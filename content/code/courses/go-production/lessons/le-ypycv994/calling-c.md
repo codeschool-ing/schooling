@@ -90,7 +90,7 @@ distinct from Go's `float64` and `int` even where the bits agree. They also belo
 that wrote `import "C"`, so a `C.int` in one package is a different type from a `C.int` in another,
 which is why the documentation advises never putting C types in a package's exported API. The
 last line shows why the names are kept apart. `C.sizeof_long` is 8 and `C.sizeof_int` is 4 on this
-machine, while Go's `int` is 8: a C `int` and a Go `int` are not the same size, and on 64-bit Windows
+machine, while Go's `int` is 8. A C `int` and a Go `int` are not the same size, and on 64-bit Windows
 a C `long` is 4 bytes rather than 8.
 
 So **every value crosses with an explicit conversion**, `C.long(total)` on the way in and
@@ -105,7 +105,7 @@ noconv/main.go:20:21: cannot use n (variable of type int) as C.int value in argu
 ```
 
 That strictness is the useful kind. The Go compiler checks every call into C against the
-declaration in the preamble, with the same rules it applies to Go code, so a wrong argument count
+declaration in the preamble, with the same rules it applies to Go code. A wrong argument count
 or a pointer where a number belongs fails here rather than at run time.
 
 ## A library that was not linked

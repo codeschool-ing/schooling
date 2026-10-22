@@ -244,7 +244,7 @@ hits-plugin: registered [csv mean]
 
 O CSV é a tabela de status da lição 1, e a média é 200 ms em 20.000 requisições. A última linha é a
 que merece uma segunda leitura. **`registered [csv mean]` vem do registro do próprio hospedeiro, e
-nada no hospedeiro jamais chamou `Register`**: as funções `init` dentro dos dois arquivos `.so`
+nada no hospedeiro jamais chamou `Register`.** As funções `init` dentro dos dois arquivos `.so`
 rodaram quando o `plugin.Open` os carregou, e escreveram no mapa que o `cmd/hits-plugin` importou. O
 plugin não ganhou um registro só dele.
 

@@ -186,7 +186,7 @@ set aside for Ana, and 65532 lands on one of those, which is not Ana. So a log t
 read, mode 600, cannot be opened through the mount, and `hits` says so and exits with 1, the status
 lesson 1 gave a failed run. Through standard input it works, because the shell opening `private.log`
 is Ana's. A program that breaks into the container it runs in finds itself an unprivileged user with
-no shell to run, which is the point of the `nonroot` variant.
+no shell to run, which is what the `nonroot` variant is for.
 
 ## The layers
 

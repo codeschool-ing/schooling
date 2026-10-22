@@ -77,13 +77,13 @@ A separação é proposital. Uma ferramenta que você roda sobre um projeto não
 do projeto, e colocá-la no `go.mod` faria o `example.com/hits` exigir `golang.org/x/tools` sem
 nenhum motivo vindo dos seus pacotes. O `go help install` lista as condições: todos os argumentos
 têm a mesma versão, os pacotes precisam ser pacotes `main` de um único módulo, e as diretivas
-`replace` desse módulo não são permitidas, de modo que o build é o mesmo em toda máquina que pedir
+`replace` desse módulo não são permitidas. É isso que torna o build o mesmo em toda máquina que pedir
 aquela versão. O `@latest` também funciona, e é o que um experimento rápido usa; **uma versão
 escrita é o que um `Makefile` ou um passo de CI deve usar**, porque `@latest` quer dizer outro
 programa no mês que vem. O `go run golang.org/x/tools/cmd/stringer@v0.52.0` faz o mesmo sem guardar
 o executável.
 
-O outro jeito de fixar uma ferramenta é torná-la parte do módulo de propósito: o `go get -tool` a
+O outro jeito de fixar uma ferramenta é torná-la parte do módulo de propósito. O `go get -tool` a
 registra no `go.mod` com uma linha `tool`, e o `go tool stringer` passa a rodá-la exatamente na
 versão que o módulo exige. Isso serve para uma ferramenta que a equipe inteira precisa rodar igual,
 ao preço de as dependências da ferramenta aparecerem no `go.mod`.

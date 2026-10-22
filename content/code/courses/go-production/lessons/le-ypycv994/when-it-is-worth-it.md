@@ -53,9 +53,9 @@ os/user []
 
 `go list -f '{{.CgoFiles}}'` names the files in a package that import `"C"`. **`netgo` and
 `osusergo` empty both lists, and the binary comes out static** with the same two answers. The
-answers can differ on other machines: the C library may be configured to ask a company directory
+answers can differ on other machines. The C library may be configured to ask a company directory
 for accounts, or to resolve names in ways Go's resolver does not implement, while the pure Go halves
-read only `/etc/passwd` and `/etc/resolv.conf`. The tags cannot remove C that you wrote: a program
+read the files under `/etc` themselves. The tags cannot remove C that you wrote: a program
 that imports zlib stays dynamic, whatever tags it is built with.
 
 ## A crash in C is a crash of the program

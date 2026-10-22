@@ -145,7 +145,7 @@ in the check of section 05.
 
 `-r` takes a rule of the form `pattern -> replacement`, where both sides are Go expressions and
 **every single lowercase letter is a wildcard** that matches any expression. `main.go` from lesson 1
-writes its error messages with `fmt.Fprintf(stderr, "hits: %v\n", err)` in four places, and
+writes its error messages with `fmt.Fprintf(stderr, "hits: %v\n", err)` in four places.
 `fmt.Fprintln` would print the same bytes with less to read, since it puts a space between its
 operands and a newline after the last. One rule makes all four changes:
 

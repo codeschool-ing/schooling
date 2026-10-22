@@ -162,7 +162,7 @@ diferença é de que lado da linha o laço está: 20.000 travessias contra uma.
 | `hash-crc32` | 0 | 0,019 ms |
 
 **Levar o laço para o C economizou 0,26 ms**, cerca de 12% do tempo. É menos que os
-0,57 ms que 20.000 travessias de 28,70 ns preveriam, então tome o número da função vazia
+0,57 ms que 20.000 travessias de 28,70 ns preveriam. Então tome o número da função vazia
 pelo que ele é: a travessia no seu ponto mais exposto, um teto e não um preço. Cada chamada também
 fez uns 90 ns de trabalho de `crc32`, então a travessia nunca foi o custo principal aqui.
 **A razão que decide se agrupar compensa é a travessia contra o trabalho feito por chamada.** Uma

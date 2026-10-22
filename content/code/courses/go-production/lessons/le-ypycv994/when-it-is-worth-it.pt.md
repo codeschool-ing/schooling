@@ -55,9 +55,9 @@ os/user []
 
 `go list -f '{{.CgoFiles}}'` lista os arquivos de um pacote que importam `"C"`. **`netgo` e
 `osusergo` esvaziam as duas listas, e o binário sai estático** com as mesmas duas respostas. Em
-outras máquinas as respostas podem diferir: a biblioteca C pode estar configurada para perguntar
+outras máquinas as respostas podem diferir. A biblioteca C pode estar configurada para perguntar
 contas a um diretório da empresa, ou para resolver nomes de jeitos que o resolvedor do Go não
-implementa, enquanto as metades em Go puro leem só `/etc/passwd` e `/etc/resolv.conf`. As tags não
+implementa, enquanto as metades em Go puro leem por conta própria os arquivos de `/etc`. As tags não
 removem o C que você escreveu: um programa que importa a zlib continua dinâmico, com quaisquer tags.
 
 ## Uma falha no C é uma falha do programa

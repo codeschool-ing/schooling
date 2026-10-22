@@ -166,9 +166,8 @@ MB allocated over every iteration the benchmark ran, almost all of it by two fun
 `runtime.MemProfileRate`.
 
 Two practical notes. **A profile of a one-second run is a hundred-odd samples**, enough to see that
-`strings.Fields` dominates and not enough to rank the functions taking 3% each; `-benchtime`
+`strings.Fields` dominates and not enough to rank the functions taking 3% each. `-benchtime`
 runs the benchmark longer, `5s` for five seconds or `200x` for exactly 200 iterations, and fills the
-profile accordingly; lesson 13 uses the second. And a profile
-carries its own function names, which is why `go tool pprof cpu.out` needed nothing else; the views
-that show machine code are the exception, and they want the binary named before the profile, as in
+profile accordingly; lesson 13 uses the second. And a profile carries its own function names, which
+is why `go tool pprof cpu.out` needed nothing else. The views that show machine code are the exception, and they want the binary named before the profile, as in
 `go tool pprof -disasm Count tally.test cpu.out`. That is what the `tally.test` left behind is for.

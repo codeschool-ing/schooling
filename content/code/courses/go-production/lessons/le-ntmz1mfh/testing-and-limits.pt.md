@@ -71,7 +71,7 @@ ok  	example.com/hits/internal/tui	0.008s
 
 **Quatro testes de um programa de tela cheia rodaram em milissegundos, e nenhum terminal foi
 aberto.** É o truque da lição 1, o `run` recebendo os fluxos, em outra forma, e o `go test ./...`
-roda o `TestRun` da lição 1 ao lado deles sem mudança: o laço que precisa de terminal é da
+roda o `TestRun` da lição 1 ao lado deles sem mudança. O laço que precisa de terminal é da
 biblioteca, e tudo o que decide o que aparece é código comum. As duas falhas de `TestBadLine` e
 `TestEmptyLog` são as que vale escrever primeiro, porque nenhuma aparece quando você testa o
 programa à mão com um log bom.
@@ -127,7 +127,7 @@ dados nem erro.
 
 A verificação é `term.IsTerminal`, do `golang.org/x/term`, que pergunta ao sistema operacional se o
 descritor é um terminal. Um teste mais curto aparece com frequência em sugestões: `os.Stdout.Stat()`
-e uma olhada em `os.ModeCharDevice`. O segundo comando da sessão mostra por que ele não basta. **O
+e uma olhada em `os.ModeCharDevice`. O terceiro comando da sessão mostra por que ele não basta. **O
 `/dev/null` também é um dispositivo de caractere**, então `hits browse access.log > /dev/null`
 passaria por ele e abriria uma tela que ninguém veria, esperando uma tecla.
 

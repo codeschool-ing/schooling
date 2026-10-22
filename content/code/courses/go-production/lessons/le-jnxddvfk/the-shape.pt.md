@@ -12,7 +12,7 @@ função em cada um que roda quando a linha de comando o cita. Nada é registrad
 não há gerador: você escreve a árvore como um literal e chama `Run` na raiz.
 
 A versão usada do começo ao fim é a v3, na **v3.14.0**. Importa saber de que versão maior você está
-lendo, porque a v2 tinha um tipo `cli.App` separado para a raiz e um argumento `*cli.Context` em toda
+lendo. A v2 tinha um tipo `cli.App` separado para a raiz e um argumento `*cli.Context` em toda
 função, e a maioria das respostas na web ainda mostra isso. A v3 tem um tipo só para os dois casos e
 passa um `context.Context` no lugar.
 
@@ -71,7 +71,7 @@ mais, o que o deixa curto o bastante para ler de uma vez:
 ```
 
 As duas Actions e a função que elas compartilham vão no `report.go`, ao lado. Elas fazem o que o
-`count`, o `top` e o `summarise` da lição 1 faziam, e diferem em onde buscam as coisas: **toda
+`count`, o `top` e o `summarise` da lição 1 faziam, e diferem em onde buscam as coisas. **Toda
 Action recebe o `*cli.Command` a que pertence**, e pede a ele as flags pelo nome, os argumentos que
 sobraram e os fluxos para ler e escrever. Salve o `report.go`:
 
@@ -155,7 +155,7 @@ func summarise(cmd *cli.Command) (tally.Summary, error) {
 Compare o `summarise` com o da lição 1. Lá, ele devolvia um código de saída ao lado do resumo,
 porque nada mais no programa sabia o que 1 e 2 significavam. Aqui **um erro pode levar o próprio
 código de saída**: o `cli.Exit` embrulha uma mensagem e um número num valor do tipo
-`cli.ExitCoder`, que é um `error` com um método `ExitCode`, e quem acabar segurando o erro pode
+`cli.ExitCoder`, que é um `error` com um método `ExitCode`. Quem acabar segurando o erro pode
 perguntar a ele que código ele quis dizer. A seção 04 trata de quem é esse alguém.
 
 ## Buscando a biblioteca

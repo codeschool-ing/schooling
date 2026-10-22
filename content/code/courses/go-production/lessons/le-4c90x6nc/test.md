@@ -5,7 +5,7 @@ version: 1
 
 `go test` is a build as well. **For each package it compiles the package together with its
 `_test.go` files into a test binary, runs that binary, and keeps the result in the build cache.**
-`go-concurrency` lessons 25 and 26 taught how to write the tests; this section is about running
+`go-concurrency` lessons 25 and 26 taught how to write the tests. This section is about running
 them the way you do fifty times a day: all of them, one of them, the fast ones, until the first
 failure, and in a form a program can read. It needs a package with more than one test, so `tally`
 gets its own.

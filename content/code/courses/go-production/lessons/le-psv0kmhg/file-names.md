@@ -39,7 +39,7 @@ ana@vm:~/tags$ GOOS=windows go list -f '{{.GoFiles}} {{.IgnoredGoFiles}}' .
 
 Each target compiled `main.go`, `progress.go` and exactly one of the three per-system files. For
 macOS that is `progress_darwin.go`, chosen by its name alone. For Windows the two left out are
-named in the second list, one by its name and one by its `//go:build unix && !darwin` line; `go
+named in the second list, one by its name and one by its `//go:build unix && !darwin` line. `go
 list` reports both the same way, because to the go command they are the same kind of rule.
 
 ## A name that almost follows it
@@ -96,7 +96,7 @@ darwin: 44 files, 92 left out
 windows: 34 files, 105 left out
 ```
 
-`os` has 119 files that are not tests, and **a build compiles between a quarter and a third of
+`os` has 119 files that are not tests, and **a build compiles about a third of
 them**: 45 for Linux, 44 for macOS, 34 for Windows. The rest are other systems' versions of the same
 functions. The "left out" figure is larger than 119 minus the first because it also counts test
 files written for one system, which `go list` reports in the same list.

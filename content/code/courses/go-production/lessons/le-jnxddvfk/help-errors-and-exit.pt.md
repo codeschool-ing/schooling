@@ -59,7 +59,7 @@ hits: one file at most, got 2
 
 O `cont` terminou com **status 3**, um código que a lição 1 nunca usou, e uma mensagem sobre tópicos
 de ajuda. Sem comando, a biblioteca imprimiu a ajuda da raiz e chamou isso de sucesso. Os dois
-arquivos saíram certos, 2 e uma linha, e vale saber o motivo: aquele erro foi criado pelo
+arquivos saíram certos, 2 e uma linha, e vale saber o motivo. Aquele erro foi criado pelo
 `cli.Exit` no `summarise`, e **por padrão a biblioteca trata um `ExitCoder` ela mesma, imprimindo a
 mensagem e chamando `os.Exit` de dentro do `Run`**. O `os.Exit(1)` do `main` nunca rodou. O erro de
 digitação foi pelo mesmo caminho: a biblioteca criou um `cli.Exit(…, 3)` próprio e encerrou.
@@ -172,7 +172,7 @@ valor do ambiente que não converte é checado depois da leitura das flags, fora
 ninguém classificou. Os dois são erros de quem chamou, e os dois precisariam de mais código para
 sair como 2: o `help` poderia ser escondido com `HideHelpCommand` e substituído, e o `run` poderia
 olhar o texto do erro. Nada disso é feito aqui, e esse é um retrato justo de um framework: **os
-padrões dele continuam chegando ao usuário por caminhos que você não escreveu**, e um contrato se
+padrões dele continuam chegando ao usuário por caminhos que você não escreveu**. Um contrato se
 mantém testando-o, não supondo que a biblioteca concorda com ele.
 
 O campo `Suggest`, que você pode ver na documentação da biblioteca, acrescenta uma linha "Did you
@@ -204,9 +204,9 @@ versão da lição 1 não tinha completação nenhuma, e esta custou um único c
 
 ## O contrato, testado
 
-O `main_test.go` tem o formato do da lição 1: uma tabela de listas de argumentos, cada uma com o
-código de saída e o começo da saída de erro que deve produzir, passadas pelo `run` com buffers no
-lugar dos fluxos:
+O teste tem o formato do da lição 1: uma tabela de listas de argumentos, cada uma com o código de
+saída e o começo da saída de erro que deve produzir, passadas pelo `run` com buffers no lugar dos
+fluxos. Salve-o como `main_test.go`, ao lado do `main.go`:
 
 ```go
 package main

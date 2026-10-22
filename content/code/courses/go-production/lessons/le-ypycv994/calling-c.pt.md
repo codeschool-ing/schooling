@@ -92,7 +92,7 @@ do Go mesmo quando os bits coincidem. Também pertencem ao pacote que escreveu `
 um `C.int` de um pacote é um tipo diferente de um `C.int` de outro, e é por isso que a documentação
 recomenda nunca pôr tipos C na API exportada de um pacote. A última linha mostra por que os nomes
 ficam separados. `C.sizeof_long` é 8 e `C.sizeof_int` é 4 nesta máquina, enquanto o `int` do Go
-tem 8: um `int` do C e um `int` do Go não têm o mesmo tamanho, e no Windows de 64 bits um `long`
+tem 8. Um `int` do C e um `int` do Go não têm o mesmo tamanho, e no Windows de 64 bits um `long`
 do C tem 4 bytes, e não 8.
 
 Então **todo valor atravessa com uma conversão explícita**, `C.long(total)` na ida e
@@ -107,7 +107,7 @@ noconv/main.go:20:21: cannot use n (variable of type int) as C.int value in argu
 ```
 
 Esse rigor é do tipo útil. O compilador Go confere cada chamada ao C com a declaração do
-preâmbulo, pelas mesmas regras que aplica ao código Go, então um número errado de argumentos ou um
+preâmbulo, pelas mesmas regras que aplica ao código Go. Um número errado de argumentos ou um
 ponteiro onde deveria haver um número falha aqui, e não em tempo de execução.
 
 ## Uma biblioteca que não foi ligada

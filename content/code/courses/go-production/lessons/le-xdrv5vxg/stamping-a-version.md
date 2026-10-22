@@ -58,7 +58,7 @@ hits: go1.27.1
 **The `mod` line now says `v1.0.0`, the tag on the commit that was built**, and four `vcs` settings
 record that the source came from git, which revision, when it was committed and whether the working
 tree had changes. Nothing in the build command asked for this. `go help build` describes the flag that
-controls it, `-buildvcs`: in its default mode, `auto`, the go command stamps the information whenever
+controls it, `-buildvcs`. In its default mode, `auto`, the go command stamps the information whenever
 the main package, its module and the current directory are in the same repository, and
 `-buildvcs=false` leaves it out.
 

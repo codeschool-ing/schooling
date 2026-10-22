@@ -156,4 +156,4 @@ de código e um teste. Agora a maior linha tem 19%, e nem tornar o `split5` grat
 impossível, renderia mais que isso; a linha seguinte tem 7%. Cada mudança a mais rende menos que a
 anterior e acrescenta código que alguém precisa ler. **O que é suficiente é uma decisão sobre o
 programa, não sobre o profile**: o `hits` conta 91 MB em bem menos de um segundo, o que basta para o
-log que um servidor escreve num dia, e o profile agora diz onde olhar se um dia não bastar.
+log que um servidor escreve num dia. O profile agora diz onde olhar se um dia não bastar.

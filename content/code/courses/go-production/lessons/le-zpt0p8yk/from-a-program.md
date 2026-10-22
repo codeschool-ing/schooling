@@ -44,7 +44,7 @@ which counts a file the way `hits count` does and writes the two profiles. In `~
 
 `hits` never learns that it was measured, and the measuring code never ships. When the program you
 need to profile is the one that ships, the same calls go into it, behind a flag such as
-`-cpuprofile`; the Go compiler itself has exactly that flag, and `go tool compile -help` lists it
+`-cpuprofile`. The Go compiler itself has exactly that flag, and `go tool compile -help` lists it
 beside `-memprofile`.
 
 ## Two million lines
@@ -88,7 +88,7 @@ The run lasted 615 milliseconds and the profile holds 62 samples, too few to ran
 first row with confidence. That row is the one the benchmark found: **`strings.Fields`, about a fifth
 of the samples on its own and a third counting what it calls**. The rows below it are small and
 belong to the runtime. `runtime.asyncPreempt` is where a sample lands when the runtime has just
-interrupted a goroutine to let something else run, the garbage collector for one, and `lock2` and
+interrupted a goroutine to let something else run, the garbage collector for one. `lock2` and
 `unlock2` are its internal locks; in a run this short, three or four samples apiece is all they are.
 
 ## Live memory and all memory
@@ -110,7 +110,7 @@ Showing nodes accounting for 2210.27kB, 100% of 2210.27kB total
 
 **2.2 MB live, and none of it belongs to `tally`.** More than half is the CPU profiler's own buffer,
 allocated by `StartCPUProfile`, and the rest the runtime's. By the time the heap profile was written,
-after `runtime.GC()`, everything `Count` had made was garbage and had been collected, and the two
+after `runtime.GC()`, everything `Count` had made was garbage and had been collected. The two
 small maps of eight paths and ten statuses are far too little to be picked by one sample in 512 KB.
 `inuse_space` answers "what is holding memory now", and for `hits` the answer is nothing.
 

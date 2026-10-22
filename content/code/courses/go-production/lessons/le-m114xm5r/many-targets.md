@@ -4,8 +4,7 @@ version: 1
 ---
 
 Four builds typed by hand were enough to see how cross-compiling works. **A release is the same
-builds every time, named the same way every time**, and that is a job for a script: a person typing
-six commands will one day type five, or call one binary `hits-mac` and the next `hits-darwin`.
+builds every time, named the same way every time**, and that is a job for a script. A person typing six commands will one day type five, or call one binary `hits-mac` and the next `hits-darwin`.
 Somebody downloading from a release page reads the name to pick a file, so the name has to say the
 system and the processor in the words Go uses: `hits-<os>-<arch>`, with `.exe` on Windows.
 

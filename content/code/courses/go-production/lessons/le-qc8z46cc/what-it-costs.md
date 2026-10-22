@@ -3,9 +3,9 @@ title: What unsafe costs, and a rule for using it
 version: 1
 ---
 
-Sections 03 and 04 kept meeting programs that worked when they should not have: a pointer stored as
-an integer that still read 404, a cast that returned a number for bytes that were not there, a map
-that counted every request under the wrong keys. **The price of `unsafe` is not speed or size; it is
+Sections 03 and 04 kept meeting programs that worked when they should not have. A pointer stored as
+an integer still read 404, a cast returned a number for bytes that were not there, and a map
+counted every request under the wrong keys. **The price of `unsafe` is not speed or size; it is
 that the compiler, the type system and most of the tools stop being able to tell you that you are
 wrong.** It comes in four parts.
 
@@ -17,10 +17,10 @@ program which builds with one Go 1 release keeps building, and behaving the same
 **Code that depends on how the runtime lays memory out has stepped out of that promise**, and the
 runtime is free to change the layout in any release.
 
-The standard library keeps the evidence. When a widely used package reaches into an unexported
-function of the runtime (which takes a `//go:linkname` directive, and the compiler refuses that
-directive in a file that does not import `unsafe`), the Go team cannot change that function without
-breaking the package. So the function gets a comment naming who depends on it:
+The standard library keeps the evidence. Reaching into an unexported function of the runtime takes a
+`//go:linkname` directive, which the compiler refuses in a file that does not import `unsafe`. When a
+widely used package does it, the Go team cannot change that function without breaking the package,
+so the function gets a comment naming who depends on it:
 
 ```
 ana@vm:~/unsafe$ grep -r "hall of shame" "$(go env GOROOT)/src" --include=*.go | wc -l

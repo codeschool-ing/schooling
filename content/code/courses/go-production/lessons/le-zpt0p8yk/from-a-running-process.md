@@ -208,8 +208,8 @@ sends into the buffer and returns.
 ## Keep it off the network
 
 The handlers `net/http/pprof` registers have no authentication, and what they serve is not harmless.
-The goroutine profile shows the source paths and the shape of the code, `cmdline` shows the
-command line with whatever secrets were passed on it, and a request for `profile?seconds=60` or a
+The goroutine profile shows the source paths and the shape of the code, and `cmdline` shows
+the command line with whatever secrets were passed on it. A request for `profile?seconds=60` or a
 trace keeps a processor busy for as long as the caller asks. **An endpoint like this must never be
 reachable from the internet.** Three habits keep it that way:
 

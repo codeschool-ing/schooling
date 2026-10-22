@@ -155,5 +155,4 @@ removing most of its cost was a 45% faster count for a few dozen lines of code a
 biggest row is 19%, and even making `split5` free, which is impossible, would buy at most that; the
 next row is 7%. Each further change buys less than the last and adds code somebody has to read.
 **What is enough is a decision about the program, not about the profile**: `hits` counts 91 MB in
-well under a second, which is fast enough for a log a server writes in a day, and the profile now
-says where to look if it ever is not.
+well under a second, which is fast enough for a log a server writes in a day. The profile now says where to look if it ever is not.

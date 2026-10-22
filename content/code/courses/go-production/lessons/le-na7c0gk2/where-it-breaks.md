@@ -102,7 +102,7 @@ hits-plugin: plugin.Open("csv-next"): plugin was built with a different version 
 ```
 
 **None of the three messages names the actual cause.** The first package whose hash differs is
-deep in the runtime, `internal/goarch` or `internal/runtime/sys`, and a person reading
+deep in the runtime, `internal/goarch` or `internal/runtime/sys`. A person reading
 `different version of package internal/goarch` after upgrading from Go 1.27.1 to 1.27.2 has to know
 this section to understand it. The race detector is a problem even when both sides agree:
 `go doc plugin` warns that it supports plugins poorly and may miss even simple races.

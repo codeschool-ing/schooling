@@ -58,7 +58,7 @@ hits: go1.27.1
 **A linha `mod` agora diz `v1.0.0`, a tag do commit que foi compilado**, e quatro configurações `vcs`
 registram que o código veio do git, qual revisão, quando foi feito o commit e se a árvore de trabalho
 tinha mudanças. Nada no comando de build pediu isso. O `go help build` descreve a flag que controla
-isso, `-buildvcs`: no modo padrão, `auto`, o comando go registra a informação sempre que o pacote main,
+isso, `-buildvcs`. No modo padrão, `auto`, o comando go registra a informação sempre que o pacote main,
 o módulo dele e o diretório atual estão no mesmo repositório, e o `-buildvcs=false` a deixa de fora.
 
 ## Um subcomando `version`

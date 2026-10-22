@@ -39,7 +39,7 @@ ana@vm:~/tags$ GOOS=windows go list -f '{{.GoFiles}} {{.IgnoredGoFiles}}' .
 
 Cada alvo compilou `main.go`, `progress.go` e exatamente um dos três arquivos por sistema. Para
 macOS é o `progress_darwin.go`, escolhido só pelo nome. Para Windows os dois deixados de fora
-aparecem na segunda lista, um pelo nome e outro pela linha `//go:build unix && !darwin`; o `go list`
+aparecem na segunda lista, um pelo nome e outro pela linha `//go:build unix && !darwin`. O `go list`
 informa os dois do mesmo jeito, porque para o comando go eles são o mesmo tipo de regra.
 
 ## Um nome que quase segue a regra
@@ -95,7 +95,7 @@ darwin: 44 files, 92 left out
 windows: 34 files, 105 left out
 ```
 
-O `os` tem 119 arquivos que não são de teste, e **um build compila entre um quarto e um terço
+O `os` tem 119 arquivos que não são de teste, e **um build compila cerca de um terço
 deles**: 45 para Linux, 44 para macOS, 34 para Windows. O resto são as versões de outros sistemas
 das mesmas funções. O número de "left out" é maior que 119 menos o primeiro porque conta também
 arquivos de teste escritos para um sistema só, que o `go list` informa na mesma lista.

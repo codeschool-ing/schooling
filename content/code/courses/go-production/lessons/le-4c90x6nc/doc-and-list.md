@@ -203,7 +203,7 @@ example.com/hits
 ```
 
 **80 packages go into `hits`, and 78 of them are the standard library.** That is one more than the
-79 `go build -a -v` compiled in section 02; the extra one is `unsafe`, which the compiler provides
+79 `go build -a -v` compiled in section 02. The extra one is `unsafe`, which the compiler provides
 itself and never compiles. A template that prints nothing for a package leaves no line, so the
 `if` reduces the list to this module's own two. The order is the order of the build: a package
 always comes after everything it imports.

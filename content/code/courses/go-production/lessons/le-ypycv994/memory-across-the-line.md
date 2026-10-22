@@ -91,7 +91,7 @@ missing most of its lines. `no such file or directory` is
 `errno`, carried back by the two-result call. The last command is a zlib habit worth knowing: given
 a file with no gzip header, `gzopen` reads it as it is, so `gzlines` counted the plain log too.
 **Each of those behaviours is a convention of one C library**, written in its header, and a cgo
-wrapper inherits every one of them; Go's own `compress/gzip` has different ones, and section 05 shows them.
+wrapper inherits every one of them. Go's own `compress/gzip` has different ones, and section 05 shows them.
 
 ## Who frees what
 

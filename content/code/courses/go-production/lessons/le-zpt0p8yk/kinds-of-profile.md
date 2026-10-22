@@ -15,10 +15,11 @@ long time or two million times for a moment each.
 ```
 
 **A sample costs the same whatever the program is doing**, which is why it is reasonable to take a
-profile from a process serving real traffic, where a stopwatch around every call would not be. The price is resolution. A tick every
-10 milliseconds sees nothing shorter than a tick unless it happens often, so a profile of a run that
-lasted one second holds about a hundred stacks, and the third digit of any percentage in it is
-noise. Section 03 profiles a benchmark that ran for about a second and gets exactly that.
+profile from a process serving real traffic, where a stopwatch around every call would not be.
+The price is resolution. A tick every 10 milliseconds sees nothing shorter than a tick unless it
+happens often. A profile of a run that lasted one second holds about a hundred stacks, so the
+third digit of any percentage in it is noise. Section 03 profiles a benchmark that ran for about a
+second and gets exactly that.
 
 ## Eight profiles, one format
 
@@ -56,7 +57,7 @@ sample carries four numbers**, and `go tool pprof` shows one at a time:
 | `alloc_objects` | how many allocations were made since the program started |
 
 **A leak shows in `inuse`, and churn shows in `alloc`.** A program whose memory grows for a week
-has its answer in the first view; a program that is slow because it makes and throws away millions
+has its answer in the first view. A program that is slow because it makes and throws away millions
 of small objects has its answer in the third and fourth, and its `inuse` view may be nearly empty.
 `hits` is the second kind, which section 04 shows on two million lines. `heap` and `allocs` are the
 same records with a different default view: `heap` opens on `inuse_space` and `allocs` on

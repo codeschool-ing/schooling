@@ -92,7 +92,7 @@ sem a maior parte das linhas. `no such file or directory` é o `errno`, trazido 
 resultados. O último comando mostra um costume da zlib que vale conhecer: diante de um arquivo sem
 cabeçalho gzip, o `gzopen` o lê como está, então o `gzlines` contou também o log puro. **Cada um
 desses comportamentos é uma convenção de uma biblioteca C**, escrita no cabeçalho dela, e um
-invólucro cgo herda todas; o `compress/gzip` do próprio Go tem outras, e a seção 05 as mostra.
+invólucro cgo herda todas. O `compress/gzip` do próprio Go tem outras, e a seção 05 as mostra.
 
 ## Quem libera o quê
 

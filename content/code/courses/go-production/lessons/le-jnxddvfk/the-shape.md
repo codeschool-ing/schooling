@@ -11,8 +11,8 @@ same output and the same exit codes as lesson 1. **In urfave/cli a whole program
 runs when the command line names it. Nothing is registered at start-up and there is no generator:
 you write the tree as a literal and call `Run` on its root.
 
-The version used throughout is v3, at **v3.14.0**. It matters which major version you read about,
-because v2 had a separate `cli.App` type for the root and a `*cli.Context` argument in every
+The version used throughout is v3, at **v3.14.0**. It matters which major version you read about.
+v2 had a separate `cli.App` type for the root and a `*cli.Context` argument in every
 function, and most answers on the web still show them. v3 has one type for both and passes a
 `context.Context` instead.
 
@@ -71,7 +71,7 @@ which makes it short enough to read in one piece:
 ```
 
 The two Actions and the function they share go in `report.go`, beside it. They do what lesson 1's
-`count`, `top` and `summarise` did, and differ in where they get things: **every Action receives
+`count`, `top` and `summarise` did, and differ in where they get things. **Every Action receives
 the `*cli.Command` it belongs to**, and asks it for the flags by name, for the arguments left over
 and for the streams to read and write. Save `report.go`:
 
@@ -155,7 +155,7 @@ func summarise(cmd *cli.Command) (tally.Summary, error) {
 Compare `summarise` with lesson 1's. There, it returned an exit code beside the summary, because
 nothing else in the program knew what 1 and 2 meant. Here **an error can carry its own exit
 code**: `cli.Exit` wraps a message and a number into a value of type `cli.ExitCoder`, which is an
-`error` with an `ExitCode` method, and whoever ends up holding the error can ask it which code it
+`error` with an `ExitCode` method. Whoever ends up holding the error can ask it which code it
 meant. Section 04 is about who that is.
 
 ## Fetching the library

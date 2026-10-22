@@ -58,7 +58,7 @@ hits: one file at most, got 2
 
 `cont` ended in **status 3**, a code lesson 1 never used, with a message about help topics. With no
 command the library printed the root's help and called it success. Two files came out right, 2 and
-one line, and the reason is worth knowing: that error was made by `cli.Exit` in `summarise`, and
+one line, and the reason is worth knowing. That error was made by `cli.Exit` in `summarise`, and
 **by default the library handles an `ExitCoder` itself, printing its message and calling
 `os.Exit` from inside `Run`**. `main`'s own `os.Exit(1)` never ran. The typo went the same way: the
 library made a `cli.Exit(…, 3)` of its own and exited.
@@ -170,7 +170,7 @@ from the environment that does not parse is checked after the flags are read, ou
 nobody classified. Both are mistakes by the caller, and both would need more code to report as 2:
 `help` could be hidden with `HideHelpCommand` and replaced, and `run` could look at the error's
 text. Neither is done here, and that is a fair picture of a framework: **its defaults keep reaching
-the user through paths you did not write**, and a contract is held by testing it rather than by
+the user through paths you did not write**. A contract is held by testing it rather than by
 assuming the library shares it.
 
 The `Suggest` field you may see in the library's documentation adds a "Did you mean" line to its own
@@ -200,9 +200,9 @@ one. That step was not run here, because a transcript cannot press Tab. Lesson 1
 
 ## The contract, tested
 
-`main_test.go` has the shape of lesson 1's: a table of argument lists, each with the exit code and
-the start of standard error it should produce, run through `run` with buffers in place of the
-streams:
+The test has the shape of lesson 1's: a table of argument lists, each with the exit code and the
+start of standard error it should produce, run through `run` with buffers in place of the streams.
+Save it as `main_test.go`, beside `main.go`:
 
 ```go
 package main

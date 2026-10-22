@@ -162,7 +162,7 @@ difference is which side of the line the loop is on: 20,000 crossings against on
 | `hash-crc32` | 0 | 0.019 ms |
 
 **Moving the loop into C saved 0.26 ms**, about 12% of the time. That is less than the
-0.57 ms that 20,000 crossings at 28.70 ns each would predict, so take the empty-function number for
+0.57 ms that 20,000 crossings at 28.70 ns each would predict. So take the empty-function number for
 what it is: the crossing at its most exposed, a ceiling rather than a price. Every call also
 did about 90 ns of `crc32` work, so the crossing was never the main cost here. **The ratio
 that decides whether batching pays is the crossing against the work done per call.** A C

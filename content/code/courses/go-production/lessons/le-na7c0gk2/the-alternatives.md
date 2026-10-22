@@ -221,7 +221,7 @@ hits-static: no reporter "xml"; have [csv mean]
 `plugin.Open` in section 02 run here at start-up, from packages the linker put in the binary.
 Adding a reporter is one import line and a rebuild. That rebuild is the price, and section 03
 showed that plugins charge it too, in a less helpful form. `go doc plugin` ends its list of
-warnings with the same advice: if the application and its plugins are built together anyway, it
+warnings with the same advice. If the application and its plugins are built together anyway, it
 may be simpler to generate a Go file that blank-imports the chosen plugins and compile one static
 executable. A team that wants the list outside the source can generate that file with
 `go generate`, the subject of lesson 10.

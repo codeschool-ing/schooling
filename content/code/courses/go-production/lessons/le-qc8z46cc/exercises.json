@@ -294,7 +294,7 @@
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "In the benchmarks, `k := string(path)` followed by `hits[k]` allocated nothing for a 10-byte key and 48 bytes for a 41-byte one. Up to how many bytes can a converted string that does not escape be built in a buffer on the stack?",
+    "prompt": "In the benchmarks, `k := string(path)` followed by `hits[k]` allocated nothing for a 10-byte key and 48 bytes for a 40-byte one. Up to how many bytes can a converted string that does not escape be built in a buffer on the stack?",
     "hint": "The constant is `tmpStringBufSize` in `runtime/string.go`.",
     "value": 32,
     "tolerance": 0,
@@ -520,7 +520,7 @@
       {
         "text": "Writing `routes[string(path)]` already does the lookup without building a string",
         "correct": true,
-        "why": "Right. `BenchmarkLookup` and `BenchmarkLookupLong` showed 0 B/op for a 10-byte and a 41-byte key: the compiler handles a conversion inside an index expression."
+        "why": "Right. `BenchmarkLookup` and `BenchmarkLookupLong` showed 0 B/op for a 10-byte and a 40-byte key: the compiler handles a conversion inside an index expression."
       },
       {
         "text": "If the zero-copy string were ever stored, `-race` would not catch the damage",

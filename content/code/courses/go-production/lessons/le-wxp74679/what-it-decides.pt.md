@@ -145,7 +145,7 @@ ou na verificação da seção 05.
 
 O `-r` recebe uma regra no formato `padrão -> substituição`, em que os dois lados são expressões Go e
 **toda letra minúscula sozinha é um curinga** que casa com qualquer expressão. O `main.go` da lição 1
-escreve as mensagens de erro com `fmt.Fprintf(stderr, "hits: %v\n", err)` em quatro lugares, e o
+escreve as mensagens de erro com `fmt.Fprintf(stderr, "hits: %v\n", err)` em quatro lugares. O
 `fmt.Fprintln` imprimiria os mesmos bytes com menos para ler, já que põe um espaço entre os operandos
 e uma quebra de linha depois do último. Uma regra faz as quatro mudanças:
 

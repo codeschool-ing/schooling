@@ -104,7 +104,7 @@ hits-plugin: plugin.Open("csv-next"): plugin was built with a different version 
 ```
 
 **Nenhuma das três mensagens cita a causa real.** O primeiro pacote cujo hash difere fica no fundo
-do runtime, `internal/goarch` ou `internal/runtime/sys`, e quem lê
+do runtime, `internal/goarch` ou `internal/runtime/sys`. Quem lê
 `different version of package internal/goarch` depois de atualizar do Go 1.27.1 para o 1.27.2
 precisa conhecer esta seção para entender. O detector de corrida é um problema mesmo quando os dois
 lados concordam: o `go doc plugin` avisa que ele suporta mal os plugins e pode deixar passar até

@@ -222,7 +222,7 @@ hits-static: no reporter "xml"; have [csv mean]
 dentro do `plugin.Open` na seção 02 rodam aqui na inicialização, a partir de pacotes que o ligador
 pôs no binário. Acrescentar um reporter é uma linha de import e uma recompilação. Essa recompilação
 é o preço, e a seção 03 mostrou que os plugins também o cobram, de forma menos útil. O
-`go doc plugin` termina a lista de avisos com o mesmo conselho: se a aplicação e seus plugins são
+`go doc plugin` termina a lista de avisos com o mesmo conselho. Se a aplicação e seus plugins são
 compilados juntos de qualquer forma, pode ser mais simples gerar um arquivo Go que importe em branco
 os plugins escolhidos e compilar um único executável estático. Uma equipe que queira a lista fora do
 código pode gerar esse arquivo com `go generate`, o assunto da lição 10.

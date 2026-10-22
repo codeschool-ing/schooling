@@ -246,12 +246,12 @@ ana@vm:~/std-hits$ wc -l main.go ../cli-hits/main.go ../cli-hits/report.go ../co
 ```
 
 A versão com a biblioteca é a mais longa, **177 linhas contra 144**, e a contagem esconde mais do
-que mostra: boa parte das 144 da lição 1 é um texto de uso escrito à mão e o `switch` do despacho, e
+que mostra. Boa parte das 144 da lição 1 é um texto de uso escrito à mão e o `switch` do despacho, e
 boa parte das 177 da urfave/cli são literais de struct declarando coisas que a lição 1 nem tinha. A
-versão com Cobra é mais curta que as duas porque faz menos: nenhuma variável de ambiente, nenhum
-validador, então a checagem do `-n` fica escrita no comando, e um nome longo com um atalho de uma
-letra, que é tudo o que uma flag do pflag pode ter, onde a urfave/cli aceita quantos apelidos você
-quiser. O que as linhas compram fica mais claro com a mesma chamada feita ao binário da lição 1:
+versão com Cobra é mais curta que as duas porque faz menos. Ela não tem variável de ambiente nem
+validador, então a checagem do `-n` fica escrita no comando. E cada flag tem um nome longo e um
+atalho de uma letra, que é tudo o que uma flag do pflag pode ter, onde a urfave/cli aceita quantos
+apelidos você quiser. O que as linhas compram fica mais claro com a mesma chamada feita ao binário da lição 1:
 
 ```
 ana@vm:~/std-hits$ ./hits top access.log -n 2; echo $?
@@ -278,9 +278,9 @@ mais um módulo e não é assunto de nenhuma lição deste curso.
 ## Qual, e quando
 
 **A biblioteca padrão** serve para uma ferramenta com um ou dois comandos, poucas flags e um motivo
-para continuar pequena ou sem dependências: um auxiliar distribuído dentro de uma imagem de
-contêiner, um programa num repositório cuja política é não ter código de terceiros, qualquer coisa
-que o pacote flag da lição 21 do `go-concurrency` dê conta. O custo é a lista de recursos de vinte
+para continuar pequena ou sem dependências. Exemplos são um auxiliar distribuído dentro de uma
+imagem de contêiner, um programa num repositório cuja política é não ter código de terceiros e
+qualquer coisa de que o pacote flag da lição 21 do `go-concurrency` dê conta. O custo é a lista de recursos de vinte
 linhas da lição 1, escritos por você ou deixados de lado.
 
 **A urfave/cli** serve para uma ferramenta com alguns comandos que quer um tratamento moderno de
@@ -296,7 +296,7 @@ páginas de manual, e o formato de muitas ferramentas Go conhecidas, então quem
 familiar. A lição 2 trata dele. O que ele custa são dois módulos compilados, o `net` entre os
 pacotes, e uma segunda biblioteca no dia em que uma flag precisar vir do ambiente.
 
-Nenhuma das três muda o `tally`, e é a decisão da seção 04 da lição 1 rendendo pela segunda vez:
-**a linha de comando é uma camada fina sobre um pacote que não sabe nada dela**, então trocar a
-camada é coisa de uma tarde, e as medidas acima podem ser tiradas de novo quando sair a próxima
+Nenhuma das três muda o `tally`, e é a decisão da seção 04 da lição 1 rendendo pela segunda vez.
+**A linha de comando é uma camada fina sobre um pacote que não sabe nada dela**, então trocar a
+camada é coisa de uma tarde. As medidas acima podem ser tiradas de novo quando sair a próxima
 versão de qualquer uma das três.

@@ -3,9 +3,9 @@ title: O que o unsafe custa, e uma regra para usá-lo
 version: 1
 ---
 
-As seções 03 e 04 esbarraram várias vezes em programas que funcionaram quando não deviam: um
-ponteiro guardado como inteiro que ainda leu 404, um cast que devolveu um número para bytes que não
-existiam, um mapa que contou todas as requisições sob as chaves erradas. **O preço do `unsafe` não é
+As seções 03 e 04 esbarraram várias vezes em programas que funcionaram quando não deviam. Um
+ponteiro guardado como inteiro ainda leu 404, um cast devolveu um número para bytes que não
+existiam, e um mapa contou todas as requisições sob as chaves erradas. **O preço do `unsafe` não é
 velocidade nem tamanho; é que o compilador, o sistema de tipos e a maioria das ferramentas deixam de
 conseguir avisar que você está errado.** Ele vem em quatro partes.
 
@@ -18,10 +18,10 @@ promessa do Go é que um programa que compila com uma versão do Go 1 continua c
 comportando do mesmo jeito, com a seguinte. **Código que depende de como o runtime organiza a
 memória saiu dessa promessa**, e o runtime é livre para mudar essa organização em qualquer versão.
 
-A própria biblioteca padrão guarda a evidência. Quando um pacote muito usado alcança uma função não
-exportada do runtime (o que exige uma diretiva `//go:linkname`, e o compilador recusa essa diretiva
-num arquivo que não importa `unsafe`), a equipe do Go não consegue mais mudar aquela função sem
-quebrar o pacote. Então a função ganha um comentário dizendo quem depende dela:
+A própria biblioteca padrão guarda a evidência. Alcançar uma função não exportada do runtime exige
+uma diretiva `//go:linkname`, que o compilador recusa num arquivo que não importa `unsafe`. Quando um
+pacote muito usado faz isso, a equipe do Go não consegue mais mudar aquela função sem quebrar o
+pacote, então a função ganha um comentário dizendo quem depende dela:
 
 ```
 ana@vm:~/unsafe$ grep -r "hall of shame" "$(go env GOROOT)/src" --include=*.go | wc -l

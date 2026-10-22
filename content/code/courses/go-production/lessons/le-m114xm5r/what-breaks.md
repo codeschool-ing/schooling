@@ -5,8 +5,7 @@ version: 1
 
 `hits` cross-compiled without a word of complaint, and it is tempting to conclude that any Go
 program does. **Three things about a build depend on the target.** Each can turn a program that
-builds here into one that fails to build for another machine, or builds into something different:
-cgo, the files a package chooses by operating system and processor, and the oldest processor the
+builds here into one that fails to build for another machine, or builds into something different. The three are cgo, the files a package chooses by operating system and processor, and the oldest processor the
 code is allowed to assume.
 
 ## cgo is off unless you turn it on

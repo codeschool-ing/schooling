@@ -242,7 +242,7 @@ hits-plugin: registered [csv mean]
 
 The CSV is the status table of lesson 1, and the mean is 200 ms over 20,000 requests. The last line
 is the one to read twice. **`registered [csv mean]` comes from the host's own registry, and nothing
-in the host ever called `Register`**: the `init` functions inside the two `.so` files ran when
+in the host ever called `Register`.** The `init` functions inside the two `.so` files ran when
 `plugin.Open` loaded them, and they wrote into the map that `cmd/hits-plugin` imported. The plugin
 did not get a registry of its own.
 

@@ -4,7 +4,7 @@ version: 1
 ---
 
 `gofmt` will sort the lines of an import block, and that is all it does with one. It does not know
-that you used `os` without importing it or imported `strings` and never used it; **the compiler
+that you used `os` without importing it, or imported `strings` and never used it. **The compiler
 refuses both, and the second refusal surprises people from other languages**, where an unused
 import is at most a warning. `goimports` is `gofmt` plus that knowledge. It formats a file the way
 `gofmt` does, and then rewrites the import block so it holds exactly what the file uses, grouped
@@ -140,7 +140,7 @@ import (
 
 **Standard library, then other people's modules, then yours.** The file had already been through
 `goimports` once and its block was already in two groups; `-local` split the second one. Pass it
-the module path from your `go.mod`, and pass the same one everywhere: a teammate who runs
+the module path from your `go.mod`, and pass the same one everywhere. A teammate who runs
 `goimports` without `-local` merges the third group back into the second, and the two of you take
 turns rewriting each other's import blocks. Section 05 puts the flag in one script so nobody has to
 remember it.
@@ -172,7 +172,7 @@ Code, and its documentation describes setups for Vim, Neovim, Emacs, Helix, Subl
 **It does the same work as `goimports`.** It offers an "Organize imports" action that deletes unused
 imports, adds missing ones and sorts them, and a `local` setting that its documentation calls "the
 equivalent of the `goimports -local` flag". Many editors run both formatting and organising on every save. This lab has no editor, so **none of it
-was run here**; what the lesson shows is the command-line tool, which is also what a hook and a CI
+was run here**. What the lesson shows is the command-line tool, which is also what a hook and a CI
 job use, and the way to check that an editor did its job.
 
 `gopls` documents one complaint worth knowing before you meet it: removing an unused import on

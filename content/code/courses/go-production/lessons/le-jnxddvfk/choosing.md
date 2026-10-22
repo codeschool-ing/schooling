@@ -246,11 +246,11 @@ ana@vm:~/std-hits$ wc -l main.go ../cli-hits/main.go ../cli-hits/report.go ../co
 ```
 
 The library version is the longest, **177 lines against 144**, and the count hides more than it
-shows: much of lesson 1's 144 is a hand-written usage text and the dispatch `switch`, and much of
+shows. Much of lesson 1's 144 is a hand-written usage text and the dispatch `switch`, and much of
 urfave/cli's 177 is struct literals declaring things lesson 1 did not have at all. The Cobra version
-is shorter than both because it does less: no environment variable, no validator, so the `-n`
-check is written into the command, and one long name with a one-letter shorthand, which is all a
-pflag flag can have, where urfave/cli takes any number of aliases. What the lines buy
+is shorter than both because it does less. It has no environment variable and no validator, so the
+`-n` check is written into the command. And each flag has one long name and a one-letter shorthand,
+which is all a pflag flag can have, where urfave/cli takes any number of aliases. What the lines buy
 is clearer from the same call made to lesson 1's binary:
 
 ```
@@ -278,8 +278,9 @@ more module and the subject of no lesson in this course.
 ## Which one, when
 
 **The standard library** is right for a tool with one command or two, a few flags, and a reason to
-stay small or dependency-free: a helper shipped inside a container image, a program in a repository
-whose policy is no third-party code, anything `go-concurrency` lesson 21's flag package covers. The
+stay small or dependency-free. Examples are a helper shipped inside a container image, a program in a
+repository whose policy is no third-party code, and anything `go-concurrency` lesson 21's flag
+package covers. The
 cost is lesson 1's list of twenty-line features, written by you or done without.
 
 **urfave/cli** is right for a tool with a handful of commands that wants modern flag handling,
@@ -295,6 +296,6 @@ pages, and the shape of many well-known Go tools, so its users meet something fa
 second library the day a flag should come from the environment.
 
 None of the three changes `tally`, and that is the decision of lesson 1 section 04 paying off a
-second time: **the command line is a thin layer over a package that knows nothing about it**, so
-replacing the layer is an afternoon, and the measurements above can be taken again when the next
+second time. **The command line is a thin layer over a package that knows nothing about it**, so
+replacing the layer is an afternoon. The measurements above can be taken again when the next
 version of any of the three is released.

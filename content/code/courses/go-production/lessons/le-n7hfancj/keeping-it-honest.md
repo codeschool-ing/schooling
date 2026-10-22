@@ -194,7 +194,7 @@ from `go-concurrency` lesson 24: the bytes of `owners.txt` compiled into the bin
 stale, since the build reads the file itself every time.
 
 What it gives up is the moment of checking. A duplicate path in an embedded list is found when
-`hits` starts, on whatever machine it runs, by a parser that ships inside the binary; a duplicate in
+`hits` starts, on whatever machine it runs, by a parser that ships inside the binary. A duplicate in
 a generated list is found by the author, at `go generate`, before anything is committed. The rule of
 thumb that follows is to **embed when the program needs the content as data, and generate when it
 needs it as Go**. A template, a page or a certificate is data; a method, a type or a table the

@@ -212,7 +212,7 @@ run. The third did start it, for an instant: the count found line 1 unreadable, 
 
 **The last two lines are something nobody typed.** `^[[?2026;0$y` and `^[[?2027;0$y` are the
 terminal's replies to the same two questions as in `msgs.log`. This run quit before they came back,
-so they reached the shell instead: bash echoed them as though they had been typed, in front of the
+so they reached the shell instead. Bash echoed them as though they had been typed, in front of the
 `1` from `echo`, and what it did not swallow was left waiting on the next prompt. Nothing is broken,
 and Ctrl+C clears the line, but a program that quits almost as soon as it starts and leaves residue
 on the screen is a fair preview of section 05's argument.

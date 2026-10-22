@@ -4,7 +4,7 @@ version: 1
 ---
 
 Quatro builds digitados à mão bastaram para ver como funciona a compilação cruzada. **Uma versão é
-sempre os mesmos builds, com os mesmos nomes**, e isso é trabalho para um script: quem digita seis
+sempre os mesmos builds, com os mesmos nomes**, e isso é trabalho para um script. Quem digita seis
 comandos um dia digita cinco, ou chama um binário de `hits-mac` e o seguinte de `hits-darwin`. Quem
 baixa de uma página de versões lê o nome para escolher o arquivo, então o nome precisa dizer o
 sistema e o processador nas palavras que o Go usa: `hits-<os>-<arch>`, com `.exe` no Windows.

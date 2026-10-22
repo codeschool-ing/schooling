@@ -197,8 +197,8 @@ string ou `[]byte`, e analisados quando o programa inicia. Embutir não precisa 
 nada que fique velho, já que o build lê o próprio arquivo toda vez.
 
 O que se perde é o momento da verificação. Um caminho duplicado numa lista embutida é encontrado
-quando o `hits` inicia, em qualquer máquina onde rode, por um analisador que vai dentro do binário;
-um duplicado numa lista gerada é encontrado por quem escreve, no `go generate`, antes de qualquer
+quando o `hits` inicia, em qualquer máquina onde rode, por um analisador que vai dentro do binário.
+Um duplicado numa lista gerada é encontrado por quem escreve, no `go generate`, antes de qualquer
 commit. A regra prática que decorre disso é **embutir quando o programa precisa do conteúdo como
 dado, e gerar quando precisa dele como Go**. Um template, uma página ou um certificado são dados; um
 método, um tipo ou uma tabela que o compilador pode conferir são Go.

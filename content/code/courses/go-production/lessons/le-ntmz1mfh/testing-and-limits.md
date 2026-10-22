@@ -71,7 +71,7 @@ ok  	example.com/hits/internal/tui	0.008s
 
 **Four tests of a full-screen program ran in milliseconds, and no terminal was opened.** It is
 lesson 1's trick, `run` with its streams passed in, in another shape, and `go test ./...` runs
-lesson 1's `TestRun` beside them unchanged: the loop that needs a terminal belongs to the library,
+lesson 1's `TestRun` beside them unchanged. The loop that needs a terminal belongs to the library,
 and everything that decides what appears is ordinary code. The two failures in `TestBadLine` and
 `TestEmptyLog` are the ones worth writing first, because neither shows up when you try the program
 by hand on a good log.
@@ -126,7 +126,7 @@ file nobody will ever display. A script reading that output would get no data an
 
 The check is `term.IsTerminal`, from `golang.org/x/term`, which asks the operating system whether
 the descriptor is a terminal. A shorter test is often suggested: `os.Stdout.Stat()` and a look for
-`os.ModeCharDevice`. The second command of the session shows why it is not enough. **`/dev/null` is
+`os.ModeCharDevice`. The third command of the session shows why it is not enough. **`/dev/null` is
 a character device too**, so `hits browse access.log > /dev/null` would pass it and start a screen
 nobody could see, waiting for a key.
 

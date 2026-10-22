@@ -207,8 +207,8 @@ mas agora toda contagem termina, envia para o buffer e retorna.
 ## Fora da rede
 
 Os handlers que o `net/http/pprof` registra não têm autenticação, e o que servem não é inofensivo. O
-profile de goroutines mostra os caminhos do código e a forma do programa, o `cmdline` mostra a linha
-de comando com os segredos que tiverem sido passados nela, e um pedido de `profile?seconds=60` ou de
+profile de goroutines mostra os caminhos do código e a forma do programa, e o `cmdline` mostra a
+linha de comando com os segredos que tiverem sido passados nela. Um pedido de `profile?seconds=60` ou de
 um trace mantém um processador ocupado pelo tempo que quem pede quiser. **Um endpoint desses nunca
 pode ser alcançável pela internet.** Três hábitos garantem isso:
 

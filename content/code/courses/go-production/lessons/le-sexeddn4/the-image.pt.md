@@ -189,7 +189,7 @@ contêiner numa faixa de ids reservada para a Ana, e o 65532 cai num desses, que
 um log que só a Ana lê, modo 600, não abre pela montagem, e o `hits` diz isso e sai com 1, o status
 que a lição 1 deu a uma execução que falhou. Pela entrada padrão funciona, porque o shell que abre
 o `private.log` é da Ana. Um programa que é invadido dentro do contêiner em que roda vira um
-usuário sem privilégios e sem shell para rodar, que é a razão de ser da variante `nonroot`.
+usuário sem privilégios e sem shell para rodar, e é para isso que existe a variante `nonroot`.
 
 ## As camadas
 

@@ -207,7 +207,7 @@ example.com/hits
 ```
 
 **80 pacotes entram no `hits`, e 78 deles são da biblioteca padrão.** É um a mais que os 79 que o
-`go build -a -v` compilou na seção 02; o extra é o `unsafe`, que o próprio compilador fornece e
+`go build -a -v` compilou na seção 02. O extra é o `unsafe`, que o próprio compilador fornece e
 nunca compila. Um template que não imprime nada para um pacote não deixa linha, então o `if` reduz
 a lista aos dois pacotes deste módulo. A ordem é a do build: um pacote sempre vem depois de tudo o
 que ele importa.

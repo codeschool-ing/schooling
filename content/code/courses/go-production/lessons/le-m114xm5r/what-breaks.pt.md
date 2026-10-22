@@ -5,8 +5,7 @@ version: 1
 
 O `hits` foi compilado para outras máquinas sem uma palavra de reclamação, e é tentador concluir que
 qualquer programa Go seria. **Três coisas num build dependem do alvo.** Cada uma pode transformar um
-programa que compila aqui num que não compila para outra máquina, ou que compila em outra coisa: o
-cgo, os arquivos que um pacote escolhe por sistema operacional e processador, e o processador mais
+programa que compila aqui num que não compila para outra máquina, ou que compila em outra coisa. As três são o cgo, os arquivos que um pacote escolhe por sistema operacional e processador, e o processador mais
 antigo que o código pode supor.
 
 ## O cgo fica desligado a menos que você o ligue

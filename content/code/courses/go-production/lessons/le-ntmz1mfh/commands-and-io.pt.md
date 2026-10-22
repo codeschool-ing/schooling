@@ -213,7 +213,7 @@ execução que falhou. O terceiro abriu, por um instante: a contagem achou a lin
 
 **As duas últimas linhas são algo que ninguém digitou.** `^[[?2026;0$y` e `^[[?2027;0$y` são as
 respostas do terminal às mesmas duas perguntas do `msgs.log`. Esta execução saiu antes de elas
-voltarem, então elas chegaram ao shell: o bash as ecoou como se tivessem sido digitadas, na frente
+voltarem, então elas chegaram ao shell. O bash as ecoou como se tivessem sido digitadas, na frente
 do `1` do `echo`, e o que ele não engoliu ficou esperando no prompt seguinte. Nada quebrou, e um
 Ctrl+C limpa a linha, mas um programa que sai quase assim que começa e deixa resíduo na tela é uma
 boa prévia do argumento da seção 05.

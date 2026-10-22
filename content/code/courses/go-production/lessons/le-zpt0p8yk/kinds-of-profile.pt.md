@@ -17,7 +17,7 @@ vez por muito tempo ou dois milhões de vezes por um instante cada.
 **Uma amostra custa o mesmo, faça o programa o que fizer**, e por isso é razoável tirar um profile de
 um processo atendendo tráfego de verdade, onde um cronômetro em volta de cada chamada não seria. O
 preço é a resolução. Um tique a cada 10 milissegundos não vê nada mais curto que um tique, a menos
-que aconteça com frequência; então o profile de uma execução de um segundo tem umas cem pilhas, e o
+que aconteça com frequência. O profile de uma execução de um segundo tem umas cem pilhas, então o
 terceiro dígito de qualquer porcentagem nele é ruído. A seção 03 mede um benchmark que rodou por
 cerca de um segundo e obtém exatamente isso.
 
@@ -57,7 +57,7 @@ amostra carrega quatro números**, e o `go tool pprof` mostra um de cada vez:
 | `alloc_objects` | quantas alocações foram feitas desde o início do programa |
 
 **Um vazamento aparece em `inuse`, e rotatividade aparece em `alloc`.** Um programa cuja memória
-cresce por uma semana tem a resposta na primeira visão; um programa lento porque cria e joga fora
+cresce por uma semana tem a resposta na primeira visão. Um programa lento porque cria e joga fora
 milhões de objetos pequenos tem a resposta na terceira e na quarta, e a visão `inuse` dele pode estar
 quase vazia. O `hits` é do segundo tipo, como a seção 04 mostra com dois milhões de linhas. `heap` e
 `allocs` são os mesmos registros com outra visão padrão: `heap` abre em `inuse_space` e `allocs` em

@@ -4,7 +4,7 @@ version: 1
 ---
 
 O `gofmt` ordena as linhas de um bloco de imports, e é tudo o que faz com ele. Ele não sabe que você
-usou `os` sem importar nem que importou `strings` e nunca usou; **o compilador recusa as duas coisas,
+usou `os` sem importar, nem que importou `strings` e nunca usou. **O compilador recusa as duas coisas,
 e a segunda recusa surpreende quem vem de outras linguagens**, onde um import sem uso é no máximo um
 aviso. O `goimports` é o `gofmt` mais esse conhecimento. Ele formata o arquivo como o `gofmt` faz e
 depois reescreve o bloco de imports para que tenha exatamente o que o arquivo usa, agrupado do jeito
@@ -141,7 +141,7 @@ import (
 
 **Biblioteca padrão, depois os módulos dos outros, depois os seus.** O arquivo já tinha passado pelo
 `goimports` uma vez e o bloco já estava em dois grupos; o `-local` dividiu o segundo. Passe a ele o
-caminho do módulo que está no seu `go.mod`, e passe o mesmo em todo lugar: um colega que roda o
+caminho do módulo que está no seu `go.mod`, e passe o mesmo em todo lugar. Um colega que roda o
 `goimports` sem `-local` junta o terceiro grupo de volta no segundo, e vocês dois passam a reescrever
 o bloco de imports um do outro, alternadamente. A seção 05 põe a flag num script só para ninguém
 precisar lembrar.
@@ -173,7 +173,7 @@ suporte a Go no VS Code, e a documentação dele descreve configurações para V
 Sublime Text e Zed. **Ele faz o mesmo trabalho que o `goimports`.** Oferece uma ação "Organize
 imports" que apaga imports sem uso, acrescenta os que faltam e os ordena, e um ajuste `local` que a
 documentação chama de "o equivalente da flag `goimports -local`". Muitos editores rodam a formatação e a
-organização a cada gravação. Este laboratório não tem editor, então **nada disso foi rodado aqui**; o
+organização a cada gravação. Este laboratório não tem editor, então **nada disso foi rodado aqui**. O
 que a lição mostra é a ferramenta de linha de comando, que é também o que um hook e um job de CI usam,
 e o jeito de conferir que um editor fez o trabalho dele.
 

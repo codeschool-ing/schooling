@@ -168,9 +168,9 @@ lado da que aparece por padrão, e um período de 524.288 bytes, os 512 KB de
 
 Duas observações práticas. **O profile de uma execução de um segundo tem pouco mais de cem
 amostras**, o suficiente para ver que `strings.Fields` domina e não para ordenar as funções que
-levam 3% cada; o `-benchtime` roda o benchmark por mais tempo, `5s` para cinco segundos ou `200x`
+levam 3% cada. O `-benchtime` roda o benchmark por mais tempo, `5s` para cinco segundos ou `200x`
 para exatamente 200 iterações, e enche o profile na mesma medida; a lição 13 usa o segundo. E um
 profile carrega os próprios nomes de função, por isso `go tool pprof cpu.out` não precisou de mais
-nada; as visões que mostram código de máquina são a exceção, e querem o binário antes do profile,
+nada. As visões que mostram código de máquina são a exceção, e querem o binário antes do profile,
 como em `go tool pprof -disasm Count tally.test cpu.out`. É para isso que serve o `tally.test` que
 ficou para trás.

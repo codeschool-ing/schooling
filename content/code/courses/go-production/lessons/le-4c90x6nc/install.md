@@ -78,12 +78,12 @@ The separation is deliberate. A tool you run on a project is not a dependency of
 code, and adding it to `go.mod` would make `example.com/hits` require `golang.org/x/tools` for no
 reason its own packages have. `go help install` lists the conditions: every argument carries the
 same version, the packages must be `main` packages of one module, and that module's own `replace`
-directives are not allowed, so the build is the same on every machine that asks for that version.
+directives are not allowed. That is what makes the build the same on every machine that asks for that version.
 `@latest` works too, and it is what a quick experiment uses; **a version written out is what a
 `Makefile` or a CI step should use**, because `@latest` means a different program next month.
 `go run golang.org/x/tools/cmd/stringer@v0.52.0` does the same without keeping the executable.
 
-The other way to pin a tool is to make it part of the module on purpose: `go get -tool` records it
+The other way to pin a tool is to make it part of the module on purpose. `go get -tool` records it
 in `go.mod` with a `tool` line, and `go tool stringer` then runs it at exactly the version the
 module requires. That suits a tool the whole team must run identically, at the price of the tool's
 dependencies appearing in `go.mod`.

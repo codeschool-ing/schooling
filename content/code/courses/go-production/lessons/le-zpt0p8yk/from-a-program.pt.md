@@ -44,7 +44,7 @@ como `tools/profcount/main.go`:
 
 O `hits` nunca fica sabendo que foi medido, e o código de medição nunca vai para produção. Quando o
 programa a medir é o que vai para produção, as mesmas chamadas entram nele, atrás de uma flag como
-`-cpuprofile`; o próprio compilador do Go tem exatamente essa flag, e o `go tool compile -help` a lista
+`-cpuprofile`. O próprio compilador do Go tem exatamente essa flag, e o `go tool compile -help` a lista
 ao lado de `-memprofile`.
 
 ## Dois milhões de linhas
@@ -90,7 +90,7 @@ confiança qualquer coisa além da primeira linha. Essa linha é a que o benchma
 **`strings.Fields`, cerca de um quinto das amostras sozinha e um terço contando o que ela chama**. As
 linhas abaixo são pequenas e pertencem ao runtime. `runtime.asyncPreempt` é onde uma amostra cai
 quando o runtime acabou de interromper uma goroutine para deixar outra coisa rodar, o coletor de lixo
-por exemplo, e `lock2` e `unlock2` são os locks internos dele; numa execução tão curta, três ou quatro
+por exemplo. `lock2` e `unlock2` são os locks internos dele; numa execução tão curta, três ou quatro
 amostras para cada uma é tudo o que são.
 
 ## Memória viva e memória toda
@@ -112,7 +112,7 @@ Showing nodes accounting for 2210.27kB, 100% of 2210.27kB total
 
 **2,2 MB vivos, e nada disso pertence ao `tally`.** Mais da metade é o buffer do próprio profiler de
 CPU, alocado por `StartCPUProfile`, e o resto é do runtime. Quando o profile de heap foi gravado,
-depois do `runtime.GC()`, tudo o que o `Count` tinha feito era lixo e já tinha sido coletado, e os dois
+depois do `runtime.GC()`, tudo o que o `Count` tinha feito era lixo e já tinha sido coletado. Os dois
 mapas pequenos, de oito caminhos e dez status, são pouco demais para serem escolhidos por uma amostra
 a cada 512 KB. O `inuse_space` responde "o que está segurando memória agora", e para o `hits` a
 resposta é nada.
