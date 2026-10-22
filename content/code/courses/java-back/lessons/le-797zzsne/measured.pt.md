@@ -8,7 +8,7 @@ do jar e quanto tempo a aplicação leva para iniciar. Os dois valem a pena, e o
 de serem lidos. Esta seção os mede para o `javalin-hello` e para o bookshop como a aula 7 o deixou, na
 mesma máquina.
 
-Faça o build do bookshop e liste os dois jars:
+Faça o build do bookshop, liste os dois jars e conte as bibliotecas empacotadas dentro do jar do bookshop:
 
 ```
 ana@vm:~/bookshop$ mvn -B -q package
@@ -30,8 +30,7 @@ megabytes raramente são o problema; o que essas bibliotecas fazem quando a apli
 **Cada framework imprime o próprio tempo de início, e os dois não podem ser comparados.** O `started in`
 do Javalin e o `Started BookshopApplication in` do Spring disparam o cronômetro num momento que o
 framework escolhe, e nenhum dos dois conta o início da própria JVM antes dele; o Spring acrescenta o
-`process running for`, que conta. Compará-los é comparar dois cronômetros disparados em momentos
-diferentes. Então meça de fora, como mediria um usuário esperando a primeira requisição: do momento em
+`process running for`, que conta. Então meça de fora, como mediria um usuário esperando a primeira requisição: do momento em
 que o `java -jar` é lançado até a primeira resposta. Salve isto como `~/first-answer.sh`:
 
 ```sh
@@ -88,7 +87,7 @@ prova nada.
 O que os números **não** dizem importa tanto quanto:
 
 - **Nada sobre velocidade depois de rodando.** O início é pago uma vez por processo. Um serviço que
-  inicia e depois responde por uma semana gasta um desses segundos por semana; quão rápido ele responde
+  inicia e depois responde por uma semana paga esses segundos uma vez naquela semana; quão rápido ele responde
   a cada requisição é outra medida, e a aula 20 faz uma com o JMeter.
 - **Nada sobre o bookshop da aula 23.** Este bookshop não tem banco, segurança nem métricas, e cada uma
   dessas coisas acrescenta trabalho no início; um Javalin com as mesmas funções também seria maior e
@@ -102,5 +101,5 @@ funções, serviços que escalam a partir de zero, jobs de vida curta. Ali, o Qu
 mantêm a maior parte das conveniências do Spring e tiram o trabalho do início, e o Javalin o elimina
 abrindo mão delas. Em todo o resto, que é a maioria dos serviços de back-end, os segundos são pagos na
 hora de publicar, e o ecossistema do Spring é aquilo em que o resto deste curso os gasta: acesso a dados
-a partir da aula 9, migrações, transações, segurança, logs, documentação, testes e métricas, cada um
-um starter que se configura sozinho. Da aula 9 em diante, o curso volta ao `~/bookshop`.
+a partir da aula 9, migrações, transações, segurança, logs, documentação, testes e métricas, a maioria
+deles um starter que se configura sozinho. Da aula 9 em diante, o curso volta ao `~/bookshop`.

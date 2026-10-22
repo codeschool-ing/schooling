@@ -101,11 +101,36 @@ class IsbnCheckTest {
 
 Three files, each in the place the layout reserves for it:
 
-@@CAPTURE find@@
+```
+ana@vm:~/isbn-check$ find . -type f | sort
+./pom.xml
+./src/main/java/com/example/isbn/IsbnCheck.java
+./src/test/java/com/example/isbn/IsbnCheckTest.java
+```
 
 `mvn compile` is the first build, run in the directory that holds `pom.xml`:
 
-@@CAPTURE compile@@
+```
+ana@vm:~/isbn-check$ mvn compile
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< com.example:isbn-check >-----------------------
+[INFO] Building isbn-check 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:3.5.0:resources (default-resources) @ isbn-check ---
+[INFO] skip non existing resourceDirectory /home/ana/isbn-check/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.15.0:compile (default-compile) @ isbn-check ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 1 source file with javac [debug release 25] to target/classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.892 s
+[INFO] Finished at: 2026-10-22T19:33:31-03:00
+[INFO] ------------------------------------------------------------------------
+```
 
 Maven read the pom, found one source file where the layout says the program is, and compiled it
 for Java 25 (`release 25`) into `target/classes`. Two plugins ran, each named with its version, and
@@ -117,7 +142,10 @@ already full. On your first build the screen fills with `Downloading from centra
 any of this, one for every jar and pom Maven had never seen, and that happens once per version of
 each file. The section on repositories says where they go.
 
-@@CAPTURE classes@@
+```
+ana@vm:~/isbn-check$ ls target/classes/com/example/isbn
+IsbnCheck.class
+```
 
 **`target/` belongs to Maven**: everything a build produces goes there, and nothing in it is yours
 to edit, because the next build overwrites it.

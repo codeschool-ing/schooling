@@ -34,13 +34,13 @@ ana@vm:~/isbn-gradle$ ./gradlew build
 > Task :check UP-TO-DATE
 > Task :build UP-TO-DATE
 
-BUILD SUCCESSFUL in 2s
+BUILD SUCCESSFUL in 651ms
 7 actionable tasks: 7 up-to-date
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.8.1/userguide/configuration_cache_enabling.html
 ```
 
 Toda tarefa com trabalho a fazer está **`UP-TO-DATE`**, e o resumo diz `7 up-to-date`: o Gradle
-comparou, achou as entradas e as saídas como as deixou, e não rodou nada. Os dois segundos foram
+comparou, achou as entradas e as saídas como as deixou, e não rodou nada. O tempo que levou foi
 para iniciar, ler os scripts e comparar.
 
 Agora mude a data de modificação de um arquivo-fonte sem mudar um byte dele:
@@ -62,7 +62,7 @@ ana@vm:~/isbn-gradle$ touch src/main/java/com/example/isbn/IsbnCheck.java && ./g
 > Task :check UP-TO-DATE
 > Task :build UP-TO-DATE
 
-BUILD SUCCESSFUL in 1s
+BUILD SUCCESSFUL in 767ms
 7 actionable tasks: 7 up-to-date
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.8.1/userguide/configuration_cache_enabling.html
 ```
@@ -94,7 +94,7 @@ ana@vm:~/isbn-gradle$ ./gradlew build
 > Task :check
 > Task :build
 
-BUILD SUCCESSFUL in 5s
+BUILD SUCCESSFUL in 1s
 7 actionable tasks: 6 executed, 1 up-to-date
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.8.1/userguide/configuration_cache_enabling.html
 ana@vm:~/isbn-gradle$ ./gradlew -q run --args="0-306-40615-2"
@@ -151,8 +151,8 @@ nada com que estar atualizado. O **cache de build** (build cache) cobre esse cas
 impressão digital de uma tarefa está nele, o Gradle copia as saídas em vez de rodar a tarefa.
 
 O **cache de configuração** (configuration cache) é outra economia. Antes de qualquer tarefa rodar,
-o Gradle executa os build scripts para montar o grafo, e essa fase é paga em todo build: são os dois
-segundos que levou um build que não fez nada. Com o cache de configuração, o Gradle guarda o grafo
+o Gradle executa os build scripts para montar o grafo, e essa fase é paga em todo build: é a maior parte do
+tempo que levou um build que não fez nada. Com o cache de configuração, o Gradle guarda o grafo
 que calculou para um pedido e o reaproveita até um script ou uma propriedade mudar. É o cache que o
 Gradle vem sugerindo no fim de todo build desta lição.
 
@@ -175,33 +175,33 @@ Calculating task graph as no cached configuration is available for tasks: clean 
 > Task :compileJava
 > Task :classes
 > Task :jar
-> Task :compileTestJava
 > Task :startScripts
-> Task :testClasses
 > Task :distTar
+> Task :compileTestJava
+> Task :testClasses
 > Task :distZip
 > Task :assemble
 > Task :test
 > Task :check
 > Task :build
 
-BUILD SUCCESSFUL in 14s
+BUILD SUCCESSFUL in 3s
 8 actionable tasks: 8 executed
 Configuration cache entry stored.
 ana@vm:~/isbn-gradle$ ./gradlew clean build
 Reusing configuration cache.
 > Task :clean
-> Task :processTestResources NO-SOURCE
 > Task :processResources NO-SOURCE
+> Task :processTestResources NO-SOURCE
 > Task :compileJava FROM-CACHE
 > Task :classes UP-TO-DATE
 > Task :jar
-> Task :startScripts
 > Task :compileTestJava FROM-CACHE
 > Task :testClasses UP-TO-DATE
-> Task :distTar
 > Task :test FROM-CACHE
 > Task :check UP-TO-DATE
+> Task :startScripts
+> Task :distTar
 > Task :distZip
 > Task :assemble
 > Task :build
@@ -209,8 +209,6 @@ Reusing configuration cache.
 BUILD SUCCESSFUL in 1s
 8 actionable tasks: 5 executed, 3 from cache
 Configuration cache entry reused.
-ana@vm:~/isbn-gradle$ ls ~/.gradle/caches/build-cache-1 | wc -l
-5
 ```
 
 A primeira execução não tinha grafo guardado (`Calculating task graph as no cached configuration is
@@ -222,7 +220,7 @@ mudou, porque com o cache de configuração o Gradle roda tarefas independentes 
 
 `jar` e as distribuições rodaram mesmo assim. O Gradle não guarda em cache as tarefas que montam
 arquivos compactados, porque compactar uns poucos arquivos sai mais barato do que procurá-los e
-copiá-los de volta. O tempo caiu de 14 segundos para 1, e num projeto em que compilar e testar leva
+copiá-los de volta. O tempo caiu de 3 segundos para 1, e num projeto em que compilar e testar leva
 minutos, essa é a economia que importa.
 
 O cache em `~/.gradle` atende os projetos desta máquina. Uma equipe ou um servidor de CI pode

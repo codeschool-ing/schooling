@@ -26,11 +26,11 @@
     "hint": "Um checksum compara duas cópias dos mesmos bytes.",
     "choices": [
       {
-        "text": "Que o zip vai rodar no JDK instalado nesta máquina",
+        "text": "Que o zip também vai rodar no JDK 25 instalado nesta máquina, sem ajuste",
         "why": "Um checksum não diz nada sobre compatibilidade; quem mostrou isso foi o `gradle --version` rodando."
       },
       {
-        "text": "Que o zip no disco é, byte a byte, o arquivo que o Gradle publicou, sem corte nem troca no caminho",
+        "text": "Que o zip no disco é, byte a byte, o que o Gradle publicou",
         "why": "Isso. Um redirecionamento, um espelho ou um download quebrado dariam outra soma."
       },
       {
@@ -185,7 +185,7 @@
         "why": "Essa opção confere que a URL responde antes de escrevê-la no arquivo; não diz nada sobre os bytes entregues depois."
       },
       {
-        "text": "Recusa o arquivo e para, citando o checksum esperado e o recebido",
+        "text": "Recusa o arquivo e para",
         "why": "Isso. Essa recusa é o que se ganha escrevendo a soma num arquivo do commit: toda máquina confere o download do mesmo jeito."
       }
     ]
@@ -237,7 +237,7 @@
         "why": "O `compileTestJava` está no ramo de testes do grafo, que o `jar` nunca alcança."
       },
       {
-        "text": "Nem compila nem roda: o `jar` só precisa das classes principais",
+        "text": "Nenhum dos dois: o `jar` só precisa das classes principais",
         "why": "Isso. Para gerar o jar só depois de os testes passarem, peça `build`, que exige `assemble` e `check`."
       },
       {
@@ -302,7 +302,7 @@
         "why": "O tempo passar não muda nada nas entradas de uma tarefa, e uma hora parado não deixa um build desatualizado."
       },
       {
-        "text": "As entradas e saídas de cada tarefa com o que ela gravou no fim da última execução",
+        "text": "As entradas e saídas de cada tarefa, contra a última execução",
         "why": "Isso. Mesmas fontes, mesmo classpath, mesmas opções e as saídas no lugar: não há nada a fazer."
       },
       {
@@ -310,7 +310,7 @@
         "why": "O Gradle não sabe nada de Git aqui; ele tira a impressão digital dos arquivos, o que funciona até num diretório que não é repositório."
       },
       {
-        "text": "As datas de modificação dos fontes com as dos arquivos de classe",
+        "text": "As datas de modificação dos arquivos-fonte contra as dos arquivos de classe",
         "why": "Essa é a verificação de fonte desatualizada que o plugin compiler do Maven faz. O `touch` que vem a seguir nesta seção mostra que o Gradle não faz."
       }
     ]
@@ -346,7 +346,7 @@
         "why": "Passar ou não é irrelevante: edite um arquivo de teste e o `compileTestJava` roda, tenham os testes passado antes ou não."
       },
       {
-        "text": "Compilar os testes depende das assinaturas públicas da classe principal, que não mudaram; rodá-los depende do bytecode dela, que mudou",
+        "text": "Compilar os testes lê as assinaturas da classe; rodá-los lê o bytecode dela",
         "why": "Isso. É o compile avoidance: uma mudança dentro do corpo de um método não quebra o código compilado contra a classe, mas pode mudar o que um teste observa."
       },
       {
@@ -368,7 +368,7 @@
     "hint": "Pense em onde estavam as saídas quando o build começou.",
     "choices": [
       {
-        "text": "`UP-TO-DATE` quer dizer que as saídas ainda estão em `build/` desde a última execução aqui; `FROM-CACHE`, que foram copiadas do cache de build, achadas pela impressão digital das entradas",
+        "text": "Se as saídas ainda estavam em `build/` ou vieram copiadas do cache",
         "why": "Isso. O `clean` apagou o `build/`, então nada estava atualizado, mas o cache em `~/.gradle/caches` ainda tinha saídas para as mesmas entradas."
       },
       {
@@ -398,7 +398,7 @@
         "why": "Isso. Aqui as duas coincidiram no commons-logging 1.4.0, por motivos diferentes; em outra árvore podem divergir."
       },
       {
-        "text": "O Maven pega a versão mais alta; o Gradle pega a declaração mais próxima",
+        "text": "O Maven pega a versão mais alta; o Gradle pega a declaração mais próxima do projeto",
         "why": "É o contrário: `1.3.5 -> 1.4.0` foi o Gradle subindo um pedido mais fundo para o mais alto."
       },
       {
@@ -420,8 +420,8 @@
         "why": "Esta lição rodou testes do JUnit 6 com o Gradle usando só o plugin `java` e o launcher."
       },
       {
-        "text": "Um pom é um arquivo declarativo só, que cada lição pode mostrar mudando e o aluno lê de cima a baixo",
-        "why": "Isso. A escolha é sobre ler o build, e nada ensinado depois depende dela."
+        "text": "Um pom é um arquivo declarativo, lido de cima a baixo",
+        "why": "Isso. Toda lição que muda o build mostra um bloco dele mudando, e nada ensinado depois depende da escolha."
       },
       {
         "text": "Builds com Maven são mais rápidos em projetos grandes",
@@ -446,7 +446,7 @@
         "why": "Um container novo inicia um daemon novo, e um daemon mantém uma JVM aquecida, não as saídas do projeto."
       },
       {
-        "text": "Um cache de build compartilhado pelas máquinas de CI, que copia as saídas achadas pela impressão digital das entradas",
+        "text": "Um cache de build compartilhado pelas máquinas de CI",
         "why": "Isso. Um cache de build remoto e compartilhado é o mecanismo que funciona entre checkouts limpos e máquinas diferentes."
       }
     ]

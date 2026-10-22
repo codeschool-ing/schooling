@@ -9,14 +9,16 @@ usado de novo no curso, então, se você só quer as ideias, pode acompanhar a l
 
 ## Bazelisk, o inicializador
 
-Ninguém instala o Bazel em si. Você instala o **Bazelisk**, um inicializador pequeno que lê a
+O jeito comum não é instalar o Bazel em si, e sim o **Bazelisk**, um inicializador pequeno que lê a
 versão do Bazel que um projeto pede num arquivo chamado `.bazelversion`, baixa essa versão uma vez
 em `~/.cache/bazelisk` e a executa. É a mesma ideia do wrapper do Gradle da aula 2: a versão faz
 parte do repositório, então todo mundo que o clona compila com o mesmo Bazel. O Bazelisk é um
 executável só, das releases dele no GitHub, e a convenção é chamá-lo de `bazel`:
 
 ```
-TRANSCRIPT_INSTALL
+ana@vm:~$ mkdir -p ~/bin
+ana@vm:~$ curl -fsSL -o ~/bin/bazel https://github.com/bazelbuild/bazelisk/releases/download/v1.29.0/bazelisk-linux-amd64
+ana@vm:~$ chmod +x ~/bin/bazel
 ```
 
 O `~/.profile` do Ubuntu põe `~/bin` no seu `PATH` quando o diretório existe, então saia e entre de
@@ -28,7 +30,8 @@ Copie as fontes da aula 1 para um diretório só delas, como a aula 2 fez para o
 qual versão do Bazel o projeto compila:
 
 ```
-TRANSCRIPT_PROJECT
+ana@vm:~$ mkdir ~/isbn-bazel && cp -r ~/isbn-check/src ~/isbn-bazel/
+ana@vm:~/isbn-bazel$ echo 9.3.0 > .bazelversion
 ```
 
 Três arquivos ficam na raiz de `~/isbn-bazel`, e mais dois ao lado das fontes, na próxima seção. O
@@ -56,7 +59,14 @@ common --noshow_progress
 Com os três arquivos no lugar, pergunte ao Bazel o que ele é:
 
 ```
-TRANSCRIPT_VERSION
+ana@vm:~/isbn-bazel$ bazel version
+Bazelisk version: v1.29.0
+Starting local Bazel server (9.3.0) and connecting to it...
+Build label: 9.3.0
+Build target: @@//src/main/java/com/google/devtools/build/lib/bazel:BazelServer
+Build time: Wed Oct 07 14:46:24 2026 (1791384384)
+Build timestamp: 1791384384
+Build timestamp as int: 1791384384
 ```
 
 O primeiro comando num diretório novo sobe um **servidor do Bazel**, um processo que fica em segundo

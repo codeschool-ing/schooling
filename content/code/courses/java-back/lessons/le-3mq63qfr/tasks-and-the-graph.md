@@ -68,7 +68,7 @@ ana@vm:~/isbn-gradle$ ./gradlew build
 > Task :check
 > Task :build
 
-BUILD SUCCESSFUL in 21s
+BUILD SUCCESSFUL in 11s
 7 actionable tasks: 7 executed
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.8.1/userguide/configuration_cache_enabling.html
 ```
@@ -123,7 +123,7 @@ ana@vm:~/isbn-gradle$ ./gradlew build --dry-run
 :check SKIPPED
 :build SKIPPED
 
-BUILD SUCCESSFUL in 2s
+BUILD SUCCESSFUL in 719ms
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.8.1/userguide/configuration_cache_enabling.html
 ```
 
@@ -220,7 +220,7 @@ Execution failed for task ':test' (registered by plugin 'org.gradle.jvm-test-sui
 > Run with --scan to get full insights from a Build Scan (powered by Develocity).
 > Get more help at https://help.gradle.org.
 
-BUILD FAILED in 8s
+BUILD FAILED in 2s
 3 actionable tasks: 1 executed, 2 up-to-date
 ```
 

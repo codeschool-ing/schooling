@@ -179,10 +179,10 @@ To use a different object mapper, visit https://javalin.io/documentation#configu
 ```
 
 O `ctx.json` precisa de algo que transforme um objeto Java em JSON, e o Javalin não traz um. **O
-mapper padrão dele usa o Jackson 2 se o Jackson 2 estiver no classpath**, não havia nenhum, e ele disse
+mapper padrão dele usa o Jackson 2 se o Jackson 2 estiver no classpath**; não havia nenhum, e ele disse
 isso no log e no corpo do 500. O bookshop nunca passou por isso, porque o `spring-boot-starter-webmvc`
-trouxe o Jackson junto e a autoconfiguração da aula 4 o preparou. Uma biblioteca deixa a escolha com
-você, e por isso também deixa com você o momento em que nada foi escolhido. Repare também quando o erro
+trouxe o Jackson junto e a autoconfiguração da aula 4 o preparou. Com uma biblioteca, escolher o mapper de
+JSON é trabalho seu, e esquecer dele é um 500. Repare também quando o erro
 apareceu: na primeira requisição que precisou de JSON, e não no início.
 
 Pare o servidor com Ctrl+C no primeiro terminal e troque o bloco `<dependencies>` do pom por este. Ele
@@ -291,13 +291,13 @@ ana@vm:~/javalin-hello$ curl -s localhost:7070/books/two
 O `-w '\n'` pede ao curl uma quebra de linha depois do corpo, já que nenhuma das duas respostas
 termina com uma. A lista e o livro avulso são o JSON do bookshop, campo por campo. As outras duas
 respostas são onde aparece a diferença em relação à aula 7. Um livro que não existe é um 404 em **texto
-puro**, `No book with id 9`, enquanto o bookshop responde `application/problem+json` com type, title e
-detail; o Javalin faria isso também, depois que você registrasse um exception handler que o escrevesse
-(o `config.routes.exception` é onde ele entra). E o `two` é recusado com um 400 no **formato próprio do
+puro**, `No book with id 9`. O bookshop responde `application/problem+json` com type, title e detail, e
+o Javalin faria isso também depois que você registrasse um exception handler que o escrevesse (o
+`config.routes.exception` é onde ele entra). E o `two` é recusado com um 400 no **formato próprio do
 Javalin** para uma conversão que falhou, um terceiro formato de erro que nenhum cliente do bookshop sabe
 ler.
 
-O que falta importa tanto quanto. `BOOKS` é uma lista estática porque não há contêiner para entregar um
+E uma coisa falta por completo. `BOOKS` é uma lista estática porque não há contêiner para entregar um
 repositório a um handler: num serviço Javalin de verdade, o `main` constrói o repositório e o serviço
 com `new` e os passa aos lambdas, que é a injeção por construtor da aula 5 escrita à mão, sem nada
 conferindo além do compilador.

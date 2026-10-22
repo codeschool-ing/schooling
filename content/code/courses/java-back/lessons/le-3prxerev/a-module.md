@@ -9,14 +9,16 @@ again in the course, so if you only want the ideas you can read along without ty
 
 ## Bazelisk, the launcher
 
-Nobody installs Bazel itself. You install **Bazelisk**, a small launcher that reads the Bazel
+The usual way is not to install Bazel itself but **Bazelisk**, a small launcher that reads the Bazel
 version a project asks for in a file called `.bazelversion`, downloads that version once into
 `~/.cache/bazelisk`, and runs it. It is the same idea as lesson 2's Gradle wrapper: the version is
 part of the repository, so everybody who clones it builds with the same Bazel. Bazelisk is one
 executable from its GitHub releases, and the convention is to call it `bazel`:
 
 ```
-TRANSCRIPT_INSTALL
+ana@vm:~$ mkdir -p ~/bin
+ana@vm:~$ curl -fsSL -o ~/bin/bazel https://github.com/bazelbuild/bazelisk/releases/download/v1.29.0/bazelisk-linux-amd64
+ana@vm:~$ chmod +x ~/bin/bazel
 ```
 
 Ubuntu's `~/.profile` puts `~/bin` on your `PATH` when the directory exists, so log out and in
@@ -28,7 +30,8 @@ Copy the sources from lesson 1 into a directory of their own, as lesson 2 did fo
 name the Bazel version the project builds with:
 
 ```
-TRANSCRIPT_PROJECT
+ana@vm:~$ mkdir ~/isbn-bazel && cp -r ~/isbn-check/src ~/isbn-bazel/
+ana@vm:~/isbn-bazel$ echo 9.3.0 > .bazelversion
 ```
 
 Three files go at the top of `~/isbn-bazel`, and two more beside the sources in the next section.
@@ -55,7 +58,14 @@ common --noshow_progress
 With the three files in place, ask Bazel what it is:
 
 ```
-TRANSCRIPT_VERSION
+ana@vm:~/isbn-bazel$ bazel version
+Bazelisk version: v1.29.0
+Starting local Bazel server (9.3.0) and connecting to it...
+Build label: 9.3.0
+Build target: @@//src/main/java/com/google/devtools/build/lib/bazel:BazelServer
+Build time: Wed Oct 07 14:46:24 2026 (1791384384)
+Build timestamp: 1791384384
+Build timestamp as int: 1791384384
 ```
 
 The first command in a new directory starts a **Bazel server**, a process that stays in the

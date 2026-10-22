@@ -22,7 +22,50 @@ and `deploy`, at the end:
 That figure is what scrolls past when you package the project. Each line between dashes is one
 goal running, in the form `plugin:version:goal (execution) @ project`:
 
-@@CAPTURE package@@
+```
+ana@vm:~/isbn-check$ mvn package
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< com.example:isbn-check >-----------------------
+[INFO] Building isbn-check 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:3.5.0:resources (default-resources) @ isbn-check ---
+[INFO] skip non existing resourceDirectory /home/ana/isbn-check/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.15.0:compile (default-compile) @ isbn-check ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- maven-resources-plugin:3.5.0:testResources (default-testResources) @ isbn-check ---
+[INFO] skip non existing resourceDirectory /home/ana/isbn-check/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.15.0:testCompile (default-testCompile) @ isbn-check ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 1 source file with javac [debug release 25] to target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:3.5.6:test (default-test) @ isbn-check ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.example.isbn.IsbnCheckTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.058 s -- in com.example.isbn.IsbnCheckTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- maven-jar-plugin:3.5.1:jar (default-jar) @ isbn-check ---
+[INFO] Building jar: /home/ana/isbn-check/target/isbn-check-1.0.0.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.020 s
+[INFO] Finished at: 2026-10-22T19:33:40-03:00
+[INFO] ------------------------------------------------------------------------
+```
 
 Six goals ran, in the order of the figure, and the name in brackets, `default-compile` and so on,
 is the **execution**: the binding Maven made on its own because the packaging is `jar`. The
@@ -30,24 +73,41 @@ compiler had nothing to do for the program, which the first build had compiled a
 changed since, and it compiled the test class, which was new. Surefire found that class under
 `src/test/java`, ran its 3 tests and summed them up. Had one failed, the build would have ended
 there with `BUILD FAILURE`, and the jar plugin would never have run: **a phase runs only if every
-phase before it passed**, so a jar `mvn package` leaves in `target/` is one whose tests passed. Its name is the
-artifact id and the version, `isbn-check-1.0.0.jar`.
+phase before it passed**, so a jar `mvn package` leaves in `target/` is one whose tests passed.
+Its name is the artifact id and the version, `isbn-check-1.0.0.jar`.
 
 ## The phases you will type
 
-**`mvn test`** stops after the tests, which is the quick question "does it still work", and
+`mvn test` stops after the tests, which is the quick question "does it still work", and
 `-q` (quiet) prints only warnings and errors, so a passing run prints nothing at all:
 
-@@CAPTURE test@@
+```
+ana@vm:~/isbn-check$ mvn -q test
+```
 
-**`mvn package`** is the one above. **`mvn verify`** runs everything `package` does and then the
+`mvn package` is the one above. `mvn verify` runs everything `package` does and then the
 phase where integration tests and checks belong; this project has none, and lesson 19 adds them.
-**`mvn install`** copies the project's jar and pom into your local repository, where another
-project on the same machine can name it as a dependency like any library from outside:
+`mvn install` copies the project's jar and pom into your local repository, where another project
+on the same machine can name it as a dependency like any library from outside. Its output is the
+build above plus two lines, so `tail -n 8` keeps only the end:
 
-@@CAPTURE install@@
+```
+ana@vm:~/isbn-check$ mvn install | tail -n 8
+[INFO] Installing /home/ana/isbn-check/pom.xml to /home/ana/.m2/repository/com/example/isbn-check/1.0.0/isbn-check-1.0.0.pom
+[INFO] Installing /home/ana/isbn-check/target/isbn-check-1.0.0.jar to /home/ana/.m2/repository/com/example/isbn-check/1.0.0/isbn-check-1.0.0.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.376 s
+[INFO] Finished at: 2026-10-22T19:33:44-03:00
+[INFO] ------------------------------------------------------------------------
+ana@vm:~/isbn-check$ ls ~/.m2/repository/com/example/isbn-check/1.0.0
+_remote.repositories
+isbn-check-1.0.0.jar
+isbn-check-1.0.0.pom
+```
 
-**`mvn deploy`** would upload them to a shared repository, which needs a server and credentials
+`mvn deploy` would upload them to a shared repository, which needs a server and credentials
 this course does not set up.
 
 ## Another lifecycle, and flags worth knowing

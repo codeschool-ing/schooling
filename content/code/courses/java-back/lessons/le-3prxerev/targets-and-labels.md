@@ -6,8 +6,8 @@ version: 1
 Maven has one build per project, run phase by phase. Bazel has a **graph of targets**, and a BUILD
 file is where targets are declared. A directory holding a `BUILD.bazel` is a **package**, and a
 target is named by a **label**: `//`, the package's path from the top of the module, a colon and
-the target's name. The library below is `//src/main/java/com/example/isbn:isbn`. Every command
-takes labels, and `//...` means every target in the module.
+the target's name. The library below is `//src/main/java/com/example/isbn:isbn`. Build, run, test
+and query commands take labels, and `//...` means every target in the module.
 
 Save this as `src/main/java/com/example/isbn/BUILD.bazel`, beside `IsbnCheck.java`:
 
@@ -49,7 +49,15 @@ Teams that write many Jupiter tests use a rule set that packages this, `contrib_
 ## Build, run, test
 
 ```
-TRANSCRIPT_BUILD
+ana@vm:~/isbn-bazel$ bazel build //src/main/java/com/example/isbn:isbn-check
+INFO: Analyzed target //src/main/java/com/example/isbn:isbn-check (0 packages loaded, 0 targets configured).
+INFO: Found 1 target...
+Target //src/main/java/com/example/isbn:isbn-check up-to-date:
+  bazel-bin/src/main/java/com/example/isbn/isbn-check
+  bazel-bin/src/main/java/com/example/isbn/isbn-check.jar
+INFO: Elapsed time: 11.452s, Critical Path: 5.68s
+INFO: 11 processes: 6 internal, 3 linux-sandbox, 2 worker.
+INFO: Build completed successfully, 11 total actions
 ```
 
 **`linux-sandbox`** is the hermetic rule at work: three actions ran in a sandbox holding only their
@@ -58,14 +66,35 @@ server. The outputs are not in a `target/` directory but under `bazel-bin`, one 
 links Bazel puts in the project into its cache:
 
 ```
-TRANSCRIPT_LS
+ana@vm:~/isbn-bazel$ ls -A
+.bazelrc
+.bazelversion
+MODULE.bazel
+MODULE.bazel.lock
+bazel-bin
+bazel-isbn-bazel
+bazel-out
+bazel-testlogs
+src
 ```
 
 `MODULE.bazel.lock` is the **lockfile**: what the module's dependencies resolved to, down to each
 file's hash. It belongs in version control beside `MODULE.bazel`, and the `bazel-*` links do not.
 
 ```
-TRANSCRIPT_RUN
+ana@vm:~/isbn-bazel$ bazel run //src/main/java/com/example/isbn:isbn-check -- 978-0-306-40615-7 0-306-40615-2 978-0-306-40615-8
+INFO: Analyzed target //src/main/java/com/example/isbn:isbn-check (0 packages loaded, 0 targets configured).
+INFO: Found 1 target...
+Target //src/main/java/com/example/isbn:isbn-check up-to-date:
+  bazel-bin/src/main/java/com/example/isbn/isbn-check
+  bazel-bin/src/main/java/com/example/isbn/isbn-check.jar
+INFO: Elapsed time: 0.549s, Critical Path: 0.02s
+INFO: 1 process: 1 internal.
+INFO: Build completed successfully, 1 total action
+INFO: Running command line: bazel-bin/src/main/java/com/example/isbn/isbn-check <args omitted>
+978-0-306-40615-7: valid, ISBN-13 9780306406157
+0-306-40615-2: valid, ISBN-13 9780306406157
+978-0-306-40615-8: invalid
 ```
 
 `bazel run` builds what is out of date first, so it works on a clean checkout too, and everything
@@ -73,12 +102,50 @@ after `--` goes to the program. Then the tests, with `--test_output=all` to see 
 printed rather than only the verdict:
 
 ```
-TRANSCRIPT_TEST
+ana@vm:~/isbn-bazel$ bazel test //... --test_output=all
+INFO: Analyzed 3 targets (3 packages loaded, 25 targets configured).
+INFO: From Testing //src/test/java/com/example/isbn:IsbnCheckTest:
+==================== Test output for //src/test/java/com/example/isbn:IsbnCheckTest:
+
+Test run finished after 117 ms
+[         4 containers found      ]
+[         0 containers skipped    ]
+[         4 containers started    ]
+[         0 containers aborted    ]
+[         4 containers successful ]
+[         0 containers failed     ]
+[         3 tests found           ]
+[         0 tests skipped         ]
+[         3 tests started         ]
+[         0 tests aborted         ]
+[         3 tests successful      ]
+[         0 tests failed          ]
+
+================================================================================
+INFO: Found 2 targets and 1 test target...
+INFO: Elapsed time: 2.121s, Critical Path: 1.53s
+INFO: 10 processes: 6 internal, 4 linux-sandbox, 1 worker.
+INFO: Build completed successfully, 10 total actions
+//src/test/java/com/example/isbn:IsbnCheckTest                           PASSED in 1.0s
+
+Executed 1 out of 1 test: 1 test passes.
+ana@vm:~/isbn-bazel$ bazel test //...
+INFO: Analyzed 3 targets (0 packages loaded, 0 targets configured).
+INFO: Found 2 targets and 1 test target...
+INFO: Elapsed time: 0.536s, Critical Path: 0.01s
+INFO: 1 process: 1 action cache hit, 1 internal.
+INFO: Build completed successfully, 1 total action
+//src/test/java/com/example/isbn:IsbnCheckTest                  (cached) PASSED in 1.0s
+
+Executed 0 out of 1 test: 1 test passes.
 ```
+
+In the launcher's table the three tests are `IsbnCheckTest`'s three methods, and the four
+containers are the class and the three test engines the console jar carries.
 
 The second `bazel test` ran nothing. **`(cached) PASSED`** is a test result taken from the cache,
 because none of the test's inputs changed since it last passed: not its source, not the library,
-not a jar, not a flag. With a remote cache that holds across machines, so a CI job reruns only the
+not a jar, not a flag. A remote cache makes that hold across machines, so a CI job reruns only the
 tests a commit could have broken. Maven runs every test on every `mvn test`.
 
 ## The graph, asked directly
@@ -87,7 +154,29 @@ Bazel will show you the graph it builds from. `cquery` lists what a target depen
 leaving out the toolchain's own implicit dependencies:
 
 ```
-TRANSCRIPT_GRAPH
+ana@vm:~/isbn-bazel$ bazel cquery --noimplicit_deps 'deps(//src/test/java/com/example/isbn:IsbnCheckTest)'
+INFO: Analyzed target //src/test/java/com/example/isbn:IsbnCheckTest (0 packages loaded, 0 targets configured).
+INFO: Found 1 target...
+//src/test/java/com/example/isbn:IsbnCheckTest (be37ecb)
+@junit_console//jar:jar (6258d0d)
+//src/test/java/com/example/isbn:IsbnCheckTest.java (null)
+//src/main/java/com/example/isbn:isbn (6258d0d)
+@bazel_tools//tools/jdk:launcher_flag_alias (6258d0d)
+@commons_logging//jar:jar (6258d0d)
+@commons_collections//jar:jar (6258d0d)
+@junit_console//jar:downloaded.jar (null)
+@commons_beanutils//jar:jar (6258d0d)
+//src/main/java/com/example/isbn:IsbnCheck.java (null)
+@commons_digester//jar:jar (6258d0d)
+@commons_validator//jar:jar (6258d0d)
+@commons_logging//jar:downloaded.jar (null)
+@commons_collections//jar:downloaded.jar (null)
+@commons_digester//jar:downloaded.jar (null)
+@commons_validator//jar:downloaded.jar (null)
+@commons_beanutils//jar:downloaded.jar (null)
+INFO: Elapsed time: 0.320s, Critical Path: 0.00s
+INFO: 0 processes.
+INFO: Build completed successfully, 0 total actions
 ```
 
 Every file is a target too: the test's source, the library's, and `downloaded.jar` in each
@@ -101,7 +190,20 @@ reach.
 Delete the two `load` lines from the library's BUILD file and build again:
 
 ```
-TRANSCRIPT_NOLOAD
+ana@vm:~/isbn-bazel$ bazel build //...
+ERROR: /home/ana/isbn-bazel/src/main/java/com/example/isbn/BUILD.bazel:2:13: //src/main/java/com/example/isbn:isbn: no such attribute 'srcs' in 'java_library' rule
+ERROR: /home/ana/isbn-bazel/src/main/java/com/example/isbn/BUILD.bazel:2:13: //src/main/java/com/example/isbn:isbn: no such attribute 'deps' in 'java_library' rule
+ERROR: /home/ana/isbn-bazel/src/main/java/com/example/isbn/BUILD.bazel:2:13: //src/main/java/com/example/isbn:isbn: no such attribute 'runtime_deps' in 'java_library' rule
+ERROR: /home/ana/isbn-bazel/src/main/java/com/example/isbn/BUILD.bazel:15:12: //src/main/java/com/example/isbn:isbn-check: no such attribute 'main_class' in 'java_binary' rule
+ERROR: /home/ana/isbn-bazel/src/main/java/com/example/isbn/BUILD.bazel:15:12: //src/main/java/com/example/isbn:isbn-check: no such attribute 'runtime_deps' in 'java_binary' rule
+ERROR: package contains errors: src/main/java/com/example/isbn
+ERROR: package contains errors: src/main/java/com/example/isbn: //src/main/java/com/example/isbn:isbn: no such attribute 'srcs' in 'java_library' rule
+WARNING: Target pattern parsing failed.
+ERROR: Skipping '//...': Error evaluating '//...': error loading package 'src/main/java/com/example/isbn': Package 'src/main/java/com/example/isbn' contains errors
+ERROR: Error evaluating '//...': error loading package 'src/main/java/com/example/isbn': Package 'src/main/java/com/example/isbn' contains errors
+INFO: Elapsed time: 0.213s
+INFO: 0 processes.
+ERROR: Build did NOT complete successfully
 ```
 
 The message does not say *load*. Without the `load`, `java_library` does not mean the rule from
@@ -111,5 +213,11 @@ upgrade, a missing `load` from `rules_java` is the first thing to look for. Put 
 and the module builds again:
 
 ```
-TRANSCRIPT_RESTORED
+ana@vm:~/isbn-bazel$ bazel build //... && echo restored
+INFO: Analyzed 3 targets (1 packages loaded, 4 targets configured).
+INFO: Found 3 targets...
+INFO: Elapsed time: 0.582s, Critical Path: 0.00s
+INFO: 1 process: 14 action cache hit, 1 internal.
+INFO: Build completed successfully, 1 total action
+restored
 ```

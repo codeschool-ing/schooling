@@ -1,0 +1,789 @@
+[
+  {
+    "id": "ex-d80t3gxn",
+    "version": 1,
+    "section": "your-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the course recommend an Ubuntu 24.04 virtual machine even to somebody whose Mac can install a JDK and Maven directly?",
+    "hint": "What does a difference between your screen and the page then tell you?",
+    "choices": [
+      {
+        "text": "Maven does not run on macOS",
+        "correct": false,
+        "why": "It does; maven.apache.org and Homebrew both install it there. The section names that path as a real option."
+      },
+      {
+        "text": "It is the system the transcripts were recorded on",
+        "correct": true,
+        "why": "Right. When your screen and a transcript disagree, the difference is then in what you typed, not in the Maven or the system underneath."
+      },
+      {
+        "text": "A build inside a virtual machine runs faster than on the computer that hosts it",
+        "correct": false,
+        "why": "A simulated computer shares the real one's processors and memory; it is never the faster of the two."
+      },
+      {
+        "text": "Java 25 is only published for Linux",
+        "correct": false,
+        "why": "OpenJDK builds exist for macOS and Windows too; Eclipse Temurin is one the section names."
+      }
+    ]
+  },
+  {
+    "id": "ex-c7dwpmjw",
+    "version": 1,
+    "section": "your-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The JDK and Maven take about 400 MB. Why does the course still ask for a virtual machine with 4 GB of memory and a 30 GB disk?",
+    "choices": [
+      {
+        "text": "Maven keeps every library it downloads in memory between builds",
+        "correct": false,
+        "why": "Maven is a new process on every run and keeps nothing in memory; the libraries live on disk, in ~/.m2."
+      },
+      {
+        "text": "Ubuntu Server alone needs 4 GB to boot",
+        "correct": false,
+        "why": "The server edition is the light one; the memory is for what this course runs on it."
+      },
+      {
+        "text": "Later lessons run an app, a database and Docker at once",
+        "correct": true,
+        "why": "Right. Lesson 9 adds the database and lesson 19 Docker with its images, and a test run starts all of them at once."
+      },
+      {
+        "text": "The hypervisor reserves half of the machine for itself",
+        "correct": false,
+        "why": "A hypervisor needs some memory of its own on the host, outside the virtual machine; it does not take a share of the 4 GB you give the guest."
+      }
+    ]
+  },
+  {
+    "id": "ex-bam9f94v",
+    "version": 1,
+    "section": "the-chain-so-far",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is `~/.mavenrc`?",
+    "choices": [
+      {
+        "text": "Options mvn reads before it starts Java",
+        "correct": true,
+        "why": "Right. That is why one line there reaches every Maven run and nothing else."
+      },
+      {
+        "text": "The project file where dependencies are declared",
+        "correct": false,
+        "why": "That is pom.xml, inside each project. ~/.mavenrc is in your home and belongs to no project."
+      },
+      {
+        "text": "The directory where downloaded libraries are kept",
+        "correct": false,
+        "why": "That is ~/.m2/repository, a directory. ~/.mavenrc is a one-line file."
+      },
+      {
+        "text": "A setting that every java command on the machine reads",
+        "correct": false,
+        "why": "Only the mvn script reads it. A program started with java never sees it."
+      }
+    ]
+  },
+  {
+    "id": "ex-wd9vx1ks",
+    "version": 1,
+    "section": "the-chain-so-far",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The four `sun.misc.Unsafe` warnings appear before the project has a single class. Whose code triggers them?",
+    "choices": [
+      {
+        "text": "Commons Validator, the project's dependency",
+        "correct": false,
+        "why": "They appear with no project at all, on mvn -v, before any dependency is read."
+      },
+      {
+        "text": "The JDK's own launcher",
+        "correct": false,
+        "why": "The JDK prints the warning, but it names the caller, and the caller is a library inside Maven."
+      },
+      {
+        "text": "Guava, inside Maven itself",
+        "correct": true,
+        "why": "Right. It is Maven's code calling a part of the JDK that Java 25 is retiring, which is why a line for Maven alone is the fix."
+      },
+      {
+        "text": "Ubuntu's packaging scripts",
+        "correct": false,
+        "why": "apt ran once at install time; these lines come from the running JVM every time mvn starts."
+      }
+    ]
+  },
+  {
+    "id": "ex-ykh4b1en",
+    "version": 1,
+    "section": "checking-the-tools",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`java -version` says 25, and `mvn -v` says `Java version: 21`. Which JDK will compile the project when you run `mvn package`?",
+    "hint": "Maven decides before your pom is read.",
+    "choices": [
+      {
+        "text": "25, because it is the one on the path",
+        "correct": false,
+        "why": "The path is only Maven's second choice; JAVA_HOME, when set, comes first."
+      },
+      {
+        "text": "21, the one mvn -v reports",
+        "correct": true,
+        "why": "Right. mvn -v says what Maven will start, which is why it is the line to read when two JDKs are installed."
+      },
+      {
+        "text": "Whichever is newer, since Maven picks the newest JDK installed",
+        "correct": false,
+        "why": "Maven does not search for JDKs; it takes JAVA_HOME or the java on the path, whatever its version."
+      },
+      {
+        "text": "The one named in maven.compiler.release",
+        "correct": false,
+        "why": "That property tells the compiler which Java to produce code for; it does not choose which JDK runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-drztzg7w",
+    "version": 1,
+    "section": "checking-the-tools",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does `mvn -v` tell you? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "The JDK that will run the build",
+        "correct": true,
+        "why": "Right: the Java version and runtime lines."
+      },
+      {
+        "text": "Where Maven itself is installed",
+        "correct": true,
+        "why": "Right: Maven home, /usr/share/maven for Ubuntu's package."
+      },
+      {
+        "text": "The plugin versions your project's build will use",
+        "correct": false,
+        "why": "mvn -v reads no pom; plugin versions only appear when a project is built."
+      },
+      {
+        "text": "The encoding the JDK would read files with by default",
+        "correct": true,
+        "why": "Right: platform encoding, the default a pom overrides with project.build.sourceEncoding."
+      },
+      {
+        "text": "Whether javac is installed",
+        "correct": false,
+        "why": "mvn -v starts the java launcher only; javac -version is the command that answers that."
+      }
+    ]
+  },
+  {
+    "id": "ex-aczwr4dw",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a machine where `java -version` works, `javac -version` answers `command not found`. What was installed?",
+    "choices": [
+      {
+        "text": "Nothing: Java is missing",
+        "correct": false,
+        "why": "java answered, so a Java is there. What is missing is narrower."
+      },
+      {
+        "text": "Maven without its compiler plugin",
+        "correct": false,
+        "why": "javac is a command of the JDK, not of Maven; Maven's plugins call it, they do not provide it."
+      },
+      {
+        "text": "A JDK older than 25",
+        "correct": false,
+        "why": "An older JDK still has javac, and javac -version would print its version."
+      },
+      {
+        "text": "A Java runtime package instead of openjdk-25-jdk",
+        "correct": true,
+        "why": "Right. A runtime runs programs and has no compiler; the JDK package adds javac."
+      }
+    ]
+  },
+  {
+    "id": "ex-g0y2qssv",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Right after adding the line to `~/.mavenrc`, `mvn -v` prints `Unrecognized option: --sun-misc-unsafe-memory-access=allow` and nothing else from Maven. What is the first thing to check?",
+    "choices": [
+      {
+        "text": "Whether the line was typed with the wrong quotes",
+        "correct": false,
+        "why": "A wrong quote breaks the shell script that reads the file, with a shell error; this message comes from a JVM that read the flag correctly and did not know it."
+      },
+      {
+        "text": "Which JDK mvn starts, through JAVA_HOME",
+        "correct": true,
+        "why": "Right. JDK 21 does not know the flag and refuses to start; echo $JAVA_HOME and update-java-alternatives -l say which JDK it is."
+      },
+      {
+        "text": "Whether Maven 3.8.7 is too old for the flag",
+        "correct": false,
+        "why": "Maven only passes the flag on; the program refusing it is the java launcher."
+      },
+      {
+        "text": "Whether the project's pom asks for Java 25",
+        "correct": false,
+        "why": "mvn -v reads no pom, and the JVM failed before any project was looked at."
+      }
+    ]
+  },
+  {
+    "id": "ex-7g3hw62w",
+    "version": 1,
+    "section": "a-project-by-hand",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With no configuration at all, Maven compiles the JUnit classes of a project from `src/___/java`.",
+    "blanks": [
+      {
+        "accept": [
+          "test"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-a2hxfjds",
+    "version": 1,
+    "section": "a-project-by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two projects in different companies both declare `groupId` `com.example`, `artifactId` `isbn-check` and `version` `1.0.0`. What follows?",
+    "choices": [
+      {
+        "text": "Nothing: Maven tells them apart by the directory they are built in",
+        "correct": false,
+        "why": "A repository has no idea where a jar was built; it files it by the three coordinates and nothing else."
+      },
+      {
+        "text": "Maven refuses to build the second one",
+        "correct": false,
+        "why": "Maven builds either happily. The clash only shows when both reach the same repository."
+      },
+      {
+        "text": "One overwrites the other in a repository",
+        "correct": true,
+        "why": "Right. The coordinates are the address, which is why a real group id is a domain its owner controls."
+      },
+      {
+        "text": "The packaging element decides which one wins",
+        "correct": false,
+        "why": "packaging says what the build produces; it is not part of what names the project."
+      }
+    ]
+  },
+  {
+    "id": "ex-k1vxk7mj",
+    "version": 1,
+    "section": "a-project-by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `<maven.compiler.release>25</maven.compiler.release>` change?",
+    "choices": [
+      {
+        "text": "javac targets and checks against Java 25",
+        "correct": true,
+        "why": "Right. It is a setting for the compiler plugin, written as a property."
+      },
+      {
+        "text": "Maven downloads and uses a JDK 25 if the machine has another",
+        "correct": false,
+        "why": "Maven 3.8.7 downloads no JDK; it compiles with the one it was started on, and that one has to know release 25."
+      },
+      {
+        "text": "The version of the project itself",
+        "correct": false,
+        "why": "That is the version element, 1.0.0. The property is about Java, not about your project."
+      },
+      {
+        "text": "Which version of maven-compiler-plugin runs",
+        "correct": false,
+        "why": "The plugin version is pinned in pluginManagement; this property is read by whichever version runs, if it knows it."
+      }
+    ]
+  },
+  {
+    "id": "ex-wfmsdbhs",
+    "version": 1,
+    "section": "dependencies",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The pom names two dependencies, and `dependency:tree` lists many more. Where did the others come from?",
+    "choices": [
+      {
+        "text": "Maven adds a standard set to every project",
+        "correct": false,
+        "why": "A project with no dependencies has an empty tree; nothing is added by default."
+      },
+      {
+        "text": "From the poms of the two dependencies, and of theirs in turn",
+        "correct": true,
+        "why": "Right. Each library's pom declares what it needs, and Maven follows those all the way down."
+      },
+      {
+        "text": "From the plugins that ran during the build",
+        "correct": false,
+        "why": "Plugins have dependencies of their own, but those never appear in your project's tree."
+      },
+      {
+        "text": "From the imports in the Java sources",
+        "correct": false,
+        "why": "Maven never reads your imports; a library the code imports and the pom omits fails to compile."
+      }
+    ]
+  },
+  {
+    "id": "ex-qzjvge0c",
+    "version": 1,
+    "section": "dependencies",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each scope to where its dependency is visible.",
+    "pairs": [
+      {
+        "left": "compile",
+        "right": "the program, its tests, and when it runs"
+      },
+      {
+        "left": "test",
+        "right": "the tests only"
+      },
+      {
+        "left": "provided",
+        "right": "compiling, but supplied by where it runs"
+      },
+      {
+        "left": "runtime",
+        "right": "running, but never compiling the program"
+      }
+    ],
+    "right_distractors": [
+      "only the build plugins"
+    ]
+  },
+  {
+    "id": "ex-wxqpg12x",
+    "version": 1,
+    "section": "dependencies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Your pom declares library A, which needs X 2.0. It also declares B, which needs C, which needs X 3.0. Nothing else mentions X. Which X does the build use?",
+    "hint": "Count the steps from your pom to each X.",
+    "choices": [
+      {
+        "text": "X 2.0",
+        "correct": true,
+        "why": "Right. It is two steps from your project and 3.0 is three; nearest wins, whichever is newer."
+      },
+      {
+        "text": "X 3.0, because the newest version wins",
+        "correct": false,
+        "why": "That is the rule people expect and not Maven's. Maven chooses by distance in the graph."
+      },
+      {
+        "text": "Both, one for A and one for C",
+        "correct": false,
+        "why": "A Java classpath holds one copy of a class; Maven puts exactly one version of X on it."
+      },
+      {
+        "text": "Neither: the build stops with a conflict error",
+        "correct": false,
+        "why": "Maven resolves the conflict silently; only -Dverbose on the tree shows the loser."
+      }
+    ]
+  },
+  {
+    "id": "ex-1957qdg0",
+    "version": 1,
+    "section": "dependencies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A transitive library arrives at a version with a known bug, and you need a newer one. What is the direct way to get it?",
+    "choices": [
+      {
+        "text": "Delete its directory from ~/.m2/repository",
+        "correct": false,
+        "why": "Maven downloads the same version again on the next build; the pom decides which version, not the cache."
+      },
+      {
+        "text": "Add an exclusion for it to the dependency that brings it",
+        "correct": false,
+        "why": "An exclusion removes it, and then no version is there at all for the code that needs it."
+      },
+      {
+        "text": "Declare it in your own pom at the version you want",
+        "correct": true,
+        "why": "Right. Your own declaration is the nearest there is, so it wins over every transitive one."
+      },
+      {
+        "text": "Run mvn with -U to update every dependency",
+        "correct": false,
+        "why": "-U refreshes snapshot and metadata checks; it never changes a version the graph has already chosen."
+      }
+    ]
+  },
+  {
+    "id": "ex-00pxc32c",
+    "version": 1,
+    "section": "the-lifecycle",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put these phases of the default lifecycle in the order `mvn install` runs them.",
+    "items": [
+      "compile",
+      "test-compile",
+      "test",
+      "package",
+      "install"
+    ]
+  },
+  {
+    "id": "ex-0ek8ee5e",
+    "version": 1,
+    "section": "the-lifecycle",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `mvn package` run?",
+    "choices": [
+      {
+        "text": "The jar plugin, and nothing else",
+        "correct": false,
+        "why": "Naming a phase never runs it alone; the jar would have no classes in it."
+      },
+      {
+        "text": "Every phase up to package, with their goals",
+        "correct": true,
+        "why": "Right. Compiling and testing come along because they are earlier phases."
+      },
+      {
+        "text": "A script stored in the pom under the name package",
+        "correct": false,
+        "why": "A pom holds no scripts; the phases and their order are Maven's, the same in every project."
+      },
+      {
+        "text": "Every phase including install and deploy",
+        "correct": false,
+        "why": "The phases after the one you name do not run; package stops at package."
+      }
+    ]
+  },
+  {
+    "id": "ex-h9eamhdc",
+    "version": 1,
+    "section": "the-lifecycle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You typed `mvn dependency:tree`. Which phases of the default lifecycle ran?",
+    "choices": [
+      {
+        "text": "All of them up to compile, because the tree needs compiled classes",
+        "correct": false,
+        "why": "The tree is read from poms, not from classes, and nothing was compiled."
+      },
+      {
+        "text": "validate only, the first phase",
+        "correct": false,
+        "why": "No phase was named, so not even validate ran."
+      },
+      {
+        "text": "None: a goal named directly runs alone",
+        "correct": true,
+        "why": "Right. plugin:goal runs that one goal and no phase at all."
+      },
+      {
+        "text": "The phase the dependency plugin is bound to",
+        "correct": false,
+        "why": "It is bound to none, which is why naming its goal is the only way it runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-9t091sh1",
+    "version": 1,
+    "section": "the-lifecycle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Another project on the same machine wants to use `com.example:isbn-check:1.0.0` as a dependency. Which command makes that possible?",
+    "choices": [
+      {
+        "text": "mvn package, because it builds the jar",
+        "correct": false,
+        "why": "The jar it builds stays in target/, where no other project looks."
+      },
+      {
+        "text": "mvn deploy",
+        "correct": false,
+        "why": "deploy uploads to a shared remote repository, which needs a server this course does not set up; it is more than the question asks."
+      },
+      {
+        "text": "mvn verify",
+        "correct": false,
+        "why": "verify ends where package ends, plus checks; nothing leaves target/."
+      },
+      {
+        "text": "mvn install",
+        "correct": true,
+        "why": "Right. It copies the jar and its pom into ~/.m2/repository, where every build on the machine resolves dependencies."
+      }
+    ]
+  },
+  {
+    "id": "ex-d3e6c1qt",
+    "version": 1,
+    "section": "the-lifecycle",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the `mvn package` run of this lesson, how many plugin goals ran, counting each `---` line once?",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "goals"
+  },
+  {
+    "id": "ex-hdrac266",
+    "version": 1,
+    "section": "plugins-and-repositories",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the `<build>` element deleted, `mvn clean package` failed with `Source option 5 is no longer supported`, although the pom still says `<maven.compiler.release>25</maven.compiler.release>`. Why?",
+    "choices": [
+      {
+        "text": "Deleting <build> also deleted the properties",
+        "correct": false,
+        "why": "The sed range ran from <build> to </build>; the properties block sits above it and was untouched."
+      },
+      {
+        "text": "The default compiler plugin 3.1 ignores it",
+        "correct": true,
+        "why": "Right. 3.1 is older than the release setting and fell back on its own default of Java 5."
+      },
+      {
+        "text": "Without <build> Maven runs the build with the oldest JDK installed",
+        "correct": false,
+        "why": "The JDK is chosen before the pom is read, from JAVA_HOME or the path; it was still 25."
+      },
+      {
+        "text": "JDK 25 cannot compile code that has no build section",
+        "correct": false,
+        "why": "javac knows nothing of poms; it was handed -source 5 by the old plugin, and that is what it refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-6thbc315",
+    "version": 1,
+    "section": "plugins-and-repositories",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A plugin is declared under `<pluginManagement>` and named nowhere else in the pom. What does that declaration do?",
+    "choices": [
+      {
+        "text": "It runs the plugin's default goal in every build",
+        "correct": false,
+        "why": "pluginManagement runs nothing; a goal runs because a phase binds it or because you name it."
+      },
+      {
+        "text": "Nothing, until the plugin is also listed under <plugins>",
+        "correct": false,
+        "why": "The dependency plugin was listed only there and still answered dependency:tree at 3.11.0."
+      },
+      {
+        "text": "It fixes the version whenever the plugin runs",
+        "correct": true,
+        "why": "Right. That is why one block pins both the lifecycle plugins and the dependency plugin."
+      },
+      {
+        "text": "It downloads the plugin into the project's target directory",
+        "correct": false,
+        "why": "Plugins go to ~/.m2/repository like any other artifact, and only when a build needs them."
+      }
+    ]
+  },
+  {
+    "id": "ex-dx6wmpnm",
+    "version": 1,
+    "section": "plugins-and-repositories",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`java -cp target/isbn-check-1.0.0.jar com.example.isbn.IsbnCheck ...` ends in `NoClassDefFoundError` for `ISBNValidator`, although `mvn package` passed. Why?",
+    "choices": [
+      {
+        "text": "The compile scope is only for compiling, not for running",
+        "correct": false,
+        "why": "compile scope is needed when the program runs too; the classpath simply did not name the jar."
+      },
+      {
+        "text": "mvn package left the library out because the tests did not need it",
+        "correct": false,
+        "why": "The tests did use it, through the program. Maven never puts dependencies in this jar at all."
+      },
+      {
+        "text": "The jar holds only our own classes",
+        "correct": true,
+        "why": "Right. jar tf showed one class of ours; the library sits in ~/.m2 until the classpath names it."
+      },
+      {
+        "text": "The class was compiled for Java 25 and the JVM is older",
+        "correct": false,
+        "why": "An older JVM fails with UnsupportedClassVersionError, on our own class, before it looks for any library."
+      }
+    ]
+  },
+  {
+    "id": "ex-hzeyajxz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's build of the same project passes on Maven 3.9 and fails on your Maven 3.8.7 at the compiler. Their pom has no `<build>` element. What is the most likely cause?",
+    "choices": [
+      {
+        "text": "Your JDK is older than hers",
+        "correct": false,
+        "why": "Possible in general, but mvn -v would show it, and an older JDK fails with \"release version 25 not supported\", not at the plugin's choice of version."
+      },
+      {
+        "text": "Maven 3.8.7 cannot build Java 25 projects",
+        "correct": false,
+        "why": "It built this lesson's project once the plugins were pinned."
+      },
+      {
+        "text": "Each Maven picks its own unpinned compiler plugin",
+        "correct": true,
+        "why": "Right. Hers picks a newer one that reads maven.compiler.release; yours picks 3.1, which does not. A pin makes both build alike."
+      },
+      {
+        "text": "Her local repository holds a newer copy of Commons Validator",
+        "correct": false,
+        "why": "A dependency's version is the pom's, the same on both machines; the cache only holds what the pom named."
+      }
+    ]
+  },
+  {
+    "id": "ex-92fg2gjy",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these make a Maven build of this project mean the same on every machine? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "Every plugin the build uses has its version written in pluginManagement",
+        "correct": true,
+        "why": "Right. Otherwise each Maven installation picks its own, as the detour showed."
+      },
+      {
+        "text": "Every dependency in the pom has an exact version",
+        "correct": true,
+        "why": "Right. The coordinates then name one file in Central for everybody."
+      },
+      {
+        "text": "The pom names the source encoding instead of trusting the platform default",
+        "correct": true,
+        "why": "Right. A machine set to another encoding would otherwise read the same sources differently."
+      },
+      {
+        "text": "Everybody runs mvn clean before every build",
+        "correct": false,
+        "why": "clean empties target/; it does not change which versions of anything are used."
+      },
+      {
+        "text": "The project's jars are copied into the project directory",
+        "correct": false,
+        "why": "Maven keeps them in ~/.m2, and the coordinates already decide which ones; copying them only adds a second place to be wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-cwwy3nx6",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a new machine with an empty `~/.m2`, you run `mvn package` in this lesson's project. Put what happens in order.",
+    "items": [
+      "Maven reads pom.xml",
+      "missing plugins and dependencies are downloaded into ~/.m2",
+      "IsbnCheck.java is compiled into target/classes",
+      "surefire runs the three tests",
+      "target/isbn-check-1.0.0.jar is written"
+    ]
+  },
+  {
+    "id": "ex-4n2x9q4x",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the detour, a build log ends in `Tests run: 0` and `BUILD SUCCESS` for a project whose `src/test/java` holds three tests. What does that log establish?",
+    "choices": [
+      {
+        "text": "That the three tests pass",
+        "correct": false,
+        "why": "None of them ran, so the log says nothing about whether they pass."
+      },
+      {
+        "text": "Only that the code compiled and a jar was written",
+        "correct": true,
+        "why": "Right. The test phase ran, its plugin found nothing it could execute, and success is all a run of nothing can report."
+      },
+      {
+        "text": "That the tests were skipped on purpose with -DskipTests",
+        "correct": false,
+        "why": "Nobody passed that flag; a skipped run says \"Tests are skipped\" instead."
+      },
+      {
+        "text": "That the test classes failed to compile",
+        "correct": false,
+        "why": "A compile error stops the build with BUILD FAILURE before the test phase is reached."
+      }
+    ]
+  }
+]

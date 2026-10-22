@@ -8,7 +8,7 @@ how big the jar is, and how long the application takes to start. Both are worth 
 a wrong way to be read. This section takes them for `javalin-hello` and for the bookshop as lesson 7
 left it, on the same machine.
 
-Build the bookshop, and list the two jars:
+Build the bookshop, list the two jars, and count the libraries packed inside the bookshop's:
 
 ```
 ana@vm:~/bookshop$ mvn -B -q package
@@ -30,7 +30,7 @@ megabytes are rarely the problem; what those libraries do when the application s
 **Each framework prints its own startup time, and the two cannot be compared.** Javalin's
 `started in` and Spring's `Started BookshopApplication in` each start their stopwatch at a moment the
 framework chooses, and neither counts the JVM's own start before it; Spring adds `process running
-for`, which does. Comparing them is comparing two stopwatches started at different moments. So
+for`, which does. So
 measure from the outside, the way a user waiting on the first request would: from the moment
 `java -jar` is launched to the first answer. Save this as `~/first-answer.sh`:
 
@@ -87,7 +87,7 @@ run proves nothing.
 What the numbers do **not** say is as important:
 
 - **Nothing about speed once running.** Startup is paid once per process. A service that starts and
-  then answers for a week spends one of those seconds per week; how fast it answers each request is a
+  then answers for a week pays those seconds once that week; how fast it answers each request is a
   different measurement, and lesson 20 takes one with JMeter.
 - **Nothing about the bookshop of lesson 23.** This bookshop has no database, no security and no
   metrics, and each of those adds work at start; Javalin with the same features would also be bigger
@@ -101,5 +101,5 @@ functions, services that scale to zero, short-lived jobs. There, Quarkus or Micr
 Spring's conveniences and move the work out of the start, and Javalin removes it by giving the
 conveniences up. Everywhere else, which is most back-end services, the seconds are paid at deploy
 time, and Spring's ecosystem is what the rest of this course spends them on: data access from lesson 9,
-migrations, transactions, security, logging, documentation, testing and metrics, each one a starter
-that configures itself. From lesson 9 on, the course is back in `~/bookshop`.
+migrations, transactions, security, logging, documentation, testing and metrics, most of them a
+starter that configures itself. From lesson 9 on, the course is back in `~/bookshop`.

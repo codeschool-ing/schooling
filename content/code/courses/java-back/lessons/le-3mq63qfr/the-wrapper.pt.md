@@ -20,7 +20,7 @@ ana@vm:~/isbn-gradle$ ~/opt/gradle-9.8.1/bin/gradle wrapper --gradle-version 9.8
 Starting a Gradle Daemon (subsequent builds will be faster)
 > Task :wrapper
 
-BUILD SUCCESSFUL in 39s
+BUILD SUCCESSFUL in 16s
 1 actionable task: 1 executed
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.8.1/userguide/configuration_cache_enabling.html
 ana@vm:~/isbn-gradle$ find . -type f -not -path "./src/*" -not -path "./.gradle/*" | sort
@@ -33,7 +33,7 @@ ana@vm:~/isbn-gradle$ find . -type f -not -path "./src/*" -not -path "./.gradle/
 ./settings.gradle.kts
 ```
 
-Trinta e nove segundos para uma tarefa minúscula são, em boa parte, o Gradle iniciando o daemon que
+Dezesseis segundos para uma tarefa minúscula são, em boa parte, o Gradle iniciando o daemon que
 ele menciona e compilando os dois scripts Kotlin pela primeira vez; a última seção volta aos dois. A
 sugestão sobre o cache de configuração é retomada na seção sobre build incremental.
 
@@ -91,7 +91,7 @@ Groovy:        4.0.33
 Ant:           Apache Ant(TM) version 1.10.17 compiled on April 6 2026
 Launcher JVM:  25.0.4.1 (Ubuntu 25.0.4.1+1-1-24.04.4-Ubuntu)
 Daemon JVM:    /usr/lib/jvm/java-25-openjdk-amd64 (no Daemon JVM specified, using current Java home)
-OS:            Linux 6.18.44-fc-v139 amd64
+OS:            Linux 6.18.44-fc-v153 amd64
 
 ana@vm:~/isbn-gradle$ ls ~/.gradle/wrapper/dists/
 gradle-9.8.1-bin

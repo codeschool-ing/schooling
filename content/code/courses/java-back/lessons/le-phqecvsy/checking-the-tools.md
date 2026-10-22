@@ -7,14 +7,28 @@ Three commands say whether the machine is ready, and each prints more than a ver
 Read all of it once, because the lines that look like noise are the ones that explain a failure
 later.
 
-@@CAPTURE versions@@
+```
+ana@vm:~$ java -version
+openjdk version "25.0.4.1" 2026-08-18
+OpenJDK Runtime Environment (build 25.0.4.1+1-1-24.04.4-Ubuntu)
+OpenJDK 64-Bit Server VM (build 25.0.4.1+1-1-24.04.4-Ubuntu, mixed mode, sharing)
+ana@vm:~$ javac -version
+javac 25.0.4.1
+```
 
-`java -version` names the **runtime**: OpenJDK, the release @@JV@@, and the build Ubuntu packaged
+`java -version` names the **runtime**: OpenJDK, the release 25.0.4.1, and the build Ubuntu packaged
 (`24.04` in the build string is the Ubuntu release it was built for). `javac -version` names the
 **compiler**, and it matters separately: a machine with only a Java runtime installed answers the
 first command and not the second, and Maven needs both.
 
-@@CAPTURE mvn-v@@
+```
+ana@vm:~$ mvn -v
+Apache Maven 3.8.7
+Maven home: /usr/share/maven
+Java version: 25.0.4.1, vendor: Ubuntu, runtime: /usr/lib/jvm/java-25-openjdk-amd64
+Default locale: en, platform encoding: UTF-8
+OS name: "linux", version: "6.18.44-fc-v153", arch: "amd64", family: "unix"
+```
 
 `mvn -v` is the one to read line by line, because it says **which Java Maven will actually use**,
 and that is not always the one `java -version` reported:

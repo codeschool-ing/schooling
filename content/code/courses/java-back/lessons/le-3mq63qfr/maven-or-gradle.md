@@ -30,7 +30,7 @@ compiled build script and a warm JVM:
 ```
 ana@vm:~/isbn-gradle$ ./gradlew --status
    PID STATUS   INFO
-  8873 IDLE     9.8.1
+ 25061 IDLE     9.8.1
 
 Only Daemons for the current Gradle version are displayed. For more on this, please refer to https://docs.gradle.org/9.8.1/userguide/gradle_daemon.html#sec:status in the Gradle documentation.
 ana@vm:~/isbn-gradle$ ./gradlew --stop

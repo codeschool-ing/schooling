@@ -16,7 +16,7 @@ Gradle publishes every release at `services.gradle.org/distributions`. This less
 ```
 ana@vm:~$ curl -sLO https://services.gradle.org/distributions/gradle-9.8.1-bin.zip
 ana@vm:~$ ls -l gradle-9.8.1-bin.zip
--rw-r--r-- 1 ana ana 151620101 Oct 16 20:23 gradle-9.8.1-bin.zip
+-rw-r--r-- 1 ana ana 151620101 Oct 22 19:33 gradle-9.8.1-bin.zip
 ```
 
 `-L` follows redirects, which matters here: the address answers with a redirect to GitHub, where
@@ -86,7 +86,7 @@ Groovy:        4.0.33
 Ant:           Apache Ant(TM) version 1.10.17 compiled on April 6 2026
 Launcher JVM:  25.0.4.1 (Ubuntu 25.0.4.1+1-1-24.04.4-Ubuntu)
 Daemon JVM:    /usr/lib/jvm/java-25-openjdk-amd64 (no Daemon JVM specified, using current Java home)
-OS:            Linux 6.18.44-fc-v139 amd64
+OS:            Linux 6.18.44-fc-v153 amd64
 
 ana@vm:~$ command -v gradle || echo "not on PATH"
 not on PATH

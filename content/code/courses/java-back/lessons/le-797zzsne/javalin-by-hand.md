@@ -179,10 +179,10 @@ To use a different object mapper, visit https://javalin.io/documentation#configu
 ```
 
 `ctx.json` needs something that turns a Java object into JSON, and Javalin does not bring one. **Its
-default mapper uses Jackson 2 if Jackson 2 is on the classpath**, there was none, and it said so in the
+default mapper uses Jackson 2 if Jackson 2 is on the classpath**; there was none, and it said so in the
 log and in the body of the 500. The bookshop never met this, because `spring-boot-starter-webmvc`
-brought Jackson along and lesson 4's autoconfiguration set it up. A library leaves the choice to you,
-and so it also leaves you the moment when nothing was chosen. Notice when it surfaced, too: at the
+brought Jackson along and lesson 4's autoconfiguration set it up. With a library, choosing the JSON mapper
+is your job, and forgetting it is a 500. Notice when it surfaced, too: at the
 first request that needed JSON, not at start.
 
 Stop the server with Ctrl+C in the first terminal, and replace the `<dependencies>` block of the pom
@@ -290,13 +290,13 @@ ana@vm:~/javalin-hello$ curl -s localhost:7070/books/two
 
 `-w '\n'` asks curl to print a line break after the body, which neither answer ends with. The list
 and the single book are the bookshop's JSON, field for field. The other two answers are where the
-difference from lesson 7 shows. A missing book is a 404 in **plain text**, `No book with id 9`, where
-the bookshop answers `application/problem+json` with a type, a title and a detail; Javalin would do
-that too, once you register an exception handler that writes it (`config.routes.exception` is where it
+difference from lesson 7 shows. A missing book is a 404 in **plain text**, `No book with id 9`. The
+bookshop answers `application/problem+json` with a type, a title and a detail, and Javalin would do
+that too once you register an exception handler that writes it (`config.routes.exception` is where it
 goes). And `two` is refused with a 400 in **Javalin's own format** for a failed conversion, a third
 shape of error that no client of the bookshop knows how to read.
 
-What is absent matters as much. `BOOKS` is a static list because there is no container to hand a
+And one thing is missing altogether. `BOOKS` is a static list because there is no container to hand a
 repository to a handler: in a real Javalin service, `main` builds the repository and the service with
 `new` and passes them to the lambdas, which is lesson 5's constructor injection written by hand, with
 nothing checking it but the compiler.

@@ -34,14 +34,14 @@ ana@vm:~/isbn-gradle$ ./gradlew build
 > Task :check UP-TO-DATE
 > Task :build UP-TO-DATE
 
-BUILD SUCCESSFUL in 2s
+BUILD SUCCESSFUL in 651ms
 7 actionable tasks: 7 up-to-date
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.8.1/userguide/configuration_cache_enabling.html
 ```
 
 Every task with work to do is **`UP-TO-DATE`**, and the summary says `7 up-to-date`: Gradle compared, found the
-inputs and outputs as it left them, and ran nothing. The two seconds went on starting up,
-reading the scripts and comparing.
+inputs and outputs as it left them, and ran nothing. What time it took went on starting
+up, reading the scripts and comparing.
 
 Now change a source file's modification time without changing a byte of it:
 
@@ -62,7 +62,7 @@ ana@vm:~/isbn-gradle$ touch src/main/java/com/example/isbn/IsbnCheck.java && ./g
 > Task :check UP-TO-DATE
 > Task :build UP-TO-DATE
 
-BUILD SUCCESSFUL in 1s
+BUILD SUCCESSFUL in 767ms
 7 actionable tasks: 7 up-to-date
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.8.1/userguide/configuration_cache_enabling.html
 ```
@@ -94,7 +94,7 @@ ana@vm:~/isbn-gradle$ ./gradlew build
 > Task :check
 > Task :build
 
-BUILD SUCCESSFUL in 5s
+BUILD SUCCESSFUL in 1s
 7 actionable tasks: 6 executed, 1 up-to-date
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.8.1/userguide/configuration_cache_enabling.html
 ana@vm:~/isbn-gradle$ ./gradlew -q run --args="0-306-40615-2"
@@ -151,7 +151,7 @@ is nothing to be up to date with. The **build cache** answers that case: a store
 fingerprint is in it, Gradle copies the outputs in instead of running the task.
 
 The **configuration cache** is a different saving. Before any task runs, Gradle runs the build
-scripts to work out the graph, and that phase is paid on every build, which is the two seconds a
+scripts to work out the graph, and that phase is paid on every build, which is most of the time a
 build that did nothing took. With the configuration cache, Gradle stores the graph it computed for
 a given request and reuses it until a script or a property changes. It is the cache Gradle has
 been suggesting at the bottom of every build in this lesson.
@@ -175,33 +175,33 @@ Calculating task graph as no cached configuration is available for tasks: clean 
 > Task :compileJava
 > Task :classes
 > Task :jar
-> Task :compileTestJava
 > Task :startScripts
-> Task :testClasses
 > Task :distTar
+> Task :compileTestJava
+> Task :testClasses
 > Task :distZip
 > Task :assemble
 > Task :test
 > Task :check
 > Task :build
 
-BUILD SUCCESSFUL in 14s
+BUILD SUCCESSFUL in 3s
 8 actionable tasks: 8 executed
 Configuration cache entry stored.
 ana@vm:~/isbn-gradle$ ./gradlew clean build
 Reusing configuration cache.
 > Task :clean
-> Task :processTestResources NO-SOURCE
 > Task :processResources NO-SOURCE
+> Task :processTestResources NO-SOURCE
 > Task :compileJava FROM-CACHE
 > Task :classes UP-TO-DATE
 > Task :jar
-> Task :startScripts
 > Task :compileTestJava FROM-CACHE
 > Task :testClasses UP-TO-DATE
-> Task :distTar
 > Task :test FROM-CACHE
 > Task :check UP-TO-DATE
+> Task :startScripts
+> Task :distTar
 > Task :distZip
 > Task :assemble
 > Task :build
@@ -209,8 +209,6 @@ Reusing configuration cache.
 BUILD SUCCESSFUL in 1s
 8 actionable tasks: 5 executed, 3 from cache
 Configuration cache entry reused.
-ana@vm:~/isbn-gradle$ ls ~/.gradle/caches/build-cache-1 | wc -l
-5
 ```
 
 The first run had no stored graph (`Calculating task graph as no cached configuration is
@@ -221,7 +219,7 @@ from the cache, and no compiler or test ran. The order of the lines also changed
 configuration cache Gradle runs independent tasks at the same time.
 
 `jar` and the distributions ran anyway. Gradle does not cache archive tasks, because zipping a
-few files is cheaper than looking them up and copying them back. The time went from 14 seconds to
+few files is cheaper than looking them up and copying them back. The time went from 3 seconds to
 1, and on a project where compiling and testing take minutes, that is the saving that matters.
 
 The cache in `~/.gradle` serves the projects on this machine. A team or a CI server can point
