@@ -40,7 +40,7 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 ```
 
 Toda tarefa com trabalho a fazer está **`UP-TO-DATE`**, e o resumo diz `7 up-to-date`: o Gradle
-comparou, achou as entradas e as saídas como as deixou, e não rodou nada. O tempo que levou foi
+comparou, achou as entradas e as saídas como as deixou, e não rodou nada. Os 651 milissegundos foram
 para iniciar, ler os scripts e comparar.
 
 Agora mude a data de modificação de um arquivo-fonte sem mudar um byte dele:

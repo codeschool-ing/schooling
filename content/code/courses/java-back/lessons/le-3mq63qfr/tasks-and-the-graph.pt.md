@@ -96,7 +96,7 @@ tests="3" skipped="0" failures="0"
 ```
 
 O jar traz as classes do próprio projeto, como o do Maven. Os dois arquivos compactados são a
-**distribuição** do plugin `application`: descompactado, cada um dá um `bin/` com um script de
+**distribuição** do plugin `application`. Descompactado, cada um dá um `bin/` com um script de
 execução e um `lib/` com o jar e todos os jars de que ele depende, para que o programa rode em
 outra máquina só com um Java. E os resultados dos testes são XML no mesmo formato dos do Maven,
 três testes e nenhuma falha; o Gradle escreve um relatório HTML ao lado, em

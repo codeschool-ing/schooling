@@ -40,7 +40,7 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 ```
 
 Every task with work to do is **`UP-TO-DATE`**, and the summary says `7 up-to-date`: Gradle compared, found the
-inputs and outputs as it left them, and ran nothing. What time it took went on starting
+inputs and outputs as it left them, and ran nothing. The 651 milliseconds went on starting
 up, reading the scripts and comparing.
 
 Now change a source file's modification time without changing a byte of it:

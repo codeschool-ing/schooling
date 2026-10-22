@@ -96,7 +96,7 @@ tests="3" skipped="0" failures="0"
 ```
 
 The jar holds the project's own classes, as Maven's does. The two archives are the
-`application` plugin's **distribution**: unpacked, each gives a `bin/` with a launcher script and a
+`application` plugin's **distribution**. Unpacked, each gives a `bin/` with a launcher script and a
 `lib/` with the jar and every jar it depends on, so the program can be run on another machine
 with a Java and nothing else. And the test results are XML in the same shape as Maven's, three
 tests and no failures; Gradle writes an HTML report beside them, in

@@ -64,9 +64,9 @@ zipStorePath=wrapper/dists
 
 `distributionUrl` is the version, written as the address of its zip. The backslash before the
 colon is how a properties file escapes one, and it is not part of the address.
-`distributionSha256Sum` is the checksum the wrapper compares every download against: if the bytes
-that arrive differ, it refuses them and stops, and that comparison is now made by a program on
-every machine, where the first section made it by eye on one. The `dists` lines say where
+`distributionSha256Sum` is the checksum the wrapper compares every download against. If the bytes
+that arrive differ, it refuses them and stops. The comparison the first section made by eye, on
+one machine, is now made by a program on every machine. The `dists` lines say where
 downloaded versions are kept, under `~/.gradle`.
 
 ## The first ./gradlew

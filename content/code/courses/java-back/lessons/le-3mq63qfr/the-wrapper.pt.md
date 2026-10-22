@@ -64,9 +64,9 @@ zipStorePath=wrapper/dists
 
 `distributionUrl` é a versão, escrita como o endereço do zip dela. A barra invertida antes dos dois
 pontos é como um arquivo de propriedades escapa esse caractere, e não faz parte do endereço.
-`distributionSha256Sum` é o checksum contra o qual o wrapper compara todo download: se os bytes que
-chegam forem diferentes, ele os recusa e para, e essa comparação agora é feita por um programa em
-toda máquina, onde a primeira seção a fez no olho, numa máquina só. As linhas `dists` dizem onde
+`distributionSha256Sum` é o checksum contra o qual o wrapper compara todo download. Se os bytes que
+chegam forem diferentes, ele os recusa e para. A comparação que a primeira seção fez no olho, numa
+máquina só, agora é feita por um programa em toda máquina. As linhas `dists` dizem onde
 ficam as versões baixadas, dentro de `~/.gradle`.
 
 ## O primeiro ./gradlew
