@@ -10,7 +10,7 @@ e o starter `-ui` pôs uma cópia dela dentro do jar da livraria.
 ```
 ana@vm:~/bookshop$ curl -si localhost:8080/swagger-ui.html | head -3
 HTTP/1.1 302 
-X-Request-Id: 9c9de462
+X-Request-Id: c06bb7b1
 Location: /swagger-ui/index.html
 ana@vm:~/bookshop$ curl -s -o /dev/null -w '%{http_code}\n' localhost:8080/swagger-ui/index.html
 200
@@ -76,8 +76,8 @@ token, `POST /books` recebe um 401, seja qual for o cliente que a envia.
 O segundo terminal vem imprimindo dois avisos a cada subida desde que o springdoc chegou:
 
 ```
-2026-10-22T20:08:06.908-03:00  WARN 14916 --- [bookshop] [           main] [] o.s.core.events.SpringDocAppInitializer  : SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
-2026-10-22T20:08:06.908-03:00  WARN 14916 --- [bookshop] [           main] [] o.s.core.events.SpringDocAppInitializer  : SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'
+2026-10-22T20:23:06.219-03:00  WARN 20356 --- [bookshop] [           main] [] o.s.core.events.SpringDocAppInitializer  : SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
+2026-10-22T20:23:06.220-03:00  WARN 20356 --- [bookshop] [           main] [] o.s.core.events.SpringDocAppInitializer  : SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'
 ```
 
 O springdoc está dizendo que os padrões dele são para desenvolvimento. Em produção, uma descrição
@@ -98,7 +98,6 @@ ana@vm:~/bookshop$ curl -s -o /dev/null -w '%{http_code}\n' localhost:8080/v3/ap
 404
 ana@vm:~/bookshop$ curl -s -o /dev/null -w '%{http_code}\n' localhost:8080/swagger-ui.html
 404
-(SpringDocAppInitializer lines in the log: 0)
 ```
 
 Os dois caminhos dão 404, a página e também o documento, porque o Swagger UI não tem o que desenhar
@@ -114,7 +113,6 @@ SPRINGDOC_APIDOCS_ENABLED=false java -jar target/bookshop-0.1.0.jar
 ```
 ana@vm:~/bookshop$ curl -s -o /dev/null -w '%{http_code}\n' localhost:8080/v3/api-docs
 404
-(SpringDocAppInitializer lines in the log: 0)
 ```
 
 A livraria mantém o documento ligado por padrão porque você ainda a está desenvolvendo; a aula 23

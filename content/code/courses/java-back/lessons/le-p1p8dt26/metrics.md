@@ -49,8 +49,11 @@ jvm.memory.usage.after.gc
 jvm.memory.used
 ```
 
-The second command prints the names one per line and keeps four families: the HTTP server, the
-connection pool, memory, and the bookshop's own. The others cover the JVM's threads and garbage
+The second command prints the names one per line and keeps the families of the HTTP server, the
+connection pool, memory and the bookshop. The HTTP server's is missing: a timer is created by the
+first request it times, and since this start nobody has asked port 8080 anything. `bookshop.orders`
+is there before any order, because `OrderService` registers it in its constructor. The names left
+out cover the JVM's threads and garbage
 collector, the process, Tomcat's sessions, Logback, which counts log lines by level, and Spring
 Security, which times every filter in lesson 15's chain.
 
@@ -112,15 +115,15 @@ ana@vm:~/bookshop$ curl -s localhost:8081/actuator/metrics/http.server.requests 
     "measurements": [
         {
             "statistic": "COUNT",
-            "value": 8.0
+            "value": 5.0
         },
         {
             "statistic": "TOTAL_TIME",
-            "value": 0.172372041
+            "value": 0.170490973
         },
         {
             "statistic": "MAX",
-            "value": 0.112119885
+            "value": 0.118845575
         }
     ],
     "name": "http.server.requests"
@@ -144,8 +147,23 @@ Tags can be chosen in the query, as `tag=key:value`, once per tag. The braces of
 written `%7B` and `%7D`, because a URL may not carry them raw:
 
 ```
-ana@vm:~/bookshop$ curl -s -g "localhost:8081/actuator/metrics/http.server.requests?tag=uri:/books/{id}&tag=status:404" | python3 -m json.tool | tail -n 16
-Expecting value: line 1 column 1 (char 0)
+ana@vm:~/bookshop$ curl -s "localhost:8081/actuator/metrics/http.server.requests?tag=uri:/books/%7Bid%7D&tag=status:404" | python3 -m json.tool | tail -n 16
+    "measurements": [
+        {
+            "statistic": "COUNT",
+            "value": 1.0
+        },
+        {
+            "statistic": "TOTAL_TIME",
+            "value": 0.015837695
+        },
+        {
+            "statistic": "MAX",
+            "value": 0.015837695
+        }
+    ],
+    "name": "http.server.requests"
+}
 ```
 
 ## The pool, as lesson 14 promised

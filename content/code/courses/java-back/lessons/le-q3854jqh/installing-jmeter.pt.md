@@ -4,7 +4,7 @@ version: 1
 ---
 
 O **Apache JMeter** é um gerador de carga: ele faz o papel de muitos clientes ao mesmo tempo,
-registra como foi cada requisição e resume o conjunto. É escrito em Java, existe desde 1998 e
+registra como foi cada requisição e resume o conjunto. É escrito em Java, existe desde o fim dos anos 1990 e
 continua sendo a ferramenta que a maioria das equipes Java encontra primeiro.
 
 O repositório do Ubuntu tem um pacote `jmeter`, e ele é o pacote errado para instalar:
@@ -102,7 +102,7 @@ Copyright (c) 1999-2024 The Apache Software Foundation
 
 O banner e a versão são a resposta. As quatro linhas `WARN StatusConsoleListener` vêm da biblioteca
 de log dentro do JMeter, que desaprova o jeito como o arquivo de configuração do próprio JMeter
-nomeia os plugins dele; o JMeter 5.6.3 as imprime a cada início, e elas não dizem nada sobre o seu
+nomeia os plugins. O JMeter 5.6.3 as imprime a cada início, e elas não dizem nada sobre o seu
 plano.
 
 O JMeter roda no mesmo JDK 25 de todo o resto deste curso. Não precisa de outro Java.

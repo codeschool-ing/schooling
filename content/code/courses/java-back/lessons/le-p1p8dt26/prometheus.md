@@ -41,8 +41,8 @@ the name. A timer's count and sum are counters themselves:
 
 ```
 ana@vm:~/bookshop$ curl -s localhost:8081/actuator/prometheus | grep -E "^http_server_requests_seconds_(count|sum)" | grep "/books\""
-http_server_requests_seconds_count{error="none",exception="none",method="GET",outcome="SUCCESS",status="200",uri="/books"} 3
-http_server_requests_seconds_sum{error="none",exception="none",method="GET",outcome="SUCCESS",status="200",uri="/books"} 0.122316625
+http_server_requests_seconds_count{error="none",exception="none",method="GET",outcome="SUCCESS",status="200",uri="/books"} 2
+http_server_requests_seconds_sum{error="none",exception="none",method="GET",outcome="SUCCESS",status="200",uri="/books"} 0.124826278
 ```
 
 ## A counter is read as a rate
@@ -56,13 +56,13 @@ orders in between, and the arithmetic is the same one Prometheus does:
 ana@vm:~/bookshop$ curl -s localhost:8081/actuator/prometheus | grep "^bookshop_orders_total"; date +%T
 bookshop_orders_total{outcome="out-of-stock"} 1.0
 bookshop_orders_total{outcome="placed"} 2.0
-20:06:57
+20:21:57
 ana@vm:~/bookshop$ for book in 4 4 4 4 4 4 3 3; do curl -s -o /dev/null -w '%{http_code} ' -H "Authorization: Bearer $(cat ana.token)" -H 'Content-Type: application/json' -d "{\"lines\":[{\"bookId\":$book,\"quantity\":1}]}" localhost:8080/orders; done; echo
 201 201 201 201 201 409 409 409 
 ana@vm:~/bookshop$ sleep 15; curl -s localhost:8081/actuator/prometheus | grep "^bookshop_orders_total"; date +%T
 bookshop_orders_total{outcome="out-of-stock"} 4.0
 bookshop_orders_total{outcome="placed"} 7.0
-20:07:12
+20:22:12
 ```
 
 The eight codes in the middle say what happened: Persuasion had five copies, so its sixth order was

@@ -25,6 +25,11 @@
 # interface's mono font does not have, so the transcript of the undefined step
 # selects the snippet with a visible grep rather than showing that line.
 #
+# Maven 3.8.7 colours its own lines even with no terminal attached; capture.sh
+# strips that colour after the command, so a pattern a lesson types never
+# anchors on the end of a coloured line. Cucumber's colours are off in the
+# runner itself (cucumber.ansi-colors.disabled), which the lesson explains.
+#
 # Run as root. Timestamps, PIDs, ports and durations differ on every run.
 #
 # Recorded on Ubuntu 24.04, OpenJDK 25.0.4, Maven 3.8.7, Docker Engine 29.8.2,
@@ -60,7 +65,7 @@ block run
 run "mvn verify -Dit.test=CucumberIT | grep -E ' # (classpath|com\.example)|Tests run:.*Cucumber|BUILD'"
 
 block shared
-run "mvn verify | grep -E 'Running .*IT$|Creating container for image: postgres|Started [A-Z]|BUILD'"
+run "mvn verify | grep -E 'Running .*IT|Creating container for image: postgres|Started [A-Z]|BUILD'"
 
 # --- a step nobody wrote code for -----------------------------------------------
 ADDED='    And she receives an e-mail confirming the order'

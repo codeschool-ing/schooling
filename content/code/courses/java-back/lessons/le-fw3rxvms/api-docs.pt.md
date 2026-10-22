@@ -113,7 +113,7 @@ Gere o build, reinicie a aplicação no segundo terminal e peça o documento:
 ```
 ana@vm:~/bookshop$ curl -si -w '\n' localhost:8080/v3/api-docs
 HTTP/1.1 401 
-X-Request-Id: f095c0a7
+X-Request-Id: ebb8c78d
 WWW-Authenticate: Bearer resource_metadata="http://localhost:8080/.well-known/oauth-protected-resource"
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 0
@@ -122,7 +122,7 @@ Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
 Content-Length: 0
-Date: Thu, 22 Oct 2026 23:08:07 GMT
+Date: Thu, 22 Oct 2026 23:23:07 GMT
 ```
 
 **401.** O `apiChain` da livraria, da aula 15, termina com `.anyRequest().authenticated()`, então

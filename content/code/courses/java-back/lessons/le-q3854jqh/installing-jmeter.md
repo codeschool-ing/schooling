@@ -4,7 +4,7 @@ version: 1
 ---
 
 **Apache JMeter** is a load generator: it plays many clients at once, records how each request
-went, and summarises the lot. It is written in Java, has been around since 1998, and is still the
+went, and summarises the lot. It is written in Java, has been around since the late 1990s, and is still the
 tool most Java teams meet first.
 
 Ubuntu's archive has a `jmeter` package, and it is the wrong one to install:
@@ -100,6 +100,6 @@ Copyright (c) 1999-2024 The Apache Software Foundation
 
 The banner and the version are the answer. The four `WARN StatusConsoleListener` lines come from
 the logging library inside JMeter, which disapproves of how JMeter's own configuration file names
-its plugins; JMeter 5.6.3 prints them on every start, and they say nothing about your plan.
+its plugins. JMeter 5.6.3 prints them on every start, and they say nothing about your plan.
 
 JMeter runs on the same JDK 25 as everything else in this course. It needs no other Java.

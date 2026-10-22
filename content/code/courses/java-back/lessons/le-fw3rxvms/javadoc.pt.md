@@ -131,8 +131,8 @@ ana@vm:~/bookshop$ mvn javadoc:javadoc
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  2.800 s
-[INFO] Finished at: 2026-10-22T20:07:50-03:00
+[INFO] Total time:  2.616 s
+[INFO] Finished at: 2026-10-22T20:22:49-03:00
 [INFO] ------------------------------------------------------------------------
 ```
 
@@ -236,6 +236,8 @@ ana@vm:~/bookshop$ head -3 ~/missing.txt
 [WARNING] /home/ana/bookshop/src/main/java/com/example/bookshop/web/ApiErrorHandler.java:24: warning: no comment
 [WARNING] /home/ana/bookshop/src/main/java/com/example/bookshop/web/ApiErrorHandler.java:32: warning: no comment
 [WARNING] /home/ana/bookshop/src/main/java/com/example/bookshop/web/ApiErrorHandler.java:27: warning: no comment
+ana@vm:~/bookshop$ grep BookController ~/missing.txt
+[WARNING] /home/ana/bookshop/src/main/java/com/example/bookshop/catalogue/BookController.java:30: warning: no comment
 ```
 
 Noventa e dois elementos públicos sem comentário. Os três primeiros são os tratadores do

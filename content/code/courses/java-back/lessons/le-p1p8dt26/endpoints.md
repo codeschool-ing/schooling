@@ -150,12 +150,12 @@ and the log line of `OrderServiceTest`. Then look inside the jar for what the ne
 ```
 ana@vm:~/bookshop$ mvn -q package
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-20:06:16.893 [main] INFO com.example.bookshop.ordering.OrderService -- Order 7 placed by ana: 1 line(s), 3500 cents
+20:21:18.156 [main] INFO com.example.bookshop.ordering.OrderService -- Order 7 placed by ana: 1 line(s), 3500 cents
 ana@vm:~/bookshop$ unzip -p target/bookshop-0.1.0.jar META-INF/build-info.properties
 build.artifact=bookshop
 build.group=com.example
 build.name=bookshop
-build.time=2026-10-22T23\:06\:13.402Z
+build.time=2026-10-22T23\:21\:14.550Z
 build.version=0.1.0
 ```
 
@@ -163,9 +163,9 @@ Start the application in the second terminal, with `BOOKSHOP_JWT_SECRET` exporte
 Tomcats now start, one after the other:
 
 ```
-2026-10-22T20:06:23.274-03:00  INFO 6003 --- [bookshop] [           main] [] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
-2026-10-22T20:06:23.340-03:00  INFO 6003 --- [bookshop] [           main] [] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 4 endpoints beneath base path '/actuator'
-2026-10-22T20:06:23.376-03:00  INFO 6003 --- [bookshop] [           main] [] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8081 (http) with context path '/'
+2026-10-22T20:21:24.266-03:00  INFO 11393 --- [bookshop] [           main] [] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-10-22T20:21:24.333-03:00  INFO 11393 --- [bookshop] [           main] [] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 4 endpoints beneath base path '/actuator'
+2026-10-22T20:21:24.372-03:00  INFO 11393 --- [bookshop] [           main] [] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8081 (http) with context path '/'
 ```
 
 `/actuator` itself lists what is exposed, with a link to each:
@@ -275,13 +275,14 @@ logging.level.org.springframework.web=debug
 
 Rebuild and start it again. The second terminal shows both servers, each one port up:
 
-@@FENCE:dev-fixed-log@@
+```
+2026-10-22T20:22:44.265-03:00  INFO 19410 --- [bookshop] [           main] [] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8081 (http) with context path '/'
+2026-10-22T20:22:44.400-03:00  INFO 19410 --- [bookshop] [           main] [] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8082 (http) with context path '/'
+```
 
 and the endpoints answer on the new port:
 
 ```
-2026-10-22T20:07:44.726-03:00  INFO 13893 --- [bookshop] [           main] [] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8081 (http) with context path '/'
-2026-10-22T20:07:44.876-03:00  INFO 13893 --- [bookshop] [           main] [] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8082 (http) with context path '/'
 ana@vm:~/bookshop$ curl -s -o /dev/null -w "%{http_code}\n" localhost:8082/actuator/health
 200
 ```
@@ -296,7 +297,7 @@ ana@vm:~/bookshop$ curl -s localhost:8081/actuator/info | python3 -m json.tool
     "build": {
         "artifact": "bookshop",
         "name": "bookshop",
-        "time": "2026-10-22T23:06:13.402Z",
+        "time": "2026-10-22T23:21:14.550Z",
         "version": "0.1.0",
         "group": "com.example"
     },

@@ -25,7 +25,7 @@ ana@vm:~/bookshop$ curl -s localhost:8081/actuator/health | python3 -m json.tool
         "diskSpace": {
             "details": {
                 "total": 270553174016,
-                "free": 24576499712,
+                "free": 24568188928,
                 "threshold": 10485760,
                 "path": "/home/ana/bookshop/.",
                 "exists": true
@@ -92,7 +92,7 @@ Ten connections, the pool's whole `maximum-pool-size` from lesson 14. Now ask ag
 
 ```
 ana@vm:~/bookshop$ curl -s -w "%{http_code} after %{time_total} s\n" -o health.json localhost:8081/actuator/health
-503 after 0.016700 s
+503 after 0.014533 s
 ana@vm:~/bookshop$ python3 -m json.tool health.json | head -9
 {
     "components": {
@@ -119,15 +119,15 @@ record it the same way, as a client's mistake on no known route:
 
 ```
 ana@vm:~/bookshop$ curl -s -o /dev/null -w "%{http_code} after %{time_total} s\n" localhost:8080/books
-401 after 5.016095 s
+401 after 5.019238 s
 ```
 
 The second terminal says what really happened:
 
 ```
-2026-10-22T20:06:30.438-03:00  WARN 6003 --- [bookshop] [io-8080-exec-10] [43fe6626] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 0, SQLState: 28000
-2026-10-22T20:06:30.438-03:00  WARN 6003 --- [bookshop] [io-8080-exec-10] [43fe6626] org.hibernate.orm.jdbc.error             : bookshop-pool - Connection is not available, request timed out after 5001ms (total=0, active=0, idle=0, waiting=0)
-2026-10-22T20:06:30.442-03:00 ERROR 6003 --- [bookshop] [io-8080-exec-10] [] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: org.springframework.transaction.CannotCreateTransactionException: Could not open JPA EntityManager for transaction] with root cause
+2026-10-22T20:21:30.683-03:00  WARN 11393 --- [bookshop] [nio-8080-exec-1] [36b99f27] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 0, SQLState: 28000
+2026-10-22T20:21:30.683-03:00  WARN 11393 --- [bookshop] [nio-8080-exec-1] [36b99f27] org.hibernate.orm.jdbc.error             : bookshop-pool - Connection is not available, request timed out after 5001ms (total=0, active=0, idle=0, waiting=0)
+2026-10-22T20:21:30.687-03:00 ERROR 11393 --- [bookshop] [nio-8080-exec-1] [] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: org.springframework.transaction.CannotCreateTransactionException: Could not open JPA EntityManager for transaction] with root cause
 ```
 
 Give the role its login back, and the pool reconnects on the next request. A single indicator has a
@@ -165,9 +165,9 @@ asks all three, ten or so times a second, and then start the bookshop in the sec
 
 ```
 ana@vm:~/bookshop$ for i in $(seq 1500); do echo $(for p in health/liveness health/readiness health; do curl -s -o /dev/null -w '%{http_code} ' localhost:8081/actuator/$p; done); done | uniq -c
-    535 000 000 000
+    537 000 000 000
       1 000 503 503
-    964 200 200 200
+    962 200 200 200
 ```
 
 `uniq -c` folds identical lines, so the loop ran 1,500 rounds and printed three lines. For the first
@@ -178,11 +178,26 @@ running and listening, and still said it was not ready. The second terminal, sta
 availability logger at `debug`, says why:
 
 ```
-2026-10-22T20:06:38.460-03:00  INFO 6804 --- [bookshop] [           main] [] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 5.893 seconds (process running for 6.355)
-2026-10-22T20:06:38.670-03:00  INFO 6804 --- [bookshop] [           main] [] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-22 with 6 books
+2026-10-22T20:21:38.883-03:00  INFO 12118 --- [bookshop] [           main] [] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 6.135 seconds (process running for 6.535)
+2026-10-22T20:21:38.987-03:00 DEBUG 12118 --- [bookshop] [           main] [] o.s.b.a.ApplicationAvailabilityBean      : Application availability state LivenessState changed to CORRECT
+2026-10-22T20:21:39.070-03:00  INFO 12118 --- [bookshop] [           main] [] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-22 with 6 books
+2026-10-22T20:21:39.071-03:00 DEBUG 12118 --- [bookshop] [           main] [] o.s.b.a.ApplicationAvailabilityBean      : Application availability state ReadinessState changed to ACCEPTING_TRAFFIC
 ```
 
-@@READINESS-PROSE-2@@
+`Started BookshopApplication` is not the end of a start-up. Right after it, liveness turns `CORRECT`.
+Then the application's runners run, here lesson 5's `CatalogueReport`, and only when the last one
+returns does readiness turn `ACCEPTING_TRAFFIC`. In between, less than two tenths of a second in this
+run, the process is alive and still preparing, and that is the moment readiness exists for. The same
+two instants are kept as metrics:
+
+```
+ana@vm:~/bookshop$ curl -s localhost:8081/actuator/prometheus | grep -E "^application_(started|ready)_time"
+application_ready_time_seconds{main_application_class="com.example.bookshop.BookshopApplication"} 6.322
+application_started_time_seconds{main_application_class="com.example.bookshop.BookshopApplication"} 6.135
+```
+
+So work that has to finish before the first request, warming a cache or loading a file, belongs in a
+runner: readiness waits for it, and a platform that respects readiness sends nothing until it is done.
 
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 700 214\" role=\"img\" aria-label=\"Three health URLs at four moments. While the bookshop starts, port 8081 is closed and none answers. While the start-up runners work, liveness answers 200 and readiness and the full health answer 503. While it serves, all three answer 200. With the database refusing the bookshop, liveness and readiness still answer 200 and the full health 503.\"><text x=\"190.0\" y=\"24\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">starting</text><text x=\"330.0\" y=\"24\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">runners</text><text x=\"470.0\" y=\"24\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">serving</text><text x=\"610.0\" y=\"24\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">database gone</text><text x=\"108\" y=\"63.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">liveness</text><rect x=\"126\" y=\"40\" width=\"128\" height=\"46\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\" stroke-dasharray=\"4 3\"></rect><text x=\"190.0\" y=\"63.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">no answer</text><rect x=\"266\" y=\"40\" width=\"128\" height=\"46\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"330.0\" y=\"63.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">200</text><rect x=\"406\" y=\"40\" width=\"128\" height=\"46\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"470.0\" y=\"63.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">200</text><rect x=\"546\" y=\"40\" width=\"128\" height=\"46\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"610.0\" y=\"63.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">UP 200</text><text x=\"108\" y=\"119.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">readiness</text><rect x=\"126\" y=\"96\" width=\"128\" height=\"46\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\" stroke-dasharray=\"4 3\"></rect><text x=\"190.0\" y=\"119.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">no answer</text><rect x=\"266\" y=\"96\" width=\"128\" height=\"46\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"330.0\" y=\"119.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--amber)\">503</text><rect x=\"406\" y=\"96\" width=\"128\" height=\"46\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"470.0\" y=\"119.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">200</text><rect x=\"546\" y=\"96\" width=\"128\" height=\"46\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"610.0\" y=\"119.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">UP 200</text><text x=\"108\" y=\"175.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">health</text><rect x=\"126\" y=\"152\" width=\"128\" height=\"46\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\" stroke-dasharray=\"4 3\"></rect><text x=\"190.0\" y=\"175.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">no answer</text><rect x=\"266\" y=\"152\" width=\"128\" height=\"46\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"330.0\" y=\"175.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--amber)\">503</text><rect x=\"406\" y=\"152\" width=\"128\" height=\"46\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"470.0\" y=\"175.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">200</text><rect x=\"546\" y=\"152\" width=\"128\" height=\"46\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"610.0\" y=\"175.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--amber)\">DOWN 503</text></svg>", "caption": "Readiness waits for the start-up work to finish. Neither group looks at the database, so losing it changes only the full report."}

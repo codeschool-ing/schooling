@@ -99,10 +99,12 @@ JMeter command prints them. The four `WARNING` lines are the same complaint less
 a library inside JMeter, XStream, calls `sun.misc.Unsafe`, which Java 25 warns about. They are about
 JMeter, not about the bookshop, and the next step silences them.
 
-The line that matters is `summary =`: 20000 requests, the twenty threads times 500 rounds times
-two samplers, in eleven seconds, at the rate per second after the `=`, with the average, smallest
-and largest response time in milliseconds, and the errors. None failed. The next section reads
-those numbers. First, run the same command again:
+While a run goes on, JMeter prints a `summary +` line for each stretch of it, with `Active` saying
+how many threads were running. The line that matters comes at the end: `summary =`, for the whole
+run. It counts 20000 requests, the twenty threads times 500 rounds times two samplers, in
+COLD-TIME, at COLD-RATE requests a second. Then come the average, smallest and largest response
+time in milliseconds, and the errors. None failed. The next section reads those numbers. First, run the same command
+again:
 
 ```
 ana@vm:~/bookshop$ jmeter -n -t src/test/jmeter/books.jmx -l target/jmeter/results.jtl -j target/jmeter/jmeter.log -e -o target/jmeter/report
@@ -146,7 +148,7 @@ user	0m10.597s
 sys	0m0.892s
 ```
 
-`time` is the shell's, and it measures JMeter itself; the next section uses its last two lines.
+`time` is the shell's, and it measures JMeter itself: the elapsed time, and the processor time JMeter used. The next section needs both.
 
 The report is a directory of HTML. Open `target/jmeter/report/index.html` in a browser and it
 shows the same run as tables and charts: a summary of requests that passed and failed, statistics

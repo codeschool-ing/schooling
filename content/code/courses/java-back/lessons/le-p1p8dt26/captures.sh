@@ -103,7 +103,7 @@ run 'python3 -m json.tool health.json | head -9'
 run 'curl -s -w " %{http_code}\n" localhost:8081/actuator/health/liveness'
 run 'curl -s -w " %{http_code}\n" localhost:8081/actuator/health/readiness'
 run 'curl -s -o /dev/null -w "%{http_code} after %{time_total} s\n" localhost:8080/books'
-run 'curl -s localhost:8081/actuator/prometheus | grep "^http_server_requests_seconds_count" | grep "status=\"401\""'
+run 'curl -s localhost:8081/actuator/prometheus | grep "^http_server_requests_seconds_count"'
 block db-down-log
 grep -E 'WARN|ERROR' $LOG | tail -n 3
 block db-back
