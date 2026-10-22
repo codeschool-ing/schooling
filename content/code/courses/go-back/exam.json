@@ -1,0 +1,2941 @@
+[
+  {
+    "id": "ex-g6yhnwcd",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "Lesson 1. A site registers `GET /` for its home page, and `/about` answers with the home page too. Completed, the pattern that answers `/` and nothing below it is `GET /___`.",
+    "hint": "A pattern ending in a slash means the whole subtree.",
+    "blanks": [
+      {
+        "accept": [
+          "{$}"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-sknwymc3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 1. Only `GET /events` is registered, and its handler writes a twelve-byte list. A client sends `HEAD /events`. What happens?",
+    "hint": "A `GET` pattern also answers `HEAD`.",
+    "choices": [
+      {
+        "text": "200, `Content-Length: 12`, no body",
+        "correct": true,
+        "why": "The handler runs; the server counts the bytes it wrote and sends none of them, which is what `HEAD` means."
+      },
+      {
+        "text": "405, with `Allow: GET`",
+        "correct": false,
+        "why": "`HEAD` is in the `Allow` list the mux builds, because the `GET` pattern answers it."
+      },
+      {
+        "text": "404, since no pattern names `HEAD`",
+        "correct": false,
+        "why": "The path exists, and the `GET` pattern covers `HEAD`."
+      },
+      {
+        "text": "The handler is skipped and an empty 200 is sent",
+        "correct": false,
+        "why": "The handler does run; that is how the server knows the length."
+      }
+    ]
+  },
+  {
+    "id": "ex-vjqbe6ax",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 1. A mux has `GET /events/{id}` and `GET /files/{path...}`. Which of these requests is answered 404?",
+    "hint": "One wildcard takes a segment, the other the rest of the path.",
+    "choices": [
+      {
+        "text": "`/events/42/tickets`",
+        "correct": true,
+        "why": "`{id}` matches exactly one segment, and `42/tickets` is two."
+      },
+      {
+        "text": "`/files/posters/2026/jazz.png`",
+        "correct": false,
+        "why": "`{path...}` takes the rest of the path, slashes included."
+      },
+      {
+        "text": "`/events/latest`",
+        "correct": false,
+        "why": "`latest` is one segment, and `{id}` takes it as a string."
+      },
+      {
+        "text": "`/files/a`",
+        "correct": false,
+        "why": "One segment is still the rest of the path."
+      }
+    ]
+  },
+  {
+    "id": "ex-m5q7zvh6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 1. A handler passes `r.Context()` to a slow pgx query, and the client hangs up halfway. What happens to the query, joining lesson 1 to lesson 6?",
+    "hint": "The server cancels the request's context when the client goes away.",
+    "choices": [
+      {
+        "text": "pgx cancels it on the server",
+        "correct": true,
+        "why": "The context ends, and pgx stops the query rather than finish work nobody will read."
+      },
+      {
+        "text": "It runs to the end, and its result is discarded",
+        "correct": false,
+        "why": "That is what happens without the context; with it, the work stops."
+      },
+      {
+        "text": "The handler panics with `context canceled`",
+        "correct": false,
+        "why": "A cancelled context is an error returned, not a panic."
+      },
+      {
+        "text": "The pool closes the connection and opens a new one for the next request",
+        "correct": false,
+        "why": "Nothing in the lessons closes the pool's connection over this."
+      }
+    ]
+  },
+  {
+    "id": "ex-86d42cmw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Lesson 1. `go run .` serves on `\"localhost:8080\"`. A colleague on another computer on the same network tries `curl http://<your address>:8080/` and gets no connection. Why?",
+    "hint": "Read the address part of the listen string.",
+    "choices": [
+      {
+        "text": "`localhost` listens on this machine only",
+        "correct": true,
+        "why": "Only connections from the same machine reach it; lesson 16 meets the same fact inside a container."
+      },
+      {
+        "text": "The server only accepts `curl` from the same user",
+        "correct": false,
+        "why": "net/http does not look at users; the address decides."
+      },
+      {
+        "text": "Port 8080 is reserved for local programs",
+        "correct": false,
+        "why": "No port number has that meaning."
+      },
+      {
+        "text": "The mux refuses requests whose `Host` is not `localhost`",
+        "correct": false,
+        "why": "The patterns here name no host; the request never arrives at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-m46qagba",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 1. One process registers `api.example.com/events` and `GET /events`. A `GET /events` arrives with `Host: api.example.com`. Which pattern answers?",
+    "hint": "The section ranked a pattern with a host against one without.",
+    "choices": [
+      {
+        "text": "`GET /events`, because it names the method",
+        "correct": false,
+        "why": "The course's rule gives the host the edge."
+      },
+      {
+        "text": "`api.example.com/events`",
+        "correct": true,
+        "why": "A pattern with a host is more specific than one without; it is how one process serves two sites."
+      },
+      {
+        "text": "The one registered last",
+        "correct": false,
+        "why": "Registration order plays no part in ServeMux's choice."
+      },
+      {
+        "text": "Neither: the program panics over a conflict",
+        "correct": false,
+        "why": "The host settles which one is more specific."
+      }
+    ]
+  },
+  {
+    "id": "ex-ktkpnha5",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "hard",
+    "prompt": "Lesson 2. A page on `https://tickets.example.com` calls `GET /admin/report` with a staff token. Put what happens in order.",
+    "hint": "The browser asks first, without the token.",
+    "items": [
+      "the browser sends an `OPTIONS` preflight",
+      "`cors` answers 204 with the allowed methods and headers",
+      "the browser checks its method and headers against those lists",
+      "the browser sends the real request with `Authorization`",
+      "`requireStaff` checks the token",
+      "the handler checks the role and answers"
+    ]
+  },
+  {
+    "id": "ex-77hhz62t",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Lesson 2. Which of these are true of boxoffice's CORS middleware? Choose every one that is.",
+    "hint": "CORS is about a browser and a page, not about the server.",
+    "choices": [
+      {
+        "text": "It must sit outside `requireStaff`, because a preflight carries no token",
+        "correct": true,
+        "why": "Inside, every preflight would be refused with 401 and the real request never sent."
+      },
+      {
+        "text": "It does nothing to stop `curl` reading any route",
+        "correct": true,
+        "why": "Only a browser applies the policy; any other client reads whatever the server sends."
+      },
+      {
+        "text": "`Vary: Origin` goes on every answer, allowed or not",
+        "correct": true,
+        "why": "The answer depends on a request header, and a cache has to know that."
+      },
+      {
+        "text": "For an unknown origin the server withholds the body",
+        "correct": false,
+        "why": "The server sent 200 and the whole body; only the browser hides it from the page."
+      },
+      {
+        "text": "Reflecting any `Origin` with `Allow-Credentials: true` is safe for an API with cookies",
+        "correct": false,
+        "why": "That lets every page on the internet read answers with the visitor's cookies."
+      }
+    ]
+  },
+  {
+    "id": "ex-6jyvzzpj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 2. With `recoverPanics` in place, a handler writes half of a JSON list and then panics. What does the client receive?",
+    "hint": "The status leaves with the first write.",
+    "choices": [
+      {
+        "text": "A clean 500 problem, because the middleware discards what the handler wrote",
+        "correct": false,
+        "why": "What was written has already gone; nothing takes it back."
+      },
+      {
+        "text": "An empty reply, exit 52, as without the middleware",
+        "correct": false,
+        "why": "The status line and part of the body did go out."
+      },
+      {
+        "text": "A 500 followed by the half list",
+        "correct": false,
+        "why": "A status cannot follow a body; the 200 was already sent."
+      },
+      {
+        "text": "A 200 with the half-written body",
+        "correct": true,
+        "why": "The 200 left with the first write; the middleware's 500 is a superfluous WriteHeader in the log. Recovery makes a panic survivable, not invisible."
+      }
+    ]
+  },
+  {
+    "id": "ex-me0e3jjt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 2. A new middleware calls `next.ServeHTTP(w, r)` and only then `w.Header().Set(\"X-Served-By\", \"boxoffice\")`. Which responses carry the header?",
+    "hint": "Lesson 1's order: status, headers, body.",
+    "choices": [
+      {
+        "text": "All of them, since the middleware wraps every route",
+        "correct": false,
+        "why": "Wrapping every route does not move the header before the write."
+      },
+      {
+        "text": "Only the error responses",
+        "correct": false,
+        "why": "Errors are written by the handlers too, before the middleware's line runs."
+      },
+      {
+        "text": "None that a handler wrote",
+        "correct": true,
+        "why": "By the time `next` returns, the headers have left with the response; the header must be set before calling `next`."
+      },
+      {
+        "text": "All of them, but only over HTTP/2",
+        "correct": false,
+        "why": "The protocol version does not change when headers leave."
+      }
+    ]
+  },
+  {
+    "id": "ex-f0w82vdw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 2. A developer adds `GET /admin/refunds` to boxoffice's top-level `mux` instead of the `admin` mux. Who may read it?",
+    "hint": "Which handler did `requireStaff` wrap?",
+    "choices": [
+      {
+        "text": "Only staff, since the path starts with `/admin/`",
+        "correct": false,
+        "why": "Protection comes from the mux the route is on, not from its name."
+      },
+      {
+        "text": "Anybody",
+        "correct": true,
+        "why": "`GET /admin/refunds` beats `/admin/` on the top-level mux, so the request never reaches the wrapped admin mux."
+      },
+      {
+        "text": "Nobody: the program panics on the overlap",
+        "correct": false,
+        "why": "One pattern is more specific, so there is no conflict."
+      },
+      {
+        "text": "Only managers",
+        "correct": false,
+        "why": "No role is checked on this path at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-t5zx5dyn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 2. A client sends the manager's token as `Authorization: bearer 5ca8…`, lower-case. What does boxoffice answer?",
+    "hint": "`requireStaff` cuts an exact prefix.",
+    "choices": [
+      {
+        "text": "200, since the token itself is right",
+        "correct": false,
+        "why": "The token is never reached; the prefix did not match."
+      },
+      {
+        "text": "403, since the caller is known but badly formatted",
+        "correct": false,
+        "why": "403 needs a known caller, and nothing matched."
+      },
+      {
+        "text": "401, with `WWW-Authenticate`",
+        "correct": true,
+        "why": "`strings.CutPrefix` looks for `Bearer ` exactly; without it nothing is compared and the request is refused."
+      },
+      {
+        "text": "400, for a malformed header",
+        "correct": false,
+        "why": "boxoffice answers a missing scheme like a missing token."
+      }
+    ]
+  },
+  {
+    "id": "ex-dxnjj96q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 3. A future route refunds a ticket. A client asks to refund one that was already refunded. By lesson 3's reasoning, which status fits?",
+    "hint": "The request is well formed and valid.",
+    "choices": [
+      {
+        "text": "409 Conflict",
+        "correct": true,
+        "why": "Like a sale that does not fit, the request conflicts with the current state of the resource."
+      },
+      {
+        "text": "400 Bad Request",
+        "correct": false,
+        "why": "400 is for a request the server could not read."
+      },
+      {
+        "text": "422, since the values are wrong",
+        "correct": false,
+        "why": "The values are fine; the ticket's state is the obstacle."
+      },
+      {
+        "text": "404, since the refundable ticket no longer exists",
+        "correct": false,
+        "why": "The ticket exists; saying otherwise is false."
+      }
+    ]
+  },
+  {
+    "id": "ex-s6zhj5k9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Lesson 3. `POST /events/abc/tickets` arrives with a body that is not JSON. What comes back?",
+    "hint": "The id in the path is the first check.",
+    "choices": [
+      {
+        "text": "400 about the body, since that is the worse problem",
+        "correct": false,
+        "why": "The checks run in order, and the id fails first."
+      },
+      {
+        "text": "One 400 listing both problems",
+        "correct": false,
+        "why": "Collecting every problem is what `validate` does for values, not the path and the body together."
+      },
+      {
+        "text": "400 about the id, before the body is read",
+        "correct": true,
+        "why": "`buyTickets` checks the path first and returns on its failure."
+      },
+      {
+        "text": "404, since no event is called `abc`",
+        "correct": false,
+        "why": "The store is never asked about a path that is not a number."
+      }
+    ]
+  },
+  {
+    "id": "ex-xgs4em0p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 3. The store gains a new sentinel, `ErrEventClosed`, but nobody touches `fail`. A client buys tickets for a closed event. What happens, and where does the fix go?",
+    "hint": "The store must not speak HTTP.",
+    "choices": [
+      {
+        "text": "A 409, since `fail` treats store errors as conflicts",
+        "correct": false,
+        "why": "`fail` only maps the errors it names."
+      },
+      {
+        "text": "A 500; the store should return `http.StatusConflict` itself",
+        "correct": false,
+        "why": "The store is shared with gRPC in lesson 10, which has no 409."
+      },
+      {
+        "text": "A 201, since the sale is not refused",
+        "correct": false,
+        "why": "The store returned an error; the handler calls `fail` with it."
+      },
+      {
+        "text": "A 500 logged as unexpected; the case goes in `fail`",
+        "correct": true,
+        "why": "An error nobody planned for falls to the default case; the translation belongs in the one place that translates."
+      }
+    ]
+  },
+  {
+    "id": "ex-jxm8z321",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Lesson 3. A client sends `{\"quantity\": 40, \"email\": \"ana\"}` to buy tickets. How many entries does the `errors` member of the answer hold?",
+    "hint": "`validate` does not stop at the first problem.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-an4ked79",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Lesson 3. A client sends `{\"quantiy\": 2, \"email\": \"ana@example.com\"}`, misspelling `quantity`, to boxoffice's purchase route. What comes back?",
+    "hint": "`decodeJSON` refuses what the struct does not have.",
+    "choices": [
+      {
+        "text": "422, quantity must be between 1 and 10",
+        "correct": false,
+        "why": "That is the plain decoder's path, which drops the field; boxoffice's decoder stops earlier."
+      },
+      {
+        "text": "201, a purchase of zero tickets",
+        "correct": false,
+        "why": "Even a zero would fail validation; and boxoffice never gets that far."
+      },
+      {
+        "text": "409, since the body conflicts with the struct",
+        "correct": false,
+        "why": "409 is for a valid request that conflicts with the event's state."
+      },
+      {
+        "text": "400, naming the unknown field",
+        "correct": true,
+        "why": "`DisallowUnknownFields` turns the typo into an error before validation runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-542pm6gc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 3. A valid purchase body is sent with `Content-Type: text/plain`. What does boxoffice do, and what does the lesson rely on instead of checking the type?",
+    "hint": "Some APIs answer 415; boxoffice does not.",
+    "choices": [
+      {
+        "text": "415, to stop forms posted from other sites",
+        "correct": false,
+        "why": "The lesson calls 415 defensible and does not use it."
+      },
+      {
+        "text": "It sells as usual; the token guards staff routes",
+        "correct": true,
+        "why": "Lesson 2's bearer token, which a form has no way to send, is the guard against a cross-site form, not the media type."
+      },
+      {
+        "text": "400, since the body is not declared as JSON",
+        "correct": false,
+        "why": "The decoder reads the bytes; the header is not consulted."
+      },
+      {
+        "text": "It sniffs the body and answers in plain text",
+        "correct": false,
+        "why": "Sniffing is for responses with no type; boxoffice's answers declare theirs."
+      }
+    ]
+  },
+  {
+    "id": "ex-tv7t3apd",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Lesson 4. Match each framework to the default of its own that the course's side-by-side comparison found.",
+    "hint": "Each is a decision taken on your behalf.",
+    "pairs": [
+      {
+        "left": "Gin",
+        "right": "404 for a wrong method"
+      },
+      {
+        "left": "Echo",
+        "right": "a wrong type answered `Bad Request` only, the detail in the log"
+      },
+      {
+        "left": "Fiber",
+        "right": "runs on fasthttp, not net/http"
+      },
+      {
+        "left": "Beego",
+        "right": "an HTML page for an unknown path"
+      }
+    ]
+  },
+  {
+    "id": "ex-yach22xr",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Lesson 4. Order the five versions of the yardstick API by how many modules they brought besides your own, fewest first.",
+    "hint": "The full-stack one is last.",
+    "items": [
+      "standard library",
+      "Echo",
+      "Fiber",
+      "Gin",
+      "Beego"
+    ]
+  },
+  {
+    "id": "ex-tp23gwte",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Lesson 4. Across the five versions, what did every one answer for a path that no route matched?",
+    "hint": "The status agreed; the format did not.",
+    "choices": [
+      {
+        "text": "405 with an `Allow` header",
+        "correct": false,
+        "why": "405 is for a known path with the wrong method."
+      },
+      {
+        "text": "A JSON problem document",
+        "correct": false,
+        "why": "None of them wrote lesson 3's shape on its own."
+      },
+      {
+        "text": "404, in several formats",
+        "correct": true,
+        "why": "Same status everywhere; Echo wrote JSON and Beego an HTML page."
+      },
+      {
+        "text": "A redirect to `/`",
+        "correct": false,
+        "why": "None redirected an unknown path."
+      }
+    ]
+  },
+  {
+    "id": "ex-4nvzvwbq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 4. Which two frameworks does the course call easy to leave, and for what reason?",
+    "hint": "Look at what runs underneath.",
+    "choices": [
+      {
+        "text": "Echo and Gin: both are net/http underneath",
+        "correct": true,
+        "why": "Their engines are `http.Handler`s, so standard code and middleware still apply around them."
+      },
+      {
+        "text": "Fiber and Echo, because they are the smallest",
+        "correct": false,
+        "why": "Fiber is not net/http, which makes it the hardest of the light ones to leave."
+      },
+      {
+        "text": "Gin and Beego, because they generate an API description",
+        "correct": false,
+        "why": "The comparison measured nothing of the sort."
+      },
+      {
+        "text": "Beego and Fiber, being the most complete",
+        "correct": false,
+        "why": "The course says Beego costs the most to change your mind about."
+      }
+    ]
+  },
+  {
+    "id": "ex-53ebbdrf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 4. A client sends `DELETE /events/1` to the Gin version. What does it lose, compared with the standard library's answer?",
+    "hint": "Gin answered 404.",
+    "choices": [
+      {
+        "text": "Nothing: both say the request failed",
+        "correct": false,
+        "why": "They say different things, and one of them is false."
+      },
+      {
+        "text": "The body, which Gin leaves empty",
+        "correct": false,
+        "why": "The body is not the loss; the status is."
+      },
+      {
+        "text": "The 405 and its `Allow` list",
+        "correct": true,
+        "why": "ServeMux's 405 says the method is wrong and lists the right ones; Gin's 404 says the resource is missing."
+      },
+      {
+        "text": "The request id",
+        "correct": false,
+        "why": "Neither version had one in lesson 4."
+      }
+    ]
+  },
+  {
+    "id": "ex-6mdrjx05",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 4. A JSON client calls an unknown path on the Beego version. Which promise from lesson 3 does that answer break?",
+    "hint": "Beego answered with a 2,000-byte page.",
+    "choices": [
+      {
+        "text": "That every error has one shape a client parses",
+        "correct": true,
+        "why": "An HTML page is a format the client was never told about."
+      },
+      {
+        "text": "That a 404 never carries a body",
+        "correct": false,
+        "why": "boxoffice's 404s have bodies; the shape is the issue."
+      },
+      {
+        "text": "That the status is right",
+        "correct": false,
+        "why": "404 is the right status here."
+      },
+      {
+        "text": "That the `Location` header names the resource",
+        "correct": false,
+        "why": "`Location` belongs to a 201, not to errors."
+      }
+    ]
+  },
+  {
+    "id": "ex-k7m6pc9b",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Lesson 5. Which of these leave a handler's signature as `func(w http.ResponseWriter, r *http.Request)`? Choose every one.",
+    "hint": "A library does one thing and leaves the shape alone.",
+    "choices": [
+      {
+        "text": "chi",
+        "correct": true,
+        "why": "Its routes take ordinary `http.HandlerFunc`s."
+      },
+      {
+        "text": "go-playground/validator, called from a handler",
+        "correct": true,
+        "why": "It validates a struct and touches no signature."
+      },
+      {
+        "text": "golang.org/x/time/rate inside a middleware",
+        "correct": true,
+        "why": "A rate limiter in the standard middleware shape."
+      },
+      {
+        "text": "Gin",
+        "correct": false,
+        "why": "Its handlers take a `*gin.Context`."
+      },
+      {
+        "text": "Fiber",
+        "correct": false,
+        "why": "Its handlers take a `fiber.Ctx`, outside net/http altogether."
+      }
+    ]
+  },
+  {
+    "id": "ex-zdmsm121",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Lesson 5. Moved to chi, a handler reads the id with `chi.URLParam(r, \"id\")`, where the standard library's says `r.___(\"id\")`.",
+    "hint": "Lesson 1's method for a wildcard.",
+    "blanks": [
+      {
+        "accept": [
+          "PathValue"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-nd3fwxjb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 5. A service needs the route `{id:[0-9]+}`, an id that is digits only, matched by the router. What does the course suggest?",
+    "hint": "ServeMux has no regular expressions in patterns.",
+    "choices": [
+      {
+        "text": "Adopt a framework, since ServeMux has reached its limit",
+        "correct": false,
+        "why": "A router alone covers this, without taking the handlers' shape."
+      },
+      {
+        "text": "Register ten patterns, one per leading digit",
+        "correct": false,
+        "why": "A wildcard does not match by its first character."
+      },
+      {
+        "text": "A router library such as chi",
+        "correct": true,
+        "why": "That is exactly the case where chi earns its module."
+      },
+      {
+        "text": "Nothing changes: ServeMux accepts the pattern",
+        "correct": false,
+        "why": "That is one of the things ServeMux still does not do."
+      }
+    ]
+  },
+  {
+    "id": "ex-wb46yq4t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 5. The course says the binary size of a framework matters little on a server. Where does it say the size matters a little more?",
+    "hint": "Think of every deployment.",
+    "choices": [
+      {
+        "text": "In the container image",
+        "correct": true,
+        "why": "Every deployment pulls the image, and a binary three times larger is an image three times larger to push and pull, build and scan."
+      },
+      {
+        "text": "In the memory the server uses per request",
+        "correct": false,
+        "why": "Binary size and per-request memory are different things, and neither was measured together."
+      },
+      {
+        "text": "In start-up time",
+        "correct": false,
+        "why": "The course did not name start-up."
+      },
+      {
+        "text": "In the number of routes",
+        "correct": false,
+        "why": "Routes do not depend on binary size."
+      }
+    ]
+  },
+  {
+    "id": "ex-cvrby828",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 5. Why does the course claim a Go developer who has never seen boxoffice can read every line of it on the first day?",
+    "hint": "A second thing to learn.",
+    "choices": [
+      {
+        "text": "Because boxoffice is short",
+        "correct": false,
+        "why": "Length is not the argument; what it uses is."
+      },
+      {
+        "text": "Because it is documented line by line",
+        "correct": false,
+        "why": "The claim rests on the libraries, not on comments."
+      },
+      {
+        "text": "Because it follows Gin's conventions, which most developers know",
+        "correct": false,
+        "why": "boxoffice uses no framework."
+      },
+      {
+        "text": "It uses nothing outside the standard library's documentation",
+        "correct": true,
+        "why": "There is no framework's context, binding rules or defaults to learn first."
+      }
+    ]
+  },
+  {
+    "id": "ex-tkrh45h8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 5. `gorilla/mux`, for years the default Go router, was archived in December 2022. What does the course draw from that for any dependency?",
+    "hint": "Each module has a maintainer.",
+    "choices": [
+      {
+        "text": "That popular modules are safe from it",
+        "correct": false,
+        "why": "It was the most popular router of its time."
+      },
+      {
+        "text": "That routers are no longer needed in Go",
+        "correct": false,
+        "why": "The point is about maintenance, not about routing."
+      },
+      {
+        "text": "A maintainer who stops leaves every user to decide whether to wait or migrate",
+        "correct": true,
+        "why": "Each module brings a licence, a maintainer who stops one day, and its own idea of compatibility."
+      },
+      {
+        "text": "That archived modules stop compiling",
+        "correct": false,
+        "why": "Archived code still compiles; it stops getting fixes."
+      }
+    ]
+  },
+  {
+    "id": "ex-hd5tw139",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "Lesson 6. A fresh `events` table holds rows 1 and 2. Then three inserts fail on the unique name, and a fourth succeeds. What id does the new event get?",
+    "hint": "A failed insert does not give its number back.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-dj00vfjv",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Lesson 6. `GET /events/9` asks for an event that does not exist. Put the error's journey in order, from the database to the client.",
+    "hint": "The error changes vocabulary at each layer.",
+    "items": [
+      "PostgreSQL returns no row",
+      "pgx reports `pgx.ErrNoRows`",
+      "`pgStore.Get` returns `ErrNotFound`, wrapped with the id",
+      "`fail` matches it with `errors.Is`",
+      "the client reads a 404 problem document"
+    ]
+  },
+  {
+    "id": "ex-hrzxwj79",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Lesson 6. A column holds SQL `NULL`. Match each Go destination to what scanning it gives.",
+    "hint": "A Go `string` has no way to say 'no value'.",
+    "pairs": [
+      {
+        "left": "`string`",
+        "right": "an error: pgx refuses"
+      },
+      {
+        "left": "`*string`",
+        "right": "`nil`"
+      },
+      {
+        "left": "`pgtype.Text`",
+        "right": "a struct with `Valid: false`"
+      }
+    ]
+  },
+  {
+    "id": "ex-wnxbne68",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Lesson 6. In a pgx query, the placeholder for the second value is written ___.",
+    "hint": "A dollar sign and a number.",
+    "blanks": [
+      {
+        "accept": [
+          "$2"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-aczpjk3r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 6. A search sends its name filter as `$1`, and a client types `x'; DROP TABLE events; --`. What does PostgreSQL run?",
+    "hint": "Parsing is finished before the value arrives.",
+    "choices": [
+      {
+        "text": "The search and then the `DROP`",
+        "correct": false,
+        "why": "That is what gluing the value into the text would allow."
+      },
+      {
+        "text": "Nothing: pgx refuses values containing quotes",
+        "correct": false,
+        "why": "*Rock 'n' Roll Night* went through a placeholder fine."
+      },
+      {
+        "text": "The search, for that odd name",
+        "correct": true,
+        "why": "The value travels apart from the SQL and is never parsed as SQL."
+      },
+      {
+        "text": "A syntax error, SQLSTATE 42601",
+        "correct": false,
+        "why": "That was the glued query's failure, not the placeholder's."
+      }
+    ]
+  },
+  {
+    "id": "ex-eny7v120",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 6. A store method returns early on a scan error and its author forgot `defer rows.Close()`. The service runs fine for a day, then every request hangs. Why?",
+    "hint": "`rows` holds a connection until it is closed.",
+    "choices": [
+      {
+        "text": "The scan errors pile up in memory",
+        "correct": false,
+        "why": "Errors are values returned and dropped; connections are what pile up."
+      },
+      {
+        "text": "PostgreSQL locks the table after repeated errors",
+        "correct": false,
+        "why": "No such lock exists; the connections are held on the Go side."
+      },
+      {
+        "text": "The pool ran out of connections",
+        "correct": true,
+        "why": "A `rows` never closed holds its connection for ever, and enough of them leave the pool empty."
+      },
+      {
+        "text": "`rows.Err()` panics on the next call",
+        "correct": false,
+        "why": "It returns an error; nothing panics."
+      }
+    ]
+  },
+  {
+    "id": "ex-r422q300",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "Lesson 7. `Event` has no `gorm.Model`. `db.Model(&e).Updates(models.Event{Seats: 50, Sold: 0})` runs. How many columns does the `UPDATE` set?",
+    "hint": "A struct's zero fields are skipped.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-e55qrzaz",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "Lesson 7. Which of these are true of GORM, as lesson 7 ran it? Choose every one.",
+    "hint": "Four pitfalls, each a rule applied consistently.",
+    "choices": [
+      {
+        "text": "`Updates(models.Event{Sold: 0})` sends no UPDATE",
+        "correct": true,
+        "why": "A struct's zero fields are skipped; naming the column writes the zero."
+      },
+      {
+        "text": "A soft-deleted row still counts against a unique index",
+        "correct": true,
+        "why": "The row is still in the table; only GORM's queries hide it."
+      },
+      {
+        "text": "`Find` with no row returns no error and an empty slice",
+        "correct": true,
+        "why": "`First` returns `ErrRecordNotFound`; `Find` treats an empty list as an answer."
+      },
+      {
+        "text": "`Delete` on a model embedding `gorm.Model` removes the row",
+        "correct": false,
+        "why": "It stamps `deleted_at`; `Unscoped().Delete` removes it."
+      },
+      {
+        "text": "`db.Delete(&models.Event{})` empties the table",
+        "correct": false,
+        "why": "GORM refused it: WHERE conditions required."
+      }
+    ]
+  },
+  {
+    "id": "ex-t9qnkrwy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 7. A `users` model embeds `gorm.Model` and has a unique `email`. A user is deleted with `db.Delete`, then signs up again with the same address. What happens?",
+    "hint": "Where is the deleted row?",
+    "choices": [
+      {
+        "text": "The new row is inserted, since the old one is gone",
+        "correct": false,
+        "why": "The old row is still in the table, stamped."
+      },
+      {
+        "text": "The insert fails on the unique index",
+        "correct": true,
+        "why": "A soft-deleted row still counts against the unique index; `Unscoped().Delete` was needed."
+      },
+      {
+        "text": "GORM undeletes the old row",
+        "correct": false,
+        "why": "No such rule exists; GORM writes an INSERT."
+      },
+      {
+        "text": "GORM refuses the delete in the first place",
+        "correct": false,
+        "why": "The delete named a row, so GORM sent its UPDATE of `deleted_at`."
+      }
+    ]
+  },
+  {
+    "id": "ex-qy9bhb82",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 7. Why does the course count `AutoMigrate` as a strength for a prototype and a weakness for boxoffice?",
+    "hint": "A generated schema knows what the structs know.",
+    "choices": [
+      {
+        "text": "Because it is slower on large tables",
+        "correct": false,
+        "why": "Speed was not the argument."
+      },
+      {
+        "text": "Because it only works with SQLite",
+        "correct": false,
+        "why": "The lesson ran it against PostgreSQL."
+      },
+      {
+        "text": "Because prototypes have no data to lose",
+        "correct": false,
+        "why": "That is part of it, but the missing rule is the reason boxoffice cannot use it."
+      },
+      {
+        "text": "Structs hold no rule like `sold <= seats`",
+        "correct": true,
+        "why": "A table in one call is worth a lot early; boxoffice depends on the CHECK that lesson 6's schema had and AutoMigrate's table lacked."
+      }
+    ]
+  },
+  {
+    "id": "ex-0cm33mcr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 7. A team wants N+1 queries caught the day one is written, not in production. What does the lesson suggest?",
+    "hint": "The lesson's program counted queries with a callback.",
+    "choices": [
+      {
+        "text": "Timing the endpoint in development",
+        "correct": false,
+        "why": "With little data and a local database the difference is invisible."
+      },
+      {
+        "text": "Turning off GORM's logger",
+        "correct": false,
+        "why": "The log is where the queries are seen, not hidden."
+      },
+      {
+        "text": "A test that asserts how many queries an endpoint sends",
+        "correct": true,
+        "why": "Counting queries, as the program did, catches the loop with a few rows of test data."
+      },
+      {
+        "text": "Always using `Find` instead of `First`",
+        "correct": false,
+        "why": "That changes how a missing row is reported, not how many queries a loop sends."
+      }
+    ]
+  },
+  {
+    "id": "ex-8jmh7gcm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 7. To reset every event's sales, a developer writes `db.Model(&models.Event{}).Update(\"sold\", 0)`. What does GORM do?",
+    "hint": "The guard against a missing condition also applies to `Update`.",
+    "choices": [
+      {
+        "text": "Updates every row, as intended",
+        "correct": false,
+        "why": "GORM does not treat a missing condition as 'all rows'."
+      },
+      {
+        "text": "Skips the update because 0 is a zero value",
+        "correct": false,
+        "why": "Naming the column writes the zero; the problem is the missing WHERE."
+      },
+      {
+        "text": "Updates the first row only",
+        "correct": false,
+        "why": "No row was named, and none is picked for you."
+      },
+      {
+        "text": "Refuses it: WHERE conditions required",
+        "correct": true,
+        "why": "Meaning 'all rows' has to be said, with `Where(\"1 = 1\")` or a session setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-52zjkjnz",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "Lesson 8. Before the fix, sqlc's store converted the path's id with `int32(id)`. Which event did `GET /events/4294967298` return? (4,294,967,296 is 2³².)",
+    "hint": "The conversion keeps the low 32 bits.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-5s4rsnj9",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Lesson 8. Match each property to the way of reaching the table that has it.",
+    "hint": "pgx by hand, GORM, sqlc.",
+    "pairs": [
+      {
+        "left": "The scan into Go happens by reflection at run time",
+        "right": "GORM"
+      },
+      {
+        "left": "A column and a field cannot get out of step",
+        "right": "sqlc"
+      },
+      {
+        "left": "A column added to the SELECT and forgotten in the Scan fails at run time",
+        "right": "pgx by hand"
+      }
+    ]
+  },
+  {
+    "id": "ex-th1a47p8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 8. A column is renamed in the database, and nobody updates the queries. With sqlc configured to ask the database, and with lesson 6's hand-written store, when does each find out?",
+    "hint": "One checks before building; the other when the query runs.",
+    "choices": [
+      {
+        "text": "Both at `go build`",
+        "correct": false,
+        "why": "Go cannot see inside an SQL string."
+      },
+      {
+        "text": "Both only when the query runs",
+        "correct": false,
+        "why": "With a database to ask, sqlc finds it earlier."
+      },
+      {
+        "text": "Neither: PostgreSQL follows renames",
+        "correct": false,
+        "why": "A query naming the old column fails."
+      },
+      {
+        "text": "sqlc at `generate`; the hand-written store when the query runs",
+        "correct": true,
+        "why": "PostgreSQL checks every name while sqlc prepares the queries; by hand, the first request finds it."
+      }
+    ]
+  },
+  {
+    "id": "ex-nbd081h2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 8. boxoffice keeps its own `Event` and converts sqlc's `db.Event` in `fromRow`. What does that buy, and what does it cost?",
+    "hint": "The handlers only ever saw the interface.",
+    "choices": [
+      {
+        "text": "It buys speed and costs nothing",
+        "correct": false,
+        "why": "A conversion is extra work, and speed was not the reason."
+      },
+      {
+        "text": "It buys JSON tags, which sqlc cannot generate",
+        "correct": false,
+        "why": "That is not the reason the lesson gives."
+      },
+      {
+        "text": "It costs a second query per row",
+        "correct": false,
+        "why": "The conversion is in memory; no query is added."
+      },
+      {
+        "text": "Untouched handlers, for a conversion to write",
+        "correct": true,
+        "why": "Generated types stay inside the store, and the conversion is where to look when types are narrower."
+      }
+    ]
+  },
+  {
+    "id": "ex-g5jdy1y6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 8. A handler fills `SearchEventsParams` from `?available=10`, setting `MinAvailable.Int32 = 10` and forgetting `Valid`. What does the search return?",
+    "hint": "A field with `Valid: false` is sent as `NULL`.",
+    "choices": [
+      {
+        "text": "Only events with at least 10 seats left",
+        "correct": false,
+        "why": "The number is never sent; `NULL` goes instead."
+      },
+      {
+        "text": "An error about a missing parameter",
+        "correct": false,
+        "why": "`NULL` is a legitimate value for a `sqlc.narg`."
+      },
+      {
+        "text": "Every event, as if the filter were absent",
+        "correct": true,
+        "why": "`NULL` makes `(filter IS NULL OR condition)` true for every row."
+      },
+      {
+        "text": "No events, since 0 seats are required",
+        "correct": false,
+        "why": "The zero value is not sent; `Valid` decides."
+      }
+    ]
+  },
+  {
+    "id": "ex-4rntqk8m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 8. Of the three ways to reach the table, which adds a tool to the build and no Go module beyond pgx?",
+    "hint": "Read the last two rows of the comparison.",
+    "choices": [
+      {
+        "text": "sqlc",
+        "correct": true,
+        "why": "The program it generates imports pgx only; sqlc, and gcc to build it, live outside the module."
+      },
+      {
+        "text": "GORM",
+        "correct": false,
+        "why": "GORM brings itself and its driver as modules."
+      },
+      {
+        "text": "pgx by hand",
+        "correct": false,
+        "why": "It needs no extra tool at all."
+      },
+      {
+        "text": "database/sql with a driver",
+        "correct": false,
+        "why": "Not one of the three compared, and it adds no tool."
+      }
+    ]
+  },
+  {
+    "id": "ex-p15enj8m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 9. A migration that adds a column was applied to production yesterday, and it named the column wrongly. What does the course recommend?",
+    "hint": "Every database keeps a record of which files it has seen.",
+    "choices": [
+      {
+        "text": "Edit yesterday's file and run `goose up` again everywhere",
+        "correct": false,
+        "why": "Databases that already hold that version skip the file, so the edit reaches none of them."
+      },
+      {
+        "text": "Run the file's Down section on production, then fix the Up section",
+        "correct": false,
+        "why": "Dropping the column also drops every value written into it since yesterday."
+      },
+      {
+        "text": "Write a new migration that renames it",
+        "correct": true,
+        "why": "Right. The fix travels the same way as the mistake did, to every database, in order."
+      },
+      {
+        "text": "Rename the column by hand in psql and leave the files alone",
+        "correct": false,
+        "why": "Then the files and production disagree, and every other database gets the wrong name."
+      }
+    ]
+  },
+  {
+    "id": "ex-hcvhm4d0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 9. Three copies of boxoffice start at the same moment against an empty database, each running its embedded migrations. Why is every migration applied exactly once?",
+    "hint": "Look at what `migrate` gives goose besides the files.",
+    "choices": [
+      {
+        "text": "`embed` makes the files read-only, so nobody applies them twice",
+        "correct": false,
+        "why": "Read-only files say nothing about which database already ran them."
+      },
+      {
+        "text": "The session locker holds an advisory lock while migrating",
+        "correct": true,
+        "why": "Right. The other two wait for the lock, then find the versions already recorded and apply nothing."
+      },
+      {
+        "text": "PostgreSQL refuses a second CREATE TABLE and goose ignores the error",
+        "correct": false,
+        "why": "goose does not ignore errors; a failed migration stops it."
+      },
+      {
+        "text": "pgxpool opens one connection at a time while starting",
+        "correct": false,
+        "why": "Each copy has its own pool; nothing in a pool coordinates three processes."
+      }
+    ]
+  },
+  {
+    "id": "ex-sbrkytms",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 9. Fifty buyers each buy one seat at once. The code reads `sold`, adds one in Go and writes the result back, inside a transaction at PostgreSQL's default isolation. What is the outcome?",
+    "hint": "A transaction is all or nothing; is it also alone?",
+    "choices": [
+      {
+        "text": "Fewer seats recorded than sold",
+        "correct": true,
+        "why": "Right. Two transactions read the same value and both write value plus one: a lost update."
+      },
+      {
+        "text": "Exactly fifty, because each sale runs in its own transaction",
+        "correct": false,
+        "why": "All or nothing is not isolation; at READ COMMITTED they still read each other's starting point."
+      },
+      {
+        "text": "Forty-nine sales fail with SQLSTATE 40001",
+        "correct": false,
+        "why": "Serialization failures come from REPEATABLE READ, not from the default level."
+      },
+      {
+        "text": "The transactions deadlock and all fifty time out",
+        "correct": false,
+        "why": "Plain reads take no locks; nothing waits, and that is the trouble."
+      }
+    ]
+  },
+  {
+    "id": "ex-qe185hch",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 9. A colleague fixes the lost update by raising the isolation to REPEATABLE READ. Every count now adds up. What does the course hold against it?",
+    "hint": "What did the losing transactions receive?",
+    "choices": [
+      {
+        "text": "Some sales are still lost silently",
+        "correct": false,
+        "why": "No: the counts add up, so nothing was lost; the failures were reported."
+      },
+      {
+        "text": "Buyers are refused with 40001 while seats are left",
+        "correct": true,
+        "why": "Right. Each refusal is honest but needless; a single `UPDATE ... sold + 1` or `FOR UPDATE` sells to all of them."
+      },
+      {
+        "text": "It makes every SELECT in the program take a write lock",
+        "correct": false,
+        "why": "REPEATABLE READ takes no extra locks; it refuses the later writer instead."
+      },
+      {
+        "text": "PostgreSQL does not offer that level",
+        "correct": false,
+        "why": "It does; the lesson ran it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1nb1gecr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 9. A pool of five connections. Inside `Sell`'s transaction, someone adds a call to `s.Get(ctx, id)` through the pool. Twenty buyers arrive at once. What happens?",
+    "hint": "Count what each request holds and what it asks for.",
+    "choices": [
+      {
+        "text": "A deadlock inside the pool",
+        "correct": true,
+        "why": "Right. Requests hang until their deadlines: five transactions hold all five connections, each waits for a sixth, and nobody gives one back."
+      },
+      {
+        "text": "The pool grows to twenty connections for the burst",
+        "correct": false,
+        "why": "`MaxConns` is a ceiling; the pool never opens past it."
+      },
+      {
+        "text": "PostgreSQL detects the deadlock and aborts one transaction",
+        "correct": false,
+        "why": "The wait is in Go, for a pool connection; the database sees nothing waiting."
+      },
+      {
+        "text": "Five sales succeed and fifteen get 409",
+        "correct": false,
+        "why": "That is the outcome after the fix, when the read goes through the transaction."
+      }
+    ]
+  },
+  {
+    "id": "ex-qpqzjgtq",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Lesson 9. A pool of two connections. Six queries that take one second each start at the same moment, with no deadline. After how many seconds does the last one finish?",
+    "hint": "The queries wait for a connection in waves.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-042bxm09",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Lesson 9. Put the steps of `pgStore.Sell` in the order the code runs them.",
+    "hint": "Rollback is registered before anything fails.",
+    "items": [
+      "`s.pool.Begin(ctx)` takes a connection and sends BEGIN",
+      "`defer tx.Rollback(ctx)`",
+      "`SellSeats` through `WithTx(tx)`",
+      "`InsertTicket` through the same transaction",
+      "`tx.Commit(ctx)`"
+    ]
+  },
+  {
+    "id": "ex-wsx74n82",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "Lesson 10. Match each call of boxoffice's contract, or of a service like it, to its kind.",
+    "hint": "Where does the word `stream` sit?",
+    "pairs": [
+      {
+        "left": "`GetEvent`: an id in, an event out",
+        "right": "unary"
+      },
+      {
+        "left": "`Watch`: an id in, availability on every change",
+        "right": "server streaming"
+      },
+      {
+        "left": "`Scan`: tickets one by one, then a summary",
+        "right": "client streaming"
+      },
+      {
+        "left": "a chat where both sides talk at will",
+        "right": "bidirectional"
+      }
+    ]
+  },
+  {
+    "id": "ex-qq1m336b",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "hard",
+    "prompt": "Lesson 10. Old clients stay deployed. Match each change to `seats.proto` with its verdict.",
+    "hint": "The numbers are the contract; the names are documentation.",
+    "pairs": [
+      {
+        "left": "add `string venue = 5;`",
+        "right": "safe"
+      },
+      {
+        "left": "rename field 2 from `name` to `title`",
+        "right": "safe on the wire"
+      },
+      {
+        "left": "give `seats` the number 7 instead of 3",
+        "right": "breaks every existing reader"
+      },
+      {
+        "left": "remove `rpc Scan`",
+        "right": "old callers get `Unimplemented`"
+      }
+    ]
+  },
+  {
+    "id": "ex-3wzzb20k",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 10. A client calls `GetEvent` with a 2-second deadline, and the server is slow. What does the server's handler see?",
+    "hint": "In gRPC the deadline is not only the client's business.",
+    "choices": [
+      {
+        "text": "Nothing: the deadline is enforced only inside the client",
+        "correct": false,
+        "why": "That is how a plain HTTP client timeout behaves, not gRPC's."
+      },
+      {
+        "text": "A 504 status in the HTTP/2 response",
+        "correct": false,
+        "why": "gRPC answers HTTP 200 and puts its own code in `grpc-status`."
+      },
+      {
+        "text": "A panic, which `recoverPanics` turns into Internal",
+        "correct": false,
+        "why": "Nothing panics, and `recoverPanics` wraps HTTP handlers, not gRPC methods."
+      },
+      {
+        "text": "Its context ends when the client's deadline passes",
+        "correct": true,
+        "why": "Right. The deadline travels with the call in a header, and the client receives `DeadlineExceeded`."
+      }
+    ]
+  },
+  {
+    "id": "ex-scj7tazy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 10. A new `rpc Cancel` is added to the contract and the code regenerated. Servers that have not written `Cancel` yet still compile. Why?",
+    "hint": "Look at what `seatsServer` embeds.",
+    "choices": [
+      {
+        "text": "Go ignores interface methods that nobody calls",
+        "correct": false,
+        "why": "A type satisfies an interface only with every method present."
+      },
+      {
+        "text": "protoc leaves new methods out until a server defines them",
+        "correct": false,
+        "why": "Generation reads only the contract; it knows nothing about servers."
+      },
+      {
+        "text": "gRPC registers methods lazily at the first call",
+        "correct": false,
+        "why": "Registration happens at start-up, from the generated description."
+      },
+      {
+        "text": "They embed `UnimplementedSeatsServer`",
+        "correct": true,
+        "why": "Right. The embedded type supplies every method the server lacks, answering `Unimplemented`."
+      }
+    ]
+  },
+  {
+    "id": "ex-5myvy60v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 10. `Watch` is rewritten without the `select` on `ctx.Done()`, only the ticker. A client watches for a minute and disconnects. What follows?",
+    "hint": "In Go a stream is a loop.",
+    "choices": [
+      {
+        "text": "gRPC kills the goroutine when the connection closes",
+        "correct": false,
+        "why": "Go has no way to kill a goroutine from outside; it has to return by itself."
+      },
+      {
+        "text": "The server panics on the next tick",
+        "correct": false,
+        "why": "Reading the store after the client left works perfectly; that is the waste."
+      },
+      {
+        "text": "The client receives `Canceled` and reconnects",
+        "correct": false,
+        "why": "The client left on purpose; the problem is on the server side."
+      },
+      {
+        "text": "It keeps polling until a `Send` fails",
+        "correct": true,
+        "why": "Right. Nothing tells the loop the client left until a send fails; with no change in seats, no send happens."
+      }
+    ]
+  },
+  {
+    "id": "ex-nvnn94ja",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Lesson 10. Fill in the blank: in a Protocol Buffers message, what travels on the wire for each field is its ____, not its name.",
+    "hint": "`--decode_raw` recovers it without the `.proto`.",
+    "blanks": [
+      {
+        "accept": [
+          "number",
+          "field number",
+          "tag"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-e2rzxp97",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 11. A team picks gRPC for its public API because protobuf answers are half the size of JSON. The service sits behind a proxy that gzips responses. What did lesson 11 measure that undercuts the reason?",
+    "hint": "Two hundred events, raw and compressed.",
+    "choices": [
+      {
+        "text": "JSON is smaller than protobuf once compressed",
+        "correct": false,
+        "why": "Protobuf stayed slightly smaller; the gap shrank, it did not reverse."
+      },
+      {
+        "text": "Compressed, they differ by six per cent",
+        "correct": true,
+        "why": "Right. 1,350 against 1,430 bytes; the raw gap is mostly repeated field names, which gzip removes."
+      },
+      {
+        "text": "Protobuf does not compress at all",
+        "correct": false,
+        "why": "It compressed too, from 5,671 to 1,350 bytes."
+      },
+      {
+        "text": "Encoding protobuf is ten times slower",
+        "correct": false,
+        "why": "Encoding protobuf was a little faster, not slower."
+      }
+    ]
+  },
+  {
+    "id": "ex-yn05ajda",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 11. A load balancer counts errors by HTTP status. Every gRPC call to boxoffice that fails with NotFound or Internal is counted as what?",
+    "hint": "Where does gRPC put its outcome?",
+    "choices": [
+      {
+        "text": "A 404 and a 500, as in REST",
+        "correct": false,
+        "why": "gRPC does not map its codes onto HTTP statuses."
+      },
+      {
+        "text": "A protocol error, since HTTP/2 confuses it",
+        "correct": false,
+        "why": "A balancer that forwards gRPC speaks HTTP/2; it reads the status fine."
+      },
+      {
+        "text": "A success, since the HTTP status is 200",
+        "correct": true,
+        "why": "Right. The real code arrives in `grpc-status`, a trailer the balancer did not read."
+      },
+      {
+        "text": "Nothing at all, since gRPC calls skip the balancer",
+        "correct": false,
+        "why": "They go through it like any other HTTP/2 request."
+      }
+    ]
+  },
+  {
+    "id": "ex-dcr4gtx7",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Lesson 11. Match each caller with the protocol section 07's four questions give it.",
+    "hint": "If the first answer is yes, REST; if any other is yes, gRPC is worth its tooling.",
+    "pairs": [
+      {
+        "left": "the box office's web page",
+        "right": "REST and JSON"
+      },
+      {
+        "left": "a partner company's app built on your API",
+        "right": "REST with an OpenAPI description"
+      },
+      {
+        "left": "your door scanner streaming tickets to your own service",
+        "right": "gRPC"
+      }
+    ],
+    "right_distractors": [
+      "SOAP"
+    ]
+  },
+  {
+    "id": "ex-jj4z7qhx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 11. A front-end developer asks to call boxoffice's gRPC port straight from a page with a JavaScript library. What stands in the way?",
+    "hint": "Where does `grpc-status` arrive?",
+    "choices": [
+      {
+        "text": "Browsers do not speak HTTP/2",
+        "correct": false,
+        "why": "They do; the problem is what a page is allowed to see of it."
+      },
+      {
+        "text": "`fetch` hides trailers from a page",
+        "correct": true,
+        "why": "Right. Trailers and HTTP/2 framing are out of a page's reach, so it needs gRPC-Web, Connect or a gateway: a second protocol to run."
+      },
+      {
+        "text": "Protobuf has no JavaScript implementation",
+        "correct": false,
+        "why": "It has several; encoding is not the obstacle."
+      },
+      {
+        "text": "CORS forbids binary bodies",
+        "correct": false,
+        "why": "CORS says nothing about the body's format."
+      }
+    ]
+  },
+  {
+    "id": "ex-aw9w7aa1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 11. A year after adopting gRPC, every caller reaches the service through grpc-gateway, which turns it back into JSON. What does the course read in that?",
+    "hint": "Section 07 names the signs of each wrong choice.",
+    "choices": [
+      {
+        "text": "gRPC was the wrong choice for these callers",
+        "correct": true,
+        "why": "Right. Everyone pays for two protocols and uses one."
+      },
+      {
+        "text": "The gateway proves the design scales",
+        "correct": false,
+        "why": "It proves the callers wanted JSON all along."
+      },
+      {
+        "text": "REST was the wrong choice for the internal callers",
+        "correct": false,
+        "why": "There is no REST service here; the callers are going around gRPC."
+      },
+      {
+        "text": "The contract needs a v2 package",
+        "correct": false,
+        "why": "Nothing in the contract broke; versioning is for breaking changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-34dd0hn8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 11. grpcurl prints an event as JSON without a `sold` field. A dashboard script reads that JSON. What must it assume?",
+    "hint": "The binary form never sent it.",
+    "choices": [
+      {
+        "text": "A missing number means zero",
+        "correct": true,
+        "why": "Right. Fields at their zero value are left out, the ambiguity lesson 3 met."
+      },
+      {
+        "text": "The event has no seats sold record yet and must be fetched again",
+        "correct": false,
+        "why": "Asking again returns the same JSON; zero is the answer."
+      },
+      {
+        "text": "The server failed to read the column",
+        "correct": false,
+        "why": "A failure would be a status, not a missing field."
+      },
+      {
+        "text": "The contract version is older than the client's",
+        "correct": false,
+        "why": "`sold` is in the contract; it was zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-k7fpc5bp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Lesson 12. Why does boxoffice's access line say `\"msg\":\"request\"` every time, with the method, path and status as fields?",
+    "hint": "Think of a program reading ten million lines.",
+    "choices": [
+      {
+        "text": "slog refuses messages longer than one word",
+        "correct": false,
+        "why": "Messages are free text; the constant is a choice."
+      },
+      {
+        "text": "It saves bytes, which matters for disk",
+        "correct": false,
+        "why": "The JSON line is longer than the old one."
+      },
+      {
+        "text": "Machines filter fields without guessing",
+        "correct": true,
+        "why": "Right. `status` is a number with a name, and every request line is found by one value."
+      },
+      {
+        "text": "Cloud loggers drop lines with variable text",
+        "correct": false,
+        "why": "No platform does that; the reason is searching."
+      }
+    ]
+  },
+  {
+    "id": "ex-5qw6nhd2",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Lesson 12. Which of these must never appear in boxoffice's log? Choose every one.",
+    "hint": "A log is kept longer and copied further than the data it describes.",
+    "choices": [
+      {
+        "text": "the `Authorization` header",
+        "correct": true,
+        "why": "Right. It carries a staff token."
+      },
+      {
+        "text": "a whole request body",
+        "correct": true,
+        "why": "Right. It holds whatever the client sent, secrets included."
+      },
+      {
+        "text": "a card number",
+        "correct": true,
+        "why": "Right. The card schemes forbid keeping it outside a certified system."
+      },
+      {
+        "text": "the request id",
+        "correct": false,
+        "why": "That is exactly what a good line holds."
+      },
+      {
+        "text": "the response status",
+        "correct": false,
+        "why": "Part of every access line since lesson 2."
+      }
+    ]
+  },
+  {
+    "id": "ex-spvztn7x",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 12. A new handler logs `\"email\", p.Email` where `p.Email` is a plain string. Lesson 12's `email` type exists. What does the course recommend?",
+    "hint": "Reduce it where nobody has to remember.",
+    "choices": [
+      {
+        "text": "Keep the plain string; logs are internal",
+        "correct": false,
+        "why": "Logs reach vendors and backups; an e-mail is personal data under LGPD."
+      },
+      {
+        "text": "Log it at DEBUG so production never writes it",
+        "correct": false,
+        "why": "A level is a filter somebody changes during an incident; the type is a guarantee."
+      },
+      {
+        "text": "Hash it with SHA-256 in the handler",
+        "correct": false,
+        "why": "The course reduces at the type, so no handler has to do anything."
+      },
+      {
+        "text": "Log `email(p.Email)`",
+        "correct": true,
+        "why": "Right. Its `LogValue` hides most of the address in every call; better still, log the ticket id."
+      }
+    ]
+  },
+  {
+    "id": "ex-9cepzdv5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 12. zerolog wrote a line in about 215 ns, zap and slog in about 450 ns. Why does the course still choose slog for boxoffice?",
+    "hint": "Put the numbers next to a database query.",
+    "choices": [
+      {
+        "text": "slog allocates less than zerolog",
+        "correct": false,
+        "why": "Both allocated nothing per line."
+      },
+      {
+        "text": "zerolog writes no JSON",
+        "correct": false,
+        "why": "zerolog writes JSON as it goes."
+      },
+      {
+        "text": "zap and zerolog stopped being maintained",
+        "correct": false,
+        "why": "The lesson says nothing of the kind."
+      },
+      {
+        "text": "The gap vanishes beside the database",
+        "correct": true,
+        "why": "Right. A query takes milliseconds, and slog is the shared type: libraries accept a `*slog.Logger`, and zerolog or zap fit behind it when needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-nwxd0hr9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 12. A batch job using zap's production logger exits right after logging an ERROR, and the line never reaches the log. What was forgotten?",
+    "hint": "zap buffers.",
+    "choices": [
+      {
+        "text": "`defer logger.Sync()`",
+        "correct": true,
+        "why": "Right. It flushes buffered lines before the program exits."
+      },
+      {
+        "text": "`logger.Sugar()`",
+        "correct": false,
+        "why": "The sugared API changes the call style, not buffering."
+      },
+      {
+        "text": "A stacktrace option",
+        "correct": false,
+        "why": "The production configuration already adds one to ERROR lines."
+      },
+      {
+        "text": "`slog.SetDefault`",
+        "correct": false,
+        "why": "That is slog's, and it flushes nothing of zap's."
+      }
+    ]
+  },
+  {
+    "id": "ex-g8zj36tt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 12. After `slog.SetDefault`, the old `log.Printf(\"unexpected error: %v\", err)` in `fail` comes out as JSON. What is still missing from that line?",
+    "hint": "Lessons 16 and 17 showed such lines.",
+    "choices": [
+      {
+        "text": "Fields, the request id and a true level",
+        "correct": true,
+        "why": "Right. It comes out as INFO, and the bridge turns text into a message and nothing more; converting the call is the rest of the job."
+      },
+      {
+        "text": "Nothing; SetDefault converts old calls completely",
+        "correct": false,
+        "why": "The error is buried in the message text, at the wrong level."
+      },
+      {
+        "text": "The timestamp, which `log` does not give slog",
+        "correct": false,
+        "why": "Every bridged line had a time."
+      },
+      {
+        "text": "Valid JSON, since `%v` breaks the quoting",
+        "correct": false,
+        "why": "The handler escapes the text; the line is valid JSON."
+      }
+    ]
+  },
+  {
+    "id": "ex-0vn6z4pa",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Lesson 13. Match each situation with the technique the lesson's reasoning picks.",
+    "hint": "Who talks, how frequently, and how many connections?",
+    "pairs": [
+      {
+        "left": "a staff dashboard a dozen people refresh every minute",
+        "right": "polling"
+      },
+      {
+        "left": "seats left on an event page, server to viewers",
+        "right": "server-sent events"
+      },
+      {
+        "left": "a chat between buyers in a queue",
+        "right": "WebSocket"
+      },
+      {
+        "left": "tens of thousands of connections that must survive a deploy",
+        "right": "Centrifugo"
+      }
+    ]
+  },
+  {
+    "id": "ex-8v9a809z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 13. A sale runs its UPDATE, the trigger calls `pg_notify`, and then the transaction rolls back. What do the listeners receive?",
+    "hint": "When is a notification delivered?",
+    "choices": [
+      {
+        "text": "The new number, then a correction with the old one",
+        "correct": false,
+        "why": "PostgreSQL sends no correction; it never sent the first one."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. Notifications are delivered at commit, so a page never shows a seat gone that is still for sale."
+      },
+      {
+        "text": "The new number, which stays wrong until the next sale",
+        "correct": false,
+        "why": "That would happen if notifications were sent at once; they wait for the commit."
+      },
+      {
+        "text": "An error on the channel `availability`",
+        "correct": false,
+        "why": "Channels carry messages, never errors."
+      }
+    ]
+  },
+  {
+    "id": "ex-ak8g0mm6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 13. Why does the news of a sale come from a trigger in PostgreSQL rather than from a call to the hub at the end of `Sell`?",
+    "hint": "Count the ways a sale reaches the database.",
+    "choices": [
+      {
+        "text": "Every sale passes through the database",
+        "correct": true,
+        "why": "Right. With two copies, each LISTENs and tells its own visitors; a hub fed by `Sell` would tell only one copy's."
+      },
+      {
+        "text": "Go refuses channel sends inside a transaction",
+        "correct": false,
+        "why": "Nothing stops it; the problem is which process hears."
+      },
+      {
+        "text": "Triggers are faster than Go code",
+        "correct": false,
+        "why": "Speed is not the argument the lesson makes."
+      },
+      {
+        "text": "`Sell` has no access to the hub",
+        "correct": false,
+        "why": "It would be one parameter away; the reason is structural."
+      }
+    ]
+  },
+  {
+    "id": "ex-vv8zb51k",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 13. The hub drops a value when a watcher's buffer of eight is full. When does a viewer see something wrong because of it?",
+    "hint": "Each message is the whole number of seats left.",
+    "choices": [
+      {
+        "text": "Every time, since a dropped sale is never counted",
+        "correct": false,
+        "why": "Messages are states, not deltas; nothing is added up."
+      },
+      {
+        "text": "When the last change was dropped",
+        "correct": true,
+        "why": "Right. Any later message replaces a dropped one, so only a final drop leaves a stale number."
+      },
+      {
+        "text": "Never, since `publish` blocks until there is room",
+        "correct": false,
+        "why": "It does not wait; the `default` case drops."
+      },
+      {
+        "text": "Only for WebSocket viewers, never for server-sent events",
+        "correct": false,
+        "why": "Both handlers read from the same hub."
+      }
+    ]
+  },
+  {
+    "id": "ex-g0xberp7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 13. A page on `https://evil.example` opens a WebSocket to boxoffice's `/events/1/ws`. Which part of boxoffice decides whether it is accepted?",
+    "hint": "Lesson 2's middleware governs `fetch`.",
+    "choices": [
+      {
+        "text": "The `cors` middleware",
+        "correct": false,
+        "why": "CORS does not apply to WebSockets; it is never consulted."
+      },
+      {
+        "text": "`Accept`'s `OriginPatterns`",
+        "correct": true,
+        "why": "Right. The browser sends `Origin`; anything not the host or a listed pattern gets 403."
+      },
+      {
+        "text": "The browser's same-origin policy, before the request leaves",
+        "correct": false,
+        "why": "Browsers let any page open a WebSocket anywhere; the server must check."
+      },
+      {
+        "text": "`requireStaff`, since the route is public",
+        "correct": false,
+        "why": "It guards `/admin/` only."
+      }
+    ]
+  },
+  {
+    "id": "ex-ssrwj9yc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 13. Someone deletes the `SetWriteDeadline(time.Time{})` line from `liveEvents`. A viewer keeps the page open. What happens?",
+    "hint": "Lesson 1 set four timeouts.",
+    "choices": [
+      {
+        "text": "Nothing; flushing resets the deadline",
+        "correct": false,
+        "why": "A flush sends bytes; the deadline stays where it was."
+      },
+      {
+        "text": "The stream ends after sixty seconds of quiet, by `IdleTimeout`",
+        "correct": false,
+        "why": "IdleTimeout applies between requests, not during one."
+      },
+      {
+        "text": "The WebSocket route breaks too",
+        "correct": false,
+        "why": "Hijacking clears the deadlines; the WebSocket never needed the line."
+      },
+      {
+        "text": "`WriteTimeout` cuts it at ten seconds",
+        "correct": true,
+        "why": "Right. Ten seconds is the longest any response has to write, unless this response lifts it."
+      }
+    ]
+  },
+  {
+    "id": "ex-r8yjqr11",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "Lesson 13. The pool has `MaxConns` 10, and `listen` holds one connection for `LISTEN`. How many are left for queries?",
+    "hint": "The listening connection is never given back.",
+    "value": 9,
+    "tolerance": 0,
+    "unit": "connections"
+  },
+  {
+    "id": "ex-zvhpr29d",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Lesson 14. `-max-conns` has a default of 10. boxoffice starts with `BOXOFFICE_MAX_CONNS=20` in its environment and `-max-conns=4` on the command line. What pool size does it use?",
+    "hint": "`fs.Set` from the variable, then `Parse`.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-6b9a13mx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 14. boxoffice is started with `./boxoffice -max-conns 6 extra -http :9000`. Which address does it listen on?",
+    "hint": "Where does the flag package stop?",
+    "choices": [
+      {
+        "text": "`:9000`",
+        "correct": false,
+        "why": "`-http :9000` came after a non-flag and was left in the arguments."
+      },
+      {
+        "text": "None: the flag package exits with status 2",
+        "correct": false,
+        "why": "A leftover argument is not an error to `flag`."
+      },
+      {
+        "text": "`localhost:8080`, the default",
+        "correct": true,
+        "why": "Right. Parsing stops at `extra`, the first argument that is not a flag, so `-http` is never read."
+      },
+      {
+        "text": "`:9000`, but `-max-conns` keeps its default",
+        "correct": false,
+        "why": "`-max-conns 6` came first and was read; it is `-http` that was not."
+      }
+    ]
+  },
+  {
+    "id": "ex-m7tbfxgm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 14. A deploy sets `BOXOFFICE_ORIGIN=tickets.example.com`, without a scheme. What happens, and why is that the right moment?",
+    "hint": "A bad value will be found; the question is when.",
+    "choices": [
+      {
+        "text": "`load` refuses to start, while the old version still serves",
+        "correct": true,
+        "why": "Right. Otherwise it would start cleanly and match no browser's `Origin`, found by a customer."
+      },
+      {
+        "text": "It starts and logs a warning on the first WebSocket",
+        "correct": false,
+        "why": "That is the late discovery the check exists to prevent."
+      },
+      {
+        "text": "It adds `https://` and carries on",
+        "correct": false,
+        "why": "`load` guesses nothing; it reports what to write."
+      },
+      {
+        "text": "Nothing; the origin is used only by CORS, which ignores schemes",
+        "correct": false,
+        "why": "CORS compares the whole origin, scheme included, and WebSockets use the host too."
+      }
+    ]
+  },
+  {
+    "id": "ex-h6rgjm5y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 14. A colleague proposes `-token` as a flag, \"since flags are the easiest to override\". What is the course's objection?",
+    "hint": "Run `ps` as another user.",
+    "choices": [
+      {
+        "text": "Any user reads it with `ps`",
+        "correct": true,
+        "why": "Right. A command line is public on the machine; the environment is readable by the owner and root only, and a `_FILE` narrower still."
+      },
+      {
+        "text": "Flags are limited to 64 characters",
+        "correct": false,
+        "why": "No such limit exists; a 32-character token fits."
+      },
+      {
+        "text": "The flag package prints every value in its help",
+        "correct": false,
+        "why": "It prints defaults, not what was passed; the leak is elsewhere."
+      },
+      {
+        "text": "`fs.Set` does not parse a secret type",
+        "correct": false,
+        "why": "A string flag would parse fine; that is not the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-cxg837ce",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 14. A pull request adds `if cfg.Env == \"production\" { ... }` to skip a check outside production. What does the course say?",
+    "hint": "Environments should differ in values.",
+    "choices": [
+      {
+        "text": "It is fine if the variable has a default",
+        "correct": false,
+        "why": "A default does not change who runs the branch first."
+      },
+      {
+        "text": "Twelve-factor requires exactly that setting",
+        "correct": false,
+        "why": "It asks for configuration in the environment, not a mode switch."
+      },
+      {
+        "text": "It belongs in a flag, not in a variable",
+        "correct": false,
+        "why": "The source is not the problem; the branch is."
+      },
+      {
+        "text": "That branch runs first in front of real users",
+        "correct": true,
+        "why": "Right. Code only production executes is tested by customers; vary values, never which lines run."
+      }
+    ]
+  },
+  {
+    "id": "ex-ys8d7rp3",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Lesson 14. Fill in the blank: to tell a variable set to the empty string from one that is not set at all, call `os.____`.",
+    "hint": "It returns the value and a bool.",
+    "blanks": [
+      {
+        "accept": [
+          "LookupEnv"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bshwykqj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Lesson 15. Somebody moves `requestID` after `logRequests` in `chain`, and access lines lose their id. Which distance of test catches it?",
+    "hint": "A handler alone never passes through middleware.",
+    "choices": [
+      {
+        "text": "The whole router, served by `httptest.Server`",
+        "correct": true,
+        "why": "Right. Only `routes(...)` with its chain shows middleware order."
+      },
+      {
+        "text": "One handler with a `ResponseRecorder`",
+        "correct": false,
+        "why": "The handler runs without any middleware."
+      },
+      {
+        "text": "An integration test against PostgreSQL",
+        "correct": false,
+        "why": "The database knows nothing about middleware."
+      },
+      {
+        "text": "`go vet`",
+        "correct": false,
+        "why": "The order is valid Go; vet has nothing to say."
+      }
+    ]
+  },
+  {
+    "id": "ex-avzawxa1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 15. A test counts successful purchases with `sold++` from fifty goroutines, and passes every run. What does the course conclude?",
+    "hint": "Run it with `-race`.",
+    "choices": [
+      {
+        "text": "It proves `memStore` is safe under concurrency",
+        "correct": false,
+        "why": "The store is safe; the test's own counter is not."
+      },
+      {
+        "text": "It is wrong: `sold++` races",
+        "correct": true,
+        "why": "Right. The race detector reports it, `atomic.Int64` fixes it; passing was luck, and on a busier machine it fails."
+      },
+      {
+        "text": "It is fine, because goroutines share memory",
+        "correct": false,
+        "why": "Sharing without ordering is exactly the race."
+      },
+      {
+        "text": "`wg.Wait()` makes the increments safe",
+        "correct": false,
+        "why": "It orders the end, not the increments among themselves."
+      }
+    ]
+  },
+  {
+    "id": "ex-6zgfdwt5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 15. CI runs `go test ./...` and is green, but no job sets `BOXOFFICE_TEST_DATABASE_URL`. What has CI verified about `pgStore`?",
+    "hint": "What does a skipped test print without `-v`?",
+    "choices": [
+      {
+        "text": "Everything, because `t.Skip` fails the package",
+        "correct": false,
+        "why": "Skipping is not failing."
+      },
+      {
+        "text": "Its SQL, through `memStore`",
+        "correct": false,
+        "why": "`memStore` runs no SQL at all."
+      },
+      {
+        "text": "The concurrency of `Sell`, with the race detector",
+        "correct": false,
+        "why": "Those tests never ran."
+      },
+      {
+        "text": "Nothing; the tests skipped",
+        "correct": true,
+        "why": "Right. The line still said `ok`: a skip looks like a pass; CI must set the variable, and a step that fails when it is empty guards it."
+      }
+    ]
+  },
+  {
+    "id": "ex-7gvk79kx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 15. A test reads rows from the test database. Someone changes the rows by hand and runs `go test` again; it says `(cached)`. Why, and what fixes it?",
+    "hint": "What does the cache key on?",
+    "choices": [
+      {
+        "text": "The test is broken; caching only happens for tests that skip",
+        "correct": false,
+        "why": "Passing tests are cached too."
+      },
+      {
+        "text": "`go clean -modcache` clears it",
+        "correct": false,
+        "why": "That deletes downloaded modules, not test results."
+      },
+      {
+        "text": "The cache ignores the database; `-count=1`",
+        "correct": true,
+        "why": "Right. It tracks code, flags and variables, and the database is none of those, so CI always passes `-count=1`."
+      },
+      {
+        "text": "PostgreSQL returned cached rows",
+        "correct": false,
+        "why": "The test did not run at all; go replayed the result."
+      }
+    ]
+  },
+  {
+    "id": "ex-22t5ackx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 15. Before the fix, two equal tokens for manager and door gave the holder which role?",
+    "hint": "The roles were read from a map.",
+    "choices": [
+      {
+        "text": "A different one on different starts, by map order",
+        "correct": true,
+        "why": "Right. Go varies map iteration on purpose, and the second write replaced the first; now `load` refuses it."
+      },
+      {
+        "text": "Always manager, the first entry",
+        "correct": false,
+        "why": "Map literals keep no order when iterated."
+      },
+      {
+        "text": "Neither: `load` refused it",
+        "correct": false,
+        "why": "Refusing is the fix lesson 15 added; before it, nothing complained."
+      },
+      {
+        "text": "Both roles at once",
+        "correct": false,
+        "why": "A map holds one value per key."
+      }
+    ]
+  },
+  {
+    "id": "ex-hdxmb9v9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 15. A handler test calls `getEvent(store)(rec, req)` and forgets `req.SetPathValue`. What status does every case get?",
+    "hint": "No mux matched a pattern for this request.",
+    "choices": [
+      {
+        "text": "404 for every event",
+        "correct": false,
+        "why": "The store is never asked; the id fails to parse first."
+      },
+      {
+        "text": "400, from `pathID`",
+        "correct": true,
+        "why": "Right. `PathValue` returns \"\", `Atoi` fails, and the handler refuses."
+      },
+      {
+        "text": "200, since `NewRequest` parses the URL",
+        "correct": false,
+        "why": "It parses the URL, not the pattern's wildcards."
+      },
+      {
+        "text": "A panic on a nil path value",
+        "correct": false,
+        "why": "It is a string, empty, not nil."
+      }
+    ]
+  },
+  {
+    "id": "ex-wpz6cz71",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "hard",
+    "prompt": "Lesson 15. `testDB` registers two cleanups: first one that drops the database, then `pool.Close`. Put what happens when the test ends in order.",
+    "hint": "Cleanups run last-registered first.",
+    "items": [
+      "the test's own body returns",
+      "`pool.Close` closes the pool's connections",
+      "`DROP DATABASE ... WITH (FORCE)` removes the database",
+      "the admin connection closes"
+    ]
+  },
+  {
+    "id": "ex-zb6mdr4v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 16. An image `FROM gcr.io/distroless/static-debian12` runs a binary built with plain `go build` and answers `exec /boxoffice: no such file or directory`. What is missing?",
+    "hint": "Read the binary's header with `file`.",
+    "choices": [
+      {
+        "text": "A loader; build with `CGO_ENABLED=0`",
+        "correct": true,
+        "why": "Right. A native build with cgo on is dynamically linked, and the image has no C library or loader."
+      },
+      {
+        "text": "The binary: `COPY` put it in the wrong place",
+        "correct": false,
+        "why": "The file is there; the message is about the interpreter it asks for."
+      },
+      {
+        "text": "A shell to start it",
+        "correct": false,
+        "why": "The exec-form `ENTRYPOINT` needs no shell."
+      },
+      {
+        "text": "Execute permission on the file",
+        "correct": false,
+        "why": "A permission problem says `permission denied`."
+      }
+    ]
+  },
+  {
+    "id": "ex-gdhccgq9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 16. An image runs boxoffice with its defaults and `-p 8080:8080`, and `curl localhost:8080` from the host gets nothing. Why?",
+    "hint": "Whose `localhost` is it?",
+    "choices": [
+      {
+        "text": "It listens on the container's own localhost, which the forwarded port never reaches",
+        "correct": true,
+        "why": "Right. `BOXOFFICE_HTTP=:8080` in the image makes it listen on every interface."
+      },
+      {
+        "text": "`EXPOSE` is missing",
+        "correct": false,
+        "why": "`EXPOSE` documents ports and publishes nothing."
+      },
+      {
+        "text": "Distroless blocks incoming connections",
+        "correct": false,
+        "why": "It has no firewall; it has almost nothing."
+      },
+      {
+        "text": "Port 8080 needs root in a container",
+        "correct": false,
+        "why": "Ports above 1024 need no privilege."
+      }
+    ]
+  },
+  {
+    "id": "ex-p3zryfsb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 16. In the container, run as your uid with the socket mounted, boxoffice fails with `failed to connect to user= database=boxoffice`. What explains the empty user?",
+    "hint": "pgx falls back on the operating system.",
+    "choices": [
+      {
+        "text": "The image's `/etc/passwd` has no name for your uid",
+        "correct": true,
+        "why": "Right. The URL named no user, so pgx looked the uid up and found nothing; `postgres://$USER@/...` fixes it."
+      },
+      {
+        "text": "Peer authentication refused the uid",
+        "correct": false,
+        "why": "The server complained that no user name was sent, before any authentication."
+      },
+      {
+        "text": "`DATABASE_URL` was not passed to the container",
+        "correct": false,
+        "why": "It was; `database=boxoffice` came from it."
+      },
+      {
+        "text": "The token file is unreadable for that uid",
+        "correct": false,
+        "why": "The token is read by `load`, which passed; this is the database."
+      }
+    ]
+  },
+  {
+    "id": "ex-6dpv90s5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 16. A release script builds with `-ldflags \"-X main.verison=v1.2.0\"`. What does the binary report as its version?",
+    "hint": "Read the variable's name carefully.",
+    "choices": [
+      {
+        "text": "`v1.2.0`",
+        "correct": false,
+        "why": "`main.verison` is not `main.version`."
+      },
+      {
+        "text": "`dev`, and the build raised no error",
+        "correct": true,
+        "why": "Right. `-X` on a variable that does not exist is ignored, which is why the default is a word no release uses."
+      },
+      {
+        "text": "Nothing: the link fails",
+        "correct": false,
+        "why": "The linker does not complain."
+      },
+      {
+        "text": "An empty string",
+        "correct": false,
+        "why": "The variable keeps its own default."
+      }
+    ]
+  },
+  {
+    "id": "ex-10qw1m8b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 16. `docker buildx build --platform linux/arm64` on an amd64 machine finished without any emulator installed. Why did it not need one?",
+    "hint": "What does the Dockerfile run?",
+    "choices": [
+      {
+        "text": "buildx emulates arm64 by default",
+        "correct": false,
+        "why": "Running the image showed `exec format error`: there is no emulation here."
+      },
+      {
+        "text": "Distroless images run on any processor",
+        "correct": false,
+        "why": "Each variant is built for one processor."
+      },
+      {
+        "text": "amd64 processors execute arm64 instructions",
+        "correct": false,
+        "why": "They do not; that is what the error said."
+      },
+      {
+        "text": "Nothing in the Dockerfile runs; Go had already compiled for arm64",
+        "correct": true,
+        "why": "Right. `COPY` of a cross-compiled binary onto distroless's arm64 variant needs no arm64 processor."
+      }
+    ]
+  },
+  {
+    "id": "ex-swbjs4w0",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Lesson 16. Fill in the blank: a native build on Linux comes out statically linked when it runs as `CGO_ENABLED=__ go build`.",
+    "hint": "Turn the bridge to C off.",
+    "blanks": [
+      {
+        "accept": [
+          "0"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pstrh3pw",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Lesson 16. To serve from a container against the host's PostgreSQL through its socket, which of these did `docker run` have to hand in? Choose every one.",
+    "hint": "Everything boxoffice needs from outside comes in by a flag.",
+    "choices": [
+      {
+        "text": "`-v /var/run/postgresql:/var/run/postgresql`",
+        "correct": true,
+        "why": "Right. The socket directory has to be inside the container."
+      },
+      {
+        "text": "`--user \"$(id -u):$(id -g)\"`",
+        "correct": true,
+        "why": "Right. Peer authentication accepts the connection when the uid is yours."
+      },
+      {
+        "text": "the token file, mounted `:ro`, and its `_FILE` variable",
+        "correct": true,
+        "why": "Right. Lesson 14's secret, as a file."
+      },
+      {
+        "text": "`--privileged`",
+        "correct": false,
+        "why": "Nothing here needs it, and it grants far too much."
+      },
+      {
+        "text": "a shell in the image",
+        "correct": false,
+        "why": "The image has none and needs none."
+      }
+    ]
+  },
+  {
+    "id": "ex-93ac4ce3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 17. A team's liveness check pings the database. The database goes down for five minutes. What follows?",
+    "hint": "What does a \"no\" to liveness make the platform do?",
+    "choices": [
+      {
+        "text": "Traffic stops until the database returns, as it should",
+        "correct": false,
+        "why": "That is what a readiness failure does; liveness kills."
+      },
+      {
+        "text": "Every copy restarts in a loop",
+        "correct": true,
+        "why": "Right. Restarts add load and fix nothing, since a restart does not bring the database back; that check belongs in readiness."
+      },
+      {
+        "text": "Nothing, since liveness only runs at start-up",
+        "correct": false,
+        "why": "That is a startup probe; liveness runs all the time."
+      },
+      {
+        "text": "The database is restarted by the platform",
+        "correct": false,
+        "why": "The platform acts on the process that answered, not on its dependencies."
+      }
+    ]
+  },
+  {
+    "id": "ex-nm56kfc3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 17. After PostgreSQL restarted, `/readyz` answered ready and every request worked, yet live pages stopped changing. Why did readiness miss it?",
+    "hint": "Read the first log line of section 03.",
+    "choices": [
+      {
+        "text": "The pool lost all its connections for good",
+        "correct": false,
+        "why": "The pool reopened them; requests worked."
+      },
+      {
+        "text": "The trigger was dropped by the restart",
+        "correct": false,
+        "why": "Restarting a server keeps its schema."
+      },
+      {
+        "text": "`listen` was dead, unchecked",
+        "correct": true,
+        "why": "Right. Nothing restarted `listen`, and readiness only pings; a health check checks what it is told; a reconnect loop and its state in readiness close the gap."
+      },
+      {
+        "text": "The hub closed when readiness failed",
+        "correct": false,
+        "why": "The hub closes only on shutdown."
+      }
+    ]
+  },
+  {
+    "id": "ex-m95wbq4j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 17. A colleague labels `boxoffice_http_requests_total` with `r.URL.Path` instead of `r.Pattern`. What goes wrong?",
+    "hint": "Every distinct label value is a time series.",
+    "choices": [
+      {
+        "text": "Counts come out lower",
+        "correct": false,
+        "why": "They split across more series; nothing is lost."
+      },
+      {
+        "text": "Prometheus rejects labels containing slashes",
+        "correct": false,
+        "why": "Label values take any text."
+      },
+      {
+        "text": "One series per event id, typo and probe, without bound",
+        "correct": true,
+        "why": "Right. The pattern is one value per route you wrote; the path is whatever strangers type."
+      },
+      {
+        "text": "Admin routes are counted twice",
+        "correct": false,
+        "why": "Each request is counted once either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-qymhpjw3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 17. `measure` is moved to the front of the chain, before `requestID`. What does the route label read for every request?",
+    "hint": "`requestID` calls `WithContext`.",
+    "choices": [
+      {
+        "text": "the right pattern, as before",
+        "correct": false,
+        "why": "Only the request handed to the mux receives it."
+      },
+      {
+        "text": "`unmatched`",
+        "correct": true,
+        "why": "Right. The mux writes the pattern into a copy of the request; the original `measure` holds stays empty."
+      },
+      {
+        "text": "the path",
+        "correct": false,
+        "why": "`measure` never reads the path."
+      },
+      {
+        "text": "`/admin/` for every route",
+        "correct": false,
+        "why": "That happens only to routes behind `requireStaff`, and only in the right order."
+      }
+    ]
+  },
+  {
+    "id": "ex-en3828ea",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Lesson 17. Nine requests take 10 ms each and one takes 1 second. What is the mean, in milliseconds, the number a histogram's buckets would not let hide the slow one behind?",
+    "hint": "Sum, then divide by ten.",
+    "value": 109,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-8tmxg36h",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Lesson 17. Which of these are safe as metric label values? Choose every one.",
+    "hint": "A label value must come from a small set known in advance.",
+    "choices": [
+      {
+        "text": "the matched route",
+        "correct": true,
+        "why": "Right. One per route you wrote."
+      },
+      {
+        "text": "the response status",
+        "correct": true,
+        "why": "Right. A few dozen values at most."
+      },
+      {
+        "text": "the request id",
+        "correct": false,
+        "why": "Unbounded; it belongs in the log."
+      },
+      {
+        "text": "the buyer's e-mail",
+        "correct": false,
+        "why": "Unbounded and personal data."
+      }
+    ]
+  },
+  {
+    "id": "ex-rc17f220",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Lesson 17. Put boxoffice's shutdown in the order `main` runs it after the first SIGTERM.",
+    "hint": "Readiness first, the ops server last.",
+    "items": [
+      "`draining` is set and `/readyz` answers 503",
+      "`srv.Shutdown` closes the listeners and waits for requests in flight",
+      "`GracefulStop` waits for gRPC calls, `Stop` at the deadline",
+      "the ops server shuts down and `main` logs `stopped`"
+    ]
+  },
+  {
+    "id": "ex-8tt8yq8v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 17. Without `RegisterOnShutdown(live.close)`, a viewer has the event page open when SIGTERM arrives. What happens to the shutdown?",
+    "hint": "`Shutdown` waits for active requests.",
+    "choices": [
+      {
+        "text": "It ends at once; streams are idle connections",
+        "correct": false,
+        "why": "A stream is mid-response, which is active."
+      },
+      {
+        "text": "The process never exits",
+        "correct": false,
+        "why": "The shutdown timeout bounds the wait."
+      },
+      {
+        "text": "`EventSource` closes the stream when it sees 503",
+        "correct": false,
+        "why": "The 503 is on the ops port; the page never asks it."
+      },
+      {
+        "text": "It waits out the deadline",
+        "correct": true,
+        "why": "Right. Eight seconds, then the stream is cut: a stream is a request built never to end."
+      }
+    ]
+  },
+  {
+    "id": "ex-12caa8rq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 17. A service sets its shutdown timeout to 15 seconds and runs under `docker stop` with its default. A request in flight needs 12 seconds. What does it get?",
+    "hint": "What does `docker stop` send after ten seconds?",
+    "choices": [
+      {
+        "text": "Its answer, since the service waits fifteen",
+        "correct": false,
+        "why": "The process does not get to wait past SIGKILL."
+      },
+      {
+        "text": "Cut off by SIGKILL at ten seconds",
+        "correct": true,
+        "why": "Right. The timeout must be shorter than the platform's grace, which is why boxoffice uses eight."
+      },
+      {
+        "text": "A 503 from readiness",
+        "correct": false,
+        "why": "Readiness answers the platform, not the request in flight."
+      },
+      {
+        "text": "A retry from Docker on another container",
+        "correct": false,
+        "why": "Docker retries nothing."
+      }
+    ]
+  }
+]
