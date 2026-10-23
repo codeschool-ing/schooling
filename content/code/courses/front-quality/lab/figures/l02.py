@@ -39,11 +39,11 @@ def figures(lang):
     line(70, t["utc"], 0)
     line(160, t["sp"], 3)
     xi = x0 + 24 * hx
-    f.arrow([(xi, 40), (xi, 190)], head=False, color="amber", dashed=True)
+    f.arrow([(xi, 40), (xi, 172)], head=False, color="amber", dashed=True)
     f.text(xi, 28, t["mark"], mono=True, size=9.5, fill="amber")
     f.text(xi + 6, 100, t["inst"], anchor="start", size=9, fill="amber", italic=True)
     f.rect(x0 + 3 * hx, 176, 24 * hx, 22, stroke="phosphor", fill="panel", width=1)
     f.text(x0 + 15 * hx, 187, t["reads"], size=9)
     f.text(xi - 6, 145, "21:00", anchor="end", mono=True, size=9, fill="amber")
     f.text(xi - 6, 84, "00:00", anchor="end", mono=True, size=9, fill="amber")
-    return {"l02-midnight": f.json(t["cap"])}
+    return {"l02-midnight": f.json(t["cap"], same=["UTC", "São Paulo (UTC−3)"] if lang == "pt" else None)}

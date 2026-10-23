@@ -41,4 +41,4 @@ def figures(lang):
         f.arrow([(270, y + 45), (330, y + 45)])
         f.arrow([(570, y + 45), (595, y + 45)])
         f.box(595, y + 25, 110, 40, [result], stroke=colour, size=9.5)
-    return {"l03-names": f.json(t["cap"])}
+    return {"l03-names": f.json(t["cap"], same=["spinbutton"] if lang == "pt" else None)}
