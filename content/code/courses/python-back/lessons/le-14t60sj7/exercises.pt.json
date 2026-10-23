@@ -1,0 +1,515 @@
+{
+  "ex-b38v75zh": {
+    "prompt": "Com o e-mail mandado dentro da view e o servidor de e-mail parado, o que a inscrição do Gil recebeu?",
+    "choices": [
+      {
+        "text": "Um 201 e nenhuma linha, já que o e-mail falhou",
+        "why": "A linha estava lá."
+      },
+      {
+        "text": "Um 500, com a linha salva",
+        "why": "Isso: o erro era sobre algo que tinha dado certo."
+      },
+      {
+        "text": "Um 409, porque o servidor de e-mail respondeu primeiro",
+        "why": "O 409 veio na segunda tentativa."
+      },
+      {
+        "text": "Um 503 com o cabeçalho Retry-After",
+        "why": "Nada mandou isso."
+      }
+    ]
+  },
+  "ex-jwqq6mwg": {
+    "prompt": "Quais destes ficam fora da requisição, pela regra da aula? Escolha todos que se aplicam.",
+    "choices": [
+      {
+        "text": "Mandar um e-mail de confirmação",
+        "why": "Isso."
+      },
+      {
+        "text": "Redimensionar uma foto que alguém enviou",
+        "why": "Isso: lento, e a resposta não precisa dele."
+      },
+      {
+        "text": "Conferir se o evento ainda tem vagas",
+        "why": "A resposta depende disso."
+      },
+      {
+        "text": "Validar o endereço de e-mail do corpo",
+        "why": "Isso decide entre 201 e 400."
+      }
+    ]
+  },
+  "ex-n1a8f0ae": {
+    "prompt": "Por que mandar o e-mail dentro da transação da inscrição seria pior?",
+    "choices": [
+      {
+        "text": "Não dá para mandar e-mail com uma linha travada",
+        "why": "Dá; o lock está no PostgreSQL."
+      },
+      {
+        "text": "O Django proíbe chamadas de rede em blocos atomic",
+        "why": "Não proíbe."
+      },
+      {
+        "text": "Um e-mail com problema travaria a inscrição",
+        "why": "Isso: a falha desfaria a linha."
+      },
+      {
+        "text": "O e-mail seria mandado duas vezes",
+        "why": "Nada o repete."
+      }
+    ]
+  },
+  "ex-3bzym3mz": {
+    "prompt": "Que papel o Redis cumpre para o Celery nesta aula?",
+    "choices": [
+      {
+        "text": "O broker das mensagens",
+        "why": "Isso."
+      },
+      {
+        "text": "O banco onde as inscrições ficam",
+        "why": "Esse é o PostgreSQL."
+      },
+      {
+        "text": "O servidor de e-mail",
+        "why": "Esse é o aiosmtpd aqui."
+      },
+      {
+        "text": "O processo que roda as tarefas",
+        "why": "Esse é o worker."
+      }
+    ]
+  },
+  "ex-j4sqnknw": {
+    "prompt": "O redis-cli ping recebeu a resposta ___ do servidor.",
+    "blanks": [
+      {
+        "accept": [
+          "PONG"
+        ]
+      }
+    ]
+  },
+  "ex-pyc030h4": {
+    "prompt": "Em que porta o Redis escuta por padrão?",
+    "unit": ""
+  },
+  "ex-0r40wmtf": {
+    "prompt": "Por que o send_confirmation recebe registration_id em vez do objeto Registration?",
+    "choices": [
+      {
+        "text": "O Celery não consegue importar models do Django num worker",
+        "why": "A tarefa importa o Registration."
+      },
+      {
+        "text": "Os argumentos viajam como JSON, e um id é JSON",
+        "why": "Isso: e o worker lê a linha como ela está então."
+      },
+      {
+        "text": "Um objeto faria a tarefa rodar duas vezes em cada worker",
+        "why": "Não é assim."
+      },
+      {
+        "text": "O Redis só guarda inteiros",
+        "why": "Ele guarda strings; JSON é uma string."
+      }
+    ]
+  },
+  "ex-0zqssske": {
+    "prompt": "Por que o .delay() é chamado pelo transaction.on_commit?",
+    "choices": [
+      {
+        "text": "O delay() só funciona fora de blocos atomic",
+        "why": "Funciona em qualquer lugar; o ponto é o momento."
+      },
+      {
+        "text": "Para a tarefa rodar dentro da mesma transação",
+        "why": "O worker é outro processo, com conexão própria."
+      },
+      {
+        "text": "Senão um worker rápido não acharia a linha",
+        "why": "Isso, ou uma que um rollback remove."
+      },
+      {
+        "text": "O on_commit tenta de novo se a tarefa falhar",
+        "why": "As novas tentativas são opções da tarefa."
+      }
+    ]
+  },
+  "ex-b1seemkb": {
+    "prompt": "Ponha em ordem o que acontece quando a Hana se inscreve.",
+    "items": [
+      "o register() dá commit na linha",
+      "o on_commit chama send_confirmation.delay",
+      "a mensagem espera no Redis",
+      "um processo worker roda a tarefa",
+      "o servidor de e-mail imprime a mensagem"
+    ]
+  },
+  "ex-5c2xbyd0": {
+    "prompt": "A primeira versão da tarefa encontrou o servidor de e-mail parado. O que aconteceu com a confirmação do Ivo?",
+    "choices": [
+      {
+        "text": "Esperou no Redis até o servidor voltar",
+        "why": "Uma tarefa que falha não volta à fila por padrão."
+      },
+      {
+        "text": "Se perdeu; nada tentou de novo",
+        "why": "Isso."
+      },
+      {
+        "text": "A API respondeu 500 ao Ivo",
+        "why": "A API respondeu 201."
+      },
+      {
+        "text": "O Django a mandou pela view no lugar",
+        "why": "A view não manda mais e-mail."
+      }
+    ]
+  },
+  "ex-99fwmmpk": {
+    "prompt": "O processo que roda as tarefas do Celery sobe com uv run celery -A config ___ -l info.",
+    "blanks": [
+      {
+        "accept": [
+          "worker"
+        ]
+      }
+    ]
+  },
+  "ex-aermxnzt": {
+    "prompt": "O que o retry_backoff=True muda?",
+    "choices": [
+      {
+        "text": "A espera cresce entre as tentativas",
+        "why": "Isso, com variação aleatória."
+      },
+      {
+        "text": "A tarefa tenta para sempre",
+        "why": "O max_retries continua valendo."
+      },
+      {
+        "text": "Tarefas que falham vão para outra fila",
+        "why": "Elas voltam para a mesma."
+      },
+      {
+        "text": "Exceções deixam de ir para o log",
+        "why": "Cada nova tentativa vai para o log."
+      }
+    ]
+  },
+  "ex-pwf7gg43": {
+    "prompt": "Por que uma tarefa com novas tentativas precisa de uma conferência como confirmation_sent_at?",
+    "choices": [
+      {
+        "text": "O Celery recusa tarefas que devolvem None",
+        "why": "A primeira versão devolvia None e rodou."
+      },
+      {
+        "text": "Para o beat saber quando rodar",
+        "why": "O beat roda por relógio."
+      },
+      {
+        "text": "O servidor de e-mail rejeita uma segunda mensagem com o mesmo assunto",
+        "why": "Ele aceita qualquer coisa."
+      },
+      {
+        "text": "O Celery roda uma tarefa pelo menos uma vez, não exatamente uma",
+        "why": "Isso: uma segunda execução precisa ser inofensiva."
+      }
+    ]
+  },
+  "ex-svw6h0r3": {
+    "prompt": "Depois de mudar o events/tasks.py, o servidor de desenvolvimento pegou a mudança. O que mais precisou acontecer?",
+    "choices": [
+      {
+        "text": "Uma migração nova",
+        "why": "A tarefa é código, não tabela."
+      },
+      {
+        "text": "O worker ser reiniciado",
+        "why": "Isso: ele roda o código com que subiu."
+      },
+      {
+        "text": "O Redis ser esvaziado",
+        "why": "O Redis guarda mensagens, não código."
+      },
+      {
+        "text": "O beat ser iniciado",
+        "why": "O beat veio depois, para a varredura."
+      }
+    ]
+  },
+  "ex-2gdryxsm": {
+    "prompt": "Uma operação que pode ser repetida sem repetir o efeito se chama ___.",
+    "blanks": [
+      {
+        "accept": [
+          "idempotente",
+          "idempotência"
+        ]
+      }
+    ]
+  },
+  "ex-avnfcr12": {
+    "prompt": "Onde a aula diz que uma confirmação duplicada ainda pode acontecer?",
+    "choices": [
+      {
+        "text": "Um worker morto entre o envio e o save()",
+        "why": "Isso."
+      },
+      {
+        "text": "Duas novas tentativas rodando no mesmo instante",
+        "why": "Cada nova tentativa é uma mensagem, rodada uma vez."
+      },
+      {
+        "text": "Uma inscrição com maiúscula no endereço",
+        "why": "Endereços não são a questão."
+      },
+      {
+        "text": "Chamar a tarefa direto do shell",
+        "why": "Essa chamada respondeu already sent."
+      }
+    ]
+  },
+  "ex-9gk7a3rz": {
+    "prompt": "Com o Redis parado e sem robust=True, o que a inscrição do Kai recebeu?",
+    "choices": [
+      {
+        "text": "201 e uma tarefa na fila para depois",
+        "why": "Nenhuma tarefa entrou na fila."
+      },
+      {
+        "text": "Um 503 sem linha",
+        "why": "A linha teve commit."
+      },
+      {
+        "text": "500, com a linha comitada",
+        "why": "Isso: a exceção do on_commit chegou à requisição."
+      },
+      {
+        "text": "Esperou até o Redis voltar",
+        "why": "O delay() desistiu rápido."
+      }
+    ]
+  },
+  "ex-apmsdmyf": {
+    "prompt": "O que o robust=True no transaction.on_commit faz?",
+    "choices": [
+      {
+        "text": "Tenta a função de novo até o Redis voltar",
+        "why": "Ele não tenta de novo."
+      },
+      {
+        "text": "Registra a exceção no log em vez de levantá-la",
+        "why": "Isso."
+      },
+      {
+        "text": "Desfaz a inscrição",
+        "why": "O commit já aconteceu."
+      },
+      {
+        "text": "Roda a função antes do commit",
+        "why": "Ela continua rodando depois."
+      }
+    ]
+  },
+  "ex-q3npfa56": {
+    "prompt": "Ligue cada sintoma à causa.",
+    "pairs": [
+      {
+        "left": "Cannot connect to redis://...",
+        "right": "o Redis não está rodando"
+      },
+      {
+        "left": "Received unregistered task of type ...",
+        "right": "o worker não conhece a tarefa"
+      },
+      {
+        "left": "Object of type Registration is not JSON serializable",
+        "right": "uma instância de model passada ao delay()"
+      }
+    ]
+  },
+  "ex-y860n943": {
+    "prompt": "Enquanto o Redis estava fora, o que o worker fez?",
+    "choices": [
+      {
+        "text": "Saiu com erro",
+        "why": "Continuou rodando."
+      },
+      {
+        "text": "Mandou ele mesmo os e-mails pendentes",
+        "why": "Não tinha mensagens para pegar."
+      },
+      {
+        "text": "Continuou tentando se reconectar, com pausas crescentes",
+        "why": "Isso: 2 s, 4 s, e assim por diante."
+      },
+      {
+        "text": "Passou a usar o PostgreSQL como broker",
+        "why": "Nada troca de broker."
+      }
+    ]
+  },
+  "ex-zrt7sb41": {
+    "prompt": "O que é o beat?",
+    "choices": [
+      {
+        "text": "Uma opção do worker que faz tarefas rodarem mais rápido",
+        "why": "É um processo separado."
+      },
+      {
+        "text": "O relógio do Celery: põe tarefas na fila segundo um horário",
+        "why": "Isso."
+      },
+      {
+        "text": "O jeito do Redis de expirar chaves",
+        "why": "Isso é assunto do próprio Redis."
+      },
+      {
+        "text": "Uma tela de monitoramento de tarefas",
+        "why": "Isso seria uma ferramenta como o Flower."
+      }
+    ]
+  },
+  "ex-mjny1t96": {
+    "prompt": "Por que o Fabio e a Hana receberam cada um uma segunda confirmação pela varredura?",
+    "choices": [
+      {
+        "text": "Os primeiros e-mails vieram antes da coluna",
+        "why": "Isso: nada os registrou."
+      },
+      {
+        "text": "A varredura ignora o confirmation_sent_at",
+        "why": "Ela filtra por ele."
+      },
+      {
+        "text": "O beat rodou duas vezes",
+        "why": "Rodou um beat."
+      },
+      {
+        "text": "Os endereços deles foram digitados duas vezes",
+        "why": "Cada um se inscreveu uma vez."
+      }
+    ]
+  },
+  "ex-3cvf6a8p": {
+    "prompt": "Por que precisa rodar exatamente um beat, quando os workers podem ser muitos?",
+    "choices": [
+      {
+        "text": "O beat segura um lock no Redis",
+        "why": "Ele não segura nenhum."
+      },
+      {
+        "text": "Dois beats dividiriam o horário entre si",
+        "why": "Cada um mandaria tudo."
+      },
+      {
+        "text": "Workers recusam tarefas de um segundo beat",
+        "why": "Workers não sabem quem mandou a tarefa."
+      },
+      {
+        "text": "Dois mandariam toda tarefa agendada duas vezes",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-jzz73xjb": {
+    "prompt": "Um horário que roda todo dia às sete da manhã é crontab(hour=7, ___=0).",
+    "blanks": [
+      {
+        "accept": [
+          "minute"
+        ]
+      }
+    ]
+  },
+  "ex-840jvwde": {
+    "prompt": "O e-mail em segundo plano do Nuno falhou. O que o cliente do Nuno viu?",
+    "choices": [
+      {
+        "text": "201: a resposta já tinha ido",
+        "why": "Isso."
+      },
+      {
+        "text": "500, já que a tarefa levantou exceção",
+        "why": "A tarefa rodou depois da resposta."
+      },
+      {
+        "text": "Um 202 com um link para tentar de novo",
+        "why": "Essa resposta não existe."
+      },
+      {
+        "text": "Nada, a conexão travou",
+        "why": "Ela respondeu 201."
+      }
+    ]
+  },
+  "ex-cscpndxx": {
+    "prompt": "Quais valem para as BackgroundTasks do FastAPI, comparadas com o Celery? Escolha todas que se aplicam.",
+    "choices": [
+      {
+        "text": "Elas rodam no processo web",
+        "why": "Isso."
+      },
+      {
+        "text": "Um reinício do servidor web perde o que estava pendente",
+        "why": "Isso."
+      },
+      {
+        "text": "Elas tentam de novo com backoff quando configuradas",
+        "why": "Não há opção de nova tentativa."
+      },
+      {
+        "text": "Elas precisam do Redis",
+        "why": "Nada para instalar."
+      }
+    ]
+  },
+  "ex-1e2mbe1j": {
+    "prompt": "Uma escola quer um certificado em PDF gerado para cada pessoa depois de um evento, o que leva uns dez segundos cada. O que serve?",
+    "choices": [
+      {
+        "text": "Gerar na view e devolver",
+        "why": "Dez segundos por requisição, e sem nova tentativa."
+      },
+      {
+        "text": "BackgroundTasks, já que ninguém espera por ele",
+        "why": "Perder um num reinício seria notado."
+      },
+      {
+        "text": "Uma tarefa Celery para cada um, idempotente, na fila após o commit",
+        "why": "Isso."
+      },
+      {
+        "text": "Um segundo beat que os gera a cada minuto",
+        "why": "Um beat só; e um horário não é o gatilho certo."
+      }
+    ]
+  },
+  "ex-7399xmdn": {
+    "prompt": "Um colega passa o Registration inteiro ao .delay() para economizar uma consulta. O que acontece?",
+    "choices": [
+      {
+        "text": "Funciona, uma consulta mais barato",
+        "why": "A instância não é JSON."
+      },
+      {
+        "text": "O kombu recusa: o objeto não é serializável em JSON",
+        "why": "Isso."
+      },
+      {
+        "text": "O worker recebe uma cópia do objeto e roda normalmente com ela",
+        "why": "Ele é recusado antes de ser mandado."
+      },
+      {
+        "text": "O Redis guarda a linha como um hash",
+        "why": "Nada chega ao Redis."
+      }
+    ]
+  }
+}

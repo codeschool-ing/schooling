@@ -1,0 +1,778 @@
+[
+  {
+    "id": "ex-b38v75zh",
+    "version": 1,
+    "section": "out-of-the-request",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the mail sent inside the view and the mail server stopped, what did Gil's registration get?",
+    "choices": [
+      {
+        "text": "A 201 and no row, since the mail failed",
+        "correct": false,
+        "why": "The row was there."
+      },
+      {
+        "text": "A 500, with the row saved",
+        "correct": true,
+        "why": "Right: the error was about something that had worked."
+      },
+      {
+        "text": "A 409, because the mail server answered first",
+        "correct": false,
+        "why": "409 came on the second try."
+      },
+      {
+        "text": "A 503 with a Retry-After header",
+        "correct": false,
+        "why": "Nothing sent that."
+      }
+    ]
+  },
+  {
+    "id": "ex-jwqq6mwg",
+    "version": 1,
+    "section": "out-of-the-request",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these belong outside the request, by the lesson's rule? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Sending a confirmation e-mail",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Resizing a photo someone uploaded",
+        "correct": true,
+        "why": "Right: slow, and the answer does not need it."
+      },
+      {
+        "text": "Checking that the event still has seats",
+        "correct": false,
+        "why": "The answer depends on it."
+      },
+      {
+        "text": "Validating the e-mail address in the body",
+        "correct": false,
+        "why": "That decides between 201 and 400."
+      }
+    ]
+  },
+  {
+    "id": "ex-n1a8f0ae",
+    "version": 1,
+    "section": "out-of-the-request",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why would sending the mail inside the registration's transaction be worse?",
+    "choices": [
+      {
+        "text": "Mail cannot be sent while a row is locked",
+        "correct": false,
+        "why": "It can; the lock is in PostgreSQL."
+      },
+      {
+        "text": "Django forbids network calls in atomic blocks",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "Mail trouble would block registering",
+        "correct": true,
+        "why": "Right: the failure would roll the row back."
+      },
+      {
+        "text": "The e-mail would be sent twice",
+        "correct": false,
+        "why": "Nothing repeats it."
+      }
+    ]
+  },
+  {
+    "id": "ex-3bzym3mz",
+    "version": 1,
+    "section": "installing-redis",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What role does Redis play for Celery in this lesson?",
+    "choices": [
+      {
+        "text": "The broker that holds the messages",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The database where registrations are stored",
+        "correct": false,
+        "why": "That is PostgreSQL."
+      },
+      {
+        "text": "The mail server",
+        "correct": false,
+        "why": "That is aiosmtpd here."
+      },
+      {
+        "text": "The process that runs the tasks",
+        "correct": false,
+        "why": "That is the worker."
+      }
+    ]
+  },
+  {
+    "id": "ex-j4sqnknw",
+    "version": 1,
+    "section": "installing-redis",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "redis-cli ping got the answer ___ from the server.",
+    "blanks": [
+      {
+        "accept": [
+          "PONG"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pyc030h4",
+    "version": 1,
+    "section": "installing-redis",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On which port does Redis listen by default?",
+    "value": 6379,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-0r40wmtf",
+    "version": 1,
+    "section": "a-celery-app",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does send_confirmation take registration_id rather than the Registration object?",
+    "choices": [
+      {
+        "text": "Celery cannot import Django models in a worker",
+        "correct": false,
+        "why": "The task imports Registration."
+      },
+      {
+        "text": "Arguments travel as JSON, and an id is JSON",
+        "correct": true,
+        "why": "Right: and the worker reads the row as it is then."
+      },
+      {
+        "text": "An object would make the task run twice on every worker",
+        "correct": false,
+        "why": "Not so."
+      },
+      {
+        "text": "Redis only stores integers",
+        "correct": false,
+        "why": "It stores strings; JSON is a string."
+      }
+    ]
+  },
+  {
+    "id": "ex-0zqssske",
+    "version": 1,
+    "section": "a-celery-app",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is .delay() called through transaction.on_commit?",
+    "choices": [
+      {
+        "text": "delay() only works outside atomic blocks",
+        "correct": false,
+        "why": "It works anywhere; the timing is the point."
+      },
+      {
+        "text": "So that the task runs inside the same transaction",
+        "correct": false,
+        "why": "The worker is another process with its own connection."
+      },
+      {
+        "text": "Else a fast worker could miss the row",
+        "correct": true,
+        "why": "Right, or one a rollback removes."
+      },
+      {
+        "text": "on_commit retries the task if it fails",
+        "correct": false,
+        "why": "Retries are the task's options."
+      }
+    ]
+  },
+  {
+    "id": "ex-b1seemkb",
+    "version": 1,
+    "section": "a-celery-app",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens when Hana registers.",
+    "items": [
+      "register() commits the row",
+      "on_commit calls send_confirmation.delay",
+      "the message waits in Redis",
+      "a worker process runs the task",
+      "the mail server prints the message"
+    ]
+  },
+  {
+    "id": "ex-5c2xbyd0",
+    "version": 1,
+    "section": "a-celery-app",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first version of the task met a stopped mail server. What happened to Ivo's confirmation?",
+    "choices": [
+      {
+        "text": "It waited in Redis until the server came back",
+        "correct": false,
+        "why": "A failed task is not requeued by default."
+      },
+      {
+        "text": "It was lost; nothing retried",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The API answered 500 to Ivo",
+        "correct": false,
+        "why": "The API answered 201."
+      },
+      {
+        "text": "Django sent it from the view instead",
+        "correct": false,
+        "why": "The view no longer sends mail."
+      }
+    ]
+  },
+  {
+    "id": "ex-99fwmmpk",
+    "version": 1,
+    "section": "a-celery-app",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The process that runs Celery's tasks is started with uv run celery -A config ___ -l info.",
+    "blanks": [
+      {
+        "accept": [
+          "worker"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-aermxnzt",
+    "version": 1,
+    "section": "retries-and-idempotency",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does retry_backoff=True change?",
+    "choices": [
+      {
+        "text": "The wait grows between attempts",
+        "correct": true,
+        "why": "Right, with random jitter."
+      },
+      {
+        "text": "The task retries forever",
+        "correct": false,
+        "why": "max_retries still applies."
+      },
+      {
+        "text": "Failed tasks move to another queue",
+        "correct": false,
+        "why": "They return to the same one."
+      },
+      {
+        "text": "Exceptions are no longer logged",
+        "correct": false,
+        "why": "Each retry is logged."
+      }
+    ]
+  },
+  {
+    "id": "ex-pwf7gg43",
+    "version": 1,
+    "section": "retries-and-idempotency",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a retried task need a check such as confirmation_sent_at?",
+    "choices": [
+      {
+        "text": "Celery refuses tasks that return None",
+        "correct": false,
+        "why": "The first version returned None and ran."
+      },
+      {
+        "text": "So that beat knows when to run",
+        "correct": false,
+        "why": "beat runs on a clock."
+      },
+      {
+        "text": "The mail server rejects a second message with the same subject",
+        "correct": false,
+        "why": "It accepts anything."
+      },
+      {
+        "text": "Celery runs a task at least once, not exactly once",
+        "correct": true,
+        "why": "Right: a second run must be harmless."
+      }
+    ]
+  },
+  {
+    "id": "ex-svw6h0r3",
+    "version": 1,
+    "section": "retries-and-idempotency",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After changing events/tasks.py, the development server picked up the change. What else had to happen?",
+    "choices": [
+      {
+        "text": "A new migration",
+        "correct": false,
+        "why": "The task is code, not a table."
+      },
+      {
+        "text": "The worker restarted",
+        "correct": true,
+        "why": "Right: it runs the code it started with."
+      },
+      {
+        "text": "Redis flushed",
+        "correct": false,
+        "why": "Redis holds messages, not code."
+      },
+      {
+        "text": "beat started",
+        "correct": false,
+        "why": "beat came later, for the sweep."
+      }
+    ]
+  },
+  {
+    "id": "ex-2gdryxsm",
+    "version": 1,
+    "section": "retries-and-idempotency",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An operation that can be repeated without repeating its effect is called ___.",
+    "blanks": [
+      {
+        "accept": [
+          "idempotent",
+          "idempotency",
+          "idempotence"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-avnfcr12",
+    "version": 1,
+    "section": "retries-and-idempotency",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Where does the lesson say a duplicate confirmation can still happen?",
+    "choices": [
+      {
+        "text": "A worker killed between the send and save()",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Two retries running at the same moment",
+        "correct": false,
+        "why": "Each retry is one message, run once at a time."
+      },
+      {
+        "text": "A registration with a capital letter in the address",
+        "correct": false,
+        "why": "Addresses are not the issue."
+      },
+      {
+        "text": "Calling the task directly from the shell",
+        "correct": false,
+        "why": "That call answered already sent."
+      }
+    ]
+  },
+  {
+    "id": "ex-9gk7a3rz",
+    "version": 1,
+    "section": "when-redis-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With Redis stopped and no robust=True, what did Kai's registration get?",
+    "choices": [
+      {
+        "text": "201 and a task queued for later",
+        "correct": false,
+        "why": "No task was queued."
+      },
+      {
+        "text": "A 503 with no row",
+        "correct": false,
+        "why": "The row was committed."
+      },
+      {
+        "text": "500, with the row committed",
+        "correct": true,
+        "why": "Right: the on_commit exception reached the request."
+      },
+      {
+        "text": "It waited until Redis came back",
+        "correct": false,
+        "why": "delay() gave up quickly."
+      }
+    ]
+  },
+  {
+    "id": "ex-apmsdmyf",
+    "version": 1,
+    "section": "when-redis-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does robust=True on transaction.on_commit do?",
+    "choices": [
+      {
+        "text": "Retries the function until Redis is back",
+        "correct": false,
+        "why": "It does not retry."
+      },
+      {
+        "text": "Logs the exception instead of raising it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Rolls the registration back",
+        "correct": false,
+        "why": "The commit has already happened."
+      },
+      {
+        "text": "Runs the function before the commit",
+        "correct": false,
+        "why": "It still runs after."
+      }
+    ]
+  },
+  {
+    "id": "ex-q3npfa56",
+    "version": 1,
+    "section": "when-redis-fails",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each symptom to its cause.",
+    "pairs": [
+      {
+        "left": "Cannot connect to redis://...",
+        "right": "Redis is not running"
+      },
+      {
+        "left": "Received unregistered task of type ...",
+        "right": "the worker does not know the task"
+      },
+      {
+        "left": "Object of type Registration is not JSON serializable",
+        "right": "a model instance passed to delay()"
+      }
+    ]
+  },
+  {
+    "id": "ex-y860n943",
+    "version": 1,
+    "section": "when-redis-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "While Redis was down, what did the worker do?",
+    "choices": [
+      {
+        "text": "Exited with an error",
+        "correct": false,
+        "why": "It kept running."
+      },
+      {
+        "text": "Sent the waiting mails itself",
+        "correct": false,
+        "why": "It had no messages to take."
+      },
+      {
+        "text": "Kept trying to reconnect, with growing pauses",
+        "correct": true,
+        "why": "Right: 2 s, 4 s, and so on."
+      },
+      {
+        "text": "Switched to PostgreSQL as its broker",
+        "correct": false,
+        "why": "Nothing switches brokers."
+      }
+    ]
+  },
+  {
+    "id": "ex-zrt7sb41",
+    "version": 1,
+    "section": "periodic-tasks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is beat?",
+    "choices": [
+      {
+        "text": "A worker option that makes tasks run faster",
+        "correct": false,
+        "why": "It is a separate process."
+      },
+      {
+        "text": "Celery's clock: it queues tasks on a schedule",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Redis's way of expiring keys",
+        "correct": false,
+        "why": "That is Redis's own business."
+      },
+      {
+        "text": "A monitoring screen for tasks",
+        "correct": false,
+        "why": "That would be a tool such as Flower."
+      }
+    ]
+  },
+  {
+    "id": "ex-mjny1t96",
+    "version": 1,
+    "section": "periodic-tasks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did Fabio and Hana each get a second confirmation from the sweep?",
+    "choices": [
+      {
+        "text": "Their first mails predate the column",
+        "correct": true,
+        "why": "Right: nothing recorded them."
+      },
+      {
+        "text": "The sweep ignores confirmation_sent_at",
+        "correct": false,
+        "why": "It filters on it."
+      },
+      {
+        "text": "beat ran twice",
+        "correct": false,
+        "why": "One beat ran."
+      },
+      {
+        "text": "Their addresses were typed twice",
+        "correct": false,
+        "why": "Each registered once."
+      }
+    ]
+  },
+  {
+    "id": "ex-3cvf6a8p",
+    "version": 1,
+    "section": "periodic-tasks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must exactly one beat run, when workers can be many?",
+    "choices": [
+      {
+        "text": "beat holds a lock on Redis",
+        "correct": false,
+        "why": "It holds none."
+      },
+      {
+        "text": "Two beats would share the schedule between them",
+        "correct": false,
+        "why": "Each would send everything."
+      },
+      {
+        "text": "Workers refuse tasks from a second beat",
+        "correct": false,
+        "why": "Workers do not know who sent a task."
+      },
+      {
+        "text": "Two would send every scheduled task twice",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-jzz73xjb",
+    "version": 1,
+    "section": "periodic-tasks",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A schedule that runs every day at seven in the morning is crontab(hour=7, ___=0).",
+    "blanks": [
+      {
+        "accept": [
+          "minute"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-840jvwde",
+    "version": 1,
+    "section": "fastapi-background",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Nuno's background mail failed. What did Nuno's client see?",
+    "choices": [
+      {
+        "text": "201: the response had already gone",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "500, since the task raised",
+        "correct": false,
+        "why": "The task ran after the response."
+      },
+      {
+        "text": "A 202 with a retry link",
+        "correct": false,
+        "why": "No such answer."
+      },
+      {
+        "text": "Nothing, the connection hung",
+        "correct": false,
+        "why": "It answered 201."
+      }
+    ]
+  },
+  {
+    "id": "ex-cscpndxx",
+    "version": 1,
+    "section": "fastapi-background",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which are true of FastAPI's BackgroundTasks, compared with Celery? Choose all that apply.",
+    "choices": [
+      {
+        "text": "They run in the web process",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A restart of the web server loses what was pending",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "They retry with backoff when configured",
+        "correct": false,
+        "why": "There is no retry option."
+      },
+      {
+        "text": "They need Redis",
+        "correct": false,
+        "why": "Nothing to install."
+      }
+    ]
+  },
+  {
+    "id": "ex-1e2mbe1j",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A school wants a PDF certificate generated for each person after an event, which takes about ten seconds each. Which fits?",
+    "choices": [
+      {
+        "text": "Generating it in the view and returning it",
+        "correct": false,
+        "why": "Ten seconds per request, and no retry."
+      },
+      {
+        "text": "BackgroundTasks, since nobody waits for it",
+        "correct": false,
+        "why": "Losing one on a restart would be noticed."
+      },
+      {
+        "text": "A Celery task per person, idempotent, queued after commit",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A second beat that generates them every minute",
+        "correct": false,
+        "why": "One beat; and a schedule is not the right trigger."
+      }
+    ]
+  },
+  {
+    "id": "ex-7399xmdn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague passes the whole Registration to .delay() to save a query. What happens?",
+    "choices": [
+      {
+        "text": "It works, one query cheaper",
+        "correct": false,
+        "why": "The instance is not JSON."
+      },
+      {
+        "text": "kombu refuses it: the object is not JSON serializable",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The worker receives a copy of the object and runs normally with it",
+        "correct": false,
+        "why": "It is refused before it is sent."
+      },
+      {
+        "text": "Redis stores the row as a hash",
+        "correct": false,
+        "why": "Nothing reaches Redis."
+      }
+    ]
+  }
+]
