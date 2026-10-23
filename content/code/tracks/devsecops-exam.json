@@ -1,0 +1,3345 @@
+[
+  {
+    "id": "ex-v9n492yd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An Alpine image ends with `USER 10001:10001`, and its program fails with `touch: /data/report.txt: Permission denied`. `/data` was made earlier in the file by `RUN mkdir /data`. A colleague proposes `RUN mkdir /data && chmod 777 /data` as the fix. What is wrong with it?",
+    "hint": "Linux and the Command Line, lesson 4; Docker and Containers, lesson 14.",
+    "choices": [
+      {
+        "text": "`chmod 777` is undone at once, since the umask that `mkdir` ran under strips the group's and others' write again",
+        "correct": false,
+        "why": "A umask acts when a file is created. `chmod` is absolute and leaves exactly the mode it names."
+      },
+      {
+        "text": "Nothing is wrong: user 10001 needs `w` on `/data`, and 777 grants that permission just as well as a `chown` would",
+        "correct": false,
+        "why": "Both let user 10001 write there. 777 also lets every other account in the container write there, and `chown` does not."
+      },
+      {
+        "text": "Anyone in it could add or delete anybody's files there; `chown app:app /data` gives one user what it needs",
+        "correct": true,
+        "why": "Creating and deleting are writes to the directory, so a world-writable one with no sticky bit makes everybody's files removable by anybody. The Docker course hands the directory to its user and nothing more."
+      },
+      {
+        "text": "The denial came from a missing `x`, which 777 adds; under the default umask `mkdir` already let others create files",
+        "correct": false,
+        "why": "Under the default umask `mkdir` gives root `rwxr-xr-x`. Others already have `x`; they lack `w`, and creating a file is a write to the directory."
+      }
+    ]
+  },
+  {
+    "id": "ex-chq460qq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A virtual machine built from a minimal image rebooted overnight, and the SOC asks for its ssh entries from before the reboot. `journalctl --list-boots` lists only the current boot, and `/var/log/journal` does not exist. What happened, and what stops the next reboot doing the same?",
+    "hint": "Linux and the Command Line, lesson 5; SOC, Monitoring and Incident Response, lesson 2.",
+    "choices": [
+      {
+        "text": "It lived in `/run/log/journal`, in memory; creating `/var/log/journal` and restarting `systemd-journald` fixes it",
+        "correct": true,
+        "why": "Without that directory journald keeps the journal on a tmpfs and loses it at every restart. Ubuntu creates the directory; minimal images often do not."
+      },
+      {
+        "text": "`SystemMaxUse=` pushed the old boot out, and raising it in `/etc/systemd/journald.conf` keeps more",
+        "correct": false,
+        "why": "Rotation by size prunes a journal that is on disk. Here nothing was ever on disk, because the directory a persistent journal lives in is missing."
+      },
+      {
+        "text": "An ordinary user sees their own entries and not the system's, and the same command under `sudo` lists the earlier boot",
+        "correct": false,
+        "why": "Permission hides other people's messages, not whole boots. With no `/var/log/journal` there is nothing on disk for root to read either."
+      },
+      {
+        "text": "A reboot that follows a crash throws the journal away on any machine, whatever its configuration says about keeping it",
+        "correct": false,
+        "why": "`journalctl -b -1` is how you find out why a machine rebooted, which only works because a persistent journal outlives the reboot."
+      }
+    ]
+  },
+  {
+    "id": "ex-151vqva2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A pipeline stage is a bash script with `set -e` at the top, and its gate is one line: `trivy image --quiet --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 linkbox:dev | tee scan.txt`. The stage comes out green, and `scan.txt` lists four high findings, each with a fixed version. Why did the gate not stop it?",
+    "hint": "Linux and the Command Line, lesson 6; Pipeline and Supply Chain Security, lesson 8.",
+    "choices": [
+      {
+        "text": "`--exit-code 1` needs `--format json` to take effect, and this line prints the default table instead",
+        "correct": false,
+        "why": "The pipeline course's own gate shows `--exit-code` deciding the verdict; the format changes what is printed, not the exit status."
+      },
+      {
+        "text": "`--quiet` hides the exit status as well as the progress output, so the step passes whatever the scan finds",
+        "correct": false,
+        "why": "`--quiet` only trims what is printed: the pipeline course's own gate runs with it and still exits 1 on a fixable high finding."
+      },
+      {
+        "text": "`set -e` reacts when the first command of a pipeline fails, and in this line `trivy` is the one that comes first",
+        "correct": false,
+        "why": "It is the other end: without `pipefail` a pipeline's status is its last command's, and every stage before it can fail silently."
+      },
+      {
+        "text": "A pipeline's status is its last command's, and `tee` succeeded; `set -o pipefail` lets the scanner's 1 count",
+        "correct": true,
+        "why": "`$?` after `trivy … | tee` is the 0 of `tee`, so `set -e` saw nothing wrong. With `pipefail`, or a look at `PIPESTATUS`, the gate fails as it should."
+      }
+    ]
+  },
+  {
+    "id": "ex-ecz15bq2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A Dockerfile's final stage installs a command-line tool written in C: a `RUN` line downloads its release binary with `curl` into `/usr/local/bin`. An advisory against that version came out last month, and Trivy's report on the image never mentions the tool. Why?",
+    "hint": "Linux and the Command Line, lesson 7; Pipeline and Supply Chain Security, lesson 8.",
+    "choices": [
+      {
+        "text": "Trivy leaves `/usr/local` alone, since that directory belongs to whoever runs the machine",
+        "correct": false,
+        "why": "Trivy reads every list it finds, wherever it is. Here there is no list to find, because nothing recorded the tool."
+      },
+      {
+        "text": "A scanner reads the records package managers keep, and nothing recorded this binary; `dpkg -S` cannot name it",
+        "correct": true,
+        "why": "Installed outside every package manager, the tool is on no list, and a C program carries no record of its own. Installing it from a package, or writing it into the SBOM by hand, puts it on one."
+      },
+      {
+        "text": "Trivy's database is downloaded once a day and holds the advisories of that day, not the older ones",
+        "correct": false,
+        "why": "It is refreshed daily and merges advisories from all its sources; one published last month is in it."
+      },
+      {
+        "text": "A binary that a `RUN` line brings in is scanned if an earlier stage of the same Dockerfile compiled it from source",
+        "correct": false,
+        "why": "Where a binary was built does not matter. A Go binary carries its module record from anywhere; a C program carries none from anywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-x5zthq86",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A build server has collected software in six ways over two years. Which of these will `apt upgrade` never bring up to date? Choose all that apply.",
+    "hint": "Linux and the Command Line, lesson 7.",
+    "choices": [
+      {
+        "text": "a release binary extracted into `/usr/local/bin`",
+        "correct": true,
+        "why": "Nothing upgrades it and nothing removes it; `dpkg -S` cannot even say it is there."
+      },
+      {
+        "text": "Docker, from `download.docker.com`, added with a key and a `signed-by` line",
+        "correct": false,
+        "why": "A third-party repository is the good option because apt still manages it: `apt upgrade` upgrades Docker like anything else."
+      },
+      {
+        "text": "a command-line tool installed with `pip install --user`",
+        "correct": true,
+        "why": "A language package manager has its own registry and knows nothing of apt, and apt knows nothing of it."
+      },
+      {
+        "text": "Firefox, installed on Ubuntu with `apt install firefox`",
+        "correct": true,
+        "why": "On Ubuntu that command installs a snap, which has its own update mechanism; `apt list --installed` does not show it."
+      },
+      {
+        "text": "a package from Ubuntu's `universe` component",
+        "correct": false,
+        "why": "Maintained by the community, and still in a repository apt reads, so `apt upgrade` covers it."
+      },
+      {
+        "text": "`python3-requests`, installed with `apt install`",
+        "correct": false,
+        "why": "It is the distribution's own package, the first choice the lesson gives, and apt upgrades it with everything else."
+      }
+    ]
+  },
+  {
+    "id": "ex-6cs3qz3e",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Hunting through a web server's access log, an analyst stacks client addresses to read the rare end: `cut -d\" \" -f1 logs/access.log | uniq -c | sort -n | head`. The short tail is full of counts of 1 and 2, and `10.0.1.12` turns up on several of those lines. What went wrong?",
+    "hint": "Linux and the Command Line, lesson 8; SOC, Monitoring and Incident Response, lesson 10.",
+    "choices": [
+      {
+        "text": "`sort -n` compared the counts as text rather than as numbers, so a `10` landed before a `9` and the order is wrong",
+        "correct": false,
+        "why": "`-n` is what makes the sort numeric. Without it `100` would sort before `99`; with it the counts are in order."
+      },
+      {
+        "text": "Field 1 is not the client's address in this log format; the address the analyst wanted sits in field 7 instead",
+        "correct": false,
+        "why": "Field 1 is the address and field 7 is the path, which is why the lesson counts busy paths with `-f7`."
+      },
+      {
+        "text": "Without a `sort` first, `uniq` counted runs of neighbouring lines, so a busy address split into small counts",
+        "correct": true,
+        "why": "`uniq` collapses adjacent lines only. Unsorted, an address scattered through the log becomes dozens of tiny counts, and they fill exactly the end a hunt reads."
+      },
+      {
+        "text": "The rare end also holds legitimate one-off visitors, and telling them apart from the rest is the validation step's job",
+        "correct": false,
+        "why": "Rare legitimate visitors do sit there, but one of them would not repeat on several lines. That repetition comes from the pipeline, not the traffic."
+      }
+    ]
+  },
+  {
+    "id": "ex-gw0f5nhm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Windows build job reads its version with `Get-Content $versionFile -ErrorAction SilentlyContinue`, so that the first build, before the file exists, does not stop. Months later somebody moves the file to another folder: the step carries on with an empty version, the job is green, and its log has no line about the file. Why is there no line?",
+    "hint": "Linux and the Command Line, lesson 10.",
+    "choices": [
+      {
+        "text": "Cmdlet errors are terminating by default, so the moved file gave an empty read rather than any error at that point",
+        "correct": false,
+        "why": "A cmdlet's errors are non-terminating by default: `Get-Content` reports `Cannot find path` and the script goes on."
+      },
+      {
+        "text": "The error went into `$LASTEXITCODE`, and nothing in the job read it",
+        "correct": false,
+        "why": "`$LASTEXITCODE` holds a native program's exit status. A cmdlet's failure shows in `$?` and in `$Error`."
+      },
+      {
+        "text": "`SilentlyContinue` made the error non-terminating, whereas under the default `Continue` the whole job would have failed",
+        "correct": false,
+        "why": "`Continue` reports the error and keeps going, so the job would still have been green, with the error printed in its log."
+      },
+      {
+        "text": "`SilentlyContinue` neither reports nor stops, so it hides this missing file just as it hides the expected one",
+        "correct": true,
+        "why": "It is lesson 8's `2>/dev/null` with the same flaw: it silences the error you expected and the one you did not."
+      }
+    ]
+  },
+  {
+    "id": "ex-scej17v3",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "On a database server, the on-call engineer reads `/proc/PID/oom_score` to see which process the kernel would pick first. One process has an `oom_score_adj` of 0 and uses half of the machine's memory. Building the score the way lesson 11 describes, about what should it read?",
+    "hint": "Linux and the Command Line, lesson 11.",
+    "value": 1000,
+    "tolerance": 3
+  },
+  {
+    "id": "ex-f88zf5fh",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A worker keeps vanishing with exit status 137 and nothing in its own log. Put lesson 11's steps for it in order.",
+    "hint": "Linux and the Command Line, lesson 11.",
+    "items": [
+      "Confirm it was memory, and not something else sending `KILL`",
+      "Run `dmesg -T | grep -i 'killed process'` for the process's name and the size it reached",
+      "Read whether the line says `Memory cgroup out of memory` or plain `Out of memory`",
+      "Ask whether its memory grew steadily or spiked, which only a graph over time answers"
+    ],
+    "trap": "The likeliest slip is changing a limit before reading the kernel's line. Until it says `Memory cgroup out of memory` or plain `Out of memory`, nobody knows whether a group's limit or the whole machine was reached."
+  },
+  {
+    "id": "ex-xd8ddq7w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "So that the deploy account can change one setting, a pull request adds a rule under `/etc/sudoers.d/` letting it run `sudo vim /etc/nginx/nginx.conf` with no password. Its author calls the rule narrow, since it names one file. What should the reviewer answer?",
+    "hint": "Linux and the Command Line, lesson 12; Information Security Fundamentals, lesson 6.",
+    "choices": [
+      {
+        "text": "The editor runs as root and `:!sh` inside it is a root shell; `sudoedit` edits as the user and installs as root",
+        "correct": true,
+        "why": "A rule is narrow when what it allows is small, like a restart script and one `tail`. This one allows whatever a root editor can do, which is everything."
+      },
+      {
+        "text": "It is narrow enough, as long as it goes in through `visudo -f`, which checks the rule first",
+        "correct": false,
+        "why": "`visudo` checks a rule's syntax, not how much it grants; a correct line can still hand out root."
+      },
+      {
+        "text": "`sudo` resets the environment on the way in, so the account's own vim configuration and plugins stay behind and do not run as root",
+        "correct": false,
+        "why": "`env_reset` drops variables, and `sudo vim` still runs the editor as root with the user's configuration and plugins in it."
+      },
+      {
+        "text": "The risk is `NOPASSWD`, and with a password prompt the same rule would be safe",
+        "correct": false,
+        "why": "A password proves who is asking. It does not shrink what the rule lets them do once they have asked."
+      }
+    ]
+  },
+  {
+    "id": "ex-15cey9ez",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A sync job sometimes runs for ninety minutes, and there must always be a full hour of quiet between the end of one run and the start of the next. Complete the `[Timer]` line that counts from the moment its service last finished: `___=1h`",
+    "hint": "Linux and the Command Line, lesson 13.",
+    "blanks": [
+      {
+        "accept": [
+          "OnUnitInactiveSec"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ywfgm5m2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Ana committed `.env` with a live payment key, noticed at once, and ran `git reset --hard HEAD~1` before pushing anything. `git log` no longer shows the commit, and she asks whether anything else needs doing.",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 4; Automated Testing and CI/CD, lesson 9.",
+    "choices": [
+      {
+        "text": "It is settled: the key stayed on her laptop, and the hard reset took that commit off the branch for good",
+        "correct": false,
+        "why": "The commit is on no branch, which is not the same as gone: her reflog keeps it for 30 days. And a key that reached a commit is treated as leaked whatever happened next."
+      },
+      {
+        "text": "Revoke the key: the commit still sits in her reflog, and a key that reached a commit counts as leaked",
+        "correct": true,
+        "why": "The reset only moved the branch. Rotating first is the one step that makes every copy worthless, the ones she knows about and the ones she does not."
+      },
+      {
+        "text": "Reset back to the reflog entry, delete `.env` in a new commit, and push both",
+        "correct": false,
+        "why": "That puts the key back on the branch and then publishes it. Deleting a file never changes the commit that added it."
+      },
+      {
+        "text": "Push the branch so that the platform's scanner checks it, and then rewrite the history with `git filter-repo`",
+        "correct": false,
+        "why": "Pushing makes copies on the server and in every fetch. Rewriting comes last, and the key keeps working throughout."
+      }
+    ]
+  },
+  {
+    "id": "ex-p1e4q4jv",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A team wants no secret and no unreviewed change to reach `main`, whoever pushes and from whatever machine. Which of these still hold for a developer who never set anything up on their own laptop? Choose all that apply.",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 8; Pipeline and Supply Chain Security, lesson 6.",
+    "choices": [
+      {
+        "text": "protection on `main` at the hosting service: changes arrive only by an approved pull request",
+        "correct": true,
+        "why": "None of it is Git: it lives on the server, which is why it binds everybody who pushes there and nobody who pushes elsewhere."
+      },
+      {
+        "text": "a gitleaks `pre-commit` hook installed in each developer's own `.git/hooks` directory",
+        "correct": false,
+        "why": "`.git/hooks` is not part of the repository, so a fresh clone has no hook, and `--no-verify` skips one that is there."
+      },
+      {
+        "text": "a required pipeline stage that scans the whole history of every push for secrets",
+        "correct": true,
+        "why": "Every push reaches the CI, so a secret that came in a merge, or from a laptop with no hook, is found there."
+      },
+      {
+        "text": "a framework that installs the team's hooks from a file kept in the repository",
+        "correct": false,
+        "why": "It solves how hooks reach each clone, and neither of the other gaps: `--no-verify`, and secrets that never pass through the hook."
+      },
+      {
+        "text": "push protection on the platform, for the token formats the provider knows",
+        "correct": true,
+        "why": "It runs on the server and refuses the push before it lands, whatever the laptop has. Its limit is the shapes it recognises."
+      },
+      {
+        "text": "`.env` listed in the project's `.gitignore`",
+        "correct": false,
+        "why": "It keeps one file out of `git add .`, which helps. A key pasted into the code, or a change nobody reviewed, passes it untouched."
+      }
+    ]
+  },
+  {
+    "id": "ex-44r8tgz4",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A history scan reports a carrier token in a file that was deleted two commits later, so `git blame` has no line left to point at. Complete the command that lists every commit that added or removed the string: `git log ___ lab-live-token --oneline`",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 3; Automated Testing and CI/CD, lesson 9.",
+    "blanks": [
+      {
+        "accept": [
+          "-S"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fr7kyc0b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A CI job checks out a project whose submodule address is a folder on the runner, and `git submodule update --init` is refused. Somebody proposes running `git config --global protocol.file.allow always` once on the runner, so nobody has to think about it again. Why does the Git course allow it per command, with `-c`, instead?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 10.",
+    "choices": [
+      {
+        "text": "Global settings are not read by Git on a CI runner, so a `-c` on the command itself is the way to reach the job",
+        "correct": false,
+        "why": "A global setting applies to every Git command the runner's account runs, and that reach is exactly why it is too wide here."
+      },
+      {
+        "text": "`-c` is needed for the first clone alone: after it the submodule is pinned and stops using the address",
+        "correct": false,
+        "why": "The pin is a commit id. The address is still where the submodule is fetched from, which is why `.gitmodules` records it."
+      },
+      {
+        "text": "Any repository it clones could aim a submodule at any folder on its disk; `-c` allows that once",
+        "correct": true,
+        "why": "Set globally, every repository the runner ever clones could reach into its disk. With a real server's address the setting is not needed at all."
+      },
+      {
+        "text": "The refusal is about speed, since a folder is copied file by file, and `-c` keeps that cost to one command",
+        "correct": false,
+        "why": "The lesson's reason is safety: what a repository you clone could make Git read from your own disk."
+      }
+    ]
+  },
+  {
+    "id": "ex-ekf6jm6a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Your team's library takes its version numbers from Conventional Commits. A commit that changes a response's format, so that callers have to adapt, goes in as `feat(api): return prices in cents`, with no `!` and no footer. A service that depends on the library has a bot that groups minor and patch updates into one pull request and merges it when the pipeline is green. What happens?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 11; Pipeline and Supply Chain Security, lesson 18.",
+    "choices": [
+      {
+        "text": "The release tool refuses the commit, because a breaking `feat` is required to carry `BREAKING CHANGE:`",
+        "correct": false,
+        "why": "The convention structures a message and cannot read its meaning. A `feat` with no `!` is taken as a feature that breaks nothing."
+      },
+      {
+        "text": "The bot reads the library's commit messages and holds each `feat` back for a person",
+        "correct": false,
+        "why": "A bot proposes versions, not commits. What decides grouping and merging here is whether the version is a major one."
+      },
+      {
+        "text": "Nothing changes downstream, since bots order updates by release date and not by version number",
+        "correct": false,
+        "why": "Grouping minor and patch updates while leaving majors alone is a decision made by version number."
+      },
+      {
+        "text": "It ships as a minor version, so the bot groups it and merges it on green; with `!` it would be a major, in a pull request of its own",
+        "correct": true,
+        "why": "A major is the version allowed to break things, and that is why majors are kept apart. Without the `!` the break arrives labelled safe, and only the dependent's tests can stop it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2xfrm4cc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Release 2.4 came from `main` and broke checkout. The on-call engineer ran `rollback.sh`, and production was answering on 2.3 within two seconds. The commit that caused it, `7f3b2d1`, is on `main`, and everybody has pulled it. What belongs in the repository next?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 4; Automated Testing and CI/CD, lesson 11.",
+    "choices": [
+      {
+        "text": "`git revert 7f3b2d1`, so `main` gains a commit that undoes it and everybody's copy of it still agrees",
+        "correct": true,
+        "why": "Revert is the undo that is safe on a shared commit. Without it, the next release built from `main` ships the bug again."
+      },
+      {
+        "text": "`git reset --hard` to the commit before it and a forced push, so `main` matches what production runs",
+        "correct": false,
+        "why": "Rewriting a branch others have pulled leaves their copies disagreeing with yours, and forcing the push drops what they had."
+      },
+      {
+        "text": "Nothing, since the rollback already undid the change and `main` can stay as it is",
+        "correct": false,
+        "why": "The rollback swapped production's links and left the code where it was; the next release from `main` carries the bug."
+      },
+      {
+        "text": "A revert, and from now on handle incidents by reverting and waiting for the pipeline instead of rolling back",
+        "correct": false,
+        "why": "That is rolling forward to a new release. The default is to roll back in seconds first and then fix through the usual pipeline."
+      }
+    ]
+  },
+  {
+    "id": "ex-eydet5jv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`deploy.sh` refuses any artifact whose SHA-256 differs from the `.sha256` file the build wrote beside it. Both files sit in a shared store that several people can write to. What does the check prove, and what would add what it cannot?",
+    "hint": "Automated Testing and CI/CD, lesson 7; Pipeline and Supply Chain Security, lesson 14.",
+    "choices": [
+      {
+        "text": "That the artifact came out of the pipeline, since the build step is what writes the `.sha256` files",
+        "correct": false,
+        "why": "Anybody who can write to the store can compute a hash and replace both files. A digest says which bytes, not who made them."
+      },
+      {
+        "text": "That these are the bytes the hash names, catching a bad download or a stray edit; a signature by a key only the CI holds says who made them",
+        "correct": true,
+        "why": "The check catches damage on the way. Saying who vouches for a digest takes a signature, and a signature is worth as much as the hold on its key."
+      },
+      {
+        "text": "Little, because a SHA-256 value can be forged by whoever has the file; a longer hash would close that gap",
+        "correct": false,
+        "why": "The bytes cannot change without the hash changing. The gap is that whoever replaces the file can write a new hash beside it."
+      },
+      {
+        "text": "That the build was reproducible, and rebuilding from the tag inside the production job would prove the rest",
+        "correct": false,
+        "why": "A rebuild is a new artifact that has never run anywhere, which is what building once and promoting the same bytes avoids."
+      }
+    ]
+  },
+  {
+    "id": "ex-zakaeh3t",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A fix stops a patient from cancelling somebody else's booking, and its pull request adds one test. Which of these make that test worth keeping? Choose all that apply.",
+    "hint": "Automated Testing and CI/CD, lesson 11; Secure Coding, lesson 19.",
+    "choices": [
+      {
+        "text": "it was run on the code before the fix and failed, then on the fix and passed",
+        "correct": true,
+        "why": "Red on the bug and green on the fix is what shows it tests anything; a test never seen failing might not."
+      },
+      {
+        "text": "it asserts the refusal, and that the other patient's booking is still booked",
+        "correct": true,
+        "why": "Checking what was refused and that nothing changed catches a fix that answers with a refusal and cancels anyway."
+      },
+      {
+        "text": "it brings the cancellation module to 100% line coverage",
+        "correct": false,
+        "why": "Coverage says which lines ran, not which refusals were asked for, and a project can ship the flaw at high coverage."
+      },
+      {
+        "text": "its name reads as the requirement it protects",
+        "correct": true,
+        "why": "The name is what still explains the test once everybody who remembers the flaw has moved on."
+      },
+      {
+        "text": "it checks the response's status code and nothing else",
+        "correct": false,
+        "why": "A status code alone is the weak column: the booking could be cancelled behind a correct-looking answer."
+      },
+      {
+        "text": "its commit message names the developer whose change let the flaw in",
+        "correct": false,
+        "why": "A blameless account names what happened. Who wrote the line is not a cause anybody can act on."
+      }
+    ]
+  },
+  {
+    "id": "ex-yqaxrnrb",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "A Brazilian shop's test suite needs identifiers that look real and belong to nobody. Match each one to what lesson 3 says the tests should use.",
+    "hint": "Automated Testing and CI/CD, lesson 3.",
+    "pairs": [
+      {
+        "left": "e-mail",
+        "right": "an address at `example.org`, `example.com` or `example.net`"
+      },
+      {
+        "left": "CEP",
+        "right": "a real CEP of a public place, such as `01310-100`"
+      },
+      {
+        "left": "CPF",
+        "right": "a number generated to pass the check digits"
+      },
+      {
+        "left": "card number",
+        "right": "the numbers a payment provider publishes for its sandbox"
+      },
+      {
+        "left": "IP address",
+        "right": "the documentation range `192.0.2.0/24`, or one of its two siblings"
+      }
+    ],
+    "right_distractors": [
+      "a real customer's value with its last digits changed",
+      "an address copied from production's access log"
+    ]
+  },
+  {
+    "id": "ex-tfvzr3rc",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "The carrier lets an account hold two valid tokens for a while, and the team rotates shipquote's production token on a quiet Tuesday, with no leak behind it. Put the steps in order.",
+    "hint": "Automated Testing and CI/CD, lesson 9.",
+    "items": [
+      "Create the new token while the old one keeps working",
+      "Deploy the new token to every place that uses it",
+      "Confirm from the logs that every consumer has switched",
+      "Revoke the old token"
+    ],
+    "trap": "Revoking before every consumer has switched is the outage the lab produced: the carrier answered `401` and the shop fell back to its table until production restarted with the new token."
+  },
+  {
+    "id": "ex-0k06k7f4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Rows that testers created in staging turn up in the production database. Staging's configuration had one line copied from the wrong file. Which pair of habits does lesson 8 give against exactly this mistake?",
+    "hint": "Automated Testing and CI/CD, lesson 8.",
+    "choices": [
+      {
+        "text": "Staging works on a copy of production's data, so that a slip made there touches the copy rather than the original",
+        "correct": false,
+        "why": "A copy of customers' data in staging is personal data under weaker controls, and it would not stop staging reaching the real database."
+      },
+      {
+        "text": "Each environment reads one shared configuration file, so that no line can be copied from the wrong one",
+        "correct": false,
+        "why": "Configuration differs per environment by design; the code is what stays the same."
+      },
+      {
+        "text": "Staging is deployed by hand, so that somebody reads its configuration before each deploy",
+        "correct": false,
+        "why": "Staging is the pipeline's, after the checks. A person handling the files is how a line gets copied from the wrong one."
+      },
+      {
+        "text": "Only production's configuration holds its credentials, and its data services refuse other connections",
+        "correct": true,
+        "why": "Either one alone stops the copied line from working: staging has no key to production, and production would not answer it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xa8rp8bk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A test fails about one run in ten with no change to the code, and the team is tired of pressing re-run. A colleague proposes that the pipeline retry failed tests once and count the second attempt as a pass. What does lesson 5 have the team do instead?",
+    "hint": "Automated Testing and CI/CD, lesson 5.",
+    "choices": [
+      {
+        "text": "Fix the random seed or the hash seed, so that the test gives exactly the same answer on every single run",
+        "correct": false,
+        "why": "That freezes the accident the test passes by. The fix is to assert what the code promises, such as the set rather than its order."
+      },
+      {
+        "text": "Keep the automatic retry, as long as it reruns just the test that failed and not the whole suite again",
+        "correct": false,
+        "why": "A retried pass turns every flaky test green, including the one that was right to fail, however narrow the retry."
+      },
+      {
+        "text": "Measure it in a loop, find the cause, and park it in a non-blocking job with an owner and a deadline",
+        "correct": true,
+        "why": "That keeps the main run trustworthy without pretending the test is fine, and the loop says how flaky it really is."
+      },
+      {
+        "text": "Delete the test, since one that fails one time in ten for no reason is measuring noise and not the code",
+        "correct": false,
+        "why": "It may be catching a real dependence on time, order or randomness; quarantining it in the open keeps that question alive."
+      }
+    ]
+  },
+  {
+    "id": "ex-9msw0dgj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A fix makes a service refuse to cancel somebody else's booking, and review asks that each refusal also write one security event. The code logs through a `log` function it is handed, as shipquote's `price` does. Which test proves that line is written, and that nothing else is?",
+    "hint": "Automated Testing and CI/CD, lesson 2; Secure Coding, lesson 15.",
+    "choices": [
+      {
+        "text": "Pass `lines.append` as `log`, cause a refusal, and compare `lines` with a list holding exactly the expected line",
+        "correct": true,
+        "why": "The list is a spy: it records what was logged, and comparing all of it catches a second, unexpected line as well."
+      },
+      {
+        "text": "Pass a stub `log` that returns nothing, cause a refusal, and assert the refusal's return value",
+        "correct": false,
+        "why": "A stub answers and records nothing, so the test cannot tell whether any line was written."
+      },
+      {
+        "text": "Pass a plain `mock.Mock()` as `log`, cause a refusal, and check that the mock was called",
+        "correct": false,
+        "why": "A plain `Mock` accepts any call, so it passes with the wrong text, or with a second line nobody expected."
+      },
+      {
+        "text": "Pass `lines.append` as `log`, cause a refusal, and assert that `\"refused\" in lines[0]`",
+        "correct": false,
+        "why": "That reads the first line only, so an extra line after it would pass unseen."
+      }
+    ]
+  },
+  {
+    "id": "ex-wzvybj91",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "On a production machine, shipquote's carrier token can reach the program in four ways. Match each to who on that machine can read it there.",
+    "hint": "Automated Testing and CI/CD, lesson 9.",
+    "pairs": [
+      {
+        "left": "`config.env` left at `-rw-r--r--`",
+        "right": "every user on the machine"
+      },
+      {
+        "left": "an argument such as `--carrier-token=` on the command line",
+        "right": "anybody who lists the processes"
+      },
+      {
+        "left": "an environment variable set by whatever starts the process",
+        "right": "the process's owner and root"
+      },
+      {
+        "left": "`config.env` after `chmod 600`",
+        "right": "only the account that owns the file"
+      }
+    ],
+    "right_distractors": [
+      "the members of the file's group, and nobody else",
+      "nobody, once the CI service masks it"
+    ]
+  },
+  {
+    "id": "ex-b36wfhew",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A team sets its objective at 99.95% over 30 days, for a service that is either up or down. Working as lesson 11's table does, how many minutes of down time does that budget allow?",
+    "hint": "Automated Testing and CI/CD, lesson 11.",
+    "value": 21.6,
+    "tolerance": 0.3,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-ckd1mjwq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Trivy flags a library in the staff portal's image with `CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:H/A:N`, score 8.2. The portal is reachable only from the office network, and every sign-in needs a second factor. Of the four questions lesson 2 says move likelihood, which does that vector answer for the shop?",
+    "hint": "Information Security Fundamentals, lesson 2; Pipeline and Supply Chain Security, lesson 5.",
+    "choices": [
+      {
+        "text": "Each of them, because `AV:N` already records that the portal faces the internet",
+        "correct": false,
+        "why": "`AV:N` says the flaw can be exploited over a network at all. Who can reach this copy of it is a fact about the shop, and the base score assumes the worst."
+      },
+      {
+        "text": "Motivation, since a score in the high band means scanners are sweeping for the flaw",
+        "correct": false,
+        "why": "Whether anybody is trying is what EPSS estimates and KEV records. CVSS says how bad it would be, not whether anyone is looking."
+      },
+      {
+        "text": "Ease alone; exposure and the controls already in the way are the shop's to answer",
+        "correct": true,
+        "why": "No conditions, no account and no click describe how hard the flaw is to use. The base score assumes the code is reached and exposed, so reachability and MFA are yours to weigh."
+      },
+      {
+        "text": "The damage side instead: a vector rates confidentiality, integrity and availability",
+        "correct": false,
+        "why": "The last three fields do. `AV`, `AC`, `PR` and `UI` come first, and they describe what exploiting the flaw takes."
+      }
+    ]
+  },
+  {
+    "id": "ex-659wfxat",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "The owners gave the public website an RTO of 2 hours, and lesson 1 put 99.9% availability at about 43 minutes of downtime in a 30-day month. Suppose the site goes down once in a 30-day month and is selling again exactly when its RTO runs out. What availability did it reach that month, in percent?",
+    "hint": "Information Security Fundamentals, lessons 1 and 12.",
+    "value": 99.72,
+    "tolerance": 0.01,
+    "unit": "%"
+  },
+  {
+    "id": "ex-qmsb8fna",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The shop's API now runs in a cluster. The team applies a `deny-all` NetworkPolicy to the `shop` namespace and then one small policy per path, such as `allow-front`, which lets pods labelled `app: front` reach the shop's pods on port 8080. In a review they call the cluster Zero Trust. What does lesson 7 say they have built?",
+    "hint": "Information Security Fundamentals, lesson 7; Kubernetes: Orchestration in Production, lesson 24.",
+    "choices": [
+      {
+        "text": "Microsegmentation, its network half; no request is yet judged on who is asking",
+        "correct": true,
+        "why": "Each workload has a boundary and each connection is allowed explicitly. What decides access is still which pod the packet came from, so a compromised `front` pod gets everything the shop answers."
+      },
+      {
+        "text": "The whole of it, because each connection between two pods is now allowed by name",
+        "correct": false,
+        "why": "Allowing paths explicitly is where Zero Trust's network side ends. The principles also ask for identity, device and context on every request, which a pod label is not."
+      },
+      {
+        "text": "A perimeter, not Zero Trust: network policies are lesson 5's edge moved inside, which Zero Trust replaces",
+        "correct": false,
+        "why": "Zero Trust does not take the segments away; it adds a decision in front of each resource. Microsegmentation is one of the ideas it is built from."
+      },
+      {
+        "text": "Trust by location again, so the policies should go and identity checks replace them",
+        "correct": false,
+        "why": "A label does stand in for a location, but the lesson keeps the network layers. The fix is to add the per-request decision, not to remove a layer that limits a compromised pod."
+      }
+    ]
+  },
+  {
+    "id": "ex-7jmgd7wd",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A review counts the layers between the internet and the production database of a small team's service. Which of these pairs are one layer drawn twice? Choose all that apply.",
+    "hint": "Information Security Fundamentals, lesson 4.",
+    "choices": [
+      {
+        "text": "The CI deploy token and the database's administrator password are the same string, in one CI variable",
+        "correct": true,
+        "why": "One secret behind two controls: whoever reads that variable passes both, so one leak opens both."
+      },
+      {
+        "text": "The engineer who writes the production firewall rules is also the one person who approves them",
+        "correct": true,
+        "why": "One person on both sides of the check: one mistake, or one stolen account, passes the rule and its review together."
+      },
+      {
+        "text": "Two web application firewalls in a row, from one vendor, running the same version",
+        "correct": true,
+        "why": "One bug in that version opens both. The lesson's case for two firewalls is two vendors, which fail for different reasons."
+      },
+      {
+        "text": "A sign-in in front of the API, then a file permission that keeps the API's account out of the payroll",
+        "correct": false,
+        "why": "The password and the operating system's permissions fail for different reasons. In the lab a leaked password got past the first and touched the second not at all."
+      },
+      {
+        "text": "A sign-in that refuses wrong passwords, and a log that records each request whatever the answer",
+        "correct": false,
+        "why": "The log relies on nothing the sign-in relies on. It recorded the leaked password's misuse when every preventive layer had held."
+      },
+      {
+        "text": "An outer firewall and an inner one from different vendors, either side of the public servers",
+        "correct": false,
+        "why": "That is the two-firewall DMZ the lessons describe as two layers, precisely because the vendors differ."
+      }
+    ]
+  },
+  {
+    "id": "ex-mvfa7mgv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The shop moves to a cloud network. Its web servers sit in a subnet whose route table sends `0.0.0.0/0` to the internet gateway; the orders database sits in a subnet whose own table holds only `local`. To speed up product pages, a developer proposes a read-only copy of the orders database inside the web servers' subnet, with a security group that admits only the web servers. What is wrong with it, in lesson 5's terms?",
+    "hint": "Information Security Fundamentals, lesson 5; Cloud Security, lesson 8.",
+    "choices": [
+      {
+        "text": "It is fine, since the copy has no public address and a route alone is half of exposure",
+        "correct": false,
+        "why": "True of reaching the copy from the internet. The web server the internet reaches is the client the security group admits, and once it is compromised it reads the whole copy."
+      },
+      {
+        "text": "It puts the data in the zone the internet reaches, which should ask for it through one port and not keep a copy",
+        "correct": true,
+        "why": "A public zone asks the inside for what it needs and holds no copy, so a compromised web server can do only what it was allowed. A copy beside it hands over everything at once."
+      },
+      {
+        "text": "A subnet with no table of its own follows the main table, so the copy would sit in a private subnet anyway",
+        "correct": false,
+        "why": "That is how the records subnet stayed private. This subnet has a table of its own, and that table leads to the internet gateway."
+      },
+      {
+        "text": "A read-only copy skips encryption at rest, so a stolen snapshot would expose the orders",
+        "correct": false,
+        "why": "Nothing in either course says so. The objection is where the data sits, beside the most exposed machine, not how it is stored."
+      }
+    ]
+  },
+  {
+    "id": "ex-q8v0j1v4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The staff portal moves into a container that must listen on port 80. Its image has no `USER` line, so the program runs as root. Which way of starting it gives the container what lesson 6's portal had on the bare server, and nothing more?",
+    "hint": "Information Security Fundamentals, lesson 6; Docker and Containers, lesson 21.",
+    "choices": [
+      {
+        "text": "`--privileged`, which is how Docker grants a port below 1024",
+        "correct": false,
+        "why": "It hands over every capability the daemon holds and the host's devices, and switches AppArmor and seccomp off: the opposite of one piece of root's power."
+      },
+      {
+        "text": "`--cap-drop ALL --cap-add NET_BIND_SERVICE`",
+        "correct": true,
+        "why": "Root's power is split into capabilities, and the portal needed exactly one: the right to listen on a low port. Drop every one and add that one back."
+      },
+      {
+        "text": "No flags, since root inside a container starts with zero capabilities until it is given some",
+        "correct": false,
+        "why": "A root process in a container holds 14 by default, among them changing file owners and switching users. Docker chose them so that most images work, not as a minimum."
+      },
+      {
+        "text": "`--read-only`, because a root unable to write a file is a root unable to do harm",
+        "correct": false,
+        "why": "A read-only filesystem stops writes to the image. The process keeps its 14 capabilities and can still kill, `chown` a mounted file or open raw sockets."
+      }
+    ]
+  },
+  {
+    "id": "ex-e42f1vxm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A pull request adds `/invoices/<id>` to the staff portal. A signed-in member of staff asking for somebody else's invoice gets `403`, and asking for an id that does not exist gets `404`. One reviewer wants it to refuse non-owners before it looks the invoice up, as the payslip code does; another wants `404` for both, as the exam portal in the secure coding course does. Who is right?",
+    "hint": "Information Security Fundamentals, lesson 8; Secure Coding, lesson 13.",
+    "choices": [
+      {
+        "text": "The second: a `403` reveals that the record exists, so it is the unsafe answer",
+        "correct": false,
+        "why": "The payslip code answers `403` before it checks existence, so ana got the same `403` for carla, who does not exist, as for bruno. A `403` says nothing when it comes before the lookup."
+      },
+      {
+        "text": "The first: a `404` for an invoice that exists is false, and status codes should stay true",
+        "correct": false,
+        "why": "The secure coding lesson chooses `404` on purpose, and keeps `403` for places where existence is no secret and the person needs to know they lack permission."
+      },
+      {
+        "text": "Neither: the endpoint should answer `200` with an empty body, so that the request leaves no trace in the answer",
+        "correct": false,
+        "why": "An empty success hides the refusal from the person and from the log, where a run of refusals from one session is the signal worth an alert."
+      },
+      {
+        "text": "Both: either way a non-owner gets the same answer whether or not the invoice exists",
+        "correct": true,
+        "why": "The leak is two answers telling existing ids from missing ones. Refusing before the lookup and answering `404` to both each remove the difference, which is what both lessons protect."
+      }
+    ]
+  },
+  {
+    "id": "ex-tdkp71t5",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "The team measures its secret scanner the way lesson 11 measured the sign-in detector. Match each result of `gitleaks` in the pipeline to its outcome.",
+    "hint": "Information Security Fundamentals, lesson 11; Pipeline and Supply Chain Security, lesson 6.",
+    "pairs": [
+      {
+        "left": "it exits 1 on the administration token written into the settings file",
+        "right": "true positive"
+      },
+      {
+        "left": "it exits 1 on `a-token-for-the-tests-only`, which opens nothing anywhere",
+        "right": "false positive"
+      },
+      {
+        "left": "it exits 0 while a real key sits on a branch that exists only in a colleague's clone",
+        "right": "false negative"
+      },
+      {
+        "left": "it exits 0 on a commit that holds no credential at all",
+        "right": "true negative"
+      }
+    ],
+    "right_distractors": [
+      "precision",
+      "recall"
+    ]
+  },
+  {
+    "id": "ex-k208gd0z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "At a threshold of 3, the shop's sign-in rule raises 21 alerts a week, and seven of its false positives come from `svc-backup`, whose password expired, failing every night. Which change does lesson 11 prefer?",
+    "hint": "Information Security Fundamentals, lesson 11; SOC, Monitoring and Incident Response, lesson 6.",
+    "choices": [
+      {
+        "text": "Give the backup job a working credential, so its failures stop at the source",
+        "correct": true,
+        "why": "With the cause gone the rule needs no exception, and the night the backup account fails six times again is news worth an alert."
+      },
+      {
+        "text": "Leave `svc-backup` out by name: precision rises to 64% and recall stays at 82%",
+        "correct": false,
+        "why": "The numbers are right and the change is not free. An exception by name is a hole by name: anyone who learns it can guess against that account in silence."
+      },
+      {
+        "text": "Lower the rule's severity to low, so the nightly alerts stop waking anybody",
+        "correct": false,
+        "why": "Severity says what an alert means if it is true. Lowering it because the rule is noisy hides the problem in the one field meant to show it."
+      },
+      {
+        "text": "Go back to a threshold of 5, where the backup job's seven windows were the false ones",
+        "correct": false,
+        "why": "At 5 the slow guesser sails under the rule and recall falls to 27%: fewer alerts bought by missing most of the exercise."
+      }
+    ]
+  },
+  {
+    "id": "ex-dh7wq2rp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The clinic's sign-in answers `wrong password` both for an address with no account and for a wrong password. A tester notices that a missing account is refused at once, while a real one takes the quarter of a second Argon2id costs. What does lesson 5 do about it?",
+    "hint": "Applied Cryptography, lesson 5; Information Security Fundamentals, lesson 8.",
+    "choices": [
+      {
+        "text": "Compare the computed hash with the stored one in constant time",
+        "correct": false,
+        "why": "That hides how much of one value matched another. Here no hash is computed at all for a missing account, so there is nothing for the comparison to hide."
+      },
+      {
+        "text": "Lower the Argon2id cost until a real account answers as fast as a missing one",
+        "correct": false,
+        "why": "A missing account still costs nothing, so the gap only shrinks. And every guess against a leaked store gets cheaper by the same factor."
+      },
+      {
+        "text": "Verify against a fixed decoy hash when the requested account does not exist",
+        "correct": true,
+        "why": "Both paths then pay for one Argon2id computation, so the time says no more than the words. A refusal should not answer a question nobody was allowed to ask."
+      },
+      {
+        "text": "Say `no such user` honestly, since the timing already gives the answer away",
+        "correct": false,
+        "why": "On a clinic's portal, whether an address has an account is a fact about somebody's health. The fix closes the second channel rather than opening the first."
+      }
+    ]
+  },
+  {
+    "id": "ex-qx2xpkny",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Ana signs in with the right password, and her stored line is `$argon2id$v=19$m=7168,t=1,p=1$…`, below the policy of `m=19456,t=2`. Put what the application does in order, as lesson 5 describes it.",
+    "hint": "Applied Cryptography, lesson 5.",
+    "items": [
+      "Read the algorithm, the cost and the salt written in Ana's stored line",
+      "Recompute from what she typed with those parameters, and compare in constant time",
+      "Notice that the stored parameters are below the policy",
+      "Hash the same password again with the policy's parameters and a fresh salt",
+      "Replace the stored line while the password is still in memory"
+    ],
+    "trap": "Verifying with the policy's parameters instead of the stored ones would refuse every old hash, and rehashing before the comparison would store a hash of whatever was typed, right or wrong."
+  },
+  {
+    "id": "ex-7x6z80ws",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "To keep the database password out of the configuration, a team seals it with AES-GCM into `db-password.gcm`. Their Dockerfile copies the sealed file and `aes-256.hex` into the image, opens the password at build time, and deletes `aes-256.hex` in a later `RUN`. The finished image has no key file in it. How should a reviewer classify the password's protection?",
+    "hint": "Applied Cryptography, lesson 11; Docker and Containers, lesson 14.",
+    "choices": [
+      {
+        "text": "Encryption, because the key is no longer anywhere in the image's filesystem",
+        "correct": false,
+        "why": "It is gone from the merged view only. A later layer adds a whiteout; the layer below still holds the file, and every pull downloads it."
+      },
+      {
+        "text": "Encoding, because the sealed file is stored as Base64 like any other ciphertext",
+        "correct": false,
+        "why": "Base64 is how bytes travel as text. What decides the category is the key, and here there is one."
+      },
+      {
+        "text": "Encryption, provided nobody runs `docker history` on the image",
+        "correct": false,
+        "why": "Hiding how the image was built is not a key kept apart. Anybody who pulls the image has both halves whether they look or not."
+      },
+      {
+        "text": "Obfuscation, because the key ships inside the image with the data it protects",
+        "correct": true,
+        "why": "The test is who holds the key. A key that travels with the data, here in an earlier layer, makes it obfuscation with better mathematics."
+      }
+    ]
+  },
+  {
+    "id": "ex-vmv9c8bs",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "prompt": "The clinic's `portal-db` Secret holds the database password under `data:` as `Vi1kYi1zM2NyZXQtMjAyNg==`. Which of these protect that password? Choose all that apply.",
+    "hint": "Applied Cryptography, lesson 11; Kubernetes: Orchestration in Production, lesson 14.",
+    "choices": [
+      {
+        "text": "RBAC rules that limit who is allowed to `get` Secrets in that namespace",
+        "correct": true,
+        "why": "Anybody who can read the object through the API gets the password, so who may read it is the first protection."
+      },
+      {
+        "text": "The API server encrypting Secrets before it writes them to etcd, with a key it is given",
+        "correct": true,
+        "why": "That protects a copy of etcd's data that leaks. Through the API the server still decrypts for whoever is allowed."
+      },
+      {
+        "text": "Keeping the manifest out of the Git repository",
+        "correct": true,
+        "why": "A Secret manifest in Git, Base64 and all, is a password in Git."
+      },
+      {
+        "text": "The Base64 under `data:`, which turns the password into unreadable text",
+        "correct": false,
+        "why": "Base64 is an encoding: `base64 -d` gives the password back with no key."
+      },
+      {
+        "text": "Applying ROT13 before the Base64, as the scheduler's vendor does",
+        "correct": false,
+        "why": "That is obfuscation, two commands and no key, and every installation shares the trick."
+      },
+      {
+        "text": "Declaring the Secret `type: Opaque` rather than leaving the type out",
+        "correct": false,
+        "why": "The type says what shape the data has. It hides nothing and protects nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-b8rmybgx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The SOC holds a capture of last week's TLS 1.3 sessions between customers and the shop's web server. Operations hand over the private key of the server's certificate so the analysts can read the requests. What does that key give them?",
+    "hint": "Applied Cryptography, lesson 7; SOC, Monitoring and Incident Response, lesson 18.",
+    "choices": [
+      {
+        "text": "Each recorded session's content, since the certificate's key protected its session key",
+        "correct": false,
+        "why": "That was RSA key transport, which TLS 1.3 removed. Each session's keys came from a fresh exchange whose private halves were discarded."
+      },
+      {
+        "text": "No help with the content, because in TLS 1.3 the certificate's key just signs each handshake",
+        "correct": true,
+        "why": "In TLS 1.3 the long-term key proves identity and never encrypts a session key. The analysts still have the addresses, ports, times, sizes and the server name."
+      },
+      {
+        "text": "The sessions recorded after the key was exported, from that moment on",
+        "correct": false,
+        "why": "No moment changes that: the exchange that made each session's keys never used the certificate's key. Whoever holds it can impersonate the server to new visitors, which is another matter."
+      },
+      {
+        "text": "The certificate and the server name, which TLS 1.3 encrypts under the server's key",
+        "correct": false,
+        "why": "The server name travels in the clear in the ClientHello, and the certificate is encrypted with handshake keys from the exchange, not with the server's key."
+      }
+    ]
+  },
+  {
+    "id": "ex-6edrvchn",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "After the restore that rewound its counter, the agenda export starts recording each sealed file's nonce in a column of its own. So that a repeated nonce is refused at the moment of the second insert, instead of being found later by an audit, that column gets a unique ___.",
+    "hint": "Applied Cryptography, lesson 17.",
+    "blanks": [
+      {
+        "accept": [
+          "index",
+          "constraint"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3es29gr6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Vereda's CI checks that every commit carries a good SSH signature, verifying it against `allowed_signers` as found in the pull request's own checkout. A contributor's pull request adds a line to that file with a key of their own and a commit signed with it, and CI reports the signature good. What is wrong?",
+    "hint": "Applied Cryptography, lesson 6; Pipeline and Supply Chain Security, lesson 14.",
+    "choices": [
+      {
+        "text": "The file is the trust decision, and the pull request rewrote it; the verifier should read it from the protected branch",
+        "correct": true,
+        "why": "Whoever controls the list of signers decides whose keys count. Read from the pull request, the list was chosen by the person being checked, like a public key pushed beside the image it verifies."
+      },
+      {
+        "text": "It is fine, because an Ed25519 signature is unforgeable without its private key",
+        "correct": false,
+        "why": "Nothing was forged. The signature is genuine, made by a key the contributor added to the list that was supposed to judge it."
+      },
+      {
+        "text": "CI should compare each commit's SHA-256 digest with the one recorded in the pull request",
+        "correct": false,
+        "why": "A digest has no key: whoever can change the commit can change its digest too. It says nothing about who made it."
+      },
+      {
+        "text": "A shared HMAC key would have stopped it, since contributors do not hold that key",
+        "correct": false,
+        "why": "Every verifier of an HMAC can also produce one, so CI would hold the power to sign. A signature exists to keep signing and checking apart."
+      }
+    ]
+  },
+  {
+    "id": "ex-2pn5cjtz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "With Calico running, the team applies `deny-all` to the `shop` namespace. Then `wget -T 3 shop.shop` from `stranger`, in another namespace, prints `download timed out`, and so does `wget -T 3 shop` from `front`, inside `shop`. A teammate concludes the shop's pods have crashed, since a policy would answer at once with a refusal. What do the two timeouts say?",
+    "hint": "Networks and Protocols, lesson 3; Kubernetes: Orchestration in Production, lesson 24.",
+    "choices": [
+      {
+        "text": "The teammate is right, because `front` sits in the protected namespace and a policy leaves its own neighbours alone",
+        "correct": false,
+        "why": "Deny-all means all: `podSelector: {}` selects every pod in the namespace, and no rule admits `front` until one is added."
+      },
+      {
+        "text": "The plugin is ignoring the policy, because an enforced policy would make `wget` fail with an error at once",
+        "correct": false,
+        "why": "An ignored policy lets the answer through, as kindnet did on the first cluster. A failure is what enforcement looks like here."
+      },
+      {
+        "text": "The attempts were discarded silently on the way, which is what a drop looks like; deny-all covers `front` too",
+        "correct": true,
+        "why": "A refusal comes back at once from a machine where nothing listens. Silence until the timeout is something in between discarding the attempt, here the policy, on every pod in the namespace."
+      },
+      {
+        "text": "The name `shop.shop` no longer resolves, because the policy also blocks the cluster's DNS",
+        "correct": false,
+        "why": "The policy has `policyTypes: [Ingress]` on the shop's pods; it says nothing about traffic leaving `stranger`, and a name that failed would say so rather than time out on the download."
+      }
+    ]
+  },
+  {
+    "id": "ex-0dq8bynn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The shop's firewall runs the zone rules of the security course: the office cannot reach `db:5432`, and `www` may. A developer in the office who can SSH into `www` runs `ssh -f -N -L 5432:192.168.20.30:5432 www` and then queries the database through `127.0.0.1:5432` on the laptop. What happened, and what refuses it?",
+    "hint": "Networks and Protocols, lesson 7; Information Security Fundamentals, lesson 5.",
+    "choices": [
+      {
+        "text": "The firewall dropped it, since the office may not reach the servers whatever program asks",
+        "correct": false,
+        "why": "The firewall never saw the office talking to the database. It saw SSH to `www`, which rule 3 allows, and `www` to `db:5432`, which rule 2 allows."
+      },
+      {
+        "text": "It works because SSH listens on 22; moving `www`'s SSH to another port closes it",
+        "correct": false,
+        "why": "A different port hides nothing and changes nothing about what sshd forwards once a connection is in."
+      },
+      {
+        "text": "SSH hid the traffic from the firewall by encrypting it; a firewall able to decrypt SSH is what it takes to stop it",
+        "correct": false,
+        "why": "Encryption is not what got it through. The rules judge addresses and ports, and both legs of the tunnel are legs the rules allow."
+      },
+      {
+        "text": "`www` made the last leg, which rule 2 allows; `AllowTcpForwarding no` on `www` refuses it",
+        "correct": true,
+        "why": "The destination of `-L` is reached from the server's side, so the laptop borrowed `www`'s right to reach the database. A server that must not carry tunnels says so in its own configuration."
+      }
+    ]
+  },
+  {
+    "id": "ex-w98ta3j3",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "From home, Ana runs `ssh -J ana@office.example.com:2222 www.example.com`. `www` accepts SSH only from the office's public address. Put what happens in order, as lesson 7 describes it.",
+    "hint": "Networks and Protocols, lesson 7.",
+    "items": [
+      "ssh signs Ana in to the office server, through the router's port 2222",
+      "The office server opens a connection to `www.example.com` port 22, which www's firewall admits",
+      "Home and www agree keys through that connection, and home checks www's host key in its own `known_hosts`",
+      "www accepts the key Ana's agent offers from home"
+    ],
+    "trap": "The office server checks nothing about www: it only relays bytes. The host key is checked at home, after the relay is open, which is why home's `known_hosts` gained www's key."
+  },
+  {
+    "id": "ex-yrs2wfde",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Ana's server once refused a forged `Invoice overdue` with `550 5.7.1 rejected by DMARC policy for example.net`. Today a message asking finance to pay a supplier's invoice into a new account arrives from the supplier's real address, sent through the supplier's own server after one of their passwords was stolen. Its headers show `spf=pass`, `dkim=pass` and `dmarc=pass`. What stops the payment?",
+    "hint": "Networks and Protocols, lesson 9; Information Security Fundamentals, lesson 6.",
+    "choices": [
+      {
+        "text": "Publishing `p=reject` for the shop's own domain, so that forged mail is refused",
+        "correct": false,
+        "why": "The shop's DMARC record rules mail that claims to come from the shop. This message claims the supplier, and the supplier's own server sent it."
+      },
+      {
+        "text": "A second person calls the supplier, on a number already on record, before money moves",
+        "correct": true,
+        "why": "DMARC proves the supplier's server sent the message, which is true. Whether the supplier meant it is a question only a channel the sender did not choose can answer."
+      },
+      {
+        "text": "The check that already ran: DMARC refuses a message that asks for money to go to a new account",
+        "correct": false,
+        "why": "DMARC reads which domain proved itself, not what the message asks. Every check passed because every check was honestly met."
+      },
+      {
+        "text": "Reading the `Received:` lines bottom up to be sure the supplier's server sent it",
+        "correct": false,
+        "why": "They will show exactly that. The supplier's server did send it, which is the problem rather than the answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-b5dwpp3n",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "A user forwards an order email to the SOC as suspicious, and its source carries the lines below. Match each to what it establishes.",
+    "hint": "Networks and Protocols, lesson 9.",
+    "pairs": [
+      {
+        "left": "`spf=pass smtp.mailfrom=example.com`",
+        "right": "the connecting server may send for the envelope sender's domain"
+      },
+      {
+        "left": "`dkim=pass (2048-bit key; unprotected) header.d=example.com`",
+        "right": "example.com's key signed the named headers and the body, unchanged since"
+      },
+      {
+        "left": "`dmarc=pass (p=reject dis=none) header.from=example.com`",
+        "right": "a pass held for the same domain as the From: line a person reads"
+      },
+      {
+        "left": "`Return-Path: <ana@example.com>`",
+        "right": "the envelope sender the message was handed over with"
+      }
+    ],
+    "right_distractors": [
+      "the sender's mail program encrypted the message end to end",
+      "the sending address has a reverse name under in-addr.arpa"
+    ]
+  },
+  {
+    "id": "ex-brxkdrwx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The shop moves its staff portal to the cloud and keeps lesson 11's rule: an alert when one address fails to sign in at least 3 times within ten minutes. All nine staff reach it from the office, whose router masquerades every laptop as `203.0.113.2`. What does that do to the rule?",
+    "hint": "Networks and Protocols, lesson 2; Information Security Fundamentals, lesson 11.",
+    "choices": [
+      {
+        "text": "The nine become one address: their slips add up, and a block shuts out the office",
+        "correct": true,
+        "why": "The portal sees the router's address for every laptop. Three staff each mistyping once in ten minutes now look like one source failing three times, and a block by address locks out all nine."
+      },
+      {
+        "text": "Little, because the portal's log still records each laptop's `192.168.10.x` address",
+        "correct": false,
+        "why": "The router rewrites the source on the way out and puts it back only on replies. Outside, every laptop is `203.0.113.2`."
+      },
+      {
+        "text": "It removes the false positives, since failures from the office's own address can be trusted",
+        "correct": false,
+        "why": "That is trust by location. An infected office laptop guessing passwords also arrives as `203.0.113.2`."
+      },
+      {
+        "text": "It raises recall, because a guesser in the office can no longer spread failures over several addresses",
+        "correct": false,
+        "why": "The guesser was never in the office. What changes is that harmless failures from nine people now share one count, which is the false positive side."
+      }
+    ]
+  },
+  {
+    "id": "ex-q69pswf7",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Ana added `PasswordAuthentication no` at the end of `/etc/ssh/sshd_config` and reloaded sshd. The audit wants evidence that the server really refuses passwords. Which of these are that evidence? Choose all that apply.",
+    "hint": "Networks and Protocols, lesson 7; Information Security Fundamentals, lesson 16.",
+    "choices": [
+      {
+        "text": "`sshd -T` printing `passwordauthentication no`",
+        "correct": true,
+        "why": "It prints the settings sshd really uses, after every file it reads, which is the only reading that settles it."
+      },
+      {
+        "text": "A client told not to offer a key being refused with `Permission denied (publickey).`",
+        "correct": true,
+        "why": "Told not to offer a key, the client is refused, and the refusal names what is still allowed: only `publickey`."
+      },
+      {
+        "text": "`grep PasswordAuthentication /etc/ssh/sshd_config` showing the line she appended",
+        "correct": false,
+        "why": "sshd keeps the first value it reads, and Ubuntu reads `/etc/ssh/sshd_config.d/*.conf` first. A `yes` there wins while the main file looks right."
+      },
+      {
+        "text": "`sshd -t` exiting 0 after the change",
+        "correct": false,
+        "why": "Lower-case `t` checks that the configuration parses, so a mistake does not lock everybody out. It says nothing about which value won."
+      },
+      {
+        "text": "The comment `#PasswordAuthentication yes` still sitting higher up in the file",
+        "correct": false,
+        "why": "A commented line is not a setting at all; the default and every included file decide, which is why the checklist reads `sshd -T`."
+      }
+    ]
+  },
+  {
+    "id": "ex-sdztj1gb",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "The SOC has `/tmp/web.pcap` from the laptop and wants only the packets that open or end each connection, the handshake and the goodbye. Complete the filter: `tcpdump -n -r /tmp/web.pcap \"tcp[tcpflags] & (tcp-syn|tcp-___) != 0\"`",
+    "hint": "Networks and Protocols, lesson 10.",
+    "blanks": [
+      {
+        "accept": [
+          "fin"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-t2fk7c44",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "A deploy step should fail when the certificate the server actually sends has less than two weeks left. It reads that certificate with `openssl s_client` and pipes it into `openssl x509 -noout -checkend N`. What should N be?",
+    "hint": "Networks and Protocols, lesson 6.",
+    "value": 1209600,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-dxd92kse",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A new pipeline stage runs `trivy image --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1` on two images whose full scans lesson 20 printed. `shelf:1.6.0` has one HIGH in a Go module compiled into it, status `fixed`, and one UNKNOWN in `tzdata`. `debian:trixie-slim` has 163 findings, 161 `affected` and 2 `fix_deferred`. Which verdicts does the stage give?",
+    "hint": "Docker and Containers, lesson 20; Pipeline and Supply Chain Security, lesson 8.",
+    "choices": [
+      {
+        "text": "Both fail, exactly as they did in lesson 20 before the extra flag was added",
+        "correct": false,
+        "why": "Lesson 20 ran the gate without `--ignore-unfixed`. With it, every finding that has no fixed version is set aside, and that is all of Debian's."
+      },
+      {
+        "text": "`shelf:1.6.0` fails on its fixable HIGH, and `debian:trixie-slim` passes",
+        "correct": true,
+        "why": "The gate keeps only findings with a fix, and of those only HIGH and CRITICAL. `shelf` has one; the Debian image has none, so a rebuild today could not change its verdict anyway."
+      },
+      {
+        "text": "`debian:trixie-slim` fails on its 43 HIGH findings, and `shelf` passes",
+        "correct": false,
+        "why": "The count is not what the gate reads. None of Debian's 43 has a fixed version, so `--ignore-unfixed` leaves nothing for `--exit-code 1` to fail on."
+      },
+      {
+        "text": "Both pass, because neither image has a single finding rated CRITICAL",
+        "correct": false,
+        "why": "`--severity HIGH,CRITICAL` names two levels, and `shelf`'s HIGH is fixable. That is the build the stage exists to break."
+      }
+    ]
+  },
+  {
+    "id": "ex-y6k07hn7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Dockerfile took a registry token as `ARG REGISTRY_TOKEN`, wrote it into `/root/.netrc` and removed the file in the same `RUN`. The image went to the team's registry a week ago, and `docker history --no-trunc` on it prints `REGISTRY_TOKEN=` followed by the value. The Dockerfile is being moved to a secret mount. What has to happen first?",
+    "hint": "Docker and Containers, lesson 18; Pipeline and Supply Chain Security, lesson 6.",
+    "choices": [
+      {
+        "text": "Delete the image's tags in the registry, so that nobody can pull the history any more",
+        "correct": false,
+        "why": "Every machine that pulled the image in that week already holds the history. Deleting the tag protects nothing that was copied."
+      },
+      {
+        "text": "Rebuild with `--mount=type=secret` and push the new image over the same tag",
+        "correct": false,
+        "why": "The new image is clean and the old one is not gone: its copies still carry the value, and the value still works."
+      },
+      {
+        "text": "Squash the image into a single layer, so that the `RUN` line drops out of its history",
+        "correct": false,
+        "why": "That changes one copy. The value in every other copy keeps working until somebody makes it stop."
+      },
+      {
+        "text": "Revoke the token where it was issued, so the value opens nothing wherever it went",
+        "correct": true,
+        "why": "BuildKit recorded the argument with its value, readable by everyone with pull access. Revoking ends the window; the rebuild with a secret mount comes after."
+      }
+    ]
+  },
+  {
+    "id": "ex-y5gm1ety",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "`shelf:1.6.0` was built with `--sbom=true --provenance=mode=min` and pushed, and a deployment gate is being designed around what travels with it. Which questions does the provenance attestation answer? Choose all that apply.",
+    "hint": "Docker and Containers, lesson 20; Pipeline and Supply Chain Security, lesson 14.",
+    "choices": [
+      {
+        "text": "Which build image and which distroless base went into the build, by digest",
+        "correct": true,
+        "why": "`resolvedDependencies` names both bases by digest, although the Dockerfile only wrote their tags."
+      },
+      {
+        "text": "Which commit of the repository was built",
+        "correct": true,
+        "why": "The provenance carries the revision, `12d9616…` in the lesson's capture."
+      },
+      {
+        "text": "Who vouches for the image's digest",
+        "correct": false,
+        "why": "That is a signature's job, made with a key somebody holds. An attestation says how the image was made, and nobody has signed this one yet."
+      },
+      {
+        "text": "Every package and Go module the image contains",
+        "correct": false,
+        "why": "That list is the SBOM, the other attestation the same build wrote: fifteen lines for `shelf` 1.6.0."
+      },
+      {
+        "text": "Whether the image is safe to run",
+        "correct": false,
+        "why": "Neither statement says so, and neither would a valid signature. Known vulnerabilities are a scanner's question, asked against a database with a date."
+      },
+      {
+        "text": "Which known vulnerabilities its packages carry",
+        "correct": false,
+        "why": "A scanner answers that afterwards, from the package lists, and the answer changes as the advisory database grows."
+      }
+    ]
+  },
+  {
+    "id": "ex-hxhc6t5k",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "An Alpine image creates the user `app` with UID 10001, then runs `RUN mkdir /data`, then `USER 10001:10001`. At start the program prints `touch: /data/report.txt: Permission denied`. What is lesson 14's fix?",
+    "hint": "Docker and Containers, lesson 14.",
+    "choices": [
+      {
+        "text": "`RUN mkdir /data && chown app:app /data`, before `USER` switches",
+        "correct": true,
+        "why": "Files and directories made during the build belong to root unless the Dockerfile says otherwise, so the directory is handed over before the switch."
+      },
+      {
+        "text": "`USER app` instead of the number, so the account's own rights apply",
+        "correct": false,
+        "why": "The name and the number are the same account. Root still owns `/data` whichever way the user is written."
+      },
+      {
+        "text": "Leave out `--read-only` when the container is started",
+        "correct": false,
+        "why": "A read-only filesystem says `Read-only file system`. `Permission denied` is an owner who is not this user."
+      },
+      {
+        "text": "Start it with `docker run --user 10001`, which grants the write",
+        "correct": false,
+        "why": "That picks the same user the image already names. Choosing a user hands no directory to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-a0d2qe2y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`shelf` runs on Ana's machine with `-p 127.0.0.1:8080:8080`. From a container started with `--add-host host.docker.internal:host-gateway`, `wget host.docker.internal:8080/version` prints `wget: can't connect to remote host (172.17.0.1): Connection refused`. Read the way the networks course reads a refusal, what does it say?",
+    "hint": "Docker and Containers, lesson 23; Networks and Protocols, lesson 3.",
+    "choices": [
+      {
+        "text": "Docker's firewall rules dropped the packet between the bridge and the host",
+        "correct": false,
+        "why": "A dropped packet gets no answer at all, and the client waits for a timeout. A refusal is an answer."
+      },
+      {
+        "text": "The name resolved to the container itself, whose loopback has nothing on 8080",
+        "correct": false,
+        "why": "The message names `172.17.0.1`, the bridge's address on the host. The container's own `localhost` was the first attempt in the lesson, not this one."
+      },
+      {
+        "text": "The path works, and nothing listens there: the port is bound to `127.0.0.1`",
+        "correct": true,
+        "why": "A refusal means the attempt arrived and the port was shut. `shelf` was published on the loopback address on purpose, and the bridge reaches the host somewhere else."
+      },
+      {
+        "text": "The default bridge resolves no names, so the request did not leave the container",
+        "correct": false,
+        "why": "`--add-host` wrote the name into the container, and the message shows it resolved. A request that never left would not be refused by `172.17.0.1`."
+      }
+    ]
+  },
+  {
+    "id": "ex-w6rbz8vx",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Ana hardens a container with the flags of lesson 21, one at a time, and checks each by trying the thing it should stop. Match each flag to what she sees.",
+    "hint": "Docker and Containers, lesson 21.",
+    "pairs": [
+      {
+        "left": "`--cap-drop ALL`",
+        "right": "`chown` refused to root inside, with `Operation not permitted`"
+      },
+      {
+        "left": "`--security-opt no-new-privileges`",
+        "right": "a setuid program cannot give the process more than it started with"
+      },
+      {
+        "left": "`--read-only`",
+        "right": "`touch /etc/oops` fails with `Read-only file system`"
+      },
+      {
+        "left": "`--tmpfs /tmp`",
+        "right": "one writable directory in memory, mounted `noexec`"
+      }
+    ],
+    "right_distractors": [
+      "UID 0 inside is an unprivileged UID on the host",
+      "the daemon itself runs as an ordinary user"
+    ]
+  },
+  {
+    "id": "ex-w13d98av",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "`shelf`'s Dockerfile names its distroless base by digest, and Trivy still reports the `tzdata` advisory that lesson 20 left in it. Debian has now published the fixed package. Put in order how that fix reaches the containers that run `shelf`.",
+    "hint": "Docker and Containers, lesson 16; Pipeline and Supply Chain Security, lesson 18.",
+    "items": [
+      "The distroless image is rebuilt on the fixed package, and its `nonroot` tag moves to a new digest",
+      "A bot such as Renovate sees the tag move and opens a pull request changing the `@sha256:` in the `FROM` line",
+      "The pipeline builds and tests `shelf` on the new base, and the scan no longer lists `tzdata`",
+      "A person reads the pull request and merges it",
+      "The new release is started by the digest the pipeline pushed"
+    ],
+    "trap": "The fix does not arrive when Debian publishes it, nor when the tag moves. With the base pinned by digest, nothing changes until the pull request that edits the digest has been judged by the pipeline and merged by a person."
+  },
+  {
+    "id": "ex-ygfjx2s2",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "`shelf` runs with no capabilities at all. Another service's process runs as root and must listen on port 80. Starting from nothing and adding only what it needs, it runs with `--cap-drop ALL --cap-add ___`.",
+    "hint": "Docker and Containers, lesson 21.",
+    "blanks": [
+      {
+        "accept": [
+          "NET_BIND_SERVICE",
+          "CAP_NET_BIND_SERVICE"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8annwjz9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The cluster runs lesson 25's `no-latest-tag` policy, whose expression demands that every image contains `:` and does not end in `:latest`. The company's registry is `harbor.internal:8443`. Which of these Deployments is admitted although its image names no tag at all?",
+    "hint": "Kubernetes: Orchestration in Production, lesson 25.",
+    "choices": [
+      {
+        "text": "One whose image is `api`",
+        "correct": false,
+        "why": "No colon anywhere, so the first half of the expression refuses it, exactly as it refused plain `nginx`."
+      },
+      {
+        "text": "One whose image is `harbor.internal/team/api`",
+        "correct": false,
+        "why": "Without the port there is no colon in the name, and the policy refuses it."
+      },
+      {
+        "text": "One whose image is `harbor.internal:8443/team/api:latest`",
+        "correct": false,
+        "why": "It ends in `:latest`, the case the second half of the expression exists for."
+      },
+      {
+        "text": "One whose image is `harbor.internal:8443/team/api`",
+        "correct": true,
+        "why": "The colon belongs to the port and the name ends in no tag, so both halves pass. It is the hole the lesson found with `registry.local:5000/shop`; a stricter rule checks what follows the last slash."
+      }
+    ]
+  },
+  {
+    "id": "ex-mszh46xg",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "The `shop` namespace has run for a year with no Pod Security label, and the team wants it at `restricted` without anybody's deploy failing on the day. Put the steps in the order lesson 25 recommends.",
+    "hint": "Kubernetes: Orchestration in Production, lesson 25.",
+    "items": [
+      "Label the namespace `pod-security.kubernetes.io/warn=restricted`",
+      "Read the warnings for a while, and fix the pod templates they name",
+      "Run `kubectl label --dry-run=server` with `enforce=restricted`, and see it name no running pod",
+      "Label the namespace `pod-security.kubernetes.io/enforce=restricted`"
+    ],
+    "trap": "Enforcing first looks harmless, because pods already running are not touched; the refusal comes later, when a ReplicaSet tries to create pods, and shows up only as an event on the ReplicaSet."
+  },
+  {
+    "id": "ex-ycw4s7bs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A colleague copies `front-dns` from lesson 24, but under `to:` writes the `namespaceSelector` for `kubernetes.io/metadata.name: kube-system` and the `podSelector` for `k8s-app: kube-dns` as two entries, each with its own leading dash. The ports are still 53 over UDP and TCP. Compared with the original, what does `front` gain?",
+    "hint": "Kubernetes: Orchestration in Production, lesson 24.",
+    "choices": [
+      {
+        "text": "Nothing: the two entries must both match a pod, as the original's two selectors do",
+        "correct": false,
+        "why": "Two entries are alternatives, and a connection is allowed if any of them matches. Only selectors inside one entry combine."
+      },
+      {
+        "text": "Port 53 on every pod in `kube-system`, whatever that pod runs",
+        "correct": true,
+        "why": "The namespace entry now stands alone and selects the whole namespace. The original allowed only the DNS pods inside it; one dash made the rule much wider."
+      },
+      {
+        "text": "Nothing beyond the original: the dash is a matter of YAML style",
+        "correct": false,
+        "why": "It changes the structure: one entry with two selectors is an AND, two entries are an OR."
+      },
+      {
+        "text": "Port 53 in every namespace, since a lone `namespaceSelector` matches them all",
+        "correct": false,
+        "why": "The namespace selector still names `kube-system` by its fixed label. What is lost is the condition on which pods inside it."
+      }
+    ]
+  },
+  {
+    "id": "ex-vtfbnhbn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An administrator adds `--encryption-provider-config` with a `secretbox` key to the API server, and it restarts. Ten minutes later, before anybody runs `kubectl get secrets --all-namespaces -o json | kubectl replace -f -`, an etcd snapshot is copied to a bucket for a migration. What does the snapshot hold for the `db` Secret's password?",
+    "hint": "Kubernetes: Orchestration in Production, lesson 14.",
+    "choices": [
+      {
+        "text": "The password in plain text, exactly as it was stored before the flag",
+        "correct": true,
+        "why": "Turning encryption on does not touch what is already stored. Each Secret has to be written again before its stored bytes begin with `k8s:enc:secretbox:v1:key1:`."
+      },
+      {
+        "text": "The password encrypted with `key1`, since reads of etcd now go through the provider",
+        "correct": false,
+        "why": "The provider acts when the API server writes. Bytes written before the flag existed are still the old bytes."
+      },
+      {
+        "text": "The base64 of the password, which is what keeps it safe in a copy",
+        "correct": false,
+        "why": "Base64 has no key and hides nothing, and the lesson's `strings` on etcd's copy printed the password itself."
+      },
+      {
+        "text": "No password: Secrets live in the API server's memory and do not reach etcd",
+        "correct": false,
+        "why": "etcd holds every object, Secrets included, which is the whole reason a leaked copy of its data is a leaked copy of every Secret."
+      }
+    ]
+  },
+  {
+    "id": "ex-95t3bwzm",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "After one `kubectl apply`, five pods are stuck, each with a different word in the STATUS column. Match each status to where lesson 40 looks next.",
+    "hint": "Kubernetes: Orchestration in Production, lesson 40.",
+    "pairs": [
+      {
+        "left": "`Pending`",
+        "right": "the scheduler's event, `FailedScheduling`"
+      },
+      {
+        "left": "`ImagePullBackOff`",
+        "right": "the pod's events, and the reference the kubelet tried to fetch"
+      },
+      {
+        "left": "`CreateContainerConfigError`",
+        "right": "the waiting message in the container's status"
+      },
+      {
+        "left": "`CrashLoopBackOff`",
+        "right": "the container's logs, with `--previous` after a restart"
+      },
+      {
+        "left": "`Running`, but `0/1` ready",
+        "right": "the `Unhealthy` events of the readiness probe"
+      }
+    ],
+    "right_distractors": [
+      "the copy of the pod stored in etcd",
+      "the API server's own `/metrics`"
+    ]
+  },
+  {
+    "id": "ex-smcv7t4g",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "The pipeline's ServiceAccount `deployer` is bound in `shop` to lesson 23's Role: `get`, `list`, `watch`, `create`, `update` and `patch` on `deployments` in `apps`, and `get`, `list` and `watch` on `pods` and `pods/log`. Which of these will it be allowed to do? Choose all that apply.",
+    "hint": "Kubernetes: Orchestration in Production, lesson 23.",
+    "choices": [
+      {
+        "text": "Change the image of the `shop` Deployment in `shop`",
+        "correct": true,
+        "why": "That is an update or a patch of a Deployment in the Role's namespace, which is what the Role exists for: rolling out a new version."
+      },
+      {
+        "text": "Read the logs of a shop pod in `shop`",
+        "correct": true,
+        "why": "`pods/log` is named in the Role. Had it been left out, reading the pods would not have included their logs."
+      },
+      {
+        "text": "List the pods in `shop`",
+        "correct": true,
+        "why": "`list` on `pods` is granted, and the namespace is the binding's own."
+      },
+      {
+        "text": "Delete the `shop` Deployment",
+        "correct": false,
+        "why": "`delete` is not among the verbs, on purpose: the lesson's capture shows the refusal, `cannot delete resource \"deployments\"`."
+      },
+      {
+        "text": "Open a shell in a shop pod with `kubectl exec`",
+        "correct": false,
+        "why": "`pods/exec` is a subresource nobody named, so `create pods/exec` answers `no` although reading the pod is allowed."
+      },
+      {
+        "text": "List the pods in `default`",
+        "correct": false,
+        "why": "A RoleBinding grants only inside its own namespace, and this one lives in `shop`."
+      }
+    ]
+  },
+  {
+    "id": "ex-srsahbs5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "One shop pod has been making connections nobody can explain. The on-call engineer wants to run `kubectl delete pod` at once, since the Deployment will start a clean one. The cluster runs no log collector. By the SOC course's rule for containment, what does deleting it first throw away?",
+    "hint": "Kubernetes: Orchestration in Production, lesson 41; SOC, Monitoring and Incident Response, lesson 13.",
+    "choices": [
+      {
+        "text": "Nothing: `kubectl logs --previous` still reads the deleted pod's output",
+        "correct": false,
+        "why": "`--previous` reads the container before the last restart, in the same pod. A deleted pod has no previous container to read."
+      },
+      {
+        "text": "Nothing lasting: the pod's events keep the same lines for an hour afterwards",
+        "correct": false,
+        "why": "Events are what the scheduler and the kubelet said about the pod, not what the process wrote. They expire after an hour anyway."
+      },
+      {
+        "text": "What its process printed: the node deletes that log file with the pod",
+        "correct": true,
+        "why": "`kubectl logs` reads a file under `/var/log/pods`, and the file goes when the pod does. Collect, then act: copy the logs, and the open connections, before the pod is removed."
+      },
+      {
+        "text": "Its image, which the node removes from its own disk together with the pod",
+        "correct": false,
+        "why": "The image stays on the node and in the registry. What goes is the record of what this particular process did."
+      }
+    ]
+  },
+  {
+    "id": "ex-pc43f7q4",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A container of the shop Deployment declares `limits: cpu: 250m`. On its node, the container's control group shows how much processor time it may have in each period of 100,000 microseconds. Complete what `cpu.max` reads: `___ 100000`.",
+    "hint": "Kubernetes: Orchestration in Production, lesson 19; Linux and the Command Line, lesson 11.",
+    "blanks": [
+      {
+        "accept": [
+          "25000"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wprcwkpw",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "A Deployment runs 8 replicas, and its `strategy.rollingUpdate` was never written, so both fields keep their default. A new image crashes on start, and the rollout stalls. Reasoning as lesson 35 does about its four-replica shop, how many pods of the old version are still serving?",
+    "hint": "Kubernetes: Orchestration in Production, lesson 35.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "pods"
+  },
+  {
+    "id": "ex-eqkn7x66",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A team weighs running its own control plane against a managed one at 0.10 dollars an hour. Its own would need the three machines lesson 46 counts for etcd, at 0.05 dollars an hour each, and about 4 hours of an engineer's time a month at 50 dollars an hour. The cluster also has six worker nodes at 0.20 dollars an hour each. In lesson 46's sum, with a month of 730 hours, what does running the control plane yourself cost per month, in dollars?",
+    "hint": "Kubernetes: Orchestration in Production, lesson 46.",
+    "value": 309.5,
+    "tolerance": 0.5,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-jtdba05x",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The pod `crashing` exits the moment it starts, and its image holds one program and no shell. You want to see the environment it was started with, and keep the broken pod exactly as it is, as evidence. Which command does that?",
+    "hint": "Kubernetes: Orchestration in Production, lesson 42.",
+    "choices": [
+      {
+        "text": "`kubectl exec crashing -- env`",
+        "correct": false,
+        "why": "There is no running container to enter, and the image has no `env` program to run if there were."
+      },
+      {
+        "text": "`kubectl debug crashing --copy-to=crashing-debug --container=shop --image=busybox:1.37 -- sleep 600`",
+        "correct": true,
+        "why": "A copy keeps the original's spec, variables included, and runs busybox in its place, so it stays up. The broken pod is left alone."
+      },
+      {
+        "text": "`kubectl debug crashing --image=busybox:1.37 --target=shop`",
+        "correct": false,
+        "why": "An ephemeral container joins a running process, and a pod that crashes on start is gone before anything can attach. It would also stay in the pod's spec for good."
+      },
+      {
+        "text": "`kubectl port-forward pod/crashing 9090:8080`",
+        "correct": false,
+        "why": "A tunnel needs something listening at the far end, and this process has already exited."
+      }
+    ]
+  },
+  {
+    "id": "ex-spyvf05j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Under Docker, a small proxy container reached `shelf-web:8080` by name on a network of its own, and `localhost:8080` from inside the proxy was refused. Moved to Kubernetes, the proxy becomes a sidecar in the shop's pod, and its configuration says `localhost:8080`. What happens?",
+    "hint": "Kubernetes: Orchestration in Production, lesson 9; Docker and Containers, lesson 23.",
+    "choices": [
+      {
+        "text": "It is refused, as under Docker, since `localhost` is one container's own loopback",
+        "correct": false,
+        "why": "That is true of separate containers. A pod wraps its containers in one network namespace, so its loopback is shared."
+      },
+      {
+        "text": "It needs the Service's name, because a pod's containers do not share a loopback",
+        "correct": false,
+        "why": "The lesson's sidecar fetched the shop's page from `localhost:8080` with no Service in the way."
+      },
+      {
+        "text": "It reaches the shop by the node's address, since each container has one of its own",
+        "correct": false,
+        "why": "The containers of one pod share one interface and one address, which is why they cannot both listen on the same port."
+      },
+      {
+        "text": "It reaches the shop, because in a pod `localhost` is the pod",
+        "correct": true,
+        "why": "Both containers share one network namespace, as processes on one small machine do, so the sidecar finds port 8080 without any address."
+      }
+    ]
+  },
+  {
+    "id": "ex-jjv30mq2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A virtual machine carries a role that may only `s3:PutObject` under `example-backups/nightly/*`. The backup container on it was built from an image with `ENV AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE` and the matching secret, left over from a test. The audit log shows the container's calls signed by that key's user and never by the role. What explains it, and what else follows?",
+    "hint": "Cloud and Serverless, lesson 7; Docker and Containers, lesson 18.",
+    "choices": [
+      {
+        "text": "The environment wins the credential chain, and `ENV` stored the key inside the image",
+        "correct": true,
+        "why": "The SDK uses the first source that answers, and variables beat the machine's role. And an `ENV` value is stored in the image, so the key has gone wherever the image went."
+      },
+      {
+        "text": "The role's credentials expired after an hour, and the SDK fell back to the next source",
+        "correct": false,
+        "why": "The provider replaces a role's credentials before they expire. The search stopped at the environment and never reached the role."
+      },
+      {
+        "text": "The trust policy names `ec2.amazonaws.com`, so a container's calls do not get to assume it",
+        "correct": false,
+        "why": "Nothing was refused: the log shows the calls succeeding as the key's user. Nobody asked for the role."
+      },
+      {
+        "text": "Programs inside containers have no way to the metadata service, so the key was what was left",
+        "correct": false,
+        "why": "The chain ends with `container-role` and `iam-role` for exactly these programs. A variable earlier in the chain won before either was tried."
+      }
+    ]
+  },
+  {
+    "id": "ex-w6s59n7s",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "prompt": "The policy attached to a nightly backup job is up for its quarterly review. Which of these lines are ones lesson 7 says to stop at? Choose all that apply.",
+    "hint": "Cloud and Serverless, lesson 7.",
+    "choices": [
+      {
+        "text": "`\"Action\": \"iam:*\"`, on an identity whose job is uploading backups",
+        "correct": true,
+        "why": "An identity that can change IAM can give itself anything. It is administrator access under another name."
+      },
+      {
+        "text": "`\"Resource\": \"*\"`",
+        "correct": true,
+        "why": "A `*` alone in `Resource` puts every bucket in the account in scope, not the one the backups go to."
+      },
+      {
+        "text": "`\"Action\": \"s3:Get*\"`, written to mean read-only",
+        "correct": true,
+        "why": "It also matches `s3:GetBucketPolicy` and every `Get` action S3 adds later. A wildcard in the middle of a name reads narrower than it is."
+      },
+      {
+        "text": "`\"Action\": \"s3:PutObject\"` on `arn:aws:s3:::example-backups/nightly/*`",
+        "correct": false,
+        "why": "One action on one prefix of one bucket is the narrowed policy the lesson writes for this very job."
+      },
+      {
+        "text": "`\"Version\": \"2012-10-17\"`",
+        "correct": false,
+        "why": "That is the version of the policy language, the current one, and the value to write."
+      },
+      {
+        "text": "A `StringLike` condition on `s3:prefix` beside `s3:ListBucket`",
+        "correct": false,
+        "why": "That condition narrows a listing to one prefix. It is the fix for a too-wide `ListBucket`, not a reason for concern."
+      }
+    ]
+  },
+  {
+    "id": "ex-rfd4vm05",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An account's API log goes to a bucket in that same account, and the administrators whose calls it records can delete objects there. The reviewers ask for the arrangement lesson 7 describes. What is it, and what does it guard against?",
+    "hint": "Cloud and Serverless, lesson 7; SOC, Monitoring and Incident Response, lesson 3.",
+    "choices": [
+      {
+        "text": "Record data reads too, so that every `GetObject` on the bucket appears in the log",
+        "correct": false,
+        "why": "That widens what is recorded. An administrator who can delete the log can still delete those entries with the rest."
+      },
+      {
+        "text": "Turn on versioning in the same bucket, so a deleted entry can be brought back",
+        "correct": false,
+        "why": "Versioning protects against mistakes, not against somebody allowed to delete versions, and an administrator is allowed."
+      },
+      {
+        "text": "A separate account that only a small security group reaches, with deletion locked until a date",
+        "correct": true,
+        "why": "Whoever can remove the log can remove the record of what they did. A copy kept by different people, out of their reach, does not share the fate of the account it audits."
+      },
+      {
+        "text": "Keep the account's log for longer than the ninety days the provider holds by default",
+        "correct": false,
+        "why": "Longer retention answers how far back the log goes, not who can erase it tomorrow."
+      }
+    ]
+  },
+  {
+    "id": "ex-z3gbj0c7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "An instance's `#cloud-config` user data writes the database password into a file with `write_files`, and the instance boots and works. Who can read that password afterwards?",
+    "hint": "Cloud and Serverless, lesson 4.",
+    "choices": [
+      {
+        "text": "Nobody after the first boot, because cloud-init deletes the user data once it has run",
+        "correct": false,
+        "why": "User data runs once; it is not removed. The provider keeps it, and the metadata service still answers with it."
+      },
+      {
+        "text": "Root on the instance alone, since it owns the file that `write_files` created",
+        "correct": false,
+        "why": "The file is one copy. The user data itself stays readable through the metadata service and through the account."
+      },
+      {
+        "text": "The provider alone, which keeps user data encrypted and does not show it to anybody again",
+        "correct": false,
+        "why": "Describing the instance shows it to anybody the account allows to do that."
+      },
+      {
+        "text": "Any process on it, through the metadata service, and anyone allowed to describe it",
+        "correct": true,
+        "why": "User data is not a secret. The way the lesson gives instead is to fetch the password at boot from the provider's secret store, with a role's permissions."
+      }
+    ]
+  },
+  {
+    "id": "ex-7asx05rh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A public subnet's network ACL admits inbound TCP 443 from `0.0.0.0/0` and lets out TCP 443 to `0.0.0.0/0`, then the `*` deny in each direction. The instance's security group allows 443 in, and the web server listens on `0.0.0.0:443`. From a workstation, `nc -zv -w 3` to the instance's address on port 443 runs. What does it report, and why?",
+    "hint": "Cloud and Serverless, lesson 6; Networks and Protocols, lesson 3.",
+    "choices": [
+      {
+        "text": "A timeout: the reply goes to the client's ephemeral port, which no outbound rule allows",
+        "correct": true,
+        "why": "The ACL is stateless, so the reply is judged on its own, and the `*` rule drops it without a word. A dropped packet looks like a dead server, which is why the usual outbound rule covers 1024 to 65535."
+      },
+      {
+        "text": "`Connection refused`, because the ACL rejects the reply on its way out",
+        "correct": false,
+        "why": "A network ACL drops; it sends nothing back. A refusal would mean the attempt arrived at a port nobody listens on."
+      },
+      {
+        "text": "It connects: the security group is stateful, so the reply leaves on its own",
+        "correct": false,
+        "why": "The group lets the reply leave the instance. The subnet's ACL is a second filter that remembers nothing, and it still has to allow the reply."
+      },
+      {
+        "text": "It connects, since outbound 443 matches the port the reply comes from",
+        "correct": false,
+        "why": "Outbound rules match the destination port, and the reply's destination is the client's ephemeral port, not 443."
+      }
+    ]
+  },
+  {
+    "id": "ex-fb688bwe",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "A nightly job overwrites `export.csv`, a 2 GB file, in a bucket with versioning on and the lifecycle rule lesson 5 writes, which expires a version 30 days after it stopped being current. Once the rule has been in place for months, about how many GB does that one key hold, counting the current version?",
+    "hint": "Cloud and Serverless, lesson 5.",
+    "value": 62,
+    "tolerance": 2,
+    "unit": "GB"
+  },
+  {
+    "id": "ex-r4enhzeh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A team runs `shelf` on a containers-as-a-service platform. This week's scan of the running image reports a HIGH finding in a package of its base image, and the status has changed to `fixed`. Whose job is it to get the fixed package running?",
+    "hint": "Cloud and Serverless, lesson 1; Docker and Containers, lesson 20.",
+    "choices": [
+      {
+        "text": "The provider's: it patches the hosts' operating system, which covers the libraries in images",
+        "correct": false,
+        "why": "The host is the provider's row, and the image is not. A package inside the image changes only when the image is rebuilt."
+      },
+      {
+        "text": "The team's: the base is inside its image, so it rebuilds on the fixed base and redeploys",
+        "correct": true,
+        "why": "On CaaS the line sits below the runtime: whatever the image carries is the team's to rebuild. Lesson 20's `tzdata` arrives the same way, through a rebuild on a new base."
+      },
+      {
+        "text": "Nobody's until the platform offers the fix in its list of supported runtime versions",
+        "correct": false,
+        "why": "That is a platform-as-a-service picture, where the runtime is chosen from the provider's list. Here the runtime and its packages travel inside the team's image."
+      },
+      {
+        "text": "The base image's maintainers, whose rebuild reaches the running containers by itself",
+        "correct": false,
+        "why": "Their rebuild moves a tag in a registry. A running container keeps the bytes it was started from until somebody builds and deploys a new image."
+      }
+    ]
+  },
+  {
+    "id": "ex-978qjj20",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A shop's cluster runs in two zones of one region, sized so that one zone carries the normal load. Its plan for losing a zone is that pods from the lost zone go `Pending` and the cluster autoscaler adds nodes in the other one. What is that plan relying on, at the worst moment?",
+    "hint": "Cloud and Serverless, lesson 9; Kubernetes: Orchestration in Production, lesson 34.",
+    "choices": [
+      {
+        "text": "Nothing beyond the data plane, since adding a node is like serving a request",
+        "correct": false,
+        "why": "Launching a machine is a control-plane call. The data plane runs what already exists."
+      },
+      {
+        "text": "A second region, since both zones answer to the same regional control systems",
+        "correct": false,
+        "why": "That is the answer for losing a region. Losing one zone is what two zones are for, if the capacity is already there."
+      },
+      {
+        "text": "The provider launching new machines while many other customers ask for the same",
+        "correct": true,
+        "why": "Recovering by launching needs the control plane when it is busiest. A statically stable design already runs enough in the other zone, and only the data plane has to move traffic."
+      },
+      {
+        "text": "The pods' real usage, since the autoscaler adds a node when the nodes get busy",
+        "correct": false,
+        "why": "The cluster autoscaler reacts to pods that cannot be scheduled, by their requests, never by usage."
+      }
+    ]
+  },
+  {
+    "id": "ex-0r0z5s0a",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A function behind an API opens its own PostgreSQL connection in each execution environment. On a sale day a burst creates 800 environments, and the database refuses connections past its limit. Which of these does lesson 8 offer as answers? Choose all that apply.",
+    "hint": "Cloud and Serverless, lesson 8.",
+    "choices": [
+      {
+        "text": "A connection proxy between the functions and the database, lending out a small pool",
+        "correct": true,
+        "why": "It holds a few real connections and shares them, which environments cannot do among themselves."
+      },
+      {
+        "text": "A concurrency limit on the function, low enough for the database's connection limit",
+        "correct": true,
+        "why": "Fewer copies at once means fewer connections; requests past the limit are turned away or queued."
+      },
+      {
+        "text": "A database whose interface is HTTP requests rather than long-lived connections",
+        "correct": true,
+        "why": "With no pool of connections, there is nothing to run out of."
+      },
+      {
+        "text": "More memory for the function, so each environment serves more of the requests",
+        "correct": false,
+        "why": "More memory buys processor and speed. Each environment still opens its own connection, and the burst still creates hundreds of them."
+      },
+      {
+        "text": "A longer timeout, so a call waits for a free connection instead of failing",
+        "correct": false,
+        "why": "The database is refusing new connections, not making them wait. And every waiting call holds an environment, and so a connection attempt, for longer."
+      },
+      {
+        "text": "The connection kept in a module-level variable, so the environments share it",
+        "correct": false,
+        "why": "Module-level code runs once per environment. The variable is shared by the calls of one copy, never across copies."
+      }
+    ]
+  },
+  {
+    "id": "ex-hcpzte6z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The pipeline's history scan finds an AWS access key beginning `AKIA` in the infrastructure repository, added eight months ago and deleted from the files since. The team lead proposes rewriting the history with `git filter-repo` tonight, force-pushing, and rotating the key in the next sprint. What is wrong with the plan?",
+    "hint": "Cloud Security, lesson 12; Pipeline and Supply Chain Security, lesson 6.",
+    "choices": [
+      {
+        "text": "Nothing, provided each developer throws away their clone and clones again after the forced push",
+        "correct": false,
+        "why": "The clones the team controls are not the problem. Forks, CI caches, backups and every copy made in eight months keep the key, and a rewrite reaches none of them."
+      },
+      {
+        "text": "`git filter-repo` does not reach a commit that old, so the key has to be removed by a new commit instead",
+        "correct": false,
+        "why": "The rewrite does change every commit, which is why every hash changes. And a new commit removing the line leaves the key in the commits before it."
+      },
+      {
+        "text": "Backwards: the key stops working first, its use is read in the trail, and a rewrite comes last",
+        "correct": true,
+        "why": "Until the key is worthless, everything else is cosmetic. Its calls since the commit are in the account's records, and rewriting is housekeeping on the copies you hold."
+      },
+      {
+        "text": "Rotation becomes unnecessary once the history is rewritten, since no copy the team holds still has it",
+        "correct": false,
+        "why": "The copies the team does not hold are the ones that matter, and a leaked key is treated as known to everybody from the push. Only rotating it makes them worthless."
+      }
+    ]
+  },
+  {
+    "id": "ex-2g8za2md",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On 3 December, caio opens a pull request touching the vendor's import bucket, whose policy still carries `#checkov:skip=CKV_AWS_70:vendor import, approved by ana until 2026-11-30, ticket SEC-114`. What does `gate.sh` do with that expired exception, and what would the application pipeline's composition gate have done with an expired line in `ci/exceptions.txt`?",
+    "hint": "Cloud Security, lesson 14; Pipeline and Supply Chain Security, lesson 7.",
+    "choices": [
+      {
+        "text": "`gate.sh` passes, as Checkov never reads the skip's date; the composition gate drops the expired line and breaks",
+        "correct": true,
+        "why": "Checkov does not read the date, so the exception is only as good as whatever looks at it. The composition gate was written to ignore an expired line, so the finding breaks the build again."
+      },
+      {
+        "text": "Both stop the change, because each tool compares the end date written in the exception with the date of today's run",
+        "correct": false,
+        "why": "Only the composition gate does that, because somebody wrote it to. Checkov treats the comment as a skip and never reads the date inside it."
+      },
+      {
+        "text": "Both let it through: an exception written with a reason and an owner holds until somebody deletes it",
+        "correct": false,
+        "why": "That is how the skip comment behaves, and it is why lesson 14 wants a reminder or a check of its own. The composition gate refuses a line whose day has passed."
+      },
+      {
+        "text": "`gate.sh` warns instead, since an expired skip turns `CKV_AWS_70` into a warning; the composition gate breaks",
+        "correct": false,
+        "why": "No such downgrade exists. `--hard-fail-on` names the checks that decide, and the skip removes this one from the run whatever its date says."
+      }
+    ]
+  },
+  {
+    "id": "ex-58yerjv3",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "The clinic protects its CloudTrail records in layers. Match each layer to what it stops, as lesson 15 describes it.",
+    "hint": "Cloud Security, lesson 15.",
+    "pairs": [
+      {
+        "left": "an explicit `Deny` on `cloudtrail:StopLogging` and its three neighbours",
+        "right": "an administrator switching the trail off, despite `AdministratorAccess`"
+      },
+      {
+        "left": "an organisation trail writing into a log-archive account",
+        "right": "a production administrator deleting the records from their bucket"
+      },
+      {
+        "left": "S3 Object Lock in compliance mode on that bucket",
+        "right": "any user, root included, removing a record before the retention ends"
+      },
+      {
+        "left": "the hourly digest files",
+        "right": "a log file that was edited or never delivered going unnoticed"
+      }
+    ],
+    "right_distractors": [
+      "a stolen key reading the patients' files",
+      "a command run inside an instance going unrecorded"
+    ]
+  },
+  {
+    "id": "ex-rb6n9fem",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "During an incident, the SOC replaced the records database's outbound rule `-1 0.0.0.0/0` with the VPC's range plus the S3 prefix list on port 443. The VPC has had flow logs on, for `ALL` traffic, for months. Lesson 13 never trusted a rule it had not checked. What shows that this one is holding?",
+    "hint": "Cloud Security, lesson 8; SOC, Monitoring and Incident Response, lesson 13.",
+    "choices": [
+      {
+        "text": "`describe-security-groups` printing the new egress list, with `0.0.0.0/0` no longer anywhere in it",
+        "correct": false,
+        "why": "That is the configuration read back. `nft` accepted rules without a complaint too, and a rule with a wrong range reads back just as cleanly."
+      },
+      {
+        "text": "The trail's `RevokeSecurityGroupEgress` record, showing that the call to remove the old rule succeeded",
+        "correct": false,
+        "why": "A management event says who changed the group and that AWS accepted the change. It says nothing about which packets went where afterwards."
+      },
+      {
+        "text": "A clean run of the posture scanner, which no longer lists the group as open",
+        "correct": false,
+        "why": "A posture scanner reads configuration through the API, the same thing `describe` reads. It cannot see a single connection."
+      },
+      {
+        "text": "Flow log lines from the database: `REJECT` to outside addresses, `ACCEPT` for the backup to S3",
+        "correct": true,
+        "why": "Configuration says what is allowed; a flow log says what happened. These are lesson 13's checks: the bad path closed, the good path still open."
+      }
+    ]
+  },
+  {
+    "id": "ex-mapxny8r",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "The trail records caio's `PutBucketPolicy` on `clinic-exports` at `2026-10-14T12:02:11Z`. ana's notes, written at the clinic in São Paulo, say she removed the policy at 12:30 that day, local time. Putting both on one clock, as lesson 15 insists, for about how many minutes was the bucket public?",
+    "hint": "Cloud Security, lesson 15.",
+    "value": 208,
+    "tolerance": 2,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-ggnhe2jr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The credential report has a row for dani, who left the clinic in March: no MFA, an active key, last used today. The cloud engineer files it in the posture backlog, to be tidied up in next week's sprint. What is it?",
+    "hint": "Cloud Security, lesson 6; SOC, Monitoring and Incident Response, lesson 12.",
+    "choices": [
+      {
+        "text": "A finding: AWS did nothing wrong, so it is a configuration defect, fixed in order of risk",
+        "correct": false,
+        "why": "That was lesson 6's reading of a permission nobody removed. A key that somebody who left is using today is an incident, not a finding."
+      },
+      {
+        "text": "An incident: declare it, so the record and the clocks start, and stop the key first",
+        "correct": true,
+        "why": "A working credential in the hands of somebody outside the company is enough, used or not. Declaring early is cheap; declaring late costs evidence and deadlines."
+      },
+      {
+        "text": "A finding until the trail shows the key changed something, since a key that just read files is housekeeping",
+        "correct": false,
+        "why": "An incident is measured against policy, not damage, and an imminent threat already counts. Reads are often the whole harm."
+      },
+      {
+        "text": "An incident, and the first move is removing dani's policies, so the key is left able to do nothing",
+        "correct": false,
+        "why": "Close the way in before you tidy the permissions: a key that still works can undo every policy change, which is what dani's key was shown doing."
+      }
+    ]
+  },
+  {
+    "id": "ex-49vqca53",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "During containment, the SOC narrows the records database's outbound rule to `10.20.0.0/16`, and the web servers' queries keep getting their answers. That works because security groups are ___: the reply to a request that was let in goes back out whatever the outbound rules say.",
+    "hint": "Cloud Security, lesson 8.",
+    "blanks": [
+      {
+        "accept": [
+          "stateful"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-601743mx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "After the exports bucket was public for an afternoon, management asks whether `clinic-records` was read too. The trail's advanced selectors have recorded data events on both buckets since well before that day, and a query for anonymous `GetObject` calls on `clinic-records` returns nothing. How should the incident record state it?",
+    "hint": "Cloud Security, lesson 15; SOC, Monitoring and Incident Response, lesson 12.",
+    "choices": [
+      {
+        "text": "As unknown, because a trail keeps who changed a bucket and not who read an object",
+        "correct": false,
+        "why": "That is true of management events alone. Data events were chosen for both buckets before the incident, so reads of `clinic-records` are recorded."
+      },
+      {
+        "text": "As in scope, since both buckets sit in the same account the stranger could reach",
+        "correct": false,
+        "why": "Scope follows what the evidence shows was touched. Being reachable in principle puts nothing in scope."
+      },
+      {
+        "text": "As out of scope, naming the selectors that cover the bucket and the query that came back empty",
+        "correct": true,
+        "why": "Out of scope is a claim too, and it needs its own evidence: what was checked, and how, so the answer to 'could it be more?' is not a guess."
+      },
+      {
+        "text": "As 'no evidence of access', leaving out what was searched so that the note stays short and readable",
+        "correct": false,
+        "why": "A negative that does not say what it covered will be read as covering more than it did. The query and the selectors are what make it worth believing."
+      }
+    ]
+  },
+  {
+    "id": "ex-anwzme0f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The clinic's incident report on the exports bucket reaches its impact section. The trail's data events hold the records lesson 15 read. Which sentence can the report state at the level 'confirmed'?",
+    "hint": "SOC, Monitoring and Incident Response, lesson 20; Cloud Security, lesson 15.",
+    "choices": [
+      {
+        "text": "Two exports, of 13 and 14 October, were served to two outside addresses while the bucket was public",
+        "correct": true,
+        "why": "The anonymous `GetObject` records show it directly: which files, which addresses, inside the window. That is what confirmed means."
+      },
+      {
+        "text": "The patients in those exports have had their data misused by whoever downloaded the files",
+        "correct": false,
+        "why": "Nothing in the records says what anybody did with the files. That is not established, and writing it is the alarming direction of a badly written impact."
+      },
+      {
+        "text": "The address that returned after the fix copied the export of 14 October for a second time",
+        "correct": false,
+        "why": "Its second request, at 15:31:02, carries `errorCode` `AccessDenied`. It was refused, which is the fix holding."
+      },
+      {
+        "text": "No patient was exposed, because S3 had encrypted the exports at rest with its own key",
+        "correct": false,
+        "why": "Encryption at rest does nothing against a request the service answers: S3 decrypts for anybody it serves. This is the reassuring direction, and it is false."
+      }
+    ]
+  },
+  {
+    "id": "ex-8q62fb6m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The SOC is writing a playbook for the alert 'AWS reports one of our access keys as exposed'. Judged by lesson 5's five questions, which step may the machine take on every alert, with nobody approving it?",
+    "hint": "SOC, Monitoring and Incident Response, lesson 5; Cloud Security, lesson 7.",
+    "choices": [
+      {
+        "text": "Delete the exposed key straight away, since a leaked key has to be made worthless as fast as possible",
+        "correct": false,
+        "why": "Deletion cannot be undone, and a forgotten job may still use the key. It fails the question of reversibility, which is why lesson 7 deactivates and watches first."
+      },
+      {
+        "text": "Deactivate the key, because deactivating is the half of rotation that can be reversed later",
+        "correct": false,
+        "why": "Reversible, yes, but it stops whatever application holds the key, the way disabling an account stops a person's work. Whether to do it needs judgement."
+      },
+      {
+        "text": "Detach the quarantine policy once a second key exists, so the application keeps running",
+        "correct": false,
+        "why": "Between deleting the exposed key and detaching the quarantine sits the investigation of what the key did. That is a person's call."
+      },
+      {
+        "text": "Look up the key's owner, its last use and its calls in the trail, and put them in a ticket",
+        "correct": true,
+        "why": "Enrichment passes all five: it happens often, needs no judgement, changes nothing, touches one key and is well understood. It is what teams automate first."
+      }
+    ]
+  },
+  {
+    "id": "ex-39qecq8f",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "The records database's outbound rule was found wide open, and the SOC lists the questions it has to answer. Match each question to the record that answers it.",
+    "hint": "SOC, Monitoring and Incident Response, lesson 18; Cloud Security, lesson 8.",
+    "pairs": [
+      {
+        "left": "Did the host talk to `203.0.113.200`, and how many bytes went each way?",
+        "right": "a flow log record"
+      },
+      {
+        "left": "What exactly did the host send in that conversation, if it was not encrypted?",
+        "right": "a packet capture started before it happened"
+      },
+      {
+        "left": "Who removed the narrow outbound rule from the security group?",
+        "right": "a CloudTrail management event"
+      },
+      {
+        "left": "Did an SSH session on the host go on to read the database?",
+        "right": "the server's own logs"
+      }
+    ],
+    "right_distractors": [
+      "the security group's rules as they stand now",
+      "a CloudTrail data event on the records bucket"
+    ]
+  },
+  {
+    "id": "ex-ym3eyrws",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Reading the clinic's trail, the SOC finds dani's refused `StopLogging`, sent from `192.0.2.10`, an address the clinic does not use. Which detection will still fire the next time somebody tries the same thing?",
+    "hint": "SOC, Monitoring and Incident Response, lesson 9; Cloud Security, lesson 15.",
+    "choices": [
+      {
+        "text": "A match on `192.0.2.10`, added to the list of known bad addresses the SIEM checks each event against",
+        "correct": false,
+        "why": "An address sits near the bottom of the pyramid of pain. The next attempt comes from another one, and the list goes stale."
+      },
+      {
+        "text": "An alarm on any `StopLogging`, `DeleteTrail` or `PutEventSelectors`, refused or not",
+        "correct": true,
+        "why": "It describes the behaviour, not a value, so it survives a new address and a new key. Lesson 15 puts exactly this alarm on the short list that wakes somebody up."
+      },
+      {
+        "text": "An alert on `StopLogging` calls that succeed, since the refused one did no harm to the trail",
+        "correct": false,
+        "why": "A successful call means the trail is already blind. The refused attempt was the most important line of the afternoon."
+      },
+      {
+        "text": "A watch for dani's key id, `AKIAEXAMPLEDANI00001`, in each new record the trail delivers",
+        "correct": false,
+        "why": "A single value again, and the key should be deleted anyway. Whoever tries next uses another credential."
+      }
+    ]
+  },
+  {
+    "id": "ex-dc2rgn2s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "During an incident, ana removed a vendor's bucket policy by hand in the console, and the exposure stopped. The policy is still written in the clinic's Terraform. The next morning, `gate.sh` on `main` ends with a plan that is not empty, though nobody has merged anything. What is the plan saying?",
+    "hint": "SOC, Monitoring and Incident Response, lesson 14; Cloud Security, lesson 14.",
+    "choices": [
+      {
+        "text": "That Terraform read the account and will keep ana's change from now on as the new desired state of the bucket",
+        "correct": false,
+        "why": "Terraform makes the account match the code, not the other way round. The plan is the change needed to put the policy back."
+      },
+      {
+        "text": "Nothing that needs action: the plan just reads, and no apply runs until a reviewer approves it",
+        "correct": false,
+        "why": "The reviewer is exactly who would reopen the hole, by approving a plan that looks routine. The containment is advice until the code agrees with it."
+      },
+      {
+        "text": "That an apply would bring the policy back: the fix lives only on the account, and has to move into the code",
+        "correct": true,
+        "why": "The plan is lesson 14's drift check, and it shows the SOC course's trap: rebuild from the old recipe and you rebuild the old hole. Every fix goes into the source."
+      },
+      {
+        "text": "That Checkov has flagged the deleted policy, since a skip comment left with no resource is a finding",
+        "correct": false,
+        "why": "Checkov reads the files, and the file still holds the policy and its skip. The plan comes from Terraform comparing the code with the account."
+      }
+    ]
+  },
+  {
+    "id": "ex-dnd885b0",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "During the incident, `tcpdump` on `fw` has been capturing the records subnet's traffic. The capture is now stopped. Put what happens to the file in the order lesson 18 handles it.",
+    "hint": "SOC, Monitoring and Incident Response, lesson 18.",
+    "items": [
+      "Stop tcpdump and read how many packets the kernel dropped",
+      "Hash the capture file",
+      "Write the hash, and who captured it, into the custody record",
+      "Make a working copy and check it against the recorded hash",
+      "Analyse the copy without root, with display filters"
+    ],
+    "trap": "The working copy is not made before the hash is written down: a copy checked against a hash taken afterwards only shows that two copies agree, not that either is what was captured."
+  },
+  {
+    "id": "ex-8bkv5m42",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A threat hunt on the clinic's AWS account needs a hypothesis. The trail records management events everywhere, and data events on the two patient buckets only. Which of these can the hunt actually test with that data?",
+    "hint": "SOC, Monitoring and Incident Response, lesson 10; Cloud Security, lesson 15.",
+    "choices": [
+      {
+        "text": "If a former contractor's key was used after they left, records carry its `accessKeyId` after their last day",
+        "correct": true,
+        "why": "Specific, testable with records the account has, and falsifiable: no such records means the hypothesis is false for the period searched."
+      },
+      {
+        "text": "If somebody ran a command on the booking server at night, the trail holds the command itself and who typed it",
+        "correct": false,
+        "why": "A command inside an instance is not an AWS API call, so no trail records it. That needs the operating system's own logs."
+      },
+      {
+        "text": "If the bucket of public images was read by strangers, the trail's management events show each of those reads",
+        "correct": false,
+        "why": "A read is a data event, and data events are recorded only for the two patient buckets. Management events hold no reads at all."
+      },
+      {
+        "text": "Somebody may be reading patients' data without the clinic knowing, through a route nobody has found",
+        "correct": false,
+        "why": "It points at no data and names nothing to look for, so no result could prove it wrong. That is a worry, not a hypothesis."
+      }
+    ]
+  },
+  {
+    "id": "ex-wa9t5k7z",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "The posture scanner flags `clinic-web` as a public bucket every morning. Triage reads it: the rule fired correctly, the bucket really is readable by everybody, and it holds the clinic's website, which is meant to be. From lesson 7's fixed list of closure reasons, it closes as a ___ true positive.",
+    "hint": "SOC, Monitoring and Incident Response, lesson 7; Cloud Security, lesson 16.",
+    "blanks": [
+      {
+        "accept": [
+          "benign"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s9b6kp8a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "For a month, the shop's triage feature sent customers' emails to a model provider exactly as they arrived, card numbers and CPFs included. Every reply came back and nothing stopped working. Classified with lesson 12's three impact categories, what does this incident look like?",
+    "hint": "SOC, Monitoring and Incident Response, lesson 12; AI in Development, lesson 11.",
+    "choices": [
+      {
+        "text": "Low on each count, since no service stopped and the model refused to use the card numbers",
+        "correct": false,
+        "why": "A refusal is a reply, and it arrives after the request has already left with everything in it. A silent incident can still be a severe one."
+      },
+      {
+        "text": "No functional impact, a privacy breach, and not recoverable for what has left",
+        "correct": true,
+        "why": "Nothing broke, personal data went to another company, and a copy outside cannot be called back. The information row is what brings in the lawyer and the DPO today."
+      },
+      {
+        "text": "Not an incident, because a provider under contract is part of the company's own systems",
+        "correct": false,
+        "why": "Sending data to a provider is handing it to another company, under its terms. And an incident is judged against policy, not against what broke."
+      },
+      {
+        "text": "An integrity loss, since the model was handed data that it was not meant to process",
+        "correct": false,
+        "why": "Integrity loss is data altered. Here nothing was changed; it was disclosed, which is the privacy breach in the information row."
+      }
+    ]
+  },
+  {
+    "id": "ex-sns43sp4",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "prompt": "The DPO is filling in the ANPD's form for Thursday's incident and asks the SOC for material. Which of these does article 48 of the LGPD list among the contents of the communication? Choose all that apply.",
+    "hint": "SOC, Monitoring and Incident Response, lesson 21.",
+    "choices": [
+      {
+        "text": "A description of the nature of the personal data affected",
+        "correct": true,
+        "why": "First on the list: credentials, contact names and e-mails, and client documents whose content is not yet established."
+      },
+      {
+        "text": "The incident lead's estimate of the fine under article 52",
+        "correct": false,
+        "why": "Article 52 lists the sanctions the ANPD may apply. Estimating them is nobody's part of the communication."
+      },
+      {
+        "text": "The measures taken to reverse or reduce the effects",
+        "correct": true,
+        "why": "Lessons 13 and 14 and the actions of lesson 15 supply them."
+      },
+      {
+        "text": "The intruder's address, `203.0.113.66`, for the authority to block",
+        "correct": false,
+        "why": "The ANPD protects personal data; it blocks nothing. Indicators go to the sharing group, with their marking."
+      },
+      {
+        "text": "The reasons for any delay, if it was not communicated at once",
+        "correct": true,
+        "why": "On Thursday there are none, if it goes by 22 September."
+      },
+      {
+        "text": "A copy of the exported contacts file, so the authority sees what left",
+        "correct": false,
+        "why": "That would send the personal data to one more party. The communication describes the data; it does not carry it."
+      }
+    ]
+  },
+  {
+    "id": "ex-yx3mwtdx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The clinic's postmortem on the exports bucket reaches its contributing factors. caio wrote the public policy from his laptop, with his own credentials, while the pipeline's gates sat unused beside him. Which finding is written the way lesson 15 asks?",
+    "hint": "SOC, Monitoring and Incident Response, lesson 15; Cloud Security, lesson 14.",
+    "choices": [
+      {
+        "text": "caio went around the pipeline and made the bucket public by hand, from his own laptop",
+        "correct": false,
+        "why": "It names a person, and a review that ends with a name ends there. The next engineer with the same access can do the same."
+      },
+      {
+        "text": "caio will take the pipeline training again and promise to use it for each future change",
+        "correct": false,
+        "why": "An action on one person, with nothing a check could confirm. It changes no condition of the system."
+      },
+      {
+        "text": "Human error during a routine change; the team agrees that no further action is needed",
+        "correct": false,
+        "why": "It names no condition and decides nothing, which is the one outcome a review may not have."
+      },
+      {
+        "text": "People's own credentials could write to the account, so any change could skip every gate in the pipeline",
+        "correct": true,
+        "why": "A condition that, had it been different, would have stopped the change. It points straight at lesson 14's answer: take write access away from people."
+      }
+    ]
+  },
+  {
+    "id": "ex-89fx59pv",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Lesson 10 prices the support assistant's month, 60,000 requests of 1,500 tokens in and 300 out, at $720 on `claude-opus-5-5`, whose list price is $4 per million tokens in and $20 out. How many of those 720 dollars pay for the output tokens alone?",
+    "hint": "AI in Development, lesson 10.",
+    "value": 360,
+    "tolerance": 1,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-sq4bn0b7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The shop moves its reply drafter onto a Lambda function. The function's execution role holds `AdministratorAccess`, and the drafter offers the model `get_order` and `issue_refund`. A security review asks what bounds the damage when an injected sentence in an email is obeyed. Which change does?",
+    "hint": "AI in Development, lesson 11; Cloud Security, lesson 13.",
+    "choices": [
+      {
+        "text": "Offer the drafting task only `get_order`, and narrow the role to what that one tool needs",
+        "correct": true,
+        "why": "Both are enforced in code, below the model. A tool that is not offered cannot be called, and the role is what any instruction the code obeys inherits."
+      },
+      {
+        "text": "Add a sentence to the system prompt that forbids refunds and any request that mentions secrets",
+        "correct": false,
+        "why": "It is one more sentence in the same stream as the email. Whether a model obeys it is a matter of probability, and an attacker gets to retry."
+      },
+      {
+        "text": "Move the model provider's API key out of the function's environment into Secrets Manager",
+        "correct": false,
+        "why": "That protects the key, which is worth doing. The injected instruction still reaches both tools and every permission the role holds."
+      },
+      {
+        "text": "Switch to a larger model, which follows sentences injected into an email less often",
+        "correct": false,
+        "why": "A defence that works most of the time is one an attacker retries until it does not. It makes the worst case rarer, not smaller."
+      }
+    ]
+  },
+  {
+    "id": "ex-8jzq7st8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Last week a developer committed `.env` with the payment provider's key in it. Today she adds `.env` to `.gitignore`, then asks the editor's assistant why a payment fails, with `.env` open in a tab. What is still true?",
+    "hint": "AI in Development, lesson 3; Git and Teamwork: Version Control, Review and Process, lesson 10.",
+    "choices": [
+      {
+        "text": "The new ignore rule keeps `.env` out of the next push, and the key leaves the repository's history with it",
+        "correct": false,
+        "why": "An ignore rule only applies to files Git is not tracking yet. The file is still tracked, and last week's commit keeps the key whatever happens next."
+      },
+      {
+        "text": "The assistant skips the files git ignores, so the repository is the one thing left to worry about",
+        "correct": false,
+        "why": "The editor does not care what git ignores: an ignored file is still a file on disk. Keeping it from the assistant takes an exclusion list of its own."
+      },
+      {
+        "text": "Git still tracks the file, last week's commit keeps the key, and the open tab reaches the assistant",
+        "correct": true,
+        "why": "Each layer needs its own answer: `git rm --cached` to stop tracking, an exclusion for the assistant, and above all a new key, because the old one has left."
+      },
+      {
+        "text": "`git rm --cached .env` takes the key out of last week's commit, as well as out of the next commit made",
+        "correct": false,
+        "why": "It removes the file from the staging area and records its removal from now on. Earlier commits keep it, which is why the key has to be revoked."
+      }
+    ]
+  },
+  {
+    "id": "ex-5ebbgnnf",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "An agent built on lesson 7's host is going into production. Which of its limits sit below the model, where nothing the model writes can change them? Choose all that apply.",
+    "hint": "AI in Development, lesson 7.",
+    "choices": [
+      {
+        "text": "`MAX_STEPS`, enforced by the host's own loop",
+        "correct": true,
+        "why": "A `for` loop stops when it stops, whatever the model asks for next."
+      },
+      {
+        "text": "The `--rules` system prompt saying each fact needs a tool result",
+        "correct": false,
+        "why": "It made invention rarer in the lesson's runs; it did not make an answer checked. The model reads it in the same stream as everything else."
+      },
+      {
+        "text": "The refusal of a second call with the same tool and arguments",
+        "correct": true,
+        "why": "The host checks the call before running it, so a model stuck in a loop is stopped at the repeat."
+      },
+      {
+        "text": "A downloaded server marking each of its tools `readOnlyHint`",
+        "correct": false,
+        "why": "That is the server's own description of itself, a hint a host should not rely on unless it trusts the server."
+      },
+      {
+        "text": "`read_handbook` resolving a path before comparing it with the folder",
+        "correct": true,
+        "why": "The check is in the tool and is about what the argument resolves to, so `../../.env` is refused whoever asked."
+      },
+      {
+        "text": "A tool description telling the model when it may use the tool",
+        "correct": false,
+        "why": "A description is text the model reads and may follow. It says when to use a tool; it enforces nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-52pev94k",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "A reply drafter refunded an order in full because of a sentence inside a customer's email. Put the response in the order lesson 11 gives it.",
+    "hint": "AI in Development, lesson 11.",
+    "items": [
+      "Stop the damage: flip the off switch, or remove the tool that paid",
+      "Revoke whatever may have leaked: a key, a token, a session",
+      "Undo what can be undone: reverse the refund and tell the customer",
+      "Fix the cause in the host: the tool offered, the check, the approval",
+      "Add this email to the evaluation, so the next model meets it too"
+    ],
+    "trap": "Fixing the cause does not come first: while the tool is still offered, the next email with the same sentence pays again, so the damage is stopped before anybody improves the host."
+  },
+  {
+    "id": "ex-6d0fkwg4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A failed job printed its environment while somebody was debugging it, and the CI log now shows the shop's `OPENAI_API_KEY`. The log is readable by everybody with access to the project's builds. What comes first?",
+    "hint": "AI in Development, lesson 10; Pipeline and Supply Chain Security, lesson 6.",
+    "choices": [
+      {
+        "text": "Delete the log; the project is private, so just colleagues could have read the key",
+        "correct": false,
+        "why": "Private is a list of people, and it changes. A CI log is often kept longer than the code, and deleting it now recalls no copy already made."
+      },
+      {
+        "text": "Revoke the key now and put a new one where the job reads it, without waiting for any proof of misuse",
+        "correct": true,
+        "why": "Revoke on suspicion, not on proof. A new key costs a deploy; an old key in the wrong hands costs whatever its limit allows."
+      },
+      {
+        "text": "Check the provider's usage page, and revoke it if it shows spending nobody can explain",
+        "correct": false,
+        "why": "That waits for proof, and the proof arrives as a bill. By then the key has been working for whoever holds it."
+      },
+      {
+        "text": "Put a spending limit on the key, so that a leak costs a bounded amount, and keep using it",
+        "correct": false,
+        "why": "A limit bounds the bill and is worth having anyway. The key still works for anybody who read the log."
+      }
+    ]
+  },
+  {
+    "id": "ex-mkw1hpf3",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "The pipeline gains an AI review bot beside its tests, its linter and a secret scan. Which of these may decide, on their own, whether a pull request merges? Choose all that apply.",
+    "hint": "AI in Development, lesson 4; Pipeline and Supply Chain Security, lesson 7.",
+    "choices": [
+      {
+        "text": "A test that fails",
+        "correct": true,
+        "why": "A test is true or false, which is what a check gating a merge has to be."
+      },
+      {
+        "text": "The bot's approval of the whole change",
+        "correct": false,
+        "why": "Never the decision to merge: a bot's approval is a claim, and lesson 4's review made three confident claims and missed the real bug."
+      },
+      {
+        "text": "A secret found by the scan",
+        "correct": true,
+        "why": "A secret always breaks the build: its owner can act at once, by revoking it."
+      },
+      {
+        "text": "A linter error on a line the change added",
+        "correct": true,
+        "why": "Like the tests and the type checker, a linter's answer is true or false."
+      },
+      {
+        "text": "A bot comment calling one function a serious problem",
+        "correct": false,
+        "why": "A finding is a hypothesis to check by reading the line or writing a test. It informs the person who decides."
+      },
+      {
+        "text": "More than five bot comments on one pull request",
+        "correct": false,
+        "why": "A count of claims is still claims. Gating on it would break builds on findings nobody has checked, and the gate would be switched off."
+      }
+    ]
+  },
+  {
+    "id": "ex-hr90qe5s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The composition-analysis stage of your DevSecOps portfolio project reports an advisory against a package you depend on, and the advisory names no fixed version. You want the repository to show what a reviewer in your track looks for. What do you do with this finding?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 3; Pipeline and Supply Chain Security, lesson 7.",
+    "choices": [
+      {
+        "text": "Break the build until the package's maintainers publish a fix, so the README shows a gate taken seriously",
+        "correct": false,
+        "why": "Nobody pushing to your project can publish somebody else's release, so every push stops on a finding no change can fix. That is the gate that gets switched off within weeks."
+      },
+      {
+        "text": "Let it warn, and write down who read the advisory and whether it touches what your project does with the package",
+        "correct": true,
+        "why": "With no version to move to, the gate warns and a named person reads the advisory, as with ecdsa, where signing was affected and verification was not. A finding accepted with a written reason is exactly the triage a DevSecOps reviewer opens the pipeline to find."
+      },
+      {
+        "text": "Put it in the exceptions file with no end date, so the pipeline stops mentioning it and the README stays clean",
+        "correct": false,
+        "why": "An exception carries a date, a reason and an owner, and it expires. One with no date is a baseline by another name: a decision nobody looks at again."
+      },
+      {
+        "text": "Take the composition stage out of the pipeline until a fixed version exists, and say so in the README",
+        "correct": false,
+        "why": "A stage that is not run is the line that turns a gate into a decoration, however honestly it is announced. The reviewer came to see a finding handled, not a scanner removed."
+      }
+    ]
+  },
+  {
+    "id": "ex-78reaa5s",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Your portfolio project runs its tests with the workflow lesson 12 of the portfolio course shows: `on: [push, pull_request]`, then `actions/checkout@v4` and one more action named by its `@v5` tag, with no `permissions` key. A DevSecOps reviewer reads it against the controls the supply-chain course applies to a workflow file. Which changes would those controls ask for? Choose all that apply.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 12; Pipeline and Supply Chain Security, lesson 16.",
+    "choices": [
+      {
+        "text": "Name each action by a full commit hash, with its version in a comment beside it",
+        "correct": true,
+        "why": "A tag can be moved by whoever controls the action's repository, which is what happened to tj-actions/changed-files; a commit hash cannot. The comment tells the next reader which release the hash stands for."
+      },
+      {
+        "text": "Name each action by its exact release tag, such as `v4.2.2`, instead of the major one",
+        "correct": false,
+        "why": "A precise tag is still a tag, and a tag can be moved to another commit. The moved tags in the tj-actions incident were version tags too."
+      },
+      {
+        "text": "Declare `permissions: contents: read` in the file, for every job",
+        "correct": true,
+        "why": "When the file says nothing, the repository's or organisation's default applies, and a setting can be changed by an administrator with no trace in a review. A line in the workflow is reviewed with the code."
+      },
+      {
+        "text": "Add `persist-credentials: false` to the checkout step",
+        "correct": true,
+        "why": "By default `actions/checkout` writes the job's token into `.git/config`, where later steps and anything that uploads the workspace can read it. This keeps it out."
+      },
+      {
+        "text": "Trigger on `pull_request_target`, so that a fork's pull request also gets the tests run with the secrets",
+        "correct": false,
+        "why": "That trigger runs in the context of the base repository, with a token that can write and its secrets, even for a fork. It exists for jobs that never run the pull request's code; `pull_request` runs a fork's code with a read-only token and no secrets, which is what tests need."
+      }
+    ]
+  },
+  {
+    "id": "ex-c6emv9sz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your portfolio repository is public. You pushed a commit holding `SMTP_PASSWORD = \"...\"`, deleted the file in the next commit, and pushed again. Two hours later a friend says: rewrite the history with `git filter-repo`, force-push, and it is as if it never happened. If you do only that, what is left?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 14; Pipeline and Supply Chain Security, lesson 6.",
+    "choices": [
+      {
+        "text": "Little that matters: the force-push replaces the branch, and the hosting site drops the old commits from every fork",
+        "correct": false,
+        "why": "Forks are copies under somebody else's account and are not touched by your push. The hosting site's own documentation says cached views and pull-request references can keep the old commits reachable too."
+      },
+      {
+        "text": "A stray copy in your laptop's reflog, which git clears away by itself within a few weeks",
+        "correct": false,
+        "why": "That reasoning fits a branch nobody pushed, which is what lesson 14 threw away. Once pushed, every clone made in those two hours holds the commit as well."
+      },
+      {
+        "text": "No finding a scanner would report, since the password was gone from the tip of the pushed branch",
+        "correct": false,
+        "why": "Secret scanners read history, not only the latest files: `gitleaks git` reads what every commit added. Scanners of public repositories find a key within minutes of the push."
+      },
+      {
+        "text": "A password that still works, sitting in every copy made before the force-push",
+        "correct": true,
+        "why": "A rewrite changes your copy and no other. What makes the copies harmless is revoking the password at the mail provider, which comes first; cleaning the history is optional and comes last."
+      }
+    ]
+  },
+  {
+    "id": "ex-81t96y2w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Your project deploys the way loanbook does: the Containerfile copies the code in and ends with `USER 1000`, and the Quadlet file mounts `loanbook-data:/data:U`. The README claims that nothing running in the container can change the application's code. What does the supply-chain course's lesson on safe execution say is wrong with that claim?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15; Pipeline and Supply Chain Security, lesson 9.",
+    "choices": [
+      {
+        "text": "It rests on the user alone: whoever starts the container can choose user 0, and only a read-only root then holds",
+        "correct": true,
+        "why": "`USER` is the user a container starts as when nothing says otherwise. One `--user 0` makes the process root and it rewrites `app.py`; with the root read-only, the same write fails."
+      },
+      {
+        "text": "Podman ignores `USER` in a Quadlet unit, so every container started that way runs as root anyway",
+        "correct": false,
+        "why": "Nothing in either lesson says so. The image's user applies unless whoever starts the container overrides it, and that override is the actual gap."
+      },
+      {
+        "text": "The `:U` on the volume hands the code under `/app` to user 1000 as well, so the application can rewrite its own files",
+        "correct": false,
+        "why": "`:U` changes the owner of the volume mounted at `/data`, nothing else. The code under `/app` was copied in by root and stays root's."
+      },
+      {
+        "text": "Nothing is wrong: a process that is not root has no way at all to gain root inside a container",
+        "correct": false,
+        "why": "`NoNewPrivs: 0` means running a setuid program can still raise privileges, and the container keeps capabilities within reach for anything that does. That is why the lesson goes on to take them away."
+      }
+    ]
+  },
+  {
+    "id": "ex-b85xgxn6",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "You review your own branch `empty-state` before opening its pull request, the way lesson 10 reviews loanbook's. Put the steps in the order the lesson takes them.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 10.",
+    "items": [
+      "`git diff --stat main...empty-state`, to see whether the change is small enough to read in one sitting",
+      "`git diff main...empty-state`, read top to bottom as if somebody else had written it",
+      "a `grep -nE` over the lines the branch adds, which finds a `console.log` and a `TODO`",
+      "`git commit -q -a --fixup HEAD`, then a rebase with `--autosquash` onto `main`, folding the cleanup into the one commit",
+      "a description whose last part names the older injection problem and the card opened for it"
+    ],
+    "trap": "The fixup cannot come before the search, because there is nothing to fold in until the two slips have been found. And the injection problem is not fixed on this branch at all: it predates the change, so it ends in the description with a card of its own."
+  },
+  {
+    "id": "ex-dmd68z4c",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Your pre-commit hook has to look at what is about to be committed rather than at the working tree, and only at the lines being added. Complete its first command as lesson 14 writes it: `git diff --___ -U0 | grep -inE '^\\+.*(password|secret|token|api_?key)...'`",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 14.",
+    "blanks": [
+      {
+        "accept": [
+          "cached",
+          "staged"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xj9jqm3c",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "loanbook's stylesheet turns the table into cards with `@media (max-width: 36rem)`, which lesson 13 puts at about 576 pixels at the default font size. A teacher who reads with a larger font has set her browser's default font size to 20 pixels. Below what window width, in pixels, does she get the card layout?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 13.",
+    "value": 720,
+    "tolerance": 0,
+    "unit": "px"
+  },
+  {
+    "id": "ex-t8w90s48",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In an interview for a DevSecOps role, the interviewer reads out a decision from your README: *No accounts. The borrower is a name typed in.* and, further on, *The cost is that anybody who can open the page can lend.* Then she asks: is that a risk you have accepted? What is the honest answer, by the threat-modelling course?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 16; Threat Modelling and Risk, lesson 12.",
+    "choices": [
+      {
+        "text": "Yes: a decision written down beside its cost is what accepting a risk means",
+        "correct": false,
+        "why": "Writing the cost down is a good start, and it is not yet an acceptance. Without an owner and a date, it is a risk somebody hopes will go away."
+      },
+      {
+        "text": "No: an accepted risk has to be reduced before it can be accepted, and a name typed into a form reduces nothing",
+        "correct": false,
+        "why": "Accepting a risk is a legitimate decision in its own right, taken when the controls cost more than they save. Nothing has to be mitigated before it."
+      },
+      {
+        "text": "Not yet: it says what was decided and why, but names nobody who accepted it, and no date to look again",
+        "correct": true,
+        "why": "A legitimate acceptance is made by the right person, in writing, knowing what they accept, for a limited time. The README has the reasoning; who accepted it, by name, and when it will be reviewed are missing."
+      },
+      {
+        "text": "Not yet: it lacks a DREAD score for the threat, which is what an acceptance is signed against",
+        "correct": false,
+        "why": "The record the lesson asks for is the risk with its estimate, why, what is in place instead, who and when. It names no scoring scheme, and DREAD is one method among several."
+      }
+    ]
+  },
+  {
+    "id": "ex-teje52fj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Six weeks into your first job, your change to the login service's configuration takes sign-in down for forty minutes. You said so in the team's channel within minutes and helped roll it back. The postmortem draft lists, as a contributing factor: *the new engineer pushed a broken configuration*. What should that line become?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 20; SOC, Monitoring and Incident Response, lesson 15.",
+    "choices": [
+      {
+        "text": "It should stay as it is, because owning a mistake means having your name written in the record beside it",
+        "correct": false,
+        "why": "You owned it where it counted, by saying so early and helping fix it. A factor that names a person leads to an action about that person and leaves the system as it was."
+      },
+      {
+        "text": "*Human error during a configuration change*, which keeps the fact and names nobody",
+        "correct": false,
+        "why": "It names nobody and still describes a person rather than a condition. Nothing in it says what a change could fix, so no action can come from it."
+      },
+      {
+        "text": "It should come out of the postmortem altogether, since an honest slip by a junior belongs in the one-to-one",
+        "correct": false,
+        "why": "Your manager may well hear about it there, and the review still needs it: the conditions that let one change take sign-in down are still in place."
+      },
+      {
+        "text": "A condition of the system: a configuration change could reach production with nothing checking sign-in",
+        "correct": true,
+        "why": "A blameless review asks what let a reasonable action cause harm, and writes it as a contributing factor a change can remove. Your own part is the sentence on what you will do differently."
+      }
+    ]
+  },
+  {
+    "id": "ex-4pyt0gcc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In your first month you join the on-call rota. At night an alert fires, and the runbook's command to isolate the server fails: the interface it names was renamed. A senior answers your message with the command that works, and the alert is handled. What do you do the next morning?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 20; SOC, Monitoring and Incident Response, lesson 11.",
+    "choices": [
+      {
+        "text": "Keep the working command in your own notes, so that you never need to ask that question again",
+        "correct": false,
+        "why": "Writing the answer down is right; your notebook is the wrong place for it. The next person on the rota meets the same broken step at night, with the same runbook in front of them."
+      },
+      {
+        "text": "Put the working step into the runbook and run it once, so the next person on the rota finds a procedure that works",
+        "correct": true,
+        "why": "A runbook is only good if it has been run, and it has to be tested again when the system changes. Turning your own question into a page for the next person is what a team values in a junior."
+      },
+      {
+        "text": "Leave the runbook to its owner: in the first ninety days a junior asks, and does not change procedures",
+        "correct": false,
+        "why": "Nothing in the first ninety days says to wait; the questions you asked are meant to become notes for the next person. Left alone, the broken step fails again on somebody else's night."
+      },
+      {
+        "text": "Ask the same senior again the next time it fires, since asking is part of a junior's job",
+        "correct": false,
+        "why": "Asking is part of the job, and so is asking each thing once. The answer has to be written where it will be found."
+      }
+    ]
+  },
+  {
+    "id": "ex-fa760mc3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In a junior DevSecOps interview you are told: *a clinic's portal is getting a feature where patients upload the PDFs of their exams. How would you threat model it?* What do you do first?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 14; Threat Modelling and Risk, lesson 1.",
+    "choices": [
+      {
+        "text": "Ask what must never happen, then draw its parts, the data between them and where trust changes",
+        "correct": true,
+        "why": "Clarifying comes before anything is drawn, and the drawing answers the first of the four questions: what are we working on. Every threat named afterwards is tied to a part of it."
+      },
+      {
+        "text": "Go through the STRIDE categories one by one and give a threat for each, which shows the method is known",
+        "correct": false,
+        "why": "A list made without a drawing of this system fits every system equally badly. The interviewer is checking whether you ask before you build."
+      },
+      {
+        "text": "Say you would run static and dynamic scanners over the upload code first, and model whatever they find",
+        "correct": false,
+        "why": "The feature is not built yet, and scanners walk past a flaw in the design anyway: a missing step leaves no line to flag."
+      },
+      {
+        "text": "Propose a penetration test of the upload first, since it gives evidence about the system instead of guesses",
+        "correct": false,
+        "why": "A pentest attacks a built system and tests the implementation after the fact. A threat model reasons about the design, and tells a pentester where to look later."
+      }
+    ]
+  },
+  {
+    "id": "ex-jky5w4x5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Your DevSecOps portfolio project is a small service whose pipeline scans for secrets, static-analysis findings and vulnerable dependencies, and whose README walks through one finding from the scan to its fix. Which line describes it on your CV?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 4; The Portfolio Project: From Brief to Deploy, lesson 3.",
+    "choices": [
+      {
+        "text": "Configured gitleaks, Semgrep, Bandit and pip-audit in a GitHub Actions pipeline",
+        "correct": false,
+        "why": "A list of tools describes a project that works and one that never ran equally well. It says what you used, and the reader wanted what you did."
+      },
+      {
+        "text": "Reduced the project's known vulnerabilities by 85% after adding automated security scanning to every push",
+        "correct": false,
+        "why": "Measured how, against what? A number nobody can explain turns the interview into a check on your honesty, and a project's own scan has no honest baseline for it."
+      },
+      {
+        "text": "Built a pipeline that refuses a pushed secret, with one finding followed from scan to fix in the README",
+        "correct": true,
+        "why": "What you did, what is now true, and evidence anybody can check: the pattern of a project line. It is also what a DevSecOps reviewer opens first, a security gate and a finding handled end to end."
+      },
+      {
+        "text": "Was responsible for the security of a CI/CD pipeline in a personal web project",
+        "correct": false,
+        "why": "*Was responsible for* is one of the openings that hide what you did. It names no result and nothing to check."
+      }
+    ]
+  },
+  {
+    "id": "ex-84ac8msv",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A take-home for a junior DevSecOps role: *add security checks to this repository's pipeline*, about three hours suggested. On the first run, static analysis reports forty findings, all in code written long before you arrived. When the three hours are up, what do you hand in? Choose all that apply.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 13; Pipeline and Supply Chain Security, lesson 7.",
+    "choices": [
+      {
+        "text": "A note saying the gate breaks only on findings that are new since a recorded baseline, and why",
+        "correct": true,
+        "why": "Separating new findings from the ones that were there before is the way out of a first run full of old ones, and the note is where what you chose, and why, belongs."
+      },
+      {
+        "text": "The forty, under what you would do with more time, as a list to triage",
+        "correct": true,
+        "why": "A baseline is a starting point with a plan attached, and the note's last part is where the missing pieces go."
+      },
+      {
+        "text": "All forty set to break the build, since a warning is a gate nobody reads",
+        "correct": false,
+        "why": "A gate that breaks on findings the person pushing did not add stops the team on day one and is switched off by day three."
+      },
+      {
+        "text": "`continue-on-error: true` on the scanning step, so that the reviewer opens a green pipeline",
+        "correct": false,
+        "why": "That line is how a gate becomes a decoration, and a reviewer of a DevSecOps take-home is looking for exactly that."
+      },
+      {
+        "text": "What you have when the time is up, rather than forty fixes made over the weekend",
+        "correct": true,
+        "why": "The reviewer compares the work with what is reasonable in the suggested time, and is also checking how you behave with a deadline."
+      },
+      {
+        "text": "Forty fixes, one commit each, since the brief asked for checks that pass",
+        "correct": false,
+        "why": "A submission that obviously took four evenings says you did not read the brief or cannot estimate. Stop when the time runs out and say what is missing."
+      }
+    ]
+  },
+  {
+    "id": "ex-mzm0f1e2",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Three months into a job search for DevSecOps roles, your tracker shows these rejections. Match each one to how lesson 19 reads it.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 19.",
+    "pairs": [
+      {
+        "left": "a no right after the screening call",
+        "right": "most often a practical mismatch: salary, contract, shift or location"
+      },
+      {
+        "left": "a single no after a technical interview",
+        "right": "the exercise, the thinking aloud, or simply a stronger candidate that day"
+      },
+      {
+        "left": "the fifth no at the same technical stage",
+        "right": "a leaking stage, fixed by practising out loud with a person watching"
+      },
+      {
+        "left": "a no after the final interview",
+        "right": "usually close: somebody else fitted slightly better"
+      }
+    ],
+    "right_distractors": [
+      "evidence that you are not good enough for the field",
+      "a CV and an aim to fix before anything else"
+    ]
+  },
+  {
+    "id": "ex-xncj7krs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In a live exercise the interviewer asks whether a secret was ever committed to a small repository. You run `gitleaks dir` over it, the scan ends with `no leaks found`, and you suspect that is not the whole answer but cannot remember the rest. What do you do?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 12; Pipeline and Supply Chain Security, lesson 6.",
+    "choices": [
+      {
+        "text": "Say that the repository is clean: the exit status is the scanner's verdict, and it was 0",
+        "correct": false,
+        "why": "The verdict covers only what was scanned. `gitleaks dir` reads the files as they are now, and the question was about every commit."
+      },
+      {
+        "text": "Say where you are: that read the files as they are now, and the question was about history",
+        "correct": true,
+        "why": "Saying where you are stuck tells the interviewer exactly what help is useful, and the missing piece is `gitleaks git`, which reads what every commit added."
+      },
+      {
+        "text": "Go quiet and read through the tool's help until you find the option that reads the whole history",
+        "correct": false,
+        "why": "From the outside, silence looks the same as having no idea. Say what you are looking for, then look."
+      },
+      {
+        "text": "Guess at a flag that might cover the history, and keep trying variations until the tool accepts one",
+        "correct": false,
+        "why": "Pretending to know an interface is what the lesson says not to do. Say what you would look up, and carry on."
+      }
+    ]
+  }
+]
