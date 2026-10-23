@@ -1,0 +1,361 @@
+{
+  "ex-w5g43hm1": {
+    "prompt": "Por que inserir na posição 0 custou centenas de milissegundos ao `ArrayList` e poucos ao `LinkedList`?",
+    "hint": "Pense no que precisa se mover.",
+    "choices": [
+      {
+        "text": "O `ArrayList` realoca e copia o array interno inteiro a cada inserção, sem exceção",
+        "why": "Ele só aumenta o array quando enche, em mais metade; o custo aqui é o empurrão."
+      },
+      {
+        "text": "Cada inserção empurra uma casa para a direita cada elemento que já está no array",
+        "why": "Isso: a centésima milésima inserção move 99.999 referências; a lista encadeada muda dois links."
+      },
+      {
+        "text": "O `LinkedList` guarda valores `int` diretamente, sem embrulhá-los",
+        "why": "As duas guardam objetos `Integer`; nenhuma guarda primitivos."
+      },
+      {
+        "text": "O JIT compila o laço do `LinkedList` e não o outro",
+        "why": "Os dois laços rodam quentes; a diferença está no trabalho que cada operação faz."
+      }
+    ]
+  },
+  "ex-gbehzrfm": {
+    "prompt": "O `LinkedList.get(i)` levou segundos em cem mil chamadas. O que faz uma chamada?",
+    "hint": "Não há array para indexar.",
+    "choices": [
+      {
+        "text": "Copia a lista para um array e indexa esse array",
+        "why": "Nada é copiado; ela segue links."
+      },
+      {
+        "text": "Procura na lista o elemento igual a `i`",
+        "why": "Isso seria o `indexOf`; o `get(i)` quer o elemento na posição `i`."
+      },
+      {
+        "text": "Caminha nó a nó a partir da ponta mais próxima",
+        "why": "Isso: até cinquenta mil passos por chamada, para cem mil elementos."
+      }
+    ]
+  },
+  "ex-3av3ay7s": {
+    "prompt": "Um programa monta uma lista de empréstimos uma vez e depois a lê por posição milhares de vezes. Qual classe?",
+    "hint": "Que operação domina?",
+    "choices": [
+      {
+        "text": "`ArrayList`",
+        "why": "Isso: ler por posição é um passo, e montá-la pelo fim é barato."
+      },
+      {
+        "text": "`LinkedList`, porque ela foi montada acrescentando",
+        "why": "Acrescentar no fim é barato para as duas; o que custa são as leituras, e cada uma custa uma caminhada à lista encadeada."
+      },
+      {
+        "text": "Qualquer uma: as duas implementam `List`, então custam o mesmo",
+        "why": "Elas cumprem a mesma promessa a custos muito diferentes; a seção 02 mediu."
+      },
+      {
+        "text": "`TreeSet`, para as leituras saírem ordenadas",
+        "why": "Um conjunto descarta repetições e não tem posições; dois empréstimos do mesmo livro virariam um."
+      }
+    ]
+  },
+  "ex-deevf0fz": {
+    "prompt": "Em `List<Integer> list = new ArrayList<>();` o tipo declarado é a interface, e só a palavra depois de `___` nomeia a classe.",
+    "hint": "A palavra-chave que cria o objeto.",
+    "blanks": [
+      {
+        "accept": [
+          "new"
+        ]
+      }
+    ]
+  },
+  "ex-vpt4a6dz": {
+    "prompt": "O `Orders.java` pôs sete títulos, dois deles repetidos, num `HashSet`. Quantos saíram, e em que ordem?",
+    "hint": "Um conjunto guarda cada elemento uma vez.",
+    "choices": [
+      {
+        "text": "Sete, exatamente na ordem em que a chamada `List.of` os listou",
+        "why": "O `Dune` e o `Emma` repetidos foram descartados, e a ordem de inserção é a do `LinkedHashSet`."
+      },
+      {
+        "text": "Cinco, em ordem alfabética",
+        "why": "Cinco está certo; a ordem alfabética é a do `TreeSet`."
+      },
+      {
+        "text": "Cinco, numa ordem que a classe não promete",
+        "why": "Isso: `Beloved, Dune, Ulysses, Middlemarch, Emma`, que é o que os baldes produziram."
+      }
+    ]
+  },
+  "ex-h04wp4d4": {
+    "prompt": "Ligue cada conjunto à ordem que ele guarda.",
+    "hint": "A tabela da seção 03.",
+    "pairs": [
+      {
+        "left": "`HashSet`",
+        "right": "Nenhuma ordem em que se possa confiar"
+      },
+      {
+        "left": "`LinkedHashSet`",
+        "right": "A ordem da primeira inserção"
+      },
+      {
+        "left": "`TreeSet`",
+        "right": "Ordem classificada"
+      }
+    ],
+    "right_distractors": [
+      "A ordem do último acesso"
+    ]
+  },
+  "ex-ycdk4har": {
+    "prompt": "O `BrokenKey` imprimiu `size 2`, `contains false` e `equal? true`. Que mudança única o fez imprimir `size 1` e `contains true`?",
+    "hint": "O `equals` já estava certo.",
+    "choices": [
+      {
+        "text": "Trocar o `HashSet` por um `ArrayList`",
+        "why": "Uma lista guarda repetições por definição, então o `size` continuaria 2."
+      },
+      {
+        "text": "Um `hashCode` feito do `isbn`, o campo que o `equals` compara",
+        "why": "Isso: livros iguais então caem no mesmo balde, onde o `equals` consegue vê-los."
+      },
+      {
+        "text": "Tornar o campo `isbn` `final`",
+        "why": "Ele já era `final`; a peça que faltava era o hash code."
+      },
+      {
+        "text": "Acrescentar `@Override` acima do `equals`, para o compilador conferir a assinatura",
+        "why": "Ele já estava lá, e só faz o compilador conferir a assinatura."
+      }
+    ]
+  },
+  "ex-4dzvmdzv": {
+    "prompt": "Dois objetos `Book` são `equals` mas têm hash codes diferentes. Que afirmação sobre um `HashSet` que guarda um deles é verdadeira?",
+    "hint": "O hash code escolhe onde procurar.",
+    "choices": [
+      {
+        "text": "O `contains` com o outro dá `true`, porque o `contains` chama o `equals`",
+        "why": "O `equals` só roda dentro do balde que o hash code escolheu, e esse é o balde errado."
+      },
+      {
+        "text": "Acrescentá-lo lança uma exceção",
+        "why": "Nada confere o contrato; o conjunto só guarda os dois, quieto."
+      },
+      {
+        "text": "Acrescentar o outro dá duas entradas",
+        "why": "Isso: hash codes diferentes os mandam para baldes diferentes, então o conjunto nunca os compara."
+      }
+    ]
+  },
+  "ex-kze24xgp": {
+    "prompt": "Um teste imprime um `HashSet<String>` e compara o resultado com uma string fixa. Hoje ele passa. O que há de errado?",
+    "hint": "O que a classe prometeu sobre a ordem?",
+    "choices": [
+      {
+        "text": "Depende de uma ordem que o `HashSet` nunca prometeu",
+        "why": "Isso: os mesmos elementos imprimem igual até a tabela crescer ou os elementos mudarem."
+      },
+      {
+        "text": "Nada: o hash code de uma `String` é fixo, então a ordem também é",
+        "why": "Os hash codes são fixos; a ordem depende também do tamanho da tabela, que cresce com o conjunto."
+      },
+      {
+        "text": "Imprimir um conjunto chama o `hashCode`, que é lento",
+        "why": "O `toString` percorre o conjunto; a velocidade não é o problema."
+      }
+    ]
+  },
+  "ex-ep7xnzhg": {
+    "prompt": "No `Counts.java`, o que o `count.merge(title, 1, Integer::sum)` fez na primeira vez que encontrou `Dune`?",
+    "hint": "A chave não existia.",
+    "choices": [
+      {
+        "text": "Lançou exceção, porque não havia valor a que somar 1",
+        "why": "O `merge` trata a chave ausente sozinho; é por isso que ele substitui o teste escrito à mão."
+      },
+      {
+        "text": "Guardou `1` sob `Dune`",
+        "why": "Isso: chave ausente, então o valor dado entra; as chamadas seguintes somam 1 a ele."
+      },
+      {
+        "text": "Guardou `0`, e o segundo empréstimo o fez virar 1",
+        "why": "O mapa terminou com `Dune=3` para três empréstimos, então o primeiro contou."
+      },
+      {
+        "text": "Chamou `Integer.sum(null, 1)`",
+        "why": "A função só roda quando há um valor antigo com que combinar."
+      }
+    ]
+  },
+  "ex-ft6n1pt6": {
+    "prompt": "`int n = count.get(\"Beloved\");` roda, e `Beloved` não está no mapa. O que acontece?",
+    "hint": "O `get` imprimiu `null` para ele.",
+    "choices": [
+      {
+        "text": "`n` vale 0, porque um `int` ausente fica com o valor padrão",
+        "why": "Padrões valem para campos; aqui `null` é desembrulhado num `int`, e isso falha."
+      },
+      {
+        "text": "Um `NullPointerException`, ao desembrulhar o `null` que o `get` devolveu",
+        "why": "Isso: `getOrDefault(\"Beloved\", 0)` é o jeito de dizer o que ausente significa."
+      },
+      {
+        "text": "Um erro de compilação, porque o `get` devolve `Integer`",
+        "why": "O desembrulho automático faz compilar; a falha espera a execução."
+      }
+    ]
+  },
+  "ex-esvvr08k": {
+    "prompt": "Para agrupar títulos pela primeira letra, `byLetter.___(title.charAt(0), k -> new ArrayList<>()).add(title)` devolve a lista da chave, criando-a antes se não houver nenhuma.",
+    "hint": "Calcule se estiver ausente.",
+    "blanks": [
+      {
+        "accept": [
+          "computeIfAbsent"
+        ]
+      }
+    ]
+  },
+  "ex-48q6v5tr": {
+    "prompt": "Um `HashMap<Book, Loan>` usa um `Book` mutável cujo `hashCode` lê o título. Um livro entra, e depois o título dele é corrigido. O que o `get` com esse mesmo objeto responde?",
+    "hint": "Onde a entrada foi arquivada?",
+    "choices": [
+      {
+        "text": "O empréstimo, porque é exatamente o mesmo objeto",
+        "why": "O mapa procura no balde que o novo hash code escolhe, e a entrada está no antigo."
+      },
+      {
+        "text": "Muito provavelmente `null`, embora a entrada continue no mapa",
+        "why": "Isso: ela está no balde do hash code antigo, onde nenhuma busca vai."
+      },
+      {
+        "text": "Um `ConcurrentModificationException`",
+        "why": "Isso é sobre mudar uma coleção enquanto se percorre, lição 34; aqui nada percorre."
+      },
+      {
+        "text": "O mapa recalcula o hash da chave sozinho quando o campo muda",
+        "why": "O mapa não tem como saber que um campo mudou."
+      }
+    ]
+  },
+  "ex-1szchqb3": {
+    "prompt": "Um programa precisa responder, a cada pedido de empréstimo, se aquele ISBN já está reservado. Que interface serve à pergunta?",
+    "hint": "\"Este aqui está lá dentro?\"",
+    "choices": [
+      {
+        "text": "`List`",
+        "why": "Uma lista responde por posição; o `contains` nela lê cada elemento."
+      },
+      {
+        "text": "`Set`",
+        "why": "Isso: pertencer é a pergunta em torno da qual um conjunto é construído."
+      },
+      {
+        "text": "`Queue`",
+        "why": "Uma fila responde qual sai em seguida."
+      },
+      {
+        "text": "`Deque`",
+        "why": "Uma deque é uma fila aberta nas duas pontas; ainda não responde rápido se algo pertence."
+      }
+    ]
+  },
+  "ex-b46gypnd": {
+    "prompt": "Por que a seção prefere `List<Book> loans = new ArrayList<>();` a `ArrayList<Book> loans = new ArrayList<>();`?",
+    "hint": "O que o resto do programa consegue chamar?",
+    "choices": [
+      {
+        "text": "A primeira forma roda mais rápido, porque chamadas por interface são mais baratas",
+        "why": "Velocidade não é o motivo; o objeto é o mesmo `ArrayList` nos dois casos."
+      },
+      {
+        "text": "A segunda forma não compila",
+        "why": "As duas compilam; o diamante funciona com qualquer tipo declarado."
+      },
+      {
+        "text": "Limita todas as chamadas seguintes aos métodos de `List`",
+        "why": "Isso: com só métodos de `List` em uso, trocar a classe depois é uma palavra depois do `new`."
+      }
+    ]
+  },
+  "ex-jcnpqb5q": {
+    "prompt": "Quais destes são bons motivos para escolher um `TreeMap` em vez de um `HashMap`? Escolha todos os que se aplicam.",
+    "hint": "Pague por uma ordem só quando algo a lê.",
+    "choices": [
+      {
+        "text": "Um relatório imprime as entradas ordenadas pela chave",
+        "why": "Sim: a ordem classificada é lida, então vale as comparações."
+      },
+      {
+        "text": "O mapa vai guardar muitíssimas entradas",
+        "why": "Tamanho sozinho favorece o mapa de hash, cujas buscas não comparam ao longo de uma árvore."
+      },
+      {
+        "text": "O programa pede a primeira chave depois de uma dada",
+        "why": "Sim: o `ceilingKey` e os parentes dele só existem em mapas ordenados."
+      },
+      {
+        "text": "As chaves são strings",
+        "why": "Strings funcionam como chave nos dois mapas."
+      }
+    ]
+  },
+  "ex-kykgb9cy": {
+    "prompt": "Uma tela de empréstimos precisa dos títulos emprestados na ordem em que foram emprestados, cada título uma vez. Qual classe?",
+    "hint": "Uma vez cada, e uma ordem que não é a classificada.",
+    "choices": [
+      {
+        "text": "`ArrayList`",
+        "why": "Ele guarda a ordem e também as repetições."
+      },
+      {
+        "text": "`TreeSet`",
+        "why": "Uma vez cada, mas na ordem classificada, não na ordem dos empréstimos."
+      },
+      {
+        "text": "`HashSet`",
+        "why": "Uma vez cada, numa ordem em que não se pode confiar."
+      },
+      {
+        "text": "`LinkedHashSet`",
+        "why": "Isso: unicidade do conjunto, ordem de inserção da lista que passa pelas entradas."
+      }
+    ]
+  },
+  "ex-hjjrf49j": {
+    "prompt": "O `Counts.java` viu seis empréstimos de três títulos. Quantas entradas o `HashMap` chamado `count` tinha no fim?",
+    "hint": "Uma entrada por chave."
+  },
+  "ex-xzfww1nj": {
+    "prompt": "Ponha os passos de `shelf.contains(book)` num `HashSet` na ordem em que acontecem.",
+    "hint": "Dois passos decidem, depois de uma chamada.",
+    "items": [
+      "`book.hashCode()` é chamado",
+      "O hash code escolhe um balde",
+      "O `equals` compara `book` com cada elemento desse balde",
+      "O `contains` responde `true` ou `false`"
+    ]
+  },
+  "ex-gc7tc473": {
+    "prompt": "Um programa guarda os ISBNs reservados num `ArrayList<String>` e chama `contains` a cada pedido. Fica lento com cinquenta mil reservas. Qual é a menor mudança correta?",
+    "hint": "A coleção está fazendo o trabalho de um conjunto.",
+    "choices": [
+      {
+        "text": "Trocar por um `LinkedList`, que é mais rápido para buscar",
+        "why": "Buscar é uma caminhada nas duas listas; a encadeada não é mais rápida nisso."
+      },
+      {
+        "text": "Guardá-los num `HashSet<String>` em vez disso",
+        "why": "Isso: o `contains` então salta para um balde em vez de ler cada elemento."
+      },
+      {
+        "text": "Ordenar a lista uma vez e continuar chamando `contains`",
+        "why": "O `contains` de uma lista não sabe que ela está ordenada; continua lendo elemento a elemento."
+      }
+    ]
+  }
+}

@@ -1,0 +1,351 @@
+{
+  "ex-gca67zyn": {
+    "prompt": "Ligue cada tipo ao que ele decide.",
+    "hint": "A tabela no alto da seção 02.",
+    "pairs": [
+      {
+        "left": "O tipo declarado da variável",
+        "right": "Quais métodos podem ser chamados"
+      },
+      {
+        "left": "A classe real do objeto",
+        "right": "Qual sobrescrita roda"
+      }
+    ],
+    "right_distractors": [
+      "Quais atributos são privados"
+    ]
+  },
+  "ex-ke31xdyv": {
+    "prompt": "O laço do `Desk` chamou `item.describe()` em três elementos declarados `Item`. O que ele imprimiu?",
+    "hint": "Cada objeto rodou a sua sobrescrita.",
+    "choices": [
+      {
+        "text": "`an item`, três vezes",
+        "why": "Isso significaria que o tipo declarado escolheu o corpo; ele só escolhe o que pode ser chamado."
+      },
+      {
+        "text": "`a book`, `a DVD`, `an item`",
+        "why": "Isso: uma chamada no código, três corpos na execução."
+      },
+      {
+        "text": "Um erro de compilação, já que `Item` não pode guardar um `Book`",
+        "why": "Uma variável pode guardar qualquer subclasse do seu tipo."
+      }
+    ]
+  },
+  "ex-wqetb9sf": {
+    "prompt": "`Item item = new Book(...)` seguido de `item.isbn()` não compila. Por quê, se o objeto é um livro?",
+    "hint": "O que o compilador olha?",
+    "choices": [
+      {
+        "text": "Porque `isbn()` é privado em `Book`",
+        "why": "Ele é público; o erro disse que o símbolo não foi encontrado."
+      },
+      {
+        "text": "Porque o objeto virou um `Item` quando foi atribuído",
+        "why": "A atribuição não muda nada no objeto; ele continua um `Book`."
+      },
+      {
+        "text": "`Item` não declara `isbn()`",
+        "why": "Isso: o compilador só confere declarações; o que o objeto é de fato só se sabe na execução."
+      }
+    ]
+  },
+  "ex-9cvsx0fd": {
+    "prompt": "`(Book) items[1]` compilou, e depois o programa lançou `ClassCastException`. O que isso diz sobre um cast?",
+    "hint": "Quem conferiu a promessa, e quando?",
+    "choices": [
+      {
+        "text": "Leva a conferência para a execução, quando o cast roda",
+        "why": "Isso: o compilador aceita um cast que poderia dar certo, e a JVM confere a classe real."
+      },
+      {
+        "text": "Converte o objeto na classe de destino",
+        "why": "Nada foi convertido: um `Dvd` continua `Dvd`, por isso o cast falhou."
+      },
+      {
+        "text": "Desliga a conferência de tipos naquela linha",
+        "why": "A JVM conferiu, e recusou."
+      },
+      {
+        "text": "É um erro de compilação que o `javac` só relata quando o programa roda",
+        "why": "Erros de compilação são relatados pelo `javac`; este compilou."
+      }
+    ]
+  },
+  "ex-n0qwr0xg": {
+    "prompt": "Que forma a seção recomenda para usar `isbn()` num `Item` que talvez seja um livro?",
+    "hint": "A que transforma uma queda num desvio.",
+    "choices": [
+      {
+        "text": "`((Book) item).isbn()`",
+        "why": "Se o item for um DVD, isso lança exceção."
+      },
+      {
+        "text": "`if (item instanceof Book book) { book.isbn(); }`",
+        "why": "Isso: pergunta primeiro, e dá nome ao resultado."
+      },
+      {
+        "text": "Acrescentar `isbn()` a `Item`, devolvendo `null` para o resto",
+        "why": "Isso dá a todo item um método que não significa nada para a maioria."
+      }
+    ]
+  },
+  "ex-h1scyd6d": {
+    "prompt": "Em que linha do `Casts.java` aconteceu a `ClassCastException`?",
+    "hint": "A última linha do stack trace."
+  },
+  "ex-xgfm0g25": {
+    "prompt": "Em `say`, que método a instrução `invokevirtual` nomeia?",
+    "hint": "O compilador anotou o que sabia.",
+    "choices": [
+      {
+        "text": "`Book.describe`, já que a primeira chamada passa um livro",
+        "why": "`say` é compilado uma vez e chamado com os dois; não pode nomear uma subclasse."
+      },
+      {
+        "text": "`Item.describe`",
+        "why": "Isso: o tipo declarado, com o corpo em aberto."
+      },
+      {
+        "text": "`Object.toString`, a raiz de toda classe",
+        "why": "`describe` é declarado em `Item`, e é ele que se nomeia."
+      },
+      {
+        "text": "Nenhum; ela nomeia o número de uma posição numa tabela",
+        "why": "A instrução nomeia um método; a tabela é como o HotSpot o encontra."
+      }
+    ]
+  },
+  "ex-fjzs3nme": {
+    "prompt": "Quando `invokevirtual Item.describe` roda num `Dvd`, como a JVM encontra o corpo?",
+    "hint": "Começa pelo objeto.",
+    "choices": [
+      {
+        "text": "Roda `Item.describe`, já que é o método nomeado",
+        "why": "O nome diz qual método; a classe do objeto diz qual corpo."
+      },
+      {
+        "text": "Pergunta ao compilador, que gravou a resposta no arquivo de classe",
+        "why": "O compilador já não está lá na execução e só gravou o tipo declarado."
+      },
+      {
+        "text": "Lê a classe do objeto e procura o método na tabela dessa classe",
+        "why": "Isso: a tabela de `Dvd` liga `describe` a `Dvd.describe`."
+      }
+    ]
+  },
+  "ex-7tz3pgj3": {
+    "prompt": "Ligue cada instrução de chamada a como o seu corpo é escolhido.",
+    "hint": "A tabela no fim da seção 03.",
+    "pairs": [
+      {
+        "left": "`invokevirtual`",
+        "right": "Pela classe do objeto, na execução"
+      },
+      {
+        "left": "`invokestatic`",
+        "right": "Pelo compilador, pela classe nomeada na chamada"
+      },
+      {
+        "left": "`invokespecial`",
+        "right": "Exatamente o nomeado: um construtor ou uma chamada `super.m()`"
+      }
+    ],
+    "right_distractors": [
+      "Pela ordem dos métodos no arquivo-fonte"
+    ]
+  },
+  "ex-bztpgvm3": {
+    "prompt": "Que instrução chama um método por um tipo de interface, como o `Lendable` da lição 23?",
+    "hint": "O nome dela diz.",
+    "choices": [
+      {
+        "text": "`invokestatic`",
+        "why": "Essa é para métodos estáticos, escolhidos pelo compilador."
+      },
+      {
+        "text": "`invokeinterface`",
+        "why": "Isso: despachada pela classe do objeto, como o `invokevirtual`."
+      },
+      {
+        "text": "`invokespecial`",
+        "why": "Essa é para construtores e chamadas `super`."
+      }
+    ]
+  },
+  "ex-4apwqg9f": {
+    "prompt": "Um colega evita métodos pequenos e sobrescrevíveis \"porque chamadas virtuais são lentas\". O que a seção responde?",
+    "hint": "O JIT observa cada ponto de chamada.",
+    "choices": [
+      {
+        "text": "Que o colega tem razão, e `final` em tudo é o remédio",
+        "why": "A seção defende o contrário: é uma decisão de desenho."
+      },
+      {
+        "text": "Que uma consulta é barata, e o JIT chama uma classe diretamente onde só viu uma",
+        "why": "Isso: então a escolha é de desenho, não de velocidade."
+      },
+      {
+        "text": "Que a JVM procura até `Object` a cada chamada, o que é rápido o bastante",
+        "why": "O HotSpot não procura a cada chamada; cada classe tem uma tabela."
+      }
+    ]
+  },
+  "ex-vppfmba8": {
+    "prompt": "Que tipo de membro acompanha o objeto, como o `who()` fez?",
+    "hint": "Só um dos quatro.",
+    "choices": [
+      {
+        "text": "Um atributo",
+        "why": "`p.name` imprimiu `parent field`: ligado pelo tipo declarado."
+      },
+      {
+        "text": "Um método estático",
+        "why": "`p.kind()` imprimiu `parent static`."
+      },
+      {
+        "text": "Um método de instância sobrescrevível",
+        "why": "Isso: o único tipo que é despachado."
+      },
+      {
+        "text": "Um método privado",
+        "why": "`callSecret()` imprimiu `parent private`."
+      }
+    ]
+  },
+  "ex-8rwecw0k": {
+    "prompt": "`Parent p = new Child();` e `Child` declara o seu próprio `name`. O que `p.name` lê, e por quê?",
+    "hint": "Veja a instrução `getfield`.",
+    "choices": [
+      {
+        "text": "`child field`, porque o objeto atrás da variável é um `Child`",
+        "why": "Atributos não são despachados; a classe do objeto não tem papel."
+      },
+      {
+        "text": "`parent field`: o compilador escreveu `getfield Parent.name`",
+        "why": "Isso: dois atributos têm o nome, e o tipo declarado escolheu um."
+      },
+      {
+        "text": "Um erro de compilação, já que dois atributos não podem ter o mesmo nome",
+        "why": "Esconder um atributo é legal, e é por isso que surpreende."
+      }
+    ]
+  },
+  "ex-3gjgfyhp": {
+    "prompt": "O `callSecret()` de `Parent` chama `secret()`, e `Child` também tem um `secret()` privado. Por que um objeto `Child` imprimiu `parent private`?",
+    "hint": "Uma subclasse consegue ver um método privado?",
+    "choices": [
+      {
+        "text": "Porque a chamada foi compilada como `invokestatic`",
+        "why": "O `javap` mostrou `invokevirtual`; a instrução não é o motivo."
+      },
+      {
+        "text": "Porque falta `@Override` no `Child.secret`",
+        "why": "Acrescentá-lo seria erro de compilação: não há nada para sobrescrever."
+      },
+      {
+        "text": "Nada abaixo de `Parent` o substitui",
+        "why": "Isso: um método privado nunca é sobrescrito, então a JVM seleciona o de `Parent`, e `Child.secret` é um método sem relação com o mesmo nome."
+      }
+    ]
+  },
+  "ex-hst8sx78": {
+    "prompt": "`p.kind()` imprimiu `parent static` porque o compilador escreveu `___ Parent.kind`.",
+    "hint": "A instrução para métodos estáticos.",
+    "blanks": [
+      {
+        "accept": [
+          "invokestatic"
+        ]
+      }
+    ]
+  },
+  "ex-hkcqfmtb": {
+    "prompt": "Quais destes são ligados pelo compilador, a partir do tipo declarado? Escolha todos os que se aplicam.",
+    "hint": "Tudo, menos métodos de instância sobrescrevíveis.",
+    "choices": [
+      {
+        "text": "Ler um atributo",
+        "why": "Sim: o `getfield` nomeia a classe."
+      },
+      {
+        "text": "Chamar um método `static`",
+        "why": "Sim: `invokestatic`."
+      },
+      {
+        "text": "Chamar um método de instância público que uma subclasse sobrescreve",
+        "why": "Não: isso é despacho dinâmico."
+      },
+      {
+        "text": "Chamar um construtor",
+        "why": "Sim: `invokespecial`, exatamente o nomeado."
+      }
+    ]
+  },
+  "ex-v975dd28": {
+    "prompt": "`Item[] items = { new Book(...) }; Book b = (Book) items[0]; Item i = b;` Depois `i.describe()` e `b.describe()`. O que imprimem?",
+    "hint": "Um objeto, duas variáveis.",
+    "choices": [
+      {
+        "text": "`an item`, depois `a book`",
+        "why": "O método acompanha o objeto, seja qual for a variável usada."
+      },
+      {
+        "text": "`a book`, duas vezes, do mesmo objeto",
+        "why": "Isso: um objeto `Book`, então `Book.describe` nas duas vezes."
+      },
+      {
+        "text": "Uma `ClassCastException` no cast",
+        "why": "O elemento é de fato um `Book`, então o cast dá certo."
+      }
+    ]
+  },
+  "ex-3pnyzj6t": {
+    "prompt": "Uma classe `Report` tem `public static String header()`, e `DetailedReport extends Report` declara o seu próprio `header()`. O código chama `report.header()` com `Report report = new DetailedReport();` e espera o cabeçalho detalhado. Qual é a correção?",
+    "hint": "Métodos estáticos não são despachados.",
+    "choices": [
+      {
+        "text": "Acrescentar `@Override` a `DetailedReport.header()`",
+        "why": "Num método estático isso é erro de compilação, não correção."
+      },
+      {
+        "text": "Fazer cast: `((DetailedReport) report).header()` em todo chamador",
+        "why": "Funciona, e espalha o conhecimento da subclasse por todos os chamadores."
+      },
+      {
+        "text": "Torná-lo método de instância",
+        "why": "Isso: torne `header()` método de instância nas duas classes; aí ele sobrescreve, e o objeto escolhe."
+      }
+    ]
+  },
+  "ex-cy30dqm9": {
+    "prompt": "Ponha em ordem os passos de uma chamada `item.describe()`, do código-fonte ao corpo que roda.",
+    "hint": "Primeiro a compilação.",
+    "items": [
+      "O `javac` confere que `Item` declara `describe()`",
+      "O `javac` escreve `invokevirtual Item.describe`",
+      "A JVM lê a classe do objeto a que `item` se refere",
+      "A JVM roda o corpo vindo da tabela de métodos dessa classe"
+    ]
+  },
+  "ex-4wn1yggv": {
+    "prompt": "Por que a seção diz que um método estático deve ser chamado pelo nome da classe, nunca por uma variável?",
+    "hint": "O que `p.kind()` sugeria, e o que fez?",
+    "choices": [
+      {
+        "text": "Parece dinâmico e não é",
+        "why": "Isso: por uma variável parece que o objeto escolhe; `Parent.kind()` diz o que de fato acontece."
+      },
+      {
+        "text": "Porque chamá-lo por uma variável é erro de compilação",
+        "why": "Compilou e rodou; só engana."
+      },
+      {
+        "text": "Porque é mais lento por uma variável",
+        "why": "Velocidade não é a questão; os dois são `invokestatic`."
+      }
+    ]
+  }
+}

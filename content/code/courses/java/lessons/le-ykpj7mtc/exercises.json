@@ -1,0 +1,535 @@
+[
+  {
+    "id": "ex-xjx7vpez",
+    "version": 1,
+    "section": "the-problem",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Leak` printed `open loans.db` and `use loans.db`, then the exception. Why is there no `close loans.db` line?",
+    "hint": "Which line of `main` was running when the exception was thrown?",
+    "choices": [
+      {
+        "text": "The JVM skips `close` when a program is about to end",
+        "correct": false,
+        "why": "The JVM skips nothing on purpose; line 6 was simply never reached."
+      },
+      {
+        "text": "The exception left `main` at line 5, so line 6 never ran",
+        "correct": true,
+        "why": "Right: an exception leaves the method at once, and every line after it is skipped."
+      },
+      {
+        "text": "`close` ran, but its output was lost behind the stack trace",
+        "correct": false,
+        "why": "The trace and the prints share the terminal; a `close` that ran would have printed its line."
+      },
+      {
+        "text": "`Resource` does not implement `AutoCloseable`",
+        "correct": false,
+        "why": "That matters only for try-with-resources; `Leak` calls `close()` by hand."
+      }
+    ]
+  },
+  {
+    "id": "ex-dcxzz2yt",
+    "version": 1,
+    "section": "the-problem",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A server catches every exception from a request and moves on to the next one. Each request opens a database connection the way `Leak` opens its resource. What happens over a day?",
+    "hint": "The process does not end, so nobody takes the connections back.",
+    "choices": [
+      {
+        "text": "Nothing at all: the garbage collector closes any connection that no variable references any more",
+        "correct": false,
+        "why": "The garbage collector gives back memory; a connection is held by the database too, and nothing closes it."
+      },
+      {
+        "text": "The server crashes on the first failed request",
+        "correct": false,
+        "why": "It caught the exception, so it carries on; that is what lets the leak grow."
+      },
+      {
+        "text": "One connection leaks per failure until none are left and requests wait",
+        "correct": true,
+        "why": "Right: a process that ends hands everything back; a server that runs for days does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-2hp2yq01",
+    "version": 1,
+    "section": "the-problem",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Masked` fails in `use` and then in `close`. What does its stack trace report?",
+    "hint": "When `finally` throws, its exception replaces the one already on its way out.",
+    "choices": [
+      {
+        "text": "Only the failure in `close`",
+        "correct": true,
+        "why": "Right: `use of loans.db failed` is gone, and the trace points at the wrong problem."
+      },
+      {
+        "text": "Only the failure in `use`, because it happened first",
+        "correct": false,
+        "why": "That is what try-with-resources does; a hand-written `finally` keeps the later one."
+      },
+      {
+        "text": "Both, the second under a line starting with `Suppressed:`",
+        "correct": false,
+        "why": "`Suppressed:` lines come from try-with-resources, in section 04; `Masked` has none."
+      },
+      {
+        "text": "Neither, because two exceptions at once end the JVM without a message",
+        "correct": false,
+        "why": "The JVM printed one exception and exit status 1; it was simply the wrong one."
+      }
+    ]
+  },
+  {
+    "id": "ex-rk1jpsn0",
+    "version": 1,
+    "section": "the-problem",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did the hand-written `finally` in `Finally.java` cost, compared with the leaking version? Choose all that apply.",
+    "hint": "Look at where the variable is declared and what a second resource would need.",
+    "choices": [
+      {
+        "text": "A variable declared outside the `try`, still in scope after the close",
+        "correct": true,
+        "why": "Yes: `finally` has to see `r`, so `r` lives on after it was closed."
+      },
+      {
+        "text": "Nested `try` blocks as soon as there are two resources",
+        "correct": true,
+        "why": "Yes: the second must be closed even when closing the first fails."
+      },
+      {
+        "text": "The exception no longer reaching the caller",
+        "correct": false,
+        "why": "It still reached the caller; the trace after `close loans.db` shows it."
+      },
+      {
+        "text": "A slower program, because `finally` runs on a separate thread",
+        "correct": false,
+        "why": "`finally` runs on the same thread, right after the `try` block is left."
+      }
+    ]
+  },
+  {
+    "id": "ex-76m4yapy",
+    "version": 1,
+    "section": "the-problem",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the garbage collector not solve the problem of section 02?",
+    "hint": "What does it give back?",
+    "choices": [
+      {
+        "text": "It does not run while an exception is being thrown",
+        "correct": false,
+        "why": "It runs whenever the JVM decides; the trouble is what it gives back, not when."
+      },
+      {
+        "text": "It gives back memory and nothing else",
+        "correct": true,
+        "why": "Right: an open file or a connection is held outside the program's memory."
+      },
+      {
+        "text": "It only collects objects created with `new`",
+        "correct": false,
+        "why": "Every object is created with `new`, the resource included."
+      }
+    ]
+  },
+  {
+    "id": "ex-w99bybc3",
+    "version": 1,
+    "section": "try-with-resources",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What must a class do for its objects to be declared in a try-with-resources?",
+    "hint": "`StringBuilder` was refused, and so would the first `Resource` have been.",
+    "choices": [
+      {
+        "text": "Have a public method called `close`",
+        "correct": false,
+        "why": "The first `Resource` had one and would still be refused; the rule is the interface."
+      },
+      {
+        "text": "Hold something that is not memory",
+        "correct": false,
+        "why": "The compiler cannot see what a class holds; it checks the type."
+      },
+      {
+        "text": "Implement `AutoCloseable`",
+        "correct": true,
+        "why": "Right: one interface with one method, `close()`, and the compiler checks it."
+      },
+      {
+        "text": "Be declared `final` so it cannot be swapped inside the block",
+        "correct": false,
+        "why": "The resource variable is implicitly final; the class itself need not be."
+      }
+    ]
+  },
+  {
+    "id": "ex-0146jgh1",
+    "version": 1,
+    "section": "try-with-resources",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Order` opens `loans.db`, then `audit.log`, and the body throws. Put what happened in order.",
+    "hint": "Reverse order for the closes, and the handlers come after them.",
+    "items": [
+      "`close audit.log`",
+      "`close loans.db`",
+      "the `catch` prints `caught: use of audit.log failed`",
+      "the `finally` prints `finally`"
+    ]
+  },
+  {
+    "id": "ex-3s06j3rk",
+    "version": 1,
+    "section": "try-with-resources",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A writer is built on top of a file, and both are declared in one try-with-resources, the file first. Why does closing in reverse order matter here?",
+    "hint": "Which one depends on the other?",
+    "choices": [
+      {
+        "text": "It does not: the order is alphabetical by variable name",
+        "correct": false,
+        "why": "`audit.log` closed before `loans.db` because it was opened second, not because of its name."
+      },
+      {
+        "text": "The writer flushes into the file while it closes, so the file has to be open then",
+        "correct": true,
+        "why": "Right: the later resource depends on the earlier one, and reverse order never pulls the floor out from under it."
+      },
+      {
+        "text": "Closing the file first would make the compiler refuse the block",
+        "correct": false,
+        "why": "The order is fixed by the language; there is nothing for the compiler to refuse."
+      }
+    ]
+  },
+  {
+    "id": "ex-hzff6f24",
+    "version": 1,
+    "section": "try-with-resources",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside the `catch` of `Order`, can the handler still call `db.use(false)`?",
+    "hint": "Where does the variable `db` exist, and when was it closed?",
+    "choices": [
+      {
+        "text": "Yes, because the resource is closed only after the `catch` block and the `finally` have both finished",
+        "correct": false,
+        "why": "The output says otherwise: both closes printed before `caught:`."
+      },
+      {
+        "text": "Yes, but only if the class is marked with `@Override`",
+        "correct": false,
+        "why": "`@Override` marks a method, and it has nothing to do with scope."
+      },
+      {
+        "text": "No: `db` exists only inside the `try` block, and it is already closed",
+        "correct": true,
+        "why": "Right: the compiler refuses the name, and the object behind it was given back."
+      }
+    ]
+  },
+  {
+    "id": "ex-qtb26tm4",
+    "version": 1,
+    "section": "try-with-resources",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`java CountLines missing.txt` threw `NoSuchFileException`. Which `close` ran?",
+    "hint": "Did the reader ever exist?",
+    "choices": [
+      {
+        "text": "None: the reader's initialiser threw, so there was nothing to close",
+        "correct": true,
+        "why": "Right: try-with-resources closes only what was actually opened."
+      },
+      {
+        "text": "The reader's, with a `null` that was then ignored",
+        "correct": false,
+        "why": "No `close` is called on a resource that was never assigned; there is no `null` to ignore."
+      },
+      {
+        "text": "The reader's, and its exception was suppressed into the `NoSuchFileException` that reached `main`",
+        "correct": false,
+        "why": "A suppressed exception would have printed a `Suppressed:` line; there was none."
+      },
+      {
+        "text": "The file system's own, inside `Files.newBufferedReader`",
+        "correct": false,
+        "why": "Nothing was opened, so the JDK's methods had nothing to close either."
+      }
+    ]
+  },
+  {
+    "id": "ex-59h6ck5y",
+    "version": 1,
+    "section": "try-with-resources",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`BufferedReader`, files, sockets and database connections qualify for try-with-resources because they implement `AutoCloseable`, most of them through the older sub-interface `java.io.___`.",
+    "hint": "It has the same method and an older name.",
+    "blanks": [
+      {
+        "accept": [
+          "Closeable"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-20yk82en",
+    "version": 1,
+    "section": "try-with-resources",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`javac NotCloseable.java` refused `try (StringBuilder sb = new StringBuilder())`. Why?",
+    "hint": "Read the second line of the error.",
+    "choices": [
+      {
+        "text": "A `StringBuilder` cannot be created inside parentheses",
+        "correct": false,
+        "why": "Any expression can initialise a resource; the type is what was refused."
+      },
+      {
+        "text": "`StringBuilder` cannot be converted to `AutoCloseable`",
+        "correct": true,
+        "why": "Right: it holds only memory and has no `close`, and the compiler says so."
+      },
+      {
+        "text": "The block has no `catch` clause, and a resource declared in parentheses needs one to compile",
+        "correct": false,
+        "why": "`Twr` had no `catch` and compiled; `catch` is optional."
+      }
+    ]
+  },
+  {
+    "id": "ex-e54bxzpd",
+    "version": 1,
+    "section": "suppressed",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In try-with-resources, the body throws and then `close` throws. Which exception reaches the caller?",
+    "hint": "The opposite of `Masked`.",
+    "choices": [
+      {
+        "text": "The one from `close`, because it happened last",
+        "correct": false,
+        "why": "That is the hand-written `finally` of section 02, which lost the cause."
+      },
+      {
+        "text": "A new exception that wraps both of them, with the body's failure as its cause",
+        "correct": false,
+        "why": "No new exception is made; the body's is kept and the other is attached to it."
+      },
+      {
+        "text": "The body's, carrying the one from `close` as suppressed",
+        "correct": true,
+        "why": "Right: the cause is what you read first, and the close failure is still in the report."
+      }
+    ]
+  },
+  {
+    "id": "ex-aepe93f2",
+    "version": 1,
+    "section": "suppressed",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Every `Throwable` returns its suppressed exceptions as an array from the method `___()`.",
+    "hint": "`Inspect` looped over it.",
+    "blanks": [
+      {
+        "accept": [
+          "getSuppressed"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-q9hts4kh",
+    "version": 1,
+    "section": "suppressed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Inspect` printed `suppressed: close of audit.log failed` before `suppressed: close of loans.db failed`. Why that order?",
+    "hint": "They are added as the closes happen.",
+    "choices": [
+      {
+        "text": "Suppressed exceptions are sorted alphabetically by their message text",
+        "correct": false,
+        "why": "No sorting happens; the list is in the order the failures were added."
+      },
+      {
+        "text": "`audit.log` was opened second, so it was closed, and failed, first",
+        "correct": true,
+        "why": "Right: the closes run in reverse order and each failure is added as it happens."
+      },
+      {
+        "text": "The array is filled from its end, so the newest is first",
+        "correct": false,
+        "why": "The newest is last; `audit.log`'s failure is simply the older one."
+      },
+      {
+        "text": "`getSuppressed` returns the order the resources were declared, reversed for safety",
+        "correct": false,
+        "why": "It returns the order of addition; the reversal comes from the closing order, not from the method."
+      }
+    ]
+  },
+  {
+    "id": "ex-jtp0g8ge",
+    "version": 1,
+    "section": "suppressed",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The `close` failure was at `Resource.java:22` in `Masked` and at `Resource.java:23` in `Suppressed`, though the throw statement is the same. Why?",
+    "hint": "Which `Resource.java` was compiled each time?",
+    "choices": [
+      {
+        "text": "The suppressed trace counts lines from one instead of from zero",
+        "correct": false,
+        "why": "Both traces count from one; the files were different."
+      },
+      {
+        "text": "try-with-resources adds a hidden line to `Resource`, which pushes every later line down by one",
+        "correct": false,
+        "why": "The generated code lives in the calling class, not in `Resource`; its line numbers are untouched."
+      },
+      {
+        "text": "The second file has an extra `@Override` line above `close`",
+        "correct": true,
+        "why": "Right: a stack trace numbers the lines of the file that was compiled."
+      }
+    ]
+  },
+  {
+    "id": "ex-kydcgqwv",
+    "version": 1,
+    "section": "suppressed",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In try-with-resources, match what failed to what the caller receives.",
+    "hint": "The table at the end of section 04.",
+    "pairs": [
+      {
+        "left": "the body only",
+        "right": "the body's exception"
+      },
+      {
+        "left": "`close` only",
+        "right": "the exception from `close`"
+      },
+      {
+        "left": "the body, then `close`",
+        "right": "the body's exception, with the close's suppressed in it"
+      }
+    ],
+    "right_distractors": [
+      "the exception from `close`, with the body's as its cause"
+    ]
+  },
+  {
+    "id": "ex-x48t0ktz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A method opens a file in try-with-resources and returns from inside the block. Before the caller receives the value, what has happened to the file?",
+    "hint": "The generated code is a `finally`, and lesson 36 said when `finally` runs.",
+    "choices": [
+      {
+        "text": "It was closed, because leaving the block by `return` still closes the resource",
+        "correct": true,
+        "why": "Right: every way out of the block closes it, a `return` included."
+      },
+      {
+        "text": "It stays open until the garbage collector finds the unreachable reader",
+        "correct": false,
+        "why": "That would be the leak; the block closes it on the way out."
+      },
+      {
+        "text": "It stays open, because `return` skips the generated close",
+        "correct": false,
+        "why": "`return` does not skip a `finally`, and try-with-resources is one."
+      },
+      {
+        "text": "The compiler refuses a `return` inside try-with-resources",
+        "correct": false,
+        "why": "Returning from inside the block is ordinary and compiles."
+      }
+    ]
+  },
+  {
+    "id": "ex-tqgdbpwm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You review code with `try { conn = open(); ... } finally { conn.close(); }`. What is the strongest reason to rewrite it with try-with-resources?",
+    "hint": "Think of the day both the work and the close fail.",
+    "choices": [
+      {
+        "text": "try-with-resources runs faster, because it skips the generated `finally` code",
+        "correct": false,
+        "why": "Both compile to much the same code; speed is not the argument."
+      },
+      {
+        "text": "A `finally` block is deprecated since Java 7, the release in which try-with-resources replaced it",
+        "correct": false,
+        "why": "`finally` is alive and well; try-with-resources is built from one."
+      },
+      {
+        "text": "Its original exception survives when `close` fails too",
+        "correct": true,
+        "why": "Right: the hand-written version reports the close failure and loses the cause."
+      }
+    ]
+  },
+  {
+    "id": "ex-kzh6jkkr",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A try-with-resources declares three resources. All three open, the body throws, and every `close` throws too. How many suppressed exceptions does the body's exception carry?",
+    "hint": "One per failed close.",
+    "value": 3,
+    "tolerance": 0
+  }
+]

@@ -108,7 +108,7 @@ jobs:
           # two share the operator through it, and a directory left out of this
           # line is a suite that never runs on the change that broke it.
           # `tools/` is narrowed to the ones it actually runs.
-          browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(lib|graph-test|a11y-test|landing-test|mfa-test|console-test|lang-test|track-test|frame-test|exam-offer-test|bundle|bundle-test|figure-fit|figure-contrast|fetch-once|check-highlight)/|\.github/workflows/ci\.yml$)'
+          browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(lib|graph-test|a11y-test|landing-test|mfa-test|console-test|lang-test|track-test|frame-test|exam-offer-test|bundle|bundle-test|figure-fit|figure-contrast|fetch-once|check-highlight|check-cloze)/|\.github/workflows/ci\.yml$)'
 
           # NARROW ON PURPOSE. The Terraform reads nothing in this repository —
           # not the Go, not the content, not the workflows it deploys from — so
@@ -598,6 +598,14 @@ jobs:
       # check in this file still green, so this runs as early as node allows.
       - name: Every fence in a language the highlighter knows
         run: node tools/check-highlight/check-highlight.mjs content
+
+      # THE SAME SHAPE, FOR THE ONE QUESTION TYPE THE SCREEN BUILDS INSIDE A
+      # SENTENCE. It draws every cloze with `ui/app/exercises/cloze.js` and
+      # counts the boxes; a hole that came out as text, which every hole in the
+      # catalogue once did, is a question nobody can answer and no other check
+      # here can see.
+      - name: Every cloze hole is drawn as a box
+        run: node tools/check-cloze/check-cloze.mjs content
 
       # `npm ci` and not `npm install`: the lock file is the version that was
       # tested, and a browser suite that silently upgraded its driver would fail

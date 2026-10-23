@@ -1,0 +1,519 @@
+[
+  {
+    "id": "ex-crp6hwmp",
+    "version": 1,
+    "section": "declaring",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`int fine;` is declared, assigned only inside an `if`, then printed. What does `javac` say?",
+    "hint": "The compiler follows paths, not values.",
+    "choices": [
+      {
+        "text": "Nothing; it prints 0 when the `if` does not run",
+        "correct": false,
+        "why": "0 is a field's default; a local has none, and the compiler refused the file."
+      },
+      {
+        "text": "`variable fine might not have been initialized`",
+        "correct": true,
+        "why": "Right: on the path where the `if` is skipped, `fine` has no value."
+      },
+      {
+        "text": "A warning, and the program prints whatever was in memory",
+        "correct": false,
+        "why": "That is what C does; Java makes it an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-bqkpah7p",
+    "version": 1,
+    "section": "declaring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`daysLate` is 3, so the `if` in `Fine.java` always runs. Why does the compiler still refuse to print `fine`?",
+    "hint": "What does the compiler look at?",
+    "choices": [
+      {
+        "text": "Because `daysLate` might change while the program runs",
+        "correct": false,
+        "why": "Nothing changes it; the reason is that the compiler does not reason about values at all."
+      },
+      {
+        "text": "It checks every path through the code, not the values on it",
+        "correct": true,
+        "why": "Right: definite assignment is about every path, whatever the values."
+      },
+      {
+        "text": "Because a variable declared without a value can never be assigned later",
+        "correct": false,
+        "why": "It can; `fine = daysLate * 50;` is a valid assignment on the path that runs it."
+      }
+    ]
+  },
+  {
+    "id": "ex-gtthe0am",
+    "version": 1,
+    "section": "declaring",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each field type to the default `Defaults.java` printed.",
+    "hint": "Zero, in some form, or nothing.",
+    "pairs": [
+      {
+        "left": "`int`",
+        "right": "`0`"
+      },
+      {
+        "left": "`double`",
+        "right": "`0.0`"
+      },
+      {
+        "left": "`boolean`",
+        "right": "`false`"
+      },
+      {
+        "left": "`String`",
+        "right": "`null`"
+      }
+    ],
+    "right_distractors": [
+      "`\"\"`, the empty string"
+    ]
+  },
+  {
+    "id": "ex-v37nh9gj",
+    "version": 1,
+    "section": "declaring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do fields get a default value while locals must be assigned before use?",
+    "hint": "Who can read each one, and when?",
+    "choices": [
+      {
+        "text": "The compiler cannot follow every path to a field",
+        "correct": true,
+        "why": "Right: a local is only seen inside its method, where every path can be checked."
+      },
+      {
+        "text": "Fields are created by the JVM and locals by the compiler",
+        "correct": false,
+        "why": "Both exist only while the program runs; the compiler checks rules, it creates no variables."
+      },
+      {
+        "text": "Defaults are slower, so Java only spends them on fields",
+        "correct": false,
+        "why": "Speed is not the reason; the compiler's reach is."
+      }
+    ]
+  },
+  {
+    "id": "ex-5azete70",
+    "version": 1,
+    "section": "declaring",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `Member` class has a field `String email;` that nothing assigns. A method sends a reminder to `email`. What goes wrong, and when?",
+    "hint": "Fields get a default, and the default for a `String` is not text.",
+    "choices": [
+      {
+        "text": "The compiler refuses the class, as it refused `Fine.java`",
+        "correct": false,
+        "why": "That rule is for locals; a field compiles and starts as `null`."
+      },
+      {
+        "text": "Nothing goes wrong; the reminder is sent to an empty address",
+        "correct": false,
+        "why": "The default is `null`, not an empty string; there is no address at all."
+      },
+      {
+        "text": "It compiles, and fails only when the program runs and uses the `null`",
+        "correct": true,
+        "why": "Right: a default is a value nobody chose, and it looks like data until it is used."
+      }
+    ]
+  },
+  {
+    "id": "ex-pfya4cyd",
+    "version": 1,
+    "section": "declaring",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The rule that a local must certainly have a value before it is read is called definite ___.",
+    "hint": "The act of putting a value in a variable.",
+    "blanks": [
+      {
+        "accept": [
+          "assignment"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-h556g4dq",
+    "version": 1,
+    "section": "scope",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does the scope of a local variable end?",
+    "hint": "Not the method: the block.",
+    "choices": [
+      {
+        "text": "At the end of the method",
+        "correct": false,
+        "why": "A variable declared inside an `if` ended at the `if`'s brace, before the method did."
+      },
+      {
+        "text": "At the closing brace of the block holding it",
+        "correct": true,
+        "why": "Right: which is why `extra` meant nothing on line 9."
+      },
+      {
+        "text": "At the end of the line that declares it",
+        "correct": false,
+        "why": "Then no variable could be used on the next line."
+      },
+      {
+        "text": "When the garbage collector removes it",
+        "correct": false,
+        "why": "That is lifetime, not scope, and locals are not collected: their frame is removed."
+      }
+    ]
+  },
+  {
+    "id": "ex-pa8kgy0j",
+    "version": 1,
+    "section": "scope",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Blocks.java` fails with `cannot find symbol` for `extra` on line 9. What is the best fix if line 9 really needs the value?",
+    "hint": "Move the declaration, not the use.",
+    "choices": [
+      {
+        "text": "Declare `extra` again on line 9",
+        "correct": false,
+        "why": "A new `extra` would be a different variable with no value from the `if`."
+      },
+      {
+        "text": "Make `extra` a field, so that every method of the class can see it",
+        "correct": false,
+        "why": "That widens it far beyond what needs it; a field is the opposite of the narrowest block."
+      },
+      {
+        "text": "Declare it before the `if`, so its block is `main`'s",
+        "correct": true,
+        "why": "Right: then it is in scope on both lines."
+      }
+    ]
+  },
+  {
+    "id": "ex-gweq36rm",
+    "version": 1,
+    "section": "scope",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Twice.java` declares `int total` in `main` and again inside a loop. What happens?",
+    "hint": "Java's rule for two locals.",
+    "choices": [
+      {
+        "text": "The inner `total` hides the outer one until the loop ends",
+        "correct": false,
+        "why": "Some languages do that; Java refuses it for locals."
+      },
+      {
+        "text": "A compile error: `total` is already defined in `main`",
+        "correct": true,
+        "why": "Right: two locals with one name in overlapping scopes are not allowed."
+      },
+      {
+        "text": "Both are the same variable, so the loop overwrites the outer `total`",
+        "correct": false,
+        "why": "A declaration always makes a new variable; that is why the compiler objects."
+      }
+    ]
+  },
+  {
+    "id": "ex-xqedpqw0",
+    "version": 1,
+    "section": "scope",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `Shadow.java`, after `String name = \"Ana\";`, how does the program still print the field?",
+    "hint": "The field is still there, unchanged.",
+    "choices": [
+      {
+        "text": "It cannot: the local replaced the field for the rest of the program",
+        "correct": false,
+        "why": "The third line printed `the library`; the field was reachable all along."
+      },
+      {
+        "text": "By naming the class: `Shadow.name`",
+        "correct": true,
+        "why": "Right: the plain name means the local, and the qualified name means the field."
+      },
+      {
+        "text": "By printing `name` before the local is assigned a new value",
+        "correct": false,
+        "why": "The local had its value from the start; the first `println` ran before it existed at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-7tw41ypf",
+    "version": 1,
+    "section": "scope",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of shadowing in Java? Choose all that apply.",
+    "hint": "A local and a field, or two locals.",
+    "choices": [
+      {
+        "text": "A local may have the same name as a field",
+        "correct": true,
+        "why": "Yes: `Shadow.java` compiled and ran."
+      },
+      {
+        "text": "A local may have the same name as another local in an enclosing block",
+        "correct": false,
+        "why": "No: `Twice.java` was refused."
+      },
+      {
+        "text": "Constructors commonly use it, writing `this.name = name`",
+        "correct": true,
+        "why": "Yes: lesson 13 writes it that way."
+      },
+      {
+        "text": "The field is deleted from the point where the local is declared",
+        "correct": false,
+        "why": "It is only hidden from the plain name; `Shadow.name` still reached it."
+      }
+    ]
+  },
+  {
+    "id": "ex-46g3ps4z",
+    "version": 1,
+    "section": "lifetime",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When does a local variable stop existing?",
+    "hint": "It lives in a frame.",
+    "choices": [
+      {
+        "text": "When the program ends",
+        "correct": false,
+        "why": "It ends much sooner: with the call that declared it."
+      },
+      {
+        "text": "When the call that declared it returns",
+        "correct": true,
+        "why": "Right: the frame is removed, and its locals with it."
+      },
+      {
+        "text": "When it is assigned a new value",
+        "correct": false,
+        "why": "A new value replaces the old one in the same variable; the variable lives on."
+      }
+    ]
+  },
+  {
+    "id": "ex-jd2x1xvq",
+    "version": 1,
+    "section": "lifetime",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On the default stack, how many frames did `Depth` reach before `StackOverflowError`?",
+    "hint": "The first two runs agreed.",
+    "value": 23254,
+    "tolerance": 0,
+    "unit": "frames"
+  },
+  {
+    "id": "ex-pwdgda3x",
+    "version": 1,
+    "section": "lifetime",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `-Xss256k` `Depth` reached 1,646 frames, and with `-Xss4m` 100,048. Sixteen times the stack gave about sixty times the frames. Why not sixteen?",
+    "hint": "Not every frame is the same size.",
+    "choices": [
+      {
+        "text": "`-Xss` is ignored above 1 MB, so the counts are noise",
+        "correct": false,
+        "why": "It is honoured: 4 MB reached far more than the default."
+      },
+      {
+        "text": "Interpreted and compiled frames differ in size",
+        "correct": true,
+        "why": "Right: and a longer run compiles more of `dive`; part of the reason is the JIT."
+      },
+      {
+        "text": "Each frame doubles in size as recursion goes deeper",
+        "correct": false,
+        "why": "A frame holds the same parameter at every level; depth does not grow it."
+      }
+    ]
+  },
+  {
+    "id": "ex-z44gyf13",
+    "version": 1,
+    "section": "lifetime",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program crashes with `StackOverflowError`. What is the usual right response?",
+    "hint": "What filled the stack?",
+    "choices": [
+      {
+        "text": "Raise `-Xss` until it stops",
+        "correct": false,
+        "why": "A recursion with no way to stop fills any stack; a bigger one only takes longer."
+      },
+      {
+        "text": "Fix the recursion",
+        "correct": true,
+        "why": "Right: find the recursion that never stops, or stops too late; the fix is in the code."
+      },
+      {
+        "text": "Catch the error everywhere, as `Depth` does",
+        "correct": false,
+        "why": "`Depth` catches it to print a number for the lesson; catching does not make the recursion end."
+      },
+      {
+        "text": "Give the JVM more heap with `-Xmx`",
+        "correct": false,
+        "why": "Frames are on the stack, not the heap; `-Xmx` sizes the heap."
+      }
+    ]
+  },
+  {
+    "id": "ex-trdg3b8e",
+    "version": 1,
+    "section": "lifetime",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A method creates an object with `new`, keeps a reference in a local, and returns that reference. After it returns, what is left?",
+    "hint": "Where does each live?",
+    "choices": [
+      {
+        "text": "Nothing: the object was in the frame and went with it",
+        "correct": false,
+        "why": "Objects are on the heap, not in frames; only the local went."
+      },
+      {
+        "text": "The local and the object, until the program ends",
+        "correct": false,
+        "why": "The local went with the frame; only the object outlives the call."
+      },
+      {
+        "text": "Only the object, on the heap; the local went with its frame",
+        "correct": true,
+        "why": "Right: the frame disappeared and the object stayed on the heap."
+      }
+    ]
+  },
+  {
+    "id": "ex-gtvs9swq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A method declares `int count;` and reads it at once. Another declares a field `static int count;` and reads it at once. What happens in each?",
+    "hint": "One rule for locals, one for fields.",
+    "choices": [
+      {
+        "text": "Both print 0, the default every `int` starts with",
+        "correct": false,
+        "why": "The local is refused at compile time; only the field gets a default."
+      },
+      {
+        "text": "The local is a compile error, and the field prints its default, 0",
+        "correct": true,
+        "why": "Right: locals need definite assignment, fields start at their default."
+      },
+      {
+        "text": "Both are compile errors, since neither was assigned",
+        "correct": false,
+        "why": "The field compiles: `Defaults.java` printed its zeros."
+      }
+    ]
+  },
+  {
+    "id": "ex-2s5x31km",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`main` calls `a`, and `a` calls `b`. Put the frames in the order they leave the stack.",
+    "hint": "The last in is the first out.",
+    "items": [
+      "`b`'s frame",
+      "`a`'s frame",
+      "`main`'s frame"
+    ]
+  },
+  {
+    "id": "ex-3nhyg8aa",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague declares every variable at the top of `main`, \"so they are all visible\". What does that cost, by this lesson's rules?",
+    "hint": "Think about scope as protection.",
+    "choices": [
+      {
+        "text": "Nothing: scope only matters to the compiler",
+        "correct": false,
+        "why": "Scope also limits where a value can be misused, which is what is lost."
+      },
+      {
+        "text": "Memory, because every variable then lives until the program ends",
+        "correct": false,
+        "why": "They live until `main` returns, which is the same for a block inside `main`; memory is not the point."
+      },
+      {
+        "text": "Every variable is exposed far from where it is needed",
+        "correct": true,
+        "why": "Right: declared in the narrowest block, a variable cannot leak outside it."
+      }
+    ]
+  },
+  {
+    "id": "ex-mccfvt5t",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A method that calls itself is using ___.",
+    "hint": "`dive` did it.",
+    "blanks": [
+      {
+        "accept": [
+          "recursion"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,357 @@
+{
+  "ex-6tx22maa": {
+    "prompt": "Quando se decide qual sobrecarga de `show` uma chamada alcança?",
+    "hint": "Nada da sobrecarga acontece em tempo de execução.",
+    "choices": [
+      {
+        "text": "Na compilação, pelos tipos dos argumentos",
+        "why": "Isso: o `javac` escolhe um e grava a escolha no arquivo de classe."
+      },
+      {
+        "text": "Na execução, pela classe do objeto passado",
+        "why": "Isso descreve a sobrescrita, escolhida pelo objeto com o programa rodando."
+      },
+      {
+        "text": "Quando o JIT compila o método, por quantas vezes cada um roda",
+        "why": "O JIT nunca muda qual método uma chamada significa; só acelera o escolhido."
+      },
+      {
+        "text": "Quando a classe é carregada, pela ordem em que as sobrecargas estão escritas",
+        "why": "A ordem no arquivo não tem papel nenhum."
+      }
+    ]
+  },
+  "ex-kdv1t1ja": {
+    "prompt": "`show(small)`, com `byte small = 5`, imprimiu `int 5`. Por que não `Integer` ou `Object`?",
+    "hint": "Não existe `show(byte)`.",
+    "choices": [
+      {
+        "text": "Porque um literal `byte` é sempre um `int` em Java",
+        "why": "`small` é uma variável `byte`; a conversão aconteceu na chamada."
+      },
+      {
+        "text": "Alargar para `int` tem preferência sobre encaixotar ou chegar a `Object`",
+        "why": "Isso: o primitivo mais largo mais próximo vence antes de qualquer encaixotamento."
+      },
+      {
+        "text": "Porque `show(int)` está escrito primeiro na classe",
+        "why": "A ordem no arquivo nunca decide."
+      }
+    ]
+  },
+  "ex-m4b4wv9b": {
+    "prompt": "Quando nenhuma sobrecarga corresponde exatamente, ponha as preferências do compilador em ordem, a preferida primeiro.",
+    "hint": "O `Ranking` perguntou duas vezes.",
+    "items": [
+      "Alargar um primitivo, como `int` para `long`",
+      "Encaixotar, como `int` para `Integer`",
+      "Varargs, como `int` para `int...`"
+    ]
+  },
+  "ex-95kxnz4v": {
+    "prompt": "Por que alargar fica acima de encaixotar?",
+    "hint": "O autoboxing chegou no Java 5.",
+    "choices": [
+      {
+        "text": "Porque encaixotar aloca um objeto e é mais lento",
+        "why": "Velocidade não foi o motivo que a seção deu."
+      },
+      {
+        "text": "Porque primitivos são conferidos antes de objetos em toda regra do Java",
+        "why": "Não existe essa regra geral; esta é sobre história."
+      },
+      {
+        "text": "Para que chamadas escritas antes do Java 5 continuassem no mesmo método",
+        "why": "Isso: o `widen(5)` de um programa 1.4 sempre caiu em `widen(long)`, e continua caindo."
+      }
+    ]
+  },
+  "ex-evx1gq83": {
+    "prompt": "Existem `lend(Integer, Object)` e `lend(Object, Integer)`. O que `lend(1, 2)` faz?",
+    "hint": "Nenhum caminho é melhor que o outro.",
+    "choices": [
+      {
+        "text": "Chama o primeiro método declarado",
+        "why": "O compilador não escolhe por posição."
+      },
+      {
+        "text": "Chama os dois, em ordem",
+        "why": "Uma chamada alcança um método, ou nenhum."
+      },
+      {
+        "text": "Não compila: é ambígua",
+        "why": "Isso: o compilador nomeia os dois candidatos e deixa a escolha com você."
+      },
+      {
+        "text": "Lança exceção em tempo de execução quando a JVM não consegue decidir",
+        "why": "Nem chega lá; o erro é na compilação."
+      }
+    ]
+  },
+  "ex-wpw43933": {
+    "prompt": "O nome de um método e os tipos dos seus parâmetros, em ordem, se chamam a sua ___; o tipo de retorno não faz parte dela.",
+    "hint": "O `Twice` falhou porque dois métodos tinham a mesma.",
+    "blanks": [
+      {
+        "accept": [
+          "assinatura"
+        ]
+      }
+    ]
+  },
+  "ex-0hygbhsg": {
+    "prompt": "O que é uma sobrescrita?",
+    "hint": "Um nível abaixo, mesma assinatura.",
+    "choices": [
+      {
+        "text": "Um segundo método na mesma classe com o mesmo nome e outros parâmetros",
+        "why": "Isso é uma sobrecarga."
+      },
+      {
+        "text": "Um método da subclasse com a assinatura de um que ela herdou",
+        "why": "Isso: substitui o corpo herdado para os objetos da subclasse."
+      },
+      {
+        "text": "Qualquer método marcado com `@Override`",
+        "why": "A anotação só pede uma conferência; o método é sobrescrita com ou sem ela."
+      }
+    ]
+  },
+  "ex-c8xz8pmc": {
+    "prompt": "O `Typo` declarou `descibe()` sem `@Override`. O que `typo.describe()` imprimiu, e por quê?",
+    "hint": "Um método novo que ninguém chama.",
+    "choices": [
+      {
+        "text": "`typo Dom Casmurro`, porque o compilador corrigiu a grafia",
+        "why": "O compilador não corrige nada; aceitou um método novo."
+      },
+      {
+        "text": "`item Dom Casmurro`, de `Item`",
+        "why": "Isso: `descibe` não substituiu nada, então rodou o método de `Item`."
+      },
+      {
+        "text": "Nada, porque o programa não compilou",
+        "why": "Sem a anotação ele compilou; é isso que torna o erro perigoso."
+      }
+    ]
+  },
+  "ex-45a3599g": {
+    "prompt": "`Item.copy()` devolve `Item`. Que tipo de retorno `Book.copy()` pode declarar?",
+    "hint": "Todo chamador da assinatura antiga precisa continuar recebendo o que lhe foi prometido.",
+    "choices": [
+      {
+        "text": "Só `Item`, exatamente",
+        "why": "Um subtipo é permitido; o `Book` usou."
+      },
+      {
+        "text": "`Object`, já que toda classe é um",
+        "why": "Isso alarga a promessa, e chamadores que esperam um `Item` quebrariam."
+      },
+      {
+        "text": "`Item` ou qualquer subtipo dele, como `Book`",
+        "why": "Isso: um retorno covariante estreita o tipo e mantém a promessa."
+      },
+      {
+        "text": "Qualquer tipo, desde que o método esteja anotado",
+        "why": "O `@Override` confere as regras; não as afrouxa."
+      }
+    ]
+  },
+  "ex-1wjwgfbh": {
+    "prompt": "O `Quiet` sobrescreveu o `describe()` público como `protected` e foi recusado. Por que o Java proíbe estreitar o acesso?",
+    "hint": "Pense num código que segura um `Item`.",
+    "choices": [
+      {
+        "text": "Um código que segura um `Item` recebeu a promessa de poder chamar `describe()`",
+        "why": "Isso: um `Quiet` atrás de uma variável `Item` quebraria a promessa."
+      },
+      {
+        "text": "Porque métodos `protected` não podem ser sobrescritos",
+        "why": "Podem; a regra é sobre em que direção o acesso pode ir."
+      },
+      {
+        "text": "Porque uma subclasse tem de usar as mesmas palavras de acesso do pai",
+        "why": "Acesso mais amplo é permitido; só o mais estreito é recusado."
+      }
+    ]
+  },
+  "ex-zc5h6wan": {
+    "prompt": "Quais destas o compilador recusaria numa subclasse de `Item`? Escolha todas as que se aplicam.",
+    "hint": "A tabela da seção 03.",
+    "choices": [
+      {
+        "text": "`@Override public String descibe()`",
+        "why": "Sim: a anotação descobre que ele não sobrescreve nada."
+      },
+      {
+        "text": "`@Override public Book copy()`",
+        "why": "Não: um retorno covariante é permitido."
+      },
+      {
+        "text": "`@Override protected String describe()`",
+        "why": "Sim: acesso mais fraco que `public`."
+      },
+      {
+        "text": "`@Override public Object copy()`",
+        "why": "Sim: `Object` não é `Item` nem subtipo dele."
+      },
+      {
+        "text": "`public String describe(String prefix)` sem anotação",
+        "why": "Não: isso é uma sobrecarga nova, e legal."
+      }
+    ]
+  },
+  "ex-34hj41dt": {
+    "prompt": "O `Book` declarou `public boolean equals(Book other)`. O que esse método é, para o compilador?",
+    "hint": "Compare o parâmetro dele com o de `Object`.",
+    "choices": [
+      {
+        "text": "Uma sobrescrita de `Object.equals`",
+        "why": "Uma sobrescrita precisa do mesmo tipo de parâmetro, `Object`."
+      },
+      {
+        "text": "Uma sobrecarga do `equals`",
+        "why": "Isso: ele fica ao lado do `equals(Object)` herdado, e o `Book` fica com dois."
+      },
+      {
+        "text": "Um erro de compilação, já que `equals` só pode receber `Object`",
+        "why": "Compilou; é por isso que o erro sobrevive."
+      }
+    ]
+  },
+  "ex-an3ehqqa": {
+    "prompt": "Com o `equals(Book)`, quantos livros o `HashSet` guardou depois de receber `a` e `b`, dois livros com o mesmo ISBN?",
+    "hint": "A segunda linha da primeira execução.",
+    "unit": "livros"
+  },
+  "ex-3r6v3qsx": {
+    "prompt": "Por que o `HashSet` nunca chamou o `equals(Book)` que a Ana escreveu?",
+    "hint": "Como o `HashSet` conhece os seus elementos, quando é compilado?",
+    "choices": [
+      {
+        "text": "Porque o `HashSet` só compara hash codes, nunca o `equals`",
+        "why": "Ele compara hash codes primeiro e chama o `equals` quando batem; aqui os dois bateram."
+      },
+      {
+        "text": "A chamada dele foi compilada como `equals(Object)`, que ainda era a conferência de identidade de `Object`",
+        "why": "Isso: sobrecargas se escolhem pelos tipos declarados, e o conjunto declara `Object`."
+      },
+      {
+        "text": "Porque o `equals(Book)` não é público",
+        "why": "Ele foi declarado `public`."
+      },
+      {
+        "text": "Porque `a` e `b` têm títulos diferentes",
+        "why": "Os títulos eram iguais, e a regra comparava ISBNs de qualquer modo."
+      }
+    ]
+  },
+  "ex-pxzhydpt": {
+    "prompt": "O que `a.equals(asObject)` imprimiu com o primeiro `Book`, onde `asObject` é o `b` guardado numa variável `Object`?",
+    "hint": "O tipo declarado do argumento escolheu o método.",
+    "choices": [
+      {
+        "text": "`a.equals(asObject): true`, já que é o mesmo `b`",
+        "why": "Mesmo objeto, tipo declarado diferente, logo outro método."
+      },
+      {
+        "text": "`a.equals(asObject): false`",
+        "why": "Isso: declarado `Object`, logo `equals(Object)`, logo identidade."
+      },
+      {
+        "text": "Uma `ClassCastException`, já que um `Object` não é um `Book`",
+        "why": "Nada sofreu cast; o método herdado aceitou o `Object`."
+      }
+    ]
+  },
+  "ex-nryxzw1q": {
+    "prompt": "Pôr a anotação `@___` no `equals(Book)` transforma o erro num erro de compilação.",
+    "hint": "Ela pede ao compilador que confirme que um método substitui um de um supertipo.",
+    "blanks": [
+      {
+        "accept": [
+          "Override"
+        ]
+      }
+    ]
+  },
+  "ex-4xc05zx2": {
+    "prompt": "O `Book` corrigido sobrescreve o `equals(Object)` direito, mas alguém apaga o `hashCode` dele. Dois livros com o mesmo ISBN entram num `HashSet`. Qual é o risco?",
+    "hint": "Objetos iguais precisam ter hash codes iguais.",
+    "choices": [
+      {
+        "text": "O conjunto procura o segundo no lugar errado e guarda os dois",
+        "why": "Isso: com hash codes de identidade os dois caem em lugares diferentes e o `equals` nunca é consultado."
+      },
+      {
+        "text": "Nenhum, já que o `equals` agora está certo",
+        "why": "O `HashSet` só chama o `equals` para elementos cujos hash codes levam ao mesmo lugar."
+      },
+      {
+        "text": "O programa não compila sem o `hashCode`",
+        "why": "Toda classe herda um de `Object`; o código compila e se comporta mal."
+      },
+      {
+        "text": "O `HashSet.add` lança exceção porque os hash codes diferem",
+        "why": "Hash codes diferentes são normais; o conjunto só os guarda separados."
+      }
+    ]
+  },
+  "ex-75mrpwqe": {
+    "prompt": "Ligue cada situação ao que decide qual método roda.",
+    "hint": "Sobrecargas são escolhidas pelo compilador; sobrescritas pelo objeto.",
+    "pairs": [
+      {
+        "left": "`show(5)` contra `show(int)` e `show(long)`",
+        "right": "Os tipos declarados dos argumentos"
+      },
+      {
+        "left": "`item.describe()` onde `item` guarda um `Book`",
+        "right": "A classe do objeto"
+      },
+      {
+        "left": "`lend(1, 2)` contra duas sobrecargas igualmente boas",
+        "right": "Nada: não compila"
+      }
+    ],
+    "right_distractors": [
+      "A ordem em que os métodos aparecem no arquivo"
+    ]
+  },
+  "ex-aavvkzzq": {
+    "prompt": "Uma classe `Member` declara `public int compareTo(Member other)` mas esquece o `implements Comparable<Member>`. `members.sort(null)` lança `ClassCastException`. O que aconteceu?",
+    "hint": "Um método com o nome certo não é um contrato assinado.",
+    "choices": [
+      {
+        "text": "O `compareTo` foi sobrecarregado em vez de sobrescrito, como na armadilha do `equals`",
+        "why": "Perto, mas aqui não havia nada para sobrescrever: o `Member` não assinou contrato nenhum."
+      },
+      {
+        "text": "O `sort` faz cast de cada elemento para a interface, e esse cast falha",
+        "why": "Isso: o método existe, mas só o `implements` torna a classe o tipo para o qual o `sort` faz cast."
+      },
+      {
+        "text": "O `compareTo` devolveu um número negativo para sócios iguais",
+        "why": "O cast falhou antes de qualquer comparação rodar."
+      }
+    ]
+  },
+  "ex-fhw09fsd": {
+    "prompt": "Qual hábito desta lição teria pegado tanto o erro `descibe` quanto o engano do `equals(Book)`?",
+    "hint": "Uma anotação.",
+    "choices": [
+      {
+        "text": "Escrever um teste unitário para cada método",
+        "why": "Testes ajudam, mas o teste rápido de `a.equals(b)` passou."
+      },
+      {
+        "text": "Evitar sobrecargas por completo",
+        "why": "Nenhum dos dois erros foi uma sobrecarga proposital."
+      },
+      {
+        "text": "`@Override` em todo método que deve substituir outro",
+        "why": "Isso: nos dois casos o compilador teria dito que o método não sobrescreve nada."
+      }
+    ]
+  }
+}

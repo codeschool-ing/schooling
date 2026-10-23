@@ -1,0 +1,650 @@
+{
+  "ex-x7dgv0tx": {
+    "prompt": "No gRPC, como fica o código do cliente quando ele pede um evento ao boxoffice?",
+    "hint": "Pense na imagem de que o gRPC parte.",
+    "choices": [
+      {
+        "text": "Um `GET` para `/events/1` montado com `http.NewRequest` e um decodificador JSON",
+        "why": "Essa é a imagem REST que esta aula contrasta com o gRPC."
+      },
+      {
+        "text": "Uma consulta SQL mandada direto ao banco do servidor",
+        "why": "O cliente nunca vê o banco; ele chama uma função do serviço."
+      },
+      {
+        "text": "Uma chamada de função: `client.GetEvent(ctx, req)`",
+        "why": "Certo. A conexão, a codificação e o caminho pertencem à biblioteca."
+      },
+      {
+        "text": "Uma mensagem WebSocket com o id dentro",
+        "why": "O gRPC roda sobre chamadas HTTP/2, e o WebSocket aparece na aula 13."
+      }
+    ]
+  },
+  "ex-5ptbmv0x": {
+    "prompt": "Ligue cada linha `rpc` do `seats.proto` ao seu tipo de chamada.",
+    "hint": "Procure a palavra `stream` e de que lado ela está.",
+    "pairs": [
+      {
+        "left": "`rpc GetEvent(GetEventRequest) returns (Event)`",
+        "right": "unária"
+      },
+      {
+        "left": "`rpc Watch(WatchRequest) returns (stream Availability)`",
+        "right": "streaming do servidor"
+      },
+      {
+        "left": "`rpc Scan(stream ScanRequest) returns (ScanSummary)`",
+        "right": "streaming do cliente"
+      }
+    ],
+    "right_distractors": [
+      "bidirecional"
+    ]
+  },
+  "ex-gmzt85xe": {
+    "prompt": "Qual destas vale para um serviço gRPC e não para uma API REST?",
+    "hint": "Três escolhas fazem o gRPC funcionar.",
+    "choices": [
+      {
+        "text": "Responde JSON com um cabeçalho `Content-Type`",
+        "why": "As mensagens gRPC são Protocol Buffers, uma codificação binária."
+      },
+      {
+        "text": "Não existe sem o contrato `.proto`",
+        "why": "Certo. Uma API REST tem uma descrição OpenAPI ou nenhuma; o gRPC gera os dois lados a partir do contrato."
+      },
+      {
+        "text": "O cliente escolhe um caminho e um método para cada requisição que manda",
+        "why": "Isso é REST; um cliente gRPC chama uma função gerada."
+      },
+      {
+        "text": "Roda sobre HTTP/1.1, uma chamada por conexão",
+        "why": "O transporte é HTTP/2, com muitas chamadas numa conexão."
+      }
+    ]
+  },
+  "ex-escmt6x0": {
+    "prompt": "Uma página no navegador de um visitante precisa das contagens de lugares. Por que a porta gRPC do boxoffice não é a resposta para ela?",
+    "hint": "Para quem é o gRPC, segundo a seção?",
+    "choices": [
+      {
+        "text": "A porta 9090 é bloqueada por todo navegador por motivo de segurança",
+        "why": "O número da porta não é o problema; o protocolo é."
+      },
+      {
+        "text": "O gRPC manda só números, e uma página precisa de nomes",
+        "why": "Os nomes estão no contrato; o código gerado devolve os números aos campos."
+      },
+      {
+        "text": "Navegadores não falam gRPC diretamente",
+        "why": "Certo, e a aula 11 volta ao que um navegador precisa."
+      },
+      {
+        "text": "O serviço gRPC lê um banco diferente da API HTTP",
+        "why": "Os dois servidores compartilham um store e um pool."
+      }
+    ]
+  },
+  "ex-sk07gsha": {
+    "prompt": "Qual programa escreve o cliente e o servidor Go a partir do `seats.proto`?",
+    "hint": "O protoc entrega o resultado a plugins.",
+    "choices": [
+      {
+        "text": "O próprio `protoc`",
+        "why": "O protoc lê e entende o arquivo; plugins escrevem o código."
+      },
+      {
+        "text": "`protoc-gen-go`",
+        "why": "Esse plugin escreve os tipos das mensagens."
+      },
+      {
+        "text": "`protoc-gen-go-grpc`",
+        "why": "Certo. O Go precisa de dois plugins, e este é o do serviço."
+      },
+      {
+        "text": "O `go generate`, que lê todo `.proto` do módulo",
+        "why": "A aula roda o protoc diretamente; o `go generate` é assunto de outra aula."
+      }
+    ]
+  },
+  "ex-hpp119y0": {
+    "prompt": "O `protoc` imprime `protoc-gen-go: program not found or is not executable`. Qual é o conserto?",
+    "hint": "Onde os plugins moram?",
+    "choices": [
+      {
+        "text": "Pôr `~/go/bin` no `PATH`",
+        "why": "Certo. A mensagem é sobre o `PATH`, não sobre o protoc."
+      },
+      {
+        "text": "Reinstalar o `protobuf-compiler` com o apt",
+        "why": "O protoc rodou e imprimiu isso; o que ele não achou foi o plugin."
+      },
+      {
+        "text": "Acrescentar `option go_package` ao arquivo `.proto`",
+        "why": "O contrato já tem isso, e a falta dele dá outra mensagem."
+      },
+      {
+        "text": "Rodar `go mod tidy` no módulo antes do protoc",
+        "why": "As dependências do módulo não põem programas no `PATH`."
+      }
+    ]
+  },
+  "ex-9mb67ccd": {
+    "prompt": "Por que uma equipe fixa as versões do protoc e dos dois plugins?",
+    "hint": "O que os arquivos gerados carregam?",
+    "choices": [
+      {
+        "text": "Plugins mais novos recusam sintaxe `.proto` mais antiga",
+        "why": "Nada na aula diz isso; o motivo são os arquivos gerados."
+      },
+      {
+        "text": "O apt remove plugins a cada atualização",
+        "why": "Os plugins vêm do `go install`, não do apt."
+      },
+      {
+        "text": "Os arquivos gerados registram essas versões",
+        "why": "Certo, o mesmo motivo pelo qual a aula 8 fixou o sqlc."
+      },
+      {
+        "text": "Servidores gRPC conferem a versão do plugin ao iniciar",
+        "why": "O servidor não confere nada disso."
+      }
+    ]
+  },
+  "ex-spngzqy2": {
+    "prompt": "O que viaja no fio para identificar um campo de uma mensagem Protocol Buffers?",
+    "hint": "Olhe a saída do `--decode_raw`.",
+    "choices": [
+      {
+        "text": "O nome dele, em UTF-8",
+        "why": "Os nomes `id` e `name` não aparecem nos 25 bytes."
+      },
+      {
+        "text": "A posição dele na mensagem, contada do zero",
+        "why": "Os campos são marcados pelo número, não pela posição."
+      },
+      {
+        "text": "Um hash do nome e do tipo do campo",
+        "why": "Não há hash; os bytes começam pelo número e pelo tipo no fio."
+      },
+      {
+        "text": "O número dele",
+        "why": "Certo. O número é a identidade do campo para sempre."
+      }
+    ]
+  },
+  "ex-xw3sd0pp": {
+    "prompt": "Quantos bytes o evento de jazz ocupou codificado em Protocol Buffers?",
+    "hint": "`wc -c` depois do `--encode`.",
+    "unit": "bytes"
+  },
+  "ex-7b33xeh2": {
+    "prompt": "O `--decode_raw` imprimiu `1: 1`, `2: \"Jazz at the Docks\"`, `3: 120`, `4: 2`. O que ele não conseguiu recuperar sem o `.proto`?",
+    "hint": "Compare com o que o contrato diz.",
+    "choices": [
+      {
+        "text": "Os valores",
+        "why": "Os valores estão todos lá."
+      },
+      {
+        "text": "Os nomes dos campos e o que cada valor significa",
+        "why": "Certo. Só o contrato diz que o 3 é `seats`."
+      },
+      {
+        "text": "A ordem dos campos dentro da mensagem",
+        "why": "Ele os imprimiu em ordem, de 1 a 4."
+      },
+      {
+        "text": "Onde termina a string do campo 2",
+        "why": "O tamanho, 17, está nos bytes antes das letras."
+      }
+    ]
+  },
+  "ex-30a7017b": {
+    "prompt": "Por que o `seats.proto` declara `package boxoffice.v1` e não só `boxoffice`?",
+    "hint": "O que acontece com um contrato que um dia precisa quebrar?",
+    "choices": [
+      {
+        "text": "O protoc recusa nome de pacote sem versão",
+        "why": "É uma convenção que a aula escolheu, não uma regra do protoc."
+      },
+      {
+        "text": "Uma mudança que quebra vira `v2`, ao lado",
+        "why": "Certo, e a seção 09 volta a isso."
+      },
+      {
+        "text": "O `v1` escolhe HTTP/1.1 como transporte",
+        "why": "O transporte é HTTP/2 seja qual for o pacote."
+      },
+      {
+        "text": "Pacotes Go precisam de um dígito no nome",
+        "why": "O pacote Go é `seatspb`, vindo do `go_package`."
+      }
+    ]
+  },
+  "ex-jmf6ga1r": {
+    "prompt": "Por que o código deve ler uma mensagem por `e.GetId()` em vez de `e.Id`?",
+    "hint": "O que acontece com uma mensagem nil?",
+    "choices": [
+      {
+        "text": "`e.Id` não é exportado",
+        "why": "Ele é exportado; o getter ainda é a leitura mais segura."
+      },
+      {
+        "text": "O getter decodifica o campo sob demanda, no primeiro uso",
+        "why": "A mensagem é decodificada quando chega; o getter só a lê."
+      },
+      {
+        "text": "Numa mensagem nil ele devolve zero, sem pânico",
+        "why": "Certo. Ler um campo por um ponteiro nil entra em pânico."
+      },
+      {
+        "text": "O `go vet` recusa qualquer leitura direta de campo",
+        "why": "O vet aponta a cópia da struct, não a leitura de um campo."
+      }
+    ]
+  },
+  "ex-5v8cs0hg": {
+    "prompt": "Um `rpc` novo é acrescentado ao `seats.proto` e o código é gerado de novo. Por que o boxoffice ainda compila antes de alguém escrever o método novo?",
+    "hint": "O que o `seatsServer` embute?",
+    "choices": [
+      {
+        "text": "O protoc pula métodos que o servidor não implementou",
+        "why": "O protoc não sabe nada do código do servidor."
+      },
+      {
+        "text": "O `UnimplementedSeatsServer` embutido o fornece, respondendo `Unimplemented`",
+        "why": "Certo. É por isso que o `mustEmbedUnimplementedSeatsServer` obriga a embutir."
+      },
+      {
+        "text": "Interfaces Go ignoram métodos acrescentados depois de o tipo ser escrito",
+        "why": "Uma interface confere todo método a cada build."
+      },
+      {
+        "text": "O `RegisterSeatsServer` registra só os métodos que encontra",
+        "why": "O registro recebe um `SeatsServer`, que tem de ter todos os métodos."
+      }
+    ]
+  },
+  "ex-gy92m9za": {
+    "prompt": "Os arquivos gerados começam com `Code generated ... DO NOT ___.`, então são mudados editando o `.proto` e rodando o protoc de novo.",
+    "hint": "A mesma linha que o sqlc escreve.",
+    "blanks": [
+      {
+        "accept": [
+          "EDIT"
+        ]
+      }
+    ]
+  },
+  "ex-eavcn95d": {
+    "prompt": "Quantas linhas de Go o protoc escreveu em `internal/seatspb`, no total?",
+    "hint": "A última linha do `wc -l`.",
+    "unit": "linhas"
+  },
+  "ex-pz9eeh3d": {
+    "prompt": "Em que o `toStatus` transforma o `ErrNotFound`?",
+    "hint": "Um erro gRPC é um status.",
+    "choices": [
+      {
+        "text": "Um HTTP 404",
+        "why": "O gRPC tem códigos próprios; o status HTTP não é a resposta."
+      },
+      {
+        "text": "`codes.Internal`, registrado no log sem detalhe para o cliente",
+        "why": "Esse é o caso padrão, para erros que ninguém previu."
+      },
+      {
+        "text": "`codes.NotFound`, com a mensagem do store",
+        "why": "Certo, e o cliente imprimiu `NotFound event 9: no such event`."
+      },
+      {
+        "text": "Um evento nil e um erro nil",
+        "why": "Isso esconderia a falha do cliente."
+      }
+    ]
+  },
+  "ex-cqsmk17z": {
+    "prompt": "O `./seats get 4294967297` falhou antes de chegar ao servidor. O que o antigo `strconv.Atoi` mais `int32(n)` teria feito?",
+    "hint": "2³² + 1, mantido em 32 bits.",
+    "choices": [
+      {
+        "text": "Pedido ao servidor o evento 1",
+        "why": "Certo, o estouro que a aula 8 encontrou, agora do lado do cliente do contrato."
+      },
+      {
+        "text": "Entrado em pânico por estouro",
+        "why": "Uma conversão de inteiros em Go dá a volta em silêncio; não entra em pânico."
+      },
+      {
+        "text": "Recebido `InvalidArgument` das verificações do servidor",
+        "why": "O servidor teria recebido um 1 de aparência válida."
+      },
+      {
+        "text": "Mandado o número inteiro de 64 bits, que o servidor recusa para o campo `int32`",
+        "why": "O campo é `int32`; a conversão acontece antes de qualquer envio."
+      }
+    ]
+  },
+  "ex-y6y28e1r": {
+    "prompt": "Por que `seatsStore` é uma interface à parte em vez de acrescentar `HasTicket` ao `Store` da aula 6?",
+    "hint": "Quem precisa do `HasTicket`?",
+    "choices": [
+      {
+        "text": "O Go proíbe interface com cinco métodos",
+        "why": "Não existe esse limite."
+      },
+      {
+        "text": "O `HasTicket` precisa de um pool próprio",
+        "why": "Ele usa o mesmo pool por meio de `s.q()`."
+      },
+      {
+        "text": "O sqlc gera uma interface separada por consulta",
+        "why": "O sqlc gera métodos de `Queries`; a interface é escolha do boxoffice."
+      },
+      {
+        "text": "Para só o lado gRPC precisar do método",
+        "why": "Certo, o hábito da interface pequena de novo."
+      }
+    ]
+  },
+  "ex-tbtj6t2k": {
+    "prompt": "Uma venda é feita por HTTP na porta 8080, e depois o `./seats get 1` pergunta na porta 9090. Por que a resposta gRPC já a conta?",
+    "hint": "Olhe o que o `main` passa aos dois servidores.",
+    "choices": [
+      {
+        "text": "O servidor gRPC assina os eventos do servidor HTTP",
+        "why": "Não existe esse vínculo; eles leem as mesmas linhas."
+      },
+      {
+        "text": "O HTTP/2 junta as duas portas numa só conexão entre os processos",
+        "why": "Cada porta é um listener separado."
+      },
+      {
+        "text": "Eles compartilham um store",
+        "why": "Certo. Uma venda é uma linha, e os dois a leem."
+      },
+      {
+        "text": "O `cmd/seats` repete a compra pelo gRPC",
+        "why": "O cliente só lê."
+      }
+    ]
+  },
+  "ex-v7n57s08": {
+    "prompt": "O que aconteceria sem o `select` em `ctx.Done()` no `Watch`?",
+    "hint": "Quem para o laço quando o cliente sai?",
+    "choices": [
+      {
+        "text": "O cliente receberia mensagens duplicadas",
+        "why": "O `last` já evita duplicatas."
+      },
+      {
+        "text": "Nada; o `Send` para o método sozinho",
+        "why": "O `Send` só roda quando o número muda, então um evento parado nunca o chamaria."
+      },
+      {
+        "text": "O laço continuaria lendo o banco para um cliente que saiu, vazando uma goroutine por observador",
+        "why": "Certo, o vazamento de que tratou a aula 6 do `go-concurrency`."
+      },
+      {
+        "text": "O ticker pararia",
+        "why": "O ticker continua até o `Stop`."
+      }
+    ]
+  },
+  "ex-a89yvch3": {
+    "prompt": "Ponha o watch da seção 07 em ordem.",
+    "hint": "A primeira linha vem antes de qualquer venda.",
+    "items": [
+      "`event 1: 120 available`",
+      "uma compra de 2 por HTTP",
+      "`event 1: 118 available`",
+      "uma compra de 3 por HTTP",
+      "`event 1: 115 available`",
+      "`error: DeadlineExceeded`"
+    ]
+  },
+  "ex-rx2z0bhy": {
+    "prompt": "No `Scan`, como o servidor sabe que a porta mandou o último ingresso?",
+    "hint": "Um valor devolvido pelo `Recv`.",
+    "choices": [
+      {
+        "text": "O cliente manda um id de ingresso 0 como marcador",
+        "why": "Nenhum marcador é mandado; fechar o fluxo é o sinal."
+      },
+      {
+        "text": "O prazo do contexto vence",
+        "why": "Isso encerraria a chamada com `DeadlineExceeded`, não com um resumo."
+      },
+      {
+        "text": "O `Recv` devolve `io.EOF`",
+        "why": "Certo, e então ele responde uma vez com `SendAndClose`."
+      },
+      {
+        "text": "Passa um timer de meio segundo sem mensagem",
+        "why": "O ticker de meio segundo pertence ao `Watch`."
+      }
+    ]
+  },
+  "ex-s9968wp1": {
+    "prompt": "O `./seats scan 1 2 3 99 2` rodou depois de vendidos os ingressos 1 e 2. Quantos foram aceitos?",
+    "hint": "O ingresso 2 foi mostrado duas vezes.",
+    "unit": "ingressos"
+  },
+  "ex-jqhbrxbh": {
+    "prompt": "Um cliente chama com prazo de dois segundos, e o servidor chama o PostgreSQL com o contexto que recebeu. O que limita a consulta ao banco?",
+    "hint": "O prazo viaja com a chamada.",
+    "choices": [
+      {
+        "text": "O limite de quem chamou, que viaja com a chamada",
+        "why": "Certo. Em cada salto, todos param quando quem chamou para de esperar."
+      },
+      {
+        "text": "Nada; prazos ficam no cliente",
+        "why": "O gRPC manda o prazo ao servidor num cabeçalho."
+      },
+      {
+        "text": "O `MaxConnIdleTime` do pool",
+        "why": "Isso fecha conexões ociosas; não limita uma consulta."
+      },
+      {
+        "text": "O `WriteTimeout` do servidor HTTP",
+        "why": "Isso pertence ao servidor HTTP na 8080, não ao gRPC."
+      }
+    ]
+  },
+  "ex-7czd1jkk": {
+    "prompt": "Por que o log do servidor teve linhas do `GetEvent` e nenhuma do watch ou do scan?",
+    "hint": "O que o `grpc.UnaryInterceptor` envolve?",
+    "choices": [
+      {
+        "text": "Fluxos nunca são registrados pelo gRPC",
+        "why": "São, com um stream interceptor."
+      },
+      {
+        "text": "Só chamadas unárias; fluxos precisam do `grpc.StreamInterceptor`",
+        "why": "Certo, outro tipo com outra assinatura."
+      },
+      {
+        "text": "O watch e o scan falharam antes de chegar ao servidor",
+        "why": "Os dois chegaram; o watch imprimiu três números."
+      },
+      {
+        "text": "`log.Printf` não é seguro dentro de um fluxo",
+        "why": "É seguro; nada o chamou para fluxos."
+      }
+    ]
+  },
+  "ex-40e3xjqj": {
+    "prompt": "Ligue cada ideia da aula 2 à sua forma no gRPC.",
+    "hint": "O gRPC não tem `http.Handler`.",
+    "pairs": [
+      {
+        "left": "um middleware em volta de toda requisição",
+        "right": "um interceptor"
+      },
+      {
+        "left": "um cabeçalho com um token",
+        "right": "metadata"
+      },
+      {
+        "left": "401 quando falta o token",
+        "right": "`codes.Unauthenticated`"
+      },
+      {
+        "left": "o `fail` da aula 3",
+        "right": "`toStatus`"
+      }
+    ],
+    "right_distractors": [
+      "`codes.Unimplemented`"
+    ]
+  },
+  "ex-xsg3hgv8": {
+    "prompt": "Uma chamada unária a um serviço na mesma rede não tem prazo nenhum, e o servidor para de responder. O que acontece com quem chamou?",
+    "hint": "O que encerra uma chamada?",
+    "choices": [
+      {
+        "text": "Recebe `DeadlineExceeded` depois do padrão de cinco segundos do gRPC",
+        "why": "Cinco segundos foi escolha do próprio `cmd/seats`, não um padrão do gRPC."
+      },
+      {
+        "text": "Espera para sempre",
+        "why": "Certo. Escolha prazos de propósito, como teto."
+      },
+      {
+        "text": "O HTTP/2 fecha a chamada depois de um minuto ociosa",
+        "why": "A aula não cita esse limite."
+      },
+      {
+        "text": "Recebe `Unavailable` na hora",
+        "why": "O servidor foi alcançado; só não responde."
+      }
+    ]
+  },
+  "ex-63w1839a": {
+    "prompt": "Um leitor antigo decodifica um evento que traz o campo novo 5. O que acontece?",
+    "hint": "`5: \"Main Hall\"`.",
+    "choices": [
+      {
+        "text": "A decodificação falha com erro de campo desconhecido",
+        "why": "Nada falhou; o contrato antigo leu todo campo que conhecia."
+      },
+      {
+        "text": "O campo 5 sobrescreve o campo 4",
+        "why": "Números identificam campos; nada é sobrescrito."
+      },
+      {
+        "text": "Descarta a mensagem inteira",
+        "why": "A saída mostra todo campo que ele conhecia."
+      },
+      {
+        "text": "O campo 5 fica como desconhecido",
+        "why": "Certo. Em Go ele vai para o `unknownFields`."
+      }
+    ]
+  },
+  "ex-9z6ajg53": {
+    "prompt": "Um campo é removido de uma mensagem. O que o contrato deve guardar, e por quê?",
+    "hint": "Mensagens antigas em filas e logs.",
+    "choices": [
+      {
+        "text": "`reserved` com o número e o nome antigo, para ninguém reusar o número",
+        "why": "Certo. Os números são o contrato."
+      },
+      {
+        "text": "Nada; remover encerra o assunto",
+        "why": "O número ficaria livre para um significado novo no qual mensagens antigas seriam lidas."
+      },
+      {
+        "text": "Um comentário, para o Go gerado manter o campo",
+        "why": "Um comentário não protege nada; o `reserved` é conferido pelo protoc."
+      },
+      {
+        "text": "O campo, renomeado para `deprecated_` mais o nome antigo e com número novo",
+        "why": "Um número novo é outro campo para todo leitor."
+      }
+    ]
+  },
+  "ex-tyesf51n": {
+    "prompt": "Quais destas mudanças mantêm funcionando quem chama com o contrato antigo? Marque todas as que se aplicam.",
+    "hint": "A tabela de regras.",
+    "choices": [
+      {
+        "text": "Acrescentar um campo com número novo",
+        "why": "Certo. Leitores antigos o guardam como desconhecido."
+      },
+      {
+        "text": "Mudar o número de um campo",
+        "why": "Para todo leitor existente é outro campo."
+      },
+      {
+        "text": "Renomear um campo e manter o número",
+        "why": "Certo, no fio; os nomes no Go mudam."
+      },
+      {
+        "text": "Remover um `rpc`",
+        "why": "Clientes antigos recebem `Unimplemented`."
+      },
+      {
+        "text": "Remover um campo e reservar o número",
+        "why": "Certo. O `reserved` impede o reuso."
+      }
+    ]
+  },
+  "ex-46ddsz75": {
+    "prompt": "Um campo precisa mudar de `int32` para `string`. O que a aula recomenda?",
+    "hint": "Algumas mudanças não têm como ser compatíveis.",
+    "choices": [
+      {
+        "text": "Mudar o tipo no lugar; o Protocol Buffers converte",
+        "why": "A maioria dos pares de tipos não compartilha codificação, e o resultado é lixo."
+      },
+      {
+        "text": "Publicar `boxoffice.v2` ao lado do `v1` e atender os dois",
+        "why": "Certo, até o último cliente antigo sumir."
+      },
+      {
+        "text": "Reusar o número antigo para a string, depois de um aviso de versão",
+        "why": "Reusar um número é justamente o que a tabela proíbe."
+      },
+      {
+        "text": "Mudar o serviço para outra porta",
+        "why": "O pacote no caminho da chamada separa as versões, não a porta."
+      }
+    ]
+  },
+  "ex-16ws3e2p": {
+    "prompt": "Ponha em ordem o trabalho de acrescentar um método ao serviço `Seats`.",
+    "hint": "O contrato vem primeiro.",
+    "items": [
+      "Acrescentar o `rpc` e as mensagens dele ao `seats.proto`",
+      "Rodar o `protoc` com os dois plugins",
+      "Escrever o método em `seatsServer`",
+      "Chamá-lo de um cliente pelo `SeatsClient` gerado"
+    ]
+  },
+  "ex-qsykttgy": {
+    "prompt": "Um painel chama o `Watch` sem prazo e a rede dele cai sem aviso. Do lado do boxoffice, o que encerra o laço do `Watch`?",
+    "hint": "Qual ramo do `select` importa, e quando ele dispara?",
+    "choices": [
+      {
+        "text": "O ticker, depois do próximo meio segundo",
+        "why": "O ticker só mantém o laço rodando."
+      },
+      {
+        "text": "O `io.EOF` do `Recv`",
+        "why": "O `Watch` nunca chama `Recv`; isso é o `Scan`."
+      },
+      {
+        "text": "O contexto do fluxo, quando o gRPC vê que a conexão acabou, ou um `Send` que falha",
+        "why": "Certo. Sem prazo, o fim da conexão é o que cancela o contexto."
+      },
+      {
+        "text": "O `toStatus`, quando traduz o erro",
+        "why": "O `toStatus` só traduz um erro que outra coisa produziu."
+      }
+    ]
+  }
+}

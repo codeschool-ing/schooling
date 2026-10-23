@@ -1,0 +1,527 @@
+[
+  {
+    "id": "ex-k6eknxb2",
+    "version": 1,
+    "section": "four-levels",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each modifier to the widest set of classes that may use a member declared with it.",
+    "hint": "The table in section 02.",
+    "pairs": [
+      {
+        "left": "`private`",
+        "right": "The class itself"
+      },
+      {
+        "left": "no modifier",
+        "right": "Every class in the same package"
+      },
+      {
+        "left": "`protected`",
+        "right": "The package, plus subclasses elsewhere"
+      },
+      {
+        "left": "`public`",
+        "right": "Every class, in any package"
+      }
+    ],
+    "right_distractors": [
+      "Only the `main` method of the class"
+    ]
+  },
+  {
+    "id": "ex-g9txwnrv",
+    "version": 1,
+    "section": "four-levels",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Main`, outside `lib`, read `s.code`, where `code` is declared with no modifier. What did `javac` say?",
+    "hint": "No modifier is not the same as public.",
+    "choices": [
+      {
+        "text": "Nothing: a field with no modifier is public by default",
+        "correct": false,
+        "why": "That is the belief the error corrects; with no modifier, only the package sees it."
+      },
+      {
+        "text": "That `code` is not public in `Shelf` and cannot be accessed from outside the package",
+        "correct": true,
+        "why": "Right: no modifier means package-private."
+      },
+      {
+        "text": "That `code` has private access in `Shelf`",
+        "correct": false,
+        "why": "That message was for `count`, which is declared `private`."
+      },
+      {
+        "text": "That `code` has protected access in `Shelf`",
+        "correct": false,
+        "why": "That message was for `capacity`."
+      }
+    ]
+  },
+  {
+    "id": "ex-zd77jr56",
+    "version": 1,
+    "section": "four-levels",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`lib/Inside.java`, in the same package as `Shelf`, read `s.code`, `s.capacity` and `s.count`. Which failed?",
+    "hint": "One modifier excludes even the neighbours.",
+    "choices": [
+      {
+        "text": "`s.count` alone",
+        "correct": true,
+        "why": "Right: private means this class and nothing else, not even a class in the same package."
+      },
+      {
+        "text": "`s.capacity` and `s.count`",
+        "correct": false,
+        "why": "`protected` includes the package, so `capacity` passed."
+      },
+      {
+        "text": "None of them: inside the package every member is visible",
+        "correct": false,
+        "why": "`count` failed with `count has private access in Shelf`."
+      },
+      {
+        "text": "All three, because `Inside` is a different class",
+        "correct": false,
+        "why": "Being a different class matters only for `private`; the package is shared."
+      }
+    ]
+  },
+  {
+    "id": "ex-btgqg8k1",
+    "version": 1,
+    "section": "four-levels",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Shelf` has a private field `count` and a public method `count()`. What may `Main`, in another package, do with the count?",
+    "hint": "A field and a method can share a name.",
+    "choices": [
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "`s.count()` compiled and printed 2."
+      },
+      {
+        "text": "Read it and change it, through the field",
+        "correct": false,
+        "why": "The field is private; that is the third error in section 02."
+      },
+      {
+        "text": "Read it, through `count()`",
+        "correct": true,
+        "why": "Right: the method is public and only returns the value."
+      }
+    ]
+  },
+  {
+    "id": "ex-dxww6c31",
+    "version": 1,
+    "section": "four-levels",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A member declared with no modifier at all is called ___-private.",
+    "hint": "Who may use it?",
+    "blanks": [
+      {
+        "accept": [
+          "package"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2zvr44c7",
+    "version": 1,
+    "section": "why-private",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the section say secrecy is the wrong reason to make a field private?",
+    "hint": "Who can read the source?",
+    "choices": [
+      {
+        "text": "Because private fields are copied into every class file anyway",
+        "correct": false,
+        "why": "A private field is in its own class's file only; that is not the argument."
+      },
+      {
+        "text": "Anyone with the source sees the name; the point is that nobody else changes it",
+        "correct": true,
+        "why": "Right: private protects a promise about the data, not the data's existence."
+      },
+      {
+        "text": "Because `javap -p` prints private fields and so reveals them",
+        "correct": false,
+        "why": "`javap -p` does print them, but the argument is about change, not about seeing."
+      }
+    ]
+  },
+  {
+    "id": "ex-vhhdq86j",
+    "version": 1,
+    "section": "why-private",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `OpenMain`, after `loan.renewals = 7;`, `renew()` returned `true`. What did the program print for the count right after?",
+    "hint": "The check compares with 2 and nothing else.",
+    "value": 8,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-bsy0rxxb",
+    "version": 1,
+    "section": "why-private",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`renew()` refuses when `renewals == 2`. After the count was set to 7 from outside, why does it never refuse again?",
+    "hint": "Follow the count: 7, 8, 9...",
+    "choices": [
+      {
+        "text": "The assignment reset the method, which now starts from zero",
+        "correct": false,
+        "why": "Methods hold no state of their own; the count is the field, and it is at 8."
+      },
+      {
+        "text": "The count passed 2 without ever equalling it, and the check is `==`",
+        "correct": true,
+        "why": "Right: from 7 it only grows, so `renewals == 2` is never true again."
+      },
+      {
+        "text": "An `int` field wraps round after 2 when it is set from another class",
+        "correct": false,
+        "why": "Nothing wraps; 7 became 8, as printed."
+      },
+      {
+        "text": "`OpenLoan` is package-private, so its methods are skipped from outside",
+        "correct": false,
+        "why": "`renew()` ran and returned `true`; package-private hides nothing in the same directory."
+      }
+    ]
+  },
+  {
+    "id": "ex-8re3jqqm",
+    "version": 1,
+    "section": "why-private",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `private int renewals;`, where can the code that changes the count be?",
+    "hint": "`Cheat` tried from outside.",
+    "choices": [
+      {
+        "text": "Anywhere in the same package",
+        "correct": false,
+        "why": "That would be package-private; private excludes the package."
+      },
+      {
+        "text": "In `Loan` and in any class that calls `renewals()`",
+        "correct": false,
+        "why": "`renewals()` only reads the count; nothing outside `Loan` can write it."
+      },
+      {
+        "text": "In code written inside `Loan` itself",
+        "correct": true,
+        "why": "Right: so to check the rule you read one class."
+      }
+    ]
+  },
+  {
+    "id": "ex-45mfgtep",
+    "version": 1,
+    "section": "why-private",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate argues: \"Make every field public now; we can make them private later if it matters.\" What does the section answer?",
+    "hint": "Which mistake is cheap to fix later?",
+    "choices": [
+      {
+        "text": "Public fields are slower, so it matters at once",
+        "correct": false,
+        "why": "Speed is not the section's argument, and access does not change it."
+      },
+      {
+        "text": "Too loose is hard to tighten later, because other code comes to depend on it; too strict costs one compile error",
+        "correct": true,
+        "why": "Right: start from private and open what a real use needs."
+      },
+      {
+        "text": "Agreed, since the compiler will list every place to fix when you change it",
+        "correct": false,
+        "why": "It will, and some of those places may be code you do not own and cannot change."
+      }
+    ]
+  },
+  {
+    "id": "ex-h4fw6646",
+    "version": 1,
+    "section": "one-public-class",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A file `Catalogue.java` declares `public class Catalogue` and `public class Entry`. What happens?",
+    "hint": "Where would the compiler look for `Entry`?",
+    "choices": [
+      {
+        "text": "It compiles, and `Entry` is usable only inside the file",
+        "correct": false,
+        "why": "It does not compile; and non-public would mean the package, not the file."
+      },
+      {
+        "text": "It compiles into one class file holding both classes",
+        "correct": false,
+        "why": "There is always one `.class` per class, and here there is an error first."
+      },
+      {
+        "text": "An error: `Entry` is public and should be in `Entry.java`",
+        "correct": true,
+        "why": "Right: a public class must be in a file named after it."
+      }
+    ]
+  },
+  {
+    "id": "ex-pt9darfp",
+    "version": 1,
+    "section": "one-public-class",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `Entry` made non-public, `javac Catalogue.java` succeeded. How many `.class` files did it write?",
+    "hint": "`ls` listed them.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-p7mj118z",
+    "version": 1,
+    "section": "one-public-class",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Entry` without `public` sits in `Catalogue.java`. Which classes may use it?",
+    "hint": "It is package-private now.",
+    "choices": [
+      {
+        "text": "Only `Catalogue`, because it is in `Catalogue`'s file",
+        "correct": false,
+        "why": "Access follows the package, not the file."
+      },
+      {
+        "text": "Any class in the same package, in any of its files",
+        "correct": true,
+        "why": "Right: no modifier means package-private, whichever file it is in."
+      },
+      {
+        "text": "Any class anywhere, since `Catalogue` is public",
+        "correct": false,
+        "why": "A public class does not make its neighbours public."
+      }
+    ]
+  },
+  {
+    "id": "ex-h9abeqba",
+    "version": 1,
+    "section": "one-public-class",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must a public class live in a file named after it?",
+    "hint": "Think about another class, somewhere else, that mentions `Entry`.",
+    "choices": [
+      {
+        "text": "So that the JVM can load `.java` files directly",
+        "correct": false,
+        "why": "The JVM loads only class files; the rule is for the compiler."
+      },
+      {
+        "text": "Because a file name is the class's identity at run time",
+        "correct": false,
+        "why": "At run time the class file carries the name; the source file's name is gone."
+      },
+      {
+        "text": "So the compiler can find its source by its name",
+        "correct": true,
+        "why": "Right: a reference to `Entry` from anywhere sends the compiler to `Entry.java`."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ag4vav0",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the four access levels from the most closed to the most open.",
+    "hint": "Each one reaches everything the one before it reaches.",
+    "items": [
+      "`private`",
+      "no modifier",
+      "`protected`",
+      "`public`"
+    ]
+  },
+  {
+    "id": "ex-fx8pf2j4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A class `Member` has a field `fines` that must never go below zero. Which design lets one class keep that promise?",
+    "hint": "Which code can change the field in each design?",
+    "choices": [
+      {
+        "text": "`public double fines;` and a comment saying it must not be negative",
+        "correct": false,
+        "why": "A comment binds nobody; any class can assign `-5`."
+      },
+      {
+        "text": "`private double fines;`, changed only by methods that check it",
+        "correct": true,
+        "why": "Right: then every change passes through code in `Member`, like `renew()` in `Loan`."
+      },
+      {
+        "text": "`protected double fines;`, so that only subclasses change it",
+        "correct": false,
+        "why": "Protected still includes the whole package, and any subclass anywhere."
+      },
+      {
+        "text": "`double fines;` with no modifier, so that other packages cannot reach it",
+        "correct": false,
+        "why": "Every class in the package can still assign it, which is most of the program."
+      }
+    ]
+  },
+  {
+    "id": "ex-dmfvg8xm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`javac` says `count has private access in Shelf`. What is the right first move?",
+    "hint": "The class's author closed it on purpose.",
+    "choices": [
+      {
+        "text": "Change `count` to `public` in `Shelf`",
+        "correct": false,
+        "why": "That removes the protection the class relied on; look for the intended way in first."
+      },
+      {
+        "text": "Look for a public method that does what you need, such as `count()`",
+        "correct": true,
+        "why": "Right: a private field is usually paired with methods that offer the safe operations."
+      },
+      {
+        "text": "Move your class into `Shelf`'s package",
+        "correct": false,
+        "why": "Package-mates are refused too; `Inside` was."
+      },
+      {
+        "text": "Compile with `-g`, which relaxes access checks",
+        "correct": false,
+        "why": "`-g` adds debugging names and changes no rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-446a4nbc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Catalogue.java` holds `public class Catalogue` and a non-public `class Entry`. A class in another package writes `new Entry()`. What happens?",
+    "hint": "Package-private applies to classes as well as to members.",
+    "choices": [
+      {
+        "text": "It works, because `Entry` sits in a public class's file",
+        "correct": false,
+        "why": "Sharing a file shares nothing about access."
+      },
+      {
+        "text": "A compile error: the class is invisible to that code",
+        "correct": true,
+        "why": "Right: a non-public class is package-private, like a member with no modifier."
+      },
+      {
+        "text": "It compiles, and fails at run time when `Entry.class` is not found",
+        "correct": false,
+        "why": "The compiler refuses it first; it never reaches the JVM."
+      }
+    ]
+  },
+  {
+    "id": "ex-5aj46x41",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these does the lesson's advice, start from private, lead you to? Choose all that apply.",
+    "hint": "Open only what another class has a reason to use.",
+    "choices": [
+      {
+        "text": "Fields `private`, read through methods where others need the value",
+        "correct": true,
+        "why": "Yes: like `count` and `count()`, `renewals` and `renewals()`."
+      },
+      {
+        "text": "Every method `public`, so the class is easy to use",
+        "correct": false,
+        "why": "Methods too are as closed as they can be; open each one when it has a caller outside."
+      },
+      {
+        "text": "A helper method that only its own class calls stays `private`",
+        "correct": true,
+        "why": "Yes: nobody outside needs it, so nobody outside gets it."
+      },
+      {
+        "text": "Fields `protected`, in case a subclass needs them one day",
+        "correct": false,
+        "why": "\"In case\" is not a reason; a subclass that needs one can be given a method then."
+      }
+    ]
+  },
+  {
+    "id": "ex-23x2qeed",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which modifier did `Shelf` use for its method `add()`, so that `Main` in another package could call it?",
+    "hint": "`Main` is outside `lib`.",
+    "choices": [
+      {
+        "text": "`public`",
+        "correct": true,
+        "why": "Right: only public reaches a class in another package that is not a subclass."
+      },
+      {
+        "text": "None, since methods are public unless marked otherwise",
+        "correct": false,
+        "why": "With no modifier a method is package-private, like a field."
+      },
+      {
+        "text": "`protected`, which includes callers in other packages",
+        "correct": false,
+        "why": "Protected adds subclasses only, and `Main` is not one."
+      }
+    ]
+  }
+]

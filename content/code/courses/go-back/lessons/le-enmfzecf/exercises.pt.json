@@ -1,0 +1,627 @@
+{
+  "ex-21ferbwm": {
+    "prompt": "`go version` imprime `go version go1.22.4 linux/amd64` na sua máquina. O que isso diz antes de a aula 1 seguir adiante?",
+    "hint": "Compare com a versão em que as transcrições foram gravadas.",
+    "choices": [
+      {
+        "text": "Uma versão mais antiga que a 1.27.1 do curso está primeiro no `PATH`",
+        "why": "Certo. Ou a instalação nova não aconteceu, ou outro `go` é encontrado antes; `command -v go` mostra o arquivo que roda."
+      },
+      {
+        "text": "O Go não está instalado e o shell chutou uma versão",
+        "why": "Um `go` ausente dá `command not found`, saída 127. Algo respondeu aqui."
+      },
+      {
+        "text": "A máquina não é Linux",
+        "why": "`linux/amd64` diz que é."
+      },
+      {
+        "text": "Tudo certo: qualquer versão 1.x se comporta igual para um servidor web",
+        "why": "O roteamento da 1.22 desta mesma aula não existia antes da 1.22, e aulas seguintes usam novidades ainda mais recentes."
+      }
+    ]
+  },
+  "ex-5me9pfmr": {
+    "prompt": "Por que este curso recomenda instalar o Go no seu próprio computador em vez de usar o Go Playground?",
+    "hint": "O que o curso digita além de código Go?",
+    "choices": [
+      {
+        "text": "O Playground roda um Go mais antigo",
+        "why": "A versão não é o problema que a seção aponta."
+      },
+      {
+        "text": "O Playground cobra por programas que abrem portas",
+        "why": "Não custa nada; ele só não tem terminal."
+      },
+      {
+        "text": "Um servidor precisa de um terminal ao lado para mandar requisições, e o Playground não tem nenhum",
+        "why": "Certo. Ele mostra a saída de um programa; não há onde digitar `curl`."
+      },
+      {
+        "text": "O Go 1.27 exige uma máquina virtual",
+        "why": "A máquina virtual é um dos três caminhos, não uma exigência."
+      }
+    ]
+  },
+  "ex-k7pp00sm": {
+    "prompt": "No `hello`, o handler é registrado com o padrão `\"/\"`. Quais requisições ele responde?",
+    "hint": "Um padrão que termina em barra reivindica uma subárvore.",
+    "choices": [
+      {
+        "text": "Só `GET /`",
+        "why": "Isso é `GET /{$}`. Um `/` sem método casa tudo abaixo dele, com qualquer método."
+      },
+      {
+        "text": "Só o caminho `/`, com qualquer método",
+        "why": "A barra final faz dele uma subárvore, o site inteiro."
+      },
+      {
+        "text": "Todo caminho, com todo método",
+        "why": "Certo. `/events/7` e `POST /anything` também chegaram a ele."
+      },
+      {
+        "text": "Todo `GET`, e outros métodos recebem 405",
+        "why": "Não há método no padrão, então nenhum método é recusado."
+      }
+    ]
+  },
+  "ex-5r4baxyb": {
+    "prompt": "O que o `ListenAndServe` devolve quando o servidor está funcionando?",
+    "hint": "Por que ele está envolvido em `log.Fatal`?",
+    "choices": [
+      {
+        "text": "Nada até falhar",
+        "why": "Certo. Ele só retorna com um erro, e o `log.Fatal` o imprime e encerra."
+      },
+      {
+        "text": "Um valor `*Server` que o programa guarda e usa depois para pará-lo",
+        "why": "Ele devolve um erro e mais nada; o `*Server` é algo que você mesmo monta na seção 08."
+      },
+      {
+        "text": "nil, logo depois de a porta abrir",
+        "why": "Aí o `log.Fatal(nil)` encerraria o programa no instante em que começou."
+      },
+      {
+        "text": "Uma contagem corrente das requisições que já serviu",
+        "why": "Não existe essa contagem na assinatura: `func ListenAndServe(addr string, handler Handler) error`."
+      }
+    ]
+  },
+  "ex-t8a3hqh8": {
+    "prompt": "`go run .` imprime `listen tcp 127.0.0.1:8080: bind: address already in use`. Qual a causa mais provável num notebook?",
+    "hint": "Quem mais ia querer a porta 8080?",
+    "choices": [
+      {
+        "text": "Uma regra de firewall no notebook está bloqueando toda conexão à porta 8080",
+        "why": "Um firewall filtra tráfego; ele não faz o `bind` falhar com essa mensagem."
+      },
+      {
+        "text": "O handler entrou em pânico",
+        "why": "Nenhuma requisição tinha chegado; o programa falhou ao abrir a porta."
+      },
+      {
+        "text": "Uma cópia anterior dele, ainda rodando",
+        "why": "Certo. Um programa por porta; pare o antigo com Ctrl+C, ou encontre-o com `ss -ltnp`."
+      },
+      {
+        "text": "`localhost` não é permitido como endereço",
+        "why": "É permitido, e a mensagem mostra que virou `127.0.0.1`."
+      }
+    ]
+  },
+  "ex-vjzdgbxe": {
+    "prompt": "Por que todo programa depois da seção 03 monta o próprio mux em vez de passar `nil`?",
+    "hint": "O que mais pode se registrar no `DefaultServeMux`?",
+    "choices": [
+      {
+        "text": "`nil` é mais lento",
+        "why": "Velocidade não é o argumento; `nil` só quer dizer o mux compartilhado do pacote."
+      },
+      {
+        "text": "O `DefaultServeMux` ignora os padrões da 1.22",
+        "why": "Ele é um `ServeMux` como qualquer outro e os entende."
+      },
+      {
+        "text": "Pacotes importados acrescentam rotas nele, como faz o `net/http/pprof`",
+        "why": "Certo. Com um mux próprio, as rotas que o servidor responde são as que o `main` registrou."
+      },
+      {
+        "text": "Passar `nil` como handler faz o servidor escutar em todas as interfaces de rede da máquina",
+        "why": "Quem decide isso é o endereço; o argumento do handler não tem nada a ver."
+      }
+    ]
+  },
+  "ex-699zth8c": {
+    "prompt": "O que faz de um tipo um `http.Handler`?",
+    "hint": "Interfaces em Go são satisfeitas implicitamente.",
+    "choices": [
+      {
+        "text": "Embutir `http.Handler` na struct",
+        "why": "Isso daria a ela um handler nil para chamar. O que precisa é de um método próprio."
+      },
+      {
+        "text": "Registrá-lo com `http.Handle`, que confere o tipo e o transforma em handler",
+        "why": "`Handle` só aceita o que já é handler; ele não cria um."
+      },
+      {
+        "text": "Um método `ServeHTTP(http.ResponseWriter, *http.Request)`",
+        "why": "Certo. O conjunto de métodos é a exigência inteira; nada é declarado."
+      },
+      {
+        "text": "Um comentário `implements http.Handler` acima do tipo",
+        "why": "Go não tem `implements`, nem no código nem em comentários."
+      }
+    ]
+  },
+  "ex-8766q1ws": {
+    "prompt": "`mux.Handle(\"/hello\", http.HandlerFunc(hello))` e `mux.HandleFunc(\"/hi\", hello)`: qual a diferença entre os dois registros?",
+    "hint": "`HandlerFunc` é um tipo.",
+    "choices": [
+      {
+        "text": "O primeiro roda `hello` numa goroutine nova e o segundo não",
+        "why": "O servidor inicia uma goroutine por requisição nos dois casos."
+      },
+      {
+        "text": "Só o caminho; o `HandleFunc` faz a mesma conversão por você",
+        "why": "Certo. Os dois acabam registrando um `http.HandlerFunc` envolvendo `hello`."
+      },
+      {
+        "text": "O segundo copia `hello` para cada requisição",
+        "why": "Um valor de função não é copiado por requisição; ele é chamado."
+      },
+      {
+        "text": "O primeiro não compila: uma função não é handler",
+        "why": "A conversão para `http.HandlerFunc` dá a ela o método; compilou e respondeu."
+      }
+    ]
+  },
+  "ex-4a9vwsy2": {
+    "prompt": "As três chamadas `curl` a `/visits` vieram uma depois da outra e a contagem saiu certa. Por que `visits` ainda trava um mutex?",
+    "hint": "Como o `net/http` roda as requisições?",
+    "choices": [
+      {
+        "text": "Para os números saírem no terminal na ordem em que as requisições foram enviadas",
+        "why": "Ordem no terminal não é o que um lock protege; ele protege `v.n` de dois escritores."
+      },
+      {
+        "text": "Porque `ServeHTTP` com receptor ponteiro não compila sem um",
+        "why": "Compila sem ele, e tem corrida sem ele."
+      },
+      {
+        "text": "Requisições rodam ao mesmo tempo, uma goroutine cada",
+        "why": "Certo. Correto só quando as requisições se revezam não é correto."
+      },
+      {
+        "text": "`fmt.Fprintf` num `ResponseWriter` não é seguro sem lock",
+        "why": "Cada requisição tem o próprio writer; o compartilhado é o contador."
+      }
+    ]
+  },
+  "ex-x41r4kpf": {
+    "prompt": "Um `*ServeMux` pode ser registrado dentro de outro mux, porque tem um método chamado ___.",
+    "hint": "O único método de `http.Handler`.",
+    "blanks": [
+      {
+        "accept": [
+          "ServeHTTP"
+        ]
+      }
+    ]
+  },
+  "ex-tmb3rhp6": {
+    "prompt": "No padrão `GET /events/{id}`, o que `r.PathValue(\"id\")` devolve para uma requisição a `/events/42`?",
+    "hint": "Olhe o tipo que `PathValue` devolve.",
+    "choices": [
+      {
+        "text": "O int `42`",
+        "why": "O mux não sabe nada de números; converter é trabalho do handler."
+      },
+      {
+        "text": "A string `\"42\"`",
+        "why": "Certo. `strconv.Atoi` vira número, e o erro dele é o 400 do handler."
+      },
+      {
+        "text": "O caminho inteiro, `/events/42`",
+        "why": "Isso é `r.URL.Path`; `PathValue` devolve o segmento que o curinga pegou."
+      },
+      {
+        "text": "Uma string vazia até chamar `r.ParseForm`",
+        "why": "Os valores de caminho são preenchidos pelo mux antes de o handler rodar; formulário é outro assunto."
+      }
+    ]
+  },
+  "ex-f7v6xpd4": {
+    "prompt": "`curl -X DELETE localhost:8080/events` recebe `405 Method Not Allowed` com `Allow: GET, HEAD, POST`. Quem escreveu esse cabeçalho `Allow`?",
+    "hint": "Ninguém em `routes/main.go` menciona `HEAD`.",
+    "choices": [
+      {
+        "text": "O `curl`, que adivinhou",
+        "why": "Ele imprimiu o que o servidor mandou."
+      },
+      {
+        "text": "O mux, a partir dos métodos registrados para aquele caminho",
+        "why": "Certo, com `HEAD` acrescentado porque um padrão `GET` também o responde."
+      },
+      {
+        "text": "O handler de `GET /events`",
+        "why": "Nenhum handler rodou: o método não casou nenhum padrão daquele caminho."
+      },
+      {
+        "text": "A pilha de rede do sistema operacional",
+        "why": "Códigos de status HTTP estão acima de tudo que o kernel conhece."
+      }
+    ]
+  },
+  "ex-2qnqrd8j": {
+    "prompt": "Ligue cada padrão a uma requisição que ele responde e os outros não.",
+    "hint": "Um segmento, o resto do caminho, ou exatamente o fim.",
+    "pairs": [
+      {
+        "left": "`GET /{$}`",
+        "right": "`GET /`"
+      },
+      {
+        "left": "`GET /events/{id}`",
+        "right": "`GET /events/42`"
+      },
+      {
+        "left": "`GET /files/{path...}`",
+        "right": "`GET /files/posters/2026/jazz.png`"
+      },
+      {
+        "left": "`/static/`",
+        "right": "`DELETE /static/site.css`"
+      }
+    ],
+    "right_distractors": [
+      "`GET /events/42/tickets`"
+    ]
+  },
+  "ex-ew4x1vbd": {
+    "prompt": "Por que `GET /about` responde 404 no `routes`, quando `GET /` o teria respondido?",
+    "hint": "O que o `{$}` acrescenta?",
+    "choices": [
+      {
+        "text": "`/about` é reservado pelo `net/http`",
+        "why": "Nenhum caminho é reservado; nenhum padrão daqui casou com ele."
+      },
+      {
+        "text": "Os padrões são casados na ordem de registro, e `/about` chegou tarde demais",
+        "why": "A ordem de registro não tem papel no `ServeMux`."
+      },
+      {
+        "text": "Curingas precisam de pelo menos um segmento, e `/about` não tem nenhum",
+        "why": "Não há curinga em `GET /{$}`, e `/about` tem um segmento."
+      },
+      {
+        "text": "`{$}` faz o padrão da home casar `/` e parar ali",
+        "why": "Certo. Sem ele, um padrão que termina em barra é uma subárvore e pega `/about`."
+      }
+    ]
+  },
+  "ex-h17xyk4z": {
+    "prompt": "Um cliente que não segue redirecionamentos chama `GET /static` no `routes` e reporta erro. O que ele recebeu?",
+    "hint": "`/static` não está debaixo de `/static/`.",
+    "choices": [
+      {
+        "text": "Um 404, porque `/static` não está registrado",
+        "why": "O mux sabe que existe uma subárvore a uma barra de distância e avisa."
+      },
+      {
+        "text": "Um 405, porque o padrão não tem método",
+        "why": "Um padrão sem método aceita qualquer método."
+      },
+      {
+        "text": "Um 200 com corpo vazio do handler de `/static/`",
+        "why": "O handler não rodou; o mux respondeu antes dele."
+      },
+      {
+        "text": "Um 307 com `Location: /static/`",
+        "why": "Certo. Útil para um diretório, surpreendente para um cliente de API."
+      }
+    ]
+  },
+  "ex-8bw64g4h": {
+    "prompt": "`GET /events/{id}` e `GET /events/latest` estão registrados. Qual responde `/events/latest`?",
+    "hint": "Qual casa menos requisições?",
+    "choices": [
+      {
+        "text": "O que foi registrado primeiro",
+        "why": "Assim funcionam muitos roteadores, mas não o `ServeMux`."
+      },
+      {
+        "text": "O que foi registrado por último",
+        "why": "A ordem não tem papel."
+      },
+      {
+        "text": "Nenhum: o programa entra em pânico ao iniciar",
+        "why": "Eles se sobrepõem, mas um é mais específico, então não há conflito."
+      },
+      {
+        "text": "O literal, onde quer que esteja no arquivo",
+        "why": "Certo. Ele casa um subconjunto estrito do que o curinga casa, então é mais específico."
+      }
+    ]
+  },
+  "ex-ptcjwbpt": {
+    "prompt": "Por que o `conflict` entra em pânico em vez de escolher um handler para `/events/42`?",
+    "hint": "Leia a terceira e a quarta linhas da mensagem.",
+    "choices": [
+      {
+        "text": "Nenhum é mais específico que o outro",
+        "why": "Certo. O mux recusa no registro em vez de adivinhar na hora da requisição."
+      },
+      {
+        "text": "Um curinga não pode ser o primeiro segmento de um padrão",
+        "why": "`/{kind}/42` é permitido sozinho; o problema é o par."
+      },
+      {
+        "text": "Os dois padrões nomeiam o método `GET`, e um método só pode aparecer uma vez por mux",
+        "why": "Muitos padrões compartilham método. Sobreposição sem vencedor é o problema."
+      },
+      {
+        "text": "`42` é número e padrões só guardam texto",
+        "why": "`42` num padrão é texto literal, e isso não tem problema."
+      }
+    ]
+  },
+  "ex-8cqpshvg": {
+    "prompt": "Um serviço antigo passa a ter um `go.mod` dizendo `go 1.21`, e toda rota com método começa a responder 404. O que aconteceu?",
+    "hint": "A linha `go` decide qual comportamento do mux você recebe.",
+    "choices": [
+      {
+        "text": "O mux antigo lê `GET /events` como um caminho literal, que nenhuma requisição tem",
+        "why": "Certo. Abaixo de `go 1.22`, ou com `GODEBUG=httpmuxgo121=1`, métodos e curingas são só texto."
+      },
+      {
+        "text": "O Go 1.21 não compila `HandleFunc`",
+        "why": "`HandleFunc` é tão antigo quanto o pacote; compilou."
+      },
+      {
+        "text": "O servidor agora recusa todo método exceto `GET`",
+        "why": "Método recusado seria 405, não 404, e o `GET` falha também."
+      },
+      {
+        "text": "Os padrões entram em conflito na 1.21 e são descartados em silêncio",
+        "why": "Nada é descartado; eles são registrados como caminhos literais."
+      }
+    ]
+  },
+  "ex-148qg534": {
+    "prompt": "Um handler escreve o corpo primeiro e depois chama `w.Header().Set(\"X-Seats\", \"40\")`. O que o cliente recebe?",
+    "hint": "A ordem de uma resposta HTTP.",
+    "choices": [
+      {
+        "text": "O corpo, e `X-Seats: 40` no final dele",
+        "why": "Cabeçalhos não viajam depois do corpo numa resposta comum."
+      },
+      {
+        "text": "Um 500, porque o cabeçalho chegou tarde",
+        "why": "O 200 já tinha ido; nada pode substituí-lo."
+      },
+      {
+        "text": "Um erro de compilação",
+        "why": "Nada sobre ordem de chamadas é verificado pelo compilador."
+      },
+      {
+        "text": "O corpo, e nenhum cabeçalho `X-Seats`",
+        "why": "Certo. A primeira escrita mandou os cabeçalhos; mudanças posteriores no mapa não vão a lugar nenhum."
+      }
+    ]
+  },
+  "ex-15f0d9q3": {
+    "prompt": "O servidor imprime `http: superfluous response.WriteHeader call from main.main.func2 (main.go:20)`. O que isso quer dizer?",
+    "hint": "Qual chamada é supérflua, e por quê?",
+    "choices": [
+      {
+        "text": "A linha 20 definiu um status depois de um ter saído",
+        "why": "Certo. Uma escrita já tinha mandado 200 sozinha; o segundo status não foi a lugar nenhum."
+      },
+      {
+        "text": "A linha 20 é código inalcançável",
+        "why": "Ela rodou; por isso foi reportada."
+      },
+      {
+        "text": "O handler definiu um código de status que não existe",
+        "why": "202 existe. Ele chegou tarde."
+      },
+      {
+        "text": "Dois handlers diferentes foram registrados para o mesmo caminho e os dois rodaram",
+        "why": "Isso seria um pânico de conflito no início, não uma linha por requisição."
+      }
+    ]
+  },
+  "ex-3qesyndj": {
+    "prompt": "`/sniffed` não define `Content-Type` e escreve `<h1>boxoffice</h1>`. Por que a resposta diz `text/html`?",
+    "hint": "`http.DetectContentType`.",
+    "choices": [
+      {
+        "text": "`fmt.Fprint` marca a saída como HTML",
+        "why": "`fmt` não sabe nada de tipos de conteúdo."
+      },
+      {
+        "text": "Ele chutou pelos primeiros bytes",
+        "why": "Certo. Sem tipo definido, ele fareja até 512 bytes; uma API JSON define o seu."
+      },
+      {
+        "text": "O `curl` acrescentou o cabeçalho do lado dele ao ver os sinais de menor e maior",
+        "why": "`-i` imprime o que o servidor mandou."
+      },
+      {
+        "text": "Todo `GET` tem HTML como padrão",
+        "why": "O `hello` respondeu um `GET` com `text/plain`; os bytes decidiram."
+      }
+    ]
+  },
+  "ex-w7acwpnn": {
+    "prompt": "Qual é a linha logo depois de `http.Error(w, \"no such event\", http.StatusNotFound)` num handler, e por quê?",
+    "hint": "`http.Error` é uma chamada de função comum.",
+    "choices": [
+      {
+        "text": "`w.WriteHeader(404)`, para garantir que o status seja enviado",
+        "why": "O `http.Error` já mandou; uma segunda chamada é a linha supérflua."
+      },
+      {
+        "text": "`panic`, para o servidor registrar a falha",
+        "why": "Pânico é para o impossível, não para um evento que falta."
+      },
+      {
+        "text": "`return`, porque o `http.Error` não interrompe o handler",
+        "why": "Certo. Sem ele o código abaixo roda e escreve depois do erro."
+      },
+      {
+        "text": "Nada; o `http.Error` retorna do handler por conta própria",
+        "why": "Nenhuma função consegue retornar pelo chamador em Go."
+      }
+    ]
+  },
+  "ex-0pex6t93": {
+    "prompt": "Quais timeouts tem um servidor iniciado com `http.ListenAndServe(addr, h)`?",
+    "hint": "O valor zero de cada campo.",
+    "choices": [
+      {
+        "text": "Nenhum",
+        "why": "Certo. Zero quer dizer sem prazo, para ler, escrever e ficar ocioso."
+      },
+      {
+        "text": "Trinta segundos para tudo",
+        "why": "Esse padrão não existe no `net/http`."
+      },
+      {
+        "text": "O que o sistema operacional define para o TCP",
+        "why": "O keepalive do kernel não é prazo de requisição HTTP; a conexão segurada ficou aberta."
+      },
+      {
+        "text": "Um timeout de leitura, mas nenhum de escrita",
+        "why": "A conexão segurada à mão provou que também não havia prazo de leitura."
+      }
+    ]
+  },
+  "ex-g8973kty": {
+    "prompt": "Qual campo defende um servidor de um cliente que manda metade de uma requisição e espera?",
+    "hint": "A conexão segurada nesta seção nunca terminou os cabeçalhos.",
+    "choices": [
+      {
+        "text": "`IdleTimeout`",
+        "why": "Ocioso é o intervalo entre requisições numa conexão mantida viva."
+      },
+      {
+        "text": "`WriteTimeout`",
+        "why": "O relógio dele começa depois de lidos os cabeçalhos, o que nunca aconteceu."
+      },
+      {
+        "text": "`MaxHeaderBytes`",
+        "why": "Esse limita tamanho, e um cliente lento manda muito pouco."
+      },
+      {
+        "text": "`ReadHeaderTimeout`",
+        "why": "Certo. Dois segundos, e o servidor fechou a conexão."
+      }
+    ]
+  },
+  "ex-ssqkvpwg": {
+    "prompt": "Contra o `patient`, depois de quantos segundos o servidor fechou a requisição pela metade?",
+    "hint": "A última linha da captura.",
+    "unit": "s"
+  },
+  "ex-8p617841": {
+    "prompt": "Um handler transmite um relatório que leva 25 segundos, num servidor com `WriteTimeout: 10 * time.Second`. O que acontece?",
+    "hint": "Quando o relógio de escrita começa, e o que acontece quando ele acaba?",
+    "choices": [
+      {
+        "text": "O servidor espera, porque o handler ainda está escrevendo",
+        "why": "Prazo é prazo; escrever não o estende."
+      },
+      {
+        "text": "O cliente recebe um 408 Request Timeout",
+        "why": "O status saiu muito antes; a conexão é simplesmente cortada."
+      },
+      {
+        "text": "O contexto do handler é cancelado aos dez segundos e ele retorna limpo",
+        "why": "`WriteTimeout` é prazo na conexão, e o handler não é avisado."
+      },
+      {
+        "text": "A resposta é cortada uns dez segundos depois de lidos os cabeçalhos",
+        "why": "Certo. Ponha acima da resposta mais lenta, ou suspenda para aquela rota, como faz a aula 13."
+      }
+    ]
+  },
+  "ex-nwft5hzz": {
+    "prompt": "No boxoffice, `/events/nine` responde 400 e `/events/9` responde 404. Por que dois status diferentes?",
+    "hint": "O que estava errado em cada requisição?",
+    "choices": [
+      {
+        "text": "`nine` não é id; `9` não é de ninguém",
+        "why": "Certo. Um é requisição malformada, o outro é recurso ausente."
+      },
+      {
+        "text": "O mux recusa palavras num curinga",
+        "why": "O mux aceitou `nine` sem problema; o `strconv.Atoi` é que recusou."
+      },
+      {
+        "text": "404 é para números acima de 2",
+        "why": "É para ids que o store não tem, seja qual for o tamanho."
+      },
+      {
+        "text": "O 400 é produzido pelo `curl` antes de enviar, e o 404 pelo servidor",
+        "why": "Os dois vieram do `getEvent`."
+      }
+    ]
+  },
+  "ex-exz80wvm": {
+    "prompt": "Por que `memStore.List` ordena os eventos antes de devolvê-los?",
+    "hint": "De onde eles vêm?",
+    "choices": [
+      {
+        "text": "Ordenar deixa o lock mais curto",
+        "why": "Se algo, deixa mais longo."
+      },
+      {
+        "text": "Um mapa não tem ordem própria",
+        "why": "Certo. Uma API que lista os mesmos dados em duas ordens é um bug esperando para ser reportado."
+      },
+      {
+        "text": "`fmt.Fprintf` precisa de entrada ordenada",
+        "why": "Ele imprime o que receber."
+      },
+      {
+        "text": "O mux espera que os ids que ele serve cheguem em ordem crescente",
+        "why": "O mux nunca vê o store."
+      }
+    ]
+  },
+  "ex-e1q1vanx": {
+    "prompt": "Ponha em ordem o que acontece com uma requisição ao boxoffice, da conexão até os bytes que o cliente lê.",
+    "hint": "O mux é um handler que chama outro handler.",
+    "items": [
+      "O servidor aceita a conexão e lê os cabeçalhos dentro do `ReadHeaderTimeout`",
+      "O servidor chama o `ServeHTTP` do mux numa goroutine para esta requisição",
+      "O mux escolhe o padrão mais específico e preenche `{id}`",
+      "O `getEvent` lê `PathValue(\"id\")` e consulta o store",
+      "A primeira escrita manda o status 200 e os cabeçalhos, depois o corpo"
+    ],
+    "trap": "O status sai com a primeira escrita, não quando o handler retorna."
+  },
+  "ex-0h3rfh8s": {
+    "prompt": "Uma rota nova `GET /events/{id}/seats` é acrescentada ao boxoffice. O que `curl -X POST localhost:8080/events/1/seats` recebe?",
+    "hint": "O caminho existe; e o método?",
+    "choices": [
+      {
+        "text": "404 page not found",
+        "why": "O caminho casa um padrão registrado, então o mux sabe que ele existe."
+      },
+      {
+        "text": "O handler de `GET` roda, porque `POST` cai nele",
+        "why": "Métodos não caem uns nos outros; só o `HEAD` pega carona no `GET`."
+      },
+      {
+        "text": "405 com `Allow: GET, HEAD`",
+        "why": "Certo. O caminho é conhecido e só `GET`, com seu `HEAD`, está registrado para ele."
+      },
+      {
+        "text": "Um pânico, porque o padrão novo conflita com `GET /events/{id}`",
+        "why": "Eles não se sobrepõem: um segmento depois de `/events/` contra dois."
+      }
+    ]
+  }
+}

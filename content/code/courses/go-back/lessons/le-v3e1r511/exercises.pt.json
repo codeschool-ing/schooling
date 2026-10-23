@@ -1,0 +1,587 @@
+{
+  "ex-x1x3agys": {
+    "prompt": "Uma equipe acrescenta um campo no meio da linha de acesso em texto da aula 2. O que acontece com os scripts que leem essas linhas?",
+    "hint": "Eles dividem por espaço.",
+    "choices": [
+      {
+        "text": "Param com um erro de interpretação na primeira linha que encontram",
+        "why": "Dividir por espaço sempre funciona; só põe a palavra errada em cada posição."
+      },
+      {
+        "text": "Nada muda, já que o status continua sendo a quarta palavra",
+        "why": "Um campo no meio empurra o status para outra posição."
+      },
+      {
+        "text": "Leem a coluna errada, e nada avisa",
+        "why": "Certo. Posição não é nome; o campo depois do novo se desloca."
+      },
+      {
+        "text": "O pacote log recusa linhas mais longas que antes",
+        "why": "O pacote log escreve o que receber."
+      }
+    ]
+  },
+  "ex-yf8k0kbg": {
+    "prompt": "Por que a mensagem de uma linha estruturada deve ser uma constante como `\"request\"`, com as partes variáveis em campos?",
+    "hint": "Pense em contar e agrupar.",
+    "choices": [
+      {
+        "text": "Linhas com o mesmo texto são contadas e agrupadas",
+        "why": "Certo. Uma mensagem diferente em cada linha não agrupa nada."
+      },
+      {
+        "text": "O JSON não guarda uma mensagem montada com `Printf`",
+        "why": "Ele guarda qualquer string; o problema é que cada uma é diferente."
+      },
+      {
+        "text": "Uma mensagem constante ocupa menos disco que uma formatada",
+        "why": "Tamanho não é o argumento da aula."
+      },
+      {
+        "text": "Níveis só funcionam quando a mensagem nunca muda",
+        "why": "Níveis são um campo à parte e funcionam com qualquer mensagem."
+      }
+    ]
+  },
+  "ex-z6hmwemz": {
+    "prompt": "Ligue cada ideia do log estruturado ao que ela dá a um operador.",
+    "hint": "Três ideias da seção 02.",
+    "pairs": [
+      {
+        "left": "nível",
+        "right": "descartar ou filtrar linhas pelo quanto importam"
+      },
+      {
+        "left": "um id de requisição em toda linha",
+        "right": "achar juntas todas as linhas de uma requisição"
+      },
+      {
+        "left": "campos tipados",
+        "right": "consultas como todo 5xx num caminho"
+      }
+    ],
+    "right_distractors": [
+      "deixar o arquivo menor que o texto puro"
+    ]
+  },
+  "ex-7436z5g5": {
+    "prompt": "No `logdemo`, a linha `Debug` nunca apareceu. Por quê?",
+    "hint": "Olhe as opções do handler.",
+    "choices": [
+      {
+        "text": "`Debug` só é impresso quando o programa roda sob `go test`",
+        "why": "O slog não olha como o programa foi iniciado."
+      },
+      {
+        "text": "O nível era INFO, então DEBUG foi descartado",
+        "why": "Certo. INFO também é o padrão do slog."
+      },
+      {
+        "text": "O handler JSON não tem como escrever linhas de debug",
+        "why": "Qualquer handler as escreve num nível baixo o bastante."
+      },
+      {
+        "text": "A linha foi para a saída de erro",
+        "why": "Os dois handlers escreviam na saída padrão; a linha foi descartada."
+      }
+    ]
+  },
+  "ex-3fb6aqzb": {
+    "prompt": "`logger.With(\"request_id\", id)` devolve um logger novo. O que muda no que esse logger escreve?",
+    "hint": "A linha de erro do `logdemo`.",
+    "choices": [
+      {
+        "text": "O id aparece como campo em cada uma das suas linhas",
+        "why": "Certo. O campo é dado uma vez e repetido em toda linha."
+      },
+      {
+        "text": "Só a primeira linha traz `request_id`, o resto continua igual",
+        "why": "A linha de erro e qualquer outra depois trazem o campo."
+      },
+      {
+        "text": "Ele troca a mensagem pelo id da requisição",
+        "why": "A mensagem fica; o id é um campo a mais."
+      },
+      {
+        "text": "Ele muda o nível de toda linha para ERROR",
+        "why": "With acrescenta campos; o nível vem da chamada."
+      }
+    ]
+  },
+  "ex-q65evr17": {
+    "prompt": "O endereço `ana@example.com` saiu no log como `a***@example.com`. O que fez isso?",
+    "hint": "Um método num tipo.",
+    "choices": [
+      {
+        "text": "O método `LogValue` do tipo `email`",
+        "why": "Certo. O slog o chama para todo slog.LogValuer, então toda chamada esconde."
+      },
+      {
+        "text": "O handler JSON mascara toda string com `@`",
+        "why": "Ele escreve strings como são; quem escondeu foi o tipo."
+      },
+      {
+        "text": "Quem chamou escreveu a forma mascarada à mão na chamada de log",
+        "why": "A chamada passou `email(\"ana@example.com\")`, o endereço inteiro."
+      },
+      {
+        "text": "Um nível que descarta a parte local dos endereços",
+        "why": "Níveis descartam linhas inteiras, nunca partes de valores."
+      }
+    ]
+  },
+  "ex-anqnr6hr": {
+    "prompt": "O handler do slog que escreve pares `key=value` para um terminal é o ___Handler.",
+    "hint": "O outro é o JSONHandler.",
+    "blanks": [
+      {
+        "accept": [
+          "Text"
+        ]
+      }
+    ]
+  },
+  "ex-986tcnkp": {
+    "prompt": "O que o middleware `requestID` do boxoffice devolve ao cliente?",
+    "hint": "Olhe a resposta do `curl -si`.",
+    "choices": [
+      {
+        "text": "Um cookie com o id da requisição",
+        "why": "Nenhum cookie é definido; um cabeçalho, sim."
+      },
+      {
+        "text": "A linha de log inteira da requisição, no corpo",
+        "why": "O corpo é a resposta do handler; o log fica no servidor."
+      },
+      {
+        "text": "Nada; o id vive só no log",
+        "why": "A captura mostra `X-Request-Id` na resposta."
+      },
+      {
+        "text": "O id, num cabeçalho `X-Request-ID`",
+        "why": "Certo. Um cliente que relata um problema o cita."
+      }
+    ]
+  },
+  "ex-an9bh3w5": {
+    "prompt": "Por que o `requestID` precisa vir antes do `logRequests` na cadeia?",
+    "hint": "De onde o `logRequests` tira o logger?",
+    "choices": [
+      {
+        "text": "A cadeia recusa dois middlewares que definem cabeçalhos",
+        "why": "Qualquer número de middlewares define cabeçalhos."
+      },
+      {
+        "text": "O id tem de ser gerado depois de o status ser conhecido",
+        "why": "Ele é criado antes do handler rodar, para estar em toda linha."
+      },
+      {
+        "text": "O middleware de log tira o logger do contexto, preenchido um passo antes",
+        "why": "Certo. Fora dele, logger(ctx) cai no padrão sem o id."
+      },
+      {
+        "text": "Senão o CORS rejeita a requisição",
+        "why": "O CORS não olha o id da requisição."
+      }
+    ]
+  },
+  "ex-2d57zx9p": {
+    "prompt": "Em que nível o novo `logRequests` do boxoffice escreve uma requisição que respondeu 409?",
+    "hint": "A regra é sobre 500 para cima.",
+    "choices": [
+      {
+        "text": "ERROR, já que 409 é uma recusa",
+        "why": "Só 500 para cima é ERROR; uma recusa pelas regras é INFO."
+      },
+      {
+        "text": "INFO",
+        "why": "Certo. A captura mostra a linha do 409 em INFO."
+      },
+      {
+        "text": "WARN, o nível entre INFO e ERROR",
+        "why": "O middleware usa só INFO e ERROR."
+      },
+      {
+        "text": "DEBUG, para as recusas sumirem por padrão",
+        "why": "Toda requisição é registrada em INFO ou acima."
+      }
+    ]
+  },
+  "ex-5n7vfps8": {
+    "prompt": "Depois do `slog.SetDefault`, o `log.Printf` do `fail` sai como JSON. O que essa linha ainda não tem?",
+    "hint": "Compare com uma linha de requisição.",
+    "choices": [
+      {
+        "text": "Um carimbo de tempo",
+        "why": "O handler padrão acrescenta `time` a toda linha."
+      },
+      {
+        "text": "Um nível",
+        "why": "Ela sai em INFO."
+      },
+      {
+        "text": "Campos, e o id da requisição",
+        "why": "Certo. O texto inteiro é a mensagem; trocar a chamada por logger(ctx) acrescenta os dois."
+      },
+      {
+        "text": "JSON válido: a ponte escreve texto puro",
+        "why": "A captura mostra essas linhas como objetos JSON."
+      }
+    ]
+  },
+  "ex-vv877gzw": {
+    "prompt": "Ponha em ordem o que acontece com uma requisição na nova cadeia do boxoffice.",
+    "hint": "O primeiro middleware nomeado é o mais de fora.",
+    "items": [
+      "`requestID` cria um id e põe no contexto um logger que o carrega",
+      "`logRequests` anota o horário de início e embrulha o writer",
+      "o handler responde a requisição",
+      "`logRequests` escreve uma linha com o status, o tamanho e a duração"
+    ]
+  },
+  "ex-qyx1gbt1": {
+    "prompt": "Uma chamada do zerolog é escrita `logger.Info().Int(\"event_id\", 1)` e mais nada. O que sai no log?",
+    "hint": "Como termina uma linha do zerolog?",
+    "choices": [
+      {
+        "text": "Uma linha só com `event_id`",
+        "why": "Sem Msg a linha nunca é escrita."
+      },
+      {
+        "text": "Um erro de compilação, porque `Msg` é obrigatório",
+        "why": "Compila; a linha se perde em silêncio."
+      },
+      {
+        "text": "Uma linha com mensagem vazia",
+        "why": "O Msg escreve a linha; sem ele não há linha."
+      },
+      {
+        "text": "Nada: sem `.Msg(...)` nenhuma linha sai",
+        "why": "Certo. É o bug clássico do zerolog, e o compilador não o pega."
+      }
+    ]
+  },
+  "ex-wg1c18vt": {
+    "prompt": "No programa do zerolog, a primeira linha `Debug` foi escrita e a segunda não. Por quê?",
+    "hint": "O que aconteceu entre elas?",
+    "choices": [
+      {
+        "text": "O zerolog descarta mensagens repetidas",
+        "why": "As mensagens diferem, e repetição não é a regra."
+      },
+      {
+        "text": "A segunda linha não tinha carimbo de tempo",
+        "why": "As duas vieram do mesmo logger com Timestamp."
+      },
+      {
+        "text": "Linhas de debug são escritas uma vez por processo",
+        "why": "Essa regra não existe; o nível mudou."
+      },
+      {
+        "text": "`SetGlobalLevel(InfoLevel)` foi chamado; antes dele, o zerolog deixa tudo passar",
+        "why": "Certo. O padrão do slog descarta DEBUG; o do zerolog não."
+      }
+    ]
+  },
+  "ex-h5mgk440": {
+    "prompt": "O que o `SugaredLogger` do zap dá que o `Logger` dele não dá?",
+    "hint": "`Infow` e `Infof`.",
+    "choices": [
+      {
+        "text": "Campos tipados como `zap.Int`",
+        "why": "Esses são do Logger estrito."
+      },
+      {
+        "text": "Linhas sem nenhuma alocação",
+        "why": "A API sugared alocou mais bytes por linha."
+      },
+      {
+        "text": "Pares chave-valor soltos e formatos de Printf",
+        "why": "Certo. Conveniência, ao custo de uma alocação a mais."
+      },
+      {
+        "text": "Um formato de texto em vez de JSON",
+        "why": "Os dois escreveram JSON na captura."
+      }
+    ]
+  },
+  "ex-v9tjgbp8": {
+    "prompt": "Por que o programa do zap chama `defer logger.Sync()`?",
+    "hint": "Linhas em buffer.",
+    "choices": [
+      {
+        "text": "Para as linhas em buffer serem descarregadas antes de o programa sair",
+        "why": "Certo. Sem ele, um programa em queda perde as linhas que explicam a queda."
+      },
+      {
+        "text": "Para imprimir o stacktrace nos erros",
+        "why": "A configuração de produção faz isso sozinha."
+      },
+      {
+        "text": "Para voltar da API sugared para a estrita",
+        "why": "O Sync não tem nada a ver com as duas APIs."
+      },
+      {
+        "text": "Para esperar toda goroutine que registrou",
+        "why": "Ele descarrega a saída; não espera goroutines."
+      }
+    ]
+  },
+  "ex-h15yty14": {
+    "prompt": "O que o `zap.NewProduction()` acrescenta a toda linha ERROR, como a captura mostra?",
+    "hint": "Um campo longo.",
+    "choices": [
+      {
+        "text": "Um id de requisição",
+        "why": "O programa acrescentou isso com With; a configuração não."
+      },
+      {
+        "text": "Um código de cor",
+        "why": "A saída é JSON puro."
+      },
+      {
+        "text": "O horário no fuso de São Paulo",
+        "why": "`ts` é segundos desde 1970."
+      },
+      {
+        "text": "Um `stacktrace`",
+        "why": "Certo. Útil uma vez, caro num serviço que registra muitos erros."
+      }
+    ]
+  },
+  "ex-jzjep72s": {
+    "prompt": "Ligue cada logger a um detalhe da saída padrão dele nesta aula.",
+    "hint": "Compare os nomes dos campos.",
+    "pairs": [
+      {
+        "left": "slog JSONHandler",
+        "right": "`msg` e `level` em maiúsculas"
+      },
+      {
+        "left": "zerolog",
+        "right": "`message` e `level` em minúsculas"
+      },
+      {
+        "left": "zap de produção",
+        "right": "`ts` em segundos e um campo `caller`"
+      }
+    ],
+    "right_distractors": [
+      "uma linha de texto sem nomes de campo"
+    ]
+  },
+  "ex-nf4bxqcd": {
+    "prompt": "No benchmark, qual logger escreveu uma linha mais rápido?",
+    "hint": "Cerca de 215 ns.",
+    "choices": [
+      {
+        "text": "slog",
+        "why": "O slog levou de 570 a 670 ns."
+      },
+      {
+        "text": "zerolog",
+        "why": "Certo, com folga."
+      },
+      {
+        "text": "zap",
+        "why": "O zap levou de 450 a 470 ns."
+      },
+      {
+        "text": "zap sugared",
+        "why": "Foi a mais lenta das APIs do zap."
+      }
+    ]
+  },
+  "ex-2jk2p36h": {
+    "prompt": "Quantos bytes por linha o `Logger` estrito do zap alocou no benchmark?",
+    "hint": "Uma alocação.",
+    "unit": "bytes"
+  },
+  "ex-7re45ew3": {
+    "prompt": "O boxoffice atende cada requisição em milissegundos e escreve uma linha de acesso por requisição. O que o benchmark diz sobre trocá-lo para o zerolog?",
+    "hint": "Ponha meio microssegundo ao lado de um milissegundo.",
+    "choices": [
+      {
+        "text": "Vale a pena: o zerolog é três vezes mais rápido que o slog",
+        "why": "Três vezes uma fração de microssegundo é invisível ao lado de uma consulta ao banco."
+      },
+      {
+        "text": "Vale a pena, porque o slog aloca em toda linha",
+        "why": "O slog não alocou nada por linha na captura."
+      },
+      {
+        "text": "Prejudicial, já que o zerolog não escreve JSON",
+        "why": "O zerolog escreveu JSON na captura."
+      },
+      {
+        "text": "O ganho é de centésimos de um por cento de uma requisição",
+        "why": "Certo. As perguntas decisivas estão em outro lugar."
+      }
+    ]
+  },
+  "ex-qy3dzk2e": {
+    "prompt": "Por que estar na biblioteca padrão é a linha decisiva da tabela para o slog?",
+    "hint": "Pense nas bibliotecas de que você depende.",
+    "choices": [
+      {
+        "text": "Código da biblioteca padrão roda mais rápido que módulos",
+        "why": "O zerolog, um módulo, foi o mais rápido."
+      },
+      {
+        "text": "Módulos não podem escrever na saída padrão",
+        "why": "Os três escreveram na saída padrão."
+      },
+      {
+        "text": "O slog é o único com níveis",
+        "why": "Os três têm níveis."
+      },
+      {
+        "text": "Uma biblioteca aceita um `*slog.Logger` e toda aplicação passa o seu",
+        "why": "Certo. É o tipo compartilhado; zerolog ou zap ainda ficam atrás dele como handler."
+      }
+    ]
+  },
+  "ex-z503j7c2": {
+    "prompt": "Quais destas foram medidas no benchmark? Marque todas as que se aplicam.",
+    "hint": "Leia as linhas da saída.",
+    "choices": [
+      {
+        "text": "o slog não alocou nada por linha",
+        "why": "Certo: 0 allocs."
+      },
+      {
+        "text": "o zap sugared alocou 384 bytes por linha",
+        "why": "Certo."
+      },
+      {
+        "text": "o zerolog alocou uma vez por linha",
+        "why": "O zerolog não alocou nada."
+      },
+      {
+        "text": "o `LogAttrs` foi mais lento que o `Info` do slog",
+        "why": "Foi um pouco mais rápido nas duas execuções."
+      }
+    ]
+  },
+  "ex-6t3232gp": {
+    "prompt": "Qual destes cabe numa linha de log do boxoffice?",
+    "hint": "A escolha da aula 2.",
+    "choices": [
+      {
+        "text": "O cabeçalho `Authorization`, para depurar o acesso da equipe",
+        "why": "Ele traz um token secreto; nunca é registrado."
+      },
+      {
+        "text": "O id do ingresso",
+        "why": "Certo. Um id leva ao dado onde ele é gerido."
+      },
+      {
+        "text": "O corpo da requisição, inteiro, de uma compra que falhou",
+        "why": "Um corpo contém o que o cliente mandou, segredos inclusive."
+      },
+      {
+        "text": "O número do cartão do comprador, mascarado à mão",
+        "why": "Dados de pagamento ficam fora do log."
+      }
+    ]
+  },
+  "ex-jcpwx02q": {
+    "prompt": "Por que reduzir dados pessoais no tipo, com `LogValue`, em vez de em cada chamada de log?",
+    "hint": "Quem tem de lembrar?",
+    "choices": [
+      {
+        "text": "O `LogValue` cifra o valor para ser lido depois",
+        "why": "Ele devolve um valor reduzido; nada é cifrado."
+      },
+      {
+        "text": "Toda chamada que registra o tipo recebe a forma reduzida, sem ninguém lembrar",
+        "why": "Certo. Uma regra mantida de memória falha na chamada que esqueceu."
+      },
+      {
+        "text": "A lei exige um método chamado `LogValue`",
+        "why": "A lei fala de dados pessoais, não de métodos Go."
+      },
+      {
+        "text": "Um valor reduzido deixa a linha de log mais rápida",
+        "why": "Velocidade não é o motivo dado."
+      }
+    ]
+  },
+  "ex-vd0d2d5v": {
+    "prompt": "Por que um log cheio de e-mails é um problema sob a LGPD e o GDPR?",
+    "hint": "Um pedido de exclusão.",
+    "choices": [
+      {
+        "text": "Logs não podem conter o caractere `@`",
+        "why": "A regra é sobre dados pessoais, não sobre caracteres."
+      },
+      {
+        "text": "E-mails deixam as linhas JSON inválidas",
+        "why": "Um endereço é uma string comum em JSON."
+      },
+      {
+        "text": "É uma cópia de dados pessoais que ninguém acha quando chega um pedido de exclusão",
+        "why": "Certo. O direito à exclusão alcança toda cópia."
+      },
+      {
+        "text": "As duas leis proíbem registrar qualquer coisa sobre uma requisição",
+        "why": "Elas regulam dados pessoais; ids, status e durações não são problema."
+      }
+    ]
+  },
+  "ex-xm7w2v17": {
+    "prompt": "Um serviço registra todo 404 de cliente como ERROR. O que a aula diz que isso custa?",
+    "hint": "Um log em que tudo é erro.",
+    "choices": [
+      {
+        "text": "Nada, já que um 404 é um erro para o cliente",
+        "why": "O nível é sobre a saúde do servidor, e um 404 do cliente é INFO."
+      },
+      {
+        "text": "Os erros de verdade se afogam entre recusas comuns",
+        "why": "Certo. Um log em que tudo é erro é um log em que nada é."
+      },
+      {
+        "text": "Mais disco, mas as buscas continuam úteis",
+        "why": "As buscas perdem o sentido, não só o disco."
+      },
+      {
+        "text": "O servidor responde 500 em vez de 404",
+        "why": "O nível de uma linha de log não muda a resposta."
+      }
+    ]
+  },
+  "ex-prdq3reh": {
+    "prompt": "Um operador tem o id `2e7276e971b433ac` de uma reclamação de cliente. O que encontra tudo o que o boxoffice escreveu sobre ele?",
+    "hint": "O id é um campo nas linhas daquela requisição.",
+    "choices": [
+      {
+        "text": "Procurar nas linhas de acesso pelo endereço do cliente",
+        "why": "Endereços não são registrados; o id da requisição, sim."
+      },
+      {
+        "text": "Uma busca no campo `request_id`",
+        "why": "Certo. Toda linha escrita pelo logger daquela requisição o traz."
+      },
+      {
+        "text": "Ler o corpo da resposta que o cliente guardou",
+        "why": "O corpo tem a resposta, não as linhas do servidor."
+      },
+      {
+        "text": "Reiniciar o boxoffice em nível DEBUG",
+        "why": "As linhas já escritas trazem o id; nada precisa mudar."
+      }
+    ]
+  },
+  "ex-wgx9rsqd": {
+    "prompt": "Ordene os passos que levaram o boxoffice das linhas da aula 2 aos logs estruturados.",
+    "hint": "O main define o padrão primeiro.",
+    "items": [
+      "o `main` chama `slog.SetDefault` com um logger JSON",
+      "o `requestID` dá a cada requisição um id e um logger que o carrega",
+      "o `logRequests` escreve a linha de acesso como campos por esse logger",
+      "as velhas chamadas `log.Printf` são convertidas uma a uma para `logger(ctx)`"
+    ],
+    "trap": "A conversão das chamadas antigas é o trabalho que sobra, depois da ponte."
+  }
+}

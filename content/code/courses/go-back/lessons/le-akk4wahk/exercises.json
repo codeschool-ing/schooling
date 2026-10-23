@@ -1,0 +1,957 @@
+[
+  {
+    "id": "ex-x7dgv0tx",
+    "version": 1,
+    "section": "what-grpc-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In gRPC, what does the client's code look like when it asks boxoffice for an event?",
+    "hint": "Think of the picture gRPC starts from.",
+    "choices": [
+      {
+        "text": "A `GET` to `/events/1` built with `http.NewRequest` and a JSON decoder",
+        "correct": false,
+        "why": "That is the REST picture this lesson contrasts with gRPC."
+      },
+      {
+        "text": "A SQL query sent straight to the server's database",
+        "correct": false,
+        "why": "The client never sees the database; it calls a function of the service."
+      },
+      {
+        "text": "A function call: `client.GetEvent(ctx, req)`",
+        "correct": true,
+        "why": "Right. The connection, the encoding and the path belong to the library."
+      },
+      {
+        "text": "A WebSocket message with the id inside",
+        "correct": false,
+        "why": "gRPC runs over HTTP/2 calls, and lesson 13 is where WebSocket appears."
+      }
+    ]
+  },
+  {
+    "id": "ex-5ptbmv0x",
+    "version": 1,
+    "section": "what-grpc-is",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `rpc` line of `seats.proto` to its kind of call.",
+    "hint": "Look for the word `stream` and which side it is on.",
+    "pairs": [
+      {
+        "left": "`rpc GetEvent(GetEventRequest) returns (Event)`",
+        "right": "unary"
+      },
+      {
+        "left": "`rpc Watch(WatchRequest) returns (stream Availability)`",
+        "right": "server streaming"
+      },
+      {
+        "left": "`rpc Scan(stream ScanRequest) returns (ScanSummary)`",
+        "right": "client streaming"
+      }
+    ],
+    "right_distractors": [
+      "bidirectional"
+    ]
+  },
+  {
+    "id": "ex-gmzt85xe",
+    "version": 1,
+    "section": "what-grpc-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is true of a gRPC service and not of a REST API?",
+    "hint": "Three choices make gRPC work.",
+    "choices": [
+      {
+        "text": "It answers JSON with a `Content-Type` header",
+        "correct": false,
+        "why": "gRPC messages are Protocol Buffers, a binary encoding."
+      },
+      {
+        "text": "It cannot exist without its `.proto` contract",
+        "correct": true,
+        "why": "Right. A REST API has an OpenAPI description or none; gRPC generates both sides from the contract."
+      },
+      {
+        "text": "Its client chooses a path and a method for every request it sends",
+        "correct": false,
+        "why": "That is REST; a gRPC client calls a generated function."
+      },
+      {
+        "text": "It runs over HTTP/1.1, one call per connection",
+        "correct": false,
+        "why": "The transport is HTTP/2, with many calls on one connection."
+      }
+    ]
+  },
+  {
+    "id": "ex-escmt6x0",
+    "version": 1,
+    "section": "what-grpc-is",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A web page in a visitor's browser needs the seat counts. Why is boxoffice's gRPC port not the answer for it?",
+    "hint": "Who is gRPC for, according to the section?",
+    "choices": [
+      {
+        "text": "Port 9090 is blocked by every browser for security reasons",
+        "correct": false,
+        "why": "The port number is not the problem; the protocol is."
+      },
+      {
+        "text": "gRPC sends only numbers, and a page needs names",
+        "correct": false,
+        "why": "Names are in the contract; generated code turns numbers back into fields."
+      },
+      {
+        "text": "Browsers do not speak gRPC directly",
+        "correct": true,
+        "why": "Right, and lesson 11 comes back to what a browser needs."
+      },
+      {
+        "text": "The gRPC service reads a different database from the HTTP API",
+        "correct": false,
+        "why": "Both servers share one store and one pool."
+      }
+    ]
+  },
+  {
+    "id": "ex-sk07gsha",
+    "version": 1,
+    "section": "installing-protoc",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which program writes the Go client and server from `seats.proto`?",
+    "hint": "protoc hands its result to plugins.",
+    "choices": [
+      {
+        "text": "`protoc` itself",
+        "correct": false,
+        "why": "protoc reads and understands the file; plugins write the code."
+      },
+      {
+        "text": "`protoc-gen-go`",
+        "correct": false,
+        "why": "That plugin writes the message types."
+      },
+      {
+        "text": "`protoc-gen-go-grpc`",
+        "correct": true,
+        "why": "Right. Go needs two plugins, and this is the one for the service."
+      },
+      {
+        "text": "`go generate`, which reads every `.proto` in the module",
+        "correct": false,
+        "why": "The lesson runs protoc directly; `go generate` belongs to another lesson."
+      }
+    ]
+  },
+  {
+    "id": "ex-hpp119y0",
+    "version": 1,
+    "section": "installing-protoc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`protoc` prints `protoc-gen-go: program not found or is not executable`. What is the fix?",
+    "hint": "Where do the plugins live?",
+    "choices": [
+      {
+        "text": "Put `~/go/bin` on `PATH`",
+        "correct": true,
+        "why": "Right. The message is about `PATH`, not about protoc."
+      },
+      {
+        "text": "Reinstall `protobuf-compiler` with apt",
+        "correct": false,
+        "why": "protoc ran and printed this; the plugin is what it did not find."
+      },
+      {
+        "text": "Add `option go_package` to the `.proto` file",
+        "correct": false,
+        "why": "The contract already has it, and its absence gives another message."
+      },
+      {
+        "text": "Run `go mod tidy` in the module before protoc",
+        "correct": false,
+        "why": "The module's requirements do not put programs on `PATH`."
+      }
+    ]
+  },
+  {
+    "id": "ex-9mb67ccd",
+    "version": 1,
+    "section": "installing-protoc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a team pin the versions of protoc and of both plugins?",
+    "hint": "What do the generated files carry?",
+    "choices": [
+      {
+        "text": "Newer plugins refuse older `.proto` syntax",
+        "correct": false,
+        "why": "Nothing in the lesson says so; the reason is the generated files."
+      },
+      {
+        "text": "apt removes plugins at each upgrade",
+        "correct": false,
+        "why": "The plugins come from `go install`, not from apt."
+      },
+      {
+        "text": "The generated files record those versions",
+        "correct": true,
+        "why": "Right, the same reason lesson 8 pinned sqlc."
+      },
+      {
+        "text": "gRPC servers check the plugin version at start",
+        "correct": false,
+        "why": "The server checks nothing of the kind."
+      }
+    ]
+  },
+  {
+    "id": "ex-spngzqy2",
+    "version": 1,
+    "section": "the-contract",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What travels on the wire to identify a field of a Protocol Buffers message?",
+    "hint": "Look at `--decode_raw`'s output.",
+    "choices": [
+      {
+        "text": "Its name, in UTF-8",
+        "correct": false,
+        "why": "The names `id` and `name` appear nowhere in the 25 bytes."
+      },
+      {
+        "text": "Its position in the message, counted from zero",
+        "correct": false,
+        "why": "Fields are tagged by number, not by position."
+      },
+      {
+        "text": "A hash of the field's name and type",
+        "correct": false,
+        "why": "No hash is involved; the bytes start with the number and the wire type."
+      },
+      {
+        "text": "Its number",
+        "correct": true,
+        "why": "Right. The number is the field's identity for ever."
+      }
+    ]
+  },
+  {
+    "id": "ex-xw3sd0pp",
+    "version": 1,
+    "section": "the-contract",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bytes did the jazz event take encoded as Protocol Buffers?",
+    "hint": "`wc -c` after `--encode`.",
+    "value": 25,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-7b33xeh2",
+    "version": 1,
+    "section": "the-contract",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`--decode_raw` printed `1: 1`, `2: \"Jazz at the Docks\"`, `3: 120`, `4: 2`. What could it not recover without the `.proto`?",
+    "hint": "Compare with what the contract says.",
+    "choices": [
+      {
+        "text": "The values",
+        "correct": false,
+        "why": "The values are all there."
+      },
+      {
+        "text": "The field names and what each value means",
+        "correct": true,
+        "why": "Right. Only the contract says that 3 is `seats`."
+      },
+      {
+        "text": "The order of the fields inside the message",
+        "correct": false,
+        "why": "It printed them in order, 1 to 4."
+      },
+      {
+        "text": "Where the string of field 2 ends",
+        "correct": false,
+        "why": "The length, 17, is in the bytes before the letters."
+      }
+    ]
+  },
+  {
+    "id": "ex-30a7017b",
+    "version": 1,
+    "section": "the-contract",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `seats.proto` declare `package boxoffice.v1` and not just `boxoffice`?",
+    "hint": "What happens to a contract that one day must break?",
+    "choices": [
+      {
+        "text": "protoc refuses a package name without a version",
+        "correct": false,
+        "why": "It is a convention the lesson chose, not a rule of protoc."
+      },
+      {
+        "text": "A breaking change becomes `v2`, beside it",
+        "correct": true,
+        "why": "Right, and section 09 comes back to it."
+      },
+      {
+        "text": "The `v1` selects HTTP/1.1 as the transport",
+        "correct": false,
+        "why": "The transport is HTTP/2 whatever the package says."
+      },
+      {
+        "text": "Go packages need a digit in their name",
+        "correct": false,
+        "why": "The Go package is `seatspb`, from `go_package`."
+      }
+    ]
+  },
+  {
+    "id": "ex-jmf6ga1r",
+    "version": 1,
+    "section": "generating",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should code read a message through `e.GetId()` rather than `e.Id`?",
+    "hint": "What happens with a nil message?",
+    "choices": [
+      {
+        "text": "`e.Id` is unexported",
+        "correct": false,
+        "why": "It is exported; the getter is still the safer read."
+      },
+      {
+        "text": "The getter decodes the field lazily, on first use",
+        "correct": false,
+        "why": "The message is decoded when it arrives; the getter only reads it."
+      },
+      {
+        "text": "On a nil message it returns zero, not a panic",
+        "correct": true,
+        "why": "Right. Reading a field through a nil pointer panics."
+      },
+      {
+        "text": "`go vet` refuses any direct read of a field",
+        "correct": false,
+        "why": "vet reports copying the struct, not reading a field."
+      }
+    ]
+  },
+  {
+    "id": "ex-5v8cs0hg",
+    "version": 1,
+    "section": "generating",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new `rpc` is added to `seats.proto` and the code is generated again. Why does boxoffice still build before anybody writes the new method?",
+    "hint": "What does `seatsServer` embed?",
+    "choices": [
+      {
+        "text": "protoc skips methods the server has not implemented",
+        "correct": false,
+        "why": "protoc knows nothing about the server's code."
+      },
+      {
+        "text": "The embedded `UnimplementedSeatsServer` supplies it, answering `Unimplemented`",
+        "correct": true,
+        "why": "Right. That is why `mustEmbedUnimplementedSeatsServer` forces the embedding."
+      },
+      {
+        "text": "Go interfaces ignore methods added after the type was written",
+        "correct": false,
+        "why": "An interface checks every method each time the code is built."
+      },
+      {
+        "text": "`RegisterSeatsServer` registers only the methods it finds",
+        "correct": false,
+        "why": "Registration takes a `SeatsServer`, which must have every method."
+      }
+    ]
+  },
+  {
+    "id": "ex-gy92m9za",
+    "version": 1,
+    "section": "generating",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The generated files start with `Code generated ... DO NOT ___.`, so they are changed by editing the `.proto` and running protoc again.",
+    "hint": "The same line sqlc writes.",
+    "blanks": [
+      {
+        "accept": [
+          "EDIT"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-eavcn95d",
+    "version": 1,
+    "section": "generating",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many lines of Go did protoc write into `internal/seatspb`, in total?",
+    "hint": "The last line of `wc -l`.",
+    "value": 620,
+    "tolerance": 0,
+    "unit": "lines"
+  },
+  {
+    "id": "ex-pz9eeh3d",
+    "version": 1,
+    "section": "unary",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `toStatus` turn `ErrNotFound` into?",
+    "hint": "A gRPC error is a status.",
+    "choices": [
+      {
+        "text": "An HTTP 404",
+        "correct": false,
+        "why": "gRPC has its own codes; the HTTP status is not the answer."
+      },
+      {
+        "text": "`codes.Internal`, logged with no detail for the client",
+        "correct": false,
+        "why": "That is the default case, for errors nobody planned."
+      },
+      {
+        "text": "`codes.NotFound`, with the store's message",
+        "correct": true,
+        "why": "Right, and the client printed `NotFound event 9: no such event`."
+      },
+      {
+        "text": "A nil event and a nil error",
+        "correct": false,
+        "why": "That would hide the failure from the client."
+      }
+    ]
+  },
+  {
+    "id": "ex-cqsmk17z",
+    "version": 1,
+    "section": "unary",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`./seats get 4294967297` failed before reaching the server. What would the old `strconv.Atoi` plus `int32(n)` have done?",
+    "hint": "2³² + 1, kept to 32 bits.",
+    "choices": [
+      {
+        "text": "Asked the server for event 1",
+        "correct": true,
+        "why": "Right, the wrap lesson 8 found, now on the client's side of the contract."
+      },
+      {
+        "text": "Panicked with an overflow",
+        "correct": false,
+        "why": "A Go integer conversion wraps silently; it does not panic."
+      },
+      {
+        "text": "Got `InvalidArgument` from the server's checks",
+        "correct": false,
+        "why": "The server would have received a valid-looking 1."
+      },
+      {
+        "text": "Sent the full 64-bit number, which the server refuses for the `int32` field",
+        "correct": false,
+        "why": "The field is `int32`; the conversion happens before anything is sent."
+      }
+    ]
+  },
+  {
+    "id": "ex-y6y28e1r",
+    "version": 1,
+    "section": "unary",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `seatsStore` a separate interface instead of adding `HasTicket` to lesson 6's `Store`?",
+    "hint": "Who needs `HasTicket`?",
+    "choices": [
+      {
+        "text": "Go forbids an interface with five methods",
+        "correct": false,
+        "why": "There is no such limit."
+      },
+      {
+        "text": "`HasTicket` needs its own database pool",
+        "correct": false,
+        "why": "It uses the same pool through `s.q()`."
+      },
+      {
+        "text": "sqlc generates a separate interface per query",
+        "correct": false,
+        "why": "sqlc generates `Queries` methods; the interface is boxoffice's choice."
+      },
+      {
+        "text": "So only the gRPC side needs the method",
+        "correct": true,
+        "why": "Right, the small-interface habit again."
+      }
+    ]
+  },
+  {
+    "id": "ex-tbtj6t2k",
+    "version": 1,
+    "section": "unary",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A sale is made over HTTP on port 8080, and then `./seats get 1` asks on port 9090. Why does the gRPC answer already count it?",
+    "hint": "Look at what `main` passes to both servers.",
+    "choices": [
+      {
+        "text": "The gRPC server subscribes to the HTTP server's events",
+        "correct": false,
+        "why": "There is no such link; they read the same rows."
+      },
+      {
+        "text": "HTTP/2 multiplexes the two ports into one connection between the processes",
+        "correct": false,
+        "why": "Each port is a separate listener."
+      },
+      {
+        "text": "They share one store",
+        "correct": true,
+        "why": "Right. A sale is a row, and both read it."
+      },
+      {
+        "text": "`cmd/seats` repeats the purchase over gRPC",
+        "correct": false,
+        "why": "The client only reads."
+      }
+    ]
+  },
+  {
+    "id": "ex-v7n57s08",
+    "version": 1,
+    "section": "streaming",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What would happen without the `select` on `ctx.Done()` in `Watch`?",
+    "hint": "Who stops the loop when the client leaves?",
+    "choices": [
+      {
+        "text": "The client would receive duplicate messages",
+        "correct": false,
+        "why": "`last` already prevents duplicates."
+      },
+      {
+        "text": "Nothing; `Send` stops the method on its own",
+        "correct": false,
+        "why": "`Send` only runs when the number changes, so a quiet event would never call it."
+      },
+      {
+        "text": "The loop would go on reading the database for a client that left, leaking a goroutine per watcher",
+        "correct": true,
+        "why": "Right, the leak `go-concurrency` lesson 6 was about."
+      },
+      {
+        "text": "The ticker would stop",
+        "correct": false,
+        "why": "The ticker goes on until `Stop`."
+      }
+    ]
+  },
+  {
+    "id": "ex-a89yvch3",
+    "version": 1,
+    "section": "streaming",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the watch of section 07 in order.",
+    "hint": "The first line comes before any sale.",
+    "items": [
+      "`event 1: 120 available`",
+      "a purchase of 2 over HTTP",
+      "`event 1: 118 available`",
+      "a purchase of 3 over HTTP",
+      "`event 1: 115 available`",
+      "`error: DeadlineExceeded`"
+    ]
+  },
+  {
+    "id": "ex-rx2z0bhy",
+    "version": 1,
+    "section": "streaming",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `Scan`, how does the server know the door has sent its last ticket?",
+    "hint": "A value returned by `Recv`.",
+    "choices": [
+      {
+        "text": "The client sends a ticket id of 0 as a marker",
+        "correct": false,
+        "why": "No marker is sent; closing the stream is the signal."
+      },
+      {
+        "text": "The context's deadline expires",
+        "correct": false,
+        "why": "That would end the call with `DeadlineExceeded`, not a summary."
+      },
+      {
+        "text": "`Recv` returns `io.EOF`",
+        "correct": true,
+        "why": "Right, and then it answers once with `SendAndClose`."
+      },
+      {
+        "text": "A timer of half a second passes with no message",
+        "correct": false,
+        "why": "The half-second ticker belongs to `Watch`."
+      }
+    ]
+  },
+  {
+    "id": "ex-s9968wp1",
+    "version": 1,
+    "section": "streaming",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`./seats scan 1 2 3 99 2` was run after tickets 1 and 2 were sold. How many were admitted?",
+    "hint": "Ticket 2 was shown twice.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "tickets"
+  },
+  {
+    "id": "ex-jqhbrxbh",
+    "version": 1,
+    "section": "deadlines-and-interceptors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A client calls with a two-second deadline, and the server calls PostgreSQL with the context it received. What limits the database query?",
+    "hint": "The deadline travels with the call.",
+    "choices": [
+      {
+        "text": "The caller's limit, which travels with the call",
+        "correct": true,
+        "why": "Right. At every hop, everybody stops when the caller stops waiting."
+      },
+      {
+        "text": "Nothing; deadlines stay on the client",
+        "correct": false,
+        "why": "gRPC sends the deadline to the server in a header."
+      },
+      {
+        "text": "The pool's `MaxConnIdleTime`",
+        "correct": false,
+        "why": "That closes idle connections; it does not limit a query."
+      },
+      {
+        "text": "The HTTP server's `WriteTimeout`",
+        "correct": false,
+        "why": "That belongs to the HTTP server on 8080, not to gRPC."
+      }
+    ]
+  },
+  {
+    "id": "ex-7czd1jkk",
+    "version": 1,
+    "section": "deadlines-and-interceptors",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did the server's log have lines for `GetEvent` and none for the watch or the scan?",
+    "hint": "What does `grpc.UnaryInterceptor` wrap?",
+    "choices": [
+      {
+        "text": "Streams are never logged by gRPC",
+        "correct": false,
+        "why": "They are, with a stream interceptor."
+      },
+      {
+        "text": "Only unary calls; streams need `grpc.StreamInterceptor`",
+        "correct": true,
+        "why": "Right, a different kind with a different signature."
+      },
+      {
+        "text": "The watch and the scan failed before reaching the server",
+        "correct": false,
+        "why": "Both reached it; the watch printed three numbers."
+      },
+      {
+        "text": "`log.Printf` is not safe inside a stream",
+        "correct": false,
+        "why": "It is safe; nothing called it for streams."
+      }
+    ]
+  },
+  {
+    "id": "ex-40e3xjqj",
+    "version": 1,
+    "section": "deadlines-and-interceptors",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each lesson 2 idea to its gRPC form.",
+    "hint": "gRPC has no `http.Handler`.",
+    "pairs": [
+      {
+        "left": "a middleware around every request",
+        "right": "an interceptor"
+      },
+      {
+        "left": "a header carrying a token",
+        "right": "metadata"
+      },
+      {
+        "left": "401 when the token is missing",
+        "right": "`codes.Unauthenticated`"
+      },
+      {
+        "left": "lesson 3's `fail`",
+        "right": "`toStatus`"
+      }
+    ],
+    "right_distractors": [
+      "`codes.Unimplemented`"
+    ]
+  },
+  {
+    "id": "ex-xsg3hgv8",
+    "version": 1,
+    "section": "deadlines-and-interceptors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A unary call to a service on the same network has no deadline at all, and the server stops answering. What happens to the caller?",
+    "hint": "What ends a call?",
+    "choices": [
+      {
+        "text": "It gets `DeadlineExceeded` after gRPC's default of five seconds",
+        "correct": false,
+        "why": "Five seconds was `cmd/seats`'s own choice, not a default of gRPC."
+      },
+      {
+        "text": "It waits for ever",
+        "correct": true,
+        "why": "Right. Choose deadlines on purpose, as a ceiling."
+      },
+      {
+        "text": "HTTP/2 closes the call after one minute idle",
+        "correct": false,
+        "why": "The lesson names no such limit."
+      },
+      {
+        "text": "It gets `Unavailable` at once",
+        "correct": false,
+        "why": "The server was reached; it just never answers."
+      }
+    ]
+  },
+  {
+    "id": "ex-63w1839a",
+    "version": 1,
+    "section": "evolving",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An old reader decodes an event that carries the new field 5. What happens?",
+    "hint": "`5: \"Main Hall\"`.",
+    "choices": [
+      {
+        "text": "Decoding fails with an unknown-field error",
+        "correct": false,
+        "why": "Nothing failed; the old contract read every field it knew."
+      },
+      {
+        "text": "Field 5 overwrites field 4",
+        "correct": false,
+        "why": "Numbers identify fields; nothing is overwritten."
+      },
+      {
+        "text": "It drops the whole message",
+        "correct": false,
+        "why": "The output shows every field it knew."
+      },
+      {
+        "text": "Field 5 is kept as unknown",
+        "correct": true,
+        "why": "Right. In Go it lands in `unknownFields`."
+      }
+    ]
+  },
+  {
+    "id": "ex-9z6ajg53",
+    "version": 1,
+    "section": "evolving",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A field is removed from a message. What should the contract keep, and why?",
+    "hint": "Old messages in queues and logs.",
+    "choices": [
+      {
+        "text": "`reserved` with its number and old name, so nobody reuses the number",
+        "correct": true,
+        "why": "Right. The numbers are the contract."
+      },
+      {
+        "text": "Nothing; removing is the end of it",
+        "correct": false,
+        "why": "The number would be free for a new meaning old messages are read into."
+      },
+      {
+        "text": "A comment, so the generated Go keeps the field",
+        "correct": false,
+        "why": "A comment protects nothing; `reserved` is checked by protoc."
+      },
+      {
+        "text": "The field, renamed to `deprecated_` plus its old name and given a new number",
+        "correct": false,
+        "why": "A new number is a different field to every reader."
+      }
+    ]
+  },
+  {
+    "id": "ex-tyesf51n",
+    "version": 1,
+    "section": "evolving",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these changes keep old callers working? Choose all that apply.",
+    "hint": "The table of rules.",
+    "choices": [
+      {
+        "text": "Add a field with a new number",
+        "correct": true,
+        "why": "Right. Old readers keep it as unknown."
+      },
+      {
+        "text": "Change a field's number",
+        "correct": false,
+        "why": "To every existing reader it is a different field."
+      },
+      {
+        "text": "Rename a field and keep its number",
+        "correct": true,
+        "why": "Right, on the wire; the Go names change."
+      },
+      {
+        "text": "Remove an `rpc`",
+        "correct": false,
+        "why": "Old clients get `Unimplemented`."
+      },
+      {
+        "text": "Remove a field and reserve its number",
+        "correct": true,
+        "why": "Right. `reserved` stops reuse."
+      }
+    ]
+  },
+  {
+    "id": "ex-46ddsz75",
+    "version": 1,
+    "section": "evolving",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A field must change from `int32` to `string`. What does the lesson recommend?",
+    "hint": "Some changes cannot be compatible.",
+    "choices": [
+      {
+        "text": "Change the type in place; Protocol Buffers converts it",
+        "correct": false,
+        "why": "Most type pairs do not share an encoding, and the result is garbage."
+      },
+      {
+        "text": "Publish `boxoffice.v2` beside `v1` and serve both",
+        "correct": true,
+        "why": "Right, until the last old client is gone."
+      },
+      {
+        "text": "Reuse the old number for the string, after a release note",
+        "correct": false,
+        "why": "Reusing a number is the rule the table forbids."
+      },
+      {
+        "text": "Move the service to another port",
+        "correct": false,
+        "why": "The package in the call's path keeps the versions apart, not the port."
+      }
+    ]
+  },
+  {
+    "id": "ex-16ws3e2p",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the work of adding a method to the `Seats` service in order.",
+    "hint": "The contract comes first.",
+    "items": [
+      "Add the `rpc` and its messages to `seats.proto`",
+      "Run `protoc` with both plugins",
+      "Write the method on `seatsServer`",
+      "Call it from a client through the generated `SeatsClient`"
+    ]
+  },
+  {
+    "id": "ex-qsykttgy",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dashboard calls `Watch` with no deadline and its network drops without a word. On boxoffice's side, what ends the `Watch` loop?",
+    "hint": "Which branch of the `select` matters, and when does it fire?",
+    "choices": [
+      {
+        "text": "The ticker, after its next half-second",
+        "correct": false,
+        "why": "The ticker only keeps the loop going."
+      },
+      {
+        "text": "`io.EOF` from `Recv`",
+        "correct": false,
+        "why": "`Watch` never calls `Recv`; that is `Scan`."
+      },
+      {
+        "text": "The stream's context, once gRPC sees the connection is gone, or a failed `Send`",
+        "correct": true,
+        "why": "Right. With no deadline, the connection's end is what cancels the context."
+      },
+      {
+        "text": "`toStatus`, when it maps the error",
+        "correct": false,
+        "why": "`toStatus` only translates an error that something else produced."
+      }
+    ]
+  }
+]

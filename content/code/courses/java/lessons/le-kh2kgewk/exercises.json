@@ -1,0 +1,554 @@
+[
+  {
+    "id": "ex-61pqbjf9",
+    "version": 1,
+    "section": "interfaces",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Lendable` declares `String title();` with no modifier written at all. What is the method?",
+    "hint": "The words are left out because they are implied.",
+    "choices": [
+      {
+        "text": "Package-private and abstract, since no access word was written",
+        "correct": false,
+        "why": "In a class that would be package-private; in an interface the default is public."
+      },
+      {
+        "text": "Public and abstract",
+        "correct": true,
+        "why": "Right: every interface method is both unless it says otherwise."
+      },
+      {
+        "text": "Public, with an empty body that returns `null`",
+        "correct": false,
+        "why": "There is no body at all; a class that signs must write one."
+      },
+      {
+        "text": "Private to the interface until a class implements it",
+        "correct": false,
+        "why": "A private interface method needs the word `private` and a body."
+      }
+    ]
+  },
+  {
+    "id": "ex-46ajxwqm",
+    "version": 1,
+    "section": "interfaces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`books.sort(null)` put `Dom Casmurro` first. What told `List.sort` how to order two books?",
+    "hint": "`null` means \"use the elements' own order\".",
+    "choices": [
+      {
+        "text": "The order in which the books were added to the list",
+        "correct": false,
+        "why": "They were added as `O Guarani`, `Dom Casmurro`, `Iracema`, and came out in another order."
+      },
+      {
+        "text": "`loanDays()`, which every `Lendable` has",
+        "correct": false,
+        "why": "All three books lend for 21 days; that could not order them."
+      },
+      {
+        "text": "`Book.compareTo`, from `Comparable<Book>`",
+        "correct": true,
+        "why": "Right: `List.sort` calls the method the contract promises."
+      },
+      {
+        "text": "The hash codes of the `Book` objects",
+        "correct": false,
+        "why": "Hash codes have no order that means anything here; `compareTo` compares titles."
+      }
+    ]
+  },
+  {
+    "id": "ex-nmkbf5wp",
+    "version": 1,
+    "section": "interfaces",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `javac` say about `Magazine`, which implements `Lendable` and writes only `title()`?",
+    "hint": "The message names the missing method.",
+    "choices": [
+      {
+        "text": "That it is not abstract and does not override `loanDays()`",
+        "correct": true,
+        "why": "Right: sign the contract and you deliver every method, or declare the class abstract."
+      },
+      {
+        "text": "Nothing; `loanDays()` returns 0 by default",
+        "correct": false,
+        "why": "Abstract methods have no default value; the compiler refuses."
+      },
+      {
+        "text": "That `Lendable` cannot be instantiated",
+        "correct": false,
+        "why": "That was `Nope`'s error, which tried `new Lendable()`."
+      }
+    ]
+  },
+  {
+    "id": "ex-y26qftr5",
+    "version": 1,
+    "section": "interfaces",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these lines compile, given section 02's `Lendable`, `Book` and `Dvd`? Choose all that apply.",
+    "hint": "A variable may have an interface type; an object may not.",
+    "choices": [
+      {
+        "text": "`Lendable item = new Dvd(\"Central do Brasil\");`",
+        "correct": true,
+        "why": "Yes: `Dvd` signed `Lendable`."
+      },
+      {
+        "text": "`Lendable item = new Lendable();`",
+        "correct": false,
+        "why": "No: `Lendable is abstract; cannot be instantiated`."
+      },
+      {
+        "text": "`Comparable<Book> c = new Book(\"Iracema\");`",
+        "correct": true,
+        "why": "Yes: `Book` signed `Comparable<Book>` as well."
+      },
+      {
+        "text": "`Comparable<Book> c = new Dvd(\"Central do Brasil\");`",
+        "correct": false,
+        "why": "No: `Dvd` signed only `Lendable`."
+      }
+    ]
+  },
+  {
+    "id": "ex-dx5nj68c",
+    "version": 1,
+    "section": "interfaces",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague writes a `Map` class next year that implements `Lendable`. Without changing a line of `Desk`, will its loop over a `List<Lendable>` work with maps?",
+    "hint": "The loop was written against the contract.",
+    "choices": [
+      {
+        "text": "No, because `Desk` was compiled before `Map` existed",
+        "correct": false,
+        "why": "Compiling against the interface is exactly what lets later classes fit."
+      },
+      {
+        "text": "Yes, each map answers with its own `title()` and `loanDays()`",
+        "correct": true,
+        "why": "Right: code written against an interface works with every class that signs it, the later ones included."
+      },
+      {
+        "text": "Only if `Map` also extends `Book`",
+        "correct": false,
+        "why": "No parent is needed; `Book` and `Dvd` share none either."
+      },
+      {
+        "text": "Only after `Desk` adds a `case` for maps to its loop",
+        "correct": false,
+        "why": "The loop has no cases; it calls the interface's methods and each object answers."
+      }
+    ]
+  },
+  {
+    "id": "ex-75tegt2n",
+    "version": 1,
+    "section": "default-methods",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`renewable()` was added to `Lendable` as a `default` method. What happened to `Book.java` and `Dvd.java`?",
+    "hint": "They were copied unchanged.",
+    "choices": [
+      {
+        "text": "They had to add `renewable()` before they compiled again",
+        "correct": false,
+        "why": "That is what an abstract method would have demanded; a default one asks nothing."
+      },
+      {
+        "text": "Nothing; they compiled and inherited `true`",
+        "correct": true,
+        "why": "Right: both answered `renewable` from the default body."
+      },
+      {
+        "text": "They compiled, and `renewable()` threw for them until they wrote it",
+        "correct": false,
+        "why": "A default has a body that runs; nothing throws."
+      }
+    ]
+  },
+  {
+    "id": "ex-kyfxdctz",
+    "version": 1,
+    "section": "default-methods",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How is `describe` called, and why that way?",
+    "hint": "It is `static`.",
+    "choices": [
+      {
+        "text": "`item.describe()`, because every implementer inherits it",
+        "correct": false,
+        "why": "Static interface methods are not inherited; `Book.describe` does not exist."
+      },
+      {
+        "text": "`Book.describe(item)`, because `Book` is the class that implements it",
+        "correct": false,
+        "why": "Not inherited, so not reachable through `Book`."
+      },
+      {
+        "text": "`Lendable.describe(item)`, because a static method belongs to the interface",
+        "correct": true,
+        "why": "Right: it is called on the interface's name, as `Shelf` did."
+      }
+    ]
+  },
+  {
+    "id": "ex-ghrg15qq",
+    "version": 1,
+    "section": "default-methods",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`javap Lendable` listed the methods the interface shows the world. How many lines of methods did it print?",
+    "hint": "Count the abstract, default and static ones; the private one is missing.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "methods"
+  },
+  {
+    "id": "ex-135qvyhq",
+    "version": 1,
+    "section": "default-methods",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two default methods in an interface both need to update a count of how many items were lent. Following the section, what does the design want?",
+    "hint": "What can an interface hold, and what can it not?",
+    "choices": [
+      {
+        "text": "A non-final field in the interface",
+        "correct": false,
+        "why": "An interface may declare constants only; it has no fields that change."
+      },
+      {
+        "text": "A private default method that keeps the count",
+        "correct": false,
+        "why": "A method cannot keep a value between calls without a field to put it in."
+      },
+      {
+        "text": "An abstract class",
+        "correct": true,
+        "why": "Right: shared state and the code around it belong to an abstract class, lesson 21's tool."
+      },
+      {
+        "text": "A second interface whose default method holds the number",
+        "correct": false,
+        "why": "Interfaces hold no state, however many there are."
+      }
+    ]
+  },
+  {
+    "id": "ex-x8f6rm30",
+    "version": 1,
+    "section": "diamond",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Audiobook implements Printed, Recorded` and writes no `label()`. What happens?",
+    "hint": "The compiler refuses to guess.",
+    "choices": [
+      {
+        "text": "`Printed`'s label runs, because it is listed first",
+        "correct": false,
+        "why": "No order of `implements` decides it."
+      },
+      {
+        "text": "Both labels run, one after the other",
+        "correct": false,
+        "why": "One call runs one method."
+      },
+      {
+        "text": "It does not compile: it inherits unrelated defaults for `label()`",
+        "correct": true,
+        "why": "Right: the class has to write its own `label()`."
+      }
+    ]
+  },
+  {
+    "id": "ex-0rbfmnb7",
+    "version": 1,
+    "section": "diamond",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside `Audiobook`, the call that runs the default from `Recorded` is written `Recorded.___.label()`.",
+    "hint": "The same word that reaches a parent class's method.",
+    "blanks": [
+      {
+        "accept": [
+          "super"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-t3xw4d9b",
+    "version": 1,
+    "section": "diamond",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Leaflet extends Catalogue implements Printed`. Both give a `label()`. Which one runs, and why does the rule exist?",
+    "hint": "It printed `a catalogue entry`.",
+    "choices": [
+      {
+        "text": "`Printed`'s, since interfaces are newer than classes",
+        "correct": false,
+        "why": "The class's method won, and the opposite rule would let old classes change."
+      },
+      {
+        "text": "`Catalogue`'s, so that adding a default cannot change an existing class",
+        "correct": true,
+        "why": "Right: a class that already had the method keeps it."
+      },
+      {
+        "text": "Neither; it is the same compile error as `Audiobook`",
+        "correct": false,
+        "why": "A class against an interface is not a clash; only two interfaces are."
+      },
+      {
+        "text": "Whichever was compiled last",
+        "correct": false,
+        "why": "Compilation order never decides which method runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-dg7ybpbv",
+    "version": 1,
+    "section": "diamond",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A class implements `Printed` only, and wants `Recorded`'s label too. Can it write `Recorded.super.label()`?",
+    "hint": "The last sentence about `.super` in section 04.",
+    "choices": [
+      {
+        "text": "Yes, any interface's default can be reached that way",
+        "correct": false,
+        "why": "Only an interface the class names in its own `implements`."
+      },
+      {
+        "text": "No: that form reaches only interfaces the class signs directly",
+        "correct": true,
+        "why": "Right: it reaches a direct superinterface, and `Recorded` is not one."
+      },
+      {
+        "text": "Yes, as long as `Recorded` is in the same directory",
+        "correct": false,
+        "why": "Location is not the rule; the `implements` clause is."
+      }
+    ]
+  },
+  {
+    "id": "ex-bshrgm2m",
+    "version": 1,
+    "section": "sealed",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `sealed interface Item permits Book, Dvd` say?",
+    "hint": "Read `permits` literally.",
+    "choices": [
+      {
+        "text": "That only `Book` and `Dvd` may implement `Item`",
+        "correct": true,
+        "why": "Right: the list is enforced by the compiler."
+      },
+      {
+        "text": "That `Book` and `Dvd` may not be extended by anything",
+        "correct": false,
+        "why": "Each permitted class decides that itself, with `final`, `sealed` or `non-sealed`."
+      },
+      {
+        "text": "That `Item` can be implemented in this file and no other",
+        "correct": false,
+        "why": "The permitted classes were in their own files."
+      }
+    ]
+  },
+  {
+    "id": "ex-gjgsevbv",
+    "version": 1,
+    "section": "sealed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`public class Dvd implements Item` was refused with `sealed, non-sealed or final modifiers expected`. What is the compiler asking?",
+    "hint": "A permitted class must say what happens below it.",
+    "choices": [
+      {
+        "text": "To add `Dvd` to `permits`",
+        "correct": false,
+        "why": "It was already there; that was not the complaint."
+      },
+      {
+        "text": "To declare what is allowed below `Dvd`",
+        "correct": true,
+        "why": "Right: `final` closes it, `sealed` lists its own, `non-sealed` opens it again."
+      },
+      {
+        "text": "To mark `title()` as `final` so no subclass changes it",
+        "correct": false,
+        "why": "The message is about the class's modifiers, not a method's."
+      },
+      {
+        "text": "To make `Item` an abstract class instead of an interface",
+        "correct": false,
+        "why": "Sealed interfaces are allowed; the fix was one word on `Dvd`."
+      }
+    ]
+  },
+  {
+    "id": "ex-nhs4ne2g",
+    "version": 1,
+    "section": "sealed",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each modifier on a permitted class to what it means for classes below it.",
+    "hint": "Section 05's three words.",
+    "pairs": [
+      {
+        "left": "`final`",
+        "right": "Nothing may extend it"
+      },
+      {
+        "left": "`sealed`",
+        "right": "Only the classes in its own `permits` may extend it"
+      },
+      {
+        "left": "`non-sealed`",
+        "right": "Any class may extend it again"
+      }
+    ],
+    "right_distractors": [
+      "Only classes in the same file may extend it"
+    ]
+  },
+  {
+    "id": "ex-hnad31x9",
+    "version": 1,
+    "section": "sealed",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody adds `Magazine` to `Item`'s `permits` and writes the class. What happens to `Rules.loanDays`, whose switch has no `default`?",
+    "hint": "The compiler read `permits` to accept the switch.",
+    "choices": [
+      {
+        "text": "It returns 0 for magazines",
+        "correct": false,
+        "why": "No case covers them, and there is no default value to fall back on."
+      },
+      {
+        "text": "It throws at run time the first time a magazine arrives",
+        "correct": false,
+        "why": "The failure comes earlier than that, which is the point."
+      },
+      {
+        "text": "The code no longer compiles: the switch is missing a case",
+        "correct": true,
+        "why": "Right: every switch over `Item` must decide the new kind before the code builds."
+      },
+      {
+        "text": "Nothing changes, because the switch only names `Book` and `Dvd`",
+        "correct": false,
+        "why": "Naming two out of three is exactly what makes it incomplete."
+      }
+    ]
+  },
+  {
+    "id": "ex-qqg0rnq6",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of growing the `Lendable` contract by `renewable()` in the order the lesson took them.",
+    "hint": "Write the default first; the old classes need nothing.",
+    "items": [
+      "Add `default boolean renewable()` with a body to `Lendable`",
+      "Recompile `Book` and `Dvd` unchanged",
+      "Override `renewable()` in `Game`, the one class that disagrees",
+      "Call `Lendable.describe` on each item"
+    ]
+  },
+  {
+    "id": "ex-4fqh0gpd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Your team needs a type for payment methods: card, Pix and boleto, each with different rules, and no other kind may ever be accepted without review. What do you write?",
+    "hint": "Which tool lists the implementers and lets a switch know it is complete?",
+    "choices": [
+      {
+        "text": "An ordinary interface, and a `default` branch in every switch",
+        "correct": false,
+        "why": "Any new class would slip in and take the default silently."
+      },
+      {
+        "text": "A sealed interface that permits the three",
+        "correct": true,
+        "why": "Right: adding a fourth means editing `permits`, and every switch then fails until it decides."
+      },
+      {
+        "text": "Three unrelated classes with a `type` string field each",
+        "correct": false,
+        "why": "A string is checked by nothing; a typo becomes a new kind."
+      },
+      {
+        "text": "An interface with three default methods, one per kind of payment",
+        "correct": false,
+        "why": "Defaults share behaviour; they do not limit who may implement."
+      }
+    ]
+  },
+  {
+    "id": "ex-8s49257h",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statement about Java's inheritance does the lesson end on?",
+    "hint": "One class, several interfaces.",
+    "choices": [
+      {
+        "text": "Behaviour and state both arrive from any number of parents",
+        "correct": false,
+        "why": "State arrives from one class only."
+      },
+      {
+        "text": "Interfaces carry state, classes carry behaviour",
+        "correct": false,
+        "why": "The other way round: interfaces hold no state."
+      },
+      {
+        "text": "Behaviour from several interfaces, state from one class",
+        "correct": true,
+        "why": "Right: and where two answers compete with no rule, you write the answer down."
+      }
+    ]
+  }
+]

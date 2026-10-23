@@ -1,0 +1,1792 @@
+{
+  "ex-58gg1h7w": {
+    "prompt": "Um colega copia um arquivo `.class` compilado num Mac para um servidor Linux com a mesma versão do Java. O que acontece quando o servidor o executa?",
+    "hint": "O que o `javac` escreve, e para qual máquina?",
+    "choices": [
+      {
+        "text": "Falha, porque o bytecode contém as instruções do processador do Mac",
+        "why": "Bytecode não contém instruções de processador nenhum; é para a JVM, que é o que muda entre máquinas."
+      },
+      {
+        "text": "Roda, porque o bytecode é para a JVM, que existe lá também",
+        "why": "Isso: o mesmo arquivo de classe roda em qualquer JVM daquela versão ou mais nova."
+      },
+      {
+        "text": "Roda só depois de o `javac` ser executado de novo no servidor",
+        "why": "Recompilar é preciso quando a versão é mais antiga, não quando o sistema operacional muda."
+      },
+      {
+        "text": "Roda só no interpretador, já que o JIT precisa da máquina original",
+        "why": "O JIT compila para o processador em que a JVM está rodando, em tempo de execução."
+      }
+    ]
+  },
+  "ex-10abrefr": {
+    "prompt": "Os arquivos de classe do Java 21 levam a versão principal 65. Que versão principal leva uma classe compilada com `--release 11`?",
+    "hint": "A versão principal anda uma unidade por versão do Java."
+  },
+  "ex-1xmr4scg": {
+    "prompt": "Numa máquina Ubuntu 24.04 montada como o curso monta, uma ferramenta de build informa Java 21, embora `java -version` diga 25. Qual a causa mais provável?",
+    "hint": "Que variável essa ferramenta lê antes do `/usr/bin/java`?",
+    "choices": [
+      {
+        "text": "O `update-alternatives` voltou para o 21 depois que o Maven foi instalado",
+        "why": "Aí o `java -version` também diria 21; ele disse 25."
+      },
+      {
+        "text": "O pacote do JDK 25 não tem compilador, então a ferramenta recorreu ao 21",
+        "why": "O `openjdk-25-jdk` traz o `javac`; e o 21 aqui é um runtime sem compilador nenhum."
+      },
+      {
+        "text": "O `JAVA_HOME` está definido como `/usr/lib/jvm/default-java`, que aponta para o 21",
+        "why": "Isso: o `default-java` é o padrão do arquivo, o 21, e ferramentas como o Maven preferem o `JAVA_HOME`."
+      },
+      {
+        "text": "Os arquivos de classe do projeto foram compilados com `--release 21`",
+        "why": "O `--release` muda o que é escrito, não em qual Java a ferramenta roda."
+      }
+    ]
+  },
+  "ex-pmxvaj4g": {
+    "prompt": "As classes foram compiladas com `javac -d build Report.java`. Qual comando executa `Report` a partir do diretório do código-fonte?",
+    "hint": "O `java` precisa saber onde estão as classes, e depois o nome de uma classe.",
+    "choices": [
+      {
+        "text": "`java build/Report.class`",
+        "why": "O `java` recebe um nome de classe, não um caminho de arquivo; ele procuraria uma classe chamada `build/Report.class`."
+      },
+      {
+        "text": "`java -cp build Report`",
+        "why": "Isso: o class path nomeia o diretório, e `Report` é a classe a iniciar."
+      },
+      {
+        "text": "`java Report`, porque o `-d` lembra onde gravou as classes",
+        "why": "Nada é lembrado; sem `-cp`, o class path é o diretório atual, onde não há `Report.class`."
+      },
+      {
+        "text": "`java -d build Report`",
+        "why": "O `-d` é a opção do compilador para onde gravar; o `java` usa `-cp` para dizer onde ler."
+      }
+    ]
+  },
+  "ex-rx2cmvvf": {
+    "prompt": "Um script executa um programa Java e confere o `$?` depois. O programa não encontrou nada para fazer e chamou `System.exit(0)`. O que o script vê?",
+    "hint": "Que número quer dizer sucesso, por convenção?",
+    "choices": [
+      {
+        "text": "1, porque o programa parou antes do fim",
+        "why": "Parar antes não é falhar; o status é o número passado ao `exit`."
+      },
+      {
+        "text": "Nada: o `$?` só é definido quando o programa lança uma exceção",
+        "why": "O `$?` guarda o status de todo comando que termina, Java ou não."
+      },
+      {
+        "text": "0, que o script lê como sucesso",
+        "why": "Isso: o número dado ao `System.exit` é o status, e 0 quer dizer sucesso."
+      }
+    ]
+  },
+  "ex-6ppc9zhn": {
+    "prompt": "Uma rotina roda `java Report.java` mil vezes por dia, e cada execução leva cerca de um segundo, onde uma classe compilada levava um quinto disso. Para onde vai a diferença?",
+    "hint": "O que o modo de arquivo-fonte faz antes de executar qualquer coisa?",
+    "choices": [
+      {
+        "text": "Em iniciar o compilador e compilar o arquivo na memória, a cada execução",
+        "why": "Isso: nada é gravado no disco, então cada execução paga o compilador de novo."
+      },
+      {
+        "text": "No próprio programa, que roda mais devagar quando iniciado do fonte",
+        "why": "Depois de compilado, o bytecode é o mesmo; o programa roda na mesma velocidade."
+      },
+      {
+        "text": "No JIT, que fica desligado no modo de arquivo-fonte",
+        "why": "O JIT funciona do mesmo jeito; o tempo a mais é gasto antes de o `main` começar."
+      },
+      {
+        "text": "Em gravar o `Report.class` no disco antes de executá-lo",
+        "why": "O modo de arquivo-fonte não grava nada: o `ls` não mostrou arquivo de classe depois."
+      }
+    ]
+  },
+  "ex-r6gmmgt8": {
+    "prompt": "Seguindo as convenções do Java, qual destes nomes é uma constante?",
+    "hint": "As constantes têm uma grafia só delas.",
+    "choices": [
+      {
+        "text": "`maxLoans`",
+        "why": "camelCase marca um método, uma variável ou um parâmetro."
+      },
+      {
+        "text": "`MaxLoans`",
+        "why": "PascalCase marca um tipo: classe, interface, enum ou record."
+      },
+      {
+        "text": "`maxloans`",
+        "why": "Tudo minúsculo e junto é como se nomeia um pacote."
+      },
+      {
+        "text": "`MAX_LOANS`",
+        "why": "Isso: UPPER_SNAKE_CASE é para constantes `static final`."
+      }
+    ]
+  },
+  "ex-bhhq8yzh": {
+    "prompt": "O `Catalogue.java` declara `public class Inventory`. O que acontece no `javac Catalogue.java`?",
+    "hint": "Das regras de nomes, só uma é cobrada pelo compilador.",
+    "choices": [
+      {
+        "text": "Compila e grava `Catalogue.class`",
+        "why": "Arquivos de classe têm o nome da classe, nunca o do arquivo-fonte."
+      },
+      {
+        "text": "Recusa: uma classe pública tem de estar num arquivo com o nome dela",
+        "why": "Isso: o compilador pede `Inventory.java`, e essa regra não é questão de estilo."
+      },
+      {
+        "text": "Compila, com um aviso de que o nome do arquivo fere a convenção de nomes das classes",
+        "why": "Convenções não geram aviso; esta aqui é erro."
+      }
+    ]
+  },
+  "ex-vvwj6dze": {
+    "prompt": "Um contador de visualizações de página foi declarado `int` e chegou a 2.147.483.647. O que o próximo `views++` deixa nele?",
+    "hint": "Um `int` tem 32 bits, e nada confere a aritmética.",
+    "choices": [
+      {
+        "text": "2.147.483.648, porque o Java o alarga para `long` quando preciso",
+        "why": "O Java nunca muda o tipo de uma variável; a soma é calculada e guardada como `int`."
+      },
+      {
+        "text": "Uma `ArithmeticException`, lançada pelo incremento",
+        "why": "Aritmética comum com `int` nunca lança nada; só métodos como o `Math.addExact` lançam."
+      },
+      {
+        "text": "-2.147.483.648, o menor `int`",
+        "why": "Isso: ele dá a volta em silêncio, e é por isso que uma contagem que pode passar de dois bilhões é `long`."
+      },
+      {
+        "text": "Fica em 2.147.483.647, o maior valor",
+        "why": "Parar no maior valor é o que faz um cast de um `double` enorme; a aritmética de `int` dá a volta."
+      }
+    ]
+  },
+  "ex-sxeyhcxg": {
+    "prompt": "Duas variáveis `Integer` guardam os códigos de sócio 4021 e 4021, lidos de dois arquivos diferentes. Um teste com códigos abaixo de 100 passava. Por que agora `if (idA == idB)` vai pelo ramo errado?",
+    "hint": "O que o `==` compara quando os dois lados são objetos?",
+    "choices": [
+      {
+        "text": "Porque o `==` em `Integer` só compara os valores até 1000",
+        "why": "Esse limite não existe; o `==` em objetos compara referências em qualquer valor."
+      },
+      {
+        "text": "O `==` compara referências, e só os valores de -128 a 127 compartilham um objeto em cache",
+        "why": "Isso: valores pequenos por acaso eram o mesmo objeto, e isso escondia o bug; o `equals` compara os valores."
+      },
+      {
+        "text": "Porque ler de um arquivo acrescenta um caractere invisível a cada código",
+        "why": "Os valores são iguais; `idA.equals(idB)` diria `true`."
+      },
+      {
+        "text": "Porque valores `Integer` grandes são desembrulhados para `long`, que o `==` recusa",
+        "why": "Não há desembrulhamento quando os dois lados são `Integer`; esse é justamente o problema."
+      }
+    ]
+  },
+  "ex-qhvt2hw7": {
+    "prompt": "`var pages = 256;` declara uma variável do tipo `___`, e nada que se atribua a ela depois muda isso.",
+    "hint": "Um literal inteiro sem sufixo.",
+    "blanks": [
+      {
+        "accept": [
+          "int"
+        ]
+      }
+    ]
+  },
+  "ex-gycgbf50": {
+    "prompt": "Um método declara `double total;` e o atribui dentro de um `if` e dentro do `else` dele, e depois o imprime. Compila?",
+    "hint": "O compilador confere caminhos, não valores.",
+    "choices": [
+      {
+        "text": "Sim: todo caminho até a impressão atribui `total` antes",
+        "why": "Isso: a atribuição definida vale nos dois ramos, então a leitura é permitida."
+      },
+      {
+        "text": "Não: uma variável local tem de receber valor onde é declarada",
+        "why": "Atribuir depois é permitido, desde que todo caminho o faça antes da leitura."
+      },
+      {
+        "text": "Sim, e compilaria também sem o `else`, já que `total` vale 0.0 por padrão",
+        "why": "Variáveis locais não têm valor padrão; sem o `else` há um caminho que a lê sem atribuição, e isso é erro."
+      }
+    ]
+  },
+  "ex-8wy0ab6x": {
+    "prompt": "Um método recursivo falha com `StackOverflowError` depois de umas 23 mil chamadas. Um colega aumenta o `-Xss` para 4m e ele chega a umas 100 mil. O que isso resolve?",
+    "hint": "O que o `-Xss` dimensiona, e do que precisa uma cadeia infinita de chamadas?",
+    "choices": [
+      {
+        "text": "Tudo: um heap maior dá mais espaço aos objetos de cada frame",
+        "why": "O `-Xss` dimensiona a pilha de cada thread, não o heap; e os objetos moram no heap de qualquer forma."
+      },
+      {
+        "text": "Nada, se a recursão nunca termina; só muda onde ela falha",
+        "why": "Isso: uma cadeia que nunca retorna enche qualquer pilha, e uma maior só adia o erro."
+      },
+      {
+        "text": "A causa, porque a pilha padrão é pequena demais para qualquer recursão",
+        "why": "Recursão que termina cabe folgada na pilha padrão; a padrão chegou a 23.254 frames."
+      }
+    ]
+  },
+  "ex-zgg0r6q4": {
+    "prompt": "Qual destas atribuições compila sem cast?",
+    "hint": "O Java só converte sozinho na direção que não pode estourar.",
+    "choices": [
+      {
+        "text": "`int n = 3.0;`",
+        "why": "`double` para `int` é estreitamento, e o compilador recusa mesmo com 3.0 cabendo."
+      },
+      {
+        "text": "`byte b = someInt;`",
+        "why": "`int` para `byte` é estreitamento; precisa de `(byte)`."
+      },
+      {
+        "text": "`long total = someInt;`",
+        "why": "Isso: `int` para `long` é alargamento, e todo `int` cabe."
+      },
+      {
+        "text": "`boolean ok = 1;`",
+        "why": "O `boolean` não converte em nada e nada converte nele; `1` não é `true` em Java."
+      }
+    ]
+  },
+  "ex-qhv31xcq": {
+    "prompt": "Um laço faz `short stock = 0;` e depois `stock += 40_000;` uma vez. Compila. O que está errado?",
+    "hint": "O que um operador composto acrescenta que `stock = stock + 40_000` não acrescentaria?",
+    "choices": [
+      {
+        "text": "Nada: o `+=` confere a faixa e recusaria um valor que não cabe",
+        "why": "Não há conferência; o cast escondido do operador composto guarda os bits baixos em silêncio."
+      },
+      {
+        "text": "Lança `ArithmeticException` em tempo de execução, porque 40.000 não cabe num `short`",
+        "why": "Casts nunca lançam; o resultado é um número errado, não uma exceção."
+      },
+      {
+        "text": "O `+=` esconde um cast para `short`, e 40.000 vira um número negativo",
+        "why": "Isso: 40.000 passa de 32.767, e o cast escondido guarda os 16 bits baixos: -25.536."
+      }
+    ]
+  },
+  "ex-9z9nwpx9": {
+    "prompt": "Quanto vale `(byte) 300`? Um `byte` guarda de -128 a 127, e um cast de estreitamento guarda os bits baixos.",
+    "hint": "Subtraia 256 até o número caber."
+  },
+  "ex-3q2xdqxf": {
+    "prompt": "`String code = \" ab-12 \"; code.strip(); code.toUpperCase();` e depois `System.out.println(\"[\" + code + \"]\")`. O que é impresso?",
+    "hint": "Para onde foram os resultados das duas chamadas?",
+    "choices": [
+      {
+        "text": "`[AB-12]`",
+        "why": "Isso exigiria `code = code.strip().toUpperCase();`: os dois resultados foram jogados fora."
+      },
+      {
+        "text": "`[ ab-12 ]`",
+        "why": "Isso: uma `String` nunca muda, e cada chamada devolveu uma string nova que ninguém guardou."
+      },
+      {
+        "text": "`[ AB-12 ]`",
+        "why": "O `toUpperCase` também não mudou o `code`; nenhuma das chamadas mudou."
+      },
+      {
+        "text": "`[ab-12]`",
+        "why": "O `strip` também devolveu uma string nova, e ela não foi atribuída."
+      }
+    ]
+  },
+  "ex-zegdpgx4": {
+    "prompt": "Um programa lê o nome de um sócio de um arquivo para `name` e testa `name == \"Ana\"`. O arquivo diz Ana. Por que o teste pode dar `false`?",
+    "hint": "Onde mora uma string montada enquanto o programa roda?",
+    "choices": [
+      {
+        "text": "Porque o `==` em strings diferencia maiúsculas e o arquivo pode diferir nisso",
+        "why": "Aqui a grafia bate; o `equals` também diferencia maiúsculas e diria `true`."
+      },
+      {
+        "text": "Porque strings lidas de arquivos ficam guardadas em outra codificação",
+        "why": "A codificação decide os caracteres, e aqui são os mesmos três caracteres."
+      },
+      {
+        "text": "O `==` compara referências, e a string lida é um objeto novo",
+        "why": "Isso: só literais compartilham um objeto; `name.equals(\"Ana\")` compara os caracteres."
+      }
+    ]
+  },
+  "ex-jyt7zka5": {
+    "prompt": "Para montar uma string longa num laço sem copiar tudo o que já existe a cada volta, acrescente a um `___` e chame `toString()` uma vez no fim.",
+    "hint": "Um buffer de caracteres mutável.",
+    "blanks": [
+      {
+        "accept": [
+          "StringBuilder",
+          "java.lang.StringBuilder",
+          "StringBuffer"
+        ]
+      }
+    ]
+  },
+  "ex-0ep7bscm": {
+    "prompt": "O caixa de uma loja soma preços guardados em `double` e compara o total com `==` contra o valor informado ao cliente. Às vezes valores iguais dão diferentes. Qual a correção sensata?",
+    "hint": "Dinheiro pede aritmética decimal exata.",
+    "choices": [
+      {
+        "text": "Arredondar os dois lados com `Math.round` antes de comparar",
+        "why": "O `Math.round` dá unidades inteiras, então dois preços que diferem em centavos dariam iguais."
+      },
+      {
+        "text": "Guardar centavos em `long`, ou `BigDecimal` criado de strings",
+        "why": "Isso: os dois são exatos, e aí a comparação quer dizer o que diz."
+      },
+      {
+        "text": "Usar `float` em vez de `double`, que tem menos dígitos para discordar",
+        "why": "O `float` tem as mesmas frações binárias com menos bits; discorda mais cedo, não mais tarde."
+      },
+      {
+        "text": "Criar cada `BigDecimal` a partir do preço em `double`, `new BigDecimal(price)`",
+        "why": "Isso registra exatamente o erro binário do `double`, com todos os 55 dígitos."
+      }
+    ]
+  },
+  "ex-vf2sccyg": {
+    "prompt": "O que `Math.floorMod(-7, 3)` devolve?",
+    "hint": "O `floorDiv(-7, 3)` arredonda -2,33 para baixo, para -3."
+  },
+  "ex-aqyvmk4r": {
+    "prompt": "Quais destas expressões valem `true`? Escolha todas as que se aplicam.",
+    "hint": "NaN não é igual a nada, nem a si mesmo.",
+    "choices": [
+      {
+        "text": "`0.1 + 0.2 == 0.3`",
+        "why": "A soma é 0.30000000000000004 e o literal fica um fio abaixo de três décimos."
+      },
+      {
+        "text": "`Double.isNaN(0.0 / 0)`",
+        "why": "Sim: `0.0 / 0` é NaN, e o `isNaN` é o jeito de perguntar."
+      },
+      {
+        "text": "`0.0 == -0.0`",
+        "why": "Sim: os dois zeros dão iguais, embora `1 / -0.0` dê `-Infinity`."
+      },
+      {
+        "text": "`Math.abs(Integer.MIN_VALUE) > 0`",
+        "why": "O gêmeo positivo dele não cabe num `int`, então o resultado continua negativo."
+      }
+    ]
+  },
+  "ex-p0d2rsgz": {
+    "prompt": "`int[] backup = shelf;` deveria guardar uma cópia antes de `shelf` ser ordenado. Depois de `Arrays.sort(shelf)`, o que `backup` guarda?",
+    "hint": "Uma variável de array guarda uma referência.",
+    "choices": [
+      {
+        "text": "Os valores ordenados, porque os dois nomes se referem a um único array",
+        "why": "Isso: a atribuição copiou a referência; o `Arrays.copyOf` cria um segundo array."
+      },
+      {
+        "text": "A ordem original, porque a atribuição copia os elementos",
+        "why": "A atribuição copia só a referência; não existe segundo array."
+      },
+      {
+        "text": "Nada: o `sort` dá ao `shelf` um array novo e o `backup` aponta para o antigo, esvaziado",
+        "why": "O `sort` trabalha no próprio array; nada é esvaziado."
+      }
+    ]
+  },
+  "ex-njjnb9vm": {
+    "prompt": "Ponha estes passos na ordem em que acontecem quando `int[][] rows = new int[2][]; rows[0] = new int[3];` roda e depois `rows[1].length` é lido.",
+    "hint": "O array externo vem primeiro, e as linhas dele começam vazias.",
+    "items": [
+      "Um array externo de dois elementos é criado, os dois `null`",
+      "Uma linha de três zeros é criada e guardada no índice 0",
+      "`rows[1]` é lido e está `null`",
+      "Uma `NullPointerException` é lançada"
+    ]
+  },
+  "ex-et8vf4gm": {
+    "prompt": "Um `switch` clássico sobre `\"poetry\"` tem `case \"novel\"` com `break`, `case \"poetry\"` sem `break`, `case \"history\"` com `break`, e `default`. Ponha o que acontece em ordem.",
+    "hint": "Um `case` é um rótulo para onde se salta, não uma caixa.",
+    "items": [
+      "Saltar direto para o rótulo `case \"poetry\"`",
+      "Executar os comandos de poetry",
+      "Cair no case seguinte e executar os comandos de history",
+      "Chegar ao `break` e sair do `switch`"
+    ]
+  },
+  "ex-j5scnkpf": {
+    "prompt": "Um método recebe `int[] prices` e precisa somar 10 a cada preço do array. Qual laço faz o serviço?",
+    "hint": "A variável de um for-each guarda o quê, exatamente?",
+    "choices": [
+      {
+        "text": "`for (int p : prices) { p = p + 10; }`",
+        "why": "Compila e não muda nada: `p` é uma cópia de cada elemento, e o array mantém os valores antigos."
+      },
+      {
+        "text": "`for (int i = 0; i < prices.length; i++) { prices[i] += 10; }`",
+        "why": "Isso: escrever de volta exige a posição, e o `for` com contador é o laço que a tem."
+      },
+      {
+        "text": "`for (int i = 0; i <= prices.length; i++) { prices[i] += 10; }`",
+        "why": "O `<=` dá uma volta a mais e lê uma posição além do fim, o que lança `ArrayIndexOutOfBoundsException`."
+      },
+      {
+        "text": "`do { prices[0] += 10; } while (false);`",
+        "why": "Isso roda uma vez e mexe só no primeiro elemento."
+      }
+    ]
+  },
+  "ex-j2tt358c": {
+    "prompt": "`for (int i = 0; i < 2; i++) { body(); }` roda até o fim. Ponha as cinco primeiras coisas que ele faz na ordem em que acontecem.",
+    "hint": "A primeira parte do cabeçalho roda uma vez; a terceira roda depois de cada volta.",
+    "items": [
+      "`int i = 0`",
+      "o teste `i < 2`, verdadeiro",
+      "`body()`",
+      "`i++`",
+      "o teste `i < 2` de novo"
+    ]
+  },
+  "ex-gw8ka0ch": {
+    "prompt": "`Book a = new Book(); Book b = a; b.title = \"X\";` O que `a.title` guarda depois disso?",
+    "hint": "Quantas vezes o `new` rodou?",
+    "choices": [
+      {
+        "text": "`null`, porque só o `b` recebeu um título",
+        "why": "`b` e `a` levam ao mesmo objeto, então um título definido por qualquer um dos dois é o título do objeto."
+      },
+      {
+        "text": "O que o `a` tinha antes, já que `b = a` copiou o livro",
+        "why": "A atribuição copia a referência, nunca o objeto; só existiu um livro o tempo todo."
+      },
+      {
+        "text": "`\"X\"`",
+        "why": "Isso: um `new`, um objeto, duas referências para ele."
+      }
+    ]
+  },
+  "ex-mztj4wx6": {
+    "prompt": "Na JVM do curso, um `Book[1000]` ocupou 4.016 bytes: um cabeçalho de 16 bytes e uma referência de 4 bytes por posição. Quantos bytes ocupa um `Book[500]`?",
+    "hint": "O array guarda referências, não livros.",
+    "unit": "bytes"
+  },
+  "ex-b29yavja": {
+    "prompt": "Uma `NullPointerException` diz `Cannot read field \"title\" because \"<local3>\" is null`. Por que um número em vez do nome da variável, e como conseguir o nome?",
+    "hint": "O que o `javac` guarda num arquivo de classe por padrão?",
+    "choices": [
+      {
+        "text": "As locais foram compiladas sem nome; `javac -g` os guarda",
+        "why": "Isso: sem essa informação a JVM só consegue numerar as locais, e o Maven compila com ela por padrão."
+      },
+      {
+        "text": "A variável foi declarada com `var`, que não tem nome em tempo de execução",
+        "why": "O `var` não muda nada no arquivo de classe; a numeração vem da falta de informação de depuração."
+      },
+      {
+        "text": "O objeto já tinha sido coletado; rode com um heap maior",
+        "why": "Uma referência `null` nunca levou a objeto nenhum, então não havia o que coletar."
+      },
+      {
+        "text": "A JVM esconde os nomes por segurança; não há como vê-los",
+        "why": "Eles aparecem assim que o arquivo de classe os traz, como o `-g` demonstra."
+      }
+    ]
+  },
+  "ex-3j888z6x": {
+    "prompt": "Uma classe tem um campo `int loans;` e um método com uma variável local `int loans;`. Nenhum dos dois recebe valor antes de ser lido. O que acontece?",
+    "hint": "Um dos dois é conferido pelo compilador.",
+    "choices": [
+      {
+        "text": "Os dois leem 0, porque todo `int` começa em zero",
+        "why": "Só o campo; uma variável local não tem padrão nenhum."
+      },
+      {
+        "text": "Os dois falham na compilação, porque nenhum foi inicializado",
+        "why": "Um campo sempre tem valor, então lê-lo compila; a JVM zera todo objeto novo."
+      },
+      {
+        "text": "Ler o campo dá 0; ler a variável local não compila",
+        "why": "Isso: o compilador consegue conferir os caminhos de um método, e não todo lugar que define um campo."
+      }
+    ]
+  },
+  "ex-ccr6nern": {
+    "prompt": "O parâmetro de um construtor se chama `title`, como o campo. Para guardar o parâmetro no campo, o construtor escreve `___.title = title;`.",
+    "hint": "O objeto que está sendo construído.",
+    "blanks": [
+      {
+        "accept": [
+          "this"
+        ]
+      }
+    ]
+  },
+  "ex-yt482af4": {
+    "prompt": "Uma equipe acrescenta `Book(String isbn, String title)` a uma classe que não tinha construtor. Código em outro lugar que diz `new Book()` agora não compila. Por quê?",
+    "hint": "De onde vinha o `Book()` antes?",
+    "choices": [
+      {
+        "text": "Dois construtores não podem existir numa classe",
+        "why": "Uma classe pode ter quantos quiser, desde que as listas de parâmetros sejam diferentes."
+      },
+      {
+        "text": "O novo construtor precisa chamar `this()` na primeira linha",
+        "why": "O `this(...)` é opcional e chama outro construtor da mesma classe; nada o exige."
+      },
+      {
+        "text": "Campos declarados sem inicializador agora tornam `new Book()` ilegal",
+        "why": "Os campos mantêm os padrões qualquer que seja o construtor; o que falta é o próprio construtor."
+      },
+      {
+        "text": "O `Book()` só é acrescentado quando não há construtor declarado",
+        "why": "Isso: declarar um tirou o gratuito, e o erro lista os construtores que restaram."
+      }
+    ]
+  },
+  "ex-7ta1qy15": {
+    "prompt": "Um campo é declarado sem modificador de acesso na classe `lib.Shelf`. Que classe consegue lê-lo?",
+    "hint": "Não escrever nada é um nível próprio.",
+    "choices": [
+      {
+        "text": "Uma subclasse de `Shelf` no pacote `app`",
+        "why": "O package-private não chega a subclasses em outros pacotes; é isso que o `protected` acrescenta."
+      },
+      {
+        "text": "`lib.Inside`, outra classe que está no pacote `lib`",
+        "why": "Isso: sem modificador quer dizer package-private, aberto a toda classe do mesmo pacote e a mais nada."
+      },
+      {
+        "text": "Qualquer classe que escreva `import lib.Shelf;`",
+        "why": "Um import só encurta um nome; não dá acesso nenhum."
+      },
+      {
+        "text": "Só a própria `Shelf`, como no `private`",
+        "why": "Isso é o `private`; o package-private abre o campo também para o resto do pacote."
+      }
+    ]
+  },
+  "ex-cnddb259": {
+    "prompt": "Ligue cada modificador de acesso ao grupo mais amplo de classes que ele deixa entrar.",
+    "hint": "Os quatro níveis, do mais estreito ao mais amplo.",
+    "pairs": [
+      {
+        "left": "`private`",
+        "right": "A classe que declara o membro"
+      },
+      {
+        "left": "nenhum modificador",
+        "right": "Toda classe do mesmo pacote"
+      },
+      {
+        "left": "`protected`",
+        "right": "O mesmo pacote, mais as subclasses em outros lugares"
+      },
+      {
+        "left": "`public`",
+        "right": "Toda classe, em qualquer lugar"
+      }
+    ],
+    "right_distractors": [
+      "Toda classe que importa a classe"
+    ]
+  },
+  "ex-v8awp879": {
+    "prompt": "Uma classe `Branch` conta empréstimos em `static int booksOnLoan`. Três agências emprestam 2, 1 e 4 livros. O que `norte.booksOnLoan` imprime, para a agência que emprestou 1?",
+    "hint": "Quantas cópias de um campo estático existem?"
+  },
+  "ex-kjhdfgt6": {
+    "prompt": "`Limits.MAX_LOANS` é `static final int` e foi mudado de 3 para 5. Só o `Limits.java` foi recompilado, e o `Report`, que imprime o limite, continua imprimindo 3. O que isso diz?",
+    "hint": "Pense no que o `javap -c Report` mostraria onde o limite é usado.",
+    "choices": [
+      {
+        "text": "A JVM guardou em cache o `Limits.class` antigo da execução anterior",
+        "why": "Cada execução carrega os arquivos de classe do disco de novo; o `Report` simplesmente nunca pergunta o valor ao `Limits`."
+      },
+      {
+        "text": "Campos `final` só mudam reiniciando a máquina",
+        "why": "Nada da máquina está envolvido; recompilar o `Report` dá 5."
+      },
+      {
+        "text": "A constante 3 foi copiada para o arquivo de classe do `Report` quando ele foi compilado",
+        "why": "Isso: uma constante de tempo de compilação é embutida em quem a usa, então toda classe que a usa precisa ser compilada de novo."
+      },
+      {
+        "text": "Um campo `static` é lido por meio de um objeto, e nenhum objeto `Limits` foi criado",
+        "why": "Campos estáticos não precisam de objeto, e ler pelo nome da classe funciona; o valor nunca saiu do `Report`."
+      }
+    ]
+  },
+  "ex-ha4vk6qn": {
+    "prompt": "Dentro de `public static void main`, a chamada `greet();` falha com `non-static method greet() cannot be referenced from a static context`. O `greet` imprime o campo `greeting`. Qual correção mantém o projeto são?",
+    "hint": "O `greet` precisa dos dados de um objeto?",
+    "choices": [
+      {
+        "text": "Criar um objeto primeiro e então chamar o `greet()` nesse objeto",
+        "why": "Isso: o `greet` precisa de uma saudação, então precisa do objeto que tem uma."
+      },
+      {
+        "text": "Tornar o `greet` estático",
+        "why": "Aí ele também não consegue ler o `greeting`, que então precisa ser estático também, e logo tudo fica compartilhado."
+      },
+      {
+        "text": "Escrever `this.greet();` no lugar",
+        "why": "Um método estático não tem `this`, então isso falha pelo mesmo motivo."
+      },
+      {
+        "text": "Tornar o `main` de instância, como o Java 21 permite",
+        "why": "O Java 21 não permite: métodos `main` de instância vêm com os arquivos-fonte compactos do Java 25."
+      }
+    ]
+  },
+  "ex-zmwk8ez2": {
+    "prompt": "Um campo é declarado `final List<String> titles = new ArrayList<>();`. Que linha compila?",
+    "hint": "O que exatamente o `final` fixa?",
+    "choices": [
+      {
+        "text": "`titles.clear();`",
+        "why": "Isso: o `final` fixa a qual lista o campo leva, não o que a lista contém."
+      },
+      {
+        "text": "`titles = new ArrayList<>();`",
+        "why": "Isso atribui o campo pela segunda vez, o que o `final` recusa."
+      },
+      {
+        "text": "`titles = null;`",
+        "why": "Também é uma segunda atribuição; `null` é um valor como outro qualquer."
+      }
+    ]
+  },
+  "ex-kt1nhrv4": {
+    "prompt": "`String branch = \"Centro\";` é lido dentro de uma classe anônima, e mais adiante no método acrescenta-se `branch = \"Norte\";`. O compilador agora recusa a classe anônima. Que problema ele está evitando?",
+    "hint": "O que o objeto anônimo guarda: a variável, ou o valor dela?",
+    "choices": [
+      {
+        "text": "Duas threads escrevendo `branch` ao mesmo tempo",
+        "why": "Nenhuma thread está envolvida; a regra vale num programa com uma só."
+      },
+      {
+        "text": "Uma `String` sendo alterada, o que strings não permitem",
+        "why": "A string nunca muda; o `branch` passaria a levar a outra string."
+      },
+      {
+        "text": "A classe anônima sobreviver ao `main` e ler memória liberada",
+        "why": "Java não tem memória liberada para ler; a cópia é justamente o que deixa o objeto sobreviver ao método com segurança."
+      },
+      {
+        "text": "Uma cópia tirada na criação se afastando da variável",
+        "why": "Isso: o objeto guarda o valor que viu; se a variável pudesse mudar, os dois se separariam em silêncio."
+      }
+    ]
+  },
+  "ex-06t8qxxe": {
+    "prompt": "Quais destes o compilador recusa? Escolha todos os que se aplicam.",
+    "hint": "O `final` num método, numa classe e num campo proíbe uma coisa cada.",
+    "choices": [
+      {
+        "text": "`class MyString extends String { }`",
+        "why": "Sim: `String` é uma classe final, e nenhuma classe pode estendê-la."
+      },
+      {
+        "text": "Uma subclasse declarando a sua própria versão de um método `final`",
+        "why": "Sim: um método final não pode ser sobrescrito."
+      },
+      {
+        "text": "Uma subclasse chamando um método `final` que herdou",
+        "why": "Não: o `final` impede que um método seja substituído, não que seja chamado."
+      },
+      {
+        "text": "Um construtor que termina sem atribuir um campo `final` em branco",
+        "why": "Sim: todo construtor precisa definir um final em branco, e o erro aponta a chave de fechamento."
+      }
+    ]
+  },
+  "ex-5aa8mj4c": {
+    "prompt": "Um programa entrega milhares de pequenos objetos `Card` a um cache de vida longa, e descobre que todo `Member` de onde eles vieram também fica na memória. `Card` é declarada dentro de `Member`. Qual a causa provável, e a correção?",
+    "hint": "O que o `javap -p` mostrou dentro de uma classe interna?",
+    "choices": [
+      {
+        "text": "O cache guarda a sua própria cópia de cada `Member`; tornar `Member` final resolve",
+        "why": "Nada é copiado, e `final` numa classe não tem nada a ver com o que continua alcançável."
+      },
+      {
+        "text": "A coleta de lixo pula classes aninhadas; leve `Card` para um arquivo próprio",
+        "why": "O coletor trata toda classe igual; um arquivo separado só ajudaria por tirar a referência escondida."
+      },
+      {
+        "text": "`Card` é interna e o campo escondido segura o membro; torne-a `static`",
+        "why": "Isso: o `this$0` mantém o objeto externo alcançável, e uma classe aninhada estática não tem esse campo."
+      }
+    ]
+  },
+  "ex-fdh0ab1k": {
+    "prompt": "Um stack trace menciona a classe `Sorting$1`. Ninguém digitou esse nome. O que é?",
+    "hint": "A JVM não sabe nada de aninhamento.",
+    "choices": [
+      {
+        "text": "A primeira versão de `Sorting`, guardada por compatibilidade",
+        "why": "Arquivos de classe não levam números de versão no nome."
+      },
+      {
+        "text": "A primeira classe anônima declarada em `Sorting`",
+        "why": "Isso: o compilador nomeia classes anônimas pela classe externa e um contador."
+      },
+      {
+        "text": "Uma cópia de `Sorting` que o compilador JIT fez ao otimizá-la",
+        "why": "O JIT trabalha na memória e nunca inventa classes com nomes novos."
+      },
+      {
+        "text": "Uma classe aninhada estática chamada `1` dentro de `Sorting`",
+        "why": "Uma classe não pode ter um nome com dígito no código-fonte; só o compilador dá nomes assim."
+      }
+    ]
+  },
+  "ex-zbqz5fr2": {
+    "prompt": "`Main` está no pacote `com.example.library.app`, compilada com `javac -d out`. Do diretório do projeto, `java -cp out Main` falha. O que está errado?",
+    "hint": "O nome de uma classe inclui o pacote dela.",
+    "choices": [
+      {
+        "text": "O `-cp` tem de apontar para `out/com/example/library/app`",
+        "why": "Essa é a falha `wrong name`: o class path diz onde a árvore de pacotes começa, não o diretório da própria classe."
+      },
+      {
+        "text": "A `Main` precisa de um `import` do próprio pacote",
+        "why": "Uma classe nunca importa o próprio pacote; a execução falha pelo nome dado ao `java`."
+      },
+      {
+        "text": "O nome: tem de ser `com.example.library.app.Main`",
+        "why": "Isso: nenhuma classe se chama só `Main`, então a JVM não encontra `out/Main.class`."
+      },
+      {
+        "text": "O programa precisa ser empacotado num jar antes de rodar",
+        "why": "Um diretório no class path roda muito bem; jars são uma conveniência."
+      }
+    ]
+  },
+  "ex-e6pqm1xg": {
+    "prompt": "`mvn package` roda toda fase até `package`. Ponha estas na ordem em que o Maven as executa.",
+    "hint": "Os testes precisam de código compilado, e o jar precisa de código testado.",
+    "items": [
+      "copiar os recursos",
+      "compilar as classes principais",
+      "compilar e rodar os testes",
+      "empacotar o jar"
+    ]
+  },
+  "ex-4jkzxvpc": {
+    "prompt": "Um build do projeto do curso falha com `release version 25 not supported`, e os quatro avisos `Unsafe` não apareceram. O que você roda primeiro?",
+    "hint": "Que Java imprime esses avisos, e qual não consegue compilar para o 25?",
+    "choices": [
+      {
+        "text": "`mvn -U package`, para baixar plugins mais novos",
+        "why": "Os plugins estão fixados e estão bem; o problema é o JDK que os executa."
+      },
+      {
+        "text": "`mvn -v`, para ver que Java o Maven encontrou",
+        "why": "Isso: sem avisos e sem release 25, as duas coisas dizem que o Maven está no Java 21, neste curso pelo `JAVA_HOME`."
+      },
+      {
+        "text": "Baixar o `maven.compiler.release` para 21 no `pom.xml`",
+        "why": "Isso esconde o sintoma e compila para a versão errada; a máquina do curso tem o JDK 25."
+      },
+      {
+        "text": "Apagar o `~/.m2/repository` e compilar de novo",
+        "why": "Plugins baixados não têm nada a ver com qual compilador roda."
+      }
+    ]
+  },
+  "ex-hm751n2m": {
+    "prompt": "Um programa de longa duração termina com `OutOfMemoryError: Java heap space`. Qual é a primeira pergunta a fazer?",
+    "hint": "O coletor libera o que nada consegue alcançar.",
+    "choices": [
+      {
+        "text": "Como chamar `System.gc()` mais vezes",
+        "why": "O `System.gc()` é um pedido, e o coletor já rodou; não conseguiu liberar nada que continuava alcançável."
+      },
+      {
+        "text": "Qual `finalize` de objeto deixou de rodar",
+        "why": "Finalizadores nem liberam memória de forma confiável nem a explicam; estão marcados para remoção."
+      },
+      {
+        "text": "O que ainda guarda referências que deveria ter soltado",
+        "why": "Isso: tudo o que continua alcançável fica, e uma coleção que só cresce é a resposta de costume."
+      },
+      {
+        "text": "Quanto heap a mais dar à JVM com `-Xmx`",
+        "why": "Isso adia o erro quando algo continua crescendo; é pergunta para depois da causa."
+      }
+    ]
+  },
+  "ex-1nksy4a2": {
+    "prompt": "Um objeto ao qual nenhuma cadeia de referências leva a partir de uma raiz, como a variável local de um método em execução ou um campo estático, é ___, e o coletor pode reaproveitar a memória dele.",
+    "hint": "O contrário da palavra que a lição usou para os objetos que ficam.",
+    "blanks": [
+      {
+        "accept": [
+          "inalcançável",
+          "inalcancavel",
+          "lixo"
+        ]
+      }
+    ]
+  },
+  "ex-grk6hxkp": {
+    "prompt": "`CountingSet extends HashSet` conta num `add` sobrescrito e também num `addAll` sobrescrito. Acrescentar três ISBNs com `addAll` conta seis. Qual a correção sólida?",
+    "hint": "Se o `HashSet.addAll` chama o `add` não está no contrato dele.",
+    "choices": [
+      {
+        "text": "Tirar a contagem do `addAll`, já que o `HashSet` chama o `add` de qualquer jeito",
+        "why": "Isso funciona hoje e quebra no dia em que o `HashSet` deixar de chamar o `add`, sem nenhuma edição nesta classe."
+      },
+      {
+        "text": "Guardar um `HashSet` num campo privado e oferecer só os métodos pretendidos",
+        "why": "Isso: a composição depende dos métodos públicos do conjunto, não de como eles calham de estar escritos."
+      },
+      {
+        "text": "Dividir a contagem por dois dentro do `addAll`",
+        "why": "Isso embute o mesmo detalhe escondido duas vezes; qualquer mudança no `HashSet` quebra de novo."
+      }
+    ]
+  },
+  "ex-ne95jjpa": {
+    "prompt": "`Book extends Item`, e `Item` tem `private int year`. Um código dentro de `Book` escreve `year = 2000;`. O que acontece?",
+    "hint": "A regra da lição 14, vista de uma subclasse.",
+    "choices": [
+      {
+        "text": "Compila, porque uma subclasse tem todo campo da superclasse",
+        "why": "O livro tem, sim, um ano, definido pelo construtor de `Item`, e o próprio código dele continua sem poder mexer nele."
+      },
+      {
+        "text": "Compila e cria um segundo campo `year` em `Book`",
+        "why": "Uma atribuição nunca declara campo; precisaria de uma declaração para isso."
+      },
+      {
+        "text": "Falha: `year has private access in Item`",
+        "why": "Isso: o `private` para na classe que declara, subclasses incluídas; `protected` ou um método o abririam."
+      },
+      {
+        "text": "Falha até o `Book` chamar `super()` na primeira linha",
+        "why": "O `super(...)` constrói a parte do item; não dá acesso a campos privados."
+      }
+    ]
+  },
+  "ex-ekb5m3b3": {
+    "prompt": "Uma classe abstrata `Item` declara um construtor que recebe um título. Como ninguém pode escrever `new Item(...)`, para que serve esse construtor?",
+    "hint": "Quem constrói a parte `Item` de um `Book`?",
+    "choices": [
+      {
+        "text": "Nada: o compilador recusa construtor em classe abstrata",
+        "why": "Ele aceita; abstrata só proíbe o `new` na própria classe."
+      },
+      {
+        "text": "As subclasses o chamam com `super(title)`",
+        "why": "Isso: todo `Book` e todo `Dvd` o executam, e o campo comum é definido num lugar só."
+      },
+      {
+        "text": "Roda uma vez, quando a classe é carregada, para preparar campos estáticos",
+        "why": "Isso é um bloco estático; um construtor roda para cada objeto."
+      },
+      {
+        "text": "A reflexão o usa para criar objetos `Item` que o `new` não cria",
+        "why": "A reflexão também é recusada: uma classe abstrata não tem instâncias próprias, de jeito nenhum."
+      }
+    ]
+  },
+  "ex-hg09zy6x": {
+    "prompt": "Num desenho de método template, `Item.fee(days)` guarda o algoritmo e chama o gancho abstrato `dailyRate()`. Por que marcar o próprio `fee` como `final`?",
+    "hint": "O que uma subclasse poderia fazer com `fee` sem isso?",
+    "choices": [
+      {
+        "text": "Para o JIT poder fazer inline, coisa de que uma classe abstrata precisa",
+        "why": "Velocidade não é o motivo que a lição dá, e o JIT faz inline de métodos não finais também."
+      },
+      {
+        "text": "Porque um método que chama um método abstrato tem de ser final",
+        "why": "Essa regra não existe; o compilador aceitaria `fee` sem `final`."
+      },
+      {
+        "text": "Para nenhuma subclasse poder trocar o algoritmo e pular as regras",
+        "why": "Isso: as subclasses preenchem o gancho; os passos em volta, como o teto, ficam iguais para todas."
+      }
+    ]
+  },
+  "ex-fw28p0xd": {
+    "prompt": "`Shelf.getTitles()` devolve diretamente o seu campo privado `List<String>`. O que quem chama passa a poder fazer?",
+    "hint": "O `private` protege o campo, não o objeto para o qual ele aponta.",
+    "choices": [
+      {
+        "text": "Mexer na própria lista da estante",
+        "why": "Isso: quem chama segura a mesma lista, então o `private` não impediu nada."
+      },
+      {
+        "text": "Só ler, já que um getter devolve uma cópia somente leitura",
+        "why": "Um getter devolve o que o corpo dele devolve; aqui, a própria lista."
+      },
+      {
+        "text": "Nada, porque o campo é privado",
+        "why": "O campo é privado; a lista para a qual ele aponta foi entregue."
+      },
+      {
+        "text": "Mudar a lista só depois de convertê-la para `ArrayList`",
+        "why": "Não precisa de conversão: o `add` já está em `List`."
+      }
+    ]
+  },
+  "ex-7937nmxa": {
+    "prompt": "Para devolver uma lista que quem chama pode ler, mas que nunca muda nem acompanha mudanças posteriores do campo, escreva `return List.___(titles);`.",
+    "hint": "Uma cópia, não uma visão.",
+    "blanks": [
+      {
+        "accept": [
+          "copyOf"
+        ]
+      }
+    ]
+  },
+  "ex-h7s8b49g": {
+    "prompt": "Três classes calculam uma multa chamando `loan.getDaysLate()` e multiplicando por 50. A taxa muda para 75. O que o tell-don't-ask diz que devia ter sido feito?",
+    "hint": "Onde o número deve morar?",
+    "choices": [
+      {
+        "text": "Uma constante pública `RATE` que as três classes leem",
+        "why": "Isso conserta o número e ainda deixa a regra copiada três vezes."
+      },
+      {
+        "text": "Um método `loan.lateFee()`, para a regra morar em `Loan` uma vez",
+        "why": "Isso: quem chama pede a resposta, e a regra muda num lugar só."
+      },
+      {
+        "text": "Um setter `setRate` em cada classe que chama, para cada uma escolher",
+        "why": "Isso multiplica os lugares onde a regra pode discordar de si mesma."
+      },
+      {
+        "text": "Nada: getters são o jeito encapsulado de compartilhar dados",
+        "why": "Um getter expõe um valor; a regra que o usa continua em três classes."
+      }
+    ]
+  },
+  "ex-r09gjtxe": {
+    "prompt": "Uma interface usada por dez classes ganha um método novo. Quando acrescentá-lo deixa as dez compilando sem mudança?",
+    "hint": "Desde o Java 8 um método de interface pode ter corpo.",
+    "choices": [
+      {
+        "text": "Quando o método novo é declarado `abstract`",
+        "why": "Um método abstrato é justamente o que cada uma das dez teria de implementar."
+      },
+      {
+        "text": "Nunca: todo implementador tem de ser recompilado com ele",
+        "why": "Recompilar não é o problema; faltar implementação é, e um corpo resolve isso."
+      },
+      {
+        "text": "Quando é um método `default` com corpo",
+        "why": "Isso: as classes que não o sobrescrevem herdam o corpo."
+      }
+    ]
+  },
+  "ex-j1k05pex": {
+    "prompt": "`Book` estende `Item`, que tem um método público `label()`, e implementa `Lendable`, que tem um `label()` default com a mesma assinatura. `Book` não declara `label()`. O que acontece?",
+    "hint": "Dois defaults colidem; uma classe e um default, não.",
+    "choices": [
+      {
+        "text": "Um erro de compilação, como com dois defaults em conflito",
+        "why": "O erro é para duas interfaces; um método da superclasse entra numa regra diferente."
+      },
+      {
+        "text": "Compila, e roda o `Item.label()`: a classe vence",
+        "why": "Isso: um método herdado de uma classe vence um método default."
+      },
+      {
+        "text": "Compila, e roda o default, porque a interface é nomeada por último",
+        "why": "A ordem em `extends` e `implements` não decide nada."
+      },
+      {
+        "text": "Compila só se `Book` escrever `Lendable.super.label()`",
+        "why": "Essa sintaxe escolhe um default explicitamente; aqui não há o que escolher."
+      }
+    ]
+  },
+  "ex-ss8a1djd": {
+    "prompt": "Uma classe permitida por uma interface selada precisa dizer uma de três palavras. Ligue cada uma ao que significa.",
+    "hint": "A hierarquia para, continua fechada, ou abre.",
+    "pairs": [
+      {
+        "left": "`final`",
+        "right": "Nada pode estendê-la"
+      },
+      {
+        "left": "`sealed`",
+        "right": "Ela nomeia as suas próprias subclasses permitidas"
+      },
+      {
+        "left": "`non-sealed`",
+        "right": "Qualquer classe pode estendê-la de novo"
+      }
+    ],
+    "right_distractors": [
+      "Ela só pode ser usada dentro do seu pacote"
+    ]
+  },
+  "ex-ck5hdtqa": {
+    "prompt": "Uma classe tem `print(long n)` e `print(Integer n)`. Qual deles `print(5)` chama?",
+    "hint": "Ordene as conversões que o compilador tenta.",
+    "choices": [
+      {
+        "text": "`print(long)`",
+        "why": "Isso: alargar `int` para `long` tem preferência sobre encaixotar em `Integer`."
+      },
+      {
+        "text": "`print(Integer)`, porque `Integer` guarda um `int` exatamente",
+        "why": "O encaixotamento só é considerado se nenhuma conversão de alargamento servir."
+      },
+      {
+        "text": "Nenhum: a chamada é ambígua e não compila",
+        "why": "A ordem de preferência resolve, então não há ambiguidade aqui."
+      },
+      {
+        "text": "O que estiver escrito primeiro na classe",
+        "why": "A ordem no código não tem papel na escolha da sobrecarga."
+      }
+    ]
+  },
+  "ex-131w7adx": {
+    "prompt": "Quando várias sobrecargas poderiam receber um argumento, ponha as três formas de o compilador casá-lo na ordem de preferência, a melhor primeiro.",
+    "hint": "Varargs é o último recurso.",
+    "items": [
+      "Alargar um primitivo, `int` para `long`",
+      "Encaixotar, `int` para `Integer`",
+      "Varargs, `int` em `int...`"
+    ]
+  },
+  "ex-2x601nx8": {
+    "prompt": "`Book` declara `public boolean equals(Book other)` comparando ISBNs, e um `hashCode` correto. Dois livros com o mesmo ISBN entram num `HashSet`. Qual o tamanho dele, e por quê?",
+    "hint": "Qual `equals` uma coleção chama?",
+    "choices": [
+      {
+        "text": "1, porque os hash codes são iguais e o conjunto compara ISBNs",
+        "why": "O conjunto chama `equals(Object)`, e `Book` nunca sobrescreveu esse."
+      },
+      {
+        "text": "1, porque o `HashSet` chama o `equals` mais específico que encontrar",
+        "why": "Sobrecargas são escolhidas na compilação pelo tipo declarado, que dentro do conjunto é `Object`."
+      },
+      {
+        "text": "2: `equals(Book)` sobrecarrega `equals(Object)` e o conjunto nunca o chama",
+        "why": "Isso: `Object.equals` compara identidade, e os dois são objetos diferentes."
+      },
+      {
+        "text": "Não compila: o `equals` tem de receber `Object`",
+        "why": "Compila; só um `@Override` nele teria transformado o engano em erro."
+      }
+    ]
+  },
+  "ex-1zsd6z6f": {
+    "prompt": "`Item item = new Book(...);` e as duas classes declaram `describe()`. De quem é o `describe()` que roda em `item.describe()`?",
+    "hint": "O objeto decide o que roda.",
+    "choices": [
+      {
+        "text": "O de `Item`, porque esse é o tipo declarado da variável",
+        "why": "O tipo declarado decide o que pode ser chamado; o objeto decide qual corpo roda."
+      },
+      {
+        "text": "O de `Book`",
+        "why": "Isso: métodos de instância são ligados dinamicamente, à classe real do objeto."
+      },
+      {
+        "text": "Os dois, primeiro o de `Item` e depois o de `Book`",
+        "why": "Uma sobrescrita substitui; só roda o de `Item` se ela mesma chamar `super.describe()`."
+      }
+    ]
+  },
+  "ex-hfakyqr6": {
+    "prompt": "`Item` e `Book` declaram cada uma um campo público `name`, e `Book extends Item`. Com `Item item = new Book();`, qual `name` o `item.name` lê?",
+    "hint": "Campos não participam do despacho dinâmico.",
+    "choices": [
+      {
+        "text": "O de `Item`, porque um campo é escolhido pelo tipo declarado",
+        "why": "Isso: o campo de `Book` esconde o de `Item`, e o acesso é ligado na compilação."
+      },
+      {
+        "text": "O de `Book`, porque o objeto é um `Book`",
+        "why": "Isso é como um método se comporta; um campo segue o tipo da variável."
+      },
+      {
+        "text": "Nenhum: o compilador recusa dois campos com o mesmo nome",
+        "why": "Ele aceita; o segundo campo esconde o primeiro."
+      },
+      {
+        "text": "O que o construtor atribuiu por último",
+        "why": "Há dois campos separados no objeto, e os dois guardam os seus valores."
+      }
+    ]
+  },
+  "ex-phgbda3e": {
+    "prompt": "Quais destes são decididos na compilação, pelo tipo declarado, e não pelo objeto em tempo de execução? Escolha todos os que se aplicam.",
+    "hint": "Só métodos de instância sobrescrevíveis seguem o objeto.",
+    "choices": [
+      {
+        "text": "Chamar um método `static` através de uma variável",
+        "why": "Sim: métodos estáticos escondem em vez de sobrescrever, e o tipo declarado escolhe."
+      },
+      {
+        "text": "Ler um campo",
+        "why": "Sim: campos escondem, e o acesso segue o tipo declarado."
+      },
+      {
+        "text": "Chamar um método de instância público que uma subclasse sobrescreve",
+        "why": "Não: isso é despacho dinâmico, decidido pela classe do objeto."
+      },
+      {
+        "text": "Escolher entre duas sobrecargas",
+        "why": "Sim: a resolução de sobrecarga acontece no `javac`, pelos tipos declarados dos argumentos."
+      },
+      {
+        "text": "Chamar um método de interface numa variável do tipo da interface",
+        "why": "Não: roda o método do objeto que implementa, escolhido em tempo de execução."
+      }
+    ]
+  },
+  "ex-3mymq0fz": {
+    "prompt": "Um programa escreve `title.strip();` numa linha sozinha e depois imprime `title`, que ainda tem os espaços. Por quê?",
+    "hint": "O que um método de um objeto imutável devolve?",
+    "choices": [
+      {
+        "text": "O `strip` só remove tabulações, não espaços",
+        "why": "Ele remove os dois; o resultado só não foi guardado."
+      },
+      {
+        "text": "Strings ficam em cache, então o print mostrou uma cópia antiga",
+        "why": "Há uma string só e ela nunca mudou; cache não tem nada a ver."
+      },
+      {
+        "text": "O `strip` devolveu uma string nova, e a linha a jogou fora",
+        "why": "Isso: `title = title.strip();` a guarda."
+      }
+    ]
+  },
+  "ex-3m2mtjvb": {
+    "prompt": "Num builder de um `Loan` imutável, onde são conferidas as regras sobre as partes, como a data de devolução depois da data de início?",
+    "hint": "Só um método vê todas as partes de uma vez.",
+    "choices": [
+      {
+        "text": "Em cada setter `withX`, quando o valor chega",
+        "why": "Um setter vê uma parte; uma regra entre duas partes só pode ser conferida quando as duas chegaram."
+      },
+      {
+        "text": "No `build()`, uma vez, com todas as partes à vista",
+        "why": "Isso: o `build()` valida e então cria o empréstimo."
+      },
+      {
+        "text": "Em quem chama, antes de o builder ser criado",
+        "why": "Aí cada um que chama repete as regras, e algum vai esquecer."
+      },
+      {
+        "text": "Em lugar nenhum: o propósito do builder é pular a validação",
+        "why": "O propósito dele é um jeito legível de passar muitas partes; a validação fica."
+      }
+    ]
+  },
+  "ex-2w20nj42": {
+    "prompt": "`Book extends Item`, e nenhuma das duas classes foi usada ainda. Ponha estes passos do primeiro `new Book()` na ordem em que rodam.",
+    "hint": "A superclasse primeiro, nos dois níveis.",
+    "items": [
+      "O bloco estático de `Item`",
+      "O bloco estático de `Book`",
+      "O bloco de instância de `Item`",
+      "O corpo do construtor de `Item`",
+      "O corpo do construtor de `Book`"
+    ]
+  },
+  "ex-2qds8fw0": {
+    "prompt": "Um programa cria cinco objetos `Book`. Quantas vezes roda o bloco estático de `Book`?",
+    "hint": "Ele pertence à classe, não a um objeto.",
+    "unit": "vezes"
+  },
+  "ex-748cmgk7": {
+    "prompt": "O construtor de `Item` chama `describe()`, que `Book` sobrescreve para imprimir o seu campo `pages`, declarado `int pages = 100;`. O que a primeira linha impressa por `new Book()` mostra em `pages`?",
+    "hint": "De quem é a parte do objeto construída primeiro?",
+    "choices": [
+      {
+        "text": "100, porque o inicializador está na mesma linha do campo",
+        "why": "O inicializador roda no passo 5, depois que o construtor de `Item` já fez a chamada."
+      },
+      {
+        "text": "Nada: o compilador recusa uma chamada sobrescrevível num construtor",
+        "why": "Compila sem uma palavra; é por isso que é uma armadilha."
+      },
+      {
+        "text": "Roda a versão de `Item`, já que `Book` ainda não foi construído",
+        "why": "O despacho segue a classe do objeto desde o começo: roda a versão de `Book`."
+      },
+      {
+        "text": "0: os inicializadores de `Book` ainda não rodaram",
+        "why": "Isso: a sobrescrita roda num objeto cuja parte `Book` ainda tem os valores padrão."
+      }
+    ]
+  },
+  "ex-73qawna6": {
+    "prompt": "Um arquivo salva o gênero de cada livro como `genre.ordinal()`. Uma constante nova é inserida no topo do enum. O que acontece com os livros salvos quando são lidos de volta?",
+    "hint": "O que um ordinal mede?",
+    "choices": [
+      {
+        "text": "Voltam corretos, já que o ordinal é fixado quando a constante é criada",
+        "why": "Um ordinal é a posição na lista, e toda posição depois da inserção mudou."
+      },
+      {
+        "text": "A leitura falha com exceção para todo livro",
+        "why": "Nada falha: cada número ainda nomeia alguma constante, só que a errada."
+      },
+      {
+        "text": "Todo livro volta com o gênero deslocado em um, sem erro",
+        "why": "Isso: guarde o `name()`, que sobrevive a uma inserção."
+      }
+    ]
+  },
+  "ex-qw60hvsj": {
+    "prompt": "Para transformar o texto `\"POETRY\"` de volta na constante `Genre.POETRY`, chame `Genre.___(\"POETRY\")`.",
+    "hint": "Lança exceção se o nome não for exato.",
+    "blanks": [
+      {
+        "accept": [
+          "valueOf"
+        ]
+      }
+    ]
+  },
+  "ex-17nrtk6p": {
+    "prompt": "Dado `record Isbn(String value) {}`, como você lê o componente de um `Isbn` chamado `isbn`?",
+    "hint": "Os acessores têm o nome dos componentes.",
+    "choices": [
+      {
+        "text": "`isbn.getValue()`",
+        "why": "Records não seguem a convenção do `get`."
+      },
+      {
+        "text": "`isbn.value`, já que o campo é público",
+        "why": "O campo é `private final`; o acessor é o caminho."
+      },
+      {
+        "text": "`isbn.get(\"value\")`",
+        "why": "Não há busca por nome; cada componente tem o seu próprio método."
+      },
+      {
+        "text": "`isbn.value()`",
+        "why": "Isso: um acessor por componente, com o nome do componente."
+      }
+    ]
+  },
+  "ex-a5phrrf6": {
+    "prompt": "`record Shelf(String name, List<String> titles) {}` é construído a partir de um `ArrayList`. Depois o código que o construiu acrescenta um título a esse `ArrayList`. A estante muda?",
+    "hint": "Um record é tão imutável quanto os seus componentes.",
+    "choices": [
+      {
+        "text": "Sim, a menos que o construtor compacto guarde `List.copyOf(titles)`",
+        "why": "Isso: o campo final guarda a mesma lista; uma cópia no construtor corta a ligação."
+      },
+      {
+        "text": "Não, porque um record copia todo componente que recebe",
+        "why": "Um record guarda o que recebe; copiar é trabalho de quem escreve."
+      },
+      {
+        "text": "Não, porque o campo é `final`",
+        "why": "O `final` fixa a referência, não o conteúdo da lista para a qual ela aponta."
+      },
+      {
+        "text": "Lança exceção, porque records proíbem componentes mutáveis",
+        "why": "Records aceitam qualquer tipo de componente; nada confere mutabilidade."
+      }
+    ]
+  },
+  "ex-5dff8g6s": {
+    "prompt": "`int a = 3, b = 5;` e `swap(a, b)` troca os seus dois parâmetros dentro do método. O que `System.out.println(a)` imprime depois?",
+    "hint": "O método recebeu cópias."
+  },
+  "ex-jya7c1cy": {
+    "prompt": "Um método `void reset(Book b) { b = new Book(\"blank\"); }` é chamado como `reset(mine)`. O que acontece com `mine`?",
+    "hint": "Duas setas, e depois uma delas se move.",
+    "choices": [
+      {
+        "text": "`mine` passa a referir-se ao livro em branco",
+        "why": "Só a cópia da referência, `b`, foi apontada para o livro novo."
+      },
+      {
+        "text": "Os campos do livro original são sobrescritos com os do livro em branco",
+        "why": "Atribuir a `b` move uma seta; não copia campo nenhum para objeto nenhum."
+      },
+      {
+        "text": "Não compila: um parâmetro não pode ser reatribuído",
+        "why": "Compila; um parâmetro é uma variável local, a menos que seja declarado `final`."
+      },
+      {
+        "text": "Nada: `mine` continua se referindo ao mesmo livro, sem mudança",
+        "why": "Isso: o Java passou uma cópia da referência, e reatribuir uma cópia não alcança ninguém."
+      }
+    ]
+  },
+  "ex-8rscg79n": {
+    "prompt": "`List<Integer> ids` contém `[7, 3, 5]`. Depois de `ids.remove(2)`, o que ele contém?",
+    "hint": "Um literal `int` e dois métodos chamados `remove`.",
+    "choices": [
+      {
+        "text": "`[7, 3, 5]`, porque não há elemento igual a 2",
+        "why": "Isso seria o `remove(Object)`; recebendo um `int`, o compilador escolhe o `remove(int index)`."
+      },
+      {
+        "text": "`[7, 3]`",
+        "why": "Isso: aqui o `2` é um índice, e o índice 2 guarda o 5."
+      },
+      {
+        "text": "`[3, 5]`, porque o primeiro elemento é removido",
+        "why": "Remover o índice 0 faria isso; o argumento foi 2."
+      },
+      {
+        "text": "Um erro de compilação, porque a chamada é ambígua",
+        "why": "Não é ambígua: a versão com `int` casa sem boxing, então vence."
+      }
+    ]
+  },
+  "ex-3htt8577": {
+    "prompt": "Um método recebe `List<String> titles` e chama `titles.add(\"Emma\")`. Um chamador passa `Arrays.asList(shelf)`, outro `List.of(\"Dune\")`. O que acontece?",
+    "hint": "Nenhum desses dois constrói uma lista que pode crescer.",
+    "choices": [
+      {
+        "text": "O primeiro funciona, porque copia o array numa lista nova",
+        "why": "O `Arrays.asList` embrulha o array sem copiá-lo, e um array não cresce."
+      },
+      {
+        "text": "Os dois lançam `UnsupportedOperationException`, sempre",
+        "why": "Isso: um é uma visão de tamanho fixo de um array, o outro não muda de jeito nenhum, e o tipo `List` esconde os dois fatos."
+      },
+      {
+        "text": "Os dois falham na compilação, porque esses métodos não devolvem um `List`",
+        "why": "Os dois devolvem `List`, e é justamente por isso que o compilador não consegue avisar."
+      },
+      {
+        "text": "O segundo funciona, já que o `List.of` só recusa o `set`",
+        "why": "O `List.of` recusa toda mudança, de tamanho e de elementos."
+      }
+    ]
+  },
+  "ex-qvkw92a1": {
+    "prompt": "Um `ArrayList` aumenta o array interno de 10 posições para 15, depois 22. Pela mesma regra, quantas posições tem o array que substitui um de 22 cheio?",
+    "hint": "O tamanho antigo mais a metade dele, arredondada para baixo.",
+    "unit": "posições"
+  },
+  "ex-s35qbpp0": {
+    "prompt": "Um programa precisa responder, milhares de vezes por segundo, se um ISBN já foi visto. Que coleção serve?",
+    "hint": "\"Este está aí dentro?\"",
+    "choices": [
+      {
+        "text": "Um `ArrayList` consultado com `contains`",
+        "why": "O `contains` numa lista lê os elementos um a um até achar: um `Set` escrito do jeito lento."
+      },
+      {
+        "text": "Um `HashSet`",
+        "why": "Isso: o hash code pula direto para um balde, e a pergunta é exatamente aquela para a qual um `Set` foi feito."
+      },
+      {
+        "text": "Um `TreeMap` de ISBN para `true`",
+        "why": "Um mapa com valor fictício é um conjunto disfarçado, e a ordem ordenada é paga e nunca lida."
+      },
+      {
+        "text": "Um `LinkedList`, porque os elementos não são lidos por posição",
+        "why": "Uma lista ligada também percorre nó a nó para responder ao `contains`."
+      }
+    ]
+  },
+  "ex-yps9ft46": {
+    "prompt": "Uma classe `Book` sobrescreve `equals` pelo ISBN e não sobrescreve `hashCode`. Dois livros iguais entram num `HashSet`. O que o conjunto informa?",
+    "hint": "Que passo da busca por hash decide o balde?",
+    "choices": [
+      {
+        "text": "Tamanho 1, porque o `equals` barra o segundo",
+        "why": "O `equals` só é comparado dentro de um balde, e os dois livros caíram em baldes diferentes."
+      },
+      {
+        "text": "Uma exceção no segundo `add`, apontando o contrato quebrado",
+        "why": "Nada confere o contrato: o conjunto fica errado, em silêncio."
+      },
+      {
+        "text": "Tamanho 2, e um terceiro igual não é achado",
+        "why": "Isso: o `hashCode` de `Object` dá a cada objeto um número próprio, então livros iguais nunca se encontram."
+      }
+    ]
+  },
+  "ex-qp4m45k4": {
+    "prompt": "Ligue cada classe de `Map` à ordem em que percorre as chaves.",
+    "hint": "Elas espelham os três conjuntos.",
+    "pairs": [
+      {
+        "left": "`HashMap`",
+        "right": "Nenhuma ordem confiável"
+      },
+      {
+        "left": "`LinkedHashMap`",
+        "right": "A ordem em que as chaves foram inseridas"
+      },
+      {
+        "left": "`TreeMap`",
+        "right": "Ordenada pelas chaves"
+      }
+    ],
+    "right_distractors": [
+      "A ordem da última mudança nos valores"
+    ]
+  },
+  "ex-v4ys1da4": {
+    "prompt": "Um balcão atende pedidos na ordem de chegada, e um balcão vazio à noite é normal. Que par de declaração e chamada lê melhor?",
+    "hint": "Forma que lança para um erro, valor especial para um resultado normal.",
+    "choices": [
+      {
+        "text": "`Queue<Request> q = new ArrayDeque<>()` e `q.poll()`, testando `null`",
+        "why": "Isso: primeiro a entrar, primeiro a sair, e o `poll` responde `null` no caso normal de fila vazia."
+      },
+      {
+        "text": "`Stack<Request>` e `pop()`",
+        "why": "Uma pilha atende primeiro o pedido mais novo, e o `pop` lança exceção com a pilha vazia."
+      },
+      {
+        "text": "`Queue<Request> q = new LinkedList<>()` e `q.remove()`",
+        "why": "O `remove()` lança exceção com a fila vazia, e o `LinkedList` é a fila mais lenta."
+      },
+      {
+        "text": "`PriorityQueue<Request>` e `peek()`",
+        "why": "Uma fila de prioridade atende o menor, não o mais antigo, e o `peek` não retira nada."
+      }
+    ]
+  },
+  "ex-jzgq57nb": {
+    "prompt": "Por que a própria documentação do JDK manda trocar `Stack` por `Deque` para fazer uma pilha?",
+    "hint": "O que o `Stack` estende?",
+    "choices": [
+      {
+        "text": "O `Stack` não guarda mais de 1024 elementos",
+        "why": "Não existe esse limite; o problema é o que o `Stack` deixa fazer, não quanto ele guarda."
+      },
+      {
+        "text": "Ele estende `Vector`, então métodos de lista como `add(0, x)` e `get(i)` furam a pilha, e toda chamada paga por travamento",
+        "why": "Isso: no código ele é uma lista, e no significado não, e os métodos dele são `synchronized`."
+      },
+      {
+        "text": "O `Stack.pop` devolve `null` com a pilha vazia, escondendo erros",
+        "why": "O `pop` lança exceção com a pilha vazia, como o da deque; o problema está em outro lugar."
+      }
+    ]
+  },
+  "ex-jymcyg8q": {
+    "prompt": "Um `for-each` sobre um `ArrayList` chama `loans.remove(loan)` quando acha um item, e o programa termina sem exceção. O que você pode concluir?",
+    "hint": "Quando o iterador confere o `modCount`?",
+    "choices": [
+      {
+        "text": "Que remover dentro de um `for-each` é seguro para esta lista",
+        "why": "Nunca é seguro: a conferência é de melhor esforço, o `hasNext` não a faz, e a próxima execução pode falhar."
+      },
+      {
+        "text": "Que a JVM pode copiar a lista para o laço",
+        "why": "Nenhuma cópia é feita: o laço percorre a própria lista pelo iterador."
+      },
+      {
+        "text": "Nada: a conferência que lança a exceção não rodou",
+        "why": "Isso: se a remoção deixa o cursor igual ao tamanho, o `hasNext` diz que acabou e a conferência nunca roda."
+      },
+      {
+        "text": "Que o elemento encontrado era o primeiro",
+        "why": "A posição que escapa é a vizinha do fim, não a primeira."
+      }
+    ]
+  },
+  "ex-386hjnxg": {
+    "prompt": "Para remover de uma lista todo elemento que atende uma condição, sem escrever um laço, chame `list.___(...)`.",
+    "hint": "O mais curto dos quatro jeitos seguros.",
+    "blanks": [
+      {
+        "accept": [
+          "removeIf"
+        ]
+      }
+    ]
+  },
+  "ex-15a6jfb2": {
+    "prompt": "Quais destes mudam uma lista com segurança enquanto ela é percorrida? Escolha todos os que se aplicam.",
+    "hint": "Quem muda a lista tem de ser quem a percorre.",
+    "choices": [
+      {
+        "text": "`it.remove()` num `Iterator` explícito",
+        "why": "Sim: o próprio iterador faz a mudança e mantém a contagem em dia."
+      },
+      {
+        "text": "`list.add(x)` dentro de um `for-each` sobre a mesma lista",
+        "why": "Não: a mudança vem de fora do iterador, e é estrutural."
+      },
+      {
+        "text": "`ListIterator.set` e `ListIterator.add`",
+        "why": "Sim: o iterador de lista fez cada inserção, então passa por elas sem problema."
+      },
+      {
+        "text": "Um `for-each` sobre `List.copyOf(list)` que remove de `list`",
+        "why": "Sim: o percurso é sobre uma cópia que não muda."
+      }
+    ]
+  },
+  "ex-yywdzhtz": {
+    "prompt": "Um método `double total(List<Number> amounts)` recusa um `List<Integer>`. Que assinatura o aceita e ainda deixa o método ler os valores?",
+    "hint": "Produtor `extends`, consumidor `super`.",
+    "choices": [
+      {
+        "text": "`double total(List<? extends Number> amounts)`",
+        "why": "Isso: o método só lê, então a lista é produtora de `Number`s."
+      },
+      {
+        "text": "`double total(List<? super Number> amounts)`, para caber qualquer lista de números",
+        "why": "O `? super Number` aceita listas de `Number` ou `Object`, não de `Integer`."
+      },
+      {
+        "text": "`double total(List amounts)`, o tipo cru",
+        "why": "Compila com avisos e abre mão da conferência que os colchetes angulares davam."
+      },
+      {
+        "text": "Não há: generics proíbem passar a lista de um subtipo",
+        "why": "Um curinga é o jeito de dizer que um método aceita listas de subtipos."
+      }
+    ]
+  },
+  "ex-8bwcffst": {
+    "prompt": "Um `List` cru junta títulos, e alguém acrescenta um `Integer` por engano. Onde o programa falha, e por que isso é um problema?",
+    "hint": "O cast é onde o estrago é descoberto.",
+    "choices": [
+      {
+        "text": "No `add`, que lança `ClassCastException` na hora",
+        "why": "Uma lista crua aceita qualquer coisa; nada é conferido no `add`."
+      },
+      {
+        "text": "Na compilação, porque o `javac` recusa tipos crus",
+        "why": "O `javac` compila tipos crus com uma nota unchecked; não os recusa."
+      },
+      {
+        "text": "Depois, num cast longe do `add`, e o stack trace aponta para longe do erro",
+        "why": "Isso: o trace mostra onde o valor foi lido, num programa real outra classe, escrita por outra pessoa."
+      }
+    ]
+  },
+  "ex-66zc7gxh": {
+    "prompt": "Por causa da ___ de tipos, um `List<String>` e um `List<Integer>` são a mesma classe em tempo de execução.",
+    "hint": "O compilador apaga os argumentos de tipo.",
+    "blanks": [
+      {
+        "accept": [
+          "erasure",
+          "apagamento"
+        ]
+      }
+    ]
+  },
+  "ex-934b8bae": {
+    "prompt": "Um stack trace é impresso para uma exceção lançada em `daysLate`, chamado por `fine`, chamado por `main`. Ponha as linhas na ordem em que são impressas.",
+    "hint": "A chamada mais recente primeiro.",
+    "items": [
+      "A classe e a mensagem da exceção",
+      "`at Fine.daysLate`",
+      "`at Fine.fine`",
+      "`at Fine.main`"
+    ]
+  },
+  "ex-bz7rz3k5": {
+    "prompt": "Por que quem chama `Files.readString` precisa capturar ou declarar `IOException`, e quem chama `Integer.parseInt` não precisa capturar nada?",
+    "hint": "Depende da classe da exceção.",
+    "choices": [
+      {
+        "text": "O `readString` pode falhar e o `parseInt` não",
+        "why": "O `parseInt` falha com facilidade, com `NumberFormatException`."
+      },
+      {
+        "text": "`IOException` é checada; `NumberFormatException` estende `RuntimeException`",
+        "why": "Isso: um arquivo ausente acontece até a um programa correto, um número inválido é bug, e as classes dizem isso."
+      },
+      {
+        "text": "Acesso a arquivo é uma operação privilegiada que o compilador audita",
+        "why": "O compilador não sabe nada de arquivos; ele lê a cláusula `throws` do método chamado."
+      },
+      {
+        "text": "O `parseInt` captura a própria exceção por dentro",
+        "why": "Ele a lança para quem chamou, e é por isso que o programa terminou com um stack trace."
+      }
+    ]
+  },
+  "ex-ns4b5ydn": {
+    "prompt": "O `try` de um método lança uma exceção, e o `finally` dele contém `return \"ok\";`. O que vê quem chamou?",
+    "hint": "O que sai do método quando o `finally` retorna?",
+    "choices": [
+      {
+        "text": "A exceção, porque o `finally` não muda o que é lançado",
+        "why": "Um `return` no `finally` substitui o que estava saindo, inclusive uma exceção."
+      },
+      {
+        "text": "`\"ok\"`, e a exceção some sem deixar rastro",
+        "why": "Isso: nenhum stack trace, nenhuma mensagem, e é por isso que o compilador avisa com `-Xlint:finally`."
+      },
+      {
+        "text": "Um erro de compilação, já que um `finally` é proibido de conter `return`",
+        "why": "Compila; só um aviso de lint o aponta."
+      },
+      {
+        "text": "Os dois, com a exceção suprimida presa ao resultado",
+        "why": "Exceções suprimidas são do try-with-resources e vão presas a uma exceção, nunca a um valor de retorno."
+      }
+    ]
+  },
+  "ex-84w2f9y4": {
+    "prompt": "`try (var a = open(\"a\"); var b = open(\"b\")) { ... } catch (Exception e) { ... } finally { ... }` e o corpo lança uma exceção. Ponha o que acontece em ordem.",
+    "hint": "Ordem inversa para fechar, e tudo fechado antes do tratador.",
+    "items": [
+      "`b` é fechado",
+      "`a` é fechado",
+      "o bloco `catch` roda",
+      "o bloco `finally` roda"
+    ]
+  },
+  "ex-fwex7ax4": {
+    "prompt": "Num try-with-resources, o corpo lança uma exceção e depois o `close` também lança. O que recebe quem chamou?",
+    "hint": "Qual das duas explica por que o trabalho não aconteceu?",
+    "choices": [
+      {
+        "text": "A exceção do `close`, que substituiu a primeira",
+        "why": "Esse é o mascaramento que um `finally` escrito à mão causa; o try-with-resources mantém a primeira."
+      },
+      {
+        "text": "Uma exceção nova envolvendo as duas como causas",
+        "why": "Nenhuma exceção nova é criada, e causa é outra relação."
+      },
+      {
+        "text": "A do corpo, com a do `close` suprimida",
+        "why": "Isso: a linha `Suppressed:` fica embaixo do trace do próprio corpo."
+      }
+    ]
+  },
+  "ex-wnb9dvht": {
+    "prompt": "O laço de um servidor envolve cada pedido em `catch (Exception e)` e registra o erro. Um pedido entra em recursão sem fim. O que o `catch` faz?",
+    "hint": "Onde fica o `StackOverflowError` na árvore?",
+    "choices": [
+      {
+        "text": "Registra o erro e o laço segue",
+        "why": "O `StackOverflowError` não é uma `Exception`, então este `catch` não o pega."
+      },
+      {
+        "text": "Nada: é um `Error`, e passa direto",
+        "why": "Isso: ele descende de `Error`, o outro galho sob `Throwable`."
+      },
+      {
+        "text": "Pega só se o método declarar `throws StackOverflowError`",
+        "why": "Declarar um throwable não checado não muda qual `catch` casa."
+      }
+    ]
+  },
+  "ex-j5yf2b3c": {
+    "prompt": "Um carregador captura uma `IOException` que não sabe tratar e lança `new CatalogueException(\"cannot load the catalogue\")`. O que se perde, e como se preserva?",
+    "hint": "O relato do JDK sobre o que deu errado de fato.",
+    "choices": [
+      {
+        "text": "A exceção original e o trace dela; passe-a como causa, e o `Caused by:` a imprime",
+        "why": "Isso: a exceção nova diz o que falhou aqui, e a causa diz por quê."
+      },
+      {
+        "text": "Não se perde informação, porque a mensagem já diz o que deu errado",
+        "why": "Ela diz o que falhou neste programa, não por quê: o arquivo ausente sumiu."
+      },
+      {
+        "text": "O número da linha; ponha-o na mensagem à mão",
+        "why": "A exceção nova tem o próprio trace; o que some é o da original."
+      },
+      {
+        "text": "O status de checada; faça `CatalogueException` estender `IOException`",
+        "why": "Ser checada ou não é outra decisão; a informação perdida é a exceção original."
+      }
+    ]
+  },
+  "ex-ebnsxhff": {
+    "prompt": "Um framework encontra, por reflexão e com o programa rodando, os métodos marcados com `@Check`. Que retenção o `@Check` precisa declarar?",
+    "hint": "Só uma das três chega ao programa em execução.",
+    "choices": [
+      {
+        "text": "`CLASS`, a padrão",
+        "why": "`CLASS` grava no arquivo de classe e a JVM não carrega."
+      },
+      {
+        "text": "`SOURCE`",
+        "why": "O compilador a descarta depois de compilar, então nada em tempo de execução a enxergaria."
+      },
+      {
+        "text": "`RUNTIME`",
+        "why": "Isso: só uma anotação `RUNTIME` é visível à reflexão."
+      }
+    ]
+  },
+  "ex-5q0rtyh5": {
+    "prompt": "Uma classe declara `public String tostring()` com `@Override` em cima. O que acontece?",
+    "hint": "O que o `@Override` pede ao compilador que confira?",
+    "choices": [
+      {
+        "text": "Compila, e imprimir o objeto usa o método novo",
+        "why": "O `s` minúsculo faz dele outro método; nada o chamaria."
+      },
+      {
+        "text": "O compilador recusa: nada acima tem esse método",
+        "why": "Isso: a anotação transforma o erro de digitação em erro de compilação."
+      },
+      {
+        "text": "Compila com um aviso, e o `toString` é renomeado",
+        "why": "O compilador não renomeia nada; ele recusa o arquivo."
+      },
+      {
+        "text": "Falha em tempo de execução com `NoSuchMethodError`",
+        "why": "A conferência acontece na compilação, antes de qualquer coisa rodar."
+      }
+    ]
+  },
+  "ex-j6yvcn6f": {
+    "prompt": "O `module-info.java` de uma biblioteca exporta `com.example.library.api` e não `com.example.library.internal`. Um módulo de aplicação importa uma classe `public` de `internal`. O que acontece?",
+    "hint": "Para o módulo da aplicação, o que é esse pacote?",
+    "choices": [
+      {
+        "text": "Compila, porque a classe é `public`",
+        "why": "Acima do pacote, quem decide é o módulo; `public` já não basta."
+      },
+      {
+        "text": "Compila com aviso e falha ao rodar",
+        "why": "A recusa vem na compilação."
+      },
+      {
+        "text": "Para o `javac`, o pacote não existe",
+        "why": "Isso: um pacote não exportado não faz parte do que a biblioteca oferece."
+      }
+    ]
+  },
+  "ex-3ggp9qm3": {
+    "prompt": "Uma aplicação típica, feita com Maven e um framework web, não tem `module-info.java`. Onde ela roda?",
+    "hint": "O projeto da lição 18, e quase todo serviço.",
+    "choices": [
+      {
+        "text": "No class path, como quase todo software Java",
+        "why": "Isso: módulos só amarram código que roda como módulo."
+      },
+      {
+        "text": "Não roda no Java 25 sem uma declaração de módulo",
+        "why": "Aplicações no class path rodam em toda versão desde a 9."
+      },
+      {
+        "text": "No module path, onde o `java` a transforma em módulo",
+        "why": "Isso a tornaria um módulo automático ou nomeado; uma aplicação comum fica no class path."
+      },
+      {
+        "text": "Dentro de um runtime montado com `jlink`",
+        "why": "O `jlink` recusa um programa que não é modular."
+      }
+    ]
+  }
+}

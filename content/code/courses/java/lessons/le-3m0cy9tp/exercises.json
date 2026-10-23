@@ -1,0 +1,507 @@
+[
+  {
+    "id": "ex-r6dwhqjk",
+    "version": 1,
+    "section": "abstract-classes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `Item` abstract, which line in `Desk` did the compiler refuse?",
+    "hint": "An abstract class may be a type; it may not be an object.",
+    "choices": [
+      {
+        "text": "`Item mystery = new Item(\"Untitled\");`",
+        "correct": true,
+        "why": "Right: `Item is abstract; cannot be instantiated`."
+      },
+      {
+        "text": "`Item item = new Book(\"Effective Java\");`",
+        "correct": false,
+        "why": "A variable of the abstract type holding a concrete `Book` is allowed and useful."
+      },
+      {
+        "text": "`System.out.println(item.describe());`, since `describe()` calls an abstract method",
+        "correct": false,
+        "why": "On a `Book`, `loanDays()` has a body; the call printed `14 days` once the other line was gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-m8jqmycz",
+    "version": 1,
+    "section": "abstract-classes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Magazine extends Item` and writes no `loanDays()`. Which two changes would each make it compile?",
+    "hint": "The error message contains both.",
+    "choices": [
+      {
+        "text": "Add `@Override`, or make `loanDays()` in `Item` `final`",
+        "correct": false,
+        "why": "`@Override` needs a method to annotate, and an abstract method cannot be `final`."
+      },
+      {
+        "text": "Give `Magazine` a constructor, or remove `super(title)`",
+        "correct": false,
+        "why": "The constructor is fine; the missing body is the problem."
+      },
+      {
+        "text": "Make `Magazine` `final`, or make `Item` concrete again with a `return 0`",
+        "correct": false,
+        "why": "A `final` class still needs every body; the second would work and bring back the default nobody chose."
+      },
+      {
+        "text": "Give it the missing body, or mark the subclass `abstract` as well",
+        "correct": true,
+        "why": "Right: `is not abstract and does not override abstract method`."
+      }
+    ]
+  },
+  {
+    "id": "ex-wqcnq070",
+    "version": 1,
+    "section": "abstract-classes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`describe()` in `Item` calls `loanDays()`, which `Item` never wrote. Why is that safe?",
+    "hint": "On which objects can `describe()` ever run?",
+    "choices": [
+      {
+        "text": "Because the JVM skips a call to a method with no body",
+        "correct": false,
+        "why": "Nothing is skipped; `describe()` printed the book's 14 days."
+      },
+      {
+        "text": "Because `loanDays()` returns 0 until a subclass writes it",
+        "correct": false,
+        "why": "An abstract method has no default value; it has no body at all."
+      },
+      {
+        "text": "Every object it runs on is of a concrete class, which has the body",
+        "correct": true,
+        "why": "Right: `Item` cannot be instantiated, and every concrete subclass must write `loanDays()`."
+      }
+    ]
+  },
+  {
+    "id": "ex-14he9a6x",
+    "version": 1,
+    "section": "abstract-classes",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A method declared with no body, ending in a semicolon, for every subclass to write, is declared with the keyword ___.",
+    "hint": "The same word goes on the class.",
+    "blanks": [
+      {
+        "accept": [
+          "abstract"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-e3gbgkqd",
+    "version": 1,
+    "section": "template-method",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `Loanable`, which method holds the fee rule itself?",
+    "hint": "The one subclasses may not replace.",
+    "choices": [
+      {
+        "text": "`lateFeeCents`",
+        "correct": true,
+        "why": "Right: it is `final`, and it calls the two blanks."
+      },
+      {
+        "text": "`dailyFeeCents`",
+        "correct": false,
+        "why": "That is a blank each subclass fills with a number."
+      },
+      {
+        "text": "`maximumFeeCents`",
+        "correct": false,
+        "why": "That is the hook with a default of 2000."
+      },
+      {
+        "text": "The constructor, which sets the fee when the item is created",
+        "correct": false,
+        "why": "The constructor sets only the title; the fee is computed per call."
+      }
+    ]
+  },
+  {
+    "id": "ex-tmee0app",
+    "version": 1,
+    "section": "template-method",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What fee, in cents, does a `Dvd` charge for 30 days late?",
+    "hint": "150 a day, but its own maximum caps it.",
+    "value": 3000,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-ty5x39e4",
+    "version": 1,
+    "section": "template-method",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Book` does not override `maximumFeeCents()`. What maximum applies to a book?",
+    "hint": "A hook has a default.",
+    "choices": [
+      {
+        "text": "None: a book's fee grows without limit",
+        "correct": false,
+        "why": "`lateFeeCents` always applies `Math.min` with whatever maximum the object has."
+      },
+      {
+        "text": "3000 cents, the last maximum any subclass declared",
+        "correct": false,
+        "why": "Each object uses its own class's method; `Dvd`'s 3000 applies to DVDs only."
+      },
+      {
+        "text": "2000 cents, inherited from `Loanable`",
+        "correct": true,
+        "why": "Right: it never mattered here, because 30 days at 50 cents is 1500."
+      }
+    ]
+  },
+  {
+    "id": "ex-fq7rrgn6",
+    "version": 1,
+    "section": "template-method",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each method of `Loanable` to what a subclass may do with it.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "`lateFeeCents`",
+        "right": "Call it, never replace it"
+      },
+      {
+        "left": "`dailyFeeCents`",
+        "right": "Must write it"
+      },
+      {
+        "left": "`maximumFeeCents`",
+        "right": "May replace it, or inherit 2000"
+      }
+    ],
+    "right_distractors": [
+      "Must call it from its constructor"
+    ]
+  },
+  {
+    "id": "ex-9fff6pn5",
+    "version": 1,
+    "section": "template-method",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is `lateFeeCents` declared `final`, when no subclass in the lesson wanted to change it?",
+    "hint": "Think about `Ebook`.",
+    "choices": [
+      {
+        "text": "So the rule holds for every subclass, even one written later",
+        "correct": true,
+        "why": "Right: without it, `Ebook` would have compiled and charged -1."
+      },
+      {
+        "text": "Because the JVM runs `final` methods faster",
+        "correct": false,
+        "why": "Speed is not the reason given; the rule is."
+      },
+      {
+        "text": "Because a method that calls an abstract method must be `final`",
+        "correct": false,
+        "why": "No such rule exists; `describe()` in section 02 called one and was not `final`."
+      },
+      {
+        "text": "So that subclasses can read `title`, which is private",
+        "correct": false,
+        "why": "`final` on a method has nothing to do with field access; `title()` gives access."
+      }
+    ]
+  },
+  {
+    "id": "ex-v419evta",
+    "version": 1,
+    "section": "template-method",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are `dailyFeeCents` and `maximumFeeCents` `protected` rather than `public`?",
+    "hint": "Who is meant to use them?",
+    "choices": [
+      {
+        "text": "Abstract methods cannot be `public`",
+        "correct": false,
+        "why": "They can; `loanDays()` in section 02 was `public abstract`."
+      },
+      {
+        "text": "So that `Fees` can call them without an object",
+        "correct": false,
+        "why": "`protected` does not make anything static, and `Fees` calls only `lateFeeCents`."
+      },
+      {
+        "text": "They are for subclasses to fill, not for other classes to call",
+        "correct": true,
+        "why": "Right: other code should ask for `lateFeeCents`, the rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-3cjqzme2",
+    "version": 1,
+    "section": "template-method",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does `Fees` print 450 cents as `4.50` without a `double`?",
+    "hint": "Integer division and remainder.",
+    "choices": [
+      {
+        "text": "`cents / 100.0`, rounded",
+        "correct": false,
+        "why": "That is a `double`, which the program avoids."
+      },
+      {
+        "text": "`String.format(\"%.2f\", cents)`",
+        "correct": false,
+        "why": "`%.2f` needs a floating-point argument."
+      },
+      {
+        "text": "`cents / 100`, a dot, and `cents % 100` padded to two digits",
+        "correct": true,
+        "why": "Right: 4, then 50; `%02d` would print 5 cents as `05`."
+      }
+    ]
+  },
+  {
+    "id": "ex-1aa605cr",
+    "version": 1,
+    "section": "when-abstract",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`new Loanable(...)` is forbidden. Who calls `Loanable`'s constructor?",
+    "hint": "`super(title)`.",
+    "choices": [
+      {
+        "text": "Nobody: an abstract class's constructor exists for documentation",
+        "correct": false,
+        "why": "It runs for every subclass object; that is how `title` gets its value."
+      },
+      {
+        "text": "Every subclass constructor, through `super(title)`",
+        "correct": true,
+        "why": "Right: and `protected` says so."
+      },
+      {
+        "text": "The JVM, once per class, when `Loanable` is loaded",
+        "correct": false,
+        "why": "That describes a static initialiser; a constructor runs once per object."
+      }
+    ]
+  },
+  {
+    "id": "ex-q6s6g7t1",
+    "version": 1,
+    "section": "when-abstract",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Special` printed `Special$1 extends Loanable`. What was created?",
+    "hint": "Lesson 17's kind of class.",
+    "choices": [
+      {
+        "text": "An object of an anonymous concrete subclass of `Loanable`",
+        "correct": true,
+        "why": "Right: the braces supplied `dailyFeeCents()` and the class has no name in the source."
+      },
+      {
+        "text": "An object of `Loanable` itself, allowed because the body was supplied",
+        "correct": false,
+        "why": "No object's class is ever `Loanable`; `getClass()` said `Special$1`."
+      },
+      {
+        "text": "A copy of `Book` with a different daily fee",
+        "correct": false,
+        "why": "`Book` was not involved; the anonymous class extends `Loanable` directly."
+      }
+    ]
+  },
+  {
+    "id": "ex-njdh8jqv",
+    "version": 1,
+    "section": "when-abstract",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The map charges 500 cents a day and inherits the default maximum. How many cents for 10 days late?",
+    "hint": "5000 before the cap.",
+    "value": 2000,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-dydnjds5",
+    "version": 1,
+    "section": "when-abstract",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Book and DVD differ only in their daily fee, a number, and in nothing else. What does the section suggest?",
+    "hint": "Different data, or different code?",
+    "choices": [
+      {
+        "text": "An abstract method `dailyFeeCents()` in an abstract superclass",
+        "correct": false,
+        "why": "That earns its place when subclasses run different code; here they differ in data."
+      },
+      {
+        "text": "An interface `Feeable` with a constant per class",
+        "correct": false,
+        "why": "An interface would still need a class per kind; the value can simply be a field."
+      },
+      {
+        "text": "One concrete class with the fee as a field set by its constructor",
+        "correct": true,
+        "why": "Right: no hierarchy is needed when only a value changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-7dxk7kzb",
+    "version": 1,
+    "section": "when-abstract",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can an abstract class have? Choose all that apply.",
+    "hint": "`javap -p Loanable`.",
+    "choices": [
+      {
+        "text": "A private field",
+        "correct": true,
+        "why": "Yes: `title`."
+      },
+      {
+        "text": "A constructor",
+        "correct": true,
+        "why": "Yes: `protected Loanable(java.lang.String)`."
+      },
+      {
+        "text": "A `final` method with a body",
+        "correct": true,
+        "why": "Yes: `lateFeeCents`."
+      },
+      {
+        "text": "An object of its own class, made with `new`",
+        "correct": false,
+        "why": "No: that is the one thing it cannot have."
+      }
+    ]
+  },
+  {
+    "id": "ex-d0nk77b0",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`item.lateFeeCents(30)` runs on a `Dvd`. Put what happens in order.",
+    "hint": "The rule first checks whether the item is late at all.",
+    "items": [
+      "`lateFeeCents` checks that 30 is more than 0",
+      "It calls `dailyFeeCents()`, and `Dvd`'s returns 150",
+      "It calls `maximumFeeCents()`, and `Dvd`'s returns 3000",
+      "`Math.min` returns 3000"
+    ]
+  },
+  {
+    "id": "ex-8k0p7n56",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague adds `public int lateFeeCents(int d) { return 0; }` to `Book` to waive fees on books. What happens?",
+    "hint": "Look at how `Loanable` declared it.",
+    "choices": [
+      {
+        "text": "Compile error: `overridden method is final`",
+        "correct": true,
+        "why": "Right: the way to waive books is `dailyFeeCents()` returning 0, a blank the rule offers."
+      },
+      {
+        "text": "It works, and books are charged nothing",
+        "correct": false,
+        "why": "That is what `final` exists to stop."
+      },
+      {
+        "text": "It compiles, and `Loanable`'s version still runs because it is `final`",
+        "correct": false,
+        "why": "A `final` method cannot be overridden at all; the compiler refuses the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-as4xw2f5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You are writing a `Report` superclass: every report prints a header, a body that differs per report, and a footer, in that order. How do you lay it out?",
+    "hint": "The lesson's late-fee rule has the same shape.",
+    "choices": [
+      {
+        "text": "Three public abstract methods, and each caller calls them in order",
+        "correct": false,
+        "why": "Then every caller must remember the order, and one will get it wrong."
+      },
+      {
+        "text": "A concrete `print()` that subclasses override whole",
+        "correct": false,
+        "why": "Each subclass then rewrites the header and footer, and they drift."
+      },
+      {
+        "text": "A `final print()` doing all three, with the body as a `protected abstract` method",
+        "correct": true,
+        "why": "Right: the template method, with the order owned by the superclass."
+      }
+    ]
+  },
+  {
+    "id": "ex-vqmmw91q",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A method with a default body that a subclass may replace, like `maximumFeeCents`, is called a ___.",
+    "hint": "One short word in English, and a fishing word in Portuguese.",
+    "blanks": [
+      {
+        "accept": [
+          "hook"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

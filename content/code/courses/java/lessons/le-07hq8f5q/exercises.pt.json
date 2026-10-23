@@ -1,0 +1,347 @@
+{
+  "ex-crp6hwmp": {
+    "prompt": "`int fine;` é declarada, atribuída só dentro de um `if`, e depois impressa. O que o `javac` diz?",
+    "hint": "O compilador segue caminhos, não valores.",
+    "choices": [
+      {
+        "text": "Nada; imprime 0 quando o `if` não roda",
+        "why": "0 é o padrão de um campo; uma local não tem padrão, e o compilador recusou o arquivo."
+      },
+      {
+        "text": "`variable fine might not have been initialized`",
+        "why": "Isso: no caminho em que o `if` é pulado, `fine` não tem valor."
+      },
+      {
+        "text": "Um aviso, e o programa imprime o que houver na memória",
+        "why": "Isso é o que o C faz; o Java torna isso um erro."
+      }
+    ]
+  },
+  "ex-bqkpah7p": {
+    "prompt": "`daysLate` vale 3, então o `if` do `Fine.java` sempre roda. Por que o compilador ainda se recusa a imprimir `fine`?",
+    "hint": "Para o que o compilador olha?",
+    "choices": [
+      {
+        "text": "Porque `daysLate` pode mudar enquanto o programa roda",
+        "why": "Nada a muda; o motivo é que o compilador nem raciocina sobre valores."
+      },
+      {
+        "text": "Ele confere cada caminho pelo código, não os valores nele",
+        "why": "Isso: atribuição definida é sobre todos os caminhos, sejam quais forem os valores."
+      },
+      {
+        "text": "Porque uma variável declarada sem valor nunca pode ser atribuída depois",
+        "why": "Pode; `fine = daysLate * 50;` é uma atribuição válida no caminho que a executa."
+      }
+    ]
+  },
+  "ex-gtthe0am": {
+    "prompt": "Ligue cada tipo de campo ao padrão que o `Defaults.java` imprimiu.",
+    "hint": "Zero, de alguma forma, ou nada.",
+    "pairs": [
+      {
+        "left": "`int`",
+        "right": "`0`"
+      },
+      {
+        "left": "`double`",
+        "right": "`0.0`"
+      },
+      {
+        "left": "`boolean`",
+        "right": "`false`"
+      },
+      {
+        "left": "`String`",
+        "right": "`null`"
+      }
+    ],
+    "right_distractors": [
+      "`\"\"`, a string vazia"
+    ]
+  },
+  "ex-v37nh9gj": {
+    "prompt": "Por que campos ganham um valor padrão enquanto locais precisam ser atribuídas antes do uso?",
+    "hint": "Quem pode ler cada um, e quando?",
+    "choices": [
+      {
+        "text": "O compilador não consegue seguir todo caminho até um campo",
+        "why": "Isso: uma local só é vista dentro do método dela, onde cada caminho pode ser conferido."
+      },
+      {
+        "text": "Campos são criados pela JVM e locais pelo compilador",
+        "why": "Os dois só existem com o programa rodando; o compilador confere regras, não cria variáveis."
+      },
+      {
+        "text": "Padrões são mais lentos, então o Java só os gasta com campos",
+        "why": "Velocidade não é o motivo; o alcance do compilador é."
+      }
+    ]
+  },
+  "ex-5azete70": {
+    "prompt": "Uma classe `Member` tem um campo `String email;` que nada atribui. Um método manda um lembrete para `email`. O que dá errado, e quando?",
+    "hint": "Campos ganham um padrão, e o padrão de uma `String` não é texto.",
+    "choices": [
+      {
+        "text": "O compilador recusa a classe, como recusou o `Fine.java`",
+        "why": "Essa regra é para locais; um campo compila e começa como `null`."
+      },
+      {
+        "text": "Nada dá errado; o lembrete vai para um endereço vazio",
+        "why": "O padrão é `null`, não uma string vazia; não há endereço nenhum."
+      },
+      {
+        "text": "Compila, e só falha quando o programa roda e usa o `null`",
+        "why": "Isso: um padrão é um valor que ninguém escolheu, e parece dado até ser usado."
+      }
+    ]
+  },
+  "ex-pfya4cyd": {
+    "prompt": "A regra de que uma local precisa certamente ter um valor antes de ser lida se chama ___ definida.",
+    "hint": "O ato de pôr um valor numa variável.",
+    "blanks": [
+      {
+        "accept": [
+          "atribuição",
+          "atribuicao"
+        ]
+      }
+    ]
+  },
+  "ex-h556g4dq": {
+    "prompt": "Onde termina o escopo de uma variável local?",
+    "hint": "Não o método: o bloco.",
+    "choices": [
+      {
+        "text": "No fim do método",
+        "why": "Uma variável declarada dentro de um `if` terminou na chave do `if`, antes do método."
+      },
+      {
+        "text": "Na chave que fecha o bloco que a contém",
+        "why": "Isso: e por isso `extra` não significava nada na linha 9."
+      },
+      {
+        "text": "No fim da linha que a declara",
+        "why": "Aí nenhuma variável poderia ser usada na linha seguinte."
+      },
+      {
+        "text": "Quando o coletor de lixo a remove",
+        "why": "Isso é tempo de vida, não escopo, e locais não são coletadas: o quadro delas é removido."
+      }
+    ]
+  },
+  "ex-pa8kgy0j": {
+    "prompt": "O `Blocks.java` falha com `cannot find symbol` para `extra` na linha 9. Qual é a melhor correção se a linha 9 precisa mesmo do valor?",
+    "hint": "Mova a declaração, não o uso.",
+    "choices": [
+      {
+        "text": "Declarar `extra` de novo na linha 9",
+        "why": "Uma nova `extra` seria outra variável, sem o valor do `if`."
+      },
+      {
+        "text": "Tornar `extra` um campo, para que todo método da classe possa enxergá-la",
+        "why": "Isso a alarga muito além do necessário; um campo é o contrário do menor bloco."
+      },
+      {
+        "text": "Declará-la antes do `if`, para o bloco dela ser o do `main`",
+        "why": "Isso: aí ela está no escopo nas duas linhas."
+      }
+    ]
+  },
+  "ex-gweq36rm": {
+    "prompt": "O `Twice.java` declara `int total` no `main` e de novo dentro de um laço. O que acontece?",
+    "hint": "A regra do Java para duas locais.",
+    "choices": [
+      {
+        "text": "O `total` de dentro esconde o de fora até o laço terminar",
+        "why": "Algumas linguagens fazem isso; o Java recusa para locais."
+      },
+      {
+        "text": "Erro de compilação: `total` já está definido no `main`",
+        "why": "Isso: duas locais com o mesmo nome em escopos sobrepostos não são permitidas."
+      },
+      {
+        "text": "As duas são a mesma variável, então o laço sobrescreve o `total` de fora",
+        "why": "Uma declaração sempre cria uma variável nova; é por isso que o compilador reclama."
+      }
+    ]
+  },
+  "ex-xqedpqw0": {
+    "prompt": "No `Shadow.java`, depois de `String name = \"Ana\";`, como o programa ainda imprime o campo?",
+    "hint": "O campo continua lá, sem mudança.",
+    "choices": [
+      {
+        "text": "Não consegue: a local substituiu o campo pelo resto do programa",
+        "why": "A terceira linha imprimiu `the library`; o campo estava ao alcance o tempo todo."
+      },
+      {
+        "text": "Nomeando a classe: `Shadow.name`",
+        "why": "Isso: o nome sozinho é a local, e o nome qualificado é o campo."
+      },
+      {
+        "text": "Imprimindo `name` antes de a local receber um novo valor",
+        "why": "A local teve valor desde o início; o primeiro `println` rodou antes de ela existir."
+      }
+    ]
+  },
+  "ex-7tw41ypf": {
+    "prompt": "Quais destas afirmações sobre sombreamento em Java são verdadeiras? Escolha todas as que se aplicam.",
+    "hint": "Uma local e um campo, ou duas locais.",
+    "choices": [
+      {
+        "text": "Uma local pode ter o mesmo nome de um campo",
+        "why": "Sim: o `Shadow.java` compilou e rodou."
+      },
+      {
+        "text": "Uma local pode ter o mesmo nome de outra local num bloco externo",
+        "why": "Não: o `Twice.java` foi recusado."
+      },
+      {
+        "text": "Construtores costumam usá-lo, escrevendo `this.name = name`",
+        "why": "Sim: a lição 13 escreve assim."
+      },
+      {
+        "text": "O campo é apagado a partir do ponto em que a local é declarada",
+        "why": "Ele só fica escondido do nome sozinho; `Shadow.name` ainda o alcançou."
+      }
+    ]
+  },
+  "ex-46g3ps4z": {
+    "prompt": "Quando uma variável local deixa de existir?",
+    "hint": "Ela vive num quadro.",
+    "choices": [
+      {
+        "text": "Quando o programa termina",
+        "why": "Termina bem antes: com a chamada que a declarou."
+      },
+      {
+        "text": "Quando a chamada que a declarou retorna",
+        "why": "Isso: o quadro é removido, e as locais com ele."
+      },
+      {
+        "text": "Quando recebe um novo valor",
+        "why": "Um valor novo substitui o antigo na mesma variável; a variável continua."
+      }
+    ]
+  },
+  "ex-jd2x1xvq": {
+    "prompt": "Na pilha padrão, quantos quadros o `Depth` alcançou antes do `StackOverflowError`?",
+    "hint": "As duas primeiras execuções concordaram.",
+    "unit": "quadros"
+  },
+  "ex-pwdgda3x": {
+    "prompt": "Com `-Xss256k` o `Depth` chegou a 1.646 quadros, e com `-Xss4m` a 100.048. Dezesseis vezes a pilha deram umas sessenta vezes os quadros. Por que não dezesseis?",
+    "hint": "Nem todo quadro tem o mesmo tamanho.",
+    "choices": [
+      {
+        "text": "O `-Xss` é ignorado acima de 1 MB, então as contagens são ruído",
+        "why": "Ele é respeitado: 4 MB foram muito além do padrão."
+      },
+      {
+        "text": "Quadros interpretados e compilados têm tamanhos diferentes",
+        "why": "Isso: e uma execução mais longa compila mais do `dive`; parte do motivo é o JIT."
+      },
+      {
+        "text": "Cada quadro dobra de tamanho conforme a recursão se aprofunda",
+        "why": "Um quadro guarda o mesmo parâmetro em todo nível; a profundidade não o aumenta."
+      }
+    ]
+  },
+  "ex-z44gyf13": {
+    "prompt": "Um programa cai com `StackOverflowError`. Qual é a resposta certa de costume?",
+    "hint": "O que encheu a pilha?",
+    "choices": [
+      {
+        "text": "Aumentar o `-Xss` até parar",
+        "why": "Uma recursão sem jeito de parar enche qualquer pilha; uma maior só demora mais."
+      },
+      {
+        "text": "Corrigir a recursão",
+        "why": "Isso: ache a recursão que nunca para, ou para tarde demais; a correção está no código."
+      },
+      {
+        "text": "Capturar o erro em todo lugar, como o `Depth` faz",
+        "why": "O `Depth` o captura para imprimir um número para a lição; capturar não faz a recursão terminar."
+      },
+      {
+        "text": "Dar mais heap à JVM com `-Xmx`",
+        "why": "Quadros ficam na pilha, não no heap; o `-Xmx` dimensiona o heap."
+      }
+    ]
+  },
+  "ex-trdg3b8e": {
+    "prompt": "Um método cria um objeto com `new`, guarda uma referência numa local e devolve essa referência. Depois que ele retorna, o que sobra?",
+    "hint": "Onde mora cada um?",
+    "choices": [
+      {
+        "text": "Nada: o objeto estava no quadro e foi junto",
+        "why": "Objetos ficam no heap, não em quadros; só a local foi embora."
+      },
+      {
+        "text": "A local e o objeto, até o programa terminar",
+        "why": "A local foi com o quadro; só o objeto sobrevive à chamada."
+      },
+      {
+        "text": "Só o objeto, no heap; a local foi junto com o quadro dela",
+        "why": "Isso: o quadro desapareceu e o objeto ficou no heap."
+      }
+    ]
+  },
+  "ex-gtvs9swq": {
+    "prompt": "Um método declara `int count;` e a lê em seguida. Outro declara um campo `static int count;` e o lê em seguida. O que acontece em cada caso?",
+    "hint": "Uma regra para locais, outra para campos.",
+    "choices": [
+      {
+        "text": "Os dois imprimem 0, o padrão com que todo `int` começa",
+        "why": "A local é recusada na compilação; só o campo ganha padrão."
+      },
+      {
+        "text": "A local é erro de compilação, e o campo imprime o padrão dele, 0",
+        "why": "Isso: locais precisam de atribuição definida, campos começam no padrão."
+      },
+      {
+        "text": "Os dois são erros de compilação, já que nenhum foi atribuído",
+        "why": "O campo compila: o `Defaults.java` imprimiu os zeros dele."
+      }
+    ]
+  },
+  "ex-2s5x31km": {
+    "prompt": "O `main` chama `a`, e `a` chama `b`. Ponha os quadros na ordem em que saem da pilha.",
+    "hint": "O último a entrar é o primeiro a sair.",
+    "items": [
+      "O quadro de `b`",
+      "O quadro de `a`",
+      "O quadro de `main`"
+    ]
+  },
+  "ex-3nhyg8aa": {
+    "prompt": "Um colega declara toda variável no começo do `main`, \"para todas ficarem visíveis\". O que isso custa, pelas regras desta lição?",
+    "hint": "Pense no escopo como proteção.",
+    "choices": [
+      {
+        "text": "Nada: escopo só importa ao compilador",
+        "why": "O escopo também limita onde um valor pode ser mal usado, que é o que se perde."
+      },
+      {
+        "text": "Memória, porque toda variável passa a viver até o programa terminar",
+        "why": "Elas vivem até o `main` retornar, o mesmo que um bloco dentro do `main`; memória não é a questão."
+      },
+      {
+        "text": "Toda variável fica exposta longe de onde é necessária",
+        "why": "Isso: declarada no menor bloco, uma variável não vaza para fora dele."
+      }
+    ]
+  },
+  "ex-mccfvt5t": {
+    "prompt": "Um método que chama a si mesmo está usando ___.",
+    "hint": "O `dive` fez isso.",
+    "blanks": [
+      {
+        "accept": [
+          "recursão",
+          "recursao"
+        ]
+      }
+    ]
+  }
+}

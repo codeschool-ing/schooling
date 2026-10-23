@@ -1,0 +1,726 @@
+{
+  "ex-dy70eata": {
+    "prompt": "Ligue cada verificação ao que um \"não\" faz a plataforma fazer.",
+    "hint": "A tabela da seção 02.",
+    "pairs": [
+      {
+        "left": "liveness",
+        "right": "matar o processo e iniciar outro"
+      },
+      {
+        "left": "readiness",
+        "right": "parar de mandar tráfego a ele, e esperar"
+      },
+      {
+        "left": "startup",
+        "right": "segurar a liveness enquanto uma partida lenta termina"
+      }
+    ],
+    "right_distractors": [
+      "restaurar o banco a partir de um backup"
+    ]
+  },
+  "ex-vnfztk0k": {
+    "prompt": "O banco cai, e a verificação de liveness de cada cópia faz ping nele. O que acontece?",
+    "hint": "A armadilha da seção 02.",
+    "choices": [
+      {
+        "text": "O tráfego vai para as cópias cuja conexão com o banco ainda funciona",
+        "why": "Todas as cópias falham no mesmo momento; não há cópia que ainda funcione."
+      },
+      {
+        "text": "Nada acontece até o banco voltar",
+        "why": "Uma liveness que falha faz a plataforma matar o processo."
+      },
+      {
+        "text": "O banco reinicia",
+        "why": "A plataforma age sobre o processo cuja verificação falhou, não sobre o banco."
+      },
+      {
+        "text": "Todas reiniciam, sem parar",
+        "why": "Certo. Um boxoffice reiniciado não alcança um banco morto melhor que o antigo, e os reinícios somam carga."
+      }
+    ]
+  },
+  "ex-gqdk8g34": {
+    "prompt": "Por que o boxoffice serve suas verificações de saúde e métricas no `-ops`, nunca publicado na internet?",
+    "hint": "Quem as lê?",
+    "choices": [
+      {
+        "text": "O Prometheus se recusa a coletar de uma porta que sirva outra coisa",
+        "why": "O Prometheus coleta de qualquer URL que receba."
+      },
+      {
+        "text": "O `http.Server` do Go permite uma única função handler em cada porta em que escuta",
+        "why": "A porta principal serve dezenas de rotas."
+      },
+      {
+        "text": "Servem à maquinaria, e expõem o interior do serviço",
+        "why": "Certo. A plataforma alcança a porta de dentro da rede; clientes nunca precisam dela."
+      },
+      {
+        "text": "O HTTP/2 precisa de uma porta só para ele",
+        "why": "Nada nesta aula trata de HTTP/2."
+      }
+    ]
+  },
+  "ex-qsdq8z1x": {
+    "prompt": "Por que o boxoffice não tem startup probe?",
+    "hint": "Para que serve uma startup probe?",
+    "choices": [
+      {
+        "text": "O Docker ignora startup probes",
+        "why": "O motivo é o tempo de partida do boxoffice, não o Docker."
+      },
+      {
+        "text": "Startup probes testam o banco, o que a liveness nunca deve fazer",
+        "why": "Uma startup probe segura a liveness; não testa nada em especial."
+      },
+      {
+        "text": "A readiness já reinicia um processo lento",
+        "why": "A readiness nunca reinicia nada; ela retém o tráfego."
+      },
+      {
+        "text": "O boxoffice parte em milissegundos, então nada precisa ser segurado",
+        "why": "Certo. A probe existe para processos que levam minutos, para a liveness não os matar no meio."
+      }
+    ]
+  },
+  "ex-m3rz1kkz": {
+    "prompt": "Por que o `ready` dá ao seu ping no banco um limite de um segundo?",
+    "hint": "A plataforma pergunta a cada poucos segundos.",
+    "choices": [
+      {
+        "text": "Resposta tardia é inútil",
+        "why": "Certo. Uma verificação lenta é inútil, e a próxima chamada chega antes de a anterior terminar."
+      },
+      {
+        "text": "O pgx recusa pings mais longos",
+        "why": "O limite é escolha do boxoffice, passado num contexto."
+      },
+      {
+        "text": "Um segundo é o timeout padrão de probe do Kubernetes",
+        "why": "A aula dá como motivo a própria verificação de prontidão, não um padrão do Kubernetes."
+      },
+      {
+        "text": "O pool configurado na aula 9 fecha toda conexão ociosa há um segundo",
+        "why": "A aula 9 definiu cinco minutos para conexões ociosas."
+      }
+    ]
+  },
+  "ex-myhmk9h1": {
+    "prompt": "O PostgreSQL foi parado sob o servidor rodando. Ligue cada requisição à sua resposta.",
+    "hint": "A segunda transcrição da seção 03.",
+    "pairs": [
+      {
+        "left": "`/healthz`",
+        "right": "200, `ok`"
+      },
+      {
+        "left": "`/readyz`",
+        "right": "503, `no database`"
+      },
+      {
+        "left": "`GET /events/1`",
+        "right": "500, o problem da aula 3"
+      }
+    ],
+    "right_distractors": [
+      "401, sem token"
+    ]
+  },
+  "ex-e0ypje8x": {
+    "prompt": "Depois que o PostgreSQL voltou, o `/readyz` disse `ready`. O que continuava quebrado?",
+    "hint": "A primeira linha do grep.",
+    "choices": [
+      {
+        "text": "O pool, que nunca reconecta",
+        "why": "O pool abriu conexões novas sozinho; o `/readyz` e as requisições funcionaram."
+      },
+      {
+        "text": "As migrações, que precisavam rodar de novo",
+        "why": "Parar um servidor mantém os dados e o esquema."
+      },
+      {
+        "text": "Toda página ao vivo: o `listen` tinha retornado e nada o iniciou de novo",
+        "why": "Certo. A prontidão verificou o banco, não o listener, então páginas congeladas passaram por prontas."
+      },
+      {
+        "text": "O `/healthz`, que seguiu respondendo 503",
+        "why": "O `/healthz` respondeu 200 o tempo todo."
+      }
+    ]
+  },
+  "ex-n1y145mq": {
+    "prompt": "O que a seção 03 dá como correção para as páginas ao vivo congeladas?",
+    "hint": "Duas metades.",
+    "choices": [
+      {
+        "text": "Reiniciar o boxoffice toda vez que o banco reiniciar",
+        "why": "Isso é o laço de reinícios de novo, feito à mão."
+      },
+      {
+        "text": "Reconectar o `listen` num laço; fazer a prontidão cobri-lo",
+        "why": "Certo. A aula 13 nomeou o laço; a prontidão então diz quando as atualizações ao vivo morreram."
+      },
+      {
+        "text": "Verificar o banco também no `/healthz`",
+        "why": "Essa é a armadilha da seção 02, e o banco já tinha voltado."
+      },
+      {
+        "text": "Consultar o banco a cada segundo em cada página, e abandonar as notificações",
+        "why": "Isso troca notificações por polling e deixa o listener morto onde está."
+      }
+    ]
+  },
+  "ex-3m2kp0qn": {
+    "prompt": "Por que o `/healthz` inclui a versão?",
+    "hint": "Durante um deploy.",
+    "choices": [
+      {
+        "text": "Diz qual build roda onde",
+        "why": "Certo. É a primeira pergunta que qualquer pessoa faz num deploy."
+      },
+      {
+        "text": "O Kubernetes a compara com a tag da imagem",
+        "why": "O Kubernetes lê só o código de status de uma probe HTTP."
+      },
+      {
+        "text": "Sem corpo, um 200 conta como falha",
+        "why": "Uma probe HTTP julga só o código de status."
+      },
+      {
+        "text": "Prova que o esquema do banco confere",
+        "why": "O `live` não toca nada fora do processo."
+      }
+    ]
+  },
+  "ex-bxe12esc": {
+    "prompt": "Ligue cada tipo de métrica ao exemplo dele no boxoffice.",
+    "hint": "A lista da seção 04.",
+    "pairs": [
+      {
+        "left": "contador",
+        "right": "`boxoffice_http_requests_total`"
+      },
+      {
+        "left": "histograma",
+        "right": "`boxoffice_http_request_duration_seconds`"
+      },
+      {
+        "left": "gauge",
+        "right": "`boxoffice_live_watchers`"
+      }
+    ],
+    "right_distractors": [
+      "`X-Request-ID`"
+    ]
+  },
+  "ex-00kxcr0b": {
+    "prompt": "Por que os dois gauges são `GaugeFunc`s?",
+    "hint": "Quando o número é lido?",
+    "choices": [
+      {
+        "text": "O Prometheus não aceita outro tipo de gauge",
+        "why": "O client_golang tem gauges comuns, definidos por `Set`, `Inc` e `Dec`."
+      },
+      {
+        "text": "Funções são mais baratas de rotular que gauges definidos à mão",
+        "why": "Esses dois gauges não têm rótulo nenhum."
+      },
+      {
+        "text": "Leem o hub e o pool no momento de cada coleta, nunca velhos",
+        "why": "Certo. Nada precisa lembrar de atualizá-los."
+      },
+      {
+        "text": "Voltam a zero depois de cada coleta",
+        "why": "Nenhuma métrica zera numa coleta."
+      }
+    ]
+  },
+  "ex-g7n41r86": {
+    "prompt": "Por que o `metricsHandler` usa um registro próprio?",
+    "hint": "Em vez do global da biblioteca.",
+    "choices": [
+      {
+        "text": "O registro global não é seguro para uso concorrente",
+        "why": "O motivo é o que aparece na página, não concorrência."
+      },
+      {
+        "text": "O global só serve JSON",
+        "why": "Os dois servem o mesmo formato de texto."
+      },
+      {
+        "text": "O Prometheus só coleta registros criados por handler",
+        "why": "O Prometheus lê uma URL; não sabe nada de registros."
+      },
+      {
+        "text": "Para servir só o que o boxoffice registra",
+        "why": "Certo. Só o que o boxoffice registra é servido."
+      }
+    ]
+  },
+  "ex-nmtchrz1": {
+    "prompt": "Por que o `measure` rotula requisições com `r.Pattern` e nunca com o caminho?",
+    "hint": "Cada valor de rótulo é uma série temporal.",
+    "choices": [
+      {
+        "text": "Caminhos carregam o request id, que precisa ficar fora de toda métrica",
+        "why": "O request id viaja num cabeçalho, não no caminho."
+      },
+      {
+        "text": "O Prometheus proíbe barras em rótulos",
+        "why": "O padrão também tem barras."
+      },
+      {
+        "text": "O caminho fica vazio depois do `requireStaff`",
+        "why": "O caminho está sempre lá."
+      },
+      {
+        "text": "Um caminho cria séries sem limite",
+        "why": "Certo. Padrões são um número que você escreveu; caminhos são o que chegar."
+      }
+    ]
+  },
+  "ex-eestcrm6": {
+    "prompt": "Por que o `measure` precisa ser o último middleware da cadeia, junto ao mux?",
+    "hint": "Quem escreve o padrão, e em quê?",
+    "choices": [
+      {
+        "text": "O mux grava o padrão na própria requisição",
+        "why": "Certo. Junto ao mux, o `measure` entrega a sua própria requisição e lê o padrão depois."
+      },
+      {
+        "text": "Precisa rodar depois de o `cors` responder às preflights",
+        "why": "A ordem com o `cors` não é o motivo; o padrão é."
+      },
+      {
+        "text": "Senão conta cada requisição duas vezes",
+        "why": "Ele roda uma vez por requisição onde quer que esteja."
+      },
+      {
+        "text": "O registrador de status só funciona junto ao mux",
+        "why": "O `logRequests` usa o mesmo registrador na ponta de fora da cadeia."
+      }
+    ]
+  },
+  "ex-ca978j03": {
+    "prompt": "Que rótulo de rota recebe o `GET /admin/report`?",
+    "hint": "O `requireStaff` chama `WithContext`.",
+    "choices": [
+      {
+        "text": "`GET /admin/report`",
+        "why": "Esse padrão é escrito numa cópia que o `measure` nunca vê."
+      },
+      {
+        "text": "`unmatched`",
+        "why": "O mux de fora a casou, então ela tem padrão."
+      },
+      {
+        "text": "o caminho, `/admin/report`",
+        "why": "O `measure` nunca rotula pelo caminho."
+      },
+      {
+        "text": "`/admin/`",
+        "why": "Certo. O padrão de fora; o mux de dentro escreve numa cópia."
+      }
+    ]
+  },
+  "ex-c159m87c": {
+    "prompt": "Sob que rota foi contado o 404 de `/events/9`?",
+    "hint": "Os contadores da seção 04.",
+    "choices": [
+      {
+        "text": "`GET /events/{id}`",
+        "why": "Certo. O handler disse que o evento não existe."
+      },
+      {
+        "text": "`unmatched`",
+        "why": "Esse foi o `/nowhere`, que nenhuma rota casou."
+      },
+      {
+        "text": "Nenhuma: erros não são contados",
+        "why": "Todo status é contado, inclusive um 500."
+      },
+      {
+        "text": "`GET /events`",
+        "why": "Esse padrão lista eventos e não recebe id."
+      }
+    ]
+  },
+  "ex-7cszxhc2": {
+    "prompt": "Ligue cada letra do RED ao que ela pergunta.",
+    "hint": "A tabela da seção 05.",
+    "pairs": [
+      {
+        "left": "Rate",
+        "right": "quantas requisições por segundo"
+      },
+      {
+        "left": "Errors",
+        "right": "quantas delas falharam"
+      },
+      {
+        "left": "Duration",
+        "right": "quanto tempo levaram"
+      }
+    ],
+    "right_distractors": [
+      "quanta memória o processo segura"
+    ]
+  },
+  "ex-72zzvxwz": {
+    "prompt": "Cem requisições levam 2 ms e uma leva 4 segundos. Qual é a média, em milissegundos, arredondada para inteiro?",
+    "hint": "4200 ms em 101 requisições.",
+    "unit": "ms"
+  },
+  "ex-mb90z3ns": {
+    "prompt": "O que um histograma guarda que a média das mesmas requisições esconde?",
+    "hint": "O exemplo da seção 05.",
+    "choices": [
+      {
+        "text": "Os request ids das lentas",
+        "why": "Request ids nunca vão num rótulo; pertencem ao log."
+      },
+      {
+        "text": "A duração exata de cada requisição",
+        "why": "Buckets contam observações até um limite; os valores exatos se perdem."
+      },
+      {
+        "text": "A forma: muitas requisições rápidas e uma lenta",
+        "why": "Certo. Uma média de 42 ms não descreve nenhuma; os buckets mostram as duas."
+      },
+      {
+        "text": "O cliente que mandou cada requisição",
+        "why": "Nada sobre o cliente está na métrica."
+      }
+    ]
+  },
+  "ex-9mebwe4k": {
+    "prompt": "Qual destes cabe num rótulo de métrica?",
+    "hint": "Um conjunto pequeno conhecido de antemão.",
+    "choices": [
+      {
+        "text": "o status HTTP",
+        "why": "Certo. Algumas dezenas de valores no máximo, todos conhecidos."
+      },
+      {
+        "text": "o e-mail do cliente",
+        "why": "Sem limite, e dado pessoal copiado para um sistema guardado por meses."
+      },
+      {
+        "text": "o request id",
+        "why": "Sem limite; pertence ao log."
+      },
+      {
+        "text": "o id do ingresso",
+        "why": "Um valor por venda, sem limite."
+      }
+    ]
+  },
+  "ex-h6hv1ppw": {
+    "prompt": "Por que os streams ao vivo não puxam para cima a latência da rota de compra?",
+    "hint": "Eles caem nos buckets de cima.",
+    "choices": [
+      {
+        "text": "O `measure` pula requisições de mais de 30 segundos",
+        "why": "As mais longas são contadas em `+Inf`."
+      },
+      {
+        "text": "Requisições sequestradas nunca chegam ao `measure`",
+        "why": "O stream de server-sent events não é sequestrado, e é medido."
+      },
+      {
+        "text": "O Prometheus descarta observações acima do último bucket",
+        "why": "Vão para o `+Inf`; nada é descartado."
+      },
+      {
+        "text": "Streams são contados sob o seu próprio rótulo de rota",
+        "why": "Certo. Cada rota é um histograma próprio."
+      }
+    ]
+  },
+  "ex-gvn6wksf": {
+    "prompt": "O `/metrics` respondeu 158 linhas. O que significariam dezenas de milhares?",
+    "hint": "O último parágrafo da seção 05.",
+    "choices": [
+      {
+        "text": "O runtime do Go está vazando goroutines",
+        "why": "Um vazamento de goroutines aumenta um número, não a contagem de linhas."
+      },
+      {
+        "text": "Um rótulo escapou para valores sem limite",
+        "why": "Certo. Alguns milhares é normal para um serviço grande."
+      },
+      {
+        "text": "O Prometheus está há tempo sem coletar",
+        "why": "A página mostra valores atuais; coletas não adicionam linhas."
+      },
+      {
+        "text": "Chegaram muito mais requisições que na transcrição, aumentando cada contador da página",
+        "why": "Mais requisições aumentam contadores, não o número de séries."
+      }
+    ]
+  },
+  "ex-mtyv02zf": {
+    "prompt": "Ordene o que o boxoffice faz depois do primeiro `SIGTERM`.",
+    "hint": "A lista da seção 06.",
+    "items": [
+      "marcar `draining`, para o `/readyz` responder 503",
+      "o `srv.Shutdown` fecha os listeners e espera as requisições ativas",
+      "o `GracefulStop` espera as chamadas gRPC, até o prazo",
+      "parar o servidor de ops e retornar do `main`"
+    ]
+  },
+  "ex-wsb630v5": {
+    "prompt": "Por que o hub ganhou um canal `done`, fechado por meio do `RegisterOnShutdown`?",
+    "hint": "O que o `Shutdown` espera?",
+    "choices": [
+      {
+        "text": "O `Shutdown` fecha todo canal do programa",
+        "why": "O `Shutdown` não sabe nada de canais."
+      },
+      {
+        "text": "Streams nunca terminam sozinhos, e WebSockets sequestrados não são rastreados",
+        "why": "Certo. Sem ele, streams seguram o desligamento até o prazo e WebSockets são derrubados."
+      },
+      {
+        "text": "O PostgreSQL para de mandar notificações no `SIGTERM`",
+        "why": "O sinal vai para o boxoffice, não para o banco."
+      },
+      {
+        "text": "Para contar os streams abertos para o gauge `boxoffice_live_watchers` da seção 04",
+        "why": "O `count` faz isso; o `done` encerra os streams."
+      }
+    ]
+  },
+  "ex-zjxmz0eh": {
+    "prompt": "Por que o `hub.close` usa `sync.Once`?",
+    "hint": "O que fechar um canal fechado faz?",
+    "choices": [
+      {
+        "text": "Deixa o `close` mais rápido",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "O `RegisterOnShutdown` chama toda função três vezes",
+        "why": "Ele chama cada função registrada uma vez por `Shutdown`."
+      },
+      {
+        "text": "Fechar um canal fechado causa panic",
+        "why": "Certo. O `Once` torna inofensiva uma segunda chamada."
+      },
+      {
+        "text": "O Go proíbe fechar um canal sem lock",
+        "why": "Fechar um canal não exige lock."
+      }
+    ]
+  },
+  "ex-jzs5kevf": {
+    "prompt": "Que status de fechamento de WebSocket o boxoffice manda ao desligar?",
+    "hint": "`GoingAway`.",
+    "unit": ""
+  },
+  "ex-9hfasdy0": {
+    "prompt": "Na execução da seção 06, o que a compra lenta recebeu?",
+    "hint": "Ela estava em andamento quando o sinal chegou.",
+    "choices": [
+      {
+        "text": "Uma conexão derrubada pelo servidor no momento do sinal",
+        "why": "Esse é o comportamento da aula 16, antes do desligamento gracioso."
+      },
+      {
+        "text": "Um 503, porque a prontidão tinha virado",
+        "why": "A prontidão responde à plataforma; a requisição em andamento seguiu."
+      },
+      {
+        "text": "201, depois de 2,2 segundos, um segundo após o sinal",
+        "why": "Certo. O processo registrou `stopped` e saiu com 0 só depois dela."
+      },
+      {
+        "text": "Um 500, porque o sinal cancelou a transação dela no meio",
+        "why": "Nada a cancelou; o `Shutdown` esperou por ela."
+      }
+    ]
+  },
+  "ex-223pq3cv": {
+    "prompt": "Por que o timeout de desligamento é de oito segundos por padrão?",
+    "hint": "Quem manda `SIGKILL`, e quando?",
+    "choices": [
+      {
+        "text": "O Prometheus coleta a cada oito segundos",
+        "why": "O intervalo de coleta não tem nada a ver."
+      },
+      {
+        "text": "O gRPC recusa prazos maiores",
+        "why": "O prazo é um contexto do próprio boxoffice."
+      },
+      {
+        "text": "Oito segundos é o máximo que uma compra levou nos testes da aula 9",
+        "why": "Nenhuma medição assim foi feita."
+      },
+      {
+        "text": "Precisa acabar antes do `SIGKILL` da plataforma",
+        "why": "Certo. O boxoffice corta os retardatários ele mesmo, de forma limpa, primeiro."
+      }
+    ]
+  },
+  "ex-6tfa5xcz": {
+    "prompt": "No terminal do servidor, o que o `${PIPESTATUS[0]}` informou?",
+    "hint": "`boxoffice | cut`.",
+    "choices": [
+      {
+        "text": "o status de saída do `cut`",
+        "why": "Esse é o `$?` depois de um pipeline."
+      },
+      {
+        "text": "o número de linhas que o `cut` encurtou",
+        "why": "O `PIPESTATUS` guarda status de saída."
+      },
+      {
+        "text": "o número do sinal `SIGTERM`",
+        "why": "Ele imprimiu `exit 0`."
+      },
+      {
+        "text": "o do boxoffice, 0",
+        "why": "Certo. O primeiro comando do pipeline."
+      }
+    ]
+  },
+  "ex-cgfaf987": {
+    "prompt": "Por que o `main` chama `stop` logo depois de o contexto do sinal terminar?",
+    "hint": "Ctrl-C duas vezes.",
+    "choices": [
+      {
+        "text": "Para fechar o pool do banco",
+        "why": "O `pool.Close` adiado faz isso quando o `main` retorna."
+      },
+      {
+        "text": "Para começar o cronômetro do desligamento",
+        "why": "O `context.WithTimeout` o começa."
+      },
+      {
+        "text": "Para mandar `SIGTERM` ao servidor gRPC",
+        "why": "O servidor gRPC roda no mesmo processo."
+      },
+      {
+        "text": "Para um segundo sinal matá-lo",
+        "why": "Certo. Apertar Ctrl-C duas vezes quer dizer exatamente isso."
+      }
+    ]
+  },
+  "ex-609g9kv5": {
+    "prompt": "Por que o `GracefulStop` roda numa goroutine, com `Stop` depois do prazo?",
+    "hint": "O `Watch` da aula 10.",
+    "choices": [
+      {
+        "text": "O `GracefulStop` devolve um erro que precisa ser lido em paralelo",
+        "why": "Ele não devolve nada."
+      },
+      {
+        "text": "Streams `Watch` nunca terminam, então o `GracefulStop` sozinho esperaria para sempre",
+        "why": "Certo. O `Stop` os corta quando o prazo passa."
+      },
+      {
+        "text": "O `Stop` drena chamadas com mais delicadeza",
+        "why": "O `Stop` corta chamadas; o `GracefulStop` é o gentil."
+      },
+      {
+        "text": "O gRPC precisa parar antes do HTTP",
+        "why": "O `Shutdown` do HTTP roda primeiro."
+      }
+    ]
+  },
+  "ex-09yxejj5": {
+    "prompt": "Quando o `Shutdown` é chamado, o `ListenAndServe` devolve `http.___`, que o `main` trata como esperado e não fatal.",
+    "hint": "Err…",
+    "blanks": [
+      {
+        "accept": [
+          "ErrServerClosed"
+        ]
+      }
+    ]
+  },
+  "ex-xsyq790j": {
+    "prompt": "Ligue cada valor do trecho de Kubernetes da seção 07 ao que ele define.",
+    "hint": "Não executado neste curso.",
+    "pairs": [
+      {
+        "left": "`periodSeconds: 10` no `/healthz`",
+        "right": "liveness perguntada a cada dez segundos"
+      },
+      {
+        "left": "`failureThreshold: 3`",
+        "right": "três falhas seguidas antes de um reinício"
+      },
+      {
+        "left": "`periodSeconds: 5` no `/readyz`",
+        "right": "readiness perguntada a cada cinco segundos"
+      },
+      {
+        "left": "`terminationGracePeriodSeconds: 30`",
+        "right": "tempo entre o sinal e o `SIGKILL`"
+      }
+    ]
+  },
+  "ex-as83r654": {
+    "prompt": "Quais afirmações batem com esta aula? Marque todas as que se aplicam.",
+    "hint": "Seções 02 a 07.",
+    "choices": [
+      {
+        "text": "A imagem define `BOXOFFICE_OPS=:9100` para a porta de ops escutar em todas as interfaces",
+        "why": "Certo. Dentro de um container, `localhost` é o próprio container."
+      },
+      {
+        "text": "A liveness faz ping no banco com limite de um segundo",
+        "why": "Essa é a readiness; a liveness não toca nada fora do processo."
+      },
+      {
+        "text": "O PromQL da seção 05 foi executado contra um servidor Prometheus",
+        "why": "O curso não instalou Prometheus; as expressões não foram executadas."
+      },
+      {
+        "text": "O boxoffice não mantém atraso entre a prontidão virar 503 e o `Shutdown`",
+        "why": "Certo. Numa plataforma que precise dele, esse atraso é mais uma configuração."
+      },
+      {
+        "text": "O stream da seção 06 terminou com status 0 do curl",
+        "why": "Certo. O servidor fechou a resposta direito."
+      }
+    ]
+  },
+  "ex-fcmz9c40": {
+    "prompt": "O Kubernetes tira um pod que está parando do balanceador e o sinaliza quase no mesmo momento. O que acontece com o boxoffice como está escrito?",
+    "hint": "O último parágrafo da seção 06.",
+    "choices": [
+      {
+        "text": "Nada: a prontidão vira 503 antes de qualquer requisição chegar",
+        "why": "A prontidão é perguntada a cada poucos segundos; a remoção se atrasa em relação ao sinal."
+      },
+      {
+        "text": "O Kubernetes espera o `/readyz` responder 503 antes de sinalizar",
+        "why": "Ele sinaliza sem perguntar."
+      },
+      {
+        "text": "Por um ou dois segundos, requisições seguem chegando a um listener já fechado",
+        "why": "Certo. Servir mais alguns segundos depois de a prontidão virar 503 é a resposta comum."
+      },
+      {
+        "text": "O pod reinicia, porque a liveness falha",
+        "why": "O `/healthz` segue respondendo 200 durante o desligamento."
+      }
+    ]
+  },
+  "ex-10awrajt": {
+    "prompt": "Ordene os momentos da execução da seção 06, do primeiro ao último.",
+    "hint": "Leia o log do servidor.",
+    "items": [
+      "o stream abre",
+      "a compra lenta começa",
+      "o `SIGTERM` chega e o stream termina",
+      "a compra recebe 201",
+      "`stopped`, exit 0"
+    ]
+  }
+}

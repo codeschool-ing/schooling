@@ -1,0 +1,857 @@
+[
+  {
+    "id": "ex-x1x3agys",
+    "version": 1,
+    "section": "why-structured",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A team adds a field in the middle of lesson 2's plain access line. What happens to the scripts that read those lines?",
+    "hint": "They split on spaces.",
+    "choices": [
+      {
+        "text": "They stop with a parse error on the first line they meet",
+        "correct": false,
+        "why": "Splitting on spaces always succeeds; it just puts the wrong word in each slot."
+      },
+      {
+        "text": "Nothing changes, since the status stays the fourth word",
+        "correct": false,
+        "why": "A field in the middle pushes the status to another position."
+      },
+      {
+        "text": "They read the wrong column, and nothing reports it",
+        "correct": true,
+        "why": "Right. A position is not a name; the field after the new one moves."
+      },
+      {
+        "text": "The log package refuses lines longer than before",
+        "correct": false,
+        "why": "The log package writes whatever it is given."
+      }
+    ]
+  },
+  {
+    "id": "ex-yf8k0kbg",
+    "version": 1,
+    "section": "why-structured",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should the message of a structured line be a constant such as `\"request\"`, with the variable parts in fields?",
+    "hint": "Think of counting and grouping.",
+    "choices": [
+      {
+        "text": "Lines with the same text are counted and grouped together",
+        "correct": true,
+        "why": "Right. A message that differs on every line groups nothing."
+      },
+      {
+        "text": "JSON cannot hold a message built with `Printf`",
+        "correct": false,
+        "why": "It holds any string; the problem is that each one is different."
+      },
+      {
+        "text": "A constant message is shorter on disk than a formatted one",
+        "correct": false,
+        "why": "Size is not the argument the lesson makes."
+      },
+      {
+        "text": "Levels only work when the message never changes",
+        "correct": false,
+        "why": "Levels are a separate field and work with any message."
+      }
+    ]
+  },
+  {
+    "id": "ex-z6hmwemz",
+    "version": 1,
+    "section": "why-structured",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each idea of structured logging to what it gives an operator.",
+    "hint": "Three ideas from section 02.",
+    "pairs": [
+      {
+        "left": "level",
+        "right": "dropping or filtering lines by how much they matter"
+      },
+      {
+        "left": "a request id carried on every line",
+        "right": "finding all lines of one request together"
+      },
+      {
+        "left": "typed fields",
+        "right": "queries such as every 5xx on one path"
+      }
+    ],
+    "right_distractors": [
+      "making the file smaller than plain text"
+    ]
+  },
+  {
+    "id": "ex-7436z5g5",
+    "version": 1,
+    "section": "slog",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `logdemo`, the `Debug` line never appeared. Why?",
+    "hint": "Look at the handler's options.",
+    "choices": [
+      {
+        "text": "`Debug` is only printed when the program runs under `go test`",
+        "correct": false,
+        "why": "slog does not look at how the program was started."
+      },
+      {
+        "text": "The level was INFO, so DEBUG was dropped",
+        "correct": true,
+        "why": "Right. INFO is also slog's default."
+      },
+      {
+        "text": "The JSON handler has no way to write debug lines",
+        "correct": false,
+        "why": "Any handler writes them at a low enough level."
+      },
+      {
+        "text": "The line went to standard error instead",
+        "correct": false,
+        "why": "Both handlers wrote to standard output; the line was dropped."
+      }
+    ]
+  },
+  {
+    "id": "ex-3fb6aqzb",
+    "version": 1,
+    "section": "slog",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`logger.With(\"request_id\", id)` returns a new logger. What does it change in what that logger writes?",
+    "hint": "The error line of `logdemo`.",
+    "choices": [
+      {
+        "text": "The id appears as a field on each of its lines",
+        "correct": true,
+        "why": "Right. The field is given once and repeated on every line."
+      },
+      {
+        "text": "Only its first line carries `request_id`, the rest stay as they were",
+        "correct": false,
+        "why": "Both the error line and any later ones carry it."
+      },
+      {
+        "text": "It replaces the message with the request id",
+        "correct": false,
+        "why": "The message stays; the id is an added field."
+      },
+      {
+        "text": "It changes the level of every line to ERROR",
+        "correct": false,
+        "why": "With adds fields; the level comes from the call."
+      }
+    ]
+  },
+  {
+    "id": "ex-q65evr17",
+    "version": 1,
+    "section": "slog",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The address `ana@example.com` was logged as `a***@example.com`. What did that?",
+    "hint": "A method on a type.",
+    "choices": [
+      {
+        "text": "The `email` type's `LogValue` method",
+        "correct": true,
+        "why": "Right. slog calls it for any slog.LogValuer, so every call hides it."
+      },
+      {
+        "text": "The JSON handler masks every string with an `@`",
+        "correct": false,
+        "why": "It writes strings as they are; the type did the hiding."
+      },
+      {
+        "text": "The caller wrote the masked form by hand in the log call",
+        "correct": false,
+        "why": "The call passed `email(\"ana@example.com\")`, the full address."
+      },
+      {
+        "text": "A level that drops the local part of addresses",
+        "correct": false,
+        "why": "Levels drop whole lines, never parts of values."
+      }
+    ]
+  },
+  {
+    "id": "ex-anqnr6hr",
+    "version": 1,
+    "section": "slog",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The slog handler that writes `key=value` pairs for a terminal is the ___Handler.",
+    "hint": "The other one is JSONHandler.",
+    "blanks": [
+      {
+        "accept": [
+          "Text"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-986tcnkp",
+    "version": 1,
+    "section": "request-logging",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does boxoffice's `requestID` middleware send back to the client?",
+    "hint": "Look at the `curl -si` answer.",
+    "choices": [
+      {
+        "text": "A cookie holding the request id",
+        "correct": false,
+        "why": "No cookie is set; a header is."
+      },
+      {
+        "text": "The whole log line of its request, in the body",
+        "correct": false,
+        "why": "The body is the handler's answer; the log stays on the server."
+      },
+      {
+        "text": "Nothing; the id lives only in the log",
+        "correct": false,
+        "why": "The capture shows `X-Request-Id` in the response."
+      },
+      {
+        "text": "The id, in an `X-Request-ID` header",
+        "correct": true,
+        "why": "Right. A client that reports a problem quotes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-an9bh3w5",
+    "version": 1,
+    "section": "request-logging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must `requestID` come before `logRequests` in the chain?",
+    "hint": "Where does `logRequests` get its logger?",
+    "choices": [
+      {
+        "text": "The chain refuses two middlewares that set headers",
+        "correct": false,
+        "why": "Any number of middlewares set headers."
+      },
+      {
+        "text": "The id has to be generated after the status is known",
+        "correct": false,
+        "why": "It is made before the handler runs, so it is on every line."
+      },
+      {
+        "text": "The logging middleware takes its logger from the context, filled one step earlier",
+        "correct": true,
+        "why": "Right. Outside it, logger(ctx) falls back to the default without the id."
+      },
+      {
+        "text": "Otherwise CORS rejects the request",
+        "correct": false,
+        "why": "CORS does not look at the request id."
+      }
+    ]
+  },
+  {
+    "id": "ex-2d57zx9p",
+    "version": 1,
+    "section": "request-logging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At which level does boxoffice's new `logRequests` write a request that answered 409?",
+    "hint": "The rule is about 500 and above.",
+    "choices": [
+      {
+        "text": "ERROR, since 409 is a refusal",
+        "correct": false,
+        "why": "Only 500 and above are ERROR; a refusal by the rules is INFO."
+      },
+      {
+        "text": "INFO",
+        "correct": true,
+        "why": "Right. The capture shows the 409 line at INFO."
+      },
+      {
+        "text": "WARN, the level between INFO and ERROR",
+        "correct": false,
+        "why": "The middleware uses only INFO and ERROR."
+      },
+      {
+        "text": "DEBUG, so that refusals are hidden by default",
+        "correct": false,
+        "why": "Every request is logged at INFO or above."
+      }
+    ]
+  },
+  {
+    "id": "ex-5n7vfps8",
+    "version": 1,
+    "section": "request-logging",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After `slog.SetDefault`, the `log.Printf` in `fail` comes out as JSON. What does that line still lack?",
+    "hint": "Compare it with a request line.",
+    "choices": [
+      {
+        "text": "A timestamp",
+        "correct": false,
+        "why": "The default handler adds `time` to every line."
+      },
+      {
+        "text": "A level",
+        "correct": false,
+        "why": "It is written at INFO."
+      },
+      {
+        "text": "Fields, and the request id",
+        "correct": true,
+        "why": "Right. The whole text is the message; converting the call to logger(ctx) adds both."
+      },
+      {
+        "text": "Valid JSON: the bridge writes plain text",
+        "correct": false,
+        "why": "The capture shows those lines as JSON objects."
+      }
+    ]
+  },
+  {
+    "id": "ex-vv877gzw",
+    "version": 1,
+    "section": "request-logging",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens to one request in boxoffice's new chain in order.",
+    "hint": "The first middleware named is the outermost.",
+    "items": [
+      "`requestID` makes an id and puts a logger carrying it in the context",
+      "`logRequests` notes the start time and wraps the writer",
+      "the handler answers the request",
+      "`logRequests` writes one line with the status, size and duration"
+    ]
+  },
+  {
+    "id": "ex-qyx1gbt1",
+    "version": 1,
+    "section": "zerolog",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A zerolog call is written `logger.Info().Int(\"event_id\", 1)` and nothing more. What is written?",
+    "hint": "How does a zerolog line end?",
+    "choices": [
+      {
+        "text": "A line with only `event_id`",
+        "correct": false,
+        "why": "Without Msg the line is never written."
+      },
+      {
+        "text": "A compile error, because `Msg` is required",
+        "correct": false,
+        "why": "It compiles; the line is silently lost."
+      },
+      {
+        "text": "A line with an empty message",
+        "correct": false,
+        "why": "Msg writes the line; without it there is none."
+      },
+      {
+        "text": "Nothing: without `.Msg(...)` no line is sent",
+        "correct": true,
+        "why": "Right. That is the classic zerolog bug, and the compiler does not catch it."
+      }
+    ]
+  },
+  {
+    "id": "ex-wg1c18vt",
+    "version": 1,
+    "section": "zerolog",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the zerolog program, the first `Debug` line was written and the second was not. Why?",
+    "hint": "What happened between them?",
+    "choices": [
+      {
+        "text": "zerolog drops repeated messages",
+        "correct": false,
+        "why": "The messages differ, and repetition is not the rule."
+      },
+      {
+        "text": "The second line had no timestamp",
+        "correct": false,
+        "why": "Both came from the same logger with Timestamp."
+      },
+      {
+        "text": "Debug lines are written once per process",
+        "correct": false,
+        "why": "No such rule; the level changed."
+      },
+      {
+        "text": "`SetGlobalLevel(InfoLevel)` was called; before it, zerolog lets everything through",
+        "correct": true,
+        "why": "Right. slog's default drops DEBUG; zerolog's default does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-h5mgk440",
+    "version": 1,
+    "section": "zap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does zap's `SugaredLogger` give that its `Logger` does not?",
+    "hint": "`Infow` and `Infof`.",
+    "choices": [
+      {
+        "text": "Typed fields such as `zap.Int`",
+        "correct": false,
+        "why": "Those belong to the strict Logger."
+      },
+      {
+        "text": "Lines with no allocation at all",
+        "correct": false,
+        "why": "The sugared API allocated more bytes per line."
+      },
+      {
+        "text": "Loose key-value pairs and Printf formats",
+        "correct": true,
+        "why": "Right. Convenience, at the cost of an extra allocation."
+      },
+      {
+        "text": "A text format instead of JSON",
+        "correct": false,
+        "why": "Both wrote JSON in the capture."
+      }
+    ]
+  },
+  {
+    "id": "ex-v9tjgbp8",
+    "version": 1,
+    "section": "zap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the zap program call `defer logger.Sync()`?",
+    "hint": "Buffered lines.",
+    "choices": [
+      {
+        "text": "So that buffered lines are flushed before the program exits",
+        "correct": true,
+        "why": "Right. Without it, a crashing program loses the lines that explain the crash."
+      },
+      {
+        "text": "To print the stacktrace on errors",
+        "correct": false,
+        "why": "The production configuration does that by itself."
+      },
+      {
+        "text": "To switch from the sugared API back to the strict one",
+        "correct": false,
+        "why": "Sync has nothing to do with the two APIs."
+      },
+      {
+        "text": "To wait for every goroutine that logged",
+        "correct": false,
+        "why": "It flushes output; it does not wait for goroutines."
+      }
+    ]
+  },
+  {
+    "id": "ex-h15yty14",
+    "version": 1,
+    "section": "zap",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `zap.NewProduction()` add to every ERROR line, as the capture shows?",
+    "hint": "A long field.",
+    "choices": [
+      {
+        "text": "A request id",
+        "correct": false,
+        "why": "The program added that with With; the configuration did not."
+      },
+      {
+        "text": "A colour code",
+        "correct": false,
+        "why": "The output is plain JSON."
+      },
+      {
+        "text": "The time in São Paulo's zone",
+        "correct": false,
+        "why": "`ts` is seconds since 1970."
+      },
+      {
+        "text": "A `stacktrace`",
+        "correct": true,
+        "why": "Right. Useful once, costly on a service that logs many errors."
+      }
+    ]
+  },
+  {
+    "id": "ex-jzjep72s",
+    "version": 1,
+    "section": "zap",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each logger to a detail of its default output in this lesson.",
+    "hint": "Compare the field names.",
+    "pairs": [
+      {
+        "left": "slog JSONHandler",
+        "right": "`msg` and `level` in capitals"
+      },
+      {
+        "left": "zerolog",
+        "right": "`message` and `level` in lower case"
+      },
+      {
+        "left": "zap production",
+        "right": "`ts` as seconds and a `caller` field"
+      }
+    ],
+    "right_distractors": [
+      "one line of text with no field names"
+    ]
+  },
+  {
+    "id": "ex-nf4bxqcd",
+    "version": 1,
+    "section": "comparing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the benchmark, which logger wrote a line fastest?",
+    "hint": "About 215 ns.",
+    "choices": [
+      {
+        "text": "slog",
+        "correct": false,
+        "why": "slog took 570 to 670 ns."
+      },
+      {
+        "text": "zerolog",
+        "correct": true,
+        "why": "Right, by a wide margin."
+      },
+      {
+        "text": "zap",
+        "correct": false,
+        "why": "zap took 450 to 470 ns."
+      },
+      {
+        "text": "zap sugared",
+        "correct": false,
+        "why": "That was the slowest of the zap APIs."
+      }
+    ]
+  },
+  {
+    "id": "ex-2jk2p36h",
+    "version": 1,
+    "section": "comparing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bytes per line did zap's strict `Logger` allocate in the benchmark?",
+    "hint": "One allocation.",
+    "value": 192,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-7re45ew3",
+    "version": 1,
+    "section": "comparing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "boxoffice serves each request in milliseconds and writes one access line per request. What does the benchmark say about switching it to zerolog?",
+    "hint": "Put half a microsecond next to a millisecond.",
+    "choices": [
+      {
+        "text": "Worth doing: zerolog is three times faster than slog",
+        "correct": false,
+        "why": "Three times a fraction of a microsecond is invisible next to a database call."
+      },
+      {
+        "text": "Worth doing, because slog allocates on every line",
+        "correct": false,
+        "why": "slog allocated nothing per line in the capture."
+      },
+      {
+        "text": "Harmful, since zerolog cannot write JSON",
+        "correct": false,
+        "why": "zerolog wrote JSON in the capture."
+      },
+      {
+        "text": "The gain is hundredths of one per cent of a request",
+        "correct": true,
+        "why": "Right. The deciding questions are elsewhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-qy3dzk2e",
+    "version": 1,
+    "section": "comparing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is slog's place in the standard library the decisive row of the comparison table?",
+    "hint": "Think of libraries you depend on.",
+    "choices": [
+      {
+        "text": "Standard library code runs faster than modules",
+        "correct": false,
+        "why": "zerolog, a module, was the fastest."
+      },
+      {
+        "text": "Modules are not allowed to write to standard output",
+        "correct": false,
+        "why": "All three wrote to standard output."
+      },
+      {
+        "text": "slog is the only one with levels",
+        "correct": false,
+        "why": "All three have levels."
+      },
+      {
+        "text": "A library accepts a `*slog.Logger` and every application passes its own",
+        "correct": true,
+        "why": "Right. It is the shared type; zerolog or zap still sit behind it as a handler."
+      }
+    ]
+  },
+  {
+    "id": "ex-z503j7c2",
+    "version": 1,
+    "section": "comparing",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these were measured in the benchmark? Choose all that apply.",
+    "hint": "Read its output lines.",
+    "choices": [
+      {
+        "text": "slog allocated nothing per line",
+        "correct": true,
+        "why": "Right: 0 allocs."
+      },
+      {
+        "text": "zap sugared allocated 384 bytes per line",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "zerolog allocated once per line",
+        "correct": false,
+        "why": "zerolog allocated nothing."
+      },
+      {
+        "text": "`LogAttrs` was slower than slog's `Info`",
+        "correct": false,
+        "why": "It was slightly faster on both runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-6t3232gp",
+    "version": 1,
+    "section": "what-not-to-log",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these belongs in a boxoffice log line?",
+    "hint": "Lesson 2's choice.",
+    "choices": [
+      {
+        "text": "The `Authorization` header, to debug staff access",
+        "correct": false,
+        "why": "It carries a secret token; it is never logged."
+      },
+      {
+        "text": "The ticket id",
+        "correct": true,
+        "why": "Right. An id leads to the data where it is managed."
+      },
+      {
+        "text": "The request body, in full, for a failed purchase",
+        "correct": false,
+        "why": "A body holds whatever the client sent, secrets included."
+      },
+      {
+        "text": "The buyer's card number, masked by hand",
+        "correct": false,
+        "why": "Payment data stays out of the log."
+      }
+    ]
+  },
+  {
+    "id": "ex-jcpwx02q",
+    "version": 1,
+    "section": "what-not-to-log",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why reduce personal data at the type, with `LogValue`, rather than at each log call?",
+    "hint": "Who has to remember?",
+    "choices": [
+      {
+        "text": "`LogValue` encrypts the value so it can be read back later",
+        "correct": false,
+        "why": "It returns a reduced value; nothing is encrypted."
+      },
+      {
+        "text": "Every call that logs the type gets the reduced form, with nobody remembering",
+        "correct": true,
+        "why": "Right. A rule kept by memory fails on the call that forgot."
+      },
+      {
+        "text": "The law requires a method called `LogValue`",
+        "correct": false,
+        "why": "The law speaks of personal data, not of Go methods."
+      },
+      {
+        "text": "A reduced value makes the log line faster to write",
+        "correct": false,
+        "why": "Speed is not the reason given."
+      }
+    ]
+  },
+  {
+    "id": "ex-vd0d2d5v",
+    "version": 1,
+    "section": "what-not-to-log",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a log full of e-mail addresses a problem under the LGPD and the GDPR?",
+    "hint": "A deletion request.",
+    "choices": [
+      {
+        "text": "Logs are not allowed to contain the `@` character",
+        "correct": false,
+        "why": "The rule is about personal data, not about characters."
+      },
+      {
+        "text": "E-mail addresses make JSON lines invalid",
+        "correct": false,
+        "why": "An address is an ordinary string in JSON."
+      },
+      {
+        "text": "It is a copy of personal data nobody finds when a deletion request arrives",
+        "correct": true,
+        "why": "Right. The person's right to deletion reaches every copy."
+      },
+      {
+        "text": "Both laws forbid logging anything about a request",
+        "correct": false,
+        "why": "They regulate personal data; ids, statuses and durations are fine."
+      }
+    ]
+  },
+  {
+    "id": "ex-xm7w2v17",
+    "version": 1,
+    "section": "what-not-to-log",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service logs every 404 from clients at ERROR. What does the lesson say this costs?",
+    "hint": "A log where everything is an error.",
+    "choices": [
+      {
+        "text": "Nothing, since a 404 is an error for the client",
+        "correct": false,
+        "why": "The level is about the server's health, and a client's 404 is INFO."
+      },
+      {
+        "text": "Real errors drown among ordinary refusals",
+        "correct": true,
+        "why": "Right. A log where everything is an error is a log where nothing is."
+      },
+      {
+        "text": "More disk, but searches stay as useful",
+        "correct": false,
+        "why": "The searches lose their meaning, not only the disk."
+      },
+      {
+        "text": "The server answers 500 instead of 404",
+        "correct": false,
+        "why": "The level of a log line does not change the response."
+      }
+    ]
+  },
+  {
+    "id": "ex-prdq3reh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An operator has the id `2e7276e971b433ac` from a client's complaint. What finds everything boxoffice wrote about it?",
+    "hint": "The id is a field on the lines of that request.",
+    "choices": [
+      {
+        "text": "Searching the access lines for the client's address",
+        "correct": false,
+        "why": "Addresses are not logged; the request id is."
+      },
+      {
+        "text": "A search on the `request_id` field",
+        "correct": true,
+        "why": "Right. Every line written through that request's logger carries it."
+      },
+      {
+        "text": "Reading the response body the client kept",
+        "correct": false,
+        "why": "The body holds the answer, not the server's lines."
+      },
+      {
+        "text": "Restarting boxoffice at DEBUG level",
+        "correct": false,
+        "why": "The lines already written carry the id; nothing needs to change."
+      }
+    ]
+  },
+  {
+    "id": "ex-wgx9rsqd",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps that moved boxoffice from lesson 2's lines to structured logs.",
+    "hint": "main sets the default first.",
+    "items": [
+      "`main` calls `slog.SetDefault` with a JSON logger",
+      "`requestID` gives each request an id and a logger carrying it",
+      "`logRequests` writes the access line as fields through that logger",
+      "the old `log.Printf` calls are converted one by one to `logger(ctx)`"
+    ],
+    "trap": "The conversion of the old calls is the remaining work, after the bridge."
+  }
+]
