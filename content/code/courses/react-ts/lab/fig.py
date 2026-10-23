@@ -69,6 +69,8 @@ class Fig:
         return self
 
     def text(self, x, y, t, mono=False, tone="paper", anchor="start", size=None, weight=None):
+        if tone == "wire":  # a hairline colour, unreadable as text
+            tone = "dim"
         self.items.append(("text", dict(x=x, y=y, t=t, mono=mono, tone=tone, anchor=anchor,
                                         size=size or (10.5 if mono else 11), weight=weight)))
         return self
