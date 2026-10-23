@@ -42,11 +42,14 @@ runh <<'EOF'
 printf '[host."http://registry:5000"]\n' | docker exec -i linkbox-control-plane cp /dev/stdin /etc/containerd/certs.d/localhost:5000/hosts.toml
 EOF
 run 'docker network connect kind registry'
+run 'kubectl wait --for=condition=Ready node --all --timeout=180s'
 run 'kubectl get nodes'
 
 block psa-namespace
 run 'kubectl create namespace linkbox'
 run 'kubectl label namespace linkbox pod-security.kubernetes.io/enforce=restricted'
+# the namespace's default service account appears a moment after the namespace
+quiet 'until kubectl get serviceaccount default -n linkbox >/dev/null 2>&1; do sleep 1; done'
 
 block psa-pod
 run 'kubectl run probe -n linkbox --image=localhost:5000/linkbox:main'
@@ -112,18 +115,20 @@ run 'kubectl describe resourcequota linkbox -n linkbox'
 
 block quota-scale
 run 'kubectl scale deployment linkbox -n linkbox --replicas=5'
-quiet 'sleep 8'
+quiet 'for i in $(seq 60); do kubectl get events -n linkbox | grep -q "exceeded quota" && break; sleep 1; done; sleep 5'
 run 'kubectl get deployment linkbox -n linkbox'
 runh <<'EOF'
-kubectl get events -n linkbox --field-selector reason=FailedCreate -o jsonpath='{range .items[*]}{.message}{"\n"}{end}' | tail -n 1
+kubectl get events -n linkbox --field-selector reason=FailedCreate -o jsonpath='{range .items[*]}{.message}{"\n"}{end}' | grep -m 1 'exceeded quota'
 EOF
 run 'kubectl scale deployment linkbox -n linkbox --replicas=1'
+quiet 'until [ "$(kubectl get pods -n linkbox --no-headers | wc -l)" = 1 ]; do sleep 1; done'
 
 block limitrange
 run 'kubectl set resources deployment linkbox -n linkbox --limits=memory=512Mi'
-quiet 'sleep 5'
+quiet 'for i in $(seq 60); do kubectl get events -n linkbox | grep -q "maximum memory" && break; sleep 1; done'
+run 'kubectl get pods -n linkbox'
 runh <<'EOF'
-kubectl get events -n linkbox --field-selector reason=FailedCreate -o jsonpath='{range .items[*]}{.message}{"\n"}{end}' | tail -n 1
+kubectl get events -n linkbox --field-selector reason=FailedCreate -o jsonpath='{range .items[*]}{.message}{"\n"}{end}' | grep -m 1 'maximum memory'
 EOF
 run 'kubectl rollout undo deployment linkbox -n linkbox'
 run 'kubectl rollout status deployment/linkbox -n linkbox --timeout=120s'

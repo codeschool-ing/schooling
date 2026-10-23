@@ -110,9 +110,9 @@ linkbox with every control from this lesson and both limits, and ask Docker what
 ana@vm:~/linkbox$ docker rm -f linkbox
 linkbox
 ana@vm:~/linkbox$ docker run -d --name linkbox --read-only --tmpfs /tmp --tmpfs /data:uid=65532,gid=65532 --cap-drop ALL --security-opt no-new-privileges --memory 256m --pids-limit 64 -p 127.0.0.1:8000:8000 -e LINKBOX_TOKEN=local-only linkbox:dev
-301074253ca5b9515bb2e08216f9ce1f541603d469cb76f9dd978d8a6cb2c690
+ecdbc2c547e4389ca0d4894f4b0895f02aaf2d2278c333bb38f7c8bf5d8738ec
 ana@vm:~/linkbox$ docker stats --no-stream --format "{{.Name}}  memory {{.MemUsage}}  pids {{.PIDs}}" linkbox
-linkbox  memory 39.28MiB / 256MiB  pids 2
+linkbox  memory 39.54MiB / 256MiB  pids 2
 ana@vm:~/linkbox$ docker rm -f linkbox
 linkbox
 ```

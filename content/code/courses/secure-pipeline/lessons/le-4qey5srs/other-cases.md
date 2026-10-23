@@ -13,7 +13,32 @@ Somebody writes the webhook check by hand after all, pastes the shared secret in
 commits with `--no-verify` because the hook "was slow today". The value is made up and opens
 nothing; the CI cannot tell, and should not try:
 
-@@CAPTURE secret@@
+```
+ana@vm:~/linkbox$ git switch -q main && git switch -q -c webhook
+ana@vm:~/linkbox$ printf "WEBHOOK_SECRET = \"Zr4tq8LmW2xK9vB6nP3sH7yC1dF5gJ0a\"\n" >webhook.py
+ana@vm:~/linkbox$ git add webhook.py && git commit -q --no-verify -m "verify incoming webhooks"
+ana@vm:~/linkbox$ git push ci webhook
+remote: run 5: webhook at 60f6753        
+remote: secrets: FAILED in 1s, the end of secrets.log:        
+remote:   Finding:     WEBHOOK_SECRET = "REDACTED"        
+remote:   Secret:      REDACTED        
+remote:   RuleID:      generic-api-key        
+remote:   Entropy:     5.000000        
+remote:   File:        webhook.py        
+remote:   Line:        1        
+remote:   Commit:      60f675340e2f7f85bb9137473f118042b64b29ca        
+remote:   Author:      Ana Lima        
+remote:   Email:       ana@example.org        
+remote:   Date:        2026-10-23T12:29:46Z        
+remote:   Fingerprint: 60f675340e2f7f85bb9137473f118042b64b29ca:webhook.py:generic-api-key:1        
+remote:           
+remote:   9:29AM INF 11 commits scanned.        
+remote:   9:29AM INF scanned ~15312 bytes (15.31 KB) in 221ms        
+remote:   9:29AM WRN leaks found: 1        
+remote: run 5: failed, the logs are in ~/ci/runs/5/logs        
+To /home/ana/ci/linkbox.git
+ * [new branch]      webhook -> webhook
+```
 
 **Decision: break, with no warning level and no exception file.** It meets the rule easily: the
 person who pushed can act at once, by revoking the secret, and nobody else can. The only entries
@@ -24,9 +49,12 @@ value anywhere.
 The response is lesson 6's, in lesson 6's order: revoke, replace, remove, then decide about the
 history. Deleting the branch on the server is the tidy-up, not the fix:
 
-@@CAPTURE secret-cleanup@@
+```
+ana@vm:~/linkbox$ git push -q ci --delete webhook
+ana@vm:~/linkbox$ git switch -q main && git branch -q -D webhook
+```
 
-The branch is gone from the list, and the commit is still in the server's object store until Git
+The branch is gone, and the commit is still in the server's object store until Git
 collects unreachable objects, as well as in the run's clone in `~/ci/runs`. That is the copies
 argument from lesson 6 again, and why the revocation comes first.
 
@@ -37,7 +65,27 @@ search page, and that the response proves it false: Jinja escapes the reflected 
 listed in `ci/zap-rules.conf`, so it warns. Lesson 2 runs the nightly checks by hand the way the
 scheduler would, on a clean clone of `main`:
 
-@@CAPTURE nightly@@
+```
+ana@vm:~/linkbox$ rm -rf /tmp/nightly && git clone -q ~/ci/linkbox.git /tmp/nightly
+ana@vm:~/linkbox$ /tmp/nightly/ci/pipeline.sh && /tmp/nightly/ci/pipeline.sh ci/nightly
+secrets: passed in 1s
+test: passed in 1s
+sast: passed in 3s
+sca: passed in 9s
+build: passed in 1s
+pipeline passed with 0 warning(s)
+rebuild: passed in 11s
+dast: WARNING in 21s, the end of dast.log:
+  PASS: Sub Resource Integrity Attribute Missing [90003]
+  PASS: Charset Mismatch [90011]
+  PASS: Application Error Disclosure [90022]
+  PASS: WSDL File Detection [90030]
+  PASS: Loosely Scoped Cookie [90033]
+  WARN-NEW: User Controllable HTML Element Attribute (Potential XSS) [10031] x 1 
+  	http://linkbox-staging-29257-app:8000/search?q=ZAP (200 OK)
+  FAIL-NEW: 0	FAIL-INPROG: 0	WARN-NEW: 1	WARN-INPROG: 0	INFO: 0	IGNORE: 0	PASS: 60
+pipeline passed with 1 warning(s)
+```
 
 Before this lesson, the same run said `dast: passed` and the warning was invisible. Now **it is one
 counted warning, and the decision is to keep it as one**. Each alternative is worse in its own
@@ -60,7 +108,62 @@ worth naming**: a report somebody reads every morning stays read only while it i
 A branch adds an export for a quarterly report. It writes a file under `/tmp`, and nothing calls it
 yet:
 
-@@CAPTURE deadcode@@
+```
+ana@vm:~/linkbox$ git switch -q -c export
+ana@vm:~/linkbox$ git diff
+diff --git a/app.py b/app.py
+index 26dd50e..9b48d29 100644
+--- a/app.py
++++ b/app.py
+@@ -70,3 +70,9 @@ def follow(code):
+     if row is None:
+         abort(404)
+     return redirect(row[0])
++
++
++def export_links():
++    with open("/tmp/linkbox-export.csv", "w") as out:
++        for code, url in db().execute("SELECT code, url FROM links"):
++            out.write(f"{code},{url}\n")
+ana@vm:~/linkbox$ git commit -q -am "an export of every link, for the quarterly report"
+9:30AM INF 0 commits scanned.
+9:30AM INF scanned ~187 bytes (187 bytes) in 187ms
+9:30AM INF no leaks found
+ana@vm:~/linkbox$ git push ci export
+remote: run 6: export at 2b89ba7        
+remote: secrets: passed in 1s        
+remote: test: passed in 1s        
+remote: sast: FAILED in 3s, the end of sast.log:        
+remote:   	Total lines skipped (#nosec): 0        
+remote:   	Total potential issues skipped due to specifically being disabled (e.g., #nosec BXXX): 0        
+remote:           
+remote:   Run metrics:        
+remote:   	Total issues (by severity):        
+remote:   		Undefined: 0        
+remote:   		Low: 0        
+remote:   		Medium: 1        
+remote:   		High: 0        
+remote:   	Total issues (by confidence):        
+remote:   		Undefined: 0        
+remote:   		Low: 0        
+remote:   		Medium: 1        
+remote:   		High: 0        
+remote:   Files skipped (0):        
+remote: run 6: failed, the logs are in ~/ci/runs/6/logs        
+To /home/ana/ci/linkbox.git
+ * [new branch]      export -> export
+```
+
+The end of the log is Bandit's summary, one issue of medium severity. The issue itself is further
+up:
+
+```
+ana@vm:~/linkbox$ grep -A3 ">> Issue" ~/ci/runs/6/logs/sast.log
+>> Issue: [B108:hardcoded_tmp_directory] Probable insecure usage of temp file/directory.
+   Severity: Medium   Confidence: Medium
+   CWE: CWE-377 (https://cwe.mitre.org/data/definitions/377.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b108_hardcoded_tmp_directory.html
+```
 
 Bandit's B108 is medium severity: a fixed path under `/tmp` is a name any other user of the machine
 can create first, and then the export writes into their file. The developer's answer is that
@@ -68,10 +171,10 @@ nothing calls the function, so nothing is exposed.
 
 **Decision: break, and delete the function.** "Nobody calls it" is a claim with no check behind
 it, true today and false the day somebody wires the export to a route, and a static analyser
-cannot tell the two days apart. Unlike case 2, this one is fixable now and by the person who
-pushed it, in one of three ways, cheapest first: delete it until it is needed; write it properly,
-with `tempfile` choosing the path; or, if the path is genuinely right, a `# nosec B108` on the line
-with the reason, as lesson 3 argued for every suppression. Proving that code is unreachable costs
+cannot tell the two days apart. Unlike case 2, this one is fixable now, by the person who
+pushed it. There are three ways, cheapest first: delete it until it is needed; write it properly,
+with `tempfile` choosing the path; or, if the path is genuinely right, put a `# nosec B108` on the
+line with the reason, as lesson 3 argued for every suppression. Proving that code is unreachable costs
 more than any of the three.
 
 ### The six, side by side
@@ -79,7 +182,7 @@ more than any of the three.
 | case | verdict | the reason, in one line |
 |---|---|---|
 | an advisory with a fix | break | one pin, in the developer's own file |
-| an advisory with no fix | warn | nobody can act by changing this change; somebody reads it |
+| an advisory with no fix | warn | nothing in this change can fix it; somebody reads it |
 | a fix that cannot land yet | pass, until a date | an exception: one advisory, a date, a reason, a name |
 | a secret | break | its owner can always act, by revoking it, and every minute costs |
 | a false positive in DAST | warn | proven false, kept visible, scoped out the day it becomes noise |

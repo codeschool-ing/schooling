@@ -17,12 +17,12 @@ Construa a imagem se ela não estiver mais na sua máquina, e inicie do jeito qu
 ```
 ana@vm:~$ cd ~/linkbox
 ana@vm:~/linkbox$ docker build -q -t linkbox:dev .
-sha256:141991c1adc92f6c8ae6a4603dd5612fb61b68f80ab5ff49473b06e99656f295
+sha256:0aded474c783e199e98d8e61bd240bcd2c4b983eea05786c1dbd259181cf2259
 ```
 
 ```
 ana@vm:~/linkbox$ docker run -d --name linkbox -p 127.0.0.1:8000:8000 -e LINKBOX_TOKEN=local-only linkbox:dev
-153870da8e4e47c5990113744c7aef5e6d105476a8acf8ae36d2f822a7f2ded0
+adaaeb4e3cfa7b8e9ece836a2e25a6c6fbff9c739ff5f18009b002662c8d0077
 ana@vm:~/linkbox$ docker inspect --format 'read-only={{.HostConfig.ReadonlyRootfs}} cap-drop={{.HostConfig.CapDrop}} security-opt={{.HostConfig.SecurityOpt}} memory={{.HostConfig.Memory}} pids-limit={{.HostConfig.PidsLimit}}' linkbox
 read-only=false cap-drop=[] security-opt=[] memory=0 pids-limit=<nil>
 ```

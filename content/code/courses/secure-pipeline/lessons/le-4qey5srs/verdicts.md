@@ -60,7 +60,12 @@ Python program that crashes. 2 is taken twice over: Python exits 2 when it is ca
 option it does not know, and ZAP's baseline scan exits 2 when it has warnings. 127 is the shell
 saying a command does not exist:
 
-@@CAPTURE statuses@@
+```
+ana@vm:~/linkbox$ python3 -m json.tool --no-such-option 2>/dev/null; echo "exit $?"
+exit 2
+ana@vm:~/linkbox$ no-such-scanner 2>/dev/null; echo "exit $?"
+exit 127
+```
 
 **Had a warning been 2, a stage whose program was called with a typo in a flag would have passed
 with a warning**, and a run that checked nothing would have gone on. 3 is not free in the wider
@@ -123,8 +128,8 @@ esac
 ```
 
 The `case` maps 2 to the pipeline's 3, keeps 0, and sends **everything else to 1**: a FAIL rule,
-a scan that crashed, a container that never started. `set -e` is gone from this script for the
-same reason as in `ci/sast.sh`: with it, ZAP's 2 would have stopped the script before the `case`
+a scan that crashed, a container that never started. `set -e` is gone from this script, because with
+it, ZAP's 2 would have stopped the script before the `case`
 could read it.
 
 | stage | breaks the build (1) | warns (3) | passes (0) |

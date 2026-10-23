@@ -79,37 +79,14 @@ function does not exist yet; the rule is written first, the way a test is.
 ### What it finds
 
 ```
-ana@vm:~/linkbox$ semgrep scan --metrics=off --quiet --config .semgrep.yml .
-                   
-                   
-┌─────────────────┐
-│ 2 Code Findings │
-└─────────────────┘
-          
-    app.py
-   ❯❯❱ writes-need-the-token
-          ❰❰ Blocking ❱❱
-          A POST route that never calls require_token() lets anybody write.
-                                                                           
-           32┆ @app.post("/links")
-           33┆ def create():
-           34┆     if request.headers.get("X-Token") != ADMIN_TOKEN:
-           35┆         abort(401)
-           36┆     code = secrets.token_urlsafe(4)
-           37┆     db().execute("INSERT INTO links VALUES (?, ?)", (code, request.form["url"]))
-           38┆     db().commit()
-           39┆     return {"code": code}, 201
-   
-   ❯❯❱ sql-built-from-a-string
-          ❰❰ Blocking ❱❱
-          SQL text built from a string reaches execute(). Write a ? where the value goes and pass the value as
-          a parameter.                                                                                        
-                                                                                                              
-           46┆ rows = db().execute(f"SELECT code, url FROM links WHERE url LIKE '%{q}%'").fetchall()
+ana@vm:~/linkbox$ semgrep scan --metrics=off --quiet --emacs --config .semgrep.yml .
+app.py:32:1:error(writes-need-the-token):@app.post("/links"):A POST route that never calls require_token() lets anybody write.
+app.py:46:12:error(sql-built-from-a-string):    rows = db().execute(f"SELECT code, url FROM links WHERE url LIKE '%{q}%'").fetchall():SQL text built from a string reaches execute(). Write a ? where the value goes and pass the value as a parameter.
 ```
 
-Two findings, one per rule. Read the first one carefully, because it is the more interesting:
-`create()` **does check the token.** Its first two lines compare the header with `ADMIN_TOKEN` and
+Two findings, one per rule, each on one line: file, line, column, the rule and its message.
+`--emacs` asks for that format, which a log can hold and `grep` can search. Read the first one
+carefully, because it is the more interesting: `create()`, at line 32, **does check the token.** Its first two lines compare the header with `ADMIN_TOKEN` and
 answer 401 when they differ, and lesson 1's test proves it. So is this a false positive?
 
 It is a true positive **of the rule**, which said something narrower than "this route is open".

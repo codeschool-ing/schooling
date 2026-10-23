@@ -16,8 +16,8 @@ project's way, with the command in `~/.local/bin`:
 
 ```
 ana@vm:~/linkbox$ uv tool install bandit==1.9.4
-Resolved 7 packages in 3ms
-Installed 7 packages in 14ms
+Resolved 7 packages in 642ms
+Installed 7 packages in 291ms
  + bandit==1.9.4
  + markdown-it-py==4.2.0
  + mdurl==0.1.2
@@ -80,7 +80,7 @@ The default output says more about each finding. Ask for the one on the search:
 
 ```
 ana@vm:~/linkbox$ bandit -q -r . -x ./.venv -t B608
-Run started:2026-10-23 04:58:35.231009+00:00
+Run started:2026-10-23 12:27:16.778693+00:00
 
 Test results:
 >> Issue: [B608:hardcoded_sql_expressions] Possible SQL injection vector through string-based query construction.

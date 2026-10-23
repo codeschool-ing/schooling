@@ -123,9 +123,12 @@ def export_links():
             out.write(f\"{code},{url}\\\\n\")
 ''')
 PY"
-run 'git diff'
+run "git diff | grep '^+'"
 run 'git commit -q -am "an export of every link, for the quarterly report"'
 run 'git push ci export'
+
+block deadcode-issue
+run 'grep -A3 ">> Issue" ~/ci/runs/6/logs/sast.log'
 
 block baselines
 run 'gitleaks git --help | grep baseline'

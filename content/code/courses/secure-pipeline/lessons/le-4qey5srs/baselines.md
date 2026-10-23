@@ -17,7 +17,18 @@ only on findings that are not in it, which is the "now, in the change" half of t
 mechanical: whoever pushes is answerable for what they added, not for the history. The scanners of
 this course each have a form of it:
 
-@@CAPTURE baselines@@
+```
+ana@vm:~/linkbox$ gitleaks git --help | grep baseline
+  -b, --baseline-path string          path to baseline with issues that can be ignored
+ana@vm:~/linkbox$ semgrep scan --help 2>/dev/null | grep -A2 "baseline-commit=VAL"
+       --baseline-commit=VAL (absent SEMGREP_BASELINE_COMMIT env)
+           Only show results that are not found in this commit hash. Aborts
+           run if not currently in a git directory, there are unstaged
+ana@vm:~/linkbox$ pip-audit --help | grep -A2 -- "--ignore-vuln ID  "
+  --ignore-vuln ID      ignore a specific vulnerability by its vulnerability
+                        ID; this option can be used multiple times (default:
+                        [])
+```
 
 gitleaks reads a previous report and leaves out the findings in it. Semgrep compares against a
 commit and reports only what is new since then. pip-audit has no baseline at all, only
@@ -36,12 +47,21 @@ live with for a while. Its lines carry what a baseline lacks: **a date, a reason
 The owner is not a field in the file. It is whoever committed the line, and Git already records
 that:
 
-@@CAPTURE owner@@
+```
+ana@vm:~/linkbox$ git blame -s ci/exceptions.txt | tail -n 3
+f7d51a98 4) PYSEC-2026-1475 2026-11-20 templates need rework for 3.1.5; Ana, see issue 41
+f7d51a98 5) PYSEC-2026-1472 2026-11-20 templates need rework for 3.1.5; Ana, see issue 41
+f7d51a98 6) PYSEC-2026-1471 2026-11-20 templates need rework for 3.1.6; Ana, see issue 41
+ana@vm:~/linkbox$ git log -1 --format="%an, %ad" --date=short -- ci/exceptions.txt
+Ana Lima, 2026-10-23
+```
 
 `git blame` names the commit behind each line, and the commit names its author and day. The name in
 the reason is a courtesy for the reader; the commit is the record nobody can forget to fill in.
 
-@@FIGURE expiry@@
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 230\" role=\"img\" data-fig=\"sp-l07-expiry\" aria-label=\"The life of one exception, written on 23 October to hold until 20 November. From 23 October to 13 November the finding passes; from 14 to 20 November, its last week, the gate warns; from 21 November the exception is ignored and the finding breaks the build again. Renewing it is a new commit with a new date and reason.\"><defs><marker id=\"sp-l07-expiry-ah-paper-dim\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker><marker id=\"sp-l07-expiry-ah-phosphor\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker></defs><rect x=\"40\" y=\"70\" width=\"420\" height=\"34\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"250\" y=\"87\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--phosphor)\">passes, as excepted</text><rect x=\"460\" y=\"70\" width=\"140\" height=\"34\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"530\" y=\"87\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">warns</text><rect x=\"600\" y=\"70\" width=\"105\" height=\"34\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"652\" y=\"87\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--amber)\">breaks again</text><path d=\"M30 130 L710 130\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\" marker-end=\"url(#sp-l07-expiry-ah-paper-dim)\"></path><line x1=\"40\" y1=\"122\" x2=\"40\" y2=\"138\" stroke=\"var(--paper)\" stroke-width=\"2\"></line><text x=\"36\" y=\"154\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">23 Oct</text><text x=\"36\" y=\"170\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">the line is committed</text><line x1=\"460\" y1=\"122\" x2=\"460\" y2=\"138\" stroke=\"var(--paper)\" stroke-width=\"2\"></line><text x=\"460\" y=\"154\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">14 Nov</text><text x=\"460\" y=\"170\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">the last week begins</text><line x1=\"597\" y1=\"122\" x2=\"597\" y2=\"138\" stroke=\"var(--paper)\" stroke-width=\"2\"></line><text x=\"597\" y=\"154\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">20 Nov</text><text x=\"597\" y=\"170\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">the last day</text><text x=\"652\" y=\"196\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">21 Nov: the date has passed</text><path d=\"M652 70 L652 40 L60 40 L60 68\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\" fill=\"none\" stroke-dasharray=\"4 3\" marker-end=\"url(#sp-l07-expiry-ah-phosphor)\"></path><text x=\"356\" y=\"30\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--phosphor)\">renewing it: a new commit, a new date, a new reason</text></svg>", "caption": "The exception announces its own end a week early, and after it the finding is back as if it had never been excepted."}
+```
 
 Four rules keep exceptions from turning into a baseline by another name:
 

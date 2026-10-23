@@ -11,9 +11,9 @@ programs, so it should run without both, and the only way to know that it does i
 
 ```
 ana@vm:~/linkbox$ docker run -d --name linkbox --read-only --tmpfs /tmp --tmpfs /data:uid=65532,gid=65532 --cap-drop ALL --security-opt no-new-privileges -p 127.0.0.1:8000:8000 -e LINKBOX_TOKEN=local-only linkbox:dev
-8f3d9ec3375175f70dd0f7c864b134d3211470b172a01886935d5c29114224d1
+e7393ee048afb52485649a7c3ee8779ab16d5ce797b22220b70bb4f3c4796285
 ana@vm:~/linkbox$ curl -s -X POST -H "X-Token: local-only" -d url=https://example.org/handbook http://127.0.0.1:8000/links
-{"code":"F1dZMQ"}
+{"code":"5d32jw"}
 ana@vm:~/linkbox$ docker exec linkbox python3 -c "$status"
 Uid:	65532	65532	65532	65532
 CapInh:	0000000000000000

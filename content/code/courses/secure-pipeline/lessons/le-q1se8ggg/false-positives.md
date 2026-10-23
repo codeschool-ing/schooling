@@ -83,7 +83,7 @@ TABLES = ("links",)
 def counts(db):
     return {t: db.execute(f"SELECT count(*) FROM {t}").fetchone()[0] for t in TABLES}
 ana@vm:/tmp/scratch$ bandit -q counts.py
-Run started:2026-10-23 04:58:35.640401+00:00
+Run started:2026-10-23 12:27:17.278153+00:00
 
 Test results:
 >> Issue: [B608:hardcoded_sql_expressions] Possible SQL injection vector through string-based query construction.

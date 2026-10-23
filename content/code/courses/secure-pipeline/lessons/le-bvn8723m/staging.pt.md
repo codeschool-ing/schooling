@@ -87,15 +87,15 @@ reconstrói a imagem sem cache, como a aula 2 arrumou:
 
 ```
 ana@vm:~/linkbox$ ci/pipeline.sh ci/nightly
-rebuild: passed in 13s
-dast: WARNING in 30s, the end of dast.log:
+rebuild: passed in 16s
+dast: WARNING in 21s, the end of dast.log:
   PASS: Sub Resource Integrity Attribute Missing [90003]
   PASS: Charset Mismatch [90011]
   PASS: Application Error Disclosure [90022]
   PASS: WSDL File Detection [90030]
   PASS: Loosely Scoped Cookie [90033]
   WARN-NEW: User Controllable HTML Element Attribute (Potential XSS) [10031] x 1 
-  	http://linkbox-staging-17713-app:8000/search?q=ZAP (200 OK)
+  	http://linkbox-staging-19276-app:8000/search?q=ZAP (200 OK)
   FAIL-NEW: 0	FAIL-INPROG: 0	WARN-NEW: 1	WARN-INPROG: 0	INFO: 0	IGNORE: 0	PASS: 60
 pipeline passed with 1 warning(s)
 ```
@@ -111,22 +111,22 @@ que a aula 7 transformou em build quebrado em vez de aprovação silenciosa.
 
 ```
 ana@vm:~/linkbox$ git commit -q -am "staging runs the image read-only, as nobody, with no capabilities"
-2:09AM INF 0 commits scanned.
-2:09AM INF scanned ~483 bytes (483 bytes) in 219ms
-2:09AM INF no leaks found
+9:24AM INF 0 commits scanned.
+9:24AM INF scanned ~483 bytes (483 bytes) in 262ms
+9:24AM INF no leaks found
 ana@vm:~/linkbox$ git push ci main
-remote: run 1: main at 364671a        
+remote: run 1: main at 9b4047a        
 remote: secrets: passed in 0s        
-remote: test: passed in 1s        
-remote: sast: passed in 3s        
-remote: sca: passed in 7s        
-remote: build: passed in 1s        
-remote: image: passed in 2s        
-remote: push: passed in 1s        
+remote: test: passed in 2s        
+remote: sast: passed in 2s        
+remote: sca: passed in 10s        
+remote: build: passed in 0s        
+remote: image: passed in 3s        
+remote: push: passed in 0s        
 remote: pipeline passed with 0 warning(s)        
 remote: run 1: passed        
 To /home/ana/ci/linkbox.git
-   425c3da..364671a  main -> main
+   cd24a71..9b4047a  main -> main
 ```
 
 O push roda o `ci/stages`, que não inclui a varredura dinâmica, então esta execução só prova que a

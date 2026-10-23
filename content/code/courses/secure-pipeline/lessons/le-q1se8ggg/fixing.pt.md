@@ -87,7 +87,7 @@ Traceback (most recent call last):
 sqlite3.OperationalError: near "s": syntax error
 =========================== short test summary info ============================
 FAILED tests/test_app.py::test_search_survives_a_quote - assert 500 == 200
-1 failed, 3 passed in 0.39s
+1 failed, 3 passed in 0.46s
 ```
 
 **O teste novo falha com um 500, um erro interno do servidor, numa busca por uma palavra do inglês.**
@@ -119,7 +119,7 @@ ganha vida por acidente** é um `python app.py` num servidor, numa tarde, para t
 ```
 ana@vm:~/linkbox$ .venv/bin/python -m pytest -q
 ....                                                                     [100%]
-4 passed in 0.13s
+4 passed in 0.22s
 ana@vm:~/linkbox$ bash ci/sast.sh; echo "exit $?"
 exit 0
 ```
@@ -141,14 +141,14 @@ aula 6 troca o token por um novo primeiro, e só depois o tira do código.
 ana@vm:~/linkbox$ git add app.py tests/test_app.py
 ana@vm:~/linkbox$ git commit -q -m "the search takes a parameter, writes call require_token(), no debug server"
 ana@vm:~/linkbox$ git push ci main
-remote: run 2: main at b1002ea        
+remote: run 2: main at 999ebb9        
 remote: test: passed in 1s        
 remote: sast: passed in 3s        
-remote: build: passed in 0s        
+remote: build: passed in 1s        
 remote: pipeline passed        
 remote: run 2: passed        
 To /home/ana/ci/linkbox.git
-   879b6bb..b1002ea  main -> main
+   f4992c6..999ebb9  main -> main
 ```
 
 A segunda execução passa em todos os estágios. O teste que prova cada correção está no mesmo commit

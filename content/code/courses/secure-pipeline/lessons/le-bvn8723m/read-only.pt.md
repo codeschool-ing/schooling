@@ -13,7 +13,7 @@ nomeia o seu lugar.
 
 ```
 ana@vm:~/linkbox$ docker run -d --name linkbox --read-only -p 127.0.0.1:8000:8000 -e LINKBOX_TOKEN=local-only linkbox:dev
-4a79c78038ef2424d25a8f3defd7c0bf490c63315479c033d8faa1cc6cf8e7fd
+2c5362095e0918b7bf1f7ad145db76f2b07094f3b60de0fc38d137beaa425a0d
 ana@vm:~/linkbox$ docker ps -a --filter name=linkbox --format "{{.Status}}"
 Exited (255) 2 seconds ago
 ana@vm:~/linkbox$ docker logs linkbox 2>&1 | tail -n 3
@@ -39,7 +39,7 @@ que um `tmpfs` é: um sistema de arquivos em memória, montado num caminho.
 
 ```
 ana@vm:~/linkbox$ docker run -d --name linkbox --read-only --tmpfs /tmp -p 127.0.0.1:8000:8000 -e LINKBOX_TOKEN=local-only linkbox:dev
-5751d0672951c4c6a91ca93ec239c77d0dd13178d20b71da0d8c2c38753dbfa7
+1a4a80659204785a0f83668802437ae66674419909c299c305018e2bb6e3a2c5
 ana@vm:~/linkbox$ curl -s -o /dev/null -w "%{http_code}\n" -X POST -H "X-Token: local-only" -d url=https://example.org/handbook http://127.0.0.1:8000/links
 500
 ana@vm:~/linkbox$ docker logs linkbox 2>&1 | grep Error
@@ -61,11 +61,11 @@ um jeito ou de outro, é uma montagem própria, e o resto continua somente leitu
 
 ```
 ana@vm:~/linkbox$ docker run -d --name linkbox --read-only --tmpfs /tmp --tmpfs /data:uid=65532,gid=65532 -p 127.0.0.1:8000:8000 -e LINKBOX_TOKEN=local-only linkbox:dev
-f0ef124b2d1d1c55e03b3ee5ec6d8440843f33754842581d5a0ff5e7ddd9445d
+cdea0931963b50f37b009395e00c7eb4daeaefdd76d64de51a5ed608493d7608
 ana@vm:~/linkbox$ curl -s -X POST -H "X-Token: local-only" -d url=https://example.org/handbook http://127.0.0.1:8000/links
-{"code":"rMPeDg"}
-ana@vm:~/linkbox$ docker exec linkbox python3 -c "print(open('/proc/mounts').read(), end='')" | grep -E ' (/|/tmp|/data) '
-overlay / overlay ro,relatime,lowerdir=1080/fs:910/fs:909/fs:908/fs:907/fs:253/fs:252/fs:251/fs:250/fs:249/fs:248/fs:247/fs:246/fs:245/fs:244/fs:243/fs:242/fs:241/fs:240/fs:239/fs:238/fs:237/fs:236/fs:235/fs:234/fs:233/fs:232/fs:231/fs:230/fs:229/fs:228/fs:227/fs:226/fs:225/fs:224/fs:223/fs:222/fs:221/fs:220/fs:219/fs:218/fs:217/fs:216/fs:215/fs:214/fs:213/fs:212/fs:211/fs:210/fs:209/fs:208/fs:207/fs:206/fs,upperdir=/var/lib/docker/containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1081/fs,workdir=/var/lib/docker/containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1081/work 0 0
+{"code":"GI2sDA"}
+ana@vm:~/linkbox$ docker exec linkbox python3 -c "print(open('/proc/mounts').read(), end='')" | grep -E ' (/|/tmp|/data) ' | sed -E 's/,(lower|upper|work)dir=[^, ]*//g'
+overlay / overlay ro,relatime 0 0
 tmpfs /data tmpfs rw,nosuid,nodev,noexec,relatime,mode=755,uid=65532,gid=65532 0 0
 tmpfs /tmp tmpfs rw,nosuid,nodev,noexec,relatime 0 0
 ana@vm:~/linkbox$ docker rm -f linkbox
@@ -79,7 +79,8 @@ OSError: [Errno 30] Read-only file system: '/app/app.py'
 ```
 
 **201 e um código: o serviço funciona com exatamente dois lugares graváveis.** A tabela de montagens
-mostra os três que importam. A raiz é `overlay` montado `ro`. `/tmp` e `/data` são `tmpfs`, e o Docker
+mostra os três que importam, com a longa lista de diretórios de camadas do overlay cortada pelo
+`sed`. A raiz é `overlay` montado `ro`. `/tmp` e `/data` são `tmpfs`, e o Docker
 os monta `nosuid`, `nodev` e `noexec`: um arquivo escrito ali não pode ser rodado como programa, não
 pode carregar bit setuid e não pode ser um dispositivo. `uid=65532,gid=65532` faz `/data` pertencer
 ao usuário com que a aplicação roda, do jeito que a imagem da aula 8 arrumou. Um `tmpfs` sem dono é

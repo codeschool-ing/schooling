@@ -65,7 +65,11 @@ def test_an_expired_exception_breaks_the_build_again():
     assert verdict([FIXED], "PYSEC-1 2026-10-13 the vendor's fix is due in November") == BREAK
 ```
 
-@@CAPTURE gate-tests@@
+```
+ana@vm:~/linkbox$ .venv/bin/python -m pytest -q tests/test_gate.py
+.....                                                                    [100%]
+5 passed in 0.02s
+```
 
 **The tests fix the day as 14 October**, so they pass on any day they are run. A gate that called
 the clock inside `judge` could only be tested on the day its dates happened to be right.
@@ -102,7 +106,11 @@ where it was watched.
 Two ways for the stage to have nothing to judge. First, the gate given no report at all: its last
 line, and its status.
 
-@@CAPTURE empty@@
+```
+ana@vm:~/linkbox$ python3 ci/gate.py </dev/null 2>&1 | tail -n 1; echo "exit ${PIPESTATUS[0]}"
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+exit 1
+```
 
 The `json` module raised, Python exited 1, and 1 is BREAK. Nobody wrote a line of code to make
 an empty report break the build; choosing 1 for BREAK did.
@@ -110,7 +118,16 @@ an empty report break the build; choosing 1 for BREAK did.
 Second, a requirements file that cannot be installed. Pin `werkzeug` back to 3.0.1, the version
 lesson 1 inherited, while `flask` stays at 3.1.3, which needs a newer one:
 
-@@CAPTURE unresolvable@@
+```
+ana@vm:~/linkbox$ sed -i s/werkzeug==3.1.9/werkzeug==3.0.1/ requirements.txt
+ana@vm:~/linkbox$ bash ci/sca.sh; echo "exit $?"
+ERROR:pip_audit._virtual_env:internal pip failure: ERROR: Cannot install -r requirements.txt (line 1) and werkzeug==3.0.1 because these package versions have conflicting dependencies.
+ERROR: ResolutionImpossible: for help visit https://pip.pypa.io/en/latest/topics/dependency-resolution/#dealing-with-dependency-conflicts
+
+ERROR:pip_audit._cli:Failed to install packages: ['/tmp/tmpmmfv6__1/bin/python3.13', '-m', 'pip', 'install', '--no-input', '--keyring-provider=subprocess', '--dry-run', '--report', '/tmp/tmp5ic0xh4h/tmpu1k_inme', '-r', 'requirements.txt', '-r', 'requirements-dev.txt']
+exit 1
+ana@vm:~/linkbox$ git checkout -q requirements.txt
+```
 
 **pip-audit could not resolve the dependencies, so it audited nothing and wrote nothing**, and the
 stage broke. A requirements file nobody can install is not a requirements file without
@@ -122,7 +139,24 @@ from another run, it would have passed.
 
 Commit everything and push:
 
-@@CAPTURE first-push@@
+```
+ana@vm:~/linkbox$ git add -A
+ana@vm:~/linkbox$ git commit -q -m "a gate that breaks, warns or passes, and exceptions that expire"
+9:28AM INF 0 commits scanned.
+9:28AM INF scanned ~4950 bytes (4.95 KB) in 297ms
+9:28AM INF no leaks found
+ana@vm:~/linkbox$ git push ci main
+remote: run 1: main at 8c3836b        
+remote: secrets: passed in 1s        
+remote: test: passed in 2s        
+remote: sast: passed in 2s        
+remote: sca: passed in 10s        
+remote: build: passed in 1s        
+remote: pipeline passed with 0 warning(s)        
+remote: run 1: passed        
+To /home/ana/ci/linkbox.git
+   8ab3d2a..8c3836b  main -> main
+```
 
 **`pipeline passed with 0 warning(s)`** is the new last line, and on this commit it is true: the
 history has no live secret, the pins have no advisories, and the code has no finding of any

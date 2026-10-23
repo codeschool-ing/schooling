@@ -87,7 +87,7 @@ Traceback (most recent call last):
 sqlite3.OperationalError: near "s": syntax error
 =========================== short test summary info ============================
 FAILED tests/test_app.py::test_search_survives_a_quote - assert 500 == 200
-1 failed, 3 passed in 0.39s
+1 failed, 3 passed in 0.46s
 ```
 
 **The new test fails with a 500, an internal server error, from a search for an English word.**
@@ -119,7 +119,7 @@ becomes live by accident** is a `python app.py` on a server, one afternoon, to t
 ```
 ana@vm:~/linkbox$ .venv/bin/python -m pytest -q
 ....                                                                     [100%]
-4 passed in 0.13s
+4 passed in 0.22s
 ana@vm:~/linkbox$ bash ci/sast.sh; echo "exit $?"
 exit 0
 ```
@@ -141,14 +141,14 @@ through. Lesson 6 replaces the token with a new one first, and only then takes i
 ana@vm:~/linkbox$ git add app.py tests/test_app.py
 ana@vm:~/linkbox$ git commit -q -m "the search takes a parameter, writes call require_token(), no debug server"
 ana@vm:~/linkbox$ git push ci main
-remote: run 2: main at b1002ea        
+remote: run 2: main at 999ebb9        
 remote: test: passed in 1s        
 remote: sast: passed in 3s        
-remote: build: passed in 0s        
+remote: build: passed in 1s        
 remote: pipeline passed        
 remote: run 2: passed        
 To /home/ana/ci/linkbox.git
-   879b6bb..b1002ea  main -> main
+   f4992c6..999ebb9  main -> main
 ```
 
 The second run passes every stage. The test that proves each fix is in the same commit as the fix,

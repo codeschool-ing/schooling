@@ -16,7 +16,7 @@ Salve como `ci/sast.sh`:
 # Static analysis: Semgrep with this project's own rules, then Bandit with
 # its built-in ones. A finding of medium severity or worse breaks the build.
 set -euo pipefail
-semgrep scan --metrics=off --quiet --error --config .semgrep.yml .
+semgrep scan --metrics=off --quiet --error --emacs --config .semgrep.yml .
 bandit -q -r . -c bandit.yaml --severity-level medium
 ```
 
@@ -26,6 +26,7 @@ Cada flag está ali por um motivo:
 |---|---|
 | `--metrics=off` | o Semgrep não envia dados de uso para lugar nenhum; um job de CI não deve chamar um fornecedor de que não precisava |
 | `--quiet` | só os achados, sem o progresso e o resumo |
+| `--emacs` | uma linha por achado: arquivo, linha, coluna, regra e mensagem, que se lê bem num log e é fácil de filtrar com `grep` |
 | `--error` | sai com 1 quando há um achado; sem ela o Semgrep aponta e sai com 0, e o estágio passa |
 | `--config .semgrep.yml` | as regras do próprio projeto e nenhuma outra, para o resultado não mudar quando um registro muda |
 | `-c bandit.yaml` | o ajuste das seções anteriores: sem `.venv`, sem B101 nos testes |
@@ -77,63 +78,26 @@ push. O código em si ainda é o que a aula 1 entregou:
 ana@vm:~/linkbox$ git add .semgrep.yml bandit.yaml ci
 ana@vm:~/linkbox$ git commit -q -m "static analysis in the pipeline"
 ana@vm:~/linkbox$ git push ci main
-remote: run 1: main at 879b6bb        
+remote: run 1: main at f4992c6        
 remote: test: passed in 1s        
-remote: sast: FAILED in 2s, the end of sast.log:        
-remote:              33┆ def create():        
-remote:              34┆     if request.headers.get("X-Token") != ADMIN_TOKEN:        
-remote:              35┆         abort(401)        
-remote:              36┆     code = secrets.token_urlsafe(4)        
-remote:              37┆     db().execute("INSERT INTO links VALUES (?, ?)", (code, request.form["url"]))        
-remote:              38┆     db().commit()        
-remote:              39┆     return {"code": code}, 201        
-remote:              
-remote:      ❯❯❱ sql-built-from-a-string        
-remote:             ❰❰ Blocking ❱❱        
-remote:             SQL text built from a string reaches execute(). Write a ? where the value goes and pass the value as        
-remote:             a parameter.                                                                                                
-remote:                                                                                                                         
-remote:              46┆ rows = db().execute(f"SELECT code, url FROM links WHERE url LIKE '%{q}%'").fetchall()        
-remote:           
+remote: sast: FAILED in 3s, the end of sast.log:        
+remote:   app.py:32:1:error(writes-need-the-token):@app.post("/links"):A POST route that never calls require_token() lets anybody write.        
+remote:   app.py:46:12:error(sql-built-from-a-string):    rows = db().execute(f"SELECT code, url FROM links WHERE url LIKE '%{q}%'").fetchall():SQL text built from a string reaches execute(). Write a ? where the value goes and pass the value as a parameter.        
 remote: run 1: failed, the logs are in ~/ci/runs/1/logs        
 To /home/ana/ci/linkbox.git
-   ed9bbb4..879b6bb  main -> main
+   ed9bbb4..f4992c6  main -> main
 ```
 
 **É o build quebrando como foi projetado para quebrar.** Os testes passaram, o estágio de análise
 estática achou duas coisas, e a execução parou antes de construir uma imagem de um código que ela
-recusou. As últimas quinze linhas do log do estágio vêm no próprio push, o que basta para ver que foi o
-Semgrep que o reprovou: os achados dele vieram primeiro, e com `set -e` o script parou ali, antes de o
-Bandit rodar. O log inteiro fica no servidor:
+recusou. O fim do log do estágio vem no próprio push: os dois achados do Semgrep, uma linha cada. Com
+`set -e` o script parou ali, antes de o Bandit rodar. O log inteiro fica no servidor, e aqui ele não
+é maior que isso:
 
 ```
 ana@vm:~/linkbox$ cat ~/ci/runs/1/logs/sast.log
-                   
-                   
-┌─────────────────┐
-│ 2 Code Findings │
-└─────────────────┘
-          
-    app.py
-   ❯❯❱ writes-need-the-token
-          ❰❰ Blocking ❱❱
-          A POST route that never calls require_token() lets anybody write.
-                                                                           
-           32┆ @app.post("/links")
-           33┆ def create():
-           34┆     if request.headers.get("X-Token") != ADMIN_TOKEN:
-           35┆         abort(401)
-           36┆     code = secrets.token_urlsafe(4)
-           37┆     db().execute("INSERT INTO links VALUES (?, ?)", (code, request.form["url"]))
-           38┆     db().commit()
-           39┆     return {"code": code}, 201
-   
-   ❯❯❱ sql-built-from-a-string
-          ❰❰ Blocking ❱❱
-          SQL text built from a string reaches execute(). Write a ? where the value goes and pass the value as
-          a parameter.                                                                                        
-                                                                                                              
-           46┆ rows = db().execute(f"SELECT code, url FROM links WHERE url LIKE '%{q}%'").fetchall()
+app.py:32:1:error(writes-need-the-token):@app.post("/links"):A POST route that never calls require_token() lets anybody write.
+app.py:46:12:error(sql-built-from-a-string):    rows = db().execute(f"SELECT code, url FROM links WHERE url LIKE '%{q}%'").fetchall():SQL text built from a string reaches execute(). Write a ? where the value goes and pass the value as a parameter.
 ```
 
 Os dois achados do Semgrep estão ali, a regra do token e a do SQL. O Bandit não rodou neste build,

@@ -205,8 +205,9 @@ project() { # N: ~/linkbox with the files of lessons 1..N-1, one commit each,
     if [ -f "$st/.deleted" ]; then
       while read -r f; do as_ana rm -f "linkbox/$f"; done <"$st/.deleted"
     fi
-    as_ana sh -c "cd linkbox && git add -A && GIT_AUTHOR_DATE=$(commit_date "$i") GIT_COMMITTER_DATE=$(commit_date "$i") \
-      git commit -q -m '$msg'"
+    # the message goes in on standard input, so an apostrophe in it is text
+    printf '%s\n' "$msg" | as_ana sh -c "cd linkbox && git add -A && GIT_AUTHOR_DATE=$(commit_date "$i") GIT_COMMITTER_DATE=$(commit_date "$i") \
+      git commit -q -F -"
   done
   if [ "$n" -gt 8 ]; then # the registry lesson 8 starts, empty
     docker rm -f registry >/dev/null 2>&1 || true
