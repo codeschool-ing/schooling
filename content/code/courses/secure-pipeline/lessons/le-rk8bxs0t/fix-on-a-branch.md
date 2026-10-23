@@ -57,7 +57,7 @@ ana@vm:~/linkbox$ git diff --stat
 
 It reports success, and the version line agrees: `werkzeug==3.1.9`. Read the two lines under it.
 **Those hashes belong to werkzeug 3.1.8**; they are the same two hashes the stale lock had. pip-audit
-edited the version and left the rest of the entry alone, and it made two more changes nobody asked
+edited the version and left the rest of the entry alone. It also made two changes nobody asked
 for: it added werkzeug to `requirements-dev.txt` as a pin of its own, with no hash at all, saying so in
 its warning; and it rewrote the indentation of the `# via` comments, which is most of the diff's
 36 changed lines.

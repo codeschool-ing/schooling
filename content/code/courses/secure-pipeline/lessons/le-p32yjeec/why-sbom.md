@@ -33,7 +33,7 @@ does**, because on the morning of the advisory the build that made the image is 
 
 An SBOM is a machine-readable list of the components of one piece of software, each with enough
 identity to be matched against other data: a name, a version, a supplier, the licence, often a hash,
-and a **package URL**, the `purl`, which names a package unambiguously across ecosystems:
+and a **package URL**. The `purl` names a package unambiguously across ecosystems:
 `pkg:pypi/gunicorn@22.0.0` is gunicorn from PyPI, `pkg:deb/debian/libc6@2.41-12+deb13u4` is a
 Debian package. Better SBOMs also record which component depends on which.
 

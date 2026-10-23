@@ -5,7 +5,7 @@ version: 1
 
 Suppose linkbox is mirrored to GitHub, and somebody writes a workflow so that every pull request
 runs the tests. The first version tends to look like the one below. Each line in it is there
-for a reason that sounded good at the time: `pull_request_target` because the tests of a fork's pull
+for a reason that sounded good at the time. `pull_request_target` is there because the tests of a fork's pull
 request "would not get the secrets otherwise", `write-all` because a step once failed for lack of a
 permission, the head commit of the pull request because "that is the code to test", and the title in
 the log because it is helpful to see. Nothing in it is a typo. **This file is shown so it can be
