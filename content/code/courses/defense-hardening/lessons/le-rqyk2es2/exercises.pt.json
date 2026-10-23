@@ -1,0 +1,407 @@
+{
+  "ex-9g25es44": {
+    "prompt": "Por que nenhum firewall de rede consegue impedir o web de alcançar o SSH do desk neste laboratório?",
+    "choices": [
+      {
+        "text": "Porque o tráfego SSH é cifrado e não pode ser filtrado",
+        "why": "Um firewall filtra por porta e endereço, cifrado ou não."
+      },
+      {
+        "text": "Os dois estão num segmento só, então o tráfego não cruza nenhum",
+        "why": "Isso: só os dois hosts o veem."
+      },
+      {
+        "text": "Porque o servidor SSH do desk não tem senha definida para a conta do portal",
+        "why": "Alcançar a porta não tem nada a ver com senhas."
+      },
+      {
+        "text": "Porque firewalls de rede só filtram tráfego para a internet",
+        "why": "Eles filtram entre quaisquer segmentos que separem."
+      }
+    ]
+  },
+  "ex-34744phh": {
+    "prompt": "Associe cada pergunta ao motivo pelo qual só um firewall de host consegue respondê-la.",
+    "pairs": [
+      {
+        "left": "que programa abriu esta conexão?",
+        "right": "só a máquina sabe que processo é dono de um socket"
+      },
+      {
+        "left": "o desk pode falar com o web?",
+        "right": "tráfego no mesmo segmento não cruza equipamento de rede"
+      },
+      {
+        "left": "o que protege um notebook num café?",
+        "right": "ele está fora de toda rede do escritório"
+      }
+    ],
+    "right_distractors": [
+      "tráfego cifrado não pode ser lido em lugar nenhum"
+    ]
+  },
+  "ex-rnbvcdtr": {
+    "prompt": "Como se chama quando um invasor numa máquina comprometida passa para a seguinte?",
+    "choices": [
+      {
+        "text": "Escalada de privilégio",
+        "why": "Isso é ganhar mais direitos na mesma máquina."
+      },
+      {
+        "text": "Exfiltração",
+        "why": "Isso é dado saindo."
+      },
+      {
+        "text": "Movimento lateral",
+        "why": "Isso."
+      },
+      {
+        "text": "Persistência",
+        "why": "Isso é continuar numa máquina depois de reinícios."
+      }
+    ]
+  },
+  "ex-5d69qpjb": {
+    "prompt": "O que `meta skuid \"portal\"` casa?",
+    "choices": [
+      {
+        "text": "Pacotes endereçados à porta do portal",
+        "why": "Portas são dport; skuid é sobre a conta de quem envia."
+      },
+      {
+        "text": "Pacotes cujo conteúdo traz a palavra portal",
+        "why": "O nftables não lê o conteúdo atrás de palavras."
+      },
+      {
+        "text": "Todo pacote que o serviço do portal recebe do nginx",
+        "why": "Casa pacotes de saída pelo dono do socket."
+      },
+      {
+        "text": "Pacotes de sockets que a conta portal possui",
+        "why": "Isso: uma regra sobre a conta é uma regra sobre o programa."
+      }
+    ]
+  },
+  "ex-c6163zew": {
+    "prompt": "Por que a regra do portal usa reject em vez de drop?",
+    "choices": [
+      {
+        "text": "Na própria máquina não há de quem se esconder, e uma resposta poupa um tempo esgotado",
+        "why": "Isso: o silêncio protege de estranhos, não de programas locais."
+      },
+      {
+        "text": "Porque drop não funciona em pacotes de saída",
+        "why": "O web_egress descarta pacotes de saída."
+      },
+      {
+        "text": "Para avisar o desk que o portal tentou",
+        "why": "O pacote nunca chega ao desk."
+      },
+      {
+        "text": "Porque reject é contado e drop não",
+        "why": "Os dois podem levar contador."
+      }
+    ]
+  },
+  "ex-cehaycvb": {
+    "prompt": "Dois serviços rodam com a mesma conta. O que isso faz com uma regra escrita por conta?",
+    "choices": [
+      {
+        "text": "Nada, porque o nftables os separa por processo",
+        "why": "O skuid só vê a conta."
+      },
+      {
+        "text": "Os dois a dividem",
+        "why": "Isso: mais um motivo para uma conta por serviço."
+      },
+      {
+        "text": "A regra vale para o serviço que subiu primeiro",
+        "why": "Vale para todo socket da conta."
+      },
+      {
+        "text": "A regra não carrega até um deles ser movido",
+        "why": "Carrega; só não distingue os dois."
+      }
+    ]
+  },
+  "ex-dyzadb98": {
+    "prompt": "O serviço de sonda com IPAddressDeny=any alcançou o desk. O que você deve concluir?",
+    "hint": "Leia o que o systemd precisa para impô-la.",
+    "choices": [
+      {
+        "text": "Que o arquivo drop-in tem um erro de digitação",
+        "why": "O systemctl show imprimiu as duas opções, resolvidas."
+      },
+      {
+        "text": "Que a opção não é imposta aqui, mostre o que mostrar",
+        "why": "Isso: os programas BPF não são presos dentro destes contêineres."
+      },
+      {
+        "text": "Que localhost inclui todo endereço do segmento",
+        "why": "localhost é 127.0.0.0/8 e ::1, como mostrado."
+      },
+      {
+        "text": "Que o SSH do desk ignora as regras de outras máquinas",
+        "why": "A regra fica em quem envia, o web."
+      }
+    ]
+  },
+  "ex-1jqchvtm": {
+    "prompt": "Por que `nft add rule ... socket cgroupv2 ... \"system.slice/probe.service\"` falhou na primeira vez?",
+    "choices": [
+      {
+        "text": "Porque regras cgroupv2 precisam de prioridade -10",
+        "why": "A prioridade não tem nada a ver."
+      },
+      {
+        "text": "Porque só o root pode nomear um serviço",
+        "why": "Rodou com sudo."
+      },
+      {
+        "text": "Nenhum grupo assim existia ainda: o serviço não estava rodando",
+        "why": "Isso: o nftables procura o grupo quando a regra é carregada."
+      },
+      {
+        "text": "Porque a tabela portal_out não tinha sido criada",
+        "why": "Tinha; o erro aponta para o caminho."
+      }
+    ]
+  },
+  "ex-ftt3rs0c": {
+    "prompt": "Depois que a sonda terminou, a listagem mostrou um número onde estava o caminho. O que isso significa para um serviço que reinicia?",
+    "choices": [
+      {
+        "text": "A regra tem de ser recarregada a cada início",
+        "why": "Isso: um reinício cria um grupo novo, e o número antigo não casa nada."
+      },
+      {
+        "text": "Nada: o nftables acompanha o serviço nos reinícios pelo nome",
+        "why": "Ele guarda a identidade do grupo, que muda."
+      },
+      {
+        "text": "A regra agora vale para todo serviço da máquina",
+        "why": "Casa um grupo antigo, que não existe mais."
+      },
+      {
+        "text": "O kernel apaga a regra junto com o grupo",
+        "why": "A regra ficou, impressa com um número."
+      }
+    ]
+  },
+  "ex-b7x5ygsj": {
+    "prompt": "Quais são os padrões do ufw no Ubuntu?",
+    "choices": [
+      {
+        "text": "Negar entrada, negar saída",
+        "why": "A saída é permitida por padrão."
+      },
+      {
+        "text": "Negar entrada, permitir saída",
+        "why": "Isso, e a segunda metade é a que um servidor deveria mudar."
+      },
+      {
+        "text": "Permitir entrada, negar saída",
+        "why": "Ao contrário."
+      },
+      {
+        "text": "Permitir tudo até uma regra ser acrescentada",
+        "why": "A entrada é negada por padrão quando o ufw está ligado."
+      }
+    ]
+  },
+  "ex-zhb8v46t": {
+    "prompt": "Por que uma lista de saída é fácil num servidor e difícil num notebook?",
+    "choices": [
+      {
+        "text": "Servidores têm mais processador para filtrar",
+        "why": "Filtrar custa quase nada nos dois casos."
+      },
+      {
+        "text": "Notebooks não conseguem rodar nftables",
+        "why": "Qualquer notebook Linux consegue."
+      },
+      {
+        "text": "Um servidor fala com poucos lugares conhecidos; uma pessoa navega em qualquer lugar",
+        "why": "Isso: a lista do servidor pode ser escrita."
+      },
+      {
+        "text": "A lei proíbe restringir a navegação de uma pessoa",
+        "why": "Não existe essa regra; empresas restringem com frequência."
+      }
+    ]
+  },
+  "ex-qdmscfpt": {
+    "prompt": "Com o web_egress carregado, por que o desk ainda consegue entrar no web por SSH?",
+    "choices": [
+      {
+        "text": "Porque o SSH usa a porta UDP 53",
+        "why": "O SSH é TCP 22."
+      },
+      {
+        "text": "O web só responde a uma conversa que o desk começou",
+        "why": "Isso: ct state established deixa as respostas saírem."
+      },
+      {
+        "text": "Porque regras de saída não valem para o sshd",
+        "why": "Valem para todo programa do web."
+      },
+      {
+        "text": "Porque a regra de contador aceita o que conta",
+        "why": "Conta e segue; a política descarta."
+      }
+    ]
+  },
+  "ex-ds3vespe": {
+    "prompt": "Quantas regras do web_egress deixam tráfego sair, antes do contador?"
+  },
+  "ex-atjz6zff": {
+    "prompt": "O contador de uma regra de drop continua em zero depois de seis meses. Qual a reação certa?",
+    "choices": [
+      {
+        "text": "Apagá-la na hora: ela não faz nada",
+        "why": "Ela pode guardar contra algo raro; pergunte antes."
+      },
+      {
+        "text": "Nada: zero quer dizer que a regra funciona perfeitamente",
+        "why": "Zero também pode querer dizer que ela não casa mais aquilo para que foi escrita."
+      },
+      {
+        "text": "Perguntar por quê, contra o comentário e o dono da regra",
+        "why": "Isso: ou guarda contra algo que nunca acontece, ou está no lugar errado."
+      },
+      {
+        "text": "Transformá-la numa regra de log para que grave algo",
+        "why": "Um log de nada continua sendo nada."
+      }
+    ]
+  },
+  "ex-2n2erd6s": {
+    "prompt": "Ponha em ordem os passos para descobrir que regra recusou uma conexão.",
+    "items": [
+      "inserir meta nftrace set 1 no topo da chain",
+      "iniciar o nft monitor trace num segundo shell",
+      "tentar a conexão recusada",
+      "ler o veredito no fim do rastro",
+      "apagar a regra que marca"
+    ]
+  },
+  "ex-dk2yzq7h": {
+    "prompt": "Uma regra `log` no web casa pacotes, e mesmo assim nada aparece no journal do web. Por quê?",
+    "choices": [
+      {
+        "text": "Porque log precisa de um contador na mesma regra",
+        "why": "São independentes."
+      },
+      {
+        "text": "O log do kernel pertence ao host, não ao contêiner",
+        "why": "Isso: as linhas vão para o log do kernel do seu computador."
+      },
+      {
+        "text": "Porque o nftables só registra pacotes descartados",
+        "why": "Uma instrução log registra o que a regra casar."
+      },
+      {
+        "text": "Porque o journald descarta mensagens de firewall por padrão",
+        "why": "Num servidor de verdade o journalctl -k as mostra."
+      }
+    ]
+  },
+  "ex-tbsmb46s": {
+    "prompt": "Um notebook Windows entra no Wi-Fi de um café que ninguém classificou. Que perfil se aplica?",
+    "choices": [
+      {
+        "text": "Domínio",
+        "why": "Só onde um controlador de domínio é alcançável."
+      },
+      {
+        "text": "Privado",
+        "why": "Só para redes que o usuário marcou como confiáveis."
+      },
+      {
+        "text": "Público",
+        "why": "Isso: o padrão para uma rede não classificada."
+      },
+      {
+        "text": "Nenhum, até o usuário escolher",
+        "why": "O Windows aplica o Público enquanto isso."
+      }
+    ]
+  },
+  "ex-2c3w3daf": {
+    "prompt": "No Windows Defender Firewall, uma regra de bloqueio e uma de permissão casam o mesmo tráfego. Qual vence?",
+    "choices": [
+      {
+        "text": "A de permissão, se foi criada depois",
+        "why": "A ordem de criação não decide."
+      },
+      {
+        "text": "A de bloqueio",
+        "why": "Isso: então uma exceção estreita o bloqueio."
+      },
+      {
+        "text": "A que nomear um programa em vez de uma porta",
+        "why": "Ser específica não passa por cima do bloqueio."
+      },
+      {
+        "text": "Nenhuma: o Windows se recusa a carregar regras em conflito",
+        "why": "As duas carregam; o bloqueio tem precedência."
+      }
+    ]
+  },
+  "ex-8cmh5k2q": {
+    "prompt": "Um serviço novo, reports, roda com conta própria e só pode alcançar o banco em 192.168.60.40. Que controle desta aula serve melhor nos contêineres deste laboratório?",
+    "hint": "Quais foram mostrados recusando aqui?",
+    "choices": [
+      {
+        "text": "IPAddressAllow no drop-in da unidade",
+        "why": "Mostrado aqui sem efeito dentro dos contêineres."
+      },
+      {
+        "text": "Uma regra socket cgroupv2 carregada uma vez no boot",
+        "why": "Precisa ser recarregada a cada início do serviço."
+      },
+      {
+        "text": "Uma regra meta skuid para a conta dele",
+        "why": "Isso: mostrada recusando, e estável entre reinícios."
+      },
+      {
+        "text": "Uma regra no firewall de rede entre segmentos",
+        "why": "O tráfego entre as máquinas aqui não cruza nenhum."
+      }
+    ]
+  },
+  "ex-bvmwq0zs": {
+    "prompt": "Quais destes no web merecem uma olhada? Escolha todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "O contador de reject do portal_out subindo",
+        "why": "O portal está tentando alcançar algum lugar."
+      },
+      {
+        "text": "O contador do web_egress subindo às três da manhã",
+        "why": "Algo no web tentou uma saída."
+      },
+      {
+        "text": "A regra established,related casando o dia todo",
+        "why": "Isso é o web respondendo aos clientes."
+      },
+      {
+        "text": "Tráfego de loopback entre o nginx e o portal",
+        "why": "Esse é o trabalho do portal."
+      }
+    ]
+  },
+  "ex-dfdgfvdh": {
+    "prompt": "Passar de uma máquina comprometida para a seguinte se chama movimento ___.",
+    "blanks": [
+      {
+        "accept": [
+          "lateral"
+        ]
+      }
+    ]
+  },
+  "ex-we2zdwxz": {
+    "prompt": "Que porta TCP a conta do portal não conseguiu alcançar no desk?"
+  }
+}
