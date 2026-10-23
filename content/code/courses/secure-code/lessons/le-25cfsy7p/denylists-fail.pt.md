@@ -27,7 +27,7 @@ que ela deixa passar, cada item um problema real e nenhum com caractere proibido
 Nada disso é ataque. É o que as pessoas digitam, e o que outros programas enviam, numa terça-feira
 qualquer. **Um campo que aceita isso guarda dados que o resto do sistema não consegue usar**: um
 lembrete mandado para sete dígitos, um agendamento num dia que não existe, uma tela de agenda que
-quebra numa clínica para a qual não tem cor. Algumas falhas mais adiante neste curso começam
+quebra numa clínica para a qual não tem cor. As injeções das aulas 5 a 7 começam
 exatamente aí, com código mais à frente que supôs que o valor tinha sido verificado.
 
 ### A lista trata da coisa errada

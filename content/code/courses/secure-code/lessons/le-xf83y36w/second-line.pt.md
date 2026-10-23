@@ -3,9 +3,7 @@ title: Para que serve uma política, e para que não serve
 version: 1
 ---
 
-**Cross-site scripting**, XSS, é o que acontece quando um texto que outra pessoa escolheu acaba numa
-página como código: o nome de um paciente, uma mensagem, um termo de busca escrito no HTML sem o
-escape que a aula 4 ensinou, e lido pelo navegador como script. A aula 7 trata das três formas que ele
+**Cross-site scripting**, XSS, é o que acontece quando um texto que outra pessoa escolheu acaba numa página como código. Pode ser o nome de um paciente, uma mensagem, um termo de busca, escrito no HTML sem o escape que a aula 4 ensinou e lido pelo navegador como script. A aula 7 trata das três formas que ele
 toma. Esta aula trata do que limita o estrago no dia em que o escape falha, porque num código com
 centenas de templates, um dia ele falha.
 

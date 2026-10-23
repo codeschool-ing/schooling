@@ -28,9 +28,9 @@ página do próprio pacote, e os responde pela API dele, que é onde o pip-audit
 
 Um alerta traz três fatos de que quem desenvolve precisa, e raramente é preciso mais para agir:
 
-- **o intervalo afetado**: quais versões têm a falha;
-- **a versão corrigida**: o primeiro lançamento sem ela, o número para onde a versão fixada vai;
-- **uma gravidade**, muitas vezes como nota CVSS, que ajuda a ordenar o trabalho quando há muitos.
+- o intervalo afetado: quais versões têm a falha;
+- a versão corrigida: o primeiro lançamento sem ela, o número para onde a versão fixada vai;
+- uma gravidade, muitas vezes como nota CVSS, que ajuda a ordenar o trabalho quando há muitos.
 
 O que um alerta não diz é **se a sua aplicação usa a parte afetada** do pacote. Às vezes claramente
 não usa, e a atualização pode esperar a próxima rotina. Decidir isso é legítimo, e é uma decisão:

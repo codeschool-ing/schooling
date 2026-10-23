@@ -14,8 +14,7 @@ Veja como a primeira versão fazia o login de um paciente:
 
 Se o navegador já tinha uma sessão, aquela que todo visitante recebe na página inicial, o login
 **mantinha o mesmo id e gravava o paciente nele.** O id que era anônimo um segundo antes passa a
-querer dizer lucia. Isso se chama **fixação de sessão**, e é uma falha porque o id anônimo é o que
-tem mais chance de ter sido visto: foi emitido antes de alguém provar quem era, num computador
+querer dizer lucia. Isso se chama **fixação de sessão**. É uma falha porque o id anônimo é o que tem mais chance de ter sido visto: foi emitido antes de alguém provar quem era, talvez num computador
 compartilhado na recepção da clínica, ou definido por alguém que mandou um link ao paciente. Quem
 conhecia o id antes do login conhece depois.
 
@@ -40,9 +39,7 @@ encerram, e cada um responde a um risco diferente.
   seja mantido vivo para sempre por um script que pede uma página a cada poucos minutos. Requisições
   não o reiniciam. Aqui são **8 horas**, um dia de trabalho.
 
-A Session Management Cheat Sheet da OWASP dá faixas em vez de números: um limite de inatividade de
-poucos minutos para aplicações de alto valor e de 15 a 30 para as de risco menor, e um limite
-absoluto definido por quanto tempo as pessoas usam de fato a aplicação. Os dois números são
+A Session Management Cheat Sheet da OWASP dá faixas em vez de números. Para a inatividade, poucos minutos em aplicações de alto valor e de 15 a 30 nas de risco menor; para o limite absoluto, quanto tempo as pessoas usam de fato a aplicação. Os dois números são
 decisões; escreva-os onde a próxima pessoa os encontre, o que aqui quer dizer duas constantes com
 nome no topo do `app.py`.
 

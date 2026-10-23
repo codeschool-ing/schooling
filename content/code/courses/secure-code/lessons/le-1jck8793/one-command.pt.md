@@ -41,10 +41,9 @@ app.py:20: B201 A Flask app appears to be run with debug=True, which exposes the
 ```
 
 Os testes passaram, o bandit falhou, e **o git não registrou nada**: não há commit para desfazer,
-porque o hook o barrou antes de ele existir. Agora o `app.py` corrigido, com a chave secreta
-aleatória de novo como na aula 1, o código de redefinição vindo do `secrets`, o identificador do
-recibo declarado como uso que não é de segurança, e a linha do depurador removida (inicie o servidor
-com `flask --app app run`):
+porque o hook o barrou antes de ele existir. Agora o `app.py` corrigido. A chave secreta volta a ser aleatória, como na aula 1, o código de
+redefinição vem do `secrets`, o identificador do recibo fica declarado como uso que não é de
+segurança, e a linha do depurador sai (inicie o servidor com `flask --app app run`):
 
 ```python
 # app.py

@@ -51,8 +51,7 @@ O valor guardado é uma string só, e leva tudo o que é preciso para conferir u
 ```
 
 Este é o **formato de string PHC**. Como o algoritmo, os parâmetros e o sal ficam escritos ao lado de
-cada hash, **aumentar o custo depois não quebra nada**: hashes antigos continuam sendo conferidos com
-os parâmetros com que foram feitos, e cada um é atualizado na próxima vez que o dono entra. Um custo
+cada hash, **aumentar o custo depois não quebra nada**. Hashes antigos continuam sendo conferidos com os parâmetros com que foram feitos, e cada um é atualizado na próxima vez que o dono entra. Um custo
 guardado como constante no código, ao contrário, faz com que aumentá-lo invalide toda senha já
 guardada, o que na prática quer dizer que ninguém nunca o aumenta.
 

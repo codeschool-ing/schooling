@@ -53,9 +53,7 @@ into the SQL string. The requirement was right and the design was right, and **t
 something different from both**.
 
 Implementation flaws are the commonest of the three by a wide margin, because there is so much
-more code than there are requirements or designs. They are also the cheapest to catch, because
-they can be caught by the person who wrote them, before anybody else sees the code: by knowing what
-the safe call looks like, and by writing a test that would fail if the unsafe one came back.
+more code than there are requirements or designs. They are also the cheapest to catch, because the person who wrote them can catch them before anybody else sees the code. Two habits do it: knowing what the safe call looks like, and writing a test that would fail if the unsafe one came back.
 
 ### Why the place matters
 

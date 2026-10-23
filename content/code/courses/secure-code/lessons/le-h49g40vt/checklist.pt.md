@@ -4,8 +4,8 @@ version: 1
 ---
 
 Uma lista de verificação é útil quando é curta o bastante para ser usada em toda revisão e específica
-o bastante para mudar o que o revisor olha. Listas longas de segurança são lidas uma vez e
-arquivadas. Esta tem uma linha por aula do curso que um diff consegue mostrar, na ordem das cinco
+o bastante para mudar o que o revisor olha. **Listas longas de segurança são lidas uma vez e
+arquivadas.** Esta tem uma linha por aula do curso que um diff consegue mostrar, na ordem das cinco
 perguntas:
 
 | procure | a pergunta | aula |

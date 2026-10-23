@@ -4,7 +4,7 @@ version: 1
 ---
 
 A checklist is useful when it is short enough to be used on every review and specific enough to
-change what the reviewer looks at. Long security checklists are read once and filed. This one has
+change what the reviewer looks at. **Long security checklists are read once and filed.** This one has
 one line per lesson of the course that a diff can show, in the order of the five questions:
 
 | look for | the question | lesson |

@@ -13,9 +13,7 @@ repositório, com quem decidiu e quando. É a promessa contra a qual o resto do 
 
 ### 2. Transforme o nível numa lista que mora no repositório
 
-Exporte do CSV os requisitos do nível escolhido para um arquivo que a equipe mantém ao lado do
-código: uma linha por requisito, com um estado (`met`, `not met`, `not applicable`) e, para cada um
-cumprido, **onde está a evidência**: o nome de um teste, um arquivo de configuração, uma verificação
+Exporte do CSV os requisitos do nível escolhido para um arquivo que a equipe mantém ao lado do código, uma linha por requisito, com um estado: `met`, `not met` ou `not applicable`. Para cada um cumprido, a linha diz **onde está a evidência**: o nome de um teste, um arquivo de configuração, uma verificação
 da aula 19. Um requisito marcado como cumprido sem evidência é uma crença, não um estado.
 
 ### 3. Percorra por seção, em ordem de risco

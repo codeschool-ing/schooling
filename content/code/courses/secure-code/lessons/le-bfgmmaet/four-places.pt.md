@@ -5,9 +5,7 @@ version: 1
 
 A aula 2 se recusou a decidir na entrada se um caractere é perigoso, porque a resposta depende de
 para onde o valor vai em seguida. Esta aula é para onde ele vai. **Tratar a saída é codificar um
-valor para o lugar exato em que ele é escrito**, no momento em que é escrito, para que o leitor
-daquele lugar (o interpretador de HTML do navegador, o motor de JavaScript, um interpretador de URL)
-o leia como dado e nunca como parte da estrutura da própria página.
+valor para o lugar exato em que ele é escrito**, no momento em que é escrito. O leitor daquele lugar, seja o interpretador de HTML do navegador, o motor de JavaScript ou um interpretador de URL, passa então a lê-lo como dado e nunca como parte da estrutura da própria página.
 
 A ideia errada mais comum é que existe uma função chamada *escape* e que chamá-la uma vez basta.
 Há várias codificações, uma por contexto, e elas não são intercambiáveis. Eis um valor,

@@ -29,9 +29,9 @@ default.
 
 An advisory carries three facts a developer needs, and you rarely need more to act:
 
-- **the affected range**: which versions have the flaw;
-- **the fixed version**: the first release without it, the number you move the pin to;
-- **a severity**, often as a CVSS score, which helps order the work when there are many.
+- the affected range: which versions have the flaw;
+- the fixed version: the first release without it, the number you move the pin to;
+- a severity, often as a CVSS score, which helps order the work when there are many.
 
 What an advisory does not tell you is **whether your application uses the affected part** of the
 package. Sometimes it plainly does not, and the update can wait for the next routine one. Deciding

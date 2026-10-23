@@ -50,8 +50,8 @@ aplicação fixa versões; nada na mudança precisava do intervalo.
 
 A mudança acrescenta duas rotas e mexe no template, e nenhum teste mudou. Cada achado acima é o tipo
 de coisa que um único teste teria fixado: *um paciente não lê a mensagem 2*, *o remetente do
-formulário é ignorado*, *o texto de uma mensagem é escapado*. Um comentário de revisão que pede o teste
-muitas vezes vale mais do que um que descreve a correção, porque o teste fica depois que o revisor
+formulário é ignorado*, *o texto de uma mensagem é escapado*. **Um comentário de revisão que pede o teste
+muitas vezes vale mais do que um que descreve a correção**, porque o teste fica depois que o revisor
 foi embora.
 
 ### O que o revisor não marcou

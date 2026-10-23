@@ -14,9 +14,7 @@ against.
 
 ### 2. Turn the level into a checklist that lives in the repository
 
-Export the requirements of the chosen level from the CSV into a file the team keeps beside the
-code: one line per requirement, with a status (`met`, `not met`, `not applicable`) and, for each
-one that is met, **where the evidence is**: a test name, a configuration file, a lesson-19 check.
+Export the requirements of the chosen level from the CSV into a file the team keeps beside the code, one line per requirement, with a status: `met`, `not met` or `not applicable`. For each one that is met, the line says **where the evidence is**: a test name, a configuration file, a lesson-19 check.
 A requirement marked met with no evidence is a belief, not a status.
 
 ### 3. Work through it by section, in order of risk

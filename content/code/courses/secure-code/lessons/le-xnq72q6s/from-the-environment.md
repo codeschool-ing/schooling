@@ -3,9 +3,7 @@ title: Secrets from the environment, and refusing without them
 version: 1
 ---
 
-The usual place for a secret to reach a running program is an **environment variable**: set by
-whatever starts the process (a service manager, a container platform, a CI system, a secret
-manager), read by the program at start-up, and never written into a file the project shares.
+The usual place for a secret to reach a running program is an **environment variable**. Whatever starts the process sets it: a service manager, a container platform, a CI system, a secret manager. The program reads it at start-up, and it is never written into a file the project shares.
 
 The tests say three things. The application takes its secrets from the environment. It **refuses
 to start** when one is missing. And no secret is written in the code. Save them as `test_app.py`:

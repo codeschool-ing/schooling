@@ -14,9 +14,7 @@ Look at how the first version signed a patient in:
 
 If the browser already had a session, the one every visitor receives on the home page, sign-in
 **kept the same id and wrote the patient into it.** The id that was anonymous a second ago now
-means lucia. That is called **session fixation**, and it is a flaw because the anonymous id is the
-one most likely to have been seen: it was issued before anybody proved who they were, on a shared
-computer at the clinic's reception, or set by somebody who handed the patient a link. Whoever knew
+means lucia. That is called **session fixation**. It is a flaw because the anonymous id is the one most likely to have been seen: it was issued before anybody proved who they were, perhaps on a shared computer at the clinic's reception, or set by somebody who handed the patient a link. Whoever knew
 the id before sign-in knows it after.
 
 **The rule is that the id changes whenever the privilege behind it changes.** At sign-in, the old

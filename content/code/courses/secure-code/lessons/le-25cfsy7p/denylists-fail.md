@@ -26,7 +26,7 @@ through, every item of which is a real problem and none of which contains a forb
 None of those is an attack. They are what people type, and what other programs send, on an
 ordinary Tuesday. **A field that accepts them stores data the rest of the system cannot use**: a
 reminder sent to seven digits, a booking for a day that does not exist, an agenda screen that
-crashes on a clinic it has no colour for. Some of the flaws later in this course start exactly
+crashes on a clinic it has no colour for. The injections of lessons 5 to 7 start exactly
 there, with code downstream that assumed the value had been checked.
 
 ### The list is about the wrong thing

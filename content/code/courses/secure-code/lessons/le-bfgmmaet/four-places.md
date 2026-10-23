@@ -4,10 +4,7 @@ version: 1
 ---
 
 Lesson 2 refused to decide at the input whether a character is dangerous, because the answer
-depends on where the value goes next. This lesson is where it goes next. **Output handling means
-encoding a value for the exact place it is written into**, at the moment it is written, so that
-the reader of that place (a browser's HTML parser, its JavaScript engine, a URL parser) reads it as
-data and never as part of the page's own structure.
+depends on where the value goes next. This lesson is where it goes next. **Output handling means encoding a value for the exact place it is written into**, at the moment it is written. The reader of that place, whether a browser's HTML parser, its JavaScript engine or a URL parser, then reads it as data and never as part of the page's own structure.
 
 The commonest wrong idea is that there is one function called *escape* and that calling it once is
 enough. There are several encodings, one per context, and they are not interchangeable. Here is

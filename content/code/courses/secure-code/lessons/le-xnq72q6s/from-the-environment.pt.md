@@ -3,10 +3,7 @@ title: Segredos pelo ambiente, e recusar sem eles
 version: 1
 ---
 
-O jeito comum de um segredo chegar a um programa em execução é uma **variável de ambiente**:
-definida por quem inicia o processo (um gerenciador de serviços, uma plataforma de contêineres, um
-sistema de CI, um cofre de segredos), lida pelo programa ao iniciar, e nunca escrita num arquivo que
-o projeto compartilha.
+O jeito comum de um segredo chegar a um programa em execução é uma **variável de ambiente**. Quem inicia o processo a define: um gerenciador de serviços, uma plataforma de contêineres, um sistema de CI, um cofre de segredos. O programa a lê ao iniciar, e ela nunca é escrita num arquivo que o projeto compartilha.
 
 Os testes dizem três coisas. A aplicação pega os segredos do ambiente. Ela **se recusa a iniciar**
 quando falta um. E nenhum segredo está escrito no código. Salve como `test_app.py`:

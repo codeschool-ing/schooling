@@ -25,7 +25,7 @@ intervalos, para que as aplicações que a usam consigam resolver uma versão s�
 O arquivo da seção anterior fixa três pacotes e deixa o pip escolher as versões das dependências
 deles: MarkupSafe, Werkzeug, urllib3 e o resto. Essas são instaladas por intervalo, então o projeto
 "fixado" muda por baixo do mesmo jeito. O `pip freeze` imprime todo pacote de um ambiente na versão
-exata, e um arquivo feito com ele fixa também as dependências transitivas; ferramentas como
+exata, e um arquivo feito com ele fixa também as dependências transitivas. Ferramentas como
 `pip-tools` e `uv` escrevem o mesmo tipo de **arquivo de trava** completo a partir de uma lista curta
 do que você pediu. Nenhuma das duas foi executada para este curso.
 

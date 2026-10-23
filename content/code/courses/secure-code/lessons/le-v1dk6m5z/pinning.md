@@ -24,10 +24,7 @@ declares ranges, so that the applications using it can resolve one version for e
 
 The file in the previous section pins three packages and lets pip choose the versions of their
 dependencies: MarkupSafe, Werkzeug, urllib3 and the rest. Those are installed by range, so the
-"pinned" project changes underneath anyway. `pip freeze` prints every package in an environment
-at its exact version, and a file made from it pins the transitive dependencies too; tools such as
-`pip-tools` and `uv` write the same kind of complete **lock file** from a short list of what you
-asked for. Neither tool was run for this course.
+"pinned" project changes underneath anyway. `pip freeze` prints every package in an environment at its exact version, and a file made from it pins the transitive dependencies too. Tools such as `pip-tools` and `uv` write the same kind of complete **lock file** from a short list of what you asked for. Neither tool was run for this course.
 
 ### Pin the bytes, too
 

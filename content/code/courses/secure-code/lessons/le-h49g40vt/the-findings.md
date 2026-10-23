@@ -49,8 +49,8 @@ why an application pins; nothing in the change needed the range.
 
 The change adds two routes and touches the template, and no test changed. Every finding above is
 the kind of thing a single test would have pinned down: *a patient cannot read message 2*,
-*the sender in the form is ignored*, *a message's text is escaped*. A review comment that asks for
-the test is often worth more than one that describes the fix, because the test stays after the
+*the sender in the form is ignored*, *a message's text is escaped*. **A review comment that asks for
+the test is often worth more than one that describes the fix**, because the test stays after the
 reviewer has gone.
 
 ### What the reviewer did not mark
