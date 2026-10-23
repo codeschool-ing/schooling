@@ -737,6 +737,648 @@
     ]
   },
   {
+    "id": "ex-6q4z4zt4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The shop's application servers run in private subnets in two zones, each zone leaving through its own NAT gateway, and autoscaling replaces them often. A payment partner accepts API calls only from addresses on a list. Which addresses go on the list?",
+    "hint": "Networks and Protocols, lesson 2; Cloud and Serverless, lesson 6.",
+    "choices": [
+      {
+        "text": "The public addresses of the two NAT gateways, one for each of the two zones",
+        "correct": true,
+        "why": "Each server's request leaves with its gateway's address as the source, as every office PC reached the web server as 203.0.113.2."
+      },
+      {
+        "text": "The private addresses of the servers, updated each time autoscaling acts",
+        "correct": false,
+        "why": "Private addresses are rewritten at the gateway and are not routed on the internet; the partner never sees them."
+      },
+      {
+        "text": "The public address of the load balancer in front of the servers",
+        "correct": false,
+        "why": "The load balancer is the way in for customers; calls the servers start go out through the NAT gateways."
+      },
+      {
+        "text": "The VPC's whole private block, `10.0.0.0/16`, so that new servers are covered",
+        "correct": false,
+        "why": "The partner sees no address from that block at all, so listing it admits nobody."
+      }
+    ]
+  },
+  {
+    "id": "ex-6sqbfbmj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`box-a` sits on the default bridge and `shelf-web` on a network called `shelfnet`. From `box-a`, `wget` to `shelf-web`'s address waits two seconds and prints `download timed out`, while `box-c`, on `shelfnet`, gets an answer from the same address at once. Read the way the networks course reads a timeout, what does this failure say?",
+    "hint": "Docker and Containers, lesson 23; Networks and Protocols, lesson 3.",
+    "choices": [
+      {
+        "text": "The name `shelf-web` does not resolve from the default bridge, so no packet was sent",
+        "correct": false,
+        "why": "The attempt used the address, not the name; a failed lookup prints `bad address`, not a timeout."
+      },
+      {
+        "text": "Something between the two networks discards the packets and never replies",
+        "correct": true,
+        "why": "A timeout means nothing answered; Docker's firewall rules drop traffic from one bridge to another."
+      },
+      {
+        "text": "`shelf-web` is overloaded and answers too slowly for a two-second limit",
+        "correct": false,
+        "why": "`box-c` got an answer at once from the same container; slowness would show from both sides."
+      },
+      {
+        "text": "`shelf-web` has nothing on port 8080, so its kernel turns the attempt away",
+        "correct": false,
+        "why": "A port with nothing on it answers at once with a reset; and `box-c` was answered on the same port."
+      }
+    ]
+  },
+  {
+    "id": "ex-711kdnm0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "After a release, a pod calling the `orders` Service gets `Connection refused` immediately, and `nslookup orders` from the same pod returns the Service's address. The release renamed a label in the Deployment's pod template. Where is the fault, and what shows it?",
+    "hint": "Kubernetes: Orchestration in Production, lesson 15; Networks and Protocols, lesson 3.",
+    "choices": [
+      {
+        "text": "A ClusterIP refuses calls from other pods until the Service is made a NodePort",
+        "correct": false,
+        "why": "A ClusterIP is exactly the address other pods use; a NodePort only adds a way in from outside."
+      },
+      {
+        "text": "A network policy drops the calls, and the caller's own logs will show them",
+        "correct": false,
+        "why": "A dropped packet gets no answer at all, so the caller would wait, not be refused at once."
+      },
+      {
+        "text": "The Service's selector matches no pod, so its EndpointSlice has no endpoints",
+        "correct": true,
+        "why": "An instant refusal means the address answered with nobody behind it, which is what an empty slice does."
+      },
+      {
+        "text": "CoreDNS returns a stale address; flushing its cache brings the right one back",
+        "correct": false,
+        "why": "The name resolved to the Service's own address, which never changes while the Service exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-745gp71d",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A pod's `/etc/resolv.conf` holds `search default.svc.cluster.local svc.cluster.local cluster.local` and `options ndots:5`. Its program looks up the `A` record of `api.example.com`, a name outside the cluster. How many `NXDOMAIN` answers come back before the resolver asks for `api.example.com` as written?",
+    "hint": "Kubernetes: Orchestration in Production, lesson 15; Networks and Protocols, lesson 4.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-76ntej7m",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Four attempts from inside containers on one Docker host, each failing in its own way. Match what `wget` printed to what it means.",
+    "hint": "Docker and Containers, lesson 23; Networks and Protocols, lesson 3.",
+    "pairs": [
+      {
+        "left": "`wget: bad address 'shelf-web:8080'`",
+        "right": "no address was tried: the name never resolved"
+      },
+      {
+        "left": "`can't connect to remote host (127.0.0.1): Connection refused`",
+        "right": "the container's own loopback answered, with nothing on it"
+      },
+      {
+        "left": "`download timed out`, to a container on another network",
+        "right": "packets were discarded on the way, without a reply"
+      },
+      {
+        "left": "`can't connect to remote host (172.17.0.1): Connection refused`",
+        "right": "the host answered, but its service listens on 127.0.0.1 only"
+      }
+    ],
+    "right_distractors": [
+      "the service crashed halfway through its answer"
+    ]
+  },
+  {
+    "id": "ex-7ctgcnrn",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "`dig +short www.example.com` prints `192.0.2.81`, yet `curl` on the same laptop goes somewhere else. To see the address programs are given, with `/etc/hosts` read first as they read it, ask with `___ hosts www.example.com`.",
+    "hint": "Networks and Protocols, lesson 4.",
+    "blanks": [
+      {
+        "accept": [
+          "getent"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7ftx1383",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "`dig +noall +answer example.org SOA` prints `example.org. 3600 IN SOA ns1.example.org. hostmaster.example.org. 2026100101 3600 900 1209600 600`. A user's lookup of `intranet.example.org` gets `NXDOMAIN`, and the record is created a moment later. Counting the way the lesson does, for up to how many seconds can that user's resolver keep saying the name does not exist?",
+    "hint": "Networks and Protocols, lesson 4.",
+    "value": 600,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-7g55b5ac",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`certbot` renewed `www.example.com`'s certificate last week, and `openssl x509 -in` on the new file shows a `notAfter` in March. The monitoring service still warns that the site's certificate ends in three days. What is the likeliest explanation?",
+    "hint": "Networks and Protocols, lesson 6.",
+    "choices": [
+      {
+        "text": "The monitoring service caches certificates and will see the new one later",
+        "correct": false,
+        "why": "A monitor asks the server each time, which is exactly how it catches a renewal nobody loaded."
+      },
+      {
+        "text": "The monitoring service's clock is wrong, so it misjudges the dates it reads",
+        "correct": false,
+        "why": "A wrong clock would disagree with every date, not single out a certificate that was renewed on disk."
+      },
+      {
+        "text": "The new certificate lacks its intermediate, which monitors then report as expiry",
+        "correct": false,
+        "why": "A missing intermediate fails with `unable to get local issuer certificate`, its own message."
+      },
+      {
+        "text": "The web server was never reloaded and still sends the certificate it had",
+        "correct": true,
+        "why": "Only the certificate the server actually sends counts; the file on disk is what should be served, not what is."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ghh6f7k",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "`files.example.com` needs its first public certificate. Put the steps in the order the lesson takes them, from nothing to a certificate somebody has checked.",
+    "hint": "Networks and Protocols, lesson 6.",
+    "items": [
+      "Make a private key on the server, and a CSR from it",
+      "Send the CSR to the certificate authority",
+      "The authority checks control of the name, by `http-01` or `dns-01`",
+      "Install the certificate on the server with its intermediate, the full chain",
+      "Ask the running server for its certificate with `openssl s_client` and `-checkend`"
+    ],
+    "trap": "It is tempting to ask for the certificate first and make the key afterwards, but the CSR is signed with the key, so the key has to exist before anything is sent."
+  },
+  {
+    "id": "ex-7j459vfw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A load balancer's security group allows TCP 443 from `0.0.0.0/0` and has no rule for UDP. Its software also offers HTTP/3. What do visitors whose browsers speak HTTP/3 experience?",
+    "hint": "Networks and Protocols, lesson 3; Cloud and Serverless, lesson 6.",
+    "choices": [
+      {
+        "text": "Pages that load a little slower to start, over HTTP/2 on TCP after a fallback",
+        "correct": true,
+        "why": "HTTP/3 runs over UDP 443, which nothing allows; the attempt gets no answer and the browser falls back."
+      },
+      {
+        "text": "An immediate `Connection refused`, as the group rejects UDP it has no rule for",
+        "correct": false,
+        "why": "A security group only allows; whatever it does not allow is dropped without a reply, never refused."
+      },
+      {
+        "text": "No change, as a stateful group lets the replies to their UDP packets back in",
+        "correct": false,
+        "why": "State admits replies to conversations that were let in; the first UDP packet in was never allowed."
+      },
+      {
+        "text": "Pages that fail to load, as a browser offering HTTP/3 tries no older version",
+        "correct": false,
+        "why": "Browsers try HTTP/3, get nothing, and fall back to HTTP/2 over TCP."
+      }
+    ]
+  },
+  {
+    "id": "ex-7sfygtcp",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "prompt": "The office is about to run IPv6 beside its IPv4, dual stack. Which of these does the lesson say about IPv6? Choose all that apply.",
+    "hint": "Networks and Protocols, lesson 2.",
+    "choices": [
+      {
+        "text": "TCP, UDP and every application protocol run on it unchanged",
+        "correct": true,
+        "why": "IPv6 is the internet layer; the layers above it stay the same."
+      },
+      {
+        "text": "A program tries IPv4 first, and IPv6 only once IPv4 has failed",
+        "correct": false,
+        "why": "It is the other way round: a program tries IPv6 first when the name has an IPv6 address."
+      },
+      {
+        "text": "Neighbours are found with ICMPv6 instead of ARP, and `ip -6 neigh` lists them",
+        "correct": true,
+        "why": "There is no ARP in IPv6; ICMPv6 messages do that job."
+      },
+      {
+        "text": "NAT is still what keeps uninvited connections from coming in",
+        "correct": false,
+        "why": "Every device can have a public address, so a firewall, not address translation, does that."
+      }
+    ]
+  },
+  {
+    "id": "ex-7vws7gn0",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "Five `nft` rules from the office router and the web server. Match each rule to what a user or a capture would notice.",
+    "hint": "Networks and Protocols, lessons 2 and 3.",
+    "pairs": [
+      {
+        "left": "`oifname \"eth1\" masquerade`",
+        "right": "the web server's log shows the office's public address"
+      },
+      {
+        "left": "`tcp flags syn tcp option maxseg size set rt mtu`",
+        "right": "handshakes announce an MSS that fits the narrowest link"
+      },
+      {
+        "left": "`tcp dport 3306 drop`",
+        "right": "the client resends its SYN and finally times out"
+      },
+      {
+        "left": "`tcp dport 5432 reject with tcp reset`",
+        "right": "the client is told `Connection refused` at once"
+      },
+      {
+        "left": "`tcp sport 443 numgen random mod 100 lt 20 drop`",
+        "right": "downloads still complete, but take far longer"
+      }
+    ],
+    "right_distractors": [
+      "the client receives an ICMP port unreachable"
+    ]
+  },
+  {
+    "id": "ex-88cfb8m1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In a container on a network made with `docker network create`, `nslookup www.example.com` names `127.0.0.11` as its server and then prints `Non-authoritative answer`. What does that output tell you?",
+    "hint": "Docker and Containers, lesson 23; Networks and Protocols, lesson 4.",
+    "choices": [
+      {
+        "text": "`127.0.0.11` holds every public zone and answers for `example.com` itself",
+        "correct": false,
+        "why": "It knows the containers on its network and passes everything else to the servers under `ExtServers`."
+      },
+      {
+        "text": "Docker's DNS handed the query on to the host's resolvers; what came back is a copy",
+        "correct": true,
+        "why": "127.0.0.11 answers container names and forwards the rest; non-authoritative means a resolver answered, not `ns1`."
+      },
+      {
+        "text": "The answer may be forged and should be confirmed with `dig +trace` first",
+        "correct": false,
+        "why": "Non-authoritative only means it came from a cache, which is how almost every answer arrives."
+      },
+      {
+        "text": "The container skipped DNS and read the host's `/etc/hosts`, shown in this way",
+        "correct": false,
+        "why": "nslookup asks DNS and ignores the hosts file; `Server:` names the DNS server it asked."
+      }
+    ]
+  },
+  {
+    "id": "ex-8cj4c7sa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A newsletter service starts sending `example.com`'s campaigns from its own servers, with `From: news@example.com`. `example.com` publishes `v=spf1 mx -all` and a DMARC record with `p=reject`, and receivers start refusing the campaigns. What lets them through without weakening the policy?",
+    "hint": "Networks and Protocols, lesson 9.",
+    "choices": [
+      {
+        "text": "Changing `-all` to `~all`, so the service's servers count as merely suspicious",
+        "correct": false,
+        "why": "A soft fail is still not a pass; with no DKIM, DMARC fails and `p=reject` still refuses."
+      },
+      {
+        "text": "An MX record naming the service's servers, so SPF's `mx` term covers them",
+        "correct": false,
+        "why": "MX says where `example.com`'s own mail is delivered; the company's inbox would move to the service."
+      },
+      {
+        "text": "A DKIM selector for the service in `example.com`'s DNS, so it signs as `example.com`",
+        "correct": true,
+        "why": "DMARC passes when DKIM passes for the `From:` domain, and a domain can publish one selector per sender."
+      },
+      {
+        "text": "Sending on port 587 instead of 25, where receiving servers check less",
+        "correct": false,
+        "why": "587 is where a mail program submits to its own server; receivers run the same checks either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-8nmfkyr2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Ana's `~/.ssh/config` starts with a `Host *` block holding `User root`, followed by `Host office` with `HostName 192.168.10.10` and `User ana`. She types `ssh office`. As whom does she try to log in, and why?",
+    "hint": "Networks and Protocols, lesson 7.",
+    "choices": [
+      {
+        "text": "As her own local user, as two `User` lines for the same host cancel each other out",
+        "correct": false,
+        "why": "Nothing cancels; ssh keeps the first value it finds and passes over the later one."
+      },
+      {
+        "text": "As nobody, as ssh stops until one of the conflicting lines is removed",
+        "correct": false,
+        "why": "Repeating a setting is not an error; the first one simply wins."
+      },
+      {
+        "text": "As `ana`, as a block naming the host outranks a pattern for every host",
+        "correct": false,
+        "why": "Blocks are not ranked by how specific they are; their order in the file decides."
+      },
+      {
+        "text": "As `root`, as the first value found for each setting wins, and `Host *` is first",
+        "correct": true,
+        "why": "The file is read from the top; defaults belong in a `Host *` block at the end."
+      }
+    ]
+  },
+  {
+    "id": "ex-8sggppb5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A repository's `.gitignore` lists `.env`, which holds a database password, and `git status` has never shown it. The Dockerfile runs `COPY . .`, and there is no `.dockerignore`. Ana builds the image and pushes it. Is the password inside?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 10; Docker and Containers, lesson 11.",
+    "choices": [
+      {
+        "text": "Yes: `.gitignore` only governs Git; the build context is the whole directory",
+        "correct": true,
+        "why": "It keeps a file out of `git status` and `git add .`, and nothing more; `.dockerignore` decides what the builder gets."
+      },
+      {
+        "text": "No: `docker build` sends just the files Git tracks, so ignored ones stay behind",
+        "correct": false,
+        "why": "The client packs the directory as it is on disk, tracked or not."
+      },
+      {
+        "text": "No: Docker falls back on `.gitignore` when the build has no `.dockerignore`",
+        "correct": false,
+        "why": "Docker reads only `.dockerignore`; without one, everything in the directory goes."
+      },
+      {
+        "text": "Only in the build cache, since `COPY` skips files whose names start with a dot",
+        "correct": false,
+        "why": "`COPY . .` copies dotfiles too; the lesson's image listed `.env` and `.git` in `/src`."
+      }
+    ]
+  },
+  {
+    "id": "ex-98e8mc5z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The last release is tagged `v1.4.2` in Git, and its image was pushed as `1.4.2`, `1.4` and `1`. Since then `main` has gained `fix(api): retry a timed-out payment` and `docs: describe the retry`. Following both lessons, which image tags does the next release push?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 11; Docker and Containers, lesson 16.",
+    "choices": [
+      {
+        "text": "`1.5.0`, `1.5` and `1`, since each merged commit counts as something new",
+        "correct": false,
+        "why": "Only a `feat` raises the middle number; a `fix` and a `docs` change make a patch."
+      },
+      {
+        "text": "`1.4.3`, `1.4` and `1`, with `1.4.2` left on the build it already names",
+        "correct": true,
+        "why": "A fix raises the patch; the moving tags follow the new build and a release tag never moves."
+      },
+      {
+        "text": "`1.4.2` again, rebuilt from `main`, so everybody pinned to it gets the fix",
+        "correct": false,
+        "why": "Re-pushing a release tag gives one version number to two different builds."
+      },
+      {
+        "text": "`2.0.0`, `2.0` and `2`, since a change to the API breaks what callers expect",
+        "correct": false,
+        "why": "Only a `!` or a `BREAKING CHANGE:` footer makes a major release, and this message has neither."
+      }
+    ]
+  },
+  {
+    "id": "ex-9bae3t6f",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A pull request changes the Terraform of the shop's network. `main` is protected, and the pipeline is the one the infrastructure-as-code course builds. Put the journey of the change in order, from push to apply.",
+    "hint": "Infrastructure as Code, lesson 15; Git and Teamwork: Version Control, Review and Process, lesson 8.",
+    "items": [
+      "Push the branch and open a pull request into `main`",
+      "The pipeline checks, scans and plans, and posts the plan as a comment",
+      "A reviewer reads the diff and the plan, and approves",
+      "The pull request is merged into `main`",
+      "On `main`, the plan is made again and saved with `-out`",
+      "A person approves that saved plan, and exactly that file is applied"
+    ],
+    "trap": "It is tempting to apply the plan the pull request showed, but other merges can make it stale, so the plan that runs is made again from `main` and approved on its own."
+  },
+  {
+    "id": "ex-9g8aykzx",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "A new Terraform repository gets this `.gitignore` before its first commit: `.terraform/`, `*.tfstate` and `*.tfstate.*`. Besides `main.tf`, the directory holds the four entries below. Which of them does `git status --short` still list as `??`? Choose all that apply.",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 10; Infrastructure as Code, lesson 7.",
+    "choices": [
+      {
+        "text": "`terraform.tfstate.backup`, a backup copy of the state",
+        "correct": false,
+        "why": "`*.tfstate.*` matches it, since `*` stands for any name on either side."
+      },
+      {
+        "text": "`.terraform.lock.hcl`, written by `terraform init`",
+        "correct": true,
+        "why": "No pattern matches it, and that is right: the lock file is meant to be committed."
+      },
+      {
+        "text": "`.terraform/`, where `init` put the providers it installed",
+        "correct": false,
+        "why": "A folder named with a slash is ignored with everything inside it."
+      },
+      {
+        "text": "`terraform.tfvars`, which holds the variable values",
+        "correct": true,
+        "why": "No pattern matches it either, so a `git add .` takes it along, secrets and all."
+      }
+    ]
+  },
+  {
+    "id": "ex-9jhwdhmc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Bruno's tests pass on his laptop and fail on the pull request's CI machine, on a feature the language gained in a recent version. A fresh clone of his branch passes on his laptop too. What removes this kind of difference for good?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 17; Docker and Containers, lesson 25.",
+    "choices": [
+      {
+        "text": "Running the tests everywhere in whatever the language's `latest` image is",
+        "correct": false,
+        "why": "`latest` moves whenever the publisher pushes, so two runs a week apart can differ again."
+      },
+      {
+        "text": "Committing whatever `git status` lists as untracked before each push",
+        "correct": false,
+        "why": "That cures files left behind; here every file is there and the versions differ."
+      },
+      {
+        "text": "Running the tests everywhere in a pinned image, like `golang:1.25`",
+        "correct": true,
+        "why": "The same image brings the same toolchain to every laptop and to the pipeline."
+      },
+      {
+        "text": "Making the CI check optional, so a laptop's result is enough to merge",
+        "correct": false,
+        "why": "That removes the clean machine, the one place the difference showed up."
+      }
+    ]
+  },
+  {
+    "id": "ex-9vq95jep",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A merged pull request tightened a security group, the pipeline applied it, and now the monitoring service cannot reach the servers. The team wants the old rule back as fast as is safe. What do they do?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 4; Infrastructure as Code, lesson 15.",
+    "choices": [
+      {
+        "text": "Reset `main` to the commit before and force-push it, so the pipeline runs on it",
+        "correct": false,
+        "why": "Reset rewrites a shared history, and a protected `main` refuses the force push anyway."
+      },
+      {
+        "text": "Check out the commit before on a laptop and run `terraform apply` from there",
+        "correct": false,
+        "why": "That applies something no merge and no review records, which one place applying exists to prevent."
+      },
+      {
+        "text": "Put the rule back by hand in the provider's console, and fix the code later",
+        "correct": false,
+        "why": "The code still says the tight rule, so the next apply from `main` takes the hand-made one away."
+      },
+      {
+        "text": "Revert the commit on a branch, merge that the normal way, and let the pipeline apply",
+        "correct": true,
+        "why": "Revert is the safe undo on a shared `main`, and the pipeline applies only what was merged and reviewed."
+      }
+    ]
+  },
+  {
+    "id": "ex-ab5sve9g",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "A team keeps its app exactly the way lesson 9's script does, finishing every branch with `--no-ff` and merging nothing else. In one month it finishes three features, one release and two hotfixes. How many merge commits does that month add?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 9.",
+    "value": 9,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-abjfgzz0",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Bruno asks why `git status` never lists `debug.log`. The command that names the pattern responsible, with the file and the line it comes from, is `git ___ -v debug.log`.",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 10.",
+    "blanks": [
+      {
+        "accept": [
+          "check-ignore"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-abnvw651",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "The team's repository protects `main`: pull requests only, one approval, checks green. Bruno pushes every branch to a new, empty repository on another hosting service. Which of those rules does the new copy have?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 8.",
+    "choices": [
+      {
+        "text": "None of them, as protection is a setting of the server and not part of Git",
+        "correct": true,
+        "why": "A copy carries commits and branches, and no rule."
+      },
+      {
+        "text": "Only the approvals, as every review is recorded inside the commits it merged",
+        "correct": false,
+        "why": "The hosting service records a review next to the pull request, not inside a commit."
+      },
+      {
+        "text": "All of them, as the rules are stored in the repository right beside its commits",
+        "correct": false,
+        "why": "Protection is a setting on the server, and Git itself knows nothing about it."
+      },
+      {
+        "text": "Only the ban on force pushes, which Git enforces on `main` by itself",
+        "correct": false,
+        "why": "Refusing a force push to `main` is the hosting service's lock as well; plain Git allows it."
+      }
+    ]
+  },
+  {
+    "id": "ex-am5h9nzv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "At four in the afternoon, Ana runs `git log --oneline --since=\"2026-09-17\"` to see everything from the 17th on, and a commit made at ten that morning is missing. Why?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 3.",
+    "choices": [
+      {
+        "text": "`--since` counts from when a commit was pushed, not from when it was made",
+        "correct": false,
+        "why": "The log filters on the dates recorded in the commits, and pushing records nothing in them."
+      },
+      {
+        "text": "A date with no time means that day at the current time, so ten o'clock is before it",
+        "correct": true,
+        "why": "Given the time as well, `\"2026-09-17 00:00\"`, the morning's commits appear."
+      },
+      {
+        "text": "`--oneline` leaves out commits whose messages run longer than one line",
+        "correct": false,
+        "why": "It shortens every commit to one line, and leaves none out."
+      },
+      {
+        "text": "The commit is Bruno's, and the log shows just your own unless given `--author`",
+        "correct": false,
+        "why": "`git log` shows everybody's commits; `--author` is what narrows them."
+      }
+    ]
+  },
+  {
     "id": "ex-bk33hgdr",
     "version": 1,
     "type": "quiz",
@@ -744,16 +1386,6 @@
     "prompt": "An application server in a private subnet does not answer on 8080. From another instance in the same VPC, `nc -zv -w 3 10.0.32.10 8080` prints `Connection refused` at once. A colleague wants to widen the security group. Where do the lessons point instead?",
     "hint": "Cloud and Serverless, lesson 6; Networks and Protocols, lesson 3.",
     "choices": [
-      {
-        "text": "The machine: nothing listens there, or only on `127.0.0.1`; `ss -tln` shows which",
-        "correct": true,
-        "why": "A refusal means the packet arrived and the machine's own system answered it."
-      },
-      {
-        "text": "The subnet's route table, which has no way back for the reply to the other instance",
-        "correct": false,
-        "why": "A reply with no way back is lost, and that looks like a timeout, not a reset."
-      },
       {
         "text": "The network ACL, whose outbound rule for the ephemeral ports is missing",
         "correct": false,
@@ -763,6 +1395,16 @@
         "text": "The security group, which rejects port 8080 with a reset instead of letting the attempt in",
         "correct": false,
         "why": "A security group never answers: a blocked attempt is dropped, and the client times out."
+      },
+      {
+        "text": "The machine: nothing listens there, or only on `127.0.0.1`; `ss -tln` shows which",
+        "correct": true,
+        "why": "A refusal means the packet arrived and the machine's own system answered it."
+      },
+      {
+        "text": "The subnet's route table, which has no way back for the reply to the other instance",
+        "correct": false,
+        "why": "A reply with no way back is lost, and that looks like a timeout, not a reset."
       }
     ]
   },
@@ -775,16 +1417,6 @@
     "hint": "Cloud and Serverless, lesson 4; Docker and Containers, lesson 13.",
     "choices": [
       {
-        "text": "A newer Docker on the hosts, because the engine is too old to unpack this image",
-        "correct": false,
-        "why": "The image was found and unpacked; it is the kernel refusing an x86-64 program."
-      },
-      {
-        "text": "Building for `linux/amd64` and `linux/arm64` under one tag, so each host pulls its own",
-        "correct": true,
-        "why": "Each host runs the variant built for its processor."
-      },
-      {
         "text": "`--platform linux/amd64` on `docker run`, so the Arm host executes the x86 binary natively",
         "correct": false,
         "why": "Without an emulator it fails the same way, and with QEMU it runs, slowly, not natively."
@@ -793,6 +1425,16 @@
         "text": "One size up on the hosts, since an Arm vCPU is a whole core and needs more memory",
         "correct": false,
         "why": "Size is not the problem: no amount of memory runs a binary built for another processor."
+      },
+      {
+        "text": "A newer Docker on the hosts, because the engine is too old to unpack this image",
+        "correct": false,
+        "why": "The image was found and unpacked; it is the kernel refusing an x86-64 program."
+      },
+      {
+        "text": "Building for `linux/amd64` and `linux/arm64` under one tag, so each host pulls its own",
+        "correct": true,
+        "why": "Each host runs the variant built for its processor."
       }
     ]
   },
@@ -805,16 +1447,6 @@
     "hint": "Cloud and Serverless, lesson 5; Kubernetes: Orchestration in Production, lesson 26.",
     "choices": [
       {
-        "text": "A bucket mounted as a filesystem with a tool, so that the pods keep writing to `/data`",
-        "correct": false,
-        "why": "Reading works; renaming and appending turn into copies and rewrites, a mistake the lesson names."
-      },
-      {
-        "text": "A larger block volume, with room for every node's writes at the same time",
-        "correct": false,
-        "why": "Size is not the limit: a block volume attaches to one machine, however large it is."
-      },
-      {
         "text": "A file service: a filesystem the provider runs, which several machines mount at once",
         "correct": true,
         "why": "Only a filesystem somebody runs for you can be written from several machines together."
@@ -823,6 +1455,16 @@
         "text": "The same block volume attached to all three nodes, each one with its own ext4 mount",
         "correct": false,
         "why": "Each node would keep its own picture of the filesystem in memory and corrupt it within minutes."
+      },
+      {
+        "text": "A bucket mounted as a filesystem with a tool, so that the pods keep writing to `/data`",
+        "correct": false,
+        "why": "Reading works; renaming and appending turn into copies and rewrites, a mistake the lesson names."
+      },
+      {
+        "text": "A larger block volume, with room for every node's writes at the same time",
+        "correct": false,
+        "why": "Size is not the limit: a block volume attaches to one machine, however large it is."
       }
     ]
   },
@@ -835,16 +1477,6 @@
     "hint": "Cloud and Serverless, lesson 7; Linux and the Command Line, lesson 13.",
     "choices": [
       {
-        "text": "The role's credentials expire after an hour, and a daytime session falls back to the last key configured",
-        "correct": false,
-        "why": "The provider replaces the role's credentials before they expire; nothing falls back to a stored key."
-      },
-      {
-        "text": "Cron runs as root, and only root may ask the metadata service for the role's credentials",
-        "correct": false,
-        "why": "The metadata service answers from inside the machine; what cron changes is the environment."
-      },
-      {
         "text": "The colleague's key is in the machine's user data, which every SSH login reads again",
         "correct": false,
         "why": "User data acts once, on the first boot; a login shell reads startup files, not user data."
@@ -853,6 +1485,16 @@
         "text": "A key exported in the engineer's `~/.bashrc`: the chain reads the environment first, and cron never reads that file",
         "correct": true,
         "why": "The environment beats the machine's role, and a cron job starts without your startup files."
+      },
+      {
+        "text": "The role's credentials expire after an hour, and a daytime session falls back to the last key configured",
+        "correct": false,
+        "why": "The provider replaces the role's credentials before they expire; nothing falls back to a stored key."
+      },
+      {
+        "text": "Cron runs as root, and only root may ask the metadata service for the role's credentials",
+        "correct": false,
+        "why": "The metadata service answers from inside the machine; what cron changes is the environment."
       }
     ]
   },
@@ -865,16 +1507,6 @@
     "hint": "Cloud and Serverless, lesson 7; Web and Internet Fundamentals, lesson 6.",
     "choices": [
       {
-        "text": "It knows who signed it, and no policy allows the action; a new key changes nothing",
-        "correct": true,
-        "why": "It is the second gate, authorisation: the fix is a policy, not a credential."
-      },
-      {
-        "text": "The signature did not verify, so the provider cannot tell who is asking; a new key fixes it",
-        "correct": false,
-        "why": "A signature that fails has a code of its own; AccessDenied comes after the identity is known."
-      },
-      {
         "text": "A security group stopped the request before it reached the API; the rule needs a new port",
         "correct": false,
         "why": "Security groups filter packets to machines; API calls are judged by identity and policy."
@@ -883,6 +1515,16 @@
         "text": "It invites the script to authenticate, so the call should be repeated with credentials",
         "correct": false,
         "why": "That is 401; a 403 is a refusal, and the same credentials get the same answer."
+      },
+      {
+        "text": "It knows who signed it, and no policy allows the action; a new key changes nothing",
+        "correct": true,
+        "why": "It is the second gate, authorisation: the fix is a policy, not a credential."
+      },
+      {
+        "text": "The signature did not verify, so the provider cannot tell who is asking; a new key fixes it",
+        "correct": false,
+        "why": "A signature that fails has a code of its own; AccessDenied comes after the identity is known."
       }
     ]
   },
@@ -895,16 +1537,6 @@
     "hint": "Cloud and Serverless, lesson 10; Infrastructure as Code, lesson 16.",
     "choices": [
       {
-        "text": "An hourly charge for the VPC and its subnets, which the plan priced at zero by mistake",
-        "correct": false,
-        "why": "The VPC, the subnets and the internet gateway have no hourly line on the sheet."
-      },
-      {
-        "text": "A charge per gigabyte processed, both ways, set by traffic no plan sees",
-        "correct": true,
-        "why": "A plan knows what will exist, not how much it will be used."
-      },
-      {
         "text": "Nothing for downloads, since data coming in from the internet is free on the sheet",
         "correct": false,
         "why": "Traffic in is free, and the gateway still charges for processing it."
@@ -913,6 +1545,16 @@
         "text": "A second 67.89, because a NAT gateway is billed once for every subnet that routes to it",
         "correct": false,
         "why": "It is billed per gateway, by the hour and by the GB; two zones usually means two gateways."
+      },
+      {
+        "text": "An hourly charge for the VPC and its subnets, which the plan priced at zero by mistake",
+        "correct": false,
+        "why": "The VPC, the subnets and the internet gateway have no hourly line on the sheet."
+      },
+      {
+        "text": "A charge per gigabyte processed, both ways, set by traffic no plan sees",
+        "correct": true,
+        "why": "A plan knows what will exist, not how much it will be used."
       }
     ]
   },
@@ -925,16 +1567,6 @@
     "hint": "Cloud and Serverless, lesson 2.",
     "choices": [
       {
-        "text": "None: the LGPD keeps data about Brazilians in Brazil, which is what the contract asks",
-        "correct": false,
-        "why": "The LGPD regulates transfer abroad and has no general localisation rule; it says nothing of courts."
-      },
-      {
-        "text": "The backups, which a large provider copies to another of its regions on its own initiative",
-        "correct": false,
-        "why": "Copies across regions happen only when somebody configures them; the courts are the gap."
-      },
-      {
         "text": "The region fixes where data sits, not which country's courts get to order it produced",
         "correct": true,
         "why": "That depends on the legal entity running the service, which no region changes."
@@ -943,6 +1575,16 @@
         "text": "Shared hardware: other tenants on the host, which a dedicated host would remove",
         "correct": false,
         "why": "Dedicated hardware settles who shares the machine, not whose law reaches the provider."
+      },
+      {
+        "text": "None: the LGPD keeps data about Brazilians in Brazil, which is what the contract asks",
+        "correct": false,
+        "why": "The LGPD regulates transfer abroad and has no general localisation rule; it says nothing of courts."
+      },
+      {
+        "text": "The backups, which a large provider copies to another of its regions on its own initiative",
+        "correct": false,
+        "why": "Copies across regions happen only when somebody configures them; the courts are the gap."
       }
     ]
   },
@@ -955,16 +1597,6 @@
     "hint": "Cloud and Serverless, lesson 9.",
     "choices": [
       {
-        "text": "Both stop, since a failing API takes the load balancer's forwarding down with it",
-        "correct": false,
-        "why": "Forwarding traffic is data plane, built to keep working when the control plane does not."
-      },
-      {
-        "text": "Both keep serving, because two zones are designed never to fail together",
-        "correct": false,
-        "why": "B has nothing running in its second zone, and replacing what it lost needs the failing API."
-      },
-      {
         "text": "B recovers sooner, because an automated launch waits for nobody to act",
         "correct": false,
         "why": "Launching is a control-plane call, and the control plane is what is failing."
@@ -973,6 +1605,16 @@
         "text": "A carries on: the load balancer shifts the load, and nothing new must be made",
         "correct": true,
         "why": "It is statically stable; it needs only the data plane, which is still working."
+      },
+      {
+        "text": "Both stop, since a failing API takes the load balancer's forwarding down with it",
+        "correct": false,
+        "why": "Forwarding traffic is data plane, built to keep working when the control plane does not."
+      },
+      {
+        "text": "Both keep serving, because two zones are designed never to fail together",
+        "correct": false,
+        "why": "B has nothing running in its second zone, and replacing what it lost needs the failing API."
       }
     ]
   },
@@ -985,16 +1627,6 @@
     "hint": "Cloud and Serverless, lesson 10.",
     "choices": [
       {
-        "text": "No: the reservation is owed for every hour, and it only wins above 57.4% of them",
-        "correct": true,
-        "why": "About 30% of the hours is well below the break-even, so on demand is cheaper."
-      },
-      {
-        "text": "Yes: 42.6% off every hour they run is a saving, however few the hours",
-        "correct": false,
-        "why": "The reservation is paid for every hour of the year, running or not."
-      },
-      {
         "text": "Yes, as with no upfront payment the team can stop paying in a month it is idle",
         "correct": false,
         "why": "No upfront spreads the payment over the year; the whole year is still owed."
@@ -1003,6 +1635,16 @@
         "text": "Reserve one and keep one on demand, so the discount covers half the hours",
         "correct": false,
         "why": "Neither machine runs enough hours; either reservation costs more than the hours it covers."
+      },
+      {
+        "text": "No: the reservation is owed for every hour, and it only wins above 57.4% of them",
+        "correct": true,
+        "why": "About 30% of the hours is well below the break-even, so on demand is cheaper."
+      },
+      {
+        "text": "Yes: 42.6% off every hour they run is a saving, however few the hours",
+        "correct": false,
+        "why": "The reservation is paid for every hour of the year, running or not."
       }
     ]
   },
@@ -1128,16 +1770,6 @@
     "hint": "Docker and Containers, lesson 5; Linux and the Command Line, lesson 4.",
     "choices": [
       {
-        "text": "The socket needs `chmod 666`, because the group has read access to it and no more",
-        "correct": false,
-        "why": "The socket is `srw-rw----`, so the group can already write, and 666 would hand every account root by another route."
-      },
-      {
-        "text": "His shell kept the group list it started with; he has to log in again",
-        "correct": true,
-        "why": "Group membership is attached to a process when it starts, so only a new login carries `docker`."
-      },
-      {
         "text": "The daemon reads its groups at start, so `dockerd` needs a restart first",
         "correct": false,
         "why": "The socket already lets the `docker` group in; what lacks the group is Bruno's own shell."
@@ -1146,6 +1778,16 @@
         "text": "The engine is stopped; that is what the client prints when nothing listens",
         "correct": false,
         "why": "Nothing listening gives `failed to connect to the docker API`; `permission denied` means the engine refused him."
+      },
+      {
+        "text": "The socket needs `chmod 666`, because the group has read access to it and no more",
+        "correct": false,
+        "why": "The socket is `srw-rw----`, so the group can already write, and 666 would hand every account root by another route."
+      },
+      {
+        "text": "His shell kept the group list it started with; he has to log in again",
+        "correct": true,
+        "why": "Group membership is attached to a process when it starts, so only a new login carries `docker`."
       }
     ]
   },
@@ -1158,16 +1800,6 @@
     "hint": "Docker and Containers, lesson 7; Linux and the Command Line, lesson 6.",
     "choices": [
       {
-        "text": "`SIGTERM` itself, which a shell reports as 128 plus its number, 137",
-        "correct": false,
-        "why": "`SIGTERM` is 15, which would read 143; 137 is 128 plus 9, `SIGKILL`."
-      },
-      {
-        "text": "The cgroup's process limit, which kills any container that forks past it",
-        "correct": false,
-        "why": "The pids limit refuses the new process with `can't fork`; it kills nothing."
-      },
-      {
         "text": "It ignored `SIGTERM`, so after the wait Docker sent `SIGKILL`, signal 9",
         "correct": true,
         "why": "137 is 128 plus 9, and `OOMKilled=false` puts the kill on `docker stop`'s ten-second wait rather than on the kernel."
@@ -1176,6 +1808,16 @@
         "text": "The memory limit; `OOMKilled` stays false until the container is restarted",
         "correct": false,
         "why": "Docker records `OOMKilled=true` as soon as the kernel kills for memory; false means something else sent the `SIGKILL`."
+      },
+      {
+        "text": "`SIGTERM` itself, which a shell reports as 128 plus its number, 137",
+        "correct": false,
+        "why": "`SIGTERM` is 15, which would read 143; 137 is 128 plus 9, `SIGKILL`."
+      },
+      {
+        "text": "The cgroup's process limit, which kills any container that forks past it",
+        "correct": false,
+        "why": "The pids limit refuses the new process with `can't fork`; it kills nothing."
       }
     ]
   },
@@ -1188,16 +1830,6 @@
     "hint": "Docker and Containers, lesson 23; Networks and Protocols, lesson 4.",
     "choices": [
       {
-        "text": "Postgres was still initialising, and a container's name appears once it accepts connections",
-        "correct": false,
-        "why": "A database still starting gives `connection refused` on its address; a container's name does not wait for its program."
-      },
-      {
-        "text": "Port 5432 of `db` was not published with `-p`, so other containers are not told its name",
-        "correct": false,
-        "why": "`-p` opens a door on the host; it creates no name, and containers reach each other's ports without it."
-      },
-      {
         "text": "Containers may not send questions out on port 53, so the lookup did not leave the container",
         "correct": false,
         "why": "A resolver nobody can reach gives no answer at all; `no such host` is an answer, from a server with no such record."
@@ -1206,6 +1838,16 @@
         "text": "Nothing on the default bridge answers for containers, and `8.8.8.8` has no record `db`",
         "correct": true,
         "why": "Only a network you create gets Docker's embedded DNS; here the question went to the host's resolver, which has no such name."
+      },
+      {
+        "text": "Postgres was still initialising, and a container's name appears once it accepts connections",
+        "correct": false,
+        "why": "A database still starting gives `connection refused` on its address; a container's name does not wait for its program."
+      },
+      {
+        "text": "Port 5432 of `db` was not published with `-p`, so other containers are not told its name",
+        "correct": false,
+        "why": "`-p` opens a door on the host; it creates no name, and containers reach each other's ports without it."
       }
     ]
   },
@@ -1248,16 +1890,6 @@
     "hint": "Docker and Containers, lesson 18; Kubernetes: Orchestration in Production, lesson 22.",
     "choices": [
       {
-        "text": "Nothing yet; the pod spec needs a `livenessProbe` that asks `/health`",
-        "correct": true,
-        "why": "Kubernetes ignores `HEALTHCHECK` and runs its own probes; the kubelet restarts a container when a liveness probe fails."
-      },
-      {
-        "text": "The kubelet, after three failed runs of the image's own `HEALTHCHECK`",
-        "correct": false,
-        "why": "Kubernetes ignores `HEALTHCHECK` entirely; the three retries are Docker's setting, read only by Docker."
-      },
-      {
         "text": "The node's Docker daemon, which marks it unhealthy and replaces it",
         "correct": false,
         "why": "Docker does nothing about an unhealthy container on its own, and a cluster talks to containerd, not to Docker."
@@ -1266,6 +1898,16 @@
         "text": "Nothing; a `readinessProbe` on `/health` is what would have restarted it",
         "correct": false,
         "why": "Readiness takes the pod out of the Service and restarts nothing; restarting is the liveness probe's job."
+      },
+      {
+        "text": "Nothing yet; the pod spec needs a `livenessProbe` that asks `/health`",
+        "correct": true,
+        "why": "Kubernetes ignores `HEALTHCHECK` and runs its own probes; the kubelet restarts a container when a liveness probe fails."
+      },
+      {
+        "text": "The kubelet, after three failed runs of the image's own `HEALTHCHECK`",
+        "correct": false,
+        "why": "Kubernetes ignores `HEALTHCHECK` entirely; the three retries are Docker's setting, read only by Docker."
       }
     ]
   },
@@ -1278,16 +1920,6 @@
     "hint": "Docker and Containers, lesson 11; Git and Teamwork: Version Control, Review and Process, lesson 10.",
     "choices": [
       {
-        "text": "Docker honours `.gitignore`, so its `.env` line has to be misspelled",
-        "correct": false,
-        "why": "The builder reads `.dockerignore` and nothing else, and this project has none."
-      },
-      {
-        "text": "The context is the whole directory, filtered by `.dockerignore` alone",
-        "correct": true,
-        "why": "`docker build .` sends everything in `.` that `.dockerignore` does not list, and `COPY . .` copied it all; Git's rules never reach the builder."
-      },
-      {
         "text": "It was committed at some point; `git rm --cached .env` would fix it",
         "correct": false,
         "why": "The log shows no commit ever touched it, and the builder does not ask Git what is tracked."
@@ -1296,6 +1928,16 @@
         "text": "BuildKit sends just the changed files, so it reused an older `.env` copy",
         "correct": false,
         "why": "Sending only what changed saves transfer; the context still holds every file in the directory, `.env` included."
+      },
+      {
+        "text": "Docker honours `.gitignore`, so its `.env` line has to be misspelled",
+        "correct": false,
+        "why": "The builder reads `.dockerignore` and nothing else, and this project has none."
+      },
+      {
+        "text": "The context is the whole directory, filtered by `.dockerignore` alone",
+        "correct": true,
+        "why": "`docker build .` sends everything in `.` that `.dockerignore` does not list, and `COPY . .` copied it all; Git's rules never reach the builder."
       }
     ]
   },
@@ -1308,16 +1950,6 @@
     "hint": "Docker and Containers, lesson 20; Infrastructure as Code, lesson 20.",
     "choices": [
       {
-        "text": "Nothing is needed: `fixed` says the scanner already applied the newer version",
-        "correct": false,
-        "why": "`fixed` means a fixed version exists upstream; the image keeps the old one until it is rebuilt on a newer base."
-      },
-      {
-        "text": "Add `--ignore-unfixed` to the gate, since nobody can act on this finding yet",
-        "correct": false,
-        "why": "That flag hides findings with no fix; this one has a fix, so it stays, and the rebuild is the way out."
-      },
-      {
         "text": "No: nothing inside can install it, and a hand fix dies with the container; rebuild on the new base",
         "correct": true,
         "why": "Distroless has no shell or package manager, and a replaced container is its image again, so the fix that lasts is a new image."
@@ -1326,6 +1958,16 @@
         "text": "Yes, and then `docker commit` each container so the upgrade survives a replacement",
         "correct": false,
         "why": "There is no package manager to upgrade with, and a committed image records nothing anybody can rebuild or review."
+      },
+      {
+        "text": "Nothing is needed: `fixed` says the scanner already applied the newer version",
+        "correct": false,
+        "why": "`fixed` means a fixed version exists upstream; the image keeps the old one until it is rebuilt on a newer base."
+      },
+      {
+        "text": "Add `--ignore-unfixed` to the gate, since nobody can act on this finding yet",
+        "correct": false,
+        "why": "That flag hides findings with no fix; this one has a fix, so it stays, and the rebuild is the way out."
       }
     ]
   },
@@ -1461,16 +2103,6 @@
     "hint": "Docker and Containers, lesson 5.",
     "choices": [
       {
-        "text": "Desktop caps every container at 2 GB unless `--memory` raises the cap",
-        "correct": false,
-        "why": "A container has no limit until one is set; the ceiling here is the VM's size, which `--memory` cannot pass."
-      },
-      {
-        "text": "The `docker` client on the laptop decides how much memory each one gets",
-        "correct": false,
-        "why": "The client only sends requests; the engine in the VM runs the containers inside the VM's memory."
-      },
-      {
         "text": "The image runs under emulation for another processor, which doubles its memory",
         "correct": false,
         "why": "Emulation makes an image slower, not bigger; the limit here is the VM's memory setting."
@@ -1479,6 +2111,16 @@
         "text": "Containers run inside Desktop's VM and never get more than it was given",
         "correct": true,
         "why": "The engine and its containers live in the VM, so its memory setting is the ceiling, whatever the laptop has."
+      },
+      {
+        "text": "Desktop caps every container at 2 GB unless `--memory` raises the cap",
+        "correct": false,
+        "why": "A container has no limit until one is set; the ceiling here is the VM's size, which `--memory` cannot pass."
+      },
+      {
+        "text": "The `docker` client on the laptop decides how much memory each one gets",
+        "correct": false,
+        "why": "The client only sends requests; the engine in the VM runs the containers inside the VM's memory."
       }
     ]
   },
@@ -1491,16 +2133,6 @@
     "hint": "Docker and Containers, lesson 4.",
     "choices": [
       {
-        "text": "The whole file is first copied up into the container's layer, and the copy changes",
-        "correct": true,
-        "why": "Overlayfs never writes to a lower layer: the first write copies the file up, which here costs 2 GB."
-      },
-      {
-        "text": "Just the new line goes into the upper layer, stored there as a diff against the image",
-        "correct": false,
-        "why": "Overlayfs works on whole files, so the first write copies the entire file into the upper layer."
-      },
-      {
         "text": "The line is written into the image's layer, and every container started from it sees it",
         "correct": false,
         "why": "No container ever writes to a lower layer; the image stays as it was for every other container."
@@ -1509,6 +2141,16 @@
         "text": "The write is refused, since a container may not modify the layers of its image",
         "correct": false,
         "why": "The read-only layer is left untouched, and the write lands on a copy in the container's own layer."
+      },
+      {
+        "text": "The whole file is first copied up into the container's layer, and the copy changes",
+        "correct": true,
+        "why": "Overlayfs never writes to a lower layer: the first write copies the file up, which here costs 2 GB."
+      },
+      {
+        "text": "Just the new line goes into the upper layer, stored there as a diff against the image",
+        "correct": false,
+        "why": "Overlayfs works on whole files, so the first write copies the entire file into the upper layer."
       }
     ]
   },
@@ -1521,16 +2163,6 @@
     "hint": "Kubernetes: Orchestration in Production, lessons 19 and 35; Linux and the Command Line, lesson 6.",
     "choices": [
       {
-        "text": "Both mean the liveness probe failed, because Kubernetes reports every probe failure as an exit code above 128",
-        "correct": false,
-        "why": "A failed liveness probe ends the process with a signal, and the code names that signal, not the probe."
-      },
-      {
-        "text": "143 is SIGTERM, which the shop catches to finish its requests; 137 is SIGKILL: look at memory or the grace period",
-        "correct": true,
-        "why": "128 plus the signal: 15 is a polite stop, 9 is one nothing can catch."
-      },
-      {
         "text": "143 is the kernel's out-of-memory kill and 137 is a polite stop from the kubelet, so the first one needs a higher memory limit",
         "correct": false,
         "why": "Reversed: 137 is 128 plus 9, SIGKILL, which is what the out-of-memory killer sends."
@@ -1539,6 +2171,16 @@
         "text": "Both are statuses the shop chose itself when it exited, so they describe what went wrong inside it, not who stopped it",
         "correct": false,
         "why": "A status above 128 is a signal number plus 128; the program did not pick it."
+      },
+      {
+        "text": "Both mean the liveness probe failed, because Kubernetes reports every probe failure as an exit code above 128",
+        "correct": false,
+        "why": "A failed liveness probe ends the process with a signal, and the code names that signal, not the probe."
+      },
+      {
+        "text": "143 is SIGTERM, which the shop catches to finish its requests; 137 is SIGKILL: look at memory or the grace period",
+        "correct": true,
+        "why": "128 plus the signal: 15 is a polite stop, 9 is one nothing can catch."
       }
     ]
   },
@@ -1551,16 +2193,6 @@
     "hint": "Kubernetes: Orchestration in Production, lesson 18; Networks and Protocols, lesson 2.",
     "choices": [
       {
-        "text": "Each veth cable takes one off, so the reply stayed inside `shop-worker2`",
-        "correct": false,
-        "why": "A cable does not touch the TTL; only a machine that routes the packet does."
-      },
-      {
-        "text": "The reply was translated twice, and every address rewrite takes one off",
-        "correct": false,
-        "why": "There is no translation on this path; the TTL drops because the packet is routed."
-      },
-      {
         "text": "It left at 64, and two routers each took one off: one node, then the other",
         "correct": true,
         "why": "Each node routes the packet once, and nothing hides a hop."
@@ -1569,6 +2201,16 @@
         "text": "The two nodes are 62 hops apart on the network that Docker created for them",
         "correct": false,
         "why": "A TTL counts down from its starting value; 62 hops would leave almost nothing."
+      },
+      {
+        "text": "Each veth cable takes one off, so the reply stayed inside `shop-worker2`",
+        "correct": false,
+        "why": "A cable does not touch the TTL; only a machine that routes the packet does."
+      },
+      {
+        "text": "The reply was translated twice, and every address rewrite takes one off",
+        "correct": false,
+        "why": "There is no translation on this path; the TTL drops because the packet is routed."
       }
     ]
   },
@@ -1581,16 +2223,6 @@
     "hint": "Kubernetes: Orchestration in Production, lesson 16; Web and Internet Fundamentals, lesson 6.",
     "choices": [
       {
-        "text": "The header makes curl resolve `shop.example.test` through the cluster's own DNS",
-        "correct": false,
-        "why": "A header is sent inside the request; it changes nothing about how curl looks a name up."
-      },
-      {
-        "text": "Traefik routes by destination address, and the header changes the address curl connects to",
-        "correct": false,
-        "why": "curl still connects to `localhost:8080`; both hosts arrive at the same address."
-      },
-      {
         "text": "The controller answers `404` to callers who do not identify themselves, and Host is how they do it",
         "correct": false,
         "why": "The `404` was for a host no route names, not for an anonymous caller."
@@ -1599,6 +2231,16 @@
         "text": "The controller chooses a route by the request's Host line, and no DNS points that name at the laptop",
         "correct": true,
         "why": "The address only reaches the controller; the Host line says which site is wanted."
+      },
+      {
+        "text": "The header makes curl resolve `shop.example.test` through the cluster's own DNS",
+        "correct": false,
+        "why": "A header is sent inside the request; it changes nothing about how curl looks a name up."
+      },
+      {
+        "text": "Traefik routes by destination address, and the header changes the address curl connects to",
+        "correct": false,
+        "why": "curl still connects to `localhost:8080`; both hosts arrive at the same address."
       }
     ]
   },
@@ -1611,16 +2253,6 @@
     "hint": "Kubernetes: Orchestration in Production, lesson 23; Web and Internet Fundamentals, lesson 6.",
     "choices": [
       {
-        "text": "The account is known, but nothing grants it the verb; a bound Role is missing",
-        "correct": true,
-        "why": "Authentication passed and authorisation refused: a 403, fixed with a Role and a RoleBinding."
-      },
-      {
-        "text": "A rule in RBAC denies pods to service accounts, and that rule has to be deleted",
-        "correct": false,
-        "why": "RBAC has no deny rules; anything no rule grants is refused."
-      },
-      {
         "text": "The namespace `shop` does not exist yet, so the API server has nowhere to look for the pods",
         "correct": false,
         "why": "The account lives in `shop`, so the namespace exists; the message is about permission."
@@ -1629,6 +2261,16 @@
         "text": "The token was not accepted, so issue a new one with a longer `--duration`",
         "correct": false,
         "why": "A token the server did not accept is a 401; this message already names the account."
+      },
+      {
+        "text": "The account is known, but nothing grants it the verb; a bound Role is missing",
+        "correct": true,
+        "why": "Authentication passed and authorisation refused: a 403, fixed with a Role and a RoleBinding."
+      },
+      {
+        "text": "A rule in RBAC denies pods to service accounts, and that rule has to be deleted",
+        "correct": false,
+        "why": "RBAC has no deny rules; anything no rule grants is refused."
       }
     ]
   },
@@ -1641,16 +2283,6 @@
     "hint": "Kubernetes: Orchestration in Production, lessons 35 and 39; Git and Teamwork: Version Control, Review and Process, lesson 4.",
     "choices": [
       {
-        "text": "The tool sees the undo as a new revision and commits it back to the repository for the team",
-        "correct": false,
-        "why": "The tool pulls from git and applies; it does not write the cluster's changes back."
-      },
-      {
-        "text": "The next sync brings 1.1 back from `main`; reverting it in git is what lasts",
-        "correct": true,
-        "why": "The undo is drift, and a revert is a new commit that undoes it on the shared branch."
-      },
-      {
         "text": "The undo is right; follow it with `git reset --hard HEAD~1` and a force-push of `main`",
         "correct": false,
         "why": "Reset rewrites a history other people already have; revert adds to it."
@@ -1659,6 +2291,16 @@
         "text": "The undo holds, because the tool reacts to new commits, and the undo came after the last one",
         "correct": false,
         "why": "The tool compares the repository with the cluster on every sync, not only on new commits."
+      },
+      {
+        "text": "The tool sees the undo as a new revision and commits it back to the repository for the team",
+        "correct": false,
+        "why": "The tool pulls from git and applies; it does not write the cluster's changes back."
+      },
+      {
+        "text": "The next sync brings 1.1 back from `main`; reverting it in git is what lasts",
+        "correct": true,
+        "why": "The undo is drift, and a revert is a new commit that undoes it on the shared branch."
       }
     ]
   },
@@ -1671,16 +2313,6 @@
     "hint": "Kubernetes: Orchestration in Production, lesson 25; Docker and Containers, lessons 15 and 16.",
     "choices": [
       {
-        "text": "`nginx:latest`, since the rule checks for the colon first",
-        "correct": false,
-        "why": "The second half of the rule refuses an image ending in `:latest`."
-      },
-      {
-        "text": "`nginx`, since a missing tag is not the text `:latest`",
-        "correct": false,
-        "why": "It has no colon at all, so the first half of the rule refuses it."
-      },
-      {
         "text": "`registry.local:5000/shop`, where the colon is the port",
         "correct": true,
         "why": "There is a colon, from the registry's port, and no tag, which means `latest`."
@@ -1689,6 +2321,16 @@
         "text": "`registry.local:5000/shop:1.0`, since the registry has a port",
         "correct": false,
         "why": "It is let in, rightly: its tag is `1.0`, an explicit version."
+      },
+      {
+        "text": "`nginx:latest`, since the rule checks for the colon first",
+        "correct": false,
+        "why": "The second half of the rule refuses an image ending in `:latest`."
+      },
+      {
+        "text": "`nginx`, since a missing tag is not the text `:latest`",
+        "correct": false,
+        "why": "It has no colon at all, so the first half of the rule refuses it."
       }
     ]
   },
@@ -1701,16 +2343,6 @@
     "hint": "Kubernetes: Orchestration in Production, lesson 1; Docker and Containers, lesson 16.",
     "choices": [
       {
-        "text": "Docker on the laptop keeps the old image under that tag until somebody runs `docker image prune`",
-        "correct": false,
-        "why": "The rebuild moved the tag on the laptop; the stale copy is on the nodes."
-      },
-      {
-        "text": "The ReplicaSet pins the old digest, and the tag `latest` would force a fresh pull",
-        "correct": false,
-        "why": "`latest` is only a name; it would not put the laptop's build inside the nodes either."
-      },
-      {
         "text": "A rollout restart reuses the old containers rather than making new pods",
         "correct": false,
         "why": "It replaces the pods with new ones from the same template, as an update would."
@@ -1719,6 +2351,16 @@
         "text": "Each node keeps the `shop:1.1` it was given, and a tag already there is not pulled again",
         "correct": true,
         "why": "The nodes have their own image store; `kind load docker-image` hands them the new build."
+      },
+      {
+        "text": "Docker on the laptop keeps the old image under that tag until somebody runs `docker image prune`",
+        "correct": false,
+        "why": "The rebuild moved the tag on the laptop; the stale copy is on the nodes."
+      },
+      {
+        "text": "The ReplicaSet pins the old digest, and the tag `latest` would force a fresh pull",
+        "correct": false,
+        "why": "`latest` is only a name; it would not put the laptop's build inside the nodes either."
       }
     ]
   },
@@ -1731,16 +2373,6 @@
     "hint": "Kubernetes: Orchestration in Production, lesson 4; Linux and the Command Line, lesson 5.",
     "choices": [
       {
-        "text": "On the node, with `systemctl status kubelet` and `journalctl -u kubelet`, because it is a service",
-        "correct": true,
-        "why": "The kubelet runs pods, so it cannot be one: systemd starts it like any daemon."
-      },
-      {
-        "text": "In `/etc/kubernetes/manifests` on that node, where its static pod file has been removed",
-        "correct": false,
-        "why": "That directory holds the control plane's static pods, which the kubelet itself runs."
-      },
-      {
         "text": "In `kubectl logs` of the node's kube-proxy pod, which runs the kubelet beside it as a sidecar",
         "correct": false,
         "why": "kube-proxy is a DaemonSet pod started by the kubelet, not a home for it."
@@ -1749,6 +2381,16 @@
         "text": "In etcd, under `/registry/pods`, where every kubelet writes the lines it logs",
         "correct": false,
         "why": "etcd holds objects written through the API server, not anybody's log."
+      },
+      {
+        "text": "On the node, with `systemctl status kubelet` and `journalctl -u kubelet`, because it is a service",
+        "correct": true,
+        "why": "The kubelet runs pods, so it cannot be one: systemd starts it like any daemon."
+      },
+      {
+        "text": "In `/etc/kubernetes/manifests` on that node, where its static pod file has been removed",
+        "correct": false,
+        "why": "That directory holds the control plane's static pods, which the kubelet itself runs."
       }
     ]
   },
@@ -1761,16 +2403,6 @@
     "hint": "Kubernetes: Orchestration in Production, lesson 5; Docker and Containers, lesson 2.",
     "choices": [
       {
-        "text": "kind copies one kernel image into each node when it builds the cluster",
-        "correct": false,
-        "why": "A kind node brings files, not a kernel; there is no kernel inside the image to copy."
-      },
-      {
-        "text": "The nodes are containers, and containers run on the host's kernel",
-        "correct": true,
-        "why": "So the column shows the laptop's own kernel, which is why the nodes start in seconds."
-      },
-      {
         "text": "Debian 13 ships that kernel release, so every Debian node reports it",
         "correct": false,
         "why": "An image named after a distribution brings its files, not its kernel."
@@ -1779,6 +2411,16 @@
         "text": "The kubelet reports the control plane's kernel for every node it lists",
         "correct": false,
         "why": "Each node reports its own, and here the three are one kernel."
+      },
+      {
+        "text": "kind copies one kernel image into each node when it builds the cluster",
+        "correct": false,
+        "why": "A kind node brings files, not a kernel; there is no kernel inside the image to copy."
+      },
+      {
+        "text": "The nodes are containers, and containers run on the host's kernel",
+        "correct": true,
+        "why": "So the column shows the laptop's own kernel, which is why the nodes start in seconds."
       }
     ]
   },
@@ -1791,16 +2433,6 @@
     "hint": "Kubernetes: Orchestration in Production, lesson 7; Git and Teamwork: Version Control, Review and Process, lesson 10.",
     "choices": [
       {
-        "text": "Nothing more: the deleting commit removed the file, and the ignore rule keeps it out",
-        "correct": false,
-        "why": "The old commit still holds it, in every clone and on the shared copy."
-      },
-      {
-        "text": "The cluster side is fine, since a kubeconfig holds addresses rather than credentials",
-        "correct": false,
-        "why": "It holds a working client certificate and key; reading it makes you an administrator."
-      },
-      {
         "text": "Replacing the credentials in it, because the key stays in the history as an admin's key",
         "correct": true,
         "why": "A committed secret is public from that moment; only revoking it fixes anything."
@@ -1809,6 +2441,16 @@
         "text": "Switching everybody to a new context with `use-context`, so the old entries stop working",
         "correct": false,
         "why": "A context is a local pointer in the file; changing it revokes nothing on the server."
+      },
+      {
+        "text": "Nothing more: the deleting commit removed the file, and the ignore rule keeps it out",
+        "correct": false,
+        "why": "The old commit still holds it, in every clone and on the shared copy."
+      },
+      {
+        "text": "The cluster side is fine, since a kubeconfig holds addresses rather than credentials",
+        "correct": false,
+        "why": "It holds a working client certificate and key; reading it makes you an administrator."
       }
     ]
   },
@@ -1821,16 +2463,6 @@
     "hint": "Kubernetes: Orchestration in Production, lesson 22.",
     "choices": [
       {
-        "text": "A liveness `failureThreshold` of 12, which gives a minute before any restart",
-        "correct": false,
-        "why": "That minute would also apply to every real hang, for the rest of the pod's life."
-      },
-      {
-        "text": "A readiness probe instead of liveness, since readiness restarts no container",
-        "correct": false,
-        "why": "The restarts stop, and so does any restart when the process really hangs."
-      },
-      {
         "text": "`restartPolicy: OnFailure`, so a failed probe is not counted as a crash",
         "correct": false,
         "why": "A liveness failure restarts the container under either policy; the probe still fires too early."
@@ -1839,6 +2471,16 @@
         "text": "A startup probe allowing a full minute, then liveness takes over as before",
         "correct": true,
         "why": "Liveness and readiness wait until the startup probe has succeeded once."
+      },
+      {
+        "text": "A liveness `failureThreshold` of 12, which gives a minute before any restart",
+        "correct": false,
+        "why": "That minute would also apply to every real hang, for the rest of the pod's life."
+      },
+      {
+        "text": "A readiness probe instead of liveness, since readiness restarts no container",
+        "correct": false,
+        "why": "The restarts stop, and so does any restart when the process really hangs."
       }
     ]
   },
@@ -1851,16 +2493,6 @@
     "hint": "Kubernetes: Orchestration in Production, lesson 20.",
     "choices": [
       {
-        "text": "In a `FailedCreate` event on the ReplicaSet the quota turned away",
-        "correct": true,
-        "why": "The ReplicaSet tried to create the fifth pod, and the quota turned it away."
-      },
-      {
-        "text": "In the output of the scale command, printed as a warning nobody read",
-        "correct": false,
-        "why": "The scale was accepted: it only changed a number on the Deployment."
-      },
-      {
         "text": "In the kubelet's log on the node that ran out of room for pods",
         "correct": false,
         "why": "No node was involved; the quota is checked by the API server on every create."
@@ -1869,6 +2501,16 @@
         "text": "In a `FailedScheduling` event on the fifth pod, written by the scheduler",
         "correct": false,
         "why": "No fifth pod exists to schedule; it was refused before it was stored."
+      },
+      {
+        "text": "In a `FailedCreate` event on the ReplicaSet the quota turned away",
+        "correct": true,
+        "why": "The ReplicaSet tried to create the fifth pod, and the quota turned it away."
+      },
+      {
+        "text": "In the output of the scale command, printed as a warning nobody read",
+        "correct": false,
+        "why": "The scale was accepted: it only changed a number on the Deployment."
       }
     ]
   },
@@ -1948,7 +2590,7 @@
     "version": 1,
     "type": "cloze",
     "difficulty": "easy",
-    "prompt": "A Secret's value is only encoded. `kubectl get secret db -o jsonpath=\"{.data.password}\" | base64 ___` prints the password itself, with no key at all.",
+    "prompt": "`kubectl get secret db -o jsonpath=\"{.data.password}\" | base64 ___` prints the password in plain text.",
     "hint": "Kubernetes: Orchestration in Production, lesson 14.",
     "blanks": [
       {
@@ -2059,7 +2701,7 @@
     "version": 1,
     "type": "cloze",
     "difficulty": "easy",
-    "prompt": "`~/iac-env.sh` exports the four `AWS_` variables that point the AWS CLI at moto. In a new terminal Ana runs `sh ~/iac-env.sh`, and `env | grep ^AWS_` then prints nothing. In that terminal, the line that works is `___ ~/iac-env.sh`.",
+    "prompt": "`~/iac-env.sh` exports the variables that point the lab's command-line tools at its local emulator. In a new terminal Ana runs `sh ~/iac-env.sh`, and `env` then lists none of them. In that terminal, the line that works is `___ ~/iac-env.sh`.",
     "hint": "Infrastructure as Code, lesson 1; Linux and the Command Line, lesson 9.",
     "blanks": [
       {
@@ -2081,16 +2723,6 @@
     "hint": "Infrastructure as Code, lesson 2; Git and Teamwork: Version Control, Review and Process, lesson 10.",
     "choices": [
       {
-        "text": "All of it: the `.tf` files, `.terraform/` and the lock file together",
-        "correct": false,
-        "why": "The lock file belongs in Git; the provider directory is a download `init` repeats, and 789M in every clone."
-      },
-      {
-        "text": "The `.tf` files and the lock file, with `.terraform/` in `.gitignore`",
-        "correct": true,
-        "why": "The lock file pins the provider versions for every checkout, and `init` rebuilds `.terraform/` from it."
-      },
-      {
         "text": "The `.tf` files and `.terraform/`, so that nobody has to run `init` again",
         "correct": false,
         "why": "`.terraform/` holds a downloaded provider that `init` fetches again; like `node_modules/`, it stays out of Git."
@@ -2099,6 +2731,16 @@
         "text": "Only the `.tf` files: the lock file and `.terraform/` are both rebuilt",
         "correct": false,
         "why": "Without the lock file, two people running `init` a week apart can get two provider versions."
+      },
+      {
+        "text": "All of it: the `.tf` files, `.terraform/` and the lock file together",
+        "correct": false,
+        "why": "The lock file belongs in Git; the provider directory is a download `init` repeats, and 789M in every clone."
+      },
+      {
+        "text": "The `.tf` files and the lock file, with `.terraform/` in `.gitignore`",
+        "correct": true,
+        "why": "The lock file pins the provider versions for every checkout, and `init` rebuilds `.terraform/` from it."
       }
     ]
   },
@@ -2111,16 +2753,6 @@
     "hint": "Infrastructure as Code, lesson 3; Cloud and Serverless, lesson 6.",
     "choices": [
       {
-        "text": "The rule passes, and subnet `a` gets `10.20.1.0/24`, as it did on the /16",
-        "correct": false,
-        "why": "`newbits` is added to the VPC's own prefix, so the same call on a /20 cuts /28s."
-      },
-      {
-        "text": "The rule passes, then the plan fails because netnum 1 does not exist",
-        "correct": false,
-        "why": "A /20 cut by eight bits gives 256 subnets, so numbers 1 and 2 both exist."
-      },
-      {
         "text": "The rule passes, and subnet `a` gets `10.20.0.16/28`, sixteen addresses",
         "correct": true,
         "why": "Eight new bits on a /20 make /28s; number 1 is the second of them, and the rule only asks whether the cut is possible."
@@ -2129,6 +2761,16 @@
         "text": "The rule refuses it, because a /20 has no room left for /24 subnets",
         "correct": false,
         "why": "A /20 holds sixteen /24s, and the rule never names /24: it asks whether eight more bits fit in 32."
+      },
+      {
+        "text": "The rule passes, and subnet `a` gets `10.20.1.0/24`, as it did on the /16",
+        "correct": false,
+        "why": "`newbits` is added to the VPC's own prefix, so the same call on a /20 cuts /28s."
+      },
+      {
+        "text": "The rule passes, then the plan fails because netnum 1 does not exist",
+        "correct": false,
+        "why": "A /20 cut by eight bits gives 256 subnets, so numbers 1 and 2 both exist."
       }
     ]
   },
@@ -2141,16 +2783,6 @@
     "hint": "Infrastructure as Code, lesson 4.",
     "choices": [
       {
-        "text": "`for_each` refuses a set; pass the plain list of subnet ids instead",
-        "correct": false,
-        "why": "`for_each` takes a map or a set of strings. It is a list that it refuses."
-      },
-      {
-        "text": "The associations run too early; add `depends_on = [aws_subnet.app]`",
-        "correct": false,
-        "why": "The reference already orders them. The trouble is that the keys themselves are unknown during the plan."
-      },
-      {
         "text": "`for_each` cannot read another resource's attributes; use `count`",
         "correct": false,
         "why": "`count` has the same rule, a number known at plan time, and it would bring back the index problem."
@@ -2159,6 +2791,16 @@
         "text": "Its keys are ids known only after apply; use `for_each = aws_subnet.app`",
         "correct": true,
         "why": "Keys must be known while planning; the subnet map's keys are the ones she wrote, and `each.value.id` carries the id."
+      },
+      {
+        "text": "`for_each` refuses a set; pass the plain list of subnet ids instead",
+        "correct": false,
+        "why": "`for_each` takes a map or a set of strings. It is a list that it refuses."
+      },
+      {
+        "text": "The associations run too early; add `depends_on = [aws_subnet.app]`",
+        "correct": false,
+        "why": "The reference already orders them. The trouble is that the keys themselves are unknown during the plan."
       }
     ]
   },
@@ -2182,16 +2824,6 @@
     "hint": "Infrastructure as Code, lesson 6.",
     "choices": [
       {
-        "text": "It plans to destroy the bucket, as a resource no longer in configuration",
-        "correct": true,
-        "why": "The setting lives in the block, so deleting the block deleted the protection with it."
-      },
-      {
-        "text": "It stops with `Instance cannot be destroyed`, as for any plan that deletes it",
-        "correct": false,
-        "why": "That refusal needs the block in the file; with the block gone, nothing carries `prevent_destroy`."
-      },
-      {
         "text": "It leaves the bucket alone, because the state still records the setting",
         "correct": false,
         "why": "Terraform reads `prevent_destroy` from the configuration, and a resource in the state but not in the file is one you want gone."
@@ -2200,6 +2832,16 @@
         "text": "It files the bucket under the module's new address by itself, keeping its id",
         "correct": false,
         "why": "Terraform matches by address only; carrying a resource to a new one takes a `moved` block."
+      },
+      {
+        "text": "It plans to destroy the bucket, as a resource no longer in configuration",
+        "correct": true,
+        "why": "The setting lives in the block, so deleting the block deleted the protection with it."
+      },
+      {
+        "text": "It stops with `Instance cannot be destroyed`, as for any plan that deletes it",
+        "correct": false,
+        "why": "That refusal needs the block in the file; with the block gone, nothing carries `prevent_destroy`."
       }
     ]
   },
@@ -2208,19 +2850,9 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
-    "prompt": "Two applies against the shop's S3 backend both sit at the confirmation question. One is stopped with Ctrl+C; the other gets `kill -9` when its CI runner is reclaimed. Which one leaves a `.tflock` object behind that blocks the next run?",
+    "prompt": "Two applies against the shop's remote backend both sit at the confirmation question. One is stopped with Ctrl+C; the other gets `kill -9` when its CI runner is reclaimed. Which one leaves a `.tflock` object behind that blocks the next run?",
     "hint": "Infrastructure as Code, lesson 7; Linux and the Command Line, lesson 6.",
     "choices": [
-      {
-        "text": "Neither: S3 deletes a lock object once the process that wrote it is gone",
-        "correct": false,
-        "why": "S3 knows nothing about the process; the object stays until somebody deletes it, which is why `force-unlock` exists."
-      },
-      {
-        "text": "The killed one: `SIGKILL` cannot be caught, so its lock is never deleted",
-        "correct": true,
-        "why": "A process cannot clean up after `KILL`, and the lock object stays until `force-unlock` removes it."
-      },
       {
         "text": "Both of them, since a lock is released only by `terraform force-unlock`",
         "correct": false,
@@ -2230,6 +2862,16 @@
         "text": "The interrupted one, which keeps its lock in case the apply resumes",
         "correct": false,
         "why": "Ctrl+C sends `SIGINT`, which Terraform handles, and it removes the lock on its way out."
+      },
+      {
+        "text": "Neither: the backend deletes a lock object once the process that wrote it is gone",
+        "correct": false,
+        "why": "S3 knows nothing about the process; the object stays until somebody deletes it, which is why `force-unlock` exists."
+      },
+      {
+        "text": "The killed one: `SIGKILL` cannot be caught, so its lock is never deleted",
+        "correct": true,
+        "why": "A process cannot clean up after `KILL`, and the lock object stays until `force-unlock` removes it."
       }
     ]
   },
@@ -2238,7 +2880,7 @@
     "version": 1,
     "type": "ordering",
     "difficulty": "medium",
-    "prompt": "The data team is taking over the `shop-logs-dev` bucket, which today sits in the app's state. Put the steps in the order the lesson takes them, so that the bucket never changes in AWS.",
+    "prompt": "The data team is taking over the `shop-logs-dev` bucket, which today sits in the app's state. Put the steps in the order the lesson takes them, so that the bucket itself never changes.",
     "hint": "Infrastructure as Code, lesson 8.",
     "items": [
       "Delete the bucket's block from the app and add a `removed` block with `destroy = false`",
@@ -2308,16 +2950,6 @@
     "hint": "Infrastructure as Code, lesson 11.",
     "choices": [
       {
-        "text": "Both `.tfvars` files write one state key, so each plan swaps the networks",
-        "correct": false,
-        "why": "With workspaces each has its own key, `env:/dev/…` and `env:/prod/…`; the values met the wrong one."
-      },
-      {
-        "text": "Somebody edited the dev VPC by hand, and the plan undoes the drift",
-        "correct": false,
-        "why": "Undoing drift puts the file's values back on the same network; here dev's range is replacing prod's."
-      },
-      {
         "text": "`prod` was still selected, so dev's values met prod's state",
         "correct": true,
         "why": "The selection lives in `.terraform/environment`, and nothing on the screen showed it."
@@ -2326,6 +2958,16 @@
         "text": "Dev's state was lost overnight, so Terraform rebuilds dev from scratch",
         "correct": false,
         "why": "An empty state plans creations only; replacing a 10.20 VPC means the plan read a state holding prod's network."
+      },
+      {
+        "text": "Both `.tfvars` files write one state key, so each plan swaps the networks",
+        "correct": false,
+        "why": "With workspaces each has its own key, `env:/dev/…` and `env:/prod/…`; the values met the wrong one."
+      },
+      {
+        "text": "Somebody edited the dev VPC by hand, and the plan undoes the drift",
+        "correct": false,
+        "why": "Undoing drift puts the file's values back on the same network; here dev's range is replacing prod's."
       }
     ]
   },
@@ -2338,16 +2980,6 @@
     "hint": "Infrastructure as Code, lesson 12; Git and Teamwork: Version Control, Review and Process, lesson 10.",
     "choices": [
       {
-        "text": "Nothing: the new commit took the file out of the repository's history",
-        "correct": false,
-        "why": "It removed the file from the next commit on; `git show` of the older commit still prints the password."
-      },
-      {
-        "text": "Mark the variable `sensitive = true`, so the old commit hides its value",
-        "correct": false,
-        "why": "`sensitive` only stops Terraform printing a value, and it changes nothing already written in Git."
-      },
-      {
         "text": "Delete `terraform.tfvars` from the disk too, since Git still tracks it",
         "correct": false,
         "why": "After `git rm --cached` and the ignore line, the file on disk is untracked; the copy that matters is the old commit."
@@ -2356,6 +2988,16 @@
         "text": "Rotate the secret, and treat the leaked value as public from now on",
         "correct": true,
         "why": "The first commit still carries the file in every clone; only a new password makes that copy worthless."
+      },
+      {
+        "text": "Nothing: the new commit took the file out of the repository's history",
+        "correct": false,
+        "why": "It removed the file from the next commit on; `git show` of the older commit still prints the password."
+      },
+      {
+        "text": "Mark the variable `sensitive = true`, so the old commit hides its value",
+        "correct": false,
+        "why": "`sensitive` only stops Terraform printing a value, and it changes nothing already written in Git."
       }
     ]
   },
@@ -2385,16 +3027,6 @@
     "hint": "Infrastructure as Code, lesson 14.",
     "choices": [
       {
-        "text": "Scan the saved plan's JSON, where `cidr_ipv4` holds the file's value",
-        "correct": true,
-        "why": "A plan fills every variable in, and Checkov then fails `CKV_AWS_24` on the same code."
-      },
-      {
-        "text": "Run Checkov with `--hard-fail-on HIGH`, so the finding fails the build",
-        "correct": false,
-        "why": "Without a Prisma Cloud key no Checkov finding has a severity, so that gate passes everything."
-      },
-      {
         "text": "Add tfsec to the pipeline, since it reads the `.tfvars` files by itself",
         "correct": false,
         "why": "tfsec does not know `aws_vpc_security_group_ingress_rule`, so it says nothing about this rule at all."
@@ -2403,6 +3035,16 @@
         "text": "It cannot: a scanner reads files, and the value stays out of its reach",
         "correct": false,
         "why": "The plan has the values, and Checkov reads a plan's JSON as a framework of its own."
+      },
+      {
+        "text": "Scan the saved plan's JSON, where `cidr_ipv4` holds the file's value",
+        "correct": true,
+        "why": "A plan fills every variable in, and Checkov then fails `CKV_AWS_24` on the same code."
+      },
+      {
+        "text": "Run Checkov with `--hard-fail-on HIGH`, so the finding fails the build",
+        "correct": false,
+        "why": "Without a Prisma Cloud key no Checkov finding has a severity, so that gate passes everything."
       }
     ]
   },
@@ -2411,7 +3053,7 @@
     "version": 1,
     "type": "multiple-choice",
     "difficulty": "medium",
-    "prompt": "The lesson's pipeline reaches AWS through two roles, `shop-plan` and `shop-apply`, and stores no access key anywhere. Which statements about them hold? Choose all that apply.",
+    "prompt": "The lesson's pipeline reaches the cloud account through two roles, `shop-plan` and `shop-apply`, and stores no access key anywhere. Which statements about them hold? Choose all that apply.",
     "hint": "Infrastructure as Code, lesson 15; Cloud and Serverless, lesson 7.",
     "choices": [
       {
@@ -2445,16 +3087,6 @@
     "hint": "Infrastructure as Code, lesson 16; Cloud and Serverless, lesson 10.",
     "choices": [
       {
-        "text": "The budget counts it once `Project` is activated in the billing settings",
-        "correct": false,
-        "why": "Activation makes a tag count in the bill; a volume that carries no tag still has nothing to count."
-      },
-      {
-        "text": "The budget never sees it; asking each service for untagged resources does",
-        "correct": true,
-        "why": "It carries no tags, so a tag filter cannot count it, and only a search for what has no tags finds it."
-      },
-      {
         "text": "The budget counts it, because `default_tags` reaches every resource in the account",
         "correct": false,
         "why": "`default_tags` reaches only what this provider creates through this configuration; a volume made by hand gets nothing."
@@ -2463,6 +3095,16 @@
         "text": "The tagging API lists it among the volumes, so a search there finds it",
         "correct": false,
         "why": "The tagging API answers from tags, and this volume has none, so it returns nothing."
+      },
+      {
+        "text": "The budget counts it once `Project` is activated in the billing settings",
+        "correct": false,
+        "why": "Activation makes a tag count in the bill; a volume that carries no tag still has nothing to count."
+      },
+      {
+        "text": "The budget never sees it; asking each service for untagged resources does",
+        "correct": true,
+        "why": "It carries no tags, so a tag filter cannot count it, and only a search for what has no tags finds it."
       }
     ]
   },
@@ -2475,16 +3117,6 @@
     "hint": "Infrastructure as Code, lesson 17.",
     "choices": [
       {
-        "text": "Both undo everything, since each treats a run as one transaction",
-        "correct": false,
-        "why": "Terraform cannot: each resource is its own API call, and what succeeded stays in the state."
-      },
-      {
-        "text": "Terraform rolls back what it made; the stack keeps it for later",
-        "correct": false,
-        "why": "It is the other way round: the stack rolls back, and Terraform keeps the half that succeeded."
-      },
-      {
         "text": "The stack rolls back what it made; Terraform keeps what succeeded",
         "correct": true,
         "why": "CloudFormation undoes a failed creation, and Terraform finishes the rest on the next apply."
@@ -2493,6 +3125,16 @@
         "text": "Both keep what succeeded, and the next deploy or apply does the rest",
         "correct": false,
         "why": "That is Terraform's habit; CloudFormation rolls a failed creation back."
+      },
+      {
+        "text": "Both undo everything, since each treats a run as one transaction",
+        "correct": false,
+        "why": "Terraform cannot: each resource is its own API call, and what succeeded stays in the state."
+      },
+      {
+        "text": "Terraform rolls back what it made; the stack keeps it for later",
+        "correct": false,
+        "why": "It is the other way round: the stack rolls back, and Terraform keeps the half that succeeded."
       }
     ]
   },
@@ -2505,16 +3147,6 @@
     "hint": "Infrastructure as Code, lesson 18; Linux and the Command Line, lesson 8.",
     "choices": [
       {
-        "text": "`command` needs `--become` to read the package list, and `shell` does not",
-        "correct": false,
-        "why": "`dpkg -l` reads as any user; an error naming `|` and `-c` as packages is a parsing problem."
-      },
-      {
-        "text": "`grep` is missing on `web1`, and the `shell` module carries its own copy",
-        "correct": false,
-        "why": "`grep` is installed; `dpkg` even listed the `grep` package when it was handed that word."
-      },
-      {
         "text": "`command` always reports CHANGED, and Ansible counts that as a failure",
         "correct": false,
         "why": "Reporting CHANGED is another matter; this task failed because `dpkg` got the wrong arguments."
@@ -2523,6 +3155,16 @@
         "text": "`command` runs it with no shell, so the pipe reaches `dpkg` as arguments",
         "correct": true,
         "why": "A pipe is set up by a shell; the `shell` module puts `/bin/sh` in front, and the line means what it says."
+      },
+      {
+        "text": "`command` needs `--become` to read the package list, and `shell` does not",
+        "correct": false,
+        "why": "`dpkg -l` reads as any user; an error naming `|` and `-c` as packages is a parsing problem."
+      },
+      {
+        "text": "`grep` is missing on `web1`, and the `shell` module carries its own copy",
+        "correct": false,
+        "why": "`grep` is installed; `dpkg` even listed the `grep` package when it was handed that word."
       }
     ]
   },
@@ -2565,16 +3207,6 @@
     "hint": "Infrastructure as Code, lesson 20; Docker and Containers, lesson 7.",
     "choices": [
       {
-        "text": "The image's own page; the fix belongs in the template, as a new version",
-        "correct": true,
-        "why": "The edit lived in the container's writable layer, which went away with the container."
-      },
-      {
-        "text": "The fixed page, since `docker exec` wrote into the image it came from",
-        "correct": false,
-        "why": "`exec` writes into the container's own layer; the image stays exactly as it was built."
-      },
-      {
         "text": "The fixed page, provided the new container gets the same name again",
         "correct": false,
         "why": "A name does not bring a layer back; `docker run` made a brand new container."
@@ -2583,6 +3215,778 @@
         "text": "No page at all, since removing the container deleted the image's files",
         "correct": false,
         "why": "Removal deletes only the container's layer, and a new container is the image again."
+      },
+      {
+        "text": "The image's own page; the fix belongs in the template, as a new version",
+        "correct": true,
+        "why": "The edit lived in the container's writable layer, which went away with the container."
+      },
+      {
+        "text": "The fixed page, since `docker exec` wrote into the image it came from",
+        "correct": false,
+        "why": "`exec` writes into the container's own layer; the image stays exactly as it was built."
+      }
+    ]
+  },
+  {
+    "id": "ex-sg6tcdkx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "loanbook's server builds its image as `localhost/loanbook` with no tag, and the unit file starts `Image=localhost/loanbook:latest`. Next month a new build goes out and the page breaks. What does that naming cost Ana at that moment?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15; Docker and Containers, lesson 16.",
+    "choices": [
+      {
+        "text": "Podman fetches a newer `latest` from Docker Hub on every restart, so the break returns",
+        "correct": false,
+        "why": "A container start pulls only when the name is missing on the machine, and `localhost/` names no registry."
+      },
+      {
+        "text": "Nothing: the git tag `v0.3.0` travels into the image, so the old build is found by it",
+        "correct": false,
+        "why": "A git tag names a commit, not an image; nothing copied it onto the build."
+      },
+      {
+        "text": "The unit no longer starts, since Quadlet wants a real version number in place of `latest`",
+        "correct": false,
+        "why": "The unit started with `:latest` in lesson 15; the name is accepted, it just says nothing."
+      },
+      {
+        "text": "No way back by name: `latest` names what is there now, never what ran before",
+        "correct": true,
+        "why": "That is the first cost of `latest`: a rollback needs the name of the previous build."
+      }
+    ]
+  },
+  {
+    "id": "ex-smxzt6qy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "To test from laptop without going through Caddy, a colleague changes loanbook's unit to `PublishPort=8000:8000`. What has that changed on srv?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15; Docker and Containers, lesson 17.",
+    "choices": [
+      {
+        "text": "It now listens on every address srv has, so any machine reaching srv talks to it in plain HTTP",
+        "correct": true,
+        "why": "With no address in front, the door is on the network card too, and Caddy stops being the only way in."
+      },
+      {
+        "text": "Laptop now reaches it over HTTPS on port 8000, since Caddy's certificate covers the whole host",
+        "correct": false,
+        "why": "The certificate is Caddy's, on Caddy's port; port 8000 answers the app directly, unencrypted."
+      },
+      {
+        "text": "Nothing outside srv changes, since Caddy is still the one door the configuration names",
+        "correct": false,
+        "why": "The Caddyfile is untouched, but the container now has a second door that bypasses it."
+      },
+      {
+        "text": "Caddy can no longer reach the app, because a port is published on a single address",
+        "correct": false,
+        "why": "Every address includes the loopback one; Caddy still gets through. What changed is who else does."
+      }
+    ]
+  },
+  {
+    "id": "ex-swv3y5w8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Every future deploy of loanbook replaces its container with one built from a new image. Why does the unit keep the SQLite file in the named volume `loanbook-data` rather than inside the container?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15; Docker and Containers, lesson 7.",
+    "choices": [
+      {
+        "text": "SQLite inside a container writes into the image, and the image is read-only",
+        "correct": false,
+        "why": "Writes inside a container go to its writable layer, which exists exactly as long as the container."
+      },
+      {
+        "text": "A container's writable layer is removed with it, and the volume outlives every container",
+        "correct": true,
+        "why": "So a replaced container takes its own layer away, and the loans stay in the volume."
+      },
+      {
+        "text": "A named volume lets Caddy read the database file directly whenever it answers a request for the list",
+        "correct": false,
+        "why": "Caddy only forwards requests to port 8000; it never touches the database."
+      },
+      {
+        "text": "Without a volume, `Restart=always` would have nothing to bring back after the program crashes",
+        "correct": false,
+        "why": "Restarting works on any container; the volume decides what data survives, not whether it restarts."
+      }
+    ]
+  },
+  {
+    "id": "ex-syxcsyk4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A reviewer reads loanbook's Containerfile and asks why it has `USER 1000`, when the container already has walls around it. Which answer agrees with both lessons?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15; Docker and Containers, lesson 14.",
+    "choices": [
+      {
+        "text": "Port 8000 is reserved for ordinary users, so the program would not start as root",
+        "correct": false,
+        "why": "Root can open any port; the old argument was the reverse, and even that no longer holds in a container."
+      },
+      {
+        "text": "Podman refuses to start an image whose process would run as root, so the line is required",
+        "correct": false,
+        "why": "Nothing refused it: an image with no `USER` runs as root by default, which is the problem."
+      },
+      {
+        "text": "A bug in the program, or a flaw past the walls, then acts as an ordinary user rather than as root",
+        "correct": true,
+        "why": "The walls stay either way; what changes is how much a single mistake is worth."
+      },
+      {
+        "text": "It makes the image smaller, because the files root would need are left out of the build",
+        "correct": false,
+        "why": "`USER` changes who the process runs as; it adds and removes no files."
+      }
+    ]
+  },
+  {
+    "id": "ex-t0xrmgcw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "From laptop, `curl -sS https://loans.lab/healthz` answers `curl: (60) SSL certificate problem: unable to get local issuer certificate`. Caddy issued the certificate with `tls internal`. What is the fix both lessons agree on?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15; Networks and Protocols, lesson 6.",
+    "choices": [
+      {
+        "text": "Ask a public authority for a certificate for `loans.lab`, and drop `tls internal`",
+        "correct": false,
+        "why": "`loans.lab` is not a real domain, and no public authority would issue a certificate for it."
+      },
+      {
+        "text": "Configure Caddy to send the full chain, because an intermediate certificate is missing from what it sends",
+        "correct": false,
+        "why": "That is the other cause of the same message; here nothing in laptop's store signed anything in the chain."
+      },
+      {
+        "text": "Add `-k` to the curl command, since this is a lab that nobody else can reach",
+        "correct": false,
+        "why": "Telling the client not to check removes the one thing that tells a real server from an impostor."
+      },
+      {
+        "text": "Copy Caddy's local root to laptop, read what it is, and add it to the trust store",
+        "correct": true,
+        "why": "Laptop then trusts that one authority on purpose, and the same request succeeds."
+      }
+    ]
+  },
+  {
+    "id": "ex-t9acqfwh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "loanbook moves to `loans.example.org` on a public server, and the Caddyfile loses its `tls internal` line. Why could the lab's way of making HTTPS work not simply be kept?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15; Networks and Protocols, lesson 6.",
+    "choices": [
+      {
+        "text": "Visitors trust the roots already in their stores, and Caddy's local root is on laptop alone",
+        "correct": true,
+        "why": "A public authority's root is already on the visitors' machines, which is why the line goes."
+      },
+      {
+        "text": "A public name does not go in `/etc/hosts`, and Caddy's own authority signs the names listed there",
+        "correct": false,
+        "why": "The hosts file only told laptop where `loans.lab` was; it has nothing to do with who signs."
+      },
+      {
+        "text": "Public authorities refuse to deal with a server whose local authority is still switched on",
+        "correct": false,
+        "why": "The reason is on the visitor's side: nobody else installed that root, and nobody should."
+      },
+      {
+        "text": "The lab's local root expires within a year, and a public site would break along with it",
+        "correct": false,
+        "why": "The capture shows that root valid until 2036; the trouble is who trusts it, not how long it lasts."
+      }
+    ]
+  },
+  {
+    "id": "ex-tdcjxvgv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On laptop, `curl -sS https://loans.lab/healthz` prints `{\"ok\": true}`, but `dig +short loans.lab` prints nothing at all. What explains the two answers?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15; Networks and Protocols, lesson 4.",
+    "choices": [
+      {
+        "text": "dig has to be pointed at srv with `@10.20.0.20`, because Caddy answers for the name",
+        "correct": false,
+        "why": "Caddy is a web server; nothing on srv answers DNS questions about `loans.lab`."
+      },
+      {
+        "text": "The name lives in laptop's `/etc/hosts`; curl reads that file, while dig asks DNS",
+        "correct": true,
+        "why": "`dig` ignores the hosts file, which is the ten-second comparison the DNS lesson teaches."
+      },
+      {
+        "text": "dig needs a public certificate to resolve a name, and Caddy's is a local one",
+        "correct": false,
+        "why": "DNS knows nothing of certificates; a name resolves or not regardless of who signed anything."
+      },
+      {
+        "text": "The record has not propagated yet, and dig will agree with curl once the old answer's TTL runs out",
+        "correct": false,
+        "why": "There is no record to propagate: no DNS server anywhere was told about `loans.lab`."
+      }
+    ]
+  },
+  {
+    "id": "ex-thh3e8vr",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "loanbook goes onto srv for the first time, as a service systemd keeps running. Put the steps in the order that works.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15; Linux and the Command Line, lesson 5.",
+    "items": [
+      "Push `main` and its tags from laptop to the bare repository on srv",
+      "On srv, clone it and build the image with `sudo podman build -t loanbook .`",
+      "Copy `deploy/loanbook.container` into `/etc/containers/systemd/`",
+      "Run `sudo systemctl daemon-reload`",
+      "Run `sudo systemctl start loanbook`, then ask `/healthz`"
+    ],
+    "trap": "Starting the service straight after copying the file skips the reload, and systemd is still working from what it read before the file existed."
+  },
+  {
+    "id": "ex-tra8wkb6",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Ana marked her four milestones with `git tag -a` and then ran `git push origin main`. The hosting site shows the branch and not one of the `v0.x` names. One command sends every one of them: `git push ___`.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 7; Git and Teamwork: Version Control, Review and Process, lesson 7.",
+    "blanks": [
+      {
+        "accept": [
+          "--tags",
+          "origin --tags"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-twft3sar",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A reviewer opens a cloud-engineering portfolio and checks that nothing in its account was created by hand. Why does that check matter, by the IaC lesson?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 3; Infrastructure as Code, lesson 16.",
+    "choices": [
+      {
+        "text": "Terraform refuses to apply anything while the account holds a resource it did not create",
+        "correct": false,
+        "why": "Terraform plans only what its configuration names; the hand-made resource sits outside, unnoticed."
+      },
+      {
+        "text": "It is harmless as long as the architecture diagram shows it, since that is what gets compared",
+        "correct": false,
+        "why": "A diagram is drawn by hand too; the check is that the code, not the drawing, made everything."
+      },
+      {
+        "text": "Made by hand, it sits in no configuration, so no plan, tag, review or destroy reaches it",
+        "correct": true,
+        "why": "It keeps billing as an orphan, which is the bill a cloud project promises never to become."
+      },
+      {
+        "text": "Providers charge more for a resource created in their console than for one made by code",
+        "correct": false,
+        "why": "An orphan costs exactly what an owned resource costs; the trouble is that nobody sees it."
+      }
+    ]
+  },
+  {
+    "id": "ex-v3qyfz2y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In a cloud portfolio, `terraform.tfvars`, holding a database password, was committed and pushed. Ana runs `git rm --cached terraform.tfvars` and adds `*.tfvars` to `.gitignore`. What is true now?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 14; Infrastructure as Code, lesson 12.",
+    "choices": [
+      {
+        "text": "The next push replaces the remote's history with hers, so the clones lose the old commit",
+        "correct": false,
+        "why": "A push sends new commits; it cannot reach clones, forks or backups that already have the old one."
+      },
+      {
+        "text": "The file and its password have left the history, since `.gitignore` applies to earlier commits too",
+        "correct": false,
+        "why": "The pattern keeps the file out of the next commit and out of no earlier one."
+      },
+      {
+        "text": "It is safe once the variable is marked `sensitive = true`, which hides it everywhere",
+        "correct": false,
+        "why": "That marking changes what is printed on screen and nothing written to disk, history included."
+      },
+      {
+        "text": "Every clone still has the password in the earlier commit, so it is rotated before anything else",
+        "correct": true,
+        "why": "Treat it as known: revoke or rotate first, and tidy the history afterwards if at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4vd060v",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "A portfolio repository on GitHub holds a Kubernetes Secret manifest whose password field reads `bGFiLW9ubHktN0hxMg==`. Its author says that is fine, since nobody can read the value. Which are true? Choose all that apply.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 14; Kubernetes: Orchestration in Production, lesson 14.",
+    "choices": [
+      {
+        "text": "Anyone who clones it gets the password back with `base64 -d`, no key needed",
+        "correct": true,
+        "why": "Base64 is an encoding with no key; it hides nothing from anyone holding the text."
+      },
+      {
+        "text": "Deleting the manifest in a new commit takes the value out of what later clones receive",
+        "correct": false,
+        "why": "Every clone gets the whole history, and the earlier commit still holds the file."
+      },
+      {
+        "text": "The password has to be changed where it was issued, and the old one treated as known",
+        "correct": true,
+        "why": "Revoking is the only step that makes the leaked value useless."
+      },
+      {
+        "text": "Encryption at rest in the cluster protects the copy sitting in the repository as well",
+        "correct": false,
+        "why": "That protects etcd's copy on the control plane; the one in git is outside the cluster entirely."
+      }
+    ]
+  },
+  {
+    "id": "ex-vckr9pma",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "loanbook's phone layout applies below `36rem`, which the lesson puts at about 576 pixels at the default font size. A reader has set their browser's font size to 20 pixels. Below what window width, in pixels, does that reader get the phone layout?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 13.",
+    "value": 720,
+    "tolerance": 0,
+    "unit": "px"
+  },
+  {
+    "id": "ex-vq8ft58h",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Building srv, Ana met each of these messages on laptop. Match each one to what was really wrong.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "pairs": [
+      {
+        "left": "`ssh: Could not resolve hostname srv`",
+        "right": "`~/.ssh/config` had no `Host srv` entry yet"
+      },
+      {
+        "left": "`Permission denied (publickey).`",
+        "right": "a user or a key that srv does not accept"
+      },
+      {
+        "left": "`REMOTE HOST IDENTIFICATION HAS CHANGED!`",
+        "right": "srv rebuilt at the same address, with new keys of its own"
+      },
+      {
+        "left": "`bash: line 1: podman: command not found`",
+        "right": "cloud-init still installing packages on the first boot"
+      }
+    ],
+    "right_distractors": [
+      "the container stopped by systemd after a crash"
+    ]
+  },
+  {
+    "id": "ex-vtyt5z8x",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "On srv, the bare repository is made with `git init -q --bare -b main loanbook.git`. What is the `-b main` for, by lesson 15?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "choices": [
+      {
+        "text": "srv's git has no default set, and a `HEAD` naming an unpushed branch clones into nothing",
+        "correct": true,
+        "why": "So the bare repository's `HEAD` names the branch laptop actually pushes."
+      },
+      {
+        "text": "Podman expects a clone whose checked-out branch is called `main` before it builds",
+        "correct": false,
+        "why": "The build reads files in a directory; it does not care what the branch is called."
+      },
+      {
+        "text": "A bare repository refuses a push to any branch other than the one it was created with",
+        "correct": false,
+        "why": "It accepts pushes to any branch; the trouble was only what a clone checks out."
+      },
+      {
+        "text": "It makes the repository bare, so it holds the history with no working files checked out beside it",
+        "correct": false,
+        "why": "That is `--bare`; `-b` names the first branch."
+      }
+    ]
+  },
+  {
+    "id": "ex-vv21pqfy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In a design question about your deployed project, the interviewer asks how you would make it survive a data-centre failure. You have never built that. Which answer follows lesson 14 and is also true to the cloud lesson?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 14; Cloud and Serverless, lesson 9.",
+    "choices": [
+      {
+        "text": "The provider keeps a cloud server running for me, so the project already survives a data-centre failure",
+        "correct": false,
+        "why": "A confident answer that is wrong: an instance lives in one zone, and goes down with it."
+      },
+      {
+        "text": "I haven't built it. An instance lives in one zone, so I'd try two zones behind a load balancer, in a lab",
+        "correct": true,
+        "why": "Plain about the edge, what is known nearby, and how it would be found out."
+      },
+      {
+        "text": "I'd add a second copy in another zone of the same building, which costs nothing extra on the bill",
+        "correct": false,
+        "why": "Zones are separate datacentres, and the second copy is paid for every hour."
+      },
+      {
+        "text": "I don't know; that is a question for seniors, so I'd rather move on and talk about my tests instead",
+        "correct": false,
+        "why": "Stopping at the edge skips the two steps the interviewer is watching for."
+      }
+    ]
+  },
+  {
+    "id": "ex-w3w67e9h",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A junior design question: a school's equipment register, one small service, a few dozen teachers, a deploy a week. You are tempted to draw a three-node Kubernetes cluster. What do the two lessons point you to?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 14; Kubernetes: Orchestration in Production, lesson 3.",
+    "choices": [
+      {
+        "text": "The cluster with autoscaling, so the design is ready if the school grows",
+        "correct": false,
+        "why": "Load here is steady and small; designing for growth nobody asked about is the cache-and-queue habit."
+      },
+      {
+        "text": "Nothing until the cloud provider is chosen, since the provider decides the design",
+        "correct": false,
+        "why": "The answer starts with questions about users and what must never happen, not with a vendor."
+      },
+      {
+        "text": "One server running the service, its parts named, and where it breaks first",
+        "correct": true,
+        "why": "One service on one machine is the least machinery that answers these questions."
+      },
+      {
+        "text": "The cluster, because interviewers read Kubernetes as the mark of a serious design",
+        "correct": false,
+        "why": "Unneeded parts read as recited rather than reasoned, and a junior answer is judged on the first stages."
+      }
+    ]
+  },
+  {
+    "id": "ex-wb53svss",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "hard",
+    "prompt": "In your first month you roll out a new image of the team's Deployment, `shop`, and the login page breaks. Put what you do in order, by the two lessons.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 20; Kubernetes: Orchestration in Production, lesson 35.",
+    "items": [
+      "Tell the person who needs to know, straight away, that your rollout broke login",
+      "Help undo it with `kubectl rollout undo deployment/shop`, back to the previous revision",
+      "Put the fix into the team's manifest file, since the file is the truth",
+      "Say in one sentence what you will do differently next time"
+    ],
+    "trap": "Rolling back quietly before telling anyone is the hour of silence that turns a small mistake into an incident."
+  },
+  {
+    "id": "ex-wcf5r68g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which CV line about a cloud-engineering portfolio project follows lesson 4?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 4; The Portfolio Project: From Brief to Deploy, lesson 3.",
+    "choices": [
+      {
+        "text": "Was responsible for the whole cloud infrastructure of a group project, applying modern DevOps and SRE practice",
+        "correct": false,
+        "why": "*Was responsible for* hides what you did, and the rest is a claim with no evidence."
+      },
+      {
+        "text": "Reduced the project's cloud costs by 40% by applying infrastructure as code best practices throughout",
+        "correct": false,
+        "why": "A number with no measurement and no baseline turns the interview into a check on your honesty."
+      },
+      {
+        "text": "Developed and maintained cloud infrastructure using Terraform, Docker, Kubernetes, Ansible, Linux and Git",
+        "correct": false,
+        "why": "A list of tools fits ten thousand CVs and says nothing about what was done."
+      },
+      {
+        "text": "Built a small web architecture from code alone, with its monthly cost written down; it destroys cleanly",
+        "correct": true,
+        "why": "What was done, what is true now, and evidence a reader can check."
+      }
+    ]
+  },
+  {
+    "id": "ex-wcx5nqq1",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Your first task at work is a one-line fix to the team's deploy script. Which of these make it finished properly, the way the portfolio course practised? Choose all that apply.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 20; The Portfolio Project: From Brief to Deploy, lesson 10.",
+    "choices": [
+      {
+        "text": "A commit message that says what changed, and why it had to change",
+        "correct": true,
+        "why": "The diff shows what; only the message can say why."
+      },
+      {
+        "text": "Folding in the two unrelated tidy-ups you noticed in the same file",
+        "correct": false,
+        "why": "Each goes in its own change; three unrelated fixes in one are harder to review than three apart."
+      },
+      {
+        "text": "Reading your own diff before you ask anybody to review it",
+        "correct": true,
+        "why": "A self-review finds the slips before a colleague has to."
+      },
+      {
+        "text": "Holding it back until it can be shown with a larger second task",
+        "correct": false,
+        "why": "The first thing shipped should be visible as soon as it is done, as the normal end of a task."
+      }
+    ]
+  },
+  {
+    "id": "ex-wfcfyb3m",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "prompt": "Which of these first jobs put somebody more senior next to you, reviewing your work, as lesson 2 asks of a first job? Choose all that apply.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 2.",
+    "choices": [
+      {
+        "text": "A consultancy that pairs each junior with a more experienced colleague",
+        "correct": true,
+        "why": "Pairing is exactly the review a first job needs."
+      },
+      {
+        "text": "A PJ contract with a company abroad, working alone from home",
+        "correct": false,
+        "why": "Contract work assumes the habits a first job is meant to teach, with nobody next to you."
+      },
+      {
+        "text": "An outsourcing placement in a client team that reviews its code",
+        "correct": true,
+        "why": "Outsourcing is a good first job when the client team teaches."
+      },
+      {
+        "text": "The only technical person at a small company that is growing",
+        "correct": false,
+        "why": "Being the only one means nobody reviews you, which on a first job is a warning."
+      }
+    ]
+  },
+  {
+    "id": "ex-wpfh72h6",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Using lesson 17's arithmetic, before tax: a CLT offer pays R$ 4,500 a month. What monthly PJ invoice, billed for twelve months, matches that CLT year? Answer in reais.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 17.",
+    "value": 5400,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-xj7hdm7r",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Reading an offer's small print, match each clause to what lesson 18 says to check in it.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 18.",
+    "pairs": [
+      {
+        "left": "probation, the contrato de experiência",
+        "right": "at most 90 days, possibly split into two periods"
+      },
+      {
+        "left": "non-compete",
+        "right": "what it covers, for how long, and whether you are paid meanwhile"
+      },
+      {
+        "left": "intellectual property",
+        "right": "that it does not claim what you build in your own time, on your own equipment"
+      },
+      {
+        "left": "exclusivity, in a PJ contract",
+        "right": "a ban on other clients, making it a job without a job's protections"
+      },
+      {
+        "left": "notice, in a PJ contract",
+        "right": "a period the contract itself sets, rather than labour law"
+      }
+    ],
+    "right_distractors": [
+      "a share you pay each time you use it"
+    ]
+  },
+  {
+    "id": "ex-xk6mmfdh",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Asked to tell about a time something you built had to hold up, you plan a STAR answer from your portfolio deploy. Match each part to its sentence.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 15; The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "pairs": [
+      {
+        "left": "Situation",
+        "right": "My portfolio project, on the lab server, the week before the deploy milestone."
+      },
+      {
+        "left": "Task",
+        "right": "The service had to come back on its own after a crash, with nobody there."
+      },
+      {
+        "left": "Action",
+        "right": "I put it under systemd with `Restart=always`, then killed the container to watch what happened."
+      },
+      {
+        "left": "Result",
+        "right": "The restart counter went from 0 to 1 with the data intact, and now I test a crash before calling anything deployed."
+      }
+    ],
+    "right_distractors": [
+      "We all agreed the deploy looked fine and moved on."
+    ]
+  },
+  {
+    "id": "ex-xm09s8my",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A take-home for a junior cloud role suggests about three hours. At three hours your configuration builds the network, and the test you planned is not written. What does lesson 13 say to do?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 13.",
+    "choices": [
+      {
+        "text": "Stop, and say in the note what is missing and what you would do with more time",
+        "correct": true,
+        "why": "The reviewer is also checking how you behave with a deadline."
+      },
+      {
+        "text": "Ask for two more days, because a late and finished submission beats an incomplete one",
+        "correct": false,
+        "why": "A late, perfect submission is usually worse than an on-time, incomplete one."
+      },
+      {
+        "text": "Keep going until the test exists, since a complete submission is what gets graded",
+        "correct": false,
+        "why": "A submission that obviously took twice the time says you did not read the brief or cannot estimate."
+      },
+      {
+        "text": "Hand it in without mentioning the test, so it is judged only on what is there",
+        "correct": false,
+        "why": "Silence about a gap reads worse than naming it; the note is where the missing pieces go."
+      }
+    ]
+  },
+  {
+    "id": "ex-xnkzragy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In a live exercise you are given a web server's log and asked to count each status code. Which plan, said aloud before typing, follows lesson 12 and would also give the right counts?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 12; Linux and the Command Line, lesson 8.",
+    "choices": [
+      {
+        "text": "I'll cut out the status column and use `sort -u`, which gives each status with its count",
+        "correct": false,
+        "why": "`sort -u` drops the duplicates and prints no counts at all."
+      },
+      {
+        "text": "I'll cut out the status column, sort it, count runs with `uniq -c`, then `sort -rn` the counts",
+        "correct": true,
+        "why": "The plan comes first, and `sort` before `uniq` is what makes the counts right."
+      },
+      {
+        "text": "I'll cut out the status column and pipe it straight into `uniq -c`, then sort the counts",
+        "correct": false,
+        "why": "`uniq` collapses only adjacent lines, so unsorted input gives wrong counts that look right."
+      },
+      {
+        "text": "I'll start typing `uniq -c` at once and explain it afterwards, since a pipeline on screen speaks for itself",
+        "correct": false,
+        "why": "The interviewer can only follow thinking that is said, and the plan is the step that lets them stop you."
+      }
+    ]
+  },
+  {
+    "id": "ex-xtrr0eh8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Your CV's skills section lists Kubernetes, which you have read about and never deployed. By lesson 3, what should happen to that line?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 3.",
+    "choices": [
+      {
+        "text": "It stays, because the tracking system searches the text for it",
+        "correct": false,
+        "why": "The system extracts what is there; it does not make a claim you cannot back any safer."
+      },
+      {
+        "text": "It moves up to the line under your name, where the ten seconds land",
+        "correct": false,
+        "why": "That line says what you do; promoting an untested skill there makes the gap the first thing read."
+      },
+      {
+        "text": "It goes, since every skill listed is one you could be asked about",
+        "correct": true,
+        "why": "Each line of the skills section is an invitation to a question."
+      },
+      {
+        "text": "It stays if the advert asks for it, since nobody checks the list line by line",
+        "correct": false,
+        "why": "That is true of the advert's list; yours is read by somebody who may ask about any line."
+      }
+    ]
+  },
+  {
+    "id": "ex-xwe2p25s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A year into a support job, you want to move into cloud infrastructure. What does lesson 22 say is often the fastest way there?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 22.",
+    "choices": [
+      {
+        "text": "Waiting until your work log shows cloud skills before asking for anything",
+        "correct": false,
+        "why": "The log records what you do; it cannot show work nobody has handed you yet."
+      },
+      {
+        "text": "A certification first, since every employer filters on one for these roles",
+        "correct": false,
+        "why": "Some employers in infrastructure filter by them; take one when an advert you want asks for it."
+      },
+      {
+        "text": "Applying elsewhere straight away, since changing company is how the next rung is reached",
+        "correct": false,
+        "why": "The lesson says to move internally first, when you can."
+      },
+      {
+        "text": "Asking to take on that work at the company where you already are",
+        "correct": true,
+        "why": "Moving internally first is often the shortest route."
       }
     ]
   }
