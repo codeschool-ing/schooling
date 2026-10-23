@@ -1672,6 +1672,9 @@ node tools/check-highlight/check-highlight.mjs content   # every fenced block la
                                   # everybody reaches for — renders perfectly, in one grey, and
                                   # nothing else here can see that. CI runs it and this list did
                                   # not, which is how 234 of them reached a pull request
+node tools/cloze-test/cloze-test.mjs content   # every cloze drawn as the screen draws
+                                  # it, one box per hole: a hole drawn as text is a
+                                  # question nobody can answer, and it reads as a word
 go run ./tools/check-interface    # every string the interface says, in every language it claims
 go run ./tools/check-interface internal/console/ui   # the console too, in two rather than five
 go run ./tools/check-interface ui/my   # and the same for the student's own place, which has
