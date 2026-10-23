@@ -1,0 +1,484 @@
+{
+  "ex-22j64kyf": {
+    "prompt": "O que torna pública uma sub-rede na AWS?",
+    "hint": "A AWS não tem campo chamado privado.",
+    "choices": [
+      {
+        "text": "Uma tabela de rotas que manda `0.0.0.0/0` para um internet gateway",
+        "why": "Isso. Essa rota, na tabela que a sub-rede segue, é a definição inteira."
+      },
+      {
+        "text": "Uma faixa de endereços fora dos blocos privados da RFC 1918",
+        "why": "As duas sub-redes da clínica usam faixas privadas, e uma delas é pública."
+      },
+      {
+        "text": "Uma opção escolhida no `create-subnet`",
+        "why": "Não existe essa opção; o `create-subnet` recebe uma faixa e uma zona."
+      },
+      {
+        "text": "O nome ou a tag que ela recebeu ao ser criada",
+        "why": "Um nome não decide nada; as rotas decidem."
+      }
+    ]
+  },
+  "ex-m66hpxq2": {
+    "prompt": "O `describe-route-tables` filtrado pela associação da sub-rede de prontuários não devolveu nada. O que isso quer dizer?",
+    "hint": "Toda VPC é criada com uma tabela já dentro.",
+    "choices": [
+      {
+        "text": "O filtro estava errado, já que toda sub-rede está associada explicitamente a alguma tabela",
+        "why": "A maioria das sub-redes em contas reais não tem associação explícita; é justamente o caso da aula."
+      },
+      {
+        "text": "O moto perdeu a associação",
+        "why": "Ninguém fez uma. A AWS responde do mesmo jeito."
+      },
+      {
+        "text": "A sub-rede não tem rotas, então não alcança nada",
+        "why": "Ela ainda tem a rota local; recebe da tabela principal."
+      },
+      {
+        "text": "A sub-rede segue a tabela de rotas principal da VPC",
+        "why": "Isso. Sem associação explícita, valem as rotas da tabela principal."
+      }
+    ]
+  },
+  "ex-htv4mtb5": {
+    "prompt": "Uma VPC tem seis sub-redes. Duas estão associadas a uma tabela pública, uma a uma tabela privada e três a nada. Alguém acrescenta `0.0.0.0/0` para um internet gateway na tabela principal. Quantas sub-redes ganharam rota para a internet?",
+    "hint": "Só mudaram as que seguem a tabela principal.",
+    "choices": [
+      {
+        "text": "Três",
+        "why": "Isso. As três sem associação; as duas públicas já tinham a rota, e a privada segue a própria tabela."
+      },
+      {
+        "text": "Nenhuma, porque uma rota só vale para a sub-rede nomeada nela",
+        "why": "Uma rota nomeia um destino, não uma sub-rede; uma tabela vale para toda sub-rede que a segue."
+      },
+      {
+        "text": "Quatro: as três sem nada, mais a privada",
+        "why": "A privada tem associação explícita e segue a própria tabela."
+      },
+      {
+        "text": "Seis, já que a tabela principal governa a VPC inteira",
+        "why": "Uma associação explícita se sobrepõe à tabela principal, então três sub-redes a ignoram."
+      }
+    ]
+  },
+  "ex-js8408v1": {
+    "prompt": "Qual correção a aula chama de duradoura, depois de removida a rota indevida?",
+    "hint": "A privacidade deve estar escrita, não herdada.",
+    "choices": [
+      {
+        "text": "Renomear a sub-rede para `records-private`",
+        "why": "Um nome não decide nada."
+      },
+      {
+        "text": "Dar à sub-rede de prontuários uma tabela própria, e deixar a principal só com `local`",
+        "why": "Isso. A próxima edição da tabela principal só alcança sub-redes em que ninguém pensou."
+      },
+      {
+        "text": "Desanexar o internet gateway da VPC",
+        "why": "Isso tira o site de agendamento da internet também."
+      },
+      {
+        "text": "Uma network ACL na sub-rede",
+        "why": "Uma segunda camada útil, mas deixa a sub-rede seguindo o que a tabela principal disser depois."
+      }
+    ]
+  },
+  "ex-jctxkr7m": {
+    "prompt": "Uma sub-rede sem associação explícita segue a tabela de rotas ___ da VPC.",
+    "hint": "A AWS a cria junto com a VPC.",
+    "blanks": [
+      {
+        "accept": [
+          "principal"
+        ]
+      }
+    ]
+  },
+  "ex-4f5qdp3v": {
+    "prompt": "Que regra de saída um security group tem quando a AWS o cria?",
+    "hint": "Leia antes de escrever qualquer coisa.",
+    "choices": [
+      {
+        "text": "Só HTTPS, para os endereços da própria AWS",
+        "why": "Esse padrão não existe."
+      },
+      {
+        "text": "Tudo dentro da faixa da própria VPC, e nada além",
+        "why": "Essa é a regra que a aula escreveu para o banco, não o padrão."
+      },
+      {
+        "text": "Nenhuma: o tráfego de saída é negado até uma regra permitir",
+        "why": "Esse é o lado de entrada. A saída começa com tudo permitido."
+      },
+      {
+        "text": "Todos os protocolos para `0.0.0.0/0`",
+        "why": "Isso: protocolo `-1` para todo endereço, como a captura imprimiu."
+      }
+    ]
+  },
+  "ex-bwjvxf5n": {
+    "prompt": "Um banco fica numa sub-rede privada com um NAT gateway para atualizações. Ninguém se conecta a ele pela internet. Ele consegue mandar a tabela que guarda para um servidor na internet?",
+    "hint": "Que direção o NAT permite?",
+    "choices": [
+      {
+        "text": "Não, o NAT só encaminha tráfego para serviços da AWS",
+        "why": "O NAT encaminha para qualquer endereço; é assim que as atualizações chegam."
+      },
+      {
+        "text": "Só se alguém antes abrir uma porta de entrada para a resposta",
+        "why": "As respostas de uma conexão de saída voltam pelo NAT e pelo grupo com estado sem regra de entrada nenhuma."
+      },
+      {
+        "text": "Não, uma sub-rede privada não alcança a internet",
+        "why": "Com um NAT gateway ela abre qualquer conexão de saída."
+      },
+      {
+        "text": "Sim, a menos que as regras de saída do security group impeçam",
+        "why": "Isso. O NAT deixa conexões saírem e não diz nada sobre o que sai."
+      }
+    ]
+  },
+  "ex-xj0jarp0": {
+    "prompt": "Depois de a regra de saída do banco ser reduzida a `10.20.0.0/16`, um servidor web manda uma consulta. A resposta volta?",
+    "hint": "Security groups lembram conexões.",
+    "choices": [
+      {
+        "text": "Sim, porque security groups têm estado",
+        "why": "Isso: a resposta sai seja o que for que digam as regras de saída, e a sub-rede web está dentro de `10.20.0.0/16` de qualquer jeito."
+      },
+      {
+        "text": "Não, uma resposta precisa da própria regra de saída",
+        "why": "É assim que uma network ACL sem estado se comporta, não um security group."
+      },
+      {
+        "text": "Só se o grupo do servidor web permitir entrada vinda do banco",
+        "why": "A resposta pertence a uma conexão que o servidor web abriu; não precisa de regra de entrada."
+      }
+    ]
+  },
+  "ex-30ngbf6f": {
+    "prompt": "Ligue cada controle de saída àquilo em que ele filtra.",
+    "hint": "A tabela no fim da seção.",
+    "pairs": [
+      {
+        "left": "um security group",
+        "right": "faixas de endereço e portas"
+      },
+      {
+        "left": "um proxy por onde as máquinas passam",
+        "right": "o nome de host pedido"
+      },
+      {
+        "left": "filtragem de DNS",
+        "right": "quais nomes podem ser resolvidos"
+      },
+      {
+        "left": "um firewall de rede gerenciado",
+        "right": "listas de domínio, inspecionadas na rede"
+      }
+    ],
+    "right_distractors": [
+      "o usuário que iniciou o processo"
+    ]
+  },
+  "ex-xsq69sgy": {
+    "prompt": "O servidor de pagamentos da clínica precisa alcançar um provedor de pagamentos. Que política de saída o raciocínio da aula favorece?",
+    "hint": "A lista de quem contém o servidor que um ladrão montou ontem?",
+    "choices": [
+      {
+        "text": "Uma regra de security group permitindo `0.0.0.0/0` só na porta 443",
+        "why": "A porta 443 para todo lugar é boa parte da internet, incluindo o servidor de um ladrão."
+      },
+      {
+        "text": "Uma lista de bloqueio de domínios maliciosos conhecidos, atualizada todo dia",
+        "why": "A lista de bloqueio de ninguém contém o servidor de ontem; é a versão fraca."
+      },
+      {
+        "text": "Uma lista de permissão com o host do provedor",
+        "why": "Isso. Os poucos destinos de que a carga precisa, e nada mais."
+      },
+      {
+        "text": "Nenhum controle de saída, já que os endereços do provedor mudam demais para anotar",
+        "why": "É por isso que o controle filtra pelo nome do host, não pelo endereço."
+      }
+    ]
+  },
+  "ex-q2t2man0": {
+    "prompt": "Que serviços um gateway endpoint alcança?",
+    "hint": "Dois, e os dois são armazenamento.",
+    "choices": [
+      {
+        "text": "Todo serviço da AWS na região",
+        "why": "Isso se aproxima dos interface endpoints, que são cobrados."
+      },
+      {
+        "text": "Qualquer serviço publicado com AWS PrivateLink",
+        "why": "O PrivateLink é a base dos interface endpoints."
+      },
+      {
+        "text": "Só o S3",
+        "why": "O DynamoDB também."
+      },
+      {
+        "text": "S3 e DynamoDB",
+        "why": "Isso. Todo outro serviço precisa de um interface endpoint."
+      }
+    ]
+  },
+  "ex-85wevkz5": {
+    "prompt": "Depois de criado o gateway endpoint, que rota nova apareceu na tabela da sub-rede de prontuários?",
+    "hint": "O destino dela não é uma faixa de endereços.",
+    "choices": [
+      {
+        "text": "Uma prefix list `pl-`, para o endpoint `vpce-`",
+        "why": "Isso. A prefix list é o conjunto de endereços do S3 em São Paulo, mantido pela AWS."
+      },
+      {
+        "text": "Nenhuma; um gateway endpoint funciona por DNS, sem rotas",
+        "why": "Isso descreve o DNS privado de um interface endpoint. Um gateway endpoint é uma rota."
+      },
+      {
+        "text": "Uma rota para o internet gateway nos endereços do S3",
+        "why": "A graça é justamente que o caminho nunca sai da VPC."
+      },
+      {
+        "text": "`0.0.0.0/0` para o endpoint",
+        "why": "Isso mandaria tudo para o S3; a rota é mais estreita."
+      }
+    ]
+  },
+  "ex-190g8264": {
+    "prompt": "Por que o security group do banco precisou de mais uma regra de saída depois que o endpoint existia?",
+    "hint": "Onde ficam os endereços do S3?",
+    "choices": [
+      {
+        "text": "A tabela de rotas precisa de uma entrada no security group para cada rota",
+        "why": "Rotas e security groups são controles independentes; é por isso que a aula tem dois."
+      },
+      {
+        "text": "Endpoints recusam tráfego de grupos sem regra que os nomeie",
+        "why": "O endpoint não olha o grupo; o grupo olha o destino."
+      },
+      {
+        "text": "Porque os endereços do S3 ficam fora de `10.20.0.0/16`, a única faixa que o grupo deixava sair",
+        "why": "Isso, então a regra nomeia a mesma prefix list, na porta 443."
+      }
+    ]
+  },
+  "ex-yp2a74dw": {
+    "prompt": "Uma credencial é roubada do servidor do banco de prontuários. Com a política do endpoint e a política do bucket da aula em vigor, quais destas a AWS recusa, pela documentação dela? Marque todas as que se aplicam.",
+    "hint": "Uma política estreita para onde vão as requisições da VPC; a outra, de onde vêm as do bucket.",
+    "choices": [
+      {
+        "text": "Gravar o backup noturno no `clinic-records` a partir do servidor do banco",
+        "why": "Esse é o caminho que as duas políticas existem para permitir."
+      },
+      {
+        "text": "Qualquer requisição ao S3 a partir do servidor do banco",
+        "why": "O backup continua passando; só os outros buckets ficam fora de alcance."
+      },
+      {
+        "text": "Copiar os prontuários para um bucket do ladrão, pelo endpoint",
+        "why": "Isso. A política do endpoint nomeia só o `clinic-records`."
+      },
+      {
+        "text": "Ler o `clinic-records` com a chave roubada do próprio laptop do ladrão",
+        "why": "Isso. A requisição não veio pelo endpoint, e o `Deny` explícito do bucket vence."
+      }
+    ]
+  },
+  "ex-r6t78jde": {
+    "prompt": "O que o laboratório mostrou sobre a política de bucket com `aws:SourceVpce`?",
+    "hint": "A tabela da aula 1 diz o que o moto faz com condições.",
+    "choices": [
+      {
+        "text": "Que o moto a rejeitou como malformada",
+        "why": "Ele a aceitou e a devolveu intacta."
+      },
+      {
+        "text": "Que ela trancou os administradores fora do bucket, como o aviso diz que pode",
+        "why": "Esse é o risco documentado pela AWS; o moto não aplica condição, então ninguém foi trancado."
+      },
+      {
+        "text": "Que ela recusou uma requisição de fora do endpoint",
+        "why": "O moto ignora condições; nenhuma recusa assim foi produzida."
+      },
+      {
+        "text": "Que o moto a guardou, com o id do endpoint na condição",
+        "why": "Isso. O efeito dela na AWS vem da documentação da AWS, não de uma execução."
+      }
+    ]
+  },
+  "ex-gwawcvd1": {
+    "prompt": "Por que o `exposure.py` lê as associações da tabela principal além das explícitas?",
+    "hint": "Que sub-rede o caio expôs?",
+    "choices": [
+      {
+        "text": "Para listar as VPCs",
+        "why": "O id da VPC já está em toda tabela."
+      },
+      {
+        "text": "O boto3 se recusa a descrever uma sub-rede sem antes buscar a tabela principal",
+        "why": "O boto3 não tem essa regra; o script rodaria e estaria errado."
+      },
+      {
+        "text": "Para que as sub-redes sem tabela própria também sejam julgadas",
+        "why": "Isso. Sem elas a sub-rede do caio passaria batida: a herança é onde morava o erro da primeira seção."
+      },
+      {
+        "text": "Porque só a tabela principal pode ter rota para um internet gateway",
+        "why": "A tabela própria da sub-rede web tem uma."
+      }
+    ]
+  },
+  "ex-xqy1565q": {
+    "prompt": "Quantos achados a primeira execução do `exposure.py` imprimiu?",
+    "hint": "Conte as linhas abaixo do comando.",
+    "unit": "achados"
+  },
+  "ex-64fmxcf7": {
+    "prompt": "O verificador imprimiu `OPEN TO EVERYONE ... clinic-web ports 443-443`. O que deve acontecer com esse achado?",
+    "hint": "Um achado é uma pergunta, não um veredito.",
+    "choices": [
+      {
+        "text": "Revogar a regra de imediato, já que nada deveria ficar aberto a todos",
+        "why": "Um site público de agendamento deve responder a todos em HTTPS; revogar a regra derruba o site."
+      },
+      {
+        "text": "Reconhecê-lo como intencional, porque é para isso que o site de agendamento existe",
+        "why": "Isso. Só quem sabe o que a clínica pretendia distingue o intencional do erro."
+      },
+      {
+        "text": "Ignorar o verificador, já que ele aponta coisas que estão certas",
+        "why": "A mesma execução achou a regra de SSH, que era a falha real."
+      },
+      {
+        "text": "Passar o site para a porta 8443, que o verificador trata diferente",
+        "why": "O verificador aponta qualquer porta aberta a todos; outro número não esconde nada."
+      }
+    ]
+  },
+  "ex-kpt5kz8e": {
+    "prompt": "Quais destas o `exposure.py`, como está escrito, não enxerga? Marque todas as que se aplicam.",
+    "hint": "O último parágrafo da seção.",
+    "choices": [
+      {
+        "text": "Uma sub-rede que segue uma tabela principal com rota para um internet gateway",
+        "why": "Esse é o caso para o qual a parte da tabela principal foi escrita."
+      },
+      {
+        "text": "Uma sub-rede em outra região",
+        "why": "Isso. Ele lê uma região, e a conta tem 38."
+      },
+      {
+        "text": "Se algum pacote de fato chegou à porta aberta",
+        "why": "Isso. A configuração diz o que é permitido; os flow logs dizem o que aconteceu."
+      },
+      {
+        "text": "Uma regra de security group que admite `0.0.0.0/0`",
+        "why": "É exatamente o que a última parte dele procura."
+      },
+      {
+        "text": "Uma network ACL",
+        "why": "Isso. Ele nunca as lê."
+      }
+    ]
+  },
+  "ex-xqtvdb1a": {
+    "prompt": "Que pergunta um flow log responde que a configuração não responde?",
+    "hint": "Permitido contra acontecido.",
+    "choices": [
+      {
+        "text": "Quais conexões de fato aconteceram",
+        "why": "Isso. Uma linha por conversa, se estava ligado na hora."
+      },
+      {
+        "text": "Quem mudou o security group",
+        "why": "Isso é um registro de chamadas de API, o assunto da aula 15."
+      },
+      {
+        "text": "Quais portas estão abertas a todos",
+        "why": "A configuração responde isso; o verificador respondeu."
+      },
+      {
+        "text": "O que uma sessão digitou depois de conectada",
+        "why": "Um flow log registra conversas, não conteúdo."
+      }
+    ]
+  },
+  "ex-vhqahskd": {
+    "prompt": "Uma linha de flow log diz `... 203.0.113.50 10.20.1.10 51544 22 6 ... ACCEPT OK`. O que ela registra?",
+    "hint": "Origem antes do destino; `6` é um número de protocolo.",
+    "choices": [
+      {
+        "text": "O servidor web abrindo uma conexão de saída para `203.0.113.50` na porta 22, que foi então aceita",
+        "why": "A origem é `203.0.113.50`; a porta de destino é a 22 do servidor web."
+      },
+      {
+        "text": "Uma conexão TCP de `203.0.113.50` à porta SSH do servidor web, aceita",
+        "why": "Isso, e a linha que uma investigação da porta aberta procura."
+      },
+      {
+        "text": "Uma tentativa recusada na porta 22",
+        "why": "A ação é `ACCEPT`."
+      },
+      {
+        "text": "Seis sessões SSH",
+        "why": "`6` é o número do protocolo, TCP."
+      }
+    ]
+  },
+  "ex-q2pe5ybx": {
+    "prompt": "Quais destas valem para flow logs de VPC, pela aula? Marque todas as que se aplicam.",
+    "hint": "Quatro coisas que um flow log não diz.",
+    "choices": [
+      {
+        "text": "Ficam desligados até alguém ligar",
+        "why": "Isso, e a manhã depois de um incidente é tarde demais."
+      },
+      {
+        "text": "Carregam o conteúdo de cada pacote",
+        "why": "Conversas, não conteúdo."
+      },
+      {
+        "text": "Agregam o tráfego em janelas, de até dez minutos por padrão",
+        "why": "Isso: contagens por janela, não uma linha do tempo ao segundo."
+      },
+      {
+        "text": "O moto gravou registros no bucket no laboratório",
+        "why": "O bucket ficou vazio; o moto não carrega tráfego."
+      },
+      {
+        "text": "Requisições ao endereço de metadados da instância ficam de fora",
+        "why": "Isso, pela documentação da AWS."
+      }
+    ]
+  },
+  "ex-k0244fpy": {
+    "prompt": "Ponha os passos da correção de rota na ordem que a aula seguiu.",
+    "hint": "A prova vem por último, e é a primeira pergunta feita de novo.",
+    "items": [
+      "achar a tabela principal e ler as rotas dela",
+      "apagar a rota `0.0.0.0/0` da tabela principal",
+      "criar uma tabela privada para a sub-rede de prontuários",
+      "associar a sub-rede de prontuários a ela",
+      "pedir de novo as rotas da sub-rede de prontuários"
+    ],
+    "trap": "Associar antes de criar é impossível; parar antes do último passo deixa a correção sem prova."
+  },
+  "ex-amqqhk0h": {
+    "prompt": "Num registro de flow log, o protocolo número `6` é ___.",
+    "hint": "O UDP é 17.",
+    "blanks": [
+      {
+        "accept": [
+          "TCP"
+        ]
+      }
+    ]
+  }
+}

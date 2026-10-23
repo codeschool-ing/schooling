@@ -1,0 +1,626 @@
+[
+  {
+    "id": "ex-f3qws125",
+    "version": 1,
+    "section": "multitenant",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Talita creates a custom field on Account in Serra Alta's org. What does the platform do?",
+    "hint": "Every org shares the same tables.",
+    "choices": [
+      {
+        "text": "Runs an ALTER TABLE that adds a column to the Account table Serra Alta owns",
+        "correct": false,
+        "why": "That is the hosted picture the section corrects: Serra Alta owns no table, and no ALTER TABLE runs anywhere."
+      },
+      {
+        "text": "Records a row of metadata for the org: object, name, type and label",
+        "correct": true,
+        "why": "Right: the field is data about the org, and the platform reads it to decide which generic column holds the value."
+      },
+      {
+        "text": "Gives the org a separate database for the fields it adds itself",
+        "correct": false,
+        "why": "Custom data lives in the same shared tables as everybody else's; the org id on each row keeps it apart."
+      },
+      {
+        "text": "Queues the field until the next of the three yearly releases",
+        "correct": false,
+        "why": "The field appears in the pages and the API within seconds of being saved; releases change the platform, not your metadata."
+      }
+    ]
+  },
+  {
+    "id": "ex-79f5km9r",
+    "version": 1,
+    "section": "multitenant",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Serra Alta's Visit and Invoice objects, and every field it added to Account, have API names that end in the same three characters: ___",
+    "hint": "Two underscores and a letter.",
+    "blanks": [
+      {
+        "accept": [
+          "__c"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-p7dzpxb5",
+    "version": 1,
+    "section": "multitenant",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An IIB flow has called Salesforce unchanged since 2018, and nobody at Serra Alta has touched it. What can still make it stop working?",
+    "hint": "Each release brings a new API version.",
+    "choices": [
+      {
+        "text": "Nothing: Serra Alta can hold back any release until its own tests pass",
+        "correct": false,
+        "why": "That is how SAP works at Serra Alta. Salesforce's releases arrive on Salesforce's calendar, with notice and a preview, never a veto."
+      },
+      {
+        "text": "Nothing: releases change the screens and leave every API untouched",
+        "correct": false,
+        "why": "Every release adds an API version, and old versions are eventually retired on announced dates."
+      },
+      {
+        "text": "Only a change Talita makes, since the org runs its own copy of the platform code",
+        "correct": false,
+        "why": "The org shares one platform with everybody else; changes Serra Alta did not make reach it too."
+      },
+      {
+        "text": "Salesforce retiring, on a date it announced, the old API version that the flow still calls",
+        "correct": true,
+        "why": "Right: a date in somebody else's release notes, with nothing in Serra Alta's own change log to explain it."
+      }
+    ]
+  },
+  {
+    "id": "ex-scyrnvn2",
+    "version": 1,
+    "section": "multitenant",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An Apex trigger inserts 80 records and then issues its 101st SOQL query, in a synchronous transaction started by an integration. What does the integration see?",
+    "hint": "Stopped, not slowed.",
+    "choices": [
+      {
+        "text": "An error, and none of the 80 records it had written exist",
+        "correct": true,
+        "why": "Right: the uncatchable exception rolls back the whole transaction, including what it had already written."
+      },
+      {
+        "text": "A slower response, because the platform throttles the transaction until its limits reset",
+        "correct": false,
+        "why": "Governor limits do not throttle. Crossing one ends the transaction at once."
+      },
+      {
+        "text": "Success with 80 records, after the trigger catches the limit exception and commits them",
+        "correct": false,
+        "why": "The limit exception cannot be caught by Apex, so there is no handler that could keep the 80."
+      },
+      {
+        "text": "The query runs later, under the async limit of 200",
+        "correct": false,
+        "why": "The asynchronous limit applies to code that was started asynchronously; nothing moves a synchronous query there."
+      }
+    ]
+  },
+  {
+    "id": "ex-j5c7ch1j",
+    "version": 1,
+    "section": "clicks-before-code",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these are declarative changes, made in the setup screens without code? Choose all that apply.",
+    "hint": "Apex and components are code.",
+    "choices": [
+      {
+        "text": "A validation rule refusing Closed Won without a region",
+        "correct": true,
+        "why": "Yes: a formula and a message, written in setup."
+      },
+      {
+        "text": "A trigger that updates the Account when an invoice is saved",
+        "correct": false,
+        "why": "A trigger is Apex, the programmatic half, and lives under the 75% test-coverage rule."
+      },
+      {
+        "text": "A page layout that shows the credit limit as read-only",
+        "correct": true,
+        "why": "Yes: which fields appear, in what order and whether they can be edited are all set without code."
+      },
+      {
+        "text": "A Flow that sends recall cases to the quality queue",
+        "correct": true,
+        "why": "Yes: Flow is the declarative automation tool."
+      },
+      {
+        "text": "A Lightning Web Component for a screen the standard pages cannot draw",
+        "correct": false,
+        "why": "Lightning Web Components are JavaScript, so they are code even though they draw a screen."
+      }
+    ]
+  },
+  {
+    "id": "ex-17b1rb6p",
+    "version": 1,
+    "section": "clicks-before-code",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Talita needs a new rule: when a Case is marked recall, assign it to the quality queue and notify Cláudia's team. What does she build it with today?",
+    "hint": "One declarative tool is left.",
+    "choices": [
+      {
+        "text": "A workflow rule, like the 41 the org already runs",
+        "correct": false,
+        "why": "Workflow Rules are retired: new ones can no longer be created, and the 41 are being moved off them."
+      },
+      {
+        "text": "A Process Builder process, which handles both actions in one place",
+        "correct": false,
+        "why": "Process Builder was retired together with Workflow Rules, in favour of Flow."
+      },
+      {
+        "text": "A Flow",
+        "correct": true,
+        "why": "Right: Flow is the declarative automation tool Salesforce kept, and the one the old rules are migrated to."
+      },
+      {
+        "text": "An Apex trigger, since declarative automation is what Salesforce is retiring",
+        "correct": false,
+        "why": "Salesforce retired two declarative tools, not declarative automation; the advice is still clicks before code."
+      }
+    ]
+  },
+  {
+    "id": "ex-rswrqevz",
+    "version": 1,
+    "section": "clicks-before-code",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A field on Account has had no value in any record changed for a year, and Salesforce shows it on no layout, report or Apex class. Before deleting it, what does the lesson say must still be checked?",
+    "hint": "What can Salesforce not see?",
+    "choices": [
+      {
+        "text": "Nothing more: a year without values proves nobody reads it",
+        "correct": false,
+        "why": "An empty field can still be read by something outside the org that expects it to exist, and that breaks on deletion."
+      },
+      {
+        "text": "That it is not on any page layout in the Partial Copy sandbox",
+        "correct": false,
+        "why": "The where-used check already covers layouts, and a sandbox has the same configuration as the org it came from."
+      },
+      {
+        "text": "That the test coverage of the org's Apex stays above 75% without it",
+        "correct": false,
+        "why": "Coverage measures Apex code, and a field nobody's Apex uses does not move it."
+      },
+      {
+        "text": "The mappings of the integration flows that live outside Salesforce, in Rui's team",
+        "correct": true,
+        "why": "Right: an IIB flow that reads the field lives outside the org, so Salesforce's where-used cannot report it."
+      }
+    ]
+  },
+  {
+    "id": "ex-nt9j0xce",
+    "version": 1,
+    "section": "clicks-before-code",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Rui's team wants to test the invoice integration with a month-end's volume, against SAP's quality system. Which sandbox?",
+    "hint": "Volume needs all the records.",
+    "choices": [
+      {
+        "text": "Full",
+        "correct": true,
+        "why": "Right: only the Full sandbox carries all of production's records, and production volume is what found the trigger."
+      },
+      {
+        "text": "Partial Copy, because its template can pick the invoices of one month",
+        "correct": false,
+        "why": "A sample is chosen to be small; it will not show what 34,000 changed invoices do in one night."
+      },
+      {
+        "text": "Developer Pro, which has more room for test records",
+        "correct": false,
+        "why": "Developer Pro copies the configuration only; the records would have to be invented."
+      },
+      {
+        "text": "Developer, so that a failed test cannot touch real customer data",
+        "correct": false,
+        "why": "Keeping customer data out is a reason to limit who enters the Full sandbox, not to test volume without records."
+      }
+    ]
+  },
+  {
+    "id": "ex-sv0nsk0h",
+    "version": 1,
+    "section": "apis-and-limits",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the month-end night 34,000 invoices changed, and the old flow made 2 API calls per invoice. The other integrations used 45,000 requests in the same 24 hours, and the allowance is 100,000. By how many requests did the org go over?",
+    "hint": "Invoices times calls, plus the rest, minus the allowance.",
+    "value": 13000,
+    "tolerance": 0,
+    "unit": "requests",
+    "accept_units": [
+      "request",
+      "calls"
+    ]
+  },
+  {
+    "id": "ex-zmerbz0z",
+    "version": 1,
+    "section": "apis-and-limits",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Rewritten with sObject Collections, the flow upserts up to 200 invoices per request and finds each Account by its external id, with no lookup call. How many requests does it need for the 34,000 invoices of the month-end night?",
+    "hint": "The lookup is gone; only the batches count.",
+    "value": 170,
+    "tolerance": 0,
+    "unit": "requests",
+    "accept_units": [
+      "request",
+      "calls"
+    ]
+  },
+  {
+    "id": "ex-v83bm49m",
+    "version": 1,
+    "section": "apis-and-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Joana proposed running the invoice sync with more parallel threads so that it finished before the reps started work. Why would that not have prevented the incident?",
+    "hint": "What does the allowance count?",
+    "choices": [
+      {
+        "text": "Parallel calls are refused by the REST API, which accepts one at a time per org",
+        "correct": false,
+        "why": "The REST API takes concurrent calls; the problem was the total, not the concurrency."
+      },
+      {
+        "text": "The allowance counts requests, and a faster flow still makes the same 68,000",
+        "correct": true,
+        "why": "Right: speed moves the moment the line is crossed earlier into the night; it does not move the line."
+      },
+      {
+        "text": "Threads would hit the governor limit of 100 queries per transaction sooner",
+        "correct": false,
+        "why": "Each one-invoice call was its own transaction with one query; threads add transactions, not queries to one."
+      },
+      {
+        "text": "The reps were not the problem: their orders do not use the API allowance",
+        "correct": false,
+        "why": "They do: the orders travel to SAP through the same org's allowance, which is why they stopped."
+      }
+    ]
+  },
+  {
+    "id": "ex-e04egefs",
+    "version": 1,
+    "section": "apis-and-limits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "For years the 2018 trigger on Invoice__c ran one SOQL query per invoice and never failed. Sent through sObject Collections, it failed at once with \"Too many SOQL queries: 101\". What changed?",
+    "hint": "Count the invoices in one transaction.",
+    "choices": [
+      {
+        "text": "Each transaction now held 200 invoices instead of one, so the loop made 200 queries in it",
+        "correct": true,
+        "why": "Right: a trigger gets a save's records in chunks of up to 200, and a query per record crosses 100 halfway through."
+      },
+      {
+        "text": "Collections run asynchronously, where the query limit is lower than the synchronous one",
+        "correct": false,
+        "why": "It is the other way round: the asynchronous limit is 200, higher than the synchronous 100."
+      },
+      {
+        "text": "Finding each Account by external id is itself a SOQL query charged to the trigger",
+        "correct": false,
+        "why": "The external id reference is resolved by the platform, and removing the lookup call was the point of using it."
+      },
+      {
+        "text": "The collection counted 200 requests against the daily allowance, which the trigger shares",
+        "correct": false,
+        "why": "A collection is one request; the daily allowance and the per-transaction limits are different fences."
+      }
+    ]
+  },
+  {
+    "id": "ex-tyhanp3r",
+    "version": 1,
+    "section": "apis-and-limits",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need at Serra Alta to the Salesforce API built for it.",
+    "hint": "One shape of traffic each.",
+    "pairs": [
+      {
+        "left": "Loading 34,000 changed invoices overnight",
+        "right": "Bulk API 2.0"
+      },
+      {
+        "left": "Telling SAP the moment an Account is changed",
+        "right": "Change Data Capture"
+      },
+      {
+        "left": "Announcing that a rep asked for a new customer",
+        "right": "Platform Events"
+      },
+      {
+        "left": "Reading one Account while a rep is on the phone",
+        "right": "REST API"
+      }
+    ],
+    "right_distractors": [
+      "a SOQL query every five minutes"
+    ]
+  },
+  {
+    "id": "ex-xesymv1f",
+    "version": 1,
+    "section": "who-owns-the-customer",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each piece of customer data to how it is changed at Serra Alta.",
+    "hint": "One owner per field; copies are read-only.",
+    "pairs": [
+      {
+        "left": "a distributor's credit limit",
+        "right": "changed in SAP after a request; read-only in Salesforce"
+      },
+      {
+        "left": "the chain buyer's phone number",
+        "right": "changed in Salesforce; not held in SAP"
+      },
+      {
+        "left": "what a chain owes on open invoices",
+        "right": "written by SAP; copied into Invoice__c"
+      },
+      {
+        "left": "the SAP customer number on an Account",
+        "right": "written once by the integration after SAP creates the customer"
+      }
+    ],
+    "right_distractors": [
+      "edited in both systems and synchronised both ways"
+    ]
+  },
+  {
+    "id": "ex-c8brftyd",
+    "version": 1,
+    "section": "who-owns-the-customer",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the life of a new customer at Serra Alta in order, from the rep's first record to the first order SAP accepts.",
+    "hint": "Credit comes before the number, and the number before the order.",
+    "items": [
+      "The rep creates the Account as a prospect",
+      "The opportunity is won and the rep asks for the customer",
+      "Finance approves a credit limit in the BPM process",
+      "SAP creates the customer and stores the Salesforce Id",
+      "The SAP number is written back to the Account",
+      "An order for the customer is sent to SAP"
+    ],
+    "trap": "Sending an order before the SAP number is back is what the validation rule exists to refuse."
+  },
+  {
+    "id": "ex-qjhxn1qg",
+    "version": 1,
+    "section": "who-owns-the-customer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Edson's team stores the Account's Salesforce Id on each SAP customer. Why the 18-character form rather than the 15?",
+    "hint": "Think about how SAP and a spreadsheet compare text.",
+    "choices": [
+      {
+        "text": "The 15-character form expires when the record is edited, and the 18-character one is permanent",
+        "correct": false,
+        "why": "Both forms name the same record for as long as it exists; neither expires."
+      },
+      {
+        "text": "SAP customer fields are fixed at 18 characters and would reject a shorter value",
+        "correct": false,
+        "why": "The reason is in how ids are compared, not in the width of a field in SAP."
+      },
+      {
+        "text": "Only the 18-character form can be used as an external id on the Account",
+        "correct": false,
+        "why": "The external id on the Account is the SAP number; the Salesforce Id is the other side's key."
+      },
+      {
+        "text": "It stays unique when SAP or a spreadsheet compares it without regard to case",
+        "correct": true,
+        "why": "Right: two 15-character ids can differ only in capitals, and a case-blind comparison would merge them."
+      }
+    ]
+  },
+  {
+    "id": "ex-wa376hdv",
+    "version": 1,
+    "section": "who-owns-the-customer",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Every Account and every SAP customer has a CNPJ. Why does Serra Alta join the two systems by stored ids instead of by CNPJ?",
+    "hint": "Is a CNPJ one customer?",
+    "choices": [
+      {
+        "text": "A company gets a new CNPJ when it moves, which would break the link whenever a store relocates",
+        "correct": false,
+        "why": "A move changes the fiscal address, not the CNPJ; the problem is that one CNPJ is not one customer."
+      },
+      {
+        "text": "One CNPJ is shared by several SAP customer numbers, such as a sold-to and its payer",
+        "correct": true,
+        "why": "Right: a sold-to and a separate payer, or one company in two sales areas, share a CNPJ, and a join on it would attach invoices to the wrong Account."
+      },
+      {
+        "text": "Salesforce cannot store a CNPJ in a field marked unique, so it cannot be a key",
+        "correct": false,
+        "why": "Serra Alta's duplicate rule does compare the CNPJ; it finds duplicates well and still makes a poor join key."
+      },
+      {
+        "text": "Matching 3,100 CNPJs on every sync would use too much of the daily allowance",
+        "correct": false,
+        "why": "The allowance counts requests; an id stored on each side avoids a wrong match, which is the real cost."
+      }
+    ]
+  },
+  {
+    "id": "ex-pv7yk91z",
+    "version": 1,
+    "section": "who-owns-the-customer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Until 2021 the fiscal address could be edited in both SAP and Salesforce, with a sync running each way. What happened when a rep corrected it in Salesforce?",
+    "hint": "Which sync ran last?",
+    "choices": [
+      {
+        "text": "The integration flagged a conflict and held both addresses until finance chose one",
+        "correct": false,
+        "why": "Nothing compared the two; that is what makes two-way editing dangerous."
+      },
+      {
+        "text": "SAP took the new address, since Salesforce was where the rep saw the change first",
+        "correct": false,
+        "why": "Seeing a change first does not make a system the owner, and here the reverse sync overwrote it."
+      },
+      {
+        "text": "The SAP-to-Salesforce sync wrote the old address back that night, and nobody was told",
+        "correct": true,
+        "why": "Right: the last sync to run wins, silently, and the next NF-e went out with the old address."
+      },
+      {
+        "text": "The edit was refused by a duplicate rule",
+        "correct": false,
+        "why": "Duplicate rules compare records with each other; they say nothing about a field changed on one record."
+      }
+    ]
+  },
+  {
+    "id": "ex-313g11m9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A rep needs a new distributor's credit limit raised before a large first order, and asks Talita to make the field editable for key-account managers. What does the lesson's design do instead?",
+    "hint": "Who owns the credit limit?",
+    "choices": [
+      {
+        "text": "The rep files a request; finance changes it in SAP, and the copy updates",
+        "correct": true,
+        "why": "Right: one owner per field. The rep asks, SAP changes, and Salesforce shows the result read-only."
+      },
+      {
+        "text": "Add a Credit_Limit_Override__c field in Salesforce that orders read instead",
+        "correct": false,
+        "why": "That is a second credit limit SAP never sees; SAP checks its own when the order arrives."
+      },
+      {
+        "text": "Make it editable and add a nightly sync from Salesforce to SAP",
+        "correct": false,
+        "why": "Two systems that both change a field are the 2021 address incident again: the last sync wins in silence."
+      },
+      {
+        "text": "Move credit limits to Salesforce, where the reps who know the customer work",
+        "correct": false,
+        "why": "Joana's first proposal, withdrawn the same afternoon: SAP checks credit, books the receivable and issues the NF-e."
+      }
+    ]
+  },
+  {
+    "id": "ex-dn3ndq1p",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Another in-house system wants to know when an Account changes, and its team plans to query Salesforce for changed Accounts every five minutes. What does the lesson point it at, and why?",
+    "hint": "Asking versus listening.",
+    "choices": [
+      {
+        "text": "A read replica of the org's Account table, so the polling costs nothing",
+        "correct": false,
+        "why": "There is no database an org can connect to, and so no replica of it either."
+      },
+      {
+        "text": "A Bulk API 2.0 extract every five minutes, which is built for volume",
+        "correct": false,
+        "why": "Bulk API is for large volumes in one job; a few changed Accounts every five minutes is still polling."
+      },
+      {
+        "text": "Change Data Capture: told of each change, without spending the allowance asking",
+        "correct": true,
+        "why": "Right: 288 polls a day spend the org's budget whether or not anything changed, and the events replay after an outage."
+      },
+      {
+        "text": "The SOAP API, whose calls are not counted against the daily allowance",
+        "correct": false,
+        "why": "Every API request counts against the same org-wide allowance, whatever its protocol."
+      }
+    ]
+  },
+  {
+    "id": "ex-qrcv4js8",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these Serra Alta practices exist because Salesforce is a platform Serra Alta rents rather than a system it runs? Choose all that apply.",
+    "hint": "Shared limits and somebody else's calendar.",
+    "choices": [
+      {
+        "text": "Every integration declares its requests on its worst day before it goes live",
+        "correct": true,
+        "why": "Yes: the allowance is shared by the whole org because the platform is shared by everybody."
+      },
+      {
+        "text": "SAP owns the CNPJ and the fiscal address",
+        "correct": false,
+        "why": "That follows from SAP issuing the NF-e, and would be the same if Serra Alta ran its CRM on its own servers."
+      },
+      {
+        "text": "The Full sandbox goes on each release preview before the reps get it",
+        "correct": true,
+        "why": "Yes: releases arrive on Salesforce's calendar, and the preview is the only notice Serra Alta gets."
+      },
+      {
+        "text": "A duplicate rule refuses a second Account with the same CNPJ",
+        "correct": false,
+        "why": "Duplicates come from people typing, and any CRM, rented or not, needs a rule against them."
+      },
+      {
+        "text": "Triggers are written to query once per chunk of records",
+        "correct": true,
+        "why": "Yes: the governor limits are the price of sharing, and code that queries per record fails under them."
+      }
+    ]
+  }
+]

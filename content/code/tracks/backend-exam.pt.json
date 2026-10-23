@@ -1,0 +1,2718 @@
+{
+  "ex-qz7kmn9y": {
+    "prompt": "As duas cópias da livraria guardam, cada uma, a tabela de sessões na própria memória, atrás do upstream do Nginx em round robin. Os clientes são deslogados ao acaso, no meio de uma cesta. O que está acontecendo, e para onde os dois cursos mandam a tabela?",
+    "hint": "Fundamentos da Web e Internet, aula 7; Servidores Web e Cache, aula 2.",
+    "choices": [
+      {
+        "text": "O cookie não tem o atributo `Domain`, então o navegador não o manda para a porta da segunda cópia.",
+        "why": "O navegador só fala com o Nginx, num nome e numa porta, e o cookie chega a qualquer cópia que o Nginx escolher."
+      },
+      {
+        "text": "O defeito é o round robin, e `hash $remote_addr` resolve de vez: cada visitante cai sempre na própria cópia.",
+        "why": "Afinidade é um paliativo: um escritório atrás de um endereço cai numa cópia só, e uma cópia que para leva as sessões junto."
+      },
+      {
+        "text": "Metade das requisições cai numa cópia que não viu a sessão; ponha a tabela no Redis, que as duas alcançam.",
+        "why": "Isso."
+      },
+      {
+        "text": "`SameSite=Lax` tira o cookie das requisições que o Nginx repassa, então a cópia atrás dele não vê ninguém logado.",
+        "why": "`SameSite` trata de qual site causou a requisição; um proxy que repassa o cabeçalho `Cookie` não é outro site."
+      }
+    ]
+  },
+  "ex-y5pkvqcm": {
+    "prompt": "Para poupar processador, um colega quer trocar o Nginx na frente da livraria por um balanceador de carga que lê só até a camada 4. Hoje o Nginx serve ele mesmo os arquivos de `/var/www/ipe` e manda `location /api/` para as duas cópias da loja. O que a troca perderia?",
+    "hint": "Fundamentos da Web e Internet, aula 5; Servidores Web e Cache, aula 2.",
+    "choices": [
+      {
+        "text": "A divisão por caminho: a caixa vê uma conexão para a porta 443 e nada da URL lá dentro, e `/api/` parece `/css/`.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada no roteamento: uma caixa de camada 4 ainda lê o caminho de cada requisição, então só a escolha do site pelo `Host` se perderia.",
+        "why": "A camada 4 para na porta; o caminho está dentro da requisição, que uma caixa dessas nunca lê."
+      },
+      {
+        "text": "Só a compressão, já que o gzip pertence à camada 6 e a caixa trabalha abaixo dela.",
+        "why": "A compressão iria embora, e a divisão por caminho também, que é o que manda `/api/` para a loja."
+      },
+      {
+        "text": "Nada, se a caixa receber o certificado: tê-lo é o que deixa a camada 4 ler caminhos.",
+        "why": "Decifrar e ler a requisição, com o certificado na mão, é o que faz um balanceador de camada 7."
+      }
+    ]
+  },
+  "ex-mcb1jfzr": {
+    "prompt": "O certificado curinga da loja, `*.ipelivros.example`, é renovado por um plugin de DNS-01 com credenciais de API do provedor de DNS antigo. No mês passado, os registros `NS` do domínio passaram a apontar para um provedor novo. Agora a renovação falha, embora o plugin registre que criou o registro TXT `_acme-challenge`. Por quê?",
+    "hint": "Fundamentos da Web e Internet, aula 8; Servidores Web e Cache, aula 3.",
+    "choices": [
+      {
+        "text": "O DNS-01 é verificado pela porta 80, e o redirecionamento para HTTPS agora engole a requisição.",
+        "why": "Esse é o HTTP-01; o DNS-01 é verificado no DNS, e é por isso que funciona numa máquina que ninguém alcança."
+      },
+      {
+        "text": "Um curinga não sai de DNS-01, então cada subdomínio precisa de um token de HTTP-01 só seu.",
+        "why": "É o contrário: o DNS-01 é o único desafio que consegue emitir um curinga."
+      },
+      {
+        "text": "O novo registro TXT ainda está se propagando, e pode levar quarenta e oito horas para chegar à CA.",
+        "why": "Nada se propaga, e nenhum TTL ajuda um registro guardado em servidores que ninguém mais consulta."
+      },
+      {
+        "text": "Foi parar em servidores que ninguém mais consulta; a CA pergunta aos que o `NS` nomeia.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-2cgx0ges": {
+    "prompt": "No servidor do laboratório, `sudo ss -ltn` lista `0.0.0.0:443`, `0.0.0.0:80`, `127.0.0.1:14000` e `127.0.0.1:8001`, entre outros, e não há firewall ligado. O notebook de um colega, na mesma rede, tenta cada um deles. Quais ele alcança? Marque todas as que se aplicam.",
+    "hint": "Fundamentos da Web e Internet, aula 4; Servidores Web e Cache, aula 4.",
+    "choices": [
+      {
+        "text": "A loja, em `127.0.0.1:8001`",
+        "why": "O loopback nunca chega à placa de rede: só a própria máquina pergunta, e é por isso que se chega à loja pelo Nginx."
+      },
+      {
+        "text": "O Nginx, em `0.0.0.0:443`",
+        "why": "`0.0.0.0` é todo endereço que a máquina tem, inclusive o da rede do escritório."
+      },
+      {
+        "text": "A API ACME do Pebble, em `127.0.0.1:14000`",
+        "why": "`127.0.0.1` é a máquina falando consigo mesma; nada de fora consegue se conectar ali."
+      },
+      {
+        "text": "O Nginx, em `0.0.0.0:80`",
+        "why": "Isso: escuta em todos os endereços, então a requisição do notebook na porta 80 chega."
+      }
+    ]
+  },
+  "ex-kscamq0w": {
+    "prompt": "No relógio do handshake do curso de fundamentos, um navegador e um servidor estão a 150 milissegundos um do outro, em cada sentido. O curso de servidores diz que, sem `keepalive` no upstream, o Nginx paga esse mesmo handshake antes de cada requisição que repassa à aplicação. Nesse relógio, quantos milissegundos passam entre a saída do SYN e a saída da própria requisição, junto com o ACK?",
+    "hint": "Fundamentos da Web e Internet, aula 2; Servidores Web e Cache, aula 2."
+  },
+  "ex-jgw7cmf6": {
+    "prompt": "Leitores em Lisboa dizem que a livraria, servida de São Paulo, leva mais de um segundo para mostrar a primeira página, e a maior parte desse segundo é ida e volta. O dono propõe dobrar a largura de banda do servidor. O que dizem os dois cursos?",
+    "hint": "Fundamentos da Web e Internet, aula 3; Servidores Web e Cache, aula 7.",
+    "choices": [
+      {
+        "text": "Corta a espera pela metade, porque cada ida e volta passa a levar o dobro de bytes de uma vez.",
+        "why": "Um cano mais largo leva mais coisa lado a lado; nada chega antes, e essas idas e voltas carregam quase nada."
+      },
+      {
+        "text": "Não mexe na parte lenta: o oceano fixa cada ida e volta, e uma borda em Lisboa tira a travessia dos arquivos que guarda.",
+        "why": "Isso."
+      },
+      {
+        "text": "Ligue o `gzip_types` no lugar: um terço dos bytes é um terço da espera.",
+        "why": "A compressão encolhe a transferência, a parte que já era curta; as idas e voltas continuam do tamanho que a distância impõe."
+      },
+      {
+        "text": "Ponha uma CDN na frente, e a cesta do cliente logado acelera tanto quanto a folha de estilo.",
+        "why": "Uma página pessoal não pode ser guardada na borda, então a requisição dela ainda atravessa o oceano até a origem."
+      }
+    ]
+  },
+  "ex-w01cv938": {
+    "prompt": "A loja passa a informar falhas como `200 OK` com `{\"error\": \"database unavailable\"}` no corpo, sob o `Cache-Control: public, max-age=60` de sempre. O Nginx faz cache de `/api/` com `proxy_cache_use_stale error timeout http_500 http_502 http_503 http_504`. O que dá errado? Marque todas as que se aplicam.",
+    "hint": "Fundamentos da Web e Internet, aula 6; Servidores Web e Cache, aula 6.",
+    "choices": [
+      {
+        "text": "O Nginx transforma a resposta num `502`, porque o corpo contradiz a linha de status.",
+        "why": "`502` quer dizer que a aplicação mandou algo que não é HTTP; um `200` bem formado passa, diga o corpo o que disser."
+      },
+      {
+        "text": "O erro é guardado como qualquer resposta e entregue a todo visitante durante o minuto seguinte.",
+        "why": "Isso: o cache guarda a falha sob o endereço, porque o número disse que deu certo."
+      },
+      {
+        "text": "A cópia boa de antes da pane nunca é usada, porque o Nginx vê um sucesso e nenhuma das falhas da lista.",
+        "why": "Isso: a cópia vencida é um recurso para erros, e todos os que ele conhece são códigos de status."
+      },
+      {
+        "text": "O `X-Cache-Status` mostra `STALE`, então ao menos a falha aparece nos cabeçalhos.",
+        "why": "`STALE` quer dizer que uma cópia vencida foi servida no lugar de um erro; aqui o Nginx recebeu um sucesso novo e o guardou, `MISS` e depois `HIT`."
+      }
+    ]
+  },
+  "ex-t19gx4b6": {
+    "prompt": "Dentro de `location /api/`, um primeiro proxy é escrito `proxy_pass http://127.0.0.1:8001/;`, com uma barra depois da porta. Um navegador pede `/api/books/3`, e a loja recebe o caminho `___`.",
+    "hint": "Servidores Web e Cache, aula 2.",
+    "blanks": [
+      {
+        "accept": [
+          "/books/3",
+          "books/3"
+        ]
+      }
+    ]
+  },
+  "ex-p077xd0y": {
+    "prompt": "No primeiro dia da loja em HTTPS, antes de qualquer renovação ter rodado, alguém manda `Strict-Transport-Security: max-age=31536000; includeSubDomains`. Um mês depois, `promo.ipelivros.example`, que uma agência mantém em HTTP puro, não abre para ninguém que tinha visitado a loja. O que a aula 4 aconselhava?",
+    "hint": "Servidores Web e Cache, aula 4.",
+    "choices": [
+      {
+        "text": "Nada de antemão: tirar o cabeçalho agora apaga a regra na próxima visita de cada navegador.",
+        "why": "Depois que um navegador viu o cabeçalho, nada que mude no servidor o remove antes de o `max-age` acabar."
+      },
+      {
+        "text": "Mandar o cabeçalho também no redirecionamento da porta 80, para os navegadores o aprenderem antes de chegar ao HTTPS.",
+        "why": "O navegador ignora HSTS recebido por HTTP puro, porque qualquer um no caminho poderia tê-lo acrescentado."
+      },
+      {
+        "text": "Começar com uma hora, alongar quando o certificado se renovar sozinho, e incluir os subdomínios com todos em HTTPS.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada: `includeSubDomains` só alcança os nomes que o mesmo Nginx serve.",
+        "why": "Ele cobre todo nome abaixo deste, inclusive os que outra equipe mantém em outro lugar."
+      }
+    ]
+  },
+  "ex-tmm3t6sd": {
+    "prompt": "Consultada direto, sem o cache, cada requisição à loja espera 120 ms pela consulta, e a aula 5 põe o teto, com dez de cada vez, em cerca de 80 requisições por segundo. Pelo mesmo raciocínio, qual é o teto, em requisições por segundo, com 30 requisições em andamento, cada uma ainda esperando 120 ms?",
+    "hint": "Servidores Web e Cache, aula 5; Fundamentos da Web e Internet, aula 1."
+  },
+  "ex-1yvhkx8k": {
+    "prompt": "O dono baixa um preço e apaga a cópia, e mesmo assim o cache termina guardando o preço velho por um tempo de vida inteiro. Ponha os eventos da corrida da aula 6 na ordem em que aconteceram.",
+    "hint": "Servidores Web e Cache, aula 6.",
+    "items": [
+      "A requisição de um visitante erra o cache",
+      "Essa requisição lê 8.990 do banco",
+      "A atualização do dono grava 7.990 no banco",
+      "A atualização apaga a cópia, que ainda não está lá",
+      "A requisição lenta guarda 8.990, fresco por mais sessenta segundos"
+    ],
+    "trap": "A ordem tentadora põe a remoção por último, como a correção que ela devia ser; ela chegou antes de a leitura lenta guardar a cópia, e é por isso que não removeu nada."
+  },
+  "ex-sj8dctc0": {
+    "prompt": "A livraria passa para trás de uma CDN comercial, configurada para chegar à origem por HTTP puro porque era a opção mais rápida de ligar. Os visitantes continuam vendo um cadeado válido. O que esse cadeado descreve?",
+    "hint": "Servidores Web e Cache, aula 7; Fundamentos da Web e Internet, aula 9.",
+    "choices": [
+      {
+        "text": "Só o trecho até a borda; o trecho até a origem atravessa uma rede às claras.",
+        "why": "Isso."
+      },
+      {
+        "text": "O caminho todo, porque a borda reaproveita a conexão cifrada do visitante a caminho da origem.",
+        "why": "A borda encerra a conexão do visitante e abre uma segunda, que nessa configuração é pura."
+      },
+      {
+        "text": "O caminho todo, desde que a origem só escute em `127.0.0.1`, como a do laboratório.",
+        "why": "A borda e a origem do laboratório dividiam uma máquina; uma origem real é alcançada por redes que a CDN não controla."
+      },
+      {
+        "text": "A borda e a origem por igual, já que a CDN obteve o certificado do domínio por ACME.",
+        "why": "Quem obteve o certificado não diz nada do segundo trecho; o cadeado descreve o trecho que o navegador fez."
+      }
+    ]
+  },
+  "ex-vvmrns7q": {
+    "prompt": "A loja leva as linhas de sessão, a tabela por trás do cookie, para o Redis que guarda o JSON dos livros, configurado como cache: `maxmemory` definido e `maxmemory-policy allkeys-lru`. O tráfego cresce e a memória enche. O que acontece com as sessões?",
+    "hint": "Servidores Web e Cache, aula 8; Fundamentos da Web e Internet, aula 7.",
+    "choices": [
+      {
+        "text": "Novos logins falham com `OOM command not allowed`, e as sessões que já existem ficam.",
+        "why": "Isso é o `noeviction`; com `allkeys-lru` toda gravação passa e as chaves mais antigas abrem espaço."
+      },
+      {
+        "text": "Ficam a salvo, já que só chaves sem tempo de vida são despejadas e toda sessão tem um.",
+        "why": "`allkeys` quer dizer qualquer chave; são as políticas `volatile` que olham só chaves com tempo de vida, e elas escolheriam as sessões."
+      },
+      {
+        "text": "As sessões despejadas vão antes para o `dump.rdb` e voltam no próximo reinício.",
+        "why": "Despejar é apagar; um snapshot guarda só o que estava na memória no momento em que foi tirado."
+      },
+      {
+        "text": "Sessões paradas somem como qualquer livro em cache, e o visitante é deslogado cedo.",
+        "why": "Isso. Um cache pode esquecer e uma tabela de sessões não pode: dê a cada um o próprio Redis."
+      }
+    ]
+  },
+  "ex-vjjch57d": {
+    "prompt": "Em 2018, servidores Memcached abertos inundaram terceiros por UDP com respostas milhares de vezes maiores que as pequenas requisições forjadas que as causaram. Por que o mesmo truque não funciona contra um Memcached que só fala TCP?",
+    "hint": "Servidores Web e Cache, aula 9; Fundamentos da Web e Internet, aula 2.",
+    "choices": [
+      {
+        "text": "O TCP numera os bytes, então o Memcached percebe que os bytes de uma requisição forjada estão fora de ordem.",
+        "why": "A numeração põe um fluxo de volta em ordem; não diz nada sobre quem o mandou."
+      },
+      {
+        "text": "Antes de qualquer dado, o TCP responde a um SYN com um SYN-ACK, que vai para o endereço forjado; a requisição nunca vem.",
+        "why": "Isso."
+      },
+      {
+        "text": "O TCP desacelera quando vê perda, então uma resposta tão grande é freada antes de causar dano.",
+        "why": "Desacelerar divide um enlace congestionado; não impede uma resposta grande de chegar a quem a requisição nomeou."
+      },
+      {
+        "text": "Por TCP, o Memcached recusa qualquer valor acima de um megabyte, então as respostas ficam pequenas.",
+        "why": "O limite de um megabyte é por valor e vale seja como for que a requisição chegue; um megabyte ainda é enorme perto de uma requisição pequena."
+      }
+    ]
+  },
+  "ex-wp423rjf": {
+    "prompt": "Associe cada tipo de dado ao padrão de cache que a tabela da aula 10 recomenda para ele.",
+    "hint": "Servidores Web e Cache, aula 10.",
+    "pairs": [
+      {
+        "left": "Contadores de visualização e curtidas, muitas gravações baratas",
+        "right": "write-behind"
+      },
+      {
+        "left": "Valores lidos logo depois de mudar",
+        "right": "write-through"
+      },
+      {
+        "left": "Dados gravados uma vez e lidos raramente",
+        "right": "write-around"
+      },
+      {
+        "left": "A maioria das leituras da maioria dos dados",
+        "right": "cache-aside"
+      }
+    ],
+    "right_distractors": [
+      "read-through"
+    ]
+  },
+  "ex-x0m2831e": {
+    "prompt": "Pela conta da aula 11, uma página lida 500 vezes por segundo, cuja consulta leva 120 ms, manda cerca de 60 consultas idênticas no instante em que a chave vence. Uma página lida 2.000 vezes por segundo, cuja consulta leva 50 ms, manda cerca de quantas?",
+    "hint": "Servidores Web e Cache, aula 11."
+  },
+  "ex-f85337s2": {
+    "prompt": "Seu handler de busca lê `q` e `lang` da query string, e `lang` nunca chega, embora as pessoas digitem na caixa dele. O template tem estes dois campos: `<label for=\"q\">Title or author</label> <input id=\"q\" name=\"q\" type=\"search\">` e `<label for=\"lang\">Language</label> <input id=\"lang\">`. O que está errado?",
+    "hint": "HTML e CSS, aula 3.",
+    "choices": [
+      {
+        "text": "O segundo rótulo está ligado por `for`, e isso faz do campo um que o navegador mostra e não envia.",
+        "why": "`for` liga um rótulo a um campo para o nome e para o clique; não tem nada a ver com o que é enviado."
+      },
+      {
+        "text": "O segundo campo tem `id` e não tem `name`, e a requisição é montada só com pares `nome=valor`.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um formulário `get` envia só o primeiro campo; o segundo precisaria de `method=\"post\"` para ir no corpo.",
+        "why": "Um formulário GET envia todos os campos com nome, unidos por `&`, na query string."
+      },
+      {
+        "text": "Um input sem `type` fica fora da requisição até ser declarado como `type=\"text\"`.",
+        "why": "`text` é o tipo padrão; o campo fica de fora por não ter nome, e não pelo tipo."
+      }
+    ]
+  },
+  "ex-dcqet7k2": {
+    "prompt": "Uma página lista as reservas de um cliente, cada uma com um link `<a href=\"cancel?id=17\">Cancel</a>` que o seu servidor atende apagando a reserva. Numa manhã, várias reservas sumiram, e ninguém apertou nada. O que as duas aulas dizem?",
+    "hint": "HTML e CSS, aula 3; Fundamentos da Web e Internet, aula 6.",
+    "choices": [
+      {
+        "text": "Links servem aqui se o servidor responder `204 No Content`, que avisa o crawler para não segui-los.",
+        "why": "O código de status chega depois de a requisição ter sido executada; a essa altura a reserva já sumiu."
+      },
+      {
+        "text": "Nada no HTTP separa os dois métodos para isso, então a causa é um bug na query que apaga.",
+        "why": "GET é definido como seguro, e é justamente essa definição que deixa qualquer coisa buscá-lo à vontade."
+      },
+      {
+        "text": "Um `GET` serve desde que o id seja longo e aleatório, para ninguém adivinhar o endereço.",
+        "why": "O endereço está na própria página, e o que lê a página pode buscar todos os links dela."
+      },
+      {
+        "text": "`GET` promete não mudar nada, e qualquer coisa o busca sem pedir; cancelar é formulário `post`.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-7pmvbr8z": {
+    "prompt": "Uma página de login antiga usa `<form action=\"login\" method=\"get\">`, então entrar envia `GET /login?user=ana&password=…` por HTTPS. Onde a senha fica anotada agora? Marque todas as que se aplicam.",
+    "hint": "HTML e CSS, aula 3; Servidores Web e Cache, aula 1.",
+    "choices": [
+      {
+        "text": "No histórico do navegador, junto com o resto do endereço.",
+        "why": "Isso."
+      },
+      {
+        "text": "No log de acesso do servidor, cujo formato combinado registra cada linha de requisição.",
+        "why": "Isso."
+      },
+      {
+        "text": "Em texto puro no Wi-Fi do café, legível por quem estiver na mesma rede.",
+        "why": "O HTTPS mantém o endereço longe das mãos dos outros no caminho; as cópias que vazam são as anotadas em cada ponta."
+      },
+      {
+        "text": "No endereço que o próximo site pode receber como a página de onde a pessoa veio.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-t5t1syt1": {
+    "prompt": "A página de pedido tem `<input name=\"copies\" type=\"number\" min=\"1\" max=\"5\">`. Alguém dispensa o navegador e envia à sua API de pedidos `{\"title\": \"Vidas Secas\", \"copies\": -40}` com `Content-Type: application/json`. O que a API deve responder?",
+    "hint": "HTML e CSS, aula 3; APIs e Autenticação, aula 1.",
+    "choices": [
+      {
+        "text": "`422`, sem gravar nada: o JSON é lido, e o conteúdo quebra uma regra que o servidor confere.",
+        "why": "Isso."
+      },
+      {
+        "text": "`400`, porque um corpo que o formulário da página nunca produziria é uma requisição malformada.",
+        "why": "`400` é sobre os bytes: um corpo que não é JSON, ou não é um objeto. Este é lido sem problema."
+      },
+      {
+        "text": "`201`, gravando um exemplar: o `min` do formulário é o piso, então o servidor pode subir o valor até ele.",
+        "why": "Um valor que falha numa regra é recusado e nada é gravado; os atributos do formulário nunca chegaram ao servidor."
+      },
+      {
+        "text": "`415`, já que um pedido que contornou a página não chegou na codificação que o formulário usa.",
+        "why": "`415` é sobre o rótulo, e este corpo está rotulado como `application/json`, que é o que a API aceita."
+      }
+    ]
+  },
+  "ex-nf40gj51": {
+    "prompt": "O formulário de pedido tem três caixas de seleção com o nome `extra`. Um pedido feito sem tocar em nenhuma chega como `GET /order?format=paperback&shop=centro&notes=`. Como o seu handler descobre que ninguém quis embrulho para presente?",
+    "hint": "HTML e CSS, aula 3.",
+    "choices": [
+      {
+        "text": "Pelo `notes=`, que o navegador manda vazio no lugar das caixas que ninguém marcou.",
+        "why": "`notes` é a área de texto, enviada vazia porque um campo de texto sempre tem valor; não diz nada sobre as caixas."
+      },
+      {
+        "text": "Não descobre, então a requisição deve ser recusada por faltar um campo que o formulário tem.",
+        "why": "A ausência de `extra` é o jeito de o formulário dizer não; recusá-la recusaria todo pedido sem extras."
+      },
+      {
+        "text": "Pela falta de `extra`: caixa desmarcada não envia nada, então ausência é não.",
+        "why": "Isso."
+      },
+      {
+        "text": "Pelo `extra=off`, que cada caixa desmarcada acrescenta no fim da query string.",
+        "why": "Uma caixa desmarcada não envia nada, nem `extra=` nem `extra=off`."
+      }
+    ]
+  },
+  "ex-kt7d9syx": {
+    "prompt": "O seu handler responde com o corpo `Pinheiros, São Paulo` e mais nada, codificado em UTF-8. Que número vai no cabeçalho `Content-Length`?",
+    "hint": "HTML e CSS, aula 1; Fundamentos da Web e Internet, aula 6."
+  },
+  "ex-cneft4mr": {
+    "prompt": "Um passo de CI roda `npx html-validate -f text templates/*.html | tee validate.log`. O log lista três erros e o passo fica verde. Começar o passo com `set -o ___` faz o status de saída do validador ser o do passo.",
+    "hint": "HTML e CSS, aula 1; Testes Automatizados e CI/CD, aula 5.",
+    "blanks": [
+      {
+        "accept": [
+          "pipefail"
+        ]
+      }
+    ]
+  },
+  "ex-ecyn6j92": {
+    "prompt": "`customers.name` é `varchar(50)` porque o esquema do projeto anterior tinha isso. Um colega alinha o formulário com a coluna: `maxlength=\"50\"` e `pattern=\"[A-Za-z ]+\"` no campo de nome. O que as duas aulas dizem?",
+    "hint": "HTML e CSS, aula 3; Bancos de Dados Relacionais e SQL, aula 3.",
+    "choices": [
+      {
+        "text": "Manter os dois: um formulário que espelha a coluna pega todo nome ruim antes da ida ao servidor.",
+        "why": "O padrão recusa nomes reais como *D'Ávila*, e um limite copiado por hábito barra pessoas reais."
+      },
+      {
+        "text": "Tirar o padrão, que recusa *D'Ávila*, e questionar um 50 que nenhuma especificação deu.",
+        "why": "Isso."
+      },
+      {
+        "text": "Tirar o `maxlength` e manter o padrão, já que no PostgreSQL `varchar(50)` é mais rápido que `text`.",
+        "why": "No PostgreSQL os dois têm o mesmo desempenho; um `varchar(n)` é `text` com uma checagem de tamanho."
+      },
+      {
+        "text": "Trocar a coluna para `char(50)`, assim todo nome fica com a mesma largura e nenhum atributo é preciso.",
+        "why": "`char(n)` completa com espaços, e comparações e tamanhos passam a discordar sobre se os espaços estão lá."
+      }
+    ]
+  },
+  "ex-8v0pgjjx": {
+    "prompt": "Depois de uma mudança no template comum das páginas, toda página abre numa janela em branco, e a aba mostra um título comprido cheio de sinais de menor e maior. No DevTools o body tem 0 pixel de altura. Que erro no template faz isso?",
+    "hint": "HTML e CSS, aula 1.",
+    "choices": [
+      {
+        "text": "A linha do doctype foi apagada, e o navegador desenhou todas as páginas em modo quirks.",
+        "why": "O modo quirks muda pouco o layout, como 4 pixels sob uma imagem; a página continua desenhada."
+      },
+      {
+        "text": "A linha do `<meta charset>` foi parar logo abaixo do `<title>`.",
+        "why": "Uma codificação errada ou tardia embaralha letras como *ã*; não esvazia a página."
+      },
+      {
+        "text": "Um `<p>` ficou sem a tag de fechamento logo antes de um `<div>`.",
+        "why": "O parser fecha o parágrafo e segue em frente, e a página fica quase certa."
+      },
+      {
+        "text": "O `<title>` não tem tag de fechamento, e o resto do arquivo virou o texto dele.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-77b8rkzk": {
+    "prompt": "O template do seu servidor escreve `<p class=\"text-{{ colour }}-700\">` e preenche `colour` com `green` ou `red` conforme o livro. O build do Tailwind roda sobre a pasta de templates. No navegador a classe está no elemento, e o texto sai preto. Por quê?",
+    "hint": "HTML e CSS, aula 13.",
+    "choices": [
+      {
+        "text": "O build lê os arquivos como texto e nunca viu `text-green-700` inteiro, então não há regra para ela.",
+        "why": "Isso."
+      },
+      {
+        "text": "O Preflight zera as cores na camada `base`, e `base` vence as utilities numa página que o servidor montou.",
+        "why": "`utilities` é a camada posterior, então uma utility vence o Preflight venha a página de onde vier."
+      },
+      {
+        "text": "O build precisa rodar de novo com `--watch` a cada requisição, porque a cor muda por livro.",
+        "why": "Rodar de novo lê o mesmo template, e o template continua sem nomear a classe inteira."
+      },
+      {
+        "text": "O Tailwind escreve a paleta em OKLCH, que o navegador não consegue desenhar numa classe vinda do servidor.",
+        "why": "Os navegadores leem OKLCH desde 2023; a cor falta porque nenhuma regra nomeia a classe."
+      }
+    ]
+  },
+  "ex-9z4ercq8": {
+    "prompt": "Você está escrevendo um parser para o corpo `application/x-www-form-urlencoded` do formulário de pedido. Ligue cada caractere que o leitor digitou a como ele chega, como mostram as capturas da aula 3.",
+    "hint": "HTML e CSS, aula 3.",
+    "pairs": [
+      {
+        "left": "um espaço",
+        "right": "`+`"
+      },
+      {
+        "left": "`@`",
+        "right": "`%40`"
+      },
+      {
+        "left": "`,`",
+        "right": "`%2C`"
+      },
+      {
+        "left": "o `-` de um CEP",
+        "right": "`-`, sem mudança"
+      }
+    ],
+    "right_distractors": [
+      "`%20`"
+    ]
+  },
+  "ex-9vmc5472": {
+    "prompt": "Um job de CI roda o axe em todas as páginas que o servidor monta e não aponta nenhuma violação. Quais destes ainda podem estar nessas páginas? Marque todas as que se aplicam.",
+    "hint": "HTML e CSS, aula 2.",
+    "choices": [
+      {
+        "text": "Vários links cujo texto inteiro é *Click here*.",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma foto de produto cujo `<img>` não tem nenhum atributo `alt`.",
+        "why": "O axe aponta essa como image-alt, crítica."
+      },
+      {
+        "text": "Um link de imagem cujo `alt` descreve a foto, e não para onde o link leva.",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma página cujo `<h1>` é seguido direto por dois títulos `<h4>`.",
+        "why": "O axe aponta um nível pulado como heading-order."
+      }
+    ]
+  },
+  "ex-prjt78dp": {
+    "prompt": "O template da página de produto agora escreve `loading=\"lazy\"` em todo `<img>`, inclusive na foto grande do topo da página. O que acontece com essa primeira foto?",
+    "hint": "HTML e CSS, aula 4.",
+    "choices": [
+      {
+        "text": "Nada muda para ela: o lazy só afeta imagens que começam abaixo da janela.",
+        "why": "O navegador não sabe se uma imagem está visível antes de montar o layout, então uma lazy perto do topo começa mais tarde."
+      },
+      {
+        "text": "Ela só é buscada quando o leitor rola, e o topo da página fica vazio.",
+        "why": "Uma imagem lazy é buscada quando o leitor se aproxima, e no topo ela está perto desde o início; só começa mais tarde."
+      },
+      {
+        "text": "Ela começa mais tarde, e a imagem vista primeiro chega por último.",
+        "why": "Isso."
+      },
+      {
+        "text": "Ela desloca o layout mesmo com `width` e `height`, que imagens lazy ignoram.",
+        "why": "Largura e altura reservam o espaço de uma imagem lazy como de qualquer outra, e é por isso que o lazy precisa delas."
+      }
+    ]
+  },
+  "ex-s9bs97ad": {
+    "prompt": "Você faz o push do loanbook para o GitHub, e o repositório mostra os vinte commits, mas o gráfico de contribuições do seu perfil continua vazio. `git config user.email` imprime `ana@example.org`, um endereço que não está na sua conta do GitHub. Qual é a correção?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 5; O Projeto de Portfólio: do Briefing ao Deploy, aula 18.",
+    "choices": [
+      {
+        "text": "Fazer um commit pequeno todo dia daqui em diante, para o gráfico encher e o buraco sumir.",
+        "why": "Fazer commits para manter o gráfico verde fica visível para quem clicar num quadrado, e se lê exatamente como é."
+      },
+      {
+        "text": "Fixar o repositório, já que o gráfico só conta os repositórios que o perfil fixou.",
+        "why": "Fixar decide o que o perfil mostra primeiro; o gráfico conta commits pelo endereço que eles carregam."
+      },
+      {
+        "text": "Mover o repositório para o nome da sua conta, que é o que liga os commits dele a um perfil.",
+        "why": "Os commits se ligam a uma conta pelo e-mail que carregam, e não por onde o repositório mora."
+      },
+      {
+        "text": "Fazer commits com um endereço que a conta conhece, como o `ID+username@users.noreply.github.com`.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-ht9pa8b2": {
+    "prompt": "O seu primeiro ticket no trabalho é um bug: a página de login recusa endereços de e-mail escritos com maiúsculas. A equipe escreve Conventional Commits, e o corpo da sua mensagem diz por que aconteceu. A primeira linha é `___(login): accept e-mail addresses in any case`.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 20; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 11.",
+    "blanks": [
+      {
+        "accept": [
+          "fix"
+        ]
+      }
+    ]
+  },
+  "ex-d0rrb0ab": {
+    "prompt": "Você quer que a planilha de candidaturas diga quantas linhas estão em cada etapa, da mais comum para a menos. Ponha os comandos do pipeline na ordem em que rodam.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 8; Linux e Linha de Comando, aula 8.",
+    "items": [
+      "`cut -d, -f5 applications.csv`",
+      "`tail -n +2`",
+      "`sort`",
+      "`uniq -c`",
+      "`sort -rn`"
+    ],
+    "trap": "`uniq -c` conta sequências de linhas iguais vizinhas, então sem um `sort` antes dele uma etapa é contada em vários pedaços, sem aviso; e é o `tail -n +2` que tira o cabeçalho `stage` que o `cut` pegou da linha 1."
+  },
+  "ex-fcd0t29d": {
+    "prompt": "Numa entrevista de projeto pedem as tabelas dos empréstimos de uma biblioteca e, depois, a parte difícil, e você diz que duas pessoas poderiam emprestar o mesmo item ao mesmo tempo. Que escolha resolve isso como as duas aulas fariam?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 14; Bancos de Dados Relacionais e SQL, aula 1.",
+    "choices": [
+      {
+        "text": "Conferir na aplicação que o item está livre, e só então inserir o empréstimo.",
+        "why": "Duas requisições podem conferir, achar o item livre e inserir; a conferência está sujeita a duas pessoas clicando juntas."
+      },
+      {
+        "text": "Uma chave no banco que o segundo empréstimo quebra, e ele é recusado por mais próximos que sejam os cliques.",
+        "why": "Isso."
+      },
+      {
+        "text": "Pôr uma fila na frente do servidor, para os empréstimos serem tratados um de cada vez.",
+        "why": "A aula 14 manda resistir a uma fila que ninguém pediu; uma restrição no banco já resolve."
+      },
+      {
+        "text": "Projetar primeiro para um milhão de usuários, já que o conflito só aparece nessa escala.",
+        "why": "Ninguém espera que um júnior projete para um milhão de usuários, e duas pessoas no mesmo instante bastam."
+      }
+    ]
+  },
+  "ex-xev8z3y9": {
+    "prompt": "Um exercício para casa pede um pequeno serviço de reservas em que uma sala não pode ser reservada duas vezes na mesma hora. A sua nota tem espaço para uma linha sobre testes. Que linha diz mais a quem avalia?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 13; Testes Automatizados e CI/CD, aula 4.",
+    "choices": [
+      {
+        "text": "Um teste reserva a sala duas vezes e falha quando a regra é removida.",
+        "why": "Isso."
+      },
+      {
+        "text": "A suíte chega a 90% de cobertura, folgada acima do limite habitual de 85%.",
+        "why": "A cobertura conta linhas que rodaram, e testes que não conferem nada a aumentam; a porcentagem não diz nada sobre a regra."
+      },
+      {
+        "text": "Toda função do serviço tem pelo menos um teste só dela.",
+        "why": "Uma contagem de testes não diz se algum deles notaria a regra sumindo."
+      },
+      {
+        "text": "Os testes vêm depois das duas funcionalidades extras, se sobrar tempo.",
+        "why": "O que o briefing pediu vem primeiro, e um extra em cima de um requisito faltando parece não ter lido o briefing."
+      }
+    ]
+  },
+  "ex-hkn491h6": {
+    "prompt": "Uma empresa oferece CLT a R$ 5.500 por mês, ou a mesma vaga como PJ. Como PJ você tiraria um mês de folga por ano, sem receber. Pela conta da aula 17, antes de impostos e benefícios, que nota mensal de PJ, em reais, empata com o ano CLT?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 17."
+  },
+  "ex-c3wwyept": {
+    "prompt": "Você ensaiou uma resposta comportamental que dura dois minutos. Pela parcela de tempo que a aula 15 dá a cada parte de uma resposta STAR, quantos segundos dela devem ser a Ação?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 15."
+  },
+  "ex-7fy944pw": {
+    "prompt": "Seis semanas dentro do período de experiência, você percebe que a exportação prometida para sexta vai atrasar uma semana. A sua próxima one-to-one é na quarta. O que a aula 21 diz?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 21.",
+    "choices": [
+      {
+        "text": "Não dizer nada ainda e trabalhar à noite, já que a experiência se passa impressionando nas últimas semanas.",
+        "why": "A experiência se passa sendo previsível, e não trabalhando até tarde nem com uma semana brilhante."
+      },
+      {
+        "text": "Guardar para a avaliação do fim da experiência, que é onde se fala de trabalho atrasado.",
+        "why": "Notícia ruim descoberta depois é um problema; dita cedo, é uma conversa."
+      },
+      {
+        "text": "Levar para a one-to-one de quarta, como o que está bloqueando você e o que você já tentou.",
+        "why": "Isso."
+      },
+      {
+        "text": "Comentar quando a exportação estiver pronta, junto com o motivo de ter demorado.",
+        "why": "Dito depois do fato, o atraso já surpreendeu todo mundo que se planejou contando com a sexta."
+      }
+    ]
+  },
+  "ex-s37h815e": {
+    "prompt": "Uma recrutadora publicou uma vaga de back-end júnior no LinkedIn, e você quer mandar uma mensagem curta para ela sobre isso. Quando a aula 7 diz para mandar?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 7.",
+    "choices": [
+      {
+        "text": "Antes de se candidatar, para ela dizer se vale a pena mandar o currículo.",
+        "why": "Quem recruta pouco pode fazer com uma mensagem sobre uma vaga à qual você não se candidatou, além de pedir que se candidate."
+      },
+      {
+        "text": "No lugar da candidatura, com o currículo anexado, já que mensagem é lida.",
+        "why": "A mensagem vai depois da candidatura e sem currículo: eles já têm."
+      },
+      {
+        "text": "Toda semana até ela responder, para a candidatura ficar no topo.",
+        "why": "Mande uma vez; a aula 10 trata do que fazer quando não há resposta."
+      },
+      {
+        "text": "Uma vez, depois de se candidatar, com a vaga, uma evidência e um link.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-tzvravab": {
+    "prompt": "A execução 2 do CI do laboratório falhou nas seis células: Ana tinha feito commit de `tests/test_carriers.py`, e o laptop dela ainda mostra `?? tests/data/carriers.csv`. Qual destas opções coloca o CSV no commit que a próxima execução vai fazer checkout?",
+    "hint": "Testes Automatizados e CI/CD, aula 5; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 2.",
+    "choices": [
+      {
+        "text": "`git commit -am` com uma mensagem, já que `-a` prepara as mudanças da pasta.",
+        "why": "`-a` só prepara arquivos que o git já rastreia; um arquivo marcado `??` fica fora do commit."
+      },
+      {
+        "text": "`git add` no CSV, depois um commit e um push: arquivo novo pede o próprio add.",
+        "why": "Isso."
+      },
+      {
+        "text": "Fazer push de novo como está: o checkout limpo do hook copia os arquivos do laptop.",
+        "why": "O checkout é o `git archive` do commit enviado, e nele só está o que entrou em commit."
+      },
+      {
+        "text": "Pôr `tests/data/` no `.gitignore`, para o git parar de listar o arquivo como não rastreado.",
+        "why": "Ignorar esconde o `??` e deixa o arquivo fora de todo commit, que é justamente a falha."
+      }
+    ]
+  },
+  "ex-kvw4vv7b": {
+    "prompt": "Depois de criar a tag `v1.4.0`, Ana faz commit de mais uma mudança e roda `ops/build.sh` sem criar outra tag. `git describe --tags` imprime `v1.4.0-1-g7c77050`. Que nome o build dá ao artefato?",
+    "hint": "Testes Automatizados e CI/CD, aula 7; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 7.",
+    "choices": [
+      {
+        "text": "`shipquote-dev-7c77050`: não há tag nesse commit, então o nome vem do commit.",
+        "why": "Isso."
+      },
+      {
+        "text": "`shipquote-1.4.0`: a tag mais nova no histórico que leva até aqui ainda é `v1.4.0`.",
+        "why": "Uma tag não anda com os commits novos; `v1.4.0` nomeia o commit anterior, e o build só usa uma tag no próprio HEAD."
+      },
+      {
+        "text": "`shipquote-1.4.1`: um commit feito depois de uma versão sobe o patch em um.",
+        "why": "Nada sobe uma versão sozinho; a versão é a tag do commit, e aqui não há nenhuma."
+      },
+      {
+        "text": "Um erro: `ops/build.sh` se recusa a construir um commit sem tag própria.",
+        "why": "Ele constrói, e dá ao resultado um nome que não pode se passar por versão publicada."
+      }
+    ]
+  },
+  "ex-3k4vndhc": {
+    "prompt": "A execução 4 deixou a `main` vermelha no commit `1247039`. Ana roda `git revert --no-edit HEAD`, faz push, e a execução 5 passa em `b33d78b`. O que o histórico da `main` contém agora?",
+    "hint": "Testes Automatizados e CI/CD, aula 5; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 4.",
+    "choices": [
+      {
+        "text": "`6b77129` de novo no topo: o revert levou a `main` de volta ao commit anterior.",
+        "why": "Isso é o que `git reset` faz; um revert acrescenta um commit e não leva nada de volta."
+      },
+      {
+        "text": "`b33d78b` no lugar de `1247039`, que o revert trocou por uma cópia corrigida.",
+        "why": "Um revert não substitui nada; trocar o último commit por um novo é o que `--amend` faz."
+      },
+      {
+        "text": "`1247039` e, em cima dele, `b33d78b`, um commit novo que faz o contrário.",
+        "why": "Isso."
+      },
+      {
+        "text": "`1247039` sozinho, com a mudança desfeita dentro dele, sem commit novo.",
+        "why": "Um commit nunca é editado no lugar: o id cobre o conteúdo, então qualquer mudança é um commit novo."
+      }
+    ]
+  },
+  "ex-x3kbv2a9": {
+    "prompt": "O hook `post-receive` do laboratório deu a execução 4 como falha, e o commit quebrado foi parar na `main` mesmo assim. Num serviço de hospedagem, o que o teria barrado?",
+    "hint": "Testes Automatizados e CI/CD, aula 5; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 8.",
+    "choices": [
+      {
+        "text": "`set -e` no topo do hook, para a primeira célula que falha recusar o push.",
+        "why": "O hook roda depois que o git aceitou o push; nada que ele faça nessa hora consegue recusá-lo."
+      },
+      {
+        "text": "Um pull request para uma `main` protegida, com checks que precisam passar antes do merge.",
+        "why": "Isso."
+      },
+      {
+        "text": "Fazer push com `-u`, para o git esperar os checks antes de mover a `origin/main`.",
+        "why": "`-u` só registra a qual branch remota a sua corresponde; o git em si não sabe nada de checks."
+      },
+      {
+        "text": "Nada barra: um servidor Git aceita qualquer push que leve uma branch para a frente.",
+        "why": "O Git aceita; o serviço de hospedagem acrescenta a proteção de branch por cima, e o Git não sabe nada dela."
+      }
+    ]
+  },
+  "ex-h9fpg8zw": {
+    "prompt": "Uma versão do repositório que publica este curso começa por uma tag. Ponha os passos em ordem, do terminal de quem desenvolve até a nova revisão no ar.",
+    "hint": "Testes Automatizados e CI/CD, aula 7; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 7.",
+    "items": [
+      "Enviar a tag anotada sozinha, com `git push origin` e o nome dela",
+      "`Tag` recusa uma tag malformada, menor que a última versão ou fora da `main`",
+      "`Checks` roda o workflow de CI inteiro, chamado em vez de copiado",
+      "`Publish` constrói, pergunta a versão ao binário e cria a release",
+      "`Deploy` envia as imagens e move o serviço para a nova revisão"
+    ],
+    "trap": "Construir primeiro parece mais rápido, mas cada job precisa do anterior: a tag é julgada antes de qualquer coisa rodar, e nada é construído a partir de um commit que os checks não aprovaram. Um `git push` simples nem começaria, porque não envia tags."
+  },
+  "ex-zgpxvsdd": {
+    "prompt": "Ana roda `git push -u origin try-new-rounding` contra o remoto do laboratório, e o hook responde `ci: try-new-rounding is not main, nothing to run`. O que aconteceu?",
+    "hint": "Testes Automatizados e CI/CD, aula 5; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 7.",
+    "choices": [
+      {
+        "text": "A branch agora existe no remoto, e nenhum teste rodou nela.",
+        "why": "Isso."
+      },
+      {
+        "text": "O push foi recusado, porque o hook recusa push para outras branches.",
+        "why": "O hook só decide se roda os testes; `* [new branch]` mostra que a branch foi recebida."
+      },
+      {
+        "text": "Os testes rodaram e passaram, por isso o hook imprimiu tão pouco.",
+        "why": "Uma execução que passa ainda imprime uma linha por célula e `run N passed`; esta não rodou nada."
+      },
+      {
+        "text": "A branch foi mesclada na `main` antes, para o hook poder testá-la.",
+        "why": "Nada é mesclado num push; a branch chegou como estava, ao lado da `main`."
+      }
+    ]
+  },
+  "ex-mzknwqe5": {
+    "prompt": "Numa branch que ninguém enviou, Ana fez commit de `deploy/production.env` com o token da transportadora e o removeu no commit seguinte. Bruno diz que, como a branch nunca saiu do laptop dela, `git reset --hard HEAD~2` resolve. O que os dois cursos mandam fazer?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10; Testes Automatizados e CI/CD, aula 9.",
+    "choices": [
+      {
+        "text": "Deixar como está: o segundo commit já tirou o token do histórico.",
+        "why": "`git show HEAD~1:deploy/production.env` ainda o imprime; apagar um arquivo não muda o commit que o adicionou."
+      },
+      {
+        "text": "Basta o reset: um commit guardado no laptop dela não chegou a outra cópia.",
+        "why": "Os dois cursos tratam um segredo que entrou em commit como público desde aquele momento; o reset só impede que se espalhe."
+      },
+      {
+        "text": "Rodar `git filter-repo` no histórico e trocar cada clone antes de qualquer coisa.",
+        "why": "Esse é o caminho para commits já enviados, e mesmo assim vem depois de revogar o token."
+      },
+      {
+        "text": "Trocar o token primeiro; depois, o reset é um bom jeito de descartar os dois commits.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-ga313da5": {
+    "prompt": "Ligue cada coisa que deu errado ao caminho de volta mais rápido que os dois cursos dão para ela.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 4; Testes Automatizados e CI/CD, aula 10.",
+    "pairs": [
+      {
+        "left": "Uma edição em `menu.html` que nunca foi preparada",
+        "right": "`git restore menu.html`"
+      },
+      {
+        "left": "Um commit ruim já na `main` compartilhada",
+        "right": "`git revert` desse commit"
+      },
+      {
+        "left": "Um canário a 25% errando 2 pontos acima da base",
+        "right": "O peso dele zerado no arquivo de rotas"
+      },
+      {
+        "left": "Uma funcionalidade nova ligada para 50% dos clientes",
+        "right": "A porcentagem dela zerada no arquivo de flags"
+      }
+    ],
+    "right_distractors": [
+      "A versão antiga reconstruída a partir da tag"
+    ]
+  },
+  "ex-8c5v9mtw": {
+    "prompt": "Um time trabalha com trunk based: a estimativa de entrega, pela metade, entra na `main` todo dia atrás de `delivery_estimate`, que em produção está agora em 10%. O CI roda a suíte com todas as flags desligadas. O que fica sem teste?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 9; Testes Automatizados e CI/CD, aula 10.",
+    "choices": [
+      {
+        "text": "Pouca coisa: abaixo de 100% a maioria tem a flag desligada, então é esse o estado a testar.",
+        "why": "Em 10% os dois caminhos rodam em produção; uma suíte que só conhece tudo desligado testa um programa que ninguém roda."
+      },
+      {
+        "text": "O merge: com uma flag, o trabalho trunk based deveria ficar na branch até ficar pronto.",
+        "why": "Fazer merge de trabalho inacabado atrás de uma flag é o próprio trunk based; a lacuna está nos testes, não na branch."
+      },
+      {
+        "text": "O arquivo de flags, que o programa lê uma vez ao iniciar e depois guarda na memória.",
+        "why": "`flags.load()` lê o arquivo a cada pedido; foi assim que 10% virou 50% sem reiniciar nada."
+      },
+      {
+        "text": "O caminho dos 10% de clientes: uma flag no meio do rollout precisa ser testada nos dois estados.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-ztnyxmfv": {
+    "prompt": "Um time de quatro pessoas termina cerca de 30 pontos numa sprint normal, com cada pessoa presente nos 10 dias. Nesta sprint, Carla vai faltar 5 dias e Diego, 3. Pela conta da aula 18, cerca de quantos pontos de capacidade o time tem, antes de deixar qualquer folga?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 18."
+  },
+  "ex-h0deeb34": {
+    "prompt": "Antes de arrumar as branches antigas, Ana roda `git branch ___`, que lista aquelas cujos commits já estão todos na branch em que ela está: as que `git branch -d` apaga sem reclamar.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 5.",
+    "blanks": [
+      {
+        "accept": [
+          "--merged"
+        ]
+      }
+    ]
+  },
+  "ex-5hvqsc1g": {
+    "prompt": "Às 15:00 de um dia posterior, Ana roda `git log --oneline --since=\"2026-09-17\"` na semana da padaria. Aparecem `6555c9b` e `eadf998`, mas não `31a6298 Add cheese rolls`, cujo commit foi às 10:15 do dia 17. Por quê?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 3.",
+    "choices": [
+      {
+        "text": "`--since` mantém o que veio depois do dia indicado, então o próprio dia 17 fica de fora.",
+        "why": "O dia não é excluído em si; com `00:00` escrito depois da data, o mesmo comando lista `31a6298`."
+      },
+      {
+        "text": "A data do commit está em `-0300`, e `--since` a compara em UTC, três horas adiante.",
+        "why": "O fuso faz parte da data guardada e é levado em conta; o que falta é a hora."
+      },
+      {
+        "text": "Uma data sem hora quer dizer aquele dia no horário de agora, aqui às 15:00.",
+        "why": "Isso."
+      },
+      {
+        "text": "O log encheu a primeira tela e ficou esperando, então o commit mais velho está abaixo.",
+        "why": "O `git log` pagina saídas longas, mas três linhas cabem em qualquer tela; não há nada esperando embaixo."
+      }
+    ]
+  },
+  "ex-4jt2tq9p": {
+    "prompt": "Ana está na `main` com a árvore de trabalho limpa, e Bruno acabou de enviar um commit novo para o `origin`. Quais destes comandos mudam arquivos na árvore de trabalho dela? Marque todas as que se aplicam.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aulas 5 e 7.",
+    "choices": [
+      {
+        "text": "`git fetch`, para trazer o que Bruno enviou",
+        "why": "Ele copia o commit e move a `origin/main`; a `main` dela e os arquivos ficam como estavam."
+      },
+      {
+        "text": "`git pull`, que aqui avança a `main` em fast-forward",
+        "why": "Isso."
+      },
+      {
+        "text": "`git branch menu-prices`, para começar outro trabalho",
+        "why": "Ele grava um nome para o commit atual e não copia nada; ela continua na `main`."
+      },
+      {
+        "text": "`git switch experiment`, cujo `index.html` é outro",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-3fmdkx99": {
+    "prompt": "Pela tabela de frete do `shipquote` na aula 1, quanto custa, em centavos, um pacote de 1600 g para o CEP `70040-010`, numa cesta cujo subtotal é de 5000 centavos?",
+    "hint": "Testes Automatizados e CI/CD, aula 1."
+  },
+  "ex-qd8tjn9k": {
+    "prompt": "Um serviço recebe cerca de 2.000.000 de pedidos de cotação por mês e define como objetivo que 99,99% dos pedidos deem certo. Pelo raciocínio da aula 11, quantos pedidos com falha o orçamento de erro permite nesse mês?",
+    "hint": "Testes Automatizados e CI/CD, aula 11."
+  },
+  "ex-bav0zah9": {
+    "prompt": "Toda cotação de produção volta com 200, mas a de `01310-100`, 1200 g, subtotal 5000, está hoje em R$ 21,90, quando ontem era R$ 18,60. Ninguém fez deploy. Onde o curso diz que a causa aparece primeiro?",
+    "hint": "Testes Automatizados e CI/CD, aulas 2 e 9.",
+    "choices": [
+      {
+        "text": "No `/version`, que deixa de citar a transportadora quando a loja volta para a tabela.",
+        "why": "O `/version` informa a URL configurada da transportadora, esteja ela respondendo ou não."
+      },
+      {
+        "text": "No smoke test, que falha assim que um preço passa a vir da tabela.",
+        "why": "O smoke test só pergunta `/health` e `/version`, e os dois continuam respondendo como esperado."
+      },
+      {
+        "text": "Na taxa de erro, que sobe a cada pedido que a transportadora deixa de atender.",
+        "why": "O fallback responde com 200; a taxa de erro conta 5xx e silêncio, então fica em zero."
+      },
+      {
+        "text": "No log, como `carrier unavailable, using the table:` e o erro da transportadora.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-5b1hsr59": {
+    "prompt": "O teste de mutação deixou um sobrevivente em `store.py`: `ORDER BY created_at DESC, id DESC` virou `ORDER BY created_at DESC`. Que teste novo o mataria?",
+    "hint": "Testes Automatizados e CI/CD, aula 4.",
+    "choices": [
+      {
+        "text": "Duas cotações com o mesmo `created_at`, esperando que `recent(2)` liste o id mais novo primeiro.",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma cotação salva com centavos negativos, esperando que o banco a recuse.",
+        "why": "Esse mata o outro sobrevivente, o `CHECK (cents >= 0)` afrouxado; nunca chega à ordenação."
+      },
+      {
+        "text": "Qualquer teste que aumente a cobertura de `store.py`, já que um sobrevivente marca uma linha que não rodou.",
+        "why": "`store.py` já está em 100%: a linha rodou, e o que falta é uma asserção que distinga as ordens."
+      },
+      {
+        "text": "Dez cotações feitas pela factory, esperando que `recent(10)` as liste da mais nova para a mais velha.",
+        "why": "A factory dá a cada cotação o seu próprio `created_at`, então o desempate por `id` nunca é necessário."
+      }
+    ]
+  },
+  "ex-qkjmfnyj": {
+    "prompt": "No GitHub Actions, uma suíte tem um teste falhando e a cobertura está em 81%. Quais destes passos `run:` ainda apareceriam verdes? Marque todas as que se aplicam.",
+    "hint": "Testes Automatizados e CI/CD, aulas 4 e 5.",
+    "choices": [
+      {
+        "text": "Sem linha `shell:`, rodando `python -m pytest -q | tee run.log`",
+        "why": "Isso."
+      },
+      {
+        "text": "`shell: bash`, rodando `python -m pytest -q | tee run.log`",
+        "why": "Dar nome ao shell traz `-eo pipefail`, então a falha do pytest derruba o pipe e o passo."
+      },
+      {
+        "text": "Sem linha `shell:`, rodando `coverage report --fail-under=85 | tail -1`",
+        "why": "Isso."
+      },
+      {
+        "text": "Sem linha `shell:`, rodando `python -m pytest -q` sozinho",
+        "why": "`bash -e` para no status diferente de zero do pytest; é o pipe que esconde um."
+      }
+    ]
+  },
+  "ex-we68qfk9": {
+    "prompt": "Um script lê uma configuração de um arquivo que um colega escreveu num editor do Windows: `mode=$(cat mode.txt)`. `echo \"$mode\"` imprime `prod`, e mesmo assim `[ \"$mode\" = prod ]` dá falso toda vez que roda. O que está acontecendo?",
+    "hint": "Linux e Linha de Comando, aula 1.",
+    "choices": [
+      {
+        "text": "O `$( )` guarda a quebra de linha final, então o valor é na verdade `prod` seguido de uma quebra.",
+        "why": "O `$( )` remove as quebras de linha finais; o `\\n` some, e o caractere antes dele fica."
+      },
+      {
+        "text": "As linhas terminam em `\\r\\n`, então o valor é `prod` e um retorno de carro, que o `cat -A` mostra como `^M`.",
+        "why": "Isso."
+      },
+      {
+        "text": "Dentro de `[ ]`, o `=` compara números, então duas palavras não saem iguais; para comparar strings ali é preciso `==`.",
+        "why": "O `=` é a comparação de strings no `[ ]`; os operadores de letras, `-eq` e os outros, são para números."
+      },
+      {
+        "text": "O `mode` não foi exportado, então o comando `[` recebe um valor vazio para comparar.",
+        "why": "O `[` recebe o valor já expandido, como argumento; o `export` só importa para um filho que lê o ambiente."
+      }
+    ]
+  },
+  "ex-r4m1s148": {
+    "prompt": "A imagem do seu serviço é `FROM alpine:3.22`, e o build copia um agente de monitoramento baixado como binário pronto para Linux x86_64. O arquivo está lá e é executável, mas se recusa a iniciar, com um erro sobre uma biblioteca compartilhada que falta. O mesmo binário roda no seu notebook com Ubuntu. O que está errado, e o que as duas aulas sugerem?",
+    "hint": "Linux e Linha de Comando, aula 2; Docker e Containers, aula 13.",
+    "choices": [
+      {
+        "text": "O `/bin/sh` do Alpine é o `ash` do busybox, não o bash, então é preciso instalar com `apk add --no-cache bash`.",
+        "why": "É isso que quebra um script com `#!/bin/bash`. Um programa compilado não precisa de shell, e a biblioteca que falta é a biblioteca C."
+      },
+      {
+        "text": "Ele foi compilado para outro processador, e refazer a imagem para `arm64` vai deixar que ele inicie.",
+        "why": "Ele roda num notebook x86_64, então a arquitetura bate; o que muda entre as duas máquinas é a biblioteca C."
+      },
+      {
+        "text": "Falta ao busybox as opções GNU com que o agente chama `ls` e `grep`, então instale as ferramentas GNU ao lado.",
+        "why": "Uma opção que falta falha depois, nessa opção. Uma biblioteca compartilhada que falta é o programa recusado antes de rodar."
+      },
+      {
+        "text": "Ele foi ligado à glibc e o Alpine traz a musl; monte sobre uma base Debian `-slim`, que tem glibc.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-b7ysk2m8": {
+    "prompt": "Uma imagem gera uma ferramenta em `/app/bin` durante o `docker build`. Para testar uma mudança no código, um colega roda com `-v \"$PWD\":/app`, e dentro do container `/app/bin` não está lá. Rodando sem o `-v`, está. O que aconteceu com ele?",
+    "hint": "Linux e Linha de Comando, aula 3; Docker e Containers, aula 8.",
+    "choices": [
+      {
+        "text": "O diretório do host fica por cima de `/app` e cobre o que a imagem pôs ali, que segue intacto.",
+        "why": "Isso."
+      },
+      {
+        "text": "A montagem copiou o diretório do host para a imagem e substituiu `/app/bin` ali de vez, com camada e tudo.",
+        "why": "Nada na imagem muda. Sem a montagem os arquivos voltam, como o `oops.txt` voltou depois do `umount`."
+      },
+      {
+        "text": "Um bind mount é somente leitura por padrão, então o container não enxerga o que ele mesmo não escreveu.",
+        "why": "Somente leitura é o `:ro`, posto de propósito, e trata de escrita; não decide o que fica visível."
+      },
+      {
+        "text": "O `docker run` descarta a camada do build que guarda `/app/bin` sempre que recebe um volume ao iniciar.",
+        "why": "Nenhuma camada é jogada fora; a montagem fica por cima do diretório e a camada continua embaixo."
+      }
+    ]
+  },
+  "ex-4apb6hyh": {
+    "prompt": "Num servidor novo você rodou `sudo usermod -aG docker ana`. No mesmo terminal, `getent group docker` imprime `docker:x:996:ana`, mas o `docker ps` responde `permission denied while trying to connect to the docker API at unix:///var/run/docker.sock`. O que você faz?",
+    "hint": "Linux e Linha de Comando, aula 4; Docker e Containers, aula 5.",
+    "choices": [
+      {
+        "text": "Rode `usermod -G docker ana`, já que o `-a` só acrescenta ao arquivo e ainda não concede nada.",
+        "why": "O `-G` sem `-a` substitui todos os outros grupos suplementares, que é como se perde o `sudo`; a mudança já está escrita."
+      },
+      {
+        "text": "Rode `sudo chmod 666 /var/run/docker.sock`, para o socket parar de conferir o grupo de quem se conecta.",
+        "why": "Isso entrega a toda conta da máquina o que o grupo docker vale, e o grupo vale root."
+      },
+      {
+        "text": "Saia e entre de novo: um shell fica com os grupos com que começou, e aí o `id -nG` mostra `docker`.",
+        "why": "Isso."
+      },
+      {
+        "text": "Suba o engine com `sudo systemctl start docker`, porque o daemon ainda não está rodando.",
+        "why": "Um engine parado responde `failed to connect to the docker API`; `permission denied` quer dizer que ele está de pé e te recusou."
+      }
+    ]
+  },
+  "ex-xpfhw277": {
+    "prompt": "Um colega escreveu à mão o arquivo de unidade de um importador noturno. Ligue cada linha dele ao que o systemd de fato faz com ela, pela aula 5.",
+    "hint": "Linux e Linha de Comando, aula 5.",
+    "pairs": [
+      {
+        "left": "`Descriptoin=Nightly importer`",
+        "right": "descartada com um aviso que ninguém vê sem rodar `systemd-analyze verify`"
+      },
+      {
+        "left": "`ExecStart=/usr/bin/importer > /var/log/importer.log`",
+        "right": "o `>` e o caminho chegam ao programa como mais dois argumentos"
+      },
+      {
+        "left": "`Type=forking`, para um programa que fica em primeiro plano",
+        "right": "o start trava e depois estoura o tempo, sem nada de fato quebrado"
+      },
+      {
+        "left": "`After=network.target`",
+        "right": "ele sobe quando a rede está configurada, que não é quando ela está alcançável"
+      }
+    ],
+    "right_distractors": [
+      "a unidade inteira é recusada e nunca carrega"
+    ]
+  },
+  "ex-8k3156sp": {
+    "prompt": "O Dockerfile de um serviço termina com `CMD ./start.sh`, na forma shell, e o script inicia o servidor na última linha. Todo `docker stop` leva dez segundos, o container depois aparece como `Exited (137)`, e o log do servidor nunca traz a mensagem de desligamento. O que explica os três?",
+    "hint": "Linux e Linha de Comando, aula 6; Docker e Containers, aula 11.",
+    "choices": [
+      {
+        "text": "O servidor captura o `TERM` e ainda está gravando quando os dez segundos acabam, então um tempo de parada maior transformaria 137 em 0.",
+        "why": "Sem linha de desligamento no log, o servidor nunca recebeu o sinal, e esperar mais só adia o `KILL`."
+      },
+      {
+        "text": "O `TERM` chega a um shell que não o repassa; depois da espera vem o `KILL`, 128 + 9. Use a forma exec e dê `exec` no servidor.",
+        "why": "Isso."
+      },
+      {
+        "text": "137 é o matador por falta de memória agindo, então o container precisa de um limite de memória maior para conseguir parar rápido.",
+        "why": "137 é qualquer `KILL`. Uma morte por memória fica registrada como `OOMKilled=true`; esta é o `KILL` do próprio `docker stop` depois da espera."
+      },
+      {
+        "text": "O `docker stop` manda `KILL` direto, e os dez segundos são o engine salvando primeiro a camada de escrita do container.",
+        "why": "Ele manda primeiro o sinal educado e espera dez segundos antes do `KILL`; o container parado guarda a camada de qualquer jeito."
+      }
+    ]
+  },
+  "ex-e8f7dz3g": {
+    "prompt": "Você está escrevendo a instrução `RUN` que instala `ca-certificates` num Dockerfile baseado em Debian. Quais destes fazem parte dela, pelas duas aulas? Marque todas as que se aplicam.",
+    "hint": "Linux e Linha de Comando, aula 7; Docker e Containers, aula 14.",
+    "choices": [
+      {
+        "text": "`apt-get` em vez de `apt`, cuja saída os autores podem mudar",
+        "why": "Isso."
+      },
+      {
+        "text": "`rm -rf /var/lib/apt/lists/*` num `RUN` separado, no fim do arquivo",
+        "why": "Um arquivo apagado numa camada posterior continua na anterior; a limpeza tem de estar no mesmo `RUN`."
+      },
+      {
+        "text": "`--no-install-recommends`, para chegar só o que o `Depends` lista",
+        "why": "Isso."
+      },
+      {
+        "text": "`dpkg -i` num `.deb` baixado antes, para não rodar resolução de dependências",
+        "why": "O `dpkg` não resolve nada: uma dependência que falta deixa o pacote desempacotado e sem configurar, `iU`."
+      }
+    ]
+  },
+  "ex-jtsp8ef5": {
+    "prompt": "O log de acesso do seu Nginx está no formato combined, com linhas como `127.0.0.1 - - [07/Oct/2026:00:11:23 -0300] \"GET /css/site.css HTTP/1.0\" 200 237 \"-\" \"ApacheBench/2.3\"`. Para contar erros do cliente, um colega roda `grep -c ' 4[0-9][0-9] ' access.log`, que dá mais que `awk '$9 >= 400 && $9 < 500' access.log | wc -l`. Em qual contagem você confia?",
+    "hint": "Linux e Linha de Comando, aula 8; Servidores Web e Cache, aula 1.",
+    "choices": [
+      {
+        "text": "A do grep: o awk divide nos espaços, então perde as linhas cujo user agent tem um espaço dentro.",
+        "why": "O user agent vem depois do campo nove. Um campo de texto livre só desloca os campos depois dele, então `$9` é o status em toda linha."
+      },
+      {
+        "text": "A do grep: o awk lê cada campo como texto, então um status como `404` não é `>= 400` para ele.",
+        "why": "`$9 >= 400` é aritmética sobre um campo, que é justamente o que o `grep` não faz."
+      },
+      {
+        "text": "A do awk: o status é o campo nove, e o padrão também casa um `200` cujo tamanho, no campo dez, por acaso é 410.",
+        "why": "Isso."
+      },
+      {
+        "text": "A do awk: o `grep -c` conta cada ocorrência na linha, então uma linha com dois desses números conta duas vezes.",
+        "why": "O `grep -c` conta linhas que casam, não ocorrências; a linha conta uma vez por mais que case."
+      }
+    ]
+  },
+  "ex-3t8p7tyg": {
+    "prompt": "Um passo de CI roda um script que começa com `set -euo pipefail`, define `check() { ./migrate --dry-run; echo \"migrations checked\"; }` e depois roda `if check; then ./deploy.sh; fi`. O `./migrate` falha e imprime um erro, o deploy acontece mesmo assim, e o job fica verde. Por que nada parou?",
+    "hint": "Linux e Linha de Comando, aula 9; Testes Automatizados e CI/CD, aula 5.",
+    "choices": [
+      {
+        "text": "O `-e` fica suspenso por toda a função chamada como condição, então `check` seguiu e devolveu o 0 do `echo`.",
+        "why": "Isso."
+      },
+      {
+        "text": "A CI lê a saída do passo procurando erros, e `migrations checked` foi a última linha que ela viu.",
+        "why": "A CI decide só pelo código de saída; nunca lê a saída, então as palavras impressas não deixam um passo verde nem vermelho."
+      },
+      {
+        "text": "Com `pipefail` ligado, o `-e` deixa de valer, e o próprio `pipefail` olha pipelines e mais nada.",
+        "why": "Os dois são independentes: o `pipefail` muda o que um pipeline informa, e o `-e` continua valendo onde vale."
+      },
+      {
+        "text": "O `-e` não entra numa função, então uma falha dentro de `check` é ignorada de onde ela for chamada.",
+        "why": "Chamada como comando comum, uma linha que falha dentro da função para o script, sim; a suspensão vem do `if`."
+      }
+    ]
+  },
+  "ex-vhb5xf8w": {
+    "prompt": "No `sales.csv` da aula 10, `Get-Content sales.csv | Measure-Object -Line` informa 33 linhas. Quantos o `Import-Csv sales.csv | Measure-Object` conta?",
+    "hint": "Linux e Linha de Comando, aula 10."
+  },
+  "ex-k9psz5cn": {
+    "prompt": "Um host em que o `nproc` imprime 4 roda um container iniciado com `--cpus 1`, que recebe o equivalente ao tempo de um processador. O que o `nproc` imprime dentro desse container?",
+    "hint": "Linux e Linha de Comando, aula 11; Docker e Containers, aula 2."
+  },
+  "ex-18s49qjq": {
+    "prompt": "O `git commit` sem `-m` abre um editor para a mensagem. Ponha em ordem os lugares onde ele procura qual abrir, o consultado primeiro no topo.",
+    "hint": "Linux e Linha de Comando, aula 12; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 1.",
+    "items": [
+      "o `core.editor` na configuração do próprio git",
+      "a variável `$VISUAL`",
+      "a variável `$EDITOR`",
+      "o padrão do sistema, `/usr/bin/editor` no Ubuntu ou `vi`"
+    ],
+    "trap": "O `$EDITOR` é o famoso e parece que tem de ganhar; a configuração do próprio git vence as duas variáveis, e a `$VISUAL` é lida antes da `$EDITOR`."
+  },
+  "ex-66dgr1hj": {
+    "prompt": "Duzentos servidores compartilham uma unidade de timer com `OnCalendar=*-*-* 03:00:00`, e o servidor de arquivos para onde todos enviam cai às três toda noite. Para quebrar essa sincronia, a seção `[Timer]` ganha `___=30m`, que dá a cada máquina o seu próprio atraso fixo de até trinta minutos.",
+    "hint": "Linux e Linha de Comando, aula 13; Escala e Observabilidade, aula 10.",
+    "blanks": [
+      {
+        "accept": [
+          "RandomizedDelaySec",
+          "RandomizedDelaySec="
+        ]
+      }
+    ]
+  },
+  "ex-kmknfyax": {
+    "prompt": "Você roda `psql shop -f shop.sql` uma segunda vez, num banco que já tem a loja da aula 1. Quais `INSERT` do arquivo são recusados? Marque todas as que se aplicam.",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 1.",
+    "choices": [
+      {
+        "text": "Os cinco clientes, pelo `UNIQUE (email)`.",
+        "why": "Isso."
+      },
+      {
+        "text": "Os quatro pedidos, pela chave primária `orders_pkey`.",
+        "why": "Os pedidos entraram de novo, `INSERT 0 4`: nada num pedido é único além do id que o banco gera, e ele gerou quatro novos."
+      },
+      {
+        "text": "Os quatro produtos, pelo `UNIQUE (sku)`.",
+        "why": "Isso."
+      },
+      {
+        "text": "As cinco linhas de pedido, pela chave `(order_id, product_id)`.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-cmqvsdn5": {
+    "prompt": "Renomear a Arena Sul no MongoDB da aula 5 reescreveu 33 documentos de show, porque cada show embute o nome do seu local. Um colega conclui que `order_lines.unit_price`, na loja em SQL, é o mesmo erro, uma cópia de `products.price`, e propõe removê-la. Pelo teste da aula 2, o que há de errado nisso?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 2; Escala e Observabilidade, aula 5.",
+    "choices": [
+      {
+        "text": "Nada: os dois repetem um valor guardado em outra tabela, e a terceira forma normal remove todo valor repetido.",
+        "why": "A 3FN remove um fato repetido que pode discordar de si mesmo; não diz nada contra dois fatos diferentes que um dia tiveram o mesmo valor."
+      },
+      {
+        "text": "Um local renomeado deve chegar a todo show, logo o nome é cópia; o preço pago não pode mudar, logo é um instantâneo.",
+        "why": "Isso."
+      },
+      {
+        "text": "O preço está a salvo porque `numeric` é exato, e uma string embutida num documento não é.",
+        "why": "O tipo não tem nada a ver com isso; o teste é se o valor deve mudar quando a origem muda."
+      },
+      {
+        "text": "A linha só está a salvo porque a chave estrangeira a liga ao produto e mantém os dois preços sempre iguais.",
+        "why": "A chave estrangeira liga o `product_id`, não o preço; nada mantém os dois preços iguais, e nada deveria."
+      }
+    ]
+  },
+  "ex-nmtrfbv4": {
+    "prompt": "Quais destes, rodados na tabela `tickets` de dois milhões de linhas da aula 6, escrevem todas as linhas de novo num arquivo novo, de modo que `pg_relation_filenode('tickets')` muda? Marque todas as que se aplicam.",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 3; Escala e Observabilidade, aula 6.",
+    "choices": [
+      {
+        "text": "`ALTER TABLE tickets ADD COLUMN public_id uuid DEFAULT gen_random_uuid()`",
+        "why": "Isso: um default volátil precisa de um valor diferente em cada linha."
+      },
+      {
+        "text": "`ALTER TABLE tickets ADD COLUMN printed boolean NOT NULL DEFAULT false`",
+        "why": "Um default constante fica guardado uma vez no catálogo: 2,1 ms, e o filenode continuou 16395."
+      },
+      {
+        "text": "`ALTER TABLE tickets ALTER COLUMN seat TYPE bigint`",
+        "why": "Isso: 5,0 segundos, uma reescrita completa, com o índice único reconstruído."
+      },
+      {
+        "text": "`ALTER TABLE tickets RENAME COLUMN code TO ticket_code`",
+        "why": "Renomear só mexe no catálogo; o que isso quebra é todo programa que ainda usa o nome antigo."
+      }
+    ]
+  },
+  "ex-ty8kme21": {
+    "prompt": "Um relatório de março sobre a tabela particionada `sales` da aula 2 filtra com `sold_at BETWEEN '2026-03-01' AND '2026-03-31'`. O que ele erra?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 4; Escala e Observabilidade, aula 2.",
+    "choices": [
+      {
+        "text": "Ele lê as seis partições, porque um `BETWEEN` na chave de particionamento não permite poda.",
+        "why": "Os dois limites caem em março, então o planejador ainda descarta os outros meses; o problema é quais linhas de março ele mantém."
+      },
+      {
+        "text": "Ele conta o 1º de abril também, porque o `BETWEEN` inclui o limite de cima e o dia seguinte.",
+        "why": "O limite de cima é `2026-03-31 00:00:00`, e nada de abril é alcançado."
+      },
+      {
+        "text": "Nada: `sold_at` é `timestamptz`, então cada data sozinha é lida como o dia inteiro.",
+        "why": "Uma data sozinha vira a meia-noite daquele dia; o tipo da coluna não a estica até o fim do dia."
+      },
+      {
+        "text": "Perde quase todo o dia 31: a data no limite de cima é o primeiro instante dele, meia-noite.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-189vwwgs": {
+    "prompt": "Suponha que cada ingresso guarde a chave de idempotência da sua venda, e que payments exporte as cobranças com a mesma chave. Depois de um dia de timeouts, você quer uma consulta que liste tanto as cobranças sem ingresso quanto os ingressos sem cobrança. Que forma faz isso?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 5; Escala e Observabilidade, aula 10.",
+    "choices": [
+      {
+        "text": "`tickets t FULL JOIN charges c ON c.key = t.key WHERE t.key IS NULL OR c.key IS NULL`",
+        "why": "Isso."
+      },
+      {
+        "text": "`tickets t JOIN charges c ON c.key = t.key`, e depois ler as linhas em que um dos lados é nulo",
+        "why": "Uma junção interna mantém só os pares; as linhas sem par são justamente as que ela descarta."
+      },
+      {
+        "text": "`tickets t LEFT JOIN charges c ON c.key = t.key`, mantendo só as linhas em que `c.key IS NULL`",
+        "why": "Isso acha os ingressos sem cobrança e nunca vê uma cobrança sem ingresso."
+      },
+      {
+        "text": "`SELECT * FROM charges WHERE key NOT IN (SELECT key FROM tickets)`",
+        "why": "Só uma direção, e uma única chave nula em `tickets` faz a consulta não devolver nada."
+      }
+    ]
+  },
+  "ex-30tpfchm": {
+    "prompt": "O SLI da aula 7 é eventos bons sobre todos os eventos. Alguém o calcula a partir de uma tabela de logs de requisições com `SELECT count(CASE WHEN ms <= 250 THEN 1 ELSE 0 END)::numeric / count(*) FROM request_log`, e o resultado é 1 até no dia em que as vendas levaram segundos. Por quê?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 6; Escala e Observabilidade, aula 7.",
+    "choices": [
+      {
+        "text": "O `::numeric` chega tarde demais, então a divisão é feita entre dois inteiros e arredonda para 1.",
+        "why": "O cast vale para o primeiro count antes da divisão, então o resultado é decimal; o numerador é que inclui todas as linhas."
+      },
+      {
+        "text": "`ms <= 250` é desconhecido nas linhas lentas, e o `CASE` trata uma condição desconhecida como se fosse verdadeira.",
+        "why": "O desconhecido só aparece onde `ms` é nulo; uma requisição lenta tem valor, e para ela a comparação é falsa."
+      },
+      {
+        "text": "O `count` conta os zeros também, já que 0 não é nulo, e o numerador vira todas as linhas.",
+        "why": "Isso."
+      },
+      {
+        "text": "O `count(*)` pula as linhas em que o `CASE` deu 0, então os dois lados encolhem juntos.",
+        "why": "O `count(*)` conta linhas e não tem argumento para pular; é o `count(CASE …)` que devia ter pulado e não pulou."
+      }
+    ]
+  },
+  "ex-9gg6q779": {
+    "prompt": "O relatório mensal de vendas da bilheteria lê uma view materializada que um job noturno atualiza, e a aula 11 de escala diz que uma resposta degradada deve dizer quão velha é. Numa noite, a atualização falha. O que a aula 7 de SQL sugere para que todo leitor perceba?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 7; Escala e Observabilidade, aula 11.",
+    "choices": [
+      {
+        "text": "Guardar nela `now() AS refreshed_at`, que cada relatório então mostra.",
+        "why": "Isso."
+      },
+      {
+        "text": "Atualizá-la com `CONCURRENTLY`, para que os leitores continuem trabalhando enquanto o novo conteúdo é montado.",
+        "why": "Isso mantém a view legível durante a atualização; não diz nada na noite em que a atualização nem aconteceu."
+      },
+      {
+        "text": "Criá-la `WITH NO DATA`, para que uma atualização que falhou vire um erro em vez de linhas velhas.",
+        "why": "Só uma view nunca preenchida dá erro; uma preenchida na semana passada continua respondendo com a semana passada."
+      },
+      {
+        "text": "Trocá-la por uma view comum, que o banco guarda em cache para você e atualiza no próprio ritmo.",
+        "why": "Uma view comum não guarda linhas; ela roda a consulta de novo a cada leitura, que é o custo que a materializada evitava."
+      }
+    ]
+  },
+  "ex-hzdd7y05": {
+    "prompt": "Ligue cada falha que a bilheteria pode encontrar ao que as duas aulas mandam fazer com ela.",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 8; Escala e Observabilidade, aula 10.",
+    "pairs": [
+      {
+        "left": "`40001`, could not serialize access",
+        "right": "Desfazer e rodar a transação inteira de novo, leituras incluídas"
+      },
+      {
+        "left": "`23505`, duplicate key value",
+        "right": "Parar: outra tentativa falha do mesmo jeito"
+      },
+      {
+        "left": "Um `503` vindo de payments",
+        "right": "Esperar um tempo aleatório sob um teto que dobra, e chamar de novo"
+      },
+      {
+        "left": "`deadlock detected` em duas transferências, todo dia",
+        "right": "Pegar as travas das linhas em ordem crescente de id"
+      }
+    ],
+    "right_distractors": [
+      "Repetir só o comando que falhou, com os valores já lidos"
+    ]
+  },
+  "ex-v6z4ba70": {
+    "prompt": "No primário, `pg_stat_user_indexes` mostra um índice em `orders (placed_at)` com `idx_scan` em 0 e várias centenas de megabytes. Relatórios e dashboards vão para uma réplica de leitura, como a aula 2 de escala recomenda. O que você deve fazer antes de removê-lo?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 9; Escala e Observabilidade, aula 2.",
+    "choices": [
+      {
+        "text": "Nada além disso: zero varreduras desde a última redefinição quer dizer que nenhuma consulta o usou.",
+        "why": "O contador do primário só vê as consultas do primário, e os relatórios rodam em outro lugar."
+      },
+      {
+        "text": "Ler o contador na réplica também: cada servidor conta só as varreduras que foram feitas nele.",
+        "why": "Isso."
+      },
+      {
+        "text": "Conferir que ele não sustenta uma restrição `UNIQUE`, e removê-lo se não sustentar.",
+        "why": "Essa é a conferência para um índice único, que este não é; e o contador em que ela confia é do servidor errado."
+      },
+      {
+        "text": "Removê-lo só no primário, para que a réplica possa manter a própria cópia do índice para os relatórios.",
+        "why": "A réplica aplica o log do primário e vira o mesmo banco um instante depois; um índice removido lá some na réplica também."
+      }
+    ]
+  },
+  "ex-epcjrmwp": {
+    "prompt": "No plano da aula 10 que conta as linhas dos pedidos pendentes, o nó interno diz `Index Only Scan using order_lines_pkey … (actual time=0.007..0.007 rows=2 loops=2923)`. Mais ou menos quantos milissegundos esse nó levou no total? Responda com um número inteiro.",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 10."
+  },
+  "ex-7d4j9e6p": {
+    "prompt": "Com a instrumentação do OpenTelemetry para psycopg, que cria um span por consulta, o trace de uma página administrativa mostra o span da requisição com 51 filhos: um `SELECT … FROM customers … LIMIT 50` e cinquenta `SELECT … FROM orders WHERE customer_id = …` de cerca de um milissegundo cada. O que é isso, e o que resolve?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 11; Escala e Observabilidade, aula 8.",
+    "choices": [
+      {
+        "text": "Spans demais: usar tail sampling na página para que só os traces lentos guardem os spans das consultas.",
+        "why": "Amostragem muda o que é registrado, não o que roda; as cinquenta consultas continuam chegando ao banco."
+      },
+      {
+        "text": "Falta um índice em `orders.customer_id`: criá-lo, e cada uma das cinquenta consultas fica mais rápida.",
+        "why": "Cada uma já leva um milissegundo; o custo é o número de idas e voltas, e um índice não muda esse número."
+      },
+      {
+        "text": "Um banco lento: dar mais CPU a ele, para que cinquenta idas e voltas caibam no tempo de poucas.",
+        "why": "O N+1 não se resolve com um servidor maior: o que ele custa são idas e voltas, não trabalho."
+      },
+      {
+        "text": "Um N+1: buscar de uma vez os pedidos dos cinquenta clientes, numa consulta com `= ANY(…)`.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-2pk7amjm": {
+    "prompt": "A primeira versão da bilheteria rodava em SQLite no modo WAL e era rápida. Para a abertura de vendas, o time quer a escala horizontal da aula 1 de escala: três cópias do programa, em três máquinas, atrás do nginx. O que diz a aula 12 de SQL?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 12; Escala e Observabilidade, aula 1.",
+    "choices": [
+      {
+        "text": "Funciona com o WAL ligado, porque o WAL deixa cada cópia escrever ao mesmo tempo.",
+        "why": "O WAL deixa os leitores e o único escritor andarem juntos; continua havendo um escritor."
+      },
+      {
+        "text": "Funciona se o arquivo ficar num sistema de arquivos de rede montado pelas três máquinas.",
+        "why": "As travas do SQLite dependem de travas de arquivo que sistemas de arquivos de rede implementam mal, e isso não é suportado."
+      },
+      {
+        "text": "Não dá: o arquivo precisa estar na máquina onde o código roda.",
+        "why": "Isso."
+      },
+      {
+        "text": "Funciona com um busy timeout, que transforma cada `database is locked` numa fila curta.",
+        "why": "Um busy timeout enfileira os escritores de uma máquina; não deixa três máquinas dividirem um arquivo."
+      }
+    ]
+  },
+  "ex-1809sv4s": {
+    "prompt": "Num sistema Oracle corporativo, você propõe o arranjo da aula 2 de escala: uma réplica que tire os relatórios do primário. Por que um sistema assim muitas vezes não tem nenhuma?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 13; Escala e Observabilidade, aula 2.",
+    "choices": [
+      {
+        "text": "Um segundo servidor é outra licença, e ler um standby enquanto ele aplica é uma opção cobrada à parte.",
+        "why": "Isso."
+      },
+      {
+        "text": "O Oracle não tem replicação: um standby só pode ser refeito a partir do backup da noite anterior.",
+        "why": "O Data Guard mantém um standby atualizado pelo fluxo de redo; ler dele é que custa a mais."
+      },
+      {
+        "text": "A consistência de leitura pelo undo torna a réplica desnecessária, já que relatórios nunca bloqueiam escritores.",
+        "why": "Leitores não bloqueiam escritores, e os relatórios ainda disputam a mesma máquina; o que impede a réplica é a conta."
+      },
+      {
+        "text": "Réplicas precisam do Diagnostics Pack para informar o atraso, e poucos sistemas o licenciam.",
+        "why": "O Diagnostics Pack é o AWR e o ASH, o histórico de desempenho; não tem nada a ver com existir um standby."
+      }
+    ]
+  },
+  "ex-cnenynxr": {
+    "prompt": "A venda da aula 1 segura a trava da linha do show durante todo o `sign()`, o que limita um show a cerca de 139 vendas por segundo. Um colega propõe ler `sold` com um `SELECT` simples, calcular o próximo assento em Python e gravar de volta com `UPDATE events SET sold = <esse número>`, para que nenhuma trava fique presa durante a assinatura. Com dezesseis compradores no mesmo show, o que dá errado?",
+    "hint": "Escala e Observabilidade, aula 1; Bancos de Dados Relacionais e SQL, aula 8.",
+    "choices": [
+      {
+        "text": "O `READ COMMITTED` padrão do PostgreSQL aborta a segunda venda com falha de serialização, então custa só novas tentativas.",
+        "why": "Esse erro é do `REPEATABLE READ` e do `SERIALIZABLE`; no `READ COMMITTED` a segunda escrita simplesmente sobrescreve a primeira."
+      },
+      {
+        "text": "Nada: um `SELECT` simples pega a mesma trava de linha que o `UPDATE` pegaria.",
+        "why": "Um `SELECT` simples não trava nada; essa trava é a que o `FOR UPDATE` pega."
+      },
+      {
+        "text": "As vendas entram em deadlock na linha do show, e depois de um segundo o PostgreSQL cancela uma delas para romper o ciclo.",
+        "why": "Um deadlock precisa de duas travas pegas em ordens opostas; esse desenho não segura nenhuma enquanto decide."
+      },
+      {
+        "text": "Duas delas veem a mesma contagem e guardam o mesmo resultado, e um incremento some: a atualização perdida.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-n7vdsfe9": {
+    "prompt": "Os ingressos estão em dois shards, divididos por show. Para relatar o preço médio, o programa pede `avg(cents)` a cada shard: o shard 0 responde 5000 sobre seus 4000 ingressos, e o shard 1 responde 10000 sobre seus 1000. Qual é a média verdadeira, em centavos?",
+    "hint": "Escala e Observabilidade, aula 2; Bancos de Dados Relacionais e SQL, aula 6."
+  },
+  "ex-8524peeg": {
+    "prompt": "Com a réplica síncrona e isolada do primário, o `curl -s -m 5 -X POST localhost:8080/events/1/tickets` de um comprador termina em `curl exit: 28`, e o comprador clica em Comprar de novo na hora, o que também estoura o tempo. O `sold` do show 1 era 0. Dez segundos depois de a rede voltar, quanto ele diz?",
+    "hint": "Escala e Observabilidade, aula 3; Bancos de Dados Relacionais e SQL, aula 8.",
+    "choices": [
+      {
+        "text": "0: uma venda cujo cliente desistiu é desfeita pelo servidor assim que ele percebe.",
+        "why": "Nada avisou o servidor de que o cliente tinha ido embora; o commit esperava a réplica, não o curl."
+      },
+      {
+        "text": "2: o primeiro commit se conclui, e a segunda venda, que aguardava a trava da linha, vem logo atrás.",
+        "why": "Isso."
+      },
+      {
+        "text": "1: a segunda venda foi recusada de cara enquanto a primeira ainda segurava a linha.",
+        "why": "Um segundo escritor espera no `UPDATE` até a trava da linha ser liberada; ele não é recusado."
+      },
+      {
+        "text": "1: a réplica aplica o commit pendente uma única vez, e o clique que o repetiu acaba absorvido por ele.",
+        "why": "Cada requisição é uma transação própria; nada na bilheteria sabe que a segunda é uma repetição, que é o assunto da aula 10."
+      }
+    ]
+  },
+  "ex-51tmkpjp": {
+    "prompt": "A aula 4 segura o assento 42 por dez minutos com um comando do Redis, `SET hold:show:1:seat:42 ana ___ EX 600`, e o mesmo comando de um segundo comprador responde `(nil)` em vez de `OK`.",
+    "hint": "Escala e Observabilidade, aula 4.",
+    "blanks": [
+      {
+        "accept": [
+          "NX"
+        ]
+      }
+    ]
+  },
+  "ex-q62nvs4m": {
+    "prompt": "A varredura do DynamoDB por `show-1#` respondeu `\"Count\": 3` e `\"ScannedCount\": 5`, e cobrou pelos cinco. Que linha de um plano do PostgreSQL mostra o mesmo tipo de desperdício?",
+    "hint": "Escala e Observabilidade, aula 5; Bancos de Dados Relacionais e SQL, aula 10.",
+    "choices": [
+      {
+        "text": "`Heap Fetches`, numa varredura só de índice que ainda precisou ir ler a tabela.",
+        "why": "Isso conta linhas que o índice sozinho não respondeu; as linhas continuavam sendo desejadas."
+      },
+      {
+        "text": "`loops`, no lado interno de um nested loop que rodou muitas vezes.",
+        "why": "`loops` diz quantas vezes um nó rodou; cada execução pode ter mantido toda linha que leu."
+      },
+      {
+        "text": "`Rows Removed by Filter`, numa varredura que leu linhas só para descartá-las.",
+        "why": "Isso."
+      },
+      {
+        "text": "`Index Cond`, numa varredura de índice que procurou as linhas no índice.",
+        "why": "Um `Index Cond` é o caso oposto: só as entradas que casavam foram lidas."
+      }
+    ]
+  },
+  "ex-ggv923ey": {
+    "prompt": "Depois do backfill, `ALTER TABLE tickets ALTER COLUMN gate SET NOT NULL` encontrou o `CHECK (gate IS NOT NULL)` válido e pulou a varredura, e ainda assim levou 1,1 segundo. Por que tanto, e por que cerca de um segundo?",
+    "hint": "Escala e Observabilidade, aula 6; Bancos de Dados Relacionais e SQL, aula 8.",
+    "choices": [
+      {
+        "text": "Ele varreu a tabela mesmo assim, porque o `SET NOT NULL` ignora uma restrição criada `NOT VALID`.",
+        "why": "A restrição já tinha sido validada, e desde o PostgreSQL 12 uma restrição válida deixa o `SET NOT NULL` pular a varredura."
+      },
+      {
+        "text": "Ele esperou um `lock_timeout` de um segundo que o backfill tinha deixado ligado naquela sessão.",
+        "why": "Cada comando psql ali é uma sessão própria; e um lock timeout termina em erro, enquanto essa mudança deu certo."
+      },
+      {
+        "text": "Ele entrou em deadlock com as vendas, e o segundo foi o PostgreSQL escolhendo qual lado manter.",
+        "why": "Um deadlock detectado desfaz um dos lados com erro; a mudança deu certo, e as vendas nunca seguraram aquela trava."
+      },
+      {
+        "text": "A trava em conflito do autovacuum, cancelada após o `deadlock_timeout`, de um segundo.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-q75s2q16": {
+    "prompt": "O `pg_stat_statements` põe a busca por email numa média de 0.0 ms em 400 chamadas, enquanto o programa que faz as chamadas mede alguns milissegundos em cada uma. A aula 7 de escala viu a mesma diferença: um percentil 95 das leituras de 20 ms pelo histograma da bilheteria e de 30 ms pelo `load.py`. O que explica as duas?",
+    "hint": "Escala e Observabilidade, aula 7; Bancos de Dados Relacionais e SQL, aula 10.",
+    "choices": [
+      {
+        "text": "Um tempo medido dentro de um serviço é um limite inferior: o relógio de quem chama inclui também a rede e a espera para ser atendido.",
+        "why": "Isso."
+      },
+      {
+        "text": "Cada número de dentro é interpolado dentro de um bucket, e a interpolação sempre sai baixa.",
+        "why": "Interpolação é como um percentil sai dos buckets; pode cair para qualquer lado, e a média do `pg_stat_statements` não é feita assim."
+      },
+      {
+        "text": "Um lado de cada par está errado, já que duas medições da mesma coisa que discordam indicam instrumentação quebrada.",
+        "why": "A concordância é o teste quando as duas medem o mesmo trecho; aqui elas medem trechos diferentes, e as duas estão certas."
+      },
+      {
+        "text": "O relógio de fora conta uma fila que um gerador em laço fechado monta de propósito.",
+        "why": "Um laço fechado espera cada resposta antes de mandar a próxima; não monta fila com os próprios pedidos."
+      }
+    ]
+  },
+  "ex-afcfwf7w": {
+    "prompt": "No `app.py` da aula 8, `charge(event_id)` roda antes de `conn.transaction()`. Uma refatoração o move para dentro da transação, depois do `UPDATE events`, para que uma cobrança que falhou desfaça o assento. Quanto isso custa quando todo mundo quer o mesmo show?",
+    "hint": "Escala e Observabilidade, aula 8; Bancos de Dados Relacionais e SQL, aula 8.",
+    "choices": [
+      {
+        "text": "Nada de novo: a linha só é travada no momento do `COMMIT`, depois que a cobrança acabou.",
+        "why": "Um `UPDATE` trava a linha desde o momento em que roda até a transação terminar."
+      },
+      {
+        "text": "Cada venda passa a segurar a trava da linha do show durante a chamada a payments além do `sign()`, e a fila dessa linha cresce.",
+        "why": "Isso."
+      },
+      {
+        "text": "As leituras da página desse show passam a esperar atrás da trava enquanto durar cada cobrança.",
+        "why": "Um leitor não espera um escritor: ele vê a última versão confirmada, e as leituras da página vão para a réplica de todo jeito."
+      },
+      {
+        "text": "Nada, e ainda ganha: uma queda depois da cobrança agora desfaz a cobrança junto com o assento.",
+        "why": "A cobrança aconteceu em outro sistema; um rollback desfaz as linhas da bilheteria e nada em payments."
+      }
+    ]
+  },
+  "ex-dbaqx17c": {
+    "prompt": "A aula 9 força a bilheteria sem proteções com 8, 32 e depois 128 workers. Ponha o que acontece na ordem em que acontece.",
+    "hint": "Escala e Observabilidade, aula 9.",
+    "items": [
+      "As vendas por segundo param de crescer: 112, 105, 104",
+      "A espera da venda mediana sobe: 70, 295, 951 ms",
+      "O PostgreSQL responde `too many clients already` e 146 vendas falham com `500`"
+    ],
+    "trap": "O erro é o que se nota, e ele vem por último: a vazão já tinha parado e a espera crescia, sem nada quebrado, antes de a sobrecarga passar para as conexões do banco."
+  },
+  "ex-x4z6bfbc": {
+    "prompt": "O `backoff` da aula 10 espera `random.uniform(0, min(2.0, 0.1 * 2 ** attempt))` quando payments não manda `Retry-After`. Se `CHARGE_ATTEMPTS` fosse 6, qual é a maior espera que ele poderia escolher depois da quarta tentativa que falhou, em milissegundos?",
+    "hint": "Escala e Observabilidade, aula 10."
+  },
+  "ex-z4wqxbfa": {
+    "prompt": "O plano da aula 11 conta uma leitura como 1,1 ms de CPU e uma venda como 10 ms, e cada comprador do primeiro minuto abre umas 10 páginas e tenta comprar uma vez. Para 9.000 compradores no primeiro minuto em vez de 6.000, quantas cópias a regra do plano dá: no máximo 70% ocupadas, mais uma para falhas?",
+    "hint": "Escala e Observabilidade, aula 11."
+  },
+  "ex-zk5w5tgq": {
+    "prompt": "Pela tabela de classes de status da aula 1, quais destas falhas o shelf deveria responder com um código 4xx? Marque todas as que se aplicam.",
+    "hint": "APIs e Autenticação, aula 1.",
+    "choices": [
+      {
+        "text": "Um corpo rotulado `application/json` que não faz parse.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um PATCH que põe `stock` em -1, recusado pelo `CHECK` do banco.",
+        "why": "Isso: o conteúdo quebra uma regra, então 422, seja quem for que pegou."
+      },
+      {
+        "text": "O arquivo do banco não abre, e nenhum livro pode ser lido.",
+        "why": "A requisição pode estar certa; quem falhou foi o servidor, e um 5xx diz ao cliente que tentar mais tarde pode dar certo."
+      },
+      {
+        "text": "Um POST de um segundo livro com um ISBN que já está no catálogo.",
+        "why": "Isso: 409."
+      }
+    ]
+  },
+  "ex-9dra55pv": {
+    "prompt": "O cliente de um parceiro confere cada livro que lê do catálogo contra um esquema com `additionalProperties: false`, como o `book.schema.json` faz com os corpos que chegam. O catálogo passa a mandar um campo novo, `cover_url`. O que acontece, pela aula 2?",
+    "hint": "APIs e Autenticação, aula 2.",
+    "choices": [
+      {
+        "text": "O cliente do parceiro falha em todo livro, embora nada do que ele lê tenha mudado.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada: acrescentar um campo à resposta é seguro para qualquer cliente que exista.",
+        "why": "É seguro para um leitor tolerante; um cliente que recusa tudo o que não espera transforma a melhoria do servidor numa queda."
+      },
+      {
+        "text": "O catálogo recusa o próximo POST do parceiro, que não traz `cover_url`.",
+        "why": "Um campo a mais na resposta não exige nada das requisições; tornar obrigatório um campo da requisição é que quebraria."
+      },
+      {
+        "text": "O cliente ignora o campo, porque a validação só roda na entrada.",
+        "why": "Esse esquema é a conferência do próprio cliente sobre o que ele lê, e com `additionalProperties: false` o campo novo é um erro."
+      }
+    ]
+  },
+  "ex-0dceecbw": {
+    "prompt": "Um host de agente manda `POST /v1/returns` para a sua API com o id do `tool_use` da chamada como `Idempotency-Key`, como sugere a aula 8 do curso de IA, e a sua API segue as regras de chaves do `catalogue.py`. Depois de um timeout, o host tenta de novo com a mesma chave, mas um bug remontou o corpo, que agora pede 2 unidades em vez de 1. O que a API deve responder?",
+    "hint": "APIs e Autenticação, aula 2; IA no Desenvolvimento, aula 8.",
+    "choices": [
+      {
+        "text": "201 com a resposta guardada e `Idempotent-Replayed: true`, já que conhece a chave.",
+        "why": "A resposta guardada só é repetida quando a impressão digital do corpo bate com a primeira, e este corpo é outro."
+      },
+      {
+        "text": "409, porque a primeira requisição com essa chave já criou uma devolução.",
+        "why": "Na tabela do rascunho, o 409 é para uma chave conhecida cuja primeira requisição ainda está rodando."
+      },
+      {
+        "text": "422, e nada acontece: a mesma chave com outro corpo é um erro do cliente.",
+        "why": "Isso."
+      },
+      {
+        "text": "201 com uma segunda devolução, já que a quantidade nova faz dela outra operação.",
+        "why": "A chave dá nome à operação; uma operação nova precisa de uma chave nova, e o servidor recusa em vez de adivinhar."
+      }
+    ]
+  },
+  "ex-zch474sj": {
+    "prompt": "O `graph.py` roda sem `--batch` numa loja de 40 livros. Quantas consultas SQL custa `{ books { title author { name } } }`?",
+    "hint": "APIs e Autenticação, aula 3."
+  },
+  "ex-7zckh32w": {
+    "prompt": "O próximo `StockLevel` do depósito mantém todos os campos, mas faz duas mudanças: `int32 copies = 3;` vira `int32 units = 3;`, e `availability` passa do número 4 para o 6. Um caixa ainda roda código gerado do primeiro `stock.proto`. O que ele lê de uma mensagem nova?",
+    "hint": "APIs e Autenticação, aula 4.",
+    "choices": [
+      {
+        "text": "Nada: um campo renomeado manda outros bytes, e a decodificação falha.",
+        "why": "Os nomes nunca saem do programa; um nome novo no número antigo manda exatamente os mesmos bytes."
+      },
+      {
+        "text": "As cópias, e `availability` como `AVAILABILITY_UNSPECIFIED`.",
+        "why": "Isso."
+      },
+      {
+        "text": "A disponibilidade como antes, já que 1 ainda é `IN_STOCK`, e as cópias como 0.",
+        "why": "É o contrário: renomear é seguro no fio, e um número novo é um campo removido e outro acrescentado."
+      },
+      {
+        "text": "Os dois campos certos, porque o `protoc` recusa um arquivo que renumera.",
+        "why": "O `protoc` recusa um número marcado com `reserved`, e nada reservou o 4 aqui."
+      }
+    ]
+  },
+  "ex-qshn4zg1": {
+    "prompt": "O `/v1/answers` da sua API pergunta a um modelo pelo adaptador da aula 10 do curso de IA. Todos os provedores de `LLM_PROVIDERS` respondem 529, sobrecarregado, e o `ask` levanta `Unavailable`. Pela tabela do `bridge.py`, o que a sua API deve responder ao cliente dela?",
+    "hint": "APIs e Autenticação, aula 5; IA no Desenvolvimento, aula 10.",
+    "choices": [
+      {
+        "text": "500, já que a requisição falhou dentro do seu próprio código.",
+        "why": "500 diz que a sua API quebrou, e um alarme nos 500 dela acordaria a pessoa errada no dia ruim de um provedor."
+      },
+      {
+        "text": "504: o provedor não respondeu a tempo.",
+        "why": "504 é para nenhuma resposta dentro do timeout, e um 529 é uma resposta."
+      },
+      {
+        "text": "529 como veio, para o cliente ver o status do próprio provedor.",
+        "why": "Seus clientes conhecem os códigos da sua API; a camada na fronteira existe para que nada depois dela fale a língua do outro sistema."
+      },
+      {
+        "text": "502, porque o sistema atrás da sua API falhou.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-y1hnph5q": {
+    "prompt": "Um time renomeia `createBook` para `addBook` no `openapi.yaml` porque fica mais legível. O `POST /v1/books` se comporta exatamente como antes, e ainda assim todo programa feito sobre um cliente gerado para de compilar quando é gerado de novo, porque o gerador transforma o `___` de cada operação em nome de função.",
+    "hint": "APIs e Autenticação, aula 6.",
+    "blanks": [
+      {
+        "accept": [
+          "operationId",
+          "operation id",
+          "operation_id"
+        ]
+      }
+    ]
+  },
+  "ex-fgmng1xt": {
+    "prompt": "A página de chat da loja transmite as respostas por um relay como o da aula 9 do curso de IA, que guarda a chave do provedor. Só clientes com login podem perguntar. O que o relay deve receber do navegador a cada requisição?",
+    "hint": "APIs e Autenticação, aula 7; IA no Desenvolvimento, aula 9.",
+    "choices": [
+      {
+        "text": "A chave do provedor, mandada pela página num cabeçalho para o relay repassar.",
+        "why": "Tudo o que vai para um navegador pode ser lido por quem o usa; a chave fica no servidor."
+      },
+      {
+        "text": "A credencial que o cliente obteve no login.",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma chave de API do app da loja, escrita no script da página.",
+        "why": "Uma chave de API identifica um aplicativo, e uma que está no script da página é legível por qualquer visitante."
+      },
+      {
+        "text": "Nada, já que o relay só atende a própria página da loja.",
+        "why": "Um relay que qualquer um chama gasta dinheiro a cada pergunta: é uma chave de API com passos a mais."
+      }
+    ]
+  },
+  "ex-gh41xzgz": {
+    "prompt": "No `tokens.py`, um ladrão copia o refresh token da ana e o gasta primeiro, recebendo um par novo. O app da ana então apresenta o token copiado, e o login inteiro é revogado. O que o ladrão ainda consegue fazer?",
+    "hint": "APIs e Autenticação, aula 8.",
+    "choices": [
+      {
+        "text": "Nada: apagar a família encerra todo token emitido naquele login.",
+        "why": "O access token que o ladrão recebeu nunca foi guardado, então não havia o que apagar."
+      },
+      {
+        "text": "Renovar de novo com o refresh token novo dele, já que só a cópia da ana voltou duas vezes.",
+        "why": "O refresh token novo dele é da mesma família e morreu com ela."
+      },
+      {
+        "text": "Chamar `/me` com o access token que recebeu, até o `exp` desse token.",
+        "why": "Isso."
+      },
+      {
+        "text": "Chamar `/me` por catorze dias, a validade do refresh token.",
+        "why": "Catorze dias é a vida do refresh token; o access token dura 300 segundos."
+      }
+    ]
+  },
+  "ex-z5g1jhms": {
+    "prompt": "Pela regra da aula 10 para a memória de que um hash scrypt precisa, quantos MiB ocupa `N=2^15, r=16, p=1`?",
+    "hint": "APIs e Autenticação, aula 10."
+  },
+  "ex-04263p5w": {
+    "prompt": "Ligue cada requisição ao `orders.py` ao status que ela recebe.",
+    "hint": "APIs e Autenticação, aula 11.",
+    "pairs": [
+      {
+        "left": "Sem token, para um endereço que não existe",
+        "right": "401"
+      },
+      {
+        "left": "O token da Ana, para o pedido 3 do Bruno",
+        "right": "404"
+      },
+      {
+        "left": "O token da Carla, para `/admin/people`",
+        "right": "403"
+      },
+      {
+        "left": "O token da Ana, cancelando o pedido 1 dela pela segunda vez",
+        "right": "409"
+      }
+    ],
+    "right_distractors": [
+      "405"
+    ]
+  },
+  "ex-3rf78e8x": {
+    "prompt": "Três cópias do `limits.py` rodam atrás de um balanceador round-robin, cada uma com o seu `LIMITS`. Um cliente do plano pro, com todos os baldes cheios, manda 600 requisições de uma vez, e o balanceador as divide igualmente. Quantas recebem 200?",
+    "hint": "APIs e Autenticação, aula 12."
+  },
+  "ex-4hz2wyt9": {
+    "prompt": "A sua API pede a um provedor de modelo que reescreva em HTML as avaliações de produtos dos clientes, e a página do produto mostra o resultado. Pela entrada API10 da aula 13 e pela aula 11 do curso de IA, onde fica a defesa?",
+    "hint": "APIs e Autenticação, aula 13; IA no Desenvolvimento, aula 11.",
+    "choices": [
+      {
+        "text": "Em lugar nenhum: o provedor é uma empresa com contrato, então suas respostas são confiáveis.",
+        "why": "Esse é o erro da API10, e o modelo copia o que leu, que um estranho escreveu."
+      },
+      {
+        "text": "Na verificação de TLS da chamada ao provedor, para ninguém alterar a resposta.",
+        "why": "O TLS mantém estranhos fora da conexão; o script estava na avaliação que o modelo recebeu, e chegou intacto."
+      },
+      {
+        "text": "No `Content-Security-Policy: default-src 'none'` da API.",
+        "why": "Esse cabeçalho rege a própria resposta da API aberta como documento; a página do produto é outro documento."
+      },
+      {
+        "text": "Onde o texto vira HTML: escapá-lo como qualquer coisa escrita por um estranho.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-ezt8kqg9": {
+    "prompt": "Aos preços do Claude Sonnet 5.5 na tabela da aula 2 ($2 por milhão de tokens de entrada, $2,50 por milhão para escrever no cache e $0,20 por milhão para ler dele), um prefixo de 10.000 tokens é escrito no cache no primeiro de dez pedidos e lido dele nos outros nove, dentro dos cinco minutos. Quanto esse prefixo custa nos dez pedidos, em dólares? Três casas decimais.",
+    "hint": "IA no Desenvolvimento, aula 2."
+  },
+  "ex-6ffhc0gf": {
+    "prompt": "Semana passada um colega fez commit e push do `settings.py` com uma chave de pagamentos digitada nele, e hoje um assistente do editor mandou o mesmo arquivo a um provedor de modelo. O time põe `settings.py` no `.gitignore` e no `.assistignore`. O que ainda falta?",
+    "hint": "IA no Desenvolvimento, aula 3; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10.",
+    "choices": [
+      {
+        "text": "Revogar a chave e emitir outra: ela está no histórico e nos logs do provedor.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada: o `.gitignore` tira o arquivo do histórico, e o `.assistignore` impede o envio.",
+        "why": "O `.gitignore` só vale para arquivos não rastreados, e apagar um arquivo não muda o commit que o acrescentou."
+      },
+      {
+        "text": "`git rm --cached settings.py`, que tira a chave dos commits já enviados.",
+        "why": "Ele para de rastrear a partir do próximo commit; `git show` no commit antigo ainda imprime a chave."
+      },
+      {
+        "text": "Pedir ao provedor que apague o pedido, o que tira a chave dos logs dele.",
+        "why": "Não existe jeito de chamar um pedido de volta; a chave agora é pública."
+      }
+    ]
+  },
+  "ex-0s81jtv7": {
+    "prompt": "O `scratch/mutate.py` apontou três sobreviventes em `shop/cart.py`, um arquivo que a suíte já executa linha por linha. Quais conclusões as duas aulas sustentam? Marque todas as que se aplicam.",
+    "hint": "IA no Desenvolvimento, aula 4; Testes Automatizados e CI/CD, aula 4.",
+    "choices": [
+      {
+        "text": "Um relatório de cobertura mostraria `cart.py` todo coberto, com os sobreviventes e tudo.",
+        "why": "Isso."
+      },
+      {
+        "text": "Cada sobrevivente é um comportamento que os testes executam e nenhum confere.",
+        "why": "Isso."
+      },
+      {
+        "text": "Subir a cobertura mínima do build teria matado os três.",
+        "why": "As linhas já rodavam; o que falta é uma asserção, e nenhuma porcentagem de linhas enxerga isso."
+      },
+      {
+        "text": "Todo sobrevivente precisa de um teste, até a nota de mutação chegar a 100%.",
+        "why": "Leia cada sobrevivente e decida; um mutante que não muda nada que um cliente perceba pode sobreviver com razão."
+      }
+    ]
+  },
+  "ex-6r8y8nyt": {
+    "prompt": "A aula 5 faz o `parse_price` aceitar vírgula um passo de cada vez. Ponha os passos em ordem.",
+    "hint": "IA no Desenvolvimento, aula 5.",
+    "items": [
+      "Pedir um plano, sem código",
+      "Escrever à mão os casos e os valores esperados",
+      "Rodá-los contra a função antiga, antes de qualquer mudança",
+      "Pôr uma função candidata no lugar e rodar a suíte",
+      "Mandar de volta o teste que falhou, exatamente como o pytest imprimiu"
+    ],
+    "trap": "Testes escritos depois da mudança, ou junto com ela, saem da mudança; eles têm de existir, e falhar no código antigo, antes de qualquer candidata ser testada."
+  },
+  "ex-rvzdhm84": {
+    "prompt": "O `check_citations` aprovou a resposta `The handbook does not say.` para *O atendimento abre no sábado?*, embora o `contact.md#1`, o primeiro trecho recuperado, diga de segunda a sexta. O que isso mostra sobre a conferência?",
+    "hint": "IA no Desenvolvimento, aula 6.",
+    "choices": [
+      {
+        "text": "A busca falhou, e o trecho nunca chegou ao prompt.",
+        "why": "O `contact.md#1` foi o primeiro recuperado e estava no prompt."
+      },
+      {
+        "text": "A recusa está dispensada de citar, então uma que leu mal os trechos passa.",
+        "why": "Isso."
+      },
+      {
+        "text": "O modelo citou um trecho que não recebeu, o que a conferência ignora.",
+        "why": "A conferência procura isso, e esta resposta não citou nada."
+      },
+      {
+        "text": "A resposta estava certa, já que o manual nunca fala em sábado.",
+        "why": "De segunda a sexta responde à pergunta: não."
+      }
+    ]
+  },
+  "ex-m132vkh5": {
+    "prompt": "O host aprovou `issue_refund({\"cents\": \"0\", \"order_id\": \"1042\"})`, e o esquema do servidor transformou `\"0\"` em `0` sem dizer nada. Onde fica a regra de que um reembolso é de pelo menos um centavo e no máximo o valor do pedido?",
+    "hint": "IA no Desenvolvimento, aula 7; APIs e Autenticação, aula 11.",
+    "choices": [
+      {
+        "text": "No prompt de sistema, como uma frase que o modelo lê a cada pedido.",
+        "why": "Um prompt é um pedido; todo limite é imposto abaixo do modelo, onde as escolhas dele não chegam."
+      },
+      {
+        "text": "No esquema de entrada, como um `minimum` de 1 e um `maximum` ao lado.",
+        "why": "Um esquema confere forma; o total do pedido é estado, e só código que lê o pedido pode comparar com ele."
+      },
+      {
+        "text": "Na aprovação do operador, já que uma pessoa vê o valor antes.",
+        "why": "O operador respondeu `y` a um prompt que mostrava o zero; a ferramenta é o único lugar por onde toda chamada passa."
+      },
+      {
+        "text": "No próprio `issue_refund`, que consulta a compra e recusa.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-28bk2gsv": {
+    "prompt": "O Ollama é derrubado no meio de uma resposta em streaming, e a biblioteca HTTP por baixo do SDK levanta `RemoteProtocolError: peer closed connection without sending complete message body (incomplete chunked read)`. Como a biblioteca soube que o corpo estava incompleto?",
+    "hint": "IA no Desenvolvimento, aula 9; Fundamentos da Web e Internet, aula 6.",
+    "choices": [
+      {
+        "text": "O cabeçalho `Content-Length` tinha prometido mais bytes do que chegaram.",
+        "why": "Uma resposta gerada enquanto sai não sabe o próprio tamanho de antemão, então não vai com um."
+      },
+      {
+        "text": "O código de status mudou de 200 para um erro no meio do caminho.",
+        "why": "O status saiu com o primeiro byte; uma falha depois disso tem de viajar dentro do stream."
+      },
+      {
+        "text": "Um corpo chunked acaba num pedaço de tamanho zero, que não veio.",
+        "why": "Isso."
+      },
+      {
+        "text": "Não tinha chegado o evento `message_stop`, que a biblioteca espera.",
+        "why": "O `message_stop` é dos eventos do SDK; a camada HTTP só conhece os pedaços."
+      }
+    ]
+  },
+  "ex-c2n46dx3": {
+    "prompt": "Os clientes da sua API desistem depois de 10 segundos, e ela pergunta a um modelo por um `anthropic.Anthropic()` criado sem argumentos. Pelas duas aulas, o que está errado, e qual é a correção?",
+    "hint": "IA no Desenvolvimento, aula 10; APIs e Autenticação, aula 5.",
+    "choices": [
+      {
+        "text": "O SDK lê uma resposta por até 600 s; passe a ele um timeout bem abaixo desses 10 s.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada: as duas novas tentativas do SDK já põem fim rápido a um pedido lento.",
+        "why": "As novas tentativas vêm depois de uma falha; uma resposta lenta é lida por até 600 segundos antes de algo falhar."
+      },
+      {
+        "text": "Pôr o timeout dos seus clientes em 600 também, para as duas camadas esperarem igual.",
+        "why": "O timeout de cada camada é menor que o da camada de cima, senão quem chama desiste antes e a resposta não vai a lugar nenhum."
+      },
+      {
+        "text": "Envolver o SDK num laço próprio de novas tentativas que pega toda exceção.",
+        "why": "Ele multiplica as esperas e repete os erros que deveriam ter parado o programa."
+      }
+    ]
+  },
+  "ex-w7envech": {
+    "prompt": "Uma página de busca pede ao modelo que transforme *mais barato primeiro* no nome da coluna pela qual ordenar o catálogo, e a resposta vai para o `ORDER BY` da consulta. Que tratamento as duas aulas pedem?",
+    "hint": "IA no Desenvolvimento, aula 11; Bancos de Dados Relacionais e SQL, aula 11.",
+    "choices": [
+      {
+        "text": "Passar a resposta como parâmetro, como o `lookup.py` fez com o nome do cliente.",
+        "why": "Um placeholder representa um valor; ele não pode representar um nome de coluna."
+      },
+      {
+        "text": "Colar como veio, já que quem escreveu foi o modelo e não um cliente.",
+        "why": "A resposta é entrada não confiável, e não há exceção para um valor em que você confia."
+      },
+      {
+        "text": "Conferir contra uma lista de colunas aceitas.",
+        "why": "Isso."
+      },
+      {
+        "text": "Passar antes pelo `html.escape`.",
+        "why": "Escapar é a regra do HTML; um nome de coluna vindo de fora passa por uma lista permitida."
+      }
+    ]
+  },
+  "ex-kxp4jjd5": {
+    "prompt": "O arquivo Quadlet do loanbook tem `PublishPort=127.0.0.1:8000:8000`, e o Caddy, no mesmo servidor, encaminha para `127.0.0.1:8000`. Um colega troca a linha por `PublishPort=8000:8000`, achando que o Caddy precisa disso. Lido pela regra que a aula 17 de Docker dá para o `-p`, que essa opção segue, o que mudou?",
+    "hint": "Docker e Containers, aula 17; O Projeto de Portfólio: do Briefing ao Deploy, aula 15.",
+    "choices": [
+      {
+        "text": "Nada: o container continua respondendo só dentro da própria rede, e o Caddy segue sendo a única entrada dele.",
+        "why": "Uma porta publicada sem endereço escuta em todos os endereços do host, o que o `ss` mostrou como `0.0.0.0`."
+      },
+      {
+        "text": "A porta 8000 passa a responder em todo endereço do srv, e quem chega ao srv contorna o Caddy e o HTTPS.",
+        "why": "Isso."
+      },
+      {
+        "text": "O Caddy perde o container, porque uma porta sem endereço é publicada só na placa de rede e em mais nenhum lugar.",
+        "why": "Sem endereço quer dizer todos os endereços, o loopback incluído, e o Caddy chega nele como antes."
+      },
+      {
+        "text": "Os pedidos à porta 8000 passam antes pelo Caddy, que converte cada um deles para HTTPS.",
+        "why": "O Caddy responde nas portas dele; um pedido à 8000 vai direto para o container."
+      }
+    ]
+  },
+  "ex-vg4k29fx": {
+    "prompt": "Suponha que o arquivo Quadlet do loanbook não tivesse a linha `Volume=`. O Containerfile continua definindo `LOANBOOK_DB=/data/loanbook.db` e não declara volume nenhum. O que acontece com os empréstimos no próximo deploy, que troca o container por um iniciado de uma imagem nova?",
+    "hint": "Docker e Containers, aula 7; O Projeto de Portfólio: do Briefing ao Deploy, aula 15.",
+    "choices": [
+      {
+        "text": "Ficam, porque a variável `LOANBOOK_DB` faz `/data` sobreviver ao container.",
+        "why": "Uma variável só dá nome a um caminho; o arquivo continua sendo gravado onde esse caminho mora, aqui a camada do próprio container."
+      },
+      {
+        "text": "Ficam, porque a imagem nova é construída por cima do que o container antigo gravou.",
+        "why": "Um container nunca escreve na imagem dele, e um build lê o contexto, não um container rodando."
+      },
+      {
+        "text": "Ficam: o Podman dá um volume anônimo a todo diretório em que um programa escreve.",
+        "why": "Um volume anônimo só aparece para um caminho que a imagem declara como volume, como faz a `postgres`; esta não declara nenhum."
+      },
+      {
+        "text": "Se perdem: `/data` vivia na camada de escrita do container antigo.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-pzwvgqae": {
+    "prompt": "O Containerfile do loanbook termina com `USER 1000`, e o arquivo Quadlet monta `Volume=loanbook-data:/data:U`. Alguém tira o `:U`, achando que 1000 é só um número. O que dá errado?",
+    "hint": "Docker e Containers, aula 14; O Projeto de Portfólio: do Briefing ao Deploy, aula 15.",
+    "choices": [
+      {
+        "text": "O programa, rodando como UID 1000, tem recusada a gravação do banco num `/data` do root.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada: o processo de um container é root no host de qualquer jeito, então o volume continua gravável por ele.",
+        "why": "Isso vale para o UID 0; o UID 1000 só tem os direitos que recebeu, como mostrou o `touch` falhando num `/data` do root."
+      },
+      {
+        "text": "O volume é esvaziado a cada início, porque o `:U` é a parte que guarda o conteúdo dele.",
+        "why": "O `:U` muda quem é o dono do volume, não quanto tempo ele dura; um volume nomeado sobrevive a todo container."
+      },
+      {
+        "text": "O container troca para root para criar o arquivo, e o banco acaba pertencendo ao root.",
+        "why": "Nada troca de usuário sozinho: o processo continua 1000, e a gravação é recusada."
+      }
+    ]
+  },
+  "ex-3sqbcxwc": {
+    "prompt": "O `Containerfile` do loanbook tem oito passos: `FROM`, `WORKDIR /app`, `COPY app.py seed.py ./`, `COPY static ./static`, depois `ENV`, `USER`, `EXPOSE` e `CMD`. Depois de um primeiro build, só `static/app.js` é editado. Pela regra do cache da aula 12 de Docker, quantos dos oito passos rodam de novo no build seguinte?",
+    "hint": "Docker e Containers, aula 12; O Projeto de Portfólio: do Briefing ao Deploy, aula 15."
+  },
+  "ex-ngkr958r": {
+    "prompt": "Com o mesmo `Containerfile` de oito passos (`COPY app.py seed.py ./`, depois `COPY static ./static`), quais destas edições, feitas sozinhas, deixam todos os passos vindo do cache no build seguinte? Marque todas as que se aplicam.",
+    "hint": "Docker e Containers, aula 12; O Projeto de Portfólio: do Briefing ao Deploy, aula 15.",
+    "choices": [
+      {
+        "text": "Um nono item no `seed.py`",
+        "why": "O passo 3 copia o `seed.py`, então esse passo e todos os seguintes rodam de novo."
+      },
+      {
+        "text": "Uma seção nova no `README.md`",
+        "why": "Isso."
+      },
+      {
+        "text": "Mais um teste no `test_app.py`",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma cor mais escura em `static/style.css`",
+        "why": "O passo 4 copia `static`, então a chave dele muda e tudo abaixo é refeito."
+      }
+    ]
+  },
+  "ex-avm2k65f": {
+    "prompt": "Um serviço dimensiona o pool de workers na partida com uma thread por processador que o `nproc` informa. Na máquina do laboratório da aula 2 de Docker, que tem 4 processadores, ele é iniciado com `docker run --cpus 1`. Quantas threads de worker ele cria?",
+    "hint": "Docker e Containers, aula 2."
+  },
+  "ex-gwepj98x": {
+    "prompt": "Um job de CI sobe um container `postgres:17` novo com `-p 127.0.0.1:5432:5432`, espera com `until docker exec db pg_isready -U postgres -q; do sleep 0.2; done` e então roda as migrações a partir do host com `psql -h 127.0.0.1`. De vez em quando esse primeiro `psql` falha com `server closed the connection unexpectedly`. Por quê?",
+    "hint": "Docker e Containers, aula 9.",
+    "choices": [
+      {
+        "text": "A porta publicada abre alguns segundos depois de o container subir, e o `pg_isready` não enxerga isso.",
+        "why": "A porta estava aberta; o que respondia atrás dela era um servidor prestes a ser trocado."
+      },
+      {
+        "text": "O `-q` esconde as falhas, então o laço termina com o servidor pronto ou não.",
+        "why": "O `-q` só cala a mensagem; o laço continua esperando pelo código de saída."
+      },
+      {
+        "text": "Na primeira partida a imagem roda um servidor temporário só num socket local, e a checagem achou esse.",
+        "why": "Isso."
+      },
+      {
+        "text": "As migrações chegaram antes de o `POSTGRES_PASSWORD` valer, e o servidor as derrubou.",
+        "why": "Senha errada é respondida com `password authentication failed`, não com uma conexão derrubada."
+      }
+    ]
+  },
+  "ex-8e4mev8g": {
+    "prompt": "O loanbook ganha o `ci/pipeline.sh` da aula 26 de Docker, e a Ana envia a tag anotada `v0.3.0` que criou na aula 7 do curso de portfólio, então o script roda com `REF_NAME=v0.3.0`. Quais destas tags de imagem ele envia? Marque todas as que se aplicam.",
+    "hint": "Docker e Containers, aula 26; O Projeto de Portfólio: do Briefing ao Deploy, aula 7.",
+    "choices": [
+      {
+        "text": "`0.3.0`",
+        "why": "Isso."
+      },
+      {
+        "text": "`v0.3.0`",
+        "why": "O `${REF_NAME#v}` tira o `v` antes de qualquer tag de imagem ser criada."
+      },
+      {
+        "text": "`latest`",
+        "why": "Nada no script fala em `latest`; o Docker só escreve essa tag quando nenhuma é dada."
+      },
+      {
+        "text": "`0.3`",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-axb233nr": {
+    "prompt": "O `shelf` roda no host, publicado com `-p 127.0.0.1:8080:8080`. Um segundo container, iniciado com `--add-host host.docker.internal:host-gateway`, pede `host.docker.internal:8080` e recebe `Connection refused` de `172.17.0.1`. Qual é o motivo?",
+    "hint": "Docker e Containers, aula 23.",
+    "choices": [
+      {
+        "text": "O `host-gateway` aponta o nome para o loopback do próprio segundo container, onde nada escuta.",
+        "why": "O erro cita `172.17.0.1`, o endereço do host na bridge, não o loopback do container."
+      },
+      {
+        "text": "A bridge padrão não resolve nomes, então `host.docker.internal` nunca virou endereço.",
+        "why": "O `--add-host` escreve o nome, e o erro mostra que ele resolveu para `172.17.0.1`."
+      },
+      {
+        "text": "O nome chega ao host pelo endereço da bridge, `172.17.0.1`, e o `shelf` só escuta em `127.0.0.1`, que ela não alcança.",
+        "why": "Isso."
+      },
+      {
+        "text": "As regras de firewall do Docker descartam todo tráfego entre a bridge e as portas do próprio host.",
+        "why": "Essas regras separam duas redes do Docker; publicado em todos os endereços, o mesmo nome respondeu `1.0.0`."
+      }
+    ]
+  },
+  "ex-pj3e6py5": {
+    "prompt": "Na revisão, um colega sugere trocar o índice único parcial do loanbook por uma checagem em Python: procurar o empréstimo aberto do item e inserir só se não houver nenhum, porque fica mais legível. Por que o README e o curso de SQL mantêm a regra no banco?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 16; Bancos de Dados Relacionais e SQL, aula 9.",
+    "choices": [
+      {
+        "text": "Dois pedidos simultâneos não acham empréstimo aberto; o índice recusa o segundo.",
+        "why": "Isso."
+      },
+      {
+        "text": "O índice existe para deixar a lista de empréstimos rápida, e uma checagem em Python atrasaria cada página.",
+        "why": "O motivo do README são dois pedidos chegando juntos; velocidade não entra nele."
+      },
+      {
+        "text": "Só o banco consegue produzir um 409, enquanto o código em Python só consegue levantar uma exceção.",
+        "why": "O `lend` já levanta `Refused` com um status em Python, e o handler transforma isso na resposta."
+      },
+      {
+        "text": "Uma checagem em Python recusaria também itens já devolvidos, coisa que `returned_on IS NULL` não faz.",
+        "why": "A checagem pode filtrar pela mesma condição; o que ela não impede são dois pedidos que leem no mesmo instante."
+      }
+    ]
+  },
+  "ex-4scf94x1": {
+    "prompt": "Um projeto lista `.env` no `.gitignore`, como faz a aula 14, e o arquivo com a senha do e-mail nunca foi commitado. Depois o projeto ganha um Dockerfile com `COPY . .` e sem `.dockerignore`, e a imagem é enviada a um registry público. A senha está segura?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 14; Docker e Containers, aula 11.",
+    "choices": [
+      {
+        "text": "Sim: o `docker build` manda só os arquivos que o git acompanha, então o `.gitignore` cobre a imagem também.",
+        "why": "O contexto é o diretório como está no disco; o `.gitignore` é lido pelo git e por mais ninguém."
+      },
+      {
+        "text": "Sim, desde que um `RUN rm .env` posterior apague o arquivo antes de a imagem ficar pronta.",
+        "why": "A camada que o `COPY` gravou ainda guarda o arquivo; apagar depois só põe um whiteout por cima."
+      },
+      {
+        "text": "Não: o contexto é o diretório inteiro, e o `.env` vai junto se o `.dockerignore` não o listar.",
+        "why": "Isso."
+      },
+      {
+        "text": "Não, mas só para quem consiga ao mesmo tempo baixar a imagem e clonar o repositório de onde ela veio.",
+        "why": "Baixar a imagem basta: `cat /src/.env` mostrou a senha sem repositório nenhum envolvido."
+      }
+    ]
+  },
+  "ex-eb7nqz75": {
+    "prompt": "O arquivo Quadlet do loanbook tem `Restart=always` e um `HealthCmd` a cada 30 segundos. Um dia o programa trava num deadlock: o processo continua rodando e o `/healthz` para de responder. Lendo junto a aula 18 de Docker, o que traz o serviço de volta?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15; Docker e Containers, aula 18.",
+    "choices": [
+      {
+        "text": "O systemd, na hora, porque `Restart=always` reinicia qualquer serviço cujo health check falhe.",
+        "why": "O `Restart=always` age quando o processo sai, e um processo travado não saiu."
+      },
+      {
+        "text": "Nada, sozinho: ele fica marcado como não saudável e segue rodando até algo agir sobre isso.",
+        "why": "Isso."
+      },
+      {
+        "text": "O próprio health check, que mata o container depois de três falhas.",
+        "why": "Um health check só informa; sozinho, nada age sobre um container não saudável."
+      },
+      {
+        "text": "O Caddy, que para de mandar tráfego ao container não saudável e sobe um novo no lugar dele.",
+        "why": "O Caddy encaminha pedidos para `127.0.0.1:8000`; ele não sobe nada."
+      }
+    ]
+  },
+  "ex-zwdhsega": {
+    "prompt": "Uma autorrevisão de um diff encontra quatro coisas. Associe cada uma à pergunta da lista da aula 10 que a pega.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 10.",
+    "pairs": [
+      {
+        "left": "Uma função chamada `handleStuff`",
+        "right": "Todo nome diz o que a coisa é?"
+      },
+      {
+        "left": "Uma versão antiga do `lend` deixada atrás de marcas `#`, \"por via das dúvidas\"",
+        "right": "Tem código comentado?"
+      },
+      {
+        "left": "Um `fetch` sem nada feito quando ele falha",
+        "right": "Todo caminho novo tem o seu erro?"
+      },
+      {
+        "left": "Um professor digitado como `<b>Rui</b>` aparece em negrito",
+        "right": "Algo vindo do usuário entra na página como HTML?"
+      }
+    ],
+    "right_distractors": [
+      "Eu entenderia isto daqui a seis meses?"
+    ]
+  },
+  "ex-awage3m3": {
+    "prompt": "Um empréstimo foi aceito com o nome de quem pegou feito só de três espaços. Ponha os passos da correção na ordem que a aula 12 pede.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 12.",
+    "items": [
+      "Escrever um teste para o bug, com o código ainda como estava",
+      "Rodar a suíte e ver esse teste falhar",
+      "Fazer a correção de uma linha",
+      "Rodar a suíte de novo e ver passar",
+      "Commitar a correção com o teste, dizendo que o teste veio antes"
+    ],
+    "trap": "Corrigir primeiro e testar depois é a ordem tentadora, e aí o teste passa desde a primeira execução, e nada mostra que ele seria capaz de ver o bug."
+  },
+  "ex-vcrqqp5r": {
+    "prompt": "As tags do loanbook têm as datas 2026-06-05 (`v0.1.0`), 2026-06-15 (`v0.2.0`), 2026-06-29 (`v0.3.0`) e 2026-07-06 (`v1.0.0`). A nota da semana 3 se preocupava por ainda não ter testado HTTPS. Quantos dias se passaram entre a tag anterior ao marco do deploy e a tag que o fechou?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 7."
+  },
+  "ex-wv8p70dh": {
+    "prompt": "O README de um projeto de back-end tem a linha \"**Sessões no Redis.** É rápido.\" na seção de decisões. Qual reescrita segue o formato de decisão da aula 16?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 16.",
+    "choices": [
+      {
+        "text": "**Sessões no Redis.** Rápido, popular e bem suportado: o padrão de costume para sessões.",
+        "why": "São verdades gerais, e não há custo: soa como uma lista de coisas de que o autor gosta."
+      },
+      {
+        "text": "**Sessões no Redis.** Dois servidores as compartilham; o custo é mais um serviço.",
+        "why": "Isso."
+      },
+      {
+        "text": "**Sessões no Redis.** Escolhi depois de comparar com outros três armazenamentos num fim de semana.",
+        "why": "Diz que houve uma escolha, não por que ela serve a este projeto nem do que ela abre mão."
+      },
+      {
+        "text": "**Sessões no Redis.** Um servidor de banco seria exagero para algo tão pequeno quanto sessões.",
+        "why": "Argumenta que a alternativa é ruim, o que é uma afirmação sobre o mundo, e continua sem custo."
+      }
+    ]
+  },
+  "ex-xmpt7p8p": {
+    "prompt": "Num servidor novo, `git init -q --bare loanbook.git` é rodado sem `-b main`, num git que nunca recebeu um branch padrão. O `git push srv main` do laptop dá certo, mas `git clone loanbook.git` no servidor não traz arquivo nenhum. Por quê, pela aula 15?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15.",
+    "choices": [
+      {
+        "text": "O `HEAD` dele aponta para um branch que ninguém enviou, e o clone não tem o que trazer.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um repositório bare guarda só o histórico, e todo clone dele fica vazio até um push com `--tags`.",
+        "why": "Não são as tags que faltam; o clone de um repositório bare com o `HEAD` certo traz os arquivos."
+      },
+      {
+        "text": "O push caiu nos arquivos de trabalho do servidor, e um repositório bare não tem onde recebê-lo.",
+        "why": "Um repositório bare recebe o push inteiro; ele só não tem arquivos de trabalho próprios."
+      },
+      {
+        "text": "O clone precisa da entrada `Host srv` do `~/.ssh/config` do laptop.",
+        "why": "Esse clone é um caminho local no servidor e não usa ssh nenhum."
+      }
+    ]
+  },
+  "ex-6xfzfr60": {
+    "prompt": "O loanbook roda no srv pelo arquivo Quadlet, com `Volume=loanbook-data:/data:U` e `LOANBOOK_DB=/data/loanbook.db` definido na imagem. A Ana roda `python3 seed.py` em `~/loanbook` no shell do próprio srv, e não pelo `podman exec`. Ele imprime `seeded 8 items, 4 of them out`, e a página continua sem equipamento nenhum. Por quê?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15; Docker e Containers, aula 8.",
+    "choices": [
+      {
+        "text": "O seed encheu o volume, mas a página guarda a lista antiga até o container reiniciar.",
+        "why": "Nada guarda a lista: cada carregamento pergunta à API, que lê o banco em `/data`."
+      },
+      {
+        "text": "O seed recusou, como faz com um banco que já tem itens, e só imprimiu uma linha.",
+        "why": "A recusa dele imprime `loanbook already has items`; esta linha diz que gravou oito itens."
+      },
+      {
+        "text": "Só o Podman escreve num volume, então as gravações foram descartadas.",
+        "why": "Nada foi descartado: as gravações foram para outro arquivo, porque o volume se alcança pelo container em que está montado."
+      },
+      {
+        "text": "O shell do host não tem `LOANBOOK_DB`, então o seed encheu um `loanbook.db` novo ao lado do código.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-22h8m5gg": {
+    "prompt": "Alguém contratando uma pessoa júnior de back-end abre o seu repositório. Pela aula 3, o que essa pessoa olha primeiro?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 3.",
+    "choices": [
+      {
+        "text": "O link no ar, aberto num celular para ver se o layout aguenta.",
+        "why": "É por aí que começa quem avalia front-end."
+      },
+      {
+        "text": "O conjunto de avaliação, com os resultados anotados antes e depois de uma mudança.",
+        "why": "É o que quem avalia engenharia de IA abre primeiro."
+      },
+      {
+        "text": "O arquivo do pipeline, e o que ele faz de um commit até algo rodando.",
+        "why": "É a primeira parada de quem avalia DevOps."
+      },
+      {
+        "text": "A seção de API do README, com pedidos de exemplo e as respostas que eles recebem, erros incluídos.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-a370d50c": {
+    "prompt": "Depois que o srv é reconstruído no mesmo endereço, `ssh srv` imprime `REMOTE HOST IDENTIFICATION HAS CHANGED!`. A causa é a sua própria reconstrução, então a aula 15 faz o ssh esquecer as chaves antigas com `ssh-keygen ___ 10.20.0.20`.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15.",
+    "blanks": [
+      {
+        "accept": [
+          "-R"
+        ]
+      }
+    ]
+  },
+  "ex-zdhgx788": {
+    "prompt": "Aos preços de Lambda que a aula 3 cita (US$ 0,20 por milhão de pedidos, US$ 0,0000166667 por GB-s), uma função com 1.024 MB roda 250 ms em cada um de 4 milhões de pedidos por mês. Sem contar a franquia gratuita, qual é a conta do mês, em dólares? Duas casas decimais.",
+    "hint": "Arquitetura de Sistemas, aula 3."
+  },
+  "ex-4hesk28y": {
+    "prompt": "O catálogo da Quitanda instala um handler de SIGTERM e parava em menos de um segundo na aula 4. Um colega reescreve a última linha do Dockerfile como `CMD python catalogue.py`. O container atende os pedidos como antes, mas `docker compose stop` agora leva uns dez segundos, o log nunca mostra `SIGTERM: finishing requests in progress, then exiting`, e o código de saída é 137. Por quê?",
+    "hint": "Arquitetura de Sistemas, aula 4; Docker e Containers, aula 11.",
+    "choices": [
+      {
+        "text": "Python rodando como processo 1 ignora SIGTERM mesmo com um handler instalado, então o handler nunca roda.",
+        "why": "O kernel ignora um sinal para o qual o PID 1 não tem handler; o catálogo rodava como PID 1 com o handler antes da mudança e parava direito."
+      },
+      {
+        "text": "A forma de string faz de `/bin/sh -c` o processo 1, e esse shell não repassa o SIGTERM.",
+        "why": "Isso."
+      },
+      {
+        "text": "O Compose manda SIGKILL na hora, sem SIGTERM antes, para qualquer container cujo comando seja uma string.",
+        "why": "O `docker stop` manda SIGTERM primeiro, seja qual for a forma; os dez segundos são o prazo antes do SIGKILL."
+      },
+      {
+        "text": "A forma de string inicia o Python sem o ambiente do container, então o handler nunca chega a ser registrado.",
+        "why": "O ambiente chega ao programa nas duas formas, e o serviço responde como antes."
+      }
+    ]
+  },
+  "ex-ggag32gq": {
+    "prompt": "A API de pagamentos da Quitanda aceita um cabeçalho `Idempotency-Key` em `POST /charges` e segue as regras do rascunho da IETF. Ligue cada pedido que ela recebe ao que ela responde.",
+    "hint": "Arquitetura de Sistemas, aula 7; APIs e Autenticação, aula 2.",
+    "pairs": [
+      {
+        "left": "Uma chave que ela nunca viu",
+        "right": "A cobrança, e depois a chave guardada com a resposta"
+      },
+      {
+        "left": "Uma chave conhecida com o mesmo corpo, cuja primeira tentativa já terminou",
+        "right": "A resposta guardada de novo, marcada como repetição"
+      },
+      {
+        "left": "Uma chave conhecida com um corpo diferente",
+        "right": "`422`, e nada é cobrado"
+      },
+      {
+        "left": "Uma chave conhecida cuja primeira tentativa ainda está rodando",
+        "right": "`409`, para quem chamou esperar e perguntar de novo"
+      }
+    ],
+    "right_distractors": [
+      "Uma segunda cobrança, com um id novo"
+    ]
+  },
+  "ex-m1hbk9wy": {
+    "prompt": "A tabela `stock` da Quitanda tem `CHECK (units >= 0)`, e um standby segue o primário de forma assíncrona. Durante uma partição o primário vende um pacote, o café vai a 10, e o standby continua respondendo 11. Um colega diz que os dois servidores são ACID, então os dados estão consistentes. Que afirmação as duas aulas sustentam?",
+    "hint": "Arquitetura de Sistemas, aula 8; Bancos de Dados Relacionais e SQL, aula 8.",
+    "choices": [
+      {
+        "text": "O colega tem razão: um banco que é ACID em cada um dos seus nós devolve a escrita mais recente de qualquer nó consultado.",
+        "why": "ACID descreve as transações de cada servidor; não diz nada sobre cópias em outras máquinas concordarem."
+      },
+      {
+        "text": "O standby quebra a durabilidade, porque uma venda que o primário confirmou não sobreviveu nele.",
+        "why": "Durabilidade é sobre a máquina que confirmou; uma réplica que ainda não recebeu a mudança não é uma violação."
+      },
+      {
+        "text": "Os dois mantêm as restrições declaradas, o C do ACID; o standby falha o C do CAP, que pede a escrita mais recente.",
+        "why": "Isso."
+      },
+      {
+        "text": "O standby quebra o C do ACID, já que o 11 que ele responde contradiz o 10 que o primário confirmou.",
+        "why": "11 obedece a toda restrição declarada; o C do ACID é sobre restrições, não sobre concordar com outra cópia."
+      }
+    ]
+  },
+  "ex-274ns4ss": {
+    "prompt": "Atrás do Nginx da Quitanda, que guarda as respostas da API por sessenta segundos, alguém da equipe baixa um preço com um `PUT` que responde `\"price_cents\": 7990`. A pessoa recarrega o produto e vê `8990`, com `X-Cache-Status: HIT`; perguntada direto, sem passar pelo cache, a loja diz `7990`. Que leitura e que correção as duas aulas sustentam?",
+    "hint": "Arquitetura de Sistemas, aula 9; Servidores Web e Cache, aula 6.",
+    "choices": [
+      {
+        "text": "Read-your-writes: a tela de quem muda os preços lê a própria loja, e o cache fica para os visitantes.",
+        "why": "Isso."
+      },
+      {
+        "text": "Leituras monotônicas: prender a pessoa a uma máquina Nginx, para as versões que ela vê só andarem para a frente.",
+        "why": "Há um cache só, e ele guarda a resposta velha; prender-se a ele não muda nada. Quem escreveu é quem foi enganado."
+      },
+      {
+        "text": "O `PUT` nunca chegou ao banco, então tem de ser mandado de novo, desta vez levando uma chave de idempotência.",
+        "why": "A loja, perguntada sem o cache, já diz 7990; a escrita chegou."
+      },
+      {
+        "text": "Um cache mal configurado: cortar toda validade para um segundo, para ninguém conseguir ver um preço velho.",
+        "why": "Uma validade de um segundo quase não poupa a aplicação, e a pessoa ainda pode ler errado a própria mudança."
+      }
+    ]
+  },
+  "ex-2qs99e8r": {
+    "prompt": "O replay de um standby está pausado enquanto o primário escreve 200.000 linhas. No primário, `pg_stat_replication` mostra `replay_lag` de `00:00:00.284866` e 15 MB entre `sent_lsn` e `replay_lsn`. A loja manda a leitura de um usuário ao standby só depois que `pg_last_wal_replay_lsn()` alcançou o LSN da última escrita desse usuário. O que é verdade nesse momento?",
+    "hint": "Arquitetura de Sistemas, aula 10; Escala e Observabilidade, aula 2.",
+    "choices": [
+      {
+        "text": "O standby está menos de um terço de segundo atrás, e a conferência passa para escritas mais antigas.",
+        "why": "`replay_lag` é o atraso da última mudança aplicada, e nada foi aplicado desde a pausa."
+      },
+      {
+        "text": "O `replay_lag` está certo, e os 15 MB são log que o standby já aplicou mas ainda não gravou em disco.",
+        "why": "A diferença é entre o enviado e o reaplicado: 15 MB que o standby não aplicou."
+      },
+      {
+        "text": "A conferência não é confiável com o replay pausado, então as leituras ficam no primário até o `replay_lag` zerar.",
+        "why": "A comparação de LSN é a exata; a coluna de tempo é que engana aqui."
+      },
+      {
+        "text": "Está bem atrás, porque esse tempo para de crescer quando nada é aplicado; a comparação falha e o primário atende a leitura.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-zq63ra85": {
+    "prompt": "A aula 10 de Escala mediu que o jitter completo reduziu as novas tentativas que caem nos 10 ms mais cheios de 1.000 para 85. Um colega põe jitter completo nas três novas tentativas do checkout e repete o congelamento de três segundos da aula 11. Vinte segundos depois o checkout ainda falha nove pedidos em dez. Por que o jitter não ajudou?",
+    "hint": "Arquitetura de Sistemas, aula 11; Escala e Observabilidade, aula 10.",
+    "choices": [
+      {
+        "text": "Jitter só importa quando os chamadores tentam de novo no mesmo instante, e o backoff do checkout já espalhava as tentativas.",
+        "why": "Backoff sem jitter muda o pico de lugar em vez de espalhá-lo; é para isso que o jitter existe."
+      },
+      {
+        "text": "O jitter completo pode sortear espera zero, e algumas tentativas voltam na hora e reiniciam a tempestade sozinhas.",
+        "why": "Algumas tentativas imediatas fazem parte do espalhamento; a tempestade precisa de muito mais chamadas que isso."
+      },
+      {
+        "text": "Ele espalha as tentativas no tempo sem diminuí-las: cada pedido ainda faz até quatro chamadas.",
+        "why": "Isso."
+      },
+      {
+        "text": "O jitter tinha de estar no serviço de estoque, que decide quando responder.",
+        "why": "Jitter é a espera aleatória de quem chama antes de tentar de novo; o serviço não tem o que sortear."
+      }
+    ]
+  },
+  "ex-7fgtv24z": {
+    "prompt": "A loja da aula 12 roda sem limite na fila de pedidos (`QUEUE` não definido), e seu único worker trata dez pedidos por segundo. Uma rajada de 300 pedidos chega de uma vez e todos recebem `202 Accepted`. Mais ou menos quantos segundos o último deles espera antes de ser tratado?",
+    "hint": "Arquitetura de Sistemas, aula 12."
+  },
+  "ex-hqhcjfcx": {
+    "prompt": "No desenho da aula 13 cada pedido é seu próprio fluxo de eventos, protegido por `UNIQUE (stream, version)`. Dois clientes, cada um no seu pedido, adicionam o último pacote de café e pagam no mesmo instante. O que impede a loja de vender dois pacotes que não tem?",
+    "hint": "Arquitetura de Sistemas, aula 13.",
+    "choices": [
+      {
+        "text": "Nada nos pedidos: nenhum comando carrega dois fluxos, então a regra pede um fluxo de estoque em que todo pedido anexe, ou uma saga.",
+        "why": "Isso."
+      },
+      {
+        "text": "A restrição única, já que os dois comandos tentam anexar o mesmo número de versão na mesma tabela de eventos, e o segundo é recusado.",
+        "why": "A restrição vale por fluxo; dois pedidos diferentes escrevendo cada um a sua versão 2 nunca colidem."
+      },
+      {
+        "text": "A projeção, que recusa um `OrderPaid` que levaria `units_sold` além do estoque da prateleira.",
+        "why": "Uma projeção monta modelos de leitura depois do fato; ela não recusa eventos."
+      },
+      {
+        "text": "A concorrência otimista, que recarrega o segundo pedido antes de anexar e encontra o café já vendido.",
+        "why": "Recarregar um pedido reaplica só os eventos daquele pedido; a venda de outro cliente não está neles."
+      }
+    ]
+  },
+  "ex-6bejfck5": {
+    "prompt": "O checkout orquestrado da Quitanda reserva o café, cobra o cartão, agenda a entrega e confirma a reserva como vendida. A equipe agora quer que ele mande também um e-mail de \"pedido confirmado\". Onde a aula 14 põe esse passo?",
+    "hint": "Arquitetura de Sistemas, aula 14.",
+    "choices": [
+      {
+        "text": "Primeiro, para o cliente saber na hora, com um e-mail de correção como compensação se um passo seguinte falhar.",
+        "why": "Um e-mail enviado não volta; um segundo é outro fato, não um desfazer."
+      },
+      {
+        "text": "Entre a reserva e a cobrança, porque a reserva já garante que o café está na prateleira.",
+        "why": "A cobrança e a entrega ainda podem falhar depois disso, e o e-mail ficaria falso."
+      },
+      {
+        "text": "Em qualquer ponto da lista, desde que o passo seja idempotente, já que um e-mail repetido sai uma vez só.",
+        "why": "Idempotência evita a duplicata; não desfaz um e-mail que uma falha posterior torna falso."
+      },
+      {
+        "text": "Depois de agendada a entrega, o pivô, porque um e-mail não pode ser compensado e dali em diante a saga só vai para a frente.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-8jthzqs6": {
+    "prompt": "A Quitanda está tirando os dados de estoque do monólito e levando para o novo serviço de estoque atrás da fachada do strangler. Ponha os passos na ordem que a aula 15 dá.",
+    "hint": "Arquitetura de Sistemas, aula 15.",
+    "items": [
+      "Fazer do módulo de estoque a única entrada para as tabelas dele, ainda dentro do monólito",
+      "Dar ao novo serviço uma cópia, alimentada por change data capture ou por um outbox",
+      "Mandar as leituras ao novo serviço pela fachada, uma parte de cada vez",
+      "Mover as escritas, para o novo serviço virar o dono",
+      "Parar a cópia e apagar as tabelas antigas"
+    ],
+    "trap": "Mover as escritas cedo parece a migração de verdade, mas o dono só deve mudar depois que as leituras mostraram que a cópia concorda, e as tabelas antigas saem por último, quando nada mais as lê."
+  },
+  "ex-d6bnrp2v": {
+    "prompt": "O `pg_stat_statements` mostra a consulta de itens do histórico de pedidos da Quitanda chamada uma vez por pedido, um múltiplo da consulta de pedidos. Um colega corrige marcando os itens do pedido como sempre carregados de forma antecipada, na classe do modelo. O que as duas aulas dizem dessa correção?",
+    "hint": "Arquitetura de Sistemas, aula 16; Bancos de Dados Relacionais e SQL, aula 11.",
+    "choices": [
+      {
+        "text": "É a correção recomendada, porque o carregamento antecipado marcado na classe tira todo N+1 da aplicação inteira de uma vez.",
+        "why": "Ela tira este N+1 e acrescenta um custo a toda outra tela que carrega um pedido."
+      },
+      {
+        "text": "Este N+1 some, mas toda tela que abre um pedido passa a buscar os itens também; a instrução vai onde o laço começa.",
+        "why": "Isso."
+      },
+      {
+        "text": "Não funciona, porque carregamento antecipado é um join, e um join numa relação para-muitos devolve linhas erradas para cada pedido.",
+        "why": "Um join numa relação para-muitos repete o pai; as linhas estão certas, só maiores."
+      },
+      {
+        "text": "Ela leva o problema para o banco, que agora roda o mesmo N+1 dentro dele como uma stored procedure.",
+        "why": "O carregamento antecipado manda uma consulta por nível, ou um join; nada fica em laço dentro do banco."
+      }
+    ]
+  },
+  "ex-renw76n1": {
+    "prompt": "O índice da Quitanda analisa os nomes com `portuguese_folded`: `lowercase`, `asciifolding` e o stemmer brasileiro. Sem `--fuzzy`, quais destas palavras, digitadas sozinhas na caixa de busca, viram um termo com que `Café torrado em grãos` foi guardado? Marque todas as que se aplicam.",
+    "hint": "Arquitetura de Sistemas, aula 17.",
+    "choices": [
+      {
+        "text": "`cafe`",
+        "why": "Dobrada e reduzida ao radical, vira `caf`, o mesmo termo de `Café`."
+      },
+      {
+        "text": "`torado`",
+        "why": "Falta uma letra; não é um termo do índice, e só o `--fuzzy` chega a `torr` a partir dela."
+      },
+      {
+        "text": "`torrada`",
+        "why": "O stemmer corta `torrado`, `torrada` e `torrados` para `torr`."
+      },
+      {
+        "text": "`tostado`",
+        "why": "Outra palavra, com outro radical, que está no nome do chá mate e não neste."
+      }
+    ]
+  },
+  "ex-tergvrzf": {
+    "prompt": "A página de pedido da Quitanda abre um fluxo de Server-Sent Events pelo Nginx, cuja location `/api/` define `proxy_read_timeout 3s`. Um pedido muda algumas vezes por hora. O que acontece com o fluxo, e o que as duas aulas sugerem?",
+    "hint": "Arquitetura de Sistemas, aula 18; Servidores Web e Cache, aula 2.",
+    "choices": [
+      {
+        "text": "O Nginx o corta após três segundos de silêncio; dar a ele um bloco próprio com timeout maior, ou escrever antes.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada, porque `proxy_read_timeout` só limita quanto tempo a loja leva para começar a responder, e o fluxo começou na hora.",
+        "why": "É o intervalo entre duas leituras da resposta, e um fluxo ocioso tem intervalos longos."
+      },
+      {
+        "text": "O Nginx o fecha depois de três segundos, mande-se o que for, porque o timeout limita o pedido inteiro.",
+        "why": "Nenhum timeout do Nginx limita o total; uma resposta que pinga um byte a tempo nunca expira."
+      },
+      {
+        "text": "O fluxo sobrevive, porque o Nginx nunca aplica o timeout de leitura a uma resposta do tipo `text/event-stream`.",
+        "why": "O Nginx trata o fluxo como qualquer outra resposta da loja."
+      }
+    ]
+  },
+  "ex-0z7e0fxm": {
+    "prompt": "O Kubernetes faz duas perguntas a um pod. Uma é se o processo deveria ser reiniciado. A outra, feita pela sonda de ___, é se a instância deveria receber tráfego agora, e um pod que falha nela sai dos endpoints do Service sem ser reiniciado.",
+    "hint": "Arquitetura de Sistemas, aula 19.",
+    "blanks": [
+      {
+        "accept": [
+          "readiness",
+          "readiness probe",
+          "prontidão"
+        ]
+      }
+    ]
+  }
+}

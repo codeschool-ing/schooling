@@ -1,0 +1,647 @@
+[
+  {
+    "id": "ex-h3yyhn1k",
+    "version": 1,
+    "section": "the-flow",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "According to the lesson, when does a pipeline earn its place in a security course?",
+    "hint": "Think about the other roads.",
+    "choices": [
+      {
+        "text": "When it is the one way in",
+        "correct": true,
+        "why": "Right. Which is as much about permissions as about scripts."
+      },
+      {
+        "text": "When it saves people from typing `terraform apply`",
+        "correct": false,
+        "why": "That is the convenience picture, in which the checks become a courtesy."
+      },
+      {
+        "text": "When it runs at least one scanner on every push to the repository",
+        "correct": false,
+        "why": "Scanners matter, and a pipeline with scanners that people can walk around still guards nothing."
+      },
+      {
+        "text": "When it applies changes faster than a person could from a laptop",
+        "correct": false,
+        "why": "Speed is not the security property; the single road is."
+      }
+    ]
+  },
+  {
+    "id": "ex-35s23rfh",
+    "version": 1,
+    "section": "the-flow",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the stages of the clinic's flow in order.",
+    "hint": "Cheap first; the human after the machines; the change last.",
+    "items": [
+      "format",
+      "validate",
+      "scan",
+      "plan",
+      "review by a person",
+      "apply the saved plan"
+    ],
+    "trap": "Putting the review before the scan is the usual slip: the person would read what a machine could have refused."
+  },
+  {
+    "id": "ex-yrvy9axa",
+    "version": 1,
+    "section": "the-flow",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the apply use the saved plan instead of computing a new one?",
+    "hint": "Who read which plan?",
+    "choices": [
+      {
+        "text": "A saved plan applies faster, which shortens the window for errors",
+        "correct": false,
+        "why": "Speed is beside the point; what matters is which changes are made."
+      },
+      {
+        "text": "So what is applied is exactly what the reviewer read",
+        "correct": true,
+        "why": "Right. A fresh plan computed later is a change nobody saw."
+      },
+      {
+        "text": "Terraform refuses to plan twice in the same directory",
+        "correct": false,
+        "why": "The lesson planned many times in one directory."
+      },
+      {
+        "text": "Because a new plan would need the reviewer's credentials, which the pipeline does not hold",
+        "correct": false,
+        "why": "A plan needs read access, which the pipeline has; the reason is what the reviewer saw."
+      }
+    ]
+  },
+  {
+    "id": "ex-k1jj777d",
+    "version": 1,
+    "section": "the-flow",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team's pipeline runs every gate perfectly, and last month's exposed bucket was still made public. Which explanation does the lesson point to first?",
+    "hint": "The dashed arrow.",
+    "choices": [
+      {
+        "text": "A scanner rule was missing",
+        "correct": false,
+        "why": "Possible, but the lesson's point is a change that never met the scanner."
+      },
+      {
+        "text": "The reviewer approved a plan without reading it",
+        "correct": false,
+        "why": "Then the plan would have shown the policy; a careless review is a different failure from a bypass."
+      },
+      {
+        "text": "Somebody with write access changed it from the console, outside the road",
+        "correct": true,
+        "why": "Right. Taking write access away closes that road; lesson 16 finds what still uses it."
+      },
+      {
+        "text": "The gate ran its stages in the wrong order",
+        "correct": false,
+        "why": "Order affects cost, not what reaches the account."
+      }
+    ]
+  },
+  {
+    "id": "ex-vn8ppa0w",
+    "version": 1,
+    "section": "a-gate",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a pipeline read from each gate to decide whether the change goes on?",
+    "hint": "Zero, or anything else.",
+    "choices": [
+      {
+        "text": "The text of the last line the tool printed",
+        "correct": false,
+        "why": "Text varies between versions; the contract is the exit status."
+      },
+      {
+        "text": "Whether the output mentions the word FAILED",
+        "correct": false,
+        "why": "The warning run printed FAILED six times and exited 0."
+      },
+      {
+        "text": "How long the gate took to run, compared with a limit set for each stage",
+        "correct": false,
+        "why": "Nothing in the script measures time."
+      },
+      {
+        "text": "Its exit status",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-eghe1rr8",
+    "version": 1,
+    "section": "a-gate",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each exit status of `terraform plan -detailed-exitcode` to what it means.",
+    "hint": "Three answers instead of two.",
+    "pairs": [
+      {
+        "left": "0",
+        "right": "no changes"
+      },
+      {
+        "left": "1",
+        "right": "an error"
+      },
+      {
+        "left": "2",
+        "right": "changes to apply"
+      }
+    ],
+    "right_distractors": [
+      "changes, and some resources will be destroyed"
+    ]
+  },
+  {
+    "id": "ex-k6g1m23h",
+    "version": 1,
+    "section": "a-gate",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On its first run, the gate's plan proposed to add how many resources?",
+    "hint": "The export bucket and two of its settings.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "resources"
+  },
+  {
+    "id": "ex-bgxvcs5a",
+    "version": 1,
+    "section": "a-gate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When caio's `tablet.tf` brought back the public policy, why did the plan never run?",
+    "hint": "Look at the order of the gates.",
+    "choices": [
+      {
+        "text": "The scan, which comes before the plan, exited non-zero and the script stopped",
+        "correct": true,
+        "why": "Right. Nobody is asked to review a change a machine has already refused."
+      },
+      {
+        "text": "Terraform cannot plan a bucket policy that uses `\"*\"`",
+        "correct": false,
+        "why": "It planned exactly that in lesson 12."
+      },
+      {
+        "text": "moto refused the policy, because the bucket's public access block forbids public policies",
+        "correct": false,
+        "why": "moto enforces no public access block, and the plan was never reached anyway."
+      },
+      {
+        "text": "Validation failed",
+        "correct": false,
+        "why": "The heading after validate was scan, so validate passed."
+      }
+    ]
+  },
+  {
+    "id": "ex-chp147vk",
+    "version": 1,
+    "section": "a-gate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The gate is run again right after an apply, with nothing changed, and answers \"no changes\". What else does that run tell you?",
+    "hint": "What would the plan show if somebody had used the console?",
+    "choices": [
+      {
+        "text": "That the scanner's rules are up to date",
+        "correct": false,
+        "why": "The scan says nothing about its own age."
+      },
+      {
+        "text": "That the account matches the code: nobody changed these resources by hand since the apply",
+        "correct": true,
+        "why": "Right. The cheapest drift check there is, limited to what this code manages."
+      },
+      {
+        "text": "That the pipeline's role has no write access",
+        "correct": false,
+        "why": "The plan reads; it says nothing about what the role could write."
+      },
+      {
+        "text": "That the whole account, every region included, is free of exposed buckets and open security groups",
+        "correct": false,
+        "why": "Only the resources in this configuration; others are lesson 16's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-e0gkvz0a",
+    "version": 1,
+    "section": "break-or-warn",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which test does the lesson give for putting a check on the blocking list?",
+    "hint": "A day of the week is involved.",
+    "choices": [
+      {
+        "text": "Whether the scanner marks it as critical",
+        "correct": false,
+        "why": "The lesson's scanner ran offline with no severities; the decision is the team's."
+      },
+      {
+        "text": "Whether it has ever failed on one of the team's own repositories",
+        "correct": false,
+        "why": "History of failures says nothing about the harm a finding causes."
+      },
+      {
+        "text": "Whether you would stop a release for it at five on a Friday",
+        "correct": true,
+        "why": "Right. If the honest answer is \"it depends\", it is a warning."
+      },
+      {
+        "text": "Whether the fix takes less than an hour",
+        "correct": false,
+        "why": "Effort to fix is not the measure; the harm at apply time is."
+      }
+    ]
+  },
+  {
+    "id": "ex-wvp5cw0y",
+    "version": 1,
+    "section": "break-or-warn",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which findings are on the clinic's blocking list? Choose all that apply.",
+    "hint": "Exposure and everything-granted.",
+    "choices": [
+      {
+        "text": "A bucket policy allowing an action to any principal",
+        "correct": true,
+        "why": "Right: `CKV_AWS_70`."
+      },
+      {
+        "text": "A bucket with versioning off",
+        "correct": false,
+        "why": "A warning: the tablet bucket went through with it."
+      },
+      {
+        "text": "An AWS access key in the code",
+        "correct": true,
+        "why": "Right: `CKV_SECRET_2`."
+      },
+      {
+        "text": "A security group open to the internet on port 22",
+        "correct": true,
+        "why": "Right: `CKV_AWS_24`."
+      },
+      {
+        "text": "A bucket with no access logging",
+        "correct": false,
+        "why": "A warning, printed and let through."
+      }
+    ]
+  },
+  {
+    "id": "ex-m8gj8spa",
+    "version": 1,
+    "section": "break-or-warn",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A vendor needs, for one month, a bucket it can read without signing. What does the lesson recommend?",
+    "hint": "For that resource, not for every change.",
+    "choices": [
+      {
+        "text": "Remove `CKV_AWS_70` from the blocking list until the month is over",
+        "correct": false,
+        "why": "That turns the check off for every other change too."
+      },
+      {
+        "text": "Run the gate with `--soft-fail` for the vendor's pull request, leaving the other pull requests in the repository untouched",
+        "correct": false,
+        "why": "That would let through every other blocking finding in that change as well."
+      },
+      {
+        "text": "Apply the change from a laptop, outside the pipeline",
+        "correct": false,
+        "why": "That is the road around the road."
+      },
+      {
+        "text": "A skip on that resource, with a reason, an owner and an end date somebody watches",
+        "correct": true,
+        "why": "Right. Checkov does not read the date, so something else has to."
+      }
+    ]
+  },
+  {
+    "id": "ex-zz8669xx",
+    "version": 1,
+    "section": "break-or-warn",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A developer's pull request edits `gate.sh` to drop `CKV_AWS_70` and, in the same change, adds a public bucket policy. The gate passes. What failed?",
+    "hint": "Who may move the line?",
+    "choices": [
+      {
+        "text": "The rule that changes to the gate need the security owner's approval was missing",
+        "correct": true,
+        "why": "Right. A gate editable by the change it judges guards nothing."
+      },
+      {
+        "text": "Nothing: the developer had a reason",
+        "correct": false,
+        "why": "A reason belongs in a skip on one resource, reviewed, not in deleting the check."
+      },
+      {
+        "text": "Checkov, which should detect edits to the script",
+        "correct": false,
+        "why": "Checkov reads infrastructure files; guarding the gate is a repository rule."
+      },
+      {
+        "text": "The plan stage, which should have caught the policy",
+        "correct": false,
+        "why": "A plan shows the policy; nothing in it decides to stop."
+      }
+    ]
+  },
+  {
+    "id": "ex-thz04xh1",
+    "version": 1,
+    "section": "break-or-warn",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The Checkov option that makes only the listed checks decide the exit status is `--hard-fail-___`.",
+    "hint": "Two letters.",
+    "blanks": [
+      {
+        "accept": [
+          "on"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9hdkc90c",
+    "version": 1,
+    "section": "who-deploys",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does the pipeline get AWS credentials in the lesson's design?",
+    "hint": "Lesson 4 did the same for a job in another cloud.",
+    "choices": [
+      {
+        "text": "An access key stored in the pipeline's secret settings",
+        "correct": false,
+        "why": "A stored key outlives every attempt to remove it, as lesson 12 showed."
+      },
+      {
+        "text": "It trades a token GitHub signs for a role's temporary credentials",
+        "correct": true,
+        "why": "Right. Nothing stored would still work next week."
+      },
+      {
+        "text": "It uses the reviewer's own credentials, handed to the job once the approval is given",
+        "correct": false,
+        "why": "Then the people would keep write access, which is the road around the road."
+      },
+      {
+        "text": "AWS sends a key to GitHub when the workflow file is pushed",
+        "correct": false,
+        "why": "AWS sends nothing on its own; the job asks for credentials with its token."
+      }
+    ]
+  },
+  {
+    "id": "ex-hrr8jh2c",
+    "version": 1,
+    "section": "who-deploys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the `token.actions.githubusercontent.com:sub` condition the one that carries the design?",
+    "hint": "GitHub signs every job's token with the same keys.",
+    "choices": [
+      {
+        "text": "moto refuses the role without it",
+        "correct": false,
+        "why": "moto stores conditions and judges none of them."
+      },
+      {
+        "text": "It sets how long the temporary credentials last",
+        "correct": false,
+        "why": "Duration is a property of the role and the request, not of this claim."
+      },
+      {
+        "text": "Without it any repository on GitHub could assume the role",
+        "correct": true,
+        "why": "Right. The issuer alone admits every job GitHub runs for anybody."
+      },
+      {
+        "text": "It encrypts the token between GitHub and AWS so that nobody on the way can read the claims",
+        "correct": false,
+        "why": "A condition encrypts nothing; it says which tokens are accepted."
+      }
+    ]
+  },
+  {
+    "id": "ex-zn6sy2er",
+    "version": 1,
+    "section": "who-deploys",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each role or line to what it is for.",
+    "hint": "Two roles, three lines.",
+    "pairs": [
+      {
+        "left": "`infra-plan`",
+        "right": "reads the account for every pull request's plan"
+      },
+      {
+        "left": "`infra-apply`",
+        "right": "writes, only for the approved production job"
+      },
+      {
+        "left": "`environment: production`",
+        "right": "makes GitHub wait for the reviewers"
+      },
+      {
+        "left": "`id-token: write`",
+        "right": "lets this job ask for a token"
+      }
+    ],
+    "right_distractors": [
+      "stores the access key for the job"
+    ]
+  },
+  {
+    "id": "ex-vhy60st1",
+    "version": 1,
+    "section": "who-deploys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson say a real workflow pins each action to a full commit hash?",
+    "hint": "What can happen to a tag?",
+    "choices": [
+      {
+        "text": "Hashes run faster than tags on GitHub's runners",
+        "correct": false,
+        "why": "No difference in speed; the point is what code runs."
+      },
+      {
+        "text": "Because the AWS action only accepts being called by hash",
+        "correct": false,
+        "why": "It can be called by tag; pinning is a choice for safety."
+      },
+      {
+        "text": "GitHub refuses tags in jobs that request `id-token: write`",
+        "correct": false,
+        "why": "It does not; the lesson's own example uses tags, for legibility."
+      },
+      {
+        "text": "Whoever controls a tag decides which code it names, and that changes when the tag moves",
+        "correct": true,
+        "why": "Right. The apply job runs with write access, so what runs inside it matters."
+      }
+    ]
+  },
+  {
+    "id": "ex-ggz9dwwf",
+    "version": 1,
+    "section": "who-deploys",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The pipeline has its two roles, but ana, caio and bia still hold administrator rights in their own roles. What does the gate amount to?",
+    "hint": "The last paragraph of the lesson.",
+    "choices": [
+      {
+        "text": "Advice: the road around it stays open to three people",
+        "correct": true,
+        "why": "Right. Read access for people, and a break-glass role used rarely and recorded."
+      },
+      {
+        "text": "A guarantee, because every change goes through the pull request",
+        "correct": false,
+        "why": "Only the changes people choose to send that way."
+      },
+      {
+        "text": "Nothing at all, so the pipeline should be removed",
+        "correct": false,
+        "why": "The gate still catches what goes through it; the fix is closing the other road."
+      },
+      {
+        "text": "A risk only if one of the three leaves the clinic and keeps the key",
+        "correct": false,
+        "why": "That is one way it goes wrong; a hurried console change by somebody still there is another."
+      }
+    ]
+  },
+  {
+    "id": "ex-3d1qd6w4",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A GitHub Actions job asks for an identity token by declaring the permission `id-token: ___`.",
+    "hint": "The opposite of read.",
+    "blanks": [
+      {
+        "accept": [
+          "write"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s18hm6s8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The warning run printed six failed checks and exited 0. Is that a defect of the gate?",
+    "hint": "What is the list at the top of the script for?",
+    "choices": [
+      {
+        "text": "Yes: a failed check must always fail the gate, whatever list the script carries at the top",
+        "correct": false,
+        "why": "A gate that blocks on everything gets switched off."
+      },
+      {
+        "text": "No: none of the six was on the blocking list, so they go to the reviewer as warnings",
+        "correct": true,
+        "why": "Right. Printed, weighed by a person, and let through."
+      },
+      {
+        "text": "Yes: Checkov crashed halfway through the report, so its exit status means nothing here",
+        "correct": false,
+        "why": "It completed its report; the status follows `--hard-fail-on`."
+      },
+      {
+        "text": "No: skipped checks do not count",
+        "correct": false,
+        "why": "These six were failures, not skips."
+      }
+    ]
+  },
+  {
+    "id": "ex-s4xmry9h",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team moves its apply from people's laptops into a pipeline that holds an administrator access key in its settings. Which lesson of the course does that ignore most directly?",
+    "hint": "Where does a stored key end up?",
+    "choices": [
+      {
+        "text": "That scanners must run before plans",
+        "correct": false,
+        "why": "Order is unaffected by where the key lives."
+      },
+      {
+        "text": "That plans should be saved to a file",
+        "correct": false,
+        "why": "Saving the plan is unaffected."
+      },
+      {
+        "text": "That a stored long-lived key outlives every attempt to remove it; a role assumed with a token holds nothing to leak",
+        "correct": true,
+        "why": "Right. Lesson 12's leak, now with administrator rights."
+      },
+      {
+        "text": "That warnings should be printed rather than hidden",
+        "correct": false,
+        "why": "Unrelated to the credential."
+      }
+    ]
+  }
+]

@@ -1,0 +1,695 @@
+[
+  {
+    "id": "ex-p4spp7re",
+    "version": 1,
+    "section": "installing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson configure a plugin cache before the first `terraform init`?",
+    "hint": "Think about the size of one thing Terraform downloads.",
+    "choices": [
+      {
+        "text": "To keep one copy of the 800 MB provider, not one per directory",
+        "correct": true,
+        "why": "Right. Two directories in this lesson, one copy of the provider."
+      },
+      {
+        "text": "Without it Terraform cannot reach moto, which listens on a port it does not know",
+        "correct": false,
+        "why": "Reaching moto is env.sh's job, through AWS_ENDPOINT_URL."
+      },
+      {
+        "text": "It stops Terraform from contacting the registry, so nothing is downloaded at all",
+        "correct": false,
+        "why": "On your computer the provider still comes from the registry, once."
+      },
+      {
+        "text": "Checkov reads its rules from there",
+        "correct": false,
+        "why": "Checkov has nothing to do with Terraform's plugin cache."
+      }
+    ]
+  },
+  {
+    "id": "ex-9jzt8mwq",
+    "version": 1,
+    "section": "installing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is `s3_use_path_style = true` in the provider block for?",
+    "hint": "It is there for moto alone.",
+    "choices": [
+      {
+        "text": "It turns on encryption for every bucket the provider creates",
+        "correct": false,
+        "why": "Encryption is a resource of its own; this setting is about addresses."
+      },
+      {
+        "text": "It writes a bucket's address as `localhost:4567/bucket`",
+        "correct": true,
+        "why": "Right. Against AWS it is left out."
+      },
+      {
+        "text": "It forces every bucket the provider creates to be private, whatever its policy says",
+        "correct": false,
+        "why": "Nothing about access; it changes how the address is written."
+      },
+      {
+        "text": "It points the provider at moto instead of AWS",
+        "correct": false,
+        "why": "That is AWS_ENDPOINT_URL, which the provider reads from the environment, as the command line does."
+      }
+    ]
+  },
+  {
+    "id": "ex-kkek1dbr",
+    "version": 1,
+    "section": "the-plan-is-the-review",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first plan showed `policy = (known after apply)` for the tablet's bucket policy. Why?",
+    "hint": "What did the `Resource` line refer to?",
+    "choices": [
+      {
+        "text": "Terraform never shows policies in a plan, to protect them",
+        "correct": false,
+        "why": "The second plan showed the whole policy. Nothing is hidden on purpose."
+      },
+      {
+        "text": "The policy was marked sensitive",
+        "correct": false,
+        "why": "Nothing was marked sensitive; a sensitive value reads `(sensitive value)`."
+      },
+      {
+        "text": "It used the bucket's ARN, which is unknown until the bucket exists",
+        "correct": true,
+        "why": "Right. Built from `local.bucket` instead, the value became known and the plan showed it."
+      },
+      {
+        "text": "moto had not created the bucket yet, and a real AWS account would have shown it",
+        "correct": false,
+        "why": "Terraform computes this before asking anybody; AWS would give the same plan."
+      }
+    ]
+  },
+  {
+    "id": "ex-znz8z1xj",
+    "version": 1,
+    "section": "the-plan-is-the-review",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team adds the lesson's `jq` query to every pull request and it has never printed a line. What does that prove?",
+    "hint": "Remember the first plan of the section.",
+    "choices": [
+      {
+        "text": "That no change has ever granted anything to everybody",
+        "correct": false,
+        "why": "A policy unknown at plan time has no value to query and passes in silence."
+      },
+      {
+        "text": "Only that no policy whose value was known at plan time had a statement for `\"*\"`",
+        "correct": true,
+        "why": "Right. The query is a second reader, as good as the habit of making values knowable."
+      },
+      {
+        "text": "That the query is broken, since jq prints at least one line",
+        "correct": false,
+        "why": "With nothing to report it prints nothing, which is the expected answer."
+      },
+      {
+        "text": "That Block Public Access is on in the account",
+        "correct": false,
+        "why": "The query reads the plan, not the account's settings."
+      }
+    ]
+  },
+  {
+    "id": "ex-4zn2rkc3",
+    "version": 1,
+    "section": "the-plan-is-the-review",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To turn a saved plan into JSON you run `terraform ___ -json plan.bin`.",
+    "hint": "The same subcommand prints the state.",
+    "blanks": [
+      {
+        "accept": [
+          "show"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-b605fyaq",
+    "version": 1,
+    "section": "the-plan-is-the-review",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A reviewer reads the diff of the `.tf` files carefully and skips the plan. What has the reviewer missed?",
+    "hint": "The diff is what somebody typed.",
+    "choices": [
+      {
+        "text": "What AWS will actually be asked to do",
+        "correct": true,
+        "why": "Right. Approving code without its plan approves a change you never saw."
+      },
+      {
+        "text": "Nothing, since the plan is generated from the same files",
+        "correct": false,
+        "why": "Generated from them, and from variables, defaults and what already exists, which the diff does not show."
+      },
+      {
+        "text": "The cost of the change, which the plan prices per resource",
+        "correct": false,
+        "why": "A plan does not price anything; the point is what it does."
+      },
+      {
+        "text": "The secrets, which are only visible in the plan",
+        "correct": false,
+        "why": "A plan hides sensitive values; it is the state that keeps them."
+      }
+    ]
+  },
+  {
+    "id": "ex-xr1rw565",
+    "version": 1,
+    "section": "scanning",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Of Checkov's eight failures on the first file, which one is the defect the lesson set out to catch?",
+    "hint": "The tablet policy.",
+    "choices": [
+      {
+        "text": "`CKV_AWS_144`, no cross-region replication",
+        "correct": false,
+        "why": "A decision that depends on the bucket; this export can be rebuilt."
+      },
+      {
+        "text": "`CKV_AWS_70`, an action allowed to any principal",
+        "correct": true,
+        "why": "Right. That is lesson 1's mistake, caught before it existed."
+      },
+      {
+        "text": "`CKV_AWS_18`, no access logging on the bucket",
+        "correct": false,
+        "why": "Worth deciding, and decided for every bucket at once; it is not what exposes the data."
+      },
+      {
+        "text": "`CKV_AWS_145`, no KMS key for the default encryption of the bucket",
+        "correct": false,
+        "why": "Encryption at rest would not have stopped a public policy from serving the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-h52vc3ev",
+    "version": 1,
+    "section": "scanning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the fixed file answer five checks with `#checkov:skip=` comments instead of fixing them?",
+    "hint": "A scanner applies the same rules to every bucket.",
+    "choices": [
+      {
+        "text": "Because Checkov reports them by mistake",
+        "correct": false,
+        "why": "They are correct rules; whether they fit this bucket is a decision."
+      },
+      {
+        "text": "To make the scan pass with as little work as possible",
+        "correct": false,
+        "why": "A skip with no reason would be that. Each skip here carries a sentence somebody can disagree with."
+      },
+      {
+        "text": "Each is a decision about this bucket, recorded with a reason",
+        "correct": true,
+        "why": "Right. Counted in every run and visible in the file."
+      },
+      {
+        "text": "Because moto does not support those features, so fixing them would break the lab",
+        "correct": false,
+        "why": "Checkov never talks to moto; it reads the files."
+      }
+    ]
+  },
+  {
+    "id": "ex-h8b8nscj",
+    "version": 1,
+    "section": "scanning",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many checks did Checkov report as failed on the first version of the file?",
+    "hint": "Count the `Check:` lines.",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "checks"
+  },
+  {
+    "id": "ex-pvqm2vxs",
+    "version": 1,
+    "section": "scanning",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Checkov passes on the clinic's Terraform, yet an anonymous request reads a file from one of its buckets. Which explanation fits what a scanner can see?",
+    "hint": "It reads files, not the account.",
+    "choices": [
+      {
+        "text": "Checkov's rules for S3 are out of date",
+        "correct": false,
+        "why": "Its rule caught exactly this policy in the lesson; the gap is elsewhere."
+      },
+      {
+        "text": "The skip comments disabled the public access rule",
+        "correct": false,
+        "why": "The five skips named other checks; CKV_AWS_70 and CKV2_AWS_6 passed."
+      },
+      {
+        "text": "The bucket was made public by hand, or by another configuration, outside these files",
+        "correct": true,
+        "why": "Right. Reading the account as it is belongs to lesson 16."
+      },
+      {
+        "text": "Checkov passed only because it ran offline",
+        "correct": false,
+        "why": "`--skip-download` skips guideline links, not checks."
+      }
+    ]
+  },
+  {
+    "id": "ex-9534mnh5",
+    "version": 1,
+    "section": "scanning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a pipeline read from a Checkov run to decide whether to continue?",
+    "hint": "The `echo` after each run printed it.",
+    "choices": [
+      {
+        "text": "Its exit status: 1 with failures, 0 without",
+        "correct": true,
+        "why": "Right. Lesson 14 builds a gate on it."
+      },
+      {
+        "text": "The number of skipped checks, which must be zero",
+        "correct": false,
+        "why": "The fixed file had five skips and exited 0."
+      },
+      {
+        "text": "The colour of the output in the terminal",
+        "correct": false,
+        "why": "A pipeline reads no colours; the exit status is the contract."
+      },
+      {
+        "text": "A report uploaded to the vendor's servers after every run",
+        "correct": false,
+        "why": "The lesson ran it offline; nothing was uploaded."
+      }
+    ]
+  },
+  {
+    "id": "ex-x1804srj",
+    "version": 1,
+    "section": "secrets-in-the-repo",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "bia removed the key from `main.tf` and committed. The scanner now passes. What is still true?",
+    "hint": "`git log -S` answered.",
+    "choices": [
+      {
+        "text": "The key is gone from every copy of the repository, clones included",
+        "correct": false,
+        "why": "From today's files only; every clone made before keeps the history."
+      },
+      {
+        "text": "The key still works, and is still in the history and every earlier clone",
+        "correct": true,
+        "why": "Right. Only making it worthless ends the leak."
+      },
+      {
+        "text": "AWS revoked the key automatically when the commit removed it from the file",
+        "correct": false,
+        "why": "AWS knows nothing about your files; the key stays valid until somebody deactivates it."
+      },
+      {
+        "text": "Nothing, now that the scanner is clean",
+        "correct": false,
+        "why": "The scanner read the current files; the history it did not read still holds the key."
+      }
+    ]
+  },
+  {
+    "id": "ex-5q0w3zgf",
+    "version": 1,
+    "section": "secrets-in-the-repo",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the response to a key found in a repository in the order the lesson gives.",
+    "hint": "Until the first step, everything else is cosmetic.",
+    "items": [
+      "deactivate the key, then delete it",
+      "find out what the key did",
+      "replace it with credentials that cannot leak the same way",
+      "clean the repository's history"
+    ],
+    "trap": "Cleaning the history first is the slip: it removes the line from the copies you control and leaves the key working."
+  },
+  {
+    "id": "ex-40rgms9m",
+    "version": 1,
+    "section": "secrets-in-the-repo",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Checkov reported `CKV_SECRET_6`, \"Base64 High Entropy String\", for the line with `secret_key`. What does that check look for?",
+    "hint": "It knows nothing about AWS.",
+    "choices": [
+      {
+        "text": "The prefix `AKIA`",
+        "correct": false,
+        "why": "That is CKV_SECRET_2's test, on the access key id."
+      },
+      {
+        "text": "Strings random enough that they rarely mean anything but a secret",
+        "correct": true,
+        "why": "Right. It flags shape and randomness, not a vendor's format."
+      },
+      {
+        "text": "A key that AWS confirms is valid when Checkov asks it during the scan",
+        "correct": false,
+        "why": "Checkov asks nobody; the key in the lesson was never valid and was still flagged."
+      },
+      {
+        "text": "The word `secret` in the name of a variable, followed by whatever value it holds",
+        "correct": false,
+        "why": "It flagged the value; a variable named secret holding nothing random would pass."
+      }
+    ]
+  },
+  {
+    "id": "ex-mgqzb2en",
+    "version": 1,
+    "section": "secrets-in-the-repo",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where can the provider get credentials so that none has to be written in a `.tf` file? Choose all that apply.",
+    "hint": "The same places the command line looks.",
+    "choices": [
+      {
+        "text": "Environment variables, as env.sh sets them",
+        "correct": true,
+        "why": "Right. That is how this lab gives it the test key."
+      },
+      {
+        "text": "A profile on the laptop",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A role, for anything that runs in the cloud or in a pipeline",
+        "correct": true,
+        "why": "Right. Lesson 14 is about the pipeline's."
+      },
+      {
+        "text": "A `terraform.tfvars` file committed beside main.tf",
+        "correct": false,
+        "why": "A committed tfvars file is a file in the repository, with the same problem as main.tf."
+      }
+    ]
+  },
+  {
+    "id": "ex-yxfnc47s",
+    "version": 1,
+    "section": "secrets-in-the-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`terraform state show` printed `secret_string = (sensitive value)`. What did `grep` on `terraform.tfstate` print?",
+    "hint": "`sensitive` hides from the screen.",
+    "choices": [
+      {
+        "text": "The same `(sensitive value)` marker",
+        "correct": false,
+        "why": "The marker is how the screen shows it; the file holds the value."
+      },
+      {
+        "text": "A hash of the password",
+        "correct": false,
+        "why": "No hashing happens; it is stored as given."
+      },
+      {
+        "text": "The password, in clear text",
+        "correct": true,
+        "why": "Right. `Clinic-2019-Booking!`, word for word."
+      },
+      {
+        "text": "The password encrypted with the state's own key, which Terraform keeps in .terraform",
+        "correct": false,
+        "why": "The local state is not encrypted at all; only a backend can encrypt it at rest."
+      }
+    ]
+  },
+  {
+    "id": "ex-e0nvxx8m",
+    "version": 1,
+    "section": "secrets-in-the-state",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After switching to `secret_string_wo`, `terraform.tfstate` no longer holds the password. Why does the lesson still say the password has to change?",
+    "hint": "Count the files grep looked at.",
+    "choices": [
+      {
+        "text": "Write-only arguments expire the value after a day",
+        "correct": false,
+        "why": "Nothing expires; the secret still answered with the same password."
+      },
+      {
+        "text": "The backup, and any history a backend keeps, still hold the old value",
+        "correct": true,
+        "why": "Right. `terraform.tfstate.backup:1`. A password that has been in a state file is a password that leaked."
+      },
+      {
+        "text": "Secrets Manager rejects a password set through Terraform",
+        "correct": false,
+        "why": "It accepted it, and get-secret-value returned it."
+      },
+      {
+        "text": "Because `secret_string_wo_version` was set to 1",
+        "correct": false,
+        "why": "The version only tells Terraform when to write again."
+      }
+    ]
+  },
+  {
+    "id": "ex-r0a32pth",
+    "version": 1,
+    "section": "secrets-in-the-state",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A variable that Terraform may use during a run and must never store is declared with `___ = true`.",
+    "hint": "Not `sensitive`, which only hides it from the screen.",
+    "blanks": [
+      {
+        "accept": [
+          "ephemeral"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3m1phgxv",
+    "version": 1,
+    "section": "secrets-in-the-state",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each place to what it did with the database password.",
+    "hint": "The figure has three columns.",
+    "pairs": [
+      {
+        "left": "the screen of `terraform state show`",
+        "right": "hid it as `(sensitive value)`"
+      },
+      {
+        "left": "`terraform.tfstate` after the write-only change",
+        "right": "no longer held it"
+      },
+      {
+        "left": "`terraform.tfstate.backup`",
+        "right": "kept the old value"
+      },
+      {
+        "left": "the Secrets Manager secret",
+        "right": "held it, as it should"
+      }
+    ],
+    "right_distractors": [
+      "encrypted it with a KMS key"
+    ]
+  },
+  {
+    "id": "ex-9zh799fx",
+    "version": 1,
+    "section": "secrets-in-the-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Whose access to the state bucket should a team limit, according to the lesson?",
+    "hint": "The state is a secret.",
+    "choices": [
+      {
+        "text": "Everybody's except the people and the pipeline that run Terraform",
+        "correct": true,
+        "why": "Right. A state readable by the whole team makes every secret in it readable by the whole team."
+      },
+      {
+        "text": "Nobody's: the state holds only resource ids",
+        "correct": false,
+        "why": "It held a password in clear text a few commands earlier."
+      },
+      {
+        "text": "The pipeline's, since people who run Terraform by hand do not need it",
+        "correct": false,
+        "why": "People who run Terraform need it too; the point is that nobody else does."
+      },
+      {
+        "text": "The auditors', who read each version of it every quarter for the report",
+        "correct": false,
+        "why": "Nothing in the lesson gives auditors the state; they get evidence, not secrets."
+      }
+    ]
+  },
+  {
+    "id": "ex-q8j32zpp",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each command to the question it answers in this lesson.",
+    "hint": "Plan, scanner, history, state.",
+    "pairs": [
+      {
+        "left": "`terraform show -json plan.bin | jq …`",
+        "right": "which statement grants something to everybody?"
+      },
+      {
+        "left": "`checkov --framework terraform`",
+        "right": "which rules does each resource break?"
+      },
+      {
+        "left": "`git log -p -S <key>`",
+        "right": "which commits ever held this key?"
+      },
+      {
+        "left": "`grep … terraform.tfstate`",
+        "right": "is the secret written in the state?"
+      }
+    ],
+    "right_distractors": [
+      "who last used this key?"
+    ]
+  },
+  {
+    "id": "ex-msx6tpz0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A pull request adds a bucket policy whose `Resource` uses `aws_s3_bucket.x.arn`, a scanner passes with a skip for `CKV_AWS_70` and no reason, and the plan shows `(known after apply)`. Which part should block the review first?",
+    "hint": "Which of the three switches off the one check that would catch it?",
+    "choices": [
+      {
+        "text": "The unknown ARN, since plans should never contain unknowns",
+        "correct": false,
+        "why": "Unknowns are normal; this one only matters because the scanner was silenced too."
+      },
+      {
+        "text": "The reasonless skip of the check for a policy allowing any principal",
+        "correct": true,
+        "why": "Right. It turns off the one finding that names the defect, with nothing to disagree with."
+      },
+      {
+        "text": "Nothing: the scanner passed",
+        "correct": false,
+        "why": "It passed because the relevant check was skipped, and nobody said why."
+      },
+      {
+        "text": "The use of jsonencode, which hides policies from Checkov",
+        "correct": false,
+        "why": "Checkov read the jsonencode policy fine in the lesson and failed it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ycc1xbrq",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A long-lived IAM user access key id starts with the four letters `___`.",
+    "hint": "Checkov's CKV_SECRET_2 recognised it by them.",
+    "blanks": [
+      {
+        "accept": [
+          "AKIA"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s2kkqtsr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statement about `sensitive = true` on a Terraform variable is correct?",
+    "hint": "Screen against file.",
+    "choices": [
+      {
+        "text": "It encrypts the value in the state with a key kept in the .terraform directory",
+        "correct": false,
+        "why": "The state showed it in clear text."
+      },
+      {
+        "text": "It keeps the value out of plans, output and the state",
+        "correct": false,
+        "why": "Out of the screen, not out of the state; that is what `ephemeral` and write-only arguments are for."
+      },
+      {
+        "text": "It hides the value on the screen and still records it in the state",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It refuses to run if the value is in an environment variable",
+        "correct": false,
+        "why": "The lesson passed it through `TF_VAR_db_password` without complaint."
+      }
+    ]
+  }
+]
