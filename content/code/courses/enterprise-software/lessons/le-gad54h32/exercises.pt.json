@@ -1,0 +1,496 @@
+{
+  "ex-8j9e97xp": {
+    "prompt": "As 21 respostas do pedido da Vale Verde chegam ao agregador misturadas com respostas de outros pedidos. Que campo do cabeçalho permite separá-las?",
+    "hint": "A que a mensagem pertence, não o que ela é.",
+    "choices": [
+      {
+        "text": "O id de correlação, que diz a que pedido cada resposta pertence",
+        "why": "Isso: cada parte e cada resposta leva ali o número do pedido da rede, e o agregador agrupa por ele."
+      },
+      {
+        "text": "O id de mensagem de cada resposta",
+        "why": "O id de mensagem identifica uma mensagem, e as 21 respostas têm ids diferentes; ele não diz quais andam juntas."
+      },
+      {
+        "text": "O endereço de retorno, o canal de resposta",
+        "why": "O endereço de retorno diz para onde vai a resposta. Respostas de muitos pedidos dividem esse canal, então ele não as separa."
+      },
+      {
+        "text": "O horário de envio, já que as respostas de um pedido chegam próximas",
+        "why": "Respostas de pedidos diferentes se intercalam no tempo, e um ramo lento pode responder minutos depois dos outros."
+      }
+    ]
+  },
+  "ex-r28hapze": {
+    "prompt": "Associe cada tipo de mensagem ao exemplo da Serra Alta que a aula dá para ele.",
+    "hint": "Faça isto, aqui estão dados, isto aconteceu.",
+    "pairs": [
+      {
+        "left": "mensagem de comando",
+        "right": "crie este pedido de loja no SAP"
+      },
+      {
+        "left": "mensagem de documento",
+        "right": "a tabela de preços mensal enviada ao Portal B2B"
+      },
+      {
+        "left": "mensagem de evento",
+        "right": "lote 2614 liberado pela qualidade"
+      }
+    ],
+    "right_distractors": [
+      "o canal para onde a resposta deve ir"
+    ]
+  },
+  "ex-hm5txww6": {
+    "prompt": "O diagrama de um colega mostra um ícone de tradutor com um canal entrando e três saindo. Lendo na notação do livro, o que está errado?",
+    "hint": "Cada ícone promete quantas mensagens entram e saem.",
+    "choices": [
+      {
+        "text": "Nada: um tradutor pode mandar a saída para onde bem entender",
+        "why": "Um tradutor muda a mensagem e não mexe no destino; escolher entre saídas é trabalho de roteador."
+      },
+      {
+        "text": "Os canais deveriam ser desenhados como setas",
+        "why": "Como o canal é desenhado é questão de estilo; o número de saídas é o que importa."
+      },
+      {
+        "text": "Promete uma saída: é roteador ou splitter com nome errado",
+        "why": "Isso: tradutor é uma entra, uma sai. Três saídas quer dizer que o passo também roteia ou divide, e o diagrama esconde isso."
+      },
+      {
+        "text": "Um tradutor precisa de um endereço de retorno",
+        "why": "Endereço de retorno é de uma requisição que espera resposta, não de um passo no meio do fluxo."
+      }
+    ]
+  },
+  "ex-9rdvpcp3": {
+    "prompt": "O pedido de terça da Vale Verde é para 9 lojas. As 9 querem leite de Juiz de Fora, 3 também querem manteiga de Lavras e 6 querem queijo de Alagoa. Quantas mensagens o splitter produz?",
+    "hint": "Uma mensagem por loja e fábrica.",
+    "unit": "mensagens",
+    "accept_units": [
+      "mensagem"
+    ]
+  },
+  "ex-ebt9nrza": {
+    "prompt": "O agregador do Rui só fecha quando a contagem de respostas é atingida. O que acontece na manhã em que uma resposta nunca chega?",
+    "hint": "Do ponto de vista dele, nada falhou ainda.",
+    "choices": [
+      {
+        "text": "Ele manda uma confirmação com as respostas que tem",
+        "why": "Isso é o que um timeout faria. Só com a contagem, ele não tem regra que o deixe parar de esperar."
+      },
+      {
+        "text": "Ele levanta um erro e o alerta do fluxo dispara",
+        "why": "Nenhum passo falhou, então não há o que levantar. Esse silêncio é o motivo de o defeito ter durado anos."
+      },
+      {
+        "text": "O broker reentrega a resposta que falta",
+        "why": "Reentrega vale para uma mensagem que existe. Uma resposta que nunca foi produzida não pode ser reentregue."
+      },
+      {
+        "text": "Ele espera para sempre, e a rede não recebe confirmação",
+        "why": "Isso: o agregado fica aberto, nada acusa falha, e o cliente é o primeiro a perceber."
+      }
+    ]
+  },
+  "ex-vrtk16gv": {
+    "prompt": "Um agregador estoura o timeout às 06:12 e confirma o pedido sem as linhas de queijo. Às 06:25 chega a resposta do queijo. Se o agregador não guardou registro dos pedidos fechados, o que ele faz?",
+    "hint": "Para o agregador, uma mensagem com id de correlação desconhecido é um começo.",
+    "choices": [
+      {
+        "text": "Abre um agregado novo, espera e depois manda uma segunda confirmação quase vazia",
+        "why": "Isso: a resposta atrasada parece a primeira de um novo conjunto. Guardar os ids fechados por mais tempo que o timeout evita isso."
+      },
+      {
+        "text": "Acrescenta as linhas de queijo à confirmação que já mandou para a rede",
+        "why": "A confirmação já saiu; nada pode acrescentar a ela. Uma correção é uma mensagem nova que alguém precisa desenhar."
+      },
+      {
+        "text": "Descarta, já que o pedido está fechado",
+        "why": "Ele não tem como saber que o pedido está fechado: esse conhecimento é justamente o registro que ele não guardou."
+      },
+      {
+        "text": "Manda para a fila de dead letter",
+        "why": "A resposta é bem formada e é processada normalmente; nada nela parece uma mensagem envenenada."
+      }
+    ]
+  },
+  "ex-a17sy304": {
+    "prompt": "Associe cada padrão de roteamento ao que entra e ao que sai.",
+    "hint": "Conte as mensagens de cada lado.",
+    "pairs": [
+      {
+        "left": "roteador baseado em conteúdo",
+        "right": "entra uma mensagem, sai a mesma por um de vários canais"
+      },
+      {
+        "left": "filtro de mensagens",
+        "right": "entra uma mensagem, sai a mesma ou nada"
+      },
+      {
+        "left": "lista de destinatários",
+        "right": "entra uma mensagem, sai uma cópia em cada um de vários canais"
+      },
+      {
+        "left": "resequencer",
+        "right": "entram várias mensagens fora de ordem, saem as mesmas em ordem"
+      }
+    ],
+    "right_distractors": [
+      "entra uma mensagem, sai com o corpo no formato do receptor"
+    ]
+  },
+  "ex-wr3szr0f": {
+    "prompt": "Seis sistemas trocam pedidos todos com todos, ponto a ponto. Quantos tradutores são necessários?",
+    "hint": "Um para cada par ordenado: n(n − 1).",
+    "unit": "tradutores",
+    "accept_units": [
+      "tradutor"
+    ]
+  },
+  "ex-v52p0ntz": {
+    "prompt": "Pedidos vão de três emissores (EDI, Portal B2B, Salesforce) para dois receptores (SAP, Business Central), ponto a ponto. Um marketplace entra como quarto emissor. Quantos tradutores o ponto a ponto precisa depois disso?",
+    "hint": "Não é n(n − 1): só emissores falam com receptores.",
+    "unit": "tradutores",
+    "accept_units": [
+      "tradutor"
+    ]
+  },
+  "ex-hs4e3nwz": {
+    "prompt": "O enricher do fluxo de pedidos busca no SAP o número de recebedor de cada loja. Um pedido chega no domingo às 02:30. O que acontece?",
+    "hint": "A aula 1 deu a janela semanal do SAP.",
+    "choices": [
+      {
+        "text": "Nada de diferente: as filas desacoplam o fluxo do SAP",
+        "why": "As filas desacoplam os passos entre si, mas a consulta do enricher é uma chamada síncrona."
+      },
+      {
+        "text": "Ele falha no enricher, porque o SAP está fora até as 05:00, e os pedidos se acumulam atrás",
+        "why": "Isso: o enricher esconde uma chamada síncrona, e o fluxo herda a janela de manutenção de domingo do SAP."
+      },
+      {
+        "text": "O enricher pula a consulta e passa o pedido adiante",
+        "why": "Um enricher que pulasse em silêncio mandaria ao SAP pedidos sem recebedor; nada no padrão faz isso."
+      },
+      {
+        "text": "O provedor de EDI segura o pedido até segunda",
+        "why": "O provedor já entregou; a espera acontece dentro do fluxo da Serra Alta."
+      }
+    ]
+  },
+  "ex-034fxmka": {
+    "prompt": "Em vez de mandar um certificado de 2 MB por todos os saltos, a mensagem leva o id do objeto no Documentum, e o receptor busca o PDF quando precisa. O livro chama isso de ___ check.",
+    "hint": "Como a ficha de um casaco deixado na chapelaria.",
+    "blanks": [
+      {
+        "accept": [
+          "claim"
+        ]
+      }
+    ]
+  },
+  "ex-68j59y8g": {
+    "prompt": "O Customer canônico da Joana para a empresa toda chegou a 87 campos, quase todos opcionais. Por que um modelo assim falha como contrato?",
+    "hint": "O que um receptor conclui de um registro que valida?",
+    "choices": [
+      {
+        "text": "Porque 87 campos deixam cada mensagem grande demais para o MQ",
+        "why": "O número de campos não é o problema; um registro de cliente fica muito abaixo de qualquer limite de tamanho."
+      },
+      {
+        "text": "Nenhum receptor sabe se um registro é utilizável",
+        "why": "Isso: com tudo opcional, um registro válido não promete nada, e Customer significa coisas diferentes em cada contexto."
+      },
+      {
+        "text": "Porque um modelo canônico nunca compensa, qualquer que seja o escopo",
+        "why": "Joana manteve uma mensagem canônica de pedido; restrito a uma troca com várias partes, o modelo compensa."
+      },
+      {
+        "text": "Porque as funções de parceiro do SAP não podem ser expressas em XML",
+        "why": "Elas podem ser escritas em qualquer formato; o problema é que os outros sistemas entendem outra coisa por cliente."
+      }
+    ]
+  },
+  "ex-wvm92vsg": {
+    "prompt": "Durante o fechamento do mês, Edson quer que o SAP receba pedidos de loja a no máximo 50 por minuto, não importa o que a fila tenha. Que tipo de consumidor dá isso a ele?",
+    "hint": "Quem decide quando a próxima mensagem é lida?",
+    "choices": [
+      {
+        "text": "Um consumidor orientado a eventos",
+        "why": "Um consumidor orientado a eventos recebe as mensagens quando chegam, então quem dita o ritmo é a fila, não o SAP."
+      },
+      {
+        "text": "Três consumidores concorrentes",
+        "why": "Consumidores concorrentes aumentam a vazão; Edson pediu um teto."
+      },
+      {
+        "text": "Um consumidor por polling",
+        "why": "Isso: ele pede uma mensagem quando está pronto, e pedir 50 vezes por minuto é o limite."
+      },
+      {
+        "text": "Um assinante durável num tópico",
+        "why": "Durabilidade guarda mensagens enquanto o assinante está fora; não diz nada sobre a velocidade de leitura."
+      }
+    ]
+  },
+  "ex-z3ykhvde": {
+    "prompt": "O ramo do SAP lê um pedido de loja sob syncpoint e chama a BAPI. O SAP grava a ordem de venda e então o fluxo falha antes de confirmar o get. O que acontece em seguida?",
+    "hint": "Qual dos dois sistemas está na unidade de trabalho?",
+    "choices": [
+      {
+        "text": "Os dois desfazem, porque a transação também cobre a chamada da BAPI",
+        "why": "O commit do SAP não faz parte da unidade de trabalho do MQ; nada desfaz a ordem de venda."
+      },
+      {
+        "text": "Ela é reentregue e, sem verificação, o SAP ganha uma segunda ordem",
+        "why": "Isso: a transação protege a mensagem, não a ordem, e por isso o fluxo também verifica se a ordem já existe."
+      },
+      {
+        "text": "A mensagem se perde, porque já tinha sido lida",
+        "why": "Sob syncpoint um get não confirmado é desfeito, e a mensagem volta para a fila."
+      },
+      {
+        "text": "O MQ pergunta ao SAP se a ordem existe antes de reentregar",
+        "why": "O MQ não sabe nada do SAP; essa verificação é trabalho do receptor, o que o torna um receptor idempotente."
+      }
+    ]
+  },
+  "ex-bexfjkjy": {
+    "prompt": "Associe cada padrão de endpoint ao seu exemplo na Serra Alta.",
+    "hint": "Dois deles escondem o messaging de um código que não quer saber dele.",
+    "pairs": [
+      {
+        "left": "messaging gateway",
+        "right": "o código do Rota chama planPublisher.publish(plan) e nunca vê o MQ"
+      },
+      {
+        "left": "service activator",
+        "right": "as mensagens de uma fila viram chamadas a uma BAPI que não sabe nada de mensagens"
+      },
+      {
+        "left": "consumidores concorrentes",
+        "right": "três cópias do fluxo de pedidos do SAP leem a mesma fila"
+      },
+      {
+        "left": "assinante durável",
+        "right": "o Portal B2B recebe as mudanças de preço publicadas durante o seu deploy"
+      }
+    ],
+    "right_distractors": [
+      "o pedido de loja é enriquecido com o número de recebedor vindo do SAP"
+    ]
+  },
+  "ex-trvahwww": {
+    "prompt": "Por que Rui convenceu Joana a não usar seletores de mensagem numa fila única de pedidos, com o Business Central pegando os de Alagoa e o SAP o resto?",
+    "hint": "Pense num pedido de uma fábrica que nenhum seletor cita.",
+    "choices": [
+      {
+        "text": "O IBM MQ não suporta seletores",
+        "why": "O MQ suporta seletores; a objeção é sobre o que acontece com as mensagens que eles não pegam."
+      },
+      {
+        "text": "O Business Central não consegue ler do MQ",
+        "why": "O Business Central é alcançado por um adaptador de qualquer jeito; o desenho com roteador também usa um."
+      },
+      {
+        "text": "Dois consumidores numa fila perdem a ordem das mensagens",
+        "why": "Esse é o custo dos consumidores concorrentes; seletores dividem as mensagens pelo conteúdo, em vez de compartilhá-las."
+      },
+      {
+        "text": "Mensagem sem seletor fica parada sem ser vista",
+        "why": "Isso: um pedido de fábrica nova, ou com erro de digitação, ficaria numa fila com cara de saudável. Um roteador tem saída padrão."
+      }
+    ]
+  },
+  "ex-63n4sj4x": {
+    "prompt": "O que transformou o rastreamento seguinte de pagamento de fazenda numa busca, em vez de um projeto de dois dias?",
+    "hint": "A correção não foi um sistema novo.",
+    "choices": [
+      {
+        "text": "O número do documento de pagamento do SAP, levado ao banco e de volta",
+        "why": "Isso: do programa de pagamento ao arquivo de retorno o pagamento tem um nome só, e uma linha rejeitada aponta para um fornecedor."
+      },
+      {
+        "text": "Uma tabela de-para nova do identificador de cada salto para o do seguinte",
+        "why": "Mais tabelas são o problema, não a solução; a regra é levar um identificador sem mudança."
+      },
+      {
+        "text": "Mudar o pagamento do dia 10 para o dia 1º",
+        "why": "A data não ajuda ninguém a achar um pagamento; as fazendas recebem no dia 10."
+      },
+      {
+        "text": "O Coleta passar a mandar os números de fornecedor do SAP",
+        "why": "Os saltos 1 e 2 nunca foram a parte lenta; a pista sumiu na remessa."
+      }
+    ]
+  },
+  "ex-809s5fbh": {
+    "prompt": "Rui coloca um wire tap e um message store no fluxo de remessa. Quais destas coisas a aula diz que precisam ser decididas junto? Marque todas as que se aplicam.",
+    "hint": "O que há nas cópias, e se a cópia falhar?",
+    "choices": [
+      {
+        "text": "Quem pode ler o store, já que ele guarda contas bancárias de produtores",
+        "why": "Sim: uma cópia de cada mensagem é uma cópia dos dados pessoais nela."
+      },
+      {
+        "text": "Por quanto tempo as cópias ficam guardadas",
+        "why": "Sim: um prazo de retenção, decidido antes de o store encher, não depois."
+      },
+      {
+        "text": "O que o fluxo principal faz se a gravação no store falhar",
+        "why": "Sim: o pagamento tem de chegar ao banco do mesmo jeito, então o tap grava numa fila e outra coisa enche o store."
+      },
+      {
+        "text": "Um id de correlação novo para cada cópia",
+        "why": "O contrário: a cópia mantém os identificadores que tinha, senão o store não pode ser pesquisado por eles."
+      }
+    ]
+  },
+  "ex-ervw4rr7": {
+    "prompt": "A Serra Alta injeta um pedido sintético toda manhã às 05:00. O que precisa ser verdade em cada sistema adiante para isso ser seguro?",
+    "hint": "Em que termina uma ordem de venda real na Serra Alta?",
+    "choices": [
+      {
+        "text": "Ele responde em menos de um minuto",
+        "why": "Velocidade é o que o teste mede; segurança é o teste não virar um pedido real."
+      },
+      {
+        "text": "Ele reconhece o pedido como teste",
+        "why": "Isso: um sistema que não reconhecesse o trataria como real, e um pedido real termina numa NF-e registrada pela SEFAZ."
+      },
+      {
+        "text": "Ele muda para um ambiente de testes às 05:00",
+        "why": "Aí o teste verificaria o ambiente de testes; a ideia é exercitar a produção antes de chegarem os pedidos reais."
+      },
+      {
+        "text": "A fila dele é limpa depois do teste",
+        "why": "Limpar uma fila de produção apaga as mensagens reais que estiverem nela; esse é o padrão perigoso."
+      }
+    ]
+  },
+  "ex-q85x5yyg": {
+    "prompt": "Ponha os passos do fluxo de pedidos redesenhado em ordem, do pedido da rede à confirmação.",
+    "hint": "Depois da revisão, o enriquecimento acontece só no ramo do SAP.",
+    "items": [
+      "Traduzir o pedido EANCOM para o XML do barramento",
+      "Dividir em uma mensagem por loja e fábrica",
+      "Rotear cada mensagem pela fábrica",
+      "Enriquecer pelo cache as mensagens que vão ao SAP",
+      "Agregar as respostas pelo número do pedido",
+      "Traduzir o resultado para um ORDRSP"
+    ],
+    "trap": "Enriquecer antes do roteador é o defeito que a revisão achou: enriquece pelo SAP mensagens do Business Central e as trava quando o SAP está fora."
+  },
+  "ex-rkyhf5j4": {
+    "prompt": "No fluxo redesenhado o enricher roda uma vez por mensagem que vai ao SAP, sem cache. Um pedido de 50 linhas se divide em 26 mensagens, 5 delas para Alagoa. Quantas consultas ao SAP ele faz?",
+    "hint": "As mensagens de Alagoa vão para o Business Central.",
+    "unit": "consultas",
+    "accept_units": [
+      "consulta",
+      "chamadas"
+    ]
+  },
+  "ex-n7c26zh0": {
+    "prompt": "A saída padrão do roteador tinha levado três mensagens em dois anos. Por que Joana errou ao chamá-la de código morto?",
+    "hint": "O que eram as três?",
+    "choices": [
+      {
+        "text": "Apagar uma rota exige uma janela de mudança",
+        "why": "Janelas decidem quando uma mudança acontece, não se uma rota é necessária."
+      },
+      {
+        "text": "O time do Rui usa essa saída para mensagens de teste",
+        "why": "O pedido de teste passa pela rota normal até o SAP; as três eram pedidos reais."
+      },
+      {
+        "text": "É onde pedidos sem regra esperam ser vistos",
+        "why": "Isso: as três eram pedidos reais de um produto novo; sem a saída, teriam sumido."
+      },
+      {
+        "text": "O IIB recusa o deploy de um Route node sem saída padrão",
+        "why": "O argumento é sobre os pedidos, não sobre a ferramenta; uma regra que só a ferramenta impõe não é o motivo."
+      }
+    ]
+  },
+  "ex-ft6hc67z": {
+    "prompt": "Antes de um vendedor prometer uma data de entrega, Talita quer que o Salesforce pergunte aos dois ERPs se eles conseguem atender, e responda em dez segundos com o que tiver voltado. Que composição serve?",
+    "hint": "A mesma pergunta para vários receptores, e uma resposta.",
+    "choices": [
+      {
+        "text": "Um splitter e um resequencer",
+        "why": "Um splitter corta uma mensagem em partes diferentes; aqui os dois ERPs recebem a mesma pergunta."
+      },
+      {
+        "text": "Um routing slip pelo SAP e depois pelo Business Central",
+        "why": "Um slip passa pelos passos um depois do outro, e o ERP mais lento soma o tempo inteiro dele à espera."
+      },
+      {
+        "text": "Um roteador baseado em conteúdo escolhendo um ERP por pergunta",
+        "why": "Um roteador manda cada pergunta para um destino; Talita quer os dois consultados."
+      },
+      {
+        "text": "Scatter-gather, com timeout no agregador",
+        "why": "Isso: uma lista de destinatários manda a mesma pergunta aos dois, e o timeout do agregador deixa a resposta voltar em dez segundos."
+      }
+    ]
+  },
+  "ex-0wz3phwq": {
+    "prompt": "Um desenho novo diz: \"Os pedidos do Portal B2B são enriquecidos com dados de crédito do SAP, divididos por data de entrega e agregados numa confirmação.\" Que perguntas o vocabulário manda um revisor fazer? Marque todas as que se aplicam.",
+    "hint": "Uma pergunta por padrão citado.",
+    "choices": [
+      {
+        "text": "O que o enricher chama, e o que acontece no domingo da 01:00 às 05:00?",
+        "why": "Sim: um enricher esconde uma chamada síncrona, e o SAP tem uma janela semanal."
+      },
+      {
+        "text": "Cada parte leva o número do pedido e quantas partes existem?",
+        "why": "Sim: o agregador correlaciona pelo primeiro e conta até o segundo."
+      },
+      {
+        "text": "Quando o agregado fecha se uma parte nunca voltar?",
+        "why": "Sim: contagem e timeout, e o que a confirmação diz sobre a parte que falta."
+      },
+      {
+        "text": "Que nós ESQL vão implementar cada passo?",
+        "why": "Isso é como ele vai ser construído, a descrição que o vocabulário existe para superar."
+      }
+    ]
+  },
+  "ex-t5hs02fv": {
+    "prompt": "O agregador redesenhado fecha com 21 respostas ou depois de 30 minutos, o que vier primeiro. A segunda condição, a que o salva de uma resposta perdida, é o seu ___.",
+    "hint": "Um limite para a espera.",
+    "blanks": [
+      {
+        "accept": [
+          "timeout",
+          "time-out",
+          "tempo limite",
+          "tempo-limite"
+        ]
+      }
+    ]
+  },
+  "ex-d83zxbc0": {
+    "prompt": "O cadastro de fazendas manda a fazenda para uma visita de qualidade ou para uma carta de recusa, conforme o resultado da primeira amostra de leite. Nos termos do livro, o que precisa conduzir isso?",
+    "hint": "A rota é conhecida quando a primeira mensagem entra?",
+    "choices": [
+      {
+        "text": "Um process manager, com estado para cada fazenda",
+        "why": "Isso: o próximo passo depende de um resultado intermediário, então a rota precisa de estado guardado num lugar."
+      },
+      {
+        "text": "Um routing slip anexado quando o pedido chega",
+        "why": "Um slip fixa a rota no começo, e aqui a rota só se sabe depois da análise da amostra."
+      },
+      {
+        "text": "Um filtro de mensagens que descarta as fazendas reprovadas",
+        "why": "Uma fazenda reprovada ainda recebe uma carta; descartar a mensagem deixaria o produtor sem resposta."
+      },
+      {
+        "text": "Uma lista de destinatários mandando a fazenda para a visita e para a carta ao mesmo tempo",
+        "why": "Os dois resultados se excluem; mandar para os dois visitaria uma fazenda recusada."
+      }
+    ]
+  }
+}
