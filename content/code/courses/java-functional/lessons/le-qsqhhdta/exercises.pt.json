@@ -1,0 +1,296 @@
+{
+  "ex-4hw93xms": {
+    "prompt": "Que threads rodam o pipeline de um stream paralelo?",
+    "hint": "`WhoWorks.java` deu os nomes delas.",
+    "choices": [
+      {
+        "text": "Um pool que o stream cria e desliga a cada vez",
+        "why": "O pool é compartilhado e vive tanto quanto o programa."
+      },
+      {
+        "text": "Uma thread nova criada para cada elemento",
+        "why": "Quatro threads cuidaram de 100.000 elementos."
+      },
+      {
+        "text": "Só os workers do pool comum; a `main` espera",
+        "why": "A `main` processou 43.750 elementos ela mesma."
+      },
+      {
+        "text": "A que chamou e os workers do pool comum",
+        "why": "Isso: `main` e `ForkJoinPool.commonPool-worker-N`."
+      }
+    ]
+  },
+  "ex-mf5yc35j": {
+    "prompt": "Numa máquina com 4 processadores, quantos workers o pool comum tem?",
+    "hint": "Um a menos, porque quem chama ajuda.",
+    "unit": "workers"
+  },
+  "ex-7bsj24sc": {
+    "prompt": "Por que uma `LinkedList` é uma fonte ruim para um stream paralelo?",
+    "hint": "Achar o meio.",
+    "choices": [
+      {
+        "text": "Os elementos dela são sempre embrulhados",
+        "why": "Toda `List` de objetos guarda referências; o problema não é esse."
+      },
+      {
+        "text": "Ela não pode ser percorrida em paralelo de jeito nenhum",
+        "why": "Pode; só se divide mal."
+      },
+      {
+        "text": "Ela não é thread-safe, então o stream a recusa",
+        "why": "Ler dela não tem problema; nada a recusa."
+      },
+      {
+        "text": "Para achar o meio, é preciso percorrer metade dela",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-td79ppk3": {
+    "prompt": "`Primes.java` fica com a melhor de cinco execuções de cada versão. Por quê?",
+    "hint": "As primeiras execuções incluem outra coisa.",
+    "choices": [
+      {
+        "text": "Cinco é o número de processadores mais um",
+        "why": "O número de execuções não tem nada a ver com processadores."
+      },
+      {
+        "text": "A versão paralela dá uma resposta diferente a cada vez",
+        "why": "As duas imprimiram 148933 todas as vezes."
+      },
+      {
+        "text": "Incluem o tempo do JIT compilando o código",
+        "why": "Isso: a correção mais barata para o aquecimento."
+      },
+      {
+        "text": "O `nanoTime` erra na primeira chamada",
+        "why": "O relógio está certo; o código medido ainda está sendo compilado."
+      }
+    ]
+  },
+  "ex-6mcertdz": {
+    "prompt": "A soma paralela de cem números pequenos levou 50 µs contra 14 sequencial. O que custou a diferença?",
+    "hint": "A aritmética levou cerca de um microssegundo.",
+    "choices": [
+      {
+        "text": "Somar números em outra ordem muda o resultado",
+        "why": "As duas imprimiram 4950."
+      },
+      {
+        "text": "Embrulhar cada número num `Integer`",
+        "why": "O `IntStream` não embrulha."
+      },
+      {
+        "text": "Entregar pedaços a outras threads e esperar",
+        "why": "Isso: o custo extra esmagou o trabalho."
+      },
+      {
+        "text": "O pool comum estava ocupado com outro programa",
+        "why": "Cada JVM tem o seu pool."
+      }
+    ]
+  },
+  "ex-1btrvysq": {
+    "prompt": "Para uma decisão que importa, a aula recomenda a ferramenta de benchmarks do OpenJDK, chamada ___.",
+    "hint": "Três letras.",
+    "blanks": [
+      {
+        "accept": [
+          "JMH"
+        ]
+      }
+    ]
+  },
+  "ex-a0zry8tj": {
+    "prompt": "Dez execuções de `forEach(shared::add)` paralelo num `ArrayList`: algumas perderam elementos, uma lançou exceção, três saíram certas. Qual é o conserto?",
+    "hint": "Pare de compartilhar.",
+    "choices": [
+      {
+        "text": "Usar `forEachOrdered` em vez de `forEach`",
+        "why": "Ordena as chamadas, e elas ainda mexem numa lista compartilhada."
+      },
+      {
+        "text": "Um bloco `synchronized` em volta de cada chamada a `add`",
+        "why": "Funciona e serializa o trabalho; o conserto da aula é não compartilhar."
+      },
+      {
+        "text": "Repetir até uma execução sair certa",
+        "why": "Três saíram certas, e nada diz quais."
+      },
+      {
+        "text": "Deixar o stream montar a lista, com `toList()` ou um coletor",
+        "why": "Isso: cada thread ganha o seu contêiner."
+      }
+    ]
+  },
+  "ex-n76razk3": {
+    "prompt": "Por que a aula chama as três execuções certas de o pior dos três resultados?",
+    "hint": "Pense num teste.",
+    "choices": [
+      {
+        "text": "Um teste ali passaria",
+        "why": "Isso: o bug se esconde."
+      },
+      {
+        "text": "Foram mais lentas que as outras",
+        "why": "Velocidade não é o ponto."
+      },
+      {
+        "text": "Os resultados estavam na ordem errada",
+        "why": "Só o tamanho foi conferido, e estava certo."
+      },
+      {
+        "text": "Usaram mais memória",
+        "why": "Memória também não é o ponto."
+      }
+    ]
+  },
+  "ex-dn8b39dc": {
+    "prompt": "Num stream paralelo, qual devolve a primeira correspondência na ordem da fonte?",
+    "hint": "O outro pode devolver qualquer correspondência.",
+    "choices": [
+      {
+        "text": "`forEachOrdered`",
+        "why": "Esse não devolve nada; só visita os elementos em ordem."
+      },
+      {
+        "text": "`anyMatch`",
+        "why": "Esse responde sim ou não."
+      },
+      {
+        "text": "`findAny()`",
+        "why": "Devolveu 625601, a que uma thread achou."
+      },
+      {
+        "text": "`findFirst()`",
+        "why": "Isso: imprimiu 0."
+      }
+    ]
+  },
+  "ex-gc29p5yp": {
+    "prompt": "Ligue cada chamada num stream paralelo ao que ela garante sobre ordem.",
+    "hint": "Seção 04.",
+    "pairs": [
+      {
+        "left": "`forEach`",
+        "right": "nenhuma ordem"
+      },
+      {
+        "left": "`forEachOrdered`",
+        "right": "a ordem da fonte, fazendo threads esperarem"
+      },
+      {
+        "left": "`findAny`",
+        "right": "qualquer correspondência que uma thread achou"
+      },
+      {
+        "left": "`toList()`",
+        "right": "uma lista na ordem da fonte"
+      }
+    ]
+  },
+  "ex-38a3n34j": {
+    "prompt": "O lambda de um stream paralelo chama um serviço web lento. O que mais no programa sofre?",
+    "hint": "O pool é compartilhado.",
+    "choices": [
+      {
+        "text": "Nada: cada stream paralelo ganha as suas threads",
+        "why": "Todos compartilham o pool comum."
+      },
+      {
+        "text": "O coletor de lixo, que para até a chamada voltar",
+        "why": "O coletor não espera chamadas de rede."
+      },
+      {
+        "text": "Os outros streams paralelos, à espera",
+        "why": "Isso: os lambdas que esperam seguram os poucos workers do pool."
+      },
+      {
+        "text": "Só os streams sequenciais, que perdem a thread",
+        "why": "Streams sequenciais rodam na thread de quem chama."
+      }
+    ]
+  },
+  "ex-r0n2ecsm": {
+    "prompt": "Quais destes fazem de um pipeline um bom candidato a `parallel()`? Marque todos os que se aplicam.",
+    "hint": "A lista da seção 05.",
+    "choices": [
+      {
+        "text": "Cálculo caro por elemento",
+        "why": "Sim."
+      },
+      {
+        "text": "Lambdas que consultam um banco de dados",
+        "why": "Não: elas esperam, e seguram os workers do pool."
+      },
+      {
+        "text": "Centenas de milhares de elementos",
+        "why": "Sim."
+      },
+      {
+        "text": "Lambdas que somam num contador compartilhado",
+        "why": "Não: estado compartilhado."
+      },
+      {
+        "text": "Um `ArrayList` ou um array como fonte",
+        "why": "Sim: divide por igual."
+      }
+    ]
+  },
+  "ex-843m9sq6": {
+    "prompt": "Um colega aumenta `java.util.concurrent.ForkJoinPool.common.parallelism` para acelerar um pipeline lento. Do que a aula avisa?",
+    "hint": "De quem é o pool?",
+    "choices": [
+      {
+        "text": "A propriedade é só de leitura",
+        "why": "Pode ser definida quando a JVM começa."
+      },
+      {
+        "text": "O programa inteiro usa esse pool",
+        "why": "Isso: uma decisão para todos, não um ajuste para um."
+      },
+      {
+        "text": "Ela só vale para streams sequenciais",
+        "why": "Ela dimensiona o pool que os streams paralelos usam."
+      },
+      {
+        "text": "Ela é ignorada em máquinas com mais de quatro processadores",
+        "why": "Ela vale em qualquer máquina."
+      }
+    ]
+  },
+  "ex-3pn68m7z": {
+    "prompt": "Ponha em ordem o trabalho de um stream paralelo.",
+    "hint": "Dividir, rodar, combinar.",
+    "items": [
+      "a operação terminal é chamada",
+      "o spliterator corta a fonte em pedaços",
+      "a thread que chamou e os workers rodam o pipeline nos pedaços",
+      "os resultados parciais são combinados"
+    ]
+  },
+  "ex-y6906r1a": {
+    "prompt": "Um pipeline de 40 elementos com lambdas baratos ficou mais lento com `parallel()`. O que fazer?",
+    "hint": "Comece sequencial.",
+    "choices": [
+      {
+        "text": "Trocar a fonte por uma `LinkedList`",
+        "why": "Ela se divide pior."
+      },
+      {
+        "text": "Trocar `toList()` por `forEach`",
+        "why": "A operação terminal não é o custo."
+      },
+      {
+        "text": "Tirar o `parallel()`",
+        "why": "Isso: a medição decidiu."
+      },
+      {
+        "text": "Acrescentar workers ao pool comum",
+        "why": "Mais threads aumentam o custo extra, não o diminuem."
+      }
+    ]
+  }
+}

@@ -1,0 +1,272 @@
+{
+  "ex-p5vktsxf": {
+    "prompt": "O que `compareAndSet(seen, candidate)` faz quando outra thread mudou o valor depois que `seen` foi lido?",
+    "hint": "Ele informa se escreveu.",
+    "choices": [
+      {
+        "text": "Lança `ConcurrentModificationException`",
+        "why": "Atômicos informam falha pelo valor de retorno."
+      },
+      {
+        "text": "Escreve `candidate` mesmo assim e devolve `true`",
+        "why": "Isso seria uma escrita comum, perdendo o valor da outra thread."
+      },
+      {
+        "text": "Não escreve nada e devolve `false`",
+        "why": "Isso; quem chama lê de novo e tenta outra vez."
+      },
+      {
+        "text": "Espera a outra thread terminar",
+        "why": "Ele nunca espera; esse é o ponto."
+      }
+    ]
+  },
+  "ex-pqjkzg20": {
+    "prompt": "Por que uma função passada ao `updateAndGet` precisa não ter efeitos colaterais?",
+    "hint": "O laço de nova tentativa por baixo.",
+    "choices": [
+      {
+        "text": "Ela roda em outra thread",
+        "why": "Roda na thread de quem chama."
+      },
+      {
+        "text": "O compilador rejeita lambdas que imprimem",
+        "why": "Compila; só se comporta mal."
+      },
+      {
+        "text": "Ela roda de novo a cada set que falha",
+        "why": "Isso."
+      },
+      {
+        "text": "Efeitos colaterais fazem o atômico perder o lock",
+        "why": "Atômicos não têm lock."
+      }
+    ]
+  },
+  "ex-jsg70t2a": {
+    "prompt": "Um mínimo e um máximo precisam sempre concordar. Por que dois campos `AtomicLong` não bastam?",
+    "hint": "O que um atômico protege?",
+    "choices": [
+      {
+        "text": "O `compareAndSet` só funciona em `AtomicInteger`",
+        "why": "Toda classe atômica o tem."
+      },
+      {
+        "text": "`AtomicLong` não guarda valores negativos",
+        "why": "Guarda qualquer `long`."
+      },
+      {
+        "text": "Dois atômicos travam um ao outro",
+        "why": "Atômicos nunca bloqueiam, então não entram em deadlock."
+      },
+      {
+        "text": "Cada um guarda uma variável; o par fica sem proteção",
+        "why": "Isso: um lock, ou um objeto imutável num `AtomicReference`."
+      }
+    ]
+  },
+  "ex-nh2dgj45": {
+    "prompt": "Um contador escrito muito mais vezes do que é lido combina com `Long___`, que espalha as escritas por várias células.",
+    "hint": "Ele soma.",
+    "blanks": [
+      {
+        "accept": [
+          "Adder"
+        ]
+      }
+    ]
+  },
+  "ex-q63eb6g7": {
+    "prompt": "Um `ConcurrentHashMap` atualizado com `get` e depois `put` perdeu contagens. Por quê, se o mapa é thread-safe?",
+    "hint": "Duas chamadas.",
+    "choices": [
+      {
+        "text": "O `getOrDefault` não é thread-safe",
+        "why": "Cada chamada é segura sozinha."
+      },
+      {
+        "text": "O par é um verificar-depois-agir",
+        "why": "Isso: use `merge` ou `compute`."
+      },
+      {
+        "text": "O `ConcurrentHashMap` descarta escritas sob carga",
+        "why": "Com `merge` ele manteve os 400.000."
+      },
+      {
+        "text": "O mapa precisa de `volatile` nos campos",
+        "why": "Visibilidade não é o problema."
+      }
+    ]
+  },
+  "ex-6cfccq35": {
+    "prompt": "Por que a aula chama o `HashMap` compartilhado da forma mais perigosa de corrida?",
+    "hint": "O que o programa fez depois?",
+    "choices": [
+      {
+        "text": "Perde as chaves mas mantém os valores",
+        "why": "Perdeu contagens, um número diferente a cada vez."
+      },
+      {
+        "text": "Nada lançou exceção, e o programa seguiu com números errados",
+        "why": "Isso."
+      },
+      {
+        "text": "É mais lento que o `ConcurrentHashMap`",
+        "why": "Velocidade não é o perigo."
+      },
+      {
+        "text": "Ele sempre entra em deadlock",
+        "why": "Terminou todas as execuções."
+      }
+    ]
+  },
+  "ex-aty7k1pc": {
+    "prompt": "Ligue cada chamada de `ConcurrentHashMap` ao que ela faz atomicamente para uma chave.",
+    "hint": "Seção 03.",
+    "pairs": [
+      {
+        "left": "`merge(k, 1, Integer::sum)`",
+        "right": "põe 1, ou soma 1 ao valor"
+      },
+      {
+        "left": "`computeIfAbsent(k, f)`",
+        "right": "monta um valor só se a chave faltar"
+      },
+      {
+        "left": "`compute(k, f)`",
+        "right": "troca o valor por `f` do antigo"
+      }
+    ],
+    "right_distractors": [
+      "trava o mapa inteiro durante a chamada"
+    ]
+  },
+  "ex-ptwkkw7q": {
+    "prompt": "O que o `put` faz numa `ArrayBlockingQueue` cheia?",
+    "hint": "Contrapressão.",
+    "choices": [
+      {
+        "text": "Aumenta a fila",
+        "why": "Ela é limitada; esse é o ponto."
+      },
+      {
+        "text": "Descarta o elemento mais antigo",
+        "why": "Nada é descartado."
+      },
+      {
+        "text": "Espera por espaço",
+        "why": "Isso."
+      },
+      {
+        "text": "Lança `IllegalStateException`",
+        "why": "Isso é o `add`; o `put` espera."
+      }
+    ]
+  },
+  "ex-g6zz6c0g": {
+    "prompt": "Por que `Handover.java` põe `STOP` na fila duas vezes?",
+    "hint": "Cada consumidor tira um.",
+    "choices": [
+      {
+        "text": "Caso o primeiro se perca",
+        "why": "Filas não perdem nada."
+      },
+      {
+        "text": "O `STOP` precisa ser comparado duas vezes para ser reconhecido",
+        "why": "Um `==` o reconhece."
+      },
+      {
+        "text": "Uma pílula de veneno para cada consumidor",
+        "why": "Isso: dois empacotadores."
+      },
+      {
+        "text": "Para garantir que a fila esteja cheia",
+        "why": "Estar cheia é irrelevante para parar."
+      }
+    ]
+  },
+  "ex-56yjrqwd": {
+    "prompt": "Por que `Order` não precisa de `volatile` nem de lock ao atravessar a fila?",
+    "hint": "A tabela da aula 12.",
+    "choices": [
+      {
+        "text": "A fila copia o pedido para cada consumidor",
+        "why": "Ela entrega o mesmo objeto."
+      },
+      {
+        "text": "Records são sempre thread-safe, como quer que sejam compartilhados",
+        "why": "A imutabilidade ajuda, mas é a aresta que o torna visível."
+      },
+      {
+        "text": "O `put` acontece-antes do `take` que o recebe",
+        "why": "Isso."
+      },
+      {
+        "text": "Só uma thread mexe num pedido",
+        "why": "Duas mexem: o produtor e um consumidor."
+      }
+    ]
+  },
+  "ex-k5ag7p6s": {
+    "prompt": "Ligue cada tipo de compartilhamento à ferramenta.",
+    "hint": "A tabela da seção 05.",
+    "pairs": [
+      {
+        "left": "trabalho de produtores para consumidores",
+        "right": "`ArrayBlockingQueue`"
+      },
+      {
+        "left": "no máximo N threads num trecho de código",
+        "right": "`Semaphore`"
+      },
+      {
+        "left": "uma lista lida muito mais do que mudada",
+        "right": "`CopyOnWriteArrayList`"
+      },
+      {
+        "left": "esperar até N coisas acontecerem",
+        "right": "`CountDownLatch`"
+      }
+    ],
+    "right_distractors": [
+      "`HashMap`"
+    ]
+  },
+  "ex-ez68f9ep": {
+    "prompt": "Com `new Semaphore(2)`, qual foi o máximo de tarefas imprimindo ao mesmo tempo em `TwoMore.java`?",
+    "hint": "A última linha.",
+    "unit": "tarefas"
+  },
+  "ex-6svs27tj": {
+    "prompt": "Por que o laço sobre o `CopyOnWriteArrayList` não lançou exceção, embora tenha acrescentado à lista?",
+    "hint": "O que ele copia, e quando?",
+    "choices": [
+      {
+        "text": "Acrescentar durante um laço é sempre permitido em Java",
+        "why": "Um `ArrayList` teria lançado."
+      },
+      {
+        "text": "O laço percorreu a cópia com que começou",
+        "why": "Isso: cada mudança faz um array novo."
+      },
+      {
+        "text": "Os elementos novos foram acrescentados depois do laço",
+        "why": "Foram acrescentados dentro dele."
+      },
+      {
+        "text": "O laço rodou numa thread separada",
+        "why": "Uma thread fez as duas coisas."
+      }
+    ]
+  },
+  "ex-k5g87wcr": {
+    "prompt": "Ponha em ordem uma volta de um laço de nova tentativa com compare-and-set.",
+    "hint": "Ler, decidir, tentar, conferir.",
+    "items": [
+      "ler o valor atual",
+      "calcular o valor novo a partir dele",
+      "`compareAndSet(old, new)`",
+      "se devolveu `false`, começar de novo"
+    ]
+  }
+}

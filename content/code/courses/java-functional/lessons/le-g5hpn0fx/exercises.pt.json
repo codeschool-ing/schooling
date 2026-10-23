@@ -1,0 +1,304 @@
+{
+  "ex-177m72x2": {
+    "prompt": "Como distinguir uma operação intermediária de uma terminal?",
+    "hint": "Veja o que ela devolve.",
+    "choices": [
+      {
+        "text": "Uma intermediária devolve um `Stream`",
+        "why": "Isso, e tudo o que devolve outra coisa termina o pipeline."
+      },
+      {
+        "text": "Intermediárias mudam a coleção de origem",
+        "why": "Nenhuma operação muda a fonte."
+      },
+      {
+        "text": "Terminais são as escritas na primeira linha da cadeia",
+        "why": "A operação terminal vem por último."
+      },
+      {
+        "text": "Uma terminal recebe um lambda; uma intermediária não",
+        "why": "`filter` e `map` recebem lambdas e são intermediárias."
+      }
+    ]
+  },
+  "ex-qrvve5vm": {
+    "prompt": "Em `Shelf.BOOKS.stream().filter(...).map(Book::title).toList()`, ligue cada operação ao que ela devolve.",
+    "hint": "Só a última devolve algo que não é stream.",
+    "pairs": [
+      {
+        "left": "`stream()`",
+        "right": "um `Stream<Book>` dos doze"
+      },
+      {
+        "left": "`filter(...)`",
+        "right": "um `Stream<Book>` dos que ficaram"
+      },
+      {
+        "left": "`map(Book::title)`",
+        "right": "um `Stream<String>`"
+      },
+      {
+        "left": "`toList()`",
+        "right": "uma `List<String>`"
+      }
+    ],
+    "right_distractors": [
+      "um `Stream<List<Book>>`"
+    ]
+  },
+  "ex-a6atjj23": {
+    "prompt": "O que um stream feito a partir de `Shelf.BOOKS` guarda?",
+    "hint": "Ele não é uma coleção.",
+    "choices": [
+      {
+        "text": "Os resultados de cada passo, calculados de antemão",
+        "why": "Nada é calculado até a operação terminal."
+      },
+      {
+        "text": "Nenhum dado: uma descrição do trabalho",
+        "why": "Isso. Os dados ficam na lista."
+      },
+      {
+        "text": "Um índice da lista e nada mais, como um cursor numa tabela de banco",
+        "why": "Ele também guarda os passos: o que manter e em que transformar cada um."
+      },
+      {
+        "text": "Uma cópia dos doze livros",
+        "why": "Nada é copiado; ele lê a lista conforme anda."
+      }
+    ]
+  },
+  "ex-51mfpy5g": {
+    "prompt": "`Stream.iterate(1, n -> n * 2).limit(10).toList()` terminou. O que aconteceria sem o `limit(10)`?",
+    "hint": "`iterate` é uma fonte infinita.",
+    "choices": [
+      {
+        "text": "Pararia no maior `int`",
+        "why": "O estouro não para um stream; os valores dão a volta."
+      },
+      {
+        "text": "O `toList()` continuaria puxando e nunca terminaria",
+        "why": "Isso: até a memória acabar."
+      },
+      {
+        "text": "Não compilaria",
+        "why": "Compila; é a execução que não termina."
+      },
+      {
+        "text": "Coletaria dez valores mesmo assim, o padrão",
+        "why": "Não existe limite padrão."
+      }
+    ]
+  },
+  "ex-72caabhe": {
+    "prompt": "`Arrays.stream(new int[] {1965, 1815, 1922})` dá que tipo?",
+    "hint": "Nenhum boxing por elemento.",
+    "choices": [
+      {
+        "text": "`IntStream`",
+        "why": "Isso, com `max`, `sum` e `average` embutidos."
+      },
+      {
+        "text": "`Stream<Integer>`",
+        "why": "Um `int[]` dá o stream primitivo."
+      },
+      {
+        "text": "`List<Integer>`",
+        "why": "Um stream, não uma lista."
+      },
+      {
+        "text": "`Stream<int[]>`",
+        "why": "Isso é `Stream.of(array)`, um elemento que é um array."
+      }
+    ]
+  },
+  "ex-bjf59d3t": {
+    "prompt": "O que `IntStream.rangeClosed(1, 5).sum()` imprimiu?",
+    "hint": "`rangeClosed` inclui o fim."
+  },
+  "ex-ggkxwfjb": {
+    "prompt": "Um pipeline tem uma fonte e dois passos, `peek` e `filter`, e nenhuma operação terminal. O que ele imprime?",
+    "hint": "A primeira parte de `Lazy.java`.",
+    "choices": [
+      {
+        "text": "Uma linha por livro",
+        "why": "Isso precisaria de algo que puxasse os livros."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso: sem operação terminal, sem trabalho."
+      },
+      {
+        "text": "Uma linha por livro que passa no filtro",
+        "why": "O `peek` vem antes do `filter`, e nenhum rodou."
+      },
+      {
+        "text": "Um erro de compilação pedindo uma operação terminal",
+        "why": "Compila, e não faz nada em silêncio."
+      }
+    ]
+  },
+  "ex-sy835e1b": {
+    "prompt": "Com `findFirst`, quantos livros o segundo pipeline de `Lazy.java` olhou?",
+    "hint": "Conte as linhas `looked at`.",
+    "unit": "livros"
+  },
+  "ex-ya4t1qtp": {
+    "prompt": "No terceiro pipeline, `upper: EMMA` saiu antes de `classic: Persuasion`. O que isso mostra?",
+    "hint": "Um elemento de cada vez.",
+    "choices": [
+      {
+        "text": "Cada elemento passa por todos os passos antes de o próximo começar",
+        "why": "Isso."
+      },
+      {
+        "text": "O `peek` reordena os elementos",
+        "why": "O `peek` passa cada elemento adiante sem mudança."
+      },
+      {
+        "text": "A saída foi impressa fora de ordem por duas threads",
+        "why": "Uma thread; essa é a ordem real."
+      },
+      {
+        "text": "O `map` roda antes do `filter` em todo pipeline",
+        "why": "O `filter` rodou primeiro em Emma; depois o `map` rodou em Emma."
+      }
+    ]
+  },
+  "ex-mz7dezr5": {
+    "prompt": "Quais destas fazem curto-circuito, podendo terminar antes de a fonte se esgotar? Marque todas as que se aplicam.",
+    "hint": "Elas podem parar assim que sabem a resposta.",
+    "choices": [
+      {
+        "text": "`anyMatch`",
+        "why": "Sim: o primeiro acerto basta."
+      },
+      {
+        "text": "`findFirst`",
+        "why": "Sim."
+      },
+      {
+        "text": "`count`",
+        "why": "Não: precisa ver todos os elementos."
+      },
+      {
+        "text": "`limit`",
+        "why": "Sim, como o terceiro pipeline mostrou."
+      },
+      {
+        "text": "`sorted`",
+        "why": "Não: precisa ver tudo antes de entregar o primeiro."
+      }
+    ]
+  },
+  "ex-cm3hqva0": {
+    "prompt": "`classics.count()` funcionou, e o segundo `classics.count()` lançou exceção. Que conserto a aula sugere?",
+    "hint": "Guarde o que pode ser percorrido de novo.",
+    "choices": [
+      {
+        "text": "Usar `peek` para copiar os elementos na primeira passada",
+        "why": "O `peek` é para olhar, e copiar é o que a fonte já é."
+      },
+      {
+        "text": "Capturar a exceção e usar a primeira resposta",
+        "why": "Isso esconde o erro em vez de tirá-lo."
+      },
+      {
+        "text": "Chamar `classics.reset()` antes da segunda contagem",
+        "why": "Streams não têm `reset`."
+      },
+      {
+        "text": "Guardar a fonte e montar um stream novo para cada pergunta",
+        "why": "Isso, ou um `Supplier<Stream<Book>>` que monte um a cada vez."
+      }
+    ]
+  },
+  "ex-t3xy1e2d": {
+    "prompt": "Por que `titles.add(\"Moby-Dick\")` lançou exceção numa lista vinda de `toList()`?",
+    "hint": "O Java 16 decidiu o que ele devolve.",
+    "choices": [
+      {
+        "text": "`toList()` devolve uma lista imutável",
+        "why": "Isso. Embrulhe em `new ArrayList<>(...)` para editar."
+      },
+      {
+        "text": "`Moby-Dick` não está na estante",
+        "why": "Qualquer string teria sido recusada."
+      },
+      {
+        "text": "Listas de strings não crescem além do tamanho inicial em versão nenhuma do Java",
+        "why": "Um `ArrayList` cresce; esta lista é só de leitura por projeto."
+      },
+      {
+        "text": "O stream ainda estava aberto",
+        "why": "O stream já tinha terminado; o problema é a lista."
+      }
+    ]
+  },
+  "ex-8z5x290y": {
+    "prompt": "A regra de que os lambdas de um pipeline não devem mudar a fonte que leem se chama não ___.",
+    "hint": "Eles não podem atrapalhar.",
+    "blanks": [
+      {
+        "accept": [
+          "interferência",
+          "interferencia"
+        ]
+      }
+    ]
+  },
+  "ex-zf2h2a4p": {
+    "prompt": "Um método guarda um `Stream<Book>` num campo para vários outros métodos usarem. O que vai acontecer?",
+    "hint": "Um stream é um percurso.",
+    "choices": [
+      {
+        "text": "Funciona, mas devagar, porque o stream é recalculado a cada vez",
+        "why": "Ele não é recalculado; é recusado."
+      },
+      {
+        "text": "Cada método recebe sua própria cópia do stream",
+        "why": "Um campo guarda um objeto; não há cópias."
+      },
+      {
+        "text": "O compilador rejeita um stream guardado num campo",
+        "why": "Compila; a falha é em tempo de execução."
+      },
+      {
+        "text": "A primeira operação terminal o gasta; a seguinte lança exceção",
+        "why": "Isso: `stream has already been operated upon or closed`."
+      }
+    ]
+  },
+  "ex-tq0rg9wv": {
+    "prompt": "Ponha as partes de `Shelf.BOOKS.stream().filter(...).map(Book::title).toList()` na ordem em que são escritas.",
+    "hint": "Fonte, passos, fim.",
+    "items": [
+      "a fonte, `stream()`",
+      "o que manter, `filter`",
+      "em que transformar cada um, `map`",
+      "como terminar, `toList()`"
+    ]
+  },
+  "ex-twvvf7f5": {
+    "prompt": "Um pipeline ordena a estante por preço e depois faz `findFirst`. Quantos livros ele puxa da fonte?",
+    "hint": "Do que o `sorted` precisa antes de entregar o primeiro?",
+    "choices": [
+      {
+        "text": "Nenhum até uma segunda operação terminal ser chamada",
+        "why": "O `findFirst` é a operação terminal, e começa o trabalho."
+      },
+      {
+        "text": "Um, porque o `findFirst` faz curto-circuito",
+        "why": "O `findFirst` para cedo, mas o `sorted` já puxou tudo."
+      },
+      {
+        "text": "Os doze",
+        "why": "Isso: o `sorted` precisa ver todos os elementos antes."
+      },
+      {
+        "text": "Dois: um para comparar e um para devolver",
+        "why": "Uma ordenação compara muito mais que dois."
+      }
+    ]
+  }
+}

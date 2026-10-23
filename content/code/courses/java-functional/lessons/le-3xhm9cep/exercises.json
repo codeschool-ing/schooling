@@ -1,0 +1,378 @@
+[
+  {
+    "id": "ex-z0f5nv93",
+    "version": 1,
+    "section": "executors",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ten tasks went to `newFixedThreadPool(4)`. How many thread names appeared in the output?",
+    "hint": "Threads are reused.",
+    "choices": [
+      {
+        "text": "Four",
+        "correct": true,
+        "why": "Right: the same four, reused."
+      },
+      {
+        "text": "Five: four workers and `main`",
+        "correct": false,
+        "why": "`main` only submitted; it ran no order."
+      },
+      {
+        "text": "One, because a pool runs tasks in order",
+        "correct": false,
+        "why": "That is a single-thread executor."
+      },
+      {
+        "text": "Ten, one per task",
+        "correct": false,
+        "why": "That is lesson 11's thread per job."
+      }
+    ]
+  },
+  {
+    "id": "ex-md71agq9",
+    "version": 1,
+    "section": "executors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does closing an `ExecutorService` in try-with-resources do?",
+    "hint": "The last line printed after every order.",
+    "choices": [
+      {
+        "text": "Refuses new work, waits for the rest",
+        "correct": true,
+        "why": "Right, then lets the threads end."
+      },
+      {
+        "text": "Discards the tasks still in the queue",
+        "correct": false,
+        "why": "All ten ran."
+      },
+      {
+        "text": "Nothing until the garbage collector runs",
+        "correct": false,
+        "why": "Closing is immediate and explicit."
+      },
+      {
+        "text": "Interrupts every task at once",
+        "correct": false,
+        "why": "It lets them finish."
+      }
+    ]
+  },
+  {
+    "id": "ex-gd52we3a",
+    "version": 1,
+    "section": "executors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `Pool.java` write `int order = n;` inside the loop?",
+    "hint": "Lesson 1 section 06.",
+    "choices": [
+      {
+        "text": "`n` changes, so the lambda cannot capture it",
+        "correct": true,
+        "why": "Right: `order` is effectively final."
+      },
+      {
+        "text": "To convert `n` to an `int`",
+        "correct": false,
+        "why": "`n` is already an `int`."
+      },
+      {
+        "text": "To make the tasks run in order",
+        "correct": false,
+        "why": "They did not run in order."
+      },
+      {
+        "text": "The pool requires a separately named variable for each task",
+        "correct": false,
+        "why": "The pool knows nothing of variables."
+      }
+    ]
+  },
+  {
+    "id": "ex-dr1a4m78",
+    "version": 1,
+    "section": "futures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A submitted `Callable` throws. What does `future.get()` do?",
+    "hint": "The failure is kept.",
+    "choices": [
+      {
+        "text": "Throws `ExecutionException` with it as the cause",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Throws the task's own exception, unchanged and unwrapped",
+        "correct": false,
+        "why": "It is wrapped."
+      },
+      {
+        "text": "Waits forever",
+        "correct": false,
+        "why": "The task ended; `get` returns at once."
+      },
+      {
+        "text": "Returns `null`",
+        "correct": false,
+        "why": "That would be the silent failure."
+      }
+    ]
+  },
+  {
+    "id": "ex-d9j3czqx",
+    "version": 1,
+    "section": "futures",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`f3.cancel(true)` stopped the sleeping task at once. When would cancelling not stop a task?",
+    "hint": "Cancelling interrupts.",
+    "choices": [
+      {
+        "text": "When it ignores interruption",
+        "correct": true,
+        "why": "Right: a loop that never checks keeps going; cancel asks, the task must answer."
+      },
+      {
+        "text": "When the pool has more than two threads",
+        "correct": false,
+        "why": "Pool size has nothing to do with it."
+      },
+      {
+        "text": "When the task returns a `Long`",
+        "correct": false,
+        "why": "The return type is irrelevant."
+      },
+      {
+        "text": "When `get` was called with a timeout",
+        "correct": false,
+        "why": "That is exactly when it worked."
+      }
+    ]
+  },
+  {
+    "id": "ex-hdwgfgh7",
+    "version": 1,
+    "section": "sizing-a-pool",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With 4 processors and tasks that wait 90 ms for every 10 ms of work, how many threads does the rule of thumb give?",
+    "hint": "processors × (1 + wait / compute)",
+    "value": 40,
+    "tolerance": 0,
+    "unit": "threads"
+  },
+  {
+    "id": "ex-vdck0s5q",
+    "version": 1,
+    "section": "sizing-a-pool",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the danger of `newFixedThreadPool`'s queue?",
+    "hint": "How big can it grow?",
+    "choices": [
+      {
+        "text": "It refuses tasks once four are waiting",
+        "correct": false,
+        "why": "That would be a bound; it has none."
+      },
+      {
+        "text": "It runs queued tasks on `main`",
+        "correct": false,
+        "why": "That is `CallerRunsPolicy`, on a different pool."
+      },
+      {
+        "text": "It reorders tasks",
+        "correct": false,
+        "why": "It keeps them in order."
+      },
+      {
+        "text": "No limit: memory runs out first",
+        "correct": true,
+        "why": "Right: bound it and choose what happens when it is full."
+      }
+    ]
+  },
+  {
+    "id": "ex-0v2epzcc",
+    "version": 1,
+    "section": "sizing-a-pool",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each rejection policy with what it does when the pool and queue are full.",
+    "hint": "Section 04.",
+    "pairs": [
+      {
+        "left": "`AbortPolicy`",
+        "right": "throws `RejectedExecutionException`"
+      },
+      {
+        "left": "`CallerRunsPolicy`",
+        "right": "the submitting thread runs the task"
+      },
+      {
+        "left": "`DiscardPolicy`",
+        "right": "drops the task silently"
+      }
+    ],
+    "right_distractors": [
+      "adds a thread to the pool"
+    ]
+  },
+  {
+    "id": "ex-na669srv",
+    "version": 1,
+    "section": "sizing-a-pool",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many of the seven orders did `Bounded.java` complete?",
+    "hint": "Two threads, a queue of three.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "orders"
+  },
+  {
+    "id": "ex-9nctt0qr",
+    "version": 1,
+    "section": "completable-future",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Asked at once, the two lookups took 304 ms instead of 537. Why?",
+    "hint": "The slower of the two.",
+    "choices": [
+      {
+        "text": "`CompletableFuture` makes each call faster",
+        "correct": false,
+        "why": "Each still took its 200 or 300 ms."
+      },
+      {
+        "text": "The JIT had warmed up by the second attempt",
+        "correct": false,
+        "why": "The time is sleeping, which no compiler speeds up."
+      },
+      {
+        "text": "Both ran at the same time, on two of the pool's threads",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The second call was skipped",
+        "correct": false,
+        "why": "Both answers are in the line."
+      }
+    ]
+  },
+  {
+    "id": "ex-8nvkrrxq",
+    "version": 1,
+    "section": "completable-future",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why should `supplyAsync` for a remote call always be given an executor?",
+    "hint": "Lesson 9 section 05.",
+    "choices": [
+      {
+        "text": "Without one it runs synchronously on the caller",
+        "correct": false,
+        "why": "It runs on the common pool."
+      },
+      {
+        "text": "It does not compile without one",
+        "correct": false,
+        "why": "The one-argument form exists."
+      },
+      {
+        "text": "It would wait on the common pool",
+        "correct": true,
+        "why": "Right, stalling every parallel stream."
+      },
+      {
+        "text": "Exceptions are lost without an executor",
+        "correct": false,
+        "why": "They are kept either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ddwzweb",
+    "version": 1,
+    "section": "completable-future",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`priceF.___(stockF, (cents, copies) -> ...)` runs a function once both results are back.",
+    "hint": "It combines.",
+    "blanks": [
+      {
+        "accept": [
+          "thenCombine"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qyzfqjjs",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the fallback pipeline for a blank title in order.",
+    "hint": "The last part of `Page.java`.",
+    "items": [
+      "`supplyAsync` starts the stock lookup",
+      "`stock` throws `IllegalArgumentException`",
+      "`thenApply` is skipped",
+      "`exceptionally` returns `stock unknown (no title)`"
+    ]
+  },
+  {
+    "id": "ex-fpeq5v43",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these keep a failing task from being silent? Choose all that apply.",
+    "hint": "Somebody must ask, or the failure must become a reported value.",
+    "choices": [
+      {
+        "text": "Calling `get` on its `Future`",
+        "correct": true,
+        "why": "Yes: `ExecutionException`."
+      },
+      {
+        "text": "Submitting it and dropping the `Future`",
+        "correct": false,
+        "why": "No: nobody ever asks."
+      },
+      {
+        "text": "`exceptionally` with a message naming the cause",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "`DiscardPolicy` on the pool",
+        "correct": false,
+        "why": "No: that drops tasks silently."
+      }
+    ]
+  }
+]

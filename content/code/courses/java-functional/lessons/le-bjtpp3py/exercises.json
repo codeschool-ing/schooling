@@ -1,0 +1,442 @@
+[
+  {
+    "id": "ex-7q924c27",
+    "version": 1,
+    "section": "taking-behaviour",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes a method a higher-order function?",
+    "hint": "Look at its parameters and its return type.",
+    "choices": [
+      {
+        "text": "It takes or returns a function",
+        "correct": true,
+        "why": "Right: a functional interface as a parameter or return type."
+      },
+      {
+        "text": "It runs on more than one thread",
+        "correct": false,
+        "why": "Nothing about threads is involved."
+      },
+      {
+        "text": "It is generic, declared with `<T>`",
+        "correct": false,
+        "why": "`select` is generic, but that is a separate property."
+      },
+      {
+        "text": "It calls itself on a smaller input until it reaches a base case",
+        "correct": false,
+        "why": "That is recursion."
+      }
+    ]
+  },
+  {
+    "id": "ex-s1e0ewcr",
+    "version": 1,
+    "section": "taking-behaviour",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `select(items, rule)`, which part belongs to `select` and which to the caller?",
+    "hint": "The part that is always the same.",
+    "choices": [
+      {
+        "text": "`select` decides which items pass; the caller builds the list",
+        "correct": false,
+        "why": "The other way round: the rule decides, `select` builds the list."
+      },
+      {
+        "text": "`select` owns the loop and the new list; the caller supplies the test",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`select` owns everything; the lambda is only a label",
+        "correct": false,
+        "why": "The lambda is the test that runs for every item."
+      },
+      {
+        "text": "Both are written by the caller each time",
+        "correct": false,
+        "why": "Then there would be nothing to reuse."
+      }
+    ]
+  },
+  {
+    "id": "ex-ypnfzwz0",
+    "version": 1,
+    "section": "taking-behaviour",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A rule passed to `select` prints a line each time it is called. How many lines will it print?",
+    "hint": "Who decides when the lambda runs?",
+    "choices": [
+      {
+        "text": "None: `select` suppresses output from rules",
+        "correct": false,
+        "why": "It calls the rule as written."
+      },
+      {
+        "text": "One, when the lambda is written",
+        "correct": false,
+        "why": "Writing it runs nothing."
+      },
+      {
+        "text": "One per item that passes the test",
+        "correct": false,
+        "why": "It prints before it knows its answer, so every call prints."
+      },
+      {
+        "text": "As many as `select` calls it: once per item here",
+        "correct": true,
+        "why": "Right. The effect happens as often as the method decides to call."
+      }
+    ]
+  },
+  {
+    "id": "ex-r4et1s2a",
+    "version": 1,
+    "section": "returning-behaviour",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `atLeast(450)` return?",
+    "hint": "Look at its return type.",
+    "choices": [
+      {
+        "text": "The number of pages, 450, boxed as an `Integer`",
+        "correct": false,
+        "why": "The number is captured inside, not returned."
+      },
+      {
+        "text": "A `Predicate<Book>` that remembers 450",
+        "correct": true,
+        "why": "Right: a test with the number captured."
+      },
+      {
+        "text": "The books with 450 pages or more",
+        "correct": false,
+        "why": "It has no books to look at; it returns a test."
+      },
+      {
+        "text": "`true`, because 450 is at least 0",
+        "correct": false,
+        "why": "It returns a lambda, not a `boolean`."
+      }
+    ]
+  },
+  {
+    "id": "ex-btsv4s0j",
+    "version": 1,
+    "section": "returning-behaviour",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`percentOff(15).apply(8990L)` printed what, in cents?",
+    "hint": "8990 minus 15% of it, rounded down to the cent.",
+    "value": 7642,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-8nhshf39",
+    "version": 1,
+    "section": "returning-behaviour",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`lumen` and `atlas` both come from `orderNumbers`. Why did asking `atlas` not move `lumen` on?",
+    "hint": "When was each `AtomicInteger` made?",
+    "choices": [
+      {
+        "text": "The prefixes are different strings, and the counter is keyed by them",
+        "correct": false,
+        "why": "There is no map of counters, only one per closure."
+      },
+      {
+        "text": "Each call to `orderNumbers` made its own counter",
+        "correct": true,
+        "why": "Right, and each closure captured a different one."
+      },
+      {
+        "text": "`Supplier` resets its state after each `get`",
+        "correct": false,
+        "why": "`lumen` went 1, 2, then 3."
+      },
+      {
+        "text": "`AtomicInteger` gives each thread a separate value",
+        "correct": false,
+        "why": "One thread ran this; the counters are separate objects."
+      }
+    ]
+  },
+  {
+    "id": "ex-5hfk91qq",
+    "version": 1,
+    "section": "returning-behaviour",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why may the lambda in `orderNumbers` capture `next` and change the counter, when lesson 1 refused `count++`?",
+    "hint": "The rule is about the variable.",
+    "choices": [
+      {
+        "text": "`next` always points at the same object; only that object changes",
+        "correct": true,
+        "why": "Right. `count++` reassigns the variable itself."
+      },
+      {
+        "text": "`incrementAndGet` runs outside the lambda",
+        "correct": false,
+        "why": "It runs inside, on each `get`."
+      },
+      {
+        "text": "Atomics are exempt from the effectively final rule",
+        "correct": false,
+        "why": "No type is exempt."
+      },
+      {
+        "text": "Lambdas returned from a method follow looser rules",
+        "correct": false,
+        "why": "The same rule applies everywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-3xpzsygk",
+    "version": 1,
+    "section": "returning-behaviour",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A function together with the values it captured is called a ___.",
+    "hint": "It closes over them.",
+    "blanks": [
+      {
+        "accept": [
+          "closure"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vz5vmc2m",
+    "version": 1,
+    "section": "wrapping-a-function",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Wrappers.java` asked for five titles. How many times did `authorOf` really run?",
+    "hint": "The last line it printed.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "lookups"
+  },
+  {
+    "id": "ex-jh2fjk0a",
+    "version": 1,
+    "section": "wrapping-a-function",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`memoized(logged(f))` logged only the misses. What would `logged(memoized(f))` log?",
+    "hint": "The outermost wrapper sees every call.",
+    "choices": [
+      {
+        "text": "The same three lines",
+        "correct": false,
+        "why": "The logger is now outside the cache, so it sees the hits too."
+      },
+      {
+        "text": "Every call, hits included",
+        "correct": true,
+        "why": "Right: five lines."
+      },
+      {
+        "text": "Nothing, because the cache swallows the log",
+        "correct": false,
+        "why": "The cache is inside; the logger runs first."
+      },
+      {
+        "text": "Only the first call, after which the cache is full",
+        "correct": false,
+        "why": "Each new title is a miss; the logger sees all calls anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-b6gp0mtx",
+    "version": 1,
+    "section": "wrapping-a-function",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these functions are safe to wrap in `memoized`? Choose all that apply.",
+    "hint": "Same argument, same answer, and nothing else that matters.",
+    "choices": [
+      {
+        "text": "The current price of a book, read from a database",
+        "correct": false,
+        "why": "No: the price changes, and the cache would keep the old one."
+      },
+      {
+        "text": "The square of a number",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Today's date formatted for a title page",
+        "correct": false,
+        "why": "No: tomorrow it would still say today."
+      },
+      {
+        "text": "The author of a title, from a fixed table",
+        "correct": true,
+        "why": "Yes, like `authorOf`."
+      }
+    ]
+  },
+  {
+    "id": "ex-wveagcmm",
+    "version": 1,
+    "section": "rules-by-name",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `Strategies.java` refuse an unknown rule name instead of using `getOrDefault(name, cents -> cents)`?",
+    "hint": "What would a typo print?",
+    "choices": [
+      {
+        "text": "The default would be slower than an error",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "`getOrDefault` does not accept a lambda as its default",
+        "correct": false,
+        "why": "It accepts any value of the map's type."
+      },
+      {
+        "text": "A typo would silently charge full price",
+        "correct": true,
+        "why": "Right. A plausible wrong number is worse than an error."
+      },
+      {
+        "text": "A `TreeMap` throws on a missing key, so the program has no choice",
+        "correct": false,
+        "why": "`get` returns `null` on a missing key."
+      }
+    ]
+  },
+  {
+    "id": "ex-4re0nqj6",
+    "version": 1,
+    "section": "rules-by-name",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With rules in a map, what does adding a new pricing rule take?",
+    "hint": "Compare with the class-per-strategy version.",
+    "choices": [
+      {
+        "text": "A new class and a new branch in a `switch`",
+        "correct": false,
+        "why": "That is the classic pattern the map replaces."
+      },
+      {
+        "text": "One more entry in the map",
+        "correct": true,
+        "why": "Right: a name and a lambda."
+      },
+      {
+        "text": "A new functional interface for that rule",
+        "correct": false,
+        "why": "All rules share `UnaryOperator<Long>`."
+      },
+      {
+        "text": "Recompiling the JDK's `java.util.function`",
+        "correct": false,
+        "why": "Nothing in the JDK changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-3008wx0v",
+    "version": 1,
+    "section": "rules-by-name",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Each strategy now needs a label for logs, a configuration value and two related methods. What does the lesson suggest?",
+    "hint": "When a rule needs a name.",
+    "choices": [
+      {
+        "text": "A map of maps, one per method",
+        "correct": false,
+        "why": "That splits one strategy across several places."
+      },
+      {
+        "text": "Small classes behind an interface, or an `enum`",
+        "correct": true,
+        "why": "Right. Several methods that belong together want a type."
+      },
+      {
+        "text": "One lambda per strategy that returns an `Object[]` with the extras",
+        "correct": false,
+        "why": "That hides the structure the extras have."
+      },
+      {
+        "text": "Keep the map and put the extras in comments",
+        "correct": false,
+        "why": "Comments do not give a strategy methods or state."
+      }
+    ]
+  },
+  {
+    "id": "ex-1hmw4bmx",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`memoized(logged(authorOf))` is asked for `Dune` for the first time. Put what happens in order.",
+    "hint": "Outermost first.",
+    "items": [
+      "`memoized` looks in its cache and misses",
+      "`logged` calls `authorOf(\"Dune\")`",
+      "`logged` prints `authorOf(Dune) = Frank Herbert`",
+      "`memoized` stores the answer under `Dune`"
+    ]
+  },
+  {
+    "id": "ex-zsc5c2rh",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each method with what it is.",
+    "hint": "Look at what goes in and what comes out.",
+    "pairs": [
+      {
+        "left": "`select(items, rule)`",
+        "right": "takes behaviour"
+      },
+      {
+        "left": "`atLeast(pages)`",
+        "right": "returns behaviour"
+      },
+      {
+        "left": "`memoized(f)`",
+        "right": "takes and returns behaviour"
+      }
+    ],
+    "right_distractors": [
+      "neither takes nor returns behaviour"
+    ]
+  }
+]

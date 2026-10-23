@@ -1,0 +1,277 @@
+{
+  "ex-z7qtfxd3": {
+    "prompt": "Em `Stop.java`, a `main` pôs `stop = true` e o worker continuou girando. O que permitiu isso?",
+    "hint": "Nada dizia que outra thread poderia mudar o campo.",
+    "choices": [
+      {
+        "text": "Um bug no compilador JIT do Java 25 que versões futuras vão corrigir",
+        "why": "É uma otimização que a linguagem permite."
+      },
+      {
+        "text": "Campos `boolean` não podem ser compartilhados",
+        "why": "Qualquer campo pode; este foi sem regra."
+      },
+      {
+        "text": "O compilador é livre para ler o campo uma vez",
+        "why": "Isso."
+      },
+      {
+        "text": "O `sleep(1000)` foi curto demais para a escrita acontecer",
+        "why": "A escrita aconteceu: a main imprimiu isso."
+      }
+    ]
+  },
+  "ex-w5twj8nj": {
+    "prompt": "Com `-Xint`, o mesmo `Stop.java` terminou. O que isso mostra?",
+    "hint": "O código-fonte não mudou.",
+    "choices": [
+      {
+        "text": "O interpretador é o jeito certo de rodar programas concorrentes",
+        "why": "O programa continua errado; o interpretador só não o expôs."
+      },
+      {
+        "text": "O bug estava só no tempo da primeira execução",
+        "why": "A primeira travaria toda vez com o laço compilado."
+      },
+      {
+        "text": "Se trava depende de como a JVM o roda",
+        "why": "Isso: por isso esses bugs sobrevivem aos testes."
+      },
+      {
+        "text": "`-Xint` torna todo campo `volatile`",
+        "why": "Ele desliga o JIT; não muda declarações."
+      }
+    ]
+  },
+  "ex-dsr2f6yd": {
+    "prompt": "A thread A roda `x = 1; r1 = y;` e a B `y = 1; r2 = x;`. Por que `r1 = 0, r2 = 0` surpreende?",
+    "hint": "Tente todo entrelaçamento.",
+    "choices": [
+      {
+        "text": "Quer dizer que uma thread nunca rodou",
+        "why": "As duas escreveram o seu 1; a outra só não viu a tempo."
+      },
+      {
+        "text": "Nenhum entrelaçamento das quatro instruções o produz",
+        "why": "Isso: exige uma leitura passando uma escrita."
+      },
+      {
+        "text": "Os arrays começam cheios de uns",
+        "why": "Começam em zero."
+      },
+      {
+        "text": "Quer dizer que o `CountDownLatch` falhou",
+        "why": "Ele só soltou as duas threads juntas."
+      }
+    ]
+  },
+  "ex-05qe62zs": {
+    "prompt": "Quantos pares mostraram `r1=0 r2=0` na execução citada de `Litmus.java`?",
+    "hint": "A primeira linha.",
+    "unit": "pares"
+  },
+  "ex-6dxscxkk": {
+    "prompt": "Que afirmação sobre reordenação vale em todo processador?",
+    "hint": "Os números mudam; a regra não.",
+    "choices": [
+      {
+        "text": "Processadores ARM reordenam menos que o x86",
+        "why": "É o contrário."
+      },
+      {
+        "text": "O x86 nunca reordena nada",
+        "why": "Os pares 0,0 vieram de um x86."
+      },
+      {
+        "text": "Reordenação só acontece com arrays",
+        "why": "Arrays só facilitaram rodar muitos testes."
+      },
+      {
+        "text": "Sem algo que os ordene, os acessos de duas threads não têm ordem confiável",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-ph1pmgke": {
+    "prompt": "Ligue cada ação ao que ela acontece-antes.",
+    "hint": "A tabela da seção 04.",
+    "pairs": [
+      {
+        "left": "`t.start()`",
+        "right": "toda ação em `t`"
+      },
+      {
+        "left": "toda ação em `t`",
+        "right": "o retorno de outra thread de `t.join()`"
+      },
+      {
+        "left": "liberar um lock",
+        "right": "a próxima aquisição desse lock"
+      },
+      {
+        "left": "uma escrita `volatile`",
+        "right": "toda leitura posterior desse campo"
+      }
+    ],
+    "right_distractors": [
+      "toda leitura de qualquer campo, em qualquer thread"
+    ]
+  },
+  "ex-s3hwh3e7": {
+    "prompt": "`Joined.java` lê um `long` comum escrito por outra thread, e acerta toda vez. Por quê?",
+    "hint": "O que veio entre a escrita e a leitura?",
+    "choices": [
+      {
+        "text": "O valor cabe num registrador, então as threads o compartilham",
+        "why": "Registradores são por thread, que é o problema em `Stop.java`."
+      },
+      {
+        "text": "Campos `long` são sempre compartilhados com segurança",
+        "why": "Sem o `join` seria uma condição de corrida."
+      },
+      {
+        "text": "O somador terminou antes de a `main` poder olhar",
+        "why": "Terminar antes é questão de tempo; a visibilidade exige uma aresta."
+      },
+      {
+        "text": "O `join` cria uma aresta happens-before",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-3nxyay10": {
+    "prompt": "Dois acessos à mesma variável em threads diferentes, pelo menos um deles uma escrita, sem happens-before entre eles, formam uma condição de ___ de dados.",
+    "hint": "Eles competem.",
+    "blanks": [
+      {
+        "accept": [
+          "corrida"
+        ]
+      }
+    ]
+  },
+  "ex-0mtj6mc5": {
+    "prompt": "Uma escrita `volatile` vem depois de dez escritas comuns na mesma thread. Por que quem lê o volatile vê as dez?",
+    "hint": "A acontece-antes de B, B acontece-antes de C.",
+    "choices": [
+      {
+        "text": "`volatile` torna o objeto inteiro volatile",
+        "why": "Vale para um campo."
+      },
+      {
+        "text": "Escritas comuns ficam visíveis na hora; só leituras atrasam",
+        "why": "`Stop.java` mostrou uma escrita que ninguém viu."
+      },
+      {
+        "text": "A relação é transitiva",
+        "why": "Isso: ordem do programa, depois a aresta volatile."
+      },
+      {
+        "text": "As dez escritas são repetidas até serem vistas",
+        "why": "Nada é repetido."
+      }
+    ]
+  },
+  "ex-qmzam1yr": {
+    "prompt": "Quais destes publicam um objeto com segurança para outra thread? Marque todos os que se aplicam.",
+    "hint": "A lista da seção 05.",
+    "choices": [
+      {
+        "text": "Um campo `volatile` com a referência",
+        "why": "Sim."
+      },
+      {
+        "text": "Um objeto com todos os campos `final`",
+        "why": "Sim, se o `this` não escapar do construtor."
+      },
+      {
+        "text": "Um campo estático comum lido num laço",
+        "why": "Não: isso é `Stop.java`."
+      },
+      {
+        "text": "Pô-lo num `ConcurrentHashMap`",
+        "why": "Sim."
+      },
+      {
+        "text": "Chamar `System.gc()` depois de escrevê-lo",
+        "why": "Não: o coletor não cria happens-before."
+      }
+    ]
+  },
+  "ex-dzqtswwp": {
+    "prompt": "Por que quem lê um `PriceList` imutável pode dispensar o lock?",
+    "hint": "O que poderia mudar por baixo deles?",
+    "choices": [
+      {
+        "text": "Nada nele muda depois de construído",
+        "why": "Isso; atualizações trocam o objeto inteiro."
+      },
+      {
+        "text": "Records são travados pela JVM",
+        "why": "Não há lock; não há o que proteger."
+      },
+      {
+        "text": "O `List.copyOf` torna a lista local da thread",
+        "why": "Ele torna a lista imutável, que se compartilha livremente."
+      },
+      {
+        "text": "Quem lê só vê o primeiro `PriceList`",
+        "why": "O leitor viu o novo, pelo campo `volatile`."
+      }
+    ]
+  },
+  "ex-je2g82yv": {
+    "prompt": "A publicação insegura não foi reproduzida para este curso. Por que a aula ainda manda seguir as regras?",
+    "hint": "O próximo processador.",
+    "choices": [
+      {
+        "text": "Porque campos `final` são mais lentos",
+        "why": "Velocidade não é o argumento."
+      },
+      {
+        "text": "Porque o compilador recusa publicação insegura",
+        "why": "Compila sem uma palavra."
+      },
+      {
+        "text": "Porque o bug se reproduz no x86 sob carga",
+        "why": "A aula diz que é raro no x86."
+      },
+      {
+        "text": "Um bug que um teste não mostra continua bug",
+        "why": "Isso: o modelo, não a execução, decide."
+      }
+    ]
+  },
+  "ex-at4dehay": {
+    "prompt": "Ponha em ordem a cadeia que deixa `B` ver `x = 1`, como a figura a desenha.",
+    "hint": "Ordem do programa, a aresta, ordem do programa.",
+    "items": [
+      "A escreve `x = 1`",
+      "A libera o lock",
+      "B obtém o mesmo lock",
+      "B lê `x` e vê 1"
+    ]
+  },
+  "ex-tkkz62n7": {
+    "prompt": "Um colega conserta `Stop.java` pondo `Thread.sleep(1)` dentro do laço, e ele para. Está consertado?",
+    "hint": "Algo criou happens-before?",
+    "choices": [
+      {
+        "text": "Sim: o `sleep` é uma aresta happens-before",
+        "why": "O `sleep` não está na lista de arestas."
+      },
+      {
+        "text": "Não: nenhuma regra garante que o worker veja a escrita",
+        "why": "Isso: funciona por acaso, o que não é o mesmo."
+      },
+      {
+        "text": "Sim, porque o laço não está mais quente",
+        "why": "Isso explica por que funciona agora, não por que precisa."
+      },
+      {
+        "text": "Não: `sleep` dentro de laço é proibido",
+        "why": "É permitido; só não prova nada."
+      }
+    ]
+  }
+}

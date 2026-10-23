@@ -1,0 +1,365 @@
+[
+  {
+    "id": "ex-7q590xym",
+    "version": 1,
+    "section": "what-a-virtual-thread-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What happens to a virtual thread's carrier when the virtual thread calls `Thread.sleep`?",
+    "hint": "Unmounted.",
+    "choices": [
+      {
+        "text": "It is handed to the common fork-join pool used by parallel streams",
+        "correct": false,
+        "why": "The scheduler has a pool of its own."
+      },
+      {
+        "text": "It sleeps too, until the virtual thread wakes",
+        "correct": false,
+        "why": "That is pinning, which `sleep` does not cause."
+      },
+      {
+        "text": "The operating system destroys it and makes a new one later",
+        "correct": false,
+        "why": "Carriers live as long as the scheduler."
+      },
+      {
+        "text": "It runs another virtual thread",
+        "correct": true,
+        "why": "Right: the sleeper's stack waits in the heap."
+      }
+    ]
+  },
+  {
+    "id": "ex-f6p85zb5",
+    "version": 1,
+    "section": "what-a-virtual-thread-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many carriers does the virtual-thread scheduler use by default on this machine, and why?",
+    "hint": "What do carriers need a processor for?",
+    "choices": [
+      {
+        "text": "One per virtual thread, created on demand",
+        "correct": false,
+        "why": "Then virtual threads would be platform threads."
+      },
+      {
+        "text": "Four, one per processor: only computing needs one",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Three, the common pool's size",
+        "correct": false,
+        "why": "That is a different pool."
+      },
+      {
+        "text": "Two hundred, to cover the waiting",
+        "correct": false,
+        "why": "Waiting needs no carrier at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-sjmwkcmd",
+    "version": 1,
+    "section": "what-a-virtual-thread-is",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Thread.currentThread().is___()` tells code whether it runs on a virtual thread.",
+    "hint": "The adjective.",
+    "blanks": [
+      {
+        "accept": [
+          "Virtual"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6kdz1n6n",
+    "version": 1,
+    "section": "a-million-threads",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A million virtual threads were running. How many more operating-system threads did the process have than before?",
+    "hint": "22 before, 27 during.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "threads"
+  },
+  {
+    "id": "ex-92epqpch",
+    "version": 1,
+    "section": "a-million-threads",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should virtual threads never be put in a fixed pool?",
+    "hint": "What is a pool for?",
+    "choices": [
+      {
+        "text": "A pool would pin them to carriers",
+        "correct": false,
+        "why": "Pooling and pinning are unrelated."
+      },
+      {
+        "text": "A pool reuses something expensive, and they are cheap",
+        "correct": true,
+        "why": "Right; a pool would only bring back the queue."
+      },
+      {
+        "text": "Pools only accept `Runnable`, not `Callable`",
+        "correct": false,
+        "why": "Lesson 16's pools took both."
+      },
+      {
+        "text": "The JVM refuses to reuse a virtual thread",
+        "correct": false,
+        "why": "Nothing refuses; it is simply pointless."
+      }
+    ]
+  },
+  {
+    "id": "ex-84qwk3yh",
+    "version": 1,
+    "section": "a-million-threads",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Each of the million threads slept two seconds, yet the last finished 9.5 seconds after the first started. What does the lesson conclude?",
+    "hint": "Cheap is not free.",
+    "choices": [
+      {
+        "text": "The executor ran them in batches of a thousand",
+        "correct": false,
+        "why": "It gives each task its own thread at once."
+      },
+      {
+        "text": "Virtual threads oversleep by design",
+        "correct": false,
+        "why": "Each slept its two seconds."
+      },
+      {
+        "text": "The operating system limited the process to 27 threads",
+        "correct": false,
+        "why": "27 was the count, not a limit."
+      },
+      {
+        "text": "Waking and ending each one costs real work",
+        "correct": true,
+        "why": "Right: a million threads are cheap, not free."
+      }
+    ]
+  },
+  {
+    "id": "ex-4qrt5qp9",
+    "version": 1,
+    "section": "what-it-changes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ten thousand tasks of 100 ms waiting took 10 s on a pool of 100 and 187 ms on virtual threads. What made the difference?",
+    "hint": "How many could wait at once?",
+    "choices": [
+      {
+        "text": "Virtual threads sleep less than asked",
+        "correct": false,
+        "why": "Each slept its 100 ms."
+      },
+      {
+        "text": "The JIT compiled `handleRequest` better the second time",
+        "correct": false,
+        "why": "The time is waiting, which compiling does not shorten."
+      },
+      {
+        "text": "All ten thousand could wait at the same time",
+        "correct": true,
+        "why": "Right, instead of a hundred at a time."
+      },
+      {
+        "text": "The virtual run used more processors",
+        "correct": false,
+        "why": "Same four processors."
+      }
+    ]
+  },
+  {
+    "id": "ex-ndz9k7ck",
+    "version": 1,
+    "section": "what-it-changes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which programming style do virtual threads make affordable again?",
+    "hint": "One thread per request.",
+    "choices": [
+      {
+        "text": "Plain blocking code, read top to bottom",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Chains of `thenCompose` for every remote call",
+        "correct": false,
+        "why": "That is what people wrote to avoid blocking."
+      },
+      {
+        "text": "A thread pool sized by the rule of thumb",
+        "correct": false,
+        "why": "That is the problem they remove."
+      },
+      {
+        "text": "Parallel streams for I/O",
+        "correct": false,
+        "why": "Lesson 9 says no to that."
+      }
+    ]
+  },
+  {
+    "id": "ex-ygh5fx1g",
+    "version": 1,
+    "section": "the-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A database accepts twenty connections. What should ten thousand virtual threads calling it use?",
+    "hint": "`Limited.java`.",
+    "choices": [
+      {
+        "text": "A `Semaphore` of twenty",
+        "correct": true,
+        "why": "Right, or the connection pool's own bound."
+      },
+      {
+        "text": "Nothing: virtual threads queue themselves",
+        "correct": false,
+        "why": "They would all call at once."
+      },
+      {
+        "text": "`synchronized` around the call",
+        "correct": false,
+        "why": "That allows one at a time, not twenty."
+      },
+      {
+        "text": "A fixed pool of twenty virtual threads",
+        "correct": false,
+        "why": "Never pool them; limit the resource instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-vmg9qary",
+    "version": 1,
+    "section": "the-limits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`Pinning.java` took 25 s on Java 21 and 120 ms on Java 25. What changed in Java 24?",
+    "hint": "Inside `synchronized`.",
+    "choices": [
+      {
+        "text": "Blocking inside `synchronized` stopped pinning the carrier",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The scheduler gained more carriers",
+        "correct": false,
+        "why": "Still one per processor."
+      },
+      {
+        "text": "`synchronized` was replaced by `ReentrantLock` inside the JDK",
+        "correct": false,
+        "why": "The keyword is unchanged; the pinning is gone."
+      },
+      {
+        "text": "`Thread.sleep` became faster",
+        "correct": false,
+        "why": "Each sleep still took 100 ms."
+      }
+    ]
+  },
+  {
+    "id": "ex-q9g27ghg",
+    "version": 1,
+    "section": "the-limits",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these gain from running on virtual threads? Choose all that apply.",
+    "hint": "Waiting, not computing.",
+    "choices": [
+      {
+        "text": "A server handling requests that wait for a database",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Resizing images in memory",
+        "correct": false,
+        "why": "No: that computes too."
+      },
+      {
+        "text": "Counting the primes below two million",
+        "correct": false,
+        "why": "No: that computes."
+      },
+      {
+        "text": "A crawler fetching ten thousand web pages",
+        "correct": true,
+        "why": "Yes."
+      }
+    ]
+  },
+  {
+    "id": "ex-2a8vncgp",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the life of a virtual thread that sleeps once in order.",
+    "hint": "The figure.",
+    "items": [
+      "mounted on a carrier, it runs",
+      "it calls `sleep` and is unmounted",
+      "its stack waits in the heap",
+      "the sleep ends and it is mounted on a free carrier"
+    ]
+  },
+  {
+    "id": "ex-kk7fdba9",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each workload with what to run it on.",
+    "hint": "Lessons 9, 16 and 17.",
+    "pairs": [
+      {
+        "left": "splitting a big computation",
+        "right": "a parallel stream"
+      },
+      {
+        "left": "thousands of requests that wait",
+        "right": "a virtual thread per task"
+      },
+      {
+        "left": "work that must not overlap",
+        "right": "a single-thread executor"
+      }
+    ],
+    "right_distractors": [
+      "a fixed pool of virtual threads"
+    ]
+  }
+]
