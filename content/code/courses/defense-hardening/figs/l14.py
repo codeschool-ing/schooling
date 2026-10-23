@@ -87,7 +87,7 @@ def sinkhole():
     f.text(400, 93, T('unbound, with the list', 'unbound, com a lista'), size=10)
     f.rect(315, 125, 170, 50, stroke='--amber', fill='--scan', width=1.1, rx=2)
     f.text(400, 142, T('sinkhole on port 80', 'sinkhole na porta 80'), size=10)
-    f.text(400, 160, T('logs who, which name, which path', 'registra quem, que nome, que caminho'), size=9.5,
+    f.text(400, 160, T('logs who, which name, which path', 'anota quem, que nome, que caminho'), size=9.5,
            fill='--paper-dim')
     f.line(140, 100, 315, 90, stroke='--paper-dim', width=1.2, arrow=True)
     f.text(225, 82, T('1 the name?', '1 o nome?'), size=9.5, fill='--paper-dim')
