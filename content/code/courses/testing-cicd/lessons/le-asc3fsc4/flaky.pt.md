@@ -35,7 +35,7 @@ ana@laptop:~/shipquote$ for i in 1 2 3 4 5 6 7 8 9 10; do PYTHONHASHSEED=0 pytho
      10 1 passed
 ```
 
-**Cinco aprovações, cinco falhas.** O Python torna aleatório o hash de strings em cada processo novo,
+**Seis aprovações, quatro falhas.** O Python torna aleatório o hash de strings em cada processo novo,
 como defesa contra um tipo de ataque de negação de serviço, então a ordem em que um set entrega
 `"SP"` e `"SE"` muda de uma execução para outra. Definir `PYTHONHASHSEED=0` fixa a semente do hash, e
 o segundo laço passou dez vezes em dez.

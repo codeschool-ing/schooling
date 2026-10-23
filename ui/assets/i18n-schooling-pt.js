@@ -63,6 +63,13 @@ window.I18N.pt.ui = Object.assign(window.I18N.pt.ui || {}, {
      student has just put a label. Left in English they would be the only words
      on the exam paper a Portuguese reader could not follow, on the screen where
      following the words is the whole task. */
+  /* The type at the head of each of these questions, drawn as `txt(ex.type)`.
+     The other seven came with the copied client's dictionary; these three had
+     no entry and showed up on a Portuguese paper as CLOZE, NUMERIC and
+     LABELLING. */
+  'cloze': 'lacunas',
+  'numeric': 'numérica',
+  'labelling': 'rótulos',
   'Blank': 'Lacuna',
   'Your answer': 'Sua resposta',
   'Unit': 'Unidade',

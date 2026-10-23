@@ -27,7 +27,7 @@ commit again, with the corrected test inside it. The `GIT_SEQUENCE_EDITOR=true` 
 because this was recorded by a script: at a keyboard, the rebase opens an editor showing the plan,
 with the fixup already moved into place, and you save and close it.
 
-Notice the hash changed, from `cf70c92` to `73606e4`. **Rebasing rewrites commits**, and that gives
+Notice the hash changed, from `d853271` to `cab5367`. **Rebasing rewrites commits**, and that gives
 the one rule of tidying: **only rewrite what nobody else has.** Commits on your machine that you have
 not pushed are yours to tidy. Commits already pushed to a branch somebody else might have pulled are
 not, and a portfolio project's `main` on GitHub is such a branch, since a reviewer may have cloned it.
