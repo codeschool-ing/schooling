@@ -30,7 +30,23 @@ updates:
 Write it to `.github/dependabot.yml` for a moment, and give it to zizmor, the checker lesson 16 put
 in the pipeline:
 
-@@CAPTURE dependabot-first@@
+```
+ana@vm:~$ cd linkbox
+ana@vm:~/linkbox$ mkdir -p .github
+ana@vm:~/linkbox$ zizmor --offline -q .github/dependabot.yml; echo "exit $?"
+warning[dependabot-cooldown]: insufficient cooldown in Dependabot updates
+ --> .github/dependabot.yml:3:5
+  |
+3 |   - package-ecosystem: pip
+  |     ^^^^^^^^^^^^^^^^^^^^^^ insufficient implicit default-days (less than 7)
+  |
+  = note: audit confidence → High
+  = note: this finding has an auto-fix
+  = help: audit documentation → https://docs.zizmor.sh/audits/#dependabot-cooldown
+
+1 findings (1 safe fixes): 0 informational, 0 low, 1 medium, 0 high
+exit 13
+```
 
 zizmor reads a Dependabot file as well as workflows, and it has an audit for exactly this file:
 **`dependabot-cooldown`**. With no `cooldown` block, Dependabot proposes a release the moment it is
@@ -106,11 +122,37 @@ The rest of each block decides how often a person is interrupted:
 
 zizmor has no finding now:
 
-@@CAPTURE dependabot-pass@@
+```
+ana@vm:~/linkbox$ zizmor --offline -q .github/dependabot.yml; echo "exit $?"
+No findings to report. Good job!
+exit 0
+```
 
 Commit it and push, and the pipeline runs zizmor over it on the CI server the same way:
 
-@@CAPTURE dependabot-push@@
+```
+ana@vm:~/linkbox$ git add .github/dependabot.yml
+ana@vm:~/linkbox$ git commit -q -m "dependabot: weekly, grouped, and nothing younger than 14 days"
+10:15AM INF 0 commits scanned.
+10:15AM INF scanned ~941 bytes (941 bytes) in 197ms
+10:15AM INF no leaks found
+ana@vm:~/linkbox$ git push ci main
+remote: run 1: main at 352ec65        
+remote: secrets: passed in 1s        
+remote: workflows: passed in 0s        
+remote: test: passed in 2s        
+remote: sast: passed in 3s        
+remote: sca: passed in 8s        
+remote: build: passed in 2s        
+remote: image: passed in 1s        
+remote: push: passed in 1s        
+remote: sbom: passed in 4s        
+remote: sign: passed in 2s        
+remote: pipeline passed with 0 warning(s)        
+remote: run 1: passed        
+To /home/ana/ci/linkbox.git
+   ab4f2ab..352ec65  main -> main
+```
 
 ### One thing the documentation does not settle for linkbox
 

@@ -19,31 +19,96 @@ Este programa pergunta ao PyPI quando cada pacote fixado publicou cada versão, 
 ano anterior a uma data. Depois conta o que três configurações teriam aberto: um pull request por
 versão, um por semana que teve versão e um por mês. Salve-o como `~/releases.py`:
 
-@@FENCE 1@@
+```python
+"""How many releases each pinned dependency published in the year before a
+date, and how many pull requests a bot would have opened for them: one per
+release, one per week with a release, or one per month with a release.
+
+    python3 ~/releases.py 2026-10-16 requirements.txt requirements-dev.txt
+
+Versions with a letter in them (alphas, betas, release candidates, post
+releases) are left out, as the bots leave them out by default.
+"""
+import datetime
+import json
+import re
+import sys
+import urllib.request
+
+
+def pinned(paths):
+    for path in paths:
+        for line in open(path):
+            found = re.match(r"([A-Za-z0-9_.-]+)==", line)
+            if found:
+                yield found.group(1).lower()
+
+
+def release_days(name, start, end):
+    with urllib.request.urlopen(f"https://pypi.org/pypi/{name}/json") as answer:
+        releases = json.load(answer)["releases"]
+    for version, files in releases.items():
+        days = [f["upload_time_iso_8601"][:10] for f in files if not f["yanked"]]
+        if days and not re.search(r"[a-z]", version) and start < min(days) <= end:
+            yield datetime.date.fromisoformat(min(days))
+
+
+end = datetime.date.fromisoformat(sys.argv[1])
+start = (end - datetime.timedelta(days=365)).isoformat()
+every = []
+for name in sorted(set(pinned(sys.argv[2:]))):
+    days = list(release_days(name, start, end.isoformat()))
+    every += days
+    print(f"{name:16} {len(days):3}")
+weeks = {day.isocalendar()[:2] for day in every}
+months = {(day.year, day.month) for day in every}
+print(f"{'one per release':16} {len(every):3}")
+print(f"{'one per week':16} {len(weeks):3}")
+print(f"{'one per month':16} {len(months):3}")
+```
 
 Ele lê os nomes dos pacotes nos arquivos de requisitos, então conta as dependências do próprio
 linkbox, diretas e transitivas juntas, porque um bot propõe atualizações para todo pin do lock. Rode-o
 para o ano que termina na data em que o lock foi compilado:
 
-@@FENCE 2@@
+```
+ana@vm:~/linkbox$ git switch -q main
+ana@vm:~/linkbox$ python3 ~/releases.py 2026-10-16 requirements.txt requirements-dev.txt
+blinker            0
+click              7
+flask              1
+gunicorn          13
+iniconfig          3
+itsdangerous       0
+jinja2             0
+markupsafe         1
+packaging          4
+pluggy             1
+pygments           2
+pytest             6
+werkzeug           6
+one per release   44
+one per week      29
+one per month     12
+```
 
 ### Lendo a contagem
 
 O linkbox tem 13 pacotes fixados e 3 dependências diretas, e a contagem é por ano:
 
-- Um pull request por versão teria dado @@N_RELEASE@@ deles, quase um por semana, cada um chegando
+- Um pull request por versão teria dado 44 deles, quase um por semana, cada um chegando
   quando a versão chegasse.
-- Agrupadas por semana, as mesmas versões cabem em @@N_WEEK@@ pull requests: esse foi o número de
+- Agrupadas por semana, as mesmas versões cabem em 29 pull requests: esse foi o número de
   semanas do ano com pelo menos uma versão.
-- Agrupadas por mês, @@N_MONTH@@: nenhum mês daquele ano passou sem uma versão.
+- Agrupadas por mês, 12: nenhum mês daquele ano passou sem uma versão.
 
-A distribuição é desigual, o que é típico. Só o gunicorn lançou @@N_GUNICORN@@ versões; três pacotes
+A distribuição é desigual, o que é típico. Só o gunicorn lançou 13 versões; três pacotes
 não lançaram nada. Um agrupamento por semana carrega, portanto, uma atualização do gunicorn numa boa
 parte dos pull requests, o que é motivo para ler o changelog do gunicorn uma vez por mês, e não para
 pulá-lo.
 
 ```schooling-figure
-{}
+{"svg": "<svg viewBox=\"0 0 720 316\" role=\"img\" data-fig=\"sp-l18-releases\" aria-label=\"Versões no ano até 16 de outubro de 2026 de cada pacote que o linkbox fixa: blinker 0, click 7, flask 1, gunicorn 13, iniconfig 3, itsdangerous 0, jinja2 0, markupsafe 1, packaging 4, pluggy 1, pygments 2, pytest 6, werkzeug 6. 44 ao todo.\"><defs></defs><text x=\"120\" y=\"24\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">blinker</text><text x=\"138.0\" y=\"24\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">0</text><text x=\"120\" y=\"46\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">click</text><rect x=\"130\" y=\"38\" width=\"269.2307692307692\" height=\"16\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"407.2307692307692\" y=\"46\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">7</text><text x=\"120\" y=\"68\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">flask</text><rect x=\"130\" y=\"60\" width=\"38.46153846153846\" height=\"16\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"176.46153846153845\" y=\"68\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">1</text><text x=\"120\" y=\"90\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">gunicorn</text><rect x=\"130\" y=\"82\" width=\"500.0\" height=\"16\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"638.0\" y=\"90\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">13</text><text x=\"120\" y=\"112\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">iniconfig</text><rect x=\"130\" y=\"104\" width=\"115.38461538461539\" height=\"16\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"253.3846153846154\" y=\"112\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">3</text><text x=\"120\" y=\"134\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">itsdangerous</text><text x=\"138.0\" y=\"134\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">0</text><text x=\"120\" y=\"156\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">jinja2</text><text x=\"138.0\" y=\"156\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">0</text><text x=\"120\" y=\"178\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">markupsafe</text><rect x=\"130\" y=\"170\" width=\"38.46153846153846\" height=\"16\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"176.46153846153845\" y=\"178\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">1</text><text x=\"120\" y=\"200\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">packaging</text><rect x=\"130\" y=\"192\" width=\"153.84615384615384\" height=\"16\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"291.8461538461538\" y=\"200\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">4</text><text x=\"120\" y=\"222\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">pluggy</text><rect x=\"130\" y=\"214\" width=\"38.46153846153846\" height=\"16\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"176.46153846153845\" y=\"222\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">1</text><text x=\"120\" y=\"244\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">pygments</text><rect x=\"130\" y=\"236\" width=\"76.92307692307692\" height=\"16\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"214.9230769230769\" y=\"244\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">2</text><text x=\"120\" y=\"266\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">pytest</text><rect x=\"130\" y=\"258\" width=\"230.76923076923077\" height=\"16\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"368.7692307692308\" y=\"266\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">6</text><text x=\"120\" y=\"288\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">werkzeug</text><rect x=\"130\" y=\"280\" width=\"230.76923076923077\" height=\"16\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"368.7692307692308\" y=\"288\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">6</text></svg>", "caption": "44 versões num ano, de treze pins, 13 delas de um pacote só, e nenhuma de três."}
 ```
 
 Um serviço Flask pequeno é o caso fácil. A mesma conta para um serviço com duzentas dependências

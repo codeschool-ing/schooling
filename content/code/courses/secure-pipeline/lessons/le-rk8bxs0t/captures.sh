@@ -97,7 +97,7 @@ run 'git push ci stale-lock'
 
 block hash-check
 run 'uv venv -q /tmp/hashcheck'
-run 'uv pip install -q --python /tmp/hashcheck --require-hashes -r requirements.txt'
+run 'uv pip install -q --python /tmp/hashcheck --require-hashes -r requirements.txt 2>&1 | tail -n 6'
 quiet 'rm -rf /tmp/hashcheck'
 
 block right-fix
