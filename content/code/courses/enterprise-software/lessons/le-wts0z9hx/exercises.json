@@ -1,0 +1,732 @@
+[
+  {
+    "id": "ex-10kbhn9v",
+    "version": 1,
+    "section": "queue-and-topic",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When a bakery pays an invoice, the ledger, Salesforce and the credit process all need to hear of it. Which channel fits?",
+    "hint": "Each of the three needs every payment.",
+    "choices": [
+      {
+        "text": "One queue that the three systems read as competing consumers",
+        "correct": false,
+        "why": "Competing consumers share the messages out: each payment would reach one of the three and be missing from the other two."
+      },
+      {
+        "text": "A topic, with a durable subscription for each system",
+        "correct": true,
+        "why": "Right: a topic gives each subscription its own copy, and durability keeps the copies for a subscriber that is down."
+      },
+      {
+        "text": "A call from the portal to each system, one after another",
+        "correct": false,
+        "why": "That works while all three are up, and it makes the portal know and wait for every system that cares about a payment."
+      },
+      {
+        "text": "A non-durable subscription per system, so that nothing piles up",
+        "correct": false,
+        "why": "Nothing piles up because a subscriber that is restarting simply misses the payments made meanwhile."
+      }
+    ]
+  },
+  {
+    "id": "ex-7xmddsc0",
+    "version": 1,
+    "section": "queue-and-topic",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The order flow spends 250 ms on each message. At month end Rui runs four instances as competing consumers. How many orders a second do they handle together?",
+    "hint": "One instance first: how many 250 ms fit in a second?",
+    "value": 16,
+    "tolerance": 0,
+    "unit": "orders",
+    "accept_units": [
+      "order",
+      "messages",
+      "message"
+    ]
+  },
+  {
+    "id": "ex-qc53cef2",
+    "version": 1,
+    "section": "queue-and-topic",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A partner runs ActiveMQ. A developer says: \"Our Java code uses JMS with IBM MQ, and ActiveMQ is JMS too, so our client can connect to their broker.\" What is wrong?",
+    "hint": "Ask what JMS standardises: the code, or the bytes.",
+    "choices": [
+      {
+        "text": "JMS is an API, and the IBM MQ client speaks only to IBM MQ",
+        "correct": true,
+        "why": "Right: JMS standardises the program's interfaces, not the protocol, so two providers do not interoperate."
+      },
+      {
+        "text": "JMS covers queues, and talking to another company needs topics",
+        "correct": false,
+        "why": "JMS defines both queues and topics; the shape of the channel is not what stands in the way here."
+      },
+      {
+        "text": "Nothing: JMS fixes the wire format, so any two JMS brokers talk",
+        "correct": false,
+        "why": "That is what AMQP 1.0 does. JMS says nothing about the bytes on the wire."
+      },
+      {
+        "text": "It works only if both sides run the same version of Java",
+        "correct": false,
+        "why": "The Java version is not the obstacle; the two brokers speak different protocols whatever Java runs the client."
+      }
+    ]
+  },
+  {
+    "id": "ex-nzabsyys",
+    "version": 1,
+    "section": "queue-and-topic",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each name to what it is.",
+    "hint": "Two products and two standards, and the standards standardise different things.",
+    "pairs": [
+      {
+        "left": "IBM MQ",
+        "right": "queues with topics on top, persistent messages and transactions"
+      },
+      {
+        "left": "Apache Kafka",
+        "right": "a partitioned log that reading does not empty"
+      },
+      {
+        "left": "JMS",
+        "right": "a Java API that leaves the bytes on the wire unspecified"
+      },
+      {
+        "left": "AMQP 1.0",
+        "right": "a wire protocol any vendor's client and broker can share"
+      }
+    ],
+    "right_distractors": [
+      "a staging table one system writes and another polls"
+    ]
+  },
+  {
+    "id": "ex-0p826j5b",
+    "version": 1,
+    "section": "delivery-guarantees",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A consumer acknowledges each message as soon as it receives it, then writes the payment to the ledger. It crashes halfway through the write. What happens to that payment?",
+    "hint": "The broker forgets a message when it hears the acknowledgement.",
+    "choices": [
+      {
+        "text": "It is recorded twice, because the broker sends it again",
+        "correct": false,
+        "why": "The broker already heard \"done\" and deleted the message, so there is nothing for it to send again."
+      },
+      {
+        "text": "It waits in the queue until the consumer restarts",
+        "correct": false,
+        "why": "That is what happens when the acknowledgement comes after the work; here it came first."
+      },
+      {
+        "text": "It is lost",
+        "correct": true,
+        "why": "Right: acknowledging before the work is at-most-once, and this delivery came to nothing."
+      },
+      {
+        "text": "It is safe, because the message was persistent on the broker",
+        "correct": false,
+        "why": "Persistence protects a message the broker still holds, and this one was deleted on acknowledgement."
+      }
+    ]
+  },
+  {
+    "id": "ex-ybfsvp4h",
+    "version": 1,
+    "section": "delivery-guarantees",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A consumer reads payments from a Kafka topic and inserts them into a PostgreSQL ledger. The team says Kafka's exactly-once semantics mean the ledger cannot get a duplicate. Are they right?",
+    "hint": "What does a Kafka transaction include?",
+    "choices": [
+      {
+        "text": "Yes, as long as the producer has idempotence switched on",
+        "correct": false,
+        "why": "The idempotent producer removes duplicates of its own retries inside Kafka; it knows nothing about the database."
+      },
+      {
+        "text": "Yes, because the offset is committed after the insert",
+        "correct": false,
+        "why": "Committing after the insert is at-least-once: a crash between the two inserts the payment again."
+      },
+      {
+        "text": "No: Kafka gives at-most-once and nothing stronger",
+        "correct": false,
+        "why": "Kafka supports at-least-once and, for writes to Kafka itself, exactly-once; the problem is the database."
+      },
+      {
+        "text": "No: the guarantee covers writes to Kafka, not the ledger",
+        "correct": true,
+        "why": "Right: a PostgreSQL insert is outside any Kafka transaction, so a redelivery is absorbed by the consumer or not at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-kw9s69wr",
+    "version": 1,
+    "section": "delivery-guarantees",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Acknowledging a message only after its work has committed gives at-___-once delivery.",
+    "hint": "Nothing is lost, and a repeat is possible.",
+    "blanks": [
+      {
+        "accept": [
+          "least"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s94zx8fg",
+    "version": 1,
+    "section": "delivery-guarantees",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A flow carries 1,900 messages a day and about one in a thousand is redelivered. How many duplicates should its consumer expect in 30 days?",
+    "hint": "Messages in the month first, then the rate.",
+    "value": 57,
+    "tolerance": 0,
+    "unit": "duplicates",
+    "accept_units": [
+      "duplicate",
+      "messages"
+    ]
+  },
+  {
+    "id": "ex-gch35zg4",
+    "version": 1,
+    "section": "idempotent-consumer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague moves the insert into `processed` into its own transaction, committed after the ledger insert. What can now go wrong?",
+    "hint": "Put a crash between the two commits.",
+    "choices": [
+      {
+        "text": "Nothing, as long as both transactions are in the same database file",
+        "correct": false,
+        "why": "Sharing a file is not sharing a transaction; two commits leave a moment between them."
+      },
+      {
+        "text": "A redelivery after a crash between the commits pays twice",
+        "correct": true,
+        "why": "Right: the work is done and the memory of it is not, so the repeat looks new."
+      },
+      {
+        "text": "The broker loses the message",
+        "correct": false,
+        "why": "The broker still holds it until the acknowledgement; the danger is that it comes back."
+      },
+      {
+        "text": "The primary key on `processed` rejects the first delivery of the message",
+        "correct": false,
+        "why": "A first delivery has an id nobody recorded, so the key accepts it."
+      }
+    ]
+  },
+  {
+    "id": "ex-tcntdjw0",
+    "version": 1,
+    "section": "idempotent-consumer",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To save a table, a developer drops `processed` and puts a unique constraint on the ledger's invoice column instead. Mercado Central pays NF-18232 in two instalments. What happens?",
+    "hint": "Is a payment unique per invoice?",
+    "choices": [
+      {
+        "text": "Both instalments are recorded, and only a redelivered message is refused",
+        "correct": false,
+        "why": "The constraint knows the invoice, not the message, so it cannot tell a repeat from a second instalment."
+      },
+      {
+        "text": "Both instalments are recorded twice each",
+        "correct": false,
+        "why": "A unique constraint can only refuse rows; it never adds them."
+      },
+      {
+        "text": "The second instalment is refused as if it were a duplicate",
+        "correct": true,
+        "why": "Right: a natural key fails where the fact can legitimately happen twice, and a payment can."
+      },
+      {
+        "text": "The broker refuses the second message for the same invoice",
+        "correct": false,
+        "why": "The broker knows nothing about invoices; the refusal, if any, happens in the consumer's database."
+      }
+    ]
+  },
+  {
+    "id": "ex-w5an2db2",
+    "version": 1,
+    "section": "idempotent-consumer",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these messages are idempotent by nature, so that handling one twice leaves the same state? Choose all that apply.",
+    "hint": "A stated value against a stated change.",
+    "choices": [
+      {
+        "text": "Order 4711 is cancelled",
+        "correct": true,
+        "why": "Yes: a cancelled order cancelled again is still cancelled."
+      },
+      {
+        "text": "Add 300 litres to farm 10233's collection",
+        "correct": false,
+        "why": "Twice is 600 litres, and the farm is paid for milk it never delivered."
+      },
+      {
+        "text": "The price of butter 200 g is now R$ 12,00",
+        "correct": true,
+        "why": "Yes: setting the same value twice leaves that value."
+      },
+      {
+        "text": "Send the certificate of analysis to the customer",
+        "correct": false,
+        "why": "Each handling sends another email; the customer receives two."
+      }
+    ]
+  },
+  {
+    "id": "ex-90hpecsx",
+    "version": 1,
+    "section": "idempotent-consumer",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A consumer runs `SELECT` on `processed`, and if the id is absent it applies the payment and inserts the id, all in one transaction, with no unique constraint on the id. Two instances read the queue. When can a payment still be applied twice?",
+    "hint": "What does each transaction see of the other before either commits?",
+    "choices": [
+      {
+        "text": "When both get the same message and check before either commits",
+        "correct": true,
+        "why": "Right: a timeout redelivers the message to the second instance, and the check passes twice. A primary key would make the database refuse one."
+      },
+      {
+        "text": "Never: putting the three steps in one transaction already prevents it",
+        "correct": false,
+        "why": "A transaction does not see another's uncommitted insert, so without a constraint both find nothing and both apply."
+      },
+      {
+        "text": "Only if the database crashes in the middle of the transaction",
+        "correct": false,
+        "why": "A crash rolls the transaction back and leaves nothing applied; the race needs no crash at all."
+      },
+      {
+        "text": "Only if the broker is configured for at-most-once delivery",
+        "correct": false,
+        "why": "At-most-once removes repeats by losing messages; the race appears with at-least-once, which is the normal setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-7f8t7jfn",
+    "version": 1,
+    "section": "outbox",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put one payment's journey through the outbox in order.",
+    "hint": "From the portal's transaction to the consumer's.",
+    "items": [
+      "The portal writes the payment and its outbox row in one transaction",
+      "The relay reads the outbox rows not yet sent",
+      "The relay publishes the message to the broker",
+      "The relay marks the outbox row as sent",
+      "The consumer records the message id and the payment together"
+    ],
+    "trap": "Marking the row sent before publishing turns a relay crash into a lost message."
+  },
+  {
+    "id": "ex-qp5sjs50",
+    "version": 1,
+    "section": "outbox",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To avoid the lost orders, a developer proposes: publish to the queue first, then commit the order; if the commit fails, publish a \"cancel\" message. What is the flaw?",
+    "hint": "Where can the process die?",
+    "choices": [
+      {
+        "text": "The cancel message would arrive before the order it cancels",
+        "correct": false,
+        "why": "Both go through the same queue in that order; the trouble is that the cancel may never be sent."
+      },
+      {
+        "text": "IBM MQ does not allow a message to be published before a database commit",
+        "correct": false,
+        "why": "The broker has no idea a database exists; it accepts the put whenever it is made."
+      },
+      {
+        "text": "Nothing: reversing the order removes the dual-write problem",
+        "correct": false,
+        "why": "Reversing the order moves the bad outcome from \"confirmed and never sent\" to \"sent and never recorded\"."
+      },
+      {
+        "text": "A crash after publishing leaves SAP an order the portal never saved",
+        "correct": true,
+        "why": "Right: it is still two writes with no shared transaction, and the compensation lives in a process that has just died."
+      }
+    ]
+  },
+  {
+    "id": "ex-xmanz5x2",
+    "version": 1,
+    "section": "outbox",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A relay generates a fresh random id for each message at the moment it publishes. It crashes after publishing a payment and before marking the row sent, and republishes on restart. What does the idempotent consumer do?",
+    "hint": "Compare the two copies' ids.",
+    "choices": [
+      {
+        "text": "Records it twice: the copy has a new id",
+        "correct": true,
+        "why": "Right: the id must be fixed when the outbox row is written, or the consumer sees two different messages."
+      },
+      {
+        "text": "It skips the copy, because the payment inside it is the same",
+        "correct": false,
+        "why": "The consumer compares message ids, not payments, and these two ids differ."
+      },
+      {
+        "text": "It rejects both copies as poison messages",
+        "correct": false,
+        "why": "Both copies are well formed and succeed; poison means a message that can never succeed."
+      },
+      {
+        "text": "Nothing: the relay never publishes a row twice",
+        "correct": false,
+        "why": "A crash between publishing and marking is exactly when it does."
+      }
+    ]
+  },
+  {
+    "id": "ex-wdy2rs2e",
+    "version": 1,
+    "section": "outbox",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lesson's run, the relay crashed once after publishing portal-1 and was restarted. How many times did portal-1 appear in queue.jsonl, and how many payments did the ledger hold afterwards?",
+    "hint": "The ledger started with three payments from the previous section.",
+    "choices": [
+      {
+        "text": "Twice, and the ledger ended with five payments",
+        "correct": true,
+        "why": "Right: the outbox duplicated the message and the consumer absorbed the duplicate: three plus two new payments."
+      },
+      {
+        "text": "Once, and the ledger held four payments",
+        "correct": false,
+        "why": "The restart found portal-1 still unsent and published it again, so it appears twice."
+      },
+      {
+        "text": "Twice, and the ledger held six payments",
+        "correct": false,
+        "why": "The copy was skipped as already processed, so it added nothing."
+      },
+      {
+        "text": "Once, and the ledger held five payments",
+        "correct": false,
+        "why": "Five is the right total, but `cat queue.jsonl` showed portal-1 on two lines."
+      }
+    ]
+  },
+  {
+    "id": "ex-t5yt7pp5",
+    "version": 1,
+    "section": "poison-and-dead-letters",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A consumer retries a failing message five times, waiting 1, 2, 4, 8 and 16 seconds before the retries. How many seconds does it spend waiting before the message goes to the dead-letter queue?",
+    "hint": "Add the waits.",
+    "value": 31,
+    "tolerance": 0,
+    "unit": "seconds",
+    "accept_units": [
+      "second",
+      "s"
+    ]
+  },
+  {
+    "id": "ex-nvb7eett",
+    "version": 1,
+    "section": "poison-and-dead-letters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An order arrives for customer 4011873, which does not exist in SAP. The consumer's error says \"customer not found\". What should it do with the message?",
+    "hint": "Will the hundredth try differ from the first?",
+    "choices": [
+      {
+        "text": "Retry with exponential backoff, without a limit, until SAP knows the customer",
+        "correct": false,
+        "why": "With no ceiling a permanent failure is retried forever, filling the logs and holding a consumer."
+      },
+      {
+        "text": "Send it to the dead-letter queue at once",
+        "correct": true,
+        "why": "Right: the fault is in the message, so retrying cannot help and a person has to look at it."
+      },
+      {
+        "text": "Acknowledge it and write the error to the log",
+        "correct": false,
+        "why": "That throws the order away; a log line nobody reads is where the 47 lost orders went as well."
+      },
+      {
+        "text": "Retry at once in a tight loop, since the error is quick",
+        "correct": false,
+        "why": "Immediate retries of a permanent failure burn a consumer and change nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-9cvgt1hf",
+    "version": 1,
+    "section": "poison-and-dead-letters",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each product to how it sets a failing message aside.",
+    "hint": "One of them has nothing in the broker at all.",
+    "pairs": [
+      {
+        "left": "IBM MQ",
+        "right": "a backout threshold and a backout requeue queue"
+      },
+      {
+        "left": "RabbitMQ",
+        "right": "a dead-letter exchange configured on the queue"
+      },
+      {
+        "left": "Amazon SQS",
+        "right": "a redrive policy after a number of receives"
+      },
+      {
+        "left": "Apache Kafka",
+        "right": "nothing in the broker; consumers write failures to another topic"
+      }
+    ],
+    "right_distractors": [
+      "a retry that waits twice as long each time, forever"
+    ]
+  },
+  {
+    "id": "ex-fkghk7sw",
+    "version": 1,
+    "section": "poison-and-dead-letters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Twenty-three credit blocks sat in the dead-letter queue for months while reps took orders from blocked customers. Which part of Rui and Joana's rule would have surfaced them soonest?",
+    "hint": "Which part makes a person look on the first day?",
+    "choices": [
+      {
+        "text": "Raising the retry count so that the credit blocks get more attempts",
+        "correct": false,
+        "why": "The missing field was permanent, so more attempts would have failed the same way, just later."
+      },
+      {
+        "text": "One shared dead-letter queue for all the flows, watched by integration",
+        "correct": false,
+        "why": "That is close to what existed: a queue whose depth meant nothing to any one team."
+      },
+      {
+        "text": "An alarm on depth above zero, sent to the flow's named owner",
+        "correct": true,
+        "why": "Right: credit is one of the flows where a single dead letter is an incident, and the alarm reaches a person who owns it."
+      },
+      {
+        "text": "Replaying the queue each night to its original destination",
+        "correct": false,
+        "why": "A blind replay of a permanent failure fails again, and nobody learns about the missing field."
+      }
+    ]
+  },
+  {
+    "id": "ex-s05kb5j1",
+    "version": 1,
+    "section": "ordering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A price message for butter from three weeks ago is replayed from the dead-letter queue. The portal's consumer reads a Kafka topic keyed by material. What makes the replay harmless?",
+    "hint": "Keys keep order in transit. What keeps it afterwards?",
+    "choices": [
+      {
+        "text": "The key, because it sends every butter message to the same partition",
+        "correct": false,
+        "why": "The replayed message joins the partition now, behind newer prices, and is applied on top of them."
+      },
+      {
+        "text": "A version on each message, checked before the update",
+        "correct": true,
+        "why": "Right: the old price carries an old version, the conditional update changes no row, and the message is acknowledged."
+      },
+      {
+        "text": "Reading the topic with a single active consumer",
+        "correct": false,
+        "why": "One consumer applies messages in arrival order, and the old price arrives last."
+      },
+      {
+        "text": "Switching to a FIFO queue, so that messages leave in the order they arrived",
+        "correct": false,
+        "why": "The replay arrives last, so a FIFO queue delivers it last, which is exactly the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-3y5e5z63",
+    "version": 1,
+    "section": "ordering",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Kafka topic has 12 partitions. Twenty instances of a consumer join the same consumer group. How many of them are given partitions to read?",
+    "hint": "Each partition is read by one member of the group at a time.",
+    "value": 12,
+    "tolerance": 0,
+    "unit": "consumers",
+    "accept_units": [
+      "consumer",
+      "instances",
+      "instance"
+    ]
+  },
+  {
+    "id": "ex-wcgmqyk1",
+    "version": 1,
+    "section": "ordering",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "\"Order 4711: line 3 removed, version 7\" arrives before \"Order 4711: line 3 added, version 6\". What should the consumer do?",
+    "hint": "Are these two changes safe to apply in either order?",
+    "choices": [
+      {
+        "text": "Apply version 7 now and version 6 when it comes, since the processed table stops repeats",
+        "correct": false,
+        "why": "Nothing repeats here; the order is wrong, and the late addition puts back a line the bakery removed."
+      },
+      {
+        "text": "Discard version 7, as a stale price would be discarded",
+        "correct": false,
+        "why": "Version 7 is the newer message, and a change cannot be dropped the way a superseded value can."
+      },
+      {
+        "text": "Send version 7 to the dead-letter queue as a poison message",
+        "correct": false,
+        "why": "Nothing is wrong with the message; it only arrived early, and it would succeed once version 6 is in."
+      },
+      {
+        "text": "Hold the removal until the addition arrives, then apply both in order",
+        "correct": true,
+        "why": "Right: the changes do not commute, so the consumer resequences, and somebody decides how long it waits."
+      }
+    ]
+  },
+  {
+    "id": "ex-qrf2w42g",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Joana reviews a new flow: SAP publishes \"the credit limit of customer X is now R$ 50.000,00\" to a topic, and a consumer updates Salesforce. Which review comments does this lesson support? Choose all that apply.",
+    "hint": "Delivery, failure and order, one comment each.",
+    "choices": [
+      {
+        "text": "Carry SAP's change number as a version, and ignore a limit older than the stored one",
+        "correct": true,
+        "why": "Yes: a stated value with a version is safe in any order, including a late replay."
+      },
+      {
+        "text": "Deliver the limits in one global order across all customers",
+        "correct": false,
+        "why": "Order matters per customer; global order costs one partition and one consumer for no benefit."
+      },
+      {
+        "text": "Give the flow its own dead-letter queue with a named owner and an alarm on depth",
+        "correct": true,
+        "why": "Yes: credit flows are where twenty-three silent dead letters cost months of complaints."
+      },
+      {
+        "text": "Acknowledge after the Salesforce update, and make the update safe to repeat",
+        "correct": true,
+        "why": "Yes: at-least-once plus an idempotent effect is how the limit is applied once."
+      }
+    ]
+  },
+  {
+    "id": "ex-w0g9pcad",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The portal must tell SAP about every order, and SAP is down every Sunday from 01:00 to 05:00. Which design keeps every order and creates each sales order once?",
+    "hint": "Three failures to cover: the portal, the relay and the redelivery.",
+    "choices": [
+      {
+        "text": "A synchronous call to SAP for each order, retried until SAP answers",
+        "correct": false,
+        "why": "For four hours every Sunday each bakery would wait on a call that cannot succeed, and a timed-out retry can still create the order twice."
+      },
+      {
+        "text": "Commit the order, put the message on the queue, and log any failed put",
+        "correct": false,
+        "why": "That is the portal's first version, the one that lost 47 orders on a Sunday night."
+      },
+      {
+        "text": "An outbox, a relay to a queue, and a consumer that records ids",
+        "correct": true,
+        "why": "Right: the outbox makes the order and its message one fact, the queue waits out the window, and the id absorbs the relay's duplicates."
+      },
+      {
+        "text": "A queue with exactly-once delivery switched on, so that no consumer check is needed",
+        "correct": false,
+        "why": "No broker setting covers the gap between SAP creating the order and the acknowledgement."
+      }
+    ]
+  },
+  {
+    "id": "ex-5zxyf2ds",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the first working day of the month, 4,800 orders are waiting in the order queue. Four instances each handle 4 orders a second. How many seconds does the backlog take to drain, if nothing new arrives?",
+    "hint": "The rate of the four together first.",
+    "value": 300,
+    "tolerance": 0,
+    "unit": "seconds",
+    "accept_units": [
+      "second",
+      "s"
+    ]
+  }
+]

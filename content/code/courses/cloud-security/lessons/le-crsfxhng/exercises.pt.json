@@ -1,0 +1,492 @@
+{
+  "ex-w4eqvqmh": {
+    "prompt": "De onde o código dentro de uma função Lambda tira as credenciais da AWS?",
+    "hint": "O Lambda assume algo pela função e entrega o resultado.",
+    "choices": [
+      {
+        "text": "Do papel de execução, como credenciais temporárias no ambiente dela",
+        "why": "Isso. O Lambda assume o papel e põe a sessão em AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY e AWS_SESSION_TOKEN."
+      },
+      {
+        "text": "Do usuário raiz da conta",
+        "why": "Nada numa função roda como raiz; ela roda como o papel dela."
+      },
+      {
+        "text": "Do usuário que publicou a função, cujas permissões ela mantém",
+        "why": "As permissões de quem publicou acabam na publicação. A função roda como o papel nomeado na configuração dela."
+      },
+      {
+        "text": "De uma chave de acesso que o desenvolvedor cola no handler",
+        "why": "Uma função não precisa de chave própria, e uma chave no código é o problema da aula 7."
+      }
+    ]
+  },
+  "ex-q6bdj7cv": {
+    "prompt": "Depois que o caio anexou `AdministratorAccess` ao papel da função de exportação, o que uma falha numa das bibliotecas da função alcançaria?",
+    "hint": "A sessão do papel leu um arquivo de paciente no laboratório.",
+    "choices": [
+      {
+        "text": "O `clinic-exports`, o bucket em que a função grava, e mais nada",
+        "why": "Isso é o que a função faz, não o que o papel permite. A sessão leu o `clinic-records` também."
+      },
+      {
+        "text": "Todo recurso que a conta guarda",
+        "why": "Isso. Todo código na função herda o papel, e aquele papel não recusava nada."
+      },
+      {
+        "text": "A própria cópia da função e mais longe não, já que o Lambda isola cada cópia",
+        "why": "O Lambda isola as cópias umas das outras, não as credenciais do papel em relação à conta."
+      },
+      {
+        "text": "O que o handler da função nomeia no código",
+        "why": "O papel não lê o código. Uma biblioteca pode chamar qualquer API que o papel permita."
+      }
+    ]
+  },
+  "ex-699yndqg": {
+    "prompt": "Que prova a aula trata como a evidência de que a política estreita funciona?",
+    "hint": "Uma política é o que você quis dizer.",
+    "choices": [
+      {
+        "text": "A sessão antiga, cujas permissões mudam na hora",
+        "why": "A aula pede uma sessão nova, para que a prova não dependa de como se comporta uma sessão já emitida."
+      },
+      {
+        "text": "O arquivo `write-exports.json`, lido com atenção",
+        "why": "O arquivo diz o que se quis; só uma requisição mostra o que a conta faz."
+      },
+      {
+        "text": "O `put-role-policy` voltando sem erro",
+        "why": "Isso prova que a política foi guardada, não o que ela permite."
+      },
+      {
+        "text": "Uma sessão nova que ainda grava a exportação e tem o arquivo de paciente e a lista de usuários recusados",
+        "why": "Isso. O trabalho continua funcionando, e o que ele não tinha por que fazer é recusado."
+      }
+    ]
+  },
+  "ex-b0a8ktkx": {
+    "prompt": "Depois do teste, a ana deixa o usuário `admin` na política de confiança do papel de exportação \"caso seja útil\". O que ela deixou aberto?",
+    "hint": "A política de confiança responde quem pode se tornar o papel.",
+    "choices": [
+      {
+        "text": "Um jeito de a função agir como o admin",
+        "why": "A confiança vai no outro sentido: deixa o admin agir como o papel da função, não a função como o admin."
+      },
+      {
+        "text": "Acesso público à URL da função",
+        "why": "Quem pode chamar a função é outro documento, a política baseada em recurso dela."
+      },
+      {
+        "text": "Risco nenhum, porque o admin já tem a AdministratorAccess",
+        "why": "Hoje. Uma entrada de confiança sobrevive ao motivo dela: quem tiver depois a chave do admin, ou um admin restringido, continua se tornando o papel."
+      },
+      {
+        "text": "Uma segunda porta para as permissões da função",
+        "why": "Isso. Só o serviço Lambda deve se tornar um papel de execução."
+      }
+    ]
+  },
+  "ex-bv791ydy": {
+    "prompt": "Quais destes são jeitos que a aula aponta para descobrir de quais ações uma função realmente precisa? Marque todos os que se aplicam.",
+    "hint": "Três jeitos, todos da documentação da AWS.",
+    "choices": [
+      {
+        "text": "As informações de último acesso do papel",
+        "why": "Isso. Lista os serviços que o papel usou e quando."
+      },
+      {
+        "text": "Compartilhar um papel entre as funções para cada uma achar o que precisa",
+        "why": "Um papel compartilhado carrega a união das necessidades de todas as funções."
+      },
+      {
+        "text": "Ler o código, onde cada chamada ao SDK é uma ação",
+        "why": "Isso. `put_object` é `s3:PutObject`."
+      },
+      {
+        "text": "O IAM Access Analyzer rascunhando uma política a partir da atividade no CloudTrail",
+        "why": "Isso. Ele mantém só as ações que viu sendo usadas."
+      },
+      {
+        "text": "Anexar AdministratorAccess até os erros pararem",
+        "why": "Esse é o erro do caio: os erros param porque todo limite para."
+      }
+    ]
+  },
+  "ex-7sa0swkh": {
+    "prompt": "Uma URL de função tem `AuthType` `NONE` e uma política baseada em recurso permitindo que `\"*\"` a invoque. Quem consegue iniciar a função?",
+    "hint": "Nenhuma assinatura é exigida.",
+    "choices": [
+      {
+        "text": "Usuários da conta da clínica que conhecem a URL",
+        "why": "Nada na requisição precisa vir da conta: ela não exige assinatura nenhuma."
+      },
+      {
+        "text": "Qualquer pessoa na internet",
+        "why": "Isso. O principal é todo mundo e nenhuma assinatura é exigida."
+      },
+      {
+        "text": "Ninguém, até a função ser publicada no API Gateway",
+        "why": "Uma URL de função é um endpoint HTTPS próprio, sem gateway na frente."
+      },
+      {
+        "text": "O tablet da recepção, já que foi para isso que ela foi criada",
+        "why": "Intenção não é controle. Nada nas duas configurações nomeia o tablet."
+      }
+    ]
+  },
+  "ex-tb6kgtxy": {
+    "prompt": "Por que a aula diz que um endereço difícil de adivinhar não é controle de acesso?",
+    "hint": "Pense em onde um endereço vai parar.",
+    "choices": [
+      {
+        "text": "Porque o moto o imprime no terminal dele",
+        "why": "Isso é o laboratório, não o motivo."
+      },
+      {
+        "text": "Porque a AWS lista as URLs de função publicamente",
+        "why": "A AWS não publica lista nenhuma. O endereço vaza por lugares comuns."
+      },
+      {
+        "text": "Porque um endereço que responde acaba em logs, históricos, capturas de tela e scanners",
+        "why": "Isso. O segredo do endereço não é uma decisão sobre quem pode chamá-lo."
+      },
+      {
+        "text": "Porque a parte aleatória do endereço é curta o bastante para um scanner tentar cada valor numa tarde",
+        "why": "A parte aleatória é longa; ela vaza em vez de ser adivinhada."
+      }
+    ]
+  },
+  "ex-cv6031df": {
+    "prompt": "Depois do `remove-permission`, o `aws lambda get-policy` respondeu `ResourceNotFoundException`. O que isso diz?",
+    "hint": "Que recurso não foi encontrado?",
+    "choices": [
+      {
+        "text": "O moto perdeu a função de vista depois que a URL mudou de tipo",
+        "why": "É a resposta documentada para uma função sem política, e a AWS dá a mesma."
+      },
+      {
+        "text": "A URL ainda permite qualquer um; mudou o id da instrução e mais nada",
+        "why": "A instrução sumiu e a URL agora exige assinatura."
+      },
+      {
+        "text": "A função foi apagada junto com a permissão",
+        "why": "A função continua lá; a URL dela foi atualizada uma linha antes."
+      },
+      {
+        "text": "A função não tem política baseada em recurso nenhuma",
+        "why": "Isso. Ninguém de fora da conta tem permissão para chamá-la."
+      }
+    ]
+  },
+  "ex-d9d26jc4": {
+    "prompt": "Uma permissão deixa `s3.amazonaws.com` invocar uma função, sem condição. Que bucket consegue fazê-la rodar?",
+    "hint": "O nome do serviço cobre mais que a sua conta.",
+    "choices": [
+      {
+        "text": "Qualquer bucket de qualquer conta, configurado para notificar a função",
+        "why": "Isso. Esse é o confused deputy, e o ARN de origem e a conta o fecham."
+      },
+      {
+        "text": "Bucket algum, até o dono do bucket escrever uma política de bucket que nomeie a função",
+        "why": "A notificação do bucket é configurada no bucket, pelo dono dele; o que é verificado é a permissão da função."
+      },
+      {
+        "text": "O `clinic-uploads`, o bucket que o caio quis dizer",
+        "why": "Só depois que a instrução disser isso, com `--source-arn`."
+      },
+      {
+        "text": "Buckets da própria conta da função",
+        "why": "Nada na instrução diz isso. É isso que o `--source-account` acrescenta."
+      }
+    ]
+  },
+  "ex-fzc2htg2": {
+    "prompt": "Por que a permissão do S3 nomeia a conta além do bucket?",
+    "hint": "Um nome de bucket não pertence a alguém para sempre.",
+    "choices": [
+      {
+        "text": "Porque a AWS rejeita um ARN de origem sem conta",
+        "why": "A AWS aceita; a aula nomeia a conta por um motivo próprio."
+      },
+      {
+        "text": "O ARN de um bucket não diz o dono, e o nome de um bucket apagado fica livre para outro tomar",
+        "why": "Isso. A conta amarra o nome ao dono."
+      },
+      {
+        "text": "Porque o moto ignora o bucket e só julga a conta",
+        "why": "O moto não julga nenhum dos dois; ele ignora condições."
+      },
+      {
+        "text": "Para a função ficar mais barata de chamar",
+        "why": "Condições mudam quem pode chamar, não o preço."
+      }
+    ]
+  },
+  "ex-9jb6srqz": {
+    "prompt": "O Lambda cifra as variáveis de ambiente em repouso. Por que uma senha ali continua exposta?",
+    "hint": "Quem recebe o valor decifrado?",
+    "choices": [
+      {
+        "text": "O Lambda guarda uma segunda cópia sem cifra para depuração",
+        "why": "Nenhuma cópia assim é necessária; a API devolve o valor decifrado."
+      },
+      {
+        "text": "A criptografia usa um algoritmo fraco",
+        "why": "O algoritmo não é o problema; para quem ela é decifrada é."
+      },
+      {
+        "text": "Porque ela é decifrada para todo chamador autorizado a ler a configuração",
+        "why": "Isso. Criptografia em repouso não diz nada sobre quem a lê pela API."
+      },
+      {
+        "text": "A chave é impressa nos logs da função",
+        "why": "Nada na aula imprime uma chave; o valor volta numa leitura da configuração."
+      }
+    ]
+  },
+  "ex-qetrnd5k": {
+    "prompt": "A bia tem só a `ReadOnlyAccess`. O que ela conseguiria fazer com a função da clínica do jeito que a aula a encontrou primeiro?",
+    "hint": "Olhe as ações que a política concede para o Lambda.",
+    "choices": [
+      {
+        "text": "Ler a senha do banco na configuração da função",
+        "why": "Isso. `lambda:Get*` cobre `GetFunctionConfiguration`."
+      },
+      {
+        "text": "Invocar a função e receber a senha na resposta",
+        "why": "Invocar não é ler; ela nem precisa, a configuração já guarda o valor."
+      },
+      {
+        "text": "Mudar a senha do banco na função",
+        "why": "Somente leitura não concede ação de atualização."
+      },
+      {
+        "text": "Mal algum, já que usuários somente leitura veem nomes e não configuração",
+        "why": "`lambda:Get*` é leitura de configuração, e a política a concede."
+      }
+    ]
+  },
+  "ex-h69he6ag": {
+    "prompt": "Depois da correção, o que o ambiente da função guarda?",
+    "hint": "O handler lê uma variável e pede o resto.",
+    "choices": [
+      {
+        "text": "O nome do segredo, `clinic/db`",
+        "why": "Isso. Um nome não prejudica ninguém; o valor é buscado na execução pelo papel."
+      },
+      {
+        "text": "Variável alguma: a senha é compilada dentro do zip",
+        "why": "Um segredo no pacote é a mesma exposição em outro arquivo, e é o assunto da aula 12."
+      },
+      {
+        "text": "O ARN do papel de execução",
+        "why": "O papel está na configuração da função, não nas variáveis de ambiente."
+      },
+      {
+        "text": "A senha, cifrada com uma chave da própria clínica",
+        "why": "Uma chave do cliente muda quem decifra em repouso, mas o valor continuaria na configuração."
+      }
+    ]
+  },
+  "ex-zfpx92fv": {
+    "prompt": "A `ReadOnlyAccess` deixa a bia listar segredos mas não chamar `secretsmanager:___`, então ela não lê o que eles guardam.",
+    "hint": "A ação que o papel de execução recebeu num segredo.",
+    "blanks": [
+      {
+        "accept": [
+          "GetSecretValue"
+        ]
+      }
+    ]
+  },
+  "ex-5874029c": {
+    "prompt": "A senha foi tirada do ambiente e posta no Secrets Manager. O que mais a aula diz que precisa acontecer?",
+    "hint": "O segredo tem um passado.",
+    "choices": [
+      {
+        "text": "Tirar a ReadOnlyAccess dos analistas",
+        "why": "A política está certa para o que é; o valor nunca devia ter estado num campo que ela lê."
+      },
+      {
+        "text": "Mais passo algum; mudar de lugar fecha a exposição",
+        "why": "Fecha daqui para frente. Todos que podiam lê-la antes ainda podem tê-la."
+      },
+      {
+        "text": "Apagar a função e criá-la de novo para a configuração antiga ser esquecida",
+        "why": "O valor antigo já está com quem o leu; recriar a função não alcança essas pessoas."
+      },
+      {
+        "text": "Trocar a senha no banco também",
+        "why": "Isso. Ela ficou legível para todo usuário somente leitura enquanto esteve lá."
+      }
+    ]
+  },
+  "ex-1zejr1yh": {
+    "prompt": "O Lambda mantém o runtime Python atualizado. Quem atualiza as bibliotecas dentro do zip da função?",
+    "hint": "Elas foram congeladas no dia do build.",
+    "choices": [
+      {
+        "text": "O pip, automaticamente, toda vez que uma cópia inicia",
+        "why": "Nada instala coisa alguma quando uma cópia inicia; ela roda o pacote como foi construído."
+      },
+      {
+        "text": "Os autores da biblioteca, que empurram correções às funções que a usam",
+        "why": "Eles publicam versões novas; o seu pacote não muda até você reconstruí-lo."
+      },
+      {
+        "text": "O Lambda, junto com o runtime",
+        "why": "O runtime é o interpretador e o sistema; o zip é seu."
+      },
+      {
+        "text": "Você, e ninguém mais, reconstruindo e publicando de novo",
+        "why": "Isso. Ninguém atualiza além de você."
+      }
+    ]
+  },
+  "ex-ez1dzetx": {
+    "prompt": "O `pip-audit` relatou 10 vulnerabilidades conhecidas para `requests==2.19.1` no dia em que a aula foi gravada. Por que o mesmo comando poderia relatar mais no mês que vem?",
+    "hint": "O que muda, se a versão não muda?",
+    "choices": [
+      {
+        "text": "Novos alertas são publicados sobre a versão antiga",
+        "why": "Isso. A versão fica, o conhecimento sobre ela cresce, então a varredura é repetida."
+      },
+      {
+        "text": "O requirements.txt resolve para uma versão diferente a cada mês",
+        "why": "Ele fixa `==2.19.1`; isso não se mexe."
+      },
+      {
+        "text": "O Lambda informa as falhas do runtime para a auditoria",
+        "why": "O pip-audit lê a lista de pacotes, não o Lambda."
+      },
+      {
+        "text": "A versão do próprio pip-audit muda sozinha",
+        "why": "Ela está fixada em 2.10.1 e não se atualiza sozinha."
+      }
+    ]
+  },
+  "ex-mdjckqnk": {
+    "prompt": "O caio corrige a versão no `requirements.txt`, a auditoria volta limpa e ele para aí. O que ainda está errado?",
+    "hint": "A auditoria leu um arquivo; a função roda um zip.",
+    "choices": [
+      {
+        "text": "A auditoria devia ter rodado duas vezes",
+        "why": "Uma segunda auditoria limpa do mesmo arquivo não acrescenta nada."
+      },
+      {
+        "text": "A função ainda roda o pacote antigo até ser reconstruída e publicada",
+        "why": "Isso. Um arquivo corrigido ao lado de um pacote antigo não corrige nada."
+      },
+      {
+        "text": "Ele devia ter removido o `requests` de vez",
+        "why": "A função o usa; a correção é uma versão mais nova, que ele escolheu."
+      },
+      {
+        "text": "O pip-audit confere dependências diretas e pula as indiretas",
+        "why": "Com `--no-deps` ele confere o arquivo como está; sem ele, resolve o que elas puxam. Nenhum dos dois é o que falta aqui."
+      }
+    ]
+  },
+  "ex-pfk77gn8": {
+    "prompt": "Quais destes hábitos a aula recomenda para o que vai no pacote de uma função? Marque todos os que se aplicam.",
+    "hint": "Três hábitos.",
+    "choices": [
+      {
+        "text": "Empacotar só o que o handler importa",
+        "why": "Isso. Uma biblioteca não importada é uma linha a menos em toda auditoria."
+      },
+      {
+        "text": "Copiar o ambiente virtual inteiro do desenvolvedor, para não faltar nada",
+        "why": "Isso leva junto ferramentas de teste e notebooks."
+      },
+      {
+        "text": "Auditar as layers como se audita a função",
+        "why": "Isso. Uma layer é uma dependência compartilhada entre funções."
+      },
+      {
+        "text": "Reconstruir por calendário além de quando algo muda",
+        "why": "Isso. A função em que ninguém mexe carrega um ano de alertas."
+      },
+      {
+        "text": "Deixar as versões sem fixar para a mais nova ser instalada",
+        "why": "Versões sem fixar fazem a auditoria não dizer nada sobre o que roda."
+      }
+    ]
+  },
+  "ex-weks2c3z": {
+    "prompt": "Ligue cada borda de uma função ao documento que a decide.",
+    "hint": "A figura no começo da aula.",
+    "pairs": [
+      {
+        "left": "quem pode se tornar ela",
+        "right": "a política de confiança do papel"
+      },
+      {
+        "left": "quem pode chamá-la",
+        "right": "a política baseada em recurso da função"
+      },
+      {
+        "left": "o que ela pode fazer",
+        "right": "as políticas do papel de execução"
+      },
+      {
+        "left": "o que ela carrega",
+        "right": "o pacote e a configuração dele"
+      }
+    ],
+    "right_distractors": [
+      "o usuário raiz da conta"
+    ]
+  },
+  "ex-ws9719w5": {
+    "prompt": "Ponha em ordem os passos para tirar uma senha do ambiente de uma função.",
+    "hint": "Por último vem a parte sobre o passado.",
+    "items": [
+      "guardar a senha no Secrets Manager",
+      "pôr o nome do segredo no ambiente em vez do valor",
+      "permitir que o papel de execução leia aquele segredo",
+      "publicar um handler que busca o valor na execução",
+      "trocar a senha no banco"
+    ],
+    "trap": "Trocar a senha primeiro é o deslize: a função quebraria até o valor novo estar guardado onde ela lê."
+  },
+  "ex-vkxrjb8d": {
+    "prompt": "Uma URL de função cujo tipo de autenticação é `___` exige que toda requisição seja assinada.",
+    "hint": "O valor para o qual a correção a mudou.",
+    "blanks": [
+      {
+        "accept": [
+          "AWS_IAM"
+        ]
+      }
+    ]
+  },
+  "ex-w4v8w11h": {
+    "prompt": "Quantas ações a política estreita `write-exports` permitia?",
+    "hint": "Uma ação num lugar.",
+    "unit": "ações"
+  },
+  "ex-kdraq8gy": {
+    "prompt": "Dez funções pequenas compartilham um papel de execução que permite a união do que elas precisam. Uma delas tem uma falha. O que a falha alcança?",
+    "hint": "Um papel não sabe qual função o está usando.",
+    "choices": [
+      {
+        "text": "Nada além de antes, porque um papel compartilhado é somente leitura",
+        "why": "Compartilhar não muda nada no que um papel pode fazer."
+      },
+      {
+        "text": "O código das outras nove funções, não os dados delas",
+        "why": "O papel alcança o que as políticas dele permitem, dados inclusive."
+      },
+      {
+        "text": "O que aquela função precisa",
+        "why": "O papel permite a união, e a falha tem o papel."
+      },
+      {
+        "text": "Toda permissão que qualquer uma das dez precisa",
+        "why": "Isso. Uma função, um papel."
+      }
+    ]
+  }
+}

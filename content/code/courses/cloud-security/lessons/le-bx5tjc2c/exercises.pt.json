@@ -1,0 +1,478 @@
+{
+  "ex-pwv8z51s": {
+    "prompt": "Contra quem a criptografia em repouso protege os prontuários da clínica?",
+    "hint": "Pense nas duas linhas da tabela.",
+    "choices": [
+      {
+        "text": "Contra quem chega aos bytes por fora do serviço, como um disco roubado ou um backup extraviado",
+        "why": "Isso. O que eles têm é texto cifrado sem a chave."
+      },
+      {
+        "text": "Contra um estranho lendo por uma política de bucket pública",
+        "why": "O laboratório mostrou o contrário: o S3 decifrou o prontuário para a requisição anônima."
+      },
+      {
+        "text": "Contra um usuário cuja política permite ler o bucket",
+        "why": "O serviço decifra para quem foi mandado responder; isso é questão de permissões."
+      },
+      {
+        "text": "Contra todos: torna os dados ilegíveis para qualquer um além do dono",
+        "why": "Essa é a imagem da caixinha que a seção corrige logo no começo."
+      }
+    ]
+  },
+  "ex-wx7fygt0": {
+    "prompt": "No laboratório, um objeto guardado com `AES256` foi servido a um `curl` anônimo assim que uma política de bucket deixou todo mundo ler. O que deu errado com a criptografia?",
+    "hint": "Onde a decifração aconteceu, e quem a pediu?",
+    "choices": [
+      {
+        "text": "A chave era curta demais para resistir a um estranho",
+        "why": "Nada foi quebrado; ninguém atacou a cifra."
+      },
+      {
+        "text": "Nada: o S3 a decifrou para uma requisição que a política permitia",
+        "why": "Isso. A criptografia fez o trabalho dela no disco; a política decidiu a quem responder."
+      },
+      {
+        "text": "O moto ignora a criptografia, e a AWS teria recusado a requisição porque o objeto é criptografado",
+        "why": "Para um objeto sob a chave do próprio S3 a AWS responde do mesmo jeito; a aula diz isso ao lado da transcrição."
+      },
+      {
+        "text": "O objeto foi cifrado depois da política, então ainda estava em claro",
+        "why": "Ele foi guardado cifrado no envio, como o `AES256` disse, antes de existir política."
+      }
+    ]
+  },
+  "ex-rx23s0p8": {
+    "prompt": "Desde janeiro de 2023, o que a AWS faz com um objeto novo no S3 quando ninguém pede criptografia?",
+    "hint": "O moto não reproduz esse padrão.",
+    "choices": [
+      {
+        "text": "Guarda em texto claro, como antes",
+        "why": "Isso mudou em janeiro de 2023."
+      },
+      {
+        "text": "Recusa o envio até alguém nomear uma chave",
+        "why": "Nenhum envio é recusado por falta de chave."
+      },
+      {
+        "text": "O cifra assim mesmo, com a chave do próprio S3",
+        "why": "Isso, e por isso a caixinha está sempre marcada e prova tão pouco."
+      },
+      {
+        "text": "O cifra com uma chave gerenciada pelo cliente criada para a conta",
+        "why": "Nenhuma chave gerenciada pelo cliente é criada para você; essas você cria."
+      }
+    ]
+  },
+  "ex-6ewxv84w": {
+    "prompt": "Ligue cada tipo de chave ao que vale para ele.",
+    "hint": "A tabela dos três tipos.",
+    "pairs": [
+      {
+        "left": "chave de propriedade da AWS",
+        "right": "invisível para você, e o uso dela não fica registrado na sua conta"
+      },
+      {
+        "left": "chave gerenciada pela AWS",
+        "right": "nomeada como `aws/s3`; você lê a política dela, não a muda"
+      },
+      {
+        "left": "chave gerenciada pelo cliente",
+        "right": "a política dela é escrita pela clínica, e ela pode ser apagada"
+      }
+    ],
+    "right_distractors": [
+      "o material dela fica fora do KMS"
+    ]
+  },
+  "ex-steg02v1": {
+    "prompt": "A política de chave padrão permite `kms:*` a `arn:aws:iam::123456789012:root`. O que quer dizer esse principal?",
+    "hint": "Não é uma pessoa.",
+    "choices": [
+      {
+        "text": "O usuário raiz da conta, e ninguém mais",
+        "why": "Parece e não é: ela passa a decisão ao IAM."
+      },
+      {
+        "text": "A conta, que passa a decisão às políticas do IAM",
+        "why": "Isso. Qualquer identidade cuja política do IAM permita a ação nesta chave pode executá-la."
+      },
+      {
+        "text": "Toda conta da AWS, já que termina em `root`",
+        "why": "Ela nomeia uma conta, a `123456789012`."
+      },
+      {
+        "text": "O próprio serviço KMS, para poder rotacionar a chave no prazo",
+        "why": "A rotação não precisa de permissão na política da chave."
+      }
+    ]
+  },
+  "ex-vdwcx03q": {
+    "prompt": "A clínica reescreve a política de uma chave para nomear só o papel do sistema de prontuários, sem instrução para a conta. Um administrador com `AdministratorAccess` pede à chave que decifre. O que acontece na AWS?",
+    "hint": "Nenhuma política do IAM concede uso de uma chave a menos que a política da chave o permita.",
+    "choices": [
+      {
+        "text": "Decifra, porque a `AdministratorAccess` permite toda ação em todo recurso",
+        "why": "Não para uma chave cuja política não passa mais a decisão à conta."
+      },
+      {
+        "text": "É recusado",
+        "why": "Isso. A política da chave decide primeiro, e ela só nomeia o sistema."
+      },
+      {
+        "text": "Decifra, mas o CloudTrail o marca como uma exceção",
+        "why": "Não existe exceção; a requisição é recusada."
+      },
+      {
+        "text": "Depende de o administrador também ter MFA",
+        "why": "Nada naquela política menciona MFA."
+      }
+    ]
+  },
+  "ex-xa9atfvc": {
+    "prompt": "Por que o laboratório guardou o id da chave em `k` em vez de usar sempre `alias/clinic-records`?",
+    "hint": "Nem toda chamada aceita um alias.",
+    "choices": [
+      {
+        "text": "Porque aliases expiram depois de uma hora",
+        "why": "Um alias dura até ser apagado."
+      },
+      {
+        "text": "O moto não aceita aliases de jeito nenhum",
+        "why": "O `describe-key` e o `encrypt` aceitaram o alias no laboratório."
+      },
+      {
+        "text": "Chamadas que administram uma chave, como `get-key-policy`, recebem o id ou o ARN e recusam o alias",
+        "why": "Isso, na AWS como no moto."
+      },
+      {
+        "text": "Usar o alias criaria uma segunda chave",
+        "why": "Um alias só aponta para uma chave."
+      }
+    ]
+  },
+  "ex-nd9jv2bs": {
+    "prompt": "Com uma chave gerenciada pelo cliente como padrão do bucket, que duas permissões ler um prontuário exige na AWS?",
+    "hint": "Uma no bucket, uma na chave.",
+    "choices": [
+      {
+        "text": "`s3:GetObject` e `kms:Decrypt`",
+        "why": "Isso. Faltando qualquer uma, a requisição é recusada."
+      },
+      {
+        "text": "`s3:GetObject` e `kms:Encrypt`",
+        "why": "Ler exige decifrar, não cifrar."
+      },
+      {
+        "text": "`s3:ListBucket` e `s3:GetEncryptionConfiguration`",
+        "why": "Nenhuma dessas toca na chave."
+      },
+      {
+        "text": "`kms:Decrypt` e `kms:GenerateDataKey`",
+        "why": "Isso deixa o bucket de fora, e gerar chave é para gravar."
+      }
+    ]
+  },
+  "ex-50g1p55b": {
+    "prompt": "A bia tem a `AmazonS3ReadOnlyAccess` e nada na chave. No laboratório, o `aws s3 cp` do prontuário o imprimiu. O que a AWS teria feito?",
+    "hint": "Qual metade disto o moto julgou?",
+    "choices": [
+      {
+        "text": "Imprimido também, já que o S3 decifra para qualquer um que possa ler o bucket",
+        "why": "Isso vale para a chave do próprio S3; com uma chave gerenciada pelo cliente, o KMS é consultado em nome da bia."
+      },
+      {
+        "text": "Recusado com `AccessDenied`, porque o KMS se recusa a decifrar para a bia",
+        "why": "Isso, pela documentação; o moto recusou o `kms decrypt` direto dela."
+      },
+      {
+        "text": "Devolvido o texto cifrado, já que ela pode ler o objeto mas não decifrá-lo",
+        "why": "O S3 nunca entrega o texto cifrado guardado; a leitura é recusada."
+      },
+      {
+        "text": "Pedido MFA a ela antes de decifrar",
+        "why": "Essa etapa não existe aqui."
+      }
+    ]
+  },
+  "ex-ydshr8gx": {
+    "prompt": "Uma política de bucket concede `s3:GetObject` a `\"Principal\": \"*\"` num bucket cujos objetos estão todos sob uma chave do KMS gerenciada pelo cliente. Segundo a documentação da AWS, o que uma requisição anônima recebe?",
+    "hint": "O KMS precisa de uma identidade para autorizar.",
+    "choices": [
+      {
+        "text": "O objeto, decifrado, como qualquer objeto público",
+        "why": "Foi o que o moto fez, e o que a chave do próprio S3 faria; não uma chave do KMS."
+      },
+      {
+        "text": "O objeto ainda cifrado, já que a chave não foi usada",
+        "why": "O S3 nunca devolve o texto cifrado guardado a quem lê."
+      },
+      {
+        "text": "Uma recusa: objetos sob uma chave do KMS exigem requisições assinadas com Signature Version 4",
+        "why": "Isso. Não executado aqui, porque o moto o serve."
+      },
+      {
+        "text": "Um redirecionamento para uma URL pré-assinada válida por uma hora",
+        "why": "O S3 não gera links em nome de ninguém."
+      }
+    ]
+  },
+  "ex-47tv4h7p": {
+    "prompt": "Quais destes o moto julgou exatamente como a AWS na seção das duas trancas? Marque todos os que se aplicam.",
+    "hint": "Um seguiu caminho próprio.",
+    "choices": [
+      {
+        "text": "A chave `test` recusada com a verificação ligada",
+        "why": "Isso: `InvalidClientTokenId` na quarta requisição."
+      },
+      {
+        "text": "O `kms decrypt` direto da bia recusado por falta de `kms:Decrypt`",
+        "why": "Isso."
+      },
+      {
+        "text": "O `aws s3 cp` do prontuário sob a chave da clínica, feito pela bia",
+        "why": "O moto serviu; a AWS recusaria."
+      },
+      {
+        "text": "O envio entrando como `aws:kms` sem nomear a chave",
+        "why": "Isso: a criptografia padrão do bucket a aplicou."
+      }
+    ]
+  },
+  "ex-8hwn5en1": {
+    "prompt": "Por que o S3 não manda cada objeto ao KMS para ser cifrado?",
+    "hint": "O laboratório bateu no limite com 5000 bytes.",
+    "choices": [
+      {
+        "text": "O KMS aceita no máximo 4096 bytes de texto claro por requisição",
+        "why": "Isso. Então o KMS cifra chaves de dados pequenas, e elas cifram os dados."
+      },
+      {
+        "text": "Porque o KMS fica em outra região e o tráfego custaria demais",
+        "why": "O KMS é regional, na mesma região; o motivo é o limite de tamanho."
+      },
+      {
+        "text": "O S3 não tem permissão para chamar o KMS",
+        "why": "O S3 chama o KMS em nome de quem pede a cada leitura."
+      },
+      {
+        "text": "O KMS só cifra senhas, por política",
+        "why": "Ele cifra qualquer dado até o limite de tamanho."
+      }
+    ]
+  },
+  "ex-8yxf2sne": {
+    "prompt": "Ponha em ordem os passos que um serviço dá para gravar e depois ler um objeto com criptografia de envelope.",
+    "hint": "A chave de dados em claro é apagada antes de qualquer coisa ser guardada.",
+    "items": [
+      "pedir ao KMS uma chave de dados, em claro e cifrada",
+      "cifrar os dados localmente com a chave de dados em claro",
+      "apagar da memória a chave de dados em claro",
+      "guardar a chave de dados cifrada ao lado dos dados cifrados",
+      "mandar a chave de dados cifrada ao KMS para ler o objeto de volta"
+    ],
+    "trap": "Guardar antes de apagar é o deslize: a chave em claro nunca pode chegar ao disco."
+  },
+  "ex-ywg6tz0t": {
+    "prompt": "O `generate-data-key` com `AES_256` devolveu uma chave em claro de 44 caracteres de base64. Quantos bytes tem a chave?",
+    "hint": "256 bits.",
+    "unit": "bytes"
+  },
+  "ex-e36xcyv7": {
+    "prompt": "O `aws kms decrypt` no laboratório não nomeou chave, e o KMS ainda respondeu com o ARN da chave. Como ele soube qual chave?",
+    "hint": "Olhe dentro do texto cifrado, não no comando.",
+    "choices": [
+      {
+        "text": "Tentou todas as chaves da conta até uma funcionar",
+        "why": "Nada é tentado; a resposta está no texto cifrado."
+      },
+      {
+        "text": "O texto cifrado carrega uma referência à chave que o fez",
+        "why": "Isso. O moto a escreve como o id da chave, legível; o formato da AWS é próprio."
+      },
+      {
+        "text": "O alias `alias/clinic-records` é a chave padrão da conta e é usado em toda decifração",
+        "why": "Não existe chave padrão da conta para decifrar."
+      },
+      {
+        "text": "A linha de comando o leu do `env.sh`",
+        "why": "O `env.sh` não guarda id de chave."
+      }
+    ]
+  },
+  "ex-ze3ssyq0": {
+    "prompt": "Por que toda leitura de um objeto sob uma chave gerenciada pelo cliente dá à clínica uma chance de recusar, e leituras sob a chave do próprio S3 não dão nenhuma?",
+    "hint": "Conte quem é consultado na hora da leitura.",
+    "choices": [
+      {
+        "text": "A chave de dados volta ao KMS em nome de quem pede a cada leitura, e a política da chave consegue negar",
+        "why": "Isso. Com a chave do próprio S3 não há política sua a consultar."
+      },
+      {
+        "text": "A chave do próprio S3 é mais fraca e qualquer um a quebra",
+        "why": "As duas usam AES-256; a diferença é quem decide."
+      },
+      {
+        "text": "Chaves gerenciadas pelo cliente rotacionam a cada hora",
+        "why": "A rotação é anual por padrão, e não é ela que recusa uma leitura."
+      },
+      {
+        "text": "Objetos sob a chave do próprio S3 nunca são cifrados",
+        "why": "São cifrados; o S3 só os decifra para quem ele serve."
+      }
+    ]
+  },
+  "ex-21yztykx": {
+    "prompt": "A clínica suspeita que a chave dela pode ter sido usada por um atacante. Um colega propõe rotacioná-la. O que a aula diz?",
+    "hint": "O que a rotação guarda?",
+    "choices": [
+      {
+        "text": "A rotação recifra tudo, então as cópias do atacante perdem o valor",
+        "why": "A rotação não recifra nada; o material antigo é guardado para o texto cifrado antigo continuar decifrando."
+      },
+      {
+        "text": "Ferramenta errada: quem usava a chave ainda decifra tudo o que foi feito antes; olhe quem tem permissão de usá-la",
+        "why": "Isso. Um comprometimento é questão para a política da chave e para o IAM."
+      },
+      {
+        "text": "Rotacionar é a resposta certa, e deve ser feito todo dia",
+        "why": "A rotação responde à idade, não ao comprometimento."
+      },
+      {
+        "text": "Apagar a chave na hora, já que a exclusão é imediata",
+        "why": "A exclusão espera de 7 a 30 dias, e tornaria ilegíveis os dados da própria clínica."
+      }
+    ]
+  },
+  "ex-rpfhtb03": {
+    "prompt": "Depois do `disable-key`, o moto ainda decifrou o bilhete. O que a AWS faz com uma requisição a uma chave desativada?",
+    "hint": "Uma exceção com o nome do estado.",
+    "choices": [
+      {
+        "text": "Decifra e registra um aviso",
+        "why": "Ela recusa."
+      },
+      {
+        "text": "Recusa com `DisabledException`",
+        "why": "Isso, pela documentação do KMS; não executado aqui."
+      },
+      {
+        "text": "Recusa com `AccessDenied`, como numa permissão que falta",
+        "why": "A recusa nomeia o estado da chave, não uma permissão."
+      },
+      {
+        "text": "Reativa a chave automaticamente para a requisição",
+        "why": "Uma chave só é reativada pelo `enable-key`."
+      }
+    ]
+  },
+  "ex-2yw4pmzc": {
+    "prompt": "Quantos dias a AWS espera antes de apagar uma chave do KMS quando o `schedule-key-deletion` não recebe período de espera?",
+    "hint": "A data que o laboratório imprimiu estava esse número de dias à frente.",
+    "unit": "dias"
+  },
+  "ex-1f5rnqdg": {
+    "prompt": "Quais chamadas sobre uma chave a aula diz que merecem um alarme próprio? Marque todas as que se aplicam.",
+    "hint": "Duas tornam os dados ilegíveis para a clínica, uma legíveis para outra pessoa.",
+    "choices": [
+      {
+        "text": "`DisableKey`",
+        "why": "Isso."
+      },
+      {
+        "text": "`ScheduleKeyDeletion`",
+        "why": "Isso."
+      },
+      {
+        "text": "`PutKeyPolicy`",
+        "why": "Isso: pode tornar os prontuários legíveis para outra pessoa."
+      },
+      {
+        "text": "`Decrypt`",
+        "why": "Toda leitura é uma; um alarme nela tocaria o dia inteiro."
+      },
+      {
+        "text": "`GetKeyRotationStatus`",
+        "why": "Ler uma configuração não muda nada."
+      }
+    ]
+  },
+  "ex-gy6p8f1a": {
+    "prompt": "Uma chave sai de `PendingDeletion` com `cancel-key-deletion`. Em que estado ela fica, na AWS como no laboratório?",
+    "hint": "Alguém precisa decidir religá-la.",
+    "choices": [
+      {
+        "text": "`Enabled`, como estava antes de a exclusão ser agendada",
+        "why": "Cancelar não a ativa."
+      },
+      {
+        "text": "`PendingDeletion`, até acabar o período de espera",
+        "why": "Cancelar encerra a exclusão pendente."
+      },
+      {
+        "text": "`Disabled`",
+        "why": "Isso. O laboratório o imprimiu depois do cancelamento."
+      },
+      {
+        "text": "Apagada, porque um cancelamento só para o relógio",
+        "why": "Nada é apagado; a chave sobrevive, desativada."
+      }
+    ]
+  },
+  "ex-gytj0txb": {
+    "prompt": "O `env.sh` do laboratório aponta para `http://localhost:4567`, HTTP puro. Por que isso é aceitável ali?",
+    "hint": "Para onde vai o tráfego?",
+    "choices": [
+      {
+        "text": "Porque o moto cifra as respostas num formato próprio",
+        "why": "O moto responde em HTTP puro."
+      },
+      {
+        "text": "Porque as chaves `test` não são secretas",
+        "why": "É verdade, mas a mesma URL apontada para outro lugar vazaria chaves reais; o motivo é para onde o tráfego vai."
+      },
+      {
+        "text": "O tráfego nunca sai deste computador",
+        "why": "Isso. Apontada para outra máquina, a mesma configuração mandaria as requisições às claras."
+      },
+      {
+        "text": "Porque os endpoints da AWS também aceitam HTTP puro",
+        "why": "Os endpoints de API da AWS respondem por HTTPS."
+      }
+    ]
+  },
+  "ex-s1zs9khs": {
+    "prompt": "A chave de condição que uma política de bucket usa para recusar requisições que não chegaram por TLS é `aws:___`.",
+    "hint": "Vale `false` quando a requisição veio sem TLS.",
+    "blanks": [
+      {
+        "accept": [
+          "SecureTransport"
+        ]
+      }
+    ]
+  },
+  "ex-k22xb4e7": {
+    "prompt": "A política de só-TLS lista `arn:aws:s3:::clinic-records` e `arn:aws:s3:::clinic-records/*`. O que ficaria desprotegido se ela listasse só o primeiro?",
+    "hint": "Um ARN sem `/*` só casa com o bucket.",
+    "choices": [
+      {
+        "text": "Nada: o ARN do bucket cobre tudo o que há nele",
+        "why": "Não cobre; ações sobre objetos são nos ARNs dos objetos."
+      },
+      {
+        "text": "Requisições pelos objetos, como `GetObject`",
+        "why": "Isso, e são essas as requisições que carregam os prontuários."
+      },
+      {
+        "text": "Requisições de administradores, que estão isentos de `Deny`",
+        "why": "Ninguém está isento de um `Deny` explícito com `Principal` `*`."
+      },
+      {
+        "text": "Só listar o conteúdo do bucket por HTTP puro",
+        "why": "Listar é uma ação sobre o bucket, que o primeiro ARN cobre."
+      }
+    ]
+  }
+}

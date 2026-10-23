@@ -1,0 +1,720 @@
+[
+  {
+    "id": "ex-w4eqvqmh",
+    "version": 1,
+    "section": "the-execution-role",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does the code inside a Lambda function get its AWS credentials from?",
+    "hint": "Lambda assumes something for the function and hands over the result.",
+    "choices": [
+      {
+        "text": "From the execution role, as temporary credentials in its environment",
+        "correct": true,
+        "why": "Right. Lambda assumes the role and puts the session into AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY and AWS_SESSION_TOKEN."
+      },
+      {
+        "text": "From the account's root user",
+        "correct": false,
+        "why": "Nothing in a function runs as root; it runs as its role."
+      },
+      {
+        "text": "From the user who deployed the function, whose permissions it keeps",
+        "correct": false,
+        "why": "The deployer's permissions end with the deployment. The function runs as the role named in its configuration."
+      },
+      {
+        "text": "From an access key the developer pastes into the handler",
+        "correct": false,
+        "why": "A function needs no key of its own, and a key in the code is lesson 7's problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-q6bdj7cv",
+    "version": 1,
+    "section": "the-execution-role",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After caio attached `AdministratorAccess` to the export function's role, what could a flaw in one of the function's libraries reach?",
+    "hint": "The role's session read a patient file in the lab.",
+    "choices": [
+      {
+        "text": "Just `clinic-exports`, the bucket the function writes to",
+        "correct": false,
+        "why": "That is what the function does, not what its role allows. The session read `clinic-records` too."
+      },
+      {
+        "text": "Every resource the account holds",
+        "correct": true,
+        "why": "Right. Any code in the function inherits the role, and that role refused nothing."
+      },
+      {
+        "text": "The function's own copy and no further, since Lambda isolates each copy",
+        "correct": false,
+        "why": "Lambda isolates copies from each other, not the role's credentials from the account."
+      },
+      {
+        "text": "What the function's handler names in its code",
+        "correct": false,
+        "why": "The role does not read the code. A library can call any API the role allows."
+      }
+    ]
+  },
+  {
+    "id": "ex-699yndqg",
+    "version": 1,
+    "section": "the-execution-role",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which piece of evidence does the lesson treat as the proof that the narrow policy works?",
+    "hint": "A policy is what you meant.",
+    "choices": [
+      {
+        "text": "The old session, whose permissions change at once",
+        "correct": false,
+        "why": "The lesson asks for a new session, so the proof does not depend on how a session already issued behaves."
+      },
+      {
+        "text": "The `write-exports.json` file, read carefully",
+        "correct": false,
+        "why": "The file says what was meant; only a request shows what the account does."
+      },
+      {
+        "text": "`put-role-policy` returning without an error",
+        "correct": false,
+        "why": "That proves the policy was stored, not what it allows."
+      },
+      {
+        "text": "A new session that still writes the export and is refused the patient file and the user list",
+        "correct": true,
+        "why": "Right. The work still works, and what it had no business doing is refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-b0a8ktkx",
+    "version": 1,
+    "section": "the-execution-role",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After testing, ana leaves her `admin` user in the export role's trust policy \"in case it is useful\". What has she left open?",
+    "hint": "The trust policy answers who may become the role.",
+    "choices": [
+      {
+        "text": "A way for the function to act as admin",
+        "correct": false,
+        "why": "Trust runs the other way: it lets admin act as the function's role, not the function as admin."
+      },
+      {
+        "text": "Public access to the function's URL",
+        "correct": false,
+        "why": "Who may call the function is a different document, its resource-based policy."
+      },
+      {
+        "text": "No risk, because admin already holds AdministratorAccess",
+        "correct": false,
+        "why": "Today. A trust entry outlives the reason for it: whoever later holds admin's key, or a narrowed admin, still becomes the role."
+      },
+      {
+        "text": "A second way into the function's permissions",
+        "correct": true,
+        "why": "Right. Only the Lambda service should become an execution role."
+      }
+    ]
+  },
+  {
+    "id": "ex-bv791ydy",
+    "version": 1,
+    "section": "the-execution-role",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are ways the lesson names to find out what actions a function really needs? Choose all that apply.",
+    "hint": "Three ways, all from AWS's documentation.",
+    "choices": [
+      {
+        "text": "The role's last accessed information",
+        "correct": true,
+        "why": "Right. It lists the services the role used and when."
+      },
+      {
+        "text": "Sharing one role across the functions so each finds what it needs",
+        "correct": false,
+        "why": "A shared role carries the union of every function's needs."
+      },
+      {
+        "text": "Reading the code, where each SDK call is an action",
+        "correct": true,
+        "why": "Right. `put_object` is `s3:PutObject`."
+      },
+      {
+        "text": "IAM Access Analyzer drafting a policy from CloudTrail activity",
+        "correct": true,
+        "why": "Right. It keeps only the actions it saw used."
+      },
+      {
+        "text": "Attaching AdministratorAccess until the errors stop",
+        "correct": false,
+        "why": "That is caio's mistake: the errors stop because every limit stops."
+      }
+    ]
+  },
+  {
+    "id": "ex-7sa0swkh",
+    "version": 1,
+    "section": "who-can-invoke",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A function URL has `AuthType` `NONE` and a resource-based policy allowing `\"*\"` to invoke it. Who can start the function?",
+    "hint": "No signature is required.",
+    "choices": [
+      {
+        "text": "Users of the clinic's account who know the URL",
+        "correct": false,
+        "why": "Nothing about the request has to come from the account: it needs no signature at all."
+      },
+      {
+        "text": "Anybody on the internet",
+        "correct": true,
+        "why": "Right. The principal is everybody and no signature is required."
+      },
+      {
+        "text": "Nobody, until the function is published to API Gateway",
+        "correct": false,
+        "why": "A function URL is its own HTTPS endpoint, with no gateway in front."
+      },
+      {
+        "text": "The reception's tablet, since that is what it was made for",
+        "correct": false,
+        "why": "Intent is not a control. Nothing in either setting names the tablet."
+      }
+    ]
+  },
+  {
+    "id": "ex-tb6kgtxy",
+    "version": 1,
+    "section": "who-can-invoke",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson say an address that is hard to guess is not an access control?",
+    "hint": "Think of where an address ends up.",
+    "choices": [
+      {
+        "text": "Because moto prints it in its terminal",
+        "correct": false,
+        "why": "That is the lab, not the reason."
+      },
+      {
+        "text": "Because function URLs are listed publicly by AWS",
+        "correct": false,
+        "why": "AWS publishes no list. The address leaks through ordinary places."
+      },
+      {
+        "text": "Because an address that answers ends up in logs, histories, screenshots and scanners",
+        "correct": true,
+        "why": "Right. Secrecy of the address is not a decision about who may call it."
+      },
+      {
+        "text": "Because the random part of the address is short enough for a scanner to try each value in an afternoon",
+        "correct": false,
+        "why": "The random part is long; it leaks rather than being guessed."
+      }
+    ]
+  },
+  {
+    "id": "ex-cv6031df",
+    "version": 1,
+    "section": "who-can-invoke",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `remove-permission`, `aws lambda get-policy` answered `ResourceNotFoundException`. What does that tell you?",
+    "hint": "What resource was not found?",
+    "choices": [
+      {
+        "text": "moto lost track of the function after the URL changed type",
+        "correct": false,
+        "why": "It is the documented answer for a function with no policy, and AWS gives the same one."
+      },
+      {
+        "text": "The URL still allows anybody; just the statement id changed",
+        "correct": false,
+        "why": "The statement is gone and the URL now demands a signature."
+      },
+      {
+        "text": "The function was deleted along with the permission",
+        "correct": false,
+        "why": "The function is still there; its URL was updated a line earlier."
+      },
+      {
+        "text": "The function has no resource-based policy at all",
+        "correct": true,
+        "why": "Right. Nobody outside the account is allowed to call it."
+      }
+    ]
+  },
+  {
+    "id": "ex-d9d26jc4",
+    "version": 1,
+    "section": "who-can-invoke",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A permission lets `s3.amazonaws.com` invoke a function, with no condition. Which bucket can make it run?",
+    "hint": "The service name covers more than your account.",
+    "choices": [
+      {
+        "text": "Any bucket in any account, set up to notify the function",
+        "correct": true,
+        "why": "Right. That is the confused deputy, and the source ARN and account close it."
+      },
+      {
+        "text": "No bucket, until the bucket's owner writes a bucket policy that names the function",
+        "correct": false,
+        "why": "The bucket's notification is configured on the bucket, by its owner; the function's permission is what is checked."
+      },
+      {
+        "text": "`clinic-uploads`, the bucket caio meant",
+        "correct": false,
+        "why": "Only once the statement says so, with `--source-arn`."
+      },
+      {
+        "text": "Buckets in the function's own account",
+        "correct": false,
+        "why": "Nothing in the statement says so. That is what `--source-account` adds."
+      }
+    ]
+  },
+  {
+    "id": "ex-fzc2htg2",
+    "version": 1,
+    "section": "who-can-invoke",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the S3 permission name the account as well as the bucket?",
+    "hint": "A bucket name is not owned for ever.",
+    "choices": [
+      {
+        "text": "Because AWS rejects a source ARN without an account",
+        "correct": false,
+        "why": "AWS accepts it; the lesson names the account for a reason of its own."
+      },
+      {
+        "text": "A bucket ARN names no account, and a deleted bucket's name is free for another account to take",
+        "correct": true,
+        "why": "Right. The account ties the name to its owner."
+      },
+      {
+        "text": "Because moto ignores the bucket and only judges the account",
+        "correct": false,
+        "why": "moto judges neither; it ignores conditions."
+      },
+      {
+        "text": "To make the function cheaper to call",
+        "correct": false,
+        "why": "Conditions change who may call, not the price."
+      }
+    ]
+  },
+  {
+    "id": "ex-9jb6srqz",
+    "version": 1,
+    "section": "secrets-in-environment",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Lambda encrypts environment variables at rest. Why is a password there still exposed?",
+    "hint": "Who gets the decrypted value?",
+    "choices": [
+      {
+        "text": "Lambda stores a second copy unencrypted for debugging",
+        "correct": false,
+        "why": "No such copy is needed; the API returns the value decrypted."
+      },
+      {
+        "text": "The encryption uses a weak algorithm",
+        "correct": false,
+        "why": "The algorithm is not the issue; who it is decrypted for is."
+      },
+      {
+        "text": "Because it is decrypted for every caller allowed to read the configuration",
+        "correct": true,
+        "why": "Right. Encryption at rest says nothing about who reads it through the API."
+      },
+      {
+        "text": "The key is printed in the function's logs",
+        "correct": false,
+        "why": "Nothing in the lesson prints a key; the value comes back from a read of the configuration."
+      }
+    ]
+  },
+  {
+    "id": "ex-qetrnd5k",
+    "version": 1,
+    "section": "secrets-in-environment",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "bia has only `ReadOnlyAccess`. Which of these could she do with the clinic's function as the lesson first found it?",
+    "hint": "Look at the actions the policy grants for Lambda.",
+    "choices": [
+      {
+        "text": "Read the database password from the function's configuration",
+        "correct": true,
+        "why": "Right. `lambda:Get*` covers `GetFunctionConfiguration`."
+      },
+      {
+        "text": "Invoke the function and receive the password in the answer",
+        "correct": false,
+        "why": "Invoking is not reading; she does not need to, the configuration already holds the value."
+      },
+      {
+        "text": "Change the database password in the function",
+        "correct": false,
+        "why": "Read-only grants no update action."
+      },
+      {
+        "text": "No harm, since read-only users see names and not configuration",
+        "correct": false,
+        "why": "`lambda:Get*` is configuration reading, and the policy grants it."
+      }
+    ]
+  },
+  {
+    "id": "ex-h69he6ag",
+    "version": 1,
+    "section": "secrets-in-environment",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the fix, what does the function's environment hold?",
+    "hint": "The handler reads one variable and asks for the rest.",
+    "choices": [
+      {
+        "text": "The name of the secret, `clinic/db`",
+        "correct": true,
+        "why": "Right. A name harms nobody; the value is fetched at run time by the role."
+      },
+      {
+        "text": "No variables: the password is compiled into the zip",
+        "correct": false,
+        "why": "A secret in the package is the same exposure in a different file, and it is lesson 12's subject."
+      },
+      {
+        "text": "The ARN of the execution role",
+        "correct": false,
+        "why": "The role is in the function's configuration, not in its environment variables."
+      },
+      {
+        "text": "The password, encrypted with a key of the clinic's own",
+        "correct": false,
+        "why": "A customer key changes who can decrypt at rest, but the value would still be in the configuration."
+      }
+    ]
+  },
+  {
+    "id": "ex-zfpx92fv",
+    "version": 1,
+    "section": "secrets-in-environment",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ReadOnlyAccess` lets bia list secrets but not call `secretsmanager:___`, so she cannot read what they hold.",
+    "hint": "The action the execution role was given on one secret.",
+    "blanks": [
+      {
+        "accept": [
+          "GetSecretValue"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5874029c",
+    "version": 1,
+    "section": "secrets-in-environment",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The password has been moved from the environment into Secrets Manager. What else does the lesson say must happen?",
+    "hint": "The secret has a past.",
+    "choices": [
+      {
+        "text": "Remove ReadOnlyAccess from the analysts",
+        "correct": false,
+        "why": "The policy is fine for what it is; the value should never have been in a field it reads."
+      },
+      {
+        "text": "No further step; moving it closes the exposure",
+        "correct": false,
+        "why": "It closes it from now on. Everybody who could read it before may still hold it."
+      },
+      {
+        "text": "Delete the function and create it again so the old configuration is forgotten",
+        "correct": false,
+        "why": "The old value is already out in whoever read it; recreating the function does not reach them."
+      },
+      {
+        "text": "Change the password in the database too",
+        "correct": true,
+        "why": "Right. It was readable by every read-only user for as long as it sat there."
+      }
+    ]
+  },
+  {
+    "id": "ex-1zejr1yh",
+    "version": 1,
+    "section": "dependencies",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Lambda keeps the Python runtime patched. Who patches the libraries inside the function's zip file?",
+    "hint": "They were frozen the day it was built.",
+    "choices": [
+      {
+        "text": "pip, automatically, each time a copy starts",
+        "correct": false,
+        "why": "Nothing installs anything when a copy starts; it runs the package as built."
+      },
+      {
+        "text": "The library's authors, who push fixes to the functions using it",
+        "correct": false,
+        "why": "They publish new versions; your package does not change until you rebuild it."
+      },
+      {
+        "text": "Lambda, along with the runtime",
+        "correct": false,
+        "why": "The runtime is the interpreter and the system; the zip is yours."
+      },
+      {
+        "text": "You, and nobody else, by rebuilding and redeploying",
+        "correct": true,
+        "why": "Right. Nobody patches it but you."
+      }
+    ]
+  },
+  {
+    "id": "ex-ez1dzetx",
+    "version": 1,
+    "section": "dependencies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pip-audit` reported 10 known vulnerabilities for `requests==2.19.1` on the day the lesson was recorded. Why might the same command report more next month?",
+    "hint": "What changes, if the version does not?",
+    "choices": [
+      {
+        "text": "New advisories get published about the old version",
+        "correct": true,
+        "why": "Right. The version stays, the knowledge about it grows, so the scan is repeated."
+      },
+      {
+        "text": "requirements.txt resolves to a different version each month",
+        "correct": false,
+        "why": "It pins `==2.19.1`; that does not move."
+      },
+      {
+        "text": "Lambda reports its runtime's flaws into the audit",
+        "correct": false,
+        "why": "pip-audit reads the list of packages, not Lambda."
+      },
+      {
+        "text": "pip-audit's own version changes on its own",
+        "correct": false,
+        "why": "It is pinned at 2.10.1 and does not upgrade itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-mdjckqnk",
+    "version": 1,
+    "section": "dependencies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "caio fixes the pin in `requirements.txt`, the audit comes back clean, and he stops there. What is still wrong?",
+    "hint": "The audit read a file; the function runs a zip.",
+    "choices": [
+      {
+        "text": "The audit should have been run twice",
+        "correct": false,
+        "why": "A second clean audit of the same file adds nothing."
+      },
+      {
+        "text": "The function still runs the old package until it is rebuilt and deployed",
+        "correct": true,
+        "why": "Right. A fixed file beside an old package fixes nothing."
+      },
+      {
+        "text": "He should have removed `requests` altogether",
+        "correct": false,
+        "why": "The function uses it; the fix is a newer version, which he chose."
+      },
+      {
+        "text": "pip-audit checks direct dependencies and skips indirect ones",
+        "correct": false,
+        "why": "With `--no-deps` it checks the file as written; without it, it resolves what they pull in. Neither is what is left undone here."
+      }
+    ]
+  },
+  {
+    "id": "ex-pfk77gn8",
+    "version": 1,
+    "section": "dependencies",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these habits does the lesson recommend for what goes into a function's package? Choose all that apply.",
+    "hint": "Three habits.",
+    "choices": [
+      {
+        "text": "Package only what the handler imports",
+        "correct": true,
+        "why": "Right. An unimported library is one less row in every audit."
+      },
+      {
+        "text": "Copy the developer's whole virtual environment, so nothing is missing",
+        "correct": false,
+        "why": "That ships test tools and notebooks too."
+      },
+      {
+        "text": "Audit layers as you audit the function",
+        "correct": true,
+        "why": "Right. A layer is a dependency shared between functions."
+      },
+      {
+        "text": "Rebuild on a schedule as well as on a change",
+        "correct": true,
+        "why": "Right. The untouched function carries a year of advisories."
+      },
+      {
+        "text": "Leave versions unpinned so the newest gets installed",
+        "correct": false,
+        "why": "Unpinned versions make the audit say nothing about what runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-weks2c3z",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each edge of a function to the document that decides it.",
+    "hint": "The figure at the start of the lesson.",
+    "pairs": [
+      {
+        "left": "who may become it",
+        "right": "the role's trust policy"
+      },
+      {
+        "left": "who may call it",
+        "right": "the function's resource-based policy"
+      },
+      {
+        "left": "what it may do",
+        "right": "the execution role's policies"
+      },
+      {
+        "left": "what it carries",
+        "right": "the package and its configuration"
+      }
+    ],
+    "right_distractors": [
+      "the account's root user"
+    ]
+  },
+  {
+    "id": "ex-ws9719w5",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of moving a password out of a function's environment in order.",
+    "hint": "Last comes the part about the past.",
+    "items": [
+      "store the password in Secrets Manager",
+      "put the secret's name in the environment instead of the value",
+      "allow the execution role to read that one secret",
+      "deploy a handler that fetches the value at run time",
+      "change the password in the database"
+    ],
+    "trap": "Changing the password first is the slip: the function would break until the new value is stored where it reads it."
+  },
+  {
+    "id": "ex-vkxrjb8d",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function URL whose authentication type is `___` demands that every request be signed.",
+    "hint": "The value the fix moved it to.",
+    "blanks": [
+      {
+        "accept": [
+          "AWS_IAM"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-w4v8w11h",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many actions did the narrow `write-exports` policy allow?",
+    "hint": "One action on one place.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "actions"
+  },
+  {
+    "id": "ex-kdraq8gy",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ten small functions share one execution role that allows the union of what they need. One of them has a flaw. What does the flaw reach?",
+    "hint": "A role does not know which function is using it.",
+    "choices": [
+      {
+        "text": "No more than before, because a shared role is read-only",
+        "correct": false,
+        "why": "Sharing changes nothing about what a role may do."
+      },
+      {
+        "text": "The other nine functions' code, not their data",
+        "correct": false,
+        "why": "The role reaches whatever its policies allow, data included."
+      },
+      {
+        "text": "What that one function needs",
+        "correct": false,
+        "why": "The role allows the union, and the flaw holds the role."
+      },
+      {
+        "text": "Every permission any of the ten needs",
+        "correct": true,
+        "why": "Right. One function, one role."
+      }
+    ]
+  }
+]
