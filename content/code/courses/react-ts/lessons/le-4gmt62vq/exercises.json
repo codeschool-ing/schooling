@@ -1,0 +1,628 @@
+[
+  {
+    "id": "ex-z3bg5vwp",
+    "version": 1,
+    "section": "what-an-effect-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When does an effect's function run?",
+    "hint": "The figure puts it after one of the three steps of lesson 3.",
+    "choices": [
+      {
+        "text": "After the commit",
+        "correct": true,
+        "why": "Right. The page already shows the render."
+      },
+      {
+        "text": "During the render, before the JSX is returned",
+        "correct": false,
+        "why": "That would make the render impure; effects wait."
+      },
+      {
+        "text": "Before the trigger, to decide whether to render",
+        "correct": false,
+        "why": "Effects have no say in whether a render happens."
+      },
+      {
+        "text": "When the browser is idle, at some later point",
+        "correct": false,
+        "why": "React runs them after the commit, not at an unknown later point."
+      }
+    ]
+  },
+  {
+    "id": "ex-kqmqb169",
+    "version": 1,
+    "section": "what-an-effect-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does the planner need an effect for?",
+    "hint": "Is there something outside React to keep in step?",
+    "choices": [
+      {
+        "text": "The minutes done this week",
+        "correct": false,
+        "why": "Computed while rendering, from state."
+      },
+      {
+        "text": "The open course's name",
+        "correct": false,
+        "why": "Computed from `openId`."
+      },
+      {
+        "text": "The tab's title",
+        "correct": true,
+        "why": "Right. `document.title` is outside the tree React draws."
+      },
+      {
+        "text": "Which screen to draw",
+        "correct": false,
+        "why": "Decided while rendering, from `openId` and `status`."
+      }
+    ]
+  },
+  {
+    "id": "ex-dy6qge8z",
+    "version": 1,
+    "section": "fetching-the-data",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the planner need a `'loading'` status now?",
+    "hint": "When does the data arrive?",
+    "choices": [
+      {
+        "text": "React refuses to render arrays that are empty",
+        "correct": false,
+        "why": "An empty array renders as nothing, without complaint."
+      },
+      {
+        "text": "Strict mode requires it",
+        "correct": false,
+        "why": "Strict mode has no opinion about statuses."
+      },
+      {
+        "text": "`fetch` blocks rendering until it is done",
+        "correct": false,
+        "why": "It returns a promise at once and blocks nothing."
+      },
+      {
+        "text": "The first render comes first",
+        "correct": true,
+        "why": "Right. Something has to be drawn while it waits."
+      }
+    ]
+  },
+  {
+    "id": "ex-2nw3dvj7",
+    "version": 1,
+    "section": "fetching-the-data",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In development, how many requests for `/courses.json` did one load of the page make?",
+    "hint": "Strict mode runs each effect twice.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-at9q64bt",
+    "version": 1,
+    "section": "fetching-the-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `ignore = true` in the cleanup protect against?",
+    "hint": "An answer can arrive after the effect that asked for it was cleaned up.",
+    "choices": [
+      {
+        "text": "Requests that fail with a 500",
+        "correct": false,
+        "why": "Failures are handled by `.catch`; `ignore` is about timing."
+      },
+      {
+        "text": "A late answer being written into state",
+        "correct": true,
+        "why": "Right. The first strict-mode request's answer was dropped this way."
+      },
+      {
+        "text": "The browser caching `courses.json` between visits",
+        "correct": false,
+        "why": "`ignore` does nothing to caching."
+      },
+      {
+        "text": "Two components fetching the same file",
+        "correct": false,
+        "why": "It protects one effect from its own late answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-v0wk6jnt",
+    "version": 1,
+    "section": "fetching-the-data",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A course screen fetches the course named in its props. The user opens Statistics, then Spanish, and Statistics' answer arrives last. Without `ignore`, what does the screen show?",
+    "hint": "Which answer is written last?",
+    "choices": [
+      {
+        "text": "Spanish, since it was the course the user asked for last",
+        "correct": false,
+        "why": "The last answer to arrive wins, not the last request."
+      },
+      {
+        "text": "The wrong course's data",
+        "correct": true,
+        "why": "Right. That is the race the cleanup prevents."
+      },
+      {
+        "text": "An error, because two requests ran at once",
+        "correct": false,
+        "why": "Two requests at once are allowed; the order of answers is the problem."
+      },
+      {
+        "text": "Both courses, one after the other",
+        "correct": false,
+        "why": "State holds one value; the last write replaces the first."
+      }
+    ]
+  },
+  {
+    "id": "ex-27prfyjh",
+    "version": 1,
+    "section": "the-dependency-array",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each way of writing the array to when the effect runs.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "No array",
+        "right": "After every render"
+      },
+      {
+        "left": "`[]`",
+        "right": "Once, after the component first appears"
+      },
+      {
+        "left": "`[monday]`",
+        "right": "After the first render, and when `monday` changes"
+      }
+    ],
+    "right_distractors": [
+      "Before the first render"
+    ]
+  },
+  {
+    "id": "ex-axs9t74k",
+    "version": 1,
+    "section": "the-dependency-array",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the title effect's array changed to `[]`, what happened after \"Next week\"?",
+    "hint": "Was the effect asked to run again?",
+    "choices": [
+      {
+        "text": "React threw an error about a missing dependency",
+        "correct": false,
+        "why": "React said nothing; the linter did."
+      },
+      {
+        "text": "The title kept the first week",
+        "correct": true,
+        "why": "Right. It ran once, with the first render's `monday`."
+      },
+      {
+        "text": "The title was cleared",
+        "correct": false,
+        "why": "Nothing cleared it."
+      },
+      {
+        "text": "The title updated one click late",
+        "correct": false,
+        "why": "It did not update at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-v2jcmrej",
+    "version": 1,
+    "section": "the-dependency-array",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which tool pointed at the missing `monday`?",
+    "hint": "It ran with `npm run lint`.",
+    "choices": [
+      {
+        "text": "TypeScript, with `npx tsc -b`",
+        "correct": false,
+        "why": "The array type-checks either way."
+      },
+      {
+        "text": "Oxlint",
+        "correct": true,
+        "why": "Right. It reads the effect and compares it with the array."
+      },
+      {
+        "text": "Vite's overlay",
+        "correct": false,
+        "why": "Vite raised nothing; the page worked."
+      },
+      {
+        "text": "Strict mode, on the console",
+        "correct": false,
+        "why": "Strict mode does not read arrays."
+      }
+    ]
+  },
+  {
+    "id": "ex-b65p85ew",
+    "version": 1,
+    "section": "the-dependency-array",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The dependency array is a statement of what the effect ___, and the linter can check a statement.",
+    "hint": "Not when you would like it to run.",
+    "blanks": [
+      {
+        "accept": [
+          "reads"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mdmm2rv5",
+    "version": 1,
+    "section": "cleaning-up",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Without the cleanup, one ArrowRight moved the week to 2 November. Why?",
+    "hint": "Count the listeners after strict mode's run, cleanup, run.",
+    "choices": [
+      {
+        "text": "The key was pressed twice by `look`",
+        "correct": false,
+        "why": "One press; it printed one `-- press ArrowRight`."
+      },
+      {
+        "text": "ArrowRight moves two weeks by design",
+        "correct": false,
+        "why": "With the cleanup back it moved one."
+      },
+      {
+        "text": "Two listeners were on the window",
+        "correct": true,
+        "why": "Right. The cleanup that should have removed the first did not exist."
+      },
+      {
+        "text": "The updater form adds 14 days",
+        "correct": false,
+        "why": "It adds 7."
+      }
+    ]
+  },
+  {
+    "id": "ex-8493v3m5",
+    "version": 1,
+    "section": "cleaning-up",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `onKey` a named function rather than written inline in `addEventListener`?",
+    "hint": "What does `removeEventListener` need?",
+    "choices": [
+      {
+        "text": "Named functions run faster",
+        "correct": false,
+        "why": "Speed is the same."
+      },
+      {
+        "text": "TypeScript needs a name to type the event",
+        "correct": false,
+        "why": "An inline function can be typed as well."
+      },
+      {
+        "text": "React requires effects to call named functions",
+        "correct": false,
+        "why": "React does not look inside the effect."
+      },
+      {
+        "text": "Removal needs the same function",
+        "correct": true,
+        "why": "Right. A second arrow function written the same is a different function."
+      }
+    ]
+  },
+  {
+    "id": "ex-e4bnfkd2",
+    "version": 1,
+    "section": "cleaning-up",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The keyboard effect uses `setMonday((m) => addDays(m, 7))`. What would `setMonday(addDays(monday, 7))` do there?",
+    "hint": "The effect runs once. Which `monday` does it hold?",
+    "choices": [
+      {
+        "text": "Exactly the same, since both add seven days",
+        "correct": false,
+        "why": "The value form reads a stale `monday`."
+      },
+      {
+        "text": "A type error",
+        "correct": false,
+        "why": "Both type-check."
+      },
+      {
+        "text": "An infinite loop of renders",
+        "correct": false,
+        "why": "Setting state from a key press is one render per press."
+      },
+      {
+        "text": "Each press would move from the first week, so the week would stick one week ahead",
+        "correct": true,
+        "why": "Right. The effect's `monday` is the first render's, forever."
+      }
+    ]
+  },
+  {
+    "id": "ex-k91yy1e2",
+    "version": 1,
+    "section": "cleaning-up",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put strict mode's first-load sequence for an effect in order.",
+    "hint": "It is designed to show a missing cleanup.",
+    "items": [
+      "The component renders and is committed",
+      "The effect runs",
+      "The effect's cleanup runs",
+      "The effect runs again"
+    ]
+  },
+  {
+    "id": "ex-8ysqy4jx",
+    "version": 1,
+    "section": "when-the-fetch-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did `/course.json`, which does not exist, answer with status 200?",
+    "hint": "The `curl` showed the content type.",
+    "choices": [
+      {
+        "text": "The browser cached an older response",
+        "correct": false,
+        "why": "`curl` has no cache and got the same 200."
+      },
+      {
+        "text": "Vite renamed the file to match",
+        "correct": false,
+        "why": "Nothing renamed it; the answer was HTML."
+      },
+      {
+        "text": "Vite sent `index.html` instead",
+        "correct": true,
+        "why": "Right. So that an app with its own addresses opens at any of them."
+      },
+      {
+        "text": "`fetch` turns a 404 into a 200 by default",
+        "correct": false,
+        "why": "`fetch` reports the status it receives."
+      }
+    ]
+  },
+  {
+    "id": "ex-bzpphffq",
+    "version": 1,
+    "section": "when-the-fetch-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which line actually caught the misspelt address?",
+    "hint": "The console message names the error.",
+    "choices": [
+      {
+        "text": "`if (!response.ok)`",
+        "correct": false,
+        "why": "The status was 200, so this passed."
+      },
+      {
+        "text": "`if (ignore) return`",
+        "correct": false,
+        "why": "That is about timing."
+      },
+      {
+        "text": "`setStatus('ready')`",
+        "correct": false,
+        "why": "It never ran."
+      },
+      {
+        "text": "`response.json()`",
+        "correct": true,
+        "why": "Right. It met `<!doctype` and threw."
+      }
+    ]
+  },
+  {
+    "id": "ex-50jan7cw",
+    "version": 1,
+    "section": "when-the-fetch-fails",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which outcomes of a request need a screen of their own? Choose every one.",
+    "hint": "The section names three.",
+    "choices": [
+      {
+        "text": "Still waiting",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Arrived",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Failed",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Answered twice in development",
+        "correct": false,
+        "why": "That is strict mode, and the user never sees it."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwbfvjcq",
+    "version": 1,
+    "section": "when-the-fetch-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A planner without a loading screen draws its normal screen with empty lists while it waits. Why is that worse than a blank page?",
+    "hint": "What would a user believe?",
+    "choices": [
+      {
+        "text": "It looks like no courses",
+        "correct": true,
+        "why": "Right. Waiting and empty become indistinguishable."
+      },
+      {
+        "text": "It renders twice as often",
+        "correct": false,
+        "why": "The number of renders is the same."
+      },
+      {
+        "text": "Screen readers cannot read empty lists",
+        "correct": false,
+        "why": "They read them; the problem is the false message."
+      },
+      {
+        "text": "It breaks the type check",
+        "correct": false,
+        "why": "Types are unaffected."
+      }
+    ]
+  },
+  {
+    "id": "ex-djcf5944",
+    "version": 1,
+    "section": "you-might-not-need-an-effect",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An effect sets `thisWeek` from `sessions` and `monday`. What does it cost compared with computing it while rendering?",
+    "hint": "Count renders and look at the first one.",
+    "choices": [
+      {
+        "text": "Nothing: the screen ends up the same",
+        "correct": false,
+        "why": "It ends up the same after an extra render with the wrong value."
+      },
+      {
+        "text": "A network request",
+        "correct": false,
+        "why": "No request is involved."
+      },
+      {
+        "text": "A type error on `setThisWeek`",
+        "correct": false,
+        "why": "It type-checks."
+      },
+      {
+        "text": "An extra render, and a first one with an empty list",
+        "correct": true,
+        "why": "Right. Two renders where one would do."
+      }
+    ]
+  },
+  {
+    "id": "ex-ah8yf27w",
+    "version": 1,
+    "section": "you-might-not-need-an-effect",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need to what to write instead of an effect.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "A value computed from state",
+        "right": "Compute it while rendering"
+      },
+      {
+        "left": "Something to happen when a button is pressed",
+        "right": "Do it in the click handler"
+      },
+      {
+        "left": "A form reset when another record is picked",
+        "right": "`key={id}` on the form"
+      }
+    ],
+    "right_distractors": [
+      "A second `useState` updated by an effect"
+    ]
+  },
+  {
+    "id": "ex-f0aedwt1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An effect starts a `setInterval` that refreshes the data every minute, with `[]`. What must it return?",
+    "hint": "Whatever an effect starts, it has to be able to stop.",
+    "choices": [
+      {
+        "text": "Nothing: `[]` means it runs once",
+        "correct": false,
+        "why": "Strict mode runs it twice, and the component can go away; both leave a timer running."
+      },
+      {
+        "text": "The interval's id, so React can stop it",
+        "correct": false,
+        "why": "React calls a returned function; it does not know what a timer id is."
+      },
+      {
+        "text": "`true`, to mark the effect as done",
+        "correct": false,
+        "why": "An effect returns a cleanup or nothing."
+      },
+      {
+        "text": "A function that calls `clearInterval` with the timer's id",
+        "correct": true,
+        "why": "Right. The cleanup stops what the effect started."
+      }
+    ]
+  },
+  {
+    "id": "ex-gds5tmqh",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The planner's `App` now has how many `useEffect` calls?",
+    "hint": "The server, the title, the keyboard.",
+    "value": 3,
+    "tolerance": 0
+  }
+]
