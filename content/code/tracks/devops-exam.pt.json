@@ -453,7 +453,7 @@
     "hint": "Linux e Linha de Comando, aula 6.",
     "choices": [
       {
-        "text": "Um serviço tira o limite do `LimitNOFILE=` no arquivo de unit dele, e nunca do shell de um engenheiro.",
+        "text": "O systemd tira o limite do `LimitNOFILE=` no arquivo de unit; o que se ajusta num shell de login nunca chega lá.",
         "why": "Um serviço não herda os limites do seu shell. E um erro que volta depois de reiniciar costuma ser um vazamento: `ls -l /proc/PID/fd | wc -l` conta os descritores, e a lista costuma apontar o culpado."
       },
       {
@@ -647,7 +647,7 @@
     "hint": "GitOps, Artefatos e Segredos, aula 8; Docker e Containers, aula 16.",
     "choices": [
       {
-        "text": "`no signatures found`, porque o rebuild tem outro digest; a produção segue com o build assinado.",
+        "text": "`no signatures found`: os bytes novos têm outro digest, e o cluster segue rodando o build que foi assinado.",
         "why": "Isso."
       },
       {
@@ -766,7 +766,7 @@
         "why": "Um registry não é um deploy; uma imagem que nenhum diretório nomeia não roda em lugar nenhum."
       },
       {
-        "text": "Um status de sucesso `kustomization/production` do Flux num commit do `fleet` cujo diretório da produção nomeia o 1.3.",
+        "text": "Um sucesso de `kustomization/production` reportado pelo Flux num commit do `fleet` cujo diretório da produção nomeia o 1.3.",
         "why": "Isso."
       },
       {
@@ -828,7 +828,7 @@
         "why": "Espera na revisão deixaria o cycle time longo, e ele é de dois dias."
       },
       {
-        "text": "Em *a fazer*, antes de alguém começar; a pergunta é de prioridade ou de gente.",
+        "text": "Em *a fazer*, antes de alguém começar; essa espera é de prioridade ou de gente.",
         "why": "Isso."
       },
       {
@@ -854,7 +854,7 @@
         "why": "Isso gasta o tempo na última e menos importante das quatro perguntas, que as máquinas já cobrem quase toda."
       },
       {
-        "text": "Dizer isso com franqueza, e perguntar se dá para dividir, ou se o Bruno pode antes mostrar a mudança a ela.",
+        "text": "Dizer isso com franqueza, e perguntar se dá para dividir, ou pedir ao Bruno que antes mostre a mudança a ela.",
         "why": "Isso."
       },
       {
@@ -1087,7 +1087,7 @@
         "why": "Chamadas em paralelo não dividem economia; a requisição espera a mais lenta, aconteça o que acontecer com a mais rápida."
       },
       {
-        "text": "Nada que se note: a página espera os preços, e o estoque tinha folga",
+        "text": "Quase nada: a chamada mais lenta é a outra, e esta tinha folga",
         "why": "O estoque já terminava 160 ms antes dos preços antes do trabalho. Encurtar um span fora do caminho crítico não encurta nada."
       },
       {
@@ -1105,7 +1105,7 @@
         "why": "Um contexto perdido parte o rastro em dois; não impede que o rastro da própria vitrine exista."
       },
       {
-        "text": "Estava entre os rastros descartados na raiz; a linha de log leva o id seja qual for a decisão",
+        "text": "Estava entre os descartados na raiz; a linha de log leva o id de qualquer jeito",
         "why": "A amostragem na cabeça decide antes de qualquer coisa acontecer, então um checkout que falhou é descartado tanto quanto um rápido, e o formatador escreve o id de qualquer jeito."
       },
       {
@@ -1189,7 +1189,7 @@
     "hint": "Servidores Web e Cache, aula 7; Fundamentos da Web e Internet, aula 7.",
     "choices": [
       {
-        "text": "Esse `Domain` manda o cookie para todo subdomínio, `static.` incluído, e o Varnish passa adiante qualquer requisição com `Cookie`",
+        "text": "Esse atributo manda o cookie para todo subdomínio, `static.` incluído, e o cache passa adiante qualquer requisição com `Cookie`",
         "why": "Alargar o cookie desfez a mudança. Deixe o `Domain` de fora para ele voltar só ao host que o definiu, ou tire os cookies na borda para os arquivos estáticos."
       },
       {
@@ -1500,24 +1500,24 @@
     ]
   },
   "ex-s7y75vbq": {
-    "prompt": "O Argo CD gerencia o Deployment `shop` com `selfHeal: true`, e o manifesto no Git diz `replicas: 2`. Um HPA no mesmo Deployment o escala para seis sob carga. O que acontece, e o que as aulas fazem a respeito?",
-    "hint": "Kubernetes: Orquestração em Produção, aula 33; GitOps, Artefatos e Segredos, aula 3.",
+    "prompt": "O Secret `db` é a única peça do shop que ainda não está no repositório de GitOps. Um colega propõe commitar o manifesto do jeito que `kubectl get secret db -o yaml` o imprime: \"os valores estão em base64, e o repositório é privado\". O que dizem as aulas?",
+    "hint": "Kubernetes: Orquestração em Produção, aula 14; GitOps, Artefatos e Segredos, aula 9.",
     "choices": [
       {
-        "text": "O HPA vence, porque o Argo CD nunca compara um campo que um controller escreveu.",
-        "why": "O Argo CD compara todo campo que gerencia; a aula 3 o mostra desfazendo em segundos uma escala feita à mão."
+        "text": "Não: deixar fora do Git e criar o Secret à mão com `kubectl create secret` em cada cluster.",
+        "why": "Aí o cluster fica com um estado que ninguém revisou, ninguém versionou e ninguém consegue reconstruir, que é o outro jeito de um segredo quebrar a regra."
       },
       {
-        "text": "Desligar o `selfHeal` da Application, para que as mudanças do autoscaler fiquem.",
-        "why": "Isso mantém as réplicas e abre mão da correção de todos os outros campos também, o que a aula 3 desaconselha."
+        "text": "Commitar, porque só quem já opera o cluster consegue ler um repositório privado.",
+        "why": "Um repositório é copiado para cada laptop que o clona e para cada backup, e guarda o valor no histórico para sempre."
       },
       {
-        "text": "Brigam; tire `replicas` do Git ou faça o Argo CD ignorar só esse campo.",
-        "why": "Um dono por campo: o autoscaler é dono de `replicas`, então o Git não deve declará-lo, ou o `ignoreDifferences` deve cobrir exatamente esse campo."
+        "text": "Não: um comando desfaz o base64. Commitar uma cópia cifrada com Sealed Secrets ou SOPS, ou uma referência a uma entrada no Vault.",
+        "why": "Essas são as três respostas da aula: uma cópia cifrada no Git, ou uma referência no Git com o valor guardado num cofre."
       },
       {
-        "text": "Pôr o `minReplicas` do HPA em 2, para que o Git e o autoscaler concordem no número.",
-        "why": "Sob carga o HPA continua pedindo seis e o Argo CD continua voltando para dois; um mínimo não muda quem é dono do campo."
+        "text": "Commitar, desde que o cluster tenha a criptografia em repouso ligada para Secrets, de modo que os valores guardados fiquem cifrados.",
+        "why": "A criptografia em repouso protege a cópia dos dados no etcd e não faz nada pela cópia no Git."
       }
     ]
   },
@@ -1566,24 +1566,24 @@
     ]
   },
   "ex-h1ypphb8": {
-    "prompt": "Um CronJob roda `pg_dump` toda noite, e o pod termina em uns três segundos. Para alertar quando um backup não acontece, a equipe dá ao container um endpoint `/metrics` e o põe no Prometheus, que faz scrape a cada quinze segundos. O scrape nunca o encontra. O que as aulas fazem no lugar?",
-    "hint": "Kubernetes: Orquestração em Produção, aula 12; Observabilidade e Operação, aula 5.",
+    "prompt": "Às três da manhã um pod do `shop` foi despejado do seu nó e substituído por outro. De manhã, `kubectl logs` com o nome do pod antigo não encontra nada, embora o shop imprima cada requisição na saída padrão. O que as aulas põem no lugar para que linhas assim sobrevivam ao pod?",
+    "hint": "Kubernetes: Orquestração em Produção, aula 41; Observabilidade e Operação, aula 9.",
     "choices": [
       {
-        "text": "Enviar a um Pushgateway o timestamp do último sucesso e alertar sobre `time()` menos ele.",
-        "why": "Um job que termina some antes do scrape; o tempo desde o último sucesso continua crescendo numa noite em que o backup não roda, e o alerta dispara."
+        "text": "Um coletor em cada nó, que lê os arquivos de log dos pods e envia as linhas para um armazenamento central.",
+        "why": "O arquivo do nó vai embora com o pod; um coletor, normalmente um DaemonSet, copia as linhas enquanto elas existem, e o armazenamento as guarda depois que o pod some."
       },
       {
-        "text": "Alertar sobre o `up` do pod de backup, que vai a 0 em qualquer noite em que um dump falhe.",
-        "why": "`up` pertence a um alvo de scrape, e um pod que já saiu nem é consultado."
+        "text": "Fazer o shop gravar o log num arquivo em `/var/log` dentro do container.",
+        "why": "Esse arquivo também vai embora com o container, e nada no nó o lê; a aula chama um programa assim de invisível."
       },
       {
-        "text": "Enviar a um Pushgateway a contagem de linhas exportadas e alertar quando essa contagem cair a zero.",
-        "why": "O Pushgateway guarda o último valor para sempre, então uma noite sem execução deixa a contagem da véspera no lugar e nada dispara."
+        "text": "Fazer o shop mandar cada linha direto para o armazenamento de logs por HTTP, sem nenhum outro programa no caminho.",
+        "why": "Aí o shop teria de repetir envios, guardar em buffer e se autenticar, e mudar sempre que o armazenamento mudasse; as aulas deixam esse trabalho fora do serviço."
       },
       {
-        "text": "Fazer scrape do pod a cada segundo, para cair sempre um scrape durante a execução.",
-        "why": "O pull supõe que o alvo continua lá; uma execução que nem começa não deixa nada para consultar, por mais vezes que o Prometheus pergunte."
+        "text": "Aumentar o tamanho a partir do qual o nó rotaciona os arquivos de log, para que durem mais.",
+        "why": "A rotação decide quanto fica guardado enquanto o pod vive; o arquivo continua sendo apagado junto com o pod."
       }
     ]
   },
@@ -1621,28 +1621,32 @@
     ]
   },
   "ex-repryr38": {
-    "prompt": "Logo depois de `sudo usermod -aG docker $USER`, o `docker ps` de Ana diz `permission denied while trying to connect to the docker API at unix:///var/run/docker.sock`. Quais destes são próximos passos sensatos? Marque todas as que se aplicam.",
-    "hint": "Docker e Containers, aula 5.",
+    "prompt": "Num host com 16 GB de memória, Bruno sobe um container com `--memory 512m` e `--tmpfs /scratch`, sem nenhuma opção no mount. Quais destas afirmações sobre `/scratch` são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "Docker e Containers, aula 8.",
     "choices": [
       {
-        "text": "Rodar `id -nG` e procurar `docker` entre os grupos",
-        "why": "Sem `docker` nessa lista, o grupo novo ainda não chegou a este shell."
+        "text": "`df -h /scratch` dentro do container mostra cerca de 7.9G",
+        "why": "Sem tamanho, um mount tmpfs recebe metade da memória do host; a máquina de 16 GB da aula mostrou 7.9G."
       },
       {
-        "text": "`sudo chmod 666 /var/run/docker.sock`, para o socket parar de recusá-la",
-        "why": "Isso entrega a toda conta da máquina o que o grupo equivale a ter, ou seja, root."
+        "text": "Ele fica limitado a 16 MB até que uma opção `size=` diga outra coisa",
+        "why": "16 MB foi o tamanho que a aula escolheu com `size=16m`; sem ele não existe esse limite."
       },
       {
-        "text": "Sair do shell e entrar de novo, para o grupo novo valer",
-        "why": "Um grupo novo vale a partir do próximo login; o shell guarda os grupos com que começou."
+        "text": "O que o programa grava ali conta para os 512 MB do container",
+        "why": "Um tmpfs vive na memória, então os arquivos dele pesam no limite de memória do próprio container, e é por isso que a aula manda definir um tamanho."
       },
       {
-        "text": "Pôr `sudo` antes de todo comando `docker` daqui em diante",
-        "why": "Funciona, e deixa arquivos de root espalhados nos diretórios dela."
+        "text": "O Docker guarda o conteúdo em `/var/lib/docker/volumes` de uma execução para a outra",
+        "why": "É ali que fica um volume nomeado; um tmpfs nunca chega ao disco."
       },
       {
-        "text": "`sudo systemctl start docker`, já que o engine não está respondendo",
-        "why": "Permission denied quer dizer que o engine está rodando e a recusou; um engine parado diz `failed to connect`."
+        "text": "Os arquivos dele somem quando o container termina",
+        "why": "Um tmpfs desaparece com o container, o que serve para arquivos temporários e para arquivos que não podem ficar num disco."
+      },
+      {
+        "text": "É um bom lugar para os arquivos de dados de um banco",
+        "why": "Os dados de um banco precisam sobreviver ao container, e é para isso que serve um volume nomeado."
       }
     ]
   },
@@ -1735,30 +1739,30 @@
     ]
   },
   "ex-k62q0pp3": {
-    "prompt": "Staging rodou o `shelf` pelo digest que o pipeline imprimiu para a tag `v1.8.0`, e todas as verificações passaram. Para produção, um segundo job faz checkout de `v1.8.0`, roda `docker build` e envia o resultado como `1.8.0`. O que há de errado nisso?",
-    "hint": "Docker e Containers, aula 16; Testes Automatizados e CI/CD, aula 7.",
+    "prompt": "Um job de CI constrói uma imagem com `--build-arg REGISTRY_TOKEN=$REGISTRY_TOKEN`, e o `RUN` que usa o token apaga `/root/.netrc` antes de terminar. O sistema de CI mascara o token no log do job. Alguém com acesso de pull ao registry roda `docker history --no-trunc` na imagem. O que essa pessoa encontra, e o que as aulas mudam?",
+    "hint": "Docker e Containers, aula 18; Testes Automatizados e CI/CD, aula 9.",
     "choices": [
       {
-        "text": "Nada sério: o mesmo commit gera a mesma imagem byte a byte, então o custo é só alguns minutos a mais de build.",
-        "why": "A aula 16 construiu o mesmo código duas vezes e obteve dois ids, porque uma imagem registra quando foi construída."
+        "text": "Nada do token, porque o `.netrc` foi apagado no mesmo `RUN`; não há nada a mudar.",
+        "why": "Apagar o arquivo o manteve fora da camada, mas o BuildKit grava no histórico os argumentos de build que um `RUN` usou, com os valores."
       },
       {
-        "text": "O rebuild tem outro digest, bytes que nenhuma etapa testou; produção deve rodar o digest que staging rodou.",
-        "why": "Construir uma vez e promover os mesmos bytes: um rebuild é outro artefato, que nunca rodou em lugar nenhum."
+        "text": "O token, na linha do `RUN`; ele deveria entrar por `RUN --mount=type=secret`.",
+        "why": "Um mount de secret existe só para aquele `RUN` e não chega a nenhuma camada nem ao histórico; num pipeline, `--secret` o lê de uma variável de ambiente."
       },
       {
-        "text": "O registry recusa um segundo push de `1.8.0`, e o job falha antes de produção.",
-        "why": "O `registry:3` aceitou sobrescrever `1.2.3`; uma tag só é fixa por convenção, a menos que o registry esteja configurado para recusar."
+        "text": "Asteriscos no lugar do token, já que a máscara do sistema de CI vale também para o que a imagem registra.",
+        "why": "A máscara reescreve o log do job quando ele é guardado e nunca toca na imagem; ela falha até no log quando o valor vem codificado."
       },
       {
-        "text": "Produção deveria puxar `latest`, para os servidores sempre receberem o release mais novo.",
-        "why": "`latest` aponta para o que foi enviado por último, que é justamente a dúvida que um digest elimina."
+        "text": "O token, então ele deveria ser definido com `ENV` no Dockerfile em vez de passar como argumento de build.",
+        "why": "`ENV` guarda o valor na configuração da imagem, onde as mesmas pessoas conseguem lê-lo."
       }
     ]
   },
   "ex-kmk73bnq": {
-    "prompt": "A aula 4 leu o status de saída 137 como 128 mais o número do sinal que encerrou o processo. O processo de um container é encerrado, em vez disso, pelo sinal que um `kill PID` simples envia quando nenhum sinal é indicado. Que status de saída o Docker informa para ele?",
-    "hint": "Docker e Containers, aula 4; Linux e Linha de Comando, aula 6."
+    "prompt": "Um guia mandou Bruno rodar `sudo chmod 666 /var/run/docker.sock`, e ele rodou. Ele quer o socket de volta como a aula 6 o listou, `srw-rw----`, do dono `root` e do grupo `docker`. Escrito como o número octal que o `chmod` recebe, que modo ele deve dar?",
+    "hint": "Docker e Containers, aula 6; Linux e Linha de Comando, aula 4."
   },
   "ex-28jn6jy2": {
     "prompt": "A Ana reescreveu três subnets de `count` para `for_each` sem mudar mais nada, e o plano quer destruir três subnets e criar três. O bloco que ela escreve na configuração, ligando cada endereço antigo (`from`) ao novo (`to`) para que as mesmas subnets fiquem com seus ids, se chama ___.",
@@ -2014,24 +2018,24 @@
     ]
   },
   "ex-106j6e6r": {
-    "prompt": "Os servidores web partem de `shop-web:latest`. A versão 1.1.0 sai com defeito, e alguém faz o rollback subindo os servidores de novo a partir de `latest`. Por que isso não muda nada?",
-    "hint": "Infraestrutura como Código, aula 20.",
+    "prompt": "O playbook da Ana confere a configuração do nginx com uma task `ansible.builtin.command: nginx -t`. Ela o roda duas vezes sem nada mudar nas máquinas, e o segundo `PLAY RECAP` ainda diz `changed=1` nos dois servidores web. O que está acontecendo, e o que ela deveria fazer?",
+    "hint": "Infraestrutura como Código, aula 18.",
     "choices": [
       {
-        "text": "Cada servidor guarda uma cópia de `latest` em cache, então nenhum pede a imagem de novo ao registry.",
-        "why": "O cache não é o problema: um pull novo de `latest` traz o build mais recente, que é o quebrado."
+        "text": "O `nginx -t` reescreveu o arquivo de configuração, então a execução tem razão de relatar; passe a task para um handler.",
+        "why": "O `nginx -t` só testa o arquivo e não muda nada; o `changed` é palpite do Ansible, não ação do nginx."
       },
       {
-        "text": "Um contêiner novo guarda os arquivos daquele que substitui, então a página quebrada sobrevive ao reinício.",
-        "why": "Um contêiner novo é a imagem de novo; o `docker diff` não achou nada da edição à mão depois de uma substituição."
+        "text": "As máquinas sofrem drift entre execuções, então o playbook deveria rodar mais vezes até o recap chegar a zero.",
+        "why": "Nada mudou nas máquinas; a mesma task relata mudança a cada execução, rode quantas vezes rodar."
       },
       {
-        "text": "`latest` nomeia o build mais recente, e esse é a própria 1.1.0, a versão que se quer desfazer.",
+        "text": "O `command` não sabe o que um programa fez, então diz changed; acrescente `changed_when: false`.",
         "why": "Isso."
       },
       {
-        "text": "O registry guarda uma só imagem por nome, então a 1.0.1 foi apagada no momento em que a 1.1.0 foi enviada.",
-        "why": "Cada versão é uma imagem própria; a 1.0.1 continua lá, com o seu próprio nome."
+        "text": "O Ansible conta o `Gathering Facts` como mudança na segunda execução, então o recap nunca chega a zero.",
+        "why": "A task de facts relata `ok`; a segunda execução do playbook do site mostrou `changed=0` com a mesma task de facts."
       }
     ]
   },
@@ -2048,7 +2052,7 @@
         "why": "Aqui o primeiro byte chega uma ida e volta depois do handshake: o pedido atravessando o continente e a resposta voltando."
       },
       {
-        "text": "Uma conexão mantida aberta para as vinte chamadas, para pagar os handshakes uma vez.",
+        "text": "Uma conexão mantida aberta durante todo o job, pagando os handshakes uma vez só.",
         "why": "Uma conexão nova custa uma ida e volta de TCP e uma de TLS antes de o pedido sair. Reaproveitada, cada chamada custa cerca de uma ida e volta em vez de três."
       },
       {
@@ -2207,7 +2211,7 @@
         "why": "Onze noves fala dos bytes sobreviverem a um ano, não de pedidos darem certo."
       },
       {
-        "text": "Não: aquilo foi disponibilidade, e 99,99% deixa uns 53 minutos por ano em que leituras falham.",
+        "text": "Não: aquilo é a outra garantia, e 99,99% de uptime admite uns 53 minutos por ano fora do ar.",
         "why": "Durabilidade é se os bytes ainda existem, e nenhum se perdeu. 0,01% dos 525.600 minutos de um ano dá uns 53."
       },
       {
@@ -2334,7 +2338,7 @@
         "why": "Um valor esperado aceito sem leitura não confere nada: registra o que o modelo disse hoje e chama isso de certo."
       },
       {
-        "text": "Testar o que o código manda, fixo e de graça, e pontuar as respostas numa avaliação a cada mudança do prompt ou do modelo.",
+        "text": "Testar o que o código manda, fixo e de graça, e pontuar as respostas numa avaliação sempre que o modelo ou as instruções mudarem.",
         "why": "Isso."
       }
     ]
@@ -2352,7 +2356,7 @@
         "why": "Sem o plano salvo, o apply planeja de novo do zero, então o que roda não é o plano que alguém leu."
       },
       {
-        "text": "O `plan` roda livre; o `apply` não recebe argumentos, roda `terraform apply tfplan` e espera alguém que leu aquele plano.",
+        "text": "O `plan` roda livre; o `apply` não recebe argumentos, aplica o arquivo de plano salvo e espera alguém que leu aquele plano.",
         "why": "Isso."
       },
       {
@@ -2570,7 +2574,7 @@
     "hint": "Testes Automatizados e CI/CD, aula 11; GitOps, Artefatos e Segredos, aula 2.",
     "choices": [
       {
-        "text": "O loop põe a 2.4 de volta; reverter o commit do manifesto nomeia o digest anterior, uma imagem que já rodou, e nada é reconstruído.",
+        "text": "O loop põe a 2.4 de volta; reverter o commit do manifesto nomeia o digest anterior, algo que já rodou, e nada é reconstruído.",
         "why": "Isso."
       },
       {
@@ -2640,7 +2644,7 @@
         "why": "O `podman kill` encerrou o processo, e é a isso que `Restart=always` reage. Um processo travado não saiu."
       },
       {
-        "text": "Nada o reinicia: o reinício reage ao processo morrer, e unhealthy é um status que um monitor lê.",
+        "text": "Ele fica travado: o systemd age quando o programa principal termina, e uma verificação com falha só muda um status para um monitor ler.",
         "why": "Certo. Uma política de reinício age quando o processo termina, nunca por uma verificação que falhou; o status unhealthy é informação até que algo o observe."
       },
       {
@@ -2700,7 +2704,7 @@
         "why": "Nada foi medido que pudesse dar esse número, e o entrevistador vai perguntar de onde ele veio."
       },
       {
-        "text": "Pus no ar o registro de empréstimos de uma escola, com HTTPS, que se recupera sozinho; derrubei-o e voltou com os dados.",
+        "text": "Coloquei online, com HTTPS, o sistema que a escola usa para emprestar equipamento; ao ser morto, voltou com todos os registros.",
         "why": "Certo: o que foi feito, o que é verdade agora e uma evidência que qualquer um confere, o contador de reinícios e os dados ainda lá."
       }
     ]
@@ -2790,7 +2794,7 @@
     "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 20; Observabilidade e Operação, aula 17.",
     "choices": [
       {
-        "text": "Diz no canal, agora, que mudou o proxy às 10:05 e que pode ter relação.",
+        "text": "Diz no canal, agora, que mudou o proxy às 10:05, seja ou não essa a causa.",
         "why": "Certo. Dizer cedo a quem precisa saber é a parte do júnior, e *o que mudou?* é a pergunta que resolve a maioria dos incidentes; uma mudança que se revela sem relação custa uma frase."
       },
       {

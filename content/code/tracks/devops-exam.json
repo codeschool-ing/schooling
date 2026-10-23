@@ -623,7 +623,7 @@
     "hint": "Linux and the Command Line, lesson 6.",
     "choices": [
       {
-        "text": "A service gets its limit from `LimitNOFILE=` in its unit file, and never from an engineer's shell.",
+        "text": "systemd sets the limit from `LimitNOFILE=` in the unit file; a login shell's setting never reaches it.",
         "correct": true,
         "why": "A service does not get your shell's limits. And an error that comes back after a restart is usually a leak: `ls -l /proc/PID/fd | wc -l` counts the descriptors, and the list tends to name the culprit."
       },
@@ -887,7 +887,7 @@
     "hint": "GitOps, Artefacts and Secrets, lesson 8; Docker and Containers, lesson 16.",
     "choices": [
       {
-        "text": "`no signatures found`, because the rebuild has a new digest; production keeps running the signed build.",
+        "text": "`no signatures found`: the new bytes have another digest, and the cluster keeps running the build that was signed.",
         "correct": true,
         "why": "Right."
       },
@@ -1133,7 +1133,7 @@
         "why": "Waiting in review would make cycle time long, and it is two days."
       },
       {
-        "text": "In *to do*, before anybody starts it; the question is priorities or people.",
+        "text": "In *to do*, before anybody starts it; that wait is about priorities or staffing.",
         "correct": true,
         "why": "Right."
       },
@@ -1626,7 +1626,7 @@
     "hint": "Web Servers and Caching, lesson 7; Web and Internet Fundamentals, lesson 7.",
     "choices": [
       {
-        "text": "That `Domain` sends the cookie to every subdomain, `static.` included, and Varnish passes any request carrying a `Cookie`",
+        "text": "That attribute sends the cookie to every subdomain, `static.` included, and Varnish passes any request carrying a `Cookie`",
         "correct": true,
         "why": "Widening the cookie undid the move. Leave `Domain` out so it returns only to the host that set it, or remove cookies at the edge for the assets."
       },
@@ -2053,28 +2053,28 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "hard",
-    "prompt": "Argo CD manages the `shop` Deployment with `selfHeal: true`, and the manifest in Git says `replicas: 2`. An HPA on the same Deployment scales it to six under load. What happens, and what do the lessons do about it?",
-    "hint": "Kubernetes: Orchestration in Production, lesson 33; GitOps, Artefacts and Secrets, lesson 3.",
+    "prompt": "The `db` Secret is the one piece of the shop that is not yet in the GitOps repository. A colleague proposes committing its manifest as `kubectl get secret db -o yaml` prints it: \"the values are base64, and the repository is private\". What do the lessons say?",
+    "hint": "Kubernetes: Orchestration in Production, lesson 14; GitOps, Artefacts and Secrets, lesson 9.",
     "choices": [
       {
-        "text": "The HPA wins, because Argo CD never compares a field that a controller has written.",
+        "text": "No: leave it out of Git and create the Secret by hand with `kubectl create secret` on each cluster.",
         "correct": false,
-        "why": "Argo CD compares every field it manages; lesson 3 shows it putting a scale made by hand back within seconds."
+        "why": "Then the cluster holds a piece of state nobody reviewed, nobody versioned and nobody can rebuild, which is the other way a secret breaks the rule."
       },
       {
-        "text": "Turn `selfHeal` off for the Application, so that the autoscaler's changes are kept.",
+        "text": "Commit it, because only the people who already run the cluster can read a private repository.",
         "correct": false,
-        "why": "That keeps the replicas and gives up the correction for every other field as well, which lesson 3 warns against."
+        "why": "A repository is copied to every laptop that clones it, and to every backup, and keeps the value in its history for good."
       },
       {
-        "text": "They fight; drop `replicas` from Git, or have Argo CD ignore that one field.",
+        "text": "No: one command undoes base64. Commit a copy encrypted with Sealed Secrets or SOPS, or a reference to an entry in Vault.",
         "correct": true,
-        "why": "One owner per field: the autoscaler owns `replicas`, so Git must not state it, or `ignoreDifferences` must cover exactly that field."
+        "why": "Those are the lesson's three answers: an encrypted copy in Git, or a reference in Git with the value kept in a store."
       },
       {
-        "text": "Set the HPA's `minReplicas` to 2, so that Git and the autoscaler agree on the number.",
+        "text": "Commit it, as long as the cluster has encryption at rest turned on for Secrets, so that the stored values are ciphertext.",
         "correct": false,
-        "why": "Under load the HPA still asks for six and Argo CD still puts back two; a minimum does not change who owns the field."
+        "why": "Encryption at rest protects etcd's copy of the data and does nothing for the copy in Git."
       }
     ]
   },
@@ -2143,28 +2143,28 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
-    "prompt": "A CronJob runs `pg_dump` every night, and its pod finishes in about three seconds. To alert when a backup does not happen, the team gives the container a `/metrics` endpoint and adds it to Prometheus, which scrapes every fifteen seconds. The scrape never finds it. What do the lessons do instead?",
-    "hint": "Kubernetes: Orchestration in Production, lesson 12; Observability and Operations, lesson 5.",
+    "prompt": "At three in the morning a `shop` pod was evicted from its node and replaced by a new one. In the morning, `kubectl logs` with the old pod's name finds nothing, although the shop prints every request to standard output. What do the lessons put in place so that lines like these outlive their pod?",
+    "hint": "Kubernetes: Orchestration in Production, lesson 41; Observability and Operations, lesson 9.",
     "choices": [
       {
-        "text": "Push a last-success timestamp to a Pushgateway, and alert on `time()` minus it.",
+        "text": "A collector on each node that reads the pods' log files and ships the lines to a central store.",
         "correct": true,
-        "why": "A job that ends is gone before the scrape; the time since the last success keeps growing on a night the backup does not run, so the alert fires."
+        "why": "The node's file goes with the pod; a collector, usually a DaemonSet, copies the lines out while they are there, and the store keeps them after the pod is gone."
       },
       {
-        "text": "Alert on `up` for the backup pod, which turns to 0 on any night that a dump fails.",
+        "text": "Have the shop write its log to a file under `/var/log` inside its container instead.",
         "correct": false,
-        "why": "`up` belongs to a scrape target, and a pod that has already exited is not scraped at all."
+        "why": "That file goes with the container as well, and nothing on the node reads it; the lesson calls such a program invisible."
       },
       {
-        "text": "Push the count of rows dumped to a Pushgateway, and alert when that count drops to zero.",
+        "text": "Have the shop send each line straight to the log store over HTTP, so that no other program is involved.",
         "correct": false,
-        "why": "The Pushgateway keeps the last value forever, so a night with no run leaves last night's count in place and nothing fires."
+        "why": "The shop would then have to retry, buffer and authenticate, and change whenever the store does; the lessons keep that job outside the service."
       },
       {
-        "text": "Scrape the backup pod every second, so that a scrape lands inside each run.",
+        "text": "Raise the size at which the node rotates its log files, so they are kept for longer.",
         "correct": false,
-        "why": "Pull assumes the target is still there; a run that never starts leaves nothing to scrape however often Prometheus asks."
+        "why": "Rotation decides how much is kept while the pod lives; the file is still deleted when the pod is."
       }
     ]
   },
@@ -2220,33 +2220,38 @@
     "version": 1,
     "type": "multiple-choice",
     "difficulty": "medium",
-    "prompt": "Right after `sudo usermod -aG docker $USER`, Ana's `docker ps` says `permission denied while trying to connect to the docker API at unix:///var/run/docker.sock`. Which of these are sound next steps? Choose all that apply.",
-    "hint": "Docker and Containers, lesson 5.",
+    "prompt": "On a host with 16 GB of memory, Bruno starts a container with `--memory 512m` and `--tmpfs /scratch`, giving the mount no options. Which of these are true of `/scratch`? Choose all that apply.",
+    "hint": "Docker and Containers, lesson 8.",
     "choices": [
       {
-        "text": "Run `id -nG` and look for `docker` among the groups",
+        "text": "`df -h /scratch` in the container reports about 7.9G",
         "correct": true,
-        "why": "Without `docker` in that list, the new group has not reached this shell yet."
+        "why": "With no size, a tmpfs mount is offered half the host's memory; the lesson's 16 GB machine showed 7.9G."
       },
       {
-        "text": "`sudo chmod 666 /var/run/docker.sock`, so that the socket stops refusing her",
+        "text": "It is capped at 16 MB until a `size=` option says otherwise",
         "correct": false,
-        "why": "That hands every account on the machine what the group amounts to, which is root."
+        "why": "16 MB was the size the lesson chose with `size=16m`; without one there is no such cap."
       },
       {
-        "text": "Leave the shell and log in again, so that the new group applies",
+        "text": "What the program writes there counts against the container's 512 MB",
         "correct": true,
-        "why": "A new group takes effect at the next login; the shell keeps the groups it started with."
+        "why": "A tmpfs lives in memory, so its files are charged to the container's own memory limit, which is why the lesson says to set a size."
       },
       {
-        "text": "Put `sudo` in front of every `docker` command from now on",
+        "text": "Docker keeps what is in it under `/var/lib/docker/volumes` from one run to the next",
         "correct": false,
-        "why": "It works, and it leaves files owned by root in her own directories."
+        "why": "That is where a named volume lives; a tmpfs never reaches a disk."
       },
       {
-        "text": "`sudo systemctl start docker`, since the engine is not answering",
+        "text": "Its files are gone once the container exits",
+        "correct": true,
+        "why": "A tmpfs disappears with the container, which suits temporary files and files that must not be left on a disk."
+      },
+      {
+        "text": "It makes a good home for a database's data files",
         "correct": false,
-        "why": "Permission denied means the engine is running and refused her; a stopped engine says `failed to connect` instead."
+        "why": "A database's data has to outlive the container, and that is what a named volume is for."
       }
     ]
   },
@@ -2375,28 +2380,28 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
-    "prompt": "Staging ran `shelf` by the digest the pipeline printed for the tag `v1.8.0`, and every check passed. For production, a second job checks out `v1.8.0`, runs `docker build`, and pushes the result as `1.8.0`. What is wrong with that?",
-    "hint": "Docker and Containers, lesson 16; Automated Testing and CI/CD, lesson 7.",
+    "prompt": "A CI job builds an image with `--build-arg REGISTRY_TOKEN=$REGISTRY_TOKEN`, and the `RUN` that uses the token deletes `/root/.netrc` before it ends. The CI system masks the token in the job's log. Someone with pull access to the registry runs `docker history --no-trunc` on the image. What do they find, and what do the lessons change?",
+    "hint": "Docker and Containers, lesson 18; Automated Testing and CI/CD, lesson 9.",
     "choices": [
       {
-        "text": "Nothing serious: the same commit rebuilds into the same bytes, so the cost is a few more build minutes.",
+        "text": "Nothing of the token, because the `.netrc` was removed in the same `RUN`; nothing needs to change.",
         "correct": false,
-        "why": "Lesson 16 built the same source twice and got two ids, because an image records when it was built."
+        "why": "Removing the file kept it out of the layer, but BuildKit writes the build arguments a `RUN` used, with their values, into the history."
       },
       {
-        "text": "The rebuild has a new digest, bytes no stage tested; production should run the digest staging ran.",
+        "text": "The token, in the `RUN` line; it should come in through `RUN --mount=type=secret`.",
         "correct": true,
-        "why": "Build once and promote the same bytes: a rebuild is a different artefact that has never run anywhere."
+        "why": "A secret mount exists for that one `RUN` and reaches no layer and no history; in a pipeline `--secret` takes it from an environment variable."
       },
       {
-        "text": "The registry refuses a second push of `1.8.0`, so the job fails before production.",
+        "text": "Asterisks where the token was, since the CI system's masking also covers what the image records.",
         "correct": false,
-        "why": "`registry:3` accepted an overwrite of `1.2.3`; a tag is fixed only by convention unless the registry is set to refuse."
+        "why": "Masking rewrites the job's log as it is stored and never touches the image; it misses even the log once the value is encoded."
       },
       {
-        "text": "Production should pull `latest` instead, so that its servers always get the newest release.",
+        "text": "The token, so it should be set with `ENV` in the Dockerfile rather than passed as a build argument.",
         "correct": false,
-        "why": "`latest` names whatever was pushed last, which is the very doubt a digest removes."
+        "why": "`ENV` stores the value in the image's configuration, where the same people can read it."
       }
     ]
   },
@@ -2405,9 +2410,9 @@
     "version": 1,
     "type": "numeric",
     "difficulty": "medium",
-    "prompt": "Lesson 4 read an exit status of 137 as 128 plus the number of the signal that ended the process. A container's process is ended instead by the signal that a plain `kill PID` sends when no signal is named. What exit status does Docker report for it?",
-    "hint": "Docker and Containers, lesson 4; Linux and the Command Line, lesson 6.",
-    "value": 143,
+    "prompt": "A guide told Bruno to run `sudo chmod 666 /var/run/docker.sock`, and he did. He wants the socket back as lesson 6 listed it, `srw-rw----`, owned by `root` and the group `docker`. Written as the octal number that `chmod` takes, which mode does he give it?",
+    "hint": "Docker and Containers, lesson 6; Linux and the Command Line, lesson 4.",
+    "value": 660,
     "tolerance": 0,
     "unit": ""
   },
@@ -2760,29 +2765,29 @@
     "id": "ex-106j6e6r",
     "version": 1,
     "type": "quiz",
-    "difficulty": "easy",
-    "prompt": "The web servers start from `shop-web:latest`. Version 1.1.0 ships broken, and somebody rolls back by starting the servers again from `latest`. Why does that change nothing?",
-    "hint": "Infrastructure as Code, lesson 20.",
+    "difficulty": "medium",
+    "prompt": "Ana's playbook checks nginx's configuration with a task `ansible.builtin.command: nginx -t`. She runs it twice with nothing changed on the machines, and the second `PLAY RECAP` still says `changed=1` on both web servers. What is going on, and what should she do?",
+    "hint": "Infrastructure as Code, lesson 18.",
     "choices": [
       {
-        "text": "Each server keeps a cached copy of `latest`, so none of them asks the registry for the image again.",
+        "text": "`nginx -t` rewrote the configuration file, so the run is right to report it; move the task to a handler.",
         "correct": false,
-        "why": "The cache is not the trouble: a fresh pull of `latest` returns the newest build, which is the broken one."
+        "why": "`nginx -t` only tests the file and changes nothing; the `changed` is Ansible guessing, not nginx acting."
       },
       {
-        "text": "A new container keeps the files of the one it replaces, so the broken page survives the restart.",
+        "text": "The hosts drift between runs, so the playbook should run more often until the recap settles at zero.",
         "correct": false,
-        "why": "A new container is the image again; `docker diff` found nothing left of the hand edit after a replacement."
+        "why": "Nothing changed on the machines; the same task reports a change on every run however often it runs."
       },
       {
-        "text": "`latest` names whatever was built most recently, and that is 1.1.0, the build being undone.",
+        "text": "`command` cannot know what a program did, so it says changed; add `changed_when: false`.",
         "correct": true,
         "why": "Right."
       },
       {
-        "text": "The registry keeps a single image per name, so 1.0.1 was deleted at the moment 1.1.0 was pushed.",
+        "text": "Ansible counts `Gathering Facts` as a change on the second run, so the recap is never zero.",
         "correct": false,
-        "why": "Each version is an image of its own; 1.0.1 is still there under its own name."
+        "why": "The facts task reports `ok`; the site playbook's second run showed `changed=0` with the same facts task."
       }
     ]
   },
@@ -2805,7 +2810,7 @@
         "why": "Here the first byte comes one round trip after the handshake: the request crossing the continent and the answer coming back."
       },
       {
-        "text": "One connection kept open for all twenty calls, so the handshakes are paid once.",
+        "text": "One connection kept open for all the calls, so the handshakes are paid once.",
         "correct": true,
         "why": "A new connection costs a TCP round trip and a TLS round trip before the request goes. Reused, each call costs about one round trip instead of three."
       },
@@ -3020,7 +3025,7 @@
         "why": "Eleven nines is about the bytes surviving a year, not about requests succeeding."
       },
       {
-        "text": "No: that was availability, and 99.99% leaves about 53 minutes a year in which reads may fail.",
+        "text": "No: that was availability, and 99.99% leaves about 53 minutes a year in which reads fail.",
         "correct": true,
         "why": "Durability is whether the bytes still exist, and none were lost. 0.01% of a year's 525,600 minutes is about 53."
       },
@@ -3196,7 +3201,7 @@
         "why": "An expected value accepted without reading checks nothing: it records what the model said today and calls it right."
       },
       {
-        "text": "Test what the code sends, which is fixed and free, and score the replies in an evaluation run on each prompt or model change.",
+        "text": "Test what the code sends, which is fixed and free, and score the replies in an evaluation run whenever the model or its instructions move.",
         "correct": true,
         "why": "Right."
       }
@@ -3221,7 +3226,7 @@
         "why": "Without the saved plan, apply plans again from scratch, so what runs is not the plan anybody read."
       },
       {
-        "text": "`plan` runs freely; `apply` takes no arguments, runs `terraform apply tfplan`, and waits for someone who read that plan.",
+        "text": "`plan` runs freely; `apply` takes no arguments, applies the saved plan file, and waits for someone who read that plan.",
         "correct": true,
         "why": "Right."
       },
@@ -3612,7 +3617,7 @@
         "why": "`podman kill` ended the process, and that is what `Restart=always` reacts to. A hung process has not exited."
       },
       {
-        "text": "Nothing restarts it: the restart reacts to the process dying, and unhealthy is a status a monitor reads.",
+        "text": "It stays hung: systemd acts when the main program exits, and a failed check only sets a status for a monitor to read.",
         "correct": true,
         "why": "Right. A restart policy acts when the process exits, never on a failed check; the unhealthy status is information until something watches it."
       },
@@ -3692,7 +3697,7 @@
         "why": "Nothing was measured that could give that number, and an interviewer will ask where it came from."
       },
       {
-        "text": "Deployed a school's loan register behind HTTPS so it recovers alone; killed it, and it came back with its data.",
+        "text": "Put the IT room's lending system online over HTTPS; after a deliberate kill it came back with every record.",
         "correct": true,
         "why": "Right: what was done, what is true now, and evidence anybody can check, the restart count and the data still there."
       }
@@ -3815,7 +3820,7 @@
     "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 20; Observability and Operations, lesson 17.",
     "choices": [
       {
-        "text": "Say in the channel now that you changed the proxy at 10:05, and that it may be related.",
+        "text": "Say in the channel now that you changed the proxy at 10:05, whether or not it turns out to be the cause.",
         "correct": true,
         "why": "Right. Saying it early to the people who need to know is the junior's part, and *what changed?* is the question that solves most incidents; a change that turns out unrelated costs a sentence."
       },
