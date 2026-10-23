@@ -32,7 +32,7 @@ def grouping(T):
         c.text(540, 74 + i * 18, s, mono=True, size=10.5)
     c.rect(390, 140, 300, 80, fill="var(--ink)", stroke="var(--amber)")
     c.text(540, 158, T("the timer", "o timer"), size=11, fill="var(--amber)", weight="600")
-    for i, s in enumerate(["ref", "onMounted", "onUnmounted"]):
+    for i, s in enumerate(["ref", "onMounted", "onBeforeUnmount"]):
         c.text(540, 178 + i * 16, s, mono=True, size=10.5)
     c.caption = T("Changing the timer means visiting three options on the left, and one block on the right.",
                   "Mudar o timer exige visitar três opções à esquerda, e um bloco à direita.")
