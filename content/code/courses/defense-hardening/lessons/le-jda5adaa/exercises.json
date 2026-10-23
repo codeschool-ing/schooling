@@ -1,0 +1,574 @@
+[
+  {
+    "id": "ex-p0thm431",
+    "version": 1,
+    "section": "ports-two-ways",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 1 already purged the FTP server. What does a default-deny firewall add on top?",
+    "choices": [
+      {
+        "text": "Nothing: once the listener is gone a filter is redundant",
+        "correct": false,
+        "why": "It covers the listener nobody has installed yet."
+      },
+      {
+        "text": "Protection against tomorrow's listener",
+        "correct": true,
+        "why": "Right. A new service stays unreachable until somebody allows it."
+      },
+      {
+        "text": "A patch for any flaw in the services it allows through",
+        "correct": false,
+        "why": "Allowed services are reachable by design, flaws included."
+      },
+      {
+        "text": "Encryption for the HTTP traffic the portal serves",
+        "correct": false,
+        "why": "A filter decides, it does not encrypt."
+      }
+    ]
+  },
+  {
+    "id": "ex-af508ja8",
+    "version": 1,
+    "section": "ports-two-ways",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does default deny mean for a rule set?",
+    "choices": [
+      {
+        "text": "Every rule in it ends with drop",
+        "correct": false,
+        "why": "The rules above are permissions; only the end drops."
+      },
+      {
+        "text": "It denies the known attacks and accepts the rest",
+        "correct": false,
+        "why": "That is the opposite, default allow."
+      },
+      {
+        "text": "What no rule allows is dropped",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nobody may change it without a second administrator's approval",
+        "correct": false,
+        "why": "That is change control, not the rule set's shape."
+      }
+    ]
+  },
+  {
+    "id": "ex-r5wb7dm9",
+    "version": 1,
+    "section": "default-deny-input",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the rule set accept `ct state established,related` near the top?",
+    "choices": [
+      {
+        "text": "So replies to allowed connections need no rule of their own",
+        "correct": true,
+        "why": "Right. Each permission is written once."
+      },
+      {
+        "text": "To let administrators in even when SSH is not listed",
+        "correct": false,
+        "why": "A new SSH connection is not established; it still needs its rule."
+      },
+      {
+        "text": "Because nftables refuses a policy drop without it",
+        "correct": false,
+        "why": "It accepts it; replies would just be dropped."
+      },
+      {
+        "text": "To speed up loopback traffic between nginx and the portal",
+        "correct": false,
+        "why": "The loopback has its own rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-m1rqq55k",
+    "version": 1,
+    "section": "default-deny-input",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What would break on web if the rule `iif \"lo\" accept` were missing?",
+    "choices": [
+      {
+        "text": "Ping from admin",
+        "correct": false,
+        "why": "Ping has its own rule and comes over eth0."
+      },
+      {
+        "text": "nginx reaching the portal on 127.0.0.1:8080",
+        "correct": true,
+        "why": "Right. That conversation never leaves the machine."
+      },
+      {
+        "text": "SSH from jump, which arrives through the loopback interface",
+        "correct": false,
+        "why": "jump's packets arrive on eth0 like any other machine's."
+      },
+      {
+        "text": "Nothing, since loopback traffic never passes the input hook",
+        "correct": false,
+        "why": "It does pass input, which is why the rule exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-ygsw1pza",
+    "version": 1,
+    "section": "default-deny-input",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `nft -c -f nftables.conf` do?",
+    "choices": [
+      {
+        "text": "Loads the rules and keeps a copy of the old ones",
+        "correct": false,
+        "why": "-c installs nothing."
+      },
+      {
+        "text": "Checks the file without installing it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Counts the packets each rule would match",
+        "correct": false,
+        "why": "Counters count after loading."
+      },
+      {
+        "text": "Converts the file to iptables syntax",
+        "correct": false,
+        "why": "That is iptables-translate's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-yhwdgn13",
+    "version": 1,
+    "section": "testing-from-outside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the rule set is loaded, `ss` on web still counts six listeners. What does that mean?",
+    "choices": [
+      {
+        "text": "The rule set did not load, because ss would count two otherwise",
+        "correct": false,
+        "why": "ss shows sockets, which a firewall does not touch."
+      },
+      {
+        "text": "The firewall only applies after the services restart",
+        "correct": false,
+        "why": "It applied at once, as desk saw."
+      },
+      {
+        "text": "The services still run, only unreachable",
+        "correct": true,
+        "why": "Right. Which is why removing them still matters."
+      },
+      {
+        "text": "Six machines are connected to web right now",
+        "correct": false,
+        "why": "-l lists listening sockets, not connections."
+      }
+    ]
+  },
+  {
+    "id": "ex-z94mee6k",
+    "version": 1,
+    "section": "testing-from-outside",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With `counter reject`, nc reports Connection refused but nmap still says filtered. Why?",
+    "choices": [
+      {
+        "text": "nmap scanned before the reject rule was loaded",
+        "correct": false,
+        "why": "It ran after, in the same block."
+      },
+      {
+        "text": "The ICMP unreachable reads to nmap as a firewall's answer",
+        "correct": true,
+        "why": "Right. A TCP reset is what nmap calls closed."
+      },
+      {
+        "text": "nc and nmap use different ports for the same service",
+        "correct": false,
+        "why": "Both asked port 21."
+      },
+      {
+        "text": "reject drops packets from nmap but answers nc",
+        "correct": false,
+        "why": "The rule cannot tell one client program from another."
+      }
+    ]
+  },
+  {
+    "id": "ex-hbyezmvs",
+    "version": 1,
+    "section": "testing-from-outside",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the drop policy, how many seconds did `nc -zv -w3 web 21` take before giving up?",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "s"
+  },
+  {
+    "id": "ex-17kabzrf",
+    "version": 1,
+    "section": "persisting-the-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `systemctl restart nftables`, the reject rule loaded by hand earlier is gone. Why?",
+    "choices": [
+      {
+        "text": "Restarting the service wipes every firewall rule and loads nothing",
+        "correct": false,
+        "why": "It loaded the file: the policy drop is there."
+      },
+      {
+        "text": "The service loads the file, which never held it",
+        "correct": true,
+        "why": "Right. What is in the file is what runs after a reboot."
+      },
+      {
+        "text": "reject rules expire after a few minutes",
+        "correct": false,
+        "why": "Rules do not expire."
+      },
+      {
+        "text": "ufw removed it when the service restarted",
+        "correct": false,
+        "why": "ufw is inactive on web."
+      }
+    ]
+  },
+  {
+    "id": "ex-tygmp9wn",
+    "version": 1,
+    "section": "persisting-the-rules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague enables ufw on web while nftables.service also loads /etc/nftables.conf. What is the risk?",
+    "choices": [
+      {
+        "text": "None: ufw only writes rules for IPv6",
+        "correct": false,
+        "why": "It writes rules for both."
+      },
+      {
+        "text": "The kernel refuses to load two rule sets and keeps the first",
+        "correct": false,
+        "why": "The kernel accepts both; they interact."
+      },
+      {
+        "text": "Two tools that each believe they own the rule set",
+        "correct": true,
+        "why": "Right. One undoes the other; nft list ruleset shows what is real."
+      },
+      {
+        "text": "ufw blocks port 80 by default and the portal goes offline",
+        "correct": false,
+        "why": "The risk is not one port; it is two owners."
+      }
+    ]
+  },
+  {
+    "id": "ex-c53y0k3e",
+    "version": 1,
+    "section": "removable-media-risk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does removing the usb-storage driver not stop a device that announces itself as a keyboard?",
+    "choices": [
+      {
+        "text": "Because keyboards use Bluetooth, not USB",
+        "correct": false,
+        "why": "Plenty are USB; this one is."
+      },
+      {
+        "text": "Typing goes through the input layer, not storage",
+        "correct": true,
+        "why": "Right. Only a device allow-list decides on class."
+      },
+      {
+        "text": "Because the driver is reloaded every time a key is pressed",
+        "correct": false,
+        "why": "Drivers are not reloaded per keystroke."
+      },
+      {
+        "text": "Because the keyboard copies files faster than a stick",
+        "correct": false,
+        "why": "A keyboard copies no files; it types."
+      }
+    ]
+  },
+  {
+    "id": "ex-z5agw8sc",
+    "version": 1,
+    "section": "removable-media-risk",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Read-only removable storage stops which of the three risks?",
+    "choices": [
+      {
+        "text": "Malware arriving on a stick",
+        "correct": false,
+        "why": "Reading a file is how it arrives."
+      },
+      {
+        "text": "Data leaving on a stick",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A device posing as a keyboard",
+        "correct": false,
+        "why": "It needs no storage at all."
+      },
+      {
+        "text": "All three, because nothing can be written to the machine",
+        "correct": false,
+        "why": "Read-only applies to the stick, and stops one thing."
+      }
+    ]
+  },
+  {
+    "id": "ex-22y3t39y",
+    "version": 1,
+    "section": "usbguard-and-modprobe",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why was the USBGuard policy not built in the lab?",
+    "choices": [
+      {
+        "text": "USBGuard is not in Ubuntu's archive",
+        "correct": false,
+        "why": "It is installed on every lab machine."
+      },
+      {
+        "text": "It needs a licence the course does not ask for",
+        "correct": false,
+        "why": "It is free software."
+      },
+      {
+        "text": "A container has no USB bus to read",
+        "correct": true,
+        "why": "Right. /sys/bus/usb does not exist inside it."
+      },
+      {
+        "text": "USBGuard only runs on desktop editions of Ubuntu",
+        "correct": false,
+        "why": "It runs on servers too; the container is the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-tzv86xwg",
+    "version": 1,
+    "section": "usbguard-and-modprobe",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `install usb-storage /bin/false` add to `blacklist usb-storage`?",
+    "choices": [
+      {
+        "text": "Even a manual modprobe of the module fails",
+        "correct": true,
+        "why": "Right. blacklist only stops automatic loading."
+      },
+      {
+        "text": "It unloads the module if it is already loaded",
+        "correct": false,
+        "why": "A loaded module stays until removed or a reboot."
+      },
+      {
+        "text": "It blocks keyboards as well as storage",
+        "correct": false,
+        "why": "It touches only usb-storage."
+      },
+      {
+        "text": "It logs every stick that is plugged in",
+        "correct": false,
+        "why": "Nothing in it logs."
+      }
+    ]
+  },
+  {
+    "id": "ex-5ky02jjd",
+    "version": 1,
+    "section": "usbguard-and-modprobe",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A device with an allowed stick's vendor and product id also presents an interface of class 03. Against a rule with `with-interface 08:06:50`, what happens?",
+    "choices": [
+      {
+        "text": "It is allowed, because the ids match",
+        "correct": false,
+        "why": "The interfaces must match too."
+      },
+      {
+        "text": "It does not match, and falls to block",
+        "correct": true,
+        "why": "Right. The extra keyboard interface is the giveaway."
+      },
+      {
+        "text": "Only its storage interface is allowed, and the keyboard part works anyway",
+        "correct": false,
+        "why": "A rule matches a device, not half of one."
+      },
+      {
+        "text": "USBGuard asks the user whether to allow it",
+        "correct": false,
+        "why": "The rule list decides; nobody is asked."
+      }
+    ]
+  },
+  {
+    "id": "ex-q2wzebay",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order how this lesson put a firewall on web.",
+    "items": [
+      "write the rule set in a file in your home",
+      "check it with nft -c",
+      "load it and test from desk and admin",
+      "copy it to /etc/nftables.conf and enable the service",
+      "restart the service and check again"
+    ]
+  },
+  {
+    "id": "ex-fj7va6pm",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match what desk saw with what web did.",
+    "pairs": [
+      {
+        "left": "succeeded",
+        "right": "a rule accepted the connection"
+      },
+      {
+        "left": "timed out",
+        "right": "the policy dropped it"
+      },
+      {
+        "left": "Connection refused",
+        "right": "the last rule rejected it"
+      }
+    ],
+    "right_distractors": [
+      "the port was rate limited"
+    ]
+  },
+  {
+    "id": "ex-pt97j463",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each control with the one USB risk it stops best.",
+    "pairs": [
+      {
+        "left": "no usb-storage driver",
+        "right": "files copied to a stick"
+      },
+      {
+        "left": "a device allow-list with interfaces",
+        "right": "a stick that also types"
+      },
+      {
+        "left": "scanning on insertion",
+        "right": "known malware on a stick"
+      }
+    ]
+  },
+  {
+    "id": "ex-awcxdafc",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many `accept` rules does the portal's rule set contain?",
+    "value": 5,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-12a0crp0",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A chain whose last word is `policy ___` discards every packet no rule accepted.",
+    "blanks": [
+      {
+        "accept": [
+          "drop"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jgke7ymq",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statements are true of this lesson's firewall? Choose all that apply.",
+    "choices": [
+      {
+        "text": "SSH from desk is dropped",
+        "correct": true,
+        "why": "Only .30 and .40 may connect."
+      },
+      {
+        "text": "It filters what web sends to other machines",
+        "correct": false,
+        "why": "Only input; output is lesson 10."
+      },
+      {
+        "text": "It survives a restart of the nftables service",
+        "correct": true,
+        "why": "The file is loaded again."
+      },
+      {
+        "text": "It removed the FTP server from web",
+        "correct": false,
+        "why": "ss still counted six listeners."
+      }
+    ]
+  }
+]
