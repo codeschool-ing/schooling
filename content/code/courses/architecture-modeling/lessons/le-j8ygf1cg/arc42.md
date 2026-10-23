@@ -3,14 +3,14 @@ title: arc42, a template for the whole architecture
 version: 1
 ---
 
-**arc42 is a free template for documenting a software architecture, in twelve sections, created by
+**arc42 is a free template for documenting a software architecture, in twelve parts, created by
 Gernot Starke and Peter Hruschka.** It does not tell you how to design; it tells you what a reader
 will look for in an architecture document, and gives each thing a place. Its strength is that a
 reader who has seen one arc42 document can find their way in any other.
 
-## The twelve sections
+## The twelve parts
 
-| | section | what goes in it | where in this course |
+| | part | what goes in it | where in this course |
 | --- | --- | --- | --- |
 | 1 | **introduction and goals** | the purpose, the top quality goals, the stakeholders | lessons 6 and 7 |
 | 2 | **constraints** | what was decided by others: laws, platforms, conventions | lesson 6 |
@@ -31,12 +31,12 @@ order and a set of empty headings, and the empty headings are the useful part.
 
 ## Using it without filling it
 
-The template's own advice is to keep sections short and **leave out what nobody needs**. A section
-can be one sentence and a link. Carcará's ticketing document is eleven pages: section 8 is the
+The template's own advice is to keep the parts short and **leave out what nobody needs**. A part
+can be one sentence and a link. Carcará's ticketing document is eleven pages: part 8 is the
 longest, because the cross-cutting rules about offline boarding and idempotency are what new
-engineers most often break; section 2 is three lines.
+engineers most often break; part 2 is three lines.
 
-What the template does well is make absences visible. Carcará's first draft had nothing in section
+What the template does well is make absences visible. Carcará's first draft had nothing in part
 11. Writing *none known* under *risks and technical debt* felt wrong to everybody in the room, and
 within ten minutes there were six entries, starting with Frota's nightly export, which has no retry.
 
@@ -44,7 +44,7 @@ within ten minutes there were six entries, starting with Frota's nightly export,
 
 The three combine with no friction, which is why many teams use exactly this set:
 
-- **C4 diagrams** go in sections 3, 5 and 7;
-- **decision records** stay in their own folder and section 9 links to the index;
-- **arc42** gives the headings that hold it together, and section 1's quality goals point to
-  section 10's scenarios.
+- **C4 diagrams** go in parts 3, 5 and 7;
+- **decision records** stay in their own folder and part 9 links to the index;
+- **arc42** gives the headings that hold it together, and part 1's quality goals point to
+  part 10's scenarios.
