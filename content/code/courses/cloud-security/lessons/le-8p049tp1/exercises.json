@@ -1,0 +1,710 @@
+[
+  {
+    "id": "ex-22j64kyf",
+    "version": 1,
+    "section": "private-is-a-route",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes a subnet in AWS public?",
+    "hint": "AWS has no field called private.",
+    "choices": [
+      {
+        "text": "A route table that sends `0.0.0.0/0` to an internet gateway",
+        "correct": true,
+        "why": "Right. That route, in the table the subnet follows, is the whole definition."
+      },
+      {
+        "text": "An address range outside the private blocks of RFC 1918",
+        "correct": false,
+        "why": "Both of the clinic's subnets use private ranges, and one of them is public."
+      },
+      {
+        "text": "A setting chosen in `create-subnet`",
+        "correct": false,
+        "why": "There is no such option; `create-subnet` takes a range and a zone."
+      },
+      {
+        "text": "The name or tag it was given when it was created",
+        "correct": false,
+        "why": "A name decides nothing; the routes do."
+      }
+    ]
+  },
+  {
+    "id": "ex-m66hpxq2",
+    "version": 1,
+    "section": "private-is-a-route",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`describe-route-tables` filtered by the records subnet's association returned nothing at all. What does that mean?",
+    "hint": "Every VPC is created with one table already in it.",
+    "choices": [
+      {
+        "text": "The filter was wrong, since every subnet is explicitly associated with some table",
+        "correct": false,
+        "why": "Most subnets in real accounts have no explicit association; that is the case the lesson is about."
+      },
+      {
+        "text": "moto lost the association",
+        "correct": false,
+        "why": "Nobody made one. AWS answers the same way."
+      },
+      {
+        "text": "The subnet has no routes, so it cannot reach anything",
+        "correct": false,
+        "why": "It still has the local route; it gets it from the main table."
+      },
+      {
+        "text": "The subnet follows the VPC's main route table",
+        "correct": true,
+        "why": "Right. No explicit association means the main table's routes."
+      }
+    ]
+  },
+  {
+    "id": "ex-htv4mtb5",
+    "version": 1,
+    "section": "private-is-a-route",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A VPC has six subnets. Two are associated with a public table, one with a private table, and three with nothing. Someone adds `0.0.0.0/0` to an internet gateway to the main table. How many subnets gained a route to the internet?",
+    "hint": "Only the ones that follow the main table changed.",
+    "choices": [
+      {
+        "text": "Three",
+        "correct": true,
+        "why": "Right. The three unassociated ones; the two public ones already had the route, and the private one follows its own table."
+      },
+      {
+        "text": "None, because a route only applies to the subnet named in it",
+        "correct": false,
+        "why": "A route names a destination, not a subnet; a table applies to every subnet that follows it."
+      },
+      {
+        "text": "Four: the three with nothing, plus the private one",
+        "correct": false,
+        "why": "The private one has an explicit association and follows its own table."
+      },
+      {
+        "text": "Six, since the main table governs the whole VPC",
+        "correct": false,
+        "why": "An explicit association overrides the main table, so three subnets ignore it."
+      }
+    ]
+  },
+  {
+    "id": "ex-js8408v1",
+    "version": 1,
+    "section": "private-is-a-route",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which fix does the lesson call the one that lasts, once the stray route is deleted?",
+    "hint": "Privacy should be written down, not inherited.",
+    "choices": [
+      {
+        "text": "Renaming the subnet to `records-private`",
+        "correct": false,
+        "why": "A name decides nothing."
+      },
+      {
+        "text": "Giving the records subnet a table of its own, and leaving the main table with `local` only",
+        "correct": true,
+        "why": "Right. The next edit to the main table then reaches only subnets nobody has thought about."
+      },
+      {
+        "text": "Detaching the internet gateway from the VPC",
+        "correct": false,
+        "why": "That takes the booking site off the internet too."
+      },
+      {
+        "text": "A network ACL on the subnet",
+        "correct": false,
+        "why": "A useful second layer, but it leaves the subnet following whatever the main table says next."
+      }
+    ]
+  },
+  {
+    "id": "ex-jctxkr7m",
+    "version": 1,
+    "section": "private-is-a-route",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A subnet with no explicit association follows the VPC's ___ route table.",
+    "hint": "AWS creates it with the VPC.",
+    "blanks": [
+      {
+        "accept": [
+          "main"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4f5qdp3v",
+    "version": 1,
+    "section": "egress",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What outbound rule does a security group have when AWS creates it?",
+    "hint": "Read before writing anything.",
+    "choices": [
+      {
+        "text": "HTTPS only, to AWS's own addresses",
+        "correct": false,
+        "why": "No such default exists."
+      },
+      {
+        "text": "Everything within the VPC's own range, and nothing beyond it",
+        "correct": false,
+        "why": "That is the rule the lesson wrote for the database, not the default."
+      },
+      {
+        "text": "None: outbound traffic is denied until a rule allows it",
+        "correct": false,
+        "why": "That is the inbound side. Outbound starts with everything allowed."
+      },
+      {
+        "text": "All protocols to `0.0.0.0/0`",
+        "correct": true,
+        "why": "Right: protocol `-1` to every address, which the capture printed."
+      }
+    ]
+  },
+  {
+    "id": "ex-bwjvxf5n",
+    "version": 1,
+    "section": "egress",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A database sits in a private subnet with a NAT gateway for updates. Nobody can connect to it from the internet. Can it send the table it holds to a server on the internet?",
+    "hint": "Which direction does NAT allow?",
+    "choices": [
+      {
+        "text": "No, NAT only forwards traffic to AWS services",
+        "correct": false,
+        "why": "NAT forwards to any address; that is how the updates arrive."
+      },
+      {
+        "text": "Only if somebody first opens an inbound port for the reply",
+        "correct": false,
+        "why": "Replies to an outbound connection come back through the NAT and the stateful group without any inbound rule."
+      },
+      {
+        "text": "No, a private subnet cannot reach the internet",
+        "correct": false,
+        "why": "With a NAT gateway it can open any outbound connection."
+      },
+      {
+        "text": "Yes, unless the security group's outbound rules stop it",
+        "correct": true,
+        "why": "Right. NAT lets connections out and says nothing about what goes out."
+      }
+    ]
+  },
+  {
+    "id": "ex-xj0jarp0",
+    "version": 1,
+    "section": "egress",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the database's outbound rule is narrowed to `10.20.0.0/16`, a web server sends it a query. Does the answer get back?",
+    "hint": "Security groups remember connections.",
+    "choices": [
+      {
+        "text": "Yes, because security groups are stateful",
+        "correct": true,
+        "why": "Right: the reply is let out whatever the outbound rules say, and the web subnet is inside `10.20.0.0/16` anyway."
+      },
+      {
+        "text": "No, a reply needs its own outbound rule",
+        "correct": false,
+        "why": "That is how a stateless network ACL behaves, not a security group."
+      },
+      {
+        "text": "Only if the web server's group allows inbound from the database",
+        "correct": false,
+        "why": "The reply belongs to a connection the web server opened; it needs no inbound rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-30ngbf6f",
+    "version": 1,
+    "section": "egress",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each outbound control to what it filters on.",
+    "hint": "The table at the end of the section.",
+    "pairs": [
+      {
+        "left": "a security group",
+        "right": "address ranges and ports"
+      },
+      {
+        "left": "a proxy the machines go through",
+        "right": "the host name asked for"
+      },
+      {
+        "left": "DNS filtering",
+        "right": "which names may be resolved"
+      },
+      {
+        "left": "a managed network firewall",
+        "right": "domain lists, inspected in the network"
+      }
+    ],
+    "right_distractors": [
+      "the user who started the process"
+    ]
+  },
+  {
+    "id": "ex-xsq69sgy",
+    "version": 1,
+    "section": "egress",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The clinic's payment server needs to reach one payment provider. Which outbound policy does the lesson's reasoning favour?",
+    "hint": "Whose list contains the server a thief set up yesterday?",
+    "choices": [
+      {
+        "text": "A security group rule allowing `0.0.0.0/0` on port 443 only",
+        "correct": false,
+        "why": "Port 443 to everywhere is most of the internet, including a thief's server."
+      },
+      {
+        "text": "A block list of known malicious domains, updated daily",
+        "correct": false,
+        "why": "Nobody's block list contains yesterday's server; it is the weak version."
+      },
+      {
+        "text": "An allow list naming the payment provider's host",
+        "correct": true,
+        "why": "Right. The few destinations the workload needs, and nothing else."
+      },
+      {
+        "text": "No outbound control, since the provider's addresses change too often to write down",
+        "correct": false,
+        "why": "That is why the control filters on the host name rather than the address."
+      }
+    ]
+  },
+  {
+    "id": "ex-q2t2man0",
+    "version": 1,
+    "section": "private-endpoints",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which services can a gateway endpoint reach?",
+    "hint": "Two, and both are storage.",
+    "choices": [
+      {
+        "text": "Every AWS service in the region",
+        "correct": false,
+        "why": "That is closer to interface endpoints, which are billed."
+      },
+      {
+        "text": "Any service published with AWS PrivateLink",
+        "correct": false,
+        "why": "PrivateLink is what interface endpoints are built on."
+      },
+      {
+        "text": "S3 alone",
+        "correct": false,
+        "why": "DynamoDB too."
+      },
+      {
+        "text": "S3 and DynamoDB",
+        "correct": true,
+        "why": "Right. Every other service needs an interface endpoint."
+      }
+    ]
+  },
+  {
+    "id": "ex-85wevkz5",
+    "version": 1,
+    "section": "private-endpoints",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the gateway endpoint was created, what new route appeared in the records subnet's table?",
+    "hint": "Its destination is not an address range.",
+    "choices": [
+      {
+        "text": "A `pl-` prefix list, to the `vpce-` endpoint",
+        "correct": true,
+        "why": "Right. The prefix list is S3's set of addresses in São Paulo, kept up to date by AWS."
+      },
+      {
+        "text": "None; a gateway endpoint works through DNS, without routes",
+        "correct": false,
+        "why": "That describes an interface endpoint's private DNS. A gateway endpoint is a route."
+      },
+      {
+        "text": "A route to the internet gateway for S3's addresses",
+        "correct": false,
+        "why": "The whole point is that the path never leaves the VPC."
+      },
+      {
+        "text": "`0.0.0.0/0` to the endpoint",
+        "correct": false,
+        "why": "That would send everything to S3; the route is narrower."
+      }
+    ]
+  },
+  {
+    "id": "ex-190g8264",
+    "version": 1,
+    "section": "private-endpoints",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the database's security group need one more outbound rule after the endpoint existed?",
+    "hint": "Where are S3's addresses?",
+    "choices": [
+      {
+        "text": "The route table needs a matching security group entry for every route",
+        "correct": false,
+        "why": "Routes and security groups are independent controls; that is why the lesson has two."
+      },
+      {
+        "text": "Endpoints refuse traffic from groups with no rule naming them",
+        "correct": false,
+        "why": "The endpoint does not look at the group; the group looks at the destination."
+      },
+      {
+        "text": "Because S3's addresses are outside `10.20.0.0/16`, the only range the group allowed out",
+        "correct": true,
+        "why": "Right, so the rule names the same prefix list, on port 443."
+      }
+    ]
+  },
+  {
+    "id": "ex-yp2a74dw",
+    "version": 1,
+    "section": "private-endpoints",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A credential is stolen from the records database host. With the endpoint policy and the bucket policy of the lesson in place, which of these does AWS refuse, by its documentation? Choose all that apply.",
+    "hint": "One policy narrows where the VPC's requests go; the other narrows where the bucket's come from.",
+    "choices": [
+      {
+        "text": "Writing the nightly backup to `clinic-records` from the database host",
+        "correct": false,
+        "why": "That is the path both policies exist to allow."
+      },
+      {
+        "text": "Any request to S3 from the database host at all",
+        "correct": false,
+        "why": "The backup still goes through; only other buckets are out of reach."
+      },
+      {
+        "text": "Copying the records to a bucket of the thief's, through the endpoint",
+        "correct": true,
+        "why": "Right. The endpoint policy names `clinic-records` alone."
+      },
+      {
+        "text": "Reading `clinic-records` with the stolen key from the thief's own laptop",
+        "correct": true,
+        "why": "Right. The request did not come through the endpoint, and the bucket's explicit `Deny` wins."
+      }
+    ]
+  },
+  {
+    "id": "ex-r6t78jde",
+    "version": 1,
+    "section": "private-endpoints",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did the lab show about the bucket policy with `aws:SourceVpce`?",
+    "hint": "Lesson 1's table says what moto does with conditions.",
+    "choices": [
+      {
+        "text": "That moto rejected it as malformed",
+        "correct": false,
+        "why": "It accepted it and returned it intact."
+      },
+      {
+        "text": "That it locked the administrators out of the bucket, as the warning says it can",
+        "correct": false,
+        "why": "That is AWS's documented risk; moto applies no condition, so nobody was locked out."
+      },
+      {
+        "text": "That it refused a request from outside the endpoint",
+        "correct": false,
+        "why": "moto ignores conditions; no such refusal was produced."
+      },
+      {
+        "text": "That moto stored it, with the endpoint's id in the condition",
+        "correct": true,
+        "why": "Right. Its effect on AWS is from AWS's documentation, not a run."
+      }
+    ]
+  },
+  {
+    "id": "ex-gwawcvd1",
+    "version": 1,
+    "section": "finding-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `exposure.py` read the main table's associations as well as the explicit ones?",
+    "hint": "Which subnet did caio expose?",
+    "choices": [
+      {
+        "text": "To list the VPCs",
+        "correct": false,
+        "why": "The VPC id is on every table already."
+      },
+      {
+        "text": "boto3 refuses to describe a subnet unless its main table is fetched first",
+        "correct": false,
+        "why": "boto3 has no such rule; the script would run and be wrong."
+      },
+      {
+        "text": "So that subnets with no table of their own are judged too",
+        "correct": true,
+        "why": "Right. Without them caio's subnet would be missed: inheritance is where the first section's mistake lived."
+      },
+      {
+        "text": "Because only the main table can hold a route to an internet gateway",
+        "correct": false,
+        "why": "The web subnet's own table holds one."
+      }
+    ]
+  },
+  {
+    "id": "ex-xqy1565q",
+    "version": 1,
+    "section": "finding-it",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many findings did the first run of `exposure.py` print?",
+    "hint": "Count the lines under the command.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "findings"
+  },
+  {
+    "id": "ex-64fmxcf7",
+    "version": 1,
+    "section": "finding-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The checker printed `OPEN TO EVERYONE ... clinic-web ports 443-443`. What should happen to that finding?",
+    "hint": "A finding is a question, not a verdict.",
+    "choices": [
+      {
+        "text": "Revoke the rule at once, since nothing should be open to everybody",
+        "correct": false,
+        "why": "A public booking site is supposed to answer everybody on HTTPS; revoking it takes the site down."
+      },
+      {
+        "text": "Recognise it as intended, because that is what the booking site is for",
+        "correct": true,
+        "why": "Right. Only somebody who knows what the clinic meant can tell the intended from the mistake."
+      },
+      {
+        "text": "Ignore the checker, since it reports things that are fine",
+        "correct": false,
+        "why": "The same run found the SSH rule, which was the real fault."
+      },
+      {
+        "text": "Move the site to port 8443, which the checker treats differently",
+        "correct": false,
+        "why": "The checker flags any port open to everybody; a different number hides nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-kpt5kz8e",
+    "version": 1,
+    "section": "finding-it",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can `exposure.py`, as written, not see? Choose all that apply.",
+    "hint": "The last paragraph of the section.",
+    "choices": [
+      {
+        "text": "A subnet that follows a main table with a route to an internet gateway",
+        "correct": false,
+        "why": "That is the case the main-table part was written for."
+      },
+      {
+        "text": "A subnet in another region",
+        "correct": true,
+        "why": "Right. It reads one region, and the account has 38."
+      },
+      {
+        "text": "Whether any packet actually reached the open port",
+        "correct": true,
+        "why": "Right. Configuration says what is allowed; flow logs say what happened."
+      },
+      {
+        "text": "A security group rule admitting `0.0.0.0/0`",
+        "correct": false,
+        "why": "That is exactly what its last part looks for."
+      },
+      {
+        "text": "A network ACL",
+        "correct": true,
+        "why": "Right. It never reads them."
+      }
+    ]
+  },
+  {
+    "id": "ex-xqtvdb1a",
+    "version": 1,
+    "section": "flow-logs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which question does a flow log answer that the configuration cannot?",
+    "hint": "Allowed against happened.",
+    "choices": [
+      {
+        "text": "Which connections actually happened",
+        "correct": true,
+        "why": "Right. One line per conversation, if it was on at the time."
+      },
+      {
+        "text": "Who changed the security group",
+        "correct": false,
+        "why": "That is a record of API calls, lesson 15's subject."
+      },
+      {
+        "text": "Which ports are open to everybody",
+        "correct": false,
+        "why": "Configuration answers that; the checker did."
+      },
+      {
+        "text": "What a session typed once it was connected",
+        "correct": false,
+        "why": "A flow log records conversations, not contents."
+      }
+    ]
+  },
+  {
+    "id": "ex-vhqahskd",
+    "version": 1,
+    "section": "flow-logs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A flow log line reads `... 203.0.113.50 10.20.1.10 51544 22 6 ... ACCEPT OK`. What does it record?",
+    "hint": "Source before destination; `6` is a protocol number.",
+    "choices": [
+      {
+        "text": "The web server opening an outbound connection to `203.0.113.50` on port 22, which was then accepted",
+        "correct": false,
+        "why": "The source is `203.0.113.50`; the destination port is 22 on the web server."
+      },
+      {
+        "text": "A TCP connection from `203.0.113.50` to the web server's SSH port, accepted",
+        "correct": true,
+        "why": "Right, and the line an investigation of the open port is looking for."
+      },
+      {
+        "text": "A refused attempt on port 22",
+        "correct": false,
+        "why": "The action is `ACCEPT`."
+      },
+      {
+        "text": "Six SSH sessions",
+        "correct": false,
+        "why": "`6` is the protocol number, TCP."
+      }
+    ]
+  },
+  {
+    "id": "ex-q2pe5ybx",
+    "version": 1,
+    "section": "flow-logs",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of VPC flow logs, by the lesson? Choose all that apply.",
+    "hint": "Four things a flow log does not say.",
+    "choices": [
+      {
+        "text": "They are off until somebody turns them on",
+        "correct": true,
+        "why": "Right, and the morning after an incident is too late."
+      },
+      {
+        "text": "They carry the payload of each packet",
+        "correct": false,
+        "why": "Conversations, not contents."
+      },
+      {
+        "text": "They aggregate traffic over windows, up to ten minutes by default",
+        "correct": true,
+        "why": "Right: counts per window, not a timeline to the second."
+      },
+      {
+        "text": "moto wrote records into the bucket in the lab",
+        "correct": false,
+        "why": "The bucket stayed empty; moto carries no traffic."
+      },
+      {
+        "text": "Requests to the instance metadata address are left out",
+        "correct": true,
+        "why": "Right, by AWS's documentation."
+      }
+    ]
+  },
+  {
+    "id": "ex-k0244fpy",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the route fix in the order the lesson took them.",
+    "hint": "The proof comes last, and it is the first question asked again.",
+    "items": [
+      "find the main table and read its routes",
+      "delete the `0.0.0.0/0` route from the main table",
+      "create a private table for the records subnet",
+      "associate the records subnet with it",
+      "ask for the records subnet's routes again"
+    ],
+    "trap": "Associating before creating is impossible; stopping before the last step leaves the fix unproved."
+  },
+  {
+    "id": "ex-amqqhk0h",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a flow log record, protocol number `6` is ___.",
+    "hint": "UDP is 17.",
+    "blanks": [
+      {
+        "accept": [
+          "TCP"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
