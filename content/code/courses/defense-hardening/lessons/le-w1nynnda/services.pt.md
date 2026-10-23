@@ -75,7 +75,7 @@ ana@desk:~$ snmpwalk -v2c -c public web 1.3.6.1.2.1.25.4.2.1.2 | wc -l; snmpwalk
 
 O servidor FTP diz o nome e a versão exata na primeira linha. O agente SNMP recebeu o pedido do nome
 da máquina com a community string `public`, o padrão que toda ferramenta de varredura tenta primeiro,
-e respondeu. A mesma pergunta com outros números devolve os 23 processos em execução e 308 linhas de software
+e respondeu. A mesma pergunta com outros números devolve os 23 processos em execução e 322 linhas de software
 instalado, como mostram as duas contagens do fim: um mapa da máquina, entregue a quem pedir.
 
 ## Parar um nem sempre é pará-lo

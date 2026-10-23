@@ -75,7 +75,7 @@ ana@desk:~$ snmpwalk -v2c -c public web 1.3.6.1.2.1.25.4.2.1.2 | wc -l; snmpwalk
 
 The FTP server gives its name and exact version in its first line. The SNMP agent was asked for the
 machine's name with the community string `public`, the default every scanner tries first, and gave
-it. The same question with other numbers returns all 23 running processes and 308 lines of installed
+it. The same question with other numbers returns all 23 running processes and 322 lines of installed
 software, as the two counts at the end show: a map of the machine, handed to whoever asks.
 
 ## Stopping one is not always stopping it
