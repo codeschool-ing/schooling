@@ -1,0 +1,680 @@
+[
+  {
+    "id": "ex-3hrk8aer",
+    "version": 1,
+    "section": "the-cycle",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the five steps of vulnerability management in order, starting from the one everything depends on.",
+    "items": [
+      "discover what runs",
+      "assess which flaws apply",
+      "prioritise and set a date",
+      "remediate",
+      "verify with the same check"
+    ]
+  },
+  {
+    "id": "ex-00s5fy1a",
+    "version": 1,
+    "section": "the-cycle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do organisations that scan every week still carry findings that are years old?",
+    "choices": [
+      {
+        "text": "Because scanners miss most flaws on their first run",
+        "correct": false,
+        "why": "Finding them is not the problem here; acting on them is."
+      },
+      {
+        "text": "The steps after the report get skipped",
+        "correct": true,
+        "why": "Right: prioritising, fixing and verifying, with owners and dates."
+      },
+      {
+        "text": "Because old flaws cannot be fixed once a newer version exists",
+        "correct": false,
+        "why": "Old flaws are fixed by updates all the time."
+      },
+      {
+        "text": "Because every report lists the same findings twice",
+        "correct": false,
+        "why": "Duplication is a nuisance, not the cause."
+      }
+    ]
+  },
+  {
+    "id": "ex-2x3wr6mr",
+    "version": 1,
+    "section": "installed-versus-fixed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ubuntu ships a security fix for OpenSSH 9.6p1. Which part of the package version changes?",
+    "choices": [
+      {
+        "text": "The upstream part, which becomes 9.7",
+        "correct": false,
+        "why": "Ubuntu backports the fix into the version it shipped."
+      },
+      {
+        "text": "The epoch, which goes from 1: to 2:",
+        "correct": false,
+        "why": "The epoch changes only when version numbering itself is reset."
+      },
+      {
+        "text": "The packaging revision, such as 3ubuntu13.20 becoming 3ubuntu13.21",
+        "correct": true,
+        "why": "Right, which is why only the full version string can be compared."
+      },
+      {
+        "text": "Nothing: the same version is rebuilt with the fix",
+        "correct": false,
+        "why": "A changed package always gets a new version, or apt would not install it."
+      }
+    ]
+  },
+  {
+    "id": "ex-accjngvk",
+    "version": 1,
+    "section": "installed-versus-fixed",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does vulncheck.py call dpkg --compare-versions instead of comparing the two strings in Python?",
+    "hint": "Compare 13.9 and 13.20 as text.",
+    "choices": [
+      {
+        "text": "Because Python cannot compare strings that contain colons",
+        "correct": false,
+        "why": "It can; the result would just be wrong."
+      },
+      {
+        "text": "Because dpkg is faster than Python",
+        "correct": false,
+        "why": "It is slower, one process per comparison, and still the right choice."
+      },
+      {
+        "text": "As text, 13.9 sorts after 13.20; dpkg knows Debian's rules",
+        "correct": true,
+        "why": "Right, and it handles the epoch too."
+      },
+      {
+        "text": "Because the feed stores versions as numbers, not text",
+        "correct": false,
+        "why": "They are strings in the feed."
+      }
+    ]
+  },
+  {
+    "id": "ex-q2dktdhw",
+    "version": 1,
+    "section": "installed-versus-fixed",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two advisories show `fixed` for web. Why is it right that a report does not raise them?",
+    "choices": [
+      {
+        "text": "web already runs a version newer than the fix",
+        "correct": true,
+        "why": "Right, and listing them anyway teaches people to skim."
+      },
+      {
+        "text": "Because those packages are not installed on web",
+        "correct": false,
+        "why": "That would say not installed; these are installed and newer."
+      },
+      {
+        "text": "Because their scores are below 7",
+        "correct": false,
+        "why": "sudo's flaw scores 7.8; the version decides, not the score."
+      },
+      {
+        "text": "Because the feed marked them as invented",
+        "correct": false,
+        "why": "The whole feed is invented for the lesson; that does not decide anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-yywdfrgq",
+    "version": 1,
+    "section": "installed-versus-fixed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes vulncheck.py an authenticated check?",
+    "choices": [
+      {
+        "text": "It asks for a password before it runs",
+        "correct": false,
+        "why": "It asks nobody; it logs in with a key."
+      },
+      {
+        "text": "It verifies the signature of the advisory feed before using it",
+        "correct": false,
+        "why": "It does not; a real tool should, and that is another matter."
+      },
+      {
+        "text": "It runs as root on web",
+        "correct": false,
+        "why": "It runs as ana on admin."
+      },
+      {
+        "text": "It logs in to web and reads the package database",
+        "correct": true,
+        "why": "Right, instead of guessing from what services say."
+      }
+    ]
+  },
+  {
+    "id": "ex-22bjkaqh",
+    "version": 1,
+    "section": "scanners",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An unauthenticated scan reads `nginx 1.24.0 (Ubuntu)` on web. Why can it not say whether a given nginx flaw is fixed?",
+    "choices": [
+      {
+        "text": "Because nginx encrypts its banner",
+        "correct": false,
+        "why": "The banner is plain text in the response."
+      },
+      {
+        "text": "Ubuntu fixes it in the packaging revision, which the banner does not show",
+        "correct": true,
+        "why": "Right. A patched and an unpatched nginx say the same thing."
+      },
+      {
+        "text": "Because nmap only reads the first port of each machine",
+        "correct": false,
+        "why": "It read both ports asked for."
+      },
+      {
+        "text": "Because port 80 is closed to admin",
+        "correct": false,
+        "why": "It answered with a version."
+      }
+    ]
+  },
+  {
+    "id": "ex-2gd0cang",
+    "version": 1,
+    "section": "scanners",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "If authenticated checks know more, what is an outside scan still good for, according to the lesson?",
+    "choices": [
+      {
+        "text": "Measuring the CVSS score of each service",
+        "correct": false,
+        "why": "A score belongs to a flaw, not to a service it can see."
+      },
+      {
+        "text": "Installing patches on machines with no agent",
+        "correct": false,
+        "why": "Scanners report; they do not patch."
+      },
+      {
+        "text": "Finding listeners nobody knew about",
+        "correct": true,
+        "why": "Right, lesson 1's use of it."
+      },
+      {
+        "text": "Proving that a hidden banner keeps the machine safe",
+        "correct": false,
+        "why": "Hiding the banner blinds the defender's scan too."
+      }
+    ]
+  },
+  {
+    "id": "ex-m07x0ts4",
+    "version": 1,
+    "section": "scanners",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is OVAL, as the lesson describes it?",
+    "choices": [
+      {
+        "text": "Machine-readable advisories that distributions publish",
+        "correct": true,
+        "why": "Right: the real form of this lesson's feed."
+      },
+      {
+        "text": "A commercial scanner sold by Tenable",
+        "correct": false,
+        "why": "That is Nessus."
+      },
+      {
+        "text": "The probability that a flaw will be exploited in 30 days",
+        "correct": false,
+        "why": "That is EPSS."
+      },
+      {
+        "text": "A list of flaws known to be exploited in real attacks",
+        "correct": false,
+        "why": "That is KEV."
+      }
+    ]
+  },
+  {
+    "id": "ex-516gzt5v",
+    "version": 1,
+    "section": "cvss",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Using cvss.py's formula, what base score does AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N get? (The transcript shows it.)",
+    "value": 7.5,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-h8tfpcpj",
+    "version": 1,
+    "section": "cvss",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The sudo flaw has High impact on all three and scores 7.8, below the 9.8 of the full-control example. Which metric holds it down?",
+    "choices": [
+      {
+        "text": "S:U, because an unchanged scope always halves the score",
+        "correct": false,
+        "why": "The full-control example is S:U too."
+      },
+      {
+        "text": "AV:L, with PR:L: somebody must already be logged in",
+        "correct": true,
+        "why": "Right. Exploitability falls; impact stays the same."
+      },
+      {
+        "text": "UI:N, because no user interaction lowers the score",
+        "correct": false,
+        "why": "UI:N raises exploitability; UI:R lowers it."
+      },
+      {
+        "text": "A:H, because availability counts less than confidentiality",
+        "correct": false,
+        "why": "The three impacts have the same weights."
+      }
+    ]
+  },
+  {
+    "id": "ex-rs6sm8xs",
+    "version": 1,
+    "section": "cvss",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a CVSS base score know about?",
+    "choices": [
+      {
+        "text": "Whether the flaw is being exploited this week",
+        "correct": false,
+        "why": "That is KEV and EPSS, outside the base score."
+      },
+      {
+        "text": "Whether the package listens on your network",
+        "correct": false,
+        "why": "That is exposure, which only you know."
+      },
+      {
+        "text": "Whether an attacker needs an account",
+        "correct": true,
+        "why": "Right: PR, privileges required, is one of the eight."
+      },
+      {
+        "text": "How important the machine is to the firm",
+        "correct": false,
+        "why": "Asset criticality is the firm's, not the flaw's."
+      }
+    ]
+  },
+  {
+    "id": "ex-kra0sqdt",
+    "version": 1,
+    "section": "cvss",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each part of a CVSS vector with its question.",
+    "pairs": [
+      {
+        "left": "AV",
+        "right": "from where can it be reached?"
+      },
+      {
+        "left": "PR",
+        "right": "must the attacker already have an account?"
+      },
+      {
+        "left": "UI",
+        "right": "must somebody click something?"
+      },
+      {
+        "left": "S",
+        "right": "does it reach beyond the vulnerable component?"
+      }
+    ],
+    "right_distractors": [
+      "is anybody exploiting it now?"
+    ]
+  },
+  {
+    "id": "ex-y4xxbegb",
+    "version": 1,
+    "section": "prioritising",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does prioritise.py put nginx (7.5) ahead of OpenSSH (8.1)?",
+    "choices": [
+      {
+        "text": "Because nginx listens on port 80, which is more exposed than 22",
+        "correct": false,
+        "why": "Both are in EXPOSED; the policy does not rank ports."
+      },
+      {
+        "text": "Its flaw is on the known-exploited list",
+        "correct": true,
+        "why": "Right: KEV beats every score."
+      },
+      {
+        "text": "Because the portal stops without nginx, and SSH is optional",
+        "correct": false,
+        "why": "The policy does not weigh that; the kev field decides."
+      },
+      {
+        "text": "Because its EPSS rounds up to 0.5",
+        "correct": false,
+        "why": "0.41 is not rounded, and kev is checked before EPSS."
+      }
+    ]
+  },
+  {
+    "id": "ex-fen64b0g",
+    "version": 1,
+    "section": "prioritising",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the small size of the KEV list, against all published CVEs, argue for using it?",
+    "choices": [
+      {
+        "text": "Because a short list is cheaper to download",
+        "correct": false,
+        "why": "Size of the download is not the argument."
+      },
+      {
+        "text": "Because CVEs not on the list cannot be exploited",
+        "correct": false,
+        "why": "They can; there is just no evidence yet that they are."
+      },
+      {
+        "text": "Most flaws are never used, so known use is a strong signal",
+        "correct": true,
+        "why": "Right. Treating every 7.5 as urgent spends weeks on the wrong ones."
+      },
+      {
+        "text": "Because every entry on it scores 9 or more",
+        "correct": false,
+        "why": "KEV is about use, not score; nginx's entry here is 7.5."
+      }
+    ]
+  },
+  {
+    "id": "ex-86n1dwdx",
+    "version": 1,
+    "section": "prioritising",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does the lesson remediate the vsftpd finding, and how does it prove it?",
+    "choices": [
+      {
+        "text": "It upgrades vsftpd and runs nmap again",
+        "correct": false,
+        "why": "The lab has no newer vsftpd to install, and the portal does not need FTP."
+      },
+      {
+        "text": "It purges the package and reruns vulncheck.py",
+        "correct": true,
+        "why": "Right: not installed, the strongest answer."
+      },
+      {
+        "text": "It adds an exception with an expiry date",
+        "correct": false,
+        "why": "An exception is for what cannot be fixed yet; this could be removed."
+      },
+      {
+        "text": "It blocks port 21 at the switch",
+        "correct": false,
+        "why": "That would be a compensating control, not removal."
+      }
+    ]
+  },
+  {
+    "id": "ex-j4dxk7ss",
+    "version": 1,
+    "section": "deadlines",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Under the lesson's policy, how many days does a P2 finding have?",
+    "value": 30,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-yr9ym0mg",
+    "version": 1,
+    "section": "deadlines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are due dates counted from the day of the finding rather than the day of the report?",
+    "choices": [
+      {
+        "text": "So a reprinted report still shows what is late",
+        "correct": true,
+        "why": "Right: otherwise the date moves every time."
+      },
+      {
+        "text": "Because reports are always printed on the same day as the scan",
+        "correct": false,
+        "why": "They are not, which is the whole problem."
+      },
+      {
+        "text": "Because a later date would give the team more time",
+        "correct": false,
+        "why": "That is the failure, not the reason."
+      },
+      {
+        "text": "Because CVSS requires it",
+        "correct": false,
+        "why": "CVSS says nothing about deadlines."
+      }
+    ]
+  },
+  {
+    "id": "ex-p826w5v2",
+    "version": 1,
+    "section": "deadlines",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which fields must an exception record carry, according to the lesson? Choose all that apply.",
+    "choices": [
+      {
+        "text": "an expiry date",
+        "correct": true,
+        "why": "Without one, the finding becomes permanent."
+      },
+      {
+        "text": "a compensating control",
+        "correct": true,
+        "why": "What is done instead of the fix."
+      },
+      {
+        "text": "who approved it, by name",
+        "correct": true,
+        "why": "A decision somebody owns."
+      },
+      {
+        "text": "the CVSS score raised by one point",
+        "correct": false,
+        "why": "Nobody changes the score of a flaw."
+      }
+    ]
+  },
+  {
+    "id": "ex-egg6mw55",
+    "version": 1,
+    "section": "deadlines",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A manager wants one number to judge the team each month. Which does the lesson recommend?",
+    "choices": [
+      {
+        "text": "The total number of open findings",
+        "correct": false,
+        "why": "It rises with every new advisory, which the team does not control."
+      },
+      {
+        "text": "The highest CVSS score still open",
+        "correct": false,
+        "why": "One finding says little about the programme."
+      },
+      {
+        "text": "The number of scans run in the month",
+        "correct": false,
+        "why": "Scanning is one step of five."
+      },
+      {
+        "text": "The count of findings past their due date",
+        "correct": true,
+        "why": "Right: the one the team controls."
+      }
+    ]
+  },
+  {
+    "id": "ex-sfxxkykf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "python3.12's advisory scores 9.8 with EPSS 0.11 but was `fixed` on web. If web had an older python3.12, which level would prioritise.py give it?",
+    "hint": "Read level() from the top.",
+    "choices": [
+      {
+        "text": "P1, because 9.8 is the highest score in the feed",
+        "correct": false,
+        "why": "P1 is for kev only."
+      },
+      {
+        "text": "P2, because its EPSS is at least 0.10",
+        "correct": true,
+        "why": "Right: the EPSS rule comes before the score rules."
+      },
+      {
+        "text": "P3, because python3.12 is not in EXPOSED",
+        "correct": false,
+        "why": "It would reach the EPSS rule first."
+      },
+      {
+        "text": "None: a fixed package is never prioritised",
+        "correct": false,
+        "why": "The question says the version is older, so it would be vulnerable."
+      }
+    ]
+  },
+  {
+    "id": "ex-25dh8zrq",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The catalogue of flaws with evidence of exploitation in real attacks, kept by CISA, is called ___.",
+    "blanks": [
+      {
+        "accept": [
+          "KEV"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-k2zhaxq0",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each signal with what it measures.",
+    "pairs": [
+      {
+        "left": "CVSS base score",
+        "right": "how bad the flaw would be"
+      },
+      {
+        "left": "EPSS",
+        "right": "how likely exploitation is in 30 days"
+      },
+      {
+        "left": "KEV",
+        "right": "whether it is exploited already"
+      },
+      {
+        "left": "exposure",
+        "right": "whether it can be reached here"
+      }
+    ],
+    "right_distractors": [
+      "how long the patch takes to install"
+    ]
+  },
+  {
+    "id": "ex-hxzg9dh8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a patch is installed, what counts as verification in this lesson?",
+    "choices": [
+      {
+        "text": "The administrator's note that the patch was applied",
+        "correct": false,
+        "why": "A note is a claim; the check is the evidence."
+      },
+      {
+        "text": "A new nmap scan showing the same banner",
+        "correct": false,
+        "why": "The banner does not change when Ubuntu patches nginx."
+      },
+      {
+        "text": "The same check that found it now saying fixed",
+        "correct": true,
+        "why": "Right: measured the way it was found."
+      },
+      {
+        "text": "A lower CVSS score in the feed",
+        "correct": false,
+        "why": "Scores describe the flaw and do not move when you patch."
+      }
+    ]
+  }
+]

@@ -1,0 +1,675 @@
+[
+  {
+    "id": "ex-1xk74n1v",
+    "version": 1,
+    "section": "beyond-the-file",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What question does an EDR ask that an antivirus does not?",
+    "hint": "One is about a file.",
+    "choices": [
+      {
+        "text": "Whether a file on disk matches a known signature of malware",
+        "correct": false,
+        "why": "That is the antivirus's own question."
+      },
+      {
+        "text": "Whether what the machine does fits its job",
+        "correct": true,
+        "why": "Right: behaviour, judged against what the machine is for."
+      },
+      {
+        "text": "Whether the machine's packages are all at their latest versions",
+        "correct": false,
+        "why": "That is vulnerability management, lesson 16."
+      },
+      {
+        "text": "Whether a user's password is strong enough",
+        "correct": false,
+        "why": "No part of EDR judges passwords."
+      }
+    ]
+  },
+  {
+    "id": "ex-t4rfh93m",
+    "version": 1,
+    "section": "beyond-the-file",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the parts of an EDR in the order they work after something happens on a machine.",
+    "hint": "The name lists most of them.",
+    "items": [
+      "the sensor records the event as telemetry",
+      "a rule matches the telemetry and raises an alert",
+      "a person reads the alert",
+      "the machine is acted on: evidence, stop, isolate"
+    ]
+  },
+  {
+    "id": "ex-76h05m54",
+    "version": 1,
+    "section": "beyond-the-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After an alert, which question can an EDR answer and an antivirus that blocked the file cannot?",
+    "hint": "What does the EDR keep?",
+    "choices": [
+      {
+        "text": "Whether the file was malicious",
+        "correct": false,
+        "why": "The antivirus answered that when it blocked it."
+      },
+      {
+        "text": "Which signature matched, and which version of the database had it",
+        "correct": false,
+        "why": "An antivirus logs exactly that."
+      },
+      {
+        "text": "How to remove the file without rebooting",
+        "correct": false,
+        "why": "Removal is the easy part, and both can do it."
+      },
+      {
+        "text": "What started it, and whether the same thing happened on other machines",
+        "correct": true,
+        "why": "Right: kept telemetry with parents, from every machine, answers it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ypxa45b7",
+    "version": 1,
+    "section": "telemetry",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside web, `sudo auditctl -l` answers `Operation not permitted` although auditd is installed. Why?",
+    "hint": "Whose audit trail is it?",
+    "choices": [
+      {
+        "text": "The kernel keeps one audit trail for the whole computer and never hands a container a piece",
+        "correct": true,
+        "why": "Right. A product that needs it runs on the host, below the containers."
+      },
+      {
+        "text": "sudo is not allowed to run auditctl",
+        "correct": false,
+        "why": "sudo ran it as root; the kernel refused root inside a container."
+      },
+      {
+        "text": "auditd has to be started first",
+        "correct": false,
+        "why": "Starting it fails the same way, which is why build disabled it."
+      },
+      {
+        "text": "The rules file is empty",
+        "correct": false,
+        "why": "An empty list would print \"No rules\", not an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-wc427pga",
+    "version": 1,
+    "section": "telemetry",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A process calls itself `[kworker/0:1]` in its arguments. Which field of the sensor's record shows what it really is?",
+    "hint": "Who writes each field?",
+    "choices": [
+      {
+        "text": "cmd, because it holds the full command line the process was started with",
+        "correct": false,
+        "why": "A process can rewrite its own arguments, so cmd says what it wants."
+      },
+      {
+        "text": "user, since kernel threads run as root",
+        "correct": false,
+        "why": "Any root process would pass that test."
+      },
+      {
+        "text": "ppid, because a real kernel worker has parent 2",
+        "correct": false,
+        "why": "A useful hint, and still not what the program is."
+      },
+      {
+        "text": "exe",
+        "correct": true,
+        "why": "Right: the kernel's link to the program file, which the process cannot change."
+      }
+    ]
+  },
+  {
+    "id": "ex-jzt4c9mv",
+    "version": 1,
+    "section": "telemetry",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each field of the sensor's record to the question it answers.",
+    "pairs": [
+      {
+        "left": "ppid",
+        "right": "which process started this one"
+      },
+      {
+        "left": "user",
+        "right": "which account it runs as"
+      },
+      {
+        "left": "exe",
+        "right": "which program file is being run"
+      },
+      {
+        "left": "host",
+        "right": "which machine it happened on"
+      }
+    ],
+    "right_distractors": [
+      "how long the process lived"
+    ]
+  },
+  {
+    "id": "ex-6sgjw4cq",
+    "version": 1,
+    "section": "a-small-sensor",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Twenty runs of /bin/true left no line in sensor.jsonl. What does that say about the sensor?",
+    "hint": "How does it find new processes?",
+    "choices": [
+      {
+        "text": "It ignores programs under /usr/bin on purpose",
+        "correct": false,
+        "why": "No line of it filters by path; sleep from /usr/bin was recorded."
+      },
+      {
+        "text": "It had crashed by then, because /bin/true writes nothing it could read",
+        "correct": false,
+        "why": "The sleep that followed was recorded, so it was running."
+      },
+      {
+        "text": "Programs run by ana are not recorded",
+        "correct": false,
+        "why": "Its first line was ana's sleep 1."
+      },
+      {
+        "text": "It looks every 0.2 s and misses what ends in between",
+        "correct": true,
+        "why": "Right: polling has a gap, and a fast process falls through it."
+      }
+    ]
+  },
+  {
+    "id": "ex-r8mz5wft",
+    "version": 1,
+    "section": "a-small-sensor",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson put sensor.py in /usr/local/sbin, which needs sudo to write?",
+    "choices": [
+      {
+        "text": "Because systemd-run only starts programs from sbin",
+        "correct": false,
+        "why": "systemd-run starts any path it is given."
+      },
+      {
+        "text": "Because Python refuses to run scripts from a home directory",
+        "correct": false,
+        "why": "detect.py runs from ana's home without trouble."
+      },
+      {
+        "text": "So that only root changes what it records",
+        "correct": true,
+        "why": "Right: a sensor anyone can edit records whatever they want."
+      },
+      {
+        "text": "Because files in sbin are kept when the lab is reset",
+        "correct": false,
+        "why": "Every up throws the whole copy away, sbin included."
+      }
+    ]
+  },
+  {
+    "id": "ex-kj0vgya6",
+    "version": 1,
+    "section": "a-small-sensor",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the sensor write one JSON object per line rather than one big JSON document?",
+    "choices": [
+      {
+        "text": "Each line is read, appended and shipped on its own",
+        "correct": true,
+        "why": "Right: jq and log shippers read it a line at a time."
+      },
+      {
+        "text": "Because JSON documents may not be longer than one line",
+        "correct": false,
+        "why": "JSON can span any number of lines."
+      },
+      {
+        "text": "Because Python's json module can only write single lines",
+        "correct": false,
+        "why": "It writes indented documents with indent=."
+      },
+      {
+        "text": "To keep the file small enough to fit in memory on a server",
+        "correct": false,
+        "why": "The format does not change the size much; the reason is how it is read."
+      }
+    ]
+  },
+  {
+    "id": "ex-mpyr6404",
+    "version": 1,
+    "section": "detection-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is written the way this lesson's rules are written?",
+    "hint": "Behaviour, from knowing the machine.",
+    "choices": [
+      {
+        "text": "Alert when nginx's workers start any program",
+        "correct": true,
+        "why": "Right: nginx never needs to, whatever the program is."
+      },
+      {
+        "text": "Alert when a file's SHA-256 is on a list of known malware",
+        "correct": false,
+        "why": "That is a signature, lesson 7's tool."
+      },
+      {
+        "text": "Alert when a process uses more than half of the processor",
+        "correct": false,
+        "why": "That is a performance alarm, and it fires on every busy hour."
+      },
+      {
+        "text": "Alert on every process started as root",
+        "correct": false,
+        "why": "Root starts processes all day; nobody would read those alerts."
+      }
+    ]
+  },
+  {
+    "id": "ex-wjpbvg24",
+    "version": 1,
+    "section": "detection-rules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The alert for /tmp/update has nothing after `under`. What happened?",
+    "hint": "When did the sensor look, and who was the parent then?",
+    "choices": [
+      {
+        "text": "The program hid its parent from /proc",
+        "correct": false,
+        "why": "It is a copy of sleep; it hides nothing."
+      },
+      {
+        "text": "detect.py drops parents for programs in /tmp, to keep the line short",
+        "correct": false,
+        "why": "The rule prints the parents of every match."
+      },
+      {
+        "text": "Its shell ended first, so process 1 had adopted it before the sensor looked",
+        "correct": true,
+        "why": "Right: the chain stops at pid 1, so the list is empty."
+      },
+      {
+        "text": "sudo removes the parent chain of the processes it starts",
+        "correct": false,
+        "why": "The first two alerts show sudo in their chains."
+      }
+    ]
+  },
+  {
+    "id": "ex-58eb5z9r",
+    "version": 1,
+    "section": "detection-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The hunt lists processes 190, 191 and 193 for the portal's account. What was 192 most likely?",
+    "hint": "Read the command the shell ran.",
+    "choices": [
+      {
+        "text": "A process another user started",
+        "correct": false,
+        "why": "Nothing else was running commands on web at that second."
+      },
+      {
+        "text": "A kernel thread, which has no program file",
+        "correct": false,
+        "why": "Kernel threads are not numbered inside the container's process space."
+      },
+      {
+        "text": "The sensor itself restarting after the download",
+        "correct": false,
+        "why": "It ran without a break: the lines on both sides of the gap are its own."
+      },
+      {
+        "text": "The cp, too quick for the sensor",
+        "correct": true,
+        "why": "Right: it ran between curl and /tmp/update and ended between two looks."
+      }
+    ]
+  },
+  {
+    "id": "ex-p4sywhz3",
+    "version": 1,
+    "section": "response",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the response to the /tmp/update alert in the order the lesson does it.",
+    "hint": "The instinct is to do the second one first.",
+    "items": [
+      "hash /proc/<pid>/exe and read its environment",
+      "stop the process",
+      "load isolate.nft",
+      "restore the machine to a known-good state"
+    ],
+    "trap": "Killing first destroys the one thing that could say what the process was."
+  },
+  {
+    "id": "ex-v4z67hw1",
+    "version": 1,
+    "section": "response",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why hash /proc/<pid>/exe rather than /tmp/update?",
+    "choices": [
+      {
+        "text": "Because /tmp is not readable by root",
+        "correct": false,
+        "why": "Root reads /tmp like anything else."
+      },
+      {
+        "text": "It is the program actually running, even if the file is deleted or replaced",
+        "correct": true,
+        "why": "Right: the path can change under you; the running image cannot."
+      },
+      {
+        "text": "Because sha256sum cannot read files in /tmp",
+        "correct": false,
+        "why": "It reads any file it has permission for."
+      },
+      {
+        "text": "Because the two give different hashes",
+        "correct": false,
+        "why": "While nothing has changed, they give the same one."
+      }
+    ]
+  },
+  {
+    "id": "ex-am0rrdwa",
+    "version": 1,
+    "section": "response",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why isolate a machine rather than switch it off?",
+    "choices": [
+      {
+        "text": "Memory, processes and logs survive for the responders",
+        "correct": true,
+        "why": "Right: a power cut destroys exactly what the examination needs."
+      },
+      {
+        "text": "Switching it off would break the portal for the firm's clients",
+        "correct": false,
+        "why": "Isolation breaks the portal for them as well."
+      },
+      {
+        "text": "A container cannot be switched off",
+        "correct": false,
+        "why": "hostlab.sh down switches them all off."
+      },
+      {
+        "text": "Isolation also removes whatever was on the machine",
+        "correct": false,
+        "why": "It removes nothing; it only cuts the network."
+      }
+    ]
+  },
+  {
+    "id": "ex-bbhqv6ay",
+    "version": 1,
+    "section": "response",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "isolate.nft drops everything in and out except loopback and one service with one machine. Which TCP port is that service on?",
+    "hint": "The responder logs in from admin.",
+    "value": 22,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-91dwzpat",
+    "version": 1,
+    "section": "response",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "While isolate.nft was loaded, your shell on web kept working. Why?",
+    "hint": "How does hostlab.sh reach a machine?",
+    "choices": [
+      {
+        "text": "Because the table exempts the connections that were already open",
+        "correct": false,
+        "why": "Nothing in it mentions connection state."
+      },
+      {
+        "text": "Because nftables leaves root's own traffic on the machine unfiltered",
+        "correct": false,
+        "why": "It filters root's packets like anyone's."
+      },
+      {
+        "text": "The shell enters the machine directly, with no network involved at all",
+        "correct": true,
+        "why": "Right: much like an agent's own channel to its console."
+      },
+      {
+        "text": "Because the lab computer's address is allowed by the second rule",
+        "correct": false,
+        "why": "Only admin's address is allowed, and only for SSH."
+      }
+    ]
+  },
+  {
+    "id": "ex-2tyqk7y7",
+    "version": 1,
+    "section": "what-real-edr-adds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does a product's sensor avoid the gap that let /bin/true through?",
+    "hint": "Looking versus being told.",
+    "choices": [
+      {
+        "text": "The kernel calls it, through eBPF or callbacks, when a program starts",
+        "correct": true,
+        "why": "Right: nothing is too short, and the parents are still alive."
+      },
+      {
+        "text": "By polling /proc a thousand times a second instead of five",
+        "correct": false,
+        "why": "Faster polling narrows the gap and never closes it."
+      },
+      {
+        "text": "By scanning every file on the disk once an hour",
+        "correct": false,
+        "why": "That finds files, not processes that have already ended."
+      },
+      {
+        "text": "By keeping a copy of every program that is installed",
+        "correct": false,
+        "why": "A copy says nothing about what ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-0qev4nvq",
+    "version": 1,
+    "section": "what-real-edr-adds",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each weakness of the lesson's EDR to what a product does about it.",
+    "pairs": [
+      {
+        "left": "polling misses short processes",
+        "right": "kernel events: eBPF, callbacks, ETW"
+      },
+      {
+        "left": "root can stop the sensor",
+        "right": "tamper protection, and silence as an alert"
+      },
+      {
+        "left": "telemetry kept on the machine itself",
+        "right": "records sent off the machine as they are made"
+      },
+      {
+        "left": "isolation by hand",
+        "right": "a button in the console, or an automatic action"
+      }
+    ]
+  },
+  {
+    "id": "ex-htft52cf",
+    "version": 1,
+    "section": "what-real-edr-adds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A firm buys an EDR and switches every rule on. Two months later nobody reads the alerts. What was skipped?",
+    "choices": [
+      {
+        "text": "Buying more licences, so every machine reports",
+        "correct": false,
+        "why": "More machines would mean more unread alerts."
+      },
+      {
+        "text": "Turning on automatic isolation for every rule",
+        "correct": false,
+        "why": "Isolating on rules that fire on normal work would stop the business."
+      },
+      {
+        "text": "Tuning",
+        "correct": true,
+        "why": "Right: deciding, alert by alert, what is this firm's normal."
+      },
+      {
+        "text": "Uninstalling the antivirus, which competes with the EDR for events",
+        "correct": false,
+        "why": "The two run together on most machines; that is not why alerts go unread."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwe4rba7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A company runs forty containers on one host and wants process telemetry from all of them. Where should the sensor run?",
+    "hint": "Where are the kernel's events?",
+    "choices": [
+      {
+        "text": "Inside each container, one sensor per container",
+        "correct": false,
+        "why": "Each would see what this lesson's sensor saw, without the kernel's events."
+      },
+      {
+        "text": "On a separate machine that scans the containers over the network",
+        "correct": false,
+        "why": "A scan sees ports, never processes."
+      },
+      {
+        "text": "On the host, below the containers, where the kernel is",
+        "correct": true,
+        "why": "Right: one sensor there sees every container's processes as they start."
+      },
+      {
+        "text": "In the image, so every new container starts with one",
+        "correct": false,
+        "why": "Still one sensor per container, with the same blind spots."
+      }
+    ]
+  },
+  {
+    "id": "ex-vtcfwgaz",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these would make good rules for web's portal account? Choose all that apply.",
+    "hint": "What does the portal's job never need?",
+    "choices": [
+      {
+        "text": "portal starts ssh or scp",
+        "correct": true,
+        "why": "The portal never connects to other machines."
+      },
+      {
+        "text": "portal runs python3",
+        "correct": false,
+        "why": "That is the portal itself, all day."
+      },
+      {
+        "text": "portal starts a program from /dev/shm",
+        "correct": true,
+        "why": "Nothing legitimate runs from there."
+      },
+      {
+        "text": "nginx's workers read files in /var/www",
+        "correct": false,
+        "why": "Serving files is nginx's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-xnr27q36",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Cutting a machine off the network except for the responders, while keeping it running, is called ___.",
+    "blanks": [
+      {
+        "accept": [
+          "isolation",
+          "isolating"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2rk9cwb9",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The sensor sleeps 0.2 s between looks. How many times a second does it look?",
+    "value": 5,
+    "tolerance": 0,
+    "unit": ""
+  }
+]

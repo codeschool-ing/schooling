@@ -1,0 +1,380 @@
+{
+  "ex-p0thm431": {
+    "prompt": "A aula 1 já removeu o servidor FTP. O que um firewall que nega por padrão acrescenta por cima?",
+    "choices": [
+      {
+        "text": "Nada: sem o listener o filtro é redundante",
+        "why": "Cobre o listener que ninguém instalou ainda."
+      },
+      {
+        "text": "Proteção contra o listener de amanhã",
+        "why": "Isso. Um serviço novo fica inalcançável até alguém permiti-lo."
+      },
+      {
+        "text": "Uma correção para qualquer falha nos serviços que ela deixa passar",
+        "why": "Serviços permitidos são alcançáveis de propósito, falhas incluídas."
+      },
+      {
+        "text": "Cifragem para o tráfego HTTP que o portal serve",
+        "why": "Um filtro decide, não cifra."
+      }
+    ]
+  },
+  "ex-af508ja8": {
+    "prompt": "O que negar por padrão quer dizer para um conjunto de regras?",
+    "choices": [
+      {
+        "text": "Toda regra dele termina em drop",
+        "why": "As regras de cima são permissões; só o fim descarta."
+      },
+      {
+        "text": "Nega os ataques conhecidos e aceita o resto",
+        "why": "Isso é o contrário, permitir por padrão."
+      },
+      {
+        "text": "O que nenhuma regra permite é descartado",
+        "why": "Isso."
+      },
+      {
+        "text": "Ninguém pode mudá-lo sem a aprovação de um segundo administrador",
+        "why": "Isso é controle de mudanças, não a forma do conjunto de regras."
+      }
+    ]
+  },
+  "ex-r5wb7dm9": {
+    "prompt": "Por que o conjunto de regras aceita `ct state established,related` perto do topo?",
+    "choices": [
+      {
+        "text": "Para respostas a conexões permitidas não precisarem de regra própria",
+        "why": "Isso. Cada permissão é escrita uma vez."
+      },
+      {
+        "text": "Para deixar administradores entrarem mesmo sem o SSH na lista",
+        "why": "Uma conexão SSH nova não está estabelecida; ainda precisa da regra."
+      },
+      {
+        "text": "Porque o nftables recusa uma policy drop sem ela",
+        "why": "Aceita; as respostas só seriam descartadas."
+      },
+      {
+        "text": "Para acelerar o tráfego de loopback entre o nginx e o portal",
+        "why": "O loopback tem a própria regra."
+      }
+    ]
+  },
+  "ex-m1rqq55k": {
+    "prompt": "O que quebraria no web se faltasse a regra `iif \"lo\" accept`?",
+    "choices": [
+      {
+        "text": "O ping a partir do admin",
+        "why": "O ping tem regra própria e vem pela eth0."
+      },
+      {
+        "text": "O nginx alcançar o portal em 127.0.0.1:8080",
+        "why": "Isso. Essa conversa nunca sai da máquina."
+      },
+      {
+        "text": "O SSH a partir do jump, que chega pela interface de loopback",
+        "why": "Os pacotes do jump chegam pela eth0 como os de qualquer máquina."
+      },
+      {
+        "text": "Nada, já que tráfego de loopback nunca passa pelo gancho input",
+        "why": "Passa pelo input, e é por isso que a regra existe."
+      }
+    ]
+  },
+  "ex-ygsw1pza": {
+    "prompt": "O que `nft -c -f nftables.conf` faz?",
+    "choices": [
+      {
+        "text": "Carrega as regras e guarda uma cópia das antigas",
+        "why": "-c não instala nada."
+      },
+      {
+        "text": "Confere o arquivo sem instalá-lo",
+        "why": "Isso."
+      },
+      {
+        "text": "Conta os pacotes que cada regra casaria",
+        "why": "Contadores contam depois de carregar."
+      },
+      {
+        "text": "Converte o arquivo para a sintaxe do iptables",
+        "why": "Isso é trabalho do iptables-translate."
+      }
+    ]
+  },
+  "ex-yhwdgn13": {
+    "prompt": "Depois de carregar o conjunto de regras, o `ss` no web ainda conta seis listeners. O que isso quer dizer?",
+    "choices": [
+      {
+        "text": "O conjunto de regras não carregou, porque senão o ss contaria dois",
+        "why": "O ss mostra sockets, em que o firewall não toca."
+      },
+      {
+        "text": "O firewall só vale depois de os serviços reiniciarem",
+        "why": "Valeu na hora, como o desk viu."
+      },
+      {
+        "text": "Os serviços continuam rodando, só inalcançáveis",
+        "why": "Isso. Por isso removê-los continua importando."
+      },
+      {
+        "text": "Seis máquinas estão conectadas ao web agora",
+        "why": "-l lista sockets escutando, não conexões."
+      }
+    ]
+  },
+  "ex-z94mee6k": {
+    "prompt": "Com `counter reject`, o nc informa Connection refused mas o nmap continua dizendo filtered. Por quê?",
+    "choices": [
+      {
+        "text": "O nmap varreu antes de a regra de reject ser carregada",
+        "why": "Rodou depois, no mesmo bloco."
+      },
+      {
+        "text": "O ICMP de inalcançável parece ao nmap a resposta de um firewall",
+        "why": "Isso. Um reset de TCP é o que o nmap chama de closed."
+      },
+      {
+        "text": "O nc e o nmap usam portas diferentes para o mesmo serviço",
+        "why": "Os dois perguntaram a porta 21."
+      },
+      {
+        "text": "O reject descarta pacotes do nmap mas responde ao nc",
+        "why": "A regra não distingue um programa cliente de outro."
+      }
+    ]
+  },
+  "ex-hbyezmvs": {
+    "prompt": "Com a policy drop, quantos segundos o `nc -zv -w3 web 21` levou antes de desistir?"
+  },
+  "ex-17kabzrf": {
+    "prompt": "Depois de `systemctl restart nftables`, a regra de reject carregada à mão antes sumiu. Por quê?",
+    "choices": [
+      {
+        "text": "Reiniciar o serviço apaga todas as regras e não carrega nada",
+        "why": "Ele carregou o arquivo: a policy drop está lá."
+      },
+      {
+        "text": "O serviço carrega o arquivo, que nunca a teve",
+        "why": "Isso. O que está no arquivo é o que roda depois de um reboot."
+      },
+      {
+        "text": "Regras de reject expiram depois de alguns minutos",
+        "why": "Regras não expiram."
+      },
+      {
+        "text": "O ufw a removeu quando o serviço reiniciou",
+        "why": "O ufw está inativo no web."
+      }
+    ]
+  },
+  "ex-tygmp9wn": {
+    "prompt": "Um colega liga o ufw no web enquanto o nftables.service também carrega o /etc/nftables.conf. Qual é o risco?",
+    "choices": [
+      {
+        "text": "Nenhum: o ufw só escreve regras para IPv6",
+        "why": "Escreve regras para os dois."
+      },
+      {
+        "text": "O kernel se recusa a carregar dois conjuntos e fica com o primeiro",
+        "why": "O kernel aceita os dois; eles interagem."
+      },
+      {
+        "text": "Duas ferramentas que se acham donas do conjunto de regras",
+        "why": "Isso. Uma desfaz a outra; o nft list ruleset mostra o que é real."
+      },
+      {
+        "text": "O ufw bloqueia a porta 80 por padrão e o portal sai do ar",
+        "why": "O risco não é uma porta; são dois donos."
+      }
+    ]
+  },
+  "ex-c53y0k3e": {
+    "prompt": "Por que tirar o driver usb-storage não barra um dispositivo que se anuncia como teclado?",
+    "choices": [
+      {
+        "text": "Porque teclados usam Bluetooth, não USB",
+        "why": "Muitos são USB; este é."
+      },
+      {
+        "text": "A digitação passa pela camada de entrada, não pela de armazenamento",
+        "why": "Isso. Só uma lista de dispositivos decide pela classe."
+      },
+      {
+        "text": "Porque o driver é recarregado a cada tecla pressionada",
+        "why": "Drivers não são recarregados a cada tecla."
+      },
+      {
+        "text": "Porque o teclado copia arquivos mais rápido que um pendrive",
+        "why": "Um teclado não copia arquivos; digita."
+      }
+    ]
+  },
+  "ex-z5agw8sc": {
+    "prompt": "Armazenamento removível só de leitura barra qual dos três riscos?",
+    "choices": [
+      {
+        "text": "Malware chegando num pendrive",
+        "why": "Ler um arquivo é como ele chega."
+      },
+      {
+        "text": "Dados saindo num pendrive",
+        "why": "Isso."
+      },
+      {
+        "text": "Um dispositivo se passando por teclado",
+        "why": "Não precisa de armazenamento nenhum."
+      },
+      {
+        "text": "Os três, porque nada pode ser gravado na máquina",
+        "why": "Só leitura vale para o pendrive, e barra uma coisa."
+      }
+    ]
+  },
+  "ex-22y3t39y": {
+    "prompt": "Por que a política do USBGuard não foi montada no laboratório?",
+    "choices": [
+      {
+        "text": "O USBGuard não está no repositório do Ubuntu",
+        "why": "Está instalado em todas as máquinas do laboratório."
+      },
+      {
+        "text": "Precisa de uma licença que o curso não pede",
+        "why": "É software livre."
+      },
+      {
+        "text": "Um contêiner não tem barramento USB para ler",
+        "why": "Isso. /sys/bus/usb não existe dentro dele."
+      },
+      {
+        "text": "O USBGuard só roda em edições desktop do Ubuntu",
+        "why": "Roda em servidores também; o problema é o contêiner."
+      }
+    ]
+  },
+  "ex-tzv86xwg": {
+    "prompt": "O que `install usb-storage /bin/false` acrescenta a `blacklist usb-storage`?",
+    "choices": [
+      {
+        "text": "Até um modprobe manual do módulo falha",
+        "why": "Isso. blacklist só impede o carregamento automático."
+      },
+      {
+        "text": "Descarrega o módulo se ele já estiver carregado",
+        "why": "Um módulo carregado fica até ser removido ou um reboot."
+      },
+      {
+        "text": "Bloqueia teclados além de armazenamento",
+        "why": "Só mexe no usb-storage."
+      },
+      {
+        "text": "Registra todo pendrive que é ligado",
+        "why": "Nada nele registra."
+      }
+    ]
+  },
+  "ex-5ky02jjd": {
+    "prompt": "Um dispositivo com o id de fabricante e de produto de um pendrive permitido também apresenta uma interface de classe 03. Contra uma regra com `with-interface 08:06:50`, o que acontece?",
+    "choices": [
+      {
+        "text": "É permitido, porque os ids batem",
+        "why": "As interfaces também precisam bater."
+      },
+      {
+        "text": "Não casa, e cai no block",
+        "why": "Isso. A interface extra de teclado é o que o entrega."
+      },
+      {
+        "text": "Só a interface de armazenamento é permitida, e a parte de teclado funciona mesmo assim",
+        "why": "Uma regra casa com um dispositivo, não com metade dele."
+      },
+      {
+        "text": "O USBGuard pergunta ao usuário se deve permitir",
+        "why": "A lista de regras decide; ninguém é consultado."
+      }
+    ]
+  },
+  "ex-q2wzebay": {
+    "prompt": "Ponha em ordem como esta aula pôs um firewall no web.",
+    "items": [
+      "escrever o conjunto de regras num arquivo no home",
+      "conferi-lo com nft -c",
+      "carregá-lo e testar a partir do desk e do admin",
+      "copiá-lo para /etc/nftables.conf e habilitar o serviço",
+      "reiniciar o serviço e conferir de novo"
+    ]
+  },
+  "ex-fj7va6pm": {
+    "prompt": "Associe o que o desk viu ao que o web fez.",
+    "pairs": [
+      {
+        "left": "succeeded",
+        "right": "uma regra aceitou a conexão"
+      },
+      {
+        "left": "timed out",
+        "right": "a policy descartou"
+      },
+      {
+        "left": "Connection refused",
+        "right": "a última regra recusou"
+      }
+    ],
+    "right_distractors": [
+      "a porta estava com limite de taxa"
+    ]
+  },
+  "ex-pt97j463": {
+    "prompt": "Associe cada controle ao risco USB que ele barra melhor.",
+    "pairs": [
+      {
+        "left": "sem driver usb-storage",
+        "right": "arquivos copiados para um pendrive"
+      },
+      {
+        "left": "uma lista de dispositivos com interfaces",
+        "right": "um pendrive que também digita"
+      },
+      {
+        "left": "exame na inserção",
+        "right": "malware conhecido num pendrive"
+      }
+    ]
+  },
+  "ex-awcxdafc": {
+    "prompt": "Quantas regras `accept` o conjunto de regras do portal tem?"
+  },
+  "ex-12a0crp0": {
+    "prompt": "Uma chain cuja última palavra é `policy ___` descarta todo pacote que nenhuma regra aceitou.",
+    "blanks": [
+      {
+        "accept": [
+          "drop"
+        ]
+      }
+    ]
+  },
+  "ex-jgke7ymq": {
+    "prompt": "Quais afirmações são verdadeiras sobre o firewall desta aula? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "O SSH a partir do desk é descartado",
+        "why": "Só .30 e .40 podem conectar."
+      },
+      {
+        "text": "Filtra o que o web manda para outras máquinas",
+        "why": "Só entrada; saída é a aula 10."
+      },
+      {
+        "text": "Sobrevive a um reinício do serviço nftables",
+        "why": "O arquivo é carregado de novo."
+      },
+      {
+        "text": "Removeu o servidor FTP do web",
+        "why": "O ss ainda contou seis listeners."
+      }
+    ]
+  }
+}

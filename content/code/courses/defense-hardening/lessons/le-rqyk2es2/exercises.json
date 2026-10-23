@@ -1,0 +1,615 @@
+[
+  {
+    "id": "ex-9g25es44",
+    "version": 1,
+    "section": "host-vs-network",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can no network firewall stop web from reaching SSH on desk in this lab?",
+    "choices": [
+      {
+        "text": "Because SSH traffic is encrypted and cannot be filtered",
+        "correct": false,
+        "why": "A firewall filters by port and address, encrypted or not."
+      },
+      {
+        "text": "The two are on one segment, so the traffic crosses none",
+        "correct": true,
+        "why": "Right: only the two hosts see it."
+      },
+      {
+        "text": "Because desk's SSH server has no password set for the portal account",
+        "correct": false,
+        "why": "Reaching the port has nothing to do with passwords."
+      },
+      {
+        "text": "Because network firewalls only filter traffic to the internet",
+        "correct": false,
+        "why": "They filter between any segments they sit between."
+      }
+    ]
+  },
+  {
+    "id": "ex-34744phh",
+    "version": 1,
+    "section": "host-vs-network",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to why only a host firewall can answer it.",
+    "pairs": [
+      {
+        "left": "which program opened this connection?",
+        "right": "only the machine knows which process owns a socket"
+      },
+      {
+        "left": "may desk talk to web?",
+        "right": "same-segment traffic crosses no network device"
+      },
+      {
+        "left": "what protects a laptop in a café?",
+        "right": "it is outside every network the firm owns"
+      }
+    ],
+    "right_distractors": [
+      "encrypted traffic cannot be read anywhere"
+    ]
+  },
+  {
+    "id": "ex-rnbvcdtr",
+    "version": 1,
+    "section": "host-vs-network",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is it called when an intruder on one compromised machine moves on to the next?",
+    "choices": [
+      {
+        "text": "Privilege escalation",
+        "correct": false,
+        "why": "That is gaining more rights on the same machine."
+      },
+      {
+        "text": "Exfiltration",
+        "correct": false,
+        "why": "That is data leaving."
+      },
+      {
+        "text": "Lateral movement",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Persistence",
+        "correct": false,
+        "why": "That is staying on a machine across reboots."
+      }
+    ]
+  },
+  {
+    "id": "ex-5d69qpjb",
+    "version": 1,
+    "section": "per-user-rules",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `meta skuid \"portal\"` match?",
+    "choices": [
+      {
+        "text": "Packets addressed to the portal's port",
+        "correct": false,
+        "why": "Ports are dport; skuid is about the sender's account."
+      },
+      {
+        "text": "Packets whose payload contains the word portal",
+        "correct": false,
+        "why": "nftables does not read payloads for words."
+      },
+      {
+        "text": "Every packet the portal service receives from nginx",
+        "correct": false,
+        "why": "It matches outgoing packets by the socket's owner."
+      },
+      {
+        "text": "Packets from sockets the portal account owns",
+        "correct": true,
+        "why": "Right: a rule about the account is a rule about the program."
+      }
+    ]
+  },
+  {
+    "id": "ex-c6163zew",
+    "version": 1,
+    "section": "per-user-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the portal rule use reject rather than drop?",
+    "choices": [
+      {
+        "text": "On its own machine there is nobody to hide from, and an answer saves a timeout",
+        "correct": true,
+        "why": "Right: silence protects from strangers, not from local programs."
+      },
+      {
+        "text": "Because drop does not work on outgoing packets",
+        "correct": false,
+        "why": "web_egress drops outgoing packets."
+      },
+      {
+        "text": "To tell desk that the portal tried",
+        "correct": false,
+        "why": "The packet never reaches desk."
+      },
+      {
+        "text": "Because reject is counted and drop is not",
+        "correct": false,
+        "why": "Both can carry a counter."
+      }
+    ]
+  },
+  {
+    "id": "ex-cehaycvb",
+    "version": 1,
+    "section": "per-user-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two services run under the same account. What does that do to a rule written per account?",
+    "choices": [
+      {
+        "text": "Nothing, because nftables tells them apart by process",
+        "correct": false,
+        "why": "skuid sees the account only."
+      },
+      {
+        "text": "Both share it",
+        "correct": true,
+        "why": "Right: one more reason for an account per service."
+      },
+      {
+        "text": "The rule applies to whichever service started first",
+        "correct": false,
+        "why": "It applies to every socket of the account."
+      },
+      {
+        "text": "The rule fails to load until one of them is moved",
+        "correct": false,
+        "why": "It loads; it just cannot tell the two apart."
+      }
+    ]
+  },
+  {
+    "id": "ex-dyzadb98",
+    "version": 1,
+    "section": "per-service-rules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The probe service with IPAddressDeny=any reached desk. What should you conclude?",
+    "hint": "Read what systemd needs to enforce it.",
+    "choices": [
+      {
+        "text": "That the drop-in file has a typo",
+        "correct": false,
+        "why": "systemctl show printed both settings, resolved."
+      },
+      {
+        "text": "That the setting is not enforced here, whatever it shows",
+        "correct": true,
+        "why": "Right: the BPF programs are not attached inside these containers."
+      },
+      {
+        "text": "That localhost includes every address on the segment",
+        "correct": false,
+        "why": "localhost is 127.0.0.0/8 and ::1, as shown."
+      },
+      {
+        "text": "That desk's SSH ignores the rules of other machines",
+        "correct": false,
+        "why": "The rule is on the sender, web."
+      }
+    ]
+  },
+  {
+    "id": "ex-1jqchvtm",
+    "version": 1,
+    "section": "per-service-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `nft add rule ... socket cgroupv2 ... \"system.slice/probe.service\"` fail the first time?",
+    "choices": [
+      {
+        "text": "Because cgroupv2 rules need priority -10",
+        "correct": false,
+        "why": "Priority has nothing to do with it."
+      },
+      {
+        "text": "Because only root may name a service",
+        "correct": false,
+        "why": "It ran with sudo."
+      },
+      {
+        "text": "No such group existed yet: the service was not running",
+        "correct": true,
+        "why": "Right: nftables looks the group up when the rule is loaded."
+      },
+      {
+        "text": "Because the table portal_out had not been created",
+        "correct": false,
+        "why": "It had; the error points at the path."
+      }
+    ]
+  },
+  {
+    "id": "ex-ftt3rs0c",
+    "version": 1,
+    "section": "per-service-rules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the probe ended, the listing showed a number where its path had been. What does that mean for a service that restarts?",
+    "choices": [
+      {
+        "text": "The rule must be reloaded after each start",
+        "correct": true,
+        "why": "Right: a restart makes a new group, and the old number matches nothing."
+      },
+      {
+        "text": "Nothing: nftables follows the service across restarts by its name",
+        "correct": false,
+        "why": "It holds the group's identity, which changes."
+      },
+      {
+        "text": "The rule now applies to every service on the machine",
+        "correct": false,
+        "why": "It matches one old group, which no longer exists."
+      },
+      {
+        "text": "The kernel deletes the rule along with the group",
+        "correct": false,
+        "why": "The rule stayed, printed with a number."
+      }
+    ]
+  },
+  {
+    "id": "ex-b7x5ygsj",
+    "version": 1,
+    "section": "outbound-matters",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What are ufw's defaults on Ubuntu?",
+    "choices": [
+      {
+        "text": "Deny incoming, deny outgoing",
+        "correct": false,
+        "why": "Outgoing is allowed by default."
+      },
+      {
+        "text": "Deny incoming, allow outgoing",
+        "correct": true,
+        "why": "Right, and the second half is the one a server should change."
+      },
+      {
+        "text": "Allow incoming, deny outgoing",
+        "correct": false,
+        "why": "The other way round."
+      },
+      {
+        "text": "Allow everything until a rule is added",
+        "correct": false,
+        "why": "Incoming is denied by default once ufw is enabled."
+      }
+    ]
+  },
+  {
+    "id": "ex-zhb8v46t",
+    "version": 1,
+    "section": "outbound-matters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is an outbound allow-list easy on a server and hard on a laptop?",
+    "choices": [
+      {
+        "text": "Servers have more processor power to filter with",
+        "correct": false,
+        "why": "Filtering costs almost nothing either way."
+      },
+      {
+        "text": "Laptops cannot run nftables",
+        "correct": false,
+        "why": "Any Linux laptop can."
+      },
+      {
+        "text": "A server talks to a few known places; a person browses anywhere",
+        "correct": true,
+        "why": "Right: the server's list can be written down."
+      },
+      {
+        "text": "The law forbids restricting a person's browsing",
+        "correct": false,
+        "why": "No such rule; firms restrict it routinely."
+      }
+    ]
+  },
+  {
+    "id": "ex-qdmscfpt",
+    "version": 1,
+    "section": "outbound-matters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With web_egress loaded, why can desk still log into web over SSH?",
+    "choices": [
+      {
+        "text": "Because SSH uses UDP port 53",
+        "correct": false,
+        "why": "SSH is TCP 22."
+      },
+      {
+        "text": "web only replies to a conversation desk started",
+        "correct": true,
+        "why": "Right: ct state established lets the replies out."
+      },
+      {
+        "text": "Because outbound rules do not apply to sshd",
+        "correct": false,
+        "why": "They apply to every program on web."
+      },
+      {
+        "text": "Because the counter rule accepts what it counts",
+        "correct": false,
+        "why": "It counts and continues; the policy drops."
+      }
+    ]
+  },
+  {
+    "id": "ex-ds3vespe",
+    "version": 1,
+    "section": "outbound-matters",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many rules in web_egress let traffic out, before the counter?",
+    "value": 3,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-atjz6zff",
+    "version": 1,
+    "section": "logging-and-review",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A drop rule's counter is still zero after six months. What is the right reaction?",
+    "choices": [
+      {
+        "text": "Delete it at once: it does nothing",
+        "correct": false,
+        "why": "It may guard against something rare; ask first."
+      },
+      {
+        "text": "Nothing: zero means the rule works perfectly",
+        "correct": false,
+        "why": "Zero may also mean it no longer matches what it was written for."
+      },
+      {
+        "text": "Ask why, against the rule's comment and owner",
+        "correct": true,
+        "why": "Right: either it guards against something that never happens, or it is in the wrong place."
+      },
+      {
+        "text": "Turn it into a log rule so it writes something",
+        "correct": false,
+        "why": "A log of nothing is still nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-2n2erd6s",
+    "version": 1,
+    "section": "logging-and-review",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of finding which rule refused a connection in order.",
+    "items": [
+      "insert meta nftrace set 1 at the top of the chain",
+      "start nft monitor trace in a second shell",
+      "try the refused connection",
+      "read the verdict at the end of the trace",
+      "delete the marking rule"
+    ]
+  },
+  {
+    "id": "ex-dk2yzq7h",
+    "version": 1,
+    "section": "logging-and-review",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `log` rule on web matches packets, yet nothing appears in web's journal. Why?",
+    "choices": [
+      {
+        "text": "Because log needs a counter in the same rule",
+        "correct": false,
+        "why": "They are independent."
+      },
+      {
+        "text": "The kernel's log belongs to the host, not to the container",
+        "correct": true,
+        "why": "Right: the lines go to your computer's kernel log."
+      },
+      {
+        "text": "Because nftables only logs dropped packets",
+        "correct": false,
+        "why": "A log statement logs whatever its rule matches."
+      },
+      {
+        "text": "Because journald discards firewall messages by default",
+        "correct": false,
+        "why": "On a real server journalctl -k shows them."
+      }
+    ]
+  },
+  {
+    "id": "ex-tbsmb46s",
+    "version": 1,
+    "section": "windows-firewall",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Windows laptop joins a café's Wi-Fi that nobody has classified. Which profile applies?",
+    "choices": [
+      {
+        "text": "Domain",
+        "correct": false,
+        "why": "Only where a domain controller is reachable."
+      },
+      {
+        "text": "Private",
+        "correct": false,
+        "why": "Only for networks the user marked as trusted."
+      },
+      {
+        "text": "Public",
+        "correct": true,
+        "why": "Right: the default for an unclassified network."
+      },
+      {
+        "text": "None, until the user picks one",
+        "correct": false,
+        "why": "Windows applies Public meanwhile."
+      }
+    ]
+  },
+  {
+    "id": "ex-2c3w3daf",
+    "version": 1,
+    "section": "windows-firewall",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In Windows Defender Firewall, a block rule and an allow rule match the same traffic. Which wins?",
+    "choices": [
+      {
+        "text": "The allow rule, if it was created later",
+        "correct": false,
+        "why": "Creation order does not decide."
+      },
+      {
+        "text": "The block rule",
+        "correct": true,
+        "why": "Right: so an exception narrows the block instead."
+      },
+      {
+        "text": "Whichever rule names a program rather than a port",
+        "correct": false,
+        "why": "Specificity does not override the block."
+      },
+      {
+        "text": "Neither: Windows refuses to load conflicting rules",
+        "correct": false,
+        "why": "Both load; the block takes precedence."
+      }
+    ]
+  },
+  {
+    "id": "ex-8cmh5k2q",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new service, reports, runs under its own account and must reach only the database at 192.168.60.40. Which control from this lesson fits it best on this lab's containers?",
+    "hint": "Which ones were shown to refuse here?",
+    "choices": [
+      {
+        "text": "IPAddressAllow in the unit's drop-in",
+        "correct": false,
+        "why": "Shown here to do nothing inside the containers."
+      },
+      {
+        "text": "A socket cgroupv2 rule loaded once at boot",
+        "correct": false,
+        "why": "It needs reloading on every start of the service."
+      },
+      {
+        "text": "A meta skuid rule for its account",
+        "correct": true,
+        "why": "Right: shown refusing, and stable across restarts."
+      },
+      {
+        "text": "A rule on the network firewall between segments",
+        "correct": false,
+        "why": "The traffic between machines here crosses none."
+      }
+    ]
+  },
+  {
+    "id": "ex-bvmwq0zs",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these on web deserve a look? Choose all that apply.",
+    "choices": [
+      {
+        "text": "The portal_out reject counter climbing",
+        "correct": true,
+        "why": "The portal is trying to reach somewhere."
+      },
+      {
+        "text": "web_egress's counter climbing at three in the morning",
+        "correct": true,
+        "why": "Something on web tried a way out."
+      },
+      {
+        "text": "The established,related rule matching all day",
+        "correct": false,
+        "why": "That is web replying to its clients."
+      },
+      {
+        "text": "Loopback traffic between nginx and the portal",
+        "correct": false,
+        "why": "That is the portal's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-dfdgfvdh",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Moving from one compromised machine to the next is called ___ movement.",
+    "blanks": [
+      {
+        "accept": [
+          "lateral"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-we2zdwxz",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which TCP port did the portal account fail to reach on desk?",
+    "value": 22,
+    "tolerance": 0,
+    "unit": ""
+  }
+]
