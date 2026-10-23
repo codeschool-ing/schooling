@@ -27,7 +27,7 @@ só, com o teste corrigido dentro. O `GIT_SEQUENCE_EDITOR=true` na frente só es
 gravado por um script: no teclado, o rebase abre um editor com o plano, com o fixup já no lugar, e você
 salva e fecha.
 
-Repare que o hash mudou, de `cf70c92` para `73606e4`. **Rebase reescreve commits**, e isso dá a única
+Repare que o hash mudou, de `d853271` para `cab5367`. **Rebase reescreve commits**, e isso dá a única
 regra da arrumação: **só reescreva o que ninguém mais tem.** Commits na sua máquina que você não enviou são
 seus para arrumar. Commits já enviados para um branch que outra pessoa pode ter baixado não são, e o `main`
 de um projeto de portfólio no GitHub é um desses, porque quem avalia pode ter clonado. Arrume na sua
