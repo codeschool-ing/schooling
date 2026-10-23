@@ -1,0 +1,2144 @@
+{
+  "ex-g6yhnwcd": {
+    "prompt": "Aula 1. Um site registra `GET /` para a página inicial, e `/about` também responde com a página inicial. Completo, o padrão que responde `/` e nada abaixo dele é `GET /___`.",
+    "hint": "Um padrão que termina em barra quer dizer a subárvore inteira.",
+    "blanks": [
+      {
+        "accept": [
+          "{$}"
+        ]
+      }
+    ]
+  },
+  "ex-sknwymc3": {
+    "prompt": "Aula 1. Só `GET /events` está registrado, e o handler escreve uma lista de doze bytes. Um cliente manda `HEAD /events`. O que acontece?",
+    "hint": "Um padrão `GET` também responde `HEAD`.",
+    "choices": [
+      {
+        "text": "200, `Content-Length: 12`, sem corpo",
+        "why": "O handler roda; o servidor conta os bytes que ele escreveu e não manda nenhum, que é o que `HEAD` significa."
+      },
+      {
+        "text": "405, com `Allow: GET`",
+        "why": "O `HEAD` está na lista `Allow` que o mux monta, porque o padrão `GET` o responde."
+      },
+      {
+        "text": "404, já que nenhum padrão nomeia `HEAD`",
+        "why": "O caminho existe, e o padrão `GET` cobre o `HEAD`."
+      },
+      {
+        "text": "O handler é pulado e um 200 vazio é enviado",
+        "why": "O handler roda, sim; é assim que o servidor sabe o tamanho."
+      }
+    ]
+  },
+  "ex-vjqbe6ax": {
+    "prompt": "Aula 1. Um mux tem `GET /events/{id}` e `GET /files/{path...}`. Qual destas requisições é respondida com 404?",
+    "hint": "Um curinga pega um segmento, o outro o resto do caminho.",
+    "choices": [
+      {
+        "text": "`/events/42/tickets`",
+        "why": "O `{id}` casa exatamente um segmento, e `42/tickets` são dois."
+      },
+      {
+        "text": "`/files/posters/2026/jazz.png`",
+        "why": "O `{path...}` pega o resto do caminho, barras incluídas."
+      },
+      {
+        "text": "`/events/latest`",
+        "why": "`latest` é um segmento, e o `{id}` o recebe como string."
+      },
+      {
+        "text": "`/files/a`",
+        "why": "Um segmento ainda é o resto do caminho."
+      }
+    ]
+  },
+  "ex-m5q7zvh6": {
+    "prompt": "Aula 1. Um handler passa o `r.Context()` para uma consulta lenta no pgx, e o cliente desliga no meio. O que acontece com a consulta, juntando a aula 1 e a aula 6?",
+    "hint": "O servidor cancela o contexto da requisição quando o cliente vai embora.",
+    "choices": [
+      {
+        "text": "O pgx a cancela no servidor",
+        "why": "O contexto termina, e o pgx interrompe a consulta em vez de terminar um trabalho que ninguém vai ler."
+      },
+      {
+        "text": "Ela roda até o fim, e o resultado é descartado",
+        "why": "Isso é o que acontece sem o contexto; com ele, o trabalho para."
+      },
+      {
+        "text": "O handler entra em pânico com `context canceled`",
+        "why": "Um contexto cancelado é um erro devolvido, não um pânico."
+      },
+      {
+        "text": "O pool fecha a conexão e abre outra para a próxima requisição",
+        "why": "Nada nas aulas fecha a conexão do pool por causa disso."
+      }
+    ]
+  },
+  "ex-86d42cmw": {
+    "prompt": "Aula 1. O `go run .` serve em `\"localhost:8080\"`. Um colega em outro computador da mesma rede tenta `curl http://<seu endereço>:8080/` e não consegue conexão. Por quê?",
+    "hint": "Leia a parte de endereço da string de escuta.",
+    "choices": [
+      {
+        "text": "`localhost` escuta só nesta máquina",
+        "why": "Só conexões da própria máquina chegam a ele; a aula 16 encontra o mesmo fato dentro de um container."
+      },
+      {
+        "text": "O servidor só aceita `curl` do mesmo usuário",
+        "why": "O net/http não olha usuários; o endereço decide."
+      },
+      {
+        "text": "A porta 8080 é reservada para programas locais",
+        "why": "Nenhum número de porta tem esse significado."
+      },
+      {
+        "text": "O mux recusa requisições cujo `Host` não é `localhost`",
+        "why": "Os padrões aqui não nomeiam host; a requisição nem chega."
+      }
+    ]
+  },
+  "ex-m46qagba": {
+    "prompt": "Aula 1. Um processo registra `api.example.com/events` e `GET /events`. Chega um `GET /events` com `Host: api.example.com`. Que padrão responde?",
+    "hint": "A seção comparou um padrão com host a um sem.",
+    "choices": [
+      {
+        "text": "O que nomeia o método",
+        "why": "A regra do curso dá a vantagem ao host."
+      },
+      {
+        "text": "O que nomeia o host",
+        "why": "Um padrão com host é mais específico que um sem; é assim que um processo serve dois sites."
+      },
+      {
+        "text": "O registrado por último",
+        "why": "A ordem de registro não entra na escolha do ServeMux."
+      },
+      {
+        "text": "Nenhum: o programa entra em pânico por conflito",
+        "why": "O host resolve qual é mais específico."
+      }
+    ]
+  },
+  "ex-ktkpnha5": {
+    "prompt": "Aula 2. Uma página em `https://tickets.example.com` chama `GET /admin/report` com um token da equipe. Ponha em ordem o que acontece.",
+    "hint": "O navegador pergunta antes, sem o token.",
+    "items": [
+      "o navegador manda um preflight `OPTIONS`",
+      "o `cors` responde 204 com os métodos e cabeçalhos permitidos",
+      "o navegador confere o método e os cabeçalhos com essas listas",
+      "o navegador manda a requisição real com o `Authorization`",
+      "o `requireStaff` confere o token",
+      "o handler confere o papel e responde"
+    ]
+  },
+  "ex-77hhz62t": {
+    "prompt": "Aula 2. Quais destas afirmações valem para o middleware de CORS do boxoffice? Escolha todas as verdadeiras.",
+    "hint": "CORS trata de um navegador e de uma página, não do servidor.",
+    "choices": [
+      {
+        "text": "Ele precisa ficar fora do `requireStaff`, porque o preflight não leva token",
+        "why": "Dentro, todo preflight seria recusado com 401 e a requisição real nunca sairia."
+      },
+      {
+        "text": "Ele não impede o `curl` de ler rota nenhuma",
+        "why": "Só um navegador aplica a política; qualquer outro cliente lê o que o servidor manda."
+      },
+      {
+        "text": "O `Vary: Origin` vai em toda resposta, permitida ou não",
+        "why": "A resposta depende de um cabeçalho da requisição, e um cache precisa saber disso."
+      },
+      {
+        "text": "Para uma origem desconhecida o servidor retém o corpo",
+        "why": "O servidor mandou 200 e o corpo inteiro; só o navegador o esconde da página."
+      },
+      {
+        "text": "Refletir qualquer `Origin` com `Allow-Credentials: true` é seguro para uma API com cookies",
+        "why": "Isso deixa toda página da internet ler respostas com os cookies do visitante."
+      }
+    ]
+  },
+  "ex-6jyvzzpj": {
+    "prompt": "Aula 2. Com o `recoverPanics` no lugar, um handler escreve metade de uma lista JSON e então entra em pânico. O que o cliente recebe?",
+    "hint": "O status sai com a primeira escrita.",
+    "choices": [
+      {
+        "text": "Um 500 limpo, porque o middleware descarta o que o handler escreveu",
+        "why": "O que foi escrito já saiu; nada traz de volta."
+      },
+      {
+        "text": "Uma resposta vazia, saída 52, como sem o middleware",
+        "why": "A linha de status e parte do corpo saíram, sim."
+      },
+      {
+        "text": "Um 500 seguido da meia lista",
+        "why": "Um status não vem depois de um corpo; o 200 já tinha sido enviado."
+      },
+      {
+        "text": "Um 200 com o corpo pela metade",
+        "why": "O 200 saiu com a primeira escrita; o 500 do middleware vira um WriteHeader supérfluo no log. A recuperação torna o pânico sobrevivível, não invisível."
+      }
+    ]
+  },
+  "ex-me0e3jjt": {
+    "prompt": "Aula 2. Um middleware novo chama `next.ServeHTTP(w, r)` e só depois `w.Header().Set(\"X-Served-By\", \"boxoffice\")`. Que respostas levam o cabeçalho?",
+    "hint": "A ordem da aula 1: status, cabeçalhos, corpo.",
+    "choices": [
+      {
+        "text": "Todas, já que o middleware envolve todas as rotas",
+        "why": "Envolver todas as rotas não move o cabeçalho para antes da escrita."
+      },
+      {
+        "text": "Só as respostas de erro",
+        "why": "Os erros também são escritos pelos handlers, antes de a linha do middleware rodar."
+      },
+      {
+        "text": "Nenhuma que um handler escreveu",
+        "why": "Quando o `next` retorna, os cabeçalhos já saíram com a resposta; o cabeçalho precisa ser definido antes de chamar o `next`."
+      },
+      {
+        "text": "Todas, mas só em HTTP/2",
+        "why": "A versão do protocolo não muda quando os cabeçalhos saem."
+      }
+    ]
+  },
+  "ex-f0w82vdw": {
+    "prompt": "Aula 2. Um desenvolvedor acrescenta `GET /admin/refunds` ao `mux` principal do boxoffice, e não ao mux `admin`. Quem pode lê-la?",
+    "hint": "Que handler o `requireStaff` envolveu?",
+    "choices": [
+      {
+        "text": "Só a equipe, já que o caminho começa com `/admin/`",
+        "why": "A proteção vem do mux em que a rota está, não do nome dela."
+      },
+      {
+        "text": "Qualquer um",
+        "why": "O `GET /admin/refunds` vence o `/admin/` no mux principal, então a requisição nunca chega ao mux admin envolvido."
+      },
+      {
+        "text": "Ninguém: o programa entra em pânico pela sobreposição",
+        "why": "Um padrão é mais específico, então não há conflito."
+      },
+      {
+        "text": "Só gerentes",
+        "why": "Nenhum papel é conferido neste caminho."
+      }
+    ]
+  },
+  "ex-t5zx5dyn": {
+    "prompt": "Aula 2. Um cliente manda o token do gerente como `Authorization: bearer 5ca8…`, em minúsculas. O que o boxoffice responde?",
+    "hint": "O `requireStaff` corta um prefixo exato.",
+    "choices": [
+      {
+        "text": "200, já que o token em si está certo",
+        "why": "O token nem é alcançado; o prefixo não casou."
+      },
+      {
+        "text": "403, já que quem chama é conhecido mas mal formatado",
+        "why": "O 403 exige quem chama conhecido, e nada casou."
+      },
+      {
+        "text": "401, com `WWW-Authenticate`",
+        "why": "O `strings.CutPrefix` procura exatamente `Bearer `; sem ele nada é comparado e a requisição é recusada."
+      },
+      {
+        "text": "400, por cabeçalho malformado",
+        "why": "O boxoffice responde a um esquema que falta como a um token que falta."
+      }
+    ]
+  },
+  "ex-dxnjj96q": {
+    "prompt": "Aula 3. Uma rota futura reembolsa um ingresso. Um cliente pede o reembolso de um que já foi reembolsado. Pelo raciocínio da aula 3, que status cabe?",
+    "hint": "A requisição está bem formada e é válida.",
+    "choices": [
+      {
+        "text": "409 Conflict",
+        "why": "Como uma venda que não cabe, a requisição conflita com o estado atual do recurso."
+      },
+      {
+        "text": "400 Bad Request",
+        "why": "O 400 é para uma requisição que o servidor não conseguiu ler."
+      },
+      {
+        "text": "422, já que os valores estão errados",
+        "why": "Os valores estão certos; o obstáculo é o estado do ingresso."
+      },
+      {
+        "text": "404, já que o ingresso reembolsável não existe mais",
+        "why": "O ingresso existe; dizer o contrário é falso."
+      }
+    ]
+  },
+  "ex-s6zhj5k9": {
+    "prompt": "Aula 3. Chega um `POST /events/abc/tickets` com um corpo que não é JSON. O que volta?",
+    "hint": "O id no caminho é a primeira verificação.",
+    "choices": [
+      {
+        "text": "400 sobre o corpo, já que é o problema pior",
+        "why": "As verificações rodam em ordem, e o id falha primeiro."
+      },
+      {
+        "text": "Um 400 listando os dois problemas",
+        "why": "Juntar todos os problemas é o que o `validate` faz com valores, não com o caminho e o corpo juntos."
+      },
+      {
+        "text": "400 sobre o id, antes de o corpo ser lido",
+        "why": "O `buyTickets` confere o caminho primeiro e retorna na falha."
+      },
+      {
+        "text": "404, já que nenhum evento se chama `abc`",
+        "why": "O store nem é consultado sobre um caminho que não é número."
+      }
+    ]
+  },
+  "ex-xgs4em0p": {
+    "prompt": "Aula 3. O store ganha um sentinela novo, `ErrEventClosed`, mas ninguém mexe no `fail`. Um cliente compra ingressos para um evento encerrado. O que acontece, e onde fica a correção?",
+    "hint": "O store não pode falar HTTP.",
+    "choices": [
+      {
+        "text": "Um 409, já que o `fail` trata erros do store como conflitos",
+        "why": "O `fail` só traduz os erros que nomeia."
+      },
+      {
+        "text": "Um 500; o store deveria devolver `http.StatusConflict` ele mesmo",
+        "why": "O store é compartilhado com o gRPC na aula 10, que não tem 409."
+      },
+      {
+        "text": "Um 201, já que a venda não é recusada",
+        "why": "O store devolveu um erro; o handler chama o `fail` com ele."
+      },
+      {
+        "text": "Um 500 registrado como inesperado; o caso entra no `fail`",
+        "why": "Um erro que ninguém previu cai no caso padrão; a tradução pertence ao único lugar que traduz."
+      }
+    ]
+  },
+  "ex-jxm8z321": {
+    "prompt": "Aula 3. Um cliente manda `{\"quantity\": 40, \"email\": \"ana\"}` para comprar ingressos. Quantas entradas o membro `errors` da resposta tem?",
+    "hint": "O `validate` não para no primeiro problema.",
+    "unit": ""
+  },
+  "ex-an4ked79": {
+    "prompt": "Aula 3. Um cliente manda `{\"quantiy\": 2, \"email\": \"ana@example.com\"}`, com `quantity` escrito errado, para a rota de compra do boxoffice. O que volta?",
+    "hint": "O `decodeJSON` recusa o que a struct não tem.",
+    "choices": [
+      {
+        "text": "422, quantity deve estar entre 1 e 10",
+        "why": "Esse é o caminho do decodificador simples, que descarta o campo; o do boxoffice para antes."
+      },
+      {
+        "text": "201, uma compra de zero ingressos",
+        "why": "Até um zero falharia na validação; e o boxoffice nem chega lá."
+      },
+      {
+        "text": "409, já que o corpo conflita com a struct",
+        "why": "O 409 é para uma requisição válida que conflita com o estado do evento."
+      },
+      {
+        "text": "400, nomeando o campo desconhecido",
+        "why": "O `DisallowUnknownFields` transforma o erro de digitação em erro antes de a validação rodar."
+      }
+    ]
+  },
+  "ex-542pm6gc": {
+    "prompt": "Aula 3. Um corpo de compra válido chega com `Content-Type: text/plain`. O que o boxoffice faz, e em que a aula se apoia em vez de conferir o tipo?",
+    "hint": "Algumas APIs respondem 415; o boxoffice não.",
+    "choices": [
+      {
+        "text": "415, para barrar formulários enviados de outros sites",
+        "why": "A aula chama o 415 de defensável e não o usa."
+      },
+      {
+        "text": "Vende como sempre; o token protege as rotas da equipe",
+        "why": "O token bearer da aula 2, que um formulário não tem como enviar, é a proteção contra um formulário de outro site, não o tipo de mídia."
+      },
+      {
+        "text": "400, já que o corpo não foi declarado como JSON",
+        "why": "O decodificador lê os bytes; o cabeçalho não é consultado."
+      },
+      {
+        "text": "Fareja o corpo e responde em texto puro",
+        "why": "O farejamento é para respostas sem tipo; as respostas do boxoffice declaram o seu."
+      }
+    ]
+  },
+  "ex-tv7t3apd": {
+    "prompt": "Aula 4. Ligue cada framework ao comportamento padrão próprio que a comparação da aula encontrou.",
+    "hint": "Cada um é uma decisão tomada por você.",
+    "pairs": [
+      {
+        "left": "Gin",
+        "right": "404 para um método errado"
+      },
+      {
+        "left": "Echo",
+        "right": "um tipo errado respondido só com `Bad Request`, o detalhe no log"
+      },
+      {
+        "left": "Fiber",
+        "right": "roda sobre o fasthttp, não o net/http"
+      },
+      {
+        "left": "Beego",
+        "right": "uma página HTML para um caminho desconhecido"
+      }
+    ]
+  },
+  "ex-yach22xr": {
+    "prompt": "Aula 4. Ordene as cinco versões da API de referência pelo número de módulos que trouxeram além do seu, do menor para o maior.",
+    "hint": "O de pilha completa vem por último.",
+    "items": [
+      "biblioteca padrão",
+      "Echo",
+      "Fiber",
+      "Gin",
+      "Beego"
+    ]
+  },
+  "ex-tp23gwte": {
+    "prompt": "Aula 4. Nas cinco versões, o que todas responderam para um caminho que nenhuma rota casava?",
+    "hint": "O status concordou; o formato não.",
+    "choices": [
+      {
+        "text": "405 com um cabeçalho `Allow`",
+        "why": "O 405 é para um caminho conhecido com o método errado."
+      },
+      {
+        "text": "Um documento de problema em JSON",
+        "why": "Nenhum escreveu sozinho o formato da aula 3."
+      },
+      {
+        "text": "404, em vários formatos",
+        "why": "O mesmo status em todos; o Echo escreveu JSON e o Beego uma página HTML."
+      },
+      {
+        "text": "Um redirecionamento para `/`",
+        "why": "Nenhum redirecionou um caminho desconhecido."
+      }
+    ]
+  },
+  "ex-4nvzvwbq": {
+    "prompt": "Aula 4. Que dois frameworks o curso chama de fáceis de largar, e por qual motivo?",
+    "hint": "Olhe o que roda por baixo.",
+    "choices": [
+      {
+        "text": "Echo e Gin: os dois são net/http por baixo",
+        "why": "Os engines deles são `http.Handler`, então código e middleware padrão continuam valendo em volta."
+      },
+      {
+        "text": "Fiber e Echo, porque são os menores",
+        "why": "O Fiber não é net/http, o que o torna o mais difícil de largar entre os leves."
+      },
+      {
+        "text": "Gin e Beego, porque geram uma descrição da API",
+        "why": "A comparação não mediu nada disso."
+      },
+      {
+        "text": "Beego e Fiber, por serem os mais completos",
+        "why": "O curso diz que o Beego é o que mais custa largar."
+      }
+    ]
+  },
+  "ex-53ebbdrf": {
+    "prompt": "Aula 4. Um cliente manda `DELETE /events/1` para a versão Gin. O que ele perde, comparado com a resposta da biblioteca padrão?",
+    "hint": "O Gin respondeu 404.",
+    "choices": [
+      {
+        "text": "Nada: os dois dizem que a requisição falhou",
+        "why": "Eles dizem coisas diferentes, e uma delas é falsa."
+      },
+      {
+        "text": "O corpo, que o Gin deixa vazio",
+        "why": "O corpo não é a perda; o status é."
+      },
+      {
+        "text": "O 405 e a lista `Allow`",
+        "why": "O 405 do ServeMux diz que o método está errado e lista os certos; o 404 do Gin diz que o recurso não existe."
+      },
+      {
+        "text": "O id da requisição",
+        "why": "Nenhuma das versões tinha um na aula 4."
+      }
+    ]
+  },
+  "ex-6mdrjx05": {
+    "prompt": "Aula 4. Um cliente JSON chama um caminho desconhecido na versão Beego. Que promessa da aula 3 essa resposta quebra?",
+    "hint": "O Beego respondeu com uma página de 2.000 bytes.",
+    "choices": [
+      {
+        "text": "Que todo erro tem um formato só que o cliente lê",
+        "why": "Uma página HTML é um formato que o cliente nunca foi avisado de que receberia."
+      },
+      {
+        "text": "Que um 404 nunca leva corpo",
+        "why": "Os 404 do boxoffice têm corpo; o formato é a questão."
+      },
+      {
+        "text": "Que o status está certo",
+        "why": "O 404 é o status certo aqui."
+      },
+      {
+        "text": "Que o cabeçalho `Location` nomeia o recurso",
+        "why": "O `Location` pertence a um 201, não a erros."
+      }
+    ]
+  },
+  "ex-k7m6pc9b": {
+    "prompt": "Aula 5. Quais destes deixam a assinatura do handler como `func(w http.ResponseWriter, r *http.Request)`? Escolha todos.",
+    "hint": "Uma biblioteca faz uma coisa e deixa a forma em paz.",
+    "choices": [
+      {
+        "text": "chi",
+        "why": "As rotas dele recebem `http.HandlerFunc` comuns."
+      },
+      {
+        "text": "go-playground/validator, chamado de um handler",
+        "why": "Ele valida uma struct e não mexe em assinatura nenhuma."
+      },
+      {
+        "text": "golang.org/x/time/rate dentro de um middleware",
+        "why": "Um limitador de taxa na forma padrão de middleware."
+      },
+      {
+        "text": "Gin",
+        "why": "Os handlers dele recebem um `*gin.Context`."
+      },
+      {
+        "text": "Fiber",
+        "why": "Os handlers dele recebem um `fiber.Ctx`, fora do net/http por completo."
+      }
+    ]
+  },
+  "ex-zdmsm121": {
+    "prompt": "Aula 5. Levado para o chi, um handler lê o id com `chi.URLParam(r, \"id\")`, onde o da biblioteca padrão diz `r.___(\"id\")`.",
+    "hint": "O método da aula 1 para um curinga.",
+    "blanks": [
+      {
+        "accept": [
+          "PathValue"
+        ]
+      }
+    ]
+  },
+  "ex-nd3fwxjb": {
+    "prompt": "Aula 5. Um serviço precisa da rota `{id:[0-9]+}`, um id só de dígitos, casado pelo roteador. O que o curso sugere?",
+    "hint": "O ServeMux não tem expressões regulares nos padrões.",
+    "choices": [
+      {
+        "text": "Adotar um framework, já que o ServeMux chegou ao limite",
+        "why": "Um roteador sozinho resolve, sem tomar a forma dos handlers."
+      },
+      {
+        "text": "Registrar dez padrões, um por dígito inicial",
+        "why": "Um curinga não casa pelo primeiro caractere."
+      },
+      {
+        "text": "Uma biblioteca de roteamento como o chi",
+        "why": "É exatamente o caso em que o chi justifica o módulo."
+      },
+      {
+        "text": "Nada muda: o ServeMux aceita o padrão",
+        "why": "Essa é uma das coisas que o ServeMux ainda não faz."
+      }
+    ]
+  },
+  "ex-wb46yq4t": {
+    "prompt": "Aula 5. O curso diz que o tamanho do binário de um framework importa pouco num servidor. Onde ele diz que o tamanho importa um pouco mais?",
+    "hint": "Pense em cada implantação.",
+    "choices": [
+      {
+        "text": "Na imagem de container",
+        "why": "Toda implantação baixa a imagem, e um binário três vezes maior é uma imagem três vezes maior para enviar, baixar, montar e varrer."
+      },
+      {
+        "text": "Na memória que o servidor usa por requisição",
+        "why": "Tamanho de binário e memória por requisição são coisas diferentes, e não foram medidas juntas."
+      },
+      {
+        "text": "No tempo de inicialização",
+        "why": "O curso não citou a inicialização."
+      },
+      {
+        "text": "No número de rotas",
+        "why": "Rotas não dependem do tamanho do binário."
+      }
+    ]
+  },
+  "ex-cvrby828": {
+    "prompt": "Aula 5. Por que o curso afirma que um desenvolvedor Go que nunca viu o boxoffice consegue ler todas as linhas dele no primeiro dia?",
+    "hint": "Uma segunda coisa para aprender.",
+    "choices": [
+      {
+        "text": "Porque o boxoffice é curto",
+        "why": "O tamanho não é o argumento; o que ele usa é."
+      },
+      {
+        "text": "Porque é documentado linha a linha",
+        "why": "A afirmação se apoia nas bibliotecas, não em comentários."
+      },
+      {
+        "text": "Porque segue as convenções do Gin, que a maioria conhece",
+        "why": "O boxoffice não usa framework."
+      },
+      {
+        "text": "Ele não usa nada fora da documentação da biblioteca padrão",
+        "why": "Não há contexto, regras de binding nem padrões de framework para aprender antes."
+      }
+    ]
+  },
+  "ex-tkrh45h8": {
+    "prompt": "Aula 5. O `gorilla/mux`, por anos o roteador padrão do Go, foi arquivado em dezembro de 2022. O que o curso tira disso para qualquer dependência?",
+    "hint": "Cada módulo tem um mantenedor.",
+    "choices": [
+      {
+        "text": "Que módulos populares estão a salvo disso",
+        "why": "Era o roteador mais popular da época."
+      },
+      {
+        "text": "Que roteadores não são mais necessários no Go",
+        "why": "O ponto é sobre manutenção, não sobre roteamento."
+      },
+      {
+        "text": "Um mantenedor que para deixa todo usuário decidindo se espera ou migra",
+        "why": "Cada módulo traz uma licença, um mantenedor que um dia para, e uma ideia própria de compatibilidade."
+      },
+      {
+        "text": "Que módulos arquivados param de compilar",
+        "why": "Código arquivado ainda compila; ele para de receber correções."
+      }
+    ]
+  },
+  "ex-hd5tw139": {
+    "prompt": "Aula 6. Uma tabela `events` nova tem as linhas 1 e 2. Depois três inserções falham pelo nome único, e uma quarta dá certo. Que id o evento novo recebe?",
+    "hint": "Uma inserção que falha não devolve o número.",
+    "unit": ""
+  },
+  "ex-dj00vfjv": {
+    "prompt": "Aula 6. O `GET /events/9` pede um evento que não existe. Ponha o caminho do erro em ordem, do banco ao cliente.",
+    "hint": "O erro muda de vocabulário em cada camada.",
+    "items": [
+      "o PostgreSQL não devolve linha",
+      "o pgx informa `pgx.ErrNoRows`",
+      "o `pgStore.Get` devolve `ErrNotFound`, embrulhado com o id",
+      "o `fail` o reconhece com `errors.Is`",
+      "o cliente lê um documento de problema 404"
+    ]
+  },
+  "ex-hrzxwj79": {
+    "prompt": "Aula 6. Uma coluna guarda `NULL` do SQL. Ligue cada destino em Go ao que a leitura dá.",
+    "hint": "Uma `string` do Go não tem como dizer 'sem valor'.",
+    "pairs": [
+      {
+        "left": "`string`",
+        "right": "um erro: o pgx recusa"
+      },
+      {
+        "left": "`*string`",
+        "right": "`nil`"
+      },
+      {
+        "left": "`pgtype.Text`",
+        "right": "uma struct com `Valid: false`"
+      }
+    ]
+  },
+  "ex-wnxbne68": {
+    "prompt": "Aula 6. Numa consulta pgx, o placeholder do segundo valor se escreve ___.",
+    "hint": "Um cifrão e um número.",
+    "blanks": [
+      {
+        "accept": [
+          "$2"
+        ]
+      }
+    ]
+  },
+  "ex-aczpjk3r": {
+    "prompt": "Aula 6. Uma busca manda o filtro de nome como `$1`, e um cliente digita `x'; DROP TABLE events; --`. O que o PostgreSQL executa?",
+    "hint": "A análise termina antes de o valor chegar.",
+    "choices": [
+      {
+        "text": "A busca e depois o `DROP`",
+        "why": "Isso é o que colar o valor no texto permitiria."
+      },
+      {
+        "text": "Nada: o pgx recusa valores com aspas",
+        "why": "*Rock 'n' Roll Night* passou por um placeholder sem problema."
+      },
+      {
+        "text": "A busca, por esse nome estranho",
+        "why": "O valor viaja separado do SQL e nunca é analisado como SQL."
+      },
+      {
+        "text": "Um erro de sintaxe, SQLSTATE 42601",
+        "why": "Essa foi a falha da consulta colada, não a do placeholder."
+      }
+    ]
+  },
+  "ex-eny7v120": {
+    "prompt": "Aula 6. Um método do store retorna cedo num erro de leitura e o autor esqueceu o `defer rows.Close()`. O serviço roda bem por um dia, depois toda requisição trava. Por quê?",
+    "hint": "O `rows` segura uma conexão até ser fechado.",
+    "choices": [
+      {
+        "text": "Os erros de leitura se acumulam na memória",
+        "why": "Erros são valores devolvidos e descartados; o que se acumula são conexões."
+      },
+      {
+        "text": "O PostgreSQL trava a tabela depois de erros repetidos",
+        "why": "Essa trava não existe; as conexões ficam presas do lado do Go."
+      },
+      {
+        "text": "O pool ficou sem conexões",
+        "why": "Um `rows` nunca fechado segura a conexão para sempre, e o suficiente deles deixa o pool vazio."
+      },
+      {
+        "text": "O `rows.Err()` entra em pânico na próxima chamada",
+        "why": "Ele devolve um erro; nada entra em pânico."
+      }
+    ]
+  },
+  "ex-r422q300": {
+    "prompt": "Aula 7. O `Event` não tem `gorm.Model`. Roda `db.Model(&e).Updates(models.Event{Seats: 50, Sold: 0})`. Quantas colunas o `UPDATE` define?",
+    "hint": "Os campos zero de uma struct são pulados.",
+    "unit": ""
+  },
+  "ex-e55qrzaz": {
+    "prompt": "Aula 7. Quais destas valem para o GORM, como a aula 7 o rodou? Escolha todas.",
+    "hint": "Quatro armadilhas, cada uma uma regra aplicada com consistência.",
+    "choices": [
+      {
+        "text": "`Updates(models.Event{Sold: 0})` não envia UPDATE",
+        "why": "Os campos zero de uma struct são pulados; nomear a coluna escreve o zero."
+      },
+      {
+        "text": "Uma linha apagada com soft delete ainda conta para um índice único",
+        "why": "A linha continua na tabela; só as consultas do GORM a escondem."
+      },
+      {
+        "text": "`Find` sem linha devolve erro nenhum e uma fatia vazia",
+        "why": "O `First` devolve `ErrRecordNotFound`; o `Find` trata a lista vazia como resposta."
+      },
+      {
+        "text": "`Delete` num modelo que embute `gorm.Model` remove a linha",
+        "why": "Ele carimba o `deleted_at`; o `Unscoped().Delete` remove."
+      },
+      {
+        "text": "`db.Delete(&models.Event{})` esvazia a tabela",
+        "why": "O GORM recusou: WHERE conditions required."
+      }
+    ]
+  },
+  "ex-t9qnkrwy": {
+    "prompt": "Aula 7. Um modelo `users` embute `gorm.Model` e tem um `email` único. Um usuário é apagado com `db.Delete` e depois se cadastra de novo com o mesmo endereço. O que acontece?",
+    "hint": "Onde está a linha apagada?",
+    "choices": [
+      {
+        "text": "A nova linha é inserida, já que a antiga sumiu",
+        "why": "A linha antiga continua na tabela, carimbada."
+      },
+      {
+        "text": "A inserção falha no índice único",
+        "why": "Uma linha apagada com soft delete ainda conta no índice único; era preciso o `Unscoped().Delete`."
+      },
+      {
+        "text": "O GORM restaura a linha antiga",
+        "why": "Essa regra não existe; o GORM escreve um INSERT."
+      },
+      {
+        "text": "O GORM recusa o delete logo de início",
+        "why": "O delete nomeou uma linha, então o GORM mandou o UPDATE do `deleted_at`."
+      }
+    ]
+  },
+  "ex-qy9bhb82": {
+    "prompt": "Aula 7. Por que o curso conta o `AutoMigrate` como ponto forte num protótipo e fraco no boxoffice?",
+    "hint": "Um schema gerado sabe o que as structs sabem.",
+    "choices": [
+      {
+        "text": "Porque é mais lento em tabelas grandes",
+        "why": "A velocidade não foi o argumento."
+      },
+      {
+        "text": "Porque só funciona com SQLite",
+        "why": "A aula o rodou contra o PostgreSQL."
+      },
+      {
+        "text": "Porque protótipos não têm dados a perder",
+        "why": "Isso conta, mas a regra que falta é o motivo de o boxoffice não poder usá-lo."
+      },
+      {
+        "text": "Structs não guardam regra como `sold <= seats`",
+        "why": "Uma tabela numa chamada vale muito no começo; o boxoffice depende do CHECK que o schema da aula 6 tinha e a tabela do AutoMigrate não."
+      }
+    ]
+  },
+  "ex-0cm33mcr": {
+    "prompt": "Aula 7. Uma equipe quer pegar consultas N+1 no dia em que uma é escrita, e não em produção. O que a aula sugere?",
+    "hint": "O programa da aula contou consultas com um callback.",
+    "choices": [
+      {
+        "text": "Medir o tempo do endpoint em desenvolvimento",
+        "why": "Com poucos dados e um banco local a diferença é invisível."
+      },
+      {
+        "text": "Desligar o logger do GORM",
+        "why": "O log é onde as consultas são vistas, não escondidas."
+      },
+      {
+        "text": "Um teste que confere quantas consultas um endpoint manda",
+        "why": "Contar consultas, como o programa fez, pega o laço com poucas linhas de dados de teste."
+      },
+      {
+        "text": "Usar sempre `Find` em vez de `First`",
+        "why": "Isso muda como uma linha que falta é informada, não quantas consultas um laço manda."
+      }
+    ]
+  },
+  "ex-8jmh7gcm": {
+    "prompt": "Aula 7. Para zerar as vendas de todos os eventos, um desenvolvedor escreve `db.Model(&models.Event{}).Update(\"sold\", 0)`. O que o GORM faz?",
+    "hint": "A proteção contra a condição ausente também vale para o `Update`.",
+    "choices": [
+      {
+        "text": "Atualiza todas as linhas, como pretendido",
+        "why": "O GORM não trata a condição ausente como 'todas as linhas'."
+      },
+      {
+        "text": "Pula a atualização porque 0 é valor zero",
+        "why": "Nomear a coluna escreve o zero; o problema é o WHERE ausente."
+      },
+      {
+        "text": "Atualiza só a primeira linha",
+        "why": "Nenhuma linha foi nomeada, e nenhuma é escolhida por você."
+      },
+      {
+        "text": "Recusa: WHERE conditions required",
+        "why": "Querer 'todas as linhas' precisa ser dito, com `Where(\"1 = 1\")` ou uma configuração de sessão."
+      }
+    ]
+  },
+  "ex-52zjkjnz": {
+    "prompt": "Aula 8. Antes da correção, o store com sqlc convertia o id do caminho com `int32(id)`. Que evento o `GET /events/4294967298` devolvia? (4.294.967.296 é 2³².)",
+    "hint": "A conversão mantém os 32 bits de baixo.",
+    "unit": ""
+  },
+  "ex-5s4rsnj9": {
+    "prompt": "Aula 8. Ligue cada propriedade ao jeito de acessar a tabela que a tem.",
+    "hint": "pgx à mão, GORM, sqlc.",
+    "pairs": [
+      {
+        "left": "A leitura para o Go acontece por reflexão em tempo de execução",
+        "right": "GORM"
+      },
+      {
+        "left": "Uma coluna e um campo não conseguem ficar fora de sincronia",
+        "right": "sqlc"
+      },
+      {
+        "left": "Uma coluna acrescentada ao SELECT e esquecida no Scan falha em tempo de execução",
+        "right": "pgx à mão"
+      }
+    ]
+  },
+  "ex-th1a47p8": {
+    "prompt": "Aula 8. Uma coluna é renomeada no banco, e ninguém atualiza as consultas. Com o sqlc configurado para perguntar ao banco, e com o store à mão da aula 6, quando cada um descobre?",
+    "hint": "Um verifica antes do build; o outro quando a consulta roda.",
+    "choices": [
+      {
+        "text": "Os dois no `go build`",
+        "why": "O Go não enxerga dentro de uma string SQL."
+      },
+      {
+        "text": "Os dois só quando a consulta roda",
+        "why": "Com um banco para perguntar, o sqlc descobre antes."
+      },
+      {
+        "text": "Nenhum: o PostgreSQL acompanha renomeações",
+        "why": "Uma consulta com o nome antigo da coluna falha."
+      },
+      {
+        "text": "O sqlc no `generate`; o store à mão quando a consulta roda",
+        "why": "O PostgreSQL confere todo nome enquanto o sqlc prepara as consultas; à mão, a primeira requisição descobre."
+      }
+    ]
+  },
+  "ex-nbd081h2": {
+    "prompt": "Aula 8. O boxoffice mantém o próprio `Event` e converte o `db.Event` do sqlc no `fromRow`. O que isso compra, e o que custa?",
+    "hint": "Os handlers só viram a interface.",
+    "choices": [
+      {
+        "text": "Compra velocidade e não custa nada",
+        "why": "Uma conversão é trabalho a mais, e velocidade não foi o motivo."
+      },
+      {
+        "text": "Compra as tags JSON, que o sqlc não gera",
+        "why": "Esse não é o motivo que a aula dá."
+      },
+      {
+        "text": "Custa uma segunda consulta por linha",
+        "why": "A conversão é em memória; nenhuma consulta é acrescentada."
+      },
+      {
+        "text": "Handlers intocados, por uma conversão a escrever",
+        "why": "Os tipos gerados ficam dentro do store, e a conversão é onde olhar quando os tipos são mais estreitos."
+      }
+    ]
+  },
+  "ex-g5jdy1y6": {
+    "prompt": "Aula 8. Um handler preenche `SearchEventsParams` a partir de `?available=10`, definindo `MinAvailable.Int32 = 10` e esquecendo o `Valid`. O que a busca devolve?",
+    "hint": "Um campo com `Valid: false` é enviado como `NULL`.",
+    "choices": [
+      {
+        "text": "Só eventos com pelo menos 10 lugares sobrando",
+        "why": "O número nunca é enviado; vai `NULL` no lugar."
+      },
+      {
+        "text": "Um erro sobre parâmetro ausente",
+        "why": "`NULL` é um valor legítimo para um `sqlc.narg`."
+      },
+      {
+        "text": "Todos os eventos, como se o filtro não existisse",
+        "why": "`NULL` torna `(filtro IS NULL OR condição)` verdadeiro para toda linha."
+      },
+      {
+        "text": "Nenhum evento, já que 0 lugares são exigidos",
+        "why": "O valor zero não é enviado; o `Valid` decide."
+      }
+    ]
+  },
+  "ex-4rntqk8m": {
+    "prompt": "Aula 8. Dos três jeitos de acessar a tabela, qual acrescenta uma ferramenta ao build e nenhum módulo Go além do pgx?",
+    "hint": "Leia as duas últimas linhas da comparação.",
+    "choices": [
+      {
+        "text": "sqlc",
+        "why": "O programa que ele gera só importa o pgx; o sqlc, e o gcc para compilá-lo, ficam fora do módulo."
+      },
+      {
+        "text": "GORM",
+        "why": "O GORM traz ele mesmo e o driver como módulos."
+      },
+      {
+        "text": "pgx à mão",
+        "why": "Ele não precisa de ferramenta extra nenhuma."
+      },
+      {
+        "text": "database/sql com um driver",
+        "why": "Não é um dos três comparados, e não acrescenta ferramenta."
+      }
+    ]
+  },
+  "ex-p15enj8m": {
+    "prompt": "Aula 9. Uma migração que acrescenta uma coluna foi aplicada em produção ontem, e deu o nome errado à coluna. O que o curso recomenda?",
+    "hint": "Todo banco guarda o registro de quais arquivos já viu.",
+    "choices": [
+      {
+        "text": "Editar o arquivo de ontem e rodar `goose up` de novo em todo lugar",
+        "why": "Bancos que já têm essa versão pulam o arquivo, então a edição não chega a nenhum deles."
+      },
+      {
+        "text": "Rodar a seção Down do arquivo em produção e depois corrigir a Up",
+        "why": "Remover a coluna também remove todo valor gravado nela desde ontem."
+      },
+      {
+        "text": "Escrever uma migração nova que a renomeia",
+        "why": "Certo. A correção viaja pelo mesmo caminho que o erro, para todo banco, em ordem."
+      },
+      {
+        "text": "Renomear a coluna à mão no psql e deixar os arquivos como estão",
+        "why": "Aí os arquivos e a produção discordam, e todos os outros bancos recebem o nome errado."
+      }
+    ]
+  },
+  "ex-hcvhm4d0": {
+    "prompt": "Aula 9. Três cópias do boxoffice sobem no mesmo instante contra um banco vazio, cada uma rodando as migrações embutidas. Por que cada migração é aplicada exatamente uma vez?",
+    "hint": "Veja o que o `migrate` entrega ao goose além dos arquivos.",
+    "choices": [
+      {
+        "text": "O `embed` deixa os arquivos só de leitura, então ninguém os aplica duas vezes",
+        "why": "Arquivos só de leitura não dizem nada sobre qual banco já os rodou."
+      },
+      {
+        "text": "O session locker segura um advisory lock enquanto migra",
+        "why": "Certo. As outras duas esperam o lock, depois encontram as versões já registradas e não aplicam nada."
+      },
+      {
+        "text": "O PostgreSQL recusa um segundo CREATE TABLE e o goose ignora o erro",
+        "why": "O goose não ignora erros; uma migração que falha o interrompe."
+      },
+      {
+        "text": "O pgxpool abre uma conexão por vez ao subir",
+        "why": "Cada cópia tem o seu pool; nada num pool coordena três processos."
+      }
+    ]
+  },
+  "ex-sbrkytms": {
+    "prompt": "Aula 9. Cinquenta compradores compram um lugar cada, ao mesmo tempo. O código lê `sold`, soma um em Go e grava o resultado, dentro de uma transação no isolamento padrão do PostgreSQL. Qual é o resultado?",
+    "hint": "Uma transação é tudo ou nada; ela também está sozinha?",
+    "choices": [
+      {
+        "text": "Menos lugares registrados do que vendidos",
+        "why": "Certo. Duas transações leem o mesmo valor e as duas gravam valor mais um: uma atualização perdida."
+      },
+      {
+        "text": "Exatamente cinquenta, porque cada venda roda na sua própria transação",
+        "why": "Tudo ou nada não é isolamento; em READ COMMITTED elas ainda leem o mesmo ponto de partida."
+      },
+      {
+        "text": "Quarenta e nove vendas falham com SQLSTATE 40001",
+        "why": "Falhas de serialização vêm do REPEATABLE READ, não do nível padrão."
+      },
+      {
+        "text": "As transações entram em deadlock e as cinquenta estouram o tempo",
+        "why": "Leituras simples não pegam lock; ninguém espera, e é esse o problema."
+      }
+    ]
+  },
+  "ex-qe185hch": {
+    "prompt": "Aula 9. Um colega corrige a atualização perdida subindo o isolamento para REPEATABLE READ. Todas as contas agora fecham. O que o curso tem contra isso?",
+    "hint": "O que as transações perdedoras receberam?",
+    "choices": [
+      {
+        "text": "Algumas vendas ainda se perdem em silêncio",
+        "why": "Não: as contas fecham, então nada se perdeu; as falhas foram informadas."
+      },
+      {
+        "text": "Compradores são recusados com 40001 enquanto ainda há lugares",
+        "why": "Certo. Cada recusa é honesta mas desnecessária; um único `UPDATE ... sold + 1` ou um `FOR UPDATE` vende para todos."
+      },
+      {
+        "text": "Faz todo SELECT do programa pegar um lock de escrita",
+        "why": "O REPEATABLE READ não pega locks extras; ele recusa quem grava depois."
+      },
+      {
+        "text": "O PostgreSQL não oferece esse nível",
+        "why": "Oferece; a aula o rodou."
+      }
+    ]
+  },
+  "ex-1nb1gecr": {
+    "prompt": "Aula 9. Um pool de cinco conexões. Dentro da transação do `Sell`, alguém acrescenta uma chamada a `s.Get(ctx, id)` pelo pool. Vinte compradores chegam ao mesmo tempo. O que acontece?",
+    "hint": "Conte o que cada requisição segura e o que ela pede.",
+    "choices": [
+      {
+        "text": "Um deadlock dentro do pool",
+        "why": "Certo. As requisições param até o prazo: cinco transações seguram as cinco conexões, cada uma espera uma sexta, e ninguém devolve nenhuma."
+      },
+      {
+        "text": "O pool cresce para vinte conexões durante o pico",
+        "why": "O `MaxConns` é um teto; o pool nunca abre além dele."
+      },
+      {
+        "text": "O PostgreSQL detecta o deadlock e aborta uma transação",
+        "why": "A espera está no Go, por uma conexão do pool; o banco não vê nada esperando."
+      },
+      {
+        "text": "Cinco vendas dão certo e quinze recebem 409",
+        "why": "Esse é o resultado depois da correção, quando a leitura passa pela transação."
+      }
+    ]
+  },
+  "ex-qpqzjgtq": {
+    "prompt": "Aula 9. Um pool de duas conexões. Seis consultas de um segundo cada começam no mesmo instante, sem prazo. Depois de quantos segundos termina a última?",
+    "hint": "As consultas esperam conexão em ondas.",
+    "unit": "segundos"
+  },
+  "ex-042bxm09": {
+    "prompt": "Aula 9. Ponha os passos do `pgStore.Sell` na ordem em que o código os executa.",
+    "hint": "O rollback é registrado antes de qualquer coisa poder falhar.",
+    "items": [
+      "`s.pool.Begin(ctx)` pega uma conexão e envia BEGIN",
+      "`defer tx.Rollback(ctx)`",
+      "`SellSeats` por meio do `WithTx(tx)`",
+      "`InsertTicket` pela mesma transação",
+      "`tx.Commit(ctx)`"
+    ]
+  },
+  "ex-wsx74n82": {
+    "prompt": "Aula 10. Associe cada chamada do contrato do boxoffice, ou de um serviço parecido, ao seu tipo.",
+    "hint": "Onde fica a palavra `stream`?",
+    "pairs": [
+      {
+        "left": "`GetEvent`: um id entra, um evento sai",
+        "right": "unária"
+      },
+      {
+        "left": "`Watch`: um id entra, a disponibilidade a cada mudança",
+        "right": "streaming do servidor"
+      },
+      {
+        "left": "`Scan`: ingressos um a um, depois um resumo",
+        "right": "streaming do cliente"
+      },
+      {
+        "left": "um chat em que os dois lados falam quando querem",
+        "right": "bidirecional"
+      }
+    ]
+  },
+  "ex-qq1m336b": {
+    "prompt": "Aula 10. Clientes antigos continuam no ar. Associe cada mudança no `seats.proto` ao seu veredito.",
+    "hint": "Os números são o contrato; os nomes são documentação.",
+    "pairs": [
+      {
+        "left": "acrescentar `string venue = 5;`",
+        "right": "seguro"
+      },
+      {
+        "left": "renomear o campo 2 de `name` para `title`",
+        "right": "seguro no fio"
+      },
+      {
+        "left": "dar a `seats` o número 7 no lugar de 3",
+        "right": "quebra todo leitor existente"
+      },
+      {
+        "left": "remover `rpc Scan`",
+        "right": "chamadores antigos recebem `Unimplemented`"
+      }
+    ]
+  },
+  "ex-3wzzb20k": {
+    "prompt": "Aula 10. Um cliente chama `GetEvent` com prazo de 2 segundos, e o servidor está lento. O que o handler do servidor enxerga?",
+    "hint": "No gRPC o prazo não é assunto só do cliente.",
+    "choices": [
+      {
+        "text": "Nada: o prazo só vale dentro do cliente",
+        "why": "É assim que se comporta um timeout de cliente HTTP comum, não o do gRPC."
+      },
+      {
+        "text": "Um status 504 na resposta HTTP/2",
+        "why": "O gRPC responde HTTP 200 e põe o próprio código no `grpc-status`."
+      },
+      {
+        "text": "Um panic, que o `recoverPanics` transforma em Internal",
+        "why": "Nada entra em panic, e o `recoverPanics` envolve handlers HTTP, não métodos gRPC."
+      },
+      {
+        "text": "O contexto dele termina quando passa o prazo do cliente",
+        "why": "Certo. O prazo viaja com a chamada num cabeçalho, e o cliente recebe `DeadlineExceeded`."
+      }
+    ]
+  },
+  "ex-scj7tazy": {
+    "prompt": "Aula 10. Um novo `rpc Cancel` é acrescentado ao contrato e o código regenerado. Servidores que ainda não escreveram `Cancel` continuam compilando. Por quê?",
+    "hint": "Veja o que o `seatsServer` embute.",
+    "choices": [
+      {
+        "text": "O Go ignora métodos de interface que ninguém chama",
+        "why": "Um tipo só satisfaz uma interface com todos os métodos presentes."
+      },
+      {
+        "text": "O protoc deixa métodos novos de fora até um servidor defini-los",
+        "why": "A geração lê só o contrato; não sabe nada dos servidores."
+      },
+      {
+        "text": "O gRPC registra métodos só na primeira chamada",
+        "why": "O registro acontece na subida, a partir da descrição gerada."
+      },
+      {
+        "text": "Eles embutem `UnimplementedSeatsServer`",
+        "why": "Certo. O tipo embutido fornece todo método que falta ao servidor, respondendo `Unimplemented`."
+      }
+    ]
+  },
+  "ex-5myvy60v": {
+    "prompt": "Aula 10. O `Watch` é reescrito sem o `select` em `ctx.Done()`, só com o ticker. Um cliente observa por um minuto e desconecta. O que acontece depois?",
+    "hint": "Em Go um stream é um laço.",
+    "choices": [
+      {
+        "text": "O gRPC mata a goroutine quando a conexão fecha",
+        "why": "O Go não tem como matar uma goroutine de fora; ela precisa retornar sozinha."
+      },
+      {
+        "text": "O servidor entra em panic no próximo tick",
+        "why": "Ler o store depois que o cliente saiu funciona perfeitamente; esse é o desperdício."
+      },
+      {
+        "text": "O cliente recebe `Canceled` e reconecta",
+        "why": "O cliente saiu de propósito; o problema está do lado do servidor."
+      },
+      {
+        "text": "Ele segue consultando até um `Send` falhar",
+        "why": "Certo. Nada avisa o laço que o cliente saiu até um envio falhar; sem mudança nos lugares, não há envio."
+      }
+    ]
+  },
+  "ex-nvnn94ja": {
+    "prompt": "Aula 10. Complete a lacuna: numa mensagem de Protocol Buffers, o que viaja no fio para cada campo é o seu ____, não o nome.",
+    "hint": "O `--decode_raw` o recupera sem o `.proto`.",
+    "blanks": [
+      {
+        "accept": [
+          "número",
+          "número do campo",
+          "tag"
+        ]
+      }
+    ]
+  },
+  "ex-e2rzxp97": {
+    "prompt": "Aula 11. Uma equipe escolhe gRPC para a API pública porque as respostas em protobuf têm metade do tamanho do JSON. O serviço fica atrás de um proxy que comprime com gzip. O que a aula 11 mediu que enfraquece o motivo?",
+    "hint": "Duzentos eventos, sem compressão e com.",
+    "choices": [
+      {
+        "text": "O JSON fica menor que o protobuf depois de comprimido",
+        "why": "O protobuf continuou um pouco menor; a diferença encolheu, não se inverteu."
+      },
+      {
+        "text": "Comprimidos, diferem em seis por cento",
+        "why": "Certo. 1.350 contra 1.430 bytes; a diferença sem compressão é quase toda nomes de campo repetidos, que o gzip remove."
+      },
+      {
+        "text": "O protobuf não se deixa comprimir",
+        "why": "Ele também comprimiu, de 5.671 para 1.350 bytes."
+      },
+      {
+        "text": "Codificar protobuf é dez vezes mais lento",
+        "why": "Codificar protobuf foi um pouco mais rápido, não mais lento."
+      }
+    ]
+  },
+  "ex-yn05ajda": {
+    "prompt": "Aula 11. Um balanceador conta erros pelo status HTTP. Toda chamada gRPC ao boxoffice que falha com NotFound ou Internal é contada como o quê?",
+    "hint": "Onde o gRPC põe o resultado?",
+    "choices": [
+      {
+        "text": "Um 404 e um 500, como no REST",
+        "why": "O gRPC não traduz os códigos dele em status HTTP."
+      },
+      {
+        "text": "Um erro de protocolo, já que não entende HTTP/2",
+        "why": "Um balanceador que encaminha gRPC fala HTTP/2; ele lê o status sem problema."
+      },
+      {
+        "text": "Um sucesso, já que o status HTTP é 200",
+        "why": "Certo. O código de verdade chega no `grpc-status`, um trailer que o balanceador não leu."
+      },
+      {
+        "text": "Nada, já que chamadas gRPC passam ao largo do balanceador",
+        "why": "Elas passam por ele como qualquer requisição HTTP/2."
+      }
+    ]
+  },
+  "ex-dcr4gtx7": {
+    "prompt": "Aula 11. Associe cada chamador ao protocolo que as quatro perguntas da seção 07 lhe dão.",
+    "hint": "Se a primeira resposta é sim, REST; se qualquer outra é sim, o gRPC vale as ferramentas.",
+    "pairs": [
+      {
+        "left": "a página web da bilheteria",
+        "right": "REST e JSON"
+      },
+      {
+        "left": "o app de uma empresa parceira feito sobre a sua API",
+        "right": "REST com uma descrição OpenAPI"
+      },
+      {
+        "left": "o seu leitor de portaria enviando ingressos em stream ao seu serviço",
+        "right": "gRPC"
+      }
+    ],
+    "right_distractors": [
+      "SOAP"
+    ]
+  },
+  "ex-jj4z7qhx": {
+    "prompt": "Aula 11. Uma desenvolvedora de front-end pede para chamar a porta gRPC do boxoffice direto de uma página, com uma biblioteca JavaScript. O que impede?",
+    "hint": "Onde chega o `grpc-status`?",
+    "choices": [
+      {
+        "text": "Navegadores não falam HTTP/2",
+        "why": "Falam; o problema é o que a página consegue enxergar dele."
+      },
+      {
+        "text": "O `fetch` esconde os trailers da página",
+        "why": "Certo. Trailers e enquadramento HTTP/2 ficam fora do alcance da página, então ela precisa de gRPC-Web, Connect ou um gateway: um segundo protocolo para operar."
+      },
+      {
+        "text": "O protobuf não tem implementação em JavaScript",
+        "why": "Tem várias; a codificação não é o obstáculo."
+      },
+      {
+        "text": "O CORS proíbe corpos binários",
+        "why": "O CORS não diz nada sobre o formato do corpo."
+      }
+    ]
+  },
+  "ex-aw9w7aa1": {
+    "prompt": "Aula 11. Um ano depois de adotar gRPC, todo chamador alcança o serviço pelo grpc-gateway, que o converte de volta em JSON. O que o curso lê nisso?",
+    "hint": "A seção 07 dá os sinais de cada escolha errada.",
+    "choices": [
+      {
+        "text": "O gRPC foi a escolha errada para esses chamadores",
+        "why": "Certo. Todo mundo paga por dois protocolos e usa um."
+      },
+      {
+        "text": "O gateway prova que o desenho escala",
+        "why": "Ele prova que os chamadores queriam JSON desde o início."
+      },
+      {
+        "text": "O REST foi a escolha errada para os chamadores internos",
+        "why": "Não há serviço REST aqui; os chamadores estão contornando o gRPC."
+      },
+      {
+        "text": "O contrato precisa de um pacote v2",
+        "why": "Nada no contrato quebrou; versão nova é para mudanças que quebram."
+      }
+    ]
+  },
+  "ex-34dd0hn8": {
+    "prompt": "Aula 11. O grpcurl imprime um evento como JSON sem o campo `sold`. Um script de painel lê esse JSON. O que ele precisa supor?",
+    "hint": "A forma binária nunca o enviou.",
+    "choices": [
+      {
+        "text": "Um número ausente significa zero",
+        "why": "Certo. Campos no valor zero ficam de fora, a ambiguidade que a aula 3 encontrou."
+      },
+      {
+        "text": "O evento ainda não tem registro de vendas e precisa ser buscado de novo",
+        "why": "Perguntar de novo devolve o mesmo JSON; zero é a resposta."
+      },
+      {
+        "text": "O servidor não conseguiu ler a coluna",
+        "why": "Uma falha seria um status, não um campo ausente."
+      },
+      {
+        "text": "A versão do contrato é mais velha que a do cliente",
+        "why": "O `sold` está no contrato; ele era zero."
+      }
+    ]
+  },
+  "ex-k7fpc5bp": {
+    "prompt": "Aula 12. Por que a linha de acesso do boxoffice diz `\"msg\":\"request\"` toda vez, com o método, o caminho e o status como campos?",
+    "hint": "Pense num programa lendo dez milhões de linhas.",
+    "choices": [
+      {
+        "text": "O slog recusa mensagens com mais de uma palavra",
+        "why": "Mensagens são texto livre; a constante é uma escolha."
+      },
+      {
+        "text": "Economiza bytes, o que importa para o disco",
+        "why": "A linha em JSON é mais longa que a antiga."
+      },
+      {
+        "text": "Máquinas filtram campos sem adivinhar",
+        "why": "Certo. O `status` é um número com nome, e toda linha de requisição se acha por um valor."
+      },
+      {
+        "text": "Loggers de nuvem descartam linhas com texto variável",
+        "why": "Nenhuma plataforma faz isso; o motivo é a busca."
+      }
+    ]
+  },
+  "ex-5qw6nhd2": {
+    "prompt": "Aula 12. Quais destes nunca devem aparecer no log do boxoffice? Escolha todos.",
+    "hint": "Um log é guardado por mais tempo e copiado para mais longe que os dados que descreve.",
+    "choices": [
+      {
+        "text": "o cabeçalho `Authorization`",
+        "why": "Certo. Ele carrega um token da equipe."
+      },
+      {
+        "text": "um corpo de requisição inteiro",
+        "why": "Certo. Ele contém o que o cliente mandou, segredos incluídos."
+      },
+      {
+        "text": "um número de cartão",
+        "why": "Certo. As bandeiras proíbem guardá-lo fora de um sistema certificado."
+      },
+      {
+        "text": "o id da requisição",
+        "why": "É exatamente o que uma boa linha contém."
+      },
+      {
+        "text": "o status da resposta",
+        "why": "Parte de toda linha de acesso desde a aula 2."
+      }
+    ]
+  },
+  "ex-spvztn7x": {
+    "prompt": "Aula 12. Um handler novo registra `\"email\", p.Email`, onde `p.Email` é uma string comum. O tipo `email` da aula 12 existe. O que o curso recomenda?",
+    "hint": "Reduza onde ninguém precise lembrar.",
+    "choices": [
+      {
+        "text": "Manter a string comum; logs são internos",
+        "why": "Logs chegam a fornecedores e backups; um e-mail é dado pessoal pela LGPD."
+      },
+      {
+        "text": "Registrar em DEBUG para a produção nunca escrever",
+        "why": "Um nível é um filtro que alguém muda num incidente; o tipo é uma garantia."
+      },
+      {
+        "text": "Fazer o hash com SHA-256 no handler",
+        "why": "O curso reduz no tipo, para nenhum handler precisar fazer nada."
+      },
+      {
+        "text": "Registrar `email(p.Email)`",
+        "why": "Certo. O `LogValue` dele esconde a maior parte do endereço em toda chamada; melhor ainda, registrar o id do ingresso."
+      }
+    ]
+  },
+  "ex-9cepzdv5": {
+    "prompt": "Aula 12. O zerolog escreveu uma linha em cerca de 215 ns, o zap e o slog em cerca de 450 ns. Por que o curso ainda escolhe o slog para o boxoffice?",
+    "hint": "Ponha os números ao lado de uma consulta ao banco.",
+    "choices": [
+      {
+        "text": "O slog aloca menos que o zerolog",
+        "why": "Os dois não alocaram nada por linha."
+      },
+      {
+        "text": "O zerolog não escreve JSON",
+        "why": "O zerolog escreve JSON enquanto monta a linha."
+      },
+      {
+        "text": "O zap e o zerolog deixaram de ser mantidos",
+        "why": "A aula não diz nada disso."
+      },
+      {
+        "text": "A diferença some ao lado do banco",
+        "why": "Certo. Uma consulta leva milissegundos, e o slog é o tipo comum: bibliotecas aceitam um `*slog.Logger`, e o zerolog ou o zap cabem por trás dele se preciso."
+      }
+    ]
+  },
+  "ex-nwxd0hr9": {
+    "prompt": "Aula 12. Um job que usa o logger de produção do zap termina logo depois de registrar um ERROR, e a linha nunca chega ao log. O que foi esquecido?",
+    "hint": "O zap usa buffer.",
+    "choices": [
+      {
+        "text": "`defer logger.Sync()`",
+        "why": "Certo. Ele descarrega as linhas do buffer antes de o programa terminar."
+      },
+      {
+        "text": "`logger.Sugar()`",
+        "why": "A API sugared muda o estilo da chamada, não o buffer."
+      },
+      {
+        "text": "Uma opção de stacktrace",
+        "why": "A configuração de produção já acrescenta uma às linhas de ERROR."
+      },
+      {
+        "text": "`slog.SetDefault`",
+        "why": "Isso é do slog, e não descarrega nada do zap."
+      }
+    ]
+  },
+  "ex-g8zj36tt": {
+    "prompt": "Aula 12. Depois do `slog.SetDefault`, o antigo `log.Printf(\"unexpected error: %v\", err)` do `fail` sai em JSON. O que ainda falta nessa linha?",
+    "hint": "As aulas 16 e 17 mostraram linhas assim.",
+    "choices": [
+      {
+        "text": "Campos, o id da requisição e um nível verdadeiro",
+        "why": "Certo. Ela sai como INFO, e a ponte transforma texto em mensagem e nada mais; converter a chamada é o resto do trabalho."
+      },
+      {
+        "text": "Nada; o SetDefault converte as chamadas antigas por completo",
+        "why": "O erro fica enterrado no texto da mensagem, no nível errado."
+      },
+      {
+        "text": "O timestamp, que o `log` não passa ao slog",
+        "why": "Toda linha da ponte tinha horário."
+      },
+      {
+        "text": "JSON válido, já que o `%v` quebra as aspas",
+        "why": "O handler escapa o texto; a linha é JSON válido."
+      }
+    ]
+  },
+  "ex-0vn6z4pa": {
+    "prompt": "Aula 13. Associe cada situação à técnica que o raciocínio da aula escolhe.",
+    "hint": "Quem fala, com que frequência, e quantas conexões?",
+    "pairs": [
+      {
+        "left": "um painel da equipe que uma dúzia de pessoas atualiza a cada minuto",
+        "right": "polling"
+      },
+      {
+        "left": "lugares restantes numa página de evento, do servidor para quem vê",
+        "right": "server-sent events"
+      },
+      {
+        "left": "um chat entre compradores numa fila",
+        "right": "WebSocket"
+      },
+      {
+        "left": "dezenas de milhares de conexões que precisam sobreviver a um deploy",
+        "right": "Centrifugo"
+      }
+    ]
+  },
+  "ex-8v9a809z": {
+    "prompt": "Aula 13. Uma venda roda o UPDATE, o gatilho chama `pg_notify`, e depois a transação faz rollback. O que os ouvintes recebem?",
+    "hint": "Quando uma notificação é entregue?",
+    "choices": [
+      {
+        "text": "O número novo, depois uma correção com o antigo",
+        "why": "O PostgreSQL não manda correção; ele nunca mandou a primeira."
+      },
+      {
+        "text": "Nada",
+        "why": "Certo. Notificações são entregues no commit, então uma página nunca mostra vendido um lugar que ainda está à venda."
+      },
+      {
+        "text": "O número novo, que fica errado até a próxima venda",
+        "why": "Isso aconteceria se as notificações saíssem na hora; elas esperam o commit."
+      },
+      {
+        "text": "Um erro no canal `availability`",
+        "why": "Canais carregam mensagens, nunca erros."
+      }
+    ]
+  },
+  "ex-ak8g0mm6": {
+    "prompt": "Aula 13. Por que a notícia de uma venda vem de um gatilho no PostgreSQL e não de uma chamada ao hub no fim do `Sell`?",
+    "hint": "Conte os caminhos por que uma venda chega ao banco.",
+    "choices": [
+      {
+        "text": "Toda venda passa pelo banco",
+        "why": "Certo. Com duas cópias, cada uma faz LISTEN e avisa os próprios visitantes; um hub alimentado pelo `Sell` avisaria só os de uma cópia."
+      },
+      {
+        "text": "O Go recusa envios a canal dentro de uma transação",
+        "why": "Nada impede; o problema é qual processo escuta."
+      },
+      {
+        "text": "Gatilhos são mais rápidos que código Go",
+        "why": "Velocidade não é o argumento da aula."
+      },
+      {
+        "text": "O `Sell` não tem acesso ao hub",
+        "why": "Bastaria um parâmetro; o motivo é estrutural."
+      }
+    ]
+  },
+  "ex-vv8zb51k": {
+    "prompt": "Aula 13. O hub descarta um valor quando o buffer de oito de quem observa está cheio. Quando alguém vê algo errado por causa disso?",
+    "hint": "Cada mensagem é o número inteiro de lugares restantes.",
+    "choices": [
+      {
+        "text": "Toda vez, já que uma venda descartada nunca é contada",
+        "why": "Mensagens são estados, não diferenças; nada é somado."
+      },
+      {
+        "text": "Quando a última mudança foi descartada",
+        "why": "Certo. Qualquer mensagem posterior substitui a descartada, então só um descarte final deixa um número velho."
+      },
+      {
+        "text": "Nunca, já que o `publish` espera haver espaço",
+        "why": "Ele não espera; o caso `default` descarta."
+      },
+      {
+        "text": "Só para quem usa WebSocket, nunca para server-sent events",
+        "why": "Os dois handlers leem do mesmo hub."
+      }
+    ]
+  },
+  "ex-g0xberp7": {
+    "prompt": "Aula 13. Uma página em `https://evil.example` abre um WebSocket para o `/events/1/ws` do boxoffice. Que parte do boxoffice decide se ele é aceito?",
+    "hint": "O middleware da aula 2 governa o `fetch`.",
+    "choices": [
+      {
+        "text": "O middleware `cors`",
+        "why": "O CORS não se aplica a WebSockets; ele nunca é consultado."
+      },
+      {
+        "text": "O `OriginPatterns` do `Accept`",
+        "why": "Certo. O navegador manda `Origin`; o que não é o host nem um padrão da lista recebe 403."
+      },
+      {
+        "text": "A política de mesma origem do navegador, antes de a requisição sair",
+        "why": "Navegadores deixam qualquer página abrir um WebSocket para qualquer lugar; o servidor precisa conferir."
+      },
+      {
+        "text": "O `requireStaff`, já que a rota é pública",
+        "why": "Ele protege só o `/admin/`."
+      }
+    ]
+  },
+  "ex-ssrwj9yc": {
+    "prompt": "Aula 13. Alguém apaga a linha `SetWriteDeadline(time.Time{})` do `liveEvents`. Alguém deixa a página aberta. O que acontece?",
+    "hint": "A aula 1 definiu quatro timeouts.",
+    "choices": [
+      {
+        "text": "Nada; o flush reinicia o prazo",
+        "why": "Um flush envia bytes; o prazo fica onde estava."
+      },
+      {
+        "text": "O stream termina depois de sessenta segundos de silêncio, pelo `IdleTimeout`",
+        "why": "O IdleTimeout vale entre requisições, não durante uma."
+      },
+      {
+        "text": "A rota de WebSocket também quebra",
+        "why": "O hijack limpa os prazos; o WebSocket nunca precisou da linha."
+      },
+      {
+        "text": "O `WriteTimeout` o corta aos dez segundos",
+        "why": "Certo. Dez segundos é o máximo que uma resposta tem para ser escrita, a menos que esta resposta o suspenda."
+      }
+    ]
+  },
+  "ex-r8yjqr11": {
+    "prompt": "Aula 13. O pool tem `MaxConns` 10, e o `listen` segura uma conexão para o `LISTEN`. Quantas sobram para consultas?",
+    "hint": "A conexão que escuta nunca é devolvida.",
+    "unit": "conexões"
+  },
+  "ex-zvhpr29d": {
+    "prompt": "Aula 14. O `-max-conns` tem padrão 10. O boxoffice sobe com `BOXOFFICE_MAX_CONNS=20` no ambiente e `-max-conns=4` na linha de comando. Que tamanho de pool ele usa?",
+    "hint": "`fs.Set` pela variável, depois `Parse`.",
+    "unit": ""
+  },
+  "ex-6b9a13mx": {
+    "prompt": "Aula 14. O boxoffice é iniciado com `./boxoffice -max-conns 6 extra -http :9000`. Em que endereço ele escuta?",
+    "hint": "Onde o pacote flag para?",
+    "choices": [
+      {
+        "text": "`:9000`",
+        "why": "O `-http :9000` veio depois de um não-flag e ficou nos argumentos."
+      },
+      {
+        "text": "Nenhum: o pacote flag sai com status 2",
+        "why": "Um argumento sobrando não é erro para o `flag`."
+      },
+      {
+        "text": "`localhost:8080`, o padrão",
+        "why": "Certo. A leitura para em `extra`, o primeiro argumento que não é flag, então o `-http` nunca é lido."
+      },
+      {
+        "text": "`:9000`, mas o `-max-conns` fica no padrão",
+        "why": "O `-max-conns 6` veio primeiro e foi lido; quem não foi lido é o `-http`."
+      }
+    ]
+  },
+  "ex-m7tbfxgm": {
+    "prompt": "Aula 14. Um deploy define `BOXOFFICE_ORIGIN=tickets.example.com`, sem esquema. O que acontece, e por que esse é o momento certo?",
+    "hint": "Um valor ruim vai ser encontrado; a questão é quando.",
+    "choices": [
+      {
+        "text": "O `load` se recusa a subir, enquanto a versão antiga ainda atende",
+        "why": "Certo. Senão subiria limpo e não casaria com o `Origin` de navegador nenhum, descoberto por um cliente."
+      },
+      {
+        "text": "Sobe e registra um aviso no primeiro WebSocket",
+        "why": "Essa é a descoberta tardia que a verificação existe para evitar."
+      },
+      {
+        "text": "Acrescenta `https://` e segue",
+        "why": "O `load` não adivinha nada; ele diz o que escrever."
+      },
+      {
+        "text": "Nada; a origem só é usada pelo CORS, que ignora esquemas",
+        "why": "O CORS compara a origem inteira, esquema incluído, e os WebSockets também usam o host."
+      }
+    ]
+  },
+  "ex-h6rgjm5y": {
+    "prompt": "Aula 14. Um colega propõe uma flag `-token`, \"já que flags são as mais fáceis de sobrescrever\". Qual é a objeção do curso?",
+    "hint": "Rode o `ps` como outro usuário.",
+    "choices": [
+      {
+        "text": "Qualquer usuário a lê com `ps`",
+        "why": "Certo. A linha de comando é pública na máquina; o ambiente só é legível pelo dono e pelo root, e um `_FILE` é mais restrito ainda."
+      },
+      {
+        "text": "Flags são limitadas a 64 caracteres",
+        "why": "Esse limite não existe; um token de 32 caracteres cabe."
+      },
+      {
+        "text": "O pacote flag imprime todo valor na ajuda",
+        "why": "Ele imprime padrões, não o que foi passado; o vazamento está em outro lugar."
+      },
+      {
+        "text": "O `fs.Set` não lê um tipo secreto",
+        "why": "Uma flag string seria lida sem problema; esse não é o problema."
+      }
+    ]
+  },
+  "ex-cxg837ce": {
+    "prompt": "Aula 14. Um pull request acrescenta `if cfg.Env == \"production\" { ... }` para pular uma verificação fora de produção. O que o curso diz?",
+    "hint": "Ambientes devem diferir em valores.",
+    "choices": [
+      {
+        "text": "Tudo bem se a variável tiver um padrão",
+        "why": "Um padrão não muda quem roda o ramo primeiro."
+      },
+      {
+        "text": "O twelve-factor exige exatamente essa configuração",
+        "why": "Ele pede configuração no ambiente, não uma chave de modo."
+      },
+      {
+        "text": "Isso pertence a uma flag, não a uma variável",
+        "why": "A origem não é o problema; o ramo é."
+      },
+      {
+        "text": "Esse ramo roda pela primeira vez na frente de usuários reais",
+        "why": "Certo. Código que só a produção executa é testado pelos clientes; varie valores, nunca quais linhas rodam."
+      }
+    ]
+  },
+  "ex-ys8d7rp3": {
+    "prompt": "Aula 14. Complete a lacuna: para distinguir uma variável vazia de uma que não está definida, chame `os.____`.",
+    "hint": "Ela devolve o valor e um bool.",
+    "blanks": [
+      {
+        "accept": [
+          "LookupEnv"
+        ]
+      }
+    ]
+  },
+  "ex-bshwykqj": {
+    "prompt": "Aula 15. Alguém move o `requestID` para depois do `logRequests` no `chain`, e as linhas de acesso perdem o id. Que distância de teste pega isso?",
+    "hint": "Um handler sozinho nunca passa por middleware.",
+    "choices": [
+      {
+        "text": "O roteador inteiro, servido pelo `httptest.Server`",
+        "why": "Certo. Só o `routes(...)` com a cadeia mostra a ordem dos middlewares."
+      },
+      {
+        "text": "Um handler com um `ResponseRecorder`",
+        "why": "O handler roda sem middleware nenhum."
+      },
+      {
+        "text": "Um teste de integração contra o PostgreSQL",
+        "why": "O banco não sabe nada de middleware."
+      },
+      {
+        "text": "`go vet`",
+        "why": "A ordem é Go válido; o vet não tem o que dizer."
+      }
+    ]
+  },
+  "ex-avzawxa1": {
+    "prompt": "Aula 15. Um teste conta compras bem-sucedidas com `sold++` em cinquenta goroutines e passa em toda execução. O que o curso conclui?",
+    "hint": "Rode com `-race`.",
+    "choices": [
+      {
+        "text": "Prova que o `memStore` é seguro sob concorrência",
+        "why": "O store é seguro; o contador do próprio teste não é."
+      },
+      {
+        "text": "Está errado: o `sold++` tem corrida",
+        "why": "Certo. O detector de corrida o aponta, o `atomic.Int64` corrige; passar foi sorte, e numa máquina mais ocupada falha."
+      },
+      {
+        "text": "Está certo, porque goroutines compartilham memória",
+        "why": "Compartilhar sem ordem é exatamente a corrida."
+      },
+      {
+        "text": "O `wg.Wait()` torna os incrementos seguros",
+        "why": "Ele ordena o fim, não os incrementos entre si."
+      }
+    ]
+  },
+  "ex-6zgfdwt5": {
+    "prompt": "Aula 15. A CI roda `go test ./...` e fica verde, mas nenhum job define `BOXOFFICE_TEST_DATABASE_URL`. O que a CI verificou sobre o `pgStore`?",
+    "hint": "O que um teste pulado imprime sem `-v`?",
+    "choices": [
+      {
+        "text": "Tudo, porque o `t.Skip` reprova o pacote",
+        "why": "Pular não é falhar."
+      },
+      {
+        "text": "O SQL dele, por meio do `memStore`",
+        "why": "O `memStore` não roda SQL nenhum."
+      },
+      {
+        "text": "A concorrência do `Sell`, com o detector de corrida",
+        "why": "Esses testes nunca rodaram."
+      },
+      {
+        "text": "Nada; os testes foram pulados",
+        "why": "Certo. A linha ainda disse `ok`: um skip parece aprovação; a CI precisa definir a variável, e um passo que falha quando ela está vazia protege isso."
+      }
+    ]
+  },
+  "ex-7gvk79kx": {
+    "prompt": "Aula 15. Um teste lê linhas do banco de teste. Alguém muda as linhas à mão e roda `go test` de novo; ele diz `(cached)`. Por quê, e o que resolve?",
+    "hint": "Do que depende a chave do cache?",
+    "choices": [
+      {
+        "text": "O teste está quebrado; só testes pulados entram em cache",
+        "why": "Testes que passam também entram em cache."
+      },
+      {
+        "text": "O `go clean -modcache` limpa isso",
+        "why": "Isso apaga módulos baixados, não resultados de teste."
+      },
+      {
+        "text": "O cache ignora o banco; `-count=1`",
+        "why": "Certo. Ele acompanha código, flags e variáveis, e o banco não é nada disso, então a CI sempre passa `-count=1`."
+      },
+      {
+        "text": "O PostgreSQL devolveu linhas em cache",
+        "why": "O teste nem rodou; o go repetiu o resultado."
+      }
+    ]
+  },
+  "ex-22t5ackx": {
+    "prompt": "Aula 15. Antes da correção, dois tokens iguais para gerente e portaria davam a quem os tinha que papel?",
+    "hint": "Os papéis eram lidos de um map.",
+    "choices": [
+      {
+        "text": "Um diferente em cada subida, pela ordem do map",
+        "why": "Certo. O Go varia a iteração de map de propósito, e a segunda escrita substituía a primeira; agora o `load` recusa."
+      },
+      {
+        "text": "Sempre gerente, a primeira entrada",
+        "why": "Literais de map não guardam ordem na iteração."
+      },
+      {
+        "text": "Nenhum: o `load` recusava",
+        "why": "Recusar é a correção que a aula 15 trouxe; antes, nada reclamava."
+      },
+      {
+        "text": "Os dois papéis ao mesmo tempo",
+        "why": "Um map guarda um valor por chave."
+      }
+    ]
+  },
+  "ex-hdxmb9v9": {
+    "prompt": "Aula 15. Um teste de handler chama `getEvent(store)(rec, req)` e esquece o `req.SetPathValue`. Que status todo caso recebe?",
+    "hint": "Nenhum mux casou um padrão para esta requisição.",
+    "choices": [
+      {
+        "text": "404 para todo evento",
+        "why": "O store nunca é consultado; o id falha antes."
+      },
+      {
+        "text": "400, vindo do `pathID`",
+        "why": "Certo. O `PathValue` devolve \"\", o `Atoi` falha, e o handler recusa."
+      },
+      {
+        "text": "200, já que o `NewRequest` lê a URL",
+        "why": "Ele lê a URL, não os curingas do padrão."
+      },
+      {
+        "text": "Um panic num path value nulo",
+        "why": "É uma string vazia, não nula."
+      }
+    ]
+  },
+  "ex-wpz6cz71": {
+    "prompt": "Aula 15. O `testDB` registra duas limpezas: primeiro uma que apaga o banco, depois o `pool.Close`. Ponha em ordem o que acontece quando o teste termina.",
+    "hint": "Limpezas rodam da última registrada para a primeira.",
+    "items": [
+      "o corpo do teste retorna",
+      "o `pool.Close` fecha as conexões do pool",
+      "o `DROP DATABASE ... WITH (FORCE)` remove o banco",
+      "a conexão de administração fecha"
+    ]
+  },
+  "ex-zb6mdr4v": {
+    "prompt": "Aula 16. Uma imagem `FROM gcr.io/distroless/static-debian12` roda um binário gerado com `go build` simples e responde `exec /boxoffice: no such file or directory`. O que falta?",
+    "hint": "Leia o cabeçalho do binário com `file`.",
+    "choices": [
+      {
+        "text": "Um loader; gere com `CGO_ENABLED=0`",
+        "why": "Certo. Um build nativo com cgo ligado é ligado dinamicamente, e a imagem não tem biblioteca C nem loader."
+      },
+      {
+        "text": "O binário: o `COPY` o pôs no lugar errado",
+        "why": "O arquivo está lá; a mensagem é sobre o interpretador que ele pede."
+      },
+      {
+        "text": "Um shell para iniciá-lo",
+        "why": "O `ENTRYPOINT` em forma exec não precisa de shell."
+      },
+      {
+        "text": "Permissão de execução no arquivo",
+        "why": "Um problema de permissão diz `permission denied`."
+      }
+    ]
+  },
+  "ex-gdhccgq9": {
+    "prompt": "Aula 16. Uma imagem roda o boxoffice com os padrões e `-p 8080:8080`, e o `curl localhost:8080` do host não recebe nada. Por quê?",
+    "hint": "De quem é esse `localhost`?",
+    "choices": [
+      {
+        "text": "Ele escuta no localhost do próprio container, que a porta encaminhada nunca alcança",
+        "why": "Certo. O `BOXOFFICE_HTTP=:8080` na imagem o faz escutar em toda interface."
+      },
+      {
+        "text": "Falta o `EXPOSE`",
+        "why": "O `EXPOSE` documenta portas e não publica nada."
+      },
+      {
+        "text": "O distroless bloqueia conexões de entrada",
+        "why": "Ele não tem firewall; não tem quase nada."
+      },
+      {
+        "text": "A porta 8080 exige root no container",
+        "why": "Portas acima de 1024 não exigem privilégio."
+      }
+    ]
+  },
+  "ex-p3zryfsb": {
+    "prompt": "Aula 16. No container, rodando com o seu uid e o socket montado, o boxoffice falha com `failed to connect to user= database=boxoffice`. O que explica o usuário vazio?",
+    "hint": "O pgx recorre ao sistema operacional.",
+    "choices": [
+      {
+        "text": "O `/etc/passwd` da imagem não tem nome para o seu uid",
+        "why": "Certo. A URL não citava usuário, então o pgx procurou o uid e não achou nada; `postgres://$USER@/...` resolve."
+      },
+      {
+        "text": "A autenticação peer recusou o uid",
+        "why": "O servidor reclamou que nenhum nome de usuário foi enviado, antes de qualquer autenticação."
+      },
+      {
+        "text": "O `DATABASE_URL` não foi passado ao container",
+        "why": "Foi; o `database=boxoffice` veio dele."
+      },
+      {
+        "text": "O arquivo do token não é legível por esse uid",
+        "why": "O token é lido pelo `load`, que passou; isto é o banco."
+      }
+    ]
+  },
+  "ex-6dpv90s5": {
+    "prompt": "Aula 16. Um script de release gera com `-ldflags \"-X main.verison=v1.2.0\"`. Que versão o binário informa?",
+    "hint": "Leia o nome da variável com atenção.",
+    "choices": [
+      {
+        "text": "`v1.2.0`",
+        "why": "`main.verison` não é `main.version`."
+      },
+      {
+        "text": "`dev`, e o build não deu erro",
+        "why": "Certo. O `-X` numa variável que não existe é ignorado, e é por isso que o padrão não passa por release."
+      },
+      {
+        "text": "Nada: a ligação falha",
+        "why": "O linker não reclama."
+      },
+      {
+        "text": "Uma string vazia",
+        "why": "A variável mantém o próprio padrão."
+      }
+    ]
+  },
+  "ex-10qw1m8b": {
+    "prompt": "Aula 16. O `docker buildx build --platform linux/arm64` numa máquina amd64 terminou sem emulador instalado. Por que não precisou de um?",
+    "hint": "O que o Dockerfile executa?",
+    "choices": [
+      {
+        "text": "O buildx emula arm64 por padrão",
+        "why": "Rodar a imagem mostrou `exec format error`: aqui não há emulação."
+      },
+      {
+        "text": "Imagens distroless rodam em qualquer processador",
+        "why": "Cada variante é feita para um processador."
+      },
+      {
+        "text": "Processadores amd64 executam instruções arm64",
+        "why": "Não executam; é o que o erro disse."
+      },
+      {
+        "text": "Nada no Dockerfile executa; o Go já tinha compilado para arm64",
+        "why": "Certo. O `COPY` de um binário compilado cruzado sobre a variante arm64 do distroless não exige processador arm64."
+      }
+    ]
+  },
+  "ex-swbjs4w0": {
+    "prompt": "Aula 16. Complete a lacuna: um build nativo no Linux sai ligado estaticamente quando roda como `CGO_ENABLED=__ go build`.",
+    "hint": "Desligue a ponte para o C.",
+    "blanks": [
+      {
+        "accept": [
+          "0"
+        ]
+      }
+    ]
+  },
+  "ex-pstrh3pw": {
+    "prompt": "Aula 16. Para atender de dentro de um container contra o PostgreSQL do host pelo socket, quais destes o `docker run` precisou entregar? Escolha todos.",
+    "hint": "Tudo o que o boxoffice precisa de fora entra por uma flag.",
+    "choices": [
+      {
+        "text": "`-v /var/run/postgresql:/var/run/postgresql`",
+        "why": "Certo. O diretório do socket precisa estar dentro do container."
+      },
+      {
+        "text": "`--user \"$(id -u):$(id -g)\"`",
+        "why": "Certo. A autenticação peer aceita a conexão quando o uid é o seu."
+      },
+      {
+        "text": "o arquivo do token, montado `:ro`, e a variável `_FILE`",
+        "why": "Certo. O segredo da aula 14, como arquivo."
+      },
+      {
+        "text": "`--privileged`",
+        "why": "Nada aqui precisa disso, e concede demais."
+      },
+      {
+        "text": "um shell na imagem",
+        "why": "A imagem não tem e não precisa."
+      }
+    ]
+  },
+  "ex-93ac4ce3": {
+    "prompt": "Aula 17. A checagem de liveness de uma equipe faz ping no banco. O banco cai por cinco minutos. O que acontece?",
+    "hint": "O que um \"não\" à liveness faz a plataforma fazer?",
+    "choices": [
+      {
+        "text": "O tráfego para até o banco voltar, como deveria",
+        "why": "Isso é o que uma falha de readiness faz; a liveness mata."
+      },
+      {
+        "text": "Toda cópia reinicia em laço",
+        "why": "Certo. Reinícios somam carga e não resolvem nada, já que reiniciar não traz o banco de volta; essa checagem pertence à readiness."
+      },
+      {
+        "text": "Nada, já que a liveness só roda na subida",
+        "why": "Isso é a startup probe; a liveness roda o tempo todo."
+      },
+      {
+        "text": "O banco é reiniciado pela plataforma",
+        "why": "A plataforma age sobre o processo que respondeu, não sobre as dependências."
+      }
+    ]
+  },
+  "ex-nm56kfc3": {
+    "prompt": "Aula 17. Depois que o PostgreSQL reiniciou, o `/readyz` respondeu ready e toda requisição funcionou, mas as páginas ao vivo pararam de mudar. Por que a readiness não percebeu?",
+    "hint": "Leia a primeira linha de log da seção 03.",
+    "choices": [
+      {
+        "text": "O pool perdeu todas as conexões para sempre",
+        "why": "O pool as reabriu; as requisições funcionaram."
+      },
+      {
+        "text": "O gatilho foi apagado pelo reinício",
+        "why": "Reiniciar um servidor mantém o esquema."
+      },
+      {
+        "text": "O `listen` estava morto, sem conferência",
+        "why": "Certo. Nada reiniciou o `listen`, e a readiness só faz ping; uma checagem de saúde confere o que mandam; um laço de reconexão e o estado dele na readiness fecham a lacuna."
+      },
+      {
+        "text": "O hub fechou quando a readiness falhou",
+        "why": "O hub só fecha no desligamento."
+      }
+    ]
+  },
+  "ex-m95wbq4j": {
+    "prompt": "Aula 17. Um colega rotula `boxoffice_http_requests_total` com `r.URL.Path` em vez de `r.Pattern`. O que dá errado?",
+    "hint": "Todo valor distinto de rótulo é uma série temporal.",
+    "choices": [
+      {
+        "text": "As contagens saem menores",
+        "why": "Elas se dividem em mais séries; nada se perde."
+      },
+      {
+        "text": "O Prometheus rejeita rótulos com barras",
+        "why": "Valores de rótulo aceitam qualquer texto."
+      },
+      {
+        "text": "Uma série por id de evento, erro de digitação e sondagem, sem limite",
+        "why": "Certo. O padrão é um valor por rota que você escreveu; o caminho é o que estranhos digitarem."
+      },
+      {
+        "text": "As rotas de admin são contadas duas vezes",
+        "why": "Cada requisição é contada uma vez de qualquer jeito."
+      }
+    ]
+  },
+  "ex-qymhpjw3": {
+    "prompt": "Aula 17. O `measure` é movido para o início da cadeia, antes do `requestID`. O que o rótulo de rota mostra para toda requisição?",
+    "hint": "O `requestID` chama `WithContext`.",
+    "choices": [
+      {
+        "text": "o padrão certo, como antes",
+        "why": "Só a requisição entregue ao mux o recebe."
+      },
+      {
+        "text": "`unmatched`",
+        "why": "Certo. O mux escreve o padrão numa cópia da requisição; a original que o `measure` segura fica vazia."
+      },
+      {
+        "text": "o caminho",
+        "why": "O `measure` nunca lê o caminho."
+      },
+      {
+        "text": "`/admin/` para toda rota",
+        "why": "Isso só acontece com rotas atrás do `requireStaff`, e só na ordem certa."
+      }
+    ]
+  },
+  "ex-en3828ea": {
+    "prompt": "Aula 17. Nove requisições levam 10 ms cada e uma leva 1 segundo. Qual é a média, em milissegundos, o número atrás do qual os buckets de um histograma não deixariam a lenta se esconder?",
+    "hint": "Some, depois divida por dez.",
+    "unit": "ms"
+  },
+  "ex-8tmxg36h": {
+    "prompt": "Aula 17. Quais destes são seguros como valores de rótulo de métrica? Escolha todos.",
+    "hint": "Um valor de rótulo precisa vir de um conjunto pequeno conhecido de antemão.",
+    "choices": [
+      {
+        "text": "a rota que casou",
+        "why": "Certo. Uma por rota que você escreveu."
+      },
+      {
+        "text": "o status da resposta",
+        "why": "Certo. Algumas dezenas de valores no máximo."
+      },
+      {
+        "text": "o id da requisição",
+        "why": "Sem limite; ele pertence ao log."
+      },
+      {
+        "text": "o e-mail do comprador",
+        "why": "Sem limite e dado pessoal."
+      }
+    ]
+  },
+  "ex-rc17f220": {
+    "prompt": "Aula 17. Ponha o desligamento do boxoffice na ordem em que o `main` o executa depois do primeiro SIGTERM.",
+    "hint": "Readiness primeiro, o servidor de ops por último.",
+    "items": [
+      "o `draining` é marcado e o `/readyz` responde 503",
+      "o `srv.Shutdown` fecha os listeners e espera as requisições em andamento",
+      "o `GracefulStop` espera as chamadas gRPC, `Stop` no prazo",
+      "o servidor de ops desliga e o `main` registra `stopped`"
+    ]
+  },
+  "ex-8tt8yq8v": {
+    "prompt": "Aula 17. Sem o `RegisterOnShutdown(live.close)`, alguém está com a página do evento aberta quando chega o SIGTERM. O que acontece com o desligamento?",
+    "hint": "O `Shutdown` espera as requisições ativas.",
+    "choices": [
+      {
+        "text": "Ele termina na hora; streams são conexões ociosas",
+        "why": "Um stream está no meio de uma resposta, o que é ativo."
+      },
+      {
+        "text": "O processo nunca termina",
+        "why": "O timeout de desligamento limita a espera."
+      },
+      {
+        "text": "O `EventSource` fecha o stream quando vê 503",
+        "why": "O 503 está na porta de ops; a página nunca a consulta."
+      },
+      {
+        "text": "Ele espera o prazo inteiro",
+        "why": "Certo. Oito segundos, depois o stream é cortado: um stream é uma requisição feita para nunca terminar."
+      }
+    ]
+  },
+  "ex-12caa8rq": {
+    "prompt": "Aula 17. Um serviço define o timeout de desligamento em 15 segundos e roda sob `docker stop` com o padrão. Uma requisição em andamento precisa de 12 segundos. O que ela recebe?",
+    "hint": "O que o `docker stop` envia depois de dez segundos?",
+    "choices": [
+      {
+        "text": "A resposta, já que o serviço espera quinze",
+        "why": "O processo não chega a esperar além do SIGKILL."
+      },
+      {
+        "text": "Cortada pelo SIGKILL aos dez segundos",
+        "why": "Certo. O timeout precisa ser menor que a tolerância da plataforma, por isso o boxoffice usa oito."
+      },
+      {
+        "text": "Um 503 da readiness",
+        "why": "A readiness responde à plataforma, não à requisição em andamento."
+      },
+      {
+        "text": "Uma nova tentativa do Docker em outro container",
+        "why": "O Docker não refaz nada."
+      }
+    ]
+  }
+}

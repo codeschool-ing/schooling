@@ -1,0 +1,586 @@
+[
+  {
+    "id": "ex-rzqpmph3",
+    "version": 1,
+    "section": "constraints",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `signals.go` defining `progressSignals = []os.Signal{syscall.SIGUSR1}` and no constraint, `GOOS=windows go build` stops with an error. Why?",
+    "hint": "Look at the message the build printed.",
+    "choices": [
+      {
+        "text": "That name exists for Linux, and this target has nothing by it",
+        "correct": true,
+        "why": "Right. The build reported `undefined: syscall.SIGUSR1`: the name exists in Linux's `syscall` and not in Windows's, so the file cannot compile there."
+      },
+      {
+        "text": "Windows forbids programs from handling signals at all",
+        "correct": false,
+        "why": "Windows has no `SIGUSR1`, but the build failed before any question of running: a name was missing at compile time."
+      },
+      {
+        "text": "Cross builds turn cgo off, and `os/signal` needs cgo",
+        "correct": false,
+        "why": "`os/signal` is pure Go, and the macOS and Windows builds of the three-file version compiled with cgo off."
+      },
+      {
+        "text": "`-o hits.exe` is wrong, since Windows names its own output",
+        "correct": false,
+        "why": "Naming the output is allowed for every target; the error was `undefined: syscall.SIGUSR1`, about the code."
+      }
+    ]
+  },
+  {
+    "id": "ex-zgyzsgm3",
+    "version": 1,
+    "section": "constraints",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague proposes keeping one file and writing `if runtime.GOOS != \"windows\" { signal.Notify(c, syscall.SIGUSR1) }`. Does that make the Windows build compile?",
+    "hint": "When does the compiler need the name to exist?",
+    "choices": [
+      {
+        "text": "Yes, because the branch never runs on Windows",
+        "correct": false,
+        "why": "Whether a branch runs is decided when the program runs; whether `syscall.SIGUSR1` exists is decided when it compiles, and for Windows it does not."
+      },
+      {
+        "text": "Yes, since the compiler removes the dead branch first",
+        "correct": false,
+        "why": "`runtime.GOOS` is a constant, but the code inside the branch is still type-checked, and an undefined name fails that check."
+      },
+      {
+        "text": "No: the name must exist to compile, whatever runs",
+        "correct": true,
+        "why": "Right. A `switch` on `runtime.GOOS` suits code that compiles everywhere. A name that exists on some systems only needs a file the other systems never compile."
+      },
+      {
+        "text": "No, because `runtime.GOOS` is not known on Windows",
+        "correct": false,
+        "why": "`runtime.GOOS` exists on every target and reads `windows` there. The problem is the signal's name, not the test."
+      }
+    ]
+  },
+  {
+    "id": "ex-4g28pm0k",
+    "version": 1,
+    "section": "constraints",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The first line of `progress_other.go`, which every system that is not Unix-like compiles, is `//go:build ___`.",
+    "hint": "A tag, and the operator that negates it.",
+    "blanks": [
+      {
+        "accept": [
+          "!unix"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cdhrbmt2",
+    "version": 1,
+    "section": "constraints",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Someone types `// go:build !unix` at the top of `progress_other.go`, with a space after the slashes. What does `go vet .` report on Linux?",
+    "hint": "With the space, what is that line to the go command?",
+    "choices": [
+      {
+        "text": "`invalid //go:build line` at the top of `progress_other.go`",
+        "correct": false,
+        "why": "Nothing reads it as a directive any more, so there is nothing to call invalid. It is an ordinary comment."
+      },
+      {
+        "text": "Nothing, and the file is left out of the Linux build",
+        "correct": false,
+        "why": "A file is left out only by a constraint, and the space removed it. Without one, the Linux build compiled the file."
+      },
+      {
+        "text": "`progressSignals redeclared`, in another file",
+        "correct": true,
+        "why": "Right. The line became a comment, so Linux compiled `progress_other.go` beside `progress_unix.go`, and vet reported the clash at `progress_unix.go:11:5`."
+      },
+      {
+        "text": "`misplaced compiler directive`, because of the space",
+        "correct": false,
+        "why": "That is what the compiler says about a directive below the package clause. A directive with a space is not a directive at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-frgwqezk",
+    "version": 1,
+    "section": "constraints",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tag with the build that satisfies it, in Go 1.27.1 with no `-tags` given.",
+    "hint": "Four of the five descriptions are right for one tag each.",
+    "pairs": [
+      {
+        "left": "`unix`",
+        "right": "a build for Linux, macOS or a BSD"
+      },
+      {
+        "left": "`cgo`",
+        "right": "a native build on a machine with a C compiler"
+      },
+      {
+        "left": "`go1.21`",
+        "right": "every build by Go 1.21 or any later release"
+      },
+      {
+        "left": "`ignore`",
+        "right": "no build at all, by convention"
+      }
+    ],
+    "right_distractors": [
+      "only a build by exactly Go 1.21"
+    ]
+  },
+  {
+    "id": "ex-8ms6qjds",
+    "version": 1,
+    "section": "file-names",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these files is compiled for macOS and for no other system, with no `//go:build` line in it?",
+    "hint": "The suffix has to be a `GOOS` value the toolchain knows.",
+    "choices": [
+      {
+        "text": "`progress_mac.go`",
+        "correct": false,
+        "why": "`mac` is not a `GOOS`, so the name carries no constraint and every build compiles the file, Linux included."
+      },
+      {
+        "text": "`darwin_progress.go`",
+        "correct": false,
+        "why": "The system has to come at the end of the name. With `darwin` at the front, the file is compiled everywhere."
+      },
+      {
+        "text": "`progress_darwin.go`",
+        "correct": true,
+        "why": "Right. `darwin` is the `GOOS` for macOS, and a name ending in `_darwin` constrains the file as if `//go:build darwin` were at its top."
+      },
+      {
+        "text": "`progress_macos.go`",
+        "correct": false,
+        "why": "`macos` is not on the list `go tool dist list` prints; Go calls the system `darwin`. This file is compiled for every target."
+      }
+    ]
+  },
+  {
+    "id": "ex-s0tfrj4e",
+    "version": 1,
+    "section": "file-names",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these file names carry a build constraint of their own? Choose all that do.",
+    "hint": "Drop `.go`, then a final `_test`, and look at what the name ends in.",
+    "choices": [
+      {
+        "text": "`zerrors_linux_amd64.go`",
+        "correct": true,
+        "why": "Yes: `_GOOS_GOARCH`, compiled only for Linux on `amd64`. `go list` showed it swapped for its `arm64` twin when `GOARCH` changed."
+      },
+      {
+        "text": "`crc32_arm64.go`",
+        "correct": true,
+        "why": "Yes: `_GOARCH` alone, so every system on `arm64` compiles it."
+      },
+      {
+        "text": "`progress_windows_test.go`",
+        "correct": true,
+        "why": "Yes. `_test` is removed first, and what is left ends in `_windows`: tests that run only on Windows."
+      },
+      {
+        "text": "`linux.go`",
+        "correct": false,
+        "why": "The suffix needs an underscore before it. A file named just after a system is an ordinary file."
+      },
+      {
+        "text": "`config_win.go`",
+        "correct": false,
+        "why": "`win` is not a `GOOS`; the Go name for Windows is `windows`. This file builds everywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-p9hqs0a9",
+    "version": 1,
+    "section": "file-names",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A file named `progress_darwin.go` also starts with `//go:build !darwin`. Which builds compile it?",
+    "hint": "The name and the line are both constraints. How do two constraints combine?",
+    "choices": [
+      {
+        "text": "Every build except macOS, since the line is more explicit",
+        "correct": false,
+        "why": "Neither rule overrides the other. The help text says the name's constraint applies in addition to any explicit one."
+      },
+      {
+        "text": "None of them",
+        "correct": true,
+        "why": "Right. The name requires `darwin` and the line requires not `darwin`, and both must hold, so no build ever compiles the file."
+      },
+      {
+        "text": "Only macOS builds, because the name wins over the line",
+        "correct": false,
+        "why": "A name does not win; it is one more condition joined with \"and\". On macOS the line is false, so the file is out there too."
+      },
+      {
+        "text": "It fails to build with a constraint conflict on macOS",
+        "correct": false,
+        "why": "The go command does not look for contradictions. The file is quietly left out of every build, which is worse."
+      }
+    ]
+  },
+  {
+    "id": "ex-g9bpybey",
+    "version": 1,
+    "section": "file-names",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`hits` needs the default directory where a log lives: `/var/log/nginx` on Linux, `/opt/homebrew/var/log/nginx` on macOS, `C:\\nginx\\logs` on Windows. How should the choice be written?",
+    "hint": "Does every branch compile on every system?",
+    "choices": [
+      {
+        "text": "Three files, `logdir_linux.go`, `logdir_darwin.go` and `logdir_windows.go`",
+        "correct": false,
+        "why": "That works, and it costs three files and a fourth for the systems none of them names. For plain strings the files buy nothing, since every value compiles everywhere."
+      },
+      {
+        "text": "A `switch` on `runtime.GOOS`",
+        "correct": true,
+        "why": "Right. Every branch is a string, which compiles on every system, so nothing has to be kept out of a build; `os.UserConfigDir` is written the same way."
+      },
+      {
+        "text": "A tag per system, chosen with `-tags linux` and the like",
+        "correct": false,
+        "why": "`linux` is already set by the build for Linux; giving it with `-tags` on another system would compile Linux files for the wrong target."
+      },
+      {
+        "text": "One file with `//go:build linux || darwin || windows`",
+        "correct": false,
+        "why": "That constraint keeps the file out of every other system, and it still has to choose between three values inside, with a `switch`."
+      }
+    ]
+  },
+  {
+    "id": "ex-whm1zcwn",
+    "version": 1,
+    "section": "custom-tags",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana builds with `go build -tags debgu -o hits .`, a typo for `debug`. What happens?",
+    "hint": "Does the go command know which tags the code uses?",
+    "choices": [
+      {
+        "text": "The build fails with `unknown build tag debgu`",
+        "correct": false,
+        "why": "There is no list of known custom tags. Any word is accepted, and one nothing mentions has no effect."
+      },
+      {
+        "text": "`go vet` warns about it at the next run",
+        "correct": false,
+        "why": "vet checks the constraints written in files, not the words given to `-tags`."
+      },
+      {
+        "text": "It builds the ordinary binary and says nothing",
+        "correct": true,
+        "why": "Right. No file mentions `debgu`, so the tag changes nothing, and `debug.go` stays out. The binary simply never prints its debug line."
+      },
+      {
+        "text": "It builds a debug binary, since the tag is close enough",
+        "correct": false,
+        "why": "Tags are matched exactly; there is no correction of spelling. `debug.go` asks for `debug`, which was not given."
+      }
+    ]
+  },
+  {
+    "id": "ex-vcakft57",
+    "version": 1,
+    "section": "custom-tags",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens when Ana runs `./hits-debug top -n 1 access.log`, the binary built with `-tags debug`.",
+    "hint": "One of these runs before `main` does.",
+    "items": [
+      "`init` in `debug.go` puts a printing function in `debugf`",
+      "`main` calls `run` with the arguments and the streams",
+      "`summarise` opens `access.log` and wraps it in a `progress`",
+      "`tally.Count` reads the 20,000 lines",
+      "`debugf` writes `hits: debug: 20000 lines, 914867 bytes …` to standard error",
+      "`top` prints the table on standard output"
+    ]
+  },
+  {
+    "id": "ex-rwhan5n1",
+    "version": 1,
+    "section": "custom-tags",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After `gofmt -r 'usage -> usageText' -w main.go`, `go build`, `go vet ./...` and `go test ./...` all pass. Which command finds what the rename broke?",
+    "hint": "Which file still says `usage`, and which commands compile it?",
+    "choices": [
+      {
+        "text": "`go test -count=1 ./...`, since the cache hid the failure",
+        "correct": false,
+        "why": "The run in the section already used `-count=1` and passed. The broken file was not compiled at all, cached or not."
+      },
+      {
+        "text": "`go vet -tags integration .`",
+        "correct": true,
+        "why": "Right. `integration_test.go` compares the binary's output with `usage`, and only a command that names the tag compiles it; vet then reported `undefined: usage`."
+      },
+      {
+        "text": "`gofmt -l .`, which lists files that still use the old name",
+        "correct": false,
+        "why": "`gofmt -l` lists files whose formatting differs. It does not resolve names, and `integration_test.go` is formatted correctly."
+      },
+      {
+        "text": "`GOOS=windows go vet ./...`",
+        "correct": false,
+        "why": "The integration test has no system constraint; Windows leaves it out for the same reason Linux does, the missing tag."
+      }
+    ]
+  },
+  {
+    "id": "ex-skrbbqcw",
+    "version": 1,
+    "section": "custom-tags",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A binary called `hits` turns up on a server, and you suspect it is a debug build. How do you find out without running it?",
+    "hint": "A Go binary carries a record of how it was built.",
+    "choices": [
+      {
+        "text": "Run `file hits`, which names the tags it was built with",
+        "correct": false,
+        "why": "`file` reads the executable format and the processor; it knows nothing of Go's build settings."
+      },
+      {
+        "text": "Compare its size with an ordinary build",
+        "correct": false,
+        "why": "One small file more changes the size by a few bytes, which a different Go release or path would also do. It proves nothing."
+      },
+      {
+        "text": "`go version -m hits`, looking for `-tags=debug`",
+        "correct": true,
+        "why": "Right. The build record lists the tags among its settings, and the debug binary showed `build -tags=debug`."
+      },
+      {
+        "text": "`go list -tags debug -f '{{.GoFiles}}' hits`",
+        "correct": false,
+        "why": "`go list` describes packages in source form. It cannot look inside a finished binary."
+      }
+    ]
+  },
+  {
+    "id": "ex-5pq5tdhn",
+    "version": 1,
+    "section": "every-platform",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `check.sh` run `go vet` for each target rather than `go build`?",
+    "hint": "Think about which files each command reads, and what each produces.",
+    "choices": [
+      {
+        "text": "`go build` cannot cross-compile, while `go vet` can",
+        "correct": false,
+        "why": "`go build` cross-compiled for macOS and Windows in section 02 with the same two variables."
+      },
+      {
+        "text": "It type-checks the test files too, and links nothing",
+        "correct": true,
+        "why": "Right. `go build` skips files ending in `_test.go`, so `integration_test.go` would never be checked; vet reads them and never makes a binary."
+      },
+      {
+        "text": "`go vet` runs the tests on each target as well",
+        "correct": false,
+        "why": "vet compiles and analyses; it runs nothing. Running a macOS test binary needs a Mac."
+      },
+      {
+        "text": "A build for `darwin` needs Apple's tools, and vet does not",
+        "correct": false,
+        "why": "The macOS build of section 02 succeeded on this Linux machine with no Apple tool installed."
+      }
+    ]
+  },
+  {
+    "id": "ex-twqy9v5s",
+    "version": 1,
+    "section": "every-platform",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After `progressHint` was added to `progress_unix.go` only, the loop of `GOOS=… go vet ./...` over five targets printed five `ok` lines. Why did it miss the break?",
+    "hint": "Which file uses `progressHint`, and when is that file compiled?",
+    "choices": [
+      {
+        "text": "`go vet` does not report undefined names, only suspicious code",
+        "correct": false,
+        "why": "It does: `check.sh` showed `vet: ./debug.go:15:47: undefined: progressHint` once the right files were compiled."
+      },
+      {
+        "text": "The macOS and Windows checks were answered from the cache",
+        "correct": false,
+        "why": "vet re-checked after the files changed. The files that break were never part of those runs."
+      },
+      {
+        "text": "The loop ran with no tags, so `debug.go` was never compiled",
+        "correct": true,
+        "why": "Right. Only `debug.go` uses `progressHint`, and only `-tags debug` compiles it. The loop checked five of fifteen combinations."
+      },
+      {
+        "text": "FreeBSD's `progress_unix.go` defined it for every system",
+        "correct": false,
+        "why": "A constant in `progress_unix.go` exists only in builds that compile that file; Windows and macOS do not."
+      }
+    ]
+  },
+  {
+    "id": "ex-s33mk4rf",
+    "version": 1,
+    "section": "every-platform",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`check.sh` runs `go vet` once per target and set of tags: 5 targets and 3 sets, 15 runs. The project drops `freebsd/amd64` and adds a fourth set, `-tags debug,integration`. How many vet runs does one `sh check.sh` make now?",
+    "hint": "Targets times sets of tags.",
+    "value": 16,
+    "tolerance": 0,
+    "unit": "runs"
+  },
+  {
+    "id": "ex-8ybke7bq",
+    "version": 1,
+    "section": "every-platform",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each command with the question it answers.",
+    "hint": "One answer on the right is something none of them can tell you.",
+    "pairs": [
+      {
+        "left": "`GOOS=darwin go list -f '{{.GoFiles}}' .`",
+        "right": "which files a macOS build compiles"
+      },
+      {
+        "left": "`go list -f '{{.IgnoredGoFiles}}' .`",
+        "right": "which files a constraint keeps out here"
+      },
+      {
+        "left": "`GOOS=windows go vet ./...`",
+        "right": "whether every package type-checks for Windows"
+      },
+      {
+        "left": "`go version -m hits-debug`",
+        "right": "how a finished binary was built"
+      }
+    ],
+    "right_distractors": [
+      "whether the program behaves correctly on Windows"
+    ]
+  },
+  {
+    "id": "ex-z76wge8r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You need a file compiled only for Linux on 64-bit ARM, and for no other system or processor. Which name does it with no `//go:build` line?",
+    "hint": "The pattern names the system first.",
+    "choices": [
+      {
+        "text": "`fast_arm64_linux.go`",
+        "correct": false,
+        "why": "The name is read from the end: `linux` is last, so this is a Linux-only file for every processor, and `arm64` is just part of the name."
+      },
+      {
+        "text": "`fast_linux_arm64.go`",
+        "correct": true,
+        "why": "Right. `_GOOS_GOARCH` constrains both, like `zerrors_linux_arm64.go` in `syscall`."
+      },
+      {
+        "text": "`fast_linux_aarch64.go`",
+        "correct": false,
+        "why": "`aarch64` is what `file` calls the processor; Go calls it `arm64`, and only Go's spelling counts in a name. This file is compiled only for Linux, on every processor."
+      },
+      {
+        "text": "`linux_arm64_fast.go`",
+        "correct": false,
+        "why": "The suffix has to end the name. With `fast` last, nothing is constrained and every build compiles it."
+      }
+    ]
+  },
+  {
+    "id": "ex-esgbavxz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new integration test sends `SIGUSR1` to the built binary and checks the progress line. It must stay out of ordinary runs and must not break the Windows build of the tests. Which first line fits it?",
+    "hint": "Two conditions, both required.",
+    "choices": [
+      {
+        "text": "`//go:build integration || unix`",
+        "correct": false,
+        "why": "With `||`, a plain `go test` on Linux compiles it, since `unix` holds there; the tag stops keeping it out."
+      },
+      {
+        "text": "`//go:build integration && unix`",
+        "correct": true,
+        "why": "Right. It needs the tag, so ordinary runs skip it, and it needs a Unix system, so `GOOS=windows go vet -tags integration` never meets `syscall.SIGUSR1`."
+      },
+      {
+        "text": "`//go:build integration`, with the name `signal_test_unix.go`",
+        "correct": false,
+        "why": "`_test` has to come last for the file to be a test file, and `_unix` is not a `GOOS`, so the name constrains nothing."
+      },
+      {
+        "text": "`//go:build integration && !windows && !darwin`",
+        "correct": false,
+        "why": "That keeps out macOS, where `SIGUSR1` exists and the test would work, and lets in Plan 9 or WebAssembly, where it does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-evz61q97",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To print the files a Windows build leaves out of the current package because of constraints, Ana runs `GOOS=windows go list -f '{{.___}}' .`",
+    "hint": "The field beside `GoFiles` in section 03.",
+    "blanks": [
+      {
+        "accept": [
+          "IgnoredGoFiles"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

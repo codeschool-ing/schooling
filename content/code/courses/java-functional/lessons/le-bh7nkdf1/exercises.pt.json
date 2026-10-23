@@ -1,0 +1,320 @@
+{
+  "ex-jwah5e6d": {
+    "prompt": "`Names.java` construiu `Path.of(\"library\", \"fiction\", \"dune.txt\")` para um arquivo que não está lá. Quando algo falhou?",
+    "hint": "Um `Path` é um nome.",
+    "choices": [
+      {
+        "text": "Nunca: o `exists` respondeu `false`",
+        "why": "Isso."
+      },
+      {
+        "text": "No `Path.of`, com `NoSuchFileException`",
+        "why": "Construir um caminho não confere nada."
+      },
+      {
+        "text": "No `toAbsolutePath`, que precisa do arquivo",
+        "why": "Ele só usou o diretório de trabalho."
+      },
+      {
+        "text": "No `getParent`, que devolveu `null`",
+        "why": "Ele devolveu `library/fiction`."
+      }
+    ]
+  },
+  "ex-wsrnrwep": {
+    "prompt": "O que `Path.of(\"library\").resolve(\"fiction/../poetry/./odes.txt\").normalize()` dá?",
+    "hint": "`nome/..` se anula.",
+    "choices": [
+      {
+        "text": "`poetry/odes.txt`",
+        "why": "O `library` fica."
+      },
+      {
+        "text": "`library/fiction/poetry/odes.txt`",
+        "why": "O `..` removeu `fiction`."
+      },
+      {
+        "text": "uma exceção, se `fiction` não existir",
+        "why": "O `normalize` lê nomes, não o disco."
+      },
+      {
+        "text": "`library/poetry/odes.txt`",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-3jsey5av": {
+    "prompt": "Quais destes tocam o disco? Marque todos os que se aplicam.",
+    "hint": "A tabela.",
+    "choices": [
+      {
+        "text": "`Files.size(path)`",
+        "why": "Sim: ele lê o tamanho do arquivo."
+      },
+      {
+        "text": "`path.normalize()`",
+        "why": "Não: ele lê os nomes."
+      },
+      {
+        "text": "`Files.exists(path)`",
+        "why": "Sim."
+      },
+      {
+        "text": "`base.relativize(path)`",
+        "why": "Não."
+      }
+    ]
+  },
+  "ex-0qxdmbwg": {
+    "prompt": "`Catalogue.java` chamou `Files.writeString` com `StandardOpenOption.APPEND`. O que a mesma chamada faria sem opções?",
+    "hint": "O padrão dos dois métodos de gravar.",
+    "choices": [
+      {
+        "text": "Gravado num arquivo novo chamado `catalogue.csv.1`",
+        "why": "Nada renomeia arquivos."
+      },
+      {
+        "text": "Trocado as três linhas por uma",
+        "why": "Isso: o padrão substitui o arquivo."
+      },
+      {
+        "text": "Lançaria, porque o arquivo já existia",
+        "why": "Sem opções um arquivo existente não é problema."
+      },
+      {
+        "text": "Acrescentado ao fim, porque acrescentar é o padrão",
+        "why": "Acrescentar tem de ser pedido."
+      }
+    ]
+  },
+  "ex-yyk2djfw": {
+    "prompt": "Quantas páginas os livros publicados depois de 1900 somaram?",
+    "hint": "Dune e Neuromancer.",
+    "unit": "páginas"
+  },
+  "ex-7h49gyfs": {
+    "prompt": "Um log tem dois gigabytes. Que chamada o lê sem segurar tudo na memória?",
+    "hint": "Lido conforme é puxado.",
+    "choices": [
+      {
+        "text": "`Files.size(path)`",
+        "why": "Esse lê o tamanho e nenhum conteúdo."
+      },
+      {
+        "text": "`Files.lines(path)`",
+        "why": "Isso."
+      },
+      {
+        "text": "`Files.readString(path)`",
+        "why": "Esse monta uma string com tudo."
+      },
+      {
+        "text": "`Files.readAllLines(path)`",
+        "why": "Esse monta uma lista com tudo."
+      }
+    ]
+  },
+  "ex-j5ntytab": {
+    "prompt": "Por que o `Files.lines` vai num `try` com recursos quando um stream de uma lista não vai?",
+    "hint": "Aula 19 seção 04.",
+    "choices": [
+      {
+        "text": "Um stream paralelo precisa disso para juntar as threads",
+        "why": "O stream era sequencial."
+      },
+      {
+        "text": "Ele lança `IOException` em cada elemento",
+        "why": "O `try` está lá para fechar, não para capturar."
+      },
+      {
+        "text": "As linhas dele se perdem quando o método retorna",
+        "why": "A soma foi impressa dentro do bloco."
+      },
+      {
+        "text": "Ele segura um descritor de arquivo aberto até ser fechado",
+        "why": "Isso, e o `sum` não o fecha."
+      }
+    ]
+  },
+  "ex-bss6373m": {
+    "prompt": "Em `Tree.java`, o que o `Files.list(root)` mostrou?",
+    "hint": "Um nível.",
+    "choices": [
+      {
+        "text": "Só `emma.txt`",
+        "why": "Esse foi o `find`."
+      },
+      {
+        "text": "`library/fiction` e `library/poetry`",
+        "why": "Isso."
+      },
+      {
+        "text": "Os quatro arquivos e os quatro diretórios",
+        "why": "Isso é o `walk`."
+      },
+      {
+        "text": "Os três arquivos `.txt`",
+        "why": "Esses ficaram nos filtros do `walk`."
+      }
+    ]
+  },
+  "ex-fv4g22zf": {
+    "prompt": "`dune.txt` tem 2.000 bytes. Por que o `Files.find` com `attrs.size() > 2_000` o deixou de fora?",
+    "hint": "Leia a comparação.",
+    "choices": [
+      {
+        "text": "Os atributos foram lidos antes de o arquivo ser gravado",
+        "why": "Os arquivos foram todos gravados antes."
+      },
+      {
+        "text": "O `find` pula os arquivos logo dentro de `fiction`",
+        "why": "Ele procurou em todos os níveis."
+      },
+      {
+        "text": "2.000 não é mais que 2.000",
+        "why": "Isso."
+      },
+      {
+        "text": "O filtro `.txt` do percurso acima o removeu",
+        "why": "Cada stream é separado."
+      }
+    ]
+  },
+  "ex-yrefweqw": {
+    "prompt": "Por que `Tree.java` ordena o percurso ao contrário antes de apagar?",
+    "hint": "O que o `Files.delete` recusa.",
+    "choices": [
+      {
+        "text": "Apagar em ordem pularia um caminho a cada dois",
+        "why": "O stream não pula."
+      },
+      {
+        "text": "A ordem inversa é mais rápida na maioria dos sistemas de arquivos",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "Para todo diretório estar vazio quando chegar a vez dele",
+        "why": "Isso: filhos antes dos pais."
+      },
+      {
+        "text": "O `Files.walk` já devolve os caminhos invertidos",
+        "why": "Ele começa pela raiz."
+      }
+    ]
+  },
+  "ex-jt6b16k4": {
+    "prompt": "Um lambda que chama `Files.size` captura a `IOException` e a relança como `___IOException`.",
+    "hint": "O tipo que o stream deixa passar.",
+    "blanks": [
+      {
+        "accept": [
+          "Unchecked"
+        ]
+      }
+    ]
+  },
+  "ex-tx8cy2f0": {
+    "prompt": "Ligue cada chamada de `Failures.java` ao que ela lançou.",
+    "hint": "A captura.",
+    "pairs": [
+      {
+        "left": "`Files.readString` em `missing.txt`",
+        "right": "`NoSuchFileException`"
+      },
+      {
+        "left": "`Files.createDirectory` em `shelf` de novo",
+        "right": "`FileAlreadyExistsException`"
+      },
+      {
+        "left": "`Files.delete` em `shelf`",
+        "right": "`DirectoryNotEmptyException`"
+      },
+      {
+        "left": "`Files.createDirectories` em `shelf`",
+        "right": "nada"
+      }
+    ],
+    "right_distractors": [
+      "`AccessDeniedException`"
+    ]
+  },
+  "ex-bayqm24t": {
+    "prompt": "`BASE.resolve(\"/etc/hostname\")` foi recusado por `Inside.java`. O que o `resolve` devolveu?",
+    "hint": "Um caminho absoluto como argumento.",
+    "choices": [
+      {
+        "text": "O próprio `/etc/hostname`, com a base ignorada",
+        "why": "Isso: só a conferência o parou."
+      },
+      {
+        "text": "`library/etc/hostname`, dentro da base",
+        "why": "Esse teria sido aceito."
+      },
+      {
+        "text": "Um caminho vazio, porque duas raízes não se juntam",
+        "why": "Ele devolveu o outro caminho."
+      },
+      {
+        "text": "Lançou antes de a conferência rodar",
+        "why": "A mensagem veio da conferência."
+      }
+    ]
+  },
+  "ex-b9w57shd": {
+    "prompt": "Por que `Inside.java` confere com `Path.startsWith` em vez de `String.startsWith`?",
+    "hint": "As duas últimas linhas da captura.",
+    "choices": [
+      {
+        "text": "O `String.startsWith` ignora maiúsculas no Linux",
+        "why": "Não ignora."
+      },
+      {
+        "text": "O `Path.startsWith` também segue links simbólicos",
+        "why": "Não segue; isso é o `toRealPath`."
+      },
+      {
+        "text": "A conferência no texto deixou `library-old` passar",
+        "why": "Isso: o `Path` compara nomes inteiros."
+      },
+      {
+        "text": "O `String.startsWith` não sabe ler `..`",
+        "why": "O caminho já estava normalizado."
+      }
+    ]
+  },
+  "ex-wm1fff36": {
+    "prompt": "Ponha em ordem os passos da conferência de `Inside.java`.",
+    "hint": "Juntar, arrumar, comparar.",
+    "items": [
+      "juntar o nome à base com `resolve`",
+      "tirar `.` e `nome/..` com `normalize`",
+      "testar `startsWith(BASE)`",
+      "recusar o nome, ou usar o caminho"
+    ]
+  },
+  "ex-8t4nj716": {
+    "prompt": "Ligue cada tarefa ao método de `Files` que a faz.",
+    "hint": "Seções 03 e 04.",
+    "pairs": [
+      {
+        "left": "ler um modelo pequeno inteiro",
+        "right": "`readString`"
+      },
+      {
+        "left": "somar uma coluna de um CSV enorme",
+        "right": "`lines`"
+      },
+      {
+        "left": "ver o que está logo dentro de uma pasta",
+        "right": "`list`"
+      },
+      {
+        "left": "achar todo arquivo acima de 1 MB abaixo de uma pasta",
+        "right": "`find`"
+      }
+    ],
+    "right_distractors": [
+      "`exists`"
+    ]
+  }
+}

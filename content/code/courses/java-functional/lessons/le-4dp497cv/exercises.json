@@ -1,0 +1,375 @@
+[
+  {
+    "id": "ex-1qk6b25h",
+    "version": 1,
+    "section": "race-conditions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`if (cents >= amount) { cents -= amount; }` on several threads is which kind of race?",
+    "hint": "A check, then an action.",
+    "choices": [
+      {
+        "text": "Check-then-act",
+        "correct": true,
+        "why": "Right, with a read-modify-write inside it."
+      },
+      {
+        "text": "Unsafe publication of the account",
+        "correct": false,
+        "why": "The account was published by `start`; the race is in `withdraw`."
+      },
+      {
+        "text": "A deadlock between the two tills",
+        "correct": false,
+        "why": "Nothing waits for anything; the tills both act."
+      },
+      {
+        "text": "A visibility problem that `volatile` would fix",
+        "correct": false,
+        "why": "Both steps must happen together; `volatile` does not do that."
+      }
+    ]
+  },
+  {
+    "id": "ex-b6dgxwb6",
+    "version": 1,
+    "section": "race-conditions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `Overdraft.java` put `Thread.yield()` between the check and the subtraction?",
+    "hint": "Real code has the same gap.",
+    "choices": [
+      {
+        "text": "Because `yield` makes the check atomic",
+        "correct": false,
+        "why": "It does the opposite."
+      },
+      {
+        "text": "Without it the code would be correct",
+        "correct": false,
+        "why": "The gap exists either way."
+      },
+      {
+        "text": "To widen the gap so the failure shows on a quiet machine",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "To give the other tills a fair turn at the money",
+        "correct": false,
+        "why": "It invites a switch exactly where switching is harmful."
+      }
+    ]
+  },
+  {
+    "id": "ex-pvtzwbh5",
+    "version": 1,
+    "section": "synchronized",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Counter.increment()` is `synchronized` and `get()` is not. What can go wrong?",
+    "hint": "Every access goes through the same lock.",
+    "choices": [
+      {
+        "text": "Nothing: reads never need a lock",
+        "correct": false,
+        "why": "A read needs the edge the lock creates."
+      },
+      {
+        "text": "Increments may be lost again",
+        "correct": false,
+        "why": "Increments still exclude each other."
+      },
+      {
+        "text": "`get()` may return a stale value",
+        "correct": true,
+        "why": "Right: no happens-before with the writers."
+      },
+      {
+        "text": "The class will not compile with mixed methods",
+        "correct": false,
+        "why": "It compiles."
+      }
+    ]
+  },
+  {
+    "id": "ex-zmfrfqq7",
+    "version": 1,
+    "section": "synchronized",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these follow the section's rules of thumb? Choose all that apply.",
+    "hint": "Same lock, short block, a lock you own.",
+    "choices": [
+      {
+        "text": "Calling a web service while holding the lock",
+        "correct": false,
+        "why": "No: everyone waits for the service."
+      },
+      {
+        "text": "Locking writes on one object and reads on another",
+        "correct": false,
+        "why": "No: two locks protect nothing."
+      },
+      {
+        "text": "A `private final Object lock` used for every access",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Putting the check and the act in one block",
+        "correct": true,
+        "why": "Yes."
+      }
+    ]
+  },
+  {
+    "id": "ex-ktrwq2df",
+    "version": 1,
+    "section": "synchronized",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A thread that holds a lock can enter another block on the same lock without waiting, because `synchronized` is ___.",
+    "hint": "It can enter again.",
+    "blanks": [
+      {
+        "accept": [
+          "reentrant"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dxbvdbhc",
+    "version": 1,
+    "section": "the-lock-interface",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must `unlock()` go in a `finally` block?",
+    "hint": "What releases a `Lock`?",
+    "choices": [
+      {
+        "text": "An exception would otherwise leave it held forever",
+        "correct": true,
+        "why": "Right: only `unlock()` releases it."
+      },
+      {
+        "text": "Because `ReentrantLock` throws if it is unlocked twice",
+        "correct": false,
+        "why": "That is true, and not the reason."
+      },
+      {
+        "text": "`finally` runs on a separate thread",
+        "correct": false,
+        "why": "It runs on the same thread."
+      },
+      {
+        "text": "The compiler requires it",
+        "correct": false,
+        "why": "It compiles without one."
+      }
+    ]
+  },
+  {
+    "id": "ex-cadnvph6",
+    "version": 1,
+    "section": "the-lock-interface",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need with the tool.",
+    "hint": "The table in section 04.",
+    "pairs": [
+      {
+        "left": "plain mutual exclusion",
+        "right": "`synchronized`"
+      },
+      {
+        "left": "give up after a time limit",
+        "right": "`tryLock(time, unit)`"
+      },
+      {
+        "left": "stop waiting when interrupted",
+        "right": "`lockInterruptibly()`"
+      },
+      {
+        "left": "many readers, few writers",
+        "right": "`ReentrantReadWriteLock`"
+      }
+    ],
+    "right_distractors": [
+      "`volatile`"
+    ]
+  },
+  {
+    "id": "ex-k8fgn9y9",
+    "version": 1,
+    "section": "the-lock-interface",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `TryLock.java`, what did `hurried` do when the lock stayed busy?",
+    "hint": "The second line of output.",
+    "choices": [
+      {
+        "text": "Gave up after 200 ms",
+        "correct": true,
+        "why": "Right, with a message."
+      },
+      {
+        "text": "Waited the whole second",
+        "correct": false,
+        "why": "That is what `synchronized` would do."
+      },
+      {
+        "text": "Threw `IllegalMonitorStateException`",
+        "correct": false,
+        "why": "It returned `false` and printed."
+      },
+      {
+        "text": "Took the lock from `slow`",
+        "correct": false,
+        "why": "A lock cannot be taken away."
+      }
+    ]
+  },
+  {
+    "id": "ex-xztgmbkb",
+    "version": 1,
+    "section": "deadlock",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a deadlocked Java program look like from outside?",
+    "hint": "No error, no spinning.",
+    "choices": [
+      {
+        "text": "It stops, silently, forever",
+        "correct": true,
+        "why": "Right; a thread dump finds it."
+      },
+      {
+        "text": "It exits with status 1",
+        "correct": false,
+        "why": "It never exits."
+      },
+      {
+        "text": "It uses every processor at 100%",
+        "correct": false,
+        "why": "Blocked threads use no processor."
+      },
+      {
+        "text": "It throws `DeadlockException`",
+        "correct": false,
+        "why": "No such exception is thrown; nothing is thrown."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ae57csv",
+    "version": 1,
+    "section": "deadlock",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the deadlock of `Deadlock.java` in order.",
+    "hint": "The figure's cycle.",
+    "items": [
+      "`pay-supplier` locks `shop`",
+      "`refund-shop` locks `supplier`",
+      "`pay-supplier` waits for `supplier`",
+      "`refund-shop` waits for `shop`, and neither moves again"
+    ]
+  },
+  {
+    "id": "ex-je68cy7s",
+    "version": 1,
+    "section": "deadlock",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which change to `transfer` prevents the deadlock?",
+    "hint": "A cycle needs two orders.",
+    "choices": [
+      {
+        "text": "Marking both accounts' fields `volatile`",
+        "correct": false,
+        "why": "Visibility does not break a cycle of locks."
+      },
+      {
+        "text": "Locking the two accounts in id order",
+        "correct": true,
+        "why": "Right: one global order, no cycle."
+      },
+      {
+        "text": "A longer `pause` between the two locks",
+        "correct": false,
+        "why": "That makes the deadlock more likely."
+      },
+      {
+        "text": "Locking `to` first and `from` second",
+        "correct": false,
+        "why": "Still two orders, just swapped."
+      }
+    ]
+  },
+  {
+    "id": "ex-m5s4bqb2",
+    "version": 1,
+    "section": "deadlock",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`jcmd <pid> Thread.___` prints a running JVM's thread dump.",
+    "hint": "It prints.",
+    "blanks": [
+      {
+        "accept": [
+          "print"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3cwcbxnw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A method takes a `ReentrantLock`, then calls a database inside the `try`. The database hangs. What happens to other threads that want the lock?",
+    "hint": "Keep the block short.",
+    "choices": [
+      {
+        "text": "The JVM detects the hang and releases the lock",
+        "correct": false,
+        "why": "The JVM does no such thing."
+      },
+      {
+        "text": "They wait for the database too, unless they use `tryLock`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "They proceed, because a `ReentrantLock` admits several threads",
+        "correct": false,
+        "why": "Reentrant means the same thread, not several."
+      },
+      {
+        "text": "The `finally` releases the lock after a timeout",
+        "correct": false,
+        "why": "`finally` runs only when the `try` ends."
+      }
+    ]
+  }
+]

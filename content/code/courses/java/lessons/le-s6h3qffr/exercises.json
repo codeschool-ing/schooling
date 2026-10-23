@@ -1,0 +1,542 @@
+[
+  {
+    "id": "ex-e2747mz7",
+    "version": 1,
+    "section": "records",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "For `record Book(Isbn isbn, String title, int year)`, how do you read the title?",
+    "hint": "The accessors are named after the components.",
+    "choices": [
+      {
+        "text": "`book.getTitle()`",
+        "correct": false,
+        "why": "That is the usual name in a hand-written class; a record's accessor has no `get`."
+      },
+      {
+        "text": "`book.title()`",
+        "correct": true,
+        "why": "Right: one accessor per component, with the component's own name."
+      },
+      {
+        "text": "`book.title`, because the field is public",
+        "correct": false,
+        "why": "The field is `private final`, as `javap -p` showed."
+      },
+      {
+        "text": "`book.get(\"title\")`",
+        "correct": false,
+        "why": "Records have no lookup by name; each component has its own method."
+      }
+    ]
+  },
+  {
+    "id": "ex-rnadv09w",
+    "version": 1,
+    "section": "records",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`a` and `b` are two `Book` records built with equal components. `a == b` printed `false` and `a.equals(b)` printed `true`. Why the difference?",
+    "hint": "`new` ran twice.",
+    "choices": [
+      {
+        "text": "`==` compares references and the generated `equals` compares components",
+        "correct": true,
+        "why": "Right: two objects, equal values."
+      },
+      {
+        "text": "`equals` is broken for records whose component is another record",
+        "correct": false,
+        "why": "`Isbn` is a record too, and its own `equals` compared the values; nothing is broken."
+      },
+      {
+        "text": "The JVM reuses one object for equal records, but `==` ignores that",
+        "correct": false,
+        "why": "No object was reused: `==` returned `false` precisely because there were two."
+      }
+    ]
+  },
+  {
+    "id": "ex-76k29gm3",
+    "version": 1,
+    "section": "records",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`javap -p Book` showed what the compiler wrote for the record. Which of these were in it? Choose all that apply.",
+    "hint": "Read the listing from the top.",
+    "choices": [
+      {
+        "text": "`private final` fields, one per component",
+        "correct": true,
+        "why": "Yes: `isbn`, `title` and `year`."
+      },
+      {
+        "text": "`equals`, `hashCode` and `toString`",
+        "correct": true,
+        "why": "Yes, all three, generated from the components."
+      },
+      {
+        "text": "A setter for each component",
+        "correct": false,
+        "why": "There is none and there can be none; the fields are final."
+      },
+      {
+        "text": "A constructor with no parameters",
+        "correct": false,
+        "why": "The one constructor takes every component, in order: `Book(Isbn, java.lang.String, int)`."
+      }
+    ]
+  },
+  {
+    "id": "ex-1p5trw95",
+    "version": 1,
+    "section": "records",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A record's header lists its ___, and the compiler builds the fields, the constructor and the accessors from them.",
+    "hint": "The word section 02 gives the record's declared values.",
+    "blanks": [
+      {
+        "accept": [
+          "components",
+          "component"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3ex656nf",
+    "version": 1,
+    "section": "records",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You add a component, `String author`, to the `Book` header and recompile. What else must you change for `equals` and `toString` to include it?",
+    "hint": "Who wrote those methods?",
+    "choices": [
+      {
+        "text": "Both methods, by hand, and the constructor",
+        "correct": false,
+        "why": "None of them is yours to edit; they are generated from the header on every compile."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right: the header is the single place the components are named, so nothing can fall out of step."
+      },
+      {
+        "text": "Only `hashCode`, which the compiler cannot generate for strings",
+        "correct": false,
+        "why": "It generates `hashCode` for any component type."
+      },
+      {
+        "text": "An annotation on the component asking for it to be included",
+        "correct": false,
+        "why": "Every component is included; there is nothing to ask for."
+      }
+    ]
+  },
+  {
+    "id": "ex-zxyv7qxn",
+    "version": 1,
+    "section": "compact-constructors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `Isbn`'s compact constructor, `value = value.replace(\"-\", \"\").strip();` reassigns what?",
+    "hint": "The compact constructor runs before the fields are assigned.",
+    "choices": [
+      {
+        "text": "The field `value`, which is final and so cannot be reassigned again",
+        "correct": false,
+        "why": "The field is assigned once, after the block; this line changes something else."
+      },
+      {
+        "text": "The parameter, whose final value the field then receives",
+        "correct": true,
+        "why": "Right: the compiler assigns the field from the parameter at the end of the block."
+      },
+      {
+        "text": "The string the caller passed, which now loses its hyphens too",
+        "correct": false,
+        "why": "Strings are immutable; `replace` returned a new string and the caller's is untouched."
+      }
+    ]
+  },
+  {
+    "id": "ex-e5v6g1k5",
+    "version": 1,
+    "section": "compact-constructors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`new Isbn(\"978-85-359\")` threw `IllegalArgumentException`. What can the rest of the program now assume about every `Isbn` it receives?",
+    "hint": "A bad one is refused before it exists.",
+    "choices": [
+      {
+        "text": "Nothing until it calls a `validate()` method",
+        "correct": false,
+        "why": "There is no such method; the check is in the constructor, which every `Isbn` passed through."
+      },
+      {
+        "text": "That it has hyphens in the usual places",
+        "correct": false,
+        "why": "The constructor removed the hyphens; it stores thirteen digits."
+      },
+      {
+        "text": "That it holds thirteen characters, with no hyphens or spaces",
+        "correct": true,
+        "why": "Right: valid by construction, so no method has to check again."
+      }
+    ]
+  },
+  {
+    "id": "ex-pdqwnxh8",
+    "version": 1,
+    "section": "compact-constructors",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`new Isbn(\" 978-85-359-0277-1 \")` printed `Isbn[value=9788535902771]`. How many characters did the constructor remove?",
+    "hint": "Four hyphens and two spaces.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "characters"
+  },
+  {
+    "id": "ex-qamtnqvc",
+    "version": 1,
+    "section": "compact-constructors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After `titles.add(\"Iracema\")` in `main`, `Shelf` showed two titles and `SafeShelf` one. What made the difference?",
+    "hint": "What does each record's field point at?",
+    "choices": [
+      {
+        "text": "`SafeShelf`'s field is `final` and `Shelf`'s is not",
+        "correct": false,
+        "why": "Both fields are `final`; a record has no other kind."
+      },
+      {
+        "text": "`SafeShelf` copied the list; `Shelf` kept the caller's own",
+        "correct": true,
+        "why": "Right: `List.copyOf` in the compact constructor cut the link to the caller's list."
+      },
+      {
+        "text": "`Shelf`'s `toString` reads the list again each time and `SafeShelf`'s does not",
+        "correct": false,
+        "why": "Both `toString` methods read their field; the fields point at different lists."
+      },
+      {
+        "text": "Records copy their components by default, and `Shelf` turned that off",
+        "correct": false,
+        "why": "Records copy nothing by default; that is why `SafeShelf` had to."
+      }
+    ]
+  },
+  {
+    "id": "ex-b51cn7f3",
+    "version": 1,
+    "section": "compact-constructors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which component type needs a copy in the compact constructor for the record to be really immutable?",
+    "hint": "Which of these can change after it is handed over?",
+    "choices": [
+      {
+        "text": "`String`",
+        "correct": false,
+        "why": "Strings are immutable already."
+      },
+      {
+        "text": "`int`",
+        "correct": false,
+        "why": "A primitive is copied by value; nothing can change it from outside."
+      },
+      {
+        "text": "`List<String>`",
+        "correct": true,
+        "why": "Right: the field is a final reference to a list that anybody holding it can change."
+      },
+      {
+        "text": "Another record, such as `Isbn`",
+        "correct": false,
+        "why": "A record whose own components are immutable is immutable too."
+      }
+    ]
+  },
+  {
+    "id": "ex-g00mra0s",
+    "version": 1,
+    "section": "patterns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `case Book(String title, int pages)` do when `item` is a `Book`?",
+    "hint": "A pattern does two jobs.",
+    "choices": [
+      {
+        "text": "Calls `Book`'s constructor with the two values",
+        "correct": false,
+        "why": "Nothing is built; the existing record is taken apart."
+      },
+      {
+        "text": "Matches, and leaves you to cast `item` to `Book` yourself",
+        "correct": false,
+        "why": "No cast is needed; that is half of what the pattern does for you."
+      },
+      {
+        "text": "Matches it, and puts its components in two new variables",
+        "correct": true,
+        "why": "Right: it tests and takes apart in one step."
+      }
+    ]
+  },
+  {
+    "id": "ex-w90n27p7",
+    "version": 1,
+    "section": "patterns",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did `describe` compile with no `default` branch?",
+    "hint": "What does `sealed` tell the compiler?",
+    "choices": [
+      {
+        "text": "`permits` lists every possible `Item`, and each has a case",
+        "correct": true,
+        "why": "Right: the compiler checked the cases against a complete list."
+      },
+      {
+        "text": "Because a switch over records never needs `default`",
+        "correct": false,
+        "why": "Over a type that is not sealed it does; the records alone do not make the list complete."
+      },
+      {
+        "text": "Because the guarded case catches whatever the others miss",
+        "correct": false,
+        "why": "A guard narrows a case; it cannot catch types the case does not name."
+      },
+      {
+        "text": "Because `describe` returns a `String`, and `null` fills the gap",
+        "correct": false,
+        "why": "A switch expression has no gap to fill; it must produce a value for every input."
+      }
+    ]
+  },
+  {
+    "id": "ex-z20a286b",
+    "version": 1,
+    "section": "patterns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Os Sertões` (640 pages) printed `a long book`, while `Dom Casmurro` (256) printed its page count. Why?",
+    "hint": "Cases are tried from the top.",
+    "choices": [
+      {
+        "text": "Because the unguarded `Book` case is skipped for books over 500 pages",
+        "correct": false,
+        "why": "It is not skipped; the guarded case simply matched first."
+      },
+      {
+        "text": "The guarded case comes first and only the 640-page book passes `pages > 500`",
+        "correct": true,
+        "why": "Right: the other book fell through to the unguarded `Book` case."
+      },
+      {
+        "text": "Because `when` sorts the books by page count",
+        "correct": false,
+        "why": "`when` is a condition on one case; it sorts nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-9h3radxe",
+    "version": 1,
+    "section": "patterns",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Fill in the keyword that adds a guard: `case Book(String t, int p) ___ p > 500 -> ...`",
+    "hint": "Section 04 used it on the long books.",
+    "blanks": [
+      {
+        "accept": [
+          "when"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9ccn62x9",
+    "version": 1,
+    "section": "when-not",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`record Loan(String isbn, String member) { private String dueDate; }` does not compile. What does the error say, and why?",
+    "hint": "`equals` and `toString` are built from the header.",
+    "choices": [
+      {
+        "text": "That `dueDate` must be `final`",
+        "correct": false,
+        "why": "The message asked for `static`, and offered a component instead."
+      },
+      {
+        "text": "That a field must be static: state outside the header would hide from `equals`",
+        "correct": true,
+        "why": "Right: a record's instance state is its components and nothing else."
+      },
+      {
+        "text": "That records cannot hold dates",
+        "correct": false,
+        "why": "Any type can be a component; the problem is where the field was declared."
+      }
+    ]
+  },
+  {
+    "id": "ex-eqkmnvq3",
+    "version": 1,
+    "section": "when-not",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A library loan is renewed: same book, same member, a new due date. Why does the section make it a class rather than a record?",
+    "hint": "Is it the same loan after the renewal?",
+    "choices": [
+      {
+        "text": "Because a record cannot hold a `LocalDate`",
+        "correct": false,
+        "why": "It can; `record Loan(String isbn, String member, LocalDate dueDate)` compiles."
+      },
+      {
+        "text": "Because records are slower than classes",
+        "correct": false,
+        "why": "Speed is not the argument; identity is."
+      },
+      {
+        "text": "It keeps one identity while its values change, and equal records count as one thing",
+        "correct": true,
+        "why": "Right: two loans with equal fields would be `equals`, yet they are different loans."
+      },
+      {
+        "text": "Because a record would need a setter for the date",
+        "correct": false,
+        "why": "A record cannot have one; but the reason to choose a class is identity, not the missing setter."
+      }
+    ]
+  },
+  {
+    "id": "ex-ghv4tz9n",
+    "version": 1,
+    "section": "when-not",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each thing to the better choice for it.",
+    "hint": "Are two with equal fields the same thing?",
+    "pairs": [
+      {
+        "left": "an ISBN",
+        "right": "a record"
+      },
+      {
+        "left": "a member's account, whose balance changes",
+        "right": "a class with private fields"
+      },
+      {
+        "left": "one of exactly four genres",
+        "right": "an enum"
+      }
+    ],
+    "right_distractors": [
+      "an interface"
+    ]
+  },
+  {
+    "id": "ex-9zzbfrdv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`record Point(int x, int y)` and `p.x = 3;` — what happens?",
+    "hint": "What kind of field is `x`?",
+    "choices": [
+      {
+        "text": "It compiles, and `p` now has `x` equal to 3",
+        "correct": false,
+        "why": "The field is private and final; neither the access nor the assignment is allowed."
+      },
+      {
+        "text": "It does not compile",
+        "correct": true,
+        "why": "Right: the field is `private final`. The way to a point with another `x` is `new Point(3, p.y())`."
+      },
+      {
+        "text": "It compiles and throws `UnsupportedOperationException` when it runs",
+        "correct": false,
+        "why": "That exception came from a list in section 03; a field assignment is checked at compile time."
+      }
+    ]
+  },
+  {
+    "id": "ex-t08rmtsn",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put what happens in `new Isbn(\" 978-85-359-0277-1 \")` in order.",
+    "hint": "The field is assigned last.",
+    "items": [
+      "The canonical constructor is called with the string",
+      "The compact block removes the hyphens and the spaces from the parameter",
+      "The block checks that thirteen characters are left",
+      "The field `value` is assigned from the parameter"
+    ]
+  },
+  {
+    "id": "ex-mxpz4q65",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these may a record declare? Choose all that apply.",
+    "hint": "Section 05 listed what is allowed and what is not.",
+    "choices": [
+      {
+        "text": "An instance method, such as `boolean isLong()`",
+        "correct": true,
+        "why": "Yes: methods are allowed; only extra instance state is not."
+      },
+      {
+        "text": "A static field",
+        "correct": true,
+        "why": "Yes: the error message asked for exactly that."
+      },
+      {
+        "text": "`implements Item`",
+        "correct": true,
+        "why": "Yes: section 04's records implemented a sealed interface."
+      },
+      {
+        "text": "`extends Item`, when `Item` is a class",
+        "correct": false,
+        "why": "No: a record already extends `java.lang.Record`."
+      }
+    ]
+  }
+]

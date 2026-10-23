@@ -1,0 +1,526 @@
+[
+  {
+    "id": "ex-6bja4xnz",
+    "version": 1,
+    "section": "construction",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Loan`'s constructor printed `title=null` on its first line. Why `null`?",
+    "hint": "What did the JVM do to the memory before anything else?",
+    "choices": [
+      {
+        "text": "Because `title` has no initialiser, the compiler inserts `title = null` at the end of the constructor",
+        "correct": false,
+        "why": "Nothing is inserted at the end; the field was null before the constructor started."
+      },
+      {
+        "text": "The object's memory starts zeroed",
+        "correct": true,
+        "why": "Right: a reference field starts as `null`, a number as 0, a boolean as false."
+      },
+      {
+        "text": "Because the argument had not been passed yet",
+        "correct": false,
+        "why": "The argument was there; the constructor simply had not assigned it to the field yet."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ftxf7wy",
+    "version": 1,
+    "section": "construction",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `new Loan(\"Effective Java\")` in the order they happen.",
+    "hint": "The constructor body is last.",
+    "items": [
+      "Memory for the object is reserved and zeroed",
+      "`days = 14`, the field initialiser, runs",
+      "The constructor body assigns `title`",
+      "The reference is stored in the variable `loan`"
+    ]
+  },
+  {
+    "id": "ex-w17yjzx6",
+    "version": 1,
+    "section": "construction",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the bytecode of `main`, what is `<init>`?",
+    "hint": "`invokespecial` calls it.",
+    "choices": [
+      {
+        "text": "The instruction that allocates the object",
+        "correct": false,
+        "why": "Allocation is the `new` instruction, which comes first."
+      },
+      {
+        "text": "A hidden method that zeroes the fields",
+        "correct": false,
+        "why": "Zeroing is part of `new`; `<init>` runs the code the class wrote."
+      },
+      {
+        "text": "The constructor, compiled as a method",
+        "correct": true,
+        "why": "Right: `invokespecial` runs it on the object `new` produced."
+      },
+      {
+        "text": "The class's static initialiser",
+        "correct": false,
+        "why": "That one is called `<clinit>` and runs once per class; lesson 27 shows it."
+      }
+    ]
+  },
+  {
+    "id": "ex-p3vdd950",
+    "version": 1,
+    "section": "construction",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can a constructor rely on nobody else using the object while it runs?",
+    "hint": "Where is the reference between `new` and `<init>`?",
+    "choices": [
+      {
+        "text": "Because the JVM locks every object until its constructor returns",
+        "correct": false,
+        "why": "There is no such lock; nobody else simply has the reference yet."
+      },
+      {
+        "text": "Until it returns, the only reference is the one being initialised; the caller stores it after",
+        "correct": true,
+        "why": "Right: `astore_1` comes after `invokespecial`, so `loan` is set only once the constructor is done."
+      },
+      {
+        "text": "Because fields cannot be read before the constructor's last line",
+        "correct": false,
+        "why": "The constructor read three fields on its first line."
+      }
+    ]
+  },
+  {
+    "id": "ex-jyz5prfa",
+    "version": 1,
+    "section": "reachability",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When does the garbage collector consider an object garbage?",
+    "hint": "Roots, and chains of references.",
+    "choices": [
+      {
+        "text": "When the program has not used it for a while",
+        "correct": false,
+        "why": "Use is not tracked; an unused object that is still reachable is kept."
+      },
+      {
+        "text": "When the method that created it returns",
+        "correct": false,
+        "why": "An object outlives its creating method whenever something reachable still points at it."
+      },
+      {
+        "text": "When no chain of references reaches it from a root",
+        "correct": true,
+        "why": "Right: that is the whole rule."
+      },
+      {
+        "text": "When nothing at all points at it",
+        "correct": false,
+        "why": "Two unreachable objects pointing at each other are still garbage."
+      }
+    ]
+  },
+  {
+    "id": "ex-b8ddgc4b",
+    "version": 1,
+    "section": "reachability",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are roots? Choose all that apply.",
+    "hint": "Where does the collector start?",
+    "choices": [
+      {
+        "text": "A local variable of a method that is still running",
+        "correct": true,
+        "why": "Yes: `pages` in `main` kept every array of `Hoard` alive."
+      },
+      {
+        "text": "A static field",
+        "correct": true,
+        "why": "Yes: `latest` in `Churn` kept the newest array."
+      },
+      {
+        "text": "A field of an object nothing reaches",
+        "correct": false,
+        "why": "An unreachable object's fields lead nowhere the collector looks."
+      },
+      {
+        "text": "A local variable of a method that has returned",
+        "correct": false,
+        "why": "Once the method returns its frame is gone, and so is the variable."
+      }
+    ]
+  },
+  {
+    "id": "ex-966a718w",
+    "version": 1,
+    "section": "reachability",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Churn` allocated how many megabytes, in a heap capped at 32 MB?",
+    "hint": "The program printed it.",
+    "value": 1953,
+    "tolerance": 0,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-qazkc2mv",
+    "version": 1,
+    "section": "reachability",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `-Xlog:gc` line reads `Pause Young (Normal) (G1 Evacuation Pause) 18M->1M(32M) 0.784ms`. What does `18M->1M(32M)` say?",
+    "hint": "Before, after, and the size of the heap.",
+    "choices": [
+      {
+        "text": "18 MB in use before, 1 MB after, in a 32 MB heap",
+        "correct": true,
+        "why": "Right: almost everything was garbage."
+      },
+      {
+        "text": "18 objects collected, 1 kept, out of 32",
+        "correct": false,
+        "why": "The numbers are megabytes, as the `M` says, not object counts."
+      },
+      {
+        "text": "The heap grew from 18 MB to 32 MB and 1 MB was freed",
+        "correct": false,
+        "why": "The heap stayed at 32 MB; the use fell from 18 to 1."
+      },
+      {
+        "text": "The pause lasted 18 ms, and 1 ms of that was spent on the 32 MB heap",
+        "correct": false,
+        "why": "The duration is the last field, 0.784 ms."
+      }
+    ]
+  },
+  {
+    "id": "ex-2fg0knm7",
+    "version": 1,
+    "section": "reachability",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`Churn` allocated almost 2 GB in a 32 MB heap and finished; `Hoard` ran out with the same cap. What is the difference that matters?",
+    "hint": "How many of each program's arrays are reachable at once?",
+    "choices": [
+      {
+        "text": "`Hoard`'s arrays are bigger, a megabyte each against a kilobyte",
+        "correct": false,
+        "why": "Size per object does not matter; `Churn` allocated far more in total."
+      },
+      {
+        "text": "`Churn` keeps one array reachable; `Hoard` keeps every one",
+        "correct": true,
+        "why": "Right: the list in `pages` held them all, so nothing could be freed."
+      },
+      {
+        "text": "`Hoard` uses an `ArrayList`, which the collector cannot clean",
+        "correct": false,
+        "why": "The collector cleans lists like anything else once they are unreachable."
+      },
+      {
+        "text": "`Churn` calls the collector itself through a static field",
+        "correct": false,
+        "why": "A static field is a root; it does not call anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-c793st42",
+    "version": 1,
+    "section": "reachability",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `-XX:+DisableExplicitGC`, `Request` called `System.gc()` and no collection happened. What does that show?",
+    "hint": "Compare it with the run without the flag.",
+    "choices": [
+      {
+        "text": "That the flag broke the program",
+        "correct": false,
+        "why": "The program printed `asked` and ended normally both times."
+      },
+      {
+        "text": "That the call is a request, and the answer was no",
+        "correct": true,
+        "why": "Right: same call, no pause; a program must not depend on it."
+      },
+      {
+        "text": "That there was nothing to collect, since `junk` was still reachable",
+        "correct": false,
+        "why": "`junk = null` made the arrays unreachable before the call."
+      }
+    ]
+  },
+  {
+    "id": "ex-n0863j27",
+    "version": 1,
+    "section": "reachability",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The error `Hoard` died with was `java.lang.___: Java heap space`.",
+    "hint": "An `Error`, not an `Exception`.",
+    "blanks": [
+      {
+        "accept": [
+          "OutOfMemoryError"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rwveexk3",
+    "version": 1,
+    "section": "cleanup",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Tidy` overrides `finalize()` and the program printed only `main ends`. Why did `finalize` not run?",
+    "hint": "Did the collector ever run?",
+    "choices": [
+      {
+        "text": "Because the object was still reachable from `main`",
+        "correct": false,
+        "why": "`new Tidy()` was never stored; it was garbage at once."
+      },
+      {
+        "text": "Because the compiler removed the method after its warning",
+        "correct": false,
+        "why": "A warning removes nothing; the method is in the class file."
+      },
+      {
+        "text": "The program ended before any collection, and none happens at exit",
+        "correct": true,
+        "why": "Right: nobody knows when, or whether, a finaliser runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-hdyqa834",
+    "version": 1,
+    "section": "cleanup",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the `[removal]` in `warning: [removal] finalize() in Object has been deprecated and marked for removal` add to an ordinary deprecation?",
+    "hint": "What will a future JDK do?",
+    "choices": [
+      {
+        "text": "That the method has already stopped working in Java 25",
+        "correct": false,
+        "why": "It still compiles and could still be called; removal is announced, not done."
+      },
+      {
+        "text": "That a future release will take it away, not merely discourage it",
+        "correct": true,
+        "why": "Right: `finalize` has been marked so since Java 18."
+      },
+      {
+        "text": "That the warning only appears with `-Xlint:removal`",
+        "correct": false,
+        "why": "It appeared with plain `javac`, unasked."
+      },
+      {
+        "text": "That the method was removed from `Object` and `Tidy` defines a new one",
+        "correct": false,
+        "why": "`Object` still declares it, which is why `@Override` compiled."
+      }
+    ]
+  },
+  {
+    "id": "ex-gzebb2cx",
+    "version": 1,
+    "section": "cleanup",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A class holds an open file. What is the main way the course gives for closing it?",
+    "hint": "At a known point, by the code that opened it.",
+    "choices": [
+      {
+        "text": "Override `finalize()` to close it",
+        "correct": false,
+        "why": "Deprecated for removal, and it may never run, as `Tidy` showed."
+      },
+      {
+        "text": "Register it with a `Cleaner`, which closes it promptly",
+        "correct": false,
+        "why": "A `Cleaner` has the same uncertainty about when; it is only a safety net."
+      },
+      {
+        "text": "A `close()` method the user calls, with try-with-resources",
+        "correct": true,
+        "why": "Right: lesson 37 makes that hard to forget."
+      },
+      {
+        "text": "Call `System.gc()` after the last use, so the file is collected",
+        "correct": false,
+        "why": "The collector reclaims memory, not files, and the call is only a request."
+      }
+    ]
+  },
+  {
+    "id": "ex-tknvmywm",
+    "version": 1,
+    "section": "cleanup",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is a `Cleaner` acceptable as a backstop when `finalize` was not, if neither says when it runs?",
+    "hint": "What can each one do to the dying object?",
+    "choices": [
+      {
+        "text": "Its action cannot resurrect the object, and it is never the main way of closing",
+        "correct": true,
+        "why": "Right: it backs up a `close()` someone forgot, without the finaliser's ability to revive what it cleans."
+      },
+      {
+        "text": "Because the JVM runs every `Cleaner` action when the program exits",
+        "correct": false,
+        "why": "No such promise exists; that was exactly `finalize`'s problem too."
+      },
+      {
+        "text": "Because a `Cleaner` runs as soon as the object becomes unreachable",
+        "correct": false,
+        "why": "It runs some time after, when the collector notices; the timing is just as uncertain."
+      }
+    ]
+  },
+  {
+    "id": "ex-nywp99kk",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A server's memory grows for days until `OutOfMemoryError`. Following the lesson, what do you look for first?",
+    "hint": "Reachable objects are kept, used or not.",
+    "choices": [
+      {
+        "text": "A larger `-Xmx`, since the heap is too small",
+        "correct": false,
+        "why": "More heap delays the error; something that only grows reaches any size."
+      },
+      {
+        "text": "What still holds references it should have dropped",
+        "correct": true,
+        "why": "Right: usually a collection, often a static one, that only grows."
+      },
+      {
+        "text": "A missing `System.gc()` call in the main loop",
+        "correct": false,
+        "why": "The collector runs on its own; the call is a request and frees nothing reachable."
+      },
+      {
+        "text": "A class whose `finalize()` is failing",
+        "correct": false,
+        "why": "Finalisers are deprecated and do not decide what is reachable."
+      }
+    ]
+  },
+  {
+    "id": "ex-50rgsv4w",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each JVM option used in the lesson to what it did.",
+    "hint": "Three options, three effects.",
+    "pairs": [
+      {
+        "left": "`-Xmx32m`",
+        "right": "Capped the heap at 32 MB"
+      },
+      {
+        "left": "`-Xlog:gc`",
+        "right": "Printed a line for every collection"
+      },
+      {
+        "left": "`-XX:+DisableExplicitGC`",
+        "right": "Made `System.gc()` do nothing"
+      }
+    ],
+    "right_distractors": [
+      "Made `finalize()` run at exit"
+    ]
+  },
+  {
+    "id": "ex-s7z920m9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A cache keeps every `Report` ever produced in a `static Map`, and a report is never looked up again after its first hour. In the lesson's terms, what is wrong?",
+    "hint": "Is an old report reachable?",
+    "choices": [
+      {
+        "text": "Nothing: reports nobody looks up are unused, so the collector frees them",
+        "correct": false,
+        "why": "The collector frees the unreachable, not the unused, and a static map is a root."
+      },
+      {
+        "text": "The map should be an instance field, which the collector cleans more often",
+        "correct": false,
+        "why": "An instance field of a reachable object keeps things just as alive."
+      },
+      {
+        "text": "Every report stays reachable from a root forever, so memory only grows",
+        "correct": true,
+        "why": "Right: `Hoard` in slow motion; the cache needs to drop old entries."
+      }
+    ]
+  },
+  {
+    "id": "ex-0kq8e936",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the recorded run, how many collection pauses did `Churn` cause with `-Xmx32m`?",
+    "hint": "`grep -c Pause gc.log` counted them.",
+    "value": 111,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-x9636ve4",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The JVM's default garbage collector on the lesson's machine, named on the first line of `-Xlog:gc`, is ___.",
+    "hint": "Two characters.",
+    "blanks": [
+      {
+        "accept": [
+          "G1"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

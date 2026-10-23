@@ -1,0 +1,534 @@
+{
+  "ex-xdd0j1yy": {
+    "prompt": "Qual propriedade é do gRPC e não do REST com JSON, na tabela da seção 02?",
+    "hint": "Olhe a linha do contrato.",
+    "choices": [
+      {
+        "text": "Respostas que proxies e CDNs guardam para depois",
+        "why": "Isso é o GET do REST; toda chamada gRPC é um POST que nenhum cache guarda."
+      },
+      {
+        "text": "Mensagens que uma pessoa lê direto do fio com curl",
+        "why": "Isso é JSON; protobuf precisa do contrato para ser lido."
+      },
+      {
+        "text": "Chamadas nativas com fetch dentro de uma página web",
+        "why": "Navegadores chegam ao REST nativamente e ao gRPC só por um tradutor."
+      },
+      {
+        "text": "Um contrato a partir do qual os dois lados são gerados",
+        "why": "Certo. O .proto é obrigatório, e clientes e servidores saem dele."
+      }
+    ]
+  },
+  "ex-5rjy1t0w": {
+    "prompt": "Como a seção 02 diz que a tabela de comparação deve ser lida?",
+    "hint": "Um placar, ou outra coisa?",
+    "choices": [
+      {
+        "text": "Como placar: a coluna com mais vitórias é o protocolo melhor",
+        "why": "A seção diz o contrário: nenhum estilo é melhor em geral."
+      },
+      {
+        "text": "Como perguntas sobre quem chama o serviço",
+        "why": "Certo. Navegador, app, script de parceiro ou serviço próprio decidem a resposta."
+      },
+      {
+        "text": "Como um ranking de velocidade, já que a velocidade decide a maioria das escolhas",
+        "why": "A seção 03 mostra que velocidade pesa pouco num serviço como o boxoffice."
+      },
+      {
+        "text": "Como um plano de migração de REST para gRPC",
+        "why": "Nada na aula pede migração; o boxoffice mantém os dois."
+      }
+    ]
+  },
+  "ex-7df0kgyy": {
+    "prompt": "Ligue cada linha da tabela ao estilo que ela favorece.",
+    "hint": "Pense em navegadores, caches e streams.",
+    "pairs": [
+      {
+        "left": "cache por CDNs",
+        "right": "REST com JSON"
+      },
+      {
+        "left": "quatro tipos de chamada embutidos",
+        "right": "gRPC"
+      },
+      {
+        "left": "cutucar com curl puro",
+        "right": "HTTP e JSON puros"
+      },
+      {
+        "left": "prazos enviados em toda chamada",
+        "right": "gRPC com sua propagação"
+      }
+    ],
+    "right_distractors": [
+      "nenhum dos dois"
+    ]
+  },
+  "ex-depay068": {
+    "prompt": "Quantos bytes 200 eventos ocuparam em JSON sem compressão no cmd/sizes?",
+    "hint": "A segunda linha da saída.",
+    "unit": "bytes"
+  },
+  "ex-qhsqz5fb": {
+    "prompt": "E em protobuf sem compressão?",
+    "hint": "Mesma linha, depois do JSON.",
+    "unit": "bytes"
+  },
+  "ex-g199jdwn": {
+    "prompt": "Com gzip, 200 eventos deram 1.430 bytes em JSON e 1.350 em protobuf. Por que a diferença encolheu tanto?",
+    "hint": "O que deixava o JSON grande, para começar?",
+    "choices": [
+      {
+        "text": "O gzip transforma JSON em protobuf no caminho",
+        "why": "A compressão muda os bytes, não o formato; o leitor ainda descomprime JSON."
+      },
+      {
+        "text": "Protobuf já vem comprimido, então o gzip não acrescenta nada a ele",
+        "why": "O protobuf também encolheu, de 5.671 para 1.350; ele é compacto, não comprimido."
+      },
+      {
+        "text": "O gzip tira os nomes de chave repetidos que inflavam o JSON",
+        "why": "Certo. Repetição é exatamente o que a compressão sabe tirar."
+      },
+      {
+        "text": "O programa mediu a lista errada para o protobuf",
+        "why": "As duas codificações levam os mesmos quatro campos dos mesmos 200 eventos."
+      }
+    ]
+  },
+  "ex-fb66q17g": {
+    "prompt": "Dois eventos: JSON 117 bytes sem compressão e 142 com gzip. O que isso diz?",
+    "hint": "O gzip tem um custo fixo.",
+    "choices": [
+      {
+        "text": "JSON comprime mal em qualquer tamanho",
+        "why": "Com 200 eventos ele foi de 12.094 para 1.430."
+      },
+      {
+        "text": "O cabeçalho do gzip pesa mais que um corpo minúsculo",
+        "why": "Certo. Para mensagens pequenas a diferença sem compressão é a diferença inteira."
+      },
+      {
+        "text": "A medição falhou",
+        "why": "O protobuf também cresceu, de 56 para 81: o mesmo efeito nos dois."
+      },
+      {
+        "text": "O curl estava com o gzip desligado nessa requisição",
+        "why": "Nenhum curl participou; o cmd/sizes comprimiu em memória."
+      }
+    ]
+  },
+  "ex-fj4b55he": {
+    "prompt": "Codificar 200 eventos levou uns 27 µs em protobuf e 33 a 35 µs em JSON. Por que a aula chama isso de irrelevante para o boxoffice?",
+    "hint": "Compare com o log da aula 6.",
+    "choices": [
+      {
+        "text": "Microbenchmarks dão números aleatórios",
+        "why": "As duas execuções concordaram de perto; os números são reais, só pequenos."
+      },
+      {
+        "text": "Uma consulta ao banco custa milissegundos",
+        "why": "Certo. Isso conta num serviço que só move mensagens em taxas altíssimas."
+      },
+      {
+        "text": "JSON é mais rápido em produção",
+        "why": "Nada na aula mediu isso; o JSON foi mais lento aqui."
+      },
+      {
+        "text": "O boxoffice não codifica nada sozinho",
+        "why": "Toda resposta que ele manda é codificada, em JSON ou protobuf."
+      }
+    ]
+  },
+  "ex-2pvg0yc1": {
+    "prompt": "O cmd/sizes escreve o campo repetido com uma tag e um tamanho por evento usando o pacote ___, que conhece o formato de fio byte a byte.",
+    "hint": "Ele é importado de google.golang.org/protobuf/encoding.",
+    "blanks": [
+      {
+        "accept": [
+          "protowire"
+        ]
+      }
+    ]
+  },
+  "ex-mtr7mew0": {
+    "prompt": "Um curl em HTTP/2 à porta gRPC recebeu HTTP/2 200 com grpc-status: 13. O que aconteceu com a chamada?",
+    "hint": "Onde o gRPC põe o resultado?",
+    "choices": [
+      {
+        "text": "Ela deu certo, como diz o 200",
+        "why": "Toda chamada gRPC responde 200; o resultado é o grpc-status."
+      },
+      {
+        "text": "O curl mandou HTTP/1.1, que o gRPC recusa com 13",
+        "why": "Essa foi a segunda requisição, que não recebeu resposta útil; esta falou HTTP/2."
+      },
+      {
+        "text": "O servidor mandou o status como código HTTP, 13",
+        "why": "HTTP não tem status 13; ele chegou num cabeçalho depois do corpo."
+      },
+      {
+        "text": "Ela falhou com Internal",
+        "why": "Certo. 13 é Internal: a chamada não levava mensagem nenhuma."
+      }
+    ]
+  },
+  "ex-mtb01pf3": {
+    "prompt": "O balanceador de carga de uma equipe mostra zero erros no serviço gRPC enquanto os clientes veem NotFound e Internal. O que explica isso?",
+    "hint": "O que um proxy vê quando olha só status HTTP?",
+    "choices": [
+      {
+        "text": "Erros viajam como HTTP 200, o grpc-status num trailer",
+        "why": "Certo. Um proxy que só conta status HTTP vê toda falha gRPC como sucesso."
+      },
+      {
+        "text": "O balanceador descarta erros gRPC para economizar banda",
+        "why": "Nada é descartado; os erros chegam, em trailers que o balanceador não lê."
+      },
+      {
+        "text": "Os clientes leem sucesso como falha",
+        "why": "Os clientes leem o grpc-status certo; o balanceador não."
+      },
+      {
+        "text": "NotFound não é erro no gRPC",
+        "why": "É um dos códigos de status, e o toStatus o manda para um evento que falta."
+      }
+    ]
+  },
+  "ex-28dvksjr": {
+    "prompt": "O grpcurl imprimiu o evento 1 sem o campo \"sold\". Por quê?",
+    "hint": "Quanto vale sold no evento 1?",
+    "choices": [
+      {
+        "text": "Valores zero ficam de fora",
+        "why": "Certo. O evento 1 tinha sold 0, então quem lê precisa saber que ausente quer dizer zero."
+      },
+      {
+        "text": "O servidor esqueceu de preencher o campo",
+        "why": "O GetEvent copia o Sold; o valor era 0."
+      },
+      {
+        "text": "Faltava ao grpcurl o contrato daquele campo",
+        "why": "Ele recebeu o seats.proto com -proto, que declara sold."
+      },
+      {
+        "text": "A reflexão estava desligada, então o grpcurl mostrou só alguns campos",
+        "why": "A reflexão estava desligada, e o -proto a substituiu por completo."
+      }
+    ]
+  },
+  "ex-rcna7d94": {
+    "prompt": "Por que o boxoffice deixa a reflexão do gRPC desligada?",
+    "hint": "O que a reflexão dá a quem chega à porta?",
+    "choices": [
+      {
+        "text": "Ela deixa toda chamada mais lenta",
+        "why": "A aula não cita custo de velocidade; a preocupação é exposição."
+      },
+      {
+        "text": "O grpcurl se recusa a trabalhar com servidores que a têm",
+        "why": "O contrário: com ela o grpcurl não precisa de .proto."
+      },
+      {
+        "text": "Ela entrega um mapa da API",
+        "why": "Certo. O contrato fica no repositório, onde os clientes o pegam de qualquer jeito."
+      },
+      {
+        "text": "Ela precisa de uma segunda porta",
+        "why": "É mais um serviço no mesmo servidor, registrado numa linha."
+      }
+    ]
+  },
+  "ex-8z0by97x": {
+    "prompt": "Ordene o que o grpcurl faz com -proto e -d numa chamada unária.",
+    "hint": "JSON entra, JSON sai, protobuf no meio.",
+    "items": [
+      "lê a requisição escrita em JSON",
+      "codifica em protobuf usando o seats.proto",
+      "faz a chamada a localhost:9090",
+      "decodifica a resposta com o mesmo contrato",
+      "imprime a resposta de volta em JSON"
+    ]
+  },
+  "ex-w295pfe9": {
+    "prompt": "Por que uma página web não pode ser cliente gRPC do boxoffice do jeito que ele está?",
+    "hint": "Duas coisas que o gRPC precisa do HTTP/2.",
+    "choices": [
+      {
+        "text": "O fetch não lê trailers",
+        "why": "Certo. O grpc-status chega num trailer, que a página não lê."
+      },
+      {
+        "text": "Navegadores não falam HTTP/2",
+        "why": "Falam; o que falta é acesso a trailers e ao enquadramento."
+      },
+      {
+        "text": "Protobuf não pode ser decodificado em JavaScript",
+        "why": "Decodificar é possível; o transporte é o obstáculo."
+      },
+      {
+        "text": "O CORS proíbe",
+        "why": "CORS trata de origens; o problema aqui é o protocolo."
+      }
+    ]
+  },
+  "ex-a8qwqtz9": {
+    "prompt": "Ligue cada contorno para o problema do navegador ao que ele faz.",
+    "hint": "Nenhum foi rodado no curso.",
+    "pairs": [
+      {
+        "left": "gRPC-Web",
+        "right": "uma variante que o navegador fala, traduzida por um proxy como o Envoy"
+      },
+      {
+        "left": "Connect",
+        "right": "serve gRPC, gRPC-Web e JSON puro dos mesmos handlers"
+      },
+      {
+        "left": "grpc-gateway",
+        "right": "gera uma frente REST e JSON a partir de anotações no .proto"
+      }
+    ],
+    "right_distractors": [
+      "comprime protobuf para o navegador aceitar"
+    ]
+  },
+  "ex-bymf85yy": {
+    "prompt": "Uma empresa abre uma API para parceiros que ela nunca vai conhecer. O que a aula recomenda?",
+    "hint": "O que todos esses clientes têm em comum?",
+    "choices": [
+      {
+        "text": "Só gRPC, já que o contrato os protege",
+        "why": "Estranhos começam pelo curl; uma cadeia de ferramentas antes custa adoção."
+      },
+      {
+        "text": "GraphQL, porque a aula compara três estilos",
+        "why": "A aula compara só REST e gRPC."
+      },
+      {
+        "text": "O que os serviços internos usarem, por consistência",
+        "why": "A escolha segue os clientes, e esses clientes são estranhos."
+      },
+      {
+        "text": "REST e JSON com uma descrição OpenAPI",
+        "why": "Certo. Ainda dá para gerar clientes, sem as ferramentas do gRPC."
+      }
+    ]
+  },
+  "ex-p9cbtxc1": {
+    "prompt": "Um catálogo público de eventos é lido por milhares de visitantes. Qual propriedade do REST pesa mais aqui?",
+    "hint": "Quem pode responder no lugar do servidor?",
+    "choices": [
+      {
+        "text": "O tamanho menor no fio",
+        "why": "JSON é o maior dos dois sem compressão."
+      },
+      {
+        "text": "Os prazos",
+        "why": "Prazos são a força do gRPC."
+      },
+      {
+        "text": "Um GET vai para cache",
+        "why": "Certo. Toda chamada gRPC é um POST que nenhum cache guarda."
+      },
+      {
+        "text": "Os clientes gerados em toda linguagem",
+        "why": "Essa é a linha do gRPC; o REST precisa de OpenAPI para isso."
+      }
+    ]
+  },
+  "ex-prv9w1dp": {
+    "prompt": "Por que uma compra por HTTP chegou a um observador gRPC meio segundo depois?",
+    "hint": "Dois adaptadores, um núcleo.",
+    "choices": [
+      {
+        "text": "As duas portas chamam um store e uma tabela",
+        "why": "Certo. Uma venda é o mesmo Sell, venha pela porta que vier."
+      },
+      {
+        "text": "O handler HTTP chama o servidor gRPC",
+        "why": "Os adaptadores nunca se chamam; os dois chamam o store."
+      },
+      {
+        "text": "O gRPC copia o log HTTP",
+        "why": "O Watch lê o evento do store a cada meio segundo."
+      },
+      {
+        "text": "O PostgreSQL empurra a mudança para clientes gRPC",
+        "why": "Nada empurra; o Watch consulta o store num ticker."
+      }
+    ]
+  },
+  "ex-k1pm4skh": {
+    "prompt": "Ligue cada cliente à sua porta no boxoffice.",
+    "hint": "Navegadores, scripts da equipe, programas da casa.",
+    "pairs": [
+      {
+        "left": "o site público de ingressos",
+        "right": "HTTP na 8080"
+      },
+      {
+        "left": "ferramentas e scripts da equipe",
+        "right": "HTTP em /admin/"
+      },
+      {
+        "left": "os leitores na porta",
+        "right": "gRPC na 9090, Scan"
+      },
+      {
+        "left": "a tela ao vivo da bilheteria",
+        "right": "gRPC na 9090, Watch"
+      }
+    ]
+  },
+  "ex-a9118smn": {
+    "prompt": "O que custa servir as duas portas, segundo a seção 06?",
+    "hint": "Pense no que atravessa as requisições.",
+    "choices": [
+      {
+        "text": "Duas cópias do store, sincronizadas por um job",
+        "why": "Há um store só; esse é o ponto do padrão."
+      },
+      {
+        "text": "Código transversal, em dobro",
+        "why": "Certo. Log, métricas, autenticação e erros existem nos dois formatos."
+      },
+      {
+        "text": "Um segundo banco para o gRPC",
+        "why": "Os dois dividem um pool e um PostgreSQL."
+      },
+      {
+        "text": "Regras de negócio duplicadas em cada adaptador",
+        "why": "Os adaptadores não têm regra de negócio; o store tem."
+      }
+    ]
+  },
+  "ex-er3dp643": {
+    "prompt": "Ponha as quatro perguntas da seção 07 na ordem em que a aula as faz.",
+    "hint": "A primeira decide REST sozinha.",
+    "items": [
+      "O cliente é um navegador, ou o programa de um estranho?",
+      "Você é dono das duas pontas, por anos?",
+      "A conversa é um stream?",
+      "O volume é extremo?"
+    ]
+  },
+  "ex-43tnj9r5": {
+    "prompt": "Dois serviços da mesma equipe vão trocar algumas centenas de requisições por minuto durante anos, sem navegador, sem streaming. Aonde o raciocínio da aula leva?",
+    "hint": "Qual das quatro perguntas é sim?",
+    "choices": [
+      {
+        "text": "gRPC, pelo contrato obrigatório",
+        "why": "Certo. Um campo renomeado quebra o build de cada cliente em vez da produção."
+      },
+      {
+        "text": "REST, porque o volume é baixo",
+        "why": "Volume é só a quarta pergunta; a segunda já é sim."
+      },
+      {
+        "text": "gRPC-Web, para deixar aberta a opção do navegador",
+        "why": "Nenhum navegador participa; um tradutor seria só custo."
+      },
+      {
+        "text": "As duas portas desde o primeiro dia",
+        "why": "A seção 06 diz para não acrescentar um segundo protocolo antes de um cliente precisar."
+      }
+    ]
+  },
+  "ex-a416p9d8": {
+    "prompt": "Quais são sinais, pela seção 07, de que gRPC foi a escolha errada? Marque todas as que se aplicam.",
+    "hint": "Três delas estão listadas para o gRPC.",
+    "choices": [
+      {
+        "text": "todo cliente passa por um gateway que volta para JSON",
+        "why": "Certo."
+      },
+      {
+        "text": "a maior parte da depuração começa instalando o grpcurl",
+        "why": "Certo."
+      },
+      {
+        "text": "um cliente de navegador é o usuário principal",
+        "why": "Certo."
+      },
+      {
+        "text": "laços de consulta imitam streams por toda parte",
+        "why": "Esse é sinal de que REST foi a escolha errada."
+      },
+      {
+        "text": "structs de cliente escritas à mão divergem das do servidor",
+        "why": "Também é sinal contra o REST, que não tem contrato obrigatório."
+      }
+    ]
+  },
+  "ex-kc30045n": {
+    "prompt": "Se nenhuma das quatro perguntas for sim, o que a aula recomenda, e por quê?",
+    "hint": "O padrão da aula 5.",
+    "choices": [
+      {
+        "text": "gRPC, por ser mais novo",
+        "why": "Idade não é critério."
+      },
+      {
+        "text": "REST, o mais simples",
+        "why": "Certo. Simplicidade é o padrão que a aula 5 defendeu."
+      },
+      {
+        "text": "Os dois, por segurança",
+        "why": "Duas portas escrevem cada preocupação transversal duas vezes."
+      },
+      {
+        "text": "O que o framework da aula 4 preferir",
+        "why": "A escolha segue os clientes, não um framework."
+      }
+    ]
+  },
+  "ex-xsptvz79": {
+    "prompt": "Um app móvel seu mostra a contagem de lugares ao vivo e precisa funcionar num trem com sinal ruim. Qual porta, pelo que a aula argumentou?",
+    "hint": "Você é dono das duas pontas, e a conversa é um stream.",
+    "choices": [
+      {
+        "text": "gRPC, pelo streaming do servidor com prazos em cada chamada",
+        "why": "Certo. As perguntas 2 e 3 são sim, e nenhum navegador participa."
+      },
+      {
+        "text": "REST, porque apps móveis são navegadores",
+        "why": "Um app nativo é um programa com cliente HTTP/2 próprio, não uma página web."
+      },
+      {
+        "text": "REST, porque protobuf é maior em redes ruins",
+        "why": "Protobuf foi o menor dos dois em toda medição."
+      },
+      {
+        "text": "Nenhuma: contagem ao vivo precisa de CDN",
+        "why": "CDN guarda cópias; a contagem ao vivo muda a cada venda."
+      }
+    ]
+  },
+  "ex-6yrgy3qt": {
+    "prompt": "Um colega propõe passar a API HTTP pública do boxoffice para gRPC para economizar banda. Qual medição responde?",
+    "hint": "As respostas são comprimidas.",
+    "choices": [
+      {
+        "text": "12.094 contra 5.671 bytes sem compressão",
+        "why": "Sem compressão não é o que trafega quando o HTTP comprime as respostas."
+      },
+      {
+        "text": "27 µs contra 33 µs para codificar",
+        "why": "Isso é velocidade, não banda, e o banco engole essa diferença."
+      },
+      {
+        "text": "1.430 contra 1.350 bytes com gzip",
+        "why": "Certo. Uns seis por cento, e os clientes públicos perderiam curl e caches."
+      },
+      {
+        "text": "56 contra 117 bytes para dois eventos",
+        "why": "Uma lista de dois não é um catálogo público, e os dois cresceram com gzip."
+      }
+    ]
+  }
+}

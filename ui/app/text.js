@@ -604,6 +604,24 @@ const RULES = {
       some any typealias associatedtype`,
   }),
 
+  csharp: language({
+    keywords: `class interface enum struct record namespace using public private protected
+      internal static readonly const sealed abstract virtual override partial void new return
+      if else for foreach in while do switch case default break continue try catch finally
+      throw var this base null true false is as async await get set init value string int
+      long double float decimal bool char object dynamic`,
+  }),
+
+  /* PHP's `#` is a comment as well as `//`, and a `$` in front of a name is
+     part of the name rather than an operator, so it is left uncoloured. */
+  php: language({
+    line: ['//', '#'],
+    keywords: `function return if elseif else for foreach as while do switch case default
+      break continue try catch finally throw new class interface trait extends implements
+      public private protected static abstract final const use namespace echo print isset
+      empty unset array list match fn null true false and or not include require`,
+  }),
+
   sql: language({
     line: ['--'],
     quotes: ["'", '"'],
@@ -770,6 +788,7 @@ const ALIAS = {
   py: 'python', py3: 'python',
   golang: 'go',
   kt: 'kotlin',
+  cs: 'csharp',
   htm: 'html', xml: 'html',
   yml: 'yaml',
   toml: 'ini', conf: 'ini', cfg: 'ini', properties: 'ini',

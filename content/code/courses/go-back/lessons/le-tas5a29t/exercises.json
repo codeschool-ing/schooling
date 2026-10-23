@@ -1,0 +1,942 @@
+[
+  {
+    "id": "ex-4w2w2s9h",
+    "version": 1,
+    "section": "what-varies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of boxoffice's values does the lesson keep in code rather than make configurable?",
+    "hint": "The defence from lesson 1.",
+    "choices": [
+      {
+        "text": "The connection pool size, since it depends on the database",
+        "correct": false,
+        "why": "The pool varies with the database's limit and the number of copies, so it is configuration."
+      },
+      {
+        "text": "`ReadHeaderTimeout`",
+        "correct": true,
+        "why": "Right. No environment wants a Slowloris defence of thirty seconds, so a setting only adds a way to get it wrong."
+      },
+      {
+        "text": "The HTTP address",
+        "correct": false,
+        "why": "A container must listen on every interface, so the address differs between environments."
+      },
+      {
+        "text": "The site allowed to call the API",
+        "correct": false,
+        "why": "A staging site is a different site, so it varies."
+      }
+    ]
+  },
+  {
+    "id": "ex-w4g7f3r2",
+    "version": 1,
+    "section": "what-varies",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What test does the lesson give for whether a value is configuration?",
+    "hint": "Compare environments.",
+    "choices": [
+      {
+        "text": "It is a number, such as a port or a timeout",
+        "correct": false,
+        "why": "Numbers such as the header timeout stay in code; being a number decides nothing."
+      },
+      {
+        "text": "Somebody once asked for it to be changeable without a release",
+        "correct": false,
+        "why": "A request is not a difference between environments."
+      },
+      {
+        "text": "It differs between environments; the code does not",
+        "correct": true,
+        "why": "Right. Configuration is what legitimately differs."
+      },
+      {
+        "text": "It appears in more than one file",
+        "correct": false,
+        "why": "Appearing twice is a reason to read it once, not a test of whether it varies."
+      }
+    ]
+  },
+  {
+    "id": "ex-mg2j7fwz",
+    "version": 1,
+    "section": "what-varies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson refuse a setting such as `BOXOFFICE_ENV=production` that code branches on?",
+    "hint": "Who runs that branch first?",
+    "choices": [
+      {
+        "text": "Environment names are longer than the variable limit",
+        "correct": false,
+        "why": "No such limit is involved; the problem is the code path."
+      },
+      {
+        "text": "Go cannot compare strings read from the environment",
+        "correct": false,
+        "why": "It compares them like any other string."
+      },
+      {
+        "text": "The flag package rejects variables that name an environment",
+        "correct": false,
+        "why": "The flag package knows nothing about environment names."
+      },
+      {
+        "text": "A production-only branch is first exercised by real users",
+        "correct": true,
+        "why": "Right. Environments differ in values, never in which lines run."
+      }
+    ]
+  },
+  {
+    "id": "ex-gnf8ym36",
+    "version": 1,
+    "section": "what-varies",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order boxoffice's sources of a setting from the one that is overridden by everything to the one that overrides everything.",
+    "hint": "Section 02's list.",
+    "items": [
+      "a default in the code",
+      "a `BOXOFFICE_*` environment variable",
+      "a flag on the command line"
+    ]
+  },
+  {
+    "id": "ex-taj16vrv",
+    "version": 1,
+    "section": "flags",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`./knobs -max-conns ten` stops with the help. What exit status does it end with?",
+    "hint": "The conventional status for misuse.",
+    "choices": [
+      {
+        "text": "0, the same as `-h`",
+        "correct": false,
+        "why": "`-h` exits with 0 because asking for help is not an error; a bad value is."
+      },
+      {
+        "text": "1",
+        "correct": false,
+        "why": "The transcript printed `exit 2`."
+      },
+      {
+        "text": "127, as for a command that does not exist",
+        "correct": false,
+        "why": "127 is the shell's status for a missing command, not the flag package's."
+      },
+      {
+        "text": "2",
+        "correct": true,
+        "why": "Right. The flag package uses 2 for a command line used wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-q235sfp3",
+    "version": 1,
+    "section": "flags",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`./knobs report.csv -v` printed `verbose: false`. Why?",
+    "hint": "Where parsing stops.",
+    "choices": [
+      {
+        "text": "`-v` must come with `=true`",
+        "correct": false,
+        "why": "A bool flag on its own means true, as the second run showed."
+      },
+      {
+        "text": "Parsing stopped at `report.csv`",
+        "correct": true,
+        "why": "Right. Both `report.csv` and `-v` landed in `flag.Args()`."
+      },
+      {
+        "text": "Flags written after a file name apply to that file and not to the program",
+        "correct": false,
+        "why": "The package has no notion of flags belonging to a file."
+      },
+      {
+        "text": "`-v` is reserved for the version",
+        "correct": false,
+        "why": "`knobs` declared `-v` itself, and the package reserves only `-h` and `-help`."
+      }
+    ]
+  },
+  {
+    "id": "ex-0rsj5v7r",
+    "version": 1,
+    "section": "flags",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`./knobs -v false -addr :9000` left the address at its default. What happened?",
+    "hint": "A bool takes a value only one way.",
+    "choices": [
+      {
+        "text": "The package reported an error and used the defaults",
+        "correct": false,
+        "why": "Nothing complained; that is the trap."
+      },
+      {
+        "text": "`false` ended the parsing before `-addr`",
+        "correct": true,
+        "why": "Right. Only `-v=false` gives a bool flag a value."
+      },
+      {
+        "text": "`false` was read as the value of `-v` and `:9000` was refused",
+        "correct": false,
+        "why": "The output shows `verbose: true` and `:9000` among the leftover arguments."
+      },
+      {
+        "text": "Two flags in one command conflict",
+        "correct": false,
+        "why": "The second run set three flags at once without trouble."
+      }
+    ]
+  },
+  {
+    "id": "ex-q4w8gjq3",
+    "version": 1,
+    "section": "flags",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each command line to what `knobs` made of it.",
+    "hint": "Section 03's transcripts.",
+    "pairs": [
+      {
+        "left": "`--addr=:9000`",
+        "right": "the same flag as `-addr=:9000`"
+      },
+      {
+        "left": "`-max-conns=20`",
+        "right": "max-conns 20"
+      },
+      {
+        "left": "`-max-conns ten`",
+        "right": "the help and exit status 2"
+      },
+      {
+        "left": "`-h`",
+        "right": "the help and exit status 0"
+      }
+    ],
+    "right_distractors": [
+      "three short flags combined"
+    ]
+  },
+  {
+    "id": "ex-xd73rcan",
+    "version": 1,
+    "section": "flags",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does the `flag` package read `-xvf`?",
+    "hint": "It is not a GNU tool.",
+    "choices": [
+      {
+        "text": "As one flag named `xvf`",
+        "correct": true,
+        "why": "Right. Programs that want combined short flags use `pflag` or `cobra`."
+      },
+      {
+        "text": "As the flags `-x`, `-v` and `-f`",
+        "correct": false,
+        "why": "That is the GNU style, which `spf13/pflag` adds."
+      },
+      {
+        "text": "As `-x` with the value `vf`",
+        "correct": false,
+        "why": "The package never splits a flag's name."
+      },
+      {
+        "text": "As a subcommand named `xvf`",
+        "correct": false,
+        "why": "Subcommands come from `cobra`, and they have no dash."
+      }
+    ]
+  },
+  {
+    "id": "ex-zk03mzt3",
+    "version": 1,
+    "section": "flags",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does boxoffice use `flag.NewFlagSet` instead of `flag.String` and `flag.Parse`?",
+    "hint": "Think of a test.",
+    "choices": [
+      {
+        "text": "The global set parses faster",
+        "correct": false,
+        "why": "Speed is not the difference; where the arguments come from is."
+      },
+      {
+        "text": "The global set rejects duration flags",
+        "correct": false,
+        "why": "`knobs` declared `-wait` as a duration on the global set."
+      },
+      {
+        "text": "Its own set parses a slice it is given",
+        "correct": true,
+        "why": "Right. The global set reads `os.Args`, and any package declares flags on it at will."
+      },
+      {
+        "text": "Only a set made with `NewFlagSet` prints the help text for `-h`",
+        "correct": false,
+        "why": "`knobs` used the global set and printed help."
+      }
+    ]
+  },
+  {
+    "id": "ex-187gbbyf",
+    "version": 1,
+    "section": "environment",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`BOXOFFICE_REGION= ./knobs` printed `\"\", set: true`. What would `os.Getenv` have returned?",
+    "hint": "It has one result, not two.",
+    "choices": [
+      {
+        "text": "An error saying the variable is empty",
+        "correct": false,
+        "why": "`os.Getenv` returns no error."
+      },
+      {
+        "text": "`\"\"`, as if unset",
+        "correct": true,
+        "why": "Right. Only `LookupEnv` tells the two apart."
+      },
+      {
+        "text": "`nil`",
+        "correct": false,
+        "why": "It returns a string, and a string is never nil."
+      },
+      {
+        "text": "The value the shell had before this command overrode it",
+        "correct": false,
+        "why": "The command set it to nothing for this run."
+      }
+    ]
+  },
+  {
+    "id": "ex-n6pgrn89",
+    "version": 1,
+    "section": "environment",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does boxoffice treat an empty variable as unset?",
+    "hint": "A container definition with nothing after `=`.",
+    "choices": [
+      {
+        "text": "Go cannot store an empty variable in a process's environment",
+        "correct": false,
+        "why": "`LookupEnv` reported one in the transcript."
+      },
+      {
+        "text": "Empty variables are not passed to child processes",
+        "correct": false,
+        "why": "They are passed like any other."
+      },
+      {
+        "text": "Empty almost always means left blank",
+        "correct": true,
+        "why": "Right. Nobody means the site to be the empty string."
+      },
+      {
+        "text": "`fs.Set` refuses an empty string for every type",
+        "correct": false,
+        "why": "A string flag accepts one; the choice is boxoffice's."
+      }
+    ]
+  },
+  {
+    "id": "ex-610xmfyr",
+    "version": 1,
+    "section": "environment",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `DATABASE_URL` keep its name without the `BOXOFFICE_` prefix?",
+    "hint": "Who else reads it.",
+    "choices": [
+      {
+        "text": "A prefix would make it a flag",
+        "correct": false,
+        "why": "Names of variables have nothing to do with flags."
+      },
+      {
+        "text": "PostgreSQL refuses connections from prefixed names",
+        "correct": false,
+        "why": "PostgreSQL never sees the variable's name."
+      },
+      {
+        "text": "Other tools read it by that name",
+        "correct": true,
+        "why": "Right. Well-known names stay as they are; the program's own settings get the prefix."
+      },
+      {
+        "text": "It is a secret, and secrets never carry a prefix",
+        "correct": false,
+        "why": "`BOXOFFICE_MANAGER_TOKEN` is a secret with the prefix."
+      }
+    ]
+  },
+  {
+    "id": "ex-vd8e7qym",
+    "version": 1,
+    "section": "environment",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "boxoffice is running, and you change `BOXOFFICE_ORIGIN` in its shell. What happens?",
+    "hint": "When are variables read?",
+    "choices": [
+      {
+        "text": "The next request uses the new site",
+        "correct": false,
+        "why": "The running process keeps the environment it started with."
+      },
+      {
+        "text": "boxoffice exits, because its environment changed",
+        "correct": false,
+        "why": "A process is never told about a change in its parent's shell."
+      },
+      {
+        "text": "Open WebSockets switch to the new site and others keep the old one",
+        "correct": false,
+        "why": "No part of the process reads the variable again."
+      },
+      {
+        "text": "Nothing, until it restarts",
+        "correct": true,
+        "why": "Right. A variable is read once, at start-up."
+      }
+    ]
+  },
+  {
+    "id": "ex-7jeerp2n",
+    "version": 1,
+    "section": "secrets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The user `nobody` ran `ps` against `knobs`. What could it see?",
+    "hint": "Compare the two transcripts.",
+    "choices": [
+      {
+        "text": "Nothing, because the process belongs to ana",
+        "correct": false,
+        "why": "It printed the whole command line."
+      },
+      {
+        "text": "The arguments, `hunter2` included",
+        "correct": true,
+        "why": "Right. Every user reads every command line; `/proc/PID/environ` is for the owner and root."
+      },
+      {
+        "text": "The environment and the command line",
+        "correct": false,
+        "why": "Reading `environ` as `nobody` gave `Permission denied`."
+      },
+      {
+        "text": "Only the program's name, with the arguments masked",
+        "correct": false,
+        "why": "The arguments came out whole."
+      }
+    ]
+  },
+  {
+    "id": "ex-9fjznyeb",
+    "version": 1,
+    "section": "secrets",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "boxoffice reads a secret from a variable, or from the path held in a twin variable whose name ends in ___.",
+    "hint": "`POSTGRES_PASSWORD_…`",
+    "blanks": [
+      {
+        "accept": [
+          "_FILE",
+          "FILE"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ef19a7bq",
+    "version": 1,
+    "section": "secrets",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The tokens sit in `~/.profile`, and only ana and root can read `/proc/PID/environ`. What is still wrong with that arrangement?",
+    "hint": "Section 04's child shell.",
+    "choices": [
+      {
+        "text": "Every program ana starts receives them, and anything that prints its environment prints them",
+        "correct": true,
+        "why": "Right. A file only its owner reads reaches only the process that opens it."
+      },
+      {
+        "text": "Variables are lost when the terminal closes",
+        "correct": false,
+        "why": "`~/.profile` sets them again in every new terminal; that is the problem, not loss."
+      },
+      {
+        "text": "`ps` shows exported variables to every user",
+        "correct": false,
+        "why": "`ps` showed the arguments; the environment was refused to `nobody`."
+      },
+      {
+        "text": "Go reads only the first ten variables",
+        "correct": false,
+        "why": "Go reads all of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-r6jhx31r",
+    "version": 1,
+    "section": "secrets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does section 08 write the token file inside `(umask 077; …)`?",
+    "hint": "When the file becomes private.",
+    "choices": [
+      {
+        "text": "`openssl` refuses to write without it",
+        "correct": false,
+        "why": "`openssl rand` writes under any umask."
+      },
+      {
+        "text": "So the file is born private",
+        "correct": true,
+        "why": "Right. A `chmod` afterwards leaves a moment when the file was readable."
+      },
+      {
+        "text": "It encrypts the file",
+        "correct": false,
+        "why": "A umask only sets permissions; the file is plain text, `-rw-------`."
+      },
+      {
+        "text": "To change ana's umask for every later terminal",
+        "correct": false,
+        "why": "The parentheses make a subshell, so the umask ends with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-781s00c5",
+    "version": 1,
+    "section": "files",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many modules did `go get github.com/spf13/viper@v1.21.0` add to an empty project?",
+    "hint": "The `grep -c` in section 06.",
+    "value": 13,
+    "tolerance": 0,
+    "unit": "modules"
+  },
+  {
+    "id": "ex-q4em6951",
+    "version": 1,
+    "section": "files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An empty program that only imports Viper came out at 6.3 MB. What does the lesson conclude?",
+    "hint": "Against `knobs`, 2.5 MB.",
+    "choices": [
+      {
+        "text": "For seven settings, `flag` and `os.Getenv` do the job",
+        "correct": true,
+        "why": "Right. Sixty readable lines against 13 modules you ship."
+      },
+      {
+        "text": "Viper is broken and has to be avoided in every program",
+        "correct": false,
+        "why": "The lesson calls it a fair price for a tool with dozens of settings in several formats."
+      },
+      {
+        "text": "Size is irrelevant once the binary is stripped",
+        "correct": false,
+        "why": "The cost includes the modules you update and trust, not only bytes."
+      },
+      {
+        "text": "A configuration file is always better than variables",
+        "correct": false,
+        "why": "A file earns its place only when settings stop being flat."
+      }
+    ]
+  },
+  {
+    "id": "ex-dd3f69cf",
+    "version": 1,
+    "section": "files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does the lesson have a `.env` file reach boxoffice?",
+    "hint": "The program never opens it.",
+    "choices": [
+      {
+        "text": "boxoffice reads `.env` beside its binary at start-up",
+        "correct": false,
+        "why": "That would be a second way in that works only on developers' machines."
+      },
+      {
+        "text": "The shell loads it with `set -a; . ./.env; set +a`",
+        "correct": true,
+        "why": "Right. The program reads the environment as always."
+      },
+      {
+        "text": "It is committed, and `go build` embeds it",
+        "correct": false,
+        "why": "A `.env` is never committed; `.env.example` goes in its place."
+      },
+      {
+        "text": "Through a `-env` flag",
+        "correct": false,
+        "why": "boxoffice declares no such flag."
+      }
+    ]
+  },
+  {
+    "id": "ex-mdr2dcgp",
+    "version": 1,
+    "section": "failing-early",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `load`, how does a flag on the command line end up beating its `BOXOFFICE_*` variable?",
+    "hint": "The order of three calls.",
+    "choices": [
+      {
+        "text": "`Parse` runs first and `VisitAll` skips flags already set",
+        "correct": false,
+        "why": "`VisitAll` runs first; `Parse` comes last."
+      },
+      {
+        "text": "`Parse` runs after `VisitAll` has applied the variables",
+        "correct": true,
+        "why": "Right. Each step overwrites the one before."
+      },
+      {
+        "text": "The flag package always prefers a flag to a variable of the same name",
+        "correct": false,
+        "why": "The package knows nothing of variables; the order of the code decides."
+      },
+      {
+        "text": "`errors.Join` keeps the last value",
+        "correct": false,
+        "why": "`errors.Join` joins errors, not values."
+      }
+    ]
+  },
+  {
+    "id": "ex-qk4hbaac",
+    "version": 1,
+    "section": "failing-early",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `load` take `getenv func(string) string` instead of calling `os.Getenv`?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "`os.Getenv` is unsafe in `main`",
+        "correct": false,
+        "why": "`main` passes exactly `os.Getenv`."
+      },
+      {
+        "text": "A function reads variables faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "The flag package demands it",
+        "correct": false,
+        "why": "The flag package never reads the environment."
+      },
+      {
+        "text": "So a test passes a map instead",
+        "correct": true,
+        "why": "Right. `main` passes `os.Getenv`; a test passes its own function."
+      }
+    ]
+  },
+  {
+    "id": "ex-jg7dh5tf",
+    "version": 1,
+    "section": "failing-early",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `load` collect problems in a slice and return `errors.Join`?",
+    "hint": "One attempt or several.",
+    "choices": [
+      {
+        "text": "Go forbids returning an error from inside a loop",
+        "correct": false,
+        "why": "Go has no such rule."
+      },
+      {
+        "text": "`errors.Join` hides the secrets",
+        "correct": false,
+        "why": "Hiding is `secret`'s job."
+      },
+      {
+        "text": "Whoever fixes it sees every problem at once, not one per restart",
+        "correct": true,
+        "why": "Right. The refusal in section 08 listed five lines."
+      },
+      {
+        "text": "So the program starts with the valid settings and skips the rest",
+        "correct": false,
+        "why": "Any error means boxoffice does not start."
+      }
+    ]
+  },
+  {
+    "id": "ex-ty04es97",
+    "version": 1,
+    "section": "failing-early",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each check in `load` to the reason behind it.",
+    "hint": "They are about what boxoffice needs.",
+    "pairs": [
+      {
+        "left": "max-conns at least 2",
+        "right": "`listen` keeps one connection for itself"
+      },
+      {
+        "left": "max-conns at most 100",
+        "right": "PostgreSQL's default connection limit"
+      },
+      {
+        "left": "origin with a scheme",
+        "right": "a browser's `Origin` header always has one"
+      },
+      {
+        "left": "a staff token",
+        "right": "without one no staff could sign in"
+      }
+    ],
+    "right_distractors": [
+      "Go's int32 range"
+    ]
+  },
+  {
+    "id": "ex-74kqanab",
+    "version": 1,
+    "section": "failing-early",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`secret` has `LogValue` and `String`. What still shows the real value?",
+    "hint": "A conversion.",
+    "choices": [
+      {
+        "text": "`slog.Info` with the secret as a value",
+        "correct": false,
+        "why": "`LogValue` makes that `[hidden]`."
+      },
+      {
+        "text": "`fmt.Printf(\"%v\", cfg)`",
+        "correct": false,
+        "why": "`String` makes that `[hidden]`."
+      },
+      {
+        "text": "`string(cfg.DatabaseURL)`",
+        "correct": true,
+        "why": "Right. `main` converts it at the one place the real value is needed."
+      },
+      {
+        "text": "`config`'s own `LogValue`",
+        "correct": false,
+        "why": "It passes the secret through `slog.Any`, which hides it."
+      }
+    ]
+  },
+  {
+    "id": "ex-58f9tjwk",
+    "version": 1,
+    "section": "boxoffice",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "boxoffice started with `BOXOFFICE_MAX_CONNS=4` and `-max-conns 6`. What `max_conns` did its first log line show?",
+    "hint": "The flag beats the variable.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-adx3r9j5",
+    "version": 1,
+    "section": "boxoffice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The refusal in section 08 printed five lines for four deliberate mistakes. Where did the fifth come from?",
+    "hint": "The step just before.",
+    "choices": [
+      {
+        "text": "The flag package added its own line",
+        "correct": false,
+        "why": "No flag was given; all five lines are `load`'s."
+      },
+      {
+        "text": "`errors.Join` repeats the first error",
+        "correct": false,
+        "why": "All five lines differ."
+      },
+      {
+        "text": "The terminal had no manager token",
+        "correct": true,
+        "why": "Right. A new terminal without the export has no token."
+      },
+      {
+        "text": "PostgreSQL refused the connection",
+        "correct": false,
+        "why": "Nothing started, so nothing connected."
+      }
+    ]
+  },
+  {
+    "id": "ex-9dwbqnad",
+    "version": 1,
+    "section": "boxoffice",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does boxoffice do when `load` returns `flag.ErrHelp`?",
+    "hint": "Asking for help.",
+    "choices": [
+      {
+        "text": "It prints the error and exits with 2",
+        "correct": false,
+        "why": "That is what every other error does."
+      },
+      {
+        "text": "It returns, ending with status 0",
+        "correct": true,
+        "why": "Right. The help was already printed, and asking for it is not a failure."
+      },
+      {
+        "text": "It starts with the defaults",
+        "correct": false,
+        "why": "It does not start at all."
+      },
+      {
+        "text": "It logs the configuration and exits",
+        "correct": false,
+        "why": "The configuration is logged only after `load` succeeds."
+      }
+    ]
+  },
+  {
+    "id": "ex-sk6k8ysh",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which statements match this lesson? Choose all that apply.",
+    "hint": "Sections 03, 05 and 07.",
+    "choices": [
+      {
+        "text": "boxoffice declares no flag for a secret",
+        "correct": true,
+        "why": "Right. A command line is readable by every user."
+      },
+      {
+        "text": "`-h` documents each setting's variable too",
+        "correct": true,
+        "why": "Right. `VisitAll` adds the variable's name to the help."
+      },
+      {
+        "text": "An unreadable file named by `_FILE` falls back to the plain variable",
+        "correct": false,
+        "why": "It is an error, never a quiet fallback."
+      },
+      {
+        "text": "`BOXOFFICE_WRITE_TIMEOUT` and `-write-timeout` use different parsers",
+        "correct": false,
+        "why": "`fs.Set` uses the flag's own parser for the variable."
+      }
+    ]
+  },
+  {
+    "id": "ex-3yy8sg6n",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague wants to pass the database password as `-db-password` so it is visible in the help. What does the lesson answer?",
+    "hint": "Section 05's first transcript.",
+    "choices": [
+      {
+        "text": "No: every user reads it with `ps`; it goes in a file named by `DATABASE_URL_FILE`",
+        "correct": true,
+        "why": "Right. A file only its owner reads, named by the variable."
+      },
+      {
+        "text": "Fine, as long as the help hides the default",
+        "correct": false,
+        "why": "The value on a running command line is the problem, not the help."
+      },
+      {
+        "text": "No: flags are limited to 64 characters",
+        "correct": false,
+        "why": "There is no such limit."
+      },
+      {
+        "text": "Fine, if it is also in `.env`",
+        "correct": false,
+        "why": "Two places for one secret doubles the exposure."
+      }
+    ]
+  },
+  {
+    "id": "ex-z6m0z5dj",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order what boxoffice does when it starts, as section 08's `main` has it.",
+    "hint": "Nothing before the configuration.",
+    "items": [
+      "read and check the configuration with `load`",
+      "log the configuration it started with",
+      "run the migrations",
+      "open the pool with `cfg.MaxConns`",
+      "listen on `cfg.HTTPAddr`"
+    ]
+  }
+]

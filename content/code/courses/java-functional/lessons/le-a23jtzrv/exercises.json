@@ -1,0 +1,444 @@
+[
+  {
+    "id": "ex-ckwxa5ht",
+    "version": 1,
+    "section": "andthen-and-compose",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `addOne = x -> x + 1` and `doubleIt = x -> x * 2`, what does `addOne.andThen(doubleIt).apply(5)` return?",
+    "hint": "`andThen` runs the first one first.",
+    "value": 12,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-kj73r5zr",
+    "version": 1,
+    "section": "andthen-and-compose",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "And `addOne.compose(doubleIt).apply(5)`?",
+    "hint": "`compose` runs its argument first.",
+    "value": 11,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-abcrv9sy",
+    "version": 1,
+    "section": "andthen-and-compose",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`length` is a `Function<String, Integer>` and `lower` a `Function<String, String>`. Why is `length.andThen(lower)` refused?",
+    "hint": "Each joint is checked.",
+    "choices": [
+      {
+        "text": "`lower` must be written with `compose` instead",
+        "correct": false,
+        "why": "`compose` would run `lower` first, a different function."
+      },
+      {
+        "text": "`lower` takes a string, not a number",
+        "correct": true,
+        "why": "Right: each output type must be the next input type."
+      },
+      {
+        "text": "`andThen` only joins functions of the same type",
+        "correct": false,
+        "why": "`strip.andThen(lower).andThen(length)` changed type and compiled."
+      },
+      {
+        "text": "A chain may have at most two steps",
+        "correct": false,
+        "why": "`Compose.java` chained three."
+      }
+    ]
+  },
+  {
+    "id": "ex-bvf7zdxc",
+    "version": 1,
+    "section": "andthen-and-compose",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two `UnaryOperator<String>` values are joined with `andThen`. What type is the result?",
+    "hint": "Where was `andThen` declared?",
+    "choices": [
+      {
+        "text": "`UnaryOperator<String>`",
+        "correct": false,
+        "why": "The method returns what `Function` declares."
+      },
+      {
+        "text": "`BinaryOperator<String>`",
+        "correct": false,
+        "why": "That takes two inputs; the joined one still takes one."
+      },
+      {
+        "text": "`Supplier<String>`",
+        "correct": false,
+        "why": "It still takes a string."
+      },
+      {
+        "text": "`Function<String, String>`",
+        "correct": true,
+        "why": "Right: `andThen` is inherited from `Function`."
+      }
+    ]
+  },
+  {
+    "id": "ex-7npv8x72",
+    "version": 1,
+    "section": "combining-tests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`noisy(\"cheap\", cheap).and(noisy(\"doorstop\", doorstop)).test(dune)` printed one line before `false`. Why only one?",
+    "hint": "Dune is not cheap.",
+    "choices": [
+      {
+        "text": "`doorstop` ran first, silently",
+        "correct": false,
+        "why": "`doorstop` never ran."
+      },
+      {
+        "text": "`and` stopped at the first `false`",
+        "correct": true,
+        "why": "Right: short-circuit, like `&&`."
+      },
+      {
+        "text": "The two lines were merged by `println`",
+        "correct": false,
+        "why": "Only one call happened."
+      },
+      {
+        "text": "`noisy` prints only for the first predicate in a chain",
+        "correct": false,
+        "why": "It prints whenever it runs; the second never ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-j1ev1gdz",
+    "version": 1,
+    "section": "combining-tests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One test reads a field, the other queries a database. In `a.and(b)`, which should be `a`?",
+    "hint": "`and` may never call `b`.",
+    "choices": [
+      {
+        "text": "The field",
+        "correct": true,
+        "why": "Right: when it says no, the query is skipped."
+      },
+      {
+        "text": "It makes no difference: both always run",
+        "correct": false,
+        "why": "`and` short-circuits."
+      },
+      {
+        "text": "Whichever was declared first in the class",
+        "correct": false,
+        "why": "Order in the class is irrelevant; order in `and` matters."
+      },
+      {
+        "text": "The database query, so the answer is always fresh",
+        "correct": false,
+        "why": "Then every call pays for the query, even when the field already says no."
+      }
+    ]
+  },
+  {
+    "id": "ex-nvps525f",
+    "version": 1,
+    "section": "combining-tests",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`lines.stream().filter(Predicate.___(String::isBlank))` keeps only the lines with text in them.",
+    "hint": "Three letters.",
+    "blanks": [
+      {
+        "accept": [
+          "not"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-h7myrvbe",
+    "version": 1,
+    "section": "comparators",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `Comparator.comparing(Book::author).thenComparing(Book::year, Comparator.reverseOrder())` sort by?",
+    "hint": "Read it left to right.",
+    "choices": [
+      {
+        "text": "Author; within an author, newest first",
+        "correct": true,
+        "why": "Right, as the first block of output showed."
+      },
+      {
+        "text": "Year, newest first, then author for ties",
+        "correct": false,
+        "why": "The first key is the author."
+      },
+      {
+        "text": "Author and year added together",
+        "correct": false,
+        "why": "Keys are compared in turn, never combined."
+      },
+      {
+        "text": "Author in reverse, then year",
+        "correct": false,
+        "why": "Only the year key is reversed."
+      }
+    ]
+  },
+  {
+    "id": "ex-v3hs6d5n",
+    "version": 1,
+    "section": "comparators",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Moving `reversed()` to the end of the chain put Herbert before Austen. What did it reverse?",
+    "hint": "It is called on the comparator built so far.",
+    "choices": [
+      {
+        "text": "Only the author, since years cannot be reversed",
+        "correct": false,
+        "why": "Any key can be reversed."
+      },
+      {
+        "text": "Only the year, the key just before it",
+        "correct": false,
+        "why": "Then Austen would still come first."
+      },
+      {
+        "text": "Both keys: author and year",
+        "correct": true,
+        "why": "Right. The years still look newest first because their order was oldest first before."
+      },
+      {
+        "text": "The list itself, after sorting",
+        "correct": false,
+        "why": "It returns a new comparator; it does not touch the list."
+      }
+    ]
+  },
+  {
+    "id": "ex-v8txexx6",
+    "version": 1,
+    "section": "comparators",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three books have `series == null`. What does `Comparator.nullsLast(...)` add?",
+    "hint": "Without it, the first comparison of a `null` fails.",
+    "choices": [
+      {
+        "text": "It replaces `null` with an empty string",
+        "correct": false,
+        "why": "It changes no values; it decides an order."
+      },
+      {
+        "text": "It sorts the books with no series last",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It removes the books with no series",
+        "correct": false,
+        "why": "All five books were printed."
+      },
+      {
+        "text": "It sorts in reverse so that `null` sorts last",
+        "correct": false,
+        "why": "The two Dune books stayed in ascending year order."
+      }
+    ]
+  },
+  {
+    "id": "ex-z7zcpg6d",
+    "version": 1,
+    "section": "comparators",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why use `comparingInt(Book::year)` rather than `comparing(Book::year)`?",
+    "hint": "Lesson 2 section 04.",
+    "choices": [
+      {
+        "text": "It compares `int` values without boxing",
+        "correct": true,
+        "why": "Right: `ToIntFunction`, no `Integer` objects."
+      },
+      {
+        "text": "`comparing` cannot sort numbers",
+        "correct": false,
+        "why": "It can, by boxing them."
+      },
+      {
+        "text": "It is the only one that accepts a method reference",
+        "correct": false,
+        "why": "Both accept `Book::year`."
+      },
+      {
+        "text": "It sorts in descending order by default",
+        "correct": false,
+        "why": "It sorts ascending, like `comparing`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ht2086zs",
+    "version": 1,
+    "section": "a-pipeline-of-steps",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `fold` start from `Function.identity()` rather than from the first step?",
+    "hint": "What should a list of zero steps do?",
+    "choices": [
+      {
+        "text": "`identity()` is faster than any real step",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "The first step must run twice",
+        "correct": false,
+        "why": "Each step runs once."
+      },
+      {
+        "text": "`andThen` cannot be called on a lambda",
+        "correct": false,
+        "why": "`strip.andThen(lower)` was called on one."
+      },
+      {
+        "text": "Zero steps then pass the input through",
+        "correct": true,
+        "why": "Right: no special case for zero steps."
+      }
+    ]
+  },
+  {
+    "id": "ex-5y95d0nj",
+    "version": 1,
+    "section": "a-pipeline-of-steps",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the cleaning of `\"  Cem Anos de   Solidão \"` in the order `STEPS` applies it.",
+    "hint": "The order of the list.",
+    "items": [
+      "strip the ends",
+      "squeeze runs of spaces",
+      "lower the case",
+      "remove the accents"
+    ]
+  },
+  {
+    "id": "ex-k66604x2",
+    "version": 1,
+    "section": "a-pipeline-of-steps",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A loop applying each step to a string gives the same answers. What does folding into one `Function` add?",
+    "hint": "Something you can name and pass.",
+    "choices": [
+      {
+        "text": "The pipeline becomes a value to store, pass and test",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It lets the steps run in any order",
+        "correct": false,
+        "why": "The order is fixed by the list."
+      },
+      {
+        "text": "It removes the need for `Locale.ROOT`",
+        "correct": false,
+        "why": "The steps are the same steps."
+      },
+      {
+        "text": "Speed: the folded function runs all four steps at the same moment",
+        "correct": false,
+        "why": "The steps still run one after another."
+      }
+    ]
+  },
+  {
+    "id": "ex-m6p61gbt",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each combinator with what its result does.",
+    "hint": "Sections 02 to 04.",
+    "pairs": [
+      {
+        "left": "`f.andThen(g)`",
+        "right": "runs `f`, then `g` on the result"
+      },
+      {
+        "left": "`f.compose(g)`",
+        "right": "runs `g`, then `f` on the result"
+      },
+      {
+        "left": "`p.negate()`",
+        "right": "answers the opposite of `p`"
+      },
+      {
+        "left": "`c1.andThen(c2)` on `Consumer`",
+        "right": "gives the same value to both"
+      }
+    ],
+    "right_distractors": [
+      "runs `f` and `g` at the same time on two threads"
+    ]
+  },
+  {
+    "id": "ex-g8vp3h86",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Books must be ordered by price, cheapest first, and equal prices by title. Which comparator does it?",
+    "hint": "A key, a numeric key, and a tie-breaker.",
+    "choices": [
+      {
+        "text": "`comparingLong(Book::priceCents).reversed()`",
+        "correct": false,
+        "why": "Dearest first, and no tie-breaker."
+      },
+      {
+        "text": "`comparing(Book::title).thenComparingLong(Book::priceCents)`",
+        "correct": false,
+        "why": "Title first, price only breaks ties."
+      },
+      {
+        "text": "`comparingLong(Book::priceCents).thenComparing(Book::title).reversed()`",
+        "correct": false,
+        "why": "`reversed()` puts the dearest first."
+      },
+      {
+        "text": "`comparingLong(Book::priceCents).thenComparing(Book::title)`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  }
+]

@@ -1,0 +1,345 @@
+{
+  "ex-38p5r8jf": {
+    "prompt": "O que torna `new Receipt().line(...).line(...)` possível?",
+    "hint": "Veja a última linha de `line`.",
+    "choices": [
+      {
+        "text": "`line` termina com `return this;`",
+        "why": "Isso: a segunda chamada é feita no recibo que a primeira devolveu."
+      },
+      {
+        "text": "Uma sintaxe especial de encadeamento ativada pela palavra `fluent`",
+        "why": "Essa palavra não existe; são chamadas comuns em valores devolvidos."
+      },
+      {
+        "text": "`Receipt` estender `StringBuilder`",
+        "why": "Ela não estende nada; devolve a si mesma, como o `StringBuilder`."
+      },
+      {
+        "text": "O atributo `List<String>`, que mantém o recibo vivo entre as chamadas",
+        "why": "A lista guarda as linhas; a cadeia funciona por causa do que o `line` devolve."
+      }
+    ]
+  },
+  "ex-q8crj59v": {
+    "prompt": "Que total o recibo imprimiu, em centavos?",
+    "hint": "150 mais 500.",
+    "unit": "centavos"
+  },
+  "ex-dknep64w": {
+    "prompt": "`card.setName(\"Ana\").setNumber(1042)` falhou com `void cannot be dereferenced`. O que a mensagem quer dizer?",
+    "hint": "O que o `setName` devolveu?",
+    "choices": [
+      {
+        "text": "Que `card` é `null`",
+        "why": "Isso seria uma `NullPointerException` na execução; isto é erro de compilação."
+      },
+      {
+        "text": "Que `setNumber` não existe",
+        "why": "Ele existe em `Card`; o problema é em que foi chamado."
+      },
+      {
+        "text": "`setName` não devolveu nada",
+        "why": "Isso: `setName` devolve `void`, então não há em que chamar o `setNumber`."
+      }
+    ]
+  },
+  "ex-rgawyszz": {
+    "prompt": "Por que a seção desaconselha fazer todo setter devolver `this`?",
+    "hint": "Pense em ferramentas que leem classes pelos seus setters.",
+    "choices": [
+      {
+        "text": "Porque devolver `this` faz uma cópia do objeto a cada vez",
+        "why": "`return this` devolve uma referência ao mesmo objeto; nada é copiado."
+      },
+      {
+        "text": "O `java.beans` só reconhece setters `void`, e as ferramentas sobre ele perderiam os outros",
+        "why": "Isso: encadear serve a uma classe feita para ser configurada de uma vez, não a todo bean."
+      },
+      {
+        "text": "Porque o compilador proíbe setter com valor de retorno",
+        "why": "Ele permite; o `Receipt.line` é praticamente um."
+      }
+    ]
+  },
+  "ex-t4t8q065": {
+    "prompt": "Por que o construtor de `Loan` é `private`?",
+    "hint": "O que um público deixaria o chamador pular?",
+    "choices": [
+      {
+        "text": "Para que `Loan` não possa ser estendida",
+        "why": "Impedir subclasses é tarefa do `final`; aqui o ponto são as verificações."
+      },
+      {
+        "text": "Para obrigar o `build()`",
+        "why": "Isso: todo empréstimo passa pelo `build()` e suas verificações, porque o builder é a única entrada."
+      },
+      {
+        "text": "Porque classes aninhadas não podem chamar construtores públicos",
+        "why": "Elas podem chamar qualquer um; o private foi escolhido para fechar as outras portas."
+      }
+    ]
+  },
+  "ex-af7dnhq8": {
+    "prompt": "`Loan.of(\"Iracema\").to(\"Ana\").build()` não definiu prazo. O que imprimiu?",
+    "hint": "Os atributos do builder começam nos padrões.",
+    "choices": [
+      {
+        "text": "`Iracema to Ana for 0 days`",
+        "why": "O `days` começa em 21 no builder, não no padrão do Java para um `int`."
+      },
+      {
+        "text": "`Iracema to Ana for 21 days`",
+        "why": "Isso: o prazo padrão, e nenhuma observação."
+      },
+      {
+        "text": "Uma `IllegalStateException`, já que `days` não foi definido",
+        "why": "Só o sócio é obrigatório; o prazo tem padrão."
+      }
+    ]
+  },
+  "ex-4mkf3ngd": {
+    "prompt": "O terceiro empréstimo esqueceu o `to(...)`. Quando o erro foi pego?",
+    "hint": "A primeira linha do stack trace depois da mensagem.",
+    "choices": [
+      {
+        "text": "Na compilação, porque `member` é obrigatório",
+        "why": "O compilador não enxerga que uma cadeia deixou uma chamada de fora."
+      },
+      {
+        "text": "Quando o empréstimo foi impresso",
+        "why": "Nunca foi impresso; nunca foi construído."
+      },
+      {
+        "text": "No `build()`, antes de qualquer `Loan` existir",
+        "why": "Isso: `at Loan$Builder.build`, com uma mensagem nomeando o livro."
+      },
+      {
+        "text": "No `days(14)`, que confere o sócio primeiro",
+        "why": "O `days` só guarda o número; toda verificação está no `build()`."
+      }
+    ]
+  },
+  "ex-ks1hqnyx": {
+    "prompt": "Além de `Loan.class`, que arquivo de classe o `ls Loan*.class` listou?",
+    "hint": "Uma classe aninhada ganha um arquivo próprio.",
+    "choices": [
+      {
+        "text": "`Builder.class`",
+        "why": "O nome da classe externa faz parte do nome do arquivo."
+      },
+      {
+        "text": "`Loan.Builder.class`",
+        "why": "O código escreve um ponto; o nome do arquivo usa outro caractere."
+      },
+      {
+        "text": "`Loan$Builder.class`",
+        "why": "Isso: nome externo, um `$`, nome aninhado."
+      },
+      {
+        "text": "Nenhum: uma classe aninhada é compilada dentro de `Loan.class`",
+        "why": "Toda classe, aninhada ou não, ganha o seu próprio arquivo de classe."
+      }
+    ]
+  },
+  "ex-7wcdyj6j": {
+    "prompt": "Segundo a tabela da seção, quais situações pedem um builder? Escolha todas as que se aplicam.",
+    "hint": "Um builder é uma segunda classe com cada atributo escrito duas vezes.",
+    "choices": [
+      {
+        "text": "Vários atributos opcionais com padrões sensatos",
+        "why": "Sim: cada um é definido pelo nome, ou deixado como está."
+      },
+      {
+        "text": "Dois atributos obrigatórios e mais nada",
+        "why": "Não: um construtor ou um record é mais simples."
+      },
+      {
+        "text": "Regras que envolvem mais de um atributo ao mesmo tempo",
+        "why": "Sim: o `build()` vê todas as partes juntas."
+      },
+      {
+        "text": "Qualquer classe com um setter",
+        "why": "Não: setters e builders respondem a necessidades diferentes."
+      }
+    ]
+  },
+  "ex-cfft1hsb": {
+    "prompt": "Um colega sugere trocar o builder por um construtor público `Loan(String book, String member, int days, String note)`. O que a seção diz que dá errado primeiro?",
+    "hint": "Leia a linha de quem chama, não a classe.",
+    "choices": [
+      {
+        "text": "Todo chamador passa `21` e `\"\"` para as partes que não lhe importam, por posição",
+        "why": "Isso: e nada diz qual número é o prazo."
+      },
+      {
+        "text": "O empréstimo fica mutável",
+        "why": "Um construtor com atributos `final` o mantém imutável."
+      },
+      {
+        "text": "As verificações ficam impossíveis",
+        "why": "Um construtor consegue conferir os argumentos; o problema está nos pontos de chamada."
+      }
+    ]
+  },
+  "ex-x3ynz77t": {
+    "prompt": "Depois de `due.plusDays(7);` numa linha isolada, o que `due` guarda?",
+    "hint": "O programa imprimiu.",
+    "choices": [
+      {
+        "text": "7 de novembro, sete dias depois",
+        "why": "Essa data foi calculada e jogada fora."
+      },
+      {
+        "text": "31 de outubro, como antes da chamada",
+        "why": "Isso: `LocalDate` nunca muda; o resultado tinha de ser atribuído."
+      },
+      {
+        "text": "`null`, porque o resultado não foi guardado",
+        "why": "O `due` continua com o objeto a que já se referia."
+      }
+    ]
+  },
+  "ex-rn5hzd5n": {
+    "prompt": "A correção da renovação é uma atribuição: `due = due.___(7);`.",
+    "hint": "O método que o `Dates` chamou e ignorou.",
+    "blanks": [
+      {
+        "accept": [
+          "plusDays"
+        ]
+      }
+    ]
+  },
+  "ex-ynhvszyq": {
+    "prompt": "`first.plus(50).plus(50).withReason(...)` rodou, e `first` ainda imprimiu 150 centavos. Por quê?",
+    "hint": "O que o `plus` devolve?",
+    "choices": [
+      {
+        "text": "Porque `cents` é `final`, então as somas foram recusadas",
+        "why": "Nada foi recusado; cada chamada construiu um `Fine` novo com o novo total."
+      },
+      {
+        "text": "O `plus` devolve um `Fine` novo",
+        "why": "Isso: `second` é o último de quatro objetos."
+      },
+      {
+        "text": "Porque o `toString` imprime o valor do construtor",
+        "why": "O `toString` imprime os atributos atuais; os de `first` nunca mudaram."
+      }
+    ]
+  },
+  "ex-jdh0qny9": {
+    "prompt": "Quantos objetos `Fine` existem depois que o `Fines` constrói `first` e `second`?",
+    "hint": "Conte `first`, os dois do meio e `second`.",
+    "unit": "objetos"
+  },
+  "ex-zmr90c7p": {
+    "prompt": "Ligue cada classe ao que `x.algumaCoisa()` faz com `x`.",
+    "hint": "A tabela no fim da seção.",
+    "pairs": [
+      {
+        "left": "`StringBuilder`",
+        "right": "Altera `x` e o devolve"
+      },
+      {
+        "left": "`LocalDate`",
+        "right": "Devolve um objeto novo, `x` sem mudança"
+      },
+      {
+        "left": "`Loan.Builder`",
+        "right": "Altera o builder e o devolve"
+      },
+      {
+        "left": "`String`",
+        "right": "Devolve uma string nova, `x` sem mudança"
+      }
+    ]
+  },
+  "ex-656e3nag": {
+    "prompt": "Por que o compilador não disse nada sobre `title.toUpperCase();`?",
+    "hint": "Ignorar um resultado é legal?",
+    "choices": [
+      {
+        "text": "Porque `toUpperCase` altera a string no lugar",
+        "why": "Ele devolveu `IRACEMA` e saiu `iracema`; nada mudou no lugar."
+      },
+      {
+        "text": "Porque avisos de resultado ignorado vêm desligados por padrão no `javac`",
+        "why": "O `javac` não tem essa verificação para ligar."
+      },
+      {
+        "text": "Chamar um método e descartar o que ele devolve é Java legal",
+        "why": "Isso: a linguagem não distingue um resultado esquecido de um indesejado."
+      }
+    ]
+  },
+  "ex-mftyhg1f": {
+    "prompt": "Ponha em ordem de execução os passos de `Loan.of(\"Central do Brasil\").to(\"Bruno\").days(7).build()`.",
+    "hint": "Da esquerda para a direita.",
+    "items": [
+      "`of` cria um builder com o livro",
+      "`to` guarda o sócio e devolve o builder",
+      "`days` guarda 7 e devolve o builder",
+      "`build` confere todas as regras e cria o `Loan`"
+    ]
+  },
+  "ex-gaqsrgqy": {
+    "prompt": "`BigDecimal total = BigDecimal.ZERO; for (...) { total.add(price); }` sempre termina em zero. O que está errado?",
+    "hint": "O `BigDecimal` está numa linha da tabela da seção.",
+    "choices": [
+      {
+        "text": "`BigDecimal.ZERO` é uma constante e recusa o `add`",
+        "why": "O `add` funciona nele e devolve um valor novo."
+      },
+      {
+        "text": "O `add` devolve um valor novo e o laço o joga fora",
+        "why": "Isso: `total = total.add(price);`."
+      },
+      {
+        "text": "O laço precisa de um `StringBuilder` para acumular a soma",
+        "why": "O `StringBuilder` monta texto, não números."
+      },
+      {
+        "text": "O `price` é somado antes de o laço começar",
+        "why": "Cada iteração chama o `add`; cada resultado se perde."
+      }
+    ]
+  },
+  "ex-wt4xv9zb": {
+    "prompt": "`Receipt.line` altera o recibo e o devolve. Um colega chama `receipt.line(\"fee\", 150);` numa linha isolada. A multa fica registrada?",
+    "hint": "Que tipo de cadeia é o recibo?",
+    "choices": [
+      {
+        "text": "Sim: o `line` alterou o recibo",
+        "why": "Isso: ignorar `this` não perde nada, ao contrário de ignorar um objeto novo."
+      },
+      {
+        "text": "Não: como no `plusDays`, o resultado precisa ser atribuído",
+        "why": "Esse é o tipo imutável; o recibo é o outro."
+      },
+      {
+        "text": "Não: uma cadeia precisa de pelo menos duas chamadas",
+        "why": "Uma chamada é uma cadeia de um, e roda normalmente."
+      }
+    ]
+  },
+  "ex-v7an7znk": {
+    "prompt": "O que é uma interface fluente?",
+    "hint": "É um desenho, não uma palavra-chave.",
+    "choices": [
+      {
+        "text": "Uma `interface` cujos métodos têm todos corpo default",
+        "why": "Interface aqui quer dizer a superfície de uma classe, não a `interface` do Java."
+      },
+      {
+        "text": "Chamadas que se encadeiam numa expressão",
+        "why": "Isso: cada método devolve um objeto para a próxima chamada."
+      },
+      {
+        "text": "Uma classe cujos métodos não recebem parâmetros",
+        "why": "`line` e `days` recebem parâmetros e se encadeiam bem."
+      }
+    ]
+  }
+}

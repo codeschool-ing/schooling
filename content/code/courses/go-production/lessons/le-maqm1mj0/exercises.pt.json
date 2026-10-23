@@ -1,0 +1,398 @@
+{
+  "ex-tcndymre": {
+    "prompt": "Com `type Celsius float64`, o que `reflect.TypeOf(Celsius(21.5))` e o seu `Kind()` imprimem?",
+    "hint": "Um é o tipo exato, o outro é a família a que ele pertence.",
+    "choices": [
+      {
+        "text": "`main.Celsius` como tipo, `float64` como kind",
+        "why": "Isso. O tipo mantém o próprio nome; o kind é o que ele é por baixo, e é nele que o código reflexivo faz o switch."
+      },
+      {
+        "text": "`float64` e `float64`, já que um tipo nomeado é só um apelido",
+        "why": "`type Celsius float64` declara um tipo novo, não um apelido, e o `TypeOf` imprimiu `main.Celsius` na transcrição."
+      },
+      {
+        "text": "`main.Celsius` e `main.Celsius`",
+        "why": "Um kind é uma de 26 famílias fixas, como `float64` ou `struct`; nenhum programa cria uma nova, então um kind nunca é o nome de um tipo seu."
+      },
+      {
+        "text": "`any` e `float64`, porque o argumento foi convertido em `any`",
+        "why": "A conversão perde o tipo estático da variável, mas o tipo dinâmico viaja na palavra do tipo da interface, e é ela que o `TypeOf` devolve."
+      }
+    ]
+  },
+  "ex-zxawnerz": {
+    "prompt": "`err := errors.New(\"disk full\")` tem o tipo estático `error`. Por que `reflect.TypeOf(err)` imprime `*errors.errorString`?",
+    "hint": "O que aconteceu com o valor antes de o `TypeOf` rodar?",
+    "choices": [
+      {
+        "text": "O `errors.New` devolve um ponteiro, e o `TypeOf` sempre segue ponteiros",
+        "why": "O `TypeOf` não segue nada: para `&PathCount{...}` ele imprimiu `*main.PathCount`. Seguir ponteiro é trabalho do `Elem`."
+      },
+      {
+        "text": "Passar como `any` guardou só o tipo dinâmico, que é o concreto",
+        "why": "Isso. O parâmetro é `any`, o tipo de interface `error` some antes de a função rodar, e a palavra do tipo guarda o tipo concreto."
+      },
+      {
+        "text": "O `error` é embutido, então o reflect não tem descritor para ele",
+        "why": "`reflect.TypeFor[error]()` descreve o `error` sem problema. Ele não chegou ao `TypeOf` aqui porque a conversão para `any` o trocou pelo tipo dinâmico."
+      },
+      {
+        "text": "O `TypeOf` informa o tipo da função que criou o valor",
+        "why": "Tipos não ficam presos à função que criou o valor; `errorString` é o tipo do próprio valor, declarado no pacote `errors`."
+      }
+    ]
+  },
+  "ex-s1n9qrnz": {
+    "prompt": "`v := reflect.ValueOf(&PathCount{\"/login\", 2576})` tem kind `ptr`. Para perguntar quantos campos a struct tem, o código chama antes `v.___()`, que segue o ponteiro.",
+    "hint": "O método que, segundo o `go doc`, entra em pânico a menos que o kind seja `Interface` ou `Pointer`.",
+    "blanks": [
+      {
+        "accept": [
+          "Elem"
+        ]
+      }
+    ]
+  },
+  "ex-rm2mzayz": {
+    "prompt": "Uma função recebe um `var err error` que é nil e o passa para `reflect.ValueOf`. O que ela recebe de volta?",
+    "hint": "Não há nada em nenhuma das duas palavras da interface.",
+    "choices": [
+      {
+        "text": "O `Value` zero, que tem kind `Invalid`",
+        "why": "Isso. Uma interface nil não tem palavra de tipo para ler, então o `ValueOf` devolve `Value{}`, impresso como `<invalid reflect.Value>`; a maioria dos métodos entra em pânico com ele."
+      },
+      {
+        "text": "Um `Value` de kind `Interface` guardando um `error` nil",
+        "why": "O tipo estático `error` se perdeu quando o valor virou `any`, e um `error` nil vira um `any` nil: não sobra `Interface` para informar."
+      },
+      {
+        "text": "Um `Value` de kind `Pointer` que é nil",
+        "why": "Isso exigiria uma palavra de tipo com algum tipo ponteiro. Uma interface nil não carrega nem tipo nem dado."
+      },
+      {
+        "text": "Nada: o `ValueOf` entra em pânico com argumento nil",
+        "why": "`ValueOf(nil)` devolve o `Value` zero sem pânico, como mostrou a última linha do `typeof`; o pânico vem depois, de um método que precisa de um valor de verdade."
+      }
+    ]
+  },
+  "ex-ew8tfqg6": {
+    "prompt": "Um campo é declarado `Method string `json:\",omitempty\"`` e guarda `\"GET\"`. Com que chave o `json.Marshal` o escreve?",
+    "hint": "A tag está presente, mas veja o que vem antes da vírgula.",
+    "choices": [
+      {
+        "text": "`\"\"`, o nome vazio que a tag dá",
+        "why": "Um nome vazio na tag quer dizer \"nenhum nome dado\", e o codificador volta ao nome do próprio campo em vez de escrever uma chave vazia."
+      },
+      {
+        "text": "`\"method\"`, posto em minúsculas pelo codificador",
+        "why": "O `encoding/json` nunca muda a caixa de um nome ao codificar; o `Status`, sem tag, saiu como `\"Status\"`."
+      },
+      {
+        "text": "`\"Method\"`, o nome do próprio campo",
+        "why": "Isso. A tag só define uma opção; sem nome antes da vírgula, o campo fica com o próprio nome, como o programa `tags` imprimiu."
+      },
+      {
+        "text": "Nenhuma: uma tag sem nome faz o campo ser pulado",
+        "why": "Pular é o que `json:\"-\"` pede. O `,omitempty` só pula o campo quando ele tem o valor zero, e `\"GET\"` não é zero."
+      }
+    ]
+  },
+  "ex-whgscf3p": {
+    "prompt": "Ligue cada campo de `Row`, com o valor que guardava, ao que o `json.Marshal` fez com ele.",
+    "hint": "Leia primeiro a tag, depois o valor.",
+    "pairs": [
+      {
+        "left": "`Path string `json:\"path\"``, guardando `\"/login\"`",
+        "right": "escrito com a chave `path`"
+      },
+      {
+        "left": "`Hits int `json:\"hits,omitempty\"``, guardando 0",
+        "right": "deixado de fora, porque tinha o valor zero"
+      },
+      {
+        "left": "`Total time.Duration `json:\"-\"``, guardando um segundo",
+        "right": "deixado de fora, seja qual for o valor"
+      },
+      {
+        "left": "`Status int`, sem tag, guardando 200",
+        "right": "escrito com a chave `Status`"
+      }
+    ],
+    "right_distractors": [
+      "escrito como `null`",
+      "escrito com a chave `status`"
+    ]
+  },
+  "ex-d2x7m480": {
+    "prompt": "Em outro pacote, um código tem `c := reflect.ValueOf(r).FieldByName(\"comment\")`, onde `comment` é um campo `string` não exportado. Qual chamada funciona?",
+    "hint": "O programa `tags` imprimiu uma delas e entrou em pânico em outra.",
+    "choices": [
+      {
+        "text": "`c.Interface()`, que devolve a string como `any`",
+        "why": "Essa é a chamada que entrou em pânico: `cannot return value obtained from unexported field or method`. Entregar como `any` furaria a fronteira do pacote."
+      },
+      {
+        "text": "`c.SetString(\"open\")`, desde que `r` tenha sido passado por ponteiro",
+        "why": "Um ponteiro torna o valor endereçável, mas um campo alcançado por nome não exportado continua só de leitura; o `CanSet` diz false de qualquer jeito."
+      },
+      {
+        "text": "Nenhuma: a reflexão não enxerga campos não exportados",
+        "why": "Enxerga: o `comment` apareceu na tabela com a tag, e o `c.String()` leu `busy` dele."
+      },
+      {
+        "text": "`c.String()`",
+        "why": "Isso. Ler por um getter específico do kind é permitido; o que a reflexão recusa é sair como `any` ou ser alterado."
+      }
+    ]
+  },
+  "ex-wcz2r449": {
+    "prompt": "Um carregador de configuração lê tags como `env:\"PORT\"`. Ele precisa tratar `env:\"\"` como \"nunca ler do ambiente\" e a ausência da tag como \"usar o nome do campo\". Do que ele precisa?",
+    "hint": "Um dos métodos de `StructTag` não distingue esses dois casos.",
+    "choices": [
+      {
+        "text": "`Tag.Get(\"env\")` e um teste de string vazia",
+        "why": "O `Get` devolve `\"\"` tanto para chave ausente quanto para chave vazia, que é exatamente o par que esse carregador precisa distinguir."
+      },
+      {
+        "text": "`Tag.Lookup(\"env\")`, cujo segundo resultado diz se a chave existe",
+        "why": "Isso. O `Lookup` devolve o valor e o `ok`; o programa `tags` mostrou `present=false` para `Status`, que o `Get` teria dado como string vazia."
+      },
+      {
+        "text": "`strings.Contains(string(f.Tag), \"env\")`",
+        "why": "Isso também casaria com uma tag como `json:\"env\"`, e ignora o formato de tag que `Get` e `Lookup` já interpretam."
+      },
+      {
+        "text": "`FieldByName`, que falha quando o campo não tem tag",
+        "why": "O `FieldByName` acha um campo pelo nome em Go e não sabe nada de tags; ele funciona com ou sem tag."
+      }
+    ]
+  },
+  "ex-5hgq1806": {
+    "prompt": "Por que `reflect.ValueOf(x).CanSet()` diz false para uma variável `int` `x`?",
+    "hint": "O que o `ValueOf` recebeu de fato?",
+    "choices": [
+      {
+        "text": "O `int` é um tipo básico, e só campos de struct podem ser alterados",
+        "why": "`reflect.ValueOf(&x).Elem().SetInt(25)` alterou o mesmo `int` na transcrição; o kind nunca foi o problema."
+      },
+      {
+        "text": "Ele recebeu uma cópia de `x` dentro de um `any`, não a variável",
+        "why": "Isso. A conversão para `any` copiou o valor, e alterar a cópia não mudaria nada visível, então o pacote recusa."
+      },
+      {
+        "text": "O `x` foi declarado com `:=`, o que o deixa só de leitura para a reflexão",
+        "why": "O jeito de declarar não faz diferença; o `x := 10` foi alterado pelo endereço no mesmo programa."
+      },
+      {
+        "text": "A reflexão só pode alterar variáveis declaradas em outro pacote",
+        "why": "A regra dos campos não exportados é outra, e um `int` local não é nenhum dos casos; o que falta é só o endereço."
+      }
+    ]
+  },
+  "ex-j23jat8g": {
+    "prompt": "Coloque em ordem os passos que alteram `c.Limit` para 10 por reflexão, como faz o programa `set`.",
+    "hint": "Comece por algo que leve de volta a `c`.",
+    "items": [
+      "pegar o endereço, `&c`",
+      "passá-lo para `reflect.ValueOf`",
+      "chamar `Elem()` para chegar à própria struct",
+      "chamar `FieldByName(\"Limit\")`",
+      "chamar `SetInt(10)`"
+    ]
+  },
+  "ex-937bej0d": {
+    "prompt": "`reflect.ValueOf(c).MethodByName(\"Describ\").Call(nil)` tem um erro de digitação no nome do método. Onde o programa falha, e dizendo o quê?",
+    "hint": "O que o `MethodByName` devolve para um nome que não acha?",
+    "choices": [
+      {
+        "text": "Na compilação, com `Describ` indefinido",
+        "why": "O nome é uma string, e o compilador só confere que o `MethodByName` recebe uma string. O programa compilou e rodou."
+      },
+      {
+        "text": "No `MethodByName`, com um pânico citando `Describ`",
+        "why": "O `MethodByName` não reclama: ele devolve o `Value` zero, e o nome não aparece em mensagem nenhuma."
+      },
+      {
+        "text": "No `go vet`, que confere nomes de métodos passados ao `reflect`",
+        "why": "O `go vet ./set` passou limpo neste mesmo programa; nenhum analisador lê as strings passadas ao `MethodByName`."
+      },
+      {
+        "text": "No `Call`, com um pânico sobre chamar um `Value` zero",
+        "why": "Isso. O `MethodByName` devolveu o `Value` zero em silêncio, e o `Call` entrou em pânico com `call of reflect.Value.Call on zero Value`, uma linha depois do erro de digitação."
+      }
+    ]
+  },
+  "ex-ahfhangw": {
+    "prompt": "No pacote `main`, com `x := 10`, `e := reflect.ValueOf(&x).Elem()` e `c` um `Config`, quais destas linhas compilam e passam no `go vet`? Marque todas.",
+    "hint": "O compilador vê os tipos dos argumentos, nunca o que a reflexão vai fazer com eles.",
+    "choices": [
+      {
+        "text": "`e.SetString(\"ten\")`",
+        "why": "Sim. O `SetString` recebe uma string e ganha uma; o desencontro com um `int` só aparece na execução, como pânico."
+      },
+      {
+        "text": "`x = \"ten\"`",
+        "why": "Atribuir uma string a uma variável `int` é erro de compilação; é essa conferência que a reflexão abandona."
+      },
+      {
+        "text": "`reflect.ValueOf(c).MethodByName(\"Describe\").Call(nil)`",
+        "why": "Sim. Compila e passa no `go vet`, e entra em pânico com `Call with too few input arguments` quando roda."
+      },
+      {
+        "text": "`c.Describe()`, sem argumento",
+        "why": "Chamar um método com argumentos de menos é erro de compilação; pelo `Call`, o mesmo erro espera a execução."
+      }
+    ]
+  },
+  "ex-87tcx8tr": {
+    "prompt": "Na rodada de benchmarks, o `FieldDirect` levou cerca de 15,4 ns por operação e o `FieldByName` entre 376,3 e 409,6 ns. Aproximadamente quantas vezes mais lento é ler um campo pelo nome?",
+    "hint": "Divida um pelo outro; qualquer das três rodadas serve."
+  },
+  "ex-fa04bhzp": {
+    "prompt": "Um campo lido por índice é cerca de 2,5 vezes mais lento que um lido direto, e mesmo assim o `Reflect` imprimiu a tabela inteira só cerca de um sexto mais devagar que o `Table`. Por quê?",
+    "hint": "O que mais acontece em cada linha além de ler dois campos?",
+    "choices": [
+      {
+        "text": "O compilador transformou as chamadas reflexivas em leituras diretas",
+        "why": "Não tem como: o índice do campo só é conhecido na execução, a partir de um nome digitado. Os 2,5 vezes foram medidos justamente nessas chamadas."
+      },
+      {
+        "text": "Formatar e escrever a tabela custam igual nos dois e dominam",
+        "why": "Isso. O `tabwriter`, o `strings.Join` e as escritas são comuns aos dois, então a parte reflexiva é uma fatia pequena de cada operação."
+      },
+      {
+        "text": "O `Table` faz mais alocações, o que compensa a diferença",
+        "why": "É o contrário: o `Table` fez 50 alocações e o `Reflect`, 58."
+      },
+      {
+        "text": "A reflexão só custa alguma coisa na primeira chamada",
+        "why": "O `FieldIndex` pagou o extra em cada uma de milhões de iterações; nada na reflexão fica mais barato depois da primeira chamada, a menos que o código guarde algo, como o `Reflect` guarda índices."
+      }
+    ]
+  },
+  "ex-b3ew99f7": {
+    "prompt": "Acrescentar `[0]` em `columns.Reflect(os.Stdout, tally.Top(s, *n)[0], …)` passou no `go vet` e no compilador, e só falhou quando o `cols` rodou. O que tornou isso possível?",
+    "hint": "Veja o tipo do segundo parâmetro do `Reflect`.",
+    "choices": [
+      {
+        "text": "O `go vet` pula arquivos em `cmd/`",
+        "why": "O `go vet ./...` cobre todos os pacotes do módulo, `cmd/cols` incluído; ele só não tinha o que apontar."
+      },
+      {
+        "text": "O parâmetro é `any`, então todo valor passa na checagem de tipos",
+        "why": "Isso. O compilador só pode conferir que o argumento é um `any`, e tudo é; a exigência de verdade, uma slice de structs, é conferida dentro do `Reflect` na execução."
+      },
+      {
+        "text": "Indexar com `[0]` devolve um valor de interface",
+        "why": "Indexar um `[]tally.PathCount` dá um `tally.PathCount`, uma struct concreta; a própria mensagem de erro do programa citou esse tipo."
+      },
+      {
+        "text": "Um `tally.PathCount` vira automaticamente uma slice de um elemento",
+        "why": "O Go nunca converte por conta própria, como disse o curso `go`; o `Reflect` recebeu uma struct e disse isso."
+      }
+    ]
+  },
+  "ex-zftm2x5n": {
+    "prompt": "Ligue cada situação à ferramenta que a seção recomenda para ela.",
+    "hint": "Pergunte quando os tipos ficam conhecidos: quando o código é escrito, quando é compilado, ou só quando roda.",
+    "pairs": [
+      {
+        "left": "um codificador para structs que quem o chama vai escrever no ano que vem",
+        "right": "`reflect`, atrás de uma API que devolve erros"
+      },
+      {
+        "left": "uma rotina de ordenação para `[]int`, `[]string` e `[]time.Duration`",
+        "right": "generics"
+      },
+      {
+        "left": "listas de colunas para uma dúzia de tipos de linha conhecidos, chatas de escrever à mão",
+        "right": "geração de código com `go generate`"
+      },
+      {
+        "left": "imprimir as duas colunas de um tipo de linha, num lugar só",
+        "right": "código simples"
+      }
+    ],
+    "right_distractors": [
+      "`unsafe`, para ler os campos mais rápido"
+    ]
+  },
+  "ex-1g2mmg3h": {
+    "prompt": "Um relatório percorre um milhão de linhas e chama `reflect.ValueOf(row).FieldByName(col)` para cada uma. O profiler mostra essa chamada no topo. Qual correção mantém o código genérico?",
+    "hint": "O que o `columns.Reflect` faz antes do laço, e o `encoding/json` por tipo?",
+    "choices": [
+      {
+        "text": "Trocar `FieldByName` por `FieldByNameFunc` com comparação sem caixa",
+        "why": "O `FieldByNameFunc` também percorre os campos a cada chamada, com uma chamada de função por comparação; não fica mais barato."
+      },
+      {
+        "text": "Resolver o nome para um índice de campo uma vez, antes do laço, e usar `Field(i)`",
+        "why": "Isso. A busca pelo nome é a parte de 25 vezes; feita uma vez, cada linha paga só a leitura por índice, de 2,5 vezes, que é como funcionam o `fieldNamed` e o cache de campos do codificador."
+      },
+      {
+        "text": "Passar `&row` em vez de `row`, para o reflect não copiar",
+        "why": "Copiar uma struct pequena não é o que o perfil mostra; o que aparece é o `FieldByName` procurando por string, e ele procura do mesmo jeito através de um ponteiro."
+      },
+      {
+        "text": "Rodar o laço em várias goroutines",
+        "why": "Isso espalha o desperdício por mais núcleos e continua fazendo um milhão de buscas por nome que uma busca só substituiria."
+      }
+    ]
+  },
+  "ex-rwhdkgv0": {
+    "prompt": "O `go vet` numa struct com `comment string `json:\"comment\"`` informa: `struct field comment has json tag but is not ___`.",
+    "hint": "A propriedade que um campo precisa ter para o `encoding/json` olhar para ele.",
+    "blanks": [
+      {
+        "accept": [
+          "exported"
+        ]
+      }
+    ]
+  },
+  "ex-jh2t7as0": {
+    "prompt": "Testes costumam comparar resultados com `reflect.DeepEqual`, embora a reflexão seja lenta e sem conferência. Por que esse uso é aceito?",
+    "hint": "Pense em quem escreve os tipos que um auxiliar de teste compara, e no quanto vale a velocidade de um teste.",
+    "choices": [
+      {
+        "text": "O `DeepEqual` é conferido pelo compilador, ao contrário do resto do `reflect`",
+        "why": "Ele recebe dois `any`, então o compilador não confere nada; comparar um `int` com uma `string` compila e devolve false."
+      },
+      {
+        "text": "É um auxiliar de teste que precisa lidar com qualquer tipo, campos incluídos, e o teste paga o custo uma vez",
+        "why": "Isso. Ele compara valores de tipos que o autor do auxiliar nunca viu, campos não exportados também, e algumas centenas de nanossegundos num teste não custam nada a ninguém."
+      },
+      {
+        "text": "O `DeepEqual` usa generics por dentro, então não custa nada a mais",
+        "why": "Ele é escrito com `reflect`, como sugere a assinatura `DeepEqual(x, y any) bool`, e percorre os dois valores na execução."
+      },
+      {
+        "text": "O `go test` desliga os pânicos da reflexão",
+        "why": "Um teste que usa `reflect` errado entra em pânico como qualquer programa; o `go test` relata o pânico como falha."
+      }
+    ]
+  },
+  "ex-5z5nr9de": {
+    "prompt": "Um auxiliar de log recebe `v any` e precisa imprimir todo inteiro do mesmo jeito, inclusive os nomeados, como `type UserID int64` e `type Port uint16`. Que teste os separa?",
+    "hint": "O auxiliar não tem como listar tipos que ainda não existem.",
+    "choices": [
+      {
+        "text": "Um type switch com `case int, int64, uint16:`",
+        "why": "Um type switch casa tipos exatos, e `UserID` não é `int64`: ele cairia no default, assim como `main.Celsius` não é `float64`."
+      },
+      {
+        "text": "Comparar `reflect.TypeOf(v).String()` com `\"int64\"` e `\"uint16\"`",
+        "why": "O `String()` de um tipo nomeado é o próprio nome, `main.UserID`, então a comparação erra justamente os tipos nomeados que o auxiliar devia tratar."
+      },
+      {
+        "text": "Um switch em `reflect.ValueOf(v).Kind()`, um caso por kind inteiro",
+        "why": "Isso. O kind é a família por baixo, `int64` para `UserID` e `uint16` para `Port`, então um caso por kind cobre todo tipo nomeado que alguém declarar depois."
+      },
+      {
+        "text": "Só `reflect.ValueOf(v).CanInt()`, que também aceita kinds sem sinal",
+        "why": "O `go doc reflect.Value.CanInt` diz que ele informa se o `Int` pode ser usado sem pânico, o que só vale para os kinds com sinal; o `Port` seria recusado."
+      }
+    ]
+  }
+}

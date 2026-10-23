@@ -1,0 +1,247 @@
+{
+  "ex-7q590xym": {
+    "prompt": "O que acontece com a portadora de uma thread virtual quando ela chama `Thread.sleep`?",
+    "hint": "Desmontada.",
+    "choices": [
+      {
+        "text": "É entregue ao pool fork-join comum dos streams paralelos",
+        "why": "O escalonador tem um pool próprio."
+      },
+      {
+        "text": "Dorme também, até a thread virtual acordar",
+        "why": "Isso é pinning, que o `sleep` não causa."
+      },
+      {
+        "text": "O sistema operacional a destrói e faz uma nova depois",
+        "why": "Portadoras vivem tanto quanto o escalonador."
+      },
+      {
+        "text": "Roda outra thread virtual",
+        "why": "Isso: a pilha de quem dorme espera no heap."
+      }
+    ]
+  },
+  "ex-f6p85zb5": {
+    "prompt": "Quantas portadoras o escalonador de threads virtuais usa por padrão nesta máquina, e por quê?",
+    "hint": "Para que as portadoras precisam de processador?",
+    "choices": [
+      {
+        "text": "Uma por thread virtual, criada sob demanda",
+        "why": "Aí threads virtuais seriam threads de plataforma."
+      },
+      {
+        "text": "Quatro, uma por processador: só calcular precisa de uma",
+        "why": "Isso."
+      },
+      {
+        "text": "Três, o tamanho do pool comum",
+        "why": "Esse é outro pool."
+      },
+      {
+        "text": "Duzentas, para cobrir a espera",
+        "why": "Esperar não precisa de portadora nenhuma."
+      }
+    ]
+  },
+  "ex-sjmwkcmd": {
+    "prompt": "`Thread.currentThread().is___()` diz ao código se ele roda numa thread virtual.",
+    "hint": "O adjetivo.",
+    "blanks": [
+      {
+        "accept": [
+          "Virtual"
+        ]
+      }
+    ]
+  },
+  "ex-6kdz1n6n": {
+    "prompt": "Um milhão de threads virtuais estava rodando. Quantas threads do sistema operacional o processo tinha a mais que antes?",
+    "hint": "22 antes, 27 durante.",
+    "unit": "threads"
+  },
+  "ex-92epqpch": {
+    "prompt": "Por que threads virtuais nunca devem ser postas num pool fixo?",
+    "hint": "Para que serve um pool?",
+    "choices": [
+      {
+        "text": "Um pool as prenderia às portadoras",
+        "why": "Pool e pinning não têm relação."
+      },
+      {
+        "text": "Pool reaproveita o caro; elas são baratas",
+        "why": "Isso; um pool só traria a fila de volta."
+      },
+      {
+        "text": "Pools só aceitam `Runnable`, não `Callable`",
+        "why": "Os pools da aula 16 aceitaram os dois."
+      },
+      {
+        "text": "A JVM se recusa a reaproveitar uma thread virtual",
+        "why": "Nada recusa; é só inútil."
+      }
+    ]
+  },
+  "ex-84qwk3yh": {
+    "prompt": "Cada uma do milhão de threads dormiu dois segundos, mas a última terminou 9,5 segundos depois de a primeira começar. O que a aula conclui?",
+    "hint": "Barato não é de graça.",
+    "choices": [
+      {
+        "text": "O executor as rodou em lotes de mil",
+        "why": "Ele dá a cada tarefa a sua thread na hora."
+      },
+      {
+        "text": "Threads virtuais dormem demais por projeto",
+        "why": "Cada uma dormiu os seus dois segundos."
+      },
+      {
+        "text": "O sistema operacional limitou o processo a 27 threads",
+        "why": "27 era a contagem, não um limite."
+      },
+      {
+        "text": "Acordar e encerrar cada uma custa trabalho",
+        "why": "Isso: um milhão de threads é barato, não de graça."
+      }
+    ]
+  },
+  "ex-4qrt5qp9": {
+    "prompt": "Dez mil tarefas de 100 ms de espera levaram 10 s num pool de 100 e 187 ms em threads virtuais. O que fez a diferença?",
+    "hint": "Quantas podiam esperar ao mesmo tempo?",
+    "choices": [
+      {
+        "text": "Threads virtuais dormem menos que o pedido",
+        "why": "Cada uma dormiu os seus 100 ms."
+      },
+      {
+        "text": "O JIT compilou melhor o `handleRequest` na segunda vez",
+        "why": "O tempo é espera, que compilar não encurta."
+      },
+      {
+        "text": "As dez mil podiam esperar ao mesmo tempo",
+        "why": "Isso, em vez de cem por vez."
+      },
+      {
+        "text": "A execução virtual usou mais processadores",
+        "why": "Os mesmos quatro processadores."
+      }
+    ]
+  },
+  "ex-ndz9k7ck": {
+    "prompt": "Que estilo de programação as threads virtuais tornam viável de novo?",
+    "hint": "Uma thread por requisição.",
+    "choices": [
+      {
+        "text": "Código bloqueante comum, de cima para baixo",
+        "why": "Isso."
+      },
+      {
+        "text": "Cadeias de `thenCompose` para toda chamada remota",
+        "why": "Isso é o que se escrevia para evitar bloquear."
+      },
+      {
+        "text": "Um pool de threads dimensionado pela regra prática",
+        "why": "Esse é o problema que elas tiram."
+      },
+      {
+        "text": "Streams paralelos para E/S",
+        "why": "A aula 9 diz não a isso."
+      }
+    ]
+  },
+  "ex-ygh5fx1g": {
+    "prompt": "Um banco de dados aceita vinte conexões. O que dez mil threads virtuais chamando-o devem usar?",
+    "hint": "`Limited.java`.",
+    "choices": [
+      {
+        "text": "Um `Semaphore` de vinte",
+        "why": "Isso, ou o limite do próprio pool de conexões."
+      },
+      {
+        "text": "Nada: threads virtuais entram em fila sozinhas",
+        "why": "Todas chamariam de uma vez."
+      },
+      {
+        "text": "`synchronized` em volta da chamada",
+        "why": "Isso permite uma por vez, não vinte."
+      },
+      {
+        "text": "Um pool fixo de vinte threads virtuais",
+        "why": "Nunca as ponha num pool; limite o recurso."
+      }
+    ]
+  },
+  "ex-vmg9qary": {
+    "prompt": "`Pinning.java` levou 25 s no Java 21 e 120 ms no Java 25. O que mudou no Java 24?",
+    "hint": "Dentro de `synchronized`.",
+    "choices": [
+      {
+        "text": "O bloqueio em `synchronized` parou de prender",
+        "why": "Isso."
+      },
+      {
+        "text": "O escalonador ganhou mais portadoras",
+        "why": "Ainda uma por processador."
+      },
+      {
+        "text": "O `synchronized` foi trocado por `ReentrantLock` dentro do JDK",
+        "why": "A palavra-chave não mudou; o pinning sumiu."
+      },
+      {
+        "text": "O `Thread.sleep` ficou mais rápido",
+        "why": "Cada sono ainda levou 100 ms."
+      }
+    ]
+  },
+  "ex-q9g27ghg": {
+    "prompt": "Quais destes ganham rodando em threads virtuais? Marque todos os que se aplicam.",
+    "hint": "Esperar, não calcular.",
+    "choices": [
+      {
+        "text": "Um servidor tratando requisições que esperam um banco",
+        "why": "Sim."
+      },
+      {
+        "text": "Redimensionar imagens na memória",
+        "why": "Não: isso também calcula."
+      },
+      {
+        "text": "Contar os primos abaixo de dois milhões",
+        "why": "Não: isso calcula."
+      },
+      {
+        "text": "Um crawler buscando dez mil páginas web",
+        "why": "Sim."
+      }
+    ]
+  },
+  "ex-2a8vncgp": {
+    "prompt": "Ponha em ordem a vida de uma thread virtual que dorme uma vez.",
+    "hint": "A figura.",
+    "items": [
+      "montada numa portadora, ela roda",
+      "ela chama `sleep` e é desmontada",
+      "a pilha dela espera no heap",
+      "o sono acaba e ela é montada numa portadora livre"
+    ]
+  },
+  "ex-kk7fdba9": {
+    "prompt": "Ligue cada carga de trabalho ao que usar para rodá-la.",
+    "hint": "Aulas 9, 16 e 17.",
+    "pairs": [
+      {
+        "left": "dividir um cálculo grande",
+        "right": "um stream paralelo"
+      },
+      {
+        "left": "milhares de requisições que esperam",
+        "right": "uma thread virtual por tarefa"
+      },
+      {
+        "left": "trabalho que não pode se sobrepor",
+        "right": "um executor de thread única"
+      }
+    ],
+    "right_distractors": [
+      "um pool fixo de threads virtuais"
+    ]
+  }
+}

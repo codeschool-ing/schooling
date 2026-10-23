@@ -1,0 +1,530 @@
+[
+  {
+    "id": "ex-9z31w9f1",
+    "version": 1,
+    "section": "iterator",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `Walk.java`, what happened when `next()` was called after `hasNext()` had answered `false`?",
+    "hint": "The last line of the program.",
+    "choices": [
+      {
+        "text": "It started again from `Dune`, at the head of the list",
+        "correct": false,
+        "why": "An iterator never resets; a new walk needs a new iterator."
+      },
+      {
+        "text": "It returned `null`, as the end-of-walk value",
+        "correct": false,
+        "why": "Returning `null` is the queue's `poll`; an iterator's `next` throws."
+      },
+      {
+        "text": "It threw `NoSuchElementException`",
+        "correct": true,
+        "why": "Right: from `ImmutableCollections$ListItr.next`, the iterator `List.of` made."
+      }
+    ]
+  },
+  {
+    "id": "ex-00bxvv1x",
+    "version": 1,
+    "section": "iterator",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`javap -c Shelf` showed three interface calls for one `for-each` loop. Which were they?",
+    "hint": "The loop asks the list for something first.",
+    "choices": [
+      {
+        "text": "`List.size`, `List.get` and `String.length`",
+        "correct": false,
+        "why": "Those would be an index loop; `for-each` on a list never calls `get`."
+      },
+      {
+        "text": "`List.iterator`, `Iterator.hasNext` and `Iterator.next`",
+        "correct": true,
+        "why": "Right: the compiler rewrote the loop into the iterator protocol."
+      },
+      {
+        "text": "`Iterable.forEach`, called once with the loop body",
+        "correct": false,
+        "why": "That method exists, but the bytecode shows the three calls of an ordinary loop."
+      },
+      {
+        "text": "A single `foreach` instruction of the JVM, with two helper calls",
+        "correct": false,
+        "why": "There is no such instruction; the JVM only sees calls."
+      }
+    ]
+  },
+  {
+    "id": "ex-ps69an38",
+    "version": 1,
+    "section": "iterator",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A `for-each` loop compiles over an array, or over anything that implements the interface `___`.",
+    "hint": "Its one method is `iterator()`.",
+    "blanks": [
+      {
+        "accept": [
+          "Iterable",
+          "java.lang.Iterable"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qqk2g16k",
+    "version": 1,
+    "section": "iterator",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can you not write `for (var e : map)` directly over a `Map`?",
+    "hint": "Which interface makes a `for-each` compile?",
+    "choices": [
+      {
+        "text": "`Map` is not `Iterable`; you walk a view",
+        "correct": true,
+        "why": "Right: `keySet()`, `values()` or `entrySet()`, each of which is iterable."
+      },
+      {
+        "text": "Maps can only be read by key, with `get`",
+        "correct": false,
+        "why": "They can be walked; only not directly, as a `Map`."
+      },
+      {
+        "text": "A map's order is undefined, so Java forbids iterating it",
+        "correct": false,
+        "why": "`TreeMap` has a defined order and still is not `Iterable`; the reason is the interface."
+      }
+    ]
+  },
+  {
+    "id": "ex-4dq5yp5a",
+    "version": 1,
+    "section": "iterator",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two loops each call `shelf.iterator()` on the same list. The first loop is halfway through when the second starts. Where does the second one begin?",
+    "hint": "Who keeps the position?",
+    "choices": [
+      {
+        "text": "Halfway, where the first one is",
+        "correct": false,
+        "why": "The position belongs to each iterator, not to the list."
+      },
+      {
+        "text": "Before the first element, with a position of its own",
+        "correct": true,
+        "why": "Right: each call to `iterator()` makes a new object with its own position."
+      },
+      {
+        "text": "It throws `ConcurrentModificationException`, since two iterators are open",
+        "correct": false,
+        "why": "Reading with two iterators changes nothing; only a structural change trips the check."
+      }
+    ]
+  },
+  {
+    "id": "ex-kxwaaj8s",
+    "version": 1,
+    "section": "iterator",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the exception in `Walk.java` name a class, `ImmutableCollections$ListItr`, that the program never mentions?",
+    "hint": "Who made the iterator?",
+    "choices": [
+      {
+        "text": "Because `Walk` declared its own iterator class without naming it",
+        "correct": false,
+        "why": "`Walk` declares no class but itself; the iterator came from the list."
+      },
+      {
+        "text": "Because `List.of` returns a list that cannot be walked",
+        "correct": false,
+        "why": "It was walked perfectly; the exception came only after the end."
+      },
+      {
+        "text": "That is the iterator class of `List.of`'s lists",
+        "correct": true,
+        "why": "Right: `iterator()` returned an object of a JDK class written for that list."
+      }
+    ]
+  },
+  {
+    "id": "ex-3x10hw3v",
+    "version": 1,
+    "section": "concurrent-modification",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Overdue.java` removed an element from `loans` inside a `for-each` over `loans`. What happened?",
+    "hint": "The next `next()` noticed.",
+    "choices": [
+      {
+        "text": "`ConcurrentModificationException`, on the next `next()`",
+        "correct": true,
+        "why": "Right: the list had changed behind the iterator."
+      },
+      {
+        "text": "It printed `[Dune, Ulysses, Beloved]`",
+        "correct": false,
+        "why": "It never reached the `println`."
+      },
+      {
+        "text": "It would not compile",
+        "correct": false,
+        "why": "It compiled; the failure happened at run time."
+      }
+    ]
+  },
+  {
+    "id": "ex-mndxp6nh",
+    "version": 1,
+    "section": "concurrent-modification",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Overdue.java` has one thread. Why is the exception called *Concurrent*ModificationException?",
+    "hint": "Two things were changing or reading the list at once.",
+    "choices": [
+      {
+        "text": "Because the JVM starts a hidden thread to run every `for-each`",
+        "correct": false,
+        "why": "No thread is started; the loop runs in `main`'s thread."
+      },
+      {
+        "text": "Two ways of using one list overlapped: the walk and the `remove`",
+        "correct": true,
+        "why": "Right: one thread, two ways of changing or walking the list at once."
+      },
+      {
+        "text": "Because the garbage collector moved the list during the loop",
+        "correct": false,
+        "why": "The collector moving objects is invisible to programs; the count of changes is what differed."
+      }
+    ]
+  },
+  {
+    "id": "ex-ppqc4wz0",
+    "version": 1,
+    "section": "concurrent-modification",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does an `ArrayList` iterator know the list changed behind it?",
+    "hint": "A number, copied and compared.",
+    "choices": [
+      {
+        "text": "It keeps a copy of every element and compares them on each `next()`",
+        "correct": false,
+        "why": "That would double the memory; it keeps one number."
+      },
+      {
+        "text": "The list sends it a message whenever `remove` is called",
+        "correct": false,
+        "why": "Lists do not track their iterators; the iterator checks."
+      },
+      {
+        "text": "It compares the list's `modCount` with the value it copied",
+        "correct": true,
+        "why": "Right: a difference on `next()` means a structural change happened."
+      }
+    ]
+  },
+  {
+    "id": "ex-n1hqb1wm",
+    "version": 1,
+    "section": "concurrent-modification",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`Quiet.java` removed `Ulysses:late` inside the loop and finished with no exception. What went wrong?",
+    "hint": "Count the `checking` lines.",
+    "choices": [
+      {
+        "text": "Nothing: the check only fires when the removed element is the first",
+        "correct": false,
+        "why": "It removed one late loan and left another in the list, which is wrong."
+      },
+      {
+        "text": "`remove` failed silently and `Ulysses:late` is still in the list",
+        "correct": false,
+        "why": "The printed list has no `Ulysses:late`; it was removed."
+      },
+      {
+        "text": "`hasNext()` stopped early, so the loop never checked `Beloved:late` at all",
+        "correct": true,
+        "why": "Right: `hasNext()` saw the cursor equal to the size and stopped, after three `checking` lines for four loans."
+      }
+    ]
+  },
+  {
+    "id": "ex-m8y2xtmt",
+    "version": 1,
+    "section": "concurrent-modification",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the figure, after `Ulysses:late` was removed, the cursor was 3. What was the list's size?",
+    "hint": "Four elements, one removed.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-t5mv5m3b",
+    "version": 1,
+    "section": "concurrent-modification",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside a `for-each` over an `ArrayList`, which of these does not trip the fail-fast check?",
+    "hint": "Only structural changes move `modCount`.",
+    "choices": [
+      {
+        "text": "`list.add(x)`",
+        "correct": false,
+        "why": "Adding changes the structure and moves `modCount`."
+      },
+      {
+        "text": "`list.set(i, x)`",
+        "correct": true,
+        "why": "Right: replacing an element is not a structural change."
+      },
+      {
+        "text": "`list.remove(x)`",
+        "correct": false,
+        "why": "Removing is the change section 03 tripped on."
+      },
+      {
+        "text": "`list.clear()`",
+        "correct": false,
+        "why": "Clearing removes every element, a structural change."
+      }
+    ]
+  },
+  {
+    "id": "ex-mjg79yvb",
+    "version": 1,
+    "section": "safe-removal",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which call removes every loan ending in `:late` from `b` without writing a loop?",
+    "hint": "It takes a condition.",
+    "choices": [
+      {
+        "text": "`b.removeAll(\":late\")`",
+        "correct": false,
+        "why": "`removeAll` takes a collection of elements to remove, not a pattern."
+      },
+      {
+        "text": "`b.removeIf(loan -> loan.endsWith(\":late\"))`",
+        "correct": true,
+        "why": "Right: it walks the list itself, safely."
+      },
+      {
+        "text": "`b.remove(\":late\")`",
+        "correct": false,
+        "why": "That removes an element equal to the string `:late`, and there is none."
+      }
+    ]
+  },
+  {
+    "id": "ex-ghz8sqf3",
+    "version": 1,
+    "section": "safe-removal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `it.remove()` not cause the exception that `loans.remove(loan)` caused?",
+    "hint": "Who made the change?",
+    "choices": [
+      {
+        "text": "`it.remove()` only marks it; the list removes it later",
+        "correct": false,
+        "why": "It removes it at once; the printed list after the loop had no late loans."
+      },
+      {
+        "text": "The iterator made the change, so it updates its own count and cursor",
+        "correct": true,
+        "why": "Right: the change no longer happens behind its back."
+      },
+      {
+        "text": "Because an explicit `Iterator` is not checked, only a `for-each` is",
+        "correct": false,
+        "why": "The `for-each` uses the same iterator; the difference is who removes."
+      }
+    ]
+  },
+  {
+    "id": "ex-86h5bb8e",
+    "version": 1,
+    "section": "safe-removal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `ListIterator` loop turned four loans into seven elements. Why did it not then visit the letters it had inserted?",
+    "hint": "Where does `add` put the new element?",
+    "choices": [
+      {
+        "text": "Because `add` puts new elements at the end of the list",
+        "correct": false,
+        "why": "The letters sit right after each fined loan, not at the end."
+      },
+      {
+        "text": "It did visit them, and skipped them since they do not end in `:late`",
+        "correct": false,
+        "why": "They would have been skipped by the `if`, but `next()` never returned them at all."
+      },
+      {
+        "text": "`add` puts it behind the cursor, out of `next()`'s way",
+        "correct": true,
+        "why": "Right: the iterator walks on from after the insertion."
+      }
+    ]
+  },
+  {
+    "id": "ex-a9czd6zn",
+    "version": 1,
+    "section": "safe-removal",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need to the technique the section's table gives for it.",
+    "hint": "The table under the transcript.",
+    "pairs": [
+      {
+        "left": "Remove what matches a condition",
+        "right": "`removeIf`"
+      },
+      {
+        "left": "Decide element by element, with a side effect",
+        "right": "An explicit `Iterator` and `it.remove()`"
+      },
+      {
+        "left": "Replace or insert while walking a list",
+        "right": "A `ListIterator`"
+      },
+      {
+        "left": "Call a method that changes the list from inside the loop",
+        "right": "Walk `List.copyOf(...)`"
+      }
+    ]
+  },
+  {
+    "id": "ex-qss3ke9z",
+    "version": 1,
+    "section": "safe-removal",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A loop over `member.loans()` calls `member.returnLoan(loan)`, which removes the loan from that same list inside `Member`. Which technique fits?",
+    "hint": "The loop cannot reach the iterator that would have to remove.",
+    "choices": [
+      {
+        "text": "An explicit `Iterator` and `it.remove()`",
+        "correct": false,
+        "why": "The removal happens inside `returnLoan`, not through your iterator."
+      },
+      {
+        "text": "Walk a copy, `List.copyOf(member.loans())`",
+        "correct": true,
+        "why": "Right: the copy does not change, and `returnLoan` changes the real list freely."
+      },
+      {
+        "text": "A `ListIterator`, so that the removal is allowed",
+        "correct": false,
+        "why": "A list iterator only protects changes it makes itself."
+      },
+      {
+        "text": "Catch `ConcurrentModificationException` and continue the loop",
+        "correct": false,
+        "why": "The check is best-effort; catching it hides a bug that may also skip elements."
+      }
+    ]
+  },
+  {
+    "id": "ex-t58gwy5m",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a `for-each` over a list in the order the compiled code does them.",
+    "hint": "Ask for the iterator first.",
+    "items": [
+      "Call `iterator()` on the list",
+      "Call `hasNext()`",
+      "Call `next()` and assign the loop variable",
+      "Run the loop body"
+    ]
+  },
+  {
+    "id": "ex-kh175x84",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program catches `ConcurrentModificationException` around its loop and logs it, \"just in case\". What does section 03 say is wrong with that?",
+    "hint": "Best effort.",
+    "choices": [
+      {
+        "text": "The exception is an `Error`, and an `Error` cannot be caught by a `catch` block",
+        "correct": false,
+        "why": "It is an ordinary `RuntimeException` and can be caught; the problem is relying on it."
+      },
+      {
+        "text": "The check is best-effort, and `Quiet.java`'s bug threw nothing",
+        "correct": true,
+        "why": "Right: `Quiet.java` was wrong and threw nothing to catch."
+      },
+      {
+        "text": "Logging is slow, and the loop should be fast",
+        "correct": false,
+        "why": "Speed is not the issue; correctness is."
+      }
+    ]
+  },
+  {
+    "id": "ex-npcahhk6",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these change a `HashMap` safely while walking it? Choose all that apply.",
+    "hint": "Through the view, or not at all.",
+    "choices": [
+      {
+        "text": "`map.entrySet().removeIf(e -> e.getValue() == 0)`",
+        "correct": true,
+        "why": "Yes: the view walks and removes, and removing from a view removes from the map."
+      },
+      {
+        "text": "A `for-each` over `map.keySet()` calling `map.remove(key)`",
+        "correct": false,
+        "why": "That is section 03's mistake, through a map."
+      },
+      {
+        "text": "An iterator over `map.values()` calling `it.remove()`",
+        "correct": true,
+        "why": "Yes: the change is made by the iterator that walks."
+      },
+      {
+        "text": "A `for-each` over `map.entrySet()` calling `map.put` with a new key",
+        "correct": false,
+        "why": "Adding a key is a structural change made outside the iterator."
+      }
+    ]
+  }
+]

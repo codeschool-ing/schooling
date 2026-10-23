@@ -1,0 +1,644 @@
+{
+  "ex-4w2w2s9h": {
+    "prompt": "Qual dos valores do boxoffice a aula mantém no código em vez de torná-lo configurável?",
+    "hint": "A defesa da aula 1.",
+    "choices": [
+      {
+        "text": "O tamanho do pool de conexões, já que depende do banco",
+        "why": "O pool varia com o limite do banco e o número de cópias, então é configuração."
+      },
+      {
+        "text": "O `ReadHeaderTimeout`",
+        "why": "Certo. Nenhum ambiente quer uma defesa contra Slowloris de trinta segundos, então uma configuração só acrescenta um jeito de errar."
+      },
+      {
+        "text": "O endereço HTTP",
+        "why": "Um container precisa escutar em todas as interfaces, então o endereço muda entre ambientes."
+      },
+      {
+        "text": "O site autorizado a chamar a API",
+        "why": "Um site de homologação é outro site, então ele varia."
+      }
+    ]
+  },
+  "ex-w4g7f3r2": {
+    "prompt": "Que teste a aula dá para saber se um valor é configuração?",
+    "hint": "Compare ambientes.",
+    "choices": [
+      {
+        "text": "É um número, como uma porta ou um timeout",
+        "why": "Números como o timeout de cabeçalho ficam no código; ser número não decide nada."
+      },
+      {
+        "text": "Alguém já pediu para ele mudar sem uma nova versão",
+        "why": "Um pedido não é uma diferença entre ambientes."
+      },
+      {
+        "text": "Difere entre ambientes; o código, não",
+        "why": "Certo. Configuração é o que difere legitimamente."
+      },
+      {
+        "text": "Aparece em mais de um arquivo",
+        "why": "Aparecer duas vezes é motivo para lê-lo uma vez só, não teste de se ele varia."
+      }
+    ]
+  },
+  "ex-mg2j7fwz": {
+    "prompt": "Por que a aula recusa uma configuração como `BOXOFFICE_ENV=production` na qual o código se ramifica?",
+    "hint": "Quem roda esse ramo primeiro?",
+    "choices": [
+      {
+        "text": "Nomes de ambiente passam do limite de tamanho de variável",
+        "why": "Não há limite desses envolvido; o problema é o caminho do código."
+      },
+      {
+        "text": "O Go não compara strings lidas do ambiente",
+        "why": "Ele as compara como qualquer outra string."
+      },
+      {
+        "text": "O pacote flag rejeita variáveis que nomeiam um ambiente",
+        "why": "O pacote flag não sabe nada de nomes de ambiente."
+      },
+      {
+        "text": "Um ramo só de produção é exercitado primeiro por usuários reais",
+        "why": "Certo. Os ambientes diferem em valores, nunca em quais linhas rodam."
+      }
+    ]
+  },
+  "ex-gnf8ym36": {
+    "prompt": "Ordene as fontes de uma configuração do boxoffice, da que é sobrescrita por todas até a que sobrescreve todas.",
+    "hint": "A lista da seção 02.",
+    "items": [
+      "um padrão no código",
+      "uma variável de ambiente `BOXOFFICE_*`",
+      "uma flag na linha de comando"
+    ]
+  },
+  "ex-taj16vrv": {
+    "prompt": "O `./knobs -max-conns ten` para mostrando a ajuda. Com que status de saída ele termina?",
+    "hint": "O status convencional para uso errado.",
+    "choices": [
+      {
+        "text": "0, o mesmo do `-h`",
+        "why": "O `-h` sai com 0 porque pedir ajuda não é erro; um valor ruim é."
+      },
+      {
+        "text": "1",
+        "why": "A transcrição imprimiu `exit 2`."
+      },
+      {
+        "text": "127, como para um comando que não existe",
+        "why": "127 é o status do shell para comando inexistente, não do pacote flag."
+      },
+      {
+        "text": "2",
+        "why": "Certo. O pacote flag usa 2 para uma linha de comando usada errado."
+      }
+    ]
+  },
+  "ex-q235sfp3": {
+    "prompt": "O `./knobs report.csv -v` imprimiu `verbose: false`. Por quê?",
+    "hint": "Onde a análise para.",
+    "choices": [
+      {
+        "text": "O `-v` precisa vir com `=true`",
+        "why": "Uma flag bool sozinha significa true, como a segunda execução mostrou."
+      },
+      {
+        "text": "A análise parou em `report.csv`",
+        "why": "Certo. Tanto `report.csv` quanto `-v` foram parar em `flag.Args()`."
+      },
+      {
+        "text": "Flags escritas depois de um nome de arquivo valem para o arquivo e não para o programa",
+        "why": "O pacote não tem noção de flags que pertencem a um arquivo."
+      },
+      {
+        "text": "O `-v` é reservado para a versão",
+        "why": "O próprio `knobs` declarou `-v`, e o pacote reserva só `-h` e `-help`."
+      }
+    ]
+  },
+  "ex-0rsj5v7r": {
+    "prompt": "O `./knobs -v false -addr :9000` deixou o endereço no padrão. O que aconteceu?",
+    "hint": "Uma bool só recebe valor de um jeito.",
+    "choices": [
+      {
+        "text": "O pacote informou um erro e usou os padrões",
+        "why": "Nada reclamou; essa é a armadilha."
+      },
+      {
+        "text": "O `false` encerrou a análise antes do `-addr`",
+        "why": "Certo. Só `-v=false` dá valor a uma flag bool."
+      },
+      {
+        "text": "O `false` foi lido como valor do `-v` e o `:9000` foi recusado",
+        "why": "A saída mostra `verbose: true` e `:9000` entre os argumentos que sobraram."
+      },
+      {
+        "text": "Duas flags num comando entram em conflito",
+        "why": "A segunda execução definiu três flags de uma vez sem problema."
+      }
+    ]
+  },
+  "ex-q4w8gjq3": {
+    "prompt": "Ligue cada linha de comando ao que o `knobs` fez dela.",
+    "hint": "As transcrições da seção 03.",
+    "pairs": [
+      {
+        "left": "`--addr=:9000`",
+        "right": "a mesma flag que `-addr=:9000`"
+      },
+      {
+        "left": "`-max-conns=20`",
+        "right": "max-conns 20"
+      },
+      {
+        "left": "`-max-conns ten`",
+        "right": "a ajuda e o status de saída 2"
+      },
+      {
+        "left": "`-h`",
+        "right": "a ajuda e o status de saída 0"
+      }
+    ],
+    "right_distractors": [
+      "três flags curtas combinadas"
+    ]
+  },
+  "ex-xd73rcan": {
+    "prompt": "Como o pacote `flag` lê `-xvf`?",
+    "hint": "Ele não é uma ferramenta GNU.",
+    "choices": [
+      {
+        "text": "Como uma flag chamada `xvf`",
+        "why": "Certo. Programas que querem flags curtas combinadas usam `pflag` ou `cobra`."
+      },
+      {
+        "text": "Como as flags `-x`, `-v` e `-f`",
+        "why": "Esse é o estilo GNU, que o `spf13/pflag` acrescenta."
+      },
+      {
+        "text": "Como `-x` com o valor `vf`",
+        "why": "O pacote nunca divide o nome de uma flag."
+      },
+      {
+        "text": "Como um subcomando chamado `xvf`",
+        "why": "Subcomandos vêm do `cobra`, e não têm traço."
+      }
+    ]
+  },
+  "ex-zk03mzt3": {
+    "prompt": "Por que o boxoffice usa `flag.NewFlagSet` em vez de `flag.String` e `flag.Parse`?",
+    "hint": "Pense num teste.",
+    "choices": [
+      {
+        "text": "O conjunto global analisa mais rápido",
+        "why": "A velocidade não é a diferença; a origem dos argumentos é."
+      },
+      {
+        "text": "O conjunto global rejeita flags de duração",
+        "why": "O `knobs` declarou `-wait` como duração no conjunto global."
+      },
+      {
+        "text": "Um conjunto próprio analisa a fatia que recebe",
+        "why": "Certo. O conjunto global lê `os.Args`, e qualquer pacote declara flags nele."
+      },
+      {
+        "text": "Só um conjunto feito com `NewFlagSet` imprime a ajuda do `-h`",
+        "why": "O `knobs` usou o conjunto global e imprimiu ajuda."
+      }
+    ]
+  },
+  "ex-187gbbyf": {
+    "prompt": "O `BOXOFFICE_REGION= ./knobs` imprimiu `\"\", set: true`. O que o `os.Getenv` teria devolvido?",
+    "hint": "Ele tem um resultado, não dois.",
+    "choices": [
+      {
+        "text": "Um erro dizendo que a variável está vazia",
+        "why": "O `os.Getenv` não devolve erro."
+      },
+      {
+        "text": "`\"\"`, como se não existisse",
+        "why": "Certo. Só o `LookupEnv` distingue os dois."
+      },
+      {
+        "text": "`nil`",
+        "why": "Ele devolve uma string, e uma string nunca é nil."
+      },
+      {
+        "text": "O valor que o shell tinha antes de este comando sobrescrevê-lo",
+        "why": "O comando a definiu como vazia para esta execução."
+      }
+    ]
+  },
+  "ex-n6pgrn89": {
+    "prompt": "Por que o boxoffice trata uma variável vazia como não definida?",
+    "hint": "Uma definição de container sem nada depois do `=`.",
+    "choices": [
+      {
+        "text": "O Go não consegue guardar uma variável vazia no ambiente de um processo",
+        "why": "O `LookupEnv` informou uma na transcrição."
+      },
+      {
+        "text": "Variáveis vazias não passam para processos filhos",
+        "why": "Elas passam como qualquer outra."
+      },
+      {
+        "text": "Vazio quase sempre quer dizer deixado em branco",
+        "why": "Certo. Ninguém quer que o site seja a string vazia."
+      },
+      {
+        "text": "O `fs.Set` recusa uma string vazia para todo tipo",
+        "why": "Uma flag de string aceita; a escolha é do boxoffice."
+      }
+    ]
+  },
+  "ex-610xmfyr": {
+    "prompt": "Por que o `DATABASE_URL` mantém o nome sem o prefixo `BOXOFFICE_`?",
+    "hint": "Quem mais a lê.",
+    "choices": [
+      {
+        "text": "Um prefixo a tornaria uma flag",
+        "why": "Nomes de variáveis não têm nada a ver com flags."
+      },
+      {
+        "text": "O PostgreSQL recusa conexões vindas de nomes com prefixo",
+        "why": "O PostgreSQL nunca vê o nome da variável."
+      },
+      {
+        "text": "Outras ferramentas a leem por esse nome",
+        "why": "Certo. Nomes conhecidos ficam como estão; as configurações do próprio programa ganham o prefixo."
+      },
+      {
+        "text": "Ela é um segredo, e segredos nunca levam prefixo",
+        "why": "O `BOXOFFICE_MANAGER_TOKEN` é um segredo com o prefixo."
+      }
+    ]
+  },
+  "ex-vd8e7qym": {
+    "prompt": "O boxoffice está rodando, e você muda `BOXOFFICE_ORIGIN` no shell dele. O que acontece?",
+    "hint": "Quando as variáveis são lidas?",
+    "choices": [
+      {
+        "text": "A próxima requisição usa o site novo",
+        "why": "O processo em execução fica com o ambiente com que começou."
+      },
+      {
+        "text": "O boxoffice sai, porque o ambiente mudou",
+        "why": "Um processo nunca é avisado de uma mudança no shell do pai."
+      },
+      {
+        "text": "Os WebSockets abertos passam ao site novo e os outros mantêm o antigo",
+        "why": "Nenhuma parte do processo lê a variável de novo."
+      },
+      {
+        "text": "Nada, até ele reiniciar",
+        "why": "Certo. Uma variável é lida uma vez, na inicialização."
+      }
+    ]
+  },
+  "ex-7jeerp2n": {
+    "prompt": "O usuário `nobody` rodou `ps` contra o `knobs`. O que ele conseguiu ver?",
+    "hint": "Compare as duas transcrições.",
+    "choices": [
+      {
+        "text": "Nada, porque o processo é da ana",
+        "why": "Ele imprimiu a linha de comando inteira."
+      },
+      {
+        "text": "Os argumentos, `hunter2` inclusive",
+        "why": "Certo. Todo usuário lê toda linha de comando; o `/proc/PID/environ` é do dono e do root."
+      },
+      {
+        "text": "O ambiente e a linha de comando",
+        "why": "Ler o `environ` como `nobody` deu `Permission denied`."
+      },
+      {
+        "text": "Só o nome do programa, com os argumentos mascarados",
+        "why": "Os argumentos saíram inteiros."
+      }
+    ]
+  },
+  "ex-9fjznyeb": {
+    "prompt": "O boxoffice lê um segredo de uma variável, ou do caminho guardado numa variável gêmea cujo nome termina em ___.",
+    "hint": "`POSTGRES_PASSWORD_…`",
+    "blanks": [
+      {
+        "accept": [
+          "_FILE",
+          "FILE"
+        ]
+      }
+    ]
+  },
+  "ex-ef19a7bq": {
+    "prompt": "Os tokens estão no `~/.profile`, e só a ana e o root leem `/proc/PID/environ`. O que ainda está errado nesse arranjo?",
+    "hint": "O shell filho da seção 04.",
+    "choices": [
+      {
+        "text": "Todo programa que a ana inicia os recebe, e qualquer coisa que imprima o ambiente os imprime",
+        "why": "Certo. Um arquivo que só o dono lê chega só ao processo que o abre."
+      },
+      {
+        "text": "As variáveis se perdem quando o terminal fecha",
+        "why": "O `~/.profile` as define de novo em todo terminal novo; esse é o problema, não a perda."
+      },
+      {
+        "text": "O `ps` mostra variáveis exportadas a todo usuário",
+        "why": "O `ps` mostrou os argumentos; o ambiente foi recusado ao `nobody`."
+      },
+      {
+        "text": "O Go só lê as dez primeiras variáveis",
+        "why": "O Go lê todas."
+      }
+    ]
+  },
+  "ex-r6jhx31r": {
+    "prompt": "Por que a seção 08 escreve o arquivo do token dentro de `(umask 077; …)`?",
+    "hint": "Quando o arquivo vira privado.",
+    "choices": [
+      {
+        "text": "O `openssl` se recusa a escrever sem ele",
+        "why": "O `openssl rand` escreve com qualquer umask."
+      },
+      {
+        "text": "Para o arquivo nascer privado",
+        "why": "Certo. Um `chmod` depois deixa um momento em que o arquivo podia ser lido."
+      },
+      {
+        "text": "Ele cifra o arquivo",
+        "why": "Uma umask só define permissões; o arquivo é texto puro, `-rw-------`."
+      },
+      {
+        "text": "Para mudar a umask da ana em todo terminal seguinte",
+        "why": "Os parênteses criam um subshell, então a umask acaba com ele."
+      }
+    ]
+  },
+  "ex-781s00c5": {
+    "prompt": "Quantos módulos o `go get github.com/spf13/viper@v1.21.0` acrescentou a um projeto vazio?",
+    "hint": "O `grep -c` da seção 06.",
+    "unit": "módulos"
+  },
+  "ex-q4em6951": {
+    "prompt": "Um programa vazio que só importa o Viper saiu com 6,3 MB. O que a aula conclui?",
+    "hint": "Contra o `knobs`, 2,5 MB.",
+    "choices": [
+      {
+        "text": "Para sete configurações, `flag` e `os.Getenv` resolvem",
+        "why": "Certo. Sessenta linhas legíveis contra 13 módulos que você entrega."
+      },
+      {
+        "text": "O Viper está quebrado e precisa ser evitado em todo programa",
+        "why": "A aula o chama de preço justo para uma ferramenta com dezenas de configurações em vários formatos."
+      },
+      {
+        "text": "O tamanho é irrelevante depois que o binário é reduzido",
+        "why": "O custo inclui os módulos que você atualiza e em que confia, não só bytes."
+      },
+      {
+        "text": "Um arquivo de configuração é sempre melhor que variáveis",
+        "why": "Um arquivo só se justifica quando as configurações deixam de ser planas."
+      }
+    ]
+  },
+  "ex-dd3f69cf": {
+    "prompt": "Como a aula faz um arquivo `.env` chegar ao boxoffice?",
+    "hint": "O programa nunca o abre.",
+    "choices": [
+      {
+        "text": "O boxoffice lê o `.env` ao lado do binário na inicialização",
+        "why": "Isso seria uma segunda entrada que só funciona nas máquinas dos desenvolvedores."
+      },
+      {
+        "text": "O shell o carrega com `set -a; . ./.env; set +a`",
+        "why": "Certo. O programa lê o ambiente como sempre."
+      },
+      {
+        "text": "Ele é commitado, e o `go build` o embute",
+        "why": "Um `.env` nunca é commitado; o `.env.example` vai no lugar dele."
+      },
+      {
+        "text": "Por uma flag `-env`",
+        "why": "O boxoffice não declara essa flag."
+      }
+    ]
+  },
+  "ex-mdr2dcgp": {
+    "prompt": "No `load`, como uma flag na linha de comando acaba vencendo a variável `BOXOFFICE_*` dela?",
+    "hint": "A ordem de três chamadas.",
+    "choices": [
+      {
+        "text": "O `Parse` roda primeiro e o `VisitAll` pula flags já definidas",
+        "why": "O `VisitAll` roda primeiro; o `Parse` vem por último."
+      },
+      {
+        "text": "O `Parse` roda depois que o `VisitAll` aplicou as variáveis",
+        "why": "Certo. Cada passo sobrescreve o anterior."
+      },
+      {
+        "text": "O pacote flag sempre prefere uma flag a uma variável de mesmo nome",
+        "why": "O pacote não sabe nada de variáveis; quem decide é a ordem do código."
+      },
+      {
+        "text": "O `errors.Join` fica com o último valor",
+        "why": "O `errors.Join` junta erros, não valores."
+      }
+    ]
+  },
+  "ex-qk4hbaac": {
+    "prompt": "Por que o `load` recebe `getenv func(string) string` em vez de chamar `os.Getenv`?",
+    "hint": "A aula 15.",
+    "choices": [
+      {
+        "text": "O `os.Getenv` é inseguro no `main`",
+        "why": "O `main` passa exatamente o `os.Getenv`."
+      },
+      {
+        "text": "Uma função lê variáveis mais rápido",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "O pacote flag exige isso",
+        "why": "O pacote flag nunca lê o ambiente."
+      },
+      {
+        "text": "Para um teste passar um mapa no lugar",
+        "why": "Certo. O `main` passa `os.Getenv`; um teste passa a própria função."
+      }
+    ]
+  },
+  "ex-jg7dh5tf": {
+    "prompt": "Por que o `load` junta os problemas numa fatia e devolve `errors.Join`?",
+    "hint": "Uma tentativa ou várias.",
+    "choices": [
+      {
+        "text": "O Go proíbe devolver erro de dentro de um laço",
+        "why": "O Go não tem essa regra."
+      },
+      {
+        "text": "O `errors.Join` esconde os segredos",
+        "why": "Esconder é trabalho do `secret`."
+      },
+      {
+        "text": "Quem conserta vê todos os problemas de uma vez, não um por reinício",
+        "why": "Certo. A recusa da seção 08 listou cinco linhas."
+      },
+      {
+        "text": "Para o programa iniciar com as configurações válidas e pular o resto",
+        "why": "Qualquer erro faz o boxoffice não iniciar."
+      }
+    ]
+  },
+  "ex-ty04es97": {
+    "prompt": "Ligue cada verificação do `load` ao motivo dela.",
+    "hint": "Elas são sobre o que o boxoffice precisa.",
+    "pairs": [
+      {
+        "left": "max-conns pelo menos 2",
+        "right": "o `listen` guarda uma conexão para si"
+      },
+      {
+        "left": "max-conns no máximo 100",
+        "right": "o limite padrão de conexões do PostgreSQL"
+      },
+      {
+        "left": "origin com esquema",
+        "right": "o cabeçalho `Origin` de um navegador sempre tem um"
+      },
+      {
+        "left": "um token de equipe",
+        "right": "sem um, ninguém da equipe entra"
+      }
+    ],
+    "right_distractors": [
+      "o intervalo do int32 do Go"
+    ]
+  },
+  "ex-74kqanab": {
+    "prompt": "O `secret` tem `LogValue` e `String`. O que ainda mostra o valor real?",
+    "hint": "Uma conversão.",
+    "choices": [
+      {
+        "text": "`slog.Info` com o segredo como valor",
+        "why": "O `LogValue` torna isso `[hidden]`."
+      },
+      {
+        "text": "`fmt.Printf(\"%v\", cfg)`",
+        "why": "O `String` torna isso `[hidden]`."
+      },
+      {
+        "text": "`string(cfg.DatabaseURL)`",
+        "why": "Certo. O `main` o converte no único lugar em que o valor real é necessário."
+      },
+      {
+        "text": "O próprio `LogValue` do `config`",
+        "why": "Ele passa o segredo por `slog.Any`, que o esconde."
+      }
+    ]
+  },
+  "ex-58f9tjwk": {
+    "prompt": "O boxoffice começou com `BOXOFFICE_MAX_CONNS=4` e `-max-conns 6`. Que `max_conns` a primeira linha do log mostrou?",
+    "hint": "A flag vence a variável.",
+    "unit": ""
+  },
+  "ex-adx3r9j5": {
+    "prompt": "A recusa da seção 08 imprimiu cinco linhas para quatro erros de propósito. De onde veio a quinta?",
+    "hint": "O passo logo antes.",
+    "choices": [
+      {
+        "text": "O pacote flag acrescentou uma linha própria",
+        "why": "Nenhuma flag foi passada; as cinco linhas são do `load`."
+      },
+      {
+        "text": "O `errors.Join` repete o primeiro erro",
+        "why": "As cinco linhas são diferentes."
+      },
+      {
+        "text": "O terminal não tinha token de gerente",
+        "why": "Certo. Um terminal novo sem o export não tem token."
+      },
+      {
+        "text": "O PostgreSQL recusou a conexão",
+        "why": "Nada começou, então nada conectou."
+      }
+    ]
+  },
+  "ex-9dwbqnad": {
+    "prompt": "O que o boxoffice faz quando o `load` devolve `flag.ErrHelp`?",
+    "hint": "Pedir ajuda.",
+    "choices": [
+      {
+        "text": "Imprime o erro e sai com 2",
+        "why": "Isso é o que qualquer outro erro faz."
+      },
+      {
+        "text": "Retorna, terminando com status 0",
+        "why": "Certo. A ajuda já foi impressa, e pedi-la não é falha."
+      },
+      {
+        "text": "Começa com os padrões",
+        "why": "Ele nem começa."
+      },
+      {
+        "text": "Registra a configuração e sai",
+        "why": "A configuração só é registrada depois que o `load` dá certo."
+      }
+    ]
+  },
+  "ex-sk6k8ysh": {
+    "prompt": "Quais afirmações batem com esta aula? Marque todas as que se aplicam.",
+    "hint": "Seções 03, 05 e 07.",
+    "choices": [
+      {
+        "text": "O boxoffice não declara flag para nenhum segredo",
+        "why": "Certo. Uma linha de comando é legível por todo usuário."
+      },
+      {
+        "text": "O `-h` documenta também a variável de cada configuração",
+        "why": "Certo. O `VisitAll` acrescenta o nome da variável à ajuda."
+      },
+      {
+        "text": "Um arquivo indicado por `_FILE` ilegível cai na variável simples",
+        "why": "É um erro, nunca um recuo silencioso."
+      },
+      {
+        "text": "O `BOXOFFICE_WRITE_TIMEOUT` e o `-write-timeout` usam analisadores diferentes",
+        "why": "O `fs.Set` usa o próprio analisador da flag para a variável."
+      }
+    ]
+  },
+  "ex-3yy8sg6n": {
+    "prompt": "Um colega quer passar a senha do banco como `-db-password` para ela aparecer na ajuda. O que a aula responde?",
+    "hint": "A primeira transcrição da seção 05.",
+    "choices": [
+      {
+        "text": "Não: todo usuário a lê com `ps`; ela vai num arquivo indicado por `DATABASE_URL_FILE`",
+        "why": "Certo. Um arquivo que só o dono lê, indicado pela variável."
+      },
+      {
+        "text": "Tudo bem, desde que a ajuda esconda o padrão",
+        "why": "O problema é o valor numa linha de comando em execução, não a ajuda."
+      },
+      {
+        "text": "Não: flags são limitadas a 64 caracteres",
+        "why": "Não existe esse limite."
+      },
+      {
+        "text": "Tudo bem, se também estiver no `.env`",
+        "why": "Dois lugares para um segredo dobram a exposição."
+      }
+    ]
+  },
+  "ex-z6m0z5dj": {
+    "prompt": "Ordene o que o boxoffice faz ao iniciar, como no `main` da seção 08.",
+    "hint": "Nada antes da configuração.",
+    "items": [
+      "ler e verificar a configuração com `load`",
+      "registrar a configuração com que começou",
+      "rodar as migrações",
+      "abrir o pool com `cfg.MaxConns`",
+      "escutar em `cfg.HTTPAddr`"
+    ]
+  }
+}

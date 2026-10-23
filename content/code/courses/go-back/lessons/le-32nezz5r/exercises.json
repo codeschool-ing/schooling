@@ -1,0 +1,1053 @@
+[
+  {
+    "id": "ex-dy70eata",
+    "version": 1,
+    "section": "health-checks",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each check to what a \"no\" makes the platform do.",
+    "hint": "Section 02's table.",
+    "pairs": [
+      {
+        "left": "liveness",
+        "right": "kill the process and start another"
+      },
+      {
+        "left": "readiness",
+        "right": "stop sending it traffic, and wait"
+      },
+      {
+        "left": "startup",
+        "right": "hold liveness off while a slow start finishes"
+      }
+    ],
+    "right_distractors": [
+      "restore the database from a backup"
+    ]
+  },
+  {
+    "id": "ex-vnfztk0k",
+    "version": 1,
+    "section": "health-checks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The database goes down, and every copy's liveness check pings it. What follows?",
+    "hint": "Section 02's trap.",
+    "choices": [
+      {
+        "text": "Traffic moves to the copies whose database connection still works",
+        "correct": false,
+        "why": "Every copy fails at the same moment; there is no copy that still works."
+      },
+      {
+        "text": "Nothing happens until the database returns",
+        "correct": false,
+        "why": "A failed liveness check makes the platform kill the process."
+      },
+      {
+        "text": "The database restarts",
+        "correct": false,
+        "why": "The platform acts on the process whose check failed, not on the database."
+      },
+      {
+        "text": "Every copy is restarted, over and over",
+        "correct": true,
+        "why": "Right. A restarted boxoffice reaches a dead database no better than the old one, and the restarts add load."
+      }
+    ]
+  },
+  {
+    "id": "ex-gqdk8g34",
+    "version": 1,
+    "section": "health-checks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does boxoffice serve its health checks and metrics on `-ops`, never published to the internet?",
+    "hint": "Who reads them?",
+    "choices": [
+      {
+        "text": "Prometheus refuses to scrape a port that serves anything else",
+        "correct": false,
+        "why": "Prometheus scrapes any URL it is given."
+      },
+      {
+        "text": "Go's `http.Server` allows only one handler function on each port it listens on",
+        "correct": false,
+        "why": "The main port serves dozens of routes."
+      },
+      {
+        "text": "They serve the machinery, and expose the service's insides",
+        "correct": true,
+        "why": "Right. The platform reaches the port from inside the network; customers never need it."
+      },
+      {
+        "text": "HTTP/2 needs a port of its own",
+        "correct": false,
+        "why": "Nothing in this lesson is about HTTP/2."
+      }
+    ]
+  },
+  {
+    "id": "ex-qsdq8z1x",
+    "version": 1,
+    "section": "health-checks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does boxoffice have no startup probe?",
+    "hint": "What is a startup probe for?",
+    "choices": [
+      {
+        "text": "Docker ignores startup probes",
+        "correct": false,
+        "why": "The reason is boxoffice's start time, not Docker."
+      },
+      {
+        "text": "Startup probes test the database, which liveness must never do",
+        "correct": false,
+        "why": "A startup probe holds liveness off; it tests nothing in particular."
+      },
+      {
+        "text": "Readiness already restarts a slow process",
+        "correct": false,
+        "why": "Readiness never restarts anything; it withholds traffic."
+      },
+      {
+        "text": "boxoffice starts in milliseconds, so nothing needs holding off",
+        "correct": true,
+        "why": "Right. The probe exists for processes that take minutes, so liveness does not kill them meanwhile."
+      }
+    ]
+  },
+  {
+    "id": "ex-m3rz1kkz",
+    "version": 1,
+    "section": "health-endpoints",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `ready` give its database ping a one-second limit?",
+    "hint": "The platform asks every few seconds.",
+    "choices": [
+      {
+        "text": "A late answer is useless, and calls pile up",
+        "correct": true,
+        "why": "Right. A slow check is a useless one, and the next call arrives before the last one ends."
+      },
+      {
+        "text": "pgx refuses longer pings",
+        "correct": false,
+        "why": "The limit is boxoffice's choice, passed in a context."
+      },
+      {
+        "text": "One second is the Kubernetes default probe timeout",
+        "correct": false,
+        "why": "The lesson gives its reason as the readiness check itself, not a Kubernetes default."
+      },
+      {
+        "text": "The pool lesson 9 configured closes any connection that has been idle for a second",
+        "correct": false,
+        "why": "Lesson 9 set five minutes for idle connections."
+      }
+    ]
+  },
+  {
+    "id": "ex-myhmk9h1",
+    "version": 1,
+    "section": "health-endpoints",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "PostgreSQL was stopped under the running server. Match each request to its answer.",
+    "hint": "Section 03's second transcript.",
+    "pairs": [
+      {
+        "left": "`/healthz`",
+        "right": "200, `ok`"
+      },
+      {
+        "left": "`/readyz`",
+        "right": "503, `no database`"
+      },
+      {
+        "left": "`GET /events/1`",
+        "right": "500, lesson 3's problem"
+      }
+    ],
+    "right_distractors": [
+      "401, no token"
+    ]
+  },
+  {
+    "id": "ex-e0ypje8x",
+    "version": 1,
+    "section": "health-endpoints",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After PostgreSQL came back, `/readyz` said `ready`. What was still broken?",
+    "hint": "The first line of the grep.",
+    "choices": [
+      {
+        "text": "The pool, which never reconnects",
+        "correct": false,
+        "why": "The pool opened new connections by itself; `/readyz` and requests worked."
+      },
+      {
+        "text": "The migrations, which had to run again",
+        "correct": false,
+        "why": "Stopping a server keeps its data and schema."
+      },
+      {
+        "text": "Every live page: `listen` had returned and nothing started it again",
+        "correct": true,
+        "why": "Right. Readiness checked the database, not the listener, so frozen pages passed as ready."
+      },
+      {
+        "text": "`/healthz`, which kept answering 503",
+        "correct": false,
+        "why": "`/healthz` answered 200 throughout."
+      }
+    ]
+  },
+  {
+    "id": "ex-n1y145mq",
+    "version": 1,
+    "section": "health-endpoints",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does section 03 give as the fix for the frozen live pages?",
+    "hint": "Two halves.",
+    "choices": [
+      {
+        "text": "Restart boxoffice every time the database restarts",
+        "correct": false,
+        "why": "That is the restart loop again, done by hand."
+      },
+      {
+        "text": "Reconnect `listen` in a loop; make readiness cover it",
+        "correct": true,
+        "why": "Right. Lesson 13 named the loop; readiness then says so when live updates are dead."
+      },
+      {
+        "text": "Check the database in `/healthz` as well",
+        "correct": false,
+        "why": "That is section 02's trap, and the database was already back."
+      },
+      {
+        "text": "Poll the database every second from each page, and drop notifications altogether",
+        "correct": false,
+        "why": "That replaces notifications with polling and leaves the dead listener in place."
+      }
+    ]
+  },
+  {
+    "id": "ex-3m2kp0qn",
+    "version": 1,
+    "section": "health-endpoints",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `/healthz` include the version?",
+    "hint": "During a deploy.",
+    "choices": [
+      {
+        "text": "It says which build runs where",
+        "correct": true,
+        "why": "Right. It is the first question anybody asks during a deploy."
+      },
+      {
+        "text": "Kubernetes compares it with the image tag",
+        "correct": false,
+        "why": "Kubernetes reads only the status code of an HTTP probe."
+      },
+      {
+        "text": "Without a body, a 200 counts as a failure",
+        "correct": false,
+        "why": "An HTTP probe judges the status code alone."
+      },
+      {
+        "text": "It proves the database schema matches",
+        "correct": false,
+        "why": "`live` touches nothing outside the process."
+      }
+    ]
+  },
+  {
+    "id": "ex-bxe12esc",
+    "version": 1,
+    "section": "metrics",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each kind of metric to boxoffice's example of it.",
+    "hint": "Section 04's list.",
+    "pairs": [
+      {
+        "left": "counter",
+        "right": "`boxoffice_http_requests_total`"
+      },
+      {
+        "left": "histogram",
+        "right": "`boxoffice_http_request_duration_seconds`"
+      },
+      {
+        "left": "gauge",
+        "right": "`boxoffice_live_watchers`"
+      }
+    ],
+    "right_distractors": [
+      "`X-Request-ID`"
+    ]
+  },
+  {
+    "id": "ex-00kxcr0b",
+    "version": 1,
+    "section": "metrics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are the two gauges `GaugeFunc`s?",
+    "hint": "When is the number read?",
+    "choices": [
+      {
+        "text": "Prometheus accepts no other kind of gauge",
+        "correct": false,
+        "why": "client_golang has ordinary gauges set by `Set`, `Inc` and `Dec`."
+      },
+      {
+        "text": "Functions are cheaper to label than gauges that are set by hand",
+        "correct": false,
+        "why": "These two gauges carry no labels at all."
+      },
+      {
+        "text": "They read the hub and the pool at the moment of each scrape, never stale",
+        "correct": true,
+        "why": "Right. Nothing has to remember to update them."
+      },
+      {
+        "text": "They reset to zero after each scrape",
+        "correct": false,
+        "why": "No metric resets on a scrape."
+      }
+    ]
+  },
+  {
+    "id": "ex-g7n41r86",
+    "version": 1,
+    "section": "metrics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `metricsHandler` use a registry of its own?",
+    "hint": "Instead of the library's global one.",
+    "choices": [
+      {
+        "text": "The global registry is not safe for concurrent use",
+        "correct": false,
+        "why": "The reason is what ends up on the page, not concurrency."
+      },
+      {
+        "text": "The global one serves only JSON",
+        "correct": false,
+        "why": "Both serve the same text format."
+      },
+      {
+        "text": "Prometheus scrapes only registries created per handler",
+        "correct": false,
+        "why": "Prometheus reads a URL; it knows nothing of registries."
+      },
+      {
+        "text": "To serve only what boxoffice registers",
+        "correct": true,
+        "why": "Right. Only what boxoffice registers is served."
+      }
+    ]
+  },
+  {
+    "id": "ex-nmtchrz1",
+    "version": 1,
+    "section": "metrics",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `measure` label requests with `r.Pattern` and never with the path?",
+    "hint": "Each label value is a time series.",
+    "choices": [
+      {
+        "text": "Paths carry the request id, which must stay out of every metric",
+        "correct": false,
+        "why": "The request id travels in a header, not in the path."
+      },
+      {
+        "text": "Prometheus forbids slashes in labels",
+        "correct": false,
+        "why": "The pattern has slashes too."
+      },
+      {
+        "text": "The path is empty after `requireStaff`",
+        "correct": false,
+        "why": "The path is always there."
+      },
+      {
+        "text": "A path makes unbounded series",
+        "correct": true,
+        "why": "Right. Patterns are a number you wrote; paths are whatever arrives."
+      }
+    ]
+  },
+  {
+    "id": "ex-eestcrm6",
+    "version": 1,
+    "section": "metrics",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why must `measure` be the last middleware in the chain, next to the mux?",
+    "hint": "Who writes the pattern, and into what?",
+    "choices": [
+      {
+        "text": "The mux writes the pattern into its own request",
+        "correct": true,
+        "why": "Right. Next to the mux, `measure` hands over its own request and reads the pattern afterwards."
+      },
+      {
+        "text": "It must run after `cors` has answered preflights",
+        "correct": false,
+        "why": "Order with `cors` is not the reason; the pattern is."
+      },
+      {
+        "text": "Otherwise it counts each request twice",
+        "correct": false,
+        "why": "It runs once per request wherever it sits."
+      },
+      {
+        "text": "The status recorder works only next to the mux",
+        "correct": false,
+        "why": "`logRequests` uses the same recorder at the outside of the chain."
+      }
+    ]
+  },
+  {
+    "id": "ex-ca978j03",
+    "version": 1,
+    "section": "metrics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which route label does `GET /admin/report` get?",
+    "hint": "`requireStaff` calls `WithContext`.",
+    "choices": [
+      {
+        "text": "`GET /admin/report`",
+        "correct": false,
+        "why": "That pattern is written into a copy `measure` never sees."
+      },
+      {
+        "text": "`unmatched`",
+        "correct": false,
+        "why": "The outer mux matched it, so it has a pattern."
+      },
+      {
+        "text": "the path, `/admin/report`",
+        "correct": false,
+        "why": "`measure` never labels by path."
+      },
+      {
+        "text": "`/admin/`",
+        "correct": true,
+        "why": "Right. The outer pattern; the inner mux writes into a copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-c159m87c",
+    "version": 1,
+    "section": "metrics",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Under which route was the 404 for `/events/9` counted?",
+    "hint": "Section 04's counters.",
+    "choices": [
+      {
+        "text": "`GET /events/{id}`",
+        "correct": true,
+        "why": "Right. The handler said the event does not exist."
+      },
+      {
+        "text": "`unmatched`",
+        "correct": false,
+        "why": "That was `/nowhere`, which no route matched."
+      },
+      {
+        "text": "None: errors are not counted",
+        "correct": false,
+        "why": "Every status is counted, a 500 included."
+      },
+      {
+        "text": "`GET /events`",
+        "correct": false,
+        "why": "That pattern lists events and takes no id."
+      }
+    ]
+  },
+  {
+    "id": "ex-7cszxhc2",
+    "version": 1,
+    "section": "what-to-measure",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each letter of RED to what it asks.",
+    "hint": "Section 05's table.",
+    "pairs": [
+      {
+        "left": "Rate",
+        "right": "how many requests per second"
+      },
+      {
+        "left": "Errors",
+        "right": "how many of them failed"
+      },
+      {
+        "left": "Duration",
+        "right": "how long they took"
+      }
+    ],
+    "right_distractors": [
+      "how much memory the process holds"
+    ]
+  },
+  {
+    "id": "ex-72zzvxwz",
+    "version": 1,
+    "section": "what-to-measure",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A hundred requests take 2 ms and one takes 4 seconds. What is the mean, in milliseconds, rounded to a whole number?",
+    "hint": "4200 ms over 101 requests.",
+    "value": 42,
+    "tolerance": 1,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-mb90z3ns",
+    "version": 1,
+    "section": "what-to-measure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a histogram keep that the mean of the same requests hides?",
+    "hint": "Section 05's example.",
+    "choices": [
+      {
+        "text": "The request ids of the slow ones",
+        "correct": false,
+        "why": "Request ids never go in a label; they belong in the log."
+      },
+      {
+        "text": "The exact duration of each request",
+        "correct": false,
+        "why": "Buckets count observations up to a bound; the exact values are gone."
+      },
+      {
+        "text": "The shape: many fast requests and one slow one",
+        "correct": true,
+        "why": "Right. A 42 ms mean describes none of them; the buckets show both."
+      },
+      {
+        "text": "The client that sent each request",
+        "correct": false,
+        "why": "Nothing about the client is in the metric."
+      }
+    ]
+  },
+  {
+    "id": "ex-9mebwe4k",
+    "version": 1,
+    "section": "what-to-measure",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these belongs in a metric's label?",
+    "hint": "A small set known in advance.",
+    "choices": [
+      {
+        "text": "the HTTP status",
+        "correct": true,
+        "why": "Right. A few dozen values at most, all known."
+      },
+      {
+        "text": "the customer's e-mail address",
+        "correct": false,
+        "why": "Unbounded, and personal data copied into a system kept for months."
+      },
+      {
+        "text": "the request id",
+        "correct": false,
+        "why": "Unbounded; it belongs in the log."
+      },
+      {
+        "text": "the ticket id",
+        "correct": false,
+        "why": "One value per sale, without bound."
+      }
+    ]
+  },
+  {
+    "id": "ex-h6hv1ppw",
+    "version": 1,
+    "section": "what-to-measure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do the live streams not drag up the purchase route's latency?",
+    "hint": "They land in the top buckets.",
+    "choices": [
+      {
+        "text": "`measure` skips requests longer than 30 seconds",
+        "correct": false,
+        "why": "Longer ones are counted in `+Inf`."
+      },
+      {
+        "text": "Hijacked requests never reach `measure`",
+        "correct": false,
+        "why": "The server-sent event stream is not hijacked, and it is measured."
+      },
+      {
+        "text": "Prometheus drops observations above the last bucket",
+        "correct": false,
+        "why": "They go into `+Inf`; nothing is dropped."
+      },
+      {
+        "text": "Streams are counted under their own route label",
+        "correct": true,
+        "why": "Right. Each route is its own histogram."
+      }
+    ]
+  },
+  {
+    "id": "ex-gvn6wksf",
+    "version": 1,
+    "section": "what-to-measure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`/metrics` answered 158 lines. What would tens of thousands mean?",
+    "hint": "Section 05's last paragraph.",
+    "choices": [
+      {
+        "text": "The Go runtime is leaking goroutines",
+        "correct": false,
+        "why": "A goroutine leak raises one number, not the line count."
+      },
+      {
+        "text": "A label has escaped into unbounded values",
+        "correct": true,
+        "why": "Right. A few thousand is normal for a large service."
+      },
+      {
+        "text": "Prometheus has not scraped for a while",
+        "correct": false,
+        "why": "The page shows current values; scrapes do not add lines."
+      },
+      {
+        "text": "Many more requests arrived than in the transcript, raising every counter on the page",
+        "correct": false,
+        "why": "More requests raise counters, not the number of series."
+      }
+    ]
+  },
+  {
+    "id": "ex-mtyv02zf",
+    "version": 1,
+    "section": "graceful-shutdown",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order what boxoffice does after the first `SIGTERM`.",
+    "hint": "Section 06's list.",
+    "items": [
+      "set `draining`, so `/readyz` answers 503",
+      "`srv.Shutdown` closes the listeners and waits for active requests",
+      "`GracefulStop` waits for gRPC calls, until the deadline",
+      "stop the ops server and return from `main`"
+    ]
+  },
+  {
+    "id": "ex-wsb630v5",
+    "version": 1,
+    "section": "graceful-shutdown",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the hub get a `done` channel, closed through `RegisterOnShutdown`?",
+    "hint": "What does `Shutdown` wait for?",
+    "choices": [
+      {
+        "text": "`Shutdown` closes every channel in the program",
+        "correct": false,
+        "why": "`Shutdown` knows nothing of channels."
+      },
+      {
+        "text": "Streams never end on their own, and hijacked WebSockets are not tracked",
+        "correct": true,
+        "why": "Right. Without it, streams hold the shutdown to its deadline and WebSockets are dropped."
+      },
+      {
+        "text": "PostgreSQL stops sending notifications on `SIGTERM`",
+        "correct": false,
+        "why": "The signal goes to boxoffice, not to the database."
+      },
+      {
+        "text": "To count the open streams for section 04's `boxoffice_live_watchers` gauge",
+        "correct": false,
+        "why": "`count` does that; `done` ends the streams."
+      }
+    ]
+  },
+  {
+    "id": "ex-zjxmz0eh",
+    "version": 1,
+    "section": "graceful-shutdown",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `hub.close` use `sync.Once`?",
+    "hint": "What does closing a closed channel do?",
+    "choices": [
+      {
+        "text": "It makes `close` faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "`RegisterOnShutdown` calls every function three times",
+        "correct": false,
+        "why": "It calls each registered function once per `Shutdown`."
+      },
+      {
+        "text": "Closing a closed channel panics",
+        "correct": true,
+        "why": "Right. `Once` makes a second call harmless."
+      },
+      {
+        "text": "Go forbids closing a channel without a lock",
+        "correct": false,
+        "why": "Closing a channel needs no lock."
+      }
+    ]
+  },
+  {
+    "id": "ex-jzs5kevf",
+    "version": 1,
+    "section": "graceful-shutdown",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which WebSocket close status does boxoffice send when it shuts down?",
+    "hint": "`GoingAway`.",
+    "value": 1001,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-9hfasdy0",
+    "version": 1,
+    "section": "graceful-shutdown",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In section 06's run, what did the slow purchase get?",
+    "hint": "It was in flight when the signal arrived.",
+    "choices": [
+      {
+        "text": "A connection reset by the server at the moment of the signal",
+        "correct": false,
+        "why": "That is lesson 16's behaviour, before the graceful shutdown."
+      },
+      {
+        "text": "A 503, because readiness had turned",
+        "correct": false,
+        "why": "Readiness answers the platform; the request already in flight went on."
+      },
+      {
+        "text": "201, after 2.2 seconds, a second after the signal",
+        "correct": true,
+        "why": "Right. The process logged `stopped` and exited with 0 only after it."
+      },
+      {
+        "text": "A 500, because the signal cancelled its transaction halfway",
+        "correct": false,
+        "why": "Nothing cancelled it; `Shutdown` waited for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-223pq3cv",
+    "version": 1,
+    "section": "graceful-shutdown",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the shutdown timeout eight seconds by default?",
+    "hint": "Who sends `SIGKILL`, and when?",
+    "choices": [
+      {
+        "text": "Prometheus scrapes every eight seconds",
+        "correct": false,
+        "why": "The scrape interval has nothing to do with it."
+      },
+      {
+        "text": "gRPC refuses longer deadlines",
+        "correct": false,
+        "why": "The deadline is boxoffice's own context."
+      },
+      {
+        "text": "Eight seconds is the longest a purchase was measured to take in lesson 9's tests",
+        "correct": false,
+        "why": "No such measurement was made."
+      },
+      {
+        "text": "It must end before the platform's `SIGKILL`",
+        "correct": true,
+        "why": "Right. boxoffice cuts the stragglers itself, cleanly, first."
+      }
+    ]
+  },
+  {
+    "id": "ex-6tfa5xcz",
+    "version": 1,
+    "section": "graceful-shutdown",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the server's terminal, what did `${PIPESTATUS[0]}` report?",
+    "hint": "`boxoffice | cut`.",
+    "choices": [
+      {
+        "text": "`cut`'s exit status",
+        "correct": false,
+        "why": "That is `$?` after a pipeline."
+      },
+      {
+        "text": "the number of lines `cut` shortened",
+        "correct": false,
+        "why": "`PIPESTATUS` holds exit statuses."
+      },
+      {
+        "text": "the signal number of `SIGTERM`",
+        "correct": false,
+        "why": "It printed `exit 0`."
+      },
+      {
+        "text": "boxoffice's exit status, 0",
+        "correct": true,
+        "why": "Right. The first command of the pipeline."
+      }
+    ]
+  },
+  {
+    "id": "ex-cgfaf987",
+    "version": 1,
+    "section": "boxoffice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `main` call `stop` right after the signal context ends?",
+    "hint": "Ctrl-C twice.",
+    "choices": [
+      {
+        "text": "To close the database pool",
+        "correct": false,
+        "why": "The deferred `pool.Close` does that when `main` returns."
+      },
+      {
+        "text": "To start the shutdown timer",
+        "correct": false,
+        "why": "`context.WithTimeout` starts it."
+      },
+      {
+        "text": "To send `SIGTERM` to the gRPC server",
+        "correct": false,
+        "why": "The gRPC server runs in the same process."
+      },
+      {
+        "text": "So a second signal kills it",
+        "correct": true,
+        "why": "Right. Pressing Ctrl-C twice means exactly that."
+      }
+    ]
+  },
+  {
+    "id": "ex-609g9kv5",
+    "version": 1,
+    "section": "boxoffice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `GracefulStop` run in a goroutine, with `Stop` after the deadline?",
+    "hint": "Lesson 10's `Watch`.",
+    "choices": [
+      {
+        "text": "`GracefulStop` returns an error that must be read in parallel",
+        "correct": false,
+        "why": "It returns nothing."
+      },
+      {
+        "text": "`Watch` streams never end, so `GracefulStop` alone would wait forever",
+        "correct": true,
+        "why": "Right. `Stop` cuts them when the deadline passes."
+      },
+      {
+        "text": "`Stop` drains calls more gently",
+        "correct": false,
+        "why": "`Stop` cuts calls; `GracefulStop` is the gentle one."
+      },
+      {
+        "text": "gRPC must stop before HTTP",
+        "correct": false,
+        "why": "HTTP's `Shutdown` runs first."
+      }
+    ]
+  },
+  {
+    "id": "ex-09yxejj5",
+    "version": 1,
+    "section": "boxoffice",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When `Shutdown` is called, `ListenAndServe` returns `http.___`, which `main` treats as expected rather than fatal.",
+    "hint": "Err…",
+    "blanks": [
+      {
+        "accept": [
+          "ErrServerClosed"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xsyq790j",
+    "version": 1,
+    "section": "boxoffice",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each value in section 07's Kubernetes snippet to what it sets.",
+    "hint": "Not run for this course.",
+    "pairs": [
+      {
+        "left": "`periodSeconds: 10` on `/healthz`",
+        "right": "liveness asked every ten seconds"
+      },
+      {
+        "left": "`failureThreshold: 3`",
+        "right": "three failures in a row before a restart"
+      },
+      {
+        "left": "`periodSeconds: 5` on `/readyz`",
+        "right": "readiness asked every five seconds"
+      },
+      {
+        "left": "`terminationGracePeriodSeconds: 30`",
+        "right": "time between the signal and `SIGKILL`"
+      }
+    ]
+  },
+  {
+    "id": "ex-as83r654",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which statements match this lesson? Choose all that apply.",
+    "hint": "Sections 02 to 07.",
+    "choices": [
+      {
+        "text": "The image sets `BOXOFFICE_OPS=:9100` so the ops port listens on every interface",
+        "correct": true,
+        "why": "Right. Inside a container, `localhost` is the container itself."
+      },
+      {
+        "text": "Liveness pings the database with a one-second limit",
+        "correct": false,
+        "why": "That is readiness; liveness touches nothing outside the process."
+      },
+      {
+        "text": "The PromQL in section 05 was run against a Prometheus server",
+        "correct": false,
+        "why": "The course installed no Prometheus; the expressions were not run."
+      },
+      {
+        "text": "boxoffice keeps no delay between readiness turning 503 and `Shutdown`",
+        "correct": true,
+        "why": "Right. On a platform that needs one, that delay is one more setting."
+      },
+      {
+        "text": "The stream in section 06 ended with curl's status 0",
+        "correct": true,
+        "why": "Right. The server closed the response properly."
+      }
+    ]
+  },
+  {
+    "id": "ex-fcmz9c40",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Kubernetes removes a stopping pod from the load balancer and signals it at about the same moment. What follows for boxoffice as written?",
+    "hint": "Section 06's last paragraph.",
+    "choices": [
+      {
+        "text": "Nothing: readiness turns 503 before any request arrives",
+        "correct": false,
+        "why": "Readiness is asked every few seconds; the removal lags behind the signal."
+      },
+      {
+        "text": "Kubernetes waits for `/readyz` to answer 503 before signalling",
+        "correct": false,
+        "why": "It signals without asking."
+      },
+      {
+        "text": "For a second or two, requests keep arriving at a listener that is already closed",
+        "correct": true,
+        "why": "Right. Serving a few more seconds after readiness turns 503 is the common answer."
+      },
+      {
+        "text": "The pod restarts, because liveness fails",
+        "correct": false,
+        "why": "`/healthz` keeps answering 200 during the shutdown."
+      }
+    ]
+  },
+  {
+    "id": "ex-10awrajt",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the moments of section 06's run, from first to last.",
+    "hint": "Read the server's log.",
+    "items": [
+      "the stream opens",
+      "the slow purchase starts",
+      "`SIGTERM` arrives and the stream ends",
+      "the purchase is answered 201",
+      "`stopped`, exit 0"
+    ]
+  }
+]

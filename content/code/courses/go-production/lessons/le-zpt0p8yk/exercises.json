@@ -1,0 +1,530 @@
+[
+  {
+    "id": "ex-hb8cztyd",
+    "version": 1,
+    "section": "kinds-of-profile",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does Go's CPU profiler find out where the time went?",
+    "hint": "Think of what it writes down, and how often.",
+    "choices": [
+      {
+        "text": "It times every call on the way in and on the way out",
+        "correct": false,
+        "why": "That is a tracer's approach, and its cost grows with the number of calls. The profiler never times a call."
+      },
+      {
+        "text": "A hundred times a second it records the running stack",
+        "correct": true,
+        "why": "Right. Each sample stands for 10 ms, and a function in many samples is where the time went, however many calls that took."
+      },
+      {
+        "text": "It counts calls and multiplies by an average cost per function",
+        "correct": false,
+        "why": "A CPU profile holds no call counts at all; it holds stacks and the number of ticks each was seen at."
+      },
+      {
+        "text": "The compiler inserts a counter at the top of every function",
+        "correct": false,
+        "why": "That is how coverage works, not profiling. A profile needs no special build."
+      }
+    ]
+  },
+  {
+    "id": "ex-emc4syfg",
+    "version": 1,
+    "section": "kinds-of-profile",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service's memory grows a little every day until it is restarted. Which view of the heap profile answers \"what is holding it\"?",
+    "hint": "One pair of views is about now, the other about the whole life of the process.",
+    "choices": [
+      {
+        "text": "`alloc_space`",
+        "correct": false,
+        "why": "That counts everything ever allocated, garbage included. A program that churns looks huge there even when nothing stays."
+      },
+      {
+        "text": "`alloc_objects`",
+        "correct": false,
+        "why": "Also since the start of the program, counted in allocations. It finds churn, not retention."
+      },
+      {
+        "text": "`inuse_space`",
+        "correct": true,
+        "why": "Right. It is the bytes still live, by the stack that allocated them: where a leak shows."
+      },
+      {
+        "text": "the `threadcreate` profile",
+        "correct": false,
+        "why": "That records where operating system threads were started, which is rarely where memory goes."
+      }
+    ]
+  },
+  {
+    "id": "ex-aqhndrj9",
+    "version": 1,
+    "section": "kinds-of-profile",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program never calls `runtime.SetBlockProfileRate`. What does its `block` profile hold?",
+    "hint": "Section 05 shows the count beside it.",
+    "choices": [
+      {
+        "text": "Nothing: blocking is not recorded until the program asks",
+        "correct": true,
+        "why": "Right. Recording every wait would slow the programs that need the profile, so it starts off, and the index page showed it at 0."
+      },
+      {
+        "text": "One sample per 512 KB of blocking",
+        "correct": false,
+        "why": "512 KB is the heap profiler's rate, `runtime.MemProfileRate`. Blocking is measured in time, and here not at all."
+      },
+      {
+        "text": "Every channel operation, because the default rate is 1",
+        "correct": false,
+        "why": "A rate of 1 records every event, but the default is off; only a call to `SetBlockProfileRate` turns it on."
+      },
+      {
+        "text": "Mutex waits only; channels belong to the goroutine profile",
+        "correct": false,
+        "why": "The block profile covers channels, mutexes and `WaitGroup` alike. It is simply off."
+      }
+    ]
+  },
+  {
+    "id": "ex-wf6r2vrw",
+    "version": 1,
+    "section": "kinds-of-profile",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A tick of the CPU profiler every 10 milliseconds is a rate of 100 ___.",
+    "hint": "The unit of samples per second.",
+    "blanks": [
+      {
+        "accept": [
+          "Hz",
+          "hertz"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-btt3a6fk",
+    "version": 1,
+    "section": "from-a-benchmark",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `BenchmarkCount` read `testdata/access.log` before `for b.Loop()` rather than inside it?",
+    "hint": "What would the time per iteration include otherwise?",
+    "choices": [
+      {
+        "text": "So that reading the disk is not part of what is timed",
+        "correct": true,
+        "why": "Right. `b.Loop` resets the timer on its first call, so the setup before it is excluded and only counting is measured."
+      },
+      {
+        "text": "Because a test may not open files inside the loop",
+        "correct": false,
+        "why": "Nothing forbids it; it would only measure the disk along with the code."
+      },
+      {
+        "text": "So the go command can cache the file between runs",
+        "correct": false,
+        "why": "The go command caches test results, not files a benchmark reads, and benchmarks are not cached at all."
+      },
+      {
+        "text": "`b.SetBytes` only works with data read before the loop",
+        "correct": false,
+        "why": "`SetBytes` just records a number used for the MB/s column; it does not care where the data came from."
+      }
+    ]
+  },
+  {
+    "id": "ex-xe6s6ge8",
+    "version": 1,
+    "section": "from-a-benchmark",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`BenchmarkCount` counted a 100,000-line log and reported `200009 allocs/op`. How many allocations is that per line, to the nearest whole number?",
+    "hint": "Divide, and ignore the handful left over.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-f1142qmb",
+    "version": 1,
+    "section": "from-a-benchmark",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go tool pprof -top mem.out` on the file `go test -memprofile` wrote says `Type: alloc_space`. Why not `inuse_space`, the heap profile's usual default?",
+    "hint": "Which profile does the test binary write?",
+    "choices": [
+      {
+        "text": "pprof always opens memory profiles on `alloc_space`",
+        "correct": false,
+        "why": "A heap profile from `WriteHeapProfile` opened on `inuse_space` in section 04. The default depends on the profile."
+      },
+      {
+        "text": "The benchmark freed everything, so `inuse_space` was empty and pprof switched",
+        "correct": false,
+        "why": "pprof does not switch views on its own; an empty view is shown as empty, as in section 04."
+      },
+      {
+        "text": "`go test` writes the `allocs` profile",
+        "correct": true,
+        "why": "Right. It holds the same records as `heap`, with `alloc_space` marked as the default, `[dflt]` in the `-raw` header."
+      },
+      {
+        "text": "`-benchmem` turns off the live-heap records",
+        "correct": false,
+        "why": "`-benchmem` only adds the B/op and allocs/op columns; the `-raw` header still listed all four values."
+      }
+    ]
+  },
+  {
+    "id": "ex-zfh8w8y1",
+    "version": 1,
+    "section": "from-a-benchmark",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The benchmark's CPU profile holds 120 samples. A function shows 0.03s flat. What can you safely conclude about it?",
+    "hint": "How many ticks is 0.03 s?",
+    "choices": [
+      {
+        "text": "It takes 2.5% of the time, give or take a tenth of a percent",
+        "correct": false,
+        "why": "Three ticks out of 120 cannot carry that precision; one tick more or less moves it by almost a point."
+      },
+      {
+        "text": "It is called three times per benchmark iteration",
+        "correct": false,
+        "why": "A CPU profile counts ticks, not calls. Three ticks say nothing about how often it ran."
+      },
+      {
+        "text": "It is small, and its rank among the small ones is noise",
+        "correct": true,
+        "why": "Right. 0.03 s is three samples; a longer run such as `-benchtime 5s` is how to rank functions that size."
+      },
+      {
+        "text": "It never appears in the call graph of `tally.Count`",
+        "correct": false,
+        "why": "Nothing about three samples says where in the stacks they were; it may well sit under `Count`."
+      }
+    ]
+  },
+  {
+    "id": "ex-aw3ybdnt",
+    "version": 1,
+    "section": "from-a-program",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `profcount` put its work in `run`, which returns an error, instead of calling `log.Fatal` inside `main` when something fails?",
+    "hint": "What happens to deferred calls when a program exits through `os.Exit`?",
+    "choices": [
+      {
+        "text": "`log.Fatal` cannot print to standard error while the profiler is running",
+        "correct": false,
+        "why": "It prints fine. The trouble is what it skips after printing."
+      },
+      {
+        "text": "`os.Exit` skips the deferred `StopCPUProfile`, so the file stays empty",
+        "correct": true,
+        "why": "Right. `log.Fatal` calls `os.Exit`, deferred calls never run, the profile is never finished, and pprof has nothing to read."
+      },
+      {
+        "text": "`run` is faster, because `main` is not optimised",
+        "correct": false,
+        "why": "`main` is compiled like any other function. The reason is the defers."
+      },
+      {
+        "text": "A profile can only be written from a function that returns an error",
+        "correct": false,
+        "why": "`StartCPUProfile` works anywhere; it needs `StopCPUProfile` to run before the program ends."
+      }
+    ]
+  },
+  {
+    "id": "ex-f7kcban3",
+    "version": 1,
+    "section": "from-a-program",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The heap profile of `profcount`, on its default view, showed 2.2 MB live and none of it from `tally`. What does that say?",
+    "hint": "Look at when the profile was written, and what `Count` keeps.",
+    "choices": [
+      {
+        "text": "The heap profile was broken by the CPU profile running at the same time",
+        "correct": false,
+        "why": "Both profiles were fine; the live heap really was the profiler's buffer and the runtime's own."
+      },
+      {
+        "text": "`Count` allocates almost nothing, so it cannot be the problem",
+        "correct": false,
+        "why": "The `alloc_space` view of the same file showed 255.18 MB allocated by `Count`'s callees. Little is kept; a lot is made."
+      },
+      {
+        "text": "`runtime.GC()` deleted `tally`'s records from the profile",
+        "correct": false,
+        "why": "A collection marks a record's objects as freed; the record stays and still counts in the `alloc` views."
+      },
+      {
+        "text": "Everything `Count` made was garbage and had been collected",
+        "correct": true,
+        "why": "Right. `inuse_space` answers what holds memory now, and after `runtime.GC()` nothing of the count was left."
+      }
+    ]
+  },
+  {
+    "id": "ex-r32tkqd5",
+    "version": 1,
+    "section": "from-a-program",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Counting the 2,000,000-line log allocated 255.18 MB in total, where pprof's MB is 1,048,576 bytes. About how many bytes is that per line?",
+    "hint": "255.18 × 1,048,576 ÷ 2,000,000.",
+    "value": 133.8,
+    "tolerance": 2,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-brhb9jzr",
+    "version": 1,
+    "section": "from-a-program",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `profcount`'s `run` in the order they happen when both profiles are asked for.",
+    "hint": "Deferred calls run last, in reverse.",
+    "items": [
+      "`pprof.StartCPUProfile` starts sampling into the file",
+      "`tally.Count` reads the whole log",
+      "`runtime.GC()` brings the heap records up to date",
+      "`pprof.WriteHeapProfile` writes the heap profile",
+      "the deferred `pprof.StopCPUProfile` finishes the CPU profile"
+    ]
+  },
+  {
+    "id": "ex-n5phdey4",
+    "version": 1,
+    "section": "from-a-running-process",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the blank import `_ \"net/http/pprof\"` do in `profserve`?",
+    "hint": "The program uses no name from the package.",
+    "choices": [
+      {
+        "text": "It registers the `/debug/pprof/` handlers on `http.DefaultServeMux`",
+        "correct": true,
+        "why": "Right. Its `init` adds the handlers, and `ListenAndServe(addr, nil)` serves that default mux."
+      },
+      {
+        "text": "It starts a web server on port 6060",
+        "correct": false,
+        "why": "The import starts nothing; the program's own goroutine calls `ListenAndServe` on the address from `-pprof`."
+      },
+      {
+        "text": "It turns on the block and mutex profiles",
+        "correct": false,
+        "why": "The index page still showed `block` and `mutex` at 0; those need `SetBlockProfileRate` and `SetMutexProfileFraction`."
+      },
+      {
+        "text": "Nothing until the program calls `pprof.Handler`",
+        "correct": false,
+        "why": "The handlers exist from the moment the package is initialised; `profserve` never calls anything in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-j0ztqn68",
+    "version": 1,
+    "section": "from-a-running-process",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Thirty goroutines of `profserve` sat on `main.go:50`, `done <- result{s, err}`, in state `chan send`. Why could none of them ever finish?",
+    "hint": "Who was supposed to receive?",
+    "choices": [
+      {
+        "text": "The channel was closed, and a send on a closed channel blocks",
+        "correct": false,
+        "why": "A send on a closed channel panics; it does not wait. Nobody closed `done`."
+      },
+      {
+        "text": "The timeout returned and left an unbuffered channel with no receiver",
+        "correct": true,
+        "why": "Right. `countBefore` had already returned through the timer, so the send waits for a receiver that no longer exists."
+      },
+      {
+        "text": "The counts were still reading the file",
+        "correct": false,
+        "why": "`chan send` is the state of a goroutine that finished its work and is trying to hand over the result."
+      },
+      {
+        "text": "`time.After` holds the channel until its timer fires again",
+        "correct": false,
+        "why": "`time.After` returns a channel of its own; it has nothing to do with `done`."
+      }
+    ]
+  },
+  {
+    "id": "ex-myzkytha",
+    "version": 1,
+    "section": "from-a-running-process",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The fix gave the channel room for one value: `done := make(chan result, ___)`.",
+    "hint": "The size of the buffer.",
+    "blanks": [
+      {
+        "accept": [
+          "1"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tsnpysvk",
+    "version": 1,
+    "section": "from-a-running-process",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service already serves its public API with `http.ListenAndServe(\":8080\", nil)`. A colleague adds `import _ \"net/http/pprof\"`. Which of these are true? Choose all that apply.",
+    "hint": "Which mux does `nil` mean, and what is now on it?",
+    "choices": [
+      {
+        "text": "`/debug/pprof/` is now reachable by anybody who can reach port 8080",
+        "correct": true,
+        "why": "Right. The import registered on `DefaultServeMux`, and `nil` serves exactly that mux on the public port."
+      },
+      {
+        "text": "A stranger can read the process's command line from `cmdline`",
+        "correct": true,
+        "why": "Right. `cmdline` returns the arguments the process was started with, secrets included if any were passed that way."
+      },
+      {
+        "text": "The handlers ask for a password the first time they are used",
+        "correct": false,
+        "why": "They have no authentication of any kind."
+      },
+      {
+        "text": "Moving the profiles to a separate listener on 127.0.0.1 fixes it, with the public API on a mux of its own",
+        "correct": true,
+        "why": "Right. The public server gets `http.NewServeMux()`, and the default mux, with the profiles, listens only on loopback."
+      }
+    ]
+  },
+  {
+    "id": "ex-r64jrz6w",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question about a Go program with the profile that answers it.",
+    "hint": "One of the descriptions on the right matches no profile in the lesson.",
+    "pairs": [
+      {
+        "left": "Which code is using the processor?",
+        "right": "the CPU profile"
+      },
+      {
+        "left": "What is keeping memory alive right now?",
+        "right": "`heap`, as `inuse_space`"
+      },
+      {
+        "left": "Which goroutines can never run again?",
+        "right": "`goroutineleak`"
+      },
+      {
+        "left": "Where do goroutines wait on channels and locks?",
+        "right": "`block`, once its rate is set"
+      }
+    ],
+    "right_distractors": [
+      "`threadcreate`, as `alloc_space`"
+    ]
+  },
+  {
+    "id": "ex-x9x5mzgq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A batch job takes forty minutes and you cannot change its code today, only its command line and environment. It already imports nothing from `runtime/pprof` or `net/http/pprof`. Which way of taking a profile from this lesson is left?",
+    "hint": "Each of the three ways needed something in the program or its tests.",
+    "choices": [
+      {
+        "text": "Fetch `/debug/pprof/profile?seconds=30` while it runs",
+        "correct": false,
+        "why": "Nothing serves that path: the handlers exist only in a program that imports `net/http/pprof` and listens."
+      },
+      {
+        "text": "Run `go tool pprof` on the binary with `-seconds 30`",
+        "correct": false,
+        "why": "`go tool pprof` reads profiles; it cannot make a program that does not profile itself produce one."
+      },
+      {
+        "text": "None of the three; a benchmark of its core function is the way in",
+        "correct": true,
+        "why": "Right. Two of the ways need code in the program; a benchmark with `-cpuprofile` needs only a test file next to the code, which measures the function rather than the job."
+      },
+      {
+        "text": "Set `GODEBUG=cpuprofile=1` and read the file it leaves",
+        "correct": false,
+        "why": "There is no such setting; a CPU profile is started by `StartCPUProfile` or by the test binary's `-cpuprofile`."
+      }
+    ]
+  },
+  {
+    "id": "ex-br9mjp9h",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three profiles in this lesson, of a benchmark, of `profcount` and of `profserve`, put the same function at the top. Which one, and why does the agreement matter?",
+    "hint": "Two different programs, two different inputs.",
+    "choices": [
+      {
+        "text": "`tally.Count`, because it is called first",
+        "correct": false,
+        "why": "`Count` has almost no time of its own; it was high only in the sense of being on nearly every stack."
+      },
+      {
+        "text": "`strings.Fields`, by three measurements",
+        "correct": true,
+        "why": "Right. A benchmark, a whole program and a running service all ranked it first, which is what makes it worth fixing in lesson 13."
+      },
+      {
+        "text": "`runtime.asyncPreempt`, which shows the scheduler is the bottleneck",
+        "correct": false,
+        "why": "It appeared in some runs but was not first in all three, and it is the runtime interrupting goroutines, not the cause of the work."
+      },
+      {
+        "text": "`time.Parse`, since every line has a timestamp",
+        "correct": false,
+        "why": "Every line also has five fields to split; `time.Parse` was a few percent in each profile."
+      }
+    ]
+  }
+]

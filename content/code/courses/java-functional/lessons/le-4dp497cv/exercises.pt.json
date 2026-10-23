@@ -1,0 +1,257 @@
+{
+  "ex-1qk6b25h": {
+    "prompt": "`if (cents >= amount) { cents -= amount; }` em várias threads é que tipo de corrida?",
+    "hint": "Uma verificação, depois uma ação.",
+    "choices": [
+      {
+        "text": "Verificar-depois-agir",
+        "why": "Isso, com um read-modify-write dentro."
+      },
+      {
+        "text": "Publicação insegura da conta",
+        "why": "A conta foi publicada pelo `start`; a corrida está no `withdraw`."
+      },
+      {
+        "text": "Um deadlock entre as duas caixas",
+        "why": "Nada espera nada; as duas caixas agem."
+      },
+      {
+        "text": "Um problema de visibilidade que o `volatile` resolveria",
+        "why": "Os dois passos precisam acontecer juntos; o `volatile` não faz isso."
+      }
+    ]
+  },
+  "ex-b6dgxwb6": {
+    "prompt": "Por que `Overdraft.java` põe `Thread.yield()` entre a verificação e a subtração?",
+    "hint": "Código real tem o mesmo intervalo.",
+    "choices": [
+      {
+        "text": "Porque o `yield` torna a verificação atômica",
+        "why": "Ele faz o oposto."
+      },
+      {
+        "text": "Sem ele o código seria correto",
+        "why": "O intervalo existe de qualquer jeito."
+      },
+      {
+        "text": "Para alargar o intervalo e a falha aparecer numa máquina tranquila",
+        "why": "Isso."
+      },
+      {
+        "text": "Para dar às outras caixas uma vez justa no dinheiro",
+        "why": "Ele convida uma troca exatamente onde trocar faz mal."
+      }
+    ]
+  },
+  "ex-pvtzwbh5": {
+    "prompt": "`Counter.increment()` é `synchronized` e `get()` não. O que pode dar errado?",
+    "hint": "Todo acesso passa pelo mesmo lock.",
+    "choices": [
+      {
+        "text": "Nada: leituras nunca precisam de lock",
+        "why": "Uma leitura precisa da aresta que o lock cria."
+      },
+      {
+        "text": "Incrementos podem se perder de novo",
+        "why": "Os incrementos ainda se excluem."
+      },
+      {
+        "text": "`get()` pode devolver um valor velho",
+        "why": "Isso: sem happens-before com quem escreve."
+      },
+      {
+        "text": "A classe não compila com métodos misturados",
+        "why": "Compila."
+      }
+    ]
+  },
+  "ex-zmfrfqq7": {
+    "prompt": "Quais destes seguem as regras práticas da seção? Marque todos os que se aplicam.",
+    "hint": "Mesmo lock, bloco curto, um lock seu.",
+    "choices": [
+      {
+        "text": "Chamar um serviço web segurando o lock",
+        "why": "Não: todos esperam o serviço."
+      },
+      {
+        "text": "Travar escritas num objeto e leituras em outro",
+        "why": "Não: dois locks não protegem nada."
+      },
+      {
+        "text": "Um `private final Object lock` usado em todo acesso",
+        "why": "Sim."
+      },
+      {
+        "text": "Pôr a verificação e a ação num bloco só",
+        "why": "Sim."
+      }
+    ]
+  },
+  "ex-ktrwq2df": {
+    "prompt": "Uma thread que segura um lock pode entrar em outro bloco no mesmo lock sem esperar, porque o `synchronized` é ___.",
+    "hint": "Ele pode entrar de novo.",
+    "blanks": [
+      {
+        "accept": [
+          "reentrante"
+        ]
+      }
+    ]
+  },
+  "ex-dxbvdbhc": {
+    "prompt": "Por que o `unlock()` precisa ir num bloco `finally`?",
+    "hint": "O que libera um `Lock`?",
+    "choices": [
+      {
+        "text": "Uma exceção, senão, o deixaria preso para sempre",
+        "why": "Isso: só o `unlock()` o libera."
+      },
+      {
+        "text": "Porque o `ReentrantLock` lança exceção se for liberado duas vezes",
+        "why": "Isso é verdade, e não é o motivo."
+      },
+      {
+        "text": "O `finally` roda numa thread separada",
+        "why": "Roda na mesma thread."
+      },
+      {
+        "text": "O compilador exige",
+        "why": "Compila sem ele."
+      }
+    ]
+  },
+  "ex-cadnvph6": {
+    "prompt": "Ligue cada necessidade à ferramenta.",
+    "hint": "A tabela da seção 04.",
+    "pairs": [
+      {
+        "left": "exclusão mútua simples",
+        "right": "`synchronized`"
+      },
+      {
+        "left": "desistir depois de um tempo limite",
+        "right": "`tryLock(time, unit)`"
+      },
+      {
+        "left": "parar de esperar quando interrompida",
+        "right": "`lockInterruptibly()`"
+      },
+      {
+        "left": "muitos leitores, poucos escritores",
+        "right": "`ReentrantReadWriteLock`"
+      }
+    ],
+    "right_distractors": [
+      "`volatile`"
+    ]
+  },
+  "ex-k8fgn9y9": {
+    "prompt": "Em `TryLock.java`, o que `hurried` fez quando o lock continuou ocupado?",
+    "hint": "A segunda linha da saída.",
+    "choices": [
+      {
+        "text": "Desistiu depois de 200 ms",
+        "why": "Isso, com uma mensagem."
+      },
+      {
+        "text": "Esperou o segundo inteiro",
+        "why": "Isso é o que o `synchronized` faria."
+      },
+      {
+        "text": "Lançou `IllegalMonitorStateException`",
+        "why": "Devolveu `false` e imprimiu."
+      },
+      {
+        "text": "Tomou o lock de `slow`",
+        "why": "Um lock não pode ser tomado."
+      }
+    ]
+  },
+  "ex-xztgmbkb": {
+    "prompt": "Como um programa Java em deadlock parece de fora?",
+    "hint": "Nenhum erro, nenhum giro.",
+    "choices": [
+      {
+        "text": "Fica parado em silêncio",
+        "why": "Isso; um dump de threads o encontra."
+      },
+      {
+        "text": "Sai com status 1",
+        "why": "Ele nunca sai."
+      },
+      {
+        "text": "Usa todos os processadores a 100%",
+        "why": "Threads bloqueadas não usam processador."
+      },
+      {
+        "text": "Lança `DeadlockException`",
+        "why": "Nenhuma exceção é lançada."
+      }
+    ]
+  },
+  "ex-8ae57csv": {
+    "prompt": "Ponha o deadlock de `Deadlock.java` em ordem.",
+    "hint": "O ciclo da figura.",
+    "items": [
+      "`pay-supplier` trava `shop`",
+      "`refund-shop` trava `supplier`",
+      "`pay-supplier` espera `supplier`",
+      "`refund-shop` espera `shop`, e nenhuma anda de novo"
+    ]
+  },
+  "ex-je68cy7s": {
+    "prompt": "Que mudança em `transfer` evita o deadlock?",
+    "hint": "Um ciclo precisa de duas ordens.",
+    "choices": [
+      {
+        "text": "Marcar os campos das duas contas como `volatile`",
+        "why": "Visibilidade não quebra um ciclo de locks."
+      },
+      {
+        "text": "Travar as duas contas em ordem de id",
+        "why": "Isso: uma ordem global, nenhum ciclo."
+      },
+      {
+        "text": "Um `pause` mais longo entre os dois locks",
+        "why": "Isso torna o deadlock mais provável."
+      },
+      {
+        "text": "Travar `to` primeiro e `from` depois",
+        "why": "Ainda duas ordens, só trocadas."
+      }
+    ]
+  },
+  "ex-m5s4bqb2": {
+    "prompt": "`jcmd <pid> Thread.___` imprime o dump de threads de uma JVM em execução.",
+    "hint": "Ele imprime.",
+    "blanks": [
+      {
+        "accept": [
+          "print"
+        ]
+      }
+    ]
+  },
+  "ex-3cwcbxnw": {
+    "prompt": "Um método obtém um `ReentrantLock` e chama um banco de dados dentro do `try`. O banco trava. O que acontece com outras threads que querem o lock?",
+    "hint": "Mantenha o bloco curto.",
+    "choices": [
+      {
+        "text": "A JVM detecta o travamento e libera o lock",
+        "why": "A JVM não faz isso."
+      },
+      {
+        "text": "Esperam o banco também, a não ser que usem `tryLock`",
+        "why": "Isso."
+      },
+      {
+        "text": "Seguem, porque um `ReentrantLock` admite várias threads",
+        "why": "Reentrante quer dizer a mesma thread, não várias."
+      },
+      {
+        "text": "O `finally` libera o lock depois de um tempo limite",
+        "why": "O `finally` só roda quando o `try` termina."
+      }
+    ]
+  }
+}

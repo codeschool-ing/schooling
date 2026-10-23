@@ -1,0 +1,364 @@
+{
+  "ex-1ty7ymvt": {
+    "prompt": "Na urfave/cli v3, qual é a assinatura da `Action` de um comando?",
+    "hint": "A função recebe o que o Run passou adiante e o comando a que pertence.",
+    "choices": [
+      {
+        "text": "`func(ctx context.Context, cmd *cli.Command) error`",
+        "why": "Isso. A v3 passa um `context.Context` e o `*cli.Command` que guarda as flags lidas, os argumentos e os fluxos."
+      },
+      {
+        "text": "`func(c *cli.Context) error`",
+        "why": "Essa é a v2, que tinha um `*cli.Context` e um `cli.App` separado. A maioria das respostas na web ainda mostra essa forma."
+      },
+      {
+        "text": "`func(cmd *cobra.Command, args []string) error`",
+        "why": "Esse é o `RunE` do Cobra, em que os argumentos chegam como fatia ao lado do comando."
+      },
+      {
+        "text": "`func(args []string, stdin io.Reader, stdout, stderr io.Writer) int`",
+        "why": "Esse é o formato do `run` da lição 1, de que a biblioteca não sabe nada."
+      }
+    ]
+  },
+  "ex-jfk94crp": {
+    "prompt": "No `hits` com urfave/cli, os dois comandos aceitam `-json`, e o `main.go` monta a flag com uma função, `jsonFlag()`, em vez de uma variável de pacote. Por quê?",
+    "hint": "O que uma struct de flag guarda depois que a linha de comando é lida?",
+    "choices": [
+      {
+        "text": "Cada flag guarda o valor que leu",
+        "why": "Isso. Uma `cli.BoolFlag` não é só uma declaração; ela guarda o que a leitura achou, então cada comando ganha a sua."
+      },
+      {
+        "text": "O Go não permite guardar o mesmo ponteiro em duas fatias",
+        "why": "O Go permite sem reclamar. O problema seria o estado compartilhado, não a linguagem."
+      },
+      {
+        "text": "Uma função é expandida em linha e deixa o binário menor",
+        "why": "Expandir ou não uma chamada muda alguns bytes no máximo e nada no comportamento. O motivo é o estado que a flag guarda."
+      },
+      {
+        "text": "Variáveis de pacote não podem guardar um valor de interface como `cli.Flag`",
+        "why": "Podem; `var f cli.Flag = &cli.BoolFlag{…}` compila. Nada no Go proíbe."
+      }
+    ]
+  },
+  "ex-29afgzpq": {
+    "prompt": "No `report.go`, o `summarise` recusa dois arquivos com `return tally.Summary{}, cli.___(\"hits: one file at most, got 2\", 2)`, um erro que leva o status com que o processo deve terminar.",
+    "hint": "A função da biblioteca que embrulha uma mensagem e um número num `cli.ExitCoder`.",
+    "blanks": [
+      {
+        "accept": [
+          "Exit"
+        ]
+      }
+    ]
+  },
+  "ex-bb7wsv0a": {
+    "prompt": "O `go mod tidy` em `~/cli-hits` baixou `github.com/stretchr/testify` e `go.yaml.in/yaml/v3`, embora nada no `hits` os importe. Por quê?",
+    "hint": "O `go mod why -m` mostraria o caminho passando pelos testes de outra pessoa.",
+    "choices": [
+      {
+        "text": "O `report.go` os importa indiretamente para formatar o JSON",
+        "why": "O `report.go` usa o `encoding/json` da biblioteca padrão. Nenhum dos dois módulos aparece em `go list -deps .`."
+      },
+      {
+        "text": "São as bibliotecas de teste da urfave/cli, e o `tidy` olha os testes do que você importa",
+        "why": "Isso. Eles ficam no grafo de módulos e no `go.sum`, e nunca são compilados no `hits`."
+      },
+      {
+        "text": "A urfave/cli os usa em tempo de execução para montar os modelos de ajuda",
+        "why": "Nesse caso o `go list -deps .` os listaria; ele mostrou só `github.com/urfave/cli/v3` de terceiros."
+      },
+      {
+        "text": "O `go get` pulou os dois e o `tidy` consertou um build quebrado",
+        "why": "O build não estava quebrado: o `go get` acrescentou o único módulo de que o `hits` precisa, e o `tidy` acertou o `go.mod` e o `go.sum`."
+      }
+    ]
+  },
+  "ex-fw84qb1q": {
+    "prompt": "Ana roda `./hits top access.log -n 2` no build da lição 1, só com a biblioteca padrão, e no build com urfave/cli. O que acontece?",
+    "hint": "Um leitor para na primeira palavra que não é flag; o outro lê a lista inteira.",
+    "choices": [
+      {
+        "text": "Os dois imprimem os dois caminhos mais acessados, já que `-n` é flag nos dois",
+        "why": "O pacote flag da lição 1 parou em `access.log`, então `-n` e `2` viraram mais dois nomes de arquivo."
+      },
+      {
+        "text": "Os dois recusam com `one file at most, got 3` e status 2",
+        "why": "A urfave/cli v3 lê `-n 2` como flag onde quer que esteja, e imprimiu `/login` e `/api/orders`."
+      },
+      {
+        "text": "Só o build novo imprime dois caminhos; o antigo recusa",
+        "why": "Isso. A v3 lê flags em qualquer ponto da linha; o pacote flag da lição 1 para no primeiro argumento."
+      },
+      {
+        "text": "O da lição 1 imprime três caminhos, ignorando o `-n`",
+        "why": "Ele nem chegou a contar: três argumentos é erro de uso no `summarise`."
+      }
+    ]
+  },
+  "ex-rxq61062": {
+    "prompt": "O `-n` do `top` é declarado com `Value: 3` e `Sources: cli.EnvVars(\"HITS_TOP\")`. Ponha os três lugares de onde o valor pode vir na ordem em que a urfave/cli tenta, com o que vence primeiro no topo.",
+    "hint": "`HITS_TOP=4 ./hits top -n 2 access.log` imprimiu duas linhas.",
+    "items": [
+      "`-n` digitado na linha de comando",
+      "a variável de ambiente `HITS_TOP`",
+      "`Value: 3` na declaração"
+    ]
+  },
+  "ex-vrn3cp02": {
+    "prompt": "Associe cada campo da declaração do `top` com o que ele produziu nas transcrições.",
+    "hint": "Veja o `./hits top -h` e as execuções em volta.",
+    "pairs": [
+      {
+        "left": "`Aliases: []string{\"limit\"}`",
+        "right": "`--limit 2` definiu o mesmo valor que `-n 2`"
+      },
+      {
+        "left": "`Sources: cli.EnvVars(\"HITS_TOP\")`",
+        "right": "`[$HITS_TOP]` na ajuda, e quatro linhas sem `-n`"
+      },
+      {
+        "left": "`Validator: atLeastOne`",
+        "right": "`-n 0` recusado com `must be at least 1, got 0`"
+      },
+      {
+        "left": "`ArgsUsage: \"[file]\"`",
+        "right": "a linha de uso `hits top [options] [file]`"
+      }
+    ],
+    "right_distractors": [
+      "`hits top` se recusou a rodar até receber `-n`"
+    ]
+  },
+  "ex-wjat1hmw": {
+    "prompt": "Um arquivo de log no diretório atual se chama, por acaso, `help`. O que `./hits top help` faz no build com urfave/cli?",
+    "hint": "Na v3, todo comando traz um subcomando próprio.",
+    "choices": [
+      {
+        "text": "Conta o arquivo `help`, já que uma palavra depois de um comando é sempre argumento",
+        "why": "Na v3 todo comando tem um subcomando `help` embutido, e `hits top help` imprimiu `NAME:` e a ajuda do `top`."
+      },
+      {
+        "text": "Imprime a ajuda do `top`; `./hits top ./help` lê o arquivo",
+        "why": "Isso. A biblioteca toma para si a palavra `help`; `./help` aponta o mesmo arquivo e não é nome de comando."
+      },
+      {
+        "text": "Para com `unknown command \"help\"` e status 2",
+        "why": "Essa mensagem vem do `noCommand`, o recurso da raiz, que só roda quando a primeira palavra não é comando. `help` é comando."
+      },
+      {
+        "text": "Imprime a ajuda da raiz, igual a `./hits --help`",
+        "why": "O `help` depois de `top` pertence ao `top`, então a ajuda impressa foi `hits top - the paths with the most requests`."
+      }
+    ]
+  },
+  "ex-0gsgwfxs": {
+    "prompt": "Com o `main.go` da seção 02, `./hits top -n five access.log 2>/dev/null | head -3` imprimiu `NAME:` e `hits top - the paths with the most requests`. O que isso mostra?",
+    "hint": "Que fluxo o `2>/dev/null` jogou fora?",
+    "choices": [
+      {
+        "text": "A biblioteca escreveu a listagem de ajuda na saída padrão, onde um pipeline lê dados",
+        "why": "Isso. Só a saída de erro foi descartada e a listagem chegou assim mesmo, então estava na saída padrão."
+      },
+      {
+        "text": "O `head` juntou os dois fluxos",
+        "why": "O `head` lê só a própria entrada, que é a saída padrão do `hits`; ele nunca vê a saída de erro."
+      },
+      {
+        "text": "O programa contou o log e imprimiu uma tabela com cabeçalho `NAME:`",
+        "why": "Nada foi contado: a flag não foi lida, então nenhuma Action rodou. `NAME:` é a primeira linha da ajuda gerada."
+      },
+      {
+        "text": "O `2>/dev/null` falhou porque a ajuda era longa demais para redirecionar",
+        "why": "Um redirecionamento não tem limite de tamanho; a listagem chegou ao `head` porque nunca esteve na saída de erro."
+      }
+    ]
+  },
+  "ex-tszkkjb0": {
+    "prompt": "Com o `main.go` da seção 02, com que status de saída terminou `./hits cont access.log`?",
+    "hint": "Um código que a lição 1 nunca usou, criado pelo comando de ajuda da biblioteca."
+  },
+  "ex-b6p9fwsc": {
+    "prompt": "Qual campo do `newApp` final é o que permite ao `main_test.go` chamar o `run` para cada linha da tabela?",
+    "hint": "Apague-o e o binário de teste parou na terceira linha.",
+    "choices": [
+      {
+        "text": "`OnUsageError: usageError`",
+        "why": "Ele transforma uma flag ruim numa linha e num 2, mas um `cli.Exit` ainda chegaria ao tratador padrão, que encerra o processo."
+      },
+      {
+        "text": "`ErrWriter: stderr`",
+        "why": "Ele manda as mensagens da biblioteca para o buffer, mas o tratador padrão ainda chamaria `os.Exit` de dentro do `Run`."
+      },
+      {
+        "text": "`ExitErrHandler` com uma função que não faz nada",
+        "why": "Isso. Com ele, o `Run` devolve todo `cli.Exit` em vez de imprimi-lo e chamar `os.Exit`, e o `run` decide o código."
+      },
+      {
+        "text": "`Action: noCommand`",
+        "why": "Ela responde a um comando vazio ou desconhecido com um `cli.Exit`, que sem o tratador é justamente o que matou o teste."
+      }
+    ]
+  },
+  "ex-qgx87dek": {
+    "prompt": "Com o `main.go` final, quais destas chamadas terminam com um status que quebra a regra da lição 1 (0 deu certo, 1 a execução falhou, 2 a chamada estava errada)? Marque todas as que valem.",
+    "hint": "Dois caminhos passam pelos três ganchos.",
+    "choices": [
+      {
+        "text": "`./hits help nope`",
+        "why": "Sim. O comando de ajuda embutido respondeu `No help topic for 'nope'` com 3, sem consultar a Action da raiz."
+      },
+      {
+        "text": "`HITS_TOP=x ./hits top access.log`",
+        "why": "Sim. Um valor ruim vindo do ambiente é erro de quem chamou, mas chega como erro comum e o `run` lhe dá 1."
+      },
+      {
+        "text": "`./hits count nope.log`",
+        "why": "Terminou em 1, e um arquivo que não abre é uma execução que falhou: é a regra."
+      },
+      {
+        "text": "`./hits cont access.log`",
+        "why": "Terminou em 2 com sugestão, pelo `noCommand`."
+      }
+    ]
+  },
+  "ex-cn1qhanm": {
+    "prompt": "O `stat` imprimiu 6.276.176 bytes para o `hits` com urfave/cli e 5.107.200 bytes para o com Cobra, construídos com o mesmo pacote `tally`. Quantos bytes o binário da urfave/cli tem a mais?",
+    "hint": "Subtraia.",
+    "unit": "bytes"
+  },
+  "ex-frysaa4k": {
+    "prompt": "O `go list -m all` em `~/cli-hits` cita `github.com/stretchr/testify`, mas o `go list -deps .` não. Qual é a leitura certa?",
+    "hint": "Um comando lista módulos, o outro pacotes.",
+    "choices": [
+      {
+        "text": "`-m all` é o grafo de módulos; `-deps` lista os pacotes compilados",
+        "why": "Isso. Um módulo pode ser exigido, até baixado, sem que nenhum pacote dele entre no binário."
+      },
+      {
+        "text": "O `-deps` esconde bibliotecas de teste para encurtar a saída",
+        "why": "O `-deps` não esconde nada: lista todo pacote que o build importa, e o `testify` só é importado pelos testes da urfave/cli."
+      },
+      {
+        "text": "Um dos dois fica desatualizado até o `go mod tidy` rodar de novo",
+        "why": "Os dois responderam a partir do mesmo `go.mod` e `go.sum`, logo depois do `tidy`. Eles respondem perguntas diferentes."
+      },
+      {
+        "text": "O `testify` é ligado dinamicamente, então não conta como compilado",
+        "why": "O Go liga esses pacotes estaticamente quando os usa; o `testify` simplesmente não é usado pelo `hits`."
+      }
+    ]
+  },
+  "ex-nk9c5xec": {
+    "prompt": "Uma equipe precisa de um auxiliar com um comando e duas flags, distribuído dentro de uma imagem de contêiner, num repositório cuja política é não ter código de terceiros. Qual das três versões medidas serve?",
+    "hint": "Pese primeiro a política, depois o que o auxiliar precisa.",
+    "choices": [
+      {
+        "text": "urfave/cli, porque não depende de nenhum outro módulo",
+        "why": "Um módulo sem nada atrás continua sendo um módulo de terceiros, que a política proíbe."
+      },
+      {
+        "text": "Cobra, pelo gerador e pelas páginas de manual",
+        "why": "Nenhum dos dois vale dois módulos compilados e uma exceção à política para um único comando."
+      },
+      {
+        "text": "A biblioteca padrão, como na lição 1",
+        "why": "Isso. Um comando e duas flags é o que o pacote flag cobre, o build não tem módulo de terceiros, e o binário foi o menor, 4.031.823 bytes."
+      },
+      {
+        "text": "Qualquer um, já que os três produziram a mesma tabela",
+        "why": "A saída bateu, mas a política e o tamanho não: dois dos três trazem código de terceiros."
+      }
+    ]
+  },
+  "ex-j252vs3g": {
+    "prompt": "O `go list -deps .` do `hits` com Cobra inclui `vendor/golang.org/x/net/dns/dnsmessage`, embora o `hits` nunca use a rede. De onde ele vem?",
+    "hint": "Siga qual pacote importa `net`.",
+    "choices": [
+      {
+        "text": "O script de completação do Cobra pede sugestões a um servidor",
+        "why": "O script de completação chama o próprio `hits` na máquina local; nada passa pela rede."
+      },
+      {
+        "text": "Pelo pflag, cujas flags de endereço IP importam `net`",
+        "why": "Isso. O `dnsmessage` é um pacote que a biblioteca padrão traz embutido para o resolvedor do `net`, e o `net` chega pelo pflag."
+      },
+      {
+        "text": "O comando go o acrescenta a todo binário construído com módulos baixados",
+        "why": "O build da urfave/cli também usou um módulo baixado, e o `go list -deps` dele não tinha esse pacote."
+      },
+      {
+        "text": "O `mousetrap`, que o Cobra usa para detectar como foi iniciado",
+        "why": "O `mousetrap` só é importado num arquivo compilado para Windows, e nem aparece na lista do build para Linux."
+      }
+    ]
+  },
+  "ex-qb242a9h": {
+    "prompt": "Para que o `-n` recorra a uma variável do shell quando não está na linha de comando, a declaração dele traz `Sources: cli.___(\"HITS_TOP\")`.",
+    "hint": "A função que monta uma cadeia de consultas ao ambiente.",
+    "blanks": [
+      {
+        "accept": [
+          "EnvVars"
+        ]
+      }
+    ]
+  },
+  "ex-a1nwzt7q": {
+    "prompt": "Ponha em ordem o que acontece quando Ana roda `./hits top -n five access.log` com o `main.go` final.",
+    "hint": "Dos argumentos do processo até o status de saída.",
+    "items": [
+      "o `run` põe `hits` na frente dos argumentos e chama o `Run`",
+      "o `-n` do `top` recusa `five` durante a leitura das flags",
+      "o `usageError` embrulha a mensagem em `cli.Exit(…, 2)`",
+      "o `ExitErrHandler` vazio deixa o `Run` devolver esse erro",
+      "o `run` imprime a linha na saída de erro e devolve 2"
+    ]
+  },
+  "ex-4j76ec7d": {
+    "prompt": "Um colega quer que o `hits` com Cobra pegue um token de API de `HITS_TOKEN` quando `--token` não for dado, como o `-n` lê `HITS_TOP` na versão com urfave/cli. Do que isso precisa?",
+    "hint": "Procure um campo de ambiente na struct `Flag` do pflag.",
+    "choices": [
+      {
+        "text": "Definir `Sources` na flag do pflag",
+        "why": "`Sources` é campo da urfave/cli. O `Flag` do pflag tem `Name`, `Shorthand`, `Usage`, `Value` e mais alguns, nenhum para o ambiente."
+      },
+      {
+        "text": "Nada: o Cobra lê variáveis `HITS_` para toda flag",
+        "why": "O Cobra não liga flag nenhuma ao ambiente por conta própria; o `hits` com Cobra ignoraria a variável."
+      },
+      {
+        "text": "Código que a leia, ou uma segunda biblioteca",
+        "why": "Isso. Leia `os.Getenv` quando a flag não foi alterada, ou acrescente o Viper, que é mais um módulo."
+      },
+      {
+        "text": "Declarar a flag com `IntVarP` em vez de `IntVar`",
+        "why": "O `IntVarP` acrescenta um atalho de uma letra, que é como `-n` e `--limit` dividem um valor; não tem relação com o ambiente."
+      }
+    ]
+  },
+  "ex-9zp6k4qq": {
+    "prompt": "Com a linha do `ExitErrHandler` apagada, o `go test .` imprimiu `hits: no command given (see 'hits --help')` direto no terminal, embora a linha da tabela passasse um buffer como saída de erro. Por quê?",
+    "hint": "Em que escritor o tratador padrão da biblioteca imprime?",
+    "choices": [
+      {
+        "text": "O `go test` imprime todo buffer quando um teste falha",
+        "why": "O `go test` mostra o que o binário de teste escreve nos próprios fluxos; ele não sabe nada de um `bytes.Buffer` dentro do teste."
+      },
+      {
+        "text": "Ele imprimiu no `cli.ErrWriter`, que é o `os.Stderr`",
+        "why": "Isso. O tratador padrão ignora o `ErrWriter` do comando, imprime ali e chama `os.Exit(2)`, encerrando a execução no meio da tabela."
+      },
+      {
+        "text": "O `run` imprimiu a mensagem antes de o teste compará-la",
+        "why": "O `run` nem recebeu o erro de volta: o processo terminou dentro do `Run`."
+      },
+      {
+        "text": "Apagar a linha também removeu `ErrWriter: stderr`",
+        "why": "O `sed` apagou só a linha que contém `ExitErrHandler`; o `ErrWriter` continuava definido."
+      }
+    ]
+  }
+}

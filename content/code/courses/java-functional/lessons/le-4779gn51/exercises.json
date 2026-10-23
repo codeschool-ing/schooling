@@ -1,0 +1,470 @@
+[
+  {
+    "id": "ex-fv13g73j",
+    "version": 1,
+    "section": "keeping-and-transforming",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Each title must become the words in it, all in one stream. Which operation does that?",
+    "hint": "One element, many values.",
+    "choices": [
+      {
+        "text": "`distinct`",
+        "correct": false,
+        "why": "`distinct` drops repeats; it splits nothing."
+      },
+      {
+        "text": "`filter`",
+        "correct": false,
+        "why": "`filter` keeps or drops whole titles."
+      },
+      {
+        "text": "`flatMap`",
+        "correct": true,
+        "why": "Right: it joins the streams it gets into one."
+      },
+      {
+        "text": "`map`",
+        "correct": false,
+        "why": "`map` gives one value per title: a stream of streams."
+      }
+    ]
+  },
+  {
+    "id": "ex-vhasa17f",
+    "version": 1,
+    "section": "keeping-and-transforming",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `map(t -> Arrays.stream(t.split(\" \")))` produce, without `flatMap`?",
+    "hint": "`map` is one to one.",
+    "choices": [
+      {
+        "text": "A `List<String[]>`",
+        "correct": false,
+        "why": "No list is built without a terminal operation."
+      },
+      {
+        "text": "A compile error, because `map` cannot return a stream",
+        "correct": false,
+        "why": "It compiles; the result is just rarely useful."
+      },
+      {
+        "text": "A `Stream<Stream<String>>`",
+        "correct": true,
+        "why": "Right: one stream per title, inside a stream."
+      },
+      {
+        "text": "A `Stream<String>` of every word",
+        "correct": false,
+        "why": "That is what `flatMap` gives."
+      }
+    ]
+  },
+  {
+    "id": "ex-dn0vekhz",
+    "version": 1,
+    "section": "keeping-and-transforming",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why put `distinct` or `sorted` after the `filter` that removes most elements?",
+    "hint": "They remember elements.",
+    "choices": [
+      {
+        "text": "They hold elements in memory, and fewer is cheaper",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "They are not allowed before a `filter`",
+        "correct": false,
+        "why": "They are allowed anywhere among the steps."
+      },
+      {
+        "text": "`filter` would undo their work if it ran after them",
+        "correct": false,
+        "why": "A later `filter` keeps the order and uniqueness it receives."
+      },
+      {
+        "text": "To make the result a `Set` instead of a `List`",
+        "correct": false,
+        "why": "The terminal operation decides the container."
+      }
+    ]
+  },
+  {
+    "id": "ex-nzmyjhqz",
+    "version": 1,
+    "section": "keeping-and-transforming",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Shelf.BOOKS.stream().___(Book::pages).sum()` adds up the pages without boxing them.",
+    "hint": "`map` into an `IntStream`.",
+    "blanks": [
+      {
+        "accept": [
+          "mapToInt"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-56k3nmmz",
+    "version": 1,
+    "section": "reduce",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `reduce((a, b) -> a + b)`, with no identity, return an `Optional`?",
+    "hint": "What should an empty stream give?",
+    "choices": [
+      {
+        "text": "An empty stream has nothing to return",
+        "correct": true,
+        "why": "Right: the empty stream gave `Optional.empty`."
+      },
+      {
+        "text": "Addition may overflow, and the `Optional` reports it",
+        "correct": false,
+        "why": "Overflow is not detected by `reduce`."
+      },
+      {
+        "text": "The lambda might return `null` for the last pair",
+        "correct": false,
+        "why": "The `Optional` is about an empty stream, not about the lambda."
+      },
+      {
+        "text": "`reduce` without an identity always runs in parallel",
+        "correct": false,
+        "why": "Parallelism has nothing to do with the return type."
+      }
+    ]
+  },
+  {
+    "id": "ex-md9e6yd5",
+    "version": 1,
+    "section": "reduce",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`IntStream.rangeClosed(1, 8).parallel().reduce(100, Integer::sum)` printed 836. What went wrong?",
+    "hint": "Each piece starts from the identity.",
+    "choices": [
+      {
+        "text": "`Integer::sum` overflowed",
+        "correct": false,
+        "why": "836 is far from the limit of an `int`."
+      },
+      {
+        "text": "Addition is not associative",
+        "correct": false,
+        "why": "It is; the identity is the problem."
+      },
+      {
+        "text": "`parallel` repeated some of the numbers",
+        "correct": false,
+        "why": "Each number was added once; the 100 was added eight times."
+      },
+      {
+        "text": "100 is not a neutral identity, and every piece started from it",
+        "correct": true,
+        "why": "Right: 36 plus eight hundreds."
+      }
+    ]
+  },
+  {
+    "id": "ex-415c26ge",
+    "version": 1,
+    "section": "reduce",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are safe to use as the combining function of `reduce`, with the right identity? Choose all that apply.",
+    "hint": "Associative, with a neutral identity.",
+    "choices": [
+      {
+        "text": "multiplication, from 1",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "subtraction, from 0",
+        "correct": false,
+        "why": "No: not associative."
+      },
+      {
+        "text": "averaging two numbers, from 0",
+        "correct": false,
+        "why": "No: the average of averages is not the average."
+      },
+      {
+        "text": "`Math::max`, from `Integer.MIN_VALUE`",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "addition, from 0",
+        "correct": true,
+        "why": "Yes."
+      }
+    ]
+  },
+  {
+    "id": "ex-gvpekjhf",
+    "version": 1,
+    "section": "reduce",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the total price of the shelf, in cents, as `Reduce.java` printed it?",
+    "hint": "The first line.",
+    "value": 62480,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-7h1gx81s",
+    "version": 1,
+    "section": "the-short-answers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`orders.stream().allMatch(Order::isPaid)` on an empty list returns what?",
+    "hint": "Is there an order to contradict it?",
+    "choices": [
+      {
+        "text": "`false`",
+        "correct": false,
+        "why": "`false` needs one unpaid order, and there is none."
+      },
+      {
+        "text": "It throws `NoSuchElementException`",
+        "correct": false,
+        "why": "It answers; it does not throw."
+      },
+      {
+        "text": "`true`",
+        "correct": true,
+        "why": "Right: nothing contradicts it."
+      },
+      {
+        "text": "`Optional.empty`",
+        "correct": false,
+        "why": "`allMatch` returns a plain `boolean`."
+      }
+    ]
+  },
+  {
+    "id": "ex-n0vzjgq8",
+    "version": 1,
+    "section": "the-short-answers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which single operation gives the count, sum, minimum, average and maximum of the years in one pass?",
+    "hint": "On an `IntStream`.",
+    "choices": [
+      {
+        "text": "`collect(Collectors.toList())`",
+        "correct": false,
+        "why": "That gives the years, not their statistics."
+      },
+      {
+        "text": "`reduce`",
+        "correct": false,
+        "why": "It folds into one value, not five."
+      },
+      {
+        "text": "`summaryStatistics()`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`average()`",
+        "correct": false,
+        "why": "Only the average."
+      }
+    ]
+  },
+  {
+    "id": "ex-kq9d55pd",
+    "version": 1,
+    "section": "the-short-answers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question with its terminal operation.",
+    "hint": "The table in section 04.",
+    "pairs": [
+      {
+        "left": "Is any book over 800 pages?",
+        "right": "`anyMatch`"
+      },
+      {
+        "left": "How many classics?",
+        "right": "`count`"
+      },
+      {
+        "left": "The dearest book?",
+        "right": "`max`"
+      },
+      {
+        "left": "The first book before 1900?",
+        "right": "`findFirst`"
+      }
+    ],
+    "right_distractors": [
+      "`peek`"
+    ]
+  },
+  {
+    "id": "ex-es9mppq6",
+    "version": 1,
+    "section": "collect",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `collect(Collectors.joining(\", \"))` better than `reduce` with `+` for joining titles?",
+    "hint": "How many strings does each build?",
+    "choices": [
+      {
+        "text": "`joining` sorts the titles first",
+        "correct": false,
+        "why": "It keeps the stream's order."
+      },
+      {
+        "text": "`reduce` cannot work on strings",
+        "correct": false,
+        "why": "It can; it is only wasteful."
+      },
+      {
+        "text": "It appends to one builder instead of copying at every step",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`reduce` loses the last title",
+        "correct": false,
+        "why": "It loses nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-n8xca615",
+    "version": 1,
+    "section": "collect",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Collectors.toMap(Book::author, Book::title)` threw `Duplicate key Frank Herbert`. What is the lesson's fix?",
+    "hint": "A third argument.",
+    "choices": [
+      {
+        "text": "Sort the books by author first",
+        "correct": false,
+        "why": "The key still repeats."
+      },
+      {
+        "text": "Use `toSet()` instead, which allows repeats",
+        "correct": false,
+        "why": "A set holds no key-value pairs, and holds each value once."
+      },
+      {
+        "text": "A merge function saying how to combine two values",
+        "correct": true,
+        "why": "Right: here, the titles joined with a slash."
+      },
+      {
+        "text": "Catch the exception and use the map built so far",
+        "correct": false,
+        "why": "No map is returned when it throws."
+      }
+    ]
+  },
+  {
+    "id": "ex-gabwme41",
+    "version": 1,
+    "section": "collect",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `toMap` throw on a repeated key instead of keeping the last value?",
+    "hint": "What would a silent choice lose?",
+    "choices": [
+      {
+        "text": "Either silent choice would drop a book",
+        "correct": true,
+        "why": "Right: the caller must decide."
+      },
+      {
+        "text": "Maps in Java cannot replace a value",
+        "correct": false,
+        "why": "`put` replaces values all the time."
+      },
+      {
+        "text": "The last value is not known until the stream ends",
+        "correct": false,
+        "why": "It is known at the moment of the clash."
+      },
+      {
+        "text": "Keeping a value would need a `TreeMap`",
+        "correct": false,
+        "why": "Any map can keep one value."
+      }
+    ]
+  },
+  {
+    "id": "ex-j7xe6ywd",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `Steps.java`'s page query in order.",
+    "hint": "Sort, drop four, keep four, label.",
+    "items": [
+      "`sorted(Comparator.comparingLong(Book::priceCents))`",
+      "`skip(4)`",
+      "`limit(4)`",
+      "`map(b -> b.title() + \" \" + b.priceCents())`"
+    ]
+  },
+  {
+    "id": "ex-w0f4xh47",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You need the average price of the classics. Which is the lesson's way?",
+    "hint": "Averages are not associative; use what is built in.",
+    "choices": [
+      {
+        "text": "`count()` alone",
+        "correct": false,
+        "why": "That counts the classics and adds nothing up."
+      },
+      {
+        "text": "`filter`, then `mapToLong(Book::priceCents).average()`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`reduce` with `(a, b) -> (a + b) / 2`",
+        "correct": false,
+        "why": "The average of averages is not the average."
+      },
+      {
+        "text": "`collect(Collectors.toSet())`, then divide its size",
+        "correct": false,
+        "why": "A set drops equal prices, and there is nothing to divide."
+      }
+    ]
+  }
+]

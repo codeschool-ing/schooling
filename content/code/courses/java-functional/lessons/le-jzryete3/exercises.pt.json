@@ -1,0 +1,299 @@
+{
+  "ex-sg9xexvy": {
+    "prompt": "O que `Collectors.groupingBy(Book::genre)` devolve?",
+    "hint": "Um mapa, e o que há em cada valor?",
+    "choices": [
+      {
+        "text": "Um mapa de cada livro para o seu gênero",
+        "why": "O gênero é a chave, não o valor."
+      },
+      {
+        "text": "Os livros ordenados por gênero",
+        "why": "Ele agrupa; não ordena."
+      },
+      {
+        "text": "Um mapa de cada gênero para a lista dos seus livros",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma lista de gêneros",
+        "why": "Ele devolve os livros também, agrupados."
+      }
+    ]
+  },
+  "ex-vdh35nkh": {
+    "prompt": "Nenhum livro é romance policial. O que `byGenre.get(\"crime\")` devolve?",
+    "hint": "As chaves vêm dos dados.",
+    "choices": [
+      {
+        "text": "Uma lista vazia",
+        "why": "Isso exigiria uma chave `crime`, e nenhum livro produziu uma."
+      },
+      {
+        "text": "Uma lista de todos os livros, já que nenhum é excluído",
+        "why": "Nada liga a chave ausente à estante inteira."
+      },
+      {
+        "text": "`null`",
+        "why": "Isso: a chave não existe."
+      },
+      {
+        "text": "Lança `NoSuchElementException`",
+        "why": "`Map.get` devolve `null` para uma chave ausente."
+      }
+    ]
+  },
+  "ex-y8jmd5rn": {
+    "prompt": "Por que passar `TreeMap::new` ao `groupingBy`?",
+    "hint": "A segunda forma recebe uma fábrica de mapa.",
+    "choices": [
+      {
+        "text": "Para as chaves saírem ordenadas",
+        "why": "Isso: a ordem de um `HashMap` não é confiável."
+      },
+      {
+        "text": "Porque `groupingBy` recusa um `HashMap`",
+        "why": "O `HashMap` é o padrão dele."
+      },
+      {
+        "text": "Para o agrupamento rodar em paralelo",
+        "why": "O tipo do mapa não tem nada a ver com threads."
+      },
+      {
+        "text": "Para manter os livros de cada grupo na ordem de inserção",
+        "why": "A fábrica ordena as chaves; as listas mantêm a ordem do stream de qualquer jeito."
+      }
+    ]
+  },
+  "ex-dm0dp24x": {
+    "prompt": "Por `b.year() / 100 + 1`, em que século está Beowulf (datado de 1000)?",
+    "hint": "Divisão inteira."
+  },
+  "ex-8pccfsec": {
+    "prompt": "Ligue cada coletor downstream ao que cada grupo vira.",
+    "hint": "A saída de `Downstream.java`.",
+    "pairs": [
+      {
+        "left": "`counting()`",
+        "right": "o número de livros, como `Long`"
+      },
+      {
+        "left": "`summingLong(Book::priceCents)`",
+        "right": "o valor total em centavos"
+      },
+      {
+        "left": "`averagingInt(Book::pages)`",
+        "right": "uma média de páginas em `Double`"
+      },
+      {
+        "left": "`maxBy(...)`",
+        "right": "um `Optional` de um livro"
+      }
+    ],
+    "right_distractors": [
+      "uma `List` ordenada de todos os livros"
+    ]
+  },
+  "ex-x9ez9g82": {
+    "prompt": "Qual é o valor do estoque de clássicos em centavos, pelo `summingLong`?",
+    "hint": "A linha `value:`.",
+    "unit": "centavos"
+  },
+  "ex-f26gtzwf": {
+    "prompt": "Dentro de um `groupingBy`, o `maxBy` ainda devolve um `Optional` por grupo. Por que o `orElseThrow()` nunca lança ali?",
+    "hint": "Como um grupo passa a existir?",
+    "choices": [
+      {
+        "text": "Um grupo só existe se algum elemento estiver nele",
+        "why": "Isso, então nenhum grupo é vazio."
+      },
+      {
+        "text": "O `orElseThrow` é desligado dentro de coletores",
+        "why": "Nada o desliga."
+      },
+      {
+        "text": "O comparator põe todo livro acima de `null`",
+        "why": "Não há `null` para classificar."
+      },
+      {
+        "text": "O `maxBy` devolve `null` em vez de vazio dentro de um agrupamento",
+        "why": "Ele devolve um `Optional`, nunca `null`."
+      }
+    ]
+  },
+  "ex-jtte232w": {
+    "prompt": "`groupingBy(Book::genre, Collectors.___(Book::title, Collectors.toList()))` faz de cada grupo uma lista de títulos.",
+    "hint": "Ele mapeia cada elemento antes de coletar.",
+    "blanks": [
+      {
+        "accept": [
+          "mapping"
+        ]
+      }
+    ]
+  },
+  "ex-qt7wjrvy": {
+    "prompt": "Nenhum livro é de graça. O que `partitioningBy(b -> b.priceCents() == 0, counting())` devolveu?",
+    "hint": "As duas chaves, sempre.",
+    "choices": [
+      {
+        "text": "`{false=12, true=0}`",
+        "why": "Isso."
+      },
+      {
+        "text": "`{false=12}`",
+        "why": "Essa foi a resposta do `groupingBy`."
+      },
+      {
+        "text": "`{}`",
+        "why": "`partitioningBy` sempre tem duas chaves."
+      },
+      {
+        "text": "`{true=0}`",
+        "why": "Os doze livros foram para `false`."
+      }
+    ]
+  },
+  "ex-192qwqnj": {
+    "prompt": "Um código lê `freeGrouped.get(true)` do resultado do `groupingBy` e soma a um `long`. O que acontece?",
+    "hint": "A chave está ausente, e o valor é um `Long`.",
+    "choices": [
+      {
+        "text": "`NullPointerException` quando o `null` é desembrulhado",
+        "why": "Isso."
+      },
+      {
+        "text": "Um erro de compilação, porque `Map<Boolean, Long>` não tem chave `true`",
+        "why": "Chaves são conferidas em tempo de execução, não pelo compilador."
+      },
+      {
+        "text": "Soma 0",
+        "why": "Isso é o que o `partitioningBy` daria."
+      },
+      {
+        "text": "Soma 12, a contagem da outra chave",
+        "why": "`get(true)` lê só a chave `true`."
+      }
+    ]
+  },
+  "ex-c7z65ajz": {
+    "prompt": "Quando escolher `partitioningBy` em vez de `groupingBy`?",
+    "hint": "Quantos resultados a pergunta tem?",
+    "choices": [
+      {
+        "text": "Quando o stream é paralelo",
+        "why": "Os dois funcionam em streams paralelos."
+      },
+      {
+        "text": "Quando a pergunta é sim ou não",
+        "why": "Isso, e as duas respostas estarão presentes."
+      },
+      {
+        "text": "Quando o resultado precisa estar ordenado",
+        "why": "Ordenar é trabalho da fábrica de mapa."
+      },
+      {
+        "text": "Quando há mais de dois grupos",
+        "why": "Esse é o trabalho do `groupingBy`."
+      }
+    ]
+  },
+  "ex-5fqbhv02": {
+    "prompt": "O que `teeing(minBy(...), maxBy(...), merger)` acrescenta em relação a chamar `min` e `max` separadamente?",
+    "hint": "Quantas passadas?",
+    "choices": [
+      {
+        "text": "Ordena o stream para as duas pontas serem conhecidas",
+        "why": "Nada é ordenado."
+      },
+      {
+        "text": "Roda os dois coletores em duas threads",
+        "why": "Roda os dois no mesmo elemento, na mesma thread."
+      },
+      {
+        "text": "Uma passada em vez de duas",
+        "why": "Isso: cada elemento vai para os dois coletores."
+      },
+      {
+        "text": "Tira o `Optional` dos dois resultados automaticamente",
+        "why": "O combinador ainda recebeu dois valores `Optional`."
+      }
+    ]
+  },
+  "ex-gpdm9prt": {
+    "prompt": "`collectingAndThen(maxBy(...), b -> b.orElseThrow().title())` dentro de `groupingBy` dá o quê por gênero?",
+    "hint": "Um finalizador no resultado de cada grupo.",
+    "choices": [
+      {
+        "text": "Uma lista de títulos",
+        "why": "O `maxBy` fica com um livro."
+      },
+      {
+        "text": "O título do livro mais caro",
+        "why": "Isso."
+      },
+      {
+        "text": "O preço do livro mais caro",
+        "why": "O finalizador pegou o título."
+      },
+      {
+        "text": "Um `Optional<Book>`",
+        "why": "O finalizador o desembrulhou."
+      }
+    ]
+  },
+  "ex-vah423kd": {
+    "prompt": "O que `Collectors.toCollection(TreeSet::new)` dá a mais que `toSet()`? Marque todas as que se aplicam.",
+    "hint": "O que é um `TreeSet`.",
+    "choices": [
+      {
+        "text": "`first()` e `last()`",
+        "why": "Sim."
+      },
+      {
+        "text": "Uma lista em vez de um conjunto",
+        "why": "Continua sendo um conjunto."
+      },
+      {
+        "text": "Elementos em ordem",
+        "why": "Sim."
+      },
+      {
+        "text": "Repetições mantidas, ao contrário de um conjunto",
+        "why": "Um `TreeSet` também é conjunto."
+      }
+    ]
+  },
+  "ex-dvqwr7a1": {
+    "prompt": "Você precisa do valor total por autor, com autores em ordem alfabética. Que coletor faz isso?",
+    "hint": "Um classificador, uma fábrica de mapa, um downstream.",
+    "choices": [
+      {
+        "text": "`toMap(Book::author, Book::priceCents)`",
+        "why": "Os dois livros de Frank Herbert entrariam em choque."
+      },
+      {
+        "text": "`partitioningBy(b -> b.author() != null, summingLong(Book::priceCents))`",
+        "why": "Dois grupos, não um por autor."
+      },
+      {
+        "text": "`groupingBy(Book::author, TreeMap::new, summingLong(Book::priceCents))`",
+        "why": "Isso."
+      },
+      {
+        "text": "`groupingBy(Book::author, counting())`",
+        "why": "Isso conta livros; não soma preços."
+      }
+    ]
+  },
+  "ex-35w4c28v": {
+    "prompt": "Ponha as partes de um coletor, como a seção 05 as lista, na ordem em que são usadas.",
+    "hint": "Criar, acrescentar, juntar, terminar.",
+    "items": [
+      "criar um contêiner vazio",
+      "acrescentar um elemento a ele",
+      "juntar dois contêineres",
+      "terminar"
+    ]
+  }
+}

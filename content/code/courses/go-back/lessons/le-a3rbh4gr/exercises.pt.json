@@ -1,0 +1,610 @@
+{
+  "ex-xpnqpega": {
+    "prompt": "Por que o `writeJSON` chama `json.Marshal` antes de escrever qualquer coisa em `w`?",
+    "hint": "O que já saiu quando o primeiro byte do corpo é enviado?",
+    "choices": [
+      {
+        "text": "Porque o `json.Marshal` é mais rápido que escrever na conexão byte a byte por um encoder",
+        "why": "Velocidade não é o motivo que a seção dá; a ordem entre status e corpo é."
+      },
+      {
+        "text": "Porque um `ResponseWriter` recusa uma escrita de mais de uma linha",
+        "why": "Ele aceita quaisquer bytes, em quantas escritas você quiser."
+      },
+      {
+        "text": "Para um valor que não codifica ainda virar um 500 honesto sem nada enviado",
+        "why": "Certo. Codificar em memória antes quer dizer que nada foi enviado quando ele falha."
+      },
+      {
+        "text": "Para o cabeçalho `Content-Length` sair certo",
+        "why": "O `net/http` calcula o tamanho de qualquer jeito para um corpo pequeno; o motivo é o status."
+      }
+    ]
+  },
+  "ex-xypg42p1": {
+    "prompt": "O `Event` tem a tag `json:\"id\"` no campo `ID`. O que um cliente vê sem essa tag?",
+    "hint": "De onde vem o nome padrão da chave?",
+    "choices": [
+      {
+        "text": "A chave `ID`, escrita do jeito que o campo Go está escrito",
+        "why": "Certo. Válido, e incomum o bastante para clientes em outras linguagens tropeçarem."
+      },
+      {
+        "text": "A chave `id`, porque o `encoding/json` põe os nomes em minúsculas sozinho",
+        "why": "Ele não muda a caixa; é a tag que faz virar `id`."
+      },
+      {
+        "text": "Nenhum `ID`, porque campos sem tag são pulados",
+        "why": "Campos exportados são codificados com ou sem tag."
+      },
+      {
+        "text": "Um erro de compilação no `writeJSON`",
+        "why": "Tags são lidas em tempo de execução; o compilador não verifica nada nelas."
+      }
+    ]
+  },
+  "ex-qjfa94kn": {
+    "prompt": "A resposta do evento 1 é um objeto plano com `available` ao lado de `id` e `sold`. Como o `available` chegou ali?",
+    "hint": "Olhe o `eventView`.",
+    "choices": [
+      {
+        "text": "O store o grava a cada venda",
+        "why": "O store guarda `Seats` e `Sold`; nada guarda o que sobra."
+      },
+      {
+        "text": "O `json.Marshal` o calcula a partir das tags",
+        "why": "Tags renomeiam campos; não calculam nada."
+      },
+      {
+        "text": "O cliente o acrescenta depois de ler `seats` e `sold`",
+        "why": "Ele está nos bytes que o servidor mandou."
+      },
+      {
+        "text": "O `eventView` embute o `Event` e o acrescenta, e campos embutidos aparecem como se fossem da struct de fora",
+        "why": "Certo. Calculado como `Seats - Sold` quando a resposta é montada."
+      }
+    ]
+  },
+  "ex-dnqxy4cd": {
+    "prompt": "Um endpoint de exportação devolve quatrocentos megabytes de linhas. Para que jeito de escrever JSON a aula o aponta, e a que preço?",
+    "hint": "Guardar tudo em memória antes é o que o `writeJSON` faz.",
+    "choices": [
+      {
+        "text": "O `writeJSON`, porque um 500 honesto importa mais que memória",
+        "why": "Para megabytes de linhas a aula prefere transmitir em fluxo."
+      },
+      {
+        "text": "Transmitir com `json.NewEncoder(w)`, aceitando que uma falha apareça como corpo truncado",
+        "why": "Certo. O erro chega depois do 200, e o cliente tem de perceber o corte."
+      },
+      {
+        "text": "Fluxo, que ainda deixa o servidor mudar o status se falhar",
+        "why": "O status saiu com os primeiros bytes; nada o muda depois."
+      },
+      {
+        "text": "Nenhum: JSON é recusado acima de um mebibyte",
+        "why": "O limite de 1 MiB é para corpos de requisição lidos pelo `decodeJSON`, não para respostas."
+      }
+    ]
+  },
+  "ex-9m1bkf14": {
+    "prompt": "Um cliente escreve `quantiy` em vez de `quantity`. O que a linha única `json.NewDecoder(r.Body).Decode(&p)` faz com isso?",
+    "hint": "O que um decoder simples faz com um campo que a struct não tem?",
+    "choices": [
+      {
+        "text": "Descarta em silêncio",
+        "why": "Certo. A compra vira zero ingressos sem reclamação; o `DisallowUnknownFields` transforma isso em erro."
+      },
+      {
+        "text": "Devolve um erro de sintaxe com o deslocamento em bytes da chave errada",
+        "why": "O JSON é válido; só o nome é desconhecido."
+      },
+      {
+        "text": "Adivinha o campo mais próximo e preenche `Quantity`",
+        "why": "O `encoding/json` casa nomes, sem diferenciar caixa, e nunca por semelhança."
+      },
+      {
+        "text": "Entra em pânico dentro do handler",
+        "why": "Decodificar devolve erros; não entra em pânico."
+      }
+    ]
+  },
+  "ex-ehxvrwmg": {
+    "prompt": "Por que o `decodeJSON` chama `dec.Decode(&struct{}{})` uma segunda vez depois de o primeiro `Decode` dar certo?",
+    "hint": "`{\"quantity\": 2}{\"quantity\": 9}`.",
+    "choices": [
+      {
+        "text": "Para conferir o primeiro objeto de novo com regras mais rígidas",
+        "why": "O primeiro objeto já passou; a segunda chamada olha depois dele."
+      },
+      {
+        "text": "Para ler o resto do corpo e a conexão poder ser reaproveitada pela próxima requisição",
+        "why": "O propósito é a verificação: qualquer coisa que não seja o fim é recusada."
+      },
+      {
+        "text": "Ele tem de encontrar o fim da entrada, e qualquer outra coisa depois do objeto é recusada",
+        "why": "Certo. Qualquer coisa depois do objeto, até outro objeto válido, é recusada."
+      },
+      {
+        "text": "Para decodificar o campo `email`, que a primeira chamada pula",
+        "why": "Um `Decode` preenche todos os campos da struct."
+      }
+    ]
+  },
+  "ex-t6062zxh": {
+    "prompt": "De quantos bytes era o limite na recusa do corpo de dois milhões de caracteres?",
+    "hint": "`1 << 20`.",
+    "unit": "bytes"
+  },
+  "ex-1gnfpfk9": {
+    "prompt": "`{\"quantity\": 2,}` foi recusado como JSON inválido em qual byte?",
+    "hint": "O deslocamento aponta o `}` depois da vírgula.",
+    "unit": ""
+  },
+  "ex-fkzphsgv": {
+    "prompt": "Ligue cada corpo mandado a `POST /events/1/tickets` ao `detail` que ele recebeu.",
+    "hint": "Qual caso do `switch` pegou cada um?",
+    "pairs": [
+      {
+        "left": "corpo nenhum",
+        "right": "the body is empty"
+      },
+      {
+        "left": "`{\"quantity\": 2`",
+        "right": "the body ends in the middle of a JSON value"
+      },
+      {
+        "left": "`{\"quantity\": \"two\"}`",
+        "right": "the field \"quantity\" has the wrong type: want int"
+      },
+      {
+        "left": "`{\"quantity\": 2, \"seat\": \"A1\"}`",
+        "right": "the body has an unknown field \"seat\""
+      }
+    ],
+    "right_distractors": [
+      "the purchase is not valid"
+    ]
+  },
+  "ex-hz4b4sxd": {
+    "prompt": "Por que o caso de campo desconhecido do `decodeJSON` testa o texto do erro com `strings.HasPrefix` em vez de `errors.As`?",
+    "hint": "Que tipo o `encoding/json` dá a esse erro?",
+    "choices": [
+      {
+        "text": "O `errors.As` é mais lento e o decoder roda a cada requisição",
+        "why": "Velocidade não tem nada a ver."
+      },
+      {
+        "text": "Porque a mensagem tem de ser traduzida antes de chegar ao cliente",
+        "why": "O texto é reescrito, mas não é por isso que é casado pelo prefixo."
+      },
+      {
+        "text": "O `DisallowUnknownFields` devolve um `*json.SyntaxError`, que o caso de cima já pegou",
+        "why": "Se fosse, o caso de sintaxe teria respondido; não respondeu."
+      },
+      {
+        "text": "Ele não tem tipo próprio para casar",
+        "why": "Certo. O `encoding/json` informa um campo desconhecido só como mensagem simples."
+      }
+    ]
+  },
+  "ex-pvvnt6rv": {
+    "prompt": "`{}` é mandado para comprar ingressos. Por que a resposta é 422 e não 400?",
+    "hint": "O corpo foi decodificado?",
+    "choices": [
+      {
+        "text": "Um objeto vazio não é JSON válido, e 422 é o status de JSON quebrado",
+        "why": "`{}` é JSON válido, e JSON quebrado recebe 400 no boxoffice."
+      },
+      {
+        "text": "O store recusou porque o evento 1 não tem lugares",
+        "why": "O store nem foi alcançado; e o evento 1 tinha 120 lugares."
+      },
+      {
+        "text": "Foi decodificado; os valores zero falharam nas verificações",
+        "why": "Certo. `0` e `\"\"` são lidos sem problema e depois recusados pelo `validate`."
+      },
+      {
+        "text": "O mux transformou um 400 em 422",
+        "why": "O mux só escreve o próprio 404 e 405."
+      }
+    ]
+  },
+  "ex-nxm38zjm": {
+    "prompt": "Por que o `validate` junta todo problema num mapa em vez de retornar no primeiro?",
+    "hint": "Pense no cliente corrigindo a requisição.",
+    "choices": [
+      {
+        "text": "Um mapa é o único tipo que o `writeProblem` aceita",
+        "why": "Ele aceita nil também; o mapa é uma escolha pensada no cliente."
+      },
+      {
+        "text": "Mapas em Go guardam as chaves na ordem de inserção",
+        "why": "Eles não têm ordem; o `encoding/json` ordena as chaves ao escrever."
+      },
+      {
+        "text": "Para uma resposta só nomear todo erro, em vez de fazer o cliente mandar uma requisição por erro",
+        "why": "Certo. `{\"quantity\": 40, \"email\": \"ana\"}` recebeu os dois campos nomeados de uma vez."
+      },
+      {
+        "text": "Retornar cedo pularia o store",
+        "why": "Uma validação que falha pula o store de qualquer jeito, de propósito."
+      }
+    ]
+  },
+  "ex-c790ypa2": {
+    "prompt": "Um campo novo `discount` pode ser `0` legitimamente, e omiti-lo deve querer dizer \"use o padrão\". Como a aula diz para declará-lo?",
+    "hint": "O `encoding/json` não distingue um campo ausente de um mandado como zero.",
+    "choices": [
+      {
+        "text": "Como `int` com `omitempty`",
+        "why": "O `omitempty` afeta a escrita, não a leitura; um campo ausente ainda é lido como 0."
+      },
+      {
+        "text": "Como string, convertida à mão no `validate`",
+        "why": "Isso muda o tipo JSON que o cliente tem de mandar; um ponteiro mantém o número."
+      },
+      {
+        "text": "Como `int`, tratando 0 como ausente",
+        "why": "Aí um desconto real de 0 fica indistinguível de nenhum."
+      },
+      {
+        "text": "Como `*int`",
+        "why": "Certo. Fica `nil` quando a chave falta e aponta para 0 quando 0 foi mandado."
+      }
+    ]
+  },
+  "ex-e3g8vb9w": {
+    "prompt": "O que o `strings.Contains(p.Email, \"@\")` verifica, segundo a aula?",
+    "hint": "Qual é o único teste real de um endereço?",
+    "choices": [
+      {
+        "text": "Que não digitaram um nome no campo errado, e nada mais",
+        "why": "Certo. Fraca de propósito: padrões mais rígidos recusam endereços reais e ainda deixam passar erros de digitação."
+      },
+      {
+        "text": "Que o endereço existe",
+        "why": "Só mandar uma mensagem testa isso."
+      },
+      {
+        "text": "Que o endereço segue a RFC 5322",
+        "why": "Uma `@` não diz nada sobre a gramática inteira."
+      },
+      {
+        "text": "Que o domínio aceita e-mail",
+        "why": "Nenhuma rede é consultada."
+      }
+    ]
+  },
+  "ex-wgqbc2dp": {
+    "prompt": "Ponha as verificações do `buyTickets` na ordem em que ele as roda.",
+    "hint": "A mais barata primeiro.",
+    "items": [
+      "O `pathID` lê o id no caminho",
+      "O `decodeJSON` lê o corpo",
+      "O `validate` verifica os valores",
+      "O `store.Sell` reserva os lugares"
+    ],
+    "trap": "`/events/nine/tickets` recebeu um 400 antes de o corpo ser olhado."
+  },
+  "ex-fs87cyd1": {
+    "prompt": "Que tipo de mídia o `writeProblem` manda?",
+    "hint": "A RFC 9457 tem um próprio.",
+    "choices": [
+      {
+        "text": "`application/json`",
+        "why": "Esse é o padrão do `writeJSON`, que o `writeProblem` define antes de chamá-lo."
+      },
+      {
+        "text": "`text/plain; charset=utf-8`",
+        "why": "É o que o `http.Error` e o 404 e 405 do próprio mux mandam."
+      },
+      {
+        "text": "`application/problem+json`",
+        "why": "Certo. O `writeJSON` mantém um `Content-Type` que já foi definido."
+      },
+      {
+        "text": "`application/error+json`",
+        "why": "Esse tipo não está na RFC."
+      }
+    ]
+  },
+  "ex-n0bqemd1": {
+    "prompt": "Um erro inesperado de banco de dados chega ao `fail`. Que `detail` o cliente recebe?",
+    "hint": "O caso `default`.",
+    "choices": [
+      {
+        "text": "Nenhum",
+        "why": "Certo. O `detail` fica vazio e é omitido; o status 500 é tudo que o cliente recebe."
+      },
+      {
+        "text": "A mensagem do erro, para o cliente poder reportá-la",
+        "why": "A mensagem pode citar um arquivo, uma consulta ou um host; ela vai para o log."
+      },
+      {
+        "text": "Um rastro de pilha, como o `recoverPanics` registra",
+        "why": "A pilha vai para o log, nunca para uma resposta."
+      },
+      {
+        "text": "`about:blank`",
+        "why": "Isso é o `type`, não o `detail`."
+      }
+    ]
+  },
+  "ex-vjynvvkf": {
+    "prompt": "No `catchall`, `DELETE /events` respondeu 404 com corpo JSON. O que o padrão curinga `/` custou?",
+    "hint": "Antes de ele ser registrado, o que o mux respondia para essa requisição?",
+    "choices": [
+      {
+        "text": "Nada: o mux escreve um 404 JSON sozinho para métodos errados",
+        "why": "O mux escreve um 405 em texto para um método errado, como o boxoffice ainda mostra."
+      },
+      {
+        "text": "A rota `GET /events`, que o `/` substituiu",
+        "why": "`GET /events` ainda respondeu `every event`; ele é mais específico."
+      },
+      {
+        "text": "O 405 honesto e seu cabeçalho `Allow`, porque `/` agora casa todo caminho e método",
+        "why": "Certo. O mux sempre acha um padrão, então nunca diz que o método está errado."
+      },
+      {
+        "text": "Um pânico ao iniciar, porque `/` conflita com `GET /events`",
+        "why": "Um é mais específico, então não há conflito; o servidor rodou."
+      }
+    ]
+  },
+  "ex-vkt3wp1t": {
+    "prompt": "Ligue cada membro de um objeto problem details ao que ele guarda.",
+    "hint": "A tabela da seção 05.",
+    "pairs": [
+      {
+        "left": "`type`",
+        "right": "uma URI que nomeia o tipo de problema"
+      },
+      {
+        "left": "`title`",
+        "right": "o mesmo resumo curto para toda ocorrência"
+      },
+      {
+        "left": "`detail`",
+        "right": "esta ocorrência, em palavras com que um desenvolvedor sabe agir"
+      },
+      {
+        "left": "`errors`",
+        "right": "a extensão do boxoffice: problemas campo a campo"
+      }
+    ],
+    "right_distractors": [
+      "o rastro de pilha da falha"
+    ]
+  },
+  "ex-n1y6t0gf": {
+    "prompt": "Quando o status diz tudo, o `type` de um problema é ___.",
+    "hint": "Uma URI que não aponta para lugar nenhum.",
+    "blanks": [
+      {
+        "accept": [
+          "about:blank"
+        ]
+      }
+    ]
+  },
+  "ex-04qz1hzx": {
+    "prompt": "Por que o store devolve `ErrSoldOut` em vez de um HTTP 409?",
+    "hint": "Quem mais vai chamar o store?",
+    "choices": [
+      {
+        "text": "Chamadores sem HTTP vão usá-lo",
+        "why": "Certo. O PostgreSQL da aula 6 e o gRPC da aula 10 não têm 404 nem 409."
+      },
+      {
+        "text": "Porque uma função Go não pode importar `net/http` fora do `main`",
+        "why": "Qualquer pacote pode importá-lo; o store escolhe não falar HTTP."
+      },
+      {
+        "text": "409 não existe no `net/http`",
+        "why": "`http.StatusConflict` é 409, e o `fail` o usa."
+      },
+      {
+        "text": "Erros são mais rápidos de comparar que códigos de status",
+        "why": "O motivo é quem fala qual vocabulário."
+      }
+    ]
+  },
+  "ex-ecsj5k4w": {
+    "prompt": "Por que o `fail` usa `errors.Is(err, ErrNotFound)` em vez de `err == ErrNotFound`?",
+    "hint": "O que o store vai fazer com os erros dele da aula 6 em diante?",
+    "choices": [
+      {
+        "text": "Ele também casa um erro embrulhado",
+        "why": "Certo. O `==` perderia o erro embrulhado e responderia 500."
+      },
+      {
+        "text": "`==` não compila entre dois erros",
+        "why": "Compila; erros são interfaces e comparáveis."
+      },
+      {
+        "text": "O `errors.Is` ignora a caixa da mensagem",
+        "why": "Ele compara valores de erro, nunca mensagens."
+      },
+      {
+        "text": "O `==` compara as mensagens, que mudam entre versões",
+        "why": "O `==` compara os próprios valores."
+      }
+    ]
+  },
+  "ex-a25jcp7j": {
+    "prompt": "Por que uma compra que não cabe é um 409 Conflict e não um 422?",
+    "hint": "A mesma requisição algum dia daria certo?",
+    "choices": [
+      {
+        "text": "Os valores são inválidos, e 409 é o nome mais novo do 422",
+        "why": "São status distintos; aqui os valores são válidos."
+      },
+      {
+        "text": "Requisição válida, em conflito com o estado atual do evento",
+        "why": "Certo. Um reembolso que libere lugares poderia fazer a mesma requisição dar certo amanhã."
+      },
+      {
+        "text": "Porque o store o devolveu antes de o `validate` rodar",
+        "why": "O `validate` roda antes; o store é o último."
+      },
+      {
+        "text": "Porque 409 diz ao cliente para tentar de novo imediatamente num laço",
+        "why": "Nada no 409 diz isso."
+      }
+    ]
+  },
+  "ex-kjwx7gah": {
+    "prompt": "O `Sell` lê o evento, confere os lugares e escreve, tudo sob o lock de escrita. O que dá errado se ele soltasse o lock entre a conferência e a escrita?",
+    "hint": "Dois compradores, um lugar.",
+    "choices": [
+      {
+        "text": "Os dois leem um lugar livre, os dois passam, os dois o compram",
+        "why": "Certo. Segurar o lock da leitura à escrita torna a venda tudo ou nada."
+      },
+      {
+        "text": "O segundo comprador espera para sempre pelo lock que foi solto",
+        "why": "Um lock solto está livre; ninguém espera para sempre."
+      },
+      {
+        "text": "O mapa entra em pânico por ser lido e escrito pela mesma goroutine duas vezes seguidas",
+        "why": "Uma goroutine lendo e escrevendo um mapa não tem problema."
+      },
+      {
+        "text": "Nada, porque o `ErrSoldOut` é sentinela",
+        "why": "Um sentinela nomeia a recusa; não evita a corrida."
+      }
+    ]
+  },
+  "ex-zrfd7mn4": {
+    "prompt": "Depois da primeira compra de 2 ingressos do evento 1, quantos lugares o `remaining` informou?",
+    "hint": "O evento 1 tem 120 lugares.",
+    "unit": "lugares"
+  },
+  "ex-1tahfs6a": {
+    "prompt": "O gerente cria o Organ Recital. Além do 201, o que diz ao cliente onde ler o evento novo?",
+    "hint": "Um cabeçalho.",
+    "choices": [
+      {
+        "text": "`Content-Location: /admin/events/3`, o endereço da cópia da equipe",
+        "why": "O boxoffice manda `Location`, apontando a rota pública."
+      },
+      {
+        "text": "`Location: /events/3`",
+        "why": "Certo. É o que o 201 promete a um cliente."
+      },
+      {
+        "text": "Um campo `link` dentro do corpo JSON da resposta",
+        "why": "O corpo é a visão do evento; não traz link."
+      },
+      {
+        "text": "Nada; o cliente tem de listar todos os eventos e procurá-lo",
+        "why": "O cabeçalho `Location` estava na captura."
+      }
+    ]
+  },
+  "ex-pp0f7a22": {
+    "prompt": "O token da portaria posta um evento novo. Quem o recusa, e com o quê?",
+    "hint": "O token é real.",
+    "choices": [
+      {
+        "text": "O `requireManager`, com um problema 403",
+        "why": "Certo. `only a manager may do this`, como `application/problem+json`."
+      },
+      {
+        "text": "O `requireStaff`, com um problema 401",
+        "why": "O token é conhecido, então o `requireStaff` o deixa passar."
+      },
+      {
+        "text": "O `validate`, com um 422 listando o papel como campo inválido",
+        "why": "A verificação do papel roda antes de o corpo ser lido."
+      },
+      {
+        "text": "O mux, com um 405 em texto",
+        "why": "`POST /admin/events` está registrado."
+      }
+    ]
+  },
+  "ex-0wjr86wy": {
+    "prompt": "Depois da aula 3, quais destas respostas o boxoffice manda como `application/problem+json`? Marque todas as que se aplicam.",
+    "hint": "Dois middlewares mudaram; o mux não.",
+    "choices": [
+      {
+        "text": "o 401 do `requireStaff`",
+        "why": "Certo. Ele agora chama `writeProblem`."
+      },
+      {
+        "text": "o 500 do `recoverPanics`",
+        "why": "Certo, sem `detail`."
+      },
+      {
+        "text": "o 405 de `DELETE /events`",
+        "why": "Quem escreve esse é o mux, em texto puro."
+      },
+      {
+        "text": "o 409 do Chamber Choir esgotado",
+        "why": "Certo. O `fail` mapeia `ErrSoldOut` para ele."
+      },
+      {
+        "text": "o recibo 201 de uma compra",
+        "why": "Um sucesso é `application/json` simples."
+      }
+    ]
+  },
+  "ex-2brfdgpv": {
+    "prompt": "O servidor é parado e iniciado de novo. O que sobra do Organ Recital e dos dois ingressos vendidos?",
+    "hint": "Onde o store os guarda?",
+    "choices": [
+      {
+        "text": "Os dois sobrevivem, porque o `writeJSON` os gravou em disco",
+        "why": "O `writeJSON` escreve na resposta, em lugar nenhum mais."
+      },
+      {
+        "text": "Nada dos dois: ambos viviam num mapa em memória",
+        "why": "Certo. O store é um mapa em memória; a aula 6 o põe no PostgreSQL."
+      },
+      {
+        "text": "O evento sobrevive mas a venda não",
+        "why": "Os dois vivem no mesmo mapa."
+      },
+      {
+        "text": "O que o log do servidor registrou é reaplicado no início",
+        "why": "O log é lido por pessoas, não pelo boxoffice."
+      }
+    ]
+  },
+  "ex-kc3jrb5q": {
+    "prompt": "Ponha estas requisições a `POST /events/1/tickets` na ordem da verificação que as barra, a mais cedo primeiro.",
+    "hint": "O caminho, o corpo, os valores, os lugares.",
+    "items": [
+      "`/events/nine/tickets` com um corpo bom",
+      "um corpo `{\"quantity\": 2,}`",
+      "um corpo `{\"quantity\": 40, \"email\": \"ana\"}`",
+      "200 ingressos comprados de 10 em 10 até o evento 1 acabar"
+    ],
+    "trap": "Só a última chega ao store."
+  },
+  "ex-1esf12jy": {
+    "prompt": "Um cliente manda `{\"quantity\": 2, \"email\": \"ana@example.com\"}` para `/events/2/tickets` e depois `{\"Quantity\": 2}` para `/events/1/tickets`. O que ele recebe?",
+    "hint": "O evento 2 é o Chamber Choir. O `encoding/json` casa nomes sem diferenciar caixa.",
+    "choices": [
+      {
+        "text": "409, depois 422 pelo e-mail ausente",
+        "why": "Certo. Esgotado primeiro; depois `Quantity` preenche `quantity` e só falta `email`."
+      },
+      {
+        "text": "409, depois 400 por um campo desconhecido `Quantity`",
+        "why": "O decoder casa `Quantity` com a tag `quantity`, então ele não é desconhecido."
+      },
+      {
+        "text": "404, depois 422",
+        "why": "O evento 2 existe; está esgotado."
+      },
+      {
+        "text": "201 duas vezes, já que os dois corpos são objetos JSON válidos com quantidade dois",
+        "why": "JSON válido é o primeiro de quatro passos."
+      }
+    ]
+  }
+}

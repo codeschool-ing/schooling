@@ -1,0 +1,841 @@
+[
+  {
+    "id": "ex-c9gqfv08",
+    "version": 1,
+    "section": "the-shape",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the shape of a middleware in Go's standard library style?",
+    "hint": "It takes the handler to wrap.",
+    "choices": [
+      {
+        "text": "A type that embeds `http.ServeMux` and overrides its routing method",
+        "correct": false,
+        "why": "No framework type is involved; a function from handler to handler is the whole idea."
+      },
+      {
+        "text": "An interface `Middleware` from `net/http`",
+        "correct": false,
+        "why": "`net/http` declares no such interface."
+      },
+      {
+        "text": "`func(w http.ResponseWriter, r *http.Request) error`",
+        "correct": false,
+        "why": "That is a handler that returns an error, a shape some frameworks use; it wraps nothing."
+      },
+      {
+        "text": "`func(next http.Handler) http.Handler`",
+        "correct": true,
+        "why": "Right. It receives `next` and returns a handler that decides when to call it."
+      }
+    ]
+  },
+  {
+    "id": "ex-93qd116e",
+    "version": 1,
+    "section": "the-shape",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `wrap`, `h = announce(\"inner\")(h)` runs before `h = announce(\"outer\")(h)`. Which line does the server print first for a request?",
+    "hint": "Which wrapper did the server receive?",
+    "choices": [
+      {
+        "text": "`outer in`",
+        "correct": true,
+        "why": "Right. The last wrapper applied is outermost, so it runs first and finishes last."
+      },
+      {
+        "text": "`inner in`",
+        "correct": false,
+        "why": "`inner` was applied first, so it ended up inside `outer`."
+      },
+      {
+        "text": "`  the handler`, since middlewares print after the handler",
+        "correct": false,
+        "why": "Each middleware prints before calling `next` as well as after."
+      },
+      {
+        "text": "It varies between requests, because each one runs in its own goroutine",
+        "correct": false,
+        "why": "Inside one request the calls are nested and ordered, like a call stack."
+      }
+    ]
+  },
+  {
+    "id": "ex-f28s5geg",
+    "version": 1,
+    "section": "the-shape",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`curl localhost:8080/nothing` gets a 404 from `wrap`. What did the two middlewares print for it?",
+    "hint": "Look at the second half of the server's output.",
+    "choices": [
+      {
+        "text": "Their in and out lines, around the mux's 404",
+        "correct": true,
+        "why": "Right. A middleware wraps whatever is inside it, answers nobody wrote included."
+      },
+      {
+        "text": "Nothing, because no route matched",
+        "correct": false,
+        "why": "They wrap the whole mux, including its 404."
+      },
+      {
+        "text": "Only `outer in` and `outer out`",
+        "correct": false,
+        "why": "`inner` wraps the mux too, so it ran as well."
+      },
+      {
+        "text": "A panic, because `next` is nil when nothing matches the path",
+        "correct": false,
+        "why": "`next` is the mux, which answers 404 itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-ygvgs2e9",
+    "version": 1,
+    "section": "the-shape",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`chain(mux, a, b)` builds the same handler as `a(___(mux))`.",
+    "hint": "The first middleware named is outermost.",
+    "blanks": [
+      {
+        "accept": [
+          "b"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8hgxw7np",
+    "version": 1,
+    "section": "logging",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `logRequests` pass the handler a `statusRecorder` instead of the real writer?",
+    "hint": "What is missing from `ResponseWriter`?",
+    "choices": [
+      {
+        "text": "A writer has no method to read back the status",
+        "correct": true,
+        "why": "Right. The recorder notes the code as it passes, so the middleware knows it afterwards."
+      },
+      {
+        "text": "To stop handlers from writing headers",
+        "correct": false,
+        "why": "Everything passes through to the real writer; nothing is stopped."
+      },
+      {
+        "text": "To buffer the body so that the log line is written before the response leaves",
+        "correct": false,
+        "why": "Nothing is buffered; the line is written after the handler returns."
+      },
+      {
+        "text": "Because a real `ResponseWriter` is not safe to use from a middleware goroutine",
+        "correct": false,
+        "why": "Middleware and handler run in the same goroutine, one calling the other."
+      }
+    ]
+  },
+  {
+    "id": "ex-bffkhfqs",
+    "version": 1,
+    "section": "logging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A handler writes a body and never calls `WriteHeader`. What status does `statusRecorder` record?",
+    "hint": "What will the real writer send?",
+    "choices": [
+      {
+        "text": "0",
+        "correct": false,
+        "why": "`Write` sets 200 when no status came before it."
+      },
+      {
+        "text": "204, since no status was chosen",
+        "correct": false,
+        "why": "204 means no content, and there was a body."
+      },
+      {
+        "text": "Whatever the handler would have chosen if it had called `WriteHeader` before its first write",
+        "correct": false,
+        "why": "Nothing guesses intentions: the first write sends 200."
+      },
+      {
+        "text": "200",
+        "correct": true,
+        "why": "Right. A write with no status first means 200, and the recorder notes exactly that."
+      }
+    ]
+  },
+  {
+    "id": "ex-fm4fbh4k",
+    "version": 1,
+    "section": "logging",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What would be lost if `statusRecorder` had no `Unwrap` method?",
+    "hint": "A wrapper hides the methods its type does not declare.",
+    "choices": [
+      {
+        "text": "Flushing through `http.ResponseController`",
+        "correct": true,
+        "why": "Right. `Unwrap` is the convention it follows to dig through wrappers, and lesson 13 needs it."
+      },
+      {
+        "text": "Nothing; embedding already exposes every method of the real writer",
+        "correct": false,
+        "why": "Embedding exposes the interface's three methods, not the extra ones the real writer has, like flushing."
+      },
+      {
+        "text": "The byte count, since `Write` would go straight to the real writer",
+        "correct": false,
+        "why": "`Write` counts the bytes; `Unwrap` plays no part in it."
+      },
+      {
+        "text": "The log line's duration",
+        "correct": false,
+        "why": "The middleware's clock measures that."
+      }
+    ]
+  },
+  {
+    "id": "ex-m4610t5s",
+    "version": 1,
+    "section": "logging",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the log, how many bytes did boxoffice send for `GET /events/9`?",
+    "hint": "The number before the `B`.",
+    "value": 14,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-mtcwq5ye",
+    "version": 1,
+    "section": "logging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the access log hold the path but not the query string or the headers?",
+    "hint": "Who reads a log, and for how long is it kept?",
+    "choices": [
+      {
+        "text": "Secrets would leak into it",
+        "correct": true,
+        "why": "Right. A token in `Authorization` or an address in a query string would sit in a file many people read for a long time."
+      },
+      {
+        "text": "Headers are not available after the handler returns",
+        "correct": false,
+        "why": "`r.Header` is still there; leaving it out is a choice."
+      },
+      {
+        "text": "A query string is too long for `log.Printf`",
+        "correct": false,
+        "why": "Length is not the reason; what it holds is."
+      },
+      {
+        "text": "The mux strips them before middleware sees the request",
+        "correct": false,
+        "why": "The logger sits outside the mux and sees the request as it arrived."
+      }
+    ]
+  },
+  {
+    "id": "ex-tbaks5c4",
+    "version": 1,
+    "section": "recovery",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Against `fragile`, which exit status did `curl` report for `/boom`?",
+    "hint": "curl's code for an empty reply.",
+    "value": 52,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-nz7vefrw",
+    "version": 1,
+    "section": "recovery",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With no recovery middleware, what does `net/http` do when a handler panics?",
+    "hint": "Did `fragile` keep running?",
+    "choices": [
+      {
+        "text": "Logs, closes the connection, serves on",
+        "correct": true,
+        "why": "Right. The process survives; the client is left with an empty reply."
+      },
+      {
+        "text": "The whole program exits with status 2",
+        "correct": false,
+        "why": "That is a panic outside a request; `net/http` recovers handler panics."
+      },
+      {
+        "text": "It sends a 500 with the panic message in the body",
+        "correct": false,
+        "why": "The client got no status at all, which is why curl said 52."
+      },
+      {
+        "text": "It runs the handler a second time, in case the panic came from a passing condition",
+        "correct": false,
+        "why": "Nothing is retried; a retry of a bug is the same bug."
+      }
+    ]
+  },
+  {
+    "id": "ex-s4tkmh02",
+    "version": 1,
+    "section": "recovery",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Reading the stack `fragile` printed, where is the line that caused the panic?",
+    "hint": "Read from the top down.",
+    "choices": [
+      {
+        "text": "The last line, where `net/http.(*Server).Serve` created the goroutine",
+        "correct": false,
+        "why": "That is where the goroutine began, far from the bug."
+      },
+      {
+        "text": "In `runtime/panic.go`",
+        "correct": false,
+        "why": "That is the runtime reporting the panic."
+      },
+      {
+        "text": "At `main.main.func1`, `main.go:13`",
+        "correct": true,
+        "why": "Right. The first frame of your own code is the line that wrote to the nil map."
+      },
+      {
+        "text": "At the top, in `net/http.(*conn).serve.func1`",
+        "correct": false,
+        "why": "That is the recovering code inside `net/http`."
+      }
+    ]
+  },
+  {
+    "id": "ex-4snb8g2x",
+    "version": 1,
+    "section": "recovery",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A handler starts a goroutine, and that goroutine panics. What does `recoverPanics` do about it?",
+    "hint": "Where does `recover` work?",
+    "choices": [
+      {
+        "text": "It turns it into a 500 like any other panic",
+        "correct": false,
+        "why": "`recover` only sees panics of its own goroutine."
+      },
+      {
+        "text": "It logs the stack and lets the goroutine continue",
+        "correct": false,
+        "why": "It never sees the panic, and a panicking goroutine does not continue."
+      },
+      {
+        "text": "Nothing, and the whole program ends",
+        "correct": true,
+        "why": "Right. A goroutine started by a handler has to protect itself."
+      },
+      {
+        "text": "`net/http` recovers it and closes the client's connection",
+        "correct": false,
+        "why": "`net/http` only recovers the goroutine it runs the handler in."
+      }
+    ]
+  },
+  {
+    "id": "ex-q9tah80t",
+    "version": 1,
+    "section": "recovery",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `recoverPanics` panic again when the value is `http.ErrAbortHandler`?",
+    "hint": "Who panics with that value, and why?",
+    "choices": [
+      {
+        "text": "Because `recover` returns nil for it",
+        "correct": false,
+        "why": "It returns the value; that is how the middleware recognises it."
+      },
+      {
+        "text": "To crash the program so a supervisor restarts it",
+        "correct": false,
+        "why": "`net/http` catches it in the connection's goroutine; the program goes on."
+      },
+      {
+        "text": "It marks a deliberate abort",
+        "correct": true,
+        "why": "Right. A 500 would undo the deliberate abort."
+      },
+      {
+        "text": "Since it marks a client that disconnected",
+        "correct": false,
+        "why": "A disconnected client cancels the context; this value is a handler's own choice."
+      }
+    ]
+  },
+  {
+    "id": "ex-vwah0gw8",
+    "version": 1,
+    "section": "cors",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`curl -H 'Origin: https://elsewhere.example.net' localhost:8080/events/1` got a 200 with the whole body. What does that show?",
+    "hint": "Who enforces CORS?",
+    "choices": [
+      {
+        "text": "The cors middleware is broken",
+        "correct": false,
+        "why": "It did its job: no `Access-Control-Allow-Origin` for that origin."
+      },
+      {
+        "text": "CORS is not access control",
+        "correct": true,
+        "why": "Right. Anything private needs authentication."
+      },
+      {
+        "text": "curl ignores the Origin header",
+        "correct": false,
+        "why": "It sent it; the server read it."
+      },
+      {
+        "text": "Unknown origins are allowed to read every `GET` answer by default",
+        "correct": false,
+        "why": "No permission header was sent for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-3ydqsbed",
+    "version": 1,
+    "section": "cors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `cors` add `Vary: Origin` to every answer, allowed or not?",
+    "hint": "Think of a cache between client and server.",
+    "choices": [
+      {
+        "text": "Browsers refuse responses without it",
+        "correct": false,
+        "why": "They accept them; the danger is in caches."
+      },
+      {
+        "text": "It tells the browser which origins are allowed to read the answer",
+        "correct": false,
+        "why": "That is `Access-Control-Allow-Origin`."
+      },
+      {
+        "text": "The answer depends on a request header, so a cache must not reuse one origin's copy for another",
+        "correct": true,
+        "why": "Right. Without it a CDN or the browser's cache might serve the wrong permission."
+      },
+      {
+        "text": "It speeds up the preflight",
+        "correct": false,
+        "why": "`Access-Control-Max-Age` does that."
+      }
+    ]
+  },
+  {
+    "id": "ex-satkr757",
+    "version": 1,
+    "section": "cors",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each header in the preflight answer to what it tells the browser.",
+    "hint": "Four headers, four permissions.",
+    "pairs": [
+      {
+        "left": "`Access-Control-Allow-Origin`",
+        "right": "which page may read the answer"
+      },
+      {
+        "left": "`Access-Control-Allow-Methods`",
+        "right": "which methods the real request may use"
+      },
+      {
+        "left": "`Access-Control-Allow-Headers`",
+        "right": "which request headers it may carry"
+      },
+      {
+        "left": "`Access-Control-Max-Age`",
+        "right": "how long to remember this answer"
+      }
+    ],
+    "right_distractors": [
+      "which token the request must send"
+    ]
+  },
+  {
+    "id": "ex-crchw3x1",
+    "version": 1,
+    "section": "cors",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many seconds may a browser remember boxoffice's preflight answer?",
+    "hint": "`Access-Control-Max-Age`.",
+    "value": 600,
+    "tolerance": 0,
+    "unit": "s"
+  },
+  {
+    "id": "ex-9ncx7cwt",
+    "version": 1,
+    "section": "cors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why must `cors` answer the preflight before `requireStaff` is reached?",
+    "hint": "What does a browser put in a preflight?",
+    "choices": [
+      {
+        "text": "`requireStaff` is slower than `cors`",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "A browser sends it with no token",
+        "correct": true,
+        "why": "Right. The real request would never be sent."
+      },
+      {
+        "text": "`OPTIONS` requests skip middleware",
+        "correct": false,
+        "why": "They go through every middleware like any other request."
+      },
+      {
+        "text": "The admin mux answers `OPTIONS` with the report",
+        "correct": false,
+        "why": "Only `GET /admin/report` is registered there."
+      }
+    ]
+  },
+  {
+    "id": "ex-tpyrt9fw",
+    "version": 1,
+    "section": "authentication",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each request to `/admin/report` to the status it got.",
+    "hint": "Who is calling, and may they?",
+    "pairs": [
+      {
+        "left": "no `Authorization` header",
+        "right": "401"
+      },
+      {
+        "left": "the door token",
+        "right": "403"
+      },
+      {
+        "left": "the manager's token",
+        "right": "200"
+      }
+    ],
+    "right_distractors": [
+      "405"
+    ]
+  },
+  {
+    "id": "ex-40xfbzsb",
+    "version": 1,
+    "section": "authentication",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the difference between the 401 and the 403 boxoffice sends?",
+    "hint": "Authentication against authorisation.",
+    "choices": [
+      {
+        "text": "401: unknown caller; 403: known caller, not allowed",
+        "correct": true,
+        "why": "Right. The door token is real, so its answer is 403."
+      },
+      {
+        "text": "401 is for a wrong password, 403 for a missing header",
+        "correct": false,
+        "why": "Both of those are unknown callers, and both got 401."
+      },
+      {
+        "text": "403 comes from the middleware and 401 from the handler",
+        "correct": false,
+        "why": "The other way round: the middleware sends 401, `salesReport` sends 403."
+      },
+      {
+        "text": "None in practice; clients treat them the same",
+        "correct": false,
+        "why": "One asks for credentials, the other says credentials will not help."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwjym6zv",
+    "version": 1,
+    "section": "authentication",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `requireStaff` compare tokens with `subtle.ConstantTimeCompare` rather than `==`?",
+    "hint": "Where does `==` stop?",
+    "choices": [
+      {
+        "text": "`==` does not work on strings read from headers",
+        "correct": false,
+        "why": "It works; it leaks time."
+      },
+      {
+        "text": "It is faster for long tokens",
+        "correct": false,
+        "why": "Speed is not the point; equal time is."
+      },
+      {
+        "text": "`==` takes longer the more of a guess is right",
+        "correct": true,
+        "why": "Right. Measured over a network, that guides guessing one character at a time."
+      },
+      {
+        "text": "To accept tokens that differ only in case",
+        "correct": false,
+        "why": "It compares bytes exactly."
+      }
+    ]
+  },
+  {
+    "id": "ex-7g4v818r",
+    "version": 1,
+    "section": "authentication",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is the context key `roleKey{}`, an unexported struct type, and not the string `\"role\"`?",
+    "hint": "Who else puts values into a request's context?",
+    "choices": [
+      {
+        "text": "Strings are not allowed as context keys",
+        "correct": false,
+        "why": "They are allowed, and that is the danger."
+      },
+      {
+        "text": "An empty struct makes the lookup faster than a string",
+        "correct": false,
+        "why": "Speed is not the reason; collisions are."
+      },
+      {
+        "text": "Because `context.WithValue` panics on a string key",
+        "correct": false,
+        "why": "It accepts one; vet tools warn about it."
+      },
+      {
+        "text": "No other package names that type, so none reads or overwrites the value by accident",
+        "correct": true,
+        "why": "Right. `staffRole` is the only way in."
+      }
+    ]
+  },
+  {
+    "id": "ex-h9yyaxn4",
+    "version": 1,
+    "section": "authentication",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does boxoffice read the tokens from environment variables rather than from a command-line flag?",
+    "hint": "What does `ps` show?",
+    "choices": [
+      {
+        "text": "Flags are limited to 16 characters",
+        "correct": false,
+        "why": "No such limit exists."
+      },
+      {
+        "text": "The `flag` package cannot parse hex",
+        "correct": false,
+        "why": "A token is read as a string either way."
+      },
+      {
+        "text": "`ps` shows command lines to everyone",
+        "correct": true,
+        "why": "Right. A secret in a flag is a secret on display."
+      },
+      {
+        "text": "Environment variables are encrypted by the kernel",
+        "correct": false,
+        "why": "They are not; they only stay off the command line."
+      }
+    ]
+  },
+  {
+    "id": "ex-zx97m23q",
+    "version": 1,
+    "section": "boxoffice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `logRequests` the outermost middleware in boxoffice?",
+    "hint": "What must the log see?",
+    "choices": [
+      {
+        "text": "It is the cheapest, so it goes first",
+        "correct": false,
+        "why": "Cost is not the argument; what it sees is."
+      },
+      {
+        "text": "`chain` requires a logger first",
+        "correct": false,
+        "why": "`chain` takes any middlewares in any order."
+      },
+      {
+        "text": "It must see every final answer: the 500 from `recoverPanics` and the 204 from `cors`",
+        "correct": true,
+        "why": "Right. Anything outside it would answer without a log line."
+      },
+      {
+        "text": "A panic inside it would otherwise crash the server",
+        "correct": false,
+        "why": "`net/http` recovers handler panics anyway; the order is about the log line."
+      }
+    ]
+  },
+  {
+    "id": "ex-h9m1ys57",
+    "version": 1,
+    "section": "boxoffice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A new route `GET /admin/refunds` is added to the `admin` mux next month. What protects it?",
+    "hint": "Where is `requireStaff` applied?",
+    "choices": [
+      {
+        "text": "The token check on the `/admin/` subtree",
+        "correct": true,
+        "why": "Right. Every path under `/admin/` passes `requireStaff` before the inner mux sees it."
+      },
+      {
+        "text": "Nothing, until someone wraps the new handler",
+        "correct": false,
+        "why": "The check sits on the subtree, not on each handler."
+      },
+      {
+        "text": "CORS, because it names one origin",
+        "correct": false,
+        "why": "CORS protects nothing on the server."
+      },
+      {
+        "text": "`recoverPanics`",
+        "correct": false,
+        "why": "It turns panics into 500s; it checks nobody."
+      }
+    ]
+  },
+  {
+    "id": "ex-nw23eza0",
+    "version": 1,
+    "section": "boxoffice",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`go run .` prints `no staff tokens: set BOXOFFICE_MANAGER_TOKEN` and exits. Why does boxoffice refuse to start?",
+    "hint": "What would the staff routes be without a token?",
+    "choices": [
+      {
+        "text": "Port 8080 is taken",
+        "correct": false,
+        "why": "That message is `address already in use`."
+      },
+      {
+        "text": "The door token is required as well as the manager's, and it was missing",
+        "correct": false,
+        "why": "Either token is enough; the loop keeps whichever is set."
+      },
+      {
+        "text": "`go vet` failed",
+        "correct": false,
+        "why": "`go vet` printed nothing."
+      },
+      {
+        "text": "No token is set at all",
+        "correct": true,
+        "why": "Right. Better a refusal now than a 401 to puzzle over later."
+      }
+    ]
+  },
+  {
+    "id": "ex-gh10wxhq",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the code a staff request to `/admin/report` passes through in order, from the server to the handler.",
+    "hint": "`chain` puts the first middleware outermost.",
+    "items": [
+      "`logRequests`",
+      "`recoverPanics`",
+      "`cors`",
+      "the main mux, matching `/admin/`",
+      "`requireStaff`",
+      "`salesReport`"
+    ],
+    "trap": "`requireStaff` sits behind the main mux, on the subtree only."
+  },
+  {
+    "id": "ex-jzc23ajx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Someone swaps the order to `chain(mux, recoverPanics, logRequests, cors(...))`. A handler panics. What changes?",
+    "hint": "The panic unwinds through `logRequests` before reaching `recover`.",
+    "choices": [
+      {
+        "text": "The client gets an empty reply instead of a 500",
+        "correct": false,
+        "why": "`recoverPanics` is still there and still sends the 500."
+      },
+      {
+        "text": "Nothing; the order of middlewares is a matter of taste",
+        "correct": false,
+        "why": "The table in section 07 argues each position."
+      },
+      {
+        "text": "The panic is logged twice",
+        "correct": false,
+        "why": "`recoverPanics` logs it once; the access line is the one lost."
+      },
+      {
+        "text": "The request gets no log line, because the panic skips the code after `next.ServeHTTP` in the logger",
+        "correct": true,
+        "why": "Right. The 500 still goes out, and nobody records it."
+      }
+    ]
+  }
+]

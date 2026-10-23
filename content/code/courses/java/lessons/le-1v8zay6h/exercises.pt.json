@@ -1,0 +1,349 @@
+{
+  "ex-dwwbpq0b": {
+    "prompt": "`Book` não declara `describe()`. Por que `book.describe()` compila e roda?",
+    "hint": "O que o `extends Item` dá ao `Book`?",
+    "choices": [
+      {
+        "text": "`Book` o herda de `Item`, que o `extends` tornou a superclasse dele",
+        "why": "Isso: uma subclasse tem todo método que a superclasse tem."
+      },
+      {
+        "text": "O compilador copia o `describe()` para o `Book.class`",
+        "why": "O `javap -p Book` não mostrou `describe()` no `Book.class`; ele é achado em `Item` quando chamado."
+      },
+      {
+        "text": "Toda classe ganha um `describe()` de `java.lang.Object`",
+        "why": "O `Object` dá `toString`, `equals` e `hashCode`, não `describe`."
+      }
+    ]
+  },
+  "ex-0nhjgwb1": {
+    "prompt": "O `describe()` é escrito uma vez, em `Item`, e chama `loanDays()`. Por que a linha do DVD diz 7 dias e a do livro 14?",
+    "hint": "Qual `loanDays()` existe num objeto `Dvd`?",
+    "choices": [
+      {
+        "text": "O `describe()` confere se o item é um `Dvd` antes de escolher o número",
+        "why": "Não há conferência no `describe()`; ele só chama `loanDays()`."
+      },
+      {
+        "text": "O `Dvd` sobrescreve o `loanDays()`, e a chamada roda a versão do objeto sobre o qual é feita",
+        "why": "Isso: num DVD roda o `loanDays()` sobrescrito; a lição 25 explica como."
+      },
+      {
+        "text": "Porque o construtor de `Dvd` passa 7 para o `super`",
+        "why": "O construtor passa título e ano; o 7 vem de um método."
+      },
+      {
+        "text": "O `@Override` copia o valor novo para `Item`",
+        "why": "O `@Override` pede uma conferência e não muda nada em `Item`."
+      }
+    ]
+  },
+  "ex-y12t8v9d": {
+    "prompt": "Sem o `super(title, year);` no construtor de `Book`, o compilador disse `required: String,int`, `found: no arguments`. O que ele tinha feito?",
+    "hint": "Um construtor sempre começa chamando outro.",
+    "choices": [
+      {
+        "text": "Procurado um construtor `Book()` sem argumentos",
+        "why": "A mensagem nomeia o construtor de `Item`, não o de `Book`."
+      },
+      {
+        "text": "Inserido uma chamada a `super()` sem argumentos, que `Item` não aceita",
+        "why": "Isso: sem chamada explícita, um `super()` sem argumentos é inserido, e `Item` não tem esse construtor."
+      },
+      {
+        "text": "Recusado porque `title` e `year` nunca foram atribuídos",
+        "why": "Atributos não atribuídos dariam outro erro; este é sobre uma chamada de construtor."
+      }
+    ]
+  },
+  "ex-e5n87s4b": {
+    "prompt": "`Book.author()` tentou ler `year`, que `Item` declara `private`. O que aconteceu?",
+    "hint": "Um livro tem um ano. O código dele pode tocá-lo?",
+    "choices": [
+      {
+        "text": "Compilou, porque uma subclasse enxerga tudo o que a superclasse declara",
+        "why": "Não compilou: `private` é privado da classe que declara, subclasses incluídas."
+      },
+      {
+        "text": "Compilou e imprimiu 0, porque a subclasse ganha uma cópia vazia própria",
+        "why": "Há um `year` só, definido pelo construtor de `Item`; o compilador recusou a leitura."
+      },
+      {
+        "text": "Um erro de compilação: `year has private access in Item`",
+        "why": "Isso: `protected` o teria aberto; `private` não abriu."
+      }
+    ]
+  },
+  "ex-5c0cp8xx": {
+    "prompt": "O modificador que deixa uma subclasse ler um atributo que a superclasse declara, como `Item` faz com `title`, é ___.",
+    "hint": "Entre private e public.",
+    "blanks": [
+      {
+        "accept": [
+          "protected"
+        ]
+      }
+    ]
+  },
+  "ex-d8eejhx6": {
+    "prompt": "Dentro de `Dvd.describe()`, o `super.describe()` roda a versão de `Item`. Qual `loanDays()` essa versão chama?",
+    "hint": "O `super` escolhe um método, não um objeto.",
+    "choices": [
+      {
+        "text": "O de `Item`, porque o `super` passa a chamada inteira para a mãe",
+        "why": "A linha imprimiu 7 dias, que é o `loanDays()` de `Dvd`."
+      },
+      {
+        "text": "O de `Dvd`: o objeto continua sendo o DVD",
+        "why": "Isso: o `super` escolheu qual `describe()` rodou, e o objeto continuou sendo um DVD."
+      },
+      {
+        "text": "Nenhum: um método chamado por `super` não consegue chamar outros",
+        "why": "Ele chamou `loanDays()` e o resultado apareceu na linha."
+      }
+    ]
+  },
+  "ex-84568thg": {
+    "prompt": "Qual é a superclasse de `Item`, que não declara nenhuma?",
+    "hint": "O `Chain` a imprimiu.",
+    "choices": [
+      {
+        "text": "Nenhuma: o `getSuperclass()` devolve `null` para ela",
+        "why": "O `null` veio depois de `java.lang.Object`, a mãe de `Item`."
+      },
+      {
+        "text": "`java.lang.Object`, a raiz sob a qual fica toda classe",
+        "why": "Isso: uma classe que não diz `extends` estende `Object`."
+      },
+      {
+        "text": "`Book`, já que é a primeira classe a estender `Item`",
+        "why": "A seta vai ao contrário: `Book` estende `Item`."
+      }
+    ]
+  },
+  "ex-bjf9qf4q": {
+    "prompt": "Dois objetos `Book` com o mesmo título, ano e autor: por que `a.equals(b)` dá false?",
+    "hint": "Que classe escreveu o `equals` que rodou?",
+    "choices": [
+      {
+        "text": "Porque o `equals` compara os hash codes, e eles são diferentes",
+        "why": "O `Object.equals` compara a identidade diretamente; os hash codes diferentes são um segundo sintoma."
+      },
+      {
+        "text": "Porque `author` é privado, então o `equals` não consegue compará-lo",
+        "why": "O `equals` de `Object` não compara atributo nenhum, privado ou não."
+      },
+      {
+        "text": "`Book` herda o `Object.equals`, que é o mesmo que `==`",
+        "why": "Isso: dois objetos diferentes, então false, até uma classe sobrescrever `equals` e `hashCode`."
+      }
+    ]
+  },
+  "ex-rs9gsd1m": {
+    "prompt": "`System.out.println(a)` imprimiu `Book@7ad041f3`. Rode o programa de novo, e o que muda?",
+    "hint": "O número é derivado da identidade do objeto.",
+    "choices": [
+      {
+        "text": "Nada: é a posição do livro na memória, que é fixa",
+        "why": "Ele é derivado da identidade, e muda a cada execução."
+      },
+      {
+        "text": "O número depois do `@`",
+        "why": "Isso: o `Object.toString` imprime um valor ligado à identidade daquele objeto, que é nova a cada execução."
+      },
+      {
+        "text": "O nome da classe, se o `Book` for compilado de novo",
+        "why": "O nome da classe vem da classe e continua `Book`."
+      },
+      {
+        "text": "Passa a imprimir o título, depois que o objeto foi usado",
+        "why": "O `toString` imprime o mesmo formato até uma classe o sobrescrever."
+      }
+    ]
+  },
+  "ex-scs3fxmq": {
+    "prompt": "Ligue cada método herdado de `Object` ao que a versão padrão faz.",
+    "hint": "A tabela no fim da seção.",
+    "pairs": [
+      {
+        "left": "`toString()`",
+        "right": "Nome da classe, `@`, e um número da identidade do objeto"
+      },
+      {
+        "left": "`equals(Object)`",
+        "right": "Verdadeiro só para o mesmíssimo objeto"
+      },
+      {
+        "left": "`hashCode()`",
+        "right": "Um número derivado da identidade do objeto"
+      }
+    ],
+    "right_distractors": [
+      "Compara cada atributo dos dois objetos"
+    ]
+  },
+  "ex-135wnfh1": {
+    "prompt": "O que o compilador disse sobre `public class Book extends Item, Dvd`?",
+    "hint": "Ele esperava o corpo da classe.",
+    "choices": [
+      {
+        "text": "`'{' expected`, na vírgula",
+        "why": "Isso: a herança simples é uma regra da gramática."
+      },
+      {
+        "text": "Que `Dvd` e `Item` declaram ambos `loanDays()`",
+        "why": "Ele nem chegou lá; o erro foi na vírgula."
+      },
+      {
+        "text": "Nada: compilou, e o `Book` pegou os métodos do `Dvd`",
+        "why": "Recusou; uma classe estende exatamente uma classe."
+      }
+    ]
+  },
+  "ex-d926yy36": {
+    "prompt": "Qual destas passa no teste do \"é um\" para o `extends`?",
+    "hint": "Diga a frase: todo X é um Y.",
+    "choices": [
+      {
+        "text": "`Loan extends Book`, já que um empréstimo precisa do título de um livro",
+        "why": "Um empréstimo tem um livro; isso é um atributo."
+      },
+      {
+        "text": "`Member extends HashSet<String>`, para guardar os ISBNs de um sócio",
+        "why": "Um sócio não é um conjunto; o conjunto vai num atributo."
+      },
+      {
+        "text": "`Magazine extends Item`",
+        "why": "Isso: uma revista é algo que a biblioteca empresta, com título e ano."
+      },
+      {
+        "text": "`Item extends Book`, para os itens ganharem autor",
+        "why": "Nem todo item é um livro; um DVD ganharia um autor que não tem."
+      }
+    ]
+  },
+  "ex-v4cst4wr": {
+    "prompt": "O `CountingSet` recebeu três ISBNs num `addAll`. Que contagem ele informou?",
+    "hint": "Cada um foi contado duas vezes."
+  },
+  "ex-z0m619th": {
+    "prompt": "Por que o `CountingSet` contou cada ISBN duas vezes, se nenhum dos seus métodos está errado sozinho?",
+    "hint": "O que o `HashSet.addAll` faz por dentro?",
+    "choices": [
+      {
+        "text": "O `List.of` entrega cada elemento duas vezes, uma por método que acrescenta",
+        "why": "O `size()` deu 3: a lista tinha três elementos e o conjunto três."
+      },
+      {
+        "text": "O `addAll` chama `add` por dentro, e o `add` também está sobrescrito",
+        "why": "Isso: um detalhe de como o `HashSet` foi escrito, do qual a subclasse passou a depender."
+      },
+      {
+        "text": "O `@Override` faz cada método sobrescrito rodar duas vezes",
+        "why": "O `@Override` só pede uma conferência; não executa nada."
+      },
+      {
+        "text": "O contador é dividido entre o conjunto e a superclasse",
+        "why": "Há um atributo `added` só, em `CountingSet`; ele foi incrementado duas vezes por ISBN."
+      }
+    ]
+  },
+  "ex-xncgzswz": {
+    "prompt": "O `CountingShelf` informou 3 para os mesmos três ISBNs. O que o deixou imune ao funcionamento interno do `HashSet`?",
+    "hint": "Ele tem um conjunto; não é um.",
+    "choices": [
+      {
+        "text": "Ele chama `add` num laço, o que o `HashSet` não faz",
+        "why": "O `HashSet.addAll` também chama `add`; a diferença é de quem é o `add`."
+      },
+      {
+        "text": "Ele guarda o conjunto num atributo, fora do alcance do `HashSet`",
+        "why": "Isso: composição; o conjunto é usado só pelos métodos públicos dele."
+      },
+      {
+        "text": "O atributo dele é `private`, o que impede o `HashSet` de contar em dobro",
+        "why": "A visibilidade do atributo não foi o que mudou a contagem; quem chama quem foi."
+      }
+    ]
+  },
+  "ex-p5b8ec12": {
+    "prompt": "Ponha as classes em ordem, da raiz da hierarquia até a classe que o `Lending` criou.",
+    "hint": "O `Chain` as imprimiu na ordem inversa.",
+    "items": [
+      "`java.lang.Object`",
+      "`Item`",
+      "`Book`"
+    ]
+  },
+  "ex-kqye9rd3": {
+    "prompt": "Um objeto `Book` tem quais destes, sem que o `Book.java` os declare? Escolha todas as que se aplicam.",
+    "hint": "Tudo de `Item` e de `Object`.",
+    "choices": [
+      {
+        "text": "`loanDays()`",
+        "why": "Sim: herdado de `Item`."
+      },
+      {
+        "text": "`hashCode()`",
+        "why": "Sim: herdado de `Object`, através de `Item`."
+      },
+      {
+        "text": "um atributo `year`, embora o código dele não possa lê-lo",
+        "why": "Sim: o objeto o tem, definido pelo construtor de `Item`; o `private` impede o código de `Book` de lê-lo."
+      },
+      {
+        "text": "um atributo `minutes`",
+        "why": "Esse é do `Dvd`; irmãs não dividem nada além da mãe."
+      }
+    ]
+  },
+  "ex-kxsfkeg6": {
+    "prompt": "Você precisa de um `Catalogue` que guarde livros e possa ser pesquisado por autor. Um colega propõe `Catalogue extends ArrayList<Book>`. O que a lição diz?",
+    "hint": "Diga a frase, e depois pense no `CountingSet`.",
+    "choices": [
+      {
+        "text": "Bom: um catálogo é uma lista, e herda `add` e `get` de graça",
+        "why": "Herda todo método de lista, inclusive os que contornam qualquer regra do catálogo, e o prende ao funcionamento interno do `ArrayList`."
+      },
+      {
+        "text": "Lista num atributo privado, só com os métodos necessários",
+        "why": "Isso: a composição mantém os detalhes do `ArrayList` fora do comportamento do `Catalogue`."
+      },
+      {
+        "text": "Estender `Book`, já que um catálogo é feito de livros",
+        "why": "Um catálogo não é um livro; isso reprova no teste do \"é um\" de cara."
+      }
+    ]
+  },
+  "ex-njw7fcws": {
+    "prompt": "Onde o `super(...)` pode aparecer num construtor, no código que esta lição escreveu?",
+    "hint": "A parte de item é construída antes da parte de livro.",
+    "choices": [
+      {
+        "text": "Em qualquer lugar, desde que seja chamado uma vez",
+        "why": "A parte da superclasse tem de existir antes de a parte da subclasse usá-la."
+      },
+      {
+        "text": "Só em classes que estendem algo diferente de `Object`",
+        "why": "Todo construtor chama um construtor da superclasse, inclusive o de `Object`; ele só é inserido para você."
+      },
+      {
+        "text": "Como primeira coisa, antes de `this.author = author`",
+        "why": "Isso: a lição 27 mostra os comandos que o Java 25 permite antes dele, e no que eles não podem tocar."
+      }
+    ]
+  },
+  "ex-wqvjz9mv": {
+    "prompt": "Guardar um objeto num atributo e usar os métodos públicos dele, em vez de estender a classe dele, se chama ___.",
+    "hint": "O `CountingShelf` faz isso.",
+    "blanks": [
+      {
+        "accept": [
+          "composição",
+          "composicao"
+        ]
+      }
+    ]
+  }
+}

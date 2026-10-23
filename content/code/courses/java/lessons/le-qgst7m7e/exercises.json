@@ -1,0 +1,560 @@
+[
+  {
+    "id": "ex-49gq1094",
+    "version": 1,
+    "section": "accessors",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`OpenDemo` set `book.year = -1899` on a class with a public field. What happened?",
+    "hint": "Read the one line it printed.",
+    "choices": [
+      {
+        "text": "The compiler refused the negative value",
+        "correct": false,
+        "why": "The compiler checks types, and `-1899` is a perfectly good `int`."
+      },
+      {
+        "text": "Nothing objected; it printed `-1899`",
+        "correct": true,
+        "why": "Right: a public field has no code of its own that runs when it is written."
+      },
+      {
+        "text": "The JVM threw an `IllegalArgumentException` when the field was written",
+        "correct": false,
+        "why": "That exception came from `checkYear` in `Book`; `OpenBook` has no such check."
+      },
+      {
+        "text": "The year was stored as 1899, its absolute value",
+        "correct": false,
+        "why": "Java stores exactly the `int` it is given; nothing corrected it."
+      }
+    ]
+  },
+  {
+    "id": "ex-74epfhj0",
+    "version": 1,
+    "section": "accessors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `Book`'s constructor call `checkYear` too, and not only `setYear`?",
+    "hint": "Think of `new Book(\"x\", -1899)`.",
+    "choices": [
+      {
+        "text": "Because a constructor cannot call a setter",
+        "correct": false,
+        "why": "It can; the lesson routes both through one private method so the rule exists once."
+      },
+      {
+        "text": "To make the stack trace one line shorter when a bad year arrives through the constructor",
+        "correct": false,
+        "why": "The stack trace is a side effect; the point is which writes are checked."
+      },
+      {
+        "text": "Otherwise building a book would be a way round the rule",
+        "correct": true,
+        "why": "Right: every write must pass the check, the first one included."
+      }
+    ]
+  },
+  {
+    "id": "ex-0g932gvg",
+    "version": 1,
+    "section": "accessors",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Sneaky` wrote `book.year = -1899` on the private-field `Book`. What stopped it?",
+    "hint": "The message started with the file name and a line number.",
+    "choices": [
+      {
+        "text": "The compiler, before anything ran",
+        "correct": true,
+        "why": "Right: `year has private access in Book`, and there was nothing to run."
+      },
+      {
+        "text": "`checkYear`, which threw when the field changed",
+        "correct": false,
+        "why": "`checkYear` runs only when called; a direct write would skip it, which is why the compiler forbids one."
+      },
+      {
+        "text": "The JVM's verifier, when it loaded `Sneaky.class`",
+        "correct": false,
+        "why": "There was no `Sneaky.class`: `javac` reported an error and wrote nothing."
+      },
+      {
+        "text": "The `final` on the field",
+        "correct": false,
+        "why": "`year` is not final, since `setYear` changes it; `title` is the final one."
+      }
+    ]
+  },
+  {
+    "id": "ex-j2acskjm",
+    "version": 1,
+    "section": "accessors",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By the JavaBeans naming convention, the getter of a `boolean` field called `available` is named `___`.",
+    "hint": "For a `boolean`, `is` replaces `get`.",
+    "blanks": [
+      {
+        "accept": [
+          "isAvailable",
+          "isAvailable()"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-km66rt6c",
+    "version": 1,
+    "section": "accessors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A setter that only does `this.year = year;` checks nothing. What does it still buy over a public field?",
+    "hint": "Think of the day a rule arrives.",
+    "choices": [
+      {
+        "text": "Faster access, because the JIT compiles the method",
+        "correct": false,
+        "why": "Speed is not the argument; a field access is at least as fast."
+      },
+      {
+        "text": "A single place for a future check",
+        "correct": true,
+        "why": "Right: the rule goes into the setter and every caller gets it."
+      },
+      {
+        "text": "Protection against a negative year, since setters reject negatives by default",
+        "correct": false,
+        "why": "A setter does only what its body says; this one says nothing."
+      },
+      {
+        "text": "Nothing at all; the two are identical in every respect",
+        "correct": false,
+        "why": "They behave the same today, and differ the day the rule has to change."
+      }
+    ]
+  },
+  {
+    "id": "ex-zn8hcyt9",
+    "version": 1,
+    "section": "accessors",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these choices in `Book` protect the rule that a year lies between 1450 and 2100? Choose all that apply.",
+    "hint": "Find every way a year could get in.",
+    "choices": [
+      {
+        "text": "`year` is `private`",
+        "correct": true,
+        "why": "Yes: no code outside `Book` can write it directly."
+      },
+      {
+        "text": "The constructor passes its argument through `checkYear`",
+        "correct": true,
+        "why": "Yes: the first write is checked like every other."
+      },
+      {
+        "text": "`title` is `final`",
+        "correct": false,
+        "why": "That fixes the title; it says nothing about the year."
+      },
+      {
+        "text": "`setYear` passes its argument through `checkYear`",
+        "correct": true,
+        "why": "Yes: changes after construction are checked too."
+      },
+      {
+        "text": "`getYear` returns an `int` rather than an `Integer`",
+        "correct": false,
+        "why": "Reading cannot break the rule; the type of the return changes nothing here."
+      }
+    ]
+  },
+  {
+    "id": "ex-wv229dq1",
+    "version": 1,
+    "section": "invariants",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Shelf.titles` is `private final`, yet `LeakDemo` put three books on a shelf for two. How?",
+    "hint": "What exactly did `getTitles()` return?",
+    "choices": [
+      {
+        "text": "`final` stops the list being replaced, so `add` on the shelf skipped its check",
+        "correct": false,
+        "why": "`Shelf.add` was never called the third time; `ArrayList.add` was."
+      },
+      {
+        "text": "The getter returned the shelf's own list, and the caller added a third book straight to it",
+        "correct": true,
+        "why": "Right: `private` hides the name, not the object a reference leads to."
+      },
+      {
+        "text": "A third `add` is allowed when the capacity is even",
+        "correct": false,
+        "why": "There is no such rule; the check is `titles.size() == capacity`."
+      },
+      {
+        "text": "`getTitles()` returned a copy, and the copy grew past the limit",
+        "correct": false,
+        "why": "A copy growing would leave the shelf at two; the shelf itself reported three."
+      }
+    ]
+  },
+  {
+    "id": "ex-n72z1b9d",
+    "version": 1,
+    "section": "invariants",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `final` on `private final List<String> titles` guarantee?",
+    "hint": "A reference and the object it refers to are two things.",
+    "choices": [
+      {
+        "text": "That nobody can add to or remove from the list, from inside the class or from outside it",
+        "correct": false,
+        "why": "The list stayed an ordinary `ArrayList`, and `LeakDemo` added to it."
+      },
+      {
+        "text": "That the getter returns a copy",
+        "correct": false,
+        "why": "`final` does nothing to what a method returns."
+      },
+      {
+        "text": "That the field refers to the same list for the object's whole life",
+        "correct": true,
+        "why": "Right: the reference is fixed; the list's contents are not."
+      }
+    ]
+  },
+  {
+    "id": "ex-8hx43dwx",
+    "version": 1,
+    "section": "invariants",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `SafeDemo`, `copy` and `view` were taken, and then `Iracema` was added to the shelf. Why did only `view` show it?",
+    "hint": "One of them is a new list; the other is a window.",
+    "choices": [
+      {
+        "text": "`List.copyOf` made a new list at that moment; the view looks through to the shelf's own list",
+        "correct": true,
+        "why": "Right: later changes reach the view and never the copy."
+      },
+      {
+        "text": "`Collections.unmodifiableList` refreshes itself each time the shelf calls `add`",
+        "correct": false,
+        "why": "Nothing is refreshed; the view has no copy of its own to refresh."
+      },
+      {
+        "text": "`copy` was printed before `Iracema` was added",
+        "correct": false,
+        "why": "Both were printed after the `add`; the order of the `println` lines does not explain it."
+      },
+      {
+        "text": "Copies drop the last element added to the original",
+        "correct": false,
+        "why": "The copy held everything there was when it was made: one title."
+      }
+    ]
+  },
+  {
+    "id": "ex-wd2cezkg",
+    "version": 1,
+    "section": "invariants",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `view.add(\"O Guarani\")` do?",
+    "hint": "The last three lines of the transcript.",
+    "choices": [
+      {
+        "text": "Added the book, since the shelf's capacity was 3",
+        "correct": false,
+        "why": "The view refuses every change, whatever the capacity."
+      },
+      {
+        "text": "Threw `IllegalStateException: shelf is full`",
+        "correct": false,
+        "why": "That message comes from `SafeShelf.add`, which this call never reached."
+      },
+      {
+        "text": "Threw `UnsupportedOperationException`",
+        "correct": true,
+        "why": "Right: a read-only view refuses `add`, on the line that tried."
+      }
+    ]
+  },
+  {
+    "id": "ex-86pptk5s",
+    "version": 1,
+    "section": "invariants",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way of returning `titles` to what the caller can do with the result.",
+    "hint": "The table in the section, plus the leaking `Shelf`.",
+    "pairs": [
+      {
+        "left": "`return titles;`",
+        "right": "Change the shelf's own list"
+      },
+      {
+        "left": "`return List.copyOf(titles);`",
+        "right": "Read a snapshot that never changes"
+      },
+      {
+        "left": "`return Collections.unmodifiableList(titles);`",
+        "right": "Read the current list, and change nothing"
+      }
+    ],
+    "right_distractors": [
+      "Change the snapshot without touching the shelf"
+    ]
+  },
+  {
+    "id": "ex-8w9wxc5m",
+    "version": 1,
+    "section": "invariants",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A constructor `Shelf(List<String> titles)` does `this.titles = titles;`. The getter returns a copy. How can a caller still break the capacity?",
+    "hint": "Who else holds the list that was passed in?",
+    "choices": [
+      {
+        "text": "It cannot: copying on the way out closes every door",
+        "correct": false,
+        "why": "The list came in from the caller, who still holds it."
+      },
+      {
+        "text": "By calling the constructor twice on the same object",
+        "correct": false,
+        "why": "A constructor runs once per object; that is not a way in."
+      },
+      {
+        "text": "By adding to the list it passed in, which is now the shelf's field",
+        "correct": true,
+        "why": "Right: copy what you receive, `new ArrayList<>(titles)`, as well as what you return."
+      },
+      {
+        "text": "By reading the copy and casting it back to `ArrayList` to reach the shelf's own list",
+        "correct": false,
+        "why": "A copy from `List.copyOf` is not the shelf's list, whatever it is cast to."
+      }
+    ]
+  },
+  {
+    "id": "ex-gsjk51mk",
+    "version": 1,
+    "section": "tell-dont-ask",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`AskDemo` printed the right fee. What is wrong with it?",
+    "hint": "Where is the fee rule written?",
+    "choices": [
+      {
+        "text": "It uses `long` for money, which loses cents",
+        "correct": false,
+        "why": "A `long` count of cents loses nothing; that is the safe choice."
+      },
+      {
+        "text": "The rule lives in the caller, so every other caller must repeat it",
+        "correct": true,
+        "why": "Right: the receipt, the e-mail and the account page would each copy the same lines."
+      },
+      {
+        "text": "It charges a negative fee for a loan returned early",
+        "correct": false,
+        "why": "The `late > 0` guard prevents that; the risk is the next caller forgetting it."
+      },
+      {
+        "text": "`getDue()` exposes a mutable date",
+        "correct": false,
+        "why": "`LocalDate` cannot be changed once built, so handing it out is safe."
+      }
+    ]
+  },
+  {
+    "id": "ex-ztvdbhfj",
+    "version": 1,
+    "section": "tell-dont-ask",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `TellDemo` print for a loan due on 9 October, checked on 5 October?",
+    "hint": "The second line of output.",
+    "choices": [
+      {
+        "text": "`Iracema: -200 cents`",
+        "correct": false,
+        "why": "Four days early would be -200 without the guard, and `lateFeeCents` has it."
+      },
+      {
+        "text": "`Iracema: 0 cents`",
+        "correct": true,
+        "why": "Right: a loan that is not late yet owes nothing."
+      },
+      {
+        "text": "`Iracema: 150 cents`",
+        "correct": false,
+        "why": "That was the first line, for 12 October."
+      }
+    ]
+  },
+  {
+    "id": "ex-wwdsx9td",
+    "version": 1,
+    "section": "tell-dont-ask",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `FEE_PER_DAY_CENTS = 50`, what does `lateFeeCents` return for a loan due on 9 October, checked on 19 October? Give cents.",
+    "hint": "Days late times fifty.",
+    "value": 500,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-nz9pxq3n",
+    "version": 1,
+    "section": "tell-dont-ask",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `describe` take `today` as a parameter instead of calling `LocalDate.now()` itself?",
+    "hint": "Think of a test written on any day of the year.",
+    "choices": [
+      {
+        "text": "So that the same loan gives the same answer whatever day the code runs",
+        "correct": true,
+        "why": "Right: the caller decides what today is, and a test can fix it."
+      },
+      {
+        "text": "Because `LocalDate.now()` is not allowed inside a class with private fields",
+        "correct": false,
+        "why": "Nothing forbids it; it was a choice about predictability."
+      },
+      {
+        "text": "Because `LocalDate.now()` returns a mutable object",
+        "correct": false,
+        "why": "`LocalDate` is immutable, whoever creates it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1b11zxcd",
+    "version": 1,
+    "section": "tell-dont-ask",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A class carries a row read from a CSV file to the code that saves it, and decides nothing. Following the section, how should it be written?",
+    "hint": "Some data is only data.",
+    "choices": [
+      {
+        "text": "With private fields, no getters, and methods for every rule",
+        "correct": false,
+        "why": "It has no rules; inventing behaviour for it would be ceremony."
+      },
+      {
+        "text": "With public mutable fields, since accessors are red tape and this class has no rule to protect",
+        "correct": false,
+        "why": "Mutable public fields bring back every problem of section 02."
+      },
+      {
+        "text": "As a record, whose accessors exist because reading the values is the point",
+        "correct": true,
+        "why": "Right: lesson 29's `record` is the tool for data that is only data."
+      }
+    ]
+  },
+  {
+    "id": "ex-z9qvdjzc",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lines of `BookDemo`'s stack trace in the order they were printed, from the top.",
+    "hint": "The top is where the exception was thrown.",
+    "items": [
+      "`Exception in thread \"main\" java.lang.IllegalArgumentException: year out of range: -1899`",
+      "`at Book.checkYear(Book.java:25)`",
+      "`at Book.setYear(Book.java:20)`",
+      "`at BookDemo.main(BookDemo.java:6)`"
+    ]
+  },
+  {
+    "id": "ex-f1kgn0r9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `Member` class has `private final List<Loan> loans` and promises at most five loans. Which getter keeps that promise and still lets a screen show the member's current loans as they change?",
+    "hint": "The screen must see later changes and make none.",
+    "choices": [
+      {
+        "text": "`return loans;`",
+        "correct": false,
+        "why": "The screen could then add a sixth loan to the member's own list."
+      },
+      {
+        "text": "`return List.copyOf(loans);`",
+        "correct": false,
+        "why": "Safe, but frozen: the screen would not see loans added after it asked."
+      },
+      {
+        "text": "`return Collections.unmodifiableList(loans);`",
+        "correct": true,
+        "why": "Right: a read-only window that follows the member's list."
+      },
+      {
+        "text": "`return new ArrayList<>(loans);`",
+        "correct": false,
+        "why": "A fresh copy: changes to it are harmless, and it is just as frozen as `copyOf`."
+      }
+    ]
+  },
+  {
+    "id": "ex-k08830x9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every caller of `loan.getDue()` compares it with today and charges a fee. What does the section suggest?",
+    "hint": "Who should own the sum?",
+    "choices": [
+      {
+        "text": "Make `due` public, since every caller reads it anyway and a getter adds nothing to that",
+        "correct": false,
+        "why": "That spreads the rule further and gives up the date's protection."
+      },
+      {
+        "text": "Move the fee into a method on `Loan`, and drop the getter if nothing else reads it",
+        "correct": true,
+        "why": "Right: tell the loan what you need, and the rule exists once."
+      },
+      {
+        "text": "Add a setter for `due` so callers can correct it",
+        "correct": false,
+        "why": "Nobody needs to change the date; they need the fee."
+      }
+    ]
+  }
+]

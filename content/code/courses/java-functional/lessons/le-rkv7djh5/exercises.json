@@ -1,0 +1,428 @@
+[
+  {
+    "id": "ex-2n0cd6fw",
+    "version": 1,
+    "section": "creating-and-starting",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`mistake.run()` printed `on main`. Why was no new thread involved?",
+    "hint": "Only one method creates the thread.",
+    "choices": [
+      {
+        "text": "Threads named by default run on `main`",
+        "correct": false,
+        "why": "`worker` had the default name and ran on `Thread-0`."
+      },
+      {
+        "text": "The thread had already finished",
+        "correct": false,
+        "why": "It had never started."
+      },
+      {
+        "text": "The JVM ran it on `main` to save a thread, an optimisation it makes for short tasks",
+        "correct": false,
+        "why": "The JVM makes no such choice; the call did exactly what it says."
+      },
+      {
+        "text": "`run` is an ordinary call; only `start` creates a thread",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-5pnnxhhr",
+    "version": 1,
+    "section": "creating-and-starting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `worker.join()` do?",
+    "hint": "The simplest coordination.",
+    "choices": [
+      {
+        "text": "Merges `worker` into the calling thread",
+        "correct": false,
+        "why": "Threads are never merged."
+      },
+      {
+        "text": "Stops `worker` if it is still running",
+        "correct": false,
+        "why": "Nothing stops a thread from outside."
+      },
+      {
+        "text": "Starts `worker` and returns at once",
+        "correct": false,
+        "why": "`start` does that."
+      },
+      {
+        "text": "Waits for `worker` to end",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-meqnzamm",
+    "version": 1,
+    "section": "creating-and-starting",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Thread.of___().name(\"invoice-\", 1)` builds operating-system threads named `invoice-1`, `invoice-2` and so on.",
+    "hint": "As opposed to virtual.",
+    "blanks": [
+      {
+        "accept": [
+          "Platform"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vd1zqp8e",
+    "version": 1,
+    "section": "the-life-of-a-thread",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each moment of `States.java` with the state it printed.",
+    "hint": "The output.",
+    "pairs": [
+      {
+        "left": "before `start`",
+        "right": "`NEW`"
+      },
+      {
+        "left": "during `sleep(5_000)`",
+        "right": "`TIMED_WAITING`"
+      },
+      {
+        "left": "after `join`",
+        "right": "`TERMINATED`"
+      }
+    ],
+    "right_distractors": [
+      "`BLOCKED`"
+    ]
+  },
+  {
+    "id": "ex-eakv3n1y",
+    "version": 1,
+    "section": "the-life-of-a-thread",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `sleeper.interrupt()` do to a thread that is sleeping?",
+    "hint": "Interrupting is asking.",
+    "choices": [
+      {
+        "text": "Kills it on the spot",
+        "correct": false,
+        "why": "Java has no safe way to kill a thread."
+      },
+      {
+        "text": "Nothing, until the sleep is over",
+        "correct": false,
+        "why": "It woke after 200 ms, not five seconds."
+      },
+      {
+        "text": "Wakes it with `InterruptedException`",
+        "correct": true,
+        "why": "Right, and the thread decides what to do."
+      },
+      {
+        "text": "Restarts its `run` method from the top",
+        "correct": false,
+        "why": "Nothing restarts a thread."
+      }
+    ]
+  },
+  {
+    "id": "ex-3a4c9jth",
+    "version": 1,
+    "section": "the-life-of-a-thread",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A method catches `InterruptedException`, cannot stop at once, and does nothing else. What is wrong?",
+    "hint": "What happened to the flag?",
+    "choices": [
+      {
+        "text": "The exception should have been printed",
+        "correct": false,
+        "why": "Printing does not tell the code above that a stop was requested."
+      },
+      {
+        "text": "`InterruptedException` must never be caught",
+        "correct": false,
+        "why": "It is checked; catching it is normal, ignoring it is the problem."
+      },
+      {
+        "text": "The flag was cleared, so nobody above sees the request",
+        "correct": true,
+        "why": "Right: call `Thread.currentThread().interrupt()` to restore it."
+      },
+      {
+        "text": "The thread is now `TERMINATED` and cannot continue",
+        "correct": false,
+        "why": "It continues running; that is the trouble."
+      }
+    ]
+  },
+  {
+    "id": "ex-1m7n82vg",
+    "version": 1,
+    "section": "the-life-of-a-thread",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program hangs. What does the lesson suggest reading first?",
+    "hint": "`jcmd <pid> Thread.print`.",
+    "choices": [
+      {
+        "text": "The garbage collector's log",
+        "correct": false,
+        "why": "A hang is threads waiting, which the dump shows."
+      },
+      {
+        "text": "A thread dump",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The source of `Thread.java`",
+        "correct": false,
+        "why": "The question is about your threads, not the class."
+      },
+      {
+        "text": "The process's memory in `/proc/self/status`",
+        "correct": false,
+        "why": "Memory does not say what a thread is waiting for."
+      }
+    ]
+  },
+  {
+    "id": "ex-61axxw54",
+    "version": 1,
+    "section": "what-one-costs",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How long did starting 10,000 platform threads take in `Cost.java`, in seconds, to one decimal place?",
+    "hint": "The `started:` line, in ms.",
+    "value": 5.5,
+    "tolerance": 0.1,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-cqd7tqne",
+    "version": 1,
+    "section": "what-one-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Threads:` rose by about one per `start()`. What does that show?",
+    "hint": "Whose count is it?",
+    "choices": [
+      {
+        "text": "The JVM counts its own Java objects there",
+        "correct": false,
+        "why": "It is the operating system's count, read from `/proc`."
+      },
+      {
+        "text": "Each is an operating-system thread",
+        "correct": true,
+        "why": "Right: one for one."
+      },
+      {
+        "text": "Threads are created lazily, when they first run",
+        "correct": false,
+        "why": "They exist as soon as `start` returns."
+      },
+      {
+        "text": "The machine has that many processors",
+        "correct": false,
+        "why": "It has four."
+      }
+    ]
+  },
+  {
+    "id": "ex-h8pvzbd5",
+    "version": 1,
+    "section": "what-one-costs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Each thread reserves a megabyte of stack, yet resident memory grew by tens of kilobytes per thread. Why?",
+    "hint": "Reserved is not used.",
+    "choices": [
+      {
+        "text": "Sleeping threads give their stack back to the JVM until they wake",
+        "correct": false,
+        "why": "A sleeping thread keeps its stack."
+      },
+      {
+        "text": "`-Xss` defaults to 64 KB on Linux",
+        "correct": false,
+        "why": "The default is a megabyte."
+      },
+      {
+        "text": "Most of the reservation is never touched",
+        "correct": true,
+        "why": "Right, and it still counts against the process's limits."
+      },
+      {
+        "text": "The garbage collector freed the stacks while they slept",
+        "correct": false,
+        "why": "Thread stacks are not collected while the thread lives."
+      }
+    ]
+  },
+  {
+    "id": "ex-bppwv6bc",
+    "version": 1,
+    "section": "when-a-thread-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`worker-a` threw `ArithmeticException` and nobody caught it. What did `main` do?",
+    "hint": "Only one thread ends.",
+    "choices": [
+      {
+        "text": "Restarted `worker-a`",
+        "correct": false,
+        "why": "Nothing restarts a thread."
+      },
+      {
+        "text": "Carried on, unaware",
+        "correct": true,
+        "why": "Right: the silent failure."
+      },
+      {
+        "text": "Stopped with the same exception",
+        "correct": false,
+        "why": "The exception ended `worker-a` only."
+      },
+      {
+        "text": "Received the exception from `join`",
+        "correct": false,
+        "why": "`join` returns normally; it reports nothing about how the thread ended."
+      }
+    ]
+  },
+  {
+    "id": "ex-j472t41e",
+    "version": 1,
+    "section": "when-a-thread-fails",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these give a failing thread a way to report its death? Choose all that apply.",
+    "hint": "Section 05, and a look ahead.",
+    "choices": [
+      {
+        "text": "`setDaemon(true)`",
+        "correct": false,
+        "why": "No: that decides whether the JVM waits for it."
+      },
+      {
+        "text": "`Thread.setDefaultUncaughtExceptionHandler`, set once",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Running it as a task in an executor, lesson 16",
+        "correct": true,
+        "why": "Yes: the result carries the exception."
+      },
+      {
+        "text": "`setUncaughtExceptionHandler` on the thread",
+        "correct": true,
+        "why": "Yes."
+      }
+    ]
+  },
+  {
+    "id": "ex-yg0bsep0",
+    "version": 1,
+    "section": "when-a-thread-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the daemon's line never appear?",
+    "hint": "Who does the JVM wait for?",
+    "choices": [
+      {
+        "text": "The JVM exited when `main` ended, killing it",
+        "correct": true,
+        "why": "Right: daemons are not waited for."
+      },
+      {
+        "text": "It threw an exception nobody saw",
+        "correct": false,
+        "why": "No trace was printed."
+      },
+      {
+        "text": "`sleep` is not allowed in a daemon",
+        "correct": false,
+        "why": "It is allowed."
+      },
+      {
+        "text": "Daemon threads cannot print",
+        "correct": false,
+        "why": "They can; this one did not live long enough."
+      }
+    ]
+  },
+  {
+    "id": "ex-trzy1w3g",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put `sleeper`'s states in the order `States.java` printed them.",
+    "hint": "From before `start` to after `join`.",
+    "items": [
+      "`NEW`",
+      "`TIMED_WAITING`",
+      "`TERMINATED`"
+    ]
+  },
+  {
+    "id": "ex-th379bd8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server starts a platform thread per request, and requests mostly wait for a database. What limits how many it can serve at once?",
+    "hint": "Section 04's last paragraph.",
+    "choices": [
+      {
+        "text": "The speed of its processors",
+        "correct": false,
+        "why": "The threads mostly wait; processors are not the limit."
+      },
+      {
+        "text": "The `-Xss` flag alone",
+        "correct": false,
+        "why": "It changes the reservation per thread, not the cost of a thread per request."
+      },
+      {
+        "text": "The number of platform threads it keeps alive",
+        "correct": true,
+        "why": "Right: a few thousand, however little each does."
+      },
+      {
+        "text": "The size of each request's body, which every thread must hold in memory at once",
+        "correct": false,
+        "why": "The cost described is per thread, not per byte of request."
+      }
+    ]
+  }
+]

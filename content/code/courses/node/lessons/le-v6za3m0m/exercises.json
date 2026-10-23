@@ -1,0 +1,912 @@
+[
+  {
+    "id": "ex-nva92he6",
+    "version": 1,
+    "section": "buffers",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bytes is `\"olá\"` in UTF-8?",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-09dnh03g",
+    "version": 1,
+    "section": "buffers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A field limit checks `text.length <= 100`. What does that let through?",
+    "choices": [
+      {
+        "text": "Exactly 100 bytes, never more",
+        "correct": false,
+        "why": "length on a string is not bytes."
+      },
+      {
+        "text": "Up to several times 100 bytes",
+        "correct": true,
+        "why": "Right: an emoji is two units and four bytes."
+      },
+      {
+        "text": "Fewer than 100 bytes, always",
+        "correct": false,
+        "why": "Multi-byte characters push it over."
+      },
+      {
+        "text": "Only ASCII text",
+        "correct": false,
+        "why": "Any text passes the check."
+      }
+    ]
+  },
+  {
+    "id": "ex-fpcqnfvt",
+    "version": 1,
+    "section": "buffers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did three of the four bytes of `\"olá\"` decode to `ol` and a replacement character?",
+    "choices": [
+      {
+        "text": "Buffers drop the last byte",
+        "correct": false,
+        "why": "subarray kept exactly three."
+      },
+      {
+        "text": "`á` is not valid UTF-8",
+        "correct": false,
+        "why": "Whole, it decoded fine."
+      },
+      {
+        "text": "toString defaults to ASCII",
+        "correct": false,
+        "why": "It was asked for utf8."
+      },
+      {
+        "text": "The cut split `á`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-0zqm8pva",
+    "version": 1,
+    "section": "buffers",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Buffer.___(\"olá\")` counts the bytes of a string without making a Buffer.",
+    "blanks": [
+      {
+        "accept": [
+          "byteLength"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-a3n8f43t",
+    "version": 1,
+    "section": "three-apis",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which form of `node:fs` does this course use after start-up?",
+    "choices": [
+      {
+        "text": "`node:fs/promises`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The Sync form, for simplicity",
+        "correct": false,
+        "why": "It blocks every request while it runs."
+      },
+      {
+        "text": "The callback form",
+        "correct": false,
+        "why": "It works; the course prefers awaiting."
+      },
+      {
+        "text": "Whichever is fastest on the day",
+        "correct": false,
+        "why": "The choice is about blocking, not speed."
+      }
+    ]
+  },
+  {
+    "id": "ex-57b53fnb",
+    "version": 1,
+    "section": "three-apis",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lines of `three.js` in the order they printed.",
+    "items": [
+      "the sync result",
+      "the callback read has started",
+      "the promise read has started",
+      "the callback result",
+      "the promise result"
+    ]
+  },
+  {
+    "id": "ex-n0t6e6cs",
+    "version": 1,
+    "section": "paths",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `path.join(\"/srv/uploads\", \"../../etc/passwd\")` give?",
+    "choices": [
+      {
+        "text": "An error",
+        "correct": false,
+        "why": "join never refuses."
+      },
+      {
+        "text": "`/etc/passwd`",
+        "correct": true,
+        "why": "Right: join applies the `..`."
+      },
+      {
+        "text": "`/srv/uploads/../../etc/passwd`, unchanged",
+        "correct": false,
+        "why": "join normalises."
+      },
+      {
+        "text": "`/srv/uploads/etc/passwd`",
+        "correct": false,
+        "why": "`..` is applied, not removed."
+      }
+    ]
+  },
+  {
+    "id": "ex-f97hy4wk",
+    "version": 1,
+    "section": "paths",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `inside` compare against `base + path.sep`, not just `base`?",
+    "choices": [
+      {
+        "text": "To allow absolute names",
+        "correct": false,
+        "why": "Absolute names are refused either way."
+      },
+      {
+        "text": "Windows needs it",
+        "correct": false,
+        "why": "It matters on every system."
+      },
+      {
+        "text": "To speed up the comparison",
+        "correct": false,
+        "why": "Speed is not why."
+      },
+      {
+        "text": "A sibling folder would pass",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-a6d8qzm2",
+    "version": 1,
+    "section": "paths",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A route refuses any file name containing `..`. Why does the lesson prefer resolving and comparing instead?",
+    "choices": [
+      {
+        "text": "Because `..` is legal in names",
+        "correct": false,
+        "why": "That is a side issue."
+      },
+      {
+        "text": "Searching strings is slow",
+        "correct": false,
+        "why": "Speed is not the point."
+      },
+      {
+        "text": "It checks where the path lands",
+        "correct": true,
+        "why": "Right: it checks where the path lands."
+      },
+      {
+        "text": "Express already removes `..`",
+        "correct": false,
+        "why": "Only express.static checks; your routes must."
+      }
+    ]
+  },
+  {
+    "id": "ex-xgw7qyeq",
+    "version": 1,
+    "section": "reading-and-writing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `mkdir(dir, { recursive: true })` do when the folder exists?",
+    "choices": [
+      {
+        "text": "Nothing, and succeeds",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Throws EEXIST",
+        "correct": false,
+        "why": "Without recursive it would."
+      },
+      {
+        "text": "Empties it",
+        "correct": false,
+        "why": "It never touches contents."
+      },
+      {
+        "text": "Makes a second copy",
+        "correct": false,
+        "why": "There is one folder per path."
+      }
+    ]
+  },
+  {
+    "id": "ex-p995dazq",
+    "version": 1,
+    "section": "reading-and-writing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two processes both write a lock file with `flag: \"wx\"`. What happens?",
+    "choices": [
+      {
+        "text": "Both succeed; the last wins",
+        "correct": false,
+        "why": "That is the plain w flag."
+      },
+      {
+        "text": "Both fail",
+        "correct": false,
+        "why": "The first one creates it."
+      },
+      {
+        "text": "One succeeds, the other gets EEXIST",
+        "correct": true,
+        "why": "Right: create only if absent, in one step."
+      },
+      {
+        "text": "They take turns writing",
+        "correct": false,
+        "why": "wx does not wait."
+      }
+    ]
+  },
+  {
+    "id": "ex-mp5c8m5m",
+    "version": 1,
+    "section": "error-codes",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each failure to its code.",
+    "pairs": [
+      {
+        "left": "a file that is not there",
+        "right": "ENOENT"
+      },
+      {
+        "left": "a folder that already exists",
+        "right": "EEXIST"
+      },
+      {
+        "left": "reading a folder as a file",
+        "right": "EISDIR"
+      },
+      {
+        "left": "writing where you may not",
+        "right": "EACCES"
+      }
+    ],
+    "right_distractors": [
+      "ECONNRESET"
+    ]
+  },
+  {
+    "id": "ex-r96arsqz",
+    "version": 1,
+    "section": "error-codes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`loadOrEmpty` returns `[]` for ENOENT. Why does it re-throw every other error?",
+    "choices": [
+      {
+        "text": "Node requires re-throwing",
+        "correct": false,
+        "why": "Nothing requires it."
+      },
+      {
+        "text": "Broken data must not pass",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Other errors cannot be caught",
+        "correct": false,
+        "why": "They were caught."
+      },
+      {
+        "text": "To make it shorter",
+        "correct": false,
+        "why": "It is about correctness."
+      }
+    ]
+  },
+  {
+    "id": "ex-v17sdtxe",
+    "version": 1,
+    "section": "error-codes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server starts failing with EMFILE after a day of running. What is the likeliest cause?",
+    "choices": [
+      {
+        "text": "The disk is full",
+        "correct": false,
+        "why": "That is ENOSPC."
+      },
+      {
+        "text": "A file was deleted",
+        "correct": false,
+        "why": "That is ENOENT."
+      },
+      {
+        "text": "A file-handle leak",
+        "correct": true,
+        "why": "Right: a leak."
+      },
+      {
+        "text": "The user lost permission",
+        "correct": false,
+        "why": "That is EACCES."
+      }
+    ]
+  },
+  {
+    "id": "ex-yswwd6dj",
+    "version": 1,
+    "section": "atomic-writes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`torn.js` was killed during `writeFile`. What was left in `store.json`?",
+    "choices": [
+      {
+        "text": "Nothing that parses",
+        "correct": true,
+        "why": "Right: zero bytes this time."
+      },
+      {
+        "text": "The old, good contents",
+        "correct": false,
+        "why": "writeFile had already emptied it."
+      },
+      {
+        "text": "The new contents, complete",
+        "correct": false,
+        "why": "The write never finished."
+      },
+      {
+        "text": "Both, one after the other",
+        "correct": false,
+        "why": "A file has one contents."
+      }
+    ]
+  },
+  {
+    "id": "ex-bh92658b",
+    "version": 1,
+    "section": "atomic-writes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does writing a temporary file and renaming it survive a crash?",
+    "choices": [
+      {
+        "text": "Temporary files are never lost",
+        "correct": false,
+        "why": "They can be; the rename is the point."
+      },
+      {
+        "text": "A rename on one disk is all or nothing",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "rename copies the file twice",
+        "correct": false,
+        "why": "It copies nothing."
+      },
+      {
+        "text": "The OS saves a backup",
+        "correct": false,
+        "why": "No backup is made."
+      }
+    ]
+  },
+  {
+    "id": "ex-pg7v3f0v",
+    "version": 1,
+    "section": "atomic-writes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the store's `save` wait for the save before it?",
+    "choices": [
+      {
+        "text": "rename fails if two run at once",
+        "correct": false,
+        "why": "Both succeed, which is the problem."
+      },
+      {
+        "text": "To use less memory",
+        "correct": false,
+        "why": "Memory is not why."
+      },
+      {
+        "text": "An older save could rename last and win",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Express runs one request at a time",
+        "correct": false,
+        "why": "It interleaves them on the loop."
+      }
+    ]
+  },
+  {
+    "id": "ex-vb3p580b",
+    "version": 1,
+    "section": "why-streams",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Counting 404s in the 127 MB log, which program needed less memory?",
+    "choices": [
+      {
+        "text": "`whole.js`",
+        "correct": false,
+        "why": "It held the file as one string."
+      },
+      {
+        "text": "They needed the same",
+        "correct": false,
+        "why": "They differed by hundreds of megabytes."
+      },
+      {
+        "text": "`streamed.js`",
+        "correct": true,
+        "why": "Right: a chunk and a line at a time."
+      },
+      {
+        "text": "It depended on the count",
+        "correct": false,
+        "why": "Both found the same count."
+      }
+    ]
+  },
+  {
+    "id": "ex-g5r2ck84",
+    "version": 1,
+    "section": "why-streams",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The log grows ten times larger. What happens to each program's peak memory?",
+    "choices": [
+      {
+        "text": "Both grow ten times",
+        "correct": false,
+        "why": "The stream holds a chunk, whatever the size."
+      },
+      {
+        "text": "Neither changes",
+        "correct": false,
+        "why": "whole.js holds the whole file."
+      },
+      {
+        "text": "The stream's grows; the other's stays",
+        "correct": false,
+        "why": "It is the other way round."
+      },
+      {
+        "text": "whole.js's grows; the stream's stays",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-w4gettej",
+    "version": 1,
+    "section": "readable-and-writable",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bytes does a file stream read at a time by default?",
+    "value": 65536,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-nn2jf2ws",
+    "version": 1,
+    "section": "readable-and-writable",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why wait for `finish` before a program that wrote a stream exits?",
+    "choices": [
+      {
+        "text": "The tail could still be unwritten",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "end() throws without it",
+        "correct": false,
+        "why": "end returns at once."
+      },
+      {
+        "text": "finish closes the terminal",
+        "correct": false,
+        "why": "It closes the file."
+      },
+      {
+        "text": "Node requires one listener per stream",
+        "correct": false,
+        "why": "No such rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-vxn2ex44",
+    "version": 1,
+    "section": "readable-and-writable",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the course read streams with `for await` rather than the `data` event?",
+    "choices": [
+      {
+        "text": "`data` is deprecated",
+        "correct": false,
+        "why": "It is still supported."
+      },
+      {
+        "text": "`for await` reads bigger chunks",
+        "correct": false,
+        "why": "The size comes from highWaterMark."
+      },
+      {
+        "text": "`data` loses chunks",
+        "correct": false,
+        "why": "It loses none if a listener is attached."
+      },
+      {
+        "text": "It never runs ahead",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-yyewxhfq",
+    "version": 1,
+    "section": "pipeline",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `pipeline` do when the source cannot be read?",
+    "choices": [
+      {
+        "text": "Leaves the writable open",
+        "correct": false,
+        "why": "That is .pipe's flaw."
+      },
+      {
+        "text": "Retries the read",
+        "correct": false,
+        "why": "Nothing retries."
+      },
+      {
+        "text": "Writes an empty result and succeeds",
+        "correct": false,
+        "why": "It rejects."
+      },
+      {
+        "text": "Destroys every stream and rejects once",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-vef3e5q0",
+    "version": 1,
+    "section": "pipeline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the failed gzip, an empty `missing.log.gz` remained. Why could `pipeline` not prevent it?",
+    "choices": [
+      {
+        "text": "gzip always writes a header",
+        "correct": false,
+        "why": "The file was empty."
+      },
+      {
+        "text": "pipeline ignores errors",
+        "correct": false,
+        "why": "It reported ENOENT."
+      },
+      {
+        "text": "The file existed before the failure",
+        "correct": true,
+        "why": "Right. Write elsewhere and rename at the end."
+      },
+      {
+        "text": "The exit code was 0",
+        "correct": false,
+        "why": "It was 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-1j56dxyp",
+    "version": 1,
+    "section": "backpressure",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `write()` returning `false` ask the producer to do?",
+    "choices": [
+      {
+        "text": "Wait for `drain`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Write the chunk again",
+        "correct": false,
+        "why": "It was accepted."
+      },
+      {
+        "text": "Close the stream",
+        "correct": false,
+        "why": "Nothing is wrong with it."
+      },
+      {
+        "text": "Write smaller chunks",
+        "correct": false,
+        "why": "Size is not the issue."
+      }
+    ]
+  },
+  {
+    "id": "ex-hrtnv1hj",
+    "version": 1,
+    "section": "backpressure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A producer ignored `false` and wrote 5000 chunks to a slow sink. Where did the data go?",
+    "choices": [
+      {
+        "text": "It was dropped",
+        "correct": false,
+        "why": "Ignoring false loses nothing."
+      },
+      {
+        "text": "To disk, as swap",
+        "correct": false,
+        "why": "It stayed in the process."
+      },
+      {
+        "text": "Into memory, all of it, waiting",
+        "correct": true,
+        "why": "Right: five megabytes."
+      },
+      {
+        "text": "Back to the producer",
+        "correct": false,
+        "why": "Nothing is returned."
+      }
+    ]
+  },
+  {
+    "id": "ex-83tt8k2y",
+    "version": 1,
+    "section": "backpressure",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these respects backpressure without you writing a `drain` handler?",
+    "choices": [
+      {
+        "text": "A loop calling `write` and ignoring its result",
+        "correct": false,
+        "why": "That is the careless sink."
+      },
+      {
+        "text": "`readFile` then `res.send`",
+        "correct": false,
+        "why": "It holds the whole file."
+      },
+      {
+        "text": "`pipeline`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A `data` listener that writes each chunk",
+        "correct": false,
+        "why": "It keeps reading regardless."
+      }
+    ]
+  },
+  {
+    "id": "ex-6xfh8nsp",
+    "version": 1,
+    "section": "transforms",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the report's transform, what does not calling `this.push` do to a line?",
+    "choices": [
+      {
+        "text": "Delays it to the end",
+        "correct": false,
+        "why": "Nothing keeps it."
+      },
+      {
+        "text": "Throws an error",
+        "correct": false,
+        "why": "Dropping is allowed."
+      },
+      {
+        "text": "Passes it on unchanged",
+        "correct": false,
+        "why": "Only push passes things on."
+      },
+      {
+        "text": "Drops it",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-h62mgjye",
+    "version": 1,
+    "section": "transforms",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why read the log through `readline` rather than splitting each chunk on newlines?",
+    "choices": [
+      {
+        "text": "Chunks split lines",
+        "correct": true,
+        "why": "Right. readline joins it again."
+      },
+      {
+        "text": "readline is faster than split",
+        "correct": false,
+        "why": "Speed is not the point."
+      },
+      {
+        "text": "Chunks contain no newlines",
+        "correct": false,
+        "why": "They contain many."
+      },
+      {
+        "text": "split cannot handle Buffers",
+        "correct": false,
+        "why": "The point is where lines end."
+      }
+    ]
+  },
+  {
+    "id": "ex-b8wmaa8j",
+    "version": 1,
+    "section": "streaming-http",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The 12 MB upload hit the 10 MB limit. What did the client get?",
+    "choices": [
+      {
+        "text": "413, and no file left",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "201 with the first 10 MB",
+        "correct": false,
+        "why": "The partial file was removed."
+      },
+      {
+        "text": "500",
+        "correct": false,
+        "why": "It is the client's request that was too large."
+      },
+      {
+        "text": "Nothing; the connection hung",
+        "correct": false,
+        "why": "It answered at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-8myebxr1",
+    "version": 1,
+    "section": "streaming-http",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A client gave up halfway through the download. What did the server do?",
+    "choices": [
+      {
+        "text": "Kept reading the file to the end",
+        "correct": false,
+        "why": "That is what readFile and send would do."
+      },
+      {
+        "text": "Crashed",
+        "correct": false,
+        "why": "pipeline rejected and the route caught it."
+      },
+      {
+        "text": "Stopped reading",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Retried the client",
+        "correct": false,
+        "why": "Servers do not call clients."
+      }
+    ]
+  },
+  {
+    "id": "ex-6pabee41",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of an upload with a limit in order.",
+    "items": [
+      "A chunk of the request arrives",
+      "Add its length to the total",
+      "Compare the total with the limit",
+      "Pass the chunk on to the file",
+      "Answer 201 when the request ends"
+    ]
+  }
+]

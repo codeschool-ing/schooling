@@ -1,0 +1,615 @@
+[
+  {
+    "id": "ex-e11ey569",
+    "version": 1,
+    "section": "stack-and-heap",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Go 1.27.1, how does a new goroutine's stack begin, and what happens when a call needs more room than it has?",
+    "hint": "Compare the two numbers the section put side by side: `ulimit -s` and `stackMin`.",
+    "choices": [
+      {
+        "text": "It starts at 2,048 bytes and is copied whole to a block twice the size",
+        "correct": true,
+        "why": "Right. `stackMin = 2048` in `stack.go`, and growth is a copy to a doubled block; `~/mem-stacks` watched `main`'s stack reach about 32 MiB that way."
+      },
+      {
+        "text": "It starts at 8 MiB, like a thread, and the program dies past that",
+        "correct": false,
+        "why": "8,192 KiB is what `ulimit -s` printed for the main thread. A goroutine starts four thousand times smaller and grows."
+      },
+      {
+        "text": "It starts at 2 KiB, and further frames are put on the heap",
+        "correct": false,
+        "why": "Frames never move to the heap. The whole stack is moved to a bigger block, which is why `x` changed address."
+      },
+      {
+        "text": "It starts at 2 KiB and gains a linked second segment",
+        "correct": false,
+        "why": "Linked segments are not what 1.27.1 does: `copystack` allocates one new block, copies the used part and frees the old one."
+      }
+    ]
+  },
+  {
+    "id": "ex-7606kdqk",
+    "version": 1,
+    "section": "stack-and-heap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `~/mem-stacks`, the local variable `x` printed one address before `down(100000)` and another after it, although no line of the program assigned it again. Why?",
+    "hint": "`x` stayed in `main`'s frame the whole time.",
+    "choices": [
+      {
+        "text": "`down` overwrote `x` with a copy of itself",
+        "correct": false,
+        "why": "`down` never sees `x`: it has its own frames with its own `pad` arrays. The value of `x` is unchanged; only where it sits changed."
+      },
+      {
+        "text": "The deep call made `x` escape to the heap",
+        "correct": false,
+        "why": "Escape is decided by the compiler when it builds the program, not during a run. `uintptr(unsafe.Pointer(&x))` keeps `x` in the frame."
+      },
+      {
+        "text": "Growing the stack copied every frame, `x`'s too",
+        "correct": true,
+        "why": "Right. Growth copies the whole stack to a new block, so every frame on it, and every variable in each frame, has a new address afterwards. The collections that shrank it moved `x` again."
+      },
+      {
+        "text": "The collector compacted the stack to close gaps between frames",
+        "correct": false,
+        "why": "The collector did shrink the stack later, by copying it to a block half the size. The first move happened during `down`, before any collection, because the stack had run out."
+      }
+    ]
+  },
+  {
+    "id": "ex-yk61tn9s",
+    "version": 1,
+    "section": "stack-and-heap",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Go's heap collector never moves a value to a new address, yet the runtime moves whole goroutine stacks freely. What makes the stack the easy case?",
+    "hint": "Think about where a pointer to something on a stack is allowed to live.",
+    "choices": [
+      {
+        "text": "Stacks are small enough to copy within one stop of the world",
+        "correct": false,
+        "why": "Stacks are copied by their own goroutine, with nothing stopped, and one in `~/mem-stacks` reached about 32 MiB. Size is not what makes it safe."
+      },
+      {
+        "text": "No heap value is allowed to point into a stack, so only the stack's own pointers need fixing",
+        "correct": true,
+        "why": "Right. It is the first invariant of escape analysis: anything whose address would be stored on the heap is put on the heap itself. The runtime adjusts pointers inside the copied stack and has nothing else to search."
+      },
+      {
+        "text": "Stack values hold no pointers, so a copy is a plain `memmove`",
+        "correct": false,
+        "why": "Frames hold pointers all the time, and the compiler records which words do so that the copy can adjust them."
+      },
+      {
+        "text": "The old stack stays mapped, so stale pointers still read the right data",
+        "correct": false,
+        "why": "The old block is freed after the copy. A stale pointer into it would read whatever came next, which is why the design needs no such pointers."
+      }
+    ]
+  },
+  {
+    "id": "ex-sbvzn4g6",
+    "version": 1,
+    "section": "stack-and-heap",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `~/mem-stacks`, 10,000 waiting goroutines took 20,000 KiB of stack. At the same starting size, how many KiB would 250,000 waiting goroutines take?",
+    "hint": "Work out the size of one stack first.",
+    "value": 500000,
+    "tolerance": 0,
+    "unit": "KiB"
+  },
+  {
+    "id": "ex-f0psmyhk",
+    "version": 1,
+    "section": "the-collector",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the collector's three colours, what does a grey value mean?",
+    "hint": "One of the three is the marker's to-do list.",
+    "choices": [
+      {
+        "text": "Reached, its pointers not yet followed",
+        "correct": true,
+        "why": "Right. Grey values are the work left: the marker takes one, shades what it points at and turns it black. Marking ends when nothing is grey."
+      },
+      {
+        "text": "Not reached yet, and garbage if it stays so",
+        "correct": false,
+        "why": "That is white. White at the end of marking is what the sweep reuses."
+      },
+      {
+        "text": "Reached, with every pointer inside it already followed",
+        "correct": false,
+        "why": "That is black. The marker will not look inside a black value again, which is exactly why the write barrier exists."
+      },
+      {
+        "text": "Allocated during the cycle, kept until the next one",
+        "correct": false,
+        "why": "Values allocated while marking runs are made black at once, by `mgc.go`'s own description."
+      }
+    ]
+  },
+  {
+    "id": "ex-qm0gpcc3",
+    "version": 1,
+    "section": "the-collector",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "While a cycle is marking, the program runs `a.next = c` and then `b.next = nil`, where `a` is black, `b` is grey and `b.next` was the only pointer to `c`. Which part of the write barrier keeps `c` alive?",
+    "hint": "Look at which value each `shade` call receives, in the five lines from `mbarrier.go`.",
+    "choices": [
+      {
+        "text": "`shade(ptr)` in `b.next = nil`, which colours the new value",
+        "correct": false,
+        "why": "The new value there is `nil`, and there is nothing to colour. The old value is the one in danger."
+      },
+      {
+        "text": "`shade(*slot)` in `b.next = nil`, colouring `c` on its way out",
+        "correct": true,
+        "why": "Right. The deletion half of the barrier shades what the field pointed at before the write, so removing the last grey path to `c` turns `c` grey instead of leaving it white."
+      },
+      {
+        "text": "No barrier is involved, because `a` is black and is rescanned at the end",
+        "correct": false,
+        "why": "Black values are not rescanned. Without the barrier `c` would stay white, be swept and be freed while `a` still points at it."
+      },
+      {
+        "text": "Mark termination stops the world and checks every black value for white pointers",
+        "correct": false,
+        "why": "Mark termination is a brief stop for housekeeping; in the trace it lasted 0.004 ms. It does not walk the heap again."
+      }
+    ]
+  },
+  {
+    "id": "ex-g67qjyyj",
+    "version": 1,
+    "section": "the-collector",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of this `gctrace` line from `hits count` to what it reports: `gc 2 @0.017s 1%: 0.032+1.2+0.004 ms clock, 0.13+0.025/0.001/0.11+0.019 ms cpu, 3->3->0 MB, 4 MB goal, 0 MB stacks, 0 MB globals, 4 P`.",
+    "hint": "The documentation's format is in `go doc runtime`, under `gctrace`.",
+    "pairs": [
+      {
+        "left": "`0.032` (clock)",
+        "right": "the stop that starts the cycle, in wall-clock time"
+      },
+      {
+        "left": "`1.2` (clock)",
+        "right": "marking, while the program kept running"
+      },
+      {
+        "left": "`0.025/0.001/0.11`",
+        "right": "marking by assists, the background worker and idle processors"
+      },
+      {
+        "left": "`3->3->0 MB`",
+        "right": "the heap at the start and end of marking, and what survived"
+      },
+      {
+        "left": "`4 MB goal`",
+        "right": "the heap size the cycle meant to finish under"
+      }
+    ],
+    "right_distractors": [
+      "the time since the previous collection ended"
+    ]
+  },
+  {
+    "id": "ex-z4ywet5h",
+    "version": 1,
+    "section": "the-collector",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Every line of the `hits count` trace says `3->3->0 MB, 4 MB goal`. With nothing surviving and `GOGC=100`, why is the goal 4 MB and not twice nothing?",
+    "hint": "Section 03 ran the same program under `GOGC=50` and `GOGC=200` and read the fifth line.",
+    "choices": [
+      {
+        "text": "The goal counts the binary's own size, about 4 MB",
+        "correct": false,
+        "why": "The binary was not counted anywhere in the goal formula. And `GOGC=200` printed an 8 MB goal for the same binary."
+      },
+      {
+        "text": "The pacer has a floor, 4 MB scaled by `GOGC` over 100",
+        "correct": true,
+        "why": "Right. `defaultHeapMinimum` is 4 MB at `GOGC=100`, and `heapMinimum = defaultHeapMinimum * GOGC / 100`; the other runs printed goals of 2 MB and 8 MB."
+      },
+      {
+        "text": "Four processors each reserve 1 MB of heap for their caches",
+        "correct": false,
+        "why": "The `4 P` at the end is a coincidence here: under `GOGC=50` the same four processors gave a 2 MB goal."
+      },
+      {
+        "text": "`0 MB` is rounded down, and the live heap was really 2 MB",
+        "correct": false,
+        "why": "Rounding would not double anything in a stable way, and the goal moved with `GOGC` exactly in proportion: 2, 4, 8."
+      }
+    ]
+  },
+  {
+    "id": "ex-ry7wx9z7",
+    "version": 1,
+    "section": "gogc-and-gomemlimit",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`gc 14` of `slowest` found 92 MB alive, with 0 MB of stacks and globals. If the program had run with `GOGC=50`, what heap goal, in MB, would the next cycle have aimed for?",
+    "hint": "The line of `mgcpacer.go`: the marked heap, plus the marked heap, stacks and globals times `GOGC` over 100.",
+    "value": 138,
+    "tolerance": 1,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-n44meksk",
+    "version": 1,
+    "section": "gogc-and-gomemlimit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under `GOMEMLIMIT=100MiB`, `slowest` ran 66 collections in 3.13 s, and its trace showed `161->164->162 MB, 161 MB goal` with the next cycle 48 ms later. What was going on?",
+    "hint": "Compare the three heap numbers with each other, and the goal with all three.",
+    "choices": [
+      {
+        "text": "The live heap was over the limit; each cycle freed almost nothing",
+        "correct": true,
+        "why": "Right. 162 of 164 MB survived, the heap was already past 100 MiB, and the goal stayed pinned to the heap as it stood: the start of a death spiral, held back by the limiter."
+      },
+      {
+        "text": "The program leaked memory, which the limit exposed",
+        "correct": false,
+        "why": "Every value it kept, it used: the entries it sorts. Nothing was unreachable and kept; the limit was simply below what the program needs."
+      },
+      {
+        "text": "The limit made the runtime return memory to Linux after every cycle",
+        "correct": false,
+        "why": "Returning memory does not explain a heap that stays at 162 MB alive. The collections themselves are the cost."
+      },
+      {
+        "text": "The runtime stopped the world for each of those 66 collections",
+        "correct": false,
+        "why": "The stops in those lines lasted under a millisecond; the marking ran beside the program. It was the sheer number of cycles that cost the time."
+      }
+    ]
+  },
+  {
+    "id": "ex-fkbf6tq6",
+    "version": 1,
+    "section": "gogc-and-gomemlimit",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of `GOMEMLIMIT` in Go 1.27.1? Choose every one that applies.",
+    "hint": "Remember the run with `GOGC=off GOMEMLIMIT=400MiB` and what `cgroup_linux.go` reads.",
+    "choices": [
+      {
+        "text": "It is soft: memory the program still uses is kept even past the limit",
+        "correct": true,
+        "why": "Right. The 400 MiB run peaked at 453 MiB, and nothing failed. The limit makes the runtime collect harder; it cannot free a reachable byte."
+      },
+      {
+        "text": "The runtime does not read it from a container; it has to be set",
+        "correct": true,
+        "why": "Right. The runtime's control-group code reads the processor quota for `GOMAXPROCS` and nothing about memory."
+      },
+      {
+        "text": "With `GOGC=off` it is the only thing that starts a collection",
+        "correct": true,
+        "why": "Right. `GOGC=off` removes the proportional rule, and the limit is still respected; that run needed three collections in all."
+      },
+      {
+        "text": "It counts the binary and memory that C code allocates",
+        "correct": false,
+        "why": "`SetMemoryLimit`'s documentation names both as excluded, which is one reason a container needs a margin below its real limit."
+      },
+      {
+        "text": "Going over it ends the program with an out-of-memory error",
+        "correct": false,
+        "why": "The 100 MiB run went far past the limit and finished, slowly. The kernel may kill a process over its container's limit; the runtime does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-cgvk9zj4",
+    "version": 1,
+    "section": "gogc-and-gomemlimit",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With `GOGC=off`, `slowest` used 0.74 s of user time instead of 1.26 s, yet its wall-clock time fell only from 1.61 s to 1.39 s. On a server whose four processors are already busy, what would you expect the same change to do?",
+    "hint": "Ask where the 0.5 s of marking had been running in the lab.",
+    "choices": [
+      {
+        "text": "Nothing different: wall-clock time is what users see, and it barely moved",
+        "correct": false,
+        "why": "It barely moved in the lab because the marking used processors that were otherwise idle. On a busy server those processors are doing other work."
+      },
+      {
+        "text": "Save more wall-clock time than in the lab, and cost far more memory",
+        "correct": true,
+        "why": "Right. The 0.5 s of marking would have been taken from other work, so removing it gains more there; the peak still doubles toward everything ever allocated, about 1 GB here."
+      },
+      {
+        "text": "Make the program slower, because the heap would never be compacted",
+        "correct": false,
+        "why": "Go's collector never compacts, on or off. What `off` changes is that nothing is reused."
+      },
+      {
+        "text": "Lower the peak memory, since no cycle leaves garbage half swept",
+        "correct": false,
+        "why": "With no collection, every byte ever allocated stays: the lab's peak went from about 0.6 GB to 1,016,500 kB."
+      }
+    ]
+  },
+  {
+    "id": "ex-9k0e393k",
+    "version": 1,
+    "section": "measuring-allocations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Benchmarked on 100,000 lines, `keep.Load` with no hint did 200,033 allocations and 53,802,259 B per run; with the exact hint, 200,003 allocations and 20,523,557 B. How do thirty allocations account for 33 MB?",
+    "hint": "The heap profile charged three quarters of all bytes to `keep.Load` itself.",
+    "choices": [
+      {
+        "text": "The thirty were the ever-larger arrays `append` allocated and copied into",
+        "correct": true,
+        "why": "Right. Past 256 elements each new array is about a quarter larger than the last, so building 100,000 entries takes some thirty arrays, and the bytes are in them."
+      },
+      {
+        "text": "`B/op` includes the time spent copying, converted to bytes",
+        "correct": false,
+        "why": "`B/op` is bytes allocated and nothing else. The copying shows up in `ns/op`, which fell by more than half."
+      },
+      {
+        "text": "The hint stopped `strings.Fields` from allocating its slice",
+        "correct": false,
+        "why": "The hint only sizes the slice of entries. The two allocations a line, from `Text` and `Fields`, are the 200,000 both runs share."
+      },
+      {
+        "text": "The benchmark measured noise: allocations vary from run to run",
+        "correct": false,
+        "why": "Allocation counts do not depend on how busy the machine is; both numbers come out the same on every run."
+      }
+    ]
+  },
+  {
+    "id": "ex-sndfmtrz",
+    "version": 1,
+    "section": "measuring-allocations",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A service records its heap size on every request. Why should it read `runtime/metrics` and not call `runtime.ReadMemStats`?",
+    "hint": "Look at the third line of `ReadMemStats`'s body.",
+    "choices": [
+      {
+        "text": "`ReadMemStats` returns numbers from the last collection",
+        "correct": false,
+        "why": "Its documentation says the opposite: up to date as of the call, unlike a heap profile."
+      },
+      {
+        "text": "`ReadMemStats` allocates a new struct on every call",
+        "correct": false,
+        "why": "The benchmark showed 0 B/op for both. The cost is elsewhere."
+      },
+      {
+        "text": "`ReadMemStats` stops the world for every call",
+        "correct": true,
+        "why": "Right. It calls `stopTheWorld`, and the benchmark took 11,398 ns per call against 338.8 for `metrics.Read`, with every goroutine halted for part of it."
+      },
+      {
+        "text": "`runtime/metrics` is the only one that reports heap sizes",
+        "correct": false,
+        "why": "`MemStats` reports heap sizes too, `HeapAlloc` and `HeapSys` among them, as the `go` course used."
+      }
+    ]
+  },
+  {
+    "id": "ex-amqfs7gv",
+    "version": 1,
+    "section": "measuring-allocations",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside a benchmark, calling `b.___()` makes that benchmark print `B/op` and `allocs/op` even when `go test` runs without `-benchmem`.",
+    "hint": "A method of `testing.B`, named for what it does.",
+    "blanks": [
+      {
+        "accept": [
+          "ReportAllocs"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ar7aeb5j",
+    "version": 1,
+    "section": "fewer-allocations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`keep.WriteEntry` keeps `*[]byte` values in its `sync.Pool`, not `[]byte`. What does the pointer save?",
+    "hint": "`~/mem-pool` printed one number for each kind.",
+    "choices": [
+      {
+        "text": "A pointer stops two goroutines receiving the same buffer",
+        "correct": false,
+        "why": "The pool never hands one item to two callers at once, whatever its type. The difference is in what `Put` costs."
+      },
+      {
+        "text": "An allocation on every `Put`",
+        "correct": true,
+        "why": "Right. `Put` takes an `any`, and a slice's three words have to be copied to the heap to become one: 1 allocation per round trip against 0 for a pointer."
+      },
+      {
+        "text": "A pointer survives two collections in the pool, a slice only one",
+        "correct": false,
+        "why": "What the pool keeps across collections does not depend on the type; the buffer in `~/mem-pool` was a pointer and was gone after two."
+      },
+      {
+        "text": "The capacity of a `[]byte` is lost when it is stored in an interface",
+        "correct": false,
+        "why": "A slice keeps its length and capacity in an interface; `b[:0]` came back with room for 64 bytes. It is just more expensive to put there."
+      }
+    ]
+  },
+  {
+    "id": "ex-45md3ghy",
+    "version": 1,
+    "section": "fewer-allocations",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function reads lines with one reused buffer, the way `keep.Write` does, and passes each line to a callback that does `saved = append(saved, line)`. The tests check a single line and pass. What happens in production?",
+    "hint": "Who owns the bytes after the callback returns?",
+    "choices": [
+      {
+        "text": "Every saved line shows the last line's bytes",
+        "correct": true,
+        "why": "Right. Each element of `saved` is a slice of the same array, which the next line overwrites. It is the ownership rule `io.Writer` states as 'must not retain p', broken by a callback."
+      },
+      {
+        "text": "Each `append` copies the bytes, so nothing goes wrong",
+        "correct": false,
+        "why": "`append(saved, line)` copies the slice header, not the bytes it points at. That is how slices share arrays."
+      },
+      {
+        "text": "The buffer escapes and the reuse silently stops",
+        "correct": false,
+        "why": "Escaping decides where the buffer lives, not whether the loop reuses it. The loop still writes into the one array."
+      },
+      {
+        "text": "The race detector reports it the first time it runs",
+        "correct": false,
+        "why": "With one goroutine there is no race to detect; the bug is aliasing, and it is silent."
+      }
+    ]
+  },
+  {
+    "id": "ex-v2vs0c18",
+    "version": 1,
+    "section": "fewer-allocations",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happened to the buffer in `~/mem-pool` when it ran with `GOMAXPROCS=1`, from the first step to the last.",
+    "hint": "The pool has two tiers, and each collection moves things one tier along.",
+    "items": [
+      "`Put` stores the buffer in the pool",
+      "a collection moves it to the second tier",
+      "`Get` still returns the same buffer",
+      "a second collection drops it from the pool",
+      "`Get` calls `New`, which makes a fresh buffer"
+    ]
+  },
+  {
+    "id": "ex-1zcpbp2w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server parses nested data from clients with a recursive function and no depth limit. Somebody sends input nested ten million levels deep. What happens?",
+    "hint": "Recall what `-max` showed, and what the default ceiling is.",
+    "choices": [
+      {
+        "text": "The request's goroutine panics, and the handler's `recover` returns an error",
+        "correct": false,
+        "why": "A stack overflow is a fatal error, not a panic: `recover` never sees it."
+      },
+      {
+        "text": "The process exits with `fatal error: stack overflow` near 1 GB",
+        "correct": true,
+        "why": "Right. The runtime doubles the goroutine's stack until the 1,000,000,000-byte ceiling and then ends every goroutine with it, other clients' requests included. Only a depth limit in the parser prevents it."
+      },
+      {
+        "text": "The stack stops at 8 MiB and only that goroutine is killed",
+        "correct": false,
+        "why": "8 MiB is a thread's stack. A goroutine's grows to the 1 GB ceiling, and an overflow takes the whole process down."
+      },
+      {
+        "text": "The runtime moves the deepest frames to the heap and the call completes",
+        "correct": false,
+        "why": "Frames never move to the heap; the stack is one block, copied whole when it grows."
+      }
+    ]
+  },
+  {
+    "id": "ex-ychmvpqr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`hits count` on two million lines spends about 1% of its run collecting, and every cycle finds 0 MB alive. Which change would make it noticeably faster?",
+    "hint": "Find where the other 99% of the time goes.",
+    "choices": [
+      {
+        "text": "`GOGC=400`, so that it collects a quarter as often",
+        "correct": false,
+        "why": "Collecting less often saves part of the 1%; the run cannot get more than about 1% faster that way."
+      },
+      {
+        "text": "A `GOMEMLIMIT` well above its peak",
+        "correct": false,
+        "why": "A limit the program never approaches changes nothing at all."
+      },
+      {
+        "text": "Less work and fewer allocations per line, in `Parse` itself",
+        "correct": true,
+        "why": "Right. The time is in parsing two million lines, two allocations each; lesson 13 removed one of the two and the benchmark ran about twice as fast. No collector setting reaches that."
+      },
+      {
+        "text": "A `sync.Pool` for the maps in `Summary`",
+        "correct": false,
+        "why": "There are two maps per run, made once. Pooling them saves two allocations out of four million."
+      }
+    ]
+  },
+  {
+    "id": "ex-b8972yrx",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation to the change the lesson's measurements support.",
+    "hint": "Read `#%` and the live heap before touching anything.",
+    "pairs": [
+      {
+        "left": "a CLI at 1% `#%` with almost nothing alive",
+        "right": "leave both settings alone"
+      },
+      {
+        "left": "a program alone in a container with a hard memory limit",
+        "right": "set `GOMEMLIMIT` a margin below the container's limit"
+      },
+      {
+        "left": "memory to spare, processors busy, `#%` high",
+        "right": "raise `GOGC` and measure the peak"
+      },
+      {
+        "left": "a peak that jumps around whatever `GOGC` says",
+        "right": "preallocate the slice the program grows"
+      }
+    ],
+    "right_distractors": [
+      "set `GOMEMLIMIT` below the live heap to force the heap down"
+    ]
+  }
+]

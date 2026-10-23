@@ -1,0 +1,549 @@
+[
+  {
+    "id": "ex-h1bv4216",
+    "version": 1,
+    "section": "queues",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Desk.java` called `poll` a fourth time on a queue that had held three people. What happened?",
+    "hint": "`poll` is the special-value form.",
+    "choices": [
+      {
+        "text": "It threw `NoSuchElementException` and the program ended",
+        "correct": false,
+        "why": "That is `remove()` on an empty queue; `poll` answers instead of throwing."
+      },
+      {
+        "text": "It answered `null`",
+        "correct": true,
+        "why": "Right: the program printed `poll    null` and carried on."
+      },
+      {
+        "text": "It answered `Ana` again, starting over from the head",
+        "correct": false,
+        "why": "A queue does not cycle; what was polled is gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-hrzkzzze",
+    "version": 1,
+    "section": "queues",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each throwing method of `Queue` to its special-value twin.",
+    "hint": "The table at the top of the section.",
+    "pairs": [
+      {
+        "left": "`add(e)`",
+        "right": "`offer(e)`"
+      },
+      {
+        "left": "`remove()`",
+        "right": "`poll()`"
+      },
+      {
+        "left": "`element()`",
+        "right": "`peek()`"
+      }
+    ],
+    "right_distractors": [
+      "`push(e)`"
+    ]
+  },
+  {
+    "id": "ex-y78kp1zb",
+    "version": 1,
+    "section": "queues",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The two-seat `ArrayBlockingQueue` already held two people. `offer(\"Carla\")` answered `false`. Why did `add(\"Carla\")` then end the program?",
+    "hint": "Same request, the other form.",
+    "choices": [
+      {
+        "text": "Calling `offer` first had left the queue in a broken state",
+        "correct": false,
+        "why": "The queue was simply full; nothing was broken, and `offer` changed nothing."
+      },
+      {
+        "text": "`add` throws `IllegalStateException` when the queue is full",
+        "correct": true,
+        "why": "Right: `Queue full`, from line 24, and nothing caught it."
+      },
+      {
+        "text": "`add` is not allowed on a queue from `java.util.concurrent`",
+        "correct": false,
+        "why": "It is allowed; it is the throwing form of `offer`, and it threw because the queue was full."
+      },
+      {
+        "text": "Carla was already in the queue, and a queue refuses duplicates",
+        "correct": false,
+        "why": "Queues accept duplicates; Carla was never in it, because `offer` refused her."
+      }
+    ]
+  },
+  {
+    "id": "ex-mackzyv9",
+    "version": 1,
+    "section": "queues",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can a queue whose `poll` answers `null` for \"empty\" not usefully hold `null` elements?",
+    "hint": "What would `null` from `poll` mean?",
+    "choices": [
+      {
+        "text": "Because `null` takes no memory, so it cannot be stored",
+        "correct": false,
+        "why": "A `null` reference occupies a slot like any other; the problem is what it would mean."
+      },
+      {
+        "text": "Because the compiler forbids `Queue<String>` from holding `null`",
+        "correct": false,
+        "why": "Generics say nothing about `null`; `ArrayDeque` refuses it at run time."
+      },
+      {
+        "text": "A `null` from `poll` could no longer tell an empty queue from a `null` element",
+        "correct": true,
+        "why": "Right: the special value only works if it is never a real element."
+      }
+    ]
+  },
+  {
+    "id": "ex-5x9b3kvg",
+    "version": 1,
+    "section": "queues",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Holds.java` printed its `PriorityQueue` and Eva, with 3 days, came last. What is the printed order?",
+    "hint": "A `PriorityQueue` is a heap.",
+    "choices": [
+      {
+        "text": "The order of the heap's array, which only guarantees the smallest at the front",
+        "correct": true,
+        "why": "Right: `toString` walks the array as it lies; only `poll` gives the priority order."
+      },
+      {
+        "text": "Insertion order, as in a `LinkedHashSet`",
+        "correct": false,
+        "why": "Bruno went in first and was printed fourth."
+      },
+      {
+        "text": "Sorted order, with a bug in `toString`",
+        "correct": false,
+        "why": "No bug: a heap is not sorted, and `toString` promises nothing about priority."
+      },
+      {
+        "text": "Alphabetical order of the members' names",
+        "correct": false,
+        "why": "Ana would have come first; Carla did."
+      }
+    ]
+  },
+  {
+    "id": "ex-6r4d5caj",
+    "version": 1,
+    "section": "queues",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the holds in the order `poll` handed them out.",
+    "hint": "Fewest days first.",
+    "items": [
+      "Carla, 1 day",
+      "Ana, 2 days",
+      "Eva, 3 days",
+      "Davi, 5 days",
+      "Bruno, 9 days"
+    ]
+  },
+  {
+    "id": "ex-8p5qxw63",
+    "version": 1,
+    "section": "queues",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A print queue must never be empty when a printer asks for work; if it is, something upstream has failed. Which call should the printer use to take the next job?",
+    "hint": "Is an empty queue normal here, or a mistake?",
+    "choices": [
+      {
+        "text": "`poll()`, and carry on quietly if it answers `null`",
+        "correct": false,
+        "why": "An empty queue here is a failure upstream, and carrying on quietly hides it."
+      },
+      {
+        "text": "`remove()`, which throws when the queue is empty",
+        "correct": true,
+        "why": "Right: the situation is a mistake, so the throwing form makes it visible where it happens."
+      },
+      {
+        "text": "`peek()`, which does not change the queue",
+        "correct": false,
+        "why": "`peek` only looks; the printer still has to take the job out."
+      },
+      {
+        "text": "`pop()`, because a print queue is a stack",
+        "correct": false,
+        "why": "Jobs print in the order they arrived; that is a queue, and `pop` takes the newest."
+      }
+    ]
+  },
+  {
+    "id": "ex-4e4g0feg",
+    "version": 1,
+    "section": "deques-and-stacks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Three actions were pushed onto the `ArrayDeque`: `lend Dune`, `lend Emma`, `return Dune`. What did the first `pop` give?",
+    "hint": "Last in, first out.",
+    "choices": [
+      {
+        "text": "`lend Dune`, the first action",
+        "correct": false,
+        "why": "That is what a queue would give; a stack gives the newest."
+      },
+      {
+        "text": "`lend Emma`, the one in the middle",
+        "correct": false,
+        "why": "`peek` showed `lend Emma` after the pop, as the new top."
+      },
+      {
+        "text": "`return Dune`",
+        "correct": true,
+        "why": "Right: the last action pushed is the first undone."
+      }
+    ]
+  },
+  {
+    "id": "ex-2h2hdqev",
+    "version": 1,
+    "section": "deques-and-stacks",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a `Deque`, `push(e)` is another name for `___(e)`, and `pop()` for `removeFirst()`.",
+    "hint": "Where does `push` put the element?",
+    "blanks": [
+      {
+        "accept": [
+          "addFirst"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7tn3cwvr",
+    "version": 1,
+    "section": "deques-and-stacks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`old.add(0, \"slipped in at the bottom\")` compiled on a `Stack<String>`. Why?",
+    "hint": "What does `Stack` extend?",
+    "choices": [
+      {
+        "text": "`Stack` adds `add(int, E)` so that stacks can be built from the bottom",
+        "correct": false,
+        "why": "`Stack` declares five methods of its own, and that is not one of them."
+      },
+      {
+        "text": "`Stack` extends `Vector`, a list, and inherits its list methods",
+        "correct": true,
+        "why": "Right: every list method is a way into the middle of the stack, and the compiler allows each one."
+      },
+      {
+        "text": "Java does not check method calls on legacy classes",
+        "correct": false,
+        "why": "The compiler checks every call; this one exists, inherited."
+      }
+    ]
+  },
+  {
+    "id": "ex-6d77vj22",
+    "version": 1,
+    "section": "deques-and-stacks",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these are reasons the section gives for using `ArrayDeque` rather than `Stack`? Choose all that apply.",
+    "hint": "Two are about inheritance, one is about cost.",
+    "choices": [
+      {
+        "text": "`Stack` inherits list methods that reach into the middle",
+        "correct": true,
+        "why": "Yes: `add(0, …)` and `get(0)` broke the stack in the program."
+      },
+      {
+        "text": "`Stack`'s methods are synchronized, and pay for locking on every call",
+        "correct": true,
+        "why": "Yes: `Vector`'s methods lock whether or not two threads ever share it."
+      },
+      {
+        "text": "`Stack` was removed in Java 25",
+        "correct": false,
+        "why": "It is still there, kept for compatibility with old code."
+      },
+      {
+        "text": "The JDK's own documentation recommends `Deque` for stacks",
+        "correct": true,
+        "why": "Yes: `Stack`'s documentation points at `Deque` itself."
+      },
+      {
+        "text": "`ArrayDeque` keeps its elements sorted",
+        "correct": false,
+        "why": "It keeps them in the order the two ends were used; sorting is `PriorityQueue`'s business, or `TreeSet`'s."
+      }
+    ]
+  },
+  {
+    "id": "ex-f861pwzv",
+    "version": 1,
+    "section": "deques-and-stacks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The deque printed `[return Dune, lend Emma, lend Dune]` and the `Stack` `[lend Dune, lend Emma, return Dune]`, for the same three pushes. Why opposite orders?",
+    "hint": "Where does each one keep its top?",
+    "choices": [
+      {
+        "text": "The deque prints from its head, the top; the `Stack` prints as a `Vector`, from index 0",
+        "correct": true,
+        "why": "Right: same stack, two ways of laying it out, and only the deque's matches the order of undoing."
+      },
+      {
+        "text": "The `Stack` reversed them because `pop` had been called once",
+        "correct": false,
+        "why": "Both were printed before any `pop`; the order comes from where each keeps its top."
+      },
+      {
+        "text": "`push` on a `Stack` adds at the head and on a deque at the tail",
+        "correct": false,
+        "why": "It is the other way round in storage, and either way both hand back the newest first."
+      }
+    ]
+  },
+  {
+    "id": "ex-gf486pvh",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which class does the section recommend behind a `Queue<E>` that is first come, first served?",
+    "hint": "The same class as for a stack.",
+    "choices": [
+      {
+        "text": "`LinkedList`",
+        "correct": false,
+        "why": "It implements `Queue`, and it lost every round of the measurement."
+      },
+      {
+        "text": "`PriorityQueue`",
+        "correct": false,
+        "why": "That one serves the smallest first, not the first to arrive."
+      },
+      {
+        "text": "`ArrayDeque`",
+        "correct": true,
+        "why": "Right: a reused array with its ends wrapping round, and no node per element."
+      },
+      {
+        "text": "`Stack`",
+        "correct": false,
+        "why": "A stack serves the last to arrive."
+      }
+    ]
+  },
+  {
+    "id": "ex-8sh8tfsg",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the `LinkedList` lose to the `ArrayDeque` at a queue's job, in both rounds?",
+    "hint": "What does each `offer` cost the linked list?",
+    "choices": [
+      {
+        "text": "Its `poll` has to walk to the end of the list",
+        "correct": false,
+        "why": "It keeps a link to both ends, so `poll` is one step; the cost is elsewhere."
+      },
+      {
+        "text": "Every `offer` allocates a node, and the garbage collector clears millions",
+        "correct": true,
+        "why": "Right: the deque writes into a reused array instead."
+      },
+      {
+        "text": "The JIT compiler cannot compile `LinkedList` methods",
+        "correct": false,
+        "why": "The JIT compiles them like any others; the work they do is what costs."
+      }
+    ]
+  },
+  {
+    "id": "ex-ydeand5d",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the measurement the `ArrayDeque` was faster in its second round than in its first, and the `LinkedList` was not. What explains the `ArrayDeque`'s second round?",
+    "hint": "Lesson 1 section 05.",
+    "choices": [
+      {
+        "text": "Its array was already full from the first round",
+        "correct": false,
+        "why": "Each round created a new `ArrayDeque`; nothing carried over but the compiled code."
+      },
+      {
+        "text": "By then the JIT had compiled the hot loop and methods",
+        "correct": true,
+        "why": "Right: the first round ran partly interpreted."
+      },
+      {
+        "text": "The second round pushed fewer numbers through the queue",
+        "correct": false,
+        "why": "Both rounds pushed the same five million."
+      }
+    ]
+  },
+  {
+    "id": "ex-nhg7efv4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A browser's back button returns to the most recently visited page. Which declaration fits the history?",
+    "hint": "Last in, first out.",
+    "choices": [
+      {
+        "text": "`Deque<String> history = new ArrayDeque<>();`",
+        "correct": true,
+        "why": "Right: a stack, used through `push` and `pop`."
+      },
+      {
+        "text": "`Queue<String> history = new ArrayDeque<>();`",
+        "correct": false,
+        "why": "Through `Queue`, `poll` gives the oldest page, not the newest."
+      },
+      {
+        "text": "`Stack<String> history = new Stack<>();`",
+        "correct": false,
+        "why": "It works, and it is the class section 03 told you to leave behind."
+      },
+      {
+        "text": "`Queue<String> history = new PriorityQueue<>();`",
+        "correct": false,
+        "why": "A priority queue would hand back pages in alphabetical order."
+      }
+    ]
+  },
+  {
+    "id": "ex-dwef98gn",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`QueueCost` kept the queue at most how many elements long?",
+    "hint": "Look at the `if` inside the loop.",
+    "value": 100,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-sj2h8p4s",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An emergency room sees patients by severity, and among equal severities by arrival. Which is closest to right?",
+    "hint": "Which queue serves by an order you choose?",
+    "choices": [
+      {
+        "text": "An `ArrayDeque`, with the severe patients added at the front with `offerFirst`",
+        "correct": false,
+        "why": "Two severe patients would then be seen newest first, the reverse of arrival."
+      },
+      {
+        "text": "A `PriorityQueue` whose comparator states both rules, the second breaking ties",
+        "correct": true,
+        "why": "Right: the comparator states the whole rule, and `poll` follows it."
+      },
+      {
+        "text": "A `TreeSet`, since it keeps patients sorted",
+        "correct": false,
+        "why": "A set drops two patients that compare equal, which a hospital cannot do."
+      }
+    ]
+  },
+  {
+    "id": "ex-t2ps4jhs",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `for-each` over a `PriorityQueue` prints its elements. In what order do they come?",
+    "hint": "It is the same walk `toString` does.",
+    "choices": [
+      {
+        "text": "Smallest first, as `poll` would give them",
+        "correct": false,
+        "why": "Only repeated `poll` gives that order; iteration does not."
+      },
+      {
+        "text": "In the heap array's order",
+        "correct": true,
+        "why": "Right: the smallest first, and the rest in no promised order."
+      },
+      {
+        "text": "In the order they were offered",
+        "correct": false,
+        "why": "Bruno was offered first and printed fourth in `Holds.java`."
+      }
+    ]
+  },
+  {
+    "id": "ex-8yzv52g6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which class from this lesson accepts `null` as an element?",
+    "hint": "Section 04 names its one advantage.",
+    "choices": [
+      {
+        "text": "`ArrayDeque`",
+        "correct": false,
+        "why": "It refuses `null` with a `NullPointerException`."
+      },
+      {
+        "text": "`PriorityQueue`",
+        "correct": false,
+        "why": "It cannot compare `null` and refuses it."
+      },
+      {
+        "text": "`LinkedList`",
+        "correct": true,
+        "why": "Right: and section 02 said why a queue should not hold one anyway."
+      },
+      {
+        "text": "`ArrayBlockingQueue`",
+        "correct": false,
+        "why": "The concurrent queues refuse `null` too."
+      }
+    ]
+  }
+]

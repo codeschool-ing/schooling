@@ -1,0 +1,511 @@
+[
+  {
+    "id": "ex-f2zqsjp3",
+    "version": 1,
+    "section": "module-info",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What problem with `public` did modules set out to solve?",
+    "hint": "A library is several packages.",
+    "choices": [
+      {
+        "text": "`public` classes were slower to load than package-private ones, and modules sped them up",
+        "correct": false,
+        "why": "Access levels have nothing to do with loading speed."
+      },
+      {
+        "text": "A class public to its library's other packages was public to everybody",
+        "correct": true,
+        "why": "Right: nothing could say \"public to my own packages, private to the rest\"."
+      },
+      {
+        "text": "`public` could not be used on interfaces",
+        "correct": false,
+        "why": "Interfaces have been `public` since Java 1.0."
+      }
+    ]
+  },
+  {
+    "id": "ex-76dcw3z1",
+    "version": 1,
+    "section": "module-info",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `module-info.java`, the keyword that makes a package visible to other modules is `___`.",
+    "hint": "The library used it once, for its `api` package.",
+    "blanks": [
+      {
+        "accept": [
+          "exports"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mst2mxrj",
+    "version": 1,
+    "section": "module-info",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Shortcut` imported `com.example.library.internal.Index`. What did `javac` answer?",
+    "hint": "The package was on disk, compiled a moment earlier.",
+    "choices": [
+      {
+        "text": "A warning that the package is internal, and it compiled",
+        "correct": false,
+        "why": "It was an error, two of them, and nothing compiled."
+      },
+      {
+        "text": "`Index is not public in com.example.library.internal`",
+        "correct": false,
+        "why": "`Index` is `public`; the module, not the class, is what refused."
+      },
+      {
+        "text": "`package com.example.library.internal does not exist`",
+        "correct": true,
+        "why": "Right: to the app module an unexported package is not there at all."
+      },
+      {
+        "text": "A `module not found` error for `com.example.library`",
+        "correct": false,
+        "why": "The module was found and `Main` compiled against it; only the package was refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-xqprfdnj",
+    "version": 1,
+    "section": "module-info",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`jar --describe-module` printed `requires java.base mandated`, and nobody wrote that line. Why is it there?",
+    "hint": "Where do `String` and `Object` live?",
+    "choices": [
+      {
+        "text": "Every module depends on `java.base`, so it is added to every declaration",
+        "correct": true,
+        "why": "Right: `mandated` means the language put it there."
+      },
+      {
+        "text": "`jar` copied it from the app module's `requires`",
+        "correct": false,
+        "why": "The app module requires `com.example.library`, not `java.base`."
+      },
+      {
+        "text": "`Index` uses `Map`, and `jar` scanned the bytecode for it",
+        "correct": false,
+        "why": "Even a module using nothing at all gets the line; `jar` did not scan anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-m48m1xr6",
+    "version": 1,
+    "section": "module-info",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece to what it does.",
+    "hint": "Section 02 used all four.",
+    "pairs": [
+      {
+        "left": "`requires`",
+        "right": "says which modules this one needs"
+      },
+      {
+        "left": "`exports`",
+        "right": "says which packages others may use"
+      },
+      {
+        "left": "`--module-source-path`",
+        "right": "tells `javac` where each module's sources are"
+      },
+      {
+        "left": "`--module-path`",
+        "right": "tells `java` where to find compiled modules"
+      }
+    ],
+    "right_distractors": [
+      "opens a package to reflection for one run"
+    ]
+  },
+  {
+    "id": "ex-vp5wbseg",
+    "version": 1,
+    "section": "module-info",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`java --module-path out -m com.example.app/com.example.app.Main` names a module and a class. What does the part before the slash tell the JVM?",
+    "hint": "On the module path, every class belongs to a module.",
+    "choices": [
+      {
+        "text": "The directory under `out` where the class file lives",
+        "correct": false,
+        "why": "It happens to match the directory here, and it is the module's name, read from `module-info.class`."
+      },
+      {
+        "text": "Which module to start from, and so which `requires` to resolve",
+        "correct": true,
+        "why": "Right: the JVM resolves that module's dependencies before running anything."
+      },
+      {
+        "text": "The package of the class, written in the module syntax",
+        "correct": false,
+        "why": "The package is `com.example.app` inside the class's full name, after the slash."
+      }
+    ]
+  },
+  {
+    "id": "ex-0c70mk6n",
+    "version": 1,
+    "section": "strong-encapsulation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Peek` failed on the module path before it ever reached `setAccessible`. Where, and why?",
+    "hint": "Read the frame from `Peek` and the end of the message.",
+    "choices": [
+      {
+        "text": "At `Class.forName`, because unexported classes cannot even be loaded",
+        "correct": false,
+        "why": "`forName` succeeded; the trace points at `newInstance`, on line 11."
+      },
+      {
+        "text": "Building an `Index`: its package is not exported to the app module",
+        "correct": true,
+        "why": "Right: `IllegalAccessException ... does not export com.example.library.internal to module com.example.app`."
+      },
+      {
+        "text": "Reading `titles`, because a `Map` cannot be copied into a `TreeMap`",
+        "correct": false,
+        "why": "The copy worked fine on the next run, once the package was opened."
+      }
+    ]
+  },
+  {
+    "id": "ex-nhzs9c94",
+    "version": 1,
+    "section": "strong-encapsulation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the section call `--add-opens` a deliberate escape hatch rather than a loophole?",
+    "hint": "Who types it, and where?",
+    "choices": [
+      {
+        "text": "It only works on Java 17 and later",
+        "correct": false,
+        "why": "When it works is not the point; who has to write it down is."
+      },
+      {
+        "text": "It opens a package for good, so it is used once and forgotten",
+        "correct": false,
+        "why": "It opens for one run only, and has to be given again every time."
+      },
+      {
+        "text": "The flag names the module, package and reader at start-up",
+        "correct": true,
+        "why": "Right: a reach into somebody's internals is visible to whoever runs it, not hidden in code."
+      }
+    ]
+  },
+  {
+    "id": "ex-ryfyz9p3",
+    "version": 1,
+    "section": "strong-encapsulation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same `Peek`, run with `java -cp out/com.example.library:out/com.example.app`, printed the map with no flag. Why?",
+    "hint": "What happens to `module-info.class` on the class path?",
+    "choices": [
+      {
+        "text": "On the class path, module declarations are ignored",
+        "correct": true,
+        "why": "Right: modules only bind code that runs as modules, so every package is open."
+      },
+      {
+        "text": "The class path keeps the `--add-opens` from the previous run",
+        "correct": false,
+        "why": "Each JVM starts fresh; nothing carries over from an earlier run."
+      },
+      {
+        "text": "`TreeMap` bypasses the module check",
+        "correct": false,
+        "why": "The check was on building `Index`, before any `TreeMap` existed."
+      }
+    ]
+  },
+  {
+    "id": "ex-v7mack5v",
+    "version": 1,
+    "section": "strong-encapsulation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`Bytes` ran on the class path, with no module of its own, and still got `InaccessibleObjectException`. What refused it?",
+    "hint": "Whose package was it reaching into?",
+    "choices": [
+      {
+        "text": "The unnamed module, which closes the class path to reflection since Java 17",
+        "correct": false,
+        "why": "The unnamed module is where `Bytes` lives, and it is open; the refusal came from the other side."
+      },
+      {
+        "text": "`java.base`, which does not open `java.lang`",
+        "correct": true,
+        "why": "Right: the JDK's own modules keep their internals closed, to everybody."
+      },
+      {
+        "text": "The source launcher, which forbids `setAccessible` in programs run from source",
+        "correct": false,
+        "why": "Compiled and run with `javac` and `java`, it fails the same way."
+      },
+      {
+        "text": "`String.value` is `final`, and final fields cannot be made accessible",
+        "correct": false,
+        "why": "Final fields of your own classes can be; the message names the module, not the modifier."
+      }
+    ]
+  },
+  {
+    "id": "ex-cygtkcbz",
+    "version": 1,
+    "section": "strong-encapsulation",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Every class on the class path belongs to the ___ module.",
+    "hint": "`Bytes`'s error named it.",
+    "blanks": [
+      {
+        "accept": [
+          "unnamed"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-a28nbtp6",
+    "version": 1,
+    "section": "runtime-images",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many modules did `java --list-modules` report for the installed JDK?",
+    "hint": "`wc -l` counted them.",
+    "value": 69,
+    "tolerance": 0,
+    "unit": "modules"
+  },
+  {
+    "id": "ex-8zeckv34",
+    "version": 1,
+    "section": "runtime-images",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How did `jlink` decide which JDK modules to put in `image`?",
+    "hint": "It was given one module.",
+    "choices": [
+      {
+        "text": "It ran the program and recorded which classes were loaded",
+        "correct": false,
+        "why": "`jlink` runs nothing; it reads declarations."
+      },
+      {
+        "text": "It copied the modules `jdeps` had printed",
+        "correct": false,
+        "why": "`jdeps` was a separate command; `jlink` needs no report from it."
+      },
+      {
+        "text": "It followed every `requires` from the app module down to `java.base`",
+        "correct": true,
+        "why": "Right: three modules, because those are all the declarations reach."
+      },
+      {
+        "text": "It took every module of the JDK and compressed them",
+        "correct": false,
+        "why": "The image listed three modules, not 69."
+      }
+    ]
+  },
+  {
+    "id": "ex-75f5mhhs",
+    "version": 1,
+    "section": "runtime-images",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`du` measured `image` at 60M and the JDK at 331M. Roughly how many times smaller is the image? Give a whole number.",
+    "hint": "Divide the larger by the smaller.",
+    "value": 6,
+    "tolerance": 1,
+    "unit": "times"
+  },
+  {
+    "id": "ex-6dvcxw9z",
+    "version": 1,
+    "section": "runtime-images",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague wants `jlink` to build a small runtime for a class-path service with forty library jars, none of them modules. What does the section say?",
+    "hint": "`jlink` needs `requires` lines to know where to stop.",
+    "choices": [
+      {
+        "text": "Pass the forty jars to `--add-modules` and `jlink` converts them",
+        "correct": false,
+        "why": "`jlink` links modules; it does not turn plain jars into modules."
+      },
+      {
+        "text": "Not the application; only a JDK trimmed to what `jdeps` reports",
+        "correct": true,
+        "why": "Right: name the JDK modules by hand with `--add-modules`, and keep the jars on the class path."
+      },
+      {
+        "text": "It works, because the class path is the unnamed module and `jlink` accepts it",
+        "correct": false,
+        "why": "The unnamed module has no name to `--add-modules` and no `requires` to follow."
+      }
+    ]
+  },
+  {
+    "id": "ex-xn1g0a4n",
+    "version": 1,
+    "section": "when-modules-pay",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are costs of making an application modular, according to section 05? Choose all that apply.",
+    "hint": "Dependencies, frameworks and two paths.",
+    "choices": [
+      {
+        "text": "Every dependency has to be a module, or pass for one",
+        "correct": true,
+        "why": "Yes: the application is only as modular as its least modular jar."
+      },
+      {
+        "text": "Packages that frameworks reflect into have to be declared `opens`",
+        "correct": true,
+        "why": "Yes: the declaration fills up with exceptions to its own rule."
+      },
+      {
+        "text": "The program runs more slowly on the module path",
+        "correct": false,
+        "why": "Speed is not among the costs the section names."
+      },
+      {
+        "text": "`javac` can no longer compile it with `--release`",
+        "correct": false,
+        "why": "`--release` works for modules as for anything else."
+      }
+    ]
+  },
+  {
+    "id": "ex-e84jpf40",
+    "version": 1,
+    "section": "when-modules-pay",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A module `requires` a library that is missing from the module path. When does the program find out?",
+    "hint": "Resolution happens before anything runs.",
+    "choices": [
+      {
+        "text": "The first time a class from the library is used, maybe an hour into a run",
+        "correct": false,
+        "why": "That is the class path's way, with `NoClassDefFoundError`; a module fails earlier."
+      },
+      {
+        "text": "At start-up, before `main` runs",
+        "correct": true,
+        "why": "Right: the JVM resolves every `requires` first and refuses to start without them."
+      },
+      {
+        "text": "Never: missing modules are skipped and their calls return null",
+        "correct": false,
+        "why": "Nothing is skipped; a missing module is a refusal to start."
+      }
+    ]
+  },
+  {
+    "id": "ex-ppw0kc6c",
+    "version": 1,
+    "section": "when-modules-pay",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "For an ordinary application, what does the lesson recommend?",
+    "hint": "As every other lesson of the course has done.",
+    "choices": [
+      {
+        "text": "A `module-info.java` from the first day, so it never has to be added later",
+        "correct": false,
+        "why": "That is the cost section 05 lists, paid for a benefit an application often does not need."
+      },
+      {
+        "text": "The class path",
+        "correct": true,
+        "why": "Right: modules pay off for a published library or a self-contained runtime."
+      },
+      {
+        "text": "`--add-opens` for every package, to avoid surprises",
+        "correct": false,
+        "why": "That is an escape hatch for one reach, not a way to build an application."
+      }
+    ]
+  },
+  {
+    "id": "ex-aq1z9fyj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You upgrade the JDK under a service, and it now fails at start-up with `module java.base does not \"opens java.util\" to unnamed module`. The service has no `module-info.java`. What is the likely cause, and the fix?",
+    "hint": "Section 03's last paragraph.",
+    "choices": [
+      {
+        "text": "The service must now be made modular, with a `module-info.java` of its own at the root",
+        "correct": false,
+        "why": "Making it modular would not change what the library reflects into."
+      },
+      {
+        "text": "A library reflects into `java.util`: upgrade it; `--add-opens` meanwhile",
+        "correct": true,
+        "why": "Right: the JDK's own wall, met by class-path code; `--add-opens java.base/java.util=ALL-UNNAMED` is the stopgap."
+      },
+      {
+        "text": "The new JDK is missing `java.util`; reinstall it",
+        "correct": false,
+        "why": "`java.util` is in `java.base`, which every JDK has; the message says it is closed, not absent."
+      }
+    ]
+  },
+  {
+    "id": "ex-1zvnwwfp",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of section 04, from source to a runtime of its own, in order.",
+    "hint": "Compile before you link, link before you run.",
+    "items": [
+      "`javac --module-source-path src -m ...` compiles both modules",
+      "`jdeps -s` shows what the app module depends on",
+      "`jlink --add-modules com.example.app` writes `image`",
+      "`image/bin/java -m com.example.app/...` runs it"
+    ]
+  }
+]

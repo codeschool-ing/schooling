@@ -1,0 +1,406 @@
+[
+  {
+    "id": "ex-z7qtfxd3",
+    "version": 1,
+    "section": "a-flag-nobody-sees",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `Stop.java`, `main` set `stop = true` and the worker kept spinning. What allowed that?",
+    "hint": "Nothing said another thread might change the field.",
+    "choices": [
+      {
+        "text": "A bug in the JIT compiler of Java 25 that later releases will fix",
+        "correct": false,
+        "why": "It is an optimisation the language permits."
+      },
+      {
+        "text": "`boolean` fields cannot be shared",
+        "correct": false,
+        "why": "Any field can be shared; this one was shared without a rule."
+      },
+      {
+        "text": "The compiler is free to read the field once",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`sleep(1000)` was too short for the write to happen",
+        "correct": false,
+        "why": "The write happened: main printed that it did."
+      }
+    ]
+  },
+  {
+    "id": "ex-w5twj8nj",
+    "version": 1,
+    "section": "a-flag-nobody-sees",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `-Xint`, the same `Stop.java` ended. What does that show?",
+    "hint": "The source did not change.",
+    "choices": [
+      {
+        "text": "The interpreter is the correct way to run concurrent programs",
+        "correct": false,
+        "why": "The program is still wrong; the interpreter just did not expose it."
+      },
+      {
+        "text": "The bug was in the first run's timing only",
+        "correct": false,
+        "why": "The first run would hang every time once the loop is compiled."
+      },
+      {
+        "text": "Whether it hangs depends on how the JVM runs it",
+        "correct": true,
+        "why": "Right: why such bugs survive testing."
+      },
+      {
+        "text": "`-Xint` makes every field `volatile`",
+        "correct": false,
+        "why": "It switches the JIT off; it changes no declarations."
+      }
+    ]
+  },
+  {
+    "id": "ex-dsr2f6yd",
+    "version": 1,
+    "section": "reordering",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Thread A runs `x = 1; r1 = y;` and thread B `y = 1; r2 = x;`. Why is `r1 = 0, r2 = 0` surprising?",
+    "hint": "Try every interleaving.",
+    "choices": [
+      {
+        "text": "It means one thread never ran",
+        "correct": false,
+        "why": "Both wrote their 1; the other just did not see it in time."
+      },
+      {
+        "text": "No interleaving of the four statements produces it",
+        "correct": true,
+        "why": "Right: it needs a read to pass a write."
+      },
+      {
+        "text": "The arrays start full of ones",
+        "correct": false,
+        "why": "They start at zero."
+      },
+      {
+        "text": "It means the `CountDownLatch` failed",
+        "correct": false,
+        "why": "It only started both threads together."
+      }
+    ]
+  },
+  {
+    "id": "ex-05qe62zs",
+    "version": 1,
+    "section": "reordering",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many pairs showed `r1=0 r2=0` in the quoted run of `Litmus.java`?",
+    "hint": "The first line.",
+    "value": 24,
+    "tolerance": 0,
+    "unit": "pairs"
+  },
+  {
+    "id": "ex-6dxscxkk",
+    "version": 1,
+    "section": "reordering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statement about reordering holds on every processor?",
+    "hint": "The numbers change; the rule does not.",
+    "choices": [
+      {
+        "text": "ARM processors reorder less than x86",
+        "correct": false,
+        "why": "The other way round."
+      },
+      {
+        "text": "x86 never reorders anything",
+        "correct": false,
+        "why": "The 0,0 pairs came from an x86."
+      },
+      {
+        "text": "Reordering only happens with arrays",
+        "correct": false,
+        "why": "Arrays only made it easy to run many tests."
+      },
+      {
+        "text": "Without something ordering them, two threads' accesses have no reliable order",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ph1pmgke",
+    "version": 1,
+    "section": "happens-before",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each action with what it happens-before.",
+    "hint": "The table in section 04.",
+    "pairs": [
+      {
+        "left": "`t.start()`",
+        "right": "every action in `t`"
+      },
+      {
+        "left": "every action in `t`",
+        "right": "another thread's return from `t.join()`"
+      },
+      {
+        "left": "releasing a lock",
+        "right": "the next acquisition of that lock"
+      },
+      {
+        "left": "a `volatile` write",
+        "right": "every later read of that field"
+      }
+    ],
+    "right_distractors": [
+      "every read of any field, in any thread"
+    ]
+  },
+  {
+    "id": "ex-s3hwh3e7",
+    "version": 1,
+    "section": "happens-before",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Joined.java` reads a plain `long` written by another thread, and is right every time. Why?",
+    "hint": "What came between the write and the read?",
+    "choices": [
+      {
+        "text": "The value fits in a register, so both threads share it",
+        "correct": false,
+        "why": "Registers are per thread, which is the problem in `Stop.java`."
+      },
+      {
+        "text": "`long` fields are always shared safely",
+        "correct": false,
+        "why": "Without the `join` it would be a data race."
+      },
+      {
+        "text": "The adder finished before `main` could look",
+        "correct": false,
+        "why": "Finishing first is timing; visibility needs an edge."
+      },
+      {
+        "text": "`join` creates a happens-before edge",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-3nxyay10",
+    "version": 1,
+    "section": "happens-before",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two accesses to the same variable in different threads, at least one a write, with no happens-before between them, form a data ___.",
+    "hint": "They compete.",
+    "blanks": [
+      {
+        "accept": [
+          "race"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0mtj6mc5",
+    "version": 1,
+    "section": "happens-before",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One `volatile` write comes after ten ordinary writes in the same thread. Why can a reader of the volatile see all ten?",
+    "hint": "A happens-before B, B happens-before C.",
+    "choices": [
+      {
+        "text": "`volatile` makes the whole object volatile",
+        "correct": false,
+        "why": "It applies to one field."
+      },
+      {
+        "text": "Ordinary writes are always visible immediately; only reads are delayed",
+        "correct": false,
+        "why": "`Stop.java` showed a write nobody saw."
+      },
+      {
+        "text": "The relation is transitive",
+        "correct": true,
+        "why": "Right: program order, then the volatile edge."
+      },
+      {
+        "text": "The ten writes are retried until they are seen",
+        "correct": false,
+        "why": "Nothing is retried."
+      }
+    ]
+  },
+  {
+    "id": "ex-qmzam1yr",
+    "version": 1,
+    "section": "safe-publication",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these publish an object safely to another thread? Choose all that apply.",
+    "hint": "Section 05's list.",
+    "choices": [
+      {
+        "text": "A `volatile` field holding the reference",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "An object whose fields are all `final`",
+        "correct": true,
+        "why": "Yes, if `this` does not escape the constructor."
+      },
+      {
+        "text": "A plain static field read in a loop",
+        "correct": false,
+        "why": "No: that is `Stop.java`."
+      },
+      {
+        "text": "Putting it into a `ConcurrentHashMap`",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Calling `System.gc()` after writing it",
+        "correct": false,
+        "why": "No: the collector creates no happens-before."
+      }
+    ]
+  },
+  {
+    "id": "ex-dzqtswwp",
+    "version": 1,
+    "section": "safe-publication",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can readers of an immutable `PriceList` skip the lock entirely?",
+    "hint": "What could change under them?",
+    "choices": [
+      {
+        "text": "Nothing in it changes after construction",
+        "correct": true,
+        "why": "Right; updates replace the whole object."
+      },
+      {
+        "text": "Records are locked by the JVM",
+        "correct": false,
+        "why": "There is no lock; there is nothing to protect."
+      },
+      {
+        "text": "`List.copyOf` makes the list thread-local",
+        "correct": false,
+        "why": "It makes the list unmodifiable, which is shared freely."
+      },
+      {
+        "text": "Readers only ever see the first `PriceList`",
+        "correct": false,
+        "why": "The reader saw the new one, through the `volatile` field."
+      }
+    ]
+  },
+  {
+    "id": "ex-je2g82yv",
+    "version": 1,
+    "section": "safe-publication",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Unsafe publication was not reproduced for this course. Why does the lesson still say to follow the rules?",
+    "hint": "The next processor.",
+    "choices": [
+      {
+        "text": "Because `final` fields are slower",
+        "correct": false,
+        "why": "Speed is not the argument."
+      },
+      {
+        "text": "Because the compiler refuses unsafe publication",
+        "correct": false,
+        "why": "It compiles without a word."
+      },
+      {
+        "text": "Because the bug does reproduce on x86 under load",
+        "correct": false,
+        "why": "The lesson says it is rare on x86."
+      },
+      {
+        "text": "A bug a test cannot show is still a bug",
+        "correct": true,
+        "why": "Right: the model, not the run, decides."
+      }
+    ]
+  },
+  {
+    "id": "ex-at4dehay",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the chain that lets `B` see `x = 1` in order, as the figure draws it.",
+    "hint": "Program order, the edge, program order.",
+    "items": [
+      "A writes `x = 1`",
+      "A releases the lock",
+      "B acquires the same lock",
+      "B reads `x` and sees 1"
+    ]
+  },
+  {
+    "id": "ex-tkkz62n7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague fixes `Stop.java` by adding `Thread.sleep(1)` inside the loop, and it stops. Is it fixed?",
+    "hint": "Did anything create happens-before?",
+    "choices": [
+      {
+        "text": "Yes: `sleep` is a happens-before edge",
+        "correct": false,
+        "why": "`sleep` is not in the list of edges."
+      },
+      {
+        "text": "No: no rule guarantees the worker sees the write",
+        "correct": true,
+        "why": "Right: it happens to work, which is not the same."
+      },
+      {
+        "text": "Yes, because the loop is no longer hot",
+        "correct": false,
+        "why": "That explains why it works now, not why it must."
+      },
+      {
+        "text": "No: `sleep` inside a loop is forbidden",
+        "correct": false,
+        "why": "It is allowed; it just proves nothing."
+      }
+    ]
+  }
+]
