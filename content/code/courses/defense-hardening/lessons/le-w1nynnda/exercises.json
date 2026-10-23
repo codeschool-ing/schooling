@@ -1,0 +1,780 @@
+[
+  {
+    "id": "ex-p3x6dk16",
+    "version": 1,
+    "section": "your-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the course recommend building the lab inside a virtual machine rather than on your own computer?",
+    "hint": "Think about what the script does as root.",
+    "choices": [
+      {
+        "text": "Because containers booted under a hypervisor run faster than on the bare computer",
+        "correct": false,
+        "why": "They do not: a hypervisor adds a layer, it does not speed anything up."
+      },
+      {
+        "text": "Because Ubuntu 24.04 cannot be installed on a laptop",
+        "correct": false,
+        "why": "It can; installed is one of the three paths, for a computer you can wipe."
+      },
+      {
+        "text": "Because each of the seven machines needs its own access to the internet",
+        "correct": false,
+        "why": "The opposite: the seven machines are on a network connected to nothing."
+      },
+      {
+        "text": "Because it changes the computer as root, and a VM is deleted whole",
+        "correct": true,
+        "why": "Right. Namespaces, containers and 7 GB under /var/lib/hostlab go away with the virtual machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-86zz60sw",
+    "version": 1,
+    "section": "your-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A student opens a Linux shell in a browser tab offered by a website and tries to build the lab there. What happens, and why?",
+    "hint": "What is the lab made of?",
+    "choices": [
+      {
+        "text": "It works, only more slowly, because every container is nested inside the website's own",
+        "correct": false,
+        "why": "Speed is not the problem; the operations themselves are refused."
+      },
+      {
+        "text": "It works once and then the website deletes it",
+        "correct": false,
+        "why": "It never gets that far: creating the containers fails."
+      },
+      {
+        "text": "It fails: that shell is already a container",
+        "correct": true,
+        "why": "Right. The lab is containers and network namespaces, which need root on a real or virtual machine."
+      },
+      {
+        "text": "It fails, because a browser tab has no way to run bash",
+        "correct": false,
+        "why": "The shell runs on the website's server, not in the browser; bash is there."
+      }
+    ]
+  },
+  {
+    "id": "ex-a72ny3rb",
+    "version": 1,
+    "section": "building-the-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before running hostlab.sh for the first time, what does the lesson ask you to compare?",
+    "hint": "A script that runs as root deserves a look.",
+    "choices": [
+      {
+        "text": "Its checksum and its number of lines",
+        "correct": true,
+        "why": "Right. If either differs, the copy lost or gained something."
+      },
+      {
+        "text": "Its file name and location with the ones the lesson uses in its own transcripts",
+        "correct": false,
+        "why": "A name can match while the content is wrong."
+      },
+      {
+        "text": "The version of bash on your computer with the one the course was recorded with",
+        "correct": false,
+        "why": "The script runs on any bash Ubuntu 24.04 ships; the content is what can go wrong."
+      },
+      {
+        "text": "The size of the two images in /var/lib/hostlab after the build has finished",
+        "correct": false,
+        "why": "That comes after running it, which is exactly what the check is meant to precede."
+      }
+    ]
+  },
+  {
+    "id": "ex-ax2e83bb",
+    "version": 1,
+    "section": "building-the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You changed a file on web in lesson 1. You type `sudo bash hostlab.sh up` at the start of lesson 2. Where is your change?",
+    "hint": "What does up copy?",
+    "choices": [
+      {
+        "text": "Still on web, because up only starts machines that are stopped",
+        "correct": false,
+        "why": "up stops every machine first and makes fresh copies."
+      },
+      {
+        "text": "In the web image, saved there by up for the lessons after it",
+        "correct": false,
+        "why": "Changes happen in the copy, never in the image."
+      },
+      {
+        "text": "Gone: up replaces every copy with a new one",
+        "correct": true,
+        "why": "Right. Every lesson starts from the same place as its transcripts."
+      }
+    ]
+  },
+  {
+    "id": "ex-kye01twp",
+    "version": 1,
+    "section": "when-the-lab-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`sudo bash hostlab.sh up` answers `set: pipefail^M: invalid option name`. What is the cause?",
+    "hint": "What does ^M stand for?",
+    "choices": [
+      {
+        "text": "The installed bash is too old to know pipefail",
+        "correct": false,
+        "why": "Ubuntu 24.04's bash knows it; the error names the option with something stuck to it."
+      },
+      {
+        "text": "The file has Windows line endings",
+        "correct": true,
+        "why": "Right. ^M is the carriage return, and sed -i \"s/\\r$//\" removes it."
+      },
+      {
+        "text": "The script was run without sudo, so bash refused its first option",
+        "correct": false,
+        "why": "Without sudo it says so in plain words: run it with sudo, from your own account."
+      },
+      {
+        "text": "The images were never built",
+        "correct": false,
+        "why": "That message names build; this one fails before any of the script's own checks run."
+      }
+    ]
+  },
+  {
+    "id": "ex-stzbr2np",
+    "version": 1,
+    "section": "when-the-lab-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After up, one machine prints `degraded`. Where do you look first?",
+    "hint": "degraded is systemd's word.",
+    "choices": [
+      {
+        "text": "At the lab computer's own firewall",
+        "correct": false,
+        "why": "The lab is not connected to the computer's network; nothing there affects a service inside a machine."
+      },
+      {
+        "text": "At build.log, from the start",
+        "correct": false,
+        "why": "build.log tells you how the image was made; the machine can tell you what failed now."
+      },
+      {
+        "text": "At `systemctl --failed` on that machine, then journalctl for the unit it names",
+        "correct": true,
+        "why": "Right. degraded means a unit failed, and those two commands name it and say why."
+      }
+    ]
+  },
+  {
+    "id": "ex-00y7z3g8",
+    "version": 1,
+    "section": "attack-surface",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is part of a server's attack surface?",
+    "hint": "Something a stranger could reach or use.",
+    "choices": [
+      {
+        "text": "The length of its host name, which a scan reports",
+        "correct": false,
+        "why": "A name is not something anyone can talk to or log in with."
+      },
+      {
+        "text": "An FTP server nobody uses, still listening",
+        "correct": true,
+        "why": "Right. Every listener is a program a stranger can talk to without logging in."
+      },
+      {
+        "text": "The amount of free space on its disk",
+        "correct": false,
+        "why": "Disk space matters to availability, but nobody reaches the machine through it."
+      },
+      {
+        "text": "The firewall on the network in front of it",
+        "correct": false,
+        "why": "That is a control in front of the surface, not part of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-7n0jxjtt",
+    "version": 1,
+    "section": "attack-surface",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A UDP scan reports `5353/udp open|filtered`. What does nmap actually know?",
+    "hint": "Think about what came back.",
+    "choices": [
+      {
+        "text": "That a firewall dropped the probe",
+        "correct": false,
+        "why": "That is one of the two explanations, and nmap cannot tell which."
+      },
+      {
+        "text": "That avahi is running and answered",
+        "correct": false,
+        "why": "An answer would have made it open; here nothing came back."
+      },
+      {
+        "text": "Only that no reply came back",
+        "correct": true,
+        "why": "Right. The machine itself, with ss, settles it."
+      },
+      {
+        "text": "That the port is closed and nothing listens there",
+        "correct": false,
+        "why": "Closed is a reply; the after-scan shows it as closed."
+      }
+    ]
+  },
+  {
+    "id": "ex-58h1d72f",
+    "version": 1,
+    "section": "attack-surface",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The first scan of web found five TCP and three UDP services. The portal's job needs two. How many listeners had no reason to be there?",
+    "hint": "Count, then subtract.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-sxrv3jdh",
+    "version": 1,
+    "section": "services",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "ss shows `tcp 127.0.0.1:8080 python3`. Who can connect to it?",
+    "hint": "127.0.0.1 is a special address.",
+    "choices": [
+      {
+        "text": "Only programs on web itself, such as nginx",
+        "correct": true,
+        "why": "Right. The loopback address never leaves the machine."
+      },
+      {
+        "text": "Every machine on the 192.168.60.0/24 segment",
+        "correct": false,
+        "why": "That would be 0.0.0.0 or web's own address."
+      },
+      {
+        "text": "Anybody on the internet, unless a firewall blocks it",
+        "correct": false,
+        "why": "Loopback is unreachable from outside with or without a firewall."
+      },
+      {
+        "text": "Only root, because the port is above 1024",
+        "correct": false,
+        "why": "Ports below 1024 need root to listen on, and nothing restricts who connects."
+      }
+    ]
+  },
+  {
+    "id": "ex-d2b4ne3m",
+    "version": 1,
+    "section": "services",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `systemctl disable --now rpcbind`, port 111 is still open, held by systemd. What is holding it, and how do you close it?",
+    "hint": "Read the warning systemctl printed.",
+    "choices": [
+      {
+        "text": "A zombie rpcbind process; kill it with kill -9",
+        "correct": false,
+        "why": "No rpcbind process is left: ss names systemd, process 1."
+      },
+      {
+        "text": "The kernel caches the port for a minute; wait",
+        "correct": false,
+        "why": "Nothing expires here: systemd is listening on purpose and would start rpcbind again."
+      },
+      {
+        "text": "A socket unit, which has to be switched off as well",
+        "correct": true,
+        "why": "Right. systemd listens for the service and starts it on the first connection."
+      },
+      {
+        "text": "inetd, which starts rpcbind whenever a client asks; remove inetd first",
+        "correct": false,
+        "why": "inetd ran telnet here; the warning names rpcbind.socket."
+      }
+    ]
+  },
+  {
+    "id": "ex-ranwv1jb",
+    "version": 1,
+    "section": "services",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way of switching a service off with what it leaves behind.",
+    "hint": "From weakest to strongest.",
+    "pairs": [
+      {
+        "left": "systemctl disable",
+        "right": "installed, and startable by hand or by another unit"
+      },
+      {
+        "left": "systemctl mask",
+        "right": "installed, and linked to /dev/null so nothing can start it"
+      },
+      {
+        "left": "apt-get purge",
+        "right": "neither the program nor its configuration"
+      }
+    ],
+    "right_distractors": [
+      "the program, with its configuration reset to defaults"
+    ]
+  },
+  {
+    "id": "ex-zxdz436p",
+    "version": 1,
+    "section": "services",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You inherit a server and find an FTP service that seems idle. What should happen before you purge it?",
+    "hint": "The service may have a user you do not know about.",
+    "choices": [
+      {
+        "text": "Nothing: an idle service is unnecessary by definition",
+        "correct": false,
+        "why": "Idle today is not idle on the day the monthly job runs."
+      },
+      {
+        "text": "Find out who uses it, and write the answer down",
+        "correct": true,
+        "why": "Right. And the note answers the next person who finds FTP missing."
+      },
+      {
+        "text": "Disable it for a whole year first, and purge it only if nobody has complained by then",
+        "correct": false,
+        "why": "A year of a disabled service still answers nothing about who needed it."
+      },
+      {
+        "text": "Upgrade it, so that it is safe to keep",
+        "correct": false,
+        "why": "A patched service nobody needs is still surface."
+      }
+    ]
+  },
+  {
+    "id": "ex-rpmxahm6",
+    "version": 1,
+    "section": "accounts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is an account called `suporte` with user id 0 a problem even though it is not called root?",
+    "hint": "What does the kernel check?",
+    "choices": [
+      {
+        "text": "Because the kernel checks the number, not the name",
+        "correct": true,
+        "why": "Right. It is root under another name, with its own password."
+      },
+      {
+        "text": "Because two accounts may not share the same home directory, and /root belongs to root",
+        "correct": false,
+        "why": "Sharing a home is untidy; the danger is the number."
+      },
+      {
+        "text": "Because Portuguese names break sudo",
+        "correct": false,
+        "why": "Names are just labels; nothing breaks."
+      },
+      {
+        "text": "Because only root may have a password",
+        "correct": false,
+        "why": "Any account may have one; what this one has is root's powers."
+      }
+    ]
+  },
+  {
+    "id": "ex-73w73q9k",
+    "version": 1,
+    "section": "accounts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague suggests `userdel -rf suporte` to remove the second root. What would it do on web?",
+    "hint": "Look at the home directory of suporte.",
+    "choices": [
+      {
+        "text": "Remove the name and nothing else, which is what you want",
+        "correct": false,
+        "why": "-r does more than the name: it removes the home directory."
+      },
+      {
+        "text": "Fail, exactly as plain userdel did",
+        "correct": false,
+        "why": "-f overrides the check that stopped the plain command."
+      },
+      {
+        "text": "Delete /root, which is suporte's home",
+        "correct": true,
+        "why": "Right. The safe removal deletes the account's lines from the four account files."
+      },
+      {
+        "text": "Lock the account, which leaves it in place for the logs to name",
+        "correct": false,
+        "why": "That is usermod -L; userdel removes."
+      }
+    ]
+  },
+  {
+    "id": "ex-byzj0ree",
+    "version": 1,
+    "section": "accounts",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which changes stop the intern's account from logging in? Choose all that apply.",
+    "hint": "Each one alone is enough.",
+    "choices": [
+      {
+        "text": "usermod -L, which locks the password",
+        "correct": true,
+        "why": "A locked password cannot be used to log in."
+      },
+      {
+        "text": "usermod -e 1, which makes the account expired",
+        "correct": true,
+        "why": "An expired account is refused whatever the password."
+      },
+      {
+        "text": "usermod -s /usr/sbin/nologin, which takes its shell away",
+        "correct": true,
+        "why": "nologin prints a refusal and exits."
+      },
+      {
+        "text": "chage -l estagio, which shows its dates",
+        "correct": false,
+        "why": "chage -l only reads; it changes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-g7atzy7d",
+    "version": 1,
+    "section": "accounts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "/etc/sudoers.d has no file for an account, yet it can use sudo. Where does that power come from?",
+    "hint": "A list that is not in /etc/passwd.",
+    "choices": [
+      {
+        "text": "Membership of the sudo group, which getent group sudo lists",
+        "correct": true,
+        "why": "Right. getent group sudo lists everybody who may use it."
+      },
+      {
+        "text": "Its SSH key in authorized_keys",
+        "correct": false,
+        "why": "A key lets it log in; it grants no privilege after that."
+      },
+      {
+        "text": "A user id below 1000",
+        "correct": false,
+        "why": "Low ids are system accounts by convention, with no sudo rights."
+      },
+      {
+        "text": "Its login shell being /bin/bash",
+        "correct": false,
+        "why": "A shell lets it log in interactively; sudo checks groups and rules."
+      }
+    ]
+  },
+  {
+    "id": "ex-wvpz2g09",
+    "version": 1,
+    "section": "remote-login",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`50-old.conf` says `PermitRootLogin yes`. You add `90-hardening.conf` saying `PermitRootLogin no` and reload. What does `sshd -T` report?",
+    "hint": "Which file is read first, and which value does sshd keep?",
+    "choices": [
+      {
+        "text": "permitrootlogin no, because the newest file wins",
+        "correct": false,
+        "why": "File age plays no part; the order is by name."
+      },
+      {
+        "text": "permitrootlogin yes, because 50 is read before 90 and sshd keeps the first value",
+        "correct": true,
+        "why": "Right. That is why the lesson named the file 10-hardening.conf."
+      },
+      {
+        "text": "An error, because a setting may only appear once",
+        "correct": false,
+        "why": "Repeating it is allowed; only the first value counts."
+      },
+      {
+        "text": "permitrootlogin no, because no is always safer",
+        "correct": false,
+        "why": "sshd does not pick the safer value, it picks the first one."
+      }
+    ]
+  },
+  {
+    "id": "ex-r8mvdh9e",
+    "version": 1,
+    "section": "remote-login",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson run `sshd -t` before `systemctl reload ssh`?",
+    "hint": "What happens if the configuration has a typo?",
+    "choices": [
+      {
+        "text": "To print the settings the server would run with",
+        "correct": false,
+        "why": "That is sshd -T, with a capital T."
+      },
+      {
+        "text": "To restart the server without dropping sessions",
+        "correct": false,
+        "why": "-t starts nothing; reload is what keeps sessions."
+      },
+      {
+        "text": "To test a login with the new settings from another machine",
+        "correct": false,
+        "why": "That is the next step, from desk."
+      },
+      {
+        "text": "To catch a typo before it reaches the running server",
+        "correct": true,
+        "why": "Right. The && means reload runs only if the check passed."
+      }
+    ]
+  },
+  {
+    "id": "ex-wrbjpn9t",
+    "version": 1,
+    "section": "remote-login",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each SSH setting with what it closes.",
+    "pairs": [
+      {
+        "left": "PermitRootLogin no",
+        "right": "the one account name every attacker knows"
+      },
+      {
+        "left": "PasswordAuthentication no",
+        "right": "guessing a password from anywhere the port is reachable"
+      },
+      {
+        "left": "X11Forwarding no",
+        "right": "graphical programs tunnelled from a server with no screen"
+      },
+      {
+        "left": "MaxAuthTries 3",
+        "right": "many attempts inside a single connection"
+      }
+    ]
+  },
+  {
+    "id": "ex-mm4bafw4",
+    "version": 1,
+    "section": "features",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`apt-cache rdepends --installed wpasupplicant` lists nothing under it on web. What does that tell you?",
+    "hint": "rdepends means reverse dependencies.",
+    "choices": [
+      {
+        "text": "That no installed package needs it",
+        "correct": true,
+        "why": "Right. Whether the machine's job needs it is the other half of the question."
+      },
+      {
+        "text": "That wpasupplicant is not installed on web, so there is nothing to remove",
+        "correct": false,
+        "why": "It is installed, and running; the command asked who needs it."
+      },
+      {
+        "text": "That it has no security updates",
+        "correct": false,
+        "why": "Dependencies say nothing about updates."
+      },
+      {
+        "text": "That the machine has a Wi-Fi card",
+        "correct": false,
+        "why": "Packages know nothing about hardware; web has no radio."
+      }
+    ]
+  },
+  {
+    "id": "ex-3xsfjw2p",
+    "version": 1,
+    "section": "features",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `server_tokens off`, what has the portal gained?",
+    "hint": "Compare the two Server headers.",
+    "choices": [
+      {
+        "text": "Protection against the flaws in nginx 1.24.0",
+        "correct": false,
+        "why": "A hidden version is just as vulnerable; lesson 16 finds out which are out of date."
+      },
+      {
+        "text": "A server that no longer tells anybody it is nginx at all",
+        "correct": false,
+        "why": "The name stays; only the version goes."
+      },
+      {
+        "text": "Its version number is no longer announced to whoever asks",
+        "correct": true,
+        "why": "Right. It is a small change and not a fix."
+      },
+      {
+        "text": "Faster responses, because the header is shorter",
+        "correct": false,
+        "why": "A few bytes make no difference anybody can measure here."
+      }
+    ]
+  },
+  {
+    "id": "ex-medh1rz3",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order the way this lesson hardens a service you did not install.",
+    "hint": "Measure before and after.",
+    "items": [
+      "scan the machine from another one on the network",
+      "ask the machine which process holds each port",
+      "find out whether anybody uses the service",
+      "remove the service and its socket",
+      "scan again from the same machine"
+    ]
+  },
+  {
+    "id": "ex-d8ev8m4m",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The final UDP scan reports 161/udp as `closed` where it first said `open`. What made the difference visible to nmap?",
+    "hint": "Closed is an answer, not a silence.",
+    "choices": [
+      {
+        "text": "snmpd now drops the probes it receives",
+        "correct": false,
+        "why": "snmpd is gone; nothing on the port receives anything."
+      },
+      {
+        "text": "web's kernel answers that no program listens there",
+        "correct": true,
+        "why": "Right. With nothing listening the kernel replies port unreachable, which nmap reads as closed."
+      },
+      {
+        "text": "A firewall was added to web during the lesson",
+        "correct": false,
+        "why": "No firewall was added in this lesson; that is lesson 5."
+      },
+      {
+        "text": "The community string was changed from public",
+        "correct": false,
+        "why": "The service was purged, not reconfigured."
+      }
+    ]
+  },
+  {
+    "id": "ex-5rb7cxav",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A service account gets the shell /usr/sbin/___, which prints a refusal and exits.",
+    "hint": "It says what it does.",
+    "blanks": [
+      {
+        "accept": [
+          "nologin"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7qtttj9k",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many packages did web lose in this lesson, counting the service packages and the two Wi-Fi ones?",
+    "hint": "Six, then two.",
+    "value": 8,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-dyy3csyg",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these reduce web's attack surface, rather than protect what is already there? Choose all that apply.",
+    "hint": "Removing versus guarding.",
+    "choices": [
+      {
+        "text": "Purging the telnet server",
+        "correct": true,
+        "why": "A program that is not there has nothing to attack."
+      },
+      {
+        "text": "Watching the FTP logs for failed logins",
+        "correct": false,
+        "why": "That guards a service that is still there."
+      },
+      {
+        "text": "Removing the second account with user id 0",
+        "correct": true,
+        "why": "One less way in, and a powerful one."
+      },
+      {
+        "text": "Choosing a longer password for the intern",
+        "correct": false,
+        "why": "The account still exists and still logs in; the lesson locked it instead."
+      }
+    ]
+  }
+]
