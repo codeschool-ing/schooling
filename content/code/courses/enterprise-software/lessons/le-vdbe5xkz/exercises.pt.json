@@ -1,0 +1,512 @@
+{
+  "ex-zktzmz00": {
+    "prompt": "O primeiro mapeamento de Joana foi escrito a partir da documentação do Coleta. Por que uma migração faz o perfil dos dados antes de escrever o mapeamento?",
+    "hint": "Pense no campo de município e no fichário.",
+    "choices": [
+      {
+        "text": "Para saber quantos servidores e quanto disco a carga vai precisar",
+        "why": "Volumes ajudam a dimensionar a carga, mas não é por isso que o perfil vem primeiro; o fichário errava sobre o que o campo guardava, não sobre o tamanho."
+      },
+      {
+        "text": "Porque o novo sistema recusa qualquer carga que não tenha passado por perfil antes",
+        "why": "Nenhum sistema exige isso. O perfil é uma decisão do time de migração, para as surpresas chegarem cedo."
+      },
+      {
+        "text": "Para os donos de negócio terem um relatório para assinar antes do projeto começar",
+        "why": "Os donos assinam a especificação de mapeamento e a reconciliação. O perfil é uma medição, não um documento para assinar."
+      },
+      {
+        "text": "O fichário descreve a intenção, e os dados se afastaram dela",
+        "why": "Isso: o fichário dizia que o município vinha de uma lista, e o perfil achou 97 grafias para 38 cidades."
+      }
+    ]
+  },
+  "ex-p1g10za1": {
+    "prompt": "O perfil acha 38 CPFs ou CNPJs que aparecem cada um em dois cadastros de fazenda. O que a migração deve fazer com eles?",
+    "hint": "Um documento repetido é a mesma coisa que uma fazenda duplicada?",
+    "choices": [
+      {
+        "text": "Perguntar a quem conhece as fazendas quais pares são um tanque duas vezes, e juntar só esses",
+        "why": "Isso: 31 pares eram um produtor com duas propriedades, e só 7 eram um tanque cadastrado duas vezes. Sebastião sabia quais."
+      },
+      {
+        "text": "Juntar cada par numa fazenda só, já que o documento identifica um produtor",
+        "why": "Isso junta a segunda propriedade de 31 produtores e paga cada um uma vez em vez de duas."
+      },
+      {
+        "text": "Pôr uma restrição de unicidade no documento no novo sistema para os duplicados não entrarem",
+        "why": "A restrição recusaria 31 fazendas corretas. A regra que o fichário sugeria não vale para os dados."
+      },
+      {
+        "text": "Mandar os 76 cadastros para o arquivo de rejeitos, e o financeiro resolve com os produtores depois da entrada no ar",
+        "why": "Essas fazendas ficariam sem cadastro no novo sistema, e fazenda sem cadastro é fazenda que não recebe."
+      }
+    ]
+  },
+  "ex-x9e4pbf1": {
+    "prompt": "O cadastro de fazendas do Coleta tem 2.140 registros. 182 deles não têm nenhuma coleta dentro do período que o novo sistema precisa guardar. Quantas fazendas estão no escopo da migração?",
+    "hint": "Uma subtração.",
+    "unit": "fazendas",
+    "accept_units": [
+      "fazenda"
+    ]
+  },
+  "ex-hyg9pb4a": {
+    "prompt": "Qual destes achados do perfil teria carregado sem erro nenhum, e só seria descoberto por uma fazenda paga numa conta encerrada?",
+    "hint": "Uma carga falha num valor que quebra uma regra.",
+    "choices": [
+      {
+        "text": "Municípios digitados como texto livre, em 97 grafias",
+        "why": "Esses falhariam: o novo sistema guarda um código do IBGE, e uma grafia desconhecida não tem código."
+      },
+      {
+        "text": "Coletas apontando para seis códigos de fazenda apagados",
+        "why": "Órfãos também falham alto, porque o novo histórico precisa de uma fazenda a que pertencer."
+      },
+      {
+        "text": "Contas bancárias guardadas no Coleta que não batem com o cadastro do SAP",
+        "why": "Isso: estão bem formadas e erradas, o tipo de valor que a carga aceita e o pagamento descobre."
+      },
+      {
+        "text": "CPFs cujos dígitos verificadores não fecham",
+        "why": "O mapeamento recusa um CPF com dígito verificador errado, então esses aparecem como rejeitos, não como pagamentos."
+      }
+    ]
+  },
+  "ex-1h43yyjv": {
+    "prompt": "O novo sistema gera o próprio farm_id. Por que o mapeamento também guarda o código do Coleta em legacy_code?",
+    "hint": "Quem consulta o Coleta depois do cutover?",
+    "choices": [
+      {
+        "text": "Porque o novo sistema não consegue gerar identificadores únicos",
+        "why": "Ele gera o farm_id sem problema. O código antigo fica por outro motivo."
+      },
+      {
+        "text": "Para o código do Coleta substituir o farm_id depois das semanas de hypercare",
+        "why": "Nada substitui o farm_id. O código antigo serve para olhar para trás, e o novo sistema se liga pelo id novo."
+      },
+      {
+        "text": "Porque o SAP paga as fazendas pelo código do Coleta",
+        "why": "O SAP paga um cadastro de fornecedor, e o mapeamento leva o número do fornecedor num campo próprio."
+      },
+      {
+        "text": "Para todo registro levar de volta à sua fazenda no Coleta",
+        "why": "Isso: custa uma coluna e responde toda pergunta sobre qual fazenda do Coleta um registro era."
+      }
+    ]
+  },
+  "ex-fr47ahc5": {
+    "prompt": "O financeiro acha 9 CPFs inválidos no Coleta. O primeiro instinto de Joana é corrigi-los na transformação. Por que a Serra Alta os corrigiu no próprio Coleta?",
+    "hint": "O que o Coleta continua fazendo depois que o cadastro muda de sistema?",
+    "choices": [
+      {
+        "text": "Porque a transformação não consegue mudar o valor de um campo",
+        "why": "Ela muda muita coisa: unidades, grafias, layouts. Se ela consegue não é a questão."
+      },
+      {
+        "text": "O Coleta continua rodando, e um fato corrigido só no caminho segue errado lá",
+        "why": "Isso: o estrangulamento mantém o Coleta vivo por meses, e um fato errado é corrigido onde ele mora."
+      },
+      {
+        "text": "Porque correções no caminho são mais lentas do que correções na origem",
+        "why": "Nove valores não custam nada no caminho. Velocidade não é o motivo da escolha."
+      },
+      {
+        "text": "Porque o dono de um fato é a única pessoa autorizada a rodar a carga da migração",
+        "why": "Os donos assinam regras e corrigem fatos; quem roda a carga é o time de migração."
+      }
+    ]
+  },
+  "ex-78vkfzyt": {
+    "prompt": "Preencher um campo obrigatório que ninguém sabe preencher com um valor inventado é perigoso: um valor ___ é um valor em que alguém depois vai acreditar.",
+    "hint": "O exemplo da rota 1.",
+    "blanks": [
+      {
+        "accept": [
+          "padrão",
+          "padrao",
+          "default"
+        ]
+      }
+    ]
+  },
+  "ex-fwb85chk": {
+    "prompt": "Quais destes a Serra Alta traduziu no caminho, na transformação? Escolha todos os que se aplicam.",
+    "hint": "Formas erradas no caminho, fatos errados na origem.",
+    "choices": [
+      {
+        "text": "As 97 grafias de município, para códigos do IBGE",
+        "why": "Sim: uma grafia é uma forma errada, traduzida por uma tabela assinada."
+      },
+      {
+        "text": "As 4 fazendas apontando para fornecedores bloqueados no SAP",
+        "why": "Um vínculo velho é um fato errado; o financeiro o corrigiu nas telas do próprio Coleta."
+      },
+      {
+        "text": "Litros guardados em centésimos, para decimal",
+        "why": "Sim: unidade é forma, e a regra roda em toda carga."
+      },
+      {
+        "text": "As 7 fazendas cadastradas duas vezes, para as sobreviventes",
+        "why": "Sim: a tabela de fusões troca a chave delas no caminho, assinada linha a linha por Sebastião."
+      }
+    ]
+  },
+  "ex-00ec2bzx": {
+    "prompt": "O que um ensaio geral acha que uma carga de teste não acha?",
+    "hint": "Quem roda cada um, quando, e com quantos dados?",
+    "choices": [
+      {
+        "text": "Uma grafia que a tabela de municípios não conhece",
+        "why": "A carga de teste acha isso; é falha de mapeamento, e cargas de teste existem para testar o mapeamento."
+      },
+      {
+        "text": "Linhas rejeitadas, agrupadas pelo motivo de cada uma",
+        "why": "Toda execução conta rejeitos por motivo, inclusive as cargas de teste."
+      },
+      {
+        "text": "Um passo que leva horas no volume total, de madrugada",
+        "why": "Isso: só o runbook inteiro, nos horários reais, numa cópia completa, mostra a noite como ela vai ser."
+      },
+      {
+        "text": "Se a especificação de mapeamento foi assinada",
+        "why": "Isso é uma conferência do documento antes de qualquer execução, não algo que o ensaio descobre."
+      }
+    ]
+  },
+  "ex-v25afws8": {
+    "prompt": "A janela de cutover vai de sábado 20:00 a domingo 10:00, e o rollback ensaiado leva 2 horas. Quantas horas depois do congelamento das 20:00 fica o último momento para a decisão de go/no-go?",
+    "hint": "A duração da janela, menos o rollback.",
+    "unit": "horas",
+    "accept_units": [
+      "hora",
+      "h"
+    ]
+  },
+  "ex-qsxwc0rd": {
+    "prompt": "O ensaio geral 1 rejeitou 41 das 1.958 fazendas no escopo. Que porcentagem das fazendas foi rejeitada? Dê duas casas decimais.",
+    "hint": "Rejeitos divididos pelas fazendas no escopo, vezes 100.",
+    "unit": "%",
+    "accept_units": [
+      "por cento"
+    ]
+  },
+  "ex-z56yzkxd": {
+    "prompt": "O ensaio geral 1 rejeitou 2.412 coletas porque os resultados de laboratório estavam vazios. O que estava errado?",
+    "hint": "O que a Serra Alta faz quando uma amostra se perde?",
+    "choices": [
+      {
+        "text": "As linhas: os resultados tinham sido apagados no Coleta",
+        "why": "Nada foi apagado. As amostras se perderam ou estragaram, e as linhas registram isso com verdade."
+      },
+      {
+        "text": "A especificação: um campo obrigatório que o negócio deixa vazio por um motivo",
+        "why": "Isso: amostra perdida é paga pelo preço base, então a regra virou opcional com código de motivo, assinada por Cláudia."
+      },
+      {
+        "text": "A carga: o tempo acabou antes de os resultados chegarem",
+        "why": "O problema de duração existia, mas era outro; essas linhas foram recusadas por uma regra, não pelo relógio."
+      },
+      {
+        "text": "A extração: leu o histórico antes dos arquivos do laboratório",
+        "why": "A extração estava completa. O vazio estava no Coleta, de propósito."
+      }
+    ]
+  },
+  "ex-ze7gzmpf": {
+    "prompt": "O primeiro ensaio geral de Edson para sair do SAP ECC estoura a janela de fim de semana em seis horas. Seguindo o raciocínio desta aula, que mudança ele deve olhar primeiro?",
+    "hint": "O que não muda mais, e por isso pode ir antes?",
+    "choices": [
+      {
+        "text": "Pular a reconciliação por registro do histórico",
+        "why": "Isso ganha tempo tirando a única verificação que viu as 214 linhas trocadas da Serra Alta."
+      },
+      {
+        "text": "Carregar os documentos dos períodos fechados dias antes de a janela abrir",
+        "why": "Isso: um período fechado não muda mais, então pode ir e ser reconciliado antes da noite, como os meses pagos da Serra Alta."
+      },
+      {
+        "text": "Parar de ensaiar o rollback, já que ele toma tempo da execução da carga",
+        "why": "O tempo medido do rollback é o que define a decisão mais tardia; sem ele o plano tem um palpite dentro."
+      },
+      {
+        "text": "Pedir ao financeiro a primeira semana do mês também",
+        "why": "É a semana do fechamento, em que o time do SAP congela mudanças; é a semana que o calendário não pode dar."
+      }
+    ]
+  },
+  "ex-wmgejrjf": {
+    "prompt": "Associe cada verificação à falha que ela é a primeira a pegar.",
+    "hint": "Contagem, total, registro, e depois uma pessoa.",
+    "pairs": [
+      {
+        "left": "contagem",
+        "right": "uma linha perdida durante a carga"
+      },
+      {
+        "left": "total de controle",
+        "right": "litros divididos por 100 uma vez a mais"
+      },
+      {
+        "left": "impressão digital do registro",
+        "right": "duas fazendas que trocaram os litros"
+      },
+      {
+        "left": "a amostra do dono",
+        "right": "gordura carregada no campo de proteína pela especificação"
+      }
+    ],
+    "right_distractors": [
+      "uma carga que estoura a janela"
+    ]
+  },
+  "ex-ns92rv2s": {
+    "prompt": "1.958 fazendas estão no escopo, nada é rejeitado, e 7 fazendas duplicadas são juntadas de propósito às sobreviventes. Quantas fazendas a reconciliação deve esperar no destino?",
+    "hint": "Toda linha da origem é carregada, rejeitada ou juntada.",
+    "unit": "fazendas",
+    "accept_units": [
+      "fazenda"
+    ]
+  },
+  "ex-9nnx3mqk": {
+    "prompt": "Rodando com target-faulty.csv, o reconcile.py mostra ok na contagem e nos litros, e depois aponta quatro fazendas. Como os dois totais batem se quatro fazendas estão erradas?",
+    "hint": "Veja o que cada falha faz com as duas somas.",
+    "choices": [
+      {
+        "text": "O programa arredonda os litros antes de somar",
+        "why": "Ele se recusa a arredondar: um valor com terceira casa decimal para a execução."
+      },
+      {
+        "text": "A contagem e o total são calculados só a partir do arquivo de origem",
+        "why": "Cada lado é lido separadamente; a saída mostra os dois, origem e destino."
+      },
+      {
+        "text": "Quatro falhas ficam abaixo da tolerância que os dois primeiros níveis permitem",
+        "why": "Não há tolerância: os níveis comparam igualdade, e aqui eles são de fato iguais."
+      },
+      {
+        "text": "Uma troca e um código errado deixam as duas somas como estavam",
+        "why": "Isso: duas fazendas trocando litros mantêm o total, e uma fazenda com o código errado mantém a contagem e os litros."
+      }
+    ]
+  },
+  "ex-fr653nyg": {
+    "prompt": "Para ganhar tempo na noite, Rui propõe reconciliar os arquivos que a transformação leu com as tabelas que a carga escreveu. O que há de errado nisso?",
+    "hint": "Compare as pontas, não o meio.",
+    "choices": [
+      {
+        "text": "Só prova que a carga concorda consigo mesma",
+        "why": "Isso: a origem deve vir do Coleta no congelamento, e o destino do novo sistema como os usuários o veem."
+      },
+      {
+        "text": "Os arquivos intermediários são grandes demais para gerar impressões digitais numa noite",
+        "why": "Tamanho não é o problema; o problema é o que a comparação consegue provar."
+      },
+      {
+        "text": "Uma reconciliação só pode ler dados por uma API",
+        "why": "Não há essa regra. Ler o destino como os usuários o veem é o ponto, seja qual for o canal."
+      },
+      {
+        "text": "Os arquivos intermediários guardam as linhas rejeitadas",
+        "why": "Rejeitos têm arquivos próprios, e a reconciliação os conta de propósito."
+      }
+    ]
+  },
+  "ex-ne0mwjer": {
+    "prompt": "Ponha estes passos do runbook de cutover da Serra Alta em ordem.",
+    "hint": "Do último arquivo do Coleta às leituras que os caminhões guardaram.",
+    "items": [
+      "O Coleta escreve o último arquivo noturno para o SAP",
+      "Congelamento: o Coleta fica somente leitura",
+      "Extração final e carga do delta",
+      "Reconciliação nos três níveis",
+      "Go/no-go, contra os critérios escritos",
+      "Os coletores liberam as leituras guardadas"
+    ],
+    "trap": "Liberar as leituras guardadas antes da decisão poria dados reais num sistema que ainda pode ser revertido."
+  },
+  "ex-1kr7x6d8": {
+    "prompt": "Por que os critérios de go/no-go são escritos semanas antes da noite do cutover?",
+    "hint": "Quem está na sala às cinco da manhã?",
+    "choices": [
+      {
+        "text": "Porque às cinco da manhã todo mundo na sala quer ouvir um sim",
+        "why": "Isso: escritos antes, a pergunta é só se cada linha é verdadeira."
+      },
+      {
+        "text": "Porque os auditores os exigem para a certificação FSSC 22000",
+        "why": "Essa auditoria trata de segurança de alimentos, não de migrações."
+      },
+      {
+        "text": "Porque o runbook não pode ser impresso antes de os critérios estarem nele",
+        "why": "Impressão não é o motivo; a reunião seria igualmente fraca com eles numa tela."
+      },
+      {
+        "text": "Para a decisão poder ser tomada pelo time do Rui sem a Regina",
+        "why": "Quem decide é a Regina, com o Marcos. Escrever os critérios antes não passa a decisão para outra pessoa."
+      }
+    ]
+  },
+  "ex-w3m3n1dh": {
+    "prompt": "Em que momento a migração da Serra Alta chegou ao ponto sem volta?",
+    "hint": "Depois dele, voltar significaria pedir dinheiro às fazendas.",
+    "choices": [
+      {
+        "text": "No congelamento, quando o Coleta ficou somente leitura para todos",
+        "why": "Descongelar o Coleta é o primeiro passo do rollback ensaiado de duas horas, então nada é definitivo ainda."
+      },
+      {
+        "text": "Na decisão de go, às 05:00 de domingo",
+        "why": "Depois do go, voltar custa mais a cada dia, mas as leituras ainda podem ser levadas de volta ao Coleta."
+      },
+      {
+        "text": "Quando sai o arquivo do banco do primeiro pagamento novo",
+        "why": "Isso: depois que as fazendas recebem pelo novo sistema, desfazer significa estornar pagamentos de cerca de 1.900 fazendas."
+      },
+      {
+        "text": "Quando a janela fecha, às 10:00 de domingo",
+        "why": "O fim da janela limita o rollback da noite, não toda volta; há um caminho de volta por dias depois dele."
+      }
+    ]
+  },
+  "ex-npqhw72r": {
+    "prompt": "Para dar ao novo sistema mais tempo antes do primeiro pagamento, Regina sugere passar o cutover para o primeiro sábado do mês. Que objeção vem do calendário da Serra Alta?",
+    "hint": "O que acontece nos primeiros cinco dias úteis?",
+    "choices": [
+      {
+        "text": "Os caminhões não coletam no primeiro fim de semana do mês",
+        "why": "Os caminhões coletam todos os dias do ano; não há fim de semana tranquilo."
+      },
+      {
+        "text": "O SAP fica em manutenção o fim de semana inteiro",
+        "why": "A manutenção do SAP é todo domingo das 01:00 às 05:00, igual em toda semana."
+      },
+      {
+        "text": "O primeiro pagamento cairia dentro da janela de cutover",
+        "why": "O pagamento é no dia 10 e a janela é uma noite; a partir dessa data eles não se sobrepõem."
+      },
+      {
+        "text": "É a semana do fechamento, e o SAP congela mudanças",
+        "why": "Isso: a primeira semana ficou de fora por esse motivo, e a janela fica depois do dia 10."
+      }
+    ]
+  },
+  "ex-d1k736n0": {
+    "prompt": "Por que a Serra Alta manteve o Coleta rodando somente leitura até dezembro, em vez de desligá-lo no fim de semana do cutover?",
+    "hint": "Uma fazenda contesta o pagamento de julho em setembro.",
+    "choices": [
+      {
+        "text": "Para os caminhões voltarem para ele se o novo sistema parasse",
+        "why": "Somente leitura significa que nada pode ser gravado nele; ele não recebe leituras."
+      },
+      {
+        "text": "Para responder disputas sobre os meses que ele pagou",
+        "why": "Isso: responde perguntas sobre o passado sem migrar todo ele, e o legacy_code liga os dois."
+      },
+      {
+        "text": "Porque a licença do IBM i não podia ser cancelada antes disso",
+        "why": "A aula trata a licença como o custo da decisão, não como o motivo dela."
+      },
+      {
+        "text": "Para o arquivo noturno dele para o SAP continuar rodando em paralelo",
+        "why": "Depois do cutover quem escreve esse arquivo é o novo sistema; dois arquivos dobrariam cada entrada de mercadoria."
+      }
+    ]
+  },
+  "ex-z5jgw33v": {
+    "prompt": "Três fazendas com exatamente 3,50% de gordura foram postas na faixa de qualidade errada pelo novo sistema. Por que nenhuma reconciliação pegou isso?",
+    "hint": "O que uma reconciliação compara?",
+    "choices": [
+      {
+        "text": "Os valores chegaram intactos; a falha era uma regra que os usava",
+        "why": "Isso: os resultados foram migrados corretamente; a fronteira de faixa é regra, achada só usando os dados."
+      },
+      {
+        "text": "Porque a amostra de 40 fazendas do dono era pequena demais",
+        "why": "A amostra procura uma regra de mapeamento errada; as regras de pagamento nem estão no mapeamento."
+      },
+      {
+        "text": "Porque as impressões digitais ignoram decimais nos resultados",
+        "why": "A impressão digital cobre todo campo na forma combinada, decimais incluídos."
+      },
+      {
+        "text": "Porque o total de controle foi feito sobre litros e não sobre gordura",
+        "why": "Um total de gordura também bateria: os valores de gordura chegaram intactos."
+      }
+    ]
+  },
+  "ex-t31mxnha": {
+    "prompt": "Que arquivo dos dados antigos do Coleta segue a aula?",
+    "hint": "Ele precisa abrir daqui a vinte anos, depois de o autor se aposentar.",
+    "choices": [
+      {
+        "text": "Um backup completo do IBM i, guardado sem data de fim para o caso de precisar",
+        "why": "Precisa de um IBM i para restaurar, e um arquivo sem data de fim é custo e risco guardados para sempre."
+      },
+      {
+        "text": "O histórico migrado também para o novo sistema, para haver um lugar só para olhar",
+        "why": "A regra de escopo deixou o histórico antigo fora do novo sistema de propósito; migrar tudo desfaria essa decisão."
+      },
+      {
+        "text": "CSV simples com a descrição de cada campo, um dono e uma data de descarte",
+        "why": "Isso: abre em qualquer lugar, se explica depois que Sebastião sair, e termina numa data escrita."
+      },
+      {
+        "text": "As tabelas do Coleta exportadas sem mudança, sem documentação nenhuma",
+        "why": "Sem a descrição dos campos, o significado vai embora com o RPG e com o autor dele."
+      }
+    ]
+  },
+  "ex-3e4343de": {
+    "prompt": "Às 05:00 a reconciliação mostra 1.951 fazendas, litros batendo, e 3 registros alterados que não estão na lista de mudanças esperadas. As duas amostras estão assinadas. Quais afirmações seguem da aula? Escolha todas as que se aplicam.",
+    "hint": "Leia os critérios um por um.",
+    "choices": [
+      {
+        "text": "A resposta é no-go, a não ser que as três sejam explicadas por uma regra",
+        "why": "Sim: uma diferença sem regra por trás para o cutover."
+      },
+      {
+        "text": "A resposta é go, já que a contagem e os litros batem",
+        "why": "Esses dois níveis deixam passar exatamente as falhas para as quais o terceiro existe."
+      },
+      {
+        "text": "O que for decidido tem de ser decidido até as 08:00",
+        "why": "Sim: a janela termina às 10:00 e o rollback precisa de duas horas."
+      },
+      {
+        "text": "O time pode pôr as três na lista de esperadas para manter a data",
+        "why": "Isso é critério entortado na noite; uma mudança esperada tem uma regra escrita antes dela."
+      }
+    ]
+  },
+  "ex-rdstaf9x": {
+    "prompt": "Num ensaio, 1.958 fazendas estão no escopo, 7 são juntadas de propósito, e o destino tem 1.948 fazendas. Por quantas fazendas o arquivo de rejeitos precisa responder, se o cadastro reconciliar?",
+    "hint": "Linhas da origem = linhas do destino + rejeitadas + juntadas.",
+    "unit": "fazendas",
+    "accept_units": [
+      "fazenda"
+    ]
+  },
+  "ex-pcqc1ds1": {
+    "prompt": "Um colega migrando contas do Salesforce para o Business Central diz: a carga terminou sem erro, então acabamos. Que resposta resume esta aula?",
+    "hint": "O que uma carga sem erros provou?",
+    "choices": [
+      {
+        "text": "Acabou, desde que o sistema antigo seja desligado no mesmo fim de semana",
+        "why": "Desligar o sistema antigo no mesmo dia tira o lugar onde se responde toda pergunta sobre o passado."
+      },
+      {
+        "text": "Só que nada do que ela verificou deu errado",
+        "why": "Isso: valores errados mas bem formados entram calados, e algumas falhas só aparecem quando o negócio usa os dados."
+      },
+      {
+        "text": "Acabou, se as contagens de linhas dos dois lados forem iguais",
+        "why": "A contagem é o primeiro de três níveis; ela não vê uma linha que chegou com o valor errado."
+      },
+      {
+        "text": "Ainda não: rode a mesma carga de novo para ver se é repetível",
+        "why": "Uma segunda execução limpa prova que a carga concorda consigo duas vezes, o que nada diz sobre o destino estar certo."
+      }
+    ]
+  }
+}
