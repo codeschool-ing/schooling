@@ -1,0 +1,458 @@
+{
+  "ex-nfq2b85e": {
+    "prompt": "Por que bloquear um site perigoso pelo nome no resolvedor em vez de pelo endereço num firewall?",
+    "hint": "Qual dos dois muda com mais frequência?",
+    "choices": [
+      {
+        "text": "Porque um firewall não consegue bloquear tráfego de saída, só de entrada",
+        "why": "Firewalls bloqueiam saída todo dia; a aula 10 escreve regras assim."
+      },
+      {
+        "text": "Endereços mudam e são divididos; o nome é a parte estável",
+        "why": "Isso. Um nome pode responder com muitos endereços, e um endereço pode carregar cem sites."
+      },
+      {
+        "text": "Porque o DNS é cifrado e firewalls não conseguem lê-lo",
+        "why": "O DNS comum na porta 53 é texto claro; os tipos cifrados são os limites desta aula."
+      },
+      {
+        "text": "Porque um resolvedor é mais barato de comprar que um firewall",
+        "why": "O preço não é o argumento; o que cada um consegue reconhecer é."
+      }
+    ]
+  },
+  "ex-1skn6aw6": {
+    "prompt": "Antes da aula, o /etc/resolv.conf do desk citava 8.8.8.8. De onde isso veio?",
+    "hint": "Ninguém na Jatobá escreveu isso.",
+    "choices": [
+      {
+        "text": "Do servidor DHCP do escritório, que o entrega a toda máquina",
+        "why": "O laboratório não tem servidor DHCP; os endereços são fixos."
+      },
+      {
+        "text": "Do dns, que se anunciou como resolvedor do Google",
+        "why": "O dns ainda não rodava resolvedor, e resolvedores não se anunciam."
+      },
+      {
+        "text": "Copiado do computador do laboratório quando o contêiner deu boot",
+        "why": "Isso. Não é decisão de ninguém, que é o estado comum de um escritório pequeno."
+      }
+    ]
+  },
+  "ex-8wqh6hm8": {
+    "prompt": "Contra o que `access-control: 192.168.60.0/24 allow` protege?",
+    "hint": "Quem mais poderia perguntar?",
+    "choices": [
+      {
+        "text": "Máquinas do segmento perguntando por nomes bloqueados",
+        "why": "São justamente as permitidas; a zona de política cuida dos nomes bloqueados."
+      },
+      {
+        "text": "O resolvedor responder a qualquer um fora do escritório",
+        "why": "Isso. Um resolvedor aberto serve a estranhos e pode ser usado contra terceiros."
+      },
+      {
+        "text": "Respostas falsificadas vindas do encaminhador no trap, que a linha rejeita",
+        "why": "Validar respostas é trabalho do DNSSEC; esta linha trata de quem pode perguntar."
+      },
+      {
+        "text": "Duas cópias do unbound subindo na mesma porta",
+        "why": "A porta é decidida pelas linhas de interface, e uma segunda cópia só falharia ao abrir a porta."
+      }
+    ]
+  },
+  "ex-b8f8de89": {
+    "prompt": "A aula remove o root-auto-trust-anchor-file.conf no dns. O que o resolvedor de um escritório de verdade manteria deixando-o no lugar?",
+    "hint": "Ele precisa da internet para funcionar.",
+    "choices": [
+      {
+        "text": "O log de cada pergunta, que esse arquivo liga",
+        "why": "O log vem do log-queries no arquivo do próprio escritório."
+      },
+      {
+        "text": "As zonas de política, que precisam da raiz confiável antes de carregar",
+        "why": "As zonas de política carregaram aqui com o arquivo removido."
+      },
+      {
+        "text": "A validação DNSSEC, que confere se cada resposta é genuína",
+        "why": "Isso. Com internet ele busca a chave da raiz e confere as assinaturas."
+      },
+      {
+        "text": "O acesso de clientes fora de 192.168.60.0/24",
+        "why": "Isso é o access-control, e ampliá-lo seria um erro."
+      }
+    ]
+  },
+  "ex-acrwx8j6": {
+    "prompt": "O desk pergunta ao dns por www.ubuntu.com e recebe SERVFAIL. O que esse status quer dizer?",
+    "choices": [
+      {
+        "text": "O resolvedor tentou e não conseguiu resposta nenhuma para esse nome",
+        "why": "Isso. O trap, fazendo o papel da internet, não responde por esse nome."
+      },
+      {
+        "text": "O nome estava na lista de bloqueio e foi recusado de propósito",
+        "why": "A lista responde NXDOMAIN ou um endereço, e nenhuma lista existia ainda."
+      },
+      {
+        "text": "O nome existe, mas não tem endereço do tipo pedido",
+        "why": "Isso é NOERROR com resposta vazia, chamado NODATA."
+      },
+      {
+        "text": "O desk não tem permissão de usar este resolvedor",
+        "why": "Um cliente recusado recebe REFUSED, e o nome do próprio desk resolveu um segundo antes."
+      }
+    ]
+  },
+  "ex-2ry83nzz": {
+    "prompt": "Por que a aula chama o log de consultas do resolvedor de telemetria mais barata que um escritório pequeno pode ter?",
+    "choices": [
+      {
+        "text": "Porque registra o conteúdo de cada página visitada",
+        "why": "Registra os nomes perguntados, não o que foi buscado."
+      },
+      {
+        "text": "Porque logs de DNS são menores que qualquer outro tipo de log que existe",
+        "why": "Tamanho não é o ponto, e um resolvedor movimentado escreve muito."
+      },
+      {
+        "text": "Não precisa de agente em máquina nenhuma, porque toda máquina já pergunta a ele",
+        "why": "Isso. Toda máquina já pergunta a ele, então toda máquina está coberta."
+      },
+      {
+        "text": "Porque a lei obriga a guardá-lo, então já está pago",
+        "why": "Nenhuma obrigação assim foi citada, e isso não o tornaria barato."
+      }
+    ]
+  },
+  "ex-e4ea3v6e": {
+    "prompt": "Associe cada linha de uma zona de política ao que o desk recebe.",
+    "hint": "Olhe a ação, não o nome.",
+    "pairs": [
+      {
+        "left": "boletos-jatoba.example.net CNAME .",
+        "right": "NXDOMAIN"
+      },
+      {
+        "left": "*.cobranca-urgente.example.org A 192.168.60.53",
+        "right": "o endereço do sinkhole"
+      },
+      {
+        "left": "jatoba.contabil-nuvem.example.net CNAME rpz-passthru.",
+        "right": "o endereço verdadeiro, intacto"
+      }
+    ],
+    "right_distractors": [
+      "SERVFAIL"
+    ]
+  },
+  "ex-r7ymmg56": {
+    "prompt": "Que nomes a entrada `*.cobranca-urgente.example.org` pega?",
+    "choices": [
+      {
+        "text": "Só o próprio nome cobranca-urgente.example.org",
+        "why": "O asterisco é para os nomes abaixo dele."
+      },
+      {
+        "text": "Todo nome de example.org, seja o que vier antes",
+        "why": "O curinga fica abaixo de cobranca-urgente, não de example.org."
+      },
+      {
+        "text": "Todo nome abaixo de cobranca-urgente.example.org, em qualquer nível",
+        "why": "Isso, pagamento.cobranca-urgente.example.org entre eles."
+      },
+      {
+        "text": "Nomes que contenham cobranca em qualquer ponto",
+        "why": "Curingas de DNS pegam rótulos inteiros à esquerda, não pedaços de texto."
+      }
+    ]
+  },
+  "ex-zwaxvd4h": {
+    "prompt": "O log mostra `rpz: applied [feed] ... 192.168.60.20`. Além do bloqueio em si, o que o escritório ganhou?",
+    "choices": [
+      {
+        "text": "Um achado: o desk tentou alcançar um domínio listado",
+        "why": "Isso. Alguém pode olhar o desk sem que ninguém tenha avisado nada."
+      },
+      {
+        "text": "A prova de que o desk está infectado e precisa ser reconstruído hoje",
+        "why": "Uma consulta pode vir de uma pré-visualização ou de um scanner; ela começa uma investigação, não a encerra."
+      },
+      {
+        "text": "O nome da pessoa que estava logada no desk naquela hora",
+        "why": "O resolvedor vê um endereço, não uma pessoa."
+      },
+      {
+        "text": "Uma cópia da página que o desk tentava abrir",
+        "why": "Nada foi buscado; o nome nem resolveu."
+      }
+    ]
+  },
+  "ex-yy7snsfv": {
+    "prompt": "Por que a aula responde a um domínio listado com um endereço em vez de NXDOMAIN?",
+    "choices": [
+      {
+        "text": "Porque o NXDOMAIN fica mais tempo em cache e deixa a rede lenta",
+        "why": "Cache não é o motivo; o que acontece depois é."
+      },
+      {
+        "text": "Para o programa se conectar a um lugar que registra o que ele queria",
+        "why": "Isso. O sinkhole viu o caminho /boleto.pdf, que a consulta sozinha não mostraria."
+      },
+      {
+        "text": "Porque um endereço é a única resposta que navegadores aceitam",
+        "why": "Navegadores lidam com NXDOMAIN o tempo todo; é um site que não existe."
+      },
+      {
+        "text": "Para mandar o programa ao destino verdadeiro por outro caminho",
+        "why": "O site verdadeiro nunca é alcançado; essa é a ideia."
+      }
+    ]
+  },
+  "ex-z9wjer2g": {
+    "prompt": "Todo nome bloqueado de uma família curinga aponta para o mesmo endereço do sinkhole. Como o log do sinkhole ainda sabia que nome o desk queria?",
+    "hint": "O que um navegador manda junto com o caminho?",
+    "choices": [
+      {
+        "text": "Ele perguntou ao resolvedor que nome tinha acabado de ir para o sinkhole",
+        "why": "O programa do sinkhole não pergunta a ninguém; ele lê o pedido."
+      },
+      {
+        "text": "Pelo cabeçalho Host do pedido HTTP",
+        "why": "Isso. O HTTP carrega em cada pedido o nome que o cliente queria."
+      },
+      {
+        "text": "Pela consulta reversa do endereço do desk",
+        "why": "Isso dá o nome do desk, não o do site."
+      },
+      {
+        "text": "Não sabe: o log só mostra o endereço de onde o desk conectou, nunca o nome",
+        "why": "A linha do log traz o nome: pagamento.cobranca-urgente.example.org."
+      }
+    ]
+  },
+  "ex-6kbrjhd2": {
+    "prompt": "Quais destas coisas o sinkhole da aula NÃO faz? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Remover o que fez o desk ir até lá",
+        "why": "Ele não limpa nada; a máquina é examinada à parte."
+      },
+      {
+        "text": "Mostrar a uma pessoa uma página dizendo que o site está bloqueado",
+        "why": "Faz: uma linha, em vez de um erro."
+      },
+      {
+        "text": "Responder a um programa que conecta com TLS na porta 443",
+        "why": "Ele fala só HTTP simples na porta 80."
+      },
+      {
+        "text": "Registrar o endereço da máquina que se conectou",
+        "why": "Faz: 192.168.60.20 está no log dele."
+      }
+    ]
+  },
+  "ex-cmvwhaaq": {
+    "prompt": "Como um feed RPZ mantido por outra organização costuma chegar a um resolvedor?",
+    "choices": [
+      {
+        "text": "Alguém o baixa toda manhã e cola na configuração",
+        "why": "No máximo uma lista no estilo hosts; um feed RPZ se atualiza sozinho."
+      },
+      {
+        "text": "Por transferência de zona do servidor deles",
+        "why": "Isso: AXFR ou IXFR, com linhas primary: no Unbound."
+      },
+      {
+        "text": "Por um agente instalado em cada estação do escritório",
+        "why": "Agentes são o formato de um serviço de fornecedor; a RPZ vive no resolvedor."
+      },
+      {
+        "text": "Dentro das atualizações do sistema operacional",
+        "why": "Atualizações do sistema não trazem listas de bloqueio."
+      }
+    ]
+  },
+  "ex-t4rbem1w": {
+    "prompt": "Um colega põe o bloco rpz: da lista de permissão depois do bloco do feed. jatoba.contabil-nuvem.example.net está nas duas. O que acontece?",
+    "hint": "O Unbound para na primeira zona que bate.",
+    "choices": [
+      {
+        "text": "A lista de permissão vence, porque passthru é sempre mais forte que um bloqueio",
+        "why": "Nenhuma ação supera outra; a ordem das zonas decide."
+      },
+      {
+        "text": "O unbound-checkconf recusa o arquivo porque as zonas se sobrepõem",
+        "why": "Zonas sobrepostas são permitidas; é assim que listas de permissão funcionam."
+      },
+      {
+        "text": "O feed bate primeiro, e o nome continua bloqueado",
+        "why": "Isso. É por isso que a lista de permissão vem primeiro."
+      },
+      {
+        "text": "As duas ações se combinam, e o desk recebe as duas respostas",
+        "why": "Uma pergunta recebe uma resposta."
+      }
+    ]
+  },
+  "ex-b98q7945": {
+    "prompt": "O que deve acompanhar cada entrada da lista de permissão, segundo a aula?",
+    "choices": [
+      {
+        "text": "Uma cópia da entrada do feed que ela anula, para comparar as duas",
+        "why": "Contexto útil, e não o que a torna segura de manter."
+      },
+      {
+        "text": "A aprovação de quem publica o feed",
+        "why": "Quem publica não é consultado; a decisão é do escritório."
+      },
+      {
+        "text": "Um motivo, um dono e uma data para revisar",
+        "why": "Isso. O domínio permitido hoje pode ser tomado ano que vem."
+      },
+      {
+        "text": "Uma segunda entrada no próprio feed, para manter as duas listas em sincronia",
+        "why": "O feed é de outra pessoa; você não o edita."
+      }
+    ]
+  },
+  "ex-9rc46ffh": {
+    "prompt": "Antes de um feed amplo novo começar a bloquear, a aula sugere uma semana de rpz-action-override: disabled. O que essa semana dá?",
+    "choices": [
+      {
+        "text": "Um log do que ele teria quebrado, sem nada bloqueado ainda",
+        "why": "Isso. A zona é lida e registrada, mas não aplicada."
+      },
+      {
+        "text": "Um resolvedor mais rápido, porque o feed fica em cache antes",
+        "why": "Velocidade não é para o que a opção serve."
+      },
+      {
+        "text": "Tempo para quem publica o feed tirar os falsos positivos",
+        "why": "Eles não sabem dos seus falsos positivos a não ser que você conte."
+      },
+      {
+        "text": "Uma lista bloqueada que os usuários podem testar sem risco nenhum ao trabalho",
+        "why": "Nada é bloqueado nessa semana."
+      }
+    ]
+  },
+  "ex-q1p9fww8": {
+    "prompt": "`dig @192.168.60.66 boletos-jatoba.example.net` a partir do desk devolveu o endereço verdadeiro. Por quê?",
+    "choices": [
+      {
+        "text": "A zona de política tinha expirado depois de 300 segundos",
+        "why": "300 é a validade das respostas, não da zona; o dns ainda bloqueava."
+      },
+      {
+        "text": "O desk perguntou a outro resolvedor, que não tem lista",
+        "why": "Isso. O controle só cobre perguntas que chegam ao dns."
+      },
+      {
+        "text": "O dig ignora zonas de política quando um endereço é dado",
+        "why": "O dig nem conhece zonas de política; quem as aplica é o resolvedor."
+      },
+      {
+        "text": "A lista de permissão cobria esse nome também",
+        "why": "A lista de permissão cita só jatoba.contabil-nuvem.example.net."
+      }
+    ]
+  },
+  "ex-0f4d5y9n": {
+    "prompt": "Por que a regra contra outros resolvedores fica no switch e não no desk?",
+    "hint": "Quem controla o desk?",
+    "choices": [
+      {
+        "text": "Porque o nftables não roda em estações de trabalho",
+        "why": "Roda no desk como em qualquer lugar; a aula 5 o usa no web."
+      },
+      {
+        "text": "Porque uma regra no desk também bloquearia as perguntas ao dns",
+        "why": "A mesma exceção para o dns poderia ser escrita lá."
+      },
+      {
+        "text": "Uma regra cobre todas as máquinas, e nenhuma consegue desfazê-la",
+        "why": "Isso. Um programa com root no desk poderia remover uma regra no desk."
+      },
+      {
+        "text": "Porque o switch é a única máquina que vê a porta 53",
+        "why": "Toda máquina vê o próprio tráfego na porta 53."
+      }
+    ]
+  },
+  "ex-tpy82ca2": {
+    "prompt": "Quais destes passam ao lado da regra do switch na porta 53? Escolha todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "Um navegador usando DNS sobre HTTPS",
+        "why": "As perguntas viajam dentro de HTTPS na porta 443."
+      },
+      {
+        "text": "Um programa com um endereço escrito nele",
+        "why": "Ele não pergunta a resolvedor nenhum."
+      },
+      {
+        "text": "Um notebook configurado para perguntar ao 8.8.8.8",
+        "why": "É exatamente o que a regra barra."
+      },
+      {
+        "text": "dig @192.168.60.66 rodado no desk",
+        "why": "O transcrito mostra o tempo estourando."
+      }
+    ]
+  },
+  "ex-hfwq6emk": {
+    "prompt": "Ponha em ordem o que acontece quando o desk abre um link para um nome que vai para o sinkhole.",
+    "items": [
+      "o desk pergunta o nome ao dns",
+      "a zona de política bate e o dns responde 192.168.60.53",
+      "o desk conecta em 192.168.60.53 e pede o arquivo",
+      "o sinkhole registra o endereço, o nome e o caminho",
+      "uma pessoa examina o desk"
+    ]
+  },
+  "ex-nc554v1m": {
+    "prompt": "Ponha a configuração do resolvedor do escritório na ordem em que a aula precisa que ela seja escrita.",
+    "hint": "O Unbound lê as zonas de política em ordem.",
+    "items": [
+      "server: quem pode perguntar, e os nomes do escritório",
+      "forward-zone: para onde vai todo o resto",
+      "rpz: a lista de permissão",
+      "rpz: o feed"
+    ]
+  },
+  "ex-j7mbz2jz": {
+    "prompt": "Que porta o DNS sobre TLS usa, a que pode ser bloqueada como a 53?"
+  },
+  "ex-nbtq104w": {
+    "prompt": "Numa zona de política, `nome CNAME rpz-___.` manda o resolvedor responder a verdade para aquele nome.",
+    "blanks": [
+      {
+        "accept": [
+          "passthru"
+        ]
+      }
+    ]
+  },
+  "ex-g23qg2dw": {
+    "prompt": "Um gestor lê esta aula e diz que o escritório não precisa mais de regras de saída no firewall. Qual é a melhor resposta?",
+    "choices": [
+      {
+        "text": "De acordo, desde que o feed seja atualizado a cada hora",
+        "why": "Uma lista mais nova não faz nada por programas que nem perguntam."
+      },
+      {
+        "text": "De acordo, porque a regra do switch já barra todo outro resolvedor",
+        "why": "Ela barra a porta 53, não DoH nem um endereço embutido."
+      },
+      {
+        "text": "Não: o DNS cobre programas que perguntam; regras de saída cobrem o resto",
+        "why": "Isso. É uma camada barata e larga, não a única."
+      },
+      {
+        "text": "Não: bloquear por DNS é fácil demais de contornar para valer a pena",
+        "why": "Cobre todo programa comum de toda máquina e dá o melhor log; isso vale muito."
+      }
+    ]
+  }
+}

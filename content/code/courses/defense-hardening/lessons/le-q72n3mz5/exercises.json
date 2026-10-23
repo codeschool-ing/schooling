@@ -1,0 +1,682 @@
+[
+  {
+    "id": "ex-nfq2b85e",
+    "version": 1,
+    "section": "dns-as-a-chokepoint",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why block a dangerous site by its name at the resolver rather than by its address at a firewall?",
+    "hint": "Which of the two moves more often?",
+    "choices": [
+      {
+        "text": "Because a firewall cannot block outbound traffic at all, only inbound",
+        "correct": false,
+        "why": "Firewalls block outbound traffic every day; lesson 10 writes such rules."
+      },
+      {
+        "text": "Addresses move and are shared; the name is the stable part",
+        "correct": true,
+        "why": "Right. One name can answer with many addresses, and one address can carry a hundred sites."
+      },
+      {
+        "text": "Because DNS is encrypted and firewalls cannot read it",
+        "correct": false,
+        "why": "Ordinary DNS on port 53 is plain text; the encrypted kinds are this lesson's limits."
+      },
+      {
+        "text": "Because a resolver is cheaper to buy than a firewall",
+        "correct": false,
+        "why": "Price is not the argument; what each one can recognise is."
+      }
+    ]
+  },
+  {
+    "id": "ex-1skn6aw6",
+    "version": 1,
+    "section": "dns-as-a-chokepoint",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before the lesson, desk's /etc/resolv.conf named 8.8.8.8. Where did that come from?",
+    "hint": "Nobody at Jatobá wrote it.",
+    "choices": [
+      {
+        "text": "From the firm's DHCP server, which hands it to every machine",
+        "correct": false,
+        "why": "The lab has no DHCP server; the addresses are fixed."
+      },
+      {
+        "text": "From dns, which announced itself as Google's resolver",
+        "correct": false,
+        "why": "dns was not running a resolver yet, and resolvers do not announce themselves."
+      },
+      {
+        "text": "Copied from the lab computer when the container booted",
+        "correct": true,
+        "why": "Right. It is nobody's decision, which is the usual state of a small office."
+      }
+    ]
+  },
+  {
+    "id": "ex-8wqh6hm8",
+    "version": 1,
+    "section": "a-resolver-for-the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `access-control: 192.168.60.0/24 allow` protect against?",
+    "hint": "Who else could ask?",
+    "choices": [
+      {
+        "text": "Machines on the segment asking for blocked names",
+        "correct": false,
+        "why": "They are exactly the ones allowed; the policy zone handles blocked names."
+      },
+      {
+        "text": "The resolver answering anybody outside the firm",
+        "correct": true,
+        "why": "Right. An open resolver serves strangers and can be used against third parties."
+      },
+      {
+        "text": "Forged answers arriving from the forwarder on trap, which the line rejects",
+        "correct": false,
+        "why": "Validating answers is DNSSEC's job; this line is about who may ask."
+      },
+      {
+        "text": "Two copies of unbound starting on the same port",
+        "correct": false,
+        "why": "The port is decided by interface lines, and a second copy would just fail to bind."
+      }
+    ]
+  },
+  {
+    "id": "ex-b8f8de89",
+    "version": 1,
+    "section": "a-resolver-for-the-lab",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The lesson removes root-auto-trust-anchor-file.conf on dns. What would a real firm's resolver keep by leaving it in place?",
+    "hint": "It needs the internet to work.",
+    "choices": [
+      {
+        "text": "Its log of every question, which that file switches on",
+        "correct": false,
+        "why": "The log comes from log-queries in the firm's own file."
+      },
+      {
+        "text": "The policy zones, which need the root to be trusted before they load",
+        "correct": false,
+        "why": "The policy zones loaded here with the file removed."
+      },
+      {
+        "text": "DNSSEC validation, which checks that each answer is genuine",
+        "correct": true,
+        "why": "Right. With internet access it fetches the root key and checks signatures."
+      },
+      {
+        "text": "Access for clients outside 192.168.60.0/24",
+        "correct": false,
+        "why": "That is access-control, and widening it would be a mistake."
+      }
+    ]
+  },
+  {
+    "id": "ex-acrwx8j6",
+    "version": 1,
+    "section": "a-resolver-for-the-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "desk asks dns for www.ubuntu.com and gets SERVFAIL. What does that status mean?",
+    "choices": [
+      {
+        "text": "The resolver tried and could not get any answer for that name",
+        "correct": true,
+        "why": "Right. trap, playing the internet, does not answer for that name."
+      },
+      {
+        "text": "The name was found on the blocklist and refused on purpose",
+        "correct": false,
+        "why": "The list answers NXDOMAIN or an address, and no list existed yet."
+      },
+      {
+        "text": "The name exists, but has no address of the type asked for",
+        "correct": false,
+        "why": "That is NOERROR with an empty answer, called NODATA."
+      },
+      {
+        "text": "desk is not allowed to use this resolver",
+        "correct": false,
+        "why": "A refused client gets REFUSED, and desk's own name resolved a second earlier."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ry83nzz",
+    "version": 1,
+    "section": "a-resolver-for-the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson call the resolver's query log the cheapest telemetry a small firm can have?",
+    "choices": [
+      {
+        "text": "Because it records the contents of every web page visited",
+        "correct": false,
+        "why": "It records names asked for, not what was fetched."
+      },
+      {
+        "text": "Because DNS logs are smaller than any other kind of log there is",
+        "correct": false,
+        "why": "Size is not the point, and a busy resolver writes a lot."
+      },
+      {
+        "text": "It needs no agent on any machine, because every machine already asks it",
+        "correct": true,
+        "why": "Right. Every machine already asks it, so every machine is covered."
+      },
+      {
+        "text": "Because the law requires firms to keep it, so it is already paid for",
+        "correct": false,
+        "why": "No such obligation was mentioned, and it would not make it cheap."
+      }
+    ]
+  },
+  {
+    "id": "ex-e4ea3v6e",
+    "version": 1,
+    "section": "response-policy-zones",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each line of a policy zone with what desk receives.",
+    "hint": "Look at the action, not the name.",
+    "pairs": [
+      {
+        "left": "boletos-jatoba.example.net CNAME .",
+        "right": "NXDOMAIN"
+      },
+      {
+        "left": "*.cobranca-urgente.example.org A 192.168.60.53",
+        "right": "the sinkhole's address"
+      },
+      {
+        "left": "jatoba.contabil-nuvem.example.net CNAME rpz-passthru.",
+        "right": "the real address, untouched"
+      }
+    ],
+    "right_distractors": [
+      "SERVFAIL"
+    ]
+  },
+  {
+    "id": "ex-r7ymmg56",
+    "version": 1,
+    "section": "response-policy-zones",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which names does the entry `*.cobranca-urgente.example.org` match?",
+    "choices": [
+      {
+        "text": "Only the name cobranca-urgente.example.org itself",
+        "correct": false,
+        "why": "The asterisk is for the names below it."
+      },
+      {
+        "text": "Every name in example.org, whatever comes before it",
+        "correct": false,
+        "why": "The wildcard sits under cobranca-urgente, not under example.org."
+      },
+      {
+        "text": "Every name below cobranca-urgente.example.org, at any depth",
+        "correct": true,
+        "why": "Right, pagamento.cobranca-urgente.example.org among them."
+      },
+      {
+        "text": "Names that contain cobranca anywhere in them",
+        "correct": false,
+        "why": "DNS wildcards match whole labels on the left, not substrings."
+      }
+    ]
+  },
+  {
+    "id": "ex-zwaxvd4h",
+    "version": 1,
+    "section": "response-policy-zones",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The log shows `rpz: applied [feed] ... 192.168.60.20`. Besides the block itself, what has the firm gained?",
+    "choices": [
+      {
+        "text": "A finding: desk tried to reach a listed domain",
+        "correct": true,
+        "why": "Right. Somebody can look at desk without anybody having reported anything."
+      },
+      {
+        "text": "Proof that desk is infected and has to be rebuilt today",
+        "correct": false,
+        "why": "A lookup can come from a preview or a scanner; it starts an investigation, it does not end one."
+      },
+      {
+        "text": "The name of the person who was logged in to desk at the time",
+        "correct": false,
+        "why": "The resolver sees an address, not a person."
+      },
+      {
+        "text": "A copy of the page that desk was trying to open",
+        "correct": false,
+        "why": "Nothing was fetched; the name never resolved."
+      }
+    ]
+  },
+  {
+    "id": "ex-yy7snsfv",
+    "version": 1,
+    "section": "the-sinkhole-tells-you-who",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson answer one listed domain with an address instead of NXDOMAIN?",
+    "choices": [
+      {
+        "text": "Because NXDOMAIN is cached for longer and slows the network down",
+        "correct": false,
+        "why": "Caching is not the reason; what happens next is."
+      },
+      {
+        "text": "So the program connects somewhere that records what it wanted",
+        "correct": true,
+        "why": "Right. The sinkhole saw the path /boleto.pdf, which the lookup alone could not show."
+      },
+      {
+        "text": "Because an address is the only answer browsers accept",
+        "correct": false,
+        "why": "Browsers handle NXDOMAIN all the time; it is a missing site."
+      },
+      {
+        "text": "To send the program back to its real destination by another route",
+        "correct": false,
+        "why": "The real site is never reached; that is the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-z9wjer2g",
+    "version": 1,
+    "section": "the-sinkhole-tells-you-who",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Every blocked name in a wildcard family points at the same sinkhole address. How did the sinkhole's log still know which name desk wanted?",
+    "hint": "What does a browser send along with the path?",
+    "choices": [
+      {
+        "text": "It asked the resolver which name had just been sinkholed",
+        "correct": false,
+        "why": "The sinkhole program asks nobody; it reads the request."
+      },
+      {
+        "text": "From the Host header of the HTTP request",
+        "correct": true,
+        "why": "Right. HTTP carries the name the client meant in every request."
+      },
+      {
+        "text": "From the reverse lookup of desk's address",
+        "correct": false,
+        "why": "That gives desk's name, not the site's."
+      },
+      {
+        "text": "It cannot: the log only shows the address desk connected from, never the name",
+        "correct": false,
+        "why": "The log line has the name in it: pagamento.cobranca-urgente.example.org."
+      }
+    ]
+  },
+  {
+    "id": "ex-6kbrjhd2",
+    "version": 1,
+    "section": "the-sinkhole-tells-you-who",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does the lesson's sinkhole NOT do? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Remove whatever made desk go there",
+        "correct": true,
+        "why": "It cleans nothing; the machine is examined separately."
+      },
+      {
+        "text": "Show a person a page saying the site is blocked",
+        "correct": false,
+        "why": "It does: one line, instead of an error."
+      },
+      {
+        "text": "Answer a program that connects with TLS on port 443",
+        "correct": true,
+        "why": "It speaks plain HTTP on port 80 only."
+      },
+      {
+        "text": "Record the address of the machine that connected",
+        "correct": false,
+        "why": "It does: 192.168.60.20 is in its log."
+      }
+    ]
+  },
+  {
+    "id": "ex-cmvwhaaq",
+    "version": 1,
+    "section": "reputation-feeds",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does an RPZ feed kept by another organisation usually reach a resolver?",
+    "choices": [
+      {
+        "text": "Somebody downloads it each morning and pastes it into the configuration",
+        "correct": false,
+        "why": "That is a hosts-style list at best; an RPZ feed refreshes itself."
+      },
+      {
+        "text": "By zone transfer from their server",
+        "correct": true,
+        "why": "Right: AXFR or IXFR, with primary: lines in Unbound."
+      },
+      {
+        "text": "Through an agent installed on every workstation of the firm",
+        "correct": false,
+        "why": "Agents are a vendor service's shape; RPZ lives in the resolver."
+      },
+      {
+        "text": "Inside the operating system's updates",
+        "correct": false,
+        "why": "Operating system updates carry no blocklists."
+      }
+    ]
+  },
+  {
+    "id": "ex-t4rbem1w",
+    "version": 1,
+    "section": "reputation-feeds",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague puts the allowlist's rpz: block after the feed's. jatoba.contabil-nuvem.example.net is on both. What happens?",
+    "hint": "Unbound stops at the first zone that matches.",
+    "choices": [
+      {
+        "text": "The allowlist wins, because passthru is always stronger than a block",
+        "correct": false,
+        "why": "No action outranks another; the order of the zones decides."
+      },
+      {
+        "text": "unbound-checkconf refuses the file because the zones overlap",
+        "correct": false,
+        "why": "Overlapping zones are allowed; that is how allowlists work at all."
+      },
+      {
+        "text": "The feed matches first, and the name stays blocked",
+        "correct": true,
+        "why": "Right. That is why the allowlist goes first."
+      },
+      {
+        "text": "The two actions are combined, and desk gets both answers",
+        "correct": false,
+        "why": "A question gets one answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-b98q7945",
+    "version": 1,
+    "section": "reputation-feeds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What should come with every allowlist entry, according to the lesson?",
+    "choices": [
+      {
+        "text": "A copy of the feed entry it overrides, so both can be compared",
+        "correct": false,
+        "why": "Useful context, and not what makes it safe to keep."
+      },
+      {
+        "text": "The approval of the feed's publisher",
+        "correct": false,
+        "why": "The publisher is not asked; the decision is the firm's."
+      },
+      {
+        "text": "A reason, an owner and a date to review it",
+        "correct": true,
+        "why": "Right. The domain allowed today may be taken over next year."
+      },
+      {
+        "text": "A second entry in the feed itself, to keep the two lists in step",
+        "correct": false,
+        "why": "The feed is somebody else's; you do not edit it."
+      }
+    ]
+  },
+  {
+    "id": "ex-9rc46ffh",
+    "version": 1,
+    "section": "reputation-feeds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before a new broad feed starts blocking, the lesson suggests a week of rpz-action-override: disabled. What does that week give you?",
+    "choices": [
+      {
+        "text": "A log of what it would have broken, with nothing blocked yet",
+        "correct": true,
+        "why": "Right. The zone is read and logged but not applied."
+      },
+      {
+        "text": "A faster resolver, because the feed is cached in advance",
+        "correct": false,
+        "why": "Speed is not what the setting is for."
+      },
+      {
+        "text": "Time for the feed's publisher to remove its false positives",
+        "correct": false,
+        "why": "They do not know about your false positives unless you tell them."
+      },
+      {
+        "text": "A blocked list that users can test without any risk to their work",
+        "correct": false,
+        "why": "Nothing is blocked during that week."
+      }
+    ]
+  },
+  {
+    "id": "ex-q1p9fww8",
+    "version": 1,
+    "section": "the-limits",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`dig @192.168.60.66 boletos-jatoba.example.net` from desk returned the real address. Why?",
+    "choices": [
+      {
+        "text": "The policy zone had expired after 300 seconds",
+        "correct": false,
+        "why": "300 is the lifetime of answers, not of the zone; dns still blocked it."
+      },
+      {
+        "text": "desk asked another resolver, which has no list",
+        "correct": true,
+        "why": "Right. The control only covers questions that reach dns."
+      },
+      {
+        "text": "dig ignores policy zones when an address is given",
+        "correct": false,
+        "why": "dig does not know about policy zones; the resolver applies them."
+      },
+      {
+        "text": "The allowlist covered that name too",
+        "correct": false,
+        "why": "The allowlist names only jatoba.contabil-nuvem.example.net."
+      }
+    ]
+  },
+  {
+    "id": "ex-0f4d5y9n",
+    "version": 1,
+    "section": "the-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the rule against other resolvers put on the switch rather than on desk?",
+    "hint": "Who controls desk?",
+    "choices": [
+      {
+        "text": "Because nftables does not run on workstations",
+        "correct": false,
+        "why": "It runs on desk as well as anywhere; lesson 5 uses it on web."
+      },
+      {
+        "text": "Because a rule on desk would also block questions to dns",
+        "correct": false,
+        "why": "The same exception for dns could be written there."
+      },
+      {
+        "text": "One rule covers every machine, and none of them can undo it",
+        "correct": true,
+        "why": "Right. A program on desk with root could remove a rule on desk."
+      },
+      {
+        "text": "Because the switch is the only machine that can see port 53",
+        "correct": false,
+        "why": "Every machine sees its own traffic on port 53."
+      }
+    ]
+  },
+  {
+    "id": "ex-tpy82ca2",
+    "version": 1,
+    "section": "the-limits",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these walk past the switch rule on port 53? Choose all that apply.",
+    "choices": [
+      {
+        "text": "A browser using DNS over HTTPS",
+        "correct": true,
+        "why": "Its questions travel inside HTTPS on port 443."
+      },
+      {
+        "text": "A program with an address written into it",
+        "correct": true,
+        "why": "It asks no resolver at all."
+      },
+      {
+        "text": "A laptop configured to ask 8.8.8.8",
+        "correct": false,
+        "why": "That is exactly what the rule stops."
+      },
+      {
+        "text": "dig @192.168.60.66 run on desk",
+        "correct": false,
+        "why": "The transcript shows it timing out."
+      }
+    ]
+  },
+  {
+    "id": "ex-hfwq6emk",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens when desk opens a link to a sinkholed name.",
+    "items": [
+      "desk asks dns for the name",
+      "the policy zone matches and dns answers 192.168.60.53",
+      "desk connects to 192.168.60.53 and asks for the file",
+      "the sinkhole logs the address, the name and the path",
+      "a person examines desk"
+    ]
+  },
+  {
+    "id": "ex-nc554v1m",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the firm's resolver configuration in the order the lesson needs it written.",
+    "hint": "Unbound reads policy zones in order.",
+    "items": [
+      "server: who may ask, and the firm's own names",
+      "forward-zone: where everything else goes",
+      "rpz: the allowlist",
+      "rpz: the feed"
+    ]
+  },
+  {
+    "id": "ex-j7mbz2jz",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which port does DNS over TLS use, the one that can be blocked like 53?",
+    "value": 853,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-nbtq104w",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a policy zone, `name CNAME rpz-___.` tells the resolver to answer that name truthfully.",
+    "blanks": [
+      {
+        "accept": [
+          "passthru"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-g23qg2dw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A manager reads this lesson and says the firm no longer needs outbound firewall rules. What is the best reply?",
+    "choices": [
+      {
+        "text": "Agreed, as long as the feed is refreshed every hour",
+        "correct": false,
+        "why": "A fresher list does nothing for programs that never ask."
+      },
+      {
+        "text": "Agreed, because the switch rule already stops every other resolver",
+        "correct": false,
+        "why": "It stops port 53, not DoH or a hard-coded address."
+      },
+      {
+        "text": "No: DNS covers programs that ask; outbound rules cover the rest",
+        "correct": true,
+        "why": "Right. It is one cheap, wide layer, not the only one."
+      },
+      {
+        "text": "No: DNS blocking is too easy to bypass to be worth running",
+        "correct": false,
+        "why": "It covers every ordinary program on every machine and gives the best log; that is worth a lot."
+      }
+    ]
+  }
+]

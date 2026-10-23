@@ -1,0 +1,528 @@
+{
+  "ex-p3x6dk16": {
+    "prompt": "Por que o curso recomenda montar o laboratório dentro de uma máquina virtual e não no seu próprio computador?",
+    "hint": "Pense no que o script faz como root.",
+    "choices": [
+      {
+        "text": "Porque contêineres iniciados sob um hipervisor rodam mais rápido que no computador direto",
+        "why": "Não rodam: um hipervisor acrescenta uma camada, não acelera nada."
+      },
+      {
+        "text": "Porque o Ubuntu 24.04 não pode ser instalado num notebook",
+        "why": "Pode; instalado é um dos três caminhos, para um computador que você possa apagar."
+      },
+      {
+        "text": "Porque cada uma das sete máquinas precisa de acesso próprio à internet",
+        "why": "O contrário: as sete máquinas estão numa rede ligada a nada."
+      },
+      {
+        "text": "Porque muda o computador como root, e uma VM se apaga inteira",
+        "why": "Isso. Namespaces, contêineres e 7 GB em /var/lib/hostlab somem com a máquina virtual."
+      }
+    ]
+  },
+  "ex-86zz60sw": {
+    "prompt": "Um aluno abre um shell Linux numa aba do navegador oferecida por um site e tenta montar o laboratório ali. O que acontece, e por quê?",
+    "hint": "De que o laboratório é feito?",
+    "choices": [
+      {
+        "text": "Funciona, só que mais devagar, porque cada contêiner fica aninhado dentro do contêiner do site",
+        "why": "A velocidade não é o problema; as próprias operações são recusadas."
+      },
+      {
+        "text": "Funciona uma vez e depois o site apaga",
+        "why": "Não chega a isso: criar os contêineres falha."
+      },
+      {
+        "text": "Falha: esse shell já é um contêiner",
+        "why": "Isso. O laboratório é feito de contêineres e namespaces de rede, que exigem root numa máquina real ou virtual."
+      },
+      {
+        "text": "Falha, porque uma aba do navegador não tem como rodar bash",
+        "why": "O shell roda no servidor do site, não no navegador; o bash está lá."
+      }
+    ]
+  },
+  "ex-a72ny3rb": {
+    "prompt": "Antes de rodar o hostlab.sh pela primeira vez, o que a aula pede que você compare?",
+    "hint": "Um script que roda como root merece um olhar.",
+    "choices": [
+      {
+        "text": "O checksum e o número de linhas",
+        "why": "Isso. Se algum diferir, a cópia perdeu ou ganhou alguma coisa."
+      },
+      {
+        "text": "O nome e o lugar do arquivo com os que a aula usa nos próprios transcritos",
+        "why": "O nome pode bater com o conteúdo errado."
+      },
+      {
+        "text": "A versão do bash do seu computador com a que o curso usou na gravação",
+        "why": "O script roda no bash que o Ubuntu 24.04 traz; o que pode dar errado é o conteúdo."
+      },
+      {
+        "text": "O tamanho das duas imagens em /var/lib/hostlab depois que o build termina",
+        "why": "Isso vem depois de rodar, que é justamente o que a conferência deve preceder."
+      }
+    ]
+  },
+  "ex-ax2e83bb": {
+    "prompt": "Você mudou um arquivo no web na aula 1. Digita `sudo bash hostlab.sh up` no começo da aula 2. Onde está a sua mudança?",
+    "hint": "O que o up copia?",
+    "choices": [
+      {
+        "text": "Ainda no web, porque o up só sobe máquinas paradas",
+        "why": "O up para todas as máquinas antes e faz cópias novas."
+      },
+      {
+        "text": "Na imagem web, onde o up a guardou para as aulas seguintes",
+        "why": "As mudanças acontecem na cópia, nunca na imagem."
+      },
+      {
+        "text": "Sumiu: o up troca cada cópia por uma nova",
+        "why": "Isso. Toda aula começa do mesmo lugar que os transcritos."
+      }
+    ]
+  },
+  "ex-kye01twp": {
+    "prompt": "`sudo bash hostlab.sh up` responde `set: pipefail^M: invalid option name`. Qual é a causa?",
+    "hint": "O que o ^M representa?",
+    "choices": [
+      {
+        "text": "O bash instalado é antigo demais para conhecer pipefail",
+        "why": "O bash do Ubuntu 24.04 conhece; o erro mostra a opção com algo grudado nela."
+      },
+      {
+        "text": "O arquivo tem finais de linha do Windows",
+        "why": "Isso. ^M é o retorno de carro, e sed -i \"s/\\r$//\" o remove."
+      },
+      {
+        "text": "O script foi rodado sem sudo, e o bash recusou a primeira opção dele",
+        "why": "Sem sudo ele diz com todas as letras: rode com sudo, a partir da sua conta."
+      },
+      {
+        "text": "As imagens nunca foram feitas",
+        "why": "Essa mensagem cita o build; esta falha antes de qualquer verificação do próprio script."
+      }
+    ]
+  },
+  "ex-stzbr2np": {
+    "prompt": "Depois do up, uma máquina imprime `degraded`. Onde você olha primeiro?",
+    "hint": "degraded é palavra do systemd.",
+    "choices": [
+      {
+        "text": "No firewall do próprio computador do laboratório",
+        "why": "O laboratório não está ligado à rede do computador; nada ali afeta um serviço dentro de uma máquina."
+      },
+      {
+        "text": "No build.log, desde o começo",
+        "why": "O build.log diz como a imagem foi feita; a máquina diz o que falhou agora."
+      },
+      {
+        "text": "No `systemctl --failed` dela, e depois no journalctl da unidade que ele citar",
+        "why": "Isso. degraded quer dizer que uma unidade falhou, e esses dois comandos dizem qual e por quê."
+      }
+    ]
+  },
+  "ex-00y7z3g8": {
+    "prompt": "Qual destes faz parte da superfície de ataque de um servidor?",
+    "hint": "Algo que um estranho consiga alcançar ou usar.",
+    "choices": [
+      {
+        "text": "O comprimento do nome do host, que a varredura informa",
+        "why": "Um nome não é algo com que alguém converse ou entre."
+      },
+      {
+        "text": "Um servidor FTP que ninguém usa, ainda escutando",
+        "why": "Isso. Todo listener é um programa com que um estranho conversa sem fazer login."
+      },
+      {
+        "text": "A quantidade de espaço livre no disco",
+        "why": "Espaço em disco importa para a disponibilidade, mas ninguém alcança a máquina por ele."
+      },
+      {
+        "text": "O firewall da rede na frente dele",
+        "why": "Esse é um controle na frente da superfície, não parte dela."
+      }
+    ]
+  },
+  "ex-7n0jxjtt": {
+    "prompt": "Uma varredura UDP informa `5353/udp open|filtered`. O que o nmap sabe de fato?",
+    "hint": "Pense no que voltou.",
+    "choices": [
+      {
+        "text": "Que um firewall descartou a sonda",
+        "why": "Essa é uma das duas explicações, e o nmap não sabe qual."
+      },
+      {
+        "text": "Que o avahi está rodando e respondeu",
+        "why": "Uma resposta teria feito a porta aparecer como open; aqui nada voltou."
+      },
+      {
+        "text": "Só que nenhuma resposta voltou",
+        "why": "Isso. A própria máquina, com o ss, resolve a dúvida."
+      },
+      {
+        "text": "Que a porta está fechada e nada escuta ali",
+        "why": "Fechada é uma resposta; a varredura do fim a mostra como closed."
+      }
+    ]
+  },
+  "ex-58h1d72f": {
+    "prompt": "A primeira varredura do web achou cinco serviços TCP e três UDP. O trabalho do portal precisa de dois. Quantos listeners não tinham motivo para estar ali?",
+    "hint": "Conte e subtraia."
+  },
+  "ex-sxrv3jdh": {
+    "prompt": "O ss mostra `tcp 127.0.0.1:8080 python3`. Quem consegue se conectar a ele?",
+    "hint": "127.0.0.1 é um endereço especial.",
+    "choices": [
+      {
+        "text": "Só programas no próprio web, como o nginx",
+        "why": "Isso. O endereço de loopback nunca sai da máquina."
+      },
+      {
+        "text": "Todas as máquinas do segmento 192.168.60.0/24",
+        "why": "Isso seria 0.0.0.0 ou o endereço do próprio web."
+      },
+      {
+        "text": "Qualquer um na internet, a não ser que um firewall bloqueie",
+        "why": "O loopback é inalcançável de fora com ou sem firewall."
+      },
+      {
+        "text": "Só o root, porque a porta é maior que 1024",
+        "why": "Portas abaixo de 1024 exigem root para escutar, e nada restringe quem conecta."
+      }
+    ]
+  },
+  "ex-d2b4ne3m": {
+    "prompt": "Depois de `systemctl disable --now rpcbind`, a porta 111 continua aberta, segura pelo systemd. O que a segura, e como você a fecha?",
+    "hint": "Leia o aviso que o systemctl imprimiu.",
+    "choices": [
+      {
+        "text": "Um processo rpcbind zumbi; mate com kill -9",
+        "why": "Não sobra processo rpcbind: o ss cita o systemd, processo 1."
+      },
+      {
+        "text": "O kernel guarda a porta por um minuto; espere",
+        "why": "Nada expira aqui: o systemd escuta de propósito e iniciaria o rpcbind de novo."
+      },
+      {
+        "text": "Uma unidade de socket, que também precisa ser desligada",
+        "why": "Isso. O systemd escuta pelo serviço e o inicia na primeira conexão."
+      },
+      {
+        "text": "O inetd, que inicia o rpcbind sempre que um cliente pede; remova o inetd antes",
+        "why": "O inetd rodava o telnet aqui; o aviso cita o rpcbind.socket."
+      }
+    ]
+  },
+  "ex-ranwv1jb": {
+    "prompt": "Associe cada jeito de desligar um serviço ao que ele deixa para trás.",
+    "hint": "Do mais fraco ao mais forte.",
+    "pairs": [
+      {
+        "left": "systemctl disable",
+        "right": "instalado, e possível de iniciar à mão ou por outra unidade"
+      },
+      {
+        "left": "systemctl mask",
+        "right": "instalado, e ligado a /dev/null para que nada o inicie"
+      },
+      {
+        "left": "apt-get purge",
+        "right": "nem o programa nem a configuração"
+      }
+    ],
+    "right_distractors": [
+      "o programa, com a configuração voltando ao padrão"
+    ]
+  },
+  "ex-zxdz436p": {
+    "prompt": "Você herda um servidor e encontra um serviço FTP que parece parado. O que deve acontecer antes de você removê-lo?",
+    "hint": "O serviço pode ter um usuário que você não conhece.",
+    "choices": [
+      {
+        "text": "Nada: um serviço parado é desnecessário por definição",
+        "why": "Parado hoje não é parado no dia em que o job mensal roda."
+      },
+      {
+        "text": "Descobrir quem usa, e anotar a resposta",
+        "why": "Isso. E a anotação responde a próxima pessoa que der falta do FTP."
+      },
+      {
+        "text": "Desabilitar por um ano inteiro primeiro, e remover só se ninguém tiver reclamado até lá",
+        "why": "Um ano de serviço desabilitado não responde quem precisava dele."
+      },
+      {
+        "text": "Atualizar, para que seja seguro mantê-lo",
+        "why": "Um serviço corrigido de que ninguém precisa continua sendo superfície."
+      }
+    ]
+  },
+  "ex-rpmxahm6": {
+    "prompt": "Por que uma conta chamada `suporte` com id de usuário 0 é um problema mesmo sem se chamar root?",
+    "hint": "O que o kernel confere?",
+    "choices": [
+      {
+        "text": "Porque o kernel confere o número, não o nome",
+        "why": "Isso. É root com outro nome, e com senha própria."
+      },
+      {
+        "text": "Porque duas contas não podem dividir o mesmo diretório home, e /root pertence ao root",
+        "why": "Dividir um home é desleixo; o perigo é o número."
+      },
+      {
+        "text": "Porque nomes em português quebram o sudo",
+        "why": "Nomes são só rótulos; nada quebra."
+      },
+      {
+        "text": "Porque só o root pode ter senha",
+        "why": "Qualquer conta pode ter; o que esta tem são os poderes do root."
+      }
+    ]
+  },
+  "ex-73w73q9k": {
+    "prompt": "Um colega sugere `userdel -rf suporte` para tirar o segundo root. O que isso faria no web?",
+    "hint": "Olhe o diretório home de suporte.",
+    "choices": [
+      {
+        "text": "Tirar o nome e mais nada, que é o que você quer",
+        "why": "-r faz mais que o nome: apaga o diretório home."
+      },
+      {
+        "text": "Falhar, exatamente como o userdel simples falhou",
+        "why": "-f passa por cima da verificação que parou o comando simples."
+      },
+      {
+        "text": "Apagar /root, que é o home de suporte",
+        "why": "Isso. A remoção segura apaga as linhas da conta nos quatro arquivos de contas."
+      },
+      {
+        "text": "Travar a conta, o que a deixa no lugar para os logs a citarem",
+        "why": "Isso é usermod -L; userdel remove."
+      }
+    ]
+  },
+  "ex-byzj0ree": {
+    "prompt": "Quais mudanças impedem a conta do estagiário de entrar? Escolha todas as que se aplicam.",
+    "hint": "Cada uma sozinha basta.",
+    "choices": [
+      {
+        "text": "usermod -L, que trava a senha",
+        "why": "Uma senha travada não serve para entrar."
+      },
+      {
+        "text": "usermod -e 1, que deixa a conta expirada",
+        "why": "Uma conta expirada é recusada seja qual for a senha."
+      },
+      {
+        "text": "usermod -s /usr/sbin/nologin, que tira o shell",
+        "why": "O nologin imprime uma recusa e sai."
+      },
+      {
+        "text": "chage -l estagio, que mostra as datas",
+        "why": "chage -l só lê; não muda nada."
+      }
+    ]
+  },
+  "ex-g7atzy7d": {
+    "prompt": "/etc/sudoers.d não tem arquivo para uma conta, e mesmo assim ela usa sudo. De onde vem esse poder?",
+    "hint": "Uma lista que não está em /etc/passwd.",
+    "choices": [
+      {
+        "text": "Ser membro do grupo sudo, que o getent group sudo lista",
+        "why": "Isso. getent group sudo lista todo mundo que pode usá-lo."
+      },
+      {
+        "text": "A chave SSH dela em authorized_keys",
+        "why": "Uma chave a deixa entrar; não dá privilégio depois disso."
+      },
+      {
+        "text": "Um id de usuário abaixo de 1000",
+        "why": "Ids baixos são contas de sistema por convenção, sem direito a sudo."
+      },
+      {
+        "text": "O shell de login dela ser /bin/bash",
+        "why": "Um shell a deixa entrar de forma interativa; o sudo confere grupos e regras."
+      }
+    ]
+  },
+  "ex-wvpz2g09": {
+    "prompt": "`50-old.conf` diz `PermitRootLogin yes`. Você acrescenta `90-hardening.conf` dizendo `PermitRootLogin no` e recarrega. O que o `sshd -T` informa?",
+    "hint": "Que arquivo é lido primeiro, e que valor o sshd guarda?",
+    "choices": [
+      {
+        "text": "permitrootlogin no, porque o arquivo mais novo vence",
+        "why": "A idade do arquivo não entra; a ordem é pelo nome."
+      },
+      {
+        "text": "permitrootlogin yes, porque o 50 é lido antes do 90 e o sshd guarda o primeiro valor",
+        "why": "Isso. É por isso que a aula deu ao arquivo o nome 10-hardening.conf."
+      },
+      {
+        "text": "Um erro, porque uma opção só pode aparecer uma vez",
+        "why": "Repetir é permitido; só o primeiro valor conta."
+      },
+      {
+        "text": "permitrootlogin no, porque no é sempre mais seguro",
+        "why": "O sshd não escolhe o valor mais seguro, escolhe o primeiro."
+      }
+    ]
+  },
+  "ex-r8mvdh9e": {
+    "prompt": "Por que a aula roda `sshd -t` antes de `systemctl reload ssh`?",
+    "hint": "O que acontece se a configuração tiver um erro de digitação?",
+    "choices": [
+      {
+        "text": "Para imprimir as opções com que o servidor rodaria",
+        "why": "Isso é sshd -T, com T maiúsculo."
+      },
+      {
+        "text": "Para reiniciar o servidor sem derrubar sessões",
+        "why": "-t não inicia nada; quem preserva as sessões é o reload."
+      },
+      {
+        "text": "Para testar um login com as novas opções a partir de outra máquina",
+        "why": "Esse é o passo seguinte, a partir do desk."
+      },
+      {
+        "text": "Para pegar um erro antes que chegue ao servidor em execução",
+        "why": "Isso. O && faz o reload rodar só se a conferência passou."
+      }
+    ]
+  },
+  "ex-wrbjpn9t": {
+    "prompt": "Associe cada opção do SSH ao que ela fecha.",
+    "pairs": [
+      {
+        "left": "PermitRootLogin no",
+        "right": "o único nome de conta que todo atacante conhece"
+      },
+      {
+        "left": "PasswordAuthentication no",
+        "right": "adivinhar uma senha de qualquer lugar de onde a porta seja alcançada"
+      },
+      {
+        "left": "X11Forwarding no",
+        "right": "programas gráficos tunelados a partir de um servidor sem tela"
+      },
+      {
+        "left": "MaxAuthTries 3",
+        "right": "muitas tentativas dentro de uma única conexão"
+      }
+    ]
+  },
+  "ex-mm4bafw4": {
+    "prompt": "`apt-cache rdepends --installed wpasupplicant` não lista nada abaixo dele no web. O que isso diz?",
+    "hint": "rdepends quer dizer dependências reversas.",
+    "choices": [
+      {
+        "text": "Que nenhum pacote instalado precisa dele",
+        "why": "Isso. Se o trabalho da máquina precisa dele é a outra metade da pergunta."
+      },
+      {
+        "text": "Que o wpasupplicant não está instalado no web, então não há o que remover",
+        "why": "Está instalado, e rodando; o comando perguntou quem precisa dele."
+      },
+      {
+        "text": "Que ele não tem atualizações de segurança",
+        "why": "Dependências não dizem nada sobre atualizações."
+      },
+      {
+        "text": "Que a máquina tem uma placa Wi-Fi",
+        "why": "Pacotes não sabem nada de hardware; o web não tem rádio."
+      }
+    ]
+  },
+  "ex-3xsfjw2p": {
+    "prompt": "Depois de `server_tokens off`, o que o portal ganhou?",
+    "hint": "Compare os dois cabeçalhos Server.",
+    "choices": [
+      {
+        "text": "Proteção contra as falhas do nginx 1.24.0",
+        "why": "Uma versão escondida é tão vulnerável quanto antes; a aula 16 descobre quais estão desatualizadas."
+      },
+      {
+        "text": "Um servidor que não conta mais a ninguém que é nginx",
+        "why": "O nome fica; só a versão sai."
+      },
+      {
+        "text": "O número de versão não é mais anunciado a quem pergunta",
+        "why": "Isso. É uma mudança pequena e não uma correção."
+      },
+      {
+        "text": "Respostas mais rápidas, porque o cabeçalho ficou menor",
+        "why": "Alguns bytes não fazem diferença que alguém consiga medir aqui."
+      }
+    ]
+  },
+  "ex-medh1rz3": {
+    "prompt": "Ponha em ordem o jeito como esta aula endurece um serviço que você não instalou.",
+    "hint": "Meça antes e depois.",
+    "items": [
+      "varrer a máquina a partir de outra na rede",
+      "perguntar à máquina que processo segura cada porta",
+      "descobrir se alguém usa o serviço",
+      "remover o serviço e o socket dele",
+      "varrer de novo a partir da mesma máquina"
+    ]
+  },
+  "ex-d8ev8m4m": {
+    "prompt": "A varredura UDP final informa a 161/udp como `closed` onde antes dizia `open`. O que tornou a diferença visível para o nmap?",
+    "hint": "Fechada é uma resposta, não um silêncio.",
+    "choices": [
+      {
+        "text": "O snmpd agora descarta as sondas que recebe",
+        "why": "O snmpd foi embora; nada na porta recebe coisa alguma."
+      },
+      {
+        "text": "O kernel do web responde que nenhum programa escuta ali",
+        "why": "Isso. Sem ninguém escutando, o kernel responde porta inalcançável, que o nmap lê como closed."
+      },
+      {
+        "text": "Um firewall foi acrescentado ao web durante a aula",
+        "why": "Nenhum firewall foi acrescentado nesta aula; isso é a aula 5."
+      },
+      {
+        "text": "A community string deixou de ser public",
+        "why": "O serviço foi removido, não reconfigurado."
+      }
+    ]
+  },
+  "ex-5rb7cxav": {
+    "prompt": "Uma conta de serviço recebe o shell /usr/sbin/___, que imprime uma recusa e sai.",
+    "hint": "O nome diz o que faz.",
+    "blanks": [
+      {
+        "accept": [
+          "nologin"
+        ]
+      }
+    ]
+  },
+  "ex-7qtttj9k": {
+    "prompt": "Quantos pacotes o web perdeu nesta aula, contando os dos serviços e os dois de Wi-Fi?",
+    "hint": "Seis, depois dois."
+  },
+  "ex-dyy3csyg": {
+    "prompt": "Quais destes reduzem a superfície de ataque do web, em vez de proteger o que já está lá? Escolha todos os que se aplicam.",
+    "hint": "Tirar versus vigiar.",
+    "choices": [
+      {
+        "text": "Remover o servidor telnet",
+        "why": "Um programa que não está lá não tem o que atacar."
+      },
+      {
+        "text": "Vigiar os logs do FTP atrás de logins que falharam",
+        "why": "Isso vigia um serviço que continua lá."
+      },
+      {
+        "text": "Tirar a segunda conta com id de usuário 0",
+        "why": "Um caminho de entrada a menos, e um poderoso."
+      },
+      {
+        "text": "Escolher uma senha mais longa para o estagiário",
+        "why": "A conta continua existindo e entrando; a aula a travou em vez disso."
+      }
+    ]
+  }
+}

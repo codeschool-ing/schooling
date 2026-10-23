@@ -1,0 +1,701 @@
+[
+  {
+    "id": "ex-4em50g6b",
+    "version": 1,
+    "section": "one-door",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson treat the administrator's path to a server more carefully than any other?",
+    "choices": [
+      {
+        "text": "Because SSH is older than the other protocols the course protects",
+        "correct": false,
+        "why": "Age is not the argument; where the path ends is."
+      },
+      {
+        "text": "Because administrators make more mistakes than other users",
+        "correct": false,
+        "why": "Nothing in the lesson says so; the value of the path is the point."
+      },
+      {
+        "text": "Because it carries more traffic than the portal does",
+        "correct": false,
+        "why": "It carries little traffic; it carries a lot of power."
+      },
+      {
+        "text": "It ends at root on the server",
+        "correct": true,
+        "why": "Right, and from there at whatever that server trusts."
+      }
+    ]
+  },
+  {
+    "id": "ex-tqs8b0x5",
+    "version": 1,
+    "section": "one-door",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before the lesson, a phishing link runs on desk. Why does that matter to web?",
+    "choices": [
+      {
+        "text": "desk holds a key web accepts, so desk is a way to web",
+        "correct": true,
+        "why": "Right. Every machine with the key was a door."
+      },
+      {
+        "text": "desk and web share a disk",
+        "correct": false,
+        "why": "They are separate containers with separate disks."
+      },
+      {
+        "text": "Phishing spreads to every machine on the same segment on its own",
+        "correct": false,
+        "why": "It needs a path; the shared key is the path."
+      },
+      {
+        "text": "web trusts desk's address for its database",
+        "correct": false,
+        "why": "No such trust exists here; SSH does."
+      }
+    ]
+  },
+  {
+    "id": "ex-g70qjhkm",
+    "version": 1,
+    "section": "one-door",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What turns a jump server from a convenience into a control?",
+    "choices": [
+      {
+        "text": "A faster connection than the direct path",
+        "correct": false,
+        "why": "Speed makes people use it on good days; it does not stop the other days."
+      },
+      {
+        "text": "The servers refuse administration from anywhere else",
+        "correct": true,
+        "why": "Right. Otherwise people go round it the day it matters."
+      },
+      {
+        "text": "Installing every administration tool the team uses on it",
+        "correct": false,
+        "why": "The opposite: it should do nothing else."
+      },
+      {
+        "text": "Giving each administrator their own account on it",
+        "correct": false,
+        "why": "Useful for the log, and still optional while other paths exist."
+      }
+    ]
+  },
+  {
+    "id": "ex-fsc3rahn",
+    "version": 1,
+    "section": "proxyjump",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With ProxyJump, where is the administrator's private key during the session to web?",
+    "hint": "The session is end to end.",
+    "choices": [
+      {
+        "text": "Copied to jump for the length of the session, then deleted",
+        "correct": false,
+        "why": "Nothing is copied; that was the old way's problem."
+      },
+      {
+        "text": "On jump's agent, because AllowAgentForwarding hands it over",
+        "correct": false,
+        "why": "The bastion sets AllowAgentForwarding no."
+      },
+      {
+        "text": "Only on admin",
+        "correct": true,
+        "why": "Right. jump carries an encrypted connection it cannot read."
+      },
+      {
+        "text": "On web, which keeps a copy after the first login",
+        "correct": false,
+        "why": "A server receives a signature, never the private key."
+      }
+    ]
+  },
+  {
+    "id": "ex-n822jp51",
+    "version": 1,
+    "section": "proxyjump",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`ssh jump` prints `This account is currently not available.` Which line of the bastion's policy did that?",
+    "choices": [
+      {
+        "text": "PermitOpen web:22",
+        "correct": false,
+        "why": "That limits where the bastion connects, not what runs on it."
+      },
+      {
+        "text": "ForceCommand /usr/sbin/nologin",
+        "correct": true,
+        "why": "Right. Every command asked for runs nologin instead."
+      },
+      {
+        "text": "AllowAgentForwarding no",
+        "correct": false,
+        "why": "That keeps the agent away from the bastion; it prints nothing."
+      },
+      {
+        "text": "X11Forwarding no",
+        "correct": false,
+        "why": "That is about graphical programs."
+      }
+    ]
+  },
+  {
+    "id": "ex-rg14hv4v",
+    "version": 1,
+    "section": "proxyjump",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`ssh -J jump desk hostname` fails with `stdio forwarding failed`, though the key is valid. Why?",
+    "choices": [
+      {
+        "text": "desk's firewall refuses connections from jump",
+        "correct": false,
+        "why": "No rule was written on desk; jump never tried."
+      },
+      {
+        "text": "ProxyJump only works when the target is called web",
+        "correct": false,
+        "why": "It works to any target the bastion is allowed to open."
+      },
+      {
+        "text": "The key was rejected by jump, which ends the whole attempt",
+        "correct": false,
+        "why": "The key was accepted; the forwarding request was refused."
+      },
+      {
+        "text": "PermitOpen lists only web:22",
+        "correct": true,
+        "why": "Right. The bastion refuses to open anything else."
+      }
+    ]
+  },
+  {
+    "id": "ex-n67t0rw7",
+    "version": 1,
+    "section": "proxyjump",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On web, SSH_CONNECTION starts with 192.168.60.40 for a session typed on admin. What does that show?",
+    "choices": [
+      {
+        "text": "web sees jump, not admin, as the client",
+        "correct": true,
+        "why": "Right, which is what lets web's firewall name jump alone."
+      },
+      {
+        "text": "admin's address was rewritten by the switch on the way",
+        "correct": false,
+        "why": "sw only bridges; jump opened the connection itself."
+      },
+      {
+        "text": "The configuration entry was ignored and admin connected directly",
+        "correct": false,
+        "why": "Directly, the address would be admin's, 192.168.60.30."
+      },
+      {
+        "text": "The session is not encrypted between jump and web",
+        "correct": false,
+        "why": "It is encrypted end to end; the address says nothing about that."
+      }
+    ]
+  },
+  {
+    "id": "ex-qdas1jgs",
+    "version": 1,
+    "section": "closing-the-other-doors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does web answer desk with `reject with tcp reset` instead of dropping silently?",
+    "choices": [
+      {
+        "text": "Because a dropped packet is still counted as accepted",
+        "correct": false,
+        "why": "Drop and count work together; nothing is accepted."
+      },
+      {
+        "text": "Inside the firm, a fast refusal saves the administrator a timeout",
+        "correct": true,
+        "why": "Right. Toward the internet lesson 5 weighs the other choice."
+      },
+      {
+        "text": "Because nftables cannot drop TCP packets",
+        "correct": false,
+        "why": "It can; lesson 14 dropped port 53 on the switch."
+      },
+      {
+        "text": "To tell desk which machine it should use instead",
+        "correct": false,
+        "why": "A reset carries no such information."
+      }
+    ]
+  },
+  {
+    "id": "ex-y902h95a",
+    "version": 1,
+    "section": "closing-the-other-doors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "web accepts SSH only from jump. Why does jump also accept SSH only from admin?",
+    "choices": [
+      {
+        "text": "Because jump has no fail2ban to protect it",
+        "correct": false,
+        "why": "fail2ban runs on every machine of the lab."
+      },
+      {
+        "text": "Because web would otherwise reject jump too",
+        "correct": false,
+        "why": "web's rule names jump's address; what reaches jump does not change it."
+      },
+      {
+        "text": "Otherwise a key stolen anywhere still reaches the bastion",
+        "correct": true,
+        "why": "Right. The door is only one door if the way to it is narrow too."
+      },
+      {
+        "text": "Because ProxyJump needs both ends on the same rule",
+        "correct": false,
+        "why": "ProxyJump knows nothing about firewall rules."
+      }
+    ]
+  },
+  {
+    "id": "ex-39a6xewe",
+    "version": 1,
+    "section": "closing-the-other-doors",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Once every administrator uses the bastion, what does a rising counter on web's reject rule mean?",
+    "choices": [
+      {
+        "text": "That the bastion is overloaded",
+        "correct": false,
+        "why": "Traffic through the bastion arrives from its address and is accepted."
+      },
+      {
+        "text": "Somebody or something is trying the old way in",
+        "correct": true,
+        "why": "Right. It is worth watching."
+      },
+      {
+        "text": "That the certificate authority needs a new key",
+        "correct": false,
+        "why": "Refused packets never reached the certificate check."
+      },
+      {
+        "text": "That fail2ban has started banning administrators by mistake",
+        "correct": false,
+        "why": "This counter belongs to the nftables rule, not to fail2ban."
+      }
+    ]
+  },
+  {
+    "id": "ex-88av6h3n",
+    "version": 1,
+    "section": "short-lived-credentials",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does an SSH user certificate add to a plain key?",
+    "choices": [
+      {
+        "text": "A longer key, which is harder to guess",
+        "correct": false,
+        "why": "The key is the same; the signature and its fields are new."
+      },
+      {
+        "text": "An authority's signature, a validity period and allowed account names",
+        "correct": true,
+        "why": "Right: -s, -V and -n in the command."
+      },
+      {
+        "text": "A password that protects the private key",
+        "correct": false,
+        "why": "That is a passphrase, which a certificate does not need or give."
+      },
+      {
+        "text": "Encryption of the session",
+        "correct": false,
+        "why": "Every SSH session is encrypted, with or without a certificate."
+      }
+    ]
+  },
+  {
+    "id": "ex-s44md2a2",
+    "version": 1,
+    "section": "short-lived-credentials",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The lab keeps the user CA's private key in ana's home on admin. What does the lesson say a real firm does?",
+    "choices": [
+      {
+        "text": "Keeps it on every server, so each can sign locally",
+        "correct": false,
+        "why": "Then stealing any server would make anybody an administrator."
+      },
+      {
+        "text": "Publishes it, since the servers need to check signatures",
+        "correct": false,
+        "why": "Servers need the public half only."
+      },
+      {
+        "text": "Keeps it on the bastion, which every session crosses",
+        "correct": false,
+        "why": "The bastion faces every administrator; the signing key belongs further away."
+      },
+      {
+        "text": "Keeps it offline, with signing logged",
+        "correct": true,
+        "why": "Right: a hardware token or a dedicated signing service."
+      }
+    ]
+  },
+  {
+    "id": "ex-67m5b9mk",
+    "version": 1,
+    "section": "short-lived-credentials",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After `AuthorizedKeysFile none`, somebody appends a public key to /home/ana/.ssh/authorized_keys on web. What happens when they use it?",
+    "choices": [
+      {
+        "text": "It is refused: the file is no longer read",
+        "correct": true,
+        "why": "Right. Only a certificate the authority signed gets in."
+      },
+      {
+        "text": "It works until the next reload of sshd",
+        "correct": false,
+        "why": "The setting is already loaded; the file is ignored from now on."
+      },
+      {
+        "text": "It works, because the key belongs to ana, who has a certificate",
+        "correct": false,
+        "why": "The certificate covers the key it was made for, not new ones."
+      },
+      {
+        "text": "sshd stops, because the file contradicts the setting",
+        "correct": false,
+        "why": "Nothing contradicts anything; the file is simply not consulted."
+      }
+    ]
+  },
+  {
+    "id": "ex-8e9hwvnt",
+    "version": 1,
+    "section": "short-lived-credentials",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A certificate valid for one hour is stolen ten minutes after it was signed. What does the lesson name for that case?",
+    "choices": [
+      {
+        "text": "Waiting, because nothing else exists",
+        "correct": false,
+        "why": "Revocation exists; it is just rarely needed."
+      },
+      {
+        "text": "RevokedKeys in the server's configuration",
+        "correct": true,
+        "why": "Right. With an hour's lifetime it is the exception."
+      },
+      {
+        "text": "Removing the line from authorized_keys on every server",
+        "correct": false,
+        "why": "There is no such line; the servers trust the authority."
+      },
+      {
+        "text": "Signing a new certificate with the same identity, which replaces the stolen one",
+        "correct": false,
+        "why": "A new certificate does not cancel the old one."
+      }
+    ]
+  },
+  {
+    "id": "ex-9qmv786d",
+    "version": 1,
+    "section": "short-lived-credentials",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The certificate's list of account names it may log in as is printed by ssh-keygen -L under the heading ___.",
+    "hint": "It is a word from the transcript.",
+    "blanks": [
+      {
+        "accept": [
+          "Principals"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-amrrz7xk",
+    "version": 1,
+    "section": "recording-sessions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three administrators all log in to web as ana with certificates. What in the log tells them apart?",
+    "choices": [
+      {
+        "text": "The source address, which differs per person",
+        "correct": false,
+        "why": "Every session comes from jump, 192.168.60.40."
+      },
+      {
+        "text": "The key fingerprint, since each person has a different key",
+        "correct": false,
+        "why": "Useful, but it names a key, not a person; the identity field is written for that."
+      },
+      {
+        "text": "The certificate's ID, written at signing",
+        "correct": true,
+        "why": "Right, matched to the authority's record of who asked."
+      },
+      {
+        "text": "The port the session came from",
+        "correct": false,
+        "why": "Ports are chosen at random by the client."
+      }
+    ]
+  },
+  {
+    "id": "ex-59cadeq0",
+    "version": 1,
+    "section": "recording-sessions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which setting made web write the certificate's ID and authority into its log?",
+    "choices": [
+      {
+        "text": "TrustedUserCAKeys",
+        "correct": false,
+        "why": "That names the authority to trust; it does not change the log."
+      },
+      {
+        "text": "PasswordAuthentication no",
+        "correct": false,
+        "why": "That refuses passwords."
+      },
+      {
+        "text": "LogLevel VERBOSE",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "ForceCommand",
+        "correct": false,
+        "why": "That was on jump, and it forces a command."
+      }
+    ]
+  },
+  {
+    "id": "ex-42gy3ry5",
+    "version": 1,
+    "section": "recording-sessions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson treat a full session recording as sensitive data in itself?",
+    "choices": [
+      {
+        "text": "Because recordings are large and fill the disk",
+        "correct": false,
+        "why": "Size is a cost, not a sensitivity."
+      },
+      {
+        "text": "Because the law forbids recording administrators",
+        "correct": false,
+        "why": "The lesson says to tell them, not that it is forbidden."
+      },
+      {
+        "text": "Because a recording can be replayed to log in again",
+        "correct": false,
+        "why": "A recording is not a credential; replaying it logs in nobody."
+      },
+      {
+        "text": "It holds typed passwords and opened files",
+        "correct": true,
+        "why": "Right, so it is kept where the recorded cannot alter it, and read only with a reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-7s23pcy6",
+    "version": 1,
+    "section": "workstation-segmentation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the gap a jump server leaves, which a privileged access workstation closes?",
+    "choices": [
+      {
+        "text": "The administrator's own workstation",
+        "correct": true,
+        "why": "Right. A compromised admin uses the bastion as designed."
+      },
+      {
+        "text": "The servers' firewalls, which the bastion cannot configure",
+        "correct": false,
+        "why": "Those were written in this lesson and do their job."
+      },
+      {
+        "text": "Certificates that expire, which a PAW renews automatically",
+        "correct": false,
+        "why": "Expiry is the feature, not the gap."
+      },
+      {
+        "text": "Encryption between jump and web, which a PAW adds",
+        "correct": false,
+        "why": "That path is already encrypted end to end."
+      }
+    ]
+  },
+  {
+    "id": "ex-jpsnnpxs",
+    "version": 1,
+    "section": "workstation-segmentation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the tier model, why must a tier 0 administrator never log in to a tier 2 workstation?",
+    "choices": [
+      {
+        "text": "Because tier 2 machines cannot run the tools tier 0 needs",
+        "correct": false,
+        "why": "Tools are not the reason; exposure of credentials is."
+      },
+      {
+        "text": "Because it would count against the workstation's licence",
+        "correct": false,
+        "why": "Licensing has nothing to do with it."
+      },
+      {
+        "text": "Whoever controls the workstation captures what they type",
+        "correct": true,
+        "why": "Right: credentials only flow downwards."
+      },
+      {
+        "text": "Because tier 2 sits on a separate network, out of tier 0's reach",
+        "correct": false,
+        "why": "Reachability is not the rule; trust is."
+      }
+    ]
+  },
+  {
+    "id": "ex-a6ac6btw",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each control with the weakness it removes.",
+    "pairs": [
+      {
+        "left": "web's firewall accepting SSH only from jump",
+        "right": "a key stolen from desk still working on web"
+      },
+      {
+        "left": "certificates valid for one hour",
+        "right": "a departed employee's key working for years"
+      },
+      {
+        "left": "PermitTTY no and ForceCommand on jump",
+        "right": "a shell on the most sensitive machine"
+      },
+      {
+        "left": "Windows LAPS",
+        "right": "one local administrator password shared by every laptop"
+      }
+    ],
+    "right_distractors": [
+      "phishing mail reaching inboxes"
+    ]
+  },
+  {
+    "id": "ex-9q3y4syn",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order the steps this lesson takes, each one depending on the one before.",
+    "items": [
+      "make jump a door with no shell",
+      "route admin's sessions to web through jump",
+      "make web accept SSH from jump only",
+      "make web trust the authority instead of key files",
+      "read the certificate identity in web's log"
+    ]
+  },
+  {
+    "id": "ex-p1zw7ajp",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many SSH connections does `ssh -J jump web` open from admin's side, counting the inner one?",
+    "hint": "One to the bastion, one carried through it.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-ze3xt5zg",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At the end of the lesson, which of these still gets a shell on web? Choose all that apply.",
+    "choices": [
+      {
+        "text": "admin with a valid certificate, through jump",
+        "correct": true,
+        "why": "That is the one door."
+      },
+      {
+        "text": "desk with ana's plain key, directly",
+        "correct": false,
+        "why": "Refused by web's firewall, and the plain key no longer counts."
+      },
+      {
+        "text": "admin with a certificate that expired an hour ago",
+        "correct": false,
+        "why": "The transcript shows it refused."
+      },
+      {
+        "text": "root at web's own console, through hostlab.sh",
+        "correct": true,
+        "why": "Physical or console access is not SSH, and no rule here touches it."
+      }
+    ]
+  }
+]

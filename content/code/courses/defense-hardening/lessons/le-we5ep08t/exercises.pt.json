@@ -1,0 +1,397 @@
+{
+  "ex-cx7rk28c": {
+    "prompt": "Por que um script gravável por todos, rodado pelo cron do root, é um caminho para o root?",
+    "choices": [
+      {
+        "text": "Porque o cron roda todo script com um shell sem senha",
+        "why": "O perigo é quem pode mudar o script, não o shell."
+      },
+      {
+        "text": "O que o root roda em seguida fica nas mãos de qualquer conta",
+        "why": "Isso."
+      },
+      {
+        "text": "Porque arquivos graváveis por todos são executados duas vezes",
+        "why": "Nada os roda duas vezes."
+      },
+      {
+        "text": "Porque o cron se recusa a registrar scripts com esses bits",
+        "why": "O cron registra normalmente; registro não é a questão."
+      }
+    ]
+  },
+  "ex-f031zcer": {
+    "prompt": "O que `sudo -u portal test -w /opt/portal/backup.sh` responde, e o que muda?",
+    "choices": [
+      {
+        "text": "Se a ana pode gravar o arquivo; muda o dono para portal",
+        "why": "Roda como portal, e não muda nada."
+      },
+      {
+        "text": "Se o arquivo é executável; marca-o como testado",
+        "why": "-w pergunta sobre gravação; nada é marcado."
+      },
+      {
+        "text": "Se o portal pode gravá-lo, e nada muda",
+        "why": "Isso."
+      },
+      {
+        "text": "Se o portal gravou nele recentemente; zera a data",
+        "why": "O test pergunta sobre permissão, não histórico."
+      }
+    ]
+  },
+  "ex-xc5sjk0f": {
+    "prompt": "O que `find / -perm -4000` procura?",
+    "choices": [
+      {
+        "text": "Arquivos que rodam com o privilégio do dono",
+        "why": "Isso: o bit set-user-id."
+      },
+      {
+        "text": "Arquivos maiores que 4000 bytes no sistema de arquivos raiz",
+        "why": "-perm trata dos bits de modo, não de tamanho."
+      },
+      {
+        "text": "Diretórios que qualquer um pode gravar sem o sticky bit",
+        "why": "Essa é outra busca, com outros bits."
+      },
+      {
+        "text": "Arquivos que todo usuário pode ler e ninguém pode gravar",
+        "why": "4000 é o bit set-user-id."
+      }
+    ]
+  },
+  "ex-ktesdkxq": {
+    "prompt": "Por que os nove bits não conseguem dar à auditora só leitura num arquivo que os contadores gravam?",
+    "choices": [
+      {
+        "text": "Porque leitura e gravação não se separam nos bits",
+        "why": "São bits separados."
+      },
+      {
+        "text": "Citam um dono e um grupo, e as duas vagas estão ocupadas",
+        "why": "Isso. O other daria a todo mundo."
+      },
+      {
+        "text": "Porque auditores não podem ter contas no Linux",
+        "why": "Ela tem uma, auditoria."
+      },
+      {
+        "text": "Porque o bit set-group-id proíbe leitores extras",
+        "why": "Ele só define o grupo dos arquivos novos."
+      }
+    ]
+  },
+  "ex-f8q1vb7a": {
+    "prompt": "O que o `+` depois dos bits no `ls -l` quer dizer?",
+    "choices": [
+      {
+        "text": "O arquivo é maior que o tamanho de bloco",
+        "why": "O ls mostra o tamanho em outro lugar."
+      },
+      {
+        "text": "O arquivo tem o sticky bit",
+        "why": "Isso aparece como t nos bits."
+      },
+      {
+        "text": "O arquivo mudou desde o último backup",
+        "why": "O ls não sabe nada de backups."
+      },
+      {
+        "text": "Existe mais acesso do que os bits mostram",
+        "why": "Isso: uma ACL."
+      }
+    ]
+  },
+  "ex-z7sexetp": {
+    "prompt": "Por que a auditora precisa de `rx` no diretório além de `r` no arquivo?",
+    "choices": [
+      {
+        "text": "x entra no diretório, r o lista",
+        "why": "Isso. Sem x o arquivo fica inalcançável."
+      },
+      {
+        "text": "Porque arquivos herdam as entradas do diretório quando lidos",
+        "why": "Entradas só são herdadas na criação, por padrões."
+      },
+      {
+        "text": "Porque o cat executa o arquivo que lê",
+        "why": "O cat lê; não executa."
+      },
+      {
+        "text": "Porque a máscara no diretório é rwx",
+        "why": "A máscara limita; não exige."
+      }
+    ]
+  },
+  "ex-mxb5qe4w": {
+    "prompt": "Num arquivo com a entrada nomeada `user:portal:rw-`, um administrador roda `chmod 640`. O que o portal consegue fazer agora?",
+    "choices": [
+      {
+        "text": "Ler e gravar, porque a própria entrada ainda diz rw-",
+        "why": "A entrada é limitada pela máscara."
+      },
+      {
+        "text": "Nada, porque o chmod tira todas as entradas da ACL",
+        "why": "As entradas ficam; o getfacl as lista."
+      },
+      {
+        "text": "Só ler: o chmod pôs a máscara em r--",
+        "why": "Isso. Os bits do meio do ls são a máscara."
+      },
+      {
+        "text": "Só gravar, porque os bits de grupo viraram r--",
+        "why": "A máscara permite r, não w."
+      }
+    ]
+  },
+  "ex-2gnmsg1k": {
+    "prompt": "Por que a máscara existe?",
+    "choices": [
+      {
+        "text": "Para guardar as permissões do grupo dono num segundo lugar",
+        "why": "Ela limita entradas; não é uma cópia."
+      },
+      {
+        "text": "Para ferramentas de nove bits ainda estreitarem um arquivo com ACL",
+        "why": "Isso."
+      },
+      {
+        "text": "Para esconder a ACL de usuários que não são root",
+        "why": "Qualquer um a lê com getfacl onde alcança o arquivo."
+      },
+      {
+        "text": "Para arquivos herdarem as entradas do diretório",
+        "why": "Isso é a ACL padrão."
+      }
+    ]
+  },
+  "ex-gxdckahm": {
+    "prompt": "Num arquivo marcado com `+`, onde você lê o acesso que as pessoas de fato têm?",
+    "choices": [
+      {
+        "text": "Nos três bits do meio do ls -l",
+        "why": "Esses são a máscara."
+      },
+      {
+        "text": "Na coluna #effective do getfacl, ao lado de cada entrada",
+        "why": "Isso."
+      },
+      {
+        "text": "No /etc/group, ao lado do nome de cada membro",
+        "why": "Grupos listam membros, não acesso a arquivos."
+      },
+      {
+        "text": "Na primeira linha do próprio arquivo",
+        "why": "O conteúdo não diz nada sobre acesso."
+      }
+    ]
+  },
+  "ex-f8nsxn8d": {
+    "prompt": "Depois do `setfacl -d` em /srv/clientes, a auditora ainda não lê o costa.txt. Por quê?",
+    "choices": [
+      {
+        "text": "Padrões só valem para arquivos criados pelo root",
+        "why": "O souza.txt foi criado pela maria e recebeu."
+      },
+      {
+        "text": "O padrão precisa de um reboot para valer",
+        "why": "Valeu para o próximo arquivo na hora."
+      },
+      {
+        "text": "Um padrão vale na criação, e o costa.txt já existia",
+        "why": "Isso. setfacl -R -m corrige o que existe."
+      },
+      {
+        "text": "Porque o umask do joao passa por cima de qualquer ACL padrão",
+        "why": "Uma ACL padrão substitui o umask para arquivos novos."
+      }
+    ]
+  },
+  "ex-e00tm2nx": {
+    "prompt": "Um documento é movido com `mv` do home de um usuário para /srv/clientes no mesmo sistema de arquivos. Que ACL ele tem?",
+    "choices": [
+      {
+        "text": "A que tinha no home",
+        "why": "Isso. Mover não cria nada, então nenhum padrão se aplica."
+      },
+      {
+        "text": "A padrão do diretório, porque agora mora ali",
+        "why": "Padrões só valem na criação."
+      },
+      {
+        "text": "Nenhuma: o mv tira todas as ACLs",
+        "why": "Ele mantém os atributos do arquivo."
+      },
+      {
+        "text": "A união das duas",
+        "why": "Nada junta listas."
+      }
+    ]
+  },
+  "ex-81h5mm2v": {
+    "prompt": "A auditora entra em contabil, que tem rw-, mas mantém a entrada nomeada r--. Ela pede para gravar. O que acontece?",
+    "choices": [
+      {
+        "text": "Permitido: o grupo concede gravação, e o acesso é somado",
+        "why": "O Linux nunca soma entradas."
+      },
+      {
+        "text": "Recusado: o kernel para no passo 2, antes dos grupos",
+        "why": "Isso. O passo 2 para antes de os grupos serem consultados."
+      },
+      {
+        "text": "Permitido uma vez, depois recusado até ela entrar de novo",
+        "why": "A resposta é a mesma toda vez."
+      },
+      {
+        "text": "Recusado, porque membros de contabil só podem ler",
+        "why": "contabil pode gravar; o joao gravou."
+      }
+    ]
+  },
+  "ex-vmddcc9c": {
+    "prompt": "A Maria é dona do silva.txt. Que entrada decide o que ela pode fazer com ele?",
+    "choices": [
+      {
+        "text": "A entrada de grupo, porque ela está em contabil",
+        "why": "A posse é conferida antes dos grupos."
+      },
+      {
+        "text": "A máscara, que limita todo mundo",
+        "why": "O dono fica fora da máscara."
+      },
+      {
+        "text": "A entrada de dono, user::",
+        "why": "Isso, e nada mais é olhado."
+      },
+      {
+        "text": "A entrada dela que conceder mais",
+        "why": "Entradas não são comparadas nem somadas."
+      }
+    ]
+  },
+  "ex-8c679drq": {
+    "prompt": "No NTFS, um grupo tem uma negação explícita de gravação e um usuário dele tem uma permissão explícita. O usuário consegue gravar?",
+    "choices": [
+      {
+        "text": "Sim, porque a entrada do próprio usuário é mais específica",
+        "why": "Essa é a regra do Linux, não a do NTFS."
+      },
+      {
+        "text": "Não: no mesmo nível, a negação é avaliada primeiro",
+        "why": "Isso."
+      },
+      {
+        "text": "Só se a herança estiver quebrada na pasta",
+        "why": "As duas entradas são explícitas; a herança não entra."
+      },
+      {
+        "text": "Sim, se o usuário entrar depois de a negação ser escrita",
+        "why": "O momento não muda a ordem de avaliação."
+      }
+    ]
+  },
+  "ex-vqhajh0c": {
+    "prompt": "Em `icacls D:\\Clientes /grant \"JATOBA\\Auditoria:(OI)(CI)R\"`, o que (OI)(CI) fazem?",
+    "choices": [
+      {
+        "text": "Concedem posse e controle total",
+        "why": "R é leitura; OI e CI são herança."
+      },
+      {
+        "text": "Tiram todas as entradas herdadas da pasta",
+        "why": "Isso é /inheritance:r."
+      },
+      {
+        "text": "Fazem a entrada descer para arquivos e subpastas",
+        "why": "Isso."
+      },
+      {
+        "text": "Limitam a concessão à própria pasta",
+        "why": "Fazem o contrário."
+      }
+    ]
+  },
+  "ex-trwx85k2": {
+    "prompt": "Ponha as classes na ordem em que o Linux as confere.",
+    "items": [
+      "dono",
+      "usuário nomeado",
+      "grupo dono e grupos nomeados",
+      "outros"
+    ]
+  },
+  "ex-622brfd3": {
+    "prompt": "Ponha em ordem como esta aula montou o diretório dos clientes.",
+    "items": [
+      "criar o grupo contabil e os membros",
+      "criar /srv/clientes com modo 2770",
+      "acrescentar entradas nomeadas para a auditora e o portal",
+      "definir uma ACL padrão para arquivos novos"
+    ]
+  },
+  "ex-d2jps346": {
+    "prompt": "Associe cada comando ao que ele faz.",
+    "pairs": [
+      {
+        "left": "setfacl -m u:auditoria:r f",
+        "right": "acrescenta uma entrada nomeada"
+      },
+      {
+        "left": "setfacl -d -m u:auditoria:r d",
+        "right": "define um modelo para arquivos novos"
+      },
+      {
+        "left": "setfacl -x u:auditoria f",
+        "right": "remove uma entrada nomeada"
+      },
+      {
+        "left": "setfacl -m m::rw f",
+        "right": "define a máscara"
+      }
+    ],
+    "right_distractors": [
+      "muda o dono do arquivo"
+    ]
+  },
+  "ex-2pvhexqa": {
+    "prompt": "O script de backup corrigido é dono rwx, grupo r-x, outros r-x. Qual é esse modo em octal?"
+  },
+  "ex-rnt9be9c": {
+    "prompt": "O silva.txt tinha 30 bytes. Depois que o João acrescentou `edited` e uma quebra de linha, quantos bytes passou a ter?"
+  },
+  "ex-5cwqbz45": {
+    "prompt": "A entrada da ACL que limita toda entrada nomeada e o grupo dono se chama ___.",
+    "blanks": [
+      {
+        "accept": [
+          "mascara",
+          "máscara"
+        ]
+      }
+    ]
+  },
+  "ex-87daqgrh": {
+    "prompt": "Quais afirmações sobre ACLs POSIX são verdadeiras? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "O chmod num arquivo com ACL muda a máscara",
+        "why": "Os bits do meio são a máscara."
+      },
+      {
+        "text": "Uma ACL padrão também concede acesso ao próprio diretório",
+        "why": "É só um modelo."
+      },
+      {
+        "text": "Uma entrada de usuário nomeado pode restringir um membro de um grupo que grava",
+        "why": "O passo 2 para."
+      },
+      {
+        "text": "O dono é limitado pela máscara",
+        "why": "O dono fica fora dela."
+      }
+    ]
+  }
+}

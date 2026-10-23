@@ -1,0 +1,455 @@
+{
+  "ex-1xk74n1v": {
+    "prompt": "Que pergunta um EDR faz que um antivírus não faz?",
+    "hint": "Uma é sobre um arquivo.",
+    "choices": [
+      {
+        "text": "Se um arquivo em disco bate com uma assinatura conhecida de malware",
+        "why": "Essa é a pergunta do próprio antivírus."
+      },
+      {
+        "text": "Se o que a máquina faz cabe no trabalho dela",
+        "why": "Isso: comportamento, julgado contra aquilo para que a máquina serve."
+      },
+      {
+        "text": "Se os pacotes da máquina estão todos na versão mais recente",
+        "why": "Isso é gestão de vulnerabilidades, a aula 16."
+      },
+      {
+        "text": "Se a senha de um usuário é forte o bastante",
+        "why": "Nenhuma parte do EDR julga senhas."
+      }
+    ]
+  },
+  "ex-t4rfh93m": {
+    "prompt": "Ponha as partes de um EDR na ordem em que trabalham depois que algo acontece numa máquina.",
+    "hint": "O nome lista a maioria delas.",
+    "items": [
+      "o sensor registra o evento como telemetria",
+      "uma regra bate com a telemetria e gera um alerta",
+      "uma pessoa lê o alerta",
+      "a máquina recebe a ação: evidência, parar, isolar"
+    ]
+  },
+  "ex-76h05m54": {
+    "prompt": "Depois de um alerta, que pergunta um EDR consegue responder e um antivírus que bloqueou o arquivo não consegue?",
+    "hint": "O que o EDR guarda?",
+    "choices": [
+      {
+        "text": "Se o arquivo era malicioso",
+        "why": "O antivírus respondeu isso quando bloqueou."
+      },
+      {
+        "text": "Que assinatura bateu, e que versão do banco a trazia",
+        "why": "Um antivírus registra exatamente isso."
+      },
+      {
+        "text": "Como remover o arquivo sem reiniciar",
+        "why": "Remover é a parte fácil, e os dois conseguem."
+      },
+      {
+        "text": "O que o iniciou, e se a mesma coisa aconteceu em outras máquinas",
+        "why": "Isso: a telemetria guardada, com pais, de todas as máquinas, responde."
+      }
+    ]
+  },
+  "ex-ypxa45b7": {
+    "prompt": "Dentro do web, `sudo auditctl -l` responde `Operation not permitted` mesmo com o auditd instalado. Por quê?",
+    "hint": "De quem é a trilha de auditoria?",
+    "choices": [
+      {
+        "text": "O kernel guarda uma trilha de auditoria para o computador inteiro e nunca entrega um pedaço a um contêiner",
+        "why": "Isso. Um produto que precisa dela roda no host, abaixo dos contêineres."
+      },
+      {
+        "text": "O sudo não tem permissão para rodar o auditctl",
+        "why": "O sudo o rodou como root; o kernel recusou o root dentro de um contêiner."
+      },
+      {
+        "text": "O auditd precisa ser iniciado antes",
+        "why": "Iniciá-lo falha do mesmo jeito, e por isso o build o desabilitou."
+      },
+      {
+        "text": "O arquivo de regras está vazio",
+        "why": "Uma lista vazia imprimiria \"No rules\", não um erro."
+      }
+    ]
+  },
+  "ex-wc427pga": {
+    "prompt": "Um processo se chama `[kworker/0:1]` nos argumentos. Que campo do registro do sensor mostra o que ele é de fato?",
+    "hint": "Quem escreve cada campo?",
+    "choices": [
+      {
+        "text": "cmd, porque traz a linha de comando completa com que o processo foi iniciado",
+        "why": "Um processo pode reescrever os próprios argumentos, então cmd diz o que ele quiser."
+      },
+      {
+        "text": "user, já que threads do kernel rodam como root",
+        "why": "Qualquer processo do root passaria nesse teste."
+      },
+      {
+        "text": "ppid, porque um worker do kernel de verdade tem pai 2",
+        "why": "Uma pista útil, e ainda não o que o programa é."
+      },
+      {
+        "text": "exe",
+        "why": "Isso: o link do kernel para o arquivo do programa, que o processo não muda."
+      }
+    ]
+  },
+  "ex-jzt4c9mv": {
+    "prompt": "Associe cada campo do registro do sensor à pergunta que ele responde.",
+    "pairs": [
+      {
+        "left": "ppid",
+        "right": "que processo iniciou este"
+      },
+      {
+        "left": "user",
+        "right": "com que conta ele roda"
+      },
+      {
+        "left": "exe",
+        "right": "que arquivo de programa está rodando"
+      },
+      {
+        "left": "host",
+        "right": "em que máquina aconteceu"
+      }
+    ],
+    "right_distractors": [
+      "quanto tempo o processo viveu"
+    ]
+  },
+  "ex-6sgjw4cq": {
+    "prompt": "Vinte execuções de /bin/true não deixaram nenhuma linha no sensor.jsonl. O que isso diz do sensor?",
+    "hint": "Como ele acha processos novos?",
+    "choices": [
+      {
+        "text": "Ignora de propósito programas em /usr/bin",
+        "why": "Nenhuma linha dele filtra por caminho; o sleep de /usr/bin foi registrado."
+      },
+      {
+        "text": "Já tinha travado, porque o /bin/true não grava nada que ele consiga ler",
+        "why": "O sleep seguinte foi registrado, então ele estava rodando."
+      },
+      {
+        "text": "Programas rodados pela ana não são registrados",
+        "why": "A primeira linha dele foi o sleep 1 da ana."
+      },
+      {
+        "text": "Olha a cada 0,2 s e perde o que termina no meio",
+        "why": "Isso: olhar periodicamente tem uma fresta, e um processo rápido cai nela."
+      }
+    ]
+  },
+  "ex-r8mz5wft": {
+    "prompt": "Por que a aula põe o sensor.py em /usr/local/sbin, que exige sudo para gravar?",
+    "choices": [
+      {
+        "text": "Porque o systemd-run só inicia programas de sbin",
+        "why": "O systemd-run inicia qualquer caminho que receber."
+      },
+      {
+        "text": "Porque o Python se recusa a rodar scripts de um diretório home",
+        "why": "O detect.py roda do home da ana sem problema."
+      },
+      {
+        "text": "Para que só o root mude o que ele registra",
+        "why": "Isso: um sensor que qualquer um edita registra o que essa pessoa quiser."
+      },
+      {
+        "text": "Porque arquivos em sbin são mantidos quando o laboratório é recriado",
+        "why": "Cada up joga a cópia inteira fora, sbin incluído."
+      }
+    ]
+  },
+  "ex-kj0vgya6": {
+    "prompt": "Por que o sensor grava um objeto JSON por linha em vez de um documento JSON grande?",
+    "choices": [
+      {
+        "text": "Cada linha é lida, acrescentada e enviada sozinha, sem o resto",
+        "why": "Isso: o jq e os coletores de log leem uma linha por vez."
+      },
+      {
+        "text": "Porque documentos JSON não podem ter mais de uma linha",
+        "why": "JSON pode ocupar quantas linhas quiser."
+      },
+      {
+        "text": "Porque o módulo json do Python só grava linhas únicas",
+        "why": "Ele grava documentos indentados com indent=."
+      },
+      {
+        "text": "Para manter o arquivo pequeno o bastante para caber na memória de um servidor",
+        "why": "O formato não muda muito o tamanho; o motivo é como ele é lido."
+      }
+    ]
+  },
+  "ex-mpyr6404": {
+    "prompt": "Qual destas está escrita do jeito que as regras desta aula são escritas?",
+    "hint": "Comportamento, a partir de conhecer a máquina.",
+    "choices": [
+      {
+        "text": "Alertar quando os workers do nginx iniciam qualquer programa",
+        "why": "Isso: o nginx nunca precisa, seja qual for o programa."
+      },
+      {
+        "text": "Alertar quando o SHA-256 de um arquivo está numa lista de malware conhecido",
+        "why": "Isso é uma assinatura, a ferramenta da aula 7."
+      },
+      {
+        "text": "Alertar quando um processo usa mais da metade do processador",
+        "why": "Isso é um alarme de desempenho, e dispara em toda hora movimentada."
+      },
+      {
+        "text": "Alertar em todo processo iniciado como root",
+        "why": "O root inicia processos o dia todo; ninguém leria esses alertas."
+      }
+    ]
+  },
+  "ex-wjpbvg24": {
+    "prompt": "O alerta do /tmp/update não tem nada depois de `under`. O que aconteceu?",
+    "hint": "Quando o sensor olhou, e quem era o pai então?",
+    "choices": [
+      {
+        "text": "O programa escondeu o pai dele do /proc",
+        "why": "É uma cópia do sleep; não esconde nada."
+      },
+      {
+        "text": "O detect.py descarta os pais de programas em /tmp, para encurtar a linha",
+        "why": "A regra imprime os pais de toda ocorrência."
+      },
+      {
+        "text": "O shell dele terminou antes, então o processo 1 já o tinha adotado quando o sensor olhou",
+        "why": "Isso: a cadeia para no pid 1, então a lista fica vazia."
+      },
+      {
+        "text": "O sudo apaga a cadeia de pais dos processos que inicia",
+        "why": "Os dois primeiros alertas mostram o sudo nas cadeias."
+      }
+    ]
+  },
+  "ex-58eb5z9r": {
+    "prompt": "A caça lista os processos 190, 191 e 193 da conta do portal. O que 192 provavelmente foi?",
+    "hint": "Leia o comando que o shell rodou.",
+    "choices": [
+      {
+        "text": "Um processo que outro usuário iniciou",
+        "why": "Nada mais rodava comandos no web naquele segundo."
+      },
+      {
+        "text": "Uma thread do kernel, que não tem arquivo de programa",
+        "why": "Threads do kernel não são numeradas dentro do espaço de processos do contêiner."
+      },
+      {
+        "text": "O próprio sensor reiniciando depois do download",
+        "why": "Rodou sem interrupção: as linhas dos dois lados da fresta são dele."
+      },
+      {
+        "text": "O cp, rápido demais para o sensor",
+        "why": "Isso: rodou entre o curl e o /tmp/update e terminou entre duas olhadas."
+      }
+    ]
+  },
+  "ex-p4sywhz3": {
+    "prompt": "Ponha a resposta ao alerta do /tmp/update na ordem em que a aula a faz.",
+    "hint": "O instinto é fazer a segunda primeiro.",
+    "items": [
+      "calcular o hash de /proc/<pid>/exe e ler o ambiente dele",
+      "parar o processo",
+      "carregar o isolate.nft",
+      "restaurar a máquina a um estado sabido bom"
+    ],
+    "trap": "Matar primeiro destrói a única coisa que poderia dizer o que o processo era."
+  },
+  "ex-v4z67hw1": {
+    "prompt": "Por que calcular o hash de /proc/<pid>/exe e não de /tmp/update?",
+    "choices": [
+      {
+        "text": "Porque o /tmp não é legível pelo root",
+        "why": "O root lê o /tmp como qualquer outra coisa."
+      },
+      {
+        "text": "É o programa que está de fato rodando, mesmo se o arquivo for apagado ou trocado",
+        "why": "Isso: o caminho pode mudar por baixo de você; a imagem em execução não."
+      },
+      {
+        "text": "Porque o sha256sum não lê arquivos em /tmp",
+        "why": "Ele lê qualquer arquivo que tenha permissão."
+      },
+      {
+        "text": "Porque os dois dão hashes diferentes",
+        "why": "Enquanto nada mudou, dão o mesmo."
+      }
+    ]
+  },
+  "ex-am0rrdwa": {
+    "prompt": "Por que isolar uma máquina em vez de desligá-la?",
+    "choices": [
+      {
+        "text": "Memória, processos e logs sobrevivem para quem responde",
+        "why": "Isso: um corte de energia destrói exatamente o que o exame precisa."
+      },
+      {
+        "text": "Desligar quebraria o portal para os clientes do escritório",
+        "why": "O isolamento também quebra o portal para eles."
+      },
+      {
+        "text": "Um contêiner não pode ser desligado",
+        "why": "O hostlab.sh down desliga todos."
+      },
+      {
+        "text": "O isolamento também remove o que estava na máquina",
+        "why": "Não remove nada; só corta a rede."
+      }
+    ]
+  },
+  "ex-bbhqv6ay": {
+    "prompt": "O isolate.nft descarta tudo o que entra e sai, menos o loopback e um serviço com uma máquina. Em que porta TCP fica esse serviço?",
+    "hint": "Quem responde entra a partir do admin."
+  },
+  "ex-91dwzpat": {
+    "prompt": "Com o isolate.nft carregado, o seu shell no web continuou funcionando. Por quê?",
+    "hint": "Como o hostlab.sh chega a uma máquina?",
+    "choices": [
+      {
+        "text": "Porque a tabela isenta as conexões que já estavam abertas",
+        "why": "Nada nela fala de estado de conexão."
+      },
+      {
+        "text": "Porque o nftables deixa sem filtro o tráfego do próprio root na máquina",
+        "why": "Ele filtra pacotes do root como os de qualquer um."
+      },
+      {
+        "text": "O shell entra direto na máquina, sem nenhuma rede no meio do caminho",
+        "why": "Isso: mais ou menos como o canal próprio de um agente com o console."
+      },
+      {
+        "text": "Porque o endereço do computador do laboratório é permitido pela segunda regra",
+        "why": "Só o endereço do admin é permitido, e só para SSH."
+      }
+    ]
+  },
+  "ex-2tyqk7y7": {
+    "prompt": "Como o sensor de um produto evita a fresta por onde o /bin/true passou?",
+    "hint": "Olhar versus ser avisado.",
+    "choices": [
+      {
+        "text": "O kernel o chama, por eBPF ou callbacks, quando um programa começa",
+        "why": "Isso: nada é curto demais, e os pais ainda estão vivos."
+      },
+      {
+        "text": "Olhando o /proc mil vezes por segundo em vez de cinco",
+        "why": "Olhar mais rápido estreita a fresta e nunca a fecha."
+      },
+      {
+        "text": "Varrendo todos os arquivos do disco uma vez por hora",
+        "why": "Isso acha arquivos, não processos que já terminaram."
+      },
+      {
+        "text": "Guardando uma cópia de todo programa instalado",
+        "why": "Uma cópia não diz nada sobre o que rodou."
+      }
+    ]
+  },
+  "ex-0qev4nvq": {
+    "prompt": "Associe cada fraqueza do EDR da aula ao que um produto faz a respeito.",
+    "pairs": [
+      {
+        "left": "olhar periodicamente perde processos curtos",
+        "right": "eventos do kernel: eBPF, callbacks, ETW"
+      },
+      {
+        "left": "o root pode parar o sensor",
+        "right": "proteção contra adulteração, e silêncio como alerta"
+      },
+      {
+        "left": "telemetria guardada na própria máquina",
+        "right": "registros enviados para fora da máquina assim que feitos"
+      },
+      {
+        "left": "isolamento à mão",
+        "right": "um botão no console, ou uma ação automática"
+      }
+    ]
+  },
+  "ex-htft52cf": {
+    "prompt": "Um escritório compra um EDR e liga todas as regras. Dois meses depois ninguém lê os alertas. O que foi pulado?",
+    "choices": [
+      {
+        "text": "Comprar mais licenças, para que todas as máquinas informem",
+        "why": "Mais máquinas seriam mais alertas sem ler."
+      },
+      {
+        "text": "Ligar o isolamento automático para todas as regras",
+        "why": "Isolar em regras que disparam com trabalho normal pararia o negócio."
+      },
+      {
+        "text": "O ajuste fino",
+        "why": "Isso: decidir, alerta por alerta, o que é o normal deste escritório."
+      },
+      {
+        "text": "Desinstalar o antivírus, que disputa eventos com o EDR",
+        "why": "Os dois rodam juntos na maioria das máquinas; não é por isso que alertas ficam sem leitura."
+      }
+    ]
+  },
+  "ex-qwe4rba7": {
+    "prompt": "Uma empresa roda quarenta contêineres num host e quer telemetria de processos de todos. Onde o sensor deve rodar?",
+    "hint": "Onde estão os eventos do kernel?",
+    "choices": [
+      {
+        "text": "Dentro de cada contêiner, um sensor por contêiner",
+        "why": "Cada um veria o que o sensor desta aula viu, sem os eventos do kernel."
+      },
+      {
+        "text": "Numa máquina separada que varre os contêineres pela rede",
+        "why": "Uma varredura vê portas, nunca processos."
+      },
+      {
+        "text": "No host, abaixo dos contêineres, onde está o kernel",
+        "why": "Isso: um sensor ali vê os processos de todos os contêineres quando começam."
+      },
+      {
+        "text": "Na imagem, para que todo contêiner novo já comece com um",
+        "why": "Ainda é um sensor por contêiner, com os mesmos pontos cegos."
+      }
+    ]
+  },
+  "ex-vtcfwgaz": {
+    "prompt": "Quais destas dariam boas regras para a conta do portal no web? Escolha todas as que se aplicam.",
+    "hint": "De que o trabalho do portal nunca precisa?",
+    "choices": [
+      {
+        "text": "portal inicia ssh ou scp",
+        "why": "O portal nunca se conecta a outras máquinas."
+      },
+      {
+        "text": "portal roda python3",
+        "why": "Esse é o próprio portal, o dia todo."
+      },
+      {
+        "text": "portal inicia um programa de /dev/shm",
+        "why": "Nada legítimo roda dali."
+      },
+      {
+        "text": "os workers do nginx leem arquivos em /var/www",
+        "why": "Servir arquivos é o trabalho do nginx."
+      }
+    ]
+  },
+  "ex-xnr27q36": {
+    "prompt": "Cortar uma máquina da rede, menos para quem responde, mantendo-a ligada, se chama ___.",
+    "blanks": [
+      {
+        "accept": [
+          "isolamento",
+          "isolar"
+        ]
+      }
+    ]
+  },
+  "ex-2rk9cwb9": {
+    "prompt": "O sensor dorme 0,2 s entre uma olhada e outra. Quantas vezes por segundo ele olha?"
+  }
+}
