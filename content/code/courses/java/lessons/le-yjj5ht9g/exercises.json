@@ -1,0 +1,538 @@
+[
+  {
+    "id": "ex-6ph4kqks",
+    "version": 1,
+    "section": "language-annotations",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Without `@Override`, the `Book` class with `tostring()` compiles. What does the annotation add?",
+    "hint": "What did `javac` say with it?",
+    "choices": [
+      {
+        "text": "It makes `tostring` count as `toString`",
+        "correct": false,
+        "why": "No annotation changes which method overrides which; the spelling decides."
+      },
+      {
+        "text": "A check: refuse if nothing above is overridden",
+        "correct": true,
+        "why": "Right: `method does not override or implement a method from a supertype`."
+      },
+      {
+        "text": "Faster calls, because the JVM can skip the lookup",
+        "correct": false,
+        "why": "`@Override` has SOURCE retention; the JVM never sees it."
+      }
+    ]
+  },
+  {
+    "id": "ex-a7r8200b",
+    "version": 1,
+    "section": "language-annotations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`lendBook` carries `@Deprecated(since = \"2.0\", forRemoval = true)`. What happens when `Counter` calls it?",
+    "hint": "Compile, then run.",
+    "choices": [
+      {
+        "text": "`javac` refuses to compile `Counter`",
+        "correct": false,
+        "why": "It compiled with one warning; nothing about deprecation is an error."
+      },
+      {
+        "text": "It compiles, and the call throws `UnsupportedOperationException` when it runs",
+        "correct": false,
+        "why": "`java Counter` printed `lent 978-0-13-468599-1`: a deprecated method works as before."
+      },
+      {
+        "text": "A `[removal]` warning at the call, and it runs as before",
+        "correct": true,
+        "why": "Right: the warning is about a future version, not this one."
+      },
+      {
+        "text": "Nothing, unless `-Xlint:deprecation` is given",
+        "correct": false,
+        "why": "That is the plain `@Deprecated`; `forRemoval` warns by default."
+      }
+    ]
+  },
+  {
+    "id": "ex-b78qnpgr",
+    "version": 1,
+    "section": "language-annotations",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each annotation to what the compiler does with it.",
+    "hint": "Section 02 showed each one.",
+    "pairs": [
+      {
+        "left": "`@Override`",
+        "right": "refuses a method that overrides nothing"
+      },
+      {
+        "left": "`@Deprecated`",
+        "right": "notes or warns at every use"
+      },
+      {
+        "left": "`@SuppressWarnings`",
+        "right": "stays quiet about a named kind of warning"
+      },
+      {
+        "left": "`@FunctionalInterface`",
+        "right": "refuses an interface with two abstract methods"
+      }
+    ],
+    "right_distractors": [
+      "generates the method's body"
+    ]
+  },
+  {
+    "id": "ex-d43p5mf5",
+    "version": 1,
+    "section": "language-annotations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where should `@SuppressWarnings(\"removal\")` go?",
+    "hint": "Think of the next warning nobody has seen.",
+    "choices": [
+      {
+        "text": "On the class, so one annotation covers every method in it",
+        "correct": false,
+        "why": "That also hides every later removal warning in the class, including ones nobody has read."
+      },
+      {
+        "text": "On the deprecated method itself, in the library",
+        "correct": false,
+        "why": "The library's author wants callers warned; silencing belongs to a caller that decided."
+      },
+      {
+        "text": "On the smallest declaration that needs it, such as one method",
+        "correct": true,
+        "why": "Right: a method rather than a class, with a comment when the reason is not obvious."
+      }
+    ]
+  },
+  {
+    "id": "ex-9erct522",
+    "version": 1,
+    "section": "language-annotations",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did `javac` refuse `Rule`?",
+    "hint": "Count its abstract methods.",
+    "choices": [
+      {
+        "text": "It has two abstract methods, and the annotation promises one",
+        "correct": true,
+        "why": "Right: `@FunctionalInterface` promises exactly one, so a lambda can implement it."
+      },
+      {
+        "text": "An interface may not carry any annotation",
+        "correct": false,
+        "why": "Interfaces carry annotations all the time; this one broke the promise it made."
+      },
+      {
+        "text": "`describe` returns a `String`, and functional interfaces return only `boolean`",
+        "correct": false,
+        "why": "The return type is free; the count of abstract methods is what matters."
+      }
+    ]
+  },
+  {
+    "id": "ex-es4c0bza",
+    "version": 1,
+    "section": "framework-annotations",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Three annotations were placed on `Target`. How many did `getAnnotations()` return while the program ran?",
+    "hint": "Only one retention reaches the JVM.",
+    "choices": [
+      {
+        "text": "Three, all of them",
+        "correct": false,
+        "why": "`InSource` and `InClassFile` never reached the running program."
+      },
+      {
+        "text": "Two: the ones written into the class file",
+        "correct": false,
+        "why": "Two were in the class file, and only the `RUNTIME` one was loaded."
+      },
+      {
+        "text": "One, `@AtRunTime`",
+        "correct": true,
+        "why": "Right: the only one with `RUNTIME` retention."
+      },
+      {
+        "text": "None, because nested annotation types are invisible to reflection",
+        "correct": false,
+        "why": "It printed `@Kept.AtRunTime()`; nesting changes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ypkkdhw",
+    "version": 1,
+    "section": "framework-annotations",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the retentions from the one that lives shortest to the one that lives longest.",
+    "hint": "Source, class file, running program.",
+    "items": [
+      "`SOURCE`",
+      "`CLASS`",
+      "`RUNTIME`"
+    ]
+  },
+  {
+    "id": "ex-e1azgw2f",
+    "version": 1,
+    "section": "framework-annotations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`javap -v` listed `Kept$InClassFile` under `RuntimeInvisibleAnnotations`. What does that mean?",
+    "hint": "It is the default retention.",
+    "choices": [
+      {
+        "text": "The annotation was dropped by the compiler",
+        "correct": false,
+        "why": "Dropped annotations are listed nowhere; `InSource` is the one that was dropped."
+      },
+      {
+        "text": "It is in the class file, and the JVM does not load it",
+        "correct": true,
+        "why": "Right: `CLASS` retention, there for bytecode tools and invisible to reflection."
+      },
+      {
+        "text": "The JVM loads it but only `javap` is allowed to read it",
+        "correct": false,
+        "why": "Nothing loads it at run time; `javap` reads the file, not a running JVM."
+      },
+      {
+        "text": "It is hidden from reflection only until `setAccessible(true)` is called",
+        "correct": false,
+        "why": "`setAccessible` is about private members; it cannot bring back what was never loaded."
+      }
+    ]
+  },
+  {
+    "id": "ex-vg6r1wtr",
+    "version": 1,
+    "section": "framework-annotations",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You write a test framework's `@Test` annotation and forget `@Retention`. Every test is then ignored. Why?",
+    "hint": "What is the default retention, and who reads the annotation?",
+    "choices": [
+      {
+        "text": "Without `@Retention` the annotation does not compile",
+        "correct": false,
+        "why": "It compiles; the default is simply not the one a framework needs."
+      },
+      {
+        "text": "The default is `CLASS`, so reflection finds no `@Test` on any method",
+        "correct": true,
+        "why": "Right: `isAnnotationPresent` answers false, and the runner skips every method as it skipped `helper`."
+      },
+      {
+        "text": "The default is `SOURCE`, and the compiler rejects methods marked with it",
+        "correct": false,
+        "why": "The default is `CLASS`, and nothing is rejected: the methods compile and are never found."
+      }
+    ]
+  },
+  {
+    "id": "ex-1wkjmr6m",
+    "version": 1,
+    "section": "framework-annotations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Runner` printed `FAILED: acceptsTheSecondBook`. What was actually wrong?",
+    "hint": "Recompute the check digit.",
+    "choices": [
+      {
+        "text": "`validIsbn` has a bug in its weights",
+        "correct": false,
+        "why": "It accepted `978-0-13-468599-1` and rejected the typo, so the weights work."
+      },
+      {
+        "text": "Reflection called the method on the wrong object",
+        "correct": false,
+        "why": "There was one instance, and the other two checks ran on it correctly."
+      },
+      {
+        "text": "`getDeclaredMethods` ran it before the class was ready",
+        "correct": false,
+        "why": "Order does not matter here; every check is independent."
+      },
+      {
+        "text": "`978-1-61729-136-8` has a wrong check digit",
+        "correct": true,
+        "why": "Right: it was invented for earlier examples and nobody computed it; the check found real bad data."
+      }
+    ]
+  },
+  {
+    "id": "ex-pms7pk67",
+    "version": 1,
+    "section": "framework-annotations",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A method called with `m.invoke(instance)` throws `AssertionError`. What does `Runner` catch, and where is the `AssertionError`?",
+    "hint": "Lesson 38's cause.",
+    "choices": [
+      {
+        "text": "An `InvocationTargetException`, with the `AssertionError` as its cause",
+        "correct": true,
+        "why": "Right: so `Runner` reports `e.getCause().getMessage()`."
+      },
+      {
+        "text": "The `AssertionError` itself, thrown straight through `invoke`",
+        "correct": false,
+        "why": "Reflection wraps whatever the method throws; catching `AssertionError` would miss it."
+      },
+      {
+        "text": "An `IllegalAccessException`, because the check failed",
+        "correct": false,
+        "why": "That is for calling something you may not access; a failing check is a different thing."
+      }
+    ]
+  },
+  {
+    "id": "ex-7b6n0cs7",
+    "version": 1,
+    "section": "framework-annotations",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The part of the library that lets a running program list a class's methods and call them by name is called ___.",
+    "hint": "`java.lang.reflect`",
+    "blanks": [
+      {
+        "accept": [
+          "reflection"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-117p92sm",
+    "version": 1,
+    "section": "your-own",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `@Target(ElementType.FIELD)` on `@NotBlank` decide?",
+    "hint": "`Misplaced` tried something else.",
+    "choices": [
+      {
+        "text": "Which object the validator checks",
+        "correct": false,
+        "why": "The validator checks whatever it is given; `@Target` is about where the annotation is written."
+      },
+      {
+        "text": "That it may be written only on fields",
+        "correct": true,
+        "why": "Right: on a method it is refused at compile time."
+      },
+      {
+        "text": "That the field it marks must be `private`",
+        "correct": false,
+        "why": "`name` and `email` are package-private and were marked fine."
+      },
+      {
+        "text": "That reflection can read it while the program runs",
+        "correct": false,
+        "why": "That is `@Retention(RUNTIME)`, the other annotation on it."
+      }
+    ]
+  },
+  {
+    "id": "ex-egrhj82p",
+    "version": 1,
+    "section": "your-own",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The second `Member` had `phone` set to `\"\"`. Why is it not in the list of problems?",
+    "hint": "What does the validator do with a field that has no `@NotBlank`?",
+    "choices": [
+      {
+        "text": "An empty string is not blank",
+        "correct": false,
+        "why": "`\"\".isBlank()` is true; the field was never checked."
+      },
+      {
+        "text": "`phone` has no `@NotBlank`, so `getAnnotation` returned `null` and it was skipped",
+        "correct": true,
+        "why": "Right: the rule lives on the field, and no rule means no check."
+      },
+      {
+        "text": "`getDeclaredFields` skips fields declared after the annotated ones",
+        "correct": false,
+        "why": "It returns every field the class declares."
+      }
+    ]
+  },
+  {
+    "id": "ex-7a3mtdgq",
+    "version": 1,
+    "section": "your-own",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An annotation type is declared with the keyword `___`, and an element such as `message()` gets a value used when none is written with `default`.",
+    "hint": "An at-sign and a familiar keyword.",
+    "blanks": [
+      {
+        "accept": [
+          "@interface"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-668f3d5g",
+    "version": 1,
+    "section": "your-own",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague adds `@NotBlank` to a field of a new class and is surprised that blank values still get saved. The annotation is declared exactly as in this lesson. What is the most likely reason?",
+    "hint": "An annotation does nothing by itself.",
+    "choices": [
+      {
+        "text": "The new class is in another package, so the annotation is invisible",
+        "correct": false,
+        "why": "Visibility of the annotation type is a compile-time matter, and it compiled."
+      },
+      {
+        "text": "`RUNTIME` retention is lost when the object is saved",
+        "correct": false,
+        "why": "Retention is about the class, not about objects or saving them."
+      },
+      {
+        "text": "Nothing in the program calls the validator on that class's objects at all",
+        "correct": true,
+        "why": "Right: a field marked with an annotation no code reads is a field with a comment on it."
+      }
+    ]
+  },
+  {
+    "id": "ex-08avwxgq",
+    "version": 1,
+    "section": "your-own",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these may be the type of an annotation element like `message()`? Choose all that apply.",
+    "hint": "The value has to be written into the class file.",
+    "choices": [
+      {
+        "text": "`String`",
+        "correct": true,
+        "why": "Yes: `message()` is one."
+      },
+      {
+        "text": "`int[]`",
+        "correct": true,
+        "why": "Yes: primitives and arrays of them are allowed."
+      },
+      {
+        "text": "`java.util.List<String>`",
+        "correct": false,
+        "why": "No: a collection cannot be written into a class file as a constant; an array can."
+      },
+      {
+        "text": "`Member`",
+        "correct": false,
+        "why": "No: an ordinary class is not among the allowed types."
+      }
+    ]
+  },
+  {
+    "id": "ex-k1h0x54h",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which annotation would make `Kept` print two lines instead of one, with no other change?",
+    "hint": "Which of the other two could reach the running program?",
+    "choices": [
+      {
+        "text": "Adding `@Target(ElementType.TYPE)` to `InClassFile`",
+        "correct": false,
+        "why": "`@Target` decides where it may be written, not how long it lives."
+      },
+      {
+        "text": "Changing `InClassFile`'s retention to `RUNTIME`",
+        "correct": true,
+        "why": "Right: then the JVM loads it and `getAnnotations()` returns both."
+      },
+      {
+        "text": "Adding `@Override` to `main`",
+        "correct": false,
+        "why": "That is a compile-time check, and `main` overrides nothing, so it would not even compile."
+      },
+      {
+        "text": "Calling `setAccessible(true)` on `Target.class` before asking",
+        "correct": false,
+        "why": "`setAccessible` is about access to members; it cannot load an annotation the JVM never kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-mn6za2ch",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A framework method has `@GetMapping(\"/books\")` on it. Which retention must `@GetMapping` have for the framework to route requests by it?",
+    "hint": "The framework reads it while the program runs.",
+    "choices": [
+      {
+        "text": "`SOURCE`",
+        "correct": false,
+        "why": "Gone after compiling; nothing would be left to route by."
+      },
+      {
+        "text": "`CLASS`",
+        "correct": false,
+        "why": "In the class file but never loaded, so reflection would not see it."
+      },
+      {
+        "text": "`RUNTIME`",
+        "correct": true,
+        "why": "Right: every annotation a framework reads at run time has it."
+      }
+    ]
+  },
+  {
+    "id": "ex-m3xse98r",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`LoanChecks` declares four public methods. How many did `Runner` call?",
+    "hint": "`helper` carries no annotation.",
+    "value": 3,
+    "tolerance": 0
+  }
+]

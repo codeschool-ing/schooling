@@ -1,0 +1,566 @@
+[
+  {
+    "id": "ex-n0eemjhe",
+    "version": 1,
+    "section": "calling-c",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Go file has a C function in a comment, then a blank line, then `import \"C\"`. The build says `C.mean` is undefined. Why?",
+    "hint": "The documentation's word for where the comment must be is \"immediately\".",
+    "choices": [
+      {
+        "text": "Separated by that line, it is no longer the preamble, so none of it is compiled as C",
+        "correct": true,
+        "why": "Right. Only a comment immediately before the import is the preamble; separated by a blank line, it is just a comment and nothing in it is compiled as C."
+      },
+      {
+        "text": "C function names must start with a capital letter to be visible from Go",
+        "correct": false,
+        "why": "The documentation says every name declared in the preamble may be used, even one that starts with a lower-case letter."
+      },
+      {
+        "text": "`static` functions in the preamble cannot be called from Go",
+        "correct": false,
+        "why": "Static functions are permitted; it is static variables that Go may not reference. `mean` in section 02 was static."
+      },
+      {
+        "text": "gcc is missing, so cgo skipped the comment",
+        "correct": false,
+        "why": "Without a compiler cgo is off and the file importing `\"C\"` is left out of the build altogether, which gives a different error."
+      }
+    ]
+  },
+  {
+    "id": "ex-3yxb7tr5",
+    "version": 1,
+    "section": "calling-c",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To link the C maths library, the preamble carries the directive `#cgo ___: -lm`.",
+    "hint": "The variable of the same family that you would set in the environment is `CGO_` plus this word.",
+    "blanks": [
+      {
+        "accept": [
+          "LDFLAGS"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3fzgxqyy",
+    "version": 1,
+    "section": "calling-c",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go build` fails with `cannot use total (variable of type int) as C.long value in argument to (C.mean)`. What is the fix?",
+    "hint": "Go never converts between numeric types on its own, and a C type is a Go type.",
+    "choices": [
+      {
+        "text": "Declare `total` as `int64`, which is the same size as a C `long` here",
+        "correct": false,
+        "why": "An `int64` is still not a `C.long`: they are distinct types even where the bits agree, so the error would only change its wording."
+      },
+      {
+        "text": "Pass `C.long(total)`",
+        "correct": true,
+        "why": "Right. Every value crosses with an explicit conversion into the C type the declaration asks for."
+      },
+      {
+        "text": "Change the C function to take `int`, which cgo maps to Go's `int`",
+        "correct": false,
+        "why": "`C.int` is its own Go type, 4 bytes on this machine, and Go's `int` is 8. The error would name `C.int` instead."
+      },
+      {
+        "text": "Add `#cgo CFLAGS: -std=gnu99`, so that gcc accepts the call",
+        "correct": false,
+        "why": "The error comes from the Go compiler checking the call against the preamble's declaration; gcc never sees it."
+      }
+    ]
+  },
+  {
+    "id": "ex-r25p7gnd",
+    "version": 1,
+    "section": "calling-c",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the commands `go build -x` printed for `first`'s package in the order they ran.",
+    "hint": "Nothing can be compiled as Go until the file has been split, and the link comes last.",
+    "items": [
+      "`cgo` splits main.go into a Go half and a C half",
+      "`gcc -c` compiles the C half and the files cgo generated",
+      "`gcc` links those objects with `-lm`, to learn which symbols come from shared libraries",
+      "`cgo -dynout` writes that list down as Go",
+      "`compile` compiles the Go half",
+      "`link -extld=gcc` links the program, with gcc doing the final step"
+    ]
+  },
+  {
+    "id": "ex-wvmd9vy9",
+    "version": 1,
+    "section": "memory-across-the-line",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`gzlines` prints `C.GoString(C.zlibVersion())`. Who frees the C string that `zlibVersion` returned?",
+    "hint": "Ask who allocated it.",
+    "choices": [
+      {
+        "text": "`gzlines`, with `C.free`, right after `C.GoString` copies it",
+        "correct": false,
+        "why": "Only memory you allocated, like a `C.CString`, is yours to free. Freeing zlib's own string hands memory that was never `malloc`ed to `free`."
+      },
+      {
+        "text": "The garbage collector, once the Go copy is unreachable",
+        "correct": false,
+        "why": "The collector frees the Go string `C.GoString` made. It does not know the C string exists."
+      },
+      {
+        "text": "Nobody: zlib owns it",
+        "correct": true,
+        "why": "Right. It points into zlib's own memory. The program copies it into Go and leaves the original alone."
+      },
+      {
+        "text": "`gzclose`, which releases everything zlib allocated for the file",
+        "correct": false,
+        "why": "`gzclose` frees the `gzFile` and its state. `zlibVersion` has nothing to do with any file."
+      }
+    ]
+  },
+  {
+    "id": "ex-y3x76ngk",
+    "version": 1,
+    "section": "memory-across-the-line",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each value from section 03 with what releases it.",
+    "hint": "One of them is not memory C allocated at all.",
+    "pairs": [
+      {
+        "left": "`C.CString(name)`",
+        "right": "`C.free`, called by your code"
+      },
+      {
+        "left": "the string `C.GoString` returns",
+        "right": "the garbage collector"
+      },
+      {
+        "left": "the `gzFile` from `gzopen`",
+        "right": "`gzclose`"
+      },
+      {
+        "left": "`cgo.NewHandle(counts)`",
+        "right": "`h.Delete()`"
+      }
+    ],
+    "right_distractors": [
+      "`runtime.Pinner.Unpin`"
+    ]
+  },
+  {
+    "id": "ex-8bme22pw",
+    "version": 1,
+    "section": "memory-across-the-line",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these follow the pointer-passing rules, with cgocheck on and no `runtime.Pinner`? Choose every one that does.",
+    "hint": "The question each time: is it Go memory, and does that memory hold a Go pointer?",
+    "choices": [
+      {
+        "text": "Passing `&buf[0]` of a `[]byte` to a C function that reads it and returns",
+        "correct": true,
+        "why": "Allowed: Go memory with no Go pointers inside, lent for the length of the call."
+      },
+      {
+        "text": "Passing `&s`, a Go variable of a C struct type whose `data` field holds a pointer from `C.CString`",
+        "correct": true,
+        "why": "Allowed: `s` is Go memory, but the pointer inside it is a C pointer, which the collector does not manage."
+      },
+      {
+        "text": "Passing `&s` whose `data` field points into a Go `[]byte`",
+        "correct": false,
+        "why": "That is `rules/main.go`: Go memory holding a pointer to unpinned Go memory, and the runtime panicked on the call."
+      },
+      {
+        "text": "A C function storing the `&buf[0]` it was given in a global, to read it on the next call",
+        "correct": false,
+        "why": "C may not keep a Go pointer after the call returns unless the memory is pinned, and here it is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-0n3aabcd",
+    "version": 1,
+    "section": "memory-across-the-line",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `GODEBUG=cgocheck=0`, `rules` printed `10` and exit status 0. What does that run show?",
+    "hint": "What was turned off, and what did the program happen to do before anything could go wrong?",
+    "choices": [
+      {
+        "text": "That the panic was a false alarm, since the right answer came out",
+        "correct": false,
+        "why": "The rule was broken either way. The answer was right because nothing moved `line` during a call that short."
+      },
+      {
+        "text": "That `span_len` copied the bytes, so no Go pointer reached C",
+        "correct": false,
+        "why": "`span_len` read the `len` field of a struct whose `data` still pointed into Go memory; nothing was copied."
+      },
+      {
+        "text": "Only that the check was off: the violation is still there and fails the day the collector runs at the wrong moment",
+        "correct": true,
+        "why": "Right. Turning the check off removes the alarm, not the bug; the fix is to pin `line` or to keep Go pointers out of what C receives."
+      },
+      {
+        "text": "That cgocheck only applies to builds made with `-race`",
+        "correct": false,
+        "why": "The check is on by default as `GODEBUG=cgocheck=1` in every build; it caught `rules` in an ordinary one."
+      }
+    ]
+  },
+  {
+    "id": "ex-kjdv3zv1",
+    "version": 1,
+    "section": "the-cost-per-call",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the run in section 04, `BenchmarkGoAdd1` took 0.7894 ns/op and `BenchmarkCAdd1` took 28.70 ns/op. To the nearest whole number, how many times longer did the call into C take?",
+    "hint": "Divide the C figure by the Go one.",
+    "value": 36,
+    "tolerance": 2,
+    "unit": "times"
+  },
+  {
+    "id": "ex-v42kh7td",
+    "version": 1,
+    "section": "the-cost-per-call",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Moving the per-line loop into C cut 20,000 crossings to one, yet saved 0.26 ms out of 2.12 ms rather than the 0.57 ms that 20,000 × 28.70 ns predicts. What explains the gap?",
+    "hint": "What else happens in each of those 20,000 calls?",
+    "choices": [
+      {
+        "text": "cgocheck inspects every pointer argument, and the per-line version has more of them",
+        "correct": false,
+        "why": "cgocheck runs on the per-line calls too, and the benchmark of `add1`, which passes no pointer, still costs 28.70 ns."
+      },
+      {
+        "text": "Each call also does about 90 ns of `crc32` work, so the empty-function price is a ceiling here",
+        "correct": true,
+        "why": "Right. The crossing measured on an empty function is the worst case; next to real work in every call, what batching saves is smaller."
+      },
+      {
+        "text": "gcc inlined `crc32` into `crc_lines`, which made the C loop slower",
+        "correct": false,
+        "why": "`crc32` lives in `libz.so.1`, a shared library, and gcc cannot inline across that boundary."
+      },
+      {
+        "text": "The C loop computes a different checksum, so the two are not comparable",
+        "correct": false,
+        "why": "The benchmark checks every version against `hash/crc32` before timing it, and all four agreed."
+      }
+    ]
+  },
+  {
+    "id": "ex-jx3j5a5f",
+    "version": 1,
+    "section": "the-cost-per-call",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A web service calls a C function that waits up to two seconds on a hardware device, once in every request handler. Under 300 requests at once, what does section 04 predict?",
+    "hint": "Section 04 counted threads, not goroutines.",
+    "choices": [
+      {
+        "text": "About 300 goroutines parked and the same few threads, as with any blocking call in Go",
+        "correct": false,
+        "why": "That is what `time.Sleep` did: 6 threads. A goroutine waiting inside C holds its thread, as `usleep` showed with 104."
+      },
+      {
+        "text": "Requests queue behind GOMAXPROCS threads, so at most 4 wait at once",
+        "correct": false,
+        "why": "The scheduler starts a new thread whenever one disappears into C, precisely so that Go code keeps running; nothing caps it at GOMAXPROCS."
+      },
+      {
+        "text": "Around 300 operating system threads, one held by each waiting request",
+        "correct": true,
+        "why": "Right. 100 goroutines asleep in C gave 104 threads; 300 waiting in C give roughly 300, a thread count that follows the traffic."
+      },
+      {
+        "text": "The runtime panics after cgocheck detects a blocking call",
+        "correct": false,
+        "why": "cgocheck checks pointers passed to C. A C function is free to block, and the runtime pays for it with a thread."
+      }
+    ]
+  },
+  {
+    "id": "ex-62038zdp",
+    "version": 1,
+    "section": "what-you-give-up",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ldd bin/gzlines` lists `libz.so.1`. You copy `gzlines` to a server that has no zlib installed. What happens?",
+    "hint": "Who reads that list, and when?",
+    "choices": [
+      {
+        "text": "It runs, because Go copied zlib into the binary when it linked",
+        "correct": false,
+        "why": "That is `gzlines-static`, built with `-extldflags=-static`. The plain build only records that it needs `libz.so.1`."
+      },
+      {
+        "text": "It starts, and fails with a Go error at the first call to `gzopen`",
+        "correct": false,
+        "why": "The library is looked for before `main` starts, by the loader, not at the call."
+      },
+      {
+        "text": "The loader cannot find `libz.so.1`, and `gzlines` never starts",
+        "correct": true,
+        "why": "Right. A dynamically linked binary needs every library `ldd` lists on the machine that runs it."
+      },
+      {
+        "text": "It falls back to `compress/gzip`, as `os/user` falls back to `/etc/passwd`",
+        "correct": false,
+        "why": "That fallback is chosen at build time inside the standard library. `gzlines` has no pure Go half to fall back on."
+      }
+    ]
+  },
+  {
+    "id": "ex-9p6zjmmx",
+    "version": 1,
+    "section": "what-you-give-up",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`CGO_ENABLED=1 GOARCH=arm64 CC=aarch64-linux-gnu-gcc go build ./gzlines` stopped because that compiler is not installed. If it were installed, what else would the build need?",
+    "hint": "The C half has to be linked, for ARM, against the C libraries it uses.",
+    "choices": [
+      {
+        "text": "Nothing: with a cross compiler named in `CC`, cgo builds for ARM",
+        "correct": false,
+        "why": "The compiler is one piece. Linking needs ARM's C library and an ARM `libz` as well."
+      },
+      {
+        "text": "The C library's headers and libraries for ARM, and an ARM build of zlib",
+        "correct": true,
+        "why": "Right. Every C library the program uses has to exist for the target, which is why each one multiplies the work."
+      },
+      {
+        "text": "`qemu-aarch64-static`, to run gcc for ARM on this machine",
+        "correct": false,
+        "why": "qemu runs the finished ARM binary. A cross compiler is an ordinary x86-64 program that writes ARM code."
+      },
+      {
+        "text": "`CGO_ENABLED=0`, so that the file importing `\"C\"` is compiled as Go",
+        "correct": false,
+        "why": "With cgo off the file is left out entirely, which is the `build constraints exclude all Go files` error."
+      }
+    ]
+  },
+  {
+    "id": "ex-nj86sw58",
+    "version": 1,
+    "section": "what-you-give-up",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A release job builds a service that stores its data with go-sqlite3, using `CGO_ENABLED=0` for static binaries. The build and the unit tests that do not open a database pass. What happens in production?",
+    "hint": "go-sqlite3 has a file for builds without cgo.",
+    "choices": [
+      {
+        "text": "The build fails with `build constraints exclude all Go files`",
+        "correct": false,
+        "why": "That is what happens to a package with no Go files left, like `gzlines`. go-sqlite3 ships a stub precisely so that its importers still compile."
+      },
+      {
+        "text": "The binary is static and uses a pure Go SQLite bundled as a fallback",
+        "correct": false,
+        "why": "There is no fallback engine in go-sqlite3; the stub only refuses. The pure Go port is a different module."
+      },
+      {
+        "text": "It runs, and the first use of the database fails with the stub's message that go-sqlite3 requires cgo",
+        "correct": true,
+        "why": "Right. `sq-nocgo` built and then exited 1 with `Binary was compiled with 'CGO_ENABLED=0', go-sqlite3 requires cgo to work`."
+      },
+      {
+        "text": "The loader refuses to start it because `libsqlite3.so` is missing",
+        "correct": false,
+        "why": "go-sqlite3 compiles SQLite into the binary; even the cgo build of `sq` needed only `libc.so.6` and the loader."
+      }
+    ]
+  },
+  {
+    "id": "ex-7tmj52xg",
+    "version": 1,
+    "section": "when-it-is-worth-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program uses `net` and `os/user`, and also calls zlib through cgo. It is built with `-tags netgo,osusergo`. What does `file` say about the binary?",
+    "hint": "What exactly do the two tags switch off?",
+    "choices": [
+      {
+        "text": "Statically linked, because the tags remove every use of C",
+        "correct": false,
+        "why": "The tags choose the pure Go halves of those two standard packages. Your own `import \"C\"` and its `-lz` are untouched."
+      },
+      {
+        "text": "Dynamically linked, since zlib still needs the loader",
+        "correct": true,
+        "why": "Right. `netgo` and `osusergo` emptied the `CgoFiles` of `net` and `os/user`; they cannot remove C you wrote."
+      },
+      {
+        "text": "The build fails: the tags require `CGO_ENABLED=0`",
+        "correct": false,
+        "why": "`lookup-pure` was built with the tags while cgo was on, and came out static."
+      },
+      {
+        "text": "Statically linked, but only on a machine without gcc",
+        "correct": false,
+        "why": "Without gcc, cgo would be off and the zlib file would be left out, so the build would fail rather than come out static."
+      }
+    ]
+  },
+  {
+    "id": "ex-wm2sekqc",
+    "version": 1,
+    "section": "when-it-is-worth-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `crash`, the same `try` with the same deferred `recover` caught the Go nil dereference and not the C one. Why?",
+    "hint": "Read the third line the program printed.",
+    "choices": [
+      {
+        "text": "`recover` only works in the goroutine that panicked, and C runs in another one",
+        "correct": false,
+        "why": "The C call ran in the same goroutine; the dump shows `main.try` calling it."
+      },
+      {
+        "text": "The deferred function was registered after the C call started",
+        "correct": false,
+        "why": "`defer` ran before `f()` in `try`, for both calls; the difference is in what happened, not in the order."
+      },
+      {
+        "text": "A fault during C code is fatal: the runtime does not turn it into a panic",
+        "correct": true,
+        "why": "Right. `signal arrived during cgo execution` is the runtime saying it was in C, where it cannot know what state was left, so it stops the whole program."
+      },
+      {
+        "text": "The C function returned an error code that Go ignored",
+        "correct": false,
+        "why": "`first` never returned; it read through a null pointer and the process received `SIGSEGV`."
+      }
+    ]
+  },
+  {
+    "id": "ex-3xdk12wc",
+    "version": 1,
+    "section": "when-it-is-worth-it",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Section 06 lists where to look before writing `import \"C\"`. Put the options in the order it gives them, first to last.",
+    "hint": "cgo itself is the last resort.",
+    "items": [
+      "the standard library",
+      "a pure Go port of the C library",
+      "the C tool run as a separate process with `os/exec`",
+      "cgo, kept in one small package"
+    ]
+  },
+  {
+    "id": "ex-d0nfwzkf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`func label(s string) { C.puts(C.CString(s)) }` is called once for each of the 20,000 lines of the log. What is wrong with it?",
+    "hint": "Count what `C.CString` allocates and what frees it.",
+    "choices": [
+      {
+        "text": "Every call leaks a C copy of the string, since nothing calls `C.free`",
+        "correct": true,
+        "why": "Right. `C.CString` mallocs a copy the collector never sees; without `defer C.free(unsafe.Pointer(cs))` each line leaks one."
+      },
+      {
+        "text": "It breaks the pointer rules: `puts` receives a Go pointer",
+        "correct": false,
+        "why": "`C.CString` returns a C pointer to C memory, which may be passed freely."
+      },
+      {
+        "text": "The garbage collector may free the C string while `puts` is printing it",
+        "correct": false,
+        "why": "The collector does not manage C memory at all, which is the root of the real problem: nobody frees it."
+      },
+      {
+        "text": "It is correct but slow; the only problem is 20,000 crossings",
+        "correct": false,
+        "why": "The crossings cost about half a millisecond in all. The leak grows with every line for as long as the process runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-ef31t8tf",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To hand a Go map to a C library that calls back with an integer of user data, wrap it with `cgo.___(counts)`, and delete it when C is done.",
+    "hint": "The function from `runtime/cgo` that returns a `Handle`.",
+    "blanks": [
+      {
+        "accept": [
+          "NewHandle"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gaqx13pe",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants SHA-256 checksums of uploaded files and proposes calling OpenSSL through cgo, \"because C is faster\". Which response follows from this lesson?",
+    "hint": "Think of what happened when zlib's crc32 met `hash/crc32`.",
+    "choices": [
+      {
+        "text": "Agree, and batch the calls so that each crossing hashes a whole file",
+        "correct": false,
+        "why": "Batching is the right shape once cgo is chosen, but the lesson's order puts the standard library first, and `crypto/sha256` is in it."
+      },
+      {
+        "text": "Agree, provided the binary is linked statically with `-extldflags=-static`",
+        "correct": false,
+        "why": "Static linking fixes one cost out of several: cross-compiling, build time and C crashes would remain, for a hash the standard library computes."
+      },
+      {
+        "text": "Measure `crypto/sha256` first: `hash/crc32` beat zlib nine times over",
+        "correct": true,
+        "why": "Right. The standard library is first on the list and \"C is faster\" was measured false once already; cgo's costs are only worth paying for something you cannot get otherwise."
+      },
+      {
+        "text": "Refuse: cgo cannot pass a file's contents to C without breaking the pointer rules",
+        "correct": false,
+        "why": "A `[]byte` holds no Go pointers, so `&data[0]` may be lent to C for a call, as `gzread` and `crc32` were lent theirs."
+      }
+    ]
+  }
+]

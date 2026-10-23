@@ -1,0 +1,360 @@
+{
+  "ex-2nwe2bdg": {
+    "prompt": "Que conversão o Java faz sozinho, sem cast?",
+    "hint": "A direção que não pode estourar.",
+    "choices": [
+      {
+        "text": "`double` para `int`",
+        "why": "Essa foi recusada como possível conversão com perda."
+      },
+      {
+        "text": "`long` para `int`",
+        "why": "Estreitamento, que precisa de cast."
+      },
+      {
+        "text": "`int` para `long`",
+        "why": "Isso: um tipo menor num maior é uma conversão de alargamento."
+      },
+      {
+        "text": "`int` para `boolean`",
+        "why": "O `boolean` não se converte em nada nem a partir de nada."
+      }
+    ]
+  },
+  "ex-8zc2qc3e": {
+    "prompt": "`float asFloat = 16_777_217;` imprimiu `1.6777216E7`. Por que um a menos?",
+    "hint": "Um `float` gasta 24 bits com dígitos.",
+    "choices": [
+      {
+        "text": "Depois de 2²⁴, um `float` pula alguns inteiros",
+        "why": "Isso: 2²⁴ é 16.777.216, e o próximo valor que ele guarda está duas unidades adiante."
+      },
+      {
+        "text": "O número é maior do que um `float` comporta",
+        "why": "Um `float` chega a uns 3,4 × 10³⁸; a faixa não é o problema."
+      },
+      {
+        "text": "Imprimir em notação científica descarta o último dígito",
+        "why": "O `double` imprimiu `1.6777217E7` na mesma notação, com todos os dígitos."
+      }
+    ]
+  },
+  "ex-4hswk5p9": {
+    "prompt": "Quais destas conversões automáticas podem mudar o valor? Escolha todas as que se aplicam.",
+    "hint": "As setas tracejadas da figura.",
+    "choices": [
+      {
+        "text": "`int` para `float`",
+        "why": "Sim: 16.777.217 virou 16.777.216."
+      },
+      {
+        "text": "`int` para `double`",
+        "why": "Não: um `double` tem mais dígitos do que qualquer `int` precisa, e guardou 16.777.217."
+      },
+      {
+        "text": "`long` para `double`",
+        "why": "Sim: um `long` tem mais dígitos significativos do que um `double` guarda."
+      },
+      {
+        "text": "`char` para `int`",
+        "why": "Não: todo código de `char` cabe exatamente num `int`."
+      }
+    ]
+  },
+  "ex-k4gbe5rg": {
+    "prompt": "`char initial = 'J'; int code = initial;` Quanto vale `code`?",
+    "hint": "Um `char` é um número por baixo.",
+    "choices": [
+      {
+        "text": "`J`",
+        "why": "Um `int` guarda número; a letra é como um `char` se imprime."
+      },
+      {
+        "text": "Um erro de compilação, porque letra não é número",
+        "why": "Compilou e imprimiu 74."
+      },
+      {
+        "text": "74",
+        "why": "Isso: o código do `J`, e `char` para `int` é alargamento, sem cast."
+      }
+    ]
+  },
+  "ex-4r8bafzw": {
+    "prompt": "Quanto dá `(int) 3.99`?",
+    "hint": "Um cast de decimal corta.",
+    "choices": [
+      {
+        "text": "4",
+        "why": "Isso é `Math.round(3.99)`; um cast não arredonda."
+      },
+      {
+        "text": "Um erro de compilação sobre conversão com perda",
+        "why": "O cast é como você aceita a perda, então compila."
+      },
+      {
+        "text": "3",
+        "why": "Isso: a fração é cortada, em direção ao zero."
+      },
+      {
+        "text": "3,99, já que o cast só muda o tipo declarado",
+        "why": "Um `int` não guarda 3,99; o valor muda."
+      }
+    ]
+  },
+  "ex-9gjqr4dx": {
+    "prompt": "O que `(byte) 200` imprimiu?",
+    "hint": "Um `byte` vai até 127, e cabem 256 valores em 8 bits."
+  },
+  "ex-48pwype5": {
+    "prompt": "`(int) 1e20` imprimiu `2147483647`. Que regra foi essa?",
+    "hint": "Compare com `(byte) 200`, que deu a volta.",
+    "choices": [
+      {
+        "text": "Os bits de baixo mantidos, como para inteiros",
+        "why": "Bits de baixo é a regra de um inteiro para um menor; 1e20 é um `double`."
+      },
+      {
+        "text": "Um estouro que teria lançado exceção sem o cast",
+        "why": "Nada lança exceção num cast; quem lança é o `Math.toIntExact`."
+      },
+      {
+        "text": "Um decimal grande demais para o destino para no maior valor dele",
+        "why": "Isso: vindo de um `double`, um valor grande demais é travado em `Integer.MAX_VALUE`."
+      }
+    ]
+  },
+  "ex-pe2b8c53": {
+    "prompt": "`Math.round(-2.5)` deu -2. Por que não -3?",
+    "hint": "Para que lado vão as metades?",
+    "choices": [
+      {
+        "text": "Metades sobem, em direção ao infinito positivo",
+        "why": "Isso: e para cima a partir de -2,5 é -2."
+      },
+      {
+        "text": "Ele corta a fração como um cast",
+        "why": "Um cast de -2,5 também daria -2, mas `Math.round(3.99)` deu 4, então ele arredonda."
+      },
+      {
+        "text": "Ele arredonda metades para longe do zero, e -2 está mais longe",
+        "why": "-3 está mais longe do zero; a regra é em direção ao infinito positivo."
+      }
+    ]
+  },
+  "ex-afegcb2w": {
+    "prompt": "Um relatório converte um total guardado num `long` para `int` para pô-lo numa coluna. Que linha faz um valor que não cabe parar o programa em vez de imprimir um número errado?",
+    "hint": "Uma destas lança exceção.",
+    "choices": [
+      {
+        "text": "`int column = (int) total;`",
+        "why": "Um cast sempre produz um número, e para um `long` grande guarda os bits de baixo, em silêncio."
+      },
+      {
+        "text": "`int column = Math.toIntExact(total);`",
+        "why": "Isso: ele lançou `integer overflow` para 3.000.000.000."
+      },
+      {
+        "text": "`int column = (int) (total / 1);`",
+        "why": "Dividir por 1 não muda nada, e o cast continua guardando os bits de baixo."
+      }
+    ]
+  },
+  "ex-7481zac3": {
+    "prompt": "Quanto vale `7 / 2` em Java?",
+    "hint": "Os dois lados são `int`.",
+    "choices": [
+      {
+        "text": "3,5",
+        "why": "Isso é `7 / 2.0`, em que um lado é `double`."
+      },
+      {
+        "text": "4",
+        "why": "Nada arredonda; a fração é descartada."
+      },
+      {
+        "text": "3",
+        "why": "Isso: a divisão inteira corta a fração."
+      }
+    ]
+  },
+  "ex-398km07t": {
+    "prompt": "`int pages = 7; double half = pages / 2;` Quanto vale `half`?",
+    "hint": "O tipo da variável não entra na expressão.",
+    "choices": [
+      {
+        "text": "3,0",
+        "why": "Isso: `pages / 2` dá 3, e só então é alargado."
+      },
+      {
+        "text": "3,5, porque `half` é `double`",
+        "why": "A divisão é feita antes, como `int`, antes de o `double` entrar."
+      },
+      {
+        "text": "Um erro de compilação: um resultado `int` não entra num `double`",
+        "why": "`int` em `double` é alargamento; compila."
+      }
+    ]
+  },
+  "ex-v53smb0z": {
+    "prompt": "`byte stock = 10; stock += 300;` compila e imprime 54, enquanto `stock = stock + 300;` é recusado. Qual é a diferença?",
+    "hint": "Um deles carrega algo que você não escreveu.",
+    "choices": [
+      {
+        "text": "O `+=` é calculado em aritmética de `byte`, que dá a volta",
+        "why": "Aritmética nunca é feita em `byte`; as duas formas calculam 310 como `int`."
+      },
+      {
+        "text": "O `+=` inclui um cast escondido de volta para `byte`, que a forma longa não tem",
+        "why": "Isso: o operador composto faz o cast em silêncio; a forma longa precisa do cast escrito."
+      },
+      {
+        "text": "O `+=` confere se o resultado cabe e a forma longa não",
+        "why": "Nada conferiu: 310 não cabia, e saiu 54."
+      }
+    ]
+  },
+  "ex-jnmwfr3m": {
+    "prompt": "O que `System.out.println(\"total: \" + 1 + 2);` imprime?",
+    "hint": "Da esquerda para a direita, e uma `String` muda o que o `+` significa.",
+    "choices": [
+      {
+        "text": "`total: 3`",
+        "why": "Isso pede a soma entre parênteses: `\"total: \" + (1 + 2)`."
+      },
+      {
+        "text": "Um erro de compilação ao misturar `String` e números",
+        "why": "O `+` com uma `String` junta texto; compila."
+      },
+      {
+        "text": "`total: 12`",
+        "why": "Isso: `\"total: \" + 1` já é uma `String`, então o `2` é juntado a ela."
+      }
+    ]
+  },
+  "ex-s0xtb054": {
+    "prompt": "Antes de qualquer aritmética, valores `byte`, `short` e `char` são alargados para `___`.",
+    "hint": "O tipo inteiro padrão.",
+    "blanks": [
+      {
+        "accept": [
+          "int"
+        ]
+      }
+    ]
+  },
+  "ex-00phke9n": {
+    "prompt": "Como você transforma a `String` `\"21\"` no `int` 21?",
+    "hint": "É um método, não um cast.",
+    "choices": [
+      {
+        "text": "`(int) \"21\"`",
+        "why": "Um cast converte entre tipos numéricos, e uma `String` não é um deles."
+      },
+      {
+        "text": "`Integer.parseInt(\"21\")`",
+        "why": "Isso: e lança exceção quando o texto não é número."
+      },
+      {
+        "text": "`String.valueOf(\"21\")`",
+        "why": "Isso vai no sentido contrário, para `String`."
+      }
+    ]
+  },
+  "ex-m1dwj55j": {
+    "prompt": "`java Copies \"21 \"` falhou com `NumberFormatException: For input string: \"21 \"`. O que há de errado com a entrada?",
+    "hint": "Leia o que está entre as aspas, tudo.",
+    "choices": [
+      {
+        "text": "21 é grande demais para caber num `int`",
+        "why": "21 cabe com folga; `java Copies 21` imprimiu 42."
+      },
+      {
+        "text": "As aspas, que foram passadas ao programa",
+        "why": "O shell as removeu; a mensagem põe a string entre aspas para mostrar onde ela começa e termina."
+      },
+      {
+        "text": "Um espaço invisível depois do número 21",
+        "why": "Isso: o `parseInt` não aceita espaço, as aspas da mensagem o mostram, e o `strip()` o removeria."
+      }
+    ]
+  },
+  "ex-qdj49h9w": {
+    "prompt": "Um usuário brasileiro digita `39,90` num campo de preço, e o código chama `Double.parseDouble`. O que acontece?",
+    "hint": "Os métodos de conversão do Java têm um separador decimal só.",
+    "choices": [
+      {
+        "text": "Um `NumberFormatException`",
+        "why": "Isso: `\"39,90\"` foi recusado, e a lição 7 mostra a conversão para um locale."
+      },
+      {
+        "text": "Devolve 39,9, porque o computador está em português",
+        "why": "Os métodos leem ponto seja qual for a língua do computador."
+      },
+      {
+        "text": "Devolve 3990, ignorando a vírgula",
+        "why": "Ele não pula caracteres; recusou a string inteira."
+      }
+    ]
+  },
+  "ex-4thcpapd": {
+    "prompt": "`String text = String.valueOf(39.9);` e depois `text + 1`. Por que `39.91` e não 40,9?",
+    "hint": "Que tipo tem `text`?",
+    "choices": [
+      {
+        "text": "O `String.valueOf` arredonda, e 39,9 + 1 arredondou para 39,91",
+        "why": "Não há aritmética nenhuma: um dos lados é `String`."
+      },
+      {
+        "text": "`text` é uma `String`, então `+ 1` junta o caractere `1` a ela",
+        "why": "Isso: a regra da seção 04, quando um dos lados é texto."
+      },
+      {
+        "text": "A aritmética de ponto flutuante acrescentou um pequeno erro",
+        "why": "Isso daria algo como 40.900000000000006, não um dígito novo no fim."
+      }
+    ]
+  },
+  "ex-gd5rmd8j": {
+    "prompt": "Ligue cada expressão ao que o `Narrow` ou o `Promote` imprimiu.",
+    "hint": "Cortar, dar a volta, travar, arredondar.",
+    "pairs": [
+      {
+        "left": "`(int) -3.99`",
+        "right": "`-3`"
+      },
+      {
+        "left": "`(byte) 200`",
+        "right": "`-56`"
+      },
+      {
+        "left": "`(int) 1e20`",
+        "right": "`2147483647`"
+      },
+      {
+        "left": "`Math.round(3.99)`",
+        "right": "`4`"
+      }
+    ],
+    "right_distractors": [
+      "`-4`"
+    ]
+  },
+  "ex-k0c2cyz2": {
+    "prompt": "Uma média é escrita `double avg = total / count;` com `total` e `count` ambos `int`. Total 7 e contagem 2 dão 3.0. Que mudança dá 3.5?",
+    "hint": "Um lado da divisão precisa ser `double` antes de dividir.",
+    "choices": [
+      {
+        "text": "`double avg = (double) total / count;`",
+        "why": "Isso: o cast vale para `total` primeiro, então a divisão é feita em `double`."
+      },
+      {
+        "text": "`double avg = (double) (total / count);`",
+        "why": "Os parênteses dividem como `int` primeiro, dando 3, e depois convertem 3 em 3.0."
+      },
+      {
+        "text": "`float avg = total / count;`",
+        "why": "Continua divisão de `int` à direita; o tipo da variável não entra nela."
+      }
+    ]
+  }
+}

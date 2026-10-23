@@ -1,0 +1,356 @@
+{
+  "ex-p1x09p76": {
+    "prompt": "O que `System.out.println(7 / 2);` imprime?",
+    "hint": "Os dois operandos são `int`."
+  },
+  "ex-fx82t2rf": {
+    "prompt": "Um método calcula uma média com `int sum` e `int count` como `sum / count`. Para uma soma de 7 em 2 itens, devolve 3. Qual é a correção?",
+    "hint": "Faça a divisão ser de ponto flutuante antes de ela acontecer.",
+    "choices": [
+      {
+        "text": "`(double) (sum / count)`",
+        "why": "O cast vem depois da divisão inteira, que já jogou a metade fora: 3.0."
+      },
+      {
+        "text": "`(double) sum / count`",
+        "why": "Isso: `sum` vira `double` primeiro, então a divisão mantém a fração: 3.5."
+      },
+      {
+        "text": "`Math.round(sum / count)`, que arredonda 3.5 para 4",
+        "why": "Quando o `round` o recebe, o valor já é o `int` 3."
+      },
+      {
+        "text": "`sum / count * 1.0`, para o resultado ser um `double`",
+        "why": "A multiplicação acontece depois da divisão inteira: 3 vezes 1.0 dá 3.0."
+      }
+    ]
+  },
+  "ex-s7fa3mef": {
+    "prompt": "Um laço marca as prateleiras de número ímpar com `if (n % 2 == 1)`. Os números vão de -5 a 5. Quais prateleiras ele deixa de fora?",
+    "hint": "O resto leva o sinal do operando da esquerda.",
+    "choices": [
+      {
+        "text": "Nenhuma",
+        "why": "`-5 % 2` dá `-1`, não `1`, então o teste dá falso para as prateleiras ímpares negativas."
+      },
+      {
+        "text": "A prateleira 0, porque `0 % 2` é indefinido",
+        "why": "`0 % 2` dá `0`, e 0 é par; nada é indefinido."
+      },
+      {
+        "text": "-5, -3 e -1",
+        "why": "Isso: os restos delas dão `-1`. `n % 2 != 0` pega os dois sinais."
+      },
+      {
+        "text": "Toda prateleira negativa, ímpar ou par",
+        "why": "As pares não deviam ser marcadas mesmo; só as ímpares negativas ficam de fora."
+      }
+    ]
+  },
+  "ex-bf56cxgd": {
+    "prompt": "`int i = 5; int a = i++; int b = ++i;` Quanto valem `a`, `b` e `i` depois?",
+    "hint": "`i++` dá o valor antigo; `++i` dá o novo.",
+    "choices": [
+      {
+        "text": "6, 7 e 7",
+        "why": "O `a` recebeu o valor de antes do incremento, que era 5."
+      },
+      {
+        "text": "5, 7 e 7",
+        "why": "Isso: a transcrição imprimiu `5 7 7`."
+      },
+      {
+        "text": "5, 6 e 6",
+        "why": "As duas linhas somam um, então o `i` termina em 7, e o `++i` devolve esse 7."
+      }
+    ]
+  },
+  "ex-4fynac11": {
+    "prompt": "`int big = Integer.MAX_VALUE; System.out.println(big + 1);` O que acontece?",
+    "hint": "O `+` comum num `int` nunca verifica.",
+    "choices": [
+      {
+        "text": "Lança `ArithmeticException: integer overflow`",
+        "why": "Isso é o `Math.addExact`; o `+` comum não diz nada."
+      },
+      {
+        "text": "Imprime `2147483648`, alargado para `long` automaticamente",
+        "why": "Dois `int` dão um `int`; nada é alargado."
+      },
+      {
+        "text": "Imprime `-2147483648`, o menor `int` que existe",
+        "why": "Isso: o valor dá a volta do maior `int` ao menor, sem erro."
+      }
+    ]
+  },
+  "ex-yqzx5kh6": {
+    "prompt": "Por que `Math.abs(Integer.MIN_VALUE)` imprimiu um número negativo?",
+    "hint": "Compare o menor e o maior `int`.",
+    "choices": [
+      {
+        "text": "O positivo dele não cabe num `int`, então dá a volta",
+        "why": "Isso: 2.147.483.648 não cabe, e o resultado volta para `-2147483648`."
+      },
+      {
+        "text": "O `abs` só funciona com `double`, e o `int` foi convertido errado",
+        "why": "O `abs` tem versão para `int`; deu `42` para `-42`."
+      },
+      {
+        "text": "É um bug conhecido do build do JDK do Ubuntu",
+        "why": "Todo JDK faz isso; é como inteiros de 32 bits funcionam."
+      },
+      {
+        "text": "O `MIN_VALUE` é um marcador especial, não um número, e o `abs` não mexe em marcadores",
+        "why": "É um `int` comum, o menor de todos."
+      }
+    ]
+  },
+  "ex-bm7ehvam": {
+    "prompt": "Ligue cada chamada ao que ela imprimiu para -2.5.",
+    "hint": "Abaixo de zero eles se separam.",
+    "pairs": [
+      {
+        "left": "`Math.round(-2.5)`",
+        "right": "`-2`"
+      },
+      {
+        "left": "`Math.floor(-2.5)`",
+        "right": "`-3.0`"
+      },
+      {
+        "left": "`Math.ceil(-2.5)`",
+        "right": "`-2.0`"
+      }
+    ],
+    "right_distractors": [
+      "`-3`"
+    ]
+  },
+  "ex-enbgsm4q": {
+    "prompt": "Os dias da semana são numerados de 0 a 6. Um programa acha o dia `k` dias antes do dia `d` com `(d - k) % 7`. Para `d = 3` e `k = 12`, recebe um índice negativo. O que deveria usar?",
+    "hint": "Um método sempre cai entre 0 e o divisor menos um.",
+    "choices": [
+      {
+        "text": "`Math.abs((d - k) % 7)`",
+        "why": "`(3 - 12) % 7` dá `-2`, e o `abs` o transforma em 2 quando a resposta é 5: ele espelha em vez de dar a volta."
+      },
+      {
+        "text": "`Math.floorMod(d - k, 7)`",
+        "why": "Isso: o `floorMod` nunca é negativo para um divisor positivo, e aqui dá 5."
+      },
+      {
+        "text": "`(d - k) / 7`",
+        "why": "Isso diz quantas semanas para trás, não qual dia."
+      },
+      {
+        "text": "`Math.round((d - k) % 7.0)`",
+        "why": "Arredondar não muda o sinal; o resultado continua `-2`."
+      }
+    ]
+  },
+  "ex-b0an7w8b": {
+    "prompt": "Por que o programa dos dados imprimiu as mesmas cinco jogadas em toda execução?",
+    "hint": "Veja como o `Random` foi criado.",
+    "choices": [
+      {
+        "text": "Porque o `nextInt(1, 7)` é uma sequência fixa em todo `Random`",
+        "why": "Só um com semente se repete; `new Random()` começa num ponto novo a cada vez."
+      },
+      {
+        "text": "Porque foi criado com a semente 42, e a sequência ficou fixa",
+        "why": "Isso: uma semente fixa a sequência, que é o que um teste precisa."
+      },
+      {
+        "text": "Porque a JVM guarda a saída de um programa que já executou",
+        "why": "Nada fica guardado entre execuções; a mesma semente calcula os mesmos números de novo."
+      }
+    ]
+  },
+  "ex-4ce9335n": {
+    "prompt": "Por que `0.1 + 0.2 == 0.3` dá falso?",
+    "hint": "O que um `double` guarda de fato?",
+    "choices": [
+      {
+        "text": "Porque o `==` compara referências, e `double` é objeto",
+        "why": "O `double` é primitivo; o `==` compara os valores, e os valores diferem."
+      },
+      {
+        "text": "Porque nenhum dos lados guarda exatamente três décimos",
+        "why": "Isso: a soma cai no double acima de 0,3 e o literal no de baixo."
+      },
+      {
+        "text": "Porque o Java arredonda `0.1 + 0.2` para 16 dígitos antes de comparar",
+        "why": "Não há arredondamento no `==`; os dois valores guardados são simplesmente diferentes."
+      },
+      {
+        "text": "Por causa de um bug corrigido em versões mais novas do Java",
+        "why": "É como o ponto flutuante binário funciona em toda linguagem que o usa."
+      }
+    ]
+  },
+  "ex-t9zf6hkr": {
+    "prompt": "Um laço soma `0.1` a `total`, começando em 0, e para `while (total != 1.0)`. O que acontece?",
+    "hint": "Depois de dez somas o programa imprimiu um valor.",
+    "choices": [
+      {
+        "text": "Para depois de dez voltas",
+        "why": "Depois de dez voltas o `total` é `0.9999999999999999`, que não é `1.0`."
+      },
+      {
+        "text": "Lança uma `ArithmeticException` quando o erro fica grande demais",
+        "why": "O ponto flutuante nunca lança exceção por erro de arredondamento."
+      },
+      {
+        "text": "Nunca para, porque o `total` passa por cima de 1,0 sem ser igual",
+        "why": "Isso: compare com uma tolerância, ou conte as voltas com um `int`."
+      }
+    ]
+  },
+  "ex-qhz55jbn": {
+    "prompt": "`double nan = 0.0 / 0;` Qual teste dá `true`?",
+    "hint": "NaN é diferente de tudo.",
+    "choices": [
+      {
+        "text": "`nan == nan`",
+        "why": "NaN é diferente de tudo, inclusive dele mesmo: isto imprimiu `false`."
+      },
+      {
+        "text": "`Double.isNaN(nan)`",
+        "why": "Isso: o único teste confiável."
+      },
+      {
+        "text": "`Double.compare(nan, nan) != 0`",
+        "why": "O `Double.compare` trata dois NaN como iguais e devolve 0, então isto dá `false`."
+      },
+      {
+        "text": "`nan > 0 || nan <= 0`",
+        "why": "Toda comparação de ordem com NaN dá `false`, então as duas metades dão."
+      }
+    ]
+  },
+  "ex-jp6zdh96": {
+    "prompt": "Quais destes param o programa com uma exceção? Escolha todos os que se aplicam.",
+    "hint": "A divisão por zero inteira e a de ponto flutuante se comportam diferente.",
+    "choices": [
+      {
+        "text": "`int x = 1 / 0;`",
+        "why": "Sim: `ArithmeticException: / by zero`."
+      },
+      {
+        "text": "`double x = 1.0 / 0;`",
+        "why": "Não: dá `Infinity`."
+      },
+      {
+        "text": "`double x = 0.0 / 0;`",
+        "why": "Não: dá `NaN`, em silêncio."
+      },
+      {
+        "text": "`int x = Math.addExact(Integer.MAX_VALUE, 1);`",
+        "why": "Sim: `ArithmeticException: integer overflow`."
+      }
+    ]
+  },
+  "ex-y7qzw6t5": {
+    "prompt": "Qual linha dá um `BigDecimal` que guarda exatamente um décimo?",
+    "hint": "A primeira linha do `Money.java` imprimiu 55 dígitos.",
+    "choices": [
+      {
+        "text": "`new BigDecimal(0.1)`",
+        "why": "Ele registra a fração binária do `double`, que fica um pouco acima de um décimo."
+      },
+      {
+        "text": "`new BigDecimal(\"0.1\")`",
+        "why": "Isso: construído a partir do texto, então o erro binário nunca entra."
+      },
+      {
+        "text": "`new BigDecimal(0.1).setScale(1, RoundingMode.HALF_UP)`",
+        "why": "Isso imprime `0.1`, sim, mas só arredondando um valor errado; construa certo desde o começo."
+      }
+    ]
+  },
+  "ex-v7f61pgc": {
+    "prompt": "`new BigDecimal(\"0.30\").equals(new BigDecimal(\"0.3\"))` dá `false`. Por quê, e o que faz a pergunta que você quis fazer?",
+    "hint": "A escala faz parte do valor.",
+    "choices": [
+      {
+        "text": "Os dois valores são comparados por referência dentro do `equals`; use `==` no lugar",
+        "why": "São `BigDecimal`, e o `==` compararia referências, o que é pior."
+      },
+      {
+        "text": "O `equals` compara a escala também; use `compareTo(...) == 0`",
+        "why": "Isso: o `compareTo` ignora a escala e imprimiu `true`."
+      },
+      {
+        "text": "O `0.30` foi arredondado na entrada; use `setScale(1)` nos dois",
+        "why": "Nada foi arredondado; o `0.30` mantém as duas casas, que é a razão de existir da escala."
+      }
+    ]
+  },
+  "ex-40n5xn5t": {
+    "prompt": "`new BigDecimal(\"10.00\").divide(new BigDecimal(\"3\"))` para o programa. Por quê?",
+    "hint": "Um terço em decimal não tem fim.",
+    "choices": [
+      {
+        "text": "O resultado exato não tem fim, e nenhuma regra de arredondamento foi dada",
+        "why": "Isso: `Non-terminating decimal expansion`. Passe uma escala e um `RoundingMode`."
+      },
+      {
+        "text": "O `BigDecimal` não divide por número inteiro",
+        "why": "Ele divide por qualquer `BigDecimal`; com escala e regra deu `3.33`."
+      },
+      {
+        "text": "A divisão por 3 estoura a escala de `10.00`",
+        "why": "Nada estoura; o resultado só não pode ser escrito exatamente."
+      }
+    ]
+  },
+  "ex-87m22y1t": {
+    "prompt": "Uma multa de 1050 centavos e uma taxa de 2075 centavos são somadas num `long`. Quantos centavos dá o total?",
+    "hint": "Soma simples.",
+    "unit": "centavos"
+  },
+  "ex-e5qk9sga": {
+    "prompt": "Ordene do menor valor para o maior.",
+    "hint": "Dois nem são números no sentido comum, e um deu a volta.",
+    "items": [
+      "`-1.0 / 0`",
+      "`Integer.MAX_VALUE + 1`",
+      "`-7 / 2`",
+      "`Math.floorMod(-7, 2)`",
+      "`1.0 / 0`"
+    ]
+  },
+  "ex-6xe8efgd": {
+    "prompt": "Uma loja guarda preços como `double` e o total do dia sai errado em alguns centavos depois de milhares de vendas. Que mudança remove o erro em vez de escondê-lo?",
+    "hint": "Onde o erro entra?",
+    "choices": [
+      {
+        "text": "Imprimir o total com `%.2f`, que arredonda para centavos",
+        "why": "A deriva continua no total guardado; só a exibição a esconde."
+      },
+      {
+        "text": "Trocar `double` por `float`, que tem menos dígitos para errar",
+        "why": "O `float` também é binário, com menos dígitos; o erro cresce."
+      },
+      {
+        "text": "Trocar por centavos num `long`, ou `BigDecimal` feito de strings",
+        "why": "Isso: valores decimais exatos desde o início, então nada deriva."
+      },
+      {
+        "text": "Comparar o total com o esperado usando uma tolerância",
+        "why": "Uma tolerância faz um teste passar; o cliente continua pagando um valor errado."
+      }
+    ]
+  },
+  "ex-637v33ws": {
+    "prompt": "Para arredondar um `BigDecimal` com a metade indo para o vizinho par, passe `RoundingMode.___` ao `setScale`.",
+    "hint": "O arredondamento bancário.",
+    "blanks": [
+      {
+        "accept": [
+          "HALF_EVEN"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,928 @@
+[
+  {
+    "id": "ex-en6kjkk7",
+    "version": 1,
+    "section": "why-routers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before Go 1.22, why did a route like `GET /events/{id}` need a router from outside the standard library, or extra code in the handler?",
+    "hint": "Lesson 1 section 05.",
+    "choices": [
+      {
+        "text": "`net/http` had no way to write JSON responses at the time",
+        "correct": false,
+        "why": "`encoding/json` writes to any writer; JSON was never the gap."
+      },
+      {
+        "text": "`ServeMux` matched neither methods nor wildcards",
+        "correct": true,
+        "why": "Right. The handler for `/events/` had to check `r.Method` and cut the id out of the path itself."
+      },
+      {
+        "text": "The standard server refused paths longer than one segment",
+        "correct": false,
+        "why": "Subtree patterns like `/events/` matched every path below them."
+      },
+      {
+        "text": "A handler could not read the request's method before 1.22",
+        "correct": false,
+        "why": "`r.Method` was always there; the mux just did not route by it."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ajmqj32",
+    "version": 1,
+    "section": "why-routers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each project to what it brought.",
+    "hint": "The table in section 02.",
+    "pairs": [
+      {
+        "left": "`julienschmidt/httprouter`",
+        "right": "`:id` parameters matched in a tree; Gin's router began as a copy"
+      },
+      {
+        "left": "`gorilla/mux`",
+        "right": "regular expressions and host matching; archived in 2022, revived in 2023"
+      },
+      {
+        "left": "`go-chi/chi`",
+        "right": "handlers that stay `http.Handler`, middleware in the standard shape"
+      }
+    ],
+    "right_distractors": [
+      "handlers that run on fasthttp"
+    ]
+  },
+  {
+    "id": "ex-vwkv60gn",
+    "version": 1,
+    "section": "why-routers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a framework bring that a router alone does not?",
+    "hint": "Section 02 lists four things.",
+    "choices": [
+      {
+        "text": "Method matching, so that `GET` and `POST` on one path reach different code",
+        "correct": false,
+        "why": "A router does that already; httprouter did in 2013."
+      },
+      {
+        "text": "Binding a body into a struct with validation from tags, and a central place where errors become responses",
+        "correct": true,
+        "why": "Right, plus its own request type and a catalogue of middleware."
+      },
+      {
+        "text": "A faster compiler",
+        "correct": false,
+        "why": "Every version here was built by the same `go build`."
+      },
+      {
+        "text": "Wildcards in paths, read back by name inside the handler that matched",
+        "correct": false,
+        "why": "Routers had those long before frameworks bundled them."
+      }
+    ]
+  },
+  {
+    "id": "ex-68ngyv99",
+    "version": 1,
+    "section": "why-routers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why was the yardstick API written in the standard library before any framework?",
+    "hint": "A comparison needs a base.",
+    "choices": [
+      {
+        "text": "Because a framework refuses to compile unless a standard library version of the same API sits beside it",
+        "correct": false,
+        "why": "Each framework version is a program of its own."
+      },
+      {
+        "text": "To be copied into boxoffice",
+        "correct": false,
+        "why": "boxoffice keeps its own style; this one is the plain style of lesson 1."
+      },
+      {
+        "text": "Because it is the fastest of the five, so the others are measured against its speed",
+        "correct": false,
+        "why": "No speed was measured in this lesson."
+      },
+      {
+        "text": "So that what differs between versions is the framework, with the same store, check and statuses",
+        "correct": true,
+        "why": "Right. Every version keeps the same rules and is asked the same six questions."
+      }
+    ]
+  },
+  {
+    "id": "ex-snda8emd",
+    "version": 1,
+    "section": "gin",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `gin.Default()` attach to the router before you register a single route?",
+    "hint": "Its first warning says so.",
+    "choices": [
+      {
+        "text": "CORS for every origin and a token check on every route",
+        "correct": false,
+        "why": "Neither is attached by default."
+      },
+      {
+        "text": "A logger and a panic recovery",
+        "correct": true,
+        "why": "Right, the two middlewares lesson 2 wrote by hand."
+      },
+      {
+        "text": "An `http.Server` with the four timeouts of lesson 1",
+        "correct": false,
+        "why": "`r.Run` uses `http.ListenAndServe`, with no timeouts at all."
+      },
+      {
+        "text": "A validator for every struct",
+        "correct": false,
+        "why": "Validation runs when `ShouldBindJSON` reads `binding` tags, not as a middleware."
+      }
+    ]
+  },
+  {
+    "id": "ex-1tszht6j",
+    "version": 1,
+    "section": "gin",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`curl -X DELETE localhost:8080/events/1` against the Gin version answers 404. What explains it?",
+    "hint": "Gin's router knows how to say 405.",
+    "choices": [
+      {
+        "text": "Event 1 was deleted by an earlier request",
+        "correct": false,
+        "why": "There is no delete route; the event still answered `GET` a moment earlier."
+      },
+      {
+        "text": "Gin only supports the methods `GET` and `POST`",
+        "correct": false,
+        "why": "Gin registers `r.DELETE` routes like any other."
+      },
+      {
+        "text": "`HandleMethodNotAllowed` is off by default",
+        "correct": true,
+        "why": "Right. Turned on, the wrong method gets 405; off, the client is told the event does not exist."
+      },
+      {
+        "text": "The path pattern `:id` refuses numbers",
+        "correct": false,
+        "why": "`GET /events/1` matched it and answered 200."
+      }
+    ]
+  },
+  {
+    "id": "ex-4bn8vbe8",
+    "version": 1,
+    "section": "gin",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Gin answered a quantity of 40 with `Key: 'purchase.Quantity' Error:Field validation for 'Quantity' failed on the 'max' tag`. What is wrong with that as an answer for a client?",
+    "hint": "Whose names are in it?",
+    "choices": [
+      {
+        "text": "It names Go struct fields and tag names, the server's vocabulary rather than the client's",
+        "correct": true,
+        "why": "Right. Gin gives the rules for free and leaves the message to you to translate."
+      },
+      {
+        "text": "Nothing: it names the JSON key the client sent",
+        "correct": false,
+        "why": "The client sent `quantity`; the message says `purchase.Quantity`."
+      },
+      {
+        "text": "It came with status 500",
+        "correct": false,
+        "why": "The handler chose 422 for binding errors."
+      },
+      {
+        "text": "It leaks the token",
+        "correct": false,
+        "why": "No token is involved in this route."
+      }
+    ]
+  },
+  {
+    "id": "ex-5tvmqzmn",
+    "version": 1,
+    "section": "gin",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Gin service rate-limits each client by `c.ClientIP()` and leaves the trusted proxies at their default. What does an abusive client do?",
+    "hint": "The warning about proxies.",
+    "choices": [
+      {
+        "text": "Nothing: the limit uses the TCP address",
+        "correct": false,
+        "why": "By default `ClientIP` believes `X-Forwarded-For` from anybody."
+      },
+      {
+        "text": "Switches `GIN_MODE` to `debug`",
+        "correct": false,
+        "why": "That is the server's environment, out of a client's reach."
+      },
+      {
+        "text": "Sends requests without a body",
+        "correct": false,
+        "why": "A missing body changes nothing about who the client appears to be."
+      },
+      {
+        "text": "Sends a different `X-Forwarded-For` on each request and looks like a new client every time",
+        "correct": true,
+        "why": "Right. `SetTrustedProxies` names whose header counts."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ypgw2ta",
+    "version": 1,
+    "section": "gin",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You keep Gin and want lesson 1's four timeouts. What do you do?",
+    "hint": "A Gin engine is an `http.Handler`.",
+    "choices": [
+      {
+        "text": "Call `r.Run` with a longer address string",
+        "correct": false,
+        "why": "`Run` calls `http.ListenAndServe`, which has no timeouts whatever the address."
+      },
+      {
+        "text": "Set `GIN_MODE=release`",
+        "correct": false,
+        "why": "Release mode silences the debug notes and sets no deadline."
+      },
+      {
+        "text": "Put the engine in an `http.Server`'s `Handler` field and never call `Run`",
+        "correct": true,
+        "why": "Right, the same server boxoffice already builds."
+      },
+      {
+        "text": "Add the `ReadHeaderTimeout` binding tag",
+        "correct": false,
+        "why": "Binding tags validate bodies; they have nothing to do with the connection."
+      }
+    ]
+  },
+  {
+    "id": "ex-w2t8pg68",
+    "version": 1,
+    "section": "gin",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many modules besides the program's own did `go list -m all` name for the Gin version?",
+    "hint": "The table of section 07.",
+    "value": 55,
+    "tolerance": 0,
+    "unit": "modules"
+  },
+  {
+    "id": "ex-99jxm7kw",
+    "version": 1,
+    "section": "echo",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is Echo's central idea about failures?",
+    "hint": "Look at the handlers' return type.",
+    "choices": [
+      {
+        "text": "Errors are panics, and a recovery middleware wrapped around the whole server turns each into a response",
+        "correct": false,
+        "why": "Echo handlers `return` errors; nothing panics."
+      },
+      {
+        "text": "Errors are written as HTML pages",
+        "correct": false,
+        "why": "That was Beego. Echo answered JSON."
+      },
+      {
+        "text": "A handler returns the error, and one error handler for the whole server turns it into a response",
+        "correct": true,
+        "why": "Right, the shape lesson 3 built with `fail`, inside the framework."
+      },
+      {
+        "text": "Each handler writes its own error format to the response and then returns an empty value",
+        "correct": false,
+        "why": "That is the standard library's way, and what Echo moves to one place."
+      }
+    ]
+  },
+  {
+    "id": "ex-t4r5ms9j",
+    "version": 1,
+    "section": "echo",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The Echo version answered the body `{\"quantity\": \"two\"}` with `{\"message\":\"Bad Request\"}`. Where did the detail go?",
+    "hint": "Read the server's log.",
+    "choices": [
+      {
+        "text": "Nowhere: Echo discards decoding errors",
+        "correct": false,
+        "why": "The log line carries it in full."
+      },
+      {
+        "text": "Into a response header",
+        "correct": false,
+        "why": "The headers carry no such thing."
+      },
+      {
+        "text": "To the client, in a second response",
+        "correct": false,
+        "why": "One request gets one response."
+      },
+      {
+        "text": "Into the server's log",
+        "correct": true,
+        "why": "Right. Echo keeps a decoding error's text for the operator, the cautious default."
+      }
+    ]
+  },
+  {
+    "id": "ex-7s6h60nj",
+    "version": 1,
+    "section": "echo",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of the four answered an unknown path with JSON, without anyone writing a format?",
+    "hint": "The central error handler.",
+    "choices": [
+      {
+        "text": "Gin",
+        "correct": false,
+        "why": "Gin's 404 was plain text."
+      },
+      {
+        "text": "Fiber",
+        "correct": false,
+        "why": "Fiber's default error handler writes text."
+      },
+      {
+        "text": "Beego",
+        "correct": false,
+        "why": "Beego sent a 2,000-byte HTML page."
+      },
+      {
+        "text": "Echo",
+        "correct": true,
+        "why": "Right, `{\"message\":\"Not Found\"}`, and its 405 kept the `Allow` header."
+      }
+    ]
+  },
+  {
+    "id": "ex-mnxa5qfy",
+    "version": 1,
+    "section": "echo",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Echo v5, a handler's signature is `func(c *echo.Context) ___`.",
+    "hint": "What does every handler return?",
+    "blanks": [
+      {
+        "accept": [
+          "error"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6gj9jpwd",
+    "version": 1,
+    "section": "echo",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants JSON errors on every route, including unknown paths, without losing the 405, and wants few dependencies. Which version from this lesson fits best as it was written?",
+    "hint": "Compare the rows of the second table.",
+    "choices": [
+      {
+        "text": "The standard library",
+        "correct": false,
+        "why": "The mux's own 404 and 405 are text, and lesson 3 showed a catch-all costs the 405."
+      },
+      {
+        "text": "Gin, because it has the most stars and the binding tags",
+        "correct": false,
+        "why": "Gin answers a wrong method with a text 404 by default and brings 55 modules."
+      },
+      {
+        "text": "Echo",
+        "correct": true,
+        "why": "Right: JSON for the 405 and the 404 by default, and eight modules besides yours."
+      },
+      {
+        "text": "Beego, because it brings the whole stack",
+        "correct": false,
+        "why": "Its default 404 is HTML and it brings 102 modules."
+      }
+    ]
+  },
+  {
+    "id": "ex-p3heypaq",
+    "version": 1,
+    "section": "fiber",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is Fiber built on?",
+    "hint": "Not what the other three share.",
+    "choices": [
+      {
+        "text": "`fasthttp`",
+        "correct": true,
+        "why": "Right, a separate HTTP implementation written for speed."
+      },
+      {
+        "text": "`net/http`, like Gin and Echo",
+        "correct": false,
+        "why": "That is exactly what Fiber is not."
+      },
+      {
+        "text": "`httprouter`, the router Gin started from",
+        "correct": false,
+        "why": "That is Gin's ancestry."
+      },
+      {
+        "text": "Express, compiled to Go from JavaScript source",
+        "correct": false,
+        "why": "Fiber copies Express's API style, not its code."
+      }
+    ]
+  },
+  {
+    "id": "ex-834e7ayt",
+    "version": 1,
+    "section": "fiber",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Fiber handler stores `c.Params(\"id\")` in a map read later by a background goroutine, and some stored ids change into other values. Why?",
+    "hint": "Where does that string's memory come from?",
+    "choices": [
+      {
+        "text": "The map needs a mutex",
+        "correct": false,
+        "why": "A race would corrupt the map, not turn one id into another id from a later request."
+      },
+      {
+        "text": "`c.Params` returns a random id",
+        "correct": false,
+        "why": "It returns the segment of the path, at that moment."
+      },
+      {
+        "text": "Fiber restarts between requests",
+        "correct": false,
+        "why": "One process served every request; the banner printed once."
+      },
+      {
+        "text": "The string points into a buffer the next request reuses; it has to be copied first",
+        "correct": true,
+        "why": "Right. Fiber's documentation warns of it and has a setting that copies every value."
+      }
+    ]
+  },
+  {
+    "id": "ex-pzr177rn",
+    "version": 1,
+    "section": "fiber",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these follow from a Fiber handler not being an `http.Handler`? Choose all that apply.",
+    "hint": "Section 05's list.",
+    "choices": [
+      {
+        "text": "Lesson 2's middlewares do not plug in directly",
+        "correct": true,
+        "why": "Right. Fiber ships an adaptor package and its own middleware."
+      },
+      {
+        "text": "`httptest` does not apply as it is; `app.Test` replaces it",
+        "correct": true,
+        "why": "Right. Lesson 15's handler tests use `httptest`."
+      },
+      {
+        "text": "The server speaks no HTTP/2",
+        "correct": true,
+        "why": "Right. `fasthttp` lacks it, where `net/http` has it without being asked."
+      },
+      {
+        "text": "JSON responses are refused",
+        "correct": false,
+        "why": "`c.JSON` answered the event as JSON."
+      },
+      {
+        "text": "Handlers have to return nothing",
+        "correct": false,
+        "why": "Fiber handlers return an `error`, like Echo's."
+      }
+    ]
+  },
+  {
+    "id": "ex-h6bm6hrk",
+    "version": 1,
+    "section": "fiber",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Fiber answered an invalid quantity with `quantity must be between 1 and 10`, with no JSON around it. What would make it answer JSON?",
+    "hint": "Who writes the error?",
+    "choices": [
+      {
+        "text": "Using `fiber.Map` instead of `fiber.NewError` in every handler",
+        "correct": false,
+        "why": "That moves the format back into each handler, which is what a central handler avoids."
+      },
+      {
+        "text": "Sending the request with `--json`",
+        "correct": false,
+        "why": "It was sent with `--json`; that describes the request, not the answer."
+      },
+      {
+        "text": "An error handler of your own in `fiber.Config`",
+        "correct": true,
+        "why": "Right. The default one writes `err.Error()` as text."
+      },
+      {
+        "text": "Upgrading to Fiber v4",
+        "correct": false,
+        "why": "The lesson used v3.6.1 and named no other version."
+      }
+    ]
+  },
+  {
+    "id": "ex-an8bk3v8",
+    "version": 1,
+    "section": "beego",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What kind of framework is Beego?",
+    "hint": "Rails and Django.",
+    "choices": [
+      {
+        "text": "A router in the tradition of httprouter, leaving the ORM and the configuration to you",
+        "correct": false,
+        "why": "That describes httprouter or chi."
+      },
+      {
+        "text": "A wrapper around fasthttp that copies the Express API for people coming from Node.js",
+        "correct": false,
+        "why": "That is Fiber; Beego runs on `net/http`."
+      },
+      {
+        "text": "A full-stack MVC framework with an ORM, configuration, sessions, cache and the `bee` tool",
+        "correct": true,
+        "why": "Right. Routing is one part of what it brings."
+      },
+      {
+        "text": "A validation library",
+        "correct": false,
+        "why": "That is `go-playground/validator`."
+      }
+    ]
+  },
+  {
+    "id": "ex-cmsar0mq",
+    "version": 1,
+    "section": "beego",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A JSON client calls an unknown path on the Beego version. What does it receive?",
+    "hint": "Section 06's transcript.",
+    "choices": [
+      {
+        "text": "`{\"error\":\"no such event\"}`",
+        "correct": false,
+        "why": "That is the handler's 404 for an event; no handler ran here."
+      },
+      {
+        "text": "A 405 with `Allow: GET`, as the standard library's mux would have answered the same request",
+        "correct": false,
+        "why": "Beego answered even the wrong method with its HTML 404."
+      },
+      {
+        "text": "An empty reply, the connection closed without a status line or headers",
+        "correct": false,
+        "why": "The body was a whole page."
+      },
+      {
+        "text": "A 404 page of 2,000 bytes of HTML, powered by beego 2.0.0",
+        "correct": true,
+        "why": "Right, meant for a person in a browser, and naming a version the module is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-5m3nmmgs",
+    "version": 1,
+    "section": "beego",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Beego's log starts with a complaint about `conf/app.conf`. What does it tell you?",
+    "hint": "Whose layout is missing?",
+    "choices": [
+      {
+        "text": "The server failed to start",
+        "correct": false,
+        "why": "The next line says it is running, and it answered every request."
+      },
+      {
+        "text": "The routes were read from that file",
+        "correct": false,
+        "why": "They were registered in `main` with `web.Get` and `web.Post`."
+      },
+      {
+        "text": "The module download failed",
+        "correct": false,
+        "why": "The program built and ran; it is a runtime notice."
+      },
+      {
+        "text": "Beego expects a project laid out its way, configuration file included",
+        "correct": true,
+        "why": "Right. A full-stack framework assumes a structure."
+      }
+    ]
+  },
+  {
+    "id": "ex-0pmz8ngh",
+    "version": 1,
+    "section": "beego",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the Beego version need `web.BConfig.CopyRequestBody = true`?",
+    "hint": "The handler reads `ctx.Input.RequestBody`.",
+    "choices": [
+      {
+        "text": "Without it `ctx.Input.RequestBody` does not hold the body",
+        "correct": true,
+        "why": "Right, a setting of Beego's global configuration object."
+      },
+      {
+        "text": "It limits the body to 1 MiB",
+        "correct": false,
+        "why": "That was lesson 3's `MaxBytesReader`, in boxoffice."
+      },
+      {
+        "text": "It makes Beego decode JSON instead of forms",
+        "correct": false,
+        "why": "The handler decodes with `json.Unmarshal` itself."
+      },
+      {
+        "text": "It turns off the HTML error pages for every route of the program",
+        "correct": false,
+        "why": "The HTML 404 still arrived with this setting on."
+      }
+    ]
+  },
+  {
+    "id": "ex-qeb0968p",
+    "version": 1,
+    "section": "beego",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`cat -v` shows `^[[1;34m[I]^[[0m` in Beego's log. What are those characters?",
+    "hint": "`^[` is the escape character.",
+    "choices": [
+      {
+        "text": "Bytes of a log file corrupted by two processes writing to it at the same time",
+        "correct": false,
+        "why": "They are deliberate escape sequences."
+      },
+      {
+        "text": "The id Beego gives each request, so that its lines can be grouped later",
+        "correct": false,
+        "why": "`[I]` marks the level, information."
+      },
+      {
+        "text": "Terminal colour codes, written though no terminal was watching",
+        "correct": true,
+        "why": "Right. A log meant for a machine should not contain them."
+      },
+      {
+        "text": "Compressed text",
+        "correct": false,
+        "why": "Nothing in the log is compressed."
+      }
+    ]
+  },
+  {
+    "id": "ex-ahjkw4w8",
+    "version": 1,
+    "section": "side-by-side",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each version to its binary size.",
+    "hint": "The first table of section 07.",
+    "pairs": [
+      {
+        "left": "standard library",
+        "right": "9.8 MB"
+      },
+      {
+        "left": "Gin",
+        "right": "31.6 MB"
+      },
+      {
+        "left": "Echo",
+        "right": "11.1 MB"
+      },
+      {
+        "left": "Beego",
+        "right": "21.7 MB"
+      }
+    ],
+    "right_distractors": [
+      "15.3 MB"
+    ]
+  },
+  {
+    "id": "ex-3mra3zwt",
+    "version": 1,
+    "section": "side-by-side",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Across the five versions, which measure barely moved?",
+    "hint": "Three numbers were read off each.",
+    "choices": [
+      {
+        "text": "The modules in each program's module graph",
+        "correct": false,
+        "why": "From 0 to 102 besides your own."
+      },
+      {
+        "text": "The non-blank lines of `main.go`",
+        "correct": true,
+        "why": "Right, from 60 to 75: a framework saved about a dozen lines here."
+      },
+      {
+        "text": "The size in bytes of each binary that `go build` wrote",
+        "correct": false,
+        "why": "From 9.8 MB to 31.6 MB."
+      },
+      {
+        "text": "The number of routes",
+        "correct": false,
+        "why": "Every version has the same two, by design."
+      }
+    ]
+  },
+  {
+    "id": "ex-rts79d8z",
+    "version": 1,
+    "section": "side-by-side",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "According to the lesson, what is the real cost of a framework?",
+    "hint": "Not the bytes.",
+    "choices": [
+      {
+        "text": "The bytes of a larger binary",
+        "correct": false,
+        "why": "The lesson says explicitly: not the bytes."
+      },
+      {
+        "text": "The extra lines each handler needs",
+        "correct": false,
+        "why": "The frameworks saved lines rather than adding them."
+      },
+      {
+        "text": "A licence fee",
+        "correct": false,
+        "why": "All four are free; licences are mentioned only as something to approve."
+      },
+      {
+        "text": "Behaviours you did not choose",
+        "correct": true,
+        "why": "Right: Gin's 404 for a wrong method, Echo's hidden detail, Beego's HTML page."
+      }
+    ]
+  },
+  {
+    "id": "ex-7dw3z8gw",
+    "version": 1,
+    "section": "side-by-side",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Your team's existing service is written in Gin, and you are adding a second service. What does the lesson advise?",
+    "hint": "The first sentence of \"Which one, if any\".",
+    "choices": [
+      {
+        "text": "Use Gin again",
+        "correct": true,
+        "why": "Right: consistency inside a codebase is worth more than any row of the table."
+      },
+      {
+        "text": "Switch to Echo, which has fewer modules",
+        "correct": false,
+        "why": "Fewer modules is one row; the lesson ranks consistency above every row."
+      },
+      {
+        "text": "Move both services to Fiber for its speed",
+        "correct": false,
+        "why": "Only where its speed has been measured to matter."
+      },
+      {
+        "text": "Write the new one in Beego to get an ORM",
+        "correct": false,
+        "why": "Beego costs the most to change your mind about."
+      }
+    ]
+  },
+  {
+    "id": "ex-xmhewpga",
+    "version": 1,
+    "section": "side-by-side",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many modules besides the program's own came with the Beego version?",
+    "hint": "The most of the four.",
+    "value": 102,
+    "tolerance": 0,
+    "unit": "modules"
+  },
+  {
+    "id": "ex-emv32shs",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the five versions by binary size, smallest first.",
+    "hint": "9.8, 11.1, 15.3, 21.7, 31.6.",
+    "items": [
+      "standard library",
+      "Echo",
+      "Fiber",
+      "Beego",
+      "Gin"
+    ],
+    "trap": "Gin carries more modules than Fiber and Echo together."
+  },
+  {
+    "id": "ex-s4txs6wv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service spends most of each request waiting on a database, and its team knows the standard library and its middleware. Someone proposes Fiber for speed. What is the lesson's answer?",
+    "hint": "Measured, and at what cost?",
+    "choices": [
+      {
+        "text": "Adopt it: fasthttp is faster and nothing else changes",
+        "correct": false,
+        "why": "The middleware, `httptest` and HTTP/2 all change."
+      },
+      {
+        "text": "Refuse it because Fiber writes errors as text",
+        "correct": false,
+        "why": "That is a default you change in `fiber.Config`, not the deciding issue."
+      },
+      {
+        "text": "Doubt the speed is felt, and count what leaving `net/http` costs",
+        "correct": true,
+        "why": "Right. Fiber suits services where its speed has been measured to matter."
+      },
+      {
+        "text": "Adopt it because it has the fewest modules",
+        "correct": false,
+        "why": "Fiber brings 25; Echo brings 8."
+      }
+    ]
+  }
+]

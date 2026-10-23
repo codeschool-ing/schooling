@@ -1,0 +1,552 @@
+[
+  {
+    "id": "ex-5fe2tb5p",
+    "version": 1,
+    "section": "how-it-works",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the OSV entry for GO-2022-1059, which field narrows the problem in `golang.org/x/text` down to `MatchStrings` and `ParseAcceptLanguage`?",
+    "hint": "There are three levels in an entry, and this is the innermost.",
+    "choices": [
+      {
+        "text": "`aliases`",
+        "correct": false,
+        "why": "`aliases` lists the other names of the same problem, a CVE number and a GitHub advisory. It says nothing about code."
+      },
+      {
+        "text": "`ranges`, with its `introduced` and `fixed` events",
+        "correct": false,
+        "why": "The range is the module level: which versions, from `0` up to but not including `0.3.8`. Every function of every package is inside it."
+      },
+      {
+        "text": "`ecosystem_specific.imports[].symbols`",
+        "correct": true,
+        "why": "Right. Under the package path `golang.org/x/text/language`, `symbols` names the two functions the fix changed, and that list is what reachability is checked against."
+      },
+      {
+        "text": "`package.name`",
+        "correct": false,
+        "why": "That is the module, `golang.org/x/text`: the coarsest of the three levels."
+      }
+    ]
+  },
+  {
+    "id": "ex-b6tmkkd7",
+    "version": 1,
+    "section": "how-it-works",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`govulncheck -version` prints `Go: go1.27.1` on its first line. Which Go is that?",
+    "hint": "Think about which standard library a source scan judges.",
+    "choices": [
+      {
+        "text": "The Go that compiled the `govulncheck` binary in `~/go/bin`",
+        "correct": false,
+        "why": "A plausible reading, and not what the line reports. A source scan judges the standard library you build with, so it asks the go command on your `PATH`."
+      },
+      {
+        "text": "The go command found on `PATH`",
+        "correct": true,
+        "why": "Right. It runs `go env GOVERSION`, and that release's standard library is what the scan checks; with `GOTOOLCHAIN=go1.27.2` the same scan found nothing."
+      },
+      {
+        "text": "The version in the `go` line of the current `go.mod`",
+        "correct": false,
+        "why": "`go.mod` says the oldest Go the module accepts. The scan uses the toolchain that will actually build it."
+      },
+      {
+        "text": "The newest Go release the database has entries for",
+        "correct": false,
+        "why": "The database is not a Go release. Its address is the third line, `DB: https://vuln.go.dev`."
+      }
+    ]
+  },
+  {
+    "id": "ex-t61s1e8c",
+    "version": 1,
+    "section": "how-it-works",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put what `govulncheck` checks for GO-2022-1059 in order, from the broadest statement to the most precise one.",
+    "hint": "The OSV entry is read from the outside in, and reachability comes last.",
+    "items": [
+      "the module `golang.org/x/text` is required at a version below `0.3.8`",
+      "the package `golang.org/x/text/language` is imported",
+      "a function the entry names, such as `ParseAcceptLanguage`, is in the call graph",
+      "a path of calls from `main` reaches that function"
+    ]
+  },
+  {
+    "id": "ex-tvn6pfs1",
+    "version": 1,
+    "section": "how-it-works",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You run `govulncheck ./...` on a library module: no `main` package, only exported functions other people call. Where does the call graph start?",
+    "hint": "The lesson named the entry points for both kinds of package.",
+    "choices": [
+      {
+        "text": "Nowhere, so a library can only ever have package-level findings",
+        "correct": false,
+        "why": "A library would then be clean by construction. `govulncheck` treats its public surface as the place calls come from."
+      },
+      {
+        "text": "At its tests, which play the part of `main`",
+        "correct": false,
+        "why": "Test files are left out unless you pass `-test`, and even then they add entry points; they do not replace the exported API."
+      },
+      {
+        "text": "At every exported function and method, and the `init` functions",
+        "correct": true,
+        "why": "Right. Any of them may be called by a program you never see, so each counts as an entry point, and a path from one to a named function is a symbol-level finding."
+      },
+      {
+        "text": "At the `main` of whichever program imported it most recently",
+        "correct": false,
+        "why": "`govulncheck` sees only the code in front of it. It knows nothing about the programs that will import the library."
+      }
+    ]
+  },
+  {
+    "id": "ex-86xjpc3f",
+    "version": 1,
+    "section": "reachable-or-not",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`accept` and `tag` both import `golang.org/x/text/language` at v0.3.7. `govulncheck ./accept` exits 3 and `govulncheck ./tag` exits 0. What separates them?",
+    "hint": "Look at which function of the package each one calls.",
+    "choices": [
+      {
+        "text": "`accept` imports the package directly and `tag` gets it indirectly",
+        "correct": false,
+        "why": "Both import `golang.org/x/text/language` in their own source; the import lines are identical."
+      },
+      {
+        "text": "Only `accept` reaches `ParseAcceptLanguage`",
+        "correct": true,
+        "why": "Right. `main` calls `preferred`, which calls a function GO-2022-1059 names. `tag` calls `language.Parse`, which the entry does not name, so its finding stays at the package level."
+      },
+      {
+        "text": "`tag` was scanned with an older copy of the database",
+        "correct": false,
+        "why": "Both scans used the same `-db file:///home/ana/vulndb`, a minute apart."
+      },
+      {
+        "text": "`tag` handles its error from `language.Parse`, and a handled error makes the call safe",
+        "correct": false,
+        "why": "`accept` checks its error too. `govulncheck` asks whether the function is reached, not what happens to its result."
+      }
+    ]
+  },
+  {
+    "id": "ex-t3bpxq3b",
+    "version": 1,
+    "section": "reachable-or-not",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`govulncheck -show verbose ./tag` listed 14 entries under Module Results. Two were in other packages of `golang.org/x/text`. How many of the 14 were in the standard library of Go 1.27.1?",
+    "hint": "The two `golang.org/x/text` entries were GO-2026-6629 and GO-2026-5970.",
+    "value": 12,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-vn9v02dj",
+    "version": 1,
+    "section": "reachable-or-not",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On Linux, a source scan of `tag` lists GO-2026-6604, marked `Platforms: windows`, under Package Results. Why does a Windows bug appear at all?",
+    "hint": "Compare with what the scan of the built binary did with the same entry.",
+    "choices": [
+      {
+        "text": "With no target system, nothing is filtered by platform",
+        "correct": true,
+        "why": "Right. Source is not tied to one system, so the scan lists the entry and marks the platform. The binary, which records `GOOS=linux`, dropped it from its count."
+      },
+      {
+        "text": "Every program imports `os`, so it is always counted",
+        "correct": false,
+        "why": "Importing `os` puts it at the package level; the platform line is about which systems the bug exists on, and the binary scan left it out."
+      },
+      {
+        "text": "`govulncheck` guessed that `tag` will be cross-compiled",
+        "correct": false,
+        "why": "Nothing in the module says so, and `govulncheck` does not guess intentions; it simply does not filter source by platform."
+      },
+      {
+        "text": "The local copy of the database lost its platform field",
+        "correct": false,
+        "why": "The field is there: the output prints `Platforms: windows` from it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xnqq4e0b",
+    "version": 1,
+    "section": "reachable-or-not",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The default report shows one step of the call path. `govulncheck -show ___ ./accept` prints all of it: `main`, then `preferred`, then `ParseAcceptLanguage` in `parse.go`.",
+    "hint": "The plural of the word the report uses for a call path.",
+    "blanks": [
+      {
+        "accept": [
+          "traces"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-b0vts0h7",
+    "version": 1,
+    "section": "binaries-and-reports",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`accept-bin` scanned with `-mode binary` reported 1 vulnerability. The same program built with `-ldflags=\"-s -w\"` reported 15. What happened?",
+    "hint": "Ask what the binary scan reads, and what `-s -w` removes.",
+    "choices": [
+      {
+        "text": "No symbol table, so every vulnerable symbol of every module",
+        "correct": true,
+        "why": "Right. Stripping removed every function name, so with nothing to look names up in, it falls back to module-level precision, and twelve standard-library entries `accept` never imports joined the list."
+      },
+      {
+        "text": "The smaller binary uses different code that really is vulnerable",
+        "correct": false,
+        "why": "`-s -w` removes debugging and symbol information; the machine code that runs is the same."
+      },
+      {
+        "text": "The linker kept more functions",
+        "correct": false,
+        "why": "The stripped file is smaller, 1,740,960 bytes against 2,683,796. Nothing was added."
+      },
+      {
+        "text": "The build record was removed, so the versions were guessed",
+        "correct": false,
+        "why": "The versions in the output are the real ones, `v0.3.7` and `go1.27.1`; the build record survives `-s -w`."
+      }
+    ]
+  },
+  {
+    "id": "ex-2xcv20q6",
+    "version": 1,
+    "section": "binaries-and-reports",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A CI step runs `govulncheck -format json ./... > vulns.json` and uploads the file. Months later somebody notices a symbol-level finding in it that the job never flagged. Why did the step stay green?",
+    "hint": "Check the exit-status table for `-format`.",
+    "choices": [
+      {
+        "text": "Symbol-level findings only appear in the text output",
+        "correct": false,
+        "why": "The JSON had it: a finding whose first frame names a function, exactly as the `jq` filter picked out."
+      },
+      {
+        "text": "Redirecting the output with `>` hides the exit status",
+        "correct": false,
+        "why": "A redirection sends standard output to a file; the exit status still reaches the shell, as `echo $?` showed."
+      },
+      {
+        "text": "JSON output always exits 0, findings or not",
+        "correct": true,
+        "why": "Right. The same holds for `sarif` and `openvex`. A job that writes JSON has to read the findings itself, or run a second, text scan for the exit status."
+      },
+      {
+        "text": "CI runners cannot reach vuln.go.dev",
+        "correct": false,
+        "why": "Then the scan would have failed with an error, and there would have been no findings in the file at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-s3ewacc0",
+    "version": 1,
+    "section": "binaries-and-reports",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each SARIF `level` that `govulncheck -format sarif` wrote with the finding it stands for.",
+    "hint": "The scan of `accept` gave 1 error, 1 warning and 14 notes.",
+    "pairs": [
+      {
+        "left": "`error`",
+        "right": "a vulnerable function is reached from your code"
+      },
+      {
+        "left": "`warning`",
+        "right": "a vulnerable package is imported, none of its named functions called"
+      },
+      {
+        "left": "`note`",
+        "right": "a vulnerable module is required, its package never imported"
+      }
+    ],
+    "right_distractors": [
+      "the scan could not load the packages"
+    ]
+  },
+  {
+    "id": "ex-s7xrzjj8",
+    "version": 1,
+    "section": "binaries-and-reports",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`govulncheck ./...` on lesson 1's `hits` exits 0 with \"affected by 0 vulnerabilities\". `govulncheck -scan module` on the same code exits 3 with \"may be affected by 13\". Which reading is right?",
+    "hint": "What does each level look at?",
+    "choices": [
+      {
+        "text": "The module scan is right, and the symbol scan missed 13 calls",
+        "correct": false,
+        "why": "Nothing was traced at the module level, which is why it says \"may\". The symbol scan looked for paths of calls and found none."
+      },
+      {
+        "text": "Both are right: no call reaches a named function, and Go 1.27.1 has 13 entries",
+        "correct": true,
+        "why": "Right. The module level counts every entry for the modules and the Go release in use; `hits` calls none of them. The exit status follows the level asked for."
+      },
+      {
+        "text": "Neither: `hits` has no dependencies, so 13 must be an error in the database",
+        "correct": false,
+        "why": "The 13 are real entries against the standard library, which every Go program depends on; the fix is Go 1.27.2."
+      },
+      {
+        "text": "The symbol scan, because `-scan module` only works on binaries",
+        "correct": false,
+        "why": "`-scan module` ran on the source of `hits` in the transcript. It refuses a package pattern; it does not need a binary."
+      }
+    ]
+  },
+  {
+    "id": "ex-9q5k1epj",
+    "version": 1,
+    "section": "fixing-and-ci",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every remaining finding on `hits` says `Fixed in: stdlib@go1.27.2`. What closes them?",
+    "hint": "The standard library is not in `go.mod`'s requirements.",
+    "choices": [
+      {
+        "text": "`go get stdlib@go1.27.2`",
+        "correct": false,
+        "why": "There is no module called `stdlib` to get. The name in the report is a label for the standard library, which comes with the toolchain."
+      },
+      {
+        "text": "Installing Go 1.27.2 and rebuilding every binary",
+        "correct": true,
+        "why": "Right. Under `GOTOOLCHAIN=go1.27.2` the scan found nothing; the real fix is installing that release and replacing the binaries built with 1.27.1."
+      },
+      {
+        "text": "`go mod tidy`, which refreshes every requirement to its newest patch",
+        "correct": false,
+        "why": "`tidy` adds missing requirements and removes unused ones. It upgrades nothing, and it never touches the Go release."
+      },
+      {
+        "text": "Nothing: standard-library entries are informational and never matter",
+        "correct": false,
+        "why": "They matter as soon as code reaches one, and a server that calls `net/http` would. They are module-level for `hits` only because `hits` calls none of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-czb4eezb",
+    "version": 1,
+    "section": "fixing-and-ci",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `go get golang.org/x/text@latest`, `govulncheck ./...` exits 0. The `accept-bin` on the server was built before the upgrade. What does a binary scan of it say?",
+    "hint": "The binary carries its own record of the modules it was built with.",
+    "choices": [
+      {
+        "text": "Clean: the binary reads the module versions from the current `go.mod`",
+        "correct": false,
+        "why": "A binary never reads `go.mod`; it carries the versions it was built with, and `go version -m` prints them."
+      },
+      {
+        "text": "Still affected, `Found in: golang.org/x/text@v0.3.7`, until it is rebuilt",
+        "correct": true,
+        "why": "Right. The scan exited 3 until `go build` replaced the file, and then 0. The upgrade reaches production only with the new binary."
+      },
+      {
+        "text": "It cannot say anything without the source code",
+        "correct": false,
+        "why": "Binary mode exists for exactly this case; it read the build record and the symbol table."
+      },
+      {
+        "text": "Affected by 15 vulnerabilities, because old binaries lose their symbols",
+        "correct": false,
+        "why": "The 15 came from the stripped build. An ordinary binary keeps its symbol table however old it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-m798y46t",
+    "version": 1,
+    "section": "fixing-and-ci",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The CI job runs `govulncheck` on `push` and `pull_request`. Why does it also have a `schedule` trigger?",
+    "hint": "Which of the two inputs to a scan can change on a day nobody commits?",
+    "choices": [
+      {
+        "text": "Scheduled runs are cheaper on GitHub's runners",
+        "correct": false,
+        "why": "Cost is not the reason given; the scheduled run does the same work as any other."
+      },
+      {
+        "text": "`govulncheck` caches results and needs a daily refresh",
+        "correct": false,
+        "why": "Each run fetches what it needs from the database. There is no result cache to refresh."
+      },
+      {
+        "text": "The database changes while the code does not",
+        "correct": true,
+        "why": "Right. A commit that passed on Monday fails on Thursday when an entry for a function it always called is published, and the schedule finds it without waiting for an unrelated pull request."
+      },
+      {
+        "text": "Pull requests from forks skip the vulnerability check",
+        "correct": false,
+        "why": "Nothing in the job file says so; the reason for the schedule is about time, not about who opened the pull request."
+      }
+    ]
+  },
+  {
+    "id": "ex-d8zv6tmh",
+    "version": 1,
+    "section": "fixing-and-ci",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`govulncheck ./...` exits 3 with a symbol-level finding in a module you require. Put the remediation in order.",
+    "hint": "Find the path, find who chose the version, change it, prove nothing broke, prove it closed, ship.",
+    "items": [
+      "read the full path with `-show traces`",
+      "run `go mod why -m` on the module to see what brings it in",
+      "`go get` the module at the fixed or the newest version",
+      "run `go mod tidy` and `go test ./...`",
+      "rerun `govulncheck ./...` and see it exit 0",
+      "rebuild the binaries and replace the running ones"
+    ]
+  },
+  {
+    "id": "ex-e7s561en",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are limits of `govulncheck` that its documentation or this lesson's runs showed? Select all that apply.",
+    "hint": "Three are limits; the other three are things it does not do at all.",
+    "choices": [
+      {
+        "text": "A call made through `reflect` is invisible to the source scan",
+        "correct": true,
+        "why": "Right. Static analysis cannot see which function a reflective call will pick, so a path through it is missed."
+      },
+      {
+        "text": "A stripped binary is reported at module-level precision",
+        "correct": true,
+        "why": "Right. `accept-small` went from 1 finding to 15 because no function names were left to check."
+      },
+      {
+        "text": "There is no way to mark a finding as accepted",
+        "correct": true,
+        "why": "Right. The documentation lists the absence; a decision to live with a finding has to live outside the tool."
+      },
+      {
+        "text": "It sends your source code to vuln.go.dev for analysis",
+        "correct": false,
+        "why": "The analysis runs on your machine. By its documentation, the requests carry module paths and nothing about your code."
+      },
+      {
+        "text": "It only checks the modules listed directly in `go.mod`",
+        "correct": false,
+        "why": "It checks the whole build, standard library included: `hits` has no requirements and still got 13 entries at the module level."
+      },
+      {
+        "text": "It ignores the standard library unless you pass `-std`",
+        "correct": false,
+        "why": "There is no `-std` flag in `govulncheck -h`, and every scan in the lesson listed standard-library entries."
+      }
+    ]
+  },
+  {
+    "id": "ex-tswkmr4e",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`go mod why -m golang.org/x/net` shows your code reaching it through `example.com/client`, whose newest release still requires a vulnerable `golang.org/x/net`. What fixes the finding today?",
+    "hint": "Go builds with the highest version any module in the build asks for.",
+    "choices": [
+      {
+        "text": "Wait for `example.com/client` to publish a release that requires the fix",
+        "correct": false,
+        "why": "That works eventually, and leaves the finding open until a stranger acts. Nothing stops you raising the version yourself."
+      },
+      {
+        "text": "Fork `example.com/client` and point a `replace` directive at the fork",
+        "correct": false,
+        "why": "Heavy, and unnecessary: the client's code does not change, only the version of a module it uses."
+      },
+      {
+        "text": "`go get golang.org/x/net` at the fixed version in your own module",
+        "correct": true,
+        "why": "Right. Minimal version selection takes the highest version anybody requires, so your requirement wins over the client's older one. Run the tests, because the client now runs on a version it was not released with."
+      },
+      {
+        "text": "Delete `golang.org/x/net` from `go.sum`",
+        "correct": false,
+        "why": "`go.sum` holds checksums, not choices; the next build puts the same line back."
+      }
+    ]
+  },
+  {
+    "id": "ex-w8e38qm5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A binary scan reports `Vulnerable symbols found: #1: language.ParseAcceptLanguage` where the source scan printed a trace. What can you not learn from the binary scan?",
+    "hint": "What does a Go binary keep, and what does it throw away?",
+    "choices": [
+      {
+        "text": "Which version of the module is in the binary",
+        "correct": false,
+        "why": "That it knows exactly: `Found in: golang.org/x/text@v0.3.7`, from the build record."
+      },
+      {
+        "text": "Who calls it, and from where",
+        "correct": true,
+        "why": "Right. A binary keeps function names but no call information, so there is no trace and no line of your code to go to."
+      },
+      {
+        "text": "Whether the function is linked into the file at all",
+        "correct": false,
+        "why": "That is exactly what the symbol table answers, and why the finding is at the symbol level."
+      },
+      {
+        "text": "Which version fixes it",
+        "correct": false,
+        "why": "The binary scan printed `Fixed in: golang.org/x/text@v0.3.8`, from the database, as the source scan did."
+      }
+    ]
+  }
+]

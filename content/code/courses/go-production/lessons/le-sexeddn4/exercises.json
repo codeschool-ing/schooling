@@ -1,0 +1,592 @@
+[
+  {
+    "id": "ex-0gbwadvc",
+    "version": 1,
+    "section": "a-static-binary",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana builds `hits` with a plain `go build` on a machine where `CGO_ENABLED` is 1, yet `ldd hits` says `not a dynamic executable`. Why?",
+    "hint": "Look at what `go list -deps . | grep -x runtime/cgo` answered.",
+    "choices": [
+      {
+        "text": "Go never links anything dynamically when it builds for Linux",
+        "correct": false,
+        "why": "Section 02's `probe` came out `dynamically linked` from the same compiler, because `os/user` used cgo."
+      },
+      {
+        "text": "Nothing it imports has a C implementation",
+        "correct": true,
+        "why": "Right. `grep` found no `runtime/cgo` among the dependencies and exited 1, so the switch had nothing to switch on."
+      },
+      {
+        "text": "`ldd` only reads binaries built with `CGO_ENABLED=0`",
+        "correct": false,
+        "why": "`ldd` read `probe` and listed `libc.so.6` and the loader. It reads any ELF file and reports what it would load."
+      },
+      {
+        "text": "`-trimpath` strips the dynamic section out of the file",
+        "correct": false,
+        "why": "This build used no flags at all. `-trimpath` rewrites recorded file paths and has nothing to do with linking."
+      }
+    ]
+  },
+  {
+    "id": "ex-e2dne0m9",
+    "version": 1,
+    "section": "a-static-binary",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ldd probe` listed `/lib64/ld-linux-x86-64.so.2`. What is that file's job?",
+    "hint": "It is not the C library itself; that was the line above it.",
+    "choices": [
+      {
+        "text": "The dynamic loader, which joins `libc.so.6` to the program",
+        "correct": true,
+        "why": "Right. A dynamically linked binary names its loader, and the kernel runs the loader, which finds the libraries and links them in."
+      },
+      {
+        "text": "It is the Go runtime, which every Go program on the machine shares",
+        "correct": false,
+        "why": "The Go runtime is inside every Go binary; `hits` is static and still has one. Nothing Go-specific is shared."
+      },
+      {
+        "text": "It is a page of kernel code mapped into every process, with no file",
+        "correct": false,
+        "why": "That is `linux-vdso.so.1`, which is not a file at all. The loader is a real file on disk."
+      },
+      {
+        "text": "It is the cgo compiler, which turns the C parts into code at start-up",
+        "correct": false,
+        "why": "cgo runs at build time, through `gcc`. Nothing compiles anything when `probe` starts."
+      }
+    ]
+  },
+  {
+    "id": "ex-fwh1dckw",
+    "version": 1,
+    "section": "a-static-binary",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Built with `CGO_ENABLED=0`, `probe` is `statically linked` and still prints Ana's account, São Paulo's time and 127 authorities. What does that tell you about the image it will go into?",
+    "hint": "Static removed one kind of dependency. What kind is left?",
+    "choices": [
+      {
+        "text": "Nothing: a static binary carries everything it needs",
+        "correct": false,
+        "why": "The answers came from `/etc/passwd`, `/usr/share/zoneinfo` and the certificate bundle of this machine. Section 04 runs the same binary where those files are missing, and all three answers fail."
+      },
+      {
+        "text": "The image must provide glibc, because `os/user` calls it",
+        "correct": false,
+        "why": "With cgo off `os/user` reads `/etc/passwd` itself; `ldd` said `not a dynamic executable`."
+      },
+      {
+        "text": "It needs no C library, but it still reads data files that the image has to contain",
+        "correct": true,
+        "why": "Right. `CGO_ENABLED=0` removed the C library and the loader. The user database, the zone rules and the certificates are data, read at run time from whatever filesystem the program sees."
+      },
+      {
+        "text": "It will only run on Ubuntu 24.04",
+        "correct": false,
+        "why": "Nothing in a static Linux binary is tied to a distribution. Section 04 runs it on Debian's distroless files and it answers."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ar6j4kk",
+    "version": 1,
+    "section": "the-image",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The `Containerfile` has two `FROM` lines. What ends up in `hits:1`?",
+    "hint": "Only one stage becomes the image.",
+    "choices": [
+      {
+        "text": "Both stages, merged into one filesystem",
+        "correct": false,
+        "why": "Then the image would weigh more than the 912 MB of `golang`. It is 5.84 MB."
+      },
+      {
+        "text": "The distroless base and the one file `COPY --from=build` named",
+        "correct": true,
+        "why": "Right. Only the last stage becomes the image, and the only thing it takes from the first is `/src/hits`."
+      },
+      {
+        "text": "The Go toolchain and the source, so that the program rebuilds itself on start",
+        "correct": false,
+        "why": "The toolchain stays in the build stage. `podman history` shows the binary layer and the base's twelve, nothing else."
+      },
+      {
+        "text": "The first stage, because it is named",
+        "correct": false,
+        "why": "The name `build` is only a handle for `COPY --from`. Being named does not make a stage ship."
+      }
+    ]
+  },
+  {
+    "id": "ex-bxrnj49f",
+    "version": 1,
+    "section": "the-image",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lines of section 03's `Containerfile` in the order the file has them.",
+    "hint": "One stage builds, the next ships.",
+    "items": [
+      "`FROM docker.io/library/golang:1.27.1 AS build`",
+      "`WORKDIR /src`",
+      "`COPY . .`",
+      "`RUN CGO_ENABLED=0 go build -trimpath -ldflags=\"-s -w\" -o hits .`",
+      "`FROM gcr.io/distroless/static-debian12:nonroot`",
+      "`COPY --from=build /src/hits /hits`",
+      "`ENTRYPOINT [\"/hits\"]`"
+    ]
+  },
+  {
+    "id": "ex-ez1m38kj",
+    "version": 1,
+    "section": "the-image",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`~/ship/.containerignore` reads `*`, `!go.mod`, `!*.go`, `!internal/`. Which of these files reach the build stage through `COPY . .`? Choose every one that does.",
+    "hint": "`*` shuts everything out; each `!` lets one pattern back, matched from the top of the context.",
+    "choices": [
+      {
+        "text": "`go.mod`",
+        "correct": true,
+        "why": "Named by `!go.mod`."
+      },
+      {
+        "text": "`internal/tally/tally.go`",
+        "correct": true,
+        "why": "`!internal/` lets the directory back with everything under it."
+      },
+      {
+        "text": "`main_test.go`",
+        "correct": true,
+        "why": "It is a `.go` file at the top of the context, so `!*.go` matches it. Harmless, and a reason to read what a pattern matches before trusting it."
+      },
+      {
+        "text": "`access.log`",
+        "correct": false,
+        "why": "Nothing lets it back after `*`, which is the point: 20,000 lines the build does not need."
+      },
+      {
+        "text": "`cosign.key`",
+        "correct": false,
+        "why": "Shut out by `*`. A private key in a build context is how keys end up published inside images."
+      },
+      {
+        "text": "`tools/genlog/main.go`",
+        "correct": false,
+        "why": "`*.go` matches names at the top only, and nothing names `tools/`. The listing of `/src` in the build stage had no `tools` directory."
+      }
+    ]
+  },
+  {
+    "id": "ex-crz40gmh",
+    "version": 1,
+    "section": "the-image",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`private.log` has mode 600 and belongs to Ana. Mounted with `-v \"$PWD/private.log:/data/access.log:ro\"`, `hits:1` answers `permission denied`. Why?",
+    "hint": "Who is the process inside, seen from outside?",
+    "choices": [
+      {
+        "text": "`:ro` forbids reading the file as well as writing it",
+        "correct": false,
+        "why": "The same `:ro` mount of `access.log`, mode 644, was read without trouble."
+      },
+      {
+        "text": "Distroless has no `open` system call for the program to use",
+        "correct": false,
+        "why": "System calls belong to the kernel, which every container shares; `hits` opened `access.log` the same way."
+      },
+      {
+        "text": "User 65532 maps to an id that is not Ana",
+        "correct": true,
+        "why": "Right. Rootless Podman maps container users onto ids set aside for Ana; 65532 lands on one of them, which has no permission on a file only Ana may read."
+      },
+      {
+        "text": "Podman refuses to mount files outside the build context",
+        "correct": false,
+        "why": "`podman run -v` takes any path the user can reach; the context matters only to `podman build`."
+      }
+    ]
+  },
+  {
+    "id": "ex-3bdrhtds",
+    "version": 1,
+    "section": "the-image",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Right after that failure, `podman run --rm --network=none -i hits:1 top -n 1 < private.log` prints `/login 2576`. Why does this way work?",
+    "hint": "Who opens the file in each case?",
+    "choices": [
+      {
+        "text": "`-i` makes the container run as root, which reads any file",
+        "correct": false,
+        "why": "`-i` only keeps standard input open. The user is still 65532, from the image's configuration."
+      },
+      {
+        "text": "Ana's shell opens the file and sends it down standard input",
+        "correct": true,
+        "why": "Right. The `<` belongs to the shell, which runs as Ana, and lesson 1's `hits` reads standard input when it is given no file."
+      },
+      {
+        "text": "Without a mount, Podman copies the file into the image before starting it",
+        "correct": false,
+        "why": "Nothing is copied into the image; it stays 5.84 MB. The bytes flow through a pipe while the container runs."
+      },
+      {
+        "text": "`top` needs fewer permissions to run than `count` does",
+        "correct": false,
+        "why": "Permissions belong to files and users, not to subcommands. `count` on standard input would work too."
+      }
+    ]
+  },
+  {
+    "id": "ex-tbsyv1w0",
+    "version": 1,
+    "section": "smaller-than-small",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each failure to the file whose absence caused it.",
+    "hint": "Three came from `probe` on scratch, one from a dynamic `probe` on distroless.",
+    "pairs": [
+      {
+        "left": "`user: Current requires cgo or $USER set in environment`",
+        "right": "`/etc/passwd`"
+      },
+      {
+        "left": "`unknown time zone America/Sao_Paulo`",
+        "right": "`/usr/share/zoneinfo`"
+      },
+      {
+        "left": "`certs: 0 authorities`",
+        "right": "`/etc/ssl/certs/ca-certificates.crt`"
+      },
+      {
+        "left": "`exec /probe: no such file or directory`",
+        "right": "`/lib64/ld-linux-x86-64.so.2`"
+      }
+    ],
+    "right_distractors": [
+      "`/bin/sh`"
+    ]
+  },
+  {
+    "id": "ex-fyr4r0tz",
+    "version": 1,
+    "section": "smaller-than-small",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On scratch, `x509.SystemCertPool` returned an empty pool and a `nil` error. Why is that the most dangerous of the three failures?",
+    "hint": "What would a real program do next?",
+    "choices": [
+      {
+        "text": "It crashes the program with a panic during start-up, before `main` runs",
+        "correct": false,
+        "why": "Nothing crashed: `probe` printed `0 authorities` and exited normally."
+      },
+      {
+        "text": "No error is returned, so the program fails later, elsewhere",
+        "correct": true,
+        "why": "Right. With no error to check, the failure surfaces later and somewhere else, as a certificate the client cannot verify."
+      },
+      {
+        "text": "It turns certificate checking off for every connection the program makes",
+        "correct": false,
+        "why": "An empty pool trusts nobody; every server certificate fails the check. It is the opposite of disabled."
+      },
+      {
+        "text": "It makes the image larger",
+        "correct": false,
+        "why": "The scratch image was the smaller one, 4.52 MB against 7.71 MB."
+      }
+    ]
+  },
+  {
+    "id": "ex-nfgkmd3c",
+    "version": 1,
+    "section": "smaller-than-small",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`probe`, linked against the C library and copied onto Google's base image for static binaries, fails with `exec /probe: no such file or directory`, though `/probe` is in the image. What fixes it?",
+    "hint": "Which file is really missing, and which image has it?",
+    "choices": [
+      {
+        "text": "Copying the binary to `/bin/probe` instead, which is where the kernel looks for programs",
+        "correct": false,
+        "why": "The kernel found `/probe`; it was the loader the binary asks for that it could not find. Moving the binary changes nothing."
+      },
+      {
+        "text": "Running it as root with `--user 0`",
+        "correct": false,
+        "why": "A missing file is missing for every user. Root changes permissions, not what exists."
+      },
+      {
+        "text": "Build with `CGO_ENABLED=0`, or use `distroless/base-debian12`",
+        "correct": true,
+        "why": "Right. The static build needs no loader at all; the `base` image is the one meant for programs that really need the C library."
+      },
+      {
+        "text": "Adding `--network=host`",
+        "correct": false,
+        "why": "No network is involved in starting a process. The message is about a file."
+      }
+    ]
+  },
+  {
+    "id": "ex-12z78esa",
+    "version": 1,
+    "section": "smaller-than-small",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the pinned `Containerfile` write `static-debian12:nonroot@sha256:afa5c872…` rather than the tag alone?",
+    "hint": "What can change behind a tag, and what can change behind a digest?",
+    "choices": [
+      {
+        "text": "It makes the pull faster, because Podman skips asking the registry",
+        "correct": false,
+        "why": "The build in section 04 pulled nothing either way: both bases were already on the machine."
+      },
+      {
+        "text": "A tag gets moved; a digest names those bytes forever",
+        "correct": true,
+        "why": "Right. The tag stays for people to read; the digest decides, and moving to a newer base becomes an edit somebody reviews."
+      },
+      {
+        "text": "Podman refuses a tag without a digest",
+        "correct": false,
+        "why": "Section 03 built from tags alone without complaint."
+      },
+      {
+        "text": "It selects the `amd64` image, so an ARM server gets an error",
+        "correct": false,
+        "why": "`afa5c872…` is the index; it names five images, one per processor, and each machine picks its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-xcahb6g9",
+    "version": 1,
+    "section": "smaller-than-small",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To make `time.LoadLocation` work on a scratch image without copying `/usr/share/zoneinfo`, build with `go build -tags ___`, which embeds the zone rules through `time/tzdata`.",
+    "hint": "It added 410,584 bytes to `probe`.",
+    "blanks": [
+      {
+        "accept": [
+          "timetzdata"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7h7msxzz",
+    "version": 1,
+    "section": "checksums-and-signatures",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After `printf x >> hits-linux-arm64`, Ana reruns the same `go build -o dist/hits-linux-arm64` and `sha256sum -c` still says `FAILED`. Why?",
+    "hint": "What does `go build` look at before writing an output that already exists?",
+    "choices": [
+      {
+        "text": "The build cache handed back a corrupted object for the arm64 target",
+        "correct": false,
+        "why": "The cache was fine: deleting the file and building again produced the right hash from the same cache."
+      },
+      {
+        "text": "`sha256sum` caches its results per file name between runs",
+        "correct": false,
+        "why": "`sha256sum` hashes the file every time it runs; it keeps nothing between runs."
+      },
+      {
+        "text": "Cross builds for `arm64` are never reproducible from one run to the next",
+        "correct": false,
+        "why": "The arm64 hash matched `SHA256SUMS` as soon as the file was rebuilt from nothing."
+      },
+      {
+        "text": "`go build` saw a current build ID in the file and kept it",
+        "correct": true,
+        "why": "Right. The extra byte went on the end and did not touch the build ID, so the go command thought the output was up to date. `rm` first forces a real write."
+      }
+    ]
+  },
+  {
+    "id": "ex-rr8dasmq",
+    "version": 1,
+    "section": "checksums-and-signatures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`hits` built without flags in `~/ship` and in `~/ship-copy` gives two different SHA-256 hashes; with `-trimpath` the hashes are equal. What differed?",
+    "hint": "The source was the same.",
+    "choices": [
+      {
+        "text": "The directory, recorded in the binary",
+        "correct": true,
+        "why": "Right. Without `-trimpath`, file names like `/home/ana/ship/main.go` go into the binary for stack traces; with it, module paths replace them."
+      },
+      {
+        "text": "The time of the build, which Go stamps into every binary",
+        "correct": false,
+        "why": "Go writes no build time; that is why the two `-trimpath` builds, made at different moments, came out identical."
+      },
+      {
+        "text": "A random seed the linker draws for each build",
+        "correct": false,
+        "why": "A random seed would make the `-trimpath` builds differ too, and they did not."
+      },
+      {
+        "text": "The version control information of each directory",
+        "correct": false,
+        "why": "Neither directory is a git repository, so neither binary recorded any."
+      }
+    ]
+  },
+  {
+    "id": "ex-y7my94g0",
+    "version": 1,
+    "section": "checksums-and-signatures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A release page lists the binaries and their `SHA256SUMS`. What does adding a cosign signature of `SHA256SUMS` protect against that the checksums alone do not?",
+    "hint": "Who is able to change each of the files on that page?",
+    "choices": [
+      {
+        "text": "A download cut short by a bad connection",
+        "correct": false,
+        "why": "`sha256sum -c` already catches that: one byte different was enough to print `FAILED`."
+      },
+      {
+        "text": "Somebody who replaces a binary and rewrites its line in `SHA256SUMS` to match",
+        "correct": true,
+        "why": "Right. Whoever can change the page can change both files; nobody without `cosign.key` can make a signature that verifies over the rewritten list."
+      },
+      {
+        "text": "A binary built for the wrong processor",
+        "correct": false,
+        "why": "A signature vouches for bytes, not for what they run on; `file` answers that question."
+      },
+      {
+        "text": "A bug in `hits` itself",
+        "correct": false,
+        "why": "A signature says who stands behind the file. A signed program with a bug still has the bug."
+      }
+    ]
+  },
+  {
+    "id": "ex-2arfn6h8",
+    "version": 1,
+    "section": "checksums-and-signatures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana's `cosign verify-blob` needs `--insecure-ignore-tlog`. What is the flag telling cosign?",
+    "hint": "Look at `no-tlog.json` and at what `sign-blob` was told to use.",
+    "choices": [
+      {
+        "text": "To skip checking the signature",
+        "correct": false,
+        "why": "The signature was checked: a forged `SHA256SUMS` failed with `invalid signature` under the same flag."
+      },
+      {
+        "text": "To trust any public key it finds, including one inside the bundle",
+        "correct": false,
+        "why": "Only `--key cosign.pub` was trusted. A different key would not verify this bundle."
+      },
+      {
+        "text": "Not to expect a Rekor entry, which this signature never got",
+        "correct": true,
+        "why": "Right. The empty signing configuration named no log, so there is none to check; the warning says what that costs: nobody else can see when the key signed."
+      },
+      {
+        "text": "To work without network access",
+        "correct": false,
+        "why": "The network is what the warning on `sign-blob` was about. This flag concerns the log entry, which exists or not regardless of the network."
+      }
+    ]
+  },
+  {
+    "id": "ex-8227wb3f",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put a signed release of `hits` in order, from the build to the user's last check.",
+    "hint": "The publisher acts first; the person downloading checks the signature before the checksums.",
+    "items": [
+      "build each target with `CGO_ENABLED=0 go build -trimpath -ldflags=\"-s -w\"`",
+      "write `SHA256SUMS` with `sha256sum`",
+      "sign `SHA256SUMS` with `cosign sign-blob --key cosign.key`",
+      "publish the binaries, `SHA256SUMS`, the bundle and `cosign.pub`",
+      "the user runs `cosign verify-blob --key cosign.pub` on `SHA256SUMS`",
+      "the user runs `sha256sum -c SHA256SUMS`"
+    ]
+  },
+  {
+    "id": "ex-89gd5sfd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague ships a `CGO_ENABLED=0` Go service that calls an HTTPS API, in an image `FROM scratch`. It starts, and every request fails with a certificate signed by an unknown authority. What is the smallest correct fix?",
+    "hint": "Which of `probe`'s three questions is this?",
+    "choices": [
+      {
+        "text": "Rebuild with `CGO_ENABLED=1` so the C library supplies the certificates",
+        "correct": false,
+        "why": "The C library holds no certificates, and on scratch a cgo binary would not even start: there is no loader."
+      },
+      {
+        "text": "Run the container with `--user 0`",
+        "correct": false,
+        "why": "Root does not create files that are not there; the pool stays empty."
+      },
+      {
+        "text": "Put a CA bundle in the image, by copying one from the build stage or by moving to `distroless/static`",
+        "correct": true,
+        "why": "Right. The program found no bundle, so it trusts nobody. Either copy `/etc/ssl/certs/ca-certificates.crt` in or use the base that carries Debian's, kept current by somebody else."
+      },
+      {
+        "text": "Build with `-tags timetzdata`",
+        "correct": false,
+        "why": "That embeds the zone rules, the second of `probe`'s questions. Certificates are the third."
+      }
+    ]
+  },
+  {
+    "id": "ex-r8zphfp5",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`podman images` showed `probe:distroless` at 7.71 MB and `probe:scratch` at 4.52 MB, the same binary on two bases. How many MB is the distroless base?",
+    "hint": "The binary is in both; subtract.",
+    "value": 3.19,
+    "tolerance": 0.005,
+    "unit": "MB"
+  }
+]

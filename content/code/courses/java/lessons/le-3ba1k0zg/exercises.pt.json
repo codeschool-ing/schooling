@@ -1,0 +1,348 @@
+{
+  "ex-68vhpvt9": {
+    "prompt": "O `Raw.java` pôs um ano numa `List` crua de títulos. Quando algo reclamou?",
+    "hint": "Três comandos rodaram.",
+    "choices": [
+      {
+        "text": "O `javac` se recusou a compilar",
+        "why": "Compilou, com duas linhas `Note:` fáceis de passar por cima."
+      },
+      {
+        "text": "Só em tempo de execução, com um `ClassCastException` na conversão",
+        "why": "Isso: e o stack trace citou a linha 17, não a 10, onde o ano entrou."
+      },
+      {
+        "text": "Nunca: o programa imprimiu o ano como título",
+        "why": "Ele imprimiu dois títulos e falhou no terceiro elemento."
+      }
+    ]
+  },
+  "ex-jjjxz99q": {
+    "prompt": "O erro no `Raw.java` estava na linha 10 e a exceção citou a linha 17. Quantas linhas os separam?",
+    "hint": "Subtraia.",
+    "unit": "linhas"
+  },
+  "ex-b4nt8fpk": {
+    "prompt": "Com `List<String>` escrito, onde o `Typed.java` falhou?",
+    "hint": "Antes de qualquer coisa rodar.",
+    "choices": [
+      {
+        "text": "Em tempo de execução, no primeiro `toUpperCase`",
+        "why": "Nunca rodou: o compilador o parou."
+      },
+      {
+        "text": "Na compilação, na linha 15, onde os títulos são lidos",
+        "why": "A linha da leitura estava certa; o erro foi onde o ano entrou."
+      },
+      {
+        "text": "Na compilação, na linha 10, no `add` errado",
+        "why": "Isso: `int cannot be converted to String`, na linha que estava errada de fato."
+      }
+    ]
+  },
+  "ex-rhpnq1hw": {
+    "prompt": "O build de um colega imprime `Note: Library.java uses unchecked or unsafe operations.` em toda execução, e ele quer ignorar. O que isso quer dizer?",
+    "hint": "O que o `-Xlint:unchecked` revelou no `Raw.java`?",
+    "choices": [
+      {
+        "text": "Alguma linha deixou um valor não conferido entrar numa coleção genérica",
+        "why": "Isso: recompile com `-Xlint:unchecked` para ver qual linha, como a seção 02 fez."
+      },
+      {
+        "text": "O arquivo é longo demais para o compilador conferir inteiro",
+        "why": "Tamanho não tem nada a ver; a nota é sobre usos crus ou não conferidos."
+      },
+      {
+        "text": "O arquivo usa um recurso que vai ser removido num JDK futuro",
+        "why": "Isso é um aviso de depreciação, outra mensagem."
+      }
+    ]
+  },
+  "ex-bsmzqk2t": {
+    "prompt": "Em `public class Box<T>`, o que é `T`?",
+    "hint": "Ele é escolhido em cada uso de `Box`.",
+    "choices": [
+      {
+        "text": "Uma classe chamada `T` que precisa ser importada",
+        "why": "Não há classe `T`; é um nome para um tipo escolhido depois."
+      },
+      {
+        "text": "Um parâmetro de tipo, escolhido a cada uso do `Box`",
+        "why": "Isso: `Box<String>` escolhe `String` para ele."
+      },
+      {
+        "text": "Uma abreviação de `Object`, mais curta de escrever",
+        "why": "Em tempo de execução vira `Object`, mas no código é conferido como o tipo que cada uso escolheu."
+      }
+    ]
+  },
+  "ex-tmh0wgm2": {
+    "prompt": "Por que o `max` declara `T extends Comparable<T>` em vez de só `T`?",
+    "hint": "Que método o laço chama em `item`?",
+    "choices": [
+      {
+        "text": "Para que o `max` só possa ser chamado com strings",
+        "why": "Ele foi chamado com `Integer`s também; o limite permite qualquer tipo comparável."
+      },
+      {
+        "text": "Para que `item.compareTo(best)` passe a compilar",
+        "why": "Isso: sem o limite, só os métodos de `Object` podem ser chamados num `T`."
+      },
+      {
+        "text": "Para que o método rode mais rápido quando recebe números",
+        "why": "Limites mudam o que compila, não a velocidade."
+      },
+      {
+        "text": "Porque todo parâmetro de tipo precisa ter um limite",
+        "why": "O `Box<T>` não tem nenhum, e compilou."
+      }
+    ]
+  },
+  "ex-a55rd37k": {
+    "prompt": "`max(List.of(new Member(\"Ana\"), new Member(\"Bruno\")))` não compilou. O que o faria compilar, sem mexer no `max`?",
+    "hint": "A mensagem disse o que faltava a `Member`.",
+    "choices": [
+      {
+        "text": "Converter a lista para o tipo cru: `max((List) members)`",
+        "why": "Isso a transforma num tipo cru, o uso não conferido de que a seção 02 avisou."
+      },
+      {
+        "text": "Declarar o tipo da lista com `var`",
+        "why": "O `var` infere a mesma `List<Member>`; o limite continua falhando."
+      },
+      {
+        "text": "Fazer `Member` implementar `Comparable<Member>`",
+        "why": "Isso: então `T` pode ser `Member`, e o limite se cumpre."
+      }
+    ]
+  },
+  "ex-w92sd8wn": {
+    "prompt": "Em `Box<String> box = new Box<>();`, o `<>` vazio à direita se chama ___.",
+    "hint": "O formato de uma pedra preciosa.",
+    "blanks": [
+      {
+        "accept": [
+          "diamante",
+          "operador diamante",
+          "diamond"
+        ]
+      }
+    ]
+  },
+  "ex-w8rkp1sm": {
+    "prompt": "Você precisa de um método que devolva o último elemento de qualquer lista. Que assinatura está certa?",
+    "hint": "O método não precisa de nada dos elementos.",
+    "choices": [
+      {
+        "text": "`static <T extends Comparable<T>> T last(List<T> items)`",
+        "why": "O limite exige algo que o `last` nunca usa, e recusa listas de `Member`."
+      },
+      {
+        "text": "`static <T> T last(List<T> items)`",
+        "why": "Isso: sem limite, porque nada é chamado nos elementos, e quem chama recebe o próprio tipo de volta."
+      },
+      {
+        "text": "`static Object last(List<Object> items)`",
+        "why": "Uma `List<String>` não é uma `List<Object>`, e quem chama teria de converter o resultado."
+      }
+    ]
+  },
+  "ex-7spanprr": {
+    "prompt": "Por que `total(fines)` não compilou quando o `total` recebia `List<Number>` e `fines` era uma `List<Integer>`?",
+    "hint": "Tipos genéricos e subtipos.",
+    "choices": [
+      {
+        "text": "Porque um `Integer` não é um `Number`",
+        "why": "É, sim; a questão está entre as listas, não entre os elementos."
+      },
+      {
+        "text": "Tipos genéricos são invariantes: `List<Integer>` não é uma `List<Number>`",
+        "why": "Isso: senão o `total` poderia acrescentar um `Double` a uma lista de inteiros."
+      },
+      {
+        "text": "Porque o `List.of` devolve uma lista não modificável",
+        "why": "Listas não modificáveis passam pela checagem de tipos como qualquer outra; os tipos é que não batiam."
+      }
+    ]
+  },
+  "ex-g911em5r": {
+    "prompt": "Dentro de `total(List<? extends Number> amounts)`, que linha não compila?",
+    "hint": "O método não sabe que tipo a lista guarda de verdade.",
+    "choices": [
+      {
+        "text": "`Number n = amounts.get(0);`",
+        "why": "Ler como `Number` é exatamente o que `? extends Number` permite."
+      },
+      {
+        "text": "`int k = amounts.size();`",
+        "why": "O `size` não depende do tipo do elemento."
+      },
+      {
+        "text": "`amounts.add((Number) 7);`",
+        "why": "Isso: a lista poderia ser uma `List<Double>`, então nada pode ser acrescentado a ela."
+      },
+      {
+        "text": "`for (Number n : amounts) {}`",
+        "why": "Percorrer é ler, e ler é permitido."
+      }
+    ]
+  },
+  "ex-7270572f": {
+    "prompt": "PECS: um parâmetro de que o método lê é um produtor e recebe `? ___ T`; um em que ele escreve é um consumidor e recebe `? super T`.",
+    "hint": "Produtor, a primeira letra da segunda palavra de PECS.",
+    "blanks": [
+      {
+        "accept": [
+          "extends"
+        ]
+      }
+    ]
+  },
+  "ex-cnev589a": {
+    "prompt": "`copy(all, fines)` compilou com `all` uma `List<Number>` e `fines` uma `List<Integer>`. Quanto valia `T`?",
+    "hint": "`from` é `List<? extends T>`, `to` é `List<? super T>`.",
+    "choices": [
+      {
+        "text": "`Integer`, o tipo mais específico que serve aos dois lados",
+        "why": "Isso: `fines` produz `Integer`s, e uma `List<Number>` é uma lista de um supertipo de `Integer`."
+      },
+      {
+        "text": "`Object`, o único tipo que as duas listas têm em comum",
+        "why": "O compilador infere o tipo mais específico que serve, e `Integer` serve."
+      },
+      {
+        "text": "`Number`, já que `all` é uma lista de números",
+        "why": "`Number` também serviria; o texto da seção diz que `T` foi inferido como `Integer` e depois `Double`."
+      }
+    ]
+  },
+  "ex-08r85azy": {
+    "prompt": "Ligue cada uso de parâmetro ao tipo que a tabela da seção dá para ele.",
+    "hint": "Produtor extends, consumidor super.",
+    "pairs": [
+      {
+        "left": "Só lido",
+        "right": "`List<? extends T>`"
+      },
+      {
+        "left": "Só escrito",
+        "right": "`List<? super T>`"
+      },
+      {
+        "left": "Lido e escrito",
+        "right": "`List<T>`"
+      },
+      {
+        "left": "Só contado ou esvaziado",
+        "right": "`List<?>`"
+      }
+    ],
+    "right_distractors": [
+      "`List<Object>`"
+    ]
+  },
+  "ex-v7hah72b": {
+    "prompt": "O que `titles.getClass() == years.getClass()` imprimiu, para uma `List<String>` e uma `List<Integer>`?",
+    "hint": "O que a JVM sabe dos colchetes?",
+    "choices": [
+      {
+        "text": "`false`",
+        "why": "Em tempo de execução os argumentos de tipo sumiram, e as duas são `ArrayList`."
+      },
+      {
+        "text": "`true`",
+        "why": "Isso: uma classe, `java.util.ArrayList`, o que quer que estivesse nos colchetes."
+      },
+      {
+        "text": "Não compilou, porque `==` não compara classes",
+        "why": "Comparar dois objetos `Class` com `==` é comum, e imprimiu um valor."
+      }
+    ]
+  },
+  "ex-1mftw9b8": {
+    "prompt": "O `javap -c Box` mostrou o campo `item` como `Ljava/lang/Object;`. Então como `String title = box.take();` recebeu uma `String` com segurança?",
+    "hint": "Veja a instrução depois da chamada.",
+    "choices": [
+      {
+        "text": "A JVM lembra que este `Box` foi criado como `Box<String>`",
+        "why": "Não lembra: o `getClass()` não mostrou argumento de tipo nenhum."
+      },
+      {
+        "text": "O próprio `take()` converte o resultado para o tipo certo",
+        "why": "O `take` devolve um `Object`; não sabe nada de `String`."
+      },
+      {
+        "text": "O compilador pôs um `checkcast String` no `UseBox`, depois da chamada",
+        "why": "Isso: a verificação passou da classe para cada chamador, onde o tipo é conhecido."
+      }
+    ]
+  },
+  "ex-mrnp8v8q": {
+    "prompt": "Por que `return new T();` é erro de compilação dentro de `Limits<T>`?",
+    "hint": "O que a JVM precisaria saber?",
+    "choices": [
+      {
+        "text": "Na execução não existe `T` que diga a classe",
+        "why": "Isso: o argumento de tipo foi apagado, e o `new` precisa de uma classe real."
+      },
+      {
+        "text": "`T` poderia ser uma interface, que não pode ser criada",
+        "why": "Esse é um problema possível, mas o erro vale para qualquer `T`: `required: class`."
+      },
+      {
+        "text": "Classes genéricas não podem criar objetos",
+        "why": "O `UseBox` criou um `Box` sem problema; só o `new T()` é recusado."
+      }
+    ]
+  },
+  "ex-ewwzk8kf": {
+    "prompt": "Quais destes o apagamento de tipos proíbe? Escolha todos os que se aplicam.",
+    "hint": "Qualquer coisa que precise de `T`, ou do argumento de tipo, em tempo de execução.",
+    "choices": [
+      {
+        "text": "`o instanceof List<String>` num `Object o`",
+        "why": "Sim: a lista não carrega o tipo dos elementos, então a verificação não pode ser feita."
+      },
+      {
+        "text": "`o instanceof List<?>` num `Object o`",
+        "why": "Não: só pergunta se `o` é uma lista, o que a JVM sabe."
+      },
+      {
+        "text": "Dois métodos `f(List<String>)` e `f(List<Integer>)` na mesma classe",
+        "why": "Sim: depois do apagamento as assinaturas são idênticas."
+      },
+      {
+        "text": "Um campo do tipo `List<String>`",
+        "why": "Não: campos de tipo parametrizado estão em toda esta lição."
+      }
+    ]
+  },
+  "ex-rsf341zw": {
+    "prompt": "Um método imprime cada elemento de qualquer lista, e nunca acrescenta nada. Que tipo de parâmetro serve melhor?",
+    "hint": "Ele só lê o `toString` de `Object`.",
+    "choices": [
+      {
+        "text": "`List<Object>`",
+        "why": "Uma `List<String>` não é uma `List<Object>`, então a maioria dos chamadores não conseguiria passar a sua."
+      },
+      {
+        "text": "`List<?>`",
+        "why": "Isso: qualquer lista é aceita, e os elementos são lidos como `Object`."
+      },
+      {
+        "text": "`List`, o tipo cru, que aceita qualquer coisa",
+        "why": "Ele aceita qualquer coisa e desliga as verificações; `List<?>` aceita qualquer coisa e as mantém."
+      }
+    ]
+  },
+  "ex-frdp5bkr": {
+    "prompt": "Ponha em ordem o que acontece com `String title = box.take();`, do código ao programa rodando.",
+    "hint": "Primeiro conferir, depois apagar.",
+    "items": [
+      "O `javac` confere que o `take` de `Box<String>` devolve uma `String`",
+      "O `javac` apaga `T` para `Object` no `Box`",
+      "O `javac` escreve um `checkcast String` depois da chamada, em quem chama",
+      "A JVM executa o `take`, depois a conversão, em tempo de execução"
+    ]
+  }
+}

@@ -1,0 +1,350 @@
+{
+  "ex-k6eknxb2": {
+    "prompt": "Ligue cada modificador ao conjunto mais amplo de classes que podem usar um membro declarado com ele.",
+    "hint": "A tabela da seção 02.",
+    "pairs": [
+      {
+        "left": "`private`",
+        "right": "A própria classe"
+      },
+      {
+        "left": "nenhum modificador",
+        "right": "Toda classe do mesmo pacote"
+      },
+      {
+        "left": "`protected`",
+        "right": "O pacote, mais subclasses em outro lugar"
+      },
+      {
+        "left": "`public`",
+        "right": "Toda classe, em qualquer pacote"
+      }
+    ],
+    "right_distractors": [
+      "Só o método `main` da classe"
+    ]
+  },
+  "ex-g9txwnrv": {
+    "prompt": "O `Main`, fora de `lib`, leu `s.code`, em que `code` é declarado sem modificador. O que o `javac` disse?",
+    "hint": "Nenhum modificador não é o mesmo que público.",
+    "choices": [
+      {
+        "text": "Nada: um atributo sem modificador é público por padrão",
+        "why": "É essa a crença que o erro corrige; sem modificador, só o pacote enxerga."
+      },
+      {
+        "text": "Que `code` não é público em `Shelf` e não pode ser acessado de fora do pacote",
+        "why": "Isso: nenhum modificador quer dizer package-private."
+      },
+      {
+        "text": "Que `code` tem acesso privado em `Shelf`",
+        "why": "Essa mensagem foi para `count`, que é declarado `private`."
+      },
+      {
+        "text": "Que `code` tem acesso protegido em `Shelf`",
+        "why": "Essa mensagem foi para `capacity`."
+      }
+    ]
+  },
+  "ex-zd77jr56": {
+    "prompt": "O `lib/Inside.java`, no mesmo pacote que `Shelf`, leu `s.code`, `s.capacity` e `s.count`. Qual falhou?",
+    "hint": "Um modificador exclui até os vizinhos.",
+    "choices": [
+      {
+        "text": "Só `s.count`",
+        "why": "Isso: privado quer dizer esta classe e mais nada, nem uma classe do mesmo pacote."
+      },
+      {
+        "text": "`s.capacity` e `s.count`",
+        "why": "O `protected` inclui o pacote, então `capacity` passou."
+      },
+      {
+        "text": "Nenhum: dentro do pacote todo membro é visível",
+        "why": "`count` falhou com `count has private access in Shelf`."
+      },
+      {
+        "text": "Os três, porque `Inside` é outra classe",
+        "why": "Ser outra classe só importa para o `private`; o pacote é compartilhado."
+      }
+    ]
+  },
+  "ex-btgqg8k1": {
+    "prompt": "`Shelf` tem um atributo privado `count` e um método público `count()`. O que o `Main`, em outro pacote, pode fazer com a contagem?",
+    "hint": "Um atributo e um método podem ter o mesmo nome.",
+    "choices": [
+      {
+        "text": "Nada",
+        "why": "`s.count()` compilou e imprimiu 2."
+      },
+      {
+        "text": "Ler e alterar, pelo atributo",
+        "why": "O atributo é privado; é o terceiro erro da seção 02."
+      },
+      {
+        "text": "Ler, por meio de `count()`",
+        "why": "Isso: o método é público e só devolve o valor."
+      }
+    ]
+  },
+  "ex-dxww6c31": {
+    "prompt": "Um membro declarado sem modificador nenhum se chama ___-private.",
+    "hint": "Quem pode usá-lo?",
+    "blanks": [
+      {
+        "accept": [
+          "package"
+        ]
+      }
+    ]
+  },
+  "ex-2zvr44c7": {
+    "prompt": "Por que a seção diz que o segredo é o motivo errado para fazer um atributo privado?",
+    "hint": "Quem consegue ler o código-fonte?",
+    "choices": [
+      {
+        "text": "Porque atributos privados são copiados para todo arquivo de classe de qualquer jeito",
+        "why": "Um atributo privado fica só no arquivo da sua classe; o argumento não é esse."
+      },
+      {
+        "text": "Quem tem o fonte vê o nome; o ponto é que mais ninguém o altera",
+        "why": "Isso: o privado protege uma promessa sobre os dados, não a existência deles."
+      },
+      {
+        "text": "Porque o `javap -p` imprime atributos privados e assim os revela",
+        "why": "O `javap -p` os imprime, sim, mas o argumento é sobre alterar, não sobre ver."
+      }
+    ]
+  },
+  "ex-vhhdq86j": {
+    "prompt": "No `OpenMain`, depois de `loan.renewals = 7;`, o `renew()` devolveu `true`. Que contagem o programa imprimiu logo depois?",
+    "hint": "A verificação compara com 2 e mais nada."
+  },
+  "ex-bsy0rxxb": {
+    "prompt": "O `renew()` recusa quando `renewals == 2`. Depois que a contagem foi posta em 7 de fora, por que ele nunca mais recusa?",
+    "hint": "Siga a contagem: 7, 8, 9...",
+    "choices": [
+      {
+        "text": "A atribuição reiniciou o método, que agora começa do zero",
+        "why": "Métodos não guardam estado próprio; a contagem é o atributo, e ele está em 8."
+      },
+      {
+        "text": "A contagem passou de 2 sem nunca ser igual a 2, e a verificação é `==`",
+        "why": "Isso: a partir de 7 ela só cresce, então `renewals == 2` nunca mais é verdade."
+      },
+      {
+        "text": "Um atributo `int` dá a volta depois de 2 quando é definido de outra classe",
+        "why": "Nada dá a volta; 7 virou 8, como foi impresso."
+      },
+      {
+        "text": "`OpenLoan` é package-private, então os métodos dele são ignorados de fora",
+        "why": "O `renew()` rodou e devolveu `true`; package-private não esconde nada no mesmo diretório."
+      }
+    ]
+  },
+  "ex-8re3jqqm": {
+    "prompt": "Com `private int renewals;`, onde pode estar o código que altera a contagem?",
+    "hint": "O `Cheat` tentou de fora.",
+    "choices": [
+      {
+        "text": "Em qualquer lugar do mesmo pacote",
+        "why": "Isso seria package-private; o privado exclui o pacote."
+      },
+      {
+        "text": "Em `Loan` e em qualquer classe que chame `renewals()`",
+        "why": "O `renewals()` só lê a contagem; nada fora de `Loan` consegue escrevê-la."
+      },
+      {
+        "text": "Em código escrito dentro do próprio `Loan`",
+        "why": "Isso: para conferir a regra você lê uma classe."
+      }
+    ]
+  },
+  "ex-45mfgtep": {
+    "prompt": "Um colega argumenta: \"Deixa todo atributo público agora; a gente torna privado depois, se importar.\" O que a seção responde?",
+    "hint": "Qual erro é barato de corrigir depois?",
+    "choices": [
+      {
+        "text": "Atributos públicos são mais lentos, então importa já",
+        "why": "Velocidade não é o argumento da seção, e o acesso não a muda."
+      },
+      {
+        "text": "Aberto demais é difícil de apertar depois, porque outro código passa a depender; restrito demais custa um erro de compilação",
+        "why": "Isso: comece do privado e abra o que um uso real precisar."
+      },
+      {
+        "text": "Concordo, já que o compilador vai listar cada lugar a corrigir quando você mudar",
+        "why": "Vai listar, e alguns desses lugares podem ser código que não é seu e que você não pode mudar."
+      }
+    ]
+  },
+  "ex-h4fw6646": {
+    "prompt": "Um arquivo `Catalogue.java` declara `public class Catalogue` e `public class Entry`. O que acontece?",
+    "hint": "Onde o compilador procuraria `Entry`?",
+    "choices": [
+      {
+        "text": "Compila, e `Entry` só é usável dentro do arquivo",
+        "why": "Não compila; e não público quer dizer o pacote, não o arquivo."
+      },
+      {
+        "text": "Compila num arquivo de classe só, com as duas classes",
+        "why": "Há sempre um `.class` por classe, e aqui antes vem um erro."
+      },
+      {
+        "text": "Um erro: `Entry` é pública e deveria estar em `Entry.java`",
+        "why": "Isso: uma classe pública tem de estar num arquivo com o nome dela."
+      }
+    ]
+  },
+  "ex-pt9darfp": {
+    "prompt": "Com `Entry` deixada não pública, `javac Catalogue.java` deu certo. Quantos arquivos `.class` ele escreveu?",
+    "hint": "O `ls` os listou."
+  },
+  "ex-p7mj118z": {
+    "prompt": "`Entry` sem `public` está em `Catalogue.java`. Que classes podem usá-la?",
+    "hint": "Agora ela é package-private.",
+    "choices": [
+      {
+        "text": "Só `Catalogue`, porque está no arquivo de `Catalogue`",
+        "why": "O acesso segue o pacote, não o arquivo."
+      },
+      {
+        "text": "Qualquer classe do mesmo pacote, em qualquer arquivo dele",
+        "why": "Isso: nenhum modificador quer dizer package-private, seja qual for o arquivo."
+      },
+      {
+        "text": "Qualquer classe em qualquer lugar, já que `Catalogue` é pública",
+        "why": "Uma classe pública não torna públicas as vizinhas."
+      }
+    ]
+  },
+  "ex-h9abeqba": {
+    "prompt": "Por que uma classe pública tem de morar num arquivo com o nome dela?",
+    "hint": "Pense numa outra classe, em outro lugar, que mencione `Entry`.",
+    "choices": [
+      {
+        "text": "Para a JVM poder carregar arquivos `.java` diretamente",
+        "why": "A JVM só carrega arquivos de classe; a regra é para o compilador."
+      },
+      {
+        "text": "Porque o nome do arquivo é a identidade da classe em tempo de execução",
+        "why": "Em execução quem carrega o nome é o arquivo de classe; o nome do fonte já sumiu."
+      },
+      {
+        "text": "Para o compilador achar o fonte pelo nome",
+        "why": "Isso: uma referência a `Entry` de qualquer lugar manda o compilador para `Entry.java`."
+      }
+    ]
+  },
+  "ex-7ag4vav0": {
+    "prompt": "Ordene os quatro níveis de acesso do mais fechado ao mais aberto.",
+    "hint": "Cada um alcança tudo o que o anterior alcança.",
+    "items": [
+      "`private`",
+      "nenhum modificador",
+      "`protected`",
+      "`public`"
+    ]
+  },
+  "ex-fx8pf2j4": {
+    "prompt": "Uma classe `Member` tem um atributo `fines` que nunca pode ficar abaixo de zero. Que desenho permite a uma classe cumprir essa promessa?",
+    "hint": "Que código pode alterar o atributo em cada desenho?",
+    "choices": [
+      {
+        "text": "`public double fines;` e um comentário dizendo que não pode ser negativo",
+        "why": "Um comentário não obriga ninguém; qualquer classe pode atribuir `-5`."
+      },
+      {
+        "text": "`private double fines;`, alterado só por métodos que o conferem",
+        "why": "Isso: assim toda mudança passa por código de `Member`, como o `renew()` em `Loan`."
+      },
+      {
+        "text": "`protected double fines;`, para só as subclasses o alterarem",
+        "why": "Protegido ainda inclui o pacote inteiro, e qualquer subclasse em qualquer lugar."
+      },
+      {
+        "text": "`double fines;` sem modificador, para outros pacotes não o alcançarem",
+        "why": "Toda classe do pacote ainda pode atribuí-lo, o que é boa parte do programa."
+      }
+    ]
+  },
+  "ex-dmfvg8xm": {
+    "prompt": "O `javac` diz `count has private access in Shelf`. Qual é o primeiro passo certo?",
+    "hint": "Quem escreveu a classe a fechou de propósito.",
+    "choices": [
+      {
+        "text": "Mudar `count` para `public` em `Shelf`",
+        "why": "Isso tira a proteção em que a classe se apoiava; procure antes o caminho previsto."
+      },
+      {
+        "text": "Procurar um método público que faça o que você precisa, como `count()`",
+        "why": "Isso: um atributo privado costuma vir com métodos que oferecem as operações seguras."
+      },
+      {
+        "text": "Mover a sua classe para o pacote de `Shelf`",
+        "why": "Vizinhos de pacote também são recusados; o `Inside` foi."
+      },
+      {
+        "text": "Compilar com `-g`, que afrouxa as verificações de acesso",
+        "why": "O `-g` acrescenta nomes de depuração e não muda regra nenhuma."
+      }
+    ]
+  },
+  "ex-446a4nbc": {
+    "prompt": "`Catalogue.java` guarda `public class Catalogue` e uma `class Entry` não pública. Uma classe de outro pacote escreve `new Entry()`. O que acontece?",
+    "hint": "Package-private vale para classes tanto quanto para membros.",
+    "choices": [
+      {
+        "text": "Funciona, porque `Entry` está no arquivo de uma classe pública",
+        "why": "Dividir um arquivo não divide nada de acesso."
+      },
+      {
+        "text": "Um erro de compilação: a classe é invisível para esse código",
+        "why": "Isso: uma classe não pública é package-private, como um membro sem modificador."
+      },
+      {
+        "text": "Compila, e falha na execução quando `Entry.class` não é encontrado",
+        "why": "O compilador recusa antes; nem chega à JVM."
+      }
+    ]
+  },
+  "ex-5aj46x41": {
+    "prompt": "A quais destas coisas leva o conselho da lição, começar do privado? Escolha todas as que se aplicam.",
+    "hint": "Abra só o que outra classe tem motivo para usar.",
+    "choices": [
+      {
+        "text": "Atributos `private`, lidos por métodos onde outros precisam do valor",
+        "why": "Sim: como `count` e `count()`, `renewals` e `renewals()`."
+      },
+      {
+        "text": "Todo método `public`, para a classe ser fácil de usar",
+        "why": "Métodos também ficam tão fechados quanto possível; abra cada um quando tiver quem o chame de fora."
+      },
+      {
+        "text": "Um método auxiliar que só a própria classe chama fica `private`",
+        "why": "Sim: ninguém de fora precisa dele, então ninguém de fora o recebe."
+      },
+      {
+        "text": "Atributos `protected`, para o caso de uma subclasse precisar um dia",
+        "why": "\"Para o caso\" não é motivo; uma subclasse que precisar pode ganhar um método nesse dia."
+      }
+    ]
+  },
+  "ex-23x2qeed": {
+    "prompt": "Que modificador o `Shelf` usou no método `add()`, para o `Main` de outro pacote poder chamá-lo?",
+    "hint": "O `Main` está fora de `lib`.",
+    "choices": [
+      {
+        "text": "`public`",
+        "why": "Isso: só o público alcança uma classe de outro pacote que não é subclasse."
+      },
+      {
+        "text": "Nenhum, já que métodos são públicos a menos que se marque o contrário",
+        "why": "Sem modificador, um método é package-private, como um atributo."
+      },
+      {
+        "text": "`protected`, que inclui quem chama de outros pacotes",
+        "why": "O protegido acrescenta só subclasses, e o `Main` não é uma."
+      }
+    ]
+  }
+}

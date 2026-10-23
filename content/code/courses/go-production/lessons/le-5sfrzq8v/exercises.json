@@ -1,0 +1,554 @@
+[
+  {
+    "id": "ex-bprjq65n",
+    "version": 1,
+    "section": "what-vet-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana runs `go vet ./...` in her module and sees nothing at all, then `echo $?` prints `0`. What does that tell her?",
+    "hint": "Vet prints only when it has something to report.",
+    "choices": [
+      {
+        "text": "No analyzer reported anything in any package",
+        "correct": true,
+        "why": "Right. A clean run is silent and exits 0, which is what lets a script read only the exit code."
+      },
+      {
+        "text": "Vet skipped the packages because none of them has tests",
+        "correct": false,
+        "why": "Vet reads source, not tests; lesson 1's `hits` was vetted package by package, `tools/genlog` included."
+      },
+      {
+        "text": "The module is free of bugs",
+        "correct": false,
+        "why": "Vet looks for a few dozen classes of mistake. A clean run says none of those is present, and section 05 shows a crash it passed."
+      },
+      {
+        "text": "Only the package in the current directory was checked",
+        "correct": false,
+        "why": "`./...` means every package under the current directory, not only the one in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-4fnsa6p7",
+    "version": 1,
+    "section": "what-vet-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`fmt.Printf(\"%d%%\\n\", share)` with `share` a `float64` compiles and prints `%!d(float64=9.365)%`. Why did the compiler accept it?",
+    "hint": "Look at the parameter types of `Printf`.",
+    "choices": [
+      {
+        "text": "The compiler converts the float to an integer when the verb asks for one",
+        "correct": false,
+        "why": "Nothing was converted: the output shows `fmt` receiving a `float64` and refusing to print it as `%d`."
+      },
+      {
+        "text": "To it the format is a string and the arguments are `...any`",
+        "correct": true,
+        "why": "Right. Any argument of any type is legal; only something that knows what `fmt` does with the string can compare the two, and that is vet."
+      },
+      {
+        "text": "Format checking is turned off unless the build uses `-gcflags`",
+        "correct": false,
+        "why": "There is no compiler flag for it; the check lives in vet's `printf` analyzer."
+      },
+      {
+        "text": "`%d` is accepted for floats in Go, and only rounds them",
+        "correct": false,
+        "why": "If it were, the program would have printed `9`. It printed `%!d(float64=9.365)`, `fmt`'s sign of a wrong verb."
+      }
+    ]
+  },
+  {
+    "id": "ex-q460zry4",
+    "version": 1,
+    "section": "what-vet-is",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Each proposed check below was turned down for vet. Match it with the criterion from `cmd/vet/README` that it fails.",
+    "hint": "Correctness, frequency, precision: one each.",
+    "pairs": [
+      {
+        "left": "a check that flags exported functions with no doc comment",
+        "right": "correctness"
+      },
+      {
+        "left": "a check for a real bug found in a handful of programs anywhere",
+        "right": "frequency"
+      },
+      {
+        "left": "a check whose warnings are wrong often enough that people stop reading them",
+        "right": "precision"
+      }
+    ],
+    "right_distractors": [
+      "speed of compilation"
+    ]
+  },
+  {
+    "id": "ex-48ha9vxf",
+    "version": 1,
+    "section": "what-vet-is",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team upgrades its machines to Go 1.27.1 but leaves `go 1.21` in `go.mod`. A goroutine started in a `for` loop reads the loop variable. What does `go vet` do, and is the program wrong?",
+    "hint": "Which file decides the loop semantics?",
+    "choices": [
+      {
+        "text": "Vet is silent and the program is correct, because the toolchain is 1.27.1",
+        "correct": false,
+        "why": "The toolchain gives each file the semantics its module declares. `oldloop` under `go 1.21` printed `/health` three times."
+      },
+      {
+        "text": "Vet reports `loop variable captured by func literal`, and the bug is real",
+        "correct": true,
+        "why": "Right. The `go` line keeps the old shared-variable loop, so the bug exists, and `loopclosure` reports it because the file declares a Go older than 1.22."
+      },
+      {
+        "text": "Vet refuses to run until `go.mod` matches the toolchain",
+        "correct": false,
+        "why": "A module declaring an older Go builds and vets normally under a newer toolchain; only a newer `go` line fails with `GOTOOLCHAIN=local`."
+      },
+      {
+        "text": "Vet reports it, but the warning is a false alarm on 1.27.1",
+        "correct": false,
+        "why": "The warning matches what the program does: under `go 1.21` all goroutines see the last value."
+      }
+    ]
+  },
+  {
+    "id": "ex-2a86hndr",
+    "version": 1,
+    "section": "the-checks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`counter`'s `Add` has the receiver `(c Counter)`, and `Counter` holds a `sync.Mutex` and a map. Why did eight goroutines crash it with `concurrent map writes`?",
+    "hint": "What does each call get, and what do the copies share?",
+    "choices": [
+      {
+        "text": "`sync.Mutex` cannot be used inside a struct with a map",
+        "correct": false,
+        "why": "A mutex beside the map it guards is the usual shape; it works as long as everyone locks the same mutex."
+      },
+      {
+        "text": "Each call locks its own copy of the mutex, while every copy shares one map",
+        "correct": true,
+        "why": "Right. The value receiver copies the struct; the copied map value still refers to the same table, so the writes collide with no lock between them."
+      },
+      {
+        "text": "`wg.Go` starts goroutines before `Add` returns",
+        "correct": false,
+        "why": "`wg.Go` only schedules the function; the crash comes from the writes inside `Add`, not from when goroutines start."
+      },
+      {
+        "text": "The `defer` unlocks the mutex before the map is written",
+        "correct": false,
+        "why": "A deferred call runs when the function returns, after `c.n[path]++`."
+      }
+    ]
+  },
+  {
+    "id": "ex-gr589bg1",
+    "version": 1,
+    "section": "the-checks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The tag on `Hits` was written `json: \"hits\"`, with a space after the colon. What did `encoding/json` do with the field?",
+    "hint": "A tag it cannot parse is treated as no tag.",
+    "choices": [
+      {
+        "text": "Refused to encode and returned an error",
+        "correct": false,
+        "why": "Nothing failed: `Encode` wrote the array. That is why the bug survives."
+      },
+      {
+        "text": "Wrote it as `\"hits\"` anyway, ignoring the space",
+        "correct": false,
+        "why": "The output shows `\"Hits\":2576`; the tag was not read at all."
+      },
+      {
+        "text": "Left the field out of the output",
+        "correct": false,
+        "why": "It is there, under another name."
+      },
+      {
+        "text": "Wrote it under its Go name, `Hits`",
+        "correct": true,
+        "why": "Right. `reflect.StructTag.Get` gave up on the malformed tag, so the field kept its Go name, and a client reading `hits` reads nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-c6dp511x",
+    "version": 1,
+    "section": "the-checks",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`length` in `header` is fixed to `return uint16(hi)<<8 | uint16(lo)`. What does `length([]byte{0x02, 0x10})` return now?",
+    "hint": "0x0210 in decimal: the high byte times 256, plus the low byte.",
+    "value": 528,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-x8mjdapp",
+    "version": 1,
+    "section": "the-checks",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each message `go vet` printed with the analyzer that wrote it.",
+    "hint": "Each analyzer is named after the mistake it looks for.",
+    "pairs": [
+      {
+        "left": "`result of slices.Compact call not used`",
+        "right": "`unusedresult`"
+      },
+      {
+        "left": "`the cancel function is not used on all paths (possible context leak)`",
+        "right": "`lostcancel`"
+      },
+      {
+        "left": "`self-assignment of l.limit`",
+        "right": "`assign`"
+      },
+      {
+        "left": "`hi (8 bits) too small for shift of 8`",
+        "right": "`shift`"
+      }
+    ],
+    "right_distractors": [
+      "`copylocks`"
+    ]
+  },
+  {
+    "id": "ex-ag8zqggf",
+    "version": 1,
+    "section": "vet-in-go-test",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`go test ./status` printed two vet messages and `FAIL example.com/vetted/status [build failed]`. How many of the package's tests ran?",
+    "hint": "Where does `go test` put the vet step?",
+    "choices": [
+      {
+        "text": "All of them, and vet's messages were printed afterwards",
+        "correct": false,
+        "why": "Vet runs before the test binary; with a finding, the binary is never run."
+      },
+      {
+        "text": "Only `TestParse`, since the other one is misnamed",
+        "correct": false,
+        "why": "That is what `-vet=off` did. With vet on, nothing ran at all."
+      },
+      {
+        "text": "None",
+        "correct": true,
+        "why": "Right. The go command treats vet as part of building the test binary, and a vet finding stops the build, so no test runs."
+      },
+      {
+        "text": "Every test except the ones in the file vet complained about",
+        "correct": false,
+        "why": "Vet's finding fails the whole package's build, whichever file it is in."
+      }
+    ]
+  },
+  {
+    "id": "ex-dc8ev1yd",
+    "version": 1,
+    "section": "vet-in-go-test",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On Go 1.27.1, how many vet analyzers does `go test` run by default, counting from the list compiled into the go command?",
+    "hint": "The help text names one fewer than the source does.",
+    "value": 12,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-h6t4dfrb",
+    "version": 1,
+    "section": "vet-in-go-test",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With `-vet=off`, `go test -v ./status` printed `--- PASS: TestParse` and `ok`. What did that green line hide?",
+    "hint": "Count the tests in the file and the tests in the output.",
+    "choices": [
+      {
+        "text": "A test that never ran, and the range bug it would have caught",
+        "correct": true,
+        "why": "Right. `TestparseRejects` is not a test name `testing` recognises, so it was skipped in silence, and it was the test that finds `Parse` accepting `600`."
+      },
+      {
+        "text": "Nothing: vet's findings were style, and the tests are what count",
+        "correct": false,
+        "why": "Neither finding was style: one was a test that never runs, the other an `errors.As` call that panics when reached."
+      },
+      {
+        "text": "A cached result from an earlier run",
+        "correct": false,
+        "why": "The cache was cleared before the run, and a cached result says `(cached)` on the `ok` line."
+      },
+      {
+        "text": "A panic in `TestParse` that `-vet=off` swallowed",
+        "correct": false,
+        "why": "`-vet=off` removes the vet step and nothing else; `TestParse` passed for real."
+      }
+    ]
+  },
+  {
+    "id": "ex-y1mgfd04",
+    "version": 1,
+    "section": "vet-in-go-test",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`go test ./counter` passed although `counter` copies a mutex. To make that same command run every analyzer, Ana adds `-vet=___`.",
+    "hint": "The opposite of `off`.",
+    "blanks": [
+      {
+        "accept": [
+          "all"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rz0mb0gs",
+    "version": 1,
+    "section": "tuning-and-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `go vet -printf=false ./...` run?",
+    "hint": "Turning one analyzer off leaves the rest on.",
+    "choices": [
+      {
+        "text": "Only the `printf` analyzer, with its wrapper inference off",
+        "correct": false,
+        "why": "That would be selecting `printf`. `=false` excludes it."
+      },
+      {
+        "text": "Every analyzer except `printf`",
+        "correct": true,
+        "why": "Right. Turning one off with `-NAME=false` runs all the others; naming one with `-NAME` runs only the ones named."
+      },
+      {
+        "text": "Nothing: one `=false` turns the whole suite off",
+        "correct": false,
+        "why": "The two programs whose only bug was a `printf` one passed, and `counter` would still have failed."
+      },
+      {
+        "text": "The twelve analyzers `go test` uses, minus `printf`",
+        "correct": false,
+        "why": "`go vet` does not use `go test`'s list; it starts from all 35."
+      }
+    ]
+  },
+  {
+    "id": "ex-0az0jzn1",
+    "version": 1,
+    "section": "tuning-and-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`logf` calls `fmt.Fprintf(os.Stderr, \"applog: \"+format+\"\\n\", args...)`, and vet did not check its callers. What is the fix that needs no flag?",
+    "hint": "Look at how `warnf` was written.",
+    "choices": [
+      {
+        "text": "Rename it `Logf`, since vet checks exported names",
+        "correct": false,
+        "why": "Vet inferred the unexported `warnf` as a wrapper; the name is not what decides."
+      },
+      {
+        "text": "Move it into a package of its own",
+        "correct": false,
+        "why": "Wrappers are inferred within a package and across packages alike; the concatenated format is what hides it."
+      },
+      {
+        "text": "Format with `fmt.Sprintf(format, args...)` first, then add the prefix",
+        "correct": true,
+        "why": "Right. Passing `format` and `args...` straight to a known formatter makes it a wrapper vet recognises, as `warnf` is."
+      },
+      {
+        "text": "Add a doc comment that says it takes a format",
+        "correct": false,
+        "why": "Vet does not read doc comments to decide what a function is."
+      }
+    ]
+  },
+  {
+    "id": "ex-w34t6mgm",
+    "version": 1,
+    "section": "tuning-and-limits",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does `go vet`, as it ships, never report? Choose all that apply.",
+    "hint": "Two of them were shown failing vet in section 03.",
+    "choices": [
+      {
+        "text": "A variable declared again with `:=` inside an `if`, hiding the outer one",
+        "correct": true,
+        "why": "Yes. `load` did exactly that, vet passed it, and only the separate `shadow` analyzer named the line."
+      },
+      {
+        "text": "An unexported function nothing calls",
+        "correct": true,
+        "why": "Yes. It is legal and often deliberate, so it fails the correctness criterion; that is lesson 8's ground."
+      },
+      {
+        "text": "`l.limit = l.limit`",
+        "correct": false,
+        "why": "`assign` reports it: `self-assignment of l.limit`."
+      },
+      {
+        "text": "A statement after a `return` in the same block",
+        "correct": false,
+        "why": "`unreachable` reports it, as it did in `limit`."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ytp6h97",
+    "version": 1,
+    "section": "tuning-and-limits",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To run an installed analysis tool in place of vet's own suite, Ana types `go vet -___=$(command -v shadow) ./load`.",
+    "hint": "The flag names the program vet should run.",
+    "blanks": [
+      {
+        "accept": [
+          "vettool"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-w5p3m0b0",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens when `go test ./status` runs on a package with no mistakes.",
+    "hint": "The vet step belongs to building the test binary.",
+    "items": [
+      "the compiler type-checks the package and its test files",
+      "the twelve default analyzers run over the same code",
+      "the test binary is built and run",
+      "`go test` prints `ok` for the package"
+    ]
+  },
+  {
+    "id": "ex-vwqnndht",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service's `Stats` type holds a `sync.RWMutex`, and its `Snapshot` method has a value receiver. The CI pipeline runs only `go test ./...`, whose tests call `Snapshot` from one goroutine. What does the pipeline report?",
+    "hint": "Which analyzers does `go test` run by default?",
+    "choices": [
+      {
+        "text": "A `copylocks` failure, since every vet finding fails `go test`",
+        "correct": false,
+        "why": "Only the default subset fails a test run, and `copylocks` is not in it; `counter` passed `go test` the same way."
+      },
+      {
+        "text": "Green, and the copied lock ships",
+        "correct": true,
+        "why": "Right. `copylocks` is outside `go test`'s twelve and one goroutine never races with itself. A `go vet ./...` step, or `-vet=all`, would have failed."
+      },
+      {
+        "text": "A compile error, because a mutex cannot be copied",
+        "correct": false,
+        "why": "Copying a struct with a mutex is legal Go; that is why vet exists for it."
+      },
+      {
+        "text": "A data race report from the test run",
+        "correct": false,
+        "why": "Races are reported by the race detector, with `-race`, and only when two goroutines actually meet."
+      }
+    ]
+  },
+  {
+    "id": "ex-t8hnkmgg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`type Timeout struct{}` has `func (e *Timeout) Error() string`, with a pointer receiver. Which wrap does vet's `%w` check report, in a module declaring `go 1.27.1`?",
+    "hint": "Which type implements `error` here: `Timeout` or `*Timeout`?",
+    "choices": [
+      {
+        "text": "`fmt.Errorf(\"read: %w\", &Timeout{})`",
+        "correct": false,
+        "why": "With a pointer receiver the error type is `*Timeout`, so wrapping `&Timeout{}` is the right operand."
+      },
+      {
+        "text": "Neither: `%w` is only checked for value receivers",
+        "correct": false,
+        "why": "The check is about the operand not being an error, which `Timeout{}` is not here; `printf` reports that too."
+      },
+      {
+        "text": "Both, because `%w` always wants a value",
+        "correct": false,
+        "why": "`%w` wants the type that implements `error`; for a pointer receiver that is the pointer."
+      },
+      {
+        "text": "`fmt.Errorf(\"read: %w\", Timeout{})`",
+        "correct": true,
+        "why": "Right. Only `*Timeout` has the `Error` method, so `Timeout{}` is not an error at all; `notfound` was the mirror case, a value receiver wrapped as a pointer."
+      }
+    ]
+  },
+  {
+    "id": "ex-w0dxzad5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`fetch` printed `<nil>` and `no path to fetch`, both correct, and vet still failed it with `lostcancel`. What does the bug cost?",
+    "hint": "What does `cancel` release, and when is it released without it?",
+    "choices": [
+      {
+        "text": "The wrong answer on the early return",
+        "correct": false,
+        "why": "The early return printed the right error; the output was correct on both paths."
+      },
+      {
+        "text": "A goroutine that never exits",
+        "correct": false,
+        "why": "The context's timer fires after two seconds and releases it; nothing is stuck for ever."
+      },
+      {
+        "text": "A context and its timer, held two seconds on every early return",
+        "correct": true,
+        "why": "Right. Without `cancel` they live until the timeout fires; at thousands of calls a second that is memory growing with traffic."
+      },
+      {
+        "text": "A panic when the parent context is cancelled",
+        "correct": false,
+        "why": "Cancelling a parent cancels its children quietly; nothing panics."
+      }
+    ]
+  }
+]

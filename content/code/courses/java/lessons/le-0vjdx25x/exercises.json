@@ -1,0 +1,534 @@
+[
+  {
+    "id": "ex-1b8fv0s7",
+    "version": 1,
+    "section": "primitives-are-copied",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `swap(x, y)` with `x = 1` and `y = 2`, what did `main` print?",
+    "hint": "`swap` worked on copies.",
+    "choices": [
+      {
+        "text": "`x=2 y=1`",
+        "correct": false,
+        "why": "That is what `swap` printed inside, about its own copies `a` and `b`."
+      },
+      {
+        "text": "`x=1 y=2`",
+        "correct": true,
+        "why": "Right: the caller's variables were never touched."
+      },
+      {
+        "text": "`x=2 y=2`",
+        "correct": false,
+        "why": "Nothing assigned to `x` at all; `swap` only had copies."
+      },
+      {
+        "text": "Nothing: the program fails to compile",
+        "correct": false,
+        "why": "It compiles; assigning to a parameter is allowed."
+      }
+    ]
+  },
+  {
+    "id": "ex-qkbwszx2",
+    "version": 1,
+    "section": "primitives-are-copied",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the bytecode of `main`, which instructions handed `x` and `y` to `swap`?",
+    "hint": "They push values, not variables.",
+    "choices": [
+      {
+        "text": "`istore_1` and `istore_2`",
+        "correct": false,
+        "why": "Those put 1 and 2 into `main`'s slots, before the call."
+      },
+      {
+        "text": "`iload_1` and `iload_2`, then `invokestatic`",
+        "correct": true,
+        "why": "Right: the two values were pushed and the call took them."
+      },
+      {
+        "text": "`iload_0` and `istore_0`, inside `swap`",
+        "correct": false,
+        "why": "Those run inside `swap` on its own slots, after the handover."
+      }
+    ]
+  },
+  {
+    "id": "ex-gh69w311",
+    "version": 1,
+    "section": "primitives-are-copied",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is a method parameter, as far as the JVM is concerned?",
+    "hint": "Lesson 5's frame.",
+    "choices": [
+      {
+        "text": "A local variable of the method, filled in by the caller",
+        "correct": true,
+        "why": "Right: `swap`'s parameters were its slots 0 and 1."
+      },
+      {
+        "text": "A pointer into the caller's frame, so writes go straight back",
+        "correct": false,
+        "why": "No JVM instruction reaches another method's frame."
+      },
+      {
+        "text": "A field of the class, shared by every call to the method",
+        "correct": false,
+        "why": "Each call gets fresh parameters in a fresh frame."
+      },
+      {
+        "text": "A second name for the caller's variable, as in pass by reference",
+        "correct": false,
+        "why": "That is pass by reference, which Java does not have."
+      }
+    ]
+  },
+  {
+    "id": "ex-1rmx41ye",
+    "version": 1,
+    "section": "primitives-are-copied",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Java passes every argument by ___: the method receives a copy of what the caller's variable holds.",
+    "hint": "The opposite of \"by reference\".",
+    "blanks": [
+      {
+        "accept": [
+          "value"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-epnwgjn5",
+    "version": 1,
+    "section": "references-are-copied",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`renew(mine)` changed `mine`'s book. What did `renew` receive?",
+    "hint": "What does a variable of a class type hold?",
+    "choices": [
+      {
+        "text": "The variable `mine` itself, under another name",
+        "correct": false,
+        "why": "Then `replace` would have changed `mine` too, and it did not."
+      },
+      {
+        "text": "A copy of the `Book` object",
+        "correct": false,
+        "why": "A copy of the object would have been changed instead of the original; `main` saw the change."
+      },
+      {
+        "text": "A copy of the reference in `mine`",
+        "correct": true,
+        "why": "Right: two arrows to one object, so a change through either is visible to both."
+      }
+    ]
+  },
+  {
+    "id": "ex-x7g3nhke",
+    "version": 1,
+    "section": "references-are-copied",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After `replace(mine)`, `mine` was still *Dom Casmurro*, renewed once. What happened to the *Iracema* object?",
+    "hint": "Who pointed at it when `replace` returned?",
+    "choices": [
+      {
+        "text": "It replaced *Dom Casmurro* on the heap, at the same address",
+        "correct": false,
+        "why": "Nothing is replaced in place; `new` made a second object."
+      },
+      {
+        "text": "It became unreachable when `replace` returned, and so garbage",
+        "correct": true,
+        "why": "Right: only `b` pointed at it, and `b` went with the frame."
+      },
+      {
+        "text": "It was copied back into `mine` and then discarded by `main`",
+        "correct": false,
+        "why": "Nothing is copied back from a method except its return value, and `replace` returns nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-jqq2ct7p",
+    "version": 1,
+    "section": "references-are-copied",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `replace`'s bytecode, `astore_0` follows the construction of the new `Book`. What does it store, and where?",
+    "hint": "Slot 0 of a static method is its first parameter.",
+    "choices": [
+      {
+        "text": "The new object, into the caller's variable `mine`",
+        "correct": false,
+        "why": "No instruction reaches `main`'s frame."
+      },
+      {
+        "text": "The reference to the new object, into `replace`'s own parameter `b`",
+        "correct": true,
+        "why": "Right: an ordinary store into its own frame, like `istore_0` for an `int`."
+      },
+      {
+        "text": "The string `Iracema`, written into the field of the book that `mine` points at",
+        "correct": false,
+        "why": "That would be `putfield`; `astore` writes a local slot."
+      }
+    ]
+  },
+  {
+    "id": "ex-bz363wdk",
+    "version": 1,
+    "section": "references-are-copied",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A method receives `Book b`. Which of these can the caller see after the method returns? Choose all that apply.",
+    "hint": "Through the arrow, or to the arrow?",
+    "choices": [
+      {
+        "text": "`b.renewals = 5;`",
+        "correct": true,
+        "why": "Yes: it writes a field of the shared object."
+      },
+      {
+        "text": "`b = new Book(\"X\");`",
+        "correct": false,
+        "why": "No: it re-points the method's own copy."
+      },
+      {
+        "text": "`b.title = b.title.toUpperCase();`",
+        "correct": true,
+        "why": "Yes: the field of the shared object now holds a new string."
+      },
+      {
+        "text": "`b = null;`",
+        "correct": false,
+        "why": "No: only the method's copy becomes `null`."
+      }
+    ]
+  },
+  {
+    "id": "ex-2shaf7vm",
+    "version": 1,
+    "section": "references-are-copied",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which sentence describes Java's argument passing?",
+    "hint": "Section 03 has a sentence to keep.",
+    "choices": [
+      {
+        "text": "Primitives by value, objects by reference",
+        "correct": false,
+        "why": "The common belief; `replace` and the swap of two strings refute it."
+      },
+      {
+        "text": "Everything by reference, primitives copied",
+        "correct": false,
+        "why": "There is no reference passing at all in Java."
+      },
+      {
+        "text": "Everything by value; for an object, the value is a reference",
+        "correct": true,
+        "why": "Right: one rule, no exceptions."
+      }
+    ]
+  },
+  {
+    "id": "ex-ch1hvssz",
+    "version": 1,
+    "section": "the-misunderstanding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`shout(name)` runs `s = s.toUpperCase();` and `name` still prints `ana`. Why?",
+    "hint": "What does `toUpperCase` return?",
+    "choices": [
+      {
+        "text": "It returns a new string, and `s =` re-points only the method's copy",
+        "correct": true,
+        "why": "Right: the original string is unchanged, as strings always are."
+      },
+      {
+        "text": "Strings are passed by value, unlike other objects",
+        "correct": false,
+        "why": "Strings are passed like every other object: a copy of the reference."
+      },
+      {
+        "text": "`toUpperCase` fails silently on lower-case input",
+        "correct": false,
+        "why": "It worked; the upper-case string was simply never stored where `main` could see it."
+      }
+    ]
+  },
+  {
+    "id": "ex-egvvpa6y",
+    "version": 1,
+    "section": "the-misunderstanding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which experiment settles that Java does not pass objects by reference?",
+    "hint": "In a language with pass by reference, one of these would have worked.",
+    "choices": [
+      {
+        "text": "`zero(numbers)` changing the array",
+        "correct": false,
+        "why": "That works the same under both models, so it decides nothing."
+      },
+      {
+        "text": "`empty(titles)` clearing the list",
+        "correct": false,
+        "why": "A method call on the shared object works under both models."
+      },
+      {
+        "text": "`swap(first, second)` leaving them as `AB`",
+        "correct": true,
+        "why": "Right: by reference, the caller's two variables would have swapped."
+      },
+      {
+        "text": "`increment(count)` leaving 5, since an object came back unchanged",
+        "correct": false,
+        "why": "Suggestive, but `Integer` being immutable muddies it; the two-object swap is the clean test."
+      }
+    ]
+  },
+  {
+    "id": "ex-jxf2nt1r",
+    "version": 1,
+    "section": "the-misunderstanding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`increment(Integer n)` runs `n++`, and `count` stays 5. What did `n++` do?",
+    "hint": "`Integer` is immutable.",
+    "choices": [
+      {
+        "text": "Changed the shared `Integer`, which `main` then cached",
+        "correct": false,
+        "why": "No `Integer` changes; there is no method that could change one."
+      },
+      {
+        "text": "Made a new `Integer` holding 6 and pointed its own `n` at it",
+        "correct": true,
+        "why": "Right: unbox, add, box a new one, reassign the method's own copy."
+      },
+      {
+        "text": "Nothing, because `++` does not work on `Integer`",
+        "correct": false,
+        "why": "It compiles and works on the method's copy, through boxing."
+      }
+    ]
+  },
+  {
+    "id": "ex-cyp7nd5v",
+    "version": 1,
+    "section": "the-misunderstanding",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each method body to what the caller sees afterwards.",
+    "hint": "Through the reference, or to the parameter?",
+    "pairs": [
+      {
+        "left": "`numbers[0] = 0;`",
+        "right": "the array's first element is 0"
+      },
+      {
+        "left": "`list.clear();`",
+        "right": "the list is empty"
+      },
+      {
+        "left": "`list = new ArrayList<>();`",
+        "right": "nothing has changed"
+      }
+    ],
+    "right_distractors": [
+      "a new empty list in the caller's variable"
+    ]
+  },
+  {
+    "id": "ex-8geknxf7",
+    "version": 1,
+    "section": "the-misunderstanding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Java have no `ref` or `&` parameter syntax, as C# and C++ do?",
+    "hint": "What would that syntax be for?",
+    "choices": [
+      {
+        "text": "Because every object parameter is already a `ref` parameter",
+        "correct": false,
+        "why": "Then a swap of two objects would work, and line 3 shows it does not."
+      },
+      {
+        "text": "Because Java has no pass by reference",
+        "correct": true,
+        "why": "Right: a method that must give back something new returns it."
+      },
+      {
+        "text": "Because `final` parameters do the same job",
+        "correct": false,
+        "why": "`final` stops reassignment; it gives the caller nothing back."
+      }
+    ]
+  },
+  {
+    "id": "ex-7gbrk16q",
+    "version": 1,
+    "section": "living-with-it",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A method has to give its caller both the smallest and the largest value of an array. How does section 05 do it?",
+    "hint": "A method returns one value.",
+    "choices": [
+      {
+        "text": "Two `int` parameters that the method fills in",
+        "correct": false,
+        "why": "Assigning them would change only the method's copies."
+      },
+      {
+        "text": "It returns a record holding both",
+        "correct": true,
+        "why": "Right: `MinMax(min, max)`, read with `min()` and `max()`."
+      },
+      {
+        "text": "Two static fields the caller reads afterwards",
+        "correct": false,
+        "why": "That works and shares mutable state across every call, which lesson 15 warned against."
+      }
+    ]
+  },
+  {
+    "id": "ex-xwpn359f",
+    "version": 1,
+    "section": "living-with-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `sortedCopy(pages)`, `pages` was still `[256, 640, 180]`; after `sortInPlace(pages)` it was sorted. What made the difference?",
+    "hint": "Which array did each one sort?",
+    "choices": [
+      {
+        "text": "`sortedCopy` received a copy of the array, and `sortInPlace` the array itself",
+        "correct": false,
+        "why": "Both received a copy of the same reference; one of them cloned the array itself."
+      },
+      {
+        "text": "One of them cloned the array before sorting",
+        "correct": true,
+        "why": "Right: `values.clone()` made a second array, and only that one was sorted."
+      },
+      {
+        "text": "`Arrays.sort` only changes arrays it creates itself",
+        "correct": false,
+        "why": "It sorts whatever array it is given, as `sortInPlace` showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-rdkpc23p",
+    "version": 1,
+    "section": "living-with-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`static void replace(final StringBuilder b)` contains `b.append(\"!\");` and `b = new StringBuilder(\"other\");`. Which line does `javac` refuse?",
+    "hint": "`final` is about the arrow, not the object.",
+    "choices": [
+      {
+        "text": "`b.append(\"!\");`, because `b` is final",
+        "correct": false,
+        "why": "`final` does not freeze the object; the call compiled."
+      },
+      {
+        "text": "Both lines",
+        "correct": false,
+        "why": "Only the assignment broke the rule."
+      },
+      {
+        "text": "`b = new StringBuilder(\"other\");`",
+        "correct": true,
+        "why": "Right: `final parameter b may not be assigned`."
+      }
+    ]
+  },
+  {
+    "id": "ex-bjbgfw7t",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put what happens during `replace(mine)` in order.",
+    "hint": "Copy first, re-point last.",
+    "items": [
+      "`main` pushes the reference held in `mine`",
+      "`replace`'s frame is created, with that reference in `b`",
+      "A new `Book` is built on the heap",
+      "`b` is pointed at the new `Book`",
+      "`replace` returns and its frame, with `b`, is discarded"
+    ]
+  },
+  {
+    "id": "ex-7m5jfnds",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague writes `void reset(Book b) { b = new Book(b.title); }` to set a book's renewals back to 0. What does the caller see?",
+    "hint": "Is anything written through the reference?",
+    "choices": [
+      {
+        "text": "The book with 0 renewals, as intended",
+        "correct": false,
+        "why": "The new book went into the method's copy of the arrow and was then discarded."
+      },
+      {
+        "text": "The same book, with its renewals unchanged",
+        "correct": true,
+        "why": "Right: the fix is `b.renewals = 0;`, or returning the new book."
+      },
+      {
+        "text": "A `NullPointerException`, because the old book is collected",
+        "correct": false,
+        "why": "The caller still points at the old book, so it is not garbage."
+      },
+      {
+        "text": "A compile error, because a parameter cannot be reassigned",
+        "correct": false,
+        "why": "It can, unless it is `final`; it compiles and does nothing visible."
+      }
+    ]
+  },
+  {
+    "id": "ex-nf25jxhx",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`int[] a = {1, 2, 3};` and `void f(int[] x) { x[1] = 10; x = new int[]{0, 0, 0}; x[2] = 20; }`. After `f(a)`, what is `a[1] + a[2]`?",
+    "hint": "Which writes happen before `x` is re-pointed?",
+    "value": 13,
+    "tolerance": 0
+  }
+]

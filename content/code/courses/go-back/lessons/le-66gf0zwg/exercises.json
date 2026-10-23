@@ -1,0 +1,1008 @@
+[
+  {
+    "id": "ex-rf7rg5jh",
+    "version": 1,
+    "section": "the-options",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Three thousand people keep an event page open, and the page polls every three seconds. How many requests a second does boxoffice receive from them?",
+    "hint": "People divided by the interval.",
+    "value": 1000,
+    "tolerance": 0,
+    "unit": "requests per second"
+  },
+  {
+    "id": "ex-nfege86d",
+    "version": 1,
+    "section": "the-options",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A dozen staff look at a sales dashboard that refreshes every minute. Which technique does the lesson say fits it?",
+    "hint": "Few people, news that is not urgent.",
+    "choices": [
+      {
+        "text": "A WebSocket, because the dashboard is a live screen",
+        "correct": false,
+        "why": "A WebSocket earns its machinery when the client talks back constantly; this one only reads."
+      },
+      {
+        "text": "Centrifugo, so that deploys do not drop the dashboard",
+        "correct": false,
+        "why": "A second server for twelve readers is the opposite of the lesson's advice."
+      },
+      {
+        "text": "Long polling, since plain polling wastes the server",
+        "correct": false,
+        "why": "Twelve requests a minute waste nothing worth a held request per viewer."
+      },
+      {
+        "text": "Polling",
+        "correct": true,
+        "why": "Right. A dozen requests a minute cost nothing, and there is no connection to keep alive."
+      }
+    ]
+  },
+  {
+    "id": "ex-769cnapb",
+    "version": 1,
+    "section": "the-options",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each technique to how it works.",
+    "hint": "The table of section 02.",
+    "pairs": [
+      {
+        "left": "polling",
+        "right": "the page asks again every few seconds"
+      },
+      {
+        "left": "long polling",
+        "right": "the server holds the request until something changes"
+      },
+      {
+        "left": "server-sent events",
+        "right": "one GET whose response never ends"
+      },
+      {
+        "left": "WebSocket",
+        "right": "an HTTP request that turns into a two-way channel"
+      }
+    ],
+    "right_distractors": [
+      "a UDP datagram per change"
+    ]
+  },
+  {
+    "id": "ex-v8ey9fct",
+    "version": 1,
+    "section": "the-options",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson pick server-sent events, and not a WebSocket, as enough for seat availability?",
+    "hint": "Who talks to whom.",
+    "choices": [
+      {
+        "text": "Browsers limit WebSockets to six per site",
+        "correct": false,
+        "why": "The six-connection limit is HTTP/1.1's, and it hits server-sent event streams, not WebSockets."
+      },
+      {
+        "text": "Server-sent events carry binary data, which a seat count needs",
+        "correct": false,
+        "why": "Server-sent events are text only, and a count is a short text."
+      },
+      {
+        "text": "The news flows one way, from server to viewer",
+        "correct": true,
+        "why": "Right. The viewer never sends anything, so a two-way channel buys nothing."
+      },
+      {
+        "text": "Go has no WebSocket support at all",
+        "correct": false,
+        "why": "Section 05 builds one with coder/websocket."
+      }
+    ]
+  },
+  {
+    "id": "ex-6h6g2tyh",
+    "version": 1,
+    "section": "notifications",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A purchase runs the `UPDATE` on `sold`, then its transaction rolls back. What does a `LISTEN availability` session receive?",
+    "hint": "When are notifications delivered?",
+    "choices": [
+      {
+        "text": "A notification with the number from before the update",
+        "correct": false,
+        "why": "Nothing is sent for that transaction at all."
+      },
+      {
+        "text": "The notification, followed by a second one undoing it",
+        "correct": false,
+        "why": "PostgreSQL sends no correction; the first one never left."
+      },
+      {
+        "text": "The notification, sent the moment the trigger ran",
+        "correct": false,
+        "why": "pg_notify queues the message; delivery waits for the commit."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. Notifications are delivered at commit, and a rollback discards them."
+      }
+    ]
+  },
+  {
+    "id": "ex-qhfebq0e",
+    "version": 1,
+    "section": "notifications",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The hub drops a value when a watcher's channel is full. Why is that safe for boxoffice?",
+    "hint": "What does each message say?",
+    "choices": [
+      {
+        "text": "PostgreSQL sends every notification twice",
+        "correct": false,
+        "why": "Each notification is delivered once to each listening session."
+      },
+      {
+        "text": "Dropped values are written to the log and resent by the hub later",
+        "correct": false,
+        "why": "The `default` branch does nothing; nothing is resent."
+      },
+      {
+        "text": "The next message replaces the missed one",
+        "correct": true,
+        "why": "Right. A missed value is corrected by the next sale's message."
+      },
+      {
+        "text": "A full channel means the browser has closed",
+        "correct": false,
+        "why": "A full channel means a slow reader; a closed one unsubscribes."
+      }
+    ]
+  },
+  {
+    "id": "ex-p1bnpvy0",
+    "version": 1,
+    "section": "notifications",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `publish` offer each value with a `select` and a `default`, instead of a plain send?",
+    "hint": "It holds the lock while it sends.",
+    "choices": [
+      {
+        "text": "A plain send on a buffered channel inside a loop over a map does not compile",
+        "correct": false,
+        "why": "It compiles; it blocks when the buffer is full."
+      },
+      {
+        "text": "`select` sends to all channels at once",
+        "correct": false,
+        "why": "Each `select` here offers one value to one channel."
+      },
+      {
+        "text": "PostgreSQL requires an answer before the next notification",
+        "correct": false,
+        "why": "Notifications need no answer."
+      },
+      {
+        "text": "One slow watcher would stall all the others",
+        "correct": true,
+        "why": "Right. A blocked send under the mutex stalls the relay for everybody."
+      }
+    ]
+  },
+  {
+    "id": "ex-c2605gpv",
+    "version": 1,
+    "section": "notifications",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "boxoffice's pool has `MaxConns` 10. How many connections are left for queries once `listen` is running?",
+    "hint": "`listen` acquires one and never releases it.",
+    "value": 9,
+    "tolerance": 0,
+    "unit": "connections"
+  },
+  {
+    "id": "ex-e4hjmw2y",
+    "version": 1,
+    "section": "notifications",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the migration wrap the function in `-- +goose StatementBegin` and `-- +goose StatementEnd`?",
+    "hint": "Count the semicolons in the function body.",
+    "choices": [
+      {
+        "text": "They make the function run inside a transaction of its own",
+        "correct": false,
+        "why": "goose already runs each migration in a transaction; the marks are about splitting."
+      },
+      {
+        "text": "PostgreSQL rejects a plpgsql function body without them",
+        "correct": false,
+        "why": "They are SQL comments; PostgreSQL never sees them as anything else."
+      },
+      {
+        "text": "goose cuts statements at semicolons",
+        "correct": true,
+        "why": "Right. Between the marks it sends everything as one statement."
+      },
+      {
+        "text": "They mark the part `Down` undoes",
+        "correct": false,
+        "why": "`-- +goose Down` marks that."
+      }
+    ]
+  },
+  {
+    "id": "ex-e2aqv8gd",
+    "version": 1,
+    "section": "notifications",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A `NOTIFY` payload has to stay under ___ bytes, which is why boxoffice sends an id and a number.",
+    "hint": "Section 03 names the limit.",
+    "blanks": [
+      {
+        "accept": [
+          "8000",
+          "8,000",
+          "8 000"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fczd508s",
+    "version": 1,
+    "section": "sse",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`liveEvents` subscribes to the hub before it reads the event from the store. What goes wrong in the other order?",
+    "hint": "Picture a sale between the two steps.",
+    "choices": [
+      {
+        "text": "The store refuses reads from a handler that has no subscription in the hub yet",
+        "correct": false,
+        "why": "The store knows nothing about the hub."
+      },
+      {
+        "text": "The first message is sent twice",
+        "correct": false,
+        "why": "Duplicates are what the chosen order risks, and they are harmless."
+      },
+      {
+        "text": "The handler deadlocks on the hub's mutex",
+        "correct": false,
+        "why": "Neither order holds the mutex across the read."
+      },
+      {
+        "text": "A sale between them is missed until the next sale",
+        "correct": true,
+        "why": "Right. Subscribing first at worst delivers the same number twice."
+      }
+    ]
+  },
+  {
+    "id": "ex-sgwh594w",
+    "version": 1,
+    "section": "sse",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What would happen to the stream at ten seconds without `rc.SetWriteDeadline(time.Time{})`?",
+    "hint": "Lesson 1's server settings.",
+    "choices": [
+      {
+        "text": "Nothing; deadlines only apply to request bodies",
+        "correct": false,
+        "why": "`WriteTimeout` applies to writing the response."
+      },
+      {
+        "text": "`EventSource` would refuse a stream older than ten seconds",
+        "correct": false,
+        "why": "The browser sets no such limit; the server's `WriteTimeout` does."
+      },
+      {
+        "text": "`WriteTimeout` would cut the connection",
+        "correct": true,
+        "why": "Right. The zero time lifts the deadline for this response only."
+      },
+      {
+        "text": "The hub would unsubscribe the handler",
+        "correct": false,
+        "why": "The hub has no clock."
+      }
+    ]
+  },
+  {
+    "id": "ex-vxm7t2sb",
+    "version": 1,
+    "section": "sse",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The handler holds lesson 2's `statusRecorder`, not the connection's writer. How does `http.ResponseController` still flush?",
+    "hint": "A method lesson 2 added for this lesson.",
+    "choices": [
+      {
+        "text": "`statusRecorder` implements `Flush` itself",
+        "correct": false,
+        "why": "It declares only `WriteHeader`, `Write` and `Unwrap`; the wrapper hides `Flush`."
+      },
+      {
+        "text": "It calls `Unwrap` to reach the writer underneath",
+        "correct": true,
+        "why": "Right. `Unwrap` is the convention it follows through wrappers."
+      },
+      {
+        "text": "It opens a second connection to the client",
+        "correct": false,
+        "why": "A server never opens connections to a browser."
+      },
+      {
+        "text": "Flushing happens anyway when the handler returns",
+        "correct": false,
+        "why": "This handler returns only when the visitor leaves."
+      }
+    ]
+  },
+  {
+    "id": "ex-dypgetdt",
+    "version": 1,
+    "section": "sse",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put what `liveEvents` does in order.",
+    "hint": "It subscribes before anything else.",
+    "items": [
+      "subscribe to the event's availability in the hub",
+      "read the event from the store",
+      "lift the write deadline and set `text/event-stream`",
+      "write and flush the current availability",
+      "write each new value until the request's context ends"
+    ]
+  },
+  {
+    "id": "ex-q3cb5phb",
+    "version": 1,
+    "section": "sse",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What ends one message in a `text/event-stream` response?",
+    "hint": "Look at `data: 118` in the transcript.",
+    "choices": [
+      {
+        "text": "A closing `}`",
+        "correct": false,
+        "why": "The format is lines, not JSON."
+      },
+      {
+        "text": "The end of the HTTP response",
+        "correct": false,
+        "why": "The response never ends; messages need their own end."
+      },
+      {
+        "text": "An empty line after the `data:` line",
+        "correct": true,
+        "why": "Right. The handler writes `data: %d` followed by two newlines."
+      },
+      {
+        "text": "A `Content-Length` header per message",
+        "correct": false,
+        "why": "Headers are sent once, before the first message."
+      }
+    ]
+  },
+  {
+    "id": "ex-9b85tnsp",
+    "version": 1,
+    "section": "websocket",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A page on `https://elsewhere.example.net` opens a WebSocket to boxoffice. Why does boxoffice's CORS middleware not protect it?",
+    "hint": "What does CORS govern?",
+    "choices": [
+      {
+        "text": "The middleware runs after the upgrade",
+        "correct": false,
+        "why": "Order is not the reason; CORS rules do not cover WebSockets."
+      },
+      {
+        "text": "CORS governs `fetch`, and browsers apply no same-origin rule to WebSockets",
+        "correct": true,
+        "why": "Right. So the server checks `Origin` itself, in `Accept`."
+      },
+      {
+        "text": "WebSockets never send an `Origin` header",
+        "correct": false,
+        "why": "Browsers send one on every WebSocket handshake."
+      },
+      {
+        "text": "CORS only protects `POST`",
+        "correct": false,
+        "why": "CORS covers every method a `fetch` sends."
+      }
+    ]
+  },
+  {
+    "id": "ex-p79kffbd",
+    "version": 1,
+    "section": "websocket",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The handshake from `curl` carried no `Origin` header at all. What did `Accept` answer?",
+    "hint": "The first transcript of section 05.",
+    "choices": [
+      {
+        "text": "403, because every request needs an Origin",
+        "correct": false,
+        "why": "A request with no Origin passes; only browsers send one."
+      },
+      {
+        "text": "400, because the key was not random",
+        "correct": false,
+        "why": "The RFC's sample key is a valid key."
+      },
+      {
+        "text": "101 Switching Protocols",
+        "correct": true,
+        "why": "Right. Programs send no Origin and are not where this attack comes from."
+      },
+      {
+        "text": "200 with the availability as JSON",
+        "correct": false,
+        "why": "A successful upgrade answers 101, and the data comes as frames."
+      }
+    ]
+  },
+  {
+    "id": "ex-qskt93e3",
+    "version": 1,
+    "section": "websocket",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "boxoffice expects no messages from the client. Why does `liveSocket` still call `CloseRead`?",
+    "hint": "Close and ping arrive as frames.",
+    "choices": [
+      {
+        "text": "`wsjson.Write` refuses to write until something was read",
+        "correct": false,
+        "why": "Writing does not depend on reading."
+      },
+      {
+        "text": "Without reading, close and ping frames go unanswered",
+        "correct": true,
+        "why": "Right. CloseRead reads them in its own goroutine and ends the context on close."
+      },
+      {
+        "text": "It lifts the write deadline",
+        "correct": false,
+        "why": "Deadlines were already cleared by the hijack."
+      },
+      {
+        "text": "It sends the first availability",
+        "correct": false,
+        "why": "`send` does that."
+      }
+    ]
+  },
+  {
+    "id": "ex-t88j0ckh",
+    "version": 1,
+    "section": "websocket",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `liveSocket` need no `SetWriteDeadline`, unlike `liveEvents`?",
+    "hint": "What `Accept` does to the connection.",
+    "choices": [
+      {
+        "text": "WebSocket connections last less than ten seconds",
+        "correct": false,
+        "why": "They last as long as the client stays."
+      },
+      {
+        "text": "`routes.go` serves `/ws` on a server with no timeouts",
+        "correct": false,
+        "why": "Both routes share the one `http.Server` with its timeouts."
+      },
+      {
+        "text": "The hijack clears the connection's deadlines",
+        "correct": true,
+        "why": "Right. From then on deadlines are the WebSocket's own business."
+      },
+      {
+        "text": "coder/websocket sets an infinite deadline before every write",
+        "correct": false,
+        "why": "The handler gives every write five seconds instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-7jbjgatv",
+    "version": 1,
+    "section": "websocket",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A server that agrees to a WebSocket handshake answers with HTTP status ___.",
+    "hint": "Switching Protocols.",
+    "blanks": [
+      {
+        "accept": [
+          "101"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3esc4883",
+    "version": 1,
+    "section": "websocket",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does every write in `liveSocket` get a five-second timeout?",
+    "hint": "A client that stops reading.",
+    "choices": [
+      {
+        "text": "Browsers drop frames older than five seconds",
+        "correct": false,
+        "why": "Browsers keep every frame they receive."
+      },
+      {
+        "text": "The RFC limits a frame to five seconds",
+        "correct": false,
+        "why": "RFC 6455 sets no such limit."
+      },
+      {
+        "text": "It spaces messages out so that the client keeps up with them",
+        "correct": false,
+        "why": "A timeout caps a write; it never delays one."
+      },
+      {
+        "text": "A full buffer would block it for good",
+        "correct": true,
+        "why": "Right. The write fails, the handler returns, and the deferred cleanup runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-bkgtk7ag",
+    "version": 1,
+    "section": "melody",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two clients are in the room and the second sends `doors open at 19:00`. Who receives it?",
+    "hint": "Look at `HandleMessage`.",
+    "choices": [
+      {
+        "text": "Only the first client",
+        "correct": false,
+        "why": "That is `BroadcastOthers`; the room uses `Broadcast`."
+      },
+      {
+        "text": "Nobody until a third client joins",
+        "correct": false,
+        "why": "Both transcripts show the message."
+      },
+      {
+        "text": "Both clients, the sender included",
+        "correct": true,
+        "why": "Right. `Broadcast` sends to every session."
+      },
+      {
+        "text": "Only the server's log",
+        "correct": false,
+        "why": "The log records joins and leaves, not messages."
+      }
+    ]
+  },
+  {
+    "id": "ex-f5rvjc1a",
+    "version": 1,
+    "section": "melody",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each Melody default to its value.",
+    "hint": "From its `config.go`.",
+    "pairs": [
+      {
+        "left": "MessageBufferSize",
+        "right": "256 messages"
+      },
+      {
+        "left": "PingPeriod",
+        "right": "54 seconds"
+      },
+      {
+        "left": "PongWait",
+        "right": "60 seconds"
+      },
+      {
+        "left": "MaxMessageSize",
+        "right": "512 bytes"
+      }
+    ],
+    "right_distractors": [
+      "8 messages"
+    ]
+  },
+  {
+    "id": "ex-x9d97hf9",
+    "version": 1,
+    "section": "melody",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `melody.New` do about the `Origin` of a handshake, and what does the lesson do about it?",
+    "hint": "Compare with coder/websocket's default.",
+    "choices": [
+      {
+        "text": "It accepts only the server's own host, like coder/websocket",
+        "correct": false,
+        "why": "Melody's default is the opposite."
+      },
+      {
+        "text": "It rejects every browser",
+        "correct": false,
+        "why": "Any site's page joins the room."
+      },
+      {
+        "text": "It accepts all; set `CheckOrigin` yourself",
+        "correct": true,
+        "why": "Right. Its `CheckOrigin` returns true for everything."
+      },
+      {
+        "text": "It reads the allowed origins from `config.go`",
+        "correct": false,
+        "why": "`config.go` holds buffer and timing settings, not origins."
+      }
+    ]
+  },
+  {
+    "id": "ex-mgtpmhq3",
+    "version": 1,
+    "section": "centrifugo",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson run `sha256sum -c` before unpacking Centrifugo?",
+    "hint": "It is the step people skip.",
+    "choices": [
+      {
+        "text": "`tar` refuses to unpack an archive that has no verified checksum beside it",
+        "correct": false,
+        "why": "`tar` checks nothing of the kind."
+      },
+      {
+        "text": "To pick the binary for the right platform",
+        "correct": false,
+        "why": "The file name already picks the platform."
+      },
+      {
+        "text": "To learn which Go version built it",
+        "correct": false,
+        "why": "`centrifugo version` prints that."
+      },
+      {
+        "text": "To check the download is the published file",
+        "correct": true,
+        "why": "Right. The checksums file is published beside the archives."
+      }
+    ]
+  },
+  {
+    "id": "ex-06tbcvbh",
+    "version": 1,
+    "section": "centrifugo",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each key of Centrifugo's `config.json` to what it is for.",
+    "hint": "Section 07.",
+    "pairs": [
+      {
+        "left": "client.token.hmac_secret_key",
+        "right": "signs the tokens clients connect with"
+      },
+      {
+        "left": "http_api.key",
+        "right": "the password a program publishes with"
+      },
+      {
+        "left": "client.allowed_origins",
+        "right": "the sites whose pages are let in"
+      },
+      {
+        "left": "http_server",
+        "right": "the address and port it listens on"
+      }
+    ],
+    "right_distractors": [
+      "the Redis password"
+    ]
+  },
+  {
+    "id": "ex-t2h1gs19",
+    "version": 1,
+    "section": "centrifugo",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The log says `\"engine\":\"memory\"`. What happens if a second node with the same engine is added?",
+    "hint": "Where are subscriptions kept?",
+    "choices": [
+      {
+        "text": "The nodes share subscribers automatically",
+        "correct": false,
+        "why": "Sharing them is what the Redis engine is for."
+      },
+      {
+        "text": "It knows nothing about the first node's subscribers",
+        "correct": true,
+        "why": "Right. The Redis engine is what lets several nodes share them."
+      },
+      {
+        "text": "It refuses to start",
+        "correct": false,
+        "why": "It starts; it just knows nothing of the first node's subscribers."
+      },
+      {
+        "text": "Both nodes deliver every message twice",
+        "correct": false,
+        "why": "Each node delivers only to its own subscribers."
+      }
+    ]
+  },
+  {
+    "id": "ex-m5rfb0k9",
+    "version": 1,
+    "section": "centrifugo",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The `connect` reply carried `\"ping\":25`. Every how many seconds does Centrifugo ping the connection?",
+    "hint": "Read the field.",
+    "value": 25,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-ep27c6nb",
+    "version": 1,
+    "section": "scaling-out",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two copies of boxoffice run behind a load balancer. A viewer is on copy A and the sale happens on copy B. How does the viewer learn of it?",
+    "hint": "Who runs `LISTEN`?",
+    "choices": [
+      {
+        "text": "PostgreSQL notifies both copies, and A's hub tells its own viewer",
+        "correct": true,
+        "why": "Right. Taking the news from the database is what makes this work."
+      },
+      {
+        "text": "Copy B forwards the sale to copy A over HTTP",
+        "correct": false,
+        "why": "No copy talks to another."
+      },
+      {
+        "text": "The viewer does not learn of it until reconnecting to B",
+        "correct": false,
+        "why": "That is what a hub fed by `Sell` would do."
+      },
+      {
+        "text": "The load balancer copies the stream to both copies",
+        "correct": false,
+        "why": "A load balancer sends each connection to one copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-85a7k3pg",
+    "version": 1,
+    "section": "scaling-out",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A copy's listening connection was down for ten seconds. What happens to the notifications sent in that time?",
+    "hint": "Are notifications stored?",
+    "choices": [
+      {
+        "text": "PostgreSQL resends them when the copy runs `LISTEN` again",
+        "correct": false,
+        "why": "Nothing resends them; that copy never sees them."
+      },
+      {
+        "text": "They wait in the hub's buffer",
+        "correct": false,
+        "why": "The hub only receives what `listen` hands it."
+      },
+      {
+        "text": "Lost; the next sale corrects that copy",
+        "correct": true,
+        "why": "Right. Each message carries the whole number, so the next one corrects every screen."
+      },
+      {
+        "text": "The transactions that sent them fail at commit",
+        "correct": false,
+        "why": "Commits succeed whether anybody listens or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-nck5eh7a",
+    "version": 1,
+    "section": "scaling-out",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A proxy closes connections that send nothing for sixty seconds. What does the lesson propose for `liveEvents`?",
+    "hint": "A line `EventSource` ignores.",
+    "choices": [
+      {
+        "text": "Raise `WriteTimeout` to an hour",
+        "correct": false,
+        "why": "The deadline is already lifted; the proxy's idle timeout is the problem."
+      },
+      {
+        "text": "A ticker that writes `: ping` every thirty seconds",
+        "correct": true,
+        "why": "Right. Lines starting with a colon are comments to `EventSource`."
+      },
+      {
+        "text": "Send the availability again every second",
+        "correct": false,
+        "why": "That is polling with extra steps; a comment line costs less."
+      },
+      {
+        "text": "Switch the route to long polling",
+        "correct": false,
+        "why": "A held request meets the same idle timeout."
+      }
+    ]
+  },
+  {
+    "id": "ex-yn4kgm2b",
+    "version": 1,
+    "section": "scaling-out",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should clients reconnect after a deploy with a random delay?",
+    "hint": "Every connection on the stopped process closes at once.",
+    "choices": [
+      {
+        "text": "Because `EventSource` refuses to reconnect at once",
+        "correct": false,
+        "why": "It reconnects by itself a few seconds later."
+      },
+      {
+        "text": "To hide the deploy from the access log",
+        "correct": false,
+        "why": "The log records every request regardless."
+      },
+      {
+        "text": "So ten thousand do not arrive in the same second",
+        "correct": true,
+        "why": "Right. The delay spreads the reconnections out."
+      },
+      {
+        "text": "So the database runs `LISTEN` first",
+        "correct": false,
+        "why": "Clients do not affect the server's `LISTEN`."
+      }
+    ]
+  },
+  {
+    "id": "ex-rd5pdycp",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which statements about this lesson's design are true? Choose all that apply.",
+    "hint": "Sections 03, 04 and 08.",
+    "choices": [
+      {
+        "text": "Dropping a value is right for a seat count and wrong for chat messages",
+        "correct": true,
+        "why": "Right. A dropped number is replaced; a dropped sentence is lost."
+      },
+      {
+        "text": "The trigger makes every way of changing `sold` announce itself",
+        "correct": true,
+        "why": "Right. Even a manual `UPDATE` in psql fires it."
+      },
+      {
+        "text": "Each hub channel holds every value until the browser reads it",
+        "correct": false,
+        "why": "Each holds eight, and a ninth is dropped."
+      },
+      {
+        "text": "`listen` returns its connection to the pool after each notification",
+        "correct": false,
+        "why": "It keeps it for good, because `LISTEN` belongs to the session."
+      }
+    ]
+  },
+  {
+    "id": "ex-dm7e2t2z",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the path of one sale until a page shows the new number.",
+    "hint": "The figure of section 03.",
+    "items": [
+      "`Sell` updates `sold` inside its transaction",
+      "the trigger calls `pg_notify`",
+      "the transaction commits and the notification is delivered",
+      "`listen` hands the number to the hub",
+      "the handler writes it to the page"
+    ]
+  },
+  {
+    "id": "ex-h63rcm35",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants live seat counts for twenty thousand viewers, and deploys several times a day. Which choice matches the lesson's advice?",
+    "hint": "What must deploys not do?",
+    "choices": [
+      {
+        "text": "Centrifugo, fed by `listen` through its publish API",
+        "correct": true,
+        "why": "Right. Connections leave boxoffice, and the database stays the source of news."
+      },
+      {
+        "text": "Melody, since its 256-message buffer handles the load",
+        "correct": false,
+        "why": "Melody's connections live in the process, so a deploy still drops them."
+      },
+      {
+        "text": "Polling every second from every viewer",
+        "correct": false,
+        "why": "That is twenty thousand requests a second."
+      },
+      {
+        "text": "A bigger hub buffer in boxoffice",
+        "correct": false,
+        "why": "A buffer does nothing for connections dropped by a deploy."
+      }
+    ]
+  }
+]

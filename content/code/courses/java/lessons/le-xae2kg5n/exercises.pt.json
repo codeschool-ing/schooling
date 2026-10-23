@@ -1,0 +1,357 @@
+{
+  "ex-te505t6s": {
+    "prompt": "`String name = \"ana\"; name.toUpperCase(); System.out.println(name);` O que isso imprime?",
+    "hint": "O que a primeira chamada fez com o resultado?",
+    "choices": [
+      {
+        "text": "`ANA`, porque o `toUpperCase` muda a string em que é chamado",
+        "why": "Nenhum método de `String` muda a string; este devolveu uma nova que ninguém guardou."
+      },
+      {
+        "text": "`ana`",
+        "why": "Isso: as maiúsculas ficaram numa string nova que foi jogada fora, e `name` continua apontando para `\"ana\"`."
+      },
+      {
+        "text": "Nada: a linha não compila, já que o resultado é ignorado",
+        "why": "Ignorar um resultado compila sem uma palavra; é isso que torna o bug fácil de escrever."
+      }
+    ]
+  },
+  "ex-nj4pt2pp": {
+    "prompt": "`a` é o literal `\"java\"` e `c` foi construída em tempo de execução com um `StringBuilder`. Por que `a == c` imprime `false`?",
+    "hint": "O que o `==` compara entre objetos?",
+    "choices": [
+      {
+        "text": "Os caracteres diferem de um jeito que o `println` não mostra, como um espaço escondido",
+        "why": "`a.equals(c)` imprimiu `true`: os caracteres são idênticos."
+      },
+      {
+        "text": "O `==` pergunta se são o mesmo objeto, e `c` é um objeto novo",
+        "why": "Isso: o mesmo texto, dois objetos, e o `==` compara referências."
+      },
+      {
+        "text": "O resultado de um `StringBuilder` não é uma `String` de verdade até o `intern()` ser chamado",
+        "why": "O `toString()` devolve uma `String` comum; o `intern()` só encontra a cópia compartilhada."
+      },
+      {
+        "text": "O `==` compara comprimentos, e o builder acrescentou um caractere de término",
+        "why": "O `==` entre objetos compara referências, e as duas strings têm quatro caracteres."
+      }
+    ]
+  },
+  "ex-r4jsvdq1": {
+    "prompt": "Um programa lê um comando do teclado em `cmd` e testa `if (cmd == \"quit\")`. Num teste rápido com `String cmd = \"quit\";` escrito no código, funcionou. O que acontece com uma entrada de verdade?",
+    "hint": "De onde vem uma string digitada por uma pessoa?",
+    "choices": [
+      {
+        "text": "Funciona igual, porque as duas guardam o texto `quit`",
+        "why": "O mesmo texto, mas o `==` não compara texto; a string digitada é outro objeto."
+      },
+      {
+        "text": "O teste dá falso mesmo quando a pessoa digita `quit`",
+        "why": "Isso: a entrada é construída em tempo de execução, um objeto novo, então o `==` com o literal falha; o `equals` é a correção."
+      },
+      {
+        "text": "Não compila, já que o `==` não é permitido entre strings",
+        "why": "Compila: o `==` é legal entre quaisquer duas referências, e é por isso que o bug sobrevive."
+      },
+      {
+        "text": "Lança uma `NullPointerException` na primeira vez",
+        "why": "Nada é null aqui; o `==` só responde `false`."
+      }
+    ]
+  },
+  "ex-3afwj1wz": {
+    "prompt": "Um literal de string que ocupa várias linhas e abre com três aspas duplas se chama bloco de ___.",
+    "hint": "O `Receipt.java` usou um.",
+    "blanks": [
+      {
+        "accept": [
+          "texto",
+          "text block"
+        ]
+      }
+    ]
+  },
+  "ex-fsf27wk0": {
+    "prompt": "`s` é `\"Machado de Assis;Dom Casmurro;1899\"`. O que `s.substring(0, s.indexOf(';'))` devolve?",
+    "hint": "O índice final fica de fora.",
+    "choices": [
+      {
+        "text": "`Machado de Assis`",
+        "why": "Isso: de 0 até 16, sem incluir o 16, que é a posição do `;`."
+      },
+      {
+        "text": "`Machado de Assis;`",
+        "why": "Isso incluiria o índice 16; o `substring` para antes do segundo índice."
+      },
+      {
+        "text": "`achado de Assis`",
+        "why": "As posições começam em 0, então o índice 0 é o `M`."
+      },
+      {
+        "text": "`16`",
+        "why": "Isso é o que o `indexOf` devolve; o `substring` devolve texto."
+      }
+    ]
+  },
+  "ex-qgffzbq5": {
+    "prompt": "`\"Zebra\".compareTo(\"apple\")` imprimiu `-7`. Ordenando `Zebra`, `apple` e `banana` com `compareTo`, qual vem primeiro?",
+    "hint": "Um resultado negativo quer dizer que o da esquerda vem primeiro.",
+    "choices": [
+      {
+        "text": "`apple`, porque A é a primeira letra do alfabeto",
+        "why": "Essa é a ordem de uma pessoa; o `compareTo` compara códigos de caracteres, e as maiúsculas vêm antes das minúsculas."
+      },
+      {
+        "text": "`Zebra`",
+        "why": "Isso: toda maiúscula tem código menor que toda minúscula, então o `Z` vem antes do `a`."
+      },
+      {
+        "text": "`banana`, porque é a mais longa",
+        "why": "O comprimento só decide quando uma string é o começo da outra."
+      }
+    ]
+  },
+  "ex-7m0ka41e": {
+    "prompt": "Um programa testa `command.toUpperCase().equals(\"TITLE\")`, sem locale. Passa em todo teste no Brasil e falha na máquina de um cliente em Istambul. O que corrige?",
+    "hint": "O turco tem duas letras i.",
+    "choices": [
+      {
+        "text": "Usar `equalsIgnoreCase` no resultado do `toUpperCase()`",
+        "why": "O resultado já é `TİTLE`, com uma maiúscula com ponto, que nenhuma regra de caixa transforma em `I`."
+      },
+      {
+        "text": "Chamar `strip()` antes, já que o teclado turco acrescenta espaços",
+        "why": "Não tem nada de espaço aqui: foi a própria conversão para maiúscula que mudou a letra."
+      },
+      {
+        "text": "Passar `Locale.ROOT` como argumento",
+        "why": "Isso: sem argumento é usado o idioma da máquina, e em turco o `i` vira `İ`."
+      },
+      {
+        "text": "Comparar com `==` em vez de `equals`",
+        "why": "O `==` compara referências e falharia em todo lugar, não só na Turquia."
+      }
+    ]
+  },
+  "ex-hg3xtrgt": {
+    "prompt": "Uma string guarda um emoji de joinha e mais nada. O que o `length()` dela devolve?",
+    "hint": "Um `char` tem 16 bits."
+  },
+  "ex-evees93n": {
+    "prompt": "Por que `s = s + \"x\"` é lento dentro de um laço que roda 50.000 vezes?",
+    "hint": "Uma `String` não pode mudar.",
+    "choices": [
+      {
+        "text": "Porque o `+` converte `\"x\"` em número e de volta a cada vez",
+        "why": "`\"x\"` já é texto; nada é convertido."
+      },
+      {
+        "text": "Cada passo constrói uma string nova e copia para ela todos os caracteres antigos",
+        "why": "Isso: as cópias crescem com a string, então o total cresce com o quadrado do comprimento."
+      },
+      {
+        "text": "Porque o compilador JIT não consegue compilar um laço que contém uma `String`",
+        "why": "O JIT compila esses laços; o trabalho está nas cópias, compiladas ou não."
+      },
+      {
+        "text": "Porque cada `+` grava a string no disco",
+        "why": "Nada toca o disco; é tudo memória e cópia."
+      }
+    ]
+  },
+  "ex-aqex961g": {
+    "prompt": "Na execução que a seção cita, o laço com `+` levou 1715 ms e o laço com `StringBuilder`, 5 ms. Quantas vezes mais tempo levou o laço com `+`? Dê um número inteiro.",
+    "hint": "Divida um pelo outro.",
+    "unit": "vezes"
+  },
+  "ex-v9gjtc29": {
+    "prompt": "O `javap -c` em `\"Hello, \" + name + \", you have \" + books + \" books\"` mostrou um `invokedynamic` e nenhum `StringBuilder`. O que isso lhe diz?",
+    "hint": "Conte as chamadas, não os sinais de mais.",
+    "choices": [
+      {
+        "text": "Que o `+` fora de um laço é tão lento quanto dentro de um",
+        "why": "Uma expressão virou uma chamada que dimensiona o resultado uma vez; o custo está em repetir isso num laço."
+      },
+      {
+        "text": "Que o compilador ignorou `books` por ser um `int`",
+        "why": "O `iload_1` carregou `books`, e a saudação imprimiu `3`."
+      },
+      {
+        "text": "Que a expressão inteira é uma chamada só, então o `+` aqui não custa nada a mais",
+        "why": "Isso: o compilador transforma a expressão numa chamada só a `makeConcatWithConstants`."
+      }
+    ]
+  },
+  "ex-fhm3e1dc": {
+    "prompt": "Onde a regra da seção manda usar um `StringBuilder`? Escolha todas as que se aplicam.",
+    "hint": "A regra é estreita.",
+    "choices": [
+      {
+        "text": "Um laço que acrescenta uma linha por livro a uma string de relatório",
+        "why": "Sim: uma string crescendo dentro de um laço é o caso para o qual ele existe."
+      },
+      {
+        "text": "Um único `return \"Hello, \" + name;` num método",
+        "why": "Uma expressão é uma chamada; o `+` é mais claro e não custa nada a mais."
+      },
+      {
+        "text": "Construir uma linha de 10.000 caracteres um caractere por vez",
+        "why": "Sim: cada `+` copiaria tudo o que veio antes."
+      },
+      {
+        "text": "Juntar um título e um autor para um `println`",
+        "why": "Fora de um laço, o `+` é a escolha mais clara."
+      }
+    ]
+  },
+  "ex-e2xj9njq": {
+    "prompt": "Qual marcador imprime `12.5` como `12.50`?",
+    "hint": "Um decimal, duas casas.",
+    "choices": [
+      {
+        "text": "`%d`",
+        "why": "O `%d` é para números inteiros, e um `double` o faz lançar uma exceção."
+      },
+      {
+        "text": "`%2d`",
+        "why": "Uma largura de 2 para um inteiro; não diz nada sobre casas decimais."
+      },
+      {
+        "text": "`%.2f`",
+        "why": "Isso: o `.2` é o número de casas depois do ponto."
+      },
+      {
+        "text": "`%s`",
+        "why": "O `%s` imprime o valor como texto, `12.5`, sem completar as casas."
+      }
+    ]
+  },
+  "ex-hv0eazh4": {
+    "prompt": "Ligue cada formato ao que ele imprimiu no `Format.java`.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "`%05d` com 42",
+        "right": "`00042`"
+      },
+      {
+        "left": "`%,d` com 1234567",
+        "right": "`1,234,567`"
+      },
+      {
+        "left": "`%,.2f` com 1234.5 e `pt-BR`",
+        "right": "`1.234,50`"
+      },
+      {
+        "left": "`%,.2f` com 1234.5 e `Locale.ROOT`",
+        "right": "`1,234.50`"
+      }
+    ],
+    "right_distractors": [
+      "`1 234,50`"
+    ]
+  },
+  "ex-qz0yr6kd": {
+    "prompt": "`String.format(\"%d copies\", \"three\")` compilou. O que aconteceu quando rodou?",
+    "hint": "O compilador vê o formato como uma string comum.",
+    "choices": [
+      {
+        "text": "Imprimiu `three copies`",
+        "why": "O `%d` só aceita inteiros; não recorre a texto."
+      },
+      {
+        "text": "Imprimiu `0 copies`, o valor padrão para tudo o que não é um número inteiro",
+        "why": "Nenhum valor padrão é posto no lugar; a chamada falha."
+      },
+      {
+        "text": "Lançou `IllegalFormatConversionException: d != java.lang.String`",
+        "why": "Isso: o descompasso só é encontrado quando a linha roda, e o programa terminou com status 1."
+      }
+    ]
+  },
+  "ex-shkkxpj2": {
+    "prompt": "Um programa grava preços num arquivo CSV que outro programa lê. Ele usa `String.format(\"%.2f\", price)` e roda num servidor configurado em `pt-BR`. O que dá errado, e qual é a correção?",
+    "hint": "Que locale o `String.format` usa quando não recebe nenhum?",
+    "choices": [
+      {
+        "text": "Saem com vírgula, `12,50`, e quem lê esperando ponto entende errado; passe `Locale.ROOT`",
+        "why": "Isso: texto para outro programa leva `Locale.ROOT`, para sair igual em toda máquina."
+      },
+      {
+        "text": "Nada dá errado: o `%.2f` sempre escreve ponto",
+        "why": "Sem locale, decide o padrão da máquina, e em `pt-BR` é vírgula."
+      },
+      {
+        "text": "O formato lança exceção numa máquina brasileira; use `%s` em vez dele",
+        "why": "Não lança. E o `%s` imprimiria todos os dígitos do `double`, que é outro problema."
+      }
+    ]
+  },
+  "ex-txear1da": {
+    "prompt": "Qual destas linhas deixa `title` com maiúsculas depois?",
+    "hint": "Um método devolve; uma atribuição guarda.",
+    "choices": [
+      {
+        "text": "`title.toUpperCase(Locale.ROOT);`",
+        "why": "O resultado é devolvido e descartado; `title` não muda."
+      },
+      {
+        "text": "`title = title.toUpperCase(Locale.ROOT);`",
+        "why": "Isso: a string nova é atribuída de volta à variável."
+      },
+      {
+        "text": "`String upper = title.toUpperCase(Locale.ROOT);`",
+        "why": "Isso guarda as maiúsculas em `upper`, e `title` continua com o original."
+      },
+      {
+        "text": "`title.equals(title.toUpperCase(Locale.ROOT));`",
+        "why": "Isso só compara as duas; nada é atribuído."
+      }
+    ]
+  },
+  "ex-bc6c3mz4": {
+    "prompt": "Ponha estes passos na ordem que um programa segue para transformar `\"  Machado de Assis;Dom Casmurro;1899  \"` no ano, como texto.",
+    "hint": "Limpe as pontas antes de cortar.",
+    "items": [
+      "`strip()` na linha",
+      "`split(\";\")` em três pedaços",
+      "Pegar o pedaço no índice 2",
+      "Imprimir o pedaço"
+    ]
+  },
+  "ex-y43bc00m": {
+    "prompt": "Um laço de relatório faz `report = report + String.format(\"%s: %d%n\", title, copies);` para 20.000 livros, e está lento. Que mudança resolve a velocidade sem mudar a saída?",
+    "hint": "O que cresce dentro do laço?",
+    "choices": [
+      {
+        "text": "Trocar o `String.format` por `+` dentro do laço, já que o `+` vira uma chamada só",
+        "why": "A chamada de formato não é o problema; o problema é o `report` que cresce e é copiado a cada volta."
+      },
+      {
+        "text": "Chamar `report.intern()` depois do laço",
+        "why": "O `intern` encontra uma cópia compartilhada; não faz nada pelas cópias já feitas."
+      },
+      {
+        "text": "Acrescentar cada linha formatada a um `StringBuilder` e chamar `toString()` uma vez no fim",
+        "why": "Isso: o builder cresce no lugar, e só a string final é copiada."
+      },
+      {
+        "text": "Usar `%s` para `copies` em vez de `%d`",
+        "why": "O marcador não muda nada na velocidade; as cópias mudam."
+      }
+    ]
+  },
+  "ex-v9rg3k00": {
+    "prompt": "Para comparar duas strings pelos caracteres, chame `a.___(b)`.",
+    "hint": "Não é `==`.",
+    "blanks": [
+      {
+        "accept": [
+          "equals"
+        ]
+      }
+    ]
+  }
+}

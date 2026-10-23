@@ -1,0 +1,381 @@
+{
+  "ex-2adzmz9y": {
+    "prompt": "O segundo `GOCACHE=/tmp/cold go run -x . top -n 1 access.log` imprimiu um único comando, o caminho de um executável dentro de `/tmp/cold`. Por que não houve compilação nem ligação?",
+    "hint": "Veja para onde esse caminho aponta.",
+    "choices": [
+      {
+        "text": "O primeiro `go run` guardou o executável no cache; este rodou essa cópia",
+        "why": "Isso. A primeira execução ligou em `$WORK`, copiou o resultado para o cache, e toda execução seguinte com as mesmas entradas inicia o arquivo guardado."
+      },
+      {
+        "text": "O `go run` interpreta o código quando nada mudou",
+        "why": "Não existe interpretador no comando go. Até a primeira execução compilou e ligou; o caminho mostra um executável de verdade."
+      },
+      {
+        "text": "Ele reaproveitou o `./hits`, o binário que o `go build -o hits` tinha escrito logo antes",
+        "why": "O caminho executado está dentro de `/tmp/cold`, não é o `./hits`. O `go run` compila sem informação de depuração, então os dois executáveis são arquivos diferentes."
+      },
+      {
+        "text": "O `-x` só imprime os comandos na primeira vez",
+        "why": "O `-x` imprime todo comando que roda. A segunda execução imprimiu uma linha porque um comando só rodou."
+      }
+    ]
+  },
+  "ex-19h9yw1y": {
+    "prompt": "Um passo de CI roda `go run . count \"$f\"` e trata o status de saída 2 como \"o job foi mal configurado\". Esse ramo nunca dispara, mesmo com a linha de comando errada. Por quê?",
+    "hint": "O próprio `hits` devolve 2 para erro de uso.",
+    "choices": [
+      {
+        "text": "O `go run` relata o status do filho numa mensagem e sai com 1",
+        "why": "Isso. O `go run .` imprimiu `exit status 2` e devolveu 1. Construa o binário e rode-o quando o código de saída importa."
+      },
+      {
+        "text": "O shell da CI troca todo status de saída diferente de zero por 1 antes de o passo ver",
+        "why": "O shell repassa os status sem mudar; o `./hits; echo $?` da lição 1 imprimiu 2."
+      },
+      {
+        "text": "O `hits` só devolve 2 quando é iniciado de um terminal",
+        "why": "O `run` devolve 2 para erro de uso, seja quem for que chame; o teste de tabela da lição 1 verificou isso sem terminal nenhum."
+      },
+      {
+        "text": "O build falhou antes, então o programa nem rodou",
+        "why": "O texto de uso foi impresso, então o programa rodou; o que mudou foi o status na saída."
+      }
+    ]
+  },
+  "ex-91n9qh5h": {
+    "prompt": "Depois de `touch main.go internal/tally/tally.go`, quantos nomes de pacote o `GOCACHE=/tmp/cold go build -v -o hits .` imprimiu?",
+    "hint": "O `touch` muda a data de modificação e mais nada."
+  },
+  "ex-15xycyr9": {
+    "prompt": "Partindo de `~/daily` sem nenhum executável dentro, quais destes comandos deixam um arquivo executável em algum lugar sob `~/daily`? Marque todos os que deixam.",
+    "hint": "Um executável só é escrito para exatamente um pacote `main`, a menos que o `-o` aponte um diretório.",
+    "choices": [
+      {
+        "text": "`go build`",
+        "why": "Sim. Um pacote `main`, no diretório atual, então ele escreve `hits`, com o nome tirado de `example.com/hits`."
+      },
+      {
+        "text": "`go build -o bin/ ./...`",
+        "why": "Sim. O `-o` com um diretório escreve ali cada pacote `main` da lista: `bin/hits` e `bin/genlog`."
+      },
+      {
+        "text": "`go build ./...`",
+        "why": "Três pacotes, então nada é escrito: o comando só confere que eles compilam."
+      },
+      {
+        "text": "`go build ./internal/tally`",
+        "why": "O `tally` não é pacote `main`. Ele é compilado no cache e o resultado é descartado."
+      },
+      {
+        "text": "`go run .`",
+        "why": "O `go run` liga num diretório temporário e guarda o executável no cache de build, que fica em `~/.cache`, não em `~/daily`."
+      }
+    ]
+  },
+  "ex-x030bm43": {
+    "prompt": "Dentro de `~/daily`, `go install golang.org/x/tools/cmd/stringer` falha com `no required module provides package`. O que a mensagem quer dizer?",
+    "hint": "Sem versão, o `go install` trabalha no contexto do módulo atual.",
+    "choices": [
+      {
+        "text": "O proxy não tem nenhum módulo chamado `golang.org/x/tools`",
+        "why": "O mesmo caminho com `@v0.52.0` baixou na hora. O módulo existe; o `go.mod` é que não o exige."
+      },
+      {
+        "text": "O `go.mod` não exige nada que contenha esse pacote",
+        "why": "Isso. Sem versão, o build usa as dependências deste módulo, e o `hits` não tem nenhuma. Com `@versão` ele compila fora delas."
+      },
+      {
+        "text": "O `stringer` não é pacote `main` e não pode ser instalado",
+        "why": "Ele é um comando; instalado com versão, foi parar em `~/go/bin` e o `go version -m` o leu."
+      },
+      {
+        "text": "O `GOBIN` não está definido, então não há para onde instalar",
+        "why": "Sem `GOBIN`, vale o `~/go/bin`, onde o `hits` tinha sido instalado um instante antes."
+      }
+    ]
+  },
+  "ex-0qc8169d": {
+    "prompt": "Depois que `go install golang.org/x/tools/cmd/stringer@v0.52.0` deu certo dentro de `~/daily`, o que o `go.mod` continha?",
+    "hint": "O `cat go.mod` rodou logo em seguida.",
+    "choices": [
+      {
+        "text": "Uma linha `require golang.org/x/tools v0.52.0`",
+        "why": "Isso é o que o `go get` acrescentaria. Um install com `@versão` ignora o `go.mod` do módulo atual."
+      },
+      {
+        "text": "As mesmas duas linhas de antes",
+        "why": "Isso. `module example.com/hits` e `go 1.27.1`, intocados: a ferramenta não é dependência do código."
+      },
+      {
+        "text": "Uma linha `tool golang.org/x/tools/cmd/stringer`",
+        "why": "Uma linha `tool` é o que o `go get -tool` escreve, outro comando, escolhido de propósito."
+      },
+      {
+        "text": "Três linhas `require`: x/tools, x/mod e x/sync",
+        "why": "Esses três estão dentro do binário, como o `go version -m` mostra, e nenhum chegou ao `go.mod`."
+      }
+    ]
+  },
+  "ex-w2h9jb1k": {
+    "prompt": "Para o `hits` instalado de `~/daily`, o `go version -m` imprimiu `mod example.com/hits ___`: a versão que um módulo recebe quando é compilado de um diretório, e não baixado numa versão.",
+    "hint": "Uma palavra entre parênteses.",
+    "blanks": [
+      {
+        "accept": [
+          "(devel)",
+          "devel"
+        ]
+      }
+    ]
+  },
+  "ex-jzkgkgh4": {
+    "prompt": "Um alvo do `Makefile` roda `go install golang.org/x/tools/cmd/stringer@latest`. Dois desenvolvedores que rodaram com um mês de diferença obtêm arquivos gerados diferentes a partir do mesmo código. Qual é a correção?",
+    "hint": "Que parte desse comando passa a significar outra coisa no mês seguinte?",
+    "choices": [
+      {
+        "text": "Rodar `go clean -i` antes de cada install",
+        "why": "Isso remove o executável velho e instala o que o `@latest` significar hoje; a diferença continua."
+      },
+      {
+        "text": "Tirar o sufixo e rodar o `go install golang.org/x/tools/cmd/stringer` simples",
+        "why": "Sem versão, o build usa o `go.mod` do projeto, que não exige x/tools, e o comando falha."
+      },
+      {
+        "text": "Escrever a versão, `@v0.52.0`",
+        "why": "Isso. Uma versão escrita compila o mesmo programa em toda máquina; o `@latest` é resolvido de novo a cada execução."
+      },
+      {
+        "text": "Apontar o `GOBIN` para um diretório dentro do projeto",
+        "why": "Isso decide onde o executável fica, não qual versão dele é compilada."
+      }
+    ]
+  },
+  "ex-hesperw3": {
+    "prompt": "`go test ./...` imprimiu `ok example.com/hits/internal/tally (cached)`. O que aconteceu com os testes do `tally` nessa execução?",
+    "hint": "Compare a coluna do tempo com a execução anterior.",
+    "choices": [
+      {
+        "text": "Rodaram em menos tempo do que o relógio consegue medir",
+        "why": "Uma execução imprimiria um tempo, como a primeira fez com 0,483 segundo. O `(cached)` substitui o tempo porque nada rodou."
+      },
+      {
+        "text": "Rodaram de novo só os testes cujo código mudou desde a execução anterior",
+        "why": "O cache trabalha por pacote e binário de teste: ou o resultado inteiro é reaproveitado ou o binário roda."
+      },
+      {
+        "text": "Nada rodou; o comando go imprimiu o resultado que tinha guardado",
+        "why": "Isso. Mesmo binário de teste, flags que admitem cache: a saída guardada foi impressa de novo. O `-count=1` força a execução."
+      },
+      {
+        "text": "Os testes foram pulados, porque o `-short` vem ligado por padrão no modo de lista de pacotes",
+        "why": "O `-short` fica desligado a menos que seja passado; a mensagem de skip só aparece com ele."
+      }
+    ]
+  },
+  "ex-w9p7kd1s": {
+    "prompt": "`go test -run Top -v ./internal/tally` rodou o `TestTop` e também o `ExampleTop`. Qual padrão roda só o `TestTop`?",
+    "hint": "A expressão é uma expressão regular, e não é ancorada.",
+    "choices": [
+      {
+        "text": "`-run Top$`",
+        "why": "Ancorar o fim é só metade: o `ExampleTop` também termina em `Top`, então os dois continuam rodando."
+      },
+      {
+        "text": "`-run '^TestTop$'`",
+        "why": "Isso. As âncoras exigem o nome inteiro, então o `ExampleTop` deixa de casar."
+      },
+      {
+        "text": "`-run Top -list .`",
+        "why": "O `-list` imprime nomes e não roda nada."
+      },
+      {
+        "text": "`-run Top -failfast`",
+        "why": "O `-failfast` muda o que acontece depois de uma falha, não quais testes casam."
+      }
+    ]
+  },
+  "ex-craseb1h": {
+    "prompt": "Uma linha chamada `short line` na tabela do `TestParse` roda como o subteste `TestParse/___` na saída do `-v`.",
+    "hint": "Espaços no nome de um subteste são substituídos.",
+    "blanks": [
+      {
+        "accept": [
+          "short_line"
+        ]
+      }
+    ]
+  },
+  "ex-57nx0rfw": {
+    "prompt": "Um teste do `tally` lê `testdata/sample.log`, um arquivo dentro do módulo. Você edita esse arquivo e roda `go test ./...` de novo, sem nenhuma outra mudança. O que mostra a linha do `tally`?",
+    "hint": "O `go help test` diz do que mais um resultado em cache depende.",
+    "choices": [
+      {
+        "text": "Um tempo: o conteúdo de um arquivo que o teste lê faz parte da chave do cache",
+        "why": "Isso. Para arquivos abertos dentro do módulo, a chave do cache inclui o conteúdo deles, então uma edição faz o resultado antigo não servir."
+      },
+      {
+        "text": "`(cached)`, porque o código Go não mudou",
+        "why": "Essa é a crença que a regra do cache foi escrita para evitar: arquivos dentro do módulo e variáveis de ambiente que o teste lê fazem parte da chave."
+      },
+      {
+        "text": "`(cached)` até alguém rodar `go clean -testcache` para jogar fora o resultado antigo",
+        "why": "Limpar funciona, mas não é necessário aqui: o arquivo editado já invalida o resultado."
+      },
+      {
+        "text": "`[no test files]`, porque o comando go ignora tudo o que fica sob um diretório `testdata`",
+        "why": "O `testdata` é ignorado como diretório de pacote, e é por isso que guarda dados de teste; os arquivos de teste do `tally` continuam lá."
+      }
+    ]
+  },
+  "ex-00nsx1wt": {
+    "prompt": "Ligue cada flag do `go test` ao que ela fez com os testes do `tally`.",
+    "hint": "Uma das descrições não pertence a nenhuma flag daqui.",
+    "pairs": [
+      {
+        "left": "`-short`",
+        "right": "o `TestCountMillion` se pulou, com o motivo"
+      },
+      {
+        "left": "`-failfast`",
+        "right": "nenhum teste novo começou depois que o `TestParse/good` falhou"
+      },
+      {
+        "left": "`-count=1`",
+        "right": "o pacote rodou apesar de haver um resultado em cache"
+      },
+      {
+        "left": "`-list .`",
+        "right": "quatro nomes impressos e nada executado"
+      }
+    ],
+    "right_distractors": [
+      "os testes rodaram em ordem aleatória"
+    ]
+  },
+  "ex-csphrrd5": {
+    "prompt": "Por que `go doc tally.summary`, todo em minúsculas, imprimiu o tipo `Summary`?",
+    "hint": "O `go help doc` tem uma regra sobre caixa.",
+    "choices": [
+      {
+        "text": "Letras minúsculas no argumento casam com as duas caixas",
+        "why": "Isso. Letras maiúsculas casam exatamente e minúsculas casam com as duas, então `summary` acha `Summary`."
+      },
+      {
+        "text": "O `go doc` passa todo nome para minúsculas antes de buscar",
+        "why": "Aí `go doc Foo` não se distinguiria de um caminho de pacote, e a ajuda diz que maiúscula no começo indica símbolo do diretório atual."
+      },
+      {
+        "text": "Identificadores Go não diferenciam maiúsculas",
+        "why": "Diferenciam: a caixa da primeira letra decide se um nome é exportado."
+      },
+      {
+        "text": "Existe um `summary` não exportado que documenta o tipo",
+        "why": "O `tally` não declara esse nome; o `go doc` casou com o tipo exportado."
+      }
+    ]
+  },
+  "ex-a5nx28h1": {
+    "prompt": "Ponha estes quatro pacotes na ordem em que `go list -deps .` os imprime para o `hits`.",
+    "hint": "Um pacote é impresso depois de tudo o que ele importa.",
+    "items": [
+      "`unsafe`",
+      "`bufio`",
+      "`example.com/hits/internal/tally`",
+      "`example.com/hits`"
+    ]
+  },
+  "ex-frd758hp": {
+    "prompt": "O `go list` pôs o `main_test.go` em `TestGoFiles` e o `tally_test.go` em `XTestGoFiles`. O que decide em qual lista um arquivo de teste entra?",
+    "hint": "Leia a primeira linha de cada arquivo.",
+    "choices": [
+      {
+        "text": "Se o arquivo fica na raiz do módulo ou num subdiretório",
+        "why": "O diretório decide em que pacote ele aparece, não em qual das duas listas."
+      },
+      {
+        "text": "A cláusula package dele: o próprio pacote, ou o nome com `_test` acrescentado",
+        "why": "Isso. `package main` é teste dentro do pacote; `package tally_test` é compilado como pacote separado que importa o `tally`."
+      },
+      {
+        "text": "Se ele contém exemplos além de testes",
+        "why": "Exemplos cabem em qualquer dos dois tipos de arquivo; o `ExampleTop` está no `tally_test.go` por escolha."
+      },
+      {
+        "text": "Se o arquivo testa um pacote `main`",
+        "why": "Uma biblioteca pode ter os dois tipos; quem decide é a cláusula package, não o que está sendo testado."
+      }
+    ]
+  },
+  "ex-kqcn38ya": {
+    "prompt": "Chega um log com uma requisição cuja URL tem 100.000 caracteres, na linha 7 de 20.000. O que o `hits count` faz com esse arquivo?",
+    "hint": "O `go doc bufio.MaxScanTokenSize` imprimiu o limite, e o `Count` nunca chama o `Buffer`.",
+    "choices": [
+      {
+        "text": "Conta as outras 19.999 linhas e pula a comprida",
+        "why": "O `Count` para no primeiro erro e o devolve; nada no `hits` pula linha."
+      },
+      {
+        "text": "Avisa `bufio.Scanner: token too long` e sai com 1, sem tabela",
+        "why": "Isso. Uma linha acima de 64 KiB para o `Scanner`, e o `summarise` imprime o erro e devolve 1, como fez a linha de 70.000 bytes."
+      },
+      {
+        "text": "Lê a linha em pedaços e acusa 5 linhas malformadas",
+        "why": "O `Scanner` não divide uma linha longa demais; ele desiste com um erro."
+      },
+      {
+        "text": "Entra em pânico, porque o `Buffer` nunca foi chamado",
+        "why": "O `Buffer` só entra em pânico se for chamado depois que a leitura começou. Não chamar deixa o limite padrão."
+      }
+    ]
+  },
+  "ex-kjs41jcw": {
+    "prompt": "O `go list -deps . | wc -l` imprimiu 80 para o `hits`, e o template que esconde a biblioteca padrão imprimiu duas linhas. Quantos pacotes da biblioteca padrão entram no `hits`?",
+    "hint": "Subtraia.",
+    "unit": "pacotes"
+  },
+  "ex-az6rw23y": {
+    "prompt": "Um job de CI roda `go build ./...` e depois um passo que roda `./hits count sample.log`. O segundo passo falha com `No such file or directory`. O que está errado?",
+    "hint": "Conte os pacotes que o `./...` nomeia neste módulo.",
+    "choices": [
+      {
+        "text": "O cache de build estava vazio na máquina da CI",
+        "why": "Um cache vazio deixa o build mais lento, não ausente; o resultado ainda seria escrito."
+      },
+      {
+        "text": "O `./...` deixa de fora o pacote da raiz",
+        "why": "Ele inclui a raiz: o `go list ./...` imprimiu `example.com/hits` primeiro."
+      },
+      {
+        "text": "Com vários pacotes o `go build` não escreve nada; `go build -o bin/ ./...` ou `go build -o hits .` escreve o arquivo",
+        "why": "Isso. Três pacotes tornam o comando só uma verificação. Aponte um pacote `main`, ou dê um diretório ao `-o`."
+      },
+      {
+        "text": "O executável foi para `~/go/bin`",
+        "why": "Isso é o `go install`. O `go build` nunca escreve no `GOBIN`."
+      }
+    ]
+  },
+  "ex-vj6h9h5m": {
+    "prompt": "Um colega pergunta de qual diretório o compilador lê o `internal/tally`, porque suspeita de uma cópia desatualizada. Que comando responde exatamente isso?",
+    "hint": "Um destes imprime um campo da estrutura do pacote.",
+    "choices": [
+      {
+        "text": "`go doc -src tally.Top`",
+        "why": "Ele imprime o código de uma declaração, não onde ficam os arquivos do pacote."
+      },
+      {
+        "text": "`go env GOCACHE`",
+        "why": "Isso diz onde os resultados compilados ficam, não o código que o compilador lê."
+      },
+      {
+        "text": "`go list -f '{{.Dir}}' ./internal/tally`",
+        "why": "Isso. O `.Dir` é o diretório com o código do pacote que o build usa: `/home/ana/daily/internal/tally` aqui."
+      },
+      {
+        "text": "`go version -m ./bin/hits`",
+        "why": "Ele dá módulos e versões dentro de um binário, não diretórios."
+      }
+    ]
+  }
+}

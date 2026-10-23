@@ -1,0 +1,542 @@
+[
+  {
+    "id": "ex-gy53jk8a",
+    "version": 1,
+    "section": "final-variables",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`final int maxLoans = 3;` and then `maxLoans = 4;`. What does `javac` say?",
+    "hint": "Assigned exactly once.",
+    "choices": [
+      {
+        "text": "`cannot assign a value to final variable maxLoans`",
+        "correct": true,
+        "why": "Right: a final variable is assigned once, and this is the second time."
+      },
+      {
+        "text": "Nothing: `final` only matters for fields",
+        "correct": false,
+        "why": "It works on locals too; `Locals.java` did not compile."
+      },
+      {
+        "text": "A warning, and the variable keeps 3",
+        "correct": false,
+        "why": "It is an error, not a warning, and nothing runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-5767r5aj",
+    "version": 1,
+    "section": "final-variables",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Book` has `final String isbn;` and a constructor `Book(String title)` that sets only the title. Where does the error point?",
+    "hint": "Where does the constructor end without having set it?",
+    "choices": [
+      {
+        "text": "At the declaration `final String isbn;`",
+        "correct": false,
+        "why": "The declaration is fine; the fault is in a constructor that leaves it unset."
+      },
+      {
+        "text": "At the line `this.title = title;`",
+        "correct": false,
+        "why": "That line is correct; the problem is what is missing after it."
+      },
+      {
+        "text": "At the constructor's closing brace",
+        "correct": true,
+        "why": "Right: line 13, `variable isbn might not have been initialized`."
+      },
+      {
+        "text": "At the first `new Book(...)` in another class",
+        "correct": false,
+        "why": "The class itself does not compile, so no caller is examined."
+      }
+    ]
+  },
+  {
+    "id": "ex-fzf798zt",
+    "version": 1,
+    "section": "final-variables",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`final StringBuilder note = new StringBuilder(\"Due\");` Which line then compiles?",
+    "hint": "`final` fixes the variable, not the object.",
+    "choices": [
+      {
+        "text": "`note.append(\" on Friday\");`",
+        "correct": true,
+        "why": "Right: the object changes, the reference does not, and `Notes` printed `Due on Friday`."
+      },
+      {
+        "text": "`note = new StringBuilder(\"Overdue\");`",
+        "correct": false,
+        "why": "That points the variable at another object, which `Reassign` showed is refused."
+      },
+      {
+        "text": "`note = null;`",
+        "correct": false,
+        "why": "`null` is a different reference too; a final variable takes one assignment."
+      }
+    ]
+  },
+  {
+    "id": "ex-yxv9kxw5",
+    "version": 1,
+    "section": "final-variables",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A class has `private final int[] scores;` set in its constructor and returned by a getter. Can callers change the scores?",
+    "hint": "What does the getter hand out?",
+    "choices": [
+      {
+        "text": "No: `private` and `final` together make the array unchangeable",
+        "correct": false,
+        "why": "They make the field unassignable from outside; the array the field leads to is untouched by either."
+      },
+      {
+        "text": "Yes: what it returns leads to the same array, so `[0] = 9` alters it",
+        "correct": true,
+        "why": "Right: as `counts[0] = 9` did in `Notes`; lesson 22 shows the defensive copy that closes this."
+      },
+      {
+        "text": "Only if they also have write access to the field",
+        "correct": false,
+        "why": "They need no access to the field once they hold a reference to the array."
+      }
+    ]
+  },
+  {
+    "id": "ex-ayh76nb8",
+    "version": 1,
+    "section": "final-variables",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A `final` field with no value in its declaration, which every constructor must set, is called a blank ___.",
+    "hint": "The keyword itself.",
+    "blanks": [
+      {
+        "accept": [
+          "final"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-48jdmw8k",
+    "version": 1,
+    "section": "final-methods-and-classes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Item` declares `final String label()`, and `Dvd extends Item` declares its own `label()`. What happens?",
+    "hint": "A final method may not be replaced.",
+    "choices": [
+      {
+        "text": "`Dvd`'s version runs for DVDs and `Item`'s for everything else",
+        "correct": false,
+        "why": "That is what overriding would do, and `final` forbids it."
+      },
+      {
+        "text": "`Dvd` does not compile: the method is final",
+        "correct": true,
+        "why": "Right: `label() in Dvd cannot override label() in Item`."
+      },
+      {
+        "text": "`Item`'s version always runs and `Dvd`'s is silently ignored",
+        "correct": false,
+        "why": "Nothing is ignored in silence; the compiler refuses the class."
+      }
+    ]
+  },
+  {
+    "id": "ex-htht0bcs",
+    "version": 1,
+    "section": "final-methods-and-classes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `final class Isbn` forbid?",
+    "hint": "`FakeIsbn` tried it.",
+    "choices": [
+      {
+        "text": "Making more than one `Isbn` object",
+        "correct": false,
+        "why": "`final` on a class is about subclasses; you can make as many objects as you like."
+      },
+      {
+        "text": "Changing the `value` of an `Isbn`",
+        "correct": false,
+        "why": "That is the `final` on the field; the class's `final` is a separate thing."
+      },
+      {
+        "text": "Any class that extends it",
+        "correct": true,
+        "why": "Right: `cannot inherit from final Isbn`."
+      },
+      {
+        "text": "Calling its methods from another package",
+        "correct": false,
+        "why": "That would be access, lesson 14, not `final`."
+      }
+    ]
+  },
+  {
+    "id": "ex-rh8b54v0",
+    "version": 1,
+    "section": "final-methods-and-classes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the section say `String` must be final for its promise to hold?",
+    "hint": "What could a subclass add?",
+    "choices": [
+      {
+        "text": "Because final classes run faster, and strings are used everywhere",
+        "correct": false,
+        "why": "Speed is not the argument the section makes."
+      },
+      {
+        "text": "A subclass could change its characters, so a string checked once might differ when used",
+        "correct": true,
+        "why": "Right: a promise a subclass can break holds for no `String` at all."
+      },
+      {
+        "text": "Because `javap` would otherwise show its private fields",
+        "correct": false,
+        "why": "`javap` shows what it shows either way; that is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-6xxmzp33",
+    "version": 1,
+    "section": "final-methods-and-classes",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did `javac` refuse in section 03? Choose all that apply.",
+    "hint": "Three refusals, and one class compiled.",
+    "choices": [
+      {
+        "text": "`class Dvd extends Item` overriding a final `label()`",
+        "correct": true,
+        "why": "Yes: `overridden method is final`."
+      },
+      {
+        "text": "`class FakeIsbn extends Isbn`",
+        "correct": true,
+        "why": "Yes: `Isbn` is a final class."
+      },
+      {
+        "text": "`class MyString extends String`",
+        "correct": true,
+        "why": "Yes: `String` is final in the JDK itself."
+      },
+      {
+        "text": "`final class Isbn` with a `final String value` field",
+        "correct": false,
+        "why": "That class compiled; only its would-be subclass failed."
+      }
+    ]
+  },
+  {
+    "id": "ex-fkseb3tn",
+    "version": 1,
+    "section": "final-methods-and-classes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You want a method that does something new to strings. `String` is final. Where does the method go?",
+    "hint": "Lesson 15's `Isbns`.",
+    "choices": [
+      {
+        "text": "In a subclass of `String`",
+        "correct": false,
+        "why": "That is exactly what `final` refuses."
+      },
+      {
+        "text": "In a static helper of your own class, given the text as a parameter",
+        "correct": true,
+        "why": "Right: like `Isbns.looksValid(String)`."
+      },
+      {
+        "text": "Into `java.lang.String` itself, after editing the JDK's source",
+        "correct": false,
+        "why": "The JDK you run is not yours to edit, and every other machine would lack the method."
+      }
+    ]
+  },
+  {
+    "id": "ex-p5sk2e1q",
+    "version": 1,
+    "section": "effectively-final",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When is a local variable *effectively final*?",
+    "hint": "No keyword is involved.",
+    "choices": [
+      {
+        "text": "When it is declared inside `main`",
+        "correct": false,
+        "why": "Where it is declared does not matter; whether it is assigned again does."
+      },
+      {
+        "text": "When nothing assigns it after its declaration",
+        "correct": true,
+        "why": "Right: even with no `final` written."
+      },
+      {
+        "text": "When it holds an object rather than a primitive",
+        "correct": false,
+        "why": "`count` was an `int` and the rule applied to it."
+      },
+      {
+        "text": "When the compiler has inlined its value as a constant",
+        "correct": false,
+        "why": "That is lesson 15's compile-time constant, a different thing."
+      }
+    ]
+  },
+  {
+    "id": "ex-tkthhedv",
+    "version": 1,
+    "section": "effectively-final",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The second `Capture` assigned `branch = \"Norte\";` after making the `Runnable`. What happened?",
+    "hint": "The error names an inner class.",
+    "choices": [
+      {
+        "text": "It printed `Report for Norte`",
+        "correct": false,
+        "why": "It never ran: the compiler refused it."
+      },
+      {
+        "text": "It printed `Report for Centro`, the value when the object was made",
+        "correct": false,
+        "why": "That is what the copy would have printed, which is the disagreement the rule prevents."
+      },
+      {
+        "text": "It did not compile",
+        "correct": true,
+        "why": "Right: `branch` was no longer effectively final."
+      }
+    ]
+  },
+  {
+    "id": "ex-33mfv3ec",
+    "version": 1,
+    "section": "effectively-final",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does Java forbid assigning a captured local variable again, rather than letting the inner code see the new value?",
+    "hint": "What does the object keep: the variable, or its value?",
+    "choices": [
+      {
+        "text": "The object keeps only a copy of the value",
+        "correct": true,
+        "why": "Right: the frame is gone by the time it runs, and a later change would leave the copy and the variable disagreeing in silence."
+      },
+      {
+        "text": "Because locals are stored in the class file, which cannot change",
+        "correct": false,
+        "why": "Locals live in a frame on the stack; the class file holds bytecode."
+      },
+      {
+        "text": "To make anonymous classes run faster than ordinary methods",
+        "correct": false,
+        "why": "Speed is not the reason; consistency is."
+      }
+    ]
+  },
+  {
+    "id": "ex-vzgxtsf6",
+    "version": 1,
+    "section": "effectively-final",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Does the lambda in `Lambda.java` meet the same rule as the anonymous class in `Capture.java`?",
+    "hint": "Compare the two error messages.",
+    "choices": [
+      {
+        "text": "No: lambdas may capture any local variable",
+        "correct": false,
+        "why": "`count = 5;` made the lambda fail to compile."
+      },
+      {
+        "text": "Yes: both refuse a captured local that is assigned again",
+        "correct": true,
+        "why": "Right: the two messages differ in one phrase, `inner class` against `lambda expression`."
+      },
+      {
+        "text": "Only for primitives such as `int`",
+        "correct": false,
+        "why": "`branch` was a `String`, and the rule applied to it as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-r00e4cj7",
+    "version": 1,
+    "section": "effectively-final",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the events of the first `Capture` in order.",
+    "hint": "The copy is taken when the object is made.",
+    "items": [
+      "`branch` is assigned `\"Centro\"`",
+      "The `Runnable` object is made, keeping a copy of `branch`",
+      "`report.run()` is called",
+      "`Report for Centro` is printed"
+    ]
+  },
+  {
+    "id": "ex-naecfeck",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each use of `final` to what it forbids.",
+    "hint": "Three places, three meanings.",
+    "pairs": [
+      {
+        "left": "a `final` local variable",
+        "right": "A second assignment"
+      },
+      {
+        "left": "a `final` field",
+        "right": "Leaving it unset in a constructor, or assigning it later"
+      },
+      {
+        "left": "a `final` method",
+        "right": "Overriding it in a subclass"
+      },
+      {
+        "left": "a `final` class",
+        "right": "Extending it"
+      }
+    ],
+    "right_distractors": [
+      "Changing the object the variable leads to"
+    ]
+  },
+  {
+    "id": "ex-2wyr89vb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `Loan` should never change its book once made. Which declaration does that, and checks it at compile time?",
+    "hint": "Every constructor sets it, nothing assigns it after.",
+    "choices": [
+      {
+        "text": "`Book book;` with a comment saying not to change it",
+        "correct": false,
+        "why": "A comment is not checked by anything."
+      },
+      {
+        "text": "`static Book book;`",
+        "correct": false,
+        "why": "Static would give every loan the same book, which is a different bug."
+      },
+      {
+        "text": "`private final Book book;`, set in every constructor",
+        "correct": true,
+        "why": "Right: the compiler refuses a constructor that forgets it and any later assignment."
+      },
+      {
+        "text": "`final class Book`",
+        "correct": false,
+        "why": "That stops subclasses of `Book`; it says nothing about which book a loan holds."
+      }
+    ]
+  },
+  {
+    "id": "ex-dkpsee9n",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is true of `final StringBuilder note`?",
+    "hint": "Section 02's `Notes`.",
+    "choices": [
+      {
+        "text": "Its text can never change",
+        "correct": false,
+        "why": "`append` changed it, and the program printed `Due on Friday`."
+      },
+      {
+        "text": "It is a compile-time constant copied into other classes",
+        "correct": false,
+        "why": "Only primitives and strings with values known at compile time are; this is an object made by `new`."
+      },
+      {
+        "text": "It always leads to the same object",
+        "correct": true,
+        "why": "Right: the reference is fixed; the object's contents are not."
+      }
+    ]
+  },
+  {
+    "id": "ex-d7hmc9yn",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`final int[] counts = {1, 2, 3}; counts[0] = 9;` What did `Notes` print for `counts[0]`?",
+    "hint": "The array is not final; the variable is.",
+    "value": 9,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-smq3acyw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When does the section advise making one of your own classes `final`?",
+    "hint": "Was it designed to be extended?",
+    "choices": [
+      {
+        "text": "Never: only the JDK's classes should be final",
+        "correct": false,
+        "why": "The section advises the opposite for classes you did not design for extension."
+      },
+      {
+        "text": "Unless you designed it to be extended",
+        "correct": true,
+        "why": "Right: lesson 20 shows what extending safely asks of a class."
+      },
+      {
+        "text": "Whenever it has a `final` field",
+        "correct": false,
+        "why": "A final field and a final class protect different things."
+      },
+      {
+        "text": "Only when it has static methods",
+        "correct": false,
+        "why": "Static methods have nothing to do with being extended."
+      }
+    ]
+  }
+]

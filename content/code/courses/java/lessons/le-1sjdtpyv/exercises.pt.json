@@ -1,0 +1,337 @@
+{
+  "ex-f2zqsjp3": {
+    "prompt": "Que problema do `public` os módulos vieram resolver?",
+    "hint": "Uma biblioteca são vários pacotes.",
+    "choices": [
+      {
+        "text": "Classes `public` carregavam mais devagar que as de pacote, e os módulos as aceleraram",
+        "why": "Níveis de acesso não têm nada a ver com a velocidade de carga."
+      },
+      {
+        "text": "Uma classe pública para os outros pacotes da biblioteca era pública para todo mundo",
+        "why": "Isso: nada conseguia dizer \"público para os meus pacotes, privado para o resto\"."
+      },
+      {
+        "text": "O `public` não podia ser usado em interfaces",
+        "why": "Interfaces são `public` desde o Java 1.0."
+      }
+    ]
+  },
+  "ex-76dcw3z1": {
+    "prompt": "No `module-info.java`, a palavra-chave que torna um pacote visível a outros módulos é `___`.",
+    "hint": "A biblioteca a usou uma vez, para o pacote `api`.",
+    "blanks": [
+      {
+        "accept": [
+          "exports"
+        ]
+      }
+    ]
+  },
+  "ex-mst2mxrj": {
+    "prompt": "O `Shortcut` importou `com.example.library.internal.Index`. O que o `javac` respondeu?",
+    "hint": "O pacote estava no disco, compilado um instante antes.",
+    "choices": [
+      {
+        "text": "Um aviso de que o pacote é interno, e compilou",
+        "why": "Foi erro, dois deles, e nada compilou."
+      },
+      {
+        "text": "`Index is not public in com.example.library.internal`",
+        "why": "O `Index` é `public`; quem recusou foi o módulo, não a classe."
+      },
+      {
+        "text": "`package com.example.library.internal does not exist`",
+        "why": "Isso: para o módulo app, um pacote não exportado simplesmente não está lá."
+      },
+      {
+        "text": "Um erro `module not found` para `com.example.library`",
+        "why": "O módulo foi achado e o `Main` compilou contra ele; só o pacote foi recusado."
+      }
+    ]
+  },
+  "ex-xqprfdnj": {
+    "prompt": "O `jar --describe-module` imprimiu `requires java.base mandated`, e ninguém escreveu essa linha. Por que ela está lá?",
+    "hint": "Onde moram `String` e `Object`?",
+    "choices": [
+      {
+        "text": "Todo módulo depende de `java.base`, então ele entra em toda declaração",
+        "why": "Isso: `mandated` quer dizer que a linguagem o pôs ali."
+      },
+      {
+        "text": "O `jar` copiou do `requires` do módulo app",
+        "why": "O módulo app requer `com.example.library`, não `java.base`."
+      },
+      {
+        "text": "O `Index` usa `Map`, e o `jar` procurou isso no bytecode",
+        "why": "Até um módulo que não usa nada ganha a linha; o `jar` não procurou nada."
+      }
+    ]
+  },
+  "ex-m48m1xr6": {
+    "prompt": "Ligue cada peça ao que ela faz.",
+    "hint": "A seção 02 usou as quatro.",
+    "pairs": [
+      {
+        "left": "`requires`",
+        "right": "diz de quais módulos este precisa"
+      },
+      {
+        "left": "`exports`",
+        "right": "diz quais pacotes os outros podem usar"
+      },
+      {
+        "left": "`--module-source-path`",
+        "right": "diz ao `javac` onde estão os fontes de cada módulo"
+      },
+      {
+        "left": "`--module-path`",
+        "right": "diz ao `java` onde achar os módulos compilados"
+      }
+    ],
+    "right_distractors": [
+      "abre um pacote à reflexão por uma execução"
+    ]
+  },
+  "ex-vp5wbseg": {
+    "prompt": "`java --module-path out -m com.example.app/com.example.app.Main` nomeia um módulo e uma classe. O que a parte antes da barra diz à JVM?",
+    "hint": "No module path, toda classe pertence a um módulo.",
+    "choices": [
+      {
+        "text": "O diretório dentro de `out` onde fica o arquivo de classe",
+        "why": "Aqui por acaso coincide com o diretório, e é o nome do módulo, lido de `module-info.class`."
+      },
+      {
+        "text": "De que módulo partir, e portanto quais `requires` resolver",
+        "why": "Isso: a JVM resolve as dependências desse módulo antes de rodar qualquer coisa."
+      },
+      {
+        "text": "O pacote da classe, escrito na sintaxe de módulo",
+        "why": "O pacote é `com.example.app` dentro do nome completo da classe, depois da barra."
+      }
+    ]
+  },
+  "ex-0c70mk6n": {
+    "prompt": "O `Peek` falhou no module path antes mesmo de chegar ao `setAccessible`. Onde, e por quê?",
+    "hint": "Leia o frame do `Peek` e o fim da mensagem.",
+    "choices": [
+      {
+        "text": "No `Class.forName`, porque classes não exportadas nem podem ser carregadas",
+        "why": "O `forName` deu certo; o trace aponta para o `newInstance`, na linha 11."
+      },
+      {
+        "text": "Ao construir o `Index`: pacote não exportado",
+        "why": "Isso: `IllegalAccessException ... does not export com.example.library.internal to module com.example.app`."
+      },
+      {
+        "text": "Ao ler `titles`, porque um `Map` não pode ser copiado num `TreeMap`",
+        "why": "A cópia funcionou na execução seguinte, depois que o pacote foi aberto."
+      }
+    ]
+  },
+  "ex-nhzs9c94": {
+    "prompt": "Por que a seção chama o `--add-opens` de saída de emergência deliberada, e não de brecha?",
+    "hint": "Quem o digita, e onde?",
+    "choices": [
+      {
+        "text": "Só funciona do Java 17 em diante",
+        "why": "Quando funciona não é a questão; quem precisa anotá-lo é."
+      },
+      {
+        "text": "Abre um pacote para sempre, então é usado uma vez e esquecido",
+        "why": "Abre por uma execução só, e precisa ser passado de novo toda vez."
+      },
+      {
+        "text": "A opção nomeia módulo, pacote e leitor na hora de iniciar",
+        "why": "Isso: um alcance nas entranhas de alguém fica visível para quem roda, não escondido no código."
+      }
+    ]
+  },
+  "ex-ryfyz9p3": {
+    "prompt": "O mesmo `Peek`, rodado com `java -cp out/com.example.library:out/com.example.app`, imprimiu o mapa sem opção nenhuma. Por quê?",
+    "hint": "O que acontece com o `module-info.class` no class path?",
+    "choices": [
+      {
+        "text": "No class path, as declarações de módulo são ignoradas",
+        "why": "Isso: módulos só amarram código que roda como módulo, então todo pacote fica aberto."
+      },
+      {
+        "text": "O class path guarda o `--add-opens` da execução anterior",
+        "why": "Cada JVM começa do zero; nada passa de uma execução para outra."
+      },
+      {
+        "text": "O `TreeMap` contorna a conferência do módulo",
+        "why": "A conferência foi ao construir o `Index`, antes de existir qualquer `TreeMap`."
+      }
+    ]
+  },
+  "ex-v7mack5v": {
+    "prompt": "O `Bytes` rodou no class path, sem módulo próprio, e mesmo assim levou `InaccessibleObjectException`. O que o recusou?",
+    "hint": "Em que pacote de quem ele estava mexendo?",
+    "choices": [
+      {
+        "text": "O módulo sem nome, que fecha o class path à reflexão desde o Java 17",
+        "why": "O módulo sem nome é onde o `Bytes` mora, e ele é aberto; a recusa veio do outro lado."
+      },
+      {
+        "text": "O `java.base`, que não abre o `java.lang`",
+        "why": "Isso: os próprios módulos do JDK mantêm as entranhas fechadas, para todo mundo."
+      },
+      {
+        "text": "O lançador de código-fonte, que proíbe `setAccessible` em programas rodados a partir do fonte",
+        "why": "Compilado e rodado com `javac` e `java`, falha do mesmo jeito."
+      },
+      {
+        "text": "O `String.value` é `final`, e campos final não podem ficar acessíveis",
+        "why": "Campos final das suas classes podem; a mensagem nomeia o módulo, não o modificador."
+      }
+    ]
+  },
+  "ex-cygtkcbz": {
+    "prompt": "Toda classe no class path pertence ao módulo sem ___.",
+    "hint": "O erro do `Bytes` o nomeou.",
+    "blanks": [
+      {
+        "accept": [
+          "nome"
+        ]
+      }
+    ]
+  },
+  "ex-a28nbtp6": {
+    "prompt": "Quantos módulos o `java --list-modules` relatou para o JDK instalado?",
+    "hint": "O `wc -l` os contou.",
+    "unit": "módulos"
+  },
+  "ex-8zeckv34": {
+    "prompt": "Como o `jlink` decidiu que módulos do JDK pôr em `image`?",
+    "hint": "Ele recebeu um módulo.",
+    "choices": [
+      {
+        "text": "Rodou o programa e registrou que classes foram carregadas",
+        "why": "O `jlink` não roda nada; ele lê declarações."
+      },
+      {
+        "text": "Copiou os módulos que o `jdeps` tinha impresso",
+        "why": "O `jdeps` foi outro comando; o `jlink` não precisa de relatório dele."
+      },
+      {
+        "text": "Seguiu cada `requires` do módulo app até chegar ao `java.base`",
+        "why": "Isso: três módulos, porque é só isso que as declarações alcançam."
+      },
+      {
+        "text": "Pegou todos os módulos do JDK e os comprimiu",
+        "why": "A imagem listou três módulos, não 69."
+      }
+    ]
+  },
+  "ex-75f5mhhs": {
+    "prompt": "O `du` mediu `image` em 60M e o JDK em 331M. A imagem é umas quantas vezes menor? Dê um número inteiro.",
+    "hint": "Divida o maior pelo menor.",
+    "unit": "vezes"
+  },
+  "ex-6dvcxw9z": {
+    "prompt": "Um colega quer que o `jlink` monte um runtime pequeno para um serviço de class path com quarenta jars de biblioteca, nenhum deles módulo. O que a seção diz?",
+    "hint": "O `jlink` precisa das linhas `requires` para saber onde parar.",
+    "choices": [
+      {
+        "text": "Passar os quarenta jars ao `--add-modules` e o `jlink` os converte",
+        "why": "O `jlink` liga módulos; não transforma jars comuns em módulos."
+      },
+      {
+        "text": "A aplicação não; só um JDK reduzido ao que o `jdeps` relata",
+        "why": "Isso: nomeie à mão os módulos do JDK com `--add-modules`, e deixe os jars no class path."
+      },
+      {
+        "text": "Funciona, porque o class path é o módulo sem nome e o `jlink` o aceita",
+        "why": "O módulo sem nome não tem nome para o `--add-modules` nem `requires` para seguir."
+      }
+    ]
+  },
+  "ex-xn1g0a4n": {
+    "prompt": "Quais destes são custos de tornar uma aplicação modular, segundo a seção 05? Escolha todos os que se aplicam.",
+    "hint": "Dependências, frameworks e dois caminhos.",
+    "choices": [
+      {
+        "text": "Toda dependência precisa ser um módulo, ou passar por um",
+        "why": "Sim: a aplicação é tão modular quanto o seu jar menos modular."
+      },
+      {
+        "text": "Pacotes em que frameworks fazem reflexão precisam ser declarados `opens`",
+        "why": "Sim: a declaração se enche de exceções à própria regra."
+      },
+      {
+        "text": "O programa roda mais devagar no module path",
+        "why": "Velocidade não está entre os custos que a seção cita."
+      },
+      {
+        "text": "O `javac` não consegue mais compilá-lo com `--release`",
+        "why": "O `--release` funciona para módulos como para qualquer outra coisa."
+      }
+    ]
+  },
+  "ex-e84jpf40": {
+    "prompt": "Um módulo faz `requires` de uma biblioteca que falta no module path. Quando o programa descobre?",
+    "hint": "A resolução acontece antes de qualquer coisa rodar.",
+    "choices": [
+      {
+        "text": "Na primeira vez que uma classe da biblioteca é usada, talvez uma hora depois de começar",
+        "why": "Esse é o jeito do class path, com `NoClassDefFoundError`; um módulo falha antes."
+      },
+      {
+        "text": "Na inicialização, antes de o `main` rodar",
+        "why": "Isso: a JVM resolve cada `requires` primeiro e se recusa a iniciar sem eles."
+      },
+      {
+        "text": "Nunca: módulos faltando são pulados e as chamadas deles devolvem null",
+        "why": "Nada é pulado; um módulo faltando é uma recusa a iniciar."
+      }
+    ]
+  },
+  "ex-ppw0kc6c": {
+    "prompt": "Para uma aplicação comum, o que a lição recomenda?",
+    "hint": "Como fez cada outra lição do curso.",
+    "choices": [
+      {
+        "text": "Um `module-info.java` desde o primeiro dia, para nunca precisar acrescentá-lo depois",
+        "why": "Esse é o custo que a seção 05 lista, pago por um benefício de que uma aplicação muitas vezes não precisa."
+      },
+      {
+        "text": "O class path",
+        "why": "Isso: módulos compensam numa biblioteca publicada ou num runtime autossuficiente."
+      },
+      {
+        "text": "`--add-opens` para todo pacote, para evitar surpresas",
+        "why": "Isso é uma saída de emergência para um alcance, não um jeito de construir uma aplicação."
+      }
+    ]
+  },
+  "ex-aq1z9fyj": {
+    "prompt": "Você atualiza o JDK de um serviço, e ele passa a falhar na inicialização com `module java.base does not \"opens java.util\" to unnamed module`. O serviço não tem `module-info.java`. Qual é a causa provável, e a correção?",
+    "hint": "O último parágrafo da seção 03.",
+    "choices": [
+      {
+        "text": "O serviço agora precisa ser tornado modular, com um `module-info.java` próprio na raiz",
+        "why": "Torná-lo modular não mudaria aquilo em que a biblioteca faz reflexão."
+      },
+      {
+        "text": "Uma biblioteca faz reflexão em `java.util`: atualize-a; `--add-opens` enquanto isso",
+        "why": "Isso: o muro do próprio JDK, encontrado por código de class path; `--add-opens java.base/java.util=ALL-UNNAMED` é o paliativo."
+      },
+      {
+        "text": "Falta `java.util` no JDK novo; reinstale-o",
+        "why": "O `java.util` está no `java.base`, que todo JDK tem; a mensagem diz que ele está fechado, não ausente."
+      }
+    ]
+  },
+  "ex-1zvnwwfp": {
+    "prompt": "Ponha em ordem os passos da seção 04, do código-fonte a um runtime próprio.",
+    "hint": "Compile antes de ligar, ligue antes de rodar.",
+    "items": [
+      "`javac --module-source-path src -m ...` compila os dois módulos",
+      "`jdeps -s` mostra do que o módulo app depende",
+      "`jlink --add-modules com.example.app` escreve `image`",
+      "`image/bin/java -m com.example.app/...` o executa"
+    ]
+  }
+}

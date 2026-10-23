@@ -1,0 +1,2190 @@
+{
+  "ex-346jq7vh": {
+    "prompt": "Uma CLI em Go feita com o pacote `flag` padrão roda como `report -v data.csv -o out.txt`. Quais flags o `flag.Parse` preenche?",
+    "hint": "Onde o pacote flag para de ler?",
+    "choices": [
+      {
+        "text": "Só `-v`; `-o out.txt` fica em `flag.Args()` depois de `data.csv`",
+        "why": "Isso. A leitura para em `data.csv`, a primeira palavra que não é flag, e tudo depois dela é argumento."
+      },
+      {
+        "text": "`-v` e `-o`, já que as flags são achadas em qualquer ponto da linha",
+        "why": "Esse é o estilo GNU, que o pflag do Cobra adota. O pacote padrão para na primeira palavra que não é flag."
+      },
+      {
+        "text": "Nenhuma: o programa sai com status 2 porque `data.csv` não é flag",
+        "why": "Um argumento posicional não é erro; ele encerra as flags e fica em `flag.Args()`."
+      },
+      {
+        "text": "Só `-o`, porque uma flag booleana precisa de `-v=true`",
+        "why": "Um `-v` sozinho liga uma flag booleana."
+      }
+    ]
+  },
+  "ex-jk125mkd": {
+    "prompt": "Um programa num pipeline foi morto por `SIGPIPE`, o sinal 13. Que status de saída o Bash informa para ele em `${PIPESTATUS[@]}`?",
+    "hint": "128 mais o número do sinal."
+  },
+  "ex-cpxhq3tb": {
+    "prompt": "Uma CLI imprime o uso na saída padrão e sai com 0 quando recebe um subcomando desconhecido. Que uso real da ferramenta isso quebra?",
+    "hint": "Pense em quem lê o código de saída e em quem lê a saída padrão.",
+    "choices": [
+      {
+        "text": "Um script com `set -e` segue adiante, e o texto de uso entra no próximo programa como dado",
+        "why": "Isso. Sair com 0 diz ao script que tudo correu bem, e o que vai para a saída padrão é o que a próxima etapa do pipeline consome."
+      },
+      {
+        "text": "O autocompletar dos nomes de subcomando",
+        "why": "O autocompletar é um mecanismo à parte; o código de saída de uma execução errada não o afeta."
+      },
+      {
+        "text": "A flag `-h`, que passa a não imprimir nada",
+        "why": "A ajuda é outro caminho; é a chamada errada que agora parece um sucesso."
+      },
+      {
+        "text": "A leitura da entrada padrão com `-`",
+        "why": "A leitura da entrada não muda; o estrago está no que se diz a quem chamou."
+      }
+    ]
+  },
+  "ex-g6x9ztx4": {
+    "prompt": "Associe cada peça de uma CLI feita com a biblioteca padrão à sua função.",
+    "hint": "Uma peça decide, uma lê, uma imprime, uma testa.",
+    "pairs": [
+      {
+        "left": "`flag.NewFlagSet(name, flag.ContinueOnError)`",
+        "right": "as flags de um subcomando, com o erro devolvido a quem chamou"
+      },
+      {
+        "left": "`run(args, stdin, stdout, stderr) int`",
+        "right": "a linha de comando como função que um teste chama"
+      },
+      {
+        "left": "`text/tabwriter`",
+        "right": "colunas alinhadas pela célula mais larga"
+      },
+      {
+        "left": "`os.Exit(run(...))` no `main`",
+        "right": "o código de saída entregue ao shell"
+      }
+    ],
+    "right_distractors": [
+      "a lista de palavras montada a partir da linha digitada"
+    ]
+  },
+  "ex-my7wrt8c": {
+    "prompt": "Numa máquina Ubuntu nova, `go env CGO_ENABLED` imprime `0` e `go build -race` falha com `-race requires cgo`. O que resolve?",
+    "hint": "O que o comando go procurou e não achou?",
+    "choices": [
+      {
+        "text": "`export CGO_ENABLED=1` no `~/.profile`",
+        "why": "O cgo ainda precisa de um compilador C para rodar; definir só a variável não deixa nada para chamar."
+      },
+      {
+        "text": "`sudo apt install gcc`",
+        "why": "Isso. Com um compilador C no caminho, o comando go religa o cgo sozinho e o detector de corrida compila."
+      },
+      {
+        "text": "Reinstalar o Go, já que o arquivo foi desempacotado por cima de um antigo",
+        "why": "Uma instalação misturada falha de outros jeitos; `CGO_ENABLED=0` é o comando go avisando que falta compilador."
+      },
+      {
+        "text": "Acrescentar `~/go/bin` ao `PATH`",
+        "why": "Esse diretório guarda ferramentas instaladas com `go install`; o compilador fica em `/usr/bin`."
+      }
+    ]
+  },
+  "ex-63a20des": {
+    "prompt": "O `main` de um programa com Cobra é o do modelo do gerador: `if err := rootCmd.Execute(); err != nil { os.Exit(1) }`. O que um job de CI que o roda perde?",
+    "hint": "Compare um erro de digitação numa flag com um arquivo que não existe.",
+    "choices": [
+      {
+        "text": "As mensagens de erro, que o Cobra deixa de imprimir quando o `main` sai",
+        "why": "O Cobra imprime a mensagem antes de o `Execute` voltar, a menos que `SilenceErrors` esteja ligado; sair depois não apaga nada."
+      },
+      {
+        "text": "Qualquer jeito de saber pelo status se a culpa foi da linha de comando ou da execução",
+        "why": "Isso. Uma flag mal escrita e um arquivo inexistente saem os dois com 1, e um script não separa \"corrija a chamada\" de \"corrija os dados\" sem ler o texto."
+      },
+      {
+        "text": "A detecção de sucesso, já que o `Execute` devolve erro depois de imprimir a ajuda",
+        "why": "Imprimir a ajuda devolve `nil`, então o job ainda vê 0 para a ajuda e para uma execução boa."
+      },
+      {
+        "text": "Nada: 1 é o status convencional para erro de uso",
+        "why": "A convenção que o pacote `flag` padrão e o `grep` seguem é 2 para erro de uso e 1 para execução que falhou."
+      }
+    ]
+  },
+  "ex-mmshte18": {
+    "prompt": "No build com Cobra do `hits`, o `go list -m all` imprimiu 8 linhas, sendo a primeira o próprio `example.com/hits`, e o `go version -m hits` listou 2 linhas `dep`. Quantos módulos estão no grafo mas não foram compilados no binário?",
+    "hint": "Tire o módulo principal e as dependências compiladas."
+  },
+  "ex-skapz95f": {
+    "prompt": "Numa ferramenta com Cobra, `--dry-run` é declarada com `root.Flags()`, não com `root.PersistentFlags()`. Um usuário roda `tool deploy --dry-run`. O que acontece?",
+    "hint": "A que comandos pertence uma flag acrescentada com `Flags()`?",
+    "choices": [
+      {
+        "text": "O `deploy` roda com dry-run ligado, já que as flags são reunidas da raiz para baixo",
+        "why": "Só as flags persistentes são reunidas pelo caminho; uma flag local da raiz pertence só à raiz."
+      },
+      {
+        "text": "O `deploy` roda com dry-run desligado e a flag é ignorada",
+        "why": "O pflag não ignora nada: flag desconhecida é erro."
+      },
+      {
+        "text": "A leitura falha com `unknown flag: --dry-run` e o `deploy` nunca roda",
+        "why": "Isso. O `deploy` não tem essa flag nem a herda, então o pflag a recusa antes do `RunE`; um programa que mapeia isso para 2 diz a quem chamou que o erro foi dele."
+      },
+      {
+        "text": "O Cobra sugere `--dry-run` em \"Did you mean this?\"",
+        "why": "As sugestões aparecem para comandos desconhecidos, não para flags desconhecidas."
+      }
+    ]
+  },
+  "ex-b10x2vpy": {
+    "prompt": "Associe cada linha da saída do comando oculto `__complete` de um programa com Cobra ao que ela significa.",
+    "hint": "O script do shell só lê a saída padrão.",
+    "pairs": [
+      {
+        "left": "`top<TAB>The paths with the most requests`",
+        "right": "um candidato, com a descrição mostrada ao lado"
+      },
+      {
+        "left": "`:4`",
+        "right": "ofereça estes candidatos e nenhum nome de arquivo"
+      },
+      {
+        "left": "`:8`",
+        "right": "use os candidatos como extensões para filtrar arquivos"
+      },
+      {
+        "left": "`Completion ended with directive: ...`",
+        "right": "uma nota na saída de erro para quem depura"
+      }
+    ],
+    "right_distractors": [
+      "o status de saída que o programa vai devolver"
+    ]
+  },
+  "ex-njvyrtxk": {
+    "prompt": "Ponha em ordem o que o `ExecuteC` do Cobra faz para `hits top access.log -n 2`, em que o `top` tem `Args: cobra.MaximumNArgs(1)`.",
+    "hint": "Uma contagem errada de argumentos só é apontada depois que as flags foram lidas.",
+    "items": [
+      "percorrer a árvore a partir do `hits` e parar no `top`",
+      "ler as flags do `top` e as persistentes que ele herda, deixando `access.log`",
+      "conferir os argumentos restantes com o `MaximumNArgs(1)`",
+      "chamar o `RunE` do `top` com `[\"access.log\"]`",
+      "devolver o `top` e o erro do `RunE`, aqui `nil`, a quem chamou"
+    ]
+  },
+  "ex-ct9gqfan": {
+    "prompt": "Um programa com urfave/cli v3 termina o `main` com `if err := cmd.Run(ctx, os.Args); err != nil { fmt.Fprintln(os.Stderr, err); os.Exit(1) }` e não define `ExitErrHandler`. Uma Action devolve `cli.Exit(\"disk full\", 4)`. Com que status de saída o processo termina?",
+    "hint": "Quem trata um `ExitCoder` quando ninguém substituiu o padrão?",
+    "choices": [
+      {
+        "text": "1, porque o `main` sai com 1 em qualquer erro",
+        "why": "O `main` nunca vê esse erro: o tratador padrão age dentro do `Run`, antes de ele retornar."
+      },
+      {
+        "text": "4",
+        "why": "Isso. Sem `ExitErrHandler`, a biblioteca imprime `disk full` e chama `os.Exit(4)` de dentro do `Run`, então a linha do `main` nunca roda."
+      },
+      {
+        "text": "2, o status que a urfave/cli usa para todo erro",
+        "why": "A biblioteca usa o código que o `ExitCoder` carrega; 2 é só uma convenção que um programa pode escolher para erros de uso."
+      },
+      {
+        "text": "0, porque o `cli.Exit` devolve um valor de erro e não encerra nada sozinho",
+        "why": "O `cli.Exit` em si não encerra, mas o tratador padrão que o recebe encerra."
+      }
+    ]
+  },
+  "ex-k2v35bha": {
+    "prompt": "No `hits` com urfave/cli, o `-n` do `top` é declarado com `Value: 3` e `Sources: cli.EnvVars(\"HITS_TOP\")`. No `access.log` de 20.000 linhas, quantas linhas de caminho `HITS_TOP=4 ./hits top -n 2 access.log` imprime abaixo do cabeçalho?",
+    "hint": "Linha de comando, ambiente, padrão: qual vence?"
+  },
+  "ex-qt4m8fz4": {
+    "prompt": "Um teste monta um comando urfave/cli v3 com `Writer: &out` e `ErrWriter: &errs` (dois `bytes.Buffer`) e sem `OnUsageError`, e roda um subcomando com `-n five`, sendo `-n` uma `IntFlag`. Onde vai parar a listagem de ajuda gerada?",
+    "hint": "A linha `Incorrect Usage` e a listagem são escritas em escritores diferentes.",
+    "choices": [
+      {
+        "text": "Em `errs`, junto da linha `Incorrect Usage`",
+        "why": "Só a linha `Incorrect Usage` vai para o `ErrWriter`; a listagem é impressa como qualquer outra ajuda, no `Writer`."
+      },
+      {
+        "text": "Em lugar nenhum: uma leitura que falha não imprime nada, só devolve o erro",
+        "why": "Sem `OnUsageError` a biblioteca imprime a reclamação e a listagem antes de devolver o erro."
+      },
+      {
+        "text": "Em `out`, enquanto a linha `Incorrect Usage` vai para `errs`",
+        "why": "Isso. A ajuda vai para o `Writer`, o fluxo que faz as vezes da saída padrão, e é por isso que uma flag ruim põe uma tela de ajuda onde um pipeline lê dados."
+      },
+      {
+        "text": "No `os.Stdout` de verdade, já que a ajuda ignora os escritores do comando",
+        "why": "A ajuda respeita o `Writer` do comando; quem usa o `cli.ErrWriter` do pacote é o tratador de saída padrão."
+      }
+    ]
+  },
+  "ex-sjfnzyvb": {
+    "prompt": "`./hits top -n 2 access.log` roda um comando raiz urfave/cli v3 cujo subcomando `top` tem uma `Action`. Ponha em ordem o que o `Run` faz.",
+    "hint": "A raiz lê as próprias flags antes de saber qual palavra é um subcomando.",
+    "items": [
+      "ler as flags do comando raiz",
+      "casar o primeiro argumento restante, `top`, com um subcomando",
+      "ler as flags do `top`, pegando `-n 2` e deixando `access.log`",
+      "conferir que as flags obrigatórias do `top` foram dadas",
+      "chamar a `Action` do `top`"
+    ]
+  },
+  "ex-7jqxfwqd": {
+    "prompt": "O mesmo `hits` foi construído de três jeitos: biblioteca padrão (4.031.823 bytes), urfave/cli v3.14.0 (6.276.176 bytes) e Cobra v1.10.2 (5.107.200 bytes). Quais afirmações são verdadeiras? Marque todas as que valem.",
+    "hint": "Separe o grafo de módulos dos pacotes compilados.",
+    "choices": [
+      {
+        "text": "O binário com urfave/cli é o maior dos três",
+        "why": "Sim. Ele tem 1.168.976 bytes a mais que o do Cobra, então \"mais leve\" não descreve o tamanho dele."
+      },
+      {
+        "text": "Só um pacote de terceiros é compilado no build com urfave/cli",
+        "why": "Sim. O `go list -deps .` mostrou `github.com/urfave/cli/v3` e mais nada de fora do módulo e da biblioteca padrão."
+      },
+      {
+        "text": "O `testify` acaba no binário com urfave/cli, já que o `go list -m all` o lista",
+        "why": "O `go list -m all` é o grafo de módulos; o `testify` só é usado pelos testes da própria urfave/cli e nunca é compilado no `hits`."
+      },
+      {
+        "text": "O `go list -m all` do Cobra é mais curto que o da urfave/cli",
+        "why": "É mais longo: 8 linhas contra 4, com `pflag`, `mousetrap` e os módulos do gerador de páginas de manual."
+      }
+    ]
+  },
+  "ex-26ceqedh": {
+    "prompt": "Um programa Bubble Tea trava por três segundos toda vez que o usuário aperta `r`, que recarrega os dados de um servidor lento. O caso `\"r\"` do `Update` chama a função que busca os dados e guarda o resultado no modelo. Qual é a correção?",
+    "hint": "Que parte de um programa Bubble Tea pode demorar?",
+    "choices": [
+      {
+        "text": "Devolver no caso `\"r\"` um `tea.Cmd` que busca e devolve o resultado como mensagem",
+        "why": "Isso. O programa roda o comando numa goroutine própria, então o `Update` retorna na hora, a tela continua respondendo e os dados chegam depois como uma mensagem que o `Update` trata."
+      },
+      {
+        "text": "Passar a busca para o `View`",
+        "why": "O `View` roda depois de cada `Update`, então a busca rodaria a cada tecla, e um modelo mudado ali é uma cópia que ninguém guarda."
+      },
+      {
+        "text": "Aumentar a taxa de quadros com `tea.WithFPS(120)`",
+        "why": "A taxa de quadros limita quantas vezes a tela é redesenhada. Nada é redesenhado enquanto o `Update` está bloqueado, seja qual for a taxa."
+      },
+      {
+        "text": "Buscar no `Init`, uma vez só, antes da primeira tela",
+        "why": "Isso leva o travamento para a partida e perde o recarregar. Trabalho lento cabe num comando, seja onde for pedido."
+      }
+    ]
+  },
+  "ex-13fkmnfs": {
+    "prompt": "Um código portado de um tutorial do Bubble Tea v1 mantém `case tea.KeyMsg:` no `Update`. Compilado com `charm.land/bubbletea/v2` ele funciona, até a view ligar `KeyboardEnhancements.ReportEventTypes = true`; a partir daí, num terminal que suporta isso, cada `j` desce o cursor duas linhas. Por quê?",
+    "hint": "O que o `tea.KeyMsg` cobre na versão 2?",
+    "choices": [
+      {
+        "text": "O terminal repete toda tecla duas vezes com as melhorias ligadas",
+        "why": "O terminal manda um evento quando a tecla desce e outro quando sobe; nenhum dos dois é repetição."
+      },
+      {
+        "text": "Na v2, `tea.KeyMsg` casa tanto com apertos quanto com solturas",
+        "why": "Isso. Ele virou uma interface sobre `tea.KeyPressMsg` e `tea.KeyReleaseMsg`; com as solturas informadas, as duas caem nesse caso. Casar com `tea.KeyPressMsg` resolve."
+      },
+      {
+        "text": "O `View` é chamado duas vezes por mensagem com as melhorias ligadas",
+        "why": "Quantas vezes o `View` roda não move o cursor; só o `Update` muda o modelo."
+      },
+      {
+        "text": "O `msg.String()` devolve `\"j j\"` para uma tecla com melhorias",
+        "why": "A string continua `\"j\"`; o segundo movimento vem de uma segunda mensagem, a soltura."
+      }
+    ]
+  },
+  "ex-f232rdra": {
+    "prompt": "O `hits browse` desenha a barra de cada status como `contagem × (largura do terminal − 16) ÷ maior contagem`, com divisão inteira. Para `/static/app.js` a maior contagem é 944 (status 200) e o status 500 tem 174. Quantos `#` o status 500 recebe num terminal de 60 colunas?",
+    "hint": "60 − 16 = 44 colunas para a maior barra."
+  },
+  "ex-app93taf": {
+    "prompt": "Ponha em ordem o que acontece num programa Bubble Tea entre o usuário apertar `j` e o cursor movido aparecer na tela.",
+    "hint": "A biblioteca transforma bytes num valor antes de o seu código ver qualquer coisa.",
+    "items": [
+      "o terminal manda ao programa o byte do `j`",
+      "o Bubble Tea o decodifica numa `tea.KeyPressMsg`",
+      "o `Update` devolve uma cópia do modelo com o cursor uma linha abaixo",
+      "o `View` desenha esse novo modelo como texto",
+      "o renderizador escreve as sequências de escape que redesenham o que mudou"
+    ]
+  },
+  "ex-h0terecy": {
+    "prompt": "Uma equipe escolhe entre uma tela cheia em Bubble Tea e uma tabela simples impressa na saída padrão para um relatório de logins que falharam. Em quais destas situações a tabela simples é a ferramenta certa? Marque todas as que se aplicam.",
+    "hint": "Pense em quem, ou o quê, lê a saída, e quando.",
+    "choices": [
+      {
+        "text": "O relatório roda toda noite pelo cron e vai por e-mail para a equipe",
+        "why": "Isso. O cron não dá terminal ao job; uma tela cheia não tem onde desenhar nem quem aperte uma tecla."
+      },
+      {
+        "text": "Um dos operadores usa um leitor de tela",
+        "why": "Isso. Uma tela redesenhada célula por célula chega ao leitor de tela em fragmentos; linhas impressas chegam em ordem."
+      },
+      {
+        "text": "O log tem 20.000 linhas",
+        "why": "O tamanho não decide nada: a tela conta num comando e continua respondendo, e a tabela imprime os mesmos totais."
+      },
+      {
+        "text": "Alguém cola os números num chamado depois de o programa sair",
+        "why": "Isso. A tela alternativa é apagada na saída; uma tabela impressa continua no histórico de rolagem."
+      },
+      {
+        "text": "O terminal tem 72 colunas",
+        "why": "Uma tela cheia se adapta à largura pela `tea.WindowSizeMsg`; 72 colunas bastam para os dois."
+      }
+    ]
+  },
+  "ex-a6s76fb3": {
+    "prompt": "Num notebook, `go build -o hits .` da ferramenta `hits` leva 0,078 segundo. Num runner de CI que começa de uma máquina limpa a cada job, o mesmo build leva uns 6 segundos toda vez. O que explica a diferença?",
+    "hint": "Pense em onde os pacotes compilados ficam entre um build e outro.",
+    "choices": [
+      {
+        "text": "As máquinas de CI compilam sem otimização",
+        "why": "Nada no job muda as flags do compilador; e builds sem otimização são mais rápidos, não mais lentos."
+      },
+      {
+        "text": "O cache de build está vazio a cada job, então a biblioteca padrão é compilada de novo toda vez",
+        "why": "Isso. Um build com o `GOCACHE` vazio compilou 79 pacotes em 5,8 s; o morno não compilou nenhum. Guardar o `GOCACHE` entre jobs elimina quase toda a diferença."
+      },
+      {
+        "text": "O `-o` fica mais lento quando o diretório de saída é novo",
+        "why": "Escrever um arquivo de 4 MB leva milissegundos; os segundos são compilação."
+      },
+      {
+        "text": "O runner baixa a biblioteca padrão do Go do proxy de módulos",
+        "why": "A biblioteca padrão vem com o toolchain no `GOROOT`; só módulos vêm do proxy, e o `hits` não exige nenhum."
+      }
+    ]
+  },
+  "ex-zzngxkem": {
+    "prompt": "Um teste de tabela tem quatro subtestes, e o primeiro, `TestParse/good`, falha. O pacote roda com `go test -failfast -v`. Quantos dos quatro subtestes do `TestParse` começam?",
+    "hint": "O `-failfast` não inicia teste novo depois da primeira falha.",
+    "unit": "subtestes"
+  },
+  "ex-y7g5d3cc": {
+    "prompt": "`go install example.com/tool/cmd/tool@v1.2.0` é recusado, enquanto clonar o repositório e rodar `go install ./cmd/tool` dentro dele funciona. O `go.mod` do módulo tem uma diretiva `replace`. Por que a diferença?",
+    "hint": "O `go help install` lista condições para a forma com `@versão`.",
+    "choices": [
+      {
+        "text": "Uma instalação com versão não tem módulo principal, e ali substituição é erro",
+        "why": "Isso. Com versão, nenhum módulo é o principal, então um `replace` que só vale para o módulo principal é recusado; dentro do clone ele é o principal e o `replace` vale."
+      },
+      {
+        "text": "A versão v1.2.0 nunca foi publicada no proxy de módulos, então não há o que baixar",
+        "why": "Aí o clone nessa tag também não existiria; a recusa é por causa do `replace`, que o `go help install` cita."
+      },
+      {
+        "text": "O `go install` com versão exige `GOBIN` definido",
+        "why": "Sem `GOBIN`, as duas formas usam `~/go/bin`."
+      },
+      {
+        "text": "Um caminho de pacote com `@versão` precisa ser uma biblioteca",
+        "why": "O contrário: os argumentos precisam ser pacotes `main`."
+      }
+    ]
+  },
+  "ex-e2gg7g5v": {
+    "prompt": "Ligue cada pergunta sobre um projeto Go ao comando que a responde.",
+    "hint": "Um dos comandos não responde nenhuma delas.",
+    "pairs": [
+      {
+        "left": "O que o `tally.Top` promete devolver?",
+        "right": "`go doc tally.Top`"
+      },
+      {
+        "left": "Que arquivos `.go` formam um pacote?",
+        "right": "`go list -f '{{.GoFiles}}' ./internal/tally`"
+      },
+      {
+        "left": "Que versões de módulo foram compiladas num binário instalado?",
+        "right": "`go version -m ~/go/bin/stringer`"
+      },
+      {
+        "left": "Onde o `go install` vai pôr os executáveis?",
+        "right": "`go env GOBIN`"
+      }
+    ],
+    "right_distractors": [
+      "`go clean -cache`"
+    ]
+  },
+  "ex-7739d22z": {
+    "prompt": "Um desenvolvedor roda `go test` sem argumento de pacote, duas vezes seguidas no mesmo diretório, e nunca vê `(cached)`. Por quê?",
+    "hint": "O `go help test` descreve dois modos.",
+    "choices": [
+      {
+        "text": "Os testes deles leem o relógio",
+        "why": "O cache não examina o que um teste lê além de arquivos do módulo e variáveis de ambiente; ler o relógio não impediria o cache."
+      },
+      {
+        "text": "Essa forma, o modo de diretório local, não guarda resultados em cache",
+        "why": "Isso. Só o modo de lista de pacotes, como em `go test .` ou `go test ./...`, guarda resultados de sucesso."
+      },
+      {
+        "text": "O `-count=1` é o padrão",
+        "why": "O valor padrão é 1, mas isso não equivale a passar a flag: só um `-count` explícito desliga o cache."
+      },
+      {
+        "text": "O cache de testes é compartilhado entre usuários, e outra pessoa na máquina o limpou",
+        "why": "Cada usuário tem o próprio `GOCACHE`; e o mesmo acontece numa máquina que ninguém mais usa."
+      }
+    ]
+  },
+  "ex-gw4t4a5a": {
+    "prompt": "Um alvo de Makefile roda `gofmt -d .` como verificação de formato. Um pull request acrescenta um arquivo recuado com quatro espaços. O que o alvo faz?",
+    "hint": "`-d` e `-l` não terminam do mesmo jeito.",
+    "choices": [
+      {
+        "text": "Imprime o diff e falha, porque o `gofmt -d` sai com 1 quando imprime um",
+        "why": "Isso. Ao contrário do `-l`, o `gofmt -d` sai com 1 sempre que a formatação difere, então funciona sozinho como verificação e deixa o diff no log."
+      },
+      {
+        "text": "Imprime o diff e passa, porque imprimir era o que foi pedido",
+        "why": "É assim que se comportam o `gofmt -l` e o `goimports -d`. O `gofmt -d` sai com 1 quando tem diff para imprimir."
+      },
+      {
+        "text": "Reescreve o arquivo com tabs e passa",
+        "why": "O `-d` não grava nada; só o `-w` mexe no arquivo."
+      },
+      {
+        "text": "Nada, já que quatro espaços é questão de gosto que o `gofmt` deixa para o autor",
+        "why": "O recuo é sempre um tab por nível; é das primeiras coisas que o `gofmt` muda."
+      }
+    ]
+  },
+  "ex-jvbcmsym": {
+    "prompt": "O `gofmt -l .` lê um diretório em que um arquivo `.go` tem erro de sintaxe. Que status de saída ele devolve?",
+    "hint": "Não é o status de sucesso nem o que o `-d` usa para uma diferença."
+  },
+  "ex-zmsjdnqy": {
+    "prompt": "Um arquivo do módulo `example.com/hits` importa `strings`, `github.com/spf13/cobra`, `example.com/hits/internal/tally` e `net/http`. Ponha-os na ordem em que o `goimports -local example.com/hits` os escreve.",
+    "hint": "Três grupos, cada um ordenado, e a biblioteca padrão não tem ponto no primeiro elemento do caminho.",
+    "items": [
+      "`\"net/http\"`",
+      "`\"strings\"`",
+      "`\"github.com/spf13/cobra\"`",
+      "`\"example.com/hits/internal/tally\"`"
+    ]
+  },
+  "ex-qqadv4k7": {
+    "prompt": "Um código antigo escreve `interface{}` em todo lugar. O que `gofmt -r 'interface{} -> any' -w .` faz com ele?",
+    "hint": "Quais identificadores de uma regra de reescrita são curingas?",
+    "choices": [
+      {
+        "text": "Nada: a regra falha, porque `interface{}` é um tipo e não uma expressão",
+        "why": "Um tipo é uma expressão válida para uma regra de reescrita; a regra roda e reescreve cada ocorrência."
+      },
+      {
+        "text": "Troca cada `interface{}` por `any`",
+        "why": "Isso. Só letras minúsculas sozinhas são curingas, então `any` é tomado ao pé da letra, e `interface{}` vira `any` em parâmetros, slices e literais igualmente."
+      },
+      {
+        "text": "Troca cada `interface{}` pela expressão com que o `a` casou",
+        "why": "`any` tem três letras, então não é curinga; e não há `a` no padrão a que ele pudesse se referir."
+      },
+      {
+        "text": "Só os `interface{}` escritos em parâmetros de função",
+        "why": "A regra casa a sintaxe onde quer que apareça: parâmetros, tipos de retorno e literais compostos."
+      }
+    ]
+  },
+  "ex-wz74wp5f": {
+    "prompt": "Todos no time formatam ao salvar com o `gopls`, e o CI roda `goimports -l -local example.com/shop .`. O CI falha só nos commits do Fábio, sempre no bloco de imports. Qual é a causa provável?",
+    "hint": "O que precisa bater entre o editor e o comando do CI?",
+    "choices": [
+      {
+        "text": "O `gopls` do Fábio tem outra largura de tab",
+        "why": "Largura de tab é ajuste de exibição do editor; nem o `gopls` nem o `goimports` escrevem nada diferente por causa dela."
+      },
+      {
+        "text": "O `gopls` do editor dele não tem o ajuste `local`, então os pacotes do módulo ficam no segundo grupo",
+        "why": "Isso. O `local` é o equivalente do `-local` no `gopls`; sem ele, os imports dele saem em dois grupos e o comando do CI, que separa um terceiro, lista o arquivo."
+      },
+      {
+        "text": "O `gopls` e o `goimports` discordam do layout do código",
+        "why": "O `gopls` aplica a mesma formatação canônica do `gofmt`; a diferença aqui fica restrita ao bloco de imports."
+      },
+      {
+        "text": "Ele faz commit com `--no-verify`",
+        "why": "Isso pula um hook local. O CI roda no servidor, aconteça o que acontecer na máquina dele, e as falhas apontam o bloco de imports."
+      }
+    ]
+  },
+  "ex-gx07xaz7": {
+    "prompt": "Um arquivo de teste declara quatro funções com a assinatura `func(t *testing.T)`. No Go 1.27.1, qual delas faz o `go test` falhar com uma descoberta do vet antes de qualquer teste rodar?",
+    "hint": "O `testing` quer `Test` seguido de algo que não começa com letra minúscula.",
+    "choices": [
+      {
+        "text": "`Test_parse`",
+        "why": "Sublinhado não é letra minúscula, então `Test_parse` é um nome de teste válido: o `go test -v` o roda e relata `PASS`."
+      },
+      {
+        "text": "`Testparse`",
+        "why": "Isso. Letra minúscula depois de `Test` é nome malformado; o analisador `tests` está no subconjunto padrão do `go test`, então a execução falha com `[build failed]`."
+      },
+      {
+        "text": "`TestHTTP`, porque uma sigla não é palavra",
+        "why": "Maiúsculas depois de `Test` são o que um nome de teste precisa; `TestHTTP` roda e passa."
+      },
+      {
+        "text": "`TestParseLongLine`, por ser mais longo que a função que testa",
+        "why": "Nada compara o nome do teste com a função testada; tamanho não é regra."
+      }
+    ]
+  },
+  "ex-ehzasa4z": {
+    "prompt": "`func length(b []byte) uint16 { hi, lo := b[0], b[1]; return uint16(hi<<8 | lo) }` compila, e o `go vet` relata `hi (8 bits) too small for shift of 8`. O que `length([]byte{0x03, 0x20})` devolve do jeito que está escrito?",
+    "hint": "O deslocamento acontece num `byte`, antes da conversão."
+  },
+  "ex-cnn005v3": {
+    "prompt": "Um código chama uma função auxiliar que a equipe sabe que o `unusedresult` do `go vet` julga mal, e ela quer manter todos os outros analisadores do vet. Qual comando faz isso?",
+    "hint": "Uma grafia escolhe um analisador, a outra o exclui.",
+    "choices": [
+      {
+        "text": "`go vet -unusedresult ./...`",
+        "why": "Citar um analisador como `-NOME` roda só os citados: isto rodaria o `unusedresult` e mais nada."
+      },
+      {
+        "text": "`go test -vet=off ./...`",
+        "why": "Isso tira o vet da execução de testes por inteiro, e o `unusedresult` nem está no subconjunto padrão do `go test`."
+      },
+      {
+        "text": "`go vet -unusedresult=false ./...`",
+        "why": "Isso. Desligar um analisador com `=false` roda todos os outros."
+      },
+      {
+        "text": "Um comentário `//nolint:unusedresult` acima da chamada",
+        "why": "O vet não tem comentário que silencie uma linha; essa sintaxe é de outras ferramentas."
+      }
+    ]
+  },
+  "ex-0fnrbqhh": {
+    "prompt": "Um pipeline de CI roda `go test ./...` e nada mais, no Go 1.27.1 com as flags padrão. Quais destes erros num pacote com testes ele barra? Marque todos os que valem.",
+    "hint": "O `go test` roda só um subconjunto curado dos analisadores do vet.",
+    "choices": [
+      {
+        "text": "`fmt.Errorf(\"read %s: %d\", path)`, com um argumento a menos",
+        "why": "Sim. O `printf` está no subconjunto do `go test`, então a execução falha antes dos testes."
+      },
+      {
+        "text": "`errors.As(err, target)` com `target` que não é ponteiro",
+        "why": "Sim. O `errorsas` também está no subconjunto."
+      },
+      {
+        "text": "um método com receptor por valor num tipo que guarda um `sync.Mutex`",
+        "why": "O `copylocks` fica fora do subconjunto; precisa de `go vet` ou `go test -vet=all`."
+      },
+      {
+        "text": "`ctx, _ := context.WithTimeout(parent, time.Second)`",
+        "why": "O `lostcancel` também fica fora do subconjunto."
+      }
+    ]
+  },
+  "ex-qgv9mjen": {
+    "prompt": "`ids := []int{1, 1, 2, 3, 3}; slices.Compact(ids); fmt.Println(ids)` compila e o `go vet` relata `result of slices.Compact call not used`. O que isso imprime no Go 1.27.1?",
+    "hint": "O `Compact` devolve a fatia mais curta e zera o que não usa mais.",
+    "choices": [
+      {
+        "text": "`[1 1 2 3 3]`, já que a chamada não mudou nada",
+        "why": "O `Compact` trabalha no lugar: moveu os elementos e zerou o final, mesmo com o resultado jogado fora."
+      },
+      {
+        "text": "`[1 2 3]`",
+        "why": "Essa é a fatia devolvida. O `ids` mantém o próprio comprimento, cinco."
+      },
+      {
+        "text": "`[1 2 3 3 3]`",
+        "why": "Antes do Go 1.22 o final mantinha os valores antigos; no 1.27.1 o `Compact` zera os elementos entre o comprimento novo e o antigo."
+      },
+      {
+        "text": "`[1 2 3 0 0]`",
+        "why": "Isso. Os três primeiros são os valores compactados, e os dois que o resultado não cobre mais foram zerados; a correção é `ids = slices.Compact(ids)`."
+      }
+    ]
+  },
+  "ex-20qqxwdn": {
+    "prompt": "O CI roda o golangci-lint v2.14.0, compilado com `go install`, e uma desenvolvedora roda o `staticcheck` v0.8.2 no notebook. No mesmo commit, uma checagem `SA` aparece num e não no outro. Qual é a primeira coisa a suspeitar?",
+    "hint": "Qual staticcheck está dentro do golangci-lint?",
+    "choices": [
+      {
+        "text": "O golangci-lint passa flags diferentes a cada analisador",
+        "why": "Ele escolhe a própria lista padrão de checagens, mas as `SA` estão ligadas nos dois; a diferença mais básica é o código que roda."
+      },
+      {
+        "text": "São versões diferentes do staticcheck",
+        "why": "Isso. O golangci-lint 2.14.0 carrega o staticcheck v0.8.1, fixado no `go.mod` dele, como o `go version -m` mostra; fixar um não fixa o outro."
+      },
+      {
+        "text": "O staticcheck lê o `staticcheck.conf` e o notebook tem outro Go",
+        "why": "Outro Go mudaria mais de uma checagem, e a versão do próprio analisador já é uma diferença conhecida."
+      },
+      {
+        "text": "O cache do golangci-lint guarda um resultado velho de outro commit",
+        "why": "O cache é por pacote e por conteúdo; um arquivo alterado é analisado de novo."
+      }
+    ]
+  },
+  "ex-kc5kt606": {
+    "prompt": "No módulo `hits` com o `report.go`, o `golangci-lint run --no-config` relatou 10 achados do `errcheck`: um `os.WriteFile`, um `w.Flush` adiado, um `f.Close` adiado e sete chamadas a `fmt.Fprint`, `fmt.Fprintf` ou `fmt.Fprintln`. Quantos restam com um `.golangci.yml` que liga só o preset de exclusões `std-error-handling`?",
+    "hint": "O preset libera impressão, fechamento, flush, `os.Remove` e variáveis de ambiente."
+  },
+  "ex-w28px44x": {
+    "prompt": "Um `.golangci.yml` com `version: \"2\"` diz `enabel:` sob `linters:` onde queria `enable:`, para acrescentar o revive. O que o `golangci-lint run` faz?",
+    "hint": "Compare o que o `run` e o `config verify` fazem com uma chave que não conhecem.",
+    "choices": [
+      {
+        "text": "Sai com 3, recusando o arquivo de configuração",
+        "why": "Isso é o `config verify`, que confere o arquivo contra o schema; o `run` ignora a chave desconhecida."
+      },
+      {
+        "text": "Roda o revive mesmo assim, adivinhando a chave",
+        "why": "Nada é adivinhado; o revive simplesmente nunca é ligado."
+      },
+      {
+        "text": "Roda o conjunto standard sem o revive, como se a chave não existisse",
+        "why": "Isso. Relata errcheck, govet, ineffassign, staticcheck e unused, e sai com 0 quando eles não acham nada, e é por isso que o `golangci-lint config verify` deve vir antes no CI."
+      },
+      {
+        "text": "Não roda linter nenhum e imprime `0 issues.`",
+        "why": "O `default: standard` continua valendo sem o `enable`, então os cinco linters standard rodam."
+      }
+    ]
+  },
+  "ex-5an0mthk": {
+    "prompt": "O `golangci-lint run --no-config`, que roda o conjunto standard de cinco linters, é apontado para um arquivo que contém cada uma destas coisas. Quais ele relata? Marque todas as que valem.",
+    "hint": "O conjunto standard é errcheck, govet, ineffassign, staticcheck e unused.",
+    "choices": [
+      {
+        "text": "`os.WriteFile(path, data, 0o644)` com o erro descartado",
+        "why": "Sim, pelo `errcheck`; sem arquivo de configuração nenhum preset está ligado."
+      },
+      {
+        "text": "`if n >= 0` com `n` do tipo `uint`",
+        "why": "Sim, como `SA4003`, pelo staticcheck que vem dentro."
+      },
+      {
+        "text": "`func Save(path string, ctx context.Context) error`",
+        "why": "A posição do context é o `context-as-argument` do revive, que não está no conjunto standard."
+      },
+      {
+        "text": "Uma função exportada sem comentário de documentação",
+        "why": "Isso é o `exported` do revive; as checagens de documentação do staticcheck julgam só um comentário que existe."
+      },
+      {
+        "text": "Uma função não exportada que nada chama",
+        "why": "Sim, pelo `unused`, um dos cinco."
+      }
+    ]
+  },
+  "ex-v4q6t6ve": {
+    "prompt": "Um workflow do GitHub Actions roda o golangci-lint com `args: --new-from-merge-base=origin/main` em todo `push`, inclusive no `main`. O que o passo verifica num push para o `main`?",
+    "hint": "Qual é a merge base do `main` e do `origin/main`, estando no `main`?",
+    "choices": [
+      {
+        "text": "Todas as linhas, já que o `main` não tem ponto de saída",
+        "why": "Há uma merge base: o próprio commit. Nada difere dele."
+      },
+      {
+        "text": "As linhas do último commit",
+        "why": "Isso seria `--new-from-rev=HEAD~`; a merge base no `main` é o próprio `HEAD`."
+      },
+      {
+        "text": "Nada: todo achado é filtrado",
+        "why": "Isso. A merge base é o commit sendo verificado, então nenhuma linha é nova e o passo passa com o que houver; o workflow deve rodar em `pull_request`."
+      },
+      {
+        "text": "Falha, porque o `origin/main` não pode ser comparado consigo mesmo",
+        "why": "O Git calcula a merge base sem problema; o resultado é só o mesmo commit."
+      }
+    ]
+  },
+  "ex-sfg08epa": {
+    "prompt": "Um serviço exige `golang.org/x/text` v0.3.7 e só chama `language.Parse`, e `govulncheck ./...` sai com 0. A GO-2022-1059 cita `MatchStrings` e `ParseAcceptLanguage`. Uma colega acrescenta um handler que chama `language.MatchStrings`. O que a próxima varredura faz?",
+    "hint": "Para que nível a chamada nova leva o achado?",
+    "choices": [
+      {
+        "text": "Continua saindo com 0: o pacote já era importado",
+        "why": "Importar o deixava no nível de pacote, que não reprova a execução. A chamada nova é um caminho até uma função citada."
+      },
+      {
+        "text": "Sai com 3 com a GO-2022-1059 em Symbol Results, rastreando o handler novo",
+        "why": "Isso. `MatchStrings` é um dos dois nomes, então o achado sobe de Package Results para o nível de símbolo, e o trace aponta a linha do handler."
+      },
+      {
+        "text": "Sai com 2, porque um import novo exige `go mod tidy` antes",
+        "why": "Nenhum import foi acrescentado; `language` já era importado. O 2 é para erro na linha de comando."
+      },
+      {
+        "text": "Nada muda até o banco publicar uma entrada nova",
+        "why": "A entrada sempre citou `MatchStrings`; o que mudou foi o código, e a varredura lê os dois."
+      }
+    ]
+  },
+  "ex-q0a8y7wg": {
+    "prompt": "Um passo de CI roda `govulncheck -scan package ./...` com saída em texto num programa que importa um pacote vulnerável e não chama nenhuma das funções que a entrada cita. Que status de saída o passo recebe?",
+    "hint": "O status de saída segue o nível pedido."
+  },
+  "ex-yqnpr1fh": {
+    "prompt": "Ligue cada situação do `govulncheck` à mudança que a resolve.",
+    "hint": "Uma das correções da direita não resolve nenhuma.",
+    "pairs": [
+      {
+        "left": "todo achado diz `Fixed in: stdlib@go1.27.2`",
+        "right": "instalar o Go 1.27.2 e recompilar os binários"
+      },
+      {
+        "left": "`go mod why -m` mostra um módulo vulnerável chegando por outro módulo que ainda pede a versão antiga",
+        "right": "dar `go get` no módulo vulnerável na versão corrigida no seu próprio módulo"
+      },
+      {
+        "left": "`-mode binary` num binário compilado com `-ldflags=\"-s -w\"` lista toda vulnerabilidade de todo módulo",
+        "right": "varrer o build com símbolos, ou o código de que ele veio"
+      },
+      {
+        "left": "um job que grava `-format json` nunca falhou, embora o arquivo tenha um achado de nível de símbolo",
+        "right": "ler os achados num script, ou acrescentar uma varredura em texto pelo status"
+      }
+    ],
+    "right_distractors": [
+      "rodar `go mod tidy`"
+    ]
+  },
+  "ex-0w5zkcnn": {
+    "prompt": "Um módulo de biblioteca não tem pacote `main`. A função exportada `Normalize` chama uma função citada numa entrada de vulnerabilidade do Go, e nada dentro do módulo chama `Normalize`. O que `govulncheck ./...` relata?",
+    "hint": "Quem chama as funções exportadas de uma biblioteca?",
+    "choices": [
+      {
+        "text": "Nada no nível de símbolo, já que nenhum código do módulo chama `Normalize`",
+        "why": "Isso tornaria toda biblioteca limpa por construção. Os chamadores são programas fora do módulo, então funções exportadas são tratadas como pontos de entrada."
+      },
+      {
+        "text": "Um achado de nível de símbolo rastreado a partir de `Normalize`, status 3",
+        "why": "Isso. Num pacote que não é `main`, toda função e todo método exportados são pontos de entrada, e `Normalize` chega a uma função citada."
+      },
+      {
+        "text": "Um erro: o `govulncheck` precisa de um pacote `main` para montar o grafo de chamadas",
+        "why": "Ele varre bibliotecas; a API exportada delas faz as vezes do `main`."
+      },
+      {
+        "text": "Só um achado de nível de módulo, porque bibliotecas são julgadas pelo `go.mod`",
+        "why": "Bibliotecas têm os mesmos três níveis que programas; só os pontos de entrada mudam."
+      }
+    ]
+  },
+  "ex-8na706ck": {
+    "prompt": "Um achado do `govulncheck` cita um módulo que você nunca pôs no `go.mod`. Quais comandos ajudam a descobrir de onde ele vem e para que versão levá-lo? Marque todos os que se aplicam.",
+    "hint": "Três deles leem o grafo de módulos ou o caminho de chamadas; os outros verificam outra coisa.",
+    "choices": [
+      {
+        "text": "`go mod why -m <módulo>`",
+        "why": "Isso. Imprime a cadeia mais curta de imports dos seus pacotes até o módulo, o que mostra o módulo do meio."
+      },
+      {
+        "text": "`go list -m -u <módulo>`",
+        "why": "Isso. Mostra a versão que você tem e, entre colchetes, a mais nova disponível."
+      },
+      {
+        "text": "`govulncheck -show traces ./...`",
+        "why": "Isso. Imprime o caminho de chamadas inteiro do seu ponto de entrada até o módulo, então você vê qual dos seus pacotes chega lá."
+      },
+      {
+        "text": "`go mod verify`",
+        "why": "Ele confere se os módulos baixados batem com os checksums registrados. Não sabe nada de vulnerabilidades nem de quem importa o quê."
+      },
+      {
+        "text": "`go vet ./...`",
+        "why": "O `vet` procura construções suspeitas no seu código, como uma string de formato errada; não lê o grafo de módulos."
+      },
+      {
+        "text": "`go clean -modcache`",
+        "why": "Ele apaga os módulos baixados, que o próximo build busca de novo nas mesmas versões. Nada no achado muda."
+      }
+    ]
+  },
+  "ex-1qh6vr7t": {
+    "prompt": "O job de CI de um módulo Go roda `go generate ./...` e falha porque o runner não tem o executável `stringer`; a diretiva é `//go:generate stringer -type=Level`. Que mudança resolve para todas as máquinas de uma vez, com a versão revisada como qualquer dependência?",
+    "hint": "Onde uma versão pode ficar escrita para que todo `go generate` leia a mesma?",
+    "choices": [
+      {
+        "text": "Pôr `go install golang.org/x/tools/cmd/stringer@latest` no job de CI antes do passo",
+        "why": "Faz a CI passar hoje, com a versão mais nova que houver, e deixa cada notebook com a sua. `@latest` vira outro programa no mês que vem."
+      },
+      {
+        "text": "Registrar a ferramenta no `go.mod` com `go get -tool …@v0.52.0` e chamá-la por `go tool`",
+        "why": "Isso. A versão vai para o `go.mod`, os módulos para o `go.sum`, e o `go tool` compila exatamente essa versão onde quer que o módulo esteja."
+      },
+      {
+        "text": "Apagar o `level_string.go` do repositório para a CI não precisar mais gerá-lo",
+        "why": "Aí nada constrói o método `String`: o `go build` nunca roda o `go generate`, então um clone fica sem método."
+      },
+      {
+        "text": "Pular o passo de generate na CI, já que o guarda do compilador pega arquivos velhos",
+        "why": "O guarda só pega valores de constantes que mudaram; uma diretiva alterada ou uma constante nova compila sem erro."
+      }
+    ]
+  },
+  "ex-tfwfkgqd": {
+    "prompt": "O `stringer -type=Color` roda sobre `const ( Red Color = iota; Green; Blue )`. Ele grava `_Color_name = \"RedGreenBlue\"` e uma tabela de índices `_Color_index`. Qual é o último número de `_Color_index`?",
+    "hint": "A tabela guarda onde cada nome começa, mais onde o último termina."
+  },
+  "ex-add7rk8x": {
+    "prompt": "Ponha em ordem a vida de uma mudança numa diretiva `//go:generate`, do editor de quem escreve ao veredito da CI.",
+    "hint": "O passo de quem escreve vem antes do commit, e a CI gera de novo depois dele.",
+    "items": [
+      "editar a diretiva ou o fonte que ela lê",
+      "rodar `go generate ./...` na máquina de quem escreve",
+      "commitar o fonte e o arquivo gerado juntos",
+      "a CI roda `go generate ./...` num checkout novo",
+      "a CI roda `git diff --exit-code` e falha em qualquer diferença"
+    ]
+  },
+  "ex-6qtytdxx": {
+    "prompt": "Um pacote tem `//go:generate echo *.go` ao lado de três arquivos `.go`. O que o `go generate` imprime para ele?",
+    "hint": "Quem expandiria o `*`?",
+    "choices": [
+      {
+        "text": "Os três nomes de arquivo, em ordem alfabética",
+        "why": "Isso é o que um shell imprimiria. O go generate inicia o comando sozinho, sem shell, e não expande curingas."
+      },
+      {
+        "text": "`*.go`",
+        "why": "Isso. Só variáveis `$NOME` e strings entre aspas são processadas; o `*` chega ao `echo` como caractere."
+      },
+      {
+        "text": "Um erro, porque uma diretiva não pode conter `*`",
+        "why": "Nada proíbe; o caractere só é repassado, como a execução mostra."
+      },
+      {
+        "text": "O nome do arquivo que tem a diretiva, como o `$GOFILE` faria",
+        "why": "O `$GOFILE` é uma variável que o go generate expande pelo nome; o `*` não é uma."
+      }
+    ]
+  },
+  "ex-vg4cjny6": {
+    "prompt": "Um módulo é baixado com `go get` para o projeto de outra pessoa. O repositório dele commita o `parser_gen.go`, escrito por uma diretiva que roda um gerador do diretório `tools/` do módulo. Quais afirmações são verdadeiras? Marque todas as que valem.",
+    "hint": "Quem roda o `go generate`, e o que um download contém?",
+    "choices": [
+      {
+        "text": "O `go build` deles compila o `parser_gen.go` como foi commitado",
+        "why": "Sim. O download traz os arquivos commitados, e um build compila o que existe."
+      },
+      {
+        "text": "A máquina deles nunca precisa do gerador",
+        "why": "Sim. Nada do lado deles roda `go generate` para uma dependência."
+      },
+      {
+        "text": "O `go build` deles roda a diretiva antes se o `parser_gen.go` for mais velho que a entrada",
+        "why": "O `go build` nunca roda uma diretiva, sejam quais forem as datas dos arquivos."
+      },
+      {
+        "text": "O `go mod tidy` deles falha se o gerador não estiver instalado na máquina deles",
+        "why": "O `go mod tidy` lê imports e requisitos; ele nunca roda uma diretiva, e o gerador de uma dependência não está entre os imports dos pacotes dela."
+      }
+    ]
+  },
+  "ex-gzt5qawk": {
+    "prompt": "Um pacote Go tem `lock_linux.go`, que chama `syscall.Flock`, e `lock_windows.go`, cada um restrito só pelo nome. Um usuário compila para `GOOS=plan9` e recebe `undefined: lockFile`. Qual é a correção que mantém os dois arquivos como estão?",
+    "hint": "Qual dos dois arquivos um build de Plan 9 compila?",
+    "choices": [
+      {
+        "text": "Renomear `lock_linux.go` para `lock_plan9.go`",
+        "why": "O Plan 9 não tem `syscall.Flock`, então o mesmo código falharia lá por outro motivo, e o Linux perderia o arquivo."
+      },
+      {
+        "text": "Pôr `//go:build windows || plan9` no topo de `lock_windows.go`",
+        "why": "Um nome e uma linha se combinam com \"e\": o arquivo continua exigindo `windows`, então o Plan 9 continua sem compilar nenhum dos dois."
+      },
+      {
+        "text": "Acrescentar `lock_other.go` com `//go:build !linux && !windows`",
+        "why": "Isso. O Plan 9 não satisfaz nenhum dos dois nomes, então não compila nenhum dos arquivos; um terceiro arquivo para todo o resto dá a cada alvo exatamente uma definição."
+      },
+      {
+        "text": "Trocar os dois arquivos por um `switch runtime.GOOS` num arquivo só",
+        "why": "Um `switch` exige que todo ramo compile em todo sistema, e `syscall.Flock` não existe no Windows nem no Plan 9."
+      }
+    ]
+  },
+  "ex-8b40zdyh": {
+    "prompt": "Num módulo cujo `go.mod` diz `go 1.27.1`, um arquivo que começa com `// go:build windows` (com um espaço depois das barras) define só uma função que nada mais define. O que acontece quando o pacote é compilado no Linux?",
+    "hint": "Essa primeira linha é uma diretiva?",
+    "choices": [
+      {
+        "text": "O arquivo fica de fora, como em qualquer sistema que não seja Windows",
+        "why": "Só uma diretiva deixa um arquivo de fora, e com o espaço a linha é um comentário comum."
+      },
+      {
+        "text": "O compilador para com `misplaced compiler directive`",
+        "why": "Essa mensagem é para uma diretiva de verdade abaixo da cláusula package. Esta linha nem é diretiva."
+      },
+      {
+        "text": "O `go vet` falha com um erro sobre a linha malformada",
+        "why": "As checagens do vet não apontaram um `// go:build` com espaço: no caso do `hits` ele deixou a linha passar e só informou a redeclaração que ela causou."
+      },
+      {
+        "text": "O arquivo é compilado no Linux, e nada avisa",
+        "why": "Isso. O espaço transforma a diretiva num comentário, e sem nome em conflito não há erro que denuncie o engano."
+      }
+    ]
+  },
+  "ex-gwxr037z": {
+    "prompt": "O CI de um time roda `go vet ./...` e `go test ./...` só no Linux. O código tem `metrics_windows.go` e um arquivo de teste atrás de `//go:build e2e`. Que mudança faz o CI compilar cada arquivo pelo menos uma vez?",
+    "hint": "Conte os jeitos como o módulo é compilado, e quais deles o CI cobre.",
+    "choices": [
+      {
+        "text": "Acrescentar `go build ./...` antes dos testes",
+        "why": "O `go build` no Linux compila os mesmos arquivos que o `go vet` já compilou, menos os testes; não alcança nem o arquivo de Windows nem o teste com tag."
+      },
+      {
+        "text": "Acrescentar `GOOS=windows go vet ./...` e `go vet -tags e2e ./...`",
+        "why": "Isso. O primeiro compila `metrics_windows.go`, e o vet inclui arquivos de teste, então o segundo compila o teste com tag. Nenhum dos dois roda nada."
+      },
+      {
+        "text": "Definir `GOFLAGS=-tags=e2e` para o job inteiro de CI",
+        "why": "Isso compila o teste com tag mas não muda nada para Windows, e ainda transforma toda execução comum numa com os testes lentos incluídos."
+      },
+      {
+        "text": "Renomear o teste com tag para `e2e_windows_test.go`",
+        "why": "Aí o teste só é compilado para Windows, e só com a tag. O CI no Linux o veria ainda menos que antes."
+      }
+    ]
+  },
+  "ex-hgh5y6kg": {
+    "prompt": "No módulo `hits`, com `main.go`, `progress.go`, `progress_unix.go` (`//go:build unix && !darwin`), `progress_darwin.go`, `progress_other.go` (`//go:build !unix`) e `debug.go` (`//go:build debug`), quantos desses seis arquivos `GOOS=freebsd go build -tags debug` compila?",
+    "hint": "O FreeBSD é Unix e não é macOS.",
+    "unit": "arquivos"
+  },
+  "ex-3nezk9g0": {
+    "prompt": "Associe cada nome de arquivo aos builds que o compilam, supondo que nenhum deles tenha linha `//go:build`.",
+    "hint": "Leia cada nome a partir do fim; uma descrição da direita não serve para nenhum.",
+    "pairs": [
+      {
+        "left": "`sum_amd64.go`",
+        "right": "todo sistema em `amd64`"
+      },
+      {
+        "left": "`sum_windows_arm64.go`",
+        "right": "só Windows em `arm64`"
+      },
+      {
+        "left": "`sum_linux_test.go`",
+        "right": "os testes, só no Linux"
+      },
+      {
+        "left": "`sum_osx.go`",
+        "right": "todo build, já que `osx` não é um `GOOS`"
+      }
+    ],
+    "right_distractors": [
+      "só macOS, em todo processador"
+    ]
+  },
+  "ex-x6s0835z": {
+    "prompt": "A contagem de goroutines de um serviço Go, lida em `/debug/pprof/`, sobe de 11 para 37 em treze segundos e nunca cai. A saída de `goroutine?debug=2` mostra a maioria no estado `[chan send]` na mesma linha. Qual é o defeito provável?",
+    "hint": "Quem deveria receber o que essas goroutines estão enviando?",
+    "choices": [
+      {
+        "text": "O servidor HTTP vaza uma goroutine por pedido de profile",
+        "why": "As pilhas estão numa linha do próprio serviço, não em `net/http`; os pedidos de profile aparecem como uma goroutine cada enquanto rodam."
+      },
+      {
+        "text": "O `GOMAXPROCS` está baixo demais para a carga",
+        "why": "Poucos processadores deixariam goroutines prontas para rodar, não paradas num envio de canal."
+      },
+      {
+        "text": "Uma goroutine envia o resultado depois que o receptor desistiu e retornou",
+        "why": "Isso. Um envio sem buffer cujo receptor saiu depois de um timeout espera para sempre; um buffer de um deixa terminar."
+      },
+      {
+        "text": "O coletor de lixo é lento demais para liberar goroutines terminadas",
+        "why": "Uma goroutine que retornou some; estas não retornaram, estão bloqueadas num envio."
+      }
+    ]
+  },
+  "ex-qszxmpth": {
+    "prompt": "Um programa chama `runtime.GC()` e depois `pprof.WriteHeapProfile` após contar um log de 91 MB. O `go tool pprof -top` no arquivo mostra 2.2 MB, nada vindo do código de contagem, enquanto `-sample_index=alloc_space` mostra 255 MB vindos dele. Qual leitura está certa?",
+    "hint": "A visão padrão de um profile de heap e a escolhida com `-sample_index` respondem perguntas diferentes.",
+    "choices": [
+      {
+        "text": "O `runtime.GC()` apagou o código de contagem do profile",
+        "why": "Uma coleta libera objetos; os registros de quem os alocou ficam, como a visão `alloc_space` mostra."
+      },
+      {
+        "text": "O profile está corrompido, porque as duas visões deveriam concordar",
+        "why": "Elas medem coisas diferentes: o que está vivo agora e o que já foi alocado."
+      },
+      {
+        "text": "O código de contagem vaza 255 MB que o coletor ainda não achou",
+        "why": "Um vazamento apareceria na visão viva; depois do `runtime.GC()` nada disso estava vivo."
+      },
+      {
+        "text": "Não retém nada, mas gira muito: 255 MB feitos e descartados",
+        "why": "Isso. `inuse_space` é retenção, `alloc_space` é rotatividade; este programa tem o segundo problema e não o primeiro."
+      }
+    ]
+  },
+  "ex-tepnrb51": {
+    "prompt": "Associe cada jeito de obter um profile em Go ao que ele exige.",
+    "hint": "Um requisito da direita não pertence a nenhum deles.",
+    "pairs": [
+      {
+        "left": "`go test -bench Count -cpuprofile cpu.out`",
+        "right": "uma função de benchmark num arquivo `_test.go`"
+      },
+      {
+        "left": "`pprof.StartCPUProfile` no programa",
+        "right": "um `StopCPUProfile` adiado que tenha chance de rodar"
+      },
+      {
+        "left": "`go tool pprof http://127.0.0.1:6060/debug/pprof/profile?seconds=5`",
+        "right": "o programa importando `net/http/pprof` e escutando"
+      },
+      {
+        "left": "um profile `block` com algo dentro",
+        "right": "uma chamada a `runtime.SetBlockProfileRate`"
+      }
+    ],
+    "right_distractors": [
+      "recompilar o toolchain do Go com profiling ligado"
+    ]
+  },
+  "ex-5gf8qmbv": {
+    "prompt": "O `go tool pprof -top` informa `Duration: 1.10s, Total samples = 1.20s` para um profile de CPU tirado na taxa padrão do Go. Quantas amostras o profile tem?",
+    "hint": "Cada amostra vale um tique do relógio de profiling."
+  },
+  "ex-z7k3dj38": {
+    "prompt": "Uma equipe quer profiles de produção e acrescenta `import _ \"net/http/pprof\"` a um serviço que serve sua API pública com `http.ListenAndServe(\":8080\", nil)`. Que mudança torna seguro deixar os profiles lá?",
+    "hint": "Em qual mux o import registra?",
+    "choices": [
+      {
+        "text": "Renomear o import com um alias para esconder os caminhos",
+        "why": "O alias não muda nada: os handlers são registrados pelo `init` do pacote, seja qual for o nome no seu arquivo."
+      },
+      {
+        "text": "Servir a API num mux próprio, e o mux padrão em 127.0.0.1",
+        "why": "Isso. Os profiles ficam no `DefaultServeMux`, que passa a escutar só no loopback; a porta pública nunca os vê."
+      },
+      {
+        "text": "Chamar `runtime.SetCPUProfileRate(0)` para nada poder ser coletado",
+        "why": "Isso desliga o profiling de CPU, mas deixa `cmdline`, pilhas de goroutines e o heap abertos a quem alcança a porta 8080."
+      },
+      {
+        "text": "Deixar como está: os handlers exigem um token em builds de produção",
+        "why": "Eles não têm autenticação nenhuma, em build algum."
+      }
+    ]
+  },
+  "ex-gaj1e0k5": {
+    "prompt": "Um benchmark grava um perfil de CPU para o `go tool pprof` quando roda como `go test -bench Count -___ cpu.out`.",
+    "hint": "A flag tem o nome do tipo de perfil e termina em \"profile\".",
+    "blanks": [
+      {
+        "accept": [
+          "cpuprofile",
+          "-cpuprofile"
+        ]
+      }
+    ]
+  },
+  "ex-3x427j99": {
+    "prompt": "Num profile de CPU em Go, `json.Unmarshal` mostra 0.05 s de flat e 3.10 s de cum em 4 s, e `reflect.Value.Field` mostra 0.90 s de flat e 0.95 s de cum. Qual afirmação está certa?",
+    "hint": "Flat é o código da própria função; cum inclui o que ela chamou.",
+    "choices": [
+      {
+        "text": "O `reflect.Value.Field` custa mais, já que o flat dele é dezoito vezes maior",
+        "why": "O código dele é mais ocupado, mas o `Unmarshal` e o que ele chama somam mais de três vezes esse tempo."
+      },
+      {
+        "text": "O `Unmarshal` delega; o `Field` trabalha por conta, provavelmente sob o `Unmarshal`",
+        "why": "Isso. Cum grande com flat minúsculo é uma função cujo tempo está nas chamadas; o `Field` é onde o processador mais é encontrado."
+      },
+      {
+        "text": "O `Unmarshal` é chamado sessenta vezes mais que o `Field`",
+        "why": "Um profile de CPU não guarda contagem de chamadas; 3,10 contra 0,05 é cum contra flat, não razão de chamadas."
+      },
+      {
+        "text": "Os números são incoerentes, já que o cum nunca passa do total de flat",
+        "why": "O cum sempre inclui as chamadas, então o cum de uma função que delega fica muito acima do flat."
+      }
+    ]
+  },
+  "ex-fgzm36t7": {
+    "prompt": "Num flame graph de um serviço Go, a caixa de `handleOrder` ocupa 60% da largura e está quase toda coberta por caixas acima, enquanto uma caixa de `crc32.update` perto do topo tem 15% de largura e nada acima. Um colega quer otimizar primeiro o código do próprio `handleOrder`. O que o gráfico diz?",
+    "hint": "A largura responde uma pergunta, a borda de cima descoberta outra.",
+    "choices": [
+      {
+        "text": "A caixa de 15% descoberta no topo é onde o tempo vai; a de 60% gasta pouco sozinha",
+        "why": "Isso. Borda de cima descoberta é tempo flat; uma caixa coberta delega, e o código dela rende no máximo o flat."
+      },
+      {
+        "text": "Nenhum dos dois: num flame graph a cor mostra o ponto quente, então procure a caixa mais vermelha",
+        "why": "A cor não tem significado num flame graph."
+      },
+      {
+        "text": "O `crc32.update` deve ser chamado mais vezes, porque está perto do topo",
+        "why": "Altura é profundidade de chamada, e um flame graph não tem contagem de chamadas."
+      },
+      {
+        "text": "Concordar: a caixa mais larga é sempre a primeira a otimizar",
+        "why": "Largura é cum: a maior parte dos 60% do `handleOrder` está no que ele chama, não no código dele."
+      }
+    ]
+  },
+  "ex-a40t4n5t": {
+    "prompt": "Para comparar dois profiles de CPU do mesmo benchmark, antes e depois de uma mudança, `go tool pprof -top -___ cpu.old cpu.new` subtrai o primeiro do segundo.",
+    "hint": "A opção que indica o profile de base.",
+    "blanks": [
+      {
+        "accept": [
+          "diff_base"
+        ]
+      }
+    ]
+  },
+  "ex-434dhyc5": {
+    "prompt": "Num profile do benchmark do `hits`, o `split5` tem 19.15% das amostras, mais que qualquer outra função. Se ele pudesse custar nada, no máximo que porcentagem do tempo medido sumiria?",
+    "hint": "Remover uma função não remove mais que a parte dela.",
+    "unit": "%"
+  },
+  "ex-x1x5rey7": {
+    "prompt": "Ponha estes passos de otimizar uma função Go a partir de um profile numa ordem defensável.",
+    "hint": "A medição que julga a mudança precisa existir antes da mudança.",
+    "items": [
+      "medir um benchmark e ler flat e cum",
+      "gravar resultados com `-count 10` como linha de base",
+      "mudar o código que o profile aponta",
+      "rodar os testes e um alvo de fuzz contra o comportamento antigo",
+      "comparar os resultados novos com o benchstat e medir de novo"
+    ]
+  },
+  "ex-hx1517q6": {
+    "prompt": "O `go tool trace -pprof=sync` sobre o trace de uma execução de 1,023 segundo informa 1,71 s em `sync.(*Mutex).Lock`, somados em quatro goroutines workers. Em média, quantas goroutines esperavam esse lock a cada momento? Dê uma casa decimal.",
+    "hint": "Tempo bloqueado de goroutines que se sobrepõem se soma; divida pelo tempo de relógio.",
+    "unit": "goroutines"
+  },
+  "ex-cenvxm40": {
+    "prompt": "Um serviço Go com `GOMAXPROCS=8` fica mais lento sob carga enquanto um profile de CPU não mostra nada novo. O Goroutine analysis do trace de execução diz que as goroutines das requisições passam 60% do tempo em \"Sched wait time\". O que isso quer dizer?",
+    "hint": "Sched wait é um estado específico.",
+    "choices": [
+      {
+        "text": "Ficaram bloqueadas em locks ou canais 60% do tempo",
+        "why": "Bloqueio em lock ou canal aparece separado, como tempo de bloqueio; sched wait é tempo em que nada as bloqueava."
+      },
+      {
+        "text": "Estavam executáveis e esperando um P",
+        "why": "Isso. Prontas para rodar com todos os Ps ocupados: mais goroutines executáveis que processadores, o que o `-pprof=sched` mostra por onde elas ficaram executáveis."
+      },
+      {
+        "text": "O próprio trace as deixou 60% mais lentas",
+        "why": "O trace custa algo, mas não aparece como estado das goroutines; sched wait é tempo medido sem P."
+      },
+      {
+        "text": "O sistema operacional tirou as threads delas da CPU em 60% do tempo",
+        "why": "O trace não vê o kernel tirando a CPU de uma thread; esse tempo conta como rodando, não como sched wait."
+      }
+    ]
+  },
+  "ex-601ddnmt": {
+    "prompt": "Um programa conta um log com quatro goroutines workers e não roda mais rápido que com uma. O profile de sync do trace, focado no código do próprio programa, cita `runtime.gcStart`, `runtime.gcMarkDone` e `runtime.chanrecv2`, e nenhum mutex. Para que mudança o trace aponta?",
+    "hint": "Nenhuma das três é um lock que o programa pegou.",
+    "choices": [
+      {
+        "text": "Trocar os canais por um map compartilhado atrás de um mutex",
+        "why": "Isso acrescenta o lock que o profile não tinha; um mutex compartilhado por linha fez os workers do mesmo programa se revezarem."
+      },
+      {
+        "text": "Subir o número de workers para dezesseis",
+        "why": "Os workers já esperavam a leitora e o coletor; mais deles esperariam também."
+      },
+      {
+        "text": "Alocar menos por linha, para o coletor rodar menos e a leitora dar conta",
+        "why": "Isso. `gcStart` e `gcMarkDone` são esperas pelo coletor, e `chanrecv2` são workers esperando lotes: o limite é a leitura e o lixo que ela gera."
+      },
+      {
+        "text": "Definir `GOMAXPROCS=1` para nada esperar processador",
+        "why": "Com um P os workers passam a maior parte do tempo executáveis; isso muda a espera de lugar e não tira a causa."
+      }
+    ]
+  },
+  "ex-mbc4zrxg": {
+    "prompt": "Um programa Go usa o flight recorder do `runtime/trace` para explicar um lote lento e raro. Ponha os passos na ordem em que acontecem.",
+    "hint": "O recorder já precisa estar rodando quando o incidente acontece.",
+    "items": [
+      "Criá-lo com `trace.NewFlightRecorder` e um `FlightRecorderConfig`",
+      "Chamar `Start` antes de o trabalho começar",
+      "Um lote demora mais que o limite",
+      "Deixar um `trace.Log` citando o lote",
+      "Chamar `WriteTo` com um arquivo novo",
+      "Ler o arquivo com `go tool trace -pprof=sync`"
+    ]
+  },
+  "ex-3hy1x73c": {
+    "prompt": "`go test -trace=test.trace ./cmd/pcount` gerou um arquivo de 21.214 bytes, e `pcount -trace` sobre um log de 3 milhões de linhas gerou 5.257.509 bytes. O que decide principalmente o tamanho de um trace de execução?",
+    "hint": "Um trace registra eventos, não amostras.",
+    "choices": [
+      {
+        "text": "O número de goroutines que o programa cria",
+        "why": "A execução de um worker do mesmo programa gravou um trace maior que a de quatro; não é a contagem de goroutines que o faz crescer."
+      },
+      {
+        "text": "Quantos eventos do runtime acontecem durante a gravação",
+        "why": "Isso. Cada mudança de estado, coleta e anotação é um evento; um teste curto gera poucos, um segundo de trabalho intenso com 94 coletas gera milhões."
+      },
+      {
+        "text": "O tamanho do arquivo de entrada que o programa lê do começo ao fim",
+        "why": "Os bytes lidos não são gravados; só os eventos que a leitura provoca, como chamadas de sistema e coletas."
+      },
+      {
+        "text": "A taxa de amostragem, cem vezes por segundo",
+        "why": "Essa é a taxa do profile de CPU. Um trace não faz amostragem."
+      }
+    ]
+  },
+  "ex-nbjf05vj": {
+    "prompt": "Um job em lote compilado com `go build -race` roda em homologação com `GORACE=log_path=/var/log/job/race`. Ele imprime os totais certos e sai com status 66. O que você conclui?",
+    "hint": "O que o detector de corrida julga: a saída ou a execução?",
+    "choices": [
+      {
+        "text": "Nada está errado: os totais estão certos, então o 66 é alarme falso",
+        "why": "O detector acusa dois acessos que viu acontecer sem nada que os ordene. Uma execução pode ter corrida e ainda imprimir o número certo por sorte."
+      },
+      {
+        "text": "Houve corrida; leia o arquivo `race.<pid>`",
+        "why": "Isso. O 66 é o status de saída do detector para uma execução com corrida, e o `log_path` mandou os relatórios para um arquivo com o id do processo em vez da saída de erro."
+      },
+      {
+        "text": "O job ficou sem memória, o que builds com race informam como 66",
+        "why": "Falta de memória tem sintomas próprios; o 66 é o padrão de `exitcode`, usado só quando o detector achou uma corrida."
+      },
+      {
+        "text": "O diretório de log não existia, então os relatórios se perderam",
+        "why": "O status de saída não depende de para onde os relatórios foram; e o primeiro lugar a olhar é aquele diretório."
+      }
+    ]
+  },
+  "ex-bevmkd2w": {
+    "prompt": "O job de corrida de um pipeline de CI vive ficando sem memória, embora `go test -bench . -benchmem` informe o mesmo B/op com e sem `-race`. Qual medida diz quanta memória dar a esse job?",
+    "hint": "Onde o detector guarda seus registros?",
+    "choices": [
+      {
+        "text": "O B/op do `-benchmem`, já que é idêntico",
+        "why": "O `-benchmem` conta o heap do Go, e os registros do detector ficam fora dele, então o B/op fica igual enquanto o processo cresce."
+      },
+      {
+        "text": "O tamanho do binário de teste com race",
+        "why": "O binário cresce cerca de um megabyte; o custo é pago durante a execução, não em disco."
+      },
+      {
+        "text": "O pico de memória residente do build com race, como o `VmHWM`",
+        "why": "Isso. Só a visão do sistema operacional enxerga a memória do detector: no benchmark do `hits` o pico foi de 19.748 kB para 46.020 kB com o mesmo B/op."
+      },
+      {
+        "text": "O tempo que o `go test` imprime ao lado de cada pacote que rodou",
+        "why": "Tempo e memória crescem por fatores diferentes; o tempo não diz nada sobre quanta memória reservar."
+      }
+    ]
+  },
+  "ex-w12vkpxw": {
+    "prompt": "Numa máquina presa a uma CPU com `taskset -c 0`, um teste que chama `CountParallel(r, 2)` falha no `go test -race`, enquanto o mesmo teste chamando `CountParallel(r, 0)`, que significa um worker por CPU, passa. Um colega conclui que a corrida só existe quando o número de workers é explícito. O que está errado nisso?",
+    "hint": "Quantas goroutines cada chamada iniciou ali?",
+    "choices": [
+      {
+        "text": "Nada: zero workers escolhe um caminho de código com lock próprio",
+        "why": "O zero só escolhe quantos workers iniciam; todo worker roda o mesmo laço com os mesmos contadores sem lock."
+      },
+      {
+        "text": "Numa só CPU, o zero deu um único trabalhador, e sem paralelismo não houve disputa",
+        "why": "Isso. O `GOMAXPROCS` ficou em 1, então só uma goroutine tocou os contadores; a corrida está no código de todo jeito, e `-cpu 1,4` faria o teste de zero workers mostrá-la também."
+      },
+      {
+        "text": "O `taskset` desliga o detector na segunda chamada",
+        "why": "O detector rodou nas duas chamadas, no mesmo processo; ele acusou a que rodou duas goroutines."
+      },
+      {
+        "text": "O segundo teste passou porque o detector precisa de duas CPUs",
+        "why": "O primeiro teste falhou nessa mesma CPU: o detector precisa de duas goroutines, não de duas CPUs."
+      }
+    ]
+  },
+  "ex-zkwqd93n": {
+    "prompt": "Um módulo tem 12 pacotes com testes, e nada define `GORACE`. Cada binário de teste com race espera o padrão do detector, 1.000 ms, antes de sair. No total, quantos segundos dessa espera de saída o `go test -race -count=1 -cpu 1,4 ./...` acrescenta, somando todos os binários?",
+    "hint": "O `-cpu` e o `-count` repetem testes dentro de uma execução do binário de cada pacote.",
+    "unit": "s"
+  },
+  "ex-83gxmcfw": {
+    "prompt": "Associe cada situação à opção do `GORACE` que trata dela.",
+    "hint": "Quatro das opções que a listagem `help=1` do detector de corrida imprime.",
+    "pairs": [
+      {
+        "left": "Um script já usa o status 66 para outra coisa",
+        "right": "exitcode"
+      },
+      {
+        "left": "A saída de erro de um servidor de homologação é descartada",
+        "right": "log_path"
+      },
+      {
+        "left": "Você quer um relatório por vez enquanto lê à mão",
+        "right": "halt_on_error"
+      },
+      {
+        "left": "Uma goroutine ainda escrevendo quando o `main` retorna precisa de tempo para ser acusada",
+        "right": "atexit_sleep_ms"
+      }
+    ],
+    "right_distractors": [
+      "strip_path_prefix"
+    ]
+  },
+  "ex-2rm13x7v": {
+    "prompt": "Num notebook Linux Intel com `gcc` instalado, você compila uma ferramenta Go que usa o pacote `net` para `linux/amd64` e `linux/arm64`, só com `GOOS`/`GOARCH`. Você quer que nenhum dos dois binários dependa da biblioteca C. O que precisa mudar?",
+    "hint": "Qual dos dois builds é cruzado, e qual é o padrão do cgo para o outro?",
+    "choices": [
+      {
+        "text": "Nada: binários Go nunca dependem da biblioteca C",
+        "why": "O build nativo de um programa com `os/user` ou `net` saiu `dynamically linked`, porque o cgo vem ligado por padrão onde há compilador C."
+      },
+      {
+        "text": "Definir `CGO_ENABLED=0` também no build `amd64`",
+        "why": "Isso. O build `arm64` é cruzado e já sai com cgo desligado; o `amd64` nativo usa cgo por padrão, e aí o `net` compila seus arquivos cgo."
+      },
+      {
+        "text": "Instalar um compilador cruzado de ARM e indicá-lo em `CC`",
+        "why": "Isso deixaria o build `arm64` usar cgo, o contrário do objetivo. Quem liga a biblioteca C é o build `amd64`."
+      },
+      {
+        "text": "Compilar os dois com `GOAMD64=v1` para ficarem portáveis",
+        "why": "O `GOAMD64` escolhe quais instruções Intel o compilador pode usar; não manda no cgo, e é ignorado em `arm64`."
+      }
+    ]
+  },
+  "ex-7jzr2e8w": {
+    "prompt": "Um cliente relata que o seu binário Linux imprime `This program can only be run on AMD64 processors with v3 microarchitecture support.` e sai. Você quer um binário só que rode para todos os clientes. O que faz?",
+    "hint": "A mensagem vem de uma configuração escolhida no build.",
+    "choices": [
+      {
+        "text": "Pedir ao cliente que defina `GOAMD64=v1` antes de rodar",
+        "why": "O `GOAMD64` é lido pelo comando go na compilação; o binário pronto já contém instruções v3 e confere se o processador as tem na partida."
+      },
+      {
+        "text": "Recompilar com `GOAMD64=v1`, o padrão",
+        "why": "Isso. O v1 é o conjunto de 64 bits que todo processador Intel e AMD roda, e um build v1 rodou no processador emulado de 2008 que recusou o v3."
+      },
+      {
+        "text": "Recompilar com `GOARCH=386` para processadores mais antigos rodarem",
+        "why": "Isso gera um binário de 32 bits para outro `GOARCH`. O processador do cliente é de 64 bits e só não tem as extensões v3."
+      },
+      {
+        "text": "Recompilar com `CGO_ENABLED=0`",
+        "why": "O cgo decide se código C entra no binário, não quais instruções de processador o compilador Go usa."
+      }
+    ]
+  },
+  "ex-htjmgrjq": {
+    "prompt": "Um pacote compila para `linux` e `darwin`, mas `GOOS=windows go build` falha com `undefined: lockFile`. O pacote tem `lock_unix.go` e nenhum outro arquivo que cite `lockFile`. Qual é a causa provável?",
+    "hint": "O build lê um conjunto diferente de arquivos para cada alvo.",
+    "choices": [
+      {
+        "text": "Nomes de arquivo no Windows não diferenciam maiúsculas, então o compilador não acha a função",
+        "why": "Os nomes de arquivo na máquina do build não mudam com o `GOOS`; o comando go continua lendo o mesmo diretório no Linux."
+      },
+      {
+        "text": "Builds cruzados desligam o cgo, e isso remove o `lockFile`",
+        "why": "Os builds para `darwin` a partir do Linux também são cruzados, e deram certo. Nada aqui importa \"C\"."
+      },
+      {
+        "text": "Esse arquivo só entra em sistemas tipo Unix, e falta uma versão para o outro sistema",
+        "why": "Isso. Um arquivo com nome ou restrição de Unix fica de fora em `windows`, então a função simplesmente não existe ali; um arquivo para Windows precisa fornecê-la."
+      },
+      {
+        "text": "O Go não compila para Windows numa máquina Linux",
+        "why": "`GOOS=windows GOARCH=amd64 go build` gerou um `PE32+` no Linux para um pacote sem arquivos específicos de sistema."
+      }
+    ]
+  },
+  "ex-0g50b3vs": {
+    "prompt": "Um script de versão compilou o `hits` para seis alvos num diretório que o `du -sb` mediu em 24.013.603 bytes. Qual é o tamanho médio de um binário, em milhares de bytes (kB), arredondado para inteiro?",
+    "hint": "Divida por seis, depois por 1.000.",
+    "unit": "kB"
+  },
+  "ex-9mdjb3v5": {
+    "prompt": "Ponha em ordem o que acontece quando `GOARCH=arm64 go test -exec qemu-aarch64-static .` roda numa máquina Linux Intel.",
+    "hint": "Do código-fonte até a linha `ok`.",
+    "items": [
+      "o comando go compila o pacote e seus testes para `arm64`",
+      "ele liga um binário de teste ARM num diretório temporário",
+      "ele inicia o `qemu-aarch64-static` com o caminho do binário de teste",
+      "o QEMU traduz as instruções ARM e repassa as chamadas de sistema ao kernel",
+      "o comando go lê o resultado e imprime `ok`"
+    ]
+  },
+  "ex-26fnx5am": {
+    "prompt": "Uma equipe compila seu servidor Go com `-ldflags=\"-s -w\"` e teme que os perfis de CPU tirados em produção mostrem endereços soltos em vez de nomes de função. O que o `go tool pprof` vai mostrar?",
+    "hint": "Onde um programa Go em execução acha os nomes das próprias funções, e o enxugamento mexe nisso?",
+    "choices": [
+      {
+        "text": "Endereços soltos, a menos que se passe ao `pprof` o binário não enxugado",
+        "why": "O perfil registra os nomes quando é escrito, a partir da tabela do próprio runtime, a `.gopclntab`, que o enxugamento deixa no lugar."
+      },
+      {
+        "text": "Nomes de função, porque o runtime os escreve no perfil a partir da `.gopclntab`",
+        "why": "Isso. É a mesma tabela que deixou um `hits` enxugado nomear cada função no `SIGQUIT`; o `-s -w` remove só o que ferramentas de fora do programa leem."
+      },
+      {
+        "text": "Nada: um binário enxugado não pode ser perfilado",
+        "why": "Quem perfila é o runtime dentro do programa, e nada de que ele precisa está no DWARF ou na tabela de símbolos."
+      },
+      {
+        "text": "Nomes só para a biblioteca padrão, já que os símbolos dela vêm com as ferramentas",
+        "why": "Toda função, inclusive as do próprio programa, é nomeada pela mesma tabela dentro do binário."
+      }
+    ]
+  },
+  "ex-ecehy8b9": {
+    "prompt": "Um programa Go mediu 4.031.935 bytes compilado sem flags, 2.869.509 bytes com `-ldflags=\"-w\"` e 2.654.368 com `-ldflags=\"-s\"`. Quantos bytes ocupavam a tabela de símbolos e seus nomes, isto é, quanto o `-s` economiza além do `-w`?",
+    "hint": "O `-s` implica o `-w`, então a diferença entre os dois builds é o que o `-s` acrescenta.",
+    "unit": "bytes"
+  },
+  "ex-jg7ry3bx": {
+    "prompt": "Uma CLI em Go imprime a versão do módulo a partir de `runtime/debug.ReadBuildInfo` (o mesmo valor que o `go version -m` mostra), e o repositório dela tem as tags v1.0.0 e v1.1.0. Associe cada forma de compilar o binário com o que ele informa.",
+    "hint": "A versão vem do git quando há um repositório para ler.",
+    "pairs": [
+      {
+        "left": "um `go build` simples num checkout limpo do commit com a tag v1.1.0",
+        "right": "v1.1.0, com `vcs.modified=false`"
+      },
+      {
+        "left": "um `go build` simples com uma edição sem commit sobre a v1.0.0",
+        "right": "v1.0.0+dirty, com `vcs.modified=true`"
+      },
+      {
+        "left": "um `go build` simples numa cópia feita pelo `git archive`",
+        "right": "(devel), sem configurações `vcs`"
+      },
+      {
+        "left": "o build de release v1.1.0, depois compactado com UPX",
+        "right": "nada: o `go version -m` diz que não é um executável Go"
+      }
+    ],
+    "right_distractors": [
+      "v1.1.0-dirty, com `vcs.modified=false`"
+    ]
+  },
+  "ex-tnh8tbyn": {
+    "prompt": "Um Makefile compila uma ferramenta Go com `go build -ldflags=\"-X main.version=$(VERSION)\"`, e o `main.go` declara `const version = \"dev\"`. O que acontece ao rodá-la?",
+    "hint": "Leia a condição que o `go doc cmd/link` dá para o `-X`, e lembre-se de como ele informa uma falha.",
+    "choices": [
+      {
+        "text": "O build falha, porque o `-X` não consegue definir uma constante",
+        "why": "O linker não avisa de um nome que não conseguiu definir: o build dá certo, como deu com o `main.Version` mal escrito."
+      },
+      {
+        "text": "O build dá certo e o binário continua dizendo `dev`",
+        "why": "Isso. O `-X` só define variáveis string e se cala sobre todo o resto; a correção é `var version = \"dev\"`."
+      },
+      {
+        "text": "O binário diz a versão do Makefile, porque o linker reescreve a string da constante",
+        "why": "Uma constante é embutida no código que a usa na compilação; não sobra variável nenhuma para o linker preencher."
+      },
+      {
+        "text": "O compilador para com uma declaração duplicada de `version`",
+        "why": "O `-X` não cria declaração nenhuma; o compilador nem o vê, já que é uma flag do linker."
+      }
+    ]
+  },
+  "ex-xftjwnpw": {
+    "prompt": "Uma ferramenta Go precisa caber num dispositivo de armazenamento pequeno, que guarda os arquivos sem compressão e já está cheio; a ferramenta é iniciada algumas vezes por dia. Compilada com `-trimpath -ldflags=\"-s -w\"`, ela tem 2,6 MB. Qual passo a mais libera mais espaço a um custo que esse uso suporta?",
+    "hint": "Pese o que cada passo economiza contra o que custa, para um programa que raramente inicia.",
+    "choices": [
+      {
+        "text": "Compilar com `-gcflags=all=-l`",
+        "why": "Desligar o inlining economizou 4,6% no `hits` e o deixou um terço mais lento, a menor economia pelo custo mais duradouro."
+      },
+      {
+        "text": "Compactá-la com UPX, aceitando uma partida mais lenta",
+        "why": "Isso. O UPX levou o `hits` a 43% do tamanho, e o custo na partida, uns 20 milissegundos ali, não pesa algumas vezes por dia. Armazenamento que guarda arquivos sem compressão é onde o UPX compensa."
+      },
+      {
+        "text": "Guardá-la com gzip e rodar o arquivo `.gz` direto",
+        "why": "O kernel não executa um arquivo gzip; ele teria de ser descompactado no armazenamento antes, que é justamente o espaço que falta."
+      },
+      {
+        "text": "Acrescentar `-buildvcs=false` para tirar a informação de versão",
+        "why": "A informação de build tem algumas centenas de bytes; o registro da revisão inteiro não é nada perto dos megabytes em jogo."
+      }
+    ]
+  },
+  "ex-aps5k0hx": {
+    "prompt": "Em `go build -ldflags=\"-s -w\"`, a flag `-w` deixa de fora as informações de depuração ___ que os depuradores leem.",
+    "hint": "O nome do formato tem quatro letras maiúsculas.",
+    "blanks": [
+      {
+        "accept": [
+          "DWARF"
+        ]
+      }
+    ]
+  },
+  "ex-km2g7meh": {
+    "prompt": "Um `Containerfile` de vários estágios compila a partir de `docker.io/library/golang:1.27.1` com `RUN CGO_ENABLED=0 go build -o /hits .`, e o `podman build --cap-drop=all` para com `open /hits: permission denied`, embora o passo rode como root. Por quê?",
+    "hint": "O que o root perde quando todas as capacidades são retiradas, e que modo o `/` tem nessa imagem?",
+    "choices": [
+      {
+        "text": "O Podman sem root nunca roda um passo de build como root, diga o passo o que disser",
+        "why": "O passo roda sim como uid 0 dentro do contêiner; o `id` na mesma imagem mostra `uid=0(root)`."
+      },
+      {
+        "text": "Sem `CAP_DAC_OVERRIDE`, o root obedece ao modo do `/`, que é 555",
+        "why": "Isso. O root escreve em qualquer lugar só por causa das capacidades; sem elas, um diretório sem bit de escrita o recusa como a qualquer um. Compilar no `WORKDIR` evita isso."
+      },
+      {
+        "text": "O `go build` se recusa a escrever fora do diretório do módulo",
+        "why": "O `-o` aceita qualquer caminho em que o processo possa escrever; `/tmp/hits` ou `/src/hits` teriam funcionado."
+      },
+      {
+        "text": "Faltou `--network=none`, então o build não buscou módulos",
+        "why": "O erro é sobre escrever um arquivo, e um programa sem dependências não busca nada."
+      }
+    ]
+  },
+  "ex-ahc54yfv": {
+    "prompt": "O `podman manifest inspect` no digest de índice de `gcr.io/distroless/static-debian12:nonroot` listou um manifesto por plataforma: `amd64`, `arm64`, `arm`, `s390x` e `ppc64le`. Quantas imagens fixar esse único digest de índice prende de uma vez?",
+    "hint": "Conte as plataformas que o índice nomeia."
+  },
+  "ex-v9chv1mc": {
+    "prompt": "Depois de um `podman build -t hits:1 .` comum, um `podman build --timestamp 0` da mesma árvore sem mudanças, sem `--no-cache`, termina com o mesmo id de imagem do `hits:1`. Duas execuções com `--no-cache --timestamp 0` concordam entre si num id diferente. O que explica o primeiro resultado?",
+    "hint": "O que uma camada em cache lembra?",
+    "choices": [
+      {
+        "text": "O `--timestamp` é ignorado sem `--network=none`",
+        "why": "Todas as execuções usaram a mesma rede; só o cache mudava."
+      },
+      {
+        "text": "O Go carimba a hora do build no binário, e builds nunca concordam",
+        "why": "Os binários eram idênticos: o tirado da imagem dava o mesmo hash dos builds da máquina. O Go não grava hora de build."
+      },
+      {
+        "text": "Camadas em cache guardam as datas de quando foram feitas",
+        "why": "Isso. Um passo em cache é reaproveitado como estava, data incluída, então o `--timestamp 0` só vale para as camadas construídas naquela execução."
+      },
+      {
+        "text": "A base distroless foi baixada de novo no meio, com outro digest",
+        "why": "Não houve pull; a base é fixada por digest e já estava na máquina."
+      }
+    ]
+  },
+  "ex-387e1xcb": {
+    "prompt": "Associe cada pergunta sobre um release Go ao comando que a responde.",
+    "hint": "Cada ferramenta responde a um tipo de pergunta.",
+    "pairs": [
+      {
+        "left": "Os bytes mudaram no caminho?",
+        "right": "`sha256sum -c SHA256SUMS`"
+      },
+      {
+        "left": "Quem responde por esta lista de hashes?",
+        "right": "`cosign verify-blob --key cosign.pub`"
+      },
+      {
+        "left": "Que bibliotecas compartilhadas este binário vai carregar?",
+        "right": "`ldd`"
+      },
+      {
+        "left": "O build compila o `runtime/cgo`?",
+        "right": "`go list -deps .`"
+      }
+    ],
+    "right_distractors": [
+      "`go vet`"
+    ]
+  },
+  "ex-1ynzx6n4": {
+    "prompt": "Um binário Go estático compilado com `CGO_ENABLED=0` vai para uma imagem `FROM scratch` e nada mais. Quais destes ele vai achar faltando, se pedir? Escolha todos.",
+    "hint": "O scratch começa sem arquivos. O que um processo recebe de outro lugar que não a sua imagem?",
+    "choices": [
+      {
+        "text": "`/etc/passwd`, para o `user.Current`",
+        "why": "Falta: o `user.Current` respondeu que precisaria de cgo ou de `$USER`."
+      },
+      {
+        "text": "as regras de fuso em `/usr/share/zoneinfo`",
+        "why": "Faltam: o `time.LoadLocation` disse `unknown time zone`, a não ser que o binário as embuta com `-tags timetzdata`."
+      },
+      {
+        "text": "um pacote de certificados",
+        "why": "Falta, em silêncio: o `SystemCertPool` devolve um pool vazio e nenhum erro."
+      },
+      {
+        "text": "o kernel Linux",
+        "why": "Um contêiner não tem kernel próprio; todo processo roda no da máquina, com scratch ou sem."
+      },
+      {
+        "text": "a biblioteca C e o carregador",
+        "why": "Um binário com `CGO_ENABLED=0` é ligado estaticamente e não pede nenhum dos dois."
+      }
+    ]
+  },
+  "ex-m19328bv": {
+    "prompt": "Um serviço Go roda com `GOMEMLIMIT=300MiB`. As linhas de `GODEBUG=gctrace=1` dele são como `gc 812 @95.1s 31%: ... 310->312->305 MB, 310 MB goal`, uma a cada poucos milissegundos, e as requisições caíram para meia velocidade. Qual é a primeira mudança certa?",
+    "hint": "Compare o heap vivo, o terceiro número do heap, com o limite.",
+    "choices": [
+      {
+        "text": "Baixar o `GOGC` para cada coleta ter menos lixo para achar",
+        "why": "Quase não há lixo para achar: 305 de 312 MB sobreviveram. Um `GOGC` menor só acrescenta coletas a um programa que já coleta sem parar."
+      },
+      {
+        "text": "Chamar `runtime.GC()` a partir de um ticker a cada segundo",
+        "why": "Uma coleta forçada libera exatamente o que uma automática libera, aqui quase nada, e acrescenta paradas próprias."
+      },
+      {
+        "text": "Subir o limite acima do heap vivo",
+        "why": "Isso. O trace conta em unidades de 2^20 bytes, então 305 MB vivos já passam do limite de 300 MiB: cada ciclo não libera nada e o seguinte começa logo. Guardar menos coisa viva também resolveria. Até lá, só o limitador de CPU o mantém a meia velocidade em vez de zero."
+      },
+      {
+        "text": "Definir `GOGC=off`, para só o limite disparar coletas",
+        "why": "Só o limite já as está disparando, e o limite é o problema: com o heap vivo acima dele, `GOGC=off` não muda nada."
+      }
+    ]
+  },
+  "ex-j6k8h93c": {
+    "prompt": "Um programa Go roda com `GOGC=200`. A última coleta achou 60 MB de heap vivo, 2 MB de pilhas a escanear e nenhuma variável de pacote que conte. Seguindo a regra do pacer no `mgcpacer.go`, que meta de heap, em MB, o próximo ciclo busca?",
+    "hint": "O heap marcado, mais o heap marcado, as pilhas e as globais multiplicados por `GOGC` sobre 100.",
+    "unit": "MB"
+  },
+  "ex-xxechqzk": {
+    "prompt": "Um teste prende `Encode` a zero alocações com `testing.AllocsPerRun`. Depois de uma mudança que faz `Encode` montar a saída num buffer local de 64 bytes e entregá-lo a um `io.Writer` passado pelo chamador, o teste acusa uma alocação por chamada. Por quê?",
+    "hint": "Pergunte se o compilador consegue provar que o buffer morre com a chamada.",
+    "choices": [
+      {
+        "text": "`AllocsPerRun` conta memória de pilha além da de heap",
+        "why": "Ela conta só alocações no heap; um buffer mantido no frame teria deixado a contagem em zero."
+      },
+      {
+        "text": "O buffer escapa: a chamada de interface tem liberdade de guardá-lo",
+        "why": "Isso. O compilador não consegue provar o que `w.Write` faz com a fatia, então o buffer precisa sobreviver ao frame e vai para o heap, uma alocação por chamada."
+      },
+      {
+        "text": "Todo buffer de 64 bytes ou mais vai para o heap",
+        "why": "64 bytes estão muito abaixo de qualquer limite de tamanho de um frame, e um buffer idêntico que nunca sai da função fica no frame."
+      },
+      {
+        "text": "A pilha da goroutine cresceu para caber o buffer, e crescer conta como alocação",
+        "why": "Crescer a pilha é uma cópia para memória de pilha e não conta como alocação no heap; nem aconteceria a cada chamada."
+      }
+    ]
+  },
+  "ex-1yyg8qfb": {
+    "prompt": "Ponha em ordem as fases de um ciclo de coleta de lixo do Go, como o `runtime/mgc.go` as descreve.",
+    "hint": "Duas das fases param o mundo, e a barreira de escrita só fica ligada entre elas.",
+    "items": [
+      "parar o mundo para o término da varredura, e ligar a barreira de escrita",
+      "marcar de forma concorrente, com workers de fundo e assists",
+      "parar o mundo para o término da marcação, e desligar a barreira de escrita",
+      "varrer de forma concorrente enquanto o programa aloca"
+    ]
+  },
+  "ex-8859w7h0": {
+    "prompt": "Para não interpretar de novo um arquivo de configuração grande, um desenvolvedor guarda o resultado interpretado num `sync.Pool` e chama `Get` a cada requisição, interpretando de novo só quando `Get` devolve nil. O que ele vai ver em produção?",
+    "hint": "Lembre o que o programa `~/mem-pool` imprimiu depois de uma e de duas coletas.",
+    "choices": [
+      {
+        "text": "As requisições compartilham um valor interpretado com segurança, e a interpretação acontece uma vez",
+        "why": "Um pool não guarda itens: o programa do `~/mem-pool` perdeu o buffer em duas coletas, e em quatro processadores depois de uma."
+      },
+      {
+        "text": "Reinterpretações em momentos imprevisíveis, sempre que as coletas esvaziam o pool",
+        "why": "Isso. Um pool é um cache que o coletor esvazia, e o `Get` também entrega um item a um só chamador até ele ser devolvido. Um valor que precisa persistir pertence a uma variável comum."
+      },
+      {
+        "text": "Uma alocação por requisição, porque uma struct num `any` é copiada",
+        "why": "Um ponteiro para a struct interpretada cabe num `any` como está. O problema é o que o pool esquece, não o que ele custa."
+      },
+      {
+        "text": "Um pânico na primeira vez que duas goroutines chamam `Get` ao mesmo tempo",
+        "why": "Um `sync.Pool` é seguro para uso concorrente; a documentação dele diz isso nos primeiros parágrafos."
+      }
+    ]
+  },
+  "ex-aywxzdq6": {
+    "prompt": "`func NewBuffer() *bytes.Buffer { var b bytes.Buffer; return &b }` é compilado com `go build -gcflags=-m`. Que linha o compilador imprime sobre `b`?",
+    "hint": "Uma variável com nome e uma expressão recebem grafias diferentes do mesmo veredito.",
+    "choices": [
+      {
+        "text": "`b does not escape`",
+        "why": "Esse é o veredito para um valor que nada alcança depois do retorno; `&b` é devolvido, então quem chama o alcança."
+      },
+      {
+        "text": "`leaking param: b`",
+        "why": "\"Leaking param\" é escrito para parâmetros, e `b` é uma variável local."
+      },
+      {
+        "text": "`moved to heap: b`",
+        "why": "Isso. Uma variável local com nome cujo endereço sobrevive à função aparece como movida para o heap; uma expressão como `&bytes.Buffer{}` diria `escapes to heap`."
+      },
+      {
+        "text": "`can inline NewBuffer`, e nada sobre `b` até alguém chamar",
+        "why": "A linha de inlining também aparece, mas o veredito de escape de `b` é impresso junto, na compilação, chame alguém o `NewBuffer` ou não."
+      }
+    ]
+  },
+  "ex-4de13pkr": {
+    "prompt": "O `testing.AllocsPerRun` mediu o `tally.Count` do `hits` em 1.009 alocações sobre 1.000 linhas de log e 100.009 sobre 100.000. Seguindo o mesmo padrão, quantas alocações faria uma contagem de 20.000 linhas?",
+    "hint": "Uma por linha, mais um número fixo por chamada."
+  },
+  "ex-54d4bq33": {
+    "prompt": "Uma função declara `var buf [200 << 10]byte`, preenche e devolve só uma soma de verificação dele; nenhum ponteiro para `buf` sai da função. Onde o compilador do Go 1.27 põe `buf`?",
+    "hint": "Escapar é uma de duas perguntas; o tamanho é a outra.",
+    "choices": [
+      {
+        "text": "Na pilha, já que nada o alcança depois do retorno",
+        "why": "Só o tempo de vida não basta: 200 KiB passam do limite de 128 KiB para uma variável declarada."
+      },
+      {
+        "text": "No heap, relatado como `moved to heap: buf` pelo `-m`",
+        "why": "Isso. É grande demais: o `-m=2` dá o motivo `too large for stack`, como fez para um array de 1 MiB para o qual nada apontava."
+      },
+      {
+        "text": "Na pilha, porque declarações com `var` nunca são movidas",
+        "why": "Uma declaração com `var` é movida como qualquer outra variável; o limite para variáveis declaradas é de 128 KiB."
+      },
+      {
+        "text": "Em lugar nenhum: o build falha com um erro de tamanho de quadro",
+        "why": "O compilador não recusa; ele aloca o array no heap e diz isso com `-m`."
+      }
+    ]
+  },
+  "ex-x8hjxb2c": {
+    "prompt": "Ponha em ordem uma maneira sólida de tirar uma alocação de um caminho quente em Go.",
+    "hint": "Meça antes e depois; leia o compilador no meio.",
+    "items": [
+      "achar a alocação quente com um benchmark rodado com `-benchmem` ou um profile de memória",
+      "localizar a linha que escapa com `-gcflags='<module>/...=-m'`",
+      "ler por que ela escapa com `-m=2`",
+      "mudar o código para que o valor deixe de escapar",
+      "confirmar a mudança com `testing.AllocsPerRun` e o benchmark de novo"
+    ]
+  },
+  "ex-ceg92byd": {
+    "prompt": "O relatório `-gcflags=-m` de quem chama dizia `&Config{...} does not escape` e `inlining call to NewConfig`. Depois que um colega pôs log dentro do `NewConfig`, as duas linhas sumiram e o benchmark de quem chama mostra 1 allocs/op em vez de 0. Nada em quem chama mudou. O que aconteceu?",
+    "hint": "O que fazia do `&Config{...}` um valor de quem chama, para começo de conversa?",
+    "choices": [
+      {
+        "text": "O log força ao heap todo valor em que toca, esteja onde estiver",
+        "why": "O valor de quem chama nem é passado ao log; a mudança está em o `NewConfig` ser inlined ou não."
+      },
+      {
+        "text": "O `NewConfig` passou do orçamento de inlining, então é chamado, e o valor que devolve é criado no heap",
+        "why": "Isso. Com inlining, o `&Config{...}` era montado no quadro de quem chama; chamado, ele é do `NewConfig` e é devolvido, como o `Distance` mostrou com `//go:noinline`."
+      },
+      {
+        "text": "O benchmark é ruidoso, e o allocs/op varia entre execuções",
+        "why": "O allocs/op não depende de quão ocupada está a máquina; ele mudou porque o código mudou."
+      },
+      {
+        "text": "O cache de build entregou um relatório antigo",
+        "why": "Um relatório em cache mostraria as linhas antigas, não as perderia; o relatório mudou junto com o código."
+      }
+    ]
+  },
+  "ex-pjcesrya": {
+    "prompt": "Para o compilador imprimir quais variáveis escapam para o heap, e com `=2` por quê, compile com `go build -gcflags=___`.",
+    "hint": "Uma única letra depois de um traço.",
+    "blanks": [
+      {
+        "accept": [
+          "-m",
+          "-m=2"
+        ]
+      }
+    ]
+  },
+  "ex-2y5003v0": {
+    "prompt": "Com `type ID string`, o que `reflect.ValueOf(ID(\"a\")).Kind()` e `.Type()` informam?",
+    "hint": "Kind é a família por baixo; Type é o tipo exato.",
+    "choices": [
+      {
+        "text": "Kind `string`, Type `main.ID`",
+        "why": "Isso. Um tipo nomeado guarda o próprio nome como Type, e o Kind é o que ele é por baixo, então um código que faz switch no Kind o trata como string."
+      },
+      {
+        "text": "Kind `main.ID`, Type `string`, já que o Type é o tipo por baixo",
+        "why": "Isso troca os dois: o Kind é uma de 26 famílias fixas, que nunca pode ser um nome declarado por você."
+      },
+      {
+        "text": "Kind `interface`, porque o `ValueOf` recebe um `any`",
+        "why": "O `any` é desmontado: o `ValueOf` lê o tipo dinâmico na palavra do tipo, então a interface nunca aparece."
+      },
+      {
+        "text": "Os dois `string`: um tipo nomeado some depois de compilado",
+        "why": "O descritor de tipo que o compilador escreve guarda o nome `main.ID`; é assim que o `fmt` imprime `%T` como `main.ID`."
+      }
+    ]
+  },
+  "ex-ggrz8c4c": {
+    "prompt": "Uma função de biblioteca `Fill(dst any, values map[string]string)` preenche campos de struct por reflexão. Chamada como `Fill(cfg, m)`, com `cfg` uma variável struct, ela entra em pânico com `reflect: call of reflect.Value.Elem on struct Value`. Qual é a correção em quem chama?",
+    "hint": "Do que a biblioteca precisa para alterar `cfg`, e não uma cópia?",
+    "choices": [
+      {
+        "text": "Exportar os campos do tipo da struct",
+        "why": "Campos não exportados dariam outra recusa, no próprio set; este pânico vem antes, do `Elem` recebendo uma struct onde esperava um ponteiro."
+      },
+      {
+        "text": "Passar `&cfg`, para a biblioteca seguir o endereço até a variável",
+        "why": "Isso. Uma struct passada por valor é uma cópia e não pode ser alterada; o `Elem` precisa de um ponteiro para seguir, e por ele todo campo exportado fica alterável."
+      },
+      {
+        "text": "Converter antes, como `Fill(any(cfg), m)`",
+        "why": "O argumento já é convertido para `any` de qualquer jeito; a conversão explícita não muda nada, e continua sendo uma cópia da struct."
+      },
+      {
+        "text": "Chamar `reflect.ValueOf(cfg).Addr()` e passar isso",
+        "why": "O `Addr` entra em pânico com um valor não endereçável, e uma cópia dentro de um `any` é exatamente isso; o endereço tem de vir do `&` de quem chama."
+      }
+    ]
+  },
+  "ex-4ezngzbd": {
+    "prompt": "Um time troca por engano uma tag de struct de `json:\"hits\"` para `json:\"hist\"`. Que verificação pega isso antes da produção?",
+    "hint": "Quem lê o conteúdo de uma tag, e quando?",
+    "choices": [
+      {
+        "text": "O compilador, que confere nomes de tags com os nomes dos campos",
+        "why": "O compilador guarda a tag como string opaca e nunca a interpreta; nada liga `hist` ao campo `Hits`."
+      },
+      {
+        "text": "O `go vet`, cuja checagem de tags lê toda tag",
+        "why": "O `go vet` confere a sintaxe da tag e aponta tag em campo não exportado, mas uma tag bem formada com o nome errado é válida para ele."
+      },
+      {
+        "text": "Um teste que codifica um valor e compara a saída",
+        "why": "Isso. A tag só tem efeito quando o `encoding/json` reflete sobre ela na execução, então só código que roda, como um teste da saída codificada, percebe a chave nova."
+      },
+      {
+        "text": "Uma refatoração de renomear do editor, aplicada ao campo",
+        "why": "Uma ferramenta de renomear troca todo `r.Hits` no código e deixa strings em paz, e uma tag é uma string."
+      }
+    ]
+  },
+  "ex-1jazn959": {
+    "prompt": "Num benchmark em Go 1.27 sobre oito linhas de `tally.PathCount`, somar `r.Hits` direto levou cerca de 15,4 ns/op, e somar `v.Index(i).Field(1).Int()` pelo `reflect` levou entre 37,5 e 39,8 ns/op. Cerca de quantas vezes mais lenta é a leitura reflexiva por índice de campo?",
+    "hint": "Divida o tempo reflexivo pelo direto."
+  },
+  "ex-c4eb9vwb": {
+    "prompt": "O `go list` no Go 1.27 mostra quais pacotes padrão importam `reflect`. Quais destes importam? Marque todos.",
+    "hint": "Quais deles lidam com valores de tipos que não tinham como conhecer quando foram compilados?",
+    "choices": [
+      {
+        "text": "`encoding/json`",
+        "why": "Sim. Ele codifica e decodifica structs escritas depois de ele ser compilado, lendo campos e tags por reflexão."
+      },
+      {
+        "text": "`strconv`",
+        "why": "Ele converte entre strings e tipos básicos que conhece pelo nome, e não precisa de reflexão."
+      },
+      {
+        "text": "`flag`",
+        "why": "Sim. Ele monta o zero do valor de uma flag para decidir se imprime `(default …)` no texto de uso."
+      },
+      {
+        "text": "`slices`",
+        "why": "As funções dele recebem parâmetros de tipo, então o tipo do elemento é conhecido na compilação; ele não importa `reflect`."
+      }
+    ]
+  },
+  "ex-0fb5pdjp": {
+    "prompt": "No linux/amd64, uma struct `Loose` (`Cached bool; Bytes int64; TLS bool; Status int32; Retry bool`, 32 bytes cada) é reescrita com os mesmos campos do maior para o menor, 16 bytes cada. Um slice de 2.000.000 delas é alocado. Quantos megabytes (milhões de bytes), aproximadamente, a reordenação economiza?",
+    "hint": "A diferença de tamanho por elemento, vezes o número de elementos.",
+    "unit": "MB"
+  },
+  "ex-5jdc8jtr": {
+    "prompt": "Um programa mantém um cache de registros já lidos como `map[uintptr]string`, indexado por `uintptr(unsafe.Pointer(rec))` para cada `*Record`, e não guarda nenhuma outra referência aos registros. Ele nunca converte uma chave de volta em ponteiro. O que dá errado?",
+    "hint": "O que mantém um `*Record` alcançável quando só resta o endereço dele, como inteiro?",
+    "choices": [
+      {
+        "text": "Os registros são coletados, e uma alocação nova reaproveita um endereço que ainda é chave",
+        "why": "Isso. Um `uintptr` não mantém nada vivo, então os registros viram lixo; o alocador tem liberdade para dar o mesmo endereço a um registro posterior, que então acha a string de outro."
+      },
+      {
+        "text": "Nada, já que o programa segue o padrão 2 e nunca converte de volta",
+        "why": "O padrão 2 torna a conversão válida; não transforma o inteiro numa referência. O programa é Go válido e ainda assim está errado, porque as chaves sobrevivem aos objetos que nomeiam."
+      },
+      {
+        "text": "O `go vet` se recusa a compilá-lo por causa da verificação `unsafeptr`",
+        "why": "O `unsafeptr` acusa um `uintptr` convertido de volta em `Pointer`, o que nunca acontece aqui. E o `vet` reporta; nunca recusa um build."
+      },
+      {
+        "text": "As chaves mudam quando o coletor move os registros",
+        "why": "O coletor do Go não move objetos do heap. O perigo é ele liberá-los, não movê-los."
+      }
+    ]
+  },
+  "ex-wzvxwa5e": {
+    "prompt": "Um pipeline de CI roda `go test ./...` num pacote que converte `[]byte` em `string` com `unsafe.String`. Qual acréscimo deixa o pipeline capaz de pegar uma conversão de `unsafe.Pointer` que lê além do fim de uma alocação no heap?",
+    "hint": "Uma flag liga, de quebra, uma verificação em tempo de execução das conversões de `unsafe.Pointer`.",
+    "choices": [
+      {
+        "text": "Rodar `go test -race ./...`",
+        "why": "Isso. O `-race` implica `-d=checkptr`, que instrumenta toda conversão envolvendo `unsafe.Pointer` e para o programa numa que atravessa duas alocações."
+      },
+      {
+        "text": "Rodar `fieldalignment ./...` e falhar no status de saída 3",
+        "why": "O `fieldalignment` aponta structs que ficariam menores em outra ordem. Não sabe nada de conversões de ponteiro."
+      },
+      {
+        "text": "Acrescentar `-count=1`, para não reaproveitar resultados de teste em cache",
+        "why": "Execuções novas do mesmo binário sem instrumentação leem além do fim com o mesmo silêncio. A verificação precisa entrar na compilação."
+      },
+      {
+        "text": "Rodar `go vet ./...`, cuja verificação `unsafeptr` lê todo cast",
+        "why": "O `unsafeptr` procura um `uintptr` convertido de volta em ponteiro. Se uma leitura passa do fim de uma alocação depende de tamanhos em tempo de execução, que nenhuma leitura de código consegue saber."
+      }
+    ]
+  },
+  "ex-2wcs12mh": {
+    "prompt": "Uma função lê linhas com `bufio.Scanner` e precisa, para cada linha, verificar se o caminho está num `map[string]bool` de caminhos bloqueados, sem alocar. Qual versão é ao mesmo tempo livre de alocação e segura?",
+    "hint": "Duas das opções guardam ou mantêm algo; uma só consulta.",
+    "choices": [
+      {
+        "text": "`blocked[string(path)]`, escrito dentro da expressão de índice",
+        "why": "Isso. O compilador passa os bytes de uma conversão dentro de um índice de mapa direto para a consulta, então nada é alocado, e nada sobrevive à chamada apontando para o buffer do scanner."
+      },
+      {
+        "text": "`k := zc.String(path)`, depois `blocked[k]`, guardando `k` para registrar no log depois",
+        "why": "A consulta funciona, mas `k` fica guardado além da linha, e o scanner sobrescreve os bytes que ele compartilha: o log registraria pedaços de outras linhas."
+      },
+      {
+        "text": "`sc.Text()`, que devolve a linha sem copiar",
+        "why": "O `Scanner.Text` devolve uma string recém-alocada; o `Scanner.Bytes` é que não aloca e reaproveita o buffer."
+      },
+      {
+        "text": "`unsafe.String(&path[0], len(path))` guardado num slice com todos os caminhos vistos",
+        "why": "É o bug do `paths` de novo: strings que compartilham o buffer do scanner, guardadas depois que o próximo `Scan` o reescreve."
+      }
+    ]
+  },
+  "ex-sdc9k3qz": {
+    "prompt": "Associe cada custo de usar o pacote `unsafe` do Go com a evidência que o próprio toolchain do Go 1.27.1 mostra.",
+    "hint": "Cada evidência é um comando ou uma linha de documentação.",
+    "pairs": [
+      {
+        "left": "fora da promessa de compatibilidade",
+        "right": "a frase do `go doc unsafe` sobre as diretrizes do Go 1"
+      },
+      {
+        "left": "internos do runtime congelados",
+        "right": "182 comentários citando pacotes que se ligam a funções do runtime"
+      },
+      {
+        "left": "números presos a uma arquitetura",
+        "right": "`tally.Entry` tem 72 bytes no amd64 e 48 com `GOARCH=386`"
+      },
+      {
+        "left": "ferramentas que não veem todo mau uso",
+        "right": "`go doc unsafe.Pointer`: o silêncio do `go vet` não é garantia"
+      }
+    ],
+    "right_distractors": [
+      "o `go list std` contando 101 pacotes que importam `unsafe`"
+    ]
+  },
+  "ex-ef9vf3w6": {
+    "prompt": "Um pacote Go chama o `deflate` da zlib via cgo. O preâmbulo inclui `<zlib.h>`, o código compila, e a ligação falha com `undefined reference` para `deflate`. O que está faltando?",
+    "hint": "Cabeçalho e biblioteca são duas coisas diferentes para o ferramental C.",
+    "choices": [
+      {
+        "text": "`#cgo LDFLAGS: -lz` no preâmbulo",
+        "why": "Isso. O cabeçalho disse ao compilador que `deflate` existe; só o `-lz` dá ao ligador o código dela, como o `-lm` fez com o `cbrt`."
+      },
+      {
+        "text": "Uma conversão de cada argumento para o tipo C, como `C.uInt(len(b))`",
+        "why": "Uma conversão faltando é erro de compilação do Go, `cannot use ... as C.uInt value`, bem antes da ligação."
+      },
+      {
+        "text": "`#include <stdlib.h>`, que declara as funções da biblioteca C",
+        "why": "O `stdlib.h` declara `malloc` e `free`; o `deflate` é da zlib, e não foi a declaração que falhou."
+      },
+      {
+        "text": "`CGO_ENABLED=1`, porque o comando go desligou o cgo",
+        "why": "Com o cgo desligado, o arquivo que importa `\"C\"` nem seria compilado; aqui ele compilou e chegou ao ligador do gcc."
+      }
+    ]
+  },
+  "ex-6erx1mtm": {
+    "prompt": "Uma biblioteca de áudio em C chama uma função sua para cada buffer que decodifica, devolvendo um `void *user` que você passou ao abrir o fluxo. Você quer que cada callback acrescente a uma `[]Frame` do Go. O que `user` deve ser?",
+    "hint": "O C guarda `user` enquanto o fluxo estiver aberto, muito depois de a chamada que o abriu retornar.",
+    "choices": [
+      {
+        "text": "`unsafe.Pointer(&frames)`, já que o cabeçalho da fatia mora na memória Go",
+        "why": "O cabeçalho de uma fatia contém um ponteiro Go, e o C guarda o valor depois que a chamada retorna, o que as regras de passagem de ponteiros proíbem."
+      },
+      {
+        "text": "Um `C.CString` do conteúdo da fatia, liberado quando o fluxo fechar",
+        "why": "Uma cópia na memória C não faz crescer a fatia Go; cada append cairia em memória que o Go não vê."
+      },
+      {
+        "text": "O endereço de um `cgo.Handle` que embrulha um ponteiro para a fatia, apagado quando o fluxo fechar",
+        "why": "Isso. O handle mantém o valor Go no Go; o C carrega só um número, e o callback o recupera com `Value()`. Apague o handle quando o fluxo fechar."
+      },
+      {
+        "text": "`&frames[0]`, com a fatia criada grande o bastante antes",
+        "why": "Emprestar `&frames[0]` é permitido por uma chamada só, e um `Frame` com qualquer ponteiro Go quebraria a regra mesmo assim."
+      }
+    ]
+  },
+  "ex-j6qr7enc": {
+    "prompt": "Calcular o checksum de um log de acesso de 20.000 linhas com o `crc32` da zlib via cgo levou 1,86 ms chamando-o uma vez por linha (com o laço escrito em C) e 0,174 ms chamando-o uma vez sobre o arquivo inteiro. Arredondando para inteiro, quantas vezes mais rápida foi a chamada única?",
+    "hint": "Divida o tempo por linha pelo tempo da chamada única.",
+    "unit": "vezes"
+  },
+  "ex-q37zn2bb": {
+    "prompt": "Associe cada mensagem do build ou da execução de um programa cgo ao que ela significa.",
+    "hint": "Duas vêm do comando go, uma da checagem de ponteiros do runtime, uma de uma falha.",
+    "pairs": [
+      {
+        "left": "`build constraints exclude all Go files`",
+        "right": "o cgo estava desligado, e o arquivo que importa \"C\" ficou de fora"
+      },
+      {
+        "left": "`cgo: C compiler \"aarch64-linux-gnu-gcc\" not found`",
+        "right": "o `CC` aponta um compilador que não está instalado"
+      },
+      {
+        "left": "`argument of cgo function has Go pointer to unpinned Go pointer`",
+        "right": "memória Go passada ao C contém um ponteiro Go"
+      },
+      {
+        "left": "`signal arrived during cgo execution`",
+        "right": "o código C falhou e derrubou o programa"
+      }
+    ],
+    "right_distractors": [
+      "uma string C nunca foi liberada"
+    ]
+  },
+  "ex-nv3jr7pa": {
+    "prompt": "Um comando usa `os/user` e `net` e não tem C próprio. Ele precisa sair como binário estático, mas o job de CI da máquina de build também roda `go test -race`, que precisa de cgo. Qual linha de build dá um binário estático sem desligar o cgo no job?",
+    "hint": "Duas tags de build escolhem as metades em Go puro exatamente desses pacotes.",
+    "choices": [
+      {
+        "text": "`go build -ldflags=-extldflags=-static`",
+        "why": "Sem C próprio o programa é ligado internamente, então flags para o ligador externo não se aplicam, e `os/user` e `net` continuariam usando a biblioteca C."
+      },
+      {
+        "text": "`go build -tags netgo,osusergo`",
+        "why": "Isso. As tags escolhem o resolvedor e a consulta de contas em Go puro com o cgo ainda ligado, e o binário sai com ligação estática."
+      },
+      {
+        "text": "`GOARCH=amd64 go build`, para o build contar como compilação cruzada",
+        "why": "Nomear a arquitetura da própria máquina não é compilação cruzada; o cgo continua ligado e o binário continua dinâmico."
+      },
+      {
+        "text": "`GODEBUG=cgocheck=0 go build`",
+        "why": "O `GODEBUG` muda o que o runtime confere durante a execução; não muda nada na ligação."
+      }
+    ]
+  },
+  "ex-x3wrgkvv": {
+    "prompt": "Um plugin Go declara `func New() report.Reporter`. O hospedeiro chama `sym, err := p.Lookup(\"New\")`. Qual afirmação de tipo lhe dá um reporter que funciona?",
+    "hint": "O `go doc plugin.Symbol` mostra uma variável e uma função sendo consultadas.",
+    "choices": [
+      {
+        "text": "`r := sym.(func() report.Reporter)()`",
+        "why": "Isso. Uma função exportada volta como o próprio valor de função, então a afirmação cita o tipo dela e a chamada devolve o reporter."
+      },
+      {
+        "text": "`r := (*sym.(*func() report.Reporter))()`",
+        "why": "Só variáveis voltam como ponteiro. Afirmar um ponteiro para tipo de função sobre um valor de função entra em pânico."
+      },
+      {
+        "text": "`r := sym.(report.Reporter)`",
+        "why": "O símbolo é uma função, que não tem método `Report`; a afirmação falha."
+      },
+      {
+        "text": "`r := *sym.(*report.Reporter)`",
+        "why": "Essa é a forma para uma variável exportada de tipo interface, como `var Reporter report.Reporter`. `New` é uma função."
+      }
+    ]
+  },
+  "ex-hk5df7m0": {
+    "prompt": "Numa medição, o hospedeiro que carrega plugins, `hits-plugin`, tinha 4.901.728 bytes, o `csv.so` 3.725.312 e o `mean.so` 4.678.960, enquanto o `hits-static`, com os dois reporters compilados dentro, tinha 2.689.276. Quantos megabytes (milhões de bytes) a versão com plugins distribui no total? Responda com uma casa decimal.",
+    "hint": "Some o hospedeiro e os dois arquivos de plugin.",
+    "unit": "MB"
+  },
+  "ex-5spab42s": {
+    "prompt": "O `csv.so` contém a própria cópia compilada do `fmt`, e o hospedeiro que o abre também. Quando o código do plugin chama `fmt.Fprintf` depois do `plugin.Open`, o código de quem roda?",
+    "hint": "Por que um hospedeiro que importa `plugin` exporta uns dez mil símbolos dinâmicos?",
+    "choices": [
+      {
+        "text": "A cópia do plugin, porque todo `.so` é autossuficiente",
+        "why": "Ele é autossuficiente no disco, por isso tem vários megabytes. Na carga, as referências dele a pacotes em comum são ligadas às definições do hospedeiro."
+      },
+      {
+        "text": "A cópia que o ligador dinâmico achar primeiro por acaso, o que pode mudar entre execuções",
+        "why": "A ligação não é aleatória: as definições exportadas pelo hospedeiro vencem sempre, e o runtime já conferiu que os hashes das duas cópias batem."
+      },
+      {
+        "text": "A do hospedeiro: há um só `fmt` no processo",
+        "why": "Isso. O hospedeiro exporta os símbolos para o plugin se ligar, então a cópia própria do plugin de cada pacote em comum é peso morto."
+      },
+      {
+        "text": "As duas, porque uma chamada a um pacote em comum roda em cada cópia para manter o estado igual",
+        "why": "Nada mantém duas cópias em sincronia; há uma cópia só, e é no estado dela que o `init` do plugin escreve, como o registro do hospedeiro mostrou."
+      }
+    ]
+  },
+  "ex-rt6xx8bg": {
+    "prompt": "Ligue cada mensagem que um programa Go que carrega plugins imprimiu à sua causa.",
+    "hint": "Uma causa não produziu nenhuma destas mensagens.",
+    "pairs": [
+      {
+        "left": "`plugin was built with a different version of package example.com/hits/internal/tally`",
+        "right": "um pacote em comum ganhou um método depois que o plugin foi compilado"
+      },
+      {
+        "left": "`plugin already loaded`",
+        "right": "um plugin com o mesmo caminho de pacote já está no processo"
+      },
+      {
+        "left": "`plugin: not implemented`",
+        "right": "o hospedeiro foi compilado com `CGO_ENABLED=0`"
+      },
+      {
+        "left": "`exec ./hits-plugin: no such file or directory`, num contêiner",
+        "right": "a imagem não tem carregador dinâmico para o hospedeiro"
+      }
+    ],
+    "right_distractors": [
+      "a função `main` do plugin devolveu um erro"
+    ]
+  },
+  "ex-k6pezkbz": {
+    "prompt": "O `hits-exec` roda reporters como processos filhos, mandando JSON pela entrada padrão. Um reporter, o `mean-exec`, é recompilado com `-race` e Go 1.27.2 enquanto o `hits-exec` fica no 1.27.1. O que acontece na próxima execução?",
+    "hint": "Compare com o que a mesma mudança faz num plugin Go.",
+    "choices": [
+      {
+        "text": "Funciona: os processos não compartilham pacote nenhum, só a mensagem e o número do protocolo",
+        "why": "Isso. O toolchain e as flags de cada programa são assunto dele; o que precisa bater é o JSON que os dois trocam."
+      },
+      {
+        "text": "O `hits-exec` o recusa com `different version of package internal/goarch`",
+        "why": "Essa conferência é do `plugin.Open`, que compara pacotes carregados num processo só. O `os/exec` não carrega nada no hospedeiro."
+      },
+      {
+        "text": "O `mean-exec` recusa a mensagem, porque o protocolo mudou com o toolchain",
+        "why": "O número do protocolo está escrito no código, e o código não mudou."
+      },
+      {
+        "text": "Falha até o `hits-exec` ser recompilado com as mesmas flags",
+        "why": "Essa é a regra dos plugins Go. Aqui o hospedeiro nunca é recompilado por causa de um reporter."
+      }
+    ]
+  }
+}
