@@ -1,0 +1,1108 @@
+{
+  "ex-5bdfv4pd": {
+    "prompt": "Num servidor de build você rodou `sudo usermod -aG docker bruno`, e o `getent group docker` já mostra o nome dele. Na sessão ssh que ele já tinha aberta, `docker ps` continua respondendo `permission denied while trying to connect to the docker API at unix:///var/run/docker.sock`. O que você diz a ele?",
+    "hint": "Linux e Linha de Comando, aula 4; Docker e Containers, aula 6.",
+    "choices": [
+      {
+        "text": "Reinicie o daemon do Docker, para que ele releia o `/etc/group` e passe a aceitar o bruno.",
+        "why": "Não é o daemon que guarda uma lista velha. O socket confere os grupos do processo que se conecta, e o shell dele ainda carrega a lista com que começou."
+      },
+      {
+        "text": "Rode `sudo chmod 666 /var/run/docker.sock`, para o socket parar de olhar os grupos.",
+        "why": "O socket comanda um daemon que roda como root, então abri-lo para todas as contas dá root a todas elas na máquina, por outro caminho."
+      },
+      {
+        "text": "Saia e entre de novo, ou rode `newgrp docker`: o shell dele tem os grupos antigos.",
+        "why": "A participação em grupos é presa ao processo quando ele começa. A mudança está no `/etc/group`, e só um login novo, ou o shell novo que o `newgrp` abre, a enxerga."
+      },
+      {
+        "text": "Rode `sudo usermod -G docker bruno`; o `-a` manteve os grupos antigos.",
+        "why": "Sem o `-a`, o `-G` troca todos os grupos suplementares dele, `sudo` incluído. E o shell que ele tem aberto continuaria sem ver a mudança."
+      }
+    ]
+  },
+  "ex-yztawpkg": {
+    "prompt": "O `docker stop` de um serviço leva exatamente dez segundos, toda vez. O log nunca mostra a mensagem de encerramento que o programa escreve quando recebe `SIGTERM`, e o container sai com `137`. O Dockerfile termina com `CMD shelf`. O que está acontecendo?",
+    "hint": "Linux e Linha de Comando, aula 6; Docker e Containers, aula 11.",
+    "choices": [
+      {
+        "text": "O processo 1 é `/bin/sh -c shelf`, que não repassa o `SIGTERM`; o `SIGKILL` vem dez segundos depois.",
+        "why": "A forma shell embrulha o comando num shell, e o sinal para ali. O `SIGKILL` não pode ser capturado, então o programa nunca registra nada nem arruma a casa, e 128 mais 9 dá 137. `CMD [\"shelf\"]` faz do próprio programa o processo 1."
+      },
+      {
+        "text": "O programa fica sem memória enquanto está encerrando, e 137 é o código de saída que sempre quer dizer falta de memória.",
+        "why": "137 quer dizer morto por `SIGKILL`, não importa quem mandou. O Docker registra `OOMKilled=true` quando foi memória, e uma espera de exatamente dez segundos é o `docker stop` desistindo."
+      },
+      {
+        "text": "O `docker stop` manda `SIGKILL` de cara, sem pedir antes, e 137 é o que todo container parado informa.",
+        "why": "Ele manda `SIGTERM` primeiro. O mesmo programa na forma exec parou em um quinto de segundo e registrou que estava encerrando."
+      },
+      {
+        "text": "O programa captura o `SIGTERM` direitinho e passa os dez segundos terminando as requisições que ainda tem abertas.",
+        "why": "Um programa que capturasse o sinal escreveria a mensagem de encerramento e sairia com o próprio status. Um status 137 diz que ele foi morto, não que terminou."
+      }
+    ]
+  },
+  "ex-1y4x4h27": {
+    "prompt": "O `ssh` do seu laptop para um servidor novo fica parado um bom tempo e termina com `Connection timed out`. No console do servidor, `ss -tulpn` mostra o sshd em `LISTEN` em `0.0.0.0:22` com `Recv-Q` 0, e `systemctl is-active ssh` imprime `active`. Onde está a falha?",
+    "hint": "Linux e Linha de Comando, aula 11; Redes e Protocolos, aula 3.",
+    "choices": [
+      {
+        "text": "Na configuração do sshd: ele escuta só no endereço de loopback, então nada de fora chega até ele.",
+        "why": "Só loopback apareceria como `127.0.0.1:22`. `0.0.0.0` quer dizer todos os endereços da máquina, e isso é alcançável pela rede."
+      },
+      {
+        "text": "No backlog de escuta: ele está cheio, então o kernel descarta cada conexão nova.",
+        "why": "Num socket em escuta, backlog cheio aparece como `Recv-Q` igual a `Send-Q`. Um `Recv-Q` de 0 quer dizer que nada espera para ser aceito."
+      },
+      {
+        "text": "No próprio sshd: um serviço parado é o que faz uma conexão dar timeout.",
+        "why": "Uma porta sem ninguém escutando responde na hora com `Connection refused`. E o serviço aqui está ativo e escutando."
+      },
+      {
+        "text": "Em algum ponto entre as duas máquinas: um firewall está descartando a tentativa.",
+        "why": "O lado do servidor está de pé e escutando em todos os endereços. Nenhuma resposta, depois de uma longa espera, é a cara de um pacote descartado, então a pergunta vai para quem cuida do firewall."
+      }
+    ]
+  },
+  "ex-baa564sh": {
+    "prompt": "Um backup noturno rodava pelo crontab do root como `0 3 * * * /usr/local/bin/backup.sh >> /var/log/backup.log 2>&1`, e o script sai com status diferente de zero em qualquer falha. O servidor foi reconstruído, voltou sem crontab nenhum, e ninguém percebeu por três semanas. Que acréscimo teria pegado isso?",
+    "hint": "Linux e Linha de Comando, aula 13; Observabilidade e Operação, aula 5.",
+    "choices": [
+      {
+        "text": "Tirar o redirecionamento da linha, para o cron mandar cada falha por email ao endereço do `MAILTO`.",
+        "why": "O cron manda por email o que o job imprime. Um job que nunca começa não imprime nada, então a caixa de entrada fica tão quieta quanto numa noite boa."
+      },
+      {
+        "text": "Publicar o horário de cada execução bem-sucedida como métrica e alertar quando ele ficar mais velho que um dia mais uma folga.",
+        "why": "Agora menos esse horário cresce a cada segundo, rode alguma coisa ou não, então o alerta dispara na noite em que o job não roda. Das quatro, é a única verificação que não precisa que o job comece."
+      },
+      {
+        "text": "Alertar sempre que o script de backup sair com status diferente de 0, como toda execução com falha faz.",
+        "why": "Um job que nunca rodou não tem status de saída para alertar. Isso pega uma execução que falhou, não uma que nunca aconteceu."
+      },
+      {
+        "text": "Envolver cada execução num trace com o span raiz batizado com o nome do job, para toda noite deixar um registro.",
+        "why": "Um trace só existe para trabalho que aconteceu. A noite em que o agendador sumiu não deixa span nenhum."
+      }
+    ]
+  },
+  "ex-7840k8bk": {
+    "prompt": "Num servidor Ubuntu, um site do Nginx diz `root /home/ana/site;`. Todo arquivo ali dentro é `-rw-r--r--`, e `/home/ana` é `drwxr-x---`, de dono `ana` e grupo `ana`. Toda requisição ao site falha, e o log de erro dele acusa um problema de permissão. O que está errado?",
+    "hint": "Linux e Linha de Comando, aula 4; Servidores Web e Cache, aula 1.",
+    "choices": [
+      {
+        "text": "Os arquivos precisam de `x` para outros além do `r`, porque o Nginx executa os arquivos que entrega a um cliente.",
+        "why": "`x` num arquivo quer dizer que ele pode rodar como programa. O Nginx só os lê, e o `r` para outros já está lá."
+      },
+      {
+        "text": "Nada a ver com modos: o processo mestre roda como root e lê cada arquivo ele mesmo antes de um worker enviá-lo.",
+        "why": "O mestre lê a configuração e abre a porta, e nunca responde a uma requisição. Quem serve são os workers."
+      },
+      {
+        "text": "O `www-data` precisa de `r` em `/home/ana`, porque tem de listar esse diretório antes de abrir um arquivo lá dentro.",
+        "why": "`r` num diretório dá a lista de nomes. Abrir um arquivo cujo nome você sabe pede `x` no caminho, não `r`."
+      },
+      {
+        "text": "Os workers rodam como `www-data`, e outros não têm `x` em `/home/ana` para atravessá-lo.",
+        "why": "Todo diretório do caminho precisa de `x` para a conta que pede. `namei -l` no caminho inteiro mostra qual deles barra, diga o que disser o arquivo."
+      }
+    ]
+  },
+  "ex-n3nvrn1j": {
+    "prompt": "Um serviço iniciado pelo systemd registra `Too many open files`. O engenheiro de plantão roda `ulimit -n` numa sessão ssh, vê `20000`, aumenta o valor nesse shell e reinicia o serviço com `systemctl restart`. Em menos de uma hora o erro volta. Por que aumentar o limite não mudou nada?",
+    "hint": "Linux e Linha de Comando, aula 6.",
+    "choices": [
+      {
+        "text": "Um serviço tira o limite do `LimitNOFILE=` no arquivo de unit dele, e nunca do shell de um engenheiro.",
+        "why": "Um serviço não herda os limites do seu shell. E um erro que volta depois de reiniciar costuma ser um vazamento: `ls -l /proc/PID/fd | wc -l` conta os descritores, e a lista costuma apontar o culpado."
+      },
+      {
+        "text": "O `ulimit -n` limita quantos processos uma conta pode rodar, então era o limite errado a aumentar.",
+        "why": "`-n` é arquivos abertos por processo. O limite de processos é o `ulimit -u`, outra linha do `ulimit -a`."
+      },
+      {
+        "text": "As conexões de rede ficam numa tabela separada, só delas, que nenhum limite de arquivos abertos alcança.",
+        "why": "Toda conexão de rede é um descritor também, na mesma tabela e contada contra o mesmo limite. É por isso que um servidor movimentado chega nele."
+      },
+      {
+        "text": "Um novo limite de arquivos abertos só vale depois que a máquina inteira reinicia.",
+        "why": "Ele vale na hora, para os processos iniciados daquele shell. O serviço foi iniciado pelo systemd, então nunca foi um deles."
+      }
+    ]
+  },
+  "ex-9ytevf6a": {
+    "prompt": "Num job de CI, `./deploy.sh | grep -c ERROR` imprime `0`, mas linhas começando com `ERROR` estão bem visíveis na saída do job logo acima. O que está acontecendo?",
+    "hint": "Linux e Linha de Comando, aula 8.",
+    "choices": [
+      {
+        "text": "O pipe iniciou o `grep` antes de o `deploy.sh` escrever qualquer coisa, então o `grep` leu um fluxo vazio.",
+        "why": "Os dois estágios rodam ao mesmo tempo, e o `grep` continua lendo o que chega até o fluxo acabar. O momento não é o problema."
+      },
+      {
+        "text": "O redirecionamento vai no fim da linha: `./deploy.sh | grep -c ERROR 2>&1`.",
+        "why": "Isso redireciona os erros do próprio `grep`. O que o `deploy.sh` escreve na saída de erro continua dando a volta no pipe."
+      },
+      {
+        "text": "Essas linhas vão para a saída de erro, que o pipe não carrega, então o `grep` nunca as recebe.",
+        "why": "Um pipe liga só a saída padrão, e os erros chegam à tela dando a volta nele. `./deploy.sh 2>&1 | grep -c ERROR` manda os erros para dentro do pipe também."
+      },
+      {
+        "text": "O `grep -c` conta ocorrências em vez de linhas, e recomeça do zero a cada linha.",
+        "why": "O `-c` conta linhas que casam. De todo jeito, linhas que chegassem ao `grep` nunca dariam zero."
+      }
+    ]
+  },
+  "ex-z86re3bb": {
+    "prompt": "O arquivo de unit que um colega escreveu para uma pequena API tem as linhas abaixo, e o serviço sobe. Quais delas não vão fazer o que parecem fazer?",
+    "hint": "Linux e Linha de Comando, aula 5.",
+    "choices": [
+      {
+        "text": "`RestartSec=5`",
+        "why": "Faz o que diz: espera cinco segundos antes de reiniciar, para um loop de falhas não ficar apertado."
+      },
+      {
+        "text": "`Restart=maybe`",
+        "why": "O systemd não consegue interpretar o valor e descarta a linha, com `ignoring` na mensagem. O serviço não vai reiniciar quando falhar, e nada avisa, a não ser que você rode `systemd-analyze verify`."
+      },
+      {
+        "text": "`ExecStart=/usr/local/bin/api > /var/log/api.log`",
+        "why": "O `ExecStart=` não roda shell nenhum, então o `>` e o caminho chegam como mais dois argumentos do programa. A saída vai para o journal, não para aquele arquivo."
+      },
+      {
+        "text": "`User=api`",
+        "why": "Roda o serviço como aquela conta, que é o que a linha diz e o que um serviço deve fazer."
+      },
+      {
+        "text": "`After=network.target`, para a API conseguir resolver o nome do banco de dados ao subir",
+        "why": "`network.target` quer dizer rede configurada, não alcançável. A versão honesta é `After=` e `Wants=` em `network-online.target`, com o serviço `wait-online` habilitado."
+      },
+      {
+        "text": "`Type=simple`, para um programa que fica em primeiro plano",
+        "why": "É exatamente para isso que o `simple` serve. O `forking` é que daria errado aqui, com uma inicialização que trava e estoura o tempo."
+      }
+    ]
+  },
+  "ex-drjt08h3": {
+    "prompt": "Dentro de um container, `nproc` imprime `8`, e o `cpu.max` do grupo de controle dele mostra `150000 100000`. Quantos núcleos de tempo de processador o container pode usar?",
+    "hint": "Linux e Linha de Comando, aula 11.",
+    "unit": "núcleos"
+  },
+  "ex-n8zw1c71": {
+    "prompt": "Num servidor Ubuntu, o `apt upgrade` deixou o pacote do banco de dados na mesma versão velha por meses e nunca comentou nada. Complete o comando que lista todo pacote que alguém congelou na versão atual: `apt-mark ___`",
+    "hint": "Linux e Linha de Comando, aula 7.",
+    "blanks": [
+      {
+        "accept": [
+          "showhold"
+        ]
+      }
+    ]
+  },
+  "ex-y5qjdcjt": {
+    "prompt": "Um segundo disco, vazio, foi ligado a um servidor e precisa aparecer em `/data`, que já existe, em todo boot daqui para a frente. Ponha os passos em ordem.",
+    "hint": "Linux e Linha de Comando, aula 3.",
+    "items": [
+      "`lsblk`, para achar o disco novo, que o `df` não mostra enquanto ele não está montado",
+      "`mkfs.ext4` naquele dispositivo, para criar um sistema de arquivos nele",
+      "`blkid`, para ler o UUID que o sistema de arquivos novo recebeu",
+      "uma linha no `/etc/fstab` com esse UUID e `/data`",
+      "`sudo mount -a`, conferindo que ele fica em silêncio antes de alguém reiniciar"
+    ],
+    "trap": "Escrever o `/etc/fstab` antes do `blkid` é nomear o disco pela letra do dispositivo, que muda quando se acrescentam discos; o UUID só existe depois que o `mkfs` cria o sistema de arquivos. E reiniciar antes do `mount -a` transforma um erro de digitação no `fstab` numa máquina que não sobe."
+  },
+  "ex-affzkze9": {
+    "prompt": "Quatro jobs agendados num servidor Ubuntu se comportam mal. Associe cada sintoma à sua causa.",
+    "hint": "Linux e Linha de Comando, aula 13.",
+    "pairs": [
+      {
+        "left": "`/etc/cron.d/backup.sh` nunca rodou, e nada em lugar nenhum reclamou",
+        "right": "um ponto no nome do arquivo"
+      },
+      {
+        "left": "o email do cron chega com o assunto `Cron <ana@vm> echo \"ran at $(date +` e um erro de sintaxe do shell",
+        "right": "um sinal de porcentagem que a linha não escapou"
+      },
+      {
+        "left": "`/bin/sh: 1: report.sh: not found`, embora o script rode no seu terminal",
+        "right": "o `PATH` curto que o cron dá a um job"
+      },
+      {
+        "left": "`0 3 13 * 5` também roda em sextas-feiras que não são dia 13",
+        "right": "os dois campos de dia restritos, então basta um deles bater"
+      }
+    ],
+    "right_distractors": [
+      "o fuso horário da máquina, que não é o da linha",
+      "um arquivo de crontab sem a quebra de linha final"
+    ]
+  },
+  "ex-28jn6jy2": {
+    "prompt": "A Ana reescreveu três subnets de `count` para `for_each` sem mudar mais nada, e o plano quer destruir três subnets e criar três. O bloco que ela escreve na configuração, ligando cada endereço antigo (`from`) ao novo (`to`) para que as mesmas subnets fiquem com seus ids, se chama ___.",
+    "hint": "Infraestrutura como Código, aula 4.",
+    "blanks": [
+      {
+        "accept": [
+          "moved",
+          "moved {}"
+        ]
+      }
+    ]
+  },
+  "ex-j2d3gdjn": {
+    "prompt": "Uma ferramenta de custos grava uma tag `CostCenter` em toda instância que o Terraform gerencia, e um autoscaler muda o número de réplicas de um deployment que um reconciliador de GitOps, com self-healing ligado, mantém igual ao Git. As duas coisas aparecem como diferença a cada execução. Um colega propõe `ignore_changes = all` nas instâncias e desligar o self-healing dessa aplicação. O que você responde?",
+    "hint": "Infraestrutura como Código, aula 6; GitOps, Artefatos e Segredos, aula 3.",
+    "choices": [
+      {
+        "text": "Concordo: o que ferramentas automáticas mudam é inofensivo, e calar os dois objetos inteiros só tira ruído.",
+        "why": "Ignorar tudo também esconde as edições que pessoas fazem à mão, que é o drift que as duas ferramentas existem para desfazer."
+      },
+      {
+        "text": "Escrever a tag e o número de réplicas nos arquivos, para a descrição e os sistemas em execução voltarem a concordar.",
+        "why": "Outro sistema muda esses valores o dia todo de propósito; um número fixo no arquivo é reposto a cada execução, e a briga continua."
+      },
+      {
+        "text": "Ignorar só o campo que o outro sistema possui: `tags[\"CostCenter\"]` no Terraform, as réplicas no reconciliador.",
+        "why": "Isso."
+      },
+      {
+        "text": "Usar `ignore_changes = [tags]` nas instâncias e deixar o self-healing como está, o que resolve os dois.",
+        "why": "O mapa inteiro de tags também esconderia as edições de tag da própria Ana, e nada diz ao reconciliador para deixar as réplicas em paz."
+      }
+    ]
+  },
+  "ex-j1vcqdj1": {
+    "prompt": "Um runner de CI foi recolhido no meio de um `terraform apply`, e desde então todo plano falha com `Error acquiring the state lock`, cujo `Who` nomeia esse runner. A equipe confirmou que o job não existe mais. Dado o ID impresso sob `Lock Info`, o subcomando do `terraform` que remove a trava é ___.",
+    "hint": "Infraestrutura como Código, aula 7.",
+    "blanks": [
+      {
+        "accept": [
+          "force-unlock",
+          "terraform force-unlock",
+          "force-unlock -force",
+          "terraform force-unlock -force"
+        ]
+      }
+    ]
+  },
+  "ex-aeezfpbw": {
+    "prompt": "O time de dados vai assumir um bucket que hoje está no estado do app. Ponha os passos na ordem que nunca deixa o bucket em dois estados ao mesmo tempo.",
+    "hint": "Infraestrutura como Código, aula 8.",
+    "items": [
+      "no app, trocar o bloco do bucket por um bloco `removed` cujo lifecycle diz `destroy = false`",
+      "aplicar o app, que tira o bucket do seu estado e o deixa na conta",
+      "na configuração do time de dados, declarar o bucket e um bloco `import` que o nomeia",
+      "fazer o plano lá, e aceitar apenas `1 to import` sem nenhuma mudança ao lado",
+      "aplicar a configuração do time de dados"
+    ],
+    "trap": "Importar primeiro é a ordem tentadora, e deixa o bucket em dois estados por um tempo: o time que planejar por último repõe a sua própria ideia do bucket. Gerenciado por ninguém durante uma hora é seguro; gerenciado por dois não é."
+  },
+  "ex-jmwhkfat": {
+    "prompt": "Uma mudança revisada acrescenta dois buckets, passa três instâncias para uma imagem nova (um argumento que força substituição, na ordem padrão), apaga o bloco de uma subnet e acrescenta uma tag à VPC. Na linha `Plan:` do plano, quantos recursos são contados em *to destroy*?",
+    "hint": "Infraestrutura como Código, aula 9.",
+    "unit": "recursos"
+  },
+  "ex-tj0d0qxe": {
+    "prompt": "Uma verificação na pipeline lê o plano salvo com `terraform show -json`. Associe cada símbolo que o texto de um plano imprime à lista `actions` que o JSON dá para aquele recurso.",
+    "hint": "Infraestrutura como Código, aula 9.",
+    "pairs": [
+      {
+        "left": "`+`",
+        "right": "`[\"create\"]`"
+      },
+      {
+        "left": "`~`",
+        "right": "`[\"update\"]`"
+      },
+      {
+        "left": "`-/+`",
+        "right": "`[\"delete\",\"create\"]`"
+      },
+      {
+        "left": "`+/-`",
+        "right": "`[\"create\",\"delete\"]`"
+      }
+    ],
+    "right_distractors": [
+      "`[\"no-op\"]`",
+      "`[\"read\"]`"
+    ]
+  },
+  "ex-q4q8hw6b": {
+    "prompt": "A pipeline clona o repositório e roda `terraform init` a cada execução, e as duas chamadas de módulo dizem `source = \"git::https://git.example.com/shop/terraform-aws-network.git?ref=main\"`. Ninguém mexe nesta configuração há um mês, e mesmo assim o plano de hoje quer mudar as subnets. O que explica isso, e o que o source deveria dizer?",
+    "hint": "Infraestrutura como Código, aula 10; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 7.",
+    "choices": [
+      {
+        "text": "`main` é um branch, que anda a cada push; fixe uma tag como `?ref=v1.1.0`, que nunca se move depois de publicada.",
+        "why": "Isso."
+      },
+      {
+        "text": "O lock file deixou de guardar a versão do módulo; rode `terraform init -upgrade` e faça commit do lock file para fixá-la de novo.",
+        "why": "O `.terraform.lock.hcl` registra providers e não módulos, então nenhum lock file fixa um módulo."
+      },
+      {
+        "text": "Acrescentar `version = \"1.1.0\"` ao lado do source Git, para o `init` escolher essa versão seja o que for que o branch tenha agora.",
+        "why": "O `version` vale só para fontes de registry; com um endereço Git ao lado, o `init` recusa a chamada."
+      },
+      {
+        "text": "O Terraform busca os módulos de novo a cada plano; faça commit de `.terraform/modules` para toda execução planejar a mesma cópia.",
+        "why": "O `init` copia o módulo e o `.terraform/` fica fora do Git; foi o `init` do clone novo que buscou o branch como ele está hoje."
+      }
+    ]
+  },
+  "ex-0hr92nx1": {
+    "prompt": "Ontem a Ana aplicou produção a partir de `~/shop`, que mantém dev e prod como workspaces. Hoje de manhã ela roda `terraform plan -var-file=dev.tfvars` para testar algo em dev, e o plano substitui a VPC pela faixa de dev e destrói uma subnet: `3 to add, 0 to change, 4 to destroy`. O que aconteceu?",
+    "hint": "Infraestrutura como Código, aula 11.",
+    "choices": [
+      {
+        "text": "O estado de dev se perdeu durante a noite, então o Terraform está construindo a rede de dev de novo do zero.",
+        "why": "Sem estado, o plano só criaria; este substitui e destrói recursos que existem."
+      },
+      {
+        "text": "O backend remoto guarda o estado de todos os workspaces numa key só, então os recursos de dev e de prod se misturaram.",
+        "why": "Um backend remoto guarda um estado por workspace; num bucket cada um tem seu objeto, sob `env:/<workspace>/` na frente da key."
+      },
+      {
+        "text": "O `dev.tfvars` dá uma faixa que se sobrepõe à de prod, e é essa sobreposição que força a substituição da VPC.",
+        "why": "As duas faixas são diferentes; a substituição vem dos valores de dev aplicados a recursos que guardam os de prod."
+      },
+      {
+        "text": "`prod` continua selecionado em `.terraform/environment`, então os valores de dev foram planejados contra o estado de prod.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-3y92gztm": {
+    "prompt": "Semanas atrás uma colega fez commit e push do `terraform.tfvars`, que guarda a senha do banco de dados. Hoje ela rodou `git rm --cached terraform.tfvars`, acrescentou `*.tfvars` ao `.gitignore` e fez commit. Ela pergunta se a senha agora está segura. O que você responde?",
+    "hint": "Infraestrutura como Código, aula 12; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10.",
+    "choices": [
+      {
+        "text": "Sim: com o padrão no `.gitignore`, o Git deixa de servir o arquivo também a partir dos commits antigos.",
+        "why": "O `.gitignore` só afeta arquivos que o Git não está rastreando; o commit que acrescentou o arquivo ainda guarda a senha."
+      },
+      {
+        "text": "Não: o commit antigo continua com ela em todo clone; troque a senha no banco e trate a antiga como pública.",
+        "why": "Isso."
+      },
+      {
+        "text": "Quase: reescreva o histórico com `git filter-repo` e faça force-push, e então a senha antiga pode continuar em uso.",
+        "why": "Clones e cópias feitos antes da reescrita continuam com ela; trocar a senha é o único passo que resolve alguma coisa."
+      },
+      {
+        "text": "Sim, desde que a variável também seja marcada `sensitive = true`, o que tira o valor de todo arquivo que o Terraform grava.",
+        "why": "O `sensitive` esconde o valor na tela; o estado, um plano salvo e o histórico do Git continuam com ele."
+      }
+    ]
+  },
+  "ex-mebt5p6f": {
+    "prompt": "Os testes unitários de um módulo de rede rodam sob `mock_provider`, com um `override_data` que lista as zonas que a Ana acredita que a região oferece. Toda execução passa. Meses depois um apply de verdade falha, porque uma dessas zonas não é mais oferecida. Em termos de dublês de teste, o que teria mantido esse override honesto?",
+    "hint": "Infraestrutura como Código, aula 13; Testes Automatizados e CI/CD, aula 2.",
+    "choices": [
+      {
+        "text": "Mais blocos `assert` nas execuções com mock, para as zonas do override serem conferidas por vários ângulos diferentes.",
+        "why": "Cada asserção encontra a mesma resposta escrita à mão; mais delas conferem o palpite, não a região."
+      },
+      {
+        "text": "`command = plan` nas execuções com mock, para o provider ser consultado sobre as zonas enquanto ele planeja.",
+        "why": "Um mock nunca chama a API, nem no plano nem no apply; a resposta continua sendo o override."
+      },
+      {
+        "text": "Um padrão `mock_data` para toda consulta de zonas, no lugar de um override para um só endereço.",
+        "why": "Continua sendo uma resposta que alguém escreveu; muda o alcance do palpite, não se ele está certo."
+      },
+      {
+        "text": "Uma execução que aplica contra a API real, onde a pergunta encontra uma resposta que ninguém escreveu.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-dnj4xa0w": {
+    "prompt": "Uma pipeline barra mudanças com um scanner que ninguém mais desenvolve. Um pull request abre a porta 22 para `0.0.0.0/0`, escrita como um recurso de regra próprio e não como um bloco dentro do grupo, e o scanner não relata nada, embora chame a mesma regra na forma antiga de `CRITICAL`. O que a aula manda montar para que um silêncio assim seja percebido?",
+    "hint": "Infraestrutura como Código, aula 14.",
+    "choices": [
+      {
+        "text": "Manter no repositório um exemplo sabidamente ruim e varrê-lo na pipeline, para um achado sumido quebrar o build.",
+        "why": "Isso."
+      },
+      {
+        "text": "Baixar a barreira para que falhe também em achados `LOW`, para que regras de severidade branda não passem por ela.",
+        "why": "Nenhuma regra casou com o tipo de recurso mais novo, então não há achado de severidade alguma para um limite pegar."
+      },
+      {
+        "text": "Tratar o relatório vazio como aprovação: um scanner que leu o arquivo e não achou nada conferiu o arquivo.",
+        "why": "Um tipo de recurso que nenhuma regra menciona produz silêncio, e o silêncio parece exatamente uma aprovação."
+      },
+      {
+        "text": "Acrescentar um ignore em linha com data de validade, para o achado voltar à revisão nesse dia.",
+        "why": "Não há achado para ignorar; uma supressão só cala algo que uma regra já relatou."
+      }
+    ]
+  },
+  "ex-0ytra7xw": {
+    "prompt": "Para simplificar, a pipeline de uma equipe roda `terraform plan` em todo pull request com o mesmo role que o job de apply usa, um que pode mudar qualquer coisa. Quem revisa essa pipeline discorda. Por que o role de plan deveria poder ler e pouco mais, se um plano não muda nada?",
+    "hint": "Infraestrutura como Código, aula 15; Testes Automatizados e CI/CD, aula 9.",
+    "choices": [
+      {
+        "text": "Um plano grava o estado, e só um role somente leitura impede que ele sobrescreva a cópia que o apply precisa.",
+        "why": "Um plano não grava nada além do objeto da trava, e essa única gravação é tudo de que o role de plan precisa além de ler."
+      },
+      {
+        "text": "Um plano roda o código do pull request: providers e um data source `external` executam, com o que o role permitir.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um pull request vindo de um fork recebe os segredos do repositório, e um role mais fraco limita o que pode vazar.",
+        "why": "O pull request de um fork roda sem segredo nenhum e com um token só de leitura; isso é uma defesa, não o risco."
+      },
+      {
+        "text": "A nuvem não entrega credenciais que podem gravar a um job iniciado por um pull request, então o role nem serve.",
+        "why": "Quem decide isso é a trust policy, e esta aceita pull requests; nada do lado da nuvem recusa se você não escrever."
+      }
+    ]
+  },
+  "ex-rdak5gaa": {
+    "prompt": "O orçamento da loja conta só os gastos com a tag `Project = shop`. No dia 15 do mês a Ana pôs essa tag em tudo pelas tags padrão do provider e aplicou. No fim do mês a fatura mostra mais gasto da loja do que o orçamento contou. Quais destes ajudam a explicar a diferença? Marque todas as que se aplicam.",
+    "hint": "Infraestrutura como Código, aula 16; Nuvem e Serverless, aula 10.",
+    "choices": [
+      {
+        "text": "A cobrança por gigabyte do NAT gateway fica de fora, porque um orçamento só conta o que um plano precifica por hora.",
+        "why": "Um orçamento mede o que a conta realmente gastou, uso incluído; é a estimativa antes do `apply` que não vê o uso."
+      },
+      {
+        "text": "Um volume que um colega criou à mão, a partir da máquina dele, não tem a tag `Project`, então o filtro nunca o conta.",
+        "why": "Isso."
+      },
+      {
+        "text": "Os discos dos servidores existiam antes das tags padrão, o provider nunca os atualizou, e eles não têm `Project`.",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma tag que o provider aplica por padrão é invisível à cobrança, que só conta as tags escritas no recurso.",
+        "why": "A cobrança vê as tags que o recurso tem na nuvem, venham de onde vierem no Terraform."
+      },
+      {
+        "text": "O alerta de previsão trocou o valor real do mês por uma projeção, e o orçamento mostrou menos do que foi gasto de fato.",
+        "why": "Uma notificação só avisa; o orçamento continua contando o gasto real."
+      },
+      {
+        "text": "O que rodou sem tag do dia 1 ao dia 15 deixou essas duas semanas sem dono, mesmo depois de receber a tag.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-106j6e6r": {
+    "prompt": "Os servidores web partem de `shop-web:latest`. A versão 1.1.0 sai com defeito, e alguém faz o rollback subindo os servidores de novo a partir de `latest`. Por que isso não muda nada?",
+    "hint": "Infraestrutura como Código, aula 20.",
+    "choices": [
+      {
+        "text": "Cada servidor guarda uma cópia de `latest` em cache, então nenhum pede a imagem de novo ao registry.",
+        "why": "O cache não é o problema: um pull novo de `latest` traz o build mais recente, que é o quebrado."
+      },
+      {
+        "text": "Um contêiner novo guarda os arquivos daquele que substitui, então a página quebrada sobrevive ao reinício.",
+        "why": "Um contêiner novo é a imagem de novo; o `docker diff` não achou nada da edição à mão depois de uma substituição."
+      },
+      {
+        "text": "`latest` nomeia o build mais recente, e esse é a própria 1.1.0, a versão que se quer desfazer.",
+        "why": "Isso."
+      },
+      {
+        "text": "O registry guarda uma só imagem por nome, então a 1.0.1 foi apagada no momento em que a 1.1.0 foi enviada.",
+        "why": "Cada versão é uma imagem própria; a 1.0.1 continua lá, com o seu próprio nome."
+      }
+    ]
+  },
+  "ex-z9jvbq65": {
+    "prompt": "Um job noturno em São Paulo faz vinte chamadas seguidas à API de um parceiro no norte da Virgínia, abrindo uma conexão HTTPS nova para cada uma. O `curl -w` contra a API mostra `dns` abaixo de um milissegundo, e depois `tcp`, `tls` e `first byte` cada um uns 77 ms depois da etapa anterior. Um colega propõe um link com dez vezes a banda. O que encurtaria mais o job?",
+    "hint": "Nuvem e Serverless, aula 9; Redes e Protocolos, aula 5.",
+    "choices": [
+      {
+        "text": "O link mais rápido, porque vinte respostas chegando cada uma dez vezes antes somam no job.",
+        "why": "Uma resposta de poucos kilobytes leva uma fração de milissegundo em qualquer dos dois links. O tempo vai na espera pelas idas e voltas."
+      },
+      {
+        "text": "Um servidor mais rápido atrás da API, já que primeiro byte lento é a aplicação pensando.",
+        "why": "Aqui o primeiro byte chega uma ida e volta depois do handshake: o pedido atravessando o continente e a resposta voltando."
+      },
+      {
+        "text": "Uma conexão mantida aberta para as vinte chamadas, para pagar os handshakes uma vez.",
+        "why": "Uma conexão nova custa uma ida e volta de TCP e uma de TLS antes de o pedido sair. Reaproveitada, cada chamada custa cerca de uma ida e volta em vez de três."
+      },
+      {
+        "text": "Guardar o endereço da API em cache, porque toda conexão nova começa consultando o nome.",
+        "why": "O `dns` fica abaixo de um milissegundo. As consultas não são onde o tempo vai."
+      }
+    ]
+  },
+  "ex-na4xz4df": {
+    "prompt": "Para cortar a conta de computação, o time passa seus hosts de containers para instâncias Arm. O CI continua construindo a imagem com um `docker build` simples num runner x86-64 e publica uma tag. Nas máquinas novas todo container sai na hora com `exec format error`. O que resolve?",
+    "hint": "Nuvem e Serverless, aula 4; Docker e Containers, aula 13.",
+    "choices": [
+      {
+        "text": "Construir com `--platform linux/amd64,linux/arm64`, para a tag levar uma imagem por processador.",
+        "why": "Um processador Arm não roda um binário x86-64. Um build multiplataforma põe uma variante arm64 sob a mesma tag, e cada máquina roda a que combina com ela."
+      },
+      {
+        "text": "Puxar a tag de novo nas máquinas novas, para o registry entregar a variante arm64.",
+        "why": "Um registry só entrega variantes que alguém construiu, e esta tag tem apenas uma imagem amd64."
+      },
+      {
+        "text": "Iniciar as instâncias Arm com a imagem de máquina da frota x86, para o sistema embaixo bater.",
+        "why": "Uma imagem de máquina é um disco, não um processador. Uma instância Arm só roda programas Arm, seja qual for o disco de boot."
+      },
+      {
+        "text": "Trocar o último estágio por uma base distroless, que é publicada para os dois processadores.",
+        "why": "Uma base multiplataforma não ajuda quando o build só produziu amd64: o binário copiado para ela continua x86-64."
+      }
+    ]
+  },
+  "ex-96p84kby": {
+    "prompt": "Os nós de trabalho de um cluster gerenciado ficam em três zonas de uma região. O Deployment da loja roda 6 réplicas com uma topology spread constraint sobre `topology.kubernetes.io/zone`, com `maxSkew: 1` e `whenUnsatisfiable: DoNotSchedule`. Uma zona perde a alimentação de energia. Quantas cópias continuam atendendo nesse momento, e contra o que esse arranjo não protege a loja?",
+    "hint": "Nuvem e Serverless, aula 9; Kubernetes: Orquestração em Produção, aula 31.",
+    "choices": [
+      {
+        "text": "Seis; a constraint mantém uma reserva por zona, e só a região caindo se sente.",
+        "why": "`maxSkew` limita a diferença entre zonas. Seis em três dá duas em cada, sem reserva, e as duas da zona apagada se foram."
+      },
+      {
+        "text": "Cinco; `maxSkew: 1` deixa uma falha levar uma cópia por vez, e a região caindo leva o resto.",
+        "why": "A constraint é verificada quando um pod é posicionado. Ela não diz nada sobre quantos uma falha leva, e uma zona tem dois."
+      },
+      {
+        "text": "Quatro; duas zonas caindo juntas, já que uma falha na região para na borda de uma zona.",
+        "why": "As zonas compartilham os sistemas de controle da região, então uma falha regional não para na fronteira de uma zona. Ela chega às três de uma vez."
+      },
+      {
+        "text": "Quatro; uma falha nos sistemas de controle comuns da região, que chega a todas as zonas.",
+        "why": "Duas por zona deixa quatro. Uma zona mantém dentro dela a falha de um prédio, mas todas rodam sob os mesmos sistemas regionais."
+      }
+    ]
+  },
+  "ex-ve1njvhd": {
+    "prompt": "Uma API interna roda como funções. O painel de latência desenha a média, que fica perto de 40 ms o dia todo. Usuários contam que as primeiras requisições da manhã, e as primeiras depois do almoço, travam por um momento perceptível. Um teste de carga com tráfego constante não mostra nada. O que está acontecendo, e o que o painel precisaria mostrar para enxergar isso?",
+    "hint": "Nuvem e Serverless, aula 8; Observabilidade e Operação, aula 7.",
+    "choices": [
+      {
+        "text": "A rede dos usuários; um teste constante prova que a função é rápida, e 40 ms confirma.",
+        "why": "Tráfego constante mantém os ambientes quentes, então o teste nunca encontra o caso lento. E a média é justamente o número que esconde umas poucas chamadas lentas."
+      },
+      {
+        "text": "Cold starts depois de períodos parados; um percentil alto, que a média de chamadas rápidas esconde.",
+        "why": "Depois de um período parado nenhum ambiente está pronto, e a requisição espera enquanto um é criado. Um punhado de chamadas lentas entre milhares mal mexe na média; um percentil alto mostra."
+      },
+      {
+        "text": "Um cliente de banco aberto no nível de módulo; levá-lo para dentro do handler, com o mesmo painel.",
+        "why": "Dentro do handler ele é pago em toda chamada, quente ou fria. No nível de módulo é pago uma vez por ambiente, que é onde ele deve ficar."
+      },
+      {
+        "text": "Uma rajada de erros diluída na média; um painel de erros com janela de dez minutos a mostraria.",
+        "why": "Nada falhou: as requisições foram lentas e responderam. E uma janela mais longa dilui uma rajada curta em vez de mostrá-la."
+      }
+    ]
+  },
+  "ex-ysf0yv5f": {
+    "prompt": "A função de uma API custa 1,20 USD por milhão de requisições, sem free tier. A alternativa são duas máquinas reservadas por um ano a 0,02610 USD por hora cada, atrás de um balanceador a 0,0225 USD por hora, num mês de 730 horas. Acima de quantos milhões de requisições por mês o par de máquinas passa a ser a escolha mais barata? Dê uma casa decimal.",
+    "hint": "Nuvem e Serverless, aula 8.",
+    "unit": "milhões de requisições"
+  },
+  "ex-ebac3fw7": {
+    "prompt": "Um time quer levar seis cargas de trabalho para uma plataforma de funções. Quais delas têm o formato errado para uma função? Marque todas as que se aplicam.",
+    "hint": "Nuvem e Serverless, aula 8.",
+    "choices": [
+      {
+        "text": "Uma transcodificação de vídeo que roda por cerca de uma hora a cada upload",
+        "why": "Ela não termina rápido, e uma chamada que ainda roda no limite de tempo da plataforma é interrompida."
+      },
+      {
+        "text": "Uma verificação rodada quando um arquivo chega num bucket, poucas vezes por hora",
+        "why": "Em rajadas, curta e sem ninguém esperando: o formato que serve a uma função."
+      },
+      {
+        "text": "Um servidor de jogo que guarda na memória o estado de cada sala, por horas",
+        "why": "O valor dele está no que o processo lembra, e uma função é feita para esquecer."
+      },
+      {
+        "text": "Um job de relatório agendado que termina em dois minutos",
+        "why": "Um job curto e agendado é um dos formatos que a aula aponta como bom encaixe."
+      },
+      {
+        "text": "Uma API pública recebendo dezenas de requisições por segundo, o dia todo, todo dia",
+        "why": "Carga alta e constante é onde uma ou duas máquinas custam menos que a função."
+      },
+      {
+        "text": "Uma ferramenta usada poucas vezes por dia, onde esperar um segundo não incomoda",
+        "why": "Uso esparso não custa nada entre as chamadas, e um cold start só pesa onde toda requisição precisa ser rápida."
+      }
+    ]
+  },
+  "ex-1qbg751n": {
+    "prompt": "As sessões vão para um cache compartilhado, os uploads para o armazenamento de objetos, os logs são enviados para fora à medida que são escritos. Quando nada do que a aplicação guarda mora na máquina que a roda, e por isso uma cópia do template pode substituir essa máquina sem ninguém perceber, a aula chama a instância de ___.",
+    "hint": "Nuvem e Serverless, aula 4.",
+    "blanks": [
+      {
+        "accept": [
+          "stateless",
+          "sem estado",
+          "state-less",
+          "state less"
+        ]
+      }
+    ]
+  },
+  "ex-m02eae4p": {
+    "prompt": "A primeira conta mensal veio bem acima de uma estimativa que contava só as máquinas, o banco de dados e o armazenamento. Associe o que você encontra na conta do provedor à linha da fatura que isso explica.",
+    "hint": "Nuvem e Serverless, aula 10.",
+    "pairs": [
+      {
+        "left": "Uma réplica numa segunda zona que recebe cada mudança feita no primário",
+        "right": "uma cobrança por gigabyte, uma vez ao sair e outra ao chegar"
+      },
+      {
+        "left": "Máquinas privadas lendo fotos de produtos do armazenamento de objetos pelo NAT gateway",
+        "right": "uma cobrança de processamento por gigabyte, além de uma por hora"
+      },
+      {
+        "left": "Um volume anexado depois do lançamento a uma máquina apagada há meses",
+        "right": "uma cobrança mensal por gigabyte guardado, de um disco que ninguém usa"
+      },
+      {
+        "left": "Logs da aplicação se acumulando no armazenamento sem regra que os apague",
+        "right": "uma linha que cresce todo mês sem ninguém ter decidido"
+      }
+    ],
+    "right_distractors": [
+      "uma cobrança por gigabyte pelos dados que chegam da internet",
+      "o preço por hora das próprias instâncias"
+    ]
+  },
+  "ex-sfcgnqjj": {
+    "prompt": "Por uns quarenta minutos numa tarde, as leituras do armazenamento de objetos da empresa falham com erro, e depois voltam a funcionar sem faltar nada. O armazenamento é projetado para onze noves de durabilidade e 99,99% de disponibilidade. Um colega escreve no canal do incidente que o provedor quebrou os onze noves. Ele tem razão?",
+    "hint": "Nuvem e Serverless, aula 5.",
+    "choices": [
+      {
+        "text": "Sim: onze noves quer dizer que um pedido falha uma vez em cem bilhões, e milhares falharam hoje.",
+        "why": "Onze noves fala dos bytes sobreviverem a um ano, não de pedidos darem certo."
+      },
+      {
+        "text": "Não: aquilo foi disponibilidade, e 99,99% deixa uns 53 minutos por ano em que leituras falham.",
+        "why": "Durabilidade é se os bytes ainda existem, e nenhum se perdeu. 0,01% dos 525.600 minutos de um ano dá uns 53."
+      },
+      {
+        "text": "Não: onze noves cobre um disco ou uma zona falhando, e quarenta minutos de erro não é isso.",
+        "why": "O veredito está certo e o motivo não: durabilidade é sobre perder bytes, seja qual for a causa, e nada se perdeu."
+      },
+      {
+        "text": "Sim: os objetos se perderam e voltaram de cópias em outra zona, o caso que a durabilidade conta.",
+        "why": "Nada se perdeu: as leituras falharam e depois funcionaram. Durabilidade conta objetos perdidos para sempre."
+      }
+    ]
+  },
+  "ex-6s98kvw5": {
+    "prompt": "Um job noturno de backup precisa enviar um arquivo para uma pasta de um bucket. A identidade dele recebeu isso, mais direitos totais sobre identidades e permissões, acrescentados \"por enquanto\" enquanto alguém o depurava há dois anos. As credenciais do job vazam. O que quem as tem consegue fazer?",
+    "hint": "Nuvem e Serverless, aula 7.",
+    "choices": [
+      {
+        "text": "Gravar arquivos só naquela pasta, porque o job nunca fez outra chamada além dessa.",
+        "why": "O que uma identidade pode fazer é o que as políticas dela permitem, não o que ela usou. Os direitos a mais continuam concedidos."
+      },
+      {
+        "text": "Mudar quem pode fazer o quê, mas não mexer em bucket, já que o acesso a eles cobre uma pasta.",
+        "why": "Direitos sobre identidades deixam quem os tem conceder a si mesmo acesso ao armazenamento, e a todo o resto."
+      },
+      {
+        "text": "Qualquer coisa na conta, depois de dar a si mesmo uma política de administrador.",
+        "why": "Uma identidade que pode mudar acessos pode se dar qualquer coisa: direitos totais sobre identidades são acesso de administrador com outro nome."
+      },
+      {
+        "text": "Nada por muito tempo, já que direitos dados durante a depuração caducam quando aquela sessão termina.",
+        "why": "Nada expira a menos que alguém faça expirar, e é assim que a concessão continua lá dois anos depois."
+      }
+    ]
+  },
+  "ex-rrz99r1a": {
+    "prompt": "Seu projeto de portfólio faz deploy como o loanbook: `sudo podman build -t loanbook .` no servidor, e um arquivo de unidade com `Image=localhost/loanbook:latest`. Você refaz o build para uma versão nova, ela quebra, e você quer de volta a versão que rodava antes. O que impede?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15; Docker e Containers, aula 16.",
+    "choices": [
+      {
+        "text": "O Podman baixa `latest` de novo do registry a cada reinício e substitui a imagem que você tiver posto de volta.",
+        "why": "Uma execução só baixa quando o nome não existe na máquina, e `localhost/loanbook` foi construída ali e nunca baixada."
+      },
+      {
+        "text": "O build novo apagou a imagem antiga do servidor, porque um build sobrescreve qualquer imagem de mesmo nome.",
+        "why": "A imagem antiga continua no servidor, com um id sem nome. O que ela perdeu foi o nome, e esse é o problema de verdade."
+      },
+      {
+        "text": "Nada mais nomeia o build antigo: `latest` só nomeia o que está lá agora; dê aos builds uma tag de versão.",
+        "why": "Certo. Sem versão na tag não há para onde voltar pelo nome; marcar cada build, com a tag do git por exemplo, e apontar `Image=` para ela dá um nome a cada versão."
+      },
+      {
+        "text": "Nada impede: `git checkout v1.0.0` no clone do srv basta, e o systemd volta a rodar o código antigo.",
+        "why": "O serviço roda a imagem, não o clone. Um checkout muda arquivos que ninguém está rodando até que se construa uma imagem com eles."
+      }
+    ]
+  },
+  "ex-3ct7cpxk": {
+    "prompt": "O pipeline do seu projeto fica verde a cada push, e o relatório de cobertura mostra o arquivo com a única regra do projeto em 100%, ramos incluídos. Na entrevista perguntam como você sabe que os testes pegariam essa regra quebrando. Qual resposta se sustenta?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 12; Testes Automatizados e CI/CD, aula 4.",
+    "choices": [
+      {
+        "text": "Cada linha do arquivo da regra rodou nos testes, então cada linha foi conferida.",
+        "why": "Coberta quer dizer que a linha rodou. Nada na medição pergunta se algum teste olhou o que ela fez."
+      },
+      {
+        "text": "O relatório de ramos também está em 100%, então as duas saídas de cada decisão foram testadas.",
+        "why": "Ramos percorridos continuam sendo só código que rodou; um teste que não verifica nada chega a 100% do mesmo jeito."
+      },
+      {
+        "text": "Tirei a regra de propósito, rodei a suíte e vi o teste certo falhar.",
+        "why": "Certo. Quebrar o código de propósito é a verificação direta de que um teste percebe, e a cobertura não tem como dizer isso."
+      },
+      {
+        "text": "Todo push roda a suíte inteira no pipeline, e ela nunca ficou vermelha.",
+        "why": "Uma suíte que não confere nada também nunca fica vermelha. Passar diz que os testes rodaram, não que veriam a regra sumir."
+      }
+    ]
+  },
+  "ex-sn1ysv4j": {
+    "prompt": "Seu serviço roda numa unidade do Quadlet como a do loanbook, com `HealthCmd`, `HealthInterval=30s` e `Restart=always`, e nada mais. Uma noite o processo trava: continua rodando, `/healthz` para de responder e o Podman marca o contêiner como unhealthy. O que acontece em seguida?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15; Observabilidade e Operação, aula 14.",
+    "choices": [
+      {
+        "text": "O systemd o reinicia em segundos, como fez depois do `podman kill`.",
+        "why": "O `podman kill` encerrou o processo, e é a isso que `Restart=always` reage. Um processo travado não saiu."
+      },
+      {
+        "text": "Nada o reinicia: o reinício reage ao processo morrer, e unhealthy é um status que um monitor lê.",
+        "why": "Certo. Uma política de reinício age quando o processo termina, nunca por uma verificação que falhou; o status unhealthy é informação até que algo o observe."
+      },
+      {
+        "text": "O Podman mata o contêiner depois de três verificações seguidas com falha e sobe outro a partir da imagem.",
+        "why": "Isso é o que uma liveness probe faz no Kubernetes, ou o Swarm com o Docker. Um healthcheck numa máquina só registra o resultado."
+      },
+      {
+        "text": "O Caddy para de mandar requisições a ele até a verificação passar, e enquanto isso a página responde com um erro.",
+        "why": "Tirar uma cópia do tráfego é uma decisão de readiness, tomada por um balanceador de carga. O Caddyfile do loanbook só repassa para uma porta, e não há outra cópia para onde mandar."
+      }
+    ]
+  },
+  "ex-zcaegqyf": {
+    "prompt": "Seu projeto escreve uma linha de log por requisição, como o loanbook. Um amigo que o revisa sugere pôr mais coisa em cada linha, para facilitar a investigação de reclamações. O que pertence à linha? Marque todas as que se aplicam.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 11; Observabilidade e Operação, aula 10.",
+    "choices": [
+      {
+        "text": "o método e o caminho",
+        "why": "O bastante para encontrar a requisição: a linha do loanbook é o método, o caminho e o status."
+      },
+      {
+        "text": "o status da resposta",
+        "why": "O status diz em que linha da tabela de erros a requisição caiu, num número só."
+      },
+      {
+        "text": "o número do item, um id que não significa nada fora do sistema",
+        "why": "Um id interno deixa a investigação achar o resto no banco, sob o controle de acesso do próprio banco."
+      },
+      {
+        "text": "o nome de quem pegou emprestado, para ligar uma reclamação a uma pessoa",
+        "why": "Um nome é dado pessoal, e um log é guardado por mais tempo e lido por mais gente que o banco de onde veio."
+      },
+      {
+        "text": "o corpo inteiro da requisição, para poder repetir uma requisição ruim",
+        "why": "Um corpo carrega tudo, cedo ou tarde, nomes e segredos incluídos; está na lista do que nunca vai para um log."
+      },
+      {
+        "text": "um traceback para cada segundo empréstimo recusado, mostrando onde foi recusado",
+        "why": "Uma recusa é a regra funcionando. Traceback é para o inesperado, para que um traceback no log signifique um bug."
+      }
+    ]
+  },
+  "ex-h7cm1bjw": {
+    "prompt": "Seu projeto de portfólio é um registro de empréstimos para a sala de informática de uma escola, com deploy feito como o do loanbook: um contêiner sob o systemd, atrás de HTTPS, derrubado uma vez de propósito para provar que volta. Que linha o descreve no seu currículo?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 4; O Projeto de Portfólio: do Briefing ao Deploy, aula 15.",
+    "choices": [
+      {
+        "text": "Fiz o deploy de um serviço em contêiner com Podman, systemd, Caddy e cloud-init no Ubuntu Server 24.04, tudo com HTTPS.",
+        "why": "Uma lista de ferramentas serve tanto para um projeto que funciona quanto para um que nunca rodou. Diz o que foi usado, não o que foi feito."
+      },
+      {
+        "text": "Fui responsável pelo deploy e pela operação de um serviço em contêiner com HTTPS, mantendo-o no ar.",
+        "why": "*Fui responsável por* esconde o que você fez, e nada na linha pode ser conferido."
+      },
+      {
+        "text": "Melhorei em 99% a disponibilidade de um serviço em contêiner, colocando-o sob o systemd com reinício automático.",
+        "why": "Nada foi medido que pudesse dar esse número, e o entrevistador vai perguntar de onde ele veio."
+      },
+      {
+        "text": "Pus no ar o registro de empréstimos de uma escola, com HTTPS, que se recupera sozinho; derrubei-o e voltou com os dados.",
+        "why": "Certo: o que foi feito, o que é verdade agora e uma evidência que qualquer um confere, o contador de reinícios e os dados ainda lá."
+      }
+    ]
+  },
+  "ex-hh5h7xhq": {
+    "prompt": "Você faz o deploy do seu projeto no seu próprio srv do jeito que a aula 15 faz com o loanbook. Ponha os passos na ordem em que a aula os dá.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15.",
+    "items": [
+      "Enviar a `main` e as tags para o repositório bare no srv",
+      "Clonar no srv e conferir que está no mesmo commit do laptop",
+      "Construir a imagem com `podman build`",
+      "Instalar o arquivo `.container` onde o Quadlet o lê",
+      "Subir o serviço e perguntar `/healthz` em `127.0.0.1`",
+      "Instalar o Caddyfile e recarregar o Caddy"
+    ],
+    "trap": "Construir antes de conferir o commit do clone é como acontece o bug de deploy mais comum da aula: uma imagem de algo diferente do que você pensa."
+  },
+  "ex-zdvr979h": {
+    "prompt": "Ao construir e acessar seu próprio srv, você encontra quatro erros. Associe cada um ao que a aula 15 diz que o causa.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15.",
+    "pairs": [
+      {
+        "left": "`ssh: Could not resolve hostname srv`",
+        "right": "não há uma entrada `Host srv` em `~/.ssh/config`, ou o arquivo tem outro nome"
+      },
+      {
+        "left": "`podman: command not found`, minutos depois do primeiro boot",
+        "right": "o cloud-init ainda está instalando os pacotes"
+      },
+      {
+        "left": "`REMOTE HOST IDENTIFICATION HAS CHANGED!` depois que você reconstruiu o srv",
+        "right": "o ssh lembra as chaves da máquina antiga, e `ssh-keygen -R` as esquece"
+      },
+      {
+        "left": "`curl: (60) SSL certificate problem: unable to get local issuer certificate`",
+        "right": "o laptop ainda não confia na autoridade local do Caddy"
+      }
+    ],
+    "right_distractors": [
+      "a virtualização do processador está desligada no firmware",
+      "o usuário está errado, porque o srv.yaml substituiu o `ubuntu`"
+    ]
+  },
+  "ex-10y9fhvd": {
+    "prompt": "Você acabou de copiar `loanbook.container` para `/etc/containers/systemd/`. Antes que `systemctl start loanbook` funcione, o systemd precisa ler o arquivo novo e gerar a partir dele o `loanbook.service`. Que comando faz isso? `sudo systemctl ___`",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15.",
+    "blanks": [
+      {
+        "accept": [
+          "daemon-reload",
+          "daemon reload",
+          "systemctl daemon-reload",
+          "sudo systemctl daemon-reload"
+        ]
+      }
+    ]
+  },
+  "ex-03hp7h2y": {
+    "prompt": "O arquivo de unidade do loanbook define `HealthInterval=30s`. Quantas vezes por dia o Podman roda a verificação de saúde?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15.",
+    "unit": "verificações"
+  },
+  "ex-wd29jpwq": {
+    "prompt": "Ao construir o srv, você colou sua chave pública no srv.yaml quebrada em duas linhas, e `ssh srv true` responde `Permission denied (publickey)`. Você junta a linha no srv.yaml e reinicia a máquina, e o ssh continua recusando. Por quê?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15.",
+    "choices": [
+      {
+        "text": "O srv.yaml desligou o login por senha com `ssh_pwauth`, e essa linha tem de sair primeiro.",
+        "why": "`ssh_pwauth: false` é para ficar; a chave é o caminho de entrada, e ela nunca chegou à máquina."
+      },
+      {
+        "text": "O ssh ainda lembra a chave antiga do srv e precisa esquecê-la com `ssh-keygen -R`.",
+        "why": "Esse é o remédio para o aviso de que o host mudou, depois de reconstruí-lo. Esta recusa é sobre a sua chave, não a do srv."
+      },
+      {
+        "text": "A chave pública também precisa ser escrita em `~/.ssh/config`, na entrada `Host srv`.",
+        "why": "Esse arquivo dá o endereço e o usuário. A metade pública vai no srv, e era para isso que servia o srv.yaml."
+      },
+      {
+        "text": "O cloud-init só lê o srv.yaml no primeiro boot; apague o srv e crie-o de novo.",
+        "why": "Certo. Corrigir o arquivo não muda nada numa máquina que já existe; `multipass delete --purge srv` e a linha do `launch` constroem uma que o lê."
+      }
+    ]
+  },
+  "ex-hqcqj6ha": {
+    "prompt": "Três semanas no seu primeiro emprego em DevOps, você faz o deploy de uma mudança na configuração do proxy às 10:05. Às 10:20 é declarado um incidente por erros no checkout, e o comandante pergunta no canal o que mudou. Você não tem certeza de que sua mudança é a causa. O que você faz?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 20; Observabilidade e Operação, aula 17.",
+    "choices": [
+      {
+        "text": "Diz no canal, agora, que mudou o proxy às 10:05 e que pode ter relação.",
+        "why": "Certo. Dizer cedo a quem precisa saber é a parte do júnior, e *o que mudou?* é a pergunta que resolve a maioria dos incidentes; uma mudança que se revela sem relação custa uma frase."
+      },
+      {
+        "text": "Confere sua mudança em silêncio primeiro, para o time não ir atrás da causa errada.",
+        "why": "Tempo gasto sozinho transforma um erro pequeno num incidente mais longo, e o hábito que prejudica é esperar ter certeza."
+      },
+      {
+        "text": "Desfaz sua mudança por conta própria e avisa quando os erros pararem.",
+        "why": "Uma mudança sem aviso pode colidir com a de outra pessoa, e por isso ela é anunciada antes com *objeções?*; e descobrir depois que você sabia é o que os times menos perdoam."
+      },
+      {
+        "text": "Manda seu diff ao comandante por mensagem privada, para deixar o canal livre para quem está investigando.",
+        "why": "O comandante decide e não depura; quem investiga precisa do fato, no canal onde a resposta acontece."
+      }
+    ]
+  },
+  "ex-qgftqs2f": {
+    "prompt": "Sua primeira tarefa no emprego novo: o backup noturno apaga os dumps depois de três dias, embora o runbook prometa sete. O repositório do time recusa pull requests cujas mensagens não seguem o Conventional Commits. Que primeira linha conclui a tarefa do jeito que o time espera?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 20; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 11.",
+    "choices": [
+      {
+        "text": "`fix: fix backup bug`",
+        "why": "Está no formato e não diz nada. Um tipo não é um motivo, e o leitor ainda precisa abrir o diff."
+      },
+      {
+        "text": "`Keep seven days of backup dumps, not three`",
+        "why": "Uma boa linha no imperativo, e a verificação do time a recusa: uma primeira tarefa se termina no padrão do time, não no seu."
+      },
+      {
+        "text": "`fix(backup)!: keep seven days of dumps, not three`",
+        "why": "O `!` marca uma mudança que quebra compatibilidade e faz da próxima versão uma versão major. Nada que funcionava deixa de funcionar aqui."
+      },
+      {
+        "text": "`fix(backup): keep seven days of dumps, not three`",
+        "why": "Certo: um bug corrigido, a parte do projeto e o que o commit faz, no formato que a verificação lê. O porquê vai no corpo."
+      }
+    ]
+  },
+  "ex-cech25m0": {
+    "prompt": "Chega uma oferta por escrito. Associe cada cláusula das letras miúdas ao que a aula 18 diz sobre ela.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 18.",
+    "pairs": [
+      {
+        "left": "período de experiência (*contrato de experiência*)",
+        "right": "no máximo 90 dias, que podem ser divididos em dois períodos"
+      },
+      {
+        "left": "não concorrência",
+        "right": "o que cobre, por quanto tempo e se você é pago durante esse tempo"
+      },
+      {
+        "left": "propriedade intelectual",
+        "right": "que não reivindique o que você constrói no seu tempo, no seu equipamento"
+      },
+      {
+        "left": "exclusividade, num contrato PJ",
+        "right": "proibir outros clientes, o que deixa o contrato ainda mais parecido com um emprego sem as proteções"
+      }
+    ],
+    "right_distractors": [
+      "um desconto de até 6% do salário-base",
+      "um valor de zero ao comparar ofertas"
+    ]
+  },
+  "ex-3zdm7kqg": {
+    "prompt": "Um desafio em casa para uma vaga júnior de DevOps: *conserte esta máquina virtual quebrada*, com cerca de três horas sugeridas. Quando as três horas acabam, um requisito ainda falha. O que você entrega? Marque todas as que se aplicam.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 13.",
+    "choices": [
+      {
+        "text": "os passos que você seguiu, em ordem, escritos para outra pessoa poder segui-los",
+        "why": "Num desafio de infraestrutura, o runbook faz o papel do README."
+      },
+      {
+        "text": "o que você conferiu no final",
+        "why": "A aula pede as verificações ao lado dos passos, para quem avalia ver como você sabe que funciona."
+      },
+      {
+        "text": "uma nota com o requisito que falha, em o que você faria com mais tempo",
+        "why": "É nessa linha que vão as partes que faltam; ser honesto sobre elas vale mais que levar o dobro do tempo em silêncio."
+      },
+      {
+        "text": "uma segunda noite de trabalho, para que nada falte quando chegar",
+        "why": "Quando o tempo acaba, pare. Uma entrega que levou quatro noites diz que você não leu o enunciado ou não sabe estimar."
+      },
+      {
+        "text": "um dashboard a mais, para mostrar o que mais você sabe fazer",
+        "why": "Um extra em cima de um requisito que falta passa a impressão de que você não leu o enunciado."
+      },
+      {
+        "text": "a correção completa, enviada um dia depois do prazo",
+        "why": "Uma entrega atrasada e perfeita costuma ser pior que uma no prazo e incompleta."
+      }
+    ]
+  },
+  "ex-w3ghm6v9": {
+    "prompt": "Duas ofertas para a mesma vaga júnior: CLT a R$ 3.000 por mês, ou PJ a R$ 3.600 por mês. Como PJ você tiraria um mês de folga por ano, sem faturar nada nele. Deixando impostos e benefícios de lado, qual paga mais num ano pela conta da aula 17?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 17.",
+    "choices": [
+      {
+        "text": "A oferta PJ: R$ 3.600 é exatamente a nota que empata com esse ano CLT.",
+        "why": "Só com doze meses faturados. Com onze, a nota que empata é R$ 3.927,27."
+      },
+      {
+        "text": "A oferta PJ, por R$ 600 a mais por mês, já que os dois valores são brutos antes de qualquer desconto.",
+        "why": "Isso compara os meses. Um ano CLT vale 14,40 salários mensais, contando o 13º, o terço de férias e o FGTS."
+      },
+      {
+        "text": "Nenhuma das duas: os R$ 600 a mais por mês pagam o mês sem faturar.",
+        "why": "Onze notas de R$ 3.600 somam R$ 39.600, e o ano CLT é R$ 43.200: o acréscimo não cobre o mês."
+      },
+      {
+        "text": "A oferta CLT: onze notas de R$ 3.600 dão R$ 39.600, abaixo de R$ 43.200.",
+        "why": "Certo. R$ 3.000 vale 14,40 meses por ano na CLT, R$ 43.200, e onze notas PJ ficam R$ 3.600 abaixo disso."
+      }
+    ]
+  },
+  "ex-a762gtw9": {
+    "prompt": "Dia 45 de um *contrato de experiência* de 90 dias. Na primeira semana sua gestora disse como é um bom resultado no fim, e você anotou. O que a aula 21 manda fazer agora?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 21.",
+    "choices": [
+      {
+        "text": "Esperar a avaliação do dia 90, já que a lista está combinada e anotada.",
+        "why": "Uma lacuna descoberta no dia 90 não tem mais tempo para ser fechada. A metade é quando ainda dá para corrigir."
+      },
+      {
+        "text": "Repassar a lista com a gestora e comparar onde você acha que está.",
+        "why": "Certo. Conferir na metade, a sua visão contra a dela, faz uma lacuna aparecer com seis semanas pela frente, não no último dia."
+      },
+      {
+        "text": "Ficar até tarde nas próximas semanas, para a segunda metade fechar com uma semana forte.",
+        "why": "O período de experiência se passa sendo previsível, não ficando até tarde nem com uma semana impressionante."
+      },
+      {
+        "text": "Perguntar ao RH se o contrato vai seguir como um contrato comum depois do fim.",
+        "why": "A resposta vem do trabalho comparado com a lista, e quem tem a lista é a sua gestora."
+      }
+    ]
+  },
+  "ex-f2gm9cad": {
+    "prompt": "Um anúncio para engenheiro de DevOps *júnior* diz que você seria responsável por toda a infraestrutura da empresa, e que mais ninguém trabalha nela. Como a aula 1 lê essa linha?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 1.",
+    "choices": [
+      {
+        "text": "Como uma vaga sênior com salário de júnior; pergunte na triagem com quem você aprenderia.",
+        "why": "Certo. Um júnior recebe partes pequenas e definidas e deve perguntar; ser o único responsável por tudo é o oposto disso."
+      },
+      {
+        "text": "Como a lista de desejos de sempre: ninguém confere item por item, então candidate-se se tiver o resto.",
+        "why": "É assim que se lê a lista de requisitos. Ser o único responsável não é um item da lista; é o formato da vaga."
+      },
+      {
+        "text": "Como um motivo para só se candidatar quando tiver todas as ferramentas que o anúncio cita.",
+        "why": "As ferramentas não são o problema aqui, e nenhum júnior tem a lista toda; o problema é não ter com quem aprender."
+      },
+      {
+        "text": "Como um bom primeiro emprego, porque você seria independente desde o início.",
+        "why": "Independência num primeiro emprego é um alerta: o que faz um primeiro emprego forte é alguém mais sênior revisando o seu trabalho."
+      }
+    ]
+  },
+  "ex-vh93ns9e": {
+    "prompt": "Um ano no emprego, você sempre reinicia o worker da fila depois de um deploy porque o runbook manda, e nunca soube por que isso é necessário. O que a aula 22 sugere?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 22.",
+    "choices": [
+      {
+        "text": "Deixar como está: o que uma ferramenta exige se aprende quando o trabalho pede.",
+        "why": "Esse é o conselho para ferramentas. O *porquê* de algo funcionar é a camada dos fundamentos, que o trabalho raramente pede para entender."
+      },
+      {
+        "text": "Tirar uma certificação do produto de filas para cobrir a lacuna.",
+        "why": "Uma certificação serve quando um anúncio a pede ou quando dá estrutura a uma habilidade vizinha, não para substituir a pergunta."
+      },
+      {
+        "text": "Descobrir por que o reinício funciona: é assim que os fundamentos crescem sem um curso.",
+        "why": "Certo. Escolher, uma vez por semana, algo que você faz porque mandaram e descobrir por quê é o segundo hábito da aula."
+      },
+      {
+        "text": "Esperar o próximo emprego, que vai ensinar o que este deixou de fora.",
+        "why": "O lugar mais barato para aprender é o trabalho pelo qual você já é pago, e ninguém vai agendar essa camada para você."
+      }
+    ]
+  }
+}

@@ -1,0 +1,1499 @@
+[
+  {
+    "id": "ex-5bdfv4pd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On a build server you ran `sudo usermod -aG docker bruno`, and `getent group docker` now lists him. In the ssh session he already had open, `docker ps` still answers `permission denied while trying to connect to the docker API at unix:///var/run/docker.sock`. What do you tell him?",
+    "hint": "Linux and the Command Line, lesson 4; Docker and Containers, lesson 6.",
+    "choices": [
+      {
+        "text": "Restart the Docker daemon, so that it reads `/etc/group` again and admits him.",
+        "correct": false,
+        "why": "The daemon is not the one holding a stale list. The socket checks the groups of the process that connects, and his shell still carries the list it started with."
+      },
+      {
+        "text": "Run `sudo chmod 666 /var/run/docker.sock`, so the socket stops asking about groups.",
+        "correct": false,
+        "why": "The socket controls a daemon that runs as root, so opening it to every account hands every account root on the machine, by another route."
+      },
+      {
+        "text": "Log out and back in, or run `newgrp docker`: his shell still has its old groups.",
+        "correct": true,
+        "why": "Group membership is attached to a process when it starts. The change is in `/etc/group`, and only a new login, or the new shell `newgrp` starts, picks it up."
+      },
+      {
+        "text": "Run `sudo usermod -G docker bruno` instead; the `-a` kept the old groups in the way.",
+        "correct": false,
+        "why": "Without `-a`, `-G` replaces every supplementary group he had, `sudo` included. And his open shell would still not see the change."
+      }
+    ]
+  },
+  {
+    "id": "ex-yztawpkg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`docker stop` on one service takes exactly ten seconds every time. Its log never shows the shutdown message the program writes when it receives `SIGTERM`, and the container exits with `137`. The Dockerfile ends with `CMD shelf`. What is happening?",
+    "hint": "Linux and the Command Line, lesson 6; Docker and Containers, lesson 11.",
+    "choices": [
+      {
+        "text": "Process 1 is `/bin/sh -c shelf`, which does not pass `SIGTERM` on; ten seconds later `SIGKILL` ends both.",
+        "correct": true,
+        "why": "The shell form wraps the command in a shell, and the signal stops there. `SIGKILL` cannot be caught, so the program never logs or tidies up, and 128 plus 9 is 137. `CMD [\"shelf\"]` makes the program itself process 1."
+      },
+      {
+        "text": "The program runs out of memory while it is shutting down, and 137 is the exit code that always means out of memory.",
+        "correct": false,
+        "why": "137 means killed by `SIGKILL`, whoever sent it. Docker records `OOMKilled=true` when it was memory, and a delay of exactly ten seconds is `docker stop` giving up."
+      },
+      {
+        "text": "`docker stop` sends `SIGKILL` straight away rather than asking first, and 137 is what every stopped container reports.",
+        "correct": false,
+        "why": "It sends `SIGTERM` first. The same program in exec form stopped in a fifth of a second and logged that it was shutting down."
+      },
+      {
+        "text": "The program catches `SIGTERM` correctly and spends its ten seconds finishing the requests it still has open.",
+        "correct": false,
+        "why": "A program that caught it would write its shutdown message and then exit with its own status. A status of 137 says it was killed, not that it finished."
+      }
+    ]
+  },
+  {
+    "id": "ex-1y4x4h27",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`ssh` from your laptop to a new server hangs for a long while and ends with `Connection timed out`. On the server's console, `ss -tulpn` shows sshd in `LISTEN` on `0.0.0.0:22` with a `Recv-Q` of 0, and `systemctl is-active ssh` prints `active`. Where is the fault?",
+    "hint": "Linux and the Command Line, lesson 11; Networks and Protocols, lesson 3.",
+    "choices": [
+      {
+        "text": "In sshd's configuration: it listens on the loopback address only, so nothing from outside reaches it.",
+        "correct": false,
+        "why": "Loopback only would show `127.0.0.1:22`. `0.0.0.0` means every address on the machine, which is reachable from the network."
+      },
+      {
+        "text": "In the listen backlog: it is full, so the kernel drops each new connection.",
+        "correct": false,
+        "why": "On a listening socket a full backlog shows `Recv-Q` equal to `Send-Q`. A `Recv-Q` of 0 means nothing is waiting to be accepted."
+      },
+      {
+        "text": "In sshd itself: a stopped service is what makes a connection time out.",
+        "correct": false,
+        "why": "A port with nothing listening answers at once with `Connection refused`. And the service here is active and listening."
+      },
+      {
+        "text": "Somewhere between the two machines: a firewall is discarding the attempt.",
+        "correct": true,
+        "why": "The server side is up and listening on every address. No answer at all, after a long wait, is what a dropped packet looks like, so the question goes to whoever runs the firewall."
+      }
+    ]
+  },
+  {
+    "id": "ex-baa564sh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A nightly backup ran from root's crontab as `0 3 * * * /usr/local/bin/backup.sh >> /var/log/backup.log 2>&1`, and the script exits non-zero on any failure. The server was rebuilt, came back with no crontab at all, and nobody noticed for three weeks. Which addition would have caught that?",
+    "hint": "Linux and the Command Line, lesson 13; Observability and Operations, lesson 5.",
+    "choices": [
+      {
+        "text": "Drop the redirect from the line, so that cron mails each failure to the address in `MAILTO` instead.",
+        "correct": false,
+        "why": "Cron mails what a job prints. A job that never starts prints nothing, so the mailbox stays as quiet as it does on a good night."
+      },
+      {
+        "text": "Push the time of each successful run as a metric, and alert once it is more than a day plus some slack old.",
+        "correct": true,
+        "why": "Now minus that time grows every second whether or not anything runs, so the alert fires on the night the job does not run. Of the four, it is the only check that does not need the job to start."
+      },
+      {
+        "text": "Alert whenever the backup script exits with any status other than 0, as a failed run always does.",
+        "correct": false,
+        "why": "A job that never ran has no exit status to alert on. This catches a run that failed, not a run that never happened."
+      },
+      {
+        "text": "Wrap each run in a trace whose root span is named after the job, so every night leaves a record behind it.",
+        "correct": false,
+        "why": "A trace exists only for work that happened. The night the scheduler is missing leaves no span at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-7840k8bk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On an Ubuntu server, an Nginx site says `root /home/ana/site;`. Every file under it is `-rw-r--r--`, and `/home/ana` is `drwxr-x---`, owned by `ana` with group `ana`. Every request for the site fails, and its error log reports a permission problem. What is wrong?",
+    "hint": "Linux and the Command Line, lesson 4; Web Servers and Caching, lesson 1.",
+    "choices": [
+      {
+        "text": "The files need `x` for other as well as `r`, because Nginx executes the files that it serves to a client.",
+        "correct": false,
+        "why": "`x` on a file means it may be run as a program. Nginx only reads them, and `r` for other is already there."
+      },
+      {
+        "text": "Nothing about modes: the master process runs as root, and it reads every file itself before a worker sends it.",
+        "correct": false,
+        "why": "The master reads the configuration and opens the port, and never answers a request. The workers do the serving."
+      },
+      {
+        "text": "`www-data` needs `r` on `/home/ana`, because it has to list that directory before it can open a file inside it.",
+        "correct": false,
+        "why": "`r` on a directory gives the list of names. Opening a file whose name you know needs `x` on the way, not `r`."
+      },
+      {
+        "text": "The workers run as `www-data`, and other has no `x` on `/home/ana` to let them pass through.",
+        "correct": true,
+        "why": "Every directory on the path needs `x` for the account asking. `namei -l` on the full path shows the one that stops it, whatever the files say."
+      }
+    ]
+  },
+  {
+    "id": "ex-n3nvrn1j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A service started by systemd logs `Too many open files`. The on-call engineer runs `ulimit -n` in an ssh session, sees `20000`, raises it in that shell, and restarts the service with `systemctl restart`. Within the hour the error is back. Why did raising the limit change nothing?",
+    "hint": "Linux and the Command Line, lesson 6.",
+    "choices": [
+      {
+        "text": "A service gets its limit from `LimitNOFILE=` in its unit file, and never from an engineer's shell.",
+        "correct": true,
+        "why": "A service does not get your shell's limits. And an error that comes back after a restart is usually a leak: `ls -l /proc/PID/fd | wc -l` counts the descriptors, and the list tends to name the culprit."
+      },
+      {
+        "text": "`ulimit -n` limits how many processes an account may run, so it was the wrong limit to raise.",
+        "correct": false,
+        "why": "`-n` is open files per process. The process limit is `ulimit -u`, a separate line in `ulimit -a`."
+      },
+      {
+        "text": "Network connections live in a separate table of their own, which no open-files limit ever covers at all.",
+        "correct": false,
+        "why": "Every network connection is a descriptor too, in the same table and counted against the same limit. That is why a busy server reaches it."
+      },
+      {
+        "text": "A new open-files limit only takes effect after the whole machine reboots.",
+        "correct": false,
+        "why": "It applies at once, to processes started from that shell. The service was started by systemd, so it was never one of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-9ytevf6a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "In a CI job, `./deploy.sh | grep -c ERROR` prints `0`, yet lines beginning with `ERROR` are plainly in the job's output just above it. What is happening?",
+    "hint": "Linux and the Command Line, lesson 8.",
+    "choices": [
+      {
+        "text": "The pipe started `grep` before `deploy.sh` had written anything, so `grep` read an empty stream.",
+        "correct": false,
+        "why": "Both stages run at once, and `grep` keeps reading whatever arrives until the stream ends. Timing is not the problem."
+      },
+      {
+        "text": "The redirect belongs at the end of the line: `./deploy.sh | grep -c ERROR 2>&1`.",
+        "correct": false,
+        "why": "That redirects `grep`'s own errors. Whatever `deploy.sh` writes to standard error still goes around the pipe."
+      },
+      {
+        "text": "Those lines go to standard error, which a pipe does not carry, so `grep` never receives them.",
+        "correct": true,
+        "why": "A pipe connects standard output only, and errors reach the screen by going around it. `./deploy.sh 2>&1 | grep -c ERROR` sends them into the pipe as well."
+      },
+      {
+        "text": "`grep -c` counts occurrences rather than lines, and starts again from zero on each line.",
+        "correct": false,
+        "why": "`-c` counts matching lines. Either way, lines that reached `grep` would never have counted as zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-z86re3bb",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "A colleague's unit file for a small API contains the lines below, and the service starts. Which of them will not do what they appear to?",
+    "hint": "Linux and the Command Line, lesson 5.",
+    "choices": [
+      {
+        "text": "`RestartSec=5`",
+        "correct": false,
+        "why": "It does what it says: wait five seconds before restarting, so a crash loop is not a tight one."
+      },
+      {
+        "text": "`Restart=maybe`",
+        "correct": true,
+        "why": "systemd fails to parse the value and drops the line, with `ignoring` in the message. The service will not restart on failure, and nothing says so unless you run `systemd-analyze verify`."
+      },
+      {
+        "text": "`ExecStart=/usr/local/bin/api > /var/log/api.log`",
+        "correct": true,
+        "why": "`ExecStart=` runs no shell, so `>` and the path arrive as two more arguments to the program. The output goes to the journal, not to that file."
+      },
+      {
+        "text": "`User=api`",
+        "correct": false,
+        "why": "It runs the service as that account, which is what the line says and what a service should do."
+      },
+      {
+        "text": "`After=network.target`, so that the API can resolve its database's name when it starts",
+        "correct": true,
+        "why": "`network.target` means the network is configured, not reachable. The honest version is `After=` and `Wants=` on `network-online.target`, with the `wait-online` service enabled."
+      },
+      {
+        "text": "`Type=simple`, for a program that stays in the foreground",
+        "correct": false,
+        "why": "That is exactly what `simple` is for. `forking` is the one that would go wrong here, with a start that hangs and times out."
+      }
+    ]
+  },
+  {
+    "id": "ex-drjt08h3",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Inside a container, `nproc` prints `8`, and its control group's `cpu.max` reads `150000 100000`. How many cores' worth of processor time can the container use?",
+    "hint": "Linux and the Command Line, lesson 11.",
+    "value": 1.5,
+    "tolerance": 0,
+    "unit": "cores"
+  },
+  {
+    "id": "ex-n8zw1c71",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "On an Ubuntu server, `apt upgrade` has left the database package at the same old version for months and never mentioned it. Complete the command that lists every package somebody froze at its current version: `apt-mark ___`",
+    "hint": "Linux and the Command Line, lesson 7.",
+    "blanks": [
+      {
+        "accept": [
+          "showhold"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-y5qjdcjt",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A second, empty disk has been attached to a server, and it must appear at `/data`, which already exists, on every boot from now on. Put the steps in order.",
+    "hint": "Linux and the Command Line, lesson 3.",
+    "items": [
+      "`lsblk`, to find the new disk, which `df` cannot show while it is not mounted",
+      "`mkfs.ext4` on that device, to put a filesystem on it",
+      "`blkid`, to read the UUID the new filesystem was given",
+      "a line in `/etc/fstab` naming that UUID and `/data`",
+      "`sudo mount -a`, checking that it is silent before anybody reboots"
+    ],
+    "trap": "Writing `/etc/fstab` before `blkid` means naming the disk by its device letter, which changes when disks are added; the UUID only exists once `mkfs` has made the filesystem. And rebooting before `mount -a` turns a typo in `fstab` into a machine that does not boot."
+  },
+  {
+    "id": "ex-affzkze9",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Four scheduled jobs on an Ubuntu server misbehave. Match each symptom to its cause.",
+    "hint": "Linux and the Command Line, lesson 13.",
+    "pairs": [
+      {
+        "left": "`/etc/cron.d/backup.sh` has never run, and nothing anywhere complained",
+        "right": "a dot in the file's name"
+      },
+      {
+        "left": "cron's mail arrives with the subject `Cron <ana@vm> echo \"ran at $(date +` and a shell syntax error",
+        "right": "a percent sign the line did not escape"
+      },
+      {
+        "left": "`/bin/sh: 1: report.sh: not found`, though the script runs from your terminal",
+        "right": "the short `PATH` cron gives a job"
+      },
+      {
+        "left": "`0 3 13 * 5` also runs on Fridays that are not the 13th",
+        "right": "both day fields restricted, so either one matching is enough"
+      }
+    ],
+    "right_distractors": [
+      "the machine's time zone, which is not the one in the line",
+      "a crontab file with no final newline"
+    ]
+  },
+  {
+    "id": "ex-28jn6jy2",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Ana rewrote three subnets from `count` to `for_each` and changed nothing else, and the plan wants to destroy three subnets and create three. The block she writes in the configuration, pairing each old address (`from`) with its new one (`to`) so that the same subnets keep their ids, is called ___.",
+    "hint": "Infrastructure as Code, lesson 4.",
+    "blanks": [
+      {
+        "accept": [
+          "moved",
+          "moved {}"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-j2d3gdjn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A cost tool writes a `CostCenter` tag on every instance Terraform manages, and an autoscaler changes the replica count of a deployment that a GitOps reconciler, with self-healing on, keeps in step with Git. Both show up as differences on every run. A colleague proposes `ignore_changes = all` on the instances and switching self-healing off for that application. What do you answer?",
+    "hint": "Infrastructure as Code, lesson 6; GitOps, Artefacts and Secrets, lesson 3.",
+    "choices": [
+      {
+        "text": "Agreed: what automated tools change is harmless, so silencing both objects whole only takes away noise.",
+        "correct": false,
+        "why": "Ignoring everything also hides the edits people make by hand, which is the drift both tools exist to undo."
+      },
+      {
+        "text": "Write the tag and the replica count into the files, so the description and the running systems agree with each other again.",
+        "correct": false,
+        "why": "Another system changes those values all day on purpose; a fixed number in the file is put back on every run, and the fight goes on."
+      },
+      {
+        "text": "Ignore just the field the other system owns: `tags[\"CostCenter\"]` in Terraform, the replicas in the reconciler.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Use `ignore_changes = [tags]` on the instances and keep self-healing as it is, which settles both.",
+        "correct": false,
+        "why": "The whole tag map would also hide Ana's own tag edits, and nothing tells the reconciler to leave the replicas alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-j1vcqdj1",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A CI runner was reclaimed in the middle of `terraform apply`, and since then every plan fails with `Error acquiring the state lock`, whose `Who` names that runner. The team has confirmed the job is gone. Given the ID printed under `Lock Info`, the subcommand of `terraform` that clears the lock is ___.",
+    "hint": "Infrastructure as Code, lesson 7.",
+    "blanks": [
+      {
+        "accept": [
+          "force-unlock",
+          "terraform force-unlock",
+          "force-unlock -force",
+          "terraform force-unlock -force"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-aeezfpbw",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "The data team is taking over a bucket that today sits in the app's state. Put the steps in the order that never leaves the bucket in two states at once.",
+    "hint": "Infrastructure as Code, lesson 8.",
+    "items": [
+      "in the app, replace the bucket's block with a `removed` block whose lifecycle says `destroy = false`",
+      "apply the app, which drops the bucket from its state and leaves it in the account",
+      "in the data team's configuration, declare the bucket and an `import` block naming it",
+      "plan there, and accept nothing but `1 to import` with no change beside it",
+      "apply the data team's configuration"
+    ],
+    "trap": "Importing first is the tempting order, and it leaves the bucket in two states for a while: whichever team plans last puts its own idea of the bucket back. Managed by nobody for an hour is safe; managed by two is not."
+  },
+  {
+    "id": "ex-jmwhkfat",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A reviewed change adds two buckets, moves three instances to a new image (an argument that forces replacement, in the default order), deletes the block of one subnet, and adds a tag to the VPC. On the plan's `Plan:` line, how many resources are counted under *to destroy*?",
+    "hint": "Infrastructure as Code, lesson 9.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "resources"
+  },
+  {
+    "id": "ex-tj0d0qxe",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "A guard in the pipeline reads the saved plan through `terraform show -json`. Match each symbol the text of a plan prints to the `actions` list the JSON gives that resource.",
+    "hint": "Infrastructure as Code, lesson 9.",
+    "pairs": [
+      {
+        "left": "`+`",
+        "right": "`[\"create\"]`"
+      },
+      {
+        "left": "`~`",
+        "right": "`[\"update\"]`"
+      },
+      {
+        "left": "`-/+`",
+        "right": "`[\"delete\",\"create\"]`"
+      },
+      {
+        "left": "`+/-`",
+        "right": "`[\"create\",\"delete\"]`"
+      }
+    ],
+    "right_distractors": [
+      "`[\"no-op\"]`",
+      "`[\"read\"]`"
+    ]
+  },
+  {
+    "id": "ex-q4q8hw6b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The pipeline clones the repository and runs `terraform init` on every run, and both module calls say `source = \"git::https://git.example.com/shop/terraform-aws-network.git?ref=main\"`. Nobody has touched this configuration for a month, yet today's plan wants to change its subnets. What explains it, and what should the source say?",
+    "hint": "Infrastructure as Code, lesson 10; Git and Teamwork: Version Control, Review and Process, lesson 7.",
+    "choices": [
+      {
+        "text": "`main` is a branch, which moves with every push; pin a tag such as `?ref=v1.1.0`, never moved once published.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The lock file stopped holding the module's version; run `terraform init -upgrade` and commit the lock file to pin it again.",
+        "correct": false,
+        "why": "`.terraform.lock.hcl` records providers and not modules, so no lock file pins a module at all."
+      },
+      {
+        "text": "Add `version = \"1.1.0\"` beside the Git source, so that `init` picks that release whatever the branch now holds.",
+        "correct": false,
+        "why": "`version` applies to registry sources only; with a Git address beside it, `init` refuses the call."
+      },
+      {
+        "text": "Terraform fetches modules again on every plan; commit `.terraform/modules` so that each run plans the same copy.",
+        "correct": false,
+        "why": "`init` copies the module and `.terraform/` stays out of Git; it was the fresh clone's `init` that fetched the branch as it is today."
+      }
+    ]
+  },
+  {
+    "id": "ex-0hr92nx1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Yesterday Ana applied production from `~/shop`, which keeps dev and prod as workspaces. This morning she runs `terraform plan -var-file=dev.tfvars` to try something in dev, and the plan replaces the VPC with dev's range and destroys a subnet: `3 to add, 0 to change, 4 to destroy`. What happened?",
+    "hint": "Infrastructure as Code, lesson 11.",
+    "choices": [
+      {
+        "text": "Dev's state was lost overnight, so Terraform is now building the whole dev network again from nothing.",
+        "correct": false,
+        "why": "With no state the plan would only create; this one replaces and destroys resources that exist."
+      },
+      {
+        "text": "The remote backend keeps every workspace under one key, so dev's and prod's resources got mixed up.",
+        "correct": false,
+        "why": "A remote backend keeps one state per workspace; in a bucket each has its own object, under `env:/<workspace>/` in front of the key."
+      },
+      {
+        "text": "`dev.tfvars` gives a range overlapping prod's, and that overlap is what forces the VPC to be replaced.",
+        "correct": false,
+        "why": "The two ranges differ; the replacement comes from dev's values being applied to resources that hold prod's."
+      },
+      {
+        "text": "`prod` is still selected in `.terraform/environment`, so dev's values were planned against prod's state.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-3y92gztm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Weeks ago a teammate committed and pushed `terraform.tfvars`, which holds the database password. Today she ran `git rm --cached terraform.tfvars`, added `*.tfvars` to `.gitignore` and committed. She asks whether the password is safe now. What do you answer?",
+    "hint": "Infrastructure as Code, lesson 12; Git and Teamwork: Version Control, Review and Process, lesson 10.",
+    "choices": [
+      {
+        "text": "Yes: with the pattern in `.gitignore`, Git stops serving the file from the older commits as well.",
+        "correct": false,
+        "why": "`.gitignore` only affects files Git is not tracking; the commit that added the file still holds the password."
+      },
+      {
+        "text": "No: the old commit still carries it in every clone, so change the password and treat the old one as public.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nearly: rewrite the history with `git filter-repo` and force-push, and the old password can then stay in use.",
+        "correct": false,
+        "why": "Clones and copies made before the rewrite keep it; changing the password is the one step that fixes anything."
+      },
+      {
+        "text": "Yes, once the variable is also marked `sensitive = true`, which keeps its value out of every file Terraform writes.",
+        "correct": false,
+        "why": "`sensitive` hides the value on screen; the state, a saved plan and the Git history still hold it."
+      }
+    ]
+  },
+  {
+    "id": "ex-mebt5p6f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A network module's unit tests run under `mock_provider`, with an `override_data` listing the zones Ana believes the region offers. Every run passes. Months later a real apply fails, because one of those zones is no longer offered. In test-double terms, what would have kept that override honest?",
+    "hint": "Infrastructure as Code, lesson 13; Automated Testing and CI/CD, lesson 2.",
+    "choices": [
+      {
+        "text": "More `assert` blocks in the mocked runs, so that the override's zones are checked from several angles.",
+        "correct": false,
+        "why": "Every assertion still meets the same hand-written answer; more of them check the guess, not the region."
+      },
+      {
+        "text": "`command = plan` on the mocked runs, so that the provider gets asked about the zones while it plans.",
+        "correct": false,
+        "why": "A mock never calls the API, in a plan or an apply; the answer is still the override."
+      },
+      {
+        "text": "A `mock_data` default for every zone lookup, in place of one override aimed at a single address.",
+        "correct": false,
+        "why": "That is still an answer somebody wrote down; it changes how widely the guess applies, not whether it is right."
+      },
+      {
+        "text": "A run that applies against the real API, so the same question meets an answer no one wrote by hand.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-dnj4xa0w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A pipeline gates on a scanner nobody develops any more. A pull request opens port 22 to `0.0.0.0/0`, written as a rule resource of its own instead of a block inside the group, and the scanner reports nothing, although it calls the same rule in the older form `CRITICAL`. What does the lesson say to set up so that a silence like this gets noticed?",
+    "hint": "Infrastructure as Code, lesson 14.",
+    "choices": [
+      {
+        "text": "Keep a known-bad example in the repository and scan it in the pipeline, so a vanished finding fails the build.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Lower the gate so that it fails on `LOW` findings as well, so that rules with a mild severity cannot slip past it.",
+        "correct": false,
+        "why": "No rule matched the newer resource type, so there is no finding at any severity for a threshold to catch."
+      },
+      {
+        "text": "Treat the empty report as a pass: a scanner that read the file and found nothing in it has checked it.",
+        "correct": false,
+        "why": "A resource type no rule mentions produces silence, and silence looks exactly like a pass."
+      },
+      {
+        "text": "Add an inline ignore with an expiry date, so that the finding comes back for review on that day.",
+        "correct": false,
+        "why": "There is no finding to ignore; a suppression only silences something a rule has already reported."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ytra7xw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "To keep things simple, a team's pipeline runs `terraform plan` on every pull request with the same role the apply job uses, one that may change anything. The reviewer of that pipeline objects. Why should the plan role be able to read and little more, although a plan changes nothing?",
+    "hint": "Infrastructure as Code, lesson 15; Automated Testing and CI/CD, lesson 9.",
+    "choices": [
+      {
+        "text": "A plan writes the state, and only a read-only role stops it overwriting the copy the apply needs.",
+        "correct": false,
+        "why": "A plan writes nothing but the lock object, and that one write is all the plan role needs beyond reading."
+      },
+      {
+        "text": "A plan runs the pull request's code: providers and an `external` data source execute, with whatever the role allows.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A pull request from a fork receives the repository's secrets, and a weaker role limits what can leak from it.",
+        "correct": false,
+        "why": "A fork's pull request runs with no secrets and a read-only token; that is a defence, not the risk."
+      },
+      {
+        "text": "The cloud will not hand credentials that can write to a job that a pull request started, so the role is unusable.",
+        "correct": false,
+        "why": "The trust policy decides that, and this one admits pull requests; nothing on the cloud's side refuses unless you write it."
+      }
+    ]
+  },
+  {
+    "id": "ex-rdak5gaa",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "The shop's budget counts only spending tagged `Project = shop`. On the 15th of the month Ana added that tag to everything through the provider's default tags and applied. At the end of the month the invoice shows more spending on the shop than the budget counted. Which of these help explain the gap? Choose all that apply.",
+    "hint": "Infrastructure as Code, lesson 16; Cloud and Serverless, lesson 10.",
+    "choices": [
+      {
+        "text": "The NAT gateway's charge per gigabyte is left out, because a budget counts only what a plan can price by the hour.",
+        "correct": false,
+        "why": "A budget measures what the account actually spent, usage included; it is the estimate before `apply` that misses usage."
+      },
+      {
+        "text": "A volume a colleague created by hand, from his own machine, carries no `Project` tag, so the filter never counts it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The servers' disks existed before the default tags, the provider never updated them, and they carry no `Project`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A tag the provider applies by default is invisible to billing, which counts only tags written on each resource.",
+        "correct": false,
+        "why": "Billing sees the tags the resource carries in the cloud, wherever in Terraform they came from."
+      },
+      {
+        "text": "The forecast alert replaced the month's actual figure with a projection, so the budget showed less than had really been spent.",
+        "correct": false,
+        "why": "A notification only warns; the budget goes on counting actual spending."
+      },
+      {
+        "text": "Whatever ran untagged from the 1st to the 15th left those two weeks unattributed, even once it was tagged.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-106j6e6r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "The web servers start from `shop-web:latest`. Version 1.1.0 ships broken, and somebody rolls back by starting the servers again from `latest`. Why does that change nothing?",
+    "hint": "Infrastructure as Code, lesson 20.",
+    "choices": [
+      {
+        "text": "Each server keeps a cached copy of `latest`, so none of them asks the registry for the image again.",
+        "correct": false,
+        "why": "The cache is not the trouble: a fresh pull of `latest` returns the newest build, which is the broken one."
+      },
+      {
+        "text": "A new container keeps the files of the one it replaces, so the broken page survives the restart.",
+        "correct": false,
+        "why": "A new container is the image again; `docker diff` found nothing left of the hand edit after a replacement."
+      },
+      {
+        "text": "`latest` names whatever was built most recently, and that is 1.1.0, the build being undone.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The registry keeps a single image per name, so 1.0.1 was deleted at the moment 1.1.0 was pushed.",
+        "correct": false,
+        "why": "Each version is an image of its own; 1.0.1 is still there under its own name."
+      }
+    ]
+  },
+  {
+    "id": "ex-z9jvbq65",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A nightly job in São Paulo makes twenty calls in a row to a partner's API in Northern Virginia, opening a new HTTPS connection for each one. `curl -w` against the API shows `dns` under a millisecond, then `tcp`, `tls` and `first byte` each about 77 ms after the stage before. A colleague proposes a link with ten times the bandwidth. What would shorten the job the most?",
+    "hint": "Cloud and Serverless, lesson 9; Networks and Protocols, lesson 5.",
+    "choices": [
+      {
+        "text": "The faster link, because twenty answers that each arrive ten times sooner add up over the job.",
+        "correct": false,
+        "why": "An answer of a few kilobytes takes a fraction of a millisecond on either link. The time goes on waiting for round trips."
+      },
+      {
+        "text": "A faster server behind the API, since a slow first byte is the application thinking.",
+        "correct": false,
+        "why": "Here the first byte comes one round trip after the handshake: the request crossing the continent and the answer coming back."
+      },
+      {
+        "text": "One connection kept open for all twenty calls, so the handshakes are paid once.",
+        "correct": true,
+        "why": "A new connection costs a TCP round trip and a TLS round trip before the request goes. Reused, each call costs about one round trip instead of three."
+      },
+      {
+        "text": "Caching the API's address locally, because every new connection starts with a name lookup.",
+        "correct": false,
+        "why": "`dns` is under a millisecond. The lookups are not where the time goes."
+      }
+    ]
+  },
+  {
+    "id": "ex-na4xz4df",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "To cut the compute bill, the team moves its container hosts to Arm instances. CI still builds the image with a plain `docker build` on an x86-64 runner and pushes one tag. On the new machines every container exits at once with `exec format error`. What fixes it?",
+    "hint": "Cloud and Serverless, lesson 4; Docker and Containers, lesson 13.",
+    "choices": [
+      {
+        "text": "Build with `--platform linux/amd64,linux/arm64`, so the tag carries an image for each processor.",
+        "correct": true,
+        "why": "An Arm processor cannot run an x86-64 binary. A multi-platform build puts an arm64 variant under the same tag, and each machine runs the one that matches it."
+      },
+      {
+        "text": "Pull the tag again on the new machines, so the registry hands over the arm64 variant.",
+        "correct": false,
+        "why": "A registry can only hand over variants somebody built, and this tag holds an amd64 image alone."
+      },
+      {
+        "text": "Boot the Arm instances from the machine image the x86 fleet used, so the system below matches.",
+        "correct": false,
+        "why": "A machine image is a disk, not a processor. An Arm instance runs only Arm programs, whatever it booted from."
+      },
+      {
+        "text": "Switch the last stage to a distroless base, which is published for both processors.",
+        "correct": false,
+        "why": "A multi-platform base does not help when the build produced only amd64: the binary copied into it is still x86-64."
+      }
+    ]
+  },
+  {
+    "id": "ex-96p84kby",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A managed cluster's worker nodes sit in three zones of one region. The shop's Deployment runs 6 replicas with a topology spread constraint over `topology.kubernetes.io/zone`, with `maxSkew: 1` and `whenUnsatisfiable: DoNotSchedule`. One zone loses its power feed. How many copies are still serving at that moment, and what does this layout not protect the shop from?",
+    "hint": "Cloud and Serverless, lesson 9; Kubernetes: Orchestration in Production, lesson 31.",
+    "choices": [
+      {
+        "text": "Six; the constraint keeps a spare in every zone, so only a region going dark is felt.",
+        "correct": false,
+        "why": "`maxSkew` bounds the difference between zones. Six over three is two each, with no spare, and the two in the dark zone are gone."
+      },
+      {
+        "text": "Five; `maxSkew: 1` lets a failure take one copy at a time, and a region fault takes the rest.",
+        "correct": false,
+        "why": "The constraint is checked when a pod is placed. It says nothing about how many a failure takes, and a zone holds two."
+      },
+      {
+        "text": "Four; two zones failing together, since a fault in the region stops at the edge of a zone.",
+        "correct": false,
+        "why": "Zones share the region's control systems, so a regional fault does not stop at a zone boundary. It reaches all three at once."
+      },
+      {
+        "text": "Four; a fault in the region's shared control systems, which reaches every zone at once.",
+        "correct": true,
+        "why": "Two per zone leaves four. A zone keeps a building's failure inside it, but every zone runs under the same regional systems."
+      }
+    ]
+  },
+  {
+    "id": "ex-ve1njvhd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An internal API runs as functions. Its latency panel draws the mean, which sits near 40 ms all day. Users report that the first requests in the morning, and the first ones after lunch, hang for a noticeable moment. A load test with steady traffic shows nothing. What is happening, and what would the panel need to show it?",
+    "hint": "Cloud and Serverless, lesson 8; Observability and Operations, lesson 7.",
+    "choices": [
+      {
+        "text": "The users' own network; a steady test proves the function is fast, and 40 ms agrees.",
+        "correct": false,
+        "why": "Steady traffic keeps environments warm, so the test never meets the slow case. And a mean is the number that hides a few slow calls."
+      },
+      {
+        "text": "Cold starts after quiet spells; a high percentile, which a mean of many fast calls hides.",
+        "correct": true,
+        "why": "After a quiet period no environment is ready, and the request waits while one is made. A handful of slow calls among thousands barely moves a mean; a high percentile shows them."
+      },
+      {
+        "text": "A database client opened at module level; moving it into the handler, keeping the same mean panel.",
+        "correct": false,
+        "why": "In the handler it is paid on every call, warm or cold. At module level it is paid once per environment, which is where it belongs."
+      },
+      {
+        "text": "A burst of errors averaged away; an error-rate panel with a ten-minute window would show it.",
+        "correct": false,
+        "why": "Nothing failed: the requests were slow and answered. And a longer window dilutes a short burst rather than showing it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ysf0yv5f",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "An API's function costs 1.20 USD per million requests, with no free tier. The alternative is two machines reserved for a year at 0.02610 USD an hour each, behind a load balancer at 0.0225 USD an hour, over a month of 730 hours. Above how many million requests a month is the pair of machines the cheaper choice? Give one decimal place.",
+    "hint": "Cloud and Serverless, lesson 8.",
+    "value": 45.4,
+    "tolerance": 0.1,
+    "unit": "million requests"
+  },
+  {
+    "id": "ex-ebac3fw7",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A team wants to move six workloads onto a function platform. Which of them have the wrong shape for a function? Choose all that apply.",
+    "hint": "Cloud and Serverless, lesson 8.",
+    "choices": [
+      {
+        "text": "A video transcode that runs for about an hour on each upload",
+        "correct": true,
+        "why": "It does not finish quickly, and a call still running at the platform's time limit is stopped."
+      },
+      {
+        "text": "A check run when a file lands in a bucket, a few times an hour",
+        "correct": false,
+        "why": "Bursty, short and with nobody waiting: the shape a function suits."
+      },
+      {
+        "text": "A game server holding the state of each room in its memory, for hours",
+        "correct": true,
+        "why": "Its value is in what the process remembers, and a function is built to forget."
+      },
+      {
+        "text": "A report job on a schedule that finishes in two minutes",
+        "correct": false,
+        "why": "A short job on a schedule is one of the shapes the lesson names as a good fit."
+      },
+      {
+        "text": "A public API taking tens of requests a second, all day, every day",
+        "correct": true,
+        "why": "Steady high load is where one or two machines cost less than the function."
+      },
+      {
+        "text": "A tool used a few times a day, where a second's wait is fine",
+        "correct": false,
+        "why": "Sparse use costs nothing between calls, and a cold start only hurts where every request has to be fast."
+      }
+    ]
+  },
+  {
+    "id": "ex-1qbg751n",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Sessions go to a shared cache, uploads to object storage, logs are shipped off as they are written. When nothing the application keeps lives on the machine running it, so a copy from the template can replace that machine without anybody noticing, the lesson calls the instance ___.",
+    "hint": "Cloud and Serverless, lesson 4.",
+    "blanks": [
+      {
+        "accept": [
+          "stateless",
+          "state-less",
+          "state less"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-m02eae4p",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "The first monthly bill came in well over an estimate that counted only the machines, the database and the storage. Match what you find in the account to the line of the bill it explains.",
+    "hint": "Cloud and Serverless, lesson 10.",
+    "pairs": [
+      {
+        "left": "A replica in a second zone that receives every change the primary makes",
+        "right": "a charge per gigabyte, once on leaving and once on arriving"
+      },
+      {
+        "left": "Private machines reading product photos from object storage through the NAT gateway",
+        "right": "a processing charge per gigabyte, on top of an hourly one"
+      },
+      {
+        "left": "A volume attached after launch to a machine deleted months ago",
+        "right": "a monthly charge per gigabyte held, for a disk nobody uses"
+      },
+      {
+        "left": "Application logs piling up in storage with no rule that ever deletes them",
+        "right": "a line that grows each month without anybody deciding it"
+      }
+    ],
+    "right_distractors": [
+      "a charge per gigabyte for data arriving from the internet",
+      "the hourly price of the instances themselves"
+    ]
+  },
+  {
+    "id": "ex-sfcgnqjj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "For about forty minutes one afternoon, reads from the company's object store fail with errors, then start working again with nothing missing. The store is designed for eleven nines of durability and 99.99% availability. A colleague writes in the incident channel that the provider broke its eleven nines. Is that right?",
+    "hint": "Cloud and Serverless, lesson 5.",
+    "choices": [
+      {
+        "text": "Yes: eleven nines means a request fails about once in a hundred billion, and thousands failed.",
+        "correct": false,
+        "why": "Eleven nines is about the bytes surviving a year, not about requests succeeding."
+      },
+      {
+        "text": "No: that was availability, and 99.99% leaves about 53 minutes a year in which reads may fail.",
+        "correct": true,
+        "why": "Durability is whether the bytes still exist, and none were lost. 0.01% of a year's 525,600 minutes is about 53."
+      },
+      {
+        "text": "No: eleven nines covers a disk or a zone failing, and forty minutes of errors is neither.",
+        "correct": false,
+        "why": "The verdict is right and the reason is not: durability is about losing bytes, whatever the cause, and nothing was lost."
+      },
+      {
+        "text": "Yes: the objects were lost and copied back from another zone, the case durability counts.",
+        "correct": false,
+        "why": "Nothing was lost: the reads failed and then worked. Durability counts objects gone for good."
+      }
+    ]
+  },
+  {
+    "id": "ex-6s98kvw5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A nightly backup job needs to upload one file to one folder of one bucket. Its identity was given that, plus full rights over identities and permissions, added \"for now\" while somebody debugged it two years ago. The job's credentials leak. What can whoever holds them do?",
+    "hint": "Cloud and Serverless, lesson 7.",
+    "choices": [
+      {
+        "text": "Write files to that folder alone, because the job has only ever made that one call.",
+        "correct": false,
+        "why": "What an identity may do is what its policies allow, not what it has used. The extra rights are still granted."
+      },
+      {
+        "text": "Change who may do what, but not touch a bucket, since the storage grant covers one folder.",
+        "correct": false,
+        "why": "Rights over identities let the holder grant itself storage access, and everything else."
+      },
+      {
+        "text": "Anything in the account, once it has used those rights to give itself an administrator's policy.",
+        "correct": true,
+        "why": "An identity that can change access can give itself anything: full rights over identities are administrator access under another name."
+      },
+      {
+        "text": "Nothing for long, since rights added while debugging lapse when that session ends.",
+        "correct": false,
+        "why": "Nothing expires unless somebody makes it expire, which is how the grant is still there two years later."
+      }
+    ]
+  },
+  {
+    "id": "ex-rrz99r1a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Your portfolio project deploys the way loanbook does: `sudo podman build -t loanbook .` on the server, and a unit file with `Image=localhost/loanbook:latest`. You rebuild for a new release, it breaks, and you want the version that ran before it back. What stands in your way?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15; Docker and Containers, lesson 16.",
+    "choices": [
+      {
+        "text": "Podman pulls `latest` again from the registry on every restart, replacing whatever image you put back.",
+        "correct": false,
+        "why": "A run pulls only when the name is missing on the machine, and `localhost/loanbook` was built there and never pulled."
+      },
+      {
+        "text": "The new build deleted the old image from the server, since a build overwrites any image with the same name.",
+        "correct": false,
+        "why": "The old image is still on the server under a bare id. What it lost is its name, which is the real problem."
+      },
+      {
+        "text": "Nothing names the old build: `latest` names only what is there now, so tag builds by version.",
+        "correct": true,
+        "why": "Right. With no version in the tag there is nothing to roll back to by name; tagging each build, with the git tag for instance, and pointing `Image=` at it gives every release one."
+      },
+      {
+        "text": "Nothing does: `git checkout v1.0.0` in the clone on srv is enough, and systemd runs the old code again.",
+        "correct": false,
+        "why": "The service runs the image, not the clone. A checkout changes files nobody is running until an image is built from them."
+      }
+    ]
+  },
+  {
+    "id": "ex-3ct7cpxk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Your project's pipeline is green on every push, and its coverage report shows the file holding the project's one rule at 100%, branches included. In the interview you are asked how you know the tests would catch that rule breaking. Which answer holds up?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 12; Automated Testing and CI/CD, lesson 4.",
+    "choices": [
+      {
+        "text": "Every line of the rule's file ran under the tests, so every line was checked.",
+        "correct": false,
+        "why": "Covered means the line ran. Nothing in the measurement asks whether a test looked at what it did."
+      },
+      {
+        "text": "The branch report is at 100% too, so both ways out of every decision were tested.",
+        "correct": false,
+        "why": "Branches taken are still only code that ran; a test that asserts nothing reaches 100% just as well."
+      },
+      {
+        "text": "I removed the rule on purpose, ran the suite, and watched the right test fail.",
+        "correct": true,
+        "why": "Right. Breaking the code on purpose is the direct check that a test notices, which coverage cannot tell you."
+      },
+      {
+        "text": "Every push runs the whole suite in the pipeline, and it has never once gone red.",
+        "correct": false,
+        "why": "A suite that checks nothing is also never red. Passing says the tests ran, not that they would see the rule go."
+      }
+    ]
+  },
+  {
+    "id": "ex-sn1ysv4j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Your service runs under a Quadlet unit like loanbook's, with `HealthCmd`, `HealthInterval=30s` and `Restart=always`, and nothing else added. One night the process hangs: it is still running, `/healthz` stops answering, and Podman marks the container unhealthy. What happens next?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15; Observability and Operations, lesson 14.",
+    "choices": [
+      {
+        "text": "systemd restarts it within seconds, exactly as it did after `podman kill` in the lesson.",
+        "correct": false,
+        "why": "`podman kill` ended the process, and that is what `Restart=always` reacts to. A hung process has not exited."
+      },
+      {
+        "text": "Nothing restarts it: the restart reacts to the process dying, and unhealthy is a status a monitor reads.",
+        "correct": true,
+        "why": "Right. A restart policy acts when the process exits, never on a failed check; the unhealthy status is information until something watches it."
+      },
+      {
+        "text": "Podman kills the container after three failed checks in a row and starts a fresh one from the image.",
+        "correct": false,
+        "why": "That is what a liveness probe does on Kubernetes, or Swarm with Docker. A healthcheck on one machine only records the result."
+      },
+      {
+        "text": "Caddy stops sending it requests until the check passes again, and the page answers with an error meanwhile.",
+        "correct": false,
+        "why": "Taking a copy out of traffic is a readiness decision made by a load balancer. loanbook's Caddyfile only proxies to one port, and there is no other copy to send to."
+      }
+    ]
+  },
+  {
+    "id": "ex-zcaegqyf",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Your project writes one log line per request, as loanbook does. A friend reviewing it suggests putting more in each line so that complaints are easier to investigate. Which belong in the line? Choose all that apply.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 11; Observability and Operations, lesson 10.",
+    "choices": [
+      {
+        "text": "the method and the path",
+        "correct": true,
+        "why": "Enough to find the request: loanbook's line is the method, the path and the status."
+      },
+      {
+        "text": "the status it answered",
+        "correct": true,
+        "why": "The status says which row of the error table the request fell in, in one number."
+      },
+      {
+        "text": "the item's number, an id that means nothing outside the system",
+        "correct": true,
+        "why": "An internal id lets an investigation find the rest in the database, under the database's own access."
+      },
+      {
+        "text": "the borrower's name, so that a complaint can be matched to a person",
+        "correct": false,
+        "why": "A name is personal data, and a log is kept longer and read by more people than the database it came from."
+      },
+      {
+        "text": "the full request body, so a bad request can be replayed",
+        "correct": false,
+        "why": "A body carries everything sooner or later, names and secrets included; it is on the list of what never goes in a log."
+      },
+      {
+        "text": "a traceback for each refused second loan, to show where it was refused",
+        "correct": false,
+        "why": "A refusal is the rule working. A traceback is for the unexpected, so that one in the log means a bug."
+      }
+    ]
+  },
+  {
+    "id": "ex-h7cm1bjw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your portfolio project is a loan register for a school's IT room, deployed the way loanbook was: a container under systemd, behind HTTPS, killed once on purpose to prove it comes back. Which line describes it on your CV?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 4; The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "choices": [
+      {
+        "text": "Deployed a containerised service with Podman, systemd, Caddy and cloud-init on Ubuntu Server 24.04, all over HTTPS.",
+        "correct": false,
+        "why": "A list of tools fits a project that works and one that never ran. It says what was used, not what was done."
+      },
+      {
+        "text": "Was responsible for deploying and running a containerised service over HTTPS, and for keeping it up.",
+        "correct": false,
+        "why": "*Was responsible for* hides what you did, and nothing in the line can be checked."
+      },
+      {
+        "text": "Improved the availability of a containerised service by 99% by putting it under systemd with automatic restarts.",
+        "correct": false,
+        "why": "Nothing was measured that could give that number, and an interviewer will ask where it came from."
+      },
+      {
+        "text": "Deployed a school's loan register behind HTTPS so it recovers alone; killed it, and it came back with its data.",
+        "correct": true,
+        "why": "Right: what was done, what is true now, and evidence anybody can check, the restart count and the data still there."
+      }
+    ]
+  },
+  {
+    "id": "ex-hh5h7xhq",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "You deploy your project to your own srv the way lesson 15 deploys loanbook. Put the steps in the order the lesson takes them.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "items": [
+      "Push `main` and its tags to the bare repository on srv",
+      "Clone it on srv and check it is at the same commit as laptop",
+      "Build the image with `podman build`",
+      "Install the `.container` file where Quadlet reads it",
+      "Start the service and ask `/healthz` on `127.0.0.1`",
+      "Install the Caddyfile and reload Caddy"
+    ],
+    "trap": "Building before checking the clone's commit is how the lesson's most common deploy bug happens: an image of something other than what you think."
+  },
+  {
+    "id": "ex-zdvr979h",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Building and reaching your own srv, you meet four errors. Match each to what lesson 15 says causes it.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "pairs": [
+      {
+        "left": "`ssh: Could not resolve hostname srv`",
+        "right": "no `Host srv` entry in `~/.ssh/config`, or the file has another name"
+      },
+      {
+        "left": "`podman: command not found`, minutes after the first boot",
+        "right": "cloud-init is still installing the packages"
+      },
+      {
+        "left": "`REMOTE HOST IDENTIFICATION HAS CHANGED!` after you rebuilt srv",
+        "right": "ssh remembers the old machine's keys, and `ssh-keygen -R` forgets them"
+      },
+      {
+        "left": "`curl: (60) SSL certificate problem: unable to get local issuer certificate`",
+        "right": "laptop does not trust Caddy's local authority yet"
+      }
+    ],
+    "right_distractors": [
+      "the processor's virtualisation is switched off in the firmware",
+      "the user is wrong, because srv.yaml replaced `ubuntu`"
+    ]
+  },
+  {
+    "id": "ex-10y9fhvd",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "You have just copied `loanbook.container` into `/etc/containers/systemd/`. Before `systemctl start loanbook` can work, systemd has to read the new file and generate `loanbook.service` from it. Which command does that? `sudo systemctl ___`",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "blanks": [
+      {
+        "accept": [
+          "daemon-reload",
+          "daemon reload",
+          "systemctl daemon-reload",
+          "sudo systemctl daemon-reload"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-03hp7h2y",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "loanbook's unit file sets `HealthInterval=30s`. How many times a day does Podman run its health check?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "value": 2880,
+    "tolerance": 0,
+    "unit": "checks"
+  },
+  {
+    "id": "ex-wd29jpwq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Building srv, you pasted your public key into srv.yaml broken over two lines, and `ssh srv true` answers `Permission denied (publickey)`. You join the line in srv.yaml and restart the machine, and ssh still refuses. Why?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "choices": [
+      {
+        "text": "srv.yaml turned off password login with `ssh_pwauth`, and that line has to be removed first.",
+        "correct": false,
+        "why": "`ssh_pwauth: false` is meant to stay; the key is the way in, and it never reached the machine."
+      },
+      {
+        "text": "ssh still remembers srv's old host key, and has to be told to forget it with `ssh-keygen -R`.",
+        "correct": false,
+        "why": "That is the cure for the warning that the host has changed, after a rebuild. This refusal is about your key, not srv's."
+      },
+      {
+        "text": "The public key also has to be written into `~/.ssh/config`, under the `Host srv` entry.",
+        "correct": false,
+        "why": "That file names the address and the user. The public half belongs on srv, which is what srv.yaml was for."
+      },
+      {
+        "text": "cloud-init reads srv.yaml only on the first boot; delete srv and launch it again.",
+        "correct": true,
+        "why": "Right. Correcting the file changes nothing on a machine that exists; `multipass delete --purge srv` and the `launch` line build one that reads it."
+      }
+    ]
+  },
+  {
+    "id": "ex-hqcqj6ha",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Three weeks into your first DevOps job, you deploy a change to the proxy configuration at 10:05. At 10:20 an incident is declared for errors on the checkout, and the commander asks in the channel what changed. You are not sure your change is the cause. What do you do?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 20; Observability and Operations, lesson 17.",
+    "choices": [
+      {
+        "text": "Say in the channel now that you changed the proxy at 10:05, and that it may be related.",
+        "correct": true,
+        "why": "Right. Saying it early to the people who need to know is the junior's part, and *what changed?* is the question that solves most incidents; a change that turns out unrelated costs a sentence."
+      },
+      {
+        "text": "Check your change quietly first, so the team does not go after the wrong cause.",
+        "correct": false,
+        "why": "Time spent alone turns a small mistake into a longer incident, and the habit that hurts is waiting to be sure."
+      },
+      {
+        "text": "Roll your change back yourself, and mention it once the errors have stopped.",
+        "correct": false,
+        "why": "An unannounced change can collide with somebody else's, which is why it is said first with *objections?*; and finding out later that you knew is what teams forgive least."
+      },
+      {
+        "text": "Send the commander your diff in a private message, so the channel stays clear for the people investigating.",
+        "correct": false,
+        "why": "The commander decides and does not debug; the people investigating need the fact, in the channel where the response happens."
+      }
+    ]
+  },
+  {
+    "id": "ex-qgftqs2f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your first task in the new job: the nightly backup deletes its dumps after three days, though the runbook promises seven. The team's repository refuses pull requests whose messages are not Conventional Commits. Which first line finishes the task the way the team expects?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 20; Git and Teamwork: Version Control, Review and Process, lesson 11.",
+    "choices": [
+      {
+        "text": "`fix: fix backup bug`",
+        "correct": false,
+        "why": "It is in the format and says nothing. A type is not a reason, and the reader still has to open the diff."
+      },
+      {
+        "text": "`Keep seven days of backup dumps, not three`",
+        "correct": false,
+        "why": "A good imperative line, and the team's check refuses it: a first task is finished at the team's standard, not your own."
+      },
+      {
+        "text": "`fix(backup)!: keep seven days of dumps, not three`",
+        "correct": false,
+        "why": "The `!` marks a breaking change and makes the next release a major version. Nothing that worked stops working here."
+      },
+      {
+        "text": "`fix(backup): keep seven days of dumps, not three`",
+        "correct": true,
+        "why": "Right: a bug fixed, the part of the project, and what the commit does, in the format the check reads. The why goes in the body."
+      }
+    ]
+  },
+  {
+    "id": "ex-cech25m0",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "An offer arrives in writing. Match each clause in its small print to what lesson 18 says about it.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 18.",
+    "pairs": [
+      {
+        "left": "probation (*contrato de experiência*)",
+        "right": "at most 90 days, which may be split into two periods"
+      },
+      {
+        "left": "non-compete",
+        "right": "what it covers, for how long, and whether you are paid during that time"
+      },
+      {
+        "left": "intellectual property",
+        "right": "that it does not claim what you build in your own time on your own equipment"
+      },
+      {
+        "left": "exclusivity, in a PJ contract",
+        "right": "a ban on other clients, which makes it look even more like a job without the protections"
+      }
+    ],
+    "right_distractors": [
+      "a deduction of up to 6% of the base salary",
+      "a value of zero when comparing offers"
+    ]
+  },
+  {
+    "id": "ex-3zdm7kqg",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A take-home for a junior DevOps role: *fix this broken virtual machine*, with about three hours suggested. When the three hours are up, one requirement still fails. What do you hand in? Choose all that apply.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 13.",
+    "choices": [
+      {
+        "text": "the steps you took, in order, written so somebody else could follow them",
+        "correct": true,
+        "why": "For an infrastructure take-home the runbook stands in for the README."
+      },
+      {
+        "text": "what you checked at the end",
+        "correct": true,
+        "why": "The lesson asks for the checks beside the steps, so the reviewer sees how you know it works."
+      },
+      {
+        "text": "a note naming the failing requirement, under what you would do with more time",
+        "correct": true,
+        "why": "That line is where the missing pieces go; being honest about them beats silently taking twice the time."
+      },
+      {
+        "text": "a second evening's work, so that nothing is missing when it arrives",
+        "correct": false,
+        "why": "When the time runs out, stop. A submission that took four evenings says you did not read the brief or cannot estimate."
+      },
+      {
+        "text": "a dashboard added on top, to show what else you can do",
+        "correct": false,
+        "why": "An extra on top of a missing requirement reads as not having read the brief."
+      },
+      {
+        "text": "the complete fix, sent a day after the deadline",
+        "correct": false,
+        "why": "A late, perfect submission is usually worse than an on-time, incomplete one."
+      }
+    ]
+  },
+  {
+    "id": "ex-w3ghm6v9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Two offers for the same junior role: CLT at R$ 3,000 a month, or PJ at R$ 3,600 a month. As a PJ you would take one month off a year and bill nothing for it. Leaving taxes and benefits aside, which pays more in a year by lesson 17's arithmetic?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 17.",
+    "choices": [
+      {
+        "text": "The PJ offer: R$ 3,600 is exactly the invoice that matches this CLT year.",
+        "correct": false,
+        "why": "Only with twelve months billed. With eleven, the invoice that matches is R$ 3,927.27."
+      },
+      {
+        "text": "The PJ offer, by R$ 600 a month, since both figures are gross before anything is taken.",
+        "correct": false,
+        "why": "That compares the months. A CLT year is 14.40 monthly salaries once the 13th, the holiday third and FGTS are in."
+      },
+      {
+        "text": "Neither of them: the extra R$ 600 a month pays for the unbilled month exactly.",
+        "correct": false,
+        "why": "Eleven invoices of R$ 3,600 come to R$ 39,600, and the CLT year is R$ 43,200: the extra does not cover the month."
+      },
+      {
+        "text": "The CLT offer: eleven invoices of R$ 3,600 make R$ 39,600, under R$ 43,200.",
+        "correct": true,
+        "why": "Right. R$ 3,000 is worth 14.40 months a year under CLT, R$ 43,200, and eleven PJ invoices fall R$ 3,600 short of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-a762gtw9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Day 45 of a 90-day *contrato de experiência*. In your first week your manager told you what good looks like by the end, and you wrote it down. What does lesson 21 have you do now?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 21.",
+    "choices": [
+      {
+        "text": "Wait for the review at day 90, since the list is already agreed and written down.",
+        "correct": false,
+        "why": "A gap found at day 90 has no time left to close. Halfway is when it can still be fixed."
+      },
+      {
+        "text": "Go through the list with your manager, and compare where you think you are.",
+        "correct": true,
+        "why": "Right. Checking halfway, your view against theirs, means a gap is heard about with six weeks left, not on the last day."
+      },
+      {
+        "text": "Work late for the next few weeks, so that the second half ends on a strong week.",
+        "correct": false,
+        "why": "The trial is passed by being predictable, not by working late or by one impressive week."
+      },
+      {
+        "text": "Ask HR whether the contract will be kept on as an ordinary one after it ends.",
+        "correct": false,
+        "why": "The question is answered by the work against the list, and the person who holds the list is your manager."
+      }
+    ]
+  },
+  {
+    "id": "ex-f2gm9cad",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An advert for a *junior* DevOps engineer says you would be responsible for the company's whole infrastructure, and that nobody else works on it. How does lesson 1 read that line?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 1.",
+    "choices": [
+      {
+        "text": "As a senior role at a junior salary; ask in the screening call who you would learn from.",
+        "correct": true,
+        "why": "Right. A junior is handed small, defined pieces and is expected to ask; being the only person responsible for everything is the opposite."
+      },
+      {
+        "text": "As the usual wish list: nobody checks it line by line, so apply if you have the rest.",
+        "correct": false,
+        "why": "That is how the list of requirements is read. Sole responsibility is not a requirement on a list; it is the shape of the job."
+      },
+      {
+        "text": "As a reason to apply only once you have every tool the advert names.",
+        "correct": false,
+        "why": "The tools are not the problem here, and no junior has the whole list; the problem is that there is nobody to learn from."
+      },
+      {
+        "text": "As a good first job, because you would be independent from the start.",
+        "correct": false,
+        "why": "Independence on a first job is a warning: what makes a first job strong is somebody more senior reviewing your work."
+      }
+    ]
+  },
+  {
+    "id": "ex-vh93ns9e",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A year into the job, you always restart the queue worker after a deploy because the runbook says so, and you have never known why it is needed. What does lesson 22 suggest?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 22.",
+    "choices": [
+      {
+        "text": "Leave it: what a tool needs is learnt when the job needs it.",
+        "correct": false,
+        "why": "That is the advice for tools. *Why* something works is the fundamentals layer, which the work rarely asks you to understand."
+      },
+      {
+        "text": "Take a certification in the queue product to fill the gap.",
+        "correct": false,
+        "why": "A certification is for when an advert asks for it or it structures an adjacent skill, not a substitute for asking why."
+      },
+      {
+        "text": "Find out why the restart works: that is how fundamentals grow without a course.",
+        "correct": true,
+        "why": "Right. Picking one thing done because you were told to, once a week, and finding out why, is the lesson's second habit."
+      },
+      {
+        "text": "Wait for the next job, which will teach what this one left out.",
+        "correct": false,
+        "why": "The cheapest place to learn is the work you are already paid for, and nobody will schedule this layer for you."
+      }
+    ]
+  }
+]
