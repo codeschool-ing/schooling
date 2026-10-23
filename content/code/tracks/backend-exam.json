@@ -1173,5 +1173,619 @@
         "ignore_accents": true
       }
     ]
+  },
+  {
+    "id": "ex-kmknfyax",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "prompt": "You run `psql shop -f shop.sql` a second time, on a database that already holds lesson 1's shop. Which of the file's `INSERT` statements are refused? Choose all that apply.",
+    "hint": "Relational Databases and SQL, lesson 1.",
+    "choices": [
+      {
+        "text": "The five customers, by `UNIQUE (email)`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The four orders, by the primary key `orders_pkey`.",
+        "correct": false,
+        "why": "The orders went in again, `INSERT 0 4`: nothing about an order is unique except the id the database generates, and it generated four new ones."
+      },
+      {
+        "text": "The four products, by `UNIQUE (sku)`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The five order lines, by their key `(order_id, product_id)`.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-cmqvsdn5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Renaming Arena Sul in lesson 5's MongoDB rewrote 33 show documents, because each show embeds its venue's name. A colleague concludes that `order_lines.unit_price` in the SQL shop is the same mistake, a copy of `products.price`, and proposes dropping it. By lesson 2's test, what is wrong with that?",
+    "hint": "Relational Databases and SQL, lesson 2; Scale and Observability, lesson 5.",
+    "choices": [
+      {
+        "text": "Nothing: both repeat a value that is held in another table, and third normal form removes every repeated value.",
+        "correct": false,
+        "why": "3NF removes a repeated fact that can disagree with itself; it says nothing against two different facts that once had the same value."
+      },
+      {
+        "text": "A renamed venue should reach every show, so it is a copy; the price paid must not move, so it is a snapshot.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The price is safe because `numeric` is exact, which a string embedded in a document is not.",
+        "correct": false,
+        "why": "The type has nothing to do with it; the test is whether the value should change when its source does."
+      },
+      {
+        "text": "The line is safe only because its foreign key ties it to the product and keeps the two prices equal for ever.",
+        "correct": false,
+        "why": "The foreign key ties `product_id`, not the price; nothing keeps the two prices equal, and nothing should."
+      }
+    ]
+  },
+  {
+    "id": "ex-nmtrfbv4",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these, run on lesson 6's two-million-row `tickets` table, write every row again into a new file, so that `pg_relation_filenode('tickets')` changes? Choose all that apply.",
+    "hint": "Relational Databases and SQL, lesson 3; Scale and Observability, lesson 6.",
+    "choices": [
+      {
+        "text": "`ALTER TABLE tickets ADD COLUMN public_id uuid DEFAULT gen_random_uuid()`",
+        "correct": true,
+        "why": "Right: a volatile default needs a different value in every row."
+      },
+      {
+        "text": "`ALTER TABLE tickets ADD COLUMN printed boolean NOT NULL DEFAULT false`",
+        "correct": false,
+        "why": "A constant default is stored once in the catalogue: 2.1 ms, and the filenode stayed 16395."
+      },
+      {
+        "text": "`ALTER TABLE tickets ALTER COLUMN seat TYPE bigint`",
+        "correct": true,
+        "why": "Right: 5.0 seconds, a full rewrite, with the unique index rebuilt."
+      },
+      {
+        "text": "`ALTER TABLE tickets RENAME COLUMN code TO ticket_code`",
+        "correct": false,
+        "why": "A rename only edits the catalogue; what it breaks is every program still using the old name."
+      }
+    ]
+  },
+  {
+    "id": "ex-ty8kme21",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A March report on lesson 2's partitioned `sales` table filters with `sold_at BETWEEN '2026-03-01' AND '2026-03-31'`. What does it get wrong?",
+    "hint": "Relational Databases and SQL, lesson 4; Scale and Observability, lesson 2.",
+    "choices": [
+      {
+        "text": "It reads all six partitions, because a `BETWEEN` on the partition key cannot be pruned.",
+        "correct": false,
+        "why": "Both bounds fall in March, so the planner can still rule the other months out; the problem is which March rows it keeps."
+      },
+      {
+        "text": "It counts 1 April too, because `BETWEEN` includes its upper bound and the day after it.",
+        "correct": false,
+        "why": "The upper bound is `2026-03-31 00:00:00`, and nothing in April is reached."
+      },
+      {
+        "text": "Nothing: `sold_at` is a `timestamptz`, so each bare date is read as the whole of that day.",
+        "correct": false,
+        "why": "A bare date becomes midnight of that day; the column's type does not stretch it to the day's end."
+      },
+      {
+        "text": "It loses most of 31 March: the bare upper date means its first instant, midnight.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-189vwwgs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Suppose each ticket stores the idempotency key of its sale, and payments exports its charges carrying the same key. After a day of timeouts you want one query listing both the charges with no ticket and the tickets with no charge. Which shape does it?",
+    "hint": "Relational Databases and SQL, lesson 5; Scale and Observability, lesson 10.",
+    "choices": [
+      {
+        "text": "`tickets t FULL JOIN charges c ON c.key = t.key WHERE t.key IS NULL OR c.key IS NULL`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`tickets t JOIN charges c ON c.key = t.key`, and then read the rows where one side is null",
+        "correct": false,
+        "why": "An inner join keeps only the pairs; the rows with no partner are exactly the ones it drops."
+      },
+      {
+        "text": "`tickets t LEFT JOIN charges c ON c.key = t.key`, keeping only the rows where `c.key IS NULL`",
+        "correct": false,
+        "why": "That finds the tickets with no charge and never sees a charge with no ticket."
+      },
+      {
+        "text": "`SELECT * FROM charges WHERE key NOT IN (SELECT key FROM tickets)`",
+        "correct": false,
+        "why": "One direction only, and a single null key in `tickets` makes it return nothing at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-30tpfchm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 7's SLI is good events over all events. Somebody computes it from a table of request logs with `SELECT count(CASE WHEN ms <= 250 THEN 1 ELSE 0 END)::numeric / count(*) FROM request_log`, and it says 1 even on the day sales took seconds. Why?",
+    "hint": "Relational Databases and SQL, lesson 6; Scale and Observability, lesson 7.",
+    "choices": [
+      {
+        "text": "The `::numeric` comes too late, so the division is done on two integers and rounds to 1.",
+        "correct": false,
+        "why": "The cast applies to the first count before the division, so the result is a decimal; the numerator is simply every row."
+      },
+      {
+        "text": "`ms <= 250` is unknown for the slow rows, and the `CASE` treats an unknown condition as if it were true.",
+        "correct": false,
+        "why": "Unknown appears only where `ms` is null; a slow request has a value, and for it the comparison is false."
+      },
+      {
+        "text": "`count` counts the zeros too, since 0 is not null, so the top is every row.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`count(*)` skips the rows whose `CASE` gave 0, so both sides shrink together.",
+        "correct": false,
+        "why": "`count(*)` counts rows and has no argument to skip on; it is the `count(CASE …)` that should have skipped and did not."
+      }
+    ]
+  },
+  {
+    "id": "ex-9gg6q779",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The box office's monthly sales report reads a materialised view that a nightly job refreshes, and scale lesson 11 says a degraded answer should say how old it is. One night the refresh fails. What does SQL lesson 7 suggest so that every reader can tell?",
+    "hint": "Relational Databases and SQL, lesson 7; Scale and Observability, lesson 11.",
+    "choices": [
+      {
+        "text": "Store `now() AS refreshed_at` in it, which every report then prints.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Refresh it `CONCURRENTLY`, so readers keep working while the new contents are being built.",
+        "correct": false,
+        "why": "That keeps the view readable during a refresh; it says nothing on the night the refresh never happened."
+      },
+      {
+        "text": "Create it `WITH NO DATA`, so that a failed refresh becomes an error instead of old rows.",
+        "correct": false,
+        "why": "Only a view never filled is an error; one filled last week keeps answering with last week."
+      },
+      {
+        "text": "Replace it with a plain view, which the database caches for you and refreshes on its own schedule.",
+        "correct": false,
+        "why": "A plain view stores no rows; it reruns the query on every read, which is the cost the materialised one was avoiding."
+      }
+    ]
+  },
+  {
+    "id": "ex-hzdd7y05",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each failure the box office can meet to what the two lessons say to do about it.",
+    "hint": "Relational Databases and SQL, lesson 8; Scale and Observability, lesson 10.",
+    "pairs": [
+      {
+        "left": "`40001`, could not serialize access",
+        "right": "Roll back and run the whole transaction again, reads included"
+      },
+      {
+        "left": "`23505`, duplicate key value",
+        "right": "Stop: another attempt fails the same way"
+      },
+      {
+        "left": "A `503` from payments",
+        "right": "Wait a random time under a doubling ceiling, then call again"
+      },
+      {
+        "left": "`deadlock detected` on two transfers, every day",
+        "right": "Take the row locks in ascending order of id"
+      }
+    ],
+    "right_distractors": [
+      "Retry only the statement that failed, with the values already read"
+    ]
+  },
+  {
+    "id": "ex-v6z4ba70",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On the primary, `pg_stat_user_indexes` shows an index on `orders (placed_at)` with `idx_scan` at 0 and a size of several hundred megabytes. Reports and dashboards are sent to a read replica, as scale lesson 2 recommends. What should you do before dropping it?",
+    "hint": "Relational Databases and SQL, lesson 9; Scale and Observability, lesson 2.",
+    "choices": [
+      {
+        "text": "Nothing more: zero scans since the last reset means that no query anywhere has used it.",
+        "correct": false,
+        "why": "The primary's counter only sees the primary's queries, and the reports run somewhere else."
+      },
+      {
+        "text": "Read the counter on the replica as well: each server counts only the scans that were made on it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Check that it does not back a `UNIQUE` constraint, and drop it if it does not.",
+        "correct": false,
+        "why": "That is the check for a unique index, which this one is not; and the counter it trusts is the wrong server's."
+      },
+      {
+        "text": "Drop it on the primary only, so that the replica can keep its own copy of the index for the reports.",
+        "correct": false,
+        "why": "A replica applies the primary's log and ends up the same database a moment later; an index dropped there is dropped on the replica."
+      }
+    ]
+  },
+  {
+    "id": "ex-epcjrmwp",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "In lesson 10's plan for counting the lines of the pending orders, the inner node reads `Index Only Scan using order_lines_pkey … (actual time=0.007..0.007 rows=2 loops=2923)`. About how many milliseconds did that node take in all? Give a whole number.",
+    "hint": "Relational Databases and SQL, lesson 10.",
+    "value": 20,
+    "tolerance": 1,
+    "unit": ""
+  },
+  {
+    "id": "ex-7d4j9e6p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "With OpenTelemetry's instrumentation for psycopg, which makes a span per query, the trace of one admin page shows the request span with 51 children: one `SELECT … FROM customers … LIMIT 50` and fifty `SELECT … FROM orders WHERE customer_id = …` of about a millisecond each. What is it, and what fixes it?",
+    "hint": "Relational Databases and SQL, lesson 11; Scale and Observability, lesson 8.",
+    "choices": [
+      {
+        "text": "Too many spans: tail-sample the page so that only the slow traces keep their query spans.",
+        "correct": false,
+        "why": "Sampling changes what is recorded, not what runs; the fifty queries still reach the database."
+      },
+      {
+        "text": "A missing index on `orders.customer_id`: add it, and each of the fifty queries gets faster.",
+        "correct": false,
+        "why": "Each one already takes a millisecond; the cost is the count of round trips, and an index does not change the count."
+      },
+      {
+        "text": "A slow database: give it more CPU, so that fifty round trips fit in the time of a few.",
+        "correct": false,
+        "why": "The N+1 is not fixed by a bigger server: what it costs is round trips, not work."
+      },
+      {
+        "text": "An N+1: fetch the orders of all fifty customers at once, in one query, with `= ANY(…)`.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-2pk7amjm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "The first version of the box office ran on SQLite in WAL mode and was fast. For the on-sale the team wants scale lesson 1's horizontal scaling: three copies of the program, on three machines, behind nginx. What does SQL lesson 12 say?",
+    "hint": "Relational Databases and SQL, lesson 12; Scale and Observability, lesson 1.",
+    "choices": [
+      {
+        "text": "It works once WAL is on, because WAL lets each copy write at the same time.",
+        "correct": false,
+        "why": "WAL lets readers and the single writer proceed together; there is still one writer."
+      },
+      {
+        "text": "It works if the file is put on a network filesystem that all three machines mount.",
+        "correct": false,
+        "why": "SQLite's locking depends on file locks that network filesystems implement unreliably, and it is not supported."
+      },
+      {
+        "text": "It is out: the file must be on the machine the code runs on.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It works with a busy timeout, which turns each `database is locked` into a short queue.",
+        "correct": false,
+        "why": "A busy timeout queues the writers of one machine; it does not let three machines share one file."
+      }
+    ]
+  },
+  {
+    "id": "ex-1809sv4s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "On a corporate Oracle system you propose scale lesson 2's arrangement: a replica that takes the reports off the primary. Why does such a system often have none?",
+    "hint": "Relational Databases and SQL, lesson 13; Scale and Observability, lesson 2.",
+    "choices": [
+      {
+        "text": "A second server is another licence, and reading a standby while it applies is a separately priced option.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Oracle has no replication: a standby can only be rebuilt from last night's backup.",
+        "correct": false,
+        "why": "Data Guard keeps a standby current from the redo stream; reading from it is what costs extra."
+      },
+      {
+        "text": "Read consistency from undo makes a replica unnecessary, since a long report there never blocks a writer.",
+        "correct": false,
+        "why": "Readers do not block writers, and the reports still compete for the same machine; what rules the replica out is the bill."
+      },
+      {
+        "text": "Replicas need the Diagnostics Pack to report their lag, and few systems license it.",
+        "correct": false,
+        "why": "The Diagnostics Pack is AWR and ASH, the performance history; it has nothing to do with whether a standby exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-cnenynxr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 1's sale holds the show's row lock for the whole of `sign()`, which caps one show at about 139 sales a second. A teammate proposes reading `sold` with a plain `SELECT`, working out the next seat in Python, and writing it back with `UPDATE events SET sold = <that number>`, so that no lock is held while signing. With sixteen buyers on one show, what goes wrong?",
+    "hint": "Scale and Observability, lesson 1; Relational Databases and SQL, lesson 8.",
+    "choices": [
+      {
+        "text": "PostgreSQL's default `READ COMMITTED` aborts the second sale with a serialization failure, so it only costs retries.",
+        "correct": false,
+        "why": "That error belongs to `REPEATABLE READ` and `SERIALIZABLE`; at `READ COMMITTED` the second write simply overwrites the first."
+      },
+      {
+        "text": "Nothing: a plain `SELECT` takes the same row lock that the `UPDATE` would have taken.",
+        "correct": false,
+        "why": "A plain `SELECT` locks nothing; that lock is what `FOR UPDATE` takes."
+      },
+      {
+        "text": "The sales deadlock on the show's row, and after a second PostgreSQL cancels one of them to break the cycle.",
+        "correct": false,
+        "why": "A deadlock needs two locks taken in opposite orders; this design holds none while it decides."
+      },
+      {
+        "text": "Two of them see the same count and store the same result, so an increment vanishes: the lost update.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-n7vdsfe9",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Tickets are sharded by show across two shards. To report the average ticket price, the program asks each shard for `avg(cents)`: shard 0 answers 5000 over its 4000 tickets, and shard 1 answers 10000 over its 1000. What is the true average, in cents?",
+    "hint": "Scale and Observability, lesson 2; Relational Databases and SQL, lesson 6.",
+    "value": 6000,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-8524peeg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "With the replica synchronous and cut off from the primary, a buyer's `curl -s -m 5 -X POST localhost:8080/events/1/tickets` ends in `curl exit: 28`, and the buyer at once clicks Buy again, which times out too. `sold` for show 1 was 0. Ten seconds after the network comes back, what does it say?",
+    "hint": "Scale and Observability, lesson 3; Relational Databases and SQL, lesson 8.",
+    "choices": [
+      {
+        "text": "0: a sale whose client gave up is rolled back by the server once it notices.",
+        "correct": false,
+        "why": "Nothing told the server the client had left; the commit was waiting for the replica, not for curl."
+      },
+      {
+        "text": "2: the first commit completes, and then the second sale, which had been waiting for that row's lock.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "1: the second sale was refused outright while the first one still held the row.",
+        "correct": false,
+        "why": "A second writer waits at the `UPDATE` until the row's lock is released; it is not refused."
+      },
+      {
+        "text": "1: the replica applies the waiting commit just once, and the click that repeated it is merged into that commit.",
+        "correct": false,
+        "why": "Each request is a transaction of its own; nothing in the box office knows the second is a repeat, which is lesson 10's subject."
+      }
+    ]
+  },
+  {
+    "id": "ex-51tmkpjp",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Lesson 4 holds seat 42 for ten minutes with one Redis command, `SET hold:show:1:seat:42 ana ___ EX 600`, and a second buyer's identical command answers `(nil)` instead of `OK`.",
+    "hint": "Scale and Observability, lesson 4.",
+    "blanks": [
+      {
+        "accept": [
+          "NX"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-q62nvs4m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "DynamoDB's scan for `show-1#` answered `\"Count\": 3` and `\"ScannedCount\": 5`, and charged for the five. Which line of a PostgreSQL plan reports the same kind of waste?",
+    "hint": "Scale and Observability, lesson 5; Relational Databases and SQL, lesson 10.",
+    "choices": [
+      {
+        "text": "`Heap Fetches`, on an index-only scan that still had to go and read the table.",
+        "correct": false,
+        "why": "That counts rows the index alone could not answer; the rows were still wanted."
+      },
+      {
+        "text": "`loops`, on the inner side of a nested loop that ran many times.",
+        "correct": false,
+        "why": "`loops` says how often a node ran; each run may have kept every row it read."
+      },
+      {
+        "text": "`Rows Removed by Filter`, on a scan that read rows only to throw them away.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`Index Cond`, on an index scan that looked up its rows in the index.",
+        "correct": false,
+        "why": "An `Index Cond` is the opposite case: only the matching entries were read."
+      }
+    ]
+  },
+  {
+    "id": "ex-ggv923ey",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "After the backfill, `ALTER TABLE tickets ALTER COLUMN gate SET NOT NULL` found the valid `CHECK (gate IS NOT NULL)` and skipped its scan, yet it took 1.1 seconds. Why that long, and why about one second?",
+    "hint": "Scale and Observability, lesson 6; Relational Databases and SQL, lesson 8.",
+    "choices": [
+      {
+        "text": "It scanned the table anyway, because `SET NOT NULL` ignores a constraint that was added `NOT VALID`.",
+        "correct": false,
+        "why": "The constraint had been validated by then, and since PostgreSQL 12 a valid one lets `SET NOT NULL` skip the scan."
+      },
+      {
+        "text": "It waited out a `lock_timeout` of one second that the backfill had left set in that session.",
+        "correct": false,
+        "why": "Each psql command there is a session of its own; and a lock timeout ends in an error, while this change succeeded."
+      },
+      {
+        "text": "It deadlocked with the sales, and the second was PostgreSQL choosing which side to keep.",
+        "correct": false,
+        "why": "A detected deadlock rolls one side back with an error; the change succeeded, and the sales never held its lock."
+      },
+      {
+        "text": "Autovacuum's conflicting lock, which PostgreSQL cancels after `deadlock_timeout`, one second.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-q75s2q16",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`pg_stat_statements` puts the lookup by email at a mean of 0.0 ms over 400 calls, while the program making the calls times each one at a few milliseconds. Scale lesson 7 met the same gap: a 95th percentile for reads of 20 ms from the box office's histogram and 30 ms from `load.py`. What explains both?",
+    "hint": "Scale and Observability, lesson 7; Relational Databases and SQL, lesson 10.",
+    "choices": [
+      {
+        "text": "A time measured inside a service is a lower bound: the caller's clock also holds the network and the wait to be served.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Each inside number is interpolated within a bucket, and interpolation always comes out low.",
+        "correct": false,
+        "why": "Interpolation is how a percentile comes out of buckets; it can land either side, and the mean in `pg_stat_statements` is not built that way."
+      },
+      {
+        "text": "One side of each pair is wrong, since two measurements of one thing that disagree mean broken instrumentation.",
+        "correct": false,
+        "why": "Agreement is the check when both measure the same span; these measure different spans, and both are right."
+      },
+      {
+        "text": "The outside clock counts a queue that a closed-loop generator builds on purpose.",
+        "correct": false,
+        "why": "A closed loop waits for each answer before sending the next; it builds no queue of its own requests."
+      }
+    ]
+  },
+  {
+    "id": "ex-afcfwf7w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In lesson 8's `app.py`, `charge(event_id)` runs before `conn.transaction()`. A refactor moves it inside the transaction, after the `UPDATE events`, so that a failed charge rolls the seat back. What does that cost when everybody wants the same show?",
+    "hint": "Scale and Observability, lesson 8; Relational Databases and SQL, lesson 8.",
+    "choices": [
+      {
+        "text": "Nothing new: the row is only locked at the moment of `COMMIT`, after the charge is done.",
+        "correct": false,
+        "why": "An `UPDATE` locks its row from the moment it runs until the transaction ends."
+      },
+      {
+        "text": "Each sale now holds the show's row lock through the call to payments as well as `sign()`, so that row's queue grows.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Page reads of that show now wait behind the lock for as long as each charge takes.",
+        "correct": false,
+        "why": "A reader does not wait for a writer: it sees the last committed version, and the page reads go to the replica anyway."
+      },
+      {
+        "text": "Nothing, and it gains: a crash after the charge now rolls the charge back with the seat.",
+        "correct": false,
+        "why": "The charge happened in another system; a rollback undoes the box office's rows and nothing at payments."
+      }
+    ]
+  },
+  {
+    "id": "ex-dbaqx17c",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Lesson 9 pushes the unguarded box office with 8, 32 and then 128 workers. Put what happens in the order it happens.",
+    "hint": "Scale and Observability, lesson 9.",
+    "items": [
+      "The sales a second stop growing: 112, 105, 104",
+      "The median sale's wait climbs: 70, 295, 951 ms",
+      "PostgreSQL answers `too many clients already` and 146 sales fail with `500`"
+    ],
+    "trap": "The error is what gets noticed, and it comes last: the rate had already stopped and the wait was growing, with nothing broken, before the overload moved on to the database's connections."
+  },
+  {
+    "id": "ex-x4z6bfbc",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Lesson 10's `backoff` waits `random.uniform(0, min(2.0, 0.1 * 2 ** attempt))` when payments sends no `Retry-After`. If `CHARGE_ATTEMPTS` were 6, what is the longest wait it could choose after the fourth failed attempt, in milliseconds?",
+    "hint": "Scale and Observability, lesson 10.",
+    "value": 1600,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-z4wqxbfa",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "Lesson 11's plan prices a read at 1.1 ms of CPU and a sale at 10 ms, and has each buyer in the first minute load about 10 pages and try to buy once. For 9,000 buyers in the first minute instead of 6,000, how many copies does the plan's rule give: no more than 70% busy, plus one for failure?",
+    "hint": "Scale and Observability, lesson 11.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": ""
   }
 ]

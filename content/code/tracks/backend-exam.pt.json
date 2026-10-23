@@ -835,5 +835,441 @@
         ]
       }
     ]
+  },
+  "ex-kmknfyax": {
+    "prompt": "Você roda `psql shop -f shop.sql` uma segunda vez, num banco que já tem a loja da aula 1. Quais `INSERT` do arquivo são recusados? Marque todas as que se aplicam.",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 1.",
+    "choices": [
+      {
+        "text": "Os cinco clientes, pelo `UNIQUE (email)`.",
+        "why": "Isso."
+      },
+      {
+        "text": "Os quatro pedidos, pela chave primária `orders_pkey`.",
+        "why": "Os pedidos entraram de novo, `INSERT 0 4`: nada num pedido é único além do id que o banco gera, e ele gerou quatro novos."
+      },
+      {
+        "text": "Os quatro produtos, pelo `UNIQUE (sku)`.",
+        "why": "Isso."
+      },
+      {
+        "text": "As cinco linhas de pedido, pela chave `(order_id, product_id)`.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-cmqvsdn5": {
+    "prompt": "Renomear a Arena Sul no MongoDB da aula 5 reescreveu 33 documentos de show, porque cada show embute o nome do seu local. Um colega conclui que `order_lines.unit_price`, na loja em SQL, é o mesmo erro, uma cópia de `products.price`, e propõe removê-la. Pelo teste da aula 2, o que há de errado nisso?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 2; Escala e Observabilidade, aula 5.",
+    "choices": [
+      {
+        "text": "Nada: os dois repetem um valor guardado em outra tabela, e a terceira forma normal remove todo valor repetido.",
+        "why": "A 3FN remove um fato repetido que pode discordar de si mesmo; não diz nada contra dois fatos diferentes que um dia tiveram o mesmo valor."
+      },
+      {
+        "text": "Um local renomeado deve chegar a todo show, logo o nome é cópia; o preço pago não pode mudar, logo é um instantâneo.",
+        "why": "Isso."
+      },
+      {
+        "text": "O preço está a salvo porque `numeric` é exato, e uma string embutida num documento não é.",
+        "why": "O tipo não tem nada a ver com isso; o teste é se o valor deve mudar quando a origem muda."
+      },
+      {
+        "text": "A linha só está a salvo porque a chave estrangeira a liga ao produto e mantém os dois preços sempre iguais.",
+        "why": "A chave estrangeira liga o `product_id`, não o preço; nada mantém os dois preços iguais, e nada deveria."
+      }
+    ]
+  },
+  "ex-nmtrfbv4": {
+    "prompt": "Quais destes, rodados na tabela `tickets` de dois milhões de linhas da aula 6, escrevem todas as linhas de novo num arquivo novo, de modo que `pg_relation_filenode('tickets')` muda? Marque todas as que se aplicam.",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 3; Escala e Observabilidade, aula 6.",
+    "choices": [
+      {
+        "text": "`ALTER TABLE tickets ADD COLUMN public_id uuid DEFAULT gen_random_uuid()`",
+        "why": "Isso: um default volátil precisa de um valor diferente em cada linha."
+      },
+      {
+        "text": "`ALTER TABLE tickets ADD COLUMN printed boolean NOT NULL DEFAULT false`",
+        "why": "Um default constante fica guardado uma vez no catálogo: 2,1 ms, e o filenode continuou 16395."
+      },
+      {
+        "text": "`ALTER TABLE tickets ALTER COLUMN seat TYPE bigint`",
+        "why": "Isso: 5,0 segundos, uma reescrita completa, com o índice único reconstruído."
+      },
+      {
+        "text": "`ALTER TABLE tickets RENAME COLUMN code TO ticket_code`",
+        "why": "Renomear só mexe no catálogo; o que isso quebra é todo programa que ainda usa o nome antigo."
+      }
+    ]
+  },
+  "ex-ty8kme21": {
+    "prompt": "Um relatório de março sobre a tabela particionada `sales` da aula 2 filtra com `sold_at BETWEEN '2026-03-01' AND '2026-03-31'`. O que ele erra?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 4; Escala e Observabilidade, aula 2.",
+    "choices": [
+      {
+        "text": "Ele lê as seis partições, porque um `BETWEEN` na chave de particionamento não permite poda.",
+        "why": "Os dois limites caem em março, então o planejador ainda descarta os outros meses; o problema é quais linhas de março ele mantém."
+      },
+      {
+        "text": "Ele conta o 1º de abril também, porque o `BETWEEN` inclui o limite de cima e o dia seguinte.",
+        "why": "O limite de cima é `2026-03-31 00:00:00`, e nada de abril é alcançado."
+      },
+      {
+        "text": "Nada: `sold_at` é `timestamptz`, então cada data sozinha é lida como o dia inteiro.",
+        "why": "Uma data sozinha vira a meia-noite daquele dia; o tipo da coluna não a estica até o fim do dia."
+      },
+      {
+        "text": "Perde quase todo o dia 31: a data no limite de cima é o primeiro instante dele, meia-noite.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-189vwwgs": {
+    "prompt": "Suponha que cada ingresso guarde a chave de idempotência da sua venda, e que payments exporte as cobranças com a mesma chave. Depois de um dia de timeouts, você quer uma consulta que liste tanto as cobranças sem ingresso quanto os ingressos sem cobrança. Que forma faz isso?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 5; Escala e Observabilidade, aula 10.",
+    "choices": [
+      {
+        "text": "`tickets t FULL JOIN charges c ON c.key = t.key WHERE t.key IS NULL OR c.key IS NULL`",
+        "why": "Isso."
+      },
+      {
+        "text": "`tickets t JOIN charges c ON c.key = t.key`, e depois ler as linhas em que um dos lados é nulo",
+        "why": "Uma junção interna mantém só os pares; as linhas sem par são justamente as que ela descarta."
+      },
+      {
+        "text": "`tickets t LEFT JOIN charges c ON c.key = t.key`, mantendo só as linhas em que `c.key IS NULL`",
+        "why": "Isso acha os ingressos sem cobrança e nunca vê uma cobrança sem ingresso."
+      },
+      {
+        "text": "`SELECT * FROM charges WHERE key NOT IN (SELECT key FROM tickets)`",
+        "why": "Só uma direção, e uma única chave nula em `tickets` faz a consulta não devolver nada."
+      }
+    ]
+  },
+  "ex-30tpfchm": {
+    "prompt": "O SLI da aula 7 é eventos bons sobre todos os eventos. Alguém o calcula a partir de uma tabela de logs de requisições com `SELECT count(CASE WHEN ms <= 250 THEN 1 ELSE 0 END)::numeric / count(*) FROM request_log`, e o resultado é 1 até no dia em que as vendas levaram segundos. Por quê?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 6; Escala e Observabilidade, aula 7.",
+    "choices": [
+      {
+        "text": "O `::numeric` chega tarde demais, então a divisão é feita entre dois inteiros e arredonda para 1.",
+        "why": "O cast vale para o primeiro count antes da divisão, então o resultado é decimal; o numerador é que inclui todas as linhas."
+      },
+      {
+        "text": "`ms <= 250` é desconhecido nas linhas lentas, e o `CASE` trata uma condição desconhecida como se fosse verdadeira.",
+        "why": "O desconhecido só aparece onde `ms` é nulo; uma requisição lenta tem valor, e para ela a comparação é falsa."
+      },
+      {
+        "text": "O `count` conta os zeros também, já que 0 não é nulo, e o numerador vira todas as linhas.",
+        "why": "Isso."
+      },
+      {
+        "text": "O `count(*)` pula as linhas em que o `CASE` deu 0, então os dois lados encolhem juntos.",
+        "why": "O `count(*)` conta linhas e não tem argumento para pular; é o `count(CASE …)` que devia ter pulado e não pulou."
+      }
+    ]
+  },
+  "ex-9gg6q779": {
+    "prompt": "O relatório mensal de vendas da bilheteria lê uma view materializada que um job noturno atualiza, e a aula 11 de escala diz que uma resposta degradada deve dizer quão velha é. Numa noite, a atualização falha. O que a aula 7 de SQL sugere para que todo leitor perceba?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 7; Escala e Observabilidade, aula 11.",
+    "choices": [
+      {
+        "text": "Guardar nela `now() AS refreshed_at`, que cada relatório então mostra.",
+        "why": "Isso."
+      },
+      {
+        "text": "Atualizá-la com `CONCURRENTLY`, para que os leitores continuem trabalhando enquanto o novo conteúdo é montado.",
+        "why": "Isso mantém a view legível durante a atualização; não diz nada na noite em que a atualização nem aconteceu."
+      },
+      {
+        "text": "Criá-la `WITH NO DATA`, para que uma atualização que falhou vire um erro em vez de linhas velhas.",
+        "why": "Só uma view nunca preenchida dá erro; uma preenchida na semana passada continua respondendo com a semana passada."
+      },
+      {
+        "text": "Trocá-la por uma view comum, que o banco guarda em cache para você e atualiza no próprio ritmo.",
+        "why": "Uma view comum não guarda linhas; ela roda a consulta de novo a cada leitura, que é o custo que a materializada evitava."
+      }
+    ]
+  },
+  "ex-hzdd7y05": {
+    "prompt": "Ligue cada falha que a bilheteria pode encontrar ao que as duas aulas mandam fazer com ela.",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 8; Escala e Observabilidade, aula 10.",
+    "pairs": [
+      {
+        "left": "`40001`, could not serialize access",
+        "right": "Desfazer e rodar a transação inteira de novo, leituras incluídas"
+      },
+      {
+        "left": "`23505`, duplicate key value",
+        "right": "Parar: outra tentativa falha do mesmo jeito"
+      },
+      {
+        "left": "Um `503` vindo de payments",
+        "right": "Esperar um tempo aleatório sob um teto que dobra, e chamar de novo"
+      },
+      {
+        "left": "`deadlock detected` em duas transferências, todo dia",
+        "right": "Pegar as travas das linhas em ordem crescente de id"
+      }
+    ],
+    "right_distractors": [
+      "Repetir só o comando que falhou, com os valores já lidos"
+    ]
+  },
+  "ex-v6z4ba70": {
+    "prompt": "No primário, `pg_stat_user_indexes` mostra um índice em `orders (placed_at)` com `idx_scan` em 0 e várias centenas de megabytes. Relatórios e dashboards vão para uma réplica de leitura, como a aula 2 de escala recomenda. O que você deve fazer antes de removê-lo?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 9; Escala e Observabilidade, aula 2.",
+    "choices": [
+      {
+        "text": "Nada além disso: zero varreduras desde a última redefinição quer dizer que nenhuma consulta o usou.",
+        "why": "O contador do primário só vê as consultas do primário, e os relatórios rodam em outro lugar."
+      },
+      {
+        "text": "Ler o contador na réplica também: cada servidor conta só as varreduras que foram feitas nele.",
+        "why": "Isso."
+      },
+      {
+        "text": "Conferir que ele não sustenta uma restrição `UNIQUE`, e removê-lo se não sustentar.",
+        "why": "Essa é a conferência para um índice único, que este não é; e o contador em que ela confia é do servidor errado."
+      },
+      {
+        "text": "Removê-lo só no primário, para que a réplica possa manter a própria cópia do índice para os relatórios.",
+        "why": "A réplica aplica o log do primário e vira o mesmo banco um instante depois; um índice removido lá some na réplica também."
+      }
+    ]
+  },
+  "ex-epcjrmwp": {
+    "prompt": "No plano da aula 10 que conta as linhas dos pedidos pendentes, o nó interno diz `Index Only Scan using order_lines_pkey … (actual time=0.007..0.007 rows=2 loops=2923)`. Mais ou menos quantos milissegundos esse nó levou no total? Responda com um número inteiro.",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 10."
+  },
+  "ex-7d4j9e6p": {
+    "prompt": "Com a instrumentação do OpenTelemetry para psycopg, que cria um span por consulta, o trace de uma página administrativa mostra o span da requisição com 51 filhos: um `SELECT … FROM customers … LIMIT 50` e cinquenta `SELECT … FROM orders WHERE customer_id = …` de cerca de um milissegundo cada. O que é isso, e o que resolve?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 11; Escala e Observabilidade, aula 8.",
+    "choices": [
+      {
+        "text": "Spans demais: usar tail sampling na página para que só os traces lentos guardem os spans das consultas.",
+        "why": "Amostragem muda o que é registrado, não o que roda; as cinquenta consultas continuam chegando ao banco."
+      },
+      {
+        "text": "Falta um índice em `orders.customer_id`: criá-lo, e cada uma das cinquenta consultas fica mais rápida.",
+        "why": "Cada uma já leva um milissegundo; o custo é o número de idas e voltas, e um índice não muda esse número."
+      },
+      {
+        "text": "Um banco lento: dar mais CPU a ele, para que cinquenta idas e voltas caibam no tempo de poucas.",
+        "why": "O N+1 não se resolve com um servidor maior: o que ele custa são idas e voltas, não trabalho."
+      },
+      {
+        "text": "Um N+1: buscar de uma vez os pedidos dos cinquenta clientes, numa consulta com `= ANY(…)`.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-2pk7amjm": {
+    "prompt": "A primeira versão da bilheteria rodava em SQLite no modo WAL e era rápida. Para a abertura de vendas, o time quer a escala horizontal da aula 1 de escala: três cópias do programa, em três máquinas, atrás do nginx. O que diz a aula 12 de SQL?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 12; Escala e Observabilidade, aula 1.",
+    "choices": [
+      {
+        "text": "Funciona com o WAL ligado, porque o WAL deixa cada cópia escrever ao mesmo tempo.",
+        "why": "O WAL deixa os leitores e o único escritor andarem juntos; continua havendo um escritor."
+      },
+      {
+        "text": "Funciona se o arquivo ficar num sistema de arquivos de rede montado pelas três máquinas.",
+        "why": "As travas do SQLite dependem de travas de arquivo que sistemas de arquivos de rede implementam mal, e isso não é suportado."
+      },
+      {
+        "text": "Não dá: o arquivo precisa estar na máquina onde o código roda.",
+        "why": "Isso."
+      },
+      {
+        "text": "Funciona com um busy timeout, que transforma cada `database is locked` numa fila curta.",
+        "why": "Um busy timeout enfileira os escritores de uma máquina; não deixa três máquinas dividirem um arquivo."
+      }
+    ]
+  },
+  "ex-1809sv4s": {
+    "prompt": "Num sistema Oracle corporativo, você propõe o arranjo da aula 2 de escala: uma réplica que tire os relatórios do primário. Por que um sistema assim muitas vezes não tem nenhuma?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 13; Escala e Observabilidade, aula 2.",
+    "choices": [
+      {
+        "text": "Um segundo servidor é outra licença, e ler um standby enquanto ele aplica é uma opção cobrada à parte.",
+        "why": "Isso."
+      },
+      {
+        "text": "O Oracle não tem replicação: um standby só pode ser refeito a partir do backup da noite anterior.",
+        "why": "O Data Guard mantém um standby atualizado pelo fluxo de redo; ler dele é que custa a mais."
+      },
+      {
+        "text": "A consistência de leitura pelo undo torna a réplica desnecessária, já que relatórios nunca bloqueiam escritores.",
+        "why": "Leitores não bloqueiam escritores, e os relatórios ainda disputam a mesma máquina; o que impede a réplica é a conta."
+      },
+      {
+        "text": "Réplicas precisam do Diagnostics Pack para informar o atraso, e poucos sistemas o licenciam.",
+        "why": "O Diagnostics Pack é o AWR e o ASH, o histórico de desempenho; não tem nada a ver com existir um standby."
+      }
+    ]
+  },
+  "ex-cnenynxr": {
+    "prompt": "A venda da aula 1 segura a trava da linha do show durante todo o `sign()`, o que limita um show a cerca de 139 vendas por segundo. Um colega propõe ler `sold` com um `SELECT` simples, calcular o próximo assento em Python e gravar de volta com `UPDATE events SET sold = <esse número>`, para que nenhuma trava fique presa durante a assinatura. Com dezesseis compradores no mesmo show, o que dá errado?",
+    "hint": "Escala e Observabilidade, aula 1; Bancos de Dados Relacionais e SQL, aula 8.",
+    "choices": [
+      {
+        "text": "O `READ COMMITTED` padrão do PostgreSQL aborta a segunda venda com falha de serialização, então custa só novas tentativas.",
+        "why": "Esse erro é do `REPEATABLE READ` e do `SERIALIZABLE`; no `READ COMMITTED` a segunda escrita simplesmente sobrescreve a primeira."
+      },
+      {
+        "text": "Nada: um `SELECT` simples pega a mesma trava de linha que o `UPDATE` pegaria.",
+        "why": "Um `SELECT` simples não trava nada; essa trava é a que o `FOR UPDATE` pega."
+      },
+      {
+        "text": "As vendas entram em deadlock na linha do show, e depois de um segundo o PostgreSQL cancela uma delas para romper o ciclo.",
+        "why": "Um deadlock precisa de duas travas pegas em ordens opostas; esse desenho não segura nenhuma enquanto decide."
+      },
+      {
+        "text": "Duas delas veem a mesma contagem e guardam o mesmo resultado, e um incremento some: a atualização perdida.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-n7vdsfe9": {
+    "prompt": "Os ingressos estão em dois shards, divididos por show. Para relatar o preço médio, o programa pede `avg(cents)` a cada shard: o shard 0 responde 5000 sobre seus 4000 ingressos, e o shard 1 responde 10000 sobre seus 1000. Qual é a média verdadeira, em centavos?",
+    "hint": "Escala e Observabilidade, aula 2; Bancos de Dados Relacionais e SQL, aula 6."
+  },
+  "ex-8524peeg": {
+    "prompt": "Com a réplica síncrona e isolada do primário, o `curl -s -m 5 -X POST localhost:8080/events/1/tickets` de um comprador termina em `curl exit: 28`, e o comprador clica em Comprar de novo na hora, o que também estoura o tempo. O `sold` do show 1 era 0. Dez segundos depois de a rede voltar, quanto ele diz?",
+    "hint": "Escala e Observabilidade, aula 3; Bancos de Dados Relacionais e SQL, aula 8.",
+    "choices": [
+      {
+        "text": "0: uma venda cujo cliente desistiu é desfeita pelo servidor assim que ele percebe.",
+        "why": "Nada avisou o servidor de que o cliente tinha ido embora; o commit esperava a réplica, não o curl."
+      },
+      {
+        "text": "2: o primeiro commit se conclui, e a segunda venda, que aguardava a trava da linha, vem logo atrás.",
+        "why": "Isso."
+      },
+      {
+        "text": "1: a segunda venda foi recusada de cara enquanto a primeira ainda segurava a linha.",
+        "why": "Um segundo escritor espera no `UPDATE` até a trava da linha ser liberada; ele não é recusado."
+      },
+      {
+        "text": "1: a réplica aplica o commit pendente uma única vez, e o clique que o repetiu acaba absorvido por ele.",
+        "why": "Cada requisição é uma transação própria; nada na bilheteria sabe que a segunda é uma repetição, que é o assunto da aula 10."
+      }
+    ]
+  },
+  "ex-51tmkpjp": {
+    "prompt": "A aula 4 segura o assento 42 por dez minutos com um comando do Redis, `SET hold:show:1:seat:42 ana ___ EX 600`, e o mesmo comando de um segundo comprador responde `(nil)` em vez de `OK`.",
+    "hint": "Escala e Observabilidade, aula 4.",
+    "blanks": [
+      {
+        "accept": [
+          "NX"
+        ]
+      }
+    ]
+  },
+  "ex-q62nvs4m": {
+    "prompt": "A varredura do DynamoDB por `show-1#` respondeu `\"Count\": 3` e `\"ScannedCount\": 5`, e cobrou pelos cinco. Que linha de um plano do PostgreSQL mostra o mesmo tipo de desperdício?",
+    "hint": "Escala e Observabilidade, aula 5; Bancos de Dados Relacionais e SQL, aula 10.",
+    "choices": [
+      {
+        "text": "`Heap Fetches`, numa varredura só de índice que ainda precisou ir ler a tabela.",
+        "why": "Isso conta linhas que o índice sozinho não respondeu; as linhas continuavam sendo desejadas."
+      },
+      {
+        "text": "`loops`, no lado interno de um nested loop que rodou muitas vezes.",
+        "why": "`loops` diz quantas vezes um nó rodou; cada execução pode ter mantido toda linha que leu."
+      },
+      {
+        "text": "`Rows Removed by Filter`, numa varredura que leu linhas só para descartá-las.",
+        "why": "Isso."
+      },
+      {
+        "text": "`Index Cond`, numa varredura de índice que procurou as linhas no índice.",
+        "why": "Um `Index Cond` é o caso oposto: só as entradas que casavam foram lidas."
+      }
+    ]
+  },
+  "ex-ggv923ey": {
+    "prompt": "Depois do backfill, `ALTER TABLE tickets ALTER COLUMN gate SET NOT NULL` encontrou o `CHECK (gate IS NOT NULL)` válido e pulou a varredura, e ainda assim levou 1,1 segundo. Por que tanto, e por que cerca de um segundo?",
+    "hint": "Escala e Observabilidade, aula 6; Bancos de Dados Relacionais e SQL, aula 8.",
+    "choices": [
+      {
+        "text": "Ele varreu a tabela mesmo assim, porque o `SET NOT NULL` ignora uma restrição criada `NOT VALID`.",
+        "why": "A restrição já tinha sido validada, e desde o PostgreSQL 12 uma restrição válida deixa o `SET NOT NULL` pular a varredura."
+      },
+      {
+        "text": "Ele esperou um `lock_timeout` de um segundo que o backfill tinha deixado ligado naquela sessão.",
+        "why": "Cada comando psql ali é uma sessão própria; e um lock timeout termina em erro, enquanto essa mudança deu certo."
+      },
+      {
+        "text": "Ele entrou em deadlock com as vendas, e o segundo foi o PostgreSQL escolhendo qual lado manter.",
+        "why": "Um deadlock detectado desfaz um dos lados com erro; a mudança deu certo, e as vendas nunca seguraram aquela trava."
+      },
+      {
+        "text": "A trava em conflito do autovacuum, cancelada após o `deadlock_timeout`, de um segundo.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-q75s2q16": {
+    "prompt": "O `pg_stat_statements` põe a busca por email numa média de 0.0 ms em 400 chamadas, enquanto o programa que faz as chamadas mede alguns milissegundos em cada uma. A aula 7 de escala viu a mesma diferença: um percentil 95 das leituras de 20 ms pelo histograma da bilheteria e de 30 ms pelo `load.py`. O que explica as duas?",
+    "hint": "Escala e Observabilidade, aula 7; Bancos de Dados Relacionais e SQL, aula 10.",
+    "choices": [
+      {
+        "text": "Um tempo medido dentro de um serviço é um limite inferior: o relógio de quem chama inclui também a rede e a espera para ser atendido.",
+        "why": "Isso."
+      },
+      {
+        "text": "Cada número de dentro é interpolado dentro de um bucket, e a interpolação sempre sai baixa.",
+        "why": "Interpolação é como um percentil sai dos buckets; pode cair para qualquer lado, e a média do `pg_stat_statements` não é feita assim."
+      },
+      {
+        "text": "Um lado de cada par está errado, já que duas medições da mesma coisa que discordam indicam instrumentação quebrada.",
+        "why": "A concordância é o teste quando as duas medem o mesmo trecho; aqui elas medem trechos diferentes, e as duas estão certas."
+      },
+      {
+        "text": "O relógio de fora conta uma fila que um gerador em laço fechado monta de propósito.",
+        "why": "Um laço fechado espera cada resposta antes de mandar a próxima; não monta fila com os próprios pedidos."
+      }
+    ]
+  },
+  "ex-afcfwf7w": {
+    "prompt": "No `app.py` da aula 8, `charge(event_id)` roda antes de `conn.transaction()`. Uma refatoração o move para dentro da transação, depois do `UPDATE events`, para que uma cobrança que falhou desfaça o assento. Quanto isso custa quando todo mundo quer o mesmo show?",
+    "hint": "Escala e Observabilidade, aula 8; Bancos de Dados Relacionais e SQL, aula 8.",
+    "choices": [
+      {
+        "text": "Nada de novo: a linha só é travada no momento do `COMMIT`, depois que a cobrança acabou.",
+        "why": "Um `UPDATE` trava a linha desde o momento em que roda até a transação terminar."
+      },
+      {
+        "text": "Cada venda passa a segurar a trava da linha do show durante a chamada a payments além do `sign()`, e a fila dessa linha cresce.",
+        "why": "Isso."
+      },
+      {
+        "text": "As leituras da página desse show passam a esperar atrás da trava enquanto durar cada cobrança.",
+        "why": "Um leitor não espera um escritor: ele vê a última versão confirmada, e as leituras da página vão para a réplica de todo jeito."
+      },
+      {
+        "text": "Nada, e ainda ganha: uma queda depois da cobrança agora desfaz a cobrança junto com o assento.",
+        "why": "A cobrança aconteceu em outro sistema; um rollback desfaz as linhas da bilheteria e nada em payments."
+      }
+    ]
+  },
+  "ex-dbaqx17c": {
+    "prompt": "A aula 9 força a bilheteria sem proteções com 8, 32 e depois 128 workers. Ponha o que acontece na ordem em que acontece.",
+    "hint": "Escala e Observabilidade, aula 9.",
+    "items": [
+      "As vendas por segundo param de crescer: 112, 105, 104",
+      "A espera da venda mediana sobe: 70, 295, 951 ms",
+      "O PostgreSQL responde `too many clients already` e 146 vendas falham com `500`"
+    ],
+    "trap": "O erro é o que se nota, e ele vem por último: a vazão já tinha parado e a espera crescia, sem nada quebrado, antes de a sobrecarga passar para as conexões do banco."
+  },
+  "ex-x4z6bfbc": {
+    "prompt": "O `backoff` da aula 10 espera `random.uniform(0, min(2.0, 0.1 * 2 ** attempt))` quando payments não manda `Retry-After`. Se `CHARGE_ATTEMPTS` fosse 6, qual é a maior espera que ele poderia escolher depois da quarta tentativa que falhou, em milissegundos?",
+    "hint": "Escala e Observabilidade, aula 10."
+  },
+  "ex-z4wqxbfa": {
+    "prompt": "O plano da aula 11 conta uma leitura como 1,1 ms de CPU e uma venda como 10 ms, e cada comprador do primeiro minuto abre umas 10 páginas e tenta comprar uma vez. Para 9.000 compradores no primeiro minuto em vez de 6.000, quantas cópias a regra do plano dá: no máximo 70% ocupadas, mais uma para falhas?",
+    "hint": "Escala e Observabilidade, aula 11."
   }
 }
