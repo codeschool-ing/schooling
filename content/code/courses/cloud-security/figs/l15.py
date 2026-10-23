@@ -22,8 +22,10 @@ def timeline():
     def X(h, m):
         return x0 + (x1 - x0) * ((h - 12) * 60 + m) / 240
 
-    f.rect(X(12, 2), axis - 34, X(15, 30) - X(12, 2), 68, stroke=None, fill='--scan', rx=0)
-    f.text((X(12, 2) + X(15, 30)) / 2, axis - 24, T('public for 3 h 28 min', 'público por 3 h 28 min'),
+    f.line(X(12, 2), axis - 28, X(15, 30), axis - 28, stroke='--amber', width=3)
+    f.line(X(12, 2), axis - 34, X(12, 2), axis - 22, stroke='--amber', width=1.5)
+    f.line(X(15, 30), axis - 34, X(15, 30), axis - 22, stroke='--amber', width=1.5)
+    f.text((X(12, 2) + X(15, 30)) / 2, axis - 40, T('public for 3 h 28 min', 'público por 3 h 28 min'),
            size=10, weight='600', fill='--amber')
     f.line(x0, axis, x1, axis, stroke='--paper-dim')
     for h in range(12, 17):
