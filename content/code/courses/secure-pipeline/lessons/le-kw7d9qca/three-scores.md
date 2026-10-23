@@ -16,7 +16,23 @@ properties and computes a score from 0 to 10 from them. The base score describes
 not your deployment. pip-audit's table carries no score; Trivy, which the next section uses as a
 second opinion, does. Its report for gunicorn's first smuggling flaw holds two vectors:
 
-@@CAPTURE cvss@@
+```
+ana@vm:~/linkbox$ trivy fs -q --scanners vuln -f json requirements.txt > /tmp/trivy.json
+ana@vm:~/linkbox$ jq ".Results[].Vulnerabilities[] | select(.VulnerabilityID == \"CVE-2024-1135\") | {Severity, CVSS}" /tmp/trivy.json
+{
+  "Severity": "HIGH",
+  "CVSS": {
+    "ghsa": {
+      "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:H/A:N",
+      "V3Score": 8.2
+    },
+    "redhat": {
+      "V3Vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+      "V3Score": 7.5
+    }
+  }
+}
+```
 
 Read the vector a field at a time. `AV:N`, reachable over the network. `AC:L`, no special
 conditions. `PR:N`, no account needed. `UI:N`, no user has to click anything. `S:U`, the damage
@@ -54,7 +70,14 @@ available. It is a list, not a score: a CVE is on it or not. American federal ag
 what is on it by a deadline, and everyone else can use the same list as the strongest signal there
 is. CISA publishes it as JSON, and keeps a copy in a repository on GitHub:
 
-@@CAPTURE kev@@
+```
+ana@vm:~/linkbox$ curl -sSfo /tmp/kev.json https://raw.githubusercontent.com/cisagov/kev-data/main/known_exploited_vulnerabilities.json
+ana@vm:~/linkbox$ jq -r ".catalogVersion, .count" /tmp/kev.json
+2026.10.21
+1754
+ana@vm:~/linkbox$ jq -r ".vulnerabilities[].cveID" /tmp/kev.json | grep -cxFf /tmp/cves.txt
+0
+```
 
 The catalogue of 21 October 2026 holds 1754 CVEs. `grep -cxFf` counts the lines of the catalogue
 that exactly match a line of `/tmp/cves.txt`, linkbox's fifteen CVEs: **none of them is on it**.

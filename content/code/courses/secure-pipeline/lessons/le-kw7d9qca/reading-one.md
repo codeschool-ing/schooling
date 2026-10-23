@@ -13,7 +13,10 @@ and nothing in the audit's table does it for you.
 
 `--desc` is on by default in pip-audit's JSON, so the description is already in `/tmp/audit.json`:
 
-@@CAPTURE flask@@
+```
+ana@vm:~/linkbox$ jq -r ".dependencies[] | select(.name == \"flask\") | .vulns[0].description" /tmp/audit.json
+When the `session` object is accessed, Flask should set the `Vary: Cookie` header. This instructs caches not to cache the response, as it may contain information specific to a logged in user. This is handled in most cases, but some forms of access such as the Python `in` operator were overlooked.  The severity depends on the application's use of the session, and the cache's behavior regarding cookies. The risk depends on all these conditions being met.  1. The application must be hosted behind a caching proxy that does not ignore responses with cookies. 2. The application does not set a `Cache-Control` header to indicate that a page is private or should not be cached. 3. The application accesses the session in a way that does not access the values, only the keys, and does not mutate the session.
+```
 
 The flaw: Flask is meant to add `Vary: Cookie` to a response whenever the code touches the session,
 so that a cache in front of the service does not store one user's page and hand it to another. In
