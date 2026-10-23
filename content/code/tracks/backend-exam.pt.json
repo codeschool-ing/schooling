@@ -1272,6 +1272,374 @@
     "prompt": "O plano da aula 11 conta uma leitura como 1,1 ms de CPU e uma venda como 10 ms, e cada comprador do primeiro minuto abre umas 10 páginas e tenta comprar uma vez. Para 9.000 compradores no primeiro minuto em vez de 6.000, quantas cópias a regra do plano dá: no máximo 70% ocupadas, mais uma para falhas?",
     "hint": "Escala e Observabilidade, aula 11."
   },
+  "ex-kxp4jjd5": {
+    "prompt": "O arquivo Quadlet do loanbook tem `PublishPort=127.0.0.1:8000:8000`, e o Caddy, no mesmo servidor, encaminha para `127.0.0.1:8000`. Um colega troca a linha por `PublishPort=8000:8000`, achando que o Caddy precisa disso. Lido pela regra que a aula 17 de Docker dá para o `-p`, que essa opção segue, o que mudou?",
+    "hint": "Docker e Containers, aula 17; O Projeto de Portfólio: do Briefing ao Deploy, aula 15.",
+    "choices": [
+      {
+        "text": "Nada: o container continua respondendo só dentro da própria rede, e o Caddy segue sendo a única entrada dele.",
+        "why": "Uma porta publicada sem endereço escuta em todos os endereços do host, o que o `ss` mostrou como `0.0.0.0`."
+      },
+      {
+        "text": "A porta 8000 passa a responder em todo endereço do srv, e quem chega ao srv contorna o Caddy e o HTTPS.",
+        "why": "Isso."
+      },
+      {
+        "text": "O Caddy perde o container, porque uma porta sem endereço é publicada só na placa de rede e em mais nenhum lugar.",
+        "why": "Sem endereço quer dizer todos os endereços, o loopback incluído, e o Caddy chega nele como antes."
+      },
+      {
+        "text": "Os pedidos à porta 8000 passam antes pelo Caddy, que converte cada um deles para HTTPS.",
+        "why": "O Caddy responde nas portas dele; um pedido à 8000 vai direto para o container."
+      }
+    ]
+  },
+  "ex-vg4k29fx": {
+    "prompt": "Suponha que o arquivo Quadlet do loanbook não tivesse a linha `Volume=`. O Containerfile continua definindo `LOANBOOK_DB=/data/loanbook.db` e não declara volume nenhum. O que acontece com os empréstimos no próximo deploy, que troca o container por um iniciado de uma imagem nova?",
+    "hint": "Docker e Containers, aula 7; O Projeto de Portfólio: do Briefing ao Deploy, aula 15.",
+    "choices": [
+      {
+        "text": "Ficam, porque a variável `LOANBOOK_DB` faz `/data` sobreviver ao container.",
+        "why": "Uma variável só dá nome a um caminho; o arquivo continua sendo gravado onde esse caminho mora, aqui a camada do próprio container."
+      },
+      {
+        "text": "Ficam, porque a imagem nova é construída por cima do que o container antigo gravou.",
+        "why": "Um container nunca escreve na imagem dele, e um build lê o contexto, não um container rodando."
+      },
+      {
+        "text": "Ficam: o Podman dá um volume anônimo a todo diretório em que um programa escreve.",
+        "why": "Um volume anônimo só aparece para um caminho que a imagem declara como volume, como faz a `postgres`; esta não declara nenhum."
+      },
+      {
+        "text": "Se perdem: `/data` vivia na camada de escrita do container antigo.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-pzwvgqae": {
+    "prompt": "O Containerfile do loanbook termina com `USER 1000`, e o arquivo Quadlet monta `Volume=loanbook-data:/data:U`. Alguém tira o `:U`, achando que 1000 é só um número. O que dá errado?",
+    "hint": "Docker e Containers, aula 14; O Projeto de Portfólio: do Briefing ao Deploy, aula 15.",
+    "choices": [
+      {
+        "text": "O programa, rodando como UID 1000, tem recusada a gravação do banco num `/data` do root.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada: o processo de um container é root no host de qualquer jeito, então o volume continua gravável por ele.",
+        "why": "Isso vale para o UID 0; o UID 1000 só tem os direitos que recebeu, como mostrou o `touch` falhando num `/data` do root."
+      },
+      {
+        "text": "O volume é esvaziado a cada início, porque o `:U` é a parte que guarda o conteúdo dele.",
+        "why": "O `:U` muda quem é o dono do volume, não quanto tempo ele dura; um volume nomeado sobrevive a todo container."
+      },
+      {
+        "text": "O container troca para root para criar o arquivo, e o banco acaba pertencendo ao root.",
+        "why": "Nada troca de usuário sozinho: o processo continua 1000, e a gravação é recusada."
+      }
+    ]
+  },
+  "ex-3sqbcxwc": {
+    "prompt": "O `Containerfile` do loanbook tem oito passos: `FROM`, `WORKDIR /app`, `COPY app.py seed.py ./`, `COPY static ./static`, depois `ENV`, `USER`, `EXPOSE` e `CMD`. Depois de um primeiro build, só `static/app.js` é editado. Pela regra do cache da aula 12 de Docker, quantos dos oito passos rodam de novo no build seguinte?",
+    "hint": "Docker e Containers, aula 12; O Projeto de Portfólio: do Briefing ao Deploy, aula 15."
+  },
+  "ex-ngkr958r": {
+    "prompt": "Com o mesmo `Containerfile` de oito passos (`COPY app.py seed.py ./`, depois `COPY static ./static`), quais destas edições, feitas sozinhas, deixam todos os passos vindo do cache no build seguinte? Marque todas as que se aplicam.",
+    "hint": "Docker e Containers, aula 12; O Projeto de Portfólio: do Briefing ao Deploy, aula 15.",
+    "choices": [
+      {
+        "text": "Um nono item no `seed.py`",
+        "why": "O passo 3 copia o `seed.py`, então esse passo e todos os seguintes rodam de novo."
+      },
+      {
+        "text": "Uma seção nova no `README.md`",
+        "why": "Isso."
+      },
+      {
+        "text": "Mais um teste no `test_app.py`",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma cor mais escura em `static/style.css`",
+        "why": "O passo 4 copia `static`, então a chave dele muda e tudo abaixo é refeito."
+      }
+    ]
+  },
+  "ex-avm2k65f": {
+    "prompt": "Um serviço dimensiona o pool de workers na partida com uma thread por processador que o `nproc` informa. Na máquina do laboratório da aula 2 de Docker, que tem 4 processadores, ele é iniciado com `docker run --cpus 1`. Quantas threads de worker ele cria?",
+    "hint": "Docker e Containers, aula 2."
+  },
+  "ex-gwepj98x": {
+    "prompt": "Um job de CI sobe um container `postgres:17` novo com `-p 127.0.0.1:5432:5432`, espera com `until docker exec db pg_isready -U postgres -q; do sleep 0.2; done` e então roda as migrações a partir do host com `psql -h 127.0.0.1`. De vez em quando esse primeiro `psql` falha com `server closed the connection unexpectedly`. Por quê?",
+    "hint": "Docker e Containers, aula 9.",
+    "choices": [
+      {
+        "text": "A porta publicada abre alguns segundos depois de o container subir, e o `pg_isready` não enxerga isso.",
+        "why": "A porta estava aberta; o que respondia atrás dela era um servidor prestes a ser trocado."
+      },
+      {
+        "text": "O `-q` esconde as falhas, então o laço termina com o servidor pronto ou não.",
+        "why": "O `-q` só cala a mensagem; o laço continua esperando pelo código de saída."
+      },
+      {
+        "text": "Na primeira partida a imagem roda um servidor temporário só num socket local, e a checagem achou esse.",
+        "why": "Isso."
+      },
+      {
+        "text": "As migrações chegaram antes de o `POSTGRES_PASSWORD` valer, e o servidor as derrubou.",
+        "why": "Senha errada é respondida com `password authentication failed`, não com uma conexão derrubada."
+      }
+    ]
+  },
+  "ex-8e4mev8g": {
+    "prompt": "O loanbook ganha o `ci/pipeline.sh` da aula 26 de Docker, e a Ana envia a tag anotada `v0.3.0` que criou na aula 7 do curso de portfólio, então o script roda com `REF_NAME=v0.3.0`. Quais destas tags de imagem ele envia? Marque todas as que se aplicam.",
+    "hint": "Docker e Containers, aula 26; O Projeto de Portfólio: do Briefing ao Deploy, aula 7.",
+    "choices": [
+      {
+        "text": "`0.3.0`",
+        "why": "Isso."
+      },
+      {
+        "text": "`v0.3.0`",
+        "why": "O `${REF_NAME#v}` tira o `v` antes de qualquer tag de imagem ser criada."
+      },
+      {
+        "text": "`latest`",
+        "why": "Nada no script fala em `latest`; o Docker só escreve essa tag quando nenhuma é dada."
+      },
+      {
+        "text": "`0.3`",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-axb233nr": {
+    "prompt": "O `shelf` roda no host, publicado com `-p 127.0.0.1:8080:8080`. Um segundo container, iniciado com `--add-host host.docker.internal:host-gateway`, pede `host.docker.internal:8080` e recebe `Connection refused` de `172.17.0.1`. Qual é o motivo?",
+    "hint": "Docker e Containers, aula 23.",
+    "choices": [
+      {
+        "text": "O `host-gateway` aponta o nome para o loopback do próprio segundo container, onde nada escuta.",
+        "why": "O erro cita `172.17.0.1`, o endereço do host na bridge, não o loopback do container."
+      },
+      {
+        "text": "A bridge padrão não resolve nomes, então `host.docker.internal` nunca virou endereço.",
+        "why": "O `--add-host` escreve o nome, e o erro mostra que ele resolveu para `172.17.0.1`."
+      },
+      {
+        "text": "O nome chega ao host pelo endereço da bridge, `172.17.0.1`, e o `shelf` só escuta em `127.0.0.1`, que ela não alcança.",
+        "why": "Isso."
+      },
+      {
+        "text": "As regras de firewall do Docker descartam todo tráfego entre a bridge e as portas do próprio host.",
+        "why": "Essas regras separam duas redes do Docker; publicado em todos os endereços, o mesmo nome respondeu `1.0.0`."
+      }
+    ]
+  },
+  "ex-pj3e6py5": {
+    "prompt": "Na revisão, um colega sugere trocar o índice único parcial do loanbook por uma checagem em Python: procurar o empréstimo aberto do item e inserir só se não houver nenhum, porque fica mais legível. Por que o README e o curso de SQL mantêm a regra no banco?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 16; Bancos de Dados Relacionais e SQL, aula 9.",
+    "choices": [
+      {
+        "text": "Dois pedidos simultâneos não acham empréstimo aberto; o índice recusa o segundo.",
+        "why": "Isso."
+      },
+      {
+        "text": "O índice existe para deixar a lista de empréstimos rápida, e uma checagem em Python atrasaria cada página.",
+        "why": "O motivo do README são dois pedidos chegando juntos; velocidade não entra nele."
+      },
+      {
+        "text": "Só o banco consegue produzir um 409, enquanto o código em Python só consegue levantar uma exceção.",
+        "why": "O `lend` já levanta `Refused` com um status em Python, e o handler transforma isso na resposta."
+      },
+      {
+        "text": "Uma checagem em Python recusaria também itens já devolvidos, coisa que `returned_on IS NULL` não faz.",
+        "why": "A checagem pode filtrar pela mesma condição; o que ela não impede são dois pedidos que leem no mesmo instante."
+      }
+    ]
+  },
+  "ex-4scf94x1": {
+    "prompt": "Um projeto lista `.env` no `.gitignore`, como faz a aula 14, e o arquivo com a senha do e-mail nunca foi commitado. Depois o projeto ganha um Dockerfile com `COPY . .` e sem `.dockerignore`, e a imagem é enviada a um registry público. A senha está segura?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 14; Docker e Containers, aula 11.",
+    "choices": [
+      {
+        "text": "Sim: o `docker build` manda só os arquivos que o git acompanha, então o `.gitignore` cobre a imagem também.",
+        "why": "O contexto é o diretório como está no disco; o `.gitignore` é lido pelo git e por mais ninguém."
+      },
+      {
+        "text": "Sim, desde que um `RUN rm .env` posterior apague o arquivo antes de a imagem ficar pronta.",
+        "why": "A camada que o `COPY` gravou ainda guarda o arquivo; apagar depois só põe um whiteout por cima."
+      },
+      {
+        "text": "Não: o contexto é o diretório inteiro, e o `.env` vai junto se o `.dockerignore` não o listar.",
+        "why": "Isso."
+      },
+      {
+        "text": "Não, mas só para quem consiga ao mesmo tempo baixar a imagem e clonar o repositório de onde ela veio.",
+        "why": "Baixar a imagem basta: `cat /src/.env` mostrou a senha sem repositório nenhum envolvido."
+      }
+    ]
+  },
+  "ex-eb7nqz75": {
+    "prompt": "O arquivo Quadlet do loanbook tem `Restart=always` e um `HealthCmd` a cada 30 segundos. Um dia o programa trava num deadlock: o processo continua rodando e o `/healthz` para de responder. Lendo junto a aula 18 de Docker, o que traz o serviço de volta?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15; Docker e Containers, aula 18.",
+    "choices": [
+      {
+        "text": "O systemd, na hora, porque `Restart=always` reinicia qualquer serviço cujo health check falhe.",
+        "why": "O `Restart=always` age quando o processo sai, e um processo travado não saiu."
+      },
+      {
+        "text": "Nada, sozinho: ele fica marcado como não saudável e segue rodando até algo agir sobre isso.",
+        "why": "Isso."
+      },
+      {
+        "text": "O próprio health check, que mata o container depois de três falhas.",
+        "why": "Um health check só informa; sozinho, nada age sobre um container não saudável."
+      },
+      {
+        "text": "O Caddy, que para de mandar tráfego ao container não saudável e sobe um novo no lugar dele.",
+        "why": "O Caddy encaminha pedidos para `127.0.0.1:8000`; ele não sobe nada."
+      }
+    ]
+  },
+  "ex-zwdhsega": {
+    "prompt": "Uma autorrevisão de um diff encontra quatro coisas. Associe cada uma à pergunta da lista da aula 10 que a pega.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 10.",
+    "pairs": [
+      {
+        "left": "Uma função chamada `handleStuff`",
+        "right": "Todo nome diz o que a coisa é?"
+      },
+      {
+        "left": "Uma versão antiga do `lend` deixada atrás de marcas `#`, \"por via das dúvidas\"",
+        "right": "Tem código comentado?"
+      },
+      {
+        "left": "Um `fetch` sem nada feito quando ele falha",
+        "right": "Todo caminho novo tem o seu erro?"
+      },
+      {
+        "left": "Um professor digitado como `<b>Rui</b>` aparece em negrito",
+        "right": "Algo vindo do usuário entra na página como HTML?"
+      }
+    ],
+    "right_distractors": [
+      "Eu entenderia isto daqui a seis meses?"
+    ]
+  },
+  "ex-awage3m3": {
+    "prompt": "Um empréstimo foi aceito com o nome de quem pegou feito só de três espaços. Ponha os passos da correção na ordem que a aula 12 pede.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 12.",
+    "items": [
+      "Escrever um teste para o bug, com o código ainda como estava",
+      "Rodar a suíte e ver esse teste falhar",
+      "Fazer a correção de uma linha",
+      "Rodar a suíte de novo e ver passar",
+      "Commitar a correção com o teste, dizendo que o teste veio antes"
+    ],
+    "trap": "Corrigir primeiro e testar depois é a ordem tentadora, e aí o teste passa desde a primeira execução, e nada mostra que ele seria capaz de ver o bug."
+  },
+  "ex-vcrqqp5r": {
+    "prompt": "As tags do loanbook têm as datas 2026-06-05 (`v0.1.0`), 2026-06-15 (`v0.2.0`), 2026-06-29 (`v0.3.0`) e 2026-07-06 (`v1.0.0`). A nota da semana 3 se preocupava por ainda não ter testado HTTPS. Quantos dias se passaram entre a tag anterior ao marco do deploy e a tag que o fechou?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 7."
+  },
+  "ex-wv8p70dh": {
+    "prompt": "O README de um projeto de back-end tem a linha \"**Sessões no Redis.** É rápido.\" na seção de decisões. Qual reescrita segue o formato de decisão da aula 16?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 16.",
+    "choices": [
+      {
+        "text": "**Sessões no Redis.** Rápido, popular e bem suportado: o padrão de costume para sessões.",
+        "why": "São verdades gerais, e não há custo: soa como uma lista de coisas de que o autor gosta."
+      },
+      {
+        "text": "**Sessões no Redis.** Dois servidores as compartilham; o custo é mais um serviço.",
+        "why": "Isso."
+      },
+      {
+        "text": "**Sessões no Redis.** Escolhi depois de comparar com outros três armazenamentos num fim de semana.",
+        "why": "Diz que houve uma escolha, não por que ela serve a este projeto nem do que ela abre mão."
+      },
+      {
+        "text": "**Sessões no Redis.** Um servidor de banco seria exagero para algo tão pequeno quanto sessões.",
+        "why": "Argumenta que a alternativa é ruim, o que é uma afirmação sobre o mundo, e continua sem custo."
+      }
+    ]
+  },
+  "ex-xmpt7p8p": {
+    "prompt": "Num servidor novo, `git init -q --bare loanbook.git` é rodado sem `-b main`, num git que nunca recebeu um branch padrão. O `git push srv main` do laptop dá certo, mas `git clone loanbook.git` no servidor não traz arquivo nenhum. Por quê, pela aula 15?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15.",
+    "choices": [
+      {
+        "text": "O `HEAD` dele aponta para um branch que ninguém enviou, e o clone não tem o que trazer.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um repositório bare guarda só o histórico, e todo clone dele fica vazio até um push com `--tags`.",
+        "why": "Não são as tags que faltam; o clone de um repositório bare com o `HEAD` certo traz os arquivos."
+      },
+      {
+        "text": "O push caiu nos arquivos de trabalho do servidor, e um repositório bare não tem onde recebê-lo.",
+        "why": "Um repositório bare recebe o push inteiro; ele só não tem arquivos de trabalho próprios."
+      },
+      {
+        "text": "O clone precisa da entrada `Host srv` do `~/.ssh/config` do laptop.",
+        "why": "Esse clone é um caminho local no servidor e não usa ssh nenhum."
+      }
+    ]
+  },
+  "ex-6xfzfr60": {
+    "prompt": "O loanbook roda no srv pelo arquivo Quadlet, com `Volume=loanbook-data:/data:U` e `LOANBOOK_DB=/data/loanbook.db` definido na imagem. A Ana roda `python3 seed.py` em `~/loanbook` no shell do próprio srv, e não pelo `podman exec`. Ele imprime `seeded 8 items, 4 of them out`, e a página continua sem equipamento nenhum. Por quê?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15; Docker e Containers, aula 8.",
+    "choices": [
+      {
+        "text": "O seed encheu o volume, mas a página guarda a lista antiga até o container reiniciar.",
+        "why": "Nada guarda a lista: cada carregamento pergunta à API, que lê o banco em `/data`."
+      },
+      {
+        "text": "O seed recusou, como faz com um banco que já tem itens, e só imprimiu uma linha.",
+        "why": "A recusa dele imprime `loanbook already has items`; esta linha diz que gravou oito itens."
+      },
+      {
+        "text": "Só o Podman escreve num volume, então as gravações foram descartadas.",
+        "why": "Nada foi descartado: as gravações foram para outro arquivo, porque o volume se alcança pelo container em que está montado."
+      },
+      {
+        "text": "O shell do host não tem `LOANBOOK_DB`, então o seed encheu um `loanbook.db` novo ao lado do código.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-22h8m5gg": {
+    "prompt": "Alguém contratando uma pessoa júnior de back-end abre o seu repositório. Pela aula 3, o que essa pessoa olha primeiro?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 3.",
+    "choices": [
+      {
+        "text": "O link no ar, aberto num celular para ver se o layout aguenta.",
+        "why": "É por aí que começa quem avalia front-end."
+      },
+      {
+        "text": "O conjunto de avaliação, com os resultados anotados antes e depois de uma mudança.",
+        "why": "É o que quem avalia engenharia de IA abre primeiro."
+      },
+      {
+        "text": "O arquivo do pipeline, e o que ele faz de um commit até algo rodando.",
+        "why": "É a primeira parada de quem avalia DevOps."
+      },
+      {
+        "text": "A seção de API do README, com pedidos de exemplo e as respostas que eles recebem, erros incluídos.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-a370d50c": {
+    "prompt": "Depois que o srv é reconstruído no mesmo endereço, `ssh srv` imprime `REMOTE HOST IDENTIFICATION HAS CHANGED!`. A causa é a sua própria reconstrução, então a aula 15 faz o ssh esquecer as chaves antigas com `ssh-keygen ___ 10.20.0.20`.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15.",
+    "blanks": [
+      {
+        "accept": [
+          "-R"
+        ]
+      }
+    ]
+  },
   "ex-zdhgx788": {
     "prompt": "Aos preços de Lambda que a aula 3 cita (US$ 0,20 por milhão de pedidos, US$ 0,0000166667 por GB-s), uma função com 1.024 MB roda 250 ms em cada um de 4 milhões de pedidos por mês. Sem contar a franquia gratuita, qual é a conta do mês, em dólares? Duas casas decimais.",
     "hint": "Arquitetura de Sistemas, aula 3."

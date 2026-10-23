@@ -1789,6 +1789,521 @@
     "unit": ""
   },
   {
+    "id": "ex-kxp4jjd5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "loanbook's Quadlet file has `PublishPort=127.0.0.1:8000:8000`, and Caddy on the same server proxies to `127.0.0.1:8000`. A teammate changes the line to `PublishPort=8000:8000`, thinking Caddy needs it. Read with the rule Docker lesson 17 gives for `-p`, which this option follows, what has changed?",
+    "hint": "Docker and Containers, lesson 17; The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "choices": [
+      {
+        "text": "Nothing: the container still answers only inside its own network, so Caddy stays the only way in to it.",
+        "correct": false,
+        "why": "A port published with no address listens on every address the host has, which `ss` showed as `0.0.0.0`."
+      },
+      {
+        "text": "Port 8000 now answers on every address of srv, so anyone reaching srv skips Caddy and HTTPS.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Caddy loses the container, because a port given no address is published on the network card and nowhere else.",
+        "correct": false,
+        "why": "No address means every address, loopback included, so Caddy reaches it exactly as before."
+      },
+      {
+        "text": "Requests to port 8000 now go through Caddy first, which upgrades each of them to HTTPS.",
+        "correct": false,
+        "why": "Caddy answers on its own ports; a request to 8000 goes straight to the container."
+      }
+    ]
+  },
+  {
+    "id": "ex-vg4k29fx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Suppose loanbook's Quadlet file had no `Volume=` line. The Containerfile still sets `LOANBOOK_DB=/data/loanbook.db` and declares no volume. What happens to the loans on the next deploy, which replaces the container with one started from a new image?",
+    "hint": "Docker and Containers, lesson 7; The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "choices": [
+      {
+        "text": "They are kept, because the variable `LOANBOOK_DB` makes `/data` outlive the container.",
+        "correct": false,
+        "why": "A variable only names a path; the file is still written wherever that path lives, here the container's own layer."
+      },
+      {
+        "text": "They are kept, because the new image is built on top of what the old container wrote.",
+        "correct": false,
+        "why": "A container never writes to its image, and a build reads its context, not a running container."
+      },
+      {
+        "text": "They are kept: Podman gives every directory a program writes to an anonymous volume.",
+        "correct": false,
+        "why": "An anonymous volume appears only for a path the image declares as a volume, as `postgres` does; this one declares none."
+      },
+      {
+        "text": "Lost: `/data` was a directory in the old container's writable layer.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-pzwvgqae",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "loanbook's Containerfile ends with `USER 1000`, and its Quadlet file mounts `Volume=loanbook-data:/data:U`. Somebody drops the `:U`, reasoning that 1000 is only a number. What goes wrong?",
+    "hint": "Docker and Containers, lesson 14; The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "choices": [
+      {
+        "text": "The program, running as UID 1000, is refused when it writes its database into a root-owned `/data`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing: the process in a container is root on the host anyway, so the volume stays writable.",
+        "correct": false,
+        "why": "That is true of UID 0; UID 1000 has only the rights it was given, as `touch` failing on a root-owned `/data` showed."
+      },
+      {
+        "text": "The volume is emptied on every start, because `:U` is the part of the line that keeps its contents safe.",
+        "correct": false,
+        "why": "`:U` changes who owns the volume, not how long it lives; a named volume outlives every container."
+      },
+      {
+        "text": "The container switches to root to create the file, so the database ends up owned by root.",
+        "correct": false,
+        "why": "Nothing switches users on its own: the process stays 1000, and the write is refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-3sqbcxwc",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "loanbook's `Containerfile` has eight steps: `FROM`, `WORKDIR /app`, `COPY app.py seed.py ./`, `COPY static ./static`, then `ENV`, `USER`, `EXPOSE` and `CMD`. After a first build, only `static/app.js` is edited. By the cache rule of Docker lesson 12, how many of the eight steps run again on the next build?",
+    "hint": "Docker and Containers, lesson 12; The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-ngkr958r",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "With the same eight-step `Containerfile` (`COPY app.py seed.py ./`, then `COPY static ./static`), which of these single edits leave every step taken from the cache on the next build? Choose all that apply.",
+    "hint": "Docker and Containers, lesson 12; The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "choices": [
+      {
+        "text": "Adding a ninth item to `seed.py`",
+        "correct": false,
+        "why": "Step 3 copies `seed.py`, so that step and every one after it run again."
+      },
+      {
+        "text": "A new section in `README.md`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "One more test in `test_app.py`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A darker colour in `static/style.css`",
+        "correct": false,
+        "why": "Step 4 copies `static`, so its key changes and everything below it is rebuilt."
+      }
+    ]
+  },
+  {
+    "id": "ex-avm2k65f",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A service sizes its worker pool at start-up to one thread per processor that `nproc` reports. On the lab machine of Docker lesson 2, which has 4 processors, it is started with `docker run --cpus 1`. How many worker threads does it create?",
+    "hint": "Docker and Containers, lesson 2.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-gwepj98x",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A CI job starts a fresh `postgres:17` container with `-p 127.0.0.1:5432:5432`, waits with `until docker exec db pg_isready -U postgres -q; do sleep 0.2; done`, then runs the migrations from the host with `psql -h 127.0.0.1`. Now and then that first `psql` fails with `server closed the connection unexpectedly`. Why?",
+    "hint": "Docker and Containers, lesson 9.",
+    "choices": [
+      {
+        "text": "The published port opens a few seconds after the container starts, which `pg_isready` cannot see.",
+        "correct": false,
+        "why": "The port was open; what answered behind it was a server that was about to be replaced."
+      },
+      {
+        "text": "`-q` hides the failures, so the loop ends whether or not the server is ready yet.",
+        "correct": false,
+        "why": "`-q` only silences the message; the loop still waits on the exit status."
+      },
+      {
+        "text": "On first start the image runs a temporary server on a local socket only, and the check found it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The migrations arrived before `POSTGRES_PASSWORD` was applied, and the server dropped them.",
+        "correct": false,
+        "why": "A wrong password is answered with `password authentication failed`, not with a dropped connection."
+      }
+    ]
+  },
+  {
+    "id": "ex-8e4mev8g",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "loanbook gets the `ci/pipeline.sh` of Docker lesson 26, and Ana pushes the annotated tag `v0.3.0` she made in lesson 7 of the portfolio course, so the script runs with `REF_NAME=v0.3.0`. Which of these image tags does it push? Choose all that apply.",
+    "hint": "Docker and Containers, lesson 26; The Portfolio Project: From Brief to Deploy, lesson 7.",
+    "choices": [
+      {
+        "text": "`0.3.0`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`v0.3.0`",
+        "correct": false,
+        "why": "`${REF_NAME#v}` strips the `v` before any image tag is made."
+      },
+      {
+        "text": "`latest`",
+        "correct": false,
+        "why": "Nothing in the script names `latest`; Docker writes it only when a tag is left out."
+      },
+      {
+        "text": "`0.3`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-axb233nr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`shelf` runs on the host, published with `-p 127.0.0.1:8080:8080`. A second container, started with `--add-host host.docker.internal:host-gateway`, asks for `host.docker.internal:8080` and gets `Connection refused` from `172.17.0.1`. What is the reason?",
+    "hint": "Docker and Containers, lesson 23.",
+    "choices": [
+      {
+        "text": "`host-gateway` points the name at the second container's own loopback, where nothing listens.",
+        "correct": false,
+        "why": "The error names `172.17.0.1`, the host's address on the bridge, not the container's loopback."
+      },
+      {
+        "text": "The default bridge resolves no names, so `host.docker.internal` never became an address.",
+        "correct": false,
+        "why": "`--add-host` writes the name in, and the error shows it resolved to `172.17.0.1`."
+      },
+      {
+        "text": "The name reaches the host on the bridge's address, `172.17.0.1`, and `shelf` listens only on `127.0.0.1`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Docker's firewall rules drop all traffic between the bridge and the host's own ports.",
+        "correct": false,
+        "why": "Those rules separate two Docker networks; once published on every address, the same name answered `1.0.0`."
+      }
+    ]
+  },
+  {
+    "id": "ex-pj3e6py5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In review, a colleague suggests replacing loanbook's partial unique index with a check in Python: look for the item's open loan, and insert only if there is none, because it reads more clearly. Why do the README and the SQL course keep the rule in the database?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 16; Relational Databases and SQL, lesson 9.",
+    "choices": [
+      {
+        "text": "Two requests at once both find no open loan; the index refuses the second.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The index exists to keep the list of loans fast, and a check in Python would slow every page.",
+        "correct": false,
+        "why": "The README's reason is two requests arriving together; speed is not part of it."
+      },
+      {
+        "text": "Only the database can produce a 409, while code in Python can only raise an exception.",
+        "correct": false,
+        "why": "`lend` already raises `Refused` with a status in Python, and the handler turns it into the answer."
+      },
+      {
+        "text": "A check in Python would also refuse items already returned, where `returned_on IS NULL` does not.",
+        "correct": false,
+        "why": "The check can filter on the same condition; what it cannot stop is two requests that read at the same moment."
+      }
+    ]
+  },
+  {
+    "id": "ex-4scf94x1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A project lists `.env` in `.gitignore`, as lesson 14 does, and the file holding the mail password was never committed. The project then gets a Dockerfile with `COPY . .` and no `.dockerignore`, and the image is pushed to a public registry. Is the password safe?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 14; Docker and Containers, lesson 11.",
+    "choices": [
+      {
+        "text": "Yes: `docker build` sends only the files git tracks, so `.gitignore` covers the image as well.",
+        "correct": false,
+        "why": "The context is the directory as it is on disk; `.gitignore` is read by git and by nothing else."
+      },
+      {
+        "text": "Yes, as long as a later `RUN rm .env` in the Dockerfile deletes it before the image is finished.",
+        "correct": false,
+        "why": "The layer `COPY` wrote still holds the file; deleting it later only adds a whiteout on top."
+      },
+      {
+        "text": "No: the context is the whole directory, and `.env` goes in unless a `.dockerignore` lists it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "No, but only for somebody who can both pull the image and clone the repository it came from.",
+        "correct": false,
+        "why": "Pulling the image is enough: `cat /src/.env` printed the password with no repository involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-eb7nqz75",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "loanbook's Quadlet file has `Restart=always` and a `HealthCmd` every 30 seconds. One day the program deadlocks: the process keeps running and `/healthz` stops answering. Reading Docker lesson 18 alongside, what brings the service back?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15; Docker and Containers, lesson 18.",
+    "choices": [
+      {
+        "text": "systemd, at once, because `Restart=always` restarts any service whose health check fails.",
+        "correct": false,
+        "why": "`Restart=always` acts when the process exits, and a deadlocked process has not exited."
+      },
+      {
+        "text": "Nothing on its own: the container is marked unhealthy and runs on until something acts on that.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The health check itself, which kills the container after three failures.",
+        "correct": false,
+        "why": "A health check only reports; on its own, nothing acts on an unhealthy container."
+      },
+      {
+        "text": "Caddy, which stops sending traffic to an unhealthy container and starts a fresh one in its place.",
+        "correct": false,
+        "why": "Caddy forwards requests to `127.0.0.1:8000`; it starts nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-zwdhsega",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "A self-review of a diff turns up four things. Match each to the question from lesson 10's checklist that catches it.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 10.",
+    "pairs": [
+      {
+        "left": "A function called `handleStuff`",
+        "right": "Does every name say what the thing is?"
+      },
+      {
+        "left": "An earlier version of `lend` left in behind `#` marks, \"just in case\"",
+        "right": "Is there code that is commented out?"
+      },
+      {
+        "left": "A `fetch` with nothing done when it fails",
+        "right": "Does every new path have its error?"
+      },
+      {
+        "left": "A teacher typed as `<b>Rui</b>` shows up in bold",
+        "right": "Is anything from the user put into the page as HTML?"
+      }
+    ],
+    "right_distractors": [
+      "Would I understand this in six months?"
+    ]
+  },
+  {
+    "id": "ex-awage3m3",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A borrower typed as three spaces was accepted. Put the steps of fixing it in the order lesson 12 asks for.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 12.",
+    "items": [
+      "Write a test for the bug, with the code still as it was",
+      "Run the suite and watch that test fail",
+      "Make the one-line fix",
+      "Run the suite again and watch it pass",
+      "Commit the fix with its test, saying the test came first"
+    ],
+    "trap": "Fixing first and testing afterwards is the tempting order, and then the test passes from its first run, so nothing shows that it could ever see the bug."
+  },
+  {
+    "id": "ex-vcrqqp5r",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "loanbook's tags are dated 2026-06-05 (`v0.1.0`), 2026-06-15 (`v0.2.0`), 2026-06-29 (`v0.3.0`) and 2026-07-06 (`v1.0.0`). Its week-3 note worried that HTTPS had not been tried yet. How many days passed between the tag before the deploy milestone and the tag that closed it?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 7.",
+    "value": 14,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-wv8p70dh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A back-end project's README has the line \"**Sessions in Redis.** It is fast.\" in its decisions section. Which rewrite follows lesson 16's shape for a decision?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 16.",
+    "choices": [
+      {
+        "text": "**Sessions in Redis.** Fast, popular and well supported: the usual standard for sessions.",
+        "correct": false,
+        "why": "Those are general truths, and there is no cost: it reads as a list of things the author likes."
+      },
+      {
+        "text": "**Sessions in Redis.** Two app servers share them; the cost is one more service.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "**Sessions in Redis.** I picked it after comparing it with three other stores over a weekend.",
+        "correct": false,
+        "why": "It says a choice was made, not why it fits this project or what it gives up."
+      },
+      {
+        "text": "**Sessions in Redis.** A database server would be overkill for something as small as sessions.",
+        "correct": false,
+        "why": "It argues the alternative is bad, which is a claim about the world, and it still names no cost."
+      }
+    ]
+  },
+  {
+    "id": "ex-xmpt7p8p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On a new server, `git init -q --bare loanbook.git` is run without `-b main`, on a git that was never told a default branch. `git push srv main` from the laptop succeeds, yet `git clone loanbook.git` on the server checks out no files. Why, by lesson 15?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "choices": [
+      {
+        "text": "Its `HEAD` names a branch nobody pushed, so the clone has nothing to check out.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A bare repository keeps only history, so every clone of it is empty until a push with `--tags`.",
+        "correct": false,
+        "why": "Tags are not what is missing; a clone of a bare repository whose `HEAD` is right checks out files."
+      },
+      {
+        "text": "The push landed in the server's working files, and a bare repository has none to receive it.",
+        "correct": false,
+        "why": "A bare repository receives the push in full; it simply has no working files of its own."
+      },
+      {
+        "text": "The clone needs the `Host srv` entry from the laptop's `~/.ssh/config`.",
+        "correct": false,
+        "why": "This clone is a local path on the server and uses no ssh at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-6xfzfr60",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "loanbook runs on srv under its Quadlet file, with `Volume=loanbook-data:/data:U` and `LOANBOOK_DB=/data/loanbook.db` set in the image. Ana runs `python3 seed.py` in `~/loanbook` in srv's own shell, not through `podman exec`. It prints `seeded 8 items, 4 of them out`, and the page still shows no equipment. Why?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15; Docker and Containers, lesson 8.",
+    "choices": [
+      {
+        "text": "The seed did fill the volume, but the page keeps the old list until the container restarts.",
+        "correct": false,
+        "why": "Nothing keeps the list: every load asks the API, which reads the database in `/data`."
+      },
+      {
+        "text": "The seed refused, as it does for a database that already has items, and only printed a line.",
+        "correct": false,
+        "why": "Its refusal prints `loanbook already has items`; this line says it wrote eight items."
+      },
+      {
+        "text": "Only Podman may write into a volume, so the writes were thrown away.",
+        "correct": false,
+        "why": "Nothing was thrown away: the writes went into another file, because the volume is reached through the container it is mounted in."
+      },
+      {
+        "text": "The host's shell has no `LOANBOOK_DB`, so the seed filled a new `loanbook.db` beside the code instead.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-22h8m5gg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Somebody hiring a junior back-end developer opens your repository. By lesson 3, what do they look at first?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 3.",
+    "choices": [
+      {
+        "text": "The live link, opened on a phone to see whether the layout holds.",
+        "correct": false,
+        "why": "That is where a front-end reviewer starts."
+      },
+      {
+        "text": "The evaluation set, with the results written down before and after a change.",
+        "correct": false,
+        "why": "That is what a reviewer in AI engineering opens first."
+      },
+      {
+        "text": "The pipeline file, and what it does from a commit to something running.",
+        "correct": false,
+        "why": "That is the DevOps reviewer's first stop."
+      },
+      {
+        "text": "The README's API section, with example requests and the answers, errors included.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-a370d50c",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "After srv is rebuilt at the same address, `ssh srv` prints `REMOTE HOST IDENTIFICATION HAS CHANGED!`. The cause is your own rebuild, so lesson 15 makes ssh forget the old keys with `ssh-keygen ___ 10.20.0.20`.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "blanks": [
+      {
+        "accept": [
+          "-R"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
     "id": "ex-zdhgx788",
     "version": 1,
     "type": "numeric",
