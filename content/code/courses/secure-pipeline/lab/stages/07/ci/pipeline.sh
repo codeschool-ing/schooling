@@ -4,9 +4,11 @@
 # stage is the script ci/<name>.sh, run from the repository's root, and its
 # exit status is its verdict: 0 passes, 3 passes with a warning that is
 # counted and shown, and anything else breaks the build and stops the run.
+# A list that is not there breaks it too, rather than passing with no stages.
 set -uo pipefail
 cd "$(dirname "$0")/.."
 LIST=${1:-ci/stages}
+[ -f "$LIST" ] || { echo "no list of stages at $LIST"; exit 1; }
 LOGS=${CI_LOGS:-ci-logs}
 mkdir -p "$LOGS"
 warnings=0
