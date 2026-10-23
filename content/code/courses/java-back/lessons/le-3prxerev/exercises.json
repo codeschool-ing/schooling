@@ -1,0 +1,543 @@
+[
+  {
+    "id": "ex-8arv4906",
+    "version": 1,
+    "section": "what-bazel-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before any rule set is loaded, what does Bazel itself know how to run?",
+    "hint": "Teaching it Java is the job of rules_java.",
+    "choices": [
+      {
+        "text": "Maven's lifecycle phases, in order",
+        "correct": false,
+        "why": "Phases are Maven's model. Bazel has no lifecycle; it has a graph of targets and the actions that build them."
+      },
+      {
+        "text": "The standard Java layout, src/main/java and src/test/java",
+        "correct": false,
+        "why": "That convention is Maven's. Bazel compiles exactly the files a target lists in srcs, wherever they are."
+      },
+      {
+        "text": "Actions: commands with declared inputs and outputs",
+        "correct": true,
+        "why": "Right. Everything else, Java included, is rules that turn targets into such actions."
+      },
+      {
+        "text": "The classes inside each jar on the classpath",
+        "correct": false,
+        "why": "Bazel treats a jar as a file with a hash. Reading classes is javac's business, inside an action."
+      }
+    ]
+  },
+  {
+    "id": "ex-8smac6aw",
+    "version": 1,
+    "section": "what-bazel-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can your build take a compiled output from a cache a colleague's build filled?",
+    "hint": "Think about what the key of an action is made of.",
+    "choices": [
+      {
+        "text": "Her jar has the same file name and version as yours would",
+        "correct": false,
+        "why": "Names and versions say nothing about the bytes inside. The key is a hash of every input, so two different sources with the same name would never share it."
+      },
+      {
+        "text": "The remote cache keeps the newest build of each target",
+        "correct": false,
+        "why": "Newest is not the question. An output is reused only when its action key matches, whenever it was stored."
+      },
+      {
+        "text": "Bazel compares the modification times of the sources",
+        "correct": false,
+        "why": "Timestamps differ between machines for identical files. Bazel hashes content, which is why the cache works across machines at all."
+      },
+      {
+        "text": "Her action and yours hash to the same key",
+        "correct": true,
+        "why": "Right. Same sources, jars, flags and JDK give the same key, and every input is declared, so equal keys mean the output would come out the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-266m6the",
+    "version": 1,
+    "section": "what-bazel-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The code of one target reads a file that the target never declared. What happens when Bazel builds it?",
+    "hint": "Where does each action run?",
+    "choices": [
+      {
+        "text": "It fails everywhere, since the sandbox lacks it",
+        "correct": true,
+        "why": "Right. The mistake shows up everywhere at once, instead of only on the machine where the file is missing."
+      },
+      {
+        "text": "Compiles on machines that happen to have the file",
+        "correct": false,
+        "why": "That is the non-hermetic build Bazel exists to prevent: it works on one laptop and fails on the next."
+      },
+      {
+        "text": "Adds the file to the declared inputs for you",
+        "correct": false,
+        "why": "Bazel never guesses inputs. A guess would make the key depend on what a machine happened to contain."
+      },
+      {
+        "text": "Compiles it, but leaves the file out of the action key",
+        "correct": false,
+        "why": "That would be the worst outcome, a cache serving stale outputs, and the sandbox is there so it cannot happen."
+      }
+    ]
+  },
+  {
+    "id": "ex-btjx55fa",
+    "version": 1,
+    "section": "what-bazel-is",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these go into the action key of a compile action? Choose all that apply.",
+    "hint": "The figure's left column.",
+    "choices": [
+      {
+        "text": "The source file being compiled",
+        "correct": true,
+        "why": "Right. Change one character and the key changes."
+      },
+      {
+        "text": "The time at which the build started",
+        "correct": false,
+        "why": "If the clock were an input, no key would ever repeat and nothing could be cached."
+      },
+      {
+        "text": "The jar the source compiles against",
+        "correct": true,
+        "why": "Right. A new version of the library is a new input, so the code is compiled again."
+      },
+      {
+        "text": "The javac command line, flags included",
+        "correct": true,
+        "why": "Right. --java_language_version=25 and 21 produce different classes, so they are different keys."
+      },
+      {
+        "text": "The name of the developer running the build",
+        "correct": false,
+        "why": "Two developers building the same commit should share outputs; that is the whole point of a remote cache."
+      },
+      {
+        "text": "The JDK that runs the compiler",
+        "correct": true,
+        "why": "Right. It is a tool, and tools are inputs too, which is why Bazel pins its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-3xnqc94p",
+    "version": 1,
+    "section": "what-bazel-is",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A monorepo has 300 modules, most commits touch one of them, and CI spends its time rebuilding and retesting the other 299. Which change attacks that cost directly?",
+    "hint": "Running work faster is not the same as not running it.",
+    "choices": [
+      {
+        "text": "Remote execution, so every action runs on a farm of machines",
+        "correct": false,
+        "why": "That spreads the same work over more machines. It is faster, but the 299 untouched modules are still compiled and tested."
+      },
+      {
+        "text": "A remote cache that every CI job and every developer reads and fills",
+        "correct": true,
+        "why": "Right. Unchanged actions and test results come back from the cache by their key, so only what the commit reaches is run."
+      },
+      {
+        "text": "A larger CI machine with twice the cores",
+        "correct": false,
+        "why": "More cores make the same rebuild quicker. The rebuild of untouched code is the cost, and it stays."
+      },
+      {
+        "text": "A separate repository and Maven build for each module",
+        "correct": false,
+        "why": "It does stop the rebuilds, and loses the one graph across modules: a change to a shared library now has to be released and picked up 299 times."
+      }
+    ]
+  },
+  {
+    "id": "ex-994bbfg1",
+    "version": 1,
+    "section": "a-module",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the one-line .bazelversion file for?",
+    "hint": "It is read before Bazel itself runs.",
+    "choices": [
+      {
+        "text": "It is the module's own version, for other modules that depend on it",
+        "correct": false,
+        "why": "That is the version in module(...) in MODULE.bazel."
+      },
+      {
+        "text": "It lists the versions the rule sets resolved to",
+        "correct": false,
+        "why": "That is MODULE.bazel.lock, which Bazel writes."
+      },
+      {
+        "text": "It sets the Java version the code is compiled for",
+        "correct": false,
+        "why": "That is --java_language_version in .bazelrc."
+      },
+      {
+        "text": "It names the Bazel release that Bazelisk downloads and runs",
+        "correct": true,
+        "why": "Right. It pins Bazel in the repository, as the wrapper pins Gradle."
+      }
+    ]
+  },
+  {
+    "id": "ex-0j9dvwy2",
+    "version": 1,
+    "section": "a-module",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each file at the top of the project to what it holds.",
+    "hint": "One of them Bazel writes itself.",
+    "pairs": [
+      {
+        "left": ".bazelversion",
+        "right": "the Bazel release the project builds with"
+      },
+      {
+        "left": "MODULE.bazel",
+        "right": "the module and the rule sets it depends on"
+      },
+      {
+        "left": ".bazelrc",
+        "right": "flags read on every command"
+      },
+      {
+        "left": "MODULE.bazel.lock",
+        "right": "what the dependencies resolved to, with hashes"
+      }
+    ],
+    "right_distractors": [
+      "the targets of one package"
+    ]
+  },
+  {
+    "id": "ex-t0z454st",
+    "version": 1,
+    "section": "a-module",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does every http_jar in MODULE.bazel carry a sha256?",
+    "hint": "What happens if the server hands over different bytes?",
+    "choices": [
+      {
+        "text": "So that the jar's own dependencies are fetched as well",
+        "correct": false,
+        "why": "A hash fetches nothing. That is what Maven does from a pom, and http_jar does not: hence the four extra entries."
+      },
+      {
+        "text": "So that Bazel checks the publisher's signature on the jar",
+        "correct": false,
+        "why": "A hash proves the bytes are the ones you pinned, not who published them. Signatures are a different check."
+      },
+      {
+        "text": "So that a different file at that address fails the build",
+        "correct": true,
+        "why": "Right. A replaced jar or a mirror serving something else is refused rather than compiled in."
+      },
+      {
+        "text": "So that Bazel can find the jar in Maven Central by its hash",
+        "correct": false,
+        "why": "The url finds the jar. The hash is checked after the download."
+      }
+    ]
+  },
+  {
+    "id": "ex-dqgcchj4",
+    "version": 1,
+    "section": "a-module",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 1's pom has one <dependency> on commons-validator. How many http_jar entries in this lesson's MODULE.bazel stand for it?",
+    "hint": "The jar itself, and what it depends on.",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-1tbt359r",
+    "version": 1,
+    "section": "targets-and-labels",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `//src/main/java/com/example/isbn:isbn`, the text before the colon names the ___ that holds the target.",
+    "blanks": [
+      {
+        "accept": [
+          "package"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6pf9thb2",
+    "version": 1,
+    "section": "targets-and-labels",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the java_test set use_testrunner = False and name a main_class?",
+    "hint": "Which JUnit does Bazel's own runner speak?",
+    "choices": [
+      {
+        "text": "Bazel's own runner speaks only JUnit 4",
+        "correct": true,
+        "why": "Right. So JUnit's console launcher becomes the main class, and args tell it which class to run."
+      },
+      {
+        "text": "So the test runs outside the sandbox, where JUnit can find its engine",
+        "correct": false,
+        "why": "The test still runs in the sandbox; the engine is inside the console jar, a declared dependency."
+      },
+      {
+        "text": "Because rules_java cannot compile tests written for JUnit 6",
+        "correct": false,
+        "why": "It compiled IsbnCheckTest without complaint. Compiling is not the problem; running is."
+      },
+      {
+        "text": "Because a java_test is always run through a main method",
+        "correct": false,
+        "why": "Normally Bazel supplies the main itself, its JUnit 4 runner. This test replaces it."
+      }
+    ]
+  },
+  {
+    "id": "ex-771a6fpz",
+    "version": 1,
+    "section": "targets-and-labels",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The second `bazel test //...` printed `(cached) PASSED in 1.0s`. What ran?",
+    "hint": "Executed 0 out of 1 test.",
+    "choices": [
+      {
+        "text": "The test, but without compiling it again",
+        "correct": false,
+        "why": "Executed 0 out of 1 test. The result itself was reused, not only the compile."
+      },
+      {
+        "text": "Nothing: the result came from the cache, as no input had changed",
+        "correct": true,
+        "why": "Right. The 1.0s is how long the run that produced the cached result took."
+      },
+      {
+        "text": "The test, faster, in the compiler worker kept alive since the last build",
+        "correct": false,
+        "why": "Workers keep compilers warm. A cached test result needs no process at all."
+      },
+      {
+        "text": "Only the test methods that had failed before",
+        "correct": false,
+        "why": "None had failed, and Bazel caches a test target as a whole, not method by method."
+      }
+    ]
+  },
+  {
+    "id": "ex-5qfesvdx",
+    "version": 1,
+    "section": "targets-and-labels",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After moving a repository to Bazel 9, a BUILD file fails with \"no such attribute 'srcs' in 'java_library' rule\". What do you check first?",
+    "hint": "The message names an attribute. The cause is elsewhere in the file.",
+    "choices": [
+      {
+        "text": "Whether srcs was renamed in the new rules_java",
+        "correct": false,
+        "why": "srcs is the attribute every Java rule has always had. The message points at it because it is the first one passed."
+      },
+      {
+        "text": "Whether the BUILD file is named BUILD rather than BUILD.bazel",
+        "correct": false,
+        "why": "Both names make a package; the rule inside it would fail the same way under either."
+      },
+      {
+        "text": "Whether the file loads java_library from rules_java",
+        "correct": true,
+        "why": "Right. Without the load, the name does not mean the rule from rules_java, and the attributes are unknown to whatever it does mean."
+      },
+      {
+        "text": "Whether IsbnCheck.java is in the same directory as the BUILD file",
+        "correct": false,
+        "why": "A missing source gives a different error, naming the file. This one fails before any file is looked at."
+      }
+    ]
+  },
+  {
+    "id": "ex-89p0r8ek",
+    "version": 1,
+    "section": "when-it-pays",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Five developers, one Spring Boot service in its own repository, a Maven build of a minute. Should they move to Bazel?",
+    "hint": "Weigh what it costs against what a minute leaves to save.",
+    "choices": [
+      {
+        "text": "Yes: a remote cache would make every build instant",
+        "correct": false,
+        "why": "A one-minute build has little to cache away, and the cache is one more server to run."
+      },
+      {
+        "text": "Yes: hermetic builds catch mistakes Maven lets through",
+        "correct": false,
+        "why": "They do, and a team that size meets few of them. The price is every jar declared by hash and tooling that expects a pom."
+      },
+      {
+        "text": "No: what it costs buys almost nothing at that size",
+        "correct": true,
+        "why": "Right. Every dependency by hand, tools built for Maven, and somebody owning the build, to save part of a minute."
+      },
+      {
+        "text": "No: Bazel cannot build a Spring Boot application",
+        "correct": false,
+        "why": "It can, with rules_java and rules_jvm_external. It is a poor trade here, not an impossible one."
+      }
+    ]
+  },
+  {
+    "id": "ex-a7bn1w5z",
+    "version": 1,
+    "section": "when-it-pays",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these situations count in favour of Bazel? Choose all that apply.",
+    "hint": "The section names four conditions.",
+    "choices": [
+      {
+        "text": "Twenty teams commit to one repository",
+        "correct": true,
+        "why": "Right. One graph across everybody's code is what Bazel was built for."
+      },
+      {
+        "text": "Java services share Protocol Buffers files with a Go tool and a TypeScript front end",
+        "correct": true,
+        "why": "Right. Several languages that depend on each other build in one graph instead of three tools glued together."
+      },
+      {
+        "text": "A newcomer must open the project in an IDE with no setup",
+        "correct": false,
+        "why": "That favours Maven: IDEs open a pom as it is and a Bazel project through a plugin."
+      },
+      {
+        "text": "CI spends most of its time rebuilding code no commit touched",
+        "correct": true,
+        "why": "Right. A remote cache turns that time into downloads."
+      },
+      {
+        "text": "The project is one library with three dependencies",
+        "correct": false,
+        "why": "Small and single-language is exactly where Maven's conventions cost least."
+      }
+    ]
+  },
+  {
+    "id": "ex-7zw2ykz4",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody clones this lesson's project on a new machine and runs `bazel build //...`. Put what happens in order.",
+    "hint": "Bazel has to exist before it can read MODULE.bazel.",
+    "items": [
+      "Bazelisk reads .bazelversion and downloads that Bazel",
+      "A Bazel server starts and stays in the background",
+      "rules_java and the jars named in MODULE.bazel are fetched",
+      "The compile actions run, each in its own sandbox",
+      "The outputs appear under bazel-bin"
+    ],
+    "trap": "The fetch cannot come first: MODULE.bazel is read by Bazel, and Bazel is what Bazelisk downloads."
+  },
+  {
+    "id": "ex-f0h79kb1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague adds `import org.apache.commons.lang3.StringUtils;` to IsbnCheck.java. That jar is in ~/.m2 on her laptop from a Maven project, and she changes nothing else. What does `bazel build //...` do?",
+    "hint": "What is in the compile action's sandbox?",
+    "choices": [
+      {
+        "text": "Builds on her laptop, where the jar is, and fails on CI",
+        "correct": false,
+        "why": "That is how a non-hermetic build behaves. Bazel never looks in ~/.m2; the sandbox holds declared inputs only."
+      },
+      {
+        "text": "Downloads commons-lang3 from Maven Central, as it is a well-known library",
+        "correct": false,
+        "why": "Nothing is fetched that MODULE.bazel does not name, and with a hash."
+      },
+      {
+        "text": "Builds everywhere, because javac searches the classpath of the JDK",
+        "correct": false,
+        "why": "The JDK's own classes are there; a third-party jar is not."
+      },
+      {
+        "text": "Fails everywhere until an http_jar and a deps entry declare the jar",
+        "correct": true,
+        "why": "Right. The same error on every machine, and the fix is two declarations: the download and the dependency."
+      }
+    ]
+  },
+  {
+    "id": "ex-j5wesyjs",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each piece of lesson 1's Maven build to its counterpart in this lesson's Bazel build.",
+    "hint": "Scopes become attributes; the output directory becomes a link.",
+    "pairs": [
+      {
+        "left": "a compile-scope <dependency>",
+        "right": "an entry in deps"
+      },
+      {
+        "left": "a runtime-scope <dependency>",
+        "right": "an entry in runtime_deps"
+      },
+      {
+        "left": "mvn test",
+        "right": "bazel test //..."
+      },
+      {
+        "left": "the target/ directory",
+        "right": "bazel-bin"
+      }
+    ],
+    "right_distractors": [
+      "visibility"
+    ]
+  }
+]

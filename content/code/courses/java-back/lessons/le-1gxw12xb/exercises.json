@@ -1,0 +1,774 @@
+[
+  {
+    "id": "ex-ccze8aen",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Wiring.java` runs the bookshop's classes with `@Service` and `@Repository` still on them, and Spring never starts. What did those annotations do in that run?",
+    "hint": "Who reads an annotation?",
+    "choices": [
+      {
+        "text": "They started Spring in the background, from the jars on the class path",
+        "correct": false,
+        "why": "A jar on the class path runs nothing by itself. Nothing called `SpringApplication.run`, so there was no container to start."
+      },
+      {
+        "text": "Nothing, because no code read them",
+        "correct": true,
+        "why": "An annotation is a label for code that looks for it. `main` never looked, so the classes ran as plain Java and the report still counted three books."
+      },
+      {
+        "text": "They made the compiler write the `new` calls into `main`",
+        "correct": false,
+        "why": "The compiler copies an annotation into the class file and leaves it there. Every `new` in that run is one you can read in `main`."
+      },
+      {
+        "text": "They stopped `main` from creating a second `BookService`",
+        "correct": false,
+        "why": "Nothing enforces one instance outside a container. `main` could call `new BookService(...)` twice and get two objects."
+      }
+    ]
+  },
+  {
+    "id": "ex-18te3bf1",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `Wiring.java`, why does `new BookService(repository)` have to come after `new InMemoryBookRepository()`?",
+    "hint": "Read `BookService`'s constructor.",
+    "choices": [
+      {
+        "text": "Spring always creates repositories before services",
+        "correct": false,
+        "why": "Spring is not running in `Wiring.java`, and in the application no rule ranks stereotypes: the constructors decide the order."
+      },
+      {
+        "text": "The repository has to load its books before the service can be compiled",
+        "correct": false,
+        "why": "Compiling runs no constructor. The order matters when the program runs, not when it is compiled."
+      },
+      {
+        "text": "Its only constructor takes the repository as an argument",
+        "correct": true,
+        "why": "An argument has to exist before the call. Spring meets the same constraint and resolves it the same way, dependency first."
+      },
+      {
+        "text": "Otherwise `BookService` would create a repository of its own",
+        "correct": false,
+        "why": "`BookService` has no code that creates a repository; it stores whatever it is given. With nothing to give, the call would not compile."
+      }
+    ]
+  },
+  {
+    "id": "ex-j7eb1vvs",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is inversion of control in the bookshop?",
+    "hint": "Who calls whom?",
+    "choices": [
+      {
+        "text": "`BookService` calling `new InMemoryBookRepository()` itself",
+        "correct": false,
+        "why": "That is the opposite: a class fetching its own dependency, so that nothing outside can choose another."
+      },
+      {
+        "text": "`BookRepository` being an interface rather than a class",
+        "correct": false,
+        "why": "An interface lets the implementation change. It says nothing about who creates the objects or who calls them."
+      },
+      {
+        "text": "Spring running the constructors in the reverse of their natural order",
+        "correct": false,
+        "why": "The order is not reversed: a dependency is still built before whatever needs it, as in `Wiring.java`."
+      },
+      {
+        "text": "`CatalogueReport.run` being called by code that is not the bookshop's",
+        "correct": true,
+        "why": "The report never decides when it runs. Spring Boot calls every `CommandLineRunner` after start-up, and nothing in the bookshop calls `run`."
+      }
+    ]
+  },
+  {
+    "id": "ex-keat79cx",
+    "version": 1,
+    "section": "the-container",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Component scanning gives the class `InMemoryBookRepository` the bean name `___`.",
+    "hint": "The simple name, with one letter changed.",
+    "blanks": [
+      {
+        "accept": [
+          "inMemoryBookRepository"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-js4waq0g",
+    "version": 1,
+    "section": "the-container",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the beans log, Spring starts on `bookService` and creates `inMemoryBookRepository` before it finishes `bookService`. Why?",
+    "hint": "What does `bookService` need before it can exist?",
+    "choices": [
+      {
+        "text": "`bookService` cannot be built until its constructor argument exists",
+        "correct": true,
+        "why": "The repository is the argument of `BookService`'s only constructor, so it is created first, when it is needed. The log's next line names it."
+      },
+      {
+        "text": "Spring creates beans in alphabetical order of their names",
+        "correct": false,
+        "why": "Alphabetically `inMemoryBookRepository` would be last of the six. It was created second, at the moment it was needed."
+      },
+      {
+        "text": "A `@Repository` is created before a `@Service` in every application",
+        "correct": false,
+        "why": "No rule ranks one stereotype above another. Take away the constructor parameter and nothing would force this order."
+      },
+      {
+        "text": "The first attempt at `bookService` failed and Spring tried again",
+        "correct": false,
+        "why": "Nothing failed: the log shows one creation of each bean and no error, and the report ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-h3gvq5gj",
+    "version": 1,
+    "section": "the-container",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`BookService`'s constructor asks for a `BookRepository`, and the log says it was autowired to the bean `inMemoryBookRepository`. What made Spring choose that bean?",
+    "hint": "Read the words \"by type\".",
+    "choices": [
+      {
+        "text": "Its name matches the parameter",
+        "correct": false,
+        "why": "The parameter is called `books`, which is no bean's name. A name only breaks a tie, and there was no tie."
+      },
+      {
+        "text": "`BookService` imports `InMemoryBookRepository`",
+        "correct": false,
+        "why": "It imports nothing of the kind. It mentions only the interface, which is the point of having one."
+      },
+      {
+        "text": "It was the one bean of that type",
+        "correct": true,
+        "why": "Spring matches a parameter by its type first. One candidate means no decision to make."
+      },
+      {
+        "text": "It was the first `@Repository` found in its package",
+        "correct": false,
+        "why": "Where a class sits in its package decides nothing. With two candidates Spring would stop rather than take the first."
+      }
+    ]
+  },
+  {
+    "id": "ex-91spg68c",
+    "version": 1,
+    "section": "the-container",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these would component scanning in the bookshop turn into a bean? Choose all that apply.",
+    "hint": "Two conditions: the label, and the package.",
+    "choices": [
+      {
+        "text": "`ClockConfig`, a `@Configuration` class in `com.example.bookshop.config`",
+        "correct": true,
+        "why": "`@Configuration` is a stereotype and the package is below `com.example.bookshop`. The log created it as `clockConfig`."
+      },
+      {
+        "text": "A `@Component` class in `com.example.billing`",
+        "correct": false,
+        "why": "The label is right and the package is not: `com.example.billing` is beside the bookshop's package, not below it."
+      },
+      {
+        "text": "A `@Service` class in `com.example.bookshop.ordering`",
+        "correct": true,
+        "why": "A stereotype in a package below the application's: both conditions hold. Lesson 14's order service sits exactly there."
+      },
+      {
+        "text": "The interface `BookRepository`",
+        "correct": false,
+        "why": "An interface cannot be instantiated. It is the type the beans are matched by, not a bean of its own."
+      },
+      {
+        "text": "A class with no annotation in `com.example.bookshop.catalogue`",
+        "correct": false,
+        "why": "The package is right and the label is missing. Scanning looks for stereotypes, as the deleted `@Repository` line showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-0z5qprc9",
+    "version": 1,
+    "section": "constructor-injection",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `BookService`'s constructor carry no `@Autowired`?",
+    "hint": "How many constructors does the class have?",
+    "choices": [
+      {
+        "text": "Spring Framework 7 removed `@Autowired`",
+        "correct": false,
+        "why": "It still exists; the field-injection detour uses it. It is simply not needed here."
+      },
+      {
+        "text": "`@Service` puts `@Autowired` on every method",
+        "correct": false,
+        "why": "`@Service` marks the class for scanning and says nothing about its methods or constructors."
+      },
+      {
+        "text": "Records never need it, and `BookService` is one",
+        "correct": false,
+        "why": "`BookService` is a class with a field and methods. `Book` is the record."
+      },
+      {
+        "text": "It is the class's only constructor",
+        "correct": true,
+        "why": "With one constructor there is nothing to choose, so Spring uses it. `@Autowired` is needed to pick one of several."
+      }
+    ]
+  },
+  {
+    "id": "ex-z6t9wkbk",
+    "version": 1,
+    "section": "constructor-injection",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `BookService` was switched to field injection, the application still started. What failed, and where?",
+    "hint": "Two runs: inside Spring, and in `Wiring.java`.",
+    "choices": [
+      {
+        "text": "Spring refused to write a private field",
+        "correct": false,
+        "why": "Spring writes private fields by reflection. It did, and the application counted three books."
+      },
+      {
+        "text": "Outside Spring: `new BookService()` left `books` null and `list()` threw",
+        "correct": true,
+        "why": "Only the container sets the field. Built by hand, the object exists without its dependency until the first call."
+      },
+      {
+        "text": "The compiler rejected the `@Autowired` field in `BookService`",
+        "correct": false,
+        "why": "`BookService` compiled. What stopped compiling was `Wiring.java`'s call to a constructor that no longer exists."
+      },
+      {
+        "text": "Inside Spring the report counted zero books",
+        "correct": false,
+        "why": "It counted three: inside Spring the field was set before anything used it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1hpx0fwe",
+    "version": 1,
+    "section": "constructor-injection",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's `PriceService` has eleven constructor parameters, and they propose field injection so that the constructor looks less crowded. What does the switch change?",
+    "hint": "What was the parameter list telling you?",
+    "choices": [
+      {
+        "text": "Spring creates fewer beans, since fields are cheaper than parameters",
+        "correct": false,
+        "why": "Every dependency is still a bean. Only the way it reaches the class changes."
+      },
+      {
+        "text": "It hides the eleven dependencies; the class needs just as many",
+        "correct": true,
+        "why": "A long parameter list is a sign the class does too much. Field injection removes the sign and keeps the cause, and adds a way to build the object incomplete."
+      },
+      {
+        "text": "The fields can now be `final`, which a constructor did not allow",
+        "correct": false,
+        "why": "The reverse: a field written after construction cannot be `final`, and a constructor-assigned one can."
+      },
+      {
+        "text": "A missing bean is now reported at start-up, where before it was not",
+        "correct": false,
+        "why": "Both forms fail at start-up when a bean is missing. Only the constructor form also fails at compile time when somebody builds it by hand."
+      }
+    ]
+  },
+  {
+    "id": "ex-g5ctycfn",
+    "version": 1,
+    "section": "constructor-injection",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When does the bookshop's interface `BookRepository` pay for its extra file?",
+    "hint": "Spring does not require it.",
+    "choices": [
+      {
+        "text": "Always, because Spring cannot inject a class that implements no interface",
+        "correct": false,
+        "why": "A constructor may ask for a class, and Spring injects the bean of that class."
+      },
+      {
+        "text": "Now, because the interface makes the repository safe to share between threads",
+        "correct": false,
+        "why": "Thread safety comes from `ConcurrentSkipListMap` and `AtomicLong` inside the class. A type cannot provide it."
+      },
+      {
+        "text": "In lesson 9, when a PostgreSQL repository replaces it and `BookService` is untouched",
+        "correct": true,
+        "why": "That is the second implementation the interface was written for. Without one in sight, an interface is a file and nothing more."
+      },
+      {
+        "text": "Never, since the interface has only one implementation in this lesson",
+        "correct": false,
+        "why": "One implementation today is not the test; one in view is. Lesson 9's is four lessons away."
+      }
+    ]
+  },
+  {
+    "id": "ex-jcbyatdg",
+    "version": 1,
+    "section": "bean-methods",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is the bookshop's clock defined by a `@Bean` method and not by a stereotype annotation?",
+    "hint": "Whose class is `Clock`?",
+    "choices": [
+      {
+        "text": "`Clock` is a JDK class, not one the bookshop wrote",
+        "correct": true,
+        "why": "A stereotype goes on a class you wrote. For one you did not, a method that returns an instance is the definition."
+      },
+      {
+        "text": "Component scanning skips the `config` package",
+        "correct": false,
+        "why": "It scanned it: that is how `ClockConfig` itself became the bean `clockConfig`."
+      },
+      {
+        "text": "A `@Bean` method makes the clock a prototype",
+        "correct": false,
+        "why": "A `@Bean` is a singleton unless it says otherwise; Spring called `clock()` once and kept the result."
+      },
+      {
+        "text": "Stereotype annotations work on interfaces only",
+        "correct": false,
+        "why": "Every stereotype in the bookshop sits on a class. `Clock` is excluded by who owns it, not by what it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-p8xd91ww",
+    "version": 1,
+    "section": "bean-methods",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A `@Bean` method declared as `public Clock clock()` defines a bean whose name is `___`.",
+    "hint": "It comes from the method, not from the type.",
+    "blanks": [
+      {
+        "accept": [
+          "clock"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-b317vrm3",
+    "version": 1,
+    "section": "bean-methods",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new `DiscountService` decides whether today is a sale day by calling `LocalDate.now()`. What problem does the bookshop's injected clock avoid that this one has?",
+    "hint": "Try to write a test for the last day of the sale.",
+    "choices": [
+      {
+        "text": "`LocalDate.now()` is much slower than reading an injected clock",
+        "correct": false,
+        "why": "Speed is not the difference. Both read the same system clock in the end."
+      },
+      {
+        "text": "`LocalDate.now()` cannot be called from inside a singleton",
+        "correct": false,
+        "why": "Any code can call it, from anywhere. That is exactly why nobody can replace what it returns."
+      },
+      {
+        "text": "No caller chooses the day, so a test's result depends on when it runs",
+        "correct": true,
+        "why": "The date is a hidden input. With a `Clock` parameter, a test passes `Clock.fixed` for the last day of the sale and checks the answer."
+      },
+      {
+        "text": "`LocalDate.now()` returns the date in UTC instead of São Paulo",
+        "correct": false,
+        "why": "It uses the machine's default zone, which is a second hidden input. The first is that nobody can replace the clock at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-sn9kqfnf",
+    "version": 1,
+    "section": "when-wiring-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A report says: `Parameter 0 of constructor in com.example.bookshop.catalogue.BookService required a single bean, but 2 were found`. What happened?",
+    "hint": "Parameter 0 is the repository.",
+    "choices": [
+      {
+        "text": "`BookService` was created twice",
+        "correct": false,
+        "why": "The report is about the candidates for one parameter. `BookService` was never created at all."
+      },
+      {
+        "text": "`BookService` has two constructors and Spring could not choose",
+        "correct": false,
+        "why": "It names a parameter of one constructor. A choice between constructors fails with a different message."
+      },
+      {
+        "text": "Two beans have the type that the parameter asks for",
+        "correct": true,
+        "why": "Two classes implement `BookRepository` and both are beans, so matching by type no longer decides."
+      },
+      {
+        "text": "Two of `BookService`'s parameters have the same type",
+        "correct": false,
+        "why": "Its constructor has one parameter. The 2 counts beans, not parameters."
+      }
+    ]
+  },
+  {
+    "id": "ex-axwmtreb",
+    "version": 1,
+    "section": "when-wiring-fails",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each start-up report to the repair that removes its cause.",
+    "hint": "One right-hand item repairs nothing.",
+    "pairs": [
+      {
+        "left": "required a single bean, but 2 were found",
+        "right": "mark one candidate @Primary, or qualify the parameter"
+      },
+      {
+        "left": "required a bean of type ... that could not be found",
+        "right": "give the class a stereotype, in a package under the application's"
+      },
+      {
+        "left": "the dependencies of some of the beans form a cycle",
+        "right": "move what both classes need into a third class"
+      }
+    ],
+    "right_distractors": [
+      "set spring.main.allow-circular-references=true"
+    ]
+  },
+  {
+    "id": "ex-gjdc4xhw",
+    "version": 1,
+    "section": "when-wiring-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Both `EmptyBookRepository` and `InMemoryBookRepository` are beans. `InMemoryBookRepository` carries `@Primary`, and `BookService`'s parameter carries `@Qualifier(\"emptyBookRepository\")`. What does `BookService` receive?",
+    "hint": "One is decided by the candidate, one by the consumer.",
+    "choices": [
+      {
+        "text": "`inMemoryBookRepository`, because `@Primary` overrides any qualifier",
+        "correct": false,
+        "why": "`@Primary` is the default for consumers that do not say. This one says."
+      },
+      {
+        "text": "Neither: start-up stops with two candidates",
+        "correct": false,
+        "why": "Each annotation alone settles the tie, so together they cannot reopen it."
+      },
+      {
+        "text": "`emptyBookRepository`, because the qualifier names it",
+        "correct": true,
+        "why": "A qualifier is the consumer naming exactly the bean it wants, and it wins over `@Primary`."
+      },
+      {
+        "text": "Both, as a list of two repositories",
+        "correct": false,
+        "why": "Spring injects a list only when the parameter's type is a `List`. This one is a single `BookRepository`."
+      }
+    ]
+  },
+  {
+    "id": "ex-t275dv8w",
+    "version": 1,
+    "section": "when-wiring-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Another project has two `PaymentGateway` beans, no `@Primary` and no `@Qualifier`, and still starts. Which explanation fits?",
+    "hint": "Spring's last tie-breaker.",
+    "choices": [
+      {
+        "text": "The constructor parameter has the same name as one of the two beans",
+        "correct": true,
+        "why": "A parameter named like a candidate wins the tie, provided the compiler kept the names. Renaming it would quietly change the wiring."
+      },
+      {
+        "text": "Spring took whichever of the two it found first",
+        "correct": false,
+        "why": "Spring does not guess between candidates. The bookshop's two repositories stopped start-up with a report."
+      },
+      {
+        "text": "The build no longer passes `-parameters` to the compiler",
+        "correct": false,
+        "why": "That would remove the names the tie-breaker reads, and the tie would end in the two-candidates report."
+      },
+      {
+        "text": "The two beans are declared in different packages",
+        "correct": false,
+        "why": "A package decides whether a class is scanned, not which of two scanned beans a parameter receives."
+      }
+    ]
+  },
+  {
+    "id": "ex-pa7qj881",
+    "version": 1,
+    "section": "when-wiring-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `spring.main.allow-circular-references=true`, the constructor cycle between `bookService` and `catalogueReport` still stops start-up. Why?",
+    "hint": "What would Spring have to hand over first?",
+    "choices": [
+      {
+        "text": "A property on the command line is ignored when it is about circular references",
+        "correct": false,
+        "why": "It was read: the report's Action changed to say that the references were allowed and the cycle still could not be broken."
+      },
+      {
+        "text": "Each constructor needs the other object to exist first",
+        "correct": true,
+        "why": "The property lets Spring pass a half-built object, which needs the object to exist first. A constructor that has not run has built nothing."
+      },
+      {
+        "text": "The property only applies to beans created by `@Bean` methods",
+        "correct": false,
+        "why": "It applies to any bean injected by field or setter. Constructors are what it cannot help."
+      },
+      {
+        "text": "Spring Boot 4 removed the property and kept only its message",
+        "correct": false,
+        "why": "The property exists and was honoured; the second report differs from the first because of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-7tegzmba",
+    "version": 1,
+    "section": "scopes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Spring, a bean in the default singleton scope exists once per what?",
+    "hint": "It is not the design pattern.",
+    "choices": [
+      {
+        "text": "Per Java virtual machine, guaranteed by the class itself",
+        "correct": false,
+        "why": "That is the singleton design pattern. `Wiring.java` made a second repository with `new` and nothing objected."
+      },
+      {
+        "text": "Per thread",
+        "correct": false,
+        "why": "One object is shared by every thread, which is why it has to be safe to share."
+      },
+      {
+        "text": "Per HTTP request",
+        "correct": false,
+        "why": "That is the request scope, which a web application adds."
+      },
+      {
+        "text": "Per application context",
+        "correct": true,
+        "why": "The container makes one and hands the same object to everybody who asks it."
+      }
+    ]
+  },
+  {
+    "id": "ex-21ne4swt",
+    "version": 1,
+    "section": "scopes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`BookService` is made a prototype and injected into the singleton `ScopeCheck`. How often does `ScopeCheck` receive a new `BookService`?",
+    "hint": "When does a constructor run?",
+    "choices": [
+      {
+        "text": "Every time one of its methods uses the field",
+        "correct": false,
+        "why": "The field holds whatever the constructor was given. Nothing replaces it between calls."
+      },
+      {
+        "text": "Once, when `ScopeCheck` itself is created",
+        "correct": true,
+        "why": "Injection happens when the constructor runs, and a singleton's constructor runs once. That is the trap of a prototype inside a singleton."
+      },
+      {
+        "text": "Never: a prototype cannot be injected into a singleton",
+        "correct": false,
+        "why": "It can, and was: the run compared the injected object with the others."
+      },
+      {
+        "text": "Once per HTTP request that reaches the application",
+        "correct": false,
+        "why": "That would be a request-scoped bean behind a proxy. A prototype has no proxy and no link to requests."
+      }
+    ]
+  },
+  {
+    "id": "ex-kytne2dv",
+    "version": 1,
+    "section": "scopes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `InMemoryBookRepository` keep its books in a `ConcurrentSkipListMap` and number them with an `AtomicLong`?",
+    "hint": "How many objects of it exist, and who calls them?",
+    "choices": [
+      {
+        "text": "Spring refuses a `@Repository` whose fields are not thread-safe types",
+        "correct": false,
+        "why": "Spring checks nothing of the sort. Safety is the author's job, which is why the author chose these two."
+      },
+      {
+        "text": "It is a singleton, so one object serves every thread that calls it",
+        "correct": true,
+        "why": "Two requests can save a book in the same instant. A plain map and counter could then hand out one id twice."
+      },
+      {
+        "text": "To keep the books in alphabetical order of title",
+        "correct": false,
+        "why": "The map is sorted by its keys, which are the ids. Titles play no part."
+      },
+      {
+        "text": "Because it is a prototype, created again for every request",
+        "correct": false,
+        "why": "It is a singleton: one object, created once, as the log said. A new object per request would need no protection at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-rmdngmfr",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens when the bookshop starts in order, from the first step to the report.",
+    "hint": "Definitions before objects, and an argument before what needs it.",
+    "items": [
+      "Component scanning reads com.example.bookshop and the packages below it",
+      "A bean definition is collected for each stereotyped class",
+      "inMemoryBookRepository is created, because bookService's constructor needs it",
+      "bookService is finished with the repository as its argument",
+      "Spring Boot calls CatalogueReport.run"
+    ],
+    "trap": "Creating bookService before its repository is the order a reader who has not read the constructor expects; Spring cannot, because the constructor has nothing to be called with."
+  },
+  {
+    "id": "ex-9sjt5ssy",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new `@Component` class, `ShelfLabelPrinter`, sits in `com.example.printing` and takes a `BookService` in its constructor. The application starts without an error and the printer never does anything. Which explanations fit? Choose all that apply.",
+    "hint": "Which classes depend on the printer?",
+    "choices": [
+      {
+        "text": "`com.example.printing` is outside the scanned packages, so no bean was made",
+        "correct": true,
+        "why": "It is beside `com.example.bookshop`, not below it, so scanning never read the class."
+      },
+      {
+        "text": "A `@Component` needs `@Autowired` on its constructor to be created",
+        "correct": false,
+        "why": "A single constructor is used without it, as `BookService`'s was."
+      },
+      {
+        "text": "Nothing depends on the printer, so its absence breaks no constructor",
+        "correct": true,
+        "why": "The \"could not be found\" report needs a consumer asking for the missing type. With none, a class that is never created fails silently."
+      },
+      {
+        "text": "A `BookService` cannot be injected into a class of another package",
+        "correct": false,
+        "why": "Injection does not care about packages once a bean exists. `CatalogueReport` and `ClockConfig` live in different ones and meet."
+      }
+    ]
+  },
+  {
+    "id": "ex-6h3d5jw3",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`BookService` is a prototype. `CatalogueReport` and `ScopeCheck` each take one in their constructors, and `ScopeCheck.run` calls `getBean(BookService.class)` twice. How many `BookService` objects has Spring created by the time that run ends?",
+    "hint": "Every injection and every `getBean` of a prototype is a new object.",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-0sctv90m",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which single change to this lesson's code would stop the application at start-up?",
+    "hint": "A missing bean is an error only when something asks for it.",
+    "choices": [
+      {
+        "text": "Moving `CatalogueReport` to the package `com.example.reports`",
+        "correct": false,
+        "why": "It would stop being a bean and stop running, and nothing asks for it, so start-up would succeed without a report."
+      },
+      {
+        "text": "Renaming `BookService`'s parameter from `books` to `repository`",
+        "correct": false,
+        "why": "With a single candidate, matching by type decides and the name is never consulted."
+      },
+      {
+        "text": "Moving `InMemoryBookRepository` to the package `com.example.storage`",
+        "correct": true,
+        "why": "No bean of type `BookRepository` would exist, and `BookService`'s constructor asks for one: the \"could not be found\" report."
+      },
+      {
+        "text": "Adding `@Autowired` to `BookService`'s constructor",
+        "correct": false,
+        "why": "It is allowed on a single constructor and changes nothing."
+      }
+    ]
+  }
+]

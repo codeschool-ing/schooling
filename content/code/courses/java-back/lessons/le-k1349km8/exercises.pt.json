@@ -1,0 +1,505 @@
+{
+  "ex-7kjyxqvf": {
+    "prompt": "Por que o `BookService` lança `DuplicateIsbnException` em vez de responder um 409 ele mesmo?",
+    "hint": "Qual camada sabe o que é HTTP?",
+    "choices": [
+      {
+        "text": "Um 409 é a palavra da camada web, e a regra é da loja",
+        "why": "Certo. \"Um ISBN aparece uma vez só\" vale para um controller, uma importação ou um teste, então o serviço diz isso nas palavras da loja e a camada web traduz."
+      },
+      {
+        "text": "O Spring proíbe um `@Service` de devolver uma `ResponseEntity`",
+        "why": "Nada proíbe, e compilaria e rodaria. A objeção é de projeto: o serviço passaria a falar HTTP com chamadores que nem são requisições web."
+      },
+      {
+        "text": "Lançar é mais rápido que montar um objeto de resposta",
+        "why": "Velocidade não é o motivo. Criar uma exceção captura um stack trace, o que custa mais que montar um objeto pequeno, não menos."
+      },
+      {
+        "text": "Só um handler de exceção consegue produzir um 409",
+        "why": "Um controller pode devolver `ResponseEntity.status(409)` direto, como o `get` da aula 6 devolvia o 404 dele. A aula tira esse trabalho do controller de propósito."
+      }
+    ]
+  },
+  "ex-56k1gdqx": {
+    "prompt": "O serviço agora lança `BookNotFoundException`, e a `ApiErrorHandler` ainda não existe. O que `GET /books/99` responde?",
+    "hint": "O tratamento do `Optional` da aula 6 sumiu, e nada reclama a exceção.",
+    "choices": [
+      {
+        "text": "404 com corpo vazio, como na aula 6",
+        "why": "Aquele 404 vinha do controller transformando um `Optional` vazio em `ResponseEntity.notFound()`. O controller não faz mais isso; a exceção passa direto por ele."
+      },
+      {
+        "text": "404 com a mensagem da exceção como corpo",
+        "why": "Transformar a exceção num 404 é justamente o que falta. Nada na aplicação liga `BookNotFoundException` a status nenhum ainda."
+      },
+      {
+        "text": "500, da página de erro do Spring Boot, porque nada reclamou a exceção",
+        "why": "Certo. A exceção atravessou o Spring MVC sem dono, e a página de erro do Boot respondeu do único jeito que pode nesse caso: o servidor falhou."
+      },
+      {
+        "text": "Nada: a aplicação se recusa a subir sem um handler",
+        "why": "O Spring não confere na subida se toda exceção tem handler. Uma exceção acontece por requisição, e esta virou um 500."
+      }
+    ]
+  },
+  "ex-7bjw95wt": {
+    "prompt": "Por que `BookNotFoundException` e `DuplicateIsbnException` estendem `RuntimeException` e não `Exception`?",
+    "hint": "Pense no controller que fica entre o serviço e o cliente.",
+    "choices": [
+      {
+        "text": "O `@ExceptionHandler` aceita exceções não checadas e nenhuma outra",
+        "why": "Um `@ExceptionHandler` pode nomear qualquer tipo de exceção, checada ou não. A escolha é sobre o código entre o `throw` e o handler."
+      },
+      {
+        "text": "Uma exceção checada não consegue carregar mensagem",
+        "why": "As duas espécies passam a mensagem ao `super`, exatamente como estas duas classes fazem."
+      },
+      {
+        "text": "O Spring Boot registra exceções não checadas e ignora as checadas",
+        "why": "O registro não depende disso. O Boot registrou o 500 porque nada tratou a exceção, e teria registrado uma checada do mesmo jeito."
+      },
+      {
+        "text": "Para o controller não ter de capturá-las nem declará-las",
+        "why": "Certo. Uma exceção checada obrigaria cada método do caminho a tratá-la ou declará-la. A aula 14 acrescenta um segundo motivo: o Spring desfaz uma transação diante de uma `RuntimeException` por padrão, e não diante de uma checada."
+      }
+    ]
+  },
+  "ex-7z88se3r": {
+    "prompt": "Duas requisições com o mesmo ISBN novo chegam ao `BookService.add` no mesmo instante, com o repositório em memória. O que pode acontecer?",
+    "hint": "O `add` é uma verificação e depois um salvamento: dois passos.",
+    "choices": [
+      {
+        "text": "A segunda espera a primeira, porque o mapa é concorrente",
+        "why": "O `ConcurrentSkipListMap` torna segura cada operação isolada. Ele não faz do par \"olhar, depois salvar\" um passo só."
+      },
+      {
+        "text": "As duas passam pela verificação, e o ISBN é gravado duas vezes",
+        "why": "Certo. Cada requisição verifica antes de qualquer uma ter salvado. A tabela da aula 9 fecha a brecha com uma restrição `UNIQUE`, que o banco garante qualquer que seja o momento."
+      },
+      {
+        "text": "O Spring entrega as requisições a um bean de serviço uma de cada vez",
+        "why": "O serviço é um único bean compartilhado, e o Tomcat atende requisições em várias threads ao mesmo tempo, todas chamando ele."
+      },
+      {
+        "text": "A segunda sempre recebe um 409, já que a verificação está no serviço",
+        "why": "A verificação está no serviço, mas só enxerga o que já foi salvo. Nenhuma das duas salvou nada quando as duas verificam."
+      }
+    ]
+  },
+  "ex-bhzp9wy7": {
+    "prompt": "Ligue cada membro de um documento de problema da RFC 9457 ao que ele guarda.",
+    "hint": "Um é para programas, um é para esta ocorrência, um nunca muda para um tipo.",
+    "pairs": [
+      {
+        "left": "`type`",
+        "right": "uma URI que dá nome ao tipo de problema, que um programa compara"
+      },
+      {
+        "left": "`title`",
+        "right": "um resumo curto, o mesmo toda vez que o tipo ocorre"
+      },
+      {
+        "left": "`detail`",
+        "right": "uma explicação desta ocorrência, para uma pessoa"
+      },
+      {
+        "left": "`instance`",
+        "right": "uma URI para esta ocorrência"
+      },
+      {
+        "left": "`status`",
+        "right": "o código de status HTTP, repetido"
+      }
+    ],
+    "right_distractors": [
+      "o momento em que o erro aconteceu"
+    ]
+  },
+  "ex-j0c9fkgp": {
+    "prompt": "Um aplicativo de celular precisa mostrar uma tela \"este ISBN já está no catálogo\" quando a inclusão de um livro falha por esse motivo. Qual membro do problema ele deve testar?",
+    "hint": "Qual membro continua igual depois que alguém reescreve as frases?",
+    "choices": [
+      {
+        "text": "`detail`, porque cita o ISBN",
+        "why": "O `detail` é escrito para uma pessoa e pode ser reescrito a qualquer momento. Um aplicativo que compara as palavras quebra no dia em que isso acontecer, sem erro em lugar nenhum."
+      },
+      {
+        "text": "`status`, porque 409 quer dizer duplicado",
+        "why": "409 quer dizer conflito com o estado atual, e mais de um tipo de problema pode compartilhá-lo: a aula 14 acrescenta um 409 para livro sem estoque."
+      },
+      {
+        "text": "`type`",
+        "why": "Certo. Ele dá nome ao tipo de problema e é o membro que a RFC destina à comparação por programas: aqui, `https://bookshop.example/problems/duplicate-isbn`."
+      },
+      {
+        "text": "`title`, porque é curto e fixo",
+        "why": "O `title` é o mesmo em toda ocorrência, mas continua sendo texto para pessoas, livre para ser reescrito ou traduzido. O identificador é o `type`."
+      }
+    ]
+  },
+  "ex-gz8whcyx": {
+    "prompt": "Qual código de status a livraria respondeu quando recebeu um segundo livro com o ISBN `9786500000016`?",
+    "hint": "A requisição era válida; ela entrou em conflito com o catálogo."
+  },
+  "ex-r8mpfy1v": {
+    "prompt": "Nada na `ApiErrorHandler` preenche o `instance`, e mesmo assim o 404 do livro 99 trouxe `\"instance\": \"/books/99\"`. De onde ele veio?",
+    "hint": "O handler deixou um membro vazio.",
+    "choices": [
+      {
+        "text": "O Spring, com o caminho da requisição",
+        "why": "Certo. Quando uma `ProblemDetail` devolvida não tem `instance`, o Spring MVC o preenche com o caminho da requisição que está respondendo."
+      },
+      {
+        "text": "O `forStatusAndDetail` copia a URL da requisição para ele",
+        "why": "O `forStatusAndDetail` preenche `status` e `detail` e mais nada. Ele nunca vê a requisição."
+      },
+      {
+        "text": "O Jackson acrescenta um membro `instance` a todo objeto que escreve",
+        "why": "O Jackson escreve os membros que o objeto tem. Um `BookResponse` não ganha `instance`."
+      },
+      {
+        "text": "O Tomcat o anexa ao corpo de todo erro",
+        "why": "O Tomcat não mexe no corpo. O membro parecido, `path`, é da página de erro do Spring Boot, um formato totalmente diferente."
+      }
+    ]
+  },
+  "ex-2rt1twav": {
+    "prompt": "Um corpo de erro da RFC 9457 é enviado com o media type `application/___+json`.",
+    "blanks": [
+      {
+        "accept": [
+          "problem"
+        ]
+      }
+    ]
+  },
+  "ex-2bdv0k21": {
+    "prompt": "O que estender `ResponseEntityExceptionHandler` dá à `ApiErrorHandler`?",
+    "hint": "De quem são as exceções que a classe base conhece?",
+    "choices": [
+      {
+        "text": "Um handler para toda exceção, inclusive as da livraria",
+        "why": "Ela não sabe nada de `BookNotFoundException`, que precisou de um método próprio, e uma exceção inesperada continuou chegando à página de erro do Spring Boot."
+      },
+      {
+        "text": "A anotação `@RestControllerAdvice`, herdada da classe base",
+        "why": "A anotação está escrita na própria `ApiErrorHandler`. Sem ela a classe nem seria um advice, estendesse o que estendesse."
+      },
+      {
+        "text": "A validação dos corpos das requisições",
+        "why": "Quem valida é o `@Valid` com a Bean Validation, como na aula 6. A classe base só responde à falha."
+      },
+      {
+        "text": "Handlers para as exceções do próprio Spring MVC, no formato de problema",
+        "why": "Certo: um corpo que não é JSON, um caminho que ninguém mapeia, um método ou media type errado, uma validação que falhou, tudo no mesmo formato dos erros da livraria."
+      }
+    ]
+  },
+  "ex-pn9ayk6y": {
+    "prompt": "Ligue cada requisição ao status com que a livraria recompilada respondeu.",
+    "hint": "Cada status é o que o HTTP tem para o caso.",
+    "pairs": [
+      {
+        "left": "`POST /books` com um corpo que não é JSON",
+        "right": "400"
+      },
+      {
+        "left": "`DELETE /books/1`",
+        "right": "405"
+      },
+      {
+        "left": "`POST /books` com `Content-Type: text/plain`",
+        "right": "415"
+      },
+      {
+        "left": "`GET /nope`",
+        "right": "404"
+      }
+    ],
+    "right_distractors": [
+      "409",
+      "500"
+    ]
+  },
+  "ex-5rgn6b6f": {
+    "prompt": "O 400 para um corpo que não é JSON não tem membro `type`. O que a RFC diz que um `type` ausente significa?",
+    "hint": "O Spring omite um valor específico ao escrever o JSON.",
+    "choices": [
+      {
+        "text": "`about:blank`: nada além do que o próprio código de status diz",
+        "why": "Certo. O Spring deixa o `type` em `about:blank` e o omite, e o `title` passa a ser a própria frase do status, \"Bad Request\"."
+      },
+      {
+        "text": "O servidor esqueceu, então o documento é inválido",
+        "why": "Os cinco membros são opcionais, e um `type` ausente tem significado definido em vez de ser um engano."
+      },
+      {
+        "text": "O cliente precisa ler o `detail` para saber o tipo",
+        "why": "Não há tipo além disso para descobrir: o problema é o que o código de status diz. Ler o `detail` é o hábito contra o qual a aula alerta."
+      },
+      {
+        "text": "O servidor não sabe o que aconteceu, como num 500",
+        "why": "Sabe exatamente: o corpo não pôde ser lido. É um erro do cliente sem nada mais específico a nomear."
+      }
+    ]
+  },
+  "ex-w522k94y": {
+    "prompt": "Quais destas respostas da livraria recompilada trouxeram um cabeçalho dizendo o que o servidor teria aceitado? Marque todas as que se aplicam.",
+    "hint": "Duas delas listam o que teria funcionado.",
+    "choices": [
+      {
+        "text": "O 405 de `DELETE /books/1`",
+        "why": "Certo: `Allow: GET` lista os métodos que `/books/1` aceita."
+      },
+      {
+        "text": "O 404 de `GET /nope`",
+        "why": "Um 404 não tem nada a listar. Os cabeçalhos dele foram só `Content-Type`, `Transfer-Encoding` e `Date`."
+      },
+      {
+        "text": "O 415 de um corpo `text/plain`",
+        "why": "Certo: `Accept: application/json, application/*+json` lista os media types que `/books` consegue ler."
+      },
+      {
+        "text": "O 409 de um ISBN duplicado",
+        "why": "Um conflito é descrito no corpo, e nenhum cabeçalho lista alternativa: a correção é outro ISBN."
+      }
+    ]
+  },
+  "ex-9pjrx0q0": {
+    "prompt": "Um cliente envia um livro e recebe um 400 cujo `detail` é \"Failed to read request\", sem `type` e sem membro `errors`. O que deu errado?",
+    "hint": "A validação precisa de um objeto para validar.",
+    "choices": [
+      {
+        "text": "Um campo violou uma restrição, e a livraria escondeu qual",
+        "why": "Uma restrição violada passa pelo `handleMethodArgumentNotValid`, cuja resposta tem o tipo `invalid-request` e um mapa `errors` que cita o campo."
+      },
+      {
+        "text": "A variável de caminho não era um número",
+        "why": "Não há variável de caminho em `POST /books`, e essa falha diz \"Failed to convert 'id' with value...\"."
+      },
+      {
+        "text": "O corpo nunca virou um `BookRequest`, então nada foi validado",
+        "why": "Certo. Um corpo que não é JSON, ou um valor do tipo errado como `\"cheap\"` em `priceCents`, falha enquanto o Jackson lê, antes de o `@Valid` ter o que olhar."
+      },
+      {
+        "text": "O ISBN já está no catálogo",
+        "why": "Um duplicado é descoberto pelo serviço, depois que a leitura e a validação deram certo, e responde 409."
+      }
+    ]
+  },
+  "ex-aj8nnvha": {
+    "prompt": "Por que a `ApiErrorHandler` sobrescreve `handleMethodArgumentNotValid` em vez de declarar `@ExceptionHandler(MethodArgumentNotValidException.class)`?",
+    "hint": "O desvio da seção tentou o segundo jeito.",
+    "choices": [
+      {
+        "text": "Dois handlers para uma exceção impedem a subida",
+        "why": "Certo. O Spring achou dois handlers para uma exceção na mesma classe e falhou com \"Ambiguous @ExceptionHandler method mapped\". Sobrescrever muda a resposta do handler herdado em vez disso."
+      },
+      {
+        "text": "Um método `@ExceptionHandler` não pode devolver uma `ProblemDetail`",
+        "why": "`notFound` e `duplicate` são métodos `@ExceptionHandler` e devolvem exatamente isso."
+      },
+      {
+        "text": "A sobrescrita roda antes da validação, então consegue consertar os campos",
+        "why": "Ela roda depois que a validação falhou, com as falhas em mãos. Nada aqui conserta uma requisição."
+      },
+      {
+        "text": "Uma sobrescrita custa menos que procurar um handler a cada requisição",
+        "why": "Os dois são encontrados uma vez, na subida. O motivo é a ambiguidade, não velocidade."
+      }
+    ]
+  },
+  "ex-gyy02txe": {
+    "prompt": "A livraria recebe `{\"isbn\": \"9786500000016\", \"title\": \"Emma\", \"priceCents\": -5}`. Quantas entradas tem o mapa `errors` do 400 dela?",
+    "hint": "Confira cada campo do `BookRequest` contra as restrições dele. O dígito verificador do ISBN é válido, e a validação roda antes de o serviço olhar o catálogo."
+  },
+  "ex-dvk0qb0n": {
+    "prompt": "Por que o mapa de erros é um `TreeMap`?",
+    "hint": "O que a aula disse sobre a ordem em que a Bean Validation informa?",
+    "choices": [
+      {
+        "text": "O Jackson não consegue escrever um `HashMap` como JSON",
+        "why": "O Jackson escreve qualquer `Map`. A escolha é sobre ordem, não sobre conseguir escrever."
+      },
+      {
+        "text": "Para um campo poder guardar duas mensagens",
+        "why": "Um `TreeMap` guarda um valor por chave como qualquer outro mapa. Um campo que viola duas restrições continua mostrando uma mensagem."
+      },
+      {
+        "text": "Para a ordem ser sempre a mesma",
+        "why": "Certo. A Bean Validation informa as violações sem ordem definida; um mapa ordenado faz duas requisições iguais darem dois corpos iguais."
+      },
+      {
+        "text": "A Bean Validation já devolve as violações em ordem",
+        "why": "Ela as devolve sem ordem definida, e é por isso que elas são ordenadas aqui."
+      }
+    ]
+  },
+  "ex-9n7zer25": {
+    "prompt": "O livro ruim da aula 6 é enviado de novo com `Accept-Language: pt-BR`. Qual mensagem em `errors` continua em inglês?",
+    "hint": "Qual restrição declara a mensagem como frase pronta, e não como chave?",
+    "choices": [
+      {
+        "text": "`must not be blank`, do título",
+        "why": "A `@NotBlank` é uma restrição padrão cuja mensagem é uma chave, então o Hibernate Validator a procurou em português."
+      },
+      {
+        "text": "`must be a valid ISBN-13`, do ISBN",
+        "why": "Certo. A `@ValidIsbn` declara `message() default \"must be a valid ISBN-13\"`, uma frase pronta, então não há nada para procurar em outro idioma."
+      },
+      {
+        "text": "`must be greater than or equal to 0`, do preço",
+        "why": "A `@PositiveOrZero` também é uma restrição padrão, e a mensagem dela voltou em português."
+      },
+      {
+        "text": "Todas: a Bean Validation responde em inglês em todo lugar",
+        "why": "O Spring passa ao Hibernate Validator o idioma da requisição, e três das quatro mensagens voltaram em português."
+      }
+    ]
+  },
+  "ex-jz9mvq9b": {
+    "prompt": "Um título de 201 espaços viola `@NotBlank` e `@Size(max = 200)` ao mesmo tempo. O que `errors.title` guarda?",
+    "hint": "O mapa é `Map<String, String>`, e o `put` substitui.",
+    "choices": [
+      {
+        "text": "A mensagem da `@NotBlank`, porque ela vem primeiro no `BookRequest`",
+        "why": "A ordem das anotações no código não decide nada aqui; as violações chegam sem ordem definida."
+      },
+      {
+        "text": "As duas mensagens, numa lista",
+        "why": "Isso exigiria `Map<String, List<String>>`. Com uma `String` por chave, o segundo `put` substitui o primeiro."
+      },
+      {
+        "text": "As duas mensagens juntas numa string",
+        "why": "Nada as junta. O `errors.put` substitui o que o campo já tinha."
+      },
+      {
+        "text": "Uma das duas, e qual delas não está definido",
+        "why": "Certo. As duas violações são informadas, o mapa guarda a última passada ao `put`, e a ordem em que chegam não é definida."
+      }
+    ]
+  },
+  "ex-qy3pc3q6": {
+    "prompt": "Sem handler para ela, a falha que substitui o banco chegou à página de erro do Spring Boot. O que havia no corpo que o cliente recebeu?",
+    "hint": "Quem decide são os padrões do Spring Boot, e a livraria não mexe neles.",
+    "choices": [
+      {
+        "text": "A mensagem da exceção, com a máquina e o usuário do banco",
+        "why": "Só com `spring.web.error.include-message=always`, que a aula ligou para mostrar o que o padrão deixa de fora."
+      },
+      {
+        "text": "O stack trace",
+        "why": "Só com `spring.web.error.include-stacktrace=always`. Por padrão o trace vai para o log e para mais lugar nenhum."
+      },
+      {
+        "text": "Um timestamp, o status, a frase dele e o caminho",
+        "why": "Certo: `timestamp`, `status`, `error` e `path`. A mensagem e o trace foram para o segundo terminal."
+      },
+      {
+        "text": "Nada: um 500 é enviado com corpo vazio",
+        "why": "A página de erro do Boot escreve um corpo JSON pequeno, no mesmo formato que os erros da aula 6 tinham."
+      }
+    ]
+  },
+  "ex-d9qymk6m": {
+    "prompt": "O pega-tudo feito às pressas respondia a toda `Exception` com `e.getMessage()` como detail. O que deu errado? Marque todas as que se aplicam.",
+    "hint": "Olhe a resposta, e depois o segundo terminal.",
+    "choices": [
+      {
+        "text": "A máquina, a porta e o usuário do banco chegaram ao cliente",
+        "why": "Certo. A mensagem da exceção foi escrita para quem lê o log, e o handler a mandou para um estranho."
+      },
+      {
+        "text": "`GET /nope` passou a responder 500",
+        "why": "Continuou respondendo 404. O Spring escolhe o handler cujo tipo de exceção é o mais próximo do lançado, e a `NoResourceFoundException` tem o seu."
+      },
+      {
+        "text": "Nada foi registrado, então ninguém que opera o servidor soube da falha",
+        "why": "Certo. A exceção contou como tratada, então nada chegou ao log, e a única pessoa que podia consertar o banco foi a única que não ficou sabendo."
+      },
+      {
+        "text": "O status virou 200, porque a exceção foi tratada",
+        "why": "O handler montou o problema com `HttpStatus.INTERNAL_SERVER_ERROR`, e esse foi o status que a resposta levou."
+      }
+    ]
+  },
+  "ex-mp7vtpdf": {
+    "prompt": "Por que a livraria não tem handler nenhum para `Exception`, nem mesmo um que registre tudo e não nomeie nada?",
+    "hint": "Pense em exceções que a livraria não escreveu, lançadas por partes do Spring que chegam em aulas seguintes.",
+    "choices": [
+      {
+        "text": "O Spring se recusa a subir com um handler para `Exception`",
+        "why": "Subiu sem reclamar no desvio. Só dois handlers para o mesmo tipo são recusados."
+      },
+      {
+        "text": "Um handler para `Exception` transformaria todo 404 de livro inexistente em 500",
+        "why": "O handler do tipo mais próximo vence, então a `BookNotFoundException` continua chegando ao `notFound`."
+      },
+      {
+        "text": "A RFC não permite um documento de problema com status 500",
+        "why": "Um documento de problema pode levar qualquer status. A objeção é sobre o que um pega-tudo pega, não sobre o formato."
+      },
+      {
+        "text": "Ele pegaria exceções que o Spring Security espera tratar, e responderia 500",
+        "why": "Certo. O Spring Security transforma suas recusas em 401 ou 403 mais adiante, depois do controller; um pega-tudo no advice chega antes. A página de erro do Boot já registra tudo e não diz nada."
+      }
+    ]
+  },
+  "ex-p03fvs06": {
+    "prompt": "Ponha em ordem os passos de `GET /books/99` na livraria pronta.",
+    "hint": "A exceção vai num sentido, e a resposta volta no outro.",
+    "items": [
+      "`BookService.get` lança `BookNotFoundException`",
+      "A exceção volta passando por `BookController.get`",
+      "O `DispatcherServlet` acha o `@ExceptionHandler` que a nomeia",
+      "`ApiErrorHandler.notFound` devolve uma `ProblemDetail`",
+      "O cliente recebe 404 como `application/problem+json`"
+    ],
+    "trap": "O controller não captura nada: a exceção passa por ele a caminho do DispatcherServlet."
+  },
+  "ex-zwff5nbt": {
+    "prompt": "Uma regra nova: um livro não pode sair do catálogo enquanto houver um pedido aberto para ele. Seguindo o desenho desta aula, como a recusa é construída?",
+    "hint": "Onde mora uma regra, e onde mora o HTTP?",
+    "choices": [
+      {
+        "text": "Uma exceção nova lançada pelo serviço, ligada a 409 na `ApiErrorHandler`",
+        "why": "Certo. A regra é da loja, então o serviço a enuncia, e um handler dá a ela um status e um `type` que o cliente pode comparar."
+      },
+      {
+        "text": "O controller procura pedidos abertos e devolve `ResponseEntity.status(409)`",
+        "why": "Isso põe a regra na camada web, onde uma importação ou um teste chamando o serviço nunca a encontraria."
+      },
+      {
+        "text": "O serviço lança uma `IllegalStateException`, e a página de erro do Boot responde",
+        "why": "Seria um 500 que não diz nada, para uma recusa que foi planejada. Um cliente não conseguiria distingui-la de uma pane."
+      },
+      {
+        "text": "O serviço devolve uma `ProblemDetail`, e o controller a repassa",
+        "why": "Aí o serviço fala HTTP, que é o acoplamento que a primeira seção da aula removeu."
+      }
+    ]
+  },
+  "ex-jm1p74p8": {
+    "prompt": "Um colega acrescenta `@ExceptionHandler(RuntimeException.class)` à `ApiErrorHandler`, respondendo um problema 500 fixo. O que `GET /books/99` responde agora?",
+    "hint": "A `BookNotFoundException` é uma `RuntimeException`, e também tem um handler próprio.",
+    "choices": [
+      {
+        "text": "500, porque o handler mais amplo pega tudo abaixo dele",
+        "why": "O Spring não escolhe o handler mais amplo. Escolhe aquele cujo tipo é o mais próximo da exceção lançada."
+      },
+      {
+        "text": "A aplicação não sobe, como com dois handlers para uma exceção",
+        "why": "Só dois handlers para o mesmo tipo são ambíguos. `RuntimeException` e `BookNotFoundException` são tipos diferentes."
+      },
+      {
+        "text": "404 da página de erro do Spring Boot",
+        "why": "A página de erro do Boot só responde ao que nenhum handler reclamou, e dois handlers reclamam este."
+      },
+      {
+        "text": "404 do `notFound`: o tipo mais próximo vence",
+        "why": "Certo, assim como `/nope` manteve o 404 sob o pega-tudo para `Exception`. O handler novo só recebe o que nada mais específico reclama."
+      }
+    ]
+  }
+}

@@ -1,0 +1,548 @@
+[
+  {
+    "id": "ex-9dtan2v1",
+    "version": 1,
+    "section": "what-jpa-costs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Whatever persistence library a Java application uses, what does the PostgreSQL driver finally send the statement as?",
+    "hint": "Lesson 9 called it the foundation everything else sits on.",
+    "choices": [
+      {
+        "text": "JPQL, which the driver translates into PostgreSQL's own dialect",
+        "correct": false,
+        "why": "The driver knows no JPQL. Hibernate translates JPQL into SQL before anything reaches JDBC, so the driver only ever sees SQL."
+      },
+      {
+        "text": "A JDBC `PreparedStatement`, with its parameters bound",
+        "correct": true,
+        "why": "Right. JdbcClient, JDBI, MyBatis, jOOQ, EBean and Hibernate all end in the same JDBC calls, and PostgreSQL never learns which library built the statement."
+      },
+      {
+        "text": "jOOQ's query objects, serialised for the server",
+        "correct": false,
+        "why": "jOOQ renders its query objects into SQL text and hands that text to JDBC. The builder is a way of writing SQL, not a different protocol."
+      },
+      {
+        "text": "It depends on the library: JDBI and MyBatis bypass JDBC to talk to the server",
+        "correct": false,
+        "why": "Both are layers over JDBC. A thin library is thin because it adds little on top of JDBC, not because it replaces it."
+      }
+    ]
+  },
+  {
+    "id": "ex-erhkm2dn",
+    "version": 1,
+    "section": "what-jpa-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team likes the repository interfaces of Spring Data JPA but keeps losing afternoons to `LazyInitializationException`. What would Spring Data JDBC change for them?",
+    "hint": "It keeps one half of lesson 11 and drops the part that throws.",
+    "choices": [
+      {
+        "text": "It keeps Hibernate and turns lazy loading off for the whole application",
+        "correct": false,
+        "why": "Spring Data JDBC does not run on Hibernate at all. It is a separate module that goes straight to JDBC."
+      },
+      {
+        "text": "It replaces the repositories with SQL strings passed to `JdbcClient`",
+        "correct": false,
+        "why": "That is lesson 9's approach. Spring Data JDBC keeps the repository interfaces, derived queries and `@Query` included."
+      },
+      {
+        "text": "It keeps lazy loading but opens a fresh session whenever an association is touched late",
+        "correct": false,
+        "why": "That is closer to how EBean behaves. Spring Data JDBC has no lazy loading to keep: what belongs to an object is loaded with it."
+      },
+      {
+        "text": "The interfaces stay; there is no persistence context, and an object is loaded whole",
+        "correct": true,
+        "why": "Right. With nothing loaded later, there is no session to outlive, and the exception has no way to happen."
+      }
+    ]
+  },
+  {
+    "id": "ex-91nptmx1",
+    "version": 1,
+    "section": "what-jpa-costs",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are part of the price JPA charges for what it gives? Choose all that apply.",
+    "hint": "The right-hand column of the first section's table, and lessons 10 and 11.",
+    "choices": [
+      {
+        "text": "One extra `select` per book when each book's author loads lazily",
+        "correct": true,
+        "why": "Right. That is the N+1 of lesson 10, the cost of lazy associations behind proxies."
+      },
+      {
+        "text": "A `LazyInitializationException` when an entity is used after its session closed",
+        "correct": true,
+        "why": "Right. The persistence context has a lifetime, and an entity read after it ended has nobody to load its associations."
+      },
+      {
+        "text": "Values concatenated into the SQL text, which leaves the application open to injection",
+        "correct": false,
+        "why": "JPA binds parameters, in JPQL and in derived queries alike. Injection comes from code that builds SQL by joining strings, whatever library it uses."
+      },
+      {
+        "text": "A window function or `ON CONFLICT` written as a native query",
+        "correct": true,
+        "why": "Right. JPQL is portable across databases, so what only PostgreSQL has goes through native queries."
+      },
+      {
+        "text": "SQL that cannot be seen at all, because Hibernate never logs it",
+        "correct": false,
+        "why": "Lesson 10 logged every statement with the `sql` profile. The cost is that you read the SQL after it ran, not that you cannot read it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1b4tr65q",
+    "version": 1,
+    "section": "ebean",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does EBean keep track of which properties of an entity have changed?",
+    "hint": "There is no `EntityManager` in EBean.",
+    "choices": [
+      {
+        "text": "In a persistence context, the way Hibernate does",
+        "correct": false,
+        "why": "That is the part of Hibernate EBean leaves out. With no context, the knowledge has to live somewhere else."
+      },
+      {
+        "text": "In the entity itself, through enhancement",
+        "correct": true,
+        "why": "Right. The enhanced class records which properties were loaded and which changed, so the object carries its own state."
+      },
+      {
+        "text": "Nowhere: with no session, every save writes every column",
+        "correct": false,
+        "why": "It is Hibernate that writes every column by default. EBean's `UPDATE` names only the changed columns, which needs exactly the tracking this option denies."
+      },
+      {
+        "text": "In the generated query bean, `QBook`",
+        "correct": false,
+        "why": "Query beans build queries. They hold no entity's state; the `Book` objects a query returns do."
+      }
+    ]
+  },
+  {
+    "id": "ex-wbtvctb5",
+    "version": 1,
+    "section": "ebean",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With EBean, code reads `book.getAuthor().getName()` after the transaction that loaded the book has ended, and nothing has touched that association before. What happens?",
+    "hint": "Compare with the last thing lesson 10 captured.",
+    "choices": [
+      {
+        "text": "A `LazyInitializationException`, as lesson 10's bookshop threw",
+        "correct": false,
+        "why": "That exception belongs to a closed persistence context, and EBean has none to close."
+      },
+      {
+        "text": "`getAuthor()` returns null, because nothing loads it any more",
+        "correct": false,
+        "why": "Returning null would make a missing author and an unloaded one look the same. EBean loads it instead."
+      },
+      {
+        "text": "A statement of its own fetches it there and then",
+        "correct": true,
+        "why": "Right. Lazy loading works outside the transaction, at the price of one more query, which is why the N+1 is still possible."
+      },
+      {
+        "text": "The build fails, because query beans refuse to compile a lazy path",
+        "correct": false,
+        "why": "Query beans check property names in queries. Navigating an association on an entity is ordinary Java, and the compiler has nothing to object to."
+      }
+    ]
+  },
+  {
+    "id": "ex-160a10ka",
+    "version": 1,
+    "section": "ebean",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An EBean project passes `mvn test`. Started from the IDE, the same test fails at start-up, complaining that an entity class is not enhanced. What is missing from the IDE run?",
+    "hint": "Which build step rewrites the compiled classes?",
+    "choices": [
+      {
+        "text": "Enhancement: the IDE ran the classes as javac left them",
+        "correct": true,
+        "why": "Right. Maven's plugin rewrote the classes and the IDE did not. Every way of running the code needs enhanced classes, which is why EBean publishes an IDE plugin and why the section calls this the price."
+      },
+      {
+        "text": "The query beans, which the annotation processor did not generate",
+        "correct": false,
+        "why": "A missing `QBook` would stop the code compiling, in Maven as much as in the IDE. This test compiled and then failed."
+      },
+      {
+        "text": "An `EntityManager`, which EBean needs whenever it runs outside Maven",
+        "correct": false,
+        "why": "EBean has no `EntityManager` anywhere. The difference between the two runs is in the classes, not in an object."
+      },
+      {
+        "text": "Spring Boot's auto-configuration for EBean, which only Maven switches on",
+        "correct": false,
+        "why": "Spring Boot has no auto-configuration for EBean at all, in Maven or anywhere else."
+      }
+    ]
+  },
+  {
+    "id": "ex-08hxqdkv",
+    "version": 1,
+    "section": "jooq-and-mybatis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A migration renames `book.price_cents` to `book.price`, and the team regenerates jOOQ's classes. When does a query that still says `BOOK.PRICE_CENTS` fail?",
+    "hint": "Where does `BOOK.PRICE_CENTS` come from in the first place?",
+    "choices": [
+      {
+        "text": "At compile time: that field is gone",
+        "correct": true,
+        "why": "Right. The regenerated `BOOK` has a `PRICE` field and no `PRICE_CENTS`, so javac stops the build."
+      },
+      {
+        "text": "When the application starts and validates its queries",
+        "correct": false,
+        "why": "That is when Spring Data JPA checks a JPQL `@Query`. jOOQ's check comes earlier, because the field is Java."
+      },
+      {
+        "text": "When the query first runs and PostgreSQL rejects the column",
+        "correct": false,
+        "why": "That is the fate of a SQL string, as in JDBI or MyBatis. Here the build fails before a query can run."
+      },
+      {
+        "text": "Never: jOOQ keeps the old name and renders it as before",
+        "correct": false,
+        "why": "The classes are regenerated from the schema as it now is. The old name only survives in the code that still uses it, and that code no longer compiles."
+      }
+    ]
+  },
+  {
+    "id": "ex-4fe75jps",
+    "version": 1,
+    "section": "jooq-and-mybatis",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The Spring Boot starter that gives an application a ready `DSLContext` bean is `spring-boot-starter-___`.",
+    "hint": "It is named after the library that generates a class per table.",
+    "blanks": [
+      {
+        "accept": [
+          "jooq"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wvmxf45b",
+    "version": 1,
+    "section": "jooq-and-mybatis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The MyBatis `search` statement of the section is called with `title` null and `maxPrice` 3000. What condition does MyBatis send?",
+    "hint": "Which `<if>` survives, and what does `<where>` do with what is left?",
+    "choices": [
+      {
+        "text": "`WHERE AND price_cents <= ?`, which PostgreSQL rejects",
+        "correct": false,
+        "why": "`<where>` exists to prevent exactly this: it drops the `AND` in front of the first surviving condition."
+      },
+      {
+        "text": "`WHERE price_cents <= 3000`, with the number written into the text",
+        "correct": false,
+        "why": "`#{maxPrice}` is a bound parameter, so the value travels apart from the SQL text. Writing it in would be the string-joining the section warns about."
+      },
+      {
+        "text": "Both conditions, with `title` bound to null",
+        "correct": false,
+        "why": "An `<if>` whose test is false leaves its text out of the statement entirely. That is what makes the SQL dynamic."
+      },
+      {
+        "text": "`WHERE price_cents <= ?`, with 3000 bound to the parameter",
+        "correct": true,
+        "why": "Right. The first `<if>` is false and leaves nothing; `<where>` writes `WHERE` and drops the now-leading `AND`."
+      }
+    ]
+  },
+  {
+    "id": "ex-2p841jth",
+    "version": 1,
+    "section": "jooq-and-mybatis",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "For which of these databases does a team need a paid edition of jOOQ?",
+    "hint": "The costs paragraph on jOOQ names two things it depends on.",
+    "choices": [
+      {
+        "text": "PostgreSQL, once the application earns money",
+        "correct": false,
+        "why": "The edition follows the database, not the business. PostgreSQL is covered by the free, Apache-licensed edition whatever the application does."
+      },
+      {
+        "text": "MySQL",
+        "correct": false,
+        "why": "MySQL is an open-source database, which the open-source edition covers."
+      },
+      {
+        "text": "Oracle",
+        "correct": true,
+        "why": "Right. Oracle, SQL Server and the other commercial databases need one of jOOQ's paid editions."
+      },
+      {
+        "text": "Any database, as soon as the code generator is used",
+        "correct": false,
+        "why": "The code generator is part of every edition, the free one included. It is how jOOQ is meant to be used."
+      }
+    ]
+  },
+  {
+    "id": "ex-8b7s8gvk",
+    "version": 1,
+    "section": "jdbi",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does JDBI do for you that plain JDBC leaves to your code?",
+    "hint": "Count what `Titles.java` did not have to write.",
+    "choices": [
+      {
+        "text": "It tracks the objects it returned and writes their changes back",
+        "correct": false,
+        "why": "That is a persistence context, which JDBI does not have. It remembers nothing between one call and the next."
+      },
+      {
+        "text": "It reads the SQL at compile time and reports misspelt columns",
+        "correct": false,
+        "why": "The SQL is a string, and nothing reads it before PostgreSQL does. The detour in the section showed when that was."
+      },
+      {
+        "text": "It generates a class per table",
+        "correct": false,
+        "why": "That is jOOQ's code generator. JDBI works from the SQL you hand it and needs no build step."
+      },
+      {
+        "text": "It manages connections, binds named parameters, maps rows",
+        "correct": true,
+        "why": "Right. That is the whole of the core library: JDBC with the ceremony taken out."
+      }
+    ]
+  },
+  {
+    "id": "ex-n3xj9ajc",
+    "version": 1,
+    "section": "jdbi",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens during the `jdbi.withHandle(...)` call in `Titles.java`.",
+    "hint": "A handle wraps a connection, and it is closed when the lambda returns.",
+    "items": [
+      "JDBI takes a connection from the driver and wraps it in a handle",
+      "The statement is prepared with `Machado de Assis` bound to `:name`",
+      "PostgreSQL runs the statement and returns two rows",
+      "`ConstructorMapper` builds one `TitleAndPrice` from each row",
+      "The handle is closed, and its connection with it"
+    ],
+    "trap": "The rows are mapped while the handle is still open: once it closes, the result set it was reading is gone."
+  },
+  {
+    "id": "ex-6txm1b8t",
+    "version": 1,
+    "section": "jdbi",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the section's detour, `b.price_cents` became `b.price` in the query string. Which part of the system reported it?",
+    "hint": "Read the transcript: which command printed the error, and whose words are in it?",
+    "choices": [
+      {
+        "text": "javac, during `mvn -q compile`, before the program started",
+        "correct": false,
+        "why": "The compile step printed nothing. To javac the SQL is a string literal like any other, and any string compiles."
+      },
+      {
+        "text": "PostgreSQL, at run time, back through the driver",
+        "correct": true,
+        "why": "Right. A SQL string is checked by the only thing that reads it, the database, and only when it runs."
+      },
+      {
+        "text": "JDBI, which checked the column names before sending the statement",
+        "correct": false,
+        "why": "JDBI does not know the schema. It sent the statement as written, and the message it raised wraps PostgreSQL's."
+      },
+      {
+        "text": "Nobody: the program printed `priceCents=0` for both books",
+        "correct": false,
+        "why": "A column that does not exist is an error in PostgreSQL, not a null. The run stopped with an exception rather than printing wrong numbers."
+      }
+    ]
+  },
+  {
+    "id": "ex-efrn5t61",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each library to what sets it apart.",
+    "hint": "Who writes the SQL, and what does the library remember?",
+    "pairs": [
+      {
+        "left": "jOOQ",
+        "right": "Java classes generated from the schema"
+      },
+      {
+        "left": "MyBatis",
+        "right": "statements in an annotation or an XML mapper"
+      },
+      {
+        "left": "EBean",
+        "right": "entities enhanced at build time, with no EntityManager"
+      },
+      {
+        "left": "JDBI",
+        "right": "a fluent layer over JDBC that needs no Spring"
+      },
+      {
+        "left": "Spring Data JDBC",
+        "right": "repository interfaces without a persistence context"
+      }
+    ],
+    "right_distractors": [
+      "a persistence context that tracks every loaded entity"
+    ]
+  },
+  {
+    "id": "ex-5rsx5ver",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A reporting service runs forty hand-tuned PostgreSQL queries full of window functions, and the team wants a misspelt column to break the build rather than a report at night. Which library fits best?",
+    "hint": "Two demands: the database's full dialect, and a check before anything runs.",
+    "choices": [
+      {
+        "text": "MyBatis, with each query in an XML mapper",
+        "correct": false,
+        "why": "MyBatis would hold the hand-written SQL well, but it is still text: a misspelt column waits for the night run."
+      },
+      {
+        "text": "jOOQ, with classes generated from the reporting schema",
+        "correct": true,
+        "why": "Right. The queries stay SQL, window functions included, and a column that does not exist is a field that does not exist, so javac refuses it."
+      },
+      {
+        "text": "EBean, whose query beans are checked by the compiler",
+        "correct": false,
+        "why": "Query beans do catch misspelt properties, but EBean is an ORM that writes SQL from entities. Forty hand-tuned window queries are the SQL the team wants to write itself."
+      },
+      {
+        "text": "Spring Data JPA, with each report written as a native `@Query`",
+        "correct": false,
+        "why": "Spring Data validates JPQL when the application starts, but a native query is plain SQL that it passes through unchecked, so the typo still waits for the night."
+      }
+    ]
+  },
+  {
+    "id": "ex-hh9g4qty",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In which of these is a misspelt column or property name caught by the compiler? Choose all that apply.",
+    "hint": "Three moments appear across the lesson: compile, start-up and the first run.",
+    "choices": [
+      {
+        "text": "A jOOQ query, on regenerated classes",
+        "correct": true,
+        "why": "Right. Each column is a field of a generated class, and a field that does not exist does not compile."
+      },
+      {
+        "text": "A JPQL string in Spring Data's `@Query`",
+        "correct": false,
+        "why": "Spring Data checks it when the application starts, which is early, but it is not the compiler: the build still succeeds."
+      },
+      {
+        "text": "An EBean query bean, `new QBook().titel.eq(...)`",
+        "correct": true,
+        "why": "Right. `QBook` is generated with one field per property, and it has no field called `titel`."
+      },
+      {
+        "text": "The SQL text inside a JDBI `createQuery(...)` call",
+        "correct": false,
+        "why": "It is a string. The section's detour compiled cleanly and failed when PostgreSQL ran it."
+      },
+      {
+        "text": "The `<select>` statement in a MyBatis XML mapper file",
+        "correct": false,
+        "why": "XML is not compiled at all, and the statement inside it is checked by the database when it runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-gssh8y33",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The same misspelt column is written three ways. Order them by when the mistake is reported, earliest first.",
+    "hint": "Which of the three is read by javac, which by Spring, and which only by PostgreSQL?",
+    "items": [
+      "a field of jOOQ's generated `BOOK` class",
+      "a JPQL query in Spring Data's `@Query`",
+      "a SQL string in a JDBI `createQuery`"
+    ],
+    "trap": "Spring Data's check at start-up comes before any request, which makes it feel like the compiler; it still needs the application to run."
+  },
+  {
+    "id": "ex-402nszrx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The bookshop stays on Spring Data JPA, and it now needs one sales report built on a window function. What does the lesson suggest?",
+    "hint": "Look at the last paragraph of the JDBI section.",
+    "choices": [
+      {
+        "text": "Write that one query with `JdbcClient` or jOOQ, next to the repositories",
+        "correct": true,
+        "why": "Right. They use the same `DataSource` and join the same transactions, so the report gets its SQL and the rest of the bookshop keeps JPA."
+      },
+      {
+        "text": "Move the whole application to MyBatis, since JPA cannot share a database with another library",
+        "correct": false,
+        "why": "They share it routinely. Every library here ends in the same JDBC calls, over the same `DataSource`."
+      },
+      {
+        "text": "Write the report in JPQL, which covers PostgreSQL's window functions",
+        "correct": false,
+        "why": "JPQL is the portable part of JPA. What only PostgreSQL has is what JPA sends you to native queries for."
+      },
+      {
+        "text": "Switch to EBean, whose query beans can express window functions",
+        "correct": false,
+        "why": "Changing ORM for one report trades a known cost for an unknown one, and EBean writes SQL from entities just as Hibernate does."
+      }
+    ]
+  }
+]

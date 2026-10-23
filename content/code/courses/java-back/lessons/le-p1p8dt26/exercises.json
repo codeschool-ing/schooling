@@ -1,0 +1,708 @@
+[
+  {
+    "id": "ex-xc8cdbar",
+    "version": 1,
+    "section": "endpoints",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the bookshop put the Actuator endpoints on `127.0.0.1:8081` instead of leaving them on the API's port?",
+    "hint": "Think about who can open a connection to a loopback address.",
+    "choices": [
+      {
+        "text": "Actuator cannot share a port with the controllers, so it always needs a second one of its own",
+        "correct": false,
+        "why": "It can: without `management.server.port`, the endpoints live on the API's own port. The second port is a choice made for safety."
+      },
+      {
+        "text": "Only the machine itself reaches a loopback address, so no password is needed",
+        "correct": true,
+        "why": "Right. Loopback is reachable from the machine and from nowhere else, so the network does the job a password would."
+      },
+      {
+        "text": "A second port makes the endpoints faster, since they skip the API's queue",
+        "correct": false,
+        "why": "Both servers run in the same JVM and share its CPU and memory. Nothing about speed decided this."
+      },
+      {
+        "text": "Port 8080 only accepts requests that carry a bearer token",
+        "correct": false,
+        "why": "8080 accepts anonymous `GET /books`. The token rules are per path, and they would have covered the endpoints too, which is why `SecurityConfig` gained a line."
+      }
+    ]
+  },
+  {
+    "id": "ex-6fnvw5qe",
+    "version": 1,
+    "section": "endpoints",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An anonymous `curl localhost:8080/actuator/health` answers `401`. What does that say about Actuator on port 8080?",
+    "hint": "Repeat the request with ana's token and compare.",
+    "choices": [
+      {
+        "text": "Nothing: the token check answers first; with a token the answer is 404",
+        "correct": true,
+        "why": "Right. The API's filter chain asks for a token before any handler is looked up, so every unknown path on 8080 answers 401 to an anonymous client, and the 401 hides the fact that there is no endpoint there at all."
+      },
+      {
+        "text": "The endpoint is there and protected, so a token would show the health report",
+        "correct": false,
+        "why": "With ana's token the same request answered 404. The endpoints live only on 8081."
+      },
+      {
+        "text": "The management server rejected the request because it came to the wrong port",
+        "correct": false,
+        "why": "The management server never saw it: it listens on 8081, and this request went to 8080, where Spring Security answered."
+      },
+      {
+        "text": "Port 8080 has the endpoints too, with `show-details` hiding everything",
+        "correct": false,
+        "why": "`show-details` decides how much of the health report is shown, not whether an endpoint exists. 8080 has no Actuator."
+      }
+    ]
+  },
+  {
+    "id": "ex-t0wc78b2",
+    "version": 1,
+    "section": "endpoints",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The bookshop sets `management.endpoints.web.exposure.include=health,info,metrics,prometheus`. Which of these have no URL at all? Choose all that apply.",
+    "hint": "An endpoint missing from the list does not exist over HTTP, whatever port you try.",
+    "choices": [
+      {
+        "text": "`env`, which lists every property and where it came from",
+        "correct": true,
+        "why": "Right. It is not in the list, so on 8081 the request fell to `anyRequest().authenticated()` and answered 401."
+      },
+      {
+        "text": "`heapdump`, a copy of the process's memory",
+        "correct": true,
+        "why": "Right, and it is the one that matters most: the JWT secret and the database password sit in that memory in plain text."
+      },
+      {
+        "text": "`prometheus`, the numbers in the text format",
+        "correct": false,
+        "why": "It is in the list, and it is what a monitoring server scrapes."
+      },
+      {
+        "text": "`health/readiness`, one of the groups",
+        "correct": false,
+        "why": "The groups are paths under `health`, which is exposed. `probes.enabled` added them."
+      },
+      {
+        "text": "`beans`, every bean in the context",
+        "correct": true,
+        "why": "Right. Off, like every endpoint the list does not name."
+      }
+    ]
+  },
+  {
+    "id": "ex-9sm5s468",
+    "version": 1,
+    "section": "endpoints",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Lesson 4's `dev` profile set `server.port=8081`, the same number as `management.server.port`, while `management.server.address=127.0.0.1` was also set. What did the bookshop do?",
+    "hint": "With equal ports there is only one server.",
+    "choices": [
+      {
+        "text": "It moved the management server to the next free port and started normally",
+        "correct": false,
+        "why": "Boot does not pick ports on its own here. The endpoints would join the API's server instead, and that is what the address forbids."
+      },
+      {
+        "text": "It refused to start: the two settings contradict each other",
+        "correct": true,
+        "why": "Right: \"Management-specific server address cannot be configured as the management server is not listening on a separate port\". A contradiction stops the application instead of being resolved silently."
+      },
+      {
+        "text": "It served the endpoints beside the API on 8081, on every address",
+        "correct": false,
+        "why": "That is what equal ports mean without the address line. With it, Boot refused rather than quietly expose the endpoints to the network."
+      },
+      {
+        "text": "It started, and the second Tomcat failed with \"port already in use\"",
+        "correct": false,
+        "why": "No second Tomcat is created when the ports are equal; the failure came earlier, from the configuration."
+      }
+    ]
+  },
+  {
+    "id": "ex-h84h8v0h",
+    "version": 1,
+    "section": "endpoints",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The property that makes the management server listen on loopback only is `management.server.___=127.0.0.1`.",
+    "blanks": [
+      {
+        "accept": [
+          "address"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jxrz8abd",
+    "version": 1,
+    "section": "endpoints",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does the `build.time` in `/actuator/info` come from?",
+    "hint": "The pom gained a plugin goal in this lesson.",
+    "choices": [
+      {
+        "text": "The moment the JVM started, recorded by Boot when the application came up",
+        "correct": false,
+        "why": "That is `process.start.time`, a metric. `build.time` does not change from one start to the next."
+      },
+      {
+        "text": "The modification time of the jar file on disk",
+        "correct": false,
+        "why": "Copying the jar changes that time and not `build.time`. The value is read from a file inside the jar."
+      },
+      {
+        "text": "A file the `build-info` goal wrote into the jar during `mvn package`",
+        "correct": true,
+        "why": "Right: `META-INF/build-info.properties`, with the time in UTC. It answers \"which build is running?\" without reading a log."
+      },
+      {
+        "text": "The last commit in the git repository",
+        "correct": false,
+        "why": "Nothing in the bookshop reads git. A separate plugin can add commit details, and the lesson did not use one."
+      }
+    ]
+  },
+  {
+    "id": "ex-9prvgr1y",
+    "version": 1,
+    "section": "health",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each health indicator with what it checks.",
+    "hint": "Each one arrived with a dependency or with the probes setting.",
+    "pairs": [
+      {
+        "left": "db",
+        "right": "borrows a pooled connection and asks whether it is still valid"
+      },
+      {
+        "left": "diskSpace",
+        "right": "free space under the working directory, against a threshold"
+      },
+      {
+        "left": "ping",
+        "right": "nothing: it is UP whenever anything answers"
+      },
+      {
+        "left": "readinessState",
+        "right": "whether the application has said it accepts traffic"
+      }
+    ],
+    "right_distractors": [
+      "whether the JWT secret is long enough"
+    ]
+  },
+  {
+    "id": "ex-xsxdctyy",
+    "version": 1,
+    "section": "health",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the database refusing the bookshop, `/actuator/health` answered 503 and `/actuator/health/liveness` answered 200. Why is the second answer the right one?",
+    "hint": "Ask what a platform does when liveness fails.",
+    "choices": [
+      {
+        "text": "Liveness is only computed once, at start-up, so it cannot have noticed",
+        "correct": false,
+        "why": "It is computed on every request, from the application's availability state. That state simply does not include the database."
+      },
+      {
+        "text": "A failed liveness gets the process restarted, and that cannot fix PostgreSQL",
+        "correct": true,
+        "why": "Right. Every copy would restart together, pay a full start-up, and come back to the same outage."
+      },
+      {
+        "text": "The database check was too slow, and liveness answers before it ever finishes",
+        "correct": false,
+        "why": "The full report came back in 16 milliseconds with `db` DOWN. Liveness never asks the database at all."
+      },
+      {
+        "text": "It is not the right answer; Boot leaves `db` out of liveness only until it is configured in",
+        "correct": false,
+        "why": "Leaving it out is the recommended design, not a gap. Adding it turns a database outage into a restart of every instance."
+      }
+    ]
+  },
+  {
+    "id": "ex-np7nwb8e",
+    "version": 1,
+    "section": "health",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happened while the bookshop started, with the availability logger at `debug`, in order.",
+    "hint": "Readiness is the last thing to change.",
+    "items": [
+      "Tomcat starts on port 8080",
+      "Tomcat starts on port 8081, for the endpoints",
+      "The start-up is logged as finished, and liveness becomes CORRECT",
+      "CatalogueReport runs, while readiness still answers 503",
+      "Readiness becomes ACCEPTING_TRAFFIC"
+    ],
+    "trap": "\"Started BookshopApplication\" is not the end: the runners come after it, and readiness waits for them."
+  },
+  {
+    "id": "ex-ed6rm6fb",
+    "version": 1,
+    "section": "health",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team keeps Actuator on the API's public port, behind login, and wants the details of `/actuator/health` for operators only. Which value of `management.endpoint.health.show-details` fits?",
+    "hint": "The bookshop chose `always`, for a reason that no longer holds here.",
+    "choices": [
+      {
+        "text": "`always`, since operators need the details",
+        "correct": false,
+        "why": "On a public port that shows the database product and the free disk to every stranger. The bookshop could afford it only because nobody else can reach 8081."
+      },
+      {
+        "text": "`never`, and operators read the logs instead",
+        "correct": false,
+        "why": "That keeps strangers out and operators too. The setting has a value made for this case."
+      },
+      {
+        "text": "`when-authorized`",
+        "correct": true,
+        "why": "Right: the details go to an authenticated caller, everybody else gets the status alone."
+      },
+      {
+        "text": "Any value, as long as the probes are enabled",
+        "correct": false,
+        "why": "The probes add the liveness and readiness groups; they do not decide who sees details."
+      }
+    ]
+  },
+  {
+    "id": "ex-12jw71jh",
+    "version": 1,
+    "section": "metrics",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which kind of meter is `hikaricp.connections.active`?",
+    "hint": "Its value can go down as well as up.",
+    "choices": [
+      {
+        "text": "A counter, since it counts connections",
+        "correct": false,
+        "why": "A counter only ever goes up. Connections in use rise and fall with the load."
+      },
+      {
+        "text": "A timer, since connections are held for a while",
+        "correct": false,
+        "why": "A timer records events and their durations; how long connections are held is `hikaricp.connections.usage`."
+      },
+      {
+        "text": "A gauge, a reading of this moment",
+        "correct": true,
+        "why": "Right: how many connections are busy now. Ask twice and it may answer two different numbers, in either direction."
+      },
+      {
+        "text": "One of the tags of `http.server.requests`",
+        "correct": false,
+        "why": "It is a meter of its own, with a `pool` tag. Tags belong to meters, never the reverse."
+      }
+    ]
+  },
+  {
+    "id": "ex-d303bdcs",
+    "version": 1,
+    "section": "metrics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the `uri` tag of `http.server.requests` hold `/books/{id}` rather than `/books/2`?",
+    "hint": "Count how many values the tag could take each way.",
+    "choices": [
+      {
+        "text": "Paths with ids would be personal data",
+        "correct": false,
+        "why": "A book's id identifies a book, not a person. The reason is the number of values, not privacy."
+      },
+      {
+        "text": "Prometheus cannot store a label whose value contains a digit, such as an id",
+        "correct": false,
+        "why": "Label values may contain any text. `status=\"404\"` is all digits."
+      },
+      {
+        "text": "Spring rewrites the path to make the JSON shorter",
+        "correct": false,
+        "why": "Nothing is rewritten to save space; the tag records the route that handled the request."
+      },
+      {
+        "text": "Each id would add a series, and the registry keeps every series in memory",
+        "correct": true,
+        "why": "Right. A new series for every book anybody ever asked for; the route template keeps the family to a handful, however many ids there are."
+      }
+    ]
+  },
+  {
+    "id": "ex-pht4edyp",
+    "version": 1,
+    "section": "metrics",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A freshly started bookshop receives `GET /books` twice, then `GET /books/1`, `GET /books/2` and `GET /books/99`, which answers 404. Every request is a `GET` and none raises an exception. How many series does `http.server.requests` hold for them?",
+    "hint": "A series is one combination of tag values. Look at `uri`, `status` and `outcome`.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "series"
+  },
+  {
+    "id": "ex-mc8jxkpz",
+    "version": 1,
+    "section": "counting-orders",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "ana orders book 99, which does not exist, and gets a 404. Which series of `bookshop.orders` moves?",
+    "hint": "Follow `place` until the exception, and see which increment it reaches.",
+    "choices": [
+      {
+        "text": "`outcome=\"out-of-stock\"`, since no copy could be taken",
+        "correct": false,
+        "why": "That increment sits after the book was found. `findByIdForUpdate` threw first, so the line was never reached."
+      },
+      {
+        "text": "Neither of them",
+        "correct": true,
+        "why": "Right, and it was a decision: an unknown book is a client's mistake, not a sale lost. Counting it would be a third value of the same tag."
+      },
+      {
+        "text": "`outcome=\"placed\"`, since the request reached the service",
+        "correct": false,
+        "why": "`placed` moves after `orders.save`, and the exception left the method long before that."
+      },
+      {
+        "text": "Both, and the transaction's rollback then undoes them",
+        "correct": false,
+        "why": "No increment ran. And a rollback would not undo one: counters are not part of the transaction."
+      }
+    ]
+  },
+  {
+    "id": "ex-5bwp3bz6",
+    "version": 1,
+    "section": "counting-orders",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `place`, `refused.increment()` runs, then `book.take` throws `OutOfStockException` and the transaction rolls back. What does the counter say afterwards?",
+    "hint": "Ask what the rollback actually undoes.",
+    "choices": [
+      {
+        "text": "One refusal, because a rollback undoes database writes only",
+        "correct": true,
+        "why": "Right: a counter in memory is not a database write. And here that is the point: a refusal is what the series exists to count. The same independence is why `placed` can run one ahead if a commit fails."
+      },
+      {
+        "text": "Nothing, because `@Transactional` rolls the increment back with the rest",
+        "correct": false,
+        "why": "`@Transactional` rolls back what went through the transaction's connection. Micrometer never touches the database."
+      },
+      {
+        "text": "Minus one, to cancel the increment that came before the exception",
+        "correct": false,
+        "why": "A counter only goes up. Nothing decrements it, and Micrometer would refuse a negative amount."
+      },
+      {
+        "text": "Nothing yet: increments are buffered until the commit",
+        "correct": false,
+        "why": "There is no buffering tied to transactions. The increment is visible the moment it runs, as the 409 followed by a counter of 1 showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-3nek7b1q",
+    "version": 1,
+    "section": "counting-orders",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `OrderServiceTest` now pass `new SimpleMeterRegistry()` to the constructor?",
+    "hint": "The constructor gained a parameter.",
+    "choices": [
+      {
+        "text": "To check that Prometheus receives the test's orders",
+        "correct": false,
+        "why": "Nothing in the test talks to Prometheus, and nothing should: a unit test has no monitoring server."
+      },
+      {
+        "text": "Because Mockito cannot mock a `MeterRegistry`",
+        "correct": false,
+        "why": "It could; a mock would just answer `null` to `counter(...)`, and the service would fail on its first increment. A real registry is simpler."
+      },
+      {
+        "text": "Spring Boot requires the simple registry in every profile used by tests",
+        "correct": false,
+        "why": "This test starts no Spring at all; it calls the constructor itself."
+      },
+      {
+        "text": "The service needs a registry, and this one reports nowhere",
+        "correct": true,
+        "why": "Right. It is Micrometer's own: it keeps the numbers in memory, made for exactly this."
+      }
+    ]
+  },
+  {
+    "id": "ex-wdqrs68f",
+    "version": 1,
+    "section": "counting-orders",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are good values for a tag on a meter? Choose all that apply.",
+    "hint": "A tag's values have to be few and known in advance.",
+    "choices": [
+      {
+        "text": "The outcome of an order: `placed` or `out-of-stock`",
+        "correct": true,
+        "why": "Right: two values, known when the code is written."
+      },
+      {
+        "text": "The route template, such as `/books/{id}`",
+        "correct": true,
+        "why": "Right: one value per route, and the routes are in the code."
+      },
+      {
+        "text": "The customer who placed the order",
+        "correct": false,
+        "why": "One series per customer, forever, and an account name copied into a system that keeps it for months."
+      },
+      {
+        "text": "The id of each order",
+        "correct": false,
+        "why": "Every order would create a series that is never used again. Ids belong in the database and in log lines."
+      },
+      {
+        "text": "The HTTP method",
+        "correct": true,
+        "why": "Right: a handful of values, and `http.server.requests` already uses it."
+      }
+    ]
+  },
+  {
+    "id": "ex-bred8srk",
+    "version": 1,
+    "section": "prometheus",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each meter, as Micrometer names it, with a line the Prometheus format writes for it.",
+    "hint": "Dots become underscores, counters gain a suffix, timers gain a unit.",
+    "pairs": [
+      {
+        "left": "bookshop.orders (a counter)",
+        "right": "bookshop_orders_total"
+      },
+      {
+        "left": "hikaricp.connections.pending (a gauge)",
+        "right": "hikaricp_connections_pending"
+      },
+      {
+        "left": "http.server.requests (a timer)",
+        "right": "http_server_requests_seconds_count"
+      }
+    ],
+    "right_distractors": [
+      "bookshop_orders_seconds",
+      "http_server_requests_total"
+    ]
+  },
+  {
+    "id": "ex-2rbx9aea",
+    "version": 1,
+    "section": "prometheus",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two scrapes 15 seconds apart read `bookshop_orders_total{outcome=\"placed\"}` as 2.0 and then 7.0. At what rate were orders placed between them?",
+    "hint": "The increase divided by the time between the readings.",
+    "value": 0.333,
+    "tolerance": 0.01,
+    "unit": "orders per second"
+  },
+  {
+    "id": "ex-8frybqqb",
+    "version": 1,
+    "section": "prometheus",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does an alert on orders use `rate(bookshop_orders_total[...])` rather than the counter's value?",
+    "hint": "What happens to the value when the process restarts?",
+    "choices": [
+      {
+        "text": "The value is cumulative since start-up: it says more about uptime than about now, and it drops to zero on a restart",
+        "correct": true,
+        "why": "Right. The rate is how fast it grows over a window, and `rate()` reads a drop as a restart rather than as orders taken back."
+      },
+      {
+        "text": "Prometheus cannot compare a counter with a number",
+        "correct": false,
+        "why": "It can compare any series with a number. The rule uses a rate because the raw total answers the wrong question."
+      },
+      {
+        "text": "Counters reset every scrape, so the value is already a rate",
+        "correct": false,
+        "why": "Nothing resets on a scrape: the second reading was 7 because the first 2 were still counted."
+      },
+      {
+        "text": "`rate()` is cheaper to store than a value",
+        "correct": false,
+        "why": "Prometheus stores the samples either way; `rate()` is computed from them when a rule or a query asks."
+      }
+    ]
+  },
+  {
+    "id": "ex-3gzwvzvm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate adds `db` to the liveness group of a bookshop running as six copies. The database then takes two minutes to fail over. What happens?",
+    "hint": "Liveness answers to a platform that restarts what fails it.",
+    "choices": [
+      {
+        "text": "Nothing changes, because liveness is read only at start-up",
+        "correct": false,
+        "why": "The platform keeps asking for as long as the process runs. That is what made the outage in the health section visible."
+      },
+      {
+        "text": "The six copies stop receiving requests until the database is back, and then resume",
+        "correct": false,
+        "why": "That is what readiness failing would do. Liveness failing means the process is killed, not rested."
+      },
+      {
+        "text": "All six are restarted together, each pays a full start-up, and the restarts cannot make the failover any shorter",
+        "correct": true,
+        "why": "Right. A database problem became an application outage that outlasts it."
+      },
+      {
+        "text": "Only the copy whose connection failed first is restarted",
+        "correct": false,
+        "why": "Every copy asks the same database and sees the same failure, so every copy fails its probe."
+      }
+    ]
+  },
+  {
+    "id": "ex-ed46b488",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A platform's readiness probe is pointed at `/actuator/health` instead of `/actuator/health/readiness`. Which situation does that change?",
+    "hint": "Compare what the full report and the group answered during the outage.",
+    "choices": [
+      {
+        "text": "None: the two URLs always answer the same status",
+        "correct": false,
+        "why": "During the outage the full report answered 503 and readiness 200. They differ exactly when it matters."
+      },
+      {
+        "text": "A full disk or a database outage takes every copy out of rotation at once",
+        "correct": true,
+        "why": "Right. The full report includes `db` and `diskSpace`, so a shared problem empties the load balancer, even for requests that would never have touched it."
+      },
+      {
+        "text": "Start-up becomes faster, because the full report skips the runners",
+        "correct": false,
+        "why": "The full report includes `readinessState` too, and answered 503 while the runners worked, like the group."
+      },
+      {
+        "text": "The probe needs a token, because `/actuator/health` is protected and the groups are not",
+        "correct": false,
+        "why": "`EndpointRequest.toAnyEndpoint()` opens the endpoint and every path under it alike."
+      }
+    ]
+  },
+  {
+    "id": "ex-p5sx2h6c",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each question somebody asks during an incident with where the bookshop answers it.",
+    "hint": "Four different endpoints or series; one leftover answers none of them.",
+    "pairs": [
+      {
+        "left": "Is the fix we shipped an hour ago the one running?",
+        "right": "build.time in /actuator/info"
+      },
+      {
+        "left": "Are requests queuing for a database connection?",
+        "right": "hikaricp_connections_pending"
+      },
+      {
+        "left": "Should the load balancer send this copy traffic now?",
+        "right": "/actuator/health/readiness"
+      },
+      {
+        "left": "How many orders were refused for lack of stock in the last hour?",
+        "right": "rate of bookshop_orders_total{outcome=\"out-of-stock\"}"
+      }
+    ],
+    "right_distractors": [
+      "jvm_threads_peak_threads"
+    ]
+  },
+  {
+    "id": "ex-7bsw05wv",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "During the outage of the health section, which of the four rules in the rules file would have fired if it had lasted ten minutes, with requests arriving all the time? Choose all that apply.",
+    "hint": "Remember what the timer recorded for the failed requests, and that the scrapes still answered.",
+    "choices": [
+      {
+        "text": "`BookshopDown`, on `up == 0`",
+        "correct": false,
+        "why": "`up` is about the scrape, and the management server kept answering it. The process was alive."
+      },
+      {
+        "text": "`BookshopServerErrors`, on the share of `SERVER_ERROR`",
+        "correct": true,
+        "why": "Right. The client was told 401, but the timer recorded `status=\"500\"` and `SERVER_ERROR` with the exception, and nearly every request needs the database."
+      },
+      {
+        "text": "`BookshopPoolWaiting`, on `hikaricp_connections_pending > 0` for two minutes",
+        "correct": true,
+        "why": "Right. Every request waited five seconds for a connection, so with steady traffic there was always somebody pending."
+      },
+      {
+        "text": "`BookshopOrdersRefused`, on the share of out-of-stock orders",
+        "correct": false,
+        "why": "No order got as far as checking stock: they failed while opening a transaction, and neither series moved."
+      }
+    ]
+  }
+]

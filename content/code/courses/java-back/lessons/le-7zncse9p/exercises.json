@@ -1,0 +1,788 @@
+[
+  {
+    "id": "ex-z6aa8cq8",
+    "version": 1,
+    "section": "test-doubles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `OrderServiceTest`, nothing was stubbed for `books.findByIdForUpdate(3L)`. What does the mock return?",
+    "hint": "Look at the method's return type.",
+    "choices": [
+      {
+        "text": "`null`, the default for every object",
+        "correct": false,
+        "why": "Mockito returns `null` for most object types, but not for `Optional`: it gives an empty one, so code calling `orElseThrow` does not crash with a `NullPointerException`."
+      },
+      {
+        "text": "An empty `Optional`",
+        "correct": true,
+        "why": "Right. That is why the detour without a stubbing got `BookNotFoundException`: the service treated the empty answer as a book that does not exist."
+      },
+      {
+        "text": "Nothing: the mock throws, because the call was never stubbed",
+        "correct": false,
+        "why": "A Mockito mock does not refuse an unstubbed call; it answers with an empty value. Only a stubbing whose arguments do not match is refused under strict stubs."
+      },
+      {
+        "text": "The book a previous test stubbed, since the mock is shared",
+        "correct": false,
+        "why": "`MockitoExtension` creates a fresh mock for every test, so nothing stubbed in one test is visible in the next."
+      }
+    ]
+  },
+  {
+    "id": "ex-11k3te2g",
+    "version": 1,
+    "section": "test-doubles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the first test program `orders.save` with `thenAnswer` rather than `thenReturn`?",
+    "choices": [
+      {
+        "text": "`thenReturn` cannot return an entity, only plain values",
+        "correct": false,
+        "why": "`thenReturn` returns any object, entities included; the stubbing of `findByIdForUpdate` returns one."
+      },
+      {
+        "text": "`thenReturn` would call the real `save` of Spring Data",
+        "correct": false,
+        "why": "No stubbing calls the real method; a mock has no real method behind it. A spy would, and there is none here."
+      },
+      {
+        "text": "The order does not exist until `place` creates it",
+        "correct": true,
+        "why": "Right. The answer runs at the call, takes the order from the arguments, gives it id 7 and returns it."
+      },
+      {
+        "text": "`thenAnswer` makes the test faster because it skips Hibernate",
+        "correct": false,
+        "why": "Neither choice touches Hibernate: both stub a mock, and the speed is the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-t9bnv03k",
+    "version": 1,
+    "section": "test-doubles",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The second test ends with `verify(orders, never()).save(any())`. Which statements about that line are true? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "It asks the mock which calls it received during the test",
+        "correct": true,
+        "why": "Right. A mock records every call, and `verify` reads that record after the fact."
+      },
+      {
+        "text": "It fails the test if `save` was called at all, whatever the argument",
+        "correct": true,
+        "why": "Right. `any()` matches every argument, and `never()` allows zero calls."
+      },
+      {
+        "text": "It stops the service from calling `save` while the test runs",
+        "correct": false,
+        "why": "`verify` runs after the call under test and only checks; it changes nothing the service does."
+      },
+      {
+        "text": "It also checks that `books` received no calls",
+        "correct": false,
+        "why": "It names the mock `orders` and its method `save`, and says nothing about `books`, which was in fact called."
+      },
+      {
+        "text": "A stub alone could not express it",
+        "correct": true,
+        "why": "Right. A stub only answers calls; whether a call happened is a question for the record a mock keeps."
+      }
+    ]
+  },
+  {
+    "id": "ex-n11geptw",
+    "version": 1,
+    "section": "test-doubles",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each kind of test double to what it does.",
+    "pairs": [
+      {
+        "left": "dummy",
+        "right": "fills a parameter and is never used"
+      },
+      {
+        "left": "stub",
+        "right": "returns answers the test chose in advance"
+      },
+      {
+        "left": "fake",
+        "right": "a working, simpler implementation"
+      },
+      {
+        "left": "spy",
+        "right": "a real object that also records its calls"
+      }
+    ],
+    "right_distractors": [
+      "a copy of the production database"
+    ]
+  },
+  {
+    "id": "ex-0rsbzt8t",
+    "version": 1,
+    "section": "test-doubles",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A test stubs `books.findByIdForUpdate(5L)`, and the service, given an order for book 3, calls `findByIdForUpdate(3L)`. The class uses `MockitoExtension`. What happens?",
+    "choices": [
+      {
+        "text": "The call returns an empty `Optional` and the test goes on to its assertions",
+        "correct": false,
+        "why": "That is what an unstubbed method does; here a stubbing exists for the same method with different arguments, and strict stubs refuse that combination."
+      },
+      {
+        "text": "The mock returns the stubbed book anyway, since the method is the same",
+        "correct": false,
+        "why": "A stubbing matches on its arguments; 5 is not 3, so it does not apply."
+      },
+      {
+        "text": "It fails with a `PotentialStubbingProblem`",
+        "correct": true,
+        "why": "Right. This is the lesson's second detour: Mockito names the call it got and the stubbing it had."
+      },
+      {
+        "text": "Mockito prints a warning and lets the test pass",
+        "correct": false,
+        "why": "Strict stubs make the mismatch an error, not a warning; the build fails."
+      }
+    ]
+  },
+  {
+    "id": "ex-d1x4tm6v",
+    "version": 1,
+    "section": "the-mockito-agent",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `-javaagent:${org.mockito:mockito-core:jar}` in surefire's `argLine` change?",
+    "choices": [
+      {
+        "text": "It lets Mockito mock final classes, which it could not do before",
+        "correct": false,
+        "why": "Mockito 5's inline mock maker could already do that by attaching itself; the option changes when the agent arrives, not what it can do."
+      },
+      {
+        "text": "The agent arrives as the JVM starts, so Mockito no longer attaches mid-run",
+        "correct": true,
+        "why": "Right, and with nothing attaching, both Mockito's message and the JDK's four warnings disappear."
+      },
+      {
+        "text": "It hides the JDK's warning while Mockito keeps attaching as before",
+        "correct": false,
+        "why": "That is what `-XX:+EnableDynamicAgentLoading` would do, and the lesson rejects it for exactly that reason."
+      },
+      {
+        "text": "It makes the tests start faster by sharing Mockito's classes between runs",
+        "correct": false,
+        "why": "Class data sharing is the JVM's own cache, and the one line left says it now covers fewer classes, not more."
+      }
+    ]
+  },
+  {
+    "id": "ex-mmgcc9v4",
+    "version": 1,
+    "section": "the-mockito-agent",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The goal of `maven-dependency-plugin` that gives every dependency a variable named `groupId:artifactId:type`, holding its jar's path in the local repository, is called `___`.",
+    "hint": "It runs in the initialize phase.",
+    "blanks": [
+      {
+        "accept": [
+          "properties"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1nkyxpx1",
+    "version": 1,
+    "section": "the-mockito-agent",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the agent is in the `argLine`, one line remains: `Sharing is only supported for boot loader classes because bootstrap classpath has been appended`. What is it?",
+    "choices": [
+      {
+        "text": "A sign that the agent failed to load and Mockito is still attaching",
+        "correct": false,
+        "why": "If Mockito were still attaching, its own message and the four `WARNING:` lines would be back, and they are gone."
+      },
+      {
+        "text": "A test failure Maven reports in a different format",
+        "correct": false,
+        "why": "All seventeen tests passed in that run; the line comes from the JVM, not from a test."
+      },
+      {
+        "text": "A warning that the agent's jar is too old for JDK 25",
+        "correct": false,
+        "why": "Nothing in the line mentions a version, and the agent works: the attaching messages are gone."
+      },
+      {
+        "text": "A harmless note from the JVM about its startup cache",
+        "correct": true,
+        "why": "Right. The agent adds classes to the boot class path, and the JVM's cache of shared classes then covers less of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-hd55embj",
+    "version": 1,
+    "section": "the-mockito-agent",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes `-XX:+EnableDynamicAgentLoading` in `argLine` instead of the `-javaagent:` option, since \"the warnings go away too\". What does that leave in place?",
+    "choices": [
+      {
+        "text": "Mockito still attaching itself in the middle of every run",
+        "correct": true,
+        "why": "Right. The flag only tells the JDK not to report it; the self-attach the JDK has announced it will stop allowing is still how Mockito gets in."
+      },
+      {
+        "text": "Nothing: the two options are equivalent ways of loading the agent",
+        "correct": false,
+        "why": "One loads the agent at start; the other permits loading it later. Only the first removes the late attach."
+      },
+      {
+        "text": "The tests failing, because the flag forbids agents",
+        "correct": false,
+        "why": "The flag does the opposite: it allows dynamic loading, so the tests pass."
+      },
+      {
+        "text": "Mockito's own message, while the JDK's four lines disappear",
+        "correct": false,
+        "why": "Partly true and not the point: what remains that matters is the late attach itself, which the message is about."
+      }
+    ]
+  },
+  {
+    "id": "ex-jdzefyhv",
+    "version": 1,
+    "section": "unit-and-integration",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each phase `mvn verify` runs to what happens in it in the bookshop.",
+    "pairs": [
+      {
+        "left": "test",
+        "right": "surefire runs the classes named *Test"
+      },
+      {
+        "left": "package",
+        "right": "the jar is built and repackaged by Boot"
+      },
+      {
+        "left": "integration-test",
+        "right": "failsafe runs the classes named *IT and records the results"
+      },
+      {
+        "left": "verify",
+        "right": "failsafe reads the record and fails the build if a test failed"
+      }
+    ],
+    "right_distractors": [
+      "Flyway migrates the bookshop's own database"
+    ]
+  },
+  {
+    "id": "ex-86cn41bk",
+    "version": 1,
+    "section": "unit-and-integration",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Someone names a new class that starts a PostgreSQL container `BookRepositoryTests`. What changes?",
+    "choices": [
+      {
+        "text": "Nothing, because Maven sees the container and hands the class to failsafe",
+        "correct": false,
+        "why": "Neither plugin looks inside a class; they choose by name, and `*Tests` is surefire's."
+      },
+      {
+        "text": "Neither plugin runs it, so its tests are silently skipped",
+        "correct": false,
+        "why": "`*Tests` is one of surefire's patterns, so it does run, just in the wrong place."
+      },
+      {
+        "text": "Surefire runs it, and every `mvn test` now needs Docker",
+        "correct": true,
+        "why": "Right. The suffix is the whole switch, and this one puts a slow test into the fast loop."
+      },
+      {
+        "text": "Maven refuses to compile a test class with that suffix",
+        "correct": false,
+        "why": "The name is legal Java and Maven compiles it; only which plugin runs it depends on the name."
+      }
+    ]
+  },
+  {
+    "id": "ex-sp3nmvg8",
+    "version": 1,
+    "section": "unit-and-integration",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does failsafe only record failures in `integration-test` and fail the build later, in `verify`?",
+    "choices": [
+      {
+        "text": "Because integration tests may fail without breaking the build, unlike unit tests",
+        "correct": false,
+        "why": "They are not: a failure still fails the build, one phase later."
+      },
+      {
+        "text": "So that the unit tests can run between the two phases",
+        "correct": false,
+        "why": "The unit tests ran long before, in `test`; nothing of theirs happens after `integration-test`."
+      },
+      {
+        "text": "Because reading the results is slow and is postponed to the end",
+        "correct": false,
+        "why": "Reading a summary file is quick; the order exists for what has to run between the two."
+      },
+      {
+        "text": "So that `post-integration-test` still runs and stops whatever was started for the tests",
+        "correct": true,
+        "why": "Right. A server or database started before the tests must be stopped even when they failed."
+      }
+    ]
+  },
+  {
+    "id": "ex-dkv6htcs",
+    "version": 1,
+    "section": "unit-and-integration",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order the phases `mvn verify` runs that the lesson's `grep` showed plugins for.",
+    "hint": "The jar is built before any integration test runs.",
+    "items": [
+      "compile",
+      "test",
+      "package",
+      "integration-test",
+      "verify"
+    ]
+  },
+  {
+    "id": "ex-yetktybd",
+    "version": 1,
+    "section": "installing-docker",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does membership of the `docker` group amount to root on that machine?",
+    "choices": [
+      {
+        "text": "The engine runs as root and does what a member asks, such as start a container that mounts the whole disk",
+        "correct": true,
+        "why": "Right. The socket is the engine's door, and the group is the key to it."
+      },
+      {
+        "text": "`usermod -aG docker` also adds the user to `sudo`",
+        "correct": false,
+        "why": "`usermod -aG docker` adds exactly one group, and `id -nG` showed only `ana docker`."
+      },
+      {
+        "text": "The `docker` group is group number 0, the same as root's",
+        "correct": false,
+        "why": "It is an ordinary group with an ordinary number; the power comes from what the engine does on request."
+      },
+      {
+        "text": "Members can read every file directly, without the engine",
+        "correct": false,
+        "why": "Membership grants nothing on files by itself; everything goes through the socket, to an engine that runs as root."
+      }
+    ]
+  },
+  {
+    "id": "ex-k3xvsgt2",
+    "version": 1,
+    "section": "installing-docker",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`docker version` prints the `Client` block and then an error, with no `Server` block. What does that say?",
+    "choices": [
+      {
+        "text": "Docker is not installed",
+        "correct": false,
+        "why": "Then there would be no `docker` command to print a `Client` block at all."
+      },
+      {
+        "text": "The command is installed and the engine was not reachable",
+        "correct": true,
+        "why": "Right. The client printed what it knows about itself and failed to reach the server through the socket."
+      },
+      {
+        "text": "The client and the engine were installed from different releases of Docker",
+        "correct": false,
+        "why": "A mismatch would still show both blocks, each with its own version."
+      },
+      {
+        "text": "The `hello-world` image has not been downloaded yet",
+        "correct": false,
+        "why": "`docker version` uses no image; it only asks the engine about itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-pwc0gtbf",
+    "version": 1,
+    "section": "when-docker-fails",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each message to what it means.",
+    "pairs": [
+      {
+        "left": "permission denied while trying to connect to the docker API",
+        "right": "the engine runs and refused this process"
+      },
+      {
+        "left": "failed to connect to the docker API",
+        "right": "nothing listens at that socket"
+      },
+      {
+        "left": "Could not find a valid Docker environment",
+        "right": "Testcontainers found no engine it could use"
+      },
+      {
+        "left": "429 Too Many Requests",
+        "right": "Docker Hub's limit on pulls without an account"
+      }
+    ],
+    "right_distractors": [
+      "the image's checksum did not match"
+    ]
+  },
+  {
+    "id": "ex-2av58wqy",
+    "version": 1,
+    "section": "when-docker-fails",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Right after `sudo usermod -aG docker $USER`, `docker ps` answers `permission denied`. Which of these belong to the right way out? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "Log out of the VM and log in again",
+        "correct": true,
+        "why": "Right. A process keeps the groups it started with, and only a new login starts with the new one."
+      },
+      {
+        "text": "Run `id -nG` and look for `docker` in the list",
+        "correct": true,
+        "why": "Right. It shows the groups of this shell, which is exactly what the engine checks."
+      },
+      {
+        "text": "`sudo chmod 666 /var/run/docker.sock`",
+        "correct": false,
+        "why": "It hands the engine, and so root, to every account on the machine, and the next restart of the engine undoes it."
+      },
+      {
+        "text": "Run the tests as `sudo mvn verify` from now on",
+        "correct": false,
+        "why": "Maven would then write files owned by root into `target/` and `~/.m2`, and the group problem is still there for every other command."
+      }
+    ]
+  },
+  {
+    "id": "ex-c95be3j0",
+    "version": 1,
+    "section": "when-docker-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`mvn verify` fails with `DOCKER_HOST unix:///var/run/docker.sock is not listening`, yet the engine is running and `id -nG` in that terminal prints only your own name. What is the cause?",
+    "choices": [
+      {
+        "text": "The engine listens on another socket, and `DOCKER_HOST` must be set",
+        "correct": false,
+        "why": "The socket is where Docker's packages put it and the engine is running there; the message's wording misleads."
+      },
+      {
+        "text": "The PostgreSQL image is missing and has to be pulled by hand",
+        "correct": false,
+        "why": "Testcontainers pulls missing images itself, and it never got as far as asking for one."
+      },
+      {
+        "text": "The socket refused a shell that lacks the `docker` group, and Testcontainers reports that as not listening",
+        "correct": true,
+        "why": "Right. `docker ps` in the same terminal would say `permission denied`, and a new login fixes both."
+      },
+      {
+        "text": "Failsafe forks its JVM without access to Unix sockets",
+        "correct": false,
+        "why": "The fork is an ordinary process of your user, with your user's groups; that is the problem here, not a missing ability."
+      }
+    ]
+  },
+  {
+    "id": "ex-ft8m5cj7",
+    "version": 1,
+    "section": "testcontainers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `@ServiceConnection` on the container bean do?",
+    "choices": [
+      {
+        "text": "It publishes the container's port 5432 on the machine's port 5432",
+        "correct": false,
+        "why": "Docker publishes it on whatever port is free, 32844 in one run; nothing ties it to 5432 on the machine."
+      },
+      {
+        "text": "It tells Flyway which migrations to apply to the container",
+        "correct": false,
+        "why": "Flyway reads `db/migration` as always; what changed is the database it connects to."
+      },
+      {
+        "text": "Boot connects to the container instead of `spring.datasource.*`",
+        "correct": true,
+        "why": "Right. That is why the test names no port and why Flyway's log shows the container's JDBC URL."
+      },
+      {
+        "text": "It starts Docker Engine if it is not running",
+        "correct": false,
+        "why": "Nothing in a test starts the engine; without one, the run fails with `Could not find a valid Docker environment`."
+      }
+    ]
+  },
+  {
+    "id": "ex-gbx4z2k1",
+    "version": 1,
+    "section": "testcontainers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`BookRepositoryIT` uses `@DataJpaTest`. What does that start?",
+    "choices": [
+      {
+        "text": "The whole application without a web server, like `@SpringBootTest`",
+        "correct": false,
+        "why": "That is `@SpringBootTest`'s job; the slice leaves out controllers, security filters and services."
+      },
+      {
+        "text": "Only Hibernate, with the schema created from the entities instead of migrations",
+        "correct": false,
+        "why": "Flyway ran in that slice too: the log shows the three migrations applied to its container."
+      },
+      {
+        "text": "The repositories with an in-memory database that replaces PostgreSQL",
+        "correct": false,
+        "why": "The log shows the JDBC URL of a PostgreSQL 16 container; nothing in memory took its place."
+      },
+      {
+        "text": "Only the persistence half, each test rolled back at its end",
+        "correct": true,
+        "why": "Right, which is why its context was ready in a fraction of a second."
+      }
+    ]
+  },
+  {
+    "id": "ex-bv5wgfgf",
+    "version": 1,
+    "section": "testcontainers",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In one `mvn verify` of this lesson's bookshop, how many containers from the image `postgres:16-alpine` were started?",
+    "hint": "One per owner: a context and a test class.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-rb3b801n",
+    "version": 1,
+    "section": "testcontainers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A build server prints the JNA `restricted method` warning on every build, while your machine printed it once. Neither has `--enable-native-access`. Why the difference?",
+    "choices": [
+      {
+        "text": "The server runs an older JDK that warns more often",
+        "correct": false,
+        "why": "The warning exists since JDK 24 and appears the same way on newer ones; the version is not what differs."
+      },
+      {
+        "text": "Each server build starts without `~/.testcontainers.properties`",
+        "correct": true,
+        "why": "Right. Your machine wrote that file after its first successful run and goes straight to the socket since."
+      },
+      {
+        "text": "Docker on the server is a remote engine, which always needs native code",
+        "correct": false,
+        "why": "Nothing here says the server's engine is remote, and the warning depended on the file, not on where the engine was."
+      },
+      {
+        "text": "Your machine silenced the warning after showing it the first time",
+        "correct": false,
+        "why": "The JVM has no memory of earlier warnings between runs; something else made the later runs skip the call."
+      }
+    ]
+  },
+  {
+    "id": "ex-trrgpmhp",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the measured `mvn verify`, what took most of the time the integration tests added?",
+    "choices": [
+      {
+        "text": "Starting the two PostgreSQL containers",
+        "correct": false,
+        "why": "Each took about 1.3 seconds, the wait for connections included; together, less than half of the context."
+      },
+      {
+        "text": "Downloading the images",
+        "correct": false,
+        "why": "The images were already on the machine; none of the measured runs downloaded anything."
+      },
+      {
+        "text": "Starting the whole Spring context",
+        "correct": true,
+        "why": "Right: 6.2 seconds in that run, against under 0.4 for the persistence slice."
+      },
+      {
+        "text": "Flyway applying the three migrations",
+        "correct": false,
+        "why": "Flyway reported an execution time of a few hundredths of a second for all three."
+      }
+    ]
+  },
+  {
+    "id": "ex-f4j6eve3",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put in order what happens during `BookshopApplicationIT`, from the moment the test JVM needs a database until nothing of the run is left.",
+    "items": [
+      "Testcontainers starts Ryuk and keeps a connection open to it",
+      "the PostgreSQL container starts, its 5432 published on a free port",
+      "Testcontainers waits until PostgreSQL accepts connections",
+      "Flyway migrates the empty schema to version 3",
+      "the test counts six books",
+      "the JVM exits and Ryuk, after a few seconds, removes itself"
+    ]
+  },
+  {
+    "id": "ex-w44pj4kb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You add `CatalogueIT`, annotated exactly like `BookshopApplicationIT`: `@SpringBootTest`, `@ActiveProfiles(\"test\")`, `@Import(TestcontainersConfiguration.class)`. How many extra PostgreSQL containers does `mvn verify` start for it?",
+    "choices": [
+      {
+        "text": "One, because every test class gets its own container",
+        "correct": false,
+        "why": "That is the `static @Container` field's behaviour; this class uses the bean, which belongs to a context."
+      },
+      {
+        "text": "None: the cached context is reused, container and all",
+        "correct": true,
+        "why": "Right. Same configuration, same context, same database, and no extra seconds of context start either."
+      },
+      {
+        "text": "Two, one for the context and one for Ryuk",
+        "correct": false,
+        "why": "Ryuk is not PostgreSQL, and one Ryuk serves the whole run."
+      },
+      {
+        "text": "It depends on whether Ryuk removed the first container in between",
+        "correct": false,
+        "why": "The first container lives as long as its context, which stays cached for the whole run; Ryuk only acts when the JVM is gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-53pr1ew5",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A change to `findTitlesByAuthor`'s `@Query` makes it return the right titles in the wrong order. Which of these would catch it? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "`BookRepositoryIT`",
+        "correct": true,
+        "why": "Right. It runs the real query on PostgreSQL and asserts the exact order with `containsExactly`."
+      },
+      {
+        "text": "`mvn verify`",
+        "correct": true,
+        "why": "Right. It runs `BookRepositoryIT`, records the failure and fails the build at `verify`."
+      },
+      {
+        "text": "`mvn test`",
+        "correct": false,
+        "why": "It stops before `package` and never runs a class named `*IT`."
+      },
+      {
+        "text": "`OrderServiceTest`",
+        "correct": false,
+        "why": "It mocks the repositories, so no query of theirs ever runs in it."
+      },
+      {
+        "text": "`BookshopApplicationIT`",
+        "correct": false,
+        "why": "It starts everything and counts the books; it never calls this query, so the order is invisible to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-c6jfx7m3",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A test class that should run with the integration tests, in `mvn verify` and never in `mvn test`, gets a name ending in `___`.",
+    "hint": "Failsafe's patterns are in the table of surefire and failsafe.",
+    "blanks": [
+      {
+        "accept": [
+          "IT"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fb9k7bhj",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the bookshop as this lesson leaves it, how many tests does one successful `mvn verify` run in total, unit and integration together?",
+    "hint": "Add surefire's total to failsafe's.",
+    "value": 20,
+    "tolerance": 0
+  }
+]

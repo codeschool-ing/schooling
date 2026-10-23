@@ -1,0 +1,850 @@
+[
+  {
+    "id": "ex-z40jbzzh",
+    "version": 1,
+    "section": "the-filter-chain",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A request reaches `/orders/1` with no token at all. Which status does the bookshop answer, and which question failed?",
+    "hint": "Who is asking comes before what they may do.",
+    "choices": [
+      {
+        "text": "401, because authentication failed",
+        "correct": true,
+        "why": "Right. Nobody is identified, so authentication fails first, and HTTP calls that 401 Unauthorized even though it means \"not authenticated\"."
+      },
+      {
+        "text": "403, because the request is not authorised",
+        "correct": false,
+        "why": "A 403 needs somebody to refuse: the server would have to know who is asking and decide that person may not. With no token, it never learns who is asking."
+      },
+      {
+        "text": "404, because the order cannot be found without a customer",
+        "correct": false,
+        "why": "The order lookup lives in the controller, and this request never gets that far: the filter chain answers before Spring MVC sees it."
+      },
+      {
+        "text": "400, because a required header is missing",
+        "correct": false,
+        "why": "A missing Authorization header is not a malformed request; it is an unauthenticated one, and the answer names the scheme it expects."
+      }
+    ]
+  },
+  {
+    "id": "ex-q3ftn3g5",
+    "version": 1,
+    "section": "the-filter-chain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The 401 and 403 answers in this lesson have an empty body, while a missing order comes back as `application/problem+json` from lesson 7's `ApiErrorHandler`. Why the difference?",
+    "hint": "Where in the request's path does each answer come from?",
+    "choices": [
+      {
+        "text": "Spring Security forbids a body on a 401 or a 403",
+        "correct": false,
+        "why": "Nothing forbids it; an entry point or an access-denied handler on the chain can write any body. The bookshop simply has not configured one."
+      },
+      {
+        "text": "The error handler skips responses whose status is below 404",
+        "correct": false,
+        "why": "A @RestControllerAdvice is chosen by exception type, not by status, and it handles 400s from validation in this very application."
+      },
+      {
+        "text": "Security failures are written to the log instead of being returned to the client",
+        "correct": false,
+        "why": "They are returned, with a status and a WWW-Authenticate header; only the body is empty."
+      },
+      {
+        "text": "A filter answers before the DispatcherServlet, so no advice runs",
+        "correct": true,
+        "why": "Right. A @RestControllerAdvice belongs to Spring MVC, and a request refused by the filter chain never reaches Spring MVC."
+      }
+    ]
+  },
+  {
+    "id": "ex-rrzrjwdx",
+    "version": 1,
+    "section": "the-filter-chain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A request for `/auth/token` arrives with a valid bearer token and no password. What happens?",
+    "hint": "`FilterChainProxy` hands each request to one chain.",
+    "choices": [
+      {
+        "text": "Chain 1 fails, so chain 2 accepts the token and lets it through",
+        "correct": false,
+        "why": "There is no second try: the first chain whose matcher matches owns the request, whether it passes or not."
+      },
+      {
+        "text": "Only chain 1 runs, finds no Basic credentials: 401",
+        "correct": true,
+        "why": "Right. Chain 1 owns /auth/token and knows HTTP Basic, not bearer tokens, so the token is ignored and the request is unauthenticated."
+      },
+      {
+        "text": "Both chains run, and the request needs to pass both",
+        "correct": false,
+        "why": "Chains are alternatives, not layers. Every filter that runs belongs to the one chain that matched."
+      },
+      {
+        "text": "A new token is issued, since the old one proves who is asking",
+        "correct": false,
+        "why": "TokenController only runs after Basic authentication succeeds, and a bearer token is not Basic."
+      }
+    ]
+  },
+  {
+    "id": "ex-e3z19nxv",
+    "version": 1,
+    "section": "the-filter-chain",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of the bookshop's security to its job.",
+    "hint": "The figure of the two chains.",
+    "pairs": [
+      {
+        "left": "FilterChainProxy",
+        "right": "hands the request to the first chain that matches"
+      },
+      {
+        "left": "BasicAuthenticationFilter",
+        "right": "checks a user name and password on /auth/token"
+      },
+      {
+        "left": "BearerTokenAuthenticationFilter",
+        "right": "checks the signature and expiry of a JWT"
+      },
+      {
+        "left": "AuthorizationFilter",
+        "right": "applies the rules such as hasAuthority"
+      }
+    ],
+    "right_distractors": [
+      "turns an exception into a problem detail"
+    ]
+  },
+  {
+    "id": "ex-82b9xe23",
+    "version": 1,
+    "section": "passwords",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the bookshop store a bcrypt hash of each password rather than the password encrypted with a key?",
+    "hint": "What does the server ever need to do with a stored password?",
+    "choices": [
+      {
+        "text": "Encryption is too slow to run on every login request",
+        "correct": false,
+        "why": "Speed is the wrong axis: bcrypt is the slower of the two, on purpose."
+      },
+      {
+        "text": "Java has no built-in encryption",
+        "correct": false,
+        "why": "The JDK has had javax.crypto for decades. The choice is about what a server should be able to do, not what it can."
+      },
+      {
+        "text": "Only checking is needed, and a hash is one-way",
+        "correct": true,
+        "why": "Right. Whatever the server can decrypt, whoever copies its data and key can decrypt too; a one-way hash leaves nothing to decrypt."
+      },
+      {
+        "text": "A hash is shorter, which saves space in the table",
+        "correct": false,
+        "why": "Both are short strings; a bcrypt hash is 60 characters. Size is not what is being protected."
+      }
+    ]
+  },
+  {
+    "id": "ex-sdhp1vnz",
+    "version": 1,
+    "section": "passwords",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`HashPassword` hashed `ana-reads-books` twice and printed two different strings, and both checked. How can both be right?",
+    "hint": "Look at the 22 characters after `$2a$10$`.",
+    "choices": [
+      {
+        "text": "bcrypt mixes the current time into the hash it computes for the password",
+        "correct": false,
+        "why": "No clock is involved; a hash from another day, the stored one, also checked."
+      },
+      {
+        "text": "`matches` ignores the last characters of the hash",
+        "correct": false,
+        "why": "It compares the whole computed hash; change one character of a stored hash and it no longer matches."
+      },
+      {
+        "text": "Each hash carries its own random salt, which `matches` reads back",
+        "correct": true,
+        "why": "Right. The salt is stored inside the hash, so checking needs nothing else, and the same password never gives the same hash twice."
+      },
+      {
+        "text": "The two are encryptions of the password under two different keys",
+        "correct": false,
+        "why": "There is no key and nothing is decrypted; the hash is one-way."
+      }
+    ]
+  },
+  {
+    "id": "ex-fjm0dwa1",
+    "version": 1,
+    "section": "passwords",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A bcrypt hash with cost `10` takes some time to check. Raised to cost `12`, how much longer does each check take?",
+    "hint": "The cost is an exponent.",
+    "choices": [
+      {
+        "text": "Four times as long",
+        "correct": true,
+        "why": "Right. Each step of cost doubles the work, so two steps multiply it by four, for the server and for anybody guessing against a stolen table alike."
+      },
+      {
+        "text": "Twice as long",
+        "correct": false,
+        "why": "One step of cost doubles the work; this is two steps."
+      },
+      {
+        "text": "20% longer, since 12 is 20% more than 10",
+        "correct": false,
+        "why": "That reads the cost as a count of rounds. It is the exponent of the count: 2 to the 10th against 2 to the 12th."
+      },
+      {
+        "text": "A hundred times as long",
+        "correct": false,
+        "why": "That would be about seven steps of doubling, not two."
+      }
+    ]
+  },
+  {
+    "id": "ex-35vrszqg",
+    "version": 1,
+    "section": "passwords",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the `{bcrypt}` at the front of a stored password for?",
+    "hint": "The encoder in `SecurityConfig` is a delegating one.",
+    "choices": [
+      {
+        "text": "It sets the cost factor to the default",
+        "correct": false,
+        "why": "The cost is the 10 inside the hash itself."
+      },
+      {
+        "text": "It is part of bcrypt's own format, like `$2a$`",
+        "correct": false,
+        "why": "bcrypt's format starts at $2a$. The braces are Spring's label, read and removed before bcrypt sees the hash."
+      },
+      {
+        "text": "It marks the password as encrypted rather than plain",
+        "correct": false,
+        "why": "Nothing here is encrypted; the prefix names a hashing algorithm, and {noop} is the one that would mean plain text."
+      },
+      {
+        "text": "It tells the delegating encoder which algorithm made the hash, so old and new algorithms share one table",
+        "correct": true,
+        "why": "Right. A system stores {argon2} hashes for new passwords while every {bcrypt} hash keeps checking."
+      }
+    ]
+  },
+  {
+    "id": "ex-2faxgqny",
+    "version": 1,
+    "section": "tokens",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With HS256, what does the server do with `BOOKSHOP_JWT_SECRET`?",
+    "hint": "HMAC is a keyed hash.",
+    "choices": [
+      {
+        "text": "Encrypts the payload so that only the server can read it",
+        "correct": false,
+        "why": "HS256 signs; it does not encrypt. The payload decoded with basenc in plain sight."
+      },
+      {
+        "text": "Signs each token and checks each signature with it",
+        "correct": true,
+        "why": "Right. HMAC is symmetric: the one secret makes the signature and verifies it, which is why it must never leave the server."
+      },
+      {
+        "text": "Hashes the users' passwords with it",
+        "correct": false,
+        "why": "Passwords are hashed by bcrypt with a salt per hash; the JWT secret plays no part."
+      },
+      {
+        "text": "Sends it to the client with the first token",
+        "correct": false,
+        "why": "A client holding the secret could sign any token it liked, with any scope."
+      }
+    ]
+  },
+  {
+    "id": "ex-r2kvrbbm",
+    "version": 1,
+    "section": "tokens",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Started without `BOOKSHOP_JWT_SECRET` in the environment, the bookshop refused to start, and the value it complained about was `\"${BOOKSHOP_JWT_SECRET}\"`. What saved it?",
+    "hint": "Count the characters of the placeholder.",
+    "choices": [
+      {
+        "text": "Spring refuses any placeholder it cannot resolve to a value",
+        "correct": false,
+        "why": "Not here: it bound the placeholder text as the value. Had that text been long enough, nothing would have complained."
+      },
+      {
+        "text": "@Size(min = 32) refused the 22-character placeholder",
+        "correct": true,
+        "why": "Right. Bean Validation on the properties record was the only check, and without it the shop would sign tokens with a key printed in the lesson."
+      },
+      {
+        "text": "NimbusJwtEncoder rejected the key when the bean was built",
+        "correct": false,
+        "why": "The failure report names the binding of JwtProperties, before any encoder exists."
+      },
+      {
+        "text": "The database refused the connection without a secret being set",
+        "correct": false,
+        "why": "The database password is a separate property, and it was set."
+      }
+    ]
+  },
+  {
+    "id": "ex-n1f9bqjv",
+    "version": 1,
+    "section": "tokens",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a decoded payload, the claim that names whose token it is is `___`.",
+    "hint": "Three letters, short for \"subject\".",
+    "blanks": [
+      {
+        "accept": [
+          "sub"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dec0sb2z",
+    "version": 1,
+    "section": "tokens",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague proposes putting each customer's e-mail address and delivery address in the token, \"to save a database query\". What is wrong with that?",
+    "hint": "Who can read a payload?",
+    "choices": [
+      {
+        "text": "A JWT cannot carry claims other than iss, sub, iat, exp and scope",
+        "correct": false,
+        "why": "A JWT may carry any claims; scope itself is one the bookshop chose."
+      },
+      {
+        "text": "The HMAC signature would no longer fit in its 32 bytes",
+        "correct": false,
+        "why": "An HMAC-SHA256 signature is 32 bytes whatever the length of what it signs."
+      },
+      {
+        "text": "The server could not verify a token that long",
+        "correct": false,
+        "why": "Length does not stop verification; it makes every request heavier, which is a smaller problem than the exposure."
+      },
+      {
+        "text": "Anybody holding the token reads the payload",
+        "correct": true,
+        "why": "Right. base64url is readable by anybody with basenc, including whoever finds a token in a log or a copied header."
+      }
+    ]
+  },
+  {
+    "id": "ex-s8r4cabw",
+    "version": 1,
+    "section": "tokens",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The forged token kept ana's original header and signature and changed only the payload's scope. Which check refused it, and why could ana not repair the signature herself?",
+    "hint": "What is the signature computed over, and with what?",
+    "choices": [
+      {
+        "text": "The HMAC check: recomputing it takes the server's secret",
+        "correct": true,
+        "why": "Right. Anybody can recompute the base64url, but nobody without the secret can produce the 32 bytes that match it."
+      },
+      {
+        "text": "The scope check; catalogue:write is reserved for the clerk's user name",
+        "correct": false,
+        "why": "Authorisation never ran. The token was refused before any rule was read, with 401 rather than 403."
+      },
+      {
+        "text": "The expiry check; editing a payload resets its exp",
+        "correct": false,
+        "why": "exp was copied unchanged and still lay in the future. The failure was about the signature."
+      },
+      {
+        "text": "The decoder, because base64url without padding is malformed",
+        "correct": false,
+        "why": "Unpadded base64url is how every JWT is written, ana's genuine one included."
+      }
+    ]
+  },
+  {
+    "id": "ex-2syt2m1v",
+    "version": 1,
+    "section": "scopes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana's token carries `\"scope\":\"orders\"`. Which authority does the bearer filter give the request?",
+    "hint": "A prefix is added.",
+    "choices": [
+      {
+        "text": "`orders`",
+        "correct": false,
+        "why": "That is the authority in the user list. From a token, every scope gets a prefix, so a rule naming plain orders would match nothing."
+      },
+      {
+        "text": "`ROLE_orders`",
+        "correct": false,
+        "why": "ROLE_ is the prefix hasRole adds, for roles; scopes from a JWT get SCOPE_."
+      },
+      {
+        "text": "`SCOPE_orders`",
+        "correct": true,
+        "why": "Right, and that is the name the rules in apiChain are written against."
+      },
+      {
+        "text": "`FACTOR_PASSWORD orders`",
+        "correct": false,
+        "why": "That is what the scope claim would hold if TokenController did not filter FACTOR_ out, and it is not an authority name."
+      }
+    ]
+  },
+  {
+    "id": "ex-yv5r2ckn",
+    "version": 1,
+    "section": "scopes",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these requests succeed with ana's token? Choose all that apply.",
+    "hint": "Read the rules table from the top.",
+    "choices": [
+      {
+        "text": "`GET /books/1`",
+        "correct": true,
+        "why": "Right. permitAll lets it through with or without a token."
+      },
+      {
+        "text": "`POST /orders` with one line",
+        "correct": true,
+        "why": "Right. SCOPE_orders is the authority the rule asks for, and ana has it."
+      },
+      {
+        "text": "`POST /books` with a valid new book",
+        "correct": false,
+        "why": "That rule asks for SCOPE_catalogue:write, which only the clerk's token carries: 403."
+      },
+      {
+        "text": "`GET /orders/1` for an order the clerk placed",
+        "correct": false,
+        "why": "The scope rule lets it in, and then OrderService finds the order is not ana's: 404."
+      }
+    ]
+  },
+  {
+    "id": "ex-3j5bgae7",
+    "version": 1,
+    "section": "scopes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without its `FACTOR_` filter, `TokenController` wrote `\"scope\":\"FACTOR_PASSWORD orders\"`. Why is it better left out of the token?",
+    "hint": "What does FACTOR_PASSWORD describe, and when?",
+    "choices": [
+      {
+        "text": "It makes the token too long to be signed with HS256 at all",
+        "correct": false,
+        "why": "HS256 signs input of any length; a few more characters change nothing."
+      },
+      {
+        "text": "It would quietly give the token access to every single endpoint",
+        "correct": false,
+        "why": "No rule names it, so it grants nothing. The trouble is what it claims, not what it opens."
+      },
+      {
+        "text": "It reveals the user's password to whoever reads the payload",
+        "correct": false,
+        "why": "It names the kind of factor, password, and nothing about the password itself."
+      },
+      {
+        "text": "It says how ana signed in, not what the token allows",
+        "correct": true,
+        "why": "Right. In the token it would become SCOPE_FACTOR_PASSWORD on every request, a word that reads like a permission and that no rule checks."
+      }
+    ]
+  },
+  {
+    "id": "ex-8kjrn92r",
+    "version": 1,
+    "section": "scopes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody adds `.requestMatchers(\"/orders/**\").authenticated()` to `apiChain`, directly above the `SCOPE_orders` rule. A token whose scope is only `catalogue:write` then asks for `GET /orders/1`. What happens at the door?",
+    "hint": "Which rule decides?",
+    "choices": [
+      {
+        "text": "Spring refuses to start, since two rules name one and the same path",
+        "correct": false,
+        "why": "Two matchers for one path are allowed. What Spring refuses at start-up is a rule written after anyRequest()."
+      },
+      {
+        "text": "403, because both rules must pass and SCOPE_orders is missing",
+        "correct": false,
+        "why": "Rules are not combined; one decides. That is why the order they are written in matters."
+      },
+      {
+        "text": "It gets through, because the new rule matches first",
+        "correct": true,
+        "why": "Right. The first matching rule decides, so the narrower SCOPE_orders rule below it is never read for that path."
+      },
+      {
+        "text": "401, because the token's scope does not match the path",
+        "correct": false,
+        "why": "401 is about who is asking, and the token is valid; a scope can only ever lead to a 403."
+      }
+    ]
+  },
+  {
+    "id": "ex-9e6wzbcx",
+    "version": 1,
+    "section": "no-session",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `csrf.disable()` correct for the bookshop as it stands?",
+    "hint": "What does a browser attach to a request by itself?",
+    "choices": [
+      {
+        "text": "Nothing authenticates by cookie, and browsers never add Authorization",
+        "correct": true,
+        "why": "Right. A forged request from another site arrives with no credentials and gets 401, so there is nothing for a CSRF token to protect."
+      },
+      {
+        "text": "HTTPS already prevents cross-site requests",
+        "correct": false,
+        "why": "HTTPS protects the request in transit; a forged request from another site travels over HTTPS just as well."
+      },
+      {
+        "text": "An API that answers in JSON cannot be the target of a CSRF attack at all",
+        "correct": false,
+        "why": "CSRF is about how the request is authenticated, not about the format of the answer. A JSON API signed in by cookie is a target."
+      },
+      {
+        "text": "The bearer filter checks every request's Origin header",
+        "correct": false,
+        "why": "No filter in either chain looks at Origin; the protection comes from where the credential travels."
+      }
+    ]
+  },
+  {
+    "id": "ex-a6y6w437",
+    "version": 1,
+    "section": "no-session",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A front-end team asks for the JWT to be set as an `HttpOnly` cookie instead of being kept by their JavaScript. If the bookshop agrees, what else must change?",
+    "hint": "Re-read the condition under which CSRF was turned off.",
+    "choices": [
+      {
+        "text": "Nothing, since the token is still signed",
+        "correct": false,
+        "why": "The signature proves the token is genuine. CSRF is a genuine token sent by the victim's own browser."
+      },
+      {
+        "text": "CSRF protection has to come back on, since a browser will now send the credential with any request to the site",
+        "correct": true,
+        "why": "Right. The moment a cookie authenticates, a page on another site can make the browser send it, which is exactly what CSRF protection exists for."
+      },
+      {
+        "text": "The session policy must become IF_REQUIRED",
+        "correct": false,
+        "why": "A cookie holding a JWT is still stateless on the server; no HttpSession is involved."
+      },
+      {
+        "text": "The token's lifetime must drop to two seconds",
+        "correct": false,
+        "why": "Lifetime limits a stolen token; it does nothing about a forged request sent within that lifetime."
+      }
+    ]
+  },
+  {
+    "id": "ex-rq00e7zv",
+    "version": 1,
+    "section": "no-session",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana reports that her laptop was stolen ten minutes after she fetched a token. What can the bookshop, as written, do about that one token right now?",
+    "hint": "What does the server remember about the tokens it issued?",
+    "choices": [
+      {
+        "text": "Delete ana's session, which ends the token",
+        "correct": false,
+        "why": "Both chains are stateless; there is no session to delete."
+      },
+      {
+        "text": "Change ana's password, which invalidates her tokens",
+        "correct": false,
+        "why": "The password is checked only at /auth/token. A token already issued never meets it again."
+      },
+      {
+        "text": "Change the secret, ending all tokens, or wait for exp",
+        "correct": true,
+        "why": "Right. The server holds nothing to cross out; a new secret ends every token at once, and the fifteen-minute lifetime ends this one soon."
+      },
+      {
+        "text": "Add the token to a revocation list that the filter already reads",
+        "correct": false,
+        "why": "That list does not exist here. It can be built, with a jti claim, and it brings back state on the server."
+      }
+    ]
+  },
+  {
+    "id": "ex-v2r24e62",
+    "version": 1,
+    "section": "no-session",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A token with a two-second lifetime was still accepted five seconds after it was issued. How many seconds of clock skew does Spring Security's decoder allow past `exp` by default?",
+    "hint": "It was refused after sleeping a further minute.",
+    "value": 60,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-fqdyc6yp",
+    "version": 1,
+    "section": "whose-order",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does the customer of a new order come from now?",
+    "hint": "The client can no longer write it.",
+    "choices": [
+      {
+        "text": "The `customer` field of the request body",
+        "correct": false,
+        "why": "That component was removed from OrderRequest; a customer field sent anyway is ignored."
+      },
+      {
+        "text": "The `sub` claim of the token the bearer filter verified",
+        "correct": true,
+        "why": "Right. The controller reads it with @AuthenticationPrincipal Jwt and getSubject(), from a token the server signed itself."
+      },
+      {
+        "text": "The user name in an HTTP Basic header sent with the order",
+        "correct": false,
+        "why": "Basic is accepted only on /auth/token; the order request carries a bearer token."
+      },
+      {
+        "text": "A session attribute set when ana signed in",
+        "correct": false,
+        "why": "There is no session; each request proves itself with its own token."
+      }
+    ]
+  },
+  {
+    "id": "ex-3pcnzf0r",
+    "version": 1,
+    "section": "whose-order",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The clerk asks for ana's order 1 and gets the same 404 as for order 99, which does not exist. Why not answer 403?",
+    "hint": "What would a 403 tell somebody counting up ids?",
+    "choices": [
+      {
+        "text": "403 is reserved for answers from the filter chain",
+        "correct": false,
+        "why": "A controller or an exception handler may answer 403 too. The choice here is about what the answer reveals."
+      },
+      {
+        "text": "OrderNotFoundException is the only exception the handler maps",
+        "correct": false,
+        "why": "ApiErrorHandler maps several exceptions; one for \"not yours\" could be added. The service throws not-found on purpose."
+      },
+      {
+        "text": "The clerk holds SCOPE_orders, so a 403 would be wrong here",
+        "correct": false,
+        "why": "The scope only got the request past the door. Ownership is a separate check, and refusing on it could have been either code."
+      },
+      {
+        "text": "A 403 would confirm that the order exists",
+        "correct": true,
+        "why": "Right. 404 says nothing about whether the order exists, which is all a stranger should learn."
+      }
+    ]
+  },
+  {
+    "id": "ex-nc5244j0",
+    "version": 1,
+    "section": "whose-order",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana sent `{\"customer\":\"clerk\", \"lines\":[...]}` with her token, and the order came back with `\"customer\":\"ana\"` and status 201. What happened to the `customer` property?",
+    "hint": "Compare the JSON with the record it is read into.",
+    "choices": [
+      {
+        "text": "OrderRequest has no such component, and Spring Boot's Jackson ignores a property the record lacks",
+        "correct": true,
+        "why": "Right. The field the client could forge no longer exists, so sending it changes nothing."
+      },
+      {
+        "text": "Bean Validation removed it as invalid",
+        "correct": false,
+        "why": "Validation checks the components a record has; it does not remove properties, and a failure would have been a 400."
+      },
+      {
+        "text": "The service compared it with the token and corrected it",
+        "correct": false,
+        "why": "The service never sees it: place takes the customer from the controller, which takes it from the token."
+      },
+      {
+        "text": "The scope rule stripped it, since ana lacks catalogue:write",
+        "correct": false,
+        "why": "Authorisation rules look at the path and the authorities, never inside the body."
+      }
+    ]
+  },
+  {
+    "id": "ex-01c1z4a3",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens when ana's `POST /orders` with a bearer token is accepted.",
+    "hint": "Filters first, Spring MVC last.",
+    "items": [
+      "FilterChainProxy hands the request to chain 2",
+      "The bearer filter checks the signature and exp",
+      "The scope claim becomes the authority SCOPE_orders",
+      "AuthorizationFilter finds the rule for /orders satisfied",
+      "OrderController reads the subject and the service saves the order"
+    ],
+    "trap": "Authorisation cannot come before the token is checked: until then there are no authorities to compare."
+  },
+  {
+    "id": "ex-xd131xxr",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each request to the status the bookshop answers.",
+    "hint": "One of them never reaches a controller and one never reaches a rule.",
+    "pairs": [
+      {
+        "left": "GET /orders/1 with a token whose payload was edited",
+        "right": "401"
+      },
+      {
+        "left": "POST /books with ana's token",
+        "right": "403"
+      },
+      {
+        "left": "GET /orders/1 for ana's order with the clerk's token",
+        "right": "404"
+      },
+      {
+        "left": "GET /books/1 with no token",
+        "right": "200"
+      }
+    ],
+    "right_distractors": [
+      "400"
+    ]
+  },
+  {
+    "id": "ex-rch864ry",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The bookshop is run as two instances behind a load balancer, each started after its own `export BOOKSHOP_JWT_SECRET=$(openssl rand -base64 32)`. What do clients see?",
+    "hint": "Which secret checks a token that the other instance signed?",
+    "choices": [
+      {
+        "text": "Nothing unusual, since the tokens are stateless",
+        "correct": false,
+        "why": "Stateless means no session is shared, which helps; it still needs the one secret shared, and here it is not."
+      },
+      {
+        "text": "A 401 whenever a request reaches the other instance",
+        "correct": true,
+        "why": "Right. Each instance checks with its own secret, so a token is good on one and invalid on the other; one shared secret fixes it."
+      },
+      {
+        "text": "403 on every request routed to the second instance",
+        "correct": false,
+        "why": "A signature that does not verify is an authentication failure, so the answer is 401, not 403."
+      },
+      {
+        "text": "A JSESSIONID mismatch error raised by the load balancer itself",
+        "correct": false,
+        "why": "Neither chain creates a session, so there is no JSESSIONID to mismatch."
+      }
+    ]
+  },
+  {
+    "id": "ex-dndwrvsf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new endpoint, `DELETE /books/{id}`, is added to `BookController`, and nobody touches `SecurityConfig`. Who can call it?",
+    "hint": "Walk the rules from the top with the method and the path.",
+    "choices": [
+      {
+        "text": "Nobody, because no rule names DELETE",
+        "correct": false,
+        "why": "A request no other rule matches falls to anyRequest(), which does not refuse everybody."
+      },
+      {
+        "text": "Everybody, because /books/** is permitted",
+        "correct": false,
+        "why": "That permitAll is for GET only; a DELETE does not match it."
+      },
+      {
+        "text": "Only the clerk, because POST /books needs SCOPE_catalogue:write",
+        "correct": false,
+        "why": "Rules match a method and a path; the POST rule says nothing about DELETE."
+      },
+      {
+        "text": "Anybody with a valid token, ana included, since only anyRequest().authenticated() matches it",
+        "correct": true,
+        "why": "Right. The default for an unlisted request is \"any signed-in user\", so a destructive endpoint needs its own rule, such as SCOPE_catalogue:write."
+      }
+    ]
+  }
+]

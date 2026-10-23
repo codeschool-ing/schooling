@@ -1,0 +1,483 @@
+{
+  "ex-91px1nbb": {
+    "prompt": "Você acrescenta uma coluna ao comando `CREATE TABLE IF NOT EXISTS book` do `schema.sql` e reinicia contra o banco que a aplicação já vinha usando. O que acontece com a tabela `book`?",
+    "hint": "Leia o que o `IF NOT EXISTS` verifica.",
+    "choices": [
+      {
+        "text": "Ganha a coluna nova nessa partida",
+        "why": "Essa é a imagem do `schema.sql` como descrição do esquema. Ele descreve só um banco vazio; uma tabela existente fica como está."
+      },
+      {
+        "text": "Nada muda: o comando inteiro é pulado",
+        "why": "O `IF NOT EXISTS` acha uma tabela chamada `book` e pula o comando, coluna nova incluída, sem erro e sem linha de log."
+      },
+      {
+        "text": "A partida falha porque `book` já existe",
+        "why": "Isso aconteceria sem a guarda. Ela existe justamente para que a segunda partida não falhe."
+      },
+      {
+        "text": "O Spring Boot apaga a tabela e a cria de novo com a coluna",
+        "why": "O executor de scripts do Spring Boot não apaga nada por conta própria. Apagar e recriar é o `create` do Hibernate, outra configuração."
+      }
+    ]
+  },
+  "ex-0v6jzb1r": {
+    "prompt": "Por que o `data.sql` da aula 10 terminava cada `INSERT` com `ON CONFLICT ... DO NOTHING`?",
+    "hint": "Quando esse arquivo rodava?",
+    "choices": [
+      {
+        "text": "Para pular qualquer linha cujo preço viole a restrição `CHECK`",
+        "why": "O `ON CONFLICT` trata conflitos de chave única e primária, não um `CHECK` violado; um preço negativo ainda interromperia o insert."
+      },
+      {
+        "text": "Porque o PostgreSQL o exige num insert de várias linhas",
+        "why": "Um `INSERT` de várias linhas funciona sem ele, como o `V2__first_titles.sql` mostra."
+      },
+      {
+        "text": "Porque o arquivo rodava a cada partida, e o segundo insert dos mesmos nomes falharia nas restrições de unicidade",
+        "why": "Todo comando de um arquivo que roda a cada partida tem de ser inofensivo na segunda vez. Uma migração roda uma vez, por isso o V2 tira a guarda."
+      },
+      {
+        "text": "Para deixar os inserts mais rápidos quando a tabela é grande",
+        "why": "Ele muda o que acontece num conflito, não a velocidade de nada."
+      }
+    ]
+  },
+  "ex-ndkceb1q": {
+    "prompt": "Com `spring.sql.init.mode=always`, o que o `schema.sql` NÃO consegue fazer num banco que já existe? Marque todas que se aplicam.",
+    "hint": "O arquivo não tem memória e roda inteiro toda vez.",
+    "choices": [
+      {
+        "text": "Mudar uma coluna de uma tabela existente, sem uma guarda escrita à mão para essa mudança",
+        "why": "Um `ALTER` funciona uma vez e falha em toda partida seguinte, então cada mudança precisaria da sua própria guarda, para sempre."
+      },
+      {
+        "text": "Criar uma tabela que ainda não existe",
+        "why": "Isso ele consegue: o `CREATE TABLE IF NOT EXISTS` cria a tabela que falta e pula as que existem."
+      },
+      {
+        "text": "Dizer qual versão do arquivo este banco recebeu por último",
+        "why": "Nada registra qual versão rodou, e é exatamente isso que a `flyway_schema_history` acrescenta."
+      },
+      {
+        "text": "Levar um banco criado há meses ao mesmo esquema de um criado hoje",
+        "why": "Cada cópia partiu de uma versão diferente do arquivo, e as guardas impedem que a antiga alcance a nova."
+      }
+    ]
+  },
+  "ex-6me4djrp": {
+    "prompt": "Que versão e que descrição o Flyway lê do nome de arquivo `V2__first_titles.sql`?",
+    "hint": "Dois sublinhados separam as duas metades.",
+    "choices": [
+      {
+        "text": "Versão 2, descrição `first titles`",
+        "why": "O trecho entre o `V` e o sublinhado duplo é a versão; o resto, com os sublinhados virando espaços, é a descrição."
+      },
+      {
+        "text": "Versão `2__first`, descrição `titles`",
+        "why": "Isso dividiria no último sublinhado. O separador é o sublinhado duplo, que vem primeiro."
+      },
+      {
+        "text": "Versão 2, descrição `V2__first_titles`",
+        "why": "A descrição é o que vem depois do separador, sem a versão na frente."
+      },
+      {
+        "text": "Versão 1, porque é o segundo arquivo do diretório",
+        "why": "O Flyway tira a versão do nome, nunca da posição do arquivo numa listagem."
+      }
+    ]
+  },
+  "ex-btzgrxmy": {
+    "prompt": "O `db/migration` tem `V1__a.sql`, `V2__b.sql`, `V10__c.sql` e `V9__d.sql`. Ponha-os na ordem em que o Flyway os aplica num banco vazio.",
+    "hint": "As versões são comparadas como números.",
+    "items": [
+      "V1__a.sql",
+      "V2__b.sql",
+      "V9__d.sql",
+      "V10__c.sql"
+    ],
+    "trap": "Ordenado como texto, o V10 cai logo depois do V1; o Flyway compara as versões como números, então 10 vem depois de 9."
+  },
+  "ex-7wdb39c3": {
+    "prompt": "O Flyway se recusa a iniciar: `Found non-empty schema(s) \"public\" but no schema history table`. O banco é o de produção, com três anos de pedidos, e as tabelas são exatamente o que o V1 ao V4 criam. O que você faz?",
+    "hint": "Qual saída preserva os dados, e qual número é a verdade?",
+    "choices": [
+      {
+        "text": "Apagar o banco e criá-lo de novo, para o Flyway aplicar do V1 ao V4 desde o começo",
+        "why": "Isso serve para dados de teste. Aqui apaga três anos de pedidos."
+      },
+      {
+        "text": "Iniciar uma vez com `baseline-on-migrate` e `baseline-version=4`",
+        "why": "O baseline registra que o banco já contém as versões até a 4, e o Flyway aplica só o que vem depois."
+      },
+      {
+        "text": "Fazer o baseline na versão 1, para o V2 ao V4 rodarem e confirmarem as tabelas",
+        "why": "O V2 ao V4 tentariam criar tabelas e linhas que já existem, e falhariam ou as duplicariam."
+      },
+      {
+        "text": "Pôr `spring.flyway.baseline-on-migrate=true` no `application.properties` de vez",
+        "why": "Funcionaria hoje, e depois faria em silêncio o baseline de qualquer banco não vazio para onde a aplicação apontasse, inclusive o errado."
+      }
+    ]
+  },
+  "ex-mq0emy97": {
+    "prompt": "Alguém fez o baseline de um banco na versão 2, mas ele só tinha o que o V1 cria; o V2 é a migração que insere os seis primeiros livros. O que acontece daí em diante?",
+    "hint": "O que cada verificação enxerga? O V2 acrescenta linhas, não colunas.",
+    "choices": [
+      {
+        "text": "O Flyway nota que falta o checksum do V2 na linha de baseline e se recusa a iniciar",
+        "why": "Uma linha de baseline não tem checksum para comparar; o Flyway aceita a afirmação como dada."
+      },
+      {
+        "text": "O Flyway aplica o V2 assim mesmo, porque o baseline cobre o esquema e não os dados",
+        "why": "Um baseline cobre toda versão até o seu número, seja esquema ou dados. O V2 é tratado como aplicado."
+      },
+      {
+        "text": "O `validate` do Hibernate percebe os livros que faltam na partida",
+        "why": "O `validate` compara tabelas e tipos de coluna com as entidades. Ele não conta linhas."
+      },
+      {
+        "text": "O V2 nunca roda ali, e nenhuma verificação avisa",
+        "why": "A versão do baseline é uma afirmação que ninguém verifica, e linhas faltando não violam nenhuma regra que o Flyway ou o Hibernate confiram."
+      }
+    ]
+  },
+  "ex-rpndbssx": {
+    "prompt": "Qual valor de `spring.jpa.hibernate.ddl-auto` faz o Hibernate comparar as entidades com o esquema e se recusar a iniciar numa diferença, sem mudar nada?",
+    "hint": "Só um valor apenas lê.",
+    "choices": [
+      {
+        "text": "`update`",
+        "why": "O `update` muda o esquema na direção das entidades, o que é um segundo autor do esquema ao lado das migrações."
+      },
+      {
+        "text": "`none`",
+        "why": "O `none` não muda nem compara: foi assim que a diferença do isbn passou despercebida nas aulas 10 e 11."
+      },
+      {
+        "text": "`create-drop`",
+        "why": "O `create-drop` monta o esquema a partir das entidades na partida e o apaga no encerramento."
+      },
+      {
+        "text": "`validate`",
+        "why": "Ele confere e não muda nada, que é o papel certo do Hibernate quando as migrações são donas do esquema."
+      }
+    ]
+  },
+  "ex-gpeamwhy": {
+    "prompt": "Por que `ddl-auto=update` é a escolha errada num projeto que usa Flyway?",
+    "hint": "Conte quem escreve o esquema e o que cada um registra.",
+    "choices": [
+      {
+        "text": "Ele deixa a partida mais lenta que o `validate` em esquemas grandes",
+        "why": "Velocidade não é o argumento; os dois leem o esquema inteiro na partida."
+      },
+      {
+        "text": "Ele vira um segundo autor do esquema, não registra nada e nunca apaga, renomeia nem muda o tipo de uma coluna",
+        "why": "O esquema passaria a ser o que a última entidade a iniciar pediu, e nenhum histórico diria isso."
+      },
+      {
+        "text": "O Flyway se recusa a iniciar sempre que o `update` está ligado",
+        "why": "O Flyway não lê as configurações do Hibernate; os dois rodariam, um depois do outro."
+      },
+      {
+        "text": "Ele apaga as linhas de toda tabela cuja entidade mudou",
+        "why": "Isso descreve o `create`, que reconstrói o esquema. O `update` só acrescenta."
+      }
+    ]
+  },
+  "ex-khjfh3a1": {
+    "prompt": "O Hibernate diz: `wrong column type encountered in column [isbn] in table [book]; found [bpchar (Types#CHAR)], but expecting [varchar(255) (Types#VARCHAR)]`. Qual lado é qual?",
+    "hint": "`found` é o que o Hibernate leu do banco.",
+    "choices": [
+      {
+        "text": "A coluna é `char(n)`; o campo `String` da entidade, sem mais nada dito, espera `varchar(255)`",
+        "why": "`bpchar` é o nome que o PostgreSQL dá a `char(n)`, e `varchar(255)` é o padrão do Hibernate para uma `String`."
+      },
+      {
+        "text": "A coluna é `varchar(255)`; a entidade declara `char`",
+        "why": "Isso lê a mensagem ao contrário: `found` é o banco e `expecting` é a entidade."
+      },
+      {
+        "text": "A coluna `isbn` não existe e o Hibernate descreve a que criaria",
+        "why": "Uma coluna ausente tem uma mensagem própria; esta achou a coluna e rejeitou o tipo."
+      },
+      {
+        "text": "O PostgreSQL não tem `varchar`, então o Hibernate recorre ao `bpchar`",
+        "why": "O PostgreSQL tem `varchar`. Os dois nomes vêm dos dois lados comparados."
+      }
+    ]
+  },
+  "ex-7a8a7dse": {
+    "prompt": "Uma migração criou `book.isbn` sem a restrição `UNIQUE`. O `ddl-auto=validate` está ligado. O que acontece?",
+    "hint": "Liste o que o `validate` compara.",
+    "choices": [
+      {
+        "text": "A partida falha, porque a entidade e a tabela discordam sobre unicidade",
+        "why": "O `validate` não compara restrições, então não há discordância para ele achar."
+      },
+      {
+        "text": "O Hibernate acrescenta a restrição, porque o `validate` conserta diferenças pequenas",
+        "why": "O `validate` nunca muda o esquema; consertar não está entre as funções dele."
+      },
+      {
+        "text": "Ela inicia, e um segundo livro com o mesmo ISBN é aceito",
+        "why": "O `validate` confere tabelas, colunas e tipos, não `UNIQUE`, `NOT NULL`, `CHECK` nem chaves estrangeiras. Restrições são tarefa das migrações."
+      },
+      {
+        "text": "O Flyway se recusa a iniciar porque a tabela não bate com o checksum do V1",
+        "why": "O checksum é calculado a partir do arquivo, não da tabela; um arquivo que rodou como escrito bate com a sua linha."
+      }
+    ]
+  },
+  "ex-khb371zm": {
+    "prompt": "O que a coluna `checksum` da `flyway_schema_history` permite ao Flyway perceber?",
+    "hint": "Ele é calculado a partir de um arquivo.",
+    "choices": [
+      {
+        "text": "Que alguém mudou as linhas de uma tabela à mão",
+        "why": "O checksum é calculado a partir do arquivo de migração, então nada feito nos dados o altera."
+      },
+      {
+        "text": "Que um arquivo de migração mudou depois de rodar",
+        "why": "O Flyway compara o número guardado quando o arquivo rodou com o número do arquivo que encontra agora."
+      },
+      {
+        "text": "Que duas cópias da aplicação iniciaram no mesmo instante",
+        "why": "Partidas simultâneas são uma questão de trava, não de checksum."
+      },
+      {
+        "text": "Que uma migração demorou mais que da última vez",
+        "why": "A duração vai em `execution_time`; o checksum descreve o conteúdo."
+      }
+    ]
+  },
+  "ex-w8r2k31j": {
+    "prompt": "Um colega corrige um preço dentro do `V2__first_titles.sql`, que a produção rodou há meses, e publica. O que a produção faz na próxima partida?",
+    "hint": "Compare o arquivo com a sua linha.",
+    "choices": [
+      {
+        "text": "Aplica o V2 novo, e a produção recebe o preço corrigido",
+        "why": "A versão 2 já tem linha, então o Flyway nunca roda o V2 de novo; ele o compara."
+      },
+      {
+        "text": "Inicia normalmente, porque só mudaram dados e não o esquema",
+        "why": "O checksum cobre o arquivo inteiro, dados ou esquema. Qualquer edição o muda."
+      },
+      {
+        "text": "Recusa-se a iniciar com uma diferença de checksum e não aplica nada",
+        "why": "O arquivo não bate mais com a linha que o registrou, e o Flyway para antes que dois bancos possam discordar em silêncio."
+      },
+      {
+        "text": "Roda o V2 de novo do começo, inserindo os seis livros pela segunda vez",
+        "why": "O Flyway aplica uma versão uma vez. O que ele faz com uma versão alterada é recusar."
+      }
+    ]
+  },
+  "ex-17fcxme7": {
+    "prompt": "Um preço no V2 está errado. Quais destas opções lidam com isso corretamente? Marque todas que se aplicam.",
+    "hint": "Onde o V2 já rodou, e o que cada ação deixa no banco?",
+    "choices": [
+      {
+        "text": "Voltar o V2 ao que rodou, e escrever a correção como a próxima migração, um `UPDATE`",
+        "why": "Todo banco recebe então os mesmos passos na mesma ordem, e o histórico diz o que aconteceu."
+      },
+      {
+        "text": "Editar o V2 e rodar `repair`, para o histórico bater com o arquivo",
+        "why": "O `repair` reescreve o checksum guardado e não roda nada: o banco fica com o preço antigo enquanto o arquivo mostra o novo."
+      },
+      {
+        "text": "Se o V2 só rodou na sua própria máquina, editá-lo e recriar o seu banco",
+        "why": "Ninguém mais viu a versão antiga, então ainda não há histórico a preservar."
+      },
+      {
+        "text": "Editar o V2 e apagar a linha dele do histórico, para que rode de novo",
+        "why": "O V2 inseriria os seis livros uma segunda vez, contra restrições de unicidade que já os contêm."
+      }
+    ]
+  },
+  "ex-5mx64w5t": {
+    "prompt": "Depois que o `V3__publisher.sql` falhou no segundo comando, por que não havia tabela `publisher`?",
+    "hint": "Que banco era, e o que ele consegue fazer com DDL?",
+    "choices": [
+      {
+        "text": "O Flyway rodou uma migração de desfazer que apagou o que o V3 tinha criado",
+        "why": "A edição gratuita do Flyway não tem desfazer, e nenhuma foi escrita."
+      },
+      {
+        "text": "O Flyway confere todos os comandos contra o banco antes de rodar qualquer um deles, então o `CREATE TABLE` nunca chegou a rodar",
+        "why": "Ele rodou; o erro veio do banco no segundo comando, na linha 6."
+      },
+      {
+        "text": "O PostgreSQL roda DDL em transações, e o Flyway rodou o V3 numa, então a falha desfez o arquivo inteiro",
+        "why": "\"Changes successfully rolled back\": o banco ficou exatamente na versão 2."
+      },
+      {
+        "text": "O `validate` do Hibernate apagou a tabela porque nenhuma entidade a mapeia",
+        "why": "O `validate` não muda nada, e nem chegou a rodar: a partida parou no Flyway."
+      }
+    ]
+  },
+  "ex-qhcfcb6n": {
+    "prompt": "O mesmo `V3__publisher.sql` passa num teste que parte de um banco vazio. Por que isso prova pouco sobre a produção?",
+    "hint": "Do que o comando que falhou precisa para falhar?",
+    "choices": [
+      {
+        "text": "Os testes usam outra versão do PostgreSQL, que aceita esse comando",
+        "why": "A versão não é o ponto; o PostgreSQL 16 também o aceita numa tabela vazia."
+      },
+      {
+        "text": "Uma coluna `NOT NULL` sem default só falha numa tabela que tem linhas, e um banco vazio não tem nenhuma",
+        "why": "Toda linha existente violaria a regra; sem linhas não há o que violar. Teste com dados no formato dos de produção."
+      },
+      {
+        "text": "Os testes rodam as migrações fora de transações, o que esconde erros",
+        "why": "O Flyway as roda em transações lá também; o comando simplesmente funciona numa tabela vazia."
+      },
+      {
+        "text": "Execuções de teste pulam migrações que criam chaves estrangeiras",
+        "why": "Nada as pula; a referência a `publisher` é válida numa tabela vazia."
+      }
+    ]
+  },
+  "ex-853rd4t4": {
+    "prompt": "Todo livro precisa ganhar um `publisher_id` obrigatório, numa loja em funcionamento. Ponha os passos de expandir e contrair em ordem.",
+    "hint": "Nada pode ser obrigatório antes que toda linha consiga cumprir.",
+    "items": [
+      "Uma migração acrescenta `publisher_id` como coluna que pode ficar vazia",
+      "Uma versão grava `publisher_id` em todo livro novo",
+      "Uma migração preenche `publisher_id` nas linhas antigas",
+      "Uma migração torna `publisher_id` `NOT NULL`"
+    ],
+    "trap": "Tornar a coluna obrigatória antes de preencher as linhas antigas é o V3 que falhou nesta seção."
+  },
+  "ex-nf7atpw7": {
+    "prompt": "No PostgreSQL uma migração que falha não deixa linha nenhuma. No ___, que confirma cada `CREATE` e `ALTER` no momento em que roda, ela deixa metade da mudança e uma linha de falha no histórico.",
+    "hint": "O outro banco de código aberto muito usado que a seção cita.",
+    "blanks": [
+      {
+        "accept": [
+          "MySQL"
+        ]
+      }
+    ]
+  },
+  "ex-vp4e4fjw": {
+    "prompt": "O que identifica um changeset no Liquibase?",
+    "hint": "Olhe as três primeiras colunas da tabela de histórico.",
+    "choices": [
+      {
+        "text": "Um número de versão no nome do arquivo do changelog",
+        "why": "Essa é a identidade do Flyway. Um changelog do Liquibase guarda muitos changesets num só arquivo."
+      },
+      {
+        "text": "O seu `id`, o seu `author` e o arquivo em que está, juntos",
+        "why": "A `databasechangelog` registra os três, e o mesmo `id` com outro autor é outro changeset."
+      },
+      {
+        "text": "O seu `md5sum`",
+        "why": "O checksum detecta uma edição num changeset; não é o nome dele."
+      },
+      {
+        "text": "A sua posição no changelog",
+        "why": "A posição decide a ordem de execução, registrada em `orderexecuted`, não a identidade."
+      }
+    ]
+  },
+  "ex-6n0g8bps": {
+    "prompt": "Ligue cada peça do Flyway à equivalente no Liquibase.",
+    "hint": "A tabela de comparação no fim da seção.",
+    "pairs": [
+      {
+        "left": "flyway_schema_history",
+        "right": "databasechangelog"
+      },
+      {
+        "left": "V2__first_titles.sql",
+        "right": "um changeset"
+      },
+      {
+        "left": "checksum",
+        "right": "md5sum"
+      },
+      {
+        "left": "spring-boot-starter-flyway",
+        "right": "spring-boot-starter-liquibase"
+      }
+    ],
+    "right_distractors": [
+      "databasechangeloglock"
+    ]
+  },
+  "ex-z1tew61r": {
+    "prompt": "Um changeset do Liquibase apagou a coluna `notes`, e o rollback escrito dele acrescenta `notes` de volta. Depois do rollback, o que há na coluna?",
+    "hint": "O que um rollback roda, e em que direção?",
+    "choices": [
+      {
+        "text": "Os valores antigos, restaurados de uma cópia que o Liquibase guardou antes do drop",
+        "why": "O Liquibase não guarda cópia de dados. Um rollback são mudanças novas rodadas para a frente."
+      },
+      {
+        "text": "Nada: a coluna voltou, vazia",
+        "why": "O rollback recria a coluna; os dados foram com o drop e nenhum passo os traz de volta."
+      },
+      {
+        "text": "Os valores guardados na `databasechangelog` quando o changeset rodou",
+        "why": "Essa tabela registra quais changesets rodaram, nunca as linhas que eles tocaram."
+      },
+      {
+        "text": "O rollback se recusa, porque uma coluna apagada não pode ser recriada",
+        "why": "Com um `rollback` escrito, o Liquibase o roda; ele só recusa quando não tem rollback escrito nem um que consiga gerar."
+      }
+    ]
+  },
+  "ex-5w3k02vz": {
+    "prompt": "Em dois branches, você e um colega acrescentam cada um um `V4__...sql` com descrições diferentes, e os dois branches são mesclados. O que o Flyway faz na próxima partida?",
+    "hint": "O que identifica uma migração no Flyway?",
+    "choices": [
+      {
+        "text": "Aplica as duas, na ordem alfabética das descrições",
+        "why": "A versão é a identidade; dois arquivos não podem dividir uma, seja qual for a descrição."
+      },
+      {
+        "text": "Aplica o arquivo mais novo e ignora o mais antigo",
+        "why": "O Flyway não olha datas de arquivo, e não escolhe em silêncio entre duas afirmações."
+      },
+      {
+        "text": "Recusa-se a iniciar, porque duas migrações dizem ser a versão 4",
+        "why": "Dois arquivos com uma versão são um conflito que o Flyway não resolve por você: um deles tem de virar V5."
+      },
+      {
+        "text": "Aplica a que encontrar primeiro e registra a outra como já aplicada",
+        "why": "Registrar uma migração que nunca rodou seria a divergência silenciosa que o Flyway existe para evitar."
+      }
+    ]
+  },
+  "ex-bnqg41qz": {
+    "prompt": "A loja renomeia `book.title` para `name`, e durante uma implantação cópias antigas e novas da aplicação rodam contra um banco só. Quais passos fazem parte de uma sequência segura? Marque todas que se aplicam.",
+    "hint": "Durante a implantação, que coluna cada cópia da aplicação lê?",
+    "choices": [
+      {
+        "text": "Uma migração acrescenta `name` e copia `title` para ela",
+        "why": "O passo de expandir: as duas colunas existem, então as duas versões do código acham a que leem."
+      },
+      {
+        "text": "Uma migração roda `ALTER TABLE book RENAME COLUMN title TO name` junto com a versão",
+        "why": "As cópias antigas ainda rodando pediriam `title` e falhariam até o fim da implantação."
+      },
+      {
+        "text": "O código passa a ler e gravar `name`",
+        "why": "Quando toda cópia em execução usa `name`, `title` não tem mais leitores."
+      },
+      {
+        "text": "Uma migração posterior apaga `title`, numa versão depois que nada a lê",
+        "why": "O passo de contrair, por último, quando não pode quebrar ninguém."
+      }
+    ]
+  },
+  "ex-22hsa6xg": {
+    "prompt": "Um banco recebeu baseline na versão 2, como esta aula mostrou, e depois recebeu o V3 e mais nada. Quantas linhas tem a `flyway_schema_history` dele?",
+    "hint": "O V1 e o V2 nunca rodaram ali.",
+    "unit": "linhas"
+  }
+}
