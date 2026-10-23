@@ -86,8 +86,10 @@ wait_log() {
 # serve: `ng serve` in a second terminal, until the first build is done.
 serve() {
   bg serve '~/planner' 'npx ng serve'
-  wait_log serve 'Local:'
-  wait_port 4200
+  wait_log serve 'Watch mode enabled'
+  sleep 0.5
+  if grep -q 'Local:' $STATE/serve.log; then wait_port 4200; fi
+  return 0
 }
 
 # THE PROJECT, from lesson to lesson. restore LESSON puts ~/planner back as

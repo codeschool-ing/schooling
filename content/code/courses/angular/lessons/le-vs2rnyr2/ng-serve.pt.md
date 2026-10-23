@@ -87,8 +87,8 @@ navegador não cabe numa aula, então este curso lê páginas com um programa cu
 //   --html SEL     print SEL's HTML instead of text, without the attributes
 //                  Angular adds to keep a component's styles to itself
 //                  (_ngcontent-…, _nghost-…); --raw keeps them
-//   --a11y SEL     print SEL's accessibility tree: the roles and names a
-//                  screen reader announces
+//   --a11y SEL     print SEL's accessibility tree as Chromium builds it for a
+//                  screen reader: each role, its name, its value and its state
 //   --styles       print the CSS rules the page's stylesheets hold, as the
 //                  browser read them
 //   --today DATE   make the browser's clock say DATE (YYYY-MM-DD), at 09:00
@@ -139,6 +139,51 @@ if (opt.network) {
   page.on("requestfailed", (r) => say(`net  ${r.method()} ${r.url().replace(origin, "")}  failed: ${r.failure()?.errorText}`));
 }
 
+// The accessibility tree of the element SEL matches, as the browser hands it to
+// a screen reader, one line per node: role, "name", [level or state], value.
+// Nodes that only group others (generic, none) are left out and their
+// children kept, and the text of a node already named by it is not repeated.
+async function axTree(sel) {
+  const cdp = await context.newCDPSession(page);
+  const { root } = await cdp.send("DOM.getDocument", { depth: 0 });
+  const { nodeId } = await cdp.send("DOM.querySelector", { nodeId: root.nodeId, selector: sel });
+  const { node } = await cdp.send("DOM.describeNode", { nodeId, depth: -1 });
+  const inside = new Set();
+  const collect = (d) => { inside.add(d.backendNodeId); (d.children ?? []).forEach(collect); };
+  collect(node);
+  const { nodes } = await cdp.send("Accessibility.getFullAXTree");
+  const byId = new Map(nodes.map((n) => [n.nodeId, n]));
+  const parent = new Map(nodes.flatMap((n) => (n.childIds ?? []).map((c) => [c, byId.get(n.nodeId)])));
+  const lines = [];
+  const walk = (n, depth, named) => {
+    const role = n.role?.value;
+    const name = n.name?.value ?? "";
+    if (role === "StaticText") {
+      if (!named) lines.push(`${"  ".repeat(depth)}- text: ${name}`);
+      return;
+    }
+    const shown = !n.ignored && !["generic", "none", "InlineTextBox", "LineBreak"].includes(role);
+    if (shown) {
+      let line = `${"  ".repeat(depth)}- ${role}${name ? ` "${name}"` : ""}`;
+      for (const p of n.properties ?? []) {
+        const v = p.value?.value;
+        if (p.name === "level") line += ` [level=${v}]`;
+        else if (["checked", "expanded", "pressed"].includes(p.name) && v !== "false") line += ` [${p.name}${v === "true" || v === true ? "" : `=${v}`}]`;
+        else if (["disabled", "invalid", "required"].includes(p.name) && v && v !== "false") line += ` [${p.name}]`;
+      }
+      if (n.value?.value !== undefined && n.value.value !== "") line += `: ${n.value.value}`;
+      lines.push(line);
+    }
+    for (const id of n.childIds ?? []) walk(byId.get(id), shown ? depth + 1 : depth, shown ? Boolean(name) : named);
+  };
+  // An element with no role of its own, such as a component's tag, has no node
+  // in the tree: start from the nodes inside it whose parent is outside it.
+  for (const n of nodes) {
+    if (inside.has(n.backendDOMNodeId) && !inside.has(parent.get(n.nodeId)?.backendDOMNodeId)) walk(n, 0, false);
+  }
+  return lines.join("\n");
+}
+
 const settle = () => page.waitForTimeout(opt.wait);
 const field = (label) => page.getByLabel(label, { exact: true });
 await page.goto(url);
@@ -160,18 +205,22 @@ for (const action of opt.do) {
   await settle();
 }
 
-if (opt.html) {
-  let html = await page.locator(opt.html).first().evaluate((e) => e.outerHTML);
+const pick = opt.html || opt.a11y || opt.text || "body";
+const target = page.locator(pick).first();
+if (!opt.styles && (await target.count()) === 0) {
+  say(`(nothing on the page matches ${pick})`);
+} else if (opt.html) {
+  let html = await target.evaluate((e) => e.outerHTML);
   if (!opt.raw) html = html.replace(/ _ng(content|host)-[\w-]+=""/g, "");
   say(html);
 } else if (opt.a11y) {
-  say(await page.locator(opt.a11y).first().ariaSnapshot());
+  say(await axTree(pick));
 } else if (opt.styles) {
   const rules = await page.evaluate(() =>
     [...document.styleSheets].flatMap((sheet) => [...sheet.cssRules].map((r) => r.cssText)));
   say(rules.join("\n"));
 } else {
-  say((await page.locator(opt.text || "body").first().innerText()).trim());
+  say((await target.innerText()).trim());
 }
 await browser.close();
 ```

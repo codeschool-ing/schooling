@@ -30,7 +30,8 @@ ana@dev:~/planner$ look http://localhost:4200/ --a11y body
 Angular is running in development mode.
 - heading "Study planner" [level=1]
 - heading "This week" [level=2]
-- paragraph: "This week: nothing planned yet."
+- paragraph
+  - text: This week: nothing planned yet.
 ```
 
 ```schooling-figure
@@ -44,14 +45,14 @@ se o componente pode ser criado. O segundo teste do `App` ainda procura o títul
 
 ```
 ana@dev:~/planner$ npx ng test --watch=false 2>&1 | tail -9
- ✓ |planner| src/app/week/week.spec.ts (1 test) 36ms
- ✓ |planner| src/app/week-summary/week-summary.spec.ts (1 test) 52ms
- ✓ |planner| src/app/app.spec.ts (2 tests) 74ms
+ ✓ |planner| src/app/week/week.spec.ts (1 test) 49ms
+ ✓ |planner| src/app/week-summary/week-summary.spec.ts (1 test) 45ms
+ ✓ |planner| src/app/app.spec.ts (2 tests) 68ms
 
  Test Files  3 passed (3)
       Tests  4 passed (4)
-   Start at  19:56:50
-   Duration  1.30s (transform 280ms, setup 985ms, import 255ms, tests 162ms, environment 1.85s)
+   Start at  20:13:18
+   Duration  1.17s (transform 134ms, setup 901ms, import 150ms, tests 162ms, environment 1.71s)
 ```
 
 Quatro testes, três arquivos, todos passando. **Criar o `App` num teste cria o `Week` e o

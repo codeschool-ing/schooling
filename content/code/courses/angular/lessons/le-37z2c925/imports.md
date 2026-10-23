@@ -58,7 +58,7 @@ it, with `imports: []`. Build:
 ana@dev:~/planner$ npx ng build
 ❯ Building...
 ✔ Building...
-Application bundle generation failed. [3.303 seconds] - 2026-10-23T22:56:00.722Z
+Application bundle generation failed. [3.220 seconds] - 2026-10-23T23:12:39.409Z
 
 ✘ [ERROR] NG8001: 'app-week-summary' is not a known element:
 1. If 'app-week-summary' is an Angular component, then verify that it is included in the '@Component.imports' of this component.
