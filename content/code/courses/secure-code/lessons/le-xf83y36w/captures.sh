@@ -30,6 +30,10 @@
 # Recorded on Ubuntu 24.04 with Python 3.13 as python3, TZ=America/Sao_Paulo.
 . "$(dirname "$0")/../../lab/capture-lib.sh"
 export PLAYWRIGHT_BROWSERS_PATH=/var/tmp/pwb
+# The folder Playwright 1.56.0 looks in, presenting the machine's Chromium build.
+mkdir -p $PLAYWRIGHT_BROWSERS_PATH/chromium_headless_shell-1194/chrome-linux
+ln -sfn /opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell \
+  $PLAYWRIGHT_BROWSERS_PATH/chromium_headless_shell-1194/chrome-linux/headless_shell
 
 D=/home/ana/sc/csp
 rm -rf "$D"
