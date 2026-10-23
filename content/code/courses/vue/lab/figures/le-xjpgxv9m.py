@@ -5,10 +5,10 @@ def classes(T):
     c = Canvas(720, 200, T(
         "A timeline of an element entering with a transition named fade, lasting 600 milliseconds. fade-enter-active "
         "is on for the whole duration. fade-enter-from is on only for the first frame. fade-enter-to is on from the "
-        "second frame to the end. When the browser reports transitionend, all three are removed and after-enter runs.",
+        "second frame to the end. When the browser reports transitionend, fade-enter-active and fade-enter-to are removed and after-enter runs.",
         "Uma linha do tempo de um elemento entrando com uma transição chamada fade, de 600 milissegundos. "
         "fade-enter-active fica ligada o tempo todo. fade-enter-from fica só no primeiro quadro. fade-enter-to fica "
-        "do segundo quadro até o fim. Quando o navegador avisa transitionend, as três saem e o after-enter roda."))
+        "do segundo quadro até o fim. Quando o navegador avisa transitionend, fade-enter-active e fade-enter-to saem e o after-enter roda."))
     x0, x1 = 170, 650
     rows = [("fade-enter-from", x0, x0 + 24, "var(--amber)"), ("fade-enter-active", x0, x1, "var(--phosphor)"),
             ("fade-enter-to", x0 + 24, x1, "var(--phosphor-dim)")]
