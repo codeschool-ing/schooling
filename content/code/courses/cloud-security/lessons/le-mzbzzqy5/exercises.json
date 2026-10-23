@@ -1,0 +1,665 @@
+[
+  {
+    "id": "ex-k9jzg1rz",
+    "version": 1,
+    "section": "boundaries",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each provider to its usual unit of isolation.",
+    "hint": "The container that holds resources and carries a bill.",
+    "pairs": [
+      {
+        "left": "AWS",
+        "right": "an account"
+      },
+      {
+        "left": "Azure",
+        "right": "a subscription"
+      },
+      {
+        "left": "Google Cloud",
+        "right": "a project"
+      }
+    ],
+    "right_distractors": [
+      "a region",
+      "a tenant"
+    ]
+  },
+  {
+    "id": "ex-48s8kjfe",
+    "version": 1,
+    "section": "boundaries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Google Cloud administrator grants `roles/storage.objectViewer` to a group on a folder. Which buckets can the group now read?",
+    "hint": "Grants at Google Cloud flow down.",
+    "choices": [
+      {
+        "text": "None until each bucket also names the group",
+        "correct": false,
+        "why": "That would be AWS's habit; at Google Cloud the folder's grant already reaches the buckets below."
+      },
+      {
+        "text": "Every bucket in every project under the folder, including future ones",
+        "correct": true,
+        "why": "Right. A grant made high up is a grant on everything below it."
+      },
+      {
+        "text": "Only buckets created by members of that group",
+        "correct": false,
+        "why": "Who created a bucket plays no part in the allow policy."
+      },
+      {
+        "text": "The buckets in the folder's first project, since a binding attaches to exactly one project",
+        "correct": false,
+        "why": "A binding on a folder applies to every project in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-276wry8k",
+    "version": 1,
+    "section": "boundaries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where do the identities that act on an Azure subscription live?",
+    "hint": "A subscription is where they are given roles.",
+    "choices": [
+      {
+        "text": "In the tenant's directory, Microsoft Entra ID",
+        "correct": true,
+        "why": "Right. Who can touch a subscription starts with a directory that serves every other one too."
+      },
+      {
+        "text": "In the subscription itself, one directory per subscription",
+        "correct": false,
+        "why": "That is closer to an AWS account's IAM. Azure subscriptions hold no identities of their own."
+      },
+      {
+        "text": "In each resource group",
+        "correct": false,
+        "why": "A resource group is a scope for role assignments, not a directory."
+      },
+      {
+        "text": "In Azure Policy, beside the guardrails that govern the subscription",
+        "correct": false,
+        "why": "Azure Policy governs configuration; it holds no identities."
+      }
+    ]
+  },
+  {
+    "id": "ex-pqs9txk3",
+    "version": 1,
+    "section": "boundaries",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The clinic attaches an SCP denying `s3:PutBucketPublicAccessBlock` to its organisation's root, and runs its workloads in the management account. What does the SCP do to those workloads?",
+    "hint": "One account is outside every SCP.",
+    "choices": [
+      {
+        "text": "It protects them, because an SCP on the root covers every account",
+        "correct": false,
+        "why": "Every account except the management account, which is exactly where the workloads are."
+      },
+      {
+        "text": "It blocks every S3 request made from the management account",
+        "correct": false,
+        "why": "It names one action, and even that does not reach the management account."
+      },
+      {
+        "text": "Nothing at all; that account is exempt",
+        "correct": true,
+        "why": "Right: an SCP never applies to the management account, which is why it should hold no workloads."
+      },
+      {
+        "text": "It grants them the permission to change the switches",
+        "correct": false,
+        "why": "An SCP grants nothing; it only limits."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ybcabaq",
+    "version": 1,
+    "section": "boundaries",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each provider to the mechanism that puts a guardrail on a whole branch of its hierarchy.",
+    "hint": "The last row of the first table.",
+    "pairs": [
+      {
+        "left": "AWS",
+        "right": "service control policies"
+      },
+      {
+        "left": "Azure",
+        "right": "Azure Policy with a Deny effect"
+      },
+      {
+        "left": "Google Cloud",
+        "right": "Organization Policy constraints"
+      }
+    ],
+    "right_distractors": [
+      "a security group"
+    ]
+  },
+  {
+    "id": "ex-1jebvwmd",
+    "version": 1,
+    "section": "identity-differences",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Google Cloud bucket grants `roles/storage.objectViewer` to `allAuthenticatedUsers`. Who can read it?",
+    "hint": "Authenticated never means ours.",
+    "choices": [
+      {
+        "text": "Members of the clinic's organisation",
+        "correct": false,
+        "why": "That is the misreading the lesson warns about."
+      },
+      {
+        "text": "Its project's service accounts",
+        "correct": false,
+        "why": "Nothing about the name limits it to a project, or to service accounts."
+      },
+      {
+        "text": "Nobody until a deny policy is removed",
+        "correct": false,
+        "why": "No deny policy is involved; the binding grants."
+      },
+      {
+        "text": "Anybody signed in to any Google account",
+        "correct": true,
+        "why": "Right. Every Google account on the planet."
+      }
+    ]
+  },
+  {
+    "id": "ex-42xhfz6n",
+    "version": 1,
+    "section": "identity-differences",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A reviewer wants to stop one person deleting storage on Azure, the way an explicit Deny would on AWS. What does the lesson say is the usual Azure way?",
+    "hint": "Azure RBAC is additive.",
+    "choices": [
+      {
+        "text": "Write a deny assignment for that person",
+        "correct": false,
+        "why": "Customers do not write deny assignments freely; Azure creates them for features such as managed applications."
+      },
+      {
+        "text": "Add a second role assignment with fewer permissions, so the narrower one wins",
+        "correct": false,
+        "why": "A second grant adds to the first; it never subtracts."
+      },
+      {
+        "text": "Take away the grant, or refuse the change with Azure Policy",
+        "correct": true,
+        "why": "Right. Permissions are the union of grants, so you take grants away; a policy constrains the resource."
+      },
+      {
+        "text": "Move the person to another tenant",
+        "correct": false,
+        "why": "Far beyond what the problem needs, and not what the lesson describes."
+      }
+    ]
+  },
+  {
+    "id": "ex-a3nxzr20",
+    "version": 1,
+    "section": "identity-differences",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An Azure access review lists every Owner and User Access Administrator on every subscription and finds three people. Who has it missed?",
+    "hint": "Two planes meet at one documented switch.",
+    "choices": [
+      {
+        "text": "Nobody: subscription roles are the only way to administer Azure resources",
+        "correct": false,
+        "why": "The directory's top role can elevate itself into them."
+      },
+      {
+        "text": "Anyone with Reader on a resource group",
+        "correct": false,
+        "why": "Reader reads; it cannot grant."
+      },
+      {
+        "text": "The managed identities of virtual machines, which inherit Owner from the subscription",
+        "correct": false,
+        "why": "A managed identity has the roles assigned to it and nothing inherited by default."
+      },
+      {
+        "text": "Global Administrators in Entra ID, through elevate access",
+        "correct": true,
+        "why": "Right. An Azure owner in waiting, invisible to an RBAC-only review."
+      }
+    ]
+  },
+  {
+    "id": "ex-1znxf3s8",
+    "version": 1,
+    "section": "identity-differences",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which Google Cloud Organization Policy constraint does the lesson name for refusing long-lived secrets for programs?",
+    "hint": "Service account keys.",
+    "choices": [
+      {
+        "text": "`iam.disableServiceAccountKeyCreation`",
+        "correct": true,
+        "why": "Right. It refuses creating service account keys across a folder or organisation."
+      },
+      {
+        "text": "`storage.publicAccessPrevention`",
+        "correct": false,
+        "why": "That one refuses public buckets."
+      },
+      {
+        "text": "`compute.skipDefaultNetworkCreation`",
+        "correct": false,
+        "why": "That one stops new projects getting the default network."
+      },
+      {
+        "text": "`iam.automaticIamGrantsForDefaultServiceAccounts`",
+        "correct": false,
+        "why": "A real constraint, about the role default service accounts receive; not the one the lesson names for keys."
+      }
+    ]
+  },
+  {
+    "id": "ex-fy02hhcp",
+    "version": 1,
+    "section": "identity-differences",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each provider to the identity a program uses with no stored secret.",
+    "hint": "The left column of the last table.",
+    "pairs": [
+      {
+        "left": "AWS",
+        "right": "a role"
+      },
+      {
+        "left": "Google Cloud",
+        "right": "an attached service account"
+      },
+      {
+        "left": "Azure",
+        "right": "a managed identity"
+      }
+    ],
+    "right_distractors": [
+      "an access key",
+      "a client secret"
+    ]
+  },
+  {
+    "id": "ex-4n2atbas",
+    "version": 1,
+    "section": "data-and-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On Azure, a storage account allows anonymous access, but every container is set to private. What can a stranger read?",
+    "hint": "Two switches have to be set.",
+    "choices": [
+      {
+        "text": "Every blob in the account",
+        "correct": false,
+        "why": "The account switch alone exposes nothing; a container has to opt in too."
+      },
+      {
+        "text": "The list of containers, but no blob inside them",
+        "correct": false,
+        "why": "With every container private, anonymous requests get nothing at all."
+      },
+      {
+        "text": "Only blobs uploaded after the account setting changed",
+        "correct": false,
+        "why": "Upload time plays no part; the container's level decides."
+      },
+      {
+        "text": "Nothing, until one container opts in as well",
+        "correct": true,
+        "why": "Right. Azure's path needs both switches."
+      }
+    ]
+  },
+  {
+    "id": "ex-x67fch49",
+    "version": 1,
+    "section": "data-and-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An Azure SAS signed with the storage account's key, and not tied to a stored access policy, has leaked. What does Microsoft's documentation offer?",
+    "hint": "It has no revoke button of its own.",
+    "choices": [
+      {
+        "text": "Rotate the account's key, ending every such link at once",
+        "correct": true,
+        "why": "Right. Blunt, and the reason a user delegation SAS is the recommended kind."
+      },
+      {
+        "text": "Revoke that one SAS from the portal",
+        "correct": false,
+        "why": "There is no per-SAS revoke for an ad hoc SAS."
+      },
+      {
+        "text": "Nothing: wait for it to expire, since every SAS lasts at most an hour",
+        "correct": false,
+        "why": "Its expiry is whatever its creator chose."
+      },
+      {
+        "text": "Delete the blob, then upload it again under the same name",
+        "correct": false,
+        "why": "The SAS is signed for the name, not for the upload, so it would read the new blob too."
+      }
+    ]
+  },
+  {
+    "id": "ex-mxx7xt3w",
+    "version": 1,
+    "section": "data-and-keys",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The clinic switches its S3 bucket from the provider's default key to a customer-managed KMS key. What changed, according to the lesson?",
+    "hint": "The disk was encrypted before as well.",
+    "choices": [
+      {
+        "text": "The data is now encrypted at rest, which it was not before",
+        "correct": false,
+        "why": "Encryption at rest is on by default at all three providers."
+      },
+      {
+        "text": "Nothing at all, since both keys belong to AWS in the end",
+        "correct": false,
+        "why": "The customer-managed key has a key policy the clinic writes; that is the difference."
+      },
+      {
+        "text": "Anyone with s3:GetObject can now read the files without a key",
+        "correct": false,
+        "why": "The opposite direction: reading now also needs the key's permission."
+      },
+      {
+        "text": "Who can switch the data off, and who sees each use of the key",
+        "correct": true,
+        "why": "Right. Lesson 11 makes that concrete."
+      }
+    ]
+  },
+  {
+    "id": "ex-djw4zr4h",
+    "version": 1,
+    "section": "data-and-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An Azure Key Vault still uses vault access policies, and the team reviews only Azure RBAC. What does the review miss?",
+    "hint": "Two models, two lists.",
+    "choices": [
+      {
+        "text": "The keys' rotation dates",
+        "correct": false,
+        "why": "Rotation is a property of keys, not of who reads them."
+      },
+      {
+        "text": "Nothing, because access policies were retired from Azure and every vault moved to RBAC",
+        "correct": false,
+        "why": "They still exist; the lesson calls them the older model."
+      },
+      {
+        "text": "A second list of who reads secrets, in the vault's access policies",
+        "correct": true,
+        "why": "Right. Microsoft recommends RBAC so there is one list."
+      },
+      {
+        "text": "The vault's region, which RBAC hides",
+        "correct": false,
+        "why": "RBAC hides no region; the gap is about who has access."
+      }
+    ]
+  },
+  {
+    "id": "ex-4zr698mp",
+    "version": 1,
+    "section": "network-and-logs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A virtual machine with a public address is launched in a Google Cloud project's `default` network, with no firewall rule written. Does SSH from the internet reach it?",
+    "hint": "Read the default network's pre-made rules.",
+    "choices": [
+      {
+        "text": "Yes, through `default-allow-ssh`, which admits port 22 from `0.0.0.0/0`",
+        "correct": true,
+        "why": "Right. Which is why Google advises deleting the default network in production."
+      },
+      {
+        "text": "No: Google Cloud denies all ingress by default, in every network, until a rule allows it",
+        "correct": false,
+        "why": "The implied rule does, but the default network adds rules above it, including SSH from anywhere."
+      },
+      {
+        "text": "Only from other Google Cloud projects",
+        "correct": false,
+        "why": "The rule's source is the whole internet."
+      },
+      {
+        "text": "Only after the instance's service account is granted a role that allows SSH logins",
+        "correct": false,
+        "why": "Network reachability is a firewall question; the service account plays no part in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-yez87hv7",
+    "version": 1,
+    "section": "network-and-logs",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are recorded by default, with nobody having configured anything? Choose all that apply.",
+    "hint": "The middle column of the logs table is the one that is off.",
+    "choices": [
+      {
+        "text": "AWS management events, in CloudTrail's event history",
+        "correct": true,
+        "why": "Right, for 90 days."
+      },
+      {
+        "text": "Reads of objects in an S3 bucket",
+        "correct": false,
+        "why": "Data events: off until a trail records them, and billed."
+      },
+      {
+        "text": "Google Cloud's Admin Activity audit logs",
+        "correct": true,
+        "why": "Right. Always on, and impossible to turn off."
+      },
+      {
+        "text": "Google Cloud's Data Access audit logs for Cloud Storage",
+        "correct": false,
+        "why": "Off by default; BigQuery is the exception."
+      },
+      {
+        "text": "Azure's Activity Log for a subscription",
+        "correct": true,
+        "why": "Right, for 90 days."
+      }
+    ]
+  },
+  {
+    "id": "ex-vewjk4ax",
+    "version": 1,
+    "section": "network-and-logs",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "For how many days does Google Cloud keep Admin Activity audit logs in the `_Required` bucket?",
+    "hint": "The logs table, last column.",
+    "value": 400,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-z2q4wemb",
+    "version": 1,
+    "section": "network-and-logs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After an incident, the clinic asks two questions of the AWS account: who changed the bucket's policy, and who read the patients' file. Nobody configured logging beforehand. What can be answered?",
+    "hint": "One is a management event and one is a data event.",
+    "choices": [
+      {
+        "text": "Both, from CloudTrail's event history",
+        "correct": false,
+        "why": "Event history holds management events only; object reads are data events."
+      },
+      {
+        "text": "Only the first one, and only if it happened within 90 days",
+        "correct": true,
+        "why": "Right. The middle column is the one that hurts after an incident."
+      },
+      {
+        "text": "Neither, since no trail was created",
+        "correct": false,
+        "why": "Event history records management events without a trail, for 90 days."
+      },
+      {
+        "text": "The second, from the bucket's own access history",
+        "correct": false,
+        "why": "A bucket keeps no access history unless logging was set up."
+      }
+    ]
+  },
+  {
+    "id": "ex-zmmpv0vz",
+    "version": 1,
+    "section": "one-control-three-ways",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab, `get-public-access-block` on the new `clinic-records` bucket answered `NoSuchPublicAccessBlockConfiguration`. What would AWS have answered?",
+    "hint": "A default since April 2023.",
+    "choices": [
+      {
+        "text": "The same error, since new buckets have no configuration",
+        "correct": false,
+        "why": "That is moto. AWS switches all four settings on for new buckets."
+      },
+      {
+        "text": "All four settings, already true",
+        "correct": true,
+        "why": "Right. Said from AWS's documentation, not run."
+      },
+      {
+        "text": "An AccessDenied error, because reading the setting needs a separate permission",
+        "correct": false,
+        "why": "Nothing in the lesson suggests a refusal; the question is what the setting holds."
+      },
+      {
+        "text": "Only BlockPublicPolicy set, with the other three left off",
+        "correct": false,
+        "why": "AWS turns on all four together."
+      }
+    ]
+  },
+  {
+    "id": "ex-6h65kcam",
+    "version": 1,
+    "section": "one-control-three-ways",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `aws s3control put-public-access-block` never reach moto?",
+    "hint": "Read the address in the error.",
+    "choices": [
+      {
+        "text": "moto refuses account-level settings with AccessDenied",
+        "correct": false,
+        "why": "No answer came back at all; the request never connected."
+      },
+      {
+        "text": "Account-level settings need the root user's password, which the lab never sets",
+        "correct": false,
+        "why": "They need a permission, not the root user; and the error was a connection failure."
+      },
+      {
+        "text": "The `test` key is not allowed to call S3 Control",
+        "correct": false,
+        "why": "moto had no checking on in this section, and the request never arrived."
+      },
+      {
+        "text": "The account number became part of a host name nothing resolves",
+        "correct": true,
+        "why": "Right. On AWS the same pattern reaches the account's S3 Control endpoint."
+      }
+    ]
+  },
+  {
+    "id": "ex-1p0xtsx8",
+    "version": 1,
+    "section": "one-control-three-ways",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The clinic's sentence is enforced by Azure Policy on a management group, by an Organization Policy constraint on the Google Cloud organisation, and by an SCP on the AWS root. Which part of its estate is outside all three?",
+    "hint": "Three places, three ways to be exempt.",
+    "choices": [
+      {
+        "text": "Nothing, since each guardrail sits at its hierarchy's top",
+        "correct": false,
+        "why": "The AWS one, at the root, still misses one account."
+      },
+      {
+        "text": "The Google Cloud projects, since constraints apply to folders only",
+        "correct": false,
+        "why": "A constraint on the organisation is inherited by every folder and project."
+      },
+      {
+        "text": "The AWS management account, which no SCP reaches",
+        "correct": true,
+        "why": "Right. The audit of the sentence has to visit it by other means."
+      },
+      {
+        "text": "Azure subscriptions created after the policy was assigned",
+        "correct": false,
+        "why": "A policy on a management group reaches subscriptions placed under it, new or old."
+      }
+    ]
+  },
+  {
+    "id": "ex-ghvv933z",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the levels of Azure's hierarchy from the top down.",
+    "hint": "The figure's middle column.",
+    "items": [
+      "the tenant's root management group",
+      "a management group",
+      "a subscription",
+      "a resource group",
+      "a resource"
+    ],
+    "trap": "Putting the resource group above the subscription is the usual slip: a resource group lives inside one subscription."
+  }
+]

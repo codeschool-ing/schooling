@@ -1,0 +1,496 @@
+{
+  "ex-10kbhn9v": {
+    "prompt": "Quando uma padaria paga uma nota, o razão, o Salesforce e o processo de crédito precisam saber. Que canal serve?",
+    "hint": "Cada um dos três precisa de todo pagamento.",
+    "choices": [
+      {
+        "text": "Uma fila que os três sistemas leem como consumidores concorrentes",
+        "why": "Consumidores concorrentes repartem as mensagens: cada pagamento chegaria a um dos três e faltaria nos outros dois."
+      },
+      {
+        "text": "Um tópico, com uma assinatura durável para cada sistema",
+        "why": "Isso: um tópico dá a cada assinatura sua própria cópia, e a durabilidade guarda as cópias para um assinante fora do ar."
+      },
+      {
+        "text": "Uma chamada do portal a cada sistema, uma depois da outra",
+        "why": "Funciona enquanto os três estão no ar, e faz o portal conhecer e esperar todo sistema que se importa com um pagamento."
+      },
+      {
+        "text": "Uma assinatura não durável por sistema, para nada se acumular",
+        "why": "Nada se acumula porque um assinante que está reiniciando simplesmente perde os pagamentos feitos nesse meio-tempo."
+      }
+    ]
+  },
+  "ex-7xmddsc0": {
+    "prompt": "O fluxo de pedidos gasta 250 ms em cada mensagem. No fim do mês o Rui roda quatro instâncias como consumidores concorrentes. Quantos pedidos por segundo elas tratam juntas?",
+    "hint": "Uma instância primeiro: quantos 250 ms cabem num segundo?",
+    "unit": "pedidos",
+    "accept_units": [
+      "pedido",
+      "mensagens",
+      "mensagem"
+    ]
+  },
+  "ex-qc53cef2": {
+    "prompt": "Um parceiro usa ActiveMQ. Um desenvolvedor diz: \"Nosso código Java usa JMS com IBM MQ, e o ActiveMQ também é JMS, então nosso cliente conecta no broker deles.\" O que está errado?",
+    "hint": "Pergunte o que o JMS padroniza: o código ou os bytes.",
+    "choices": [
+      {
+        "text": "O JMS é uma API, e o cliente do IBM MQ só fala com o IBM MQ",
+        "why": "Isso: o JMS padroniza as interfaces do programa, não o protocolo, então dois provedores não se entendem."
+      },
+      {
+        "text": "JMS cobre filas, e falar com outra empresa exige tópicos",
+        "why": "O JMS define filas e tópicos; a forma do canal não é o que atrapalha aqui."
+      },
+      {
+        "text": "Nada: o JMS fixa o formato na rede, então dois brokers JMS conversam",
+        "why": "Isso é o que o AMQP 1.0 faz. O JMS não diz nada sobre os bytes na rede."
+      },
+      {
+        "text": "Só funcionaria se os dois lados rodassem a mesma versão do Java",
+        "why": "A versão do Java não é o obstáculo; os dois brokers falam protocolos diferentes, seja qual for o Java do cliente."
+      }
+    ]
+  },
+  "ex-nzabsyys": {
+    "prompt": "Ligue cada nome ao que ele é.",
+    "hint": "Dois produtos e dois padrões, e os padrões padronizam coisas diferentes.",
+    "pairs": [
+      {
+        "left": "IBM MQ",
+        "right": "filas com tópicos por cima, mensagens persistentes e transações"
+      },
+      {
+        "left": "Apache Kafka",
+        "right": "um log particionado que a leitura não esvazia"
+      },
+      {
+        "left": "JMS",
+        "right": "uma API Java que não especifica os bytes na rede"
+      },
+      {
+        "left": "AMQP 1.0",
+        "right": "um protocolo de rede que cliente e broker de qualquer fornecedor compartilham"
+      }
+    ],
+    "right_distractors": [
+      "uma tabela de staging que um sistema grava e outro consulta"
+    ]
+  },
+  "ex-0p826j5b": {
+    "prompt": "Um consumidor confirma cada mensagem assim que a recebe e depois grava o pagamento no razão. Ele cai no meio da gravação. O que acontece com esse pagamento?",
+    "hint": "O broker esquece uma mensagem quando ouve a confirmação.",
+    "choices": [
+      {
+        "text": "É registrado duas vezes, porque o broker o manda de novo",
+        "why": "O broker já ouviu \"pronto\" e apagou a mensagem, então não há nada para mandar de novo."
+      },
+      {
+        "text": "Espera na fila até o consumidor reiniciar",
+        "why": "Isso acontece quando a confirmação vem depois do trabalho; aqui ela veio antes."
+      },
+      {
+        "text": "Ele se perde",
+        "why": "Isso: confirmar antes do trabalho é at-most-once, e esta entrega não resultou em nada."
+      },
+      {
+        "text": "Está seguro, porque a mensagem era persistente no broker",
+        "why": "A persistência protege uma mensagem que o broker ainda guarda, e esta foi apagada na confirmação."
+      }
+    ]
+  },
+  "ex-ybfsvp4h": {
+    "prompt": "Um consumidor lê pagamentos de um tópico do Kafka e os insere num razão PostgreSQL. O time diz que a semântica exactly-once do Kafka impede duplicatas no razão. Eles têm razão?",
+    "hint": "O que entra numa transação do Kafka?",
+    "choices": [
+      {
+        "text": "Sim, desde que o produtor esteja com a idempotência ligada",
+        "why": "O produtor idempotente remove duplicatas das próprias retentativas dentro do Kafka; ele não sabe nada do banco."
+      },
+      {
+        "text": "Sim, porque o offset é confirmado depois do insert",
+        "why": "Confirmar depois do insert é at-least-once: uma queda entre os dois insere o pagamento de novo."
+      },
+      {
+        "text": "Não: o Kafka dá at-most-once e nada mais forte",
+        "why": "O Kafka suporta at-least-once e, para escritas no próprio Kafka, exactly-once; o problema é o banco."
+      },
+      {
+        "text": "Não: a garantia cobre escritas no Kafka, não no razão",
+        "why": "Isso: um insert no PostgreSQL fica fora de qualquer transação do Kafka, então a reentrega é absorvida pelo consumidor ou por ninguém."
+      }
+    ]
+  },
+  "ex-kw9s69wr": {
+    "prompt": "Confirmar uma mensagem só depois de o trabalho dela ter sido gravado dá entrega at-___-once.",
+    "hint": "Nada se perde, e uma repetição é possível.",
+    "blanks": [
+      {
+        "accept": [
+          "least"
+        ]
+      }
+    ]
+  },
+  "ex-s94zx8fg": {
+    "prompt": "Um fluxo leva 1.900 mensagens por dia e cerca de uma em mil é reentregue. Quantas duplicatas o consumidor deve esperar em 30 dias?",
+    "hint": "Primeiro as mensagens do mês, depois a taxa.",
+    "unit": "duplicatas",
+    "accept_units": [
+      "duplicata",
+      "mensagens"
+    ]
+  },
+  "ex-gch35zg4": {
+    "prompt": "Um colega passa o insert em `processed` para uma transação própria, gravada depois do insert no razão. O que pode dar errado agora?",
+    "hint": "Ponha uma queda entre os dois commits.",
+    "choices": [
+      {
+        "text": "Nada, desde que as duas transações estejam no mesmo arquivo de banco",
+        "why": "Compartilhar um arquivo não é compartilhar uma transação; dois commits deixam um momento entre eles."
+      },
+      {
+        "text": "Uma reentrega depois de uma queda entre os commits paga duas vezes",
+        "why": "Isso: o trabalho foi feito e a memória dele não, então a repetição parece nova."
+      },
+      {
+        "text": "O broker perde a mensagem",
+        "why": "O broker ainda a guarda até a confirmação; o perigo é ela voltar."
+      },
+      {
+        "text": "A chave primária de `processed` rejeita a primeira entrega da mensagem",
+        "why": "Uma primeira entrega tem um id que ninguém registrou, então a chave a aceita."
+      }
+    ]
+  },
+  "ex-tcntdjw0": {
+    "prompt": "Para economizar uma tabela, um desenvolvedor remove `processed` e põe uma restrição de unicidade na coluna de nota do razão. O Mercado Central paga a NF-18232 em duas parcelas. O que acontece?",
+    "hint": "Um pagamento é único por nota?",
+    "choices": [
+      {
+        "text": "As duas parcelas são registradas, e só uma mensagem reentregue é recusada",
+        "why": "A restrição conhece a nota, não a mensagem, então não distingue uma repetição de uma segunda parcela."
+      },
+      {
+        "text": "As duas parcelas são registradas duas vezes cada",
+        "why": "Uma restrição de unicidade só recusa linhas; ela nunca as acrescenta."
+      },
+      {
+        "text": "A segunda parcela é recusada como se fosse uma duplicata",
+        "why": "Isso: uma chave natural falha onde o fato pode legitimamente acontecer duas vezes, e um pagamento pode."
+      },
+      {
+        "text": "O broker recusa a segunda mensagem da mesma nota",
+        "why": "O broker não sabe nada de notas; a recusa, se houver, acontece no banco do consumidor."
+      }
+    ]
+  },
+  "ex-w5an2db2": {
+    "prompt": "Quais destas mensagens são idempotentes por natureza, de modo que tratá-las duas vezes deixa o mesmo estado? Escolha todas as que se aplicam.",
+    "hint": "Um valor informado contra uma mudança informada.",
+    "choices": [
+      {
+        "text": "O pedido 4711 está cancelado",
+        "why": "Sim: um pedido cancelado, cancelado de novo, continua cancelado."
+      },
+      {
+        "text": "Some 300 litros à coleta da fazenda 10233",
+        "why": "Duas vezes são 600 litros, e a fazenda recebe por um leite que nunca entregou."
+      },
+      {
+        "text": "O preço da manteiga 200 g agora é R$ 12,00",
+        "why": "Sim: gravar o mesmo valor duas vezes deixa esse valor."
+      },
+      {
+        "text": "Mande o certificado de análise para o cliente",
+        "why": "Cada tratamento manda outro e-mail; o cliente recebe dois."
+      }
+    ]
+  },
+  "ex-90hpecsx": {
+    "prompt": "Um consumidor roda `SELECT` em `processed` e, se o id não está lá, aplica o pagamento e insere o id, tudo numa transação, sem restrição de unicidade no id. Duas instâncias leem a fila. Quando um pagamento ainda pode ser aplicado duas vezes?",
+    "hint": "O que cada transação enxerga da outra antes de qualquer uma confirmar?",
+    "choices": [
+      {
+        "text": "Quando as duas recebem a mesma mensagem e conferem antes de confirmar",
+        "why": "Isso: um timeout reentrega a mensagem à segunda instância, e a conferência passa duas vezes. Uma chave primária faria o banco recusar uma."
+      },
+      {
+        "text": "Nunca: pôr os três passos numa só transação já impede que isso aconteça",
+        "why": "Uma transação não enxerga o insert ainda não confirmado da outra, então sem restrição as duas não acham nada e as duas aplicam."
+      },
+      {
+        "text": "Só se o banco cair no meio da transação",
+        "why": "Uma queda desfaz a transação e não deixa nada aplicado; a corrida não precisa de queda nenhuma."
+      },
+      {
+        "text": "Só se o broker estiver configurado para entrega at-most-once",
+        "why": "At-most-once evita repetições perdendo mensagens; a corrida aparece com at-least-once, que é a configuração normal."
+      }
+    ]
+  },
+  "ex-7f8t7jfn": {
+    "prompt": "Ponha em ordem o caminho de um pagamento pelo outbox.",
+    "hint": "Da transação do portal à do consumidor.",
+    "items": [
+      "O portal grava o pagamento e a linha do outbox numa transação",
+      "O relay lê as linhas do outbox ainda não enviadas",
+      "O relay publica a mensagem no broker",
+      "O relay marca a linha do outbox como enviada",
+      "O consumidor registra o id da mensagem e o pagamento juntos"
+    ],
+    "trap": "Marcar a linha como enviada antes de publicar transforma uma queda do relay numa mensagem perdida."
+  },
+  "ex-qp5sjs50": {
+    "prompt": "Para evitar os pedidos perdidos, um desenvolvedor propõe: publicar na fila primeiro e depois confirmar o pedido; se o commit falhar, publicar uma mensagem de \"cancelar\". Qual é a falha?",
+    "hint": "Onde o processo pode morrer?",
+    "choices": [
+      {
+        "text": "A mensagem de cancelar chegaria antes do pedido que cancela",
+        "why": "As duas passam pela mesma fila nessa ordem; o problema é que o cancelar pode nunca ser enviado."
+      },
+      {
+        "text": "O IBM MQ não permite publicar uma mensagem antes de um commit no banco",
+        "why": "O broker nem sabe que existe um banco; aceita o put quando ele é feito."
+      },
+      {
+        "text": "Nada: inverter a ordem elimina o problema da escrita dupla",
+        "why": "Inverter a ordem só troca o resultado ruim de \"confirmado e nunca enviado\" para \"enviado e nunca registrado\"."
+      },
+      {
+        "text": "Uma queda após publicar deixa no SAP um pedido que o portal não tem",
+        "why": "Isso: continuam sendo duas escritas sem transação compartilhada, e a compensação mora num processo que acabou de morrer."
+      }
+    ]
+  },
+  "ex-xmanz5x2": {
+    "prompt": "Um relay gera um id aleatório novo para cada mensagem no momento em que publica. Ele cai depois de publicar um pagamento e antes de marcar a linha como enviada, e publica de novo ao reiniciar. O que faz o consumidor idempotente?",
+    "hint": "Compare os ids das duas cópias.",
+    "choices": [
+      {
+        "text": "Registra duas vezes: a cópia tem outro id",
+        "why": "Isso: o id precisa ser fixado quando a linha do outbox é gravada, senão o consumidor vê duas mensagens diferentes."
+      },
+      {
+        "text": "Pula a cópia, porque o pagamento dentro dela é o mesmo",
+        "why": "O consumidor compara ids de mensagem, não pagamentos, e esses dois ids são diferentes."
+      },
+      {
+        "text": "Rejeita as duas cópias como mensagens envenenadas",
+        "why": "As duas cópias são bem formadas e dão certo; envenenada é uma mensagem que nunca dá certo."
+      },
+      {
+        "text": "Nada: o relay nunca publica uma linha duas vezes",
+        "why": "Uma queda entre publicar e marcar é exatamente quando ele publica."
+      }
+    ]
+  },
+  "ex-wdy2rs2e": {
+    "prompt": "Na execução da aula, o relay caiu uma vez depois de publicar portal-1 e foi reiniciado. Quantas vezes portal-1 apareceu em queue.jsonl, e quantos pagamentos o razão tinha depois?",
+    "hint": "O razão começou com três pagamentos da seção anterior.",
+    "choices": [
+      {
+        "text": "Duas vezes, e o razão terminou com cinco pagamentos",
+        "why": "Isso: o outbox duplicou a mensagem e o consumidor absorveu a duplicata: três mais dois pagamentos novos."
+      },
+      {
+        "text": "Uma vez, e o razão tinha quatro pagamentos",
+        "why": "O reinício achou portal-1 ainda não enviada e a publicou de novo, então ela aparece duas vezes."
+      },
+      {
+        "text": "Duas vezes, e o razão tinha seis pagamentos",
+        "why": "A cópia foi pulada como já processada, então não acrescentou nada."
+      },
+      {
+        "text": "Uma vez, e o razão tinha cinco pagamentos",
+        "why": "Cinco é o total certo, mas `cat queue.jsonl` mostrou portal-1 em duas linhas."
+      }
+    ]
+  },
+  "ex-t5yt7pp5": {
+    "prompt": "Um consumidor repete uma mensagem que falha cinco vezes, esperando 1, 2, 4, 8 e 16 segundos antes das retentativas. Quantos segundos passa esperando antes de a mensagem ir para a fila de mensagens mortas?",
+    "hint": "Some as esperas.",
+    "unit": "segundos",
+    "accept_units": [
+      "segundo",
+      "s"
+    ]
+  },
+  "ex-nvb7eett": {
+    "prompt": "Chega um pedido do cliente 4011873, que não existe no SAP. O erro do consumidor diz \"cliente não encontrado\". O que ele deveria fazer com a mensagem?",
+    "hint": "A centésima tentativa vai ser diferente da primeira?",
+    "choices": [
+      {
+        "text": "Repetir com backoff exponencial, sem limite, até o SAP conhecer o cliente",
+        "why": "Sem teto uma falha permanente é repetida para sempre, enchendo os logs e prendendo um consumidor."
+      },
+      {
+        "text": "Mandá-la de imediato para a fila de mensagens mortas",
+        "why": "Isso: o defeito está na mensagem, então repetir não ajuda e uma pessoa precisa olhar."
+      },
+      {
+        "text": "Confirmá-la e gravar o erro no log",
+        "why": "Isso joga o pedido fora; uma linha de log que ninguém lê foi para onde também foram os 47 pedidos perdidos."
+      },
+      {
+        "text": "Repetir na hora, num laço apertado, já que o erro é rápido",
+        "why": "Repetições imediatas de uma falha permanente queimam um consumidor e não mudam nada."
+      }
+    ]
+  },
+  "ex-9cvgt1hf": {
+    "prompt": "Ligue cada produto ao jeito como ele põe de lado uma mensagem que falha.",
+    "hint": "Um deles não tem nada no broker.",
+    "pairs": [
+      {
+        "left": "IBM MQ",
+        "right": "um limite de backout e uma fila de reenvio de backout"
+      },
+      {
+        "left": "RabbitMQ",
+        "right": "uma dead-letter exchange configurada na fila"
+      },
+      {
+        "left": "Amazon SQS",
+        "right": "uma redrive policy depois de um número de recebimentos"
+      },
+      {
+        "left": "Apache Kafka",
+        "right": "nada no broker; os consumidores gravam as falhas em outro tópico"
+      }
+    ],
+    "right_distractors": [
+      "uma retentativa que espera o dobro a cada vez, para sempre"
+    ]
+  },
+  "ex-fkghk7sw": {
+    "prompt": "Vinte e três bloqueios de crédito ficaram meses na fila de mensagens mortas enquanto os vendedores tiravam pedidos de clientes bloqueados. Que parte da regra do Rui e da Joana os teria revelado mais cedo?",
+    "hint": "Que parte faz uma pessoa olhar no primeiro dia?",
+    "choices": [
+      {
+        "text": "Aumentar o número de retentativas para os bloqueios de crédito terem mais tentativas",
+        "why": "O campo faltando era permanente, então mais tentativas teriam falhado igual, só mais tarde."
+      },
+      {
+        "text": "Uma fila de mensagens mortas compartilhada por todos os fluxos, vigiada pela integração",
+        "why": "É parecido com o que existia: uma fila cuja profundidade não queria dizer nada para nenhum time."
+      },
+      {
+        "text": "Um alarme na profundidade acima de zero, enviado ao dono nomeado do fluxo",
+        "why": "Isso: crédito é um dos fluxos em que uma única mensagem morta é um incidente, e o alarme chega a uma pessoa que é dona dele."
+      },
+      {
+        "text": "Reproduzir a fila toda noite para o destino original",
+        "why": "Uma reprodução às cegas de uma falha permanente falha de novo, e ninguém fica sabendo do campo faltando."
+      }
+    ]
+  },
+  "ex-s05kb5j1": {
+    "prompt": "Uma mensagem de preço da manteiga de três semanas atrás é reproduzida a partir da fila de mensagens mortas. O consumidor do portal lê um tópico do Kafka com chave por material. O que torna a reprodução inofensiva?",
+    "hint": "Chaves mantêm a ordem no trânsito. O que a mantém depois?",
+    "choices": [
+      {
+        "text": "A chave, porque manda toda mensagem da manteiga para a mesma partição",
+        "why": "A mensagem reproduzida entra na partição agora, atrás de preços mais novos, e é aplicada por cima deles."
+      },
+      {
+        "text": "Uma versão em cada mensagem, conferida antes do update",
+        "why": "Isso: o preço velho leva uma versão velha, o update condicional não muda nenhuma linha, e a mensagem é confirmada."
+      },
+      {
+        "text": "Ler o tópico com um único consumidor ativo",
+        "why": "Um consumidor aplica as mensagens na ordem de chegada, e o preço velho chega por último."
+      },
+      {
+        "text": "Trocar para uma fila FIFO, para as mensagens saírem na ordem em que chegaram",
+        "why": "A reprodução chega por último, então uma fila FIFO a entrega por último, que é justamente o problema."
+      }
+    ]
+  },
+  "ex-3y5e5z63": {
+    "prompt": "Um tópico do Kafka tem 12 partições. Vinte instâncias de um consumidor entram no mesmo grupo de consumidores. Quantas delas recebem partições para ler?",
+    "hint": "Cada partição é lida por um membro do grupo de cada vez.",
+    "unit": "consumidores",
+    "accept_units": [
+      "consumidor",
+      "instâncias",
+      "instância"
+    ]
+  },
+  "ex-wcgmqyk1": {
+    "prompt": "\"Pedido 4711: linha 3 removida, versão 7\" chega antes de \"Pedido 4711: linha 3 incluída, versão 6\". O que o consumidor deveria fazer?",
+    "hint": "Essas duas mudanças podem ser aplicadas em qualquer ordem?",
+    "choices": [
+      {
+        "text": "Aplicar a versão 7 agora e a 6 quando chegar, já que a tabela processed impede repetições",
+        "why": "Nada se repete aqui; a ordem está errada, e a inclusão atrasada devolve uma linha que a padaria removeu."
+      },
+      {
+        "text": "Descartar a versão 7, como um preço velho seria descartado",
+        "why": "A versão 7 é a mensagem mais nova, e uma mudança não pode ser descartada como um valor substituído."
+      },
+      {
+        "text": "Mandar a versão 7 para a fila de mensagens mortas como envenenada",
+        "why": "Não há nada errado com a mensagem; ela só chegou cedo, e daria certo depois que a 6 entrasse."
+      },
+      {
+        "text": "Segurar a remoção até a inclusão chegar, e aplicar as duas em ordem",
+        "why": "Isso: as mudanças não comutam, então o consumidor reordena, e alguém decide quanto tempo ele espera."
+      }
+    ]
+  },
+  "ex-qrf2w42g": {
+    "prompt": "A Joana revisa um fluxo novo: o SAP publica \"o limite de crédito do cliente X agora é R$ 50.000,00\" num tópico, e um consumidor atualiza o Salesforce. Quais comentários de revisão esta aula sustenta? Escolha todos os que se aplicam.",
+    "hint": "Entrega, falha e ordem, um comentário cada.",
+    "choices": [
+      {
+        "text": "Levar o número de alteração do SAP como versão, e ignorar um limite mais velho que o gravado",
+        "why": "Sim: um valor informado com versão é seguro em qualquer ordem, inclusive numa reprodução atrasada."
+      },
+      {
+        "text": "Entregar os limites numa ordem global entre todos os clientes",
+        "why": "A ordem importa por cliente; a ordem global custa uma partição e um consumidor sem benefício."
+      },
+      {
+        "text": "Dar ao fluxo sua própria fila de mensagens mortas com um dono nomeado e alarme na profundidade",
+        "why": "Sim: fluxos de crédito são onde vinte e três mensagens mortas silenciosas custaram meses de reclamações."
+      },
+      {
+        "text": "Confirmar depois da atualização no Salesforce, e fazer a atualização poder ser repetida",
+        "why": "Sim: at-least-once mais um efeito idempotente é como o limite é aplicado uma vez."
+      }
+    ]
+  },
+  "ex-w0g9pcad": {
+    "prompt": "O portal precisa avisar o SAP de todo pedido, e o SAP fica parado todo domingo da 01:00 às 05:00. Que desenho guarda todo pedido e cria cada ordem de venda uma vez?",
+    "hint": "Três falhas a cobrir: o portal, o relay e a reentrega.",
+    "choices": [
+      {
+        "text": "Uma chamada síncrona ao SAP para cada pedido, repetida até o SAP responder",
+        "why": "Por quatro horas todo domingo cada padaria esperaria uma chamada que não pode dar certo, e uma retentativa após timeout ainda pode criar o pedido duas vezes."
+      },
+      {
+        "text": "Confirmar o pedido, pôr a mensagem na fila e registrar no log qualquer put que falhar",
+        "why": "Essa é a primeira versão do portal, a que perdeu 47 pedidos num domingo à noite."
+      },
+      {
+        "text": "Um outbox, um relay para uma fila e um consumidor que registra ids",
+        "why": "Isso: o outbox faz do pedido e da mensagem um fato só, a fila espera a janela passar, e o id absorve as duplicatas do relay."
+      },
+      {
+        "text": "Uma fila com entrega exactly-once ligada, para nenhuma conferência no consumidor ser necessária",
+        "why": "Nenhuma configuração do broker cobre o intervalo entre o SAP criar o pedido e a confirmação."
+      }
+    ]
+  },
+  "ex-5zxyf2ds": {
+    "prompt": "No primeiro dia útil do mês, 4.800 pedidos esperam na fila de pedidos. Quatro instâncias tratam 4 pedidos por segundo cada uma. Quantos segundos leva para esvaziar o acúmulo, se nada novo chegar?",
+    "hint": "Primeiro a vazão das quatro juntas.",
+    "unit": "segundos",
+    "accept_units": [
+      "segundo",
+      "s"
+    ]
+  }
+}
