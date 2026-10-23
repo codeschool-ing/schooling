@@ -36,4 +36,4 @@ def figures(lang):
     f.arrow([(312, 146), (325, 146)])
     f.arrow([(437, 146), (450, 146)])
     f.arrow([(562, 146), (645, 146), (645, 115)])
-    return {"l09-csrf": f.json(t["cap"], same=["SameSite=Lax"] if lang == "pt" else None)}
+    return {"l09-csrf": f.json(t["cap"], same=["1 SameSite=Lax"] if lang == "pt" else None)}
