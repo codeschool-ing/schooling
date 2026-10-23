@@ -30,6 +30,9 @@ done
 mkdir -p /home/ana; mount --bind "$LAB_HOME/ana" /home/ana
 
 set -uo pipefail
+# bash reports the stopped server as "Terminated" on its own stderr; that line
+# is the shell's, not any program's, and is kept out of the transcripts.
+exec 2> >(grep --line-buffered -v '^Terminated$' >&2)
 export HOME=/home/ana TZ=America/Sao_Paulo LC_ALL=C.UTF-8 PAGER=cat GIT_PAGER=cat
 export PIP_DISABLE_PIP_VERSION_CHECK=1
 SC_LAB=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
@@ -62,7 +65,9 @@ serve() {
   flock 9
   local dir=$1; shift
   local act=''; [ "$VENV" = 1 ] && act='. /home/ana/sc/.venv/bin/activate && '
-  ( cd "$dir" && setsid bash -c "$act exec $*" </dev/null >/var/tmp/secure-code-server.log 2>&1 & echo $! > /var/tmp/secure-code-server.pid )
+  rm -f /var/tmp/secure-code-server.pid
+  ( cd "$dir" && setsid bash -c "echo \$\$ > /var/tmp/secure-code-server.pid; $act exec $*" </dev/null >/var/tmp/secure-code-server.log 2>&1 & )
+  for _ in $(seq 50); do [ -s /var/tmp/secure-code-server.pid ] && break; sleep 0.1; done
   SERVER_PID=$(cat /var/tmp/secure-code-server.pid)
   for _ in $(seq 50); do
     if curl -s -o /dev/null http://127.0.0.1:5000/ 2>/dev/null; then return 0; fi
@@ -71,8 +76,8 @@ serve() {
   echo "serve: nothing answered on port 5000" >&2; cat /var/tmp/secure-code-server.log >&2; exit 1
 }
 unserve() {
-  [ -n "$SERVER_PID" ] && kill -- -"$SERVER_PID" 2>/dev/null; kill "$SERVER_PID" 2>/dev/null
-  SERVER_PID=; sleep 0.3
+  { [ -n "$SERVER_PID" ] && kill -- -"$SERVER_PID"; kill "$SERVER_PID"; sleep 0.3; } 2>/dev/null
+  SERVER_PID=
   flock -u 9 2>/dev/null || true
 }
 trap 'unserve' EXIT
