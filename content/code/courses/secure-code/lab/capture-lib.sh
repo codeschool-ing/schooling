@@ -43,7 +43,11 @@ run() {
   local pre=''; [ "$VENV" = 1 ] && pre='(.venv) '
   printf '%sana@vm:%s$ %s\n' "$pre" "$shown" "$*"
   local act=''; [ "$VENV" = 1 ] && act='. /home/ana/sc/.venv/bin/activate && '
-  ( cd "$dir" && bash -c "$act$*" ) 2>&1
+  if [[ "$*" == *"pip "* ]]; then   # one pip at a time in the shared environment
+    ( flock 8; cd "$dir" && bash -c "$act$*" ) 8>/var/tmp/secure-code-pip.lock 2>&1
+  else
+    ( cd "$dir" && bash -c "$act$*" ) 2>&1
+  fi
   return 0
 }
 block() { printf '##### %s\n' "$1"; }
