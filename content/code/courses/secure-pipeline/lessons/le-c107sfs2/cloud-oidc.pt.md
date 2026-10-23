@@ -14,7 +14,19 @@ máquina é a mesma troca com todas as peças à vista, e a tabela do fim liga u
 Um job do GitHub Actions só recebe um token de identidade se o workflow conceder a permissão de pedir
 um. A forma documentada, para um job que faz deploy na AWS:
 
-@@FENCE 1@@
+```yaml
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: arn:aws:iam::111122223333:role/linkbox-deploy
+          aws-region: sa-east-1
+```
 
 `id-token: write` parece acesso de escrita a alguma coisa, e não é: ele permite que o job peça ao
 serviço de tokens do GitHub um JWT sobre si mesmo. Sem ele o pedido falha, e é por isso que o
@@ -23,7 +35,10 @@ um token de recebê-lo. A action pede o token, envia à AWS e põe as credenciai
 devolve no ambiente do job. O número da conta é o exemplo da documentação da AWS, e a action está
 fixada por commit, como a aula 16 exige. O commit foi conferido do jeito que a aula 16 confere:
 
-@@FENCE 2@@
+```
+ana@vm:~/linkbox$ git ls-remote https://github.com/aws-actions/configure-aws-credentials refs/tags/v6.3.0
+e1253824e5c10ff9df46874f81ed3ec929e19cfd	refs/tags/v6.3.0
+```
 
 ### O provedor de nuvem decide quais execuções
 
@@ -31,7 +46,26 @@ Na AWS, a **trust policy** da role faz o papel da role do Vault. O serviço de t
 registrado uma vez na conta como provedor de identidade, e cada role diz quais tokens dele podem se
 tornar aquela role:
 
-@@FENCE 3@@
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": "arn:aws:iam::111122223333:oidc-provider/token.actions.githubusercontent.com"
+      },
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringEquals": {
+          "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
+          "token.actions.githubusercontent.com:sub": "repo:ana/linkbox:ref:refs/heads/main"
+        }
+      }
+    }
+  ]
+}
+```
 
 Leia em paralelo com o `linkbox-main.json`. O principal `Federated` é o `bound_issuer` e a chave
 pública juntos: em qual assinatura acreditar. A condição em `aud` é o `bound_audiences`. A condição em
@@ -101,4 +135,7 @@ ser trocada à mão em todo lugar onde foi colada.
 
 Quando terminar, remova o contêiner do Vault. Ele levou os segredos junto, como o modo dev prometia:
 
-@@FENCE 4@@
+```
+ana@vm:~/linkbox$ docker rm -f vault
+vault
+```

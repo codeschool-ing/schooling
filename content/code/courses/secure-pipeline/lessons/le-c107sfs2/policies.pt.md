@@ -14,7 +14,14 @@ de mais nada. O pipeline em `main` precisa ler um valor, a senha de assinatura, 
 exatamente isso. Ela pertence a quem opera o Vault, não ao projeto, então mora ao lado dos outros
 arquivos do servidor de CI. Salve-a como `~/ci/vault/linkbox-sign.hcl`:
 
-@@FENCE 1@@
+```hcl
+# What a run of linkbox's pipeline on main may do in Vault: read the
+# password of the signing key. Not list the secrets beside it, not write
+# this one, not read any other path.
+path "secret/data/linkbox/signing" {
+  capabilities = ["read"]
+}
+```
 
 O caminho é o da API, da seção anterior, com `data/` no meio. **Capabilities são verbos**: `read`,
 `create`, `update`, `delete` e `list` são os que um armazenamento chave/valor usa, e `sudo` e `deny`
@@ -26,7 +33,14 @@ do linkbox" e concede todo segredo que qualquer time acrescente depois com esse 
 
 Carregue-a no Vault e crie um token que a leva e vive trinta segundos:
 
-@@FENCE 2@@
+```
+ana@vm:~/linkbox$ vault policy write linkbox-sign - <~/ci/vault/linkbox-sign.hcl
+Success! Uploaded policy: linkbox-sign
+ana@vm:~/linkbox$ t=$(vault token create -policy=linkbox-sign -ttl=30s -field=token)
+ana@vm:~/linkbox$ vault token lookup "$t" | grep -E "^(policies|ttl) "
+policies            [default linkbox-sign]
+ttl                 29s
+```
 
 `vault token create` imprime uma tabela por padrão; `-field=token` imprime só o token, que vai para a
 variável de shell `t` e nunca para a tela. A consulta confirma duas coisas. O token leva
@@ -41,7 +55,15 @@ vez da função `vault`, que roda como root. `VAULT_ADDR` no seu shell é o ende
 receberia. Leia os nomes das chaves da senha, depois tente um caminho que a policy não nomeia, depois
 tente escrever:
 
-@@FENCE 3@@
+```
+ana@vm:~/linkbox$ export VAULT_ADDR=http://127.0.0.1:8200
+ana@vm:~/linkbox$ curl -s -H "X-Vault-Token: $t" $VAULT_ADDR/v1/secret/data/linkbox/signing | jq -c ".data.data | keys"
+["password"]
+ana@vm:~/linkbox$ curl -s -H "X-Vault-Token: $t" $VAULT_ADDR/v1/secret/data/linkbox/registry | jq -c
+{"errors":["1 error occurred:\n\t* permission denied\n\n"]}
+ana@vm:~/linkbox$ curl -s -H "X-Vault-Token: $t" --data "{\"data\": {\"password\": \"x\"}}" $VAULT_ADDR/v1/secret/data/linkbox/signing | jq -c
+{"errors":["1 error occurred:\n\t* permission denied\n\n"]}
+```
 
 A leitura responde `["password"]`, os nomes dos campos naquele caminho, e nada sobre os valores:
 pedir as chaves ao `jq` é como conferir que uma leitura funcionou sem imprimir um segredo. O outro
@@ -53,7 +75,11 @@ inexistente de um proibido conseguiria mapear o que não tem permissão de ler.
 
 O token foi criado com trinta segundos de vida. Espere esse tempo e repita a leitura que funcionou:
 
-@@FENCE 4@@
+```
+ana@vm:~/linkbox$ sleep 30
+ana@vm:~/linkbox$ curl -s -H "X-Vault-Token: $t" $VAULT_ADDR/v1/secret/data/linkbox/signing | jq -c
+{"errors":["2 errors occurred:\n\t* permission denied\n\t* invalid token\n\n"]}
+```
 
 O mesmo pedido, o mesmo caminho, recusado, e agora com um segundo motivo: **invalid token**. O Vault
 esquece um token expirado, então para o servidor ele não existe mais. Ninguém revogou nada e nenhum

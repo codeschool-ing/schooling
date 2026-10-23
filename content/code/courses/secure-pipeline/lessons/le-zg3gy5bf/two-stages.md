@@ -39,7 +39,7 @@ pipeline scripts and the `.git` directory stay out whatever `.dockerignore` says
 ```
 ana@vm:~/scans$ cd ~/linkbox
 ana@vm:~/linkbox$ docker build -q -t linkbox:dev .
-sha256:74a999810b693c84b198c67645d7df6d3764dc9a532279988d9ef967b2253a3f
+sha256:7eb384df9aef14b08f93b185dbba4cdf7bd0e11aa51d0e330dd1d215555aeeef
 ana@vm:~/linkbox$ docker images --format "{{.Repository}}:{{.Tag}}  {{.Size}}" linkbox:dev
 linkbox:dev  100MB
 ana@vm:~/linkbox$ docker image inspect --format "{{.Config.User}}" linkbox:dev
@@ -74,14 +74,14 @@ to it; Kubernetes has `kubectl debug` for that, which lesson 10's cluster could 
 
 ```
 ana@vm:~/linkbox$ docker run -d --name linkbox -p 127.0.0.1:8000:8000 -e LINKBOX_TOKEN=local-only linkbox:dev
-6da0618d9b9aabadef11b490fbcacfd2963aabddcd35e1acb8cad7de3ca92b87
+53954fc514ab94fd54af98190061fc89fda6b2daac25b535e3b5777fab6f5336
 ana@vm:~/linkbox$ curl -s -X POST -H "X-Token: local-only" -d url=https://example.org/handbook http://127.0.0.1:8000/links
-{"code":"HB3suw"}
+{"code":"E7y0OA"}
 ana@vm:~/linkbox$ docker logs linkbox 2>&1 | head -n 4
-[2026-10-23 04:53:51 +0000] [1] [INFO] Starting gunicorn 22.0.0
-[2026-10-23 04:53:51 +0000] [1] [INFO] Listening at: http://0.0.0.0:8000 (1)
-[2026-10-23 04:53:51 +0000] [1] [INFO] Using worker: sync
-[2026-10-23 04:53:51 +0000] [7] [INFO] Booting worker with pid: 7
+[2026-10-23 12:40:24 +0000] [1] [INFO] Starting gunicorn 22.0.0
+[2026-10-23 12:40:24 +0000] [1] [INFO] Listening at: http://0.0.0.0:8000 (1)
+[2026-10-23 12:40:24 +0000] [1] [INFO] Using worker: sync
+[2026-10-23 12:40:24 +0000] [7] [INFO] Booting worker with pid: 7
 ana@vm:~/linkbox$ docker rm -f linkbox
 linkbox
 ```

@@ -60,12 +60,7 @@ Python program that crashes. 2 is taken twice over: Python exits 2 when it is ca
 option it does not know, and ZAP's baseline scan exits 2 when it has warnings. 127 is the shell
 saying a command does not exist:
 
-```
-ana@vm:~/linkbox$ python3 -m json.tool --no-such-option 2>/dev/null; echo "exit $?"
-exit 2
-ana@vm:~/linkbox$ no-such-scanner 2>/dev/null; echo "exit $?"
-exit 127
-```
+@@CAPTURE statuses@@
 
 **Had a warning been 2, a stage whose program was called with a typo in a flag would have passed
 with a warning**, and a run that checked nothing would have gone on. 3 is not free in the wider
@@ -82,13 +77,14 @@ Save it as `ci/sast.sh`:
 # Static analysis. A finding of medium severity or worse breaks the build,
 # and a low one is a warning.
 set -uo pipefail
-semgrep scan --metrics=off --quiet --error --config .semgrep.yml . || exit 1
+semgrep scan --metrics=off --quiet --error --emacs --config .semgrep.yml . || exit 1
 bandit -q -r . -c bandit.yaml --severity-level medium || exit 1
 bandit -q -r . -c bandit.yaml --severity-level low || exit 3
 ```
 
 Semgrep runs only the two rules lesson 3 wrote for this project, each for a defect linkbox has
-actually had, so a finding of either breaks the build. Bandit's built-in rules are broader, and
+actually had, so a finding of either breaks the build. `--emacs` prints each finding as one plain line, file, line
+and message, which is what a CI log can show. Bandit's built-in rules are broader, and
 their severity is the line between the two verdicts: medium or high breaks, low warns. That is a
 judgement about Bandit's rules, not a law. Its low findings are mostly the kind lesson 3 met in
 B105, a string that looks like a password and needs a person to read it, and a person reading it

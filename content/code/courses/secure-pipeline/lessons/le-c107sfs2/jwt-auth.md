@@ -12,7 +12,12 @@ signed by the right key gets nothing on its own; it has to match a role.
 
 Enable the method and give it the public key and the issuer name `mint.py` signs as:
 
-@@CAPTURE jwt-config@@
+```
+ana@vm:~/linkbox$ vault auth enable jwt
+Success! Enabled jwt auth method at: jwt/
+ana@vm:~/linkbox$ vault write auth/jwt/config jwt_validation_pubkeys="$(cat ~/ci/oidc/ci-oidc.pub)" bound_issuer=https://ci.linkbox.example
+Success! Data written to: auth/jwt/config
+```
 
 `jwt_validation_pubkeys` is the simplest way to tell Vault whose signatures to believe: paste the
 public key. `bound_issuer` makes Vault refuse a token whose `iss` claim is anything else, which
@@ -23,7 +28,15 @@ matters the day the same key, or a key in the same list, signs for something els
 The first role is the one that is easy to write and wrong. It checks that the token is for Vault
 and nothing about the run, and it attaches the signing policy:
 
-@@CAPTURE broad@@
+```
+ana@vm:~/linkbox$ vault write auth/jwt/role/linkbox-any role_type=jwt bound_audiences=vault user_claim=sub token_policies=linkbox-sign token_ttl=5m
+Success! Data written to: auth/jwt/role/linkbox-any
+ana@vm:~/linkbox$ feature=$(python3 ~/ci/oidc/mint.py refs/heads/try-something)
+ana@vm:~/linkbox$ curl -s --data "{\"role\": \"linkbox-any\", \"jwt\": \"$feature\"}" $VAULT_ADDR/v1/auth/jwt/login | jq -c ".auth | {policies, lease_duration}"
+{"policies":["default","linkbox-sign"],"lease_duration":300}
+ana@vm:~/linkbox$ vault delete auth/jwt/role/linkbox-any
+Success! Data deleted (if it existed) at: auth/jwt/role/linkbox-any
+```
 
 **A run of a branch called `try-something` logged in and got the policy that reads the signing
 password.** Nothing about the token is forged: the CI server signed it, it is for Vault, it is
@@ -62,7 +75,14 @@ log says `repo:ana/linkbox:ref:refs/heads/main` rather than a token number. And 
 past them. Load it, then log in with the `main` token minted in the previous section and with the
 `try-something` one:
 
-@@CAPTURE bound@@
+```
+ana@vm:~/linkbox$ vault write auth/jwt/role/linkbox-main - <~/ci/vault/linkbox-main.json
+Success! Data written to: auth/jwt/role/linkbox-main
+ana@vm:~/linkbox$ curl -s --data "{\"role\": \"linkbox-main\", \"jwt\": \"$main\"}" $VAULT_ADDR/v1/auth/jwt/login | jq -c ".auth | {policies, lease_duration}"
+{"policies":["default","linkbox-sign"],"lease_duration":300}
+ana@vm:~/linkbox$ curl -s --data "{\"role\": \"linkbox-main\", \"jwt\": \"$feature\"}" $VAULT_ADDR/v1/auth/jwt/login | jq -c
+{"errors":["error validating claims: claim \"ref\" does not match any associated bound claim values"]}
+```
 
 `main` gets the policy for 300 seconds. `try-something` is refused, and **the error names the claim
 that failed**, which is what you want from a refusal you will one day read in a CI log: not "denied"
@@ -74,7 +94,16 @@ Two more tokens show the checks that came before the role's. One is minted for a
 audience, as a token meant for the registry would be. The other is signed by a key Vault has never
 seen:
 
-@@CAPTURE others@@
+```
+ana@vm:~/linkbox$ elsewhere=$(python3 ~/ci/oidc/mint.py refs/heads/main registry)
+ana@vm:~/linkbox$ curl -s --data "{\"role\": \"linkbox-main\", \"jwt\": \"$elsewhere\"}" $VAULT_ADDR/v1/auth/jwt/login | jq -c
+{"errors":["error validating token: invalid audience (aud) claim: audience claim does not match any expected audience"]}
+ana@vm:~/linkbox$ openssl genpkey -quiet -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out /tmp/stranger.key
+ana@vm:~/linkbox$ stranger=$(CI_OIDC_KEY=/tmp/stranger.key python3 ~/ci/oidc/mint.py refs/heads/main)
+ana@vm:~/linkbox$ curl -s --data "{\"role\": \"linkbox-main\", \"jwt\": \"$stranger\"}" $VAULT_ADDR/v1/auth/jwt/login | jq -c
+{"errors":["error validating token: error verifying token signature: no known key successfully validated the token signature"]}
+ana@vm:~/linkbox$ rm /tmp/stranger.key
+```
 
 Each is refused at a different step, and the figure puts the four in order. The audience check is
 what stops a token issued for one service being replayed against another: a registry that received
@@ -123,7 +152,18 @@ successful or not, so the five minutes are a ceiling and not the usual life.
 
 Run it as the CI server would for a run of `main`, and for a run of `try-something`:
 
-@@CAPTURE script@@
+```
+ana@vm:~/linkbox$ CI_ID_TOKEN=$main bash ci/vault-read.sh linkbox-main linkbox/signing password | cmp - ~/ci/keys/password && echo same
+same
+ana@vm:~/linkbox$ CI_ID_TOKEN=$feature bash ci/vault-read.sh linkbox-main linkbox/signing password; echo "exit $?"
+error validating claims: claim "ref" does not match any associated bound claim values
+exit 1
+ana@vm:~/linkbox$ git add ci/vault-read.sh
+ana@vm:~/linkbox$ git commit -q -m "the pipeline reads its secrets from Vault with an identity of its own"
+9:44AM INF 0 commits scanned.
+9:44AM INF scanned ~939 bytes (939 bytes) in 209ms
+9:44AM INF no leaks found
+```
 
 The `main` run reads a value equal to the file on the CI server's disk, and the comparison says so
 without printing it. The `try-something` run stops with exit status 1 and the reason. Commit the

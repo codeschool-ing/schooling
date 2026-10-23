@@ -18,7 +18,11 @@ that publishes the keys and names the fields is OpenID Connect, which is why thi
 The private key is the new thing to protect, and it belongs with the CI server's other keys, outside
 any repository. Make it, and derive the public half that Vault will be given:
 
-@@CAPTURE keys@@
+```
+ana@vm:~/linkbox$ mkdir -p ~/ci/oidc && cd ~/ci/oidc
+ana@vm:~/ci/oidc$ openssl genpkey -quiet -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out ci-oidc.key
+ana@vm:~/ci/oidc$ openssl pkey -in ci-oidc.key -pubout -out ci-oidc.pub
+```
 
 `pkey -pubout` writes the public key, which is not a secret: anybody may hold it, because it can only
 check signatures, not make them. Notice what just happened to the secret zero problem. There is still one long-lived
@@ -38,7 +42,14 @@ Python's standard library for the JSON and asks `openssl` for the signature. Sav
 The directory now holds the CI server's whole identity, and `genpkey` made the private key readable
 by its owner alone:
 
-@@CAPTURE files@@
+```
+ana@vm:~/ci/oidc$ ls -l
+total 12
+-rw------- 1 ana ana 1704 Oct 23 09:44 ci-oidc.key
+-rw-r--r-- 1 ana ana  451 Oct 23 09:44 ci-oidc.pub
+-rw-r--r-- 1 ana ana 1636 Oct 23 09:44 mint.py
+ana@vm:~/ci/oidc$ cd ~/linkbox
+```
 
 The claims are the interesting part of the program. `sub`, the subject, follows the same pattern GitHub Actions uses,
 `repo:OWNER/REPO:ref:REF`, so the habits you build here carry over. `repository` and `ref` repeat
@@ -50,7 +61,23 @@ instead of matching a pattern in a longer string.
 Mint one for `main` and look at it. A JWT is three base64url pieces joined by dots: the header, the
 claims and the signature. The first 64 characters are the whole header and the start of the claims:
 
-@@CAPTURE mint@@
+```
+ana@vm:~/linkbox$ main=$(python3 ~/ci/oidc/mint.py refs/heads/main)
+ana@vm:~/linkbox$ cut -c1-64 <<<"$main"
+eyJhbGciOiAiUlMyNTYiLCAidHlwIjogIkpXVCJ9.eyJpc3MiOiAiaHR0cHM6Ly9
+ana@vm:~/linkbox$ jq -R 'split(".")[1] | gsub("-";"+") | gsub("_";"/") | @base64d | fromjson' <<<"$main"
+{
+  "iss": "https://ci.linkbox.example",
+  "sub": "repo:ana/linkbox:ref:refs/heads/main",
+  "aud": "vault",
+  "repository": "ana/linkbox",
+  "ref": "refs/heads/main",
+  "iat": 1792759471,
+  "nbf": 1792759471,
+  "exp": 1792759771,
+  "jti": "39d66bb6-3d6b-4844-b727-ea4847cd4ab4"
+}
+```
 
 The second command decodes the middle piece. `jq` translates base64url's two URL-safe characters
 back to standard base64, decodes it and parses the JSON. **Anybody holding the token can do the

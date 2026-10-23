@@ -16,7 +16,7 @@ de um reboot:
 
 ```
 ana@vm:~/linkbox$ docker run -d --restart=always -p 127.0.0.1:5000:5000 --name registry registry:3.1.2
-d2864152d2dacdf7a948056e6740a164052bfb6e9f9ab59c4b3599e891b36163
+24d14b09a7ec5442e62c93a6dd8adc4bdf7c82816cb3fc48b1aeb42ea32e0776
 ana@vm:~/linkbox$ curl -s http://localhost:5000/v2/_catalog
 {"repositories":[]}
 ```
@@ -86,25 +86,25 @@ aula 6 conferindo se o commit tem segredos:
 ```
 ana@vm:~/linkbox$ git add Dockerfile ci
 ana@vm:~/linkbox$ git commit -q -m "a two-stage image on a distroless base, scanned and pushed to the registry"
-1:53AM INF 0 commits scanned.
-1:53AM INF scanned ~1619 bytes (1.62 KB) in 202ms
-1:53AM INF no leaks found
+9:40AM INF 0 commits scanned.
+9:40AM INF scanned ~1619 bytes (1.62 KB) in 361ms
+9:40AM INF no leaks found
 ana@vm:~/linkbox$ git push ci main
-remote: run 1: main at 8fe5800        
+remote: run 1: main at f73b23a        
 remote: secrets: passed in 1s        
-remote: test: passed in 1s        
-remote: sast: passed in 2s        
-remote: sca: passed in 8s        
+remote: test: passed in 2s        
+remote: sast: passed in 3s        
+remote: sca: passed in 9s        
 remote: build: passed in 1s        
-remote: image: passed in 0s        
-remote: push: passed in 1s        
+remote: image: passed in 1s        
+remote: push: passed in 2s        
 remote: pipeline passed with 0 warning(s)        
 remote: run 1: passed        
 To /home/ana/ci/linkbox.git
-   f7930f5..8fe5800  main -> main
+   965e448..f73b23a  main -> main
 ```
 
-**Sete estágios, todos aprovados, e o estágio de imagem levou menos de um segundo**, porque lê o banco
+**Sete estágios, todos aprovados, e o estágio de imagem levou cerca de um segundo**, porque lê o banco
 que esta máquina já tem. O log diz o que o portão olhou e o que ele só contou:
 
 ```
@@ -115,7 +115,7 @@ Report Summary
 ┌────────────────────────────────────────────────┬────────────┬─────────────────┬─────────┐
 │                     Target                     │    Type    │ Vulnerabilities │ Secrets │
 ├────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
-│ linkbox:8fe5800 (debian 13.7)                  │   debian   │        0        │    -    │
+│ linkbox:f73b23a (debian 13.7)                  │   debian   │        0        │    -    │
 ├────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
 │ packages/blinker-1.9.0.dist-info/METADATA      │ python-pkg │        0        │    -    │
 ├────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
@@ -142,7 +142,7 @@ Legend:
 everything else, fixed or not:
 Total: 162 (UNKNOWN: 0, LOW: 49, MEDIUM: 87, HIGH: 26, CRITICAL: 0)
 ana@vm:~/linkbox$ curl -s http://localhost:5000/v2/linkbox/tags/list
-{"name":"linkbox","tags":["8fe5800","main"]}
+{"name":"linkbox","tags":["f73b23a","main"]}
 ```
 
 O resumo tem uma linha para cada lista que o Trivy leu, o banco do Debian e um `METADATA` por pacote
@@ -155,7 +155,7 @@ não existe, aqui passando um commit que ninguém construiu:
 
 ```
 ana@vm:~/linkbox$ CI_COMMIT=0000000 bash ci/image.sh; echo "exit $?"
-2026-10-23T01:54:12-03:00	FATAL	Fatal error	run error: image scan error: scan error: unable to initialize a scan service: unable to initialize artifact: unable to initialize container image: unable to find the specified image "linkbox:0000000" in ["docker" "containerd" "podman" "remote"]: 4 errors occurred:
+2026-10-23T09:40:50-03:00	FATAL	Fatal error	run error: image scan error: scan error: unable to initialize a scan service: unable to initialize artifact: unable to initialize container image: unable to find the specified image "linkbox:0000000" in ["docker" "containerd" "podman" "remote"]: 4 errors occurred:
 	* docker error: unable to inspect the image (linkbox:0000000): Error response from daemon: No such image: linkbox:0000000
 	* containerd error: failed to list images from containerd client: connection error: desc = "transport: Error while dialing: dial unix /run/containerd/containerd.sock: connect: permission denied"
 	* podman error: unable to initialize Podman client: no podman socket found: stat podman/podman.sock: no such file or directory
@@ -180,17 +180,17 @@ comando imprime os mesmos achados, um por linha:
 ana@vm:~/linkbox$ git switch -q -c old-base
 ana@vm:~/linkbox$ git checkout main~1 -- Dockerfile
 ana@vm:~/linkbox$ git commit -q -m "the single-stage image, to see what the gate says"
-1:54AM INF 0 commits scanned.
-1:54AM INF scanned ~140 bytes (140 bytes) in 220ms
-1:54AM INF no leaks found
+9:40AM INF 0 commits scanned.
+9:40AM INF scanned ~140 bytes (140 bytes) in 201ms
+9:40AM INF no leaks found
 ana@vm:~/linkbox$ git push ci old-base 2>&1 | grep -v '[│├└┌]'
-remote: run 2: old-base at 1afc223        
+remote: run 2: old-base at e152fa6        
 remote: secrets: passed in 1s        
 remote: test: passed in 1s        
 remote: sast: passed in 3s        
-remote: sca: passed in 7s        
+remote: sca: passed in 9s        
 remote: build: passed in 1s        
-remote: image: FAILED in 13s, the end of image.log:        
+remote: image: FAILED in 49s, the end of image.log:        
 remote: run 2: failed, the logs are in ~/ci/runs/2/logs        
 To /home/ana/ci/linkbox.git
  * [new branch]      old-base -> old-base

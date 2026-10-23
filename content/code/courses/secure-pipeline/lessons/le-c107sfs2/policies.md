@@ -33,7 +33,14 @@ secrets" and grants every secret any later team adds under that name.
 
 Load it into Vault, and make a token that carries it and lives thirty seconds:
 
-@@CAPTURE policy@@
+```
+ana@vm:~/linkbox$ vault policy write linkbox-sign - <~/ci/vault/linkbox-sign.hcl
+Success! Uploaded policy: linkbox-sign
+ana@vm:~/linkbox$ t=$(vault token create -policy=linkbox-sign -ttl=30s -field=token)
+ana@vm:~/linkbox$ vault token lookup "$t" | grep -E "^(policies|ttl) "
+policies            [default linkbox-sign]
+ttl                 29s
+```
 
 `vault token create` prints a table by default; `-field=token` prints only the token, which goes
 into the shell variable `t` and never onto the screen. The lookup confirms two things. The token
@@ -48,7 +55,15 @@ than the root-powered `vault` function. `VAULT_ADDR` in your shell is the addres
 be given. Read the password's key names, then try a path the policy does not name, then try to
 write:
 
-@@CAPTURE reads@@
+```
+ana@vm:~/linkbox$ export VAULT_ADDR=http://127.0.0.1:8200
+ana@vm:~/linkbox$ curl -s -H "X-Vault-Token: $t" $VAULT_ADDR/v1/secret/data/linkbox/signing | jq -c ".data.data | keys"
+["password"]
+ana@vm:~/linkbox$ curl -s -H "X-Vault-Token: $t" $VAULT_ADDR/v1/secret/data/linkbox/registry | jq -c
+{"errors":["1 error occurred:\n\t* permission denied\n\n"]}
+ana@vm:~/linkbox$ curl -s -H "X-Vault-Token: $t" --data "{\"data\": {\"password\": \"x\"}}" $VAULT_ADDR/v1/secret/data/linkbox/signing | jq -c
+{"errors":["1 error occurred:\n\t* permission denied\n\n"]}
+```
 
 The read answers `["password"]`, the names of the fields at that path, and nothing about their
 values: asking `jq` for the keys is how to check a read worked without printing a secret. The other
@@ -60,7 +75,11 @@ secret from a forbidden one could map what it is not allowed to read.
 
 The token was made with thirty seconds to live. Wait that long and try the read that worked:
 
-@@CAPTURE expiry@@
+```
+ana@vm:~/linkbox$ sleep 30
+ana@vm:~/linkbox$ curl -s -H "X-Vault-Token: $t" $VAULT_ADDR/v1/secret/data/linkbox/signing | jq -c
+{"errors":["2 errors occurred:\n\t* permission denied\n\t* invalid token\n\n"]}
+```
 
 The same request, the same path, refused, and this time with a second reason: **invalid token**.
 Vault forgets an expired token, so for the server it no longer exists. Nobody revoked anything and

@@ -14,7 +14,23 @@ decision is the third move.
 The release history, and the advisories PyPI's own vulnerability data lists for the version lesson 7
 used:
 
-@@CAPTURE ecdsa@@
+```
+ana@vm:~/linkbox$ curl -s https://pypi.org/pypi/ecdsa/json | jq -r ".releases | to_entries[] | select(.value | length > 0) | \"\(.value[0].upload_time[:10]) \(.key)\"" | sort | tail -n 4
+2022-07-09 0.18.0
+2024-04-08 0.19.0
+2025-03-13 0.19.1
+2026-03-26 0.19.2
+ana@vm:~/linkbox$ curl -s https://pypi.org/pypi/ecdsa/0.19.2/json | jq -r ".vulnerabilities[] | \"\(.id) \(.aliases | join(\" \")) fixed_in=\(.fixed_in)\""
+PYSEC-2026-1325 CVE-2024-23342 GHSA-wj6h-64fc-37mp fixed_in=[]
+GHSA-wj6h-64fc-37mp CVE-2024-23342 PYSEC-2026-1325 fixed_in=[]
+ana@vm:~/linkbox$ curl -s https://pypi.org/pypi/ecdsa/0.19.2/json | jq -r ".vulnerabilities[0].details" | fold -s -w 96
+python-ecdsa has been found to be subject to a Minerva timing attack on the P-256 curve. Using 
+the `ecdsa.SigningKey.sign_digest()` API function and timing signatures an attacker can leak 
+the internal nonce which may allow for private key discovery. Both ECDSA signatures, key 
+generation, and ECDH operations are affected. ECDSA signature verification is unaffected. The 
+python-ecdsa project considers side channel attacks out of scope for the project and there is 
+no planned fix.
+```
 
 One advisory under three names, CVE, GHSA and PYSEC, with nothing in `fixed_in`. The text explains
 why: a timing side channel in signing, and **"The python-ecdsa project considers side channel attacks
@@ -24,7 +40,16 @@ not do for you.
 
 The repository's recent history answers the second health question, who maintains it:
 
-@@CAPTURE ecdsa-repo@@
+```
+ana@vm:~/linkbox$ git clone -q --filter=blob:none --no-checkout https://github.com/tlsfuzzer/python-ecdsa ~/scratch/ecdsa
+ana@vm:~/linkbox$ git -C ~/scratch/ecdsa log -1 --format="%cs %s"
+2026-06-08 Merge pull request #376 from tomato42/new-badge-action
+ana@vm:~/linkbox$ git -C ~/scratch/ecdsa shortlog -sn --no-merges --since=2025-10-01 HEAD
+     7	Alicja Kario
+     2	0xmrma
+     1	Alexander Shadchin
+     1	Hubert Kario
+```
 
 A merge in June, and in the last year one person wrote most of the non-merge commits. That is a
 maintained project, by a small group, with a stated scope. **Nothing here says the package is
@@ -41,7 +66,7 @@ The advisory's text is precise about where the risk is, and that decides the mov
 | signs only to check its own messages later | yes | replace it, and ask whether a signature is needed at all |
 
 The last row is common and worth a moment. If one service signs a message only so that the same
-service can trust it later, nobody else verifies it, and what it needs is a **message authentication
+service can trust it later, nobody else verifies it. What it needs is a **message authentication
 code**: `hmac` from the standard library, with `hmac.compare_digest` to compare, which lesson 3 already
 used for linkbox's token. No dependency at all is the best replacement there is.
 
@@ -71,7 +96,11 @@ except InvalidSignature:
 
 Run in a throwaway environment, so nothing is added to linkbox:
 
-@@CAPTURE replace@@
+```
+ana@vm:~/linkbox$ uv run -q --no-project --with "cryptography==50.0.2" python ~/scratch/sign.py
+verified: https://example.org/docs/handbook/onboarding
+refused: the message changed after it was signed
+```
 
 ### What a replacement costs
 

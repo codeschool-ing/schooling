@@ -20,7 +20,11 @@ faz o seu servidor de CI emiti-los também.
 A chave privada é a coisa nova a proteger, e ela fica junto das outras chaves do servidor de CI, fora
 de qualquer repositório. Gere-a e derive a metade pública que o Vault vai receber:
 
-@@FENCE 1@@
+```
+ana@vm:~/linkbox$ mkdir -p ~/ci/oidc && cd ~/ci/oidc
+ana@vm:~/ci/oidc$ openssl genpkey -quiet -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out ci-oidc.key
+ana@vm:~/ci/oidc$ openssl pkey -in ci-oidc.key -pubout -out ci-oidc.pub
+```
 
 `pkey -pubout` grava a chave pública, que não é segredo: qualquer um pode tê-la, porque ela só confere
 assinaturas, não as cria. Repare no que acabou de acontecer com o problema do segredo zero. Ainda
@@ -41,7 +45,14 @@ curto que usa a biblioteca padrão do Python para o JSON e pede a assinatura ao 
 O diretório agora guarda a identidade inteira do servidor de CI, e o `genpkey` criou a chave privada
 legível só pela dona:
 
-@@FENCE 3@@
+```
+ana@vm:~/ci/oidc$ ls -l
+total 12
+-rw------- 1 ana ana 1704 Oct 23 09:44 ci-oidc.key
+-rw-r--r-- 1 ana ana  451 Oct 23 09:44 ci-oidc.pub
+-rw-r--r-- 1 ana ana 1636 Oct 23 09:44 mint.py
+ana@vm:~/ci/oidc$ cd ~/linkbox
+```
 
 Os claims são a parte interessante do programa. `sub`, o subject, segue o mesmo padrão que o GitHub
 Actions usa, `repo:DONO/REPO:ref:REF`, então os hábitos que você cria aqui valem lá. `repository` e
@@ -54,7 +65,23 @@ Emita um para `main` e olhe para ele. Um JWT são três pedaços de base64url un
 cabeçalho, os claims e a assinatura. Os primeiros 64 caracteres são o cabeçalho inteiro e o começo
 dos claims:
 
-@@FENCE 4@@
+```
+ana@vm:~/linkbox$ main=$(python3 ~/ci/oidc/mint.py refs/heads/main)
+ana@vm:~/linkbox$ cut -c1-64 <<<"$main"
+eyJhbGciOiAiUlMyNTYiLCAidHlwIjogIkpXVCJ9.eyJpc3MiOiAiaHR0cHM6Ly9
+ana@vm:~/linkbox$ jq -R 'split(".")[1] | gsub("-";"+") | gsub("_";"/") | @base64d | fromjson' <<<"$main"
+{
+  "iss": "https://ci.linkbox.example",
+  "sub": "repo:ana/linkbox:ref:refs/heads/main",
+  "aud": "vault",
+  "repository": "ana/linkbox",
+  "ref": "refs/heads/main",
+  "iat": 1792759471,
+  "nbf": 1792759471,
+  "exp": 1792759771,
+  "jti": "39d66bb6-3d6b-4844-b727-ea4847cd4ab4"
+}
+```
 
 O segundo comando decodifica o pedaço do meio. O `jq` traduz os dois caracteres seguros para URL do
 base64url de volta para o base64 padrão, decodifica e interpreta o JSON. **Qualquer um que tenha o

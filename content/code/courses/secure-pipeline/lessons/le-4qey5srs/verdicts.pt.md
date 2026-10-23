@@ -62,12 +62,7 @@ trava. 2 está ocupado duas vezes: o Python sai com 2 quando é chamado com uma 
 a varredura baseline do ZAP sai com 2 quando tem alertas. 127 é o shell dizendo que um comando não
 existe:
 
-```
-ana@vm:~/linkbox$ python3 -m json.tool --no-such-option 2>/dev/null; echo "exit $?"
-exit 2
-ana@vm:~/linkbox$ no-such-scanner 2>/dev/null; echo "exit $?"
-exit 127
-```
+@@CAPTURE statuses@@
 
 **Se o alerta fosse 2, um estágio cujo programa foi chamado com um erro de digitação numa flag teria
 passado com alerta**, e uma execução que não checou nada teria seguido. O 3 não está livre no mundo; o
@@ -84,13 +79,14 @@ Salve como `ci/sast.sh`:
 # Static analysis. A finding of medium severity or worse breaks the build,
 # and a low one is a warning.
 set -uo pipefail
-semgrep scan --metrics=off --quiet --error --config .semgrep.yml . || exit 1
+semgrep scan --metrics=off --quiet --error --emacs --config .semgrep.yml . || exit 1
 bandit -q -r . -c bandit.yaml --severity-level medium || exit 1
 bandit -q -r . -c bandit.yaml --severity-level low || exit 3
 ```
 
 O Semgrep roda só as duas regras que a aula 3 escreveu para este projeto, cada uma para um defeito que
-o linkbox de fato teve, então um achado de qualquer uma quebra o build. As regras embutidas do Bandit
+o linkbox de fato teve, então um achado de qualquer uma quebra o build. `--emacs` imprime cada achado numa linha simples, com
+arquivo, linha e mensagem, que é o que um log de CI consegue mostrar. As regras embutidas do Bandit
 são mais amplas, e a severidade delas é a linha entre os dois vereditos: média ou alta quebra, baixa
 alerta. Isso é um julgamento sobre as regras do Bandit, não uma lei. Os achados baixos dele são, na
 maioria, do tipo que a aula 3 viu no B105, uma string que parece senha e precisa que uma pessoa a leia,

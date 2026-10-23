@@ -12,11 +12,18 @@ so what the image contains depends on what PyPI answered during the build, check
 ### Base images by digest
 
 A digest names the bytes, so the Dockerfile names the base images by digest, with the tag kept in
-front for the reader. The registry tells you the digest a tag points at today; the first command asks
-Google's mirror of Docker Hub, which serves Docker Hub's names and digests, and the second asks the
+front for the reader. The registry tells you the digest a tag points at today. The first command asks
+Google's mirror of Docker Hub, which serves Docker Hub's names and digests; the second asks the
 local copy of the distroless image:
 
-@@CAPTURE digests@@
+```
+ana@vm:~/linkbox$ docker buildx imagetools inspect mirror.gcr.io/library/python:3.13-slim | head -n 3
+Name:      mirror.gcr.io/library/python:3.13-slim
+MediaType: application/vnd.oci.image.index.v1+json
+Digest:    sha256:57b29a7c050c4e679e4bea572e14b3965cf4b5839de2da49d55e49ffc4024f39
+ana@vm:~/linkbox$ docker image inspect --format "{{index .RepoDigests 0}}" gcr.io/distroless/python3-debian13:nonroot
+gcr.io/distroless/python3-debian13@sha256:727eccc5d83f11273c954652667b5b5a1c66120bd4cfb884e879ab77dcdf966a
+```
 
 **Updating a base image becomes a one-line diff**, reviewed like any other, instead of something that
 happens to whoever builds next. Lesson 2's nightly rebuild still matters: it is now the place to
@@ -28,10 +35,16 @@ change.
 `docker build --network none` gives the build's `RUN` steps no network at all. Try it on lesson 8's
 Dockerfile, which installs from PyPI:
 
-@@CAPTURE offline-old@@
+```
+ana@vm:~/linkbox$ docker build -q --network none -t linkbox:offline . 2>&1 | tail -n 4
+   6 |     RUN mkdir /data
+   7 |     
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c pip install --no-cache-dir --target /packages -r /requirements.txt" did not complete successfully: exit code: 1
+```
 
-pip tried to reach the index, could not, and the build failed. That failure is the point of the
-flag: **a build that cannot reach the network can only use what it was handed**, so everything it
+The step that runs `pip install` against PyPI did not complete: with no network there is no index
+to reach, and the build failed. That failure is the point of the flag: **a build that cannot reach the network can only use what it was handed**, so everything it
 uses has passed through a step somebody can check. The packages have to arrive some other way, and
 the way is wheels downloaded before the build, each checked against its hash in the lock.
 
@@ -125,12 +138,56 @@ assert_used:
 
 ### Build, commit, push
 
-@@CAPTURE build@@
+```
+ana@vm:~/linkbox$ bash ci/build.sh
+sha256:3eb4828fe170b6f19b746285bff755dd61df3dc4ca5b136b5ac1026b2a7e75b1
+ana@vm:~/linkbox$ ls wheels
+blinker-1.9.0-py3-none-any.whl
+click-8.5.0-py3-none-any.whl
+flask-3.1.3-py3-none-any.whl
+gunicorn-26.2.0-py3-none-any.whl
+itsdangerous-2.2.0-py3-none-any.whl
+jinja2-3.1.6-py3-none-any.whl
+markupsafe-3.0.4-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl
+werkzeug-3.1.9-py3-none-any.whl
+```
 
 Eight wheels, one per package in the lock, and the image built from them alone. Then the commit and
 the run:
 
-@@CAPTURE commit@@
+```
+ana@vm:~/linkbox$ git add -A
+ana@vm:~/linkbox$ git status --short
+M  .dockerignore
+M  .gitignore
+M  Dockerfile
+M  bandit.yaml
+M  ci/build.sh
+M  ci/test.sh
+A  requirements-dev.in
+M  requirements-dev.txt
+A  requirements.in
+M  requirements.txt
+ana@vm:~/linkbox$ git commit -q -m "dependencies compiled with their hashes, base images by digest, and a build with no network"
+9:42AM INF 0 commits scanned.
+9:42AM INF scanned ~17631 bytes (17.63 KB) in 210ms
+9:42AM INF no leaks found
+ana@vm:~/linkbox$ git push ci main
+remote: run 1: main at 077b93e        
+remote: secrets: passed in 1s        
+remote: test: passed in 1s        
+remote: sast: passed in 3s        
+remote: sca: passed in 6s        
+remote: build: passed in 2s        
+remote: image: passed in 1s        
+remote: push: passed in 1s        
+remote: sbom: passed in 5s        
+remote: sign: passed in 2s        
+remote: pipeline passed with 0 warning(s)        
+remote: run 1: passed        
+To /home/ana/ci/linkbox.git
+   73c0fea..077b93e  main -> main
+```
 
 Every stage passed, including the scans of lesson 5 against the new lock and of lesson 8 against an
 image whose base is now named by digest. The image in the registry was signed by lesson 14's stage
@@ -141,7 +198,10 @@ like every other.
 The last check is the one lesson 13 asked for. The image has a Python and no shell, so Python itself
 answers whether `packaging` is in it:
 
-@@CAPTURE packaging-gone@@
+```
+ana@vm:~/linkbox$ docker run --rm --entrypoint python3 linkbox:$(git rev-parse --short HEAD) -c "import importlib.util as u; print(u.find_spec(\"packaging\"), u.find_spec(\"gunicorn\").origin)"
+None /packages/gunicorn/__init__.py
+```
 
 `None` for `packaging`, and gunicorn found where the first stage put it. **The image now holds what the
 lock names and nothing else**, and the lock says why each package is there.

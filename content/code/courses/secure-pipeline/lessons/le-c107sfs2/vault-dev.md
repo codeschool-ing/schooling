@@ -17,7 +17,11 @@ This section starts one on your machine, from the image the course pulled with t
 
 With no arguments the image starts Vault's **development server**:
 
-@@CAPTURE vault-start@@
+```
+ana@vm:~/linkbox$ docker run -d --name vault -p 127.0.0.1:8200:8200 -e VAULT_ADDR=http://127.0.0.1:8200 -e VAULT_DEV_ROOT_TOKEN_ID=dev-only-root hashicorp/vault:2.1.2
+faa318a2f888a2b2d1cff1cf7b5d4130297db75311016dbd4b6570539b156d38
+ana@vm:~/linkbox$ docker logs vault 2>&1 | sed -n "/WARNING!/,/production/p"
+```
 
 `-p 127.0.0.1:8200:8200` publishes its port on your own machine only, and `VAULT_ADDR` tells the
 command-line client inside the container where the server is. `VAULT_DEV_ROOT_TOKEN_ID` is a dev-mode
@@ -56,7 +60,11 @@ the role, is configured the same way on a production Vault.
 The image carries Vault's command-line client as well as the server. A shell function lends it to
 your terminal, so `vault` behaves as if it were installed:
 
-@@CAPTURE vault-cli@@
+```
+ana@vm:~/linkbox$ vault() { docker exec -i vault vault "$@"; }
+ana@vm:~/linkbox$ vault status
+Error checking seal status: Get "http://127.0.0.1:8200/v1/sys/seal-status": dial tcp 127.0.0.1:8200: connect: connection refused
+```
 
 `Sealed false` and `Storage Type inmem` are the first two lines of the warning, confirmed by the
 server itself. The function runs the client inside the container, where dev mode left the root
@@ -70,7 +78,22 @@ The function lasts as long as the terminal; a new terminal needs the line again.
 Vault mounts a key/value store at `secret/` in dev mode. Put the CI server's signing password in it,
 and check that what comes back is the file byte for byte:
 
-@@CAPTURE kv@@
+```
+ana@vm:~/linkbox$ vault kv put secret/linkbox/signing password="$(cat ~/ci/keys/password)"
+======= Secret Path =======
+secret/data/linkbox/signing
+
+======= Metadata =======
+Key                Value
+---                -----
+created_time       2026-10-23T12:44:00.019630078Z
+custom_metadata    <nil>
+deletion_time      n/a
+destroyed          false
+version            1
+ana@vm:~/linkbox$ [ "$(vault kv get -field=password secret/linkbox/signing)" = "$(cat ~/ci/keys/password)" ] && echo same
+same
+```
 
 The value went from the file to Vault's command line through `$(cat …)` and was never printed. The
 comparison prints `same` and nothing else, which is how to check a secret without showing it.

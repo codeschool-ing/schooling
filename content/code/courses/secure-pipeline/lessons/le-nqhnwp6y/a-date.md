@@ -13,7 +13,18 @@ header of the lock, so anybody can rerun the same command and get the same file.
 
 A bare `flask`, with no range at all, resolved as of two dates:
 
-@@CAPTURE dates@@
+```
+ana@vm:~/linkbox$ for d in 2024-06-01 2026-10-16; do echo "$d: $(echo flask | uv pip compile - --exclude-newer $d --no-header 2>/dev/null | grep -E "^(flask|werkzeug)==" | tr "\n" " ")"; done
+2024-06-01: flask==3.0.3 werkzeug==3.0.3 
+2026-10-16: flask==3.1.3 werkzeug==3.1.9 
+ana@vm:~/linkbox$ uv pip compile requirements.in --exclude-newer 2026-08-01 --no-header
+  × No solution found when resolving dependencies:
+  ╰─▶ Because only gunicorn<=26.0.0 is available and you require
+      gunicorn>=26.2,<27, we can conclude that your requirements are
+      unsatisfiable.
+
+hint: `gunicorn` was filtered by `exclude-newer` to only include packages uploaded before 2026-08-02T03:00:00Z. The latest version satisfying the requirement is v26.2.0, published at 2026-08-24T15:05:57.67Z. Consider using `exclude-newer-package` to override the cutoff for this package.
+```
 
 The first line is what a compile in mid-2024 would have produced, the second what this lesson's
 compile produces. And linkbox's own ranges as of the start of August fail outright, because no
@@ -35,7 +46,9 @@ closer to today than a fixed number of days. uv can also take the cooling-off fr
 than the command line, and lesson 18 configures the same idea, a minimum release age, for the bots
 that propose updates.
 
-@@FIGURE cooloff@@
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 170\" role=\"img\" data-fig=\"sp-l15-cooloff\" aria-label=\"A timeline. A bad release is published, found and removed within days. A compile with an exclude-newer date a week before today sees only what was uploaded before that date, so a release in the window is never picked up. Moving the date forward is a deliberate change to the lock.\"><defs><marker id=\"sp-l15-cooloff-ah-amber\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--amber)\"></path></marker><marker id=\"sp-l15-cooloff-ah-paper-dim\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><path d=\"M20 90 L700 90\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#sp-l15-cooloff-ah-paper-dim)\"></path><rect x=\"20\" y=\"70\" width=\"430\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"235\" y=\"90\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">what the compile can see</text><rect x=\"450\" y=\"70\" width=\"240\" height=\"40\" rx=\"4\" fill=\"var(--ink)\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"640\" y=\"90\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--amber)\">not seen yet</text><line x1=\"450\" y1=\"40\" x2=\"450\" y2=\"125\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></line><text x=\"450\" y=\"30\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--phosphor)\">--exclude-newer</text><line x1=\"690\" y1=\"40\" x2=\"690\" y2=\"125\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\"></line><text x=\"690\" y=\"30\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">today</text><text x=\"570\" y=\"140\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">a week</text><path d=\"M520 125 L520 112\" stroke=\"var(--amber)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#sp-l15-cooloff-ah-amber)\"></path><text x=\"520\" y=\"155\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--amber)\">a bad release published</text><text x=\"530\" y=\"155\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--amber)\">→ found and removed</text></svg>", "caption": "The compile looks only at what was uploaded before the date, so a release has to survive a week of other people's scrutiny before it can reach the lock."}
+```
 
 The cost is real and worth saying: a fix published yesterday for an advisory published yesterday is
 also held back. That is the case for an exception, made by a person, for one package; the lesson 7

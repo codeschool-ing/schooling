@@ -1,0 +1,359 @@
+{
+  "ex-vc1tyjzq": {
+    "prompt": "Por que esta aula chama fixar de base de todo movimento, e não de alternativa a atualizar?",
+    "choices": [
+      {
+        "text": "Pacotes fixados recebem correções de segurança do PyPI automaticamente",
+        "why": "Um pin não recebe nada sozinho; é para isso que ele serve."
+      },
+      {
+        "text": "Faz de cada atualização uma mudança escolhida e revisada",
+        "why": "Isso. Versões soltas atualizam em produção por acidente; pins fazem de cada atualização uma mudança revisada."
+      },
+      {
+        "text": "Um pacote fixado nunca é afetado por avisos novos",
+        "why": "Um aviso é sobre uma versão; o pin mantém você nela, afetada ou não."
+      },
+      {
+        "text": "Substituir um pacote é impossível sem um pin",
+        "why": "Substituir é sair de um projeto, e não precisa de pin para isso."
+      }
+    ]
+  },
+  "ex-22t1973n": {
+    "prompt": "O `uv pip tree` no ambiente da aula 5 mostrou qual pacote puxando o `packaging`?",
+    "choices": [
+      {
+        "text": "flask",
+        "why": "A árvore do Flask tinha seis pacotes, e o `packaging` não estava entre eles."
+      },
+      {
+        "text": "werkzeug",
+        "why": "O Werkzeug puxa o markupsafe, não o `packaging`."
+      },
+      {
+        "text": "pytest",
+        "why": "O pytest também precisa dele, mas só no lock de desenvolvimento; a árvore mostrada era a de execução do linkbox."
+      },
+      {
+        "text": "gunicorn",
+        "why": "Isso: o gunicorn 22 o exigia diretamente."
+      }
+    ]
+  },
+  "ex-pd3hqbkd": {
+    "prompt": "O PyPI listou quatro majors do gunicorn lançados depois do 22. O que isso diz sobre ficar no 22?",
+    "choices": [
+      {
+        "text": "A versão 22 não é segura para rodar hoje",
+        "why": "Um histórico de releases não diz nada sobre avisos contra o 22; essa é outra pergunta."
+      },
+      {
+        "text": "O projeto está abandonado e deve ser substituído",
+        "why": "Releases regulares até agosto são o contrário de abandono."
+      },
+      {
+        "text": "Cada salto depois será maior",
+        "why": "Isso. Quanto mais o pin fica para trás, maior o salto que um aviso força. Um projeto em movimento é saudável, e o custo cai em quem fica para trás."
+      },
+      {
+        "text": "Nada, desde que os testes passem no 22",
+        "why": "Testes passando hoje não encurtam o salto que você vai ter de dar depois."
+      }
+    ]
+  },
+  "ex-37kmynpk": {
+    "prompt": "Associe cada situação ao movimento que esta aula recomenda.",
+    "pairs": [
+      {
+        "left": "um projeto saudável lança uma versão suportada além do seu pin",
+        "right": "atualizar"
+      },
+      {
+        "left": "um pacote novo entra no serviço",
+        "right": "fixar, com hashes"
+      },
+      {
+        "left": "os mantenedores dizem que um aviso nunca será corrigido, e você assina com ele",
+        "right": "substituir"
+      }
+    ],
+    "right_distractors": [
+      "tirar o limite superior"
+    ]
+  },
+  "ex-gkskgp0c": {
+    "prompt": "A primeira compilação, rodada com o `requirements.txt` da aula 5 ainda no lugar, manteve `click` e `markupsafe` nas versões antigas. Por quê?",
+    "choices": [
+      {
+        "text": "O uv mantém pins do arquivo de saída que ainda cabem",
+        "why": "Isso. Um lock muda o mínimo possível, então a revisão lê só o que mudou."
+      },
+      {
+        "text": "Versões mais novas dos dois foram excluídas pela data",
+        "why": "A compilação limpa com a mesma data escolheu versões mais novas dos dois."
+      },
+      {
+        "text": "A faixa do flask proíbe versões mais novas de click e markupsafe",
+        "why": "A compilação limpa resolveu o click 8.5.0 sob a mesma faixa do flask."
+      },
+      {
+        "text": "O gunicorn 26 exige exatamente essas versões",
+        "why": "O gunicorn 26 não exige nada fora dos extras."
+      }
+    ]
+  },
+  "ex-7cht7vx8": {
+    "prompt": "Contra o que um hash sob um pin no `requirements.txt` protege que o número de versão sozinho não protege?",
+    "choices": [
+      {
+        "text": "Um release de versão mais nova",
+        "why": "Uma versão mais nova tem outro número; o pin sozinho já a ignora."
+      },
+      {
+        "text": "Outro arquivo servido sob a mesma versão",
+        "why": "Isso. O instalador recusa bytes cujo hash não está no lock."
+      },
+      {
+        "text": "Um aviso publicado contra essa versão",
+        "why": "Um hash não diz nada sobre avisos; ele fixa bytes."
+      },
+      {
+        "text": "Uma dependência do pacote mudando de licença",
+        "why": "Licenças não são o que um hash confere."
+      }
+    ]
+  },
+  "ex-xv1a5hqj": {
+    "prompt": "O `ci/test.sh` instala com `uv pip install --___`, então qualquer pacote sem hash no lock é recusado.",
+    "blanks": [
+      {
+        "accept": [
+          "require-hashes"
+        ]
+      }
+    ]
+  },
+  "ex-h4qb2ren": {
+    "prompt": "Alguém do time edita o `requirements.txt` à mão para subir um pacote e o hash dele, sem mexer no `requirements.in`. O que se perdeu?",
+    "choices": [
+      {
+        "text": "Nada, se o hash foi copiado certo do PyPI",
+        "why": "Os bytes podem estar certos; o que se foi é a garantia de que o lock é o que as faixas resolvem."
+      },
+      {
+        "text": "A imagem volta a ser construída a partir da rede",
+        "why": "O build continua usando as wheels baixadas; o problema está no lock."
+      },
+      {
+        "text": "O lock deixa de bater com o comando do cabeçalho",
+        "why": "Isso. Ninguém consegue rodar o comando do cabeçalho e obter este arquivo, e os comentários `# via` podem estar mentindo."
+      },
+      {
+        "text": "O `--require-hashes` vai recusar o pacote editado",
+        "why": "Ele aceita qualquer pacote cujo hash esteja no arquivo; uma edição à mão passa."
+      }
+    ]
+  },
+  "ex-v1yzfq6k": {
+    "prompt": "Compiladas com `--exclude-newer 2026-08-01`, as faixas do linkbox falharam. Por quê?",
+    "choices": [
+      {
+        "text": "O PyPI recusa datas de mais de um mês atrás",
+        "why": "A data de 2024 funcionou para o flask na mesma captura."
+      },
+      {
+        "text": "Nenhum gunicorn 26.2 tinha sido enviado até então",
+        "why": "Isso. `>=26.2` não é atendido com arquivos de antes de 24 de agosto."
+      },
+      {
+        "text": "O flask 3.1.3 não existia em agosto",
+        "why": "O flask resolveu para 3.1.3 na data de outubro; o resolvedor apontou o gunicorn."
+      },
+      {
+        "text": "Uma data sem `--generate-hashes` é um erro",
+        "why": "Datas e hashes são opções independentes."
+      }
+    ]
+  },
+  "ex-r1r258ek": {
+    "prompt": "Um release malicioso de uma dependência é publicado na segunda e removido na quarta. A sua data de compilação está sempre uma semana atrás de hoje. Na quinta alguém atualiza o lock. O que acontece?",
+    "choices": [
+      {
+        "text": "A compilação o pega, porque ele foi válido por dois dias",
+        "why": "Com a data uma semana atrás, o envio de segunda fica depois da data na quinta."
+      },
+      {
+        "text": "A compilação nunca o enxergou",
+        "why": "Isso. Ele some antes de a data alcançá-lo: o release viveu dentro da janela que a data exclui."
+      },
+      {
+        "text": "Os hashes o pegam, já que o arquivo é novo",
+        "why": "Os hashes são gerados a partir do que a compilação escolheu; eles não julgam um release."
+      },
+      {
+        "text": "O pip-audit o recusa no estágio sca",
+        "why": "Um release malicioso recente costuma nem ter aviso ainda; foi a data que o deixou de fora."
+      }
+    ]
+  },
+  "ex-8nr54nfh": {
+    "prompt": "Que custo a aula aponta para uma data de compilação uma semana atrás?",
+    "choices": [
+      {
+        "text": "Os locks ficam impossíveis de reproduzir",
+        "why": "A data é justamente o que os torna reproduzíveis."
+      },
+      {
+        "text": "Uma correção publicada ontem também fica retida",
+        "why": "Isso. É o caso para uma exceção escrita para um pacote."
+      },
+      {
+        "text": "Todo pacote precisa ser baixado duas vezes",
+        "why": "A data muda quais versões são escolhidas, não quantas vezes são baixadas."
+      },
+      {
+        "text": "Os testes param de rodar no pipeline",
+        "why": "Os testes rodaram contra o lock datado nesta aula."
+      }
+    ]
+  },
+  "ex-zn1zahkk": {
+    "prompt": "Ponha as checagens que esta aula aplica à atualização do gunicorn de 22 para 26 na ordem em que ela as faz.",
+    "items": [
+      "ler o que mudou em cada major",
+      "ver o que ela traz ou tira",
+      "rodar os testes no lock novo",
+      "construir e rodar a imagem no pipeline"
+    ]
+  },
+  "ex-gxg30fmc": {
+    "prompt": "O Dockerfile da aula 8, construído com `--network none`, falhou. O que essa falha mostrou?",
+    "choices": [
+      {
+        "text": "Que o Docker não consegue construir imagens offline",
+        "why": "O Dockerfile novo foi construído offline logo depois."
+      },
+      {
+        "text": "Que o build antigo buscava pacotes no PyPI durante o build",
+        "why": "Isso. O build dependia do que o índice respondesse, e ninguém conferia depois."
+      },
+      {
+        "text": "Que a imagem base tinha sido adulterada",
+        "why": "Nada na imagem base mudou; o pip não alcançou o índice."
+      },
+      {
+        "text": "Que o diretório de wheels faltava no `.dockerignore`",
+        "why": "O Dockerfile antigo não usava wheels."
+      }
+    ]
+  },
+  "ex-tv296qrj": {
+    "prompt": "Quantas wheels o `ci/build.sh` baixou para `wheels/` a partir do lock de execução do linkbox?"
+  },
+  "ex-fx5dd9s2": {
+    "prompt": "Quais destas valem para o build depois desta aula? Escolha todas as que valem.",
+    "choices": [
+      {
+        "text": "Cada wheel é conferida contra o hash duas vezes, antes e dentro do build",
+        "why": "Isso: `pip download --require-hashes`, depois `pip install --require-hashes` no Dockerfile."
+      },
+      {
+        "text": "As duas imagens base são nomeadas por digest",
+        "why": "Isso, com a tag mantida na frente para quem lê."
+      },
+      {
+        "text": "Os passos RUN do build alcançam o PyPI pelo proxy",
+        "why": "`--network none` não lhes dá rede nenhuma."
+      },
+      {
+        "text": "O `packaging` é instalado na imagem para o gunicorn",
+        "why": "A checagem do próprio Python imprimiu `None` para ele."
+      }
+    ]
+  },
+  "ex-2rr9p6t7": {
+    "prompt": "O aviso do ecdsa diz que a verificação de assinaturas não é afetada. Um serviço só verifica assinaturas feitas por outros. O que a aula recomenda?",
+    "choices": [
+      {
+        "text": "Substituir já, porque o aviso não tem correção",
+        "why": "O texto diz que as operações vulneráveis são assinar e gerar chaves, e este serviço não faz nenhuma das duas."
+      },
+      {
+        "text": "Manter fixado, com o motivo escrito nas exceções do gate",
+        "why": "Isso. O aviso não se aplica ao que o serviço faz, e a exceção registra o porquê."
+      },
+      {
+        "text": "Atualizar para o release mais recente, que corrige",
+        "why": "Não há versão corrigida; `fixed_in` estava vazio."
+      },
+      {
+        "text": "Fazer um fork da biblioteca e corrigir o vazamento de tempo você mesmo",
+        "why": "Isso faz de você mantenedor de uma biblioteca criptográfica, a opção mais cara que existe."
+      }
+    ]
+  },
+  "ex-9kjep67q": {
+    "prompt": "Um serviço assina um token só para que o próprio serviço o confira num pedido seguinte. Que substituto para o `ecdsa` a aula defende?",
+    "choices": [
+      {
+        "text": "O ECDSA do `cryptography` na mesma curva",
+        "why": "Funciona, mas uma assinatura é mais do que o trabalho pede; ninguém mais verifica."
+      },
+      {
+        "text": "Um release mais novo do `ecdsa` com a correção de tempo",
+        "why": "O projeto declarou que não há correção planejada."
+      },
+      {
+        "text": "O `hmac` da biblioteca padrão",
+        "why": "Isso, comparado com `compare_digest`. Uma parte que cria e confere as próprias mensagens precisa de um MAC, e de nenhuma dependência."
+      },
+      {
+        "text": "Um hash do token com SHA-256",
+        "why": "Qualquer um calcula um hash simples, então ele não prova nada sobre quem fez o token."
+      }
+    ]
+  },
+  "ex-ct562ta3": {
+    "prompt": "O lock de um time é compilado sem data, e um job noturno o recompila e faz commit do resultado. Que duas propriedades do lock desta aula isso abandona?",
+    "choices": [
+      {
+        "text": "Os hashes e os comentários `# via`",
+        "why": "Os dois continuam sendo escritos por toda compilação, com ou sem data."
+      },
+      {
+        "text": "Reproduzir o arquivo a partir do cabeçalho, e o período de quarentena",
+        "why": "Isso. Sem data o mesmo comando responde diferente amanhã, e um release de uma hora atrás entra."
+      },
+      {
+        "text": "Os limites superiores e inferiores do `requirements.in`",
+        "why": "Esses estão no arquivo `.in`, e o job não mexe neles."
+      },
+      {
+        "text": "O build offline e os digests das imagens base",
+        "why": "Esses ficam no Dockerfile e no `ci/build.sh`, intocados por uma recompilação."
+      }
+    ]
+  },
+  "ex-dx5afa5z": {
+    "prompt": "Depois desta aula, como você mostra que o `packaging` não está na imagem do linkbox?",
+    "choices": [
+      {
+        "text": "Perguntar ao Python da própria imagem",
+        "why": "Isso. O `find_spec` imprimiu `None`, de dentro da imagem, sem precisar de shell."
+      },
+      {
+        "text": "Abrir um shell no contêiner e rodar `pip list`",
+        "why": "A imagem distroless não tem shell nem pip, pelo desenho da aula 8."
+      },
+      {
+        "text": "Procurar a palavra no `requirements.in`",
+        "why": "Ele nunca esteve no `requirements.in`; entrou pelo gunicorn 22."
+      },
+      {
+        "text": "Conferir que o `requirements-dev.txt` não o lista mais",
+        "why": "Ele ainda lista, para o pytest, e esse lock nunca chega à imagem."
+      }
+    ]
+  }
+}

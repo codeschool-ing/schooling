@@ -36,7 +36,10 @@ credentials AWS returns into the job's environment. The account number is AWS's 
 example, and the action is pinned by commit as lesson 16 requires. The commit was checked the way
 lesson 16 checks one:
 
-@@CAPTURE pin@@
+```
+ana@vm:~/linkbox$ git ls-remote https://github.com/aws-actions/configure-aws-credentials refs/tags/v6.3.0
+e1253824e5c10ff9df46874f81ed3ec929e19cfd	refs/tags/v6.3.0
+```
 
 ### The cloud provider decides which runs
 
@@ -133,4 +136,7 @@ replaced by hand everywhere it was pasted.
 
 When you are done, remove the Vault container. It took its secrets with it, as dev mode promised:
 
-@@CAPTURE cleanup@@
+```
+ana@vm:~/linkbox$ docker rm -f vault
+vault
+```

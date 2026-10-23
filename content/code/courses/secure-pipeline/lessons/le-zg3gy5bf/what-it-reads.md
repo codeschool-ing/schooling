@@ -21,17 +21,17 @@ itself:
 
 ```
 ana@vm:~$ TRIVY_SKIP_DB_UPDATE=false trivy image --no-progress --cache-dir /tmp/trivy-db --download-db-only
-2026-10-23T01:53:26-03:00	INFO	[vulndb] Need to update DB
-2026-10-23T01:53:26-03:00	INFO	[vulndb] Downloading vulnerability DB...
-2026-10-23T01:53:26-03:00	INFO	[vulndb] Downloading artifact...	repo="mirror.gcr.io/aquasec/trivy-db:2"
-2026-10-23T01:53:42-03:00	INFO	[vulndb] Artifact successfully downloaded	repo="mirror.gcr.io/aquasec/trivy-db:2"
+2026-10-23T09:39:54-03:00	INFO	[vulndb] Need to update DB
+2026-10-23T09:39:54-03:00	INFO	[vulndb] Downloading vulnerability DB...
+2026-10-23T09:39:54-03:00	INFO	[vulndb] Downloading artifact...	repo="mirror.gcr.io/aquasec/trivy-db:2"
+2026-10-23T09:40:10-03:00	INFO	[vulndb] Artifact successfully downloaded	repo="mirror.gcr.io/aquasec/trivy-db:2"
 ana@vm:~$ trivy version --cache-dir /tmp/trivy-db
 Version: 0.75.0
 Vulnerability DB:
   Version: 2
-  UpdatedAt: 2026-10-23 01:18:09.482141619 +0000 UTC
-  NextUpdate: 2026-10-24 01:18:09.482141078 +0000 UTC
-  DownloadedAt: 2026-10-23 04:53:42.2368631 +0000 UTC
+  UpdatedAt: 2026-10-23 07:12:39.66827463 +0000 UTC
+  NextUpdate: 2026-10-24 07:12:39.668274239 +0000 UTC
+  DownloadedAt: 2026-10-23 12:40:10.310745067 +0000 UTC
 ```
 
 **About 130 MB, from a registry rather than from a website**: the database is published as an

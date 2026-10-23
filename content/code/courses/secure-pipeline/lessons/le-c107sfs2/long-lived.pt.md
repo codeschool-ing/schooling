@@ -14,7 +14,19 @@ credencial nenhuma.
 
 Dois estágios lidam com algo secreto. Uma busca nos scripts dos estágios acha os dois:
 
-@@FENCE 1@@
+```
+ana@vm:~$ cd linkbox
+ana@vm:~/linkbox$ grep -n -e password -e LINKBOX_TOKEN ci/*.sh
+ci/dast.sh:15:  -e LINKBOX_TOKEN="$(head -c 18 /dev/urandom | base64)" "linkbox:${CI_COMMIT:-dev}" >/dev/null
+ci/sign.sh:3:# The key and its password belong to the CI server, in ~/ci/keys, and never
+ci/sign.sh:12:COSIGN_PASSWORD=$(cat "$keys/password")
+ana@vm:~/linkbox$ ls -l ~/ci/keys
+total 16
+-rw------- 1 ana ana 653 Oct 23 09:43 cosign.key
+-rw-r--r-- 1 ana ana 178 Oct 23 09:43 cosign.pub
+-rw------- 1 ana ana 104 Oct 23 09:43 offline.json
+-rw------- 1 ana ana  33 Oct 23 09:43 password
+```
 
 Eles são opostos, e a diferença é o assunto desta aula.
 
