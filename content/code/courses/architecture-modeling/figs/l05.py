@@ -85,7 +85,7 @@ def log():
             (190, 'ADR-0004', T('holds in the database', 'bloqueios no banco'), '--paper-dim', True),
             (545, 'ADR-0009', T('holds in Redis', 'bloqueios no Redis'), '--phosphor', False),
             (600, 'ADR-0011', T('webhook confirmations', 'confirmação por webhook'), '--phosphor', False),
-            (660, 'ADR-0014', T('refund late payments', 'estorna pagamento tardio'), '--phosphor', False)]
+            (660, 'ADR-0014', T('refund late payments', 'estorna pago atrasado'), '--phosphor', False)]
     for i, (x, n, what, c, dash) in enumerate(recs):
         y = 120 if i % 2 == 0 else 60
         w = 116 if x < 650 else 100
