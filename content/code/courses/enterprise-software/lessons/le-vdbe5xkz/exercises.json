@@ -1,0 +1,761 @@
+[
+  {
+    "id": "ex-zktzmz00",
+    "version": 1,
+    "section": "profiling",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Joana's first mapping was written from Coleta's documentation. Why does a migration profile the data before writing the mapping?",
+    "hint": "Think of the municipality field and the binder.",
+    "choices": [
+      {
+        "text": "To find out how many servers and how much disk the load will need",
+        "correct": false,
+        "why": "Volumes help size the load, but that is not why profiling comes first; the binder was wrong about what the field held, not about its size."
+      },
+      {
+        "text": "Because the new system refuses any load that has not been profiled first",
+        "correct": false,
+        "why": "No system asks for that. Profiling is a decision the migration team makes so that surprises arrive early."
+      },
+      {
+        "text": "So that the business owners have a report to sign before the project starts",
+        "correct": false,
+        "why": "Owners sign the mapping specification and the reconciliation. The profile is a measurement, not a document for signature."
+      },
+      {
+        "text": "The binder describes intent, and the data has drifted from it",
+        "correct": true,
+        "why": "Right: the binder said the municipality came from a list, and the profile found 97 spellings of 38 towns."
+      }
+    ]
+  },
+  {
+    "id": "ex-p1g10za1",
+    "version": 1,
+    "section": "profiling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The profile finds 38 tax ids that each appear on two farm records. What should the migration do with them?",
+    "hint": "Is a shared tax id the same thing as a duplicate farm?",
+    "choices": [
+      {
+        "text": "Ask somebody who knows the farms which pairs are one tank twice, and merge only those",
+        "correct": true,
+        "why": "Right: 31 pairs were one producer with two properties, and only 7 were one tank registered twice. Sebastião knew which."
+      },
+      {
+        "text": "Merge each pair into one farm, since a tax id identifies one producer",
+        "correct": false,
+        "why": "That merges 31 producers' second properties and pays each of them once instead of twice."
+      },
+      {
+        "text": "Add a unique constraint on tax id in the new system so the duplicates cannot load",
+        "correct": false,
+        "why": "The constraint would refuse 31 correct farms. The rule the binder implied is not true of the data."
+      },
+      {
+        "text": "Send all 76 records to the reject file, for finance to sort out with the producers after go-live",
+        "correct": false,
+        "why": "Those farms would have no record in the new system, and a farm with no record is a farm that is not paid."
+      }
+    ]
+  },
+  {
+    "id": "ex-x9e4pbf1",
+    "version": 1,
+    "section": "profiling",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Coleta's farm master holds 2,140 records. 182 of them have no collection inside the period the new system must hold. How many farms are in scope for the migration?",
+    "hint": "A subtraction.",
+    "value": 1958,
+    "tolerance": 0,
+    "unit": "farms",
+    "accept_units": [
+      "farm"
+    ]
+  },
+  {
+    "id": "ex-hyg9pb4a",
+    "version": 1,
+    "section": "profiling",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these profiling findings would have loaded without any error, and been found only by a farm paid into a closed account?",
+    "hint": "A load fails on a value that breaks a rule.",
+    "choices": [
+      {
+        "text": "Municipalities typed as free text, in 97 spellings",
+        "correct": false,
+        "why": "These would fail: the new system stores an IBGE code, and an unknown spelling has none."
+      },
+      {
+        "text": "Collection rows pointing at six deleted farm codes",
+        "correct": false,
+        "why": "Orphans fail loudly too, since the new history needs a farm to belong to."
+      },
+      {
+        "text": "Bank accounts kept in Coleta that disagree with SAP's vendor master",
+        "correct": true,
+        "why": "Right: they are well formed and wrong, which is the kind of value a load accepts and a payment finds."
+      },
+      {
+        "text": "CPFs whose check digits do not add up",
+        "correct": false,
+        "why": "The mapping refuses a CPF whose check digits fail, so these surface as rejects, not as payments."
+      }
+    ]
+  },
+  {
+    "id": "ex-1h43yyjv",
+    "version": 1,
+    "section": "mapping-and-cleansing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The new system generates its own farm_id. Why does the mapping also keep Coleta's code in legacy_code?",
+    "hint": "Who looks things up in Coleta after the cutover?",
+    "choices": [
+      {
+        "text": "Because the new system cannot generate identifiers that are unique",
+        "correct": false,
+        "why": "It generates farm_id without trouble. The old code is kept for a different reason."
+      },
+      {
+        "text": "So that Coleta's code can replace farm_id after the hypercare weeks",
+        "correct": false,
+        "why": "Nothing replaces farm_id. The old code is for looking back, and it is the new id that the new system joins by."
+      },
+      {
+        "text": "Because SAP pays the farms by their Coleta code",
+        "correct": false,
+        "why": "SAP pays a vendor record, and the mapping carries the vendor number in its own field."
+      },
+      {
+        "text": "So any record leads back to its Coleta farm",
+        "correct": true,
+        "why": "Right: it costs one column and answers every question about which Coleta farm a record was."
+      }
+    ]
+  },
+  {
+    "id": "ex-fr47ahc5",
+    "version": 1,
+    "section": "mapping-and-cleansing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Finance finds 9 invalid CPFs in Coleta. Joana's first instinct is to correct them in the transformation. Why did Serra Alta correct them in Coleta instead?",
+    "hint": "What does Coleta keep doing after the farm master moves?",
+    "choices": [
+      {
+        "text": "Because the transformation cannot change the value of a field",
+        "correct": false,
+        "why": "It changes plenty: units, spellings, layouts. Whether it can is not the question."
+      },
+      {
+        "text": "Coleta keeps running, so a fact fixed only in flight stays wrong there",
+        "correct": true,
+        "why": "Right: the strangler keeps Coleta alive for months, and a wrong fact is corrected where it lives."
+      },
+      {
+        "text": "Because corrections in flight are slower than corrections at the source",
+        "correct": false,
+        "why": "Nine values cost nothing in flight. Speed is not why the place was chosen."
+      },
+      {
+        "text": "Because the owner of a fact is the only person allowed to run the migration",
+        "correct": false,
+        "why": "Owners sign rules and fix facts; the migration team runs the load."
+      }
+    ]
+  },
+  {
+    "id": "ex-78vkfzyt",
+    "version": 1,
+    "section": "mapping-and-cleansing",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Filling a mandatory field nobody can fill with an invented value is dangerous: a ___ is a value somebody will later believe.",
+    "hint": "The route 1 example.",
+    "blanks": [
+      {
+        "accept": [
+          "default",
+          "default value"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fwb85chk",
+    "version": 1,
+    "section": "mapping-and-cleansing",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did Serra Alta translate in flight, in the transformation? Choose all that apply.",
+    "hint": "Wrong forms in flight, wrong facts at the source.",
+    "choices": [
+      {
+        "text": "The 97 municipality spellings, into IBGE codes",
+        "correct": true,
+        "why": "Yes: a spelling is a wrong form, translated by a signed table."
+      },
+      {
+        "text": "The 4 farms pointing at blocked SAP vendors",
+        "correct": false,
+        "why": "A stale link is a wrong fact; finance corrected it in Coleta's own screens."
+      },
+      {
+        "text": "Litres stored as hundredths, into a decimal",
+        "correct": true,
+        "why": "Yes: a unit is a form, and the rule runs at every load."
+      },
+      {
+        "text": "The 7 farms registered twice, into their survivors",
+        "correct": true,
+        "why": "Yes: the merge table re-keys them on the way, signed row by row by Sebastião."
+      }
+    ]
+  },
+  {
+    "id": "ex-00ec2bzx",
+    "version": 1,
+    "section": "rehearsals",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a dress rehearsal find that a mock load does not?",
+    "hint": "Who runs each, when, and on how much data?",
+    "choices": [
+      {
+        "text": "A spelling the municipality table does not know",
+        "correct": false,
+        "why": "A mock load finds that; it is a mapping fault, and mock loads exist to test the mapping."
+      },
+      {
+        "text": "Rejected rows, grouped by the reason for each",
+        "correct": false,
+        "why": "Every run counts rejects by reason, mock loads included."
+      },
+      {
+        "text": "A step that takes hours on full volume, at night",
+        "correct": true,
+        "why": "Right: only the whole runbook, at the real hours, on a full copy, shows the night as it will be."
+      },
+      {
+        "text": "Whether the mapping specification has been signed",
+        "correct": false,
+        "why": "That is a document check before any run, not something a rehearsal discovers."
+      }
+    ]
+  },
+  {
+    "id": "ex-v25afws8",
+    "version": 1,
+    "section": "rehearsals",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The cutover window runs from Saturday 20:00 to Sunday 10:00, and the rehearsed rollback takes 2 hours. How many hours after the 20:00 freeze is the latest moment to take the go/no-go decision?",
+    "hint": "The window's length, less the rollback.",
+    "value": 12,
+    "tolerance": 0,
+    "unit": "hours",
+    "accept_units": [
+      "hour",
+      "h"
+    ]
+  },
+  {
+    "id": "ex-qsxwc0rd",
+    "version": 1,
+    "section": "rehearsals",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Dress rehearsal 1 rejected 41 of the 1,958 farms in scope. What percentage of the farms was rejected? Give two decimal places.",
+    "hint": "Rejects divided by the farms in scope, times 100.",
+    "value": 2.09,
+    "tolerance": 0.01,
+    "unit": "%",
+    "accept_units": [
+      "percent"
+    ]
+  },
+  {
+    "id": "ex-z56yzkxd",
+    "version": 1,
+    "section": "rehearsals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Dress rehearsal 1 rejected 2,412 collection rows because their lab results were empty. What was wrong?",
+    "hint": "What does Serra Alta do when a sample is lost?",
+    "choices": [
+      {
+        "text": "The rows: the lab results had been deleted in Coleta",
+        "correct": false,
+        "why": "Nothing was deleted. The samples were lost or spoiled, and the rows record that truthfully."
+      },
+      {
+        "text": "The specification: a mandatory field the business leaves empty for a reason",
+        "correct": true,
+        "why": "Right: a lost sample is paid at the base price, so the rule became optional with a reason code, signed by Cláudia."
+      },
+      {
+        "text": "The load: it ran out of time before the lab results arrived",
+        "correct": false,
+        "why": "The duration problem was real but separate; these rows were refused by a rule, not by the clock."
+      },
+      {
+        "text": "The extract: it read the history before the lab files were merged in",
+        "correct": false,
+        "why": "The extract was complete. The emptiness was in Coleta, on purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-ze7gzmpf",
+    "version": 1,
+    "section": "rehearsals",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Edson's first dress rehearsal for the move off SAP ECC overruns its weekend window by six hours. Following the reasoning of this lesson, which change should he look at first?",
+    "hint": "What cannot change any more, and so can move early?",
+    "choices": [
+      {
+        "text": "Skip the record-level reconciliation of the history",
+        "correct": false,
+        "why": "That buys time by removing the only check that saw Serra Alta's 214 swapped rows."
+      },
+      {
+        "text": "Load the documents of closed periods days before the window opens",
+        "correct": true,
+        "why": "Right: a closed period will not change, so it can move and be reconciled before the night, as Serra Alta's paid months did."
+      },
+      {
+        "text": "Stop rehearsing the rollback, since it takes time from the run",
+        "correct": false,
+        "why": "The rollback's measured time is what sets the latest decision; without it the plan has a guess in it."
+      },
+      {
+        "text": "Ask finance to give him the first week of the month as well",
+        "correct": false,
+        "why": "That is the close week, when the SAP team freezes changes; it is the one week the calendar cannot give."
+      }
+    ]
+  },
+  {
+    "id": "ex-wmgejrjf",
+    "version": 1,
+    "section": "reconciliation",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each check to the fault it is the first to catch.",
+    "hint": "Count, total, record, then a person.",
+    "pairs": [
+      {
+        "left": "count",
+        "right": "a row dropped during the load"
+      },
+      {
+        "left": "control total",
+        "right": "litres divided by 100 one time too many"
+      },
+      {
+        "left": "record fingerprint",
+        "right": "two farms that exchanged their litres"
+      },
+      {
+        "left": "the owner's sample",
+        "right": "fat loaded into the protein field by the spec"
+      }
+    ],
+    "right_distractors": [
+      "a load that overruns its window"
+    ]
+  },
+  {
+    "id": "ex-ns92rv2s",
+    "version": 1,
+    "section": "reconciliation",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "1,958 farms are in scope, nothing is rejected, and 7 duplicate farms are merged into their survivors on purpose. How many farms should the reconciliation expect in the target?",
+    "hint": "Every source row is loaded, rejected or merged.",
+    "value": 1951,
+    "tolerance": 0,
+    "unit": "farms",
+    "accept_units": [
+      "farm"
+    ]
+  },
+  {
+    "id": "ex-9nnx3mqk",
+    "version": 1,
+    "section": "reconciliation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Run on target-faulty.csv, reconcile.py prints ok for the count and for the litres, then names four farms. How can both totals agree while four farms are wrong?",
+    "hint": "Look at what each of the faults does to the two sums.",
+    "choices": [
+      {
+        "text": "The program rounds the litres before it adds them up",
+        "correct": false,
+        "why": "It refuses to round: a value with a third decimal stops the run."
+      },
+      {
+        "text": "The count and the total are computed from the source file alone",
+        "correct": false,
+        "why": "Each side is read separately; the output prints both, source and target."
+      },
+      {
+        "text": "Four faults are below the tolerance the first two levels allow",
+        "correct": false,
+        "why": "There is no tolerance: the levels compare for equality, and here they really are equal."
+      },
+      {
+        "text": "A swap and a mistyped code each leave both sums unchanged",
+        "correct": true,
+        "why": "Right: two farms exchanging litres keep the total, and one farm under the wrong code keeps both the count and the litres."
+      }
+    ]
+  },
+  {
+    "id": "ex-fr653nyg",
+    "version": 1,
+    "section": "reconciliation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To save time on the night, Rui proposes reconciling the files the transformation read against the tables the load wrote. What is wrong with that?",
+    "hint": "Compare the ends, not the middle.",
+    "choices": [
+      {
+        "text": "It proves only that the load agrees with itself",
+        "correct": true,
+        "why": "Right: the source should come from Coleta at the freeze and the target from the new system as users see it."
+      },
+      {
+        "text": "Staging files are too large to fingerprint in one night",
+        "correct": false,
+        "why": "Size is not the issue; what the comparison can prove is."
+      },
+      {
+        "text": "A reconciliation is only allowed to read data through an API",
+        "correct": false,
+        "why": "There is no such rule. Reading the target as users see it is the point, whatever the channel."
+      },
+      {
+        "text": "The staging files hold the rows that were rejected",
+        "correct": false,
+        "why": "Rejects have their own files, and the reconciliation counts them on purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-ne0mwjer",
+    "version": 1,
+    "section": "cutover-and-rollback",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these steps of Serra Alta's cutover runbook in order.",
+    "hint": "From Coleta's last file to the readings the trucks held.",
+    "items": [
+      "Coleta writes its last nightly file for SAP",
+      "Freeze: Coleta becomes read-only",
+      "Final extract and delta load",
+      "Reconciliation at all three levels",
+      "Go/no-go, against the written criteria",
+      "Handhelds release their held readings"
+    ],
+    "trap": "Releasing the held readings before the decision would put real data into a system that may still be rolled back."
+  },
+  {
+    "id": "ex-1kr7x6d8",
+    "version": 1,
+    "section": "cutover-and-rollback",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why are the go/no-go criteria written weeks before the cutover night?",
+    "hint": "Who is in the room at five in the morning?",
+    "choices": [
+      {
+        "text": "Because at five in the morning everyone in the room wants a yes",
+        "correct": true,
+        "why": "Right: written in advance, the question is only whether each line is true."
+      },
+      {
+        "text": "Because the auditors require them for the FSSC 22000 certification",
+        "correct": false,
+        "why": "That audit is about food safety, not about migrations."
+      },
+      {
+        "text": "Because the runbook cannot be printed until the criteria are in it",
+        "correct": false,
+        "why": "Printing is not the reason; the meeting would be just as weak with them on a screen."
+      },
+      {
+        "text": "So that the decision can be taken by Rui's team without Regina",
+        "correct": false,
+        "why": "Regina takes it, with Marcos. Writing the criteria early does not move the decision to somebody else."
+      }
+    ]
+  },
+  {
+    "id": "ex-w3m3n1dh",
+    "version": 1,
+    "section": "cutover-and-rollback",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At what moment did Serra Alta's migration reach its point of no return?",
+    "hint": "After it, going back would mean asking farms for money.",
+    "choices": [
+      {
+        "text": "At the freeze, when Coleta became read-only for everybody",
+        "correct": false,
+        "why": "Unfreezing Coleta is the first step of the rehearsed two-hour rollback, so nothing is final yet."
+      },
+      {
+        "text": "At the go decision, at 05:00 on Sunday",
+        "correct": false,
+        "why": "After the go, going back costs more each day, but the readings can still be carried back to Coleta."
+      },
+      {
+        "text": "When the bank file of the first new payment leaves",
+        "correct": true,
+        "why": "Right: once farms are paid from the new system, undoing it means reversing payments to about 1,900 farms."
+      },
+      {
+        "text": "When the window closes, at 10:00 on Sunday",
+        "correct": false,
+        "why": "The window's end limits the night's rollback, not every way back; a fallback exists for days after it."
+      }
+    ]
+  },
+  {
+    "id": "ex-npqhw72r",
+    "version": 1,
+    "section": "cutover-and-rollback",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To give the new system more time before its first payment, Regina suggests moving the cutover to the first Saturday of the month. Which objection follows from Serra Alta's calendar?",
+    "hint": "What happens in the first five working days?",
+    "choices": [
+      {
+        "text": "The trucks do not collect on the first weekend of the month",
+        "correct": false,
+        "why": "The trucks collect every day of the year; there is no quiet weekend."
+      },
+      {
+        "text": "SAP is in maintenance for the whole of that weekend",
+        "correct": false,
+        "why": "SAP's maintenance is every Sunday from 01:00 to 05:00, the same in every week."
+      },
+      {
+        "text": "The first payment would then fall inside the cutover window",
+        "correct": false,
+        "why": "The payment is on the 10th and the window is one night; they cannot overlap from that date."
+      },
+      {
+        "text": "It is the close week, and SAP changes are frozen",
+        "correct": true,
+        "why": "Right: the first week was out for that reason, so the window sits after the 10th."
+      }
+    ]
+  },
+  {
+    "id": "ex-d1k736n0",
+    "version": 1,
+    "section": "after-go-live",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did Serra Alta keep Coleta running read-only until December instead of switching it off on the cutover weekend?",
+    "hint": "A farm disputes July's payment in September.",
+    "choices": [
+      {
+        "text": "So the trucks could fall back to it if the new system stopped",
+        "correct": false,
+        "why": "Read-only means nothing can be recorded in it; it cannot take readings."
+      },
+      {
+        "text": "To answer disputes about the months it paid",
+        "correct": true,
+        "why": "Right: it answers questions about the past without migrating all of it, and legacy_code joins the two."
+      },
+      {
+        "text": "Because the IBM i licence could not be cancelled before then",
+        "correct": false,
+        "why": "The lesson treats the licence as the cost of the decision, not its reason."
+      },
+      {
+        "text": "So that its nightly file to SAP could keep running in parallel",
+        "correct": false,
+        "why": "After the cutover the new system writes that file; two files would double every goods receipt."
+      }
+    ]
+  },
+  {
+    "id": "ex-z5jgw33v",
+    "version": 1,
+    "section": "after-go-live",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Three farms with exactly 3.50% fat were put in the wrong quality band by the new system. Why did no reconciliation catch it?",
+    "hint": "What does a reconciliation compare?",
+    "choices": [
+      {
+        "text": "The values arrived intact; the fault was a rule using them",
+        "correct": true,
+        "why": "Right: the lab results were migrated correctly; a band boundary is a rule, found only by using the data."
+      },
+      {
+        "text": "Because the owner's sample of 40 farms was too small",
+        "correct": false,
+        "why": "The sample looks for a wrong mapping rule; the payment rules are not in the mapping at all."
+      },
+      {
+        "text": "Because fingerprints ignore decimals in the lab results",
+        "correct": false,
+        "why": "A fingerprint covers every field in the agreed form, decimals included."
+      },
+      {
+        "text": "Because the control total was taken on litres and not on fat",
+        "correct": false,
+        "why": "A total on fat would have agreed too: the fat values arrived intact."
+      }
+    ]
+  },
+  {
+    "id": "ex-t31mxnha",
+    "version": 1,
+    "section": "after-go-live",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which archive of Coleta's old data follows the lesson?",
+    "hint": "It has to open in twenty years, after its author has retired.",
+    "choices": [
+      {
+        "text": "A full backup of the IBM i, kept with no end date in case it is needed",
+        "correct": false,
+        "why": "It needs an IBM i to restore, and an archive with no end date is a cost and a liability kept forever."
+      },
+      {
+        "text": "The history migrated into the new system as well, so there is one place to look",
+        "correct": false,
+        "why": "The scope rule kept old history out of the new system on purpose; moving it all would undo that decision."
+      },
+      {
+        "text": "Plain CSV with a description of each field, an owner, and a disposal date",
+        "correct": true,
+        "why": "Right: it opens anywhere, explains itself after Sebastião leaves, and ends on a written date."
+      },
+      {
+        "text": "Coleta's database tables exported unchanged, without any documentation",
+        "correct": false,
+        "why": "Without the field descriptions, the meaning leaves with the RPG and its author."
+      }
+    ]
+  },
+  {
+    "id": "ex-3e4343de",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At 05:00 the reconciliation shows 1,951 farms, matching litres, and 3 changed records that are not on the list of expected changes. Both samples are signed. Which statements follow from the lesson? Choose all that apply.",
+    "hint": "Read the criteria one by one.",
+    "choices": [
+      {
+        "text": "The answer is no-go unless the three are explained by a rule",
+        "correct": true,
+        "why": "Yes: a difference with no rule behind it stops the cutover."
+      },
+      {
+        "text": "The answer is go, since the count and the litres both match",
+        "correct": false,
+        "why": "Those two levels let through exactly the faults the third one exists for."
+      },
+      {
+        "text": "Whatever is decided has to be decided by 08:00",
+        "correct": true,
+        "why": "Yes: the window ends at 10:00 and the rollback needs two hours."
+      },
+      {
+        "text": "The team may add the three to the expected list to keep the date",
+        "correct": false,
+        "why": "That is a criterion bent on the night; an expected change has a rule written before it."
+      }
+    ]
+  },
+  {
+    "id": "ex-rdstaf9x",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a rehearsal, 1,958 farms are in scope, 7 are merged on purpose, and the target holds 1,948 farms. How many farms must the reject file account for, if the farm master reconciles?",
+    "hint": "Source rows = target rows + rejected + merged.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "farms",
+    "accept_units": [
+      "farm"
+    ]
+  },
+  {
+    "id": "ex-pcqc1ds1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague migrating Salesforce accounts into Business Central says: the load finished without an error, so we are done. Which reply sums up this lesson?",
+    "hint": "What has a load without errors proved?",
+    "choices": [
+      {
+        "text": "Done, once the old system is switched off the same weekend",
+        "correct": false,
+        "why": "Switching off the old system on the day removes the place where every question about the past is answered."
+      },
+      {
+        "text": "Only that nothing it checked went wrong",
+        "correct": true,
+        "why": "Right: values wrong but well formed load silently, and some faults only show when the business uses the data."
+      },
+      {
+        "text": "Done, if the row counts on both sides are the same",
+        "correct": false,
+        "why": "A count is the first of three levels; it cannot see a row that arrived with the wrong value."
+      },
+      {
+        "text": "Not yet: run the same load again to see it is repeatable",
+        "correct": false,
+        "why": "A second clean run proves the load agrees with itself twice, which says nothing about the target being right."
+      }
+    ]
+  }
+]

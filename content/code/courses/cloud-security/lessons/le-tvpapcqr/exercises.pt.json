@@ -1,0 +1,470 @@
+{
+  "ex-jjskfgpn": {
+    "prompt": "Um id de chave começa com `ASIA`. Que tipo de credencial é?",
+    "hint": "Compare os dois ids da transcrição.",
+    "choices": [
+      {
+        "text": "Uma sessão de papel, temporária",
+        "why": "Isso: veio do assume-role, com token de sessão e expiração."
+      },
+      {
+        "text": "A chave de acesso de longa duração de um usuário do IAM",
+        "why": "Essas começam com `AKIA`, como a do caio."
+      },
+      {
+        "text": "Uma chave do usuário raiz, que a AWS marca de modo diferente de todas as outras da conta",
+        "why": "O prefixo diz longa duração ou temporária, não de quem."
+      },
+      {
+        "text": "Uma chave que a AWS pôs em quarentena",
+        "why": "A quarentena é uma política no usuário; não muda o id da chave."
+      }
+    ]
+  },
+  "ex-wn4hzwst": {
+    "prompt": "Por que a aula trata a chave de acesso de usuário como o tipo mais arriscado?",
+    "hint": "O que encerra cada tipo?",
+    "choices": [
+      {
+        "text": "Ela usa um algoritmo de assinatura mais fraco que o de uma sessão",
+        "why": "Os dois assinam requisições do mesmo jeito; a diferença é a duração."
+      },
+      {
+        "text": "Ela é digitada no console da AWS, onde uma página falsa poderia copiá-la",
+        "why": "Uma chave de acesso assina requisições de API diretamente; não é digitada no console."
+      },
+      {
+        "text": "É a única credencial que carrega permissões",
+        "why": "Uma sessão tem as permissões do papel dela."
+      },
+      {
+        "text": "Ela funciona até alguém apagá-la",
+        "why": "Isso. Uma sessão achada amanhã já expirou."
+      }
+    ]
+  },
+  "ex-0z8q5jnd": {
+    "prompt": "Ligue cada um que assina ao que deveria ter.",
+    "hint": "A tabela no fim da seção.",
+    "pairs": [
+      {
+        "left": "uma pessoa",
+        "right": "uma sessão vinda do provedor de identidade"
+      },
+      {
+        "left": "um programa numa função da AWS",
+        "right": "o papel que a plataforma lhe dá"
+      },
+      {
+        "left": "um pipeline fora da AWS",
+        "right": "uma sessão obtida por federação"
+      },
+      {
+        "left": "um programa sem outro caminho",
+        "right": "uma chave de acesso, guardada com cuidado"
+      }
+    ],
+    "right_distractors": [
+      "a senha do usuário raiz"
+    ]
+  },
+  "ex-8y03ep7k": {
+    "prompt": "A sessão de papel do laboratório foi pedida com `--duration-seconds 900`. Quantos minutos ela dura?",
+    "hint": "Divida por sessenta.",
+    "unit": "minutos"
+  },
+  "ex-wnx7savc": {
+    "prompt": "O caio apaga o `booking.env` num novo commit, uma hora depois de enviá-lo a um repositório público. A chave está segura agora?",
+    "hint": "Onde mais o arquivo está?",
+    "choices": [
+      {
+        "text": "Não: ele fica no histórico, então a chave precisa ser rotacionada",
+        "why": "Isso. A única correção é tornar a chave inútil."
+      },
+      {
+        "text": "Sim, já que o arquivo saiu do repositório",
+        "why": "Saiu só do último commit; o histórico, os clones e os caches ainda o têm."
+      },
+      {
+        "text": "Sim, desde que o repositório fique privado no mesmo dia",
+        "why": "Varredores leem repositórios públicos em minutos; escondê-lo depois não muda quem já o tem."
+      },
+      {
+        "text": "Não, e o usuário do IAM precisa ser renomeado para a chave deixar de bater",
+        "why": "Renomear não toca a chave; apagá-la, sim."
+      }
+    ]
+  },
+  "ex-j1qrz55z": {
+    "prompt": "O que o `grep` de uma linha da aula procurou?",
+    "hint": "Um prefixo e um tamanho.",
+    "choices": [
+      {
+        "text": "Qualquer linha com a palavra senha",
+        "why": "Ele procurou o formato de um id de chave, não uma palavra."
+      },
+      {
+        "text": "Linhas com mais de quarenta caracteres, o tamanho de um segredo",
+        "why": "Só o tamanho apontaria metade de qualquer repositório."
+      },
+      {
+        "text": "`AKIA` ou `ASIA` seguido de dezesseis maiúsculas ou dígitos",
+        "why": "Isso, o formato de um id de chave de acesso."
+      },
+      {
+        "text": "Arquivos cujo nome termina em `.env`",
+        "why": "Ele leu todo arquivo do diretório e comparou o conteúdo."
+      }
+    ]
+  },
+  "ex-3nr10xmn": {
+    "prompt": "Quais destes são caminhos pelos quais chaves acabam expostas, como a aula lista? Marque todos os que se aplicam.",
+    "hint": "Nenhum parece erro na hora.",
+    "choices": [
+      {
+        "text": "Um arquivo de configuração enviado junto com o código",
+        "why": "Isso, o caso do caio."
+      },
+      {
+        "text": "Uma camada de imagem de contêiner que copiou a chave",
+        "why": "Isso: uma camada posterior apagando o arquivo não a remove."
+      },
+      {
+        "text": "Um log de CI que imprimiu o ambiente",
+        "why": "Isso."
+      },
+      {
+        "text": "Assumir um papel por quinze minutos",
+        "why": "Isso gera uma sessão, que expira; é o tipo mais seguro."
+      },
+      {
+        "text": "Ligar o MFA do usuário",
+        "why": "O MFA não expõe nada."
+      }
+    ]
+  },
+  "ex-q6n9q4hr": {
+    "prompt": "Depois que a política de quarentena foi anexada, qual requisição do caio ainda passou no laboratório?",
+    "hint": "Ela nega as ações de que mais se abusa, não tudo.",
+    "choices": [
+      {
+        "text": "Listar buckets",
+        "why": "Recusada com AccessDenied."
+      },
+      {
+        "text": "Criar uma chave de acesso nova para si",
+        "why": "Recusada: iam:CreateAccessKey está na lista da quarentena."
+      },
+      {
+        "text": "Listar segredos no Secrets Manager",
+        "why": "Isso. A quarentena é um freio, não uma correção."
+      },
+      {
+        "text": "Nenhuma: a política nega toda ação de todo serviço",
+        "why": "Ela negava uma lista de 98 ações na aula 6, não tudo."
+      }
+    ]
+  },
+  "ex-0zs7crjg": {
+    "prompt": "A AWS pôs em quarentena uma chave exposta na conta da clínica. Que passo a aula põe antes de retirar a quarentena?",
+    "hint": "Uma porta fechada não diz o que entrou por ela.",
+    "choices": [
+      {
+        "text": "Trocar e apagar a chave, e depois ler o que ela fez enquanto exposta",
+        "why": "Isso, pelos registros de que trata a aula 15."
+      },
+      {
+        "text": "Esperar noventa dias, o prazo normal de rotação",
+        "why": "Esperar deixa a chave exposta viva; ela precisa ser trocada agora."
+      },
+      {
+        "text": "Retirar a quarentena primeiro para a aplicação seguir funcionando durante a investigação",
+        "why": "Isso solta o freio enquanto a chave exposta ainda funciona."
+      },
+      {
+        "text": "Acrescentar MFA ao usuário",
+        "why": "Uma chave de acesso é usada sem MFA; não muda nada para ela."
+      }
+    ]
+  },
+  "ex-a5cjt5wq": {
+    "prompt": "Ponha os passos da rotação de uma chave de acesso em ordem.",
+    "hint": "A todo momento a aplicação tem uma chave que funciona.",
+    "items": [
+      "criar uma segunda chave",
+      "passar a aplicação para a chave nova",
+      "desativar a chave antiga e observar o último uso",
+      "apagar a chave antiga"
+    ],
+    "trap": "Apagar primeiro é o deslize: a aplicação fica fora do ar até a chave nova ser publicada."
+  },
+  "ex-pgsmd3ss": {
+    "prompt": "Criar uma terceira chave de acesso para o caio falhou com `LimitExceeded`. O que isso costuma dizer a quem revisa?",
+    "hint": "Dois é o limite por usuário.",
+    "choices": [
+      {
+        "text": "A conta atingiu o total de usuários e precisa de um aumento de cota da AWS",
+        "why": "A cota é de duas chaves por usuário, não de usuários."
+      },
+      {
+        "text": "O moto não aceita uma segunda chave",
+        "why": "Ele aceitou a segunda; a terceira foi recusada, como a AWS recusa."
+      },
+      {
+        "text": "A quarentena do caio bloqueia chaves novas",
+        "why": "Quem criou a chave foi o admin; a quarentena vale para requisições assinadas pela chave do caio."
+      },
+      {
+        "text": "A rotação anterior nunca terminou",
+        "why": "Isso: uma chave antiga que ninguém apagou bloqueia a próxima."
+      }
+    ]
+  },
+  "ex-8fjxytak": {
+    "prompt": "No laboratório, a chave antiga do caio foi posta como `Inactive` e ainda respondeu ao `get-caller-identity`. O que prova que a chave antiga está inutilizável, neste laboratório e na AWS?",
+    "hint": "Qual passo vale nos dois lugares?",
+    "choices": [
+      {
+        "text": "Apagá-la e ver a requisição seguinte recusada",
+        "why": "Isso: InvalidClientTokenId, nos dois."
+      },
+      {
+        "text": "Listar as chaves e ler `Inactive` ao lado dela",
+        "why": "O status foi salvo e o moto o ignorou; uma listagem prova a configuração, não a recusa."
+      },
+      {
+        "text": "Esperar quinze minutos para a desativação chegar a todas as regiões",
+        "why": "Não há espera envolvida; o moto simplesmente não respeita o status."
+      },
+      {
+        "text": "Ler get-access-key-last-used uma vez",
+        "why": "Isso mostra quando foi usada, não se é recusada."
+      }
+    ]
+  },
+  "ex-vh8hnq17": {
+    "prompt": "Uma revisão encontra uma chave de acesso rotacionada a cada noventa dias há três anos, usada por um processo numa instância EC2. Qual é a descoberta?",
+    "hint": "A rotação é um sintoma.",
+    "choices": [
+      {
+        "text": "A rotação funciona, então não há nada a fazer",
+        "why": "Funciona, e mantém uma credencial que não precisa existir."
+      },
+      {
+        "text": "O intervalo deveria ser de trinta dias",
+        "why": "Um intervalo menor mantém a mesma chave de longa duração, só trocada mais vezes."
+      },
+      {
+        "text": "O trabalho deveria assumir o papel da máquina, e a chave deveria sumir",
+        "why": "Isso. Um programa numa máquina da AWS recebe uma sessão de papel que expira sozinha."
+      },
+      {
+        "text": "A chave deveria ir para uma variável de ambiente",
+        "why": "Isso muda onde a chave fica, não se ela existe."
+      }
+    ]
+  },
+  "ex-jgfp95fw": {
+    "prompt": "Qual rótulo um leitor pede para obter o valor em uso?",
+    "hint": "O que o put-secret-value move.",
+    "choices": [
+      {
+        "text": "`AWSPREVIOUS`",
+        "why": "Esse é o valor de antes da última mudança."
+      },
+      {
+        "text": "`LATEST`",
+        "why": "O Secrets Manager não tem esse rótulo."
+      },
+      {
+        "text": "`AWSCURRENT`",
+        "why": "Isso, e é o padrão quando nenhuma versão é dada."
+      },
+      {
+        "text": "O id de versão impresso pelo create-secret",
+        "why": "Isso serve para uma versão; o rótulo é o que acompanha a rotação."
+      }
+    ]
+  },
+  "ex-ww6h046a": {
+    "prompt": "Com `\"Resource\": \"*\"` na política, o que o papel do sistema de agendamento conseguia ler no laboratório?",
+    "hint": "Existiam dois segredos.",
+    "choices": [
+      {
+        "text": "Só o segredo do próprio banco",
+        "why": "Ele leu o do banco de relatórios também: os dois tamanhos voltaram como 24."
+      },
+      {
+        "text": "Nenhum, porque o moto recusa o Secrets Manager para papéis",
+        "why": "Ele recusou o ARN estreito e permitiu o `*`."
+      },
+      {
+        "text": "Só os nomes dos segredos, nunca os valores",
+        "why": "O GetSecretValue devolveu o valor; a consulta imprimiu só o tamanho."
+      },
+      {
+        "text": "Os dois segredos, o seu e o do banco de relatórios",
+        "why": "Isso, o custo do `*`. Na AWS o ARN estreito limita a um."
+      }
+    ]
+  },
+  "ex-82mwdjz2": {
+    "prompt": "Depois do `put-secret-value`, a versão que tinha `AWSCURRENT` guarda o valor sob o rótulo `___`.",
+    "hint": "O valor de logo antes.",
+    "blanks": [
+      {
+        "accept": [
+          "AWSPREVIOUS"
+        ]
+      }
+    ]
+  },
+  "ex-8gx82qyv": {
+    "prompt": "A política estreita do papel nomeia `...:secret:clinic/booking/db-*` e o moto recusou a leitura. O que a aula conclui?",
+    "hint": "De quem foi a recusa?",
+    "choices": [
+      {
+        "text": "O ARN está errado; o `-*` precisa sair também para a AWS",
+        "why": "A AWS o aceita; o sufixo precisa ser coberto porque o Secrets Manager acrescenta seis caracteres."
+      },
+      {
+        "text": "A recusa é do moto, que só compara com `*`; a AWS respeita o ARN estreito",
+        "why": "Isso. O laboratório recorre ao `*` e diz o que isso custa."
+      },
+      {
+        "text": "Papéis não leem segredos; só usuários leem",
+        "why": "O mesmo papel os leu quando a política passou a dizer `*`."
+      },
+      {
+        "text": "A sessão expirou entre os dois comandos",
+        "why": "A mesma sessão leu o segredo logo depois."
+      }
+    ]
+  },
+  "ex-tpacxn1h": {
+    "prompt": "Ligue cada lugar onde um programa acha um segredo a quem mais vê o valor.",
+    "hint": "A tabela no começo da seção.",
+    "pairs": [
+      {
+        "left": "escrito no código",
+        "right": "todo mundo com o repositório e o histórico"
+      },
+      {
+        "left": "uma variável de ambiente definida na publicação",
+        "right": "quem lê a configuração da publicação"
+      },
+      {
+        "left": "buscado no Secrets Manager em tempo de execução",
+        "right": "quem a política do segredo permite"
+      }
+    ],
+    "right_distractors": [
+      "ninguém"
+    ]
+  },
+  "ex-9qg65tdh": {
+    "prompt": "Por que o `app.py` imprime o tamanho da senha em vez da senha?",
+    "hint": "Para onde vai o que é impresso?",
+    "choices": [
+      {
+        "text": "Uma linha de log é mais um lugar por onde um segredo vaza",
+        "why": "Isso."
+      },
+      {
+        "text": "Porque o boto3 se recusa a devolver o valor ao Python",
+        "why": "Ele devolveu o valor; o programa escolheu não imprimi-lo."
+      },
+      {
+        "text": "Imprimi-lo rotacionaria o segredo automaticamente e quebraria a conexão com o banco",
+        "why": "Imprimir não muda nada no Secrets Manager."
+      },
+      {
+        "text": "O valor está cifrado e não pode ser mostrado",
+        "why": "O GetSecretValue o devolve em claro a quem tem permissão."
+      }
+    ]
+  },
+  "ex-z8ngab5c": {
+    "prompt": "Contra o que buscar um segredo em tempo de execução NÃO protege?",
+    "hint": "O programa ainda o guarda.",
+    "choices": [
+      {
+        "text": "A senha parada no histórico do repositório",
+        "why": "É exatamente disso que protege: nada fica escrito no código."
+      },
+      {
+        "text": "A configuração da publicação lida por outra pessoa",
+        "why": "Só o nome do segredo fica na configuração."
+      },
+      {
+        "text": "Alguém que consegue ler a memória do programa em execução",
+        "why": "Isso. O valor fica na memória depois de buscado."
+      },
+      {
+        "text": "Uma rotação chegar ao programa sem publicação",
+        "why": "Isso é uma vantagem, não uma ameaça."
+      }
+    ]
+  },
+  "ex-e6g9zeyd": {
+    "prompt": "Quais afirmações sobre o laboratório desta aula são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "O moto acertou parte e errou parte.",
+    "choices": [
+      {
+        "text": "Uma chave apagada foi recusada com InvalidClientTokenId",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma chave inativa foi recusada",
+        "why": "O moto a aceitou; a AWS a recusa."
+      },
+      {
+        "text": "Uma terceira chave para um usuário foi recusada com LimitExceeded",
+        "why": "Isso."
+      },
+      {
+        "text": "O ARN estreito do segredo foi respeitado",
+        "why": "O moto o recusou; a AWS o respeita."
+      },
+      {
+        "text": "A sessão de papel mostrou um Expiration",
+        "why": "Isso, quinze minutos à frente."
+      }
+    ]
+  },
+  "ex-d9d5hm9c": {
+    "prompt": "Uma nova função precisa da senha do banco da clínica. Que arranjo esta aula defende?",
+    "hint": "Junte o papel e o segredo com nome.",
+    "choices": [
+      {
+        "text": "A chave de um usuário do IAM numa variável de ambiente, rotacionada a cada noventa dias",
+        "why": "Uma chave de que ninguém precisava, guardada onde quem lê a configuração a vê."
+      },
+      {
+        "text": "A senha no código, cifrada com base64",
+        "why": "Base64 é uma codificação que qualquer um desfaz; a aula 11 do curso `cryptography` diz isso."
+      },
+      {
+        "text": "Um papel que lê todo segredo, para poupar a escrita de políticas",
+        "why": "Esse foi o `*` do laboratório, e o custo dele apareceu na tela."
+      },
+      {
+        "text": "O papel da função lê um segredo nomeado ao iniciar",
+        "why": "Isso: sem chave, sem valor na configuração, um segredo legível."
+      }
+    ]
+  },
+  "ex-fj666gjz": {
+    "prompt": "Um usuário do IAM pode ter no máximo ___ chaves de acesso ao mesmo tempo.",
+    "hint": "A terceira requisição foi recusada.",
+    "blanks": [
+      {
+        "accept": [
+          "2",
+          "duas",
+          "dois"
+        ]
+      }
+    ]
+  }
+}

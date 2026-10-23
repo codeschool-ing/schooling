@@ -1,0 +1,479 @@
+{
+  "ex-v4ryagbn": {
+    "prompt": "O Coleta grava o arquivo às 23:30 e o SAP o carrega às 02:00. Que tipo de acoplamento essa transferência de arquivo deixa de fora?",
+    "hint": "Pergunte o que aconteceria se o SAP estivesse fora do ar às 23:30.",
+    "choices": [
+      {
+        "text": "Acoplamento no formato",
+        "why": "Os dois lados ainda precisam combinar o leiaute: que colunas trazem os litros, o que diz o trailer."
+      },
+      {
+        "text": "Acoplamento na localização, já que os dois usam um diretório combinado",
+        "why": "O diretório é um lugar que os dois lados conhecem, então esse acoplamento continua."
+      },
+      {
+        "text": "Acoplamento no tempo",
+        "why": "Isso: nenhum dos lados precisa estar rodando quando o outro está; o arquivo espera no diretório."
+      },
+      {
+        "text": "Acoplamento às tabelas internas do outro lado",
+        "why": "Esse é o acoplamento do banco compartilhado; um arquivo leva um leiaute combinado, não as tabelas de alguém."
+      }
+    ]
+  },
+  "ex-b3239j3v": {
+    "prompt": "Associe cada descrição ao estilo de integração a que ela pertence.",
+    "hint": "Formato, tempo e localização: qual está apertado, qual está solto.",
+    "pairs": [
+      {
+        "left": "Quem recebe depende do que as tabelas do outro lado significam",
+        "right": "banco compartilhado"
+      },
+      {
+        "left": "Os dois lados precisam estar no ar no mesmo momento",
+        "right": "API"
+      },
+      {
+        "left": "Quem envia não sabe quem recebe",
+        "right": "evento"
+      },
+      {
+        "left": "Gravado agora e lido horas depois",
+        "right": "transferência de arquivo"
+      }
+    ],
+    "right_distractors": [
+      "barramento de serviços"
+    ]
+  },
+  "ex-wtw44neq": {
+    "prompt": "O mapa da Joana tem 110 integrações, e o ESB carrega 70 delas. Quantas vão ponto a ponto, fora do ESB?",
+    "hint": "Uma subtração.",
+    "unit": "integrações",
+    "accept_units": [
+      "integração"
+    ]
+  },
+  "ex-27zv52we": {
+    "prompt": "Ponha em ordem os passos de uma integração por arquivo segura, de quem grava a quem lê e de volta.",
+    "hint": "O arquivo precisa existir inteiro antes que alguém o confira.",
+    "items": [
+      "Gravar o arquivo com um nome temporário, com header e trailer",
+      "Renomeá-lo quando a última linha estiver escrita",
+      "Conferir o formato e comparar as linhas com os totais do trailer",
+      "Recusá-lo se o dia e a sequência já foram carregados",
+      "Carregar as linhas de produtores",
+      "Devolver um arquivo de confirmação ou de rejeição"
+    ],
+    "trap": "Carregar antes de conferir os totais lança entradas de mercadoria a partir de um arquivo que talvez esteja com uma linha a menos."
+  },
+  "ex-n3wzkvkb": {
+    "prompt": "O trailer de um arquivo do Coleta diz 6 produtores e 11237 litros. As linhas de produtor do arquivo somam 5 produtores e 10277 litros. Quantos litros estão faltando?",
+    "hint": "O trailer é o que quem gravou prometeu; as linhas são o que chegou.",
+    "unit": "litros",
+    "accept_units": [
+      "litro",
+      "l"
+    ]
+  },
+  "ex-vqb303d8": {
+    "prompt": "Quem grava cria o arquivo com um nome temporário e o ___ depois que a última linha está escrita, para que um leitor vigiando o diretório nunca veja meio arquivo.",
+    "hint": "No mesmo sistema de arquivos essa operação é atômica.",
+    "blanks": [
+      {
+        "accept": [
+          "renomeia",
+          "renomear",
+          "renomeou"
+        ]
+      }
+    ]
+  },
+  "ex-yryv95sv": {
+    "prompt": "Por quatro noites em março de 2025 nenhum arquivo do Coleta chegou, e a carga das 02:00 terminou sem erro em cada uma delas. Que controle teria dado o alerta na primeira noite?",
+    "hint": "Não havia arquivo para conferência nenhuma ler.",
+    "choices": [
+      {
+        "text": "Um trailer trazendo o número de linhas de produtor e os litros",
+        "why": "Um trailer é conferido quando um arquivo chega; naquelas noites não havia arquivo para conferir."
+      },
+      {
+        "text": "Gravar com nome .tmp e renomear",
+        "why": "Isso impede que um arquivo pela metade seja lido; não faz nada por um arquivo que nunca foi gravado."
+      },
+      {
+        "text": "Recusar um dia e uma sequência já carregados",
+        "why": "Isso protege contra carregar o mesmo arquivo duas vezes, não contra a falta dele."
+      },
+      {
+        "text": "Um alarme às 01:30 se faltar a remessa",
+        "why": "Isso: a ausência é a falha que um arquivo esconde, então o alarme fica no arquivo que não veio."
+      }
+    ]
+  },
+  "ex-fgt2bnjf": {
+    "prompt": "Um operador roda de novo a carga da noite depois de um estouro de tempo, sem saber que ela já tinha terminado. O arquivo está inteiro. O que impede que 1.870 produtores recebam duas vezes pelo leite daquele dia?",
+    "hint": "Os totais do trailer batem nas duas execuções.",
+    "choices": [
+      {
+        "text": "A carga registrar cada arquivo carregado e recusar uma repetição",
+        "why": "Isso: uma segunda execução de uma carga que lembra o dia e a sequência não muda nada."
+      },
+      {
+        "text": "Os totais de controle do trailer",
+        "why": "O arquivo está inteiro, então os totais batem na primeira execução e na segunda."
+      },
+      {
+        "text": "O arquivo de confirmação mandado de volta ao Coleta depois da carga",
+        "why": "A confirmação conta ao Coleta o que aconteceu; não impede o SAP de lançar as mesmas linhas de novo."
+      },
+      {
+        "text": "O renomear a partir do nome temporário",
+        "why": "O renomear aconteceu uma vez, do lado do Coleta, bem antes de qualquer das cargas rodar."
+      }
+    ]
+  },
+  "ex-mre25j0d": {
+    "prompt": "O Coleta passa a marcar um produtor suspenso com um valor novo de status em vez de apagar a linha. O Rota continua lendo direto a tabela de produtores do Coleta. O que acontece?",
+    "hint": "A forma da tabela não mudou.",
+    "choices": [
+      {
+        "text": "A consulta do Rota falha naquela noite, como em 2023",
+        "why": "Em 2023 uma coluna foi dividida, e a consulta quebrou. Aqui nenhuma coluna mudou, então nada quebra."
+      },
+      {
+        "text": "O Rota continua mandando caminhões a fazendas que pararam de fornecer",
+        "why": "Isso: uma mudança de significado sem mudança de forma é a falha silenciosa de ler a tabela de alguém."
+      },
+      {
+        "text": "Nada, porque o Rota lê as colunas de produtor de que precisa e nenhuma outra",
+        "why": "As colunas que o Rota lê estão intactas; o que mudou foi o que uma linha delas significa."
+      },
+      {
+        "text": "As telas do Coleta ficam lentas para os técnicos do laboratório",
+        "why": "Carga no banco do dono é um custo real de leituras diretas, mas esta mudança não acrescenta nenhuma."
+      }
+    ]
+  },
+  "ex-ndrwv2cw": {
+    "prompt": "Comparada a consultar as tabelas de outro sistema de tempos em tempos, o que a captura de dados de mudança melhora? Marque todas as que se aplicam.",
+    "hint": "Ela lê o registro de mudanças do banco.",
+    "choices": [
+      {
+        "text": "Nenhuma carga nas tabelas que a aplicação está usando",
+        "why": "Isso: o registro é gravado de qualquer jeito, e lê-lo não varre tabela nenhuma."
+      },
+      {
+        "text": "Os deletes chegam, na ordem de commit",
+        "why": "Isso: uma consulta procurando linhas novas nunca vê uma linha que sumiu."
+      },
+      {
+        "text": "As colunas da tabela deixam de ser o contrato",
+        "why": "Um evento de CDC é uma linha antes e depois; divida uma coluna e os eventos mudam de forma também."
+      },
+      {
+        "text": "Nenhuma espera pela próxima consulta",
+        "why": "Isso: cada mudança é publicada quando é confirmada."
+      }
+    ]
+  },
+  "ex-2pntv0z4": {
+    "prompt": "Uma pasta de Excel do financeiro lê direto as tabelas de documentos de material do SAP ECC, e depois da mudança para o S/4HANA ainda abre sem erro. Por que ela continua sendo uma linha no plano de migração?",
+    "hint": "De onde vêm agora os dados que ela lê?",
+    "choices": [
+      {
+        "text": "O S/4HANA recusa conexões de planilhas",
+        "why": "Nada na aula diz isso; a pasta abre, e esse é o ponto da pergunta."
+      },
+      {
+        "text": "Ela precisa antes de uma réplica de leitura, para tirar a carga do SAP",
+        "why": "Uma réplica resolve a carga, o único custo que não tem a ver com a migração."
+      },
+      {
+        "text": "Ela agora lê views de compatibilidade que a SAP mantém enquanto a SAP decidir",
+        "why": "Isso: os dados foram para a MATDOC, e os nomes antigos sobrevivem como views nos termos da SAP."
+      },
+      {
+        "text": "Os totais dobram, porque a MATDOC repete cada item",
+        "why": "As views devolvem os documentos uma vez; o risco é quem as controla, não contagem dupla."
+      }
+    ]
+  },
+  "ex-kvqkjqhg": {
+    "prompt": "A consulta de estoque vai do portal, pelo ESB, até o SAP, e cada um dos três está disponível 99,5% do tempo. Supondo que falhem de forma independente, qual é a disponibilidade da cadeia, em porcentagem, com uma casa decimal?",
+    "hint": "Multiplique os três.",
+    "unit": "%",
+    "accept_units": [
+      "por cento"
+    ]
+  },
+  "ex-qkz9rbag": {
+    "prompt": "Com a disponibilidade da cadeia em 98,507%, cerca de quantas horas de um mês de 30 dias (720 horas) a consulta de estoque fica indisponível? Dê uma casa decimal.",
+    "hint": "A parte indisponível é 100% menos a disponibilidade.",
+    "unit": "horas",
+    "accept_units": [
+      "hora",
+      "h"
+    ]
+  },
+  "ex-ypvg62na": {
+    "prompt": "O portal espera 10 segundos pelo ESB e o ESB espera 60 segundos pelo SAP. O que esse par de configurações produz quando o SAP leva 30 segundos?",
+    "hint": "Quem ainda está esperando no segundo 20?",
+    "choices": [
+      {
+        "text": "A padaria espera os 60 segundos inteiros",
+        "why": "A espera da padaria acaba com as tentativas do portal, aos 30 segundos naquele incidente."
+      },
+      {
+        "text": "O ESB responde ao portal antes do SAP",
+        "why": "O ESB não tem resposta para dar até o SAP responder ou os 60 segundos dele acabarem."
+      },
+      {
+        "text": "Trabalho no SAP que ninguém está esperando",
+        "why": "Isso: a espera de dentro dura mais que a de fora, e o SAP termina consultas das quais o portal já desistiu."
+      },
+      {
+        "text": "As novas tentativas do portal esperam a primeira consulta ao SAP terminar",
+        "why": "Cada nova tentativa abre uma chamada na hora; foi assim que o SAP acabou com três consultas para uma cesta."
+      }
+    ]
+  },
+  "ex-2dtqejxh": {
+    "prompt": "É a semana de fechamento, e o SAP está respondendo consultas de estoque em 25 segundos. Uma padaria aperta o botão de fechar o pedido. O que faz o desenho da aula?",
+    "hint": "A resposta foi feita primeiro para as noites de domingo.",
+    "choices": [
+      {
+        "text": "Tenta de novo três vezes, rápido, para a padaria não ficar esperando",
+        "why": "Novas tentativas rápidas contra um sistema lento aumentam a carga; foi isso que triplicou as consultas do SAP em outubro."
+      },
+      {
+        "text": "Aumenta o timeout do portal para 60 segundos",
+        "why": "Aí a padaria espera um minuto; a correção foram timeouts menores, diminuindo na direção do SAP."
+      },
+      {
+        "text": "Recusa o checkout e pede à padaria que tente mais tarde",
+        "why": "São os 212 checkouts falhos de 2 de outubro, transformados em regra."
+      },
+      {
+        "text": "Mostra o último estoque com a hora e confirma depois",
+        "why": "Isso: o comportamento planejado para um SAP lento é o de domingo, usado sempre que o timeout acaba."
+      }
+    ]
+  },
+  "ex-fj8dvk13": {
+    "prompt": "Qual destas mensagens é um evento, e não um comando?",
+    "hint": "Olhe o tempo verbal, e quem decide o que acontece depois.",
+    "choices": [
+      {
+        "text": "Crie o cliente 30117 no Salesforce",
+        "why": "Imperativo, para um destinatário só: quem envia decidiu o que o Salesforce precisa fazer."
+      },
+      {
+        "text": "A nota 4711 foi autorizada",
+        "why": "Isso: um fato no passado, para qualquer número de destinatários agir como quiserem."
+      },
+      {
+        "text": "Mande o certificado do lote 2210 para a rede de supermercados",
+        "why": "Uma instrução para fazer uma coisa para alguém é um comando, seja qual for o transporte."
+      },
+      {
+        "text": "Recalcule o frete do pedido 4711",
+        "why": "Pede a alguém que aja; um evento diz o que já aconteceu e não pede nada."
+      }
+    ]
+  },
+  "ex-emy7jcxd": {
+    "prompt": "A Serra Alta emite cerca de 1.400 notas por dia útil, e hoje cada uma é mandada por chamada a três destinatários. Quantas chamadas são por dia?",
+    "hint": "Uma chamada por nota por destinatário.",
+    "unit": "chamadas",
+    "accept_units": [
+      "chamada"
+    ]
+  },
+  "ex-tm7p9rb4": {
+    "prompt": "O consumidor do Salesforce no tópico de notas para por três horas. Como essa falha se mostra?",
+    "hint": "O broker guarda as mensagens.",
+    "choices": [
+      {
+        "text": "Como um erro no SAP para cada nota publicada nessas horas",
+        "why": "O SAP publica no broker e não espera ninguém, então não vê erro nenhum."
+      },
+      {
+        "text": "Como três horas de notas perdidas, a reenviar a partir do SAP",
+        "why": "As mensagens esperam no broker; nada se perde e nada é reenviado."
+      },
+      {
+        "text": "Como atraso: a mensagem mais antiga não consumida fica cada vez mais velha",
+        "why": "Isso: um consumidor parado não produz erro, e é por isso que o alarme fica na idade da mensagem mais antiga."
+      },
+      {
+        "text": "Como o portal e o fluxo de EDI parando também",
+        "why": "Cada consumidor lê o tópico por conta própria; os outros dois nem percebem."
+      }
+    ]
+  },
+  "ex-60a9hcsg": {
+    "prompt": "O evento de nota traz só o número da nota, e cada um dos três consumidores então chama o SAP para saber o valor e o cliente. O que esse desenho trouxe de volta?",
+    "hint": "Quando o SAP precisa estar no ar agora?",
+    "choices": [
+      {
+        "text": "Acoplamento no tempo",
+        "why": "Isso: o SAP precisa estar no ar sempre que um consumidor processa um evento, como se os consumidores o chamassem direto."
+      },
+      {
+        "text": "O SAP conhecendo quem são os três consumidores",
+        "why": "O SAP continua publicando num tópico; ele responde chamadas sem precisar saber antes quem vai fazê-las."
+      },
+      {
+        "text": "O SAP esperando cada consumidor antes da próxima nota",
+        "why": "Publicar continua sem esperar ninguém; a espera está do lado dos consumidores."
+      },
+      {
+        "text": "Um contrato cobrindo cada campo da nota",
+        "why": "Um evento magro tem menos campos a prometer; o contrato completo vem com carregar o estado."
+      }
+    ]
+  },
+  "ex-pchcgm8p": {
+    "prompt": "Associe cada integração da Serra Alta ao estilo que a Joana decidiu para ela.",
+    "hint": "Quem espera, quão atual, e quantos consumidores.",
+    "pairs": [
+      {
+        "left": "Coleta → SAP, os litros diários dos produtores",
+        "right": "um arquivo com totais de controle"
+      },
+      {
+        "left": "Portal B2B → SAP, estoque no checkout",
+        "right": "uma chamada com plano B"
+      },
+      {
+        "left": "SAP → Rota, o plano de recebimento de cada fábrica",
+        "right": "um evento num tópico"
+      }
+    ],
+    "right_distractors": [
+      "uma leitura direta das tabelas do outro sistema"
+    ]
+  },
+  "ex-6w4j1kpx": {
+    "prompt": "Por que a Joana mantém Coleta → SAP como arquivo em vez de passá-lo para eventos?",
+    "hint": "Quem espera pelos litros, e por quanto tempo o Coleta vai existir?",
+    "choices": [
+      {
+        "text": "O SAP não recebe mensagens de um sistema em IBM i",
+        "why": "O SAP recebe mensagens do MQ, e o IBM i consegue pô-las lá; o motivo é outro."
+      },
+      {
+        "text": "Ninguém precisa dos litros antes da manhã, e o Coleta vai ser substituído",
+        "why": "Isso: nada espera por ele, e uma interface nova em IBM i seria código que ninguém mantém depois de 2028."
+      },
+      {
+        "text": "Arquivos são mais confiáveis que eventos",
+        "why": "Um arquivo tem suas próprias falhas, e por isso precisa de trailer, recusa de repetições e alarme."
+      },
+      {
+        "text": "O banco define o formato",
+        "why": "Esse é o motivo do arquivo CNAB; o leiaute do Coleta é da própria Serra Alta."
+      }
+    ]
+  },
+  "ex-hew6fnjq": {
+    "prompt": "Redes de supermercado pedem certificados de análise pelo número do lote. Por que a Joana lhes dá uma API em vez de publicar cada certificado como evento?",
+    "hint": "Quem quer quais certificados, e quando?",
+    "choices": [
+      {
+        "text": "O Documentum não tem como publicar eventos",
+        "why": "A aula não argumenta pelos recursos do Documentum; argumenta por quem pede e quando."
+      },
+      {
+        "text": "Eventos são pequenos demais para levar um PDF",
+        "why": "Tamanho não é o motivo dado; a demanda é."
+      },
+      {
+        "text": "Uma chamada custa menos para operar do que um broker",
+        "why": "A Serra Alta já opera um broker; custo não foi o que decidiu esta linha."
+      },
+      {
+        "text": "Poucos clientes os querem, para alguns lotes, em momentos que ninguém prevê",
+        "why": "Isso: alguém espera, o documento precisa ser o atual, e mandar todos para todo mundo é tráfego para nada."
+      }
+    ]
+  },
+  "ex-7f2m74fq": {
+    "prompt": "O Rota lê direto a tabela de produtores do Coleta e funciona hoje. Seguindo a aula, o que a Joana deveria fazer a respeito agora? Marque todas as que se aplicam.",
+    "hint": "O mapa é uma lista de decisões, não de reconstruções.",
+    "choices": [
+      {
+        "text": "Anotar um dono para ele no mapa",
+        "why": "Isso: um estilo não traz dono, e toda linha precisa de um."
+      },
+      {
+        "text": "Reconstruí-lo como evento neste trimestre",
+        "why": "Uma linha que funciona em outro estilo não vale automaticamente a mudança; o plano muda as quatro que leem o SAP."
+      },
+      {
+        "text": "Dizer ao Sebastião de quais colunas o Rota depende",
+        "why": "Isso: aí a próxima mudança nelas é uma conversa, e não rotas montadas à mão."
+      },
+      {
+        "text": "Pôr um alarme para a noite em que o plano não sair",
+        "why": "Isso: a falha de 2023 foi notada pelos despachantes, não por um alarme."
+      }
+    ]
+  },
+  "ex-9bg07m1t": {
+    "prompt": "Um sistema novo na fábrica de Lavras registra cada palete de manteiga produzido, cerca de 300 por dia. O estoque do SAP precisa mostrar um palete em minutos, ninguém na linha de produção espera pelo SAP, e o SAP para todo domingo da 01:00 às 05:00. Que estilo serve?",
+    "hint": "Atual, ninguém esperando, e um destinatário que às vezes está fora do ar.",
+    "choices": [
+      {
+        "text": "Um arquivo gravado toda noite às 23:30",
+        "why": "O estoque ficaria até um dia atrasado, e a fábrica precisa dele em minutos."
+      },
+      {
+        "text": "Uma chamada ao SAP por palete, repetida até o SAP responder",
+        "why": "Ninguém está esperando resposta, e nas noites de domingo as novas tentativas durariam quatro horas."
+      },
+      {
+        "text": "Um evento por palete, que o broker guarda durante a janela do SAP",
+        "why": "Isso: atual em minutos, sem espera, e o broker guarda os paletes de domingo até o SAP voltar."
+      },
+      {
+        "text": "O SAP lendo a tabela de paletes do sistema novo a cada cinco minutos",
+        "why": "É a tabela de integração de novo, sem ninguém olhando as linhas com erro e o job do SAP consultando à toa."
+      }
+    ]
+  },
+  "ex-hd36cjnd": {
+    "prompt": "Numa integração por evento, o alarme fica na ___ da mensagem mais antiga não consumida, porque um consumidor parado não produz erros.",
+    "hint": "Há quanto tempo ela está esperando.",
+    "blanks": [
+      {
+        "accept": [
+          "idade"
+        ]
+      }
+    ]
+  },
+  "ex-bb92y0xq": {
+    "prompt": "O mapa da Joana mostra 17 vínculos por banco, 15 deles sem forma de notar uma falha. O que o plano dela para o próximo ano faz com eles?",
+    "hint": "Quais deles quebrariam na migração para o S/4HANA de qualquer jeito?",
+    "choices": [
+      {
+        "text": "Passa os 17 para eventos, o estilo que a tabela prefere",
+        "why": "A tabela decide linhas novas; nas que funcionam, o custo de mudar precisa ser pesado."
+      },
+      {
+        "text": "Muda os quatro que leem o SAP; os outros ganham dono e alarme",
+        "why": "Isso: esses quatro quebram na migração de qualquer jeito, e os outros são decisões, não reconstruções."
+      },
+      {
+        "text": "Deixa como estão, porque uma integração que funciona é melhor não mexer",
+        "why": "Quinze linhas que ninguém vigia não estão funcionando em nenhum sentido que um dono aceitaria."
+      },
+      {
+        "text": "Troca-os por chamadas, o estilo mais bem vigiado",
+        "why": "Chamadas são vigiadas porque falham na frente de alguém; isso não é motivo para acrescentar dependência de tempo."
+      }
+    ]
+  }
+}

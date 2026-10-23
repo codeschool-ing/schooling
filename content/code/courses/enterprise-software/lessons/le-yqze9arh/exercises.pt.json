@@ -1,0 +1,484 @@
+{
+  "ex-7xpjxxxc": {
+    "prompt": "A Serra Alta tem doze sistemas em volta do barramento. Se cada par tivesse a sua própria interface direta, quantas conexões ponto a ponto haveria?",
+    "hint": "n(n − 1)/2.",
+    "unit": "conexões",
+    "accept_units": [
+      "conexão"
+    ]
+  },
+  "ex-6zbe4g8m": {
+    "prompt": "Três sistemas novos se juntam aos doze, e não existe hub. Quantas conexões diretas possíveis isso acrescenta ao teto?",
+    "hint": "Calcule o teto para quinze e subtraia o de doze.",
+    "unit": "conexões",
+    "accept_units": [
+      "conexão"
+    ]
+  },
+  "ex-xpzdj3yy": {
+    "prompt": "Associe cada parte da promessa do hub ao que ela significava na Serra Alta.",
+    "hint": "Um dos itens da direita não é promessa nenhuma do barramento.",
+    "pairs": [
+      {
+        "left": "roteamento",
+        "right": "um alerta de qualidade chega a três lugares cujos nomes o remetente nunca aprende"
+      },
+      {
+        "left": "transformação",
+        "right": "o pedido EDI de um supermercado vira um IDoc do SAP"
+      },
+      {
+        "left": "mediação de protocolo",
+        "right": "uma aplicação web alcança o Coleta, que fala MQ"
+      },
+      {
+        "left": "um lugar para observar",
+        "right": "um número de pedido procurado num console só"
+      }
+    ],
+    "right_distractors": [
+      "um desconto de 3% aplicado a pedidos de padarias"
+    ]
+  },
+  "ex-f1t4m33p": {
+    "prompt": "A Serra Alta passou de um teto de 66 conexões diretas para 12 conexões até um hub. O que essa mudança deixou exatamente do mesmo tamanho?",
+    "hint": "Olhe o que cada linha carregava, não a linha.",
+    "choices": [
+      {
+        "text": "Os protocolos que cada sistema precisa falar",
+        "why": "A mediação de protocolo é uma das promessas do hub: cada sistema fala o seu próprio protocolo com o barramento."
+      },
+      {
+        "text": "As interfaces que cada sistema mantém",
+        "why": "Isso foi o que encolheu: cada sistema agora mantém uma conexão, com o barramento."
+      },
+      {
+        "text": "Os mapeamentos, rotas e regras, agora guardados dentro do barramento",
+        "why": "Isso: um hub reduz conexões, não acordos. Ele os põe num lugar só, sob um time só."
+      },
+      {
+        "text": "Nada; os acordos foram embora junto com as linhas",
+        "why": "A crença que a seção corrige. Todo mapeamento continua existindo; ele foi para dentro do hub."
+      }
+    ]
+  },
+  "ex-j1xypfst": {
+    "prompt": "Ponha os elementos da resposta de fault do FarmRegistry em ordem, do mais externo ao mais interno.",
+    "hint": "O fault toma o lugar da resposta.",
+    "items": [
+      "soap:Envelope",
+      "soap:Body",
+      "soap:Fault",
+      "detail",
+      "fr:FarmNotFound"
+    ]
+  },
+  "ex-7zqap2fm": {
+    "prompt": "Chega uma mensagem cujo elemento raiz é `env:Envelope`. O que diz ao receptor qual é a versão do SOAP?",
+    "hint": "Prefixos são escolhidos por quem escreve a mensagem.",
+    "choices": [
+      {
+        "text": "O próprio prefixo: `soap:` quer dizer 1.1 e `env:` quer dizer 1.2",
+        "why": "Um prefixo é só um nome local. `env:` ligado ao namespace da 1.1 é uma mensagem 1.1."
+      },
+      {
+        "text": "Um atributo de versão no `Envelope`",
+        "why": "Esse atributo não existe. A versão vem no namespace."
+      },
+      {
+        "text": "O header `SOAPAction`, que só a versão 1.2 manda",
+        "why": "Ao contrário: `SOAPAction` é o header da 1.1; a 1.2 põe a action no content type."
+      },
+      {
+        "text": "O URI de namespace a que `env` está ligado",
+        "why": "Isso: `http://schemas.xmlsoap.org/soap/envelope/` é 1.1, `http://www.w3.org/2003/05/soap-envelope` é 1.2."
+      }
+    ]
+  },
+  "ex-j9qeeqq2": {
+    "prompt": "O Rota chama o FarmRegistry e recebe HTTP 500 com um fault SOAP 1.1 cujo `faultcode` é `soap:Client`. O que ele deve concluir?",
+    "hint": "No SOAP 1.1 o status é o mesmo para todo fault.",
+    "choices": [
+      {
+        "text": "A sua própria requisição estava errada, e reenviá-la não muda nada",
+        "why": "Isso: `Client` põe a culpa em quem mandou. A mesma requisição recebe a mesma resposta."
+      },
+      {
+        "text": "O barramento caiu; tente de novo com espera crescente",
+        "why": "O SOAP 1.1 manda todo fault como 500. Ler só o status joga fora o faultcode."
+      },
+      {
+        "text": "O serviço falhou trabalhando numa requisição que estava certa",
+        "why": "Isso é `soap:Server`. `soap:Client` diz que o problema era a própria requisição."
+      },
+      {
+        "text": "Algo na frente do barramento falhou antes de o SOAP entrar na história",
+        "why": "Há um envelope com um fault dentro, então o serviço respondeu."
+      }
+    ]
+  },
+  "ex-gnbzjx5r": {
+    "prompt": "O time do barramento muda o FarmRegistry para outro host, e nada mais nele muda. Que parte do WSDL precisa mudar?",
+    "hint": "Cada parte responde a uma pergunta diferente.",
+    "choices": [
+      {
+        "text": "`binding`, que diz como a interface vai para o fio",
+        "why": "O formato no fio é o mesmo: SOAP 1.1 sobre HTTP, document/literal."
+      },
+      {
+        "text": "`portType`, a lista de operações e das suas mensagens",
+        "why": "As operações não mudaram, então a interface abstrata fica como está."
+      },
+      {
+        "text": "`service`",
+        "why": "Isso: o `soap:address` dentro de `service` é o único lugar em que o WSDL diz onde o serviço mora."
+      },
+      {
+        "text": "`types`, onde cada elemento é declarado em XML Schema",
+        "why": "Nenhum elemento mudou de forma. Uma mudança de endereço não é uma mudança de mensagem."
+      }
+    ]
+  },
+  "ex-k0x5ccma": {
+    "prompt": "Associe cada especificação WS-* ao problema que ela resolvia.",
+    "hint": "Uma das descrições é do WSDL, não do WS-*.",
+    "pairs": [
+      {
+        "left": "WS-Addressing",
+        "right": "para onde a resposta deve ir, escrito dentro do envelope"
+      },
+      {
+        "left": "WS-Security",
+        "right": "assinar e cifrar partes da própria mensagem"
+      },
+      {
+        "left": "WS-ReliableMessaging",
+        "right": "mensagens numeradas, confirmadas e reenviadas até chegarem"
+      },
+      {
+        "left": "WS-AtomicTransaction",
+        "right": "um commit em duas fases entre vários serviços"
+      }
+    ],
+    "right_distractors": [
+      "descrever as operações para que um cliente seja gerado"
+    ]
+  },
+  "ex-3b0tqmqv": {
+    "prompt": "Um pedido de compra vai do Salesforce ao barramento e do barramento ao SAP, com TLS nas duas conexões. O financeiro quer que o SAP consiga conferir que ninguém no meio mudou os valores. O que dá isso?",
+    "hint": "Quem lê a mensagem aberta entre as duas conexões?",
+    "choices": [
+      {
+        "text": "O TLS nas duas conexões, já que todo salto é cifrado",
+        "why": "Cada conexão termina no barramento, que lê a mensagem aberta e conseguiria mudá-la."
+      },
+      {
+        "text": "Um `UsernameToken` com a senha do Salesforce",
+        "why": "Ele diz quem chamou. Não prova nada sobre o body, e a senha viaja como foi escrita."
+      },
+      {
+        "text": "Uma assinatura sobre o body, feita por quem envia",
+        "why": "Isso: a assinatura no nível da mensagem atravessa todo intermediário, o que o TLS não faz."
+      },
+      {
+        "text": "`mustUnderstand=\"1\"` no bloco de segurança do header",
+        "why": "Isso obriga o receptor a processar o bloco ou recusar. Sozinho, não protege conteúdo nenhum."
+      }
+    ]
+  },
+  "ex-vtm1rze1": {
+    "prompt": "Por que tão poucas organizações ligaram o WS-AtomicTransaction entre serviços de times diferentes?",
+    "hint": "Pense no que um participante faz enquanto espera.",
+    "choices": [
+      {
+        "text": "Ele não tinha como desfazer depois que um serviço se preparava",
+        "why": "O commit em duas fases tem abort; esse nunca foi o problema."
+      },
+      {
+        "text": "Locks presos enquanto se espera o coordenador de outro time",
+        "why": "Isso: dentro de um data center é viável; entre donos diferentes, a pane de um time prende as linhas do outro."
+      },
+      {
+        "text": "Ele funcionava sobre SOAP 1.2 e não sobre a 1.1",
+        "why": "Nada na aula o prende a uma versão do SOAP. O custo estava nos locks."
+      },
+      {
+        "text": "Os message brokers já tinham tornado as transações distribuídas desnecessárias",
+        "why": "Um broker garante a entrega, não que vários serviços confirmem juntos."
+      }
+    ]
+  },
+  "ex-bwxm3a6v": {
+    "prompt": "Quais destes fluxos carregam lógica de negócio, pelo teste da aula? Marque todos os que se aplicam.",
+    "hint": "Alguém de fora da TI poderia pedir para mudar?",
+    "choices": [
+      {
+        "text": "Descarta pedidos de clientes com nota vencida",
+        "why": "Sim: é uma política de crédito, por mais curto que seja o código."
+      },
+      {
+        "text": "Transforma `20261022` em `2026-10-22` para o SAP",
+        "why": "Mudar formato é integração. Nenhuma pessoa do negócio é dona de um formato de data."
+      },
+      {
+        "text": "Dá às padarias 3% de desconto em pedidos acima de um limite",
+        "why": "Sim: um percentual e um limite de que o comercial é dono."
+      },
+      {
+        "text": "Tira uma mensagem de uma fila MQ e a manda a um serviço HTTP",
+        "why": "Roteamento entre protocolos: o trabalho para o qual um barramento sempre serviu."
+      },
+      {
+        "text": "Manda os pedidos de UHT para Juiz de Fora, a não ser que o depósito fique ao sul de uma latitude fixa",
+        "why": "Sim: que fábrica despacha é uma decisão de logística."
+      }
+    ]
+  },
+  "ex-5hvd49s5": {
+    "prompt": "O comercial subiu o limite das padarias para R$ 1.800 no SAP, e os pedidos continuaram recebendo o desconto a partir de R$ 1.500 por cinco meses. Qual era o defeito por baixo?",
+    "hint": "Conte os lugares em que a regra morava.",
+    "choices": [
+      {
+        "text": "O time de SAP configurou errado o novo limite",
+        "why": "O SAP tinha o número certo. O desconto era aplicado antes de o pedido chegar a ele."
+      },
+      {
+        "text": "O barramento guardava uma cópia velha da tabela de preços do SAP",
+        "why": "Nenhuma tabela foi copiada. A regra estava escrita no ESQL do fluxo."
+      },
+      {
+        "text": "Uma regra tinha duas casas",
+        "why": "Isso: a mudança chegou a uma cópia, e nada em nenhum dos sistemas dizia qual era a verdadeira."
+      },
+      {
+        "text": "O portal mandava os seus próprios preços antigos junto com cada pedido",
+        "why": "O portal mandava o pedido; os 3% vinham do fluxo entre ele e o SAP."
+      }
+    ]
+  },
+  "ex-wamnn4pr": {
+    "prompt": "Lewis e Fowler, 2014: pontas inteligentes e ___ burros.",
+    "hint": "O que liga as pontas.",
+    "blanks": [
+      {
+        "accept": [
+          "canos",
+          "cano"
+        ]
+      }
+    ]
+  },
+  "ex-e6skpcjf": {
+    "prompt": "Um time propõe tirar as novas tentativas e a entrega garantida do IBM MQ e escrevê-las em cada serviço, \"para o cano ficar burro de verdade\". O que a aula diz?",
+    "hint": "O que burro quer dizer na frase?",
+    "choices": [
+      {
+        "text": "Concorda: um cano burro não segura nem tenta de novo coisa alguma",
+        "why": "A leitura errada que a seção aponta. Burro quer dizer que ele não decide nada sobre o negócio."
+      },
+      {
+        "text": "Passar a entrega para os fluxos do barramento, onde o time de Rui observa",
+        "why": "Isso poria mais coisa no barramento, a direção contrária à da seção inteira."
+      },
+      {
+        "text": "Manter a entrega do MQ por ora, já que a licença está paga",
+        "why": "Resultado certo, motivo errado. A entrega confiável pertence ao cano, custe o que custar a licença."
+      },
+      {
+        "text": "A entrega fica no cano; só as decisões saem dele",
+        "why": "Isso: segurar uma mensagem até o SAP voltar é exatamente o que um cano burro faz."
+      }
+    ]
+  },
+  "ex-cbr638vs": {
+    "prompt": "Depois de um patch, o FarmRegistry responde com `ns2:` onde usava `fr:`, ligado ao mesmo URI de namespace. As expressões regulares do Rota não acham nada. Quem quebrou o contrato?",
+    "hint": "O que um prefixo significa sozinho?",
+    "choices": [
+      {
+        "text": "O time do barramento: um prefixo faz parte do contrato do WSDL",
+        "why": "O WSDL nomeia namespaces, não os prefixos que uma mensagem usa para eles."
+      },
+      {
+        "text": "Ninguém; o XML era o mesmo, e o Rota lia texto",
+        "why": "Isso: uma mudança que não era mudança quebrou um parser que não era parser."
+      },
+      {
+        "text": "O time do barramento, por não passar a uma versão nova de namespace",
+        "why": "Um namespace novo é para mensagens incompatíveis. Estas eram idênticas."
+      },
+      {
+        "text": "O Coleta, ao mudar o formato das respostas no IBM i",
+        "why": "O prefixo é escrito pela camada SOAP do barramento; o Coleta nunca vê um envelope."
+      }
+    ]
+  },
+  "ex-3nkg40zj": {
+    "prompt": "Para uma fazenda, o adaptador do Rota recebe `soap:Client` com um detail `FarmNotFound`. O que ele deve fazer?",
+    "hint": "De quem é a culpa, e perguntar de novo ajudaria?",
+    "choices": [
+      {
+        "text": "Tentar de novo uma vez, e então planejar com a resposta de ontem",
+        "why": "Essa é a reação a `soap:Server`. Uma fazenda desconhecida continua desconhecida."
+      },
+      {
+        "text": "Parar a rodada de planejamento inteira e alertar o time do Rota de plantão",
+        "why": "Isso serve para um fault sem detail conhecido, que é bug do lado do Rota. Este é uma resposta conhecida."
+      },
+      {
+        "text": "Esperar o timeout de leitura e passar à próxima fazenda",
+        "why": "Uma resposta chegou; não há o que esperar."
+      },
+      {
+        "text": "Devolver \"fazenda desconhecida\" para o planejador tirar e informar",
+        "why": "Isso: o fault é uma resposta com significado, traduzida para os termos do próprio Rota."
+      }
+    ]
+  },
+  "ex-bmz985xd": {
+    "prompt": "O timeout de leitura do Rota é de 5 segundos e, depois de uma falha, ele espera 2 segundos e tenta mais uma vez. Se as duas chamadas para uma fazenda travarem, quantos segundos passam antes de o Rota recorrer à resposta de ontem?",
+    "hint": "Duas esperas por resposta e uma pausa entre elas.",
+    "unit": "segundos",
+    "accept_units": [
+      "s",
+      "segundo"
+    ]
+  },
+  "ex-xn3z4rta": {
+    "prompt": "O processo de cadastro de fazendas chama `RegisterBankAccount` e não recebe resposta dentro do timeout. Por que ele não deve simplesmente chamar de novo?",
+    "hint": "O que se sabe, e o que não se sabe, depois de um timeout?",
+    "choices": [
+      {
+        "text": "Ninguém sabe se a primeira chamada funcionou, e uma segunda cadastraria a conta duas vezes",
+        "why": "Isso: um timeout deixa o resultado desconhecido, e uma gravação repetida às cegas faz o trabalho de novo."
+      },
+      {
+        "text": "O SOAP proíbe mandar o mesmo envelope duas vezes ao mesmo endereço",
+        "why": "Essa regra não existe. O protocolo não protege uma gravação de ser repetida."
+      },
+      {
+        "text": "Um timeout quer dizer que o serviço recusou a requisição, e uma nova tentativa recebe o mesmo fault",
+        "why": "Uma recusa chega como fault. Um timeout quer dizer que nada chegou."
+      },
+      {
+        "text": "O barramento segura a primeira chamada, então as duas chegariam juntas",
+        "why": "Mesmo que segurasse, o problema seria o mesmo: dois cadastros, não uma questão de horário."
+      }
+    ]
+  },
+  "ex-4x0dkdgx": {
+    "prompt": "Dos 70 fluxos, 11 não tiveram tráfego em 90 dias, e 2 deles acabaram se revelando anuais. Quantos fluxos o barramento roda depois que os mortos de verdade são desligados?",
+    "hint": "Primeiro descubra quantos estão mortos de verdade.",
+    "unit": "fluxos",
+    "accept_units": [
+      "fluxo"
+    ]
+  },
+  "ex-6ek1gscd": {
+    "prompt": "Depois da reclassificação a Serra Alta tem 24 fluxos de roteamento, 19 transformações, 18 orquestrações e 9 fluxos mortos. Se tudo andar como planejado, quantos fluxos saem do barramento?",
+    "hint": "Só uma classe fica.",
+    "unit": "fluxos",
+    "accept_units": [
+      "fluxo"
+    ]
+  },
+  "ex-dsf1pp43": {
+    "prompt": "Ponha os passos para encolher o barramento na ordem que a aula dá.",
+    "hint": "Pare o crescimento antes de contar.",
+    "items": [
+      "congelar lógica de negócio nova",
+      "inventariar todo fluxo com um ano de tráfego",
+      "desligar os fluxos mortos",
+      "levar as transformações para as suas pontas",
+      "levar as orquestrações aos donos das decisões",
+      "decidir o que os fluxos de roteamento viram"
+    ]
+  },
+  "ex-t4qka4sx": {
+    "prompt": "Um fornecedor oferece uma ferramenta que leva os 70 fluxos, do jeito que estão, para uma plataforma de integração moderna. Por que Joana diz que isso não encolheria nada?",
+    "hint": "Onde o desconto moraria depois?",
+    "choices": [
+      {
+        "text": "Ferramentas assim falham com ESQL, então a maioria dos fluxos precisaria ser reescrita à mão",
+        "why": "Talvez, mas uma ferramenta perfeita ainda levaria as regras sem mudança nenhuma."
+      },
+      {
+        "text": "As regras ficariam num cano novo, com o mesmo time para mudá-las",
+        "why": "Isso: o mesmo barramento com uma licença nova. Encolher é dar outra casa a cada fluxo."
+      },
+      {
+        "text": "Uma plataforma moderna não tem message broker por baixo",
+        "why": "A maioria tem, e o MQ ficaria de qualquer jeito. Não foi o broker que fez o barramento crescer."
+      },
+      {
+        "text": "Os 70 fluxos incluem 9 mortos que a ferramenta copiaria",
+        "why": "Verdade, e o menor dos problemas; os fluxos mortos são desligados em semanas."
+      }
+    ]
+  },
+  "ex-9xrnxcb6": {
+    "prompt": "Depois do congelamento, Talita pede a Rui um fluxo que bloqueie pedidos do Salesforce de clientes acima do limite de crédito. Para onde a regra do congelamento a manda?",
+    "hint": "Quem é dono da decisão, e algum sistema já a toma?",
+    "choices": [
+      {
+        "text": "Um fluxo escrito no sandbox do próprio time dela, revisado por Rui",
+        "why": "Quem escreve não muda nada: a regra ainda moraria no cano."
+      },
+      {
+        "text": "Uma regra de validação no Salesforce que confere um limite copiado",
+        "why": "Um limite copiado é uma regra com duas casas, o defeito por trás do desconto."
+      },
+      {
+        "text": "A gestão de crédito do SAP; o fluxo só leva o pedido",
+        "why": "Isso: a decisão tem dono e um sistema que já a toma."
+      },
+      {
+        "text": "Uma exceção aprovada por Regina, já que é uma regra só",
+        "why": "Regina concordou por escrito que prazo não é motivo para isso."
+      }
+    ]
+  },
+  "ex-mgr1j5xz": {
+    "prompt": "Felipe quer que o Business Central mande ao SAP, pelo barramento, os pedidos da fábrica de queijos de Alagoa. O fluxo proposto tira cada pedido de uma fila, mapeia os campos para um IDoc do SAP e escolhe a fábrica que despacha pelo estoque. Pelas regras de Joana, o que pode ficar no barramento?",
+    "hint": "Classifique cada um dos três passos.",
+    "choices": [
+      {
+        "text": "Os três, já que o congelamento só vale para fluxos anteriores a ele",
+        "why": "O congelamento vale para fluxos novos a partir da data; este é um."
+      },
+      {
+        "text": "Só a fila; o mapeamento e a escolha da fábrica são ambos do SAP",
+        "why": "Um mapeamento é integração, e pode ficar ou ir para uma ponta dona dele. Só a decisão precisa sair."
+      },
+      {
+        "text": "Nada: integrações novas passam longe do barramento",
+        "why": "O congelamento proíbe lógica de negócio, não roteamento nem transformação."
+      },
+      {
+        "text": "A fila e o mapeamento, mas não a escolha da fábrica",
+        "why": "Isso: roteamento e transformação são integração; que fábrica despacha é uma decisão, e a logística é dona dela."
+      }
+    ]
+  },
+  "ex-217e8z96": {
+    "prompt": "Um serviço SOAP novo vai levar confirmações de entrega do Rota ao SAP, e alguém propõe WS-ReliableMessaging para nenhuma se perder. Qual é a resposta de Joana?",
+    "hint": "O que a Serra Alta já roda por baixo do barramento?",
+    "choices": [
+      {
+        "text": "Pô-las no MQ e deixar o SAP seguro para receber uma duas vezes",
+        "why": "Isso: o broker dá a garantia, e a aula 10 trata do dever que ele deixa para o consumidor."
+      },
+      {
+        "text": "Concordar, desde que as mensagens também sejam assinadas com WS-Security",
+        "why": "Assinar prova quem escreveu uma mensagem, não que ela chegou. E as duas pontas guardariam estado de sequência."
+      },
+      {
+        "text": "Usar WS-AtomicTransaction, para o Rota e o SAP confirmarem juntos",
+        "why": "Commit em duas fases entre donos diferentes é o arranjo que quase ninguém ligou."
+      },
+      {
+        "text": "Repetir cada chamada que falhar no Rota até o SAP responder",
+        "why": "Repetir uma gravação depois de um timeout arrisca fazê-la duas vezes, e o SAP fica fora toda noite de domingo."
+      }
+    ]
+  }
+}

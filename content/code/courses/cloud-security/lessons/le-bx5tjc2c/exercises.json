@@ -1,0 +1,705 @@
+[
+  {
+    "id": "ex-pwv8z51s",
+    "version": 1,
+    "section": "what-it-protects",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Against whom does encryption at rest protect the clinic's records?",
+    "hint": "Think of the two rows of the table.",
+    "choices": [
+      {
+        "text": "Against anybody who reaches the bytes around the service, such as a stolen disk or a misdirected backup",
+        "correct": true,
+        "why": "Right. What they hold is ciphertext without the key."
+      },
+      {
+        "text": "Against a stranger reading through a public bucket policy",
+        "correct": false,
+        "why": "The lab showed the opposite: S3 decrypted the record for the anonymous request."
+      },
+      {
+        "text": "Against a user whose policy allows reading the bucket",
+        "correct": false,
+        "why": "The service decrypts for whoever it is told to answer; that is a question of permissions."
+      },
+      {
+        "text": "Against everybody: it makes the data unreadable to anyone but the owner",
+        "correct": false,
+        "why": "That is the checkbox picture the section opens by correcting."
+      }
+    ]
+  },
+  {
+    "id": "ex-wx7fygt0",
+    "version": 1,
+    "section": "what-it-protects",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab, an object stored with `AES256` was served to an anonymous `curl` once a bucket policy allowed everybody to read. What went wrong with the encryption?",
+    "hint": "Where did the decryption happen, and who asked for it?",
+    "choices": [
+      {
+        "text": "The key was too short to resist a stranger",
+        "correct": false,
+        "why": "Nothing was broken; nobody attacked the cipher."
+      },
+      {
+        "text": "Nothing: S3 decrypted it for a request the policy allowed",
+        "correct": true,
+        "why": "Right. Encryption did its job on the disk; the policy decided who was answered."
+      },
+      {
+        "text": "moto ignores encryption, and AWS would have refused the request because the object is encrypted",
+        "correct": false,
+        "why": "For an object under S3's own key AWS answers the same way; the lesson says so beside the transcript."
+      },
+      {
+        "text": "The object was encrypted after the policy was attached, so it was still plain",
+        "correct": false,
+        "why": "It was stored encrypted at upload, as `AES256` said, before any policy existed."
+      }
+    ]
+  },
+  {
+    "id": "ex-rx23s0p8",
+    "version": 1,
+    "section": "what-it-protects",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Since January 2023, what does AWS do with a new object in S3 when nobody asks for encryption?",
+    "hint": "moto does not reproduce this default.",
+    "choices": [
+      {
+        "text": "Stores it in plain text, as before",
+        "correct": false,
+        "why": "That changed in January 2023."
+      },
+      {
+        "text": "Refuses the upload until a key is named",
+        "correct": false,
+        "why": "No upload is refused for lack of a key."
+      },
+      {
+        "text": "Encrypts it anyway, under S3's own key",
+        "correct": true,
+        "why": "Right, which is why the checkbox is always ticked and proves so little."
+      },
+      {
+        "text": "Encrypts it with a customer managed key created for the account",
+        "correct": false,
+        "why": "No customer managed key is ever created for you; you create those."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ewxv84w",
+    "version": 1,
+    "section": "managed-keys",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each kind of key to what is true of it.",
+    "hint": "The table of three kinds.",
+    "pairs": [
+      {
+        "left": "AWS owned key",
+        "right": "invisible to you, and its use is not logged in your account"
+      },
+      {
+        "left": "AWS managed key",
+        "right": "named like `aws/s3`; you can read its policy, not change it"
+      },
+      {
+        "left": "customer managed key",
+        "right": "its key policy is written by the clinic, and it can be deleted"
+      }
+    ],
+    "right_distractors": [
+      "its key material is kept outside KMS"
+    ]
+  },
+  {
+    "id": "ex-steg02v1",
+    "version": 1,
+    "section": "managed-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The default key policy allows `kms:*` to `arn:aws:iam::123456789012:root`. What does that principal mean?",
+    "hint": "It is not a person.",
+    "choices": [
+      {
+        "text": "The account's root user, and nobody else",
+        "correct": false,
+        "why": "It looks like that and is not: it delegates to IAM."
+      },
+      {
+        "text": "The account, which hands the decision to IAM policies",
+        "correct": true,
+        "why": "Right. Any identity whose IAM policy allows the action on this key may perform it."
+      },
+      {
+        "text": "Every AWS account, since it ends in `root`",
+        "correct": false,
+        "why": "It names one account, `123456789012`."
+      },
+      {
+        "text": "The KMS service itself, so it can rotate the key on schedule",
+        "correct": false,
+        "why": "Rotation needs no permission in the key policy."
+      }
+    ]
+  },
+  {
+    "id": "ex-vdwcx03q",
+    "version": 1,
+    "section": "managed-keys",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The clinic rewrites a key's policy so that it names only the records application's role, with no statement for the account. An administrator with `AdministratorAccess` asks the key to decrypt. What happens on AWS?",
+    "hint": "No IAM policy grants use of a key unless the key policy allows it.",
+    "choices": [
+      {
+        "text": "It decrypts, because `AdministratorAccess` allows every action on every resource",
+        "correct": false,
+        "why": "Not for a KMS key whose policy no longer delegates to the account."
+      },
+      {
+        "text": "It is refused",
+        "correct": true,
+        "why": "Right. The key policy decides first, and it names only the application."
+      },
+      {
+        "text": "It decrypts, but CloudTrail flags it as an override",
+        "correct": false,
+        "why": "There is no override; the request is refused."
+      },
+      {
+        "text": "It depends on whether the administrator also has MFA",
+        "correct": false,
+        "why": "Nothing in that policy mentions MFA."
+      }
+    ]
+  },
+  {
+    "id": "ex-xa9atfvc",
+    "version": 1,
+    "section": "managed-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the lab keep the key's id in `k` instead of always using `alias/clinic-records`?",
+    "hint": "Not every call accepts an alias.",
+    "choices": [
+      {
+        "text": "Because aliases expire after an hour",
+        "correct": false,
+        "why": "An alias lasts until it is deleted."
+      },
+      {
+        "text": "moto does not support aliases at all",
+        "correct": false,
+        "why": "`describe-key` and `encrypt` took the alias in the lab."
+      },
+      {
+        "text": "Calls that administer a key, like `get-key-policy`, take its id or ARN and refuse the alias",
+        "correct": true,
+        "why": "Right, in AWS as in moto."
+      },
+      {
+        "text": "Using the alias would create a second key",
+        "correct": false,
+        "why": "An alias only points at a key."
+      }
+    ]
+  },
+  {
+    "id": "ex-nd9jv2bs",
+    "version": 1,
+    "section": "two-locks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With a customer managed key as the bucket's default, which two permissions does reading a record take on AWS?",
+    "hint": "One on the bucket, one on the key.",
+    "choices": [
+      {
+        "text": "`s3:GetObject` and `kms:Decrypt`",
+        "correct": true,
+        "why": "Right. Missing either one, the request is refused."
+      },
+      {
+        "text": "`s3:GetObject` and `kms:Encrypt`",
+        "correct": false,
+        "why": "Reading needs decryption, not encryption."
+      },
+      {
+        "text": "`s3:ListBucket` and `s3:GetEncryptionConfiguration`",
+        "correct": false,
+        "why": "Neither of those touches the key."
+      },
+      {
+        "text": "`kms:Decrypt` and `kms:GenerateDataKey`",
+        "correct": false,
+        "why": "That leaves out the bucket, and generating a key is for writing."
+      }
+    ]
+  },
+  {
+    "id": "ex-50g1p55b",
+    "version": 1,
+    "section": "two-locks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "bia has `AmazonS3ReadOnlyAccess` and nothing on the key. In the lab, `aws s3 cp` of the record printed it. What would AWS have done?",
+    "hint": "Which half of this did moto judge?",
+    "choices": [
+      {
+        "text": "Printed it too, since S3 decrypts for anyone allowed to read the bucket",
+        "correct": false,
+        "why": "That is true of S3's own key; with a customer managed key, KMS is asked on bia's behalf."
+      },
+      {
+        "text": "Refused it with `AccessDenied`, because KMS refuses to decrypt for bia",
+        "correct": true,
+        "why": "Right, from the documentation; moto did refuse her direct `kms decrypt`."
+      },
+      {
+        "text": "Returned the ciphertext, since she may read the object but not decrypt it",
+        "correct": false,
+        "why": "S3 never hands out the stored ciphertext; the read is refused."
+      },
+      {
+        "text": "Asked her for MFA before decrypting",
+        "correct": false,
+        "why": "No such step exists here."
+      }
+    ]
+  },
+  {
+    "id": "ex-ydshr8gx",
+    "version": 1,
+    "section": "two-locks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A bucket policy grants `s3:GetObject` to `\"Principal\": \"*\"` on a bucket whose objects are all under a customer managed KMS key. According to AWS's documentation, what does an anonymous request get?",
+    "hint": "KMS needs an identity to authorise.",
+    "choices": [
+      {
+        "text": "The object, decrypted, like any public object",
+        "correct": false,
+        "why": "That is what moto did, and what S3's own key would do; not a KMS key."
+      },
+      {
+        "text": "The object still encrypted, since the key was not used",
+        "correct": false,
+        "why": "S3 never returns stored ciphertext to a reader."
+      },
+      {
+        "text": "A refusal: objects under a KMS key are read only by requests signed with Signature Version 4",
+        "correct": true,
+        "why": "Right. Not run here, because moto serves it."
+      },
+      {
+        "text": "A redirect to a presigned URL valid for one hour",
+        "correct": false,
+        "why": "S3 does not generate links on anybody's behalf."
+      }
+    ]
+  },
+  {
+    "id": "ex-47tv4h7p",
+    "version": 1,
+    "section": "two-locks",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did moto judge exactly as AWS would in the section on two locks? Choose all that apply.",
+    "hint": "One went its own way.",
+    "choices": [
+      {
+        "text": "The `test` key refused once checking was on",
+        "correct": true,
+        "why": "Right: `InvalidClientTokenId` on the fourth request."
+      },
+      {
+        "text": "bia's direct `kms decrypt` refused for lack of `kms:Decrypt`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "bia's `aws s3 cp` of the record under the clinic's key",
+        "correct": false,
+        "why": "moto served it; AWS would refuse it."
+      },
+      {
+        "text": "The upload going in as `aws:kms` without naming the key",
+        "correct": true,
+        "why": "Right: the bucket's default encryption applied it."
+      }
+    ]
+  },
+  {
+    "id": "ex-8hwn5en1",
+    "version": 1,
+    "section": "envelope",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does S3 not send each object to KMS to be encrypted?",
+    "hint": "The lab hit the limit with 5000 bytes.",
+    "choices": [
+      {
+        "text": "KMS takes at most 4096 bytes of plain text per request",
+        "correct": true,
+        "why": "Right. So KMS encrypts small data keys, and those encrypt the data."
+      },
+      {
+        "text": "Because KMS is in another region and the traffic would cost too much",
+        "correct": false,
+        "why": "KMS is regional, in the same region; the reason is the size limit."
+      },
+      {
+        "text": "S3 has no permission to call KMS",
+        "correct": false,
+        "why": "S3 calls KMS on the caller's behalf for every read."
+      },
+      {
+        "text": "KMS only encrypts passwords, by policy",
+        "correct": false,
+        "why": "It encrypts any data up to its size limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-8yxf2sne",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps a service takes to write and then read an object with envelope encryption in order.",
+    "hint": "The plain data key is erased before anything is stored.",
+    "items": [
+      "ask KMS for a data key, in plain text and encrypted",
+      "encrypt the data locally with the plain data key",
+      "erase the plain data key from memory",
+      "store the encrypted data key beside the encrypted data",
+      "send the encrypted data key to KMS to read the object back"
+    ],
+    "trap": "Storing before erasing is the slip: the plain key must never reach the disk."
+  },
+  {
+    "id": "ex-ywg6tz0t",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`generate-data-key` with `AES_256` returned a plain key of 44 base64 characters. How many bytes is the key?",
+    "hint": "256 bits.",
+    "value": 32,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-e36xcyv7",
+    "version": 1,
+    "section": "envelope",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`aws kms decrypt` in the lab named no key, and KMS still answered with the key's ARN. How did it know which key?",
+    "hint": "Look inside the ciphertext, not the command.",
+    "choices": [
+      {
+        "text": "It tried every key in the account until one worked",
+        "correct": false,
+        "why": "Nothing is tried; the answer is in the ciphertext."
+      },
+      {
+        "text": "The ciphertext carries a reference to the key that made it",
+        "correct": true,
+        "why": "Right. moto writes it as the key id in clear; AWS's format is its own."
+      },
+      {
+        "text": "The alias `alias/clinic-records` is the account's default key and is used for every decrypt",
+        "correct": false,
+        "why": "There is no account-wide default key for decrypt."
+      },
+      {
+        "text": "The command line read it from `env.sh`",
+        "correct": false,
+        "why": "`env.sh` holds no key id."
+      }
+    ]
+  },
+  {
+    "id": "ex-ze3ssyq0",
+    "version": 1,
+    "section": "envelope",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does every read of an object under a customer managed key give the clinic a chance to refuse, while reads under S3's own key give none?",
+    "hint": "Count who is asked at read time.",
+    "choices": [
+      {
+        "text": "The data key is sent back to KMS in the caller's name on each read, and the key policy can say no",
+        "correct": true,
+        "why": "Right. With S3's own key there is no policy of yours to ask."
+      },
+      {
+        "text": "S3's own key is weaker and anybody can break it",
+        "correct": false,
+        "why": "Both use AES-256; the difference is who decides."
+      },
+      {
+        "text": "Customer managed keys rotate every hour",
+        "correct": false,
+        "why": "Rotation is yearly by default, and it is not what refuses a read."
+      },
+      {
+        "text": "Objects under S3's own key are never encrypted",
+        "correct": false,
+        "why": "They are encrypted; S3 just decrypts them for anybody it serves."
+      }
+    ]
+  },
+  {
+    "id": "ex-21yztykx",
+    "version": 1,
+    "section": "key-lifecycle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The clinic suspects its key may have been used by an attacker. A colleague proposes rotating it. What does the lesson say?",
+    "hint": "What does rotation keep?",
+    "choices": [
+      {
+        "text": "Rotation re-encrypts everything, so the attacker's copies become useless",
+        "correct": false,
+        "why": "Rotation re-encrypts nothing; older material is kept so old ciphertext still decrypts."
+      },
+      {
+        "text": "Wrong tool: whoever used the key still decrypts everything made before; look at who is allowed to use it",
+        "correct": true,
+        "why": "Right. A compromise is a question for the key policy and IAM."
+      },
+      {
+        "text": "Rotation is the right answer, and it must be done every day",
+        "correct": false,
+        "why": "Rotation answers age, not compromise."
+      },
+      {
+        "text": "Delete the key at once, since deletion is immediate",
+        "correct": false,
+        "why": "Deletion waits 7 to 30 days, and it would make the clinic's own data unreadable."
+      }
+    ]
+  },
+  {
+    "id": "ex-rpfhtb03",
+    "version": 1,
+    "section": "key-lifecycle",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `disable-key`, moto still decrypted the note. What does AWS do with a request to a disabled key?",
+    "hint": "An exception named after the state.",
+    "choices": [
+      {
+        "text": "Decrypts it and logs a warning",
+        "correct": false,
+        "why": "It refuses."
+      },
+      {
+        "text": "Refuses it with `DisabledException`",
+        "correct": true,
+        "why": "Right, from KMS's documentation; not run here."
+      },
+      {
+        "text": "Refuses it with `AccessDenied`, as with a missing permission",
+        "correct": false,
+        "why": "The refusal names the key's state, not a permission."
+      },
+      {
+        "text": "Enables the key again automatically for the request",
+        "correct": false,
+        "why": "A key is enabled only by `enable-key`."
+      }
+    ]
+  },
+  {
+    "id": "ex-2yw4pmzc",
+    "version": 1,
+    "section": "key-lifecycle",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many days does AWS wait before deleting a KMS key when `schedule-key-deletion` is given no waiting period?",
+    "hint": "The date the lab printed was this many days on.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-1f5rnqdg",
+    "version": 1,
+    "section": "key-lifecycle",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which calls on a key does the lesson say deserve an alarm of their own? Choose all that apply.",
+    "hint": "Two make the data unreadable to the clinic, one readable to somebody else.",
+    "choices": [
+      {
+        "text": "`DisableKey`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`ScheduleKeyDeletion`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`PutKeyPolicy`",
+        "correct": true,
+        "why": "Right: it can make the records readable to somebody else."
+      },
+      {
+        "text": "`Decrypt`",
+        "correct": false,
+        "why": "Every read is one; an alarm on it would ring all day."
+      },
+      {
+        "text": "`GetKeyRotationStatus`",
+        "correct": false,
+        "why": "Reading a setting changes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-gy6p8f1a",
+    "version": 1,
+    "section": "key-lifecycle",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A key is cancelled out of `PendingDeletion` with `cancel-key-deletion`. In what state is it left, on AWS as in the lab?",
+    "hint": "Somebody has to decide to switch it back on.",
+    "choices": [
+      {
+        "text": "`Enabled`, as it was before the deletion was scheduled",
+        "correct": false,
+        "why": "Cancelling does not enable it."
+      },
+      {
+        "text": "`PendingDeletion`, until the waiting period ends",
+        "correct": false,
+        "why": "Cancelling ends the pending deletion."
+      },
+      {
+        "text": "`Disabled`",
+        "correct": true,
+        "why": "Right. The lab printed it after the cancel."
+      },
+      {
+        "text": "Deleted, because a cancellation only stops the timer",
+        "correct": false,
+        "why": "Nothing is deleted; the key survives, disabled."
+      }
+    ]
+  },
+  {
+    "id": "ex-gytj0txb",
+    "version": 1,
+    "section": "in-transit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The lab's `env.sh` points at `http://localhost:4567`, plain HTTP. Why is that acceptable there?",
+    "hint": "Where does the traffic go?",
+    "choices": [
+      {
+        "text": "Because moto encrypts its answers in a format of its own",
+        "correct": false,
+        "why": "moto answers in plain HTTP."
+      },
+      {
+        "text": "Because the `test` keys are not secret",
+        "correct": false,
+        "why": "True, but the same URL pointed elsewhere would leak real keys; the reason is where the traffic goes."
+      },
+      {
+        "text": "The traffic never leaves this computer",
+        "correct": true,
+        "why": "Right. Pointed at another machine, the same setting would send requests in the open."
+      },
+      {
+        "text": "Because AWS's endpoints also accept plain HTTP",
+        "correct": false,
+        "why": "AWS's API endpoints answer over HTTPS."
+      }
+    ]
+  },
+  {
+    "id": "ex-s1zs9khs",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The condition key a bucket policy uses to refuse requests that did not arrive over TLS is `aws:___`.",
+    "hint": "It is `false` when the request came without TLS.",
+    "blanks": [
+      {
+        "accept": [
+          "SecureTransport"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-k22xb4e7",
+    "version": 1,
+    "section": "in-transit",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The TLS-only policy lists `arn:aws:s3:::clinic-records` and `arn:aws:s3:::clinic-records/*`. What would be left unprotected if it listed only the first?",
+    "hint": "An ARN without `/*` matches only the bucket.",
+    "choices": [
+      {
+        "text": "Nothing: the bucket's ARN covers everything in it",
+        "correct": false,
+        "why": "It does not; object actions are on the objects' ARNs."
+      },
+      {
+        "text": "Requests for the objects, such as `GetObject`",
+        "correct": true,
+        "why": "Right, which are the requests that carry the records."
+      },
+      {
+        "text": "Requests from administrators, who are exempt from `Deny`",
+        "correct": false,
+        "why": "Nobody is exempt from an explicit `Deny` with `Principal` `*`."
+      },
+      {
+        "text": "Only listing the bucket's contents over plain HTTP",
+        "correct": false,
+        "why": "Listing is a bucket action, which the first ARN does cover."
+      }
+    ]
+  }
+]

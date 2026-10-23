@@ -1,0 +1,683 @@
+[
+  {
+    "id": "ex-jjskfgpn",
+    "version": 1,
+    "section": "two-kinds",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A key id begins with `ASIA`. What kind of credential is it?",
+    "hint": "Compare the two ids in the transcript.",
+    "choices": [
+      {
+        "text": "A role session, temporary",
+        "correct": true,
+        "why": "Right: it came from assume-role, with a session token and an expiry."
+      },
+      {
+        "text": "An IAM user's long-lived access key",
+        "correct": false,
+        "why": "Those begin with `AKIA`, like caio's."
+      },
+      {
+        "text": "A root user's key, which AWS marks apart from every other key in the account",
+        "correct": false,
+        "why": "The prefix says long-lived or temporary, not whose."
+      },
+      {
+        "text": "A key AWS has placed in quarantine",
+        "correct": false,
+        "why": "Quarantine is a policy on the user; it does not change the key's id."
+      }
+    ]
+  },
+  {
+    "id": "ex-wn4hzwst",
+    "version": 1,
+    "section": "two-kinds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson treat a user's access key as the riskier kind?",
+    "hint": "What ends each kind?",
+    "choices": [
+      {
+        "text": "It uses a weaker signature algorithm than a session",
+        "correct": false,
+        "why": "Both sign requests the same way; the difference is lifetime."
+      },
+      {
+        "text": "It is typed into the AWS console, where a fake sign-in page could copy it",
+        "correct": false,
+        "why": "An access key signs API requests directly; it is not typed into the console."
+      },
+      {
+        "text": "It is the only credential that carries permissions",
+        "correct": false,
+        "why": "A session has the permissions of its role."
+      },
+      {
+        "text": "It works until somebody deletes it",
+        "correct": true,
+        "why": "Right. A session found tomorrow has already expired."
+      }
+    ]
+  },
+  {
+    "id": "ex-0z8q5jnd",
+    "version": 1,
+    "section": "two-kinds",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each signer to what it should hold.",
+    "hint": "The table at the end of the section.",
+    "pairs": [
+      {
+        "left": "a person",
+        "right": "a session from the identity provider"
+      },
+      {
+        "left": "a program on an AWS function",
+        "right": "the role the platform gives it"
+      },
+      {
+        "left": "a pipeline outside AWS",
+        "right": "a session obtained by federation"
+      },
+      {
+        "left": "a program with no other route",
+        "right": "an access key, kept carefully"
+      }
+    ],
+    "right_distractors": [
+      "the root user's password"
+    ]
+  },
+  {
+    "id": "ex-8y03ep7k",
+    "version": 1,
+    "section": "two-kinds",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The lab's role session was requested with `--duration-seconds 900`. How many minutes does it last?",
+    "hint": "Divide by sixty.",
+    "value": 15,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-wnx7savc",
+    "version": 1,
+    "section": "when-a-key-leaks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "caio deletes `booking.env` in a new commit, an hour after pushing it to a public repository. Is the key safe now?",
+    "hint": "Where else is the file?",
+    "choices": [
+      {
+        "text": "No: it stays in the history, so the key must be rotated",
+        "correct": true,
+        "why": "Right. The only fix is to make the key worthless."
+      },
+      {
+        "text": "Yes, since the file is gone from the repository",
+        "correct": false,
+        "why": "It is gone from the latest commit only; the history, clones and caches still hold it."
+      },
+      {
+        "text": "Yes, provided the repository is made private within the day",
+        "correct": false,
+        "why": "Scanners read public repositories within minutes; hiding it later changes nothing about who has it."
+      },
+      {
+        "text": "No, and the IAM user must be renamed so the key stops matching",
+        "correct": false,
+        "why": "A rename does not touch the key; deletion does."
+      }
+    ]
+  },
+  {
+    "id": "ex-j1qrz55z",
+    "version": 1,
+    "section": "when-a-key-leaks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did the lesson's one-line `grep` look for?",
+    "hint": "A prefix and a length.",
+    "choices": [
+      {
+        "text": "Any line containing the word password",
+        "correct": false,
+        "why": "It matched the shape of a key id, not a word."
+      },
+      {
+        "text": "Lines longer than forty characters, the length of a secret",
+        "correct": false,
+        "why": "Length alone would flag half of any repository."
+      },
+      {
+        "text": "`AKIA` or `ASIA` followed by sixteen capitals or digits",
+        "correct": true,
+        "why": "Right, the shape of an access key id."
+      },
+      {
+        "text": "Files whose names end in `.env`",
+        "correct": false,
+        "why": "It read every file in the directory and matched contents."
+      }
+    ]
+  },
+  {
+    "id": "ex-3nr10xmn",
+    "version": 1,
+    "section": "when-a-key-leaks",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are routes by which keys end up exposed, as the lesson lists them? Choose all that apply.",
+    "hint": "None of them looks like a mistake at the time.",
+    "choices": [
+      {
+        "text": "A configuration file committed with the code",
+        "correct": true,
+        "why": "Right, caio's case."
+      },
+      {
+        "text": "A container image layer that copied the key in",
+        "correct": true,
+        "why": "Right: a later layer deleting the file does not remove it."
+      },
+      {
+        "text": "A CI log that printed the environment",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Assuming a role for fifteen minutes",
+        "correct": false,
+        "why": "That produces a session, which expires; it is the safer kind."
+      },
+      {
+        "text": "Turning on MFA for the user",
+        "correct": false,
+        "why": "MFA exposes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-q6n9q4hr",
+    "version": 1,
+    "section": "when-a-key-leaks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the quarantine policy was attached, which of caio's requests still went through in the lab?",
+    "hint": "It denies the most abused actions, not everything.",
+    "choices": [
+      {
+        "text": "Listing buckets",
+        "correct": false,
+        "why": "Refused with AccessDenied."
+      },
+      {
+        "text": "Creating a new access key for himself",
+        "correct": false,
+        "why": "Refused: iam:CreateAccessKey is on the quarantine list."
+      },
+      {
+        "text": "Listing secrets in Secrets Manager",
+        "correct": true,
+        "why": "Right. The quarantine is a brake, not a fix."
+      },
+      {
+        "text": "None of them: the policy denies every action in every service",
+        "correct": false,
+        "why": "It denied a list of 98 actions in lesson 6, not everything."
+      }
+    ]
+  },
+  {
+    "id": "ex-0zs7crjg",
+    "version": 1,
+    "section": "when-a-key-leaks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "AWS has quarantined an exposed key in the clinic's account. Which next step does the lesson put before removing the quarantine?",
+    "hint": "A closed door does not say what came through it.",
+    "choices": [
+      {
+        "text": "Replacing and deleting the key, then reading what it did while exposed",
+        "correct": true,
+        "why": "Right, from the records lesson 15 is about."
+      },
+      {
+        "text": "Waiting ninety days, the normal rotation period",
+        "correct": false,
+        "why": "Waiting leaves the exposed key alive; it has to be replaced now."
+      },
+      {
+        "text": "Detaching the quarantine first so that the application keeps working during the investigation",
+        "correct": false,
+        "why": "That removes the brake while the exposed key still works."
+      },
+      {
+        "text": "Adding MFA to the user",
+        "correct": false,
+        "why": "An access key is used without MFA; it changes nothing for the key."
+      }
+    ]
+  },
+  {
+    "id": "ex-a5cjt5wq",
+    "version": 1,
+    "section": "rotating-a-key",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of rotating an access key in order.",
+    "hint": "At every moment the application holds a key that works.",
+    "items": [
+      "create a second key",
+      "switch the application to the new key",
+      "deactivate the old key and watch its last use",
+      "delete the old key"
+    ],
+    "trap": "Deleting first is the slip: the application is down until the new key is deployed."
+  },
+  {
+    "id": "ex-pgsmd3ss",
+    "version": 1,
+    "section": "rotating-a-key",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Creating a third access key for caio failed with `LimitExceeded`. What does that usually tell a reviewer?",
+    "hint": "Two is the limit per user.",
+    "choices": [
+      {
+        "text": "The account has reached its total number of users and needs a quota increase from AWS",
+        "correct": false,
+        "why": "The quota is two keys per user, not a count of users."
+      },
+      {
+        "text": "moto does not support a second key",
+        "correct": false,
+        "why": "It accepted the second; the third was refused, as AWS refuses it."
+      },
+      {
+        "text": "caio's quarantine blocks new keys",
+        "correct": false,
+        "why": "admin created the key; the quarantine applies to requests signed by caio's key."
+      },
+      {
+        "text": "The previous rotation was never finished",
+        "correct": true,
+        "why": "Right: an old key nobody deleted blocks the next one."
+      }
+    ]
+  },
+  {
+    "id": "ex-8fjxytak",
+    "version": 1,
+    "section": "rotating-a-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab, caio's old key was set to `Inactive` and still answered `get-caller-identity`. What proves the old key is unusable, in this lab and on AWS?",
+    "hint": "Which step is true in both places?",
+    "choices": [
+      {
+        "text": "Deleting it and seeing the next request refused",
+        "correct": true,
+        "why": "Right: InvalidClientTokenId, in both."
+      },
+      {
+        "text": "Listing the keys and reading `Inactive` beside it",
+        "correct": false,
+        "why": "The status was saved and moto ignored it; a listing proves the setting, not the refusal."
+      },
+      {
+        "text": "Waiting fifteen minutes for the deactivation to spread to every region",
+        "correct": false,
+        "why": "No wait was involved; moto does not honour the status at all."
+      },
+      {
+        "text": "Reading get-access-key-last-used once",
+        "correct": false,
+        "why": "That shows when it was used, not whether it is refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-vh8hnq17",
+    "version": 1,
+    "section": "rotating-a-key",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A review finds one access key that has been rotated every ninety days for three years, used by a job running on an EC2 instance. What is the finding?",
+    "hint": "Rotation is a symptom.",
+    "choices": [
+      {
+        "text": "Rotation is working, so nothing is to be done",
+        "correct": false,
+        "why": "It works, and it maintains a credential that does not need to exist."
+      },
+      {
+        "text": "The interval should be thirty days instead",
+        "correct": false,
+        "why": "A shorter interval keeps the same long-lived key, just more often replaced."
+      },
+      {
+        "text": "The job should use the instance's role, and the key should go",
+        "correct": true,
+        "why": "Right. A program on an AWS machine gets a role session that expires on its own."
+      },
+      {
+        "text": "The key should be moved into an environment variable",
+        "correct": false,
+        "why": "That changes where the key sits, not whether it exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-jgfp95fw",
+    "version": 1,
+    "section": "secrets-manager",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which label does a reader ask for to get the value in use?",
+    "hint": "The one put-secret-value moves.",
+    "choices": [
+      {
+        "text": "`AWSPREVIOUS`",
+        "correct": false,
+        "why": "That is the value before the last change."
+      },
+      {
+        "text": "`LATEST`",
+        "correct": false,
+        "why": "Secrets Manager has no such label."
+      },
+      {
+        "text": "`AWSCURRENT`",
+        "correct": true,
+        "why": "Right, and it is the default when no version is given."
+      },
+      {
+        "text": "The version id printed by create-secret",
+        "correct": false,
+        "why": "That works for one version; the label is what follows a rotation."
+      }
+    ]
+  },
+  {
+    "id": "ex-ww6h046a",
+    "version": 1,
+    "section": "secrets-manager",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `\"Resource\": \"*\"` on its policy, what could the booking application's role read in the lab?",
+    "hint": "Two secrets existed.",
+    "choices": [
+      {
+        "text": "Only its own database's secret",
+        "correct": false,
+        "why": "It also read the reports database's: both lengths came back as 24."
+      },
+      {
+        "text": "Neither, because moto refuses Secrets Manager for roles",
+        "correct": false,
+        "why": "It refused the narrow ARN, and allowed `*`."
+      },
+      {
+        "text": "Only the secrets' names, never their values",
+        "correct": false,
+        "why": "GetSecretValue returned the value; the query printed only its length."
+      },
+      {
+        "text": "Both secrets, its own and the reports database's",
+        "correct": true,
+        "why": "Right, the cost of `*`. On AWS the narrow ARN keeps it to one."
+      }
+    ]
+  },
+  {
+    "id": "ex-82mwdjz2",
+    "version": 1,
+    "section": "secrets-manager",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `put-secret-value`, the version that held `AWSCURRENT` keeps its value under the label `___`.",
+    "hint": "The value just before.",
+    "blanks": [
+      {
+        "accept": [
+          "AWSPREVIOUS"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8gx82qyv",
+    "version": 1,
+    "section": "secrets-manager",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The role's narrow policy names `...:secret:clinic/booking/db-*` and moto refused the read. What does the lesson conclude?",
+    "hint": "Whose refusal was it?",
+    "choices": [
+      {
+        "text": "The ARN is wrong; `-*` must be removed for AWS too",
+        "correct": false,
+        "why": "AWS accepts it; the suffix needs covering because Secrets Manager adds six characters."
+      },
+      {
+        "text": "The refusal is moto's, which matches only `*`; AWS honours the narrow ARN",
+        "correct": true,
+        "why": "Right. The lab falls back to `*` and says what that costs."
+      },
+      {
+        "text": "Roles cannot read secrets; only users can",
+        "correct": false,
+        "why": "The same role read them once the policy said `*`."
+      },
+      {
+        "text": "The session expired between the two commands",
+        "correct": false,
+        "why": "The same session read the secret a moment later."
+      }
+    ]
+  },
+  {
+    "id": "ex-tpacxn1h",
+    "version": 1,
+    "section": "in-the-application",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each place a program finds a secret to who else can see the value.",
+    "hint": "The table at the top of the section.",
+    "pairs": [
+      {
+        "left": "written in the code",
+        "right": "everybody with the repository and its history"
+      },
+      {
+        "left": "an environment variable set at deploy",
+        "right": "whoever reads the deployment's configuration"
+      },
+      {
+        "left": "fetched from Secrets Manager at run time",
+        "right": "whoever the secret's policy allows"
+      }
+    ],
+    "right_distractors": [
+      "nobody at all"
+    ]
+  },
+  {
+    "id": "ex-9qg65tdh",
+    "version": 1,
+    "section": "in-the-application",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `app.py` print the password's length rather than the password?",
+    "hint": "Where does printed output go?",
+    "choices": [
+      {
+        "text": "A log line is another place a secret leaks",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because boto3 refuses to return the value to Python",
+        "correct": false,
+        "why": "It returned the value; the program chose not to print it."
+      },
+      {
+        "text": "Printing it would rotate the secret automatically and break the database connection",
+        "correct": false,
+        "why": "Printing changes nothing in Secrets Manager."
+      },
+      {
+        "text": "The value is encrypted and cannot be shown",
+        "correct": false,
+        "why": "GetSecretValue returns it in clear to an allowed caller."
+      }
+    ]
+  },
+  {
+    "id": "ex-z8ngab5c",
+    "version": 1,
+    "section": "in-the-application",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does fetching a secret at run time NOT protect against?",
+    "hint": "The program still holds it.",
+    "choices": [
+      {
+        "text": "The password sitting in the repository's history",
+        "correct": false,
+        "why": "That is exactly what it protects against: nothing is written in the code."
+      },
+      {
+        "text": "The deployment's configuration being read by somebody else",
+        "correct": false,
+        "why": "Only the secret's name is in the configuration."
+      },
+      {
+        "text": "Somebody reading the running program's memory",
+        "correct": true,
+        "why": "Right. The value is in memory once fetched."
+      },
+      {
+        "text": "A rotation reaching the program without a deploy",
+        "correct": false,
+        "why": "That is a benefit, not a threat."
+      }
+    ]
+  },
+  {
+    "id": "ex-e6g9zeyd",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statements about this lesson's lab are true? Choose all that apply.",
+    "hint": "moto got some of it right and some wrong.",
+    "choices": [
+      {
+        "text": "A deleted key was refused with InvalidClientTokenId",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "An inactive key was refused",
+        "correct": false,
+        "why": "moto accepted it; AWS refuses it."
+      },
+      {
+        "text": "A third key for one user was refused with LimitExceeded",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The narrow secret ARN was honoured",
+        "correct": false,
+        "why": "moto refused it; AWS honours it."
+      },
+      {
+        "text": "The role session showed an Expiration",
+        "correct": true,
+        "why": "Right, fifteen minutes ahead."
+      }
+    ]
+  },
+  {
+    "id": "ex-d9d5hm9c",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new function needs the clinic's database password. Which arrangement does this lesson argue for?",
+    "hint": "Combine the role and the named secret.",
+    "choices": [
+      {
+        "text": "An IAM user's key in an environment variable, rotated every ninety days",
+        "correct": false,
+        "why": "A key nobody needed, kept where configuration readers see it."
+      },
+      {
+        "text": "The password in the code, encrypted with base64",
+        "correct": false,
+        "why": "Base64 is an encoding anybody reverses; the `cryptography` course's lesson 11 says so."
+      },
+      {
+        "text": "A role allowed to read every secret, to save writing policies",
+        "correct": false,
+        "why": "That was the lab's `*`, and its cost was on the screen."
+      },
+      {
+        "text": "The function's role reads one named secret at start",
+        "correct": true,
+        "why": "Right: no key, no value in configuration, one secret readable."
+      }
+    ]
+  },
+  {
+    "id": "ex-fj666gjz",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An IAM user may hold at most ___ access keys at once.",
+    "hint": "The third request was refused.",
+    "blanks": [
+      {
+        "accept": [
+          "2",
+          "two"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

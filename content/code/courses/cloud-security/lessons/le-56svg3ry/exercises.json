@@ -1,0 +1,687 @@
+[
+  {
+    "id": "ex-20p4hxdf",
+    "version": 1,
+    "section": "the-gap",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the gap between granted and used permissions grow on its own?",
+    "hint": "Think about which change ever produces a ticket.",
+    "choices": [
+      {
+        "text": "AWS adds new actions to existing policies every year",
+        "correct": false,
+        "why": "A wildcard does pick up new actions, but that is not the habit the lesson describes. People add grants and never remove them."
+      },
+      {
+        "text": "A permission that causes no error never gets a ticket to remove it",
+        "correct": true,
+        "why": "Right. Every grant solved a real problem; nothing ever complains about one that is too wide."
+      },
+      {
+        "text": "Unused permissions are added automatically after ninety days",
+        "correct": false,
+        "why": "Nothing is added automatically; every grant was somebody's decision."
+      },
+      {
+        "text": "Policies stop being enforced once they are old",
+        "correct": false,
+        "why": "Age changes nothing about enforcement; an old policy is enforced exactly as a new one."
+      }
+    ]
+  },
+  {
+    "id": "ex-haqa9anw",
+    "version": 1,
+    "section": "the-gap",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each AWS record to the question it answers.",
+    "hint": "Three kinds of record, three questions.",
+    "pairs": [
+      {
+        "left": "when an access key was last used",
+        "right": "is this key dead?"
+      },
+      {
+        "left": "Access Advisor, service last accessed",
+        "right": "which grants were never exercised?"
+      },
+      {
+        "left": "IAM Access Analyzer policy generation",
+        "right": "what would a policy built from real calls look like?"
+      }
+    ],
+    "right_distractors": [
+      "who created this user?"
+    ]
+  },
+  {
+    "id": "ex-2v65meqm",
+    "version": 1,
+    "section": "the-gap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A review has time for one identity today. Which should it look at first?",
+    "hint": "One kind of extra permission has no ceiling.",
+    "choices": [
+      {
+        "text": "The user with the longest policy document",
+        "correct": false,
+        "why": "Length says little; a two-line policy can be the dangerous one, as dani's was."
+      },
+      {
+        "text": "A user who can read three more buckets than its job needs",
+        "correct": false,
+        "why": "That is a real gap, and a bounded one. The other kind is not bounded."
+      },
+      {
+        "text": "Any identity that can write to IAM",
+        "correct": true,
+        "why": "Right. Whoever can change permissions can grant themselves the rest."
+      },
+      {
+        "text": "The identity created most recently, since it has had the least review",
+        "correct": false,
+        "why": "Recency is no measure of risk; dani's user was months old."
+      }
+    ]
+  },
+  {
+    "id": "ex-qfzgz67x",
+    "version": 1,
+    "section": "the-gap",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Of the three records the lesson describes, which one does moto keep?",
+    "hint": "The transcripts used it.",
+    "choices": [
+      {
+        "text": "The service last accessed report",
+        "correct": false,
+        "why": "moto answered that call with an internal server error."
+      },
+      {
+        "text": "When each access key was last used",
+        "correct": true,
+        "why": "Right: get-access-key-last-used named the date, the service and the region."
+      },
+      {
+        "text": "Access Analyzer's unused-access findings, computed from CloudTrail",
+        "correct": false,
+        "why": "They do not exist in moto, and moto records no CloudTrail events either."
+      }
+    ]
+  },
+  {
+    "id": "ex-y9qwrywj",
+    "version": 1,
+    "section": "people-sign-in-once",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "dani was disabled at the clinic's identity provider in March, and her key still worked in October. Why did disabling her not reach it?",
+    "hint": "What connects an IAM user to the identity provider?",
+    "choices": [
+      {
+        "text": "Nothing connects an IAM user to the identity provider",
+        "correct": true,
+        "why": "Right. The IAM user lives in the account and was outside the process that removes people."
+      },
+      {
+        "text": "The identity provider takes a full year to reach every account",
+        "correct": false,
+        "why": "Federation takes effect at the next sign-in; there is no delay of that kind."
+      },
+      {
+        "text": "Her role session had been issued with the twelve-hour maximum",
+        "correct": false,
+        "why": "Twelve hours would have ended in March. She had a key, not a session."
+      },
+      {
+        "text": "Access keys cannot be disabled once a password exists",
+        "correct": false,
+        "why": "Any key can be deactivated or deleted; nobody did."
+      }
+    ]
+  },
+  {
+    "id": "ex-7nfpxv5z",
+    "version": 1,
+    "section": "people-sign-in-once",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A person is removed from the identity provider at 10:00. At 10:20 a request signed with their role session still succeeds. What explains it, and what limits the damage?",
+    "hint": "Disabling stops one thing and not another.",
+    "choices": [
+      {
+        "text": "The removal failed silently, and it has to be repeated in the AWS console of every account",
+        "correct": false,
+        "why": "The removal worked: no new sign-in is possible. The session predates it."
+      },
+      {
+        "text": "A session already issued lasts until it expires; short sessions, or revoking older sessions, limit it",
+        "correct": true,
+        "why": "Right. AWS documents a deny on sessions issued before a given time for exactly this."
+      },
+      {
+        "text": "Role sessions never expire, so the role itself has to be deleted before the person loses access",
+        "correct": false,
+        "why": "They expire, after fifteen minutes to twelve hours."
+      },
+      {
+        "text": "MFA was not enforced at the provider",
+        "correct": false,
+        "why": "MFA guards the sign-in, and the session already existed before the removal."
+      }
+    ]
+  },
+  {
+    "id": "ex-0xwe74pc",
+    "version": 1,
+    "section": "people-sign-in-once",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each IAM Identity Center piece to what it is.",
+    "hint": "The table in the section, in sign-in order.",
+    "pairs": [
+      {
+        "left": "identity source",
+        "right": "where people and groups live"
+      },
+      {
+        "left": "permission set",
+        "right": "a named collection of policies, defined once"
+      },
+      {
+        "left": "assignment",
+        "right": "a group given a permission set in one account"
+      },
+      {
+        "left": "role",
+        "right": "what the person's session is a session of"
+      }
+    ],
+    "right_distractors": [
+      "a long-lived key for each person"
+    ]
+  },
+  {
+    "id": "ex-vegg9ynm",
+    "version": 1,
+    "section": "people-sign-in-once",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which identity should a review expect to find outside the identity provider, on purpose?",
+    "hint": "For the day the provider is down.",
+    "choices": [
+      {
+        "text": "A user per developer, kept as a backup in case federation ever breaks",
+        "correct": false,
+        "why": "That is the arrangement federation replaces, and twenty backups are twenty ways in."
+      },
+      {
+        "text": "The CI pipeline's user, since a pipeline has no way to use federation at all",
+        "correct": false,
+        "why": "Pipelines can assume roles through federation; lesson 4 shows it."
+      },
+      {
+        "text": "One break-glass identity, with hardware MFA, alarmed on every use",
+        "correct": true,
+        "why": "Right, and only one."
+      },
+      {
+        "text": "Nobody: every identity has to go through the provider",
+        "correct": false,
+        "why": "Then an outage at the provider would lock everybody out, including the people fixing it."
+      }
+    ]
+  },
+  {
+    "id": "ex-fsz1gfhc",
+    "version": 1,
+    "section": "the-escalation-path",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lab, what did `INITIAL_NO_AUTH_ACTION_COUNT=3` change?",
+    "hint": "Before it, moto accepted any key.",
+    "choices": [
+      {
+        "text": "It limited every user to three requests",
+        "correct": false,
+        "why": "There is no limit per user; three is how many requests pass before judging starts."
+      },
+      {
+        "text": "It let three requests through unchecked, then judged every request",
+        "correct": true,
+        "why": "Right. The three are spent creating the administrator."
+      },
+      {
+        "text": "It created three users automatically, one of them an administrator",
+        "correct": false,
+        "why": "You created admin yourself, with the three free requests."
+      },
+      {
+        "text": "It made moto enforce conditions, boundaries and service control policies as well",
+        "correct": false,
+        "why": "None of those are enforced even with checking on; identity policies are."
+      }
+    ]
+  },
+  {
+    "id": "ex-mvymx34r",
+    "version": 1,
+    "section": "the-escalation-path",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "dani's policy allows only `iam:AttachUserPolicy` and `iam:ListAttachedUserPolicies` on `*`. Why was that enough to become an administrator?",
+    "hint": "Which policy, attached to which user?",
+    "choices": [
+      {
+        "text": "Any policy could be attached to any user, hers included",
+        "correct": true,
+        "why": "Right. Narrow-looking, and the right action with no limit on the policy or the user."
+      },
+      {
+        "text": "ListAttachedUserPolicies reveals the administrator's key",
+        "correct": false,
+        "why": "It lists policy names; it reveals no key."
+      },
+      {
+        "text": "moto grants administrator rights to any user whose policy names IAM",
+        "correct": false,
+        "why": "moto judged the policy as written; AWS would have done the same with it."
+      },
+      {
+        "text": "A bug in AWS allowed it",
+        "correct": false,
+        "why": "Nothing is wrong with AWS here; the permission did exactly what it says."
+      }
+    ]
+  },
+  {
+    "id": "ex-ddm2b2vb",
+    "version": 1,
+    "section": "the-escalation-path",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The attach request printed nothing. What does the lesson make of that?",
+    "hint": "A silent prompt.",
+    "choices": [
+      {
+        "text": "Nothing, since a command with no output did nothing",
+        "correct": false,
+        "why": "The next list-users succeeded where it had failed; something changed."
+      },
+      {
+        "text": "That the request succeeded, and that silence is the finding",
+        "correct": true,
+        "why": "Right. AWS gives no warning for a permission used as granted."
+      },
+      {
+        "text": "That moto failed to log the request, so it cannot be proved",
+        "correct": false,
+        "why": "The proof is the next request: list-users, refused before, answered after."
+      },
+      {
+        "text": "That the request is still pending an approval from admin",
+        "correct": false,
+        "why": "IAM has no approval step; a request is allowed or refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-xpfpq9e0",
+    "version": 1,
+    "section": "the-escalation-path",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which changes, each on its own, would have closed dani's path? Choose all that apply.",
+    "hint": "Remove any one link.",
+    "choices": [
+      {
+        "text": "Deleting her IAM user when she left",
+        "correct": true,
+        "why": "Right: no user, no path."
+      },
+      {
+        "text": "Deleting her access key",
+        "correct": true,
+        "why": "Right: the request needed a working key."
+      },
+      {
+        "text": "Limiting the policy to the one policy she was meant to attach",
+        "correct": true,
+        "why": "Right, with a condition on `iam:PolicyARN`, which AWS enforces and moto does not."
+      },
+      {
+        "text": "Giving bia ReadOnlyAccess instead of a wider policy",
+        "correct": false,
+        "why": "bia was never on the path."
+      },
+      {
+        "text": "Turning on MFA for admin",
+        "correct": false,
+        "why": "Good practice, and irrelevant to a request signed with dani's key."
+      }
+    ]
+  },
+  {
+    "id": "ex-fkwbph8f",
+    "version": 1,
+    "section": "finding-them",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where did the script take its list of risky IAM actions from?",
+    "hint": "Guessing is how a list misses one.",
+    "choices": [
+      {
+        "text": "From a list of the ten most common mistakes on a security blog",
+        "correct": false,
+        "why": "The lesson took it from AWS itself."
+      },
+      {
+        "text": "From the quarantine policy AWS attaches to an exposed key",
+        "correct": true,
+        "why": "Right: AWSCompromisedKeyQuarantineV3, whose first statement denied 98 actions."
+      },
+      {
+        "text": "From the error messages moto printed during the lesson",
+        "correct": false,
+        "why": "Error messages name one action at a time, and only the ones refused."
+      },
+      {
+        "text": "From the credential report",
+        "correct": false,
+        "why": "The report covers passwords, MFA and keys, not permissions."
+      }
+    ]
+  },
+  {
+    "id": "ex-en91hchc",
+    "version": 1,
+    "section": "finding-them",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many actions did the first statement of `AWSCompromisedKeyQuarantineV3` deny in moto's copy?",
+    "hint": "grep -c counted them.",
+    "value": 98,
+    "tolerance": 0,
+    "unit": "actions"
+  },
+  {
+    "id": "ex-bwsb2v47",
+    "version": 1,
+    "section": "finding-them",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A user holds a policy allowing `iam:Put*` on `*`. The lesson's script prints nothing for it. Why, and is the user safe?",
+    "hint": "Read the script's limits.",
+    "choices": [
+      {
+        "text": "It is safe: Put actions only add data, they never grant anything",
+        "correct": false,
+        "why": "`iam:PutUserPolicy` writes an inline policy, which can grant anything."
+      },
+      {
+        "text": "The script reads only managed policies, and this grant sits in an inline policy instead",
+        "correct": false,
+        "why": "It reads inline policies too; dani's inline one was printed."
+      },
+      {
+        "text": "Exact-string matching misses the wildcard; the user still writes policies",
+        "correct": true,
+        "why": "Right. A clean run of a script with known blind spots is not a clean account."
+      },
+      {
+        "text": "moto does not support wildcards in actions",
+        "correct": false,
+        "why": "The question is about the script's match, not moto; the script is plain jq."
+      }
+    ]
+  },
+  {
+    "id": "ex-q84rfq27",
+    "version": 1,
+    "section": "finding-them",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "caio's `PowerUserAccess` is written with `NotAction` excluding `iam:*`. Why did the script stay silent about it, and why is that silence not a guarantee in general?",
+    "hint": "What does a NotAction allow?",
+    "choices": [
+      {
+        "text": "Right by luck: it never reads that field, so a different list would pass unseen",
+        "correct": true,
+        "why": "Right. The script never reads NotAction at all; it happened to be right about this one."
+      },
+      {
+        "text": "Because PowerUserAccess is maintained by AWS, and the script skips every policy that AWS maintains itself",
+        "correct": false,
+        "why": "It reads attached managed policies; AdministratorAccess was printed."
+      },
+      {
+        "text": "Because caio has no access key",
+        "correct": false,
+        "why": "The script reads policies, not keys."
+      },
+      {
+        "text": "Because NotAction policies are refused by AWS",
+        "correct": false,
+        "why": "AWS accepts them; its own PowerUserAccess is one."
+      }
+    ]
+  },
+  {
+    "id": "ex-jks2c34y",
+    "version": 1,
+    "section": "closing-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab, dani's key was set to `Inactive` and the next request it signed still succeeded. What should you conclude?",
+    "hint": "Here the lab is wrong.",
+    "choices": [
+      {
+        "text": "Deactivating a key is useless, on AWS exactly as in moto, so the step can be skipped",
+        "correct": false,
+        "why": "AWS refuses requests signed with an inactive key; moto does not."
+      },
+      {
+        "text": "moto does not honour inactive keys; AWS does, by its documentation",
+        "correct": true,
+        "why": "Right, and deleting the key is the step that holds in both."
+      },
+      {
+        "text": "The change takes several minutes to reach every endpoint, so the key still worked",
+        "correct": false,
+        "why": "list-access-keys already showed it Inactive; moto simply ignores the status."
+      },
+      {
+        "text": "The status was not saved, so the command must be repeated",
+        "correct": false,
+        "why": "It was saved: list-access-keys printed Inactive."
+      }
+    ]
+  },
+  {
+    "id": "ex-tmcq3caj",
+    "version": 1,
+    "section": "closing-it",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of closing dani's path in the order the lesson uses.",
+    "hint": "Close the way in before tidying.",
+    "items": [
+      "delete her access key",
+      "prove the key is refused",
+      "detach and delete her policies",
+      "delete her user",
+      "run the audit script again"
+    ],
+    "trap": "Starting with the policies is the slip: a key that still works can put them back."
+  },
+  {
+    "id": "ex-1g7gdkfd",
+    "version": 1,
+    "section": "closing-it",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`aws iam delete-user --user-name dani` answered `DeleteConflict`. What did it want first?",
+    "hint": "Read the error.",
+    "choices": [
+      {
+        "text": "Her policies deleted",
+        "correct": true,
+        "why": "Right: the inline manage-users was still on the user."
+      },
+      {
+        "text": "Approval from a second administrator",
+        "correct": false,
+        "why": "IAM has no approval step."
+      },
+      {
+        "text": "Her MFA device to be registered so that the deletion could be confirmed",
+        "correct": false,
+        "why": "No MFA is involved in deleting a user."
+      },
+      {
+        "text": "A wait of seven days after deactivating her key",
+        "correct": false,
+        "why": "There is no waiting period for a user; the error named the policies."
+      }
+    ]
+  },
+  {
+    "id": "ex-zmm9qgr8",
+    "version": 1,
+    "section": "closing-it",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each guardrail to what it does.",
+    "hint": "None of the three is enforced by moto.",
+    "pairs": [
+      {
+        "left": "a condition on `iam:PolicyARN`",
+        "right": "limits which policies may be attached"
+      },
+      {
+        "left": "a permission boundary",
+        "right": "a ceiling on one user or role"
+      },
+      {
+        "left": "a service control policy",
+        "right": "a deny across the whole organisation"
+      }
+    ],
+    "right_distractors": [
+      "an alarm on every sign-in"
+    ]
+  },
+  {
+    "id": "ex-y8h9m50y",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did moto 5.2.3 get right in this lesson, as AWS would? Choose all that apply.",
+    "hint": "Two of them it got wrong or did not do.",
+    "choices": [
+      {
+        "text": "Refusing dani's list-users before she had the administrator policy",
+        "correct": true,
+        "why": "Right: an implicit deny, judged from her identity policy."
+      },
+      {
+        "text": "Allowing her attach-user-policy, as her policy said",
+        "correct": true,
+        "why": "Right: AWS would have allowed it too."
+      },
+      {
+        "text": "Refusing a request signed with an inactive key",
+        "correct": false,
+        "why": "moto accepted it; AWS refuses."
+      },
+      {
+        "text": "Refusing a request signed with a deleted key",
+        "correct": true,
+        "why": "Right: InvalidClientTokenId."
+      },
+      {
+        "text": "Producing an Access Advisor report",
+        "correct": false,
+        "why": "It answered with an internal server error."
+      }
+    ]
+  },
+  {
+    "id": "ex-z093yrkw",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A role session lasts at most ___ hours.",
+    "hint": "The role's maximum session duration has a ceiling.",
+    "blanks": [
+      {
+        "accept": [
+          "12",
+          "twelve"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s9mt0cw8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new contractor must hand one specific managed policy to new analysts, and nothing else. Which grant fits on AWS?",
+    "hint": "dani's policy, with the missing limit added.",
+    "choices": [
+      {
+        "text": "`iam:*` limited to the analysts' group, so the grant reaches nobody outside it",
+        "correct": false,
+        "why": "`iam:*` includes writing policies; scoping it to a group does not stop the escalation."
+      },
+      {
+        "text": "`iam:AttachUserPolicy` on `*`, exactly as dani had it, plus a reminder to review it",
+        "correct": false,
+        "why": "That is the path this lesson closed."
+      },
+      {
+        "text": "`iam:AttachUserPolicy` with a condition on `iam:PolicyARN` naming that ARN",
+        "correct": true,
+        "why": "Right. AWS enforces it; moto would not, so this one is proved from the documentation."
+      },
+      {
+        "text": "AdministratorAccess, with a note in the ticket to remove it later",
+        "correct": false,
+        "why": "Later is the gap this lesson measured."
+      }
+    ]
+  }
+]
