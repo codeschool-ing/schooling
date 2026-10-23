@@ -34,9 +34,6 @@ The defences are procedural:
 - **make it slow on purpose**: a short delay before a reset takes effect gives the real owner time to
   object.
 
-`attacks-threats` lessons 1 and 5 take apart how a caller builds a pretext; this lesson needs only
-the defender's side.
-
 ### Weak recovery undoes strong login
 
 Security questions, recovery by SMS to a number that can be swapped, and "click here to reset" emails

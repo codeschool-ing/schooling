@@ -12,7 +12,7 @@ Atacantes reaproveitam um conjunto bem estável de técnicas, e o **MITRE ATT&CK
 delas, organizado pelo que o atacante quer conseguir em cada etapa: entrar, ficar, se mover, tirar
 dados. Um time azul pode marcar cada técnica como detectada, parcialmente detectada ou não detectada, e
 os exercícios roxos são como essas marcas se provam, em vez de serem supostas. O resultado é um mapa de
-onde a defesa é cega. A aula 26 de `attacks-threats` explica o catálogo em si.
+onde a defesa é cega.
 
 ### Tempo: quanto até percebermos, e até parar?
 
@@ -42,5 +42,5 @@ Uma defesa muda toda vez que os sistemas mudam, então um teste do ano passado d
 passado. Um ritmo sensato para uma organização do tamanho da loja: uma checagem roxa sempre que um
 controle é acrescentado ou mudado, como no exercício desta aula; um exercício de mesa por ano; e, quando
 o básico estiver no lugar, um teste de invasão externo do que fica de frente para a internet. A aula 18
-descreve as carreiras dos dois lados desses exercícios, e `soc-response` e `pentest` são os cursos que
-ensinam cada lado direito.
+descreve as carreiras dos dois lados desses exercícios, e `soc-response` é o curso que ensina direito o
+lado de quem defende.

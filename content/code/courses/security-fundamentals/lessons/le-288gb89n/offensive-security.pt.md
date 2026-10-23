@@ -32,6 +32,6 @@ autorização por escrito, o escopo combinado e o relatório honesto são o que 
 Testar fora do escopo, mesmo para ajudar, acaba com carreiras e pode ser crime.
 
 O primeiro emprego costuma ser de testador júnior trabalhando com um sênior, muitas vezes depois de um
-tempo em SOC, em desenvolvimento ou em administração de sistemas. O `pentest` ensina a profissão, e ele
-começa pelas regras, pela autorização e pelos limites legais no Brasil antes de qualquer técnica, nessa
-ordem de propósito.
+tempo em SOC, em desenvolvimento ou em administração de sistemas. Este catálogo ensina o lado de quem
+defende e não esta profissão, então quem a escolhe aprende as técnicas em outro lugar, e um bom curso
+começa pelas regras, pela autorização e pelos limites legais antes de qualquer técnica.

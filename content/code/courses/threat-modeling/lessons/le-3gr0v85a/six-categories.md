@@ -43,8 +43,7 @@ system; file each threat under the letter that made you think of it and move on.
 ### What STRIDE is not
 
 **It is not a list of attacks.** "SQL injection" is not a STRIDE category; it is a way to cause
-tampering, disclosure or elevation, depending on what the query does. The `attacks-threats`
-course catalogues techniques. STRIDE asks which property each part of your system could lose,
+tampering, disclosure or elevation, depending on what the query does. STRIDE asks which property each part of your system could lose,
 which is a question about your design rather than about attackers' tools.
 
 **It does not rank anything.** A STRIDE list says what can go wrong. How likely each item is and

@@ -41,8 +41,7 @@ desta aula precisa. É também a evidência da aula 13, aplicada a você.
 Há certificações para toda família, do nível de entrada ao sênior. Algumas exigem anos de experiência
 profissional antes de serem concedidas; outras são provas práticas em que você precisa de fato invadir uma
 máquina; outras são cursos de implementação ou auditoria de uma norma como a ISO 27001. Trate-as como um
-jeito de estruturar o estudo e de passar por um filtro de currículo, não como a habilidade em si. A aula 21
-de `pentest` faz um panorama das ofensivas.
+jeito de estruturar o estudo e de passar por um filtro de currículo, não como a habilidade em si.
 
 ### O fio comum
 
