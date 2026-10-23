@@ -1,0 +1,395 @@
+{
+  "ex-8bsg7dbr": {
+    "prompt": "O que torna um objeto um store?",
+    "hint": "Um método é o contrato inteiro.",
+    "choices": [
+      {
+        "text": "Ser criado por `writable` ou `readable` de `svelte/store`",
+        "why": "Elas montam stores, mas o relógio escrito à mão é um store sem elas."
+      },
+      {
+        "text": "Um método chamado `subscribe` que segue o contrato",
+        "why": "Isso. Chame com uma função, seja chamado de volta, receba um jeito de parar."
+      },
+      {
+        "text": "Um `$` no começo do nome da variável",
+        "why": "O `$` é como um componente lê um store, não o que o faz ser um."
+      },
+      {
+        "text": "Morar num arquivo cujo nome termina em `.svelte.js`, para o compilador lê-lo",
+        "why": "Isso é o que as runes precisam; o `timer.js` é um módulo comum e o seu store funciona."
+      }
+    ]
+  },
+  "ex-wgkvfshr": {
+    "prompt": "Ponha em ordem a vida de uma inscrição no `now` escrito à mão.",
+    "hint": "O intervalo é limpo por último.",
+    "items": [
+      "O componente chama `subscribe` com uma função",
+      "O store chama essa função com `Date.now()` na hora",
+      "A cada 250 ms o intervalo a chama de novo",
+      "O componente vai embora e chama o que o `subscribe` devolveu",
+      "`clearInterval` para o relógio"
+    ],
+    "trap": "O primeiro valor chega antes de qualquer intervalo disparar, porque o contrato diz chamar na hora."
+  },
+  "ex-bp0a7qrr": {
+    "prompt": "O que o compilador escreve por você quando um componente lê `$now`?",
+    "hint": "Três coisas que você faria à mão.",
+    "choices": [
+      {
+        "text": "Uma cópia do store só para este componente",
+        "why": "Há um store só; o componente se inscreve nele."
+      },
+      {
+        "text": "Uma conversão do store num campo `$state`, mantido em dia por um efeito",
+        "why": "Isso lembra o `fromStore`, que você chama; o `$` se inscreve diretamente."
+      },
+      {
+        "text": "O subscribe, a variável com o valor e o cancelamento quando ele vai embora",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-rxjc9mvt": {
+    "prompt": "Onde o `$now` NÃO funciona?",
+    "hint": "Que arquivos o compilador reescreve?",
+    "choices": [
+      {
+        "text": "Num módulo `.js` comum, que o compilador não reescreve",
+        "why": "Isso. Use `get(store)` ou `subscribe` lá."
+      },
+      {
+        "text": "Na marcação do componente que o importa",
+        "why": "É exatamente onde a página do timer o usou."
+      },
+      {
+        "text": "No script de um componente, no nível de cima",
+        "why": "Funciona lá também, para um store importado ou declarado no nível de cima."
+      },
+      {
+        "text": "Num componente que também usa runes como `$state`",
+        "why": "Runes e `$store` convivem nos componentes do Svelte 5."
+      }
+    ]
+  },
+  "ex-y0nbc2dk": {
+    "prompt": "O `look … --wait 2400` imprimiu quantos segundos na página do timer?",
+    "hint": "Segundos inteiros depois de uma espera de 2,4."
+  },
+  "ex-ebteh4cn": {
+    "prompt": "Ligue cada função ao store que ela cria.",
+    "hint": "Só um pode ser definido de fora.",
+    "pairs": [
+      {
+        "left": "`writable`",
+        "right": "Um store que você define de fora"
+      },
+      {
+        "left": "`readable`",
+        "right": "Um store alimentado por uma fonte que ele inicia"
+      },
+      {
+        "left": "`derived`",
+        "right": "Um store calculado a partir de outros stores"
+      }
+    ],
+    "right_distractors": [
+      "Um store que se grava em disco"
+    ]
+  },
+  "ex-fkta8pka": {
+    "prompt": "O que havia de errado no relógio escrito à mão que o `readable` conserta?",
+    "hint": "Pense em dois componentes olhando para ele.",
+    "choices": [
+      {
+        "text": "Nunca chamava o assinante antes do primeiro tique",
+        "why": "Ele chamava `run(Date.now())` na hora, como o contrato pede."
+      },
+      {
+        "text": "Cada assinante iniciava um intervalo só dele",
+        "why": "Isso. O `readable` mantém uma fonte para todos."
+      },
+      {
+        "text": "Não podia ser lido com `$` num componente",
+        "why": "A página do timer o leu com `$now`."
+      },
+      {
+        "text": "Continuava rodando depois que o último assinante saía da página",
+        "why": "Ele limpava o intervalo ao cancelar; o defeito era ter um por assinante."
+      }
+    ]
+  },
+  "ex-xsjc5yvw": {
+    "prompt": "Quando roda a função `start` passada ao `readable`?",
+    "hint": "Olhe a figura.",
+    "choices": [
+      {
+        "text": "Quando o módulo é importado",
+        "why": "Importar cria o store; nada começa até alguém se inscrever."
+      },
+      {
+        "text": "Uma vez por assinante",
+        "why": "Esse era o defeito do relógio escrito à mão."
+      },
+      {
+        "text": "Quando chega o primeiro assinante",
+        "why": "Isso, e o que ela devolve roda quando o último sai."
+      },
+      {
+        "text": "A cada 250 milissegundos, quando o intervalo dispara",
+        "why": "O intervalo chama `set`; o `start` rodou uma vez para criá-lo."
+      }
+    ]
+  },
+  "ex-kf25dqj6": {
+    "prompt": "Dentro de um componente, `$count += 1` é atalho para…",
+    "hint": "O valor novo depende do antigo.",
+    "choices": [
+      {
+        "text": "`count.update((n) => n + 1)`, a partir do valor antigo",
+        "why": "Isso."
+      },
+      {
+        "text": "`count.subscribe((n) => n + 1)`",
+        "why": "O `subscribe` escuta; ele nunca muda o valor."
+      },
+      {
+        "text": "`count = writable(count + 1)`, um store novo a cada vez",
+        "why": "Isso trocaria o store e perderia todos os assinantes."
+      }
+    ]
+  },
+  "ex-tty4x39f": {
+    "prompt": "Você inicia o timer, segue um link para outro lugar da app e volta por um link. O que o `$startedAt` guarda?",
+    "hint": "Onde mora o `startedAt`?",
+    "choices": [
+      {
+        "text": "`null`, porque o componente da página foi destruído e criado de novo",
+        "why": "O componente se foi; o store mora no módulo, que ficou."
+      },
+      {
+        "text": "A hora em que foi iniciado, já que o módulo o guardou",
+        "why": "Isso. Só recarregar a página inteira o recomeça."
+      },
+      {
+        "text": "A hora em que você voltou, porque o store recomeça com o primeiro assinante novo",
+        "why": "Isso é a fonte do `readable` recomeçando; um `writable` mantém o valor."
+      }
+    ]
+  },
+  "ex-234b42r6": {
+    "prompt": "Por que o arquivo se chama `planner.svelte.js` e não `planner.js`?",
+    "hint": "Quem lê runes?",
+    "choices": [
+      {
+        "text": "O Vite só serve arquivos cujo nome contém `.svelte`",
+        "why": "O Vite serve o `week.js` sem problema."
+      },
+      {
+        "text": "O compilador só reescreve runes em arquivos `.svelte` e `.svelte.js`",
+        "why": "Isso."
+      },
+      {
+        "text": "É um hábito de nome, sem efeito em como o arquivo roda",
+        "why": "Num `.js` comum o `$state` não seria reescrito como signal."
+      }
+    ]
+  },
+  "ex-kp8612tm": {
+    "prompt": "O que levar `add` e `move` para a classe dá ao planner?",
+    "hint": "Pergunte: o que pode mudar o planner?",
+    "choices": [
+      {
+        "text": "Atualizações mais rápidas, porque métodos pulam o proxy",
+        "why": "Eles passam pelos mesmos campos `$state` e pelo mesmo proxy."
+      },
+      {
+        "text": "Persistência: uma classe mantém o estado depois de recarregar",
+        "why": "Recarregar começa do arquivo de dados, com classe ou sem."
+      },
+      {
+        "text": "Um arquivo onde toda mudança no estado está escrita",
+        "why": "Isso, e uma classe que um teste pode criar sem página."
+      },
+      {
+        "text": "A capacidade de os componentes importarem o mesmo planner sem props",
+        "why": "O componente cria o seu; uma instância compartilhada é a armadilha da próxima seção."
+      }
+    ]
+  },
+  "ex-w46mtww9": {
+    "prompt": "`const { total } = planner;` e depois uma sessão é acrescentada. O que `total` guarda?",
+    "hint": "A aula 2 avisou disso.",
+    "choices": [
+      {
+        "text": "O número antigo",
+        "why": "Isso. A desestruturação copiou uma vez; leia `planner.total`."
+      },
+      {
+        "text": "O número novo, porque `total` é um campo `$derived`",
+        "why": "O campo é reativo; a cópia local não."
+      },
+      {
+        "text": "`undefined`, porque signals privados não podem ser desestruturados",
+        "why": "O getter devolve o valor naquele momento."
+      }
+    ]
+  },
+  "ex-tbw1vhcj": {
+    "prompt": "O `Planner.svelte` escreve `new Planner(untrack(() => data))`. O que mudaria se `data` recebesse um valor novo depois?",
+    "hint": "Quando o planner é criado?",
+    "choices": [
+      {
+        "text": "Um `Planner` novo seria criado com os dados novos",
+        "why": "Nada roda o script de novo, e o `untrack` diz que a leitura é intencional."
+      },
+      {
+        "text": "Nada: o planner foi criado uma vez, a partir dos dados como chegaram",
+        "why": "Isso, o que aqui é intencional."
+      },
+      {
+        "text": "Os campos atualizariam, porque a classe lê `data` de forma reativa",
+        "why": "O construtor copiou valores de `data` para os seus campos."
+      },
+      {
+        "text": "Um erro, já que uma prop lida por `untrack` não pode mudar",
+        "why": "Props podem mudar; o `untrack` só impede que esta leitura seja rastreada."
+      }
+    ]
+  },
+  "ex-8mwks17h": {
+    "prompt": "`bind:selected={planner.selected}` funciona porque o campo da classe é declarado com a rune `$___`.",
+    "hint": "Não é `$derived`.",
+    "blanks": [
+      {
+        "accept": [
+          "state"
+        ]
+      }
+    ]
+  },
+  "ex-p8ddpsfk": {
+    "prompt": "Ligue cada valor à ferramenta que a aula recomenda.",
+    "hint": "Quem é dono do valor?",
+    "pairs": [
+      {
+        "left": "As sessões do planner",
+        "right": "Runes numa classe"
+      },
+      {
+        "left": "Um relógio que só deve bater enquanto olhado",
+        "right": "`readable`"
+      },
+      {
+        "left": "Um observable do RxJS de uma biblioteca",
+        "right": "O contrato de store, lido com `$`"
+      }
+    ],
+    "right_distractors": [
+      "Uma variável global em `window`"
+    ]
+  },
+  "ex-h8p2yvh5": {
+    "prompt": "Você precisa do valor de um store dentro de um módulo `.svelte.js`. O que usa?",
+    "hint": "O `$` não existe lá.",
+    "choices": [
+      {
+        "text": "`$store`, já que o arquivo é compilado pelo Svelte",
+        "why": "O `$store` é um recurso só de componentes."
+      },
+      {
+        "text": "`fromStore(store)`, e depois ler o seu `.current`",
+        "why": "Isso, tão reativo quanto um campo `$state`."
+      },
+      {
+        "text": "`toStore(store)`, que o transforma em runes",
+        "why": "O `toStore` vai no sentido contrário: runes para um store."
+      },
+      {
+        "text": "Nada: stores não podem ser usados fora de componentes no Svelte 5",
+        "why": "Podem: `subscribe` e `get` sempre funcionam, e o `fromStore` existe para isso."
+      }
+    ]
+  },
+  "ex-1pdwjbcw": {
+    "prompt": "Por que `export const planner = new Planner(…)` num módulo é perigoso no servidor?",
+    "hint": "Quantos módulos o servidor tem por visitante?",
+    "choices": [
+      {
+        "text": "Classes não podem ser importadas na renderização no servidor",
+        "why": "Podem; o problema é compartilhar uma instância."
+      },
+      {
+        "text": "A instância é criada de novo a cada requisição, perdendo mudanças",
+        "why": "É o contrário: o módulo roda uma vez e a instância fica."
+      },
+      {
+        "text": "Uma instância é compartilhada pelas requisições de todos os visitantes",
+        "why": "Isso. A próxima aula mostra isso acontecendo."
+      }
+    ]
+  },
+  "ex-hddyfyxt": {
+    "prompt": "Para o estado de que a aplicação é dona, o que a aula, e a documentação do Svelte, recomendam?",
+    "hint": "O planner foi para ela.",
+    "choices": [
+      {
+        "text": "Um store `writable` por campo",
+        "why": "Esse era o jeito do Svelte 4."
+      },
+      {
+        "text": "Um objeto global em `window` que todo componente lê",
+        "why": "Estado global é a armadilha da instância única, piorada."
+      },
+      {
+        "text": "Uma classe ou objeto com runes",
+        "why": "Isso."
+      },
+      {
+        "text": "Um store `derived` calculado do arquivo de dados no build",
+        "why": "Stores derived calculam a partir de outros stores em tempo de execução; isso não é estado próprio."
+      }
+    ]
+  },
+  "ex-gnedxjfv": {
+    "prompt": "Quais destes são stores? Escolha todos os que se aplicam.",
+    "hint": "Procure `subscribe`.",
+    "choices": [
+      {
+        "text": "O `now` escrito à mão no `timer.js`",
+        "why": "Sim: tem `subscribe`."
+      },
+      {
+        "text": "`startedAt = writable(null)`",
+        "why": "Sim."
+      },
+      {
+        "text": "A classe `Planner`",
+        "why": "Não: runes, sem `subscribe`."
+      },
+      {
+        "text": "O `prefersReducedMotion` de `svelte/motion`, lido como `.current`",
+        "why": "Não: ele é lido por `.current`, do jeito das runes."
+      }
+    ]
+  },
+  "ex-t2qf6r63": {
+    "prompt": "Depois de `--click Start --wait 2400`, a página disse `2 s studied`. Que store calculou o 2?",
+    "hint": "Ele lê dois outros.",
+    "choices": [
+      {
+        "text": "`now`",
+        "why": "O `now` guarda um timestamp, não uma contagem de segundos."
+      },
+      {
+        "text": "`startedAt`",
+        "why": "O `startedAt` guarda quando o Start foi apertado."
+      },
+      {
+        "text": "`elapsed`, derivado de `now` e `startedAt`",
+        "why": "Isso."
+      }
+    ]
+  }
+}
