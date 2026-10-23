@@ -117,6 +117,7 @@ says what it prints and which options it takes, and lessons 2 to 22 use those op
 //   --do 'click SEL'      click the first element SEL matches
 //   --do 'fill SEL TEXT'  type TEXT into a field (SEL without spaces)
 //   --do 'check SEL'      tick a checkbox
+//   --do 'select SEL VAL' choose the option whose value is VAL (SEL without spaces)
 //   --do 'press KEY'      press a key on whatever has focus (Tab, Enter...)
 //   --do 'goto PATH'      go to another address on the same site
 //   --do 'wait MS'        let MS milliseconds pass
@@ -179,6 +180,7 @@ for (const action of opt.do) {
   if (verb === "click") await page.click(rest.join(" "));
   else if (verb === "fill") await page.fill(sel, rest.slice(1).join(" "));
   else if (verb === "check") await page.check(rest.join(" "));
+  else if (verb === "select") await page.selectOption(sel, rest.slice(1).join(" "));
   else if (verb === "press") await page.keyboard.press(sel);
   else if (verb === "goto") await page.goto(origin + sel, { waitUntil: "networkidle" });
   else if (verb === "wait") await page.waitForTimeout(Number(sel));
