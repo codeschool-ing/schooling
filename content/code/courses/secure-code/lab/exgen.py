@@ -115,8 +115,8 @@ def ranks(path_en, path_pt=None):
         out = []
         for texts in ([c["text"] for c in e["choices"]], [c["text"] for c in pt[e["id"]]["choices"]]):
             L = [len(x) for x in texts]
-            order = sorted(set(L), reverse=True)
-            out.append(f"r{order.index(L[k])} {L}")
+            r = "tie" if L.count(L[k]) > 1 else sum(1 for x in L if x > L[k])
+            out.append(f"r{r} {L}")
         print(e["id"], "key", k, "| en", out[0], "| pt", out[1])
 
 
