@@ -23,14 +23,23 @@ def pieces(text):
             else:
                 out[infile] += line
         elif f:
-            infile = "file:" + f.group(1)
+            base = "file:" + f.group(1)
+            n = 1
+            while f"{base}#{n}" in out:
+                n += 1
+            infile = f"{base}#{n}"
             out[infile] = ""
         elif m:
             name = m.group(1)
             out[name] = ""
         elif name:
             out[name] += line
-    return {k: v.rstrip("\n") for k, v in out.items()}
+    got = {k: v.rstrip("\n") for k, v in out.items()}
+    # `file:PATH` alone is the last version put; `file:PATH#N` is the Nth.
+    for k in list(got):
+        if "#" in k:
+            got[k.split("#")[0]] = got[k]
+    return got
 
 
 def main(lesson, capture):
@@ -47,7 +56,7 @@ def main(lesson, capture):
                 bad += 1
                 return m.group(0)
             return got[name]
-        new = re.sub(r"^@@typed:([a-zA-Z0-9_./:+-]+)@@$", rep, text, flags=re.M)
+        new = re.sub(r"^@@typed:([a-zA-Z0-9_./:+#-]+)@@$", rep, text, flags=re.M)
         if new != text:
             md.write_text(new)
     sys.exit(1 if bad else 0)
