@@ -86,7 +86,7 @@ docker_up() {
   docker info >/dev/null 2>&1 && return 0
   mkdir -p /etc/docker
   [ -f /etc/docker/daemon.json ] || echo '{"registry-mirrors":["https://mirror.gcr.io"]}' >/etc/docker/daemon.json
-  setsid dockerd >/var/log/dockerd.log 2>&1 </dev/null &
+  setsid dockerd >/var/log/dockerd.log 2>&1 </dev/null 9>&- &
   for _ in $(seq 60); do docker info >/dev/null 2>&1 && return 0; sleep 1; done
   echo "dockerd did not start; see /var/log/dockerd.log" >&2; return 1
 }
@@ -100,7 +100,7 @@ import socket, sys
 s = socket.socket(); s.settimeout(1)
 sys.exit(0 if s.connect_ex((sys.argv[1], 3128)) == 0 else 1)
 PY
-  setsid python3 "$LAB/lab/relay.py" "$gw" 3128 127.0.0.1 "$port" >/var/log/lab-relay.log 2>&1 </dev/null &
+  setsid python3 "$LAB/lab/relay.py" "$gw" 3128 127.0.0.1 "$port" >/var/log/lab-relay.log 2>&1 </dev/null 9>&- &
   sleep 1
 }
 
@@ -239,7 +239,7 @@ check() { python3 "$LAB/lab/shown.py" --check "$LAB"; }
 # twice into the same directory. Everything that touches it takes this lock,
 # and whatever it starts inherits it (capture.sh takes it the same way).
 if [ -z "${SP_LOCKED:-}" ]; then
-  exec 9>/var/lock/secure-pipeline-lab.lock
+  exec 9>/var/lock/secure-pipeline-lab-v2.lock
   flock 9
   export SP_LOCKED=1
 fi

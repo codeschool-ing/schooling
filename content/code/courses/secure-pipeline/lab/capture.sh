@@ -23,7 +23,7 @@ set -uo pipefail
 # The lab is one machine and one user: a second capture running at the same
 # time would rebuild ~/linkbox under this one. Wait for the lab to be free.
 if [ -z "${SP_LOCKED:-}" ]; then
-  exec 9>/var/lock/secure-pipeline-lab.lock
+  exec 9>/var/lock/secure-pipeline-lab-v2.lock
   flock 9
   export SP_LOCKED=1
 fi

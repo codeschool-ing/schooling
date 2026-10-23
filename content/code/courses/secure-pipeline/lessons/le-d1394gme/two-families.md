@@ -59,8 +59,7 @@ linkbox-scan
 **From outside, the service says it is gunicorn and does not say which version.** The headers
 lesson 4 added are there, and so is a server name, but no number. A scanner that matches versions
 against advisories has nothing to match here. It can report "gunicorn, version unknown", or guess
-from other behaviour, which is where false positives come from. Gunicorn 21.2.0, which has two
-published advisories you will meet in the last section, would answer exactly the same.
+from other behaviour, which is where false positives come from. Had the image carried gunicorn 21.2.0, which has two published advisories you will meet in the last section, this answer would give a scanner nothing more to go on.
 
 Now the same image from inside, the way an artefact scanner reads it:
 
