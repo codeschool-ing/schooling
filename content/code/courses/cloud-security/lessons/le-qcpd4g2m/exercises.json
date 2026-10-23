@@ -1,0 +1,716 @@
+[
+  {
+    "id": "ex-wdvcdj7f",
+    "version": 1,
+    "section": "what-a-trail-records",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A bucket was public for an afternoon. Which kind of CloudTrail event says who downloaded the files during that time?",
+    "hint": "Reading an object is an operation on the data.",
+    "choices": [
+      {
+        "text": "An Insights event, which CloudTrail raises when downloads spike",
+        "correct": false,
+        "why": "The lesson's question is answered by the record of each read, which is a data event."
+      },
+      {
+        "text": "The bucket's own access log, which every bucket keeps with no setup",
+        "correct": false,
+        "why": "S3 server access logging is a setting too, off until switched on; and it is not what this lesson configures."
+      },
+      {
+        "text": "A management event, recorded by default",
+        "correct": false,
+        "why": "Management events record the policy change, not the downloads."
+      },
+      {
+        "text": "A data event, if it was selected beforehand",
+        "correct": true,
+        "why": "Right. Data events are chosen per resource, and a trail switched on afterwards records nothing about the days before."
+      }
+    ]
+  },
+  {
+    "id": "ex-qe82bewe",
+    "version": 1,
+    "section": "what-a-trail-records",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An account has never had a trail. What can still answer who changed a security group last week?",
+    "hint": "Ninety days of one kind, with no setup.",
+    "choices": [
+      {
+        "text": "Nothing: without a trail no call is recorded anywhere",
+        "correct": false,
+        "why": "Event history records management events with no trail at all."
+      },
+      {
+        "text": "The security group's description field, which AWS updates on each change",
+        "correct": false,
+        "why": "A description is free text somebody writes."
+      },
+      {
+        "text": "VPC flow logs, which record rule changes",
+        "correct": false,
+        "why": "Flow logs record traffic, not configuration changes."
+      },
+      {
+        "text": "Event history, which keeps 90 days of management events",
+        "correct": true,
+        "why": "Right. It exists in every account, one region at a time, with no data events."
+      }
+    ]
+  },
+  {
+    "id": "ex-6c0kxqn6",
+    "version": 1,
+    "section": "what-a-trail-records",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A record carries an `errorCode` of `AccessDenied`. What does that mean?",
+    "hint": "Refused calls are recorded too.",
+    "choices": [
+      {
+        "text": "The trail failed to write the record correctly",
+        "correct": false,
+        "why": "The record is fine; the call it describes was refused."
+      },
+      {
+        "text": "Somebody made the call and was refused",
+        "correct": true,
+        "why": "Right, and that is often the first sign of a key being tried against things it does not allow."
+      },
+      {
+        "text": "The record itself is hidden from the reader",
+        "correct": false,
+        "why": "You are reading it; the field describes the call."
+      },
+      {
+        "text": "The call succeeded, but slowly",
+        "correct": false,
+        "why": "An error code is present only when the call failed."
+      }
+    ]
+  },
+  {
+    "id": "ex-95exv34v",
+    "version": 1,
+    "section": "what-a-trail-records",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these would a CloudTrail trail NOT record? Choose all that apply.",
+    "hint": "A trail records calls to the AWS API.",
+    "choices": [
+      {
+        "text": "A query sent to the clinic's database",
+        "correct": true,
+        "why": "Right. The database keeps its own logs."
+      },
+      {
+        "text": "`PutBucketPolicy` on `clinic-exports`",
+        "correct": false,
+        "why": "A management event, recorded by default."
+      },
+      {
+        "text": "The contents of an uploaded file",
+        "correct": true,
+        "why": "Right. A record names the object, never what was in it."
+      },
+      {
+        "text": "A refused `StopLogging`",
+        "correct": false,
+        "why": "Refused calls are recorded, with their error code."
+      },
+      {
+        "text": "A command typed inside an EC2 instance",
+        "correct": true,
+        "why": "Right. That is the operating system's log."
+      }
+    ]
+  },
+  {
+    "id": "ex-87rdhmza",
+    "version": 1,
+    "section": "a-trail",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the trail's bucket policy carry an `aws:SourceArn` condition naming the trail?",
+    "hint": "The writer is a service that works for many accounts.",
+    "choices": [
+      {
+        "text": "So the service writes there for this trail and not for a trail in someone else's account",
+        "correct": true,
+        "why": "Right. It is the confused deputy of lesson 13 again."
+      },
+      {
+        "text": "To stop the clinic's own administrators from reading the records the service writes into the bucket",
+        "correct": false,
+        "why": "The condition limits the service's writing; it says nothing about people reading."
+      },
+      {
+        "text": "So CloudTrail compresses the files",
+        "correct": false,
+        "why": "Compression has nothing to do with the bucket policy."
+      },
+      {
+        "text": "Because moto refuses a policy without it",
+        "correct": false,
+        "why": "moto ignores conditions; the reason is AWS's."
+      }
+    ]
+  },
+  {
+    "id": "ex-2bt89nw6",
+    "version": 1,
+    "section": "a-trail",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `--is-multi-region-trail` buy the clinic?",
+    "hint": "Lesson 1 counted 38 default networks.",
+    "choices": [
+      {
+        "text": "A copy of the bucket in every region",
+        "correct": false,
+        "why": "The records go to one bucket; the flag is about where calls are recorded from."
+      },
+      {
+        "text": "Lower latency for lookups",
+        "correct": false,
+        "why": "It changes coverage, not speed."
+      },
+      {
+        "text": "Data events in every region, for free",
+        "correct": false,
+        "why": "Data events are chosen by selectors and billed per event."
+      },
+      {
+        "text": "A record of calls in every region, including the ones nobody watches",
+        "correct": true,
+        "why": "Right. A resource started in a forgotten region still leaves a record."
+      }
+    ]
+  },
+  {
+    "id": "ex-kbe2g95h",
+    "version": 1,
+    "section": "a-trail",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`get-trail-status` says `IsLogging: true` and gives a recent delivery time. What does the lesson say you still have to check?",
+    "hint": "moto said the same, with an empty bucket.",
+    "choices": [
+      {
+        "text": "That the trail's name matches the bucket's",
+        "correct": false,
+        "why": "They happened to match here; it proves nothing about records."
+      },
+      {
+        "text": "That the bucket holds files from today",
+        "correct": true,
+        "why": "Right. A status that says logging is not evidence that records exist."
+      },
+      {
+        "text": "That log file validation is off, so delivery is faster",
+        "correct": false,
+        "why": "Validation is what lets you prove the files later; turning it off loses that."
+      },
+      {
+        "text": "That the status was read by an administrator rather than by caio",
+        "correct": false,
+        "why": "Who reads it changes nothing about what it says."
+      }
+    ]
+  },
+  {
+    "id": "ex-fj9d2a7a",
+    "version": 1,
+    "section": "a-trail",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did moto do with the trail the lesson configured?",
+    "hint": "Look in the bucket.",
+    "choices": [
+      {
+        "text": "Refused to create it without the bucket policy",
+        "correct": false,
+        "why": "That is what AWS does; moto creates it either way."
+      },
+      {
+        "text": "Recorded management events and skipped data events",
+        "correct": false,
+        "why": "It recorded neither; the bucket stayed empty."
+      },
+      {
+        "text": "Wrote every call into the bucket, like AWS",
+        "correct": false,
+        "why": "The bucket listing was empty."
+      },
+      {
+        "text": "Kept the whole configuration and recorded no events at all",
+        "correct": true,
+        "why": "Right, and lookup-events answered HTTP 500."
+      }
+    ]
+  },
+  {
+    "id": "ex-vx7399vv",
+    "version": 1,
+    "section": "a-trail",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The flag `--enable-log-file-___` makes CloudTrail write a signed digest file every hour.",
+    "hint": "The word that ends the flag.",
+    "blanks": [
+      {
+        "accept": [
+          "validation"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-66wm6mnz",
+    "version": 1,
+    "section": "reading-records",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In which time zone does CloudTrail write `eventTime`?",
+    "hint": "The clinic is three hours behind it.",
+    "choices": [
+      {
+        "text": "UTC, always",
+        "correct": true,
+        "why": "Right. 12:02 in the record was 09:02 in São Paulo."
+      },
+      {
+        "text": "The caller's local time, taken from the user agent",
+        "correct": false,
+        "why": "The user agent names a program, not a time zone."
+      },
+      {
+        "text": "The time zone set on the trail",
+        "correct": false,
+        "why": "A trail has no time-zone setting."
+      },
+      {
+        "text": "The region's local time",
+        "correct": false,
+        "why": "No region's clock is used; every record is in the same zone."
+      }
+    ]
+  },
+  {
+    "id": "ex-sz1gdawk",
+    "version": 1,
+    "section": "reading-records",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lesson's records, how many objects were served to anonymous callers while the bucket was public?",
+    "hint": "The fourth column said `served` or not.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "objects"
+  },
+  {
+    "id": "ex-rse1ybqv",
+    "version": 1,
+    "section": "reading-records",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does CloudTrail identify a caller who signed nothing?",
+    "hint": "The query filtered on one account value.",
+    "choices": [
+      {
+        "text": "As the bucket owner, since the bucket served the object",
+        "correct": false,
+        "why": "The owner is the clinic; the caller is somebody else."
+      },
+      {
+        "text": "By the caller's IP address in `userIdentity.arn`",
+        "correct": false,
+        "why": "An anonymous caller has no ARN; the address is in `sourceIPAddress`."
+      },
+      {
+        "text": "It does not record unsigned calls",
+        "correct": false,
+        "why": "It records them as data events when they are selected."
+      },
+      {
+        "text": "With the account `ANONYMOUS_PRINCIPAL` in `userIdentity`",
+        "correct": true,
+        "why": "Right. That is the value the lesson's query selected on."
+      }
+    ]
+  },
+  {
+    "id": "ex-pqhybz3v",
+    "version": 1,
+    "section": "reading-records",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Suppose the trail had no data events. Which question about the afternoon could the records still answer?",
+    "hint": "The policy change and the reads are different kinds of event.",
+    "choices": [
+      {
+        "text": "Whether any anonymous caller was refused after the fix",
+        "correct": false,
+        "why": "That refused read is also a data event."
+      },
+      {
+        "text": "How many patients' rows were in each file",
+        "correct": false,
+        "why": "No trail records content, with or without data events."
+      },
+      {
+        "text": "Which files left, and to which addresses",
+        "correct": false,
+        "why": "Those are the GetObject records, which are data events."
+      },
+      {
+        "text": "Who made the bucket public, and when",
+        "correct": true,
+        "why": "Right. PutBucketPolicy is a management event, recorded by default."
+      }
+    ]
+  },
+  {
+    "id": "ex-t1dbr4tq",
+    "version": 1,
+    "section": "reading-records",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the afternoon's events in the order the trail recorded them.",
+    "hint": "The timeline figure at the end of the section.",
+    "items": [
+      "caio puts a public bucket policy",
+      "an anonymous caller is served the day's export",
+      "dani's key tries StopLogging and is refused",
+      "ana deletes the bucket policy",
+      "the first anonymous address comes back and is refused"
+    ],
+    "trap": "Putting dani's attempt first is the slip: it came in the middle of the window."
+  },
+  {
+    "id": "ex-z62w43n6",
+    "version": 1,
+    "section": "protecting-the-trail",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "caio holds `AdministratorAccess` and an inline policy denying `cloudtrail:StopLogging`. What happened when he called it?",
+    "hint": "Lesson 6's rule about Deny.",
+    "choices": [
+      {
+        "text": "It succeeded, since AdministratorAccess allows `*`",
+        "correct": false,
+        "why": "An explicit Deny beats every Allow."
+      },
+      {
+        "text": "It was refused, and the trail kept logging",
+        "correct": true,
+        "why": "Right. He could still read the trail's configuration."
+      },
+      {
+        "text": "It was refused, and caio lost all his other permissions",
+        "correct": false,
+        "why": "The Deny names four calls; everything else stays."
+      },
+      {
+        "text": "moto ignored the Deny, as it ignores conditions",
+        "correct": false,
+        "why": "moto judges identity policies; it is conditions it ignores."
+      }
+    ]
+  },
+  {
+    "id": "ex-6c2j4et3",
+    "version": 1,
+    "section": "protecting-the-trail",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson send the trail's records to a separate log-archive account?",
+    "hint": "Who could empty a bucket in the same account?",
+    "choices": [
+      {
+        "text": "So the records are kept in a different region",
+        "correct": false,
+        "why": "Accounts and regions are separate questions."
+      },
+      {
+        "text": "Because a bucket in another account is cheaper",
+        "correct": false,
+        "why": "Price is not the reason; reach is."
+      },
+      {
+        "text": "So the administrators being recorded have no permission on the records",
+        "correct": true,
+        "why": "Right. An administrator of production has nothing on the archive's bucket."
+      },
+      {
+        "text": "Because CloudTrail refuses to write into the account it records",
+        "correct": false,
+        "why": "It writes into the same account happily; that is the weakness."
+      }
+    ]
+  },
+  {
+    "id": "ex-5wxwamnp",
+    "version": 1,
+    "section": "protecting-the-trail",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A log file was deleted from the trail's bucket on a Tuesday. Which mechanism would show that, and how?",
+    "hint": "Every hour, a signed list of hashes, chained.",
+    "choices": [
+      {
+        "text": "The digest files: `validate-logs` reports a file the digest lists and the bucket lacks",
+        "correct": true,
+        "why": "Right. Each hour's digest names the hash of every file delivered."
+      },
+      {
+        "text": "The trail's status, which changes `IsLogging` to false",
+        "correct": false,
+        "why": "Deleting a file does not stop logging; the status would look fine."
+      },
+      {
+        "text": "S3 versioning, by refusing the deletion",
+        "correct": false,
+        "why": "Versioning keeps old versions; it does not refuse a delete, and it is not what the lesson used."
+      },
+      {
+        "text": "The event history, which lists the deleted file",
+        "correct": false,
+        "why": "Event history shows management events, and deleting an object is a data event."
+      }
+    ]
+  },
+  {
+    "id": "ex-0t0mq4j1",
+    "version": 1,
+    "section": "protecting-the-trail",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson prefer a service control policy over the same Deny on each user?",
+    "hint": "The next user.",
+    "choices": [
+      {
+        "text": "Because moto enforces SCPs and not identity policies",
+        "correct": false,
+        "why": "The reverse: moto judges identity policies and ignores SCPs."
+      },
+      {
+        "text": "Because an SCP grants the permission back to the security team, who then hold it alone",
+        "correct": false,
+        "why": "An SCP only limits; it grants nothing."
+      },
+      {
+        "text": "Because identity policies cannot contain a Deny",
+        "correct": false,
+        "why": "They can; caio's did."
+      },
+      {
+        "text": "Because a guardrail on each user is one somebody forgets on the next user",
+        "correct": true,
+        "why": "Right. Written once on the organisation, it binds every identity of every member account."
+      }
+    ]
+  },
+  {
+    "id": "ex-kn4w8s82",
+    "version": 1,
+    "section": "protecting-the-trail",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which calls does the lesson's guardrail deny? Choose all that apply.",
+    "hint": "Four calls that would blind the trail.",
+    "choices": [
+      {
+        "text": "`cloudtrail:DeleteTrail`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`cloudtrail:GetTrailStatus`",
+        "correct": false,
+        "why": "Reading the status harms nothing, and caio still could."
+      },
+      {
+        "text": "`cloudtrail:PutEventSelectors`",
+        "correct": true,
+        "why": "Right. Removing the data selectors blinds the trail to reads."
+      },
+      {
+        "text": "`cloudtrail:DescribeTrails`",
+        "correct": false,
+        "why": "A read of configuration; caio ran it after the refusal."
+      },
+      {
+        "text": "`cloudtrail:StopLogging`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-fb4t5rqd",
+    "version": 1,
+    "section": "the-equivalents",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Google Cloud, which audit logs are off by default, except for BigQuery?",
+    "hint": "The kind that can be enormous.",
+    "choices": [
+      {
+        "text": "Policy Denied",
+        "correct": false,
+        "why": "Those record calls a security policy refused; the lesson does not list them as off by default."
+      },
+      {
+        "text": "Admin Activity",
+        "correct": false,
+        "why": "Always written, and impossible to switch off."
+      },
+      {
+        "text": "Data Access",
+        "correct": true,
+        "why": "Right. They record reads and writes of user data, and are billed when on."
+      },
+      {
+        "text": "System Event",
+        "correct": false,
+        "why": "Those record Google's own actions and are written regardless."
+      }
+    ]
+  },
+  {
+    "id": "ex-bm88wf9g",
+    "version": 1,
+    "section": "the-equivalents",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each provider's record of configuration changes to its name.",
+    "hint": "The first row of the table.",
+    "pairs": [
+      {
+        "left": "AWS",
+        "right": "CloudTrail management events"
+      },
+      {
+        "left": "Azure",
+        "right": "the Activity Log"
+      },
+      {
+        "left": "Google Cloud",
+        "right": "Admin Activity audit logs"
+      }
+    ],
+    "right_distractors": [
+      "Microsoft Entra ID sign-in logs"
+    ]
+  },
+  {
+    "id": "ex-bp4nx6yw",
+    "version": 1,
+    "section": "the-equivalents",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A file was read from an Azure storage account last month. Where would the record of that read be?",
+    "hint": "Reading a blob is a data-plane operation.",
+    "choices": [
+      {
+        "text": "In resource logs, if a diagnostic setting was sending them somewhere",
+        "correct": true,
+        "why": "Right. Without that setting, there is no record of the read."
+      },
+      {
+        "text": "In Microsoft Entra ID's audit log",
+        "correct": false,
+        "why": "Entra records identity events, not reads of a blob."
+      },
+      {
+        "text": "In the blob's own metadata",
+        "correct": false,
+        "why": "Metadata describes the blob; it is not a log of who read it."
+      },
+      {
+        "text": "In the subscription's Activity Log, kept 90 days",
+        "correct": false,
+        "why": "The Activity Log records control-plane operations, not reads of data."
+      }
+    ]
+  },
+  {
+    "id": "ex-6cvg5vs6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The clinic opens a trail today, with data events on `clinic-records`. A breach is suspected from three weeks ago. What can the new trail tell you about those reads?",
+    "hint": "Nobody can switch it on retroactively.",
+    "choices": [
+      {
+        "text": "Everything, since CloudTrail backfills 90 days when a trail is created",
+        "correct": false,
+        "why": "Event history holds 90 days of management events, never data events."
+      },
+      {
+        "text": "Nothing about them",
+        "correct": true,
+        "why": "Right. Data events exist only from the moment they were selected."
+      },
+      {
+        "text": "The reads, without the callers' addresses",
+        "correct": false,
+        "why": "There are no records of those reads at all."
+      },
+      {
+        "text": "The reads, if the bucket was in sa-east-1",
+        "correct": false,
+        "why": "The region changes nothing here."
+      }
+    ]
+  },
+  {
+    "id": "ex-7mc1y046",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A refused call carries the field `___` in its record, such as `AccessDenied`.",
+    "hint": "The field the last query of the reading section selected on.",
+    "blanks": [
+      {
+        "accept": [
+          "errorCode"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

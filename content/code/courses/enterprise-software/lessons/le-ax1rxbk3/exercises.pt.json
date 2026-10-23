@@ -1,0 +1,419 @@
+{
+  "ex-t7nev3r0": {
+    "prompt": "Um desenvolvedor de Edson corrige um programa de preço no DEV, e os usuários-chave o aprovam no QAS. O que é importado no PRD?",
+    "hint": "Pense no que foi do DEV para o QAS.",
+    "choices": [
+      {
+        "text": "A mesma requisição de transporte importada no QAS",
+        "why": "Isso: a requisição gravada no DEV segue sem alteração, e a produção recebe exatamente o que foi testado."
+      },
+      {
+        "text": "Uma cópia do programa do QAS, exportada depois do teste para levar as correções achadas lá",
+        "why": "Nada é exportado do QAS. Uma correção achada no teste volta ao DEV e viaja numa requisição nova."
+      },
+      {
+        "text": "O desenvolvedor repete a mudança à mão no PRD",
+        "why": "O PRD está configurado para que os programas não possam ser editados; uma mudança redigitada não teria sido testada."
+      },
+      {
+        "text": "Uma cópia inteira do sistema DEV, substituindo o PRD durante a noite",
+        "why": "Cada sistema tem o próprio banco; copiar o DEV por cima do PRD trocaria os dados de produção pelos de desenvolvimento."
+      }
+    ]
+  },
+  "ex-na3vgxcw": {
+    "prompt": "Ponha em ordem os passos de uma mudança no SAP da Serra Alta, do desenvolvedor até a produção.",
+    "hint": "A figura dos três sistemas.",
+    "items": [
+      "A mudança é feita no DEV",
+      "O SAP a grava numa requisição de transporte",
+      "O desenvolvedor libera a requisição",
+      "A requisição é importada no QAS",
+      "Os usuários-chave testam no QAS",
+      "A mesma requisição é importada no PRD"
+    ],
+    "trap": "Importar no PRD antes do teste no QAS põe trabalho não testado no balanço."
+  },
+  "ex-62e5psqh": {
+    "prompt": "O ambiente de teste do Rota se conecta ao QAS, mandante 300, e lança um lote de documentos de teste. Onde eles caem?",
+    "hint": "O QAS tem dois mandantes, e eles não são a mesma coisa.",
+    "choices": [
+      {
+        "text": "No mandante de testes, o 200, já que o QAS guarda todos os dados de teste juntos",
+        "why": "Os dados de negócio são separados por mandante dentro de um sistema; o 200 não vê o que foi lançado no 300."
+      },
+      {
+        "text": "Em lugar nenhum: o SAP recusa uma conexão que não indique o mandante de testes",
+        "why": "O SAP aceita qualquer mandante em que o usuário esteja cadastrado; a conexão entra e lança sem reclamar."
+      },
+      {
+        "text": "Na produção, porque os números de mandante são compartilhados entre DEV, QAS e PRD",
+        "why": "Cada sistema tem o próprio banco; um mandante do QAS não alcança nada no PRD."
+      },
+      {
+        "text": "Nos dados de treinamento em que os usuários novos aprendem",
+        "why": "Isso: o mandante 300 é o de treinamento, e uma conexão aponta para um sistema e um mandante, então o mandante errado recebe os documentos."
+      }
+    ]
+  },
+  "ex-wes5mfjs": {
+    "prompt": "Quando a fábrica de Alagoa entrar no SAP, que tipo de mudança o caminho de atualização da própria SAP foi desenhado para levar adiante com menos esforço?",
+    "hint": "Um tipo de mudança é o código da SAP se comportando como foi configurado.",
+    "choices": [
+      {
+        "text": "Um relatório Z escrito para a fábrica",
+        "why": "Um objeto Z é código seu dentro do SAP; cada atualização precisa conferi-lo contra o que mudou."
+      },
+      {
+        "text": "Uma alteração no próprio programa de ordem de venda da SAP, feita com chave de modificação",
+        "why": "Isso é modificação do código da SAP, o anel que a aula 1 disse para nunca usar, e cada atualização precisa refazê-la."
+      },
+      {
+        "text": "Customizing: a fábrica nova cadastrada no Implementation Guide",
+        "why": "Isso: customizing são linhas em tabelas de configuração que o código da SAP lê, e a SAP desenha as atualizações para levá-lo adiante."
+      },
+      {
+        "text": "Uma tabela Z com as receitas de queijo da fábrica, lida por transações da SAP",
+        "why": "A atualização da SAP não sabe nada de uma tabela do cliente; ela só segue se alguém conferir o código que a usa."
+      }
+    ]
+  },
+  "ex-83m8gfed": {
+    "prompt": "Marcos pede os litros de UHT vendidos por centro no último trimestre, de uma tabela de linhas de venda com quarenta campos. Por que um armazenamento por coluna responde mais rápido que um por linha?",
+    "hint": "Quantos dos quarenta campos a pergunta usa?",
+    "choices": [
+      {
+        "text": "Ele lê os três campos de que precisa e pula os outros trinta e sete",
+        "why": "Isso: cada coluna fica guardada junta, então a soma mexe em três blocos em vez de em cada linha inteira."
+      },
+      {
+        "text": "Ele guarda cada linha da tabela num bloco só, então uma leitura busca o trimestre inteiro de uma vez",
+        "why": "Isso descreve guardar as linhas juntas, que é o que faz o armazenamento por linha e por que ele lê os quarenta campos."
+      },
+      {
+        "text": "Ele guarda totais trimestrais já calculados por centro",
+        "why": "O contrário: o HANA deixou o S/4HANA abandonar as tabelas de totais e calcular as somas a partir dos itens na hora."
+      },
+      {
+        "text": "Ele não grava nada em disco, então nenhuma leitura espera por um",
+        "why": "O HANA grava um log e salva a memória em disco; estar em memória não é o motivo de uma coluna custar menos que quarenta."
+      }
+    ]
+  },
+  "ex-yfbkx2g8": {
+    "prompt": "Uma tabela de linhas de faturamento da Serra Alta tem 25 milhões de linhas. A coluna de centro guarda um dos três centros do SAP, como dicionário e um código de 2 bits por linha. Quantos megabytes os códigos ocupam, sem contar o dicionário? (1 MB = 1.000.000 bytes.)",
+    "hint": "Linhas × 2 bits, depois 8 bits por byte.",
+    "unit": "MB",
+    "accept_units": [
+      "megabytes"
+    ]
+  },
+  "ex-5nz11yad": {
+    "prompt": "Se a Serra Alta comprar todos os anos de manutenção estendida que a SAP oferece para o ECC 6.0, quantos meses ela compra depois do fim da manutenção principal?",
+    "hint": "De 1º de janeiro de 2028 a 31 de dezembro de 2030.",
+    "unit": "meses",
+    "accept_units": [
+      "mês"
+    ]
+  },
+  "ex-b1rap8xq": {
+    "prompt": "A Serra Alta converte o ECC em S/4HANA no lugar. Quais destes vão ter de mudar? Escolha todos os que se aplicam.",
+    "hint": "Confira cada um contra a tabela do que o S/4HANA tirou, e do que sobrevive como view.",
+    "choices": [
+      {
+        "text": "Um mapeamento de EDI que corta o número do material em 18 caracteres",
+        "why": "Sim: o S/4HANA aceita 40 caracteres, e o mapeamento quebra no primeiro número mais longo."
+      },
+      {
+        "text": "Um programa Z que grava linhas na tabela de índice BSID",
+        "why": "Sim: a BSID sobrevive como uma view calculada a partir dos itens, e numa view não se grava."
+      },
+      {
+        "text": "Um relatório Z cujo ABAP lê as partidas em aberto de clientes na BSID",
+        "why": "As leituras continuam funcionando, porque o nome antigo responde como view de compatibilidade."
+      },
+      {
+        "text": "Uma interface Z que cria clientes sem business partner",
+        "why": "Sim: no S/4HANA todo cliente e todo fornecedor é um business partner."
+      }
+    ]
+  },
+  "ex-p12fg8pc": {
+    "prompt": "Um consultor diz a Marcos que a Serra Alta poderia simplesmente ficar no ECC depois de 2030 e pagar pelo suporte que a SAP ainda vender. Qual é a objeção mais forte para uma empresa brasileira?",
+    "hint": "O que deixa de chegar depois da manutenção estendida?",
+    "choices": [
+      {
+        "text": "As mudanças legais param, e a reforma tributária segue mudando a NF-e até 2033",
+        "why": "Isso: sem mudanças legais o sistema fica para trás no leiaute da NF-e, e sem NF-e válida nenhum palete sai."
+      },
+      {
+        "text": "O ECC para de funcionar em 1º de janeiro de 2031",
+        "why": "O software continua rodando; o que acaba é o que a SAP entrega para ele."
+      },
+      {
+        "text": "O banco de dados dele deixa de ter suporte de qualquer fornecedor depois de 2030",
+        "why": "A aula não dá data nenhuma assim para o banco; a data que importa é a da manutenção da SAP para o ECC."
+      },
+      {
+        "text": "Os 1.800 objetos Z param de compilar quando a manutenção principal termina",
+        "why": "O código continua compilando num sistema que não muda; os objetos Z viram problema quando o sistema muda, não quando o suporte acaba."
+      }
+    ]
+  },
+  "ex-asneda3p": {
+    "prompt": "Ligue cada porta do SAP à conversa da Serra Alta a que ela serve.",
+    "hint": "A tabela \"Escolher uma porta\".",
+    "pairs": [
+      {
+        "left": "IDoc",
+        "right": "o pedido de uma rede de supermercados chegando pelo provedor de EDI"
+      },
+      {
+        "left": "BAPI por RFC",
+        "right": "uma padaria esperando na tela pelo número do pedido"
+      },
+      {
+        "left": "OData",
+        "right": "o portal perguntando quanta manteiga dá para prometer para sexta"
+      },
+      {
+        "left": "arquivo",
+        "right": "a coleta de um dia em 1.900 fazendas, toda noite"
+      }
+    ],
+    "right_distractors": [
+      "uma atualização SQL noturna das tabelas de estoque"
+    ]
+  },
+  "ex-btkepvbb": {
+    "prompt": "Uma rede de supermercados diz que o pedido chegou ontem à Serra Alta: o barramento confirma que entregou ao SAP um IDoc ORDERS. O SD não tem ordem de venda para ele. Onde o time de Rui olha primeiro?",
+    "hint": "Aceito e lançado são dois momentos diferentes para um IDoc.",
+    "choices": [
+      {
+        "text": "Nos logs do provedor de EDI, porque uma ordem que falta quer dizer que o IDoc nem chegou ao SAP",
+        "why": "O barramento confirmou a entrega; o IDoc está no SAP, e a pergunta é o que aconteceu quando ele foi lançado."
+      },
+      {
+        "text": "No monitor de IDocs, atrás desse IDoc parado no status 51",
+        "why": "Isso: o SAP o aceitou, depois não conseguiu lançá-lo, e ele espera no status 51 até alguém corrigir a causa e reprocessar."
+      },
+      {
+        "text": "Na tabela de retorno da BAPI, que guarda o motivo da recusa",
+        "why": "Essa tabela é de uma chamada síncrona de BAPI; este pedido entrou como um IDoc assíncrono."
+      },
+      {
+        "text": "Nas tabelas de ordens do PRD, com uma consulta SQL pela data",
+        "why": "Se o SD não tem a ordem, as tabelas também não têm, e a regra da aula é não lê-las."
+      }
+    ]
+  },
+  "ex-p070j8tc": {
+    "prompt": "Uma integração nova chama a BAPI_SALESORDER_CREATEFROMDAT2, recebe um número de pedido e o mostra ao usuário. Na manhã seguinte o SD não tem esse pedido. O que a integração mais provavelmente deixou de fazer?",
+    "hint": "Uma BAPI que escreve precisa de uma segunda chamada.",
+    "choices": [
+      {
+        "text": "Um IDoc para confirmar o pedido ao SAP depois",
+        "why": "O IDoc é outra porta; a chamada da BAPI se completa sozinha depois do commit."
+      },
+      {
+        "text": "Uma requisição de transporte levando o pedido do DEV para o PRD",
+        "why": "Transportes levam programas e configuração entre sistemas, nunca um documento de negócio."
+      },
+      {
+        "text": "Conferir se a tabela de mensagens devolvida estava vazia antes de confiar no número",
+        "why": "Conferir as mensagens importa, mas aqui voltou um número, o que quer dizer que a BAPI montou a ordem."
+      },
+      {
+        "text": "A chamada à BAPI_TRANSACTION_COMMIT",
+        "why": "Isso: uma BAPI que escreve não confirma sozinha, então o número era de uma ordem que nunca foi gravada."
+      }
+    ]
+  },
+  "ex-0t9tmk8e": {
+    "prompt": "Um IDoc cujo documento de aplicação foi lançado chega ao status 53. Um que o SAP aceitou mas não conseguiu lançar para no status ___ até alguém reprocessá-lo.",
+    "hint": "O número que o time de Rui vigia toda manhã.",
+    "blanks": [
+      {
+        "accept": [
+          "51"
+        ]
+      }
+    ]
+  },
+  "ex-n7dkaw33": {
+    "prompt": "O time do Rota quer os dados bancários das fazendas para o planejamento de rotas e propõe uma conta só de leitura no banco do SAP: \"só leitura, então nada no SAP quebra\". Que ponto da aula responde mais diretamente a esse argumento?",
+    "hint": "O argumento é sobre escrita. Que problema da leitura não tem nada a ver com escrita?",
+    "choices": [
+      {
+        "text": "Uma leitura pega bloqueios que impedem os funcionários de trabalhar na VA01",
+        "why": "O ponto da aula sobre bloqueios é sobre escrita; ela não diz que uma leitura trava os funcionários."
+      },
+      {
+        "text": "O SAP confere autorizações na camada de aplicação, por onde esse acesso nunca passa",
+        "why": "Isso: esse acesso vê todas as linhas, inclusive dados bancários que nenhum usuário do Rota tem permissão de ver pelo SAP."
+      },
+      {
+        "text": "Ler uma tabela cria documentos que contam para a licença",
+        "why": "O registro de licença conta os documentos que uma integração cria; uma leitura não cria nenhum."
+      },
+      {
+        "text": "Contas só de leitura param de funcionar na janela de manutenção de domingo, e o planejamento de rotas roda aos domingos",
+        "why": "Vale para qualquer coisa síncrona com o SAP, e para toda porta; não responde à ideia de que ler é inofensivo."
+      }
+    ]
+  },
+  "ex-054jgacg": {
+    "prompt": "O relatório do conselho mostra dois números de vendas líquidas para o mesmo mês, e eles diferem exatamente pelas devoluções do mês. Qual é a causa, e quem resolve?",
+    "hint": "Nada está quebrado; duas definições estão sendo aplicadas corretamente.",
+    "choices": [
+      {
+        "text": "Dois universos definem a medida de jeitos diferentes; Marcos decide qual vale",
+        "why": "Isso: a definição mora na camada semântica, e qual está certa é uma decisão de finanças, não um ajuste de ferramenta."
+      },
+      {
+        "text": "Um bug no Web Intelligence, corrigido pelo time de BusinessObjects na próxima atualização",
+        "why": "Os dois relatórios calculam exatamente o que o universo deles diz; uma atualização reproduziria os dois números."
+      },
+      {
+        "text": "O BW carregou as devoluções atrasado, então um relatório rodou antes da extração noturna",
+        "why": "Uma diferença de horário mudaria de um dia para outro; uma diferença igual às devoluções todo mês aponta para a definição."
+      },
+      {
+        "text": "Um relatório lê a produção e o outro lê o BW",
+        "why": "Na Serra Alta os universos consultam o BW; a aula atribui os dois números a duas definições da medida."
+      }
+    ]
+  },
+  "ex-6sgv6yyc": {
+    "prompt": "Uma padaria passou da região de vendas de Juiz de Fora para a de Barbacena em junho. Por que o BW ainda credita as vendas de janeiro a Juiz de Fora, quando um relatório rodado no SAP não faria isso?",
+    "hint": "O que o SAP faz com um cadastro quando ele muda?",
+    "choices": [
+      {
+        "text": "O SAP guarda todas as versões passadas do cadastro do cliente",
+        "why": "O SAP sobrescreve o cadastro; a região antiga some dele."
+      },
+      {
+        "text": "O BW é atualizado uma vez por ano, então ainda não soube da mudança, e se acerta no fim do ano",
+        "why": "Os extratores mandam as mudanças toda noite; o BW sabe da mudança e mesmo assim mantém a região antiga nas vendas antigas."
+      },
+      {
+        "text": "O BW guardou a região que cada venda tinha quando aconteceu",
+        "why": "Isso: o data warehouse lembra o que o ERP sobrescreve, e é sobre isso que se calcula o bônus regional."
+      },
+      {
+        "text": "O universo fixa no código a região de cada padaria",
+        "why": "Um universo mapeia nomes sobre tabelas e cálculos; a história vem de como o BW guardou os fatos."
+      }
+    ]
+  },
+  "ex-vtpdrwkh": {
+    "prompt": "Doze meses de auditoria mostram 300 dos 900 relatórios sem abrir. Joana quer que eles sumam antes de o projeto de S/4HANA começar. Qual é o próximo passo certo?",
+    "hint": "Alguns relatórios são abertos uma vez por ano.",
+    "choices": [
+      {
+        "text": "Apagar os 300 agora, já que doze meses sem leitor bastam como prova",
+        "why": "Um relatório anual, como os registros de lote da FSSC 22000, cai algumas semanas fora de uma janela de doze meses."
+      },
+      {
+        "text": "Migrar os 900 para o S/4HANA e limpar depois, para nenhum usuário perder um relatório",
+        "why": "Levar os 300 é pagar para converter e testar, e limpar sai mais barato antes da mudança do que no meio dela."
+      },
+      {
+        "text": "Refazer os 300 no SAP Analytics Cloud",
+        "why": "Refazer um relatório que ninguém lê muda o custo de produto em vez de eliminá-lo."
+      },
+      {
+        "text": "Medir por mais de um ano, achar o dono de cada um e arquivar em vez de apagar",
+        "why": "Isso: uma janela mais longa pega os relatórios anuais, e um arquivo volta se alguém pedir."
+      }
+    ]
+  },
+  "ex-jqfj7fhe": {
+    "prompt": "Depois de uma mudança para o S/4HANA, que argumento contra relatar direto na produção continua de pé?",
+    "hint": "Um dos argumentos era sobre carga num banco por linha.",
+    "choices": [
+      {
+        "text": "Uma varredura longa de linhas de ordem deixa lentos os funcionários que tiram pedidos",
+        "why": "É o argumento que o HANA enfraquece: um banco colunar responde muitas dessas perguntas sobre dado ao vivo sem prejudicar as transações."
+      },
+      {
+        "text": "Relatórios na produção não usam universos",
+        "why": "A aula não diz nada disso; o argumento é sobre o que a produção guarda, não sobre que ferramenta a lê."
+      },
+      {
+        "text": "A produção guarda o estado atual de um sistema, não o histórico nem outros sistemas",
+        "why": "Isso: a região antiga da padaria e as vendas da fábrica de queijos no Business Central não estão no S/4HANA."
+      },
+      {
+        "text": "Os números ao vivo mudam ao longo do dia, e o conselho prefere números fixados à meia-noite pela carga noturna",
+        "why": "Frescor é o que relatar na produção ganha; o argumento que sobra na aula é sobre história e alcance."
+      }
+    ]
+  },
+  "ex-fva3sgwx": {
+    "prompt": "A Talita quer que o pedido do representante chegue ao SAP enquanto ele espera, e mostre na hora o número da ordem no SAP. O que entra no desenho da Joana? Marque todas as que se aplicam.",
+    "hint": "A porta, os dois hábitos dela, o registro e para onde apontam os testes.",
+    "choices": [
+      {
+        "text": "Uma BAPI chamada por RFC pelo barramento, seguida do commit",
+        "why": "Sim: um vendedor esperando um número precisa de chamada síncrona, e uma BAPI que escreve precisa do commit."
+      },
+      {
+        "text": "Testar contra o PRD, mandante 100, porque os dados do QAS são menos realistas",
+        "why": "Os testes apontam para o QAS e nunca para o PRD; manter o QAS realista é o trabalho a fazer no lugar disso."
+      },
+      {
+        "text": "Ler as mensagens devolvidas, e não só o número do pedido",
+        "why": "Sim: uma BAPI informa a falha como dado, e quem lê só o número lê um número vazio como sucesso."
+      },
+      {
+        "text": "Uma linha no registro: cerca de quantas ordens de venda por mês ela cria",
+        "why": "Sim: os documentos que uma integração cria são a base do preço do uso indireto, então o time de contratos precisa da contagem."
+      }
+    ]
+  },
+  "ex-h30tgjx0": {
+    "prompt": "Sebastião pergunta se o arquivo noturno do Coleta precisa mudar numa migração brownfield para o S/4HANA. O que Joana deve responder?",
+    "hint": "O arquivo é uma coisa; o programa Z que o lê é outra.",
+    "choices": [
+      {
+        "text": "Sim: as entradas de mercadoria vão para a MATDOC, então o Coleta precisa escrever um leiaute novo",
+        "why": "A MATDOC fica dentro do SAP; o Coleta nunca vê uma tabela, então o leiaute do arquivo não é o que a tabela nova muda."
+      },
+      {
+        "text": "Não: uma conversão brownfield mantém tudo, então nada de nenhum lado do arquivo muda",
+        "why": "Ela mantém o programa Z, mas todo objeto Z é conferido contra a Simplification List, o carregador também."
+      },
+      {
+        "text": "O arquivo não muda; o carregador Z é conferido, e lançar pela lógica da SAP decide o trabalho",
+        "why": "Isso: se o carregador lança as entradas pela lógica da própria SAP ele passa com facilidade; se escreve nas tabelas por conta própria, é reescrito."
+      },
+      {
+        "text": "Só se o carregador aparecer no registro de uso como não usado",
+        "why": "O carregador roda toda noite às 02:00, então é o oposto de um candidato a ser apagado."
+      }
+    ]
+  },
+  "ex-7k9x0efe": {
+    "prompt": "No terceiro dia útil do mês, o time de Rui descobre que é preciso uma mudança dentro do SAP para os pedidos de EDI pararem de falhar. O que acontece com ela?",
+    "hint": "Dois calendários se encontram aqui: as janelas de transporte e o fechamento.",
+    "choices": [
+      {
+        "text": "Vai para o PRD naquela noite, porque as falhas de EDI custam vendas",
+        "why": "As importações param nos cinco primeiros dias úteis enquanto o financeiro fecha; a urgência sozinha não reabre a janela."
+      },
+      {
+        "text": "O time de Rui edita o mapeamento direto no PRD e grava no DEV depois",
+        "why": "O PRD não pode ser editado, e os auditores que certificam o balanço conferem essa configuração."
+      },
+      {
+        "text": "Pula o QAS para pegar a importação de terça",
+        "why": "Uma requisição chega ao PRD depois do QAS, na ordem de liberação; pular o teste não muda o calendário."
+      },
+      {
+        "text": "Espera a janela depois do fechamento, a não ser que Edson assine um transporte de emergência",
+        "why": "Isso: a semana de fechamento congela as importações, e o transporte de emergência é a única exceção, decidida por Edson."
+      }
+    ]
+  }
+}

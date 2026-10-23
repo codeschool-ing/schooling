@@ -1,0 +1,3811 @@
+[
+  {
+    "id": "ex-qz7kmn9y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The bookshop's two copies each keep the session table in their own memory, behind Nginx's round-robin upstream. Shoppers are signed out at random, halfway through a basket. What is happening, and where do the two courses send the table?",
+    "hint": "Web and Internet Fundamentals, lesson 7; Web Servers and Caching, lesson 2.",
+    "choices": [
+      {
+        "text": "The cookie has no `Domain` attribute, so the browser keeps it from the second copy's port.",
+        "correct": false,
+        "why": "The browser only talks to Nginx, at one name and one port, and its cookie reaches whichever copy Nginx picks."
+      },
+      {
+        "text": "Round robin is the defect, and `hash $remote_addr` fixes it for good: each visitor always meets their own copy.",
+        "correct": false,
+        "why": "Affinity is a workaround: an office behind one address lands on one copy, and a copy that stops takes its sessions with it."
+      },
+      {
+        "text": "Half the requests reach a copy that never saw that session; keep the table in Redis, which both reach.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`SameSite=Lax` drops the cookie from the requests Nginx forwards, so the copy behind it sees nobody signed in.",
+        "correct": false,
+        "why": "`SameSite` is about which site caused the request; a proxy passing the `Cookie` header on is not another site."
+      }
+    ]
+  },
+  {
+    "id": "ex-y5pkvqcm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "To save processor time, a teammate wants to swap the Nginx in front of the bookshop for a load balancer that reads only up to layer 4. Today Nginx serves the files in `/var/www/ipe` itself and sends `location /api/` to the two copies of the shop. What would the swap lose?",
+    "hint": "Web and Internet Fundamentals, lesson 5; Web Servers and Caching, lesson 2.",
+    "choices": [
+      {
+        "text": "The split by path: such a box sees a connection to port 443 and none of the URL inside, so `/api/` looks like `/css/`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing in the routing: a layer 4 box still reads the path of every request, so only the choice of site by `Host` would be lost.",
+        "correct": false,
+        "why": "Layer 4 stops at the port; the path is inside the request, which such a box never reads."
+      },
+      {
+        "text": "Only the compression, since gzip belongs to layer 6 and the box works below it.",
+        "correct": false,
+        "why": "Compression would go, and so would the split by path, which is what sends `/api/` to the shop."
+      },
+      {
+        "text": "Nothing, if the box is given the certificate: holding it is what lets layer 4 read paths.",
+        "correct": false,
+        "why": "Decrypting and reading the request, certificate in hand, is what a layer 7 balancer does."
+      }
+    ]
+  },
+  {
+    "id": "ex-mcb1jfzr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The shop's wildcard certificate, `*.ipelivros.example`, is renewed by a DNS-01 plugin holding API credentials for the old DNS provider. Last month the domain's `NS` records were pointed at a new provider. Renewal now fails, although the plugin logs that it created the `_acme-challenge` TXT record. Why?",
+    "hint": "Web and Internet Fundamentals, lesson 8; Web Servers and Caching, lesson 3.",
+    "choices": [
+      {
+        "text": "DNS-01 is checked over port 80, and the redirect to HTTPS now swallows the request.",
+        "correct": false,
+        "why": "That is HTTP-01; DNS-01 is checked in DNS, which is why it works for a machine nobody can reach."
+      },
+      {
+        "text": "A wildcard cannot come from DNS-01, so every subdomain needs an HTTP-01 token of its own.",
+        "correct": false,
+        "why": "It is the other way round: DNS-01 is the only challenge that can issue a wildcard."
+      },
+      {
+        "text": "The new TXT record is still propagating, and it can take forty-eight hours to reach the CA.",
+        "correct": false,
+        "why": "Nothing propagates, and no TTL helps a record held by servers nobody asks any more."
+      },
+      {
+        "text": "It landed on servers nobody asks any more; the CA asks the ones `NS` names now.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-2cgx0ges",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "On the lab server, `sudo ss -ltn` lists `0.0.0.0:443`, `0.0.0.0:80`, `127.0.0.1:14000` and `127.0.0.1:8001`, among others, and no firewall is on. A colleague's laptop on the same network tries each of them. Which can it reach? Choose all that apply.",
+    "hint": "Web and Internet Fundamentals, lesson 4; Web Servers and Caching, lesson 4.",
+    "choices": [
+      {
+        "text": "The shop, on `127.0.0.1:8001`",
+        "correct": false,
+        "why": "Loopback never reaches a network card: only the machine itself can ask, which is why the shop is reached through Nginx."
+      },
+      {
+        "text": "Nginx, on `0.0.0.0:443`",
+        "correct": true,
+        "why": "`0.0.0.0` is every address the machine has, the one on the office network included."
+      },
+      {
+        "text": "Pebble's ACME API, on `127.0.0.1:14000`",
+        "correct": false,
+        "why": "`127.0.0.1` is the machine talking to itself; nothing outside it can connect there."
+      },
+      {
+        "text": "Nginx, on `0.0.0.0:80`",
+        "correct": true,
+        "why": "Right: listening on every address, so the laptop's request on port 80 arrives."
+      }
+    ]
+  },
+  {
+    "id": "ex-kscamq0w",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "On the handshake clock of the fundamentals course, a browser and a server are 150 milliseconds apart each way. The servers course says that without `keepalive` in the upstream, Nginx pays that same handshake before every request it passes to the application. On that clock, how many milliseconds pass between the SYN leaving and the request itself leaving with the ACK?",
+    "hint": "Web and Internet Fundamentals, lesson 2; Web Servers and Caching, lesson 2.",
+    "value": 300,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-jgw7cmf6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Readers in Lisbon say the bookshop, served from São Paulo, takes over a second to show its first page, and most of that second is round trips. The owner proposes doubling the server's bandwidth. What do the two courses say?",
+    "hint": "Web and Internet Fundamentals, lesson 3; Web Servers and Caching, lesson 7.",
+    "choices": [
+      {
+        "text": "It halves the wait, because each round trip then carries twice as many bytes at once.",
+        "correct": false,
+        "why": "A wider pipe moves more side by side; nothing arrives sooner, and these round trips carry almost nothing."
+      },
+      {
+        "text": "It leaves the slow part alone: the ocean sets each round trip, and an edge in Lisbon removes the crossing for cacheable files.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Turn on `gzip_types` instead: a third of the bytes is a third of the wait.",
+        "correct": false,
+        "why": "Compression shrinks the transfer, the part that was already short; the round trips stay as long as the distance makes them."
+      },
+      {
+        "text": "Put a CDN in front, and the signed-in basket speeds up exactly as much as the stylesheet does.",
+        "correct": false,
+        "why": "A personal page must not be stored at the edge, so its request still crosses the ocean to the origin."
+      }
+    ]
+  },
+  {
+    "id": "ex-w01cv938",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "The shop starts reporting failures as `200 OK` with `{\"error\": \"database unavailable\"}` in the body, under its usual `Cache-Control: public, max-age=60`. Nginx caches `/api/` with `proxy_cache_use_stale error timeout http_500 http_502 http_503 http_504`. What goes wrong? Choose all that apply.",
+    "hint": "Web and Internet Fundamentals, lesson 6; Web Servers and Caching, lesson 6.",
+    "choices": [
+      {
+        "text": "Nginx turns the answer into a `502`, because the body contradicts the status line.",
+        "correct": false,
+        "why": "`502` means the application sent something that is not HTTP; a well-formed `200` passes, whatever its body says."
+      },
+      {
+        "text": "The error is stored like any other answer and handed to every visitor for the next minute.",
+        "correct": true,
+        "why": "Right: a cache files the failure under the address, because the number said it worked."
+      },
+      {
+        "text": "The good copy from before the outage is never used, since Nginx sees a success and none of the listed failures.",
+        "correct": true,
+        "why": "Right: the stale copy is a fallback for errors, and every one it knows of is a status code."
+      },
+      {
+        "text": "`X-Cache-Status` reports `STALE`, so the failure at least shows in the headers.",
+        "correct": false,
+        "why": "`STALE` means an expired copy was served instead of an error; here Nginx got a fresh success and stored it, `MISS` and then `HIT`."
+      }
+    ]
+  },
+  {
+    "id": "ex-t19gx4b6",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Inside `location /api/`, a first proxy is written `proxy_pass http://127.0.0.1:8001/;`, with a slash after the port. A browser asks for `/api/books/3`, and the shop receives the path `___`.",
+    "hint": "Web Servers and Caching, lesson 2.",
+    "blanks": [
+      {
+        "accept": [
+          "/books/3",
+          "books/3"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-p077xd0y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On the shop's first day on HTTPS, before renewal has ever run, somebody sends `Strict-Transport-Security: max-age=31536000; includeSubDomains`. A month later `promo.ipelivros.example`, run by an agency on plain HTTP, will not open for anybody who had visited the shop. What did lesson 4 advise?",
+    "hint": "Web Servers and Caching, lesson 4.",
+    "choices": [
+      {
+        "text": "Nothing in advance: removing the header now clears the rule on each browser's next visit.",
+        "correct": false,
+        "why": "Once a browser has seen the header, nothing changed on the server removes it before `max-age` runs out."
+      },
+      {
+        "text": "Sending the header on the port-80 redirect as well, so that browsers learn the rule before they ever reach HTTPS.",
+        "correct": false,
+        "why": "A browser ignores HSTS received over plain HTTP, because anybody on the path could have added it."
+      },
+      {
+        "text": "Start at an hour, lengthen it once the certificate renews itself, and add subdomains once all are on HTTPS.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing: `includeSubDomains` reaches only the names that the same Nginx serves.",
+        "correct": false,
+        "why": "It covers every name under this one, including those another team runs somewhere else."
+      }
+    ]
+  },
+  {
+    "id": "ex-tmm3t6sd",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Asked straight, without the cache, every request to the shop waits 120 ms for its query, and lesson 5 puts the ceiling for ten at a time at about 80 requests a second. By the same reasoning, what is the ceiling, in requests a second, with 30 requests in flight, each still waiting 120 ms?",
+    "hint": "Web Servers and Caching, lesson 5; Web and Internet Fundamentals, lesson 1.",
+    "value": 250,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-1yvhkx8k",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "The owner lowers a price and purges the copy, and the cache still ends up holding the old price for a whole lifetime. Put the events of lesson 6's race in the order they happened.",
+    "hint": "Web Servers and Caching, lesson 6.",
+    "items": [
+      "A visitor's request misses the cache",
+      "That request reads 8,990 from the database",
+      "The owner's update writes 7,990 to the database",
+      "The update purges the copy, which is not there yet",
+      "The slow request stores 8,990, fresh for another sixty seconds"
+    ],
+    "trap": "The tempting order puts the purge last, as the fix it was meant to be; it landed before the slow read stored its copy, which is why it removed nothing."
+  },
+  {
+    "id": "ex-sj8dctc0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The bookshop goes behind a commercial CDN, set to reach the origin over plain HTTP because that was the quickest option to switch on. Visitors still see a valid padlock. What does that padlock describe?",
+    "hint": "Web Servers and Caching, lesson 7; Web and Internet Fundamentals, lesson 9.",
+    "choices": [
+      {
+        "text": "Only the hop to the edge; the hop to the origin crosses a network in the clear.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The whole path, because the edge reuses the visitor's encrypted connection on its way to the origin.",
+        "correct": false,
+        "why": "The edge ends the visitor's connection and opens a second one, which in this setting is plain."
+      },
+      {
+        "text": "The whole path, as long as the origin listens only on `127.0.0.1`, as the lab's did.",
+        "correct": false,
+        "why": "The lab's edge and origin shared one machine; a real origin is reached across networks the CDN does not own."
+      },
+      {
+        "text": "The edge and the origin alike, since the CDN obtained the domain's certificate through ACME.",
+        "correct": false,
+        "why": "Who obtained the certificate says nothing of the second hop; the padlock describes the hop the browser made."
+      }
+    ]
+  },
+  {
+    "id": "ex-vvmrns7q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The shop moves its session rows, the table behind the cookie, into the Redis that caches book JSON, which is set up as a cache: `maxmemory` set and `maxmemory-policy allkeys-lru`. Traffic grows and memory fills. What happens to the sessions?",
+    "hint": "Web Servers and Caching, lesson 8; Web and Internet Fundamentals, lesson 7.",
+    "choices": [
+      {
+        "text": "New sign-ins fail with `OOM command not allowed`, while the sessions already there are kept.",
+        "correct": false,
+        "why": "That is `noeviction`; under `allkeys-lru` every write succeeds and older keys make the room."
+      },
+      {
+        "text": "They are safe, since only keys without a lifetime are evicted and every session carries one.",
+        "correct": false,
+        "why": "`allkeys` means any key; it is the `volatile` policies that look only at keys with a lifetime, and they would pick the sessions."
+      },
+      {
+        "text": "Evicted sessions are written to `dump.rdb` first, and come back after the next restart.",
+        "correct": false,
+        "why": "Eviction deletes; a snapshot holds only what was in memory when it was taken."
+      },
+      {
+        "text": "Idle sessions are evicted like any cached book, and those visitors are signed out early.",
+        "correct": true,
+        "why": "Right. A cache may forget and a session table may not: give each one a Redis of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-vjjch57d",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In 2018, open Memcached servers flooded third parties over UDP with replies many thousands of times the size of the small forged requests that caused them. Why does the same trick not work against a Memcached that speaks only TCP?",
+    "hint": "Web Servers and Caching, lesson 9; Web and Internet Fundamentals, lesson 2.",
+    "choices": [
+      {
+        "text": "TCP numbers its bytes, so Memcached can tell that a forged request's bytes are out of order.",
+        "correct": false,
+        "why": "Numbering puts a stream back in order; it says nothing about who sent it."
+      },
+      {
+        "text": "Before any data, TCP answers a SYN with a SYN-ACK, which goes to the forged address; the request never follows.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "TCP slows down when it sees loss, so a reply that large is throttled before it can do harm.",
+        "correct": false,
+        "why": "Slowing down shares a congested link; it does not stop a large answer reaching whoever the request named."
+      },
+      {
+        "text": "Over TCP, Memcached refuses any value larger than a megabyte, so the replies stay small.",
+        "correct": false,
+        "why": "The one-megabyte limit is per value and holds however the request arrives; a megabyte is still huge beside a small request."
+      }
+    ]
+  },
+  {
+    "id": "ex-wp423rjf",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "Match each kind of data to the caching pattern that lesson 10's table recommends for it.",
+    "hint": "Web Servers and Caching, lesson 10.",
+    "pairs": [
+      {
+        "left": "View counters and likes, many cheap writes",
+        "right": "write-behind"
+      },
+      {
+        "left": "Values read right after they change",
+        "right": "write-through"
+      },
+      {
+        "left": "Data written once and rarely read",
+        "right": "write-around"
+      },
+      {
+        "left": "Most reads of most data",
+        "right": "cache-aside"
+      }
+    ],
+    "right_distractors": [
+      "read-through"
+    ]
+  },
+  {
+    "id": "ex-x0m2831e",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "By lesson 11's arithmetic, a page read 500 times a second whose query takes 120 ms sends about 60 identical queries the instant its key expires. A page read 2,000 times a second, whose query takes 50 ms, sends about how many?",
+    "hint": "Web Servers and Caching, lesson 11.",
+    "value": 100,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-f85337s2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your search handler reads `q` and `lang` from the query string, and `lang` never arrives, although people type in its box. The template has these two fields: `<label for=\"q\">Title or author</label> <input id=\"q\" name=\"q\" type=\"search\">` and `<label for=\"lang\">Language</label> <input id=\"lang\">`. What is wrong?",
+    "hint": "HTML and CSS, lesson 3.",
+    "choices": [
+      {
+        "text": "The second label is joined by `for`, which makes its field one the browser shows and does not send.",
+        "correct": false,
+        "why": "`for` joins a label to a field for its name and its click; it has nothing to do with what is sent."
+      },
+      {
+        "text": "The second field has an `id` and no `name`, and a request is built only from `name=value` pairs.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A `get` form sends only its first field; the second would need `method=\"post\"` to travel in the body.",
+        "correct": false,
+        "why": "A GET form sends every named field, joined by `&`, in the query string."
+      },
+      {
+        "text": "An input with no `type` is left out of the request until it is declared as `type=\"text\"`.",
+        "correct": false,
+        "why": "`text` is the default type; the field is skipped for having no name, not for its type."
+      }
+    ]
+  },
+  {
+    "id": "ex-dcqet7k2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A page lists a customer's reservations, each with a link `<a href=\"cancel?id=17\">Cancel</a>` that your server answers by deleting the reservation. One morning several reservations are gone, and nobody pressed anything. What do the two lessons say?",
+    "hint": "HTML and CSS, lesson 3; Web and Internet Fundamentals, lesson 6.",
+    "choices": [
+      {
+        "text": "Links are acceptable here if the server answers `204 No Content`, which tells a crawler not to follow them.",
+        "correct": false,
+        "why": "A status code arrives after the request has been carried out; by then the reservation is gone."
+      },
+      {
+        "text": "Nothing in HTTP separates the two methods for this, so the cause is a bug in the delete query.",
+        "correct": false,
+        "why": "GET is defined as safe, and that definition is exactly what lets anything fetch it freely."
+      },
+      {
+        "text": "A `GET` is fine as long as the id is long and random, so that nobody can guess the address.",
+        "correct": false,
+        "why": "The address is in the page itself, and whatever reads the page may fetch every link on it."
+      },
+      {
+        "text": "A `GET` promises to change nothing, so anything may fetch it unasked; cancelling needs a `post` form.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-7pmvbr8z",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "An old login page uses `<form action=\"login\" method=\"get\">`, so signing in sends `GET /login?user=ana&password=…` over HTTPS. Where is the password now written down? Choose all that apply.",
+    "hint": "HTML and CSS, lesson 3; Web Servers and Caching, lesson 1.",
+    "choices": [
+      {
+        "text": "In the browser's history, with the rest of the address.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "In the server's access log, whose combined format records each request line.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "In plain text on the café's Wi-Fi, readable by anybody sharing it.",
+        "correct": false,
+        "why": "HTTPS keeps the address out of other people's hands on the way; the copies that leak are the ones written down at each end."
+      },
+      {
+        "text": "In the address the next site may receive as the page the visitor came from.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-t5t1syt1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The order page has `<input name=\"copies\" type=\"number\" min=\"1\" max=\"5\">`. Somebody skips the browser and sends your orders API `{\"title\": \"Vidas Secas\", \"copies\": -40}` with `Content-Type: application/json`. What should the API answer?",
+    "hint": "HTML and CSS, lesson 3; APIs and Authentication, lesson 1.",
+    "choices": [
+      {
+        "text": "`422`, storing nothing: the JSON parses, and its content breaks a rule the server checks itself.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`400`, because a body the page's form could never have produced is a malformed request.",
+        "correct": false,
+        "why": "`400` is about the bytes: a body that is not JSON, or not an object. This one parses."
+      },
+      {
+        "text": "`201`, with one copy stored: the form's `min` is the floor, so the server can move the value up to it.",
+        "correct": false,
+        "why": "A value that fails a rule is refused and nothing is stored; the form's attributes never reached the server."
+      },
+      {
+        "text": "`415`, since an order that bypassed the page did not arrive in the encoding the form uses.",
+        "correct": false,
+        "why": "`415` is about the label, and this body is labelled `application/json`, which is what the API takes."
+      }
+    ]
+  },
+  {
+    "id": "ex-nf40gj51",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "The order form has three checkboxes named `extra`. An order placed without touching any of them arrives as `GET /order?format=paperback&shop=centro&notes=`. How does your handler learn that nobody wanted gift wrap?",
+    "hint": "HTML and CSS, lesson 3.",
+    "choices": [
+      {
+        "text": "From `notes=`, which the browser sends empty in place of the boxes nobody ticked.",
+        "correct": false,
+        "why": "`notes` is the text area, sent empty because a text field always has a value; it says nothing about the boxes."
+      },
+      {
+        "text": "It cannot, so the request should be refused for leaving out a field the form has.",
+        "correct": false,
+        "why": "A missing `extra` is how the form says no; refusing it would refuse every order without extras."
+      },
+      {
+        "text": "From the missing `extra`: an unchecked box sends nothing, so absence means no.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "From `extra=off`, which each unchecked box adds to the end of the query string.",
+        "correct": false,
+        "why": "An unchecked checkbox sends nothing at all, neither `extra=` nor `extra=off`."
+      }
+    ]
+  },
+  {
+    "id": "ex-kt7d9syx",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Your handler answers with the body `Pinheiros, São Paulo` and nothing else, encoded in UTF-8. What number belongs in its `Content-Length` header?",
+    "hint": "HTML and CSS, lesson 1; Web and Internet Fundamentals, lesson 6.",
+    "value": 21,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-cneft4mr",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A CI step runs `npx html-validate -f text templates/*.html | tee validate.log`. The log lists three errors and the step is green. Starting the step with `set -o ___` makes the validator's exit status the step's.",
+    "hint": "HTML and CSS, lesson 1; Automated Testing and CI/CD, lesson 5.",
+    "blanks": [
+      {
+        "accept": [
+          "pipefail"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ecyn6j92",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`customers.name` is `varchar(50)` because the last project's schema had it. A teammate brings the form into line with it: `maxlength=\"50\"` and `pattern=\"[A-Za-z ]+\"` on the name field. What do the two lessons say?",
+    "hint": "HTML and CSS, lesson 3; Relational Databases and SQL, lesson 3.",
+    "choices": [
+      {
+        "text": "Keep both: a form that mirrors the column exactly catches every bad name before the round trip.",
+        "correct": false,
+        "why": "The pattern refuses real names such as *D'Ávila*, and a limit copied out of habit stops real people."
+      },
+      {
+        "text": "Drop the pattern, which refuses *D'Ávila*, and question a 50 that no specification gave.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Drop `maxlength` and keep the pattern, since in PostgreSQL `varchar(50)` is faster than `text`.",
+        "correct": false,
+        "why": "In PostgreSQL the two perform identically; a `varchar(n)` is `text` with a length check attached."
+      },
+      {
+        "text": "Make the column `char(50)`, so every name is stored at one width and neither attribute is needed.",
+        "correct": false,
+        "why": "`char(n)` pads with spaces, and comparisons and lengths then disagree about whether the spaces are there."
+      }
+    ]
+  },
+  {
+    "id": "ex-8v0pgjjx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "After a change to the shared page template, every page opens to a blank window, and the tab shows a long title full of angle brackets. In DevTools the body is 0 pixels tall. Which mistake in the template does that?",
+    "hint": "HTML and CSS, lesson 1.",
+    "choices": [
+      {
+        "text": "The doctype line was deleted, so the browser drew every page in quirks mode.",
+        "correct": false,
+        "why": "Quirks mode changes layout slightly, such as 4 pixels under an image; the page is still drawn."
+      },
+      {
+        "text": "The `<meta charset>` line moved to just below the `<title>`.",
+        "correct": false,
+        "why": "A wrong or late encoding garbles letters such as *ã*; it does not empty the page."
+      },
+      {
+        "text": "A `<p>` was left without its closing tag just before a `<div>`.",
+        "correct": false,
+        "why": "The parser closes the paragraph and carries on, and the page looks almost right."
+      },
+      {
+        "text": "The `<title>` has no closing tag, so the rest of the file became its text.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-77b8rkzk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Your server template writes `<p class=\"text-{{ colour }}-700\">` and fills `colour` with `green` or `red` per book. The Tailwind build runs over the templates folder. In the browser the class is on the element, and the text is black. Why?",
+    "hint": "HTML and CSS, lesson 13.",
+    "choices": [
+      {
+        "text": "The build reads files as text and never saw `text-green-700` written whole, so no rule exists for it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Preflight resets colours in the `base` layer, and `base` wins over utilities on a page a server rendered.",
+        "correct": false,
+        "why": "`utilities` is the later layer, so a utility wins over Preflight wherever the page came from."
+      },
+      {
+        "text": "The build must run again with `--watch` after each request, because the colour changes per book.",
+        "correct": false,
+        "why": "Rebuilding reads the same template, and the template still never names the class whole."
+      },
+      {
+        "text": "Tailwind writes its palette in OKLCH, which a browser cannot draw for a class a server sent.",
+        "correct": false,
+        "why": "Browsers have read OKLCH since 2023; the colour is missing because no rule names the class."
+      }
+    ]
+  },
+  {
+    "id": "ex-9z4ercq8",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "You are writing a parser for the order form's `application/x-www-form-urlencoded` body. Match each character the reader typed to how it arrives, as lesson 3's captures show it.",
+    "hint": "HTML and CSS, lesson 3.",
+    "pairs": [
+      {
+        "left": "a space",
+        "right": "`+`"
+      },
+      {
+        "left": "`@`",
+        "right": "`%40`"
+      },
+      {
+        "left": "`,`",
+        "right": "`%2C`"
+      },
+      {
+        "left": "the `-` in a CEP",
+        "right": "`-`, unchanged"
+      }
+    ],
+    "right_distractors": [
+      "`%20`"
+    ]
+  },
+  {
+    "id": "ex-9vmc5472",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A CI job runs axe over every page the server renders and reports no violations. Which of these could still be on those pages? Choose all that apply.",
+    "hint": "HTML and CSS, lesson 2.",
+    "choices": [
+      {
+        "text": "Several links whose whole text is *Click here*.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A product photo whose `<img>` carries no `alt` attribute at all.",
+        "correct": false,
+        "why": "axe reports that one as image-alt, critical."
+      },
+      {
+        "text": "An image link whose `alt` describes the photo, not where the link goes.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A page whose `<h1>` is followed straight by two `<h4>` headings.",
+        "correct": false,
+        "why": "axe reports a skipped level as heading-order."
+      }
+    ]
+  },
+  {
+    "id": "ex-prjt78dp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The product page template now writes `loading=\"lazy\"` on every `<img>`, the large photograph at the top of the page included. What happens to that first photograph?",
+    "hint": "HTML and CSS, lesson 4.",
+    "choices": [
+      {
+        "text": "Nothing changes for it: lazy only affects images that begin below the window.",
+        "correct": false,
+        "why": "The browser cannot know an image is visible until it has laid the page out, so a lazy one near the top starts later."
+      },
+      {
+        "text": "It is not fetched until the reader scrolls, so the top of the page stays empty.",
+        "correct": false,
+        "why": "A lazy image is fetched as the reader comes near it, and at the top it is near from the start; it only starts later."
+      },
+      {
+        "text": "It starts later, so the picture the reader sees first arrives last.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It shifts the layout even with `width` and `height`, which lazy images ignore.",
+        "correct": false,
+        "why": "Width and height reserve the space for a lazy image as for any other, which is why lazy loading needs them."
+      }
+    ]
+  },
+  {
+    "id": "ex-s9bs97ad",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "You push loanbook to GitHub, and the repository shows its twenty commits, yet your profile's contribution graph stays empty. `git config user.email` prints `ana@example.org`, an address that is not on your GitHub account. What is the fix?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 5; The Portfolio Project: From Brief to Deploy, lesson 18.",
+    "choices": [
+      {
+        "text": "Commit something small every day from now on, so the graph fills in and the gap stops showing.",
+        "correct": false,
+        "why": "Committing to keep the graph green is visible to anybody who clicks on a square, and it reads exactly as it is."
+      },
+      {
+        "text": "Pin the repository, since the graph counts only the repositories a profile has pinned.",
+        "correct": false,
+        "why": "Pinning decides what the profile shows first; the graph counts commits by the address they carry."
+      },
+      {
+        "text": "Move the repository under your account's name, which is what ties its commits to a profile.",
+        "correct": false,
+        "why": "Commits are tied to an account by the e-mail they carry, not by where the repository lives."
+      },
+      {
+        "text": "Commit with an address the account knows, such as its no-reply `ID+username@users.noreply.github.com`.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ht9pa8b2",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "Your first ticket at work is a bug: the login page refuses e-mail addresses written with capitals. The team writes Conventional Commits, and the body of your message says why it happened. Its first line reads `___(login): accept e-mail addresses in any case`.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 20; Git and Teamwork: Version Control, Review and Process, lesson 11.",
+    "blanks": [
+      {
+        "accept": [
+          "fix"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-d0rrb0ab",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "You want your applications tracker to say how many rows sit at each stage, the commonest first. Put the commands of the pipeline in the order they run.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 8; Linux and the Command Line, lesson 8.",
+    "items": [
+      "`cut -d, -f5 applications.csv`",
+      "`tail -n +2`",
+      "`sort`",
+      "`uniq -c`",
+      "`sort -rn`"
+    ],
+    "trap": "`uniq -c` counts runs of identical neighbouring lines, so without a `sort` before it one stage is counted in several pieces, with no warning; and `tail -n +2` is what drops the `stage` header that `cut` took from line 1."
+  },
+  {
+    "id": "ex-fcd0t29d",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In a design interview you are asked for the tables of a library's loans, then for the one hard part, and you say that two people could lend the same item at once. Which choice settles it the way both lessons would?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 14; Relational Databases and SQL, lesson 1.",
+    "choices": [
+      {
+        "text": "Check in the application that the item is free, and only then insert the loan.",
+        "correct": false,
+        "why": "Two requests can both check, both find the item free and both insert; the check is subject to two people clicking at once."
+      },
+      {
+        "text": "A key in the database that a second loan breaks, so it is refused however close the clicks.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Put a queue in front of the server, so that loans are handled one at a time.",
+        "correct": false,
+        "why": "Lesson 14 says to resist a queue nobody asked for; a constraint in the database already settles it."
+      },
+      {
+        "text": "Design for a million users first, since the clash only appears at that scale.",
+        "correct": false,
+        "why": "Nobody expects a junior to design for a million users, and two people at the same moment are enough."
+      }
+    ]
+  },
+  {
+    "id": "ex-xev8z3y9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A take-home asks for a small booking service in which a room cannot be booked twice for the same hour. Your note has room for one line about tests. Which line tells the reviewer the most?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 13; Automated Testing and CI/CD, lesson 4.",
+    "choices": [
+      {
+        "text": "One test books the room twice and fails when the rule is removed.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The suite reaches 90% coverage, comfortably above the usual 85% threshold.",
+        "correct": false,
+        "why": "Coverage counts lines that ran, and tests that check nothing raise it; the percentage says nothing about the rule."
+      },
+      {
+        "text": "Every function in the service has at least one test of its own.",
+        "correct": false,
+        "why": "A count of tests says nothing about whether any of them would notice the rule going missing."
+      },
+      {
+        "text": "Tests will follow the two extra features, once there is time left.",
+        "correct": false,
+        "why": "What the brief asked comes first, and an extra on top of a missing requirement reads as not having read the brief."
+      }
+    ]
+  },
+  {
+    "id": "ex-hkn491h6",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "A company offers CLT at R$ 5,500 a month, or the same role as a PJ. As a PJ you would take one month off a year, unpaid. By lesson 17's arithmetic, before taxes and benefits, what monthly PJ invoice, in reais, matches the CLT year?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 17.",
+    "value": 7200,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-c3wwyept",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "You have practised a behavioural answer that runs for two minutes. By the share of time lesson 15 gives each part of a STAR answer, how many seconds of it should be the Action?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 15.",
+    "value": 66,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-7fy944pw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Six weeks into your trial period you realise that the export you promised for Friday will be a week late. Your next one-to-one is on Wednesday. What does lesson 21 say?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 21.",
+    "choices": [
+      {
+        "text": "Say nothing yet and work evenings, since a trial is passed by impressing in its final weeks.",
+        "correct": false,
+        "why": "The trial is passed by being predictable, not by working late or by one impressive week."
+      },
+      {
+        "text": "Keep it for the review at the end of the trial, which is where late work is discussed.",
+        "correct": false,
+        "why": "Bad news found out later is a problem; said early, it is a conversation."
+      },
+      {
+        "text": "Take it to Wednesday's one-to-one, as what is blocking you and what you have tried.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Mention it once the export is finished, together with the reason it took longer.",
+        "correct": false,
+        "why": "Said after the fact, the delay has already surprised everybody who planned around Friday."
+      }
+    ]
+  },
+  {
+    "id": "ex-s37h815e",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A recruiter has posted a junior back-end role on LinkedIn, and you want to send her a short message about it. When does lesson 7 say to send it?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 7.",
+    "choices": [
+      {
+        "text": "Before applying, so that she can say whether the CV is worth sending.",
+        "correct": false,
+        "why": "A recruiter can do little with a message about a role you have not applied for, except ask you to apply."
+      },
+      {
+        "text": "Instead of applying, with the CV attached, since a message gets read.",
+        "correct": false,
+        "why": "The message goes after the application and carries no CV: they have it already."
+      },
+      {
+        "text": "Every week until she answers, so the application stays near the top.",
+        "correct": false,
+        "why": "Send it once; lesson 10 deals with what to do when there is no answer."
+      },
+      {
+        "text": "Once, after applying, with the role, the evidence and a link.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-tzvravab",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Run 2 of the lab's CI failed in all six cells: Ana had committed `tests/test_carriers.py`, and her laptop still shows `?? tests/data/carriers.csv`. Which of these puts the CSV into the commit the next run checks out?",
+    "hint": "Automated Testing and CI/CD, lesson 5; Git and Teamwork: Version Control, Review and Process, lesson 2.",
+    "choices": [
+      {
+        "text": "`git commit -am` with a message: `-a` stages the changes in the folder.",
+        "correct": false,
+        "why": "`-a` only stages files git already tracks; a file marked `??` stays out of the commit."
+      },
+      {
+        "text": "`git add` on the CSV, then a commit and a push: a new file needs its own add.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Push again as it is: the hook's clean checkout copies the files from the laptop.",
+        "correct": false,
+        "why": "The checkout is `git archive` of the pushed commit, and only what was committed is in it."
+      },
+      {
+        "text": "Add `tests/data/` to `.gitignore`, so that git stops reporting the file as untracked.",
+        "correct": false,
+        "why": "Ignoring it hides the `??` and keeps the file out of every commit, which is the failure itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-kvw4vv7b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "After tagging `v1.4.0`, Ana commits one more change and runs `ops/build.sh` without tagging again. `git describe --tags` prints `v1.4.0-1-g7c77050`. What does the build call the artifact?",
+    "hint": "Automated Testing and CI/CD, lesson 7; Git and Teamwork: Version Control, Review and Process, lesson 7.",
+    "choices": [
+      {
+        "text": "`shipquote-dev-7c77050`: no tag sits on that commit, so it is named by the commit.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`shipquote-1.4.0`: the newest tag in the history that leads here is still `v1.4.0`.",
+        "correct": false,
+        "why": "A tag does not move with new commits; `v1.4.0` names the commit before, and the build only uses a tag on HEAD itself."
+      },
+      {
+        "text": "`shipquote-1.4.1`: a commit made after a release raises the patch number by one.",
+        "correct": false,
+        "why": "Nothing raises a version on its own; the version is the tag on the commit, and here there is none."
+      },
+      {
+        "text": "An error: `ops/build.sh` refuses to build a commit with no tag of its own.",
+        "correct": false,
+        "why": "It builds, and names the result so that it cannot pass for a release."
+      }
+    ]
+  },
+  {
+    "id": "ex-3k4vndhc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Run 4 turned `main` red at commit `1247039`. Ana runs `git revert --no-edit HEAD`, pushes, and run 5 passes on `b33d78b`. What does `main`'s history hold now?",
+    "hint": "Automated Testing and CI/CD, lesson 5; Git and Teamwork: Version Control, Review and Process, lesson 4.",
+    "choices": [
+      {
+        "text": "`6b77129` at the top again: the revert moved `main` back to the commit before.",
+        "correct": false,
+        "why": "That is what `git reset` does; a revert adds a commit and moves nothing back."
+      },
+      {
+        "text": "`b33d78b` in the place of `1247039`, which the revert swapped for a corrected copy.",
+        "correct": false,
+        "why": "A revert replaces nothing; swapping the last commit for a new one is what `--amend` does."
+      },
+      {
+        "text": "`1247039` and, on top of it, `b33d78b`, a new commit that does the opposite.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`1247039` alone, with its change undone inside it and no new commit made.",
+        "correct": false,
+        "why": "A commit is never edited in place: its id covers its content, so any change is a new commit."
+      }
+    ]
+  },
+  {
+    "id": "ex-x3kbv2a9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The lab's `post-receive` hook reported run 4 as failed, and the broken commit was on `main` all the same. On a hosting service, what would have kept it out?",
+    "hint": "Automated Testing and CI/CD, lesson 5; Git and Teamwork: Version Control, Review and Process, lesson 8.",
+    "choices": [
+      {
+        "text": "`set -e` at the top of the hook, so that its first failing cell rejects the push.",
+        "correct": false,
+        "why": "The hook runs after git has accepted the push; nothing it does then can refuse it."
+      },
+      {
+        "text": "A pull request into a protected `main` whose checks must pass before the merge.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Pushing with `-u`, so that git waits for the checks before it moves `origin/main`.",
+        "correct": false,
+        "why": "`-u` only records which remote branch yours goes with; git itself knows nothing of checks."
+      },
+      {
+        "text": "Nothing can: a Git server takes any push that moves a branch forward.",
+        "correct": false,
+        "why": "Git does take it; the hosting service adds branch protection on top, which Git knows nothing about."
+      }
+    ]
+  },
+  {
+    "id": "ex-h9fpg8zw",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A release of the repository that publishes this course starts from a tag. Put the steps in order, from the developer's terminal to the new revision serving.",
+    "hint": "Automated Testing and CI/CD, lesson 7; Git and Teamwork: Version Control, Review and Process, lesson 7.",
+    "items": [
+      "Push the annotated tag on its own, with `git push origin` and its name",
+      "`Tag` refuses a malformed tag, one lower than the last release, or one off `main`",
+      "`Checks` runs the whole CI workflow, called rather than copied",
+      "`Publish` builds, asks the binary its version and creates the release",
+      "`Deploy` pushes the images and moves the service to the new revision"
+    ],
+    "trap": "Building first looks quicker, but each job needs the one before: the tag is judged before anything runs, and nothing is built from a commit the checks have not passed. A plain `git push` would not even start it, because it sends no tags."
+  },
+  {
+    "id": "ex-zgpxvsdd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Ana runs `git push -u origin try-new-rounding` against the lab's remote, and the hook answers `ci: try-new-rounding is not main, nothing to run`. What happened?",
+    "hint": "Automated Testing and CI/CD, lesson 5; Git and Teamwork: Version Control, Review and Process, lesson 7.",
+    "choices": [
+      {
+        "text": "The branch now exists on the remote, and no test ran on it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The push was refused, because the hook turns away pushes to other branches.",
+        "correct": false,
+        "why": "The hook decides whether to run tests, not whether to accept; `* [new branch]` shows the branch was received."
+      },
+      {
+        "text": "The tests ran and passed, which is why the hook printed so little.",
+        "correct": false,
+        "why": "A passing run still prints a line per cell and `run N passed`; this one ran nothing."
+      },
+      {
+        "text": "The branch was merged into `main` first, so that the hook could test it.",
+        "correct": false,
+        "why": "Nothing merges on a push; the branch arrived as it was, beside `main`."
+      }
+    ]
+  },
+  {
+    "id": "ex-mzknwqe5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On a branch nobody has pushed, Ana committed `deploy/production.env` with the carrier token, then removed it in the next commit. Bruno says that since the branch never left her laptop, `git reset --hard HEAD~2` settles it. What do the two courses say to do?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 10; Automated Testing and CI/CD, lesson 9.",
+    "choices": [
+      {
+        "text": "Leave it: the second commit already took the token out of the history.",
+        "correct": false,
+        "why": "`git show HEAD~1:deploy/production.env` still prints it; deleting a file does not change the commit that added it."
+      },
+      {
+        "text": "The reset settles it: a commit kept on her own laptop has reached no other copy.",
+        "correct": false,
+        "why": "Both courses treat a committed secret as public from that moment; the reset only stops it spreading."
+      },
+      {
+        "text": "Run `git filter-repo` over the history and replace each clone before anything else.",
+        "correct": false,
+        "why": "That is the route for commits already pushed, and even then it comes after revoking the token."
+      },
+      {
+        "text": "Rotate the token first; after that, the reset is a fine way to drop both commits.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ga313da5",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each thing that went wrong to the quickest way back the two courses give for it.",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 4; Automated Testing and CI/CD, lesson 10.",
+    "pairs": [
+      {
+        "left": "An edit to `menu.html` that was never staged",
+        "right": "`git restore menu.html`"
+      },
+      {
+        "left": "A bad commit already on the shared `main`",
+        "right": "`git revert` of that commit"
+      },
+      {
+        "left": "A canary at 25% erring 2 points above the baseline",
+        "right": "Its weight set to 0 in the routes file"
+      },
+      {
+        "left": "A new feature on for 50% of customers",
+        "right": "Its percentage set to 0 in the flags file"
+      }
+    ],
+    "right_distractors": [
+      "The old release rebuilt from its tag"
+    ]
+  },
+  {
+    "id": "ex-8c5v9mtw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A team works trunk based: the half-built delivery estimate is merged into `main` every day behind `delivery_estimate`, which production now has at 10%. Its CI runs the suite with every flag off. What does that leave untested?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 9; Automated Testing and CI/CD, lesson 10.",
+    "choices": [
+      {
+        "text": "Little that matters: below 100% most customers have it off, so off is the state to test.",
+        "correct": false,
+        "why": "At 10% both paths run in production; a suite that only knows every flag off tests a program nobody runs."
+      },
+      {
+        "text": "The merging: with a flag, trunk-based work should stay on its branch until it is done.",
+        "correct": false,
+        "why": "Merging unfinished work behind a flag is the point of trunk based; the gap is in the tests, not the branch."
+      },
+      {
+        "text": "The flags file, which the program reads once at start-up and then keeps in memory.",
+        "correct": false,
+        "why": "`flags.load()` reads the file on every request; that is how 10% became 50% with no restart."
+      },
+      {
+        "text": "The path the 10% of customers take: a flag mid-rollout has to be tested in both of its states.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ztnyxmfv",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A team of four finishes about 30 points in a normal sprint, with each person there for all 10 days. This sprint Carla is away for 5 days and Diego for 3. By lesson 18's arithmetic, about how many points of capacity does the team have, before any slack is left?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 18.",
+    "value": 24,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-h0deeb34",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Before tidying up old branches, Ana runs `git branch ___`, which lists the ones whose commits are all already in the branch she is on: the ones `git branch -d` will delete without complaint.",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 5.",
+    "blanks": [
+      {
+        "accept": [
+          "--merged"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5hvqsc1g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "At 15:00 on a later day, Ana runs `git log --oneline --since=\"2026-09-17\"` on the bakery's week. `6555c9b` and `eadf998` are listed, but `31a6298 Add cheese rolls`, committed at 10:15 on the 17th, is not. Why?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 3.",
+    "choices": [
+      {
+        "text": "`--since` keeps what came after the day named, so the 17th itself is left out.",
+        "correct": false,
+        "why": "The day is not excluded as such; with `00:00` written after the date, the same command lists `31a6298`."
+      },
+      {
+        "text": "The commit's date is in `-0300`, and `--since` compares it in UTC, three hours later.",
+        "correct": false,
+        "why": "The zone is part of the stored date and is taken into account; the missing piece is the hour."
+      },
+      {
+        "text": "A date with no time means that day at the current time of day, here 15:00.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The log filled the first screen and waited, so the older commit sits further down.",
+        "correct": false,
+        "why": "`git log` does page long output, but three lines fit on any screen; nothing is waiting below."
+      }
+    ]
+  },
+  {
+    "id": "ex-4jt2tq9p",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "prompt": "Ana is on `main` with a clean working tree, and Bruno has just pushed a new commit to `origin`. Which of these commands change files in her working tree? Choose all that apply.",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lessons 5 and 7.",
+    "choices": [
+      {
+        "text": "`git fetch`, to bring in what Bruno pushed",
+        "correct": false,
+        "why": "It copies his commit and moves `origin/main`; her own `main` and her files stay as they were."
+      },
+      {
+        "text": "`git pull`, which here fast-forwards `main`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`git branch menu-prices`, to start new work",
+        "correct": false,
+        "why": "It writes a name for the current commit and copies nothing; she is still on `main`."
+      },
+      {
+        "text": "`git switch experiment`, whose `index.html` differs",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-3fmdkx99",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "By `shipquote`'s freight table in lesson 1, what does a parcel of 1600 g to the CEP `70040-010` cost, in cents, for a basket whose subtotal is 5000 cents?",
+    "hint": "Automated Testing and CI/CD, lesson 1.",
+    "value": 3540,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-qd8tjn9k",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A service takes about 2,000,000 quote requests a month and sets its objective at 99.99% of requests succeeding. By lesson 11's reasoning, how many failed requests does its error budget allow in that month?",
+    "hint": "Automated Testing and CI/CD, lesson 11.",
+    "value": 200,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-bav0zah9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Every quote from production comes back with a 200, but the one for `01310-100`, 1200 g, subtotal 5000, is R$ 21,90 today where it was R$ 18,60 yesterday. Nobody deployed. Where does the course say the cause shows first?",
+    "hint": "Automated Testing and CI/CD, lessons 2 and 9.",
+    "choices": [
+      {
+        "text": "In `/version`, which stops naming the carrier once the shop falls back to its table.",
+        "correct": false,
+        "why": "`/version` reports the configured carrier URL whether or not the carrier is answering."
+      },
+      {
+        "text": "In the smoke test, which fails as soon as a price comes from the table instead.",
+        "correct": false,
+        "why": "The smoke test asks only `/health` and `/version`, and both still answer as expected."
+      },
+      {
+        "text": "In the error rate, which climbs with each request the carrier fails to answer now.",
+        "correct": false,
+        "why": "A fallback is answered with a 200; an error rate counts 5xx and silence, so it stays at zero."
+      },
+      {
+        "text": "In the log, as `carrier unavailable, using the table:` followed by the carrier's error.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-5b1hsr59",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Mutation testing left a survivor in `store.py`: `ORDER BY created_at DESC, id DESC` changed to `ORDER BY created_at DESC`. Which new test would kill it?",
+    "hint": "Automated Testing and CI/CD, lesson 4.",
+    "choices": [
+      {
+        "text": "Two quotes with the same `created_at`, and `recent(2)` expected to list the newer id first.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A quote saved with negative cents, and the database expected to refuse it.",
+        "correct": false,
+        "why": "That kills the other survivor, the loosened `CHECK (cents >= 0)`; it never reaches the ordering."
+      },
+      {
+        "text": "Any test that raises the coverage of `store.py`, since a survivor marks a line nobody ran.",
+        "correct": false,
+        "why": "`store.py` is already at 100%: the line ran, and what is missing is an assertion that tells the orders apart."
+      },
+      {
+        "text": "Ten quotes from the factory, and `recent(10)` expected to list the ten, newest first.",
+        "correct": false,
+        "why": "The factory gives every quote its own `created_at`, so the tie-break on `id` is never needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-qkjmfnyj",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "On GitHub Actions, a suite has one failing test and coverage stands at 81%. Which of these `run:` steps would still show green? Choose all that apply.",
+    "hint": "Automated Testing and CI/CD, lessons 4 and 5.",
+    "choices": [
+      {
+        "text": "No `shell:` line, running `python -m pytest -q | tee run.log`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`shell: bash`, running `python -m pytest -q | tee run.log`",
+        "correct": false,
+        "why": "Naming the shell gives `-eo pipefail`, so pytest's failure fails the pipe and the step."
+      },
+      {
+        "text": "No `shell:` line, running `coverage report --fail-under=85 | tail -1`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "No `shell:` line, running `python -m pytest -q` on its own",
+        "correct": false,
+        "why": "`bash -e` stops on pytest's non-zero status; it is the pipe that hides one."
+      }
+    ]
+  },
+  {
+    "id": "ex-we68qfk9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A script reads a setting from a file a colleague wrote in a Windows editor: `mode=$(cat mode.txt)`. `echo \"$mode\"` prints `prod`, and yet `[ \"$mode\" = prod ]` is false every time it runs. What is going on?",
+    "hint": "Linux and the Command Line, lesson 1.",
+    "choices": [
+      {
+        "text": "`$( )` keeps the file's final newline, so the value is really `prod` followed by a line break.",
+        "correct": false,
+        "why": "`$( )` strips trailing newlines; the `\\n` is gone, and the character before it is not."
+      },
+      {
+        "text": "The lines end in `\\r\\n`, so the value is `prod` and a carriage return, which `cat -A` shows as `^M`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Inside `[ ]`, `=` compares numbers, so two words do not compare as equal; a comparison of strings needs `==` there.",
+        "correct": false,
+        "why": "`=` is the string comparison in `[ ]`; the letter operators, `-eq` and the rest, are for numbers."
+      },
+      {
+        "text": "`mode` was never exported, so the `[` command receives an empty value to compare.",
+        "correct": false,
+        "why": "`[` is handed the value already expanded, as an argument; `export` only matters to a child reading its environment."
+      }
+    ]
+  },
+  {
+    "id": "ex-r4m1s148",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your service's image is `FROM alpine:3.22`, and the build copies in a monitoring agent downloaded as a prebuilt Linux x86_64 binary. The file is there and executable, but it refuses to start, with an error about a missing shared library. The same binary runs on your Ubuntu laptop. What is wrong, and what do the two lessons suggest?",
+    "hint": "Linux and the Command Line, lesson 2; Docker and Containers, lesson 13.",
+    "choices": [
+      {
+        "text": "Alpine's `/bin/sh` is busybox `ash`, not bash, so it has to be added with `apk add --no-cache bash`.",
+        "correct": false,
+        "why": "That is what breaks a `#!/bin/bash` script. A compiled program needs no shell, and the library it misses is the C library."
+      },
+      {
+        "text": "It was built for another processor, and rebuilding the image for `arm64` will let it start.",
+        "correct": false,
+        "why": "It runs on an x86_64 laptop, so the architecture matches; what differs between the two machines is the C library."
+      },
+      {
+        "text": "Busybox lacks the GNU flags the agent calls `ls` and `grep` with, so install the GNU tools beside it.",
+        "correct": false,
+        "why": "A missing flag fails later, on that flag. A missing shared library is the program refused before it runs at all."
+      },
+      {
+        "text": "It was linked against glibc and Alpine ships musl; build on a Debian `-slim` base, which has glibc.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-b7ysk2m8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An image builds a tool into `/app/bin` during `docker build`. To try a code change, a teammate runs it with `-v \"$PWD\":/app`, and inside the container `/app/bin` is not there. Run without the `-v`, it is. What happened to it?",
+    "hint": "Linux and the Command Line, lesson 3; Docker and Containers, lesson 8.",
+    "choices": [
+      {
+        "text": "The host directory lies over `/app` and covers what the image put there, which is untouched.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The mount copied the host directory into the image and replaced `/app/bin` there for good, layer and all.",
+        "correct": false,
+        "why": "Nothing in the image changes. Without the mount the files are back, the way `oops.txt` came back after `umount`."
+      },
+      {
+        "text": "A bind mount is read-only by default, so the container does not see what it did not write itself.",
+        "correct": false,
+        "why": "Read-only is `:ro`, added on purpose, and it is about writing; it does not decide what is visible."
+      },
+      {
+        "text": "`docker run` discards the build layer holding `/app/bin` whenever a volume is passed to it at start.",
+        "correct": false,
+        "why": "No layer is thrown away; the mount sits on top of the directory and the layer is still underneath it."
+      }
+    ]
+  },
+  {
+    "id": "ex-4apb6hyh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On a new server you ran `sudo usermod -aG docker ana`. In the same terminal, `getent group docker` prints `docker:x:996:ana`, yet `docker ps` answers `permission denied while trying to connect to the docker API at unix:///var/run/docker.sock`. What do you do?",
+    "hint": "Linux and the Command Line, lesson 4; Docker and Containers, lesson 5.",
+    "choices": [
+      {
+        "text": "Run `usermod -G docker ana` instead, since `-a` only appends to the file and grants nothing yet.",
+        "correct": false,
+        "why": "`-G` without `-a` replaces every other supplementary group, which is how people lose `sudo`; the change is already written."
+      },
+      {
+        "text": "Run `sudo chmod 666 /var/run/docker.sock`, so the socket stops checking the group of whoever connects.",
+        "correct": false,
+        "why": "That hands every account on the machine what the docker group amounts to, and the group amounts to root."
+      },
+      {
+        "text": "Log out and in again: a shell keeps the groups it began with, and `id -nG` then shows `docker`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Start the engine with `sudo systemctl start docker`, because the daemon is not running yet.",
+        "correct": false,
+        "why": "A stopped engine answers `failed to connect to the docker API`; `permission denied` means it is up and refused you."
+      }
+    ]
+  },
+  {
+    "id": "ex-xpfhw277",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "A colleague hand-wrote a unit file for a nightly importer. Match each line in it to what systemd actually does with it, by lesson 5.",
+    "hint": "Linux and the Command Line, lesson 5.",
+    "pairs": [
+      {
+        "left": "`Descriptoin=Nightly importer`",
+        "right": "dropped with a warning nobody sees unless `systemd-analyze verify` is run"
+      },
+      {
+        "left": "`ExecStart=/usr/bin/importer > /var/log/importer.log`",
+        "right": "the `>` and the path reach the program as two more arguments"
+      },
+      {
+        "left": "`Type=forking`, for a program that stays in the foreground",
+        "right": "the start hangs, then times out, with nothing actually broken"
+      },
+      {
+        "left": "`After=network.target`",
+        "right": "it starts once the network is configured, which is not when it is reachable"
+      }
+    ],
+    "right_distractors": [
+      "the whole unit is refused and never loads"
+    ]
+  },
+  {
+    "id": "ex-8k3156sp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A service's Dockerfile ends with `CMD ./start.sh`, in shell form, and the script starts the server on its last line. Every `docker stop` takes ten seconds, the container then shows `Exited (137)`, and the server's log never has its shutdown message. What explains all three?",
+    "hint": "Linux and the Command Line, lesson 6; Docker and Containers, lesson 11.",
+    "choices": [
+      {
+        "text": "The server catches `TERM` and is still flushing when the ten seconds run out, so a longer stop timeout would turn 137 into 0.",
+        "correct": false,
+        "why": "With no shutdown line in the log the server never received the signal at all, and waiting longer only delays the `KILL`."
+      },
+      {
+        "text": "`TERM` reaches a shell that does not pass it on; after the wait comes `KILL`, 128 + 9. Use exec form and `exec` the server.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "137 is the out-of-memory killer at work, so the container needs a higher memory limit before it can stop any faster.",
+        "correct": false,
+        "why": "137 is any `KILL`. A memory kill is recorded as `OOMKilled=true`; this one is `docker stop`'s own `KILL` after its wait."
+      },
+      {
+        "text": "`docker stop` sends `KILL` straight away, and the ten seconds are the engine first saving the container's layer.",
+        "correct": false,
+        "why": "It sends the polite signal first and waits ten seconds before the `KILL`; the stopped container keeps its layer regardless."
+      }
+    ]
+  },
+  {
+    "id": "ex-e8f7dz3g",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "You are writing the `RUN` instruction that installs `ca-certificates` in a Dockerfile built on Debian. Which of these belong in it, by the two lessons? Choose all that apply.",
+    "hint": "Linux and the Command Line, lesson 7; Docker and Containers, lesson 14.",
+    "choices": [
+      {
+        "text": "`apt-get` rather than `apt`, whose output its authors may change",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`rm -rf /var/lib/apt/lists/*` as a separate `RUN`, at the end of the file",
+        "correct": false,
+        "why": "A file deleted in a later layer is still in the earlier one; the cleanup has to be in the same `RUN`."
+      },
+      {
+        "text": "`--no-install-recommends`, so only what `Depends` lists arrives",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`dpkg -i` on a `.deb` fetched first, so no dependency resolution runs",
+        "correct": false,
+        "why": "`dpkg` resolves nothing: a missing dependency leaves the package unpacked and unconfigured, `iU`."
+      }
+    ]
+  },
+  {
+    "id": "ex-jtsp8ef5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your Nginx access log is in the combined format, with lines like `127.0.0.1 - - [07/Oct/2026:00:11:23 -0300] \"GET /css/site.css HTTP/1.0\" 200 237 \"-\" \"ApacheBench/2.3\"`. To count client errors, a teammate runs `grep -c ' 4[0-9][0-9] ' access.log`, which reports more than `awk '$9 >= 400 && $9 < 500' access.log | wc -l`. Which count do you trust?",
+    "hint": "Linux and the Command Line, lesson 8; Web Servers and Caching, lesson 1.",
+    "choices": [
+      {
+        "text": "grep's: awk splits on spaces, so it loses the lines whose user agent has a space inside it.",
+        "correct": false,
+        "why": "The user agent comes after field nine. A free-text field only moves the fields after it, so `$9` is the status on every line."
+      },
+      {
+        "text": "grep's: awk reads each field as text, so a status such as `404` is not `>= 400` to it.",
+        "correct": false,
+        "why": "`$9 >= 400` is arithmetic on a field, which is the thing `grep` cannot do."
+      },
+      {
+        "text": "awk's: the status is field nine, and the pattern also matches a `200` whose size, in field ten, happens to be 410.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "awk's: `grep -c` counts each match on a line, so a line holding two such numbers is counted twice.",
+        "correct": false,
+        "why": "`grep -c` counts matching lines, not matches; a line is counted once however many times it matches."
+      }
+    ]
+  },
+  {
+    "id": "ex-3t8p7tyg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A CI step runs a script that begins `set -euo pipefail`, defines `check() { ./migrate --dry-run; echo \"migrations checked\"; }` and then runs `if check; then ./deploy.sh; fi`. `./migrate` fails and prints an error, the deploy happens anyway, and the job is green. Why did nothing stop?",
+    "hint": "Linux and the Command Line, lesson 9; Automated Testing and CI/CD, lesson 5.",
+    "choices": [
+      {
+        "text": "`-e` is suspended for the whole of a function called as a condition, so `check` ran on and returned the `echo`'s 0.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The CI reads the step's output for errors, and `migrations checked` was the last line it saw printed there.",
+        "correct": false,
+        "why": "A CI decides on the exit status alone; it never reads the output, so the words printed cannot turn a step green or red."
+      },
+      {
+        "text": "With `pipefail` set, `-e` stops applying, and `pipefail` itself looks at pipelines and nothing else.",
+        "correct": false,
+        "why": "The two are independent: `pipefail` changes what a pipeline reports, and `-e` still applies everywhere it applies."
+      },
+      {
+        "text": "`-e` does not reach inside a function, so a failure inside `check` is ignored wherever it is called from.",
+        "correct": false,
+        "why": "Called as a plain command, a failing line inside a function does stop the script; the suspension comes from the `if`."
+      }
+    ]
+  },
+  {
+    "id": "ex-vhb5xf8w",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "On lesson 10's `sales.csv`, `Get-Content sales.csv | Measure-Object -Line` reports 33 lines. How many does `Import-Csv sales.csv | Measure-Object` count?",
+    "hint": "Linux and the Command Line, lesson 10.",
+    "value": 32,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-k9psz5cn",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "A host where `nproc` prints 4 runs a container started with `--cpus 1`, so the container gets one processor's worth of time. What does `nproc` print inside that container?",
+    "hint": "Linux and the Command Line, lesson 11; Docker and Containers, lesson 2.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-18s49qjq",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "`git commit` without `-m` opens an editor for the message. Put the places it looks for one in order, the one consulted first at the top.",
+    "hint": "Linux and the Command Line, lesson 12; Git and Teamwork: Version Control, Review and Process, lesson 1.",
+    "items": [
+      "`core.editor` in git's own configuration",
+      "the `$VISUAL` variable",
+      "the `$EDITOR` variable",
+      "the system's fallback, `/usr/bin/editor` on Ubuntu or `vi`"
+    ],
+    "trap": "`$EDITOR` is the famous one and feels like it must win; git's own setting beats both variables, and `$VISUAL` is read before `$EDITOR`."
+  },
+  {
+    "id": "ex-66dgr1hj",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "Two hundred servers share one timer unit with `OnCalendar=*-*-* 03:00:00`, and the file server they all upload to falls over at three every night. To break that synchrony, the `[Timer]` section gets `___=30m`, which gives each machine its own fixed delay of up to thirty minutes.",
+    "hint": "Linux and the Command Line, lesson 13; Scale and Observability, lesson 10.",
+    "blanks": [
+      {
+        "accept": [
+          "RandomizedDelaySec",
+          "RandomizedDelaySec="
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kmknfyax",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "prompt": "You run `psql shop -f shop.sql` a second time, on a database that already holds lesson 1's shop. Which of the file's `INSERT` statements are refused? Choose all that apply.",
+    "hint": "Relational Databases and SQL, lesson 1.",
+    "choices": [
+      {
+        "text": "The five customers, by `UNIQUE (email)`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The four orders, by the primary key `orders_pkey`.",
+        "correct": false,
+        "why": "The orders went in again, `INSERT 0 4`: nothing about an order is unique except the id the database generates, and it generated four new ones."
+      },
+      {
+        "text": "The four products, by `UNIQUE (sku)`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The five order lines, by their key `(order_id, product_id)`.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-cmqvsdn5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Renaming Arena Sul in lesson 5's MongoDB rewrote 33 show documents, because each show embeds its venue's name. A colleague concludes that `order_lines.unit_price` in the SQL shop is the same mistake, a copy of `products.price`, and proposes dropping it. By lesson 2's test, what is wrong with that?",
+    "hint": "Relational Databases and SQL, lesson 2; Scale and Observability, lesson 5.",
+    "choices": [
+      {
+        "text": "Nothing: both repeat a value that is held in another table, and third normal form removes every repeated value.",
+        "correct": false,
+        "why": "3NF removes a repeated fact that can disagree with itself; it says nothing against two different facts that once had the same value."
+      },
+      {
+        "text": "A renamed venue should reach every show, so it is a copy; the price paid must not move, so it is a snapshot.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The price is safe because `numeric` is exact, which a string embedded in a document is not.",
+        "correct": false,
+        "why": "The type has nothing to do with it; the test is whether the value should change when its source does."
+      },
+      {
+        "text": "The line is safe only because its foreign key ties it to the product and keeps the two prices equal for ever.",
+        "correct": false,
+        "why": "The foreign key ties `product_id`, not the price; nothing keeps the two prices equal, and nothing should."
+      }
+    ]
+  },
+  {
+    "id": "ex-nmtrfbv4",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these, run on lesson 6's two-million-row `tickets` table, write every row again into a new file, so that `pg_relation_filenode('tickets')` changes? Choose all that apply.",
+    "hint": "Relational Databases and SQL, lesson 3; Scale and Observability, lesson 6.",
+    "choices": [
+      {
+        "text": "`ALTER TABLE tickets ADD COLUMN public_id uuid DEFAULT gen_random_uuid()`",
+        "correct": true,
+        "why": "Right: a volatile default needs a different value in every row."
+      },
+      {
+        "text": "`ALTER TABLE tickets ADD COLUMN printed boolean NOT NULL DEFAULT false`",
+        "correct": false,
+        "why": "A constant default is stored once in the catalogue: 2.1 ms, and the filenode stayed 16395."
+      },
+      {
+        "text": "`ALTER TABLE tickets ALTER COLUMN seat TYPE bigint`",
+        "correct": true,
+        "why": "Right: 5.0 seconds, a full rewrite, with the unique index rebuilt."
+      },
+      {
+        "text": "`ALTER TABLE tickets RENAME COLUMN code TO ticket_code`",
+        "correct": false,
+        "why": "A rename only edits the catalogue; what it breaks is every program still using the old name."
+      }
+    ]
+  },
+  {
+    "id": "ex-ty8kme21",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A March report on lesson 2's partitioned `sales` table filters with `sold_at BETWEEN '2026-03-01' AND '2026-03-31'`. What does it get wrong?",
+    "hint": "Relational Databases and SQL, lesson 4; Scale and Observability, lesson 2.",
+    "choices": [
+      {
+        "text": "It reads all six partitions, because a `BETWEEN` on the partition key cannot be pruned.",
+        "correct": false,
+        "why": "Both bounds fall in March, so the planner can still rule the other months out; the problem is which March rows it keeps."
+      },
+      {
+        "text": "It counts 1 April too, because `BETWEEN` includes its upper bound and the day after it.",
+        "correct": false,
+        "why": "The upper bound is `2026-03-31 00:00:00`, and nothing in April is reached."
+      },
+      {
+        "text": "Nothing: `sold_at` is a `timestamptz`, so each bare date is read as the whole of that day.",
+        "correct": false,
+        "why": "A bare date becomes midnight of that day; the column's type does not stretch it to the day's end."
+      },
+      {
+        "text": "It loses most of 31 March: the bare upper date means its first instant, midnight.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-189vwwgs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Suppose each ticket stores the idempotency key of its sale, and payments exports its charges carrying the same key. After a day of timeouts you want one query listing both the charges with no ticket and the tickets with no charge. Which shape does it?",
+    "hint": "Relational Databases and SQL, lesson 5; Scale and Observability, lesson 10.",
+    "choices": [
+      {
+        "text": "`tickets t FULL JOIN charges c ON c.key = t.key WHERE t.key IS NULL OR c.key IS NULL`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`tickets t JOIN charges c ON c.key = t.key`, and then read the rows where one side is null",
+        "correct": false,
+        "why": "An inner join keeps only the pairs; the rows with no partner are exactly the ones it drops."
+      },
+      {
+        "text": "`tickets t LEFT JOIN charges c ON c.key = t.key`, keeping only the rows where `c.key IS NULL`",
+        "correct": false,
+        "why": "That finds the tickets with no charge and never sees a charge with no ticket."
+      },
+      {
+        "text": "`SELECT * FROM charges WHERE key NOT IN (SELECT key FROM tickets)`",
+        "correct": false,
+        "why": "One direction only, and a single null key in `tickets` makes it return nothing at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-30tpfchm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 7's SLI is good events over all events. Somebody computes it from a table of request logs with `SELECT count(CASE WHEN ms <= 250 THEN 1 ELSE 0 END)::numeric / count(*) FROM request_log`, and it says 1 even on the day sales took seconds. Why?",
+    "hint": "Relational Databases and SQL, lesson 6; Scale and Observability, lesson 7.",
+    "choices": [
+      {
+        "text": "The `::numeric` comes too late, so the division is done on two integers and rounds to 1.",
+        "correct": false,
+        "why": "The cast applies to the first count before the division, so the result is a decimal; the numerator is simply every row."
+      },
+      {
+        "text": "`ms <= 250` is unknown for the slow rows, and the `CASE` treats an unknown condition as if it were true.",
+        "correct": false,
+        "why": "Unknown appears only where `ms` is null; a slow request has a value, and for it the comparison is false."
+      },
+      {
+        "text": "`count` counts the zeros too, since 0 is not null, so the top is every row.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`count(*)` skips the rows whose `CASE` gave 0, so both sides shrink together.",
+        "correct": false,
+        "why": "`count(*)` counts rows and has no argument to skip on; it is the `count(CASE …)` that should have skipped and did not."
+      }
+    ]
+  },
+  {
+    "id": "ex-9gg6q779",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The box office's monthly sales report reads a materialised view that a nightly job refreshes, and scale lesson 11 says a degraded answer should say how old it is. One night the refresh fails. What does SQL lesson 7 suggest so that every reader can tell?",
+    "hint": "Relational Databases and SQL, lesson 7; Scale and Observability, lesson 11.",
+    "choices": [
+      {
+        "text": "Store `now() AS refreshed_at` in it, which every report then prints.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Refresh it `CONCURRENTLY`, so readers keep working while the new contents are being built.",
+        "correct": false,
+        "why": "That keeps the view readable during a refresh; it says nothing on the night the refresh never happened."
+      },
+      {
+        "text": "Create it `WITH NO DATA`, so that a failed refresh becomes an error instead of old rows.",
+        "correct": false,
+        "why": "Only a view never filled is an error; one filled last week keeps answering with last week."
+      },
+      {
+        "text": "Replace it with a plain view, which the database caches for you and refreshes on its own schedule.",
+        "correct": false,
+        "why": "A plain view stores no rows; it reruns the query on every read, which is the cost the materialised one was avoiding."
+      }
+    ]
+  },
+  {
+    "id": "ex-hzdd7y05",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each failure the box office can meet to what the two lessons say to do about it.",
+    "hint": "Relational Databases and SQL, lesson 8; Scale and Observability, lesson 10.",
+    "pairs": [
+      {
+        "left": "`40001`, could not serialize access",
+        "right": "Roll back and run the whole transaction again, reads included"
+      },
+      {
+        "left": "`23505`, duplicate key value",
+        "right": "Stop: another attempt fails the same way"
+      },
+      {
+        "left": "A `503` from payments",
+        "right": "Wait a random time under a doubling ceiling, then call again"
+      },
+      {
+        "left": "`deadlock detected` on two transfers, every day",
+        "right": "Take the row locks in ascending order of id"
+      }
+    ],
+    "right_distractors": [
+      "Retry only the statement that failed, with the values already read"
+    ]
+  },
+  {
+    "id": "ex-v6z4ba70",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On the primary, `pg_stat_user_indexes` shows an index on `orders (placed_at)` with `idx_scan` at 0 and a size of several hundred megabytes. Reports and dashboards are sent to a read replica, as scale lesson 2 recommends. What should you do before dropping it?",
+    "hint": "Relational Databases and SQL, lesson 9; Scale and Observability, lesson 2.",
+    "choices": [
+      {
+        "text": "Nothing more: zero scans since the last reset means that no query anywhere has used it.",
+        "correct": false,
+        "why": "The primary's counter only sees the primary's queries, and the reports run somewhere else."
+      },
+      {
+        "text": "Read the counter on the replica as well: each server counts only the scans that were made on it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Check that it does not back a `UNIQUE` constraint, and drop it if it does not.",
+        "correct": false,
+        "why": "That is the check for a unique index, which this one is not; and the counter it trusts is the wrong server's."
+      },
+      {
+        "text": "Drop it on the primary only, so that the replica can keep its own copy of the index for the reports.",
+        "correct": false,
+        "why": "A replica applies the primary's log and ends up the same database a moment later; an index dropped there is dropped on the replica."
+      }
+    ]
+  },
+  {
+    "id": "ex-epcjrmwp",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "In lesson 10's plan for counting the lines of the pending orders, the inner node reads `Index Only Scan using order_lines_pkey … (actual time=0.007..0.007 rows=2 loops=2923)`. About how many milliseconds did that node take in all? Give a whole number.",
+    "hint": "Relational Databases and SQL, lesson 10.",
+    "value": 20,
+    "tolerance": 1,
+    "unit": ""
+  },
+  {
+    "id": "ex-7d4j9e6p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "With OpenTelemetry's instrumentation for psycopg, which makes a span per query, the trace of one admin page shows the request span with 51 children: one `SELECT … FROM customers … LIMIT 50` and fifty `SELECT … FROM orders WHERE customer_id = …` of about a millisecond each. What is it, and what fixes it?",
+    "hint": "Relational Databases and SQL, lesson 11; Scale and Observability, lesson 8.",
+    "choices": [
+      {
+        "text": "Too many spans: tail-sample the page so that only the slow traces keep their query spans.",
+        "correct": false,
+        "why": "Sampling changes what is recorded, not what runs; the fifty queries still reach the database."
+      },
+      {
+        "text": "A missing index on `orders.customer_id`: add it, and each of the fifty queries gets faster.",
+        "correct": false,
+        "why": "Each one already takes a millisecond; the cost is the count of round trips, and an index does not change the count."
+      },
+      {
+        "text": "A slow database: give it more CPU, so that fifty round trips fit in the time of a few.",
+        "correct": false,
+        "why": "The N+1 is not fixed by a bigger server: what it costs is round trips, not work."
+      },
+      {
+        "text": "An N+1: fetch the orders of all fifty customers at once, in one query, with `= ANY(…)`.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-2pk7amjm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "The first version of the box office ran on SQLite in WAL mode and was fast. For the on-sale the team wants scale lesson 1's horizontal scaling: three copies of the program, on three machines, behind nginx. What does SQL lesson 12 say?",
+    "hint": "Relational Databases and SQL, lesson 12; Scale and Observability, lesson 1.",
+    "choices": [
+      {
+        "text": "It works once WAL is on, because WAL lets each copy write at the same time.",
+        "correct": false,
+        "why": "WAL lets readers and the single writer proceed together; there is still one writer."
+      },
+      {
+        "text": "It works if the file is put on a network filesystem that all three machines mount.",
+        "correct": false,
+        "why": "SQLite's locking depends on file locks that network filesystems implement unreliably, and it is not supported."
+      },
+      {
+        "text": "It is out: the file must be on the machine the code runs on.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It works with a busy timeout, which turns each `database is locked` into a short queue.",
+        "correct": false,
+        "why": "A busy timeout queues the writers of one machine; it does not let three machines share one file."
+      }
+    ]
+  },
+  {
+    "id": "ex-1809sv4s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "On a corporate Oracle system you propose scale lesson 2's arrangement: a replica that takes the reports off the primary. Why does such a system often have none?",
+    "hint": "Relational Databases and SQL, lesson 13; Scale and Observability, lesson 2.",
+    "choices": [
+      {
+        "text": "A second server is another licence, and reading a standby while it applies is a separately priced option.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Oracle has no replication: a standby can only be rebuilt from last night's backup.",
+        "correct": false,
+        "why": "Data Guard keeps a standby current from the redo stream; reading from it is what costs extra."
+      },
+      {
+        "text": "Read consistency from undo makes a replica unnecessary, since a long report there never blocks a writer.",
+        "correct": false,
+        "why": "Readers do not block writers, and the reports still compete for the same machine; what rules the replica out is the bill."
+      },
+      {
+        "text": "Replicas need the Diagnostics Pack to report their lag, and few systems license it.",
+        "correct": false,
+        "why": "The Diagnostics Pack is AWR and ASH, the performance history; it has nothing to do with whether a standby exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-cnenynxr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 1's sale holds the show's row lock for the whole of `sign()`, which caps one show at about 139 sales a second. A teammate proposes reading `sold` with a plain `SELECT`, working out the next seat in Python, and writing it back with `UPDATE events SET sold = <that number>`, so that no lock is held while signing. With sixteen buyers on one show, what goes wrong?",
+    "hint": "Scale and Observability, lesson 1; Relational Databases and SQL, lesson 8.",
+    "choices": [
+      {
+        "text": "PostgreSQL's default `READ COMMITTED` aborts the second sale with a serialization failure, so it only costs retries.",
+        "correct": false,
+        "why": "That error belongs to `REPEATABLE READ` and `SERIALIZABLE`; at `READ COMMITTED` the second write simply overwrites the first."
+      },
+      {
+        "text": "Nothing: a plain `SELECT` takes the same row lock that the `UPDATE` would have taken.",
+        "correct": false,
+        "why": "A plain `SELECT` locks nothing; that lock is what `FOR UPDATE` takes."
+      },
+      {
+        "text": "The sales deadlock on the show's row, and after a second PostgreSQL cancels one of them to break the cycle.",
+        "correct": false,
+        "why": "A deadlock needs two locks taken in opposite orders; this design holds none while it decides."
+      },
+      {
+        "text": "Two of them see the same count and store the same result, so an increment vanishes: the lost update.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-n7vdsfe9",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Tickets are sharded by show across two shards. To report the average ticket price, the program asks each shard for `avg(cents)`: shard 0 answers 5000 over its 4000 tickets, and shard 1 answers 10000 over its 1000. What is the true average, in cents?",
+    "hint": "Scale and Observability, lesson 2; Relational Databases and SQL, lesson 6.",
+    "value": 6000,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-8524peeg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "With the replica synchronous and cut off from the primary, a buyer's `curl -s -m 5 -X POST localhost:8080/events/1/tickets` ends in `curl exit: 28`, and the buyer at once clicks Buy again, which times out too. `sold` for show 1 was 0. Ten seconds after the network comes back, what does it say?",
+    "hint": "Scale and Observability, lesson 3; Relational Databases and SQL, lesson 8.",
+    "choices": [
+      {
+        "text": "0: a sale whose client gave up is rolled back by the server once it notices.",
+        "correct": false,
+        "why": "Nothing told the server the client had left; the commit was waiting for the replica, not for curl."
+      },
+      {
+        "text": "2: the first commit completes, and then the second sale, which had been waiting for that row's lock.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "1: the second sale was refused outright while the first one still held the row.",
+        "correct": false,
+        "why": "A second writer waits at the `UPDATE` until the row's lock is released; it is not refused."
+      },
+      {
+        "text": "1: the replica applies the waiting commit just once, and the click that repeated it is merged into that commit.",
+        "correct": false,
+        "why": "Each request is a transaction of its own; nothing in the box office knows the second is a repeat, which is lesson 10's subject."
+      }
+    ]
+  },
+  {
+    "id": "ex-51tmkpjp",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Lesson 4 holds seat 42 for ten minutes with one Redis command, `SET hold:show:1:seat:42 ana ___ EX 600`, and a second buyer's identical command answers `(nil)` instead of `OK`.",
+    "hint": "Scale and Observability, lesson 4.",
+    "blanks": [
+      {
+        "accept": [
+          "NX"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-q62nvs4m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "DynamoDB's scan for `show-1#` answered `\"Count\": 3` and `\"ScannedCount\": 5`, and charged for the five. Which line of a PostgreSQL plan reports the same kind of waste?",
+    "hint": "Scale and Observability, lesson 5; Relational Databases and SQL, lesson 10.",
+    "choices": [
+      {
+        "text": "`Heap Fetches`, on an index-only scan that still had to go and read the table.",
+        "correct": false,
+        "why": "That counts rows the index alone could not answer; the rows were still wanted."
+      },
+      {
+        "text": "`loops`, on the inner side of a nested loop that ran many times.",
+        "correct": false,
+        "why": "`loops` says how often a node ran; each run may have kept every row it read."
+      },
+      {
+        "text": "`Rows Removed by Filter`, on a scan that read rows only to throw them away.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`Index Cond`, on an index scan that looked up its rows in the index.",
+        "correct": false,
+        "why": "An `Index Cond` is the opposite case: only the matching entries were read."
+      }
+    ]
+  },
+  {
+    "id": "ex-ggv923ey",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "After the backfill, `ALTER TABLE tickets ALTER COLUMN gate SET NOT NULL` found the valid `CHECK (gate IS NOT NULL)` and skipped its scan, yet it took 1.1 seconds. Why that long, and why about one second?",
+    "hint": "Scale and Observability, lesson 6; Relational Databases and SQL, lesson 8.",
+    "choices": [
+      {
+        "text": "It scanned the table anyway, because `SET NOT NULL` ignores a constraint that was added `NOT VALID`.",
+        "correct": false,
+        "why": "The constraint had been validated by then, and since PostgreSQL 12 a valid one lets `SET NOT NULL` skip the scan."
+      },
+      {
+        "text": "It waited out a `lock_timeout` of one second that the backfill had left set in that session.",
+        "correct": false,
+        "why": "Each psql command there is a session of its own; and a lock timeout ends in an error, while this change succeeded."
+      },
+      {
+        "text": "It deadlocked with the sales, and the second was PostgreSQL choosing which side to keep.",
+        "correct": false,
+        "why": "A detected deadlock rolls one side back with an error; the change succeeded, and the sales never held its lock."
+      },
+      {
+        "text": "Autovacuum's conflicting lock, which PostgreSQL cancels after `deadlock_timeout`, one second.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-q75s2q16",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`pg_stat_statements` puts the lookup by email at a mean of 0.0 ms over 400 calls, while the program making the calls times each one at a few milliseconds. Scale lesson 7 met the same gap: a 95th percentile for reads of 20 ms from the box office's histogram and 30 ms from `load.py`. What explains both?",
+    "hint": "Scale and Observability, lesson 7; Relational Databases and SQL, lesson 10.",
+    "choices": [
+      {
+        "text": "A time measured inside a service is a lower bound: the caller's clock also holds the network and the wait to be served.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Each inside number is interpolated within a bucket, and interpolation always comes out low.",
+        "correct": false,
+        "why": "Interpolation is how a percentile comes out of buckets; it can land either side, and the mean in `pg_stat_statements` is not built that way."
+      },
+      {
+        "text": "One side of each pair is wrong, since two measurements of one thing that disagree mean broken instrumentation.",
+        "correct": false,
+        "why": "Agreement is the check when both measure the same span; these measure different spans, and both are right."
+      },
+      {
+        "text": "The outside clock counts a queue that a closed-loop generator builds on purpose.",
+        "correct": false,
+        "why": "A closed loop waits for each answer before sending the next; it builds no queue of its own requests."
+      }
+    ]
+  },
+  {
+    "id": "ex-afcfwf7w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In lesson 8's `app.py`, `charge(event_id)` runs before `conn.transaction()`. A refactor moves it inside the transaction, after the `UPDATE events`, so that a failed charge rolls the seat back. What does that cost when everybody wants the same show?",
+    "hint": "Scale and Observability, lesson 8; Relational Databases and SQL, lesson 8.",
+    "choices": [
+      {
+        "text": "Nothing new: the row is only locked at the moment of `COMMIT`, after the charge is done.",
+        "correct": false,
+        "why": "An `UPDATE` locks its row from the moment it runs until the transaction ends."
+      },
+      {
+        "text": "Each sale now holds the show's row lock through the call to payments as well as `sign()`, so that row's queue grows.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Page reads of that show now wait behind the lock for as long as each charge takes.",
+        "correct": false,
+        "why": "A reader does not wait for a writer: it sees the last committed version, and the page reads go to the replica anyway."
+      },
+      {
+        "text": "Nothing, and it gains: a crash after the charge now rolls the charge back with the seat.",
+        "correct": false,
+        "why": "The charge happened in another system; a rollback undoes the box office's rows and nothing at payments."
+      }
+    ]
+  },
+  {
+    "id": "ex-dbaqx17c",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Lesson 9 pushes the unguarded box office with 8, 32 and then 128 workers. Put what happens in the order it happens.",
+    "hint": "Scale and Observability, lesson 9.",
+    "items": [
+      "The sales a second stop growing: 112, 105, 104",
+      "The median sale's wait climbs: 70, 295, 951 ms",
+      "PostgreSQL answers `too many clients already` and 146 sales fail with `500`"
+    ],
+    "trap": "The error is what gets noticed, and it comes last: the rate had already stopped and the wait was growing, with nothing broken, before the overload moved on to the database's connections."
+  },
+  {
+    "id": "ex-x4z6bfbc",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Lesson 10's `backoff` waits `random.uniform(0, min(2.0, 0.1 * 2 ** attempt))` when payments sends no `Retry-After`. If `CHARGE_ATTEMPTS` were 6, what is the longest wait it could choose after the fourth failed attempt, in milliseconds?",
+    "hint": "Scale and Observability, lesson 10.",
+    "value": 1600,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-z4wqxbfa",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "Lesson 11's plan prices a read at 1.1 ms of CPU and a sale at 10 ms, and has each buyer in the first minute load about 10 pages and try to buy once. For 9,000 buyers in the first minute instead of 6,000, how many copies does the plan's rule give: no more than 70% busy, plus one for failure?",
+    "hint": "Scale and Observability, lesson 11.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-zk5w5tgq",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "prompt": "By lesson 1's table of status classes, which of these failures should shelf answer with a 4xx code? Choose all that apply.",
+    "hint": "APIs and Authentication, lesson 1.",
+    "choices": [
+      {
+        "text": "A body labelled `application/json` that does not parse.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A PATCH setting `stock` to -1, refused by the database's `CHECK`.",
+        "correct": true,
+        "why": "Right: the content breaks a rule, so 422, whoever caught it."
+      },
+      {
+        "text": "The database file cannot be opened, so no book can be read.",
+        "correct": false,
+        "why": "The request may be fine; the server failed, and a 5xx tells the client that trying later may work."
+      },
+      {
+        "text": "A POST of a second book with an ISBN already in the catalogue.",
+        "correct": true,
+        "why": "Right: 409."
+      }
+    ]
+  },
+  {
+    "id": "ex-9dra55pv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A partner's client checks every book it reads from the catalogue against a schema with `additionalProperties: false`, the way `book.schema.json` checks the bodies sent in. The catalogue starts sending a new field, `cover_url`. What happens, by lesson 2?",
+    "hint": "APIs and Authentication, lesson 2.",
+    "choices": [
+      {
+        "text": "The partner's client fails on every book, though nothing it reads has changed.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing: adding a field to a response is safe for every client there is.",
+        "correct": false,
+        "why": "It is safe for a tolerant reader; a client that refuses anything unexpected turns the server's improvement into an outage."
+      },
+      {
+        "text": "The catalogue refuses the partner's next POST, which has no `cover_url`.",
+        "correct": false,
+        "why": "A field added to a response asks nothing of requests; making a request field required would be the breaking change."
+      },
+      {
+        "text": "The client ignores the field, because validation only ever runs on input.",
+        "correct": false,
+        "why": "This schema is the client's own check on what it reads, and with `additionalProperties: false` the new field is an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-0dceecbw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "An agent host sends `POST /v1/returns` to your API with the call's `tool_use` id as the `Idempotency-Key`, as the AI course's lesson 8 suggests, and your API follows `catalogue.py`'s rules for keys. After a timeout the host retries with the same key, but a bug rebuilt the body, which now asks for 2 units instead of 1. What should the API answer?",
+    "hint": "APIs and Authentication, lesson 2; AI in Development, lesson 8.",
+    "choices": [
+      {
+        "text": "201 with the stored answer and `Idempotent-Replayed: true`, since it knows the key.",
+        "correct": false,
+        "why": "The stored answer is replayed only when the body's fingerprint matches the first one, and this body differs."
+      },
+      {
+        "text": "409, because the first request with that key already created a return.",
+        "correct": false,
+        "why": "In the draft's table, 409 is for a known key whose first request is still running."
+      },
+      {
+        "text": "422, and nothing is done: the same key with another body is a client bug.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "201 with a second return, since the new quantity makes it a new operation.",
+        "correct": false,
+        "why": "The key names the operation; a new operation needs a new key, and the server refuses rather than guess."
+      }
+    ]
+  },
+  {
+    "id": "ex-zch474sj",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "`graph.py` runs without `--batch` on a shop of 40 books. How many SQL queries does `{ books { title author { name } } }` cost?",
+    "hint": "APIs and Authentication, lesson 3.",
+    "value": 41,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-7zckh32w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The warehouse's next `StockLevel` keeps every field but makes two edits: `int32 copies = 3;` becomes `int32 units = 3;`, and `availability` moves from number 4 to number 6. A till still runs code generated from the first `stock.proto`. What does it read from a new message?",
+    "hint": "APIs and Authentication, lesson 4.",
+    "choices": [
+      {
+        "text": "Nothing at all: a renamed field sends other bytes, so decoding fails.",
+        "correct": false,
+        "why": "Names never leave the program; a new name on the old number sends exactly the same bytes."
+      },
+      {
+        "text": "The copies as before, and `availability` as `AVAILABILITY_UNSPECIFIED`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The availability as before, since 1 still means `IN_STOCK`, and copies as 0.",
+        "correct": false,
+        "why": "It is the other way round: renaming is safe on the wire, and a new number is a field removed and another added."
+      },
+      {
+        "text": "Both fields correctly, because `protoc` refuses a file that renumbers.",
+        "correct": false,
+        "why": "`protoc` refuses a number marked `reserved`, and nothing reserved 4 here."
+      }
+    ]
+  },
+  {
+    "id": "ex-qshn4zg1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your API's `/v1/answers` asks a model through the AI course's lesson 10 adapter. Every provider in `LLM_PROVIDERS` answers 529, overloaded, so `ask` raises `Unavailable`. By `bridge.py`'s table, what should your API answer its own client?",
+    "hint": "APIs and Authentication, lesson 5; AI in Development, lesson 10.",
+    "choices": [
+      {
+        "text": "500, since the request failed inside your own code.",
+        "correct": false,
+        "why": "500 says your API broke, and an alarm on its 500s would wake the wrong person for a provider's bad day."
+      },
+      {
+        "text": "504: the provider did not answer in time.",
+        "correct": false,
+        "why": "504 is for no answer within the timeout, and a 529 is an answer."
+      },
+      {
+        "text": "529 as it came, so the client sees the provider's own status.",
+        "correct": false,
+        "why": "Your clients know your API's codes; the layer at the boundary exists so nothing past it speaks the other system's language."
+      },
+      {
+        "text": "502, because the system behind your API failed.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-y1hnph5q",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A team renames `createBook` to `addBook` in `openapi.yaml` because it reads better. `POST /v1/books` behaves exactly as before, and still every program built on a generated client stops compiling when it regenerates, because a generator turns each operation's `___` into a function name.",
+    "hint": "APIs and Authentication, lesson 6.",
+    "blanks": [
+      {
+        "accept": [
+          "operationId",
+          "operation id",
+          "operation_id"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fgmng1xt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The shop's chat page streams answers through a relay like the AI course's lesson 9 one, which holds the provider's key. Only signed-in customers may ask. What should the relay take from the browser with each request?",
+    "hint": "APIs and Authentication, lesson 7; AI in Development, lesson 9.",
+    "choices": [
+      {
+        "text": "The provider's key, sent by the page in a header for the relay to pass on.",
+        "correct": false,
+        "why": "Anything sent to a browser can be read by whoever is using it; the key stays on the server."
+      },
+      {
+        "text": "The customer's own credential from signing in, checked on every request.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "An API key for the shop's app, written into the page's script.",
+        "correct": false,
+        "why": "An API key names an application, and one in a page's script is readable by every visitor."
+      },
+      {
+        "text": "Nothing, since the relay only ever answers the shop's own page.",
+        "correct": false,
+        "why": "A relay anyone can call spends money on every question: an API key with extra steps."
+      }
+    ]
+  },
+  {
+    "id": "ex-gh41xzgz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In `tokens.py`, a thief copies ana's refresh token and spends it first, getting a new pair. Ana's app then presents the copied token, and the whole sign-in is revoked. What can the thief still do?",
+    "hint": "APIs and Authentication, lesson 8.",
+    "choices": [
+      {
+        "text": "Nothing: deleting the family ends every token issued from that login.",
+        "correct": false,
+        "why": "The access token the thief was given was never stored, so there was nothing to delete."
+      },
+      {
+        "text": "Refresh again with its new refresh token, since only ana's copy came back twice.",
+        "correct": false,
+        "why": "Its new refresh token is in the same family and died with it."
+      },
+      {
+        "text": "Keep calling `/me` with the access token it was given, until that token's `exp` passes.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Call `/me` for fourteen days, the refresh token's lifetime.",
+        "correct": false,
+        "why": "Fourteen days is the refresh token's life; the access token lasts 300 seconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-z5g1jhms",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "By lesson 10's rule for the memory one scrypt hash needs, how many MiB does `N=2^15, r=16, p=1` take?",
+    "hint": "APIs and Authentication, lesson 10.",
+    "value": 64,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-04263p5w",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each request to `orders.py` with the status it gets.",
+    "hint": "APIs and Authentication, lesson 11.",
+    "pairs": [
+      {
+        "left": "No token, for an address that does not exist",
+        "right": "401"
+      },
+      {
+        "left": "Ana's token, for Bruno's order 3",
+        "right": "404"
+      },
+      {
+        "left": "Carla's token, for `/admin/people`",
+        "right": "403"
+      },
+      {
+        "left": "Ana's token, cancelling her order 1 a second time",
+        "right": "409"
+      }
+    ],
+    "right_distractors": [
+      "405"
+    ]
+  },
+  {
+    "id": "ex-3rf78e8x",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "Three copies of `limits.py` run behind a round-robin load balancer, each with its own `LIMITS`. A client on the pro tier, whose buckets are all full, sends 600 requests at once, and the balancer spreads them evenly. How many are answered 200?",
+    "hint": "APIs and Authentication, lesson 12.",
+    "value": 300,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-4hz2wyt9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Your API asks a model provider to rewrite customers' product reviews as HTML, and the shop's product page shows the result. By lesson 13's entry API10 and the AI course's lesson 11, where does the defence belong?",
+    "hint": "APIs and Authentication, lesson 13; AI in Development, lesson 11.",
+    "choices": [
+      {
+        "text": "Nowhere new: the provider is a company under contract, so its answers are trusted.",
+        "correct": false,
+        "why": "That is API10's mistake, and the model copies what it read, which a stranger wrote."
+      },
+      {
+        "text": "In TLS verification on the call to the provider, so nobody alters the reply.",
+        "correct": false,
+        "why": "TLS keeps strangers off the connection; the script was in the review the model was given, and it arrived intact."
+      },
+      {
+        "text": "In the API's `Content-Security-Policy: default-src 'none'`.",
+        "correct": false,
+        "why": "That header governs the API's own answer opened as a document; the product page is another document."
+      },
+      {
+        "text": "Where the text becomes HTML: escape it like anything a stranger wrote.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ezt8kqg9",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "At Claude Sonnet 5.5's prices in lesson 2's sheet ($2 per million input tokens, $2.50 per million to write the cache and $0.20 per million to read it), a 10,000-token prefix is written to the cache on the first of ten requests and read from it on the other nine, inside the five minutes. What does that prefix cost over the ten requests, in dollars? Three decimal places.",
+    "hint": "AI in Development, lesson 2.",
+    "value": 0.043,
+    "tolerance": 0.0005,
+    "unit": ""
+  },
+  {
+    "id": "ex-6ffhc0gf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Last week a teammate committed and pushed `settings.py` with a payments key typed into it, and today an editor assistant sent the same file to a model provider. The team adds `settings.py` to `.gitignore` and to `.assistignore`. What is still missing?",
+    "hint": "AI in Development, lesson 3; Git and Teamwork: Version Control, Review and Process, lesson 10.",
+    "choices": [
+      {
+        "text": "Revoking the key and issuing a new one: it is in the history and the provider's logs.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing: `.gitignore` takes the file out of the history, and `.assistignore` stops the sending.",
+        "correct": false,
+        "why": "`.gitignore` applies only to untracked files, and deleting a file does not change the commit that added it."
+      },
+      {
+        "text": "`git rm --cached settings.py`, which takes the key out of the pushed commits.",
+        "correct": false,
+        "why": "It stops tracking from the next commit; `git show` on the old commit still prints the key."
+      },
+      {
+        "text": "Asking the provider to delete the request, which takes the key out of its logs.",
+        "correct": false,
+        "why": "There is no way to call a request back; the key is public from now on."
+      }
+    ]
+  },
+  {
+    "id": "ex-0s81jtv7",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "`scratch/mutate.py` reported three survivors in `shop/cart.py`, a file whose every line the suite already runs. Which conclusions do the two lessons support? Choose all that apply.",
+    "hint": "AI in Development, lesson 4; Automated Testing and CI/CD, lesson 4.",
+    "choices": [
+      {
+        "text": "A coverage report would show `cart.py` fully covered, survivors and all.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Each survivor is a behaviour the tests run and none of them checks.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Raising the build's minimum coverage would have killed all three of them.",
+        "correct": false,
+        "why": "The lines already ran; what is missing is an assertion, which no percentage of lines can see."
+      },
+      {
+        "text": "Every survivor needs a test of its own, until the mutation score reaches 100%.",
+        "correct": false,
+        "why": "Read each survivor and decide; a mutant that changes nothing a customer could notice can survive for good reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-6r8y8nyt",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "Lesson 5 adds comma support to `parse_price` one step at a time. Put its steps in order.",
+    "hint": "AI in Development, lesson 5.",
+    "items": [
+      "Ask for a plan, and no code",
+      "Write the cases and their expected values by hand",
+      "Run them against the old function, before any change",
+      "Swap a candidate function in and run the suite",
+      "Send the failing test back, exactly as pytest printed it"
+    ],
+    "trap": "Tests written after the change, or with it, come from the change; they have to exist, and fail on the old code, before any candidate is tried."
+  },
+  {
+    "id": "ex-rvzdhm84",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`check_citations` passed the answer `The handbook does not say.` to *Is support open on Saturday?*, although `contact.md#1`, the first passage retrieved, says Monday to Friday. What does that show about the check?",
+    "hint": "AI in Development, lesson 6.",
+    "choices": [
+      {
+        "text": "The search failed, so the passage never reached the prompt.",
+        "correct": false,
+        "why": "`contact.md#1` was retrieved first and was in the prompt."
+      },
+      {
+        "text": "A refusal is excused from citing, so one that misread its passages passes.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The model cited a passage it was not given, and the check does not look for that.",
+        "correct": false,
+        "why": "The check does look for that, and this reply cited nothing at all."
+      },
+      {
+        "text": "The answer was right, since the handbook never names Saturday.",
+        "correct": false,
+        "why": "Monday to Friday answers the question: no."
+      }
+    ]
+  },
+  {
+    "id": "ex-m132vkh5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The host approved `issue_refund({\"cents\": \"0\", \"order_id\": \"1042\"})`, and the server's schema quietly turned `\"0\"` into `0`. Where does the rule that a refund is at least one cent and at most what the order cost belong?",
+    "hint": "AI in Development, lesson 7; APIs and Authentication, lesson 11.",
+    "choices": [
+      {
+        "text": "In the system prompt, as a sentence the model reads on every request.",
+        "correct": false,
+        "why": "A prompt is a request; every limit is enforced below the model, where its choices cannot reach."
+      },
+      {
+        "text": "In the input schema, as a `minimum` of 1 and a `maximum` beside it.",
+        "correct": false,
+        "why": "A schema checks shape; the order's total is state, and only code that reads the order can compare with it."
+      },
+      {
+        "text": "In the operator's approval, since a person sees the amount first.",
+        "correct": false,
+        "why": "The operator answered `y` to a prompt showing the zero; the tool is the one place every call passes."
+      },
+      {
+        "text": "In `issue_refund`, which reads the order and refuses either way.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-28bk2gsv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Ollama is killed halfway through a streamed reply, and the HTTP library under the SDK raises `RemoteProtocolError: peer closed connection without sending complete message body (incomplete chunked read)`. How did the library know the body was incomplete?",
+    "hint": "AI in Development, lesson 9; Web and Internet Fundamentals, lesson 6.",
+    "choices": [
+      {
+        "text": "The `Content-Length` header had promised more bytes than arrived.",
+        "correct": false,
+        "why": "A reply generated as it goes cannot know its size in advance, so it is not sent with one."
+      },
+      {
+        "text": "The status code changed from 200 to an error halfway through.",
+        "correct": false,
+        "why": "The status left with the first byte; a failure after that has to travel inside the stream."
+      },
+      {
+        "text": "A chunked body ends with a piece of size zero, and that piece never came.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "No `message_stop` event had arrived, which the library watches for.",
+        "correct": false,
+        "why": "`message_stop` belongs to the SDK's events; the HTTP layer knows only the chunks."
+      }
+    ]
+  },
+  {
+    "id": "ex-c2n46dx3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Your API's own clients give up after 10 seconds, and it asks a model through `anthropic.Anthropic()`, made with no arguments. By the two lessons, what is wrong, and what is the fix?",
+    "hint": "AI in Development, lesson 10; APIs and Authentication, lesson 5.",
+    "choices": [
+      {
+        "text": "The SDK reads for up to 600 s; pass it a timeout below that 10 s.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing: the SDK's two retries already put an end to a slow request quickly.",
+        "correct": false,
+        "why": "Retries follow a failure; a slow reply is read for up to 600 seconds before anything fails."
+      },
+      {
+        "text": "Set your clients' timeout to 600 as well, so both layers wait as long.",
+        "correct": false,
+        "why": "Each layer's timeout is shorter than the one above it, or the caller gives up first and the answer goes nowhere."
+      },
+      {
+        "text": "Wrap the SDK in a retry loop of your own that catches every exception.",
+        "correct": false,
+        "why": "It multiplies the waits and retries the errors that should have stopped the program."
+      }
+    ]
+  },
+  {
+    "id": "ex-w7envech",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A search page asks the model to turn *cheapest first* into the name of the column to sort the catalogue by, and the reply goes into the query's `ORDER BY`. Which handling do the two lessons call for?",
+    "hint": "AI in Development, lesson 11; Relational Databases and SQL, lesson 11.",
+    "choices": [
+      {
+        "text": "Bind the reply as a parameter, the way `lookup.py` bound the customer's name.",
+        "correct": false,
+        "why": "A placeholder stands for a value; it cannot stand for a column name."
+      },
+      {
+        "text": "Paste it in as it came, since the model wrote it and no customer did.",
+        "correct": false,
+        "why": "The reply is untrusted input, and there is no exception for a value you trust."
+      },
+      {
+        "text": "Check it against a list of accepted columns.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Run it through `html.escape` first.",
+        "correct": false,
+        "why": "Escaping is the rule for HTML; a column name from outside goes through an allow-list."
+      }
+    ]
+  },
+  {
+    "id": "ex-kxp4jjd5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "loanbook's Quadlet file has `PublishPort=127.0.0.1:8000:8000`, and Caddy on the same server proxies to `127.0.0.1:8000`. A teammate changes the line to `PublishPort=8000:8000`, thinking Caddy needs it. Read with the rule Docker lesson 17 gives for `-p`, which this option follows, what has changed?",
+    "hint": "Docker and Containers, lesson 17; The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "choices": [
+      {
+        "text": "Nothing: the container still answers only inside its own network, so Caddy stays the only way in to it.",
+        "correct": false,
+        "why": "A port published with no address listens on every address the host has, which `ss` showed as `0.0.0.0`."
+      },
+      {
+        "text": "Port 8000 now answers on every address of srv, so anyone reaching srv skips Caddy and HTTPS.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Caddy loses the container, because a port given no address is published on the network card and nowhere else.",
+        "correct": false,
+        "why": "No address means every address, loopback included, so Caddy reaches it exactly as before."
+      },
+      {
+        "text": "Requests to port 8000 now go through Caddy first, which upgrades each of them to HTTPS.",
+        "correct": false,
+        "why": "Caddy answers on its own ports; a request to 8000 goes straight to the container."
+      }
+    ]
+  },
+  {
+    "id": "ex-vg4k29fx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Suppose loanbook's Quadlet file had no `Volume=` line. The Containerfile still sets `LOANBOOK_DB=/data/loanbook.db` and declares no volume. What happens to the loans on the next deploy, which replaces the container with one started from a new image?",
+    "hint": "Docker and Containers, lesson 7; The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "choices": [
+      {
+        "text": "They are kept, because the variable `LOANBOOK_DB` makes `/data` outlive the container.",
+        "correct": false,
+        "why": "A variable only names a path; the file is still written wherever that path lives, here the container's own layer."
+      },
+      {
+        "text": "They are kept, because the new image is built on top of what the old container wrote.",
+        "correct": false,
+        "why": "A container never writes to its image, and a build reads its context, not a running container."
+      },
+      {
+        "text": "They are kept: Podman gives every directory a program writes to an anonymous volume.",
+        "correct": false,
+        "why": "An anonymous volume appears only for a path the image declares as a volume, as `postgres` does; this one declares none."
+      },
+      {
+        "text": "Lost: `/data` was a directory in the old container's writable layer.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-pzwvgqae",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "loanbook's Containerfile ends with `USER 1000`, and its Quadlet file mounts `Volume=loanbook-data:/data:U`. Somebody drops the `:U`, reasoning that 1000 is only a number. What goes wrong?",
+    "hint": "Docker and Containers, lesson 14; The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "choices": [
+      {
+        "text": "The program, running as UID 1000, is refused when it writes its database into a root-owned `/data`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing: the process in a container is root on the host anyway, so the volume stays writable.",
+        "correct": false,
+        "why": "That is true of UID 0; UID 1000 has only the rights it was given, as `touch` failing on a root-owned `/data` showed."
+      },
+      {
+        "text": "The volume is emptied on every start, because `:U` is the part of the line that keeps its contents safe.",
+        "correct": false,
+        "why": "`:U` changes who owns the volume, not how long it lives; a named volume outlives every container."
+      },
+      {
+        "text": "The container switches to root to create the file, so the database ends up owned by root.",
+        "correct": false,
+        "why": "Nothing switches users on its own: the process stays 1000, and the write is refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-3sqbcxwc",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "loanbook's `Containerfile` has eight steps: `FROM`, `WORKDIR /app`, `COPY app.py seed.py ./`, `COPY static ./static`, then `ENV`, `USER`, `EXPOSE` and `CMD`. After a first build, only `static/app.js` is edited. By the cache rule of Docker lesson 12, how many of the eight steps run again on the next build?",
+    "hint": "Docker and Containers, lesson 12; The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-ngkr958r",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "With the same eight-step `Containerfile` (`COPY app.py seed.py ./`, then `COPY static ./static`), which of these single edits leave every step taken from the cache on the next build? Choose all that apply.",
+    "hint": "Docker and Containers, lesson 12; The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "choices": [
+      {
+        "text": "Adding a ninth item to `seed.py`",
+        "correct": false,
+        "why": "Step 3 copies `seed.py`, so that step and every one after it run again."
+      },
+      {
+        "text": "A new section in `README.md`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "One more test in `test_app.py`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A darker colour in `static/style.css`",
+        "correct": false,
+        "why": "Step 4 copies `static`, so its key changes and everything below it is rebuilt."
+      }
+    ]
+  },
+  {
+    "id": "ex-avm2k65f",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A service sizes its worker pool at start-up to one thread per processor that `nproc` reports. On the lab machine of Docker lesson 2, which has 4 processors, it is started with `docker run --cpus 1`. How many worker threads does it create?",
+    "hint": "Docker and Containers, lesson 2.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-gwepj98x",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A CI job starts a fresh `postgres:17` container with `-p 127.0.0.1:5432:5432`, waits with `until docker exec db pg_isready -U postgres -q; do sleep 0.2; done`, then runs the migrations from the host with `psql -h 127.0.0.1`. Now and then that first `psql` fails with `server closed the connection unexpectedly`. Why?",
+    "hint": "Docker and Containers, lesson 9.",
+    "choices": [
+      {
+        "text": "The published port opens a few seconds after the container starts, which `pg_isready` cannot see.",
+        "correct": false,
+        "why": "The port was open; what answered behind it was a server that was about to be replaced."
+      },
+      {
+        "text": "`-q` hides the failures, so the loop ends whether or not the server is ready yet.",
+        "correct": false,
+        "why": "`-q` only silences the message; the loop still waits on the exit status."
+      },
+      {
+        "text": "On first start the image runs a temporary server on a local socket only, and the check found it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The migrations arrived before `POSTGRES_PASSWORD` was applied, and the server dropped them.",
+        "correct": false,
+        "why": "A wrong password is answered with `password authentication failed`, not with a dropped connection."
+      }
+    ]
+  },
+  {
+    "id": "ex-8e4mev8g",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "loanbook gets the `ci/pipeline.sh` of Docker lesson 26, and Ana pushes the annotated tag `v0.3.0` she made in lesson 7 of the portfolio course, so the script runs with `REF_NAME=v0.3.0`. Which of these image tags does it push? Choose all that apply.",
+    "hint": "Docker and Containers, lesson 26; The Portfolio Project: From Brief to Deploy, lesson 7.",
+    "choices": [
+      {
+        "text": "`0.3.0`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`v0.3.0`",
+        "correct": false,
+        "why": "`${REF_NAME#v}` strips the `v` before any image tag is made."
+      },
+      {
+        "text": "`latest`",
+        "correct": false,
+        "why": "Nothing in the script names `latest`; Docker writes it only when a tag is left out."
+      },
+      {
+        "text": "`0.3`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-axb233nr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`shelf` runs on the host, published with `-p 127.0.0.1:8080:8080`. A second container, started with `--add-host host.docker.internal:host-gateway`, asks for `host.docker.internal:8080` and gets `Connection refused` from `172.17.0.1`. What is the reason?",
+    "hint": "Docker and Containers, lesson 23.",
+    "choices": [
+      {
+        "text": "`host-gateway` points the name at the second container's own loopback, where nothing listens.",
+        "correct": false,
+        "why": "The error names `172.17.0.1`, the host's address on the bridge, not the container's loopback."
+      },
+      {
+        "text": "The default bridge resolves no names, so `host.docker.internal` never became an address.",
+        "correct": false,
+        "why": "`--add-host` writes the name in, and the error shows it resolved to `172.17.0.1`."
+      },
+      {
+        "text": "The name reaches the host on the bridge's address, `172.17.0.1`, and `shelf` listens only on `127.0.0.1`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Docker's firewall rules drop all traffic between the bridge and the host's own ports.",
+        "correct": false,
+        "why": "Those rules separate two Docker networks; once published on every address, the same name answered `1.0.0`."
+      }
+    ]
+  },
+  {
+    "id": "ex-pj3e6py5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In review, a colleague suggests replacing loanbook's partial unique index with a check in Python: look for the item's open loan, and insert only if there is none, because it reads more clearly. Why do the README and the SQL course keep the rule in the database?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 16; Relational Databases and SQL, lesson 9.",
+    "choices": [
+      {
+        "text": "Two requests at once both find no open loan; the index refuses the second.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The index exists to keep the list of loans fast, and a check in Python would slow every page.",
+        "correct": false,
+        "why": "The README's reason is two requests arriving together; speed is not part of it."
+      },
+      {
+        "text": "Only the database can produce a 409, while code in Python can only raise an exception.",
+        "correct": false,
+        "why": "`lend` already raises `Refused` with a status in Python, and the handler turns it into the answer."
+      },
+      {
+        "text": "A check in Python would also refuse items already returned, where `returned_on IS NULL` does not.",
+        "correct": false,
+        "why": "The check can filter on the same condition; what it cannot stop is two requests that read at the same moment."
+      }
+    ]
+  },
+  {
+    "id": "ex-4scf94x1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A project lists `.env` in `.gitignore`, as lesson 14 does, and the file holding the mail password was never committed. The project then gets a Dockerfile with `COPY . .` and no `.dockerignore`, and the image is pushed to a public registry. Is the password safe?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 14; Docker and Containers, lesson 11.",
+    "choices": [
+      {
+        "text": "Yes: `docker build` sends only the files git tracks, so `.gitignore` covers the image as well.",
+        "correct": false,
+        "why": "The context is the directory as it is on disk; `.gitignore` is read by git and by nothing else."
+      },
+      {
+        "text": "Yes, as long as a later `RUN rm .env` in the Dockerfile deletes it before the image is finished.",
+        "correct": false,
+        "why": "The layer `COPY` wrote still holds the file; deleting it later only adds a whiteout on top."
+      },
+      {
+        "text": "No: the context is the whole directory, and `.env` goes in unless a `.dockerignore` lists it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "No, but only for somebody who can both pull the image and clone the repository it came from.",
+        "correct": false,
+        "why": "Pulling the image is enough: `cat /src/.env` printed the password with no repository involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-eb7nqz75",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "loanbook's Quadlet file has `Restart=always` and a `HealthCmd` every 30 seconds. One day the program deadlocks: the process keeps running and `/healthz` stops answering. Reading Docker lesson 18 alongside, what brings the service back?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15; Docker and Containers, lesson 18.",
+    "choices": [
+      {
+        "text": "systemd, at once, because `Restart=always` restarts any service whose health check fails.",
+        "correct": false,
+        "why": "`Restart=always` acts when the process exits, and a deadlocked process has not exited."
+      },
+      {
+        "text": "Nothing on its own: the container is marked unhealthy and runs on until something acts on that.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The health check itself, which kills the container after three failures.",
+        "correct": false,
+        "why": "A health check only reports; on its own, nothing acts on an unhealthy container."
+      },
+      {
+        "text": "Caddy, which stops sending traffic to an unhealthy container and starts a fresh one in its place.",
+        "correct": false,
+        "why": "Caddy forwards requests to `127.0.0.1:8000`; it starts nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-zwdhsega",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "A self-review of a diff turns up four things. Match each to the question from lesson 10's checklist that catches it.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 10.",
+    "pairs": [
+      {
+        "left": "A function called `handleStuff`",
+        "right": "Does every name say what the thing is?"
+      },
+      {
+        "left": "An earlier version of `lend` left in behind `#` marks, \"just in case\"",
+        "right": "Is there code that is commented out?"
+      },
+      {
+        "left": "A `fetch` with nothing done when it fails",
+        "right": "Does every new path have its error?"
+      },
+      {
+        "left": "A teacher typed as `<b>Rui</b>` shows up in bold",
+        "right": "Is anything from the user put into the page as HTML?"
+      }
+    ],
+    "right_distractors": [
+      "Would I understand this in six months?"
+    ]
+  },
+  {
+    "id": "ex-awage3m3",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A borrower typed as three spaces was accepted. Put the steps of fixing it in the order lesson 12 asks for.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 12.",
+    "items": [
+      "Write a test for the bug, with the code still as it was",
+      "Run the suite and watch that test fail",
+      "Make the one-line fix",
+      "Run the suite again and watch it pass",
+      "Commit the fix with its test, saying the test came first"
+    ],
+    "trap": "Fixing first and testing afterwards is the tempting order, and then the test passes from its first run, so nothing shows that it could ever see the bug."
+  },
+  {
+    "id": "ex-vcrqqp5r",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "loanbook's tags are dated 2026-06-05 (`v0.1.0`), 2026-06-15 (`v0.2.0`), 2026-06-29 (`v0.3.0`) and 2026-07-06 (`v1.0.0`). Its week-3 note worried that HTTPS had not been tried yet. How many days passed between the tag before the deploy milestone and the tag that closed it?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 7.",
+    "value": 14,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-wv8p70dh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A back-end project's README has the line \"**Sessions in Redis.** It is fast.\" in its decisions section. Which rewrite follows lesson 16's shape for a decision?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 16.",
+    "choices": [
+      {
+        "text": "**Sessions in Redis.** Fast, popular and well supported: the usual standard for sessions.",
+        "correct": false,
+        "why": "Those are general truths, and there is no cost: it reads as a list of things the author likes."
+      },
+      {
+        "text": "**Sessions in Redis.** Two app servers share them; the cost is one more service.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "**Sessions in Redis.** I picked it after comparing it with three other stores over a weekend.",
+        "correct": false,
+        "why": "It says a choice was made, not why it fits this project or what it gives up."
+      },
+      {
+        "text": "**Sessions in Redis.** A database server would be overkill for something as small as sessions.",
+        "correct": false,
+        "why": "It argues the alternative is bad, which is a claim about the world, and it still names no cost."
+      }
+    ]
+  },
+  {
+    "id": "ex-xmpt7p8p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On a new server, `git init -q --bare loanbook.git` is run without `-b main`, on a git that was never told a default branch. `git push srv main` from the laptop succeeds, yet `git clone loanbook.git` on the server checks out no files. Why, by lesson 15?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "choices": [
+      {
+        "text": "Its `HEAD` names a branch nobody pushed, so the clone has nothing to check out.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A bare repository keeps only history, so every clone of it is empty until a push with `--tags`.",
+        "correct": false,
+        "why": "Tags are not what is missing; a clone of a bare repository whose `HEAD` is right checks out files."
+      },
+      {
+        "text": "The push landed in the server's working files, and a bare repository has none to receive it.",
+        "correct": false,
+        "why": "A bare repository receives the push in full; it simply has no working files of its own."
+      },
+      {
+        "text": "The clone needs the `Host srv` entry from the laptop's `~/.ssh/config`.",
+        "correct": false,
+        "why": "This clone is a local path on the server and uses no ssh at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-6xfzfr60",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "loanbook runs on srv under its Quadlet file, with `Volume=loanbook-data:/data:U` and `LOANBOOK_DB=/data/loanbook.db` set in the image. Ana runs `python3 seed.py` in `~/loanbook` in srv's own shell, not through `podman exec`. It prints `seeded 8 items, 4 of them out`, and the page still shows no equipment. Why?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15; Docker and Containers, lesson 8.",
+    "choices": [
+      {
+        "text": "The seed did fill the volume, but the page keeps the old list until the container restarts.",
+        "correct": false,
+        "why": "Nothing keeps the list: every load asks the API, which reads the database in `/data`."
+      },
+      {
+        "text": "The seed refused, as it does for a database that already has items, and only printed a line.",
+        "correct": false,
+        "why": "Its refusal prints `loanbook already has items`; this line says it wrote eight items."
+      },
+      {
+        "text": "Only Podman may write into a volume, so the writes were thrown away.",
+        "correct": false,
+        "why": "Nothing was thrown away: the writes went into another file, because the volume is reached through the container it is mounted in."
+      },
+      {
+        "text": "The host's shell has no `LOANBOOK_DB`, so the seed filled a new `loanbook.db` beside the code instead.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-22h8m5gg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Somebody hiring a junior back-end developer opens your repository. By lesson 3, what do they look at first?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 3.",
+    "choices": [
+      {
+        "text": "The live link, opened on a phone to see whether the layout holds.",
+        "correct": false,
+        "why": "That is where a front-end reviewer starts."
+      },
+      {
+        "text": "The evaluation set, with the results written down before and after a change.",
+        "correct": false,
+        "why": "That is what a reviewer in AI engineering opens first."
+      },
+      {
+        "text": "The pipeline file, and what it does from a commit to something running.",
+        "correct": false,
+        "why": "That is the DevOps reviewer's first stop."
+      },
+      {
+        "text": "The README's API section, with example requests and the answers, errors included.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-a370d50c",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "After srv is rebuilt at the same address, `ssh srv` prints `REMOTE HOST IDENTIFICATION HAS CHANGED!`. The cause is your own rebuild, so lesson 15 makes ssh forget the old keys with `ssh-keygen ___ 10.20.0.20`.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "blanks": [
+      {
+        "accept": [
+          "-R"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zdhgx788",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "At the Lambda prices lesson 3 quotes (US$ 0.20 per million requests, US$ 0.0000166667 per GB-s), a function given 1,024 MB runs for 250 ms on each of 4 million requests a month. Ignoring the free allowance, what is the month's bill in US dollars? Two decimal places.",
+    "hint": "Systems Architecture, lesson 3.",
+    "value": 17.47,
+    "tolerance": 0.01,
+    "unit": ""
+  },
+  {
+    "id": "ex-4hesk28y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Quitanda's catalogue installs a SIGTERM handler and stopped in under a second in lesson 4. A teammate rewrites the Dockerfile's last line as `CMD python catalogue.py`. The container serves requests as before, but `docker compose stop` now takes about ten seconds, the log never shows `SIGTERM: finishing requests in progress, then exiting`, and the exit code is 137. Why?",
+    "hint": "Systems Architecture, lesson 4; Docker and Containers, lesson 11.",
+    "choices": [
+      {
+        "text": "Python running as process 1 ignores SIGTERM even when a handler is installed, so the handler never runs.",
+        "correct": false,
+        "why": "The kernel ignores a signal PID 1 has no handler for; the catalogue ran as PID 1 with its handler before the change and stopped cleanly."
+      },
+      {
+        "text": "The string form makes `/bin/sh -c` process 1, and that shell does not pass SIGTERM on.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Compose sends SIGKILL straight away, without a SIGTERM first, to any container whose command is a string.",
+        "correct": false,
+        "why": "`docker stop` sends SIGTERM first whatever the form; the ten seconds are the grace period before SIGKILL."
+      },
+      {
+        "text": "The string form starts Python without the container's environment, so the handler is never registered.",
+        "correct": false,
+        "why": "The environment reaches the program either way, and the service answers as before."
+      }
+    ]
+  },
+  {
+    "id": "ex-ggag32gq",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Quitanda's payments API takes an `Idempotency-Key` header on `POST /charges` and follows the IETF draft's rules. Match each request it receives to what it answers.",
+    "hint": "Systems Architecture, lesson 7; APIs and Authentication, lesson 2.",
+    "pairs": [
+      {
+        "left": "A key it has never seen",
+        "right": "The charge, then the key stored with its response"
+      },
+      {
+        "left": "A known key with the same body, whose first attempt has finished",
+        "right": "The stored response again, marked as a replay"
+      },
+      {
+        "left": "A known key with a different body",
+        "right": "`422`, and nothing is charged"
+      },
+      {
+        "left": "A known key whose first attempt is still running",
+        "right": "`409`, so the caller waits and asks again"
+      }
+    ],
+    "right_distractors": [
+      "A second charge, with a new id"
+    ]
+  },
+  {
+    "id": "ex-m1hbk9wy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Quitanda's `stock` table carries `CHECK (units >= 0)`, and a standby follows the primary asynchronously. During a partition the primary sells a bag, coffee goes to 10, and the standby still answers 11. A teammate says both servers are ACID, so the data is consistent. Which statement do the two lessons support?",
+    "hint": "Systems Architecture, lesson 8; Relational Databases and SQL, lesson 8.",
+    "choices": [
+      {
+        "text": "The teammate is right: a database that is ACID on every one of its nodes returns the latest write from whichever node is asked.",
+        "correct": false,
+        "why": "ACID describes each server's own transactions; it says nothing about copies on other machines agreeing."
+      },
+      {
+        "text": "The standby breaks durability, because a sale the primary committed did not survive on it.",
+        "correct": false,
+        "why": "Durability is about the machine that committed; a replica that has not received the change yet is not a violation."
+      },
+      {
+        "text": "Both keep their declared constraints, which is ACID's C; the standby fails CAP's C, which asks for the latest write.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The standby breaks ACID's C, since the 11 it answers contradicts the 10 the primary committed.",
+        "correct": false,
+        "why": "11 obeys every declared constraint; ACID's C is about constraints, not about agreeing with another copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-274ns4ss",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Behind Quitanda's Nginx, which keeps the API's answers for sixty seconds, a staff member lowers a price with a `PUT` that answers `\"price_cents\": 7990`. They reload the product and see `8990`, with `X-Cache-Status: HIT`; asked directly, past the cache, the shop says `7990`. Which reading and fix do the two lessons support?",
+    "hint": "Systems Architecture, lesson 9; Web Servers and Caching, lesson 6.",
+    "choices": [
+      {
+        "text": "Read-your-writes: send the staff screen past the cache to the shop, and keep the cache for visitors.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Monotonic reads: stick the staff member to one Nginx machine, so the versions they see only move forward.",
+        "correct": false,
+        "why": "There is one cache and it holds the old answer; affinity to it changes nothing. The person who wrote is the one misled."
+      },
+      {
+        "text": "The `PUT` never reached the database, so it has to be sent again, this time carrying an idempotency key.",
+        "correct": false,
+        "why": "The shop, asked past the cache, already says 7990; the write arrived."
+      },
+      {
+        "text": "A badly configured cache: cut every lifetime to one second, so that nobody can ever see an old price.",
+        "correct": false,
+        "why": "A one-second lifetime spares the application almost nothing, and the staff member can still read their own change wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-2qs99e8r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A standby's replay is paused while the primary writes 200,000 rows. On the primary, `pg_stat_replication` shows a `replay_lag` of `00:00:00.284866` and 15 MB between `sent_lsn` and `replay_lsn`. The shop sends a user's read to the standby only once `pg_last_wal_replay_lsn()` has reached the LSN of that user's last write. What is true at that moment?",
+    "hint": "Systems Architecture, lesson 10; Scale and Observability, lesson 2.",
+    "choices": [
+      {
+        "text": "The standby is under a third of a second behind, so the check passes for every write older than that.",
+        "correct": false,
+        "why": "`replay_lag` is the delay of the last change applied, and nothing has been applied since the pause."
+      },
+      {
+        "text": "`replay_lag` is right, and the 15 MB is log the standby has already applied but not yet flushed to disk.",
+        "correct": false,
+        "why": "The difference is between what was sent and what was replayed: 15 MB the standby has not applied."
+      },
+      {
+        "text": "The check cannot be trusted while replay is paused, so reads should stay on the primary until `replay_lag` is zero.",
+        "correct": false,
+        "why": "The LSN comparison is the exact one; the time column is the one that misleads here."
+      },
+      {
+        "text": "It is well behind, since that time stops growing while nothing is applied; the comparison fails and the primary serves the read.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-zq63ra85",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Scale lesson 10 measured that full jitter cut the retries landing in the busiest 10 ms from 1,000 to 85. A teammate adds full jitter to the checkout's three retries and reruns lesson 11's three-second freeze. Twenty seconds later the checkout is still failing nine requests in ten. Why did jitter not help?",
+    "hint": "Systems Architecture, lesson 11; Scale and Observability, lesson 10.",
+    "choices": [
+      {
+        "text": "Jitter only matters when callers retry at the same instant, and the checkout's backoff had already spread its retries.",
+        "correct": false,
+        "why": "Backoff without jitter moves the spike rather than spreading it; that is why jitter exists."
+      },
+      {
+        "text": "Full jitter can draw a wait of zero, so some retries come straight back and restart the storm by themselves.",
+        "correct": false,
+        "why": "A few immediate retries are part of the spread; the storm needs far more calls than that."
+      },
+      {
+        "text": "It spreads retries in time without making fewer of them: every request still makes up to four calls.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Jitter belongs in the stock service, which decides when to answer, not in the client.",
+        "correct": false,
+        "why": "Jitter is the caller's random wait before retrying; the service has nothing to randomise."
+      }
+    ]
+  },
+  {
+    "id": "ex-7fgtv24z",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "The shop of lesson 12 runs with no bound on its orders queue (`QUEUE` unset), and its one worker handles ten orders a second. A burst of 300 orders arrives all at once and every one is answered `202 Accepted`. About how many seconds does the last of them wait before it is handled?",
+    "hint": "Systems Architecture, lesson 12.",
+    "value": 30,
+    "tolerance": 1,
+    "unit": ""
+  },
+  {
+    "id": "ex-hqhcjfcx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In lesson 13's design each order is its own event stream, guarded by `UNIQUE (stream, version)`. Two customers, each in their own order, add the last bag of coffee and pay at the same moment. What stops the shop from selling two bags it does not have?",
+    "hint": "Systems Architecture, lesson 13.",
+    "choices": [
+      {
+        "text": "Nothing in the order streams: no command loads two streams, so the rule needs a stock stream every order appends to, or a saga.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The unique constraint, since both commands try to append the same version number to the one events table, and the later is refused.",
+        "correct": false,
+        "why": "The constraint is per stream; two different orders each writing their own version 2 never collide."
+      },
+      {
+        "text": "The projection, which refuses an `OrderPaid` that would take `units_sold` past the stock.",
+        "correct": false,
+        "why": "A projection builds read models after the fact; it does not refuse events."
+      },
+      {
+        "text": "Optimistic concurrency, which reloads the second order and finds the coffee already sold.",
+        "correct": false,
+        "why": "Reloading an order replays that order's events only; another customer's sale is not in them."
+      }
+    ]
+  },
+  {
+    "id": "ex-6bejfck5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Quitanda's orchestrated checkout reserves the coffee, charges the card, schedules the delivery and confirms the reservation as sold. The team now wants it to send an \"order confirmed\" e-mail too. Where does lesson 14 put that step?",
+    "hint": "Systems Architecture, lesson 14.",
+    "choices": [
+      {
+        "text": "First, so the customer hears at once, with a correction e-mail as its compensation if a later step fails.",
+        "correct": false,
+        "why": "An e-mail sent cannot be taken back; a second one is another fact, not an undo."
+      },
+      {
+        "text": "Between the reservation and the charge, because the reservation already guarantees that the coffee is there.",
+        "correct": false,
+        "why": "The charge and the delivery can still fail after it, and the e-mail would then be false."
+      },
+      {
+        "text": "Anywhere in the list, as long as the step is idempotent, since a retried e-mail then goes out only once.",
+        "correct": false,
+        "why": "Idempotency stops a duplicate; it does not undo an e-mail that a later failure makes untrue."
+      },
+      {
+        "text": "After the delivery is scheduled, the pivot, because an e-mail cannot be compensated and the saga only goes forward from there.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-8jthzqs6",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Quitanda is moving its stock data out of the monolith and into the new stock service behind the strangler facade. Put the steps in the order lesson 15 gives them.",
+    "hint": "Systems Architecture, lesson 15.",
+    "items": [
+      "Make the stock module the only way in to its tables, inside the monolith",
+      "Give the new service a copy, fed by change data capture or an outbox",
+      "Send the reads to the new service through the facade, a share at a time",
+      "Move the writes, so the new service becomes the owner",
+      "Stop the copying and drop the old tables"
+    ],
+    "trap": "Moving the writes early feels like the real migration, but the owner should change only after the reads have shown the copy agrees, and the old tables go last, once nothing reads them."
+  },
+  {
+    "id": "ex-d6bnrp2v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`pg_stat_statements` shows the items query of Quitanda's order history called once per order, a multiple of the orders query. A teammate fixes it by marking the order's items as always loaded eagerly, on the model class. What do the two lessons say about that fix?",
+    "hint": "Systems Architecture, lesson 16; Relational Databases and SQL, lesson 11.",
+    "choices": [
+      {
+        "text": "It is the recommended fix, because eager loading marked on the class removes every N+1 in the whole application at once.",
+        "correct": false,
+        "why": "It removes this N+1 and adds a cost to every other screen that loads an order."
+      },
+      {
+        "text": "This N+1 goes, but every screen that loads an order now fetches its items too; the instruction belongs at the loop.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It cannot work, because eager loading is a join, and a join on a to-many relationship returns the wrong rows for each order.",
+        "correct": false,
+        "why": "A join on a to-many relationship repeats the parent; the rows are correct, only larger."
+      },
+      {
+        "text": "It moves the problem into the database, which now runs the same N+1 as a stored procedure.",
+        "correct": false,
+        "why": "Eager loading sends one query per level, or a join; nothing loops inside the database."
+      }
+    ]
+  },
+  {
+    "id": "ex-renw76n1",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Quitanda's index analyses names with `portuguese_folded`: `lowercase`, `asciifolding` and the Brazilian stemmer. Without `--fuzzy`, which of these words, typed alone into the search box, become a term that `Café torrado em grãos` was stored with? Choose all that apply.",
+    "hint": "Systems Architecture, lesson 17.",
+    "choices": [
+      {
+        "text": "`cafe`",
+        "correct": true,
+        "why": "Folded and stemmed, it is `caf`, the same term as `Café`."
+      },
+      {
+        "text": "`torado`",
+        "correct": false,
+        "why": "One letter short; it is not a term in the index, and only `--fuzzy` reaches `torr` from it."
+      },
+      {
+        "text": "`torrada`",
+        "correct": true,
+        "why": "The stemmer cuts `torrado`, `torrada` and `torrados` to `torr`."
+      },
+      {
+        "text": "`tostado`",
+        "correct": false,
+        "why": "A different word with a different stem, found in the mate tea's name and not in this one."
+      }
+    ]
+  },
+  {
+    "id": "ex-tergvrzf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Quitanda's order page opens a Server-Sent Events stream through Nginx, whose `/api/` location sets `proxy_read_timeout 3s`. An order changes a few times an hour. What happens to the stream, and what do the two lessons suggest?",
+    "hint": "Systems Architecture, lesson 18; Web Servers and Caching, lesson 2.",
+    "choices": [
+      {
+        "text": "Nginx cuts it after three silent seconds; give it a block of its own with a longer timeout, or write something sooner.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing, because `proxy_read_timeout` only limits how long the shop takes to start answering, and the stream started at once.",
+        "correct": false,
+        "why": "It is the gap between two reads of the response, and an idle stream has long gaps."
+      },
+      {
+        "text": "Nginx closes it after three seconds whatever is sent, because the timeout caps the whole request.",
+        "correct": false,
+        "why": "None of Nginx's timeouts caps the total; a response that trickles a byte in time never times out."
+      },
+      {
+        "text": "The stream survives, because Nginx never applies its read timeout to a response of type `text/event-stream`.",
+        "correct": false,
+        "why": "Nginx treats the stream like any other response from the shop."
+      }
+    ]
+  },
+  {
+    "id": "ex-0z7e0fxm",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Kubernetes asks two questions of a pod. One is whether the process should be restarted. The other, asked by the ___ probe, is whether the instance should get traffic right now, and a pod failing it leaves the Service's endpoints without being restarted.",
+    "hint": "Systems Architecture, lesson 19.",
+    "blanks": [
+      {
+        "accept": [
+          "readiness",
+          "readiness probe"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

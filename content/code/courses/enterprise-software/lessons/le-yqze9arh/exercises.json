@@ -1,0 +1,717 @@
+[
+  {
+    "id": "ex-7xpjxxxc",
+    "version": 1,
+    "section": "why-the-bus",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Serra Alta has twelve systems around its bus. If every pair had its own direct interface, how many point-to-point connections would there be?",
+    "hint": "n(n − 1)/2.",
+    "value": 66,
+    "tolerance": 0,
+    "unit": "connections",
+    "accept_units": [
+      "connection"
+    ]
+  },
+  {
+    "id": "ex-6zbe4g8m",
+    "version": 1,
+    "section": "why-the-bus",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Three new systems join the twelve, and no hub exists. How many more possible direct connections does that add to the ceiling?",
+    "hint": "Work out the ceiling for fifteen, then subtract the one for twelve.",
+    "value": 39,
+    "tolerance": 0,
+    "unit": "connections",
+    "accept_units": [
+      "connection"
+    ]
+  },
+  {
+    "id": "ex-xpzdj3yy",
+    "version": 1,
+    "section": "why-the-bus",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each part of the hub's promise to what it meant at Serra Alta.",
+    "hint": "One right-hand item is not a promise of the bus at all.",
+    "pairs": [
+      {
+        "left": "routing",
+        "right": "a quality alert reaches three places whose names its sender never learns"
+      },
+      {
+        "left": "transformation",
+        "right": "a supermarket's EDI order becomes an SAP IDoc"
+      },
+      {
+        "left": "protocol mediation",
+        "right": "a web application reaches Coleta, which speaks MQ"
+      },
+      {
+        "left": "one place to watch",
+        "right": "an order number searched for in a single console"
+      }
+    ],
+    "right_distractors": [
+      "a 3% discount applied to bakery orders"
+    ]
+  },
+  {
+    "id": "ex-f1t4m33p",
+    "version": 1,
+    "section": "why-the-bus",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Serra Alta went from a ceiling of 66 direct connections to 12 connections to a hub. What did that move leave exactly as large as before?",
+    "hint": "Look at what each line carried, not at the line.",
+    "choices": [
+      {
+        "text": "The protocols each system has to speak",
+        "correct": false,
+        "why": "Protocol mediation is one of the hub's promises: each system speaks its own protocol to the bus."
+      },
+      {
+        "text": "The interfaces each system maintains",
+        "correct": false,
+        "why": "That is what shrank: each system now keeps one connection, to the bus."
+      },
+      {
+        "text": "The mappings, routes and rules, now held inside the bus",
+        "correct": true,
+        "why": "Right: a hub reduces connections, not agreements. It puts them in one place, under one team."
+      },
+      {
+        "text": "Nothing; the agreements went away with the lines",
+        "correct": false,
+        "why": "The belief the section corrects. Every mapping still exists; it moved inside the hub."
+      }
+    ]
+  },
+  {
+    "id": "ex-j1xypfst",
+    "version": 1,
+    "section": "soap-anatomy",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the elements of FarmRegistry's fault response in order, from the outermost to the innermost.",
+    "hint": "The fault takes the place of the response.",
+    "items": [
+      "soap:Envelope",
+      "soap:Body",
+      "soap:Fault",
+      "detail",
+      "fr:FarmNotFound"
+    ]
+  },
+  {
+    "id": "ex-7zqap2fm",
+    "version": 1,
+    "section": "soap-anatomy",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A message arrives whose root element is `env:Envelope`. What tells the receiver which SOAP version it is?",
+    "hint": "Prefixes are chosen by whoever writes the message.",
+    "choices": [
+      {
+        "text": "The prefix itself: `soap:` means 1.1 and `env:` means 1.2",
+        "correct": false,
+        "why": "A prefix is only a local name. `env:` bound to the 1.1 namespace is a 1.1 message."
+      },
+      {
+        "text": "A version attribute on the `Envelope`",
+        "correct": false,
+        "why": "There is no such attribute. The version is carried by the namespace."
+      },
+      {
+        "text": "The `SOAPAction` header, sent by version 1.2 alone",
+        "correct": false,
+        "why": "Backwards: `SOAPAction` is the 1.1 header; 1.2 puts the action on the content type."
+      },
+      {
+        "text": "The namespace URI that `env` is bound to",
+        "correct": true,
+        "why": "Right: `http://schemas.xmlsoap.org/soap/envelope/` is 1.1, `http://www.w3.org/2003/05/soap-envelope` is 1.2."
+      }
+    ]
+  },
+  {
+    "id": "ex-j9qeeqq2",
+    "version": 1,
+    "section": "soap-anatomy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Rota calls FarmRegistry and gets HTTP 500 with a SOAP 1.1 fault whose `faultcode` is `soap:Client`. What should it conclude?",
+    "hint": "In SOAP 1.1 the status is the same for every fault.",
+    "choices": [
+      {
+        "text": "Its own request was wrong, and resending it changes nothing",
+        "correct": true,
+        "why": "Right: `Client` puts the fault on the sender. The same request gets the same answer."
+      },
+      {
+        "text": "The bus is down; retry with backoff",
+        "correct": false,
+        "why": "SOAP 1.1 sends every fault as 500. Reading the status alone throws away the faultcode."
+      },
+      {
+        "text": "The service failed while working on a request that was fine",
+        "correct": false,
+        "why": "That is `soap:Server`. `soap:Client` says the request itself was the problem."
+      },
+      {
+        "text": "Something in front of the bus failed before SOAP was involved",
+        "correct": false,
+        "why": "There is an envelope with a fault in it, so the service answered."
+      }
+    ]
+  },
+  {
+    "id": "ex-gnbzjx5r",
+    "version": 1,
+    "section": "soap-anatomy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The bus team moves FarmRegistry to a new host, and nothing else about it changes. Which part of its WSDL has to change?",
+    "hint": "Each part answers a different question.",
+    "choices": [
+      {
+        "text": "`binding`, which says how the interface goes on the wire",
+        "correct": false,
+        "why": "The wire format is the same: SOAP 1.1 over HTTP, document/literal."
+      },
+      {
+        "text": "`portType`, the list of operations and their messages",
+        "correct": false,
+        "why": "The operations did not change, so the abstract interface stays as it is."
+      },
+      {
+        "text": "`service`",
+        "correct": true,
+        "why": "Right: the `soap:address` inside `service` is the one place the WSDL says where the service lives."
+      },
+      {
+        "text": "`types`, where every element is declared in XML Schema",
+        "correct": false,
+        "why": "No element changed shape. A move is not a change of message."
+      }
+    ]
+  },
+  {
+    "id": "ex-k0x5ccma",
+    "version": 1,
+    "section": "ws-star",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each WS-* specification to the problem it solved.",
+    "hint": "One description belongs to the WSDL, not to WS-*.",
+    "pairs": [
+      {
+        "left": "WS-Addressing",
+        "right": "where the reply should go, written inside the envelope"
+      },
+      {
+        "left": "WS-Security",
+        "right": "signing and encrypting parts of the message itself"
+      },
+      {
+        "left": "WS-ReliableMessaging",
+        "right": "numbered messages, acknowledged and resent until they arrive"
+      },
+      {
+        "left": "WS-AtomicTransaction",
+        "right": "a two-phase commit across several services"
+      }
+    ],
+    "right_distractors": [
+      "describing the operations so that a client is generated"
+    ]
+  },
+  {
+    "id": "ex-3b0tqmqv",
+    "version": 1,
+    "section": "ws-star",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A purchase order goes from Salesforce to the bus and from the bus to SAP, with TLS on both connections. Finance wants SAP to be able to check that nobody in between changed the amounts. What gives that?",
+    "hint": "Who reads the message in clear between the two connections?",
+    "choices": [
+      {
+        "text": "TLS on both connections, since every hop is encrypted",
+        "correct": false,
+        "why": "Each connection ends at the bus, which reads the message in clear and could change it."
+      },
+      {
+        "text": "A `UsernameToken` carrying Salesforce's password",
+        "correct": false,
+        "why": "It says who called. It proves nothing about the body, and the password travels as written."
+      },
+      {
+        "text": "A signature over the body, made by the sender",
+        "correct": true,
+        "why": "Right: message-level signing travels through every intermediary, which TLS cannot do."
+      },
+      {
+        "text": "`mustUnderstand=\"1\"` on the security header block",
+        "correct": false,
+        "why": "That forces the receiver to process the block or refuse. On its own it protects no content."
+      }
+    ]
+  },
+  {
+    "id": "ex-vtm1rze1",
+    "version": 1,
+    "section": "ws-star",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did so few organisations switch WS-AtomicTransaction on between services owned by different teams?",
+    "hint": "Think about what a participant does while it waits.",
+    "choices": [
+      {
+        "text": "It had no way to roll back once any service had prepared",
+        "correct": false,
+        "why": "Two-phase commit has an abort; that was never the problem."
+      },
+      {
+        "text": "Locks held while waiting on another team's coordinator",
+        "correct": true,
+        "why": "Right: inside one data centre that is workable; across owners, one team's outage holds the other's rows."
+      },
+      {
+        "text": "It worked over SOAP 1.2 and not over 1.1",
+        "correct": false,
+        "why": "Nothing in the lesson ties it to a SOAP version. The cost was in the locks."
+      },
+      {
+        "text": "Message brokers had already made distributed transactions unnecessary",
+        "correct": false,
+        "why": "A broker guarantees delivery, not that several services commit together."
+      }
+    ]
+  },
+  {
+    "id": "ex-bwxm3a6v",
+    "version": 1,
+    "section": "the-bus-that-grew",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these flows carry business logic, by the lesson's test? Choose all that apply.",
+    "hint": "Could somebody outside IT ask for it to change?",
+    "choices": [
+      {
+        "text": "Drops orders from customers with an overdue invoice",
+        "correct": true,
+        "why": "Yes: that is a credit policy, however short the code."
+      },
+      {
+        "text": "Turns `20261022` into `2026-10-22` for SAP",
+        "correct": false,
+        "why": "A format change is integration. No business person owns a date format."
+      },
+      {
+        "text": "Gives bakeries 3% off orders above a threshold",
+        "correct": true,
+        "why": "Yes: a percentage and a threshold the commercial team owns."
+      },
+      {
+        "text": "Takes a message off an MQ queue and posts it to an HTTP service",
+        "correct": false,
+        "why": "Routing across a protocol: the work a bus was always meant for."
+      },
+      {
+        "text": "Sends UHT orders to Juiz de Fora unless the depot lies south of a set latitude",
+        "correct": true,
+        "why": "Yes: which plant ships is a logistics decision."
+      }
+    ]
+  },
+  {
+    "id": "ex-5hvd49s5",
+    "version": 1,
+    "section": "the-bus-that-grew",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The commercial team raised the bakery threshold to R$ 1,800 in SAP, and orders went on getting the discount from R$ 1,500 for five months. What was the defect underneath?",
+    "hint": "Count the places the rule lived.",
+    "choices": [
+      {
+        "text": "The SAP team configured the new threshold wrongly",
+        "correct": false,
+        "why": "SAP had the right number. The discount applied before the order reached it."
+      },
+      {
+        "text": "The bus kept a stale copy of SAP's price list",
+        "correct": false,
+        "why": "No price list was copied. The rule was written into the flow's ESQL."
+      },
+      {
+        "text": "One rule had two homes",
+        "correct": true,
+        "why": "Right: the change reached one copy, and nothing in either system could say which was real."
+      },
+      {
+        "text": "The portal sent its own old prices along with each order",
+        "correct": false,
+        "why": "The portal sent the order; the 3% came from the flow between it and SAP."
+      }
+    ]
+  },
+  {
+    "id": "ex-wamnn4pr",
+    "version": 1,
+    "section": "the-bus-that-grew",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Lewis and Fowler, 2014: smart endpoints and dumb ___.",
+    "hint": "What connects the endpoints.",
+    "blanks": [
+      {
+        "accept": [
+          "pipes",
+          "pipe"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-e6skpcjf",
+    "version": 1,
+    "section": "the-bus-that-grew",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team proposes taking retries and guaranteed delivery out of IBM MQ and writing them into each service, \"so the pipe is properly dumb\". What does the lesson say?",
+    "hint": "What does dumb mean in the phrase?",
+    "choices": [
+      {
+        "text": "Agreed: a dumb pipe holds and retries nothing",
+        "correct": false,
+        "why": "The misreading the section names. Dumb means it decides nothing about the business."
+      },
+      {
+        "text": "Move delivery into the bus flows, where Rui's team watches it",
+        "correct": false,
+        "why": "That would put more into the bus, the opposite direction from the whole section."
+      },
+      {
+        "text": "Keep MQ's delivery for now, since its licence is already paid",
+        "correct": false,
+        "why": "Right outcome, wrong reason. Reliable delivery belongs in the pipe whatever the licence costs."
+      },
+      {
+        "text": "Delivery stays in the pipe; only decisions leave it",
+        "correct": true,
+        "why": "Right: holding a message until SAP is back is exactly what a dumb pipe does."
+      }
+    ]
+  },
+  {
+    "id": "ex-cbr638vs",
+    "version": 1,
+    "section": "living-with-soap",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After a patch, FarmRegistry answers with `ns2:` where it used `fr:`, bound to the same namespace URI. Rota's regular expressions find nothing. Who broke the contract?",
+    "hint": "What does a prefix mean on its own?",
+    "choices": [
+      {
+        "text": "The bus team: a prefix belongs to the WSDL contract",
+        "correct": false,
+        "why": "The WSDL names namespaces, not the prefixes a message uses for them."
+      },
+      {
+        "text": "Nobody; the XML was the same, and Rota was reading text",
+        "correct": true,
+        "why": "Right: a change that is not a change broke a parser that was not a parser."
+      },
+      {
+        "text": "The bus team, for not moving to a new namespace version",
+        "correct": false,
+        "why": "A new namespace is for incompatible messages. These were identical."
+      },
+      {
+        "text": "Coleta, by changing the format of its answers on the IBM i",
+        "correct": false,
+        "why": "The prefix is written by the bus's SOAP layer; Coleta never sees an envelope."
+      }
+    ]
+  },
+  {
+    "id": "ex-3nkg40zj",
+    "version": 1,
+    "section": "living-with-soap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For one farm, Rota's adapter gets `soap:Client` with a `FarmNotFound` detail. What should it do?",
+    "hint": "Whose fault is it, and would asking again help?",
+    "choices": [
+      {
+        "text": "Retry once, then plan from yesterday's answer",
+        "correct": false,
+        "why": "That is the reaction to `soap:Server`. An unknown farm stays unknown."
+      },
+      {
+        "text": "Stop the whole planning run and alert the Rota team on call",
+        "correct": false,
+        "why": "That fits a fault with no known detail, which is a bug on Rota's side. This one is a known answer."
+      },
+      {
+        "text": "Wait out the read timeout and try the next farm",
+        "correct": false,
+        "why": "An answer arrived; there is nothing to wait for."
+      },
+      {
+        "text": "Return \"unknown farm\" for the planner to drop and report",
+        "correct": true,
+        "why": "Right: the fault is a meaningful answer, turned into Rota's own terms."
+      }
+    ]
+  },
+  {
+    "id": "ex-bmz985xd",
+    "version": 1,
+    "section": "living-with-soap",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Rota's read timeout is 5 seconds, and after a failure it waits 2 seconds and tries once more. If both calls for one farm hang, how many seconds pass before Rota falls back to yesterday's answer?",
+    "hint": "Two waits for an answer and one pause between them.",
+    "value": 12,
+    "tolerance": 0,
+    "unit": "seconds",
+    "accept_units": [
+      "s",
+      "second"
+    ]
+  },
+  {
+    "id": "ex-xn3z4rta",
+    "version": 1,
+    "section": "living-with-soap",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The farm-onboarding process calls `RegisterBankAccount` and gets no answer within its timeout. Why must it not simply call again?",
+    "hint": "What is known, and not known, after a timeout?",
+    "choices": [
+      {
+        "text": "Nobody knows whether the first call worked, and a second would register the account twice",
+        "correct": true,
+        "why": "Right: a timeout leaves the outcome unknown, and a write repeated blindly does the work again."
+      },
+      {
+        "text": "SOAP forbids sending the same envelope twice to one address",
+        "correct": false,
+        "why": "No such rule exists. The protocol cannot protect a write from being repeated."
+      },
+      {
+        "text": "A timeout means the service refused the request, and a retry gets the same fault",
+        "correct": false,
+        "why": "A refusal arrives as a fault. A timeout means nothing arrived at all."
+      },
+      {
+        "text": "The bus holds the first call, so both would arrive at once",
+        "correct": false,
+        "why": "Even if it did, the problem would be the same: two registrations, not a timing issue."
+      }
+    ]
+  },
+  {
+    "id": "ex-4x0dkdgx",
+    "version": 1,
+    "section": "shrinking-the-bus",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Of the 70 flows, 11 had no traffic in 90 days, and 2 of those turned out to run once a year. How many flows does the bus run once the truly dead ones are switched off?",
+    "hint": "First find how many are really dead.",
+    "value": 61,
+    "tolerance": 0,
+    "unit": "flows",
+    "accept_units": [
+      "flow"
+    ]
+  },
+  {
+    "id": "ex-6ek1gscd",
+    "version": 1,
+    "section": "shrinking-the-bus",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the reclassification Serra Alta has 24 routing flows, 19 transformations, 18 orchestrations and 9 dead flows. If everything moves as planned, how many flows leave the bus?",
+    "hint": "Only one class stays.",
+    "value": 46,
+    "tolerance": 0,
+    "unit": "flows",
+    "accept_units": [
+      "flow"
+    ]
+  },
+  {
+    "id": "ex-dsf1pp43",
+    "version": 1,
+    "section": "shrinking-the-bus",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of shrinking the bus in the order the lesson gives.",
+    "hint": "Stop it growing before you count it.",
+    "items": [
+      "freeze new business logic",
+      "inventory every flow with a year of traffic",
+      "switch off the dead flows",
+      "move transformations to their endpoints",
+      "move orchestrations to the owners of the decisions",
+      "decide what the routing flows become"
+    ]
+  },
+  {
+    "id": "ex-t4qka4sx",
+    "version": 1,
+    "section": "shrinking-the-bus",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A vendor offers a tool that moves all 70 flows, as they are, to a modern integration platform. Why does Joana say it would not shrink anything?",
+    "hint": "Where would the discount live afterwards?",
+    "choices": [
+      {
+        "text": "Such tools fail on ESQL, so most flows would need rewriting by hand",
+        "correct": false,
+        "why": "Perhaps, but a perfect tool would still carry the rules across unchanged."
+      },
+      {
+        "text": "The same rules would sit in a new pipe, changed by the same team",
+        "correct": true,
+        "why": "Right: the same bus with a new licence. Shrinking is a different home for each flow."
+      },
+      {
+        "text": "A modern platform has no message broker underneath",
+        "correct": false,
+        "why": "Most do, and MQ would stay anyway. The broker is not what made the bus grow."
+      },
+      {
+        "text": "The 70 flows include 9 dead ones that the tool would copy",
+        "correct": false,
+        "why": "True, and the smallest of the problems; the dead flows are switched off in weeks."
+      }
+    ]
+  },
+  {
+    "id": "ex-9xrnxcb6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the freeze, Talita asks Rui for a flow that blocks Salesforce orders from customers over their credit limit. What does the freeze rule send her to?",
+    "hint": "Who owns the decision, and does a system already make it?",
+    "choices": [
+      {
+        "text": "A flow written in her own team's sandbox, reviewed by Rui",
+        "correct": false,
+        "why": "Who writes it changes nothing: the rule would still live in the pipe."
+      },
+      {
+        "text": "A validation rule in Salesforce that checks a copied limit",
+        "correct": false,
+        "why": "A copied limit is a rule with two homes, the defect behind the discount."
+      },
+      {
+        "text": "SAP's credit management; the flow only carries the order",
+        "correct": true,
+        "why": "Right: the decision has an owner and a system that already makes it."
+      },
+      {
+        "text": "An exception approved by Regina, since it is a single rule",
+        "correct": false,
+        "why": "Regina agreed in writing that a deadline is not a reason for one."
+      }
+    ]
+  },
+  {
+    "id": "ex-mgr1j5xz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Felipe wants Business Central to send the Alagoa cheese plant's orders to SAP through the bus. The proposed flow takes each order off a queue, maps its fields to an SAP IDoc, and picks the shipping plant by stock. Under Joana's rules, what may stay in the bus?",
+    "hint": "Classify each of the three steps.",
+    "choices": [
+      {
+        "text": "All three, since the freeze only covers flows built before it",
+        "correct": false,
+        "why": "The freeze covers new flows from its date on; this is one."
+      },
+      {
+        "text": "Only the queue; mapping and plant choice both belong to SAP",
+        "correct": false,
+        "why": "A mapping is integration, and it may stay or go to an owning endpoint. Only the decision has to leave."
+      },
+      {
+        "text": "None of it: new integrations bypass the bus entirely",
+        "correct": false,
+        "why": "The freeze bans business logic, not routing or transformation."
+      },
+      {
+        "text": "The queue and the mapping, not the plant choice",
+        "correct": true,
+        "why": "Right: routing and transformation are integration; which plant ships is a decision, and logistics owns it."
+      }
+    ]
+  },
+  {
+    "id": "ex-217e8z96",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new SOAP service will carry delivery confirmations from Rota to SAP, and somebody proposes WS-ReliableMessaging so none is lost. What is Joana's answer?",
+    "hint": "What does Serra Alta already run underneath the bus?",
+    "choices": [
+      {
+        "text": "Put them on MQ and make SAP safe to receive one twice",
+        "correct": true,
+        "why": "Right: the broker gives the guarantee, and lesson 10 covers the duty it leaves the consumer."
+      },
+      {
+        "text": "Agree, provided the messages are also signed with WS-Security",
+        "correct": false,
+        "why": "Signing proves who wrote a message, not that it arrived. And both ends would carry sequence state."
+      },
+      {
+        "text": "Use WS-AtomicTransaction, so Rota and SAP commit together",
+        "correct": false,
+        "why": "Two-phase commit across owners is the arrangement almost nobody switched on."
+      },
+      {
+        "text": "Retry each failed call from Rota until SAP answers",
+        "correct": false,
+        "why": "Retrying a write after a timeout risks doing it twice, and SAP is down every Sunday night."
+      }
+    ]
+  }
+]

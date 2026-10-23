@@ -1,0 +1,475 @@
+{
+  "ex-p4spp7re": {
+    "prompt": "Por que a aula configura um cache de plugins antes do primeiro `terraform init`?",
+    "hint": "Pense no tamanho de uma coisa que o Terraform baixa.",
+    "choices": [
+      {
+        "text": "Para guardar uma cópia só do provider de 800 MB, e não uma por diretório",
+        "why": "Isso. Dois diretórios nesta aula, uma cópia do provider."
+      },
+      {
+        "text": "Sem ele o Terraform não alcança o moto, que escuta numa porta que ele desconhece",
+        "why": "Alcançar o moto é trabalho do env.sh, pela AWS_ENDPOINT_URL."
+      },
+      {
+        "text": "Ele impede o Terraform de contatar o registry, de modo que nada chega a ser baixado",
+        "why": "No seu computador o provider ainda vem do registry, uma vez."
+      },
+      {
+        "text": "O Checkov lê as regras dele dali",
+        "why": "O Checkov não tem nada a ver com o cache de plugins do Terraform."
+      }
+    ]
+  },
+  "ex-9jzt8mwq": {
+    "prompt": "Para que serve `s3_use_path_style = true` no bloco do provider?",
+    "hint": "Está ali só por causa do moto.",
+    "choices": [
+      {
+        "text": "Liga a criptografia em todo bucket que o provider cria, com a chave padrão da conta",
+        "why": "Criptografia é um recurso à parte; esta configuração é sobre endereços."
+      },
+      {
+        "text": "Escreve o endereço de um bucket como `localhost:4567/bucket`",
+        "why": "Isso. Contra a AWS ela fica de fora."
+      },
+      {
+        "text": "Força todo bucket que o provider cria a ser privado, diga o que disser a política",
+        "why": "Nada a ver com acesso; muda como o endereço é escrito."
+      },
+      {
+        "text": "Aponta o provider para o moto em vez da AWS",
+        "why": "Isso é a AWS_ENDPOINT_URL, que o provider lê do ambiente, como a linha de comando."
+      }
+    ]
+  },
+  "ex-kkek1dbr": {
+    "prompt": "O primeiro plano mostrou `policy = (known after apply)` para a política do tablet. Por quê?",
+    "hint": "A que a linha `Resource` se referia?",
+    "choices": [
+      {
+        "text": "O Terraform nunca mostra políticas num plano",
+        "why": "O segundo plano mostrou a política inteira. Nada é escondido de propósito."
+      },
+      {
+        "text": "A política estava marcada como sensível",
+        "why": "Nada estava marcado como sensível; um valor sensível aparece como `(sensitive value)`."
+      },
+      {
+        "text": "Ela usava o ARN do bucket, desconhecido até o bucket existir",
+        "why": "Isso. Montada a partir de `local.bucket`, o valor ficou conhecido e o plano o mostrou."
+      },
+      {
+        "text": "O moto ainda não tinha criado o bucket, e uma conta real da AWS teria mostrado",
+        "why": "O Terraform calcula isso antes de perguntar a qualquer um; a AWS daria o mesmo plano."
+      }
+    ]
+  },
+  "ex-znz8z1xj": {
+    "prompt": "Uma equipe põe a consulta `jq` da aula em todo pull request e ela nunca imprimiu uma linha. O que isso prova?",
+    "hint": "Lembre do primeiro plano da seção.",
+    "choices": [
+      {
+        "text": "Que nenhuma mudança jamais concedeu nada a todo mundo",
+        "why": "Uma política desconhecida no momento do plano não tem valor para consultar e passa em silêncio."
+      },
+      {
+        "text": "Só que nenhuma política cujo valor era conhecido no plano tinha instrução para `\"*\"`",
+        "why": "Isso. A consulta é um segundo leitor, tão boa quanto o hábito de tornar valores conhecíveis."
+      },
+      {
+        "text": "Que a consulta está quebrada, já que o jq imprime ao menos uma linha",
+        "why": "Sem nada a relatar ela não imprime nada, que é a resposta esperada."
+      },
+      {
+        "text": "Que o Block Public Access está ligado na conta",
+        "why": "A consulta lê o plano, não as configurações da conta."
+      }
+    ]
+  },
+  "ex-4zn2rkc3": {
+    "prompt": "Para transformar um plano salvo em JSON, você roda `terraform ___ -json plan.bin`.",
+    "hint": "O mesmo subcomando imprime o estado.",
+    "blanks": [
+      {
+        "accept": [
+          "show"
+        ]
+      }
+    ]
+  },
+  "ex-b605fyaq": {
+    "prompt": "Uma revisora lê com cuidado o diff dos arquivos `.tf` e pula o plano. O que ela deixou de ver?",
+    "hint": "O diff é o que alguém digitou.",
+    "choices": [
+      {
+        "text": "O que a AWS vai de fato ser chamada a fazer",
+        "why": "Isso. Aprovar o código sem o plano é aprovar uma mudança que você não viu."
+      },
+      {
+        "text": "Nada, já que o plano é gerado dos mesmos arquivos",
+        "why": "Gerado deles, e de variáveis, padrões e do que já existe, que o diff não mostra."
+      },
+      {
+        "text": "O custo da mudança, que o plano calcula recurso por recurso",
+        "why": "Um plano não dá preço a nada; o ponto é o que ele faz."
+      },
+      {
+        "text": "Os segredos, que aparecem no plano e não nos arquivos .tf",
+        "why": "Um plano esconde valores sensíveis; é o estado que os guarda."
+      }
+    ]
+  },
+  "ex-xr1rw565": {
+    "prompt": "Das oito falhas do Checkov no primeiro arquivo, qual é o defeito que a aula queria pegar?",
+    "hint": "A política do tablet.",
+    "choices": [
+      {
+        "text": "`CKV_AWS_144`, sem replicação entre regiões",
+        "why": "Uma decisão que depende do bucket; esta exportação pode ser refeita."
+      },
+      {
+        "text": "`CKV_AWS_70`, uma ação permitida a qualquer principal",
+        "why": "Isso. É o erro da aula 1, pego antes de existir."
+      },
+      {
+        "text": "`CKV_AWS_18`, sem log de acesso no bucket",
+        "why": "Vale decidir, e é decidido para todos os buckets de uma vez; não é o que expõe os dados."
+      },
+      {
+        "text": "`CKV_AWS_145`, sem chave KMS na criptografia padrão do bucket",
+        "why": "Criptografia em repouso não teria impedido uma política pública de servir o arquivo."
+      }
+    ]
+  },
+  "ex-h52vc3ev": {
+    "prompt": "Por que o arquivo corrigido responde a cinco verificações com comentários `#checkov:skip=` em vez de corrigi-las?",
+    "hint": "Um scanner aplica as mesmas regras a todo bucket.",
+    "choices": [
+      {
+        "text": "Porque o Checkov as relata por engano",
+        "why": "São regras corretas; se servem para este bucket é uma decisão."
+      },
+      {
+        "text": "Para fazer a varredura passar com o mínimo de trabalho",
+        "why": "Uma exceção sem motivo seria isso. Cada exceção aqui carrega uma frase de que alguém pode discordar."
+      },
+      {
+        "text": "Cada uma é uma decisão sobre este bucket, registrada com um motivo",
+        "why": "Isso. Contada em toda execução e visível no arquivo."
+      },
+      {
+        "text": "Porque o moto não dá suporte a esses recursos, e corrigi-las quebraria o laboratório",
+        "why": "O Checkov nunca fala com o moto; ele lê os arquivos."
+      }
+    ]
+  },
+  "ex-h8b8nscj": {
+    "prompt": "Quantas verificações o Checkov relatou como falhas na primeira versão do arquivo?",
+    "hint": "Conte as linhas `Check:`.",
+    "unit": "verificações"
+  },
+  "ex-pvqm2vxs": {
+    "prompt": "O Checkov passa no Terraform da clínica, e mesmo assim uma requisição anônima lê um arquivo de um dos buckets. Que explicação cabe no que um scanner enxerga?",
+    "hint": "Ele lê arquivos, não a conta.",
+    "choices": [
+      {
+        "text": "As regras do Checkov para S3 estão desatualizadas",
+        "why": "A regra dele pegou exatamente essa política na aula; a lacuna está em outro lugar."
+      },
+      {
+        "text": "Os comentários de exceção desligaram a regra de acesso público",
+        "why": "As cinco exceções citavam outras verificações; a CKV_AWS_70 e a CKV2_AWS_6 passaram."
+      },
+      {
+        "text": "O bucket foi tornado público à mão, ou por outra configuração, fora destes arquivos",
+        "why": "Isso. Ler a conta como ela é fica para a aula 16."
+      },
+      {
+        "text": "O Checkov passou só porque rodou offline",
+        "why": "O `--skip-download` pula links de orientação, não verificações."
+      }
+    ]
+  },
+  "ex-9534mnh5": {
+    "prompt": "O que um pipeline lê de uma execução do Checkov para decidir se continua?",
+    "hint": "O `echo` depois de cada execução o imprimiu.",
+    "choices": [
+      {
+        "text": "O código de saída: 1 com falhas, 0 sem",
+        "why": "Isso. A aula 14 monta uma porta sobre ele."
+      },
+      {
+        "text": "O número de exceções, que precisa ser zero",
+        "why": "O arquivo corrigido tinha cinco exceções e saiu com 0."
+      },
+      {
+        "text": "A cor da saída no terminal",
+        "why": "Um pipeline não lê cores; o código de saída é o contrato."
+      },
+      {
+        "text": "Um relatório enviado aos servidores do fornecedor depois de cada execução",
+        "why": "A aula o rodou offline; nada foi enviado."
+      }
+    ]
+  },
+  "ex-x1804srj": {
+    "prompt": "A bia tirou a chave do `main.tf` e fez o commit. O scanner agora passa. O que continua verdade?",
+    "hint": "O `git log -S` respondeu.",
+    "choices": [
+      {
+        "text": "A chave sumiu de toda cópia do repositório, clones incluídos",
+        "why": "Só dos arquivos de hoje; todo clone feito antes guarda o histórico."
+      },
+      {
+        "text": "A chave ainda funciona, e ainda está no histórico e em todo clone anterior",
+        "why": "Isso. Só torná-la inútil encerra o vazamento."
+      },
+      {
+        "text": "A AWS revogou a chave sozinha quando o commit a tirou do arquivo, horas depois",
+        "why": "A AWS não sabe nada dos seus arquivos; a chave segue válida até alguém desativá-la."
+      },
+      {
+        "text": "Nada, agora que o scanner está limpo",
+        "why": "O scanner leu os arquivos atuais; o histórico que ele não leu ainda guarda a chave."
+      }
+    ]
+  },
+  "ex-5q0w3zgf": {
+    "prompt": "Ponha a resposta a uma chave encontrada num repositório na ordem que a aula dá.",
+    "hint": "Até o primeiro passo, todo o resto é cosmético.",
+    "items": [
+      "desativar a chave, depois apagá-la",
+      "descobrir o que a chave fez",
+      "trocá-la por credenciais que não vazem do mesmo jeito",
+      "limpar o histórico do repositório"
+    ],
+    "trap": "Limpar o histórico primeiro é o deslize: tira a linha das cópias que você controla e deixa a chave funcionando."
+  },
+  "ex-40rgms9m": {
+    "prompt": "O Checkov relatou `CKV_SECRET_6`, \"Base64 High Entropy String\", para a linha com `secret_key`. O que essa verificação procura?",
+    "hint": "Ela não sabe nada de AWS.",
+    "choices": [
+      {
+        "text": "O prefixo `AKIA`",
+        "why": "Esse é o teste da CKV_SECRET_2, no id da chave de acesso."
+      },
+      {
+        "text": "Sequências tão aleatórias que raramente são outra coisa que um segredo",
+        "why": "Isso. Marca formato e aleatoriedade, não o padrão de um fornecedor."
+      },
+      {
+        "text": "Uma chave que a AWS confirma ser válida quando o Checkov pergunta durante a varredura",
+        "why": "O Checkov não pergunta a ninguém; a chave da aula nunca foi válida e mesmo assim foi marcada."
+      },
+      {
+        "text": "A palavra `secret` no nome de uma variável, seguida de qualquer valor que ela tenha",
+        "why": "Ela marcou o valor; uma variável chamada secret sem nada aleatório passaria."
+      }
+    ]
+  },
+  "ex-mgqzb2en": {
+    "prompt": "De onde o provider pode tirar credenciais para que nenhuma precise ser escrita num arquivo `.tf`? Marque todas as que se aplicam.",
+    "hint": "Os mesmos lugares em que a linha de comando procura.",
+    "choices": [
+      {
+        "text": "Variáveis de ambiente, como o env.sh define",
+        "why": "Isso. É assim que este laboratório lhe dá a chave test."
+      },
+      {
+        "text": "Um perfil no notebook",
+        "why": "Isso."
+      },
+      {
+        "text": "Um papel, para o que roda na nuvem ou num pipeline",
+        "why": "Isso. A aula 14 trata do papel do pipeline."
+      },
+      {
+        "text": "Um arquivo `terraform.tfvars` commitado ao lado do main.tf",
+        "why": "Um tfvars commitado é um arquivo no repositório, com o mesmo problema do main.tf."
+      }
+    ]
+  },
+  "ex-yxfnc47s": {
+    "prompt": "O `terraform state show` imprimiu `secret_string = (sensitive value)`. O que o `grep` no `terraform.tfstate` imprimiu?",
+    "hint": "`sensitive` esconde da tela.",
+    "choices": [
+      {
+        "text": "O mesmo marcador `(sensitive value)`",
+        "why": "O marcador é como a tela mostra; o arquivo guarda o valor."
+      },
+      {
+        "text": "Um hash da senha",
+        "why": "Não há hash nenhum; fica guardada como veio."
+      },
+      {
+        "text": "A senha, em texto claro",
+        "why": "Isso. `Clinic-2019-Booking!`, letra por letra."
+      },
+      {
+        "text": "A senha cifrada com a chave do próprio estado, que o Terraform guarda em .terraform",
+        "why": "O estado local não é cifrado; só um backend pode cifrá-lo em repouso."
+      }
+    ]
+  },
+  "ex-e0nvxx8m": {
+    "prompt": "Depois da troca para `secret_string_wo`, o `terraform.tfstate` não guarda mais a senha. Por que a aula ainda diz que a senha precisa mudar?",
+    "hint": "Conte os arquivos em que o grep olhou.",
+    "choices": [
+      {
+        "text": "Argumentos write-only expiram o valor depois de um dia",
+        "why": "Nada expira; o segredo ainda respondeu com a mesma senha."
+      },
+      {
+        "text": "O backup, e qualquer histórico que um backend guarde, ainda têm o valor antigo",
+        "why": "Isso. `terraform.tfstate.backup:1`. Uma senha que passou por um arquivo de estado é uma senha que vazou."
+      },
+      {
+        "text": "O Secrets Manager rejeita senha definida pelo Terraform",
+        "why": "Ele aceitou, e o get-secret-value a devolveu."
+      },
+      {
+        "text": "Porque o `secret_string_wo_version` ficou em 1",
+        "why": "A versão só diz ao Terraform quando escrever de novo."
+      }
+    ]
+  },
+  "ex-r0a32pth": {
+    "prompt": "Uma variável que o Terraform pode usar numa execução e nunca pode guardar é declarada com `___ = true`.",
+    "hint": "Não é `sensitive`, que só a esconde da tela.",
+    "blanks": [
+      {
+        "accept": [
+          "ephemeral"
+        ]
+      }
+    ]
+  },
+  "ex-3m1phgxv": {
+    "prompt": "Ligue cada lugar ao que ele fez com a senha do banco.",
+    "hint": "A figura tem três colunas.",
+    "pairs": [
+      {
+        "left": "a tela do `terraform state show`",
+        "right": "escondeu como `(sensitive value)`"
+      },
+      {
+        "left": "`terraform.tfstate` depois da troca write-only",
+        "right": "não a guardava mais"
+      },
+      {
+        "left": "`terraform.tfstate.backup`",
+        "right": "manteve o valor antigo"
+      },
+      {
+        "left": "o segredo do Secrets Manager",
+        "right": "a guardava, como deve"
+      }
+    ],
+    "right_distractors": [
+      "cifrou com uma chave KMS"
+    ]
+  },
+  "ex-9zh799fx": {
+    "prompt": "O acesso de quem ao bucket de estado uma equipe deve limitar, segundo a aula?",
+    "hint": "O estado é um segredo.",
+    "choices": [
+      {
+        "text": "O de todos, exceto as pessoas e o pipeline que rodam o Terraform",
+        "why": "Isso. Um estado legível pela equipe inteira torna todo segredo nele legível pela equipe inteira."
+      },
+      {
+        "text": "O de ninguém: o estado guarda só ids de recursos",
+        "why": "Ele guardou uma senha em texto claro alguns comandos antes."
+      },
+      {
+        "text": "O do pipeline, já que quem roda o Terraform à mão não precisa dele",
+        "why": "Pessoas que rodam o Terraform também precisam; o ponto é que mais ninguém precisa."
+      },
+      {
+        "text": "O dos auditores, que leem cada versão dele a cada trimestre para o relatório",
+        "why": "Nada na aula dá o estado aos auditores; eles recebem evidências, não segredos."
+      }
+    ]
+  },
+  "ex-q8j32zpp": {
+    "prompt": "Ligue cada comando à pergunta que ele responde nesta aula.",
+    "hint": "Plano, scanner, histórico, estado.",
+    "pairs": [
+      {
+        "left": "`terraform show -json plan.bin | jq …`",
+        "right": "que instrução concede algo a todo mundo?"
+      },
+      {
+        "left": "`checkov --framework terraform`",
+        "right": "que regras cada recurso quebra?"
+      },
+      {
+        "left": "`git log -p -S <chave>`",
+        "right": "que commits já tiveram esta chave?"
+      },
+      {
+        "left": "`grep … terraform.tfstate`",
+        "right": "o segredo está escrito no estado?"
+      }
+    ],
+    "right_distractors": [
+      "quem usou esta chave por último?"
+    ]
+  },
+  "ex-msx6tpz0": {
+    "prompt": "Um pull request adiciona uma política de bucket cujo `Resource` usa `aws_s3_bucket.x.arn`, um scanner passa com uma exceção para `CKV_AWS_70` sem motivo, e o plano mostra `(known after apply)`. Qual parte deve travar a revisão primeiro?",
+    "hint": "Qual dos três desliga a única verificação que pegaria o problema?",
+    "choices": [
+      {
+        "text": "O ARN desconhecido, já que planos nunca deveriam ter desconhecidos",
+        "why": "Desconhecidos são normais; este só importa porque o scanner também foi calado."
+      },
+      {
+        "text": "Ter desligado o `CKV_AWS_70` sem dizer por quê, o que cala o único achado do defeito",
+        "why": "Isso. Ela desliga o único achado que nomeia o defeito, sem nada de que discordar."
+      },
+      {
+        "text": "Nada: o scanner passou",
+        "why": "Passou porque a verificação relevante foi pulada, e ninguém disse por quê."
+      },
+      {
+        "text": "O uso de jsonencode, que esconde políticas do Checkov",
+        "why": "O Checkov leu a política com jsonencode sem problema na aula e a reprovou."
+      }
+    ]
+  },
+  "ex-ycc1xbrq": {
+    "prompt": "O id de uma chave de acesso de longa duração de um usuário do IAM começa com as quatro letras `___`.",
+    "hint": "A CKV_SECRET_2 do Checkov a reconheceu por elas.",
+    "blanks": [
+      {
+        "accept": [
+          "AKIA"
+        ]
+      }
+    ]
+  },
+  "ex-s2kkqtsr": {
+    "prompt": "Que afirmação sobre `sensitive = true` numa variável do Terraform está correta?",
+    "hint": "Tela contra arquivo.",
+    "choices": [
+      {
+        "text": "Ela cifra o valor no estado com uma chave guardada no diretório .terraform",
+        "why": "O estado o mostrou em texto claro."
+      },
+      {
+        "text": "Ela mantém o valor fora de planos, saídas e do estado",
+        "why": "Fora da tela, não do estado; é para isso que existem `ephemeral` e os argumentos write-only."
+      },
+      {
+        "text": "Ela esconde o valor na tela e mesmo assim o registra no estado",
+        "why": "Isso."
+      },
+      {
+        "text": "Ela se recusa a rodar com o valor numa variável de ambiente",
+        "why": "A aula a passou por `TF_VAR_db_password` sem reclamação."
+      }
+    ]
+  }
+}

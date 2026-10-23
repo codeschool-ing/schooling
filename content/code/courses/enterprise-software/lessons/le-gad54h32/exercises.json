@@ -1,0 +1,727 @@
+[
+  {
+    "id": "ex-8j9e97xp",
+    "version": 1,
+    "section": "pattern-language",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The 21 replies of Vale Verde's order reach the aggregator mixed with replies to other orders. Which header field lets it sort them?",
+    "hint": "What this message belongs to, not what it is.",
+    "choices": [
+      {
+        "text": "The correlation id, which names the order each reply belongs to",
+        "correct": true,
+        "why": "Right: every part and every reply carries the chain's order number there, so the aggregator groups by it."
+      },
+      {
+        "text": "The message id of each reply",
+        "correct": false,
+        "why": "A message id identifies one message, and all 21 replies have different ones; it cannot say which belong together."
+      },
+      {
+        "text": "The return address, the reply channel",
+        "correct": false,
+        "why": "The return address says where a reply goes. Replies to many orders share that channel, so it cannot tell them apart."
+      },
+      {
+        "text": "The timestamp, since the replies of one order arrive close together",
+        "correct": false,
+        "why": "Replies of different orders interleave in time, and a slow branch can reply minutes after the rest."
+      }
+    ]
+  },
+  {
+    "id": "ex-r28hapze",
+    "version": 1,
+    "section": "pattern-language",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each kind of message to the Serra Alta example the lesson gives for it.",
+    "hint": "Do this, here is data, this happened.",
+    "pairs": [
+      {
+        "left": "command message",
+        "right": "create this store order in SAP"
+      },
+      {
+        "left": "document message",
+        "right": "the monthly price table sent to the Portal B2B"
+      },
+      {
+        "left": "event message",
+        "right": "batch 2614 released by quality"
+      }
+    ],
+    "right_distractors": [
+      "the channel a reply should be sent to"
+    ]
+  },
+  {
+    "id": "ex-hm5txww6",
+    "version": 1,
+    "section": "pattern-language",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's diagram shows a translator icon with one channel going in and three coming out. Reading it in the book's notation, what is wrong?",
+    "hint": "Each icon promises a count of messages in and out.",
+    "choices": [
+      {
+        "text": "Nothing: a translator may send its output wherever it likes",
+        "correct": false,
+        "why": "A translator changes a message and leaves its destination alone; choosing among exits is a router's job."
+      },
+      {
+        "text": "The channels should be drawn as arrows",
+        "correct": false,
+        "why": "How a channel is drawn is a matter of style; the count of exits is the substance."
+      },
+      {
+        "text": "It promises one out: a router or splitter mislabelled",
+        "correct": true,
+        "why": "Right: a translator is one in, one out. Three exits means the step also routes or splits, and the diagram hides it."
+      },
+      {
+        "text": "A translator needs a return address",
+        "correct": false,
+        "why": "A return address belongs to a request that expects a reply, not to a step in the middle of a flow."
+      }
+    ]
+  },
+  {
+    "id": "ex-9rdvpcp3",
+    "version": 1,
+    "section": "routing",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Vale Verde's Tuesday order is for 9 stores. All 9 want milk from Juiz de Fora, 3 also want butter from Lavras and 6 want cheese from Alagoa. How many messages does the splitter produce?",
+    "hint": "One message per store and plant.",
+    "value": 18,
+    "tolerance": 0,
+    "unit": "messages",
+    "accept_units": [
+      "message"
+    ]
+  },
+  {
+    "id": "ex-ebt9nrza",
+    "version": 1,
+    "section": "routing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Rui's aggregator completes only when the count of replies is reached. What happens on the morning one reply never comes?",
+    "hint": "Nothing has failed yet, from its point of view.",
+    "choices": [
+      {
+        "text": "It sends a confirmation for the replies it has",
+        "correct": false,
+        "why": "That is what a timeout would do. With a count alone it has no rule that lets it stop waiting."
+      },
+      {
+        "text": "It raises an error, and the flow's alert fires",
+        "correct": false,
+        "why": "No step has failed, so there is nothing to raise. That silence is why the defect lasted years."
+      },
+      {
+        "text": "The broker redelivers the missing reply",
+        "correct": false,
+        "why": "Redelivery applies to a message that exists. A reply that was never produced cannot be redelivered."
+      },
+      {
+        "text": "It waits for ever, and the chain gets no confirmation",
+        "correct": true,
+        "why": "Right: the aggregate stays open, nothing reports a failure, and the customer is the first to notice."
+      }
+    ]
+  },
+  {
+    "id": "ex-vrtk16gv",
+    "version": 1,
+    "section": "routing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An aggregator times out at 06:12 and confirms the order without the cheese lines. At 06:25 the cheese reply arrives. If the aggregator kept no record of closed orders, what does it do?",
+    "hint": "To the aggregator, a message with an unknown correlation id is a beginning.",
+    "choices": [
+      {
+        "text": "Starts a new aggregate and later sends a second confirmation",
+        "correct": true,
+        "why": "Right: the late reply looks like the first of a new set. Remembering closed ids for longer than the timeout prevents it."
+      },
+      {
+        "text": "Adds the cheese lines to the confirmation it already sent to the chain",
+        "correct": false,
+        "why": "The confirmation has left; nothing can add to it. A correction is a new message somebody has to design."
+      },
+      {
+        "text": "Discards it, since the order is already closed",
+        "correct": false,
+        "why": "It cannot know the order is closed: that knowledge is exactly the record it did not keep."
+      },
+      {
+        "text": "Sends it to the dead letter queue",
+        "correct": false,
+        "why": "The reply is well formed and processes normally; nothing about it looks like a poison message."
+      }
+    ]
+  },
+  {
+    "id": "ex-a17sy304",
+    "version": 1,
+    "section": "routing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each routing pattern to what goes in and what comes out.",
+    "hint": "Count the messages on each side.",
+    "pairs": [
+      {
+        "left": "content-based router",
+        "right": "one message in, the same message out on one of several channels"
+      },
+      {
+        "left": "message filter",
+        "right": "one message in, the same message out or nothing"
+      },
+      {
+        "left": "recipient list",
+        "right": "one message in, a copy out on each of several channels"
+      },
+      {
+        "left": "resequencer",
+        "right": "several messages in out of order, the same messages out in order"
+      }
+    ],
+    "right_distractors": [
+      "one message in, its body changed to the receiver's format"
+    ]
+  },
+  {
+    "id": "ex-wr3szr0f",
+    "version": 1,
+    "section": "transformation",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Six systems all exchange orders with each other, point to point. How many translators are needed?",
+    "hint": "One for each ordered pair: n(n − 1).",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "translators",
+    "accept_units": [
+      "translator"
+    ]
+  },
+  {
+    "id": "ex-v52p0ntz",
+    "version": 1,
+    "section": "transformation",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Orders flow from three senders (EDI, the Portal B2B, Salesforce) to two receivers (SAP, Business Central), point to point. A marketplace is added as a fourth sender. How many translators does point to point need after the addition?",
+    "hint": "Not n(n − 1): only senders talk to receivers.",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "translators",
+    "accept_units": [
+      "translator"
+    ]
+  },
+  {
+    "id": "ex-hs4e3nwz",
+    "version": 1,
+    "section": "transformation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The order flow's enricher looks up each store's ship-to number in SAP. An order arrives on Sunday at 02:30. What happens?",
+    "hint": "Lesson 1 gave SAP's weekly window.",
+    "choices": [
+      {
+        "text": "Nothing unusual: the queues decouple the flow from SAP",
+        "correct": false,
+        "why": "The queues decouple the steps from each other, but the enricher's lookup is a synchronous call."
+      },
+      {
+        "text": "It fails at the enricher, since SAP is down until 05:00, and orders queue behind it",
+        "correct": true,
+        "why": "Right: the enricher hides a synchronous call, so the flow inherits SAP's Sunday maintenance window."
+      },
+      {
+        "text": "The enricher skips the lookup and passes the order on",
+        "correct": false,
+        "why": "An enricher that skipped silently would send SAP orders with no ship-to; nothing in the pattern does that."
+      },
+      {
+        "text": "The EDI provider holds the order until Monday",
+        "correct": false,
+        "why": "The provider delivered it already; the wait happens inside Serra Alta's flow."
+      }
+    ]
+  },
+  {
+    "id": "ex-034fxmka",
+    "version": 1,
+    "section": "transformation",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Rather than send a 2 MB certificate through every hop, the message carries the Documentum object id, and the receiver fetches the PDF when it needs it. The book calls this a ___ check.",
+    "hint": "Like the ticket for a coat left at a cloakroom.",
+    "blanks": [
+      {
+        "accept": [
+          "claim"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-68j59y8g",
+    "version": 1,
+    "section": "transformation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Joana's company-wide canonical Customer reached 87 fields, nearly all optional. Why does a model like that fail as a contract?",
+    "hint": "What can a receiver conclude from a record that validates?",
+    "choices": [
+      {
+        "text": "Because 87 fields make every message too large for MQ",
+        "correct": false,
+        "why": "Field count is not the problem; a customer record is far below any message size limit."
+      },
+      {
+        "text": "No receiver knows whether a record it gets is usable",
+        "correct": true,
+        "why": "Right: with everything optional, a valid record promises nothing, and Customer means different things in each context."
+      },
+      {
+        "text": "Because a canonical model never pays, whatever its scope",
+        "correct": false,
+        "why": "Joana kept a canonical order message; scoped to one exchange with several parties, the model does pay."
+      },
+      {
+        "text": "Because SAP's partner functions cannot be expressed in XML",
+        "correct": false,
+        "why": "They can be written in any format; the trouble is that other systems mean something else by customer."
+      }
+    ]
+  },
+  {
+    "id": "ex-wvm92vsg",
+    "version": 1,
+    "section": "endpoints",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "During the month close, Edson wants SAP to take store orders at no more than 50 a minute, whatever the queue holds. Which kind of consumer gives him that?",
+    "hint": "Who decides when the next message is read?",
+    "choices": [
+      {
+        "text": "An event-driven consumer",
+        "correct": false,
+        "why": "An event-driven consumer is handed messages as they arrive, so the queue sets the pace, not SAP."
+      },
+      {
+        "text": "Three competing consumers",
+        "correct": false,
+        "why": "Competing consumers raise throughput; Edson asked for a ceiling."
+      },
+      {
+        "text": "A polling consumer",
+        "correct": true,
+        "why": "Right: it asks for a message when it is ready, so asking 50 times a minute is the limit."
+      },
+      {
+        "text": "A durable subscriber on a topic",
+        "correct": false,
+        "why": "Durability keeps messages while a subscriber is away; it says nothing about how fast they are read."
+      }
+    ]
+  },
+  {
+    "id": "ex-z3ykhvde",
+    "version": 1,
+    "section": "endpoints",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The SAP branch reads a store order under syncpoint and calls the BAPI. SAP commits the sales order, then the flow fails before committing its get. What follows?",
+    "hint": "Which of the two systems is in the unit of work?",
+    "choices": [
+      {
+        "text": "Both roll back, because the transaction also covers the BAPI call",
+        "correct": false,
+        "why": "SAP's commit is not part of MQ's unit of work; nothing rolls the sales order back."
+      },
+      {
+        "text": "It is redelivered, and without a check SAP gets a second order",
+        "correct": true,
+        "why": "Right: the transaction protects the message, not the order, which is why the flow also checks for an existing order."
+      },
+      {
+        "text": "The message is lost, since it was already read",
+        "correct": false,
+        "why": "Under syncpoint an uncommitted get is undone, so the message goes back on the queue."
+      },
+      {
+        "text": "MQ asks SAP whether the order exists before redelivering",
+        "correct": false,
+        "why": "MQ knows nothing about SAP; that check is the receiver's job, which makes it an idempotent receiver."
+      }
+    ]
+  },
+  {
+    "id": "ex-bexfjkjy",
+    "version": 1,
+    "section": "endpoints",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each endpoint pattern to its Serra Alta example.",
+    "hint": "Two of them hide messaging from code that does not want it.",
+    "pairs": [
+      {
+        "left": "messaging gateway",
+        "right": "Rota's code calls planPublisher.publish(plan) and never sees MQ"
+      },
+      {
+        "left": "service activator",
+        "right": "a queue's messages become calls to a BAPI that knows nothing about messages"
+      },
+      {
+        "left": "competing consumers",
+        "right": "three copies of the SAP order flow read the same queue"
+      },
+      {
+        "left": "durable subscriber",
+        "right": "the Portal B2B gets the price changes published while it was redeployed"
+      }
+    ],
+    "right_distractors": [
+      "the store order is enriched with the ship-to number from SAP"
+    ]
+  },
+  {
+    "id": "ex-trvahwww",
+    "version": 1,
+    "section": "endpoints",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did Rui talk Joana out of message selectors on one shared order queue, with Business Central taking Alagoa's orders and SAP the rest?",
+    "hint": "Think of an order from a plant neither selector names.",
+    "choices": [
+      {
+        "text": "Selectors are not supported by IBM MQ",
+        "correct": false,
+        "why": "MQ does support selectors; the objection is about what happens to messages they do not match."
+      },
+      {
+        "text": "Business Central cannot read from MQ",
+        "correct": false,
+        "why": "Business Central is reached through an adapter either way; the router design uses one too."
+      },
+      {
+        "text": "Two consumers on one queue lose the order of messages",
+        "correct": false,
+        "why": "That is the competing consumers trade-off; selectors split the messages by content rather than sharing them."
+      },
+      {
+        "text": "Unmatched messages sit there unseen",
+        "correct": true,
+        "why": "Right: an order from a new plant, or a typo, would wait on a queue that looks healthy. A router has a default exit."
+      }
+    ]
+  },
+  {
+    "id": "ex-63n4sj4x",
+    "version": 1,
+    "section": "system-management",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What made the next farm-payment trace a search instead of a two-day project?",
+    "hint": "The fix was not a new system.",
+    "choices": [
+      {
+        "text": "SAP's payment document number, carried to the bank and back",
+        "correct": true,
+        "why": "Right: from the payment run to the return file the payment has one name, so a rejected line points at a vendor."
+      },
+      {
+        "text": "A new mapping table from each hop's identifier to the next one's",
+        "correct": false,
+        "why": "More tables are the problem, not the fix; the rule is to carry one identifier unchanged."
+      },
+      {
+        "text": "Moving the payment run from the 10th to the 1st",
+        "correct": false,
+        "why": "The date does not help anybody find a payment; the farms are paid on the 10th."
+      },
+      {
+        "text": "Coleta sending SAP's vendor numbers",
+        "correct": false,
+        "why": "Hops 1 and 2 were never the slow part; the trail went cold at the remittance."
+      }
+    ]
+  },
+  {
+    "id": "ex-809s5fbh",
+    "version": 1,
+    "section": "system-management",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Rui adds a wire tap and a message store to the remittance flow. Which of these does the lesson say must be decided with it? Choose all that apply.",
+    "hint": "What is in the copies, and what if the copy fails?",
+    "choices": [
+      {
+        "text": "Who may read the store, since it holds farmers' bank accounts",
+        "correct": true,
+        "why": "Yes: a copy of every message is a copy of the personal data in it."
+      },
+      {
+        "text": "How long the copies are kept",
+        "correct": true,
+        "why": "Yes: a retention period, decided before the store fills rather than after."
+      },
+      {
+        "text": "What the main flow does if writing to the store fails",
+        "correct": true,
+        "why": "Yes: the payment must still reach the bank, so the tap writes to a queue and something else fills the store."
+      },
+      {
+        "text": "A new correlation id for each copy",
+        "correct": false,
+        "why": "The opposite: a copy keeps the identifiers it had, or the store cannot be searched by them."
+      }
+    ]
+  },
+  {
+    "id": "ex-ervw4rr7",
+    "version": 1,
+    "section": "system-management",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Serra Alta injects a synthetic order every morning at 05:00. What has to be true of every system downstream for this to be safe?",
+    "hint": "What does a real sales order end in at Serra Alta?",
+    "choices": [
+      {
+        "text": "It answers within a minute",
+        "correct": false,
+        "why": "Speed is what the test measures; safety is about the test not becoming a real order."
+      },
+      {
+        "text": "It recognises the order as a test",
+        "correct": true,
+        "why": "Right: a system that did not would treat it as real, and a real order ends in an NF-e the tax authority registers."
+      },
+      {
+        "text": "It is switched to a test environment at 05:00",
+        "correct": false,
+        "why": "Then the test would check the test environment; the point is to exercise production before the real orders arrive."
+      },
+      {
+        "text": "Its queue is purged after the test",
+        "correct": false,
+        "why": "Purging a production queue deletes whatever real messages are on it; that is the dangerous pattern."
+      }
+    ]
+  },
+  {
+    "id": "ex-q85x5yyg",
+    "version": 1,
+    "section": "composing",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the redesigned order flow in order, from the chain's order to its confirmation.",
+    "hint": "After the review, enrichment happens on SAP's branch only.",
+    "items": [
+      "Translate the EANCOM order into the bus's XML",
+      "Split it into one message per store and plant",
+      "Route each message by plant",
+      "Enrich the SAP-bound messages from the cache",
+      "Aggregate the replies by order number",
+      "Translate the result into an ORDRSP"
+    ],
+    "trap": "Enriching before the router is the defect the review found: it enriches messages for Business Central from SAP and stops them when SAP is down."
+  },
+  {
+    "id": "ex-rkyhf5j4",
+    "version": 1,
+    "section": "composing",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the redesigned flow the enricher runs once per SAP-bound message, with no cache. An order of 50 lines splits into 26 messages, 5 of them for Alagoa. How many SAP lookups does it make?",
+    "hint": "Alagoa's messages go to Business Central.",
+    "value": 21,
+    "tolerance": 0,
+    "unit": "lookups",
+    "accept_units": [
+      "lookup",
+      "calls"
+    ]
+  },
+  {
+    "id": "ex-n7c26zh0",
+    "version": 1,
+    "section": "composing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The router's default exit had carried three messages in two years. Why was Joana wrong to call it dead code?",
+    "hint": "What were the three?",
+    "choices": [
+      {
+        "text": "Deleting a route needs a change window",
+        "correct": false,
+        "why": "Windows decide when a change happens, not whether a route is needed."
+      },
+      {
+        "text": "Rui's team uses it for test messages",
+        "correct": false,
+        "why": "The test order goes through the normal route to SAP; the three were real orders."
+      },
+      {
+        "text": "It is where unmatched orders wait to be seen",
+        "correct": true,
+        "why": "Right: the three were real orders for a new product; without the exit they would have vanished."
+      },
+      {
+        "text": "IIB refuses to deploy a Route node that has no default exit",
+        "correct": false,
+        "why": "The argument is about the orders, not about the tool; a rule that only a tool enforces is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-ft6hc67z",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Before a rep promises a delivery date, Talita wants Salesforce to ask both ERPs whether they can supply, and answer within ten seconds with whatever came back. Which composition fits?",
+    "hint": "The same request to several receivers, and one answer.",
+    "choices": [
+      {
+        "text": "A splitter and a resequencer",
+        "correct": false,
+        "why": "A splitter cuts one message into different parts; here both ERPs get the same question."
+      },
+      {
+        "text": "A routing slip through SAP, then Business Central",
+        "correct": false,
+        "why": "A slip visits the steps one after another, so the slowest ERP adds its whole time to the wait."
+      },
+      {
+        "text": "A content-based router choosing one ERP per request",
+        "correct": false,
+        "why": "A router sends each request to one destination; Talita wants both asked."
+      },
+      {
+        "text": "Scatter-gather, with a timeout on the aggregator",
+        "correct": true,
+        "why": "Right: a recipient list sends the same request to both, and the aggregator's timeout lets the answer come back in ten seconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-0wz3phwq",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new design reads: \"Portal B2B orders are enriched with credit data from SAP, split per delivery date, and aggregated into one confirmation.\" Which questions does the vocabulary tell a reviewer to ask? Choose all that apply.",
+    "hint": "One question per pattern named.",
+    "choices": [
+      {
+        "text": "What does the enricher call, and what happens on Sunday from 01:00 to 05:00?",
+        "correct": true,
+        "why": "Yes: an enricher hides a synchronous call, and SAP has a weekly window."
+      },
+      {
+        "text": "Does each part carry the order number and how many parts there are?",
+        "correct": true,
+        "why": "Yes: the aggregator correlates on the first and counts to the second."
+      },
+      {
+        "text": "When is the aggregate complete if one part never comes back?",
+        "correct": true,
+        "why": "Yes: count and timeout, and what the confirmation says about the missing part."
+      },
+      {
+        "text": "Which ESQL nodes will implement each step?",
+        "correct": false,
+        "why": "That is how it will be built, the description the vocabulary exists to get past."
+      }
+    ]
+  },
+  {
+    "id": "ex-t5hs02fv",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The redesigned aggregator completes at 21 replies or after 30 minutes, whichever comes first. The second condition, the one that saves it from a lost reply, is its ___.",
+    "hint": "A limit on waiting.",
+    "blanks": [
+      {
+        "accept": [
+          "timeout",
+          "time-out",
+          "time out"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-d83zxbc0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Farm onboarding sends a farm for a quality visit or a rejection letter depending on what its first milk sample showed. In the book's terms, what has to run it?",
+    "hint": "Is the route known when the first message enters?",
+    "choices": [
+      {
+        "text": "A process manager, with state for each farm",
+        "correct": true,
+        "why": "Right: the next step depends on an intermediate result, so the route needs state kept in one place."
+      },
+      {
+        "text": "A routing slip attached when the request arrives",
+        "correct": false,
+        "why": "A slip fixes the route at the start, and here the route is unknown until the sample is analysed."
+      },
+      {
+        "text": "A message filter that drops failed farms",
+        "correct": false,
+        "why": "A rejected farm still gets a letter; dropping the message would leave the farmer with no answer."
+      },
+      {
+        "text": "A recipient list sending the farm to both the visit and the letter steps",
+        "correct": false,
+        "why": "The two outcomes exclude each other; sending to both would visit a farm that was refused."
+      }
+    ]
+  }
+]

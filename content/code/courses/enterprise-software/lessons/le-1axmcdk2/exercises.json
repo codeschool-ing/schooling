@@ -1,0 +1,714 @@
+[
+  {
+    "id": "ex-v4ryagbn",
+    "version": 1,
+    "section": "four-styles",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Coleta writes its file at 23:30 and SAP loads it at 02:00. Which kind of coupling does this file transfer leave out?",
+    "hint": "Ask what would happen if SAP were down at 23:30.",
+    "choices": [
+      {
+        "text": "Coupling in format",
+        "correct": false,
+        "why": "Both sides still have to agree on the layout: which columns hold the litres, what the trailer says."
+      },
+      {
+        "text": "Coupling in location, since both sides use one agreed directory",
+        "correct": false,
+        "why": "The directory is a location both sides know, so this coupling stays."
+      },
+      {
+        "text": "Coupling in time",
+        "correct": true,
+        "why": "Right: neither side has to be running when the other is; the file waits in the directory."
+      },
+      {
+        "text": "Coupling to the other side's internal tables",
+        "correct": false,
+        "why": "That is the shared database's coupling; a file carries a layout both sides agreed, not anybody's tables."
+      }
+    ]
+  },
+  {
+    "id": "ex-b3239j3v",
+    "version": 1,
+    "section": "four-styles",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each description to the integration style it belongs to.",
+    "hint": "Format, time and location: which one is tight, which one is loose.",
+    "pairs": [
+      {
+        "left": "The receiver depends on what the other side's tables mean",
+        "right": "shared database"
+      },
+      {
+        "left": "Both sides must be up at the same moment",
+        "right": "API"
+      },
+      {
+        "left": "The sender does not know who receives",
+        "right": "event"
+      },
+      {
+        "left": "Written now and read hours later",
+        "right": "file transfer"
+      }
+    ],
+    "right_distractors": [
+      "enterprise service bus"
+    ]
+  },
+  {
+    "id": "ex-wtw44neq",
+    "version": 1,
+    "section": "four-styles",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Joana's map has 110 integrations, and the ESB carries 70 of them. How many go point to point, outside the ESB?",
+    "hint": "A subtraction.",
+    "value": 40,
+    "tolerance": 0,
+    "unit": "integrations",
+    "accept_units": [
+      "integration"
+    ]
+  },
+  {
+    "id": "ex-27zv52we",
+    "version": 1,
+    "section": "by-file",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a safe file integration in order, from the writer to the reader and back.",
+    "hint": "The file has to exist whole before anybody can check it.",
+    "items": [
+      "Write the file under a temporary name, with a header and a trailer",
+      "Rename it when the last line is written",
+      "Check the shape and compare the lines with the trailer's totals",
+      "Refuse it if its day and sequence were already loaded",
+      "Load the farm lines",
+      "Send an acknowledgement or a reject file back"
+    ],
+    "trap": "Loading before checking the totals posts goods receipts from a file that might be short of a line."
+  },
+  {
+    "id": "ex-n3wzkvkb",
+    "version": 1,
+    "section": "by-file",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Coleta file's trailer says 6 farms and 11237 litres. The farm lines in the file add up to 5 farms and 10277 litres. How many litres are missing?",
+    "hint": "The trailer is what the writer promised; the lines are what arrived.",
+    "value": 960,
+    "tolerance": 0,
+    "unit": "litres",
+    "accept_units": [
+      "litre",
+      "liters",
+      "l"
+    ]
+  },
+  {
+    "id": "ex-vqb303d8",
+    "version": 1,
+    "section": "by-file",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The writer creates the file under a temporary name and ___ it once the last line is down, so that a reader polling the directory never sees half a file.",
+    "hint": "On one file system this operation is atomic.",
+    "blanks": [
+      {
+        "accept": [
+          "renames",
+          "rename",
+          "renamed"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yryv95sv",
+    "version": 1,
+    "section": "by-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For four nights in March 2025 no Coleta file arrived, and the 02:00 load finished without an error each night. Which control would have raised it on the first night?",
+    "hint": "There was no file for any check to read.",
+    "choices": [
+      {
+        "text": "A trailer carrying the number of farm lines and the litres",
+        "correct": false,
+        "why": "A trailer is checked when a file arrives; on those nights there was no file to check."
+      },
+      {
+        "text": "Writing under a .tmp name and renaming",
+        "correct": false,
+        "why": "That stops a half-written file being read; it does nothing about a file that was never written."
+      },
+      {
+        "text": "Refusing a day and sequence already loaded",
+        "correct": false,
+        "why": "That protects against a second load of the same file, not against the absence of one."
+      },
+      {
+        "text": "An alarm at 01:30 when the day's file has not arrived",
+        "correct": true,
+        "why": "Yes: absence is the failure a file hides, so the alarm is on the file that did not come."
+      }
+    ]
+  },
+  {
+    "id": "ex-fgt2bnjf",
+    "version": 1,
+    "section": "by-file",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An operator re-runs the night's load after a timeout, not knowing that it had already finished. The file is whole. What stops 1,870 farms being paid for that day's milk twice?",
+    "hint": "The trailer's totals agree on both runs.",
+    "choices": [
+      {
+        "text": "The loader recording each file it loaded and refusing a repeat",
+        "correct": true,
+        "why": "Right: a second run of a loader that remembers day and sequence changes nothing."
+      },
+      {
+        "text": "The control totals in the trailer",
+        "correct": false,
+        "why": "The file is whole, so its totals agree on the first run and on the second."
+      },
+      {
+        "text": "The acknowledgement file sent back to Coleta after the load",
+        "correct": false,
+        "why": "The acknowledgement tells Coleta what happened; it does not stop SAP posting the same lines again."
+      },
+      {
+        "text": "The rename from the temporary name",
+        "correct": false,
+        "why": "The rename happened once, on Coleta's side, long before either load ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-mre25j0d",
+    "version": 1,
+    "section": "by-database",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Coleta starts marking a suspended farm with a new status value instead of deleting its row. Rota still reads Coleta's farm table directly. What happens?",
+    "hint": "The shape of the table did not change.",
+    "choices": [
+      {
+        "text": "Rota's query fails that night, as it did in 2023",
+        "correct": false,
+        "why": "In 2023 a column was split, so the query broke. Here no column changed, so nothing breaks."
+      },
+      {
+        "text": "Trucks keep going to farms that stopped supplying",
+        "correct": true,
+        "why": "Yes: a change of meaning with no change of shape is the quiet failure of reading somebody's table."
+      },
+      {
+        "text": "Rota is unaffected, because it reads just the farm columns it needs",
+        "correct": false,
+        "why": "The columns Rota reads are fine; what changed is what a row in them means."
+      },
+      {
+        "text": "Coleta's screens slow down for the lab technicians",
+        "correct": false,
+        "why": "Load on the owner's database is a real cost of direct reads, but this change does not add any."
+      }
+    ]
+  },
+  {
+    "id": "ex-ndrwv2cw",
+    "version": 1,
+    "section": "by-database",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Compared with querying another system's tables on a schedule, what does change data capture improve? Choose all that apply.",
+    "hint": "It reads the database's log of changes.",
+    "choices": [
+      {
+        "text": "No load on the tables the application is using",
+        "correct": true,
+        "why": "Yes: the log is written anyway, and reading it scans no table."
+      },
+      {
+        "text": "Deletes arrive, in commit order",
+        "correct": true,
+        "why": "Yes: a query looking for new rows never sees a row that has gone."
+      },
+      {
+        "text": "The table's columns stop being the contract",
+        "correct": false,
+        "why": "A CDC event is a row before and after; split a column and the events change shape too."
+      },
+      {
+        "text": "No waiting for the next poll",
+        "correct": true,
+        "why": "Yes: each change is published as it is committed."
+      }
+    ]
+  },
+  {
+    "id": "ex-2pntv0z4",
+    "version": 1,
+    "section": "by-database",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A finance workbook reads SAP ECC's material document tables directly, and after the move to S/4HANA it still opens without errors. Why is it still a line on the migration plan?",
+    "hint": "Where does the data it reads now come from?",
+    "choices": [
+      {
+        "text": "S/4HANA refuses connections from spreadsheets",
+        "correct": false,
+        "why": "Nothing in the lesson says so; the workbook opens, which is the point of the question."
+      },
+      {
+        "text": "It needs a read replica first, to take the load off SAP",
+        "correct": false,
+        "why": "A replica answers the load, the one cost that is not about the migration."
+      },
+      {
+        "text": "It now reads compatibility views that SAP keeps for as long as SAP decides",
+        "correct": true,
+        "why": "Right: the data moved to MATDOC, and the old names survive as views on SAP's terms."
+      },
+      {
+        "text": "Its totals double, because MATDOC repeats every item",
+        "correct": false,
+        "why": "The views return the documents once; the risk is who controls them, not double counting."
+      }
+    ]
+  },
+  {
+    "id": "ex-kvqkjqhg",
+    "version": 1,
+    "section": "by-api",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The stock check goes from the portal through the ESB to SAP, and each of the three is available 99.5% of the time. Assuming they fail independently, what is the chain's availability, in percent, to one decimal place?",
+    "hint": "Multiply the three.",
+    "value": 98.5,
+    "tolerance": 0.05,
+    "unit": "%",
+    "accept_units": [
+      "percent"
+    ]
+  },
+  {
+    "id": "ex-qkz9rbag",
+    "version": 1,
+    "section": "by-api",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With the chain's availability at 98.507%, about how many hours of a 30-day month (720 hours) is the stock check unavailable? Give one decimal place.",
+    "hint": "The unavailable share is 100% minus the availability.",
+    "value": 10.7,
+    "tolerance": 0.1,
+    "unit": "hours",
+    "accept_units": [
+      "hour",
+      "h"
+    ]
+  },
+  {
+    "id": "ex-ypvg62na",
+    "version": 1,
+    "section": "by-api",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The portal waits 10 seconds for the ESB and the ESB waits 60 seconds for SAP. What does that pair of settings produce when SAP takes 30 seconds?",
+    "hint": "Who is still waiting at second 20?",
+    "choices": [
+      {
+        "text": "The bakery waits the full 60 seconds",
+        "correct": false,
+        "why": "The bakery's wait ends with the portal's attempts, at 30 seconds in that incident."
+      },
+      {
+        "text": "The ESB answers the portal before SAP does",
+        "correct": false,
+        "why": "The ESB has no answer to give until SAP replies or its own 60 seconds run out."
+      },
+      {
+        "text": "Work in SAP that nobody is waiting for",
+        "correct": true,
+        "why": "Yes: the inner wait outlasts the outer one, so SAP finishes checks the portal already gave up on."
+      },
+      {
+        "text": "The portal's retries wait until the first SAP check has finished",
+        "correct": false,
+        "why": "Each retry starts a new call at once; that is how SAP ended up with three checks for one basket."
+      }
+    ]
+  },
+  {
+    "id": "ex-2dtqejxh",
+    "version": 1,
+    "section": "by-api",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "It is the closing week, and SAP is answering stock checks in 25 seconds. A bakery presses the checkout button. What does the lesson's design do?",
+    "hint": "The answer was first built for Sunday nights.",
+    "choices": [
+      {
+        "text": "Retries quickly three times so the bakery is not kept waiting",
+        "correct": false,
+        "why": "Quick retries into a slow system add load to it; that is what tripled SAP's checks in October."
+      },
+      {
+        "text": "Raises the portal's timeout to 60 seconds",
+        "correct": false,
+        "why": "Then the bakery waits a minute; the fix was shorter timeouts, shrinking towards SAP."
+      },
+      {
+        "text": "Fails the checkout and asks the bakery to try again later",
+        "correct": false,
+        "why": "That is the 212 failed checkouts of 2 October, turned into a policy."
+      },
+      {
+        "text": "Shows the last stock figure with its time, and confirms later",
+        "correct": true,
+        "why": "Right: the planned behaviour for a slow SAP is the Sunday one, used whenever the timeout runs out."
+      }
+    ]
+  },
+  {
+    "id": "ex-fj8dvk13",
+    "version": 1,
+    "section": "by-event",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these messages is an event rather than a command?",
+    "hint": "Look at the tense, and at who decides what happens next.",
+    "choices": [
+      {
+        "text": "Create customer 30117 in Salesforce",
+        "correct": false,
+        "why": "Imperative, aimed at one receiver: the sender has decided what Salesforce must do."
+      },
+      {
+        "text": "Invoice 4711 was authorised",
+        "correct": true,
+        "why": "Right: a fact in the past tense, for any number of receivers to act on as they choose."
+      },
+      {
+        "text": "Send the certificate of batch 2210 to the supermarket chain",
+        "correct": false,
+        "why": "An instruction to do one thing for one party is a command, whatever carries it."
+      },
+      {
+        "text": "Recalculate the freight on order 4711",
+        "correct": false,
+        "why": "It asks somebody to act; an event states what already happened and asks nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-emy7jcxd",
+    "version": 1,
+    "section": "by-event",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Serra Alta issues about 1,400 invoices a weekday, and today each one is sent by call to three receivers. How many calls is that a day?",
+    "hint": "One call per invoice per receiver.",
+    "value": 4200,
+    "tolerance": 0,
+    "unit": "calls",
+    "accept_units": [
+      "call"
+    ]
+  },
+  {
+    "id": "ex-tm7p9rb4",
+    "version": 1,
+    "section": "by-event",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Salesforce's consumer of the invoice topic stops for three hours. How does that failure show itself?",
+    "hint": "The broker keeps the messages.",
+    "choices": [
+      {
+        "text": "As an error in SAP for each invoice published during those three hours",
+        "correct": false,
+        "why": "SAP publishes to the broker and waits for nobody, so it sees no error at all."
+      },
+      {
+        "text": "As three hours of invoices lost, to be re-sent from SAP",
+        "correct": false,
+        "why": "The messages wait in the broker; nothing is lost and nothing is re-sent."
+      },
+      {
+        "text": "As a lag: the oldest unconsumed message keeps getting older",
+        "correct": true,
+        "why": "Yes: a stopped consumer produces no errors, which is why the alarm is on the age of the oldest message."
+      },
+      {
+        "text": "As the portal and the EDI flow stopping too",
+        "correct": false,
+        "why": "Each consumer reads the topic on its own; the other two never notice."
+      }
+    ]
+  },
+  {
+    "id": "ex-60a9hcsg",
+    "version": 1,
+    "section": "by-event",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The invoice event carries only the invoice number, and each of the three consumers then calls SAP for the amount and the customer. What has that design brought back?",
+    "hint": "When does SAP have to be up now?",
+    "choices": [
+      {
+        "text": "Coupling in time",
+        "correct": true,
+        "why": "Right: SAP has to be up whenever a consumer processes an event, as if the consumers called it directly."
+      },
+      {
+        "text": "SAP knowing who the three consumers are",
+        "correct": false,
+        "why": "SAP still publishes to a topic; it answers calls without needing to know in advance who will make them."
+      },
+      {
+        "text": "SAP waiting for each consumer before the next invoice",
+        "correct": false,
+        "why": "Publishing still waits for nobody; the waiting is on the consumers' side."
+      },
+      {
+        "text": "A contract covering every field of the invoice",
+        "correct": false,
+        "why": "A thin event has fewer fields to promise; the full contract comes with carrying the state."
+      }
+    ]
+  },
+  {
+    "id": "ex-pchcgm8p",
+    "version": 1,
+    "section": "choosing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Serra Alta integration to the style Joana decided for it.",
+    "hint": "Who waits, how fresh, and how many consumers.",
+    "pairs": [
+      {
+        "left": "Coleta → SAP, the farms' daily litres",
+        "right": "a file with control totals"
+      },
+      {
+        "left": "Portal B2B → SAP, stock at checkout",
+        "right": "a call with a fallback"
+      },
+      {
+        "left": "SAP → Rota, each plant's intake plan",
+        "right": "an event on a topic"
+      }
+    ],
+    "right_distractors": [
+      "a direct read of the other system's tables"
+    ]
+  },
+  {
+    "id": "ex-6w4j1kpx",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Joana keep Coleta → SAP as a file instead of moving it to events?",
+    "hint": "Who waits for the litres, and for how long will Coleta exist?",
+    "choices": [
+      {
+        "text": "SAP cannot receive messages from a system on IBM i",
+        "correct": false,
+        "why": "SAP takes messages from MQ, and IBM i can put them there; the reason is elsewhere."
+      },
+      {
+        "text": "Nobody needs the litres before morning, and Coleta is being replaced",
+        "correct": true,
+        "why": "Yes: nothing waits on it, and a new interface on IBM i would be code nobody maintains after 2028."
+      },
+      {
+        "text": "Files are more reliable than events",
+        "correct": false,
+        "why": "A file has its own failures, which is why it needs a trailer, a refusal of repeats and an alarm."
+      },
+      {
+        "text": "The bank defines the format",
+        "correct": false,
+        "why": "That is the CNAB file's reason; Coleta's layout is Serra Alta's own."
+      }
+    ]
+  },
+  {
+    "id": "ex-hew6fnjq",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Supermarket chains ask for certificates of analysis by batch number. Why does Joana give them an API rather than publishing every certificate as an event?",
+    "hint": "Who wants which certificates, and when?",
+    "choices": [
+      {
+        "text": "Documentum has no way to publish events",
+        "correct": false,
+        "why": "The lesson does not argue from Documentum's features; it argues from who asks and when."
+      },
+      {
+        "text": "Events are too small to carry a PDF",
+        "correct": false,
+        "why": "Size is not the reason given; the demand is."
+      },
+      {
+        "text": "A call costs less to operate than a broker",
+        "correct": false,
+        "why": "Serra Alta already runs a broker; cost is not what decided this row."
+      },
+      {
+        "text": "Few customers want them, for some batches, at moments nobody predicts",
+        "correct": true,
+        "why": "Right: somebody waits, the document must be current, and sending all of them to everybody is traffic for nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-7f2m74fq",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Rota reads Coleta's farm table directly and works today. Following the lesson, what should Joana do about it now? Choose all that apply.",
+    "hint": "The map is a list of decisions, not of rebuilds.",
+    "choices": [
+      {
+        "text": "Write an owner for it on the map",
+        "correct": true,
+        "why": "Yes: a style supplies no owner, and every row needs one."
+      },
+      {
+        "text": "Rebuild it as an event this quarter",
+        "correct": false,
+        "why": "A working row in another style is not automatically worth moving; the plan moves the four reading SAP."
+      },
+      {
+        "text": "Tell Sebastião which columns Rota depends on",
+        "correct": true,
+        "why": "Yes: then the next change to them is a conversation rather than routes planned by hand."
+      },
+      {
+        "text": "Add an alarm for the night the plan is not produced",
+        "correct": true,
+        "why": "Yes: the 2023 failure was noticed by dispatchers, not by any alarm."
+      }
+    ]
+  },
+  {
+    "id": "ex-9bg07m1t",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new system at the Lavras plant records each pallet of butter produced, about 300 a day. SAP's stock must show a pallet within minutes, nobody waits on the production line for SAP, and SAP stops every Sunday from 01:00 to 05:00. Which style fits?",
+    "hint": "Fresh, nobody waiting, and a receiver that is sometimes down.",
+    "choices": [
+      {
+        "text": "A file written each night at 23:30",
+        "correct": false,
+        "why": "Stock would be up to a day old, and the plant needs it within minutes."
+      },
+      {
+        "text": "A call to SAP per pallet, retried until SAP answers",
+        "correct": false,
+        "why": "Nobody is waiting for an answer, and on Sunday nights the retries would run for four hours."
+      },
+      {
+        "text": "An event per pallet, held by the broker through Sunday",
+        "correct": true,
+        "why": "Right: fresh in minutes, no waiting, and the broker keeps the Sunday pallets until SAP is back."
+      },
+      {
+        "text": "SAP reading the new system's pallet table every five minutes",
+        "correct": false,
+        "why": "That is the integration table again, with nobody watching its error rows and SAP's job polling for nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-hd36cjnd",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For an event integration, the alarm is set on the ___ of the oldest unconsumed message, because a consumer that has stopped produces no errors.",
+    "hint": "How long it has been waiting.",
+    "blanks": [
+      {
+        "accept": [
+          "age"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bb92y0xq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Joana's map shows 17 database links, 15 of them with no way to notice a failure. What does her plan for next year do with them?",
+    "hint": "Which of them would break in the S/4HANA migration anyway?",
+    "choices": [
+      {
+        "text": "Moves all 17 to events, the style the table prefers",
+        "correct": false,
+        "why": "The table decides new rows; for working ones, the cost of changing has to be weighed."
+      },
+      {
+        "text": "Moves the four reading SAP; the rest get an owner and an alarm",
+        "correct": true,
+        "why": "Yes: those four break in the migration anyway, and the others are decisions, not rebuilds."
+      },
+      {
+        "text": "Leaves them as they are, since a working integration is best left alone",
+        "correct": false,
+        "why": "Fifteen rows nobody watches are not working in any sense an owner would accept."
+      },
+      {
+        "text": "Replaces them with calls, the best-watched style",
+        "correct": false,
+        "why": "Calls are watched because they fail in front of somebody; that is no reason to add a time dependency."
+      }
+    ]
+  }
+]

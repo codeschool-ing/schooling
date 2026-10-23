@@ -1,0 +1,712 @@
+[
+  {
+    "id": "ex-a0zz29e8",
+    "version": 1,
+    "section": "a-decade",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the exposed-bucket incidents the lesson lists, what did the people who found the data need?",
+    "hint": "The bucket answered as designed.",
+    "choices": [
+      {
+        "text": "Stolen credentials of an employee",
+        "correct": false,
+        "why": "No credentials at all: the buckets answered anonymous requests."
+      },
+      {
+        "text": "Only the bucket's address",
+        "correct": true,
+        "why": "Right. Nothing was broken into; the setting did what it said."
+      },
+      {
+        "text": "Access to the provider's data centre network",
+        "correct": false,
+        "why": "The provider's security held throughout."
+      },
+      {
+        "text": "A vulnerability in S3 that AWS later patched",
+        "correct": false,
+        "why": "S3 worked as designed in every case; nothing was patched."
+      }
+    ]
+  },
+  {
+    "id": "ex-98rrbnax",
+    "version": 1,
+    "section": "a-decade",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three of the four 2017 incidents in the table share a shape. Which one?",
+    "hint": "Whose bucket, and whose data?",
+    "choices": [
+      {
+        "text": "A bucket made public by an attacker who had broken in first",
+        "correct": false,
+        "why": "The owners made them public; nobody broke in."
+      },
+      {
+        "text": "Data deleted by ransomware after it was found",
+        "correct": false,
+        "why": "The table records exposure, not deletion."
+      },
+      {
+        "text": "A vendor's bucket holding a customer's data",
+        "correct": true,
+        "why": "Right. The company in the headline never created the bucket, and its programme never saw it."
+      },
+      {
+        "text": "A bucket encrypted with a key that was later leaked",
+        "correct": false,
+        "why": "Encryption at rest does not stop a request the bucket is configured to answer; lesson 11 says why."
+      }
+    ]
+  },
+  {
+    "id": "ex-z4cmvj9s",
+    "version": 1,
+    "section": "a-decade",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put AWS's changes in the order it announced them.",
+    "hint": "The guardrail came first, the defaults years later.",
+    "items": [
+      "S3 Block Public Access launched",
+      "every new object encrypted at rest by default",
+      "new buckets created with Block Public Access on and ACLs disabled"
+    ],
+    "trap": "The defaults of 2023 are not the guardrail itself, which dates from 2018."
+  },
+  {
+    "id": "ex-cw0rse62",
+    "version": 1,
+    "section": "a-decade",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Since April 2023 new buckets start with Block Public Access on. Which bucket of a clinic's account does that change protect least?",
+    "hint": "A default applies when something is created.",
+    "choices": [
+      {
+        "text": "A bucket whose objects are encrypted with SSE-S3",
+        "correct": false,
+        "why": "Encryption says nothing about who may read; and the date is what matters here."
+      },
+      {
+        "text": "A bucket created in 2021 and never changed since",
+        "correct": true,
+        "why": "Right. Buckets created before the change keep the settings they had."
+      },
+      {
+        "text": "A bucket created this morning by caio",
+        "correct": false,
+        "why": "That one got the new defaults."
+      },
+      {
+        "text": "A bucket created this year with a bucket policy granting the clinic's own users read access",
+        "correct": false,
+        "why": "A grant to the account's own users is not public, and the guardrail is on anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-qcctsx6y",
+    "version": 1,
+    "section": "how-a-bucket-goes-public",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The letter was public with no bucket policy at all. Which grant made it so?",
+    "hint": "It was set at upload, on the file.",
+    "choices": [
+      {
+        "text": "The bucket's default encryption, which was off",
+        "correct": false,
+        "why": "Encryption decides nothing about who may read."
+      },
+      {
+        "text": "A grant to `AllUsers` in the bucket's ACL, which every object inherits",
+        "correct": false,
+        "why": "A bucket ACL's READ lets people list keys; objects do not inherit it."
+      },
+      {
+        "text": "The fact that moto accepts any key",
+        "correct": false,
+        "why": "The request had no key at all; the object's ACL answered it."
+      },
+      {
+        "text": "A grant to `AllUsers` in the object's ACL",
+        "correct": true,
+        "why": "Right: `--acl public-read` on `put-object`."
+      }
+    ]
+  },
+  {
+    "id": "ex-dwz73jp1",
+    "version": 1,
+    "section": "how-a-bucket-goes-public",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Everybody holds `READ` on the clinic's referrals bucket through its bucket ACL. What does that let a stranger do?",
+    "hint": "READ on a bucket is not READ on its objects.",
+    "choices": [
+      {
+        "text": "Read every letter in the bucket",
+        "correct": false,
+        "why": "Objects have their own ACLs; a bucket ACL's READ does not reach their contents."
+      },
+      {
+        "text": "Delete the bucket",
+        "correct": false,
+        "why": "READ grants no deletion."
+      },
+      {
+        "text": "List every key, which here is a list of patients' cases",
+        "correct": true,
+        "why": "Right. File names alone can be personal data."
+      },
+      {
+        "text": "Change the bucket's policy",
+        "correct": false,
+        "why": "That needs a different permission entirely."
+      }
+    ]
+  },
+  {
+    "id": "ex-5bm35s6f",
+    "version": 1,
+    "section": "how-a-bucket-goes-public",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "bia's report carries a grant to `AuthenticatedUsers`, and an anonymous `curl` gets `403`. Who can read it on AWS?",
+    "hint": "The group is not the users of your account.",
+    "choices": [
+      {
+        "text": "Only principals in the same region",
+        "correct": false,
+        "why": "Regions play no part in the grant."
+      },
+      {
+        "text": "Only the clinic's own IAM users",
+        "correct": false,
+        "why": "That is the belief that makes this grant dangerous."
+      },
+      {
+        "text": "Nobody, since the anonymous request was refused",
+        "correct": false,
+        "why": "The refusal is only for unsigned requests; a signed one from any account is answered."
+      },
+      {
+        "text": "Anybody who signs the request with a key from their own AWS account",
+        "correct": true,
+        "why": "Right, by AWS's documentation; the lab cannot show a stranger's key."
+      }
+    ]
+  },
+  {
+    "id": "ex-kgewtgd5",
+    "version": 1,
+    "section": "how-a-bucket-goes-public",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the lesson not show an anonymous listing of the bucket with `curl`?",
+    "hint": "A transcript has to prove something.",
+    "choices": [
+      {
+        "text": "moto answers it for any bucket, private or not, so it would prove nothing",
+        "correct": true,
+        "why": "Right. The grant itself is what the review looks for."
+      },
+      {
+        "text": "Listing a bucket anonymously is illegal",
+        "correct": false,
+        "why": "It was your own bucket in your own lab; the reason is moto's behaviour."
+      },
+      {
+        "text": "`curl` cannot send the request a listing needs",
+        "correct": false,
+        "why": "A listing is a plain GET on the bucket."
+      },
+      {
+        "text": "The bucket was empty",
+        "correct": false,
+        "why": "It held the letter."
+      }
+    ]
+  },
+  {
+    "id": "ex-dmrs1knc",
+    "version": 1,
+    "section": "how-a-bucket-goes-public",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each grant to who it answers.",
+    "hint": "The figure's right-hand column.",
+    "pairs": [
+      {
+        "left": "a bucket policy with `\"Principal\": \"*\"` on `GetObject`",
+        "right": "everyone, for every object it names"
+      },
+      {
+        "left": "`AllUsers` READ on the bucket ACL",
+        "right": "everyone, as a list of keys"
+      },
+      {
+        "left": "`AllUsers` READ on one object's ACL",
+        "right": "everyone, for that one file"
+      },
+      {
+        "left": "`AuthenticatedUsers` READ on one object's ACL",
+        "right": "anybody with an AWS account"
+      }
+    ],
+    "right_distractors": [
+      "the account's own IAM users"
+    ]
+  },
+  {
+    "id": "ex-3j0cbr22",
+    "version": 1,
+    "section": "how-a-bucket-goes-public",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The ACL group that means everybody on the internet, signed in or not, is called `___`.",
+    "hint": "The other group is AuthenticatedUsers.",
+    "blanks": [
+      {
+        "accept": [
+          "AllUsers"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mw0s1zzr",
+    "version": 1,
+    "section": "block-public-access",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Block Public Access switch to what it does on AWS.",
+    "hint": "Two are about new grants, two about existing ones.",
+    "pairs": [
+      {
+        "left": "`BlockPublicAcls`",
+        "right": "refuses a request that would add a public ACL"
+      },
+      {
+        "left": "`IgnorePublicAcls`",
+        "right": "makes public ACLs already written grant nothing"
+      },
+      {
+        "left": "`BlockPublicPolicy`",
+        "right": "refuses a bucket policy granting public access"
+      },
+      {
+        "left": "`RestrictPublicBuckets`",
+        "right": "limits a public-policy bucket to AWS services and its own account"
+      }
+    ],
+    "right_distractors": [
+      "encrypts every object with a managed key"
+    ]
+  },
+  {
+    "id": "ex-mykzpbcw",
+    "version": 1,
+    "section": "block-public-access",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A bucket has an object ACL granting `AllUsers` READ. Somebody switches on `BlockPublicAcls` alone. On AWS, is the object still public?",
+    "hint": "One switch is about new grants, another about old ones.",
+    "choices": [
+      {
+        "text": "No, the switch removes the grant",
+        "correct": false,
+        "why": "No switch removes anything; they refuse or ignore."
+      },
+      {
+        "text": "Yes, until `IgnorePublicAcls` is on too",
+        "correct": true,
+        "why": "Right. `BlockPublicAcls` refuses new grants; only `IgnorePublicAcls` makes the existing one count for nothing. That is why all four go on."
+      },
+      {
+        "text": "No, any one switch makes the whole bucket private",
+        "correct": false,
+        "why": "Each switch closes one door; the existing ACL is a different door."
+      },
+      {
+        "text": "It depends on whether the object was uploaded before the switch",
+        "correct": false,
+        "why": "Upload time does not matter; which switches are on does."
+      }
+    ]
+  },
+  {
+    "id": "ex-trnhxrsa",
+    "version": 1,
+    "section": "block-public-access",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With all four switches on, moto still served the letter and accepted a new public ACL. What does that tell you?",
+    "hint": "Lesson 1's table.",
+    "choices": [
+      {
+        "text": "That the ACL was written before the switches, so they do not cover it",
+        "correct": false,
+        "why": "`IgnorePublicAcls` exists for exactly the grants written before."
+      },
+      {
+        "text": "That Block Public Access does not work on AWS either",
+        "correct": false,
+        "why": "AWS documents both refusals; moto simply does not enforce them."
+      },
+      {
+        "text": "That moto stores the guardrail and enforces none of it",
+        "correct": true,
+        "why": "Right. On AWS the anonymous request is refused and the `put-object-acl` gets `AccessDenied`."
+      },
+      {
+        "text": "That the switches take some minutes to apply",
+        "correct": false,
+        "why": "Nothing waits; moto never applies them."
+      }
+    ]
+  },
+  {
+    "id": "ex-301eskfw",
+    "version": 1,
+    "section": "block-public-access",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson call the account-level switches the ones worth having?",
+    "hint": "Think of the bucket somebody creates next year.",
+    "choices": [
+      {
+        "text": "They are cheaper, since bucket-level switches are billed",
+        "correct": false,
+        "why": "Neither level is billed."
+      },
+      {
+        "text": "They replace bucket policies entirely",
+        "correct": false,
+        "why": "They sit above policies; they do not replace them."
+      },
+      {
+        "text": "They also cover buckets nobody has created yet, and a bucket's own setting cannot loosen them",
+        "correct": true,
+        "why": "Right. The bucket level protects one bucket; the account level protects the ones you do not know about."
+      },
+      {
+        "text": "They are the only ones moto enforces",
+        "correct": false,
+        "why": "moto enforces neither level, and the account level could not even be reached in the lab."
+      }
+    ]
+  },
+  {
+    "id": "ex-4y0brvzj",
+    "version": 1,
+    "section": "block-public-access",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does Object Ownership set to `BucketOwnerEnforced` do, by AWS's documentation?",
+    "hint": "It closes three of the four routes at once.",
+    "choices": [
+      {
+        "text": "Encrypts every object with the bucket owner's key",
+        "correct": false,
+        "why": "It is about ownership and ACLs, not encryption."
+      },
+      {
+        "text": "Disables ACLs: no ACL is consulted, and access comes from policies alone",
+        "correct": true,
+        "why": "Right, and it is the default for new buckets since April 2023."
+      },
+      {
+        "text": "Refuses any bucket policy that names another account",
+        "correct": false,
+        "why": "Policies are untouched; that would be a different control."
+      },
+      {
+        "text": "Makes the owner's account the only one that can list the bucket, whatever the ACL says, and nothing more",
+        "correct": false,
+        "why": "It goes further: no ACL is consulted at all, for listing or for reading objects."
+      }
+    ]
+  },
+  {
+    "id": "ex-erpssacc",
+    "version": 1,
+    "section": "finding-every-bucket",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`clinic-reports` did not answer the checker's anonymous request. Which line caught it?",
+    "hint": "A probe without a signature cannot see the grant that needs one.",
+    "choices": [
+      {
+        "text": "`ANSWERS AN ANONYMOUS REQUEST`",
+        "correct": false,
+        "why": "That line appeared only for the referral letter."
+      },
+      {
+        "text": "The ACL line about every AWS account reading it",
+        "correct": true,
+        "why": "Right. Reading the lists is what catches the grant that refuses the anonymous test."
+      },
+      {
+        "text": "A policy line, since the bucket had a public policy",
+        "correct": false,
+        "why": "It had no policy at all."
+      },
+      {
+        "text": "None; the checker missed it",
+        "correct": false,
+        "why": "It printed the ACL line and the missing guardrail."
+      }
+    ]
+  },
+  {
+    "id": "ex-msab2qwb",
+    "version": 1,
+    "section": "finding-every-bucket",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many findings did the first run of `public_buckets.py` print for `clinic-referrals`?",
+    "hint": "The lines indented under its name.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "findings"
+  },
+  {
+    "id": "ex-a7hzgq4s",
+    "version": 1,
+    "section": "finding-every-bucket",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the checker report a policy statement that has a condition, instead of deciding the condition makes it safe?",
+    "hint": "What can a program not know about the clinic?",
+    "choices": [
+      {
+        "text": "Because any condition at all makes a statement public",
+        "correct": false,
+        "why": "A condition can only narrow; the question is by how much."
+      },
+      {
+        "text": "Because boto3 cannot read conditions",
+        "correct": false,
+        "why": "boto3 returns the whole policy; the choice not to judge is deliberate."
+      },
+      {
+        "text": "Because whether it narrows the grant enough is a reading for a person",
+        "correct": true,
+        "why": "Right. Same rule as lesson 8: the checker finds where something is open, a person decides."
+      },
+      {
+        "text": "Because conditions are ignored by AWS as well as moto",
+        "correct": false,
+        "why": "AWS applies conditions; only moto ignores them."
+      }
+    ]
+  },
+  {
+    "id": "ex-xba2k8zj",
+    "version": 1,
+    "section": "finding-every-bucket",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does `public_buckets.py` check for every bucket? Choose all that apply.",
+    "hint": "Its parts, in order.",
+    "choices": [
+      {
+        "text": "Whether Block Public Access is fully on",
+        "correct": true,
+        "why": "Right, the first check."
+      },
+      {
+        "text": "Whether the bucket policy allows something to everyone",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Whether objects are encrypted",
+        "correct": false,
+        "why": "Not in this program; encryption is lesson 11."
+      },
+      {
+        "text": "Whether each object answers a request with no credentials",
+        "correct": true,
+        "why": "Right, the probe, on your own buckets only."
+      },
+      {
+        "text": "Who last changed each bucket's policy",
+        "correct": false,
+        "why": "That needs the record of API calls, lesson 15."
+      }
+    ]
+  },
+  {
+    "id": "ex-zxj1nyj0",
+    "version": 1,
+    "section": "the-fix-and-the-proof",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In what order does the lesson fix an exposed bucket?",
+    "hint": "The last step is the only one that tells you the others worked.",
+    "choices": [
+      {
+        "text": "Encrypt the objects, then rotate the keys",
+        "correct": false,
+        "why": "Encryption does not change who the bucket answers."
+      },
+      {
+        "text": "Put the guardrail on, ask again, then remove the grant",
+        "correct": false,
+        "why": "Asking before removing the grant proves nothing about the fix; and AWS refuses `BucketOwnerEnforced` while the bucket ACL grants others."
+      },
+      {
+        "text": "Remove the grant, put the guardrail on, ask again as the stranger",
+        "correct": true,
+        "why": "Right: take it away, stop it coming back, then prove it."
+      },
+      {
+        "text": "Delete the bucket, create a new one, copy the files back",
+        "correct": false,
+        "why": "Somebody needed the sharing; without a better way the grant returns elsewhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-4za92vjq",
+    "version": 1,
+    "section": "the-fix-and-the-proof",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The clinic's website must be readable by everybody. Which arrangement does the lesson describe, by AWS's documentation?",
+    "hint": "Even this bucket can stay private.",
+    "choices": [
+      {
+        "text": "A private bucket read by a CloudFront distribution through an origin access control",
+        "correct": true,
+        "why": "Right. The public reaches CloudFront; nobody reaches the bucket directly."
+      },
+      {
+        "text": "A bucket ACL granting `AuthenticatedUsers` READ",
+        "correct": false,
+        "why": "That lists the keys to any AWS account and serves no visitor without one."
+      },
+      {
+        "text": "Presigned URLs for every page",
+        "correct": false,
+        "why": "Presigned URLs expire, and are for one recipient at a time."
+      },
+      {
+        "text": "A public bucket with a policy allowing `GetObject` to everyone, and Block Public Access off for it",
+        "correct": false,
+        "why": "That works and is exactly the exception the account-level guardrail would have to carry."
+      }
+    ]
+  },
+  {
+    "id": "ex-zenbr5g8",
+    "version": 1,
+    "section": "the-fix-and-the-proof",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab, what carried the final `403` for the letter?",
+    "hint": "Which half of the fix does moto apply?",
+    "choices": [
+      {
+        "text": "`BucketOwnerEnforced`",
+        "correct": false,
+        "why": "Stored by moto, not enforced."
+      },
+      {
+        "text": "The object's public grant being removed",
+        "correct": true,
+        "why": "Right. On AWS the guardrail would also hold if the grant came back."
+      },
+      {
+        "text": "The checker running",
+        "correct": false,
+        "why": "The checker only asks; it changes nothing."
+      },
+      {
+        "text": "Block Public Access on the referrals bucket",
+        "correct": false,
+        "why": "moto enforces none of it; the letter was served with it on."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzdfmsfd",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The setting that disables ACLs on a bucket is Object Ownership set to `___`.",
+    "hint": "Bucket owner, enforced.",
+    "blanks": [
+      {
+        "accept": [
+          "BucketOwnerEnforced"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kv42j6mq",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new account policy says: Block Public Access on at the account level, and every bucket `BucketOwnerEnforced`. Which of the four routes can still make an object readable by a stranger on AWS? Choose all that apply.",
+    "hint": "Three routes are ACLs, and the fourth is the one BlockPublicPolicy refuses.",
+    "choices": [
+      {
+        "text": "A bucket policy with `\"Principal\": \"*\"`",
+        "correct": false,
+        "why": "`BlockPublicPolicy` refuses it at the account level."
+      },
+      {
+        "text": "A grant to `AuthenticatedUsers`",
+        "correct": false,
+        "why": "It is an ACL, and ACLs are off."
+      },
+      {
+        "text": "None of them, by AWS's documentation",
+        "correct": true,
+        "why": "Right. ACLs are not consulted, and a public policy is refused."
+      },
+      {
+        "text": "An object ACL granting `AllUsers` READ",
+        "correct": false,
+        "why": "With ACLs disabled, no ACL is consulted."
+      }
+    ]
+  }
+]
