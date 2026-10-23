@@ -41,8 +41,7 @@ It names four views and a fifth that ties them together:
 | **physical** | what runs on which machine, and how are the machines connected? | operations, platform | deployment diagram, lesson 2 |
 | **scenarios** (the +1) | do the four views together support the things users actually do? | everybody | use cases, lesson 2 |
 
-The +1 is the important part. **The scenarios are how you check that the four views agree with each
-other**: walk one use case, such as *a passenger buys a ticket*, through the logical view, then the
+The +1 is the important part. **The scenarios are how you check that the four views agree with each other.** Walk one use case, such as *a passenger buys a ticket*, through the logical view, then the
 process view, then the physical one, and every place where the walk gets stuck is a gap in a view.
 
 ## What this means on Monday

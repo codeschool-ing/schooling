@@ -35,7 +35,7 @@ dono desse meio.
 
 No Carcará, como na maioria das empresas do seu tamanho, há uma analista, Joana, e ela trabalha
 quase só para o financeiro. Nos outros times **o arquiteto ou um tech lead faz análise de negócio sem
-o cargo**. Fazer isso de propósito é tomar emprestado o mínimo desta aula: os seis conceitos centrais
+o cargo**. Fazer isso de propósito é tomar emprestado o mínimo desta aula. O mínimo são os seis conceitos centrais
 numa página, uma lista de stakeholders que inclua as pessoas que ninguém convidou, pelo menos uma
 observação em vez de só entrevistas, as quatro classes para que os requisitos de transição não sejam
 esquecidos, e o MoSCoW com o *won't* escrito.

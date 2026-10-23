@@ -15,9 +15,8 @@ Os exemplos vêm de uma empresa só, do começo ao fim. **A Carcará é fictíci
 menos 9.000 passagens vendidas num dia comum. Perto das festas de São João, em junho, e de novo no
 Natal, esse número quadruplica, e a semana anterior é quando tudo o que era frágil quebra.
 
-Quarenta engenheiros trabalham lá, em cinco times: **Vendas** faz o site e o app do passageiro,
-**Embarque** faz o app que os motoristas usam para conferir passagens na porta do ônibus,
-**Pagamentos** cuida da integração com o gateway de pagamento, **Frota** cuida da ligação com o
+Quarenta engenheiros trabalham lá, em cinco times. **Vendas** faz o site e o app do passageiro,
+**Embarque** faz o app que os motoristas usam para conferir passagens na porta do ônibus. **Pagamentos** cuida da integração com o gateway de pagamento, **Frota** cuida da ligação com o
 sistema antigo que conhece ônibus e motoristas, e **Plataforma** roda a infraestrutura de todo mundo.
 
 Algumas pessoas aparecem mais de uma vez:

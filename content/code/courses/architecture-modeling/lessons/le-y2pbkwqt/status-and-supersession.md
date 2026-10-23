@@ -38,8 +38,7 @@ then: one store, no new infrastructure, a few hundred holds a minute. ADR-0009, 
 it, because the forces had changed: peak traffic had grown five times and the database was the
 bottleneck. **Both records are true**, each about its own time. If ADR-0004 had been edited to say
 *Redis*, a reader would have no way to know that the database approach had been the original one,
-that it had worked for two years, or why it stopped working, which is exactly what somebody needs to
-know before proposing to move holds back to the database.
+that it had worked for two years, or why it stopped working. That is what somebody needs to know before proposing to move holds back to the database.
 
 ## Keeping the log navigable
 

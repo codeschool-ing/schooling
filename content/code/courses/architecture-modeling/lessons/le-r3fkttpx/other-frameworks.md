@@ -28,8 +28,7 @@ company of Carcará's size has no such problem and gains nothing from their weig
 ## An analyst firm's approach
 
 Gartner's approach to enterprise architecture is not a published framework in the same sense; it is
-a body of advice, sold to clients, that emphasises **business outcomes over complete models**: start
-from what the business is trying to achieve, model only what helps decide, and measure the
+a body of advice, sold to clients, that emphasises **business outcomes over complete models**. Start from what the business is trying to achieve, model only what helps decide, and measure the
 architecture function by the decisions it improves. Much of lesson 8's last section, *produce only
 the documents somebody will read*, is the same position.
 

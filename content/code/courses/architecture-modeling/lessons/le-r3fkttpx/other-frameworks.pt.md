@@ -30,8 +30,7 @@ peso deles.
 ## A abordagem de uma empresa de análise
 
 A abordagem do Gartner para arquitetura corporativa não é um framework publicado no mesmo sentido; é
-um corpo de recomendações, vendido a clientes, que põe **resultados de negócio acima de modelos
-completos**: comece pelo que o negócio está tentando alcançar, modele só o que ajuda a decidir, e meça
+um corpo de recomendações, vendido a clientes, que põe **resultados de negócio acima de modelos completos**. Comece pelo que o negócio está tentando alcançar, modele só o que ajuda a decidir, e meça
 a função de arquitetura pelas decisões que ela melhora. Boa parte da última seção da aula 8, *produza
 só os documentos que alguém vai ler*, é a mesma posição.
 

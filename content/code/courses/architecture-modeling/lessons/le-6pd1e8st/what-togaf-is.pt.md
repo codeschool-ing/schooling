@@ -13,7 +13,7 @@ arquitetos, e o que tem a maior comunidade de certificados.
 
 A aula 4 de `architecture-role` separou três níveis: arquitetura de aplicação, o interior de um
 sistema; arquitetura de solução, um resultado que atravessa vários sistemas; e **arquitetura
-corporativa, o portfólio inteiro**: como o negócio, a informação, as aplicações e a tecnologia da
+corporativa, o portfólio inteiro**. Ela trata de como o negócio, a informação, as aplicações e a tecnologia da
 organização se encaixam, e como devem mudar ao longo dos anos para servir à estratégia dela.
 
 Tudo o que as aulas 1 a 7 deste curso fizeram ficou nos dois primeiros níveis. O TOGAF trabalha no

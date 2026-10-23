@@ -13,7 +13,7 @@ descriptions for architects, and the one with the largest certified community.
 
 `architecture-role` lesson 4 separated three levels: application architecture, the inside of one
 system; solution architecture, one outcome across several systems; and **enterprise architecture,
-the whole portfolio**: how the organisation's business, information, applications and technology
+the whole portfolio**. It covers how the organisation's business, information, applications and technology
 fit together, and how they should change over years to serve its strategy.
 
 Everything in lessons 1 to 7 of this course worked at the first two levels. TOGAF works at the

@@ -15,8 +15,8 @@ bus company based in Salvador, with 140 routes across Bahia, about 300 buses and
 tickets sold on an ordinary day. Around the São João festivals in June, and again at Christmas,
 that number goes up four times, and the week before is when everything that was fragile breaks.
 
-Forty engineers work there in five teams: **Sales** builds the passenger site and app, **Boarding**
-builds the app the drivers use to check tickets at the door of the bus, **Payments** owns the
+Forty engineers work there in five teams. **Sales** builds the passenger site and app, **Boarding**
+builds the app the drivers use to check tickets at the door of the bus. **Payments** owns the
 integration with the payment gateway, **Fleet** looks after the link with the old system that
 knows about buses and drivers, and **Platform** runs the infrastructure for everybody.
 

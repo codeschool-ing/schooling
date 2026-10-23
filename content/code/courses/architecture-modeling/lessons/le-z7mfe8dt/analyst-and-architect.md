@@ -35,7 +35,7 @@ middle.
 
 At Carcará, as in most companies of its size, there is one analyst, Joana, and she works mostly for
 Finance. On the other teams **the architect or a tech lead does business analysis without the title**.
-Doing it on purpose means borrowing the minimum from this lesson: the six core concepts on one page,
+Doing it on purpose means borrowing the minimum from this lesson. The minimum is the six core concepts on one page,
 a stakeholder list that includes the people nobody invited, at least one observation rather than
 only interviews, the four classes so that transition requirements are not forgotten, and MoSCoW with
 the *won't* written down.
