@@ -39,8 +39,8 @@ had changed.
 ## Show the steps, not only the ends
 
 A change that takes a year has states in between, and those are what people will live in. Lesson 8
-called them **transition architectures**. For the digital boarding programme, the product team's
-real question was not the target but *what does a station look like in May, halfway through?* A
+called them **transition architectures**. For the digital boarding programme, the question the product
+team asked was not about the target but *what does a station look like in May, halfway through?* A
 presentation of a long change shows **at least the next transition**, with its date, and marks
 which capabilities each step adds or removes.
 
