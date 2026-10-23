@@ -280,6 +280,407 @@
     "prompt": "Pela conta da aula 11, uma página lida 500 vezes por segundo, cuja consulta leva 120 ms, manda cerca de 60 consultas idênticas no instante em que a chave vence. Uma página lida 2.000 vezes por segundo, cuja consulta leva 50 ms, manda cerca de quantas?",
     "hint": "Servidores Web e Cache, aula 11."
   },
+  "ex-f85337s2": {
+    "prompt": "Seu handler de busca lê `q` e `lang` da query string, e `lang` nunca chega, embora as pessoas digitem na caixa dele. O template tem estes dois campos:\n\n```html\n<label for=\"q\">Title or author</label>\n<input id=\"q\" name=\"q\" type=\"search\">\n<label for=\"lang\">Language</label>\n<input id=\"lang\">\n```\n\nO que está errado?",
+    "hint": "HTML e CSS, aula 3.",
+    "choices": [
+      {
+        "text": "O segundo rótulo está ligado por `for`, e isso faz do campo um que o navegador mostra e não envia.",
+        "why": "`for` liga um rótulo a um campo para o nome e para o clique; não tem nada a ver com o que é enviado."
+      },
+      {
+        "text": "O segundo campo tem `id` e não tem `name`, e a requisição é montada só com pares `nome=valor`.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um formulário `get` envia só o primeiro campo; o segundo precisaria de `method=\"post\"` para ir no corpo.",
+        "why": "Um formulário GET envia todos os campos com nome, unidos por `&`, na query string."
+      },
+      {
+        "text": "Um input sem `type` fica fora da requisição até ser declarado como `type=\"text\"`.",
+        "why": "`text` é o tipo padrão; o campo fica de fora por não ter nome, e não pelo tipo."
+      }
+    ]
+  },
+  "ex-dcqet7k2": {
+    "prompt": "Uma página lista as reservas de um cliente, cada uma com um link `<a href=\"cancel?id=17\">Cancel</a>` que o seu servidor atende apagando a reserva. Numa manhã, várias reservas sumiram, e ninguém apertou nada. O que as duas aulas dizem?",
+    "hint": "HTML e CSS, aula 3; Fundamentos da Web e Internet, aula 6.",
+    "choices": [
+      {
+        "text": "Links servem aqui se o servidor responder `204 No Content`, que avisa o crawler para não segui-los.",
+        "why": "O código de status chega depois de a requisição ter sido executada; a essa altura a reserva já sumiu."
+      },
+      {
+        "text": "Nada no HTTP separa os dois métodos para isso, então a causa é um bug na query que apaga.",
+        "why": "GET é definido como seguro, e é justamente essa definição que deixa qualquer coisa buscá-lo à vontade."
+      },
+      {
+        "text": "Um `GET` serve desde que o id seja longo e aleatório, para ninguém adivinhar o endereço.",
+        "why": "O endereço está na própria página, e o que lê a página pode buscar todos os links dela."
+      },
+      {
+        "text": "`GET` promete não mudar nada, e qualquer coisa o busca sem pedir; cancelar é formulário `post`.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-7pmvbr8z": {
+    "prompt": "Uma página de login antiga usa `<form action=\"login\" method=\"get\">`, então entrar envia `GET /login?user=ana&password=…` por HTTPS. Onde a senha fica anotada agora? Marque todas as que se aplicam.",
+    "hint": "HTML e CSS, aula 3; Servidores Web e Cache, aula 1.",
+    "choices": [
+      {
+        "text": "No histórico do navegador, junto com o resto do endereço.",
+        "why": "Isso."
+      },
+      {
+        "text": "No log de acesso do servidor, cujo formato combinado registra cada linha de requisição.",
+        "why": "Isso."
+      },
+      {
+        "text": "Em texto puro no Wi-Fi do café, legível por quem estiver na mesma rede.",
+        "why": "O HTTPS mantém o endereço longe das mãos dos outros no caminho; as cópias que vazam são as anotadas em cada ponta."
+      },
+      {
+        "text": "No endereço que o próximo site pode receber como a página de onde a pessoa veio.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-t5t1syt1": {
+    "prompt": "A página de pedido tem `<input name=\"copies\" type=\"number\" min=\"1\" max=\"5\">`. Alguém dispensa o navegador e envia à sua API de pedidos `{\"title\": \"Vidas Secas\", \"copies\": -40}` com `Content-Type: application/json`. O que a API deve responder?",
+    "hint": "HTML e CSS, aula 3; APIs e Autenticação, aula 1.",
+    "choices": [
+      {
+        "text": "`422`, sem gravar nada: o JSON é lido, e o conteúdo quebra uma regra que o servidor confere.",
+        "why": "Isso."
+      },
+      {
+        "text": "`400`, porque um corpo que o formulário da página nunca produziria é uma requisição malformada.",
+        "why": "`400` é sobre os bytes: um corpo que não é JSON, ou não é um objeto. Este é lido sem problema."
+      },
+      {
+        "text": "`201`, gravando um exemplar: o `min` do formulário é o piso, então o servidor pode subir o valor até ele.",
+        "why": "Um valor que falha numa regra é recusado e nada é gravado; os atributos do formulário nunca chegaram ao servidor."
+      },
+      {
+        "text": "`415`, já que um pedido que contornou a página não chegou na codificação que o formulário usa.",
+        "why": "`415` é sobre o rótulo, e este corpo está rotulado como `application/json`, que é o que a API aceita."
+      }
+    ]
+  },
+  "ex-nf40gj51": {
+    "prompt": "O formulário de pedido tem três caixas de seleção com o nome `extra`. Um pedido feito sem tocar em nenhuma chega como `GET /order?format=paperback&shop=centro&notes=`. Como o seu handler descobre que ninguém quis embrulho para presente?",
+    "hint": "HTML e CSS, aula 3.",
+    "choices": [
+      {
+        "text": "Pelo `notes=`, que o navegador manda vazio no lugar das caixas que ninguém marcou.",
+        "why": "`notes` é a área de texto, enviada vazia porque um campo de texto sempre tem valor; não diz nada sobre as caixas."
+      },
+      {
+        "text": "Não descobre, então a requisição deve ser recusada por faltar um campo que o formulário tem.",
+        "why": "A ausência de `extra` é o jeito de o formulário dizer não; recusá-la recusaria todo pedido sem extras."
+      },
+      {
+        "text": "Pela falta de `extra`: caixa desmarcada não envia nada, então ausência é não.",
+        "why": "Isso."
+      },
+      {
+        "text": "Pelo `extra=off`, que cada caixa desmarcada acrescenta no fim da query string.",
+        "why": "Uma caixa desmarcada não envia nada, nem `extra=` nem `extra=off`."
+      }
+    ]
+  },
+  "ex-kt7d9syx": {
+    "prompt": "O seu handler responde com o corpo `Pinheiros, São Paulo` e mais nada, codificado em UTF-8. Que número vai no cabeçalho `Content-Length`?",
+    "hint": "HTML e CSS, aula 1; Fundamentos da Web e Internet, aula 6."
+  },
+  "ex-cneft4mr": {
+    "prompt": "Um passo de CI roda `npx html-validate -f text templates/*.html | tee validate.log`. O log lista três erros e o passo fica verde. Começar o passo com `set -o ___` faz o status de saída do validador ser o do passo.",
+    "hint": "HTML e CSS, aula 1; Testes Automatizados e CI/CD, aula 5.",
+    "blanks": [
+      {
+        "accept": [
+          "pipefail"
+        ]
+      }
+    ]
+  },
+  "ex-ecyn6j92": {
+    "prompt": "`customers.name` é `varchar(50)` porque o esquema do projeto anterior tinha isso. Um colega alinha o formulário com a coluna: `maxlength=\"50\"` e `pattern=\"[A-Za-z ]+\"` no campo de nome. O que as duas aulas dizem?",
+    "hint": "HTML e CSS, aula 3; Bancos de Dados Relacionais e SQL, aula 3.",
+    "choices": [
+      {
+        "text": "Manter os dois: um formulário que espelha a coluna pega todo nome ruim antes da ida ao servidor.",
+        "why": "O padrão recusa nomes reais como *D'Ávila*, e um limite copiado por hábito barra pessoas reais."
+      },
+      {
+        "text": "Tirar o padrão, que recusa *D'Ávila*, e questionar um 50 que nenhuma especificação deu.",
+        "why": "Isso."
+      },
+      {
+        "text": "Tirar o `maxlength` e manter o padrão, já que no PostgreSQL `varchar(50)` é mais rápido que `text`.",
+        "why": "No PostgreSQL os dois têm o mesmo desempenho; um `varchar(n)` é `text` com uma checagem de tamanho."
+      },
+      {
+        "text": "Trocar a coluna para `char(50)`, assim todo nome fica com a mesma largura e nenhum atributo é preciso.",
+        "why": "`char(n)` completa com espaços, e comparações e tamanhos passam a discordar sobre se os espaços estão lá."
+      }
+    ]
+  },
+  "ex-8v0pgjjx": {
+    "prompt": "Depois de uma mudança no template comum das páginas, toda página abre numa janela em branco, e a aba mostra um título comprido cheio de sinais de menor e maior. No DevTools o body tem 0 pixel de altura. Que erro no template faz isso?",
+    "hint": "HTML e CSS, aula 1.",
+    "choices": [
+      {
+        "text": "A linha do doctype foi apagada, e o navegador desenhou todas as páginas em modo quirks.",
+        "why": "O modo quirks muda pouco o layout, como 4 pixels sob uma imagem; a página continua desenhada."
+      },
+      {
+        "text": "A linha do `<meta charset>` foi parar logo abaixo do `<title>`.",
+        "why": "Uma codificação errada ou tardia embaralha letras como *ã*; não esvazia a página."
+      },
+      {
+        "text": "Um `<p>` ficou sem a tag de fechamento logo antes de um `<div>`.",
+        "why": "O parser fecha o parágrafo e segue em frente, e a página fica quase certa."
+      },
+      {
+        "text": "O `<title>` não tem tag de fechamento, e o resto do arquivo virou o texto dele.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-77b8rkzk": {
+    "prompt": "O template do seu servidor escreve `<p class=\"text-{{ colour }}-700\">` e preenche `colour` com `green` ou `red` conforme o livro. O build do Tailwind roda sobre a pasta de templates. No navegador a classe está no elemento, e o texto sai preto. Por quê?",
+    "hint": "HTML e CSS, aula 13.",
+    "choices": [
+      {
+        "text": "O build lê os arquivos como texto e nunca viu `text-green-700` inteiro, então não há regra para ela.",
+        "why": "Isso."
+      },
+      {
+        "text": "O Preflight zera as cores na camada `base`, e `base` vence as utilities numa página que o servidor montou.",
+        "why": "`utilities` é a camada posterior, então uma utility vence o Preflight venha a página de onde vier."
+      },
+      {
+        "text": "O build precisa rodar de novo com `--watch` a cada requisição, porque a cor muda por livro.",
+        "why": "Rodar de novo lê o mesmo template, e o template continua sem nomear a classe inteira."
+      },
+      {
+        "text": "O Tailwind escreve a paleta em OKLCH, que o navegador não consegue desenhar numa classe vinda do servidor.",
+        "why": "Os navegadores leem OKLCH desde 2023; a cor falta porque nenhuma regra nomeia a classe."
+      }
+    ]
+  },
+  "ex-9z4ercq8": {
+    "prompt": "Você está escrevendo um parser para o corpo `application/x-www-form-urlencoded` do formulário de pedido. Ligue cada caractere que o leitor digitou a como ele chega, como mostram as capturas da aula 3.",
+    "hint": "HTML e CSS, aula 3.",
+    "pairs": [
+      {
+        "left": "um espaço",
+        "right": "`+`"
+      },
+      {
+        "left": "`@`",
+        "right": "`%40`"
+      },
+      {
+        "left": "`,`",
+        "right": "`%2C`"
+      },
+      {
+        "left": "o `-` de um CEP",
+        "right": "`-`, sem mudança"
+      }
+    ],
+    "right_distractors": [
+      "`%20`"
+    ]
+  },
+  "ex-9vmc5472": {
+    "prompt": "Um job de CI roda o axe em todas as páginas que o servidor monta e não aponta nenhuma violação. Quais destes ainda podem estar nessas páginas? Marque todas as que se aplicam.",
+    "hint": "HTML e CSS, aula 2.",
+    "choices": [
+      {
+        "text": "Vários links cujo texto inteiro é *Click here*.",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma foto de produto cujo `<img>` não tem nenhum atributo `alt`.",
+        "why": "O axe aponta essa como image-alt, crítica."
+      },
+      {
+        "text": "Um link de imagem cujo `alt` descreve a foto, e não para onde o link leva.",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma página cujo `<h1>` é seguido direto por dois títulos `<h4>`.",
+        "why": "O axe aponta um nível pulado como heading-order."
+      }
+    ]
+  },
+  "ex-prjt78dp": {
+    "prompt": "O template da página de produto agora escreve `loading=\"lazy\"` em todo `<img>`, inclusive na foto grande do topo da página. O que acontece com essa primeira foto?",
+    "hint": "HTML e CSS, aula 4.",
+    "choices": [
+      {
+        "text": "Nada muda para ela: o lazy só afeta imagens que começam abaixo da janela.",
+        "why": "O navegador não sabe se uma imagem está visível antes de montar o layout, então uma lazy perto do topo começa mais tarde."
+      },
+      {
+        "text": "Ela só é buscada quando o leitor rola, e o topo da página fica vazio.",
+        "why": "Uma imagem lazy é buscada quando o leitor se aproxima, e no topo ela está perto desde o início; só começa mais tarde."
+      },
+      {
+        "text": "Ela começa mais tarde, e a imagem vista primeiro chega por último.",
+        "why": "Isso."
+      },
+      {
+        "text": "Ela desloca o layout mesmo com `width` e `height`, que imagens lazy ignoram.",
+        "why": "Largura e altura reservam o espaço de uma imagem lazy como de qualquer outra, e é por isso que o lazy precisa delas."
+      }
+    ]
+  },
+  "ex-s9bs97ad": {
+    "prompt": "Você faz o push do loanbook para o GitHub, e o repositório mostra os vinte commits, mas o gráfico de contribuições do seu perfil continua vazio. `git config user.email` imprime `ana@example.org`, um endereço que não está na sua conta do GitHub. Qual é a correção?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 5; O Projeto de Portfólio: do Briefing ao Deploy, aula 18.",
+    "choices": [
+      {
+        "text": "Fazer um commit pequeno todo dia daqui em diante, para o gráfico encher e o buraco sumir.",
+        "why": "Fazer commits para manter o gráfico verde fica visível para quem clicar num quadrado, e se lê exatamente como é."
+      },
+      {
+        "text": "Fixar o repositório, já que o gráfico só conta os repositórios que o perfil fixou.",
+        "why": "Fixar decide o que o perfil mostra primeiro; o gráfico conta commits pelo endereço que eles carregam."
+      },
+      {
+        "text": "Mover o repositório para o nome da sua conta, que é o que liga os commits dele a um perfil.",
+        "why": "Os commits se ligam a uma conta pelo e-mail que carregam, e não por onde o repositório mora."
+      },
+      {
+        "text": "Fazer commits com um endereço que a conta conhece, como o `ID+username@users.noreply.github.com`.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-ht9pa8b2": {
+    "prompt": "O seu primeiro ticket no trabalho é um bug: a página de login recusa endereços de e-mail escritos com maiúsculas. A equipe escreve Conventional Commits, e o corpo da sua mensagem diz por que aconteceu. A primeira linha é `___(login): accept e-mail addresses in any case`.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 20; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 11.",
+    "blanks": [
+      {
+        "accept": [
+          "fix"
+        ]
+      }
+    ]
+  },
+  "ex-d0rrb0ab": {
+    "prompt": "Você quer que a planilha de candidaturas diga quantas linhas estão em cada etapa, da mais comum para a menos. Ponha os comandos do pipeline na ordem em que rodam.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 8; Linux e Linha de Comando, aula 8.",
+    "items": [
+      "`cut -d, -f5 applications.csv`",
+      "`tail -n +2`",
+      "`sort`",
+      "`uniq -c`",
+      "`sort -rn`"
+    ],
+    "trap": "`uniq -c` conta sequências de linhas iguais vizinhas, então sem um `sort` antes dele uma etapa é contada em vários pedaços, sem aviso; e é o `tail -n +2` que tira o cabeçalho `stage` que o `cut` pegou da linha 1."
+  },
+  "ex-fcd0t29d": {
+    "prompt": "Numa entrevista de projeto pedem as tabelas dos empréstimos de uma biblioteca e, depois, a parte difícil, e você diz que duas pessoas poderiam emprestar o mesmo item ao mesmo tempo. Que escolha resolve isso como as duas aulas fariam?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 14; Bancos de Dados Relacionais e SQL, aula 1.",
+    "choices": [
+      {
+        "text": "Conferir na aplicação que o item está livre, e só então inserir o empréstimo.",
+        "why": "Duas requisições podem conferir, achar o item livre e inserir; a conferência está sujeita a duas pessoas clicando juntas."
+      },
+      {
+        "text": "Uma chave no banco que o segundo empréstimo quebra, e ele é recusado por mais próximos que sejam os cliques.",
+        "why": "Isso."
+      },
+      {
+        "text": "Pôr uma fila na frente do servidor, para os empréstimos serem tratados um de cada vez.",
+        "why": "A aula 14 manda resistir a uma fila que ninguém pediu; uma restrição no banco já resolve."
+      },
+      {
+        "text": "Projetar primeiro para um milhão de usuários, já que o conflito só aparece nessa escala.",
+        "why": "Ninguém espera que um júnior projete para um milhão de usuários, e duas pessoas no mesmo instante bastam."
+      }
+    ]
+  },
+  "ex-xev8z3y9": {
+    "prompt": "Um exercício para casa pede um pequeno serviço de reservas em que uma sala não pode ser reservada duas vezes na mesma hora. A sua nota tem espaço para uma linha sobre testes. Que linha diz mais a quem avalia?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 13; Testes Automatizados e CI/CD, aula 4.",
+    "choices": [
+      {
+        "text": "Um teste reserva a sala duas vezes e falha quando a regra é removida.",
+        "why": "Isso."
+      },
+      {
+        "text": "A suíte chega a 90% de cobertura, folgada acima do limite habitual de 85%.",
+        "why": "A cobertura conta linhas que rodaram, e testes que não conferem nada a aumentam; a porcentagem não diz nada sobre a regra."
+      },
+      {
+        "text": "Toda função do serviço tem pelo menos um teste só dela.",
+        "why": "Uma contagem de testes não diz se algum deles notaria a regra sumindo."
+      },
+      {
+        "text": "Os testes vêm depois das duas funcionalidades extras, se sobrar tempo.",
+        "why": "O que o briefing pediu vem primeiro, e um extra em cima de um requisito faltando parece não ter lido o briefing."
+      }
+    ]
+  },
+  "ex-hkn491h6": {
+    "prompt": "Uma empresa oferece CLT a R$ 5.500 por mês, ou a mesma vaga como PJ. Como PJ você tiraria um mês de folga por ano, sem receber. Pela conta da aula 17, antes de impostos e benefícios, que nota mensal de PJ, em reais, empata com o ano CLT?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 17."
+  },
+  "ex-c3wwyept": {
+    "prompt": "Você ensaiou uma resposta comportamental que dura dois minutos. Pela parcela de tempo que a aula 15 dá a cada parte de uma resposta STAR, quantos segundos dela devem ser a Ação?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 15."
+  },
+  "ex-7fy944pw": {
+    "prompt": "Seis semanas dentro do período de experiência, você percebe que a exportação prometida para sexta vai atrasar uma semana. A sua próxima one-to-one é na quarta. O que a aula 21 diz?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 21.",
+    "choices": [
+      {
+        "text": "Não dizer nada ainda e trabalhar à noite, já que a experiência se passa impressionando nas últimas semanas.",
+        "why": "A experiência se passa sendo previsível, e não trabalhando até tarde nem com uma semana brilhante."
+      },
+      {
+        "text": "Guardar para a avaliação do fim da experiência, que é onde se fala de trabalho atrasado.",
+        "why": "Notícia ruim descoberta depois é um problema; dita cedo, é uma conversa."
+      },
+      {
+        "text": "Levar para a one-to-one de quarta, como o que está bloqueando você e o que você já tentou.",
+        "why": "Isso."
+      },
+      {
+        "text": "Comentar quando a exportação estiver pronta, junto com o motivo de ter demorado.",
+        "why": "Dito depois do fato, o atraso já surpreendeu todo mundo que se planejou contando com a sexta."
+      }
+    ]
+  },
+  "ex-s37h815e": {
+    "prompt": "Uma recrutadora publicou uma vaga de back-end júnior no LinkedIn, e você quer mandar uma mensagem curta para ela sobre isso. Quando a aula 7 diz para mandar?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 7.",
+    "choices": [
+      {
+        "text": "Antes de se candidatar, para ela dizer se vale a pena mandar o currículo.",
+        "why": "Quem recruta pouco pode fazer com uma mensagem sobre uma vaga à qual você não se candidatou, além de pedir que se candidate."
+      },
+      {
+        "text": "No lugar da candidatura, com o currículo anexado, já que mensagem é lida.",
+        "why": "A mensagem vai depois da candidatura e sem currículo: eles já têm."
+      },
+      {
+        "text": "Toda semana até ela responder, para a candidatura ficar no topo.",
+        "why": "Mande uma vez; a aula 10 trata do que fazer quando não há resposta."
+      },
+      {
+        "text": "Uma vez, depois de se candidatar, com a vaga, uma evidência e um link.",
+        "why": "Isso."
+      }
+    ]
+  },
   "ex-tzvravab": {
     "prompt": "A execução 2 do CI do laboratório falhou nas seis células: Ana tinha feito commit de `tests/test_carriers.py`, e o laptop dela ainda mostra `?? tests/data/carriers.csv`. Qual destas opções coloca o CSV no commit que a próxima execução vai fazer checkout?",
     "hint": "Testes Automatizados e CI/CD, aula 5; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 2.",
@@ -1271,6 +1672,402 @@
   "ex-z4wqxbfa": {
     "prompt": "O plano da aula 11 conta uma leitura como 1,1 ms de CPU e uma venda como 10 ms, e cada comprador do primeiro minuto abre umas 10 páginas e tenta comprar uma vez. Para 9.000 compradores no primeiro minuto em vez de 6.000, quantas cópias a regra do plano dá: no máximo 70% ocupadas, mais uma para falhas?",
     "hint": "Escala e Observabilidade, aula 11."
+  },
+  "ex-zk5w5tgq": {
+    "prompt": "Pela tabela de classes de status da aula 1, quais destas falhas o shelf deveria responder com um código 4xx? Marque todas as que se aplicam.",
+    "hint": "APIs e Autenticação, aula 1.",
+    "choices": [
+      {
+        "text": "Um corpo rotulado `application/json` que não faz parse.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um PATCH que põe `stock` em -1, recusado pelo `CHECK` do banco.",
+        "why": "Isso: o conteúdo quebra uma regra, então 422, seja quem for que pegou."
+      },
+      {
+        "text": "O arquivo do banco não abre, e nenhum livro pode ser lido.",
+        "why": "A requisição pode estar certa; quem falhou foi o servidor, e um 5xx diz ao cliente que tentar mais tarde pode dar certo."
+      },
+      {
+        "text": "Um POST de um segundo livro com um ISBN que já está no catálogo.",
+        "why": "Isso: 409."
+      }
+    ]
+  },
+  "ex-9dra55pv": {
+    "prompt": "O cliente de um parceiro confere cada livro que lê do catálogo contra um esquema com `additionalProperties: false`, como o `book.schema.json` faz com os corpos que chegam. O catálogo passa a mandar um campo novo, `cover_url`. O que acontece, pela aula 2?",
+    "hint": "APIs e Autenticação, aula 2.",
+    "choices": [
+      {
+        "text": "O cliente do parceiro falha em todo livro, embora nada do que ele lê tenha mudado.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada: acrescentar um campo à resposta é seguro para qualquer cliente que exista.",
+        "why": "É seguro para um leitor tolerante; um cliente que recusa tudo o que não espera transforma a melhoria do servidor numa queda."
+      },
+      {
+        "text": "O catálogo recusa o próximo POST do parceiro, que não traz `cover_url`.",
+        "why": "Um campo a mais na resposta não exige nada das requisições; tornar obrigatório um campo da requisição é que quebraria."
+      },
+      {
+        "text": "O cliente ignora o campo, porque a validação só roda na entrada.",
+        "why": "Esse esquema é a conferência do próprio cliente sobre o que ele lê, e com `additionalProperties: false` o campo novo é um erro."
+      }
+    ]
+  },
+  "ex-0dceecbw": {
+    "prompt": "Um host de agente manda `POST /v1/returns` para a sua API com o id do `tool_use` da chamada como `Idempotency-Key`, como sugere a aula 8 do curso de IA, e a sua API segue as regras de chaves do `catalogue.py`. Depois de um timeout, o host tenta de novo com a mesma chave, mas um bug remontou o corpo, que agora pede 2 unidades em vez de 1. O que a API deve responder?",
+    "hint": "APIs e Autenticação, aula 2; IA no Desenvolvimento, aula 8.",
+    "choices": [
+      {
+        "text": "201 com a resposta guardada e `Idempotent-Replayed: true`, já que conhece a chave.",
+        "why": "A resposta guardada só é repetida quando a impressão digital do corpo bate com a primeira, e este corpo é outro."
+      },
+      {
+        "text": "409, porque a primeira requisição com essa chave já criou uma devolução.",
+        "why": "Na tabela do rascunho, o 409 é para uma chave conhecida cuja primeira requisição ainda está rodando."
+      },
+      {
+        "text": "422, e nada acontece: a mesma chave com outro corpo é um erro do cliente.",
+        "why": "Isso."
+      },
+      {
+        "text": "201 com uma segunda devolução, já que a quantidade nova faz dela outra operação.",
+        "why": "A chave dá nome à operação; uma operação nova precisa de uma chave nova, e o servidor recusa em vez de adivinhar."
+      }
+    ]
+  },
+  "ex-zch474sj": {
+    "prompt": "O `graph.py` roda sem `--batch` numa loja de 40 livros. Quantas consultas SQL custa `{ books { title author { name } } }`?",
+    "hint": "APIs e Autenticação, aula 3."
+  },
+  "ex-7zckh32w": {
+    "prompt": "O próximo `StockLevel` do depósito mantém todos os campos, mas faz duas mudanças: `int32 copies = 3;` vira `int32 units = 3;`, e `availability` passa do número 4 para o 6. Um caixa ainda roda código gerado do primeiro `stock.proto`. O que ele lê de uma mensagem nova?",
+    "hint": "APIs e Autenticação, aula 4.",
+    "choices": [
+      {
+        "text": "Nada: um campo renomeado manda outros bytes, e a decodificação falha.",
+        "why": "Os nomes nunca saem do programa; um nome novo no número antigo manda exatamente os mesmos bytes."
+      },
+      {
+        "text": "As cópias, e `availability` como `AVAILABILITY_UNSPECIFIED`.",
+        "why": "Isso."
+      },
+      {
+        "text": "A disponibilidade como antes, já que 1 ainda é `IN_STOCK`, e as cópias como 0.",
+        "why": "É o contrário: renomear é seguro no fio, e um número novo é um campo removido e outro acrescentado."
+      },
+      {
+        "text": "Os dois campos certos, porque o `protoc` recusa um arquivo que renumera.",
+        "why": "O `protoc` recusa um número marcado com `reserved`, e nada reservou o 4 aqui."
+      }
+    ]
+  },
+  "ex-qshn4zg1": {
+    "prompt": "O `/v1/answers` da sua API pergunta a um modelo pelo adaptador da aula 10 do curso de IA. Todos os provedores de `LLM_PROVIDERS` respondem 529, sobrecarregado, e o `ask` levanta `Unavailable`. Pela tabela do `bridge.py`, o que a sua API deve responder ao cliente dela?",
+    "hint": "APIs e Autenticação, aula 5; IA no Desenvolvimento, aula 10.",
+    "choices": [
+      {
+        "text": "500, já que a requisição falhou dentro do seu próprio código.",
+        "why": "500 diz que a sua API quebrou, e um alarme nos 500 dela acordaria a pessoa errada no dia ruim de um provedor."
+      },
+      {
+        "text": "504: o provedor não respondeu a tempo.",
+        "why": "504 é para nenhuma resposta dentro do timeout, e um 529 é uma resposta."
+      },
+      {
+        "text": "529 como veio, para o cliente ver o status do próprio provedor.",
+        "why": "Seus clientes conhecem os códigos da sua API; a camada na fronteira existe para que nada depois dela fale a língua do outro sistema."
+      },
+      {
+        "text": "502, porque o sistema atrás da sua API falhou.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-y1hnph5q": {
+    "prompt": "Um time renomeia `createBook` para `addBook` no `openapi.yaml` porque fica mais legível. O `POST /v1/books` se comporta exatamente como antes, e ainda assim todo programa feito sobre um cliente gerado para de compilar quando é gerado de novo, porque o gerador transforma o `___` de cada operação em nome de função.",
+    "hint": "APIs e Autenticação, aula 6.",
+    "blanks": [
+      {
+        "accept": [
+          "operationId",
+          "operation id",
+          "operation_id"
+        ]
+      }
+    ]
+  },
+  "ex-fgmng1xt": {
+    "prompt": "A página de chat da loja transmite as respostas por um relay como o da aula 9 do curso de IA, que guarda a chave do provedor. Só clientes com login podem perguntar. O que o relay deve receber do navegador a cada requisição?",
+    "hint": "APIs e Autenticação, aula 7; IA no Desenvolvimento, aula 9.",
+    "choices": [
+      {
+        "text": "A chave do provedor, mandada pela página num cabeçalho para o relay repassar.",
+        "why": "Tudo o que vai para um navegador pode ser lido por quem o usa; a chave fica no servidor."
+      },
+      {
+        "text": "A credencial que o cliente obteve no login.",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma chave de API do app da loja, escrita no script da página.",
+        "why": "Uma chave de API identifica um aplicativo, e uma que está no script da página é legível por qualquer visitante."
+      },
+      {
+        "text": "Nada, já que o relay só atende a própria página da loja.",
+        "why": "Um relay que qualquer um chama gasta dinheiro a cada pergunta: é uma chave de API com passos a mais."
+      }
+    ]
+  },
+  "ex-gh41xzgz": {
+    "prompt": "No `tokens.py`, um ladrão copia o refresh token da ana e o gasta primeiro, recebendo um par novo. O app da ana então apresenta o token copiado, e o login inteiro é revogado. O que o ladrão ainda consegue fazer?",
+    "hint": "APIs e Autenticação, aula 8.",
+    "choices": [
+      {
+        "text": "Nada: apagar a família encerra todo token emitido naquele login.",
+        "why": "O access token que o ladrão recebeu nunca foi guardado, então não havia o que apagar."
+      },
+      {
+        "text": "Renovar de novo com o refresh token novo dele, já que só a cópia da ana voltou duas vezes.",
+        "why": "O refresh token novo dele é da mesma família e morreu com ela."
+      },
+      {
+        "text": "Chamar `/me` com o access token que recebeu, até o `exp` desse token.",
+        "why": "Isso."
+      },
+      {
+        "text": "Chamar `/me` por catorze dias, a validade do refresh token.",
+        "why": "Catorze dias é a vida do refresh token; o access token dura 300 segundos."
+      }
+    ]
+  },
+  "ex-z5g1jhms": {
+    "prompt": "Pela regra da aula 10 para a memória de que um hash scrypt precisa, quantos MiB ocupa `N=2^15, r=16, p=1`?",
+    "hint": "APIs e Autenticação, aula 10."
+  },
+  "ex-04263p5w": {
+    "prompt": "Ligue cada requisição ao `orders.py` ao status que ela recebe.",
+    "hint": "APIs e Autenticação, aula 11.",
+    "pairs": [
+      {
+        "left": "Sem token, para um endereço que não existe",
+        "right": "401"
+      },
+      {
+        "left": "O token da Ana, para o pedido 3 do Bruno",
+        "right": "404"
+      },
+      {
+        "left": "O token da Carla, para `/admin/people`",
+        "right": "403"
+      },
+      {
+        "left": "O token da Ana, cancelando o pedido 1 dela pela segunda vez",
+        "right": "409"
+      }
+    ],
+    "right_distractors": [
+      "405"
+    ]
+  },
+  "ex-3rf78e8x": {
+    "prompt": "Três cópias do `limits.py` rodam atrás de um balanceador round-robin, cada uma com o seu `LIMITS`. Um cliente do plano pro, com todos os baldes cheios, manda 600 requisições de uma vez, e o balanceador as divide igualmente. Quantas recebem 200?",
+    "hint": "APIs e Autenticação, aula 12."
+  },
+  "ex-4hz2wyt9": {
+    "prompt": "A sua API pede a um provedor de modelo que reescreva em HTML as avaliações de produtos dos clientes, e a página do produto mostra o resultado. Pela entrada API10 da aula 13 e pela aula 11 do curso de IA, onde fica a defesa?",
+    "hint": "APIs e Autenticação, aula 13; IA no Desenvolvimento, aula 11.",
+    "choices": [
+      {
+        "text": "Em lugar nenhum: o provedor é uma empresa com contrato, então suas respostas são confiáveis.",
+        "why": "Esse é o erro da API10, e o modelo copia o que leu, que um estranho escreveu."
+      },
+      {
+        "text": "Na verificação de TLS da chamada ao provedor, para ninguém alterar a resposta.",
+        "why": "O TLS mantém estranhos fora da conexão; o script estava na avaliação que o modelo recebeu, e chegou intacto."
+      },
+      {
+        "text": "No `Content-Security-Policy: default-src 'none'` da API.",
+        "why": "Esse cabeçalho rege a própria resposta da API aberta como documento; a página do produto é outro documento."
+      },
+      {
+        "text": "Onde o texto vira HTML: escapá-lo como qualquer coisa escrita por um estranho.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-ezt8kqg9": {
+    "prompt": "Aos preços do Claude Sonnet 5.5 na tabela da aula 2 ($2 por milhão de tokens de entrada, $2,50 por milhão para escrever no cache e $0,20 por milhão para ler dele), um prefixo de 10.000 tokens é escrito no cache no primeiro de dez pedidos e lido dele nos outros nove, dentro dos cinco minutos. Quanto esse prefixo custa nos dez pedidos, em dólares? Três casas decimais.",
+    "hint": "IA no Desenvolvimento, aula 2."
+  },
+  "ex-6ffhc0gf": {
+    "prompt": "Semana passada um colega fez commit e push do `settings.py` com uma chave de pagamentos digitada nele, e hoje um assistente do editor mandou o mesmo arquivo a um provedor de modelo. O time põe `settings.py` no `.gitignore` e no `.assistignore`. O que ainda falta?",
+    "hint": "IA no Desenvolvimento, aula 3; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10.",
+    "choices": [
+      {
+        "text": "Revogar a chave e emitir outra: ela está no histórico e nos logs do provedor.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada: o `.gitignore` tira o arquivo do histórico, e o `.assistignore` impede o envio.",
+        "why": "O `.gitignore` só vale para arquivos não rastreados, e apagar um arquivo não muda o commit que o acrescentou."
+      },
+      {
+        "text": "`git rm --cached settings.py`, que tira a chave dos commits já enviados.",
+        "why": "Ele para de rastrear a partir do próximo commit; `git show` no commit antigo ainda imprime a chave."
+      },
+      {
+        "text": "Pedir ao provedor que apague o pedido, o que tira a chave dos logs dele.",
+        "why": "Não existe jeito de chamar um pedido de volta; a chave agora é pública."
+      }
+    ]
+  },
+  "ex-0s81jtv7": {
+    "prompt": "O `scratch/mutate.py` apontou três sobreviventes em `shop/cart.py`, um arquivo que a suíte já executa linha por linha. Quais conclusões as duas aulas sustentam? Marque todas as que se aplicam.",
+    "hint": "IA no Desenvolvimento, aula 4; Testes Automatizados e CI/CD, aula 4.",
+    "choices": [
+      {
+        "text": "Um relatório de cobertura mostraria `cart.py` todo coberto, com os sobreviventes e tudo.",
+        "why": "Isso."
+      },
+      {
+        "text": "Cada sobrevivente é um comportamento que os testes executam e nenhum confere.",
+        "why": "Isso."
+      },
+      {
+        "text": "Subir a cobertura mínima do build teria matado os três.",
+        "why": "As linhas já rodavam; o que falta é uma asserção, e nenhuma porcentagem de linhas enxerga isso."
+      },
+      {
+        "text": "Todo sobrevivente precisa de um teste, até a nota de mutação chegar a 100%.",
+        "why": "Leia cada sobrevivente e decida; um mutante que não muda nada que um cliente perceba pode sobreviver com razão."
+      }
+    ]
+  },
+  "ex-6r8y8nyt": {
+    "prompt": "A aula 5 faz o `parse_price` aceitar vírgula um passo de cada vez. Ponha os passos em ordem.",
+    "hint": "IA no Desenvolvimento, aula 5.",
+    "items": [
+      "Pedir um plano, sem código",
+      "Escrever à mão os casos e os valores esperados",
+      "Rodá-los contra a função antiga, antes de qualquer mudança",
+      "Pôr uma função candidata no lugar e rodar a suíte",
+      "Mandar de volta o teste que falhou, exatamente como o pytest imprimiu"
+    ],
+    "trap": "Testes escritos depois da mudança, ou junto com ela, saem da mudança; eles têm de existir, e falhar no código antigo, antes de qualquer candidata ser testada."
+  },
+  "ex-rvzdhm84": {
+    "prompt": "O `check_citations` aprovou a resposta `The handbook does not say.` para *O atendimento abre no sábado?*, embora o `contact.md#1`, o primeiro trecho recuperado, diga de segunda a sexta. O que isso mostra sobre a conferência?",
+    "hint": "IA no Desenvolvimento, aula 6.",
+    "choices": [
+      {
+        "text": "A busca falhou, e o trecho nunca chegou ao prompt.",
+        "why": "O `contact.md#1` foi o primeiro recuperado e estava no prompt."
+      },
+      {
+        "text": "A recusa está dispensada de citar, então uma que leu mal os trechos passa.",
+        "why": "Isso."
+      },
+      {
+        "text": "O modelo citou um trecho que não recebeu, o que a conferência ignora.",
+        "why": "A conferência procura isso, e esta resposta não citou nada."
+      },
+      {
+        "text": "A resposta estava certa, já que o manual nunca fala em sábado.",
+        "why": "De segunda a sexta responde à pergunta: não."
+      }
+    ]
+  },
+  "ex-m132vkh5": {
+    "prompt": "O host aprovou `issue_refund({\"cents\": \"0\", \"order_id\": \"1042\"})`, e o esquema do servidor transformou `\"0\"` em `0` sem dizer nada. Onde fica a regra de que um reembolso é de pelo menos um centavo e no máximo o valor do pedido?",
+    "hint": "IA no Desenvolvimento, aula 7; APIs e Autenticação, aula 11.",
+    "choices": [
+      {
+        "text": "No prompt de sistema, como uma frase que o modelo lê a cada pedido.",
+        "why": "Um prompt é um pedido; todo limite é imposto abaixo do modelo, onde as escolhas dele não chegam."
+      },
+      {
+        "text": "No esquema de entrada, como um `minimum` de 1 e um `maximum` ao lado.",
+        "why": "Um esquema confere forma; o total do pedido é estado, e só código que lê o pedido pode comparar com ele."
+      },
+      {
+        "text": "Na aprovação do operador, já que uma pessoa vê o valor antes.",
+        "why": "O operador respondeu `y` a um prompt que mostrava o zero; a ferramenta é o único lugar por onde toda chamada passa."
+      },
+      {
+        "text": "No próprio `issue_refund`, que consulta a compra e recusa.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-28bk2gsv": {
+    "prompt": "O Ollama é derrubado no meio de uma resposta em streaming, e a biblioteca HTTP por baixo do SDK levanta `RemoteProtocolError: peer closed connection without sending complete message body (incomplete chunked read)`. Como a biblioteca soube que o corpo estava incompleto?",
+    "hint": "IA no Desenvolvimento, aula 9; Fundamentos da Web e Internet, aula 6.",
+    "choices": [
+      {
+        "text": "O cabeçalho `Content-Length` tinha prometido mais bytes do que chegaram.",
+        "why": "Uma resposta gerada enquanto sai não sabe o próprio tamanho de antemão, então não vai com um."
+      },
+      {
+        "text": "O código de status mudou de 200 para um erro no meio do caminho.",
+        "why": "O status saiu com o primeiro byte; uma falha depois disso tem de viajar dentro do stream."
+      },
+      {
+        "text": "Um corpo chunked acaba num pedaço de tamanho zero, que não veio.",
+        "why": "Isso."
+      },
+      {
+        "text": "Não tinha chegado o evento `message_stop`, que a biblioteca espera.",
+        "why": "O `message_stop` é dos eventos do SDK; a camada HTTP só conhece os pedaços."
+      }
+    ]
+  },
+  "ex-c2n46dx3": {
+    "prompt": "Os clientes da sua API desistem depois de 10 segundos, e ela pergunta a um modelo por um `anthropic.Anthropic()` criado sem argumentos. Pelas duas aulas, o que está errado, e qual é a correção?",
+    "hint": "IA no Desenvolvimento, aula 10; APIs e Autenticação, aula 5.",
+    "choices": [
+      {
+        "text": "O SDK lê uma resposta por até 600 s; passe a ele um timeout bem abaixo desses 10 s.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada: as duas novas tentativas do SDK já põem fim rápido a um pedido lento.",
+        "why": "As novas tentativas vêm depois de uma falha; uma resposta lenta é lida por até 600 segundos antes de algo falhar."
+      },
+      {
+        "text": "Pôr o timeout dos seus clientes em 600 também, para as duas camadas esperarem igual.",
+        "why": "O timeout de cada camada é menor que o da camada de cima, senão quem chama desiste antes e a resposta não vai a lugar nenhum."
+      },
+      {
+        "text": "Envolver o SDK num laço próprio de novas tentativas que pega toda exceção.",
+        "why": "Ele multiplica as esperas e repete os erros que deveriam ter parado o programa."
+      }
+    ]
+  },
+  "ex-w7envech": {
+    "prompt": "Uma página de busca pede ao modelo que transforme *mais barato primeiro* no nome da coluna pela qual ordenar o catálogo, e a resposta vai para o `ORDER BY` da consulta. Que tratamento as duas aulas pedem?",
+    "hint": "IA no Desenvolvimento, aula 11; Bancos de Dados Relacionais e SQL, aula 11.",
+    "choices": [
+      {
+        "text": "Passar a resposta como parâmetro, como o `lookup.py` fez com o nome do cliente.",
+        "why": "Um placeholder representa um valor; ele não pode representar um nome de coluna."
+      },
+      {
+        "text": "Colar como veio, já que quem escreveu foi o modelo e não um cliente.",
+        "why": "A resposta é entrada não confiável, e não há exceção para um valor em que você confia."
+      },
+      {
+        "text": "Conferir contra uma lista de colunas aceitas.",
+        "why": "Isso."
+      },
+      {
+        "text": "Passar antes pelo `html.escape`.",
+        "why": "Escapar é a regra do HTML; um nome de coluna vindo de fora passa por uma lista permitida."
+      }
+    ]
   },
   "ex-kxp4jjd5": {
     "prompt": "O arquivo Quadlet do loanbook tem `PublishPort=127.0.0.1:8000:8000`, e o Caddy, no mesmo servidor, encaminha para `127.0.0.1:8000`. Um colega troca a linha por `PublishPort=8000:8000`, achando que o Caddy precisa disso. Lido pela regra que a aula 17 de Docker dá para o `-p`, que essa opção segue, o que mudou?",
