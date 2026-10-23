@@ -24,7 +24,8 @@ def norm(s):
 
 
 def main(lesson, capture):
-    out = norm(Path(capture).read_text())
+    raw = re.sub(r"^#####F .*?^#####E\n", "", Path(capture).read_text(), flags=re.M | re.S)
+    out = norm(raw)
     bad = 0
     for md in sorted(Path(lesson).glob("*.md")):
         if md.name.endswith(".pt.md"):
