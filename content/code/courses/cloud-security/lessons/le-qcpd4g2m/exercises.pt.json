@@ -1,0 +1,488 @@
+{
+  "ex-wdvcdj7f": {
+    "prompt": "Um bucket ficou público por uma tarde. Que tipo de evento do CloudTrail diz quem baixou os arquivos nesse tempo?",
+    "hint": "Ler um objeto é uma operação sobre os dados.",
+    "choices": [
+      {
+        "text": "Um evento do Insights, que o CloudTrail levanta quando os downloads disparam",
+        "why": "A pergunta da aula é respondida pelo registro de cada leitura, que é um evento de dados."
+      },
+      {
+        "text": "O log de acesso do próprio bucket, que todo bucket guarda sem configuração",
+        "why": "O log de acesso do S3 também é uma configuração, desligada até ser ligada; e não é o que esta aula configura."
+      },
+      {
+        "text": "Um evento de gerenciamento, registrado por padrão",
+        "why": "Eventos de gerenciamento registram a mudança de política, não os downloads."
+      },
+      {
+        "text": "Um evento de dados, se foi selecionado antes",
+        "why": "Isso. Eventos de dados são escolhidos por recurso, e uma trilha ligada depois não registra nada sobre os dias anteriores."
+      }
+    ]
+  },
+  "ex-qe82bewe": {
+    "prompt": "Uma conta nunca teve trilha. O que ainda consegue responder quem mudou um security group semana passada?",
+    "hint": "Noventa dias de um tipo, sem configuração.",
+    "choices": [
+      {
+        "text": "Nada: sem trilha nenhuma chamada fica registrada em lugar nenhum",
+        "why": "O histórico de eventos registra eventos de gerenciamento sem trilha nenhuma."
+      },
+      {
+        "text": "O campo de descrição do security group, que a AWS atualiza a cada mudança",
+        "why": "Uma descrição é um texto livre que alguém escreve."
+      },
+      {
+        "text": "Os VPC flow logs, que registram mudanças de regra",
+        "why": "Flow logs registram tráfego, não mudanças de configuração."
+      },
+      {
+        "text": "O histórico de eventos, que guarda 90 dias de eventos de gerenciamento",
+        "why": "Isso. Ele existe em toda conta, uma região por vez, sem eventos de dados."
+      }
+    ]
+  },
+  "ex-6c0kxqn6": {
+    "prompt": "Um registro traz um `errorCode` `AccessDenied`. O que isso quer dizer?",
+    "hint": "Chamadas recusadas também são registradas.",
+    "choices": [
+      {
+        "text": "A trilha falhou ao gravar o registro direito",
+        "why": "O registro está certo; a chamada que ele descreve foi recusada."
+      },
+      {
+        "text": "Alguém fez a chamada e foi recusado",
+        "why": "Isso, e muitas vezes é o primeiro sinal de uma chave sendo testada contra coisas que ela não permite."
+      },
+      {
+        "text": "O próprio registro está escondido de quem lê",
+        "why": "Você está lendo; o campo descreve a chamada."
+      },
+      {
+        "text": "A chamada deu certo, mas devagar",
+        "why": "Um código de erro só aparece quando a chamada falhou."
+      }
+    ]
+  },
+  "ex-95exv34v": {
+    "prompt": "Quais destes uma trilha do CloudTrail NÃO registraria? Marque todos os que se aplicam.",
+    "hint": "Uma trilha registra chamadas à API da AWS.",
+    "choices": [
+      {
+        "text": "Uma consulta mandada ao banco da clínica",
+        "why": "Isso. O banco guarda os próprios logs."
+      },
+      {
+        "text": "`PutBucketPolicy` no `clinic-exports`",
+        "why": "Um evento de gerenciamento, registrado por padrão."
+      },
+      {
+        "text": "O conteúdo de um arquivo enviado",
+        "why": "Isso. Um registro nomeia o objeto, nunca o que havia nele."
+      },
+      {
+        "text": "Um `StopLogging` recusado",
+        "why": "Chamadas recusadas são registradas, com o código de erro."
+      },
+      {
+        "text": "Um comando digitado dentro de uma instância EC2",
+        "why": "Isso. Isso é log do sistema operacional."
+      }
+    ]
+  },
+  "ex-87rdhmza": {
+    "prompt": "Por que a política do bucket da trilha traz uma condição `aws:SourceArn` nomeando a trilha?",
+    "hint": "Quem grava é um serviço que trabalha para muitas contas.",
+    "choices": [
+      {
+        "text": "Para o serviço gravar ali por esta trilha e não por uma trilha na conta de outra pessoa",
+        "why": "Isso. É o confused deputy da aula 13 de novo."
+      },
+      {
+        "text": "Para impedir os próprios administradores da clínica de ler os registros que o serviço grava no bucket",
+        "why": "A condição limita a gravação do serviço; não diz nada sobre pessoas lendo."
+      },
+      {
+        "text": "Para o CloudTrail compactar os arquivos",
+        "why": "Compressão não tem nada a ver com a política do bucket."
+      },
+      {
+        "text": "Porque o moto recusa uma política sem ela",
+        "why": "O moto ignora condições; o motivo é da AWS."
+      }
+    ]
+  },
+  "ex-2bt89nw6": {
+    "prompt": "O que o `--is-multi-region-trail` dá à clínica?",
+    "hint": "A aula 1 contou 38 redes padrão.",
+    "choices": [
+      {
+        "text": "Uma cópia do bucket em cada região",
+        "why": "Os registros vão para um bucket; a opção é sobre de onde as chamadas são registradas."
+      },
+      {
+        "text": "Menor latência nas consultas",
+        "why": "Ela muda a cobertura, não a velocidade."
+      },
+      {
+        "text": "Eventos de dados em toda região, de graça",
+        "why": "Eventos de dados são escolhidos por seletores e cobrados por evento."
+      },
+      {
+        "text": "Um registro das chamadas em toda região, inclusive as que ninguém olha",
+        "why": "Isso. Um recurso iniciado numa região esquecida ainda deixa registro."
+      }
+    ]
+  },
+  "ex-kbe2g95h": {
+    "prompt": "O `get-trail-status` diz `IsLogging: true` e mostra um horário de entrega recente. O que a aula diz que você ainda precisa conferir?",
+    "hint": "O moto disse o mesmo, com o bucket vazio.",
+    "choices": [
+      {
+        "text": "Que o nome da trilha bate com o do bucket",
+        "why": "Eles por acaso batem aqui; isso não prova nada sobre registros."
+      },
+      {
+        "text": "Que o bucket tem arquivos de hoje",
+        "why": "Isso. Um status dizendo que registra não é prova de que os registros existem."
+      },
+      {
+        "text": "Que a validação de arquivos de log está desligada, para a entrega ser mais rápida",
+        "why": "A validação é o que deixa provar os arquivos depois; desligá-la perde isso."
+      },
+      {
+        "text": "Que o status foi lido por um administrador e não pelo caio",
+        "why": "Quem lê não muda nada no que ele diz."
+      }
+    ]
+  },
+  "ex-fj9d2a7a": {
+    "prompt": "O que o moto fez com a trilha que a aula configurou?",
+    "hint": "Olhe no bucket.",
+    "choices": [
+      {
+        "text": "Recusou criá-la sem a política do bucket",
+        "why": "Isso é o que a AWS faz; o moto a cria de qualquer jeito."
+      },
+      {
+        "text": "Registrou eventos de gerenciamento e pulou os de dados",
+        "why": "Não registrou nenhum dos dois; o bucket ficou vazio."
+      },
+      {
+        "text": "Gravou toda chamada no bucket, como a AWS",
+        "why": "A listagem do bucket veio vazia."
+      },
+      {
+        "text": "Guardou a configuração inteira e não registrou evento nenhum",
+        "why": "Isso, e o lookup-events respondeu HTTP 500."
+      }
+    ]
+  },
+  "ex-vx7399vv": {
+    "prompt": "A opção `--enable-log-file-___` faz o CloudTrail gravar um arquivo de digest assinado a cada hora.",
+    "hint": "A palavra que termina a opção.",
+    "blanks": [
+      {
+        "accept": [
+          "validation"
+        ]
+      }
+    ]
+  },
+  "ex-66wm6mnz": {
+    "prompt": "Em que fuso horário o CloudTrail grava o `eventTime`?",
+    "hint": "A clínica está três horas atrás dele.",
+    "choices": [
+      {
+        "text": "UTC, sempre",
+        "why": "Isso. 12:02 no registro eram 09:02 em São Paulo."
+      },
+      {
+        "text": "O horário local de quem chamou, tirado do user agent",
+        "why": "O user agent nomeia um programa, não um fuso."
+      },
+      {
+        "text": "O fuso definido na trilha",
+        "why": "Uma trilha não tem configuração de fuso."
+      },
+      {
+        "text": "O horário local da região",
+        "why": "Nenhum relógio de região é usado; todo registro está no mesmo fuso."
+      }
+    ]
+  },
+  "ex-sz1gdawk": {
+    "prompt": "Nos registros da aula, quantos objetos foram servidos a chamadores anônimos enquanto o bucket estava público?",
+    "hint": "A quarta coluna dizia `served` ou não.",
+    "unit": "objetos"
+  },
+  "ex-rse1ybqv": {
+    "prompt": "Como o CloudTrail identifica um chamador que não assinou nada?",
+    "hint": "A consulta filtrou por um valor de conta.",
+    "choices": [
+      {
+        "text": "Como o dono do bucket, já que o bucket serviu o objeto",
+        "why": "O dono é a clínica; quem chamou é outra pessoa."
+      },
+      {
+        "text": "Pelo endereço IP do chamador em `userIdentity.arn`",
+        "why": "Um chamador anônimo não tem ARN; o endereço fica em `sourceIPAddress`."
+      },
+      {
+        "text": "Ele não registra chamadas sem assinatura",
+        "why": "Ele as registra como eventos de dados quando estão selecionados."
+      },
+      {
+        "text": "Com a conta `ANONYMOUS_PRINCIPAL` em `userIdentity`",
+        "why": "Isso. É o valor pelo qual a consulta da aula selecionou."
+      }
+    ]
+  },
+  "ex-pqhybz3v": {
+    "prompt": "Suponha que a trilha não tivesse eventos de dados. Que pergunta sobre a tarde os registros ainda conseguiriam responder?",
+    "hint": "A mudança de política e as leituras são tipos diferentes de evento.",
+    "choices": [
+      {
+        "text": "Se algum chamador anônimo foi recusado depois da correção",
+        "why": "Essa leitura recusada também é um evento de dados."
+      },
+      {
+        "text": "Quantas linhas de pacientes havia em cada arquivo",
+        "why": "Nenhuma trilha registra conteúdo, com ou sem eventos de dados."
+      },
+      {
+        "text": "Quais arquivos saíram, e para quais endereços",
+        "why": "Esses são os registros de GetObject, que são eventos de dados."
+      },
+      {
+        "text": "Quem tornou o bucket público, e quando",
+        "why": "Isso. PutBucketPolicy é um evento de gerenciamento, registrado por padrão."
+      }
+    ]
+  },
+  "ex-t1dbr4tq": {
+    "prompt": "Ponha os eventos da tarde na ordem em que a trilha os registrou.",
+    "hint": "A figura da linha do tempo no fim da seção.",
+    "items": [
+      "o caio aplica uma política de bucket pública",
+      "um chamador anônimo recebe a exportação do dia",
+      "a chave da dani tenta StopLogging e é recusada",
+      "a ana apaga a política do bucket",
+      "o primeiro endereço anônimo volta e é recusado"
+    ],
+    "trap": "Pôr a tentativa da dani primeiro é o deslize: ela veio no meio da janela."
+  },
+  "ex-z62w43n6": {
+    "prompt": "O caio tem a `AdministratorAccess` e uma política inline negando `cloudtrail:StopLogging`. O que aconteceu quando ele a chamou?",
+    "hint": "A regra da aula 6 sobre Deny.",
+    "choices": [
+      {
+        "text": "Deu certo, já que a AdministratorAccess permite `*`",
+        "why": "Um Deny explícito vence todo Allow."
+      },
+      {
+        "text": "Foi recusada, e a trilha continuou registrando",
+        "why": "Isso. Ele ainda conseguia ler a configuração da trilha."
+      },
+      {
+        "text": "Foi recusada, e o caio perdeu todas as outras permissões",
+        "why": "O Deny nomeia quatro chamadas; todo o resto fica."
+      },
+      {
+        "text": "O moto ignorou o Deny, como ignora condições",
+        "why": "O moto julga políticas de identidade; são as condições que ele ignora."
+      }
+    ]
+  },
+  "ex-6c2j4et3": {
+    "prompt": "Por que a aula manda os registros da trilha para uma conta de arquivo de logs separada?",
+    "hint": "Quem conseguiria esvaziar um bucket na mesma conta?",
+    "choices": [
+      {
+        "text": "Para os registros ficarem numa região diferente",
+        "why": "Contas e regiões são perguntas separadas."
+      },
+      {
+        "text": "Porque um bucket em outra conta é mais barato",
+        "why": "O preço não é o motivo; o alcance é."
+      },
+      {
+        "text": "Para os administradores registrados não terem permissão sobre os registros",
+        "why": "Isso. Um administrador da produção não tem nada sobre o bucket do arquivo."
+      },
+      {
+        "text": "Porque o CloudTrail se recusa a gravar na conta que registra",
+        "why": "Ele grava na mesma conta sem problema; essa é a fraqueza."
+      }
+    ]
+  },
+  "ex-5wxwamnp": {
+    "prompt": "Um arquivo de log foi apagado do bucket da trilha numa terça. Que mecanismo mostraria isso, e como?",
+    "hint": "A cada hora, uma lista assinada de hashes, encadeada.",
+    "choices": [
+      {
+        "text": "Os arquivos de digest: o `validate-logs` aponta um arquivo que o digest lista e o bucket não tem",
+        "why": "Isso. O digest de cada hora traz o hash de todo arquivo entregue."
+      },
+      {
+        "text": "O status da trilha, que muda `IsLogging` para false",
+        "why": "Apagar um arquivo não para o registro; o status pareceria normal."
+      },
+      {
+        "text": "O versionamento do S3, recusando a exclusão",
+        "why": "O versionamento guarda versões antigas; não recusa exclusão, e não é o que a aula usou."
+      },
+      {
+        "text": "O histórico de eventos, que lista o arquivo apagado",
+        "why": "O histórico de eventos mostra eventos de gerenciamento, e apagar um objeto é um evento de dados."
+      }
+    ]
+  },
+  "ex-0t0mq4j1": {
+    "prompt": "Por que a aula prefere uma política de controle de serviço ao mesmo Deny em cada usuário?",
+    "hint": "O próximo usuário.",
+    "choices": [
+      {
+        "text": "Porque o moto aplica SCPs e não políticas de identidade",
+        "why": "O contrário: o moto julga políticas de identidade e ignora SCPs."
+      },
+      {
+        "text": "Porque uma SCP devolve a permissão para a equipe de segurança, que passa a tê-la sozinha",
+        "why": "Uma SCP só limita; não concede nada."
+      },
+      {
+        "text": "Porque políticas de identidade não podem ter um Deny",
+        "why": "Podem; a do caio tinha."
+      },
+      {
+        "text": "Porque uma proteção em cada usuário é uma que alguém esquece no próximo usuário",
+        "why": "Isso. Escrita uma vez na organização, ela vale para toda identidade de toda conta membro."
+      }
+    ]
+  },
+  "ex-kn4w8s82": {
+    "prompt": "Quais chamadas a proteção da aula nega? Marque todas as que se aplicam.",
+    "hint": "Quatro chamadas que cegariam a trilha.",
+    "choices": [
+      {
+        "text": "`cloudtrail:DeleteTrail`",
+        "why": "Isso."
+      },
+      {
+        "text": "`cloudtrail:GetTrailStatus`",
+        "why": "Ler o status não prejudica nada, e o caio ainda conseguia."
+      },
+      {
+        "text": "`cloudtrail:PutEventSelectors`",
+        "why": "Isso. Tirar os seletores de dados cega a trilha para leituras."
+      },
+      {
+        "text": "`cloudtrail:DescribeTrails`",
+        "why": "Uma leitura de configuração; o caio a rodou depois da recusa."
+      },
+      {
+        "text": "`cloudtrail:StopLogging`",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-fb4t5rqd": {
+    "prompt": "No Google Cloud, quais logs de auditoria ficam desligados por padrão, exceto para o BigQuery?",
+    "hint": "O tipo que pode ser enorme.",
+    "choices": [
+      {
+        "text": "Policy Denied",
+        "why": "Esses registram chamadas que uma política de segurança recusou; a aula não os lista como desligados por padrão."
+      },
+      {
+        "text": "Admin Activity",
+        "why": "Gravados sempre, e impossíveis de desligar."
+      },
+      {
+        "text": "Data Access",
+        "why": "Isso. Registram leituras e gravações de dados do usuário, e são cobrados quando ligados."
+      },
+      {
+        "text": "System Event",
+        "why": "Esses registram ações do próprio Google e são gravados de qualquer jeito."
+      }
+    ]
+  },
+  "ex-bm88wf9g": {
+    "prompt": "Ligue o registro de mudanças de configuração de cada provedor ao nome dele.",
+    "hint": "A primeira linha da tabela.",
+    "pairs": [
+      {
+        "left": "AWS",
+        "right": "eventos de gerenciamento do CloudTrail"
+      },
+      {
+        "left": "Azure",
+        "right": "o Activity Log"
+      },
+      {
+        "left": "Google Cloud",
+        "right": "logs de auditoria Admin Activity"
+      }
+    ],
+    "right_distractors": [
+      "logs de entrada do Microsoft Entra ID"
+    ]
+  },
+  "ex-bp4nx6yw": {
+    "prompt": "Um arquivo foi lido de uma conta de armazenamento do Azure no mês passado. Onde estaria o registro dessa leitura?",
+    "hint": "Ler um blob é uma operação do plano de dados.",
+    "choices": [
+      {
+        "text": "Nos logs de recurso, se uma configuração de diagnóstico os mandava para algum lugar",
+        "why": "Isso. Sem essa configuração, não há registro da leitura."
+      },
+      {
+        "text": "No log de auditoria do Microsoft Entra ID",
+        "why": "O Entra registra eventos de identidade, não leituras de um blob."
+      },
+      {
+        "text": "Nos metadados do próprio blob",
+        "why": "Metadados descrevem o blob; não são um log de quem o leu."
+      },
+      {
+        "text": "No Activity Log da assinatura, guardado por 90 dias",
+        "why": "O Activity Log registra operações do plano de controle, não leituras de dados."
+      }
+    ]
+  },
+  "ex-6cvg5vs6": {
+    "prompt": "A clínica abre hoje uma trilha, com eventos de dados no `clinic-records`. Suspeita-se de um vazamento de três semanas atrás. O que a trilha nova diz sobre aquelas leituras?",
+    "hint": "Ninguém consegue ligar isso para trás.",
+    "choices": [
+      {
+        "text": "Tudo, já que o CloudTrail preenche 90 dias para trás quando uma trilha é criada",
+        "why": "O histórico de eventos guarda 90 dias de eventos de gerenciamento, nunca de dados."
+      },
+      {
+        "text": "Nada sobre elas",
+        "why": "Isso. Eventos de dados só existem a partir do momento em que foram selecionados."
+      },
+      {
+        "text": "As leituras, sem os endereços de quem chamou",
+        "why": "Não há registro nenhum dessas leituras."
+      },
+      {
+        "text": "As leituras, se o bucket estava em sa-east-1",
+        "why": "A região não muda nada aqui."
+      }
+    ]
+  },
+  "ex-7mc1y046": {
+    "prompt": "Uma chamada recusada traz o campo `___` no seu registro, como `AccessDenied`.",
+    "hint": "O campo pelo qual a última consulta da seção de leitura selecionou.",
+    "blanks": [
+      {
+        "accept": [
+          "errorCode"
+        ]
+      }
+    ]
+  }
+}
