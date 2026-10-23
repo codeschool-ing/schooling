@@ -68,7 +68,7 @@
     "hint": "The Role of the Software Architect, lesson 14; Communication, Consulting and Technical Leadership, lesson 4.",
     "choices": [
       {
-        "text": "The exposure and the priced responses, accepting among them, for Sílvio to choose",
+        "text": "Each response with what it costs, acceptance among them, and the choice left to the budget owner",
         "correct": true,
         "why": "Accepting is a correct choice when reducing costs more than the risk is worth, and only the budget owner makes it; if he does, the register records who, a review date and a trigger."
       },
@@ -214,7 +214,7 @@
         "why": "Nothing needs coordinating on the first afternoon; the coupling shows later, the first time Matching changes its cache."
       },
       {
-        "text": "Easy and complex: close at hand, and it braids Pricing into Matching",
+        "text": "Easy and complex: close at hand, and it braids two teams together",
         "correct": true,
         "why": "Easy is what is near at hand; complex is what is braided together. Like Payments reading Tracking's table, it is the trap corner."
       }
@@ -457,7 +457,7 @@
     "hint": "Design Patterns and Principles, lesson 8; Observability and Operations, lesson 11.",
     "choices": [
       {
-        "text": "The desk had its answer when the root span ended; the rest is events waiting for the projector, so the screen lagged while the rules stayed right.",
+        "text": "The desk's answer came when the root span ended; the rest is events waiting in the queue before the projector.",
         "correct": true,
         "why": "Right: a trace is measured to its last span, and the wait in the queue has no span of its own. The customer's wait is the root span's duration."
       },
@@ -467,7 +467,7 @@
         "why": "Projected asynchronously, the command returns before any projector runs; freeing the write is the reason to project later."
       },
       {
-        "text": "The seconds between the two services are clock skew, the noise to ignore in any trace that crosses machines.",
+        "text": "The seconds between the two services are clock skew, the noise to ignore in any trace that crosses two machines' clocks.",
         "correct": false,
         "why": "Skew is a few milliseconds and can make a short wait look negative; a wait of seconds is a finding."
       },
@@ -487,12 +487,12 @@
     "hint": "Design Patterns and Principles, lesson 9; Observability and Operations, lesson 10.",
     "choices": [
       {
-        "text": "An upcaster that blanks the CPF whenever `MemberJoined` is read, so that no projection ever sees it again.",
+        "text": "An upcaster that blanks the CPF whenever `MemberJoined` is read, so that the projections stop seeing it.",
         "correct": false,
         "why": "An upcaster adapts the shape on the way out; the stored row still holds the CPF, in the store and in every backup of it."
       },
       {
-        "text": "Events that name her by an internal id meaning nothing outside, with her name and CPF in a table that can lose one row.",
+        "text": "Events that name her by an internal id meaning nothing outside, with her name and CPF in a table that loses one row on demand.",
         "correct": true,
         "why": "Right: the stream never held the person, so nothing append-only has to change. Deleting the row leaves the history joined to nobody."
       },
@@ -502,7 +502,7 @@
         "why": "That is the fix lesson 9 rejects: the trigger refuses it, and a history that has been edited can no longer be trusted."
       },
       {
-        "text": "Deleting every snapshot of her stream, so that the next rebuild folds a stream with none of her details.",
+        "text": "Deleting every snapshot of her stream, so that the next rebuild folds a stream without her details.",
         "correct": false,
         "why": "A snapshot is a cache of the fold; the events it came from still carry the CPF."
       }
@@ -522,17 +522,17 @@
         "why": "Readiness moves traffic and restarts nothing; a pod whose actors are gone would sit out of rotation, alive and useless."
       },
       {
-        "text": "Make liveness check the database as well, since state that must survive a crash lives there.",
+        "text": "Make liveness check the database as well, since the state that has to survive a crash lives there and a lost link is the likely cause.",
         "correct": false,
         "why": "That is the probe that kills: a dependency in liveness restarts every copy when the database fails, and no restart helps."
       },
       {
-        "text": "Fail the liveness answer or end the process, so the platform starts a fresh container: a restart fixes a fault inside it.",
+        "text": "Fail the probe that decides on restarts, or end the process, so the platform starts a fresh container that clears the fault.",
         "correct": true,
         "why": "Right: past its limit a supervisor escalates, and at the root the next level up is the container platform. What must survive lives outside the actors."
       },
       {
-        "text": "Restart the shelf without a limit, because a fresh instance always starts from a known good state.",
+        "text": "Restart the shelf with no limit at all, because a fresh instance starts from a known good state each time.",
         "correct": false,
         "why": "The same message crashes every fresh shelf, so a supervisor with no limit spins on it for ever."
       }
@@ -547,24 +547,24 @@
     "hint": "Design Patterns and Principles, lesson 16; Observability and Operations, lesson 6.",
     "choices": [
       {
-        "text": "A counter, `pageviews_dropped_total`, incremented on every drop and read with `rate()`.",
-        "correct": true,
-        "why": "Right: how many were lost is a question of how many happened, which is a counter's question."
-      },
-      {
         "text": "A counter of drops labelled by `user_id`, so the report can say whose views went missing.",
         "correct": false,
         "why": "One series per user is the cardinality lesson 6 measured; who was affected belongs in a log line or a trace."
       },
       {
-        "text": "A gauge of how many page views are waiting in the buffer at this moment.",
+        "text": "A counter, `pageviews_dropped_total`, incremented on every drop and read with `rate()`.",
         "correct": true,
-        "why": "Right: how many are there now is a gauge, and a buffer sitting at its limit is what comes before the drops."
+        "why": "Right: how many were lost is a question of how many happened, which is a counter's question."
       },
       {
         "text": "A gauge set to the number of drops since start-up, so that `rate()` gives drops per second.",
         "correct": false,
         "why": "`rate()` of a gauge reads every fall as a restart, and a running total kept in a gauge is lost at every restart."
+      },
+      {
+        "text": "A gauge of how many page views wait in the buffer right now, the number that reaches its limit first.",
+        "correct": true,
+        "why": "Right: how many are there now is a gauge, and a buffer sitting at its limit is what comes before the drops."
       }
     ]
   },
@@ -612,7 +612,7 @@
         "why": "Without an SDK the API hands back spans that record nothing and raise nothing, which is what lets a library ship instrumented."
       },
       {
-        "text": "The package should call only the API; which provider and exporter run is chosen once, in each service's composition root.",
+        "text": "The library calls only the API; which provider and SDK will run is chosen once, in each service's composition root.",
         "correct": true,
         "why": "Right: where spans go is configuration made once at start-up, and the library stays the same in every service."
       },
@@ -637,12 +637,12 @@
     "hint": "Design Patterns and Principles, lesson 9; Observability and Operations, lesson 6.",
     "choices": [
       {
-        "text": "That label makes a series per member; count by the command instead, and put the stream on the span of the failed append.",
+        "text": "That label makes one series per person; count by the command instead, and record the stream on the span that failed.",
         "correct": true,
         "why": "Right: a label should take a small, known set of values, and what identifies one member belongs on a span or in a log line."
       },
       {
-        "text": "Nothing: a counter only grows, and cardinality is a cost of gauges, which keep a last value per series.",
+        "text": "Nothing: a counter just grows, and cardinality is a cost of gauges, which keep a last value per series.",
         "correct": false,
         "why": "Every distinct label value is its own series whatever the type; lesson 6's twenty thousand series came from a counter."
       },
@@ -652,7 +652,7 @@
         "why": "That is a reason for how the store is designed, and it says nothing about what a series costs Prometheus."
       },
       {
-        "text": "Drop the metric and log at `ERROR`, since a conflict means two clerks broke a rule and somebody must act.",
+        "text": "Drop the metric and log at `ERROR` instead, since a conflict means two clerks broke a rule and somebody has to act on it now.",
         "correct": false,
         "why": "A conflict is the check working: the loser re-reads the stream and runs the rules again, an ordinary outcome."
       }
@@ -667,7 +667,7 @@
     "hint": "Design Patterns and Principles, lesson 10; Observability and Operations, lesson 15.",
     "choices": [
       {
-        "text": "Nothing: waiting for a replica only costs time while the network is partitioned, which is CAP's case.",
+        "text": "Nothing: waiting for a replica costs time just while the network is partitioned, which is CAP's case.",
         "correct": false,
         "why": "That is PACELC's else: with every link healthy, waiting for the replica cost 113 ms on every write."
       },
@@ -719,19 +719,19 @@
         "why": "Right: across a network a retried message arrives twice, and a retry is only safe if the request is."
       },
       {
-        "text": "Exactly-once delivery, which the retries now give: a remote tell that failed is always sent again.",
+        "text": "Exactly-once delivery, which the retries now give: a remote tell that failed is sent again by Envoy.",
         "correct": false,
         "why": "Retries add duplicates and do not remove loss; remote actor systems promise at most once by default, Akka included."
-      },
-      {
-        "text": "A shelf that has gone silent, which looks the same as a slow one and is found by a timeout.",
-        "correct": true,
-        "why": "Right: at a distance, failure is detected by timeout, because silence and slowness look alike."
       },
       {
         "text": "A page on the shelf's own error ratio, since Envoy's retries hide every failure from the desk's numbers.",
         "correct": false,
         "why": "With the failure invisible to users, that page wakes somebody for nothing; page on the symptom at the edge, keep causes as tickets."
+      },
+      {
+        "text": "A shelf that has gone silent, which from the desk looks the same as a slow one and is found by a timeout.",
+        "correct": true,
+        "why": "Right: at a distance, failure is detected by timeout, because silence and slowness look alike."
       }
     ]
   },
@@ -861,12 +861,12 @@
         "why": "No state ends up where the parent forbade it; the call is refused before anything changes."
       },
       {
-        "text": "None: raising is louder than a wrong answer, so callers catching `ValueError` are enough.",
+        "text": "No failure: raising is louder than a wrong answer, so callers catching `ValueError` suffice.",
         "correct": false,
         "why": "A refusal is the first shape, `ReferenceBook`'s, and a catch in every caller is the repair the lesson rules out."
       },
       {
-        "text": "A strengthened precondition, like `ReferenceBook`; fix what the hierarchy claims, not the callers.",
+        "text": "A strengthened precondition, as with `ReferenceBook`; repair what the hierarchy claims, not the callers.",
         "correct": true,
         "why": "Right: a new issue is not lendable, so `Periodical` should not claim to be an item that lends it."
       }
@@ -881,7 +881,7 @@
     "hint": "Design Patterns and Principles, lesson 2.",
     "choices": [
       {
-        "text": "`extend` skips a title the list already holds, so three of the four never reached the shelf.",
+        "text": "`extend` skips a title the list already holds, so three of the four did not reach the shelf.",
         "correct": false,
         "why": "The shelf holds four, as the report says; nothing failed anywhere, which is what makes this bug quiet."
       },
@@ -896,7 +896,7 @@
         "why": "Right: that self-call was in no interface anybody wrote, so the parent's author could not see the dependency."
       },
       {
-        "text": "The change broke the parent's own tests, which nobody ran before the monthly report.",
+        "text": "The change broke the parent's own tests, which nobody ran before the report.",
         "correct": false,
         "why": "Every test of `Shelf` still passes; the shelf holds four titles, and the parent did nothing wrong by its own rules."
       }
@@ -926,7 +926,7 @@
         "why": "A view-model exposes properties and has never heard of the view; this class calls the view."
       },
       {
-        "text": "MVC on the server, because the class receives values and chooses which view method to call.",
+        "text": "MVC on the server, because the class receives values and chooses which view method to call next.",
         "correct": false,
         "why": "Web MVC renders a view once per request; this class talks to a long-lived view through its methods."
       }
@@ -1080,7 +1080,7 @@
     "hint": "Observability and Operations, lesson 7.",
     "choices": [
       {
-        "text": "As zero, which is right: no failed charge was recorded, so none happened.",
+        "text": "As zero, which is right: no failed charge was recorded, so there were no failures.",
         "correct": false,
         "why": "No charge was recorded at all, failed or not; the share is unknown, and zero claims the opposite."
       },
@@ -1090,7 +1090,7 @@
         "why": "Carrying a value forward invents measurements nobody took."
       },
       {
-        "text": "As a gap, with `up` on the same dashboard to show that payments stopped answering scrapes.",
+        "text": "As a gap in the line, with `up` drawn on the same page so the missing target shows beside it.",
         "correct": true,
         "why": "Right: a missing series is unknown, not zero, and `up` says why it is missing."
       },
@@ -1120,7 +1120,7 @@
         "why": "The index grows with the number of streams, and this label adds one stream per order."
       },
       {
-        "text": "Follow the lesson's advice that labels say what a line says, so searches never read chunks.",
+        "text": "Follow the lesson's advice that labels say what a line says, so searches skip the chunks.",
         "correct": false,
         "why": "The advice is the reverse: labels say where a line came from, never what it says."
       },
@@ -1145,17 +1145,17 @@
         "why": "Durations are skewed, and more incidents do not make a mean describe any one of them."
       },
       {
-        "text": "Which interval the M means, then the median and the longest, with the list of incidents.",
+        "text": "Which interval the M stands for, then the median and the longest, with the list of incidents.",
         "correct": true,
         "why": "Right: the mean of ten short incidents and one long night describes none of them."
       },
       {
-        "text": "The mean without the eight-hour incident, an outlier, which gives a true MTTR of 15 minutes.",
+        "text": "The mean without the eight-hour incident, an outlier, which gives a true MTTR of 15 minutes for the quarter.",
         "correct": false,
         "why": "That incident is the one the review most needs to see."
       },
       {
-        "text": "Time to detect alone, since it is the only interval with no person in it.",
+        "text": "Time to detect alone, since it is the one interval with no person in it.",
         "correct": false,
         "why": "Each interval points at a different fix, and detection is only one of them."
       }
@@ -1170,14 +1170,14 @@
     "hint": "Observability and Operations, lesson 8.",
     "choices": [
       {
-        "text": "A declined card logged at `INFO`, as a normal outcome of the service.",
-        "correct": true,
-        "why": "Right: an `ERROR` should mean somebody may need to act, and a declined card is the system working."
-      },
-      {
         "text": "The same exception logged with `log.exception` by the database layer, the service and the handler.",
         "correct": false,
         "why": "Log an exception once, where it is handled; three tracebacks are three errors in the count and one in reality."
+      },
+      {
+        "text": "A declined card logged at `INFO`, as a normal outcome of the service and not a failure of it.",
+        "correct": true,
+        "why": "Right: an `ERROR` should mean somebody may need to act, and a declined card is the system working."
       },
       {
         "text": "A field named `duration_ms`, the unit in its name and a number in it on every line.",
@@ -1260,7 +1260,7 @@
     "hint": "Architecture Modelling and Frameworks, lesson 13; Cloud and Serverless, lesson 8.",
     "choices": [
       {
-        "text": "A risk: one call stops at 15 minutes, so the design as drawn cannot meet that scenario",
+        "text": "A risk: one call stops at 15 minutes, so the job as drawn cannot finish in time",
         "correct": true,
         "why": "A risk is a decision that may leave a scenario unmet, and no setting lets one Lambda call run for twenty minutes."
       },
@@ -1586,6 +1586,559 @@
     ]
   },
   {
+    "id": "ex-hkrh74qr",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "In lesson 16's `network.tf`, the private subnet in `sa-east-1c` leaves through the shop's only NAT gateway, in `sa-east-1a`. A pull request brings the network in line with the cloud course's three-tier layout for the shop's two zones, and writes everything it adds the way `network.tf` wrote the first gateway. What `change per month, USD` does `price.py` print for its plan?",
+    "hint": "Infrastructure as Code, lesson 16; Cloud and Serverless, lesson 6.",
+    "value": 71.54,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-r92b3sry",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The shop's web servers get the database password through `user_data`, and lesson 12 found it in the plan, in the saved plan file and in the state. A colleague proposes building the password into the machine image instead, so that Terraform never handles it. Which arrangement do the two lessons point to?",
+    "hint": "Infrastructure as Code, lesson 12; Cloud and Serverless, lesson 7.",
+    "choices": [
+      {
+        "text": "Bake it into the image: then no plan, plan file or state of Terraform's holds it",
+        "correct": false,
+        "why": "A file in an image is copied onto every disk started from it and into its snapshots, so the password spreads further, not less."
+      },
+      {
+        "text": "RDS keeps it in Secrets Manager; the instance's role reads that one secret and no other",
+        "correct": true,
+        "why": "Terraform only learns where the secret is, and the application reads it at start with the role's temporary credentials, which no file holds."
+      },
+      {
+        "text": "Keep `user_data`, and mark the variable `sensitive` so the state drops the value",
+        "correct": false,
+        "why": "`sensitive` hides the value on the screen and changes nothing written to disk; the state keeps it in plain text."
+      },
+      {
+        "text": "Put a key allowed `GetSecretValue` in `/etc/shop.env` for the app to use",
+        "correct": false,
+        "why": "A key in a file lives until somebody rotates it and is in every backup and snapshot of that disk; a role hands the machine credentials that expire."
+      }
+    ]
+  },
+  {
+    "id": "ex-0vychpqg",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "The shop's product photos live in an S3 bucket declared with `prevent_destroy = true`. An architect lists what could still lose them and what would bring them back. Which statements hold? Choose all that apply.",
+    "hint": "Infrastructure as Code, lesson 6; Cloud and Serverless, lesson 5.",
+    "choices": [
+      {
+        "text": "Deleting the bucket's block in a refactor gets past `prevent_destroy` silently",
+        "correct": true,
+        "why": "The setting lives in the block and goes with it; the plan's `not in configuration` line is where a reviewer catches it."
+      },
+      {
+        "text": "Eleven nines of durability mean a photo that a cleanup script deleted can be read back",
+        "correct": false,
+        "why": "Durability is the store keeping what it was told to keep; a delete it was told to make is kept just as faithfully."
+      },
+      {
+        "text": "With versioning on, the script's delete only adds a marker; the photo comes back",
+        "correct": true,
+        "why": "A delete with no version id adds a delete marker; removing the marker restores the last version."
+      },
+      {
+        "text": "`prevent_destroy` also refuses a delete made in the console or with the CLI",
+        "correct": false,
+        "why": "It is a rule inside Terraform's plan; outside Terraform, IAM permissions and versioning are what protect the bucket."
+      }
+    ]
+  },
+  {
+    "id": "ex-0gks6nph",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The shop's web servers become an autoscaling group launched from `shop-web` images. After the group scales in one night, photos customers uploaded that afternoon to `/var/www/uploads` are gone, and so is a fix somebody made over SSH on one of the servers. What do the two lessons make of it?",
+    "hint": "Infrastructure as Code, lesson 20; Cloud and Serverless, lesson 4.",
+    "choices": [
+      {
+        "text": "Scale in by stopping instances, since a stopped instance keeps its root volume",
+        "correct": false,
+        "why": "The group terminates the instances it removes, and a photo kept on one machine was never on the others anyway."
+      },
+      {
+        "text": "Bake `/var/www/uploads` into the next image, so new instances start with it",
+        "correct": false,
+        "why": "An image fixes its bytes when it is built; every photo uploaded after the build would still live on one machine."
+      },
+      {
+        "text": "Set `ignore_changes = [ami]`, so that Terraform stops replacing the group's machines",
+        "correct": false,
+        "why": "The group, not Terraform, ended those instances when it scaled in; a lifecycle setting does not stop a scale-in."
+      },
+      {
+        "text": "Only the image survives: uploads belong in object storage, fixes in the template",
+        "correct": true,
+        "why": "Nothing written on a machine outlives it, so the data leaves the machine and a fix ships as a new image version."
+      }
+    ]
+  },
+  {
+    "id": "ex-82qjd8vw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A company that runs on AWS buys one that runs on Google Cloud, and both estates stay where they are. The architect wants one infrastructure-as-code tool for the two clouds, the DNS provider and the GitHub organisation. Which choice, with which expectation, fits the two lessons?",
+    "hint": "Infrastructure as Code, lesson 17; Cloud and Serverless, lesson 2.",
+    "choices": [
+      {
+        "text": "Terraform or OpenTofu; each cloud keeps its own identity system and its bill",
+        "correct": true,
+        "why": "They reach anything with a provider, and the tool does not merge the clouds: two identity systems and two bills remain."
+      },
+      {
+        "text": "CloudFormation, which keeps the state inside the provider and leaves none to lose",
+        "correct": false,
+        "why": "CloudFormation reaches AWS only; it cannot hold the Google Cloud estate, the DNS or GitHub."
+      },
+      {
+        "text": "The AWS CDK in TypeScript, as a general-purpose language can describe either cloud",
+        "correct": false,
+        "why": "The CDK writes CloudFormation templates, so it reaches AWS and nothing else."
+      },
+      {
+        "text": "Terraform, so that one configuration lets the application fail over between clouds",
+        "correct": false,
+        "why": "Failing over between providers needs the application running on both and its data copied between them; the cloud lesson calls it the most expensive reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-je14tz5r",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "A virtual machine carries a role that may write backups to one bucket. Match each set-up on the machine to whom the AWS CLI there ends up calling as.",
+    "hint": "Cloud and Serverless, lesson 7.",
+    "pairs": [
+      {
+        "left": "Nothing else is configured on the machine",
+        "right": "the role, through the instance metadata service"
+      },
+      {
+        "left": "`AWS_ACCESS_KEY_ID` and its secret are exported in the shell",
+        "right": "whoever owns the exported key"
+      },
+      {
+        "left": "`~/.aws/credentials` holds a key, and the shell exports none",
+        "right": "the owner of the key in that file"
+      },
+      {
+        "left": "The role is taken off, and nothing else is configured",
+        "right": "nobody: `NoCredentials`, and no request is sent"
+      }
+    ],
+    "right_distractors": [
+      "the role, since the machine's own source is read first"
+    ]
+  },
+  {
+    "id": "ex-f4x2942c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Two pipeline jobs run against the shop's S3 backend a minute apart. The second fails at once with `Error acquiring the state lock`, and `Who` names the first job's runner, which is healthy and still applying. What does lesson 7 give the pipeline for this?",
+    "hint": "Infrastructure as Code, lesson 7.",
+    "choices": [
+      {
+        "text": "`terraform force-unlock` with the printed `ID`, run by the second job before it plans",
+        "correct": false,
+        "why": "The holder is alive; forcing the lock lets a second writer in beside it, the lost update the lock exists to stop."
+      },
+      {
+        "text": "`-lock=false` on plans, because a plan writes nothing to AWS and needs no lock",
+        "correct": false,
+        "why": "Plans lock too: reading a state while another run writes it gives a plan of a world that never existed."
+      },
+      {
+        "text": "`-lock-timeout`, so the later job waits its turn and plans on top of the earlier one's work",
+        "correct": true,
+        "why": "With a timeout of a few minutes, two jobs that collided become two jobs that ran in turn."
+      },
+      {
+        "text": "A `dynamodb_table` in the backend, so that each of the jobs can hold a lock of its own",
+        "correct": false,
+        "why": "The table is the older home of the same single lock, deprecated in favour of `use_lockfile`; it never gave two writers a lock each."
+      }
+    ]
+  },
+  {
+    "id": "ex-m24fwmcm",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "In the lesson's GitHub workflow, a job can ask GitHub for the token that `configure-aws-credentials` exchanges for a role's credentials only when its `permissions` include `id-token: ___`.",
+    "hint": "Infrastructure as Code, lesson 15.",
+    "blanks": [
+      {
+        "accept": [
+          "write"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4d1c9d9a",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "After the shop is split into a network state and an app state, four needs come up. Match each one to the tool lesson 8 gives it.",
+    "hint": "Infrastructure as Code, lesson 8.",
+    "pairs": [
+      {
+        "left": "The app's security group needs the VPC id, and the app may read the network's state",
+        "right": "`terraform_remote_state`, reading the network's outputs"
+      },
+      {
+        "left": "The app needs two network values, and may not download the network's state",
+        "right": "an SSM parameter the network writes for others to read"
+      },
+      {
+        "left": "The data team takes over a bucket that the app's state manages",
+        "right": "a `removed` block in the app, then an `import` block in theirs"
+      },
+      {
+        "left": "A security group made by hand, with rules nobody wrote down, must join the app's state",
+        "right": "an `import` block, and a plan that drafts the block for you"
+      }
+    ],
+    "right_distractors": [
+      "a `moved` block that names the data team's state",
+      "`terraform state rm` in the app, and nothing more"
+    ]
+  },
+  {
+    "id": "ex-zysy5pd8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Applying Ana's saved `tfplan` stopped halfway: the batch security group was created, and the API refused the subnet's range. She corrects the range in `main.tf` and runs `terraform apply tfplan` again. What happens?",
+    "hint": "Infrastructure as Code, lesson 9.",
+    "choices": [
+      {
+        "text": "It applies the corrected range, since `apply` reads the `main.tf` beside the plan file",
+        "correct": false,
+        "why": "A saved plan carries the configuration it was computed from, and this one is refused before anything is read."
+      },
+      {
+        "text": "It deletes the security group first, so the plan can start again from nothing",
+        "correct": false,
+        "why": "An apply is not a transaction: what succeeded stays in AWS and in the state, and nothing is rolled back."
+      },
+      {
+        "text": "It creates the security group again, and then the subnet and the instance",
+        "correct": false,
+        "why": "The state already records the group, and the file is refused before any of this."
+      },
+      {
+        "text": "It refuses the file as stale; a new plan proposes only the subnet and the instance",
+        "correct": true,
+        "why": "The failed apply wrote the state, so the saved plan is spent; a fresh plan finds the two things still missing."
+      }
+    ]
+  },
+  {
+    "id": "ex-jk8b539y",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "After a provider's version constraint is raised in `versions.tf`, the lock file keeps pinning the old version, and plans stop, until somebody runs `terraform init -___`, whose diff of `.terraform.lock.hcl` then belongs in the review.",
+    "hint": "Infrastructure as Code, lesson 9.",
+    "blanks": [
+      {
+        "accept": [
+          "upgrade",
+          "-upgrade"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1mdrs8kz",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Ana's root calls the network module as `module \"shop\"`, from `./modules/network`, and her state holds `module.shop.aws_vpc.this` and its subnets. Which of these edits leave every address in the state as it is? Choose all that apply.",
+    "hint": "Infrastructure as Code, lesson 10.",
+    "choices": [
+      {
+        "text": "Renaming the call to `module \"network\"`, keeping the same source and arguments",
+        "correct": false,
+        "why": "The call's label is the first part of every address, so each one changes and the plan destroys and creates."
+      },
+      {
+        "text": "Pointing `source` at the same files under a Git tag, then running `terraform init`",
+        "correct": true,
+        "why": "Where a module's files come from is not part of the address; the lesson's plan said `No changes`."
+      },
+      {
+        "text": "Renaming `aws_subnet.this` to `aws_subnet.private` inside the module, without `moved`",
+        "correct": false,
+        "why": "The resource's name is part of the address; without a `moved` block the subnets are destroyed and created."
+      },
+      {
+        "text": "Moving the `module` block out of `main.tf` into a new `network.tf` beside it",
+        "correct": true,
+        "why": "Terraform reads every `.tf` file in the directory as one configuration; which file holds a block is for the reader."
+      }
+    ]
+  },
+  {
+    "id": "ex-x61ad2xb",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "The network module's author renames `aws_subnet.this` to `aws_subnet.private` without making any caller rebuild a subnet. Put the steps in order, from the author's branch to a caller's clean plan.",
+    "hint": "Infrastructure as Code, lesson 10.",
+    "items": [
+      "On a branch, rename the resource and its reference in `outputs.tf`",
+      "Add `moved.tf`, from `aws_subnet.this` to `aws_subnet.private`",
+      "Merge the branch into `main` and tag the merge `v1.1.0`",
+      "Push `main` and the tag to the module's repository",
+      "In the caller, move both `?ref=` to `v1.1.0` and run `terraform init`",
+      "Read the plan: only `has moved to` lines, nothing added or destroyed"
+    ],
+    "trap": "Tagging `v1.1.0` before `moved.tf` is on the branch is the slip: a published tag is never moved, so callers who take it plan three subnets destroyed and three created, and the fix needs yet another version."
+  },
+  {
+    "id": "ex-ace71k9t",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A pull request changes both web servers in `web.tf` from `t3.medium` to `t3.micro`, and keeps their 20 GB `gp3` root disks. What `change per month, USD` does lesson 16's `price.py` print for its plan?",
+    "hint": "Infrastructure as Code, lesson 16.",
+    "value": -73.58,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-kdbp6tj8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "An Auto Scaling group carries `ignore_changes = [desired_capacity]`, because an autoscaler moves that number all day and the file holds only the starting value. At noon, with the autoscaler well above that value, a merged change forces the group to be replaced. What capacity does the new group start with?",
+    "hint": "Infrastructure as Code, lesson 6.",
+    "choices": [
+      {
+        "text": "The autoscaler's noon value, which Terraform kept in the state and carries over",
+        "correct": false,
+        "why": "Terraform reads the ignored value into the state, but a new resource is created from the file."
+      },
+      {
+        "text": "The file's starting value, as ignored arguments come from it on creation",
+        "correct": true,
+        "why": "`ignore_changes` applies only after creation; a replacement is a creation, and the file decides."
+      },
+      {
+        "text": "None yet: Terraform refuses to replace a resource that has an ignored argument",
+        "correct": false,
+        "why": "Ignoring an argument stops a comparison; it does not stop a replacement forced by another argument."
+      },
+      {
+        "text": "The old group's capacity, which `create_before_destroy` copies to the new one",
+        "correct": false,
+        "why": "Lifecycle settings change the order of the two steps; they copy no values between objects."
+      }
+    ]
+  },
+  {
+    "id": "ex-pv0y6wdr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "To save snapshot storage, the image pipeline deregisters the previous `shop-web` AMI on the day a new version ships. Then `1.1.0` turns out to be faulty, and Ana runs lesson 20's rollback. What happens?",
+    "hint": "Infrastructure as Code, lesson 20.",
+    "choices": [
+      {
+        "text": "`git revert` restores `1.0.1`, the lookup by name finds no image, and the plan fails",
+        "correct": true,
+        "why": "The rollback works only because the old AMI still exists, which is why a pipeline keeps the last few versions."
+      },
+      {
+        "text": "Terraform starts the new instance from a copy of the old image kept in its state",
+        "correct": false,
+        "why": "The state records an AMI's id, not the image; with the image gone there is nothing to start."
+      },
+      {
+        "text": "The plan updates the running instance in place, back to the older image's files",
+        "correct": false,
+        "why": "A different `ami` forces a replacement, and there is no older image to replace it with."
+      },
+      {
+        "text": "Nothing breaks: the old instance waits as a deposed object, ready to come back",
+        "correct": false,
+        "why": "The deposed object was destroyed in the same apply that created its replacement."
+      }
+    ]
+  },
+  {
+    "id": "ex-s746h5rd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Ana's play gains a second template task, which writes a TLS snippet into nginx's configuration and also notifies `Reload nginx`. On the next run both files change on `web1`. When is nginx reloaded there, and how often?",
+    "hint": "Infrastructure as Code, lesson 18.",
+    "choices": [
+      {
+        "text": "Twice, each one right after the task that notified the handler",
+        "correct": false,
+        "why": "A notified handler does not run where it was notified; it waits for the end of the play."
+      },
+      {
+        "text": "Once, right after the first task that reported a change",
+        "correct": false,
+        "why": "A notified handler does not run where it was notified; it waits for the end of the play."
+      },
+      {
+        "text": "Once, at the end of the play, after every one of its tasks has run",
+        "correct": true,
+        "why": "A handler runs only when notified and only once, at the end of the play, however many tasks notified it."
+      },
+      {
+        "text": "Twice, at the end of the play, one for each notifying task",
+        "correct": false,
+        "why": "Two notifications of one handler still give one run."
+      }
+    ]
+  },
+  {
+    "id": "ex-ctgnhj9a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Security forbids any connection into the shop's servers, SSH from a control machine included. The team still wants a configuration change to reach every server at once, not on the next half-hourly run. Which arrangement from lesson 19 fits?",
+    "hint": "Infrastructure as Code, lesson 19.",
+    "choices": [
+      {
+        "text": "Ansible run from a control machine, which installs nothing at all on the servers",
+        "correct": false,
+        "why": "Push needs the control machine to reach every target over SSH, which is the connection security forbids."
+      },
+      {
+        "text": "`salt-ssh`, which reaches every server without a minion installed on it",
+        "correct": false,
+        "why": "It works over SSH as well, an inbound connection to each server."
+      },
+      {
+        "text": "Puppet agents on their defaults, which open the connection from the inside",
+        "correct": false,
+        "why": "They do connect outwards, but every 1800 seconds: a change waits for the next run."
+      },
+      {
+        "text": "Salt minions, which open the connection themselves and run what is published",
+        "correct": true,
+        "why": "The minion keeps its own connection to the master open, and what the master publishes runs at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-858z6gd7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The shop's subnets use `for_each` over a map keyed `web`, `app` and `db`. A tidy-up renames the key `db` to `data` and keeps the same range. What does the plan propose, and what keeps the subnet as it is?",
+    "hint": "Infrastructure as Code, lesson 4.",
+    "choices": [
+      {
+        "text": "It destroys `app[\"db\"]` and creates `app[\"data\"]`; a `moved` block pairing them keeps it",
+        "correct": true,
+        "why": "An address is the only thing Terraform matches on, and `moved` tells it that `aws_subnet.app[\"db\"]` is now `aws_subnet.app[\"data\"]`."
+      },
+      {
+        "text": "Nothing: the range is unchanged, so Terraform finds the same subnet under the new key",
+        "correct": false,
+        "why": "Terraform does not look at ranges to pair objects; it matches addresses."
+      },
+      {
+        "text": "An update in place of the subnet's key, because a key is only a name",
+        "correct": false,
+        "why": "The key is part of the address in the state, not an argument AWS can update."
+      },
+      {
+        "text": "It replaces all three subnets, because changing one key shifts the others",
+        "correct": false,
+        "why": "That is `count`'s index problem; the other keys of a map stay where they are."
+      }
+    ]
+  },
+  {
+    "id": "ex-2kjvbbcm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A unit test runs under `mock_provider \"aws\" {}` and asserts that `aws_vpc.this.arn` contains `sa-east-1`. No override sets the ARN. What happens, and why?",
+    "hint": "Infrastructure as Code, lesson 13.",
+    "choices": [
+      {
+        "text": "It passes: the mock keeps the provider's schema, so the ARN looks like AWS's",
+        "correct": false,
+        "why": "The schema says which attributes exist; the values of the computed ones are invented."
+      },
+      {
+        "text": "It is skipped, because a mock cannot give a value to a computed attribute",
+        "correct": false,
+        "why": "A run is skipped when its provider cannot be configured or a run before it failed; a mock gives every computed attribute a value."
+      },
+      {
+        "text": "It fails: a mock fills each computed attribute with eight random characters",
+        "correct": true,
+        "why": "Under a mock only what the module sets and what an override supplies means anything; the ARN in the lesson's run was `jhm1adza`."
+      },
+      {
+        "text": "It passes only when the AWS endpoint answers, as the mock asks it for the ARN",
+        "correct": false,
+        "why": "A mock never calls the provider's API; the lesson ran it with the endpoint pointing at nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-r06q5xbq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "To try a change in dev, a colleague stands in `~/shop-infra/live`, the folder that holds both `dev` and `prod`, runs `terragrunt run --all apply`, and answers `y` to the one question. What does Terragrunt do?",
+    "hint": "Infrastructure as Code, lesson 11.",
+    "choices": [
+      {
+        "text": "It applies dev's units only, because dev is where the change was made",
+        "correct": false,
+        "why": "`run --all` takes every unit below the current directory, whatever changed."
+      },
+      {
+        "text": "It applies every unit below `live`, prod's too, with `-auto-approve`",
+        "correct": true,
+        "why": "That one question is the only confirmation the whole queue gets: the classic mistake the lesson's table gives Terragrunt."
+      },
+      {
+        "text": "It asks again before each unit's apply, as a plain `terraform apply` would",
+        "correct": false,
+        "why": "Under `run --all`, Terragrunt adds `-auto-approve` to every command unless told `--no-auto-approve`."
+      },
+      {
+        "text": "It refuses: units run only from their own folder, never from `root.hcl`'s",
+        "correct": false,
+        "why": "`run --all` is meant to run from a folder above the units; the lesson ran it from `live/dev`."
+      }
+    ]
+  },
+  {
     "id": "ex-aac6jzyj",
     "version": 1,
     "type": "quiz",
@@ -1594,12 +2147,12 @@
     "hint": "Linux and the Command Line, lesson 6; Networks and Protocols, lesson 3.",
     "choices": [
       {
-        "text": "The partner closed those connections and the service never closed its side: a leak in the code, which a higher limit only postpones.",
+        "text": "The partner closed them and the program never closed its side: a leak that a higher limit only postpones.",
         "correct": true,
         "why": "Every connection is a descriptor, and `CLOSE-WAIT` that piles up is a program that forgets to close what the other side already closed."
       },
       {
-        "text": "`CLOSE-WAIT` is what any busy client shows for sixty seconds after each call, so a higher limit is the fix.",
+        "text": "`CLOSE-WAIT` is what every busy client shows for sixty seconds after each call it makes, so a higher limit is the right fix.",
         "correct": false,
         "why": "That is `TIME-WAIT`, on the side that closed first; `CLOSE-WAIT` means the other side closed and this program has not."
       },
@@ -1609,7 +2162,7 @@
         "why": "A drop shows as waiting in `SYN-SENT` or a timeout; here the partner's close arrived, which is exactly what `CLOSE-WAIT` records."
       },
       {
-        "text": "Sockets are not files, so the descriptor count comes from somewhere else and the connections are a separate question.",
+        "text": "Sockets are not files, so the descriptors are something else and the connections are another matter.",
         "correct": false,
         "why": "A TCP connection is not in the filesystem, but it is still an entry in the same descriptor table that `LimitNOFILE=` caps."
       }
@@ -1619,7 +2172,7 @@
     "id": "ex-rxdgnpfc",
     "version": 1,
     "type": "quiz",
-    "difficulty": "medium",
+    "difficulty": "hard",
     "prompt": "The checkout API is slow. On its host, `vmstat 1 5` shows nothing in `r` or `b` and `id` near 100, `free -m` has plenty `available`, and `iostat -xz` is quiet. From that host, `curl -w` with lesson 5's five timers against the pricing service it calls shows `dns`, `tcp` and `tls` done within a few milliseconds, and `first byte` arriving seconds later. Where is the fix?",
     "hint": "Linux and the Command Line, lesson 11; Networks and Protocols, lesson 5.",
     "choices": [
@@ -1634,7 +2187,7 @@
         "why": "Distance and loss show in `tcp` and `tls`, which needs round trips; both were quick here."
       },
       {
-        "text": "In the pricing service's code: the network answered at once, and the waiting starts after the request arrived.",
+        "text": "In the code of the service being called: the network answered at once, and the wait begins once the request lands.",
         "correct": true,
         "why": "A slow first byte after everything else was quick is the application thinking, and the idle host had already said it was not this machine."
       },
@@ -1659,7 +2212,7 @@
         "why": "On the internet they are ordinary; between two machines in one rack, retransmissions mean something on the link is broken."
       },
       {
-        "text": "Frames are being damaged on that link, by a cable or a card, and TCP turns each loss into waiting rather than an error.",
+        "text": "A cable or a card is damaging frames on that link, and TCP turns each loss into a wait, not an error.",
         "correct": true,
         "why": "`errors` counts malformed frames, a cable or a card, and TCP resends what was lost, so the copy finishes late instead of failing."
       },
@@ -1669,7 +2222,7 @@
         "why": "A slow reader leaves bytes waiting in `Recv-Q`; a retransmission is a segment that was never acknowledged, and `errors` is the card's count."
       },
       {
-        "text": "The copy should move to UDP, which skips the acknowledgements and so has nothing to repeat.",
+        "text": "The copy should move to UDP, which skips the acknowledgements and so never has anything to send twice.",
         "correct": false,
         "why": "A copy needs every byte in order, which is TCP's job; UDP would lose the same frames and simply not notice."
       }
@@ -1691,7 +2244,7 @@
       {
         "text": "`ssh -f -N -L 8080:ops1:8080 ops1`, since `127.0.0.1` inside the tunnel would mean the laptop",
         "correct": false,
-        "why": "The destination is read on the server, where `ops1` is its network address and nothing listens on 8080 there."
+        "why": "The destination is read on the server, where `127.0.0.1` is the server itself; the page listens on no other address."
       },
       {
         "text": "`ssh -f -N -L 8080:127.0.0.1:8080 ops1`, then `http://127.0.0.1:8080/` on the laptop",
@@ -1749,12 +2302,12 @@
         "why": "Cron loses every run the machine was off for, and a renewal is meant to happen well before the end, not on the last day."
       },
       {
-        "text": "A systemd timer with `Persistent=true`, so that a run missed while the machine was off happens at boot.",
+        "text": "A systemd timer with `Persistent=true`, so a run missed while the machine was off happens at boot.",
         "correct": true,
         "why": "Missed runs are lost to cron and caught by `Persistent=true`; renewing automatically, a month ahead, is what makes short certificates bearable."
       },
       {
-        "text": "A monthly reminder to renew by hand, shorter than the certificate's life and free of any scheduler.",
+        "text": "A monthly reminder to renew by hand, which is shorter than the certificate's life.",
         "correct": false,
         "why": "A certificate renewed by hand is the one that expires on a Sunday, and shorter lives make that more likely, not less."
       },
@@ -1769,27 +2322,27 @@
     "id": "ex-jn1zyf91",
     "version": 1,
     "type": "quiz",
-    "difficulty": "medium",
+    "difficulty": "hard",
     "prompt": "On a new build server inside the company network, `apt update` prints `403  Forbidden [IP: 185.125.189.187 443]` for two PPAs, then says each repository `is no longer signed`. A teammate wants to re-import the PPAs' signing keys. What do the two courses say?",
     "hint": "Linux and the Command Line, lesson 7; Networks and Protocols, lesson 5.",
     "choices": [
       {
-        "text": "A server answered and refused, here the company's proxy; a key fault would show `NO_PUBKEY`, so ask whoever runs the proxy.",
+        "text": "The company's proxy answered and refused; a key fault would read `NO_PUBKEY`, so ask the proxy's owners.",
         "correct": true,
         "why": "A `403` is a finished conversation in which the server declined, and apt's message names the consequence, not the cause."
       },
       {
-        "text": "The signing keys expired, which is what `no longer signed` names, so new keys will bring the PPAs back.",
+        "text": "The signing keys have expired, which is exactly what `no longer signed` names, so new keys will bring the PPAs back.",
         "correct": false,
         "why": "`no longer signed` appears whenever the signed index is missing, whatever the reason; the `Failed to fetch` line above it says `403`."
       },
       {
-        "text": "A firewall drops the connections to port 443, and apt reports the timeout as a `403`.",
+        "text": "A firewall on the way drops the connections to port 443, and apt reports the timeout that follows as a `403`.",
         "correct": false,
         "why": "A drop leaves the client waiting with no answer at all; a status code means something received the request and replied."
       },
       {
-        "text": "The PPA names no longer resolve, and `403` is how apt words a lookup that found nothing.",
+        "text": "The PPA names no longer resolve on this network, and `403` is the way apt words a lookup that found nothing.",
         "correct": false,
         "why": "The line carries the address it reached, `185.125.189.187`; DNS had answered and the request had arrived."
       }
@@ -1834,7 +2387,7 @@
     "hint": "Linux and the Command Line, lesson 2.",
     "choices": [
       {
-        "text": "Accept the scanner's word: a fixed release gets no fixes at all until its next version comes out.",
+        "text": "Accept the scanner's word: a fixed release gets no fixes of any kind until its next version comes out.",
         "correct": false,
         "why": "A fixed release still receives security fixes; it freezes features, not patches."
       },
@@ -1844,7 +2397,7 @@
         "why": "Rolling gets today's software and changes under you; fixed releases get security fixes too, and production rarely rolls."
       },
       {
-        "text": "Ask the package manager: the fix may be in already, backported without moving the version number.",
+        "text": "Ask the package manager whether the fix is in: a fixed release backports without moving the number.",
         "correct": true,
         "why": "Backporting applies the fix to the old version, so a scanner that only compares numbers reports problems that are not there."
       },
@@ -1859,7 +2412,7 @@
     "id": "ex-nwkke8sy",
     "version": 1,
     "type": "quiz",
-    "difficulty": "medium",
+    "difficulty": "hard",
     "prompt": "A packaging step runs `ln -s /build/shop/releases/new /build/shop/current` and archives `/build/shop`. The servers unpack the archive into `/srv/shop`, and `current` there points at nothing. Which link would have survived the move?",
     "hint": "Linux and the Command Line, lesson 3.",
     "choices": [
@@ -1894,7 +2447,7 @@
     "hint": "Linux and the Command Line, lesson 5.",
     "choices": [
       {
-        "text": "The copy in `/etc` replaces the whole packaged unit and stops getting its changes; `systemctl edit nginx` would write a one-line drop-in.",
+        "text": "The copy in `/etc` replaces the packaged unit and stops getting its fixes; `systemctl edit nginx` writes a drop-in.",
         "correct": true,
         "why": "A drop-in is merged on top of the package's unit, so the package keeps updating underneath it."
       },
@@ -1904,12 +2457,12 @@
         "why": "The list runs highest first, and `/etc/systemd/system` sits above the package's directory; that is why the copy wins."
       },
       {
-        "text": "apt leaves the unit files of a running service alone, and the fix will arrive with the next reboot.",
+        "text": "apt leaves the unit files of a running service untouched, and the fix will arrive with the machine's next reboot.",
         "correct": false,
         "why": "The package did update its own file in `/usr/lib`; the copy in `/etc` shadows it whether the machine reboots or not."
       },
       {
-        "text": "Copying dropped the `[Install]` section, so the unit became `static` and systemd stopped rereading it.",
+        "text": "When it was copied the unit lost its `[Install]` section, so it became `static` and systemd stopped rereading it.",
         "correct": false,
         "why": "`[Install]` is read only by `systemctl enable`; a copy keeps it, and being `static` has nothing to do with updates."
       }
@@ -2233,7 +2786,7 @@
     "hint": "Relational Databases and SQL, lesson 2; Data Modelling and the Data Warehouse, lesson 6.",
     "choices": [
       {
-        "text": "Nothing does: the department is computed from the whole key, `book_key`, so the dependency is not transitive.",
+        "text": "His premise fails: the department is computed from the whole key, `book_key`, so the dependency is not transitive.",
         "correct": false,
         "why": "It is computed by way of the category, which is exactly the chain 3NF forbids. The star breaks the rule on purpose."
       },
@@ -2263,22 +2816,22 @@
     "hint": "Relational Databases and SQL, lesson 2; Data Modelling and the Data Warehouse, lesson 5.",
     "choices": [
       {
-        "text": "Nothing: each sale line stores the buyer's state, as each order line stores its price.",
-        "correct": false,
-        "why": "The till copied the price into every line and copied no state. A sale reaches the state through the customer, so it gets whatever the dimension says now."
-      },
-      {
         "text": "It changes after each load, as everyone who moved since takes their 2024 sales to the new state.",
         "correct": true,
         "why": "Right. That is type 1: asked in October and again in December, lesson 5's 2024 figure for Minas Gerais differed by R$ 9,392.24."
       },
       {
-        "text": "Every sale of a customer who moved is counted twice, once in each state.",
+        "text": "The report stays put, since each sale line stores the buyer's state, as each order line stores its price.",
+        "correct": false,
+        "why": "The till copied the price into every line and copied no state. A sale reaches the state through the customer, so it gets whatever the dimension says now."
+      },
+      {
+        "text": "A customer who moved has each sale counted twice, once in each state.",
         "correct": false,
         "why": "Double counting comes from type 2 versions that overlap. An overwrite leaves one row per customer, holding only the new state."
       },
       {
-        "text": "During the load a customer holds two states, and a report run then sees both of them.",
+        "text": "During the load a customer holds two states at once, and a report run mid-load sees both.",
         "correct": false,
         "why": "The load runs inside a transaction, so a reader sees the old dimension or the new one. The damage is in what the new one says about the past."
       }
@@ -2293,22 +2846,22 @@
     "hint": "Relational Databases and SQL, lesson 9; Data Modelling and the Data Warehouse, lesson 6.",
     "choices": [
       {
-        "text": "The plan switches to an index scan, and only the months on the dashboard are read from the table.",
+        "text": "The plan switches to an index scan, and just the dashboard's months are read from the table.",
         "correct": false,
         "why": "The dashboard asks for every month there is. An index pays when it rules out most of the table, and this filter rules out nothing."
       },
       {
-        "text": "Nothing changes until `ANALYZE` runs; with fresh statistics the planner picks the new index.",
+        "text": "The new index waits for `ANALYZE`; with fresh statistics the planner picks it.",
         "correct": false,
         "why": "Fresh statistics would only confirm what the planner already knows: the query wants every row, and reading the table straight through is cheaper."
       },
       {
-        "text": "The planner goes on reading the whole table, rightly; a 616-row aggregate built by the load is the tool.",
+        "text": "It still reads the whole table, rightly; a 616-row aggregate is the tool.",
         "correct": true,
         "why": "Right. The query summarises all of the table, so no index can skip any of it. Summing once at load time and reading 616 rows can."
       },
       {
-        "text": "With `INCLUDE (net_cents)` the index covers the query, and the table itself is never read.",
+        "text": "With `INCLUDE (net_cents)` the index covers the query, and the table itself is skipped.",
         "correct": false,
         "why": "It would not even cover it, since the department comes through `book_key`. And a query over most of the table wants the table, not an index."
       }
@@ -2323,9 +2876,9 @@
     "hint": "Relational Databases and SQL, lesson 8; Data Modelling and the Data Warehouse, lesson 6.",
     "choices": [
       {
-        "text": "A load takes no locks in the warehouse, so a long transaction there costs nothing.",
+        "text": "A warehouse load works without row locks, so a long transaction there is free.",
         "correct": false,
-        "why": "The load locks what it writes. What makes that acceptable is that nobody else is writing the warehouse."
+        "why": "Any transaction keeps the rows it wrote locked until it ends. What makes a long one acceptable here is that nobody else is writing the warehouse."
       },
       {
         "text": "Batching is about speed, since one large commit writes more slowly than many small ones.",
@@ -2333,12 +2886,12 @@
         "why": "Lesson 8 batches for the locks, the dead row versions and the ability to stop, and says plainly that it gives up atomicity to get them."
       },
       {
-        "text": "The backfill can be run again safely and the load cannot, so only the load needs one.",
+        "text": "The backfill is safe to rerun while the load is not, which is why the load alone gets one.",
         "correct": false,
         "why": "Lesson 8 had to make the backfill resumable precisely because it gave up the transaction. Being rerunnable is not what separates the two."
       },
       {
-        "text": "The tills write beside the backfill; the warehouse has one writer, and no report may see half a load.",
+        "text": "The tills write beside the backfill; the warehouse has one writer, and a report must never see half a load.",
         "correct": true,
         "why": "Right. On the shop's database a long transaction blocks the tills and holds dead versions. In the warehouse, all or nothing costs only the load's own time."
       }
@@ -2364,7 +2917,7 @@
     "hint": "Relational Databases and SQL, lesson 7; Data Modelling and the Data Warehouse, lesson 6.",
     "choices": [
       {
-        "text": "`REFRESH ... CONCURRENTLY`, which works out which rows changed and recomputes only those months.",
+        "text": "`REFRESH ... CONCURRENTLY`, which works out which rows have changed and recomputes just the months involved.",
         "correct": false,
         "why": "The summary is no longer a materialised view, and `CONCURRENTLY` still reruns the whole query; it only lets readers carry on while it does."
       },
@@ -2374,12 +2927,12 @@
         "why": "Right. The table never rewrites a month it is not loading, so only a check can turn the ten-real gap into an error somebody sees."
       },
       {
-        "text": "Nothing needs to: the summary is built from `fact_sales`, so it cannot disagree with it.",
+        "text": "The summary is safe as it is: built from `fact_sales`, it agrees with it by construction.",
         "correct": false,
         "why": "A derived table is as old as its last rebuild. Lesson 6 showed the two totals 1,000 centavos apart after exactly this correction."
       },
       {
-        "text": "Replacing the table with a plain view, which is always current and as quick to read.",
+        "text": "Replacing the table with a plain view, current at each read and as quick to read.",
         "correct": false,
         "why": "A view stores nothing, so it is current, but every read runs the aggregation over all of `fact_sales` again."
       }
@@ -2404,12 +2957,12 @@
         "why": "Each statement takes its own view, so a sale committed between the two queries lands in one total and not in the other."
       },
       {
-        "text": "On the shop's database, with both queries in one transaction at `REPEATABLE READ`.",
+        "text": "On the shop's own database, with both statements in one transaction at `REPEATABLE READ`.",
         "correct": true,
         "why": "Right. A question about now belongs on the operational side, and one view for the whole transaction makes the two totals agree."
       },
       {
-        "text": "On a read replica at `READ UNCOMMITTED`, so the page never waits for a till.",
+        "text": "On a read replica at `READ UNCOMMITTED`, so that the page does not wait for a till.",
         "correct": false,
         "why": "PostgreSQL runs that level as `READ COMMITTED`: two statements, two views, and the totals can still differ."
       }
@@ -2429,7 +2982,7 @@
         "why": "That is close to 900 thousand lookups per dimension. A Nested Loop suits a small outer side, and here the outer side is the whole fact table."
       },
       {
-        "text": "Merge Joins, because the fact table is already sorted on every one of its keys.",
+        "text": "Merge Joins, because the fact table is already sorted on each of its keys.",
         "correct": false,
         "why": "`fact_sales` is stored in order of order number, so it is not sorted on `book_key` or `customer_key`."
       },
@@ -2451,7 +3004,7 @@
     "type": "multiple-choice",
     "difficulty": "medium",
     "prompt": "Ana builds her first star from the shop's operational schema. Which of that schema's habits does lesson 2's star deliberately leave behind? Choose all that apply.",
-    "hint": "Relational Databases and SQL, lesson 1; Data Modelling and the Data Warehouse, lesson 2.",
+    "hint": "Relational Databases and SQL, lesson 7; Data Modelling and the Data Warehouse, lesson 2.",
     "choices": [
       {
         "text": "A book's format kept as a code that a lookup table translates",
@@ -2459,12 +3012,12 @@
         "why": "Left behind: `dim_book` says `hardcover`, because a code that needs a lookup is a join every report must remember."
       },
       {
-        "text": "Money held as an integer number of cents, never as a float",
+        "text": "Money held as an integer number of cents rather than as a float",
         "correct": false,
         "why": "Kept: `fact_sales` stays in integer cents, and its 887,477 lines add up to the exact centavo."
       },
       {
-        "text": "The category tree as a table that points at itself, walked by each report",
+        "text": "The category tree as a table that points at itself, walked with `WITH RECURSIVE` by each report",
         "correct": true,
         "why": "Left behind: the load flattens the ragged tree once, and every book row carries all three levels."
       },
@@ -2489,17 +3042,17 @@
         "why": "True of PostgreSQL only. Delta's vacuum goes by a retention period, and lesson 10's dry run with zero retention picked a file that versions 0 and 1 still needed."
       },
       {
-        "text": "In PostgreSQL, `idle_in_transaction_session_timeout`; in Delta, the next checkpoint of the log.",
+        "text": "In PostgreSQL, the `idle_in_transaction_session_timeout` setting; in Delta, the log's next checkpoint.",
         "correct": false,
         "why": "The timeout ends idle sessions, which helps vacuum, but it sets no retention. A checkpoint summarises the log and deletes no data file."
       },
       {
-        "text": "In both, the next compaction, which rewrites every page or file and drops what is old.",
+        "text": "In both, the next compaction, which rewrites each page or file and drops what is old.",
         "correct": false,
         "why": "PostgreSQL's vacuum reclaims dead versions without rewriting the table, and Delta's deletes files by age, not by compaction."
       },
       {
-        "text": "In PostgreSQL, the oldest transaction still open; in Delta, a retention period, seven days by default.",
+        "text": "In PostgreSQL, the oldest open transaction; in Delta, a retention period, seven days by default.",
         "correct": true,
         "why": "Right. PostgreSQL keeps what a running transaction may still need; Delta keeps old files for a window, and time travel works only inside it."
       }
@@ -2530,22 +3083,22 @@
     "hint": "Relational Databases and SQL, lesson 11.",
     "choices": [
       {
-        "text": "One `LEFT JOIN` of publishers to books, so that the page is a single statement.",
+        "text": "One `LEFT JOIN` of publishers to books, so that the whole page comes back in a single statement.",
         "correct": false,
         "why": "It repeats each publisher's long description on every one of its books, hundreds of copies. The join suits a to-one relationship."
       },
       {
-        "text": "Fetch the publishers, then every book whose publisher is in that set, in one more statement.",
+        "text": "Load the publishers, then the books of all of them in one more statement, by their set of ids.",
         "correct": true,
         "why": "Right. Two statements per page whatever the number of publishers, and each book comes back once."
       },
       {
-        "text": "Mark the books relationship as eager on the publisher model, which fixes it on every screen.",
+        "text": "Mark the books relationship as eager on the publisher model, which fixes the problem on each screen.",
         "correct": false,
         "why": "It also loads the books on every screen that fetches a publisher, including those that show only a name. The instruction belongs where the loop starts."
       },
       {
-        "text": "Cache each publisher's books, since every one of the 40 queries is fast on its own.",
+        "text": "Cache each publisher's books, as each of the 40 queries takes a fraction of a millisecond.",
         "correct": false,
         "why": "The cost is the count of round trips, and lesson 11 says the fix is never caching, denormalising or a bigger server."
       }
@@ -2575,7 +3128,7 @@
         "why": "Right. Equality first, then the sort column: the customer's entries sit together in date order, and reading them backwards is free."
       },
       {
-        "text": "`(placed_at, customer_id)` and nothing else",
+        "text": "`(placed_at, customer_id)` by itself",
         "correct": false,
         "why": "Sorted by date first, one customer's orders are scattered across the whole index, and the leftmost-prefix rule gives a filter on `customer_id` nothing."
       }
@@ -2621,7 +3174,12 @@
     "hint": "Relational Databases and SQL, lesson 13.",
     "choices": [
       {
-        "text": "Oracle runs at `SERIALIZABLE` by default, which holds every lock for an hour.",
+        "text": "The server has no autocommit and SQL\\*Plus sent no commit, so the transaction is open.",
+        "correct": true,
+        "why": "Right. Row locks last until `COMMIT` or `ROLLBACK`, and nobody has typed either."
+      },
+      {
+        "text": "Oracle runs at `SERIALIZABLE` by default, a level that holds each lock it takes for an hour.",
         "correct": false,
         "why": "Oracle's default is `READ COMMITTED`, and no level holds a lock for a set time; it lasts until the transaction ends."
       },
@@ -2634,11 +3192,6 @@
         "text": "The undo ran out, and the row stays locked until `ORA-01555` frees it.",
         "correct": false,
         "why": "`ORA-01555` refuses a long query whose undo was recycled. It neither takes locks nor frees them."
-      },
-      {
-        "text": "The server has no autocommit and SQL\\*Plus sent no commit, so the transaction is open.",
-        "correct": true,
-        "why": "Right. Row locks last until `COMMIT` or `ROLLBACK`, and nobody has typed either."
       }
     ]
   },
@@ -2680,14 +3233,14 @@
     "hint": "Relational Databases and SQL, lesson 4.",
     "choices": [
       {
-        "text": "An aggregate cannot appear in `HAVING`, so the total has to be filtered in `WHERE`.",
-        "correct": false,
-        "why": "The other way round: `WHERE` runs before the groups exist and cannot see a sum. A condition on a sum belongs in `HAVING`."
+        "text": "That clause runs before `SELECT`, so the name `spent` has not been given yet.",
+        "correct": true,
+        "why": "Right. `HAVING` runs before `SELECT`, and of the clauses only `ORDER BY` runs after it, so that is the one that can use the alias."
       },
       {
-        "text": "`HAVING` runs before `SELECT`, so the name `spent` has not been given yet.",
-        "correct": true,
-        "why": "Right. Of the clauses after `SELECT`'s list, only `ORDER BY` runs later, so it is the one that can use the alias."
+        "text": "An aggregate is not allowed in `HAVING`, so the total has to be filtered in `WHERE`.",
+        "correct": false,
+        "why": "The other way round: `WHERE` runs before the groups exist and cannot see a sum. A condition on a sum belongs in `HAVING`."
       },
       {
         "text": "The alias needs double quotes, because PostgreSQL folds names written without them.",
@@ -2695,7 +3248,7 @@
         "why": "`spent` is already lower case, and quoting it changes nothing: the name does not exist yet when `HAVING` runs."
       },
       {
-        "text": "`GROUP BY` threw the `total` column away, so nothing is left to compare.",
+        "text": "`GROUP BY` threw `total` away, so the comparison has lost its column.",
         "correct": false,
         "why": "The sum is computed from `total` in each group. What is missing is only the name, which `SELECT` gives later."
       }
@@ -2767,24 +3320,24 @@
     "hint": "Data Modelling and the Data Warehouse, lesson 2.",
     "choices": [
       {
-        "text": "The loans made",
-        "correct": true,
-        "why": "A flow: each loan happened in one month, so the months add up to the year's loans."
-      },
-      {
         "text": "The books on the shelves at month-end",
         "correct": false,
         "why": "A level, like `on_hand`: twelve counts of mostly the same copies, which add up to no number of books."
       },
       {
-        "text": "The share of loans returned late",
-        "correct": false,
-        "why": "A ratio. Store the late loans and all loans, sum each, and divide last."
+        "text": "The loans made",
+        "correct": true,
+        "why": "A flow: each loan happened in one month, so the months add up to the year's loans."
       },
       {
         "text": "The fines collected",
         "correct": true,
         "why": "Money taken during the month is a flow, and flows add over time."
+      },
+      {
+        "text": "The share of loans returned late",
+        "correct": false,
+        "why": "A ratio. Store the late loans and all loans, sum each, and divide last."
       }
     ]
   },
@@ -2807,12 +3360,12 @@
         "why": "The chain needs one join per level, and with no fixed depth no query knows how many to write."
       },
       {
-        "text": "A hierarchy bridge, one row for each ancestor and descendant pair, with their distance.",
+        "text": "A hierarchy bridge, with one row for each ancestor and descendant pair and the distance between them.",
         "correct": true,
         "why": "Right. Everything under a manager is then one join, at any depth."
       },
       {
-        "text": "A junk dimension holding every combination of manager and seller that occurs.",
+        "text": "A junk dimension holding each combination of manager and seller that occurs.",
         "correct": false,
         "why": "A junk dimension collects small flags of an event. It knows nothing about who sits above whom."
       }
@@ -2832,12 +3385,12 @@
         "why": "Right. Zone maps prune only when the rows a query wants sit together, and `shop_key` also falls to 524 bytes, seven runs."
       },
       {
-        "text": "The file shrinks to a fraction of its size, since every column now compresses as runs.",
+        "text": "The file shrinks to a fraction of its size, since each column now compresses as runs.",
         "correct": false,
         "why": "The total barely moved, 9,331,332 against 9,317,594 bytes. One column shrank enormously and `date_key` grew."
       },
       {
-        "text": "Nothing a query notices, because row groups keep statistics for `date_key` alone.",
+        "text": "A query does the same work, since row groups keep statistics for `date_key` alone.",
         "correct": false,
         "why": "Every row group records a minimum and maximum for every column, `shop_key` included."
       },
@@ -2867,12 +3420,12 @@
         "why": "Clustering cuts the work of a query. It neither keeps one workload from waiting on another nor splits the bill."
       },
       {
-        "text": "Auto-suspend after a minute of idleness, so that no credit is spent waiting.",
+        "text": "Auto-suspend after a minute of idleness, so that idle hours stop costing credits.",
         "correct": false,
         "why": "It saves the idle hours, but the load and the dashboards still queue on one warehouse."
       },
       {
-        "text": "Separate warehouses for separate workloads, each consuming its own credits.",
+        "text": "Separate warehouses for separate workloads, each on its own credits.",
         "correct": true,
         "why": "Right. The load cannot slow dashboards that run on their own warehouse, and each team's consumption shows on its own."
       }
@@ -2887,7 +3440,7 @@
     "hint": "Enterprise Software and Integration, lesson 12; Management, Process and Estimation, lesson 8.",
     "choices": [
       {
-        "text": "With the portal's 99.9%, the three multiply to about 98.4%: promise less, or take SAP out of the wait.",
+        "text": "With the portal's 99.9%, the three multiply to about 98.4%: offer less, or take SAP out of the wait.",
         "correct": true,
         "why": "Right: every synchronous part is a factor, and the agreements underneath have to reach the promise before it is signed. SAP's 1% is most of the gap."
       },
@@ -3003,7 +3556,7 @@
         "why": "One rehearsal measured one night. The runbook keeps its reserve for what the real night does differently, and keeps it in one place."
       },
       {
-        "text": "Keep one reserve before the decision: margins spread over steps get spent, and 08:00 is the window minus the rollback.",
+        "text": "Keep a single buffer ahead of go/no-go: margins spread over steps get spent, and 08:00 is the window minus the rollback.",
         "correct": true,
         "why": "Right: a reserve held in one place is spent only when something happens, like the critical chain's single buffer, and the latest decision comes from the measured rollback."
       }
@@ -3148,7 +3701,7 @@
         "why": "Nothing failed in a consumer. A subscription that is not durable has nobody to deliver to, so no copy is kept anywhere."
       },
       {
-        "text": "Salesforce never gets them: a subscription that is not durable delivers only to whoever is connected at the time.",
+        "text": "That flow loses them: a subscription of that kind gets only what arrives while it is connected.",
         "correct": true,
         "why": "Right: the difference is one word in the code, and ten minutes of restart quietly cost every payment made in them."
       },

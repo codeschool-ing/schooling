@@ -153,7 +153,7 @@
         "why": "Nada precisa de coordenação na primeira tarde; o acoplamento aparece depois, na primeira vez que o Matching muda o cache."
       },
       {
-        "text": "Fácil e complexa: já está à mão, e entrelaça o Pricing com o interior do Matching",
+        "text": "Fácil e complexa: já está à mão, e entrelaça os dois times",
         "why": "Fácil é o que está à mão; complexo é o que está trançado junto. Como o Payments lendo a tabela do Tracking, é o canto da armadilha."
       }
     ]
@@ -333,15 +333,15 @@
     "hint": "Padrões e Princípios de Projeto, aula 8; Observabilidade e Operação, aula 11.",
     "choices": [
       {
-        "text": "O balcão teve a resposta quando o span raiz terminou; o resto são eventos esperando o projetor: a tela atrasou e as regras seguiram certas.",
+        "text": "O balcão teve a resposta quando o span raiz terminou; o resto são eventos esperando na fila até o projetor pegá-los.",
         "why": "Certo: um rastro é medido até o último span, e a espera na fila não tem span próprio. A espera do cliente é a duração do span raiz."
       },
       {
-        "text": "O comando agora espera o projetor antes de retornar, então cada empréstimo custa ao balcão esses vinte segundos.",
+        "text": "O comando agora espera o projetor antes de retornar, então cada empréstimo custa ao balcão esses vinte e poucos segundos.",
         "why": "Com projeção assíncrona, o comando retorna antes de qualquer projetor rodar; liberar a escrita é o motivo de projetar depois."
       },
       {
-        "text": "Os segundos entre os dois serviços são desvio de relógio, o ruído a ignorar em todo rastro que cruza máquinas.",
+        "text": "Os segundos entre os dois serviços são desvio de relógio, o ruído a ignorar nos rastros que cruzam máquinas.",
         "why": "O desvio é de poucos milissegundos e pode fazer uma espera curta parecer negativa; uma espera de segundos é um achado."
       },
       {
@@ -355,11 +355,11 @@
     "hint": "Padrões e Princípios de Projeto, aula 9; Observabilidade e Operação, aula 10.",
     "choices": [
       {
-        "text": "Um upcaster que apaga o CPF sempre que `MemberJoined` é lido, para nenhuma projeção voltar a vê-lo.",
+        "text": "Um upcaster que apaga o CPF sempre que `MemberJoined` é lido, para as projeções deixarem de vê-lo.",
         "why": "Um upcaster adapta o formato na saída; a linha gravada continua com o CPF, no armazém e em cada backup dele."
       },
       {
-        "text": "Eventos que a nomeiam por um id interno sem sentido fora do sistema, com nome e CPF numa tabela que pode perder uma linha.",
+        "text": "Eventos que a nomeiam por um id interno sem sentido fora do sistema, com nome e CPF numa tabela de onde uma linha sai quando ela solicitar.",
         "why": "Certo: o stream nunca guardou a pessoa, então nada que só aceita inserção precisa mudar. Apagar a linha deixa o histórico ligado a ninguém."
       },
       {
@@ -367,7 +367,7 @@
         "why": "É a correção que a aula 9 rejeita: o gatilho a recusa, e um histórico editado deixa de merecer confiança."
       },
       {
-        "text": "Apagar todos os snapshots do stream dela, para o próximo rebuild dobrar um stream sem nenhum dado seu.",
+        "text": "Apagar todos os snapshots do stream dela, para o próximo rebuild dobrar um stream sem os dados dela.",
         "why": "Um snapshot é um cache da dobra; os eventos de onde ele veio continuam com o CPF."
       }
     ]
@@ -381,15 +381,15 @@
         "why": "Readiness move tráfego e não reinicia nada; um pod cujos atores sumiram ficaria fora da rotação, vivo e inútil."
       },
       {
-        "text": "Fazer a liveness checar também o banco, já que o estado que precisa sobreviver a uma queda mora lá.",
+        "text": "Fazer a liveness checar também o banco, já que o estado que precisa sobreviver a uma queda mora lá e a conexão perdida é a causa provável.",
         "why": "É a sonda que mata: uma dependência na liveness reinicia todas as cópias quando o banco cai, e nenhum reinício ajuda."
       },
       {
-        "text": "Falhar a liveness ou encerrar o processo, para a plataforma subir um contêiner novo: reiniciar resolve uma falha dentro dele.",
+        "text": "Falhar a sonda que decide os reinícios, ou encerrar o processo, para a plataforma subir um contêiner novo que limpe a falha.",
         "why": "Certo: passado o limite, um supervisor escala o problema, e na raiz o nível acima é a plataforma de contêineres. O que precisa sobreviver mora fora dos atores."
       },
       {
-        "text": "Reiniciar a estante sem limite, porque uma instância nova sempre começa de um estado bom conhecido.",
+        "text": "Reiniciar a estante sem limite, porque uma instância nova começa de um estado bom conhecido a cada vez.",
         "why": "A mesma mensagem derruba cada estante nova, então um supervisor sem limite gira nela para sempre."
       }
     ]
@@ -399,20 +399,20 @@
     "hint": "Padrões e Princípios de Projeto, aula 16; Observabilidade e Operação, aula 6.",
     "choices": [
       {
-        "text": "Um contador, `pageviews_dropped_total`, incrementado a cada descarte e lido com `rate()`.",
-        "why": "Certo: quantas se perderam é uma pergunta de quantas aconteceram, que é a pergunta de um contador."
-      },
-      {
         "text": "Um contador de descartes com o rótulo `user_id`, para o relatório dizer de quem sumiram as visualizações.",
         "why": "Uma série por usuário é a cardinalidade que a aula 6 mediu; quem foi afetado cabe numa linha de log ou num rastro."
       },
       {
-        "text": "Um gauge de quantas visualizações estão esperando no buffer neste momento.",
-        "why": "Certo: quantas há agora é um gauge, e um buffer parado no limite é o que vem antes dos descartes."
+        "text": "Um contador, `pageviews_dropped_total`, incrementado a cada descarte e lido com `rate()`.",
+        "why": "Certo: quantas se perderam é uma pergunta de quantas aconteceram, que é a pergunta de um contador."
       },
       {
         "text": "Um gauge com o número de descartes desde a partida, para `rate()` dar descartes por segundo.",
         "why": "`rate()` de um gauge lê cada queda como um reinício, e um total acumulado num gauge se perde a cada reinício."
+      },
+      {
+        "text": "Um gauge de quantas visualizações esperam no buffer agora, o número que bate no limite antes.",
+        "why": "Certo: quantas há agora é um gauge, e um buffer parado no limite é o que vem antes dos descartes."
       }
     ]
   },
@@ -447,15 +447,15 @@
         "why": "Sem um SDK a API devolve spans que não gravam nada nem lançam nada, e é isso que deixa uma biblioteca sair instrumentada."
       },
       {
-        "text": "O pacote deve chamar só a API; que provider e que exportador rodam se escolhe uma vez, na raiz de composição de cada serviço.",
+        "text": "A biblioteca chama só a API; que provider e que SDK vão rodar se escolhe uma vez, na raiz de composição de cada serviço.",
         "why": "Certo: para onde vão os spans é configuração feita uma vez na partida, e a biblioteca fica igual em todo serviço."
       },
       {
-        "text": "Ele deve receber um `Tracer` em cada construtor, já que `trace.get_tracer` é um service locator e esses estão sempre errados.",
+        "text": "Ele deve receber um `Tracer` em cada construtor, já que `trace.get_tracer` é um service locator, e esses estão sempre errados.",
         "why": "A aula 5 tolera um localizador para serviços transversais, como `logging.getLogger`; o global da API de tracing é esse caso."
       },
       {
-        "text": "Tudo bem se o provider só for montado quando `OTEL_SERVICE_NAME` estiver definido, para um serviço desistir deixando-o vazio.",
+        "text": "Tudo bem se o provider só for montado quando `OTEL_SERVICE_NAME` estiver definido, para um serviço poder desistir deixando-o vazio.",
         "why": "A escolha continua morando numa biblioteca, longe da partida de cada serviço, que é onde ela pertence e pode ser trocada."
       }
     ]
@@ -465,11 +465,11 @@
     "hint": "Padrões e Princípios de Projeto, aula 9; Observabilidade e Operação, aula 6.",
     "choices": [
       {
-        "text": "Esse rótulo cria uma série por sócio; conte pelo comando, e ponha o stream no span do append que falhou.",
+        "text": "Isso cria uma série para cada pessoa; conte pelo comando, e registre o stream no span da gravação que falhou.",
         "why": "Certo: um rótulo deve ter um conjunto pequeno e conhecido de valores, e o que identifica um sócio cabe num span ou numa linha de log."
       },
       {
-        "text": "Nada: um contador só cresce, e cardinalidade é custo de gauge, que guarda um último valor por série.",
+        "text": "Nada: um contador sobe e não desce, e cardinalidade é custo de gauge, que guarda um último valor por série.",
         "why": "Cada valor distinto de rótulo é uma série, seja qual for o tipo; as vinte mil séries da aula 6 vieram de um contador."
       },
       {
@@ -487,7 +487,7 @@
     "hint": "Padrões e Princípios de Projeto, aula 10; Observabilidade e Operação, aula 15.",
     "choices": [
       {
-        "text": "Nada: esperar por uma réplica só custa tempo enquanto a rede está partida, que é o caso do CAP.",
+        "text": "Nada: esperar por uma réplica custa tempo enquanto a rede está partida, e não fora disso, que é o caso do CAP.",
         "why": "Esse é o senão do PACELC: com todos os enlaces bons, esperar pela réplica custou 113 ms em cada escrita."
       },
       {
@@ -495,7 +495,7 @@
         "why": "Uma fração abaixo de um limite de bucket não envolve interpolação; uma renovação de 113 ms cai acima de 0,1 e conta como ruim."
       },
       {
-        "text": "Ele sobe, já que uma renovação não pode mais ser lida defasada da réplica, e leituras defasadas contavam como ruins.",
+        "text": "Ele sobe, já que uma renovação já não é lida defasada, e leituras defasadas contavam como ruins.",
         "why": "Um SLI de latência conta durações contra um limite; defasagem não é um dos eventos que ele mede."
       },
       {
@@ -524,16 +524,16 @@
         "why": "Certo: pela rede uma mensagem repetida chega duas vezes, e uma repetição só é segura se a requisição for."
       },
       {
-        "text": "Entrega exatamente uma vez, que as repetições agora garantem: um tell remoto que falhou é sempre reenviado.",
+        "text": "Entrega exatamente uma vez, que as repetições agora garantem: um tell remoto que falhou é reenviado pelo Envoy.",
         "why": "Repetições acrescentam duplicatas e não eliminam perdas; sistemas de atores remotos prometem no máximo uma vez por padrão, Akka incluso."
       },
       {
-        "text": "Uma estante que ficou em silêncio, que parece igual a uma lenta e é descoberta por um timeout.",
-        "why": "Certo: à distância, a falha se detecta por timeout, porque silêncio e lentidão se parecem."
+        "text": "Um page sobre a taxa de erros da própria estante, já que as repetições do Envoy escondem as falhas dos números do balcão.",
+        "why": "Com a falha invisível aos usuários, esse page acorda alguém à toa; acione pelo sintoma na borda e deixe as causas como tickets."
       },
       {
-        "text": "Um page sobre a taxa de erros da própria estante, já que as repetições do Envoy escondem toda falha dos números do balcão.",
-        "why": "Com a falha invisível aos usuários, esse page acorda alguém à toa; acione pelo sintoma na borda e deixe as causas como tickets."
+        "text": "Uma estante que ficou em silêncio, que vista do balcão parece igual a uma lenta e é descoberta por um timeout.",
+        "why": "Certo: à distância, a falha se detecta por timeout, porque silêncio e lentidão se parecem."
       }
     ]
   },
@@ -546,7 +546,7 @@
         "why": "O meio passa a importar toda borda que um dia possa usar, que é justamente a importação que portas e adaptadores proíbe."
       },
       {
-        "text": "No agente próprio de cada serviço, já que todo produto aceita OTLP agora e uma ferramenta tira as chamadas do agente depois.",
+        "text": "No agente próprio de cada serviço, já que os produtos aceitam OTLP agora e uma ferramenta tira as chamadas do agente depois.",
         "why": "Aceitar OTLP não tira nenhuma chamada do fornecedor do código; esse aprisionamento sai linha a linha."
       },
       {
@@ -564,7 +564,7 @@
     "hint": "Padrões e Princípios de Projeto, aula 19; Observabilidade e Operação, aula 19.",
     "choices": [
       {
-        "text": "Nomeie a força primeiro: uma malha compensa com muitas equipes e linguagens, mTLS obrigatório ou controle de tráfego, e nada disso existe aqui.",
+        "text": "Nomeie a força antes: uma malha compensa com muitas equipes e linguagens, mTLS obrigatório ou controle de tráfego, e nada disso há aqui.",
         "why": "Certo: um padrão paga a indireção quando absorve uma mudança que custa mais que os saltos, e este ainda não absorve nenhuma."
       },
       {
@@ -572,11 +572,11 @@
         "why": "O custo cresce com o número de pods, e o plano de controle é um sistema crítico que alguém precisa operar."
       },
       {
-        "text": "Adote, porque um proxy enxerga mais do que o OpenTelemetry no código, então os sinais de todo serviço melhoram.",
+        "text": "Adote, porque um proxy enxerga mais do que o OpenTelemetry no código, então os sinais de cada serviço melhoram.",
         "why": "É o contrário: o OpenTelemetry no código dá sinais mais ricos do que um proxy consegue."
       },
       {
-        "text": "Espere a primeira queda, já que uma malha é o único jeito de pôr timeouts e repetições num serviço em produção.",
+        "text": "Espere a primeira queda, já que uma malha é o único jeito de pôr timeouts e repetições num serviço que já está rodando.",
         "why": "Timeouts e repetições são poucas linhas cada, e ficam ao lado da lógica que sabe se uma chamada pode ser repetida."
       }
     ]
@@ -625,19 +625,19 @@
     "hint": "Padrões e Princípios de Projeto, aula 3.",
     "choices": [
       {
-        "text": "Uma pós-condição enfraquecida, como `Laptop`; afrouxe a promessa do pai sobre datas de devolução para todos.",
+        "text": "Uma pós-condição enfraquecida, como `Laptop`; afrouxe a promessa do pai sobre datas de devolução.",
         "why": "Uma pós-condição enfraquecida devolve algo que o pai excluía; este filho recusa algo que o pai aceitava."
       },
       {
-        "text": "Uma invariante quebrada, como `Square`; o conserto é tirar os setters de `Item`, para nada mudar um periódico.",
+        "text": "Uma invariante quebrada, como `Square`; o conserto é tirar os setters de `Item`, para nada mudar um periódico depois.",
         "why": "Nenhum estado vai parar onde o pai proibia; a chamada é recusada antes de qualquer mudança."
       },
       {
-        "text": "Nenhuma: lançar erro é mais barulhento que responder errado, então quem chama capturar `ValueError` basta.",
+        "text": "Não é falha: lançar erro é mais barulhento que responder errado, então quem chama capturar `ValueError` basta.",
         "why": "Recusar é a primeira forma, a de `ReferenceBook`, e um `except` em cada chamador é o conserto que a aula descarta."
       },
       {
-        "text": "Uma pré-condição fortalecida, como `ReferenceBook`; conserte o que a hierarquia afirma, não os chamadores.",
+        "text": "Uma pré-condição fortalecida, como a de `ReferenceBook`; conserte o que a hierarquia afirma, não os chamadores.",
         "why": "Certo: um número novo não é emprestável, então `Periodical` não deve se dizer um item que o empresta."
       }
     ]
@@ -647,11 +647,11 @@
     "hint": "Padrões e Princípios de Projeto, aula 2.",
     "choices": [
       {
-        "text": "`extend` pula um título que a lista já tem, então três dos quatro nunca chegaram à estante.",
+        "text": "`extend` pula um título que a lista já tem, então três dos quatro não chegaram à estante.",
         "why": "A estante tem quatro, como o relatório diz; nada falhou em lugar nenhum, e é isso que deixa esse defeito silencioso."
       },
       {
-        "text": "O contador é compartilhado por todas as instâncias, então o relatório leu a contagem de outro objeto estante.",
+        "text": "O contador é compartilhado entre as instâncias, então o relatório leu a contagem de outro objeto estante.",
         "why": "O contador pertence a um objeto; o número está errado por causa de como o pai guarda os títulos agora."
       },
       {
@@ -659,7 +659,7 @@
         "why": "Certo: essa chamada não estava em nenhuma interface escrita, então o autor do pai não tinha como ver a dependência."
       },
       {
-        "text": "A mudança quebrou os testes do próprio pai, que ninguém rodou antes do relatório do mês.",
+        "text": "A mudança quebrou os testes do pai, que não foram rodados antes do relatório.",
         "why": "Todo teste de `Shelf` continua passando; a estante tem quatro títulos, e o pai não errou por nenhuma regra dele."
       }
     ]
@@ -677,11 +677,11 @@
         "why": "Certo: o presenter decide o que a tela mostra e empurra isso para a view por métodos."
       },
       {
-        "text": "MVVM, porque a lógica da tela mora numa classe que um teste alcança sem tela nenhuma.",
+        "text": "MVVM, porque a lógica da tela mora numa classe que um teste alcança sem tela alguma.",
         "why": "Um view-model expõe propriedades e nunca ouviu falar da view; esta classe chama a view."
       },
       {
-        "text": "MVC no servidor, porque a classe recebe valores e escolhe qual método da view chamar.",
+        "text": "MVC no servidor, porque a classe recebe valores e escolhe qual método da view chamar em seguida.",
         "why": "O MVC da web renderiza uma view por requisição; esta classe conversa com uma view duradoura pelos métodos dela."
       }
     ]
@@ -715,11 +715,11 @@
         "why": "Certo: o percurso é sobre uma cópia que ninguém muda, e nenhum lock fica preso em volta de código que o sujeito não controla."
       },
       {
-        "text": "Segurar o lock durante todo o `publish`, para ninguém cancelar inscrição enquanto os ouvintes rodam.",
+        "text": "Segurar o lock durante todo o `publish`, para não haver cancelamento de inscrição enquanto os ouvintes rodam.",
         "why": "Aí um ouvinte lento trava toda inscrição, e um que se inscreve de dentro do próprio callback trava contra a própria thread."
       },
       {
-        "text": "Guardar os ouvintes num set, para uma mudança no meio do percurso ser pega e todos serem avisados.",
+        "text": "Guardar os ouvintes num set, para uma mudança no meio do percurso ser pega e o evento chegar a cada um.",
         "why": "Um set troca o silêncio por `RuntimeError`, uma falha melhor, e o evento continua sem chegar a todos."
       },
       {
@@ -789,7 +789,7 @@
     "hint": "Observabilidade e Operação, aula 7.",
     "choices": [
       {
-        "text": "Como zero, o que está certo: nenhuma cobrança com falha foi registrada, então nenhuma houve.",
+        "text": "Como zero, o que está certo: não se registrou cobrança com falha, então não houve falha.",
         "why": "Nenhuma cobrança foi registrada, com ou sem falha; a fração é desconhecida, e zero afirma o contrário."
       },
       {
@@ -797,7 +797,7 @@
         "why": "Repetir um valor inventa medições que ninguém fez."
       },
       {
-        "text": "Como um buraco, com `up` no mesmo painel para mostrar que o payments parou de responder às coletas.",
+        "text": "Como um buraco na linha, com `up` desenhado na mesma página para o alvo ausente aparecer ao lado.",
         "why": "Certo: uma série ausente é desconhecida, não zero, e `up` diz por que ela falta."
       },
       {
@@ -811,15 +811,15 @@
     "hint": "Observabilidade e Operação, aula 9.",
     "choices": [
       {
-        "text": "Nada de novo: o Loki já indexa todo campo dentro das linhas, então o rótulo repete o que está indexado.",
+        "text": "Nada de novo: o Loki já indexa os campos dentro das linhas, então o rótulo repete o que está indexado.",
         "why": "O Loki nunca indexa as linhas; só os rótulos são indexados, e é por isso que a proposta parece atraente."
       },
       {
-        "text": "Acelerar toda consulta, já que um seletor mais estreito lê menos chunks e o índice mantém o tamanho.",
+        "text": "Acelerar as consultas, já que um seletor mais estreito lê menos chunks e o índice mantém o tamanho.",
         "why": "O índice cresce com o número de streams, e esse rótulo cria um stream por pedido."
       },
       {
-        "text": "Seguir o conselho da aula de que rótulos dizem o que a linha diz, para as buscas nunca lerem chunks.",
+        "text": "Seguir o conselho da aula: rótulos dizem o que a linha diz, e as buscas pulam os chunks.",
         "why": "O conselho é o contrário: rótulos dizem de onde a linha veio, nunca o que ela diz."
       },
       {
@@ -833,11 +833,11 @@
     "hint": "Observabilidade e Operação, aula 18.",
     "choices": [
       {
-        "text": "A mesma média, recalculada toda semana, já que uma média de mais incidentes se assenta perto da verdade.",
+        "text": "A mesma média, recalculada a cada semana, já que uma média de mais incidentes se assenta perto da verdade.",
         "why": "As durações são assimétricas, e mais incidentes não fazem uma média descrever nenhum deles."
       },
       {
-        "text": "Que intervalo o M quer dizer, e então a mediana e o mais longo, com a lista de incidentes.",
+        "text": "Que intervalo o M quer dizer, e então a mediana e o incidente mais longo, com a lista de incidentes.",
         "why": "Certo: a média de dez incidentes curtos e uma noite longa não descreve nenhum deles."
       },
       {
@@ -845,7 +845,7 @@
         "why": "Esse incidente é o que a revisão mais precisa ver."
       },
       {
-        "text": "Só o tempo para detectar, já que é o único intervalo sem uma pessoa nele.",
+        "text": "O tempo para detectar, sozinho, já que é o único intervalo sem uma pessoa nele.",
         "why": "Cada intervalo aponta para uma correção diferente, e detectar é só uma delas."
       }
     ]
@@ -855,12 +855,12 @@
     "hint": "Observabilidade e Operação, aula 8.",
     "choices": [
       {
-        "text": "Um cartão recusado registrado em `INFO`, como um desfecho normal do serviço.",
-        "why": "Certo: um `ERROR` deveria querer dizer que alguém talvez precise agir, e um cartão recusado é o sistema funcionando."
-      },
-      {
         "text": "A mesma exceção registrada com `log.exception` pela camada de banco, pelo serviço e pelo handler.",
         "why": "Registre uma exceção uma vez, onde ela é tratada; três tracebacks são três erros na contagem e um na realidade."
+      },
+      {
+        "text": "Um cartão recusado registrado em `INFO`, como um desfecho normal do serviço, não uma falha dele.",
+        "why": "Certo: um `ERROR` deveria querer dizer que alguém talvez precise agir, e um cartão recusado é o sistema funcionando."
       },
       {
         "text": "Um campo chamado `duration_ms`, com a unidade no nome e um número nele em toda linha.",
@@ -911,7 +911,7 @@
         "why": "A API espera cada consulta, então a linha tracejada afirmaria o contrário, e um estilo não diz porta nenhuma."
       },
       {
-        "text": "O protocolo, PostgreSQL na TCP 5432, que o Rui então libera a partir do security group da própria API",
+        "text": "O protocolo, PostgreSQL na TCP 5432, que o Rui libera vindo do grupo da própria API",
         "why": "Num diagrama de implantação o protocolo decide a regra de firewall, e citar o grupo da API mantém a regra verdadeira enquanto instâncias vêm e vão."
       }
     ]
@@ -921,7 +921,7 @@
     "hint": "Modelagem e Frameworks de Arquitetura, aula 13; Nuvem e Serverless, aula 8.",
     "choices": [
       {
-        "text": "Um risco: uma chamada para aos 15 minutos, então o desenho como está não atende esse cenário",
+        "text": "Um risco: uma execução para aos 15 minutos, e o job como está não termina a tempo",
         "why": "Um risco é uma decisão que pode deixar um cenário sem atender, e nenhuma configuração deixa uma chamada de Lambda rodar vinte minutos."
       },
       {
@@ -1162,16 +1162,421 @@
       "os dados locais podem estar desatualizados"
     ]
   },
+  "ex-hkrh74qr": {
+    "prompt": "No `network.tf` da aula 16, a sub-rede privada em `sa-east-1c` sai pelo único NAT gateway da loja, em `sa-east-1a`. Um pull request ajusta a rede ao layout de três camadas do curso de nuvem para as duas zonas da loja, e escreve tudo o que acrescenta do jeito que o `network.tf` escreveu o primeiro gateway. Que `change per month, USD` o `price.py` imprime para o plan dele?",
+    "hint": "Infraestrutura como Código, aula 16; Nuvem e Serverless, aula 6.",
+    "unit": "USD"
+  },
+  "ex-r92b3sry": {
+    "prompt": "Os servidores web da loja recebem a senha do banco pelo `user_data`, e a aula 12 a encontrou no plan, no arquivo do plan salvo e no state. Um colega propõe colocar a senha dentro da imagem da máquina, para que o Terraform nunca a manipule. Que arranjo as duas aulas indicam?",
+    "hint": "Infraestrutura como Código, aula 12; Nuvem e Serverless, aula 7.",
+    "choices": [
+      {
+        "text": "Assar na imagem: aí nenhum plan, arquivo de plan ou state do Terraform a guarda",
+        "why": "Um arquivo na imagem é copiado para cada disco iniciado dela e para os snapshots, então a senha se espalha mais, e não menos."
+      },
+      {
+        "text": "O RDS a guarda no Secrets Manager; a role da instância lê esse segredo e mais nenhum",
+        "why": "O Terraform só fica sabendo onde está o segredo, e a aplicação o lê ao iniciar com as credenciais temporárias da role, que nenhum arquivo guarda."
+      },
+      {
+        "text": "Manter o `user_data` e marcar a variável `sensitive` para o state largar o valor",
+        "why": "`sensitive` esconde o valor na tela e não muda nada do que é gravado em disco; o state o guarda em texto puro."
+      },
+      {
+        "text": "Pôr uma chave com `GetSecretValue` em `/etc/shop.env` para o app usar",
+        "why": "Uma chave num arquivo vale até alguém trocá-la e está em todo backup e snapshot desse disco; uma role entrega à máquina credenciais que expiram."
+      }
+    ]
+  },
+  "ex-0vychpqg": {
+    "prompt": "As fotos de produto da loja ficam num bucket S3 declarado com `prevent_destroy = true`. Uma arquiteta lista o que ainda pode perdê-las e o que as traria de volta. Quais afirmações valem? Marque todas as que se aplicam.",
+    "hint": "Infraestrutura como Código, aula 6; Nuvem e Serverless, aula 5.",
+    "choices": [
+      {
+        "text": "Apagar o bloco do bucket numa refatoração passa pelo `prevent_destroy` em silêncio",
+        "why": "A configuração mora no bloco e vai embora com ele; a linha `not in configuration` do plan é onde um revisor percebe."
+      },
+      {
+        "text": "Onze noves de durabilidade fazem uma foto que um script de limpeza apagou voltar a ser lida",
+        "why": "Durabilidade é o armazenamento guardar o que mandaram guardar; uma exclusão que mandaram fazer é guardada com o mesmo cuidado."
+      },
+      {
+        "text": "Com versionamento, a exclusão do script só põe um marcador, e a foto volta",
+        "why": "Uma exclusão sem version id acrescenta um marcador de exclusão; remover o marcador traz de volta a última versão."
+      },
+      {
+        "text": "O `prevent_destroy` também recusa uma exclusão feita no console ou pela CLI",
+        "why": "Ele é uma regra dentro do plan do Terraform; fora do Terraform, quem protege o bucket são as permissões do IAM e o versionamento."
+      }
+    ]
+  },
+  "ex-0gks6nph": {
+    "prompt": "Os servidores web da loja viram um grupo de autoscaling iniciado de imagens `shop-web`. Depois que o grupo reduz de tamanho numa noite, as fotos que os clientes enviaram à tarde para `/var/www/uploads` sumiram, e também uma correção que alguém fez por SSH num dos servidores. O que as duas aulas dizem disso?",
+    "hint": "Infraestrutura como Código, aula 20; Nuvem e Serverless, aula 4.",
+    "choices": [
+      {
+        "text": "Reduzir parando instâncias, já que uma instância parada mantém o volume raiz",
+        "why": "O grupo encerra as instâncias que remove, e uma foto guardada numa máquina nunca esteve nas outras, de qualquer jeito."
+      },
+      {
+        "text": "Assar `/var/www/uploads` na próxima imagem, para as novas já começarem com ele",
+        "why": "Uma imagem fixa seus bytes quando é construída; toda foto enviada depois disso ainda moraria numa máquina só."
+      },
+      {
+        "text": "Pôr `ignore_changes = [ami]`, para que o Terraform pare de trocar as máquinas do grupo",
+        "why": "Foi o grupo, e não o Terraform, que encerrou as instâncias ao reduzir; uma configuração de lifecycle não impede isso."
+      },
+      {
+        "text": "Só a imagem sobrevive: uploads vão para o object storage, correções para o template",
+        "why": "Nada escrito numa máquina sobrevive a ela, então os dados saem da máquina e uma correção sai como nova versão da imagem."
+      }
+    ]
+  },
+  "ex-82qjd8vw": {
+    "prompt": "Uma empresa que roda na AWS compra outra que roda no Google Cloud, e as duas estruturas ficam onde estão. O arquiteto quer uma só ferramenta de infraestrutura como código para as duas nuvens, o provedor de DNS e a organização no GitHub. Que escolha, com que expectativa, combina com as duas aulas?",
+    "hint": "Infraestrutura como Código, aula 17; Nuvem e Serverless, aula 2.",
+    "choices": [
+      {
+        "text": "Terraform ou OpenTofu; cada nuvem mantém sua identidade e sua fatura",
+        "why": "Eles alcançam tudo o que tem provider, e a ferramenta não funde as nuvens: continuam dois sistemas de identidade e duas faturas."
+      },
+      {
+        "text": "CloudFormation, que guarda o state dentro do provedor e não deixa nada a perder",
+        "why": "O CloudFormation só alcança a AWS; não consegue guardar o Google Cloud, o DNS nem o GitHub."
+      },
+      {
+        "text": "O AWS CDK em TypeScript, já que uma linguagem geral descreve qualquer das nuvens",
+        "why": "O CDK escreve templates de CloudFormation, então alcança a AWS e nada mais."
+      },
+      {
+        "text": "Terraform, para uma configuração só deixar a aplicação trocar de nuvem numa falha",
+        "why": "Trocar de provedor numa falha exige a aplicação rodando nos dois e os dados copiados entre eles; a aula de nuvem chama isso de motivo mais caro."
+      }
+    ]
+  },
+  "ex-je14tz5r": {
+    "prompt": "Uma máquina virtual tem uma role que pode gravar backups num bucket. Associe cada configuração da máquina a quem a AWS CLI nela acaba usando para chamar.",
+    "hint": "Nuvem e Serverless, aula 7.",
+    "pairs": [
+      {
+        "left": "Nada mais está configurado na máquina",
+        "right": "a role, pelo serviço de metadados da instância"
+      },
+      {
+        "left": "`AWS_ACCESS_KEY_ID` e o segredo estão exportados no shell",
+        "right": "o dono da chave exportada"
+      },
+      {
+        "left": "`~/.aws/credentials` guarda uma chave, e o shell não exporta nenhuma",
+        "right": "o dono da chave desse arquivo"
+      },
+      {
+        "left": "A role é retirada, e nada mais está configurado",
+        "right": "ninguém: `NoCredentials`, e nenhuma requisição sai"
+      }
+    ],
+    "right_distractors": [
+      "a role, porque a fonte da própria máquina é lida primeiro"
+    ]
+  },
+  "ex-f4x2942c": {
+    "prompt": "Dois jobs de pipeline rodam contra o backend S3 da loja com um minuto de diferença. O segundo falha na hora com `Error acquiring the state lock`, e o `Who` aponta o runner do primeiro job, que está saudável e ainda aplicando. O que a aula 7 dá ao pipeline para isso?",
+    "hint": "Infraestrutura como Código, aula 7.",
+    "choices": [
+      {
+        "text": "`terraform force-unlock` com o `ID` impresso, rodado pelo segundo job antes de planejar",
+        "why": "Quem segura a trava está vivo; forçar a trava deixa um segundo escritor entrar ao lado dele, a atualização perdida que a trava existe para impedir."
+      },
+      {
+        "text": "`-lock=false` nos plans, porque um plan não grava nada na AWS e dispensa trava",
+        "why": "Plans também travam: ler um state enquanto outra execução o grava dá o plan de um mundo que nunca existiu."
+      },
+      {
+        "text": "`-lock-timeout`, para o job de trás esperar a vez e planejar sobre o trabalho do outro",
+        "why": "Com alguns minutos de timeout, dois jobs que colidiram viram dois jobs que rodaram em sequência."
+      },
+      {
+        "text": "Uma `dynamodb_table` no backend, para que cada um dos jobs possa ter uma trava só sua",
+        "why": "A tabela é o lugar antigo da mesma trava única, obsoleto em favor do `use_lockfile`; ela nunca deu uma trava a cada escritor."
+      }
+    ]
+  },
+  "ex-m24fwmcm": {
+    "prompt": "No workflow do GitHub da aula, um job só pode pedir ao GitHub o token que o `configure-aws-credentials` troca pelas credenciais de uma role quando as `permissions` dele incluem `id-token: ___`.",
+    "hint": "Infraestrutura como Código, aula 15.",
+    "blanks": [
+      {
+        "accept": [
+          "write"
+        ]
+      }
+    ]
+  },
+  "ex-4d1c9d9a": {
+    "prompt": "Depois que a loja é dividida num state de rede e num state da aplicação, surgem quatro necessidades. Associe cada uma à ferramenta que a aula 8 dá a ela.",
+    "hint": "Infraestrutura como Código, aula 8.",
+    "pairs": [
+      {
+        "left": "O security group da aplicação precisa do id da VPC, e a aplicação pode ler o state da rede",
+        "right": "`terraform_remote_state`, lendo os outputs da rede"
+      },
+      {
+        "left": "A aplicação precisa de dois valores da rede, e não pode baixar o state da rede",
+        "right": "um parâmetro do SSM que a rede grava para os outros lerem"
+      },
+      {
+        "left": "O time de dados assume um bucket que o state da aplicação gerencia",
+        "right": "um bloco `removed` na aplicação, depois um bloco `import` no deles"
+      },
+      {
+        "left": "Um security group feito à mão, com regras que ninguém anotou, precisa entrar no state da aplicação",
+        "right": "um bloco `import`, e um plan que escreve o rascunho do bloco"
+      }
+    ],
+    "right_distractors": [
+      "um bloco `moved` que nomeia o state do time de dados",
+      "`terraform state rm` na aplicação, e nada mais"
+    ]
+  },
+  "ex-zysy5pd8": {
+    "prompt": "A aplicação do `tfplan` salvo da Ana parou no meio: o security group do batch foi criado, e a API recusou a faixa da sub-rede. Ela corrige a faixa no `main.tf` e roda `terraform apply tfplan` de novo. O que acontece?",
+    "hint": "Infraestrutura como Código, aula 9.",
+    "choices": [
+      {
+        "text": "Aplica a faixa corrigida, já que o `apply` lê o `main.tf` que está ao lado do arquivo de plan",
+        "why": "Um plan salvo carrega a configuração de que foi calculado, e este é recusado antes de qualquer leitura."
+      },
+      {
+        "text": "Apaga primeiro o security group, para que o plan possa recomeçar do zero",
+        "why": "Um apply não é uma transação: o que deu certo fica na AWS e no state, e nada é desfeito."
+      },
+      {
+        "text": "Cria o security group de novo, e em seguida a sub-rede e a instância",
+        "why": "O state já registra o grupo, e o arquivo é recusado antes de tudo isso."
+      },
+      {
+        "text": "Recusa o arquivo como obsoleto; um plan novo propõe só a sub-rede e a instância",
+        "why": "O apply que falhou gravou o state, então o plan salvo está gasto; um plan novo encontra as duas coisas que ainda faltam."
+      }
+    ]
+  },
+  "ex-jk8b539y": {
+    "prompt": "Depois que a restrição de versão de um provider sobe no `versions.tf`, o lock file continua fixando a versão antiga, e os plans param, até alguém rodar `terraform init -___`, cujo diff do `.terraform.lock.hcl` passa a fazer parte da revisão.",
+    "hint": "Infraestrutura como Código, aula 9.",
+    "blanks": [
+      {
+        "accept": [
+          "upgrade",
+          "-upgrade"
+        ]
+      }
+    ]
+  },
+  "ex-1mdrs8kz": {
+    "prompt": "A raiz da Ana chama o módulo de rede como `module \"shop\"`, de `./modules/network`, e o state dela guarda `module.shop.aws_vpc.this` e as sub-redes. Quais destas edições deixam todo endereço do state como está? Marque todas as que se aplicam.",
+    "hint": "Infraestrutura como Código, aula 10.",
+    "choices": [
+      {
+        "text": "Renomear a chamada para `module \"network\"`, com a mesma origem e os mesmos argumentos",
+        "why": "O rótulo da chamada é a primeira parte de todo endereço, então cada um muda e o plan destrói e cria."
+      },
+      {
+        "text": "Apontar o `source` para os mesmos arquivos numa tag do Git e rodar `terraform init`",
+        "why": "De onde vêm os arquivos de um módulo não faz parte do endereço; o plan da aula disse `No changes`."
+      },
+      {
+        "text": "Renomear `aws_subnet.this` para `aws_subnet.private` no módulo, sem `moved`",
+        "why": "O nome do recurso faz parte do endereço; sem um bloco `moved` as sub-redes são destruídas e criadas."
+      },
+      {
+        "text": "Mover o bloco `module` do `main.tf` para um `network.tf` novo ao lado",
+        "why": "O Terraform lê todo arquivo `.tf` do diretório como uma configuração só; em que arquivo um bloco está é para quem lê."
+      }
+    ]
+  },
+  "ex-x61ad2xb": {
+    "prompt": "O autor do módulo de rede renomeia `aws_subnet.this` para `aws_subnet.private` sem fazer nenhum chamador reconstruir uma sub-rede. Ponha os passos em ordem, da branch do autor até um plan limpo num chamador.",
+    "hint": "Infraestrutura como Código, aula 10.",
+    "items": [
+      "Numa branch, renomear o recurso e a referência a ele no `outputs.tf`",
+      "Acrescentar o `moved.tf`, de `aws_subnet.this` para `aws_subnet.private`",
+      "Fazer o merge da branch na `main` e marcar o merge com a tag `v1.1.0`",
+      "Enviar a `main` e a tag ao repositório do módulo",
+      "No chamador, mudar os dois `?ref=` para `v1.1.0` e rodar `terraform init`",
+      "Ler o plan: só linhas `has moved to`, nada acrescentado nem destruído"
+    ],
+    "trap": "O deslize é criar a tag `v1.1.0` antes de o `moved.tf` estar na branch: uma tag publicada nunca é movida, então quem a usa planeja três sub-redes destruídas e três criadas, e a correção exige mais uma versão."
+  },
+  "ex-ace71k9t": {
+    "prompt": "Um pull request muda os dois servidores web do `web.tf` de `t3.medium` para `t3.micro` e mantém os discos raiz `gp3` de 20 GB. Que `change per month, USD` o `price.py` da aula 16 imprime para o plan dele?",
+    "hint": "Infraestrutura como Código, aula 16.",
+    "unit": "USD"
+  },
+  "ex-kdbp6tj8": {
+    "prompt": "Um grupo de Auto Scaling tem `ignore_changes = [desired_capacity]`, porque um autoscaler mexe nesse número o dia todo e o arquivo guarda só o valor inicial. Ao meio-dia, com o autoscaler bem acima desse valor, uma mudança aprovada força a substituição do grupo. Com que capacidade o grupo novo começa?",
+    "hint": "Infraestrutura como Código, aula 6.",
+    "choices": [
+      {
+        "text": "O valor do autoscaler ao meio-dia, que o Terraform guardou no state e leva adiante",
+        "why": "O Terraform lê o valor ignorado para o state, mas um recurso novo é criado a partir do arquivo."
+      },
+      {
+        "text": "O número escrito na configuração, já que argumentos ignorados vêm dela na criação",
+        "why": "O `ignore_changes` só vale depois da criação; uma substituição é uma criação, e quem decide é o arquivo."
+      },
+      {
+        "text": "Nenhuma ainda: o Terraform recusa substituir um recurso com argumento ignorado",
+        "why": "Ignorar um argumento para uma comparação; não impede uma substituição forçada por outro argumento."
+      },
+      {
+        "text": "A capacidade do grupo antigo, que o `create_before_destroy` copia para o novo",
+        "why": "As configurações de lifecycle mudam a ordem dos dois passos; não copiam valores entre objetos."
+      }
+    ]
+  },
+  "ex-pv0y6wdr": {
+    "prompt": "Para economizar armazenamento de snapshots, o pipeline de imagens desregistra a AMI `shop-web` anterior no dia em que sai uma versão nova. Aí a `1.1.0` se mostra defeituosa, e a Ana faz o rollback da aula 20. O que acontece?",
+    "hint": "Infraestrutura como Código, aula 20.",
+    "choices": [
+      {
+        "text": "O `git revert` volta a `1.0.1`, a busca pelo nome não acha imagem, e o plan falha",
+        "why": "O rollback só funciona porque a AMI antiga ainda existe, e é por isso que um pipeline guarda as últimas versões."
+      },
+      {
+        "text": "O Terraform inicia a nova instância de uma cópia da imagem velha no state",
+        "why": "O state registra o id de uma AMI, não a imagem; sem a imagem não há o que iniciar."
+      },
+      {
+        "text": "O plan atualiza no lugar a instância em execução, de volta à imagem antiga",
+        "why": "Um `ami` diferente força uma substituição, e não há imagem antiga com que substituir."
+      },
+      {
+        "text": "Nada quebra: a instância antiga espera como objeto deposto, pronta para voltar",
+        "why": "O objeto deposto foi destruído no mesmo apply que criou a substituta."
+      }
+    ]
+  },
+  "ex-s746h5rd": {
+    "prompt": "A play da Ana ganha uma segunda tarefa de template, que grava um trecho de TLS na configuração do nginx e também notifica `Reload nginx`. Na execução seguinte os dois arquivos mudam no `web1`. Quando o nginx é recarregado ali, e quantas vezes?",
+    "hint": "Infraestrutura como Código, aula 18.",
+    "choices": [
+      {
+        "text": "Duas vezes, cada uma logo depois da tarefa que notificou o handler",
+        "why": "Um handler notificado não roda onde foi notificado; espera o fim da play."
+      },
+      {
+        "text": "Uma vez, logo depois da primeira tarefa que relatou mudança",
+        "why": "Um handler notificado não roda onde foi notificado; espera o fim da play."
+      },
+      {
+        "text": "Uma vez, no fim da play, depois que todas as tarefas dela terminaram",
+        "why": "Um handler só roda quando é notificado e uma vez só, no fim da play, não importa quantas tarefas o notificaram."
+      },
+      {
+        "text": "Duas vezes, no fim da play, uma para cada tarefa que notificou",
+        "why": "Duas notificações do mesmo handler ainda dão uma execução."
+      }
+    ]
+  },
+  "ex-ctgnhj9a": {
+    "prompt": "A segurança proíbe qualquer conexão de entrada nos servidores da loja, SSH de uma máquina de controle incluído. O time ainda quer que uma mudança de configuração chegue a todos os servidores na hora, e não na próxima execução de meia em meia hora. Que arranjo da aula 19 serve?",
+    "hint": "Infraestrutura como Código, aula 19.",
+    "choices": [
+      {
+        "text": "Ansible rodado de uma máquina de controle, que não instala nada nos servidores",
+        "why": "O push precisa que a máquina de controle alcance cada alvo por SSH, que é a conexão que a segurança proíbe."
+      },
+      {
+        "text": "`salt-ssh`, que alcança cada servidor sem um minion instalado nele",
+        "why": "Ele também funciona por SSH, uma conexão de entrada em cada servidor."
+      },
+      {
+        "text": "Agentes do Puppet no padrão, que abrem a conexão de dentro para fora",
+        "why": "Eles se conectam para fora, sim, mas a cada 1800 segundos: a mudança espera a próxima execução."
+      },
+      {
+        "text": "Minions do Salt, que abrem eles mesmos a conexão e executam o que é publicado",
+        "why": "O minion mantém aberta a própria conexão com o master, e o que o master publica executa na hora."
+      }
+    ]
+  },
+  "ex-858z6gd7": {
+    "prompt": "As sub-redes da loja usam `for_each` sobre um map com as chaves `web`, `app` e `db`. Uma arrumação renomeia a chave `db` para `data` e mantém a mesma faixa. O que o plan propõe, e o que mantém a sub-rede como está?",
+    "hint": "Infraestrutura como Código, aula 4.",
+    "choices": [
+      {
+        "text": "Destrói `app[\"db\"]` e cria `app[\"data\"]`; um bloco `moved` que liga os dois a mantém",
+        "why": "Um endereço é a única coisa que o Terraform compara, e o `moved` diz a ele que `aws_subnet.app[\"db\"]` agora é `aws_subnet.app[\"data\"]`."
+      },
+      {
+        "text": "Nada: a faixa não mudou, então o Terraform acha a mesma sub-rede na chave nova",
+        "why": "O Terraform não olha as faixas para casar objetos; ele compara endereços."
+      },
+      {
+        "text": "Uma atualização no lugar da chave da sub-rede, porque uma chave é só um nome",
+        "why": "A chave faz parte do endereço no state, não é um argumento que a AWS atualiza."
+      },
+      {
+        "text": "Substitui as três sub-redes, porque mudar uma chave desloca as outras",
+        "why": "Esse é o problema do índice do `count`; as outras chaves de um map ficam onde estão."
+      }
+    ]
+  },
+  "ex-2kjvbbcm": {
+    "prompt": "Um teste de unidade roda sob `mock_provider \"aws\" {}` e afirma que `aws_vpc.this.arn` contém `sa-east-1`. Nenhum override define o ARN. O que acontece, e por quê?",
+    "hint": "Infraestrutura como Código, aula 13.",
+    "choices": [
+      {
+        "text": "Passa: o mock mantém o schema do provider, então o ARN parece o da AWS",
+        "why": "O schema diz quais atributos existem; os valores dos calculados são inventados."
+      },
+      {
+        "text": "É pulado, porque um mock não consegue dar valor algum a um atributo calculado",
+        "why": "Um run é pulado quando o provider não pode ser configurado ou um run anterior falhou; um mock dá valor a todo atributo calculado."
+      },
+      {
+        "text": "Falha: um mock preenche os atributos calculados com caracteres aleatórios",
+        "why": "Sob um mock só significa algo o que o módulo define e o que um override fornece; o ARN no run da aula foi `jhm1adza`."
+      },
+      {
+        "text": "Só passa quando o endpoint da AWS responde, porque o mock pede o ARN a ele",
+        "why": "Um mock nunca chama a API do provider; a aula o rodou com o endpoint apontando para lugar nenhum."
+      }
+    ]
+  },
+  "ex-r06q5xbq": {
+    "prompt": "Para testar uma mudança em dev, um colega fica em `~/shop-infra/live`, a pasta que contém `dev` e `prod`, roda `terragrunt run --all apply` e responde `y` à única pergunta. O que o Terragrunt faz?",
+    "hint": "Infraestrutura como Código, aula 11.",
+    "choices": [
+      {
+        "text": "Aplica só as unidades de dev, porque foi em dev que a mudança foi feita",
+        "why": "O `run --all` pega toda unidade abaixo do diretório atual, seja lá o que mudou."
+      },
+      {
+        "text": "Aplica toda unidade abaixo de `live`, prod também, com `-auto-approve`",
+        "why": "Aquela pergunta é a única confirmação que a fila inteira recebe: o erro clássico que a tabela da aula dá ao Terragrunt."
+      },
+      {
+        "text": "Pergunta de novo antes do apply de cada unidade, como um `terraform apply` comum",
+        "why": "Sob o `run --all`, o Terragrunt acrescenta `-auto-approve` a todo comando, a menos que receba `--no-auto-approve`."
+      },
+      {
+        "text": "Recusa: unidades só rodam da própria pasta, nunca da pasta do `root.hcl`",
+        "why": "O `run --all` foi feito para rodar de uma pasta acima das unidades; a aula o rodou de `live/dev`."
+      }
+    ]
+  },
   "ex-aac6jzyj": {
     "prompt": "Um serviço de relatórios chama a API de um parceiro e, a cada poucos dias, começa a registrar `Too many open files` até alguém reiniciá-lo. `ls -l /proc/PID/fd | wc -l` fica perto do `LimitNOFILE=` da unit, e `ss -tn` no host lista milhares de conexões com o parceiro em `CLOSE-WAIT`. A equipe propõe aumentar o limite. O que os dois cursos dizem?",
     "hint": "Linux e Linha de Comando, aula 6; Redes e Protocolos, aula 3.",
     "choices": [
       {
-        "text": "O parceiro fechou essas conexões e o serviço nunca fechou o lado dele: um vazamento no código, que um limite maior só adia.",
+        "text": "O parceiro as fechou e o programa nunca fechou o lado dele: um vazamento que um limite maior só adia.",
         "why": "Toda conexão é um descritor, e `CLOSE-WAIT` que se acumula é um programa que esquece de fechar o que o outro lado já fechou."
       },
       {
-        "text": "`CLOSE-WAIT` é o que todo cliente ocupado mostra por sessenta segundos depois de cada chamada, então o limite maior resolve.",
+        "text": "`CLOSE-WAIT` é o que todo cliente ocupado mostra por sessenta segundos depois de cada chamada que faz, então o limite maior é a correção certa.",
         "why": "Isso é o `TIME-WAIT`, no lado que fechou primeiro; `CLOSE-WAIT` quer dizer que o outro lado fechou e este programa não."
       },
       {
@@ -1179,7 +1584,7 @@
         "why": "Um descarte aparece como espera em `SYN-SENT` ou como timeout; aqui o fechamento do parceiro chegou, e é isso que o `CLOSE-WAIT` registra."
       },
       {
-        "text": "Sockets não são arquivos, então a contagem de descritores vem de outro lugar e as conexões são outra questão.",
+        "text": "Sockets não são arquivos, então os descritores são outra coisa e as conexões são outro assunto.",
         "why": "Uma conexão TCP não está no sistema de arquivos, mas continua sendo uma entrada na mesma tabela de descritores que o `LimitNOFILE=` limita."
       }
     ]
@@ -1197,7 +1602,7 @@
         "why": "Distância e perda aparecem no `tcp` e no `tls`, que precisa de idas e voltas; os dois foram rápidos aqui."
       },
       {
-        "text": "No código do serviço de preços: a rede respondeu na hora, e a espera começa depois que o pedido chegou.",
+        "text": "No código do serviço chamado: a rede respondeu na hora, e a espera começa quando o pedido chega lá.",
         "why": "Um primeiro byte lento depois de todo o resto rápido é a aplicação pensando, e o host ocioso já tinha dito que não era esta máquina."
       },
       {
@@ -1211,19 +1616,19 @@
     "hint": "Linux e Linha de Comando, aula 11; Redes e Protocolos, aula 3.",
     "choices": [
       {
-        "text": "Retransmissões acontecem em toda rede, então esses contadores são ruído e os discos são o gargalo de verdade.",
+        "text": "Retransmissões acontecem em toda rede, então esses contadores são só ruído e os discos são o gargalo de verdade.",
         "why": "Na internet elas são comuns; entre duas máquinas de um rack, retransmissão quer dizer que algo no enlace está quebrado."
       },
       {
-        "text": "Quadros estão sendo danificados nesse enlace, por um cabo ou uma placa, e o TCP transforma cada perda em espera em vez de erro.",
+        "text": "Um cabo ou uma placa está danificando quadros nesse enlace, e o TCP transforma cada perda em espera, não em erro.",
         "why": "`errors` conta quadros malformados, um cabo ou uma placa, e o TCP reenvia o que se perdeu, então a cópia termina tarde em vez de falhar."
       },
       {
-        "text": "O programa que recebe lê devagar demais, e o remetente fica repetindo segmentos até o leitor alcançar.",
+        "text": "O programa que recebe lê devagar demais, e o remetente fica repetindo segmentos até que o leitor consiga alcançar.",
         "why": "Um leitor lento deixa bytes esperando no `Recv-Q`; uma retransmissão é um segmento que nunca foi confirmado, e `errors` é a contagem da placa."
       },
       {
-        "text": "A cópia deveria passar para UDP, que dispensa as confirmações e por isso não tem o que repetir.",
+        "text": "A cópia deveria passar para UDP, que dispensa as confirmações e por isso nunca tem nada para mandar duas vezes.",
         "why": "Uma cópia precisa de todos os bytes em ordem, que é o trabalho do TCP; o UDP perderia os mesmos quadros e só não perceberia."
       }
     ]
@@ -1238,7 +1643,7 @@
       },
       {
         "text": "`ssh -f -N -L 8080:ops1:8080 ops1`, já que `127.0.0.1` dentro do túnel seria o laptop",
-        "why": "O destino é lido no servidor, onde `ops1` é o endereço de rede dele e nada escuta na 8080 ali."
+        "why": "O destino é lido no servidor, onde `127.0.0.1` é o próprio servidor; a página não escuta em nenhum outro endereço."
       },
       {
         "text": "`ssh -f -N -L 8080:127.0.0.1:8080 ops1`, e depois `http://127.0.0.1:8080/` no laptop",
@@ -1281,11 +1686,11 @@
         "why": "O cron perde toda execução em que a máquina estava desligada, e a renovação deve acontecer bem antes do fim, não no último dia."
       },
       {
-        "text": "Um timer do systemd com `Persistent=true`, para que uma execução perdida com a máquina desligada aconteça no boot.",
+        "text": "Um timer do systemd com `Persistent=true`, para que uma execução perdida com a máquina desligada rode no boot.",
         "why": "Execuções perdidas somem no cron e são recuperadas pelo `Persistent=true`; renovar sozinho, um mês antes, é o que torna certificados curtos suportáveis."
       },
       {
-        "text": "Um lembrete mensal para renovar à mão, mais curto que a vida do certificado e sem depender de agendador.",
+        "text": "Um lembrete mensal para renovar à mão, que é mais curto que a vida do certificado.",
         "why": "Certificado renovado à mão é o que vence num domingo, e vidas mais curtas tornam isso mais provável, não menos."
       },
       {
@@ -1299,19 +1704,19 @@
     "hint": "Linux e Linha de Comando, aula 7; Redes e Protocolos, aula 5.",
     "choices": [
       {
-        "text": "Um servidor respondeu e recusou, aqui o proxy da empresa; defeito de chave mostraria `NO_PUBKEY`, então pergunte a quem cuida do proxy.",
+        "text": "O proxy da empresa respondeu e recusou; defeito de chave diria `NO_PUBKEY`, então pergunte a quem cuida do proxy.",
         "why": "Um `403` é uma conversa completa em que o servidor recusou, e a mensagem do apt dá nome à consequência, não à causa."
       },
       {
-        "text": "As chaves de assinatura expiraram, que é o que `no longer signed` nomeia, então chaves novas trazem os PPAs de volta.",
+        "text": "As chaves de assinatura expiraram, que é exatamente o que `no longer signed` nomeia, então chaves novas trazem os PPAs de volta.",
         "why": "`no longer signed` aparece sempre que falta o índice assinado, seja qual for o motivo; a linha `Failed to fetch` acima dela diz `403`."
       },
       {
-        "text": "Um firewall descarta as conexões para a porta 443, e o apt relata o timeout como `403`.",
+        "text": "Um firewall no caminho descarta as conexões para a porta 443, e o apt relata como `403` o timeout que vem em seguida.",
         "why": "Um descarte deixa o cliente esperando sem resposta nenhuma; um código de status quer dizer que algo recebeu o pedido e respondeu."
       },
       {
-        "text": "Os nomes dos PPAs não resolvem mais, e `403` é como o apt descreve uma consulta que não achou nada.",
+        "text": "Os nomes dos PPAs não resolvem mais nessa rede, e `403` é o jeito de o apt descrever uma consulta que não achou nada.",
         "why": "A linha traz o endereço que alcançou, `185.125.189.187`; o DNS tinha respondido e o pedido tinha chegado."
       }
     ]
@@ -1351,7 +1756,7 @@
         "why": "Rolling traz o software de hoje e muda debaixo de você; versões fixas também recebem correções de segurança, e produção quase nunca é rolling."
       },
       {
-        "text": "Perguntar ao gerenciador de pacotes: a correção pode já estar lá, com backport, sem mexer no número da versão.",
+        "text": "Perguntar ao gerenciador de pacotes se a correção já está lá: versões fixas fazem backport sem mexer no número.",
         "why": "O backport aplica a correção na versão antiga, então um scanner que só compara números acusa problemas que não existem."
       },
       {
@@ -1387,7 +1792,7 @@
     "hint": "Linux e Linha de Comando, aula 5.",
     "choices": [
       {
-        "text": "A cópia em `/etc` substitui a unit do pacote inteira e para de receber as mudanças dela; `systemctl edit nginx` gravaria um drop-in de uma linha.",
+        "text": "A cópia em `/etc` substitui a unit do pacote e para de receber as correções dela; `systemctl edit nginx` grava um drop-in.",
         "why": "Um drop-in é mesclado por cima da unit do pacote, então o pacote continua se atualizando por baixo."
       },
       {
@@ -1395,7 +1800,7 @@
         "why": "A lista vai da maior prioridade para a menor, e `/etc/systemd/system` fica acima do diretório do pacote; é por isso que a cópia vence."
       },
       {
-        "text": "O apt não mexe nas units de um serviço em execução, e a correção vai chegar no próximo reboot.",
+        "text": "O apt deixa intocadas as units de um serviço em execução, e a correção vai chegar junto com o próximo reboot da máquina.",
         "why": "O pacote atualizou, sim, o próprio arquivo em `/usr/lib`; a cópia em `/etc` o encobre com ou sem reboot."
       },
       {
@@ -1489,7 +1894,7 @@
         "why": "Máquina sem systemd é um dos casos em que a aula manda ficar com o cron."
       },
       {
-        "text": "Uma execução lenta não pode se sobrepor à seguinte",
+        "text": "Uma execução lenta não deve se sobrepor à seguinte",
         "why": "Um service ativo não é iniciado de novo, então o timer impede a sobreposição que o cron deixa por sua conta."
       },
       {
@@ -1632,7 +2037,7 @@
     "hint": "Bancos de Dados Relacionais e SQL, aula 2; Modelagem de Dados e Data Warehouse, aula 6.",
     "choices": [
       {
-        "text": "Nada: o departamento é calculado a partir da chave inteira, `book_key`, então a dependência não é transitiva.",
+        "text": "A premissa falha: o departamento sai da chave inteira, `book_key`, logo não há dependência transitiva.",
         "why": "Ele é calculado por meio da categoria, que é exatamente a cadeia que a 3FN proíbe. A estrela quebra a regra de propósito."
       },
       {
@@ -1654,15 +2059,15 @@
     "hint": "Bancos de Dados Relacionais e SQL, aula 2; Modelagem de Dados e Data Warehouse, aula 5.",
     "choices": [
       {
-        "text": "Nada: cada item de venda guarda o estado do comprador, como cada item de pedido guarda o seu preço.",
-        "why": "O caixa copiou o preço para cada item e não copiou estado nenhum. Uma venda chega ao estado pelo cliente, então pega o que a dimensão diz hoje."
-      },
-      {
         "text": "Ele muda a cada carga, porque quem se mudou desde então leva as vendas de 2024 para o estado novo.",
         "why": "Isso. É o tipo 1: perguntado em outubro e de novo em dezembro, o número de 2024 de Minas Gerais na aula 5 diferiu em R$ 9.392,24."
       },
       {
-        "text": "Cada venda de um cliente que se mudou é contada duas vezes, uma em cada estado.",
+        "text": "O relatório fica igual, porque cada item de venda guarda o estado do comprador, como cada item de pedido guarda o seu preço.",
+        "why": "O caixa copiou o preço para cada item e não copiou estado nenhum. Uma venda chega ao estado pelo cliente, então pega o que a dimensão diz hoje."
+      },
+      {
+        "text": "Um cliente que se mudou tem cada venda contada duas vezes, uma em cada estado.",
         "why": "Contagem dupla vem de versões do tipo 2 que se sobrepõem. Uma sobrescrita deixa uma linha por cliente, com só o estado novo."
       },
       {
@@ -1676,19 +2081,19 @@
     "hint": "Bancos de Dados Relacionais e SQL, aula 9; Modelagem de Dados e Data Warehouse, aula 6.",
     "choices": [
       {
-        "text": "O plano passa a usar o índice, e só os meses do painel são lidos da tabela.",
+        "text": "O plano troca a leitura completa pelo índice, e só os meses que o painel pede saem da tabela.",
         "why": "O painel pede todos os meses que existem. Um índice compensa quando descarta a maior parte da tabela, e esse filtro não descarta nada."
       },
       {
-        "text": "Nada muda até o `ANALYZE` rodar; com estatísticas novas o planejador escolhe o índice novo.",
+        "text": "O índice novo espera o `ANALYZE`; com estatísticas novas o planejador o escolhe.",
         "why": "Estatísticas novas só confirmariam o que o planejador já sabe: a consulta quer todas as linhas, e ler a tabela de ponta a ponta sai mais barato."
       },
       {
-        "text": "O planejador continua lendo a tabela inteira, com razão; um agregado de 616 linhas montado pela carga é a ferramenta.",
+        "text": "O plano segue lendo tudo, com razão; a ferramenta é um agregado de 616 linhas.",
         "why": "Isso. A consulta resume a tabela toda, então nenhum índice pode pular parte dela. Somar uma vez na carga e ler 616 linhas pode."
       },
       {
-        "text": "Com `INCLUDE (net_cents)` o índice cobre a consulta, e a tabela em si nunca é lida.",
+        "text": "Com `INCLUDE (net_cents)` o índice cobre a consulta, e a própria tabela deixa de ser lida.",
         "why": "Ele nem cobriria, porque o departamento vem por `book_key`. E uma consulta sobre a maior parte da tabela quer a tabela, não um índice."
       }
     ]
@@ -1698,19 +2103,19 @@
     "hint": "Bancos de Dados Relacionais e SQL, aula 8; Modelagem de Dados e Data Warehouse, aula 6.",
     "choices": [
       {
-        "text": "Uma carga não trava nada no warehouse, então uma transação longa ali não custa nada.",
-        "why": "A carga trava o que grava. O que torna isso aceitável é que ninguém mais está gravando no warehouse."
+        "text": "Uma carga no warehouse trabalha sem travas de linha, então uma transação longa ali sai de graça.",
+        "why": "Toda transação mantém travadas as linhas que gravou até terminar. O que torna uma longa aceitável aqui é que ninguém mais está gravando no warehouse."
       },
       {
         "text": "Dividir em lotes é questão de velocidade, porque um commit grande grava mais devagar que muitos pequenos.",
         "why": "A aula 8 divide em lotes por causa das travas, das versões mortas e da chance de parar, e diz com todas as letras que abre mão da atomicidade para isso."
       },
       {
-        "text": "O backfill pode ser rodado de novo com segurança e a carga não, então só a carga precisa de uma.",
+        "text": "O backfill é seguro de rodar de novo e a carga não, e por isso só a carga ganha uma.",
         "why": "A aula 8 teve de tornar o backfill retomável justamente porque abriu mão da transação. Poder rodar de novo não é o que separa os dois."
       },
       {
-        "text": "Os caixas gravam ao lado do backfill; o warehouse tem um escritor só, e nenhum relatório pode ver meia carga.",
+        "text": "Os caixas gravam ao lado do backfill; o warehouse tem um escritor só, e nenhum relatório vê meia carga.",
         "why": "Isso. No banco da loja uma transação longa bloqueia os caixas e segura versões mortas. No warehouse, tudo ou nada custa só o tempo da própria carga."
       }
     ]
@@ -1725,7 +2130,7 @@
     "hint": "Bancos de Dados Relacionais e SQL, aula 7; Modelagem de Dados e Data Warehouse, aula 6.",
     "choices": [
       {
-        "text": "`REFRESH ... CONCURRENTLY`, que descobre quais linhas mudaram e recalcula só aqueles meses.",
+        "text": "`REFRESH ... CONCURRENTLY`, que descobre quais linhas mudaram e recalcula só os meses envolvidos nessas linhas.",
         "why": "O resumo não é mais uma view materializada, e `CONCURRENTLY` ainda roda a consulta inteira; ele só deixa os leitores seguirem enquanto isso."
       },
       {
@@ -1733,11 +2138,11 @@
         "why": "Isso. A tabela nunca reescreve um mês que não está carregando, então só uma verificação transforma a diferença de dez reais num erro que alguém vê."
       },
       {
-        "text": "Nada precisa: o resumo é montado a partir de `fact_sales`, então não pode discordar dela.",
+        "text": "O resumo está seguro assim: montado a partir de `fact_sales`, ele concorda com ela por construção.",
         "why": "Uma tabela derivada tem a idade da sua última reconstrução. A aula 6 mostrou os dois totais a 1.000 centavos de distância depois exatamente dessa correção."
       },
       {
-        "text": "Trocar a tabela por uma view comum, que está sempre atual e é tão rápida de ler quanto.",
+        "text": "Trocar a tabela por uma view comum, atual a cada leitura e tão rápida de ler quanto.",
         "why": "Uma view não guarda nada, então está atual, mas cada leitura roda de novo a agregação sobre toda a `fact_sales`."
       }
     ]
@@ -1755,11 +2160,11 @@
         "why": "Cada instrução tira a sua própria visão, então uma venda confirmada entre as duas consultas entra num total e não no outro."
       },
       {
-        "text": "No banco da loja, com as duas consultas numa transação em `REPEATABLE READ`.",
+        "text": "No próprio banco da loja, com as duas consultas dentro de uma transação em `REPEATABLE READ`.",
         "why": "Isso. Uma pergunta sobre agora pertence ao lado operacional, e uma visão só para a transação inteira faz os dois totais baterem."
       },
       {
-        "text": "Numa réplica de leitura em `READ UNCOMMITTED`, para a página nunca esperar um caixa.",
+        "text": "Numa réplica de leitura em `READ UNCOMMITTED`, para a página não esperar um caixa.",
         "why": "O PostgreSQL roda esse nível como `READ COMMITTED`: duas instruções, duas visões, e os totais ainda podem diferir."
       }
     ]
@@ -1788,18 +2193,18 @@
   },
   "ex-d8qz9g3r": {
     "prompt": "Ana monta a sua primeira estrela a partir do esquema operacional da loja. Quais hábitos desse esquema a estrela da aula 2 deixa para trás de propósito? Marque todas as que se aplicam.",
-    "hint": "Bancos de Dados Relacionais e SQL, aula 1; Modelagem de Dados e Data Warehouse, aula 2.",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 7; Modelagem de Dados e Data Warehouse, aula 2.",
     "choices": [
       {
         "text": "O formato do livro guardado como um código que uma tabela de consulta traduz",
         "why": "Fica para trás: `dim_book` diz `hardcover`, porque um código que precisa de consulta é uma junção que todo relatório tem de lembrar."
       },
       {
-        "text": "Dinheiro guardado como um número inteiro de centavos, nunca como float",
+        "text": "Dinheiro guardado como um número inteiro de centavos, e não como float",
         "why": "Fica: `fact_sales` continua em centavos inteiros, e os seus 887.477 itens somam até o centavo exato."
       },
       {
-        "text": "A árvore de categorias como uma tabela que aponta para si mesma, percorrida por cada relatório",
+        "text": "A árvore de categorias como uma tabela que aponta para si mesma, percorrida com `WITH RECURSIVE` por cada relatório",
         "why": "Fica para trás: a carga achata a árvore irregular uma vez, e toda linha de livro leva os três níveis."
       },
       {
@@ -1817,7 +2222,7 @@
         "why": "Vale só para o PostgreSQL. O vacuum do Delta segue um período de retenção, e o teste a seco da aula 10, com retenção zero, apontou um arquivo de que as versões 0 e 1 ainda precisavam."
       },
       {
-        "text": "No PostgreSQL, `idle_in_transaction_session_timeout`; no Delta, o próximo checkpoint do log.",
+        "text": "No PostgreSQL, o parâmetro `idle_in_transaction_session_timeout`; no Delta, o próximo checkpoint do log.",
         "why": "O timeout encerra sessões ociosas, o que ajuda o vacuum, mas não define retenção. Um checkpoint resume o log e não apaga arquivo de dados nenhum."
       },
       {
@@ -1825,7 +2230,7 @@
         "why": "O vacuum do PostgreSQL recupera versões mortas sem reescrever a tabela, e o do Delta apaga arquivos pela idade, não por compactação."
       },
       {
-        "text": "No PostgreSQL, a transação mais antiga ainda aberta; no Delta, um período de retenção, sete dias por padrão.",
+        "text": "No PostgreSQL, a transação aberta mais antiga; no Delta, um período de retenção, sete dias por padrão.",
         "why": "Isso. O PostgreSQL guarda o que uma transação em andamento ainda pode precisar; o Delta guarda arquivos velhos por uma janela, e a viagem no tempo só funciona dentro dela."
       }
     ]
@@ -1847,19 +2252,19 @@
     "hint": "Bancos de Dados Relacionais e SQL, aula 11.",
     "choices": [
       {
-        "text": "Um `LEFT JOIN` de editoras com livros, para a página ser uma instrução só.",
+        "text": "Um único `LEFT JOIN` de editoras com livros, para que a página inteira volte numa instrução só.",
         "why": "Ele repete a descrição longa de cada editora em cada um dos seus livros, centenas de cópias. A junção serve para uma relação para-um."
       },
       {
-        "text": "Buscar as editoras, e depois todo livro cuja editora está nesse conjunto, em mais uma instrução.",
+        "text": "Buscar as editoras e depois, numa instrução a mais, todo livro de editora desse conjunto.",
         "why": "Isso. Duas instruções por página, seja qual for o número de editoras, e cada livro volta uma vez."
       },
       {
-        "text": "Marcar a relação de livros como ansiosa no modelo da editora, o que corrige em todas as telas.",
+        "text": "Marcar a relação de livros como ansiosa no modelo da editora, o que corrige o problema em cada tela.",
         "why": "Isso também carrega os livros em toda tela que busca uma editora, inclusive as que só mostram um nome. A instrução pertence a onde o laço começa."
       },
       {
-        "text": "Pôr em cache os livros de cada editora, já que cada uma das 40 consultas é rápida sozinha.",
+        "text": "Pôr em cache os livros de cada editora, pois cada consulta leva frações de milissegundo.",
         "why": "O custo é o número de idas e voltas, e a aula 11 diz que a correção nunca é cache, desnormalização ou um servidor maior."
       }
     ]
@@ -1881,7 +2286,7 @@
         "why": "Isso. Igualdade primeiro, depois a coluna da ordenação: as entradas do cliente ficam juntas na ordem de data, e lê-las de trás para frente não custa nada."
       },
       {
-        "text": "`(placed_at, customer_id)` e mais nada",
+        "text": "`(placed_at, customer_id)` sozinho",
         "why": "Ordenado pela data primeiro, os pedidos de um cliente ficam espalhados pelo índice inteiro, e a regra do prefixo à esquerda não dá nada a um filtro em `customer_id`."
       }
     ]
@@ -1908,7 +2313,11 @@
     "hint": "Bancos de Dados Relacionais e SQL, aula 13.",
     "choices": [
       {
-        "text": "O Oracle roda em `SERIALIZABLE` por padrão, que segura cada trava por uma hora.",
+        "text": "O servidor não tem autocommit e o SQL\\*Plus não mandou commit, então a transação está aberta.",
+        "why": "Isso. Travas de linha duram até `COMMIT` ou `ROLLBACK`, e ninguém digitou nenhum dos dois."
+      },
+      {
+        "text": "O Oracle roda em `SERIALIZABLE` por padrão, um nível que segura por uma hora cada trava que pega.",
         "why": "O padrão do Oracle é `READ COMMITTED`, e nenhum nível segura uma trava por um tempo fixo; ela dura até a transação acabar."
       },
       {
@@ -1918,10 +2327,6 @@
       {
         "text": "O undo acabou, e a linha fica travada até o `ORA-01555` liberá-la.",
         "why": "O `ORA-01555` recusa uma consulta longa cujo undo foi reciclado. Ele não pega nem solta travas."
-      },
-      {
-        "text": "O servidor não tem autocommit e o SQL\\*Plus não mandou commit, então a transação está aberta.",
-        "why": "Isso. Travas de linha duram até `COMMIT` ou `ROLLBACK`, e ninguém digitou nenhum dos dois."
       }
     ]
   },
@@ -1955,19 +2360,19 @@
     "hint": "Bancos de Dados Relacionais e SQL, aula 4.",
     "choices": [
       {
-        "text": "Uma agregação não pode aparecer em `HAVING`, então o total tem de ser filtrado no `WHERE`.",
-        "why": "É o contrário: o `WHERE` roda antes de os grupos existirem e não enxerga uma soma. Uma condição sobre uma soma pertence ao `HAVING`."
+        "text": "Essa cláusula roda antes do `SELECT`, então o nome `spent` ainda não foi dado.",
+        "why": "Isso. O `HAVING` roda antes do `SELECT`, e das cláusulas só o `ORDER BY` roda depois dele, então é a única que pode usar o apelido."
       },
       {
-        "text": "O `HAVING` roda antes do `SELECT`, então o nome `spent` ainda não foi dado.",
-        "why": "Isso. Só o `ORDER BY` roda depois do `SELECT`, então é a única cláusula que pode usar o apelido."
+        "text": "Uma agregação não pode aparecer em `HAVING`, então o total tem de ser filtrado no `WHERE`.",
+        "why": "É o contrário: o `WHERE` roda antes de os grupos existirem e não enxerga uma soma. Uma condição sobre uma soma pertence ao `HAVING`."
       },
       {
         "text": "O apelido precisa de aspas duplas, porque o PostgreSQL converte nomes escritos sem elas.",
         "why": "`spent` já está em minúsculas, e pôr aspas não muda nada: o nome ainda não existe quando o `HAVING` roda."
       },
       {
-        "text": "O `GROUP BY` descartou a coluna `total`, então não sobra nada para comparar.",
+        "text": "O `GROUP BY` descartou a coluna `total`, e a comparação perdeu a coluna.",
         "why": "A soma é calculada a partir de `total` em cada grupo. O que falta é só o nome, que o `SELECT` dá depois."
       }
     ]
@@ -2020,20 +2425,20 @@
     "hint": "Modelagem de Dados e Data Warehouse, aula 2.",
     "choices": [
       {
-        "text": "Os empréstimos feitos",
-        "why": "Um fluxo: cada empréstimo aconteceu num mês, então os meses somam os empréstimos do ano."
-      },
-      {
         "text": "Os livros nas estantes no fim do mês",
         "why": "Um nível, como `on_hand`: doze contagens de quase os mesmos exemplares, que somam número nenhum de livros."
       },
       {
-        "text": "A fração de empréstimos devolvidos com atraso",
-        "why": "Uma razão. Guarde os empréstimos atrasados e todos os empréstimos, some cada um e divida no fim."
+        "text": "Os empréstimos feitos",
+        "why": "Um fluxo: cada empréstimo aconteceu num mês, então os meses somam os empréstimos do ano."
       },
       {
         "text": "As multas recebidas",
         "why": "Dinheiro recebido durante o mês é um fluxo, e fluxos somam ao longo do tempo."
+      },
+      {
+        "text": "A fração de empréstimos devolvidos com atraso",
+        "why": "Uma razão. Guarde os empréstimos atrasados e todos os empréstimos, some cada um e divida no fim."
       }
     ]
   },
@@ -2050,7 +2455,7 @@
         "why": "A cadeia precisa de uma junção por nível, e sem profundidade fixa nenhuma consulta sabe quantas escrever."
       },
       {
-        "text": "Uma ponte de hierarquia, uma linha por par de ancestral e descendente, com a distância.",
+        "text": "Uma ponte de hierarquia, com uma linha por par de ancestral e descendente e a distância entre eles.",
         "why": "Isso. Tudo abaixo de um gerente vira uma junção só, em qualquer profundidade."
       },
       {
@@ -2064,15 +2469,15 @@
     "hint": "Modelagem de Dados e Data Warehouse, aula 8.",
     "choices": [
       {
-        "text": "As linhas de uma loja ficam juntas, então os zone maps deixam um filtro de loja pular a maioria dos grupos de linhas.",
+        "text": "As linhas de uma loja ficam juntas, e os zone maps deixam um filtro de loja pular quase todos os grupos.",
         "why": "Isso. Zone maps só podam quando as linhas que a consulta quer estão juntas, e `shop_key` ainda cai para 524 bytes, sete sequências."
       },
       {
-        "text": "O arquivo encolhe para uma fração do tamanho, já que toda coluna agora comprime em sequências.",
+        "text": "O arquivo encolhe para uma fração do tamanho, já que cada coluna agora comprime em sequências.",
         "why": "O total quase não mudou, 9.331.332 contra 9.317.594 bytes. Uma coluna encolheu muito e `date_key` cresceu."
       },
       {
-        "text": "Nada que uma consulta perceba, porque os grupos de linhas guardam estatísticas só de `date_key`.",
+        "text": "Uma consulta faz o mesmo trabalho, porque os grupos de linhas guardam estatísticas apenas da coluna `date_key`.",
         "why": "Todo grupo de linhas registra mínimo e máximo de toda coluna, `shop_key` inclusive."
       },
       {
@@ -2090,15 +2495,15 @@
         "why": "Um warehouse maior e compartilhado ainda mistura as duas cargas e ainda manda uma conta só para os dois times."
       },
       {
-        "text": "Clusterizar a tabela fato pela data, para cada consulta ler menos bytes.",
+        "text": "Clusterizar a tabela fato pela data, para que cada consulta leia menos bytes.",
         "why": "Clusterizar reduz o trabalho de uma consulta. Não impede uma carga de esperar a outra nem divide a conta."
       },
       {
-        "text": "Suspensão automática depois de um minuto ocioso, para nenhum crédito ser gasto esperando.",
+        "text": "Suspensão automática depois de um minuto ocioso, para as horas paradas deixarem de gastar créditos.",
         "why": "Isso economiza as horas paradas, mas a carga e os painéis ainda fazem fila num warehouse só."
       },
       {
-        "text": "Warehouses separados para cargas separadas, cada um gastando os próprios créditos.",
+        "text": "Warehouses separados para cargas separadas, cada um com seus créditos.",
         "why": "Isso. A carga não atrasa painéis que rodam no seu próprio warehouse, e o consumo de cada time aparece sozinho."
       }
     ]
@@ -2301,7 +2706,7 @@
         "why": "Nada falhou num consumidor. Uma assinatura que não é durável não tem a quem entregar, então nenhuma cópia fica guardada."
       },
       {
-        "text": "O Salesforce nunca os recebe: uma assinatura que não é durável entrega só a quem estiver conectado na hora da publicação.",
+        "text": "Aquele fluxo os perde: um ouvinte não durável só recebe o que é publicado enquanto está conectado.",
         "why": "Isso: a diferença é uma palavra no código, e dez minutos de reinício custam, em silêncio, todos os pagamentos feitos neles."
       },
       {
