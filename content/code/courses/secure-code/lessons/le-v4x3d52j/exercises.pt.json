@@ -1,0 +1,434 @@
+{
+  "ex-v2gtwh6c": {
+    "prompt": "Em que comportamento do navegador o CSRF se apoia?",
+    "choices": [
+      {
+        "text": "Navegadores rodam scripts de qualquer site com os direitos do portal",
+        "why": "Scripts de um site não agem como outro; requisições sim."
+      },
+      {
+        "text": "Os cookies vão em toda requisição ao site",
+        "why": "Isso, seja qual for a página que iniciou a requisição."
+      },
+      {
+        "text": "Navegadores compartilham senhas entre abas",
+        "why": "Nenhuma senha está envolvida."
+      },
+      {
+        "text": "Formulários vão sempre por HTTP sem criptografia",
+        "why": "HTTPS não muda nada aqui."
+      }
+    ]
+  },
+  "ex-05n4cc85": {
+    "prompt": "O outro site consegue ler a resposta do portal a uma requisição forjada?",
+    "choices": [
+      {
+        "text": "Sim, a resposta volta para a página que a mandou",
+        "why": "O navegador a mantém longe dos scripts daquela página."
+      },
+      {
+        "text": "Não: CSRF é falha de escrita",
+        "why": "Isso. A mudança é feita; ninguém no outro site vê o resultado."
+      },
+      {
+        "text": "Sim, se o portal usar JSON",
+        "why": "O formato não muda quem pode ler."
+      },
+      {
+        "text": "Só em navegadores de celular",
+        "why": "Não há essa diferença."
+      }
+    ]
+  },
+  "ex-8rc0v1bs": {
+    "prompt": "Associe cada defesa à condição da falsificação que ela quebra.",
+    "pairs": [
+      {
+        "left": "um token em todo formulário",
+        "right": "todo valor é previsível"
+      },
+      {
+        "left": "SameSite no cookie",
+        "right": "a sessão viaja sozinha"
+      },
+      {
+        "left": "GET nunca muda nada",
+        "right": "links e imagens disparam a ação"
+      }
+    ],
+    "right_distractors": [
+      "HTTPS em tudo"
+    ]
+  },
+  "ex-07d96skw": {
+    "prompt": "Quais métodos as defesas contra CSRF precisam cobrir? Escolha todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "POST",
+        "why": "Muda algo."
+      },
+      {
+        "text": "PUT",
+        "why": "Muda algo."
+      },
+      {
+        "text": "DELETE",
+        "why": "Muda algo."
+      },
+      {
+        "text": "GET",
+        "why": "Para começar, não pode mudar nada."
+      }
+    ]
+  },
+  "ex-tyh5tc1n": {
+    "prompt": "Quantos dos sete testes falharam contra a primeira versão?"
+  },
+  "ex-9h8ky0bq": {
+    "prompt": "Por que um cliente de teste mostra a falha sem página nenhuma de outro site?",
+    "choices": [
+      {
+        "text": "O cliente de teste finge ser o servidor de outro site",
+        "why": "Ele manda requisições, como um navegador."
+      },
+      {
+        "text": "O Flask desliga o CSRF nos testes",
+        "why": "O Flask não tem proteção CSRF própria para desligar."
+      },
+      {
+        "text": "Manda o que o portal receberia",
+        "why": "Isso. Uma sessão válida e uma mudança, sem nada provando que a página do portal a mandou."
+      },
+      {
+        "text": "Porque CSRF só acontece em testes",
+        "why": "Acontece em navegadores; o teste mostra o lado do portal."
+      }
+    ]
+  },
+  "ex-4w4c0xdw": {
+    "prompt": "Por que o e-mail e o telefone valem uma mudança forjada?",
+    "choices": [
+      {
+        "text": "Recuperações de senha vão para lá",
+        "why": "Isso. Troque-os, e a próxima recuperação vai para outro lugar."
+      },
+      {
+        "text": "Aparecem no site público da clínica",
+        "why": "São privados."
+      },
+      {
+        "text": "São o usuário e a senha da paciente",
+        "why": "São dados de contato."
+      },
+      {
+        "text": "Trocá-los apaga a conta",
+        "why": "Nada é apagado."
+      }
+    ]
+  },
+  "ex-h7rgn1p6": {
+    "prompt": "Por que uma página de outro site não consegue fornecer o token do portal?",
+    "choices": [
+      {
+        "text": "O token é criptografado com a senha da paciente",
+        "why": "É aleatório e fica na sessão."
+      },
+      {
+        "text": "O token muda a cada segundo",
+        "why": "Dura a sessão."
+      },
+      {
+        "text": "Ela não tem acesso ao que é mostrado ali",
+        "why": "Isso. O token está na página, e a página está fora do alcance dela."
+      },
+      {
+        "text": "Navegadores tiram campos ocultos das requisições de outros sites",
+        "why": "Não tiram."
+      }
+    ]
+  },
+  "ex-axhrr7nm": {
+    "prompt": "Por que a verificação recusa quando a sessão não guarda token nenhum?",
+    "choices": [
+      {
+        "text": "Um token vazio bateria com um campo vazio",
+        "why": "Isso. compare_digest de duas strings vazias dá True."
+      },
+      {
+        "text": "Sessões sem token estão expiradas",
+        "why": "Expiração é a aula 10, e é outra coisa."
+      },
+      {
+        "text": "O compare_digest dá erro com strings vazias",
+        "why": "Devolve True para duas delas."
+      },
+      {
+        "text": "O Flask exige token em toda sessão",
+        "why": "O Flask não tem essa regra."
+      }
+    ]
+  },
+  "ex-rp9gnj92": {
+    "prompt": "O token é comparado em tempo constante com `secrets.___`.",
+    "blanks": [
+      {
+        "accept": [
+          "compare_digest"
+        ]
+      }
+    ]
+  },
+  "ex-bxgy2znw": {
+    "prompt": "Por que a verificação fica no `@app.before_request` e não em cada rota?",
+    "choices": [
+      {
+        "text": "Rotas não leem campos de formulário",
+        "why": "Leem."
+      },
+      {
+        "text": "Roda mais rápido ali",
+        "why": "Não é o motivo."
+      },
+      {
+        "text": "O Flask só roda before_request em POST",
+        "why": "Roda em toda requisição; o código pula os métodos seguros."
+      },
+      {
+        "text": "Toda rota nova fica coberta sem ninguém lembrar",
+        "why": "Isso. Negar por padrão, como na aula 12."
+      }
+    ]
+  },
+  "ex-czzadj6x": {
+    "prompt": "Depois da correção do token, quantos testes passaram?"
+  },
+  "ex-gvy0k8d4": {
+    "prompt": "Associe cada valor de SameSite a quando o cookie viaja numa requisição de outro site.",
+    "pairs": [
+      {
+        "left": "Strict",
+        "right": "nunca"
+      },
+      {
+        "left": "Lax",
+        "right": "só navegações GET de nível superior"
+      },
+      {
+        "left": "None",
+        "right": "sempre, e exige Secure"
+      }
+    ],
+    "right_distractors": [
+      "só por HTTP sem criptografia"
+    ]
+  },
+  "ex-f4rjm4td": {
+    "prompt": "Por que o portal escolhe Lax e não Strict?",
+    "choices": [
+      {
+        "text": "O Flask não suporta Strict",
+        "why": "Suporta."
+      },
+      {
+        "text": "Links de um e-mail continuam chegando logados",
+        "why": "Isso. Strict deslogaria todo link para o portal."
+      },
+      {
+        "text": "Lax também impede o JavaScript de ler o cookie",
+        "why": "Isso é o HttpOnly."
+      },
+      {
+        "text": "Cookies Strict expiram em um minuto",
+        "why": "SameSite não define expiração."
+      }
+    ]
+  },
+  "ex-7dsj6q3z": {
+    "prompt": "Por que definir SameSite explicitamente, se um navegador já pode tratar cookies como Lax?",
+    "choices": [
+      {
+        "text": "Atributos explícitos deixam cookies menores",
+        "why": "Deixam mais longos."
+      },
+      {
+        "text": "O Flask não inicia sem ele",
+        "why": "Inicia."
+      },
+      {
+        "text": "Nem todo navegador faz isso, e padrões mudam",
+        "why": "Isso. O atributo é uma decisão escrita no código."
+      },
+      {
+        "text": "Lax explícito também confere o token",
+        "why": "Não sabe nada do token."
+      }
+    ]
+  },
+  "ex-xywhzw11": {
+    "prompt": "Uma requisição chega sem cabeçalho `Origin`. O que o portal corrigido faz?",
+    "choices": [
+      {
+        "text": "Recusa com 403",
+        "why": "Alguns clientes legítimos não mandam."
+      },
+      {
+        "text": "Deixa seguir para a verificação do token",
+        "why": "Isso. O token ainda precisa bater."
+      },
+      {
+        "text": "Aceita a mudança sem outras verificações",
+        "why": "A verificação do token ainda roda."
+      },
+      {
+        "text": "Pede ao navegador que reenvie",
+        "why": "Não existe esse mecanismo."
+      }
+    ]
+  },
+  "ex-4qtzm4dh": {
+    "prompt": "O cookie de sessão do Flask recebe o atributo por `SESSION_COOKIE____`.",
+    "blanks": [
+      {
+        "accept": [
+          "SAMESITE"
+        ]
+      }
+    ]
+  },
+  "ex-bbqvqa9g": {
+    "prompt": "O webhook de um provedor de pagamento fica isento do token. Como ele se protege?",
+    "choices": [
+      {
+        "text": "Não precisa: webhooks não podem ser forjados",
+        "why": "Uma rota isenta é uma rota sem proteção CSRF."
+      },
+      {
+        "text": "Conferindo o cabeçalho Referer",
+        "why": "Referer sozinho não é defesa."
+      },
+      {
+        "text": "Uma assinatura com segredo",
+        "why": "Isso. E só muda o que o provedor pode mudar."
+      },
+      {
+        "text": "Definindo SameSite=Strict na resposta",
+        "why": "O provedor não manda cookie."
+      }
+    ]
+  },
+  "ex-eccdc1gv": {
+    "prompt": "Quais destes não são defesas contra CSRF? Escolha todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "um cookie secreto",
+        "why": "O navegador o manda também."
+      },
+      {
+        "text": "HTTPS",
+        "why": "Protege o trajeto, não a intenção."
+      },
+      {
+        "text": "um formulário em várias etapas",
+        "why": "Uma sequência forjada continua forjada."
+      },
+      {
+        "text": "um token ligado à sessão",
+        "why": "É a defesa principal."
+      }
+    ]
+  },
+  "ex-v8dhedxt": {
+    "prompt": "Por que o formulário de login também precisa de token CSRF?",
+    "choices": [
+      {
+        "text": "Um login forjado a põe na conta de outra pessoa",
+        "why": "Isso. O que ela digitar depois vai para essa conta."
+      },
+      {
+        "text": "Senhas vão dentro do token",
+        "why": "Não vão."
+      },
+      {
+        "text": "O Flask-WTF falha sem ele",
+        "why": "Não é o motivo."
+      },
+      {
+        "text": "Formulários de login usam GET",
+        "why": "Não podem."
+      }
+    ]
+  },
+  "ex-ham20wzt": {
+    "prompt": "Uma configuração de CORS devolve qualquer `Origin` e permite credenciais. O que isso faz?",
+    "choices": [
+      {
+        "text": "Nada, desde que o cookie seja SameSite=None",
+        "why": "Isso piora, não melhora."
+      },
+      {
+        "text": "Bloqueia toda requisição de outro site",
+        "why": "Faz o contrário."
+      },
+      {
+        "text": "Só afeta imagens",
+        "why": "Governa requisições e leituras de scripts."
+      },
+      {
+        "text": "Todo site ganha o alcance do próprio portal",
+        "why": "Isso. Permita as origens que você nomeia, e nenhuma outra."
+      }
+    ]
+  },
+  "ex-jnknhc2b": {
+    "prompt": "Uma rota nova `GET /account/unsubscribe` desliga os lembretes de uma paciente. O que está errado?",
+    "choices": [
+      {
+        "text": "Nada: o before_request confere o token",
+        "why": "Ele pula GET."
+      },
+      {
+        "text": "Um GET que muda algo escapa de toda defesa",
+        "why": "Isso. Transforme num POST com token."
+      },
+      {
+        "text": "Lembretes não deveriam ser desligados",
+        "why": "Pacientes podem escolher."
+      },
+      {
+        "text": "Páginas de descadastro precisam ser públicas",
+        "why": "Não é a questão aqui."
+      }
+    ]
+  },
+  "ex-k683h4ee": {
+    "prompt": "Ponha em ordem o que o portal corrigido faz com um POST que chega.",
+    "items": [
+      "pular a verificação se o método for seguro",
+      "recusar um Origin que não seja o do portal",
+      "recusar se a sessão não guarda token",
+      "comparar o token enviado em tempo constante"
+    ]
+  },
+  "ex-pms6pmwf": {
+    "prompt": "Uma API lê as credenciais de um cabeçalho `Authorization` que o JavaScript do portal define. Por que fica menos exposta a CSRF?",
+    "choices": [
+      {
+        "text": "Cabeçalhos Authorization são criptografados",
+        "why": "Não sozinhos."
+      },
+      {
+        "text": "APIs não podem ser chamadas de navegadores",
+        "why": "São, o tempo todo."
+      },
+      {
+        "text": "Outro site não faz o navegador acrescentá-lo",
+        "why": "Isso. O navegador anexa cookies sozinho, não esse cabeçalho."
+      },
+      {
+        "text": "Cabeçalhos Authorization expiram mais rápido",
+        "why": "Expiração não é o motivo."
+      }
+    ]
+  }
+}
