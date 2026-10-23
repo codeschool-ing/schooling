@@ -99,9 +99,9 @@ ponte com data para acabar.
 Mais uma família aparece no mapa porque é confundida com as outras. Um fluxo no barramento de
 integração da Serra Alta que transforma um pedido de venda numa mensagem EDI, ou o arquivo noturno do
 Coleta para o SAP, move dados entre sistemas. Não tem pessoas, não tem caixa de entrada e nada nele
-espera semanas. Isso é integração, e as aulas 8 a 11 tratam dela. A confusão corre nos dois sentidos:
-um time põe uma transformação de mensagem de dois segundos numa suíte de BPM porque a suíte é o que
-ele conhece, ou monta uma aprovação de um mês com mensagens e flags no banco porque nunca viu um
+espera semanas. Isso é integração, e as aulas 8 a 11 tratam dela. A confusão corre nos dois sentidos. Um time põe uma transformação de mensagem de dois segundos numa
+suíte de BPM porque a suíte é o que ele conhece; outro monta uma aprovação de um mês com mensagens e
+flags no banco porque nunca viu um
 motor.
 
 ## Como saber de qual um problema precisa

@@ -39,7 +39,7 @@ HTTP API carries them as headers of its own.
 
 TLS protects a connection, from one end to the other. When a message crosses a bus, there are two
 connections, and in the middle the bus reads the message in clear, because it has to route and
-transform it. **WS-Security moved protection from the connection to the message**: XML Signature
+transform it. **WS-Security moved protection from the connection to the message.** XML Signature
 over the body proves who wrote it and that nobody changed it, XML Encryption hides chosen elements
 from everybody but the final receiver, and the bus in the middle can still read the parts it needs.
 
@@ -91,8 +91,7 @@ not one trip it made.
 WS-ReliableMessaging gave SOAP over HTTP what a message broker gives anything: each message in a
 sequence is numbered, the receiver acknowledges ranges, and the sender retransmits what was not
 acknowledged. It worked, and it asked both ends to keep sequence state. **Companies that already
-had a broker, as Serra Alta has IBM MQ, got the same guarantee without asking anything of the
-endpoints**, and lesson 10 shows the remaining duty the broker cannot take away: a consumer that
+had a broker, as Serra Alta has IBM MQ, got the same guarantee without asking anything of the endpoints.** Lesson 10 shows the remaining duty the broker cannot take away: a consumer that
 can receive the same message twice without doing the work twice.
 
 WS-AtomicTransaction brought the database's two-phase commit to services. A coordinator asks every

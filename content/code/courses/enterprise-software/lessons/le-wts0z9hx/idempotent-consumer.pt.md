@@ -173,7 +173,7 @@ As duas falham em lugares diferentes, e a escolha depende de qual falha é poss�
 
 `consumer.py` usa o id da mensagem porque um pagamento não é único por nota. Para a autorização de
 uma NF-e, a chave natural é melhor. **Use a chave natural onde o negócio diz que o fato acontece
-uma vez, e o id da mensagem em todo o resto** — e então garanta que o publicador fixe o id quando o
+uma vez, e o id da mensagem em todo o resto.** Depois garanta que o publicador fixe o id quando o
 fato é registrado, não quando a mensagem é enviada, que é o assunto da próxima seção.
 
 ## O que a transação não cobre

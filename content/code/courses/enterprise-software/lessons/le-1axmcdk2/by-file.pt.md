@@ -47,8 +47,7 @@ batem o rejeita antes de pagar qualquer pessoa, que é o que se espera de um ban
 ## O nome, e o momento em que o arquivo aparece
 
 A segunda defesa está no nome. **O nome traz a data e um número de sequência**, para que quem lê
-distinga um arquivo novo de uma repetição e perceba uma lacuna: `coleta-20261022-0001.txt` é o
-primeiro arquivo de 22 de outubro, e se aparecer um segundo com o mesmo nome, alguma coisa está
+distinga um arquivo novo de uma repetição e perceba uma lacuna. `coleta-20261022-0001.txt` é o primeiro arquivo de 22 de outubro, e se aparecer um segundo com o mesmo nome, alguma coisa está
 sendo mandada de novo.
 
 A terceira trata de quando o arquivo fica visível. Um arquivo gravado direto com o nome final existe

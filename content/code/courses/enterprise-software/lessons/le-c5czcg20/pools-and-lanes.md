@@ -3,8 +3,8 @@ title: Pools, lanes and the messages between them
 version: 1
 ---
 
-Swimlanes look like an organisation chart turned on its side, so the usual reading is that a pool is
-a department and a lane a smaller one inside it. **A pool is a participant, a party that runs its
+Swimlanes look like an organisation chart turned on its side, so it is natural to read a pool as a
+department and a lane as a smaller one inside it. **A pool is a participant, a party that runs its
 own process and decides for itself; a lane is a role inside one participant's process.** The
 difference is not one of size. Serra Alta's field team and its quality team are lanes, because one
 process directs both. The farm and the bank are pools, because nothing Serra Alta draws can make
@@ -21,8 +21,7 @@ The rule that follows from that is short and strict:
 - Lanes are not boundaries. A sequence flow crosses from one lane to another as often as the work
   changes hands, and that is most of what lanes are for.
 
-A diagram with more than one pool and the messages between them is a **collaboration diagram**. A
-pool can be drawn as a **white box**, with its process inside, or as a **black box**, an empty band
+A diagram with more than one pool and the messages between them is a **collaboration diagram**. A pool can be drawn as a *white box*, with its process inside, or as a *black box*, an empty band
 with a name, when you do not know or do not control what happens inside. Message flows then end on
 the edge of the black-box pool rather than on any element in it.
 
@@ -66,7 +65,7 @@ contradiction no engine will report. When a model is executed, keeping lane and 
 is a review item, and the section on running a model comes back to it.
 
 Lanes also make the handoffs visible, and the handoffs are where the time goes. When Denise and
-Joana pulled the dates out of the suite for the 112 farms onboarded in 2025, the work itself, the
+Joana pulled the dates out of the suite for the farms onboarded in 2025, the work itself, the
 document check, the visit, the registration and the contract, came to about four working days per
 farm. The rest of the median of 31 days was spent between lanes and between pools: in the quality
 team's queue before a technician was free, and waiting for contracts to come back. **Every arrow that

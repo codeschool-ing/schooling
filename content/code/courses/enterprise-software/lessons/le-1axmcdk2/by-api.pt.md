@@ -5,8 +5,7 @@ version: 1
 
 Uma chamada é a integração que todo desenvolvedor já conhece. Um sistema manda uma requisição, o
 outro faz o trabalho e responde, e quem chamou segue em frente com a resposta na mão. A Joana passou
-oito anos construindo serviços que se chamavam assim, e sua primeira correção na Serra Alta, na aula
-1, foi uma dessas: em vez de um arquivo de estoque gravado a cada hora, o Portal B2B agora pergunta
+oito anos construindo serviços que se chamavam assim, e sua primeira correção na Serra Alta, na aula 1, foi uma dessas. Em vez de um arquivo de estoque gravado a cada hora, o Portal B2B agora pergunta
 ao SAP o estoque disponível quando uma padaria fecha o pedido. **Uma API dá a quem chama uma resposta
 atual no momento em que precisa dela. O preço é que quem chama, e tudo o que fica entre ele e a
 resposta, precisa estar no ar e rápido nesse momento.**
@@ -19,8 +18,8 @@ moda, e acoplam dois sistemas no tempo exatamente do mesmo jeito.
 ## Os dois no ar ao mesmo tempo
 
 A consulta de estoque no checkout não vai do portal direto ao SAP. Vai do portal a um fluxo do ESB,
-que chama o SAP, então três sistemas precisam estar funcionando para uma padaria ver um número. Nos
-últimos doze meses, cada um dos três esteve disponível cerca de **99,5%** do tempo. Parecem três
+que chama o SAP, então três sistemas precisam estar funcionando para uma padaria ver um número. Digamos que cada um dos três esteja disponível cerca de **99,5%** do tempo, um número redondo para
+fazer a conta. Parecem três
 números bons. A cadeia é o produto deles:
 
 0,995 × 0,995 × 0,995 = 0,98507, ou seja, cerca de **98,5%**.

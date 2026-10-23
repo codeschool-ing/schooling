@@ -10,7 +10,7 @@ ESB product, usually running a process nobody has opened in years. It is worth k
 because the reasons it faded are the same reasons a process model and the code that runs it still
 drift apart today.
 
-The common belief is that BPEL was simply BPMN's XML format. **It was a separate language with a
+BPEL is often remembered as BPMN's XML format. **It was a separate language with a
 separate model of the world: a process was a web service that calls other web services, and nothing
 else.** BPMN was a notation for people that later learned to run; BPEL was a programming language
 for machines that people were expected to draw pictures of.
@@ -28,7 +28,7 @@ alongside an enterprise service bus.
 
 A BPEL process is an XML document, and every interaction in it is a web service operation described
 in WSDL, the interface language of SOAP services that lesson 8 opens up. The process declares its
-**partner links**, the services it talks to and the role it plays with each; its **variables**,
+*partner links*, the services it talks to and the role it plays with each; its *variables*,
 which are WSDL messages; and then its activities. Here is the start of onboarding as BPEL would have
 expressed it, for reading:
 
@@ -76,7 +76,7 @@ middle of a process, and BPEL was the first place most engineers met it.
 The rest of the language will look familiar after the previous sections. `<flow>` runs activities
 in parallel, like a parallel split and join. `<if>` and `<while>` branch and loop. `<pick>` waits
 for whichever of several messages or alarms comes first, which is BPMN's event-based gateway.
-`<scope>` groups activities with their own **fault handlers** and **compensation handlers**, the same
+`<scope>` groups activities with their own *fault handlers* and *compensation handlers*, the same
 ideas as an error boundary event and a compensation activity. The concepts carried over; the
 notation did not.
 

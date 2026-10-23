@@ -241,8 +241,8 @@ Ponha esse WSDL na ferramenta certa e sai uma classe com um método `getFarmTank
 devolve um objeto com quatro campos tipados, e uma exceção tipada para `FarmNotFound`. **Um time
 conseguia integrar com um serviço que nunca tinha visto, e o compilador avisava quando ele mandava o
 tipo errado.** Em 2005, quando a alternativa era um PDF descrevendo um arquivo de largura fixa,
-isso era um avanço grande, e é a parte do SOAP que vale lembrar quando você encontrar os seus
-descendentes: o OpenAPI deu a mesma coisa ao JSON sobre HTTP anos depois, e um contrato que uma
+isso era um avanço grande. É também a parte do SOAP que vale lembrar quando você encontrar os seus
+descendentes. O OpenAPI deu a mesma coisa ao JSON sobre HTTP anos depois, e um contrato que uma
 máquina consegue ler continua sendo a melhor defesa contra dois times que acreditam, cada um, ter
 combinado uma coisa diferente.
 

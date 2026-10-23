@@ -5,10 +5,8 @@ version: 1
 
 The tempting answer to a bus that grew is a project to replace it: pick a modern integration
 platform, move the 70 flows across, switch IBM Integration Bus off. Vendors offer migration tools
-that do exactly that. **Moving every flow as it is to a new product gives you the same bus with a
-new licence**: the discount still lives in the pipe, the plant decision still lives in the pipe, and
-the team that has to change them is still the only one that can. What shrinks a bus is not a new
-product but a different answer, flow by flow, to the question *where does this belong?*
+that do exactly that. **Moving every flow as it is to a new product gives you the same bus with a new licence.** The discount still lives in the pipe, the plant decision still lives in the pipe, and
+the team that has to change them is still the only one that can. What shrinks a bus is a different answer, flow by flow, to the question *where does this belong?*
 
 ## Freeze before you shrink
 

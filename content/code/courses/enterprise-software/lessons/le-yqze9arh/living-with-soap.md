@@ -7,8 +7,8 @@ SOAP services will outlive most of the people reading this section. FarmRegistry
 goes, the NF-e services stay as long as the tax authority wants them, and SAP itself exposes much
 of what it does as SOAP. A team building something new at Serra Alta will call SOAP for years, and
 the wrong reaction is the natural one for an engineer from a JSON world: to treat it as a nuisance
-and get it over with quickly. **The goal is not to avoid SOAP but to keep it at the edge of your
-system, in one place, so that nothing else in your code knows it is there.**
+and get it over with quickly. **Keep it at the edge of your
+system instead, in one place, so that nothing else in your code knows it is there.**
 
 ## What going quickly looks like
 
@@ -65,8 +65,7 @@ one side, Rota's own types come out of the other, and the rest of the program ca
 ```
 
 That boundary has a name in domain-driven design, the anti-corruption layer, and it can be much more
-than a type conversion: Coleta's farm codes carry a check digit, its volumes are in whole litres,
-and its times carry an offset Rota does not want. Lesson 13 builds the layer properly, because it
+than a type conversion: Coleta's farm codes carry a check digit, and its times carry an offset Rota does not want. Lesson 13 builds the layer properly, because it
 becomes the seam along which Coleta is replaced. Here the point is smaller: put every SOAP detail
 in one class, and the next change to the bus touches one class.
 

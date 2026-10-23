@@ -5,8 +5,7 @@ version: 1
 
 A call is the integration every developer already knows. One system sends a request, the other does
 the work and answers, and the caller carries on with the answer in hand. Joana spent eight years
-building services that called each other this way, and her first fix at Serra Alta, in lesson 1, was
-one: instead of a stock file written every hour, the Portal B2B now asks SAP for available stock when
+building services that called each other this way, and her first fix at Serra Alta, in lesson 1, was one. Instead of a stock file written every hour, the Portal B2B now asks SAP for available stock when
 a bakery checks out. **An API gives the caller a current answer at the moment it needs one. The price
 is that the caller, and everything between it and the answer, must be up and fast at that moment.**
 
@@ -18,8 +17,8 @@ two systems in time exactly the same way.
 ## Both up at once
 
 The stock check at checkout does not go from the portal to SAP directly. It goes from the portal to an
-ESB flow, which calls SAP, so three systems have to be working for one bakery to see a number. Over the
-last twelve months each of the three was available about **99.5%** of the time. That sounds like
+ESB flow, which calls SAP, so three systems have to be working for one bakery to see a number. Say each of the three is available about **99.5%** of the time, a round figure for the sake of the
+sum. That sounds like
 three good numbers. The chain is the product of them:
 
 0.995 × 0.995 × 0.995 = 0.98507, so about **98.5%**.

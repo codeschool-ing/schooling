@@ -36,13 +36,13 @@ seções anteriores não protegeram.
 
 A mesma inversão tem outras causas que não precisam de um segundo consumidor:
 
-- **Uma retentativa.** A primeira mensagem falha num timeout de lock e espera 4 segundos pela
+- *Uma retentativa.* A primeira mensagem falha num timeout de lock e espera 4 segundos pela
   retentativa; a segunda chega nesse meio-tempo e dá certo. A repetida então também dá certo, por
   cima dela.
-- **Uma reprodução.** Uma mensagem de preço de três semanas atrás está na fila de mensagens mortas.
+- *Uma reprodução.* Uma mensagem de preço de três semanas atrás está na fila de mensagens mortas.
   Alguém corrige a causa e a reproduz, e o portal aplica um preço que foi substituído vinte vezes
   desde então.
-- **Dois caminhos.** Uma mensagem passa por um fluxo com um passo a mais e outra por um mais curto.
+- *Dois caminhos.* Uma mensagem passa por um fluxo com um passo a mais e outra por um mais curto.
   Nenhuma fila está fora de ordem; as saídas delas é que se encontram fora de ordem.
 
 ## Três respostas

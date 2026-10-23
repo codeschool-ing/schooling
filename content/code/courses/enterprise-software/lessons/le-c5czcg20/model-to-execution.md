@@ -5,7 +5,7 @@ version: 1
 
 Lesson 6 described the suites and engines that run processes. This section is about the file they
 run, and about the gap between the diagram Denise can read and the model an engine can execute.
-The usual picture is that the business draws, the engine runs, and nobody writes code. **A diagram
+It is easy to believe that the business draws, the engine runs, and nobody writes code. **A diagram
 says what happens in what order; an executable model also says, for every shape, exactly how.** The
 second half is most of the work, and it is engineering.
 
@@ -26,8 +26,7 @@ to know:
 | the model itself | a version, because instances already running keep the version they started on |
 
 None of those is visible in the picture, and each of them is a place where the model and the
-systems around it have to agree. The last row is the one lesson 6 dwelt on: change the model while
-two hundred farms are halfway through it and two versions run side by side until the old instances
+systems around it have to agree. The last row is the one lesson 6 dwelt on: change the model while farms are halfway through it, as 18 were in 2023, and two versions run side by side until the old instances
 finish or are migrated.
 
 ## The file
@@ -83,19 +82,19 @@ copies diverge with every change.
 
 There are two honest ways to live with it:
 
-- **One model, owned by the engineers and reviewed by the business.** The executable file is the
+- One model, owned by the engineers and reviewed by the business. The executable file is the
   only one; it sits in version control next to the code it calls, and every change to it goes
   through a pull request that Denise reviews as a rendered diagram. The business never edits the
   file directly, and the model can never be out of date, because it is what runs.
-- **Two models, and an agreement that they differ.** A descriptive model for people, kept simple and
+- Two models, and an agreement that they differ. A descriptive model for people, kept simple and
   owned by the process office, and an implementation, in an engine or in code, owned by IT. The
   descriptive model is reviewed against the implementation on a schedule, and nobody pretends one is
   generated from the other.
 
-What fails is the middle: one file that both groups edit in different tools. The BPMN 2.0
-specification itself acknowledges the split, in its conformance classes: a **descriptive** subclass
-with the handful of shapes people need to document a process, an **analytic** one with more, and a
-**common executable** one for models an engine runs. A model can be correct in the first and
+**What fails is the middle: one file that both groups edit in different tools.** The BPMN 2.0
+specification itself acknowledges the split, in its conformance classes: a *descriptive* subclass
+with the handful of shapes people need to document a process, an *analytic* one with more, and a
+*common executable* one for models an engine runs. A model can be correct in the first and
 unusable in the third.
 
 ## When to execute and when to document

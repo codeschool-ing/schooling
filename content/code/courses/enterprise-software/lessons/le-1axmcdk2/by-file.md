@@ -46,7 +46,7 @@ rejects it before paying anybody, which is what you want from a bank.
 ## The name, and the moment the file appears
 
 The second defence is in the name. **A name carries the date and a sequence number**, so the reader
-can tell a new file from a repeat and notice a gap: `coleta-20261022-0001.txt` is the first file for
+can tell a new file from a repeat and notice a gap. `coleta-20261022-0001.txt` is the first file for
 22 October, and if a second one with the same name turns up, something is being sent again.
 
 The third is about when the file becomes visible. A file written straight under its final name exists

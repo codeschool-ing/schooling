@@ -9,8 +9,7 @@ spends most of its life waiting, and a model that does not say what happens when
 too long has no answer to the commonest thing that goes wrong.**
 
 When Denise pulled the open instances out of IBM BPM in 2026, one farm's application had been
-sitting in the task list of a quality technician for 71 days. He had left the company in March. The
-task was assigned to him by name, nothing in the process had a deadline, and the farm had been
+sitting in the task list of a quality technician for 71 days. He had left the company in March. The task was assigned to him by name, the visit had no deadline, and the farm had been
 phoning the field team, who could see the instance was *running* and nothing more. A user task with
 no timer waits for ever, and it waits politely, without an error and without anybody being told.
 
@@ -54,21 +53,21 @@ team publishes truck routes weekly.
 
 The bank sometimes rejects an account. The branch number is wrong, or the account belongs to
 somebody other than the farm's owner. That is a business outcome with a known response, asking the
-farm for the details again, and BPMN models it as an **error**: an error boundary event on the
+farm for the details again, and BPMN models it as an **error**. An error boundary event on the
 "Register bank account" task catches the rejection and sends the token to "Ask for the details
 again". An error boundary event is always interrupting, because the activity it is attached to has
 failed and there is nothing left to continue. Inside a sub-process, an error end event throws the
 error, and the boundary event on the sub-process catches it.
 
 **A BPMN error is for an outcome the business has a response to; a technical failure is not one.**
-If the bank's service times out, there is nothing to say to the farm; the right response is to try
+If the bank's service times out, there is nothing to say to the farm. The right response is to try
 again in a few minutes, and an engine handles that by retrying the service task and, when the
 retries run out, raising an incident for an operator. Modelling every timeout as an error event
 fills the diagram with paths the business does not recognise, and hides the ones it does. Lesson 10
 comes back to retries and to what happens when one message is delivered twice.
 
-BPMN also has an **escalation** event, which raises something to a higher level without saying
-that anything failed, and a **cancel** event for transaction sub-processes. Most models need neither
+BPMN also has an *escalation* event, which raises something to a higher level without saying
+that anything failed, and a *cancel* event for transaction sub-processes. Most models need neither
 at first.
 
 ## Compensation: undoing completed work

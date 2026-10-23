@@ -3,7 +3,7 @@ title: Mensagens envenenadas e mensagens mortas
 version: 1
 ---
 
-A entrega at-least-once tem um lado escuro de que as seções anteriores não precisaram: uma
+A entrega at-least-once tem uma consequência de que as seções anteriores não precisaram: uma
 mensagem cujo processamento falha é entregue de novo, e algumas mensagens falham toda vez. **Uma
 mensagem envenenada (*poison message*) é uma que nunca vai dar certo, não importa quantas vezes
 seja tentada**, porque o problema está na mensagem e não no mundo em volta dela. Deixada sozinha, é
@@ -50,10 +50,10 @@ maior espera individual.
 
 Dois refinamentos importam em produção:
 
-- **Jitter.** Se um reinício do broker faz 300 mensagens falharem no mesmo instante, todas repetem
+- *Jitter.* Se um reinício do broker faz 300 mensagens falharem no mesmo instante, todas repetem
   em 1 s, 2 s, 4 s, no mesmo passo, e atingem o sistema que está se recuperando como uma onda de
   cada vez. Somar uma parte aleatória a cada espera as espalha.
-- **Onde a espera acontece.** Um consumidor que dorme segurando uma mensagem ocupa uma vaga de
+- *Onde a espera acontece.* Um consumidor que dorme segurando uma mensagem ocupa uma vaga de
   consumidor e, com um timeout de broker, convida a uma reentrega. Brokers melhores conseguem
   atrasar uma reentrega por você, ou o consumidor republica a mensagem numa fila de retentativa com
   atraso e confirma a original.
@@ -86,8 +86,7 @@ Toda família da primeira seção tem a ideia, com nomes diferentes:
   lugar nenhum. Os consumidores, o Kafka Connect e frameworks como o Spring gravam os registros que
   falharam em outro tópico, que é uma fila de mensagens mortas por convenção.
 
-Hohpe e Woolf (2003) separam dois casos que os produtos misturam: um **dead letter channel** para
-mensagens que o sistema não conseguiu entregar, e um **invalid message channel** para mensagens que
+Hohpe e Woolf (2003) separam dois casos que os produtos misturam: um *dead letter channel* para mensagens que o sistema não conseguiu entregar, e um *invalid message channel* para mensagens que
 chegaram e não puderam ser entendidas. A aula 11 situa os dois no catálogo deles.
 
 ## A fila que ninguém olhava

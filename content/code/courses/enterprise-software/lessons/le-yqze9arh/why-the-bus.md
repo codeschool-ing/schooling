@@ -5,10 +5,9 @@ version: 1
 
 The story most engineers tell about the enterprise service bus is short: a big product, sold to big
 companies, which turned every integration into a ticket for one overworked team. Joana told it
-herself at the fintech, where nobody had a bus and nobody missed one. It is half right. **The bus
-answered a real problem — the number of possible connections grows with the square of the number of
-systems — and most of the trouble it brought came from what people later put inside it, not from
-the idea of a hub.** She needs both halves before she touches any of Rui Andrade's 70 flows,
+herself at the fintech, where nobody had a bus and nobody missed one. It is half right. The bus answered a real problem: the number of possible connections grows with the
+square of the number of systems. **Most of the trouble it brought came from what people later put
+inside it, not from the idea of a hub.** She needs both halves before she touches any of Rui Andrade's 70 flows,
 because the people who bought it in 2015 were not foolish, and the reasons they had are still true.
 
 ## The arithmetic of point to point
@@ -25,10 +24,9 @@ others, and dividing by two stops a pair being counted twice, once from each end
 | 15 | 105 |
 | 20 | 190 |
 
-Twelve is not a number picked for the table. Count the systems around Serra Alta's bus today — SAP
-ECC, BW with BusinessObjects, Business Central, Microsoft 365, Salesforce, Documentum, IBM BPM,
-Coleta, Rota, the Portal B2B, the banks' files and the EDI provider — and there are twelve:
-12 × 11 / 2 = 66. **Sixty-six is a ceiling, not a count.** Rota has nothing to say to Documentum,
+Twelve is not a number picked for the table. Serra Alta's bus has twelve systems around it today: SAP ECC,
+BW with BusinessObjects, Business Central, Microsoft 365, Salesforce, Documentum, IBM BPM, Coleta,
+Rota, the Portal B2B, the banks' files and the EDI provider. That gives 12 × 11 / 2 = 66. **Sixty-six is a ceiling, not a count.** Rota has nothing to say to Documentum,
 and not every pair talks. But the ceiling is what grows: three more systems take it to 105, which
 is 39 more possible interfaces for three new names on the diagram.
 

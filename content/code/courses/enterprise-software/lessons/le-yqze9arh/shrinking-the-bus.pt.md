@@ -6,10 +6,8 @@ version: 1
 A resposta tentadora para um barramento que cresceu é um projeto para trocá-lo: escolher uma
 plataforma de integração moderna, passar os 70 fluxos para ela, desligar o IBM Integration Bus. Há
 fornecedores que oferecem ferramentas de migração que fazem exatamente isso. **Mover todos os
-fluxos do jeito que estão para um produto novo dá a você o mesmo barramento com uma licença nova**:
-o desconto continua morando no cano, a decisão da fábrica continua morando no cano, e o time que
-precisa mudá-los continua sendo o único que consegue. O que encolhe um barramento não é um produto
-novo, e sim uma resposta diferente, fluxo a fluxo, para a pergunta *a que lugar isto pertence?*
+fluxos do jeito que estão para um produto novo dá a você o mesmo barramento com uma licença nova.** O desconto continua morando no cano, a decisão da fábrica continua morando no cano, e o time que
+precisa mudá-los continua sendo o único que consegue. O que encolhe um barramento é uma resposta diferente, fluxo a fluxo, para a pergunta *a que lugar isto pertence?*
 
 ## Congele antes de encolher
 

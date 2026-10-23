@@ -15,10 +15,10 @@ outro desenho. A diferença está em quem decide, e importa mais que o transport
 ## As notas da Serra Alta, por chamada
 
 Num dia útil a Serra Alta emite cerca de 1.400 notas, e cada NF-e precisa ser autorizada pela SEFAZ
-antes de a mercadoria sair. Quando a autorização volta, três outros sistemas precisam saber: o
-Salesforce, para que um representante de grandes contas veja a nota no cadastro do cliente; o Portal
-B2B, para que a padaria possa baixar a sua nota; e o provedor de EDI, para que o sistema de uma rede de
-supermercados a receba.
+antes de a mercadoria sair. Quando a autorização volta, três outros sistemas precisam saber. O Salesforce
+precisa disso para que um representante de grandes contas veja a nota no cadastro do cliente. O
+Portal B2B precisa para que a padaria possa baixar a sua nota, e o provedor de EDI para que o
+sistema de uma rede de supermercados a receba.
 
 Hoje cada um deles é uma integração própria, disparada do lado do SAP. Quando uma nota é autorizada,
 o SAP a manda a um fluxo do ESB, e o fluxo chama a API do Salesforce, grava uma linha para o portal e
@@ -99,10 +99,10 @@ parado não produz erro nenhum.
 ## O que esta aula deixa para a próxima
 
 Tudo o que veio acima trata o broker como uma caixa que guarda mensagens até os consumidores as
-pegarem. Como ele faz isso é a aula 10: o que são uma fila e um tópico, o que a entrega *at least
-once* significa para um consumidor que recebe a mesma nota duas vezes, como publicar um evento e
-atualizar o próprio banco do SAP sem perder um dos dois, o que fazer com uma mensagem que nunca
-consegue ser processada, e se as notas chegam na ordem em que foram emitidas. Cada um desses é um
+pegarem. Como ele faz isso é a aula 10. Ela trata do que são uma fila e um tópico, do que a entrega *at least
+once* significa para um consumidor que recebe a mesma nota duas vezes, e de como publicar um evento
+e atualizar o próprio banco do SAP sem perder um dos dois. Trata também do que fazer com uma
+mensagem que nunca consegue ser processada, e de se as notas chegam na ordem em que foram emitidas. Cada um desses é um
 jeito de o parágrafo acima, sobre nada se perder, acabar sendo falso, e é por isso que ganham uma aula
 só para eles.
 

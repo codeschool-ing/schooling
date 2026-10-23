@@ -82,9 +82,8 @@ The defences are cheap:
 ## The call that failed on a Sunday
 
 The 315 supplier registrations had failed at their last step, the call that creates the vendor
-record in SAP. Most of the failures had a timestamp between 01:00 and 05:00 on a Sunday, which is
-SAP's weekly maintenance window (lesson 1): a buyer had finished the registration on Saturday night,
-the engine called SAP while it was down, and the call failed. The instance went into a failed state
+record in SAP. Most of the failures had a timestamp between 01:00 and 05:00 on a Sunday, which is SAP's weekly maintenance window (lesson 1). A buyer had finished the registration on
+Saturday night, the engine called SAP while it was down, and the call failed. The instance went into a failed state
 and waited for somebody to retry it from the admin console. Nobody did. On Monday the buyer, seeing
 no vendor in SAP, created it by hand.
 

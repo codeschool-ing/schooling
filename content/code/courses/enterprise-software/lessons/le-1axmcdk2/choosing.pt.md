@@ -3,7 +3,7 @@ title: Escolhendo um estilo para cada integração
 version: 1
 ---
 
-Os quatro estilos não são um ranking, e escolher entre eles não é questão de gosto. **Cada integração
+Escolher entre os quatro estilos não é questão de gosto. **Cada integração
 tem alguns fatos que decidem seu estilo: quão atuais os dados precisam ser, quanto dado existe, quem
 precisa estar no ar, e como uma falha se mostraria.** Anote esses fatos para uma linha do mapa e o
 estilo quase se escolhe sozinho. Quando não se escolhe, a discordância costuma ser sobre um fato, e
@@ -17,8 +17,7 @@ as linhas para as quais ninguém soube dizer como uma falha seria notada.
 ```
 
 Os vínculos por banco são, de longe, o estilo mais mal vigiado: 15 de 17 não tinham como notar uma
-falha, porque ninguém os desenhou como integrações, para começo de conversa. As chamadas eram as mais
-bem vigiadas, 4 de 33, porque uma chamada que falha falha na hora e na frente de alguém.
+falha, porque ninguém os desenhou como integrações, para começo de conversa. As chamadas eram as mais bem vigiadas, só 4 de 33 sem resposta, porque uma chamada que falha falha na hora e na frente de alguém.
 
 ## A tabela de decisão
 
@@ -60,7 +59,7 @@ consumidores do mesmo fato. O tópico de nota autorizada da seção anterior o a
 que chamava o Salesforce para cada nota é aposentado.
 
 **4. SAP ↔ bancos, CNAB 240. Continua arquivo, e não é a Serra Alta quem escolhe.** O banco define a
-interface. Alguns bancos já oferecem APIs para parte das mesmas operações; para 1.900 pagamentos a
+interface. Alguns bancos já oferecem APIs para parte das mesmas operações. Para 1.900 pagamentos a
 produtores uma vez por mês, um arquivo com totais por lote e uma resposta no arquivo de retorno é bem
 conhecido pelos dois lados, e os controles que importam já estão no padrão. O que a Joana acrescentou
 ao mapa foi o alarme que faltava: um arquivo de retorno que não chegou até as 10:00 do dia do

@@ -86,8 +86,8 @@ defesas são baratas:
 ## A chamada que falhou num domingo
 
 Os 315 cadastros de fornecedor tinham falhado no último passo, a chamada que cria o registro de
-fornecedor no SAP. A maioria das falhas tinha horário entre 01:00 e 05:00 de um domingo, que é a
-janela semanal de manutenção do SAP (aula 1): um comprador terminava o cadastro no sábado à noite, o
+fornecedor no SAP. A maioria das falhas tinha horário entre 01:00 e 05:00 de um domingo, que é a janela semanal de manutenção do SAP (aula 1). Um comprador terminava o cadastro no sábado à
+noite, o
 motor chamava o SAP enquanto ele estava fora do ar, e a chamada falhava. A instância ia para um estado
 de falha e esperava alguém repeti-la pelo console de administração. Ninguém repetia. Na segunda, o
 comprador, sem ver o fornecedor no SAP, o criava à mão.

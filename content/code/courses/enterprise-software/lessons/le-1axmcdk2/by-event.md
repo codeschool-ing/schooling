@@ -17,9 +17,9 @@ transport.
 ## Invoices at Serra Alta, by call
 
 On a weekday Serra Alta issues about 1,400 invoices, and each NF-e has to be authorised by SEFAZ
-before the goods leave. When the authorisation comes back, three other systems need to know:
-Salesforce, so that a key account rep can see the invoice on the customer's record; the Portal B2B,
-so that a bakery can download its invoice; and the EDI provider, so that a supermarket chain's own
+before the goods leave. When the authorisation comes back, three other systems need to know. Salesforce needs it
+so that a key account rep can see the invoice on the customer's record. The Portal B2B needs it so
+that a bakery can download its invoice, and the EDI provider so that a supermarket chain's own
 system receives it.
 
 Today each of those is its own integration, triggered from SAP's side. When an invoice is authorised,
@@ -98,11 +98,10 @@ errors at all.
 
 ## What this lesson leaves to the next one
 
-Everything above treats the broker as a box that keeps messages until consumers take them. How it
-does that is lesson 10: what a queue and a topic are, what *at least once* delivery means for a
-consumer that receives the same invoice twice, how to publish an event and update SAP's own database
-without losing one or the other, what to do with a message that can never be processed, and whether
-the invoices arrive in the order they were issued. Each of those is a way the paragraph above about
+Everything above treats the broker as a box that keeps messages until consumers take them. How it does that is lesson 10. It covers what a queue and a topic are, what *at least once* delivery
+means for a consumer that receives the same invoice twice, and how to publish an event and update
+SAP's own database without losing one or the other. It also covers what to do with a message that
+can never be processed, and whether the invoices arrive in the order they were issued. Each of those is a way the paragraph above about
 nothing being lost can turn out to be false, which is why it gets a lesson of its own.
 
 The style is easy to state and harder to adopt than it looks, because it moves a decision. With

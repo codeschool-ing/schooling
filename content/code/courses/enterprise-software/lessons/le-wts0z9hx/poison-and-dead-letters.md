@@ -3,7 +3,7 @@ title: Poison messages and dead letters
 version: 1
 ---
 
-At-least-once delivery has a dark side that the previous sections did not need: a message whose
+At-least-once delivery has a consequence that the previous sections did not need: a message whose
 processing fails is delivered again, and some messages fail every time. **A poison message is one
 that can never succeed, however often it is tried**, because the problem is in the message and not
 in the world around it. Left alone, it is retried forever, and depending on the queue it either
@@ -46,10 +46,10 @@ ceiling is usually set as a number of attempts plus a largest single wait.
 
 Two refinements matter in production:
 
-- **Jitter.** If a broker restart makes 300 messages fail at the same moment, they all retry at 1 s,
+- *Jitter.* If a broker restart makes 300 messages fail at the same moment, they all retry at 1 s,
   2 s, 4 s, in step, and hit the recovering system as one wave each time. Adding a random part to
   each wait spreads them out.
-- **Where the wait happens.** A consumer that sleeps while holding a message holds a consumer slot
+- *Where the wait happens.* A consumer that sleeps while holding a message holds a consumer slot
   and, with a broker timeout, invites a redelivery. Better brokers can delay a redelivery for you,
   or the consumer republishes the message to a retry queue with a delay and acknowledges the
   original.
@@ -81,8 +81,7 @@ Every family from the first section has the idea, under different names:
   Consumers, Kafka Connect and frameworks such as Spring write failed records to another topic,
   which is a dead-letter queue by convention.
 
-Hohpe and Woolf (2003) separate two cases that the products blur: a **dead letter channel** for
-messages the system could not deliver, and an **invalid message channel** for messages that
+Hohpe and Woolf (2003) separate two cases that the products blur: a *dead letter channel* for messages the system could not deliver, and an *invalid message channel* for messages that
 arrived and could not be understood. Lesson 11 places both in their catalogue.
 
 ## The queue nobody watched

@@ -7,7 +7,7 @@ Os serviços SOAP vão durar mais que a carreira de muita gente que lê esta se�
 fica até o Coleta sair, os serviços da NF-e ficam enquanto a autoridade tributária quiser, e o
 próprio SAP expõe como SOAP boa parte do que faz. Um time que constrói algo novo na Serra Alta vai
 chamar SOAP por anos, e a reação errada é a natural para um engenheiro vindo do mundo do JSON:
-tratar o SOAP como um incômodo e resolver logo. **O objetivo não é evitar o SOAP, e sim mantê-lo na
+tratar o SOAP como um incômodo e resolver logo. **Em vez disso, mantenha-o na
 borda do seu sistema, num lugar só, para que nada mais no seu código saiba que ele está ali.**
 
 ## Como é resolver logo
@@ -67,8 +67,8 @@ diferença.**
 ```
 
 Essa fronteira tem nome no domain-driven design, a camada anticorrupção, e ela pode ser muito mais
-que uma conversão de tipos: os códigos de fazenda do Coleta têm dígito verificador, os volumes vêm
-em litros inteiros, e os horários trazem um fuso que o Rota não quer. A aula 13 constrói a camada
+que uma conversão de tipos: os códigos de fazenda do Coleta têm dígito verificador, e os horários trazem um fuso que o Rota
+não quer. A aula 13 constrói a camada
 direito, porque ela vira a costura ao longo da qual o Coleta é substituído. Aqui a questão é menor:
 ponha todo detalhe de SOAP numa classe, e a próxima mudança no barramento mexe numa classe.
 

@@ -49,9 +49,9 @@ engine runs them, but it cannot change them. Changes then wait for a consultancy
 rates and lead times.
 
 Joana searched for people with IBM BPM on their profile within commuting distance of Juiz de Fora and
-found two. The skill is not dying everywhere, but **a product's skill pool shrinks in every market
-where it stops being installed**, and a company that keeps the product keeps paying for that scarcity
-in salary, in contractors, or in changes not made. The cheapest fix in the whole assessment is
+found two. The skill has not vanished everywhere, but **a product's skill pool shrinks in every market
+where it stops being installed.** A company that keeps the product pays for that scarcity in salary,
+in contractors, or in changes not made. The cheapest fix in the whole assessment is
 also the most urgent: a second developer working beside Vinícius this year, whatever is decided
 about the product.
 

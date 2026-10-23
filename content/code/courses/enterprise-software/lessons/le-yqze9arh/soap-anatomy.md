@@ -131,7 +131,7 @@ forever, and will throw away the one element that said why.
 | HTTP status of a fault | always 500 | 400 for a `Sender` fault, 500 otherwise |
 
 You will meet SOAP 1.2 without leaving Brazil: the web services through which every NF-e reaches
-the state tax authority are SOAP 1.2. and the 1,400 or so invoices Serra Alta issues on an ordinary weekday
+the state tax authority are SOAP 1.2, and the 1,400 or so invoices Serra Alta issues on an ordinary weekday
 travel that way.
 
 ## The contract
@@ -238,7 +238,7 @@ Put that WSDL into the right tool and out comes a class with a method `getFarmTa
 returning an object with four typed fields, and a typed exception for `FarmNotFound`. **A team
 could integrate with a service it had never seen, and the compiler told it when it sent the wrong
 type.** In 2005, when the alternative was a PDF describing a fixed-width file, that was a large
-improvement, and it is the part of SOAP worth remembering when you meet its descendants: OpenAPI
+improvement. It is also the part of SOAP worth remembering when you meet its descendants. OpenAPI
 gave JSON over HTTP the same thing years later, and a contract a machine can read is still the
 best defence against two teams that each believe they agreed on something different.
 

@@ -6,10 +6,9 @@ version: 1
 A história que a maioria dos engenheiros conta sobre o enterprise service bus é curta: um produto
 grande, vendido a empresas grandes, que transformou cada integração num chamado para um time
 sobrecarregado. A própria Joana contava essa história na fintech, onde ninguém tinha barramento e
-ninguém sentia falta de um. Ela está meio certa. **O barramento respondia a um problema real — o
-número de conexões possíveis cresce com o quadrado do número de sistemas — e a maior parte dos
-problemas que ele trouxe veio do que as pessoas puseram dentro dele depois, não da ideia de um
-hub.** Joana precisa das duas metades antes de mexer em qualquer um dos 70 fluxos de Rui Andrade,
+ninguém sentia falta de um. Ela está meio certa. O barramento respondia a um problema real: o número de conexões possíveis
+cresce com o quadrado do número de sistemas. **A maior parte dos problemas que ele trouxe veio do que
+as pessoas puseram dentro dele depois, não da ideia de um hub.** Joana precisa das duas metades antes de mexer em qualquer um dos 70 fluxos de Rui Andrade,
 porque quem comprou o barramento em 2015 não era ingênuo, e os motivos que tinha continuam
 valendo.
 
@@ -27,10 +26,10 @@ número de conexões possíveis entre *n* sistemas é *n*(*n* − 1)/2. Cada sis
 | 15 | 105 |
 | 20 | 190 |
 
-Doze não é um número escolhido para a tabela. Conte os sistemas em volta do barramento da Serra
-Alta hoje — SAP ECC, BW com BusinessObjects, Business Central, Microsoft 365, Salesforce,
-Documentum, IBM BPM, Coleta, Rota, o Portal B2B, os arquivos dos bancos e o provedor de EDI — e são
-doze: 12 × 11 / 2 = 66. **Sessenta e seis é um teto, não uma contagem.** O Rota não tem nada a
+Doze não é um número escolhido para a tabela. Hoje há doze sistemas em volta do barramento da
+Serra Alta: SAP ECC, BW com BusinessObjects, Business Central, Microsoft 365, Salesforce,
+Documentum, IBM BPM, Coleta, Rota, o Portal B2B, os arquivos dos bancos e o provedor de EDI. Isso dá
+12 × 11 / 2 = 66. **Sessenta e seis é um teto, não uma contagem.** O Rota não tem nada a
 dizer ao Documentum, e nem todo par conversa. Mas é o teto que cresce: mais três sistemas o levam a
 105, ou seja, 39 interfaces possíveis a mais por três nomes novos no diagrama.
 

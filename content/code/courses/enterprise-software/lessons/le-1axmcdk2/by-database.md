@@ -17,25 +17,26 @@ where one system simply reads another's tables, 7 of them reports.
 
 ## The integration table
 
-The Portal B2B sends its orders to SAP through a table. The portal writes each order as a row in
-`pedido_integracao`, in a small SQL Server database, with a status of `N` for new. Every five minutes
-an ABAP job connects to that database, reads the `N` rows, creates a sales order in SAP for each one,
-and sets the status to `P` for processed, or `E` with a message if SAP refused it.
+Rota uses a table to tell SAP which trips the contracted trucks have made, so that SAP can pay
+their owners. Rota writes each finished trip as a row in a small SQL Server database, with a status
+of `N` for new. Every five minutes an ABAP job connects to that database, reads the `N` rows, records
+each trip in SAP for payment, and sets the status to `P` for processed, or `E` with a message if SAP
+refused it.
 
 That is a reasonable design, and it is worth seeing why: **an integration table is a queue built out
-of a table**. The portal does not need SAP to be up when a bakery orders; the order waits in the table.
+of a table**. Rota does not need SAP to be up when a truck comes back; the trip waits in the table.
 The format is a table the two teams designed together for this purpose, so neither side's internal
 model leaks into it. It is closer to a file or a message than to reading somebody's tables.
 
 It also has a queue's problems without a queue's tools, and the map found all of them:
 
 - **Nobody watches the error rows.** On the morning Joana looked, 37 rows sat in status `E`, the oldest
-  nine days old. Each one was an order a bakery believed it had placed.
+  nine days old. Each one was a trip somebody expected to be paid for.
 - **Polling is a latency and a load.** Every five minutes, whether anything arrived or not, the job
-  queries the table; and an order placed at 10:01 waits until 10:05.
-- **Two writers update one row.** The portal can still change an order the job is reading, and the
-  status column is the only thing standing between them. A job that crashes between creating the SAP
-  order and setting `P` will create the same order again on its next run, which is the double load
+  queries the table; and a trip closed at 10:01 waits until 10:05.
+- **Two writers update one row.** Rota can still correct a trip the job is reading, and the status column is the only
+  thing standing between them. A job that crashes between recording the trip in SAP and setting `P`
+  will record the same trip again on its next run, which is the double load
   of the previous section in another form.
 
 A broker gives you error queues, alarms on depth and delivery without polling, and lesson 10 is about
@@ -44,8 +45,7 @@ thought to use the one there is.
 
 ## Just reading their table
 
-The second disguise has no design at all. Rota, the route planner, needs to know every farm: where it
-is, the size of its tank, which days it is collected. That data lives in Coleta, on IBM i, so when
+The second disguise has no design at all. Rota, the route planner, needs to know every farm: where it is and which days it is collected. That data lives in Coleta, on IBM i, so when
 Rota was built in 2022 the team connected to Coleta's database over ODBC and read the farm table
 directly, every night at 21:00. It took a day to build.
 

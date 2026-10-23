@@ -3,7 +3,7 @@ title: Gateways e os tokens que passam por eles
 version: 1
 ---
 
-A leitura habitual de um losango é "uma decisão": o fluxo chega, alguém escolhe, um caminho é
+Quase todo mundo lê um losango como "uma decisão": o fluxo chega, alguém escolhe, um caminho é
 seguido. Isso cobre um tipo de gateway em quatro, e só quando ele divide. **Um gateway é uma regra
 sobre tokens, e o mesmo losango faz uma coisa quando divide um fluxo e outra quando junta.** Errar a
 junção é o jeito mais comum de um diagrama BPMN quebrar, e ele quebra sem mensagem de erro.

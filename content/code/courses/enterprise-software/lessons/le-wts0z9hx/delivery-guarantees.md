@@ -44,13 +44,13 @@ consumer that does not know it is paying it will do the work twice without notic
 A crash is the dramatic case and not the common one. Three ordinary situations redeliver a message
 whose work was done:
 
-- **A consumer that is slow.** Amazon SQS hides a received message for a visibility timeout, 30
+- *A consumer that is slow.* Amazon SQS hides a received message for a visibility timeout, 30
   seconds unless configured otherwise, and shows it again if the consumer has not deleted it by
   then. A consumer that takes 40 seconds over one message, because the system behind it is slow,
   finishes the work and then finds that another instance has started it again.
-- **A connection that drops.** The consumer acknowledges, the network loses the acknowledgement,
+- *A connection that drops.* The consumer acknowledges, the network loses the acknowledgement,
   and the broker never learns. To the broker this looks exactly like a crash.
-- **A producer that is not sure.** A publish that times out leaves the producer not knowing whether
+- *A producer that is not sure.* A publish that times out leaves the producer not knowing whether
   the broker received it. Sending again is the only safe choice, and if the first attempt did
   arrive, the queue now holds two copies. The duplicate is born before any consumer sees it.
 
@@ -62,8 +62,7 @@ days the key-account reps saw customers owing twice what they owed, and Talita G
 a week finding and deleting the copies by hand.
 
 **A duplicate rate is small and never zero.** About 1,400 orders, a similar number of deliveries and as many
-invoices cross the bus on a weekday, so the order and invoice flows alone move about ninety
-thousand messages a month; a rate of one in a thousand is ninety duplicates. Design for them, because they will arrive.
+invoices cross the bus on a weekday, so those three flows alone move about ninety thousand messages a month; a rate of one in a thousand is ninety duplicates. Design for them, because they will arrive.
 
 ## What "exactly once" means when a product says it
 

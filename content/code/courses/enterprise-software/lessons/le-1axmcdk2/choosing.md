@@ -3,7 +3,7 @@ title: Choosing a style for each integration
 version: 1
 ---
 
-The four styles are not a ranking, and choosing between them is not a matter of taste. **Each
+Choosing between the four styles is not a matter of taste. **Each
 integration has a few facts that decide its style: how fresh the data has to be, how much of it there
 is, who has to be up, and how a failure would show itself.** Write those facts down for a row on the
 map and the style mostly chooses itself. When it does not, the disagreement is usually about a fact,
@@ -17,8 +17,7 @@ rows for which nobody could say how a failure would be noticed.
 ```
 
 The database links are the worst-watched style by a distance: 15 of 17 had no way of noticing a
-failure, because nobody had designed them as integrations in the first place. The calls were the
-best watched, 4 of 33, because a call that fails does so at once and in front of somebody.
+failure, because nobody had designed them as integrations in the first place. The calls were the best watched, with only 4 of 33 unanswered, because a call that fails does so at once and in front of somebody.
 
 ## The decision table
 
@@ -59,8 +58,7 @@ of the same fact. The invoice-authorised topic from the previous section serves 
 that called Salesforce for every invoice is retired.
 
 **4. SAP ↔ the banks, CNAB 240. It stays a file, and that is not Serra Alta's choice to make.** The
-bank defines the interface. Some banks now offer APIs for some of the same operations; for 1,900 farm
-payments once a month, a file with batch totals and a *retorno* answer is well understood by both
+bank defines the interface. Some banks now offer APIs for some of the same operations. For 1,900 farm payments once a month, a file with batch totals and a *retorno* answer is well understood by both
 sides, and the controls that matter are already in the standard. What Joana added to the map was the
 missing alarm: a *retorno* file that has not arrived by 10:00 on payment day pages finance.
 

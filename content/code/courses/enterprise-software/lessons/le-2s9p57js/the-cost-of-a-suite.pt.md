@@ -49,9 +49,9 @@ os roda, mas não consegue mudá-los. As mudanças passam a esperar uma consulto
 prazos de uma consultoria.
 
 Joana procurou pessoas com IBM BPM no perfil a uma distância de Juiz de Fora que dê para ir todo dia
-e achou duas. A habilidade não está morrendo em toda parte, mas **o grupo de pessoas que conhece um
-produto encolhe em todo mercado onde ele deixa de ser instalado**, e a empresa que fica com o produto
-continua pagando por essa escassez em salário, em terceirizados ou em mudanças que não são feitas. A
+e achou duas. A habilidade não sumiu de toda parte, mas **o grupo de pessoas que conhece um produto
+encolhe em todo mercado onde ele deixa de ser instalado.** A empresa que fica com o produto paga por
+essa escassez em salário, em terceirizados ou em mudanças que não são feitas. A
 correção mais barata de toda a avaliação é também a mais urgente: um segundo desenvolvedor
 trabalhando ao lado do Vinícius este ano, seja qual for a decisão sobre o produto.
 

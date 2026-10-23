@@ -3,8 +3,8 @@ title: Pools, raias e as mensagens entre eles
 version: 1
 ---
 
-Raias parecem um organograma deitado, então a leitura habitual é que um pool é um departamento e uma
-raia um departamento menor dentro dele. **Um pool é um participante, uma parte que roda o próprio
+Raias parecem um organograma deitado, então é natural ler um pool como um departamento e uma raia
+como um departamento menor dentro dele. **Um pool é um participante, uma parte que roda o próprio
 processo e decide por si; uma raia é um papel dentro do processo de um participante.** A diferença
 não é de tamanho. A equipe de campo e a equipe de qualidade da Serra Alta são raias, porque um
 processo dirige as duas. A fazenda e o banco são pools, porque nada que a Serra Alta desenhe
@@ -22,7 +22,7 @@ A regra que sai disso é curta e rígida:
   trabalho muda de mãos, e é para isso que as raias servem, quase sempre.
 
 Um diagrama com mais de um pool e as mensagens entre eles é um **diagrama de colaboração**. Um pool
-pode ser desenhado como **caixa-branca**, com o processo dentro, ou como **caixa-preta**, uma faixa
+pode ser desenhado como *caixa-branca*, com o processo dentro, ou como *caixa-preta*, uma faixa
 vazia com um nome, quando você não sabe ou não controla o que acontece lá dentro. Os fluxos de
 mensagem então terminam na borda do pool caixa-preta, e não em algum elemento dentro dele.
 
@@ -67,7 +67,7 @@ executado, manter raia e atribuição em acordo é um item de revisão, e a seç
 modelo volta a isso.
 
 As raias também deixam à vista as passagens de mão, e é nas passagens que o tempo vai embora. Quando
-Denise e Joana tiraram da suíte as datas das 112 fazendas cadastradas em 2025, o trabalho em si — a
+Denise e Joana tiraram da suíte as datas das fazendas cadastradas em 2025, o trabalho em si — a
 conferência de documentos, a visita, o cadastro, o contrato — somava cerca de quatro dias úteis por
 fazenda. O resto da mediana de 31 dias ficou entre raias e entre pools: na fila da equipe de
 qualidade até um técnico ficar livre, e esperando contratos voltarem. **Cada seta que cruza uma linha

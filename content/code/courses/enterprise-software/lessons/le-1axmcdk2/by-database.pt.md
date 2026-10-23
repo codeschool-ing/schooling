@@ -17,26 +17,26 @@ lugares onde um sistema simplesmente lê as tabelas de outro, 7 deles relatório
 
 ## A tabela de integração
 
-O Portal B2B manda seus pedidos ao SAP por uma tabela. O portal grava cada pedido como uma linha em
-`pedido_integracao`, num pequeno banco SQL Server, com status `N` de novo. A cada cinco minutos um
-job ABAP se conecta a esse banco, lê as linhas `N`, cria uma ordem de venda no SAP para cada uma, e
-muda o status para `P` de processado, ou `E` com uma mensagem se o SAP recusou.
+O Rota usa uma tabela para dizer ao SAP quais viagens os caminhões contratados fizeram, para que o
+SAP pague os donos deles. O Rota grava cada viagem encerrada como uma linha num pequeno banco SQL
+Server, com status `N` de novo. A cada cinco minutos um job ABAP se conecta a esse banco, lê as
+linhas `N`, registra cada viagem no SAP para pagamento, e muda o status para `P` de processado, ou
+`E` com uma mensagem se o SAP recusou.
 
 É um desenho razoável, e vale ver por quê: **uma tabela de integração é uma fila construída com uma
-tabela**. O portal não precisa do SAP no ar quando uma padaria faz um pedido; o pedido espera na
-tabela. O formato é uma tabela que os dois times desenharam juntos para isso, então o modelo interno
+tabela**. O Rota não precisa do SAP no ar quando um caminhão volta; a viagem espera na tabela. O formato é uma tabela que os dois times desenharam juntos para isso, então o modelo interno
 de nenhum dos lados vaza para ela. Está mais perto de um arquivo ou de uma mensagem do que de ler as
 tabelas de alguém.
 
 Também tem os problemas de uma fila sem as ferramentas de uma fila, e o mapa achou todos:
 
 - **Ninguém olha as linhas com erro.** Na manhã em que a Joana olhou, 37 linhas estavam com status
-  `E`, a mais velha com nove dias. Cada uma era um pedido que uma padaria achava que tinha feito.
+  `E`, a mais velha com nove dias. Cada uma era uma viagem pela qual alguém esperava ser pago.
 - **Consultar de tempos em tempos é latência e carga.** A cada cinco minutos, chegue algo ou não, o
-  job consulta a tabela; e um pedido feito às 10:01 espera até 10:05.
-- **Dois escritores atualizam a mesma linha.** O portal ainda pode mudar um pedido que o job está
-  lendo, e a coluna de status é a única coisa entre eles. Um job que cai entre criar a ordem no SAP e
-  marcar `P` cria a mesma ordem de novo na execução seguinte, que é a carga dupla da seção anterior
+  job consulta a tabela; e uma viagem encerrada às 10:01 espera até 10:05.
+- **Dois escritores atualizam a mesma linha.** O Rota ainda pode corrigir uma viagem que o job está
+  lendo, e a coluna de status é a única coisa entre eles. Um job que cai entre registrar a viagem no
+  SAP e marcar `P` registra a mesma viagem de novo na execução seguinte, que é a carga dupla da seção anterior
   em outra forma.
 
 Um broker dá filas de erro, alarmes de profundidade e entrega sem consulta periódica, e a aula 10
@@ -45,8 +45,8 @@ ninguém pensou em usar o que existe.
 
 ## Só ler a tabela deles
 
-O segundo disfarce não tem desenho nenhum. O Rota, o roteirizador, precisa conhecer todos os
-produtores: onde ficam, o tamanho do tanque, em que dias são coletados. Esses dados vivem no Coleta,
+O segundo disfarce não tem desenho nenhum. O Rota, o roteirizador, precisa conhecer todos os produtores: onde ficam e em que dias são
+coletados. Esses dados vivem no Coleta,
 em IBM i, então quando o Rota foi construído em 2022 o time se conectou ao banco do Coleta por ODBC e
 passou a ler a tabela de produtores direto, toda noite às 21:00. Levou um dia para fazer.
 

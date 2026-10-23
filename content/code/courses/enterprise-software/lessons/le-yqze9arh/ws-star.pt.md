@@ -40,7 +40,7 @@ propriedades da mensagem, e uma API HTTP os leva em headers próprios.
 
 O TLS protege uma conexão, de uma ponta à outra. Quando uma mensagem atravessa um barramento, há
 duas conexões, e no meio o barramento lê a mensagem aberta, porque precisa roteá-la e
-transformá-la. **O WS-Security tirou a proteção da conexão e a pôs na mensagem**: uma XML Signature
+transformá-la. **O WS-Security tirou a proteção da conexão e a pôs na mensagem.** Uma XML Signature
 sobre o body prova quem a escreveu e que ninguém a alterou, a XML Encryption esconde elementos
 escolhidos de todos menos do receptor final, e o barramento no meio ainda consegue ler as partes de
 que precisa.
@@ -95,8 +95,7 @@ viagem que ele fez.
 O WS-ReliableMessaging deu ao SOAP sobre HTTP o que um message broker dá a qualquer coisa: cada
 mensagem de uma sequência é numerada, o receptor confirma faixas, e o remetente retransmite o que
 não foi confirmado. Funcionava, e exigia que as duas pontas guardassem estado de sequência. **As
-empresas que já tinham um broker, como a Serra Alta tem o IBM MQ, ganhavam a mesma garantia sem
-exigir nada das pontas**, e a aula 10 mostra o dever que o broker não consegue tirar delas: um
+empresas que já tinham um broker, como a Serra Alta tem o IBM MQ, ganhavam a mesma garantia sem exigir nada das pontas.** A aula 10 mostra o dever que o broker não consegue tirar delas: um
 consumidor que recebe a mesma mensagem duas vezes sem fazer o trabalho duas vezes.
 
 O WS-AtomicTransaction levou aos serviços o commit em duas fases dos bancos de dados. Um coordenador

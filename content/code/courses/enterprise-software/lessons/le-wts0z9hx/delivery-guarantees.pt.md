@@ -44,13 +44,13 @@ um consumidor que não sabe que está pagando esse preço vai fazer o trabalho d
 Uma queda é o caso dramático, não o comum. Três situações corriqueiras reentregam uma mensagem cujo
 trabalho já foi feito:
 
-- **Um consumidor lento.** O Amazon SQS esconde uma mensagem recebida por um visibility timeout,
+- *Um consumidor lento.* O Amazon SQS esconde uma mensagem recebida por um visibility timeout,
   30 segundos se nada for configurado, e a mostra de novo se o consumidor não a tiver apagado até
   lá. Um consumidor que leva 40 segundos numa mensagem, porque o sistema atrás dele está lento,
   termina o trabalho e descobre que outra instância já começou de novo.
-- **Uma conexão que cai.** O consumidor confirma, a rede perde a confirmação, e o broker nunca
+- *Uma conexão que cai.* O consumidor confirma, a rede perde a confirmação, e o broker nunca
   fica sabendo. Para o broker isso parece exatamente uma queda.
-- **Um produtor que não tem certeza.** Uma publicação que estoura o timeout deixa o produtor sem
+- *Um produtor que não tem certeza.* Uma publicação que estoura o timeout deixa o produtor sem
   saber se o broker a recebeu. Mandar de novo é a única escolha segura, e se a primeira tentativa
   chegou, a fila agora tem duas cópias. A duplicata nasce antes de qualquer consumidor vê-la.
 
@@ -62,8 +62,7 @@ de nota duplicados. Por dois dias os vendedores de grandes contas viram clientes
 que deviam, e a Talita Gomes passou quase uma semana achando e apagando as cópias à mão.
 
 **Uma taxa de duplicatas é pequena e nunca é zero.** Cerca de 1.400 pedidos, um número parecido de
-remessas e outras tantas notas passam pelo barramento num dia útil, então só os fluxos de pedido e
-de nota movem umas noventa mil mensagens por mês; uma taxa de uma em mil são noventa duplicatas.
+remessas e outras tantas notas passam pelo barramento num dia útil, então só esses três fluxos movem umas noventa mil mensagens por mês; uma taxa de uma em mil são noventa duplicatas.
 Projete para elas, porque elas vão chegar.
 
 ## O que "exatamente uma vez" quer dizer quando um produto diz

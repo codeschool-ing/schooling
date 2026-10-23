@@ -114,8 +114,7 @@ engine, and the figure draws it against the clock.
 
 The instance lived three days and three hours. People worked on it for under half an hour.
 **Almost all of a process's life is waiting, and keeping track of the waiting is what the engine is
-for.** Who has the task, since when, what happens if nobody takes it: those questions are the
-product. Drawing the boxes is the easy part.
+for.** Who has the task, since when, what happens if nobody takes it: those questions are the product.
 
 The example also shows why the engine needs a task list instead of a simple notification. An e-mail
 saying "please approve" goes to a person and is gone. A task goes to a role, can be claimed and

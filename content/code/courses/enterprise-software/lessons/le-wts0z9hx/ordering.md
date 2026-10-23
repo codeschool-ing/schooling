@@ -35,11 +35,11 @@ previous sections did not protect.
 
 The same reversal has other causes that need no second consumer:
 
-- **A retry.** The first message fails on a lock timeout and waits 4 seconds for its retry; the
+- *A retry.* The first message fails on a lock timeout and waits 4 seconds for its retry; the
   second arrives in the meantime and succeeds. The retried one then succeeds too, on top of it.
-- **A replay.** A price message from three weeks ago sits in the dead-letter queue. Somebody fixes
+- *A replay.* A price message from three weeks ago sits in the dead-letter queue. Somebody fixes
   the cause and replays it, and the portal applies a price that was superseded twenty times since.
-- **Two paths.** One message travels through a flow with an extra step and another through a
+- *Two paths.* One message travels through a flow with an extra step and another through a
   shorter one. Neither queue is out of order; their outputs meet out of order.
 
 ## Three answers

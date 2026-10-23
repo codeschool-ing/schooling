@@ -96,9 +96,9 @@ system with no interface, and the pressure to fix it goes away. Use RPA as a bri
 One more family appears on the map because it gets confused with the others. A flow on Serra Alta's
 integration bus that turns a sales order into an EDI message, or the nightly file from Coleta to SAP,
 moves data between systems. It has no people, no inbox and nothing that waits for weeks. That is
-integration, and lessons 8 to 11 are about it. The confusion runs in both directions: a team puts a
-two-second message transformation into a BPM suite because the suite is what it knows, or builds a
-month-long approval out of messages and database flags because it has never seen an engine.
+integration, and lessons 8 to 11 are about it. The confusion runs in both directions. One team puts a two-second message transformation into a BPM
+suite because the suite is what it knows; another builds a month-long approval out of messages and
+database flags because it has never seen an engine.
 
 ## Telling which one a problem needs
 

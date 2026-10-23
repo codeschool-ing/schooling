@@ -9,8 +9,7 @@ passa a maior parte da vida esperando, e um modelo que não diz o que acontece q
 estende demais não tem resposta para a coisa que mais dá errado.**
 
 Quando Denise tirou do IBM BPM as instâncias abertas em 2026, o pedido de uma fazenda estava havia
-71 dias na lista de tarefas de um técnico de qualidade. Ele tinha saído da empresa em março. A
-tarefa estava atribuída a ele pelo nome, nada no processo tinha prazo, e a fazenda vinha ligando
+71 dias na lista de tarefas de um técnico de qualidade. Ele tinha saído da empresa em março. A tarefa estava atribuída a ele pelo nome, a visita não tinha prazo, e a fazenda vinha ligando
 para a equipe de campo, que só conseguia ver que a instância estava *em execução*. Uma tarefa de
 usuário sem temporizador espera para sempre, e espera educadamente, sem erro e sem que ninguém seja
 avisado.
@@ -56,21 +55,20 @@ seguinte, porque o time do Rota publica as rotas dos caminhões semanalmente.
 
 Às vezes o banco rejeita uma conta. O número da agência está errado, ou a conta é de outra pessoa
 que não o dono da fazenda. Isso é um resultado de negócio com uma resposta conhecida, pedir os dados
-de novo à fazenda, e a BPMN o modela como um **erro**: um evento de borda de erro na tarefa
+de novo à fazenda, e a BPMN o modela como um **erro**. Um evento de borda de erro na tarefa
 "Cadastrar conta bancária" captura a rejeição e manda o token para "Pedir os dados de novo". Um
 evento de borda de erro é sempre interruptivo, porque a atividade a que está preso falhou e não
 sobrou nada para continuar. Dentro de um subprocesso, um evento de fim de erro dispara o erro, e o
 evento de borda no subprocesso o captura.
 
 **Um erro BPMN é para um resultado ao qual o negócio tem resposta; uma falha técnica não é um
-deles.** Se o serviço do banco estoura o tempo limite, não há nada a dizer à fazenda; a resposta
-certa é tentar de novo em alguns minutos, e uma engine cuida disso repetindo a tarefa de serviço e,
+deles.** Se o serviço do banco estoura o tempo limite, não há nada a dizer à fazenda. A resposta certa é tentar de novo em alguns minutos, e uma engine cuida disso repetindo a tarefa de serviço e,
 quando as tentativas acabam, abrindo um incidente para um operador. Modelar cada timeout como evento
 de erro enche o diagrama de caminhos que o negócio não reconhece, e esconde os que ele reconhece. A
 aula 10 volta às novas tentativas e ao que acontece quando uma mensagem é entregue duas vezes.
 
-A BPMN também tem um evento de **escalonamento**, que leva algo a um nível acima sem dizer que nada
-falhou, e um evento de **cancelamento** para subprocessos de transação. A maioria dos modelos não
+A BPMN também tem um evento de *escalonamento*, que leva algo a um nível acima sem dizer que nada
+falhou, e um evento de *cancelamento* para subprocessos de transação. A maioria dos modelos não
 precisa de nenhum dos dois no começo.
 
 ## Compensação: desfazer trabalho concluído

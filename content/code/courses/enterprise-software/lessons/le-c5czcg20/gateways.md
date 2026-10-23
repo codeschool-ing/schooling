@@ -3,7 +3,7 @@ title: Gateways and the tokens that pass through them
 version: 1
 ---
 
-The usual reading of a diamond is "a decision": the flow reaches it, somebody chooses, one path is
+Most people read a diamond as "a decision": the flow reaches it, somebody chooses, one path is
 taken. That covers one kind of gateway out of four, and only when it splits. **A gateway is a rule
 about tokens, and the same diamond does a different thing when it splits a flow and when it joins
 one.** Getting the join wrong is the most common way a BPMN diagram breaks, and it breaks without

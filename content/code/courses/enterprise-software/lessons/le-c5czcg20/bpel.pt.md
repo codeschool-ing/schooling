@@ -10,7 +10,7 @@ quase sempre dentro de um produto de ESB, quase sempre rodando um processo que n
 Vale saber o que ela foi, porque os motivos pelos quais ela sumiu são os mesmos pelos quais um modelo
 de processo e o código que o executa ainda se distanciam hoje.
 
-A crença comum é que a BPEL era simplesmente o formato XML da BPMN. **Era uma linguagem separada, com
+Muita gente se lembra da BPEL como o formato XML da BPMN. **Era uma linguagem separada, com
 um modelo de mundo separado: um processo era um web service que chama outros web services, e nada
 mais.** A BPMN era uma notação para pessoas que depois aprendeu a rodar; a BPEL era uma linguagem de
 programação para máquinas, da qual se esperava que as pessoas desenhassem figuras.
@@ -28,8 +28,8 @@ produto que vinha junto com um barramento de serviços corporativo.
 
 Um processo BPEL é um documento XML, e cada interação nele é uma operação de web service descrita em
 WSDL, a linguagem de interface dos serviços SOAP que a aula 8 abre por dentro. O processo declara
-seus **partner links**, os serviços com que conversa e o papel que ele faz com cada um; suas
-**variáveis**, que são mensagens WSDL; e então suas atividades. Aqui está o começo do cadastro como a
+seus *partner links*, os serviços com que conversa e o papel que ele faz com cada um; suas
+*variáveis*, que são mensagens WSDL; e então suas atividades. Aqui está o começo do cadastro como a
 BPEL o teria expressado, para leitura:
 
 ```xml
@@ -76,7 +76,7 @@ meio de um processo, e a BPEL foi o primeiro lugar em que a maioria dos engenhei
 O resto da linguagem vai parecer familiar depois das seções anteriores. `<flow>` roda atividades em
 paralelo, como uma divisão e uma junção paralelas. `<if>` e `<while>` ramificam e repetem. `<pick>`
 espera a primeira de várias mensagens ou alarmes, que é o gateway baseado em eventos da BPMN.
-`<scope>` agrupa atividades com seus próprios **tratadores de falha** e **tratadores de compensação**,
+`<scope>` agrupa atividades com seus próprios *tratadores de falha* e *tratadores de compensação*,
 as mesmas ideias de um evento de borda de erro e de uma atividade de compensação. Os conceitos
 passaram de uma para a outra; a notação não.
 

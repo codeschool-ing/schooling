@@ -5,7 +5,7 @@ version: 1
 
 A aula 6 descreveu as suítes e engines que executam processos. Esta seção trata do arquivo que elas
 executam, e da distância entre o diagrama que Denise consegue ler e o modelo que uma engine consegue
-rodar. A imagem habitual é que o negócio desenha, a engine executa e ninguém escreve código. **Um
+rodar. É fácil acreditar que o negócio desenha, a engine executa e ninguém escreve código. **Um
 diagrama diz o que acontece e em que ordem; um modelo executável também diz, para cada forma,
 exatamente como.** A segunda metade é a maior parte do trabalho, e é engenharia.
 
@@ -26,8 +26,7 @@ precisaria saber:
 | o próprio modelo | uma versão, porque as instâncias já em execução ficam na versão em que começaram |
 
 Nada disso aparece no desenho, e cada item é um lugar em que o modelo e os sistemas em volta dele
-precisam concordar. A última linha é aquela em que a aula 6 se demorou: mude o modelo com duzentas
-fazendas no meio dele e duas versões rodam lado a lado até as instâncias antigas terminarem ou
+precisam concordar. A última linha é aquela em que a aula 6 se demorou: mude o modelo com fazendas no meio dele, como as 18 de 2023, e duas versões rodam lado a lado até as instâncias antigas terminarem ou
 serem migradas.
 
 ## O arquivo
@@ -83,19 +82,19 @@ processo agora existe duas vezes, e as duas cópias se afastam a cada mudança.
 
 Há dois jeitos honestos de conviver com isso:
 
-- **Um modelo, dos engenheiros e revisado pelo negócio.** O arquivo executável é o único; fica no
+- Um modelo, dos engenheiros e revisado pelo negócio. O arquivo executável é o único; fica no
   controle de versão ao lado do código que ele chama, e toda mudança nele passa por um pull request
   que Denise revisa como diagrama renderizado. O negócio nunca edita o arquivo diretamente, e o
   modelo nunca fica desatualizado, porque é ele que roda.
-- **Dois modelos, e um acordo de que eles diferem.** Um modelo descritivo para pessoas, mantido
+- Dois modelos, e um acordo de que eles diferem. Um modelo descritivo para pessoas, mantido
   simples e de responsabilidade do escritório de processos, e uma implementação, numa engine ou em
   código, de responsabilidade da TI. O modelo descritivo é revisado contra a implementação numa
   agenda combinada, e ninguém finge que um é gerado a partir do outro.
 
-O que falha é o meio-termo: um arquivo que os dois grupos editam em ferramentas diferentes. A
+**O que falha é o meio-termo: um arquivo que os dois grupos editam em ferramentas diferentes.** A
 própria especificação da BPMN 2.0 reconhece a separação nas suas classes de conformidade: uma
-subclasse **descritiva**, com o punhado de formas de que as pessoas precisam para documentar um
-processo, uma **analítica**, com mais, e uma **executável comum**, para modelos que uma engine roda.
+subclasse *descritiva*, com o punhado de formas de que as pessoas precisam para documentar um
+processo, uma *analítica*, com mais, e uma *executável comum*, para modelos que uma engine roda.
 Um modelo pode estar correto na primeira e ser inútil na terceira.
 
 ## Quando executar e quando documentar

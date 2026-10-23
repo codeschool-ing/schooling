@@ -154,6 +154,7 @@ two steps, and another consumer can act between them.
 database is the one place both instances meet, and a unique constraint is its way of saying "only
 one of you": whichever transaction inserts second fails, rolls back and writes nothing. **The
 constraint does not need the consumers to agree; it decides for them.**
+
 ## Natural key or message id
 
 The `processed` table remembers *messages*. Sometimes the business fact itself has an identity that
@@ -170,7 +171,7 @@ The two fail in different places, and the choice depends on which failure is pos
 
 `consumer.py` uses the message id because a payment is not unique per invoice. For an NF-e
 authorisation, the natural key is better. **Use the natural key where the business says the fact
-happens once, and the message id everywhere else** — and then make sure the publisher fixes the id
+happens once, and the message id everywhere else.** Then make sure the publisher fixes the id
 when the fact is recorded, not when the message is sent, which is the subject of the next section.
 
 ## What the transaction cannot cover

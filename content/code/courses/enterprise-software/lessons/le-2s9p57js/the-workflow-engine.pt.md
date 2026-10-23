@@ -115,8 +115,7 @@ motor, e a figura desenha isso contra o relógio.
 
 A instância viveu três dias e três horas. Pessoas trabalharam nela menos de meia hora. **Quase toda
 a vida de um processo é espera, e acompanhar a espera é para isso que o motor existe.** Quem está com
-a tarefa, desde quando, o que acontece se ninguém pegar: essas perguntas são o produto. Desenhar as
-caixas é a parte fácil.
+a tarefa, desde quando, o que acontece se ninguém pegar: essas perguntas são o produto.
 
 O exemplo também mostra por que o motor precisa de uma lista de tarefas em vez de uma simples
 notificação. Um e-mail dizendo "favor aprovar" vai para uma pessoa e some. Uma tarefa vai para um

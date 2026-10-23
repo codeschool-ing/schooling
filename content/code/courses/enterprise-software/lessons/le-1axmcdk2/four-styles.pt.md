@@ -11,8 +11,7 @@ com que frequência, quem é o dono, e como alguém perceberia que aquilo parou.
 
 Levou cinco semanas e deu **110 linhas**. Os 70 fluxos do ESB foram a parte fácil, porque o ESB tem
 um console que lista todos. As outras 40 apareceram perguntando: um arquivo que o Coleta empurra
-toda noite, um relatório de Power BI que lê um banco diretamente, uma tabela que o Portal B2B grava
-e um job ABAP consulta. **Em 38 das 110 linhas, ninguém soube dizer como uma falha seria notada.**
+toda noite, um relatório de Power BI que lê um banco diretamente, uma tabela que o Rota grava e um job ABAP consulta. **Em 38 das 110 linhas, ninguém soube dizer como uma falha seria notada.**
 Essa coluna acabou sendo a mais útil da planilha.
 
 A outra coluna útil era o *estilo*. Toda linha do mapa move dados de um entre quatro jeitos, e o
@@ -24,15 +23,15 @@ Gregor Hohpe e Bobby Woolf, em *Enterprise Integration Patterns* (2003), abrem o
 estilos de integração. Continuam sendo os quatro certos, vinte anos e várias tecnologias depois,
 porque cada um responde a uma pergunta diferente sobre como dois sistemas se encontram.
 
-- **Transferência de arquivo.** Um sistema grava um arquivo; o outro lê depois. O arquivo noturno
+- *Transferência de arquivo.* Um sistema grava um arquivo; o outro lê depois. O arquivo noturno
   do Coleta para o SAP, os arquivos CNAB trocados com os bancos, as mensagens EDI com as redes de
   supermercado.
-- **Banco de dados compartilhado.** Dois sistemas leem e gravam as mesmas tabelas. Na Serra Alta isso
+- *Banco de dados compartilhado.* Dois sistemas leem e gravam as mesmas tabelas. Na Serra Alta isso
   é quase sempre um sistema lendo direto as tabelas de outro, ou uma tabela de passagem que um lado
   grava e o outro consulta de tempos em tempos.
-- **Invocação remota de procedimento**, que esta aula chama de *por API*. Um sistema chama o outro e
+- *Invocação remota de procedimento*, que esta aula chama de *por API*. Um sistema chama o outro e
   espera a resposta: uma chamada SOAP pelo ESB, uma requisição REST do Portal B2B.
-- **Mensageria**, que esta aula chama de *por evento*, porque o uso que mais importa aqui é publicar
+- *Mensageria*, que esta aula chama de *por evento*, porque o uso que mais importa aqui é publicar
   um fato. Um sistema manda uma mensagem a um broker, e quem tiver interesse a recebe. Na Serra Alta
   é o IBM MQ que carrega essas mensagens.
 

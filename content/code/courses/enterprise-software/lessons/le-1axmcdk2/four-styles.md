@@ -11,8 +11,7 @@ would notice that it had stopped.
 
 It took five weeks and came to **110 rows**. The ESB's 70 message flows were the easy part, because
 the ESB has a console that lists them. The other 40 were found by asking: a file Coleta pushes every
-night, a Power BI report that reads a database directly, a table the Portal B2B writes and an ABAP
-job polls. **For 38 of the 110 rows, nobody could say how a failure would be noticed.** That column
+night, a Power BI report that reads a database directly, a table Rota writes and an ABAP job polls. **For 38 of the 110 rows, nobody could say how a failure would be noticed.** That column
 turned out to be the most useful one in the sheet.
 
 The other useful column was *style*. Every row on the map moves data in one of four ways, and the
@@ -24,14 +23,14 @@ Gregor Hohpe and Bobby Woolf, in *Enterprise Integration Patterns* (2003), open 
 integration styles. They are still the right four, twenty years and several technologies later,
 because each one answers a different question about how two systems meet.
 
-- **File transfer.** One system writes a file; the other reads it, later. Coleta's nightly file to
+- *File transfer.* One system writes a file; the other reads it, later. Coleta's nightly file to
   SAP, the CNAB files exchanged with banks, the EDI messages with the supermarket chains.
-- **Shared database.** Two systems read and write the same tables. At Serra Alta that is mostly
+- *Shared database.* Two systems read and write the same tables. At Serra Alta that is mostly
   one system reading another's tables directly, or a staging table one side writes and the other
   polls.
-- **Remote procedure invocation**, which this lesson calls *by API*. One system calls the other and
+- *Remote procedure invocation*, which this lesson calls *by API*. One system calls the other and
   waits for the answer: a SOAP call through the ESB, a REST request from the Portal B2B.
-- **Messaging**, which this lesson calls *by event*, because the use of it that matters most here is
+- *Messaging*, which this lesson calls *by event*, because the use of it that matters most here is
   publishing a fact. One system sends a message to a broker, and whoever is interested receives it.
   IBM MQ carries Serra Alta's.
 
