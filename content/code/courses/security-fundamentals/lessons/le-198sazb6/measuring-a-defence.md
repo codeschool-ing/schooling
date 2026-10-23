@@ -13,7 +13,7 @@ Attackers reuse a fairly stable set of techniques, and **MITRE ATT&CK** is a pub
 organised by what the attacker is trying to achieve at each stage: getting in, staying, moving,
 taking data out. A blue team can mark each technique as detected, partly detected or not detected,
 and purple exercises are how those marks get proved rather than assumed. The result is a map of
-where the defence is blind. `attacks-threats` lesson 26 explains the catalogue itself.
+where the defence is blind.
 
 ### Time: how long until we notice, and until it stops?
 
@@ -43,5 +43,5 @@ A defence changes every time the systems change, so a test from last year descri
 A sensible rhythm for an organisation the shop's size: a purple check whenever a control is added or
 changed, as in this lesson's exercise; a tabletop exercise once a year; and, once the basics are in
 place, an external penetration test of what faces the internet. Lesson 18 describes the careers on
-both sides of these exercises, and `soc-response` and `pentest` are the courses that teach each side
+both sides of these exercises, and `soc-response` is the course that teaches the defending side
 properly.

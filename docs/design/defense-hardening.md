@@ -15,7 +15,7 @@ In **1 track** — `security`(10).
 
 ## Assumes, and leaves ready
 
-**Assumes:** `attacks-threats` — hardening is a list of answers, and it is unreadable without the questions.
+**Assumes:** `security-fundamentals` — hardening is a list of answers, and each lesson states the question its control answers. It assumed `attacks-threats` until 2026-10-23, when that course and `pentest` left both tracks: the catalogue teaches the defending side, and neither will be written.
 
 **Leaves ready:** **nothing.** No course requires it.
 

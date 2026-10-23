@@ -41,8 +41,7 @@ evidence, applied to yourself.
 Certifications exist for every family, from entry level to senior. Some require years of professional
 experience before they can be awarded; some are practical exams where you must actually break into a
 machine; some are courses in implementing or auditing a standard like ISO 27001. Treat them as a way to
-structure study and to get past a CV filter, not as the skill itself. `pentest` lesson 21 surveys the
-offensive ones.
+structure study and to get past a CV filter, not as the skill itself.
 
 ### The common thread
 

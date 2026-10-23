@@ -46,5 +46,5 @@ fez o quê (a responsabilização da aula 1).
 
 Um **vetor de ameaça**, ou vetor de ataque, é o caminho que uma ameaça usa para chegar ao ativo:
 e-mail, uma página web pública, um pen drive, um telefonema para o suporte. Listar os vetores que
-chegam a um ativo é como um defensor descobre onde pôr controles. O `attacks-threats` percorre os
-vetores intencionais um a um; este curso só precisa da ideia de que eles existem.
+chegam a um ativo é como um defensor descobre onde pôr controles, e este curso só precisa da ideia de
+que eles existem.

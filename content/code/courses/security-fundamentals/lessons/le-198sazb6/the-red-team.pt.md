@@ -32,9 +32,7 @@ O que separa um time vermelho de um criminoso não é a técnica. É a **autoriz
 - o que acontece com qualquer dado real que os testadores virem.
 
 Testar um sistema que não é seu, ou que você não recebeu permissão por escrito para testar, é crime no
-Brasil como na maioria dos países, qualquer que seja a intenção. As aulas 1, 2 e 22 de `pentest` tratam
-em detalhe das regras, do documento de autorização e dos limites legais, e elas vêm antes de qualquer
-técnica naquele curso por um motivo.
+Brasil como na maioria dos países, qualquer que seja a intenção.
 
 Pelo mesmo motivo, tudo o que este curso mostra é feito no laboratório dele, contra máquinas que o
 curso montou para isso. O lado vermelho no exercício desta aula é a ana, testando o portal da própria
