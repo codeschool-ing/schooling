@@ -3,12 +3,12 @@ from fig import Canvas
 
 def graph(T):
     c = Canvas(720, 230, T(
-        "The planner's dependency graph. Two refs on the left, sessions and monday. Two computed values in the "
-        "middle: total reads both refs, and perCourse reads both refs and courses. The template on the right "
+        "The planner's dependency graph. Three refs on the left: courses, sessions and monday. Two computed values in the "
+        "middle: total reads sessions and monday, and perCourse reads all three refs. The template on the right "
         "reads total, perCourse and monday. A click on Previous week writes monday; the arrows from monday mark "
         "total, perCourse and the template stale, and the redraw recomputes each once.",
-        "O grafo de dependências do planner. Dois refs à esquerda, sessions e monday. Dois valores computed no "
-        "meio: total lê os dois refs, e perCourse lê os dois refs e courses. O template, à direita, lê total, "
+        "O grafo de dependências do planner. Três refs à esquerda: courses, sessions e monday. Dois valores computed no "
+        "meio: total lê sessions e monday, e perCourse lê os três refs. O template, à direita, lê total, "
         "perCourse e monday. Um clique em Previous week escreve em monday; as setas que saem de monday marcam "
         "total, perCourse e o template como desatualizados, e a renderização recalcula cada um uma vez."))
     col = [(30, T("owned: ref", "próprio: ref")), (300, T("derived: computed", "derivado: computed")), (560, T("drawn", "desenhado"))]
