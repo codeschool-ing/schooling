@@ -43,4 +43,4 @@ def figures(lang):
     f.text(525, 175, t["r2"], size=8, fill="paper-dim")
     f.arrow([(450, 122), (450, 48)], both=True)
     f.text(458, 84, t["r3"], anchor="start", size=8.5, fill="paper-dim")
-    return {"l06-bff": f.json(t["cap"])}
+    return {"l06-bff": f.json(t["cap"], same=["refresh token", "access token"] if lang == "pt" else None)}
