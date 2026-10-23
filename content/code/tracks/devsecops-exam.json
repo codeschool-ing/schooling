@@ -422,7 +422,7 @@
         "why": "The convention structures a message and cannot read its meaning. A `feat` with no `!` is taken as a feature that breaks nothing."
       },
       {
-        "text": "The bot reads the library's commit messages and holds each `feat` back for a person",
+        "text": "The bot reads the library's commit messages and holds each `feat` back for a person instead of merging it on green",
         "correct": false,
         "why": "A bot proposes versions, not commits. What decides grouping and merging here is whether the version is a major one."
       },
@@ -432,7 +432,7 @@
         "why": "Grouping minor and patch updates while leaving majors alone is a decision made by version number."
       },
       {
-        "text": "It ships as a minor version, so the bot groups it and merges it on green; with `!` it would be a major, in a pull request of its own",
+        "text": "It counts as a new feature release, so it lands unattended once checks pass; a `!` would have made it a major, kept apart",
         "correct": true,
         "why": "A major is the version allowed to break things, and that is why majors are kept apart. Without the `!` the break arrives labelled safe, and only the dependent's tests can stop it."
       }
@@ -1402,6 +1402,808 @@
     "unit": "seconds"
   },
   {
+    "id": "ex-ea0wthm5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "linkbox's `ci/sast.sh` begins with `set -euo pipefail`, runs Semgrep with `--error`, then Bandit with `--severity-level medium`. Run 1 failed in `sast` on Semgrep's two findings. The developer fixes exactly those two and pushes, and run 2 fails in `sast` again, on Bandit's B201 for the debugger. She says the scanner missed it the first time. What happened?",
+    "hint": "Pipeline and Supply Chain Security, lesson 3.",
+    "choices": [
+      {
+        "text": "Bandit reports once Semgrep has passed, because the two tools share one set of rules",
+        "correct": false,
+        "why": "They share nothing: Bandit's checks are its own. It simply never started in run 1."
+      },
+      {
+        "text": "B201 is high severity, and the gate reads high findings after the medium ones are fixed",
+        "correct": false,
+        "why": "`--severity-level medium` reports medium and high together, in one run; the threshold is a floor, not an order of reading."
+      },
+      {
+        "text": "`set -e` stopped the script at Semgrep's failure, so Bandit did not run in run 1",
+        "correct": true,
+        "why": "A stage that stops at its first tool reports only that tool's findings. B201 was in the code all along, and it appears once Semgrep's are fixed."
+      },
+      {
+        "text": "Fixing the search moved the line numbers, and Bandit reports a moved line as a new finding",
+        "correct": false,
+        "why": "Bandit keeps no memory between runs; it would have reported B201 in run 1 had it run at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-3s27kfwc",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A monthly security report quotes `pip-audit -r requirements.txt` on the portal's old lock, which printed `Found 12 known vulnerabilities in 2 packages`. The rows for jinja2 3.1.4 name `PYSEC-2026-1475`, `PYSEC-2026-1472`, `PYSEC-2026-1471`, `PYSEC-2026-1471`, `PYSEC-2026-1475` and `PYSEC-2026-1472`; the rows for requests 2.31.0 name `PYSEC-2026-1873`, `PYSEC-2026-1872`, `PYSEC-2026-2275`, `PYSEC-2026-1873`, `PYSEC-2026-1872` and `PYSEC-2026-2275`. Counting the way the pipeline course asks before a number goes into a report, how many flaws should the report state?",
+    "hint": "Pipeline and Supply Chain Security, lesson 5; Secure Coding, lesson 17.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "flaws"
+  },
+  {
+    "id": "ex-zxp7thcb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "linkbox's `ci/exceptions.txt` holds three lines excepting Jinja2 3.1.4's advisories until `2026-11-20`, with reasons such as `templates need rework for 3.1.5; Ana, see issue 41`. In the last week the gate starts warning, and a teammate runs `sed` to change all three dates to `2027-01-20`, keeps the reason, and commits it as \"bump dates\". The build is green again. What do the two courses find wrong with that commit?",
+    "hint": "Pipeline and Supply Chain Security, lesson 7; Threat Modelling and Risk, lesson 12.",
+    "choices": [
+      {
+        "text": "A renewal is a new decision: the risk reviewed, and a reason saying what changed",
+        "correct": true,
+        "why": "Both courses refuse the moved date. An exception that renews itself by an edit becomes the permanent acceptance its date was there to prevent."
+      },
+      {
+        "text": "The gate reads the date, so a later date that a reviewer lets through is a valid renewal",
+        "correct": false,
+        "why": "The gate checks the date because a program can. Whether the decision still holds is what the reason and the review are for, and this commit carries neither."
+      },
+      {
+        "text": "Each line should name the package instead of one advisory, so a single date covers the next advisory too",
+        "correct": false,
+        "why": "Naming the advisory is deliberate: a fourth advisory against 3.1.4 is not covered, and it breaks the build like any other."
+      },
+      {
+        "text": "Exceptions are not renewable; the build has to stay broken until Jinja2 is upgraded",
+        "correct": false,
+        "why": "Both courses allow a renewal. What they refuse is one made by moving a date with no new decision behind it."
+      }
+    ]
+  },
+  {
+    "id": "ex-61hm46v1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A team ships two programs in one image. The build stage compiles a Go service with `CGO_ENABLED=0` and a small C tool linked against a compression library somebody copied into the repository; the final stage is `gcr.io/distroless/static-debian12` and receives both binaries with `COPY --from=build`. The image scan reports very little. Which part of what ships has no list the scanner can read?",
+    "hint": "Pipeline and Supply Chain Security, lesson 8; Docker and Containers, lesson 13.",
+    "choices": [
+      {
+        "text": "The Go service: a static binary on a base with no package manager leaves the scanner no record",
+        "correct": false,
+        "why": "Go records its module dependencies inside the binary, and Trivy reads that record, static or not."
+      },
+      {
+        "text": "Neither: distroless records the copied binaries in the Debian package database too",
+        "correct": false,
+        "why": "That database lists the base's own packages. Files the build stage copies in are on no list unless something writes one."
+      },
+      {
+        "text": "Both binaries: the scanner reads a program's bytes, and a compiled binary hides what went into it",
+        "correct": false,
+        "why": "A scanner does not recognise code from its bytes. It reads the records package managers, and some compilers, leave behind."
+      },
+      {
+        "text": "The C tool and its library: nothing recorded them, so the report is silent about them",
+        "correct": true,
+        "why": "A C program compiled in the build records nothing. The way out is to write the component into the SBOM by hand: a clean report is a statement about the lists."
+      }
+    ]
+  },
+  {
+    "id": "ex-an5jsxz0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Deployment runs an image whose Dockerfile ends with `USER 65532`, and its container sets `readOnlyRootFilesystem: true`, `allowPrivilegeEscalation: false` and `capabilities: {drop: [\"ALL\"]}`. To get past a permission error, somebody adds `runAsUser: 0` to the container in a hurry, and the pod starts as root. Which one field, had it been there, would have turned that edit into a refusal?",
+    "hint": "Pipeline and Supply Chain Security, lesson 9; Kubernetes: Orchestration in Production, lesson 25.",
+    "choices": [
+      {
+        "text": "`seccompProfile: {type: RuntimeDefault}`, since a root process makes calls the filter refuses",
+        "correct": false,
+        "why": "The filter limits which system calls a process may make, whoever it runs as. It says nothing about the user."
+      },
+      {
+        "text": "`runAsNonRoot: true`: the kubelet then refuses to start a container whose user would be 0",
+        "correct": true,
+        "why": "It is the one control that checks the user: the pod waits in `CreateContainerConfigError` instead of running. `USER` in the image is only what happens when nothing says otherwise."
+      },
+      {
+        "text": "`readOnlyRootFilesystem: true` on the pod as well, since root fails to start on a read-only root",
+        "correct": false,
+        "why": "It was already set, and it still held: root cannot change the image's files. Nothing about a read-only root stops root from starting."
+      },
+      {
+        "text": "`capabilities: {drop: [\"ALL\"]}` moved to the pod, so that root has no capability left to use",
+        "correct": false,
+        "why": "Root without capabilities still starts. Dropping them limits what root can do, not whether it runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-h0xadedh",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "To sign an image keyless from GitHub Actions, the signing job asks GitHub for a short-lived OIDC token that names the repository, the workflow and the ref, and exchanges it with Fulcio for a certificate. The job can ask for that token only when its workflow grants the permission `id-token: ___`.",
+    "hint": "Pipeline and Supply Chain Security, lesson 14; Automated Testing and CI/CD, lesson 9.",
+    "blanks": [
+      {
+        "accept": [
+          "write"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-z4ms7711",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "zizmor read the first version of linkbox's GitHub Actions workflow and reported the findings on the left. Match each with the change the fixed workflow makes for it.",
+    "hint": "Pipeline and Supply Chain Security, lesson 16.",
+    "pairs": [
+      {
+        "left": "`dangerous-triggers`",
+        "right": "`pull_request` in its place, with no `ref:` pointing at the head"
+      },
+      {
+        "left": "`template-injection`",
+        "right": "the title handed to the step under `env:` and read as `$TITLE`"
+      },
+      {
+        "left": "`unpinned-uses`",
+        "right": "each action named by a full commit hash, its version in a comment"
+      },
+      {
+        "left": "`artipacked`",
+        "right": "`persist-credentials: false` on the checkout step"
+      },
+      {
+        "left": "`excessive-permissions`",
+        "right": "`contents: read` declared at the top, for every job"
+      }
+    ],
+    "right_distractors": [
+      "a `concurrency` group that cancels the older run of a branch",
+      "a `name` given to the job"
+    ]
+  },
+  {
+    "id": "ex-zkc85m3e",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A team moving linkbox's pipeline to a hosted CI removes `--redact` from `ci/secrets.sh`, arguing that the CI masks secrets in every job log anyway. The stage is gitleaks reading the whole history. What is wrong with the argument?",
+    "hint": "Pipeline and Supply Chain Security, lesson 6; Automated Testing and CI/CD, lesson 9.",
+    "choices": [
+      {
+        "text": "Masking hides random-looking strings in a log, so the flag was redundant and dropping it changes little",
+        "correct": false,
+        "why": "Masking replaces the exact values registered in the CI's store. It does not look for strings that merely look random."
+      },
+      {
+        "text": "Masking hides values registered in the CI, and a secret found in the history was not registered",
+        "correct": true,
+        "why": "A leaked value found in a commit is not one of the CI's own secrets, so nothing masks it, and a CI log is read by many people and kept longer than the code."
+      },
+      {
+        "text": "`--redact` matters on a laptop, where a terminal may be shared on a call or recorded",
+        "correct": false,
+        "why": "The lesson says the flag matters more in CI than anywhere else, because everybody with access to the builds reads that log."
+      },
+      {
+        "text": "Without `--redact` gitleaks exits 0 on a finding, so the stage would pass a pushed secret",
+        "correct": false,
+        "why": "The flag changes what is printed, not the verdict: gitleaks exits 1 on a finding either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-599mh3za",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A reviewer reads linkbox's stage scripts for one property: a scanner that crashed or never started must break the build rather than pass it. Which of these have that property? Choose all that apply.",
+    "hint": "Pipeline and Supply Chain Security, lesson 7.",
+    "choices": [
+      {
+        "text": "`semgrep scan --metrics=off --quiet --error --emacs --config .semgrep.yml . || exit 1`",
+        "correct": true,
+        "why": "Any failure of the command, a crash included, leaves the script with status 1, which the pipeline reads as a broken build."
+      },
+      {
+        "text": "`[ -s \"$report\" ] || exit 1`, after pip-audit wrote to a file `mktemp` made empty for this run",
+        "correct": true,
+        "why": "A run that wrote nothing leaves the file empty, and an empty report breaks the build before it reaches the gate."
+      },
+      {
+        "text": "The gate program reading the report, in which BREAK is 1 and an unhandled error also exits 1",
+        "correct": true,
+        "why": "The gate fails closed with no extra code: choosing 1 for BREAK made a crash and a break the same verdict."
+      },
+      {
+        "text": "pip-audit writing its report to `audit.json` in the project, and the stage checking the file is not empty",
+        "correct": false,
+        "why": "A report an earlier run left behind is not empty, so a failed audit passed on the laptop; that is the bug the lesson found while it was recorded."
+      },
+      {
+        "text": "`semgrep scan --metrics=off --quiet --emacs --config .semgrep.yml . || true`",
+        "correct": false,
+        "why": "`|| true` turns every status into 0, a crash included: it is one of the lines that make a gate a decoration."
+      }
+    ]
+  },
+  {
+    "id": "ex-msd5ch5q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A security lead proposes two numbers for the quarterly review: each team's median days to close a finding, and the percentage of threats \"mitigated\" in each team's threat model. What do the two courses say about the pair?",
+    "hint": "Pipeline and Supply Chain Security, lesson 20; Threat Modelling and Risk, lesson 15.",
+    "choices": [
+      {
+        "text": "Both are sound, since each one comes from a file or a log rather than from anybody's memory",
+        "correct": false,
+        "why": "Where a number comes from does not stop it being gamed; both of these move without any risk going away."
+      },
+      {
+        "text": "Count the findings and threats each team found instead, since more found means more looked at",
+        "correct": false,
+        "why": "A model padded with generic threats from a tool scores higher on that count and protects less."
+      },
+      {
+        "text": "Keep both, averaged across the teams, so that one team's gaming is diluted",
+        "correct": false,
+        "why": "An average of gamed numbers is a gamed number; the trouble is in what each one counts."
+      },
+      {
+        "text": "Both improve by counting differently; report each beside a second number that shows it",
+        "correct": true,
+        "why": "Once a measure is a target it improves the cheap way. The won't-fix share and the count of verified requirements show which way it moved."
+      }
+    ]
+  },
+  {
+    "id": "ex-w8e4f0y5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "linkbox's `ci/dast.sh` starts the image with `-e LINKBOX_TOKEN=\"$(head -c 18 /dev/urandom | base64)\"` on the `docker run` command line, where another user of the machine could read it in the process list. The testing course ranks a secret on a command line as never acceptable. Why does the pipeline course accept it here?",
+    "hint": "Pipeline and Supply Chain Security, lesson 6; Automated Testing and CI/CD, lesson 9.",
+    "choices": [
+      {
+        "text": "That token is made for one run and opens one throwaway container; a real secret would not",
+        "correct": true,
+        "why": "The lesson accepts it for exactly that value, and says lesson 17 replaces values like it with ones the pipeline fetches at run time."
+      },
+      {
+        "text": "Docker hides the values given with `-e` from `ps`, so the process list leaves them out",
+        "correct": false,
+        "why": "The lesson says the value does appear on the command line, readable in the process list for the length of the scan."
+      },
+      {
+        "text": "The token is base64, which `ps` shows as unreadable text, so the list gives no usable value",
+        "correct": false,
+        "why": "Base64 is an encoding anybody reverses; the testing course decodes a header that way in one command."
+      },
+      {
+        "text": "The CI runs as a member of the docker group, so other users cannot see its processes",
+        "correct": false,
+        "why": "Other users of the same machine are exactly who the lesson says could read it; being in a group hides no process."
+      }
+    ]
+  },
+  {
+    "id": "ex-er7kns0d",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "prompt": "daniel is about to accept T14, the crafted PDF, for six months. Which of these does the lesson say the record of that acceptance must hold? Choose all that apply.",
+    "hint": "Threat Modelling and Risk, lesson 12.",
+    "choices": [
+      {
+        "text": "The risk with its estimate, so a later reader knows what was accepted",
+        "correct": true,
+        "why": "Six months on, nobody remembers what \"accepted\" referred to unless the record says, with the numbers."
+      },
+      {
+        "text": "What is in place instead: the compensating controls that make living with it reasonable",
+        "correct": true,
+        "why": "RA-001 lists the viewer rule, the weekly updates, the backups restored in a test and the insurance quote."
+      },
+      {
+        "text": "Who accepted it, by name, and on which day",
+        "correct": true,
+        "why": "An acceptance is legitimate when the right person made it, and the record says who that was."
+      },
+      {
+        "text": "A review date, and the events that would bring it forward",
+        "correct": true,
+        "why": "The date makes the acceptance expire instead of turning permanent; the triggers make it stale early when the risk changes."
+      },
+      {
+        "text": "The signature of the developer who found the threat, since they know the code best",
+        "correct": false,
+        "why": "Accepting a risk spends the business's money in advance, so it needs somebody with the authority to spend that much."
+      },
+      {
+        "text": "A permanent status, so the risk stops coming up at each review",
+        "correct": false,
+        "why": "That is the first way an acceptance rots: no expiry, renewed by nobody, true forever."
+      }
+    ]
+  },
+  {
+    "id": "ex-49y81hdf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "pytm reads `model.py`, where the staff console sits behind the clinic network as designed, so none of its findings mentions the internet, although the console answers from it. conftest reads linkbox's Dockerfile, whose final stage set no `USER`, and cannot see that the base image runs as 65532. What do the two lessons do about a fact that lives outside the file a tool reads?",
+    "hint": "Threat Modelling and Risk, lesson 2; Pipeline and Supply Chain Security, lesson 19.",
+    "choices": [
+      {
+        "text": "Trust the tools' coverage: pytm's library of rules and Trivy's built-in checks already include such cases",
+        "correct": false,
+        "why": "pytm believes the boundary it was given, and Trivy's DS-0002 fails on the same Dockerfile for the same reason; neither reads what the file leaves out."
+      },
+      {
+        "text": "Point both tools at the running system instead, so the files need no extra lines",
+        "correct": false,
+        "why": "Both lessons check the file because the file is what a change and its review pass through; a fact left out of it is invisible there."
+      },
+      {
+        "text": "Write the fact into the file: draw the flow from the internet, set `USER 65532:65532` in the final stage",
+        "correct": true,
+        "why": "A rule judges only what the file states. Written down, a later change that undoes the fact shows in a diff and fails the check."
+      },
+      {
+        "text": "Add rules until one of them notices the gap, since a missing finding means the rule set is too small",
+        "correct": false,
+        "why": "No rule over the model knows the console's real reach, and none over the Dockerfile knows the base's user; more rules read the same file."
+      }
+    ]
+  },
+  {
+    "id": "ex-9hg0ks15",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "An insurer's questionnaire asks Vereda for each risk's SLE, the cost of one event, and its ARO, the events per year. It also asks for the product of the two, R$ 75,000 for T03, under the name it abbreviates as ___.",
+    "hint": "Threat Modelling and Risk, lesson 9.",
+    "blanks": [
+      {
+        "accept": [
+          "ALE"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hefspype",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Vereda's attack tree for \"mark a booking paid without paying\" has three branches, and each needs both of its two leaves, estimated in days of an outsider's effort. Forge the webhook: learn its address, 1, and send a request the portal accepts, 1. Change the status in the console: take over a staff account, 5, and reach the console, 2. Change the row in the database: take over the reminder worker, 10, and use its owner account, 1. The team buys the signature check and the least-privilege account for the worker, and not the second factor. How many days does the cheapest remaining route cost?",
+    "hint": "Threat Modelling and Risk, lesson 5.",
+    "value": 7,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-aypza816",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "C6, an isolated viewer for exam PDFs, costs R$ 18,000 a year and removes about R$ 7,200 of T14's expected loss. Which of these could the lesson accept as a reason to buy it all the same? Choose all that apply.",
+    "hint": "Threat Modelling and Risk, lesson 11.",
+    "choices": [
+      {
+        "text": "A partner's contract that requires exams to be opened in an isolated viewer",
+        "correct": true,
+        "why": "A control a customer or partner requires is done whatever its ratio, and the plan says that is why."
+      },
+      {
+        "text": "A regulation that comes to require it of clinics holding health data",
+        "correct": true,
+        "why": "The law sits above the arithmetic: C11 is done for the LGPD although its ratio after C1 and C2 is about 0.6."
+      },
+      {
+        "text": "The bad year: R$ 388,419 one year in a hundred, a loss Vereda might not absorb",
+        "correct": true,
+        "why": "A rare, large loss is a question of survival rather than a budget line, and the average alone does not show it."
+      },
+      {
+        "text": "A fresh estimate of T14's loss, raised until the ratio comes out above 1",
+        "correct": false,
+        "why": "A ratio fiddled to justify a decision already taken is how a quantitative method loses everybody's trust; write the real reason instead."
+      },
+      {
+        "text": "It is the only control proposed for T14, so without it T14 would have no answer",
+        "correct": false,
+        "why": "T14 has other answers: it can be accepted on the record, or partly transferred, which is what lesson 12 does with it."
+      },
+      {
+        "text": "Its R$ 7,200 a year saved is more than first-phase controls save",
+        "correct": false,
+        "why": "C1 alone saves R$ 60,000 a year; C6 saves the least per real of all eleven."
+      }
+    ]
+  },
+  {
+    "id": "ex-5fvwvyvt",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "The invoice story adds a new external entity and three flows to Vereda's portal, so it gets a short design review before work starts. Put the steps of that review in the order the lesson gives them.",
+    "hint": "Threat Modelling and Risk, lesson 15.",
+    "items": [
+      "Draw the change as a difference to the level 1 DFD, and add the same parts to `model.py`",
+      "Ask STRIDE's questions of each new element and flow, and of nothing else",
+      "Write what the questions found into `threats.csv` and `requirements.csv`, with new ids",
+      "Merge the model's changes in the same pull request as the code"
+    ],
+    "trap": "Writing threats and requirements before STRIDE has been asked of the new flows records guesses instead of findings, and a model merged after the code has already fallen behind the system it describes."
+  },
+  {
+    "id": "ex-c3tgfhjx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "R16, \"The reminder worker's database account can read bookings and nothing else\", is verified by review, because no test in the portal's code can see a database grant. carla wants it checked on every change instead. Reading the pipeline course's tests for a rule worth writing, when can R16 become a policy rule in the pipeline?",
+    "hint": "Threat Modelling and Risk, lesson 8; Pipeline and Supply Chain Security, lesson 19.",
+    "choices": [
+      {
+        "text": "Once the worker's grants live in a file, so a rule gives a yes or a no on each run",
+        "correct": true,
+        "why": "A rule earns its place when a file can show the fact and the answer is yes or no; R16 already meets the third test, since somebody is hurt when it breaks."
+      },
+      {
+        "text": "By a person: a database or cloud permission is a judgement a file does not settle",
+        "correct": false,
+        "why": "The pipeline course checks permissions and settings written in files on every push; review was the answer only because no file showed the grant."
+      },
+      {
+        "text": "Once pytm gains an attribute for the account each process uses, so the model itself checks the grant",
+        "correct": false,
+        "why": "pytm has no such attribute, and even a model that stated the account would describe the design, not the grant the database actually holds."
+      },
+      {
+        "text": "Once R16 carries an estimate in reais, because a policy rule needs a number to weigh",
+        "correct": false,
+        "why": "A rule answers yes or no. Numbers to weigh belong to the risk lessons, not to a check."
+      }
+    ]
+  },
+  {
+    "id": "ex-vv2vqq4b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Abuse case A3 ends with the line \"Then the answer is the same as for an exam that does not exist\". Turning it into a test, which assertion holds that line exactly?",
+    "hint": "Threat Modelling and Risk, lesson 7; Secure Coding, lesson 13.",
+    "choices": [
+      {
+        "text": "Asking for exam E2 as P1 answers 403, so P1 learns her request was refused",
+        "correct": false,
+        "why": "A 403 tells P1 that exam E2 exists, which is the very fact the line keeps from her."
+      },
+      {
+        "text": "Asking for exam E2 as P1 answers 404, whatever the body says",
+        "correct": false,
+        "why": "A body that differs, a message or a length, still tells P1 that the exam exists; the status alone does not hold the line."
+      },
+      {
+        "text": "The page shown for E2 tells P1 that the exam belongs to somebody else",
+        "correct": false,
+        "why": "That message confirms the exam exists and has an owner, which is the output the abuse case closes."
+      },
+      {
+        "text": "Its status and body equal those for an exam nobody has",
+        "correct": true,
+        "why": "The secure-code test compares both with a request for a missing exam, so nothing in the answer separates \"not yours\" from \"not there\"."
+      }
+    ]
+  },
+  {
+    "id": "ex-r7vwa9hx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "The company's package proxy serves a copy of `jinja2-3.1.6-py3-none-any.whl` that somebody altered. The project pins `jinja2==3.1.6`, and `pip-audit -r requirements.txt` prints `No known vulnerabilities found`. What would have refused the altered file?",
+    "hint": "Secure Coding, lesson 17.",
+    "choices": [
+      {
+        "text": "A second audit against osv.dev, which compares downloaded files with the published ones",
+        "correct": false,
+        "why": "An audit looks versions up in advisory data. It never examines the bytes of the file you downloaded."
+      },
+      {
+        "text": "A `--hash=sha256:` beside the pin, and pip run with `--require-hashes`",
+        "correct": true,
+        "why": "An audit checks what was published, and a hash checks that you received it: pip refuses any file whose digest differs."
+      },
+      {
+        "text": "An exact pin, which `jinja2==3.1.6` already is, so the file was already protected",
+        "correct": false,
+        "why": "A version number names a release. It does not prove that the file downloaded is the file that was published."
+      },
+      {
+        "text": "A range such as `jinja2>=3.1.6`, for a newer, untouched release",
+        "correct": false,
+        "why": "A range installs whatever is newest on the day, from the same proxy, and proves nothing about the bytes either."
+      }
+    ]
+  },
+  {
+    "id": "ex-m3vg00mb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "After lesson 3's fix, linkbox's search sends `SELECT code, url FROM links WHERE url LIKE ?` with the search text, wrapped in `%` signs, as the parameter, and `bash ci/sast.sh` exits 0. A search for `%` alone now lists every link in the service. Why does no scanner object, and what would catch it?",
+    "hint": "Secure Coding, lesson 5; Pipeline and Supply Chain Security, lesson 3.",
+    "choices": [
+      {
+        "text": "Bandit rates the query at low confidence, so `--confidence-level low` would report it",
+        "correct": false,
+        "why": "There is nothing to rate: the SQL text is fixed and the value travels apart, which is the shape every rule treats as safe."
+      },
+      {
+        "text": "It is still SQL injection, and a Semgrep rule that matched `?` placeholders as well would report it",
+        "correct": false,
+        "why": "The value never reaches the SQL parser, so nothing is injected; a rule against placeholders would flag the fix itself."
+      },
+      {
+        "text": "`LIKE` reads the value as a pattern, which no rule sees; a test searching for `%` and `_` does",
+        "correct": true,
+        "why": "The placeholder settles the SQL. The wildcards need escaping for `LIKE`, and only a test that searches for them literally sees the behaviour."
+      },
+      {
+        "text": "The nightly ZAP baseline would catch it, since it types `%` into the search boxes it finds",
+        "correct": false,
+        "why": "The baseline only looks: it reads what the application answers and sends nothing meant to break it."
+      }
+    ]
+  },
+  {
+    "id": "ex-gzp70qrx",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "ZAP's baseline scan reported rule 10020, Missing Anti-clickjacking Header, on linkbox. The fix sends `X-Frame-Options: DENY` and, in its Content-Security-Policy, the same directive the portal's policy uses so that no other site may show its pages inside a frame: `___ 'none'`.",
+    "hint": "Secure Coding, lesson 8; Pipeline and Supply Chain Security, lesson 4.",
+    "blanks": [
+      {
+        "accept": [
+          "frame-ancestors"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-p6kt2jg5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The staff console's team wants physiotherapists to list a patient's exams, and asks to reuse the portal's `GET /exams` with a `?patient=` parameter, since the code already exists. What do the two courses answer?",
+    "hint": "Secure Coding, lesson 13; Threat Modelling and Risk, lesson 2.",
+    "choices": [
+      {
+        "text": "Reuse it, and switch exam ids to random ones so a patient cannot guess another's",
+        "correct": false,
+        "why": "An unguessable id is a second layer on top of a check. Here the parameter itself chooses whose exams are read."
+      },
+      {
+        "text": "Reuse it, and log the requests that carry `?patient=` so that misuse gets noticed",
+        "correct": false,
+        "why": "A log records the misuse after the data has gone; the route still answers every patient who adds the parameter."
+      },
+      {
+        "text": "Reuse it, since a patient will not send a parameter that the screen does not show her",
+        "correct": false,
+        "why": "The server receives requests, not screens. Any patient can type the parameter into the address."
+      },
+      {
+        "text": "A separate console route behind its own check, with patients and staff kept apart in the model",
+        "correct": true,
+        "why": "One route serving two audiences ends up applying the check meant for one to neither; drawn as one box, the boundary between patients and staff disappears."
+      }
+    ]
+  },
+  {
+    "id": "ex-m023h2ed",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A ticket proposes what the portal's sign-in should write to its log, to make support easier. Which of these must never go in that log line? Choose all that apply.",
+    "hint": "Secure Coding, lesson 15.",
+    "choices": [
+      {
+        "text": "The password that was typed, even when it was wrong",
+        "correct": true,
+        "why": "A wrong password is often the right one for another site, or one typo away from this one."
+      },
+      {
+        "text": "The session id issued after the sign-in",
+        "correct": true,
+        "why": "Anybody reading the line could act as that session."
+      },
+      {
+        "text": "The full number of the card the patient last paid with",
+        "correct": true,
+        "why": "The card rules forbid storing it, and a log is storage."
+      },
+      {
+        "text": "The account's identifier",
+        "correct": false,
+        "why": "Who tried is what a defender needs; an identifier is what the log carries instead of the person's full details."
+      },
+      {
+        "text": "Whether the attempt succeeded, was refused or failed",
+        "correct": false,
+        "why": "The outcome is one of the five things every security event line needs."
+      }
+    ]
+  },
+  {
+    "id": "ex-08jejqdr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The portal now refuses to start without `PORTAL_SECRET_KEY` and `SMS_API_KEY`, and on laptops they come from a `.env` file that `.gitignore` keeps out of every commit. For production, somebody proposes copying a `.env` file onto the server. What does the lesson say production needs instead?",
+    "hint": "Secure Coding, lesson 16.",
+    "choices": [
+      {
+        "text": "A secret manager as the source of the variables, giving each process only its own secrets and recording each read",
+        "correct": true,
+        "why": "An environment variable is how a secret reaches a process, not where it is kept; a file on a server gives no access per process and no record of reads."
+      },
+      {
+        "text": "That is enough, provided the file is readable by the portal's account alone",
+        "correct": false,
+        "why": "Permissions narrow who reads the file. They still give no record of each read and no rotation without a deploy."
+      },
+      {
+        "text": "The two values written into a settings file inside the deployed code, so the process needs no variable",
+        "correct": false,
+        "why": "Code is copied, kept and shared by design; a secret written there belongs to everybody who will ever read it."
+      },
+      {
+        "text": "A private repository for the production `.env`, so each copy is versioned and reviewed",
+        "correct": false,
+        "why": "A repository's history keeps every version for as long as it exists, the opposite of what a secret needs."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ckkqszj",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Reviewing the `messages` branch of the portal, you mark the changes below. Match each with what it does to the portal.",
+    "hint": "Secure Coding, lesson 18.",
+    "pairs": [
+      {
+        "left": "`read_message` returns `MESSAGES[number]` after checking only that somebody is signed in",
+        "right": "any signed-in patient reads any message"
+      },
+      {
+        "left": "a new message takes its `patient` from the form whenever the form carries one",
+        "right": "the sender chooses whose message it is"
+      },
+      {
+        "left": "the template turns line breaks into `<br>` and marks the text `safe`",
+        "right": "what a patient typed reaches the page unescaped"
+      },
+      {
+        "left": "`app.secret_key = \"vereda-dev\"` replaces a random key",
+        "right": "whoever read the repository can forge a session cookie"
+      },
+      {
+        "left": "`flask==3.1.3` becomes `flask>=3.0`",
+        "right": "each deployment installs whatever release is newest that day"
+      }
+    ],
+    "right_distractors": [
+      "two messages can get one number when they arrive together",
+      "a missing message number answers with a 500"
+    ]
+  },
+  {
+    "id": "ex-cw88qyk8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Two projects silence Bandit's B101 on test asserts in different ways. One runs `bandit -q -r . -x ./test_app.py`; the other has B101's own setting, `assert_used`, skip `*/tests/*.py` in `bandit.yaml`. Months later somebody pastes a real-looking token into the test file each project already has, assigned to `ADMIN_TOKEN`. Which project's scan reports it as B105, and why?",
+    "hint": "Secure Coding, lesson 19; Pipeline and Supply Chain Security, lesson 3.",
+    "choices": [
+      {
+        "text": "Both: `-x` and the `assert_used` setting each switch off B101 and leave the rest alone",
+        "correct": false,
+        "why": "`-x` takes the file out of the scan, so every check stops reading it, B105 included."
+      },
+      {
+        "text": "The `bandit.yaml` one: `-x` drops the test file from each check, B105 too",
+        "correct": true,
+        "why": "Skipping one rule where it is wrong keeps the others watching; excluding the file buys silence on B101 with a blind spot for everything else."
+      },
+      {
+        "text": "Neither: Bandit skips B105 in test files, where fixture values are expected",
+        "correct": false,
+        "why": "B105 looks at a string that looks like a password, assigned to a name that sounds like one; the file's name does not enter into it."
+      },
+      {
+        "text": "The `-x` one, since naming one file narrows the exclusion more than a glob does",
+        "correct": false,
+        "why": "Narrow or wide, `-x` removes the whole file from the scan; the glob in `assert_used` removes one rule and keeps the file in."
+      }
+    ]
+  },
+  {
+    "id": "ex-d0wv374w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The portal's first sign-in code logged each attempt with the name written exactly as it arrived. Its log now goes to a SIEM whose parser turns each line into one event with named fields. A sign-in arrives whose name holds a line break followed by text in the shape of a successful sign-in. What can that do, and what stops it?",
+    "hint": "Secure Coding, lesson 15; SOC, Monitoring and Incident Response, lesson 4.",
+    "choices": [
+      {
+        "text": "Little: a SIEM keeps the raw line beside its fields, so an analyst sees the break",
+        "correct": false,
+        "why": "The raw line it keeps is the forged second line itself; each line is already its own event before anybody reads it."
+      },
+      {
+        "text": "The parser fails on the forged line and counts it, so the attempt reports itself",
+        "correct": false,
+        "why": "A line written in the expected shape matches the parser; only lines it does not recognise are skipped and counted."
+      },
+      {
+        "text": "A forged event, such as a sign-in that did not happen; encoding the name keeps it one line",
+        "correct": true,
+        "why": "One attempt has to be one line. The fix encodes the value for the log as escaping does for a page, and structured logging does it by construction."
+      },
+      {
+        "text": "The password is the risky field; a name is safe to log just as it arrives",
+        "correct": false,
+        "why": "Any value a sender chooses, written to the log as it arrives, can split one event into two."
+      }
+    ]
+  },
+  {
+    "id": "ex-0nnnykt0",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Lesson 3 of the pipeline course fixes linkbox's injection with the secure-code course's loop, inside a pipeline. Put its events in the order they happen.",
+    "hint": "Secure Coding, lesson 1; Pipeline and Supply Chain Security, lesson 3.",
+    "items": [
+      "`sast` breaks run 1 on the query built from a string",
+      "a new test searches for `it's` and fails with a 500",
+      "the query takes a `?`, with the search text as a parameter",
+      "the tests pass locally and `ci/sast.sh` exits 0",
+      "the fix and its test go into one commit, and run 2 passes"
+    ],
+    "trap": "Changing the query before the new test has been seen failing leaves no evidence that the test would catch the defect, and a fix pushed without its test can come back in a shape the rule does not match."
+  },
+  {
     "id": "ex-dxd92kse",
     "version": 1,
     "type": "quiz",
@@ -2243,7 +3045,7 @@
     "hint": "Cloud Security, lesson 14; Pipeline and Supply Chain Security, lesson 7.",
     "choices": [
       {
-        "text": "`gate.sh` passes, as Checkov never reads the skip's date; the composition gate drops the expired line and breaks",
+        "text": "`gate.sh` passes, as Checkov never reads the skip's date; the other stage drops that stale line and breaks",
         "correct": true,
         "why": "Checkov does not read the date, so the exception is only as good as whatever looks at it. The composition gate was written to ignore an expired line, so the finding breaks the build again."
       },
@@ -2391,7 +3193,7 @@
     "hint": "Cloud Security, lesson 15; SOC, Monitoring and Incident Response, lesson 12.",
     "choices": [
       {
-        "text": "As unknown, because a trail keeps who changed a bucket and not who read an object",
+        "text": "As unknown, because a trail's selectors keep who changed a bucket and not who read an object",
         "correct": false,
         "why": "That is true of management events alone. Data events were chosen for both buckets before the incident, so reads of `clinic-records` are recorded."
       },
@@ -2401,7 +3203,7 @@
         "why": "Scope follows what the evidence shows was touched. Being reachable in principle puts nothing in scope."
       },
       {
-        "text": "As out of scope, naming the selectors that cover the bucket and the query that came back empty",
+        "text": "As out of scope, citing the records that cover it and the search that found nothing",
         "correct": true,
         "why": "Out of scope is a claim too, and it needs its own evidence: what was checked, and how, so the answer to 'could it be more?' is not a guess."
       },
@@ -2421,7 +3223,7 @@
     "hint": "SOC, Monitoring and Incident Response, lesson 20; Cloud Security, lesson 15.",
     "choices": [
       {
-        "text": "Two exports, of 13 and 14 October, were served to two outside addresses while the bucket was public",
+        "text": "Two files, from 13 and 14 October, went to two outside addresses during the public window",
         "correct": true,
         "why": "The anonymous `GetObject` records show it directly: which files, which addresses, inside the window. That is what confirmed means."
       },
@@ -2936,7 +3738,7 @@
         "why": "Nobody pushing to your project can publish somebody else's release, so every push stops on a finding no change can fix. That is the gate that gets switched off within weeks."
       },
       {
-        "text": "Let it warn, and write down who read the advisory and whether it touches what your project does with the package",
+        "text": "Let it warn, and record who read the notice and whether your code reaches the affected part",
         "correct": true,
         "why": "With no version to move to, the gate warns and a named person reads the advisory, as with ecdsa, where signing was affected and verification was not. A finding accepted with a written reason is exactly the triage a DevSecOps reviewer opens the pipeline to find."
       },
@@ -3231,7 +4033,7 @@
         "why": "Measured how, against what? A number nobody can explain turns the interview into a check on your honesty, and a project's own scan has no honest baseline for it."
       },
       {
-        "text": "Built a pipeline that refuses a pushed secret, with one finding followed from scan to fix in the README",
+        "text": "Built CI that refuses a pushed credential, and documented one issue from detection to repair",
         "correct": true,
         "why": "What you did, what is now true, and evidence anybody can check: the pattern of a project line. It is also what a DevSecOps reviewer opens first, a security gate and a finding handled end to end."
       },

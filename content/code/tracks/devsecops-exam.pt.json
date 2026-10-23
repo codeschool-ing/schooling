@@ -156,7 +156,7 @@
         "why": "O `Continue` informa o erro e segue em frente, então o job continuaria verde, com o erro impresso no log."
       },
       {
-        "text": "O `SilentlyContinue` não informa nem para, e esconde este arquivo ausente como esconde o que era esperado",
+        "text": "O `SilentlyContinue` não informa nem para, e esconde esta falha como escondia a esperada",
         "why": "É o `2>/dev/null` da aula 8, com o mesmo defeito: cala o erro que você esperava e também o que você não esperava."
       }
     ]
@@ -1032,6 +1032,596 @@
     "hint": "Redes e Protocolos, aula 6.",
     "unit": "segundos"
   },
+  "ex-ea0wthm5": {
+    "prompt": "O `ci/sast.sh` do linkbox começa com `set -euo pipefail`, roda o Semgrep com `--error` e depois o Bandit com `--severity-level medium`. A execução 1 falhou em `sast` com os dois achados do Semgrep. A desenvolvedora corrige exatamente esses dois e faz push, e a execução 2 falha de novo em `sast`, com o B201 do Bandit, sobre o depurador. Ela diz que o scanner deixou passar da primeira vez. O que aconteceu?",
+    "hint": "Segurança na Esteira e Cadeia de Suprimentos, aula 3.",
+    "choices": [
+      {
+        "text": "O Bandit reporta depois que o Semgrep passa, porque as duas ferramentas dividem um conjunto de regras",
+        "why": "Não dividem nada: as verificações do Bandit são dele. Ele simplesmente nem começou na execução 1."
+      },
+      {
+        "text": "O B201 é de severidade alta, e o gate lê os achados altos depois que os médios são corrigidos",
+        "why": "`--severity-level medium` reporta médios e altos juntos, numa execução só; o limiar é um piso, não uma ordem de leitura."
+      },
+      {
+        "text": "O `set -e` parou o script na falha do Semgrep, e o Bandit nem rodou na execução 1",
+        "why": "Um estágio que para na primeira ferramenta só reporta os achados dela. O B201 estava no código o tempo todo e aparece quando os do Semgrep são corrigidos."
+      },
+      {
+        "text": "Corrigir a busca mudou os números das linhas, e o Bandit reporta uma linha que mudou de lugar como achado novo",
+        "why": "O Bandit não guarda memória entre execuções; teria reportado o B201 na execução 1 se tivesse rodado."
+      }
+    ]
+  },
+  "ex-3s27kfwc": {
+    "prompt": "Um relatório mensal de segurança cita o `pip-audit -r requirements.txt` sobre o lock antigo do portal, que imprimiu `Found 12 known vulnerabilities in 2 packages`. As linhas do jinja2 3.1.4 nomeiam `PYSEC-2026-1475`, `PYSEC-2026-1472`, `PYSEC-2026-1471`, `PYSEC-2026-1471`, `PYSEC-2026-1475` e `PYSEC-2026-1472`; as do requests 2.31.0 nomeiam `PYSEC-2026-1873`, `PYSEC-2026-1872`, `PYSEC-2026-2275`, `PYSEC-2026-1873`, `PYSEC-2026-1872` e `PYSEC-2026-2275`. Contando do jeito que o curso de esteira pede antes de um número entrar num relatório, quantas falhas o relatório deve informar?",
+    "hint": "Segurança na Esteira e Cadeia de Suprimentos, aula 5; Codificação Segura, aula 17.",
+    "unit": "falhas"
+  },
+  "ex-zxp7thcb": {
+    "prompt": "O `ci/exceptions.txt` do linkbox tem três linhas que excetuam os avisos do Jinja2 3.1.4 até `2026-11-20`, com motivos como `templates need rework for 3.1.5; Ana, see issue 41`. Na última semana o gate começa a avisar, e um colega roda `sed` para mudar as três datas para `2027-01-20`, mantém o motivo e faz o commit como \"bump dates\". O build volta a ficar verde. O que os dois cursos veem de errado nesse commit?",
+    "hint": "Segurança na Esteira e Cadeia de Suprimentos, aula 7; Modelagem de Ameaças e Risco, aula 12.",
+    "choices": [
+      {
+        "text": "Renovar é uma decisão nova: o risco revisto, e um motivo dizendo o que mudou, para alguém revisar",
+        "why": "Os dois cursos recusam a data empurrada. Uma exceção que se renova com uma edição vira a aceitação permanente que a data existia para impedir."
+      },
+      {
+        "text": "O gate lê a data, então uma data posterior que o revisor deixe passar é uma renovação válida",
+        "why": "O gate confere a data porque um programa consegue. Se a decisão ainda vale é papel do motivo e da revisão, e este commit não traz nenhum dos dois."
+      },
+      {
+        "text": "Cada linha deveria nomear o pacote em vez de um aviso, para que uma única data cubra também o próximo aviso",
+        "why": "Nomear o aviso é de propósito: um quarto aviso contra a 3.1.4 não fica coberto e quebra o build como qualquer outro."
+      },
+      {
+        "text": "Exceções não se renovam; o build tem de ficar quebrado até o Jinja2 ser atualizado",
+        "why": "Os dois cursos permitem renovar. O que recusam é renovar empurrando uma data sem nenhuma decisão nova por trás."
+      }
+    ]
+  },
+  "ex-61hm46v1": {
+    "prompt": "Uma equipe entrega dois programas numa imagem. O estágio de build compila um serviço Go com `CGO_ENABLED=0` e uma pequena ferramenta em C ligada a uma biblioteca de compressão que alguém copiou para o repositório; o estágio final é `gcr.io/distroless/static-debian12` e recebe os dois binários com `COPY --from=build`. A varredura da imagem reporta muito pouco. Que parte do que vai para produção não tem lista nenhuma que o scanner consiga ler?",
+    "hint": "Segurança na Esteira e Cadeia de Suprimentos, aula 8; Docker e Containers, aula 13.",
+    "choices": [
+      {
+        "text": "O serviço Go: um binário estático numa base sem gerenciador de pacotes não deixa registro para o scanner",
+        "why": "O Go grava as dependências de módulo dentro do binário, e o Trivy lê esse registro, estático ou não."
+      },
+      {
+        "text": "Nem um nem outro: o distroless registra os binários copiados também no banco de pacotes do Debian",
+        "why": "Esse banco lista os pacotes da própria base. Os arquivos que o estágio de build copia não estão em lista nenhuma, a menos que algo escreva uma."
+      },
+      {
+        "text": "Os dois binários: o scanner lê os bytes do programa, e um binário compilado esconde o que entrou nele",
+        "why": "Um scanner não reconhece código pelos bytes. Ele lê os registros que os gerenciadores de pacotes, e alguns compiladores, deixam para trás."
+      },
+      {
+        "text": "A ferramenta em C e a biblioteca dela: nada as registrou, e o relatório se cala sobre elas",
+        "why": "Um programa em C compilado no build não registra nada. A saída é escrever o componente no SBOM à mão: um relatório limpo é uma afirmação sobre as listas."
+      }
+    ]
+  },
+  "ex-an5jsxz0": {
+    "prompt": "Um Deployment roda uma imagem cujo Dockerfile termina com `USER 65532`, e o contêiner define `readOnlyRootFilesystem: true`, `allowPrivilegeEscalation: false` e `capabilities: {drop: [\"ALL\"]}`. Para contornar um erro de permissão, alguém acrescenta às pressas `runAsUser: 0` ao contêiner, e o pod sobe como root. Que campo, se estivesse lá, teria transformado essa edição numa recusa?",
+    "hint": "Segurança na Esteira e Cadeia de Suprimentos, aula 9; Kubernetes: Orquestração em Produção, aula 25.",
+    "choices": [
+      {
+        "text": "`seccompProfile: {type: RuntimeDefault}`, já que um processo root faz chamadas que o filtro recusa",
+        "why": "O filtro limita quais chamadas de sistema um processo pode fazer, seja quem for. Não diz nada sobre o usuário."
+      },
+      {
+        "text": "`runAsNonRoot: true`, porque o kubelet passa a recusar subir um contêiner cujo usuário seria 0",
+        "why": "É o único controle que confere o usuário: o pod fica em `CreateContainerConfigError` em vez de rodar. O `USER` da imagem é só o que vale quando nada diz o contrário."
+      },
+      {
+        "text": "`readOnlyRootFilesystem: true` também no pod, já que root não sobe com a raiz somente leitura",
+        "why": "Já estava definido e continuou valendo: root não consegue mudar os arquivos da imagem. Nada numa raiz somente leitura impede root de subir."
+      },
+      {
+        "text": "`capabilities: {drop: [\"ALL\"]}` levado para o pod, para que root fique sem capability para usar",
+        "why": "Root sem capabilities sobe do mesmo jeito. Tirá-las limita o que root faz, não se ele roda."
+      }
+    ]
+  },
+  "ex-h0xadedh": {
+    "prompt": "Para assinar uma imagem sem chave a partir do GitHub Actions, o job de assinatura pede ao GitHub um token OIDC de vida curta que nomeia o repositório, o workflow e a ref, e troca esse token no Fulcio por um certificado. O job só consegue pedir esse token quando o workflow concede a permissão `id-token: ___`.",
+    "hint": "Segurança na Esteira e Cadeia de Suprimentos, aula 14; Testes Automatizados e CI/CD, aula 9.",
+    "blanks": [
+      {
+        "accept": [
+          "write"
+        ]
+      }
+    ]
+  },
+  "ex-z4ms7711": {
+    "prompt": "O zizmor leu a primeira versão do workflow de GitHub Actions do linkbox e reportou os achados da esquerda. Ligue cada um à mudança que o workflow corrigido faz por ele.",
+    "hint": "Segurança na Esteira e Cadeia de Suprimentos, aula 16.",
+    "pairs": [
+      {
+        "left": "`dangerous-triggers`",
+        "right": "`pull_request` no lugar, sem `ref:` apontando para o head"
+      },
+      {
+        "left": "`template-injection`",
+        "right": "o título entregue ao passo em `env:` e lido como `$TITLE`"
+      },
+      {
+        "left": "`unpinned-uses`",
+        "right": "cada action nomeada pelo hash completo do commit, com a versão num comentário"
+      },
+      {
+        "left": "`artipacked`",
+        "right": "`persist-credentials: false` no passo de checkout"
+      },
+      {
+        "left": "`excessive-permissions`",
+        "right": "`contents: read` declarado no topo, para todos os jobs"
+      }
+    ],
+    "right_distractors": [
+      "um grupo de `concurrency` que cancela a execução mais antiga de um branch",
+      "um `name` dado ao job"
+    ]
+  },
+  "ex-zkc85m3e": {
+    "prompt": "Uma equipe que está levando a esteira do linkbox para um CI hospedado tira o `--redact` do `ci/secrets.sh`, com o argumento de que o CI já mascara segredos em todo log de job. O estágio é o gitleaks lendo o histórico inteiro. O que há de errado no argumento?",
+    "hint": "Segurança na Esteira e Cadeia de Suprimentos, aula 6; Testes Automatizados e CI/CD, aula 9.",
+    "choices": [
+      {
+        "text": "O mascaramento esconde strings com cara de aleatórias num log, então a flag era redundante e tirá-la muda pouco",
+        "why": "O mascaramento troca os valores exatos cadastrados no cofre do CI. Ele não procura strings que só parecem aleatórias."
+      },
+      {
+        "text": "O mascaramento esconde valores cadastrados no CI, e um segredo achado no histórico não foi cadastrado",
+        "why": "Um valor vazado achado num commit não é um dos segredos do próprio CI, então nada o mascara, e um log de CI é lido por muita gente e guardado por mais tempo que o código."
+      },
+      {
+        "text": "O `--redact` importa no laptop, onde o terminal pode ser compartilhado numa chamada ou gravado",
+        "why": "A aula diz que a flag importa mais no CI do que em qualquer outro lugar, porque todo mundo com acesso aos builds lê esse log."
+      },
+      {
+        "text": "Sem `--redact` o gitleaks sai com 0 quando acha algo, e o estágio deixaria passar um segredo enviado",
+        "why": "A flag muda o que é impresso, não o veredito: o gitleaks sai com 1 num achado de qualquer jeito."
+      }
+    ]
+  },
+  "ex-599mh3za": {
+    "prompt": "Um revisor lê os scripts de estágio do linkbox procurando uma propriedade: um scanner que travou ou nem começou tem de quebrar o build, não deixá-lo passar. Quais destes têm essa propriedade? Marque todas as que se aplicam.",
+    "hint": "Segurança na Esteira e Cadeia de Suprimentos, aula 7.",
+    "choices": [
+      {
+        "text": "`semgrep scan --metrics=off --quiet --error --emacs --config .semgrep.yml . || exit 1`",
+        "why": "Qualquer falha do comando, inclusive uma queda, deixa o script com status 1, que a esteira lê como build quebrado."
+      },
+      {
+        "text": "`[ -s \"$report\" ] || exit 1`, depois de o pip-audit escrever num arquivo que o `mktemp` criou vazio para esta execução",
+        "why": "Uma execução que não escreveu nada deixa o arquivo vazio, e um relatório vazio quebra o build antes de chegar ao gate."
+      },
+      {
+        "text": "O programa do gate lendo o relatório, no qual BREAK é 1 e um erro não tratado também sai com 1",
+        "why": "O gate falha fechado sem código extra: escolher 1 para BREAK fez de uma queda e de uma quebra o mesmo veredito."
+      },
+      {
+        "text": "O pip-audit escrevendo o relatório em `audit.json` dentro do projeto, e o estágio conferindo que o arquivo não está vazio",
+        "why": "Um relatório deixado por uma execução anterior não está vazio, então uma auditoria que falhou passou no laptop; é o bug que a aula achou enquanto era gravada."
+      },
+      {
+        "text": "`semgrep scan --metrics=off --quiet --emacs --config .semgrep.yml . || true`",
+        "why": "`|| true` transforma todo status em 0, inclusive o de uma queda: é uma das linhas que fazem de um gate uma decoração."
+      }
+    ]
+  },
+  "ex-msd5ch5q": {
+    "prompt": "Um líder de segurança propõe dois números para a revisão trimestral: a mediana de dias que cada equipe leva para fechar um achado e o percentual de ameaças \"mitigadas\" no modelo de ameaças de cada equipe. O que os dois cursos dizem desse par?",
+    "hint": "Segurança na Esteira e Cadeia de Suprimentos, aula 20; Modelagem de Ameaças e Risco, aula 15.",
+    "choices": [
+      {
+        "text": "Os dois são sólidos, já que cada um vem de um arquivo ou de um log, e não da memória de alguém",
+        "why": "De onde um número vem não o impede de ser manipulado; esses dois se mexem sem que risco nenhum vá embora."
+      },
+      {
+        "text": "Contar os achados e as ameaças que cada equipe encontrou, já que mais encontrado quer dizer mais examinado",
+        "why": "Um modelo inflado com ameaças genéricas de uma ferramenta pontua mais nessa contagem e protege menos."
+      },
+      {
+        "text": "Manter os dois, com a média entre as equipes, para diluir a manipulação de uma delas",
+        "why": "A média de números manipulados é um número manipulado; o problema está no que cada um conta."
+      },
+      {
+        "text": "Os dois melhoram contando de outro jeito; reporte cada um ao lado de um segundo número",
+        "why": "Quando uma medida vira meta, ela melhora pelo caminho barato. A fatia de won't fix e a contagem de requisitos verificados mostram por qual caminho ela andou."
+      }
+    ]
+  },
+  "ex-w8e4f0y5": {
+    "prompt": "O `ci/dast.sh` do linkbox sobe a imagem com `-e LINKBOX_TOKEN=\"$(head -c 18 /dev/urandom | base64)\"` na linha de comando do `docker run`, onde outro usuário da máquina poderia lê-lo na lista de processos. O curso de testes classifica segredo em linha de comando como nunca aceitável. Por que o curso de esteira aceita aqui?",
+    "hint": "Segurança na Esteira e Cadeia de Suprimentos, aula 6; Testes Automatizados e CI/CD, aula 9.",
+    "choices": [
+      {
+        "text": "Esse token nasce para uma execução e abre um contêiner descartável; um de verdade não iria assim",
+        "why": "A aula aceita exatamente por causa desse valor, e diz que a aula 17 troca valores assim por outros que a esteira busca na hora da execução."
+      },
+      {
+        "text": "O Docker esconde do `ps` os valores passados com `-e`, então a lista de processos não os mostra",
+        "why": "A aula diz que o valor aparece sim na linha de comando, legível na lista de processos enquanto a varredura dura."
+      },
+      {
+        "text": "O token está em base64, que o `ps` mostra como texto ilegível, e a lista não entrega valor utilizável",
+        "why": "Base64 é uma codificação que qualquer um desfaz; o curso de testes decodifica um cabeçalho assim num comando."
+      },
+      {
+        "text": "O CI roda como membro do grupo docker, e outros usuários não veem os processos dele",
+        "why": "Outros usuários da mesma máquina são exatamente quem a aula diz que poderia ler; estar num grupo não esconde processo nenhum."
+      }
+    ]
+  },
+  "ex-er7kns0d": {
+    "prompt": "daniel vai aceitar a T14, o PDF malicioso, por seis meses. Quais destes itens a aula diz que o registro dessa aceitação precisa ter? Marque todas as que se aplicam.",
+    "hint": "Modelagem de Ameaças e Risco, aula 12.",
+    "choices": [
+      {
+        "text": "O risco com a estimativa, para quem ler depois saber o que foi aceito",
+        "why": "Seis meses depois, ninguém lembra a que o \"aceito\" se referia se o registro não disser, com os números."
+      },
+      {
+        "text": "O que existe no lugar: os controles compensatórios que tornam razoável conviver com ele",
+        "why": "O RA-001 lista a regra do visualizador, as atualizações semanais, os backups restaurados num teste e a cotação de seguro."
+      },
+      {
+        "text": "Quem aceitou, pelo nome, e em que dia",
+        "why": "Uma aceitação é legítima quando a pessoa certa a fez, e o registro diz quem foi."
+      },
+      {
+        "text": "Uma data de revisão, e os eventos que a antecipariam",
+        "why": "A data faz a aceitação expirar em vez de virar permanente; os gatilhos a tornam vencida antes, quando o risco muda."
+      },
+      {
+        "text": "A assinatura do desenvolvedor que achou a ameaça, já que é quem mais conhece o código",
+        "why": "Aceitar um risco é gastar o dinheiro do negócio adiantado, então precisa de alguém com autoridade para gastar tanto."
+      },
+      {
+        "text": "Um status permanente, para o risco parar de aparecer a cada revisão",
+        "why": "É o primeiro jeito de uma aceitação apodrecer: sem validade, renovada por ninguém, verdadeira para sempre."
+      }
+    ]
+  },
+  "ex-49y81hdf": {
+    "prompt": "O pytm lê o `model.py`, em que o console da equipe fica atrás da rede das clínicas, como projetado, e nenhum dos achados dele menciona a internet, embora o console responda a partir dela. O conftest lê o Dockerfile do linkbox, cujo estágio final não definia `USER`, e não consegue ver que a imagem base roda como 65532. O que as duas aulas fazem com um fato que mora fora do arquivo que a ferramenta lê?",
+    "hint": "Modelagem de Ameaças e Risco, aula 2; Segurança na Esteira e Cadeia de Suprimentos, aula 19.",
+    "choices": [
+      {
+        "text": "Confiar na cobertura das ferramentas: a biblioteca de regras do pytm e as verificações embutidas do Trivy já incluem esses casos",
+        "why": "O pytm acredita na fronteira que recebeu, e o DS-0002 do Trivy falha no mesmo Dockerfile pelo mesmo motivo; nenhum dos dois lê o que o arquivo deixa de fora."
+      },
+      {
+        "text": "Apontar as duas ferramentas para o sistema em execução, para os arquivos não precisarem de linhas a mais",
+        "why": "As duas aulas conferem o arquivo porque é por ele que passam a mudança e a revisão dela; um fato deixado de fora fica invisível ali."
+      },
+      {
+        "text": "Registrá-lo onde a ferramenta lê: desenhar o fluxo vindo de fora e declarar `USER 65532:65532` por último",
+        "why": "Uma regra só julga o que o arquivo declara. Escrito, uma mudança posterior que desfaça o fato aparece num diff e reprova a verificação."
+      },
+      {
+        "text": "Acrescentar regras até alguma notar a lacuna, já que um achado que falta quer dizer conjunto de regras pequeno",
+        "why": "Nenhuma regra sobre o modelo conhece o alcance real do console, e nenhuma sobre o Dockerfile conhece o usuário da base; mais regras leem o mesmo arquivo."
+      }
+    ]
+  },
+  "ex-9hg0ks15": {
+    "prompt": "O questionário de uma seguradora pede à Vereda o SLE de cada risco, o custo de um evento, e o ARO, os eventos por ano. Pede também o produto dos dois, R$ 75.000 para a T03, sob o nome que abrevia como ___.",
+    "hint": "Modelagem de Ameaças e Risco, aula 9.",
+    "blanks": [
+      {
+        "accept": [
+          "ALE"
+        ]
+      }
+    ]
+  },
+  "ex-hefspype": {
+    "prompt": "A árvore de ataque da Vereda para \"marcar uma reserva como paga sem pagar\" tem três ramos, e cada um exige as suas duas folhas, estimadas em dias de esforço de alguém de fora. Forjar o webhook: descobrir o endereço, 1, e mandar uma requisição que o portal aceite, 1. Mudar o status no console: tomar uma conta da equipe, 5, e alcançar o console, 2. Mudar a linha no banco: tomar o worker de lembretes, 10, e usar a conta de dono dele, 1. A equipe compra a verificação de assinatura e a conta de privilégio mínimo para o worker, e não o segundo fator. Quantos dias custa a rota mais barata que sobra?",
+    "hint": "Modelagem de Ameaças e Risco, aula 5.",
+    "unit": "dias"
+  },
+  "ex-aypza816": {
+    "prompt": "O C6, um visualizador isolado para os PDFs de exames, custa R$ 18.000 por ano e remove cerca de R$ 7.200 da perda esperada da T14. Quais destes a aula poderia aceitar como motivo para comprá-lo mesmo assim? Marque todas as que se aplicam.",
+    "hint": "Modelagem de Ameaças e Risco, aula 11.",
+    "choices": [
+      {
+        "text": "Um contrato de um parceiro que exige abrir exames num visualizador isolado",
+        "why": "Um controle que um cliente ou parceiro exige é feito seja qual for a razão, e o plano diz que é por isso."
+      },
+      {
+        "text": "Uma norma que passe a exigi-lo de clínicas que guardam dados de saúde",
+        "why": "A lei fica acima da aritmética: o C11 é feito pela LGPD, embora a razão dele depois de C1 e C2 seja cerca de 0,6."
+      },
+      {
+        "text": "O ano ruim: R$ 388.419 um ano em cem, uma perda que a Vereda talvez não absorva",
+        "why": "Uma perda rara e grande é questão de sobrevivência, não uma linha de orçamento, e a média sozinha não a mostra."
+      },
+      {
+        "text": "Uma nova estimativa da perda da T14, aumentada até a razão passar de 1",
+        "why": "Uma razão ajeitada para justificar uma decisão já tomada é como um método quantitativo perde a confiança de todos; escreva o motivo real."
+      },
+      {
+        "text": "É o único controle proposto para a T14, então sem ele a T14 ficaria sem resposta",
+        "why": "A T14 tem outras respostas: pode ser aceita formalmente ou em parte transferida, que é o que a aula 12 faz com ela."
+      },
+      {
+        "text": "A economia de R$ 7.200 por ano é maior que a dos controles da primeira fase",
+        "why": "Só o C1 economiza R$ 60.000 por ano; o C6 é o que menos economiza por real gasto dos onze."
+      }
+    ]
+  },
+  "ex-5fvwvyvt": {
+    "prompt": "A história da nota fiscal acrescenta uma entidade externa nova e três fluxos ao portal da Vereda, então ganha uma revisão de design curta antes de o trabalho começar. Ponha os passos dessa revisão na ordem em que a aula os dá.",
+    "hint": "Modelagem de Ameaças e Risco, aula 15.",
+    "items": [
+      "Desenhar a mudança como uma diferença no DFD de nível 1 e acrescentar as mesmas partes ao `model.py`",
+      "Fazer as perguntas do STRIDE a cada elemento e fluxo novo, e a nada mais",
+      "Escrever o que as perguntas acharam no `threats.csv` e no `requirements.csv`, com ids novos",
+      "Fazer o merge das mudanças do modelo no mesmo pull request do código"
+    ],
+    "trap": "Escrever ameaças e requisitos antes de fazer as perguntas do STRIDE aos fluxos novos registra palpites em vez de achados, e um modelo que entra depois do código já ficou para trás do sistema que descreve."
+  },
+  "ex-c3tgfhjx": {
+    "prompt": "O R16, \"The reminder worker's database account can read bookings and nothing else\", é verificado por revisão, porque nenhum teste no código do portal enxerga uma permissão do banco. A carla quer que ele seja conferido a cada mudança. Pelos critérios do curso de esteira para uma regra que vale escrever, quando o R16 pode virar uma regra de política na esteira?",
+    "hint": "Modelagem de Ameaças e Risco, aula 8; Segurança na Esteira e Cadeia de Suprimentos, aula 19.",
+    "choices": [
+      {
+        "text": "Quando as permissões do worker estiverem num arquivo, para uma regra dar sim ou não a cada execução",
+        "why": "Uma regra merece o lugar quando um arquivo consegue mostrar o fato e a resposta é sim ou não; o R16 já cumpre o terceiro critério, porque alguém sai prejudicado quando ele quebra."
+      },
+      {
+        "text": "Por uma pessoa: permissão de banco ou de nuvem é um julgamento que um arquivo não resolve",
+        "why": "O curso de esteira confere permissões e configurações escritas em arquivos a cada push; a revisão foi a resposta só porque nenhum arquivo mostrava a permissão."
+      },
+      {
+        "text": "Quando o pytm ganhar um atributo para a conta que cada processo usa, e o próprio modelo conferir a permissão",
+        "why": "O pytm não tem esse atributo, e mesmo um modelo que declarasse a conta descreveria o design, não a permissão que o banco tem de fato."
+      },
+      {
+        "text": "Quando o R16 tiver uma estimativa em reais, porque uma regra de política precisa de um número para pesar",
+        "why": "Uma regra responde sim ou não. Números para pesar são assunto das aulas de risco, não de uma verificação."
+      }
+    ]
+  },
+  "ex-vv2vqq4b": {
+    "prompt": "O caso de abuso A3 termina com a linha \"Then the answer is the same as for an exam that does not exist\". Ao virar teste, que asserção sustenta essa linha à risca?",
+    "hint": "Modelagem de Ameaças e Risco, aula 7; Codificação Segura, aula 13.",
+    "choices": [
+      {
+        "text": "Pedir o exame E2 como P1 responde 403, e P1 fica sabendo que o pedido foi recusado",
+        "why": "Um 403 conta a P1 que o exame E2 existe, que é justamente o fato que a linha esconde dela."
+      },
+      {
+        "text": "Pedir o exame E2 como P1 responde 404, diga o que disser o corpo da resposta",
+        "why": "Um corpo diferente, uma mensagem ou um tamanho, ainda conta a P1 que o exame existe; o status sozinho não sustenta a linha."
+      },
+      {
+        "text": "A página mostrada para o E2 avisa a P1 que o exame é de outra pessoa",
+        "why": "Essa mensagem confirma que o exame existe e tem dono, que é a saída que o caso de abuso fecha."
+      },
+      {
+        "text": "Status e corpo iguais aos de um exame que ninguém tem",
+        "why": "O teste do curso de código seguro compara os dois com o pedido de um exame que não existe, então nada na resposta separa \"não é seu\" de \"não existe\"."
+      }
+    ]
+  },
+  "ex-r7vwa9hx": {
+    "prompt": "O proxy de pacotes da empresa serve uma cópia de `jinja2-3.1.6-py3-none-any.whl` que alguém alterou. O projeto fixa `jinja2==3.1.6`, e o `pip-audit -r requirements.txt` imprime `No known vulnerabilities found`. O que teria recusado o arquivo alterado?",
+    "hint": "Codificação Segura, aula 17.",
+    "choices": [
+      {
+        "text": "Uma segunda auditoria contra o osv.dev, que compara os arquivos baixados com os publicados",
+        "why": "Uma auditoria procura versões em dados de avisos. Ela nunca examina os bytes do arquivo que você baixou."
+      },
+      {
+        "text": "Um `--hash=sha256:` ao lado do pin, com o pip rodando com `--require-hashes`",
+        "why": "A auditoria confere o que foi publicado, e o hash confere que você recebeu isso: o pip recusa qualquer arquivo com digest diferente."
+      },
+      {
+        "text": "Um pin exato, que `jinja2==3.1.6` já é, então o arquivo já estava protegido",
+        "why": "Um número de versão nomeia uma release. Não prova que o arquivo baixado é o arquivo que foi publicado."
+      },
+      {
+        "text": "Uma faixa como `jinja2>=3.1.6`, para instalar uma release mais nova e intacta",
+        "why": "Uma faixa instala o que estiver mais novo no dia, do mesmo proxy, e também não prova nada sobre os bytes."
+      }
+    ]
+  },
+  "ex-m3vg00mb": {
+    "prompt": "Depois da correção da aula 3, a busca do linkbox manda `SELECT code, url FROM links WHERE url LIKE ?` com o texto buscado, cercado de sinais `%`, como parâmetro, e o `bash ci/sast.sh` sai com 0. Uma busca só por `%` agora lista todos os links do serviço. Por que nenhum scanner reclama, e o que pegaria isso?",
+    "hint": "Codificação Segura, aula 5; Segurança na Esteira e Cadeia de Suprimentos, aula 3.",
+    "choices": [
+      {
+        "text": "O Bandit dá baixa confiança à consulta, então `--confidence-level low` a reportaria",
+        "why": "Não há nada a classificar: o texto do SQL é fixo e o valor vai à parte, que é a forma que toda regra trata como segura."
+      },
+      {
+        "text": "Ainda é injeção de SQL, e uma regra do Semgrep que também casasse placeholders `?` a reportaria",
+        "why": "O valor nunca chega ao parser de SQL, então nada é injetado; uma regra contra placeholders apontaria a própria correção."
+      },
+      {
+        "text": "O `LIKE` lê o valor como padrão, o que as regras não veem; um teste que busca `%` e `_` vê",
+        "why": "O placeholder resolve o SQL. Os curingas precisam de escape para o `LIKE`, e só um teste que os busca literalmente vê o comportamento."
+      },
+      {
+        "text": "O baseline noturno do ZAP pegaria, porque digita `%` nas caixas de busca que encontra",
+        "why": "O baseline só olha: lê o que a aplicação responde e não manda nada feito para quebrá-la."
+      }
+    ]
+  },
+  "ex-gzp70qrx": {
+    "prompt": "O baseline do ZAP reportou a regra 10020, Missing Anti-clickjacking Header, no linkbox. A correção manda `X-Frame-Options: DENY` e, na Content-Security-Policy, a mesma diretiva que a política do portal usa para que nenhum outro site mostre suas páginas dentro de um frame: `___ 'none'`.",
+    "hint": "Codificação Segura, aula 8; Segurança na Esteira e Cadeia de Suprimentos, aula 4.",
+    "blanks": [
+      {
+        "accept": [
+          "frame-ancestors"
+        ]
+      }
+    ]
+  },
+  "ex-p6kt2jg5": {
+    "prompt": "A equipe do console quer que os fisioterapeutas listem os exames de um paciente e pede para reaproveitar o `GET /exams` do portal com um parâmetro `?patient=`, já que o código existe. O que os dois cursos respondem?",
+    "hint": "Codificação Segura, aula 13; Modelagem de Ameaças e Risco, aula 2.",
+    "choices": [
+      {
+        "text": "Reaproveitar, e trocar os ids dos exames por aleatórios para um paciente não adivinhar os de outro",
+        "why": "Um id impossível de adivinhar é uma segunda camada em cima de uma checagem. Aqui o próprio parâmetro escolhe de quem são os exames lidos."
+      },
+      {
+        "text": "Reaproveitar, e registrar no log as requisições com `?patient=` para o mau uso ser notado",
+        "why": "Um log registra o mau uso depois que o dado já saiu; a rota continua respondendo a todo paciente que acrescentar o parâmetro."
+      },
+      {
+        "text": "Reaproveitar, já que um paciente não vai mandar um parâmetro que a tela não mostra",
+        "why": "O servidor recebe requisições, não telas. Qualquer paciente pode digitar o parâmetro no endereço."
+      },
+      {
+        "text": "Uma rota separada no console, atrás da própria checagem, com pacientes e equipe separados no modelo",
+        "why": "Uma rota servindo dois públicos acaba aplicando a nenhum a checagem feita para um; desenhada como uma caixa só, a fronteira entre pacientes e equipe some."
+      }
+    ]
+  },
+  "ex-m023h2ed": {
+    "prompt": "Um chamado propõe o que o login do portal deve escrever no log, para facilitar o suporte. Quais destes nunca podem entrar nessa linha de log? Marque todas as que se aplicam.",
+    "hint": "Codificação Segura, aula 15.",
+    "choices": [
+      {
+        "text": "A senha digitada, mesmo quando estava errada",
+        "why": "Uma senha errada muitas vezes é a certa de outro site, ou está a um erro de digitação desta."
+      },
+      {
+        "text": "O id de sessão emitido depois do login",
+        "why": "Qualquer um que lesse a linha poderia agir como aquela sessão."
+      },
+      {
+        "text": "O número completo do cartão com que o paciente pagou por último",
+        "why": "As regras dos cartões proíbem guardá-lo, e um log é armazenamento."
+      },
+      {
+        "text": "O identificador da conta",
+        "why": "Quem tentou é o que um defensor precisa saber; o identificador é o que o log leva no lugar dos dados completos da pessoa."
+      },
+      {
+        "text": "Se a tentativa deu certo, foi recusada ou falhou",
+        "why": "O resultado é uma das cinco coisas de que toda linha de evento de segurança precisa."
+      }
+    ]
+  },
+  "ex-08jejqdr": {
+    "prompt": "O portal agora se recusa a subir sem `PORTAL_SECRET_KEY` e `SMS_API_KEY`, e nos laptops eles vêm de um arquivo `.env` que o `.gitignore` mantém fora de todo commit. Para produção, alguém propõe copiar um arquivo `.env` para o servidor. O que a aula diz que produção precisa no lugar disso?",
+    "hint": "Codificação Segura, aula 16.",
+    "choices": [
+      {
+        "text": "Um gerenciador de segredos como origem das variáveis, que dá a cada processo os segredos dele e registra cada leitura",
+        "why": "A variável de ambiente é como o segredo chega ao processo, não onde ele é guardado; um arquivo no servidor não dá acesso por processo nem registro de leituras."
+      },
+      {
+        "text": "Isso basta, desde que o arquivo seja legível apenas pela conta que roda o portal",
+        "why": "Permissões estreitam quem lê o arquivo. Continuam sem registro de cada leitura e sem rotação sem deploy."
+      },
+      {
+        "text": "Os dois valores escritos num arquivo de configuração dentro do código implantado, sem precisar de variável",
+        "why": "Código é copiado, guardado e compartilhado por natureza; um segredo escrito ali pertence a todos que um dia o lerem."
+      },
+      {
+        "text": "Um repositório privado para o `.env` de produção, para cada cópia ser versionada e revisada",
+        "why": "O histórico de um repositório guarda toda versão enquanto ele existir, o contrário do que um segredo precisa."
+      }
+    ]
+  },
+  "ex-7ckkqszj": {
+    "prompt": "Revisando o branch `messages` do portal, você marca as mudanças abaixo. Ligue cada uma ao que ela faz com o portal.",
+    "hint": "Codificação Segura, aula 18.",
+    "pairs": [
+      {
+        "left": "`read_message` devolve `MESSAGES[number]` depois de conferir só que alguém está logado",
+        "right": "qualquer paciente logado lê qualquer mensagem"
+      },
+      {
+        "left": "uma mensagem nova pega o `patient` do formulário sempre que ele vem nele",
+        "right": "quem envia escolhe de quem é a mensagem"
+      },
+      {
+        "left": "o template troca quebras de linha por `<br>` e marca o texto como `safe`",
+        "right": "o que um paciente digitou chega à página sem escape"
+      },
+      {
+        "left": "`app.secret_key = \"vereda-dev\"` substitui uma chave aleatória",
+        "right": "quem leu o repositório consegue forjar um cookie de sessão"
+      },
+      {
+        "left": "`flask==3.1.3` vira `flask>=3.0`",
+        "right": "cada deploy instala a release que for a mais nova naquele dia"
+      }
+    ],
+    "right_distractors": [
+      "duas mensagens podem ganhar o mesmo número quando chegam juntas",
+      "um número de mensagem inexistente responde com 500"
+    ]
+  },
+  "ex-cw88qyk8": {
+    "prompt": "Dois projetos calam o B101 do Bandit nos asserts dos testes de jeitos diferentes. Um roda `bandit -q -r . -x ./test_app.py`; no outro, a configuração do próprio B101, `assert_used`, pula `*/tests/*.py` no `bandit.yaml`. Meses depois alguém cola um token com cara de real no arquivo de teste que cada projeto já tem, atribuído a `ADMIN_TOKEN`. A varredura de qual projeto reporta isso como B105, e por quê?",
+    "hint": "Codificação Segura, aula 19; Segurança na Esteira e Cadeia de Suprimentos, aula 3.",
+    "choices": [
+      {
+        "text": "Os dois: o `-x` e a configuração `assert_used` desligam cada um o B101 e deixam o resto em paz",
+        "why": "O `-x` tira o arquivo da varredura, então toda verificação para de lê-lo, inclusive o B105."
+      },
+      {
+        "text": "O do `bandit.yaml`: o `-x` tira o arquivo de teste de cada verificação, B105 inclusive",
+        "why": "Pular uma regra onde ela erra mantém as outras de olho; excluir o arquivo compra silêncio no B101 com um ponto cego para todo o resto."
+      },
+      {
+        "text": "Nem um nem outro: o Bandit não reporta B105 em arquivos de teste, onde valores de fixture são esperados",
+        "why": "O B105 olha para uma string com cara de senha atribuída a um nome que soa como uma; o nome do arquivo não entra nisso."
+      },
+      {
+        "text": "O do `-x`, já que nomear um arquivo estreita a exclusão mais que um glob",
+        "why": "Estreito ou largo, o `-x` tira o arquivo inteiro da varredura; o glob do `assert_used` tira uma regra e mantém o arquivo."
+      }
+    ]
+  },
+  "ex-d0wv374w": {
+    "prompt": "O primeiro código de login do portal registrava cada tentativa com o nome escrito exatamente como chegava. Agora o log vai para um SIEM cujo parser transforma cada linha num evento com campos nomeados. Chega um login cujo nome tem uma quebra de linha seguida de um texto no formato de um login bem-sucedido. O que isso pode causar, e o que impede?",
+    "hint": "Codificação Segura, aula 15; SOC, Monitoramento e Resposta a Incidentes, aula 4.",
+    "choices": [
+      {
+        "text": "Pouco: o SIEM guarda a linha original ao lado dos campos, e um analista vê a quebra",
+        "why": "A linha original que ele guarda é a própria segunda linha forjada; cada linha já é um evento antes de alguém ler."
+      },
+      {
+        "text": "O parser falha na linha forjada e a conta, então a tentativa se denuncia sozinha",
+        "why": "Uma linha escrita no formato esperado casa com o parser; só as linhas que ele não reconhece são puladas e contadas."
+      },
+      {
+        "text": "Um evento forjado, como um login que não houve; codificar o nome o mantém numa única linha",
+        "why": "Uma tentativa tem de ser uma linha. A correção codifica o valor para o log como o escape faz para uma página, e o log estruturado faz isso por construção."
+      },
+      {
+        "text": "A senha é o campo perigoso; um nome vai para o log como chega sem problema",
+        "why": "Qualquer valor que o remetente escolha, escrito no log como chega, pode partir um evento em dois."
+      }
+    ]
+  },
+  "ex-0nnnykt0": {
+    "prompt": "A aula 3 do curso de esteira corrige a injeção do linkbox com o ciclo do curso de código seguro, dentro de uma esteira. Ponha os acontecimentos na ordem em que ocorrem.",
+    "hint": "Codificação Segura, aula 1; Segurança na Esteira e Cadeia de Suprimentos, aula 3.",
+    "items": [
+      "o `sast` quebra a execução 1 na consulta montada a partir de uma string",
+      "um teste novo busca `it's` e falha com 500",
+      "a consulta passa a ter `?`, com o texto buscado como parâmetro",
+      "os testes passam localmente e o `ci/sast.sh` sai com 0",
+      "a correção e o teste dela entram num commit só, e a execução 2 passa"
+    ],
+    "trap": "Mudar a consulta antes de ver o teste novo falhar não deixa prova de que o teste pegaria o defeito, e uma correção enviada sem o teste pode voltar numa forma que a regra não casa."
+  },
   "ex-dxd92kse": {
     "prompt": "Um estágio novo do pipeline roda `trivy image --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1` em duas imagens cuja varredura completa a aula 20 imprimiu. `shelf:1.6.0` tem um HIGH num módulo Go compilado nela, com status `fixed`, e um UNKNOWN em `tzdata`. `debian:trixie-slim` tem 163 achados, 161 `affected` e 2 `fix_deferred`. Que veredito o estágio dá a cada uma?",
     "hint": "Docker e Containers, aula 20; Segurança na Esteira e Cadeia de Suprimentos, aula 8.",
@@ -1649,7 +2239,7 @@
     "hint": "Segurança em Nuvem, aula 14; Segurança na Esteira e Cadeia de Suprimentos, aula 7.",
     "choices": [
       {
-        "text": "O `gate.sh` passa, porque o Checkov não lê a data da exceção; a porta de composição ignora a linha vencida e quebra o build",
+        "text": "O `gate.sh` passa, porque o Checkov não olha datas; a outra etapa descarta aquela linha e quebra o build",
         "why": "O Checkov não lê a data, então a exceção vale o que valer aquilo que olha para ela. A porta de composição foi escrita para ignorar uma linha vencida, e o achado volta a quebrar o build."
       },
       {
@@ -1758,7 +2348,7 @@
     "hint": "Segurança em Nuvem, aula 15; SOC, Monitoramento e Resposta a Incidentes, aula 12.",
     "choices": [
       {
-        "text": "Como desconhecido, porque uma trilha guarda quem mudou um bucket e não quem leu um objeto",
+        "text": "Como desconhecido, porque os seletores de uma trilha guardam quem mudou um bucket e não quem leu um objeto",
         "why": "Isso vale só para eventos de gerenciamento. Eventos de dados foram escolhidos para os dois buckets antes do incidente, então as leituras de `clinic-records` estão registradas."
       },
       {
@@ -1766,7 +2356,7 @@
         "why": "O escopo segue o que a evidência mostra que foi tocado. Ser alcançável em princípio não põe nada no escopo."
       },
       {
-        "text": "Como fora do escopo, citando os seletores que cobrem o bucket e a consulta que voltou vazia",
+        "text": "Como fora do escopo, citando os registros que o cobrem e a busca que não achou nada",
         "why": "Fora do escopo também é uma afirmação, e precisa da própria evidência: o que foi conferido, e como, para a resposta a 'pode ser mais?' não ser um palpite."
       },
       {
@@ -1780,7 +2370,7 @@
     "hint": "SOC, Monitoramento e Resposta a Incidentes, aula 20; Segurança em Nuvem, aula 15.",
     "choices": [
       {
-        "text": "Duas exportações, de 13 e 14 de outubro, foram entregues a dois endereços de fora enquanto o bucket estava público",
+        "text": "Dois arquivos, de 13 e 14 de outubro, foram para dois endereços de fora durante a janela pública",
         "why": "Os registros de `GetObject` anônimo mostram isso diretamente: quais arquivos, quais endereços, dentro da janela. É isso que confirmado quer dizer."
       },
       {
@@ -2049,7 +2639,7 @@
         "why": "O editor não liga para o que o git ignora: um arquivo ignorado continua sendo um arquivo no disco. Mantê-lo longe do assistente pede uma lista de exclusão própria."
       },
       {
-        "text": "O Git ainda rastreia o arquivo, o commit da semana passada guarda a chave, e a aba chega ao assistente",
+        "text": "O Git segue rastreando o arquivo, o histórico conserva a chave, e a aba aberta vai junto na pergunta",
         "why": "Cada camada pede a própria resposta: `git rm --cached` para parar de rastrear, uma exclusão para o assistente e, acima de tudo, uma chave nova, porque a antiga já saiu."
       },
       {
@@ -2312,7 +2902,7 @@
         "why": "Seu gestor pode muito bem ouvir sobre isso lá, e a revisão continua precisando dele: as condições que deixaram uma mudança derrubar o login continuam no lugar."
       },
       {
-        "text": "Uma condição do sistema: uma mudança de configuração chegava à produção sem checar o login",
+        "text": "Uma condição do sistema: nada verificava o acesso antes de uma alteração chegar à produção",
         "why": "Uma revisão sem culpados pergunta o que deixou uma ação razoável causar dano, e escreve isso como um fator contribuinte que uma mudança pode eliminar. A sua parte é a frase sobre o que você vai fazer diferente."
       }
     ]
@@ -2326,7 +2916,7 @@
         "why": "Anotar a resposta está certo; o seu caderno é o lugar errado para ela. A próxima pessoa da escala encontra o mesmo passo quebrado de madrugada, com o mesmo runbook na frente."
       },
       {
-        "text": "Pôr o passo que funcionou no runbook e rodá-lo uma vez, para a próxima pessoa da escala encontrar um procedimento que funciona",
+        "text": "Corrigir o passo no procedimento e testá-lo uma vez, para quem vier depois não tropeçar no mesmo erro",
         "why": "Um runbook só presta se foi executado, e precisa ser testado de novo quando o sistema muda. Transformar a sua pergunta numa página para a próxima pessoa é o que um time valoriza num júnior."
       },
       {
@@ -2374,7 +2964,7 @@
         "why": "Medido como, comparado com quê? Um número que ninguém consegue explicar transforma a entrevista numa checagem da sua honestidade, e a varredura do próprio projeto não tem uma linha de base honesta para ele."
       },
       {
-        "text": "Construí uma pipeline que recusa segredos enviados, e o README segue um achado até a correção",
+        "text": "Montei uma CI que recusa credenciais enviadas, e documentei um problema da detecção ao conserto",
         "why": "O que você fez, o que passou a ser verdade e uma evidência que qualquer um confere: o padrão de uma linha de projeto. É também o que um avaliador de DevSecOps abre primeiro, um gate de segurança e um achado tratado de ponta a ponta."
       },
       {
