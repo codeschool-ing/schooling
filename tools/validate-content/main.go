@@ -815,6 +815,15 @@ var allowedOutsideTheFont = map[rune]string{
 	'\u25c7': "`npm create vite` opens each step it reports with it (`◇  Scaffolding project in " +
 		"…`). IBM Plex Mono has no U+25C7 at all. It opens a line, and a capture is pasted byte " +
 		"for byte, so the alternative is a transcript that is not the one printed",
+	// Vitest's default reporter, which every course that tests a front end with it
+	// quotes: U+276F marks a failing file or suite, U+23AF draws its section rules.
+	'\u276f': "Vitest's default reporter opens the line of a failing file or suite with it " +
+		"(`❯ src/planner.test.ts (5 tests | 1 failed)`), where a passing one gets U+2713. IBM " +
+		"Plex Mono has no U+276F at all. The indentation before it carries the nesting and is " +
+		"unaffected; what follows it may sit a fraction of a cell off its passing neighbour",
+	'\u23af': "Vitest draws the rules around its failure report with it (`⎯⎯⎯ Failed Tests 1 " +
+		"⎯⎯⎯`). IBM Plex Mono has no U+23AF at all. The rule is a line of its own and nothing " +
+		"is aligned to where it ends",
 }
 
 // coverage is the set of code points the interface declares a face for.
