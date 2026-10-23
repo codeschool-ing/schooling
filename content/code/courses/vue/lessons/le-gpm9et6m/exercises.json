@@ -1,0 +1,733 @@
+[
+  {
+    "id": "ex-4gmdmjkz",
+    "version": 1,
+    "section": "why-a-store",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the `WhyAStore` demo, `#add-week` is clicked twice and `#add-course` once. What number of minutes does the store show in the `course` box?",
+    "hint": "Every click adds 15 to the one store, whichever box it was in.",
+    "value": 45,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-yvc49wtk",
+    "version": 1,
+    "section": "why-a-store",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the same demo the composable shows 30 in one box and 15 in the other. Why do the two boxes disagree?",
+    "hint": "Count how many times each function body ran.",
+    "choices": [
+      {
+        "text": "Each `useTally()` call made a ref of its own",
+        "correct": true,
+        "why": "Right. A composable makes fresh state on every call, so two boxes hold two refs."
+      },
+      {
+        "text": "The second box was rendered before the first click, so it missed it",
+        "correct": false,
+        "why": "Rendering order has nothing to do with it: the clicks happened after both boxes were on screen, and the store shows 45 in both."
+      },
+      {
+        "text": "`ref(0)` in a plain `.js` file is not reactive, so only the store's copy updates",
+        "correct": false,
+        "why": "It is reactive: both composable counts moved, 30 and 15. They are simply two refs."
+      },
+      {
+        "text": "The click handler calls `own.add(15)` once for the whole page",
+        "correct": false,
+        "why": "Each button calls the `add` of its own box. The 30 is two clicks in the first box."
+      }
+    ]
+  },
+  {
+    "id": "ex-mntr89jh",
+    "version": 1,
+    "section": "why-a-store",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `ref` exported from a file is already one copy for everybody. A test suite runs the planner twenty times in one process. What does Pinia give it that the exported `ref` does not?",
+    "hint": "Where does each one keep its value between runs?",
+    "choices": [
+      {
+        "text": "A store that is reactive, where the exported ref is not",
+        "correct": false,
+        "why": "The module's `ref` is just as reactive. What differs is where the state is kept."
+      },
+      {
+        "text": "Faster reads of the state",
+        "correct": false,
+        "why": "Speed is not what the lesson's list is about; the container is about whose state it is."
+      },
+      {
+        "text": "Fresh state for each run, from its own `createPinia()`",
+        "correct": true,
+        "why": "Right. One container per application is the first thing in the lesson's list, and tests are its first example."
+      },
+      {
+        "text": "A copy of the state for every component",
+        "correct": false,
+        "why": "That is the composable's behaviour. A store is one copy per container."
+      }
+    ]
+  },
+  {
+    "id": "ex-dmxbvts2",
+    "version": 1,
+    "section": "define-store",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a setup store, what does a `computed()` become?",
+    "hint": "The table maps three words.",
+    "choices": [
+      {
+        "text": "An action",
+        "correct": false,
+        "why": "An action is a function the store returns, like `load` or `toggle`."
+      },
+      {
+        "text": "Part of the state",
+        "correct": false,
+        "why": "State is the refs. A computed value is derived from them."
+      },
+      {
+        "text": "A getter, read like a property",
+        "correct": true,
+        "why": "Right. `titles` and `hasCourse` are the planner store's getters."
+      },
+      {
+        "text": "A private value the store keeps to itself",
+        "correct": false,
+        "why": "It is part of the store as soon as it is returned, and `titles` is read from components."
+      }
+    ]
+  },
+  {
+    "id": "ex-eqkf4fcb",
+    "version": 1,
+    "section": "define-store",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`hasCourse` is a getter that returns a ___, which is how a getter takes an argument: `planner.hasCourse('spanish')`.",
+    "hint": "What do you call with parentheses?",
+    "blanks": [
+      {
+        "accept": [
+          "function"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tn82xjc3",
+    "version": 1,
+    "section": "define-store",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A component holds `const planner = usePlannerStore()`. How does its script read the list of sessions?",
+    "hint": "A store is a `reactive` object.",
+    "choices": [
+      {
+        "text": "`planner.sessions.value`, because `sessions` is a ref",
+        "correct": false,
+        "why": "It is a ref inside the store, but the store unwraps it when it is read through the store."
+      },
+      {
+        "text": "`planner.sessions`",
+        "correct": true,
+        "why": "Right. Refs are unwrapped when read through a reactive object, so there is no `.value`."
+      },
+      {
+        "text": "`planner.state.sessions`",
+        "correct": false,
+        "why": "A setup store has no `state` key; whatever the function returns sits on the store itself."
+      },
+      {
+        "text": "`inject('sessions')`",
+        "correct": false,
+        "why": "That was the provide and inject of lesson 8, which the store replaces."
+      }
+    ]
+  },
+  {
+    "id": "ex-kp0vc6ef",
+    "version": 1,
+    "section": "define-store",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody adds `const draft = ref('')` to the planner store and leaves it out of the `return`. The actions use it. What happens?",
+    "hint": "Read the note on the `return`, and the first rule of the section.",
+    "choices": [
+      {
+        "text": "Pinia refuses to create the store until every ref is returned",
+        "correct": false,
+        "why": "Nothing refuses: the lesson says a private ref works. The cost is elsewhere."
+      },
+      {
+        "text": "The actions see an empty string forever, because `draft` was never registered",
+        "correct": false,
+        "why": "The actions close over `draft` like any function in the setup, and see every change."
+      },
+      {
+        "text": "It works, but devtools and server rendering never see it",
+        "correct": true,
+        "why": "Right. Pinia only saves, inspects and resets what is returned."
+      },
+      {
+        "text": "Components read it as `planner.draft` all the same",
+        "correct": false,
+        "why": "Only what is returned is part of the store, so `planner.draft` is `undefined`."
+      }
+    ]
+  },
+  {
+    "id": "ex-g2w2c985",
+    "version": 1,
+    "section": "options-store",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The `OptionsStore` demo clicks *Empty it* and then *Reset*. How many minutes are shown as done afterwards?",
+    "hint": "`$reset()` goes back to what `state()` returned.",
+    "value": 45,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-r8hx44s0",
+    "version": 1,
+    "section": "options-store",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are an options store's actions written as methods, `toggle(id) { … }`, and not as arrows?",
+    "hint": "What does an action use to reach the store?",
+    "choices": [
+      {
+        "text": "Pinia rejects an arrow in `actions` when the store is defined",
+        "correct": false,
+        "why": "Nothing is rejected up front. The arrow breaks when it runs and reads `this`."
+      },
+      {
+        "text": "They use `this`, and an arrow brings its `this` from outside",
+        "correct": true,
+        "why": "Right. It is lesson 11's trap, unchanged."
+      },
+      {
+        "text": "A method is memoised like a getter, and an arrow is not",
+        "correct": false,
+        "why": "Getters are the computed values. Actions are plain functions, run on every call."
+      },
+      {
+        "text": "Arrows are fine; the lesson writes methods for style alone",
+        "correct": false,
+        "why": "The lesson says never arrows, because the action needs `this` to be the store."
+      }
+    ]
+  },
+  {
+    "id": "ex-fdphm6k2",
+    "version": 1,
+    "section": "options-store",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In development, what does calling `planner.$reset()` on the planner's setup store do?",
+    "hint": "A reset needs a function Pinia can call again.",
+    "choices": [
+      {
+        "text": "It sets every returned ref back to its first value",
+        "correct": false,
+        "why": "That needs the starting state, and a setup store has no `state()` to call again."
+      },
+      {
+        "text": "It runs the setup function again and replaces the store",
+        "correct": false,
+        "why": "Pinia does not rerun the setup; that would also send another request from `load`."
+      },
+      {
+        "text": "Nothing at all, silently",
+        "correct": false,
+        "why": "That is a production build. In development it says what is wrong."
+      },
+      {
+        "text": "It throws an error saying the store does not implement `$reset()`",
+        "correct": true,
+        "why": "Right. A setup store that needs a reset writes its own action."
+      }
+    ]
+  },
+  {
+    "id": "ex-eh3r8pk9",
+    "version": 1,
+    "section": "options-store",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a setup store have without writing any code for it? Choose all that apply.",
+    "hint": "One of the two things the options syntax gives is given to every store.",
+    "choices": [
+      {
+        "text": "`$patch` with an object",
+        "correct": true,
+        "why": "Right. Every store has `$patch`, setup stores included."
+      },
+      {
+        "text": "A working `$reset()`",
+        "correct": false,
+        "why": "It throws in development: there is no `state()` for Pinia to call again."
+      },
+      {
+        "text": "`$subscribe`",
+        "correct": true,
+        "why": "Right. Every store has it; the fifth section uses it on an options store, and it works the same on a setup store."
+      },
+      {
+        "text": "`$patch` with a function",
+        "correct": true,
+        "why": "Right. The same `$patch`, given a function that changes the state."
+      }
+    ]
+  },
+  {
+    "id": "ex-6r93mzgf",
+    "version": 1,
+    "section": "store-to-refs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `LostRefs`, after the toggle, `Destructured:` still shows 45 while the `storeToRefs` line shows 105. Why?",
+    "hint": "What does `const { done } = store` do, and when?",
+    "choices": [
+      {
+        "text": "The toggle failed, and `storeToRefs` recomputed from the old list",
+        "correct": false,
+        "why": "The toggle worked: 105 of 105 is s4 done. Only the destructured copy stayed put."
+      },
+      {
+        "text": "Getters are not reactive outside the store",
+        "correct": false,
+        "why": "`doneRef` is the same getter and it moved. It is the destructuring that lost the link."
+      },
+      {
+        "text": "`{ done } = store` read it once, as a number",
+        "correct": true,
+        "why": "Right. Lesson 2's first trap: a value taken out of a reactive object no longer follows it."
+      },
+      {
+        "text": "The template caches `done` after its first render",
+        "correct": false,
+        "why": "The template rerenders: the other line changed on the same click."
+      }
+    ]
+  },
+  {
+    "id": "ex-vtqgearn",
+    "version": 1,
+    "section": "store-to-refs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new view writes `const { titles, load } = storeToRefs(planner)` and then calls `load()`. What happens?",
+    "hint": "Which pieces does `storeToRefs` hand back?",
+    "choices": [
+      {
+        "text": "`load` is `undefined`, because `storeToRefs` skips actions, so the call throws",
+        "correct": true,
+        "why": "Right. Actions are destructured from the store itself, as the planner's views do with `toggle`."
+      },
+      {
+        "text": "`load` is a ref, so it is called as `load.value()`",
+        "correct": false,
+        "why": "`storeToRefs` makes refs for state and getters only; an action needs no ref."
+      },
+      {
+        "text": "It works, and `titles` stops being reactive",
+        "correct": false,
+        "why": "`titles` is the part that works: it is a getter, and `storeToRefs` keeps it reactive."
+      },
+      {
+        "text": "It works exactly as `planner.load()` does",
+        "correct": false,
+        "why": "It would, had `load` come from `planner`. Through `storeToRefs` there is no `load` at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-ey8hg6gr",
+    "version": 1,
+    "section": "store-to-refs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`App.vue` writes `planner.error` and `planner.courses.length` in its template. Does it need `storeToRefs`?",
+    "hint": "Read the last part of the section.",
+    "choices": [
+      {
+        "text": "Yes, or the header stays on `Loading…` after the data arrives",
+        "correct": false,
+        "why": "That would be true of a destructured value. Reading through the store follows every change."
+      },
+      {
+        "text": "No: reading through the store is always reactive",
+        "correct": true,
+        "why": "Right. `storeToRefs` is for the pieces you take out of the store."
+      },
+      {
+        "text": "Yes, for `courses`, which is an array",
+        "correct": false,
+        "why": "An array read through the store is as reactive as a string. Nothing is taken out."
+      },
+      {
+        "text": "No, because templates unwrap only refs",
+        "correct": false,
+        "why": "Nothing there is a ref the template unwraps: `planner` is the store, a reactive object."
+      }
+    ]
+  },
+  {
+    "id": "ex-w7zg4tg7",
+    "version": 1,
+    "section": "subscribe",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the `Subscribe` demo, the first button calls the action `store.toggle('s4')`. What `mutation.type` did the callback print?",
+    "hint": "Look at the first line under `-- click #toggle`.",
+    "choices": [
+      {
+        "text": "`patch function`",
+        "correct": false,
+        "why": "That is a `$patch` given a function. The action assigns `this.sessions`."
+      },
+      {
+        "text": "`action`",
+        "correct": false,
+        "why": "An action is not a kind of change. To see actions, a store has `$onAction`."
+      },
+      {
+        "text": "`patch object`",
+        "correct": false,
+        "why": "That came from the second button, the `$patch` with an object."
+      },
+      {
+        "text": "`direct`",
+        "correct": true,
+        "why": "Right. Inside the action, `this.sessions = …` is a direct assignment."
+      }
+    ]
+  },
+  {
+    "id": "ex-5rj00r86",
+    "version": 1,
+    "section": "subscribe",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Given a callback that changes the state, `$patch` is reported to `$subscribe` with the type `patch ___`.",
+    "hint": "The other kind of `$patch` is `patch object`.",
+    "blanks": [
+      {
+        "accept": [
+          "function"
+        ],
+        "ignore_case": false,
+        "ignore_accents": false
+      }
+    ]
+  },
+  {
+    "id": "ex-mh3rj0wt",
+    "version": 1,
+    "section": "subscribe",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A page is redesigned, and the component that called `store.$subscribe(save)` is no longer on it. What becomes of the saving?",
+    "hint": "Whose is a subscription made in a component?",
+    "choices": [
+      {
+        "text": "It keeps running, because the store outlives the component",
+        "correct": false,
+        "why": "The store does outlive it, and the subscription does not: it belongs to the component unless `{ detached: true }`."
+      },
+      {
+        "text": "It stops quietly, so the planner saves with a `watch`",
+        "correct": true,
+        "why": "Right. A watch inside the store runs for as long as the store exists, whichever component is on screen."
+      },
+      {
+        "text": "Vue warns that a subscription was left without its component",
+        "correct": false,
+        "why": "That is what makes it quiet: nothing warns, the saving just stops."
+      },
+      {
+        "text": "It moves to the next component that calls the store",
+        "correct": false,
+        "why": "Subscriptions are not handed on. Each one is a callback somebody registered."
+      }
+    ]
+  },
+  {
+    "id": "ex-1755f3ma",
+    "version": 1,
+    "section": "subscribe",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a `$subscribe` callback receive with the type `direct`? Choose all that apply.",
+    "hint": "`direct` is anything that is not a `$patch`.",
+    "choices": [
+      {
+        "text": "`store.sessions = [{ id: 's9', minutes: 20, done: true }]` in a template",
+        "correct": true,
+        "why": "Right. The demo's third button printed `direct: 1 sessions`."
+      },
+      {
+        "text": "`store.$patch({ sessions: [] })`",
+        "correct": false,
+        "why": "An object given to `$patch` is `patch object`."
+      },
+      {
+        "text": "`store.toggle('s4')`, an action assigning `this.sessions`",
+        "correct": true,
+        "why": "Right. An action is not a kind of change; its assignment is direct."
+      },
+      {
+        "text": "`store.$patch((state) => { state.sessions = [] })`",
+        "correct": false,
+        "why": "A function given to `$patch` is `patch function`."
+      }
+    ]
+  },
+  {
+    "id": "ex-mvaxzxrc",
+    "version": 1,
+    "section": "planner-store",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the network list of the section's last capture, how many requests for `/courses.json` are there?",
+    "hint": "Lesson 12 had two.",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-rcekkkpm",
+    "version": 1,
+    "section": "planner-store",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`App` and the course route's guard both call `planner.load()`. Why is only one request sent?",
+    "hint": "Read the `??=` in the store's `load`.",
+    "choices": [
+      {
+        "text": "The browser caches `courses.json` and answers the second call itself",
+        "correct": false,
+        "why": "No second request reached the network list at all; the store never sent one."
+      },
+      {
+        "text": "The guard runs only after `App` has finished loading",
+        "correct": false,
+        "why": "Whichever asks first sends the request; the other waits for the same answer."
+      },
+      {
+        "text": "`load` keeps its first promise and hands it to every caller",
+        "correct": true,
+        "why": "Right. `??=` assigns only while `loading` is `null`."
+      },
+      {
+        "text": "Pinia runs each action once and ignores repeated calls",
+        "correct": false,
+        "why": "`toggle` runs on every click. It is `load` that remembers its promise, by its own code."
+      }
+    ]
+  },
+  {
+    "id": "ex-d2aynqy6",
+    "version": 1,
+    "section": "planner-store",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The Spanish session of the 23rd is ticked on the course's page, and the week's page then shows Spanish at 70 of 70. What carried it across?",
+    "hint": "Nobody passes the list around any more.",
+    "choices": [
+      {
+        "text": "The `localStorage` copy, read back when the week opened",
+        "correct": false,
+        "why": "The store does save to `localStorage`, but it reads it once, in `load`. The week reads the store."
+      },
+      {
+        "text": "Both views read the same `sessions` from one store",
+        "correct": true,
+        "why": "Right. The two pages are two views of one store."
+      },
+      {
+        "text": "`App` provided the new list to the week through `plannerKey`",
+        "correct": false,
+        "why": "`plannerKey` is gone: `src/keys.js` is deleted in this section."
+      },
+      {
+        "text": "The router fetched `courses.json` again on the way back",
+        "correct": false,
+        "why": "The network list shows one request for `courses.json`, at the start."
+      }
+    ]
+  },
+  {
+    "id": "ex-yc0c81h6",
+    "version": 1,
+    "section": "planner-store",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On a slow connection, what does each row of `SessionRow` show in place of a title before the data file has arrived?",
+    "hint": "Read the `??` in its `title`.",
+    "choices": [
+      {
+        "text": "Nothing, because `SessionRow` waits for the store",
+        "correct": false,
+        "why": "Nothing waits: the computed has a fallback for exactly that moment."
+      },
+      {
+        "text": "`undefined`",
+        "correct": false,
+        "why": "`planner.titles[session.course]` is `undefined` then, and the `??` replaces it."
+      },
+      {
+        "text": "`Loading…`, the same as the header",
+        "correct": false,
+        "why": "`Loading…` is `App`'s line. The row has its own fallback."
+      },
+      {
+        "text": "The id in `session.course`, until the titles have loaded",
+        "correct": true,
+        "why": "Right. The comment says it: its id until the courses have loaded."
+      }
+    ]
+  },
+  {
+    "id": "ex-k2qh4cf9",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of moving the planner into its store in the order the lesson takes them.",
+    "hint": "The store has to exist before anything asks it.",
+    "items": [
+      "Install `pinia@4.1.0`, pinned",
+      "Save the store as `src/stores/planner.js`",
+      "Install Pinia in `main.js`, before the router",
+      "Make the course route's guard ask the store",
+      "Swap each view's `inject(plannerKey)` for the store",
+      "Delete `src/keys.js` and `usePlannerData.js`"
+    ]
+  },
+  {
+    "id": "ex-8hwty6x1",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of an options store to what it is in a setup store.",
+    "hint": "One line on the right is something no store is written with.",
+    "pairs": [
+      {
+        "left": "`state: () => ({ sessions: [] })`",
+        "right": "`const sessions = ref([])`"
+      },
+      {
+        "left": "`getters: { planned: (state) => … }`",
+        "right": "`const planned = computed(() => …)`"
+      },
+      {
+        "left": "`actions: { toggle(id) { … } }`",
+        "right": "`function toggle(id) { … }`"
+      },
+      {
+        "left": "`this` inside an action",
+        "right": "the store"
+      }
+    ],
+    "right_distractors": [
+      "`inject(plannerKey)`"
+    ]
+  },
+  {
+    "id": "ex-b8jby9sp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new statistics view writes `const { sessions, toggle } = planner`. Ticking a session there changes the store, but the view's own list never moves. Which change fixes it?",
+    "hint": "Two different kinds of thing were destructured, and they need different treatment.",
+    "choices": [
+      {
+        "text": "`sessions` via `storeToRefs`, `toggle` from `planner`",
+        "correct": true,
+        "why": "Right. State goes through `storeToRefs`; the action comes straight from the store."
+      },
+      {
+        "text": "`const { sessions, toggle } = storeToRefs(planner)`",
+        "correct": false,
+        "why": "That fixes `sessions` and loses `toggle`, which `storeToRefs` skips."
+      },
+      {
+        "text": "Read `sessions.value` in the template",
+        "correct": false,
+        "why": "The destructured `sessions` is a plain array, not a ref, so there is no `.value` to read."
+      },
+      {
+        "text": "Call `planner.$patch({ sessions })` after each toggle",
+        "correct": false,
+        "why": "The store already has the new list. The view holds a copy taken at setup, and patching the store does not reach it."
+      }
+    ]
+  },
+  {
+    "id": "ex-3sfzabad",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The planner needs a *Start over* button that puts the store back as it was before `load()`. What does the setup store need?",
+    "hint": "Which of the two syntaxes gets `$reset()` for free?",
+    "choices": [
+      {
+        "text": "Nothing: the button calls `planner.$reset()`",
+        "correct": false,
+        "why": "On a setup store that throws in development and does nothing in production."
+      },
+      {
+        "text": "A call to `createPinia()` in the button's handler",
+        "correct": false,
+        "why": "A new container is not the one the application uses; the components still read the old store."
+      },
+      {
+        "text": "A reset action it writes itself",
+        "correct": true,
+        "why": "Right. A setup store that needs a reset writes it, and `load`'s remembered promise has to go too, or it never fetches again."
+      },
+      {
+        "text": "A `state()` function added beside the setup function",
+        "correct": false,
+        "why": "`defineStore` takes a setup function or an options object, not both."
+      }
+    ]
+  }
+]
