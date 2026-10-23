@@ -29,10 +29,10 @@ ana@web:~$ sudo nft insert rule inet web_egress output meta nftrace set 1
 ana@web:~$ nc -z -w1 desk 22; echo "exit $?"
 exit 1
 ana@web:~$ sudo cat /tmp/trace.txt | head -8 | cut -c1-150
-trace id 70272c7b inet web_egress output packet: oif "eth0" ip saddr 192.168.60.10 ip daddr 192.168.60.20 ip dscp cs0 ip ecn not-ect ip ttl 64 ip id 5
-trace id 70272c7b inet web_egress output rule meta nftrace set 1 (verdict continue)
-trace id 70272c7b inet web_egress output rule counter packets 2 bytes 120 comment "web starts nothing else" (verdict continue)
-trace id 70272c7b inet web_egress output policy drop 
+trace id b13335e5 inet web_egress output packet: oif "eth0" ip saddr 192.168.60.10 ip daddr 192.168.60.20 ip dscp cs0 ip ecn not-ect ip ttl 64 ip id 3
+trace id b13335e5 inet web_egress output rule meta nftrace set 1 (verdict continue)
+trace id b13335e5 inet web_egress output rule counter packets 2 bytes 120 comment "web starts nothing else" (verdict continue)
+trace id b13335e5 inet web_egress output policy drop 
 ```
 
 The trace reads top to bottom: the packet as it entered the chain, with the addresses that identify

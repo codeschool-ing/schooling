@@ -36,18 +36,20 @@ Um serviço avulso com as mesmas duas opções, pedindo para alcançar o `desk`:
 
 ```
 ana@web:~$ sudo systemd-run -q --wait --pipe -p IPAddressDeny=any -p IPAddressAllow=localhost nc -zv -w2 desk 22 2>&1
-Connection to desk (192.168.60.20) 22 port [tcp/ssh] succeeded!
+nc: connect to desk (192.168.60.20) port 22 (tcp) timed out: Operation now in progress
 ```
 
-**Conectou.** As opções estão em vigor no papel e não fazem nada aqui. O systemd as impõe com
-pequenos programas BPF presos ao grupo de controle do serviço, e dentro dos contêineres deste
-laboratório o kernel não deixa o systemd prendê-los; o systemd segue sem eles e sem erro na tela. Na
-sua própria máquina virtual, fora dos contêineres, o mesmo comando é recusado pelo kernel, como a
-documentação do systemd descreve; isso não foi executado para este curso.
+A conexão estourou o tempo, dois segundos e nada: o filtro do systemd descartou todo pacote que o
+serviço tentou mandar para um endereço fora da faixa de loopback, sem resposta nenhuma. O filtro é um
+pequeno programa BPF preso ao grupo de controle do serviço, e vale para todo processo que o serviço
+iniciar, com qualquer conta.
 
-Essa é a regra da aula 1 na forma mais afiada: **uma configuração é uma afirmação até um cliente ser
-recusado.** Uma configuração de firewall que em silêncio não faz nada é pior que nenhuma, porque todo
-mundo acredita nela.
+**Testar não foi formalidade.** Quando este laboratório foi montado pela primeira vez, os contêineres
+dele não tinham permissão para a chamada de sistema que o systemd usa para prender esses programas, e
+o mesmo comando conectou: as opções apareciam exatamente como acima e não faziam nada, sem erro em
+tela nenhuma. Essa é a regra da aula 1 na forma mais afiada: **uma configuração é uma afirmação até um
+cliente ser recusado**, e uma configuração de firewall que em silêncio não faz nada é pior que
+nenhuma, porque todo mundo acredita nela.
 
 ## No nftables, por grupo de controle
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# The terminal sessions quoted in lesson 9 of defense-hardening, as a script that produces them.
+# The terminal sessions quoted in lesson 10 of defense-hardening, as a script that produces them.
 #
 # THE SCRIPT IS THE SOURCE AND ITS OUTPUT IS NOT COMMITTED. Every transcript in
 # this lesson was copied from running it, so the next person can run it and see

@@ -35,18 +35,19 @@ service with the same two settings, asked to reach `desk`:
 
 ```
 ana@web:~$ sudo systemd-run -q --wait --pipe -p IPAddressDeny=any -p IPAddressAllow=localhost nc -zv -w2 desk 22 2>&1
-Connection to desk (192.168.60.20) 22 port [tcp/ssh] succeeded!
+nc: connect to desk (192.168.60.20) port 22 (tcp) timed out: Operation now in progress
 ```
 
-**It connected.** The settings are in force on paper and do nothing here. systemd enforces them
-with small BPF programs attached to the service's control group, and inside this lab's containers
-the kernel does not let systemd attach them; systemd carries on without them and without an error
-on the screen. In your own virtual machine, outside the containers, the same command is refused by
-the kernel, as systemd's documentation describes; that was not run for this course.
+The connection timed out, two seconds and nothing: systemd's filter dropped every packet the
+service tried to send to an address outside the loopback range, without a word back. The filter is
+a small BPF program attached to the service's control group, and it applies to every process the
+service starts, under any account.
 
-That is lesson 1's rule in its sharpest form: **a setting is a claim until a client has been
-refused.** A firewall setting that silently does nothing is worse than none, because everybody
-believes it.
+**Testing it was not a formality.** When this lab was first built, its containers were not allowed
+the system call systemd uses to attach those programs, and the same command connected: the settings
+printed exactly as above and did nothing at all, with no error on any screen. That is lesson 1's
+rule in its sharpest form: **a setting is a claim until a client has been refused**, and a firewall
+setting that silently does nothing is worse than none, because everybody believes it.
 
 ## In nftables, by control group
 
