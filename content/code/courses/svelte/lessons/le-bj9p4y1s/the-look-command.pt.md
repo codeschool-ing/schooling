@@ -70,6 +70,7 @@ página quando ela tem um, e a árvore do `<main>` da página, ou da página int
 //   --click NAME        press the button or link whose name is NAME
 //   --fill LABEL=TEXT   type TEXT into the field whose label is LABEL
 //   --check LABEL       tick or untick the checkbox whose label is LABEL
+//   --press KEY         press a key, such as Enter or ArrowRight
 //   --wait MS           let the page run for MS milliseconds
 //   --no-js             open the page with JavaScript turned off
 //   --console           print what the page wrote to its console, too
@@ -98,6 +99,8 @@ for (let i = 0; i < args.length; i++) {
     await page.getByLabel(label, { exact: true }).fill(text.join("="));
   } else if (flag === "--check") {
     await page.getByLabel(value, { exact: true }).click();
+  } else if (flag === "--press") {
+    await page.keyboard.press(value);
   } else if (flag === "--wait") {
     await page.waitForTimeout(Number(value));
   } else {
