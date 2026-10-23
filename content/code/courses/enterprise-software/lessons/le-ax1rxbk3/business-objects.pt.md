@@ -7,8 +7,8 @@ Marcos Teles julga o SAP por uma coisa que ele vê todo mês: os relatórios. Qu
 que ele queria da mudança para o S/4HANA, a resposta não tinha nada a ver com tabelas ou transportes.
 Ele queria que o relatório do conselho parasse de discordar de si mesmo. **Na Serra Alta, os
 relatórios são três camadas compradas da SAP: um data warehouse, uma camada semântica e uma
-ferramenta de relatórios. O problema real não está em nenhuma das três, mas em novecentos
-relatórios que não têm dono.** Esta seção é sobre essas camadas e esse problema.
+ferramenta de relatórios. O problema não está em nenhuma das três: são novecentos relatórios
+que não têm dono.** Esta seção é sobre essas camadas e esse problema.
 
 ## Como a BusinessObjects virou da SAP
 
@@ -88,7 +88,7 @@ explicou por quê. Alguns relatórios são abertos uma vez por ano: o que junta 
 para a auditoria anual da FSSC 22000, a valoração de estoque de fim de ano, uma simulação de recall
 que as fábricas fazem a cada doze meses e que cai algumas semanas fora da janela da auditoria. **Um
 relatório usado uma vez por ano parece morto para qualquer medição mais curta do que um ano e pouco**,
-que é a mesma cautela que a seção anterior levantou sobre os objetos Z que só rodam no fechamento
+que é a mesma cautela que a seção sobre o HANA levantou sobre os objetos Z que só rodam no fechamento
 anual.
 
 Então a aposentadoria foi feita em passos, e os passos valem em geral.

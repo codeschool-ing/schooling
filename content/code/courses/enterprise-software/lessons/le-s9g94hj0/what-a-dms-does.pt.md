@@ -3,11 +3,11 @@ title: O que um DMS faz que uma pasta compartilhada não faz
 version: 1
 ---
 
-A imagem comum de gestão de documentos é um drive compartilhado com nomes de pasta bem pensados.
-**Uma pasta guarda arquivos; um sistema de gestão de documentos os controla**, e a diferença aparece
-no dia em que alguém precisa provar qual versão estava em vigor. Na Serra Alta esse dia chega várias
-vezes por ano, quando um auditor da FSSC 22000 ou um fiscal federal para diante de um procedimento no
-chão de fábrica e pede para ver que ele é o aprovado.
+Quase todo mundo imagina gestão de documentos como um drive compartilhado com nomes de pasta bem
+pensados. **Uma pasta guarda arquivos; um sistema de gestão de documentos os controla**, e a
+diferença aparece no dia em que alguém precisa provar qual versão estava em vigor. Na Serra Alta
+esse dia chega várias vezes por ano, quando um auditor da FSSC 22000 ou um fiscal federal para
+diante de um procedimento no chão de fábrica e pede para ver que ele é o aprovado.
 
 ## A pasta, e o que dá errado nela
 
@@ -53,10 +53,10 @@ si mesmo.
 ## Um número de versão carrega um significado
 
 A maioria dos sistemas numera versões em duas partes. O Documentum deixa cada check-in escolher um
-incremento menor (de 1.0 para 1.1) ou maior (de 1.0 para 2.0). As equipes de
-qualidade acrescentam uma convenção por cima disso: versões menores são rascunhos de trabalho, versões maiores são as que foram
-liberadas. O número passa a dizer o estado a quem lê. Quem vê 1.2 sabe que está diante de um rascunho
-do que vai virar 2.0, e que a 1.0 continua sendo a que a linha segue.
+incremento menor (de 1.0 para 1.1) ou maior (de 1.0 para 2.0). As equipes de qualidade acrescentam
+uma convenção por cima disso: versões menores são rascunhos de trabalho, versões maiores são as que
+foram liberadas. O número passa a dizer o estado a quem lê. Quem vê 1.2 sabe que está diante de um
+rascunho do que vai virar 2.0, e que a 1.0 continua sendo a que a linha segue.
 
 Um número não diz se uma versão é a mais recente. Para isso o sistema guarda uma marca à parte: o
 Documentum chama essas marcas de *version labels* e mantém uma chamada `CURRENT` na versão mais
@@ -113,9 +113,10 @@ do trabalho de implantá-lo é fazer as outras cópias serem conhecidas.
 
 ## O que ele não é
 
-Três vizinhos dividem vocabulário com um DMS e fazem outros trabalhos. Uma wiki ou um site do SharePoint é bom para páginas que as pessoas escrevem juntas, e mais leve em
-aprovação e controle de registros, a menos que alguém o configure para isso. O Microsoft 365, que a
-Serra Alta tem, traz recursos de retenção, e a aula 3 descreve o ambiente Microsoft da empresa. Uma suíte de BPM
+Três vizinhos dividem vocabulário com um DMS e fazem outros trabalhos. Uma wiki ou um site do
+SharePoint é bom para páginas que as pessoas escrevem juntas, e mais leve em aprovação e controle de
+registros, a menos que alguém o configure para isso; o Microsoft 365, que a Serra Alta tem, traz
+recursos de retenção, e a aula 3 descreve o ambiente Microsoft da empresa. Uma suíte de BPM
 encaminha trabalho em geral, e a aprovação de um documento é um tipo dele; a aula 6 trata dessas
 suítes. E um ERP guarda transações, não documentos, embora precise apontar para eles, que é a última
 seção desta aula.

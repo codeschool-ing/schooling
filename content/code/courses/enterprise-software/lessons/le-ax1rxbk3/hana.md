@@ -83,7 +83,7 @@ calls customer-specific maintenance, which no longer delivers new legal changes.
 That last clause is the one that matters in Brazil. **An ERP that stops receiving legal changes stops
 being able to invoice.** Brazil's consumption-tax reform phases new taxes in between 2026 and 2033,
 and the NF-e layout changes with it; a Serra Alta that could not issue a valid NF-e could not ship a
-pallet of butter. "Stay on ECC" is therefore an option with an end date, not an option.
+pallet of butter. "Stay on ECC" is therefore an option with an end date.
 
 Joana did the arithmetic on a whiteboard for Regina Fontes. Extended maintenance buys three years,
 from 1 January 2028 to 31 December 2030, and each of them costs more than a year of mainstream
@@ -101,8 +101,8 @@ question "what do we keep?".
 | selective data transition | a new system is built from the old one's configuration, then chosen data and history are moved into it | what you choose, for example one company or the last three years | specialist tools and a partner who has done it before |
 
 **None of the three is an upgrade**, and the difference between them is mostly a difference about
-data. Lesson 14 is about moving data between systems, and it comes back to these three choices from
-that side.
+data: what moves, how much of its history, and into which model. Lesson 14 is about moving data
+between systems.
 
 ## What happens to the 1,800 objects
 

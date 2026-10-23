@@ -41,8 +41,8 @@ into leaves mainstream maintenance at the end of 2027, and the S/4HANA project t
 already being planned (lesson 2). **Migrating a company into a system you are about to leave means
 migrating it twice**: once into ECC, then again with everything else into S/4HANA a few years
 later. Mantiqueira's two cheese extensions would be rebuilt in ABAP for ECC, and then reconsidered
-for S/4HANA. Joana had seen the right shape, since one ERP for the group is a reasonable end state,
-at the wrong moment.
+for S/4HANA. Joana had seen the right shape at the wrong moment: one ERP for the group is a
+reasonable end state, and ECC is the wrong place to reach it.
 
 ## The three options
 
@@ -77,7 +77,7 @@ invoices, the general ledger), and a partner or a customer can publish more as A
 are authenticated through Entra ID, and an application registered in the tenant can call the API
 with no person signed in, which is how a scheduled integration ought to identify itself.
 
-The tenant is Mantiqueira's old one. That is the loose end from the previous section coming back:
+The tenant is Mantiqueira's old one. That is the loose end from the section on the tenant coming back:
 the integration's own identity would live in the directory nobody governs, with a secret only Felipe
 holds. Joana's plan registers it there anyway, because the move is not scheduled, and adds two
 things. The secret goes into the vault Rui Andrade's team uses, with its expiry date on their

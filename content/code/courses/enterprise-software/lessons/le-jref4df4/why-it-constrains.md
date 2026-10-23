@@ -120,5 +120,5 @@ taken, and accepts the order for confirmation when SAP comes back.
 She wrote the reasons down as a decision record, in the folder this course asked you to keep. **The
 record's first line names the constraint, not the technology**: *SAP is the system of record for
 stock; the portal does not read its tables.* The rest of the course is, in one sense, the long
-version of that sentence: lessons 2 to 6 are the systems Serra Alta bought, and lessons 7 to 15 are
+version of that sentence. Lessons 2 to 6 are the systems Serra Alta bought, and lessons 7 to 15 are
 how to connect, change and replace them without stopping a company that collects milk every day.

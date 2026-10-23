@@ -3,11 +3,11 @@ title: What a DMS does that a shared folder cannot
 version: 1
 ---
 
-The common picture of document management is a shared drive with sensible folder names. **A folder
+Most people picture document management as a shared drive with sensible folder names. **A folder
 stores files; a document management system controls them**, and the difference shows on the day
-somebody has to prove which version was in force. At Serra Alta that day comes several times a
-year, when an FSSC 22000 auditor or a federal inspector stops at a procedure on the factory floor
-and asks to see that it is the approved one.
+somebody has to prove which version was in force. At Serra Alta that day comes several times a year,
+when an FSSC 22000 auditor or a federal inspector stops at a procedure on the factory floor and asks
+to see that it is the approved one.
 
 ## The folder, and what goes wrong in it
 
@@ -51,9 +51,10 @@ the past that the file cannot answer about itself.
 
 ## A version number carries a meaning
 
-Most systems number versions in two parts. Documentum lets each check-in choose a minor increment (1.0 to 1.1) or a major one (1.0 to 2.0). Quality teams add a convention on top
-of that: minor versions are working drafts, major versions are the ones that were released. The number then tells
-a reader the state. Somebody who sees 1.2 knows they are looking at a draft of what will become 2.0,
+Most systems number versions in two parts. Documentum lets each check-in choose a minor increment
+(1.0 to 1.1) or a major one (1.0 to 2.0). Quality teams add a convention on top of that: minor
+versions are working drafts, major versions are the ones that were released. The number then tells a
+reader the state. Somebody who sees 1.2 knows they are looking at a draft of what will become 2.0,
 and that 1.0 is still the one the line works to.
 
 A number cannot say whether a version is the latest. For that the system keeps a separate marker:
@@ -110,12 +111,12 @@ copies known.
 
 ## What it is not
 
-Three neighbours share vocabulary with a DMS and do other jobs. A wiki or a SharePoint site is good for pages people write together, and lighter on approval and
-records control unless somebody configures it for them. Microsoft 365, which Serra Alta has, does
-carry retention features, and lesson 3 describes the company's Microsoft estate. A BPM suite routes work in general,
-of which a document approval is one kind, and lesson 6 is about those. And an ERP stores
-transactions, not documents, though it has to point at them, which is the last section of this
-lesson.
+Three neighbours share vocabulary with a DMS and do other jobs. A wiki or a SharePoint site is good
+for pages people write together, and lighter on approval and records control unless somebody
+configures it for them; Microsoft 365, which Serra Alta has, does carry retention features, and
+lesson 3 describes the company's Microsoft estate. A BPM suite routes work in general, of which a
+document approval is one kind, and lesson 6 is about those. And an ERP stores transactions, not
+documents, though it has to point at them, which is the last section of this lesson.
 
 Nobody can download Documentum to try it, so if you want to see these ideas working, an open-source
 system is the way. Alfresco Community Edition is free and has check-out, versions, metadata, rules

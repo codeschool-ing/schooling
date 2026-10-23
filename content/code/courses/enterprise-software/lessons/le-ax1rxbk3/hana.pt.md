@@ -90,7 +90,7 @@ Essa última parte é a que importa no Brasil. **Um ERP que para de receber muda
 conseguir faturar.** A reforma tributária do consumo introduz tributos novos em etapas entre 2026 e
 2033, e o leiaute da NF-e muda junto; uma Serra Alta que não conseguisse emitir uma NF-e válida não
 conseguiria despachar um palete de manteiga. "Ficar no ECC" é, portanto, uma opção com data de
-validade, e não uma opção.
+validade.
 
 Joana fez a conta num quadro branco para Regina Fontes. A manutenção estendida compra três anos, de
 1º de janeiro de 2028 a 31 de dezembro de 2030, e cada um deles custa mais do que custava um ano de
@@ -108,7 +108,8 @@ A SAP e os parceiros descrevem três abordagens amplas, e cada uma é uma respos
 | transição seletiva de dados | um sistema novo é montado a partir da configuração do antigo, e depois os dados e o histórico escolhidos são levados para ele | o que você escolher, por exemplo uma empresa ou os últimos três anos | ferramentas especializadas e um parceiro que já tenha feito isso |
 
 **Nenhuma das três é uma atualização**, e a diferença entre elas é sobretudo uma diferença sobre
-dados. A aula 14 é sobre mover dados entre sistemas, e volta a essas três escolhas por esse lado.
+dados: o que vai, com quanto do histórico e para qual modelo. A aula 14 é sobre mover dados entre
+sistemas.
 
 ## O que acontece com os 1.800 objetos
 

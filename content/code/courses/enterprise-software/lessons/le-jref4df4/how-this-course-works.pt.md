@@ -40,8 +40,8 @@ dia em que a oferta muda.
 
 Se você quiser ver um ERP por dentro, dois de código aberto podem ser instalados na sua própria
 máquina: a edição Community do Odoo e o ERPNext. Nenhum dos dois é assunto de aula e nenhum é
-necessário, mas qualquer um mostra uma ordem de venda virando remessa e nota fiscal, que é o que a
-aula 1 descreve.
+necessário, mas qualquer um mostra uma ordem de venda virando remessa e nota fiscal, que é o que
+esta aula descreve.
 
 ## Nada para instalar
 

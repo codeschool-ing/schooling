@@ -120,6 +120,6 @@ obtido, e aceita o pedido para confirmar quando o SAP voltar.
 
 Ela registrou os motivos num registro de decisão, na pasta que este curso pediu para você manter. **A
 primeira linha do registro nomeia a restrição, não a tecnologia**: *o SAP é o sistema de registro do
-estoque; o portal não lê as tabelas dele.* O resto do curso é, num sentido, a versão longa dessa frase:
-as aulas 2 a 6 são os sistemas que a Serra Alta comprou, e as aulas 7 a 15 são como ligá-los, mudá-los
+estoque; o portal não lê as tabelas dele.* O resto do curso é, num sentido, a versão longa dessa frase.
+As aulas 2 a 6 são os sistemas que a Serra Alta comprou, e as aulas 7 a 15 são como ligá-los, mudá-los
 e substituí-los sem parar uma empresa que coleta leite todo dia.

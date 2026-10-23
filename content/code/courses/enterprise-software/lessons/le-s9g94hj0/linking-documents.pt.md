@@ -34,10 +34,10 @@ laboratórios de Juiz de Fora e de Lavras davam aos certificados um número sequ
 um arquivo chamado `CA-0457.pdf` existia nas duas plantas. Um nome também é editado quando alguém
 corrige um erro de digitação, e o vínculo fica com a grafia antiga.
 
-**Pelo título ou pela posição.** "O terceiro anexo do lote" ou "o documento intitulado Certificado de
-análise L2610-0457" se soltam no dia em que alguém acrescenta um anexo ou muda o título do documento.
-É a falha que o próprio formato de conteúdo desta plataforma foi feito para recusar: as coisas se
-ligam por um id estável, nunca por palavras nem pelo lugar numa lista.
+**Pelo título ou pela posição.** "O terceiro anexo do lote" ou "o documento intitulado Certificado
+de análise L2610-0457" se soltam no dia em que alguém acrescenta um anexo ou muda o título do
+documento. Palavras e lugares numa lista são coisas que as pessoas mudam, e por isso nenhum dos dois
+segura um vínculo.
 
 ## Ligar por um id estável
 
@@ -84,9 +84,10 @@ certa: um lote corrigido no SAP depois do arquivamento deixa um certificado que 
 A Serra Alta hoje faz metade do segundo padrão: o número do lote vai digitado no nome do arquivo. O
 projeto de Joana faz os dois padrões e torna um deles a fonte da verdade do vínculo. A rotina que
 gera o certificado a partir dos resultados do SAP QM o arquiva com lote, material e planta como
-propriedades tipadas, e depois grava o id do documento novo de volta no lote, no SAP. O DMS responde "que certificados pertencem a este lote?" e o SAP mostra o certificado na tela do
-lote. **Se os dois algum dia discordarem, valem as propriedades do DMS**, porque foram preenchidas
-a partir da origem no momento do arquivamento e o id no SAP foi copiado delas.
+propriedades tipadas, e depois grava o id do documento novo de volta no lote, no SAP. O DMS responde
+"que certificados pertencem a este lote?" e o SAP mostra o certificado na tela do lote. **Se os dois
+algum dia discordarem, valem as propriedades do DMS**, porque foram preenchidas a partir da origem
+no momento do arquivamento e o id no SAP foi copiado delas.
 
 Com isso no lugar, o caso do supermercado vira uma consulta pelo lote L2610-0457 em busca do
 certificado aprovado, e o Service Cloud mostra ao atendente um link que o abre. Um link, não uma
@@ -100,20 +101,20 @@ mesmo número de lote pode existir para dois materiais. **Use toda a chave que o
 busca só pelo número do lote vai um dia devolver dois certificados e alguém vai mandar o errado.
 
 E prefira chaves de negócio, o código do material, o número do lote, o número do fornecedor, a um
-número técnico interno do ERP. O SAP da Serra Alta vai ser substituído nos próximos anos, como a aula
-2 explica, e o sistema seguinte vai ter os números de lote impressos nas caixas, mas não os ids
-internos de linha do antigo. As fazendas são o mesmo caso, já que cada uma é um cadastro de fornecedor no SAP. Um certificado de
-fornecedor ou um dossiê de cadastro arquivado sob o número do fornecedor sobrevive ao ERP que o
-emitiu, desde que a migração da aula 14 preserve os números.
+número técnico interno do ERP. O SAP da Serra Alta vai ser substituído nos próximos anos, como a
+aula 2 explica, e o sistema seguinte vai ter os números de lote impressos nas caixas, mas não os ids
+internos de linha do antigo. As fazendas são o mesmo caso, já que cada uma é um cadastro de
+fornecedor no SAP. Um certificado de fornecedor ou um dossiê de cadastro arquivado sob o número do
+fornecedor sobrevive ao ERP que o emitiu, desde que a migração da aula 14 preserve os números.
 
 ## Quando o documento vai embora
 
-A seção anterior deixou uma pergunta em aberto: o que acontece com um vínculo quando o documento é
-descartado? Se o registro do lote no SAP guarda o id de um certificado destruído em janeiro de 2034,
-a tela do lote mostra um link para o nada. Então a rodada de descarte informa os ids que destruiu, e
-os sistemas que guardam vínculos os marcam como descartados, mantendo a data e a regra. **Um vínculo
-para um registro destruído deve dizer que ele foi destruído**, e não falhar em silêncio, pelo mesmo
-motivo pelo qual o registro do descarte é guardado.
+A seção sobre temporalidade deixou uma pergunta em aberto: o que acontece com um vínculo quando o
+documento é descartado? Se o registro do lote no SAP guarda o id de um certificado destruído em
+janeiro de 2034, a tela do lote mostra um link para o nada. Então a rodada de descarte informa os
+ids que destruiu, e os sistemas que guardam vínculos os marcam como descartados, mantendo a data e a
+regra. **Um vínculo para um registro destruído deve dizer que ele foi destruído**, e não falhar em
+silêncio, pelo mesmo motivo pelo qual o registro do descarte é guardado.
 
 ## Mande o id, não o documento
 
@@ -127,5 +128,5 @@ conferido quando o documento é buscado, e existe uma cópia só. A aula 11 dá 
 
 A regra que cobre a seção inteira é uma a que este curso sempre volta: **ligue por um id estável,
 nunca por um nome, um caminho ou uma posição.** Um sistema de documentos que faz tudo o que as três
-primeiras seções descrevem, e que está ligado ao ERP pelo nome do arquivo, continua perdendo o
+seções antes desta descrevem, e que está ligado ao ERP pelo nome do arquivo, continua perdendo o
 certificado.

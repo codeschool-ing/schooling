@@ -6,7 +6,7 @@ version: 1
 Marcos Teles judges SAP by one thing he sees every month: the reports. When Joana asked him what he
 wanted from the move to S/4HANA, his answer had nothing to do with tables or transports. He wanted
 the board pack to stop disagreeing with itself. **At Serra Alta, reporting is three layers bought from
-SAP: a warehouse, a semantic layer and a reporting tool. Its real problem is none of the three, but
+SAP: a warehouse, a semantic layer and a reporting tool. Its problem sits in none of the three: it is
 nine hundred reports that nobody owns.** This section is about those layers and that problem.
 
 ## How BusinessObjects came to be SAP's
@@ -84,8 +84,8 @@ Her first proposal was to delete those 300. Edson asked her to wait, and Cláudi
 why. Some reports are opened once a year: the one that assembles the batch records for the annual
 FSSC 22000 audit, the year-end inventory valuation, a recall simulation that the plants run every
 twelve months and that lands a few weeks outside the audit window. **A report used once a year looks
-dead to any measurement shorter than a year and a bit**, which is the same caution the previous
-section raised about Z objects that run only at the annual close.
+dead to any measurement shorter than a year and a bit**, which is the same caution the section on
+HANA raised about Z objects that run only at the annual close.
 
 So the retirement went in steps, and the steps are general.
 

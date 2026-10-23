@@ -6,10 +6,10 @@ version: 1
 A imagem comum de um ERP é a de um programa de contabilidade enorme, com telas demais. **Um ERP é um
 conjunto de funções do negócio — finanças, vendas, compras, estoque, produção, pessoas — construído
 sobre um único modelo de dados e um único banco, para que um evento no negócio atualize todas elas de
-uma vez.** As telas são a parte menos interessante. O que faz dele um ERP é que, quando um caminhão de
-iogurte sai da fábrica de Juiz de Fora, o estoque cai, o custo das mercadorias vendidas sobe, o
-cliente passa a dever e o plano de produção da semana seguinte enxerga o buraco, na mesma transação e
-sem ninguém copiar um número de um lugar para outro.
+uma vez.** As telas são a parte menos interessante. O que faz dele um ERP é o que acontece quando um caminhão
+de iogurte sai da fábrica de Juiz de Fora. O estoque cai, o custo das mercadorias vendidas sobe, o
+cliente passa a dever e o plano de produção da semana seguinte enxerga o buraco, tudo na mesma
+transação e sem ninguém copiar um número de um lugar para outro.
 
 A sigla vem de *enterprise resource planning*, planejamento de recursos da empresa, um nome que
 descreve melhor de onde ele veio do que o que ele faz hoje.

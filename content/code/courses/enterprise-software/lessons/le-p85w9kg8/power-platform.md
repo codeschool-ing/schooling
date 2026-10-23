@@ -120,8 +120,7 @@ as co-owner.
 
 ## One user for 38 flows
 
-The single SAP connection needs its own paragraph, because it is the kind of shortcut that reads as
-harmless. Every one of the 38 flows acts in SAP as `PA_FINANCEIRO`. SAP records who created and
+The single SAP connection is the kind of shortcut that reads as harmless. Every one of the 38 flows acts in SAP as `PA_FINANCEIRO`. SAP records who created and
 changed each document, and for everything those flows did, it records that user. When a credit
 limit changed in May, SAP could say it was `PA_FINANCEIRO`; it could not say which of the seven
 writing flows did it, or on whose decision. **A shared service account turns an audit trail into a

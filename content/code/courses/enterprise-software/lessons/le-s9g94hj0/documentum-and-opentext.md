@@ -6,8 +6,8 @@ version: 1
 Software is bought from a company, and companies are sold. **A product you keep for fifteen years
 will probably change owners while you use it**, and each change moves things the licence does not
 mention: the roadmap, the people who know the product, the partners who install it. Serra Alta's
-document system is worth reading closely because nothing went dramatically wrong with it. It simply
-runs today on a product whose owner the company never chose.
+document system is worth reading closely because nothing went dramatically wrong with it. It runs
+today on a product whose owner the company never chose.
 
 ## Four owners in twenty-seven years
 
@@ -116,8 +116,9 @@ common ground: Documentum's lifecycles and workflows, its retention rules, and t
 one document out of others. A migration through CMIS moves the documents and their metadata. It does
 not move the process that governs them, and that has to be rebuilt in the new system.
 
-So CMIS is worth requiring of every new integration, and it is not an exit on its own. An honest estimate of leaving, for Serra Alta, counts three things. The documents, which CMIS can move.
-The approval history and lifecycle states of the 2,300 controlled documents, which is a mapping
+So CMIS is worth requiring of every new integration, and it is not an exit on its own. An honest
+estimate of leaving, for Serra Alta, counts three things. The documents, which CMIS can move. The
+approval history and lifecycle states of the 2,300 controlled documents, which is a mapping
 exercise. And the retention schedule, which has to be configured again in the new system and tested
 before the first disposal run.
 

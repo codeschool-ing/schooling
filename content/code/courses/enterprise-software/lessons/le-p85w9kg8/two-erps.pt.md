@@ -41,8 +41,8 @@ da manutenção principal no fim de 2027, e o projeto de S/4HANA que o substitui
 planejado (aula 2). **Migrar uma empresa para um sistema que você está prestes a deixar é migrá-la
 duas vezes**: uma para o ECC, e de novo, com todo o resto, para o S/4HANA alguns anos depois. As duas
 extensões de queijo da Mantiqueira seriam refeitas em ABAP para o ECC e depois reavaliadas para o
-S/4HANA. A Joana tinha visto a forma certa, já que um ERP só para o grupo é um estado final razoável,
-no momento errado.
+S/4HANA. A Joana tinha visto a forma certa no momento errado: um ERP só para o grupo é um estado
+final razoável, e o ECC é o lugar errado para chegar a ele.
 
 ## As três opções
 
@@ -78,7 +78,7 @@ itens, notas de venda, o razão), e um parceiro ou cliente pode publicar mais co
 chamadas são autenticadas pelo Entra ID, e uma aplicação registrada no tenant pode chamar a API sem
 ninguém logado, que é como uma integração agendada deve se identificar.
 
-O tenant é o antigo da Mantiqueira. É a ponta solta da seção anterior voltando: a identidade da
+O tenant é o antigo da Mantiqueira. É a ponta solta da seção sobre o tenant voltando: a identidade da
 própria integração moraria no diretório que ninguém governa, com um segredo que só o Felipe guarda. O
 plano da Joana a registra lá mesmo assim, porque a mudança não está agendada, e acrescenta duas
 coisas. O segredo vai para o cofre que o time do Rui Andrade usa, com a data de expiração na agenda

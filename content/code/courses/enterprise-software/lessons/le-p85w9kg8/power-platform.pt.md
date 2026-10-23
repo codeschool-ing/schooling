@@ -122,8 +122,7 @@ nível de time, com a gestora dela como coproprietária.
 
 ## Um usuário para 38 fluxos
 
-A conexão única com o SAP merece um parágrafo próprio, porque é o tipo de atalho que parece
-inofensivo. Cada um dos 38 fluxos age no SAP como `PA_FINANCEIRO`. O SAP registra quem criou e quem
+A conexão única com o SAP é o tipo de atalho que parece inofensivo. Cada um dos 38 fluxos age no SAP como `PA_FINANCEIRO`. O SAP registra quem criou e quem
 alterou cada documento, e para tudo o que esses fluxos fizeram ele registra esse usuário. Quando um
 limite de crédito mudou em maio, o SAP sabia dizer que foi `PA_FINANCEIRO`; não sabia dizer qual dos
 sete fluxos que escrevem fez a mudança, nem por decisão de quem. **Uma conta de serviço compartilhada

@@ -6,10 +6,10 @@ version: 1
 The common picture of an ERP is a very large accounting program with too many screens. **An ERP is a
 set of business functions — finance, sales, purchasing, stock, production, people — built on one
 data model and one database, so that a single event in the business updates all of them at once.**
-The screens are the least interesting part. What makes it an ERP is that when a truck of yoghurt
-leaves the Juiz de Fora plant, the stock falls, the cost of goods sold rises, the customer owes
-money and the production plan for next week sees the gap, in the same transaction and without
-anybody copying a number from one place to another.
+The screens are the least interesting part. What makes it an ERP is what happens when a truck of
+yoghurt leaves the Juiz de Fora plant. The stock falls, the cost of goods sold rises, the customer
+owes money and the production plan for next week sees the gap, all in the same transaction and
+without anybody copying a number from one place to another.
 
 The letters stand for *enterprise resource planning*, a name that describes where it came from
 better than what it does today.

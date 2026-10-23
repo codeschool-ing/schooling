@@ -34,10 +34,9 @@ Fora and Lavras both named certificates by a sequence number, so a file called `
 in both plants. A name is also edited when somebody corrects a typo, and the link goes with the old
 spelling.
 
-**By title or by position.** "The third attachment of the batch" or "the document titled
-Certificate of analysis L2610-0457" detaches the day somebody adds an attachment or retitles the
-document. It is the failure this platform's own content format is built to refuse: things join by a
-stable id, never by words or by place in a list.
+**By title or by position.** "The third attachment of the batch" or "the document titled Certificate
+of analysis L2610-0457" detaches the day somebody adds an attachment or retitles the document. Words
+and places in a list are both things people change, which is why neither can hold a link.
 
 ## Link by a stable id
 
@@ -82,10 +81,10 @@ corrected in SAP after filing leaves a certificate that nobody finds.
 Serra Alta today does half of the second pattern: the batch number is typed into the file name.
 Joana's design does both patterns, and makes one of them the source of truth for the link. The job
 that produces the certificate from SAP QM's results files it with batch, material and plant as typed
-properties, then writes the new document's id back to the batch in SAP. The DMS answers "which certificates belong to this batch?" and SAP shows the certificate on the
-batch screen. **If the
-two ever disagree, the properties in the DMS win**, because they were set from the source at the
-moment of filing and the id in SAP was copied from them.
+properties, then writes the new document's id back to the batch in SAP. The DMS answers "which
+certificates belong to this batch?" and SAP shows the certificate on the batch screen. **If the two
+ever disagree, the properties in the DMS win**, because they were set from the source at the moment
+of filing and the id in SAP was copied from them.
 
 With that in place, the supermarket's case is a query on batch L2610-0457 for the approved
 certificate, and Service Cloud shows the agent a link that opens it. A link, not a copy: the DMS
@@ -101,17 +100,18 @@ one.
 And prefer business keys, the material code, the batch number, the vendor number, to an internal
 technical number of the ERP. Serra Alta's SAP will be replaced in the next few years, as lesson 2
 explains, and the next system will carry the batch numbers printed on the cartons but not the
-internal row ids of the old one. The farms are the same case, since each one is a vendor record in SAP. A supplier certificate or an
-onboarding file filed under the vendor number survives the ERP that issued it, provided the
-migration in lesson 14 keeps the numbers.
+internal row ids of the old one. The farms are the same case, since each one is a vendor record in
+SAP. A supplier certificate or an onboarding file filed under the vendor number survives the ERP
+that issued it, provided the migration in lesson 14 keeps the numbers.
 
 ## When the document goes
 
-The previous section left a question open: what happens to a link when its document is disposed of?
-If the batch record in SAP holds the id of a certificate destroyed in January 2034, the batch screen
-shows a link to nothing. So the disposal run reports the ids it destroyed, and the systems holding
-links mark them as disposed, keeping the date and the rule. **A link to a destroyed record should say
-it was destroyed**, not fail silently, for the same reason the record of the disposal is kept.
+The section on retention left a question open: what happens to a link when its document is disposed
+of? If the batch record in SAP holds the id of a certificate destroyed in January 2034, the batch
+screen shows a link to nothing. So the disposal run reports the ids it destroyed, and the systems
+holding links mark them as disposed, keeping the date and the rule. **A link to a destroyed record
+should say it was destroyed**, not fail silently, for the same reason the record of the disposal is
+kept.
 
 ## Send the id, not the document
 
@@ -124,5 +124,6 @@ is fetched, and there is one copy. Lesson 11 gives this pattern its name, the cl
 among the other message patterns.
 
 The rule that covers the whole section is one this course keeps coming back to: **join by a stable
-id, never by a name, a path or a position.** A document system that does everything the first three
-sections describe, and is linked to the ERP by file name, still loses the certificate.
+id, never by a name, a path or a position.** A document system that does everything the three
+sections before this one describe, and is linked to the ERP by file name, still loses the
+certificate.

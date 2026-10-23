@@ -7,7 +7,7 @@ Software se compra de uma empresa, e empresas são vendidas. **Um produto que vo
 anos provavelmente vai mudar de dono enquanto você o usa**, e cada mudança mexe em coisas que a
 licença não menciona: o roadmap, as pessoas que conhecem o produto, os parceiros que o implantam. O
 sistema de documentos da Serra Alta merece uma leitura atenta justamente porque nada deu
-dramaticamente errado com ele. Ele só roda hoje sobre um produto cujo dono a empresa nunca escolheu.
+dramaticamente errado com ele. Ele roda hoje sobre um produto cujo dono a empresa nunca escolheu.
 
 ## Quatro donos em vinte e sete anos
 
@@ -117,10 +117,11 @@ do terreno comum: os ciclos de vida e os workflows do Documentum, as regras de t
 jeito como ele compõe um documento a partir de outros. Uma migração pelo CMIS move os documentos e os
 metadados. Ela não move o processo que os governa, e esse precisa ser reconstruído no sistema novo.
 
-Então vale exigir CMIS de toda integração nova, e ele não é uma saída por si só. Uma estimativa honesta de saída, para a Serra Alta, conta três coisas. Os documentos, que o CMIS
-consegue mover. O histórico de aprovação e os estados de ciclo de vida dos 2.300 documentos
-controlados, que é um trabalho de mapeamento. E a tabela de temporalidade, que precisa ser
-configurada de novo no sistema novo e testada antes da primeira rodada de descarte.
+Então vale exigir CMIS de toda integração nova, e ele não é uma saída por si só. Uma estimativa
+honesta de saída, para a Serra Alta, conta três coisas. Os documentos, que o CMIS consegue mover. O
+histórico de aprovação e os estados de ciclo de vida dos 2.300 documentos controlados, que é um
+trabalho de mapeamento. E a tabela de temporalidade, que precisa ser configurada de novo no sistema
+novo e testada antes da primeira rodada de descarte.
 
 ## O que Joana registra
 

@@ -40,7 +40,7 @@ needs one company's free offer stops working the day the offer changes.
 If you want to see an ERP from the inside, two open-source ones can be installed on your own
 machine: Odoo's Community edition and ERPNext. Neither is the subject of a lesson and neither is
 needed, but either will show you a sales order turning into a delivery and an invoice, which is
-what lesson 1 describes.
+what this lesson describes.
 
 ## Nothing to install
 
