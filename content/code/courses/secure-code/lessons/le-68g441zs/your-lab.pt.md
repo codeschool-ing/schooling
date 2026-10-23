@@ -50,7 +50,7 @@ recursos do 3.10; o Ubuntu 24.04 traz o 3.12, e a máquina da gravação tinha o
 
 ```
 ana@vm:~$ python3 --version
-Python 3.13.16
+Python 3.13.17
 ana@vm:~$ git --version
 git version 2.43.0
 ```
@@ -126,7 +126,7 @@ itsdangerous 2.2.0
 Jinja2       3.1.6
 MarkupSafe   3.0.4
 packaging    26.3
-pip          26.2.1
+pip          26.2.2
 pluggy       1.7.0
 Pygments     2.21.0
 pytest       9.1.1

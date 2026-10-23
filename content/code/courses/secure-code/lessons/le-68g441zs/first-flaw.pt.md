@@ -72,7 +72,7 @@ Quatro coisas nesse arquivo valem saber, porque toda aula usa:
 ```
 (.venv) ana@vm:~/sc/cancel$ pytest
 ============================= test session starts ==============================
-platform linux -- Python 3.13.16, pytest-9.1.1, pluggy-1.7.0
+platform linux -- Python 3.13.17, pytest-9.1.1, pluggy-1.7.0
 rootdir: /home/ana/sc/cancel
 collected 3 items
 
@@ -94,7 +94,7 @@ E        +      where post = <FlaskClient <Flask 'app'>>.post
 test_app.py:35: AssertionError
 =========================== short test summary info ============================
 FAILED test_app.py::test_a_patient_cannot_cancel_somebody_elses_booking - Ass...
-========================= 1 failed, 2 passed in 0.12s ==========================
+========================= 1 failed, 2 passed in 0.14s ==========================
 ```
 
 Dois testes passam e o terceiro falha, e o pytest diz exatamente como: a aplicação respondeu `200`
@@ -141,13 +141,13 @@ index 0b47e64..6a47a61 100644
 ```
 (.venv) ana@vm:~/sc/cancel$ pytest
 ============================= test session starts ==============================
-platform linux -- Python 3.13.16, pytest-9.1.1, pluggy-1.7.0
+platform linux -- Python 3.13.17, pytest-9.1.1, pluggy-1.7.0
 rootdir: /home/ana/sc/cancel
 collected 3 items
 
 test_app.py ...                                                          [100%]
 
-============================== 3 passed in 0.10s ===============================
+============================== 3 passed in 0.11s ===============================
 ```
 
 Faça commit da correção junto com o teste que a prova. A partir de agora a frase que faltava está
@@ -169,8 +169,9 @@ responde; `Ctrl+C` para.
 (.venv) ana@vm:~/sc/cancel$ flask --app app run
  * Serving Flask app 'app'
  * Debug mode: off
-Address already in use
-Port 5000 is in use by another program. Either identify and stop that program, or start the server with a different port.
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
 ```
 
 O aviso do Flask é exato e vale levar ao pé da letra: o servidor embutido dele é para
@@ -180,8 +181,8 @@ terminal**, uma requisição sem sessão recebe a recusa para a qual a primeira 
 ```
 (.venv) ana@vm:~/sc/cancel$ curl -si -X POST http://127.0.0.1:5000/bookings/101/cancel
 HTTP/1.1 401 UNAUTHORIZED
-Server: Werkzeug/3.1.9 Python/3.13.16
-Date: Fri, 23 Oct 2026 03:24:54 GMT
+Server: Werkzeug/3.1.9 Python/3.13.17
+Date: Fri, 23 Oct 2026 14:58:48 GMT
 Content-Type: text/html; charset=utf-8
 Content-Length: 317
 Vary: Cookie
