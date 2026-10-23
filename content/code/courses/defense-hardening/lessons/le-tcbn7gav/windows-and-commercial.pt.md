@@ -18,8 +18,8 @@ que o limite não é baixo. O fail2ban conta por endereço e nunca trava conta n
 ## Regras de redução da superfície de ataque
 
 As regras de **redução da superfície de ataque** do Microsoft Defender são um HIPS feito de
-comportamentos de que o trabalho comum quase nunca precisa, e cada uma pode ficar em *auditoria* ou em
-*bloqueio*: aplicativos do Office iniciando processos filhos, scripts lançando executáveis baixados,
+comportamentos de que o trabalho comum quase nunca precisa, e cada uma pode ficar em *auditoria* ou em *bloqueio*.
+Alguns exemplos: aplicativos do Office iniciando processos filhos, scripts lançando executáveis baixados,
 processos lendo credenciais da memória do processo de autenticação do sistema. A orientação da própria
 Microsoft é a que esta aula dá: **rode cada regra em modo de auditoria primeiro**, leia o que ela teria
 bloqueado e passe para bloqueio só onde nada legítimo aparecer.

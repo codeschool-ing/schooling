@@ -15,7 +15,8 @@ alcançada na sua máquina. Os dois estão no feed ou no que você já sabe.
 
 KEV e EPSS não foram baixados para este curso; o feed traz valores inventados no formato deles. A
 lista KEV de verdade tem pouco mais de mil entradas, contra as centenas de milhares de CVEs já
-publicados, e **essa proporção é o argumento para usá-la**: a maioria das falhas nunca é usada por
+publicados, e **essa proporção é o argumento para usá-la**.
+A maioria das falhas nunca é usada por
 ninguém, e uma equipe que trata todo 7,5 como urgente passa as semanas nas falhas erradas.
 
 A política do escritório, escrita como código para poder ser lida, discutida e aplicada do mesmo

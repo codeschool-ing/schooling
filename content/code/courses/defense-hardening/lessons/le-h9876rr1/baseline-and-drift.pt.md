@@ -57,7 +57,8 @@ primeiro, com seis listeners que não estão na linha de base dele e os seis pac
 exatamente o trabalho da aula 1, encontrado desta vez por um script que o acharia em cinquenta
 máquinas tão facilmente quanto em uma. Depois o `dns`, cuja linha de base diz que ele responde nomes
 na porta 53 e que não responde, porque toda aula começa com um laboratório novo e o resolvedor da aula
-14 não está configurado neste: uma máquina que faz menos do que o papel dela diz também é desvio, do
+14 não está configurado neste.
+Uma máquina que faz menos do que o papel dela diz também é desvio, do
 tipo que aparece como indisponibilidade. Por último vêm as duas máquinas sem dono, e o `printer`, que
 nem pôde ser lido.
 

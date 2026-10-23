@@ -15,8 +15,8 @@ Os serviços online que esta aula descreve guardam o que recebem. A documentaç�
 todas as letras que arquivos enviados pela interface pública são compartilhados com os clientes
 premium e os parceiros de segurança dele, que podem baixá-los. As varreduras públicas do urlscan.io
 ficam visíveis para qualquer um que procure. Os planos gratuitos do any.run e do Joe Sandbox tornam
-públicas as análises. Tudo isso é útil para a comunidade de segurança e perigoso para você se o
-arquivo era da Jatobá: **a planilha de um cliente cheia de CPFs, enviada "para conferir", é um
+públicas as análises. Tudo isso é útil para a comunidade de segurança e perigoso para você se o arquivo era da Jatobá.
+**A planilha de um cliente cheia de CPFs, enviada "para conferir", é um
 vazamento de dados** exatamente do tipo que a aula 9 tentou impedir, e pela LGPD o escritório responde
 por ele.
 

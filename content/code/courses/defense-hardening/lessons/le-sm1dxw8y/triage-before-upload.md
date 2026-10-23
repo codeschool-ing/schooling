@@ -15,7 +15,8 @@ The online services this lesson describes keep what they are sent. VirusTotal's 
 plainly that files submitted through its public interface are shared with its premium customers and
 security partners, who can download them. urlscan.io's public scans are visible to anybody who
 searches. any.run's and Joe Sandbox's free tiers make their analyses public. All of that is useful
-to the security community and dangerous to you if the file was one of Jatobá's: **a client's
+to the security community and dangerous to you if the file was one of Jatobá's.
+**A client's
 spreadsheet full of CPF numbers, uploaded "to check it", is a data leak** of exactly the kind lesson 9
 tried to prevent, and under the LGPD the firm answers for it.
 

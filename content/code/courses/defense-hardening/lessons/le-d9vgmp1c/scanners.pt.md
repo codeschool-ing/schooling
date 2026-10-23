@@ -48,6 +48,6 @@ USN, os pacotes e as versões corrigidas, e o OpenSCAP, que a aula 2 usa para co
 avaliá-lo. Baixá-lo exige internet, que o laboratório não tem, então este curso mostra o mecanismo com
 um feed que cabe numa tela.
 
-Agentes são o que a maioria das organizações acaba usando, por um motivo que o laboratório já
-mostrou: um agente está dentro da máquina, então lê o banco de dados de pacotes como o script leu, e
+Agentes são o que a maioria das organizações acaba usando, por um motivo que o laboratório já mostrou.
+Um agente está dentro da máquina, então lê o banco de dados de pacotes como o script leu, e
 informa a partir de notebooks que raramente estão na rede do escritório quando o scanner roda.

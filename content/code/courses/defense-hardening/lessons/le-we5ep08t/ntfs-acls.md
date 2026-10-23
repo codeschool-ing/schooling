@@ -17,8 +17,8 @@ the common bundles are called Read, Read & execute, Modify and Full control.
 
 **Deny entries exist, and at the same level they win.** Windows evaluates explicit entries before
 inherited ones, and within each, deny before allow. So an explicit deny for a group overrides an
-explicit allow for a user who is in it, which is the opposite of the Linux surprise in the last
-section: on Linux a named user entry can
+explicit allow for a user who is in it, which is the opposite of the Linux surprise in the last section.
+On Linux a named user entry can
 restrict a member of a generous group; on Windows a deny on the group restricts the user whatever
 their own entry says. Microsoft's advice is to use deny sparingly, because the result of mixing them
 is hard to read.

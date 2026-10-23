@@ -32,7 +32,7 @@ ter na máquina, o passo seguinte é uma máquina que você joga fora depois.** 
 `sudo bash hostlab.sh up trap` dá um `trap` novo em segundos, e o que um arquivo fizer ali some no
 próximo `up`. Fora do laboratório a mesma ideia é uma máquina virtual restaurada de um snapshot depois
 de cada uso, ou o Windows Sandbox, um Windows descartável que a Microsoft traz nas edições Pro e
-Enterprise, que fecha e esquece tudo quando a janela é fechada; o Windows Sandbox não foi executado
+Enterprise, que fecha e esquece tudo quando a janela é fechada. O Windows Sandbox não foi executado
 para este curso.
 
 A ordem de preferência para um arquivo desconhecido fica então simples: um serviço que o analisa em

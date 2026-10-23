@@ -12,7 +12,8 @@ estar na rede, e como a rede consegue saber.
 A imagem errada é a de que a rede fica dentro do prédio e o prédio está trancado, então o que está
 ligado pertence a ele. A recepção da Jatobá tem uma tomada de rede atrás de uma cadeira. O notebook
 de um visitante, a caixa de diagnóstico de um prestador, um pequeno aparelho esquecido atrás de uma
-impressora: nenhum deles precisa de senha para usar essa tomada, e uma vez no segmento cada um
+impressora: nenhum deles precisa de senha para usar essa tomada.
+Uma vez no segmento, cada um
 alcança o SSH do portal, os compartilhamentos de arquivos e tudo o que a aula 1 achou escutando.
 
 O **controle de acesso à rede** (NAC) leva a decisão para a porta do switch. Antes de encaminhar o
@@ -37,8 +38,8 @@ Suba o laboratório com `sudo bash hostlab.sh up desk web` e abra dois shells: u
 `nac` no seu home em cada máquina.
 
 Duas coisas desta aula não estão no laboratório. Um switch de verdade implementa os dois métodos no
-firmware e é configurado pela interface própria, que muda de fabricante para fabricante; o
-laboratório os faz com as mesmas ferramentas Linux sobre as quais o firmware de um switch muitas
+firmware e é configurado pela interface própria, que muda de fabricante para fabricante.
+O laboratório os faz com as mesmas ferramentas Linux sobre as quais o firmware de um switch muitas
 vezes é construído, o `nftables` para o filtro da porta e o `hostapd` para o 802.1X. E o laboratório
 não tem servidor RADIUS: o `hostapd` confere as credenciais ele mesmo, onde uma rede de verdade as
 manda para um servidor central. A última seção diz o que muda, e nenhuma das partes de fabricante ou

@@ -16,7 +16,8 @@ dos próprios fabricantes.
 
 ## Três famílias
 
-**Heurísticas estáticas** leem o arquivo sem rodá-lo e pontuam as propriedades dele: um formato de
+**Heurísticas estáticas** leem o arquivo sem rodá-lo e pontuam as propriedades dele.
+Procuram um formato de
 documento trazendo uma macro que roda quando ele é aberto, um executável cujas seções estão
 comprimidas ou cifradas, um arquivo compactado protegido por senha para que nada dentro dele possa ser
 lido, um arquivo cuja extensão diz um tipo e o conteúdo diz outro. Cada propriedade sozinha é comum em

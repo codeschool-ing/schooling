@@ -15,7 +15,8 @@ explanations.
 
 ## Three families
 
-**Static heuristics** read the file without running it and score its properties: a document format
+**Static heuristics** read the file without running it and score its properties.
+They look for a document format
 carrying a macro that runs when it is opened, an executable whose sections are compressed or
 encrypted, an archive protected by a password so that nothing inside it can be read, a file whose
 extension says one type and whose content says another. Each property alone is common in legitimate

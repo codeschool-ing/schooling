@@ -6,7 +6,8 @@ version: 1
 **Numa máquina, endurecer é uma lista de comandos. Em cinquenta, é uma questão de quem decide e de
 onde a decisão mora.** A aula 2 escreveu a linha de base do portal como uma verificação e um playbook
 para um servidor. Um escritório do tamanho da Jatobá tem alguns servidores e algumas dezenas de
-estações, e cada uma se desvia do seu jeito: uma configuração mudada por causa de uma impressora que
+estações, e cada uma se desvia do seu jeito.
+Pense numa configuração mudada por causa de uma impressora que
 depois foi trocada, uma regra afrouxada por uma tarde, um notebook que estava fora da rede quando todo
 o resto foi atualizado.
 

@@ -15,7 +15,8 @@ reached on your machine at all. Both are in the feed or in what you already know
 
 KEV and EPSS were not downloaded for this course; the feed carries invented values in their shape.
 The real KEV list holds somewhat over a thousand entries, out of the hundreds of thousands of CVEs
-ever published, and **that ratio is the argument for using it**: most flaws are never used by anybody, and a
+ever published, and **that ratio is the argument for using it**.
+Most flaws are never used by anybody, and a
 team that treats every 7.5 as urgent spends its weeks on the wrong ones.
 
 The firm's policy, written as code so that it can be read, argued about and applied the same way

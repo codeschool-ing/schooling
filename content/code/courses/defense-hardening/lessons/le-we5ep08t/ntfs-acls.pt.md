@@ -17,8 +17,8 @@ separados, e os pacotes comuns se chamam Read, Read & execute, Modify e Full con
 
 **Entradas de negação existem e, no mesmo nível, vencem.** O Windows avalia entradas explícitas antes
 das herdadas e, dentro de cada uma, negação antes de permissão. Então uma negação explícita para um
-grupo vence uma permissão explícita para um usuário que está nele, o que é o contrário da surpresa do
-Linux na seção anterior: no Linux uma entrada de usuário nomeado pode restringir um membro de um
+grupo vence uma permissão explícita para um usuário que está nele, o que é o contrário da surpresa do Linux na seção anterior.
+No Linux uma entrada de usuário nomeado pode restringir um membro de um
 grupo generoso; no Windows uma negação no grupo restringe o usuário diga a entrada dele o que disser.
 O conselho da Microsoft é usar negação com parcimônia, porque o resultado de misturar as duas é
 difícil de ler.

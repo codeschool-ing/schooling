@@ -66,7 +66,8 @@ contadores voltam a gravar, pela entrada de grupo que a máscara não estreita m
 ## Por que funciona assim
 
 A máscara deixa um programa que não sabe nada de ACL, como uma ferramenta de backup que restaura
-arquivos com `chmod`, estreitar um arquivo com segurança: o que ela põe nos bits de grupo limita
+arquivos com `chmod`, estreitar um arquivo com segurança.
+O que ela põe nos bits de grupo limita
 todas as entradas extras de uma vez, então um arquivo restaurado nunca fica mais aberto do que os
 bits dizem. O preço é a armadilha acima, pago pelo administrador que esqueceu que o arquivo tinha ACL.
 É por isso que vale reparar no `+` do `ls -l` toda vez.

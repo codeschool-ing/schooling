@@ -56,7 +56,8 @@ Every line is a finding, and every one about a listed machine has an owner besid
 first, with six listeners that are not in its baseline and the six packages behind them: exactly lesson
 1's work, found this time by a script that would find it on fifty machines as easily as on one. Then
 `dns`, whose baseline says it answers names on port 53 and which does not, because every lesson starts
-from a fresh lab and lesson 14's resolver is not configured in this one: a machine that does less than
+from a fresh lab and lesson 14's resolver is not configured in this one.
+A machine that does less than
 its role says is drift too, the kind that shows up as an outage. Last come the two machines nobody owns,
 and `printer`, which could not be read at all.
 

@@ -23,7 +23,8 @@ Connection to desk (192.168.60.20) 22 port [tcp/ssh] succeeded!
 O `desk` alcança o SSH e o portal no `web`, de que pode precisar. E o `web`, com a própria conta do
 portal, alcança o SSH do `desk`, de que o portal nunca precisa. Se o portal um dia rodar um comando
 para o qual não foi escrito, do jeito que a aula 8 encenou, essa é a primeira porta aberta que ele
-encontra: de uma máquina para a seguinte, o que se chama **movimento lateral**, e é assim que um
+encontra: de uma máquina para a seguinte, o que se chama **movimento lateral**.
+É assim que um
 único servidor comprometido vira um escritório comprometido.
 
 ```schooling-figure
