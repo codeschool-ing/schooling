@@ -83,3 +83,4 @@ block type-error
 LAB as "cd ~/planner && sed -i 's/const id = \`s\${plan.sessions.length + 1}\`;/const id = plan.sessions.length + 1;/' src/planner.ts"
 run $P 'npm run build'
 LAB as 'cd ~/planner && git checkout -q src/planner.ts'
+save_as 1

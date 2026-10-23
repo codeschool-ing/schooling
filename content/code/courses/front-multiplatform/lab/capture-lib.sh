@@ -61,3 +61,18 @@ trap unserve EXIT
 commit() {
   LAB as "cd $1 && git add -A && GIT_AUTHOR_DATE='$2:00 -0300' GIT_COMMITTER_DATE='$2:00 -0300' git commit -q -m '$3'"
 }
+# Where a lesson starts. Lesson N's captures begin from the planner lesson N-1's
+# captures left behind: `save_as N` keeps a copy of ana's projects when a
+# lesson finishes, and `start_from N-1` puts that copy back. So the captures run
+# IN ORDER the first time; after that any lesson can be run again on its own.
+# What a student types to get from one lesson to the next is in the lessons.
+SNAP=/var/lib/machines/fm-snapshots
+PROJECTS="planner planner-native planner-electron"
+save_as() {
+  mkdir -p $SNAP
+  ( cd "$M/home/ana" && tar -cf "$SNAP/after-$1.tar" --exclude='*/src-tauri/target' $(ls -d $PROJECTS 2>/dev/null) )
+}
+start_from() {
+  [ -f "$SNAP/after-$1.tar" ] || { echo "no snapshot after lesson $1: run its captures first" >&2; exit 1; }
+  ( cd "$M/home/ana" && rm -rf $PROJECTS && tar -xf "$SNAP/after-$1.tar" )
+}

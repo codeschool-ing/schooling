@@ -27,7 +27,7 @@ browser it drives:
 ```
 ana@dev:~/planner$ npm install -E -D playwright@1.63.0
 
-added 4 packages, and audited 21 packages in 917ms
+added 4 packages, and audited 21 packages in 991ms
 
 found 0 vulnerabilities
 ```

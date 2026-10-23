@@ -52,7 +52,7 @@ ana@dev:~$ cd planner
 ana@dev:~/planner$ rm -r src public
 ana@dev:~/planner$ npm install -E -D vite@8.3.5 typescript@6.0.3
 
-added 16 packages, and audited 17 packages in 2s
+added 16 packages, and audited 17 packages in 4s
 
 found 0 vulnerabilities
 ana@dev:~/planner$ cat package.json
@@ -271,7 +271,7 @@ computing gzip size...
 dist/index.html                0.32 kB │ gzip: 0.23 kB
 dist/assets/index-kF5hUKai.js  2.90 kB │ gzip: 1.34 kB
 
-✓ built in 150ms
+✓ built in 131ms
 ```
 
 **`dist/` is the thing every later lesson wraps.** Capacitor copies it into an Android and an iOS

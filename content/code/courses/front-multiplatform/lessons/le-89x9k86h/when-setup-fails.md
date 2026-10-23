@@ -44,7 +44,7 @@ ana@dev:~/planner$ timeout 5 npm run dev 2>&1 | head -n 6
 > vite
 
 Port 5173 is in use, trying another one...
-7:40:17 PM [vite] (client) Re-optimizing dependencies because lockfile has changed
+7:43:29 PM [vite] (client) Re-optimizing dependencies because lockfile has changed
 ```
 
 `npm run dev` was already running in another terminal, holding port 5173, so the second one moved
