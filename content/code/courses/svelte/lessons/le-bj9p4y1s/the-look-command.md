@@ -56,8 +56,9 @@ used.*
 ## The program
 
 Save this as `~/svelte-tools/look.mjs`. You do not need to follow every line yet. It opens the
-address, carries out what the options ask in order, and prints the path it ended up on and the tree of the
-page's `<main>`, or of the whole page when there is no `<main>`:
+address, carries out what the options ask in order, and prints the path it ended up on, the page's title
+when it has one, and the tree of the page's `<main>`, or of the whole page when there is no
+`<main>`:
 
 ```javascript
 // look.mjs: open a page in Chromium and print what is on it, as the tree of
@@ -73,7 +74,8 @@ page's `<main>`, or of the whole page when there is no `<main>`:
 //   --wait MS           let the page run for MS milliseconds
 //   --no-js             open the page with JavaScript turned off
 //   --console           print what the page wrote to its console, too
-// At the end it prints the path it is on and the tree of <main>.
+// At the end it prints the path it is on, the page's title if it has one,
+// and the tree of <main>.
 import { chromium } from "playwright";
 
 const [url, ...args] = process.argv.slice(2);
@@ -107,6 +109,7 @@ for (let i = 0; i < args.length; i++) {
 
 const where = new URL(page.url());
 if (where.protocol.startsWith("http")) console.log(`at ${where.pathname}`);
+if (await page.title()) console.log(`title: ${await page.title()}`);
 const main = page.locator("main");
 console.log(await ((await main.count()) ? main : page.locator("body")).ariaSnapshot());
 await browser.close();

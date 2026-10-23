@@ -36,6 +36,8 @@ def parse(body):
             cur = {"code": [], "note": note}; parts.append(cur); continue
         if cur is not None:
             cur["code"].append(line)
+        elif line.strip():
+            raise SystemExit(f"ex.py: a line before the first '---' would be lost: {line!r}")
     out = []
     for p in parts:
         code = "\n".join(p["code"]).rstrip("\n")

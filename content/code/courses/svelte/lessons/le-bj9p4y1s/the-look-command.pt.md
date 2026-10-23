@@ -55,8 +55,9 @@ downloads do Playwright, e já tinha o mesmo build, 153.0.8010.12, que todo `loo
 ## O programa
 
 Salve isto como `~/svelte-tools/look.mjs`. Você não precisa acompanhar cada linha agora. Ele abre o
-endereço, faz em ordem o que as opções pedem, e imprime o caminho em que terminou e a árvore do
-`<main>` da página, ou da página inteira quando não há `<main>`:
+endereço, faz em ordem o que as opções pedem, e imprime o caminho em que terminou, o título da
+página quando ela tem um, e a árvore do `<main>` da página, ou da página inteira quando não há
+`<main>`:
 
 ```javascript
 // look.mjs: open a page in Chromium and print what is on it, as the tree of
@@ -72,7 +73,8 @@ endereço, faz em ordem o que as opções pedem, e imprime o caminho em que term
 //   --wait MS           let the page run for MS milliseconds
 //   --no-js             open the page with JavaScript turned off
 //   --console           print what the page wrote to its console, too
-// At the end it prints the path it is on and the tree of <main>.
+// At the end it prints the path it is on, the page's title if it has one,
+// and the tree of <main>.
 import { chromium } from "playwright";
 
 const [url, ...args] = process.argv.slice(2);
@@ -106,6 +108,7 @@ for (let i = 0; i < args.length; i++) {
 
 const where = new URL(page.url());
 if (where.protocol.startsWith("http")) console.log(`at ${where.pathname}`);
+if (await page.title()) console.log(`title: ${await page.title()}`);
 const main = page.locator("main");
 console.log(await ((await main.count()) ? main : page.locator("body")).ariaSnapshot());
 await browser.close();
