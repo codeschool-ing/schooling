@@ -1,0 +1,633 @@
+[
+  {
+    "id": "ex-791z7ra8",
+    "version": 1,
+    "section": "gunicorn-and-uvicorn",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does Gunicorn's master process do once the workers are running?",
+    "choices": [
+      {
+        "text": "Answers requests when every worker is busy, as a spare",
+        "correct": false,
+        "why": "Only the workers answer requests."
+      },
+      {
+        "text": "Replaces a worker that dies",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Serves the static files",
+        "correct": false,
+        "why": "nginx does, in this lesson."
+      },
+      {
+        "text": "Runs Celery",
+        "correct": false,
+        "why": "Celery has its own services."
+      }
+    ]
+  },
+  {
+    "id": "ex-c3ar4p5b",
+    "version": 1,
+    "section": "gunicorn-and-uvicorn",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does each Gunicorn worker have its own copy of Django?",
+    "choices": [
+      {
+        "text": "Django refuses to be imported twice in one process",
+        "correct": false,
+        "why": "It is imported once per worker, as usual."
+      },
+      {
+        "text": "To share memory between requests",
+        "correct": false,
+        "why": "Separate processes share none."
+      },
+      {
+        "text": "Each worker is a separate process",
+        "correct": true,
+        "why": "Right: one crash takes one worker."
+      },
+      {
+        "text": "The master sends each worker a different settings file so they can serve different sites",
+        "correct": false,
+        "why": "They all use the same settings."
+      }
+    ]
+  },
+  {
+    "id": "ex-a7xr34jy",
+    "version": 1,
+    "section": "gunicorn-and-uvicorn",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Gunicorn loads Django through the module startproject wrote: config.___.",
+    "blanks": [
+      {
+        "accept": [
+          "wsgi"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gpza3tvx",
+    "version": 1,
+    "section": "gunicorn-and-uvicorn",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When would the lesson run a Django project under Uvicorn instead of Gunicorn?",
+    "choices": [
+      {
+        "text": "When it has async views",
+        "correct": true,
+        "why": "Right: through config.asgi."
+      },
+      {
+        "text": "When it uses PostgreSQL",
+        "correct": false,
+        "why": "Both work with any database."
+      },
+      {
+        "text": "Always, because Uvicorn is newer and every Django project should move to it",
+        "correct": false,
+        "why": "Newer is not the reason."
+      },
+      {
+        "text": "When it has more than three workers",
+        "correct": false,
+        "why": "Worker counts do not decide it."
+      }
+    ]
+  },
+  {
+    "id": "ex-tks25753",
+    "version": 1,
+    "section": "systemd-units",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can /etc/agenda/agenda.env be readable by root only, when the service runs as ana?",
+    "choices": [
+      {
+        "text": "ana is in the root group",
+        "correct": false,
+        "why": "She is not."
+      },
+      {
+        "text": "systemd reads it as root, first",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Gunicorn asks for sudo",
+        "correct": false,
+        "why": "It never does."
+      },
+      {
+        "text": "The file is copied into ana's home at boot",
+        "correct": false,
+        "why": "Nothing copies it."
+      }
+    ]
+  },
+  {
+    "id": "ex-v09xnkbf",
+    "version": 1,
+    "section": "systemd-units",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each line of the unit to what it does.",
+    "pairs": [
+      {
+        "left": "EnvironmentFile=",
+        "right": "the variables, read as root"
+      },
+      {
+        "left": "Restart=on-failure",
+        "right": "start it again after an error"
+      },
+      {
+        "left": "WantedBy=multi-user.target",
+        "right": "start it at boot once enabled"
+      },
+      {
+        "left": "User=ana",
+        "right": "the account the process runs as"
+      }
+    ]
+  },
+  {
+    "id": "ex-2mg3z5zs",
+    "version": 1,
+    "section": "systemd-units",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does ExecStart name /home/ana/agenda/.venv/bin/gunicorn instead of uv run gunicorn?",
+    "choices": [
+      {
+        "text": "systemd cannot run uv",
+        "correct": false,
+        "why": "It can run any program."
+      },
+      {
+        "text": "uv would install packages from the internet at every boot, and the unit would fail offline",
+        "correct": false,
+        "why": "That is not what the lesson says."
+      },
+      {
+        "text": "Gunicorn refuses to start from uv",
+        "correct": false,
+        "why": "It ran under uv run earlier."
+      },
+      {
+        "text": "A full path leaves nothing to resolve at boot",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-6vk7p2te",
+    "version": 1,
+    "section": "systemd-units",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does celery -A config inspect ping answering pong prove?",
+    "choices": [
+      {
+        "text": "Broker and worker both work",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Every task has run at least once since the worker started",
+        "correct": false,
+        "why": "It runs no task."
+      },
+      {
+        "text": "The mail server accepts mail",
+        "correct": false,
+        "why": "Mail is not involved."
+      },
+      {
+        "text": "Gunicorn is up",
+        "correct": false,
+        "why": "Celery knows nothing of Gunicorn."
+      }
+    ]
+  },
+  {
+    "id": "ex-cfkaznbs",
+    "version": 1,
+    "section": "systemd-units",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After writing a new unit file, systemd reads it with sudo systemctl daemon-___.",
+    "blanks": [
+      {
+        "accept": [
+          "reload"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-f0w9j89h",
+    "version": 1,
+    "section": "systemd-units",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why was STATIC_ROOT put in /var/www/agenda/static rather than inside the project?",
+    "choices": [
+      {
+        "text": "Django refuses a STATIC_ROOT inside BASE_DIR",
+        "correct": false,
+        "why": "It allows one; the default here is inside it."
+      },
+      {
+        "text": "nginx runs as www-data, which cannot enter /home/ana",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "collectstatic only writes to /var/www",
+        "correct": false,
+        "why": "It writes wherever STATIC_ROOT says."
+      },
+      {
+        "text": "To make the files private",
+        "correct": false,
+        "why": "They are public by design."
+      }
+    ]
+  },
+  {
+    "id": "ex-ydjk8ay3",
+    "version": 1,
+    "section": "installing-nginx",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is a reverse proxy's job in this lesson?",
+    "choices": [
+      {
+        "text": "Running the database migrations before each request reaches the application",
+        "correct": false,
+        "why": "Migrations are run by hand."
+      },
+      {
+        "text": "Terminating TLS",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Hashing passwords",
+        "correct": false,
+        "why": "That is the application's."
+      },
+      {
+        "text": "Queueing Celery tasks",
+        "correct": false,
+        "why": "Redis holds tasks."
+      }
+    ]
+  },
+  {
+    "id": "ex-2qnrw42e",
+    "version": 1,
+    "section": "nginx-in-front",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the API's server block add X-Content-Type-Options and X-Frame-Options, while the site's does not?",
+    "choices": [
+      {
+        "text": "nginx only adds headers to JSON",
+        "correct": false,
+        "why": "It adds what it is told to."
+      },
+      {
+        "text": "The site does not need them",
+        "correct": false,
+        "why": "It needs them and gets them."
+      },
+      {
+        "text": "Django's middleware already sends them; FastAPI does not",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The headers only work on subdomains such as api.",
+        "correct": false,
+        "why": "They work on any name."
+      }
+    ]
+  },
+  {
+    "id": "ex-zbpmerk7",
+    "version": 1,
+    "section": "nginx-in-front",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does every reload in the lesson come after sudo nginx -t?",
+    "choices": [
+      {
+        "text": "reload refuses to run without it",
+        "correct": false,
+        "why": "It runs; it would keep the old configuration."
+      },
+      {
+        "text": "So a mistake never reaches the running server",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "nginx -t clears the cache, which a reload needs to see new static files",
+        "correct": false,
+        "why": "It only tests."
+      },
+      {
+        "text": "It restarts the applications",
+        "correct": false,
+        "why": "It touches nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-e3ceqng4",
+    "version": 1,
+    "section": "nginx-in-front",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The stylesheet came back with Server: nginx and no request reached Django. Which directive did that?",
+    "choices": [
+      {
+        "text": "proxy_pass",
+        "correct": false,
+        "why": "That sends requests to Django."
+      },
+      {
+        "text": "server_name",
+        "correct": false,
+        "why": "It picks the block, not the file."
+      },
+      {
+        "text": "add_header",
+        "correct": false,
+        "why": "That adds headers."
+      },
+      {
+        "text": "location /static/ with alias",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-6pb1cz9q",
+    "version": 1,
+    "section": "https-behind-nginx",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "curl answered 000 for https://agenda.example.org/ until --cacert was given. Why is that the right fix?",
+    "choices": [
+      {
+        "text": "It disables the certificate check for this one request",
+        "correct": false,
+        "why": "It keeps the check, with a certificate to check against."
+      },
+      {
+        "text": "It trusts this certificate, and still checks it on every request",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It makes nginx send a different certificate",
+        "correct": false,
+        "why": "nginx sends the same one."
+      },
+      {
+        "text": "It switches to HTTP",
+        "correct": false,
+        "why": "The request stayed HTTPS."
+      }
+    ]
+  },
+  {
+    "id": "ex-p3jnhhp5",
+    "version": 1,
+    "section": "https-behind-nginx",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson leave HSTS at max-age=3600 and without preload?",
+    "choices": [
+      {
+        "text": "Browsers ignore longer values",
+        "correct": false,
+        "why": "They honour them."
+      },
+      {
+        "text": "Preload requires paying a registry",
+        "correct": false,
+        "why": "It is free; it is hard to undo."
+      },
+      {
+        "text": "Both are hard to take back, so they are raised later",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Django forbids HSTS above an hour while DEBUG is off",
+        "correct": false,
+        "why": "No such limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-r04tx9vp",
+    "version": 1,
+    "section": "https-behind-nginx",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With a forged X-Forwarded-For: 203.0.113.9, why did Uvicorn still log 127.0.0.2?",
+    "choices": [
+      {
+        "text": "nginx deletes X-Forwarded-For headers from clients",
+        "correct": false,
+        "why": "It appends to them."
+      },
+      {
+        "text": "It reads from the right and trusts only nginx's address",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "203.0.113.9 is not a valid address",
+        "correct": false,
+        "why": "It is valid, reserved for documentation."
+      },
+      {
+        "text": "--proxy-headers ignores X-Forwarded-For and reads the TCP peer only",
+        "correct": false,
+        "why": "It reads the header."
+      }
+    ]
+  },
+  {
+    "id": "ex-jvps3k8c",
+    "version": 1,
+    "section": "https-behind-nginx",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Django treats a request as HTTPS behind a proxy when the header named in SECURE_PROXY____ says https.",
+    "blanks": [
+      {
+        "accept": [
+          "SSL_HEADER"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hpdq71tx",
+    "version": 1,
+    "section": "when-nginx-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "nginx answered 502 Bad Gateway. Where does the lesson look first?",
+    "choices": [
+      {
+        "text": "nginx's error log, then the application's service",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The browser's cache",
+        "correct": false,
+        "why": "The error is on the server."
+      },
+      {
+        "text": "The certificate",
+        "correct": false,
+        "why": "TLS worked; the upstream did not."
+      },
+      {
+        "text": "PostgreSQL's configuration file, because a 502 usually means the database is down",
+        "correct": false,
+        "why": "502 means the upstream did not answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-hx6q84hw",
+    "version": 1,
+    "section": "when-nginx-fails",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each code from nginx to what it says.",
+    "pairs": [
+      {
+        "left": "502",
+        "right": "nothing answered at the upstream"
+      },
+      {
+        "left": "504",
+        "right": "the upstream took too long"
+      },
+      {
+        "left": "301 to the same URL, again",
+        "right": "Django did not see X-Forwarded-Proto"
+      }
+    ]
+  },
+  {
+    "id": "ex-kktg80t6",
+    "version": 1,
+    "section": "when-nginx-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What happens to a running nginx if a reload follows a configuration that failed nginx -t?",
+    "choices": [
+      {
+        "text": "It stops serving",
+        "correct": false,
+        "why": "It keeps running."
+      },
+      {
+        "text": "It keeps the old configuration, and goes on serving with it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It loads the parts that parsed and skips the broken line",
+        "correct": false,
+        "why": "It loads all or nothing."
+      },
+      {
+        "text": "It reverts to the default site",
+        "correct": false,
+        "why": "Nothing reverts."
+      }
+    ]
+  },
+  {
+    "id": "ex-kbqr23cc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate removes proxy_set_header Host $host from the site. What will Django answer?",
+    "choices": [
+      {
+        "text": "200, since nginx still proxies",
+        "correct": false,
+        "why": "Django checks the Host it receives."
+      },
+      {
+        "text": "502",
+        "correct": false,
+        "why": "The upstream still answers."
+      },
+      {
+        "text": "400, because the Host is not in ALLOWED_HOSTS",
+        "correct": true,
+        "why": "Right: nginx sends 127.0.0.1:8000 instead."
+      },
+      {
+        "text": "301 to HTTPS",
+        "correct": false,
+        "why": "The host check comes first."
+      }
+    ]
+  }
+]

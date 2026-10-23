@@ -1,0 +1,46 @@
+---
+title: Serializers: one class, both directions
+version: 1
+---
+
+A **serializer** describes the shape of a resource. Given an object, it produces a dictionary that
+becomes JSON; given a dictionary that came in as JSON, it validates it and produces clean values.
+It is to an API what lesson 3's `Form` is to a page. Save this as `events/serializers.py`:
+
+```schooling-example
+{"language": "python", "file": "events/serializers.py", "parts": [{"code": "# events/serializers.py\nfrom rest_framework import serializers\n\nfrom .models import Event, Registration\n\n\n", "note": "Serializers live in their own module; DRF's `serializers` is the counterpart of Django's `forms`."}, {"code": "class EventSerializer(serializers.ModelSerializer):\n", "note": "**A `ModelSerializer` reads the model** and builds a field for each name in `fields`, with the model's own types and validation."}, {"code": "    taken = serializers.IntegerField(read_only=True)\n\n", "note": "`taken` is not a model field: it is the annotation the view adds, so it is declared here, **read-only**, and ignored on input."}, {"code": "    class Meta:\n        model = Event\n        fields = [\"slug\", \"title\", \"starts_at\", \"venue\", \"capacity\", \"description\", \"taken\"]\n\n", "note": "`fields` is a list on purpose. An API exposes exactly what it names, and a column added to the model next year does not appear in it by accident."}, {"code": "    def validate_capacity(self, value):\n        if self.instance is not None:\n            taken = self.instance.registrations.count()\n            if value < taken:\n                raise serializers.ValidationError(\n                    f\"{taken} people are already registered.\"\n                )\n        return value\n\n\n", "note": "**`validate_<field>`** runs after the field's own checks. `self.instance` is the event being changed, or `None` when one is being created."}, {"code": "class RegistrationSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = Registration\n        fields = [\"name\", \"email\", \"created_at\"]\n        read_only_fields = [\"created_at\"]\n", "note": "The registration's shape: two fields in, three out. `created_at` is set by the database, so clients may read it and never send it."}]}
+```
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 200\" role=\"img\" aria-label=\"Two rows. Outgoing: a model instance is passed to EventSerializer, whose data attribute is a dictionary, which Response turns into JSON bytes. Incoming: request.data, the parsed JSON, is passed to a serializer as data; is_valid either fills validated_data or produces errors that become a 400; validated data is then saved, or handed to a service.\"> <defs><marker id=\"sw-a\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker></defs> <defs><marker id=\"sw-b\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--amber)\"></path></marker></defs> <text x=\"20\" y=\"24\" text-anchor=\"start\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--phosphor)\">out: a response</text> <rect x=\"20\" y=\"36\" width=\"160\" height=\"44\" rx=\"3\" fill=\"var(--scan)\" stroke=\"var(--wire)\"></rect> <text x=\"100\" y=\"56\" text-anchor=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">Event row</text> <text x=\"100\" y=\"72\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">a model instance</text> <rect x=\"200\" y=\"36\" width=\"200\" height=\"44\" rx=\"3\" fill=\"var(--scan)\" stroke=\"var(--wire)\"></rect> <text x=\"300\" y=\"56\" text-anchor=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">EventSerializer(event)</text> <text x=\"300\" y=\"72\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">.data, a dict</text> <rect x=\"430\" y=\"36\" width=\"160\" height=\"44\" rx=\"3\" fill=\"var(--scan)\" stroke=\"var(--wire)\"></rect> <text x=\"510\" y=\"56\" text-anchor=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">Response(...)</text> <text x=\"510\" y=\"72\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">JSON bytes</text> <path d=\"M180 58 L194 58\" stroke=\"var(--phosphor)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#sw-a)\"></path> <path d=\"M400 58 L424 58\" stroke=\"var(--phosphor)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#sw-a)\"></path> <text x=\"20\" y=\"124\" text-anchor=\"start\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--amber)\">in: a request</text> <rect x=\"20\" y=\"136\" width=\"160\" height=\"44\" rx=\"3\" fill=\"var(--scan)\" stroke=\"var(--wire)\"></rect> <text x=\"100\" y=\"156\" text-anchor=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">request.data</text> <text x=\"100\" y=\"172\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">parsed JSON</text> <rect x=\"200\" y=\"136\" width=\"200\" height=\"44\" rx=\"3\" fill=\"var(--scan)\" stroke=\"var(--wire)\"></rect> <text x=\"300\" y=\"156\" text-anchor=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">Serializer(data=…)</text> <text x=\"300\" y=\"172\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">.is_valid()</text> <rect x=\"430\" y=\"136\" width=\"160\" height=\"44\" rx=\"3\" fill=\"var(--scan)\" stroke=\"var(--wire)\"></rect> <text x=\"510\" y=\"156\" text-anchor=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">validated_data</text> <text x=\"510\" y=\"172\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">or .errors, 400</text> <path d=\"M180 158 L194 158\" stroke=\"var(--amber)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#sw-b)\"></path> <path d=\"M400 158 L424 158\" stroke=\"var(--amber)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#sw-b)\"></path> <rect x=\"610\" y=\"136\" width=\"90\" height=\"44\" rx=\"3\" fill=\"var(--phosphor)\" fill-opacity=\"0.15\" stroke=\"var(--phosphor)\"></rect> <text x=\"655\" y=\"156\" text-anchor=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">.save()</text> <text x=\"655\" y=\"172\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">or a service</text> <path d=\"M590 158 L604 158\" stroke=\"var(--amber)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#sw-b)\"></path> </svg>", "caption": "One class describes the shape both ways, so what the API sends and what it accepts cannot drift apart."}
+```
+
+## Out: an object becomes data
+
+```
+ana@vm:~/agenda$ uv run python manage.py shell -c "from events.serializers import EventSerializer; from events.models import Event; print(EventSerializer(Event.objects.get(slug=\"testing-dojo\")).data)"
+14 objects imported automatically (use -v 2 for details).
+
+{'slug': 'testing-dojo', 'title': 'Testing dojo', 'starts_at': '2026-11-26T19:00:00-03:00', 'venue': 'Community Centre, room 3', 'capacity': 20, 'description': ''}
+```
+
+Every field in `fields`, with the date in ISO 8601 and **the São Paulo offset, `-03:00`**, because
+DRF converts dates to `TIME_ZONE` on the way out. `taken` is missing because this event came from a
+plain `get()`, with no annotation; a read-only field the object does not have is left out rather
+than failing.
+
+## In: data is checked before it becomes anything
+
+```
+ana@vm:~/agenda$ uv run python manage.py shell -c "from events.serializers import EventSerializer; s = EventSerializer(data={\"slug\": \"bad slug\", \"title\": \"\", \"capacity\": -1}); print(s.is_valid()); print(s.errors)"
+14 objects imported automatically (use -v 2 for details).
+
+False
+{'slug': [ErrorDetail(string='Enter a valid "slug" consisting of letters, numbers, underscores or hyphens.', code='invalid')], 'title': [ErrorDetail(string='This field may not be blank.', code='blank')], 'starts_at': [ErrorDetail(string='This field is required.', code='required')], 'venue': [ErrorDetail(string='This field is required.', code='required')], 'capacity': [ErrorDetail(string='Ensure this value is greater than or equal to 0.', code='min_value')]}
+```
+
+`is_valid()` ran every check and collected **every error at once, field by field**, which is what a
+client needs to show a form with all its problems marked. The messages come from the model: the
+slug's pattern, `title` not blank, the `CHECK` lesson 4 saw as `PositiveIntegerField`'s minimum of
+0. The fields the model requires and the data left out are named as `required`. Nothing was saved;
+saving is a separate step, and only valid data reaches it.

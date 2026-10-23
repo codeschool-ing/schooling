@@ -1,0 +1,429 @@
+{
+  "ex-q2ef6ff6": {
+    "prompt": "Onde foram parar as linhas que os testes do Django escreveram?",
+    "choices": [
+      {
+        "text": "No agenda, o banco de desenvolvimento",
+        "why": "Nada mudou ali."
+      },
+      {
+        "text": "Em lugar nenhum; tudo foi desfeito",
+        "why": "Isso, num banco de testes destruído no fim."
+      },
+      {
+        "text": "Num arquivo SQLite que o pytest criou",
+        "why": "O pytest-django usou PostgreSQL, como as configurações dizem."
+      },
+      {
+        "text": "No Redis",
+        "why": "O Redis não participou."
+      }
+    ]
+  },
+  "ex-t0cen5zf": {
+    "prompt": "Por que o pytest-django conseguiu criar o test_agenda sem senha nem papel novo?",
+    "choices": [
+      {
+        "text": "Bancos de teste não precisam de permissões",
+        "why": "Criar um banco precisa."
+      },
+      {
+        "text": "Ele usou o papel postgres",
+        "why": "Ele se conectou como ana."
+      },
+      {
+        "text": "A aula 4 fez de ana um papel superusuário",
+        "why": "Isso."
+      },
+      {
+        "text": "O pytest-django traz o próprio servidor PostgreSQL para testes",
+        "why": "Ele usa o que está instalado."
+      }
+    ]
+  },
+  "ex-xkwt6x7r": {
+    "prompt": "Fixtures divididas por vários arquivos de teste vão em tests/___.py.",
+    "blanks": [
+      {
+        "accept": [
+          "conftest"
+        ]
+      }
+    ]
+  },
+  "ex-v5z6z2vb": {
+    "prompt": "Por que os testes do serviço não precisaram de Redis, embora o register() ponha uma tarefa do Celery na fila?",
+    "choices": [
+      {
+        "text": "Nada tem commit, então o on_commit não disparou",
+        "why": "Isso."
+      },
+      {
+        "text": "O pytest-django sobe um Redis próprio",
+        "why": "Não sobe."
+      },
+      {
+        "text": "O Celery é desligado quando o DEBUG é verdadeiro",
+        "why": "O DEBUG não tem nada a ver."
+      },
+      {
+        "text": "As fixtures trocaram o send_confirmation",
+        "why": "Só o test_tasks.py troca alguma coisa."
+      }
+    ]
+  },
+  "ex-4wy41yn5": {
+    "prompt": "No conftest.py, por que pedir a fixture workshop também cria a ana?",
+    "choices": [
+      {
+        "text": "O pytest cria toda fixture para todo teste",
+        "why": "Só as pedidas, direta ou indiretamente."
+      },
+      {
+        "text": "O workshop pede ana como parâmetro",
+        "why": "Isso: fixtures pedem fixtures."
+      },
+      {
+        "text": "A ana é a superusuária, criada pelo migrate",
+        "why": "O migrate não cria usuários."
+      },
+      {
+        "text": "A fixture db copia os usuários de desenvolvimento",
+        "why": "O banco de testes começa vazio."
+      }
+    ]
+  },
+  "ex-7tx7z6c3": {
+    "prompt": "O teste do formulário enviou sem token de CSRF e passou. Por quê?",
+    "choices": [
+      {
+        "text": "A view está isenta de CSRF",
+        "why": "Não está."
+      },
+      {
+        "text": "O pytest-django manda o token sozinho em toda requisição",
+        "why": "Nenhum token foi mandado."
+      },
+      {
+        "text": "O CSRF só vale para o admin",
+        "why": "Ele vale para todo formulário POST."
+      },
+      {
+        "text": "O cliente de testes pula o CSRF por padrão",
+        "why": "Isso: enforce_csrf_checks=True liga."
+      }
+    ]
+  },
+  "ex-vkd78xve": {
+    "prompt": "Depois de a contagem ser acrescentada ao template, quantas consultas a lista fez para os dois eventos?",
+    "hint": "Uma para a lista, uma por evento.",
+    "unit": "consultas"
+  },
+  "ex-ad6wb1f9": {
+    "prompt": "O que consertou o test_the_list_costs_one_query?",
+    "choices": [
+      {
+        "text": "Subir o número esperado para 3",
+        "why": "Isso esconderia o N+1, não o consertaria."
+      },
+      {
+        "text": "annotate(taken=Count(...)) na view",
+        "why": "Isso: uma consulta de novo."
+      },
+      {
+        "text": "Pôr o template em cache",
+        "why": "As consultas vêm das chamadas do template, a cada renderização."
+      },
+      {
+        "text": "select_related(\"registrations\") na lista",
+        "why": "O select_related só segue chaves estrangeiras para a frente."
+      }
+    ]
+  },
+  "ex-63av0dab": {
+    "prompt": "Para um teste falhar quando um bloco roda mais SQL que o esperado, o pytest-django oferece django_assert_num____.",
+    "blanks": [
+      {
+        "accept": [
+          "queries"
+        ]
+      }
+    ]
+  },
+  "ex-kw3d605m": {
+    "prompt": "Por que um teste que conta consultas importa mais que um que confere o texto da página?",
+    "choices": [
+      {
+        "text": "O texto muda demais para ser testado",
+        "why": "Testes de texto são bons; testam outra coisa."
+      },
+      {
+        "text": "Um N+1 parece certo e é lento",
+        "why": "Isso: nada mais notaria."
+      },
+      {
+        "text": "O PostgreSQL cobra por consulta",
+        "why": "Não cobra."
+      },
+      {
+        "text": "Contagens de consultas também conferem permissões",
+        "why": "Elas conferem custo, não portas."
+      }
+    ]
+  },
+  "ex-41cpcdx3": {
+    "prompt": "O que o force_authenticate(user) faz no APIClient do DRF?",
+    "choices": [
+      {
+        "text": "Faz toda requisição ser daquele usuário, sem token",
+        "why": "Isso."
+      },
+      {
+        "text": "Entra com o usuário pelo formulário de login, como um navegador",
+        "why": "Nenhum formulário participa."
+      },
+      {
+        "text": "Dá ao usuário toda permissão durante o teste",
+        "why": "As permissões não mudam; esse é o ponto."
+      },
+      {
+        "text": "Cria um token do DRF em authtoken_token",
+        "why": "Nenhum token é criado."
+      }
+    ]
+  },
+  "ex-s4avb9dw": {
+    "prompt": "Por que cada porta é um teste próprio em vez de um teste com um laço?",
+    "choices": [
+      {
+        "text": "O pytest não roda laços dentro de testes",
+        "why": "Roda."
+      },
+      {
+        "text": "É mais rápido",
+        "why": "É um pouco mais lento."
+      },
+      {
+        "text": "Cada falha nomeia a própria linha",
+        "why": "Isso."
+      },
+      {
+        "text": "O parametrize pula linhas que falham",
+        "why": "Ele as relata."
+      }
+    ]
+  },
+  "ex-79zhdy7d": {
+    "prompt": "O que o request.getfixturevalue(who) faz no test_doors?",
+    "choices": [
+      {
+        "text": "Lê a coluna who do banco",
+        "why": "O who é uma string da tabela."
+      },
+      {
+        "text": "Pega a fixture nomeada na linha",
+        "why": "Isso: \"bruno\" vira a fixture bruno."
+      },
+      {
+        "text": "Entra como who com a senha",
+        "why": "Nenhuma senha é usada."
+      },
+      {
+        "text": "Devolve o código de status esperado",
+        "why": "Isso é a coluna expected."
+      }
+    ]
+  },
+  "ex-wwma0me3": {
+    "prompt": "Comparada ao doors.py da aula 12, o que a versão em teste muda? Escolha todas que se aplicam.",
+    "choices": [
+      {
+        "text": "Ela não precisa de servidor rodando",
+        "why": "Isso."
+      },
+      {
+        "text": "Ela não precisa de senhas nem tokens",
+        "why": "Isso: force_authenticate."
+      },
+      {
+        "text": "Ela confere códigos de status diferentes",
+        "why": "As mesmas decisões."
+      },
+      {
+        "text": "Ela escreve no banco de desenvolvimento",
+        "why": "Ela escreve no banco de testes, e desfaz."
+      }
+    ]
+  },
+  "ex-kcgn33hh": {
+    "prompt": "Por que o test_registering_queues_the_confirmation_after_commit troca o send_confirmation.delay?",
+    "choices": [
+      {
+        "text": "O delay() é lento demais para um teste",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "O Celery recusa tarefas durante testes",
+        "why": "Ele só tentaria alcançar o Redis."
+      },
+      {
+        "text": "Para registrar o que entra na fila sem Redis",
+        "why": "Isso."
+      },
+      {
+        "text": "Para o e-mail ir para o mailoutbox",
+        "why": "Isso é o segundo teste, que chama a função."
+      }
+    ]
+  },
+  "ex-sx1s4jj6": {
+    "prompt": "O que o django_capture_on_commit_callbacks(execute=True) torna possível?",
+    "choices": [
+      {
+        "text": "Rodar os callbacks adiados",
+        "why": "Isso."
+      },
+      {
+        "text": "Dar commit na transação do teste",
+        "why": "Nada dá commit."
+      },
+      {
+        "text": "Rodar o worker do Celery no teste",
+        "why": "Nenhum worker roda."
+      },
+      {
+        "text": "Pular o bloco atomic do register",
+        "why": "O bloco roda como savepoint."
+      }
+    ]
+  },
+  "ex-3nwfemze": {
+    "prompt": "Por que o CELERY_TASK_ALWAYS_EAGER enfraqueceria estes testes?",
+    "choices": [
+      {
+        "text": "Ele precisa de um segundo Redis",
+        "why": "Não precisa de nenhum."
+      },
+      {
+        "text": "Ele desliga as novas tentativas",
+        "why": "As novas tentativas não são o que os testes conferem."
+      },
+      {
+        "text": "Ele manda e-mail de verdade",
+        "why": "O backend de teste continua pegando o e-mail."
+      },
+      {
+        "text": "Ele esconde quando uma tarefa entra na fila",
+        "why": "Isso: é o que o primeiro teste confere."
+      }
+    ]
+  },
+  "ex-5zjsd0pg": {
+    "prompt": "As mensagens que o backend de e-mail de teste do Django junta ficam na fixture ___.",
+    "blanks": [
+      {
+        "accept": [
+          "mailoutbox"
+        ]
+      }
+    ]
+  },
+  "ex-j790jca7": {
+    "prompt": "Na fixture session do agenda-api, o que o join_transaction_mode=\"create_savepoint\" faz com o session.commit() de uma rota?",
+    "choices": [
+      {
+        "text": "Faz ele levantar exceção, para os testes pegarem",
+        "why": "Ele dá certo."
+      },
+      {
+        "text": "Transforma num release de savepoint",
+        "why": "Isso: a transação de fora ainda é desfeita."
+      },
+      {
+        "text": "Dá commit de verdade e depois apaga as linhas",
+        "why": "Nada tem commit."
+      },
+      {
+        "text": "Adia até o fim do teste",
+        "why": "Acontece na hora, dentro da transação."
+      }
+    ]
+  },
+  "ex-grxbeew6": {
+    "prompt": "Por que o monkeypatch mira \"app.mail.confirmation\" em vez de importar a função no teste?",
+    "choices": [
+      {
+        "text": "Tarefas em segundo plano não podem ser importadas",
+        "why": "Podem."
+      },
+      {
+        "text": "O monkeypatch só aceita strings",
+        "why": "Ele aceita objetos também."
+      },
+      {
+        "text": "O register a procura no módulo quando roda",
+        "why": "Isso."
+      },
+      {
+        "text": "O arquivo de teste não pode importar o app",
+        "why": "O conftest importa o app."
+      }
+    ]
+  },
+  "ex-419557sb": {
+    "prompt": "Ponha em ordem o que um teste do FastAPI atravessa.",
+    "items": [
+      "a fixture session começa a transação de fora",
+      "a fixture client substitui o get_session",
+      "o teste manda a requisição pelo TestClient",
+      "as substituições são limpas",
+      "a transação de fora é desfeita"
+    ]
+  },
+  "ex-agq4tmdv": {
+    "prompt": "Com o EventDep no lugar do EditableEvent, quantas portas falharam?",
+    "unit": "portas"
+  },
+  "ex-c1datak2": {
+    "prompt": "Sem a guarda, por que o PATCH anônimo respondeu 200 em vez de 401?",
+    "choices": [
+      {
+        "text": "O TestClient manda um token por padrão",
+        "why": "Ele não manda nenhum."
+      },
+      {
+        "text": "Nada na rota pedia mais um usuário",
+        "why": "Isso: o 401 vinha do CurrentUser da guarda."
+      },
+      {
+        "text": "O EventDep faz login de anônimos",
+        "why": "Ele só acha o evento."
+      },
+      {
+        "text": "PATCH é um método seguro",
+        "why": "Não é."
+      }
+    ]
+  },
+  "ex-dyc198st": {
+    "prompt": "Um endpoint novo só pode ser aberto a admins. O que deve vir com ele?",
+    "choices": [
+      {
+        "text": "Um comentário dizendo que é só para admin",
+        "why": "Um comentário não quebra nada."
+      },
+      {
+        "text": "Linhas na tabela de portas para cada pessoa, com o código esperado",
+        "why": "Isso."
+      },
+      {
+        "text": "Um teste de contagem de consultas",
+        "why": "Esse confere custo."
+      },
+      {
+        "text": "Uma conferência manual com curl antes de cada versão",
+        "why": "Ela roda uma vez; um teste roda sempre."
+      }
+    ]
+  }
+}

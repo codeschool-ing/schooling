@@ -1,0 +1,569 @@
+{
+  "ex-j4v93asw": {
+    "prompt": "O que acontece no momento em que o create_engine(...) roda no app/db.py?",
+    "choices": [
+      {
+        "text": "Ele abre cinco conexões com o PostgreSQL e as deixa esperando",
+        "why": "Ele ainda não abre nenhuma."
+      },
+      {
+        "text": "Ele cria as tabelas que os models descrevem",
+        "why": "Isso é trabalho do Alembic, depois."
+      },
+      {
+        "text": "Ele monta um pool; nada se conecta até alguém pedir",
+        "why": "Isso. O hello_db.py foi o primeiro a pedir."
+      },
+      {
+        "text": "Ele confere a senha da URL",
+        "why": "Esta URL não tem senha, e nada é conferido ainda."
+      }
+    ]
+  },
+  "ex-j75qr1fy": {
+    "prompt": "Ligue cada parte de postgresql+psycopg:///agenda_api ao que ela diz.",
+    "pairs": [
+      {
+        "left": "postgresql",
+        "right": "qual SQL escrever"
+      },
+      {
+        "left": "+psycopg",
+        "right": "qual biblioteca o leva"
+      },
+      {
+        "left": "///",
+        "right": "o socket local, como o usuário do sistema"
+      },
+      {
+        "left": "agenda_api",
+        "right": "o banco"
+      }
+    ]
+  },
+  "ex-7dn1yk6k": {
+    "prompt": "Por que o app/db.py cria a engine na importação, e não dentro de cada rota?",
+    "choices": [
+      {
+        "text": "Rotas não podem importar o SQLAlchemy",
+        "why": "Elas podem."
+      },
+      {
+        "text": "O pool guarda conexões para a próxima requisição",
+        "why": "Isso. Uma engine por requisição abre uma conexão por requisição."
+      },
+      {
+        "text": "O Uvicorn recusa um módulo que cria objetos depois da inicialização",
+        "why": "Essa regra não existe."
+      },
+      {
+        "text": "O PostgreSQL limita cada processo a uma engine pela vida inteira",
+        "why": "O PostgreSQL não sabe nada de engines."
+      }
+    ]
+  },
+  "ex-1pnk1bra": {
+    "prompt": "O hello_db.py rodou SQL puro embrulhando a string em ___(), que pertence ao Core do SQLAlchemy.",
+    "blanks": [
+      {
+        "accept": [
+          "text"
+        ]
+      }
+    ]
+  },
+  "ex-hw9bnt4f": {
+    "prompt": "No CREATE TABLE que o show_sql.py imprimiu, qual coluna tem um DEFAULT na própria tabela?",
+    "choices": [
+      {
+        "text": "description, pelo default=\"\"",
+        "why": "Esse padrão é aplicado pelo SQLAlchemy; a tabela não tem nenhum."
+      },
+      {
+        "text": "created_at",
+        "why": "Isso: server_default=func.now() virou DEFAULT now()."
+      },
+      {
+        "text": "capacity, que recebe zero",
+        "why": "capacity não tem padrão nenhum."
+      },
+      {
+        "text": "Toda coluna NOT NULL ganha um automaticamente",
+        "why": "Só created_at tinha um."
+      }
+    ]
+  },
+  "ex-dks4x307": {
+    "prompt": "Um campo novo é declarado como note: Mapped[str | None]. O que a tabela ganha?",
+    "choices": [
+      {
+        "text": "Uma coluna que aceita nulo",
+        "why": "Isso. Sem | None ela seria NOT NULL."
+      },
+      {
+        "text": "Nada até um relationship nomeá-la",
+        "why": "Todo atributo mapeado com tipo é uma coluna."
+      },
+      {
+        "text": "Uma coluna NOT NULL com string vazia como padrão",
+        "why": "O | None é o que permite nulo."
+      },
+      {
+        "text": "Uma segunda tabela guardando as notas",
+        "why": "Um atributo, uma coluna."
+      }
+    ]
+  },
+  "ex-fq9p4yrp": {
+    "prompt": "Quais destes no app/models.py viraram algo no CREATE TABLE? Escolha todos que se aplicam.",
+    "choices": [
+      {
+        "text": "UniqueConstraint(\"event_id\", \"email\")",
+        "why": "Isso: UNIQUE (event_id, email)."
+      },
+      {
+        "text": "registrations: Mapped[list[\"Registration\"]] = relationship(...)",
+        "why": "Um relationship é só Python; a chave estrangeira é a coluna."
+      },
+      {
+        "text": "mapped_column(ForeignKey(\"events.id\"))",
+        "why": "Isso: FOREIGN KEY(event_id) REFERENCES events (id)."
+      },
+      {
+        "text": "A property taken",
+        "why": "Uma property é Python comum."
+      }
+    ]
+  },
+  "ex-c8yp1a0v": {
+    "prompt": "Por que o agenda-api mantém o EventIn no schemas.py e o Event no models.py em vez de uma classe para os dois?",
+    "choices": [
+      {
+        "text": "O SQLAlchemy não consegue ler anotações de tipo",
+        "why": "Ele lê: Mapped[int] é uma."
+      },
+      {
+        "text": "O Pydantic recusa qualquer classe com chave primária",
+        "why": "Essa regra não existe."
+      },
+      {
+        "text": "O que um cliente manda e o que uma tabela guarda mudam então separados",
+        "why": "Isso: o id, por exemplo, está na tabela e não na entrada."
+      },
+      {
+        "text": "Uma classe só rodaria a validação duas vezes por requisição",
+        "why": "A validação não é o motivo."
+      }
+    ]
+  },
+  "ex-z41he6rx": {
+    "prompt": "Ponha em ordem os passos que levaram o agenda_api de vazio a três eventos.",
+    "items": [
+      "uv run alembic init migrations",
+      "apontar sqlalchemy.url e target_metadata para o projeto",
+      "uv run alembic revision --autogenerate --rev-id 0001 -m \"events and registrations\"",
+      "ler o arquivo que ele escreveu",
+      "uv run alembic upgrade head",
+      "uv run python seed.py"
+    ]
+  },
+  "ex-rh9ywgay": {
+    "prompt": "Onde o Alembic registra a qual migração um banco chegou?",
+    "choices": [
+      {
+        "text": "No alembic.ini, que ele reescreve depois de cada upgrade",
+        "why": "O alembic.ini é configuração; ele não é reescrito."
+      },
+      {
+        "text": "No arquivo mais novo em migrations/versions",
+        "why": "Os arquivos são a cadeia, não a posição."
+      },
+      {
+        "text": "Numa tabela chamada alembic_version",
+        "why": "Isso: uma linha, 0001 depois do upgrade."
+      },
+      {
+        "text": "Em lugar nenhum; ele compara models e tabelas toda vez",
+        "why": "Isso é o autogenerate, não o registro."
+      }
+    ]
+  },
+  "ex-gsp0ykf6": {
+    "prompt": "O seed.py chamou session.add_all(...) e depois session.commit(). Quando as três linhas foram mandadas ao PostgreSQL?",
+    "choices": [
+      {
+        "text": "Uma a uma, enquanto o add_all percorria a lista",
+        "why": "O add_all só entrega objetos à session."
+      },
+      {
+        "text": "No commit, numa transação",
+        "why": "Isso: a session é uma unidade de trabalho."
+      },
+      {
+        "text": "Quando o bloco with fechou a session",
+        "why": "Fechar sem commit teria desfeito tudo."
+      },
+      {
+        "text": "No próximo alembic upgrade",
+        "why": "O Alembic não leva linhas de objetos Python."
+      }
+    ]
+  },
+  "ex-r5mpnmm7": {
+    "prompt": "Para chamar uma revisão de 0001 em vez de uma sequência hexadecimal aleatória, passe --___ 0001 ao alembic revision.",
+    "blanks": [
+      {
+        "accept": [
+          "rev-id"
+        ]
+      }
+    ]
+  },
+  "ex-h2n5ytqg": {
+    "prompt": "O atributo venue foi renomeado para place no model. O que o autogenerate escreveu?",
+    "choices": [
+      {
+        "text": "op.alter_column renomeando venue para place",
+        "why": "Isso é o que o conserto escreveu à mão."
+      },
+      {
+        "text": "Uma coluna place adicionada e a coluna venue apagada",
+        "why": "Isso. Visto de fora, renomear parece isso."
+      },
+      {
+        "text": "Nada, já que o tipo da coluna não mudou",
+        "why": "Ele percebeu uma diferença, só que a errada."
+      },
+      {
+        "text": "Um aviso perguntando se venue foi renomeada",
+        "why": "Ele não pergunta nada."
+      }
+    ]
+  },
+  "ex-7w00qyev": {
+    "prompt": "Por que a aula chama de caso de sorte o upgrade da 0002 que falhou?",
+    "choices": [
+      {
+        "text": "Numa tabela vazia, ou com uma coluna que aceita nulo, ele teria rodado e apagado todos os locais",
+        "why": "Isso: a falha do NOT NULL foi o que o parou."
+      },
+      {
+        "text": "O Alembic tentou de novo com a operação certa",
+        "why": "Ele não tentou de novo; o conserto foi escrito à mão."
+      },
+      {
+        "text": "A mensagem de erro disse ao autor qual coluna renomear",
+        "why": "Ela reclamou de valores nulos."
+      },
+      {
+        "text": "A falha apagou o arquivo ruim",
+        "why": "O arquivo ficou, e foi editado."
+      }
+    ]
+  },
+  "ex-parf3jzn": {
+    "prompt": "Depois do upgrade que falhou, em que estado estava a tabela events?",
+    "choices": [
+      {
+        "text": "Com uma coluna place vazia e venue ainda lá",
+        "why": "Nada da migração ficou."
+      },
+      {
+        "text": "Sem venue, que foi apagada antes do erro",
+        "why": "O drop vinha depois do add, e os dois foram desfeitos."
+      },
+      {
+        "text": "Travada até alguém rodar alembic downgrade",
+        "why": "Nada ficou travado."
+      },
+      {
+        "text": "Como antes: o PostgreSQL desfez tudo",
+        "why": "Isso: DDL transacional."
+      }
+    ]
+  },
+  "ex-trc85vs2": {
+    "prompt": "O que o alembic check responde?",
+    "choices": [
+      {
+        "text": "Se todo arquivo de migração é Python válido",
+        "why": "Ele compara o esquema, não os arquivos."
+      },
+      {
+        "text": "Se os models precisam de uma migração que falta ao banco",
+        "why": "Isso, e não escreve arquivo."
+      },
+      {
+        "text": "Se o PostgreSQL está rodando",
+        "why": "Isso apareceria como erro de conexão."
+      },
+      {
+        "text": "Em que revisão o banco está",
+        "why": "Isso é o alembic current."
+      }
+    ]
+  },
+  "ex-acneptzs": {
+    "prompt": "O queries.py imprimiu True para same is night. O que isso mostra?",
+    "choices": [
+      {
+        "text": "As duas consultas devolveram valores iguais",
+        "why": "O is compara identidade, não igualdade."
+      },
+      {
+        "text": "O session.get leu de um cache dividido por todo processo",
+        "why": "O mapa pertence a uma session."
+      },
+      {
+        "text": "Uma session guarda um objeto por linha",
+        "why": "Isso: o mapa de identidade."
+      },
+      {
+        "text": "O evento foi copiado e depois comparado",
+        "why": "Nenhuma cópia foi feita."
+      }
+    ]
+  },
+  "ex-z02r0479": {
+    "prompt": "No laço preguiçoso do nplus1.py, quantas consultas a engine mandou para os três eventos?",
+    "hint": "Uma para a lista, depois uma por evento.",
+    "unit": "consultas"
+  },
+  "ex-kfq1qnwt": {
+    "prompt": "Com selectinload(Event.registrations), quantas consultas custaria uma página de cem eventos?",
+    "choices": [
+      {
+        "text": "Cento e uma",
+        "why": "Isso é o laço preguiçoso."
+      },
+      {
+        "text": "Duas: uma para a página, uma com IN para o resto",
+        "why": "Isso, seja qual for o tamanho da página."
+      },
+      {
+        "text": "Uma, com join",
+        "why": "Isso é o joinedload."
+      },
+      {
+        "text": "Cem",
+        "why": "A própria lista também é uma consulta."
+      }
+    ]
+  },
+  "ex-zbmnzhcj": {
+    "prompt": "Ligue cada loader do SQLAlchemy ao método do Django que faz o mesmo.",
+    "pairs": [
+      {
+        "left": "selectinload",
+        "right": "prefetch_related"
+      },
+      {
+        "left": "joinedload",
+        "right": "select_related"
+      }
+    ],
+    "right_distractors": [
+      "only",
+      "annotate"
+    ]
+  },
+  "ex-a1r30byf": {
+    "prompt": "Uma rota levanta uma exceção no meio, depois do session.add(...) e antes do commit. O que acontece com a linha?",
+    "choices": [
+      {
+        "text": "Ela é escrita, já que o add a manda na hora",
+        "why": "O add não manda nada."
+      },
+      {
+        "text": "Ela espera no pool até a próxima requisição dar commit",
+        "why": "Cada requisição tem sua session."
+      },
+      {
+        "text": "Nada é escrito: fechar a session desfaz",
+        "why": "Isso: o bloco with do get_session a fecha."
+      },
+      {
+        "text": "Metade dela é escrita",
+        "why": "Uma linha é escrita inteira ou não é."
+      }
+    ]
+  },
+  "ex-09pqrrnf": {
+    "prompt": "O que deixa o EventOut ser montado a partir de um objeto Event em vez de um dict?",
+    "choices": [
+      {
+        "text": "from_attributes=True no model_config dele",
+        "why": "Isso: o Pydantic passa a ler atributos."
+      },
+      {
+        "text": "Herdar de Base além de BaseModel",
+        "why": "Os dois ficam separados."
+      },
+      {
+        "text": "Chamar event.__dict__ em toda rota antes de devolver",
+        "why": "As rotas devolvem o próprio objeto."
+      },
+      {
+        "text": "O FastAPI faz isso para qualquer classe",
+        "why": "Sem a configuração, a validação espera um dict."
+      }
+    ]
+  },
+  "ex-9d6jy50d": {
+    "prompt": "O que mudou quando o agenda-api saiu do app/store.py para o PostgreSQL? Escolha todos que se aplicam.",
+    "choices": [
+      {
+        "text": "O forecast.py lê event.slug em vez de event[\"slug\"]",
+        "why": "Isso, em três lugares."
+      },
+      {
+        "text": "O create_event deixa o slug repetido com a restrição de unicidade",
+        "why": "Isso: o IntegrityError vira um 409."
+      },
+      {
+        "text": "Os caminhos das rotas",
+        "why": "Todo caminho ficou igual."
+      },
+      {
+        "text": "O registration_lock saiu do dependencies.py",
+        "why": "Isso: o lock foi para o banco."
+      }
+    ]
+  },
+  "ex-1rf10a3v": {
+    "prompt": "Sem o .with_for_update(), três rodadas do crowd.py deixaram 20, 19 e 18 pessoas em doze vagas. Por quê?",
+    "choices": [
+      {
+        "text": "A restrição de unicidade também foi apagada",
+        "why": "Ela não foi tocada; todo endereço era diferente."
+      },
+      {
+        "text": "Requisições contaram antes de outras suficientes terem dado commit",
+        "why": "Isso: contar, depois inserir, com espaço entre os dois."
+      },
+      {
+        "text": "Quatro workers guardaram cada um sua cópia da tabela",
+        "why": "Existe uma tabela, no PostgreSQL."
+      },
+      {
+        "text": "O httpx2 mandou algumas requisições duas vezes",
+        "why": "Cada uma das vinte foi mandada uma vez."
+      }
+    ]
+  },
+  "ex-4hdsw4tt": {
+    "prompt": "Por que o threading.Lock da aula 8 não poderia ter impedido o excesso de inscrições aqui?",
+    "choices": [
+      {
+        "text": "Um threading.Lock não funciona com rotas def",
+        "why": "Funciona, dentro do processo dele."
+      },
+      {
+        "text": "O SQLAlchemy solta locks do Python no commit",
+        "why": "Ele não sabe nada deles."
+      },
+      {
+        "text": "Havia quatro processos, cada um com seu lock",
+        "why": "Isso: o lock de linha mora onde os quatro olham."
+      },
+      {
+        "text": "Locks só funcionam dentro de async def",
+        "why": "Não é assim."
+      }
+    ]
+  },
+  "ex-4f9hf89c": {
+    "prompt": "Por que o endereço repetido fica com a restrição de unicidade, e não com uma consulta que confere antes?",
+    "choices": [
+      {
+        "text": "Conferir e depois inserir tem um intervalo em que outra requisição cabe",
+        "why": "Isso: a restrição recusa dentro do próprio insert."
+      },
+      {
+        "text": "Um SELECT em registrations não é permitido com a linha do evento travada",
+        "why": "É permitido; a contagem faz justamente isso."
+      },
+      {
+        "text": "O Pydantic já rejeitou endereços repetidos",
+        "why": "O Pydantic vê uma requisição, não a tabela."
+      },
+      {
+        "text": "Restrições são mais rápidas que qualquer consulta",
+        "why": "Velocidade não é o ponto."
+      }
+    ]
+  },
+  "ex-m613yfw7": {
+    "prompt": "O with_for_update() transforma a consulta em SELECT … FOR ___, que segura a linha até a transação dar commit.",
+    "blanks": [
+      {
+        "accept": [
+          "UPDATE"
+        ]
+      }
+    ]
+  },
+  "ex-66tjq07t": {
+    "prompt": "Enquanto uma inscrição para o async workshop segura o lock da linha dele, o que acontece com uma inscrição para o Django Night?",
+    "choices": [
+      {
+        "text": "Ela espera o commit do workshop",
+        "why": "Ela trava outra linha."
+      },
+      {
+        "text": "Ela é recusada com 409 até o lock ser solto",
+        "why": "Nada a recusa."
+      },
+      {
+        "text": "Ela segue: outro evento é outra linha",
+        "why": "Isso: o lock é por linha."
+      },
+      {
+        "text": "Ela é posta na fila pelo Uvicorn para o próximo worker",
+        "why": "O Uvicorn não sabe do lock."
+      }
+    ]
+  },
+  "ex-0whnhttg": {
+    "prompt": "Antes de publicar um campo novo num model, o que a aula faz um projeto rodar na CI?",
+    "choices": [
+      {
+        "text": "alembic upgrade head contra a produção",
+        "why": "Não pela CI, e não como teste."
+      },
+      {
+        "text": "alembic check",
+        "why": "Isso: um model sem migração quebra o build."
+      },
+      {
+        "text": "alembic history",
+        "why": "Isso lista a cadeia e não confere nada."
+      },
+      {
+        "text": "alembic downgrade base, depois upgrade head",
+        "why": "Isso reconstrói; não compara."
+      }
+    ]
+  },
+  "ex-zvyz4q4q": {
+    "prompt": "Uma rota lista cinquenta eventos e, para cada um, devolve o nome do primeiro inscrito. O que a consulta deve usar?",
+    "choices": [
+      {
+        "text": "Nada a mais: o carregamento preguiçoso é rápido o bastante para cinquenta",
+        "why": "Cinquenta e uma consultas por requisição."
+      },
+      {
+        "text": "with_for_update(), para a lista ficar consistente",
+        "why": "Uma listagem não precisa de lock."
+      },
+      {
+        "text": "options(selectinload(Event.registrations))",
+        "why": "Isso: duas consultas para a página."
+      },
+      {
+        "text": "Uma engine nova para a rota",
+        "why": "Uma engine por processo basta."
+      }
+    ]
+  }
+}
