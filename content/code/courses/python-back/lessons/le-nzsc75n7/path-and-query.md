@@ -37,7 +37,7 @@ ana@vm:~/agenda-api$ curl -s "http://127.0.0.1:8001/events?limit=1" | python3 -m
 ]
 ```
 
-`taken` is there because the response model `EventOut` asked for it. `venue` filters, and is simply
+`taken` is there because the response model `EventOut` asked for it. `venue` filters, and is
 absent when not given:
 
 ```

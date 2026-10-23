@@ -48,7 +48,7 @@ python        3.12-slim   179MB
 ```
 
 **An image is named by its tag**, here `0.1.0`. A release builds a new tag from a new commit, pushes it
-to a registry the server can pull from, and changes `image:` in the compose file; going back is
+to a registry the server can pull from, and changes `image:` in the compose file. Going back is
 changing the tag back, provided the database still suits the old code, which is what expand and
 contract is for. A tag such as `latest`, which moves, says nothing about which code is running.
 

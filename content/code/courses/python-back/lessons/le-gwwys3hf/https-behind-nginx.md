@@ -111,7 +111,7 @@ System check identified 2 issues (0 silenced).
 
 The four HTTPS warnings are gone. The two left are deliberate: **include subdomains** and **preload**
 extend HSTS to every name under the domain and into browsers' built-in lists, and both are hard to
-take back, so a site raises them after HSTS has run without trouble for a while, as the short
+take back. A site raises them after HSTS has run without trouble for a while, as the short
 `max-age` of an hour is meant to allow.
 
 ## What the application believes

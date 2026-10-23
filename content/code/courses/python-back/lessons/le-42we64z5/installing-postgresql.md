@@ -5,7 +5,7 @@ version: 1
 
 Lesson 3 ended with registrations in a Python list, gone at every restart and wrong under two
 requests at once. They need a database, and this course uses **PostgreSQL 16**, the version Ubuntu
-24.04 ships. SQLite, which agenda has used so far, is a fine database for one writer at a time; a
+24.04 ships. SQLite, which agenda has used so far, is a fine database for one writer at a time. A
 site where many people register at once wants a server that takes row locks, which is the last
 section of this lesson, and SQLite has none to take.
 

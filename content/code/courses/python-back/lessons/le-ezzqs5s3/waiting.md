@@ -4,8 +4,8 @@ version: 1
 ---
 
 The common belief is that `async` makes Python faster. **It does not make any piece of code run
-faster.** What it does is let one process do something useful while a piece of code is waiting, and
-a web request spends most of its life waiting: for the database, for another service, for a client
+faster.** What it does is let one process do something useful while a piece of code is waiting. A
+web request spends most of its life waiting: for the database, for another service, for a client
 on a slow connection to finish sending.
 
 To see it, agenda needs something slow to wait for. Real applications call partners, a payment

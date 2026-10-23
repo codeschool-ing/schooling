@@ -15,7 +15,7 @@ django.template.exceptions.TemplateDoesNotExist: events/event_lsit.html
 ```
 
 A typo in the name passed to `render`. In a request, with `DEBUG` on, the error page also lists every
-directory Django searched and why each one did not have it, which settles the other common cause:
+directory Django searched and why each one did not have it. That settles the other common cause:
 the template is in `events/templates/` without the second `events/`, or in a project-level
 `templates/` that `DIRS` does not name.
 

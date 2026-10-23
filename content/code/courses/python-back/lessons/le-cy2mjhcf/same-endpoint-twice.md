@@ -4,7 +4,7 @@ version: 1
 ---
 
 The fastest way to see what each framework assumes is to make each of them do the same small thing.
-The thing is one endpoint: `GET /hello/<name>` answers with a little JSON greeting. Both projects
+The example is one endpoint: `GET /hello/<name>` answers with a little JSON greeting. Both projects
 live in your home directory, side by side, and both are uv projects, which `python` lesson 19
 introduced.
 

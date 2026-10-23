@@ -6,7 +6,7 @@ version: 1
 A aula 3 terminou com as inscrições numa lista Python, perdidas a cada reinício e erradas com duas
 requisições ao mesmo tempo. Elas precisam de um banco, e este curso usa o **PostgreSQL 16**, a versão
 que o Ubuntu 24.04 traz. O SQLite, que o agenda usou até aqui, é um bom banco para um escritor por
-vez; um site onde muita gente se inscreve ao mesmo tempo quer um servidor que faça travas de linha,
+vez. Um site onde muita gente se inscreve ao mesmo tempo quer um servidor que faça travas de linha,
 que é a última seção desta aula, e o SQLite não tem nenhuma para fazer.
 
 ## Três lugares para tê-lo

@@ -111,7 +111,7 @@ System check identified 2 issues (0 silenced).
 
 Os quatro avisos de HTTPS sumiram. Os dois que sobram são deliberados: **include subdomains** e
 **preload** estendem o HSTS a todo nome abaixo do domínio e às listas embutidas dos navegadores, e os
-dois são difíceis de desfazer, então um site os liga depois que o HSTS rodou sem problemas por um tempo,
+dois são difíceis de desfazer. Um site os liga depois que o HSTS rodou sem problemas por um tempo,
 que é o que o `max-age` curto de uma hora permite.
 
 ## O que a aplicação acredita

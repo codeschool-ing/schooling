@@ -48,8 +48,8 @@ python        3.12-slim   179MB
 ```
 
 **Uma imagem é nomeada pela tag**, aqui `0.1.0`. Uma versão constrói uma tag nova a partir de um commit
-novo, a envia a um registro de que o servidor consegue baixar, e muda o `image:` no arquivo do compose;
-voltar atrás é mudar a tag de volta, desde que o banco ainda sirva ao código antigo, que é para o que
+novo, a envia a um registro de que o servidor consegue baixar, e muda o `image:` no arquivo do compose.
+Voltar atrás é mudar a tag de volta, desde que o banco ainda sirva ao código antigo, que é para o que
 serve expandir e contrair. Uma tag como `latest`, que se move, não diz nada sobre qual código está
 rodando.
 

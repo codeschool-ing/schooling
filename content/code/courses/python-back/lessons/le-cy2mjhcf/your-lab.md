@@ -27,7 +27,7 @@ goes wrong. Use VirtualBox on Windows or Linux, UTM on an Apple-silicon Mac, or 
 
 **Installed** works as printed on a computer that already runs Ubuntu 24.04. On macOS or Windows,
 Python and uv install from their own sites and every lesson's Python code runs the same, but the
-services of lessons 4 to 17 install differently and the transcripts here will not match yours; none
+services of lessons 4 to 17 install differently, and the transcripts here will not match yours. None
 of that was run for this course.
 
 **Online**, GitHub Codespaces gives you a Linux machine with a terminal in the browser. It costs

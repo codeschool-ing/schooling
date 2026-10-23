@@ -58,7 +58,7 @@ rápido, como um único SHA-256, é a ferramenta errada aqui exatamente por isso
 senha é a ferramenta errada por todos os motivos.
 
 O padrão do Django é o PBKDF2. O **Argon2** venceu a Password Hashing Competition em 2015 e também é
-caro em memória, o que encarece os palpites em placas de vídeo; o Django o usa se o `argon2-cffi`
+caro em memória, o que encarece os palpites em placas de vídeo. O Django o usa se o `argon2-cffi`
 estiver instalado e o `Argon2PasswordHasher` vier primeiro em `PASSWORD_HASHERS`, e o agenda-api o usa
 desde o começo mais adiante nesta aula. O prefixo de cada hash diz que algoritmo o fez, então um site
 pode trocar o padrão e continuar conferindo hashes antigos, atualizando cada um no próximo login da

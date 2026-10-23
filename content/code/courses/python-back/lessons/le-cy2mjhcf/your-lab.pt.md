@@ -27,8 +27,8 @@ Ubuntu 24.04 no Windows, com 2 GB de memória e um disco de 20 GB, como a aula 1
 
 **Instalado** funciona como está impresso num computador que já roda Ubuntu 24.04. No macOS ou no
 Windows, o Python e o uv se instalam pelos próprios sites e o código Python de toda aula roda igual,
-mas os serviços das aulas 4 a 17 se instalam de outro jeito e as transcrições daqui não vão bater com
-as suas; nada disso foi rodado para este curso.
+mas os serviços das aulas 4 a 17 se instalam de outro jeito, e as transcrições daqui não vão bater com
+as suas. Nada disso foi rodado para este curso.
 
 **Online**, o GitHub Codespaces dá uma máquina Linux com terminal no navegador. Ele não custa nada ao
 seu computador, e o GitHub dá às contas pessoais uma cota mensal de horas e cobra além dela, em termos

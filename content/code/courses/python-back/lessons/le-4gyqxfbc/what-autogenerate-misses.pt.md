@@ -57,7 +57,7 @@ sqlalchemy.exc.IntegrityError: (psycopg.errors.NotNullViolation) column "place" 
 ```
 
 **Este é o caso de sorte.** A coluna nova não pode ser nula, então adicioná-la a três linhas que não
-têm valor falhou, e o PostgreSQL desfez a migração inteira: o "transactional DDL" que o Alembic
+têm valor falhou, e o PostgreSQL desfez a migração inteira. O "transactional DDL" que o Alembic
 anunciou toda vez quer dizer que uma migração que falha não deixa nada pela metade. Numa tabela vazia,
 ou com uma coluna que aceita nulo, o mesmo arquivo teria rodado sem uma palavra e **jogado fora todos
 os locais**.

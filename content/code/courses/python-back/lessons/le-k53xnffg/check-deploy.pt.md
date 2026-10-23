@@ -53,7 +53,7 @@ ana@vm:~/agenda$ curl -s -o /dev/null -w "%{http_code}\n" -H "Host: agenda.examp
 ```
 
 **400 para um host fora da lista.** O Django compara o cabeçalho `Host` da requisição com o
-`ALLOWED_HOSTS` antes de qualquer outra coisa; isso impede que requisições destinadas a outros nomes
+`ALLOWED_HOSTS` antes de qualquer outra coisa. Isso impede que requisições destinadas a outros nomes
 cheguem à aplicação, inclusive as forjadas que poriam o domínio de um estranho nos links de um e-mail de
 redefinição de senha. Com o `DEBUG` desligado, um erro também é uma página simples:
 

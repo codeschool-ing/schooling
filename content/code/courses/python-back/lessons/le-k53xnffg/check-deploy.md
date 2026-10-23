@@ -53,7 +53,7 @@ ana@vm:~/agenda$ curl -s -o /dev/null -w "%{http_code}\n" -H "Host: agenda.examp
 ```
 
 **400 for a host not in the list.** Django compares the request's `Host` header with
-`ALLOWED_HOSTS` before anything else; it stops requests aimed at other names from reaching the
+`ALLOWED_HOSTS` before anything else. That stops requests aimed at other names from reaching the
 application, including the forged ones that would put a stranger's domain into the links of a
 password-reset e-mail. With `DEBUG` off, an error is also a plain page:
 

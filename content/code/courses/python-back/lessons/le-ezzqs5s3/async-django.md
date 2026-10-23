@@ -3,8 +3,8 @@ title: Async in Django
 version: 1
 ---
 
-Django has supported `async def` views since version 3.1, and they work under both servers:
-under WSGI, Django runs each one in an event loop of its own for the length of the request; under
+Django has supported `async def` views since version 3.1, and they work under both servers.
+Under WSGI, Django runs each one in an event loop of its own for the length of the request; under
 ASGI, they share the server's loop, which is where the waiting overlaps. Lesson 1 noticed the
 project already had `config/asgi.py`. The agenda project needs the partner's client, and an ASGI
 server, since `runserver` is a WSGI one:

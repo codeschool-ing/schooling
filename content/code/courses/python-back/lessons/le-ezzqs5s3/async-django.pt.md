@@ -3,7 +3,7 @@ title: Async no Django
 version: 1
 ---
 
-O Django aceita views `async def` desde a versão 3.1, e elas funcionam nos dois servidores: sob WSGI, o
+O Django aceita views `async def` desde a versão 3.1, e elas funcionam nos dois servidores. Sob WSGI, o
 Django roda cada uma num event loop próprio durante a requisição; sob ASGI, elas dividem o loop do
 servidor, que é onde as esperas se sobrepõem. A aula 1 reparou que o projeto já tinha o
 `config/asgi.py`. O projeto agenda precisa do cliente do parceiro, e de um servidor ASGI, já que o

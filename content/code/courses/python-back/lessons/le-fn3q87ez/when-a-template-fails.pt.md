@@ -15,8 +15,8 @@ django.template.exceptions.TemplateDoesNotExist: events/event_lsit.html
 ```
 
 Um erro de digitação no nome passado ao `render`. Numa requisição, com o `DEBUG` ligado, a página de
-erro também lista todo diretório em que o Django procurou e por que cada um não tinha o arquivo, o que
-resolve a outra causa comum: o template está em `events/templates/` sem o segundo `events/`, ou num
+erro também lista todo diretório em que o Django procurou e por que cada um não tinha o arquivo. Isso resolve
+a outra causa comum: o template está em `events/templates/` sem o segundo `events/`, ou num
 `templates/` do projeto que o `DIRS` não cita.
 
 ## Uma tag que nunca é fechada

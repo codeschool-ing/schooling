@@ -4,8 +4,8 @@ version: 1
 ---
 
 A crença comum é que o `async` deixa o Python mais rápido. **Ele não faz nenhum pedaço de código rodar
-mais rápido.** O que ele faz é deixar um processo fazer algo útil enquanto um pedaço de código espera,
-e uma requisição web passa a maior parte da vida esperando: pelo banco, por outro serviço, por um
+mais rápido.** O que ele faz é deixar um processo fazer algo útil enquanto um pedaço de código espera.
+Uma requisição web passa a maior parte da vida esperando: pelo banco, por outro serviço, por um
 cliente numa conexão lenta terminar de mandar.
 
 Para ver isso, o agenda precisa de algo lento para esperar. Aplicações de verdade chamam parceiros, um
