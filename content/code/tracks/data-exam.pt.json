@@ -1,0 +1,2843 @@
+{
+  "ex-x9b0gwr0": {
+    "prompt": "Ana acrescenta uma última linha ao `load_stock.py`, depois do `print`, e esquece de fechar um parêntese. Ela roda `python load_stock.py inbox/stock_2026-03-04.csv`. O que aconteceu com `raw.stock`?",
+    "hint": "Python, aula 1.",
+    "choices": [
+      {
+        "text": "As linhas são carregadas, e o erro aparece quando a última linha é alcançada.",
+        "why": "É assim que se comporta um erro levantado durante a execução. Um `SyntaxError` é levantado antes de a primeira linha rodar."
+      },
+      {
+        "text": "Nada: o arquivo não pôde ser lido, então nenhuma linha dele rodou.",
+        "why": "Isso."
+      },
+      {
+        "text": "O `DELETE` daquele arquivo rodou antes do erro, então as linhas antigas sumiram.",
+        "why": "Nada rodou, nem o `DELETE`: o interpretador parou enquanto lia o arquivo."
+      },
+      {
+        "text": "O Python pula a linha que não consegue ler, avisa e carrega as 1.200 linhas.",
+        "why": "O Python não pula uma linha que não consegue ler. Ele recusa o arquivo inteiro."
+      }
+    ]
+  },
+  "ex-75xw54sa": {
+    "prompt": "A exportação de uma editora dá errado, e o validador da aula 16 rejeita 60 de 1.071 registros de preço. Ele imprime a linha de STOP com o campo de f-string {len(bad) / total:.0%}, então a linha começa com STOP: ___ rejected.",
+    "hint": "Python, aula 2; Pipelines de Dados e ETL, aula 16.",
+    "blanks": [
+      {
+        "accept": [
+          "6%",
+          "6 %"
+        ]
+      }
+    ]
+  },
+  "ex-kexe67s3": {
+    "prompt": "No `validate_prices.py`, um registro rejeitado vai para a quarentena como `{\"reason\": reason, \"record\": json.loads(line)}`, lendo a linha pela segunda vez em vez de usar `rec`, que `check(rec, fixed)` acabou de examinar. Por quê?",
+    "hint": "Python, aula 3; Pipelines de Dados e ETL, aula 16.",
+    "choices": [
+      {
+        "text": "`json.loads` guarda em cache o que leu, então a segunda chamada não custa nada e devolve o mesmo objeto.",
+        "why": "Não há cache. Cada chamada monta um dicionário novo, e é exatamente por isso que ele difere de `rec`."
+      },
+      {
+        "text": "Depois que `check` retorna, `rec` foi consumido e não pode mais ser lido.",
+        "why": "Um dicionário não é consumido por ser lido; `rec` continua lá, e continua alterado."
+      },
+      {
+        "text": "`check` trabalha numa cópia de `rec`, então a segunda leitura só deixa a linha mais legível.",
+        "why": "Nenhuma cópia é feita. A função recebe o dicionário de quem a chamou, e é por isso que a segunda leitura é necessária."
+      },
+      {
+        "text": "`check` altera `rec` no lugar, e guardá-lo manteria um dicionário meio corrigido.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-5gcmwnpn": {
+    "prompt": "Um colega tira os registros rejeitados de uma lista com `for rec in records:` e, dentro dele, `if check(rec, fixed): records.remove(rec)`. `records` tem quatro registros, e o segundo e o terceiro seriam rejeitados. O que vale depois do laço? Marque todas as que se aplicam.",
+    "hint": "Python, aula 4.",
+    "choices": [
+      {
+        "text": "O terceiro registro continua em `records`.",
+        "why": "Isso."
+      },
+      {
+        "text": "`check` foi chamado nos quatro registros.",
+        "why": "Remover o segundo fez o terceiro escorregar para o lugar dele, que o laço já tinha passado: o terceiro nunca foi conferido."
+      },
+      {
+        "text": "Nenhuma exceção foi levantada.",
+        "why": "Isso."
+      },
+      {
+        "text": "`records` termina com dois registros, ambos bons.",
+        "why": "Sobram três: os dois bons e o terceiro, que o laço pulou."
+      }
+    ]
+  },
+  "ex-6wq1vc95": {
+    "prompt": "Ana muda o formato da linha que `failed`, em `~/airflow/plugins/oncall.py`, escreve, e salva o arquivo. Naquela noite uma tarefa falha, e o `alerts.log` ganha uma linha no formato antigo. Por quê?",
+    "hint": "Python, aula 7; Pipelines de Dados e ETL, aula 10.",
+    "choices": [
+      {
+        "text": "O processo em execução importou `oncall` uma vez e guarda esse módulo; importar de novo devolve o mesmo.",
+        "why": "Isso."
+      },
+      {
+        "text": "O Python lê `oncall` do `.pyc` em `__pycache__` até alguém apagá-lo.",
+        "why": "O bytecode compilado só é reaproveitado enquanto o código-fonte não muda; não é a edição que está sendo ignorada."
+      },
+      {
+        "text": "O arquivo da DAG também precisa ser editado: só uma mudança nele faz o Airflow importar seus módulos de novo.",
+        "why": "Ler o arquivo da DAG de novo roda o `import oncall` outra vez, e esse import devolve o módulo já carregado."
+      },
+      {
+        "text": "O processador de DAGs relê `dags/` e mais nada, então o arquivo precisa ir para lá.",
+        "why": "Pôr o arquivo em `dags/` foi o que fez o callback do prazo falhar: o triggerer não importa de lá."
+      }
+    ]
+  },
+  "ex-bszfp0rs": {
+    "prompt": "Um colega envolve todo o corpo de `fetch`, em `prices_daily`, num `try:` … `except Exception: pass`, \"para a noite nunca falhar\". Naquela noite a API de preços responde `503` a todos os pedidos. O que acontece? Marque todas as que se aplicam.",
+    "hint": "Python, aula 8; Pipelines de Dados e ETL, aula 10.",
+    "choices": [
+      {
+        "text": "A tarefa termina em `success` depois de uma tentativa.",
+        "why": "Isso."
+      },
+      {
+        "text": "O Airflow tenta de novo quatro vezes, esperando mais a cada vez.",
+        "why": "Uma nova tentativa precisa de uma exceção que chegue ao Airflow, e esta nunca sai do handler."
+      },
+      {
+        "text": "O `alerts.log` não ganha nenhuma linha FAILED nessa noite.",
+        "why": "Isso."
+      },
+      {
+        "text": "O `landing/prices.jsonl` é esvaziado, porque o try não terminou.",
+        "why": "O arquivo só é escrito depois do laço, que a exceção pulou: o arquivo da noite anterior continua lá."
+      }
+    ]
+  },
+  "ex-pqyhf07j": {
+    "prompt": "Para economizar memória, um colega muda o `prices.py` da aula 3 para abrir `landing/prices.jsonl` com `\"w\"` antes do laço `while` e escrever cada página assim que ela chega. Na execução seguinte a API responde as duas primeiras páginas, depois `503`, e `raise_for_status()` interrompe o script. O que há no arquivo?",
+    "hint": "Python, aula 9; Pipelines de Dados e ETL, aula 3.",
+    "choices": [
+      {
+        "text": "Os preços da execução anterior, intactos: nada é escrito até o bloco `with` terminar normalmente.",
+        "why": "As escritas vão para o arquivo à medida que são feitas, e o `\"w\"` já o tinha esvaziado."
+      },
+      {
+        "text": "Nada, porque uma exceção dentro de um bloco `with` descarta o que foi escrito nele.",
+        "why": "O `with` fecha o arquivo na saída; não desfaz o que foi escrito."
+      },
+      {
+        "text": "Só as duas primeiras páginas: o `\"w\"` esvaziou o arquivo ao abri-lo, antes da falha.",
+        "why": "Isso."
+      },
+      {
+        "text": "As duas primeiras páginas, seguidas do resto das linhas da execução anterior.",
+        "why": "O `\"w\"` primeiro trunca o arquivo para nada; não escreve por cima do conteúdo antigo."
+      }
+    ]
+  },
+  "ex-3st7yvc0": {
+    "prompt": "O `apply_cdc.py` lê as colunas do `test_decoding` com `FIELD = re.compile(r\"(\\w+)\\[[^\\]]+\\]:('(?:[^']|'')*'|\\S+)\")`. O que `FIELD.findall(\"customer_id[integer]:538 city[text]:'Campinas'\")` devolve?",
+    "hint": "Python, aula 10; Pipelines de Dados e ETL, aula 5.",
+    "choices": [
+      {
+        "text": "`['customer_id[integer]:538', \"city[text]:'Campinas'\"]`",
+        "why": "É o que `findall` dá para um padrão sem grupos. Este tem dois."
+      },
+      {
+        "text": "`[('customer_id', '538'), ('city', \"'Campinas'\")]`",
+        "why": "Isso."
+      },
+      {
+        "text": "`[('customer_id', '538', ''), ('city', \"'Campinas'\", 'C')]`",
+        "why": "`(?:…)` agrupa sem capturar, então são dois grupos, não três."
+      },
+      {
+        "text": "`[('customer_id', '538'), ('city', 'Campinas')]`",
+        "why": "As aspas fazem parte do que o segundo grupo casou; `values()` as tira depois."
+      }
+    ]
+  },
+  "ex-1wz3rdpy": {
+    "prompt": "Um colega edita `main` no `validate_prices.py` da aula 17 para informar o tamanho primeiro:\n\n```python\nlines = (json.loads(l) for l in open(src, encoding=\"utf-8\"))\nprint(sum(1 for _ in lines), \"lines\")\nfor rec in lines:\n    reason = check(rec, fixed)\n    ...\n```\n\nRodado num arquivo de 1.071 registros, ele imprime `1071 lines`. O que acontece em seguida?",
+    "hint": "Python, aula 11; Pipelines de Dados e ETL, aula 17.",
+    "choices": [
+      {
+        "text": "O laço abre o arquivo de novo e confere os 1.071 registros, como antes.",
+        "why": "Um gerador não é o arquivo. Ele foi gasto pelo `sum`, e nada o reinicia."
+      },
+      {
+        "text": "Levanta `ZeroDivisionError` ao imprimir a linha de STOP.",
+        "why": "O ramo do STOP exige mais rejeições do que 5% de zero, e não há nenhuma, então essa linha nunca roda."
+      },
+      {
+        "text": "Imprime STOP, porque nenhum registro foi aceito, e sai com 1.",
+        "why": "O STOP é decidido pela fração rejeitada, e nada foi rejeitado."
+      },
+      {
+        "text": "Informa 0 registros, escreve um arquivo vazio e devolve 0.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-e5bmjaj0": {
+    "prompt": "Dentro de `shop_nightly`, `day = day_to_load()` roda quando o arquivo da DAG é lido, meses antes de existir qualquer data lógica, e não devolve data nenhuma. Por que chamar a função não roda o corpo dela?",
+    "hint": "Python, aula 12; Pipelines de Dados e ETL, aula 8.",
+    "choices": [
+      {
+        "text": "O parâmetro `logical_date=None` faz o Python esperar até que um argumento de verdade seja passado.",
+        "why": "Um valor padrão é só um valor. Chamada sem nada, uma função comum rodaria com `None` e falharia."
+      },
+      {
+        "text": "Uma função definida dentro de outra só roda depois que a de fora retorna.",
+        "why": "Uma função interna roda sempre que é chamada; nada espera a de fora."
+      },
+      {
+        "text": "`@task` trocou o nome pelo que o decorador devolveu, que cria uma tarefa.",
+        "why": "Isso."
+      },
+      {
+        "text": "A anotação `-> str` adia a chamada até que uma string possa ser devolvida.",
+        "why": "Uma anotação é uma nota sobre a qual nada age em tempo de execução."
+      }
+    ]
+  },
+  "ex-z7yfcm9a": {
+    "prompt": "O `load_raw.py` apaga e recria `raw.shops`, imprime `raw.shops: 7 rows` e então falha no `DROP TABLE raw.books`, porque uma view do dbt depende dela. Depois disso, `raw` está exatamente como antes do comando. Por quê?",
+    "hint": "Python, aula 13; Pipelines de Dados e ETL, aula 11.",
+    "choices": [
+      {
+        "text": "A exceção saiu do bloco `with`, e a saída dele desfez a transação que recriou `raw.shops`.",
+        "why": "Isso."
+      },
+      {
+        "text": "`DROP TABLE IF EXISTS` não mexe numa tabela que ainda tem linhas.",
+        "why": "`raw.shops` foi apagada e preenchida de novo; foi o rollback que desfez as duas coisas."
+      },
+      {
+        "text": "Um bloco `with` captura a exceção e restaura as tabelas a partir de uma cópia feita na entrada.",
+        "why": "Um bloco `with` arruma a casa e deixa a exceção seguir; nenhuma cópia é feita."
+      },
+      {
+        "text": "Fechar a conexão desfaz todos os comandos, com commit ou sem.",
+        "why": "Um commit sobrevive ao fechamento. Aqui nada tinha sido confirmado, e por isso o rollback desfez tudo."
+      }
+    ]
+  },
+  "ex-ekc8g2sd": {
+    "prompt": "`python -m pytest -q tests/test_nightly.py` roda os três testes de integração da aula 17. A fixture `warehouse`, que todos eles pedem, é declarada com `@pytest.fixture(scope=\"module\")`. Quantas vezes a execução roda `dbt build`?",
+    "hint": "Python, aula 16; Pipelines de Dados e ETL, aula 17."
+  },
+  "ex-mj4q2b77": {
+    "prompt": "O `setup.sh` da aula 1 instala `apache-airflow[postgres]==3.3.2` com `--constraint` apontando para o arquivo de restrições do Airflow. Nos termos da aula 18 de Python, o que esse arquivo acrescenta que o `==3.3.2` não dá?",
+    "hint": "Python, aula 18; Pipelines de Dados e ETL, aula 1.",
+    "choices": [
+      {
+        "text": "Lista as dependências diretas do Airflow, para o pip baixá-las em paralelo.",
+        "why": "O pip resolve as dependências de qualquer jeito. O arquivo decide quais versões ele pode escolher."
+      },
+      {
+        "text": "Impede o pip de instalar no Python do sistema, que pertence ao sistema operacional.",
+        "why": "Isso é o que o ambiente virtual faz. O arquivo não diz nada sobre onde instalar."
+      },
+      {
+        "text": "É o `pip freeze` do Airflow, então só fixa o que já estava instalado na máquina de build.",
+        "why": "Ele é publicado para cada versão e cada Python, e o ambiente do laboratório estava vazio antes dele."
+      },
+      {
+        "text": "Fixa na versão testada cada biblioteca abaixo do Airflow.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-6222tkrg": {
+    "prompt": "Para enxergar exclusões, Ana segue o conselho da aula 4 de comparar as chaves: `shop_ids` é uma lista com os 5.345 ids de clientes da loja, e `gone = [i for i in wh_ids if i not in shop_ids]` percorre os ids do warehouse. Que mudança remove o trabalho que cresce com o produto dos dois tamanhos?",
+    "hint": "Python, aula 20; Pipelines de Dados e ETL, aula 4.",
+    "choices": [
+      {
+        "text": "Escrever `if i not in set(shop_ids)` dentro da compreensão.",
+        "why": "Isso monta o conjunto de novo para cada id, o que custa tanto quanto a varredura que substituiu."
+      },
+      {
+        "text": "`shop_ids = set(shop_ids)` uma vez, antes da compreensão.",
+        "why": "Isso."
+      },
+      {
+        "text": "Ordenar as duas listas primeiro e manter a compreensão como está.",
+        "why": "`in` numa lista ordenada continua percorrendo a lista; ordenar sozinho não transforma a busca num passo."
+      },
+      {
+        "text": "Trocar a compreensão por uma expressão geradora.",
+        "why": "Isso muda o que fica na memória, não quantas comparações são feitas."
+      }
+    ]
+  },
+  "ex-yc4a8qy7": {
+    "prompt": "A API de preços muda de lugar, e `/v1/prices` passa a responder `404` com `{\"error\": \"no such resource\"}`. O que a execução daquela noite de `prices_daily` faz?",
+    "hint": "Python, aula 21; Pipelines de Dados e ETL, aula 10.",
+    "choices": [
+      {
+        "text": "`raise_for_status()` levanta `HTTPError`, que é tentado de novo; depois de cinco tentativas o callback escreve FAILED.",
+        "why": "Isso."
+      },
+      {
+        "text": "Falha na hora com `AirflowFailException`, como faria com uma chave errada no cabeçalho.",
+        "why": "Só `400`, `401` e `403` estão na lista que recusa nova tentativa. Um `404` passa direto."
+      },
+      {
+        "text": "`requests.get` levanta no próprio `404`, antes de o código olhar o status.",
+        "why": "Um `404` é um pedido HTTP bem-sucedido; o `requests` só levanta quando pedem."
+      },
+      {
+        "text": "Escreve um arquivo de preços vazio e tem sucesso, porque o corpo do erro ainda é JSON válido.",
+        "why": "`raise_for_status()` vem antes de o corpo ser lido, e levanta para qualquer `4xx`."
+      }
+    ]
+  },
+  "ex-j5g7dgvw": {
+    "prompt": "Sem índice em `order_date`, apagar um dia de `big.fact_sales`, da aula 19, foi um `Seq Scan`: 446 linhas achadas, 3.511.654 descartadas. Se a tabela tivesse doze anos em vez de seis, como mudaria o tempo para achar esse dia?",
+    "hint": "Pipelines de Dados e ETL, aula 19; Python, aula 20.",
+    "choices": [
+      {
+        "text": "Continuaria igual, já que o dia ainda tem as mesmas 446 linhas para achar.",
+        "why": "O custo de uma varredura segue a tabela, não o dia: toda linha é lida para achar as poucas que casam."
+      },
+      {
+        "text": "Umas quatro vezes, porque cada linha é comparada com todas as outras.",
+        "why": "Isso é um laço dentro de um laço. Uma varredura compara cada linha com uma data, uma vez."
+      },
+      {
+        "text": "Cerca do dobro, porque a varredura lê cada linha uma vez, como `in` numa lista.",
+        "why": "Isso."
+      },
+      {
+        "text": "Alguns passos a mais, pois cortar ao meio acha o dia.",
+        "why": "Isso é o que o índice compra. Sem ele, nada divide a tabela ao meio."
+      }
+    ]
+  },
+  "ex-sncmzwt2": {
+    "prompt": "Na quinta-feira, um auditor pede a Ana o relatório de domingo de novo: 3.278 livros na primeira semana de março. Desde então o back office reembolsou alguns pedidos daquela semana. O que lhe dá o número de domingo?",
+    "hint": "Pipelines de Dados e ETL, aula 2.",
+    "choices": [
+      {
+        "text": "Rodar `etl.py` de 1 a 7 de março de novo.",
+        "why": "Ele pergunta à loja o que ela diz agora, reembolsos incluídos, e dá 3.252."
+      },
+      {
+        "text": "Rodar `extract_load.py` para a semana de novo, depois `sales_by_category.sql`.",
+        "why": "Extrair de novo substitui as linhas cruas de domingo pelas de hoje, e a resposta muda junto."
+      },
+      {
+        "text": "Rodar `sales_by_category.sql` de novo sobre as linhas cruas de domingo.",
+        "why": "Isso."
+      },
+      {
+        "text": "Contar a semana na loja incluindo os pedidos reembolsados e cancelados.",
+        "why": "Isso também conta pedidos cancelados antes de domingo, que nunca estiveram no relatório."
+      }
+    ]
+  },
+  "ex-cq1y69ek": {
+    "prompt": "A primeira tentativa de Ana na mudança das categorias renomeou cinco categorias pelas quais os relatórios filtram. Pela convenção de versões da aula 18, uma versão que traga essa mudança sobe o número ___.",
+    "hint": "Pipelines de Dados e ETL, aula 18.",
+    "blanks": [
+      {
+        "accept": [
+          "maior",
+          "major"
+        ]
+      }
+    ]
+  },
+  "ex-gr9ees1j": {
+    "prompt": "O `consume.py` da aula 1 grava o offset depois de cada evento, então uma queda entre as duas coisas faz aquele evento ser lido de novo ao reiniciar. O que torna a segunda cópia inofensiva no warehouse?",
+    "hint": "Pipelines de Dados e ETL, aula 15.",
+    "choices": [
+      {
+        "text": "Gravar o offset antes de tratar cada evento, não depois.",
+        "why": "Aí uma queda no meio pula o evento para sempre, que é a falha sem remédio."
+      },
+      {
+        "text": "Uma linha por `event_id` na carga dos eventos.",
+        "why": "Isso."
+      },
+      {
+        "text": "Começar o consumidor do byte 0 sempre que ele reinicia.",
+        "why": "Isso relê todos os eventos, o que multiplica as duplicatas em vez de tirá-las."
+      },
+      {
+        "text": "Acompanhar o atraso, para o reinício ser notado em segundos.",
+        "why": "O atraso diz quanto o consumidor está para trás; não faz nada com um evento lido duas vezes."
+      }
+    ]
+  },
+  "ex-wy3q2pgb": {
+    "prompt": "Depois que o dia 14 de março é tocado, o `apply_cdc.py` imprime `2268 changes read up to 0/BE7CF38: {'INSERT': 22, 'UPDATE': 4, 'DELETE': 1, 'other tables': 1387}`. O slot entrega uma linha `BEGIN` e uma `COMMIT` para cada transação e uma linha por linha alterada. Quantas transações a loja confirmou naquele dia?",
+    "hint": "Pipelines de Dados e ETL, aula 5."
+  },
+  "ex-t6x007rn": {
+    "prompt": "Ana quer a receita por dia numa consulta que também lê as linhas dos pedidos, para ter o número de livros. Juntar `payments` a `order_lines` e somar `amount_cents` quase dobrou a receita da loja. Que coluna de receita corrige isso?",
+    "hint": "Pipelines de Dados e ETL, aula 6.",
+    "choices": [
+      {
+        "text": "`sum(l.quantity * l.unit_price_cents)`, subindo de cada linha até o seu pedido",
+        "why": "Isso."
+      },
+      {
+        "text": "`sum(DISTINCT p.amount_cents)` sobre a mesma junção",
+        "why": "Dois pedidos que pagaram o mesmo valor contariam uma vez só, e o total sairia baixo."
+      },
+      {
+        "text": "`sum(p.amount_cents)` com a junção escrita como `LEFT JOIN`",
+        "why": "Uma junção à esquerda mantém cada pagamento e continua repetindo-o uma vez por linha."
+      },
+      {
+        "text": "`sum(p.amount_cents)` agrupado por `order_id` antes, e depois o total disso",
+        "why": "O grupo de cada pedido ainda tem uma cópia do pagamento por linha."
+      }
+    ]
+  },
+  "ex-efdaszs3": {
+    "prompt": "Ponha uma noite da carga da aula 7 na ordem em que ela precisa rodar.",
+    "hint": "Pipelines de Dados e ETL, aula 7.",
+    "items": [
+      "Copiar as tabelas da loja para `raw`",
+      "Reconstruir `staging` a partir de `raw`",
+      "Fechar a versão atual de cada cliente cuja cidade ou estado mudou",
+      "Abrir uma versão para cada cliente sem nenhuma atual",
+      "Substituir o dia em `fact_sales`, cada linha apontando para a versão válida quando o pedido foi feito"
+    ],
+    "trap": "Um cliente que se mudou ainda tem uma versão atual até ela ser fechada, então abrir primeiro não abre nada para ele; e a carga dos fatos procura a versão, então vem depois das duas."
+  },
+  "ex-gvsbw5jb": {
+    "prompt": "Associe cada configuração do `FileSensor` que espera o arquivo de estoque do distribuidor ao que ela faz, pela aula 9.",
+    "hint": "Pipelines de Dados e ETL, aula 9.",
+    "pairs": [
+      {
+        "left": "`mode=\"poke\"`",
+        "right": "Segura seu worker e confere a cada poucos segundos"
+      },
+      {
+        "left": "`mode=\"reschedule\"`",
+        "right": "Devolve seu worker entre uma conferência e outra"
+      },
+      {
+        "left": "`deferrable=True`",
+        "right": "Passa a espera para o triggerer"
+      },
+      {
+        "left": "`timeout=2 * 60 * 60`",
+        "right": "Falha depois de duas horas, para um alerta poder avisar"
+      }
+    ],
+    "right_distractors": [
+      "Tenta de novo quatro vezes, esperando mais a cada vez"
+    ]
+  },
+  "ex-kfwf1ymh": {
+    "prompt": "Uma DAG copiada de um projeto de Airflow 2 define `\"retries\": 4`, `\"retry_delay\": dt.timedelta(seconds=15)` e `\"retry_exponential_backoff\": True`. No Airflow 3.3, a API fica fora do ar a noite toda. Quanto tempo o Airflow espera antes de cada nova tentativa?",
+    "hint": "Pipelines de Dados e ETL, aula 10; Python, aula 2.",
+    "choices": [
+      {
+        "text": "15, 30, 60 e 120 segundos, já que a chave ligou o backoff.",
+        "why": "Na 3.3 a configuração é um multiplicador, e quem dobra a espera é `2.0`."
+      },
+      {
+        "text": "Nenhum: um booleano é recusado ali, então a DAG não carrega.",
+        "why": "Nada o recusa. É por isso que o erro não deixa rastro em log nenhum."
+      },
+      {
+        "text": "Cada espera é 15 segundos maior que a anterior.",
+        "why": "Nada na configuração soma; ela multiplica a espera cada vez que é usada de novo."
+      },
+      {
+        "text": "Uns 15 segundos toda vez: `True` conta como `1`.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-vjeh8kx9": {
+    "prompt": "`dbt_marts.fact_sales` é incremental, com chave `order_date` e `where order_date >= (select max(order_date) from {{ this }})`. Ela tem dias até 9 de março. O dia 10 é carregado em `raw`, e as views de staging agora dão 383 linhas de venda no dia 8, 429 no dia 9 e 368 no dia 10. Quantas linhas `dbt run -s fact_sales` informa ter inserido?",
+    "hint": "Pipelines de Dados e ETL, aula 11."
+  },
+  "ex-qn2b5dwm": {
+    "prompt": "Associe cada resultado de teste no projeto dbt de Ana à mudança que a aula 12 fez em resposta a ele.",
+    "hint": "Pipelines de Dados e ETL, aula 12.",
+    "pairs": [
+      {
+        "left": "`not_null` no `customer_id` dos pedidos falha com 5.809 linhas",
+        "right": "Aplicá-lo só aos pedidos do site"
+      },
+      {
+        "left": "`unique` no `order_id` das linhas falha com 7.974 linhas",
+        "right": "Conferir o pedido e o número da linha como um valor só"
+      },
+      {
+        "left": "O teste de cliente estreitado ainda devolve 7 clientes apagados",
+        "right": "Dar ao teste a severidade warn"
+      },
+      {
+        "left": "`fact_sales_has_not_drifted` falha em 11 dias antigos",
+        "right": "Reconstruir por inteiro a tabela de fatos e o que vem depois dela"
+      }
+    ],
+    "right_distractors": [
+      "Apagar o teste, já que os dados estão certos"
+    ]
+  },
+  "ex-0s151vnc": {
+    "prompt": "Os relatórios de 14 de março foram escritos por cada uma das ferramentas da aula 13. Depois a loja reembolsa um pedido do dia 14, e `raw` é carregada de novo. Sem apagar nenhum arquivo, quais destes escrevem um `reports/daily_2026-03-14.csv` novo? Marque todas as que se aplicam.",
+    "hint": "Pipelines de Dados e ETL, aula 13; Pipelines de Dados e ETL, aula 14.",
+    "choices": [
+      {
+        "text": "`luigi --module nightly_luigi DailyReport --day 2026-03-14 --local-scheduler`",
+        "why": "O arquivo do relatório existe, então o Luigi considera a tarefa completa e não roda nada."
+      },
+      {
+        "text": "`python nightly_prefect.py 2026-03-14`, com o Python do próprio Prefect",
+        "why": "Isso."
+      },
+      {
+        "text": "`dagster asset materialize` com `--select \"*\"` e o dia definido como 2026-03-14",
+        "why": "Isso."
+      },
+      {
+        "text": "`make`, com o relógio do laboratório em 16 de março",
+        "why": "`DAY` vem do relógio, então as regras tratam do relatório do dia 16; o dia 14 não é alvo deste Makefile."
+      }
+    ]
+  },
+  "ex-e65vqgsz": {
+    "prompt": "O gerente quer as vendas de 2024 pelo estado do cliente, e os caixas não podem sentir o relatório. Um colega propõe rodá-lo numa réplica por streaming do PostgreSQL do banco da loja. O que a réplica resolve, e o que ela deixa como está?",
+    "hint": "Modelagem de Dados e Data Warehouse, aula 1; Bancos de Dados Relacionais e SQL, aula 12.",
+    "choices": [
+      {
+        "text": "Resolve as duas coisas: a réplica reaplica o write-ahead log, então guarda a cidade anterior de cada cliente como uma versão própria, pronta para o join.",
+        "why": "Reaplicar o log aplica cada update na mesma linha de estado atual; a cidade antiga é sobrescrita na réplica também."
+      },
+      {
+        "text": "Não resolve nenhuma: uma réplica por streaming existe só para failover, e recusa as consultas de leitura que um relatório mandaria a ela.",
+        "why": "Uma réplica é somente leitura e pode atender leituras; é para isso que ela serve aqui."
+      },
+      {
+        "text": "Tira o relatório da disputa com os caixas; a divisão por estado continua errada, porque a réplica tem as mesmas linhas de estado atual.",
+        "why": "Isso."
+      },
+      {
+        "text": "Guarda o histórico mas não a velocidade: o passado fica na réplica, enquanto o relatório ainda disputa a memória do primário.",
+        "why": "É o contrário. A réplica tira a carga do primário e tem as mesmas linhas sobrescritas."
+      }
+    ]
+  },
+  "ex-kqs7tzkd": {
+    "prompt": "Um colega monta a entrega como tabela de transações: uma linha por marco, então um pacote tem uma linha `ordered`, uma `shipped` e, quando chega, uma `delivered`. Como ele conta agora os pacotes que ainda estão a caminho?",
+    "hint": "Modelagem de Dados e Data Warehouse, aula 2; Bancos de Dados Relacionais e SQL, aula 5.",
+    "choices": [
+      {
+        "text": "Conta as linhas cuja data de entrega é nula, do mesmo jeito que o snapshot conta as linhas que apontam para a chave 0, `Not yet`.",
+        "why": "Um marco não alcançado não tem linha nenhuma na tabela dele, então não existe data vazia para contar."
+      },
+      {
+        "text": "Usa `NOT EXISTS` para pedidos com linha de despacho e sem linha de chegada: o que ainda viaja é uma ausência.",
+        "why": "Isso."
+      },
+      {
+        "text": "Faz `LEFT JOIN` das linhas `shipped` com as `delivered` pelo número do pedido, e depois tira o `count(*)` de cada mês.",
+        "why": "Todo pedido despachado mantém uma linha depois do left join, entregue ou não; sem `IS NULL` no lado direito, ele conta todos."
+      },
+      {
+        "text": "Do mesmo jeito de antes, já que uma tabela de transações e um snapshot acumulado guardam uma linha por pedido.",
+        "why": "A tabela dele guarda uma linha por marco; só o snapshot responde direto pelos pacotes em aberto, como linhas."
+      }
+    ]
+  },
+  "ex-heb07ekp": {
+    "prompt": "Para comparar o dia do pedido com o dia do despacho, um relatório junta `fact_fulfilment f` com `dim_date d ON d.date_key = f.ordered_date_key AND d.date_key = f.shipped_date_key`. O que volta?",
+    "hint": "Modelagem de Dados e Data Warehouse, aula 3; Bancos de Dados Relacionais e SQL, aula 5.",
+    "choices": [
+      {
+        "text": "Só os pedidos despachados no dia do pedido: uma linha de data não guarda duas chaves, então `dim_date` entra duas vezes.",
+        "why": "Isso."
+      },
+      {
+        "text": "Cada pedido duas vezes, uma para cada uma das suas datas, porque o join pareia a linha de fato com as duas datas que batem.",
+        "why": "As duas condições estão num mesmo `ON`, então uma única linha de `dim_date` precisa satisfazer as duas ao mesmo tempo."
+      },
+      {
+        "text": "Um erro de coluna ambígua, porque `d.date_key` aparece em duas condições separadas de um mesmíssimo join.",
+        "why": "A consulta é válida, sem erro nenhum, e devolve em silêncio muito menos linhas do que há pedidos."
+      },
+      {
+        "text": "Cada pedido uma vez, com o nome do dia da data do pedido, porque a primeira condição escrita no `ON` decide o par.",
+        "why": "A ordem das condições não decide nada; um par só sobrevive quando as duas são verdadeiras."
+      }
+    ]
+  },
+  "ex-1mhh59jy": {
+    "prompt": "No banco da loja, `customer_id` é chave primária e a chave estrangeira de cada pedido é imposta. Por que o warehouse ainda assim não aponta seus fatos para ela?",
+    "hint": "Modelagem de Dados e Data Warehouse, aula 4; Bancos de Dados Relacionais e SQL, aula 1.",
+    "choices": [
+      {
+        "text": "É o número do sistema dos caixas: um software novo que volte a contar do 1 faria de 2123 duas pessoas.",
+        "why": "Isso."
+      },
+      {
+        "text": "É largo demais para uma tabela de fatos que o repete nas 887.477 linhas, e uma chave substituta ocupa menos espaço.",
+        "why": "As duas são inteiros. Os 66% que a aula 4 mediu eram um endereço de e-mail contra uma chave inteira."
+      },
+      {
+        "text": "Vendas de balcão não têm cliente, e só uma chave substituta pode receber o valor 0 para representá-las no lugar dele.",
+        "why": "O membro desconhecido é um uso de uma chave que é do warehouse, não o motivo; o motivo é que outra pessoa pode mudar ou reaproveitar a chave natural."
+      },
+      {
+        "text": "A chave estrangeira fica no banco da loja, então no warehouse `customer_id` poderia apontar para nada.",
+        "why": "O warehouse é carregado por um único programa a partir de uma única origem; o perigo é um valor que muda de sentido, não um que fica solto."
+      }
+    ]
+  },
+  "ex-eta5sgh7": {
+    "prompt": "Para arrumar a carga da aula 2, um analista reescreve a busca da versão do cliente como `o.ordered_at BETWEEN c.valid_from AND c.valid_to`. O que acontece com uma venda feita no exato segundo em que o nível do cliente mudou?",
+    "hint": "Modelagem de Dados e Data Warehouse, aula 5; Bancos de Dados Relacionais e SQL, aula 4.",
+    "choices": [
+      {
+        "text": "Não bate com nenhuma versão e cai fora do join, porque `BETWEEN` deixa de fora as duas pontas do intervalo.",
+        "why": "`BETWEEN` inclui as duas pontas; essa é a armadilha, não a proteção."
+      },
+      {
+        "text": "Bate só com a versão mais nova, porque quando duas linhas se qualificam o join fica com a mais recente.",
+        "why": "Um join mantém todo par cuja condição é verdadeira; ele não tem preferência entre eles."
+      },
+      {
+        "text": "Voltam as mesmas linhas, porque `>=` com `<` e `BETWEEN` são dois jeitos de escrever o mesmo teste.",
+        "why": "Os dois diferem exatamente na fronteira, e a fronteira é onde uma versão passa a vez para a seguinte."
+      },
+      {
+        "text": "Bate com as duas versões e é contada duas vezes: o `valid_to` de uma é o `valid_from` da seguinte.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-g4m3r1cy": {
+    "prompt": "A terceira linha do pedido 112406 é corrigida em `fact_sales`, R$ 10,00 a menos, e nada mais é executado. Quais destes mostram o total corrigido na próxima vez que alguém os ler? Marque todas as que se aplicam.",
+    "hint": "Modelagem de Dados e Data Warehouse, aula 6; Bancos de Dados Relacionais e SQL, aula 7.",
+    "choices": [
+      {
+        "text": "Uma view que agrupa `fact_sales` por mês e por loja.",
+        "why": "Isso."
+      },
+      {
+        "text": "`agg_sales_month`, feita com `CREATE TABLE … AS SELECT` a partir de `fact_sales`.",
+        "why": "Uma tabela montada a partir de uma consulta guarda as linhas da última montagem; ela tem a idade dessa montagem até ser refeita."
+      },
+      {
+        "text": "Uma view materializada sobre `fact_sales`, criada na véspera.",
+        "why": "Ela guarda a resposta, e nada a atualiza até rodar um `REFRESH`."
+      },
+      {
+        "text": "Um relatório que soma `fact_sales` dentro de um passo `WITH`, rodado depois da correção.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-6z04fv2e": {
+    "prompt": "O relatório por cidade da aula 10 levou 490 ms num processo só e 222 ms com consulta paralela, em que o líder e dois workers fizeram um terço cada. Trate esses três processos como três processadores na fórmula do ganho de velocidade da aula 7. Que parcela do trabalho do relatório podia ser dividida entre eles, em porcentagem? Arredonde para o inteiro mais próximo.",
+    "hint": "Modelagem de Dados e Data Warehouse, aula 7; Bancos de Dados Relacionais e SQL, aula 10.",
+    "unit": "%"
+  },
+  "ex-9xad56xp": {
+    "prompt": "O índice BRIN da aula 9 em `events (created_at)` e os zone maps de um arquivo Parquet da aula 8 são duas versões de um mesmo truque. O que os dois têm em comum?",
+    "hint": "Modelagem de Dados e Data Warehouse, aula 8; Bancos de Dados Relacionais e SQL, aula 9.",
+    "choices": [
+      {
+        "text": "Cada um é uma cópia ordenada da coluna com um ponteiro por linha, então atende qualquer filtro nela, seja qual for a ordem em que as linhas foram gravadas.",
+        "why": "Isso é uma B-tree. Estes guardam só uma faixa por bloco, e uma faixa não diz nada útil quando cada bloco cobre tudo."
+      },
+      {
+        "text": "Cada um depende de um dicionário dos valores distintos da coluna, então funciona melhor numa coluna com poucos deles, como um status.",
+        "why": "Dicionário é uma codificação de valores. Pular blocos depende de as linhas que a consulta quer estarem juntas."
+      },
+      {
+        "text": "Cada um guarda um mínimo e um máximo por bloco e pula os blocos que não podem bater, então precisa das linhas na ordem da coluna.",
+        "why": "Isso."
+      },
+      {
+        "text": "Cada um encarece as escritas, porque todo insert precisa reordenar a coluna que ele cobre.",
+        "why": "Cada um registra poucos bytes por bloco enquanto os dados são gravados; é por isso que a aula 9 chama o BRIN de índice desprezível."
+      }
+    ]
+  },
+  "ex-xg6tqde6": {
+    "prompt": "Um warehouse cobrado sob demanda conta os dados que uma consulta processa como toda coluna que ela cita, em todas as linhas da tabela, a 8 bytes por valor inteiro. Uma consulta lê `date_key`, `shop_key`, `promotion_key` e `net_cents` de `fact_sales`, filtra 2025 e termina com `LIMIT 10`. A tabela tem 887.477 linhas e nenhuma coluna de partição ou de clustering. Quantos bytes de `fact_sales` são cobrados?",
+    "hint": "Modelagem de Dados e Data Warehouse, aula 9; Bancos de Dados Relacionais e SQL, aula 4.",
+    "unit": "bytes"
+  },
+  "ex-vef2hvp9": {
+    "prompt": "Dois jobs noturnos fazem append na mesma tabela Delta ao mesmo tempo, e o outro ganha o commit 5. Ponha em ordem o que acontece com o job que perde, do primeiro passo ao último.",
+    "hint": "Modelagem de Dados e Data Warehouse, aula 10; Bancos de Dados Relacionais e SQL, aula 8.",
+    "items": [
+      "Grava seus arquivos Parquet onde nenhum leitor está procurando",
+      "Tenta criar o commit 5 em `_delta_log` e descobre que já foi tomado",
+      "Lê o log de novo, incluindo o commit do vencedor",
+      "Grava sua entrada como commit 6, e só então seus arquivos fazem parte da tabela"
+    ],
+    "trap": "Os arquivos estão no disco desde o primeiro passo e ainda não são a tabela: só um commit os torna parte dela. Perder a corrida significa ler de novo antes de pegar o número seguinte, como uma transação recusada que roda de novo a partir das leituras."
+  },
+  "ex-7sp2wj44": {
+    "prompt": "Ligue cada princípio do data mesh ao que ele significa na prática, pela aula 11.",
+    "hint": "Modelagem de Dados e Data Warehouse, aula 11.",
+    "pairs": [
+      {
+        "left": "Propriedade por domínio",
+        "right": "O time de pedidos publica os pedidos, incluindo os dados analíticos"
+      },
+      {
+        "left": "Dados como produto",
+        "right": "Quem não o construiu pode confiar nele, com garantias por escrito"
+      },
+      {
+        "left": "Uma plataforma de autosserviço",
+        "right": "Armazenamento, pipelines, catálogo e controle de acesso mantidos por um time de plataforma"
+      },
+      {
+        "left": "Governança computacional federada",
+        "right": "Regras comuns, como as dimensões conformadas, impostas por código na plataforma"
+      }
+    ],
+    "right_distractors": [
+      "Um time central de dados que aprende cada origem, uma de cada vez"
+    ]
+  },
+  "ex-t4txxhpa": {
+    "prompt": "O cliente 19 pede para ser apagado, e um colega propõe `DELETE FROM dim_customer WHERE customer_id = 19` no lugar do update da aula 12. O que acontece com as seis linhas de venda do cliente em todo relatório que junta `fact_sales` com `dim_customer`?",
+    "hint": "Modelagem de Dados e Data Warehouse, aula 12; Bancos de Dados Relacionais e SQL, aula 5.",
+    "choices": [
+      {
+        "text": "Passam para a chave 0, a linha do cliente de balcão, porque uma venda cujo cliente sumiu conta como não identificada.",
+        "why": "Nada as reaponta: as seis linhas de fato continuam com as chaves 27, 28 e 29."
+      },
+      {
+        "text": "Os relatórios ficam como estavam, porque cada linha de fato carrega ela mesma o nome e a cidade do cliente.",
+        "why": "Uma linha de fato carrega chaves e medidas; o nome e a cidade só existem na dimensão."
+      },
+      {
+        "text": "São apagadas também, como a LGPD exige, porque uma venda ligada a uma pessoa não pode ser guardada.",
+        "why": "O artigo 16 deixa a empresa guardar o que uma obrigação legal exige; a aula 12 mantém as vendas e tira o que identifica a pessoa."
+      },
+      {
+        "text": "Somem de todo inner join, já que as chaves não batem com mais nenhuma linha, e o total cai 73.630 centavos.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-d6d6nb5t": {
+    "prompt": "*The Salt Season IV* tem `list_price_cents` 15990 em `books`, e as linhas de pedido dela em 2024 trazem `unit_price_cents` 14890. Um colega calcula a receita de 2024 como `quantity * list_price_cents`, para não ler o preço da linha. Em quantos centavos isso infla um exemplar vendido em 2024?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 1; Modelagem de Dados e Data Warehouse, aula 1.",
+    "unit": "centavos"
+  },
+  "ex-p3swdmzb": {
+    "prompt": "A aula 2 faz uma pergunta a um valor guardado em dois lugares: se a origem mudar, isto também deveria mudar? Quais destes são instantâneos, e não cópias? Marque todas as que se aplicam.",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 2; Modelagem de Dados e Data Warehouse, aula 5.",
+    "choices": [
+      {
+        "text": "`unit_price_cents` em cada linha de pedido, ao lado de `list_price_cents` em `books`.",
+        "why": "Isso."
+      },
+      {
+        "text": "`department` em cada linha de `dim_book`, refeita a partir do catálogo a cada carga.",
+        "why": "Um departamento renomeado deveria aparecer com o nome novo em todo livro; é uma cópia, segura porque a carga a reescreve."
+      },
+      {
+        "text": "`teacher_room` em cada curso que o professor dá.",
+        "why": "Quando o professor muda de sala, todo curso acompanha; é a cópia que a aula 2 removeu."
+      },
+      {
+        "text": "`state_when_joined`, o estado onde o cliente morava no dia em que se cadastrou.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-y6r0fqnj": {
+    "prompt": "No banco operacional da loja, Paulista, Pinheiros e Cambuí ficam em SP, Savassi em MG, Batel no PR, Moinhos no RS, e o estado do site é NULL. SELECT count(*) FROM shops WHERE state <> 'SP' devolve ___. Em dim_shop, onde o estado do site está escrito como '--', o mesmo filtro devolve ___.",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 4; Modelagem de Dados e Data Warehouse, aula 2.",
+    "blanks": [
+      {
+        "accept": [
+          "3",
+          "três"
+        ]
+      },
+      {
+        "accept": [
+          "4",
+          "quatro"
+        ]
+      }
+    ]
+  },
+  "ex-y19xs6wr": {
+    "prompt": "Ana monta dois resumos de dezembro, uma linha por pedido: o líquido de vendas e os recebimentos do financeiro. Ela quer todo pedido em que os dois discordam, esteja ele em só um deles ou nos dois com valores diferentes. Qual consulta faz isso?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 5; Modelagem de Dados e Data Warehouse, aula 11.",
+    "choices": [
+      {
+        "text": "Um `FULL JOIN` pelo pedido, mantendo as linhas em que falta um dos lados ou os dois valores diferem.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um `LEFT JOIN` a partir do resumo de vendas, mantendo as linhas em que os dois valores diferem um do outro.",
+        "why": "Pedidos que só o financeiro tem nunca aparecem, e para os que faltam no financeiro a comparação com nulo é desconhecida, então eles caem também."
+      },
+      {
+        "text": "Um `JOIN` interno pelo pedido, mantendo as linhas em que os dois valores diferem.",
+        "why": "Um join interno descarta todo pedido que está em só um resumo, que são dois dos três tipos de discordância."
+      },
+      {
+        "text": "Um `UNION` dos dois resumos, mantendo os pedidos que aparecem nele uma vez.",
+        "why": "`UNION` remove linhas idênticas, então um pedido em que os dois concordam também aparece uma vez e é apontado como discordância."
+      }
+    ]
+  },
+  "ex-4ng07vbc": {
+    "prompt": "No passo `versions` da `dim_customer` da aula 5, um colega encurta `lead(valid_from) OVER (PARTITION BY customer_id ORDER BY valid_from)` para `lead(valid_from) OVER (ORDER BY valid_from)`. Como fica a dimensão refeita?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 6; Modelagem de Dados e Data Warehouse, aula 5.",
+    "choices": [
+      {
+        "text": "Igual a antes, porque `lead()` olha apenas as linhas do próprio cliente quando `valid_from` dá a ordem da janela.",
+        "why": "Sem `PARTITION BY`, a janela é o resultado inteiro, e a próxima linha pode ser de qualquer pessoa."
+      },
+      {
+        "text": "A carga é recusada, porque uma função de janela com `ORDER BY` dentro do `OVER` também precisa de uma cláusula `PARTITION BY`.",
+        "why": "`OVER (ORDER BY …)` sozinho é válido; a aula 6 escreve vários."
+      },
+      {
+        "text": "Cada versão termina na próxima mudança de qualquer cliente, então só uma linha é atual e a checagem por cliente falha.",
+        "why": "Isso."
+      },
+      {
+        "text": "Toda versão fica atual, porque `lead()` devolve nulo sempre que a janela não tem nenhuma partição para trabalhar.",
+        "why": "`lead()` devolve a próxima linha do resultado inteiro, e nulo só no finalzinho dele."
+      }
+    ]
+  },
+  "ex-1vts0c82": {
+    "prompt": "Numa cópia da estrela em PostgreSQL, o mart de vendas é `CREATE VIEW mart_sales.lines AS SELECT * FROM wh.fact_sales`, e Ana diz que um mart de views nunca fica para trás. Que mudança mostra que a afirmação está incompleta?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 7; Modelagem de Dados e Data Warehouse, aula 11.",
+    "choices": [
+      {
+        "text": "Uma correção numa venda, que a view não mostra até alguém dar refresh nela.",
+        "why": "Uma view comum não guarda linhas; ela roda sua consulta sobre os dados como estão agora."
+      },
+      {
+        "text": "Uma coluna adicionada a `fact_sales` depois: as linhas da view estão sempre em dia, mas o `*` dela virou uma lista de colunas no dia em que foi criada.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um mês novo de vendas, já que uma view só enxerga as linhas que existiam quando foi feita.",
+        "why": "Toda leitura roda a definição de novo, então o mês novo aparece na hora."
+      },
+      {
+        "text": "Uma linha apagada, que a view continua devolvendo até o `VACUUM` removê-la.",
+        "why": "Uma linha apagada não volta na consulta que a view roda; o vacuum só recupera o espaço dela."
+      }
+    ]
+  },
+  "ex-dfvtwz0w": {
+    "prompt": "A execução de dezembro da carga mensal da aula 5 fecha 269 versões no segundo passo, e então o `INSERT` falha. Os três passos estão entre `BEGIN` e `COMMIT`. O que `dim_customer_m` tem agora?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 8; Modelagem de Dados e Data Warehouse, aula 5.",
+    "choices": [
+      {
+        "text": "269 versões fechadas e nenhuma nova, porque cada `UPDATE` é atômico e durável no momento em que termina.",
+        "why": "Um comando sozinho é atômico por conta própria só com autocommit; dentro de `BEGIN`, nada é durável até o `COMMIT`."
+      },
+      {
+        "text": "Só os nomes corrigidos, porque o passo de tipo 1 rodou primeiro e uma transação desfaz só o comando que falhou.",
+        "why": "Uma transação é desfeita inteira: todos os comandos dela, não só o que falhou."
+      },
+      {
+        "text": "O mesmo de antes de rodar: os fechamentos estavam na mesma transação do `INSERT` que falhou, e foram junto.",
+        "why": "Isso."
+      },
+      {
+        "text": "Os clientes novos do mês sem nenhum dos fechamentos, já que o `INSERT` falhou só nas linhas que não conseguiu gravar.",
+        "why": "Um comando não acontece pela metade; o `INSERT` não gravou nada, e o rollback levou os fechamentos junto."
+      }
+    ]
+  },
+  "ex-c3k83sxn": {
+    "prompt": "A `order_lines` da loja tem `PRIMARY KEY (order_id, line_no)` e uma chave estrangeira em `book_id`, e o `oltp.sql` ainda acrescenta `CREATE INDEX ON order_lines (book_id)`. Quais destas condições o índice da chave primária atende sozinho? Marque todas as que se aplicam.",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 9; Modelagem de Dados e Data Warehouse, aula 1.",
+    "choices": [
+      {
+        "text": "`WHERE order_id = 900001`",
+        "why": "Isso."
+      },
+      {
+        "text": "`WHERE book_id = 2395`",
+        "why": "O PostgreSQL não cria índice para chave estrangeira, e `book_id` nem está na chave; é por isso que o script acrescenta um."
+      },
+      {
+        "text": "`WHERE order_id = 900001 AND line_no = 2`",
+        "why": "Isso."
+      },
+      {
+        "text": "`WHERE line_no = 1`",
+        "why": "`line_no` é a segunda coluna da chave, e um índice só atende suas colunas a partir da esquerda."
+      }
+    ]
+  },
+  "ex-n7cwhdk6": {
+    "prompt": "O relatório da aula 1 imprimiu temp read=14555 written=14571 ao lado dos seus shared buffers. Nos termos da aula 10, uma ordenação ou um hash que passa da memória permitida a uma operação, definida pelo parâmetro ___, continua em arquivos temporários no disco.",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 10; Modelagem de Dados e Data Warehouse, aula 1.",
+    "blanks": [
+      {
+        "accept": [
+          "work_mem"
+        ]
+      }
+    ]
+  },
+  "ex-b7w3nch4": {
+    "prompt": "Um job em Python carrega as linhas de venda de cada dia no warehouse DuckDB percorrendo-as num laço e mandando um `INSERT` por linha, e a carga fica mais lenta a cada mês. O que o curso diz que está errado?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 11; Modelagem de Dados e Data Warehouse, aula 8.",
+    "choices": [
+      {
+        "text": "A tabela precisa de um índice na chave que cada `INSERT` cita, para cada linha achar o seu lugar mais rápido.",
+        "why": "Um índice é mais trabalho em toda escrita, e o custo aqui é um comando por linha."
+      },
+      {
+        "text": "O laço está certo: um banco colunar recebe linhas avulsas mais rápido que o PostgreSQL, então a causa está em outro lugar.",
+        "why": "A aula 8 mediu o contrário: 0,956 segundo no PostgreSQL contra 1,981 no DuckDB."
+      },
+      {
+        "text": "O processador: uma máquina maior espalharia os inserts por mais threads e acompanharia o crescimento.",
+        "why": "Um custo feito de idas e voltas não muda com um servidor maior."
+      },
+      {
+        "text": "É o formato N+1 da aula 11 apontado para um banco colunar: uma ida e volta por linha, cada uma anexando ao bloco comprimido de toda coluna, quando um lote grava cada coluna uma vez.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-33dhhj4k": {
+    "prompt": "Dois times carregaram a mesma região como `South`, `SOUTH` e `Sul`. No MySQL 8 com a collation padrão, quantos grupos `GROUP BY region` produz, e o que resolve?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 12; Modelagem de Dados e Data Warehouse, aula 3.",
+    "choices": [
+      {
+        "text": "Um: a collation padrão ignora acentos e maiúsculas, então as três grafias da região são comparadas como iguais entre si.",
+        "why": "`ai_ci` dobra acentos e maiúsculas de uma palavra; `Sul` é outra palavra."
+      },
+      {
+        "text": "Dois: `South` e `SOUTH` viram um só e `Sul` fica à parte; um único valor conformado por região resolve.",
+        "why": "Isso."
+      },
+      {
+        "text": "Três: `GROUP BY` compara bytes em todo motor, e a collation decide apenas o `ORDER BY`.",
+        "why": "A collation vale para comparação, `ORDER BY`, `GROUP BY`, `DISTINCT` e índices únicos, todos do mesmo jeito."
+      },
+      {
+        "text": "Dois, e `COLLATE utf8mb4_bin` na coluna resolve, dando a cada grafia um grupo próprio.",
+        "why": "Isso faz três grupos, que é o problema aumentado; os valores precisam ser conformados."
+      }
+    ]
+  },
+  "ex-cc3r4ah7": {
+    "prompt": "O relatório mensal de um banco roda por duas horas à noite na instância Oracle de produção, ao lado da aplicação, e falha no meio com `ORA-01555`. Que leitura junta a aula 13 e a aula 1 de warehouse?",
+    "hint": "Bancos de Dados Relacionais e SQL, aula 13; Modelagem de Dados e Data Warehouse, aula 1.",
+    "choices": [
+      {
+        "text": "O undo do snapshot dele foi reciclado; é análise no banco transacional, e um segundo servidor seria outra licença.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um deadlock com a aplicação, em que o Oracle escolheu o relatório como vítima, então um laço de retentativa em volta dele resolve.",
+        "why": "Deadlock é `ORA-00060`; `ORA-01555` é um snapshot que o Oracle não conseguiu mais reconstruir."
+      },
+      {
+        "text": "O relatório leu trabalho não confirmado que depois sofreu rollback, e o Oracle para a consulta que viu um valor que nunca existiu.",
+        "why": "O Oracle não tem read uncommitted; seus leitores nunca veem o trabalho inacabado de outra transação."
+      },
+      {
+        "text": "Um bug na consulta: o Oracle recusa um comando que roda por mais de uma hora, então o relatório precisa ir para PL/SQL.",
+        "why": "A consulta estava certa; o Oracle recusou porque não conseguiu cumprir o que prometeu, não por um limite de tempo."
+      }
+    ]
+  },
+  "ex-c9q9kqb4": {
+    "prompt": "Uma exportação de pesquisa chega como CSV com três colunas de dígitos: `region` (códigos de 11 a 53), `rating` (de 1 a 5 estrelas) e `basket` (reais). O carregador leu as três como números. Quais destes resumos descrevem a coluna com honestidade? Marque todas as que se aplicam.",
+    "hint": "Estatística para Análise de Dados, aula 2; Fundamentos de Engenharia de Dados, aula 6.",
+    "choices": [
+      {
+        "text": "A média de `basket`.",
+        "why": "Isso."
+      },
+      {
+        "text": "A mediana de `rating`.",
+        "why": "Isso."
+      },
+      {
+        "text": "A média de `region`.",
+        "why": "Os códigos dão nome a lugares. Um CSV carrega texto e nenhum tipo, então o carregador supôs que fossem números, e a média deles não quer dizer nada."
+      },
+      {
+        "text": "Uma nota 4 valer o dobro de uma nota 2.",
+        "why": "Uma nota tem ordem e não tem zero verdadeiro, e ninguém mediu os degraus dela; razões pedem uma escala de razão."
+      }
+    ]
+  },
+  "ex-j610s7fd": {
+    "prompt": "Os nove salários mensais da Horta têm média de R$ 5.338,89 e mediana de R$ 2.400. No mês que vem a retirada do fundador passa de R$ 28.000 para R$ 37.000, e a de mais ninguém muda. O salário médio sobe R$ ___.",
+    "hint": "Estatística para Análise de Dados, aula 4.",
+    "blanks": [
+      {
+        "accept": [
+          "1000",
+          "1.000",
+          "1000,00",
+          "1.000,00"
+        ]
+      }
+    ]
+  },
+  "ex-1229jw2a": {
+    "prompt": "O time de dados cria um alerta para toda coluna numérica do warehouse: marcar a coluna quando o coeficiente de variação, o desvio padrão dividido pela média, passar de 0,5. Em qual coluna esse número não quer dizer nada, saia o valor que sair?",
+    "hint": "Estatística para Análise de Dados, aula 5.",
+    "choices": [
+      {
+        "text": "`basket`, cujo CV de 0,75 é o maior das colunas da Horta",
+        "why": "Um CV alto é um achado, não um defeito. Cesta tem zero verdadeiro, e o alerta a lê corretamente."
+      },
+      {
+        "text": "`items`, porque uma contagem é discreta e não contínua",
+        "why": "Discreta ou contínua não muda nada para o CV; zero itens é nenhum, então a razão diz o que parece dizer."
+      },
+      {
+        "text": "`temp_c`, a temperatura na porta, em °C",
+        "why": "Isso. A média em Celsius depende de onde se pôs o zero, então o CV muda com a escala."
+      },
+      {
+        "text": "`minutes`, porque o CV de 0,25 fica bem abaixo da linha",
+        "why": "Ficar abaixo da linha é o alerta funcionando. Minutos têm zero verdadeiro, e o CV os compara com honestidade."
+      }
+    ]
+  },
+  "ex-rfjnpjs0": {
+    "prompt": "Um colega quer uma regra nova entre as verificações na porta do feed de cestas: pôr em quarentena toda cesta acima de Q3 + 1,5 × IQR, que para as 400 cestas do mês passado dá R$ 202,12. O que a regra faria?",
+    "hint": "Estatística para Análise de Dados, aula 6; Fundamentos de Engenharia de Dados, aula 7.",
+    "choices": [
+      {
+        "text": "Pegaria vírgulas fora do lugar com segurança, já que quartis são robustos e um valor errado não move a cerca.",
+        "why": "A cerca é robusta, e o problema não é esse: ela também marca as compras grandes que são reais, e a quarentena as tira de todo relatório."
+      },
+      {
+        "text": "Separaria uns dezessete pedidos reais por mês: numa coluna assimétrica à direita, a cerca marca a cauda de propósito.",
+        "why": "Isso."
+      },
+      {
+        "text": "Não perderia nada, porque uma linha em quarentena fica guardada com o motivo e pode voltar depois.",
+        "why": "Fica guardada, e fora de todo relatório até alguém ler o arquivo. Dezessete pedidos reais por mês é uma quarentena que já não é ruído."
+      },
+      {
+        "text": "Deixaria passar demais: para dinheiro, um escore z acima de 3 é a regra mais rigorosa e segura.",
+        "why": "A regra do escore z falha justamente nesse tipo de dado, em que os valores grandes inflam a régua pela qual são julgados."
+      }
+    ]
+  },
+  "ex-76axvq3q": {
+    "prompt": "O arquivo de reparos de um prestador chega com 8 linhas, e uma verificação na porta põe em quarentena toda linha cujo `minutes` tenha escore z além de ±3, calculado dentro desse arquivo. Pela aula 9, qual é o maior escore z que um valor pode alcançar num arquivo de 8 linhas, haja o que houver nele? Dê duas casas decimais.",
+    "hint": "Estatística para Análise de Dados, aula 9; Fundamentos de Engenharia de Dados, aula 7."
+  },
+  "ex-z8m00e61": {
+    "prompt": "Os sensores das docas mandam uma leitura por minuto por doca, 1.440 por dia. Para um estudo de longo prazo sair barato, o Davi guarda, de cada doca, uma leitura a cada 1.440 a partir de um início sorteado. O que há de errado com essa amostra?",
+    "hint": "Estatística para Análise de Dados, aula 10; Fundamentos de Engenharia de Dados, aula 7.",
+    "choices": [
+      {
+        "text": "Nada: o início sorteado faz uma amostra sistemática se comportar como uma amostra aleatória simples das leituras.",
+        "why": "Na maioria das listas, faz. Numa lista com ritmo diário, um passo igual ao ritmo fica com um minuto e joga fora o resto do dia."
+      },
+      {
+        "text": "É pequena demais, porque uma leitura por dia por doca não dá uma resposta precisa.",
+        "why": "O tamanho não é o problema: 150 docas ao longo de um ano bastam. Mais leituras escolhidas assim cairiam todas no mesmo minuto também."
+      },
+      {
+        "text": "É uma amostra de conveniência, porque ninguém sorteou as docas.",
+        "why": "Todas as docas estão nela. O que se escolheu foi o minuto, e escolhê-lo uma vez e repeti-lo todo dia é a armadilha."
+      },
+      {
+        "text": "As leituras de cada doca caem todas no mesmo minuto do dia, e o estudo vê um instante só.",
+        "why": "Isso. O passo coincide com o ciclo diário, então a amostra sai ordenada e enviesada: um minuto faz as vezes do dia inteiro."
+      }
+    ]
+  },
+  "ex-adgyems9": {
+    "prompt": "Um painel mostra a cesta média de uma amostra aleatória de 40 pedidos como R$ 82,39 ± 12,63, em que 12,63 é a dispersão da amostra, R$ 79,86, dividida pela raiz quadrada de 40. Esse ± é o ___ da média.",
+    "hint": "Estatística para Análise de Dados, aula 12.",
+    "blanks": [
+      {
+        "accept": [
+          "erro padrão",
+          "erro-padrão",
+          "EP",
+          "SE",
+          "standard error"
+        ]
+      }
+    ]
+  },
+  "ex-58a9w9p5": {
+    "prompt": "Uma verificação noturna testa se a contagem de viagens de cada estação caiu e marca o Batel com p = 0,01. A responsável pela operação escreve: \"então há 99% de chance de o sensor do Batel estar quebrado\". O que está errado nessa frase?",
+    "hint": "Estatística para Análise de Dados, aula 14.",
+    "choices": [
+      {
+        "text": "Lê p como a probabilidade de defeito, e p supõe que nada aconteceu.",
+        "why": "Isso. Um valor-p é a frequência com que dados tão extremos apareceriam se nada tivesse mudado; não é a chance de algo estar quebrado."
+      },
+      {
+        "text": "Nada está errado: um menos o valor-p é a probabilidade de a alternativa ser verdadeira.",
+        "why": "Essa é uma das leituras erradas que a aula 14 lista. O valor-p é calculado dentro do mundo em que nada mudou."
+      },
+      {
+        "text": "O número deveria ser 98%, porque um teste de queda na contagem é unilateral.",
+        "why": "Ser unilateral muda como p é calculado, não o que ele significa; nenhuma versão de p é a probabilidade de uma hipótese."
+      },
+      {
+        "text": "Só vale quando a verificação usa α = 0,01 em vez de 0,05.",
+        "why": "α é a linha com que o valor-p é comparado. Não transforma p na probabilidade de o sensor ter quebrado."
+      }
+    ]
+  },
+  "ex-qtktx0qy": {
+    "prompt": "Duas mudanças no pipeline foram testadas pelo efeito no tempo de entrega, e só importam mudanças além de ±2 minutos. A mudança X tem intervalo de 95% de −0,3 a +0,4 minuto; a Y, de −4,1 a +1,5. Nenhuma é significativa. Qual leitura está certa?",
+    "hint": "Estatística para Análise de Dados, aula 22.",
+    "choices": [
+      {
+        "text": "As duas não fazem nada que valha medir, porque os dois intervalos contêm o zero.",
+        "why": "Conter o zero é o veredito do teste. O intervalo de Y também admite uma economia de quatro minutos, então não resolve nada."
+      },
+      {
+        "text": "Y é o resultado mais forte, porque o intervalo dele vai mais longe do zero.",
+        "why": "Um intervalo largo é sinal de poucos dados, não de um efeito grande."
+      },
+      {
+        "text": "X descarta uma mudança que importe; Y não sabe dizer.",
+        "why": "Isso. X fica inteiro dentro da faixa; Y alcança tanto o zero quanto uma economia além de dois minutos."
+      },
+      {
+        "text": "Nenhuma diz nada até os dois testes serem repetidos com mais dados.",
+        "why": "X já diz: o intervalo inteiro fica dentro da faixa, o que é evidência de que qualquer efeito é pequeno demais para importar."
+      }
+    ]
+  },
+  "ex-gxtrwnhd": {
+    "prompt": "Desde que as viagens passaram a ser particionadas por hash do id da viagem, cada uma das quatro partições guarda entre 2.446 e 2.573 linhas por noite. Num mês de execuções noturnas, a correlação entre as linhas de uma partição e o tempo do job é 0,1, e alguém conclui que as linhas não determinam o tempo de execução. O que essa conclusão deixa de ver?",
+    "hint": "Estatística para Análise de Dados, aula 17; Fundamentos de Engenharia de Dados, aula 9.",
+    "choices": [
+      {
+        "text": "Assimetria: uma estação quente continua numa das partições, e as execuções longas dela escondem o padrão nas outras três.",
+        "why": "Por id da viagem não há chave quente, porque cada id é uma única linha; é por isso que os tamanhos saíram tão parecidos."
+      },
+      {
+        "text": "O hash deixou as partições quase iguais, então as linhas mal variam, e numa faixa tão estreita o ruído as engole.",
+        "why": "Isso. Uma correlação descreve os dados só na amplitude em que foram medidos, e o hash espremeu essa amplitude em umas cem linhas."
+      },
+      {
+        "text": "Nada: uma correlação de 0,1 divide cerca de 1% da variação, o que equivale a efeito nenhum.",
+        "why": "Essa fração vale só dentro dessa faixa. Uma correlação descreve os dados na amplitude em que foram medidos, e aqui a amplitude é de cem linhas."
+      },
+      {
+        "text": "Pearson é a medida errada aqui, e o coeficiente de Spearman mostraria o efeito.",
+        "why": "Postos ajudam com curvas e valores extremos; não alargam uma faixa de 2.446 a 2.573 linhas."
+      }
+    ]
+  },
+  "ex-kwxg4kvx": {
+    "prompt": "Um firmware novo das docas foi primeiro para as estações com o sinal de celular mais fraco. Um mês depois, as estações com o firmware novo têm muito mais leituras chegando com mais de um minuto de atraso. Antes de alguém culpar o firmware, o que o time deve conferir?",
+    "hint": "Estatística para Análise de Dados, aula 18; Fundamentos de Engenharia de Dados, aula 8.",
+    "choices": [
+      {
+        "text": "Se a diferença é estatisticamente significativa, já que um valor-p pequeno mostraria que o firmware é a causa.",
+        "why": "Significância diz que a diferença não é acaso. A diferença dos cupons também era significativa, e a distância explicava toda ela."
+      },
+      {
+        "text": "Se as leituras atrasadas foram contadas pelo horário de chegada em vez do horário do evento.",
+        "why": "O relógio decide em que janela a leitura cai. O atraso é a distância entre os dois relógios e existe seja qual for o usado na contagem."
+      },
+      {
+        "text": "Se o firmware chegou antes de o atraso começar, já que a causa tem de vir primeiro.",
+        "why": "A ordem no tempo é necessária e não basta. Aqui o sinal fraco veio antes dos dois e pode causar os dois."
+      },
+      {
+        "text": "Se a diferença se mantém em grupos de cobertura parecida, já que a cobertura fraca decidiu a troca e também atrasa a chegada.",
+        "why": "Isso. Um confundidor se testa mantendo-o fixo e vendo se a associação sobrevive."
+      }
+    ]
+  },
+  "ex-xyn5be5k": {
+    "prompt": "A reta da Horta para as 120 entregas é minutos = 25,03 + 2,48 × km, com desvio padrão dos resíduos de 4,28 minutos. Pela regra da aula 19, que promessa para uma entrega de 10 km seria quebrada por cerca de uma entrega em quarenta? Dê uma casa decimal.",
+    "hint": "Estatística para Análise de Dados, aula 19."
+  },
+  "ex-dkp2ry26": {
+    "prompt": "Ligue cada contagem ou medida da plataforma da Roda Livre à distribuição com que a aula 8 a modelaria.",
+    "hint": "Estatística para Análise de Dados, aula 8; Fundamentos de Engenharia de Dados, aula 7.",
+    "pairs": [
+      {
+        "left": "Quantas das 40 entregas de arquivo desta noite falham na contagem de linhas, cada uma com a mesma chance de 5%, de forma independente",
+        "right": "binomial"
+      },
+      {
+        "left": "Quantas respostas `429` uma API manda em uma hora, chegando ao acaso a uma taxa constante",
+        "right": "Poisson"
+      },
+      {
+        "left": "Em que momento, dentro de um intervalo de consulta de 15 minutos, uma viagem terminou, sem momento favorecido",
+        "right": "uniforme"
+      },
+      {
+        "left": "A leitura de tensão de um sensor: o valor verdadeiro mais muitos pequenos erros independentes",
+        "right": "normal"
+      }
+    ],
+    "right_distractors": [
+      "t de Student"
+    ]
+  },
+  "ex-afrxqsh6": {
+    "prompt": "Os minutos das viagens têm cauda longa, então a Marta quer a mediana da duração por estação. As viagens ficam em três nós por hash do id da viagem e, para não mover viagens, o job calcula a mediana de cada nó por estação e manda só elas. O que está errado?",
+    "hint": "Fundamentos de Engenharia de Dados, aula 9; Estatística para Análise de Dados, aula 4.",
+    "choices": [
+      {
+        "text": "Mediana não se combina em pedaços; a mediana de três medianas não é a mediana das viagens.",
+        "why": "Isso. Uma contagem ou uma soma se monta em pedaços; uma mediana precisa dos valores reunidos."
+      },
+      {
+        "text": "Nada: contar primeiro em cada nó manda resultados parciais pelo mesmo motivo, e deu a mesma resposta.",
+        "why": "Aquele plano mandava contagens, que se somam. Três medianas não se somam, e a mediana verdadeira pode cair em qualquer ponto entre elas."
+      },
+      {
+        "text": "A mediana é o resumo errado, e para minutos o número a informar é a média.",
+        "why": "A média responde perguntas sobre totais. A Marta perguntou quanto dura uma viagem típica, que é pergunta da mediana."
+      },
+      {
+        "text": "Funciona desde que cada nó guarde o mesmo número de viagens daquela estação.",
+        "why": "Grupos iguais não resolvem: o meio do todo depende da ordem de todos os valores, não do tamanho de cada grupo."
+      }
+    ]
+  },
+  "ex-11g7amqq": {
+    "prompt": "Davi, Caio e Marta dão, cada um, notas de 1 a 5 a três opções de warehouse em cinco critérios, e um script tira a média das notas antes de aplicar os pesos. As duas primeiras terminam com 36,4 e 35,9. O que esse meio ponto decide?",
+    "hint": "Fundamentos de Engenharia de Dados, aula 2; Estatística para Análise de Dados, aula 2.",
+    "choices": [
+      {
+        "text": "A primeira opção, porque a média das notas de três pessoas cancela a dúvida de cada uma.",
+        "why": "A média continua tratando o degrau de 2 para 3 como o de 4 para 5. Ninguém mediu isso, e uma nota mexida em um ponto ainda vira o total."
+      },
+      {
+        "text": "A segunda opção, depois de juntar conta e manutenção para o custo não contar duas vezes.",
+        "why": "Juntar pode até estar certo, e é reconstruir a matriz em vez de lê-la. Do jeito que está, os totais não separam as duas."
+      },
+      {
+        "text": "A primeira opção, desde que cada conjunto de pesos some dez.",
+        "why": "Pesos que somam dez tornam totais comparáveis entre ponderações. Não fazem meio ponto querer dizer alguma coisa."
+      },
+      {
+        "text": "Nada: notas ordinais somadas não sustentam meio ponto.",
+        "why": "Isso. Cada nota é um julgamento numa escala ordinal, somá-las supõe degraus iguais, e uma célula mexida em um ponto muda o total em mais de meio ponto."
+      }
+    ]
+  },
+  "ex-hgvcbbjh": {
+    "prompt": "O relatório da manhã de segunda diz 352 viagens, quando os dias úteis giram em torno de 180. Um analista diz que é um extremo genuíno, uma segunda movimentada, e quer mantê-lo. Que verificação resolve a questão mais depressa?",
+    "hint": "Fundamentos de Engenharia de Dados, aula 3; Estatística para Análise de Dados, aula 9.",
+    "choices": [
+      {
+        "text": "Um escore z contra as segundas do último mês: acima de 3 é erro, abaixo de 3 é real.",
+        "why": "Um escore z lista candidatos. Não distingue um dia movimentado de verdade de uma cópia dobrada; só a fonte distingue."
+      },
+      {
+        "text": "Contar a segunda no banco do app e no raw: 187 viagens contra 374 linhas culpam a cópia.",
+        "why": "Isso. \"A fonte concorda?\" resolve: o app tem metade do que o raw tem."
+      },
+      {
+        "text": "Rodar a transformação de novo: se ela imprimir a mesma contagem pela segunda vez, o número do relatório é real.",
+        "why": "A transformação conta fielmente o que o raw tem. Rodada de novo sobre um raw dobrado, dobra de novo."
+      },
+      {
+        "text": "Comparar o ranking de estações com o da segunda anterior: se a ordem se mantém, o volume é real.",
+        "why": "Todas as estações dobraram juntas, então o ranking não mudou; foi por isso que o relatório pareceu confiável."
+      }
+    ]
+  },
+  "ex-n7g7gddp": {
+    "prompt": "A cópia noturna da tabela de viagens pede toda linha cujo `updated_at` seja posterior ao watermark. Uma viagem cancelada às 09:20 é apagada do banco do app. Como a cópia do time de dados pode ficar sabendo?",
+    "hint": "Fundamentos de Engenharia de Dados, aula 4.",
+    "choices": [
+      {
+        "text": "Alargar a sobreposição, para a próxima execução reler a última hora.",
+        "why": "Uma sobreposição relê linhas que ainda existem; uma linha apagada não tem mais `updated_at` pelo qual ser encontrada."
+      },
+      {
+        "text": "Copiar por `started_at`, já que a hora de início de uma viagem fica fixa.",
+        "why": "Qualquer consulta à tabela só acha as linhas que ainda estão nela, e a viagem apagada não é uma delas."
+      },
+      {
+        "text": "Seguir o log de mudanças do banco, que registra o delete.",
+        "why": "Isso. Um delete é uma mudança, então o log o tem, quando nenhuma consulta à tabela acha a linha."
+      },
+      {
+        "text": "Pedir ao app cada viagem pelo id a cada execução.",
+        "why": "O app responde com o que tem agora, e ele não tem mais essa viagem."
+      }
+    ]
+  },
+  "ex-8d2tv6at": {
+    "prompt": "`rides.parquet` guarda um mês de viagens em três grupos de linhas, gravados em ordem de tempo; o grupo 2 vai de 24 set 10:28 a 30 set 04:50. Uma consulta pede a média de `minutes` das viagens depois de 25 de setembro. O que o leitor precisa ler?",
+    "hint": "Fundamentos de Engenharia de Dados, aula 6.",
+    "choices": [
+      {
+        "text": "O rodapé, e depois só os pedaços de `started_at` e `minutes` do grupo 2.",
+        "why": "Isso."
+      },
+      {
+        "text": "O arquivo inteiro, porque uma média precisa dos minutos de cada viagem.",
+        "why": "Só contam as viagens depois do dia 25, e as estatísticas do rodapé mostram que os grupos 0 e 1 terminam antes dele."
+      },
+      {
+        "text": "Os pedaços de `minutes` dos três grupos, já que uma coluna é guardada inteira.",
+        "why": "Uma coluna é guardada por grupo de linhas, e as estatísticas descartam dois grupos antes de ler qualquer pedaço."
+      },
+      {
+        "text": "O grupo 2 completo, todas as colunas, porque um grupo de linhas é lido como um bloco.",
+        "why": "Dentro do grupo cada coluna é um pedaço à parte; o leitor pega os dois de que precisa e passa pelo resto."
+      }
+    ]
+  },
+  "ex-2bnhgrj8": {
+    "prompt": "A cópia dos pagamentos é conferida com o extrato diário do provedor. Ponha os três níveis de conciliação em ordem, do mais barato ao mais completo.",
+    "hint": "Fundamentos de Engenharia de Dados, aula 7.",
+    "items": [
+      "Comparar o número de pagamentos por dia",
+      "Comparar a soma dos valores por dia, em centavos",
+      "Comparar cada id de pagamento dos dois lados"
+    ],
+    "trap": "Uma contagem deixa passar um dia com um pagamento dobrado e outro faltando; um total pega isso, a não ser que os dois valores sejam iguais; só os ids dizem quais pagamentos, e custam todas as chaves dos dois lados."
+  },
+  "ex-bbe7yxf8": {
+    "prompt": "A contagem ao vivo de viagens por quarto de hora perde as viagens do Parque Barigui quando o link cai por meia hora, e a queda do Passeio Público durou até a manhã seguinte. A Marta quer números rápidos e números certos. Que desenho dá os dois sem segurar toda janela por um dia?",
+    "hint": "Fundamentos de Engenharia de Dados, aula 8.",
+    "choices": [
+      {
+        "text": "Subir o atraso permitido para vinte e cinco minutos, que pegou toda viagem atrasada da aula.",
+        "why": "Pegou as do Parque Barigui, e toda janela passa a sair com 25 minutos de idade; as viagens do Passeio Público chegaram mais de 21 horas atrasadas."
+      },
+      {
+        "text": "Manter o atraso permitido curto na contagem ao vivo e deixar o job noturno recontar cada dia fechado a partir dos eventos raw.",
+        "why": "Isso."
+      },
+      {
+        "text": "Contar pelo horário de chegada, para que uma viagem não chegue atrasada.",
+        "why": "Nada é descartado, e as viagens caem no quarto de hora errado; o pico das 08:45 seria inventado."
+      },
+      {
+        "text": "Tornar o consumidor idempotente pelo id do evento, para cada viagem atrasada contar uma vez só.",
+        "why": "Idempotência impede que uma repetição conte duas vezes. Não faz nada por uma viagem cuja janela já foi enviada."
+      }
+    ]
+  },
+  "ex-wrpjy0ya": {
+    "prompt": "Durante um corte, a Roda Livre deixa as cópias continuarem respondendo dos dois lados só para dados cujas duas versões possam ser mescladas depois. Quais destes podem ficar desse lado? Marque todas as que se aplicam.",
+    "hint": "Fundamentos de Engenharia de Dados, aula 10.",
+    "choices": [
+      {
+        "text": "A contagem de bicicletas de uma estação no mapa das docas, guardada como retiradas e devolvidas por nó",
+        "why": "Isso."
+      },
+      {
+        "text": "O conjunto de estações que um cliente salvou como favoritas",
+        "why": "Isso."
+      },
+      {
+        "text": "Para qual cliente a bicicleta B017 está desbloqueada",
+        "why": "Dois clientes com uma bicicleta não se mesclam numa resposta certa, então essa decisão recusa durante um corte."
+      },
+      {
+        "text": "Se a cobrança de uma viagem já foi feita",
+        "why": "Um pagamento é cobrado uma vez. Responder dos dois lados pode cobrar duas vezes, e nenhuma mescla desfaz isso."
+      }
+    ]
+  },
+  "ex-qxpxk99p": {
+    "prompt": "Um colega no Windows manda o `extract.sh`. No servidor, `./extract.sh` responde `bash: ./extract.sh: cannot execute: required file not found`, e o `ls` mostra o arquivo ali mesmo. O que a aula 1 manda usar primeiro?",
+    "hint": "Linux e Linha de Comando, aula 1.",
+    "choices": [
+      {
+        "text": "`chmod +x extract.sh`, já que o kernel não executa arquivo sem o bit de execução.",
+        "why": "Bit de execução faltando aparece como `Permission denied`. Esta mensagem é sobre o programa que a primeira linha nomeia."
+      },
+      {
+        "text": "`file extract.sh`, para ver se ele acusa `with CRLF line terminators`.",
+        "why": "Isso."
+      },
+      {
+        "text": "`bash -x extract.sh`, para seguir linha a linha até aparecer a que falha.",
+        "why": "Chamar o bash pelo nome pula a primeira linha, e o script pode até rodar, levando o `\\r` para dentro dos valores e falhando em outro lugar mais tarde."
+      },
+      {
+        "text": "`which bash`, porque a mensagem diz que falta o bash no servidor.",
+        "why": "O bash está lá. O kernel procurou `/bin/bash\\r`, com o retorno de carro junto, e esse programa não existe."
+      }
+    ]
+  },
+  "ex-bjm0zf3m": {
+    "prompt": "Para encolher a imagem, um colega troca a base de um carregador em pandas de `python:3.13-slim` para uma Alpine. O build passa; na execução, `import pandas` falha com um erro sobre um objeto compartilhado, e nada na mensagem explica o motivo. Qual é a causa provável, e a correção?",
+    "hint": "Linux e Linha de Comando, aula 2; Docker e Containers, aula 13.",
+    "choices": [
+      {
+        "text": "Código nativo feito para a glibc encontra a musl da Alpine; volte para uma base Debian `-slim`.",
+        "why": "Isso."
+      },
+      {
+        "text": "Falta no busybox uma opção GNU de que o import depende; `apk add --no-cache bash` traz as ferramentas GNU de volta.",
+        "why": "O busybox explica um script que falha numa opção. Um import não passa por `ls` nem por `sed`, e instalar o bash não muda nada aqui."
+      },
+      {
+        "text": "A imagem é pequena demais para os dados do pandas, e o carregador precisa de um `--memory` maior para importá-lo.",
+        "why": "Um limite de memória encerra o processo com 137. Não torna uma biblioteca impossível de carregar."
+      },
+      {
+        "text": "O `--no-cache` apagou o índice de pacotes que o Python lê no import; tire-o do `apk add`.",
+        "why": "O `--no-cache` só evita guardar o índice do apk em disco. O Python nunca lê esse índice."
+      }
+    ]
+  },
+  "ex-5b43x9t1": {
+    "prompt": "Um raspador grava cada página da API num arquivo próprio: 10.000 arquivos de 440 bytes cada, num sistema de arquivos que aloca blocos de 4 KiB, como o da aula 3. Quantos KiB de disco o `du` conta para eles?",
+    "hint": "Linux e Linha de Comando, aula 3.",
+    "unit": "KiB"
+  },
+  "ex-3vjb2wky": {
+    "prompt": "A exportação noturna roda com umask 027, o ajuste de endurecimento que a aula 4 indica para servidores. Em octal, cada CSV que ela cria nasce com modo ___ e cada diretório com modo ___.",
+    "hint": "Linux e Linha de Comando, aula 4.",
+    "blanks": [
+      {
+        "accept": [
+          "640",
+          "0640"
+        ]
+      },
+      {
+        "accept": [
+          "750",
+          "0750"
+        ]
+      }
+    ]
+  },
+  "ex-yq21ywrt": {
+    "prompt": "Um arquivo de unidade para a carga noturna:\n\n```\n[Unit]\nDescriptoin=Nightly load into the warehouse\nAfter=network.target\n\n[Service]\nExecStart=/opt/etl/load.sh > /var/log/etl/load.log\nRestart=maybe\nUser=etl\n```\n\nQuais linhas não vão fazer o que o autor quis? Marque todas as que se aplicam.",
+    "hint": "Linux e Linha de Comando, aula 5.",
+    "choices": [
+      {
+        "text": "`Descriptoin=Nightly load into the warehouse`",
+        "why": "Isso."
+      },
+      {
+        "text": "`After=network.target`",
+        "why": "Ela ordena a partida depois da rede, e era só isso que devia fazer. Não precisa de `Requires=` para isso."
+      },
+      {
+        "text": "`ExecStart=/opt/etl/load.sh > /var/log/etl/load.log`",
+        "why": "Isso."
+      },
+      {
+        "text": "`Restart=maybe`",
+        "why": "Isso."
+      },
+      {
+        "text": "`User=etl`",
+        "why": "Ela roda o serviço como `etl`, exatamente o que a linha diz."
+      }
+    ]
+  },
+  "ex-b4f49ny1": {
+    "prompt": "Uma semana de execuções do carregador terminou com estes status de saída. Ligue cada um ao que ele significa.",
+    "hint": "Linux e Linha de Comando, aula 6; Docker e Containers, aula 17.",
+    "pairs": [
+      {
+        "left": "`127` vindo do script de entrada",
+        "right": "o shell não encontrou o comando"
+      },
+      {
+        "left": "`126` vindo do script de entrada",
+        "right": "o arquivo foi achado e não pôde ser executado"
+      },
+      {
+        "left": "`137`, com `oom=true` no `docker inspect`",
+        "right": "`SIGKILL`, mandado pelo matador de falta de memória"
+      },
+      {
+        "left": "`1` vindo do `grep` da etapa de checagem",
+        "right": "o padrão não estava lá"
+      }
+    ],
+    "right_distractors": [
+      "os argumentos estavam errados",
+      "`SIGTERM`, um pedido educado para parar"
+    ]
+  },
+  "ex-p7m5k55d": {
+    "prompt": "No servidor Ubuntu da equipe, `/usr/bin/python3 -m pip install requests` para um script novo de ingestão para com `error: externally-managed-environment`. Um colega sugere repetir com `sudo` e `--break-system-packages`. O que as duas aulas mandam fazer no lugar disso?",
+    "hint": "Linux e Linha de Comando, aula 7; Python, aula 18.",
+    "choices": [
+      {
+        "text": "Repetir com `sudo`, sem a opção: a recusa é por gravar num diretório que pertence ao root.",
+        "why": "A recusa é a distribuição protegendo o próprio Python, e `sudo pip install` é justamente o que a aula diz que quebra as coisas."
+      },
+      {
+        "text": "Pôr a opção, já que é a saída documentada e nenhum outro script do servidor importa `requests`.",
+        "why": "O Python do sistema pertence às ferramentas do próprio sistema operacional. Uma biblioteca atualizada debaixo delas quebra algo sem relação uma hora depois."
+      },
+      {
+        "text": "Copiar o `requests` de um notebook para o `dist-packages` do sistema, para o apt enxergá-lo.",
+        "why": "O apt só conhece o que ele instalou. Uma biblioteca copiada colide com a da distribuição do mesmo jeito que `sudo pip install`."
+      },
+      {
+        "text": "Dar ao projeto um ambiente virtual próprio e instalar nele usando o `pip` desse ambiente.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-9dmqpqy2": {
+    "prompt": "Quais endereços de cliente mais chamam a API de ingestão? Ponha as etapas do pipeline em ordem, para ele imprimir os seis mais ativos, do mais ativo para baixo.",
+    "hint": "Linux e Linha de Comando, aula 8.",
+    "items": [
+      "`cut -d\" \" -f1 logs/access.log`",
+      "`sort`",
+      "`uniq -c`",
+      "`sort -rn`",
+      "`head -6`"
+    ],
+    "trap": "O `uniq` só junta linhas vizinhas, então um `sort` tem de vir antes dele; a contagem que ele põe na frente é um número, e só o `sort -rn` a ordena de modo que `100` venha antes de `99`."
+  },
+  "ex-cr0jwc0s": {
+    "prompt": "Um script noturno começa com `set -e`, roda `work=$(mktemp -d /tmp/extract.XXXXXX)`, baixa três arquivos para lá, valida, carrega e sai. Meses depois, o `/tmp` está cheio de diretórios `extract.*`. Onde a aula 9 põe `trap 'rm -rf \"$work\"' EXIT`?",
+    "hint": "Linux e Linha de Comando, aula 9.",
+    "choices": [
+      {
+        "text": "Na linha logo depois do `mktemp`, antes que outro passo tenha a chance de falhar.",
+        "why": "Isso."
+      },
+      {
+        "text": "Na última linha, depois da carga, que é onde uma execução bem-sucedida chega.",
+        "why": "O fim do arquivo é justamente o que uma execução com falha nunca alcança. Um trap ali não cobre quase nada."
+      },
+      {
+        "text": "Logo depois da validação, quando já se sabe que os arquivos servem para a carga.",
+        "why": "Cada passo antes dele é uma janela em que o script morre e deixa o diretório; o download é o passo que mais falha."
+      },
+      {
+        "text": "Não precisa: quando o `set -e` para um script, ele também apaga o que o script criou.",
+        "why": "O `set -e` para o script e não limpa nada. Os diretórios no `/tmp` são o que ele deixa para trás."
+      }
+    ]
+  },
+  "ex-2j5tjrzx": {
+    "prompt": "Uma etapa de transformação roda sob `docker run --memory 512m`. Antes de cada arquivo, ela lê `free -m`, vê uns 15 GB livres e carrega o arquivo inteiro de uma vez; o container termina com `exit=137 oom=true`. Onde ela devia ter lido a memória que pode usar?",
+    "hint": "Linux e Linha de Comando, aula 11; Docker e Containers, aula 17.",
+    "choices": [
+      {
+        "text": "Direto do `/proc/meminfo`, porque o `free` arredonda o número que imprime.",
+        "why": "O `free` lê o `/proc/meminfo`, e dentro de um container esse arquivo mostra a memória do host."
+      },
+      {
+        "text": "Do `nproc` e da carga média, que mostram a fatia do host que o container recebeu.",
+        "why": "Os dois descrevem a máquina inteira: o `nproc` ignora a cota, e o `/proc/loadavg` é o do host."
+      },
+      {
+        "text": "Do `top`, cuja coluna de memória é por processo e, portanto, por container.",
+        "why": "O `top` lê o `/proc/meminfo` como o `free`, e mostra o host."
+      },
+      {
+        "text": "Do arquivo `memory.max` do próprio grupo de controle, em `/sys/fs/cgroup`.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-pby99vnf": {
+    "prompt": "Num servidor de produção, o crontab -e abre o vim, e você já digitou algo sem querer. Depois de apertar Esc, você digita ___ e Enter para sair sem salvar.",
+    "hint": "Linux e Linha de Comando, aula 12.",
+    "blanks": [
+      {
+        "accept": [
+          ":q!"
+        ]
+      }
+    ]
+  },
+  "ex-578dv56t": {
+    "prompt": "`python3 load.py` funciona no terminal da Ana, onde o `~/.bashrc` dela roda `source ~/etl/.venv/bin/activate`. Pela linha de crontab `0 3 * * * cd ~/etl && python3 load.py`, falha com `ModuleNotFoundError: No module named 'pandas'`. O que resolve?",
+    "hint": "Linux e Linha de Comando, aula 13; Python, aula 18.",
+    "choices": [
+      {
+        "text": "Pôr `SHELL=/bin/bash` no topo do crontab, para o cron ler o `~/.bashrc` como um terminal lê.",
+        "why": "Um job do cron não é shell interativo nem shell de login, então o bash continua pulando o `~/.bashrc`."
+      },
+      {
+        "text": "Chamar o interpretador do próprio ambiente pelo caminho: `/home/ana/etl/.venv/bin/python load.py`.",
+        "why": "Isso."
+      },
+      {
+        "text": "Instalar o pandas no Python do sistema com `sudo pip`, já que o cron roda os jobs como root.",
+        "why": "O crontab da Ana roda como Ana, e instalar no Python do sistema é o que a recusa externally-managed existe para impedir."
+      },
+      {
+        "text": "Rodar `source .venv/bin/activate` uma vez num terminal, para o ambiente ficar ativo para os próximos jobs.",
+        "why": "Ativar mexe no `PATH` do shell que rodou o comando e em mais nada. Um job às três da manhã começa com as seis variáveis do cron."
+      }
+    ]
+  },
+  "ex-kaps4g1a": {
+    "prompt": "No servidor compartilhado de análise, `/srv/finance` é `drwx------ root root`. Uma analista pede para entrar no grupo `docker`, para rodar as imagens de pipeline da equipe sem `sudo`. O que entrar no grupo dá a ela?",
+    "hint": "Docker e Containers, aula 6; Linux e Linha de Comando, aula 4.",
+    "choices": [
+      {
+        "text": "As imagens de pipeline, mas o processo de um container continua esbarrando no `700` do diretório.",
+        "why": "O daemon roda como root e monta qualquer diretório do host que lhe pedirem. Foi assim que a aula 6 leu o `/srv/payroll`."
+      },
+      {
+        "text": "Um jeito de ler `/srv/finance` montando-o num container, o que é root por outro caminho.",
+        "why": "Isso."
+      },
+      {
+        "text": "O direito de listar containers; iniciar um continua exigindo `sudo`.",
+        "why": "O grupo é dono do socket, e o socket aceita qualquer pedido, inclusive iniciar um container."
+      },
+      {
+        "text": "Root dentro dos containers, enquanto os arquivos do host ficam fora de alcance sem `--privileged`.",
+        "why": "Um bind mount não precisa de `--privileged`. `-v /srv/finance:/p` basta, como o `/srv/payroll` mostrou."
+      }
+    ]
+  },
+  "ex-eh2qrjz8": {
+    "prompt": "Para testes locais, a Ana roda `docker run -d --name db -e POSTGRES_PASSWORD=lab-only postgres:17` e carrega um dia de pedidos. Para mudar uma configuração, roda `docker rm -f db` e depois o mesmo `docker run`, e a tabela `orders` sumiu. Para onde ela foi?",
+    "hint": "Docker e Containers, aula 7.",
+    "choices": [
+      {
+        "text": "Para a camada gravável do container, que o `docker rm -f` apagou junto com ele.",
+        "why": "A imagem declara `/var/lib/postgresql/data` como volume, então os dados nunca estiveram na camada gravável."
+      },
+      {
+        "text": "O PostgreSQL a descartou ao subir, porque container novo conta como servidor novo.",
+        "why": "Nada foi descartado. O servidor novo subiu num diretório de dados novo e vazio e nunca viu o antigo."
+      },
+      {
+        "text": "Para um volume anônimo que o primeiro container deixou para trás; o novo recebeu um volume vazio.",
+        "why": "Isso."
+      },
+      {
+        "text": "Para a imagem, de onde um `docker commit` a traria de volta.",
+        "why": "Nada é copiado para uma imagem durante a execução. Os dados estão num volume com um hash como nome."
+      }
+    ]
+  },
+  "ex-pcp80hyj": {
+    "prompt": "Na CI, `docker run --rm -v \"$PWD/out\":/out loader:1.4` grava `daily.csv` em `out/`, um diretório do usuário comum do runner. A imagem roda como root. Quais afirmações sobre `out/daily.csv` no host são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "Docker e Containers, aula 8; Linux e Linha de Comando, aula 4.",
+    "choices": [
+      {
+        "text": "Ele pertence ao `root`.",
+        "why": "Isso."
+      },
+      {
+        "text": "O usuário do runner consegue apagá-lo, porque apagar é escrever em `out/`, que é dele.",
+        "why": "Isso."
+      },
+      {
+        "text": "Rodar `chmod 777 out` antes do job faz o arquivo ser do runner.",
+        "why": "Isso abre o diretório para todo mundo. O arquivo novo continua pertencendo ao usuário com que o container roda."
+      },
+      {
+        "text": "Com `--user \"$(id -u):$(id -g)\"` na execução, o próximo arquivo é do runner.",
+        "why": "Isso."
+      },
+      {
+        "text": "Com `:ro` no fim da montagem, o próximo arquivo é do runner.",
+        "why": "O `:ro` impede o container de escrever na montagem, então o carregador nem consegue gravar o CSV."
+      }
+    ]
+  },
+  "ex-7axf6rnv": {
+    "prompt": "Uma imagem de exportação termina com `CMD ./export.sh`. O script cria seu espaço de rascunho com `mktemp -d /data/export.XXXXXX` num volume montado e põe `trap 'rm -rf \"$work\"' EXIT` na linha seguinte. Todo `docker stop` leva dez segundos e deixa um diretório `export.*` para trás. Por quê?",
+    "hint": "Docker e Containers, aula 11; Linux e Linha de Comando, aula 9.",
+    "choices": [
+      {
+        "text": "O trap está em `EXIT`, que um sinal nunca dispara, então o script precisava de um segundo trap, em `TERM`, ao lado.",
+        "why": "O script nem chegou a receber sinal: o shell que o embrulha como processo 1 ficou com ele."
+      },
+      {
+        "text": "Apagar um diretório num volume montado leva dez segundos, e o `docker stop` interrompeu o `rm -rf` que estava rodando antes do fim.",
+        "why": "A parada na forma exec levou um quinto de segundo. Os dez segundos são a espera padrão do Docker antes do `SIGKILL`."
+      },
+      {
+        "text": "O `SIGTERM` chegou ao `/bin/sh -c`, que o reteve; dez segundos depois o `SIGKILL` encerrou os dois, e esse não se captura.",
+        "why": "Isso."
+      },
+      {
+        "text": "O `docker stop` manda `SIGKILL` primeiro a um container com volume, e nada lá dentro consegue reagir.",
+        "why": "Ele manda `SIGTERM` primeiro, com volume ou sem, e `SIGKILL` só depois dos dez segundos padrão."
+      }
+    ]
+  },
+  "ex-xcnbpwzd": {
+    "prompt": "A imagem de um carregador em Python é reconstruída a cada commit. Os arquivos `.py` mudam todo dia, e o `requirements.txt` mais ou menos uma vez por mês. Depois de `FROM python:3.13-slim`, ponha estas instruções na ordem em que uma edição no código reconstrói o menor número de camadas.",
+    "hint": "Docker e Containers, aula 12; Python, aula 18.",
+    "items": [
+      "`WORKDIR /app`",
+      "`COPY requirements.txt ./`",
+      "`RUN pip install -r requirements.txt`",
+      "`COPY *.py ./`"
+    ],
+    "trap": "Copie o código antes de instalar e cada edição invalida a camada da instalação, e o `pip install` roda de novo por uma mudança que não tocou em dependência nenhuma."
+  },
+  "ex-y5cxvd9a": {
+    "prompt": "Três workers rodam a imagem de ingestão como `registry.example.com/ingest`, sem tag, e cada um a baixou num dia diferente. Um relato de bug diz que algumas linhas foram interpretadas pela lógica antiga. O que a aula 16 conclui disso?",
+    "hint": "Docker e Containers, aula 16.",
+    "choices": [
+      {
+        "text": "O `docker run` consulta o registry antes de cada início, então os três estão no build mais novo.",
+        "why": "Ele só baixa quando o nome não existe na máquina. Cada servidor fica com o que baixou."
+      },
+      {
+        "text": "Os três rodam o mesmo build, porque uma tag aponta para uma única imagem, então as linhas antigas são de antes do bug.",
+        "why": "Uma tag aponta para uma imagem de cada vez. Cada máquina baixou num momento diferente e recebeu uma diferente."
+      },
+      {
+        "text": "Iniciar cada container com `--pull always` dá a cada worker, daqui em diante, uma versão conhecida e fixa.",
+        "why": "Isso troca a imagem velha por um reinício que muda a versão sem avisar. Versão conhecida é uma tag de versão ou um digest."
+      },
+      {
+        "text": "`latest` aponta para onde o último push o deixou, então cada worker está no build que baixou naquele dia.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-kk0j9xwy": {
+    "prompt": "Um carregador iniciado com `--restart on-failure:5` não alcança o banco de dados e por isso sai com status 1 na hora, toda vez. Seguindo a execução da aula 17 com `on-failure:3`, quantas linhas `database: failed to connect` o `docker logs` terá quando o daemon desistir?",
+    "hint": "Docker e Containers, aula 17."
+  },
+  "ex-q0e7a0bv": {
+    "prompt": "O PostgreSQL roda no próprio host, escutando em `127.0.0.1:5432`. Um container de pipeline conecta em `localhost:5432` e recebe `Connection refused`. O que a aula 23 diz que está acontecendo?",
+    "hint": "Docker e Containers, aula 23.",
+    "choices": [
+      {
+        "text": "Lá dentro, `localhost` é o loopback dele mesmo, e o banco não está escutando ali na 5432.",
+        "why": "Isso."
+      },
+      {
+        "text": "O host bloqueia a porta 5432 para os containers até ela ser publicada com `-p 5432:5432`.",
+        "why": "O `-p` publica no host a porta de um container. O banco não está num container, e o que está errado é o endereço."
+      },
+      {
+        "text": "O PostgreSQL recusa clientes num endereço da bridge até as regras de acesso dele os liberarem.",
+        "why": "Isso seria uma recusa depois de chegar ao host. Uma conexão para `localhost` nunca saiu do container."
+      },
+      {
+        "text": "O container precisa de `--network none`, para o `localhost` dele cair no do host.",
+        "why": "O `none` deixa só o loopback do próprio container. Quem compartilha o namespace de rede do host é o `host`."
+      }
+    ]
+  },
+  "ex-ar11a0jy": {
+    "prompt": "Um mês de logs do servidor de ingestão traz cinco falhas, cada uma de uma noite diferente. Ligue cada mensagem a onde a aula 1 manda olhar.",
+    "hint": "Redes e Protocolos, aula 1.",
+    "pairs": [
+      {
+        "left": "`ping: connect: Network is unreachable`",
+        "right": "O enlace, o endereço ou a rota da própria máquina"
+      },
+      {
+        "left": "`Destination Host Unreachable`, vindo do próprio endereço do servidor",
+        "right": "Uma máquina no mesmo enlace que está desligada ou não existe"
+      },
+      {
+        "left": "`Connection refused`",
+        "right": "O serviço na máquina do outro lado, parado ou em outra porta"
+      },
+      {
+        "left": "`curl: (6) Could not resolve host`",
+        "right": "O nome, ou o servidor DNS"
+      },
+      {
+        "left": "`HTTP/2 404`",
+        "right": "O próprio site; a rede fez a parte dela"
+      }
+    ],
+    "right_distractors": [
+      "Um firewall em algum ponto do caminho"
+    ]
+  },
+  "ex-4m3t0tfx": {
+    "prompt": "As páginas pequenas da API de um parceiro chegam, e a exportação noturna trava sem receber nada do corpo. Do servidor de extração, `ping -M do -s 1464` para o endereço da API recebe resposta e `-s 1465` não. O enlace estreito é a própria linha do roteador do escritório até o provedor, e o roteador está configurado para ajustar o MSS a ela. Que MSS o servidor da API vai ver, então, no SYN do servidor de extração?",
+    "hint": "Redes e Protocolos, aula 2.",
+    "unit": "bytes"
+  },
+  "ex-41zmycca": {
+    "prompt": "Um carregador na sub-rede da aplicação precisa alcançar o PostgreSQL do warehouse em `10.0.64.20`, na sub-rede de dados. `nc -zv -w 3 10.0.64.20 5432` espera os três segundos inteiros e informa `timed out`. Um colega diz que o banco caiu. Para onde a espera aponta?",
+    "hint": "Redes e Protocolos, aula 3; Nuvem e Serverless, aula 6.",
+    "choices": [
+      {
+        "text": "O banco parou e, sem ninguém escutando na 5432, o kernel do servidor ignora o SYN.",
+        "why": "Sem ninguém escutando, o kernel responde na hora com um reset, e o `nc` teria impresso `Connection refused` em vez de esperar."
+      },
+      {
+        "text": "Algo no caminho descartou o SYN sem dizer nada, como o security group do banco.",
+        "why": "Isso."
+      },
+      {
+        "text": "A tabela de rotas da camada de dados não tem rota `0.0.0.0/0`, então o pacote não tinha para onde ir.",
+        "why": "Os dois endereços estão dentro da VPC, e a rota `local` com que toda tabela começa os atende; a rota padrão só importa para sair dela."
+      },
+      {
+        "text": "O banco está afogado em conexões presas em `TIME-WAIT` e parou de responder.",
+        "why": "`TIME-WAIT` é uma conexão fechada esperando passarem pacotes perdidos: sinal de servidor ocupado, não de servidor quebrado."
+      }
+    ]
+  },
+  "ex-26ngk8ky": {
+    "prompt": "Desde cedo, um job de monitoramento consulta `ingest.example.com` a cada minuto, antes de o nome existir. Toda resposta foi `NXDOMAIN`, com o SOA da zona `ns1.example.com. hostmaster.example.com. 2026092502 3600 900 1209600 300`. Você cria o registro `A` agora. Por no máximo quantos segundos um resolvedor que respondeu ao job há pouco pode continuar dizendo que o nome não existe?",
+    "hint": "Redes e Protocolos, aula 4; Fundamentos da Web e Internet, aula 8.",
+    "unit": "s"
+  },
+  "ex-45cy4z3c": {
+    "prompt": "A extração noturna ficou lenta. Rodado à mão contra uma página da API do parceiro, `curl -so /dev/null -w` com os cinco cronômetros da aula imprime `dns 0.004`, `tcp 0.031`, `tls 0.098`, `first byte 4.210` e `total 4.260`. Para onde foi o tempo?",
+    "hint": "Redes e Protocolos, aula 5; Fundamentos da Web e Internet, aula 11.",
+    "choices": [
+      {
+        "text": "Para o handshake TLS, o maior número antes do primeiro byte.",
+        "why": "Cada cronômetro conta desde o início, então o TLS levou 0.098 − 0.031, uns 67 ms."
+      },
+      {
+        "text": "Para trazer a resposta, então uma linha mais rápida no servidor de extração ajudaria.",
+        "why": "O corpo levou 4.260 − 4.210, 50 ms; não é a linha que está lenta."
+      },
+      {
+        "text": "Para o servidor do parceiro produzir a resposta.",
+        "why": "Isso."
+      },
+      {
+        "text": "Para resolver o nome, porque o resolvedor foi consultado primeiro.",
+        "why": "O DNS terminou em 4 ms; um resolvedor lento aparece no primeiro cronômetro, e esse é pequeno."
+      }
+    ]
+  },
+  "ex-c3c11dr5": {
+    "prompt": "Uma extração em Python falha contra a API de um parceiro com `unable to get local issuer certificate`, enquanto o mesmo endereço abre sem aviso no navegador de uma analista. `openssl s_client` contra ele lista só `0 s:CN = api.partner.example` com `i:O = Example Trust Services, CN = Example Issuing CA 1`, e termina em `Verify return code: 21 (unable to verify the first certificate)`. O que está errado?",
+    "hint": "Redes e Protocolos, aula 6.",
+    "choices": [
+      {
+        "text": "O servidor do parceiro deixa de fora o intermediário; a correção é a cadeia completa do lado dele.",
+        "why": "Isso."
+      },
+      {
+        "text": "O certificado é autoassinado, então precisa entrar no repositório de confiança da extração como raiz.",
+        "why": "O emissor é `Example Issuing CA 1`, não ele mesmo; um autoassinado falha com `self-signed certificate`, código 18."
+      },
+      {
+        "text": "O relógio do servidor de extração está errado, então o certificado parece vencido.",
+        "why": "Um problema de data diz `certificate has expired`, código 10; aqui falta um elo da cadeia."
+      },
+      {
+        "text": "Nada do lado do parceiro: o navegador prova que a cadeia está certa, então a extração pode pular a verificação.",
+        "why": "Navegadores lembram ou buscam intermediários e não servem de teste da cadeia, e desligar a verificação é a única correção que a aula descarta."
+      }
+    ]
+  },
+  "ex-me3fg51z": {
+    "prompt": "O PostgreSQL do warehouse em `10.0.64.20` não tem endereço público, e o security group dele só admite a 5432 vinda do grupo do bastion. Do seu notebook você roda `ssh -f -N -L 5433:10.0.64.20:5432 bastion`, aponta o `psql` para `127.0.0.1` na porta 5433, e ele conecta. Por que o banco deixa entrar?",
+    "hint": "Redes e Protocolos, aula 7; Nuvem e Serverless, aula 6.",
+    "choices": [
+      {
+        "text": "O túnel leva o endereço público do seu notebook por todo o caminho até o banco, e o grupo por acaso o permite.",
+        "why": "O banco nunca vê o seu notebook; a conexão até ele é aberta no bastion."
+      },
+      {
+        "text": "A sessão SSH é criptografada, e um security group deixa passar tráfego criptografado.",
+        "why": "Um grupo filtra por protocolo, porta e origem; se os bytes estão criptografados não lhe diz nada."
+      },
+      {
+        "text": "Não deixaria: `10.0.64.20` é privado, então o notebook não o alcança e o túnel falha.",
+        "why": "O destino do `-L` é alcançado a partir do bastion, dentro da VPC, onde o endereço privado tem rota."
+      },
+      {
+        "text": "O sshd no bastion abre a conexão, então ela chega de uma interface que leva o grupo do bastion.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-ft8qa65j": {
+    "prompt": "Um parceiro entrega seus arquivos noturnos de pedidos por FTP simples há anos e está escolhendo para onde migrar. Quais destas afirmações são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "Redes e Protocolos, aula 8.",
+    "choices": [
+      {
+        "text": "No FTP simples, qualquer um no caminho consegue ler a senha com que o seu job faz login.",
+        "why": "Isso."
+      },
+      {
+        "text": "O SFTP roda sobre SSH na porta 22, sem faixa passiva para abrir no firewall.",
+        "why": "Isso."
+      },
+      {
+        "text": "O FTPS mantém as conexões de dados separadas, então o firewall dele ainda precisa da faixa passiva.",
+        "why": "Isso."
+      },
+      {
+        "text": "O SFTP é FTP dentro de TLS, então o servidor FTP do parceiro pode oferecê-lo com dois ajustes.",
+        "why": "O SFTP é um subsistema do SSH e não tem nada a ver com FTP; FTP dentro de TLS é o FTPS."
+      },
+      {
+        "text": "Um arquivo com o mesmo tamanho nas duas pontas chegou byte a byte.",
+        "why": "O mesmo tamanho é um bom sinal, não uma prova; `sha256sum` nas duas pontas é."
+      }
+    ]
+  },
+  "ex-49eyj91s": {
+    "prompt": "Uma tarefa que envia por e-mail o relatório noturno de qualidade de dados para `ops@partner.example` entrega a mensagem ao servidor de e-mail da empresa na porta 25 sem fazer login, e recebe `554 5.7.1 <ops@partner.example>: Relay access denied`. O que deve mudar?",
+    "hint": "Redes e Protocolos, aula 9; Pipelines de Dados e ETL, aula 10.",
+    "choices": [
+      {
+        "text": "Nada na tarefa: o servidor está ocupado hoje, e as novas tentativas vão fazer a mensagem passar.",
+        "why": "Um código que começa com 5 é permanente, e perguntar de novo traz a mesma recusa; é uma falha para parar, não para repetir."
+      },
+      {
+        "text": "Um registro SPF no domínio do parceiro listando o servidor de e-mail da empresa.",
+        "why": "O SPF é conferido pelo servidor que recebe, contra o domínio do remetente; este recusou antes de qualquer envio, porque ninguém tinha feito login."
+      },
+      {
+        "text": "A porta 587, com TLS e login; aí ele repassa para outros domínios.",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma linha `From:` com `ops@partner.example`, para o servidor tratar a mensagem como do próprio parceiro.",
+        "why": "O `From:` da carta não é o que o servidor usa para encaminhar, e forjá-lo só convida o DMARC a recusar."
+      }
+    ]
+  },
+  "ex-bpd5ffb0": {
+    "prompt": "Os downloads noturnos de um parceiro estão lentos, e você anexa um relatório do `mtr` ao chamado. Ele mostra perda de `0.0%` nos saltos 1 e 2, `55.0%` no salto 3 e `0.0%` nos saltos 4, 5 e 6, sendo o último o servidor do parceiro. O que ele diz sobre o salto 3?",
+    "hint": "Redes e Protocolos, aula 10.",
+    "choices": [
+      {
+        "text": "Ele descarta mais da metade de todo o tráfego que passa por ele, e o chamado deve apontá-lo.",
+        "why": "Os saltos 4 a 6 são alcançados através do salto 3 e não perdem nada, então o tráfego passa por ele intacto."
+      },
+      {
+        "text": "O caminho se rompe nesse salto, e os downloads dão a volta nele por outra rota.",
+        "why": "O relatório é um só caminho, e todo salto depois dele respondeu por ele."
+      },
+      {
+        "text": "Ele perde pacotes, mas poucos demais para o TCP perceber.",
+        "why": "Perda que atinge tráfego de verdade continua até o fim do caminho; esta para no salto."
+      },
+      {
+        "text": "Ele deixa de responder a algumas sondas dirigidas a ele, o que não é perda no caminho.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-3srmg7x4": {
+    "prompt": "Uma extração noturna roda numa plataforma como serviço e grava as páginas brutas da API de cada noite em `./landing/`, no próprio disco, para a etapa de carga ler de manhã. O que a aula 1 diz que acontece com esses arquivos em muitas plataformas?",
+    "hint": "Nuvem e Serverless, aula 1.",
+    "choices": [
+      {
+        "text": "Somem no próximo deploy ou reinício; o lugar deles é o armazenamento de objetos.",
+        "why": "Isso."
+      },
+      {
+        "text": "Eles ficam, porque a plataforma faz backup do disco de cada cópia junto com a aplicação.",
+        "why": "A plataforma roda cópias da aplicação e as troca à vontade; não guarda nada que uma delas gravou localmente."
+      },
+      {
+        "text": "Eles sobrevivem, porque arquivos locais passam a fazer parte do código que a plataforma constrói.",
+        "why": "O build usa o código que você entregou, não arquivos gravados durante a execução."
+      },
+      {
+        "text": "Eles ficam até a plataforma aposentar a versão de runtime em que foram gravados.",
+        "why": "A aposentadoria de um runtime decide a sua versão da linguagem, não quanto tempo um arquivo dura."
+      }
+    ]
+  },
+  "ex-jf0yyb3z": {
+    "prompt": "Neste mês uma equipe copia 20 TB de `sa-east-1` para o próprio datacenter, por uma VPN que atravessa a internet. Pelos preços em faixas da aula para dados que saem para a internet, 0.150 por GB nos primeiros 10 TB e 0.138 nos 40 TB seguintes, contando um TB como 1.024 GB, quanto custa a transferência, em USD?",
+    "hint": "Nuvem e Serverless, aula 2.",
+    "unit": "USD"
+  },
+  "ex-d9nkesbh": {
+    "prompt": "Um relatório de custos lê toda noite a lista pública de preços do provedor pelo endereço que tem `current`, e multiplica por ela o uso do mês anterior. Rodado de novo em março para janeiro, dá um total diferente do enviado em fevereiro, embora as linhas de uso sejam idênticas. Por quê?",
+    "hint": "Nuvem e Serverless, aula 3; Pipelines de Dados e ETL, aula 15.",
+    "choices": [
+      {
+        "text": "A exportação de uso ainda estava mudando em fevereiro, e se acomodou depois.",
+        "why": "As linhas de uso são idênticas nas duas execuções; o que mudou foram os preços."
+      },
+      {
+        "text": "As listas de preços ficam em cache por região, e a nova execução leu o arquivo de outra região.",
+        "why": "A região faz parte do endereço que o relatório pede; nada a troca por trás dele."
+      },
+      {
+        "text": "Aquela URL aponta para a versão publicada mais recentemente, com preços mais novos; fixar uma versão resolve.",
+        "why": "Isso."
+      },
+      {
+        "text": "Os descontos gratuitos são aplicados no dia em que o relatório roda, então uma execução posterior do mesmo mês recebe uma parte maior deles.",
+        "why": "O desconto gratuito é uma faixa da lista de preços, contada sobre o mês de uso, não sobre o dia do cálculo."
+      }
+    ]
+  },
+  "ex-nsfqd84n": {
+    "prompt": "Às 20:00 a carga na API de relatórios triplica, e uma política de target tracking comanda o grupo de autoscaling dela. Ponha em ordem as etapas até uma instância nova assumir parte da carga, da primeira à última.",
+    "hint": "Nuvem e Serverless, aula 4.",
+    "items": [
+      "A métrica é coletada, e a política espera pontos suficientes para confiar na alta",
+      "O grupo pede instâncias, e o provedor as aloca e inicia",
+      "Cada instância nova dá boot e roda o seu user data",
+      "O health check do load balancer passa, e o tráfego chega até ela"
+    ],
+    "trap": "A política não age sobre uma alta que ainda não mediu, e o load balancer não manda nada a uma instância antes de o check passar; o boot no meio é a etapa que uma imagem pronta encurta."
+  },
+  "ex-nqxrekfe": {
+    "prompt": "As páginas brutas da API chegam em `raw/` no armazenamento de objetos, e uma regra de ciclo de vida as move, depois de 180 dias, para a classe mais fria da tabela da aula. Um bug achado hoje obriga a reconstruir os fatos do ano passado a partir dessas páginas, com um backfill do ano inteiro. O que acontece quando as execuções começam?",
+    "hint": "Nuvem e Serverless, aula 5; Pipelines de Dados e ETL, aula 9.",
+    "choices": [
+      {
+        "text": "Elas rodam como sempre, só que mais devagar, já que uma classe fria ainda responde a um `GET` depois de paga a taxa de recuperação do objeto.",
+        "why": "Ler em milissegundos é a promessa das classes mais quentes; a mais fria recusa o `GET` até terminar uma restauração do objeto."
+      },
+      {
+        "text": "Os dias antigos não podem ser lidos antes de cada objeto ser restaurado, o que leva de minutos a horas e é cobrado por GB.",
+        "why": "Isso."
+      },
+      {
+        "text": "As páginas com mais de 180 dias foram apagadas pela regra, então o backfill não acha nada para ler na maior parte do ano.",
+        "why": "A regra as move para outra classe; apagar exigiria uma expiração, e esta regra não tem."
+      },
+      {
+        "text": "Cada execução lê suas páginas sem custo, porque ler dentro de um bucket não é transferência.",
+        "why": "Uma classe fria cobra cada GB lido de volta, seja quem for que leia e de onde for."
+      }
+    ]
+  },
+  "ex-9bd3vsp7": {
+    "prompt": "Os jobs em lote de uma sub-rede privada copiam terabytes por noite para o armazenamento de objetos da mesma região passando pelo NAT gateway, pagando a taxa de processamento dele em cada GB. O caminho sem custo que a aula 6 dá a esse tráfego é uma rota na tabela da sub-rede para um ___ de gateway.",
+    "hint": "Nuvem e Serverless, aula 6.",
+    "blanks": [
+      {
+        "accept": [
+          "endpoint",
+          "endpoints",
+          "ponto de extremidade"
+        ]
+      }
+    ]
+  },
+  "ex-q8gfg1j0": {
+    "prompt": "Uma extração roda num container numa VM cujo role só pode gravar objetos em `raw/` de um bucket. Para testar, um desenvolvedor iniciou o container com um `--env-file` copiado do notebook dele, com o próprio par de chaves de acesso, e o arquivo ficou. O log de auditoria agora mostra as gravações da extração no usuário dele. Por quê?",
+    "hint": "Nuvem e Serverless, aula 7; Docker e Containers, aula 17.",
+    "choices": [
+      {
+        "text": "A chave está no ambiente, o primeiro lugar onde a cadeia de credenciais procura, então o role da máquina nunca é consultado.",
+        "why": "Isso."
+      },
+      {
+        "text": "As credenciais do role venceram depois de uma hora, e o programa recorreu à próxima chave que achou.",
+        "why": "O provedor troca as credenciais de um role antes de vencerem; o programa nem chegou a usá-las."
+      },
+      {
+        "text": "Um container não alcança o serviço de metadados da máquina, então a chave do desenvolvedor era a única credencial que o programa conseguia achar.",
+        "why": "As fontes da própria máquina vêm por último na cadeia; ela nem chegou lá, porque o ambiente respondeu primeiro."
+      },
+      {
+        "text": "O log de auditoria registra quem iniciou o container, sejam quais forem as credenciais que assinaram as chamadas.",
+        "why": "O log registra o principal cujas credenciais assinaram cada requisição, e aqui é a chave dele."
+      }
+    ]
+  },
+  "ex-167e258y": {
+    "prompt": "Todo arquivo que chega em `incoming/` dispara uma função que insere as linhas dele na tabela de vendas do dia. Uma ou duas vezes por mês o total de um dia sai dobrado, embora o arquivo tenha sido enviado uma vez. Que correção bate com as aulas?",
+    "hint": "Nuvem e Serverless, aula 8; Pipelines de Dados e ETL, aula 15.",
+    "choices": [
+      {
+        "text": "Um timeout maior, para a função nunca parar no meio e ser repetida.",
+        "why": "Uma duplicata faz parte do contrato mesmo quando nada falhou: a entrega é pelo menos uma vez."
+      },
+      {
+        "text": "Os retries do bucket desligados, para cada arquivo ser anunciado uma única vez.",
+        "why": "A entrega pelo menos uma vez é como a invocação assíncrona funciona, não um ajuste para desligar."
+      },
+      {
+        "text": "Mais memória para a função, para duas cópias dela nunca rodarem ao mesmo tempo.",
+        "why": "A memória dimensiona uma cópia; a plataforma continua iniciando uma cópia por evento, duplicatas incluídas."
+      },
+      {
+        "text": "Uma carga idempotente: guardar a chave de cada evento e ignorar o repetido, ou substituir o que ele gravou em vez de somar.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-sdr7as5z": {
+    "prompt": "Uma etapa de enriquecimento em São Paulo chama uma API no norte da Virgínia 3.000 vezes, uma chamada depois da outra, e abre uma conexão HTTPS nova para cada uma. Com o piso da aula de 76,6 ms por ida e volta, e o handshake TCP, o handshake TLS 1.3 e a requisição custando uma cada, no mínimo quantos segundos a distância sozinha acrescenta à etapa?",
+    "hint": "Nuvem e Serverless, aula 9; Fundamentos da Web e Internet, aula 3.",
+    "unit": "s"
+  },
+  "ex-djq9ccgc": {
+    "prompt": "A conta da plataforma de dados tem um orçamento mensal de 2.000 USD, com alertas em 50%, 80% e 100% do gasto real e um sobre a previsão. Quais afirmações são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "Nuvem e Serverless, aula 10.",
+    "choices": [
+      {
+        "text": "Quando o gasto real passa de 2.000, chega o alerta de 100% e o gasto continua até alguém mudar o que está rodando.",
+        "why": "Isso."
+      },
+      {
+        "text": "O alerta de previsão pode disparar semanas antes de o gasto real chegar ao limite.",
+        "why": "Isso."
+      },
+      {
+        "text": "Os dados de cobrança chegam horas atrás do uso, e é por isso que vale ter limiares abaixo do limite.",
+        "why": "Isso."
+      },
+      {
+        "text": "Passar de 100% para os recursos da conta até o mês seguinte.",
+        "why": "Um alerta avisa e não para nada; as ações que param coisas precisam ser montadas de propósito."
+      },
+      {
+        "text": "Uma conta que triplicou em um ano quer dizer que o design não está escalando.",
+        "why": "Só o custo por unidade do que o negócio vende pode dizer isso; se os dados processados cresceram mais rápido, cada unidade ficou mais barata."
+      }
+    ]
+  },
+  "ex-7tk5twb3": {
+    "prompt": "Uma exportação de 500 GB está num bucket no norte da Virgínia, e um job em São Paulo a copia como um único download por um link de 1 Gbps. Ele roda a uma fração pequena do link, e nada está perdendo pacotes. O que explica isso, e o que ajuda?",
+    "hint": "Fundamentos da Web e Internet, aula 3; Nuvem e Serverless, aula 9.",
+    "choices": [
+      {
+        "text": "O link é dividido com os vizinhos, então a cópia deveria rodar às três da manhã.",
+        "why": "A divisão explica uma noite mais lenta, não um fluxo muito abaixo de um link ocioso."
+      },
+      {
+        "text": "Os cabeçalhos de cada camada limitam a vazão, então comprimir a exportação é a alavanca.",
+        "why": "Os cabeçalhos custam poucos por cento; a diferença aqui é a ida e volta em que uma conversa só fica esperando."
+      },
+      {
+        "text": "Um fluxo espera uma longa ida e volta por janela; fluxos em paralelo ajudam.",
+        "why": "Isso."
+      },
+      {
+        "text": "A largura de banda é o limite, então um link de 10 Gbps deixaria a cópia dez vezes mais rápida.",
+        "why": "Um cano mais largo não enche quando o remetente passa o tempo esperando confirmações de outro continente."
+      }
+    ]
+  },
+  "ex-3qm9xwcb": {
+    "prompt": "A tarefa de API da extração repete num `503` e espera num `429`, como manda a política de retry dela. Uma noite o gateway do parceiro responde toda página com `200` e o corpo `{\"error\": \"quota exceeded\"}`. A execução fica verde, nenhum retry dispara, e o dia falta no warehouse. Por que nada reagiu?",
+    "hint": "Fundamentos da Web e Internet, aula 6; Pipelines de Dados e ETL, aula 10.",
+    "choices": [
+      {
+        "text": "O retry age pelo status, e `200` disse que deu certo; o corpo ficou sem leitura.",
+        "why": "Isso."
+      },
+      {
+        "text": "Retries só disparam em erros de conexão que nem chegam a um status, e esta resposta trazia um.",
+        "why": "A política repete um `503` e espera num `429`, ambos status; deixou este passar porque o status dizia sucesso."
+      },
+      {
+        "text": "Uma cota é uma falha permanente, e a tarefa fez bem em tratá-la assim.",
+        "why": "A tarefa nem falhou; registrou um sucesso, e esse é o problema."
+      },
+      {
+        "text": "O parceiro deveria ter respondido `404`, que uma política de retry trata como falha passageira.",
+        "why": "Um `404` é um erro do cliente que perguntar de novo não muda, do tipo em que a tarefa falha na hora."
+      }
+    ]
+  },
+  "ex-f4sv13m4": {
+    "prompt": "Cada execução publica uma exportação datada, e um pequeno arquivo ponteiro aponta a mais nova; as exportações são servidas com max-age de um ano. Para que navegadores e a CDN possam guardar o ponteiro mas precisem perguntar à origem antes de cada uso, o que costuma ser respondido com 304, a diretiva de Cache-Control dele é ___.",
+    "hint": "Fundamentos da Web e Internet, aula 7.",
+    "blanks": [
+      {
+        "accept": [
+          "no-cache"
+        ]
+      }
+    ]
+  },
+  "ex-2ca6wjxp": {
+    "prompt": "Há uma hora você mudou o endpoint de ingestão para um servidor novo e editou o registro `A` dele. Alguns remetentes ainda chegam ao antigo. `dig @ns1.dnsprovider.net ingest.example.com`, perguntando ao servidor que os registros `NS` do domínio indicam, também devolve o endereço antigo. O que isso resolve?",
+    "hint": "Fundamentos da Web e Internet, aula 8; Redes e Protocolos, aula 10.",
+    "choices": [
+      {
+        "text": "A mudança só não está no ar ainda: os resolvedores guardam a resposta antiga até o TTL dela acabar.",
+        "why": "É isso que uma resposta antiga de um resolvedor quer dizer; uma resposta antiga do servidor autoritativo quer dizer que a mudança nem está lá."
+      },
+      {
+        "text": "O registro publicado está errado, e esperar não adianta; confira se a edição foi feita num provedor que os registros `NS` não indicam mais.",
+        "why": "Isso."
+      },
+      {
+        "text": "A propagação leva até 48 horas, e a mudança ainda não foi enviada ao servidor autoritativo.",
+        "why": "Nada é enviado ao servidor autoritativo; ele responde com o que foi publicado nele, e responde o antigo."
+      },
+      {
+        "text": "Os remetentes têm o endereço antigo nos arquivos hosts deles.",
+        "why": "A resposta autoritativa também é antiga, e nenhum arquivo hosts de remetente muda o que aquele servidor diz."
+      }
+    ]
+  },
+  "ex-3d52vsqh": {
+    "prompt": "A API do painel do time de dados, em São Paulo, leva dois segundos por requisição, quase tudo numa consulta ao warehouse, e cada resposta depende dos filtros do usuário. Um gerente propõe pôr uma CDN na frente dela. O que isso vai mudar?",
+    "hint": "Fundamentos da Web e Internet, aula 9; Nuvem e Serverless, aula 9.",
+    "choices": [
+      {
+        "text": "Toda requisição fica umas dez vezes mais rápida, porque a borda está mais perto que a origem.",
+        "why": "Só respostas em cache saem da borda; estas mudam a cada filtro e continuam indo à origem."
+      },
+      {
+        "text": "Nada nos dois segundos: essas respostas não vão para o cache, então cada uma continua indo à origem, talvez com um salto a mais.",
+        "why": "Isso."
+      },
+      {
+        "text": "O tempo da consulta, porque cada borda guarda uma cópia do warehouse perto dos usuários.",
+        "why": "Uma borda guarda cópias de respostas, não bancos de dados; o sistema de registro fica na região."
+      },
+      {
+        "text": "Torna seguro guardar as respostas num cache público, porque a CDN separa os usuários pelo endereço.",
+        "why": "Nada numa CDN torna uma resposta pessoal compartilhável; respostas assim precisam ser marcadas `private`."
+      }
+    ]
+  },
+  "ex-x3ypw7x4": {
+    "prompt": "Para não escrever um cliente de API, um colega clica com o botão direito numa requisição do site interno de relatórios, copia como curl e faz commit do comando como script do job de extração. Quais destas afirmações são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "Fundamentos da Web e Internet, aula 11; Nuvem e Serverless, aula 7.",
+    "choices": [
+      {
+        "text": "O comando leva o cookie de sessão dele, uma credencial válida em texto puro.",
+        "why": "Isso."
+      },
+      {
+        "text": "Todo mundo que clona o repositório recebe o cookie, e o histórico o guarda mesmo depois que um commit seguinte apaga a linha.",
+        "why": "Isso."
+      },
+      {
+        "text": "O job deveria rodar com uma identidade própria, só com o acesso de que precisa.",
+        "why": "Isso."
+      },
+      {
+        "text": "É inofensivo, já que um cookie só funciona dentro do navegador que o recebeu.",
+        "why": "O comando copiado repete a requisição fora do navegador, cookie incluído, e é por isso que ele funciona."
+      },
+      {
+        "text": "É seguro enquanto o repositório for privado, já que só colegas conseguem lê-lo.",
+        "why": "Um segredo em qualquer coisa que é copiada vai para quem recebe a cópia; um repositório privado reduz quem é essa gente, e a chave continua valendo para todos."
+      }
+    ]
+  },
+  "ex-nf1b8s25": {
+    "prompt": "Na sua primeira semana como engenheiro de dados júnior, você mandou para o `main` compartilhado um commit que renomeia uma coluna lida pela carga noturna, e dois colegas já fizeram pull dele. A carga falha às 09:00. O que você faz?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 4; Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 20.",
+    "choices": [
+      {
+        "text": "Conserte em silêncio com `git reset --hard HEAD~1` e um force-push, para o commit sumir antes que alguém veja.",
+        "why": "O reset reescreve um commit que duas pessoas já têm, e a hora gasta escondendo é o que transforma um deslize num incidente."
+      },
+      {
+        "text": "Rode `git restore` no arquivo da carga e faça commit, já que o restore é o desfazer mais seguro dos três.",
+        "why": "O restore só mexe no que nunca entrou num commit; com a árvore de trabalho limpa ele não tem o que desfazer, e o commit continua no `main`."
+      },
+      {
+        "text": "Faça amend do commit com o nome antigo da coluna, para o log mostrar um commit certo em vez de dois.",
+        "why": "Um commit com amend é um commit novo, com outro id; seus colegas continuam com o antigo, e ninguém foi avisado."
+      },
+      {
+        "text": "Avise a equipe agora que o seu commit quebrou a carga, desfaça com `git revert` e mande esse commit.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-ezb25cfn": {
+    "prompt": "Você roda `git push` no `main` e recebe `! [rejected] main -> main (fetch first)`. Um colega mandou uma correção no mesmo arquivo de DAG há uma hora, e o seu único commit ainda não está no `origin`. Qual sequência põe os dois commits no `origin` sem perder nenhum?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 7.",
+    "choices": [
+      {
+        "text": "`git push --force`, porque o seu commit é o mais novo dos dois e o remoto deveria ficar igual a ele.",
+        "why": "O force move o `main` do `origin` para o seu commit e descarta o do colega, que é justamente o que a rejeição estava protegendo."
+      },
+      {
+        "text": "`git fetch`, depois `git push` de novo, agora que o commit do colega chegou.",
+        "why": "O fetch move só o `origin/main`; o seu `main` continua sem o commit do colega, então o segundo push é rejeitado como o primeiro."
+      },
+      {
+        "text": "`git pull --rebase`, que reaplica o seu commit em cima do dele, depois `git push`.",
+        "why": "Isso."
+      },
+      {
+        "text": "`git status` até ele dizer que o branch está em dia com `origin/main`, depois `git push`.",
+        "why": "O `git status` compara com o seu último registro do `origin` e não pergunta nada ao remoto, então esperar por ele não muda nada."
+      }
+    ]
+  },
+  "ex-6men562f": {
+    "prompt": "O arquivo de configuração local de um pipeline, settings.local.yaml, entrou num commit na primeira semana e foi para a lista de ignorados depois. O Git continua mostrando cada edição nele como modificação. O comando que deixa de rastreá-lo e o mantém no seu disco é git rm ___ settings.local.yaml, seguido de um commit.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10.",
+    "blanks": [
+      {
+        "accept": [
+          "--cached"
+        ]
+      }
+    ]
+  },
+  "ex-81g4rqg7": {
+    "prompt": "Você revisa um pull request de um ticket que pede para descontar os reembolsos da receita diária. Ele faz isso com um join, também reformata todos os arquivos SQL da pasta, e você teria escrito um `CASE` no lugar. Rodando sobre os dados de ontem, um dia sem reembolsos sai com receita `NULL`. Qual comentário bloqueia o merge?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 13.",
+    "choices": [
+      {
+        "text": "O dia que sai `NULL`, com a consulta que mostra isso e o valor que deveria aparecer ao lado.",
+        "why": "Isso."
+      },
+      {
+        "text": "A reformatação dos outros arquivos SQL, que precisa ser desfeita antes de ler o resto.",
+        "why": "Isso está fora do escopo: peça que vá para um pull request próprio. Não é o que torna este errado."
+      },
+      {
+        "text": "O join, já que um `CASE` é como você teria escrito e é mais fácil de ler para você.",
+        "why": "Os dois funcionam, então é preferência; o teste é se o código ficaria pior de um jeito que alguém pudesse notar."
+      },
+      {
+        "text": "Um pedido para dividir a mudança antes de revisar qualquer coisa, porque ela mexe em mais de um arquivo.",
+        "why": "Dividir é para uma mudança grande demais para ler com atenção; esta foi lida, e o número errado já apareceu."
+      }
+    ]
+  },
+  "ex-hpx3egxq": {
+    "prompt": "O ticket *Trazer as notas dos fornecedores para o warehouse* é grande demais, e o refinamento o divide. Qual primeiro ticket pode ser entregue sozinho e ensinar algo à equipe?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 16; O Projeto de Portfólio: do Briefing ao Deploy, aula 5.",
+    "choices": [
+      {
+        "text": "Criar as tabelas brutas dos doze fornecedores, depois o extrator, depois os modelos de relatório.",
+        "why": "Isso é dividir por camada: nenhum dos três dá um número a ninguém até os três ficarem prontos."
+      },
+      {
+        "text": "O arquivo de um só fornecedor, carregado de ponta a ponta numa tabela que responde a uma pergunta real de um analista.",
+        "why": "Isso."
+      },
+      {
+        "text": "Estimar o ticket inteiro em 13 pontos para o planejamento saber o tamanho, e começar na próxima sprint.",
+        "why": "Um 13 é sinal de que o ticket volta para ser dividido ou esclarecido, não um tamanho para planejar em volta."
+      },
+      {
+        "text": "O extrator dos doze fornecedores primeiro, já que é na extração que estão as incertezas.",
+        "why": "Continua sendo uma camada; as dúvidas sobre carga e consulta aparecem semanas depois, quando chegam as outras camadas."
+      }
+    ]
+  },
+  "ex-z9mas949": {
+    "prompt": "As verificações do seu pipeline passam no seu notebook. Quais destes fariam as mesmas verificações falharem num clone novo do seu branch, como o CI as roda? Marque todas as que se aplicam.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 17.",
+    "choices": [
+      {
+        "text": "`git status --short` mostrou `?? lookup/`, e você fez o commit com `git commit -a`.",
+        "why": "Isso."
+      },
+      {
+        "text": "O código lê a senha do warehouse de uma variável definida só no perfil do seu shell.",
+        "why": "Isso."
+      },
+      {
+        "text": "Você preparou a mudança com `git add -p` e a dividiu em dois commits em vez de um.",
+        "why": "Como os commits são cortados muda o histórico, não o que o branch contém depois que os dois sobem."
+      },
+      {
+        "text": "A transformação usa um recurso que chegou no Python 3.12, e a máquina do CI instala o 3.10.",
+        "why": "Isso."
+      },
+      {
+        "text": "Os dados de teste são montados por uma fixture dentro do arquivo de teste commitado.",
+        "why": "Uma fixture num arquivo commitado vem junto com o clone; é o tipo de dado de teste que sempre viaja."
+      }
+    ]
+  },
+  "ex-fkgateqh": {
+    "prompt": "Uma etapa de enriquecimento manda 4.000 descrições de produto por dia para o Claude Sonnet 5.5, aos preços da tabela da aula 2: US$ 2 por milhão de tokens de entrada e US$ 10 por milhão de tokens de saída. Cada pedido tem 1.500 tokens de entrada e 100 de saída. Em dólares, quanto custa um mês de 30 dias?",
+    "hint": "IA no Desenvolvimento, aula 2."
+  },
+  "ex-t94va7mn": {
+    "prompt": "Uma task do Airflow com `retries: 3` chama um modelo pelo SDK da Anthropic, deixado com as tentativas padrão. A noite toda o provedor não responde, com erro de conexão em toda tentativa. No máximo, quantas vezes o pedido é enviado nessa execução?",
+    "hint": "IA no Desenvolvimento, aula 10; Pipelines de Dados e ETL, aula 10."
+  },
+  "ex-ppd4kmrg": {
+    "prompt": "Uma etapa do pipeline pede a um modelo que transforme cada nota de fornecedor digitalizada em `{supplier, total_cents, currency}`. Ela valida cada resposta contra o esquema, devolve os erros uma vez e recebe `None` depois da segunda falha. O que a etapa deve fazer com essa nota?",
+    "hint": "IA no Desenvolvimento, aula 8; Pipelines de Dados e ETL, aula 16.",
+    "choices": [
+      {
+        "text": "Continuar pedindo até uma resposta passar, já que cada tentativa sai barato perto de uma nota faltando.",
+        "why": "Cada tentativa é cobrada e raramente resolve o que a segunda não resolveu; um esquema que falha sempre aponta para o prompt ou para o esquema."
+      },
+      {
+        "text": "Carregá-la com os campos que validaram e deixar `total_cents` nulo para os analistas preencherem.",
+        "why": "Um registro que nunca passou seria arquivado meio certo, e uma linha meio certa numa tabela é uma que ninguém olha de novo."
+      },
+      {
+        "text": "Pulá-la com um aviso no log, para uma digitalização ilegível não segurar o lote.",
+        "why": "Um registro que some atrás de uma linha de log não pode ser achado nem devolvido ao fornecedor; o lote pode seguir e a nota ainda ser guardada."
+      },
+      {
+        "text": "Gravá-la em quarentena como chegou, com o motivo, e contá-la no balanço da execução.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-vm0ke4bm": {
+    "prompt": "Uma equipe copia o avaliador da aula 5 para medir um prompt que escreve descrições de colunas: 20 colunas, 3 execuções cada, e a versão com exemplos passa em 52 de 60. Lendo as aprovadas, 17 são um dos exemplos do prompt, palavra por palavra. Com uma verificação que recusa resposta igual a um exemplo, quanto essa execução marca, de 60?",
+    "hint": "IA no Desenvolvimento, aula 5."
+  },
+  "ex-c5ssz7t1": {
+    "prompt": "Um pipeline manda tickets de suporte para um modelo etiquetar e grava uma linha de log por pedido. Quais campos cabem nessa linha? Marque todas as que se aplicam.",
+    "hint": "IA no Desenvolvimento, aula 11; O Projeto de Portfólio: do Briefing ao Deploy, aula 11.",
+    "choices": [
+      {
+        "text": "O id do pedido no provedor",
+        "why": "Isso."
+      },
+      {
+        "text": "O texto do ticket, depois da redação dos dados",
+        "why": "Com ou sem redação, são as palavras do cliente, guardadas pelo tempo dos logs e lidas por quem lê os logs; isso vai num armazenamento separado."
+      },
+      {
+        "text": "As contagens de tokens de entrada e de saída",
+        "why": "Isso."
+      },
+      {
+        "text": "O e-mail do cliente, para achar o pedido depois",
+        "why": "O id do pedido já liga a linha aos registros do provedor; um endereço no log é mais uma cópia de dado pessoal."
+      },
+      {
+        "text": "Um SHA-256 curto do prompt",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-2xn62gvw": {
+    "prompt": "Com `etl/config.py` aberto no editor, você perguntou ao assistente de código sobre uma consulta lenta. O arquivo tem `DWH_URL = \"postgresql://etl:Kp7x2mQ9@dwh.internal:5432/sales\"`, e o pedido que o assistente guardou mostra que o arquivo foi junto. O que vem primeiro?",
+    "hint": "IA no Desenvolvimento, aula 3; O Projeto de Portfólio: do Briefing ao Deploy, aula 14.",
+    "choices": [
+      {
+        "text": "Pôr `etl/config.py` no `.gitignore`, para o assistente não mandar de novo.",
+        "why": "A lista de ignorados do Git não vale nada para o editor; um arquivo ignorado numa aba aberta continua sendo enviado."
+      },
+      {
+        "text": "Trocar a senha do banco e depois ler a URL do ambiente.",
+        "why": "Isso."
+      },
+      {
+        "text": "Pôr `etl/config.py` na lista de exclusão do assistente, já que o vazamento veio do arquivo aberto.",
+        "why": "Isso protege o próximo pedido, não o que já foi, e um pedido não tem como ser chamado de volta."
+      },
+      {
+        "text": "Nenhuma providência: o arquivo não tem linha de `password`, e a verificação de segredos teria barrado um de verdade.",
+        "why": "Uma string de conexão com senha dentro é um segredo; a verificação vê nomes e formatos, e esta passou."
+      }
+    ]
+  },
+  "ex-44zcjqw4": {
+    "prompt": "Um assistente responde perguntas sobre o warehouse a partir do dicionário de dados, cortado em um trecho por parágrafo com ids como `orders.md#4`, e guarda cada resposta com suas citações. Alguém acrescenta um parágrafo perto do começo de `orders.md`. O que acontece com as respostas guardadas no mês passado?",
+    "hint": "IA no Desenvolvimento, aula 6.",
+    "choices": [
+      {
+        "text": "Nada, porque cada trecho leva o título do documento e continua fazendo sentido sozinho.",
+        "why": "O título deixa o trecho legível; o id é uma posição, e as posições depois da inserção mudaram todas."
+      },
+      {
+        "text": "As citações deixam de ser encontradas até o índice ser refeito, e depois voltam a funcionar.",
+        "why": "Depois de refeito, os ids continuam existindo; apontam outros parágrafos, e é por isso que nada quebra à vista."
+      },
+      {
+        "text": "As citações de parágrafos abaixo do novo passam a apontar outros parágrafos, e nada falha.",
+        "why": "Isso."
+      },
+      {
+        "text": "Só as respostas que citam o parágrafo novo são afetadas, já que os outros mantiveram o texto.",
+        "why": "Nenhuma resposta guardada pode citar um parágrafo que não existia; as antigas apontam posições, não texto."
+      }
+    ]
+  },
+  "ex-kmzenge2": {
+    "prompt": "Uma transformação marca uma entrega como atrasada com `delivered_on >= promised_on`, e o contrato diz que entregar no dia prometido é estar no prazo. Você pede ao assistente testes da função; ele escreve seis, e os seis passam. O que esses seis testes verdes dizem?",
+    "hint": "IA no Desenvolvimento, aula 4; O Projeto de Portfólio: do Briefing ao Deploy, aula 12.",
+    "choices": [
+      {
+        "text": "Que a função faz o que o próprio código dela diz, incluído o `>=` no dia prometido.",
+        "why": "Isso."
+      },
+      {
+        "text": "Que a borda está coberta, porque seis testes sobre uma única comparação vão incluir o dia prometido.",
+        "why": "Um teste tirado do código espera o que o código faz; um no dia prometido esperaria atraso, e passaria."
+      },
+      {
+        "text": "Que eles não contam até cada um ter falhado uma vez, então apague os seis e escreva novos primeiro.",
+        "why": "Falhar primeiro é a regra para o teste de um bug; testes gerados ainda dão uma lista de casos, a conferir contra o contrato."
+      },
+      {
+        "text": "Que o contrato está cumprido, já que o modelo leu o nome e a docstring da função.",
+        "why": "O contrato nunca esteve no contexto; o modelo só podia testar contra o que viu, que é o código."
+      }
+    ]
+  },
+  "ex-3zw939gx": {
+    "prompt": "Você está se candidatando a vagas júnior de engenharia de dados com quatro ideias de projeto. Pelos três filtros da aula 3 e pelo que quem avalia dados abre primeiro, qual você constrói?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 3; Pipelines de Dados e ETL, aula 15.",
+    "choices": [
+      {
+        "text": "Um chat sobre os relatórios de transporte da cidade usando um modelo hospedado, que precisa da sua chave paga para testar.",
+        "why": "Falha no terceiro filtro: um projeto que ninguém consegue testar sem pagar é uma evidência que ninguém confere."
+      },
+      {
+        "text": "Uma reconstrução, com ferramentas abertas, do painel principal de um produto de análise famoso.",
+        "why": "Um clone convida a uma comparação com uma equipe grande que você não ganha, e um painel não é o que quem avalia engenharia de dados abre primeiro."
+      },
+      {
+        "text": "Um app de lista de tarefas com uma página de relatório que conta as tarefas concluídas por semana.",
+        "why": "Falha no segundo filtro: nada nele exercita a habilidade central da trilha, um pipeline."
+      },
+      {
+        "text": "Um job noturno que carrega os dados abertos de atrasos de ônibus de uma cidade numa tabela consultável, onde rodar um dia de novo deixa as mesmas linhas.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-npyr7qpv": {
+    "prompt": "O seu pipeline de portfólio vai ingerir um dataset público num warehouse. Qual plano para a primeira semana é um esqueleto que anda?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 5.",
+    "choices": [
+      {
+        "text": "O esquema estrela completo com todas as dimensões desenhadas, e a extração escrita quando o modelo estiver fechado.",
+        "why": "Isso é construir por camada: nada roda até a última camada ficar pronta, e é ali que costuma parar."
+      },
+      {
+        "text": "Um dia de uma fonte extraído, carregado numa tabela e uma pergunta respondida a partir dessa tabela.",
+        "why": "Isso."
+      },
+      {
+        "text": "O extrator de todos os endpoints da fonte, testado, para as entradas estarem firmes antes de carregar qualquer coisa.",
+        "why": "Continua sendo uma camada: a carga e a consulta seguem como plano, e o projeto não tem nada rodando de ponta a ponta."
+      },
+      {
+        "text": "O agendador, os alertas e o deploy, para o pipeline rodar sozinho desde o primeiro dia.",
+        "why": "Cada um desses é mais fácil de acrescentar a algo que roda do que a um plano; o esqueleto vem antes."
+      }
+    ]
+  },
+  "ex-1y9yynwx": {
+    "prompt": "Você termina o marco *rodar de novo deixa as mesmas linhas*, roda `git tag -a v0.2.0 -m '...'` e depois `git push`. Quem avalia abre o repositório no dia seguinte e não vê nenhum `v0.2.0`. Por quê?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 7; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 7.",
+    "choices": [
+      {
+        "text": "Uma tag anotada fica na sua máquina até alguém criar uma página de release para ela no serviço.",
+        "why": "Uma release é feita a partir de uma tag que já está no serviço; a tag precisa chegar lá antes, com um push."
+      },
+      {
+        "text": "Tags abaixo de `v1.0.0` ficam escondidas no serviço até existir a primeira versão que vale mostrar.",
+        "why": "Nada esconde uma tag pelo número; versionamento semântico é uma convenção que pessoas leem, não uma regra que o serviço aplica."
+      },
+      {
+        "text": "`git push` manda branches, não tags; a tag sobe com um `git push origin v0.2.0` só dela.",
+        "why": "Isso."
+      },
+      {
+        "text": "`-a` cria uma tag leve, e uma tag leve fica na máquina que a criou.",
+        "why": "`-a` cria uma tag anotada; a leve é a criada sem `-a` e `-m`, e as duas sobem do mesmo jeito."
+      }
+    ]
+  },
+  "ex-84pxs2c1": {
+    "prompt": "A sua árvore de trabalho tem a correção de uma carga que duplicava linhas e, no mesmo arquivo, um print que você pôs para depurar. Para preparar a correção um trecho de cada vez e responder não ao print, rode git add ___ load.py e depois faça o commit.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 9.",
+    "blanks": [
+      {
+        "accept": [
+          "-p",
+          "--patch"
+        ]
+      }
+    ]
+  },
+  "ex-thc1ztjf": {
+    "prompt": "Uma API de ingestão do seu portfólio responde do jeito que a aula 11 responde no loanbook. Ligue cada pedido à resposta dele.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 11.",
+    "pairs": [
+      {
+        "left": "Um corpo que não é JSON",
+        "right": "400, com uma frase dizendo o que corrigir"
+      },
+      {
+        "left": "Um id de dataset que não existe",
+        "right": "404, dizendo que esse dataset não existe"
+      },
+      {
+        "left": "Carregar um dia enquanto esse mesmo dia ainda está carregando",
+        "right": "409, nomeando a regra e os fatos por trás dela"
+      },
+      {
+        "left": "Um `KeyError` que ninguém esperava",
+        "right": "Um traceback no log do servidor, e nenhuma frase sobre ele"
+      }
+    ],
+    "right_distractors": [
+      "200, com o problema descrito num campo `error`"
+    ]
+  },
+  "ex-es9bryde": {
+    "prompt": "`test_loading_a_day_twice_leaves_448_lines` foi escrito depois que o `DELETE` da carga entrou, então nunca falhou. Como você descobre se ele perceberia uma carga que duplica?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 12; Pipelines de Dados e ETL, aula 15.",
+    "choices": [
+      {
+        "text": "Rodar duas vezes seguidas: um teste que passa nas duas é ele mesmo idempotente.",
+        "why": "Passar duas vezes mostra que o teste é estável, não que ele percebe alguma coisa."
+      },
+      {
+        "text": "Apagar a linha do `DELETE`, rodar a suíte, ver esse teste falhar e então restaurar a linha.",
+        "why": "Isso."
+      },
+      {
+        "text": "Medir cobertura: se a linha do `DELETE` está coberta, o teste a protege.",
+        "why": "Coberta quer dizer que a linha rodou; uma suíte pode rodar todas as linhas e não afirmar nada sobre o que fizeram."
+      },
+      {
+        "text": "Escrever mais testes em volta, já que uma regra segurada por vários testes fica mais firme do que por um.",
+        "why": "Mais testes que nunca falharam carregam a mesma dúvida; um teste visto falhando resolve."
+      }
+    ]
+  },
+  "ex-xpwqc3h3": {
+    "prompt": "A senha de um warehouse chegou a um repositório público num commit que subiu. Ponha o que você faz na ordem que a aula 14 dá.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 14; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10.",
+    "items": [
+      "Revogar a senha no banco e emitir uma nova",
+      "Procurar nos logs do banco sessões que você não abriu",
+      "Pôr a senha nova no ambiente, não num arquivo",
+      "Reescrever o histórico com `git filter-repo` e fazer force-push, se quiser deixá-lo limpo"
+    ],
+    "trap": "Limpar o histórico parece o mais urgente e vem por último: não recolhe clones já feitos, e enquanto a senha não é revogada a vazada continua abrindo o banco."
+  },
+  "ex-0c1c2sck": {
+    "prompt": "O seu pipeline de portfólio roda num container que grava os resultados num arquivo DuckDB em `/app/data`, e cada deploy troca o container por um da imagem nova. Depois do segundo deploy, o histórico sumiu. No arquivo de unidade da aula 15, o que o teria mantido?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15; Docker e Containers, aula 7.",
+    "choices": [
+      {
+        "text": "Um volume nomeado montado em `/app/data`, fora do container.",
+        "why": "Isso."
+      },
+      {
+        "text": "`Restart=always`, para o container voltar em vez de ser trocado por um novo.",
+        "why": "Reiniciar traz o mesmo container de volta depois de uma queda; um deploy o remove e sobe outro com uma camada gravável nova."
+      },
+      {
+        "text": "Uma verificação de saúde a cada trinta segundos, que marca o container como doente antes de algo se perder.",
+        "why": "Uma verificação de saúde informa um estado; não guarda nada."
+      },
+      {
+        "text": "Parar o container antigo com educação antes de cada deploy, em vez de deixá-lo ser morto.",
+        "why": "Um container parado só mantém a camada até ser removido, e trocá-lo por uma imagem nova é uma remoção."
+      }
+    ]
+  },
+  "ex-xk0pdj1y": {
+    "prompt": "O seu README diz *Para rodar: `pip install -r requirements.txt`, depois `python run.py 2026-03-16`*, e isso funciona sempre no seu notebook. O que rodar a frio, numa máquina que nunca viu o projeto, testa que o seu notebook não consegue?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 16; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 17.",
+    "choices": [
+      {
+        "text": "Se o pipeline roda mais rápido numa máquina sem mais nada instalado nem rodando.",
+        "why": "Velocidade não é a afirmação em teste; os passos do README é que são."
+      },
+      {
+        "text": "Se os testes passam, o que o notebook não consegue mostrar por causa de tudo o que tem em cache.",
+        "why": "Os testes rodam em qualquer lugar; o que o notebook não mostra é tudo o que ele tem e o README nunca menciona."
+      },
+      {
+        "text": "Se um passo que você faz por hábito, como definir `DWH_URL`, está escrito em algum lugar.",
+        "why": "Isso."
+      },
+      {
+        "text": "Se as seções do README estão na ordem em que quem avalia as lê.",
+        "why": "A ordem se confere lendo; rodar a frio confere se o que ele manda digitar basta."
+      }
+    ]
+  },
+  "ex-vdk73ww9": {
+    "prompt": "Você escreve um script de seed para o warehouse de demonstração do seu pipeline. Quais destes a aula 17 pede dele? Marque todas as que se aplicam.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 17.",
+    "choices": [
+      {
+        "text": "Datas relativas a hoje, para o dia mais recente estar sempre perto",
+        "why": "Isso."
+      },
+      {
+        "text": "Nomes de clientes de uma exportação real, com a coluna de e-mail em hash",
+        "why": "Dado de demonstração é inventado, sempre: uma exportação real com uma coluna em hash continua sendo dado de gente, publicado."
+      },
+      {
+        "text": "Linhas gravadas pelas próprias funções de carga do pipeline, não por fora delas",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma recusa a rodar num warehouse que já tem dados",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma data fixa como `2026-06-24` escrita no código, para os prints nunca mudarem",
+        "why": "Uma data fixa envelhece: um ano depois a demonstração significa outra coisa sozinha."
+      }
+    ]
+  },
+  "ex-8c7mp8t2": {
+    "prompt": "Qual linha de currículo para o seu pipeline de portfólio segue o padrão da aula 4: o que você fez, o que passou a valer e como conferir?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 4; O Projeto de Portfólio: do Briefing ao Deploy, aula 12.",
+    "choices": [
+      {
+        "text": "Desenvolvi um pipeline de ETL usando Python, Airflow, PostgreSQL e Docker, seguindo boas práticas de engenharia de dados.",
+        "why": "Uma lista de ferramentas: a mesma linha descreve um pipeline que nunca rodou."
+      },
+      {
+        "text": "Melhorei a qualidade dos dados em 40% construindo um pipeline robusto e escalável para dados públicos.",
+        "why": "Um número que você não sabe explicar, sem base de comparação, custa mais do que número nenhum."
+      },
+      {
+        "text": "Participei da construção de um pipeline de dados de transporte público, responsável pela camada de carga e pelos testes.",
+        "why": "*Participei* e *responsável por* escondem o que você fez e não dizem nada sobre o que passou a valer."
+      },
+      {
+        "text": "Construí uma carga noturna dos atrasos de ônibus de uma cidade; rodar um dia de novo deixa as mesmas linhas, garantido por um teste que falha sem o delete.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-03ka1rdb": {
+    "prompt": "Ponha em ordem os passos de quem avalia pelo seu perfil no GitHub, pela aula 5.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 5.",
+    "items": [
+      "A página do perfil: seu nome, uma linha e a cidade",
+      "Os repositórios fixados e a descrição de uma linha de cada",
+      "A primeira tela do README",
+      "Um arquivo, ou o histórico de commits"
+    ],
+    "trap": "Ninguém passeia por um perfil: cada passo ganha o próximo clique ou encerra a visita, e um arquivo ou o histórico é aberto por último, se for."
+  },
+  "ex-mwjvak9r": {
+    "prompt": "Seis semanas depois, sua planilha tem 60 candidaturas para vagas júnior de engenharia de dados, 2 respostas e nenhuma ligação de triagem. Pela aula 8, onde o funil vaza?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 8.",
+    "choices": [
+      {
+        "text": "Na triagem, que é onde a conversa sobre salário dá errado.",
+        "why": "Não houve ligação de triagem para dar errado; o funil vaza antes delas."
+      },
+      {
+        "text": "Nos follow-ups, que deveriam sair duas vezes por semana até alguém responder.",
+        "why": "Mais follow-ups não consertam um vazamento no topo, e mais de um por candidatura custa mais do que rende."
+      },
+      {
+        "text": "No topo do funil, então o que corrigir é o currículo ou a escolha das vagas.",
+        "why": "Isso."
+      },
+      {
+        "text": "Em lugar nenhum ainda: sessenta candidaturas são poucas para a planilha dizer algo.",
+        "why": "Sessenta com duas respostas é a planilha dizendo algo, e dizer é para isso que ela serve."
+      }
+    ]
+  },
+  "ex-02hxg680": {
+    "prompt": "Pela aula 10, o único follow-up de uma candidatura sai mais ou menos uma ___ depois de se candidatar; mais de um, ou um no dia seguinte, custa mais do que rende.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 10.",
+    "blanks": [
+      {
+        "accept": [
+          "semana"
+        ]
+      }
+    ]
+  },
+  "ex-tx5sh6ts": {
+    "prompt": "Um teste para levar para casa numa vaga júnior de dados: *Carregue o CSV de pedidos anexo numa tabela; carregar o mesmo arquivo duas vezes não pode duplicar linhas. Cerca de três horas.* Na terceira hora você tem a carga e um gráfico de pedidos por dia, e rodar de novo ainda duplica as linhas. O que as aulas 13 e 5 dizem sobre essa entrega?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 13; O Projeto de Portfólio: do Briefing ao Deploy, aula 5.",
+    "choices": [
+      {
+        "text": "Use a noite a mais para deixar a segunda carga segura, já que só uma entrega completa é lida.",
+        "why": "Uma entrega que levou o dobro em silêncio diz a quem avalia que você não sabe estimar, e essa pessoa está olhando como você lida com prazo."
+      },
+      {
+        "text": "A regra da segunda carga era a única coisa a fazer primeiro; pare agora, e a nota diz que ela falta e como você a faria.",
+        "why": "Isso."
+      },
+      {
+        "text": "Entregue como está: o gráfico vai além do pedido e compensa a regra que falta.",
+        "why": "Um extra em cima de um requisito faltando parece que você não leu o enunciado."
+      },
+      {
+        "text": "Deixe a segunda carga fora da nota, já que quem avalia em dez minutos só confere a primeira linha do enunciado.",
+        "why": "A última parte da nota é onde vai o que falta; ser honesto sobre isso é melhor do que ser descoberto."
+      }
+    ]
+  },
+  "ex-vxv4qwdc": {
+    "prompt": "Diante de *me conte de uma vez em que você errou*, você conta a história de uma carga que triplicou um dia de vendas. Ligue cada parte do STAR à frase que pertence a ela.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 15.",
+    "pairs": [
+      {
+        "left": "Situação",
+        "right": "No meu estágio, na equipe que rodava a carga noturna de vendas"
+      },
+      {
+        "left": "Tarefa",
+        "right": "Um relatório mostrava o dia 16 com o triplo das vendas reais, e eu tinha de descobrir por quê"
+      },
+      {
+        "left": "Ação",
+        "right": "Rastreei até o meu retry rodando um insert de novo, avisei minha líder e mudei a carga para substituir o dia"
+      },
+      {
+        "left": "Resultado",
+        "right": "Rodar de novo agora deixa as mesmas linhas, e eu confiro toda carga nova rodando duas vezes"
+      }
+    ],
+    "right_distractors": [
+      "A gente sempre testaria as cargas com cuidado antes de entregar"
+    ]
+  },
+  "ex-k2d5k4tj": {
+    "prompt": "Uma empresa de dados oferece R$ 5.000 por mês em CLT, e outra oferece R$ 5.000 por mês como PJ. Com a conta da aula 17, antes de impostos e benefícios, qual nota mensal de PJ, faturada nos 12 meses, empata com o ano em CLT?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 17."
+  },
+  "ex-jc7qsjpx": {
+    "prompt": "Sua segunda semana: o ticket diz *Incluir a região nova no mart de vendas*. Vinte minutos depois, você acha duas tabelas chamadas `regions`, e nada diz qual vale. O que você faz?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 20; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 16.",
+    "choices": [
+      {
+        "text": "Escrever a pergunta no ticket com o que achou, perguntar a quem o escreveu e anotar a resposta.",
+        "why": "Isso."
+      },
+      {
+        "text": "Escolher a tabela com mais linhas, construir em cima dela e citar a escolha no pull request.",
+        "why": "Esse é o palpite silencioso: quem pediu vê o resultado pela primeira vez na revisão, e pode não ser o que queria."
+      },
+      {
+        "text": "Continuar cavando sozinho pelo resto do dia, para só perguntar quando tiver certeza de que ninguém anotou.",
+        "why": "Depois de um tempo combinado travado, você pergunta; um dia de palpites custa mais que o minuto de que alguém precisa para responder."
+      },
+      {
+        "text": "Postar no chat da equipe toda vez que surgir uma dúvida nova, para nada ficar esperando.",
+        "why": "Perguntas pequenas vão para uma lista e são feitas juntas num horário combinado; dez interrupções por dia custam mais à equipe."
+      }
+    ]
+  }
+}
