@@ -1,5 +1,635 @@
 [
   {
+    "id": "ex-e65vqgsz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The manager wants 2024 sales by the customer's state, and the tills must not feel the report. A colleague proposes a PostgreSQL streaming replica of the shop's database to run it on. What does the replica fix, and what does it leave?",
+    "hint": "Data Modelling and the Data Warehouse, lesson 1; Relational Databases and SQL, lesson 12.",
+    "choices": [
+      {
+        "text": "It fixes both: the replica replays the write-ahead log, so it keeps each customer's earlier city as a version of its own, ready to join.",
+        "correct": false,
+        "why": "Replaying the log applies each update to the same current-state row; the old city is overwritten on the replica too."
+      },
+      {
+        "text": "It fixes neither: a streaming replica exists only for failover, and it refuses the read queries that a report would send it.",
+        "correct": false,
+        "why": "A replica is read-only and can serve reads; that is what it is for here."
+      },
+      {
+        "text": "It stops the report competing with the tills; the split stays wrong, since the replica holds the same current-state rows.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It keeps the history but not the speed: the past is on the replica, while the report still competes for the primary's memory.",
+        "correct": false,
+        "why": "The other way round. The replica takes the load off the primary and has the same overwritten rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-kqs7tzkd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A colleague builds fulfilment as a transaction table: one row per milestone, so a parcel has an `ordered` row, a `shipped` row and, once it arrives, a `delivered` row. How does he now count the parcels still on the road?",
+    "hint": "Data Modelling and the Data Warehouse, lesson 2; Relational Databases and SQL, lesson 5.",
+    "choices": [
+      {
+        "text": "Count the rows whose delivery date is null, the same way the snapshot counts its rows pointing at key 0, `Not yet`.",
+        "correct": false,
+        "why": "A milestone not reached has no row at all in his table, so there is no empty date to count."
+      },
+      {
+        "text": "Use `NOT EXISTS` for orders with a despatch row and no arrival row: what is still travelling is an absence.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`LEFT JOIN` the `shipped` rows to the `delivered` rows on the order number, then take `count(*)` for each month.",
+        "correct": false,
+        "why": "Every shipped order keeps a row after the left join, delivered or not; without `IS NULL` on the right side it counts them all."
+      },
+      {
+        "text": "The same way as before, since a transaction table and an accumulating snapshot both keep one row per order.",
+        "correct": false,
+        "why": "His table keeps one row per milestone; only the snapshot answers the open parcels directly, as rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-heb07ekp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "For order day against ship day, a report joins `fact_fulfilment f` to `dim_date d ON d.date_key = f.ordered_date_key AND d.date_key = f.shipped_date_key`. What comes back?",
+    "hint": "Data Modelling and the Data Warehouse, lesson 3; Relational Databases and SQL, lesson 5.",
+    "choices": [
+      {
+        "text": "Only orders shipped on the day they were placed: a date row cannot hold two keys, so `dim_date` goes in twice.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Each order twice, once for each of its two dates, because the join pairs the fact row with both matching dates.",
+        "correct": false,
+        "why": "Both conditions sit in one `ON`, so a single row of `dim_date` has to satisfy both at once."
+      },
+      {
+        "text": "An error about an ambiguous column, since `d.date_key` is named in two separate conditions of the very same join.",
+        "correct": false,
+        "why": "The query is valid, with no error, and it quietly returns far fewer rows than there are orders."
+      },
+      {
+        "text": "Each order once, with the ordering date's day name, because the first condition written in `ON` decides the pair.",
+        "correct": false,
+        "why": "Nothing is decided by the order of the conditions; a pair survives only when both are true."
+      }
+    ]
+  },
+  {
+    "id": "ex-1mhh59jy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In the shop's database `customer_id` is a primary key and every order's foreign key is enforced. Why does the warehouse still not point its facts at it?",
+    "hint": "Data Modelling and the Data Warehouse, lesson 4; Relational Databases and SQL, lesson 1.",
+    "choices": [
+      {
+        "text": "It is the till's number: new till software counting from 1 again would make 2123 two different people.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It is too wide for a fact table that repeats it on all 887,477 rows, and a surrogate key is smaller to store.",
+        "correct": false,
+        "why": "Both are integers. The 66% that lesson 4 measured was an e-mail address against an integer key."
+      },
+      {
+        "text": "Walk-in sales have no customer, and only a surrogate key can be given the value 0 to stand in for them.",
+        "correct": false,
+        "why": "The unknown member is one use of a key the warehouse owns, not the reason; the reason is that somebody else can change or reuse the natural one."
+      },
+      {
+        "text": "The foreign key stays behind in the shop's database, so in the warehouse `customer_id` could point at nothing.",
+        "correct": false,
+        "why": "The warehouse is loaded by one program from one source; the danger is a value that changes meaning, not one that dangles."
+      }
+    ]
+  },
+  {
+    "id": "ex-eta5sgh7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "To tidy lesson 2's load, an analyst rewrites the lookup of the customer version as `o.ordered_at BETWEEN c.valid_from AND c.valid_to`. What happens to a sale placed at the very second a customer's tier changed?",
+    "hint": "Data Modelling and the Data Warehouse, lesson 5; Relational Databases and SQL, lesson 4.",
+    "choices": [
+      {
+        "text": "It matches neither version and drops out of the join, because `BETWEEN` leaves out both ends of its range.",
+        "correct": false,
+        "why": "`BETWEEN` includes both ends; that is the trap, not the protection."
+      },
+      {
+        "text": "It matches only the newer version, because when two rows qualify, a join keeps the later of them.",
+        "correct": false,
+        "why": "A join keeps every pair whose condition is true; it has no preference between them."
+      },
+      {
+        "text": "The same rows come back, since `>=` with `<` and `BETWEEN` are two spellings of one test on a timestamp.",
+        "correct": false,
+        "why": "They differ exactly at the boundary, and the boundary is where one version hands over to the next."
+      },
+      {
+        "text": "It matches both versions and is counted twice: one version's `valid_to` is the next one's `valid_from`.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-g4m3r1cy",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "The third line of order 112406 is corrected in `fact_sales`, R$ 10.00 lower, and nothing else is run. Which of these show the corrected total the next time somebody reads them? Choose all that apply.",
+    "hint": "Data Modelling and the Data Warehouse, lesson 6; Relational Databases and SQL, lesson 7.",
+    "choices": [
+      {
+        "text": "A view that groups `fact_sales` by month and shop.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`agg_sales_month`, made with `CREATE TABLE … AS SELECT` from `fact_sales`.",
+        "correct": false,
+        "why": "A table built from a query holds the rows of its last build; it is as old as that build until it is rebuilt."
+      },
+      {
+        "text": "A materialised view over `fact_sales`, created the day before.",
+        "correct": false,
+        "why": "It stores the answer and nothing updates it until a `REFRESH` runs."
+      },
+      {
+        "text": "A report that sums `fact_sales` inside a `WITH` step, run after the correction.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-6z04fv2e",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "Lesson 10's city report took 490 ms in one process and 222 ms with parallel query, where the leader and two workers each did a third. Treat those three processes as three processors in lesson 7's formula for the speed-up. What share of the report's work could be spread across them, in per cent? Round to the nearest whole number.",
+    "hint": "Data Modelling and the Data Warehouse, lesson 7; Relational Databases and SQL, lesson 10.",
+    "value": 82,
+    "tolerance": 1,
+    "unit": "%"
+  },
+  {
+    "id": "ex-9xad56xp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 9's BRIN index on `events (created_at)` and lesson 8's zone maps in a Parquet file are two versions of one trick. What do they share?",
+    "hint": "Data Modelling and the Data Warehouse, lesson 8; Relational Databases and SQL, lesson 9.",
+    "choices": [
+      {
+        "text": "Each is a sorted copy of the column with a pointer per row, so it serves any filter on that column, in whatever order rows were written.",
+        "correct": false,
+        "why": "That is a B-tree. These keep only a range per block, and a range says nothing useful when every block spans everything."
+      },
+      {
+        "text": "Each relies on a dictionary of the column's distinct values, so each works best on a column with few of them, such as a status.",
+        "correct": false,
+        "why": "A dictionary is an encoding of values. Skipping blocks depends on the rows a query wants sitting together."
+      },
+      {
+        "text": "Each keeps a minimum and a maximum per block and skips blocks that cannot match, so each needs rows stored in that column's order.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Each makes writes expensive, because every insert has to re-sort the column it covers.",
+        "correct": false,
+        "why": "Each records a few bytes per block as the data is written; lesson 9 calls BRIN a negligible index for that reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-xg6tqde6",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A warehouse billed on demand counts the data a query processes as every column it names, over every row of the table, at 8 bytes per integer value. A query reads `date_key`, `shop_key`, `promotion_key` and `net_cents` from `fact_sales`, filters on 2025 and ends with `LIMIT 10`. The table has 887,477 rows and no partition or clustering column. How many bytes of `fact_sales` are billed?",
+    "hint": "Data Modelling and the Data Warehouse, lesson 9; Relational Databases and SQL, lesson 4.",
+    "value": 28399264,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-vef2hvp9",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Two nightly jobs append to the same Delta table at once and the other one wins commit 5. Put what happens to the losing job in order, first step first.",
+    "hint": "Data Modelling and the Data Warehouse, lesson 10; Relational Databases and SQL, lesson 8.",
+    "items": [
+      "Write its Parquet files where no reader is looking for them",
+      "Try to create commit 5 in `_delta_log` and find it already taken",
+      "Read the log again, the winner's commit included",
+      "Write its entry as commit 6, and only now its files are part of the table"
+    ],
+    "trap": "Its files are on disk from the first step and still not the table: only a commit makes them so. Losing the race means reading again before claiming the next number, the way a refused transaction is run again from its reads."
+  },
+  {
+    "id": "ex-7sp2wj44",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "Match each principle of data mesh to what it means in practice, by lesson 11.",
+    "hint": "Data Modelling and the Data Warehouse, lesson 11.",
+    "pairs": [
+      {
+        "left": "Domain ownership",
+        "right": "The orders team publishes the orders, analytical data included"
+      },
+      {
+        "left": "Data as a product",
+        "right": "Users who did not build it can rely on it, with written guarantees"
+      },
+      {
+        "left": "A self-serve platform",
+        "right": "Storage, pipelines, a catalogue and access control run by a platform team"
+      },
+      {
+        "left": "Federated computational governance",
+        "right": "Shared rules, such as the conformed dimensions, enforced by code in the platform"
+      }
+    ],
+    "right_distractors": [
+      "A central data team that learns every source in turn"
+    ]
+  },
+  {
+    "id": "ex-t4txxhpa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Customer 19 asks to be erased, and a colleague proposes `DELETE FROM dim_customer WHERE customer_id = 19` instead of lesson 12's update. What happens to the customer's six sales lines in every report that joins `fact_sales` to `dim_customer`?",
+    "hint": "Data Modelling and the Data Warehouse, lesson 12; Relational Databases and SQL, lesson 5.",
+    "choices": [
+      {
+        "text": "They move to key 0, the walk-in row, because a sale whose customer is gone counts as unidentified.",
+        "correct": false,
+        "why": "Nothing re-points them: the six fact rows still carry keys 27, 28 and 29."
+      },
+      {
+        "text": "The reports stay as they were, since each fact row carries the customer's name and city itself.",
+        "correct": false,
+        "why": "A fact row carries keys and measures; the name and the city live only in the dimension."
+      },
+      {
+        "text": "They are erased too, as the LGPD requires, because a sale tied to a person cannot be kept.",
+        "correct": false,
+        "why": "Article 16 lets a company keep what a legal obligation requires; lesson 12 keeps the sales and removes what names the person."
+      },
+      {
+        "text": "They drop out of every inner join, their keys now matching no row, and the total falls by 73,630 centavos.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-d6d6nb5t",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "*The Salt Season IV* has `list_price_cents` 15990 in `books`, and its order lines of 2024 carry `unit_price_cents` 14890. A colleague computes 2024 revenue as `quantity * list_price_cents`, to skip the price on the line. By how many centavos does that overstate one copy sold in 2024?",
+    "hint": "Relational Databases and SQL, lesson 1; Data Modelling and the Data Warehouse, lesson 1.",
+    "value": 1100,
+    "tolerance": 0,
+    "unit": "centavos"
+  },
+  {
+    "id": "ex-p3swdmzb",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Lesson 2 asks one question of a value stored in two places: if the source changes, should this change too? Which of these are snapshots rather than copies? Choose all that apply.",
+    "hint": "Relational Databases and SQL, lesson 2; Data Modelling and the Data Warehouse, lesson 5.",
+    "choices": [
+      {
+        "text": "`unit_price_cents` on each order line, beside `list_price_cents` in `books`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`department` on every row of `dim_book`, rebuilt from the catalogue by each load.",
+        "correct": false,
+        "why": "A renamed department should show its new name on every book; it is a copy, safe because the load rewrites it."
+      },
+      {
+        "text": "`teacher_room` on every course the teacher teaches.",
+        "correct": false,
+        "why": "When the teacher moves office every course follows; that is the copy lesson 2 removed."
+      },
+      {
+        "text": "`state_when_joined`, the state a customer lived in on the day they joined.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-y6r0fqnj",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "In the shop's operational database Paulista, Pinheiros and Cambuí are in SP, Savassi in MG, Batel in PR, Moinhos in RS, and the website's state is NULL. SELECT count(*) FROM shops WHERE state <> 'SP' returns ___. On dim_shop, where the website's state is written as '--', the same filter returns ___.",
+    "hint": "Relational Databases and SQL, lesson 4; Data Modelling and the Data Warehouse, lesson 2.",
+    "blanks": [
+      {
+        "accept": [
+          "3",
+          "three"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      },
+      {
+        "accept": [
+          "4",
+          "four"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-y19xs6wr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Ana builds two summaries of December, one row per order: sales' net and finance's receipts. She wants every order they disagree about, whether it is in only one of them or in both with different amounts. Which query does that?",
+    "hint": "Relational Databases and SQL, lesson 5; Data Modelling and the Data Warehouse, lesson 11.",
+    "choices": [
+      {
+        "text": "A `FULL JOIN` on the order, keeping rows where either side is missing or the two amounts differ.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A `LEFT JOIN` from the sales summary, keeping the rows where the two amounts differ from each other.",
+        "correct": false,
+        "why": "Orders only finance has never appear, and for orders finance lacks the comparison with a null is unknown, so they drop too."
+      },
+      {
+        "text": "An inner `JOIN` on the order, keeping rows where the two amounts differ.",
+        "correct": false,
+        "why": "An inner join drops every order that is in only one summary, which is two of the three kinds of disagreement."
+      },
+      {
+        "text": "A `UNION` of the two summaries, keeping orders that appear in it once.",
+        "correct": false,
+        "why": "`UNION` removes identical rows, so an order both agree on also appears once and is reported as a disagreement."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ng07vbc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In the `versions` step of lesson 5's `dim_customer`, a colleague shortens `lead(valid_from) OVER (PARTITION BY customer_id ORDER BY valid_from)` to `lead(valid_from) OVER (ORDER BY valid_from)`. What does the rebuilt dimension look like?",
+    "hint": "Relational Databases and SQL, lesson 6; Data Modelling and the Data Warehouse, lesson 5.",
+    "choices": [
+      {
+        "text": "The same as before, because `lead()` looks just at one customer's own rows once `valid_from` is the window's order.",
+        "correct": false,
+        "why": "Without `PARTITION BY` the window is the whole result, and the next row can belong to anybody."
+      },
+      {
+        "text": "The build is refused, since a window function with an `ORDER BY` inside its `OVER` must also have a `PARTITION BY` clause.",
+        "correct": false,
+        "why": "`OVER (ORDER BY …)` alone is legal; lesson 6 writes several."
+      },
+      {
+        "text": "Each version ends at the next change to anyone, so one row in the table is current and the per-customer check fails.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Every version is current, since `lead()` returns null whenever the window has no partition at all to work within.",
+        "correct": false,
+        "why": "`lead()` returns the next row of the whole result, and null only at its very end."
+      }
+    ]
+  },
+  {
+    "id": "ex-1vts0c82",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On a PostgreSQL copy of the star, the sales mart is `CREATE VIEW mart_sales.lines AS SELECT * FROM wh.fact_sales`, and Ana says a mart of views can never fall behind. Which change shows the claim is incomplete?",
+    "hint": "Relational Databases and SQL, lesson 7; Data Modelling and the Data Warehouse, lesson 11.",
+    "choices": [
+      {
+        "text": "A correction to one sale, which the view does not show until somebody refreshes it.",
+        "correct": false,
+        "why": "A plain view stores no rows; it runs its query against the data as it is now."
+      },
+      {
+        "text": "A column added to `fact_sales` later: the view's rows are always current, but its `*` was turned into a list of columns the day it was created.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A new month of sales, since a view only sees the rows that existed when it was made.",
+        "correct": false,
+        "why": "Every read runs the definition again, so a new month is there at once."
+      },
+      {
+        "text": "A deleted line, which the view keeps returning until `VACUUM` removes it.",
+        "correct": false,
+        "why": "A deleted row is not returned by the query the view runs; vacuum only reclaims its space."
+      }
+    ]
+  },
+  {
+    "id": "ex-dfvtwz0w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "December's run of lesson 5's monthly load closes 269 versions in its second step, and then its `INSERT` fails. The three steps sit between `BEGIN` and `COMMIT`. What does `dim_customer_m` hold now?",
+    "hint": "Relational Databases and SQL, lesson 8; Data Modelling and the Data Warehouse, lesson 5.",
+    "choices": [
+      {
+        "text": "269 closed versions and no new ones, since each `UPDATE` is atomic and durable the moment it ends.",
+        "correct": false,
+        "why": "A single statement is atomic on its own only under autocommit; inside `BEGIN` nothing is durable until the `COMMIT`."
+      },
+      {
+        "text": "Only the corrected names, because the type 1 step ran first and a transaction undoes only the statement that failed.",
+        "correct": false,
+        "why": "A transaction is undone whole: every statement in it, not only the one that failed."
+      },
+      {
+        "text": "What it held before the run: the closings were in the same transaction as the failed `INSERT`, and went with it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The month's new customers but none of the closings, since the `INSERT` failed only for the rows it could not write.",
+        "correct": false,
+        "why": "A statement does not half happen; the `INSERT` wrote nothing, and the rollback took the closings too."
+      }
+    ]
+  },
+  {
+    "id": "ex-c3k83sxn",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "The shop's `order_lines` has `PRIMARY KEY (order_id, line_no)` and a foreign key on `book_id`, and `oltp.sql` still adds `CREATE INDEX ON order_lines (book_id)`. Which of these conditions can the primary key's index serve on its own? Choose all that apply.",
+    "hint": "Relational Databases and SQL, lesson 9; Data Modelling and the Data Warehouse, lesson 1.",
+    "choices": [
+      {
+        "text": "`WHERE order_id = 900001`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`WHERE book_id = 2395`",
+        "correct": false,
+        "why": "PostgreSQL builds no index for a foreign key, and `book_id` is not in the key at all; that is why the script adds one."
+      },
+      {
+        "text": "`WHERE order_id = 900001 AND line_no = 2`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`WHERE line_no = 1`",
+        "correct": false,
+        "why": "`line_no` is the second column of the key, and an index serves its columns only from the left."
+      }
+    ]
+  },
+  {
+    "id": "ex-n7cwhdk6",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Lesson 1's report printed temp read=14555 written=14571 beside its shared buffers. In lesson 10's terms, a sort or a hash that outgrows the memory one operation is allowed, set by the parameter ___, goes on in temporary files on disk.",
+    "hint": "Relational Databases and SQL, lesson 10; Data Modelling and the Data Warehouse, lesson 1.",
+    "blanks": [
+      {
+        "accept": [
+          "work_mem"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-b7w3nch4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A Python job loads each day's sale lines into the DuckDB warehouse by looping over them and sending one `INSERT` per line, and the load gets slower every month. What does the course say is wrong?",
+    "hint": "Relational Databases and SQL, lesson 11; Data Modelling and the Data Warehouse, lesson 8.",
+    "choices": [
+      {
+        "text": "The table needs an index on the key each `INSERT` names, so every row finds its place faster.",
+        "correct": false,
+        "why": "An index is more work on every write, and the cost here is one statement per row."
+      },
+      {
+        "text": "The loop is fine: a column store takes single rows faster than PostgreSQL does, so the cause is elsewhere.",
+        "correct": false,
+        "why": "Lesson 8 measured the opposite, 0.956 seconds for PostgreSQL against 1.981 for DuckDB."
+      },
+      {
+        "text": "The processor: a bigger machine would spread the inserts across more threads and keep up with the growth.",
+        "correct": false,
+        "why": "A cost made of round trips does not move with a bigger server."
+      },
+      {
+        "text": "It is lesson 11's N+1 shape aimed at a column store: one round trip per row, each appending to every column's compressed block, where one batch writes each column once.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-33dhhj4k",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Two teams loaded the same region as `South`, `SOUTH` and `Sul`. On MySQL 8 with its default collation, how many groups does `GROUP BY region` produce, and what fixes it?",
+    "hint": "Relational Databases and SQL, lesson 12; Data Modelling and the Data Warehouse, lesson 3.",
+    "choices": [
+      {
+        "text": "One: the default collation ignores accents and case, so all three spellings of the region compare as equal ones.",
+        "correct": false,
+        "why": "`ai_ci` folds accents and case of one word; `Sul` is a different word."
+      },
+      {
+        "text": "Two: `South` and `SOUTH` fold together and `Sul` stays apart; one conformed value per region fixes it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Three: `GROUP BY` compares bytes on every engine, and the collation decides just `ORDER BY`.",
+        "correct": false,
+        "why": "The collation applies to comparison, `ORDER BY`, `GROUP BY`, `DISTINCT` and unique indexes alike."
+      },
+      {
+        "text": "Two, and `COLLATE utf8mb4_bin` on the column fixes it, giving each spelling a group of its own.",
+        "correct": false,
+        "why": "That makes three groups, which is the problem made bigger; the values need conforming."
+      }
+    ]
+  },
+  {
+    "id": "ex-cc3r4ah7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A bank's monthly report runs for two hours at night on the production Oracle instance, beside the application, and fails partway with `ORA-01555`. Which reading puts lesson 13 and warehouse lesson 1 together?",
+    "hint": "Relational Databases and SQL, lesson 13; Data Modelling and the Data Warehouse, lesson 1.",
+    "choices": [
+      {
+        "text": "Its snapshot's undo was recycled; it is analytics on the transactional database, and a second server is another licence.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A deadlock with the application, where Oracle chose the report as its victim, so a retry loop around the report is the fix.",
+        "correct": false,
+        "why": "A deadlock is `ORA-00060`; `ORA-01555` is a snapshot Oracle could no longer rebuild."
+      },
+      {
+        "text": "The report read uncommitted work that was later rolled back, and Oracle stops any query that saw a value which never existed.",
+        "correct": false,
+        "why": "Oracle has no read uncommitted; its readers never see another transaction's unfinished work."
+      },
+      {
+        "text": "A bug in the query: Oracle refuses a statement that runs for longer than an hour, so the report has to move into PL/SQL.",
+        "correct": false,
+        "why": "The query was correct; Oracle refused because it could not keep its promise, not because of a time limit."
+      }
+    ]
+  },
+  {
     "id": "ex-c9q9kqb4",
     "version": 1,
     "type": "multiple-choice",
@@ -1075,6 +1705,688 @@
         "text": "The container needs `--network none`, so that its `localhost` falls through to the host's.",
         "correct": false,
         "why": "`none` leaves only the container's own loopback. It is `host` that shares the host's network namespace."
+      }
+    ]
+  },
+  {
+    "id": "ex-ar11a0jy",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "A month of the ingestion server's logs holds five failures, each from a different night. Match each message to where lesson 1 says to look.",
+    "hint": "Networks and Protocols, lesson 1.",
+    "pairs": [
+      {
+        "left": "`ping: connect: Network is unreachable`",
+        "right": "This machine's own link, address or route"
+      },
+      {
+        "left": "`Destination Host Unreachable`, from the server's own address",
+        "right": "A machine on the same link that is off or not there"
+      },
+      {
+        "left": "`Connection refused`",
+        "right": "The service on the far machine, stopped or on another port"
+      },
+      {
+        "left": "`curl: (6) Could not resolve host`",
+        "right": "The name, or the DNS server"
+      },
+      {
+        "left": "`HTTP/2 404`",
+        "right": "The site itself; the network did its job"
+      }
+    ],
+    "right_distractors": [
+      "A firewall somewhere in between"
+    ]
+  },
+  {
+    "id": "ex-4m3t0tfx",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "Small pages from a partner's API arrive, and the nightly export hangs with nothing of its body received. From the extraction server, `ping -M do -s 1464` to the API's address gets an answer and `-s 1465` does not. The narrow link is the office router's own line to the provider, and the router is set to clamp the MSS to it. What MSS will the API's server then see in the extraction server's SYN?",
+    "hint": "Networks and Protocols, lesson 2.",
+    "value": 1452,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-41zmycca",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A loader in the application subnet must reach the warehouse's PostgreSQL at `10.0.64.20`, in the data subnet. `nc -zv -w 3 10.0.64.20 5432` waits the full three seconds and reports `timed out`. A colleague says the database has crashed. What does the wait point at?",
+    "hint": "Networks and Protocols, lesson 3; Cloud and Serverless, lesson 6.",
+    "choices": [
+      {
+        "text": "The database has stopped, and with nothing listening on 5432 the server's kernel ignores the SYN.",
+        "correct": false,
+        "why": "With nothing listening, the kernel answers at once with a reset, and `nc` would have printed `Connection refused` rather than waited."
+      },
+      {
+        "text": "Something on the path discarded the SYN without a word, such as the database's security group.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The data tier's route table has no `0.0.0.0/0` route, so the packet had nowhere to go.",
+        "correct": false,
+        "why": "Both addresses are inside the VPC, and the `local` route every table starts with carries them; the default route matters only for leaving it."
+      },
+      {
+        "text": "The database is swamped by connections stuck in `TIME-WAIT` and has stopped answering.",
+        "correct": false,
+        "why": "`TIME-WAIT` is a closed connection waiting out stray packets: the mark of a busy server, not a broken one."
+      }
+    ]
+  },
+  {
+    "id": "ex-26ngk8ky",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Since this morning a monitoring job has looked up `ingest.example.com` every minute, before the name existed. Each answer was `NXDOMAIN`, with the zone's SOA `ns1.example.com. hostmaster.example.com. 2026092502 3600 900 1209600 300`. You create the `A` record now. For at most how many seconds can a resolver that answered the job a moment ago keep saying the name does not exist?",
+    "hint": "Networks and Protocols, lesson 4; Web and Internet Fundamentals, lesson 8.",
+    "value": 300,
+    "tolerance": 0,
+    "unit": "s"
+  },
+  {
+    "id": "ex-45cy4z3c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The nightly extract has slowed down. Run by hand against one page of the partner's API, `curl -so /dev/null -w` with the lesson's five timers prints `dns 0.004`, `tcp 0.031`, `tls 0.098`, `first byte 4.210` and `total 4.260`. Where did the time go?",
+    "hint": "Networks and Protocols, lesson 5; Web and Internet Fundamentals, lesson 11.",
+    "choices": [
+      {
+        "text": "Into the TLS handshake, the largest number before the first byte.",
+        "correct": false,
+        "why": "Each timer counts from the start, so TLS took 0.098 − 0.031, about 67 ms."
+      },
+      {
+        "text": "Into carrying the response, so a faster line at the extraction server would help.",
+        "correct": false,
+        "why": "The body took 4.260 − 4.210, 50 ms; the line is not what is slow."
+      },
+      {
+        "text": "Into the partner's server producing the answer.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Into looking up the name, because the resolver was asked first.",
+        "correct": false,
+        "why": "DNS had finished at 4 ms; a slow resolver shows in the first timer, and this one is small."
+      }
+    ]
+  },
+  {
+    "id": "ex-c3c11dr5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Python extract fails against a partner's API with `unable to get local issuer certificate`, while the same address opens without a warning in an analyst's browser. `openssl s_client` against it lists only `0 s:CN = api.partner.example` with `i:O = Example Trust Services, CN = Example Issuing CA 1`, and ends `Verify return code: 21 (unable to verify the first certificate)`. What is wrong?",
+    "hint": "Networks and Protocols, lesson 6.",
+    "choices": [
+      {
+        "text": "The partner's server leaves out the intermediate; the fix is the full chain on their side.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The certificate is self-signed, so it has to go into the extract's trust store as a root.",
+        "correct": false,
+        "why": "Its issuer is `Example Issuing CA 1`, not itself; a self-signed one fails with `self-signed certificate`, code 18."
+      },
+      {
+        "text": "The extraction server's clock is wrong, so the certificate looks expired.",
+        "correct": false,
+        "why": "A date problem says `certificate has expired`, code 10; this is a link missing from the chain."
+      },
+      {
+        "text": "Nothing on the partner's side: the browser proves the chain is fine, so the extract can skip verification.",
+        "correct": false,
+        "why": "Browsers remember or fetch intermediates and are no test of a chain, and switching the check off is the one fix the lesson rules out."
+      }
+    ]
+  },
+  {
+    "id": "ex-me3fg51z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The warehouse's PostgreSQL at `10.0.64.20` has no public address, and its security group admits 5432 only from the bastion's group. From your laptop you run `ssh -f -N -L 5433:10.0.64.20:5432 bastion`, then point `psql` at `127.0.0.1` port 5433, and it connects. Why does the database let it in?",
+    "hint": "Networks and Protocols, lesson 7; Cloud and Serverless, lesson 6.",
+    "choices": [
+      {
+        "text": "The tunnel carries your laptop's public address all the way to the database, and the group happens to allow it.",
+        "correct": false,
+        "why": "The database never sees your laptop; the connection to it is opened on the bastion."
+      },
+      {
+        "text": "The SSH session is encrypted, and a security group lets encrypted traffic through.",
+        "correct": false,
+        "why": "A group filters by protocol, port and source; whether the bytes are encrypted is nothing to it."
+      },
+      {
+        "text": "It would not: `10.0.64.20` is private, so the laptop cannot reach it and the tunnel fails.",
+        "correct": false,
+        "why": "The destination in `-L` is reached from the bastion, inside the VPC, where the private address routes."
+      },
+      {
+        "text": "sshd on the bastion opens the connection, so it arrives from an interface that carries the bastion's group.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ft8qa65j",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A partner has delivered its nightly order files by plain FTP for years, and is choosing what to move to. Which of these are true? Choose all that apply.",
+    "hint": "Networks and Protocols, lesson 8.",
+    "choices": [
+      {
+        "text": "On plain FTP, anybody on the path can read the password your job logs in with.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "SFTP runs over SSH on port 22, with no passive range to open in a firewall.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "FTPS keeps the separate data connections, so its firewall still needs the passive range.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "SFTP is FTP inside TLS, so the partner's FTP server can offer it with two settings.",
+        "correct": false,
+        "why": "SFTP is a subsystem of SSH and has nothing to do with FTP; FTP inside TLS is FTPS."
+      },
+      {
+        "text": "A file with the same size on both ends arrived byte for byte.",
+        "correct": false,
+        "why": "The same size is a good sign and not a proof; `sha256sum` on both ends is."
+      }
+    ]
+  },
+  {
+    "id": "ex-49eyj91s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A task that e-mails the nightly data-quality report to `ops@partner.example` hands it to the company's mail server on port 25 without logging in, and gets `554 5.7.1 <ops@partner.example>: Relay access denied`. What should change?",
+    "hint": "Networks and Protocols, lesson 9; Data Pipelines and ETL, lesson 10.",
+    "choices": [
+      {
+        "text": "Nothing in the task: the server is busy tonight, and the retries will get the message through.",
+        "correct": false,
+        "why": "A code starting with 5 is permanent, and asking again gets the same refusal; it is a failure to stop on, not to retry."
+      },
+      {
+        "text": "An SPF record for the partner's domain that lists the company's mail server.",
+        "correct": false,
+        "why": "SPF is checked by a receiving server against the sender's domain; this one refused before anything was sent, because nobody had logged in."
+      },
+      {
+        "text": "Port 587, with TLS and a login; only then does it relay to other domains.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A `From:` line of `ops@partner.example`, so the server treats the message as the partner's own.",
+        "correct": false,
+        "why": "The letter's `From:` is not what a server routes by, and forging it only invites DMARC to refuse it."
+      }
+    ]
+  },
+  {
+    "id": "ex-bpd5ffb0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Nightly downloads from a partner are slow, and you attach an `mtr` report to the ticket. It shows `0.0%` loss at hops 1 and 2, `55.0%` at hop 3, and `0.0%` at hops 4, 5 and 6, the last being the partner's server. What does it say about hop 3?",
+    "hint": "Networks and Protocols, lesson 10.",
+    "choices": [
+      {
+        "text": "It drops more than half of all the traffic that crosses it, and the ticket should name it.",
+        "correct": false,
+        "why": "Hops 4 to 6 are reached through hop 3 and lose nothing, so traffic is crossing it untouched."
+      },
+      {
+        "text": "The path breaks at that hop, and the downloads find their way round it by another route.",
+        "correct": false,
+        "why": "The report is one path, and every hop after it answered along it."
+      },
+      {
+        "text": "It loses packets, though too few for TCP to notice.",
+        "correct": false,
+        "why": "Loss that touches real traffic carries on to the end of the path; this stops at the hop."
+      },
+      {
+        "text": "It declines to answer some probes sent to it, which is not loss on the path.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-3srmg7x4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A nightly extract runs on a platform as a service and saves each night's raw API pages under `./landing/` on its own disk, for the load step to read in the morning. What does lesson 1 say happens to those files on many platforms?",
+    "hint": "Cloud and Serverless, lesson 1.",
+    "choices": [
+      {
+        "text": "They are lost at the next deploy or restart; they belong in object storage.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "They are kept, because the platform backs up each copy's disk together with the application.",
+        "correct": false,
+        "why": "A platform runs copies of the application and replaces them freely; it keeps nothing one of them wrote locally."
+      },
+      {
+        "text": "They survive, because files written locally become part of the code the platform builds.",
+        "correct": false,
+        "why": "The build takes the code you handed over, not files written while it ran."
+      },
+      {
+        "text": "They stay until the platform retires the runtime version they were written under.",
+        "correct": false,
+        "why": "A runtime's retirement decides your language version, not how long a file lasts."
+      }
+    ]
+  },
+  {
+    "id": "ex-jf0yyb3z",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "This month a team copies 20 TB out of `sa-east-1` to its own datacentre, over a VPN across the internet. At the lesson's tiered prices for data out to the internet, 0.150 per GB for the first 10 TB and 0.138 for the next 40 TB, with a TB counted as 1,024 GB, what does the transfer cost, in USD?",
+    "hint": "Cloud and Serverless, lesson 2.",
+    "value": 2949.12,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-d9nkesbh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A cost report reads the provider's public price list every night from the address with `current` in it, and multiplies last month's usage by it. Re-run in March for January, it gives a different total from the one sent in February, though the usage rows are identical. Why?",
+    "hint": "Cloud and Serverless, lesson 3; Data Pipelines and ETL, lesson 15.",
+    "choices": [
+      {
+        "text": "The usage export was still changing in February, and has settled since.",
+        "correct": false,
+        "why": "The usage rows are identical in both runs; what moved is the prices."
+      },
+      {
+        "text": "Price lists are cached per region, and the re-run read another region's file.",
+        "correct": false,
+        "why": "The region is part of the address the report asks for; nothing swaps it behind its back."
+      },
+      {
+        "text": "`current` is the latest version, so the re-run used newer prices; a pinned version gives one total.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Free allowances are applied on the day a report runs, so a later run of the same month gets a larger share of them.",
+        "correct": false,
+        "why": "An allowance is a tier of the price list, counted over the month of usage, not over the day of the calculation."
+      }
+    ]
+  },
+  {
+    "id": "ex-nsfqd84n",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "At 20:00 the load on the reporting API triples, and a target-tracking policy runs its autoscaling group. Put the steps before a new instance takes a share of the load in order, the first one first.",
+    "hint": "Cloud and Serverless, lesson 4.",
+    "items": [
+      "The metric is collected, and the policy waits for enough points to trust the rise",
+      "The group asks for instances, and the provider places and starts them",
+      "Each new instance boots and runs its user data",
+      "The load balancer's health check passes, and traffic reaches it"
+    ],
+    "trap": "The policy cannot act on a rise it has not measured, and the load balancer sends nothing to an instance until its check passes; the boot in between is the step a baked image shortens."
+  },
+  {
+    "id": "ex-nqxrekfe",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Raw API pages land under `raw/` in object storage, and a lifecycle rule moves them after 180 days to the coldest class on the lesson's sheet. A bug found today means last year's facts must be rebuilt from those pages, with a backfill over the whole year. What happens when its runs start?",
+    "hint": "Cloud and Serverless, lesson 5; Data Pipelines and ETL, lesson 9.",
+    "choices": [
+      {
+        "text": "They run as usual, only slower, since a cold class still answers a `GET` once the retrieval fee for the object has been paid.",
+        "correct": false,
+        "why": "Reading in milliseconds is the warmer classes' promise; the coldest refuses a `GET` until a restore of the object has finished."
+      },
+      {
+        "text": "Older days' runs cannot read their pages until each object is restored, in minutes to hours, billed per GB.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The pages older than 180 days were deleted by the rule, so the backfill finds nothing left to read for most of the year.",
+        "correct": false,
+        "why": "The rule moves them to another class; deleting would take an expiration, and this rule has none."
+      },
+      {
+        "text": "Each run reads its pages at no charge, because reading inside one bucket is not a transfer.",
+        "correct": false,
+        "why": "A cold class bills every GB read back from it, whoever reads it and from wherever."
+      }
+    ]
+  },
+  {
+    "id": "ex-9bd3vsp7",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A private subnet's batch jobs copy terabytes a night to object storage in the same region through the NAT gateway, paying its processing charge on every GB. The free path lesson 6 gives that traffic is a route in the subnet's table to a gateway ___.",
+    "hint": "Cloud and Serverless, lesson 6.",
+    "blanks": [
+      {
+        "accept": [
+          "endpoint",
+          "endpoints"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-q8gfg1j0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "An extract runs in a container on a VM whose role may only put objects under `raw/` in one bucket. To test it, a developer started the container with an `--env-file` copied from his laptop, holding his own access key pair, and the file stayed. The audit log now shows the extract's writes under his user. Why?",
+    "hint": "Cloud and Serverless, lesson 7; Docker and Containers, lesson 17.",
+    "choices": [
+      {
+        "text": "The key is in the environment, the first place the credential chain looks, so the machine's role is never consulted.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The role's credentials expired after an hour, and the program fell back to the next key it found.",
+        "correct": false,
+        "why": "The provider replaces a role's credentials before they expire; the program never used them at all."
+      },
+      {
+        "text": "A container cannot reach the machine's metadata service, so the developer's key was the only credential the program could find.",
+        "correct": false,
+        "why": "The machine's own sources come last in the chain; it never got that far, because the environment answered first."
+      },
+      {
+        "text": "The audit log records whoever started the container, whatever credentials signed the calls.",
+        "correct": false,
+        "why": "The log records the principal whose credentials signed each request, and here that is his key."
+      }
+    ]
+  },
+  {
+    "id": "ex-167e258y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Every file that lands under `incoming/` triggers a function that inserts its rows into the day's sales table. Once or twice a month a day's total comes out doubled, though the file was uploaded once. Which fix matches the lessons?",
+    "hint": "Cloud and Serverless, lesson 8; Data Pipelines and ETL, lesson 15.",
+    "choices": [
+      {
+        "text": "A longer timeout, so the function never stops halfway and gets retried.",
+        "correct": false,
+        "why": "A duplicate is part of the contract even when nothing failed: delivery is at least once."
+      },
+      {
+        "text": "The bucket's retries switched off, so each file is announced a single time.",
+        "correct": false,
+        "why": "At-least-once delivery is how asynchronous invocation works, not a setting to turn off."
+      },
+      {
+        "text": "More memory for the function, so two copies of it never run at once.",
+        "correct": false,
+        "why": "Memory sizes one copy; the platform still starts a copy per event, duplicates included."
+      },
+      {
+        "text": "An idempotent load: record each file's key and skip one already seen, or replace that file's rows instead of adding them.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-sdr7as5z",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "An enrichment step in São Paulo calls an API in Northern Virginia 3,000 times, one call after another, and opens a fresh HTTPS connection for each. At the lesson's floor of 76.6 ms per round trip, with the TCP handshake, the TLS 1.3 handshake and the request costing one each, at least how many seconds does the distance alone add to the step?",
+    "hint": "Cloud and Serverless, lesson 9; Web and Internet Fundamentals, lesson 3.",
+    "value": 689.4,
+    "tolerance": 0.1,
+    "unit": "s"
+  },
+  {
+    "id": "ex-djq9ccgc",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "The data platform's account has a monthly budget of 2,000 USD, with alerts at 50%, 80% and 100% of actual spend and one on the forecast. Which statements are true? Choose all that apply.",
+    "hint": "Cloud and Serverless, lesson 10.",
+    "choices": [
+      {
+        "text": "When actual spend passes 2,000, the 100% alert arrives and spending carries on until somebody changes what runs.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The forecast alert can fire weeks before actual spend reaches the limit.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Billing data runs hours behind usage, which is why thresholds below the limit are worth having.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Crossing 100% stops the account's resources until next month.",
+        "correct": false,
+        "why": "An alert tells you and stops nothing; the actions that do stop things have to be built on purpose."
+      },
+      {
+        "text": "A bill that tripled in a year means the design is failing to scale.",
+        "correct": false,
+        "why": "Only the cost per unit the business sells can say so; if the data processed grew faster, each unit got cheaper."
+      }
+    ]
+  },
+  {
+    "id": "ex-7tk5twb3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A 500 GB export sits in a bucket in Northern Virginia, and a job in São Paulo copies it as one download over a 1 Gbps link. It runs at a small fraction of the link, and nothing is dropping packets. What explains it, and what helps?",
+    "hint": "Web and Internet Fundamentals, lesson 3; Cloud and Serverless, lesson 9.",
+    "choices": [
+      {
+        "text": "The link is shared with the neighbours, so the copy should run at three in the morning.",
+        "correct": false,
+        "why": "Sharing explains a slower evening, not one stream far below an idle link."
+      },
+      {
+        "text": "Headers on every layer cap throughput, so compressing the export is the lever.",
+        "correct": false,
+        "why": "Headers cost a few percent; the gap here is the round trip a single conversation waits on."
+      },
+      {
+        "text": "One stream waits a long round trip per window; parallel streams help.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Bandwidth is the limit, so a 10 Gbps link would make the copy ten times faster.",
+        "correct": false,
+        "why": "A wider pipe does not fill when the sender spends its time waiting for acknowledgements from another continent."
+      }
+    ]
+  },
+  {
+    "id": "ex-3qm9xwcb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The extract's API task retries on a `503` and waits on a `429`, as its retry policy says. One night the partner's gateway answers every page with `200` and the body `{\"error\": \"quota exceeded\"}`. The run is green, no retry fires, and the day is missing from the warehouse. Why did nothing react?",
+    "hint": "Web and Internet Fundamentals, lesson 6; Data Pipelines and ETL, lesson 10.",
+    "choices": [
+      {
+        "text": "Retry logic acts on the status, and `200` said it worked; the body went unread.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Retries fire only on connection errors that never reach a status, and this reply carried one.",
+        "correct": false,
+        "why": "The policy retries a `503` and waits on a `429`, both statuses; it passed this one by because the status said success."
+      },
+      {
+        "text": "A quota is a permanent failure, and the task was right to treat it as one.",
+        "correct": false,
+        "why": "The task did not fail at all; it recorded a success, and that is the problem."
+      },
+      {
+        "text": "The partner should have answered `404`, which a retry policy treats as a passing failure.",
+        "correct": false,
+        "why": "A `404` is a client error that asking again will not change, the kind a task fails on at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-f4sv13m4",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "Each run publishes a dated export, and a small pointer file names the newest one; the exports are served with a year-long max-age. So that browsers and the CDN may keep the pointer but must ask the origin before every use, which is usually answered 304, its Cache-Control directive is ___.",
+    "hint": "Web and Internet Fundamentals, lesson 7.",
+    "blanks": [
+      {
+        "accept": [
+          "no-cache"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2ca6wjxp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An hour ago you moved the ingestion endpoint to a new server and edited its `A` record. Some senders still reach the old one. `dig @ns1.dnsprovider.net ingest.example.com`, asking the server the domain's `NS` records name, returns the old address too. What does that settle?",
+    "hint": "Web and Internet Fundamentals, lesson 8; Networks and Protocols, lesson 10.",
+    "choices": [
+      {
+        "text": "The change is not live yet: resolvers hold the old answer until its TTL runs out.",
+        "correct": false,
+        "why": "That is what an old answer from a resolver means; an old answer from the authoritative server means the change is not there at all."
+      },
+      {
+        "text": "The published record is wrong, and waiting will not help; check whether the edit went to a provider the `NS` records no longer name.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Propagation takes up to 48 hours, and the authoritative server has not been sent the change yet.",
+        "correct": false,
+        "why": "Nothing is sent to the authoritative server; it answers with what was published there, and it answers old."
+      },
+      {
+        "text": "The senders have the old address in their hosts files.",
+        "correct": false,
+        "why": "The authoritative answer is old too, and no hosts file on a sender changes what that server says."
+      }
+    ]
+  },
+  {
+    "id": "ex-3d52vsqh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The data team's dashboard API, in São Paulo, takes two seconds per request, nearly all of it a query on the warehouse, and every answer depends on the user's filters. A manager proposes putting a CDN in front of it. What will that change?",
+    "hint": "Web and Internet Fundamentals, lesson 9; Cloud and Serverless, lesson 9.",
+    "choices": [
+      {
+        "text": "Every request gets about ten times faster, because an edge is nearer than the origin.",
+        "correct": false,
+        "why": "Only cached answers come from the edge; these differ per filter and still go to the origin."
+      },
+      {
+        "text": "Nothing about the two seconds: these answers are not cached, so each still goes to the origin, perhaps one hop longer.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The query time, because each edge keeps a copy of the warehouse near its users.",
+        "correct": false,
+        "why": "An edge keeps copies of responses, not databases; the system of record stays in the region."
+      },
+      {
+        "text": "It makes the answers safe to cache publicly, because the CDN keeps users apart by address.",
+        "correct": false,
+        "why": "Nothing about a CDN makes a personal answer shareable; such answers have to be marked `private`."
+      }
+    ]
+  },
+  {
+    "id": "ex-x3ypw7x4",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "To skip writing an API client, a colleague right-clicks a request on the internal reporting site, copies it as curl, and commits the command as the extraction job's script. Which of these are true? Choose all that apply.",
+    "hint": "Web and Internet Fundamentals, lesson 11; Cloud and Serverless, lesson 7.",
+    "choices": [
+      {
+        "text": "The command carries his session cookie, a working credential in plain text.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Everybody who clones the repository gets it, and the history keeps it after a later commit deletes the line.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The job should run as an identity of its own, with only the access it needs.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It is harmless, since a cookie works only inside the browser that received it.",
+        "correct": false,
+        "why": "The copied command replays the request outside the browser, cookie included, which is why it works at all."
+      },
+      {
+        "text": "It is safe as long as the repository is private, since only colleagues can read it.",
+        "correct": false,
+        "why": "A secret in anything that gets copied is given to whoever receives a copy; a private repository narrows who that is, and the key still works for all of them."
       }
     ]
   }
