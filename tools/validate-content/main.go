@@ -813,6 +813,16 @@ var allowedOutsideTheFont = map[rune]string{
 	'\u25c7': "`npm create vite` prints it beside a step it finished (`◇  Scaffolding project " +
 		"in …`). IBM Plex Mono has no U+25C7 at all. It opens a line and nothing is aligned to " +
 		"what follows it, and a capture is pasted byte for byte",
+	'\u25c6': "Nuxt's tools print it beside a step they finished (`◆ Types generated in .nuxt.`). " +
+		"IBM Plex Mono has no U+25C6 at all. It opens a line and nothing is aligned to what " +
+		"follows it",
+	// `next build` ends with a table of routes, one of these before each.
+	'\u25cb': "`next build` marks a route prerendered as static content with it, in its route " +
+		"table and in the legend under it. IBM Plex Mono has no U+25CB at all. The two columns at " +
+		"the right of those lines move by whatever the reader's machine gives the glyph, which is " +
+		"a fraction of a cell; the alternative is a table that is not the one the build printed",
+	'\u25d0': "`next build` marks a partially prerendered route with it, in the same table and " +
+		"legend as U+25CB, with the same consequence. IBM Plex Mono has no U+25D0 at all",
 }
 
 // coverage is the set of code points the interface declares a face for.
