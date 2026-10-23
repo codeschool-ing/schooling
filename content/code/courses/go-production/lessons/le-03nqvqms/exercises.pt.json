@@ -1,0 +1,380 @@
+{
+  "ex-e4bj6jbp": {
+    "prompt": "Ana digita `go version` e o shell responde `bash: line 1: go: command not found`, com status de saída 127. O que isso diz a ela?",
+    "hint": "O 127 vem do shell, não do Go.",
+    "choices": [
+      {
+        "text": "O arquivo veio corrompido e precisa ser baixado de novo",
+        "why": "Um arquivo corrompido deixaria um `go` que falha ao rodar. Aqui nada rodou: o shell nem achou um arquivo para iniciar."
+      },
+      {
+        "text": "O shell não achou nenhum `go` nos diretórios do `PATH` dela",
+        "why": "Isso. 127 é o código do shell para comando não encontrado; a correção são as duas linhas `export` no `~/.profile` e um novo login."
+      },
+      {
+        "text": "O Go 1.27.1 se recusa a rodar no Ubuntu 24.04",
+        "why": "Todas as transcrições do curso rodaram Go 1.27.1 no Ubuntu 24.04. Uma recusa viria do próprio Go, com mensagem dele."
+      },
+      {
+        "text": "Falta o `gcc`, então o comando go não inicia",
+        "why": "Sem `gcc` o comando go inicia e desliga o cgo. A falta do compilador aparece depois, na recusa do `-race`."
+      }
+    ]
+  },
+  "ex-z1szj7r7": {
+    "prompt": "Numa máquina em que ninguém definiu a variável, `go env CGO_ENABLED` imprime `0`. Qual é a causa mais provável?",
+    "hint": "A seção mostrou esse valor num `PATH` sem um programa.",
+    "choices": [
+      {
+        "text": "O comando go procurou um compilador C e não achou",
+        "why": "Isso. Sem `gcc` no caminho, o comando go desliga o cgo em silêncio, e o detector de corrida passa a recusar o build."
+      },
+      {
+        "text": "O Go 1.27.1 vem com cgo desligado por padrão no Linux",
+        "why": "Na máquina do laboratório, com `gcc` presente, o mesmo comando imprimiu `1`. O padrão segue o compilador."
+      },
+      {
+        "text": "O `go.mod` do módulo pede uma versão mais nova do Go",
+        "why": "Isso falha com uma mensagem citando a versão que o `go.mod` exige. Não tem relação com cgo."
+      },
+      {
+        "text": "Falta o `~/go/bin` no `PATH`",
+        "why": "Esse diretório guarda programas que você construiu com `go install`. O compilador C fica em `/usr/bin`."
+      }
+    ]
+  },
+  "ex-1b8qc126": {
+    "prompt": "Por que o curso recomenda uma máquina virtual, e não o Go Playground, para quem está no Windows e não consegue instalar o Go direto?",
+    "hint": "Pense no que este curso faz em volta do programa.",
+    "choices": [
+      {
+        "text": "O Playground roda uma versão anterior à 1.27.1",
+        "why": "A seção não dá esse motivo. O que ela diz que falta é o terminal."
+      },
+      {
+        "text": "Uma máquina virtual compila Go mais rápido que o próprio Windows",
+        "why": "Velocidade não é o argumento; a VM custa memória e disco enquanto roda."
+      },
+      {
+        "text": "Não há terminal para build, linters e profiler",
+        "why": "Isso. O Playground roda um arquivo e mostra a saída; tudo o que o curso digita em volta desse arquivo não tem onde rodar ali."
+      },
+      {
+        "text": "O Playground recusa qualquer programa que importe um pacote",
+        "why": "Ele roda programas que importam a biblioteca padrão; o `hits` compilaria lá. É o ferramental em volta que não tem lugar."
+      }
+    ]
+  },
+  "ex-ty82c639": {
+    "prompt": "O detector de corrida se recusa a compilar com `go: -race requires ___; enable it by setting CGO_ENABLED=1` quando não há compilador C no caminho.",
+    "hint": "O recurso que deixa o Go chamar C, e do qual o detector de corrida depende.",
+    "blanks": [
+      {
+        "accept": [
+          "cgo"
+        ]
+      }
+    ]
+  },
+  "ex-dwvdr2zn": {
+    "prompt": "Ana roda `./args -n=3 \"two words\" feb.log`. O que `flag.Args()` devolve?",
+    "hint": "O shell decidiu onde cada palavra termina antes de o programa começar.",
+    "choices": [
+      {
+        "text": "`[\"two words\" \"feb.log\"]`",
+        "why": "Isso. As aspas disseram ao shell que `two words` é uma palavra só; o pacote flag tirou o `-n=3` e deixou o resto."
+      },
+      {
+        "text": "`[\"two\" \"words\" \"feb.log\"]`",
+        "why": "Essa seria a lista sem as aspas. As aspas não chegam ao programa, mas a fronteira que elas marcaram chega."
+      },
+      {
+        "text": "`[\"-n=3\" \"two words\" \"feb.log\"]`",
+        "why": "Isso é o `os.Args` sem o primeiro elemento. `flag.Args` é o que sobra depois de tirar as flags."
+      },
+      {
+        "text": "`[\"\\\"two words\\\"\" \"feb.log\"]`, com as aspas",
+        "why": "O shell tira as aspas antes de o programa começar; o `os.Args` da transcrição não mostra aspas."
+      }
+    ]
+  },
+  "ex-g69e4bfq": {
+    "prompt": "Em `./args --n 3 jan.log -v`, por que o `-v` continua falso?",
+    "hint": "Veja onde o `-v` fica em relação à primeira palavra que não é flag.",
+    "choices": [
+      {
+        "text": "O Go aceita apenas flags escritas com um traço só",
+        "why": "O `--n` do mesmo comando foi lido como `-n`. Um traço ou dois dão na mesma flag."
+      },
+      {
+        "text": "Uma flag booleana precisa de `-v=true` para ser ligada",
+        "why": "`./args -v -n 3 …` ligou com o `-v` sozinho. O que mudou foi a posição."
+      },
+      {
+        "text": "A leitura parou em `jan.log`, e o `-v` virou argumento",
+        "why": "Isso. O pacote flag lê as flags do começo e para na primeira palavra que não é flag; o `-v` foi parar em `flag.Args`."
+      },
+      {
+        "text": "O `--n` engoliu `3` e `jan.log` como valor",
+        "why": "O `-n=3` da saída mostra que `--n` levou uma palavra, `3`. O `jan.log` está em `flag.Args`."
+      }
+    ]
+  },
+  "ex-vcst013v": {
+    "prompt": "Associe cada chamada do `args` com o que ela produz.",
+    "hint": "Duas delas param o programa dentro do `flag.Parse`.",
+    "pairs": [
+      {
+        "left": "`./args -n three`",
+        "right": "uma listagem de uso e status de saída 2"
+      },
+      {
+        "left": "`./args -h`",
+        "right": "uma listagem de uso e status de saída 0"
+      },
+      {
+        "left": "`./args -- -v`",
+        "right": "`-v` em `flag.Args`, e `-v=false`"
+      },
+      {
+        "left": "`./args -v -n 3 jan.log`",
+        "right": "`-v=true -n=3` e um argumento"
+      }
+    ],
+    "right_distractors": [
+      "um erro do shell e status de saída 127"
+    ]
+  },
+  "ex-72cs4fxv": {
+    "prompt": "O `genlog` de um colega imprime uma primeira linha diferente da lição com `-n 5` e a semente padrão. Qual é a conclusão razoável?",
+    "hint": "O que faz duas execuções produzirem as mesmas linhas?",
+    "choices": [
+      {
+        "text": "O terminal dele usa outro fuso horário",
+        "why": "O `genlog` monta os horários em UTC e formata com `Z`; o fuso do shell não entra."
+      },
+      {
+        "text": "Números aleatórios mudam de uma máquina para outra",
+        "why": "Um gerador PCG criado com a mesma semente sorteia a mesma sequência em qualquer máquina; é por isso que o log se reproduz."
+      },
+      {
+        "text": "O programa dele difere do da lição",
+        "why": "Isso. Mesma semente, mesmo programa, mesmas linhas; uma linha diferente indica outra lista, outra ordem de sorteio ou outra semente."
+      },
+      {
+        "text": "O `go run` recompila e escolhe uma semente nova a cada vez",
+        "why": "A semente é uma flag com padrão 1; recompilar não a muda."
+      }
+    ]
+  },
+  "ex-017dfxc6": {
+    "prompt": "Por que o `hits` deixa a contagem em `internal/tally` e não em `main.go`?",
+    "hint": "As lições 2 a 4 trocam uma coisa e mantêm outra.",
+    "choices": [
+      {
+        "text": "O Go exige que um pacote `main` fique abaixo de 100 linhas",
+        "why": "Essa regra não existe. A divisão é decisão de projeto, não limite do compilador."
+      },
+      {
+        "text": "Para as linhas de comando das lições 2 a 4 o compartilharem",
+        "why": "Isso. Três linhas de comando nas lições 2 a 4 ficam na frente do mesmo pacote, e o `internal` impede que alguém de fora o importe."
+      },
+      {
+        "text": "Um pacote em `internal` compila mais rápido",
+        "why": "`internal` muda quem pode importar o pacote, não a velocidade do build."
+      },
+      {
+        "text": "O pacote flag se recusa a rodar fora do `main`",
+        "why": "O `FlagSet` funciona em qualquer pacote. O `tally` fica longe das flags porque não tem relação com linha de comando."
+      }
+    ]
+  },
+  "ex-dzbgxcdy": {
+    "prompt": "Cada subcomando do `hits` monta suas flags com `flag.NewFlagSet(nome, flag.ContinueOnError)`. O que o `ContinueOnError` muda em relação ao `flag.Parse` do pacote?",
+    "hint": "Quem decide o código de saída depois de uma flag errada?",
+    "choices": [
+      {
+        "text": "O `Parse` devolve o erro e o subcomando escolhe o código de saída",
+        "why": "Isso. As funções de pacote saem sozinhas; aqui o `flagError` transforma o erro em 0 para `-h` e 2 para o resto."
+      },
+      {
+        "text": "Flags desconhecidas são ignoradas e a leitura segue para a próxima palavra",
+        "why": "`./hits top -n five` ainda falhou com `invalid value`. Nada é ignorado; o erro volta em vez de virar uma saída."
+      },
+      {
+        "text": "A listagem de uso deixa de aparecer numa flag errada",
+        "why": "A transcrição mostra a listagem depois de `invalid value \"five\"`. O `SetOutput` escolheu para onde ela vai, não se vai."
+      },
+      {
+        "text": "Flags passam a valer também depois do nome do arquivo",
+        "why": "O FlagSet para na primeira palavra que não é flag, igual ao leitor do pacote."
+      }
+    ]
+  },
+  "ex-qvn3663t": {
+    "prompt": "No `access.log` de 20.000 linhas, o `hits count` informou 7.554 requisições com status `200`. Que porcentagem do log é isso, arredondando para inteiro?",
+    "hint": "7.554 de 20.000.",
+    "unit": "%"
+  },
+  "ex-p5gyk50k": {
+    "prompt": "Quais destas coisas o `hits` escrito à mão NÃO faz, e a versão com Cobra da lição 2 acrescenta? Marque todas as que valem.",
+    "hint": "A seção listou o que faltava depois dos quatro erros.",
+    "choices": [
+      {
+        "text": "Sugerir `count` quando alguém digita `cont`",
+        "why": "Sim. Ele imprimiu `unknown command \"cont\"` e o uso, sem sugestão."
+      },
+      {
+        "text": "Imprimir a ajuda do próprio `top` para `hits help top`",
+        "why": "Sim. O `help` imprime o uso geral, venha o que vier depois."
+      },
+      {
+        "text": "Sair com status 2 num valor de flag que não converte",
+        "why": "Isso ele já faz: `./hits top -n five` terminou em 2."
+      },
+      {
+        "text": "Ler o log da entrada padrão quando nenhum arquivo é citado",
+        "why": "Isso ele já faz, em `summarise`."
+      }
+    ]
+  },
+  "ex-eqhjprz4": {
+    "prompt": "Por que o `hits` escreve `hits: open nope.log: no such file or directory` na saída de erro e não na saída padrão?",
+    "hint": "Imagine o `hits top` no começo de um pipeline.",
+    "choices": [
+      {
+        "text": "A saída de erro é mais rápida porque não tem buffer",
+        "why": "Velocidade não é o motivo dado. O motivo é o que o próximo programa do pipeline faria com a mensagem."
+      },
+      {
+        "text": "O shell pinta a saída de erro de vermelho",
+        "why": "O Bash imprime os dois fluxos do mesmo jeito; a transcrição não mostra diferença até um deles ser redirecionado."
+      },
+      {
+        "text": "O próximo programa a tomaria por dado",
+        "why": "Isso. Um relatório montado com `hits top` ganharia uma linha dizendo `hits: one file at most, got 2`."
+      },
+      {
+        "text": "O runtime do Go manda para lá toda string que começa com o nome do programa",
+        "why": "Nada no runtime escolhe pelo conteúdo; o `run` escreve em `stderr` porque o código manda."
+      }
+    ]
+  },
+  "ex-998w7cb0": {
+    "prompt": "Associe cada situação com o código de saída que o `hits` devolve.",
+    "hint": "0 é sucesso; os outros dois separam de quem foi a culpa.",
+    "pairs": [
+      {
+        "left": "`./hits count access.log` imprime a tabela",
+        "right": "0"
+      },
+      {
+        "left": "`./hits top -h`",
+        "right": "0, porque a ajuda foi pedida"
+      },
+      {
+        "left": "`./hits count nope.log`",
+        "right": "1"
+      },
+      {
+        "left": "`./hits top a.log b.log`",
+        "right": "2"
+      }
+    ],
+    "right_distractors": [
+      "141"
+    ]
+  },
+  "ex-et1atn56": {
+    "prompt": "`./genlog -n 1000000 | head -1` deixou o `genlog` com status 141. O shell informa um programa morto por sinal como 128 mais o número do sinal. Que número de sinal matou o `genlog`?",
+    "hint": "141 menos 128."
+  },
+  "ex-56c5aypr": {
+    "prompt": "Um colega move o trabalho para o `main` e lê `os.Args` e `os.Stdout` direto, dizendo que os quatro parâmetros do `run` eram ruído. O que ele perde?",
+    "hint": "Como o `main_test.go` conferiu os caminhos de erro?",
+    "choices": [
+      {
+        "text": "A capacidade de ler a entrada padrão",
+        "why": "O `main` lê `os.Stdin` tão bem quanto o `run`; a entrada continua funcionando."
+      },
+      {
+        "text": "Um teste que roda a linha de comando inteira como função comum",
+        "why": "Isso. Sem os parâmetros, o único jeito de conferir um código de saída ou uma mensagem é compilar o binário e rodá-lo como processo."
+      },
+      {
+        "text": "Os códigos de saída, já que o `main` não devolve nada",
+        "why": "O `main` sai com `os.Exit`, como já faz; os códigos sobrevivem à mudança."
+      },
+      {
+        "text": "Velocidade, já que passar writers por uma função custa tempo",
+        "why": "Um parâmetro de interface custa nanossegundos por chamada; o argumento a favor do `run` é teste, não velocidade."
+      }
+    ]
+  },
+  "ex-a6axks9q": {
+    "prompt": "Depois que um pipeline roda, o Bash guarda o código de saída de cada comando no array `${___[@]}`.",
+    "hint": "A seção imprimiu `0 0` e `141 0` com ele.",
+    "blanks": [
+      {
+        "accept": [
+          "PIPESTATUS"
+        ]
+      }
+    ]
+  },
+  "ex-3z5pqnhx": {
+    "prompt": "Ponha em ordem o que acontece quando Ana roda `./hits top -n 2 access.log`.",
+    "hint": "Do shell até a tabela.",
+    "items": [
+      "o shell divide a linha em palavras e inicia o `hits`",
+      "o `run` lê `top` e passa o resto para `top`",
+      "o `FlagSet` pega `-n 2` e deixa `access.log`",
+      "o `summarise` abre o arquivo e o `tally.Count` o lê",
+      "o `tabwriter` imprime duas linhas e o `run` devolve 0"
+    ]
+  },
+  "ex-hw78axqj": {
+    "prompt": "Um script noturno roda `hits count \"$f\" > counts.txt` com `set -e`. Numa noite, o log tem a linha 9.412 malformada. O que acontece?",
+    "hint": "Acompanhe a mensagem de erro e o código de saída separadamente.",
+    "choices": [
+      {
+        "text": "O script para, e o `counts.txt` fica vazio",
+        "why": "Isso. O `Count` para na linha ruim, a mensagem vai para a saída de erro, a tabela não é escrita, e o status 1 para um script com `set -e`."
+      },
+      {
+        "text": "O `counts.txt` guarda a contagem das 9.411 primeiras linhas e o script segue",
+        "why": "O `hits` não imprime nada na saída padrão quando o `summarise` falha, e o status 1 para o script."
+      },
+      {
+        "text": "O `counts.txt` contém a mensagem de erro, porque o `>` captura a saída",
+        "why": "O `>` redireciona só a saída padrão, e a mensagem está na saída de erro."
+      },
+      {
+        "text": "A linha ruim é pulada e a contagem cobre 19.999 linhas",
+        "why": "O `Count` retorna na primeira linha que não consegue ler; ele não pula."
+      }
+    ]
+  },
+  "ex-81j94vje": {
+    "prompt": "`go run ./tools/genlog -n 1000 -seed 3 | ./hits top -n 2` imprimiu dois caminhos. De onde o `hits` tirou a entrada?",
+    "hint": "Nenhum nome de arquivo veio depois de `-n 2`.",
+    "choices": [
+      {
+        "text": "Do `access.log`, que o `hits` abre por padrão",
+        "why": "O `hits` não tem arquivo padrão; sem nome, ele lê a entrada padrão."
+      },
+      {
+        "text": "De um arquivo temporário em que o shell gravou a saída do `genlog`",
+        "why": "Um pipe passa os bytes de um processo ao outro enquanto os dois rodam; nenhum arquivo é criado."
+      },
+      {
+        "text": "Do segundo argumento do `top`, que é `2`",
+        "why": "O `2` é o valor de `-n`. O `flag.Args` ficou vazio."
+      },
+      {
+        "text": "Do fluxo padrão de leitura, que o pipe ligou ao `genlog`",
+        "why": "Isso. Sem arquivo, o `summarise` mantém `in = stdin`, e o pipe fez disso a saída do `genlog`."
+      }
+    ]
+  }
+}

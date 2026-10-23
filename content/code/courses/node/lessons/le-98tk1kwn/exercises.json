@@ -1,0 +1,1100 @@
+[
+  {
+    "id": "ex-rxa6xwy4",
+    "version": 1,
+    "section": "the-process",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `process.exitCode = 3` do?",
+    "choices": [
+      {
+        "text": "Stops the program at once with code 3",
+        "correct": false,
+        "why": "That is process.exit(3)."
+      },
+      {
+        "text": "Sends signal 3 to the process",
+        "correct": false,
+        "why": "It sends nothing."
+      },
+      {
+        "text": "Sets the code it ends with",
+        "correct": true,
+        "why": "Right: the program still runs to its end."
+      },
+      {
+        "text": "Starts three child processes",
+        "correct": false,
+        "why": "Nothing is started."
+      }
+    ]
+  },
+  {
+    "id": "ex-p1m1adpp",
+    "version": 1,
+    "section": "the-process",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which signal can a Node program not handle?",
+    "choices": [
+      {
+        "text": "SIGTERM",
+        "correct": false,
+        "why": "signals.js heard it."
+      },
+      {
+        "text": "SIGINT",
+        "correct": false,
+        "why": "Ctrl-C can be handled."
+      },
+      {
+        "text": "SIGHUP",
+        "correct": false,
+        "why": "signals.js heard it too."
+      },
+      {
+        "text": "SIGKILL",
+        "correct": true,
+        "why": "Right: the system ends the process."
+      }
+    ]
+  },
+  {
+    "id": "ex-3mzr7frz",
+    "version": 1,
+    "section": "the-process",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A process killed with SIGKILL, signal 9: what exit code does the shell report?",
+    "hint": "128 plus the signal.",
+    "value": 137,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-j5fakxa8",
+    "version": 1,
+    "section": "the-process",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does this course prefer `process.exitCode` to `process.exit()`?",
+    "choices": [
+      {
+        "text": "process.exit is deprecated",
+        "correct": false,
+        "why": "It is not."
+      },
+      {
+        "text": "exitCode is faster",
+        "correct": false,
+        "why": "Speed is not the point."
+      },
+      {
+        "text": "Pending writes still finish",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "process.exit cannot set a code above 1",
+        "correct": false,
+        "why": "It takes any code."
+      }
+    ]
+  },
+  {
+    "id": "ex-e9t79nvp",
+    "version": 1,
+    "section": "graceful-shutdown",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `server.close()` do first?",
+    "choices": [
+      {
+        "text": "Ends every open request at once",
+        "correct": false,
+        "why": "Busy connections are left to finish."
+      },
+      {
+        "text": "Exits the process",
+        "correct": false,
+        "why": "It only closes the server."
+      },
+      {
+        "text": "Sends SIGTERM to the clients",
+        "correct": false,
+        "why": "Signals are for processes on this machine."
+      },
+      {
+        "text": "Stops accepting new connections",
+        "correct": true,
+        "why": "Right; open ones are left to finish."
+      }
+    ]
+  },
+  {
+    "id": "ex-1md3zghz",
+    "version": 1,
+    "section": "graceful-shutdown",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the ten-second timer given `.unref()`?",
+    "choices": [
+      {
+        "text": "So it does not keep the loop alive",
+        "correct": true,
+        "why": "Right: when all else is done, Node exits without waiting for it."
+      },
+      {
+        "text": "So it fires sooner",
+        "correct": false,
+        "why": "It fires at the same time."
+      },
+      {
+        "text": "So a second signal cancels it",
+        "correct": false,
+        "why": "unref cancels nothing."
+      },
+      {
+        "text": "Because timers cannot call process.exit",
+        "correct": false,
+        "why": "They can."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ftp0vk3",
+    "version": 1,
+    "section": "graceful-shutdown",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "During the shutdown, `curl /fast` exited with code 7. What does that mean?",
+    "choices": [
+      {
+        "text": "The server answered 500",
+        "correct": false,
+        "why": "There was no answer at all."
+      },
+      {
+        "text": "The request timed out",
+        "correct": false,
+        "why": "That is exit code 28."
+      },
+      {
+        "text": "The slow request was cut off",
+        "correct": false,
+        "why": "It answered in full."
+      },
+      {
+        "text": "It could not connect",
+        "correct": true,
+        "why": "Right: nobody was listening any more."
+      }
+    ]
+  },
+  {
+    "id": "ex-9dqhrzyn",
+    "version": 1,
+    "section": "graceful-shutdown",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the links store need no extra code to finish its last save on SIGTERM?",
+    "choices": [
+      {
+        "text": "The save is synchronous",
+        "correct": false,
+        "why": "It uses fs/promises."
+      },
+      {
+        "text": "Node waits for pending writes before exiting by itself",
+        "correct": true,
+        "why": "Right, as long as nothing calls process.exit."
+      },
+      {
+        "text": "SIGTERM is delayed until writes end",
+        "correct": false,
+        "why": "Signals are not delayed."
+      },
+      {
+        "text": "rename is atomic",
+        "correct": false,
+        "why": "That keeps the file whole, not the save finished."
+      }
+    ]
+  },
+  {
+    "id": "ex-n3mfjyvb",
+    "version": 1,
+    "section": "child-processes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which function returns a program's output as a stream while it runs?",
+    "choices": [
+      {
+        "text": "execFile",
+        "correct": false,
+        "why": "It gives the output at the end."
+      },
+      {
+        "text": "spawn",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "exec",
+        "correct": false,
+        "why": "It gives the output at the end, through a shell."
+      },
+      {
+        "text": "promisify",
+        "correct": false,
+        "why": "That wraps a callback function."
+      }
+    ]
+  },
+  {
+    "id": "ex-pnx71mw3",
+    "version": 1,
+    "section": "child-processes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `exec`, the name `notes.txt; echo the shell ran this too` printed the echo. Why?",
+    "choices": [
+      {
+        "text": "wc ran the echo",
+        "correct": false,
+        "why": "wc counts words."
+      },
+      {
+        "text": "Node runs every argument",
+        "correct": false,
+        "why": "execFile showed it does not."
+      },
+      {
+        "text": "A shell read the `;` as a second command",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The file held the echo",
+        "correct": false,
+        "why": "It held three words."
+      }
+    ]
+  },
+  {
+    "id": "ex-2dmks7z0",
+    "version": 1,
+    "section": "child-processes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`execFileP(\"no-such-program\")` rejected. With what `err.code`?",
+    "choices": [
+      {
+        "text": "1",
+        "correct": false,
+        "why": "No program ran to return a code."
+      },
+      {
+        "text": "127",
+        "correct": false,
+        "why": "That is what a shell would report."
+      },
+      {
+        "text": "EACCES",
+        "correct": false,
+        "why": "That would be a file it may not run."
+      },
+      {
+        "text": "ENOENT",
+        "correct": true,
+        "why": "Right: no file to run."
+      }
+    ]
+  },
+  {
+    "id": "ex-r5qs75jf",
+    "version": 1,
+    "section": "child-processes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program prints 5 MB and execFile kills it with an error. What limit was hit?",
+    "choices": [
+      {
+        "text": "highWaterMark",
+        "correct": false,
+        "why": "That is a stream's buffer."
+      },
+      {
+        "text": "The heap",
+        "correct": false,
+        "why": "Node did not run out of memory."
+      },
+      {
+        "text": "ulimit",
+        "correct": false,
+        "why": "No system limit was hit."
+      },
+      {
+        "text": "maxBuffer",
+        "correct": true,
+        "why": "Right: one megabyte by default."
+      }
+    ]
+  },
+  {
+    "id": "ex-kxnjrjfk",
+    "version": 1,
+    "section": "talking-to-a-child",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `fork` give that `spawn` does not?",
+    "choices": [
+      {
+        "text": "A shell",
+        "correct": false,
+        "why": "Neither uses one."
+      },
+      {
+        "text": "Shared memory",
+        "correct": false,
+        "why": "Processes share none."
+      },
+      {
+        "text": "A channel for messages",
+        "correct": true,
+        "why": "Right: send and message, both ways."
+      },
+      {
+        "text": "A thread in the same process",
+        "correct": false,
+        "why": "That is a worker thread."
+      }
+    ]
+  },
+  {
+    "id": "ex-nyzkx5pz",
+    "version": 1,
+    "section": "talking-to-a-child",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The child was stopped with `child.kill()`. What did `exit` report?",
+    "choices": [
+      {
+        "text": "Code 0 and no signal",
+        "correct": false,
+        "why": "It did not end itself."
+      },
+      {
+        "text": "Code 1 and SIGKILL",
+        "correct": false,
+        "why": "kill() sends SIGTERM, and one of the two is null."
+      },
+      {
+        "text": "Code 137",
+        "correct": false,
+        "why": "That is a shell's way of saying it."
+      },
+      {
+        "text": "No code, and SIGTERM",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-t62351ka",
+    "version": 1,
+    "section": "talking-to-a-child",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the parent keep printing `still answering` during the count?",
+    "choices": [
+      {
+        "text": "The count ran in another process",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The count used await",
+        "correct": false,
+        "why": "countPrimes is synchronous."
+      },
+      {
+        "text": "setInterval has priority",
+        "correct": false,
+        "why": "No callback runs while the loop is blocked."
+      },
+      {
+        "text": "The child shared its thread",
+        "correct": false,
+        "why": "It has its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-8bzw7s2f",
+    "version": 1,
+    "section": "worker-threads",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which kind of work gains from a worker thread?",
+    "choices": [
+      {
+        "text": "Reading a file",
+        "correct": false,
+        "why": "That already happens off the main thread."
+      },
+      {
+        "text": "A long calculation",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Waiting on a database",
+        "correct": false,
+        "why": "Waiting costs the main thread nothing."
+      },
+      {
+        "text": "Calling an API",
+        "correct": false,
+        "why": "That is waiting too."
+      }
+    ]
+  },
+  {
+    "id": "ex-xcjtgxwh",
+    "version": 1,
+    "section": "worker-threads",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Four workers on four processors made the count about three times faster, not four. Why?",
+    "choices": [
+      {
+        "text": "Only three processors were used",
+        "correct": false,
+        "why": "All four were."
+      },
+      {
+        "text": "Workers run at reduced priority",
+        "correct": false,
+        "why": "They do not."
+      },
+      {
+        "text": "The last slice had more work",
+        "correct": true,
+        "why": "Right, and starting workers costs a little."
+      },
+      {
+        "text": "postMessage copied the numbers slowly",
+        "correct": false,
+        "why": "Only four numbers came back."
+      }
+    ]
+  },
+  {
+    "id": "ex-awtgdwty",
+    "version": 1,
+    "section": "worker-threads",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many primes are there below 10,000,000, as both runs of `threads.js` agreed?",
+    "value": 664579,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-69r3x9qq",
+    "version": 1,
+    "section": "sharing-memory",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `postMessage(x, [x.buffer])`, what is `x.byteLength` in the sender?",
+    "choices": [
+      {
+        "text": "0",
+        "correct": true,
+        "why": "Right: the bytes moved."
+      },
+      {
+        "text": "The same as before",
+        "correct": false,
+        "why": "That is what a copy leaves."
+      },
+      {
+        "text": "Half of it",
+        "correct": false,
+        "why": "Nothing is split."
+      },
+      {
+        "text": "It throws",
+        "correct": false,
+        "why": "Reading it is allowed; it is empty."
+      }
+    ]
+  },
+  {
+    "id": "ex-qc81h35a",
+    "version": 1,
+    "section": "sharing-memory",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `n[0]++` from four threads end below 4,000,000?",
+    "choices": [
+      {
+        "text": "Int32Array overflowed",
+        "correct": false,
+        "why": "Four million fits easily."
+      },
+      {
+        "text": "Two threads wrote the same old value back",
+        "correct": true,
+        "why": "Right: one addition is lost."
+      },
+      {
+        "text": "A worker stopped early",
+        "correct": false,
+        "why": "Every worker ran its loop."
+      },
+      {
+        "text": "SharedArrayBuffer copies on write",
+        "correct": false,
+        "why": "It never copies."
+      }
+    ]
+  },
+  {
+    "id": "ex-tvfpy3tv",
+    "version": 1,
+    "section": "sharing-memory",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`___.add(n, 0, 1)` adds to shared memory without losing updates.",
+    "blanks": [
+      {
+        "accept": [
+          "Atomics"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9yt12qmr",
+    "version": 1,
+    "section": "a-worker-pool",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a pool start its workers once rather than one per job?",
+    "choices": [
+      {
+        "text": "To avoid start-up costs and too many threads",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A worker can run only one job",
+        "correct": false,
+        "why": "The pool's workers run many."
+      },
+      {
+        "text": "Node allows four workers at most",
+        "correct": false,
+        "why": "There is no such limit."
+      },
+      {
+        "text": "Jobs must run in order",
+        "correct": false,
+        "why": "They run as workers free up."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ng8kpta",
+    "version": 1,
+    "section": "a-worker-pool",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A worker in the pool throws. What does the pool do with it?",
+    "choices": [
+      {
+        "text": "Puts it back on the free list",
+        "correct": false,
+        "why": "It has ended; a dead worker would take jobs and never answer."
+      },
+      {
+        "text": "Replaces it and rejects that job",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Restarts the whole pool",
+        "correct": false,
+        "why": "Only that one is replaced."
+      },
+      {
+        "text": "Retries the job on another worker",
+        "correct": false,
+        "why": "The job is rejected."
+      }
+    ]
+  },
+  {
+    "id": "ex-jp1t1vss",
+    "version": 1,
+    "section": "a-worker-pool",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without a pool, the fast request waited about four seconds. Behind what?",
+    "choices": [
+      {
+        "text": "The network",
+        "correct": false,
+        "why": "It is all on one machine."
+      },
+      {
+        "text": "The pool's queue",
+        "correct": false,
+        "why": "There was no pool."
+      },
+      {
+        "text": "Four counts on the main thread",
+        "correct": true,
+        "why": "Right: one after another."
+      },
+      {
+        "text": "Four workers starting",
+        "correct": false,
+        "why": "None were started."
+      }
+    ]
+  },
+  {
+    "id": "ex-mgyak9g1",
+    "version": 1,
+    "section": "cluster",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a cluster, which process holds port 3000?",
+    "choices": [
+      {
+        "text": "The first worker",
+        "correct": false,
+        "why": "No worker holds it."
+      },
+      {
+        "text": "Each worker, on its own",
+        "correct": false,
+        "why": "They would get EADDRINUSE."
+      },
+      {
+        "text": "The operating system, for nobody",
+        "correct": false,
+        "why": "The primary holds it."
+      },
+      {
+        "text": "The primary",
+        "correct": true,
+        "why": "Right: it hands connections to workers."
+      }
+    ]
+  },
+  {
+    "id": "ex-34jsngr0",
+    "version": 1,
+    "section": "cluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A worker was killed with SIGKILL. What did `hello-cluster.js` do?",
+    "choices": [
+      {
+        "text": "Stopped every worker",
+        "correct": false,
+        "why": "The others kept serving."
+      },
+      {
+        "text": "Nothing: three were left",
+        "correct": false,
+        "why": "Its exit handler forked another."
+      },
+      {
+        "text": "Started a replacement",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Exited with 137",
+        "correct": false,
+        "why": "The primary was not killed."
+      }
+    ]
+  },
+  {
+    "id": "ex-jqw6xwfn",
+    "version": 1,
+    "section": "cluster",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Eight slow requests took 8.5 s with one worker. About how many seconds with four?",
+    "value": 2.15,
+    "tolerance": 0.4,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-j9cbyvtr",
+    "version": 1,
+    "section": "what-cluster-does-not-share",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Under cluster, why did most visits to the new link answer 404?",
+    "choices": [
+      {
+        "text": "The link was not saved",
+        "correct": false,
+        "why": "It was in the file, for a while."
+      },
+      {
+        "text": "Only one worker's Map had it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Workers cannot read files",
+        "correct": false,
+        "why": "They can, and did, once."
+      },
+      {
+        "text": "The primary answers 404",
+        "correct": false,
+        "why": "The primary serves nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-wj3091hm",
+    "version": 1,
+    "section": "what-cluster-does-not-share",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A second link was created on another worker. What happened to the first in the file?",
+    "choices": [
+      {
+        "text": "It was kept beside the new one",
+        "correct": false,
+        "why": "The save wrote a Map that never had it."
+      },
+      {
+        "text": "It was lost, silently",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The save failed with an error",
+        "correct": false,
+        "why": "Nothing failed."
+      },
+      {
+        "text": "Its visits were reset to 0",
+        "correct": false,
+        "why": "The whole link went."
+      }
+    ]
+  },
+  {
+    "id": "ex-sy4empq6",
+    "version": 1,
+    "section": "what-cluster-does-not-share",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these break when a service runs as several copies?",
+    "choices": [
+      {
+        "text": "A rate limit counted in memory",
+        "correct": true,
+        "why": "Each copy counts a part."
+      },
+      {
+        "text": "Sessions held in memory",
+        "correct": true,
+        "why": "Each copy knows its own."
+      },
+      {
+        "text": "A route that reads nothing from before",
+        "correct": false,
+        "why": "Nothing to disagree about."
+      },
+      {
+        "text": "A cache in a Map",
+        "correct": true,
+        "why": "Each copy has its own."
+      },
+      {
+        "text": "Reading configuration at start-up",
+        "correct": false,
+        "why": "Every copy reads the same environment."
+      }
+    ]
+  },
+  {
+    "id": "ex-j5tz2tx0",
+    "version": 1,
+    "section": "process-managers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "SIGTERM was sent to `npm start`. What happened to the Node under it?",
+    "choices": [
+      {
+        "text": "It kept running",
+        "correct": true,
+        "why": "Right, until it was signalled directly."
+      },
+      {
+        "text": "It shut down gracefully",
+        "correct": false,
+        "why": "It never heard the signal."
+      },
+      {
+        "text": "npm restarted it",
+        "correct": false,
+        "why": "npm had exited."
+      },
+      {
+        "text": "It was killed with SIGKILL",
+        "correct": false,
+        "why": "Nothing killed it."
+      }
+    ]
+  },
+  {
+    "id": "ex-etry4r0a",
+    "version": 1,
+    "section": "process-managers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the unit file, what does `EnvironmentFile=/etc/links/secrets.env` keep out of the unit?",
+    "choices": [
+      {
+        "text": "The admin key",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The port",
+        "correct": false,
+        "why": "That is in Environment=."
+      },
+      {
+        "text": "The path to node",
+        "correct": false,
+        "why": "That is in ExecStart."
+      },
+      {
+        "text": "NODE_ENV",
+        "correct": false,
+        "why": "That is in Environment= too."
+      }
+    ]
+  },
+  {
+    "id": "ex-489c52jj",
+    "version": 1,
+    "section": "process-managers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is TimeoutStopSec 15 in a unit whose service has a ten-second deadline?",
+    "choices": [
+      {
+        "text": "systemd needs five seconds to start",
+        "correct": false,
+        "why": "Starting is not stopping."
+      },
+      {
+        "text": "The values must differ",
+        "correct": false,
+        "why": "No such rule."
+      },
+      {
+        "text": "15 is systemd's minimum",
+        "correct": false,
+        "why": "Its default is 90."
+      },
+      {
+        "text": "So the service ends before SIGKILL",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-v3f6hy2w",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A route resizes uploaded images with a program installed on the server. Which tool?",
+    "choices": [
+      {
+        "text": "execFile, with the file as an argument",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "exec, with the name in the command",
+        "correct": false,
+        "why": "The name would reach a shell."
+      },
+      {
+        "text": "cluster",
+        "correct": false,
+        "why": "It runs copies of this server, not another program."
+      },
+      {
+        "text": "A SharedArrayBuffer",
+        "correct": false,
+        "why": "That shares memory between threads."
+      }
+    ]
+  },
+  {
+    "id": "ex-rz4ahxbx",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service is slow under load, and `monitorEventLoopDelay` shows almost no delay. What is likely?",
+    "choices": [
+      {
+        "text": "It needs cluster",
+        "correct": false,
+        "why": "The loop is not busy."
+      },
+      {
+        "text": "It needs worker threads",
+        "correct": false,
+        "why": "Nothing blocks the loop."
+      },
+      {
+        "text": "The thread pool is too large",
+        "correct": false,
+        "why": "A large pool does not slow requests."
+      },
+      {
+        "text": "It is waiting on something outside it",
+        "correct": true,
+        "why": "Right: more processors will not help."
+      }
+    ]
+  },
+  {
+    "id": "ex-by1yx6t5",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put a graceful shutdown in order.",
+    "items": [
+      "SIGTERM arrives",
+      "the server stops accepting connections",
+      "the open requests finish",
+      "the event loop is empty",
+      "node exits with 0"
+    ]
+  },
+  {
+    "id": "ex-w7snda58",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need to the tool for it.",
+    "pairs": [
+      {
+        "left": "run git and read its output",
+        "right": "execFile"
+      },
+      {
+        "left": "read a command's endless output",
+        "right": "spawn"
+      },
+      {
+        "left": "a slow sum beside a server",
+        "right": "a worker thread"
+      },
+      {
+        "left": "one server on every processor",
+        "right": "cluster"
+      }
+    ],
+    "right_distractors": [
+      "exec, with outside input"
+    ]
+  },
+  {
+    "id": "ex-q3sab1v3",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`os.___()` says how many processors a program may use at once.",
+    "blanks": [
+      {
+        "accept": [
+          "availableParallelism"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gvrps4gg",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Order these by what they cost, from the least.",
+    "hint": "Memory and start-up.",
+    "items": [
+      "an async call on the main thread",
+      "a worker thread",
+      "a child process"
+    ]
+  }
+]

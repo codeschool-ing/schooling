@@ -1,0 +1,435 @@
+{
+  "ex-69xwv99c": {
+    "prompt": "Que comando imprime as decisões da análise de escape do compilador para o pacote em `./point`?",
+    "hint": "As flags vão para o compilador, não para o linker.",
+    "choices": [
+      {
+        "text": "`go vet -m ./point`",
+        "why": "O `go vet` roda verificações estáticas no código; não tem `-m` nem relata onde os valores são alocados."
+      },
+      {
+        "text": "`go build -gcflags=-m ./point`",
+        "why": "Isso. O `-gcflags` passa `-m` ao `go tool compile`, cuja ajuda o descreve como \"print optimization decisions\", entre elas a análise de escape."
+      },
+      {
+        "text": "`go build -ldflags=-m ./point`",
+        "why": "O `-ldflags` vai para o linker, que roda depois de todas as decisões de alocação, e só para um programa."
+      },
+      {
+        "text": "`go test -benchmem ./point`",
+        "why": "O `-benchmem` conta as alocações que um benchmark fez em execução; não diz nada sobre os motivos do compilador."
+      }
+    ]
+  },
+  "ex-gwpgz91d": {
+    "prompt": "Ligue cada linha da saída de `-gcflags=-m` ao que ela diz.",
+    "hint": "Uma das descrições não é algo que o `-m` relate.",
+    "pairs": [
+      {
+        "left": "`moved to heap: p`",
+        "right": "a variável p é alocada no heap"
+      },
+      {
+        "left": "`p does not escape`",
+        "right": "a função não guarda nada para o que esse parâmetro aponta"
+      },
+      {
+        "left": "`leaking param: a to result ~r0 level=0`",
+        "right": "aquilo para o que a aponta pode sair como resultado"
+      },
+      {
+        "left": "`can inline New`",
+        "right": "a função é pequena o bastante para ser copiada em quem a chama"
+      }
+    ],
+    "right_distractors": [
+      "o valor foi liberado pelo coletor de lixo"
+    ]
+  },
+  "ex-av95w3kq": {
+    "prompt": "`Farther(a, b *Point) *Point` aparece como `leaking param: a to result ~r0 level=0`. Quem chama escreve `q := Point{3, 4}` e `n := Sum(Farther(&q, &q))`, sem guardar ponteiro nenhum depois. Onde `q` pode morar?",
+    "hint": "\"Leaking param\" é um resumo que quem chama lê, não uma alocação.",
+    "choices": [
+      {
+        "text": "No heap, porque todo parâmetro que vaza leva o argumento para lá",
+        "why": "Essa é a forma simples, `leaking param: c`. O \"to result\" devolve a decisão a quem chama."
+      },
+      {
+        "text": "Na pilha, porque o `Sum` não guarda nada do que recebe",
+        "why": "Isso. O ponteiro sai do `Farther` e vai para o `Sum`, cujo `p does not escape`, então nada sobrevive a quem chama."
+      },
+      {
+        "text": "No quadro do `Farther`, copiado para lá na chamada",
+        "why": "Passar um ponteiro copia o ponteiro, não o `Point`; o `Farther` não tem cópia de `q`."
+      },
+      {
+        "text": "Em lugar nenhum até o coletor decidir, em execução",
+        "why": "Onde um valor mora é decidido uma vez, na compilação; o coletor só libera o que já está no heap."
+      }
+    ]
+  },
+  "ex-8qa2h2r7": {
+    "prompt": "Num módulo `example.com/shop`, `go build -gcflags=-m .` no pacote `main` imprime dezenas de linhas, nenhuma sobre o `internal/cart`, que o `main` importa e que você sabe que devolve ponteiros. O que explica isso?",
+    "hint": "A que pacotes o `-gcflags` chega sem padrão?",
+    "choices": [
+      {
+        "text": "O cache de build já tinha o `internal/cart`, então ele não foi compilado de novo",
+        "why": "O cache não é o motivo: sem padrão as flags nunca se aplicaram ao `cart`, com cache ou sem."
+      },
+      {
+        "text": "Ponteiros devolvidos só aparecem com `-m=2`",
+        "why": "O `-m` já imprime `moved to heap` e `escapes to heap`; o `-m=2` acrescenta os motivos."
+      },
+      {
+        "text": "Sem padrão, as flags só chegam ao `main`",
+        "why": "Isso. Sem padrão a lista vale para os pacotes nomeados na linha de comando, aqui só o `main`; `-gcflags='example.com/shop/...=-m'` chega ao `cart`."
+      },
+      {
+        "text": "Um pacote `internal` fica escondido do relatório do compilador",
+        "why": "O `internal` limita quem pode importar o pacote; o `internal/tally` do `hits` apareceu assim que um padrão o nomeou."
+      }
+    ]
+  },
+  "ex-1fmvhaw1": {
+    "prompt": "`func Show(n int) { fmt.Println(n) }` aparece como `n escapes to heap`. Por que um simples `int` escapa?",
+    "hint": "Qual é o tipo do parâmetro do `Println`, e o que o `-m=2` diz do `Fprintln`?",
+    "choices": [
+      {
+        "text": "O `Println` recebe `...any`, e o parâmetro do `Fprintln` vaza para o heap",
+        "why": "Isso. Uma interface aponta para os dados, e o resumo do `Fprintln` diz que os argumentos vazam, então `n` ganha uma cópia no heap."
+      },
+      {
+        "text": "Todo argumento inteiro de uma função é passado pelo heap",
+        "why": "O `Sum(p)` e inúmeras outras chamadas passam inteiros em registradores ou na pilha; este escapa por causa da interface."
+      },
+      {
+        "text": "O `Println` é inlined, e código inlined sempre aloca",
+        "why": "O inlining costuma tirar alocações, como mostrou o `Distance`; aqui o vazamento está no `Fprintln`, que não foi inlined."
+      },
+      {
+        "text": "A fatia de argumentos escapa e leva `n` junto",
+        "why": "O relatório diz `... argument does not escape`: a fatia fica na pilha e só o valor posto nela se muda."
+      }
+    ]
+  },
+  "ex-ep68pf0f": {
+    "prompt": "O `Counter` declara `n := 0` e devolve `func() int { n++; return n }`. O relatório diz `moved to heap: n`. Por que `n` não podia ficar no quadro do `Counter`?",
+    "hint": "Quando a closure roda?",
+    "choices": [
+      {
+        "text": "Closures são sempre alocadas no heap, capturem o que capturarem",
+        "why": "A closure do `Total`, passada ao `Each`, não escapou: `func literal does not escape` com `-l`."
+      },
+      {
+        "text": "Ele ainda é alterado por uma closure que roda depois que a chamada acabou",
+        "why": "Isso. A closure é devolvida e guarda uma referência a `n`, e incrementa `n` quando o quadro já não existe."
+      },
+      {
+        "text": "`n` é um `int`, e um `int` capturado por referência é embrulhado como numa interface",
+        "why": "Não há interface envolvida; o motivo é tempo de vida, e um `*Point` capturado se mudaria pelo mesmo motivo."
+      },
+      {
+        "text": "O `n++` escreve em `n`, e a pilha fica só de leitura depois que a função começa",
+        "why": "O quadro é memória comum, gravável; o `t += x` do `Total` escreve numa variável capturada na pilha."
+      }
+    ]
+  },
+  "ex-vba31j63": {
+    "prompt": "Quais destes fazem o valor citado escapar para o heap? Escolha todos os que fazem.",
+    "hint": "Pergunte, para cada um, se algo pode alcançar o valor depois que a função retorna.",
+    "choices": [
+      {
+        "text": "Uma função devolve `c.Tick`, um method value do parâmetro `c`",
+        "why": "Sim. O `Ticker` mostrou: `c.Tick escapes to heap` e `leaking param: c`."
+      },
+      {
+        "text": "Uma função guarda `string(b)` como chave com `m[string(b)]++`",
+        "why": "Sim. Um map guarda as chaves, e o `Add` saiu como `string(b) escapes to heap`."
+      },
+      {
+        "text": "Uma função só lê `m[string(b)]`",
+        "why": "Uma consulta não guarda nada: o `Get` saiu como `string(b) does not escape`."
+      },
+      {
+        "text": "Uma função passa `&x` ao `Sum`, cujo `p does not escape`",
+        "why": "Esse resumo é justamente o que deixa `x` no quadro de quem chama."
+      },
+      {
+        "text": "Uma função usa `f := c.Tick` e chama `f()` duas vezes",
+        "why": "Usado localmente, o method value fica na pilha: `c.Tick does not escape` no `TickTwice`."
+      }
+    ]
+  },
+  "ex-ccm22n1p": {
+    "prompt": "Um pacote tem `var handlers []*Handler` e `func Register(h *Handler) { handlers = append(handlers, h) }`. O que o `-m` relata para `h`, e o que acontece com quem escreve `Register(&Handler{})`?",
+    "hint": "Onde `h` vai parar: num resultado, ou em algo que sobrevive a todas as chamadas?",
+    "choices": [
+      {
+        "text": "`h does not escape`, já que o `append` copia o ponteiro",
+        "why": "Copiar o ponteiro para uma fatia que é guardada é justamente como aquilo para o que ele aponta fica guardado."
+      },
+      {
+        "text": "`leaking param: h to result ~r0 level=0`, então quem chama decide",
+        "why": "O `Register` não tem resultado; `h` vai para uma fatia do pacote, que é o heap."
+      },
+      {
+        "text": "`append escapes to heap`, o que afeta só a fatia, não o `Handler`",
+        "why": "O array que cresce escapa, sim, mas também cada `Handler` guardado nele."
+      },
+      {
+        "text": "`leaking param: h`, então o `&Handler{}` de quem chama escapa para o heap",
+        "why": "Isso. Um parâmetro guardado numa global vaza para o próprio heap, e todo argumento passado a ele vai para lá, como o `Ticker(&clk)` levou `clk`."
+      }
+    ]
+  },
+  "ex-2qzgamjr": {
+    "prompt": "O `Sized(n)` faz `s := make([]int, n)` e aparece como `make([]int, n) does not escape`, mas o `testing.AllocsPerRun` conta uma alocação para `Sized(5)`. Como as duas coisas podem ser verdade?",
+    "hint": "O que o compilador põe no quadro quando não sabe `n`?",
+    "choices": [
+      {
+        "text": "O relatório erra para `make`, e versões novas corrigem isso",
+        "why": "O relatório responde a outra pergunta, tempo de vida, e responde certo: a fatia não sobrevive ao `Sized`."
+      },
+      {
+        "text": "Só 32 bytes são reservados no quadro",
+        "why": "Isso. O compilador compila uma verificação, e o heap é usado quando a fatia não cabe neles. Quatro `int`s cabem em 32 bytes e cinco não, então `Sized(4)` não custa nada e `Sized(5)` custa uma alocação."
+      },
+      {
+        "text": "O `AllocsPerRun` conta a closure do teste, não o `Sized`",
+        "why": "O `Sized(4)`, chamado pelo mesmo tipo de closure, contou 0."
+      },
+      {
+        "text": "Cinco passa do limite de 64 KiB para um valor implícito",
+        "why": "Cinco `int`s são 40 bytes; o limite de 64 KiB é o que mandou `make([]int, 10000)` para o heap."
+      }
+    ]
+  },
+  "ex-0m5cr99v": {
+    "prompt": "Com o buffer de 32 bytes que o Go 1.27 reserva para um `make` cujo tamanho só se sabe em execução, qual é o maior `n` para o qual `make([]string, n)` fica na pilha em linux/amd64, onde o cabeçalho de uma string tem 16 bytes?",
+    "hint": "Divida o buffer pelo tamanho do elemento e arredonde para baixo."
+  },
+  "ex-g5kjenvw": {
+    "prompt": "Depois que `//go:noinline` vai acima de `point.New`, o relatório de `why/inline.go` perde `inlining call to point.New` e `&point.Point{...} does not escape`. Nada no `Distance` mudou. O que aconteceu com o `Point`?",
+    "hint": "Em que quadro o `Point` é criado quando o `New` vira uma chamada de verdade?",
+    "choices": [
+      {
+        "text": "Continua no quadro do `Distance`; só a mensagem sumiu",
+        "why": "O `AllocsPerRun` contou o `Distance(4, 5)` passando de 0 para 1 alocação com a diretiva."
+      },
+      {
+        "text": "É criado dentro do `New` e devolvido, então fica no heap",
+        "why": "Isso. Com inlining, o `&Point{...}` era um valor do próprio `Distance`; chamado, é do `New`, e o `New` devolve o endereço."
+      },
+      {
+        "text": "A diretiva proíbe alocação, então o `New` deixa de compilar",
+        "why": "O `//go:noinline` só impede o inliner; o build passou e o veredito do próprio `New` não mudou."
+      },
+      {
+        "text": "O `Sum` também deixa de ser inlined, e isso move o `Point`",
+        "why": "O relatório continua dizendo `inlining call to point.Sum`; a mudança é só no `New`."
+      }
+    ]
+  },
+  "ex-4htfdbec": {
+    "prompt": "Para ver o que cada função decide sozinha, sem nenhuma chamada copiada para dentro dela, Ana compila com `go build -gcflags='-m ___' ./why`, a flag do compilador que desliga o inlining.",
+    "hint": "Uma única letra minúscula depois de um hífen.",
+    "blanks": [
+      {
+        "accept": [
+          "-l"
+        ]
+      }
+    ]
+  },
+  "ex-dhx1dd87": {
+    "prompt": "O relatório diz `n escapes to heap` para `func Box(n int) any { return n }`, mas o `testing.AllocsPerRun` conta 0 para `Box(7)` e 1 para `Box(1000)`. Por que a diferença?",
+    "hint": "Procure uma tabela em `runtime/iface.go`.",
+    "choices": [
+      {
+        "text": "Constantes pequenas são resolvidas na compilação, então `Box(7)` nunca é chamado",
+        "why": "O teste passa os valores por variáveis do pacote justamente para que nada seja conhecido de antemão."
+      },
+      {
+        "text": "Valores de 0 a 255 apontam para uma tabela que o runtime mantém",
+        "why": "Isso. A `staticuint64s` guarda esses valores, então a interface aponta para lá em vez de para uma cópia nova."
+      },
+      {
+        "text": "O `AllocsPerRun` arredonda para zero médias abaixo de um",
+        "why": "Ele devolve a média como float; o `Box(1000)` deu exatamente 1 e o `Box(7)`, exatamente 0."
+      },
+      {
+        "text": "Um `int` abaixo de 256 cabe na palavra de tipo da interface",
+        "why": "A palavra de tipo guarda o tipo; o valor é alcançado pelo ponteiro de dados nos dois casos."
+      }
+    ]
+  },
+  "ex-wcqv5zb2": {
+    "prompt": "Com `//go:noinline` no `point.New`, o `BenchmarkDistance` levou 17.03 ns/op com 1 alloc/op, enquanto o `BenchmarkCall`, o mesmo trabalho atrás de uma chamada sem inlining e sem alocação, levou 0.7961 ns/op. Uns quantos nanossegundos do tempo do `Distance` são a alocação, e não a chamada?",
+    "hint": "Subtraia o tempo da chamada.",
+    "unit": "ns"
+  },
+  "ex-p1qx9qh6": {
+    "prompt": "Um colega conclui pelo benchmark que uma alocação no heap custa exatamente 16 ns e que um caminho quente com um milhão delas custa 16 ms no total. O que isso deixa de fora?",
+    "hint": "Quem libera a memória, e em que processador?",
+    "choices": [
+      {
+        "text": "Nada: o `-benchmem` já inclui o tempo do coletor",
+        "why": "Ele conta bytes e alocações; o ns/op só tem a parte da coleta que caiu na goroutine do benchmark."
+      },
+      {
+        "text": "A pilha, que também é liberada pelo coletor",
+        "why": "Um quadro é liberado quando a função retorna; o coletor não tem trabalho de pilha a fazer por ele."
+      },
+      {
+        "text": "O trabalho posterior do coletor, parte dele em outros processadores",
+        "why": "Isso. Cada objeto precisa ser achado e liberado depois, e esse trabalho fica quase todo fora do ns/op do laço que o alocou."
+      },
+      {
+        "text": "Só os 0,8 ns da chamada, que deviam ser descontados",
+        "why": "Isso deixaria a estimativa ainda menor; o custo que falta vai no sentido oposto."
+      }
+    ]
+  },
+  "ex-p5cjy4m1": {
+    "prompt": "No `hits`, o `string(bufio.s.token)` do `Count` escapa porque o `line` do `Parse` vaza por `strings.Fields(line)`, o fallback que não rodou em nenhuma das 100.000 linhas. Por que um caminho que nunca roda decide isso?",
+    "hint": "Quando a análise de escape é feita?",
+    "choices": [
+      {
+        "text": "O fallback roda uma vez na partida para aquecer o cache",
+        "why": "Nada disso acontece; o `split5` aceitou todas as linhas que o `genlog` escreveu."
+      },
+      {
+        "text": "Na compilação, sobre todos os caminhos do código",
+        "why": "Isso. Nenhuma entrada existe ainda quando a decisão é tomada, então um caminho que vaza basta para todos os chamadores."
+      },
+      {
+        "text": "A otimização guiada por profile marcou o fallback como quente",
+        "why": "Nenhum profile foi dado ao compilador, e um profile mostraria o fallback como nunca usado."
+      },
+      {
+        "text": "O `strings.Fields` foi inlined, e chamadas inlined contam em dobro",
+        "why": "Nada conta em dobro; o vazamento vem do resumo do `Fields` para o parâmetro dele."
+      }
+    ]
+  },
+  "ex-cj66g5ka": {
+    "prompt": "Ponha em ordem os passos da rota que o `-m=2` relatou por último para a string de cada linha do `hits`, com os dois `Clone` no lugar, de onde a string é criada até onde ela precisa sobreviver ao laço.",
+    "hint": "Termina na linha marcada `key of map put`.",
+    "items": [
+      "o `Count` converte os bytes do scanner em string na linha 64",
+      "a string é passada ao `Parse` como `line`",
+      "o `Parse` devolve `Path` como um pedaço de `line` dentro da `Entry`",
+      "o `Count` guarda `e.Path` como chave em `s.ByPath` na linha 70"
+    ]
+  },
+  "ex-zyds7105": {
+    "prompt": "Alguém mantém as duas edições com `strings.Clone` no `tally.go`, de modo que o `Parse` relata `leaking param: line to result ~r0 level=0`, e espera que o `Count` sobre 100.000 linhas caia de 100.009 alocações para umas 9. O que acontece?",
+    "hint": "Duas outras coisas ficam entre a linha e a pilha.",
+    "choices": [
+      {
+        "text": "Cai para 9, já que nada no `Parse` vaza para o heap",
+        "why": "O próprio `Count` ainda guarda `e.Path` como chave de map, e o relatório diz que a string escapa por isso."
+      },
+      {
+        "text": "Sobe, já que cada `Clone` aloca em toda linha",
+        "why": "O `Clone` do fallback não roda em nenhuma linha do log do `genlog`, embora o de antes do `ParseDuration` rodasse em toda linha."
+      },
+      {
+        "text": "Continua em uma por linha",
+        "why": "Isso. A chave do map é a terceira rota, e mesmo sem rota nenhuma uma linha de 34 a 51 bytes é maior que o buffer de pilha de 32 bytes que uma conversão de string ganha. O `Clone` antes do `ParseDuration` ainda soma uma."
+      },
+      {
+        "text": "Cai pela metade, já que uma das três rotas continua aberta",
+        "why": "Rotas não são frações de uma alocação: qualquer uma sozinha basta para pôr a string inteira no heap."
+      }
+    ]
+  },
+  "ex-r4rprn1p": {
+    "prompt": "O `TestAllocs` relatou o `Parse` com 0 alocações, o `Count` sobre 1.000 linhas com 1009 e sobre 100.000 linhas com 100009. O que os três números dizem juntos?",
+    "hint": "Compare as duas contagens do `Count` com seus números de linhas.",
+    "choices": [
+      {
+        "text": "O `Parse` aloca uma vez por linha e o `Count` soma nove",
+        "why": "O `Parse` medido sozinho deu 0; a alocação por linha acontece no `Count`, na string que o `Text` cria."
+      },
+      {
+        "text": "O `Count` aloca nove vezes por linha, arredondado",
+        "why": "Nove por linha dariam 9.000 e 900.000; os números são linhas mais nove."
+      },
+      {
+        "text": "Uma alocação por linha no `Count`, mais nove por chamada",
+        "why": "Isso. 1.009 − 1.000 e 100.009 − 100.000 dão 9 nos dois casos: um custo fixo por contagem, com os dois maps nele, e uma string por linha."
+      },
+      {
+        "text": "As alocações crescem mais rápido que a entrada, então algo vaza",
+        "why": "Elas crescem exatamente com a entrada, uma por linha; um vazamento apareceria como uma diferença crescente."
+      }
+    ]
+  },
+  "ex-zgc7w99q": {
+    "prompt": "Qual destes diz quantas alocações no heap uma função realmente faz quando roda?",
+    "hint": "Um deles roda o código; os outros o leem.",
+    "choices": [
+      {
+        "text": "`go build -gcflags=-m=2`",
+        "why": "Ele imprime as previsões do compilador e os motivos; o `Box(7)` escapava nele e não alocou nada."
+      },
+      {
+        "text": "`testing.AllocsPerRun`",
+        "why": "Isso. Ele roda a função e conta, e foi assim que o `Sized(5)` foi pego alocando com `does not escape`."
+      },
+      {
+        "text": "`go vet`",
+        "why": "O `go vet` aponta código suspeito e não roda nada."
+      },
+      {
+        "text": "`go build -gcflags=all=-m`",
+        "why": "É a mesma previsão para todos os pacotes do build, 44.067 linhas para o `hits`."
+      }
+    ]
+  },
+  "ex-be7z361f": {
+    "prompt": "O `split5` da lição 13 devolve `[5]string`; o `strings.Fields` devolve `[]string`. Os dois apontam para a mesma linha. Por que um custa uma alocação por chamada e o outro nenhuma?",
+    "hint": "Onde fica a memória de cada resultado, e o tamanho dela é conhecido na compilação?",
+    "choices": [
+      {
+        "text": "Arrays ficam sempre na pilha e fatias sempre no heap",
+        "why": "O `make([]int, 64)` do `Fixed` ficou na pilha, e o array de 1 MiB do `Grid` foi para o heap."
+      },
+      {
+        "text": "O `strings.Fields` copia cada campo, e as cópias é que alocam",
+        "why": "Os dois devolvem strings que apontam para a linha sem copiá-la; a diferença é o recipiente que as guarda."
+      },
+      {
+        "text": "O array é copiado para fora por valor",
+        "why": "Isso. Um array de tamanho fixo é copiado para o quadro de quem chama, e o relatório do `split5` é `leaking param: line to result f`. O `Fields` devolve uma fatia cujo array ele criou, de tamanho só conhecido em execução, então esse array sobrevive à chamada no heap."
+      },
+      {
+        "text": "O `split5` é inlined no `Parse`, e isso tira a alocação dele",
+        "why": "O relatório do `tally` não imprimiu `inlining call to split5`; o array é de graça porque é devolvido por valor."
+      }
+    ]
+  },
+  "ex-xtm8kr90": {
+    "prompt": "Um handler de requisições mostra `id escapes to heap` para `log.Printf(\"request %d\", id)`. Antes de reescrever o log, qual é a primeira coisa que vale fazer?",
+    "hint": "O relatório é uma previsão; o que o transforma numa decisão?",
+    "choices": [
+      {
+        "text": "Reescrever a chamada na hora, já que todo escape é um bug de desempenho",
+        "why": "Muitos escapes são necessários ou baratos, como os maps que o `Count` devolve; reescrever sem medir troca clareza por nada conhecido."
+      },
+      {
+        "text": "Compilar com `-l` para ver se o escape sobrevive sem inlining",
+        "why": "O `-l` gera um binário que ninguém publica; o veredito que importa é o com inlining ligado."
+      },
+      {
+        "text": "Medir antes: contar as alocações e ver se esse caminho é quente",
+        "why": "Isso. Conte as alocações e veja num profile. Um `id` abaixo de 256 não aloca nada, e um caminho que roda uma vez por requisição é um custo pequeno entre tudo o que a requisição faz."
+      },
+      {
+        "text": "Trocar `id` por um ponteiro, para a interface guardar um ponteiro que já existe",
+        "why": "Um ponteiro para `id` faria o próprio `id` escapar, e a chamada continuaria alocando."
+      }
+    ]
+  }
+}

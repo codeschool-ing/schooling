@@ -1,0 +1,560 @@
+[
+  {
+    "id": "ex-e4bj6jbp",
+    "version": 1,
+    "section": "your-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana types `go version` and the shell answers `bash: line 1: go: command not found`, with exit status 127. What does that tell her?",
+    "hint": "127 comes from the shell, not from Go.",
+    "choices": [
+      {
+        "text": "The archive is damaged and has to be downloaded again",
+        "correct": false,
+        "why": "A damaged archive would leave a `go` that fails when it runs. Here nothing ran at all: the shell never found a file to start."
+      },
+      {
+        "text": "The shell found no `go` in any directory on her `PATH`",
+        "correct": true,
+        "why": "Right. 127 is the shell's code for a command it could not find; the fix is the two `export` lines in `~/.profile` and a fresh login."
+      },
+      {
+        "text": "Go 1.27.1 refuses to run on Ubuntu 24.04",
+        "correct": false,
+        "why": "Every transcript in the course ran Go 1.27.1 on Ubuntu 24.04. A refusal would come from Go itself, with its own message."
+      },
+      {
+        "text": "`gcc` is missing, so the go command will not start",
+        "correct": false,
+        "why": "Without `gcc` the go command starts and turns cgo off. The missing compiler shows up later, as the `-race` refusal."
+      }
+    ]
+  },
+  {
+    "id": "ex-z1szj7r7",
+    "version": 1,
+    "section": "your-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a machine where nobody set it, `go env CGO_ENABLED` prints `0`. What is the most likely cause?",
+    "hint": "The section showed this value on a `PATH` with one program missing.",
+    "choices": [
+      {
+        "text": "The go command looked for a C compiler and found none",
+        "correct": true,
+        "why": "Right. With no `gcc` on the path the go command quietly turns cgo off, and the race detector then refuses to build."
+      },
+      {
+        "text": "Go 1.27.1 ships with cgo turned off by default on Linux",
+        "correct": false,
+        "why": "On the lab machine, with `gcc` present, the same command printed `1`. The default follows the compiler."
+      },
+      {
+        "text": "The module's `go.mod` asks for a newer release of Go",
+        "correct": false,
+        "why": "That fails with a message naming the version `go.mod` requires. It has nothing to do with cgo."
+      },
+      {
+        "text": "`~/go/bin` is missing from `PATH`",
+        "correct": false,
+        "why": "That directory holds programs you built with `go install`. The C compiler lives in `/usr/bin`."
+      }
+    ]
+  },
+  {
+    "id": "ex-1b8qc126",
+    "version": 1,
+    "section": "your-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the course recommend a virtual machine, rather than the Go Playground, to a student on Windows who cannot install Go directly?",
+    "hint": "Think about what this course does around the program.",
+    "choices": [
+      {
+        "text": "The Playground runs a release older than 1.27.1",
+        "correct": false,
+        "why": "The section gives no such reason. What it says is missing is the terminal."
+      },
+      {
+        "text": "A virtual machine compiles Go faster than Windows itself does",
+        "correct": false,
+        "why": "Speed is not the argument; a VM costs memory and disk while it runs."
+      },
+      {
+        "text": "It has no terminal for builds, linters and profilers",
+        "correct": true,
+        "why": "Right. The Playground runs one file and shows its output; everything this course types around that file has nowhere to go there."
+      },
+      {
+        "text": "The Playground refuses any program that imports a package",
+        "correct": false,
+        "why": "It runs programs that import the standard library; `hits` would compile there. It is the tooling around it that has no home."
+      }
+    ]
+  },
+  {
+    "id": "ex-ty82c639",
+    "version": 1,
+    "section": "your-lab",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The race detector refuses to build with `go: -race requires ___; enable it by setting CGO_ENABLED=1` when no C compiler is on the path.",
+    "hint": "The feature that lets Go call C, and that the race detector relies on.",
+    "blanks": [
+      {
+        "accept": [
+          "cgo"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dwvdr2zn",
+    "version": 1,
+    "section": "arguments",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana runs `./args -n=3 \"two words\" feb.log`. What does `flag.Args()` return?",
+    "hint": "The shell decided the word boundaries before the program started.",
+    "choices": [
+      {
+        "text": "`[\"two words\" \"feb.log\"]`",
+        "correct": true,
+        "why": "Right. The quotes told the shell that `two words` is one word; the flag package removed `-n=3` and left the rest."
+      },
+      {
+        "text": "`[\"two\" \"words\" \"feb.log\"]`",
+        "correct": false,
+        "why": "That would be the list without the quotes. The quotes never reach the program, but the boundary they drew does."
+      },
+      {
+        "text": "`[\"-n=3\" \"two words\" \"feb.log\"]`",
+        "correct": false,
+        "why": "That is `os.Args` without its first element. `flag.Args` is what is left after the flags are taken out."
+      },
+      {
+        "text": "`[\"\\\"two words\\\"\" \"feb.log\"]`, quotes and all",
+        "correct": false,
+        "why": "The shell removes the quotes before the program starts; `os.Args` in the transcript shows no quote characters."
+      }
+    ]
+  },
+  {
+    "id": "ex-g69e4bfq",
+    "version": 1,
+    "section": "arguments",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `./args --n 3 jan.log -v`, why is `-v` still false?",
+    "hint": "Look at where `-v` sits relative to the first word that is not a flag.",
+    "choices": [
+      {
+        "text": "Go only accepts flags that are written with a single dash",
+        "correct": false,
+        "why": "`--n` in the same command was read as `-n`. One dash or two mean the same flag."
+      },
+      {
+        "text": "A boolean flag needs `-v=true` to be set",
+        "correct": false,
+        "why": "`./args -v -n 3 …` set it to true with the bare `-v`. The position is what changed."
+      },
+      {
+        "text": "Parsing stopped at `jan.log`, so `-v` became an argument",
+        "correct": true,
+        "why": "Right. The flag package reads flags from the front and stops at the first word that is not one; `-v` ended up in `flag.Args`."
+      },
+      {
+        "text": "`--n` swallowed both `3` and `jan.log` as its value",
+        "correct": false,
+        "why": "`-n=3` in the output shows `--n` took one word, `3`. `jan.log` is in `flag.Args`."
+      }
+    ]
+  },
+  {
+    "id": "ex-vcst013v",
+    "version": 1,
+    "section": "arguments",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each invocation of `args` with what it ends in.",
+    "hint": "Two of them stop the program inside `flag.Parse`.",
+    "pairs": [
+      {
+        "left": "`./args -n three`",
+        "right": "a usage listing and exit status 2"
+      },
+      {
+        "left": "`./args -h`",
+        "right": "a usage listing and exit status 0"
+      },
+      {
+        "left": "`./args -- -v`",
+        "right": "`-v` in `flag.Args`, and `-v=false`"
+      },
+      {
+        "left": "`./args -v -n 3 jan.log`",
+        "right": "`-v=true -n=3` and one argument"
+      }
+    ],
+    "right_distractors": [
+      "an error from the shell and exit status 127"
+    ]
+  },
+  {
+    "id": "ex-72cs4fxv",
+    "version": 1,
+    "section": "arguments",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Your colleague's `genlog` prints a different first line from the lesson's for `-n 5` with the default seed. What is the reasonable conclusion?",
+    "hint": "What makes two runs produce the same lines?",
+    "choices": [
+      {
+        "text": "Their terminal uses a different time zone",
+        "correct": false,
+        "why": "`genlog` builds its times in UTC and formats them with `Z`; the time zone of the shell does not enter it."
+      },
+      {
+        "text": "Random numbers differ from one machine to the next",
+        "correct": false,
+        "why": "A PCG generator built from the same seed draws the same sequence on any machine; that is why the log is reproducible."
+      },
+      {
+        "text": "Their program differs from the lesson's",
+        "correct": true,
+        "why": "Right. Same seed, same program, same lines; a different line means a different list, a different order of draws or a different seed."
+      },
+      {
+        "text": "`go run` recompiles and picks a fresh seed each time",
+        "correct": false,
+        "why": "The seed is a flag with a default of 1; compiling again does not change it."
+      }
+    ]
+  },
+  {
+    "id": "ex-017dfxc6",
+    "version": 1,
+    "section": "subcommands",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `hits` keep the counting in `internal/tally` instead of in `main.go`?",
+    "hint": "Lessons 2 to 4 change something and keep something else.",
+    "choices": [
+      {
+        "text": "Go requires a `main` package to stay under 100 lines",
+        "correct": false,
+        "why": "There is no such rule. The split is a design decision, not a compiler limit."
+      },
+      {
+        "text": "So three command lines in lessons 2 to 4 share it",
+        "correct": true,
+        "why": "Right. Three command lines in lessons 2 to 4 sit in front of the same package, and `internal` keeps outsiders from importing it."
+      },
+      {
+        "text": "A package under `internal` compiles faster",
+        "correct": false,
+        "why": "`internal` changes who may import the package, not how fast it builds."
+      },
+      {
+        "text": "The flag package refuses to run outside `main`",
+        "correct": false,
+        "why": "`FlagSet` works in any package. `tally` keeps away from flags because it has nothing to do with a command line."
+      }
+    ]
+  },
+  {
+    "id": "ex-dzbgxcdy",
+    "version": 1,
+    "section": "subcommands",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Each subcommand of `hits` builds its flags with `flag.NewFlagSet(name, flag.ContinueOnError)`. What does `ContinueOnError` change compared with the package-level `flag.Parse`?",
+    "hint": "Who decides the exit code after a bad flag?",
+    "choices": [
+      {
+        "text": "`Parse` returns the error and the subcommand picks the exit code",
+        "correct": true,
+        "why": "Right. The package-level functions exit by themselves; here `flagError` turns the error into 0 for `-h` and 2 for the rest."
+      },
+      {
+        "text": "Unknown flags are ignored and parsing goes on to the next word",
+        "correct": false,
+        "why": "`./hits top -n five` still failed with `invalid value`. Nothing is ignored; the error is returned instead of acted on."
+      },
+      {
+        "text": "The usage listing is no longer printed on a bad flag",
+        "correct": false,
+        "why": "The transcript shows the listing after `invalid value \"five\"`. `SetOutput` chose where it goes, not whether."
+      },
+      {
+        "text": "Flags may appear after the file name as well as before it",
+        "correct": false,
+        "why": "The FlagSet stops at the first non-flag word exactly like the package-level parser."
+      }
+    ]
+  },
+  {
+    "id": "ex-qvn3663t",
+    "version": 1,
+    "section": "subcommands",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the 20,000-line `access.log`, `hits count` reported 7,554 requests with status `200`. What percentage of the log is that, to the nearest whole number?",
+    "hint": "7,554 out of 20,000.",
+    "value": 38,
+    "tolerance": 0.5,
+    "unit": "%"
+  },
+  {
+    "id": "ex-p5gyk50k",
+    "version": 1,
+    "section": "subcommands",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these does the hand-written `hits` NOT do, and lesson 2's Cobra version adds? Choose all that apply.",
+    "hint": "The section listed what was missing after the four mistakes.",
+    "choices": [
+      {
+        "text": "Suggest `count` when somebody types `cont`",
+        "correct": true,
+        "why": "Yes. It printed `unknown command \"cont\"` and the usage, with no suggestion."
+      },
+      {
+        "text": "Print `top`'s own help for `hits help top`",
+        "correct": true,
+        "why": "Yes. `help` prints the general usage whatever follows it."
+      },
+      {
+        "text": "Exit with status 2 on a flag value that does not parse",
+        "correct": false,
+        "why": "It does that already: `./hits top -n five` ended in 2."
+      },
+      {
+        "text": "Read the log from standard input when no file is named",
+        "correct": false,
+        "why": "It does that already, in `summarise`."
+      }
+    ]
+  },
+  {
+    "id": "ex-eqhjprz4",
+    "version": 1,
+    "section": "output-and-exit-codes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `hits` write `hits: open nope.log: no such file or directory` to standard error instead of standard output?",
+    "hint": "Picture `hits top` at the start of a pipeline.",
+    "choices": [
+      {
+        "text": "Standard error is faster because it is not buffered",
+        "correct": false,
+        "why": "Speed is not the reason given. The reason is what the next program in a pipeline would do with it."
+      },
+      {
+        "text": "The shell colours standard error red",
+        "correct": false,
+        "why": "Bash prints both streams the same way; the transcript shows no difference until one of them is redirected."
+      },
+      {
+        "text": "The next program would take it for data",
+        "correct": true,
+        "why": "Right. A report built from `hits top` would grow a row reading `hits: one file at most, got 2`."
+      },
+      {
+        "text": "Go's runtime sends every string starting with the program's name there",
+        "correct": false,
+        "why": "Nothing in the runtime routes by content; `run` writes to `stderr` because the code says so."
+      }
+    ]
+  },
+  {
+    "id": "ex-998w7cb0",
+    "version": 1,
+    "section": "output-and-exit-codes",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation with the exit code `hits` returns.",
+    "hint": "0 is success; the other two separate whose fault it was.",
+    "pairs": [
+      {
+        "left": "`./hits count access.log` prints its table",
+        "right": "0"
+      },
+      {
+        "left": "`./hits top -h`",
+        "right": "0, because help was asked for"
+      },
+      {
+        "left": "`./hits count nope.log`",
+        "right": "1"
+      },
+      {
+        "left": "`./hits top a.log b.log`",
+        "right": "2"
+      }
+    ],
+    "right_distractors": [
+      "141"
+    ]
+  },
+  {
+    "id": "ex-et1atn56",
+    "version": 1,
+    "section": "output-and-exit-codes",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`./genlog -n 1000000 | head -1` left `genlog` with status 141. The shell reports a program killed by a signal as 128 plus the signal's number. Which signal number killed `genlog`?",
+    "hint": "141 minus 128.",
+    "value": 13,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-56c5aypr",
+    "version": 1,
+    "section": "output-and-exit-codes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate moves the work into `main` and reads `os.Args` and `os.Stdout` directly, saying the four parameters of `run` were noise. What do they lose?",
+    "hint": "How did `main_test.go` check the error paths?",
+    "choices": [
+      {
+        "text": "The ability to read standard input",
+        "correct": false,
+        "why": "`main` can read `os.Stdin` as well as `run` can; the input still works."
+      },
+      {
+        "text": "A test that runs the whole command line as a plain function",
+        "correct": true,
+        "why": "Right. Without the parameters, the only way to check an exit code or a message is to build the binary and run it as a process."
+      },
+      {
+        "text": "The exit codes, since `main` returns nothing",
+        "correct": false,
+        "why": "`main` exits with `os.Exit`, as it does now; the codes survive the change."
+      },
+      {
+        "text": "Speed, since passing writers through a function costs time",
+        "correct": false,
+        "why": "An interface parameter costs nanoseconds per call; the argument for `run` is about testing, not speed."
+      }
+    ]
+  },
+  {
+    "id": "ex-a6axks9q",
+    "version": 1,
+    "section": "output-and-exit-codes",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After a pipeline runs, Bash keeps the exit code of every command in it in the array `${___[@]}`.",
+    "hint": "The section printed `0 0` and `141 0` from it.",
+    "blanks": [
+      {
+        "accept": [
+          "PIPESTATUS"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3z5pqnhx",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens in order when Ana runs `./hits top -n 2 access.log`.",
+    "hint": "From the shell to the table.",
+    "items": [
+      "the shell splits the line into words and starts `hits`",
+      "`run` reads `top` and passes the rest to `top`",
+      "the `FlagSet` takes `-n 2` and leaves `access.log`",
+      "`summarise` opens the file and `tally.Count` reads it",
+      "the `tabwriter` prints two rows and `run` returns 0"
+    ]
+  },
+  {
+    "id": "ex-hw78axqj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly script runs `hits count \"$f\" > counts.txt` under `set -e`. One night the log has a malformed line 9,412. What happens?",
+    "hint": "Follow the error message and the exit code separately.",
+    "choices": [
+      {
+        "text": "The script stops, and `counts.txt` is left empty",
+        "correct": true,
+        "why": "Right. `Count` stops at the bad line, the message goes to standard error, the table is never written, and exit status 1 stops a `set -e` script."
+      },
+      {
+        "text": "`counts.txt` holds the counts of the first 9,411 lines and the script goes on",
+        "correct": false,
+        "why": "`hits` prints nothing to standard output when `summarise` fails, and status 1 stops the script."
+      },
+      {
+        "text": "`counts.txt` contains the error message, because `>` captures the output",
+        "correct": false,
+        "why": "`>` redirects standard output only, and the message is on standard error."
+      },
+      {
+        "text": "The bad line is skipped and the counts cover 19,999 lines",
+        "correct": false,
+        "why": "`Count` returns at the first line it cannot parse; it does not skip."
+      }
+    ]
+  },
+  {
+    "id": "ex-81j94vje",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go run ./tools/genlog -n 1000 -seed 3 | ./hits top -n 2` printed two paths. Where did `hits` get its input?",
+    "hint": "No file name came after `-n 2`.",
+    "choices": [
+      {
+        "text": "From `access.log`, the file `hits` opens by default",
+        "correct": false,
+        "why": "`hits` has no default file; with none named it reads standard input."
+      },
+      {
+        "text": "From a temporary file the shell wrote `genlog`'s output into",
+        "correct": false,
+        "why": "A pipe passes the bytes from one process to the other while both run; no file is made."
+      },
+      {
+        "text": "From the second argument of `top`, which is `2`",
+        "correct": false,
+        "why": "`2` is the value of `-n`. `flag.Args` was empty."
+      },
+      {
+        "text": "From standard input, which the pipe connected to `genlog`'s standard output",
+        "correct": true,
+        "why": "Right. With no file named, `summarise` keeps `in = stdin`, and the pipe made that `genlog`'s output."
+      }
+    ]
+  }
+]

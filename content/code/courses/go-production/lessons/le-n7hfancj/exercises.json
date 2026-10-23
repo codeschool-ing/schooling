@@ -1,0 +1,571 @@
+[
+  {
+    "id": "ex-hc6n0z69",
+    "version": 1,
+    "section": "directives",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`internal/demo/demo.go` holds `//go:generate touch made-by-generate`. Ana runs `go build ./...` and then `ls internal/demo`. What does she see?",
+    "hint": "Which command reads the directives?",
+    "choices": [
+      {
+        "text": "Only `demo.go`; a build compiles the package and never runs a directive",
+        "correct": true,
+        "why": "Right. `go build` compiles and never runs a directive; the file appeared only after `go generate ./...`."
+      },
+      {
+        "text": "`demo.go` and `made-by-generate`",
+        "correct": false,
+        "why": "That assumes a build runs the directives before it compiles, which is how `make` works, not the go command. `go help generate` says it is never run automatically by `go build` or `go test`."
+      },
+      {
+        "text": "A build error, because a package may not contain directives that `go build` cannot run",
+        "correct": false,
+        "why": "A directive is a comment to the compiler. The package built and printed nothing."
+      },
+      {
+        "text": "`demo.go` and `made-by-generate`, written to the build cache rather than the package",
+        "correct": false,
+        "why": "Nothing ran, so nothing was written anywhere. The cache holds compiled packages, not a directive's output."
+      }
+    ]
+  },
+  {
+    "id": "ex-32aqdx3v",
+    "version": 1,
+    "section": "directives",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `~/gen-try`, the file `internal/demo/demo.go` holds `//go:generate pwd`. Ana types `go generate ./...` at the top of the module. What does `pwd` print?",
+    "hint": "Where does go generate start each command?",
+    "choices": [
+      {
+        "text": "`/home/ana/gen-try`, the directory she typed the command in",
+        "correct": false,
+        "why": "A shell would start the command there. go generate changes to the package's directory first."
+      },
+      {
+        "text": "`/home/ana/gen-try/internal/demo`",
+        "correct": true,
+        "why": "Right. A directive runs in the directory of the package that holds it, so its relative paths are relative to that file."
+      },
+      {
+        "text": "The module cache directory, where the go command keeps sources",
+        "correct": false,
+        "why": "The module cache holds downloaded modules. Your own package runs where it lives."
+      },
+      {
+        "text": "A temporary directory, so that a generator cannot touch the source tree",
+        "correct": false,
+        "why": "`touch made-by-generate` left its file next to `demo.go`; nothing isolates a generator from the tree."
+      }
+    ]
+  },
+  {
+    "id": "ex-svms1qt4",
+    "version": 1,
+    "section": "directives",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The line `// go:generate echo hi` is not a directive, because a directive allows no ___ between `//` and `go:generate`.",
+    "hint": "One keystroke on the widest key of the keyboard.",
+    "blanks": [
+      {
+        "accept": [
+          "space",
+          "a space",
+          "blank",
+          "whitespace"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jvc3k8za",
+    "version": 1,
+    "section": "directives",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each flag of `go generate` with what it does.",
+    "hint": "Two of them decide which directives run; two decide what is printed.",
+    "pairs": [
+      {
+        "left": "`-n`",
+        "right": "prints each command and runs none"
+      },
+      {
+        "left": "`-x`",
+        "right": "prints each command, then runs it"
+      },
+      {
+        "left": "`-run echo`",
+        "right": "keeps only directives whose line matches `echo`"
+      },
+      {
+        "left": "`-skip \"touch|printf\"`",
+        "right": "drops the directives whose line matches"
+      }
+    ],
+    "right_distractors": [
+      "runs the directives before every `go build`"
+    ]
+  },
+  {
+    "id": "ex-ma3a2skk",
+    "version": 1,
+    "section": "stringer",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `go tool stringer -type=Class` write when it runs from the directive in `internal/status/class.go`?",
+    "hint": "Look at the file name it produced and the one method in it.",
+    "choices": [
+      {
+        "text": "A `String() string` method for `Class`, in `class_string.go`",
+        "correct": true,
+        "why": "Right. It reads the constants of type `Class` and writes the method that names them, in a file named after the type."
+      },
+      {
+        "text": "A new version of `class.go` with a `String` method added at the end",
+        "correct": false,
+        "why": "stringer never edits your file. Its output goes in a separate file, so regenerating cannot damage what you wrote."
+      },
+      {
+        "text": "The `Class` constants, numbered from the names listed in the directive",
+        "correct": false,
+        "why": "It goes the other way: you write the constants, and stringer reads them."
+      },
+      {
+        "text": "A test file that checks every constant prints its name",
+        "correct": false,
+        "why": "There is no test; the check it does write is the `func _()` guard, which the compiler runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-krp47v2k",
+    "version": 1,
+    "section": "stringer",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "stringer wrote `_Class_name = \"InformationalSuccessRedirectionClientErrorServerError\"` and `_Class_index = [...]uint8{0, 13, 20, 31, 42, 53}`. How many bytes long is the name `String` returns for `Redirection`, the third constant?",
+    "hint": "The third name runs from the third number to the fourth.",
+    "value": 11,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-c8v9nfv3",
+    "version": 1,
+    "section": "stringer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana changes `Informational Class = iota + 1` to `Informational Class = iota` and runs `go build ./...` without regenerating. What happens?",
+    "hint": "Every constant drops by one, and `func _()` indexes a one-element array with each.",
+    "choices": [
+      {
+        "text": "The build succeeds, and `Success` prints as `Informational`",
+        "correct": false,
+        "why": "That would be the result without the guard. With it, the stale file never compiles."
+      },
+      {
+        "text": "stringer runs again by itself, since its file is out of date",
+        "correct": false,
+        "why": "Nothing runs stringer but `go generate`; `go build` only compiles what is there."
+      },
+      {
+        "text": "A panic the first time `String` is called on a `Class`",
+        "correct": false,
+        "why": "The failure comes earlier: the indices are constants, so the compiler checks them."
+      },
+      {
+        "text": "It fails to compile: each index in `class_string.go` is now -1",
+        "correct": true,
+        "why": "Right. `x[Informational-1]` became `x[-1]`, and the compiler refused all five lines with `must not be negative`."
+      }
+    ]
+  },
+  {
+    "id": "ex-0gk1enzt",
+    "version": 1,
+    "section": "stringer",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague appends `Nonstandard` to the constant block, after `ServerError`, so it gets the value 6, and does not run `go generate`. What do `go build` and `fmt.Println(status.Nonstandard)` do?",
+    "hint": "The guard lists the constants stringer saw when it ran.",
+    "choices": [
+      {
+        "text": "The build fails, because the guard checks every constant of the type",
+        "correct": false,
+        "why": "The guard has one line per constant it saw, and `Nonstandard` is not among them, so nothing checks it."
+      },
+      {
+        "text": "It builds, and `String` falls back to printing `Class(6)`",
+        "correct": true,
+        "why": "Right. No existing value moved, so every index is still 0; `String` finds 6 past the end of its table and falls back to the number."
+      },
+      {
+        "text": "It builds, and prints `ServerError`, the last name in the table",
+        "correct": false,
+        "why": "The range check in `String` stops any index past the last name; it never reuses one."
+      },
+      {
+        "text": "It builds, and prints an empty string",
+        "correct": false,
+        "why": "The fallback builds `Class(` plus the number plus `)`, never an empty name."
+      }
+    ]
+  },
+  {
+    "id": "ex-6dksbckc",
+    "version": 1,
+    "section": "writing-a-generator",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `genowners` pass the template's output through `format.Source` before writing it?",
+    "hint": "Compare the template's map entries with the ones in `owners_gen.go`.",
+    "choices": [
+      {
+        "text": "To lay the code out as `gofmt` would, and refuse output that is not valid Go",
+        "correct": true,
+        "why": "Right. The template wrote entries flush left; `format.Source` parsed them, indented them and aligned the values, so `gofmt -l` listed nothing."
+      },
+      {
+        "text": "Because `go build` rejects a file that is not formatted",
+        "correct": false,
+        "why": "The compiler accepts any layout. Unformatted output fails a formatting check, such as lesson 6's, not the build."
+      },
+      {
+        "text": "To add the `// Code generated` header the template leaves out",
+        "correct": false,
+        "why": "The header is the first line of the template itself; `format.Source` only reformats."
+      },
+      {
+        "text": "To sort the map entries by path",
+        "correct": false,
+        "why": "The entries came out in the order of `owners.txt`, `/` first and `/health` last; nothing sorted them."
+      }
+    ]
+  },
+  {
+    "id": "ex-648319bm",
+    "version": 1,
+    "section": "writing-a-generator",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The directive in `internal/owner/owner.go` runs `go run example.com/hits/tools/genowners` rather than `go run ../../tools/genowners`. What does the import path buy?",
+    "hint": "Where does a directive run, and what happens to a relative path when the package moves?",
+    "choices": [
+      {
+        "text": "`go run` refuses relative paths inside a directive",
+        "correct": false,
+        "why": "It accepts them; the section says `../../tools/genowners` would also work, today."
+      },
+      {
+        "text": "It downloads genowners from the module proxy at a fixed version",
+        "correct": false,
+        "why": "`example.com/hits` is the module itself; `go run` builds the generator from the same working tree."
+      },
+      {
+        "text": "The directive still works if the package moves deeper",
+        "correct": true,
+        "why": "Right. The directive runs in the package's directory, so `../../` depends on its depth; the import path names the same package from anywhere in the module."
+      },
+      {
+        "text": "It sets `$GOPACKAGE`, which a relative path would leave empty",
+        "correct": false,
+        "why": "go generate sets `$GOPACKAGE` for every directive, whatever command it names."
+      }
+    ]
+  },
+  {
+    "id": "ex-2kktezkf",
+    "version": 1,
+    "section": "writing-a-generator",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what one run of `genowners` does in order.",
+    "hint": "The file on disk is touched once, at the very end.",
+    "items": [
+      "read `owners.txt`, refusing a bad or repeated line",
+      "fill the template with the package name and the rows",
+      "pass the bytes through `format.Source`",
+      "write `owners_gen.go` in one call"
+    ]
+  },
+  {
+    "id": "ex-8yw45rkh",
+    "version": 1,
+    "section": "writing-a-generator",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A different generator opens its output with `os.Create(out)` first and runs `tmpl.Execute` straight into the file. Its input has a bad line, and `Execute` fails halfway. What is left, and when does anybody notice?",
+    "hint": "`os.Create` empties the file the moment it opens it.",
+    "choices": [
+      {
+        "text": "The old file, because `os.Create` keeps the contents until the file is closed",
+        "correct": false,
+        "why": "`os.Create` truncates on opening. The old contents are gone before the first byte is written."
+      },
+      {
+        "text": "Nothing at all: the go command deletes the output of a failed generator",
+        "correct": false,
+        "why": "go generate reports the failure and stops the package; it knows nothing about which files a generator wrote."
+      },
+      {
+        "text": "A complete file, because `Execute` writes nothing until the template finishes",
+        "correct": false,
+        "why": "`Execute` writes as it goes, straight to the writer it was given."
+      },
+      {
+        "text": "Half a Go file; the next build fails inside it",
+        "correct": true,
+        "why": "Right. The file was emptied, then partly written. That is why `genowners` builds everything in a buffer and writes once, at the end."
+      }
+    ]
+  },
+  {
+    "id": "ex-57ajyz1e",
+    "version": 1,
+    "section": "keeping-it-honest",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why are `class_string.go` and `owners_gen.go` committed to the repository rather than listed in `.gitignore`?",
+    "hint": "Who runs `go generate`, and who never does?",
+    "choices": [
+      {
+        "text": "Because the go command refuses to build a file that git does not track",
+        "correct": false,
+        "why": "The go command does not read git's index; it compiled both files before the repository existed."
+      },
+      {
+        "text": "No build runs `go generate`, so a clone or a download gets only what was committed",
+        "correct": true,
+        "why": "Right. Without them, `owner` does not compile and `classes` prints numbers, on every machine but the author's."
+      },
+      {
+        "text": "So that the header line can be checked by `git diff`",
+        "correct": false,
+        "why": "`git diff` compares contents; it has no idea what a header means. The header is for tools and people."
+      },
+      {
+        "text": "Because regenerating them on every machine would give each a different file",
+        "correct": false,
+        "why": "With the same generator version, the output is the same everywhere; the reason is that nobody but the author regenerates."
+      }
+    ]
+  },
+  {
+    "id": "ex-97n7wnqm",
+    "version": 1,
+    "section": "keeping-it-honest",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these first lines mark a Go file as generated, by the rule in `go help generate`? Choose all that apply.",
+    "hint": "`^// Code generated .* DO NOT EDIT\\.$`, before the first text that is not a comment.",
+    "choices": [
+      {
+        "text": "`// Code generated by \"stringer -type=Class\"; DO NOT EDIT.`",
+        "correct": true,
+        "why": "Yes. It is stringer's own header and matches the expression exactly."
+      },
+      {
+        "text": "`// Code generated by genowners from owners.txt; DO NOT EDIT.`",
+        "correct": true,
+        "why": "Yes. Any text may stand between `Code generated` and `DO NOT EDIT.`."
+      },
+      {
+        "text": "`// Code generated by genowners; DO NOT EDIT`",
+        "correct": false,
+        "why": "No full stop at the end, and the expression ends in `\\.$`. Tools read this file as handwritten."
+      },
+      {
+        "text": "`/* Code generated by genowners; DO NOT EDIT. */`",
+        "correct": false,
+        "why": "The expression asks for a line starting with `// `, so a block comment does not match."
+      }
+    ]
+  },
+  {
+    "id": "ex-ejh3s906",
+    "version": 1,
+    "section": "keeping-it-honest",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pull request adds a new directive, and its author never commits the file it writes. CI runs `go generate ./... && git diff --exit-code` and passes. Why?",
+    "hint": "What does `git diff` compare?",
+    "choices": [
+      {
+        "text": "The directive is new, so CI has no generator to run",
+        "correct": false,
+        "why": "go generate ran it in CI and wrote the file; the problem is what the comparison looks at."
+      },
+      {
+        "text": "`git diff` compares tracked files only, and the new file was never added",
+        "correct": true,
+        "why": "Right. The new file is untracked, so it is not in the diff; `test -z \"$(git status --porcelain)\"` would have failed."
+      },
+      {
+        "text": "`--exit-code` only fails on changes to files that carry the generated header",
+        "correct": false,
+        "why": "It fails on any change to a tracked file, generated or not; it knows nothing of headers."
+      },
+      {
+        "text": "go generate skips directives in files that changed in the latest commit",
+        "correct": false,
+        "why": "go generate reads every directive it finds; it does not look at git history."
+      }
+    ]
+  },
+  {
+    "id": "ex-q0ext9ab",
+    "version": 1,
+    "section": "keeping-it-honest",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way a directive can name stringer with the version that runs.",
+    "hint": "One version is written in `go.mod`, one in the directive, and one nowhere.",
+    "pairs": [
+      {
+        "left": "`stringer -type=Class`",
+        "right": "whatever is first on the `PATH` of whoever generates"
+      },
+      {
+        "left": "`go run golang.org/x/tools/cmd/stringer@v0.52.0 -type=Class`",
+        "right": "v0.52.0, written in the directive itself"
+      },
+      {
+        "left": "`go tool stringer -type=Class`",
+        "right": "the version the module's `go.mod` requires"
+      }
+    ],
+    "right_distractors": [
+      "the newest release on the module proxy that day"
+    ]
+  },
+  {
+    "id": "ex-mshsmbfk",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go fix -diff ./legacy` printed a change to `old.go` only, though `old_gen.go` holds the same `interface{}`. Why was `old_gen.go` left out?",
+    "hint": "Look at the first line of each file.",
+    "choices": [
+      {
+        "text": "`go fix` only rewrites functions whose names start with an upper-case letter",
+        "correct": false,
+        "why": "Both functions, `Echo` and `EchoGen`, are exported; the names are not what differs."
+      },
+      {
+        "text": "Its header marks it generated, and `go fix` skips generated files",
+        "correct": true,
+        "why": "Right. A fix there would be undone by the next `go generate`, so `go fix` checks `ast.IsGenerated` and leaves it."
+      },
+      {
+        "text": "A file whose name ends in `_gen.go` is not compiled",
+        "correct": false,
+        "why": "The name is a convention for people; the go command compiled `owners_gen.go` like any other file."
+      },
+      {
+        "text": "`-diff` shows only the first file that would change",
+        "correct": false,
+        "why": "It shows every change; there was only one to show."
+      }
+    ]
+  },
+  {
+    "id": "ex-c1n2k397",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague adds `-linecomment` to the stringer directive, runs `go build ./...`, sees it pass, and commits without running `go generate`. Which check stops that commit from going unnoticed?",
+    "hint": "What does the guard in `func _()` compare, and did any of it change?",
+    "choices": [
+      {
+        "text": "The compiler, through the guard in `func _()`",
+        "correct": false,
+        "why": "The guard checks constant values, and no value changed: the build passed in the transcript."
+      },
+      {
+        "text": "`go vet`, which compares each header with its directive",
+        "correct": false,
+        "why": "Nothing in the go command compares a header with a directive; the header is a marker, not a record to check."
+      },
+      {
+        "text": "The CI step that regenerates and runs `git diff --exit-code`",
+        "correct": true,
+        "why": "Right. It wrote the new `class_string.go`, found it different from the committed one, printed the diff and exited 1."
+      },
+      {
+        "text": "`go test`, because `class_string.go` is out of date",
+        "correct": false,
+        "why": "`go test` builds what is there, exactly like `go build`, and never runs a directive."
+      }
+    ]
+  },
+  {
+    "id": "ex-xz54nyzb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service sends a welcome e-mail from an HTML file that the design team edits, and the program fills in a name with `html/template`. Generate Go from the file, or embed it?",
+    "hint": "Does the program need the file as Go, or as data?",
+    "choices": [
+      {
+        "text": "Generate, so the compiler checks the HTML",
+        "correct": false,
+        "why": "The compiler checks Go, not HTML. A generated string literal holding the page would be checked no more than the file is."
+      },
+      {
+        "text": "Generate, because embedded files are read from disk when the program starts",
+        "correct": false,
+        "why": "`//go:embed` puts the bytes in the binary at build time; nothing is read from disk at run time."
+      },
+      {
+        "text": "Embed: the program needs the bytes, and embedding has nothing to go stale",
+        "correct": true,
+        "why": "Right. A template is data for `html/template`; `//go:embed` reads the file at every build, so there is no generated copy to forget."
+      },
+      {
+        "text": "Neither: a file edited by another team must be fetched over the network at run time",
+        "correct": false,
+        "why": "Nothing in the case asks for that, and it would add a failure at run time that both build-time options avoid."
+      }
+    ]
+  },
+  {
+    "id": "ex-ps7xec1v",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the 20,000-line `access.log`, `cmd/classes` printed `Success 10058`, `Redirection 2421` and `ServerError 2523`, and `1xx` had none. How many requests were in `ClientError`?",
+    "hint": "The classes with requests add up to every line of the log.",
+    "value": 4998,
+    "tolerance": 0
+  }
+]

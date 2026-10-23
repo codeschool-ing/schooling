@@ -1,0 +1,422 @@
+{
+  "ex-e11ey569": {
+    "prompt": "No Go 1.27.1, como começa a pilha de uma goroutine nova, e o que acontece quando uma chamada precisa de mais espaço do que ela tem?",
+    "hint": "Compare os dois números que a seção pôs lado a lado: `ulimit -s` e `stackMin`.",
+    "choices": [
+      {
+        "text": "Começa com 2.048 bytes e é copiada inteira para um bloco com o dobro do tamanho",
+        "why": "Isso. `stackMin = 2048` no `stack.go`, e crescer é copiar para um bloco dobrado; o `~/mem-stacks` viu a pilha de `main` chegar a uns 32 MiB assim."
+      },
+      {
+        "text": "Começa com 8 MiB, como uma thread, e o programa morre além disso",
+        "why": "8.192 KiB é o que o `ulimit -s` imprimiu para a thread principal. Uma goroutine começa quatro mil vezes menor e cresce."
+      },
+      {
+        "text": "Começa com 2 KiB, e os frames seguintes vão para o heap",
+        "why": "Frames nunca vão para o heap. A pilha inteira é movida para um bloco maior, e por isso o `x` mudou de endereço."
+      },
+      {
+        "text": "Começa com 2 KiB e ganha um segundo segmento encadeado",
+        "why": "Segmentos encadeados não são o que o 1.27.1 faz: `copystack` aloca um bloco novo, copia a parte usada e libera o antigo."
+      }
+    ]
+  },
+  "ex-7606kdqk": {
+    "prompt": "No `~/mem-stacks`, a variável local `x` imprimiu um endereço antes de `down(100000)` e outro depois, embora nenhuma linha do programa a tenha atribuído de novo. Por quê?",
+    "hint": "O `x` ficou no frame de `main` o tempo todo.",
+    "choices": [
+      {
+        "text": "`down` sobrescreveu `x` com uma cópia dele",
+        "why": "`down` nunca vê o `x`: tem seus próprios frames com seus próprios arrays `pad`. O valor de `x` não mudou; só o lugar onde ele está."
+      },
+      {
+        "text": "A chamada profunda fez `x` escapar para o heap",
+        "why": "O escape é decidido pelo compilador ao construir o programa, não durante a execução. `uintptr(unsafe.Pointer(&x))` mantém `x` no frame."
+      },
+      {
+        "text": "Crescer a pilha copiou todos os frames, o de `x` também",
+        "why": "Isso. Crescer copia a pilha inteira para um bloco novo, então cada frame dela, e cada variável de cada frame, tem endereço novo depois. As coletas que a encolheram moveram `x` de novo."
+      },
+      {
+        "text": "O coletor compactou a pilha para fechar buracos entre frames",
+        "why": "O coletor encolheu a pilha depois, copiando-a para um bloco com metade do tamanho. A primeira mudança aconteceu durante o `down`, antes de qualquer coleta, porque a pilha tinha se esgotado."
+      }
+    ]
+  },
+  "ex-yk61tn9s": {
+    "prompt": "O coletor do heap do Go nunca move um valor para outro endereço, e mesmo assim o runtime move pilhas inteiras de goroutines à vontade. O que faz da pilha o caso fácil?",
+    "hint": "Pense em onde um ponteiro para algo numa pilha tem permissão de morar.",
+    "choices": [
+      {
+        "text": "Pilhas são pequenas o bastante para copiar dentro de uma parada do mundo",
+        "why": "A pilha é copiada pela própria goroutine, sem parar nada, e uma no `~/mem-stacks` chegou a uns 32 MiB. Tamanho não é o que torna seguro."
+      },
+      {
+        "text": "Nenhum valor do heap tem permissão de apontar para dentro de uma pilha, então só os ponteiros da própria pilha precisam de correção",
+        "why": "Isso. É a primeira invariante da análise de escape: tudo cujo endereço seria guardado no heap vai para o próprio heap. O runtime ajusta os ponteiros dentro da pilha copiada e não tem mais nada a procurar."
+      },
+      {
+        "text": "Valores na pilha não guardam ponteiros, então a cópia é um `memmove` simples",
+        "why": "Frames guardam ponteiros o tempo todo, e o compilador registra quais palavras guardam para que a cópia possa ajustá-los."
+      },
+      {
+        "text": "A pilha antiga continua mapeada, então ponteiros velhos ainda leem o dado certo",
+        "why": "O bloco antigo é liberado depois da cópia. Um ponteiro velho para ele leria o que viesse depois, e por isso o projeto não admite ponteiros assim."
+      }
+    ]
+  },
+  "ex-sbvzn4g6": {
+    "prompt": "No `~/mem-stacks`, 10.000 goroutines esperando ocuparam 20.000 KiB de pilha. Com o mesmo tamanho inicial, quantos KiB ocupariam 250.000 goroutines esperando?",
+    "hint": "Calcule primeiro o tamanho de uma pilha.",
+    "unit": "KiB"
+  },
+  "ex-f0psmyhk": {
+    "prompt": "Nas três cores do coletor, o que significa um valor cinza?",
+    "hint": "Uma das três é a lista de tarefas do marcador.",
+    "choices": [
+      {
+        "text": "Alcançado, ponteiros ainda não seguidos",
+        "why": "Isso. Os valores cinza são o trabalho que falta: o marcador pega um, sombreia o que ele aponta e o deixa preto. A marcação termina quando nada é cinza."
+      },
+      {
+        "text": "Ainda não alcançado, e lixo se continuar assim",
+        "why": "Esse é o branco. Branco no fim da marcação é o que a varredura reaproveita."
+      },
+      {
+        "text": "Alcançado, com todos os ponteiros dentro dele já seguidos",
+        "why": "Esse é o preto. O marcador não olha de novo dentro de um valor preto, e é exatamente por isso que a barreira de escrita existe."
+      },
+      {
+        "text": "Alocado durante o ciclo, mantido até o próximo",
+        "why": "Valores alocados enquanto a marcação roda já nascem pretos, pela própria descrição do `mgc.go`."
+      }
+    ]
+  },
+  "ex-qm0gpcc3": {
+    "prompt": "Enquanto um ciclo está marcando, o programa executa `a.next = c` e depois `b.next = nil`, onde `a` é preto, `b` é cinza e `b.next` era o único ponteiro para `c`. Que parte da barreira de escrita mantém `c` vivo?",
+    "hint": "Veja que valor cada chamada `shade` recebe, nas cinco linhas do `mbarrier.go`.",
+    "choices": [
+      {
+        "text": "`shade(ptr)` em `b.next = nil`, que colore o valor novo",
+        "why": "O valor novo ali é `nil`, e não há nada para colorir. O valor antigo é o que corre perigo."
+      },
+      {
+        "text": "`shade(*slot)` em `b.next = nil`, que colore `c` na saída",
+        "why": "Isso. A metade de exclusão da barreira sombreia o que o campo apontava antes da escrita, então remover o último caminho cinza até `c` deixa `c` cinza em vez de branco."
+      },
+      {
+        "text": "Nenhuma barreira entra, porque `a` é preto e é escaneado de novo no fim",
+        "why": "Valores pretos não são escaneados de novo. Sem a barreira, `c` ficaria branco, seria varrido e liberado com `a` ainda apontando para ele."
+      },
+      {
+        "text": "O fim da marcação para o mundo e verifica em todo valor preto se há ponteiros brancos",
+        "why": "O fim da marcação é uma parada curta para arrumação; no trace durou 0,004 ms. Ele não percorre o heap de novo."
+      }
+    ]
+  },
+  "ex-g67qjyyj": {
+    "prompt": "Associe cada pedaço desta linha de `gctrace` do `hits count` ao que ele informa: `gc 2 @0.017s 1%: 0.032+1.2+0.004 ms clock, 0.13+0.025/0.001/0.11+0.019 ms cpu, 3->3->0 MB, 4 MB goal, 0 MB stacks, 0 MB globals, 4 P`.",
+    "hint": "O formato documentado está em `go doc runtime`, sob `gctrace`.",
+    "pairs": [
+      {
+        "left": "`0.032` (clock)",
+        "right": "a parada que começa o ciclo, em tempo de relógio"
+      },
+      {
+        "left": "`1.2` (clock)",
+        "right": "a marcação, com o programa rodando"
+      },
+      {
+        "left": "`0.025/0.001/0.11`",
+        "right": "marcação por assists, pelo worker de fundo e por processadores ociosos"
+      },
+      {
+        "left": "`3->3->0 MB`",
+        "right": "o heap no início e no fim da marcação, e o que sobreviveu"
+      },
+      {
+        "left": "`4 MB goal`",
+        "right": "o tamanho de heap sob o qual o ciclo queria terminar"
+      }
+    ],
+    "right_distractors": [
+      "o tempo desde o fim da coleta anterior"
+    ]
+  },
+  "ex-z4ywet5h": {
+    "prompt": "Toda linha do trace do `hits count` diz `3->3->0 MB, 4 MB goal`. Sem nada sobrevivendo e com `GOGC=100`, por que a meta é 4 MB, e não o dobro de nada?",
+    "hint": "A seção 03 rodou o mesmo programa com `GOGC=50` e `GOGC=200` e leu a quinta linha.",
+    "choices": [
+      {
+        "text": "A meta conta o tamanho do próprio binário, uns 4 MB",
+        "why": "O binário não entra em nenhum lugar da fórmula da meta. E `GOGC=200` imprimiu meta de 8 MB para o mesmo binário."
+      },
+      {
+        "text": "O pacer tem um piso, 4 MB escalado por `GOGC` sobre 100",
+        "why": "Isso. `defaultHeapMinimum` é 4 MB com `GOGC=100`, e `heapMinimum = defaultHeapMinimum * GOGC / 100`; as outras execuções imprimiram metas de 2 MB e 8 MB."
+      },
+      {
+        "text": "Quatro processadores reservam 1 MB de heap cada para seus caches",
+        "why": "O `4 P` no fim é coincidência aqui: com `GOGC=50` os mesmos quatro processadores deram meta de 2 MB."
+      },
+      {
+        "text": "O `0 MB` está arredondado para baixo, e o heap vivo era de fato 2 MB",
+        "why": "Arredondamento não dobraria nada de forma estável, e a meta acompanhou o `GOGC` na proporção exata: 2, 4, 8."
+      }
+    ]
+  },
+  "ex-ry7wx9z7": {
+    "prompt": "O `gc 14` do `slowest` achou 92 MB vivos, com 0 MB de pilhas e globais. Se o programa tivesse rodado com `GOGC=50`, que meta de heap, em MB, o ciclo seguinte teria buscado?",
+    "hint": "A linha do `mgcpacer.go`: o heap marcado, mais o heap marcado, as pilhas e as globais vezes `GOGC` sobre 100.",
+    "unit": "MB"
+  },
+  "ex-n44meksk": {
+    "prompt": "Com `GOMEMLIMIT=100MiB`, o `slowest` fez 66 coletas em 3,13 s, e o trace mostrou `161->164->162 MB, 161 MB goal`, com o ciclo seguinte 48 ms depois. O que estava acontecendo?",
+    "hint": "Compare os três números do heap entre si, e a meta com os três.",
+    "choices": [
+      {
+        "text": "O heap vivo passava do limite; cada ciclo liberava quase nada",
+        "why": "Isso. 162 de 164 MB sobreviveram, o heap já passava de 100 MiB, e a meta ficou presa ao heap do momento: o começo de uma espiral da morte, contida pelo limitador."
+      },
+      {
+        "text": "O programa vazava memória, e o limite revelou isso",
+        "why": "Tudo o que ele guardava, ele usava: as entradas que ordena. Nada inalcançável ficou retido; o limite só estava abaixo do que o programa precisa."
+      },
+      {
+        "text": "O limite fez o runtime devolver memória ao Linux depois de cada ciclo",
+        "why": "Devolver memória não explica um heap que continua com 162 MB vivos. O custo são as próprias coletas."
+      },
+      {
+        "text": "O runtime parou o mundo em cada uma dessas 66 coletas",
+        "why": "As paradas nessas linhas duraram menos de um milissegundo; a marcação rodou ao lado do programa. O que custou o tempo foi a quantidade de ciclos."
+      }
+    ]
+  },
+  "ex-fkbf6tq6": {
+    "prompt": "Quais destas afirmações valem para o `GOMEMLIMIT` no Go 1.27.1? Escolha todas as que se aplicam.",
+    "hint": "Lembre da execução com `GOGC=off GOMEMLIMIT=400MiB` e do que o `cgroup_linux.go` lê.",
+    "choices": [
+      {
+        "text": "É flexível: a memória que o programa ainda usa fica, mesmo passando do limite",
+        "why": "Isso. A execução com 400 MiB teve pico de 453 MiB, e nada falhou. O limite faz o runtime coletar mais; ele não libera um byte alcançável."
+      },
+      {
+        "text": "O runtime não o lê de um contêiner; é preciso defini-lo",
+        "why": "Isso. O código de control groups do runtime lê a cota de processador para o `GOMAXPROCS` e nada sobre memória."
+      },
+      {
+        "text": "Com `GOGC=off`, é a única coisa que inicia uma coleta",
+        "why": "Isso. `GOGC=off` remove a regra proporcional, e o limite continua valendo; aquela execução precisou de três coletas ao todo."
+      },
+      {
+        "text": "Ele conta o binário e a memória que código C aloca",
+        "why": "A documentação de `SetMemoryLimit` cita os dois como excluídos, e esse é um dos motivos de um contêiner precisar de margem abaixo do limite real."
+      },
+      {
+        "text": "Passar dele encerra o programa com erro de falta de memória",
+        "why": "A execução com 100 MiB passou muito do limite e terminou, devagar. O kernel mata um processo acima do limite do contêiner; o runtime não."
+      }
+    ]
+  },
+  "ex-cgvk9zj4": {
+    "prompt": "Com `GOGC=off`, o `slowest` usou 0,74 s de tempo de usuário em vez de 1,26 s, mas o tempo de relógio caiu só de 1,61 s para 1,39 s. Num servidor cujos quatro processadores já estão ocupados, o que você esperaria da mesma mudança?",
+    "hint": "Pergunte onde os 0,5 s de marcação estavam rodando no laboratório.",
+    "choices": [
+      {
+        "text": "Nada diferente: tempo de relógio é o que o usuário vê, e ele quase não mudou",
+        "why": "Quase não mudou no laboratório porque a marcação usava processadores que estariam ociosos. Num servidor ocupado esses processadores fazem outro trabalho."
+      },
+      {
+        "text": "Economizar mais tempo de relógio do que no laboratório, e custar bem mais memória",
+        "why": "Isso. Os 0,5 s de marcação seriam tirados de outro trabalho, então removê-los rende mais ali; o pico ainda dobra rumo a tudo o que já foi alocado, cerca de 1 GB aqui."
+      },
+      {
+        "text": "Deixar o programa mais lento, porque o heap nunca seria compactado",
+        "why": "O coletor do Go nunca compacta, ligado ou não. O que `off` muda é que nada é reaproveitado."
+      },
+      {
+        "text": "Baixar o pico de memória, já que nenhum ciclo deixa lixo meio varrido",
+        "why": "Sem coleta, cada byte já alocado fica: o pico do laboratório foi de uns 0,6 GB para 1.016.500 kB."
+      }
+    ]
+  },
+  "ex-9k0e393k": {
+    "prompt": "No benchmark de 100.000 linhas, `keep.Load` sem dica fez 200.033 alocações e 53.802.259 B por execução; com a dica exata, 200.003 alocações e 20.523.557 B. Como trinta alocações respondem por 33 MB?",
+    "hint": "O perfil de heap atribuiu três quartos de todos os bytes ao próprio `keep.Load`.",
+    "choices": [
+      {
+        "text": "As trinta eram os arrays cada vez maiores que o `append` alocou e para onde copiou",
+        "why": "Isso. Passados 256 elementos, cada array novo é cerca de um quarto maior que o anterior, então montar 100.000 entradas leva uns trinta arrays, e os bytes estão neles."
+      },
+      {
+        "text": "`B/op` inclui o tempo gasto copiando, convertido em bytes",
+        "why": "`B/op` são bytes alocados e mais nada. A cópia aparece no `ns/op`, que caiu mais da metade."
+      },
+      {
+        "text": "A dica impediu o `strings.Fields` de alocar sua fatia",
+        "why": "A dica só dimensiona a fatia de entradas. As duas alocações por linha, de `Text` e `Fields`, são as 200.000 que as duas execuções têm em comum."
+      },
+      {
+        "text": "O benchmark mediu ruído: alocações variam de execução para execução",
+        "why": "Contagens de alocação não dependem de quão ocupada está a máquina; os dois números saem iguais em toda execução."
+      }
+    ]
+  },
+  "ex-sndfmtrz": {
+    "prompt": "Um serviço registra o tamanho do heap a cada requisição. Por que ele deve ler `runtime/metrics` e não chamar `runtime.ReadMemStats`?",
+    "hint": "Veja a terceira linha do corpo de `ReadMemStats`.",
+    "choices": [
+      {
+        "text": "`ReadMemStats` devolve números da última coleta",
+        "why": "A documentação diz o contrário: atualizados no momento da chamada, ao contrário de um perfil de heap."
+      },
+      {
+        "text": "`ReadMemStats` aloca uma struct nova a cada chamada",
+        "why": "O benchmark mostrou 0 B/op para os dois. O custo está em outro lugar."
+      },
+      {
+        "text": "`ReadMemStats` para o mundo a cada chamada",
+        "why": "Isso. Ela chama `stopTheWorld`, e o benchmark levou 11.398 ns por chamada contra 338,8 do `metrics.Read`, com toda goroutine parada durante parte disso."
+      },
+      {
+        "text": "`runtime/metrics` é o único que informa tamanhos de heap",
+        "why": "`MemStats` também informa tamanhos de heap, `HeapAlloc` e `HeapSys` entre eles, como o curso `go` usou."
+      }
+    ]
+  },
+  "ex-amqfs7gv": {
+    "prompt": "Dentro de um benchmark, chamar `b.___()` faz esse benchmark imprimir `B/op` e `allocs/op` mesmo quando o `go test` roda sem `-benchmem`.",
+    "hint": "Um método de `testing.B`, com nome do que ele faz.",
+    "blanks": [
+      {
+        "accept": [
+          "ReportAllocs"
+        ]
+      }
+    ]
+  },
+  "ex-ar7aeb5j": {
+    "prompt": "`keep.WriteEntry` guarda valores `*[]byte` no seu `sync.Pool`, e não `[]byte`. O que o ponteiro economiza?",
+    "hint": "O `~/mem-pool` imprimiu um número para cada tipo.",
+    "choices": [
+      {
+        "text": "Um ponteiro impede que duas goroutines recebam o mesmo buffer",
+        "why": "O pool nunca entrega o mesmo item a dois chamadores ao mesmo tempo, seja qual for o tipo. A diferença está no custo de `Put`."
+      },
+      {
+        "text": "Uma alocação a cada `Put`",
+        "why": "Isso. `Put` recebe um `any`, e as três palavras de uma fatia precisam ser copiadas para o heap para virar um: 1 alocação por ida e volta contra 0 com um ponteiro."
+      },
+      {
+        "text": "Um ponteiro sobrevive a duas coletas no pool, uma fatia só a uma",
+        "why": "O que o pool guarda entre coletas não depende do tipo; o buffer do `~/mem-pool` era um ponteiro e sumiu depois de duas."
+      },
+      {
+        "text": "A capacidade de um `[]byte` se perde quando ele é guardado numa interface",
+        "why": "Uma fatia mantém tamanho e capacidade numa interface; `b[:0]` voltou com espaço para 64 bytes. Só é mais caro colocá-la lá."
+      }
+    ]
+  },
+  "ex-45md3ghy": {
+    "prompt": "Uma função lê linhas com um buffer reaproveitado, como o `keep.Write` faz, e passa cada linha a um callback que faz `saved = append(saved, line)`. Os testes verificam uma linha só e passam. O que acontece em produção?",
+    "hint": "De quem são os bytes depois que o callback retorna?",
+    "choices": [
+      {
+        "text": "Toda linha guardada mostra os bytes da última",
+        "why": "Isso. Cada elemento de `saved` é uma fatia do mesmo array, que a linha seguinte sobrescreve. É a regra de posse que o `io.Writer` declara como 'must not retain p', quebrada por um callback."
+      },
+      {
+        "text": "Cada `append` copia os bytes, então nada dá errado",
+        "why": "`append(saved, line)` copia o cabeçalho da fatia, não os bytes para os quais ele aponta. É assim que fatias compartilham arrays."
+      },
+      {
+        "text": "O buffer escapa e o reaproveitamento para em silêncio",
+        "why": "Escapar decide onde o buffer mora, não se o laço o reaproveita. O laço continua escrevendo no mesmo array."
+      },
+      {
+        "text": "O detector de corrida acusa na primeira execução",
+        "why": "Com uma goroutine só não há corrida a detectar; o defeito é compartilhamento de memória, e é silencioso."
+      }
+    ]
+  },
+  "ex-v2vs0c18": {
+    "prompt": "Ponha em ordem o que aconteceu com o buffer no `~/mem-pool` quando ele rodou com `GOMAXPROCS=1`, do primeiro passo ao último.",
+    "hint": "O pool tem dois níveis, e cada coleta move as coisas um nível adiante.",
+    "items": [
+      "`Put` guarda o buffer no pool",
+      "uma coleta o move para o segundo nível",
+      "`Get` ainda devolve o mesmo buffer",
+      "uma segunda coleta o descarta do pool",
+      "`Get` chama `New`, que faz um buffer novo"
+    ]
+  },
+  "ex-1zcpbp2w": {
+    "prompt": "Um servidor interpreta dados aninhados enviados por clientes com uma função recursiva e sem limite de profundidade. Alguém manda uma entrada com dez milhões de níveis. O que acontece?",
+    "hint": "Lembre o que o `-max` mostrou, e qual é o teto padrão.",
+    "choices": [
+      {
+        "text": "A goroutine da requisição entra em pânico, e o `recover` do handler devolve um erro",
+        "why": "Estouro de pilha é erro fatal, não pânico: o `recover` nunca o vê."
+      },
+      {
+        "text": "O processo sai com `fatal error: stack overflow` perto de 1 GB",
+        "why": "Isso. O runtime dobra a pilha da goroutine até o teto de 1.000.000.000 bytes e então encerra todas as goroutines junto, inclusive as requisições de outros clientes. Só um limite de profundidade no parser evita isso."
+      },
+      {
+        "text": "A pilha para em 8 MiB e só aquela goroutine é encerrada",
+        "why": "8 MiB é a pilha de uma thread. A de uma goroutine cresce até o teto de 1 GB, e um estouro derruba o processo inteiro."
+      },
+      {
+        "text": "O runtime move os frames mais profundos para o heap e a chamada termina",
+        "why": "Frames nunca vão para o heap; a pilha é um bloco só, copiado inteiro quando cresce."
+      }
+    ]
+  },
+  "ex-ychmvpqr": {
+    "prompt": "O `hits count` em dois milhões de linhas gasta cerca de 1% da execução coletando, e todo ciclo acha 0 MB vivos. Que mudança o deixaria visivelmente mais rápido?",
+    "hint": "Descubra para onde vão os outros 99% do tempo.",
+    "choices": [
+      {
+        "text": "`GOGC=400`, para coletar um quarto das vezes",
+        "why": "Coletar menos vezes economiza parte do 1%; a execução não fica mais que cerca de 1% mais rápida assim."
+      },
+      {
+        "text": "Um `GOMEMLIMIT` bem acima do pico",
+        "why": "Um limite do qual o programa nunca se aproxima não muda nada."
+      },
+      {
+        "text": "Menos trabalho e menos alocações por linha, no próprio `Parse`",
+        "why": "Isso. O tempo está em interpretar dois milhões de linhas, com duas alocações cada; a lição 13 tirou uma das duas e o benchmark rodou cerca de duas vezes mais rápido. Nenhum ajuste do coletor chega a isso."
+      },
+      {
+        "text": "Um `sync.Pool` para os mapas do `Summary`",
+        "why": "São dois mapas por execução, criados uma vez. Usar pool neles economiza duas alocações de quatro milhões."
+      }
+    ]
+  },
+  "ex-b8972yrx": {
+    "prompt": "Associe cada situação à mudança que as medições da lição sustentam.",
+    "hint": "Leia o `#%` e o heap vivo antes de mexer em qualquer coisa.",
+    "pairs": [
+      {
+        "left": "uma CLI com 1% de `#%` e quase nada vivo",
+        "right": "deixar os dois ajustes como estão"
+      },
+      {
+        "left": "um programa sozinho num contêiner com limite rígido de memória",
+        "right": "definir `GOMEMLIMIT` com uma margem abaixo do limite do contêiner"
+      },
+      {
+        "left": "memória sobrando, processadores ocupados, `#%` alto",
+        "right": "aumentar o `GOGC` e medir o pico"
+      },
+      {
+        "left": "um pico que pula para lá e para cá seja qual for o `GOGC`",
+        "right": "pré-alocar a fatia que o programa faz crescer"
+      }
+    ],
+    "right_distractors": [
+      "definir `GOMEMLIMIT` abaixo do heap vivo para forçar o heap a baixar"
+    ]
+  }
+}
