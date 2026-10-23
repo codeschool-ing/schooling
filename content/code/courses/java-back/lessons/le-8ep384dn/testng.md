@@ -75,7 +75,7 @@ choices are old (lesson 1 showed what they cost). The three plugins pinned are t
 test classpath, finds TestNG instead of the JUnit Platform, and uses its TestNG provider. The one
 line of configuration hands it a suite file.
 
-`src/main/java/look/Shelf.java`, the class under test, counts copies by title:
+`src/main/java/look/Shelf.java`, the class under test, counts the copies of each book:
 
 ```java
 package look;
