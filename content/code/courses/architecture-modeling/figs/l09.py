@@ -1,18 +1,18 @@
 """Lesson 9: IAF and ArchiMate."""
 from figures import Fig, T, figure, picture
 
-LEVELS = [(T('Contextual', 'Contextual'), T('why?', 'por quê?')), (T('Conceptual', 'Conceitual'), T('what?', 'o quê?')),
+def LEVELS(): return [(T('Contextual', 'Contextual'), T('why?', 'por quê?')), (T('Conceptual', 'Conceitual'), T('what?', 'o quê?')),
           (T('Logical', 'Lógico'), T('how?', 'como?')), (T('Physical', 'Físico'), T('with what?', 'com o quê?'))]
-AREAS = [T('Business', 'Negócio'), T('Information', 'Informação'), T('Information systems', 'Sistemas de informação'),
+def AREAS(): return [T('Business', 'Negócio'), T('Information', 'Informação'), T('Information systems', 'Sistemas de informação'),
          T('Technology', 'Tecnologia')]
 
 
 def grid_drawing(f, words=True):
     t = f.text if words else (lambda *a, **k: None)
     x0, y0, cw, rh = 150, 50, 115, 52
-    for j, a in enumerate(AREAS):
+    for j, a in enumerate(AREAS()):
         t(x0 + cw * j + cw / 2, y0 - 16, a, size=9.5, weight='600')
-    for i, (lv, q) in enumerate(LEVELS):
+    for i, (lv, q) in enumerate(LEVELS()):
         y = y0 + i * rh
         f.rect(20, y + 4, 120, rh - 8, stroke='--amber', fill='--panel', rx=4, width=1.4)
         t(80, y + rh / 2 - 7, lv, size=10, weight='600')

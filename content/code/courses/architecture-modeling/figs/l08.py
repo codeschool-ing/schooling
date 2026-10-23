@@ -38,7 +38,7 @@ def domains():
                 'A camada de negócio, no alto, é o que o C4 não desenha. As outras três são onde vivem os sistemas das aulas 2 e 3.')
 
 
-PHASES = [('A', T('Architecture Vision', 'Visão de Arquitetura')), ('B', T('Business', 'Negócio')),
+def PHASES(): return [('A', T('Architecture Vision', 'Visão de Arquitetura')), ('B', T('Business', 'Negócio')),
           ('C', T('Information Systems', 'Sistemas de Informação')), ('D', T('Technology', 'Tecnologia')),
           ('E', T('Opportunities and Solutions', 'Oportunidades e Soluções')), ('F', T('Migration Planning', 'Planejamento de Migração')),
           ('G', T('Implementation Governance', 'Governança da Implementação')), ('H', T('Change Management', 'Gestão de Mudanças'))]
@@ -64,7 +64,7 @@ def adm_drawing(f, words=True):
         p2 = (cx + R * math.cos(a2), cy + R * math.sin(a2) * 0.93)
         f.path(f'M{p1[0]:.1f} {p1[1]:.1f} A{R} {R * 0.93:.1f} 0 0 1 {p2[0]:.1f} {p2[1]:.1f}', stroke='--paper-dim',
                width=1.2, arrow=True)
-    for (x, y), (k, n) in zip(pts, PHASES):
+    for (x, y), (k, n) in zip(pts, PHASES()):
         f.line(x + (cx - x) * 0.22, y + (cy - y) * 0.22, x + (cx - x) * 0.55, y + (cy - y) * 0.55,
                stroke='--wire', width=1, dash='3 3')
         f.circle(x, y, 22, fill='--panel', stroke='--phosphor', width=1.6)

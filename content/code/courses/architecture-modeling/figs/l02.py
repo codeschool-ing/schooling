@@ -156,7 +156,7 @@ def use_case_wrong():
 
 # ------------------------------------------------------------------ class diagrams
 
-RELS = [('association', 'plain', T('association', 'associação'), T('linked instances', 'instâncias ligadas')),
+def RELS(): return [('association', 'plain', T('association', 'associação'), T('linked instances', 'instâncias ligadas')),
         ('aggregation', 'odiamond', T('aggregation', 'agregação'), T('loose part-of', 'parte de, frouxo')),
         ('composition', 'diamond', T('composition', 'composição'), T('owned part, same life', 'parte com a mesma vida')),
         ('generalisation', 'hollow', T('generalisation', 'generalização'), T('is a kind of', 'é um tipo de')),
@@ -165,7 +165,7 @@ RELS = [('association', 'plain', T('association', 'associação'), T('linked ins
 
 
 def relations_drawing(f, words=True):
-    for i, (key, head, name, meaning) in enumerate(RELS):
+    for i, (key, head, name, meaning) in enumerate(RELS()):
         x0 = 150
         y = 26 + i * 40
         f.rect(x0, y - 14, 60, 28, stroke='--paper-dim', fill='--panel', rx=1)

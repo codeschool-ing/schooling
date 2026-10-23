@@ -1,18 +1,18 @@
 """Lesson 10: Zachman."""
 from figures import Fig, T, figure, picture
 
-COLS = [T('What', 'O quê'), T('How', 'Como'), T('Where', 'Onde'), T('Who', 'Quem'), T('When', 'Quando'), T('Why', 'Por quê')]
-ROWS = [T('Executive', 'Executivo'), T('Business mgmt', 'Gestão do negócio'), T('Architect', 'Arquiteto'),
+def COLS(): return [T('What', 'O quê'), T('How', 'Como'), T('Where', 'Onde'), T('Who', 'Quem'), T('When', 'Quando'), T('Why', 'Por quê')]
+def ROWS(): return [T('Executive', 'Executivo'), T('Business mgmt', 'Gestão do negócio'), T('Architect', 'Arquiteto'),
         T('Engineer', 'Engenheiro'), T('Technician', 'Técnico'), T('Enterprise', 'Empresa')]
 X0, Y0, CW, RH = 150, 40, 92, 38
 
 
 def grid(f, words=True, fills=None):
     t = f.text if words else (lambda *a, **k: None)
-    for j, c in enumerate(COLS):
+    for j, c in enumerate(COLS()):
         f.rect(X0 + j * CW + 2, Y0 - 30, CW - 4, 26, stroke='--amber', fill='--panel', rx=3, width=1.2)
         t(X0 + j * CW + CW / 2, Y0 - 17, c, size=10, weight='600')
-    for i, r in enumerate(ROWS):
+    for i, r in enumerate(ROWS()):
         y = Y0 + i * RH
         f.rect(14, y + 2, X0 - 20, RH - 4, stroke='--phosphor', fill='--panel', rx=3, width=1.2)
         t(14 + (X0 - 20) / 2, y + RH / 2, r, size=9.5, weight='600')
