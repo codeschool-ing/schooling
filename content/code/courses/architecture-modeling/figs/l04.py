@@ -174,7 +174,7 @@ def state_drawing(f, words=True):
         if words:
             if k == 'held':
                 f.text(x, y - 8, n, size=10.5, weight='600')
-                f.text(x, y + 10, T('entry / start 10-min timer', 'entrada / inicia timer de 10 min'), size=8, fill='--paper-dim', mono=True)
+                f.text(x, y + 10, T('entry / start 10-min timer', 'entrada / timer de 10 min'), size=8, fill='--paper-dim', mono=True)
             else:
                 f.text(x, y, n, size=10.5, weight='600')
     f.start(30, 130)
