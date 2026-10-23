@@ -27,6 +27,15 @@
    at the hole leaves a lone backtick at each end. So the holes become markers
    that `esc()` cannot touch, the whole sentence is formatted once, and only
    then does each marker become its box — inside the <code> where it belongs.
+
+   THE MARKER IS ITS OWN, AND NOT THE ONE `formatted()` USES. Both wrote
+   NUL-number-NUL, and once `formatted()` began setting its code spans aside
+   that way, it read every hole as a code span it had stored: a hole outside a
+   span came back as span number N — `<code>undefined</code>` in a prompt with
+   no code at all, and somebody else's code in a prompt with some. No box, so
+   no answer, and the walk of `java-functional` found it by reading the words
+   on the screen. `tools/cloze-test` draws every cloze in the catalogue and
+   counts the boxes, so a marker that collides again fails there.
    ========================================================================== */
 
 import { esc, formatted } from '../text.js';
@@ -40,12 +49,13 @@ export default {
   body(ex, uid) {
     const count = (ex.blanks || []).length;
 
-    // A NUL cannot appear in a prompt that came out of JSON text a person
-    // wrote, and esc() leaves it alone, so it survives formatting untouched.
+    // A control character cannot appear in a prompt that came out of JSON text
+    // a person wrote, and esc() leaves it alone, so it survives formatting
+    // untouched. SOH and not NUL: NUL is `formatted()`'s own marker.
     let hole = 0;
-    const marked = String(ex.prompt || '').replace(/___/g, () => '\u0000' + (hole++) + '\u0000');
+    const marked = String(ex.prompt || '').replace(/___/g, () => '\u0001' + (hole++) + '\u0001');
 
-    const sentence = formatted(marked).replace(/\u0000(\d+)\u0000/g, (_, n) => {
+    const sentence = formatted(marked).replace(/\u0001(\d+)\u0001/g, (_, n) => {
       const i = Number(n);
       // More holes than blanks: the extra ones draw nothing, as they always did.
       if (i >= count) return '';
