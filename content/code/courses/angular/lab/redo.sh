@@ -12,6 +12,8 @@ HERE=$(cd "$(dirname "$0")" && pwd)
 L=$1
 D=$HERE/../lessons/$L
 mkdir -p /tmp/anglab
+# The examples first: a capture takes files out of them.
+for md in "$D"/*.md; do case $md in *.pt.md) ;; *) python3 "$HERE/ex.py" "$md" >/dev/null ;; esac; done
 if [ "${2:-}" != "--no-capture" ] && [ -f "$D/captures.sh" ]; then
   bash "$D/captures.sh" > /tmp/anglab/$L.txt 2>&1
 fi
@@ -19,7 +21,6 @@ for md in "$D"/*.md; do
   case $md in *.pt.md) continue ;; esac
   if [ -f /tmp/anglab/$L.txt ] && grep -q "^ana@dev:" "$md"; then python3 "$HERE/fill.py" "$md" /tmp/anglab/$L.txt; fi
 done
-for md in "$D"/*.md; do case $md in *.pt.md) ;; *) python3 "$HERE/ex.py" "$md" >/dev/null ;; esac; done
 for pt in "$D"/*.pt.md; do
   md=${pt%.pt.md}.md
   if grep -q '^```' "$md"; then python3 "$HERE/pt.py" "$md" "$pt" >/dev/null || echo "pt.py failed on $pt"; fi
