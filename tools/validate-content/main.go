@@ -805,6 +805,18 @@ var allowedOutsideTheFont = map[rune]string{
 		"follows it, and a capture is pasted byte for byte",
 	'\u2139': "`node --test` opens each line of its summary with it (`ℹ tests 3`). IBM Plex " +
 		"Mono has no U+2139 at all. It opens a line and nothing is aligned to what follows it",
+	// The Angular CLI and the Vitest it runs. `ng build`, `ng serve` and `ng test`
+	// open their progress line with U+276F (`❯ Building...`) and `ng serve` its
+	// address with U+279C (`➜  Local:`); Vitest opens the line of a file with a
+	// failing test with U+276F and draws its section rules with U+23AF. IBM Plex
+	// Mono has none of the three, and every Angular transcript carries the first.
+	'\u276f': "the Angular CLI opens every build's progress line with it (`❯ Building...`), and " +
+		"Vitest the line of a file with a failing test. It opens a line and nothing is aligned " +
+		"to what follows it, and a capture is pasted byte for byte",
+	'\u279c': "`ng serve` opens the line with its address with it (`➜  Local:`). It opens a line " +
+		"and nothing is aligned to what follows it",
+	'\u23af': "Vitest draws the rules around its failure report with it (`⎯⎯⎯ Failed Tests 1 ⎯⎯⎯`). " +
+		"A rule is a run of the one character and nothing below it is aligned to where it ends",
 }
 
 // coverage is the set of code points the interface declares a face for.
