@@ -1,5 +1,717 @@
 [
   {
+    "id": "ex-x9b0gwr0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Ana adds a last line to `load_stock.py`, after the `print`, and forgets its closing bracket. She runs `python load_stock.py inbox/stock_2026-03-04.csv`. What has happened to `raw.stock`?",
+    "hint": "Python, lesson 1.",
+    "choices": [
+      {
+        "text": "The rows are loaded, and the error appears once the last line is reached.",
+        "correct": false,
+        "why": "That is how an error raised while running behaves. A `SyntaxError` is raised before the first line runs."
+      },
+      {
+        "text": "Nothing: the file could not be read, so not one line of it ran.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The `DELETE` for that file ran before the error, so its old rows are gone.",
+        "correct": false,
+        "why": "Nothing ran at all, the `DELETE` included: the interpreter stopped while reading the file."
+      },
+      {
+        "text": "Python skips the line it cannot parse, warns, and loads the 1,200 rows.",
+        "correct": false,
+        "why": "Python does not skip a line it cannot read. It refuses the whole file."
+      }
+    ]
+  },
+  {
+    "id": "ex-75xw54sa",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A publisher's export goes wrong and lesson 16's validator rejects 60 of 1,071 price records. It prints its STOP line with the f-string field {len(bad) / total:.0%}, so the line begins STOP: ___ rejected.",
+    "hint": "Python, lesson 2; Data Pipelines and ETL, lesson 16.",
+    "blanks": [
+      {
+        "accept": [
+          "6%",
+          "6 %"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kexe67s3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In `validate_prices.py`, a rejected record goes to quarantine as `{\"reason\": reason, \"record\": json.loads(line)}`, parsing the line a second time instead of using `rec`, which `check(rec, fixed)` has just examined. Why?",
+    "hint": "Python, lesson 3; Data Pipelines and ETL, lesson 16.",
+    "choices": [
+      {
+        "text": "`json.loads` caches what it parsed, so the second call costs nothing and returns the same object.",
+        "correct": false,
+        "why": "Nothing is cached. Each call builds a new dictionary, which is exactly why it differs from `rec`."
+      },
+      {
+        "text": "After `check` returns, `rec` has been consumed and can no longer be read.",
+        "correct": false,
+        "why": "A dictionary is not consumed by being read; `rec` is still there, and still changed."
+      },
+      {
+        "text": "`check` works on a copy of `rec`, so the second parse only makes the line easier to read.",
+        "correct": false,
+        "why": "No copy is made. The function receives the caller's dictionary, which is why the second parse is needed."
+      },
+      {
+        "text": "`check` fixed `rec` in place, so storing it would keep a half-fixed dictionary.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-5gcmwnpn",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A colleague drops the rejected records from a list with `for rec in records:` and, inside it, `if check(rec, fixed): records.remove(rec)`. `records` holds four records, and the second and third would both be rejected. Which hold after the loop? Choose all that apply.",
+    "hint": "Python, lesson 4.",
+    "choices": [
+      {
+        "text": "The third record is still in `records`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`check` was called on all four records.",
+        "correct": false,
+        "why": "Removing the second slid the third into its place, which the loop had already passed: the third was never checked."
+      },
+      {
+        "text": "No exception was raised.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`records` ends with two records, both of them good.",
+        "correct": false,
+        "why": "Three are left: the two good ones and the third, which the loop skipped."
+      }
+    ]
+  },
+  {
+    "id": "ex-6wq1vc95",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Ana changes how `failed` in `~/airflow/plugins/oncall.py` formats its line, and saves it. That night a task fails, and `alerts.log` gets a line in the old format. Why?",
+    "hint": "Python, lesson 7; Data Pipelines and ETL, lesson 10.",
+    "choices": [
+      {
+        "text": "The running process imported `oncall` once and keeps that module; importing it again returns the same one.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Python reads `oncall` from its `.pyc` in `__pycache__` until somebody deletes it.",
+        "correct": false,
+        "why": "Compiled bytecode is reused only while the source is unchanged; the edit is not what is being ignored."
+      },
+      {
+        "text": "The DAG file has to be edited too: only a change there makes Airflow import its modules again.",
+        "correct": false,
+        "why": "Parsing the DAG file again runs its `import oncall` again, and that import returns the module already loaded."
+      },
+      {
+        "text": "The DAG processor re-reads `dags/` and nothing else, so the file has to be moved there.",
+        "correct": false,
+        "why": "Moving it to `dags/` is what made the deadline callback fail: the triggerer does not import from there."
+      }
+    ]
+  },
+  {
+    "id": "ex-bszfp0rs",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "A colleague wraps the whole body of `fetch` in `prices_daily` in `try:` … `except Exception: pass`, \"so the night never fails\". That night the price API answers `503` to every request. What happens? Choose all that apply.",
+    "hint": "Python, lesson 8; Data Pipelines and ETL, lesson 10.",
+    "choices": [
+      {
+        "text": "The task ends in `success` after one try.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Airflow retries it four times, waiting longer each time.",
+        "correct": false,
+        "why": "A retry needs an exception to reach Airflow, and this one never leaves the handler."
+      },
+      {
+        "text": "`alerts.log` gets no FAILED line for the night.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`landing/prices.jsonl` is emptied, because the try did not finish.",
+        "correct": false,
+        "why": "The file is written only after the loop, which the exception skipped: last night's file is still there."
+      }
+    ]
+  },
+  {
+    "id": "ex-pqyhf07j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "To save memory, a colleague changes lesson 3's `prices.py` to open `landing/prices.jsonl` with `\"w\"` before its `while` loop and write each page as it arrives. On the next run the API answers the first two pages, then `503`, and `raise_for_status()` stops the script. What is in the file?",
+    "hint": "Python, lesson 9; Data Pipelines and ETL, lesson 3.",
+    "choices": [
+      {
+        "text": "The previous run's prices, untouched: nothing is written until the `with` block ends normally.",
+        "correct": false,
+        "why": "Writes go to the file as they are made, and `\"w\"` had already emptied it."
+      },
+      {
+        "text": "Nothing at all, because an exception inside a `with` block throws away what was written in it.",
+        "correct": false,
+        "why": "`with` closes the file on the way out; it does not undo what was written."
+      },
+      {
+        "text": "The first two pages only: `\"w\"` emptied the file when it was opened, before the failure.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The first two pages, followed by the rest of the previous run's lines.",
+        "correct": false,
+        "why": "`\"w\"` truncates to nothing first; it does not write over the old content in place."
+      }
+    ]
+  },
+  {
+    "id": "ex-3st7yvc0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`apply_cdc.py` reads `test_decoding`'s columns with `FIELD = re.compile(r\"(\\w+)\\[[^\\]]+\\]:('(?:[^']|'')*'|\\S+)\")`. What does `FIELD.findall(\"customer_id[integer]:538 city[text]:'Campinas'\")` return?",
+    "hint": "Python, lesson 10; Data Pipelines and ETL, lesson 5.",
+    "choices": [
+      {
+        "text": "`['customer_id[integer]:538', \"city[text]:'Campinas'\"]`",
+        "correct": false,
+        "why": "That is what `findall` gives for a pattern with no groups. This one has two."
+      },
+      {
+        "text": "`[('customer_id', '538'), ('city', \"'Campinas'\")]`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`[('customer_id', '538', ''), ('city', \"'Campinas'\", 'C')]`",
+        "correct": false,
+        "why": "`(?:…)` groups without capturing, so there are two groups and not three."
+      },
+      {
+        "text": "`[('customer_id', '538'), ('city', 'Campinas')]`",
+        "correct": false,
+        "why": "The quotes are part of what the second group matched; `values()` strips them afterwards."
+      }
+    ]
+  },
+  {
+    "id": "ex-1wz3rdpy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A colleague edits `main` in lesson 17's `validate_prices.py` to report the size first:\n\n```python\nlines = (json.loads(l) for l in open(src, encoding=\"utf-8\"))\nprint(sum(1 for _ in lines), \"lines\")\nfor rec in lines:\n    reason = check(rec, fixed)\n    ...\n```\n\nRun on a file of 1,071 records, it prints `1071 lines`. What happens next?",
+    "hint": "Python, lesson 11; Data Pipelines and ETL, lesson 17.",
+    "choices": [
+      {
+        "text": "The loop opens the file again and checks all 1,071 records, as before.",
+        "correct": false,
+        "why": "A generator is not the file. It was spent by the `sum`, and nothing restarts it."
+      },
+      {
+        "text": "It raises `ZeroDivisionError` while printing the STOP line.",
+        "correct": false,
+        "why": "The STOP branch needs more rejections than 5% of zero, and there are none, so that line never runs."
+      },
+      {
+        "text": "It prints STOP, because no record was accepted, and exits with 1.",
+        "correct": false,
+        "why": "STOP is decided by the share rejected, and nothing was rejected."
+      },
+      {
+        "text": "It reports 0 records, writes an empty file and returns 0.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-e5bmjaj0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Inside `shop_nightly`, `day = day_to_load()` runs when the DAG file is parsed, months before any logical date exists, and returns no date. Why does calling the function not run its body?",
+    "hint": "Python, lesson 12; Data Pipelines and ETL, lesson 8.",
+    "choices": [
+      {
+        "text": "Its parameter `logical_date=None` makes Python wait until a real argument is passed.",
+        "correct": false,
+        "why": "A default is just a value. Called with nothing, a plain function would run with `None` and fail."
+      },
+      {
+        "text": "A function defined inside another one does not run until the outer one has returned.",
+        "correct": false,
+        "why": "An inner function runs whenever it is called; nothing waits for the outer one."
+      },
+      {
+        "text": "`@task` rebound the name to the decorator's result, which adds a task instead.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The annotation `-> str` delays the call until a string can be returned.",
+        "correct": false,
+        "why": "An annotation is a note that nothing acts on at run time."
+      }
+    ]
+  },
+  {
+    "id": "ex-z7yfcm9a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`load_raw.py` drops and recreates `raw.shops`, prints `raw.shops: 7 rows`, then fails on `DROP TABLE raw.books` because a dbt view depends on it. Afterwards `raw` is exactly as it was before the command. Why?",
+    "hint": "Python, lesson 13; Data Pipelines and ETL, lesson 11.",
+    "choices": [
+      {
+        "text": "The exception left the `with` block, and its exit rolled back the transaction that recreated `raw.shops`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`DROP TABLE IF EXISTS` leaves a table alone while it still has rows in it.",
+        "correct": false,
+        "why": "`raw.shops` was dropped and filled again; it is the rollback that undid both."
+      },
+      {
+        "text": "A `with` block catches the exception and restores the tables from a copy taken on the way in.",
+        "correct": false,
+        "why": "A `with` block tidies up and lets the exception go on; no copy is taken."
+      },
+      {
+        "text": "Closing the connection undoes every statement, committed or not.",
+        "correct": false,
+        "why": "A commit survives the close. Here nothing had been committed, which is why the rollback undid it all."
+      }
+    ]
+  },
+  {
+    "id": "ex-ekc8g2sd",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "`python -m pytest -q tests/test_nightly.py` runs lesson 17's three integration tests. The `warehouse` fixture they all ask for is declared with `@pytest.fixture(scope=\"module\")`. How many times does the run execute `dbt build`?",
+    "hint": "Python, lesson 16; Data Pipelines and ETL, lesson 17.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-mj4q2b77",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 1's `setup.sh` installs `apache-airflow[postgres]==3.3.2` with `--constraint` pointing at Airflow's constraints file. In the terms of Python's lesson 18, what does that file add that the `==3.3.2` does not?",
+    "hint": "Python, lesson 18; Data Pipelines and ETL, lesson 1.",
+    "choices": [
+      {
+        "text": "It lists Airflow's direct dependencies, so pip can download them in parallel.",
+        "correct": false,
+        "why": "Pip resolves the dependencies either way. The file decides which versions it may choose."
+      },
+      {
+        "text": "It keeps pip from installing into the system's Python, which belongs to the operating system.",
+        "correct": false,
+        "why": "That is what the virtual environment does. The file says nothing about where to install."
+      },
+      {
+        "text": "It is Airflow's `pip freeze`, so it pins only what was already installed on the build machine.",
+        "correct": false,
+        "why": "It is published for each release and Python version, and the lab's environment was empty before it."
+      },
+      {
+        "text": "It pins every library below Airflow at its tested version; one pin cannot.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-6222tkrg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "To see deletes, Ana takes lesson 4's advice to compare the keys: `shop_ids` is a list of the 5,345 customer ids in the shop, and `gone = [i for i in wh_ids if i not in shop_ids]` runs over the warehouse's ids. Which change removes the work that grows with the product of the two sizes?",
+    "hint": "Python, lesson 20; Data Pipelines and ETL, lesson 4.",
+    "choices": [
+      {
+        "text": "Write `if i not in set(shop_ids)` inside the comprehension.",
+        "correct": false,
+        "why": "That builds the set again for every id, which costs as much as the walk it replaced."
+      },
+      {
+        "text": "`shop_ids = set(shop_ids)` once, before the comprehension.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Sort both lists first and keep the comprehension as it is.",
+        "correct": false,
+        "why": "`in` on a sorted list still walks it; sorting alone does not turn the search into a step."
+      },
+      {
+        "text": "Turn the comprehension into a generator expression.",
+        "correct": false,
+        "why": "That changes what is kept in memory, not how many comparisons are made."
+      }
+    ]
+  },
+  {
+    "id": "ex-yc4a8qy7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The price API moves, and `/v1/prices` starts answering `404` with `{\"error\": \"no such resource\"}`. What does that night's run of `prices_daily` do?",
+    "hint": "Python, lesson 21; Data Pipelines and ETL, lesson 10.",
+    "choices": [
+      {
+        "text": "`raise_for_status()` raises `HTTPError`, which is retried; after five tries the callback writes FAILED.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It fails at once with `AirflowFailException`, as it would for a wrong key in the header.",
+        "correct": false,
+        "why": "Only `400`, `401` and `403` are in the list that refuses a retry. A `404` falls through."
+      },
+      {
+        "text": "`requests.get` raises on the `404` itself, before the code ever looks at the status.",
+        "correct": false,
+        "why": "A `404` is a successful HTTP request; `requests` raises only when asked to."
+      },
+      {
+        "text": "It writes an empty prices file and succeeds, because the error body is still valid JSON.",
+        "correct": false,
+        "why": "`raise_for_status()` comes before the body is read, and it raises for any `4xx`."
+      }
+    ]
+  },
+  {
+    "id": "ex-j5g7dgvw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "With no index on `order_date`, deleting one day from lesson 19's `big.fact_sales` was a `Seq Scan`: 446 lines found, 3,511,654 thrown away. If the table held twelve years instead of six, how would the time to find that day change?",
+    "hint": "Data Pipelines and ETL, lesson 19; Python, lesson 20.",
+    "choices": [
+      {
+        "text": "It would stay the same, since the day still has 446 lines.",
+        "correct": false,
+        "why": "A scan's cost follows the table, not the day: every row is read to find the few that match."
+      },
+      {
+        "text": "About four times, because each row is compared with every other.",
+        "correct": false,
+        "why": "That is a loop inside a loop. A scan compares each row with one date, once."
+      },
+      {
+        "text": "About twice, because the scan reads every row once, like `in` on a list.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A few steps more, as halving finds the day.",
+        "correct": false,
+        "why": "That is what the index buys. Without one, nothing halves the table."
+      }
+    ]
+  },
+  {
+    "id": "ex-sncmzwt2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On Thursday an auditor asks Ana for Sunday's report again: 3,278 books for the first week of March. The back office has refunded some of that week's orders since. What gives her Sunday's number?",
+    "hint": "Data Pipelines and ETL, lesson 2.",
+    "choices": [
+      {
+        "text": "Run `etl.py` for 1 to 7 March again.",
+        "correct": false,
+        "why": "It asks the shop what it says now, refunds included, and gives 3,252."
+      },
+      {
+        "text": "Run `extract_load.py` for the week again, then `sales_by_category.sql`.",
+        "correct": false,
+        "why": "Extracting again replaces Sunday's raw rows with today's, so the answer moves with them."
+      },
+      {
+        "text": "Run `sales_by_category.sql` again over Sunday's raw rows.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Count the week in the shop with refunded and cancelled orders included.",
+        "correct": false,
+        "why": "That also counts orders cancelled before Sunday, which were never in the report."
+      }
+    ]
+  },
+  {
+    "id": "ex-cq1y69ek",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Ana's first attempt at the categories change renamed five categories that the reports filter on. By the versioning convention of lesson 18, a release carrying that change moves the ___ number.",
+    "hint": "Data Pipelines and ETL, lesson 18.",
+    "blanks": [
+      {
+        "accept": [
+          "major"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gr9ees1j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 1's `consume.py` writes its offset after each event, so a crash between the two reads that event again on restart. What makes the second copy harmless in the warehouse?",
+    "hint": "Data Pipelines and ETL, lesson 15.",
+    "choices": [
+      {
+        "text": "Writing the offset before handling the event.",
+        "correct": false,
+        "why": "Then a crash in between skips the event for good, which is the failure with no remedy."
+      },
+      {
+        "text": "Keeping one row per `event_id` when the events are loaded.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Starting the consumer from byte 0 after every restart.",
+        "correct": false,
+        "why": "That reads every event again, which multiplies the duplicates rather than removing them."
+      },
+      {
+        "text": "Watching the lag, so the restart is noticed within seconds.",
+        "correct": false,
+        "why": "Lag says how far behind the consumer is; it does nothing about an event read twice."
+      }
+    ]
+  },
+  {
+    "id": "ex-wy3q2pgb",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "After 14 March is played, `apply_cdc.py` prints `2268 changes read up to 0/BE7CF38: {'INSERT': 22, 'UPDATE': 4, 'DELETE': 1, 'other tables': 1387}`. The slot hands over a `BEGIN` and a `COMMIT` line for each transaction and one line per changed row. How many transactions did the shop commit that day?",
+    "hint": "Data Pipelines and ETL, lesson 5.",
+    "value": 427,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-t6x007rn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Ana wants revenue per day in a query that also reads the order lines, for the number of books. Joining `payments` to `order_lines` and summing `amount_cents` nearly doubled the shop's revenue. Which revenue column fixes it?",
+    "hint": "Data Pipelines and ETL, lesson 6.",
+    "choices": [
+      {
+        "text": "`sum(l.quantity * l.unit_price_cents)`, joining each line up to its order",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`sum(DISTINCT p.amount_cents)` over the same join",
+        "correct": false,
+        "why": "Two orders that paid the same amount would count once, so the total comes out short."
+      },
+      {
+        "text": "`sum(p.amount_cents)` with the join written as a `LEFT JOIN`",
+        "correct": false,
+        "why": "A left join keeps every payment and still repeats it once per line."
+      },
+      {
+        "text": "`sum(p.amount_cents)` grouped by `order_id` first, then the total of those",
+        "correct": false,
+        "why": "Each order's group still holds one copy of the payment per line."
+      }
+    ]
+  },
+  {
+    "id": "ex-efdaszs3",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put one night of lesson 7's load in the order it has to run.",
+    "hint": "Data Pipelines and ETL, lesson 7.",
+    "items": [
+      "Copy the shop's tables into `raw`",
+      "Rebuild `staging` from `raw`",
+      "Close the current version of each customer whose city or state changed",
+      "Open a version for each customer with none current",
+      "Replace the day in `fact_sales`, each line pointing at the version valid when it was ordered"
+    ],
+    "trap": "A customer who moved still has a current version until it is closed, so opening first opens nothing for them; and the fact load looks the version up, so it comes after both."
+  },
+  {
+    "id": "ex-gvsbw5jb",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "Match each setting of the `FileSensor` that waits for the distributor's stock file to what it does, by lesson 9.",
+    "hint": "Data Pipelines and ETL, lesson 9.",
+    "pairs": [
+      {
+        "left": "`mode=\"poke\"`",
+        "right": "Holds its worker and checks every few seconds"
+      },
+      {
+        "left": "`mode=\"reschedule\"`",
+        "right": "Gives its worker back between checks"
+      },
+      {
+        "left": "`deferrable=True`",
+        "right": "Hands the waiting to the triggerer"
+      },
+      {
+        "left": "`timeout=2 * 60 * 60`",
+        "right": "Fails after two hours, so an alert can say so"
+      }
+    ],
+    "right_distractors": [
+      "Tries again four times, waiting longer each time"
+    ]
+  },
+  {
+    "id": "ex-kfwf1ymh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A DAG copied from an Airflow 2 project sets `\"retries\": 4`, `\"retry_delay\": dt.timedelta(seconds=15)` and `\"retry_exponential_backoff\": True`. On Airflow 3.3 the API is down all night. How long does Airflow wait before each retry?",
+    "hint": "Data Pipelines and ETL, lesson 10; Python, lesson 2.",
+    "choices": [
+      {
+        "text": "15, 30, 60 and 120 seconds, as the switch turned the backoff on.",
+        "correct": false,
+        "why": "In 3.3 the setting is a multiplier, and the doubling comes from `2.0`."
+      },
+      {
+        "text": "None: a boolean is refused there, so the DAG does not load.",
+        "correct": false,
+        "why": "Nothing refuses it. That is why the mistake leaves no trace in any log."
+      },
+      {
+        "text": "Each wait is longer by 15 seconds than the one before.",
+        "correct": false,
+        "why": "Nothing in the setting adds; it multiplies the wait each time it is used again."
+      },
+      {
+        "text": "About 15 seconds each time, since `True` counts as `1`.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-vjeh8kx9",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "`dbt_marts.fact_sales` is incremental, keyed on `order_date`, with `where order_date >= (select max(order_date) from {{ this }})`. It holds days up to 9 March. The 10th is loaded into `raw`, and the staging views now give 383 sale lines on the 8th, 429 on the 9th and 368 on the 10th. How many rows does `dbt run -s fact_sales` report inserting?",
+    "hint": "Data Pipelines and ETL, lesson 11.",
+    "value": 797,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-qn2b5dwm",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each test result in Ana's dbt project to the change lesson 12 made in answer to it.",
+    "hint": "Data Pipelines and ETL, lesson 12.",
+    "pairs": [
+      {
+        "left": "`not_null` on the orders' `customer_id` fails with 5,809 rows",
+        "right": "Apply it to the website's orders only"
+      },
+      {
+        "left": "`unique` on the lines' `order_id` fails with 7,974 rows",
+        "right": "Check the order and the line number as one value"
+      },
+      {
+        "left": "The narrowed customer test still returns 7 erased customers",
+        "right": "Give the test a severity of warn"
+      },
+      {
+        "left": "`fact_sales_has_not_drifted` fails on 11 older days",
+        "right": "Rebuild the fact table and what follows it in full"
+      }
+    ],
+    "right_distractors": [
+      "Delete the test, since the data is right"
+    ]
+  },
+  {
+    "id": "ex-0s151vnc",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "Reports for 14 March were written by each of lesson 13's tools. Then the shop refunds an order from the 14th and `raw` is loaded again. Without deleting any file, which of these write a new `reports/daily_2026-03-14.csv`? Choose all that apply.",
+    "hint": "Data Pipelines and ETL, lesson 13; Data Pipelines and ETL, lesson 14.",
+    "choices": [
+      {
+        "text": "`luigi --module nightly_luigi DailyReport --day 2026-03-14 --local-scheduler`",
+        "correct": false,
+        "why": "The report file exists, so Luigi calls the task complete and runs nothing."
+      },
+      {
+        "text": "`python nightly_prefect.py 2026-03-14`, with Prefect's own Python",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`dagster asset materialize` with `--select \"*\"` and the day set to 2026-03-14",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`make`, with the lab's clock on 16 March",
+        "correct": false,
+        "why": "`DAY` comes from the clock, so the rules are about the 16th's report; the 14th is no target of this Makefile."
+      }
+    ]
+  },
+  {
     "id": "ex-e65vqgsz",
     "version": 1,
     "type": "quiz",
@@ -2387,6 +3099,836 @@
         "text": "It is safe as long as the repository is private, since only colleagues can read it.",
         "correct": false,
         "why": "A secret in anything that gets copied is given to whoever receives a copy; a private repository narrows who that is, and the key still works for all of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-nf1b8s25",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In your first week as a junior data engineer you pushed a commit to the shared `main` that renames a column the nightly load reads, and two colleagues have already pulled it. The load fails at 09:00. What do you do?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 4; From Study to Hired: CV, Interviews and the First 90 Days, lesson 20.",
+    "choices": [
+      {
+        "text": "Fix it quietly with `git reset --hard HEAD~1` and a force-push, so the commit is gone before anybody looks.",
+        "correct": false,
+        "why": "Reset rewrites a commit two people already have, and the hour spent hiding it is what turns a slip into an incident."
+      },
+      {
+        "text": "Run `git restore` on the load's file and commit, since restore is the safest undo of the three.",
+        "correct": false,
+        "why": "Restore only touches what was never committed; with a clean working tree it has nothing to undo, and the commit stays on `main`."
+      },
+      {
+        "text": "Amend the commit with the old column name, so the log shows one correct commit instead of two.",
+        "correct": false,
+        "why": "An amended commit is a new commit with a new id; your colleagues still have the old one, and nobody has been told."
+      },
+      {
+        "text": "Tell the team now that your commit broke the load, then undo it with `git revert` and push that.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ezb25cfn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "You run `git push` on `main` and get `! [rejected] main -> main (fetch first)`. A colleague pushed a fix to the same DAG file an hour ago, and your one commit is not on `origin` yet. Which sequence puts both commits on `origin` and loses neither?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 7.",
+    "choices": [
+      {
+        "text": "`git push --force`, because your commit is the newer of the two and the remote should match it.",
+        "correct": false,
+        "why": "Force moves `origin`'s `main` to your commit and drops your colleague's, which is exactly what the rejection was protecting."
+      },
+      {
+        "text": "`git fetch`, then `git push` again, now that the colleague's commit has arrived.",
+        "correct": false,
+        "why": "Fetch moves only `origin/main`; your own `main` still lacks the colleague's commit, so the second push is rejected like the first."
+      },
+      {
+        "text": "`git pull --rebase`, which replays your commit on top of theirs, then `git push`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`git status` until it reports the branch up to date with `origin/main`, then `git push`.",
+        "correct": false,
+        "why": "`git status` compares with your last record of `origin` and never asks the remote anything, so waiting on it changes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-6men562f",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A pipeline's local settings file, settings.local.yaml, was committed in the first week and added to the ignore list later. Git still reports every edit to it as a modification. The command that stops tracking it and leaves it on your disk is git rm ___ settings.local.yaml, followed by a commit.",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 10.",
+    "blanks": [
+      {
+        "accept": [
+          "--cached"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-81g4rqg7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "You review a pull request for a ticket asking that refunds be subtracted from daily revenue. It does that with a join, it also reformats every SQL file in the folder, and you would have written a `CASE` instead. Run against yesterday's data, a day with no refunds comes out with revenue `NULL`. Which comment blocks the merge?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 13.",
+    "choices": [
+      {
+        "text": "The day that comes out `NULL`, with the query that shows it and the expected figure beside it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The reformatting of the other SQL files, which has to be undone before the rest is read.",
+        "correct": false,
+        "why": "That is out of scope: ask for it to move to its own pull request. It is not what makes this one wrong."
+      },
+      {
+        "text": "The join, since a `CASE` is how you would have written it and reads more easily to you.",
+        "correct": false,
+        "why": "Both work, so it is a preference; the test is whether the code would be worse in a way somebody could notice."
+      },
+      {
+        "text": "A request to split the change before reviewing anything, because it touches more than one file.",
+        "correct": false,
+        "why": "Splitting is for a change too big to read with attention; this one was read, and the wrong number is already found."
+      }
+    ]
+  },
+  {
+    "id": "ex-hpx3egxq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The ticket *Bring supplier invoices into the warehouse* is too big, and refinement splits it. Which first ticket can be released on its own and teach the team something?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 16; The Portfolio Project: From Brief to Deploy, lesson 5.",
+    "choices": [
+      {
+        "text": "Create the raw tables for the twelve suppliers, then the extractor, then the reporting models.",
+        "correct": false,
+        "why": "That is a split by layer: none of the three gives anybody a number until all three are done."
+      },
+      {
+        "text": "One vendor's file, loaded end to end into a table that answers one real question from an analyst.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Estimate the whole ticket at 13 points so planning knows how large it is, and start it next sprint.",
+        "correct": false,
+        "why": "A 13 is a signal that the ticket goes back to be split or clarified, not a size to plan around."
+      },
+      {
+        "text": "The extractor for the twelve suppliers first, since extraction is where the unknowns are.",
+        "correct": false,
+        "why": "It is still one layer; the questions about loading and querying turn up weeks later, when the other layers arrive."
+      }
+    ]
+  },
+  {
+    "id": "ex-z9mas949",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Your pipeline's checks pass on your laptop. Which of these would make the same checks fail on a fresh clone of your branch, the way CI runs them? Choose all that apply.",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 17.",
+    "choices": [
+      {
+        "text": "`git status --short` showed `?? lookup/`, and you committed with `git commit -a`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The code reads the warehouse password from a variable set only in your shell profile.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "You staged the change with `git add -p` and split it into two commits instead of one.",
+        "correct": false,
+        "why": "How the commits are cut changes the history, not what the branch holds once both are pushed."
+      },
+      {
+        "text": "The transform uses a feature that arrived in Python 3.12, and the CI machine installs 3.10.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The test data is built by a fixture inside the committed test file.",
+        "correct": false,
+        "why": "A fixture in a committed file comes with the clone; it is the one kind of test data that always travels."
+      }
+    ]
+  },
+  {
+    "id": "ex-fkgateqh",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "An enrichment step sends 4,000 product descriptions a day to Claude Sonnet 5.5, at the prices on lesson 2's sheet: $2 per million input tokens and $10 per million output tokens. Each request is 1,500 tokens in and 100 out. In dollars, what does a 30-day month cost?",
+    "hint": "AI in Development, lesson 2.",
+    "value": 480,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-t94va7mn",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "An Airflow task with `retries: 3` calls a model through the Anthropic SDK, left at its default retries. All night the provider cannot be reached, with a connection error every time. At most, how many times is the request sent in that one run?",
+    "hint": "AI in Development, lesson 10; Data Pipelines and ETL, lesson 10.",
+    "value": 12,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-ppd4kmrg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A pipeline step asks a model to turn each scanned supplier invoice into `{supplier, total_cents, currency}`. It validates every reply against the schema, sends the errors back once, and gets `None` after the second failure. What should the step do with that invoice?",
+    "hint": "AI in Development, lesson 8; Data Pipelines and ETL, lesson 16.",
+    "choices": [
+      {
+        "text": "Keep asking until a reply passes, since each attempt is cheap next to a missing invoice.",
+        "correct": false,
+        "why": "Each try is billed and rarely fixes what the second did not; a schema that keeps failing points at the prompt or the schema."
+      },
+      {
+        "text": "Load it with the fields that did validate and leave `total_cents` null for the analysts to fill.",
+        "correct": false,
+        "why": "A record that never passed would be filed half-right, and a half-right row in a table is one nobody looks at again."
+      },
+      {
+        "text": "Skip it with a warning in the log, so one unreadable scan does not hold up the batch.",
+        "correct": false,
+        "why": "A record that vanishes behind a log line cannot be found or sent back to the supplier; the batch can go on and the invoice still be kept."
+      },
+      {
+        "text": "Write it to quarantine as it arrived, with the reason, and count it in the run's tally.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-vm0ke4bm",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A team copies lesson 5's evaluation harness to score a prompt that writes column descriptions: 20 columns, 3 runs each, and the version with examples passes 52 of 60. Reading the passes, 17 of them are one of the prompt's examples, word for word. Once a check refuses a reply equal to an example, what does that run score, out of 60?",
+    "hint": "AI in Development, lesson 5.",
+    "value": 35,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-c5ssz7t1",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A pipeline sends support tickets to a model to tag them and writes one log line per request. Which fields belong in that line? Choose all that apply.",
+    "hint": "AI in Development, lesson 11; The Portfolio Project: From Brief to Deploy, lesson 11.",
+    "choices": [
+      {
+        "text": "The provider's id for the request",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The ticket text, after redaction",
+        "correct": false,
+        "why": "Redacted or not it is the customer's words, kept as long as the logs and read by everyone who reads them; it belongs in a separate store."
+      },
+      {
+        "text": "The input and output token counts",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The customer's e-mail, to find the request later",
+        "correct": false,
+        "why": "The request id already joins the line to the provider's records; an address in the log is one more copy of personal data."
+      },
+      {
+        "text": "A short SHA-256 of the prompt",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-2xn62gvw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "With `etl/config.py` open in the editor, you asked the coding assistant about a slow query. The file holds `DWH_URL = \"postgresql://etl:Kp7x2mQ9@dwh.internal:5432/sales\"`, and the request the assistant kept shows the file went with it. What comes first?",
+    "hint": "AI in Development, lesson 3; The Portfolio Project: From Brief to Deploy, lesson 14.",
+    "choices": [
+      {
+        "text": "Add `etl/config.py` to `.gitignore`, so the assistant does not send it again.",
+        "correct": false,
+        "why": "Git's ignore list means nothing to the editor; an ignored file in an open tab is still sent."
+      },
+      {
+        "text": "Change the database password, then read the URL from the environment.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Add `etl/config.py` to the assistant's exclusion list, since the leak came from the file being open.",
+        "correct": false,
+        "why": "That protects the next request, not the one already sent, and a request cannot be called back."
+      },
+      {
+        "text": "No action: the file has no `password` line, and the secret check would have stopped a real one.",
+        "correct": false,
+        "why": "A connection string with a password inside is a secret; the check sees names and shapes, and this one went through."
+      }
+    ]
+  },
+  {
+    "id": "ex-44zcjqw4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An assistant answers questions about the warehouse from its data dictionary, cut one passage per paragraph with ids like `orders.md#4`, and stores each answer with its citations. Somebody adds a paragraph near the top of `orders.md`. What happens to last month's stored answers?",
+    "hint": "AI in Development, lesson 6.",
+    "choices": [
+      {
+        "text": "Nothing, because every passage carries its document's title and still makes sense on its own.",
+        "correct": false,
+        "why": "The title keeps a passage readable; the id is a position, and the positions after the insert all moved."
+      },
+      {
+        "text": "The citations stop resolving until the index is rebuilt, and then they work again.",
+        "correct": false,
+        "why": "After a rebuild the ids still exist; they name other paragraphs, which is why nothing visibly breaks."
+      },
+      {
+        "text": "Citations to paragraphs below the new one now name different paragraphs, and nothing fails.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Only answers that cite the new paragraph are affected, since the others kept their text.",
+        "correct": false,
+        "why": "No stored answer can cite a paragraph that did not exist; the old ones point at positions, not at text."
+      }
+    ]
+  },
+  {
+    "id": "ex-kmzenge2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A transform marks a delivery late with `delivered_on >= promised_on`, and the contract says a delivery on the promised day is on time. You ask the assistant for tests of the function; it writes six, and all six pass. What do those six green tests tell you?",
+    "hint": "AI in Development, lesson 4; The Portfolio Project: From Brief to Deploy, lesson 12.",
+    "choices": [
+      {
+        "text": "That the function does what its own code says, the `>=` on the promised day included.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "That the edge is covered, because six tests on a single comparison will include the promised day.",
+        "correct": false,
+        "why": "A test read off the code expects what the code does; one on the promised day would expect it late, and pass."
+      },
+      {
+        "text": "That they are worthless until each has failed once, so delete the six and write new ones first.",
+        "correct": false,
+        "why": "Fail-first is the rule for a bug's own test; generated tests still give a list of cases, to be checked against the contract."
+      },
+      {
+        "text": "That the contract is met, since the model read the function's name and its docstring.",
+        "correct": false,
+        "why": "The contract was never in the context; the model could only test against what it was shown, which is the code."
+      }
+    ]
+  },
+  {
+    "id": "ex-3zw939gx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "You are applying for junior data engineering roles with four project ideas. By lesson 3's three filters and what a data reviewer opens first, which one do you build?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 3; Data Pipelines and ETL, lesson 15.",
+    "choices": [
+      {
+        "text": "A chat over the city's transport reports through a hosted model, which needs your paid key to try.",
+        "correct": false,
+        "why": "It fails the third filter: a project nobody can try without paying is evidence nobody can check."
+      },
+      {
+        "text": "A rebuild, with open tools, of a well-known analytics product's main dashboard.",
+        "correct": false,
+        "why": "A clone invites a comparison with a large team you cannot win, and a dashboard is not what a data engineering reviewer opens first."
+      },
+      {
+        "text": "A to-do list app with a reporting page that counts the tasks finished each week.",
+        "correct": false,
+        "why": "It fails the second filter: nothing in it exercises the track's core skill, a pipeline."
+      },
+      {
+        "text": "A nightly job loading a city's open bus-delay data into a queryable table, where rerunning a day leaves the same rows.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-npyr7qpv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your portfolio pipeline will ingest a public dataset into a warehouse. Which plan for the first week is a walking skeleton?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 5.",
+    "choices": [
+      {
+        "text": "The full star schema with each dimension designed, and the extraction written once the model is settled.",
+        "correct": false,
+        "why": "That is building by layer: nothing runs until the last layer is done, which is usually where it stops."
+      },
+      {
+        "text": "One day of one source extracted, loaded into one table, and one question answered from that table.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The extractor for each endpoint of the source, tested, so the inputs are solid before anything is loaded.",
+        "correct": false,
+        "why": "Still one layer: the load and the query remain a plan, and the project has nothing that runs end to end."
+      },
+      {
+        "text": "The scheduler, the alerts and the deploy, so the pipeline runs unattended from the very first day.",
+        "correct": false,
+        "why": "Each of those is easier to add to a thing that runs than to a plan; the skeleton comes first."
+      }
+    ]
+  },
+  {
+    "id": "ex-1y9yynwx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "You finish the milestone *a rerun leaves the same rows*, run `git tag -a v0.2.0 -m '...'` and then `git push`. A reviewer who opens the repository the next day sees no `v0.2.0`. Why?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 7; Git and Teamwork: Version Control, Review and Process, lesson 7.",
+    "choices": [
+      {
+        "text": "An annotated tag stays on your machine until a release page is created for it on the host.",
+        "correct": false,
+        "why": "A release is made from a tag already on the host; the tag has to get there first, by being pushed."
+      },
+      {
+        "text": "Tags under `v1.0.0` stay hidden on the host until the first version worth showing exists.",
+        "correct": false,
+        "why": "Nothing hides a tag by its number; semantic versioning is a convention people read, not a rule the host applies."
+      },
+      {
+        "text": "`git push` sends branches, not tags; the tag goes up with its own `git push origin v0.2.0`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`-a` makes a lightweight tag, and a lightweight tag stays on the machine that made it.",
+        "correct": false,
+        "why": "`-a` makes an annotated tag; a lightweight one is made without `-a` and `-m`, and both are pushed the same way."
+      }
+    ]
+  },
+  {
+    "id": "ex-84pxs2c1",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "Your working tree holds the fix for a load that doubled rows and, in the same file, a print you added while debugging it. To stage the fix one hunk at a time and answer no to the print, run git add ___ load.py, then commit.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 9.",
+    "blanks": [
+      {
+        "accept": [
+          "-p",
+          "--patch"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-thc1ztjf",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "An ingestion API in your portfolio answers the way lesson 11 answers in loanbook. Match each request to its answer.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 11.",
+    "pairs": [
+      {
+        "left": "A body that is not JSON",
+        "right": "400, with a sentence saying what to fix"
+      },
+      {
+        "left": "A dataset id that does not exist",
+        "right": "404, saying there is no such dataset"
+      },
+      {
+        "left": "Loading a day while that same day is still loading",
+        "right": "409, naming the rule and the facts behind it"
+      },
+      {
+        "left": "A `KeyError` nobody expected",
+        "right": "A traceback in the server's log, and no sentence about it"
+      }
+    ],
+    "right_distractors": [
+      "200, with the problem described in an `error` field"
+    ]
+  },
+  {
+    "id": "ex-es9bryde",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`test_loading_a_day_twice_leaves_448_lines` was written after the load's `DELETE` went in, so it has never failed. How do you find out whether it would notice a load that doubles?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 12; Data Pipelines and ETL, lesson 15.",
+    "choices": [
+      {
+        "text": "Run it twice in a row: a test that passes both times is itself idempotent.",
+        "correct": false,
+        "why": "Passing twice shows the test is stable, not that it notices anything."
+      },
+      {
+        "text": "Delete the `DELETE` line, run the suite, watch that test fail, then restore the line.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Measure coverage: if the `DELETE` line is covered, the test is guarding it.",
+        "correct": false,
+        "why": "Covered means the line ran; a suite can run every line and assert nothing about what it did."
+      },
+      {
+        "text": "Write more tests around it, since a rule held by several tests is held more firmly than by one.",
+        "correct": false,
+        "why": "More tests that never failed carry the same doubt; one test seen failing settles it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xpwqc3h3",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A warehouse password reached a public repository in a commit that was pushed. Put what you do in the order lesson 14 gives.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 14; Git and Teamwork: Version Control, Review and Process, lesson 10.",
+    "items": [
+      "Revoke the password in the database and issue a new one",
+      "Check the database's logs for sessions you did not open",
+      "Put the new password in the environment, not in a file",
+      "Rewrite the history with `git filter-repo` and force-push, if you want it tidy"
+    ],
+    "trap": "Cleaning the history feels most urgent and comes last: it cannot recall clones already made, and until the password is revoked the leaked one still opens the database."
+  },
+  {
+    "id": "ex-0c1c2sck",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Your portfolio pipeline runs in a container that writes its results to a DuckDB file under `/app/data`, and every deploy replaces the container with one from the new image. After the second deploy the history is gone. In lesson 15's unit file, what would have kept it?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15; Docker and Containers, lesson 7.",
+    "choices": [
+      {
+        "text": "A named volume mounted at `/app/data`, outside the container.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`Restart=always`, so that the container comes back instead of being replaced by a new one.",
+        "correct": false,
+        "why": "Restarting brings the same container back after a crash; a deploy removes it and starts another with a fresh writable layer."
+      },
+      {
+        "text": "A health check every thirty seconds, which marks the container unhealthy before anything is lost.",
+        "correct": false,
+        "why": "A health check reports a state; it keeps nothing."
+      },
+      {
+        "text": "Stopping the old container politely before each deploy, instead of letting it be killed.",
+        "correct": false,
+        "why": "A stopped container keeps its layer only until it is removed, and replacing it with a new image is a removal."
+      }
+    ]
+  },
+  {
+    "id": "ex-xk0pdj1y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Your README says *Run it: `pip install -r requirements.txt`, then `python run.py 2026-03-16`*, and that works every time on your laptop. What does running it cold, on a machine that has never seen the project, test that your laptop cannot?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 16; Git and Teamwork: Version Control, Review and Process, lesson 17.",
+    "choices": [
+      {
+        "text": "Whether the pipeline runs faster on a machine with nothing else installed or running on it.",
+        "correct": false,
+        "why": "Speed is not the claim being tested; the README's steps are."
+      },
+      {
+        "text": "Whether the tests pass, which the laptop cannot show because of everything it has cached.",
+        "correct": false,
+        "why": "The tests run anywhere; what the laptop cannot show is everything it has that the README never mentions."
+      },
+      {
+        "text": "Whether a step you do out of habit, such as setting `DWH_URL`, is written down at all.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Whether the README's sections are in the order that a reviewer reads them.",
+        "correct": false,
+        "why": "Order is checked by reading; running it cold checks that what it tells you to type is enough."
+      }
+    ]
+  },
+  {
+    "id": "ex-vdk73ww9",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "You write a seed script for your pipeline's demo warehouse. Which of these does lesson 17 ask of it? Choose all that apply.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 17.",
+    "choices": [
+      {
+        "text": "Dates relative to today, so the latest day in it is always recent",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Customer names from a real export, with the e-mail column hashed",
+        "correct": false,
+        "why": "Demo data is invented, always: a real export with one column hashed is still people's data, published."
+      },
+      {
+        "text": "Rows written through the pipeline's own load functions, not around them",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A refusal to run on a warehouse that already holds data",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A fixed date such as `2026-06-24` written in, so the screenshots never change",
+        "correct": false,
+        "why": "A fixed date ages: a year later the demo means something else on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-8c7mp8t2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which CV line for your portfolio pipeline follows lesson 4's pattern of what you did, what is true now, and how to check it?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 4; The Portfolio Project: From Brief to Deploy, lesson 12.",
+    "choices": [
+      {
+        "text": "Developed an ETL pipeline using Python, Airflow, PostgreSQL and Docker, following good practice in data engineering.",
+        "correct": false,
+        "why": "A list of tools: the same line describes a pipeline that never ran."
+      },
+      {
+        "text": "Improved data quality by 40% by building a robust and scalable pipeline for public data.",
+        "correct": false,
+        "why": "A number you cannot explain, with no baseline, costs more than no number at all."
+      },
+      {
+        "text": "Participated in building a data pipeline for public transport data, responsible for the loading layer and its tests.",
+        "correct": false,
+        "why": "*Participated* and *responsible for* hide what you did and say nothing about what is true now."
+      },
+      {
+        "text": "Built a nightly load of a city's bus-delay data; rerunning a day leaves the same rows, held by a test that fails when the delete goes.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-03ka1rdb",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "Put the steps a reviewer takes through your GitHub profile in order, by lesson 5.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 5.",
+    "items": [
+      "The profile page: your name, one line and the city",
+      "The pinned repositories and their one-line descriptions",
+      "The README's first screen",
+      "One file, or the history of commits"
+    ],
+    "trap": "Nobody browses a profile: each step earns the next click or ends the visit, and a file or the history is opened last, if at all."
+  },
+  {
+    "id": "ex-mwjvak9r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Six weeks in, your tracker has 60 applications for junior data engineering roles, 2 answers and no screening calls. By lesson 8, where does the funnel leak?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 8.",
+    "choices": [
+      {
+        "text": "At the screening, which is where the salary conversation goes wrong.",
+        "correct": false,
+        "why": "There were no screening calls to go wrong; the funnel leaks before them."
+      },
+      {
+        "text": "In the follow-ups, which should go out twice a week until somebody answers.",
+        "correct": false,
+        "why": "More follow-ups do not fix a leak at the top, and more than one per application costs more than it earns."
+      },
+      {
+        "text": "At the top of the funnel, so the CV or the choice of roles is what to fix.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nowhere yet: sixty applications are too few for the tracker to say anything.",
+        "correct": false,
+        "why": "Sixty with two answers is the tracker saying something, and saying it is what the tracker is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-02hxg680",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "By lesson 10, the one follow-up on an application goes out about a ___ after applying; more than one, or one the next day, costs more than it earns.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 10.",
+    "blanks": [
+      {
+        "accept": [
+          "week",
+          "one week"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tx5sh6ts",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A take-home for a junior data role: *Load the attached orders CSV into a table; loading the same file twice must not duplicate rows. About three hours.* At hour three you have the load and a chart of orders per day, and a rerun still doubles the rows. What do lessons 13 and 5 say about this submission?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 13; The Portfolio Project: From Brief to Deploy, lesson 5.",
+    "choices": [
+      {
+        "text": "Take the extra evening to make the rerun safe, since only a complete submission gets read.",
+        "correct": false,
+        "why": "A submission that silently took twice the time tells the reviewer you cannot estimate, and they are watching how you meet a deadline."
+      },
+      {
+        "text": "The rerun rule was the one thing to build first; stop now, and the note says it is missing and how you would add it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Hand it in as it is: the chart goes past the brief and makes up for the missing rule.",
+        "correct": false,
+        "why": "An extra on top of a missing requirement reads as not having read the brief."
+      },
+      {
+        "text": "Leave the rerun out of the note, since a reviewer with ten minutes checks only the first line of the brief.",
+        "correct": false,
+        "why": "The note's last part is where the missing pieces go; being honest about them beats being found out."
+      }
+    ]
+  },
+  {
+    "id": "ex-vxv4qwdc",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Asked *tell me about a time you made a mistake*, you tell the story of a load that tripled a day of sales. Match each part of STAR to the sentence that belongs in it.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 15.",
+    "pairs": [
+      {
+        "left": "Situation",
+        "right": "During my internship, on the team that ran the nightly sales load"
+      },
+      {
+        "left": "Task",
+        "right": "A report showed the 16th at three times its real sales, and I had to find out why"
+      },
+      {
+        "left": "Action",
+        "right": "I traced it to my retry rerunning an insert, told my lead, and changed the load to replace the day"
+      },
+      {
+        "left": "Result",
+        "right": "Reruns now leave the same rows, and I check every new load by running it twice"
+      }
+    ],
+    "right_distractors": [
+      "We would always test our loads carefully before shipping them"
+    ]
+  },
+  {
+    "id": "ex-k2d5k4tj",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A data company offers R$ 5,000 a month under CLT, and another offers R$ 5,000 a month as PJ. With lesson 17's arithmetic, before taxes and benefits, what monthly PJ invoice, billed for 12 months, matches the CLT year?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 17.",
+    "value": 6000,
+    "tolerance": 1,
+    "unit": ""
+  },
+  {
+    "id": "ex-jc7qsjpx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your second week: the ticket says *Add the new region to the sales mart*. Twenty minutes in, you find two tables called `regions`, and nothing says which one counts. What do you do?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 20; Git and Teamwork: Version Control, Review and Process, lesson 16.",
+    "choices": [
+      {
+        "text": "Write the question on the ticket with what you found, ask whoever wrote it, and note the answer down.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Pick the table with more rows, build on it, and mention the choice in the pull request.",
+        "correct": false,
+        "why": "That is the quiet guess: the person who asked sees the result for the first time at review, and it may not be what they meant."
+      },
+      {
+        "text": "Keep digging alone for the rest of the day, so you only ask once you are sure nobody wrote the answer down.",
+        "correct": false,
+        "why": "After a set time stuck, you ask; a day of guessing costs more than the minute somebody needs to answer."
+      },
+      {
+        "text": "Post in the team chat every time a new doubt comes up, so nothing has to wait.",
+        "correct": false,
+        "why": "Small questions are kept on a list and asked together at a set time; ten interruptions a day cost the team more."
       }
     ]
   }

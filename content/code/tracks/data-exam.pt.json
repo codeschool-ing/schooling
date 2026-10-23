@@ -1,4 +1,520 @@
 {
+  "ex-x9b0gwr0": {
+    "prompt": "Ana acrescenta uma última linha ao `load_stock.py`, depois do `print`, e esquece de fechar um parêntese. Ela roda `python load_stock.py inbox/stock_2026-03-04.csv`. O que aconteceu com `raw.stock`?",
+    "hint": "Python, aula 1.",
+    "choices": [
+      {
+        "text": "As linhas são carregadas, e o erro aparece quando a última linha é alcançada.",
+        "why": "É assim que se comporta um erro levantado durante a execução. Um `SyntaxError` é levantado antes de a primeira linha rodar."
+      },
+      {
+        "text": "Nada: o arquivo não pôde ser lido, então nenhuma linha dele rodou.",
+        "why": "Isso."
+      },
+      {
+        "text": "O `DELETE` daquele arquivo rodou antes do erro, então as linhas antigas sumiram.",
+        "why": "Nada rodou, nem o `DELETE`: o interpretador parou enquanto lia o arquivo."
+      },
+      {
+        "text": "O Python pula a linha que não consegue ler, avisa e carrega as 1.200 linhas.",
+        "why": "O Python não pula uma linha que não consegue ler. Ele recusa o arquivo inteiro."
+      }
+    ]
+  },
+  "ex-75xw54sa": {
+    "prompt": "A exportação de uma editora dá errado, e o validador da aula 16 rejeita 60 de 1.071 registros de preço. Ele imprime a linha de STOP com o campo de f-string {len(bad) / total:.0%}, então a linha começa com STOP: ___ rejected.",
+    "hint": "Python, aula 2; Pipelines de Dados e ETL, aula 16.",
+    "blanks": [
+      {
+        "accept": [
+          "6%",
+          "6 %"
+        ]
+      }
+    ]
+  },
+  "ex-kexe67s3": {
+    "prompt": "No `validate_prices.py`, um registro rejeitado vai para a quarentena como `{\"reason\": reason, \"record\": json.loads(line)}`, lendo a linha pela segunda vez em vez de usar `rec`, que `check(rec, fixed)` acabou de examinar. Por quê?",
+    "hint": "Python, aula 3; Pipelines de Dados e ETL, aula 16.",
+    "choices": [
+      {
+        "text": "`json.loads` guarda em cache o que leu, então a segunda chamada não custa nada e devolve o mesmo objeto.",
+        "why": "Não há cache. Cada chamada monta um dicionário novo, e é exatamente por isso que ele difere de `rec`."
+      },
+      {
+        "text": "Depois que `check` retorna, `rec` foi consumido e não pode mais ser lido.",
+        "why": "Um dicionário não é consumido por ser lido; `rec` continua lá, e continua alterado."
+      },
+      {
+        "text": "`check` trabalha numa cópia de `rec`, então a segunda leitura só deixa a linha mais legível.",
+        "why": "Nenhuma cópia é feita. A função recebe o dicionário de quem a chamou, e é por isso que a segunda leitura é necessária."
+      },
+      {
+        "text": "`check` altera `rec` no lugar, e guardá-lo manteria um dicionário meio corrigido.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-5gcmwnpn": {
+    "prompt": "Um colega tira os registros rejeitados de uma lista com `for rec in records:` e, dentro dele, `if check(rec, fixed): records.remove(rec)`. `records` tem quatro registros, e o segundo e o terceiro seriam rejeitados. O que vale depois do laço? Marque todas as que se aplicam.",
+    "hint": "Python, aula 4.",
+    "choices": [
+      {
+        "text": "O terceiro registro continua em `records`.",
+        "why": "Isso."
+      },
+      {
+        "text": "`check` foi chamado nos quatro registros.",
+        "why": "Remover o segundo fez o terceiro escorregar para o lugar dele, que o laço já tinha passado: o terceiro nunca foi conferido."
+      },
+      {
+        "text": "Nenhuma exceção foi levantada.",
+        "why": "Isso."
+      },
+      {
+        "text": "`records` termina com dois registros, ambos bons.",
+        "why": "Sobram três: os dois bons e o terceiro, que o laço pulou."
+      }
+    ]
+  },
+  "ex-6wq1vc95": {
+    "prompt": "Ana muda o formato da linha que `failed`, em `~/airflow/plugins/oncall.py`, escreve, e salva o arquivo. Naquela noite uma tarefa falha, e o `alerts.log` ganha uma linha no formato antigo. Por quê?",
+    "hint": "Python, aula 7; Pipelines de Dados e ETL, aula 10.",
+    "choices": [
+      {
+        "text": "O processo em execução importou `oncall` uma vez e guarda esse módulo; importar de novo devolve o mesmo.",
+        "why": "Isso."
+      },
+      {
+        "text": "O Python lê `oncall` do `.pyc` em `__pycache__` até alguém apagá-lo.",
+        "why": "O bytecode compilado só é reaproveitado enquanto o código-fonte não muda; não é a edição que está sendo ignorada."
+      },
+      {
+        "text": "O arquivo da DAG também precisa ser editado: só uma mudança nele faz o Airflow importar seus módulos de novo.",
+        "why": "Ler o arquivo da DAG de novo roda o `import oncall` outra vez, e esse import devolve o módulo já carregado."
+      },
+      {
+        "text": "O processador de DAGs relê `dags/` e mais nada, então o arquivo precisa ir para lá.",
+        "why": "Pôr o arquivo em `dags/` foi o que fez o callback do prazo falhar: o triggerer não importa de lá."
+      }
+    ]
+  },
+  "ex-bszfp0rs": {
+    "prompt": "Um colega envolve todo o corpo de `fetch`, em `prices_daily`, num `try:` … `except Exception: pass`, \"para a noite nunca falhar\". Naquela noite a API de preços responde `503` a todos os pedidos. O que acontece? Marque todas as que se aplicam.",
+    "hint": "Python, aula 8; Pipelines de Dados e ETL, aula 10.",
+    "choices": [
+      {
+        "text": "A tarefa termina em `success` depois de uma tentativa.",
+        "why": "Isso."
+      },
+      {
+        "text": "O Airflow tenta de novo quatro vezes, esperando mais a cada vez.",
+        "why": "Uma nova tentativa precisa de uma exceção que chegue ao Airflow, e esta nunca sai do handler."
+      },
+      {
+        "text": "O `alerts.log` não ganha nenhuma linha FAILED nessa noite.",
+        "why": "Isso."
+      },
+      {
+        "text": "O `landing/prices.jsonl` é esvaziado, porque o try não terminou.",
+        "why": "O arquivo só é escrito depois do laço, que a exceção pulou: o arquivo da noite anterior continua lá."
+      }
+    ]
+  },
+  "ex-pqyhf07j": {
+    "prompt": "Para economizar memória, um colega muda o `prices.py` da aula 3 para abrir `landing/prices.jsonl` com `\"w\"` antes do laço `while` e escrever cada página assim que ela chega. Na execução seguinte a API responde as duas primeiras páginas, depois `503`, e `raise_for_status()` interrompe o script. O que há no arquivo?",
+    "hint": "Python, aula 9; Pipelines de Dados e ETL, aula 3.",
+    "choices": [
+      {
+        "text": "Os preços da execução anterior, intactos: nada é escrito até o bloco `with` terminar normalmente.",
+        "why": "As escritas vão para o arquivo à medida que são feitas, e o `\"w\"` já o tinha esvaziado."
+      },
+      {
+        "text": "Nada, porque uma exceção dentro de um bloco `with` descarta o que foi escrito nele.",
+        "why": "O `with` fecha o arquivo na saída; não desfaz o que foi escrito."
+      },
+      {
+        "text": "Só as duas primeiras páginas: o `\"w\"` esvaziou o arquivo ao abri-lo, antes da falha.",
+        "why": "Isso."
+      },
+      {
+        "text": "As duas primeiras páginas, seguidas do resto das linhas da execução anterior.",
+        "why": "O `\"w\"` primeiro trunca o arquivo para nada; não escreve por cima do conteúdo antigo."
+      }
+    ]
+  },
+  "ex-3st7yvc0": {
+    "prompt": "O `apply_cdc.py` lê as colunas do `test_decoding` com `FIELD = re.compile(r\"(\\w+)\\[[^\\]]+\\]:('(?:[^']|'')*'|\\S+)\")`. O que `FIELD.findall(\"customer_id[integer]:538 city[text]:'Campinas'\")` devolve?",
+    "hint": "Python, aula 10; Pipelines de Dados e ETL, aula 5.",
+    "choices": [
+      {
+        "text": "`['customer_id[integer]:538', \"city[text]:'Campinas'\"]`",
+        "why": "É o que `findall` dá para um padrão sem grupos. Este tem dois."
+      },
+      {
+        "text": "`[('customer_id', '538'), ('city', \"'Campinas'\")]`",
+        "why": "Isso."
+      },
+      {
+        "text": "`[('customer_id', '538', ''), ('city', \"'Campinas'\", 'C')]`",
+        "why": "`(?:…)` agrupa sem capturar, então são dois grupos, não três."
+      },
+      {
+        "text": "`[('customer_id', '538'), ('city', 'Campinas')]`",
+        "why": "As aspas fazem parte do que o segundo grupo casou; `values()` as tira depois."
+      }
+    ]
+  },
+  "ex-1wz3rdpy": {
+    "prompt": "Um colega edita `main` no `validate_prices.py` da aula 17 para informar o tamanho primeiro:\n\n```python\nlines = (json.loads(l) for l in open(src, encoding=\"utf-8\"))\nprint(sum(1 for _ in lines), \"lines\")\nfor rec in lines:\n    reason = check(rec, fixed)\n    ...\n```\n\nRodado num arquivo de 1.071 registros, ele imprime `1071 lines`. O que acontece em seguida?",
+    "hint": "Python, aula 11; Pipelines de Dados e ETL, aula 17.",
+    "choices": [
+      {
+        "text": "O laço abre o arquivo de novo e confere os 1.071 registros, como antes.",
+        "why": "Um gerador não é o arquivo. Ele foi gasto pelo `sum`, e nada o reinicia."
+      },
+      {
+        "text": "Levanta `ZeroDivisionError` ao imprimir a linha de STOP.",
+        "why": "O ramo do STOP exige mais rejeições do que 5% de zero, e não há nenhuma, então essa linha nunca roda."
+      },
+      {
+        "text": "Imprime STOP, porque nenhum registro foi aceito, e sai com 1.",
+        "why": "O STOP é decidido pela fração rejeitada, e nada foi rejeitado."
+      },
+      {
+        "text": "Informa 0 registros, escreve um arquivo vazio e devolve 0.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-e5bmjaj0": {
+    "prompt": "Dentro de `shop_nightly`, `day = day_to_load()` roda quando o arquivo da DAG é lido, meses antes de existir qualquer data lógica, e não devolve data nenhuma. Por que chamar a função não roda o corpo dela?",
+    "hint": "Python, aula 12; Pipelines de Dados e ETL, aula 8.",
+    "choices": [
+      {
+        "text": "O parâmetro `logical_date=None` faz o Python esperar até que um argumento de verdade seja passado.",
+        "why": "Um valor padrão é só um valor. Chamada sem nada, uma função comum rodaria com `None` e falharia."
+      },
+      {
+        "text": "Uma função definida dentro de outra só roda depois que a de fora retorna.",
+        "why": "Uma função interna roda sempre que é chamada; nada espera a de fora."
+      },
+      {
+        "text": "`@task` trocou o nome pelo que o decorador devolveu, que cria uma tarefa.",
+        "why": "Isso."
+      },
+      {
+        "text": "A anotação `-> str` adia a chamada até que uma string possa ser devolvida.",
+        "why": "Uma anotação é uma nota sobre a qual nada age em tempo de execução."
+      }
+    ]
+  },
+  "ex-z7yfcm9a": {
+    "prompt": "O `load_raw.py` apaga e recria `raw.shops`, imprime `raw.shops: 7 rows` e então falha no `DROP TABLE raw.books`, porque uma view do dbt depende dela. Depois disso, `raw` está exatamente como antes do comando. Por quê?",
+    "hint": "Python, aula 13; Pipelines de Dados e ETL, aula 11.",
+    "choices": [
+      {
+        "text": "A exceção saiu do bloco `with`, e a saída dele desfez a transação que recriou `raw.shops`.",
+        "why": "Isso."
+      },
+      {
+        "text": "`DROP TABLE IF EXISTS` não mexe numa tabela que ainda tem linhas.",
+        "why": "`raw.shops` foi apagada e preenchida de novo; foi o rollback que desfez as duas coisas."
+      },
+      {
+        "text": "Um bloco `with` captura a exceção e restaura as tabelas a partir de uma cópia feita na entrada.",
+        "why": "Um bloco `with` arruma a casa e deixa a exceção seguir; nenhuma cópia é feita."
+      },
+      {
+        "text": "Fechar a conexão desfaz todos os comandos, com commit ou sem.",
+        "why": "Um commit sobrevive ao fechamento. Aqui nada tinha sido confirmado, e por isso o rollback desfez tudo."
+      }
+    ]
+  },
+  "ex-ekc8g2sd": {
+    "prompt": "`python -m pytest -q tests/test_nightly.py` roda os três testes de integração da aula 17. A fixture `warehouse`, que todos eles pedem, é declarada com `@pytest.fixture(scope=\"module\")`. Quantas vezes a execução roda `dbt build`?",
+    "hint": "Python, aula 16; Pipelines de Dados e ETL, aula 17."
+  },
+  "ex-mj4q2b77": {
+    "prompt": "O `setup.sh` da aula 1 instala `apache-airflow[postgres]==3.3.2` com `--constraint` apontando para o arquivo de restrições do Airflow. Nos termos da aula 18 de Python, o que esse arquivo acrescenta que o `==3.3.2` não dá?",
+    "hint": "Python, aula 18; Pipelines de Dados e ETL, aula 1.",
+    "choices": [
+      {
+        "text": "Lista as dependências diretas do Airflow, para o pip baixá-las em paralelo.",
+        "why": "O pip resolve as dependências de qualquer jeito. O arquivo decide quais versões ele pode escolher."
+      },
+      {
+        "text": "Impede o pip de instalar no Python do sistema, que pertence ao sistema operacional.",
+        "why": "Isso é o que o ambiente virtual faz. O arquivo não diz nada sobre onde instalar."
+      },
+      {
+        "text": "É o `pip freeze` do Airflow, então só fixa o que já estava instalado na máquina de build.",
+        "why": "Ele é publicado para cada versão e cada Python, e o ambiente do laboratório estava vazio antes dele."
+      },
+      {
+        "text": "Fixa na versão testada cada biblioteca abaixo do Airflow.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-6222tkrg": {
+    "prompt": "Para enxergar exclusões, Ana segue o conselho da aula 4 de comparar as chaves: `shop_ids` é uma lista com os 5.345 ids de clientes da loja, e `gone = [i for i in wh_ids if i not in shop_ids]` percorre os ids do warehouse. Que mudança remove o trabalho que cresce com o produto dos dois tamanhos?",
+    "hint": "Python, aula 20; Pipelines de Dados e ETL, aula 4.",
+    "choices": [
+      {
+        "text": "Escrever `if i not in set(shop_ids)` dentro da compreensão.",
+        "why": "Isso monta o conjunto de novo para cada id, o que custa tanto quanto a varredura que substituiu."
+      },
+      {
+        "text": "`shop_ids = set(shop_ids)` uma vez, antes da compreensão.",
+        "why": "Isso."
+      },
+      {
+        "text": "Ordenar as duas listas primeiro e manter a compreensão como está.",
+        "why": "`in` numa lista ordenada continua percorrendo a lista; ordenar sozinho não transforma a busca num passo."
+      },
+      {
+        "text": "Trocar a compreensão por uma expressão geradora.",
+        "why": "Isso muda o que fica na memória, não quantas comparações são feitas."
+      }
+    ]
+  },
+  "ex-yc4a8qy7": {
+    "prompt": "A API de preços muda de lugar, e `/v1/prices` passa a responder `404` com `{\"error\": \"no such resource\"}`. O que a execução daquela noite de `prices_daily` faz?",
+    "hint": "Python, aula 21; Pipelines de Dados e ETL, aula 10.",
+    "choices": [
+      {
+        "text": "`raise_for_status()` levanta `HTTPError`, que é tentado de novo; depois de cinco tentativas o callback escreve FAILED.",
+        "why": "Isso."
+      },
+      {
+        "text": "Falha na hora com `AirflowFailException`, como faria com uma chave errada no cabeçalho.",
+        "why": "Só `400`, `401` e `403` estão na lista que recusa nova tentativa. Um `404` passa direto."
+      },
+      {
+        "text": "`requests.get` levanta no próprio `404`, antes de o código olhar o status.",
+        "why": "Um `404` é um pedido HTTP bem-sucedido; o `requests` só levanta quando pedem."
+      },
+      {
+        "text": "Escreve um arquivo de preços vazio e tem sucesso, porque o corpo do erro ainda é JSON válido.",
+        "why": "`raise_for_status()` vem antes de o corpo ser lido, e levanta para qualquer `4xx`."
+      }
+    ]
+  },
+  "ex-j5g7dgvw": {
+    "prompt": "Sem índice em `order_date`, apagar um dia de `big.fact_sales`, da aula 19, foi um `Seq Scan`: 446 linhas achadas, 3.511.654 descartadas. Se a tabela tivesse doze anos em vez de seis, como mudaria o tempo para achar esse dia?",
+    "hint": "Pipelines de Dados e ETL, aula 19; Python, aula 20.",
+    "choices": [
+      {
+        "text": "Continuaria igual, já que o dia ainda tem as mesmas 446 linhas para achar.",
+        "why": "O custo de uma varredura segue a tabela, não o dia: toda linha é lida para achar as poucas que casam."
+      },
+      {
+        "text": "Umas quatro vezes, porque cada linha é comparada com todas as outras.",
+        "why": "Isso é um laço dentro de um laço. Uma varredura compara cada linha com uma data, uma vez."
+      },
+      {
+        "text": "Cerca do dobro, porque a varredura lê cada linha uma vez, como `in` numa lista.",
+        "why": "Isso."
+      },
+      {
+        "text": "Alguns passos a mais, pois cortar ao meio acha o dia.",
+        "why": "Isso é o que o índice compra. Sem ele, nada divide a tabela ao meio."
+      }
+    ]
+  },
+  "ex-sncmzwt2": {
+    "prompt": "Na quinta-feira, um auditor pede a Ana o relatório de domingo de novo: 3.278 livros na primeira semana de março. Desde então o back office reembolsou alguns pedidos daquela semana. O que lhe dá o número de domingo?",
+    "hint": "Pipelines de Dados e ETL, aula 2.",
+    "choices": [
+      {
+        "text": "Rodar `etl.py` de 1 a 7 de março de novo.",
+        "why": "Ele pergunta à loja o que ela diz agora, reembolsos incluídos, e dá 3.252."
+      },
+      {
+        "text": "Rodar `extract_load.py` para a semana de novo, depois `sales_by_category.sql`.",
+        "why": "Extrair de novo substitui as linhas cruas de domingo pelas de hoje, e a resposta muda junto."
+      },
+      {
+        "text": "Rodar `sales_by_category.sql` de novo sobre as linhas cruas de domingo.",
+        "why": "Isso."
+      },
+      {
+        "text": "Contar a semana na loja incluindo os pedidos reembolsados e cancelados.",
+        "why": "Isso também conta pedidos cancelados antes de domingo, que nunca estiveram no relatório."
+      }
+    ]
+  },
+  "ex-cq1y69ek": {
+    "prompt": "A primeira tentativa de Ana na mudança das categorias renomeou cinco categorias pelas quais os relatórios filtram. Pela convenção de versões da aula 18, uma versão que traga essa mudança sobe o número ___.",
+    "hint": "Pipelines de Dados e ETL, aula 18.",
+    "blanks": [
+      {
+        "accept": [
+          "maior",
+          "major"
+        ]
+      }
+    ]
+  },
+  "ex-gr9ees1j": {
+    "prompt": "O `consume.py` da aula 1 grava o offset depois de cada evento, então uma queda entre as duas coisas faz aquele evento ser lido de novo ao reiniciar. O que torna a segunda cópia inofensiva no warehouse?",
+    "hint": "Pipelines de Dados e ETL, aula 15.",
+    "choices": [
+      {
+        "text": "Gravar o offset antes de tratar cada evento, não depois.",
+        "why": "Aí uma queda no meio pula o evento para sempre, que é a falha sem remédio."
+      },
+      {
+        "text": "Uma linha por `event_id` na carga dos eventos.",
+        "why": "Isso."
+      },
+      {
+        "text": "Começar o consumidor do byte 0 sempre que ele reinicia.",
+        "why": "Isso relê todos os eventos, o que multiplica as duplicatas em vez de tirá-las."
+      },
+      {
+        "text": "Acompanhar o atraso, para o reinício ser notado em segundos.",
+        "why": "O atraso diz quanto o consumidor está para trás; não faz nada com um evento lido duas vezes."
+      }
+    ]
+  },
+  "ex-wy3q2pgb": {
+    "prompt": "Depois que o dia 14 de março é tocado, o `apply_cdc.py` imprime `2268 changes read up to 0/BE7CF38: {'INSERT': 22, 'UPDATE': 4, 'DELETE': 1, 'other tables': 1387}`. O slot entrega uma linha `BEGIN` e uma `COMMIT` para cada transação e uma linha por linha alterada. Quantas transações a loja confirmou naquele dia?",
+    "hint": "Pipelines de Dados e ETL, aula 5."
+  },
+  "ex-t6x007rn": {
+    "prompt": "Ana quer a receita por dia numa consulta que também lê as linhas dos pedidos, para ter o número de livros. Juntar `payments` a `order_lines` e somar `amount_cents` quase dobrou a receita da loja. Que coluna de receita corrige isso?",
+    "hint": "Pipelines de Dados e ETL, aula 6.",
+    "choices": [
+      {
+        "text": "`sum(l.quantity * l.unit_price_cents)`, subindo de cada linha até o seu pedido",
+        "why": "Isso."
+      },
+      {
+        "text": "`sum(DISTINCT p.amount_cents)` sobre a mesma junção",
+        "why": "Dois pedidos que pagaram o mesmo valor contariam uma vez só, e o total sairia baixo."
+      },
+      {
+        "text": "`sum(p.amount_cents)` com a junção escrita como `LEFT JOIN`",
+        "why": "Uma junção à esquerda mantém cada pagamento e continua repetindo-o uma vez por linha."
+      },
+      {
+        "text": "`sum(p.amount_cents)` agrupado por `order_id` antes, e depois o total disso",
+        "why": "O grupo de cada pedido ainda tem uma cópia do pagamento por linha."
+      }
+    ]
+  },
+  "ex-efdaszs3": {
+    "prompt": "Ponha uma noite da carga da aula 7 na ordem em que ela precisa rodar.",
+    "hint": "Pipelines de Dados e ETL, aula 7.",
+    "items": [
+      "Copiar as tabelas da loja para `raw`",
+      "Reconstruir `staging` a partir de `raw`",
+      "Fechar a versão atual de cada cliente cuja cidade ou estado mudou",
+      "Abrir uma versão para cada cliente sem nenhuma atual",
+      "Substituir o dia em `fact_sales`, cada linha apontando para a versão válida quando o pedido foi feito"
+    ],
+    "trap": "Um cliente que se mudou ainda tem uma versão atual até ela ser fechada, então abrir primeiro não abre nada para ele; e a carga dos fatos procura a versão, então vem depois das duas."
+  },
+  "ex-gvsbw5jb": {
+    "prompt": "Associe cada configuração do `FileSensor` que espera o arquivo de estoque do distribuidor ao que ela faz, pela aula 9.",
+    "hint": "Pipelines de Dados e ETL, aula 9.",
+    "pairs": [
+      {
+        "left": "`mode=\"poke\"`",
+        "right": "Segura seu worker e confere a cada poucos segundos"
+      },
+      {
+        "left": "`mode=\"reschedule\"`",
+        "right": "Devolve seu worker entre uma conferência e outra"
+      },
+      {
+        "left": "`deferrable=True`",
+        "right": "Passa a espera para o triggerer"
+      },
+      {
+        "left": "`timeout=2 * 60 * 60`",
+        "right": "Falha depois de duas horas, para um alerta poder avisar"
+      }
+    ],
+    "right_distractors": [
+      "Tenta de novo quatro vezes, esperando mais a cada vez"
+    ]
+  },
+  "ex-kfwf1ymh": {
+    "prompt": "Uma DAG copiada de um projeto de Airflow 2 define `\"retries\": 4`, `\"retry_delay\": dt.timedelta(seconds=15)` e `\"retry_exponential_backoff\": True`. No Airflow 3.3, a API fica fora do ar a noite toda. Quanto tempo o Airflow espera antes de cada nova tentativa?",
+    "hint": "Pipelines de Dados e ETL, aula 10; Python, aula 2.",
+    "choices": [
+      {
+        "text": "15, 30, 60 e 120 segundos, já que a chave ligou o backoff.",
+        "why": "Na 3.3 a configuração é um multiplicador, e quem dobra a espera é `2.0`."
+      },
+      {
+        "text": "Nenhum: um booleano é recusado ali, então a DAG não carrega.",
+        "why": "Nada o recusa. É por isso que o erro não deixa rastro em log nenhum."
+      },
+      {
+        "text": "Cada espera é 15 segundos maior que a anterior.",
+        "why": "Nada na configuração soma; ela multiplica a espera cada vez que é usada de novo."
+      },
+      {
+        "text": "Uns 15 segundos toda vez: `True` conta como `1`.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-vjeh8kx9": {
+    "prompt": "`dbt_marts.fact_sales` é incremental, com chave `order_date` e `where order_date >= (select max(order_date) from {{ this }})`. Ela tem dias até 9 de março. O dia 10 é carregado em `raw`, e as views de staging agora dão 383 linhas de venda no dia 8, 429 no dia 9 e 368 no dia 10. Quantas linhas `dbt run -s fact_sales` informa ter inserido?",
+    "hint": "Pipelines de Dados e ETL, aula 11."
+  },
+  "ex-qn2b5dwm": {
+    "prompt": "Associe cada resultado de teste no projeto dbt de Ana à mudança que a aula 12 fez em resposta a ele.",
+    "hint": "Pipelines de Dados e ETL, aula 12.",
+    "pairs": [
+      {
+        "left": "`not_null` no `customer_id` dos pedidos falha com 5.809 linhas",
+        "right": "Aplicá-lo só aos pedidos do site"
+      },
+      {
+        "left": "`unique` no `order_id` das linhas falha com 7.974 linhas",
+        "right": "Conferir o pedido e o número da linha como um valor só"
+      },
+      {
+        "left": "O teste de cliente estreitado ainda devolve 7 clientes apagados",
+        "right": "Dar ao teste a severidade warn"
+      },
+      {
+        "left": "`fact_sales_has_not_drifted` falha em 11 dias antigos",
+        "right": "Reconstruir por inteiro a tabela de fatos e o que vem depois dela"
+      }
+    ],
+    "right_distractors": [
+      "Apagar o teste, já que os dados estão certos"
+    ]
+  },
+  "ex-0s151vnc": {
+    "prompt": "Os relatórios de 14 de março foram escritos por cada uma das ferramentas da aula 13. Depois a loja reembolsa um pedido do dia 14, e `raw` é carregada de novo. Sem apagar nenhum arquivo, quais destes escrevem um `reports/daily_2026-03-14.csv` novo? Marque todas as que se aplicam.",
+    "hint": "Pipelines de Dados e ETL, aula 13; Pipelines de Dados e ETL, aula 14.",
+    "choices": [
+      {
+        "text": "`luigi --module nightly_luigi DailyReport --day 2026-03-14 --local-scheduler`",
+        "why": "O arquivo do relatório existe, então o Luigi considera a tarefa completa e não roda nada."
+      },
+      {
+        "text": "`python nightly_prefect.py 2026-03-14`, com o Python do próprio Prefect",
+        "why": "Isso."
+      },
+      {
+        "text": "`dagster asset materialize` com `--select \"*\"` e o dia definido como 2026-03-14",
+        "why": "Isso."
+      },
+      {
+        "text": "`make`, com o relógio do laboratório em 16 de março",
+        "why": "`DAY` vem do relógio, então as regras tratam do relatório do dia 16; o dia 14 não é alvo deste Makefile."
+      }
+    ]
+  },
   "ex-e65vqgsz": {
     "prompt": "O gerente quer as vendas de 2024 pelo estado do cliente, e os caixas não podem sentir o relatório. Um colega propõe rodá-lo numa réplica por streaming do PostgreSQL do banco da loja. O que a réplica resolve, e o que ela deixa como está?",
     "hint": "Modelagem de Dados e Data Warehouse, aula 1; Bancos de Dados Relacionais e SQL, aula 12.",
@@ -1725,6 +2241,602 @@
       {
         "text": "É seguro enquanto o repositório for privado, já que só colegas conseguem lê-lo.",
         "why": "Um segredo em qualquer coisa que é copiada vai para quem recebe a cópia; um repositório privado reduz quem é essa gente, e a chave continua valendo para todos."
+      }
+    ]
+  },
+  "ex-nf1b8s25": {
+    "prompt": "Na sua primeira semana como engenheiro de dados júnior, você mandou para o `main` compartilhado um commit que renomeia uma coluna lida pela carga noturna, e dois colegas já fizeram pull dele. A carga falha às 09:00. O que você faz?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 4; Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 20.",
+    "choices": [
+      {
+        "text": "Conserte em silêncio com `git reset --hard HEAD~1` e um force-push, para o commit sumir antes que alguém veja.",
+        "why": "O reset reescreve um commit que duas pessoas já têm, e a hora gasta escondendo é o que transforma um deslize num incidente."
+      },
+      {
+        "text": "Rode `git restore` no arquivo da carga e faça commit, já que o restore é o desfazer mais seguro dos três.",
+        "why": "O restore só mexe no que nunca entrou num commit; com a árvore de trabalho limpa ele não tem o que desfazer, e o commit continua no `main`."
+      },
+      {
+        "text": "Faça amend do commit com o nome antigo da coluna, para o log mostrar um commit certo em vez de dois.",
+        "why": "Um commit com amend é um commit novo, com outro id; seus colegas continuam com o antigo, e ninguém foi avisado."
+      },
+      {
+        "text": "Avise a equipe agora que o seu commit quebrou a carga, desfaça com `git revert` e mande esse commit.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-ezb25cfn": {
+    "prompt": "Você roda `git push` no `main` e recebe `! [rejected] main -> main (fetch first)`. Um colega mandou uma correção no mesmo arquivo de DAG há uma hora, e o seu único commit ainda não está no `origin`. Qual sequência põe os dois commits no `origin` sem perder nenhum?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 7.",
+    "choices": [
+      {
+        "text": "`git push --force`, porque o seu commit é o mais novo dos dois e o remoto deveria ficar igual a ele.",
+        "why": "O force move o `main` do `origin` para o seu commit e descarta o do colega, que é justamente o que a rejeição estava protegendo."
+      },
+      {
+        "text": "`git fetch`, depois `git push` de novo, agora que o commit do colega chegou.",
+        "why": "O fetch move só o `origin/main`; o seu `main` continua sem o commit do colega, então o segundo push é rejeitado como o primeiro."
+      },
+      {
+        "text": "`git pull --rebase`, que reaplica o seu commit em cima do dele, depois `git push`.",
+        "why": "Isso."
+      },
+      {
+        "text": "`git status` até ele dizer que o branch está em dia com `origin/main`, depois `git push`.",
+        "why": "O `git status` compara com o seu último registro do `origin` e não pergunta nada ao remoto, então esperar por ele não muda nada."
+      }
+    ]
+  },
+  "ex-6men562f": {
+    "prompt": "O arquivo de configuração local de um pipeline, settings.local.yaml, entrou num commit na primeira semana e foi para a lista de ignorados depois. O Git continua mostrando cada edição nele como modificação. O comando que deixa de rastreá-lo e o mantém no seu disco é git rm ___ settings.local.yaml, seguido de um commit.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10.",
+    "blanks": [
+      {
+        "accept": [
+          "--cached"
+        ]
+      }
+    ]
+  },
+  "ex-81g4rqg7": {
+    "prompt": "Você revisa um pull request de um ticket que pede para descontar os reembolsos da receita diária. Ele faz isso com um join, também reformata todos os arquivos SQL da pasta, e você teria escrito um `CASE` no lugar. Rodando sobre os dados de ontem, um dia sem reembolsos sai com receita `NULL`. Qual comentário bloqueia o merge?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 13.",
+    "choices": [
+      {
+        "text": "O dia que sai `NULL`, com a consulta que mostra isso e o valor que deveria aparecer ao lado.",
+        "why": "Isso."
+      },
+      {
+        "text": "A reformatação dos outros arquivos SQL, que precisa ser desfeita antes de ler o resto.",
+        "why": "Isso está fora do escopo: peça que vá para um pull request próprio. Não é o que torna este errado."
+      },
+      {
+        "text": "O join, já que um `CASE` é como você teria escrito e é mais fácil de ler para você.",
+        "why": "Os dois funcionam, então é preferência; o teste é se o código ficaria pior de um jeito que alguém pudesse notar."
+      },
+      {
+        "text": "Um pedido para dividir a mudança antes de revisar qualquer coisa, porque ela mexe em mais de um arquivo.",
+        "why": "Dividir é para uma mudança grande demais para ler com atenção; esta foi lida, e o número errado já apareceu."
+      }
+    ]
+  },
+  "ex-hpx3egxq": {
+    "prompt": "O ticket *Trazer as notas dos fornecedores para o warehouse* é grande demais, e o refinamento o divide. Qual primeiro ticket pode ser entregue sozinho e ensinar algo à equipe?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 16; O Projeto de Portfólio: do Briefing ao Deploy, aula 5.",
+    "choices": [
+      {
+        "text": "Criar as tabelas brutas dos doze fornecedores, depois o extrator, depois os modelos de relatório.",
+        "why": "Isso é dividir por camada: nenhum dos três dá um número a ninguém até os três ficarem prontos."
+      },
+      {
+        "text": "O arquivo de um só fornecedor, carregado de ponta a ponta numa tabela que responde a uma pergunta real de um analista.",
+        "why": "Isso."
+      },
+      {
+        "text": "Estimar o ticket inteiro em 13 pontos para o planejamento saber o tamanho, e começar na próxima sprint.",
+        "why": "Um 13 é sinal de que o ticket volta para ser dividido ou esclarecido, não um tamanho para planejar em volta."
+      },
+      {
+        "text": "O extrator dos doze fornecedores primeiro, já que é na extração que estão as incertezas.",
+        "why": "Continua sendo uma camada; as dúvidas sobre carga e consulta aparecem semanas depois, quando chegam as outras camadas."
+      }
+    ]
+  },
+  "ex-z9mas949": {
+    "prompt": "As verificações do seu pipeline passam no seu notebook. Quais destes fariam as mesmas verificações falharem num clone novo do seu branch, como o CI as roda? Marque todas as que se aplicam.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 17.",
+    "choices": [
+      {
+        "text": "`git status --short` mostrou `?? lookup/`, e você fez o commit com `git commit -a`.",
+        "why": "Isso."
+      },
+      {
+        "text": "O código lê a senha do warehouse de uma variável definida só no perfil do seu shell.",
+        "why": "Isso."
+      },
+      {
+        "text": "Você preparou a mudança com `git add -p` e a dividiu em dois commits em vez de um.",
+        "why": "Como os commits são cortados muda o histórico, não o que o branch contém depois que os dois sobem."
+      },
+      {
+        "text": "A transformação usa um recurso que chegou no Python 3.12, e a máquina do CI instala o 3.10.",
+        "why": "Isso."
+      },
+      {
+        "text": "Os dados de teste são montados por uma fixture dentro do arquivo de teste commitado.",
+        "why": "Uma fixture num arquivo commitado vem junto com o clone; é o tipo de dado de teste que sempre viaja."
+      }
+    ]
+  },
+  "ex-fkgateqh": {
+    "prompt": "Uma etapa de enriquecimento manda 4.000 descrições de produto por dia para o Claude Sonnet 5.5, aos preços da tabela da aula 2: US$ 2 por milhão de tokens de entrada e US$ 10 por milhão de tokens de saída. Cada pedido tem 1.500 tokens de entrada e 100 de saída. Em dólares, quanto custa um mês de 30 dias?",
+    "hint": "IA no Desenvolvimento, aula 2."
+  },
+  "ex-t94va7mn": {
+    "prompt": "Uma task do Airflow com `retries: 3` chama um modelo pelo SDK da Anthropic, deixado com as tentativas padrão. A noite toda o provedor não responde, com erro de conexão em toda tentativa. No máximo, quantas vezes o pedido é enviado nessa execução?",
+    "hint": "IA no Desenvolvimento, aula 10; Pipelines de Dados e ETL, aula 10."
+  },
+  "ex-ppd4kmrg": {
+    "prompt": "Uma etapa do pipeline pede a um modelo que transforme cada nota de fornecedor digitalizada em `{supplier, total_cents, currency}`. Ela valida cada resposta contra o esquema, devolve os erros uma vez e recebe `None` depois da segunda falha. O que a etapa deve fazer com essa nota?",
+    "hint": "IA no Desenvolvimento, aula 8; Pipelines de Dados e ETL, aula 16.",
+    "choices": [
+      {
+        "text": "Continuar pedindo até uma resposta passar, já que cada tentativa sai barato perto de uma nota faltando.",
+        "why": "Cada tentativa é cobrada e raramente resolve o que a segunda não resolveu; um esquema que falha sempre aponta para o prompt ou para o esquema."
+      },
+      {
+        "text": "Carregá-la com os campos que validaram e deixar `total_cents` nulo para os analistas preencherem.",
+        "why": "Um registro que nunca passou seria arquivado meio certo, e uma linha meio certa numa tabela é uma que ninguém olha de novo."
+      },
+      {
+        "text": "Pulá-la com um aviso no log, para uma digitalização ilegível não segurar o lote.",
+        "why": "Um registro que some atrás de uma linha de log não pode ser achado nem devolvido ao fornecedor; o lote pode seguir e a nota ainda ser guardada."
+      },
+      {
+        "text": "Gravá-la em quarentena como chegou, com o motivo, e contá-la no balanço da execução.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-vm0ke4bm": {
+    "prompt": "Uma equipe copia o avaliador da aula 5 para medir um prompt que escreve descrições de colunas: 20 colunas, 3 execuções cada, e a versão com exemplos passa em 52 de 60. Lendo as aprovadas, 17 são um dos exemplos do prompt, palavra por palavra. Com uma verificação que recusa resposta igual a um exemplo, quanto essa execução marca, de 60?",
+    "hint": "IA no Desenvolvimento, aula 5."
+  },
+  "ex-c5ssz7t1": {
+    "prompt": "Um pipeline manda tickets de suporte para um modelo etiquetar e grava uma linha de log por pedido. Quais campos cabem nessa linha? Marque todas as que se aplicam.",
+    "hint": "IA no Desenvolvimento, aula 11; O Projeto de Portfólio: do Briefing ao Deploy, aula 11.",
+    "choices": [
+      {
+        "text": "O id do pedido no provedor",
+        "why": "Isso."
+      },
+      {
+        "text": "O texto do ticket, depois da redação dos dados",
+        "why": "Com ou sem redação, são as palavras do cliente, guardadas pelo tempo dos logs e lidas por quem lê os logs; isso vai num armazenamento separado."
+      },
+      {
+        "text": "As contagens de tokens de entrada e de saída",
+        "why": "Isso."
+      },
+      {
+        "text": "O e-mail do cliente, para achar o pedido depois",
+        "why": "O id do pedido já liga a linha aos registros do provedor; um endereço no log é mais uma cópia de dado pessoal."
+      },
+      {
+        "text": "Um SHA-256 curto do prompt",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-2xn62gvw": {
+    "prompt": "Com `etl/config.py` aberto no editor, você perguntou ao assistente de código sobre uma consulta lenta. O arquivo tem `DWH_URL = \"postgresql://etl:Kp7x2mQ9@dwh.internal:5432/sales\"`, e o pedido que o assistente guardou mostra que o arquivo foi junto. O que vem primeiro?",
+    "hint": "IA no Desenvolvimento, aula 3; O Projeto de Portfólio: do Briefing ao Deploy, aula 14.",
+    "choices": [
+      {
+        "text": "Pôr `etl/config.py` no `.gitignore`, para o assistente não mandar de novo.",
+        "why": "A lista de ignorados do Git não vale nada para o editor; um arquivo ignorado numa aba aberta continua sendo enviado."
+      },
+      {
+        "text": "Trocar a senha do banco e depois ler a URL do ambiente.",
+        "why": "Isso."
+      },
+      {
+        "text": "Pôr `etl/config.py` na lista de exclusão do assistente, já que o vazamento veio do arquivo aberto.",
+        "why": "Isso protege o próximo pedido, não o que já foi, e um pedido não tem como ser chamado de volta."
+      },
+      {
+        "text": "Nenhuma providência: o arquivo não tem linha de `password`, e a verificação de segredos teria barrado um de verdade.",
+        "why": "Uma string de conexão com senha dentro é um segredo; a verificação vê nomes e formatos, e esta passou."
+      }
+    ]
+  },
+  "ex-44zcjqw4": {
+    "prompt": "Um assistente responde perguntas sobre o warehouse a partir do dicionário de dados, cortado em um trecho por parágrafo com ids como `orders.md#4`, e guarda cada resposta com suas citações. Alguém acrescenta um parágrafo perto do começo de `orders.md`. O que acontece com as respostas guardadas no mês passado?",
+    "hint": "IA no Desenvolvimento, aula 6.",
+    "choices": [
+      {
+        "text": "Nada, porque cada trecho leva o título do documento e continua fazendo sentido sozinho.",
+        "why": "O título deixa o trecho legível; o id é uma posição, e as posições depois da inserção mudaram todas."
+      },
+      {
+        "text": "As citações deixam de ser encontradas até o índice ser refeito, e depois voltam a funcionar.",
+        "why": "Depois de refeito, os ids continuam existindo; apontam outros parágrafos, e é por isso que nada quebra à vista."
+      },
+      {
+        "text": "As citações de parágrafos abaixo do novo passam a apontar outros parágrafos, e nada falha.",
+        "why": "Isso."
+      },
+      {
+        "text": "Só as respostas que citam o parágrafo novo são afetadas, já que os outros mantiveram o texto.",
+        "why": "Nenhuma resposta guardada pode citar um parágrafo que não existia; as antigas apontam posições, não texto."
+      }
+    ]
+  },
+  "ex-kmzenge2": {
+    "prompt": "Uma transformação marca uma entrega como atrasada com `delivered_on >= promised_on`, e o contrato diz que entregar no dia prometido é estar no prazo. Você pede ao assistente testes da função; ele escreve seis, e os seis passam. O que esses seis testes verdes dizem?",
+    "hint": "IA no Desenvolvimento, aula 4; O Projeto de Portfólio: do Briefing ao Deploy, aula 12.",
+    "choices": [
+      {
+        "text": "Que a função faz o que o próprio código dela diz, incluído o `>=` no dia prometido.",
+        "why": "Isso."
+      },
+      {
+        "text": "Que a borda está coberta, porque seis testes sobre uma única comparação vão incluir o dia prometido.",
+        "why": "Um teste tirado do código espera o que o código faz; um no dia prometido esperaria atraso, e passaria."
+      },
+      {
+        "text": "Que eles não contam até cada um ter falhado uma vez, então apague os seis e escreva novos primeiro.",
+        "why": "Falhar primeiro é a regra para o teste de um bug; testes gerados ainda dão uma lista de casos, a conferir contra o contrato."
+      },
+      {
+        "text": "Que o contrato está cumprido, já que o modelo leu o nome e a docstring da função.",
+        "why": "O contrato nunca esteve no contexto; o modelo só podia testar contra o que viu, que é o código."
+      }
+    ]
+  },
+  "ex-3zw939gx": {
+    "prompt": "Você está se candidatando a vagas júnior de engenharia de dados com quatro ideias de projeto. Pelos três filtros da aula 3 e pelo que quem avalia dados abre primeiro, qual você constrói?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 3; Pipelines de Dados e ETL, aula 15.",
+    "choices": [
+      {
+        "text": "Um chat sobre os relatórios de transporte da cidade usando um modelo hospedado, que precisa da sua chave paga para testar.",
+        "why": "Falha no terceiro filtro: um projeto que ninguém consegue testar sem pagar é uma evidência que ninguém confere."
+      },
+      {
+        "text": "Uma reconstrução, com ferramentas abertas, do painel principal de um produto de análise famoso.",
+        "why": "Um clone convida a uma comparação com uma equipe grande que você não ganha, e um painel não é o que quem avalia engenharia de dados abre primeiro."
+      },
+      {
+        "text": "Um app de lista de tarefas com uma página de relatório que conta as tarefas concluídas por semana.",
+        "why": "Falha no segundo filtro: nada nele exercita a habilidade central da trilha, um pipeline."
+      },
+      {
+        "text": "Um job noturno que carrega os dados abertos de atrasos de ônibus de uma cidade numa tabela consultável, onde rodar um dia de novo deixa as mesmas linhas.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-npyr7qpv": {
+    "prompt": "O seu pipeline de portfólio vai ingerir um dataset público num warehouse. Qual plano para a primeira semana é um esqueleto que anda?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 5.",
+    "choices": [
+      {
+        "text": "O esquema estrela completo com todas as dimensões desenhadas, e a extração escrita quando o modelo estiver fechado.",
+        "why": "Isso é construir por camada: nada roda até a última camada ficar pronta, e é ali que costuma parar."
+      },
+      {
+        "text": "Um dia de uma fonte extraído, carregado numa tabela e uma pergunta respondida a partir dessa tabela.",
+        "why": "Isso."
+      },
+      {
+        "text": "O extrator de todos os endpoints da fonte, testado, para as entradas estarem firmes antes de carregar qualquer coisa.",
+        "why": "Continua sendo uma camada: a carga e a consulta seguem como plano, e o projeto não tem nada rodando de ponta a ponta."
+      },
+      {
+        "text": "O agendador, os alertas e o deploy, para o pipeline rodar sozinho desde o primeiro dia.",
+        "why": "Cada um desses é mais fácil de acrescentar a algo que roda do que a um plano; o esqueleto vem antes."
+      }
+    ]
+  },
+  "ex-1y9yynwx": {
+    "prompt": "Você termina o marco *rodar de novo deixa as mesmas linhas*, roda `git tag -a v0.2.0 -m '...'` e depois `git push`. Quem avalia abre o repositório no dia seguinte e não vê nenhum `v0.2.0`. Por quê?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 7; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 7.",
+    "choices": [
+      {
+        "text": "Uma tag anotada fica na sua máquina até alguém criar uma página de release para ela no serviço.",
+        "why": "Uma release é feita a partir de uma tag que já está no serviço; a tag precisa chegar lá antes, com um push."
+      },
+      {
+        "text": "Tags abaixo de `v1.0.0` ficam escondidas no serviço até existir a primeira versão que vale mostrar.",
+        "why": "Nada esconde uma tag pelo número; versionamento semântico é uma convenção que pessoas leem, não uma regra que o serviço aplica."
+      },
+      {
+        "text": "`git push` manda branches, não tags; a tag sobe com um `git push origin v0.2.0` só dela.",
+        "why": "Isso."
+      },
+      {
+        "text": "`-a` cria uma tag leve, e uma tag leve fica na máquina que a criou.",
+        "why": "`-a` cria uma tag anotada; a leve é a criada sem `-a` e `-m`, e as duas sobem do mesmo jeito."
+      }
+    ]
+  },
+  "ex-84pxs2c1": {
+    "prompt": "A sua árvore de trabalho tem a correção de uma carga que duplicava linhas e, no mesmo arquivo, um print que você pôs para depurar. Para preparar a correção um trecho de cada vez e responder não ao print, rode git add ___ load.py e depois faça o commit.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 9.",
+    "blanks": [
+      {
+        "accept": [
+          "-p",
+          "--patch"
+        ]
+      }
+    ]
+  },
+  "ex-thc1ztjf": {
+    "prompt": "Uma API de ingestão do seu portfólio responde do jeito que a aula 11 responde no loanbook. Ligue cada pedido à resposta dele.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 11.",
+    "pairs": [
+      {
+        "left": "Um corpo que não é JSON",
+        "right": "400, com uma frase dizendo o que corrigir"
+      },
+      {
+        "left": "Um id de dataset que não existe",
+        "right": "404, dizendo que esse dataset não existe"
+      },
+      {
+        "left": "Carregar um dia enquanto esse mesmo dia ainda está carregando",
+        "right": "409, nomeando a regra e os fatos por trás dela"
+      },
+      {
+        "left": "Um `KeyError` que ninguém esperava",
+        "right": "Um traceback no log do servidor, e nenhuma frase sobre ele"
+      }
+    ],
+    "right_distractors": [
+      "200, com o problema descrito num campo `error`"
+    ]
+  },
+  "ex-es9bryde": {
+    "prompt": "`test_loading_a_day_twice_leaves_448_lines` foi escrito depois que o `DELETE` da carga entrou, então nunca falhou. Como você descobre se ele perceberia uma carga que duplica?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 12; Pipelines de Dados e ETL, aula 15.",
+    "choices": [
+      {
+        "text": "Rodar duas vezes seguidas: um teste que passa nas duas é ele mesmo idempotente.",
+        "why": "Passar duas vezes mostra que o teste é estável, não que ele percebe alguma coisa."
+      },
+      {
+        "text": "Apagar a linha do `DELETE`, rodar a suíte, ver esse teste falhar e então restaurar a linha.",
+        "why": "Isso."
+      },
+      {
+        "text": "Medir cobertura: se a linha do `DELETE` está coberta, o teste a protege.",
+        "why": "Coberta quer dizer que a linha rodou; uma suíte pode rodar todas as linhas e não afirmar nada sobre o que fizeram."
+      },
+      {
+        "text": "Escrever mais testes em volta, já que uma regra segurada por vários testes fica mais firme do que por um.",
+        "why": "Mais testes que nunca falharam carregam a mesma dúvida; um teste visto falhando resolve."
+      }
+    ]
+  },
+  "ex-xpwqc3h3": {
+    "prompt": "A senha de um warehouse chegou a um repositório público num commit que subiu. Ponha o que você faz na ordem que a aula 14 dá.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 14; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10.",
+    "items": [
+      "Revogar a senha no banco e emitir uma nova",
+      "Procurar nos logs do banco sessões que você não abriu",
+      "Pôr a senha nova no ambiente, não num arquivo",
+      "Reescrever o histórico com `git filter-repo` e fazer force-push, se quiser deixá-lo limpo"
+    ],
+    "trap": "Limpar o histórico parece o mais urgente e vem por último: não recolhe clones já feitos, e enquanto a senha não é revogada a vazada continua abrindo o banco."
+  },
+  "ex-0c1c2sck": {
+    "prompt": "O seu pipeline de portfólio roda num container que grava os resultados num arquivo DuckDB em `/app/data`, e cada deploy troca o container por um da imagem nova. Depois do segundo deploy, o histórico sumiu. No arquivo de unidade da aula 15, o que o teria mantido?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15; Docker e Containers, aula 7.",
+    "choices": [
+      {
+        "text": "Um volume nomeado montado em `/app/data`, fora do container.",
+        "why": "Isso."
+      },
+      {
+        "text": "`Restart=always`, para o container voltar em vez de ser trocado por um novo.",
+        "why": "Reiniciar traz o mesmo container de volta depois de uma queda; um deploy o remove e sobe outro com uma camada gravável nova."
+      },
+      {
+        "text": "Uma verificação de saúde a cada trinta segundos, que marca o container como doente antes de algo se perder.",
+        "why": "Uma verificação de saúde informa um estado; não guarda nada."
+      },
+      {
+        "text": "Parar o container antigo com educação antes de cada deploy, em vez de deixá-lo ser morto.",
+        "why": "Um container parado só mantém a camada até ser removido, e trocá-lo por uma imagem nova é uma remoção."
+      }
+    ]
+  },
+  "ex-xk0pdj1y": {
+    "prompt": "O seu README diz *Para rodar: `pip install -r requirements.txt`, depois `python run.py 2026-03-16`*, e isso funciona sempre no seu notebook. O que rodar a frio, numa máquina que nunca viu o projeto, testa que o seu notebook não consegue?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 16; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 17.",
+    "choices": [
+      {
+        "text": "Se o pipeline roda mais rápido numa máquina sem mais nada instalado nem rodando.",
+        "why": "Velocidade não é a afirmação em teste; os passos do README é que são."
+      },
+      {
+        "text": "Se os testes passam, o que o notebook não consegue mostrar por causa de tudo o que tem em cache.",
+        "why": "Os testes rodam em qualquer lugar; o que o notebook não mostra é tudo o que ele tem e o README nunca menciona."
+      },
+      {
+        "text": "Se um passo que você faz por hábito, como definir `DWH_URL`, está escrito em algum lugar.",
+        "why": "Isso."
+      },
+      {
+        "text": "Se as seções do README estão na ordem em que quem avalia as lê.",
+        "why": "A ordem se confere lendo; rodar a frio confere se o que ele manda digitar basta."
+      }
+    ]
+  },
+  "ex-vdk73ww9": {
+    "prompt": "Você escreve um script de seed para o warehouse de demonstração do seu pipeline. Quais destes a aula 17 pede dele? Marque todas as que se aplicam.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 17.",
+    "choices": [
+      {
+        "text": "Datas relativas a hoje, para o dia mais recente estar sempre perto",
+        "why": "Isso."
+      },
+      {
+        "text": "Nomes de clientes de uma exportação real, com a coluna de e-mail em hash",
+        "why": "Dado de demonstração é inventado, sempre: uma exportação real com uma coluna em hash continua sendo dado de gente, publicado."
+      },
+      {
+        "text": "Linhas gravadas pelas próprias funções de carga do pipeline, não por fora delas",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma recusa a rodar num warehouse que já tem dados",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma data fixa como `2026-06-24` escrita no código, para os prints nunca mudarem",
+        "why": "Uma data fixa envelhece: um ano depois a demonstração significa outra coisa sozinha."
+      }
+    ]
+  },
+  "ex-8c7mp8t2": {
+    "prompt": "Qual linha de currículo para o seu pipeline de portfólio segue o padrão da aula 4: o que você fez, o que passou a valer e como conferir?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 4; O Projeto de Portfólio: do Briefing ao Deploy, aula 12.",
+    "choices": [
+      {
+        "text": "Desenvolvi um pipeline de ETL usando Python, Airflow, PostgreSQL e Docker, seguindo boas práticas de engenharia de dados.",
+        "why": "Uma lista de ferramentas: a mesma linha descreve um pipeline que nunca rodou."
+      },
+      {
+        "text": "Melhorei a qualidade dos dados em 40% construindo um pipeline robusto e escalável para dados públicos.",
+        "why": "Um número que você não sabe explicar, sem base de comparação, custa mais do que número nenhum."
+      },
+      {
+        "text": "Participei da construção de um pipeline de dados de transporte público, responsável pela camada de carga e pelos testes.",
+        "why": "*Participei* e *responsável por* escondem o que você fez e não dizem nada sobre o que passou a valer."
+      },
+      {
+        "text": "Construí uma carga noturna dos atrasos de ônibus de uma cidade; rodar um dia de novo deixa as mesmas linhas, garantido por um teste que falha sem o delete.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-03ka1rdb": {
+    "prompt": "Ponha em ordem os passos de quem avalia pelo seu perfil no GitHub, pela aula 5.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 5.",
+    "items": [
+      "A página do perfil: seu nome, uma linha e a cidade",
+      "Os repositórios fixados e a descrição de uma linha de cada",
+      "A primeira tela do README",
+      "Um arquivo, ou o histórico de commits"
+    ],
+    "trap": "Ninguém passeia por um perfil: cada passo ganha o próximo clique ou encerra a visita, e um arquivo ou o histórico é aberto por último, se for."
+  },
+  "ex-mwjvak9r": {
+    "prompt": "Seis semanas depois, sua planilha tem 60 candidaturas para vagas júnior de engenharia de dados, 2 respostas e nenhuma ligação de triagem. Pela aula 8, onde o funil vaza?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 8.",
+    "choices": [
+      {
+        "text": "Na triagem, que é onde a conversa sobre salário dá errado.",
+        "why": "Não houve ligação de triagem para dar errado; o funil vaza antes delas."
+      },
+      {
+        "text": "Nos follow-ups, que deveriam sair duas vezes por semana até alguém responder.",
+        "why": "Mais follow-ups não consertam um vazamento no topo, e mais de um por candidatura custa mais do que rende."
+      },
+      {
+        "text": "No topo do funil, então o que corrigir é o currículo ou a escolha das vagas.",
+        "why": "Isso."
+      },
+      {
+        "text": "Em lugar nenhum ainda: sessenta candidaturas são poucas para a planilha dizer algo.",
+        "why": "Sessenta com duas respostas é a planilha dizendo algo, e dizer é para isso que ela serve."
+      }
+    ]
+  },
+  "ex-02hxg680": {
+    "prompt": "Pela aula 10, o único follow-up de uma candidatura sai mais ou menos uma ___ depois de se candidatar; mais de um, ou um no dia seguinte, custa mais do que rende.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 10.",
+    "blanks": [
+      {
+        "accept": [
+          "semana"
+        ]
+      }
+    ]
+  },
+  "ex-tx5sh6ts": {
+    "prompt": "Um teste para levar para casa numa vaga júnior de dados: *Carregue o CSV de pedidos anexo numa tabela; carregar o mesmo arquivo duas vezes não pode duplicar linhas. Cerca de três horas.* Na terceira hora você tem a carga e um gráfico de pedidos por dia, e rodar de novo ainda duplica as linhas. O que as aulas 13 e 5 dizem sobre essa entrega?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 13; O Projeto de Portfólio: do Briefing ao Deploy, aula 5.",
+    "choices": [
+      {
+        "text": "Use a noite a mais para deixar a segunda carga segura, já que só uma entrega completa é lida.",
+        "why": "Uma entrega que levou o dobro em silêncio diz a quem avalia que você não sabe estimar, e essa pessoa está olhando como você lida com prazo."
+      },
+      {
+        "text": "A regra da segunda carga era a única coisa a fazer primeiro; pare agora, e a nota diz que ela falta e como você a faria.",
+        "why": "Isso."
+      },
+      {
+        "text": "Entregue como está: o gráfico vai além do pedido e compensa a regra que falta.",
+        "why": "Um extra em cima de um requisito faltando parece que você não leu o enunciado."
+      },
+      {
+        "text": "Deixe a segunda carga fora da nota, já que quem avalia em dez minutos só confere a primeira linha do enunciado.",
+        "why": "A última parte da nota é onde vai o que falta; ser honesto sobre isso é melhor do que ser descoberto."
+      }
+    ]
+  },
+  "ex-vxv4qwdc": {
+    "prompt": "Diante de *me conte de uma vez em que você errou*, você conta a história de uma carga que triplicou um dia de vendas. Ligue cada parte do STAR à frase que pertence a ela.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 15.",
+    "pairs": [
+      {
+        "left": "Situação",
+        "right": "No meu estágio, na equipe que rodava a carga noturna de vendas"
+      },
+      {
+        "left": "Tarefa",
+        "right": "Um relatório mostrava o dia 16 com o triplo das vendas reais, e eu tinha de descobrir por quê"
+      },
+      {
+        "left": "Ação",
+        "right": "Rastreei até o meu retry rodando um insert de novo, avisei minha líder e mudei a carga para substituir o dia"
+      },
+      {
+        "left": "Resultado",
+        "right": "Rodar de novo agora deixa as mesmas linhas, e eu confiro toda carga nova rodando duas vezes"
+      }
+    ],
+    "right_distractors": [
+      "A gente sempre testaria as cargas com cuidado antes de entregar"
+    ]
+  },
+  "ex-k2d5k4tj": {
+    "prompt": "Uma empresa de dados oferece R$ 5.000 por mês em CLT, e outra oferece R$ 5.000 por mês como PJ. Com a conta da aula 17, antes de impostos e benefícios, qual nota mensal de PJ, faturada nos 12 meses, empata com o ano em CLT?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 17."
+  },
+  "ex-jc7qsjpx": {
+    "prompt": "Sua segunda semana: o ticket diz *Incluir a região nova no mart de vendas*. Vinte minutos depois, você acha duas tabelas chamadas `regions`, e nada diz qual vale. O que você faz?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 20; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 16.",
+    "choices": [
+      {
+        "text": "Escrever a pergunta no ticket com o que achou, perguntar a quem o escreveu e anotar a resposta.",
+        "why": "Isso."
+      },
+      {
+        "text": "Escolher a tabela com mais linhas, construir em cima dela e citar a escolha no pull request.",
+        "why": "Esse é o palpite silencioso: quem pediu vê o resultado pela primeira vez na revisão, e pode não ser o que queria."
+      },
+      {
+        "text": "Continuar cavando sozinho pelo resto do dia, para só perguntar quando tiver certeza de que ninguém anotou.",
+        "why": "Depois de um tempo combinado travado, você pergunta; um dia de palpites custa mais que o minuto de que alguém precisa para responder."
+      },
+      {
+        "text": "Postar no chat da equipe toda vez que surgir uma dúvida nova, para nada ficar esperando.",
+        "why": "Perguntas pequenas vão para uma lista e são feitas juntas num horário combinado; dez interrupções por dia custam mais à equipe."
       }
     ]
   }
