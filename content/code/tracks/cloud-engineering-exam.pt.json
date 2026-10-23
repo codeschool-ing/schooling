@@ -1,0 +1,1899 @@
+{
+  "ex-02f28x98": {
+    "prompt": "Numa VM na nuvem com endereço público, um colega sobe o PostgreSQL num container com `-p 5432:5432`, para que a aplicação na mesma VM o alcance. O `ss -ltn` mostra `0.0.0.0:5432`. Que mudança as duas aulas indicam?",
+    "hint": "Docker e Containers, aula 17; Fundamentos da Web e Internet, aula 9.",
+    "choices": [
+      {
+        "text": "`-p 127.0.0.1:5432:5432`, para que só programas da própria VM alcancem a porta",
+        "why": "Aí o banco escuta a máquina e não o mundo, que é o que as duas aulas pedem."
+      },
+      {
+        "text": "Manter o `-p` e fechar a porta 5432 com o `ufw`, que então bloqueia o container",
+        "why": "O Docker escreve as próprias regras de firewall para portas publicadas, e elas valem antes das do `ufw`."
+      },
+      {
+        "text": "Deixar assim: `0.0.0.0` quer dizer que a porta não tem endereço, e de fora nada chega",
+        "why": "Um programa escutando em `0.0.0.0` escuta em todos os endereços da máquina, a placa de rede incluída."
+      },
+      {
+        "text": "Tirar o `-p` e apontar a aplicação que roda na VM para `localhost:5432`",
+        "why": "Sem `-p`, nada no host leva à porta do container, então a aplicação não encontra ninguém ali."
+      }
+    ]
+  },
+  "ex-0endv15z": {
+    "prompt": "A loja roda em três pods atrás de um Service, e cada pod guarda a tabela de sessões na própria memória. Clientes são desconectados ao acaso, no meio do checkout. Um colega propõe pôr `sessionAffinity: ClientIP` no Service. O que as duas aulas recomendam em vez disso?",
+    "hint": "Kubernetes: Orquestração em Produção, aula 17; Fundamentos da Web e Internet, aula 7.",
+    "choices": [
+      {
+        "text": "Pôr a afinidade: cada cliente passa a voltar sempre ao pod que tem a linha dele",
+        "why": "Clientes atrás de um gateway dividem um endereço e se amontoam num pod, e as linhas somem quando esse pod vai embora."
+      },
+      {
+        "text": "Pôr as linhas de sessão num lugar que todos os pods alcancem, como um banco ou um cache",
+        "why": "Aí qualquer pod responde qualquer requisição, que é o que a ausência de estado do protocolo permitia desde o início."
+      },
+      {
+        "text": "Trocar por tokens assinados no local storage, para pod algum precisar consultar nada",
+        "why": "O local storage não tem `HttpOnly`, então qualquer script da página lê o token, e um token não pode ser revogado."
+      },
+      {
+        "text": "Dar ao cookie de sessão um `Max-Age` maior, para o navegador parar de descartá-lo",
+        "why": "O navegador continua mandando o cookie; a linha que ele nomeia está na memória de outro pod."
+      }
+    ]
+  },
+  "ex-19gbyy28": {
+    "prompt": "Um nome HTTPS, `shop.example.test`, precisa mandar `/admin` para o Service admin e todo o resto para a loja, como faz o Ingress da aula de Kubernetes. Até que camada a caixa na entrada precisa ler, e quanto isso custa a ela?",
+    "hint": "Fundamentos da Web e Internet, aula 5; Kubernetes: Orquestração em Produção, aula 16.",
+    "choices": [
+      {
+        "text": "Camada 4: uma conexão para a porta 443 já diz, por si, qual caminho ela está pedindo",
+        "why": "Uma caixa de camada 4 lê até a porta; o caminho está dentro da requisição, onde ela não olha."
+      },
+      {
+        "text": "Camada 3: roteadores mandam cada caminho a uma máquina pelo endereço de destino",
+        "why": "Um roteador lê o endereço de destino e não vai além, e os dois caminhos chegam ao mesmo endereço."
+      },
+      {
+        "text": "Camada 7: ela lê o caminho, então tem de decifrar a requisição e ter o certificado",
+        "why": "Para rotear pela URL ela decifra, inspeciona e cifra de novo, o que custa trabalho e quer dizer que ela guarda o seu certificado."
+      },
+      {
+        "text": "Camada 7, sem certificado: o caminho viaja fora da cifra, assim como o nome viaja",
+        "why": "O nome vai antes de a cifra começar; qual página foi pedida fica escondida com todo o resto."
+      }
+    ]
+  },
+  "ex-224fpwtk": {
+    "prompt": "Seu VPS roda Nginx com um certificado que se renova sozinho. Hoje os navegadores avisam que o certificado venceu. O log da renovação mostra sucesso na semana passada, e o arquivo do certificado no disco tem validade de meses à frente. O que aconteceu, e o que resolve?",
+    "hint": "Fundamentos da Web e Internet, aula 9; Linux e Linha de Comando, aula 5.",
+    "choices": [
+      {
+        "text": "Os navegadores dos visitantes guardaram o certificado antigo; cada um deve limpá-lo",
+        "why": "O servidor ainda manda o vencido, então todo visitante o recebe; um verificador que não é navegador vê o mesmo."
+      },
+      {
+        "text": "O arquivo novo nomeia só `example.com`, que os navegadores mostram como vencido no `www`",
+        "why": "Um nome que o certificado não cobre dá divergência de nome, não vencimento."
+      },
+      {
+        "text": "A porta 80 está fechada, então a verificação HTTP falhou e certificado novo não saiu",
+        "why": "O arquivo no disco é novo, então a verificação passou; o servidor em execução é que não o pegou."
+      },
+      {
+        "text": "O Nginx ainda guarda o antigo em memória; recarregue-o, e faça a renovação recarregar",
+        "why": "Renovado e não recarregado: o que renova tem que avisar o servidor, e o `systemctl reload` faz isso com ele continuando rodando."
+      }
+    ]
+  },
+  "ex-22nr3794": {
+    "prompt": "Uma VM nova na sua rede na nuvem roda um serviço web na porta 8080. Do escritório, `curl http://203.0.113.7:8080/` espera e depois desiste. De outra instância na mesma VPC, `nc -zv -w 3 10.0.32.10 8080` conecta. Onde você deve olhar?",
+    "hint": "Nuvem e Serverless, aula 6; Fundamentos da Web e Internet, aula 1.",
+    "choices": [
+      {
+        "text": "Entre o lado de fora e a VM: a origem de uma regra, a ACL, a rota, o endereço",
+        "why": "Um timeout quer dizer que algo descartou o pacote, e o teste de dentro mostra que o serviço responde."
+      },
+      {
+        "text": "No escritório, cujo resolvedor está falhando, então não se acha endereço para o servidor",
+        "why": "O comando dá um endereço, então nenhum nome foi consultado."
+      },
+      {
+        "text": "Na VM: nada escuta na 8080, então o sistema operacional dela recusa cada tentativa",
+        "why": "Isso seria uma recusa, e ela vem na hora; aqui o teste de dentro da VPC conectou."
+      },
+      {
+        "text": "Na aplicação, que responde com uma página de erro que o `curl` não chega a mostrar",
+        "why": "Um erro respondido é uma resposta rápida e bem formada, não uma espera que termina em desistência."
+      }
+    ]
+  },
+  "ex-2dnf9bsk": {
+    "prompt": "O site vai para um host que te dá um nome, `target.example.net`, em vez de um endereço. Você quer que o próprio `example.com`, sem nada à esquerda, aponte para ele, e o painel de DNS recusa um `CNAME` ali. Por quê, e o que a aula oferece?",
+    "hint": "Fundamentos da Web e Internet, aula 8.",
+    "choices": [
+      {
+        "text": "Os registros `MX` estão no caminho; apague-os e o painel vai aceitar o `CNAME`",
+        "why": "Mesmo sem MX, o domínio puro ainda precisa dos registros NS, e um CNAME não fica ao lado deles."
+      },
+      {
+        "text": "O domínio puro precisa ter registros `NS`, e um `CNAME` não aceita nada ao lado; use `www`",
+        "why": "Um nome com CNAME não pode ter outros registros, então o domínio puro não pode ter um; ALIAS ou flattening funcionam onde o provedor oferece."
+      },
+      {
+        "text": "Um `CNAME` guarda um endereço, não um nome; consulte o endereço do host e ponha esse",
+        "why": "Um CNAME guarda outro nome; o registro que guarda um endereço IPv4 é o A."
+      },
+      {
+        "text": "O TTL do registro antigo ainda está correndo; espere um TTL e o painel vai aceitar",
+        "why": "O TTL diz aos caches quanto tempo guardar uma resposta; não decide que registros um nome pode ter."
+      }
+    ]
+  },
+  "ex-2nh75y6q": {
+    "prompt": "Você acabou de receber uma VM Linux nova com endereço público, que você acessa por ssh. Quais destes fazem parte da primeira hora dela, pelas duas aulas? Marque todas as que se aplicam.",
+    "hint": "Fundamentos da Web e Internet, aula 9; Linux e Linha de Comando, aula 5.",
+    "choices": [
+      {
+        "text": "Aplicar as atualizações pendentes, e garantir que as de segurança sigam chegando",
+        "why": "Atualizações primeiro: uma máquina sem atualizações num endereço público é encontrada por varredura em horas."
+      },
+      {
+        "text": "Deixar as cópias de segurança para quando a aplicação tiver dados que valeria perder",
+        "why": "Decida agora, enquanto a máquina está vazia e isso leva dez minutos."
+      },
+      {
+        "text": "Quando sua chave funcionar, pôr `PasswordAuthentication no`, numa sessão aberta",
+        "why": "A varredura adivinha senhas e uma chave torna isso inútil; a sessão aberta te salva se a configuração quebrar."
+      },
+      {
+        "text": "Rodar a aplicação como administrador, para que ela jamais falhe por falta de permissão",
+        "why": "Uma conta separada, com só o acesso de que a aplicação precisa, transforma um comprometimento num comprometimento menor."
+      }
+    ]
+  },
+  "ex-2ytgvk2r": {
+    "prompt": "O cookie de sessão da loja ainda precisa chegar quando um cliente segue um link para a loja a partir de um e-mail, e não pode ir junto em requisições de fundo que a página de outro site faz. O cabeçalho que faz as duas coisas é `Set-Cookie: session=8f3c1a9e; Max-Age=3600; Path=/; Secure; HttpOnly; SameSite=___`.",
+    "hint": "Fundamentos da Web e Internet, aula 7.",
+    "blanks": [
+      {
+        "accept": [
+          "Lax"
+        ]
+      }
+    ]
+  },
+  "ex-30r3qnbs": {
+    "prompt": "No painel de rede você abre o tempo da primeira requisição de uma página a um host que ela nunca contatou, por HTTPS. Ponha as barras na ordem em que acontecem.",
+    "hint": "Fundamentos da Web e Internet, aula 11.",
+    "items": [
+      "DNS: o nome vira um endereço",
+      "Conexão: a conexão TCP é aberta",
+      "TLS: versão, cifra e chave são combinadas",
+      "Esperando: o servidor monta a resposta",
+      "Baixando: os bytes da resposta chegam"
+    ],
+    "trap": "Pôr o TLS antes da conexão, ou a consulta depois dela: nada conecta enquanto o nome não tem endereço, e a cifra é combinada sobre uma conexão que já existe."
+  },
+  "ex-331ed72e": {
+    "prompt": "O build de uma loja agora dá a cada arquivo uma impressão digital no nome. Ligue cada resposta ao `Cache-Control` que a aula dá a ela.",
+    "hint": "Fundamentos da Web e Internet, aula 7.",
+    "pairs": [
+      {
+        "left": "a página HTML, que nomeia os arquivos deste build",
+        "right": "`no-cache`"
+      },
+      {
+        "left": "`app.7f3c2a9.css`",
+        "right": "`max-age=31536000, immutable`"
+      },
+      {
+        "left": "a página de histórico de pedidos de um cliente logado",
+        "right": "`private`"
+      },
+      {
+        "left": "um extrato bancário aberto numa máquina compartilhada",
+        "right": "`no-store`"
+      }
+    ],
+    "right_distractors": [
+      "`public`"
+    ]
+  },
+  "ex-3fsw2k68": {
+    "prompt": "O Dockerfile de um colega termina com `CMD report-api`, na forma shell. O programa trata `SIGTERM` e registra uma linha ao encerrar, mas todo `docker stop` leva dez segundos, essa linha nunca aparece e o `docker ps -a` mostra `Exited (137)`. O que aconteceu?",
+    "hint": "Linux e Linha de Comando, aula 6; Docker e Containers, aula 11.",
+    "choices": [
+      {
+        "text": "O OOM killer o matou no meio do encerramento, que é o que 137 significa num container",
+        "why": "137 diz `SIGKILL` e nada mais; aqui a espera de dez segundos aponta para o Docker mandando o sinal."
+      },
+      {
+        "text": "Um programa dentro de um container não consegue capturar `SIGTERM`, então o Docker recorre ao kill",
+        "why": "Na forma exec um programa captura o sinal: o `shelf` da aula parou em um quinto de segundo."
+      },
+      {
+        "text": "O shell, processo 1, ignorou o `SIGTERM`; dez segundos depois o Docker mandou `SIGKILL`",
+        "why": "137 é 128 + 9, e o programa atrás do shell nunca viu o sinal educado."
+      },
+      {
+        "text": "O programa levou dez segundos terminando requisições, e 137 é o que uma saída limpa informa",
+        "why": "Uma saída limpa é o status do próprio programa; 137 é 128 mais 9, uma morte forçada."
+      }
+    ]
+  },
+  "ex-3j4g47q3": {
+    "prompt": "O user data de uma VM na nuvem cria `ana` com a chave pública SSH dela, `groups: [sudo]` e nenhuma senha. Na revisão, a linha `sudo: \"ALL=(ALL) NOPASSWD:ALL\"` é removida por ser permissiva demais, e nada mais muda. Na máquina nova, Ana entra com a chave e roda `sudo apt update`. O que acontece?",
+    "hint": "Linux e Linha de Comando, aula 4; Nuvem e Serverless, aula 4.",
+    "choices": [
+      {
+        "text": "Roda, porque o grupo `sudo` concede o acesso e a chave dela já provou quem ela é",
+        "why": "O grupo decide o que ela pode fazer; o `sudo` ainda pede a senha dela antes."
+      },
+      {
+        "text": "O `sudo` pede a senha do root, que a imagem nunca definiu, e o comando é recusado",
+        "why": "Isso é o `su`; o `sudo` pede a senha de quem está rodando o comando."
+      },
+      {
+        "text": "O `sudo` responde `ana is not in the sudoers file`, já que ninguém escreveu regra para ela",
+        "why": "A linha `%sudo` em `/etc/sudoers` cobre todo membro do grupo, ela inclusive."
+      },
+      {
+        "text": "O `sudo` pede a senha da Ana, que não tem nenhuma, e não há como seguir",
+        "why": "O grupo a autoriza, mas o `sudo` continua autenticando a pessoa com a senha dela."
+      }
+    ]
+  },
+  "ex-3rc6d534": {
+    "prompt": "O script que cria as máquinas da aula de Ansible acrescenta cada nome com `echo \"$addr $name\" | sudo tee -a /etc/hosts >/dev/null`. Um colega reescreve essa linha como `sudo echo \"$addr $name\" >> /etc/hosts` para encurtá-la. Rodada pela Ana, o que a linha nova faz?",
+    "hint": "Linux e Linha de Comando, aula 4; Infraestrutura como Código, aula 18.",
+    "choices": [
+      {
+        "text": "Falha: o shell da Ana abre o `/etc/hosts` para redirecionar antes do `sudo`",
+        "why": "O redirecionamento é do shell, e o shell ainda é a Ana."
+      },
+      {
+        "text": "Funciona igual, só sem a cópia de cada linha que o `tee` mostrava na tela",
+        "why": "A recusa vem antes de o `echo` rodar; e o `>/dev/null` já escondia essa cópia."
+      },
+      {
+        "text": "Funciona, mas o `>>` substitui o `/etc/hosts`, enquanto o `tee -a` acrescentava",
+        "why": "O `>>` acrescenta exatamente como o `tee -a`; o problema é quem abre o arquivo."
+      },
+      {
+        "text": "Falha, porque o `sudo` não roda o `echo`, um comando que vive dentro do shell",
+        "why": "O `sudo echo` roda sem problema; o que é recusado é o redirecionamento em volta."
+      }
+    ]
+  },
+  "ex-3zeh11qx": {
+    "prompt": "Bruno saiu da empresa na sexta, e um administrador rodou `passwd -l bruno` no servidor de build. Na segunda, o log mostra Bruno entrando por ssh. O que faltou?",
+    "hint": "Linux e Linha de Comando, aula 5.",
+    "choices": [
+      {
+        "text": "As sessões de sexta, já que a trava espera a última sessão aberta terminar",
+        "why": "A trava vale na próxima verificação de senha; ela não espera nada."
+      },
+      {
+        "text": "A chave dele em `~/.ssh/authorized_keys`, que o ssh aceita sem ler o `/etc/shadow`",
+        "why": "Um login por chave nunca consulta o hash da senha, então travá-lo não muda nada."
+      },
+      {
+        "text": "A entrada do notebook dele no `known_hosts` do servidor, que ainda confia na máquina",
+        "why": "O `known_hosts` lista servidores a que o usuário se conectou, não quem pode entrar."
+      },
+      {
+        "text": "Reiniciar o `sshd`, que lê a trava quando o serviço sobe de novo",
+        "why": "A trava é o `!` no hash guardado, lido a cada verificação de senha."
+      }
+    ]
+  },
+  "ex-41h2kv2g": {
+    "prompt": "Um unit file escrito à mão traz `Restrat=on-failure`. Ele foi recarregado, habilitado e iniciado sem reclamação, e o `systemctl status` parecia saudável. Ontem à noite o programa caiu e ficou fora. O que explica isso, e o que teria pego o erro?",
+    "hint": "Linux e Linha de Comando, aula 5.",
+    "choices": [
+      {
+        "text": "O `on-failure` não cobre uma queda; a linha precisava de `always` para religá-lo",
+        "why": "Uma queda é justamente para o que serve o `on-failure`; a linha nunca teve efeito."
+      },
+      {
+        "text": "Sem `RestartSec=`, o systemd tenta uma vez e desiste de vez depois disso",
+        "why": "Sem ele as tentativas vêm na hora, num laço apertado, e não uma vez só."
+      },
+      {
+        "text": "O systemd descartou a chave desconhecida e seguiu; o `systemd-analyze verify` diria isso",
+        "why": "Um nome de chave que ele não conhece é ignorado em silêncio, e o `verify` é quem avisa."
+      },
+      {
+        "text": "O `Restart=` vale a partir do próximo boot, então a unit pedia reboot após o `enable`",
+        "why": "A política vale para o serviço rodando; a linha apenas nunca chegou ao systemd."
+      }
+    ]
+  },
+  "ex-42qg9d92": {
+    "prompt": "Para economizar espaço, uma equipe reconstrói as imagens dos seus serviços sobre `alpine:3.22` em vez de uma base Debian, sem mudar mais nada. Quais destes param de funcionar nas imagens novas? Marque todas as que se aplicam.",
+    "hint": "Linux e Linha de Comando, aula 2; Docker e Containers, aula 13.",
+    "choices": [
+      {
+        "text": "Um script de entrypoint cuja primeira linha é `#!/bin/bash`",
+        "why": "O Alpine traz o `ash` do busybox como `/bin/sh`, e nenhum bash a menos que se instale."
+      },
+      {
+        "text": "Um pacote Python instalado como wheel pré-compilado para a glibc",
+        "why": "A biblioteca C do Alpine é a musl, então o objeto compartilhado pronto não carrega."
+      },
+      {
+        "text": "Um programa Go compilado como binário estático e copiado",
+        "why": "As aulas citam um binário Go como o tipo de programa a que o Alpine serve bem."
+      },
+      {
+        "text": "Um script de shell que chama `cp`, `ls` e `sed` nas formas comuns",
+        "why": "O busybox cobre os usos comuns; o que falta são as extensões do GNU."
+      }
+    ]
+  },
+  "ex-46gxw9q0": {
+    "prompt": "Ana roda `up.sh` de novo, que joga fora o `web1` e sobe um novo, com chaves de host novas, com o mesmo nome. Agora o `ssh web1` para em `WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!`. Sabendo o motivo, ela faz o ssh esquecer a chave guardada, para que ele pergunte de novo, com `ssh-keygen ___ web1`.",
+    "hint": "Linux e Linha de Comando, aula 5; Infraestrutura como Código, aula 18.",
+    "blanks": [
+      {
+        "accept": [
+          "-R"
+        ]
+      }
+    ]
+  },
+  "ex-4a36zmtc": {
+    "prompt": "O unit file de um serviço define `UMask=007`. O serviço cria um diretório pedindo o modo que os programas costumam pedir. Com que modo octal o diretório novo fica?",
+    "hint": "Linux e Linha de Comando, aula 4."
+  },
+  "ex-4hew8k99": {
+    "prompt": "A aula instala o `cowsay` a partir de um `.deb` baixado à mão, quebra a instalação no caminho e a conserta. Ponha o que acontece em ordem.",
+    "hint": "Linux e Linha de Comando, aula 7.",
+    "items": [
+      "O `apt-get download cowsay` põe o `.deb` em `/tmp` e não instala nada",
+      "O `dpkg -i` desempacota o arquivo e para numa dependência que falta",
+      "O `dpkg -l` mostra `iU`: desejado, desempacotado, nunca configurado",
+      "O `apt-get --fix-broken install` busca a dependência e configura o pacote",
+      "O `dpkg -l` mostra `ii`, e o `cowsay hi` funciona"
+    ],
+    "trap": "Pôr o `--fix-broken install` antes do `dpkg -i` ignora que ele conserta uma instalação pela metade; não há nada para ele terminar até o dpkg parar."
+  },
+  "ex-4nnbfr3v": {
+    "prompt": "Um colega abre um terminal novo para o laboratório de IaC e roda `sh ~/iac-env.sh`. Termina sem erro, mas o `env` não lista nenhuma das variáveis que o arquivo exporta, e o comando seguinte não acha credenciais. O que deu errado?",
+    "hint": "Linux e Linha de Comando, aula 9; Infraestrutura como Código, aula 1.",
+    "choices": [
+      {
+        "text": "O arquivo não tem bit de execução, e o `sh` pulou as linhas de `export`",
+        "why": "`sh arquivo` roda as linhas seja qual for o modo; o bit só importa para `./arquivo`."
+      },
+      {
+        "text": "Cada `export` vale só para o próximo comando, e uma linha desfez a outra",
+        "why": "Isso é `NOME=valor comando`; o `export` mantém a variável pelo resto daquele shell."
+      },
+      {
+        "text": "O `env` mostra só o que o `~/.bashrc` define, então as variáveis existem e não aparecem",
+        "why": "O `env` lista exatamente o que está exportado no shell atual, venha de onde vier."
+      },
+      {
+        "text": "O `sh` rodou o arquivo num shell próprio, e os exports acabaram junto com ele",
+        "why": "Um filho não muda o pai; lido com `.`, as linhas rodam no seu shell."
+      }
+    ]
+  },
+  "ex-4qwppvmk": {
+    "prompt": "Um container de homologação morreu de madrugada com código de saída 137. O `docker inspect` mostra `OOMKilled=false`, e no host o `dmesg -T | grep -i 'killed process'` não tem linha perto daquele horário. O que sobra?",
+    "hint": "Linux e Linha de Comando, aula 11; Docker e Containers, aula 4.",
+    "choices": [
+      {
+        "text": "Um `SIGKILL` enviado por alguma coisa que não é o OOM killer do kernel",
+        "why": "128 + 9 sem nenhum dos dois registros de memória quer dizer que a morte veio de outro lugar."
+      },
+      {
+        "text": "Chegou ao limite de memória: 137 é o código de falta de memória, diga a flag o que disser",
+        "why": "137 é qualquer `SIGKILL`; quando o kernel mata por memória, o Docker registra `OOMKilled=true`."
+      },
+      {
+        "text": "A máquina inteira ficou sem memória, e isso não conta contra o container",
+        "why": "Uma morte na máquina toda também deixa uma linha `Killed process`, como `Out of memory` puro."
+      },
+      {
+        "text": "O programa capturou o sinal, fez a limpeza e escolheu 137 como saída",
+        "why": "O sinal 9 não pode ser capturado, bloqueado nem ignorado; não houve limpeza nenhuma."
+      }
+    ]
+  },
+  "ex-4sdd4781": {
+    "prompt": "O container de um pod recebe `limits: cpu: 1500m`. O nó usa cgroup v2, e o `cpu.max` do container guarda dois números em microssegundos, o segundo deles o período habitual de `100000`. Qual é o primeiro?",
+    "hint": "Linux e Linha de Comando, aula 11; Kubernetes: Orquestração em Produção, aula 19."
+  },
+  "ex-5416bbh1": {
+    "prompt": "O serviço `shelf` registra pelo pacote `log` do Go, então `docker logs --since 1h web | wc -l` imprime cada linha do log na tela e depois `0`. Para contá-las, o comando vira `docker logs --since 1h web ___ | wc -l`.",
+    "hint": "Linux e Linha de Comando, aula 8; Docker e Containers, aula 22.",
+    "blanks": [
+      {
+        "accept": [
+          "2>&1"
+        ]
+      }
+    ]
+  },
+  "ex-58p38btj": {
+    "prompt": "Você copiou o `~/.gitconfig` do notebook para uma VM na nuvem e rodou `export EDITOR=nano` lá. O `VISUAL` está vazio. O `git commit` continua parando com `code --wait: 1: code: not found`. Por que o export não mudou nada?",
+    "hint": "Linux e Linha de Comando, aula 12; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 1.",
+    "choices": [
+      {
+        "text": "Uma variável exportada só chega ao git depois de ser escrita no `~/.bashrc`",
+        "why": "O `export` entrega a variável a todo filho deste shell, o git incluído."
+      },
+      {
+        "text": "O arquivo copiado define `core.editor`, e o git lê isso antes do `$EDITOR`",
+        "why": "A configuração do próprio programa vem primeiro na cadeia, depois `$VISUAL`, depois `$EDITOR`."
+      },
+      {
+        "text": "O git usa o `/usr/bin/editor`, que ainda aponta para o `code`",
+        "why": "Essa alternativa é o último recurso, alcançado só quando nada mais está definido."
+      },
+      {
+        "text": "O git quer um editor de tela cheia, então lê o `$VISUAL` e ignora o `$EDITOR`",
+        "why": "Sem `$VISUAL`, o git segue para o `$EDITOR`; a configuração dele parou a cadeia antes."
+      }
+    ]
+  },
+  "ex-5c5xxex5": {
+    "prompt": "Uma linha do crontab diz `0 2 * * * tar czf /backup/db-$(date +%F).tgz /srv/db`. Colada no terminal, funciona; pelo cron, nenhum arquivo aparece e o e-mail diz `Syntax error: end of file unexpected (expecting \")\")`. Qual é a causa?",
+    "hint": "Linux e Linha de Comando, aula 13.",
+    "choices": [
+      {
+        "text": "O `/bin/sh` do cron é o dash, que não tem substituição de comando `$( )`",
+        "why": "O dash roda `$( )` sem problema; a mesma linha com o sinal escapado funciona nele."
+      },
+      {
+        "text": "O `date` não está no `PATH` curto do cron, então a substituição sai vazia",
+        "why": "O `/usr/bin` está no `PATH` do cron, e uma substituição vazia não é erro de sintaxe."
+      },
+      {
+        "text": "Um `%` sem escape encerra o comando no crontab, e o shell recebeu só `$(date +`",
+        "why": "O resto virou entrada padrão; `\\%` mantém o sinal no comando."
+      },
+      {
+        "text": "O cron divide o comando nos espaços, e o `+%F).tgz` acabou virando um campo próprio",
+        "why": "Só os cinco campos de horário são separados; o resto da linha vai inteiro para o shell."
+      }
+    ]
+  },
+  "ex-5e0zzhb7": {
+    "prompt": "Ligue cada linha da seção `[Timer]` de um timer ao que ela faz.",
+    "hint": "Linux e Linha de Comando, aula 13.",
+    "pairs": [
+      {
+        "left": "`OnBootSec=15min`",
+        "right": "primeira execução quinze minutos depois de a máquina terminar o boot"
+      },
+      {
+        "left": "`OnUnitActiveSec=1h`",
+        "right": "uma hora depois de a última execução do serviço começar"
+      },
+      {
+        "left": "`OnUnitInactiveSec=1h`",
+        "right": "uma hora depois de a última execução do serviço terminar"
+      },
+      {
+        "left": "`RandomizedDelaySec=30m`",
+        "right": "um atraso de até trinta minutos, fixo por máquina"
+      },
+      {
+        "left": "`AccuracySec=1s`",
+        "right": "disparar no segundo em vez de dentro do minuto padrão"
+      }
+    ],
+    "right_distractors": [
+      "uma execução de recuperação para cada execução que a máquina perdeu"
+    ]
+  },
+  "ex-62tmab0g": {
+    "prompt": "O volume de logs de um servidor acusa `No space left on device`, e o chat da equipe se enche de sugestões. Quais são verificações que a aula faz antes de apagar qualquer coisa? Marque todas as que se aplicam.",
+    "hint": "Linux e Linha de Comando, aula 11.",
+    "choices": [
+      {
+        "text": "`df -i`, caso os inodes tenham acabado antes dos blocos",
+        "why": "Todo arquivo precisa de um inode, então um disco pode lotar com espaço livre."
+      },
+      {
+        "text": "`lsof +L1`, atrás de um arquivo apagado que um processo segura aberto",
+        "why": "O espaço dele só volta quando o último descritor fecha."
+      },
+      {
+        "text": "`du -sh /` sem `-x`, para somar cada byte abaixo da raiz",
+        "why": "Ele entra em toda montagem, até as de rede, e não enxerga arquivos apagados."
+      },
+      {
+        "text": "`ls -la` no diretório de logs, para achar o arquivo que o enche",
+        "why": "Um arquivo apagado e ainda aberto não tem mais nome para o `ls` mostrar."
+      }
+    ]
+  },
+  "ex-63rjvtkr": {
+    "prompt": "Um script de limpeza registra o plano com `find /srv/exports -name '*.tmp' | xargs ls -l`. Numa noite sem nenhum arquivo `.tmp` lá, o log traz uma listagem do diretório de trabalho do script. O que aconteceu?",
+    "hint": "Linux e Linha de Comando, aula 8.",
+    "choices": [
+      {
+        "text": "Um nome com espaço virou duas palavras, e o `ls` recorreu ao diretório",
+        "why": "Um nome partido dá erros `No such file or directory`, não uma listagem."
+      },
+      {
+        "text": "O `ls -l` lê a lista da entrada padrão, e entrada vazia quer dizer `.`",
+        "why": "O `ls` recebe argumentos e nunca lê entrada, e é por isso que o `xargs` existe."
+      },
+      {
+        "text": "Sem resultado, o `find` imprimiu `.`, e o `ls -l` listou esse diretório",
+        "why": "O `find` não imprime nada quando nada casa; a lista vazia é justamente a questão."
+      },
+      {
+        "text": "Sem entrada, o `xargs` rodou o `ls` uma vez, sem argumento algum",
+        "why": "O `ls` sozinho lista onde está; o `xargs -r` pula a execução com a entrada vazia."
+      }
+    ]
+  },
+  "ex-bk33hgdr": {
+    "prompt": "Um servidor de aplicação numa sub-rede privada não responde na 8080. De outra instância na mesma VPC, `nc -zv -w 3 10.0.32.10 8080` imprime `Connection refused` na hora. Um colega quer abrir mais o security group. Para onde as aulas apontam?",
+    "hint": "Nuvem e Serverless, aula 6; Redes e Protocolos, aula 3.",
+    "choices": [
+      {
+        "text": "A máquina: nada escuta ali, ou só em `127.0.0.1`; o `ss -tln` mostra qual",
+        "why": "Uma recusa quer dizer que o pacote chegou e o próprio sistema da máquina respondeu."
+      },
+      {
+        "text": "A tabela de rotas da sub-rede, que não tem caminho de volta para a resposta à outra instância",
+        "why": "Uma resposta sem caminho de volta se perde, e isso parece timeout, não reset."
+      },
+      {
+        "text": "A network ACL, sem a regra de saída para as portas efêmeras",
+        "why": "A ACL também descarta em silêncio; a recusa vem da máquina, depois de todos os filtros."
+      },
+      {
+        "text": "O security group, que rejeita a porta 8080 com um reset em vez de deixar a tentativa entrar",
+        "why": "Um security group nunca responde: a tentativa bloqueada é descartada, e o cliente estoura o tempo."
+      }
+    ]
+  },
+  "ex-bmftf244": {
+    "prompt": "Para economizar os 19% que a tabela de preços mostra para Arm no mesmo tamanho, uma equipe troca seus hosts de containers de máquinas Intel por máquinas Arm. A imagem foi construída com um `docker build` simples num laptop x86-64, e nos hosts novos todo container sai com `exec format error`. O que resolve?",
+    "hint": "Nuvem e Serverless, aula 4; Docker e Containers, aula 13.",
+    "choices": [
+      {
+        "text": "Um Docker mais novo nos hosts, porque o engine é antigo demais para abrir a imagem",
+        "why": "A imagem foi encontrada e desempacotada; é o kernel recusando um programa x86-64."
+      },
+      {
+        "text": "Construir para `linux/amd64` e `linux/arm64` sob uma só tag, e cada host baixa a sua",
+        "why": "Cada host roda a variante construída para o seu processador."
+      },
+      {
+        "text": "`--platform linux/amd64` no `docker run`, para o host Arm executar o binário x86 nativamente",
+        "why": "Sem emulador falha do mesmo jeito; com QEMU roda, devagar, não nativamente."
+      },
+      {
+        "text": "Um tamanho acima, já que a vCPU Arm é um núcleo inteiro e pede mais memória",
+        "why": "O tamanho não é o problema: memória nenhuma executa um binário feito para outro processador."
+      }
+    ]
+  },
+  "ex-bt4faza1": {
+    "prompt": "Seis pods web em três nós precisam gravar uploads em `/data`, e a aplicação só sabe gravar num diretório. O claim que eles dividem pede `ReadWriteOnce`, então só os pods de um nó conseguem montá-lo. Que tipo de armazenamento o curso de nuvem diz que isso exige?",
+    "hint": "Nuvem e Serverless, aula 5; Kubernetes: Orquestração em Produção, aula 26.",
+    "choices": [
+      {
+        "text": "Um bucket montado como sistema de arquivos com uma ferramenta, e os pods seguem em `/data`",
+        "why": "Ler funciona; renomear e acrescentar viram cópias e regravações, um erro que a aula aponta."
+      },
+      {
+        "text": "Um volume de bloco maior, com espaço para a escrita de todos os nós acontecer ao mesmo tempo",
+        "why": "O limite não é o tamanho: um volume de bloco se conecta a uma máquina, por maior que seja."
+      },
+      {
+        "text": "Um serviço de arquivos, que o provedor opera e várias máquinas montam ao mesmo tempo",
+        "why": "Só um sistema de arquivos que alguém opera para você aceita escrita de várias máquinas juntas."
+      },
+      {
+        "text": "O mesmo volume de bloco conectado aos três nós, cada um com sua montagem ext4",
+        "why": "Cada nó guardaria na memória a sua versão do sistema de arquivos e o corromperia em minutos."
+      }
+    ]
+  },
+  "ex-btnpm7kj": {
+    "prompt": "Uma máquina virtual carrega uma role que só pode gravar backups num bucket. Quando um engenheiro roda o script de backup à mão por SSH, o log de auditoria mostra as chamadas feitas com a chave de acesso de longa duração de um colega; quando o cron roda o mesmo script à noite, as chamadas saem como a role da máquina. O que explica as duas coisas?",
+    "hint": "Nuvem e Serverless, aula 7; Linux e Linha de Comando, aula 13.",
+    "choices": [
+      {
+        "text": "As credenciais da role vencem em uma hora, e uma sessão de dia recai na última chave configurada",
+        "why": "O provedor troca as credenciais da role antes de vencerem; nada recai numa chave guardada."
+      },
+      {
+        "text": "O cron roda como root, e só o root pode pedir ao serviço de metadados as credenciais da role",
+        "why": "O serviço de metadados responde de dentro da máquina; o que o cron muda é o ambiente."
+      },
+      {
+        "text": "A chave do colega está no user data da máquina, que todo login por SSH lê de novo",
+        "why": "O user data age uma vez, no primeiro boot; um shell de login lê arquivos de inicialização, não user data."
+      },
+      {
+        "text": "Uma chave exportada no `~/.bashrc` do engenheiro: a cadeia lê o ambiente primeiro, e o cron não lê esse arquivo",
+        "why": "O ambiente vence a role da máquina, e um job do cron começa sem os seus arquivos de inicialização."
+      }
+    ]
+  },
+  "ex-bwyegxzs": {
+    "prompt": "A chamada de um script de deploy à API do provedor volta `403` com o código `AccessDenied`. Um colega diz que a chave de acesso deve estar ruim e quer trocá-la. O que as aulas dizem que essa resposta significa?",
+    "hint": "Nuvem e Serverless, aula 7; Fundamentos da Web e Internet, aula 6.",
+    "choices": [
+      {
+        "text": "Sabe quem assinou e nenhuma política permite a ação; trocar a chave não muda nada",
+        "why": "É o segundo portão, a autorização: o conserto é uma política, não uma credencial."
+      },
+      {
+        "text": "A assinatura não conferiu, então o provedor não sabe quem pergunta; uma chave nova resolve",
+        "why": "Assinatura que falha tem código próprio; AccessDenied vem depois de a identidade ser conhecida."
+      },
+      {
+        "text": "Um security group barrou o pedido antes de chegar à API; a regra precisa de outra porta",
+        "why": "Security groups filtram pacotes para máquinas; chamadas de API são julgadas por identidade e política."
+      },
+      {
+        "text": "É um convite para se autenticar, então o script deve repetir a chamada com credenciais",
+        "why": "Isso é o 401; o 403 é uma recusa, e as mesmas credenciais recebem a mesma resposta."
+      }
+    ]
+  },
+  "ex-bx1rdjez": {
+    "prompt": "Um pull request adiciona uma sub-rede privada com um NAT gateway, e a estimativa de custo do plano do Terraform na descrição diz +67,89 USD por mês para o gateway. O revisor aprova achando que esse é o custo inteiro do gateway. O que a fatura vai somar que nenhum plano consegue mostrar?",
+    "hint": "Nuvem e Serverless, aula 10; Infraestrutura como Código, aula 16.",
+    "choices": [
+      {
+        "text": "Uma cobrança por hora da VPC e das sub-redes, que o plano precificou como zero por engano",
+        "why": "A VPC, as sub-redes e o internet gateway não têm linha por hora na tabela."
+      },
+      {
+        "text": "Uma cobrança por GB processado, nos dois sentidos, conforme o tráfego",
+        "why": "Um plano sabe o que vai existir, não quanto vai ser usado."
+      },
+      {
+        "text": "Nada pelos downloads, já que dados entrando da internet são grátis na tabela",
+        "why": "A entrada é grátis, e o gateway ainda cobra por processá-la."
+      },
+      {
+        "text": "Mais 67,89, porque um NAT gateway é cobrado uma vez por sub-rede que roteia para ele",
+        "why": "A cobrança é por gateway, por hora e por GB; duas zonas costumam significar dois gateways."
+      }
+    ]
+  },
+  "ex-bx3gxwp1": {
+    "prompt": "O contrato de uma empresa brasileira diz que os dados dos clientes só podem ser entregues por ordem de um tribunal brasileiro. A equipe propõe a região de São Paulo de um provedor constituído no exterior, já que os dados ficariam no Brasil. Qual é a lacuna?",
+    "hint": "Nuvem e Serverless, aula 2.",
+    "choices": [
+      {
+        "text": "Nenhuma: a LGPD mantém no Brasil os dados de brasileiros, que é o que o contrato pede",
+        "why": "A LGPD regula a transferência internacional e não tem regra geral de localização; não fala de tribunais."
+      },
+      {
+        "text": "Os backups, que um provedor grande copia para outra das suas regiões por iniciativa própria",
+        "why": "Cópias entre regiões só acontecem quando alguém as configura; a lacuna são os tribunais."
+      },
+      {
+        "text": "A região fixa onde o dado fica, não os tribunais de que país têm poder de mandar entregá-lo",
+        "why": "Isso depende da pessoa jurídica que opera o serviço, e nenhuma região muda isso."
+      },
+      {
+        "text": "O hardware compartilhado: outros clientes no host, que um host dedicado tiraria",
+        "why": "Hardware dedicado resolve quem divide a máquina, não a lei de que país alcança o provedor."
+      }
+    ]
+  },
+  "ex-byd6gaed": {
+    "prompt": "Dois desenhos dizem sobreviver à perda de uma zona. O A mantém instâncias suficientes rodando em duas zonas para aguentar a carga toda. O B roda numa zona e lança substitutas numa segunda quando os health checks falham. Num incidente, a API do provedor para criar recursos está falhando, enquanto as instâncias que já rodam seguem servindo. Como cada um se sai?",
+    "hint": "Nuvem e Serverless, aula 9.",
+    "choices": [
+      {
+        "text": "Os dois param, já que uma API falhando derruba junto o encaminhamento do load balancer",
+        "why": "Encaminhar tráfego é plano de dados, feito para seguir funcionando quando o plano de controle não funciona."
+      },
+      {
+        "text": "Os dois seguem servindo, pois duas zonas são projetadas para nunca falharem juntas",
+        "why": "O B não tem nada rodando na segunda zona, e repor o que perdeu depende da API que está falhando."
+      },
+      {
+        "text": "O B se recupera antes, porque um lançamento automático não espera ninguém agir",
+        "why": "Lançar é uma chamada ao plano de controle, e é o plano de controle que está falhando."
+      },
+      {
+        "text": "O A continua de pé: o load balancer desloca a carga, e nada novo precisa ser criado",
+        "why": "É estaticamente estável; só precisa do plano de dados, que continua funcionando."
+      }
+    ]
+  },
+  "ex-c5ntahh6": {
+    "prompt": "As duas máquinas de um ambiente de staging rodam só em horário comercial, cerca de 50 das 168 horas da semana. Uma reserva de um ano sem pagamento adiantado cortaria o preço por hora delas em 42,6%. A equipe deve reservá-las?",
+    "hint": "Nuvem e Serverless, aula 10.",
+    "choices": [
+      {
+        "text": "Não: a reserva é devida por todas as horas do ano, e só compensa acima de 57,4% delas",
+        "why": "Uns 30% das horas ficam bem abaixo do ponto de empate, então sob demanda sai mais barato."
+      },
+      {
+        "text": "Sim: 42,6% a menos em cada hora rodada é economia, sejam quantas forem as horas",
+        "why": "A reserva é paga por todas as horas do ano, rodando ou não."
+      },
+      {
+        "text": "Sim, porque sem pagamento adiantado a equipe pode parar de pagar num mês ocioso",
+        "why": "Sem adiantamento o pagamento se espalha pelo ano; o ano inteiro continua devido."
+      },
+      {
+        "text": "Reservar uma e manter a outra sob demanda, para o desconto cobrir metade das horas",
+        "why": "Nenhuma das duas roda horas suficientes; qualquer reserva custa mais que as horas que cobre."
+      }
+    ]
+  },
+  "ex-ce4bm527": {
+    "prompt": "Uma equipe leva sua API de máquinas virtuais para funções serverless. Quais tarefas continuam sendo da equipe? Marque todas as que se aplicam.",
+    "hint": "Nuvem e Serverless, aula 8.",
+    "choices": [
+      {
+        "text": "Atualizar uma biblioteca importada pelo código quando sai uma falha nela",
+        "why": "O código e cada biblioteca que ele importa ficam do seu lado da linha."
+      },
+      {
+        "text": "Aplicar patches no sistema operacional das máquinas em que as funções são executadas",
+        "why": "Do seu lado da linha não há sistema operacional para atualizar."
+      },
+      {
+        "text": "Decidir com que permissões cada função roda",
+        "why": "A role da função é sua para escrever, tão estreita quanto o trabalho permitir."
+      },
+      {
+        "text": "Definir quantas cópias rodam de madrugada",
+        "why": "Uma função escala até zero e a partir dele; a contagem é do provedor."
+      }
+    ]
+  },
+  "ex-cq8et90a": {
+    "prompt": "Uma instância da aplicação numa zona lê 800 GB por mês de resultados de consulta do primário do banco de dados em outra zona da mesma região. A linha entre zonas da tabela de preços é 0,0100 USD por GB, em cada sentido. Quanto esse tráfego custa por mês, em USD?",
+    "hint": "Nuvem e Serverless, aula 9.",
+    "unit": "USD"
+  },
+  "ex-czcr1gyw": {
+    "prompt": "Um código de servidor em São Paulo faz cinco chamadas, uma depois da outra, a uma API no norte da Virgínia, onde o piso de ida e volta é 76,6 ms. A primeira chamada abre uma conexão nova, com um handshake TCP e depois um handshake TLS 1.3 antes da requisição; as outras quatro reaproveitam essa conexão. No piso, quantos milissegundos as cinco chamadas levam juntas?",
+    "hint": "Nuvem e Serverless, aula 9; Redes e Protocolos, aula 5.",
+    "unit": "ms"
+  },
+  "ex-d020659z": {
+    "prompt": "Uma função atrás de uma fila pode receber o mesmo evento duas vezes, então um handler que cobra um cartão registra o id do evento e o confere antes de agir. Um handler que deixa o mundo como uma execução deixaria, mesmo rodando duas vezes com o mesmo evento, é chamado de ___.",
+    "hint": "Nuvem e Serverless, aula 8.",
+    "blanks": [
+      {
+        "accept": [
+          "idempotente"
+        ]
+      }
+    ]
+  },
+  "ex-d1tbhcw2": {
+    "prompt": "Uma empresa federa sua conta de nuvem com o seu provedor de identidade. Ponha em ordem o login da Ana.",
+    "hint": "Nuvem e Serverless, aula 7.",
+    "items": [
+      "Ana entra no provedor de identidade da organização, com senha e um segundo fator",
+      "O provedor de identidade manda ao provedor de nuvem uma declaração assinada de quem ela é e dos seus grupos",
+      "O provedor de nuvem confere a assinatura e mapeia os grupos dela para roles que ela pode assumir",
+      "Ana recebe credenciais temporárias para uma dessas roles, e elas expiram"
+    ],
+    "trap": "Pôr a conferência do provedor de nuvem primeiro, como se ele guardasse senhas próprias: com federação ele nunca vê a senha da Ana, só a declaração assinada."
+  },
+  "ex-d21cw0yk": {
+    "prompt": "Associe cada forma de comprar a mesma máquina ao que você promete ao provedor em troca do preço.",
+    "hint": "Nuvem e Serverless, aula 10.",
+    "pairs": [
+      {
+        "left": "Sob demanda",
+        "right": "Nada: desligue em qualquer hora e não deve mais nada"
+      },
+      {
+        "left": "Uma reserva",
+        "right": "Pagar por um tipo de máquina numa região durante um prazo, usando ou não"
+      },
+      {
+        "left": "Um savings plan",
+        "right": "Um valor gasto por hora durante um prazo, entre tipos de máquina"
+      },
+      {
+        "left": "Spot",
+        "right": "Devolver a máquina quando o provedor precisar da capacidade"
+      }
+    ],
+    "right_distractors": [
+      "Manter a máquina dentro do nível gratuito por doze meses"
+    ]
+  },
+  "ex-e7x6f8tv": {
+    "prompt": "Num servidor de build compartilhado, um administrador roda `sudo usermod -aG docker bruno`. No shell que o Bruno já tinha aberto, `docker ps` continua respondendo `permission denied while trying to connect to the docker API at unix:///var/run/docker.sock`, e `getent group docker` já mostra o nome dele. O que está acontecendo?",
+    "hint": "Docker e Containers, aula 5; Linux e Linha de Comando, aula 4.",
+    "choices": [
+      {
+        "text": "O socket precisa de `chmod 666`, porque o grupo só tem leitura nele",
+        "why": "O socket é `srw-rw----`, então o grupo já escreve, e 666 daria root por outro caminho a qualquer conta."
+      },
+      {
+        "text": "O shell dele continua com a lista de grupos antiga; ele precisa logar de novo",
+        "why": "A lista de grupos é presa ao processo quando ele começa, e só uma sessão nova traz o `docker`."
+      },
+      {
+        "text": "O daemon lê os grupos quando sobe, então o `dockerd` precisa reiniciar antes",
+        "why": "O socket já deixa o grupo `docker` entrar; quem está sem o grupo é o próprio shell do Bruno."
+      },
+      {
+        "text": "O engine está parado; é isso que o cliente imprime quando nada escuta",
+        "why": "Nada escutando dá `failed to connect to the docker API`; `permission denied` quer dizer que o engine o recusou."
+      }
+    ]
+  },
+  "ex-ef410me3": {
+    "prompt": "`docker stop worker` levou dez segundos, e depois `docker inspect -f \"OOMKilled={{.State.OOMKilled}} ExitCode={{.State.ExitCode}}\" worker` imprimiu `OOMKilled=false ExitCode=137`. O líder do time lê 137 como falta de memória e quer um `--memory` maior. O que de fato encerrou o processo?",
+    "hint": "Docker e Containers, aula 7; Linux e Linha de Comando, aula 6.",
+    "choices": [
+      {
+        "text": "O próprio `SIGTERM`, que um shell relata como 128 mais o número dele, 137",
+        "why": "O `SIGTERM` é 15, o que daria 143; 137 é 128 mais 9, o `SIGKILL`."
+      },
+      {
+        "text": "O limite de processos do cgroup, que mata qualquer container que passa dele",
+        "why": "O limite de pids recusa o processo novo com `can't fork`; ele não mata nada."
+      },
+      {
+        "text": "Ignorou o `SIGTERM`, e após a espera o Docker mandou `SIGKILL`, o sinal 9",
+        "why": "137 é 128 mais 9, e `OOMKilled=false` põe a morte na espera de dez segundos do `docker stop`, não no kernel."
+      },
+      {
+        "text": "O limite de memória; o `OOMKilled` só vira true quando o container reinicia",
+        "why": "O Docker grava `OOMKilled=true` assim que o kernel mata por memória; false quer dizer que outra coisa mandou o `SIGKILL`."
+      }
+    ]
+  },
+  "ex-egb9htts": {
+    "prompt": "A Ana roda `docker run -d --name db -e POSTGRES_PASSWORD=lab-only postgres:17` e depois `docker run -d --name web --env-file shelf.env shelf:1.0.0`, em que `DATABASE_URL` aponta para `db:5432`. Nenhum dos dois comandos cita uma rede. Minutos depois, o log do `web` diz `hostname resolving error: lookup db on 8.8.8.8:53: no such host`. O que explica isso?",
+    "hint": "Docker e Containers, aula 23; Redes e Protocolos, aula 4.",
+    "choices": [
+      {
+        "text": "O Postgres ainda inicializava, e o nome do container só aparece quando ele aceita conexões",
+        "why": "Um banco ainda subindo dá `connection refused` no endereço; o nome do container não espera pelo programa."
+      },
+      {
+        "text": "A porta 5432 do `db` não foi publicada com `-p`, então os outros containers não ficam sabendo o nome",
+        "why": "`-p` abre uma porta no host; não cria nome nenhum, e containers alcançam as portas uns dos outros sem ele."
+      },
+      {
+        "text": "Containers não podem mandar perguntas pela porta 53, então a consulta nem saiu do container",
+        "why": "Um resolver que ninguém alcança não dá resposta nenhuma; `no such host` é uma resposta, de um servidor sem esse registro."
+      },
+      {
+        "text": "Nenhum servidor na bridge padrão responde por containers, e o `8.8.8.8` não tem registro `db`",
+        "why": "Só uma rede que você cria ganha o DNS embutido do Docker; aqui a pergunta foi ao resolver do host, que não conhece esse nome."
+      }
+    ]
+  },
+  "ex-ek47v1wj": {
+    "prompt": "Na máquina da Ana, o `shelf` roda como `host-shelf`, publicado com `-p 127.0.0.1:8080:8080`. Uma ferramenta em outro container precisa chamar o `/version` dele. Quais destas opções chegam lá? Marque todas as que se aplicam.",
+    "hint": "Docker e Containers, aula 23.",
+    "choices": [
+      {
+        "text": "Rodar a ferramenta com `--network host` e chamar `localhost:8080`",
+        "why": "Com `host` o container fica no namespace de rede da máquina, loopback incluído, onde a porta foi publicada."
+      },
+      {
+        "text": "Republicar com `-p 8081:8080` e chamar `host.docker.internal:8081` via `host-gateway`",
+        "why": "Uma porta em todos os endereços é alcançável pelo lado da bridge, `172.17.0.1`, que o `host-gateway` nomeia; e fica aberta para a rede também."
+      },
+      {
+        "text": "Deixar a ferramenta na bridge padrão e chamar `localhost:8080`",
+        "why": "Dentro de um container `localhost` é o próprio container, e nada nele escuta na 8080."
+      },
+      {
+        "text": "Mapear `host.docker.internal` para `host-gateway` e chamar a porta 8080, sem mudar mais nada",
+        "why": "Isso chega ao host em `172.17.0.1`, mas o `shelf` só escuta em `127.0.0.1`, então a conexão é recusada."
+      }
+    ]
+  },
+  "ex-ekgxrvsm": {
+    "prompt": "A imagem do `shelf` traz `HEALTHCHECK` com `CMD [\"/probe\", \"http://127.0.0.1:8080/health\"]`. O time a leva para o Kubernetes, num Deployment que não declara probe nenhuma. Um pod trava: o processo está de pé e o `/health` para de responder. O que o reinicia?",
+    "hint": "Docker e Containers, aula 18; Kubernetes: Orquestração em Produção, aula 22.",
+    "choices": [
+      {
+        "text": "Nada ainda; a spec do pod precisa de um `livenessProbe` no `/health`",
+        "why": "O Kubernetes ignora o `HEALTHCHECK` e roda as próprias probes; o kubelet reinicia o container quando a liveness falha."
+      },
+      {
+        "text": "O kubelet, depois de três execuções falhas do próprio `HEALTHCHECK` da imagem",
+        "why": "O Kubernetes ignora o `HEALTHCHECK` por inteiro; as três tentativas são configuração do Docker, e só o Docker a lê."
+      },
+      {
+        "text": "O daemon Docker do nó, que o marca como unhealthy e o substitui",
+        "why": "O Docker sozinho não faz nada com um container unhealthy, e o cluster conversa com o containerd, não com o Docker."
+      },
+      {
+        "text": "Nada; um `readinessProbe` no `/health` é que o teria reiniciado",
+        "why": "A readiness tira o pod do Service e não reinicia nada; reiniciar é trabalho da liveness."
+      }
+    ]
+  },
+  "ex-enmr2c3t": {
+    "prompt": "O `.env` está no `.gitignore` do `shelf` desde o primeiro commit, e `git log --all -- .env` não imprime nada. O projeto não tem `.dockerignore`. Depois de `docker build -t shelf:dev .`, com `COPY . .` no Dockerfile, `docker run --rm shelf:dev cat /src/.env` imprime a senha do banco. Por quê?",
+    "hint": "Docker e Containers, aula 11; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10.",
+    "choices": [
+      {
+        "text": "O Docker respeita o `.gitignore`, então a linha do `.env` está errada",
+        "why": "O builder lê o `.dockerignore` e mais nada, e este projeto não tem um."
+      },
+      {
+        "text": "O contexto é o diretório inteiro, filtrado só pelo `.dockerignore`",
+        "why": "`docker build .` envia tudo em `.` que o `.dockerignore` não lista, e o `COPY . .` copiou tudo; as regras do Git nunca chegam ao builder."
+      },
+      {
+        "text": "Ele foi commitado alguma vez; `git rm --cached .env` resolveria",
+        "why": "O log mostra que nenhum commit tocou nele, e o builder não pergunta ao Git o que é rastreado."
+      },
+      {
+        "text": "O BuildKit só envia o que mudou, então reaproveitou um `.env` antigo",
+        "why": "Enviar só o que mudou economiza transferência; o contexto continua tendo todo arquivo do diretório, `.env` incluído."
+      }
+    ]
+  },
+  "ex-epm3becs": {
+    "prompt": "O Trivy aponta o `tzdata` na base distroless do `shelf` com o status `fixed`. Na call do incidente, um colega propõe dar `docker exec` em cada container do `shelf` em execução e atualizar o pacote ali mesmo, para não ter de reconstruir nada. Qual é a resposta?",
+    "hint": "Docker e Containers, aula 20; Infraestrutura como Código, aula 20.",
+    "choices": [
+      {
+        "text": "Nada a fazer: `fixed` diz que o scanner já aplicou a versão mais nova",
+        "why": "`fixed` quer dizer que existe uma versão corrigida upstream; a imagem guarda a antiga até ser reconstruída numa base mais nova."
+      },
+      {
+        "text": "Pôr `--ignore-unfixed` no gate, já que ninguém consegue agir sobre esse achado ainda",
+        "why": "Essa flag esconde achados sem correção; este tem correção, então continua, e a saída é reconstruir."
+      },
+      {
+        "text": "Não: nada lá dentro instala o pacote, e um conserto à mão morre com o container; reconstrua na base nova",
+        "why": "A distroless não tem shell nem gerenciador de pacotes, e um container substituído volta a ser a imagem, então o conserto que fica é uma imagem nova."
+      },
+      {
+        "text": "Sim, e depois um `docker commit` de cada container para a atualização sobreviver à troca",
+        "why": "Não há gerenciador de pacotes com que atualizar, e uma imagem commitada não registra nada que alguém possa reconstruir ou revisar."
+      }
+    ]
+  },
+  "ex-ew5nwx6y": {
+    "prompt": "Numa VM na nuvem com endereço público, a Ana sobe o `shelf` com `docker run -d --name web -p 8080:8080 shelf:1.0.0`. Para ver qual endereço local ficou com a porta 8080, ela lista os sockets TCP em estado de escuta, com números em vez de nomes: `ss ___ | grep :8080`. Uma resposta `0.0.0.0:8080` quer dizer que quem alcança a VM alcança o `shelf`.",
+    "hint": "Docker e Containers, aula 17; Redes e Protocolos, aula 10.",
+    "blanks": [
+      {
+        "accept": [
+          "-lnpt",
+          "-lnt",
+          "-lntp",
+          "-lpnt",
+          "-lptn",
+          "-ltn",
+          "-ltnp",
+          "-ltpn",
+          "-nlpt",
+          "-nlt",
+          "-nltp",
+          "-nplt",
+          "-nptl",
+          "-ntl",
+          "-ntlp",
+          "-ntpl",
+          "-plnt",
+          "-pltn",
+          "-pnlt",
+          "-pntl",
+          "-ptln",
+          "-ptnl",
+          "-tln",
+          "-tlnp",
+          "-tlpn",
+          "-tnl",
+          "-tnlp",
+          "-tnpl",
+          "-tpln",
+          "-tpnl"
+        ]
+      }
+    ]
+  },
+  "ex-f33sc91v": {
+    "prompt": "Três servidores puxaram `localhost:5000/shelf` cada um num dia diferente, e agora rodam três versões dele. O `docker run` só puxa quando o nome falta na máquina. Para fazê-lo perguntar ao registry pela imagem por trás da tag toda vez que um container sobe, a flag é `docker run --pull ___`.",
+    "hint": "Docker e Containers, aula 16.",
+    "blanks": [
+      {
+        "accept": [
+          "always"
+        ]
+      }
+    ]
+  },
+  "ex-f84f300d": {
+    "prompt": "Num container rootless do Podman, `cat /proc/self/uid_map` imprimiu:\n\n```\n         0      30033          1\n         1     165536      65536\n```\n\nOutro processo no mesmo container roda como UID 1000. Que UID ele é no host?",
+    "hint": "Docker e Containers, aula 28."
+  },
+  "ex-fh5mgv14": {
+    "prompt": "A Ana sobe o `postgres:17` pela primeira vez, com um volume vazio e o `01-schema.sql` montado em `/docker-entrypoint-initdb.d`. Ponha em ordem o que o entrypoint da imagem faz.",
+    "hint": "Docker e Containers, aula 9.",
+    "items": [
+      "Cria os arquivos do banco e define a senha",
+      "Sobe um servidor temporário que só escuta num socket dentro do container",
+      "Roda `/docker-entrypoint-initdb.d/01-schema.sql`",
+      "Registra no log `PostgreSQL init process complete; ready for start up.`",
+      "Sobe o servidor de verdade, PID 1, alcançável pela porta publicada"
+    ],
+    "trap": "O primeiro `ready to accept connections` do log parece o servidor de verdade; é o temporário, que só existe para rodar o script."
+  },
+  "ex-g0pcz64t": {
+    "prompt": "A Ana trata todo container do `shelf` como algo que ela vai apagar. Ligue cada tipo de estado ao lugar que a regra da aula 7 dá a ele.",
+    "hint": "Docker e Containers, aula 7.",
+    "pairs": [
+      {
+        "left": "os dados PostgreSQL do catálogo",
+        "right": "um volume nomeado"
+      },
+      {
+        "left": "arquivos de código que ela edita no host durante o desenvolvimento",
+        "right": "um bind mount"
+      },
+      {
+        "left": "a senha do banco",
+        "right": "um arquivo de segredo, nunca a imagem"
+      },
+      {
+        "left": "o que o programa registra em log",
+        "right": "a saída padrão do container"
+      },
+      {
+        "left": "um cache que pode sumir",
+        "right": "a camada de escrita, ou um tmpfs"
+      }
+    ],
+    "right_distractors": [
+      "uma linha `ENV` no Dockerfile"
+    ]
+  },
+  "ex-g2b2qtnz": {
+    "prompt": "As configurações do Docker Desktop do Bruno dão 2 GB de memória à VM. Um container de banco que precisa de 4 GB não para de falhar, embora o laptop tenha bastante memória livre. Por quê?",
+    "hint": "Docker e Containers, aula 5.",
+    "choices": [
+      {
+        "text": "O Desktop limita cada container a 2 GB, a menos que `--memory` suba o limite",
+        "why": "Um container não tem limite até alguém definir um; o teto aqui é o tamanho da VM, que o `--memory` não ultrapassa."
+      },
+      {
+        "text": "O cliente `docker` no laptop decide quanta memória cada um recebe",
+        "why": "O cliente só envia pedidos; o engine na VM roda os containers dentro da memória da VM."
+      },
+      {
+        "text": "A imagem roda emulada para outro processador, o que dobra a memória dela",
+        "why": "Emulação deixa a imagem mais lenta, não maior; o limite aqui é a memória da VM."
+      },
+      {
+        "text": "Os containers rodam na VM do Desktop e nunca ganham mais do que ela tem",
+        "why": "O engine e seus containers vivem na VM, então a memória dela é o teto, tenha o laptop o que tiver."
+      }
+    ]
+  },
+  "ex-gbwx4c4q": {
+    "prompt": "Um container acrescenta uma linha a um arquivo de 2 GB que veio com a imagem. O que acontece no sistema de arquivos do container?",
+    "hint": "Docker e Containers, aula 4.",
+    "choices": [
+      {
+        "text": "O arquivo inteiro é antes copiado para a camada do container, e a cópia é que muda",
+        "why": "O overlayfs nunca escreve numa camada inferior: a primeira escrita copia o arquivo para cima, o que aqui custa 2 GB."
+      },
+      {
+        "text": "Só a linha nova vai para a camada superior, guardada como diferença em relação à imagem",
+        "why": "O overlayfs trabalha com arquivos inteiros, então a primeira escrita copia o arquivo todo para a camada superior."
+      },
+      {
+        "text": "A linha é escrita na camada da imagem, e todo container dela passa a vê-la",
+        "why": "Nenhum container escreve numa camada inferior; a imagem continua igual para todos os outros containers."
+      },
+      {
+        "text": "A escrita é recusada, porque as camadas da imagem são somente leitura para todo container",
+        "why": "A camada somente leitura fica intocada, e a escrita cai numa cópia na camada do próprio container."
+      }
+    ]
+  },
+  "ex-hmf80f4s": {
+    "prompt": "Dois containers da loja terminaram durante a noite. O `lastState.terminated` mostra código de saída 143 em um e 137 no outro. Qual leitura dos dois números está certa?",
+    "hint": "Kubernetes: Orquestração em Produção, aulas 19 e 35; Linux e Linha de Comando, aula 6.",
+    "choices": [
+      {
+        "text": "Os dois indicam falha da sonda de liveness, porque o Kubernetes registra uma falha de sonda como código acima de 128",
+        "why": "Uma sonda de liveness que falha encerra o processo com um sinal, e o código nomeia o sinal, não a sonda."
+      },
+      {
+        "text": "143 é SIGTERM, que a loja captura para terminar as requisições; 137 é SIGKILL: olhe a memória ou o prazo de encerramento",
+        "why": "128 mais o sinal: 15 é um pedido educado, 9 é um que nada consegue capturar."
+      },
+      {
+        "text": "143 é o kill do kernel por falta de memória e 137 é uma parada educada do kubelet, então o primeiro precisa de um limite de memória maior",
+        "why": "Ao contrário: 137 é 128 mais 9, SIGKILL, que é o que o OOM killer manda."
+      },
+      {
+        "text": "Os dois são status que a própria loja escolheu ao sair, então descrevem o que deu errado dentro dela, não quem a parou",
+        "why": "Um status acima de 128 é o número de um sinal mais 128; o programa não o escolheu."
+      }
+    ]
+  },
+  "ex-hrhg9efw": {
+    "prompt": "Do pod `left`, em `shop-worker`, `ping 10.244.1.2` chega ao pod `right`, em `shop-worker2`, e toda resposta volta com `ttl=62`. O que esse número diz sobre o caminho?",
+    "hint": "Kubernetes: Orquestração em Produção, aula 18; Redes e Protocolos, aula 2.",
+    "choices": [
+      {
+        "text": "Cada cabo veth tira um, então a resposta ficou dentro de `shop-worker2`",
+        "why": "Um cabo não mexe no TTL; só uma máquina que roteia o pacote mexe."
+      },
+      {
+        "text": "A resposta foi traduzida duas vezes, e cada reescrita de endereço tira um",
+        "why": "Não há tradução nesse caminho; o TTL cai porque o pacote é roteado."
+      },
+      {
+        "text": "Saiu com 64, e dois roteadores tiraram um cada: um nó e depois o outro",
+        "why": "Cada nó roteia o pacote uma vez, e nenhum salto fica escondido."
+      },
+      {
+        "text": "Os dois nós estão a 62 saltos de distância na rede que o Docker criou para eles",
+        "why": "O TTL conta para baixo a partir do valor inicial; 62 saltos quase não deixariam nada."
+      }
+    ]
+  },
+  "ex-hsq64m6s": {
+    "prompt": "Um único pod do Traefik atende duas aplicações na porta 8080 do laptop, escolhidas pelo nome do host. Para testar a rota da loja, a aula roda `curl -s -H \"Host: shop.example.test\" localhost:8080/`. Por que esse cabeçalho?",
+    "hint": "Kubernetes: Orquestração em Produção, aula 16; Fundamentos da Web e Internet, aula 6.",
+    "choices": [
+      {
+        "text": "O cabeçalho faz o curl resolver `shop.example.test` pelo DNS do próprio cluster",
+        "why": "Um cabeçalho vai dentro da requisição; não muda nada em como o curl resolve um nome."
+      },
+      {
+        "text": "O Traefik roteia pelo endereço de destino, e o cabeçalho muda o endereço ao qual o curl se conecta",
+        "why": "O curl continua se conectando a `localhost:8080`; os dois hosts chegam ao mesmo endereço."
+      },
+      {
+        "text": "O controlador responde `404` a quem não se identifica, e o Host é a forma de se identificar",
+        "why": "O `404` era para um host que nenhuma rota nomeia, não para um chamador anônimo."
+      },
+      {
+        "text": "O controlador escolhe a rota pela linha Host da requisição, e nenhum DNS aponta esse nome para o laptop",
+        "why": "O endereço só leva ao controlador; a linha Host diz qual site se quer."
+      }
+    ]
+  },
+  "ex-j1n9ysrw": {
+    "prompt": "Um pipeline de deploy chama a API com um token de `kubectl create token deployer -n shop`. A resposta é um `Status` com `\"reason\": \"Forbidden\"`, citando `system:serviceaccount:shop:deployer`, o verbo `list` e o recurso `pods`. O que isso diz, e o que resolve?",
+    "hint": "Kubernetes: Orquestração em Produção, aula 23; Fundamentos da Web e Internet, aula 6.",
+    "choices": [
+      {
+        "text": "A conta é conhecida, mas nada lhe concede esse verbo; falta uma Role vinculada a ela",
+        "why": "A autenticação passou e a autorização recusou: um 403, resolvido com uma Role e um RoleBinding."
+      },
+      {
+        "text": "Uma regra do RBAC nega pods a service accounts, e essa regra precisa ser apagada",
+        "why": "O RBAC não tem regras de negação; o que nenhuma regra concede é recusado."
+      },
+      {
+        "text": "O namespace `shop` ainda não existe, então o API server não acha os pods",
+        "why": "A conta vive em `shop`, então o namespace existe; a mensagem é sobre permissão."
+      },
+      {
+        "text": "O token não foi aceito, então gere outro com um `--duration` maior",
+        "why": "Um token que o servidor não aceitou dá 401; esta mensagem já nomeia a conta."
+      }
+    ]
+  },
+  "ex-j6mv8phr": {
+    "prompt": "Uma ferramenta de GitOps mantém o cluster em dia com a `main`. A versão 1.1 saiu por um commit mesclado e está quebrada, então, durante o incidente, a Carla roda `kubectl rollout undo deployment/shop`. O que acontece em seguida, e qual correção dura?",
+    "hint": "Kubernetes: Orquestração em Produção, aulas 35 e 39; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 4.",
+    "choices": [
+      {
+        "text": "A ferramenta vê o undo como uma revisão nova e o grava de volta no repositório para a equipe",
+        "why": "A ferramenta puxa do git e aplica; ela não escreve as mudanças do cluster de volta."
+      },
+      {
+        "text": "A próxima sincronização traz a 1.1 de volta; o que dura é reverter o commit dela na `main`",
+        "why": "O undo é drift, e um revert é um commit novo que o desfaz no branch compartilhado."
+      },
+      {
+        "text": "O undo está certo; depois, `git reset --hard HEAD~1` e um force-push da `main`",
+        "why": "O reset reescreve um histórico que outras pessoas já têm; o revert acrescenta a ele."
+      },
+      {
+        "text": "O undo se mantém, porque a ferramenta reage a commits novos, e o undo veio depois do último",
+        "why": "A ferramenta compara o repositório com o cluster a cada sincronização, não só a cada commit novo."
+      }
+    ]
+  },
+  "ex-j8h5tac1": {
+    "prompt": "Uma ValidatingAdmissionPolicy só aceita um Deployment se toda imagem fizer `contains(':')` e não terminar em `:latest`. Qual destas imagens entra mesmo rodando o que `latest` aponta?",
+    "hint": "Kubernetes: Orquestração em Produção, aula 25; Docker e Containers, aulas 15 e 16.",
+    "choices": [
+      {
+        "text": "`nginx:latest`, já que a regra verifica primeiro os dois-pontos",
+        "why": "A segunda metade da regra recusa uma imagem que termina em `:latest`."
+      },
+      {
+        "text": "`nginx`, já que a falta de tag não é o texto `:latest`",
+        "why": "Ela não tem dois-pontos nenhum, então a primeira metade da regra a recusa."
+      },
+      {
+        "text": "`registry.local:5000/shop`, em que os dois-pontos são a porta",
+        "why": "Há dois-pontos, da porta do registry, e nenhuma tag, o que significa `latest`."
+      },
+      {
+        "text": "`registry.local:5000/shop:1.0`, já que o registry tem uma porta",
+        "why": "Ela entra, e com razão: a tag é `1.0`, uma versão explícita."
+      }
+    ]
+  },
+  "ex-jf88b939": {
+    "prompt": "Você corrige um bug e roda `./build.sh` de novo, então `shop:1.1` no seu laptop é uma imagem nova. Depois, `kubectl rollout restart deployment/shop`. Os pods novos ainda se comportam como o build antigo. Por quê?",
+    "hint": "Kubernetes: Orquestração em Produção, aula 1; Docker e Containers, aula 16.",
+    "choices": [
+      {
+        "text": "O Docker do laptop mantém a imagem antiga com essa tag até alguém rodar `docker image prune`",
+        "why": "O rebuild moveu a tag no laptop; a cópia velha está nos nós."
+      },
+      {
+        "text": "O ReplicaSet fixa o digest antigo, e a tag `latest` forçaria baixar de novo",
+        "why": "`latest` é só um nome; também não colocaria o build do laptop dentro dos nós."
+      },
+      {
+        "text": "Um rollout restart reaproveita os containers antigos em vez de criar pods novos",
+        "why": "Ele troca os pods por novos a partir do mesmo template, como uma atualização faria."
+      },
+      {
+        "text": "Cada nó guarda o `shop:1.1` que recebeu, e uma tag que já está lá não é baixada de novo",
+        "why": "Os nós têm um armazenamento de imagens próprio; `kind load docker-image` entrega o build novo a eles."
+      }
+    ]
+  },
+  "ex-jsf7q3h5": {
+    "prompt": "`shop-worker2` fica `NotReady`, e `kubectl get pods -n kube-system` não lista nenhum pod do kubelet cujos logs você possa ler. Onde procurar o relato do próprio kubelet?",
+    "hint": "Kubernetes: Orquestração em Produção, aula 4; Linux e Linha de Comando, aula 5.",
+    "choices": [
+      {
+        "text": "No nó, com `systemctl status kubelet` e `journalctl -u kubelet`, porque ele é um serviço",
+        "why": "O kubelet roda os pods, então não pode ser um: o systemd o inicia como qualquer daemon."
+      },
+      {
+        "text": "Em `/etc/kubernetes/manifests` desse nó, de onde o arquivo do seu static pod deve ter sumido",
+        "why": "Esse diretório guarda os static pods do plano de controle, que o próprio kubelet roda."
+      },
+      {
+        "text": "Em `kubectl logs` do pod kube-proxy do nó, que roda o kubelet ao lado como sidecar",
+        "why": "O kube-proxy é um pod de DaemonSet iniciado pelo kubelet, não a casa dele."
+      },
+      {
+        "text": "No etcd, sob `/registry/pods`, onde cada kubelet grava as linhas do seu log",
+        "why": "O etcd guarda objetos gravados pelo API server, não o log de ninguém."
+      }
+    ]
+  },
+  "ex-jzkfwz2t": {
+    "prompt": "No cluster do kind, `kubectl get nodes -o wide` mostra a imagem de sistema `Debian GNU/Linux 13 (trixie)` e o kernel `6.18.44-fc-v70 (amd64)` nos três nós. Por que o kernel é o mesmo em todo nó?",
+    "hint": "Kubernetes: Orquestração em Produção, aula 5; Docker e Containers, aula 2.",
+    "choices": [
+      {
+        "text": "O kind copia uma imagem de kernel para cada nó quando monta o cluster",
+        "why": "Um nó do kind traz arquivos, não um kernel; não há kernel na imagem para copiar."
+      },
+      {
+        "text": "Os nós são containers, e containers rodam no kernel do host",
+        "why": "Então a coluna mostra o kernel do próprio laptop, e é por isso que os nós sobem em segundos."
+      },
+      {
+        "text": "O Debian 13 vem com essa versão de kernel, então os nós Debian a mostram",
+        "why": "Uma imagem com nome de distribuição traz os arquivos dela, não o kernel."
+      },
+      {
+        "text": "O kubelet informa o kernel do plano de controle para cada nó listado",
+        "why": "Cada nó informa o seu, e aqui os três são um mesmo kernel."
+      }
+    ]
+  },
+  "ex-k7sjgv6w": {
+    "prompt": "O Bruno fez commit do seu `~/.kube/config` no repositório da equipe e deu push. Um dia depois, apagou o arquivo num commit novo e o pôs no `.gitignore`. O que a situação ainda exige?",
+    "hint": "Kubernetes: Orquestração em Produção, aula 7; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10.",
+    "choices": [
+      {
+        "text": "Nada mais: o commit que apagou removeu o arquivo, e a regra de ignorar o mantém fora",
+        "why": "O commit antigo ainda o guarda, em todo clone e na cópia compartilhada."
+      },
+      {
+        "text": "O lado do cluster está bem, já que um kubeconfig guarda endereços, não credenciais",
+        "why": "Ele guarda um certificado e uma chave de cliente válidos; quem o lê vira administrador."
+      },
+      {
+        "text": "Trocar as credenciais dele, porque a chave fica no histórico como chave de admin",
+        "why": "Um segredo commitado é público desde aquele momento; só revogá-lo resolve algo."
+      },
+      {
+        "text": "Passar a equipe para um contexto novo com `use-context`, para as entradas antigas pararem",
+        "why": "Um contexto é um ponteiro local no arquivo; mudá-lo não revoga nada no servidor."
+      }
+    ]
+  },
+  "ex-keezd7w5": {
+    "prompt": "Um serviço precisa de uns trinta segundos depois de iniciar até `/healthz` responder. A única sonda é a de liveness, com `periodSeconds: 5` e `failureThreshold: 3`, e o pod reinicia sem parar e nunca atende. O que resolve sem atrasar a detecção de travamentos depois?",
+    "hint": "Kubernetes: Orquestração em Produção, aula 22.",
+    "choices": [
+      {
+        "text": "Um `failureThreshold` de 12 na liveness, que dá um minuto antes de reiniciar",
+        "why": "Esse minuto valeria também para todo travamento real, pelo resto da vida do pod."
+      },
+      {
+        "text": "Uma sonda de readiness no lugar da liveness, que não reinicia o container",
+        "why": "Os reinícios param, e também param quando o processo trava de verdade."
+      },
+      {
+        "text": "`restartPolicy: OnFailure`, para a sonda que falha não contar como crash",
+        "why": "Uma falha de liveness reinicia o container com qualquer das duas; a sonda ainda dispara cedo."
+      },
+      {
+        "text": "Uma sonda de startup que dá um minuto inteiro, e depois a liveness assume",
+        "why": "Liveness e readiness esperam até a sonda de startup ter sucesso uma vez."
+      }
+    ]
+  },
+  "ex-kte11rce": {
+    "prompt": "`team-a` tem uma ResourceQuota de `pods: \"4\"`. `kubectl scale deployment shop --replicas=6 -n team-a` funciona, o Deployment passa a mostrar `4/6`, e nenhum pod está `Pending`. Onde o motivo está escrito?",
+    "hint": "Kubernetes: Orquestração em Produção, aula 20.",
+    "choices": [
+      {
+        "text": "Num evento `FailedCreate` no ReplicaSet que a cota barrou",
+        "why": "O ReplicaSet tentou criar o quinto pod, e a cota o recusou."
+      },
+      {
+        "text": "Na saída do comando scale, impressa como um aviso que passou despercebido",
+        "why": "O scale foi aceito: só mudou um número no Deployment."
+      },
+      {
+        "text": "No log do kubelet do nó que ficou sem espaço para pods",
+        "why": "Nenhum nó entrou na história; o API server confere a cota em toda criação."
+      },
+      {
+        "text": "Num evento `FailedScheduling` do quinto pod, escrito pelo scheduler",
+        "why": "Não existe quinto pod para agendar; ele foi recusado antes de ser gravado."
+      }
+    ]
+  },
+  "ex-kv2937xq": {
+    "prompt": "No cluster do laptop, `kube-scheduler.yaml` sai de `/etc/kubernetes/manifests`, e depois o Deployment `shop` é escalado de uma réplica para três. O que acontece? Marque todas as que se aplicam.",
+    "hint": "Kubernetes: Orquestração em Produção, aula 4.",
+    "choices": [
+      {
+        "text": "O pod que já rodava continua atendendo",
+        "why": "Ele já tem um nó, e o kubelet dele o mantém rodando."
+      },
+      {
+        "text": "Dois pods novos são criados, e ficam em `Pending`",
+        "why": "Os dois controladores fizeram sua parte; ninguém escolheu um nó."
+      },
+      {
+        "text": "O comando scale é recusado até um scheduler voltar",
+        "why": "O API server o aceita; só falta a etapa de escolher um nó."
+      },
+      {
+        "text": "O scale precisa ser repetido quando o arquivo voltar",
+        "why": "O trabalho espera no API server, e o novo scheduler põe os dois pods."
+      }
+    ]
+  },
+  "ex-kydryamt": {
+    "prompt": "Os manifestos da loja ficam num repositório git, e depois de uma semana movimentada roda-se `kubectl apply -k shop` a partir dele. Quais mudanças feitas à mão esse apply desfaz? Marque todas as que se aplicam.",
+    "hint": "Kubernetes: Orquestração em Produção, aulas 7, 35, 38 e 39.",
+    "choices": [
+      {
+        "text": "`replicas` aumentado para 5 com `kubectl scale` num incidente",
+        "why": "O arquivo diz outra coisa, e o apply faz o objeto vivo bater com ele."
+      },
+      {
+        "text": "A imagem levada uma revisão para trás com `kubectl rollout undo`",
+        "why": "O repositório ainda nomeia a imagem mais nova, então o apply a traz de volta."
+      },
+      {
+        "text": "Um Deployment `debug` criado com `kubectl create`, fora dos arquivos",
+        "why": "O apply muda o que os arquivos descrevem e nunca apaga mais nada."
+      },
+      {
+        "text": "Um ConfigMap gerado antigo, que o overlay deixou de produzir",
+        "why": "O apply o deixa lá; removê-lo é um prune, que o apply puro não faz."
+      }
+    ]
+  },
+  "ex-m3gd1ct7": {
+    "prompt": "O CronJob `nightly` chamou de `nightly-29855110` o Job que iniciou para as 17:10 UTC de 6 de outubro de 2026. Que número vai no nome do Job que ele inicia para as 18:00 UTC do mesmo dia?",
+    "hint": "Kubernetes: Orquestração em Produção, aula 12."
+  },
+  "ex-m3pg5nbd": {
+    "prompt": "O valor de um Secret está só codificado. `kubectl get secret db -o jsonpath=\"{.data.password}\" | base64 ___` imprime a própria senha, sem chave nenhuma.",
+    "hint": "Kubernetes: Orquestração em Produção, aula 14.",
+    "blanks": [
+      {
+        "accept": [
+          "-d",
+          "--decode"
+        ]
+      }
+    ]
+  },
+  "ex-m6anrcsg": {
+    "prompt": "Antes de o pipeline depender da sua Role, isto pede ao autorizador um simples sim ou não: `kubectl auth ___ delete deployments -n shop --as=system:serviceaccount:shop:deployer`.",
+    "hint": "Kubernetes: Orquestração em Produção, aula 23.",
+    "blanks": [
+      {
+        "accept": [
+          "can-i"
+        ]
+      }
+    ]
+  },
+  "ex-mftaeaft": {
+    "prompt": "Um claim numa classe CSI que faz o vínculo no primeiro uso ganha um pod. Mais tarde o pod é apagado, e depois o claim, com reclaim policy `Delete`. Ponha as chamadas que o driver recebe na ordem.",
+    "hint": "Kubernetes: Orquestração em Produção, aula 27.",
+    "items": [
+      "`CreateVolume`, do `csi-provisioner`",
+      "`NodeStageVolume`, do kubelet",
+      "`NodePublishVolume`, do kubelet",
+      "`NodeUnpublishVolume`, do kubelet",
+      "`NodeUnstageVolume`, do kubelet",
+      "`DeleteVolume`, do `csi-provisioner`"
+    ],
+    "trap": "Desfazer o stage antes do publish, ou apagar antes de o nó terminar, quebra a regra de que desmontar é montar ao contrário."
+  },
+  "ex-mga88fw2": {
+    "prompt": "Cinco pods não sobem, e `kubectl get pods` mostra um status diferente para cada um. Ligue cada status ao primeiro lugar onde ler o motivo.",
+    "hint": "Kubernetes: Orquestração em Produção, aula 40.",
+    "pairs": [
+      {
+        "left": "`Pending`",
+        "right": "os eventos do scheduler"
+      },
+      {
+        "left": "`ErrImagePull`",
+        "right": "os eventos do pod, que citam a referência tentada"
+      },
+      {
+        "left": "`CreateContainerConfigError`",
+        "right": "a mensagem de espera no status do container"
+      },
+      {
+        "left": "`CrashLoopBackOff`",
+        "right": "os logs do container, com `--previous` depois de um reinício"
+      },
+      {
+        "left": "`Running`, mas `0/1` pronto",
+        "right": "os eventos `Unhealthy` da sonda"
+      }
+    ]
+  },
+  "ex-mq59t4ka": {
+    "prompt": "Cada linha abaixo foi impressa por um cliente no cluster do laptop. Ligue cada uma ao que ela significa.",
+    "hint": "Kubernetes: Orquestração em Produção, aulas 5, 15 e 24; Redes e Protocolos, aula 3.",
+    "pairs": [
+      {
+        "left": "`wget: download timed out`",
+        "right": "pacotes descartados sem resposta, como faz uma NetworkPolicy aplicada"
+      },
+      {
+        "left": "`wget: can't connect to remote host (10.96.250.86): Connection refused`",
+        "right": "um Service com a lista de endpoints vazia, respondido na hora com um reset"
+      },
+      {
+        "left": "`wget: bad address 'shop'`",
+        "right": "o nome nunca foi resolvido, então nem se tentou conexão"
+      },
+      {
+        "left": "`The connection to the server localhost:8080 was refused`",
+        "right": "o kubectl não tem contexto atual e caiu num padrão antigo"
+      }
+    ],
+    "right_distractors": [
+      "o certificado do API server venceu depois de um ano"
+    ]
+  },
+  "ex-n9zh5nbh": {
+    "prompt": "`~/iac-env.sh` exporta as quatro variáveis `AWS_` que apontam a AWS CLI para o moto. Num terminal novo a Ana roda `sh ~/iac-env.sh`, e em seguida `env | grep ^AWS_` não imprime nada. Nesse terminal, a linha que funciona é `___ ~/iac-env.sh`.",
+    "hint": "Infraestrutura como Código, aula 1; Linux e Linha de Comando, aula 9.",
+    "blanks": [
+      {
+        "accept": [
+          ".",
+          "source"
+        ]
+      }
+    ]
+  },
+  "ex-ncsyj5sw": {
+    "prompt": "O primeiro commit de um colega numa configuração Terraform nova traz `main.tf`, `versions.tf` e o diretório `.terraform/` inteiro, todos os 789M dele, e deixa de fora o `.terraform.lock.hcl`. O que esse commit deveria trazer?",
+    "hint": "Infraestrutura como Código, aula 2; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10.",
+    "choices": [
+      {
+        "text": "Tudo junto: os arquivos `.tf`, o `.terraform/` e o lock file",
+        "why": "O lock file vai para o Git; o diretório do provider é um download que o `init` repete, e são 789M em cada clone."
+      },
+      {
+        "text": "Os arquivos `.tf` e o lock file, com `.terraform/` no `.gitignore`",
+        "why": "O lock file fixa as versões dos providers em todo checkout, e o `init` reconstrói o `.terraform/` a partir dele."
+      },
+      {
+        "text": "Os arquivos `.tf` e o `.terraform/`, para ninguém precisar rodar `init` de novo",
+        "why": "O `.terraform/` guarda um provider baixado que o `init` busca de novo; como o `node_modules/`, fica fora do Git."
+      },
+      {
+        "text": "Os arquivos `.tf` sozinhos: o lock file e o `.terraform/` são reconstruídos",
+        "why": "Sem o lock file, duas pessoas rodando `init` com uma semana de diferença podem receber duas versões do provider."
+      }
+    ]
+  },
+  "ex-ndfp95zs": {
+    "prompt": "A variável `network` da Ana tem a regra `can(cidrsubnet(var.network.cidr, 8, 2))`, e a subnet `a` recebe `cidrsubnet(var.network.cidr, 8, 1)`. Um colega passa `cidr = \"10.20.0.0/20\"` para uma VPC menor. O que acontece?",
+    "hint": "Infraestrutura como Código, aula 3; Nuvem e Serverless, aula 6.",
+    "choices": [
+      {
+        "text": "A regra passa, e a subnet `a` fica com `10.20.1.0/24`, como era no /16",
+        "why": "O `newbits` é somado ao prefixo da própria VPC, então a mesma chamada sobre um /20 corta /28."
+      },
+      {
+        "text": "A regra passa, e depois o plan falha porque o netnum 1 não existe",
+        "why": "Um /20 cortado em oito bits dá 256 subnets, então os números 1 e 2 existem."
+      },
+      {
+        "text": "A regra passa, e a subnet `a` vira `10.20.0.16/28`, de 16 endereços",
+        "why": "Oito bits novos sobre um /20 dão /28; o número 1 é o segundo deles, e a regra só pergunta se o corte é possível."
+      },
+      {
+        "text": "A regra recusa, porque um /20 não tem mais espaço para subnets /24",
+        "why": "Um /20 comporta dezesseis /24, e a regra nem menciona /24: pergunta se mais oito bits cabem em 32."
+      }
+    ]
+  },
+  "ex-ndn46hw0": {
+    "prompt": "A Ana cria duas subnets com `for_each` e liga cada uma a uma route table com `for_each = toset(values(aws_subnet.app)[*].id)`. O primeiro plan para com `Invalid for_each argument`. O que está errado, e o que resolve?",
+    "hint": "Infraestrutura como Código, aula 4.",
+    "choices": [
+      {
+        "text": "O `for_each` recusa um set; passe a lista simples de ids das subnets",
+        "why": "O `for_each` aceita um mapa ou um set de strings. É a lista que ele recusa."
+      },
+      {
+        "text": "As associações rodam cedo demais; acrescente `depends_on = [aws_subnet.app]`",
+        "why": "A referência já ordena as duas. O problema é que as próprias chaves são desconhecidas durante o plan."
+      },
+      {
+        "text": "O `for_each` não lê atributos de outro recurso; troque por `count`",
+        "why": "O `count` tem a mesma regra, um número conhecido no plan, e traria de volta o problema do índice."
+      },
+      {
+        "text": "Chaves vêm de ids ainda desconhecidos; use `for_each = aws_subnet.app`",
+        "why": "As chaves precisam ser conhecidas no plan; as chaves do mapa de subnets são as que ela escreveu, e `each.value.id` leva o id."
+      }
+    ]
+  },
+  "ex-ndsjeeg5": {
+    "prompt": "A bucket policy da loja deixa a conta ler objetos só a partir das faixas em `office-cidrs.txt`: `203.0.113.0/28` e `198.51.100.32/29`. Contando todos os endereços dos dois blocos, quantos endereços de origem essa condição permite?",
+    "hint": "Infraestrutura como Código, aula 5; Nuvem e Serverless, aula 6.",
+    "unit": "endereços"
+  },
+  "ex-ngw4kxha": {
+    "prompt": "Um pull request de refatoração leva os buckets da loja para um módulo novo e, por engano, apaga o antigo bloco `assets`, o que tem `prevent_destroy = true`, sem escrevê-lo em nenhum outro lugar. O que o próximo plan faz?",
+    "hint": "Infraestrutura como Código, aula 6.",
+    "choices": [
+      {
+        "text": "Planeja destruir o bucket, sendo um recurso que saiu da configuração",
+        "why": "A configuração mora no bloco, então apagar o bloco apagou a proteção junto."
+      },
+      {
+        "text": "Para com `Instance cannot be destroyed`, como em todo plan que o apaga",
+        "why": "Essa recusa precisa do bloco no arquivo; sem o bloco, nada carrega o `prevent_destroy`."
+      },
+      {
+        "text": "Deixa o bucket em paz, porque o estado ainda registra a configuração",
+        "why": "O Terraform lê o `prevent_destroy` da configuração, e um recurso no estado que não está no arquivo é um que você quer remover."
+      },
+      {
+        "text": "Arquiva sozinho o bucket no endereço novo do módulo, mantendo o id",
+        "why": "O Terraform casa só por endereço; levar um recurso a um endereço novo exige um bloco `moved`."
+      }
+    ]
+  },
+  "ex-nhzv6q29": {
+    "prompt": "Dois applies contra o backend S3 da loja estão parados na pergunta de confirmação. Um é interrompido com Ctrl+C; o outro leva um `kill -9` quando o runner de CI é recolhido. Qual deles deixa para trás um objeto `.tflock` que bloqueia a próxima execução?",
+    "hint": "Infraestrutura como Código, aula 7; Linux e Linha de Comando, aula 6.",
+    "choices": [
+      {
+        "text": "Nenhum: o S3 apaga o objeto da trava quando o processo que o gravou some",
+        "why": "O S3 não sabe nada do processo; o objeto fica até alguém apagá-lo, e é para isso que existe o `force-unlock`."
+      },
+      {
+        "text": "O que foi morto: `SIGKILL` não é capturável, e a trava nunca é apagada",
+        "why": "Um processo não consegue limpar nada depois de um `KILL`, e o objeto da trava fica até o `force-unlock` removê-lo."
+      },
+      {
+        "text": "Os dois, já que uma trava só é liberada pelo `terraform force-unlock`",
+        "why": "Uma execução que termina normalmente, ou que é interrompida com Ctrl+C, remove a própria trava."
+      },
+      {
+        "text": "O interrompido, que guarda a trava para o caso de o apply ser retomado",
+        "why": "Ctrl+C manda `SIGINT`, que o Terraform trata, e ele remove a trava ao sair."
+      }
+    ]
+  },
+  "ex-nj4cwccm": {
+    "prompt": "O time de dados vai assumir o bucket `shop-logs-dev`, que hoje está no estado do app. Ponha os passos na ordem em que a aula os faz, para que o bucket nunca mude na AWS.",
+    "hint": "Infraestrutura como Código, aula 8.",
+    "items": [
+      "Apagar o bloco do bucket no app e acrescentar um bloco `removed` com `destroy = false`",
+      "Aplicar o app, para que o estado dele solte o bucket",
+      "Declarar o bucket e um bloco `import` na configuração do time de dados",
+      "Rodar o plan ali e não aceitar nada além de `1 to import, 0 to add, 0 to change, 0 to destroy`",
+      "Aplicar a configuração do time de dados"
+    ],
+    "trap": "Importar primeiro deixa o bucket em dois estados por um tempo, e o time que rodar o plan por último põe de volta a sua própria versão do bucket."
+  },
+  "ex-nvhv8263": {
+    "prompt": "A Ana salvou um plan no branch `change` para um colega revisar. Enquanto ele esperava, uma tag `Owner` urgente saiu de um branch chamado `hotfix`. Ponha os passos em ordem, do plan salvo até um apply que alguém de fato revisou.",
+    "hint": "Infraestrutura como Código, aula 9; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 6.",
+    "items": [
+      "Rodar `terraform plan -out=tfplan` no `change` e pedir a revisão",
+      "Aplicar a tag `Owner` a partir do `hotfix`, o que grava o estado",
+      "Ver o `terraform apply tfplan` recusar com `Saved plan is stale`",
+      "Atualizar o `change` com `git rebase hotfix`",
+      "Rodar o plan de novo com `-out=tfplan` e mandar o plan novo para revisão",
+      "Aplicar o `tfplan` novo"
+    ],
+    "trap": "Rodar o plan de novo antes do rebase lê arquivos sem o hotfix, e o plan novo tiraria a tag `Owner` outra vez."
+  },
+  "ex-pkkk47ga": {
+    "prompt": "Cada linha é o jeito como uma configuração nomeia o módulo de rede. Ligue cada uma ao que o próximo `terraform init` num checkout limpo instala.",
+    "hint": "Infraestrutura como Código, aula 10; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 7.",
+    "pairs": [
+      {
+        "left": "`source = \"./modules/network\"`",
+        "right": "o que os arquivos daquele diretório dizem agora"
+      },
+      {
+        "left": "uma origem Git com `?ref=main`",
+        "right": "o commit a que o branch tiver chegado naquele dia"
+      },
+      {
+        "left": "uma origem Git com `?ref=v1.0.0`",
+        "right": "um commit, enquanto ninguém mover a tag publicada"
+      },
+      {
+        "left": "uma origem Git com `?ref=` e o hash completo de um commit",
+        "right": "um commit que nenhum push consegue mover"
+      },
+      {
+        "left": "uma origem de registry com `version = \"~> 6.0\"`",
+        "right": "a 6.x mais nova que o registry lista naquele momento"
+      }
+    ],
+    "right_distractors": [
+      "a versão registrada no `.terraform.lock.hcl`"
+    ]
+  },
+  "ex-pksnbyke": {
+    "prompt": "Uma configuração guarda dev e prod em workspaces. Na manhã seguinte a um apply em prod, a Ana roda `terraform plan -var-file=dev.tfvars` para testar algo em dev. O plan substitui uma VPC cuja faixa vai de `10.20.0.0/16` para `10.21.0.0/16` e destrói uma subnet em `sa-east-1c`. O que aconteceu?",
+    "hint": "Infraestrutura como Código, aula 11.",
+    "choices": [
+      {
+        "text": "Os dois arquivos `.tfvars` gravam numa key só, e cada plan troca as redes",
+        "why": "Com workspaces cada um tem a sua key, `env:/dev/…` e `env:/prod/…`; os valores encontraram a errada."
+      },
+      {
+        "text": "Alguém editou a VPC de dev à mão, e o plan está desfazendo o drift",
+        "why": "Desfazer drift põe os valores do arquivo de volta na mesma rede; aqui a faixa de dev está substituindo a de prod."
+      },
+      {
+        "text": "O `prod` seguia selecionado, e os valores de dev foram ao estado de prod",
+        "why": "A seleção mora em `.terraform/environment`, e nada na tela a mostrava."
+      },
+      {
+        "text": "O estado de dev se perdeu durante a noite, e o Terraform refaz dev do zero",
+        "why": "Um estado vazio planeja só criações; substituir uma VPC 10.20 quer dizer que o plan leu um estado com a rede de prod."
+      }
+    ]
+  },
+  "ex-pnvjrn42": {
+    "prompt": "Semanas atrás um `git add .` fez commit do `terraform.tfvars` com a senha do banco de dados dentro, e o repositório já foi enviado desde então. A Ana roda `git rm --cached terraform.tfvars`, acrescenta `*.tfvars` ao `.gitignore` e faz commit. O que falta fazer?",
+    "hint": "Infraestrutura como Código, aula 12; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10.",
+    "choices": [
+      {
+        "text": "Nada: o commit novo tirou o arquivo do histórico do repositório",
+        "why": "Ele tirou o arquivo dos commits seguintes; um `git show` do commit antigo ainda imprime a senha."
+      },
+      {
+        "text": "Marcar a variável com `sensitive = true`, para o commit antigo esconder o valor",
+        "why": "O `sensitive` só impede o Terraform de imprimir um valor, e não muda nada do que já está no Git."
+      },
+      {
+        "text": "Apagar também o `terraform.tfvars` do disco, porque o Git ainda o rastreia",
+        "why": "Depois do `git rm --cached` e da linha no ignore, o arquivo no disco não é rastreado; a cópia que importa é o commit antigo."
+      },
+      {
+        "text": "Trocar o segredo e tratar o valor vazado como público daqui em diante",
+        "why": "O primeiro commit continua levando o arquivo em todo clone; só um valor novo torna essa cópia inútil."
+      }
+    ]
+  },
+  "ex-psck19ht": {
+    "prompt": "Num pipeline, a Ana quer que o degrau de formatação falhe em vez de reescrever arquivos: `terraform fmt ___ -recursive` não muda nada e sai com status diferente de zero quando algum arquivo mudaria, e esse status para o job.",
+    "hint": "Infraestrutura como Código, aula 13; Linux e Linha de Comando, aula 6.",
+    "blanks": [
+      {
+        "accept": [
+          "-check"
+        ]
+      }
+    ]
+  },
+  "ex-pxr75t94": {
+    "prompt": "Um revisor pede que a faixa da regra de SSH vire `var.admin_cidr`, uma variável sem default. Depois da mudança, Checkov e Trivy aprovam a regra, enquanto o `maintenance.tfvars` define `admin_cidr = \"0.0.0.0/0\"`. Como a aula pega isso?",
+    "hint": "Infraestrutura como Código, aula 14.",
+    "choices": [
+      {
+        "text": "Varrendo o JSON do plan salvo, no qual `cidr_ipv4` já tem o valor do arquivo",
+        "why": "Um plan preenche todas as variáveis, e aí o Checkov reprova `CKV_AWS_24` no mesmo código."
+      },
+      {
+        "text": "Rodando o Checkov com `--hard-fail-on HIGH`, para o achado quebrar o build",
+        "why": "Sem uma chave da Prisma Cloud nenhum achado do Checkov tem severidade, então esse gate aprova tudo."
+      },
+      {
+        "text": "Pondo o tfsec no pipeline, que lê os arquivos `.tfvars` por conta própria",
+        "why": "O tfsec não conhece `aws_vpc_security_group_ingress_rule`, então não diz nada sobre essa regra."
+      },
+      {
+        "text": "Não pega: um scanner lê arquivos, e o valor fica fora do alcance dele",
+        "why": "O plan tem os valores, e o Checkov lê o JSON de um plan como um framework próprio."
+      }
+    ]
+  },
+  "ex-pxv8e3st": {
+    "prompt": "O pipeline da aula entra na AWS por dois roles, `shop-plan` e `shop-apply`, e não guarda access key em lugar nenhum. Quais afirmações sobre eles valem? Escolha todas as que se aplicam.",
+    "hint": "Infraestrutura como Código, aula 15; Nuvem e Serverless, aula 7.",
+    "choices": [
+      {
+        "text": "O role de plan precisa conseguir gravar um objeto, o `.tflock` do estado",
+        "why": "Um plan também trava o estado, então um role que não grava essa key não consegue rodar o plan."
+      },
+      {
+        "text": "O role de apply confia só em jobs no environment `production` aprovado",
+        "why": "A trust policy dele casa essa claim, então a aprovação e o direito de gravar são o mesmo portão."
+      },
+      {
+        "text": "O role de plan pode ter acesso de escrita também, já que um plan não muda nada",
+        "why": "Um plan roda código do pull request, como um data source `external`, com as credenciais desse role."
+      },
+      {
+        "text": "O par de chaves de cada role fica nos secrets do repositório e é trocado à mão",
+        "why": "Cada job recebe um token assinado e credenciais de vida curta para o role; nada secreto fica guardado."
+      }
+    ]
+  },
+  "ex-q7wb7s53": {
+    "prompt": "O budget da loja conta só gastos com a tag `Project = shop`, que o `default_tags` põe em tudo o que a configuração cria. O Bruno criou à mão um volume de 100 GB para uma exportação e se esqueceu dele. Qual afirmação está certa?",
+    "hint": "Infraestrutura como Código, aula 16; Nuvem e Serverless, aula 10.",
+    "choices": [
+      {
+        "text": "O budget passa a contá-lo quando `Project` for ativada no faturamento",
+        "why": "Ativar faz uma tag contar na fatura; um volume que não leva tag continua sem nada para contar."
+      },
+      {
+        "text": "O budget não o vê; uma busca por recursos sem tag em cada serviço o acha",
+        "why": "Ele não tem tag nenhuma, então um filtro por tag não o conta, e só uma busca pelo que não tem tags o encontra."
+      },
+      {
+        "text": "O budget o conta, porque o `default_tags` alcança todo recurso da conta",
+        "why": "O `default_tags` alcança só o que este provider cria por esta configuração; um volume feito à mão não recebe nada."
+      },
+      {
+        "text": "A API de tagging o lista entre os volumes, então uma busca ali o encontra",
+        "why": "A API de tagging responde a partir das tags, e esse volume não tem nenhuma, então ela não devolve nada."
+      }
+    ]
+  },
+  "ex-qvth5k0r": {
+    "prompt": "Uma stack do CloudFormation está sendo criada, e a API recusa um dos recursos no meio do caminho. Em que esse fim difere de um apply do Terraform que falha do mesmo jeito?",
+    "hint": "Infraestrutura como Código, aula 17.",
+    "choices": [
+      {
+        "text": "Os dois desfazem tudo, porque tratam uma execução como transação",
+        "why": "O Terraform não consegue: cada recurso é uma chamada de API própria, e o que deu certo fica no estado."
+      },
+      {
+        "text": "O Terraform desfaz o que criou; a stack guarda tudo para depois",
+        "why": "É o contrário: a stack desfaz, e o Terraform mantém a metade que deu certo."
+      },
+      {
+        "text": "A stack desfaz o que criou; o Terraform mantém o que deu certo",
+        "why": "O CloudFormation desfaz uma criação que falhou, e o Terraform termina o resto no próximo apply."
+      },
+      {
+        "text": "Os dois mantêm o que deu certo, e o próximo deploy ou apply faz o resto",
+        "why": "Esse é o hábito do Terraform; o CloudFormation desfaz uma criação que falhou."
+      }
+    ]
+  },
+  "ex-r198gwnf": {
+    "prompt": "`ansible web1 -m command -a \"dpkg -l | grep -c ^ii\"` falha, com o `dpkg-query` dizendo que nenhum pacote casa com `|`, `-c` e `^ii`. Rodada com `-m shell` contra os dois servidores web, a mesma linha imprime `193` para cada um. Por que a diferença?",
+    "hint": "Infraestrutura como Código, aula 18; Linux e Linha de Comando, aula 8.",
+    "choices": [
+      {
+        "text": "O `command` precisa de `--become` para ler a lista de pacotes, e o `shell` não",
+        "why": "O `dpkg -l` lê como qualquer usuário; um erro que trata `|` e `-c` como pacotes é problema de interpretação."
+      },
+      {
+        "text": "Falta o `grep` no `web1`, e o módulo `shell` leva uma cópia própria",
+        "why": "O `grep` está instalado; o `dpkg` até listou o pacote `grep` quando recebeu essa palavra."
+      },
+      {
+        "text": "O `command` informa CHANGED a cada vez, e o Ansible conta isso como falha",
+        "why": "Informar CHANGED é outra história; esta tarefa falhou porque o `dpkg` recebeu os argumentos errados."
+      },
+      {
+        "text": "O `command` roda sem shell, então o pipe chega ao `dpkg` como argumentos",
+        "why": "Quem monta um pipe é um shell; o módulo `shell` põe `/bin/sh` na frente, e a linha quer dizer o que diz."
+      }
+    ]
+  },
+  "ex-r3fcjez5": {
+    "prompt": "Às 03:40 a pessoa de plantão encerra uma queda editando à mão a configuração do nginx num servidor web, e não escreve nada em descrição nenhuma. Quais afirmações valem? Escolha todas as que se aplicam.",
+    "hint": "Infraestrutura como Código, aula 19.",
+    "choices": [
+      {
+        "text": "Com um agente Puppet no padrão, a edição é desfeita em até meia hora",
+        "why": "O `runinterval` é de 1800 segundos; a próxima execução acha uma diferença e grava o arquivo como descrito."
+      },
+      {
+        "text": "Com o Ansible rodado de um laptop, a edição fica até o playbook rodar de novo",
+        "why": "Com push, nada compara a máquina até a próxima execução, que pode ser amanhã ou nunca."
+      },
+      {
+        "text": "Um agente Puppet mantém a edição, porque distingue a correção de um engano",
+        "why": "Ele desfaz as duas com a mesma confiança, porque não tem como distinguir uma da outra."
+      },
+      {
+        "text": "Um agente só regrava o arquivo se a descrição mudou desde a última execução",
+        "why": "Toda execução compara a máquina com a descrição, então uma edição à mão já é uma diferença."
+      }
+    ]
+  },
+  "ex-rd9y6dj0": {
+    "prompt": "Um container roda a partir de `shop-web:1.2.0`, e alguém corrige a página com `docker exec`, gravando em `/var/www/html/index.html`; o `curl` mostra a correção. Mais tarde o container é removido e iniciado de novo a partir da mesma imagem. O que o `curl` mostra, e onde a correção deveria ter ido?",
+    "hint": "Infraestrutura como Código, aula 20; Docker e Containers, aula 7.",
+    "choices": [
+      {
+        "text": "A página da própria imagem; a correção vai no template, como versão nova",
+        "why": "A edição vivia na camada gravável do container, que foi embora com ele."
+      },
+      {
+        "text": "A página corrigida, já que o `docker exec` gravou na imagem de onde ele veio",
+        "why": "O `exec` grava na camada do próprio container; a imagem fica exatamente como foi construída."
+      },
+      {
+        "text": "A página corrigida, desde que o container novo receba o mesmo nome",
+        "why": "Um nome não traz uma camada de volta; o `docker run` criou um container novo em folha."
+      },
+      {
+        "text": "Página nenhuma, porque remover o container apagou os arquivos da imagem",
+        "why": "A remoção apaga só a camada do container, e um container novo é a imagem de novo."
+      }
+    ]
+  }
+}
