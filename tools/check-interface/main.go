@@ -285,6 +285,30 @@ func saidIn(source string) []string {
 	return out
 }
 
+/*
+typesDeclared is the question types a module of `app/exercises/` draws.
+
+	THEY ARE SAID, AND NO `txt()` CALL SHOWS IT. The paper heads every question
+	with its type, `txt(ex.type)` in `exercises/index.js`, and an argument that
+	is a variable is invisible to `saidIn` by design. So `cloze`, `numeric` and
+	`labelling` reached a Portuguese exam as CLOZE, NUMERIC and LABELLING for as
+	long as they had existed, beside seven types that were translated because
+	they came with the copied client's dictionary. A track-exam walk found it by
+	looking at the screen. The list a module declares in `types: [...]` is the
+	list `index.js` can be handed, so it is what gets asked about.
+*/
+var typesList = regexp.MustCompile(`\btypes:\s*\[([^\]]*)\]`)
+
+func typesDeclared(source string) []string {
+	var out []string
+	for _, m := range typesList.FindAllStringSubmatch(withoutComments(source), -1) {
+		for _, quoted := range oneLiteral.FindAllString(m[1], -1) {
+			out = append(out, unescape(quoted[1:len(quoted)-1]))
+		}
+	}
+	return out
+}
+
 func stringsSaid(dir string) ([]string, error) {
 	found := map[string]bool{}
 
@@ -324,6 +348,11 @@ func stringsSaid(dir string) ([]string, error) {
 		}
 		for _, s := range saidIn(string(body)) {
 			found[s] = true
+		}
+		if filepath.Base(filepath.Dir(path)) == "exercises" {
+			for _, s := range typesDeclared(string(body)) {
+				found[s] = true
+			}
 		}
 	}
 
