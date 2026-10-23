@@ -1,0 +1,839 @@
+{
+  "ex-qz7kmn9y": {
+    "prompt": "As duas cópias da livraria guardam, cada uma, a tabela de sessões na própria memória, atrás do upstream do Nginx em round robin. Os clientes são deslogados ao acaso, no meio de uma cesta. O que está acontecendo, e para onde os dois cursos mandam a tabela?",
+    "hint": "Fundamentos da Web e Internet, aula 7; Servidores Web e Cache, aula 2.",
+    "choices": [
+      {
+        "text": "O cookie não tem o atributo `Domain`, então o navegador não o manda para a porta da segunda cópia.",
+        "why": "O navegador só fala com o Nginx, num nome e numa porta, e o cookie chega a qualquer cópia que o Nginx escolher."
+      },
+      {
+        "text": "O defeito é o round robin, e `hash $remote_addr` resolve de vez: cada visitante cai sempre na própria cópia.",
+        "why": "Afinidade é um paliativo: um escritório atrás de um endereço cai numa cópia só, e uma cópia que para leva as sessões junto."
+      },
+      {
+        "text": "Metade das requisições cai numa cópia que não viu a sessão; ponha a tabela no Redis, que as duas alcançam.",
+        "why": "Isso."
+      },
+      {
+        "text": "`SameSite=Lax` tira o cookie das requisições que o Nginx repassa, então a cópia atrás dele não vê ninguém logado.",
+        "why": "`SameSite` trata de qual site causou a requisição; um proxy que repassa o cabeçalho `Cookie` não é outro site."
+      }
+    ]
+  },
+  "ex-y5pkvqcm": {
+    "prompt": "Para poupar processador, um colega quer trocar o Nginx na frente da livraria por um balanceador de carga que lê só até a camada 4. Hoje o Nginx serve ele mesmo os arquivos de `/var/www/ipe` e manda `location /api/` para as duas cópias da loja. O que a troca perderia?",
+    "hint": "Fundamentos da Web e Internet, aula 5; Servidores Web e Cache, aula 2.",
+    "choices": [
+      {
+        "text": "A divisão por caminho: a caixa vê uma conexão para a porta 443 e nada da URL lá dentro, e `/api/` parece `/css/`.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada no roteamento: uma caixa de camada 4 ainda lê o caminho de cada requisição, então só a escolha do site pelo `Host` se perderia.",
+        "why": "A camada 4 para na porta; o caminho está dentro da requisição, que uma caixa dessas nunca lê."
+      },
+      {
+        "text": "Só a compressão, já que o gzip pertence à camada 6 e a caixa trabalha abaixo dela.",
+        "why": "A compressão iria embora, e a divisão por caminho também, que é o que manda `/api/` para a loja."
+      },
+      {
+        "text": "Nada, se a caixa receber o certificado: tê-lo é o que deixa a camada 4 ler caminhos.",
+        "why": "Decifrar e ler a requisição, com o certificado na mão, é o que faz um balanceador de camada 7."
+      }
+    ]
+  },
+  "ex-mcb1jfzr": {
+    "prompt": "O certificado curinga da loja, `*.ipelivros.example`, é renovado por um plugin de DNS-01 com credenciais de API do provedor de DNS antigo. No mês passado, os registros `NS` do domínio passaram a apontar para um provedor novo. Agora a renovação falha, embora o plugin registre que criou o registro TXT `_acme-challenge`. Por quê?",
+    "hint": "Fundamentos da Web e Internet, aula 8; Servidores Web e Cache, aula 3.",
+    "choices": [
+      {
+        "text": "O DNS-01 é verificado pela porta 80, e o redirecionamento para HTTPS agora engole a requisição.",
+        "why": "Esse é o HTTP-01; o DNS-01 é verificado no DNS, e é por isso que funciona numa máquina que ninguém alcança."
+      },
+      {
+        "text": "Um curinga não sai de DNS-01, então cada subdomínio precisa de um token de HTTP-01 só seu.",
+        "why": "É o contrário: o DNS-01 é o único desafio que consegue emitir um curinga."
+      },
+      {
+        "text": "O novo registro TXT ainda está se propagando, e pode levar quarenta e oito horas para chegar à CA.",
+        "why": "Nada se propaga, e nenhum TTL ajuda um registro guardado em servidores que ninguém mais consulta."
+      },
+      {
+        "text": "Foi parar em servidores que ninguém mais consulta; a CA pergunta aos que o `NS` nomeia.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-2cgx0ges": {
+    "prompt": "No servidor do laboratório, `sudo ss -ltn` lista `0.0.0.0:443`, `0.0.0.0:80`, `127.0.0.1:14000` e `127.0.0.1:8001`, entre outros, e não há firewall ligado. O notebook de um colega, na mesma rede, tenta cada um deles. Quais ele alcança? Marque todas as que se aplicam.",
+    "hint": "Fundamentos da Web e Internet, aula 4; Servidores Web e Cache, aula 4.",
+    "choices": [
+      {
+        "text": "A loja, em `127.0.0.1:8001`",
+        "why": "O loopback nunca chega à placa de rede: só a própria máquina pergunta, e é por isso que se chega à loja pelo Nginx."
+      },
+      {
+        "text": "O Nginx, em `0.0.0.0:443`",
+        "why": "`0.0.0.0` é todo endereço que a máquina tem, inclusive o da rede do escritório."
+      },
+      {
+        "text": "A API ACME do Pebble, em `127.0.0.1:14000`",
+        "why": "`127.0.0.1` é a máquina falando consigo mesma; nada de fora consegue se conectar ali."
+      },
+      {
+        "text": "O Nginx, em `0.0.0.0:80`",
+        "why": "Isso: escuta em todos os endereços, então a requisição do notebook na porta 80 chega."
+      }
+    ]
+  },
+  "ex-kscamq0w": {
+    "prompt": "No relógio do handshake do curso de fundamentos, um navegador e um servidor estão a 150 milissegundos um do outro, em cada sentido. O curso de servidores diz que, sem `keepalive` no upstream, o Nginx paga esse mesmo handshake antes de cada requisição que repassa à aplicação. Nesse relógio, quantos milissegundos passam entre a saída do SYN e a saída da própria requisição, junto com o ACK?",
+    "hint": "Fundamentos da Web e Internet, aula 2; Servidores Web e Cache, aula 2."
+  },
+  "ex-jgw7cmf6": {
+    "prompt": "Leitores em Lisboa dizem que a livraria, servida de São Paulo, leva mais de um segundo para mostrar a primeira página, e a maior parte desse segundo é ida e volta. O dono propõe dobrar a largura de banda do servidor. O que dizem os dois cursos?",
+    "hint": "Fundamentos da Web e Internet, aula 3; Servidores Web e Cache, aula 7.",
+    "choices": [
+      {
+        "text": "Corta a espera pela metade, porque cada ida e volta passa a levar o dobro de bytes de uma vez.",
+        "why": "Um cano mais largo leva mais coisa lado a lado; nada chega antes, e essas idas e voltas carregam quase nada."
+      },
+      {
+        "text": "Não mexe na parte lenta: o oceano fixa cada ida e volta, e uma borda em Lisboa tira a travessia dos arquivos que guarda.",
+        "why": "Isso."
+      },
+      {
+        "text": "Ligue o `gzip_types` no lugar: um terço dos bytes é um terço da espera.",
+        "why": "A compressão encolhe a transferência, a parte que já era curta; as idas e voltas continuam do tamanho que a distância impõe."
+      },
+      {
+        "text": "Ponha uma CDN na frente, e a cesta do cliente logado acelera tanto quanto a folha de estilo.",
+        "why": "Uma página pessoal não pode ser guardada na borda, então a requisição dela ainda atravessa o oceano até a origem."
+      }
+    ]
+  },
+  "ex-w01cv938": {
+    "prompt": "A loja passa a informar falhas como `200 OK` com `{\"error\": \"database unavailable\"}` no corpo, sob o `Cache-Control: public, max-age=60` de sempre. O Nginx faz cache de `/api/` com `proxy_cache_use_stale error timeout http_500 http_502 http_503 http_504`. O que dá errado? Marque todas as que se aplicam.",
+    "hint": "Fundamentos da Web e Internet, aula 6; Servidores Web e Cache, aula 6.",
+    "choices": [
+      {
+        "text": "O Nginx transforma a resposta num `502`, porque o corpo contradiz a linha de status.",
+        "why": "`502` quer dizer que a aplicação mandou algo que não é HTTP; um `200` bem formado passa, diga o corpo o que disser."
+      },
+      {
+        "text": "O erro é guardado como qualquer resposta e entregue a todo visitante durante o minuto seguinte.",
+        "why": "Isso: o cache guarda a falha sob o endereço, porque o número disse que deu certo."
+      },
+      {
+        "text": "A cópia boa de antes da pane nunca é usada, porque o Nginx vê um sucesso e nenhuma das falhas da lista.",
+        "why": "Isso: a cópia vencida é um recurso para erros, e todos os que ele conhece são códigos de status."
+      },
+      {
+        "text": "O `X-Cache-Status` mostra `STALE`, então ao menos a falha aparece nos cabeçalhos.",
+        "why": "`STALE` quer dizer que uma cópia vencida foi servida no lugar de um erro; aqui o Nginx recebeu um sucesso novo e o guardou, `MISS` e depois `HIT`."
+      }
+    ]
+  },
+  "ex-t19gx4b6": {
+    "prompt": "Dentro de `location /api/`, um primeiro proxy é escrito `proxy_pass http://127.0.0.1:8001/;`, com uma barra depois da porta. Um navegador pede `/api/books/3`, e a loja recebe o caminho `___`.",
+    "hint": "Servidores Web e Cache, aula 2.",
+    "blanks": [
+      {
+        "accept": [
+          "/books/3",
+          "books/3"
+        ]
+      }
+    ]
+  },
+  "ex-p077xd0y": {
+    "prompt": "No primeiro dia da loja em HTTPS, antes de qualquer renovação ter rodado, alguém manda `Strict-Transport-Security: max-age=31536000; includeSubDomains`. Um mês depois, `promo.ipelivros.example`, que uma agência mantém em HTTP puro, não abre para ninguém que tinha visitado a loja. O que a aula 4 aconselhava?",
+    "hint": "Servidores Web e Cache, aula 4.",
+    "choices": [
+      {
+        "text": "Nada de antemão: tirar o cabeçalho agora apaga a regra na próxima visita de cada navegador.",
+        "why": "Depois que um navegador viu o cabeçalho, nada que mude no servidor o remove antes de o `max-age` acabar."
+      },
+      {
+        "text": "Mandar o cabeçalho também no redirecionamento da porta 80, para os navegadores o aprenderem antes de chegar ao HTTPS.",
+        "why": "O navegador ignora HSTS recebido por HTTP puro, porque qualquer um no caminho poderia tê-lo acrescentado."
+      },
+      {
+        "text": "Começar com uma hora, alongar quando o certificado se renovar sozinho, e incluir os subdomínios com todos em HTTPS.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada: `includeSubDomains` só alcança os nomes que o mesmo Nginx serve.",
+        "why": "Ele cobre todo nome abaixo deste, inclusive os que outra equipe mantém em outro lugar."
+      }
+    ]
+  },
+  "ex-tmm3t6sd": {
+    "prompt": "Consultada direto, sem o cache, cada requisição à loja espera 120 ms pela consulta, e a aula 5 põe o teto, com dez de cada vez, em cerca de 80 requisições por segundo. Pelo mesmo raciocínio, qual é o teto, em requisições por segundo, com 30 requisições em andamento, cada uma ainda esperando 120 ms?",
+    "hint": "Servidores Web e Cache, aula 5; Fundamentos da Web e Internet, aula 1."
+  },
+  "ex-1yvhkx8k": {
+    "prompt": "O dono baixa um preço e apaga a cópia, e mesmo assim o cache termina guardando o preço velho por um tempo de vida inteiro. Ponha os eventos da corrida da aula 6 na ordem em que aconteceram.",
+    "hint": "Servidores Web e Cache, aula 6.",
+    "items": [
+      "A requisição de um visitante erra o cache",
+      "Essa requisição lê 8.990 do banco",
+      "A atualização do dono grava 7.990 no banco",
+      "A atualização apaga a cópia, que ainda não está lá",
+      "A requisição lenta guarda 8.990, fresco por mais sessenta segundos"
+    ],
+    "trap": "A ordem tentadora põe a remoção por último, como a correção que ela devia ser; ela chegou antes de a leitura lenta guardar a cópia, e é por isso que não removeu nada."
+  },
+  "ex-sj8dctc0": {
+    "prompt": "A livraria passa para trás de uma CDN comercial, configurada para chegar à origem por HTTP puro porque era a opção mais rápida de ligar. Os visitantes continuam vendo um cadeado válido. O que esse cadeado descreve?",
+    "hint": "Servidores Web e Cache, aula 7; Fundamentos da Web e Internet, aula 9.",
+    "choices": [
+      {
+        "text": "Só o trecho até a borda; o trecho até a origem atravessa uma rede às claras.",
+        "why": "Isso."
+      },
+      {
+        "text": "O caminho todo, porque a borda reaproveita a conexão cifrada do visitante a caminho da origem.",
+        "why": "A borda encerra a conexão do visitante e abre uma segunda, que nessa configuração é pura."
+      },
+      {
+        "text": "O caminho todo, desde que a origem só escute em `127.0.0.1`, como a do laboratório.",
+        "why": "A borda e a origem do laboratório dividiam uma máquina; uma origem real é alcançada por redes que a CDN não controla."
+      },
+      {
+        "text": "A borda e a origem por igual, já que a CDN obteve o certificado do domínio por ACME.",
+        "why": "Quem obteve o certificado não diz nada do segundo trecho; o cadeado descreve o trecho que o navegador fez."
+      }
+    ]
+  },
+  "ex-vvmrns7q": {
+    "prompt": "A loja leva as linhas de sessão, a tabela por trás do cookie, para o Redis que guarda o JSON dos livros, configurado como cache: `maxmemory` definido e `maxmemory-policy allkeys-lru`. O tráfego cresce e a memória enche. O que acontece com as sessões?",
+    "hint": "Servidores Web e Cache, aula 8; Fundamentos da Web e Internet, aula 7.",
+    "choices": [
+      {
+        "text": "Novos logins falham com `OOM command not allowed`, e as sessões que já existem ficam.",
+        "why": "Isso é o `noeviction`; com `allkeys-lru` toda gravação passa e as chaves mais antigas abrem espaço."
+      },
+      {
+        "text": "Ficam a salvo, já que só chaves sem tempo de vida são despejadas e toda sessão tem um.",
+        "why": "`allkeys` quer dizer qualquer chave; são as políticas `volatile` que olham só chaves com tempo de vida, e elas escolheriam as sessões."
+      },
+      {
+        "text": "As sessões despejadas vão antes para o `dump.rdb` e voltam no próximo reinício.",
+        "why": "Despejar é apagar; um snapshot guarda só o que estava na memória no momento em que foi tirado."
+      },
+      {
+        "text": "Sessões paradas somem como qualquer livro em cache, e o visitante é deslogado cedo.",
+        "why": "Isso. Um cache pode esquecer e uma tabela de sessões não pode: dê a cada um o próprio Redis."
+      }
+    ]
+  },
+  "ex-vjjch57d": {
+    "prompt": "Em 2018, servidores Memcached abertos inundaram terceiros por UDP com respostas milhares de vezes maiores que as pequenas requisições forjadas que as causaram. Por que o mesmo truque não funciona contra um Memcached que só fala TCP?",
+    "hint": "Servidores Web e Cache, aula 9; Fundamentos da Web e Internet, aula 2.",
+    "choices": [
+      {
+        "text": "O TCP numera os bytes, então o Memcached percebe que os bytes de uma requisição forjada estão fora de ordem.",
+        "why": "A numeração põe um fluxo de volta em ordem; não diz nada sobre quem o mandou."
+      },
+      {
+        "text": "Antes de qualquer dado, o TCP responde a um SYN com um SYN-ACK, que vai para o endereço forjado; a requisição nunca vem.",
+        "why": "Isso."
+      },
+      {
+        "text": "O TCP desacelera quando vê perda, então uma resposta tão grande é freada antes de causar dano.",
+        "why": "Desacelerar divide um enlace congestionado; não impede uma resposta grande de chegar a quem a requisição nomeou."
+      },
+      {
+        "text": "Por TCP, o Memcached recusa qualquer valor acima de um megabyte, então as respostas ficam pequenas.",
+        "why": "O limite de um megabyte é por valor e vale seja como for que a requisição chegue; um megabyte ainda é enorme perto de uma requisição pequena."
+      }
+    ]
+  },
+  "ex-wp423rjf": {
+    "prompt": "Associe cada tipo de dado ao padrão de cache que a tabela da aula 10 recomenda para ele.",
+    "hint": "Servidores Web e Cache, aula 10.",
+    "pairs": [
+      {
+        "left": "Contadores de visualização e curtidas, muitas gravações baratas",
+        "right": "write-behind"
+      },
+      {
+        "left": "Valores lidos logo depois de mudar",
+        "right": "write-through"
+      },
+      {
+        "left": "Dados gravados uma vez e lidos raramente",
+        "right": "write-around"
+      },
+      {
+        "left": "A maioria das leituras da maioria dos dados",
+        "right": "cache-aside"
+      }
+    ],
+    "right_distractors": [
+      "read-through"
+    ]
+  },
+  "ex-x0m2831e": {
+    "prompt": "Pela conta da aula 11, uma página lida 500 vezes por segundo, cuja consulta leva 120 ms, manda cerca de 60 consultas idênticas no instante em que a chave vence. Uma página lida 2.000 vezes por segundo, cuja consulta leva 50 ms, manda cerca de quantas?",
+    "hint": "Servidores Web e Cache, aula 11."
+  },
+  "ex-tzvravab": {
+    "prompt": "A execução 2 do CI do laboratório falhou nas seis células: Ana tinha feito commit de `tests/test_carriers.py`, e o laptop dela ainda mostra `?? tests/data/carriers.csv`. Qual destas opções coloca o CSV no commit que a próxima execução vai fazer checkout?",
+    "hint": "Testes Automatizados e CI/CD, aula 5; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 2.",
+    "choices": [
+      {
+        "text": "`git commit -am` com uma mensagem, já que `-a` prepara as mudanças da pasta.",
+        "why": "`-a` só prepara arquivos que o git já rastreia; um arquivo marcado `??` fica fora do commit."
+      },
+      {
+        "text": "`git add` no CSV, depois um commit e um push: arquivo novo pede o próprio add.",
+        "why": "Isso."
+      },
+      {
+        "text": "Fazer push de novo como está: o checkout limpo do hook copia os arquivos do laptop.",
+        "why": "O checkout é o `git archive` do commit enviado, e nele só está o que entrou em commit."
+      },
+      {
+        "text": "Pôr `tests/data/` no `.gitignore`, para o git parar de listar o arquivo como não rastreado.",
+        "why": "Ignorar esconde o `??` e deixa o arquivo fora de todo commit, que é justamente a falha."
+      }
+    ]
+  },
+  "ex-kvw4vv7b": {
+    "prompt": "Depois de criar a tag `v1.4.0`, Ana faz commit de mais uma mudança e roda `ops/build.sh` sem criar outra tag. `git describe --tags` imprime `v1.4.0-1-g7c77050`. Que nome o build dá ao artefato?",
+    "hint": "Testes Automatizados e CI/CD, aula 7; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 7.",
+    "choices": [
+      {
+        "text": "`shipquote-dev-7c77050`: não há tag nesse commit, então o nome vem do commit.",
+        "why": "Isso."
+      },
+      {
+        "text": "`shipquote-1.4.0`: a tag mais nova no histórico que leva até aqui ainda é `v1.4.0`.",
+        "why": "Uma tag não anda com os commits novos; `v1.4.0` nomeia o commit anterior, e o build só usa uma tag no próprio HEAD."
+      },
+      {
+        "text": "`shipquote-1.4.1`: um commit feito depois de uma versão sobe o patch em um.",
+        "why": "Nada sobe uma versão sozinho; a versão é a tag do commit, e aqui não há nenhuma."
+      },
+      {
+        "text": "Um erro: `ops/build.sh` se recusa a construir um commit sem tag própria.",
+        "why": "Ele constrói, e dá ao resultado um nome que não pode se passar por versão publicada."
+      }
+    ]
+  },
+  "ex-3k4vndhc": {
+    "prompt": "A execução 4 deixou a `main` vermelha no commit `1247039`. Ana roda `git revert --no-edit HEAD`, faz push, e a execução 5 passa em `b33d78b`. O que o histórico da `main` contém agora?",
+    "hint": "Testes Automatizados e CI/CD, aula 5; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 4.",
+    "choices": [
+      {
+        "text": "`6b77129` de novo no topo: o revert levou a `main` de volta ao commit anterior.",
+        "why": "Isso é o que `git reset` faz; um revert acrescenta um commit e não leva nada de volta."
+      },
+      {
+        "text": "`b33d78b` no lugar de `1247039`, que o revert trocou por uma cópia corrigida.",
+        "why": "Um revert não substitui nada; trocar o último commit por um novo é o que `--amend` faz."
+      },
+      {
+        "text": "`1247039` e, em cima dele, `b33d78b`, um commit novo que faz o contrário.",
+        "why": "Isso."
+      },
+      {
+        "text": "`1247039` sozinho, com a mudança desfeita dentro dele, sem commit novo.",
+        "why": "Um commit nunca é editado no lugar: o id cobre o conteúdo, então qualquer mudança é um commit novo."
+      }
+    ]
+  },
+  "ex-x3kbv2a9": {
+    "prompt": "O hook `post-receive` do laboratório deu a execução 4 como falha, e o commit quebrado foi parar na `main` mesmo assim. Num serviço de hospedagem, o que o teria barrado?",
+    "hint": "Testes Automatizados e CI/CD, aula 5; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 8.",
+    "choices": [
+      {
+        "text": "`set -e` no topo do hook, para a primeira célula que falha recusar o push.",
+        "why": "O hook roda depois que o git aceitou o push; nada que ele faça nessa hora consegue recusá-lo."
+      },
+      {
+        "text": "Um pull request para uma `main` protegida, com checks que precisam passar antes do merge.",
+        "why": "Isso."
+      },
+      {
+        "text": "Fazer push com `-u`, para o git esperar os checks antes de mover a `origin/main`.",
+        "why": "`-u` só registra a qual branch remota a sua corresponde; o git em si não sabe nada de checks."
+      },
+      {
+        "text": "Nada barra: um servidor Git aceita qualquer push que leve uma branch para a frente.",
+        "why": "O Git aceita; o serviço de hospedagem acrescenta a proteção de branch por cima, e o Git não sabe nada dela."
+      }
+    ]
+  },
+  "ex-h9fpg8zw": {
+    "prompt": "Uma versão do repositório que publica este curso começa por uma tag. Ponha os passos em ordem, do terminal de quem desenvolve até a nova revisão no ar.",
+    "hint": "Testes Automatizados e CI/CD, aula 7; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 7.",
+    "items": [
+      "Enviar a tag anotada sozinha, com `git push origin` e o nome dela",
+      "`Tag` recusa uma tag malformada, menor que a última versão ou fora da `main`",
+      "`Checks` roda o workflow de CI inteiro, chamado em vez de copiado",
+      "`Publish` constrói, pergunta a versão ao binário e cria a release",
+      "`Deploy` envia as imagens e move o serviço para a nova revisão"
+    ],
+    "trap": "Construir primeiro parece mais rápido, mas cada job precisa do anterior: a tag é julgada antes de qualquer coisa rodar, e nada é construído a partir de um commit que os checks não aprovaram. Um `git push` simples nem começaria, porque não envia tags."
+  },
+  "ex-zgpxvsdd": {
+    "prompt": "Ana roda `git push -u origin try-new-rounding` contra o remoto do laboratório, e o hook responde `ci: try-new-rounding is not main, nothing to run`. O que aconteceu?",
+    "hint": "Testes Automatizados e CI/CD, aula 5; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 7.",
+    "choices": [
+      {
+        "text": "A branch agora existe no remoto, e nenhum teste rodou nela.",
+        "why": "Isso."
+      },
+      {
+        "text": "O push foi recusado, porque o hook recusa push para outras branches.",
+        "why": "O hook só decide se roda os testes; `* [new branch]` mostra que a branch foi recebida."
+      },
+      {
+        "text": "Os testes rodaram e passaram, por isso o hook imprimiu tão pouco.",
+        "why": "Uma execução que passa ainda imprime uma linha por célula e `run N passed`; esta não rodou nada."
+      },
+      {
+        "text": "A branch foi mesclada na `main` antes, para o hook poder testá-la.",
+        "why": "Nada é mesclado num push; a branch chegou como estava, ao lado da `main`."
+      }
+    ]
+  },
+  "ex-mzknwqe5": {
+    "prompt": "Numa branch que ninguém enviou, Ana fez commit de `deploy/production.env` com o token da transportadora e o removeu no commit seguinte. Bruno diz que, como a branch nunca saiu do laptop dela, `git reset --hard HEAD~2` resolve. O que os dois cursos mandam fazer?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10; Testes Automatizados e CI/CD, aula 9.",
+    "choices": [
+      {
+        "text": "Deixar como está: o segundo commit já tirou o token do histórico.",
+        "why": "`git show HEAD~1:deploy/production.env` ainda o imprime; apagar um arquivo não muda o commit que o adicionou."
+      },
+      {
+        "text": "Basta o reset: um commit guardado no laptop dela não chegou a outra cópia.",
+        "why": "Os dois cursos tratam um segredo que entrou em commit como público desde aquele momento; o reset só impede que se espalhe."
+      },
+      {
+        "text": "Rodar `git filter-repo` no histórico e trocar cada clone antes de qualquer coisa.",
+        "why": "Esse é o caminho para commits já enviados, e mesmo assim vem depois de revogar o token."
+      },
+      {
+        "text": "Trocar o token primeiro; depois, o reset é um bom jeito de descartar os dois commits.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-ga313da5": {
+    "prompt": "Ligue cada coisa que deu errado ao caminho de volta mais rápido que os dois cursos dão para ela.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 4; Testes Automatizados e CI/CD, aula 10.",
+    "pairs": [
+      {
+        "left": "Uma edição em `menu.html` que nunca foi preparada",
+        "right": "`git restore menu.html`"
+      },
+      {
+        "left": "Um commit ruim já na `main` compartilhada",
+        "right": "`git revert` desse commit"
+      },
+      {
+        "left": "Um canário a 25% errando 2 pontos acima da base",
+        "right": "O peso dele zerado no arquivo de rotas"
+      },
+      {
+        "left": "Uma funcionalidade nova ligada para 50% dos clientes",
+        "right": "A porcentagem dela zerada no arquivo de flags"
+      }
+    ],
+    "right_distractors": [
+      "A versão antiga reconstruída a partir da tag"
+    ]
+  },
+  "ex-8c5v9mtw": {
+    "prompt": "Um time trabalha com trunk based: a estimativa de entrega, pela metade, entra na `main` todo dia atrás de `delivery_estimate`, que em produção está agora em 10%. O CI roda a suíte com todas as flags desligadas. O que fica sem teste?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 9; Testes Automatizados e CI/CD, aula 10.",
+    "choices": [
+      {
+        "text": "Pouca coisa: abaixo de 100% a maioria tem a flag desligada, então é esse o estado a testar.",
+        "why": "Em 10% os dois caminhos rodam em produção; uma suíte que só conhece tudo desligado testa um programa que ninguém roda."
+      },
+      {
+        "text": "O merge: com uma flag, o trabalho trunk based deveria ficar na branch até ficar pronto.",
+        "why": "Fazer merge de trabalho inacabado atrás de uma flag é o próprio trunk based; a lacuna está nos testes, não na branch."
+      },
+      {
+        "text": "O arquivo de flags, que o programa lê uma vez ao iniciar e depois guarda na memória.",
+        "why": "`flags.load()` lê o arquivo a cada pedido; foi assim que 10% virou 50% sem reiniciar nada."
+      },
+      {
+        "text": "O caminho dos 10% de clientes: uma flag no meio do rollout precisa ser testada nos dois estados.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-ztnyxmfv": {
+    "prompt": "Um time de quatro pessoas termina cerca de 30 pontos numa sprint normal, com cada pessoa presente nos 10 dias. Nesta sprint, Carla vai faltar 5 dias e Diego, 3. Pela conta da aula 18, cerca de quantos pontos de capacidade o time tem, antes de deixar qualquer folga?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 18."
+  },
+  "ex-h0deeb34": {
+    "prompt": "Antes de arrumar as branches antigas, Ana roda `git branch ___`, que lista aquelas cujos commits já estão todos na branch em que ela está: as que `git branch -d` apaga sem reclamar.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 5.",
+    "blanks": [
+      {
+        "accept": [
+          "--merged"
+        ]
+      }
+    ]
+  },
+  "ex-5hvqsc1g": {
+    "prompt": "Às 15:00 de um dia posterior, Ana roda `git log --oneline --since=\"2026-09-17\"` na semana da padaria. Aparecem `6555c9b` e `eadf998`, mas não `31a6298 Add cheese rolls`, cujo commit foi às 10:15 do dia 17. Por quê?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 3.",
+    "choices": [
+      {
+        "text": "`--since` mantém o que veio depois do dia indicado, então o próprio dia 17 fica de fora.",
+        "why": "O dia não é excluído em si; com `00:00` escrito depois da data, o mesmo comando lista `31a6298`."
+      },
+      {
+        "text": "A data do commit está em `-0300`, e `--since` a compara em UTC, três horas adiante.",
+        "why": "O fuso faz parte da data guardada e é levado em conta; o que falta é a hora."
+      },
+      {
+        "text": "Uma data sem hora quer dizer aquele dia no horário de agora, aqui às 15:00.",
+        "why": "Isso."
+      },
+      {
+        "text": "O log encheu a primeira tela e ficou esperando, então o commit mais velho está abaixo.",
+        "why": "O `git log` pagina saídas longas, mas três linhas cabem em qualquer tela; não há nada esperando embaixo."
+      }
+    ]
+  },
+  "ex-4jt2tq9p": {
+    "prompt": "Ana está na `main` com a árvore de trabalho limpa, e Bruno acabou de enviar um commit novo para o `origin`. Quais destes comandos mudam arquivos na árvore de trabalho dela? Marque todas as que se aplicam.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aulas 5 e 7.",
+    "choices": [
+      {
+        "text": "`git fetch`, para trazer o que Bruno enviou",
+        "why": "Ele copia o commit e move a `origin/main`; a `main` dela e os arquivos ficam como estavam."
+      },
+      {
+        "text": "`git pull`, que aqui avança a `main` em fast-forward",
+        "why": "Isso."
+      },
+      {
+        "text": "`git branch menu-prices`, para começar outro trabalho",
+        "why": "Ele grava um nome para o commit atual e não copia nada; ela continua na `main`."
+      },
+      {
+        "text": "`git switch experiment`, cujo `index.html` é outro",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-3fmdkx99": {
+    "prompt": "Pela tabela de frete do `shipquote` na aula 1, quanto custa, em centavos, um pacote de 1600 g para o CEP `70040-010`, numa cesta cujo subtotal é de 5000 centavos?",
+    "hint": "Testes Automatizados e CI/CD, aula 1."
+  },
+  "ex-qd8tjn9k": {
+    "prompt": "Um serviço recebe cerca de 2.000.000 de pedidos de cotação por mês e define como objetivo que 99,99% dos pedidos deem certo. Pelo raciocínio da aula 11, quantos pedidos com falha o orçamento de erro permite nesse mês?",
+    "hint": "Testes Automatizados e CI/CD, aula 11."
+  },
+  "ex-bav0zah9": {
+    "prompt": "Toda cotação de produção volta com 200, mas a de `01310-100`, 1200 g, subtotal 5000, está hoje em R$ 21,90, quando ontem era R$ 18,60. Ninguém fez deploy. Onde o curso diz que a causa aparece primeiro?",
+    "hint": "Testes Automatizados e CI/CD, aulas 2 e 9.",
+    "choices": [
+      {
+        "text": "No `/version`, que deixa de citar a transportadora quando a loja volta para a tabela.",
+        "why": "O `/version` informa a URL configurada da transportadora, esteja ela respondendo ou não."
+      },
+      {
+        "text": "No smoke test, que falha assim que um preço passa a vir da tabela.",
+        "why": "O smoke test só pergunta `/health` e `/version`, e os dois continuam respondendo como esperado."
+      },
+      {
+        "text": "Na taxa de erro, que sobe a cada pedido que a transportadora deixa de atender.",
+        "why": "O fallback responde com 200; a taxa de erro conta 5xx e silêncio, então fica em zero."
+      },
+      {
+        "text": "No log, como `carrier unavailable, using the table:` e o erro da transportadora.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-5b1hsr59": {
+    "prompt": "O teste de mutação deixou um sobrevivente em `store.py`: `ORDER BY created_at DESC, id DESC` virou `ORDER BY created_at DESC`. Que teste novo o mataria?",
+    "hint": "Testes Automatizados e CI/CD, aula 4.",
+    "choices": [
+      {
+        "text": "Duas cotações com o mesmo `created_at`, esperando que `recent(2)` liste o id mais novo primeiro.",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma cotação salva com centavos negativos, esperando que o banco a recuse.",
+        "why": "Esse mata o outro sobrevivente, o `CHECK (cents >= 0)` afrouxado; nunca chega à ordenação."
+      },
+      {
+        "text": "Qualquer teste que aumente a cobertura de `store.py`, já que um sobrevivente marca uma linha que não rodou.",
+        "why": "`store.py` já está em 100%: a linha rodou, e o que falta é uma asserção que distinga as ordens."
+      },
+      {
+        "text": "Dez cotações feitas pela factory, esperando que `recent(10)` as liste da mais nova para a mais velha.",
+        "why": "A factory dá a cada cotação o seu próprio `created_at`, então o desempate por `id` nunca é necessário."
+      }
+    ]
+  },
+  "ex-qkjmfnyj": {
+    "prompt": "No GitHub Actions, uma suíte tem um teste falhando e a cobertura está em 81%. Quais destes passos `run:` ainda apareceriam verdes? Marque todas as que se aplicam.",
+    "hint": "Testes Automatizados e CI/CD, aulas 4 e 5.",
+    "choices": [
+      {
+        "text": "Sem linha `shell:`, rodando `python -m pytest -q | tee run.log`",
+        "why": "Isso."
+      },
+      {
+        "text": "`shell: bash`, rodando `python -m pytest -q | tee run.log`",
+        "why": "Dar nome ao shell traz `-eo pipefail`, então a falha do pytest derruba o pipe e o passo."
+      },
+      {
+        "text": "Sem linha `shell:`, rodando `coverage report --fail-under=85 | tail -1`",
+        "why": "Isso."
+      },
+      {
+        "text": "Sem linha `shell:`, rodando `python -m pytest -q` sozinho",
+        "why": "`bash -e` para no status diferente de zero do pytest; é o pipe que esconde um."
+      }
+    ]
+  },
+  "ex-we68qfk9": {
+    "prompt": "Um script lê uma configuração de um arquivo que um colega escreveu num editor do Windows: `mode=$(cat mode.txt)`. `echo \"$mode\"` imprime `prod`, e mesmo assim `[ \"$mode\" = prod ]` dá falso toda vez que roda. O que está acontecendo?",
+    "hint": "Linux e Linha de Comando, aula 1.",
+    "choices": [
+      {
+        "text": "O `$( )` guarda a quebra de linha final, então o valor é na verdade `prod` seguido de uma quebra.",
+        "why": "O `$( )` remove as quebras de linha finais; o `\\n` some, e o caractere antes dele fica."
+      },
+      {
+        "text": "As linhas terminam em `\\r\\n`, então o valor é `prod` e um retorno de carro, que o `cat -A` mostra como `^M`.",
+        "why": "Isso."
+      },
+      {
+        "text": "Dentro de `[ ]`, o `=` compara números, então duas palavras não saem iguais; para comparar strings ali é preciso `==`.",
+        "why": "O `=` é a comparação de strings no `[ ]`; os operadores de letras, `-eq` e os outros, são para números."
+      },
+      {
+        "text": "O `mode` não foi exportado, então o comando `[` recebe um valor vazio para comparar.",
+        "why": "O `[` recebe o valor já expandido, como argumento; o `export` só importa para um filho que lê o ambiente."
+      }
+    ]
+  },
+  "ex-r4m1s148": {
+    "prompt": "A imagem do seu serviço é `FROM alpine:3.22`, e o build copia um agente de monitoramento baixado como binário pronto para Linux x86_64. O arquivo está lá e é executável, mas se recusa a iniciar, com um erro sobre uma biblioteca compartilhada que falta. O mesmo binário roda no seu notebook com Ubuntu. O que está errado, e o que as duas aulas sugerem?",
+    "hint": "Linux e Linha de Comando, aula 2; Docker e Containers, aula 13.",
+    "choices": [
+      {
+        "text": "O `/bin/sh` do Alpine é o `ash` do busybox, não o bash, então é preciso instalar com `apk add --no-cache bash`.",
+        "why": "É isso que quebra um script com `#!/bin/bash`. Um programa compilado não precisa de shell, e a biblioteca que falta é a biblioteca C."
+      },
+      {
+        "text": "Ele foi compilado para outro processador, e refazer a imagem para `arm64` vai deixar que ele inicie.",
+        "why": "Ele roda num notebook x86_64, então a arquitetura bate; o que muda entre as duas máquinas é a biblioteca C."
+      },
+      {
+        "text": "Falta ao busybox as opções GNU com que o agente chama `ls` e `grep`, então instale as ferramentas GNU ao lado.",
+        "why": "Uma opção que falta falha depois, nessa opção. Uma biblioteca compartilhada que falta é o programa recusado antes de rodar."
+      },
+      {
+        "text": "Ele foi ligado à glibc e o Alpine traz a musl; monte sobre uma base Debian `-slim`, que tem glibc.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-b7ysk2m8": {
+    "prompt": "Uma imagem gera uma ferramenta em `/app/bin` durante o `docker build`. Para testar uma mudança no código, um colega roda com `-v \"$PWD\":/app`, e dentro do container `/app/bin` não está lá. Rodando sem o `-v`, está. O que aconteceu com ele?",
+    "hint": "Linux e Linha de Comando, aula 3; Docker e Containers, aula 8.",
+    "choices": [
+      {
+        "text": "O diretório do host fica por cima de `/app` e cobre o que a imagem pôs ali, que segue intacto.",
+        "why": "Isso."
+      },
+      {
+        "text": "A montagem copiou o diretório do host para a imagem e substituiu `/app/bin` ali de vez, com camada e tudo.",
+        "why": "Nada na imagem muda. Sem a montagem os arquivos voltam, como o `oops.txt` voltou depois do `umount`."
+      },
+      {
+        "text": "Um bind mount é somente leitura por padrão, então o container não enxerga o que ele mesmo não escreveu.",
+        "why": "Somente leitura é o `:ro`, posto de propósito, e trata de escrita; não decide o que fica visível."
+      },
+      {
+        "text": "O `docker run` descarta a camada do build que guarda `/app/bin` sempre que recebe um volume ao iniciar.",
+        "why": "Nenhuma camada é jogada fora; a montagem fica por cima do diretório e a camada continua embaixo."
+      }
+    ]
+  },
+  "ex-4apb6hyh": {
+    "prompt": "Num servidor novo você rodou `sudo usermod -aG docker ana`. No mesmo terminal, `getent group docker` imprime `docker:x:996:ana`, mas o `docker ps` responde `permission denied while trying to connect to the docker API at unix:///var/run/docker.sock`. O que você faz?",
+    "hint": "Linux e Linha de Comando, aula 4; Docker e Containers, aula 5.",
+    "choices": [
+      {
+        "text": "Rode `usermod -G docker ana`, já que o `-a` só acrescenta ao arquivo e ainda não concede nada.",
+        "why": "O `-G` sem `-a` substitui todos os outros grupos suplementares, que é como se perde o `sudo`; a mudança já está escrita."
+      },
+      {
+        "text": "Rode `sudo chmod 666 /var/run/docker.sock`, para o socket parar de conferir o grupo de quem se conecta.",
+        "why": "Isso entrega a toda conta da máquina o que o grupo docker vale, e o grupo vale root."
+      },
+      {
+        "text": "Saia e entre de novo: um shell fica com os grupos com que começou, e aí o `id -nG` mostra `docker`.",
+        "why": "Isso."
+      },
+      {
+        "text": "Suba o engine com `sudo systemctl start docker`, porque o daemon ainda não está rodando.",
+        "why": "Um engine parado responde `failed to connect to the docker API`; `permission denied` quer dizer que ele está de pé e te recusou."
+      }
+    ]
+  },
+  "ex-xpfhw277": {
+    "prompt": "Um colega escreveu à mão o arquivo de unidade de um importador noturno. Ligue cada linha dele ao que o systemd de fato faz com ela, pela aula 5.",
+    "hint": "Linux e Linha de Comando, aula 5.",
+    "pairs": [
+      {
+        "left": "`Descriptoin=Nightly importer`",
+        "right": "descartada com um aviso que ninguém vê sem rodar `systemd-analyze verify`"
+      },
+      {
+        "left": "`ExecStart=/usr/bin/importer > /var/log/importer.log`",
+        "right": "o `>` e o caminho chegam ao programa como mais dois argumentos"
+      },
+      {
+        "left": "`Type=forking`, para um programa que fica em primeiro plano",
+        "right": "o start trava e depois estoura o tempo, sem nada de fato quebrado"
+      },
+      {
+        "left": "`After=network.target`",
+        "right": "ele sobe quando a rede está configurada, que não é quando ela está alcançável"
+      }
+    ],
+    "right_distractors": [
+      "a unidade inteira é recusada e nunca carrega"
+    ]
+  },
+  "ex-8k3156sp": {
+    "prompt": "O Dockerfile de um serviço termina com `CMD ./start.sh`, na forma shell, e o script inicia o servidor na última linha. Todo `docker stop` leva dez segundos, o container depois aparece como `Exited (137)`, e o log do servidor nunca traz a mensagem de desligamento. O que explica os três?",
+    "hint": "Linux e Linha de Comando, aula 6; Docker e Containers, aula 11.",
+    "choices": [
+      {
+        "text": "O servidor captura o `TERM` e ainda está gravando quando os dez segundos acabam, então um tempo de parada maior transformaria 137 em 0.",
+        "why": "Sem linha de desligamento no log, o servidor nunca recebeu o sinal, e esperar mais só adia o `KILL`."
+      },
+      {
+        "text": "O `TERM` chega a um shell que não o repassa; depois da espera vem o `KILL`, 128 + 9. Use a forma exec e dê `exec` no servidor.",
+        "why": "Isso."
+      },
+      {
+        "text": "137 é o matador por falta de memória agindo, então o container precisa de um limite de memória maior para conseguir parar rápido.",
+        "why": "137 é qualquer `KILL`. Uma morte por memória fica registrada como `OOMKilled=true`; esta é o `KILL` do próprio `docker stop` depois da espera."
+      },
+      {
+        "text": "O `docker stop` manda `KILL` direto, e os dez segundos são o engine salvando primeiro a camada de escrita do container.",
+        "why": "Ele manda primeiro o sinal educado e espera dez segundos antes do `KILL`; o container parado guarda a camada de qualquer jeito."
+      }
+    ]
+  },
+  "ex-e8f7dz3g": {
+    "prompt": "Você está escrevendo a instrução `RUN` que instala `ca-certificates` num Dockerfile baseado em Debian. Quais destes fazem parte dela, pelas duas aulas? Marque todas as que se aplicam.",
+    "hint": "Linux e Linha de Comando, aula 7; Docker e Containers, aula 14.",
+    "choices": [
+      {
+        "text": "`apt-get` em vez de `apt`, cuja saída os autores podem mudar",
+        "why": "Isso."
+      },
+      {
+        "text": "`rm -rf /var/lib/apt/lists/*` num `RUN` separado, no fim do arquivo",
+        "why": "Um arquivo apagado numa camada posterior continua na anterior; a limpeza tem de estar no mesmo `RUN`."
+      },
+      {
+        "text": "`--no-install-recommends`, para chegar só o que o `Depends` lista",
+        "why": "Isso."
+      },
+      {
+        "text": "`dpkg -i` num `.deb` baixado antes, para não rodar resolução de dependências",
+        "why": "O `dpkg` não resolve nada: uma dependência que falta deixa o pacote desempacotado e sem configurar, `iU`."
+      }
+    ]
+  },
+  "ex-jtsp8ef5": {
+    "prompt": "O log de acesso do seu Nginx está no formato combined, com linhas como `127.0.0.1 - - [07/Oct/2026:00:11:23 -0300] \"GET /css/site.css HTTP/1.0\" 200 237 \"-\" \"ApacheBench/2.3\"`. Para contar erros do cliente, um colega roda `grep -c ' 4[0-9][0-9] ' access.log`, que dá mais que `awk '$9 >= 400 && $9 < 500' access.log | wc -l`. Em qual contagem você confia?",
+    "hint": "Linux e Linha de Comando, aula 8; Servidores Web e Cache, aula 1.",
+    "choices": [
+      {
+        "text": "A do grep: o awk divide nos espaços, então perde as linhas cujo user agent tem um espaço dentro.",
+        "why": "O user agent vem depois do campo nove. Um campo de texto livre só desloca os campos depois dele, então `$9` é o status em toda linha."
+      },
+      {
+        "text": "A do grep: o awk lê cada campo como texto, então um status como `404` não é `>= 400` para ele.",
+        "why": "`$9 >= 400` é aritmética sobre um campo, que é justamente o que o `grep` não faz."
+      },
+      {
+        "text": "A do awk: o status é o campo nove, e o padrão também casa um `200` cujo tamanho, no campo dez, por acaso é 410.",
+        "why": "Isso."
+      },
+      {
+        "text": "A do awk: o `grep -c` conta cada ocorrência na linha, então uma linha com dois desses números conta duas vezes.",
+        "why": "O `grep -c` conta linhas que casam, não ocorrências; a linha conta uma vez por mais que case."
+      }
+    ]
+  },
+  "ex-3t8p7tyg": {
+    "prompt": "Um passo de CI roda um script que começa com `set -euo pipefail`, define `check() { ./migrate --dry-run; echo \"migrations checked\"; }` e depois roda `if check; then ./deploy.sh; fi`. O `./migrate` falha e imprime um erro, o deploy acontece mesmo assim, e o job fica verde. Por que nada parou?",
+    "hint": "Linux e Linha de Comando, aula 9; Testes Automatizados e CI/CD, aula 5.",
+    "choices": [
+      {
+        "text": "O `-e` fica suspenso por toda a função chamada como condição, então `check` seguiu e devolveu o 0 do `echo`.",
+        "why": "Isso."
+      },
+      {
+        "text": "A CI lê a saída do passo procurando erros, e `migrations checked` foi a última linha que ela viu.",
+        "why": "A CI decide só pelo código de saída; nunca lê a saída, então as palavras impressas não deixam um passo verde nem vermelho."
+      },
+      {
+        "text": "Com `pipefail` ligado, o `-e` deixa de valer, e o próprio `pipefail` olha pipelines e mais nada.",
+        "why": "Os dois são independentes: o `pipefail` muda o que um pipeline informa, e o `-e` continua valendo onde vale."
+      },
+      {
+        "text": "O `-e` não entra numa função, então uma falha dentro de `check` é ignorada de onde ela for chamada.",
+        "why": "Chamada como comando comum, uma linha que falha dentro da função para o script, sim; a suspensão vem do `if`."
+      }
+    ]
+  },
+  "ex-vhb5xf8w": {
+    "prompt": "No `sales.csv` da aula 10, `Get-Content sales.csv | Measure-Object -Line` informa 33 linhas. Quantos o `Import-Csv sales.csv | Measure-Object` conta?",
+    "hint": "Linux e Linha de Comando, aula 10."
+  },
+  "ex-k9psz5cn": {
+    "prompt": "Um host em que o `nproc` imprime 4 roda um container iniciado com `--cpus 1`, que recebe o equivalente ao tempo de um processador. O que o `nproc` imprime dentro desse container?",
+    "hint": "Linux e Linha de Comando, aula 11; Docker e Containers, aula 2."
+  },
+  "ex-18s49qjq": {
+    "prompt": "O `git commit` sem `-m` abre um editor para a mensagem. Ponha em ordem os lugares onde ele procura qual abrir, o consultado primeiro no topo.",
+    "hint": "Linux e Linha de Comando, aula 12; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 1.",
+    "items": [
+      "o `core.editor` na configuração do próprio git",
+      "a variável `$VISUAL`",
+      "a variável `$EDITOR`",
+      "o padrão do sistema, `/usr/bin/editor` no Ubuntu ou `vi`"
+    ],
+    "trap": "O `$EDITOR` é o famoso e parece que tem de ganhar; a configuração do próprio git vence as duas variáveis, e a `$VISUAL` é lida antes da `$EDITOR`."
+  },
+  "ex-66dgr1hj": {
+    "prompt": "Duzentos servidores compartilham uma unidade de timer com `OnCalendar=*-*-* 03:00:00`, e o servidor de arquivos para onde todos enviam cai às três toda noite. Para quebrar essa sincronia, a seção `[Timer]` ganha `___=30m`, que dá a cada máquina o seu próprio atraso fixo de até trinta minutos.",
+    "hint": "Linux e Linha de Comando, aula 13; Escala e Observabilidade, aula 10.",
+    "blanks": [
+      {
+        "accept": [
+          "RandomizedDelaySec",
+          "RandomizedDelaySec="
+        ]
+      }
+    ]
+  }
+}

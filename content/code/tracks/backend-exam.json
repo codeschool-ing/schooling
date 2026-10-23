@@ -1,0 +1,1177 @@
+[
+  {
+    "id": "ex-qz7kmn9y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The bookshop's two copies each keep the session table in their own memory, behind Nginx's round-robin upstream. Shoppers are signed out at random, halfway through a basket. What is happening, and where do the two courses send the table?",
+    "hint": "Web and Internet Fundamentals, lesson 7; Web Servers and Caching, lesson 2.",
+    "choices": [
+      {
+        "text": "The cookie has no `Domain` attribute, so the browser keeps it from the second copy's port.",
+        "correct": false,
+        "why": "The browser only talks to Nginx, at one name and one port, and its cookie reaches whichever copy Nginx picks."
+      },
+      {
+        "text": "Round robin is the defect, and `hash $remote_addr` fixes it for good: each visitor always meets their own copy.",
+        "correct": false,
+        "why": "Affinity is a workaround: an office behind one address lands on one copy, and a copy that stops takes its sessions with it."
+      },
+      {
+        "text": "Half the requests reach a copy that never saw that session; keep the table in Redis, which both reach.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`SameSite=Lax` drops the cookie from the requests Nginx forwards, so the copy behind it sees nobody signed in.",
+        "correct": false,
+        "why": "`SameSite` is about which site caused the request; a proxy passing the `Cookie` header on is not another site."
+      }
+    ]
+  },
+  {
+    "id": "ex-y5pkvqcm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "To save processor time, a teammate wants to swap the Nginx in front of the bookshop for a load balancer that reads only up to layer 4. Today Nginx serves the files in `/var/www/ipe` itself and sends `location /api/` to the two copies of the shop. What would the swap lose?",
+    "hint": "Web and Internet Fundamentals, lesson 5; Web Servers and Caching, lesson 2.",
+    "choices": [
+      {
+        "text": "The split by path: such a box sees a connection to port 443 and none of the URL inside, so `/api/` looks like `/css/`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing in the routing: a layer 4 box still reads the path of every request, so only the choice of site by `Host` would be lost.",
+        "correct": false,
+        "why": "Layer 4 stops at the port; the path is inside the request, which such a box never reads."
+      },
+      {
+        "text": "Only the compression, since gzip belongs to layer 6 and the box works below it.",
+        "correct": false,
+        "why": "Compression would go, and so would the split by path, which is what sends `/api/` to the shop."
+      },
+      {
+        "text": "Nothing, if the box is given the certificate: holding it is what lets layer 4 read paths.",
+        "correct": false,
+        "why": "Decrypting and reading the request, certificate in hand, is what a layer 7 balancer does."
+      }
+    ]
+  },
+  {
+    "id": "ex-mcb1jfzr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The shop's wildcard certificate, `*.ipelivros.example`, is renewed by a DNS-01 plugin holding API credentials for the old DNS provider. Last month the domain's `NS` records were pointed at a new provider. Renewal now fails, although the plugin logs that it created the `_acme-challenge` TXT record. Why?",
+    "hint": "Web and Internet Fundamentals, lesson 8; Web Servers and Caching, lesson 3.",
+    "choices": [
+      {
+        "text": "DNS-01 is checked over port 80, and the redirect to HTTPS now swallows the request.",
+        "correct": false,
+        "why": "That is HTTP-01; DNS-01 is checked in DNS, which is why it works for a machine nobody can reach."
+      },
+      {
+        "text": "A wildcard cannot come from DNS-01, so every subdomain needs an HTTP-01 token of its own.",
+        "correct": false,
+        "why": "It is the other way round: DNS-01 is the only challenge that can issue a wildcard."
+      },
+      {
+        "text": "The new TXT record is still propagating, and it can take forty-eight hours to reach the CA.",
+        "correct": false,
+        "why": "Nothing propagates, and no TTL helps a record held by servers nobody asks any more."
+      },
+      {
+        "text": "It landed on servers nobody asks any more; the CA asks the ones `NS` names now.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-2cgx0ges",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "On the lab server, `sudo ss -ltn` lists `0.0.0.0:443`, `0.0.0.0:80`, `127.0.0.1:14000` and `127.0.0.1:8001`, among others, and no firewall is on. A colleague's laptop on the same network tries each of them. Which can it reach? Choose all that apply.",
+    "hint": "Web and Internet Fundamentals, lesson 4; Web Servers and Caching, lesson 4.",
+    "choices": [
+      {
+        "text": "The shop, on `127.0.0.1:8001`",
+        "correct": false,
+        "why": "Loopback never reaches a network card: only the machine itself can ask, which is why the shop is reached through Nginx."
+      },
+      {
+        "text": "Nginx, on `0.0.0.0:443`",
+        "correct": true,
+        "why": "`0.0.0.0` is every address the machine has, the one on the office network included."
+      },
+      {
+        "text": "Pebble's ACME API, on `127.0.0.1:14000`",
+        "correct": false,
+        "why": "`127.0.0.1` is the machine talking to itself; nothing outside it can connect there."
+      },
+      {
+        "text": "Nginx, on `0.0.0.0:80`",
+        "correct": true,
+        "why": "Right: listening on every address, so the laptop's request on port 80 arrives."
+      }
+    ]
+  },
+  {
+    "id": "ex-kscamq0w",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "On the handshake clock of the fundamentals course, a browser and a server are 150 milliseconds apart each way. The servers course says that without `keepalive` in the upstream, Nginx pays that same handshake before every request it passes to the application. On that clock, how many milliseconds pass between the SYN leaving and the request itself leaving with the ACK?",
+    "hint": "Web and Internet Fundamentals, lesson 2; Web Servers and Caching, lesson 2.",
+    "value": 300,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-jgw7cmf6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Readers in Lisbon say the bookshop, served from São Paulo, takes over a second to show its first page, and most of that second is round trips. The owner proposes doubling the server's bandwidth. What do the two courses say?",
+    "hint": "Web and Internet Fundamentals, lesson 3; Web Servers and Caching, lesson 7.",
+    "choices": [
+      {
+        "text": "It halves the wait, because each round trip then carries twice as many bytes at once.",
+        "correct": false,
+        "why": "A wider pipe moves more side by side; nothing arrives sooner, and these round trips carry almost nothing."
+      },
+      {
+        "text": "It leaves the slow part alone: the ocean sets each round trip, and an edge in Lisbon removes the crossing for cacheable files.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Turn on `gzip_types` instead: a third of the bytes is a third of the wait.",
+        "correct": false,
+        "why": "Compression shrinks the transfer, the part that was already short; the round trips stay as long as the distance makes them."
+      },
+      {
+        "text": "Put a CDN in front, and the signed-in basket speeds up exactly as much as the stylesheet does.",
+        "correct": false,
+        "why": "A personal page must not be stored at the edge, so its request still crosses the ocean to the origin."
+      }
+    ]
+  },
+  {
+    "id": "ex-w01cv938",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "The shop starts reporting failures as `200 OK` with `{\"error\": \"database unavailable\"}` in the body, under its usual `Cache-Control: public, max-age=60`. Nginx caches `/api/` with `proxy_cache_use_stale error timeout http_500 http_502 http_503 http_504`. What goes wrong? Choose all that apply.",
+    "hint": "Web and Internet Fundamentals, lesson 6; Web Servers and Caching, lesson 6.",
+    "choices": [
+      {
+        "text": "Nginx turns the answer into a `502`, because the body contradicts the status line.",
+        "correct": false,
+        "why": "`502` means the application sent something that is not HTTP; a well-formed `200` passes, whatever its body says."
+      },
+      {
+        "text": "The error is stored like any other answer and handed to every visitor for the next minute.",
+        "correct": true,
+        "why": "Right: a cache files the failure under the address, because the number said it worked."
+      },
+      {
+        "text": "The good copy from before the outage is never used, since Nginx sees a success and none of the listed failures.",
+        "correct": true,
+        "why": "Right: the stale copy is a fallback for errors, and every one it knows of is a status code."
+      },
+      {
+        "text": "`X-Cache-Status` reports `STALE`, so the failure at least shows in the headers.",
+        "correct": false,
+        "why": "`STALE` means an expired copy was served instead of an error; here Nginx got a fresh success and stored it, `MISS` and then `HIT`."
+      }
+    ]
+  },
+  {
+    "id": "ex-t19gx4b6",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Inside `location /api/`, a first proxy is written `proxy_pass http://127.0.0.1:8001/;`, with a slash after the port. A browser asks for `/api/books/3`, and the shop receives the path `___`.",
+    "hint": "Web Servers and Caching, lesson 2.",
+    "blanks": [
+      {
+        "accept": [
+          "/books/3",
+          "books/3"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-p077xd0y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On the shop's first day on HTTPS, before renewal has ever run, somebody sends `Strict-Transport-Security: max-age=31536000; includeSubDomains`. A month later `promo.ipelivros.example`, run by an agency on plain HTTP, will not open for anybody who had visited the shop. What did lesson 4 advise?",
+    "hint": "Web Servers and Caching, lesson 4.",
+    "choices": [
+      {
+        "text": "Nothing in advance: removing the header now clears the rule on each browser's next visit.",
+        "correct": false,
+        "why": "Once a browser has seen the header, nothing changed on the server removes it before `max-age` runs out."
+      },
+      {
+        "text": "Sending the header on the port-80 redirect as well, so that browsers learn the rule before they ever reach HTTPS.",
+        "correct": false,
+        "why": "A browser ignores HSTS received over plain HTTP, because anybody on the path could have added it."
+      },
+      {
+        "text": "Start at an hour, lengthen it once the certificate renews itself, and add subdomains once all are on HTTPS.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing: `includeSubDomains` reaches only the names that the same Nginx serves.",
+        "correct": false,
+        "why": "It covers every name under this one, including those another team runs somewhere else."
+      }
+    ]
+  },
+  {
+    "id": "ex-tmm3t6sd",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Asked straight, without the cache, every request to the shop waits 120 ms for its query, and lesson 5 puts the ceiling for ten at a time at about 80 requests a second. By the same reasoning, what is the ceiling, in requests a second, with 30 requests in flight, each still waiting 120 ms?",
+    "hint": "Web Servers and Caching, lesson 5; Web and Internet Fundamentals, lesson 1.",
+    "value": 250,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-1yvhkx8k",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "The owner lowers a price and purges the copy, and the cache still ends up holding the old price for a whole lifetime. Put the events of lesson 6's race in the order they happened.",
+    "hint": "Web Servers and Caching, lesson 6.",
+    "items": [
+      "A visitor's request misses the cache",
+      "That request reads 8,990 from the database",
+      "The owner's update writes 7,990 to the database",
+      "The update purges the copy, which is not there yet",
+      "The slow request stores 8,990, fresh for another sixty seconds"
+    ],
+    "trap": "The tempting order puts the purge last, as the fix it was meant to be; it landed before the slow read stored its copy, which is why it removed nothing."
+  },
+  {
+    "id": "ex-sj8dctc0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The bookshop goes behind a commercial CDN, set to reach the origin over plain HTTP because that was the quickest option to switch on. Visitors still see a valid padlock. What does that padlock describe?",
+    "hint": "Web Servers and Caching, lesson 7; Web and Internet Fundamentals, lesson 9.",
+    "choices": [
+      {
+        "text": "Only the hop to the edge; the hop to the origin crosses a network in the clear.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The whole path, because the edge reuses the visitor's encrypted connection on its way to the origin.",
+        "correct": false,
+        "why": "The edge ends the visitor's connection and opens a second one, which in this setting is plain."
+      },
+      {
+        "text": "The whole path, as long as the origin listens only on `127.0.0.1`, as the lab's did.",
+        "correct": false,
+        "why": "The lab's edge and origin shared one machine; a real origin is reached across networks the CDN does not own."
+      },
+      {
+        "text": "The edge and the origin alike, since the CDN obtained the domain's certificate through ACME.",
+        "correct": false,
+        "why": "Who obtained the certificate says nothing of the second hop; the padlock describes the hop the browser made."
+      }
+    ]
+  },
+  {
+    "id": "ex-vvmrns7q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The shop moves its session rows, the table behind the cookie, into the Redis that caches book JSON, which is set up as a cache: `maxmemory` set and `maxmemory-policy allkeys-lru`. Traffic grows and memory fills. What happens to the sessions?",
+    "hint": "Web Servers and Caching, lesson 8; Web and Internet Fundamentals, lesson 7.",
+    "choices": [
+      {
+        "text": "New sign-ins fail with `OOM command not allowed`, while the sessions already there are kept.",
+        "correct": false,
+        "why": "That is `noeviction`; under `allkeys-lru` every write succeeds and older keys make the room."
+      },
+      {
+        "text": "They are safe, since only keys without a lifetime are evicted and every session carries one.",
+        "correct": false,
+        "why": "`allkeys` means any key; it is the `volatile` policies that look only at keys with a lifetime, and they would pick the sessions."
+      },
+      {
+        "text": "Evicted sessions are written to `dump.rdb` first, and come back after the next restart.",
+        "correct": false,
+        "why": "Eviction deletes; a snapshot holds only what was in memory when it was taken."
+      },
+      {
+        "text": "Idle sessions are evicted like any cached book, and those visitors are signed out early.",
+        "correct": true,
+        "why": "Right. A cache may forget and a session table may not: give each one a Redis of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-vjjch57d",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In 2018, open Memcached servers flooded third parties over UDP with replies many thousands of times the size of the small forged requests that caused them. Why does the same trick not work against a Memcached that speaks only TCP?",
+    "hint": "Web Servers and Caching, lesson 9; Web and Internet Fundamentals, lesson 2.",
+    "choices": [
+      {
+        "text": "TCP numbers its bytes, so Memcached can tell that a forged request's bytes are out of order.",
+        "correct": false,
+        "why": "Numbering puts a stream back in order; it says nothing about who sent it."
+      },
+      {
+        "text": "Before any data, TCP answers a SYN with a SYN-ACK, which goes to the forged address; the request never follows.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "TCP slows down when it sees loss, so a reply that large is throttled before it can do harm.",
+        "correct": false,
+        "why": "Slowing down shares a congested link; it does not stop a large answer reaching whoever the request named."
+      },
+      {
+        "text": "Over TCP, Memcached refuses any value larger than a megabyte, so the replies stay small.",
+        "correct": false,
+        "why": "The one-megabyte limit is per value and holds however the request arrives; a megabyte is still huge beside a small request."
+      }
+    ]
+  },
+  {
+    "id": "ex-wp423rjf",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "Match each kind of data to the caching pattern that lesson 10's table recommends for it.",
+    "hint": "Web Servers and Caching, lesson 10.",
+    "pairs": [
+      {
+        "left": "View counters and likes, many cheap writes",
+        "right": "write-behind"
+      },
+      {
+        "left": "Values read right after they change",
+        "right": "write-through"
+      },
+      {
+        "left": "Data written once and rarely read",
+        "right": "write-around"
+      },
+      {
+        "left": "Most reads of most data",
+        "right": "cache-aside"
+      }
+    ],
+    "right_distractors": [
+      "read-through"
+    ]
+  },
+  {
+    "id": "ex-x0m2831e",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "By lesson 11's arithmetic, a page read 500 times a second whose query takes 120 ms sends about 60 identical queries the instant its key expires. A page read 2,000 times a second, whose query takes 50 ms, sends about how many?",
+    "hint": "Web Servers and Caching, lesson 11.",
+    "value": 100,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-tzvravab",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Run 2 of the lab's CI failed in all six cells: Ana had committed `tests/test_carriers.py`, and her laptop still shows `?? tests/data/carriers.csv`. Which of these puts the CSV into the commit the next run checks out?",
+    "hint": "Automated Testing and CI/CD, lesson 5; Git and Teamwork: Version Control, Review and Process, lesson 2.",
+    "choices": [
+      {
+        "text": "`git commit -am` with a message: `-a` stages the changes in the folder.",
+        "correct": false,
+        "why": "`-a` only stages files git already tracks; a file marked `??` stays out of the commit."
+      },
+      {
+        "text": "`git add` on the CSV, then a commit and a push: a new file needs its own add.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Push again as it is: the hook's clean checkout copies the files from the laptop.",
+        "correct": false,
+        "why": "The checkout is `git archive` of the pushed commit, and only what was committed is in it."
+      },
+      {
+        "text": "Add `tests/data/` to `.gitignore`, so that git stops reporting the file as untracked.",
+        "correct": false,
+        "why": "Ignoring it hides the `??` and keeps the file out of every commit, which is the failure itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-kvw4vv7b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "After tagging `v1.4.0`, Ana commits one more change and runs `ops/build.sh` without tagging again. `git describe --tags` prints `v1.4.0-1-g7c77050`. What does the build call the artifact?",
+    "hint": "Automated Testing and CI/CD, lesson 7; Git and Teamwork: Version Control, Review and Process, lesson 7.",
+    "choices": [
+      {
+        "text": "`shipquote-dev-7c77050`: no tag sits on that commit, so it is named by the commit.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`shipquote-1.4.0`: the newest tag in the history that leads here is still `v1.4.0`.",
+        "correct": false,
+        "why": "A tag does not move with new commits; `v1.4.0` names the commit before, and the build only uses a tag on HEAD itself."
+      },
+      {
+        "text": "`shipquote-1.4.1`: a commit made after a release raises the patch number by one.",
+        "correct": false,
+        "why": "Nothing raises a version on its own; the version is the tag on the commit, and here there is none."
+      },
+      {
+        "text": "An error: `ops/build.sh` refuses to build a commit with no tag of its own.",
+        "correct": false,
+        "why": "It builds, and names the result so that it cannot pass for a release."
+      }
+    ]
+  },
+  {
+    "id": "ex-3k4vndhc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Run 4 turned `main` red at commit `1247039`. Ana runs `git revert --no-edit HEAD`, pushes, and run 5 passes on `b33d78b`. What does `main`'s history hold now?",
+    "hint": "Automated Testing and CI/CD, lesson 5; Git and Teamwork: Version Control, Review and Process, lesson 4.",
+    "choices": [
+      {
+        "text": "`6b77129` at the top again: the revert moved `main` back to the commit before.",
+        "correct": false,
+        "why": "That is what `git reset` does; a revert adds a commit and moves nothing back."
+      },
+      {
+        "text": "`b33d78b` in the place of `1247039`, which the revert swapped for a corrected copy.",
+        "correct": false,
+        "why": "A revert replaces nothing; swapping the last commit for a new one is what `--amend` does."
+      },
+      {
+        "text": "`1247039` and, on top of it, `b33d78b`, a new commit that does the opposite.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`1247039` alone, with its change undone inside it and no new commit made.",
+        "correct": false,
+        "why": "A commit is never edited in place: its id covers its content, so any change is a new commit."
+      }
+    ]
+  },
+  {
+    "id": "ex-x3kbv2a9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The lab's `post-receive` hook reported run 4 as failed, and the broken commit was on `main` all the same. On a hosting service, what would have kept it out?",
+    "hint": "Automated Testing and CI/CD, lesson 5; Git and Teamwork: Version Control, Review and Process, lesson 8.",
+    "choices": [
+      {
+        "text": "`set -e` at the top of the hook, so that its first failing cell rejects the push.",
+        "correct": false,
+        "why": "The hook runs after git has accepted the push; nothing it does then can refuse it."
+      },
+      {
+        "text": "A pull request into a protected `main` whose checks must pass before the merge.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Pushing with `-u`, so that git waits for the checks before it moves `origin/main`.",
+        "correct": false,
+        "why": "`-u` only records which remote branch yours goes with; git itself knows nothing of checks."
+      },
+      {
+        "text": "Nothing can: a Git server takes any push that moves a branch forward.",
+        "correct": false,
+        "why": "Git does take it; the hosting service adds branch protection on top, which Git knows nothing about."
+      }
+    ]
+  },
+  {
+    "id": "ex-h9fpg8zw",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A release of the repository that publishes this course starts from a tag. Put the steps in order, from the developer's terminal to the new revision serving.",
+    "hint": "Automated Testing and CI/CD, lesson 7; Git and Teamwork: Version Control, Review and Process, lesson 7.",
+    "items": [
+      "Push the annotated tag on its own, with `git push origin` and its name",
+      "`Tag` refuses a malformed tag, one lower than the last release, or one off `main`",
+      "`Checks` runs the whole CI workflow, called rather than copied",
+      "`Publish` builds, asks the binary its version and creates the release",
+      "`Deploy` pushes the images and moves the service to the new revision"
+    ],
+    "trap": "Building first looks quicker, but each job needs the one before: the tag is judged before anything runs, and nothing is built from a commit the checks have not passed. A plain `git push` would not even start it, because it sends no tags."
+  },
+  {
+    "id": "ex-zgpxvsdd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Ana runs `git push -u origin try-new-rounding` against the lab's remote, and the hook answers `ci: try-new-rounding is not main, nothing to run`. What happened?",
+    "hint": "Automated Testing and CI/CD, lesson 5; Git and Teamwork: Version Control, Review and Process, lesson 7.",
+    "choices": [
+      {
+        "text": "The branch now exists on the remote, and no test ran on it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The push was refused, because the hook turns away pushes to other branches.",
+        "correct": false,
+        "why": "The hook decides whether to run tests, not whether to accept; `* [new branch]` shows the branch was received."
+      },
+      {
+        "text": "The tests ran and passed, which is why the hook printed so little.",
+        "correct": false,
+        "why": "A passing run still prints a line per cell and `run N passed`; this one ran nothing."
+      },
+      {
+        "text": "The branch was merged into `main` first, so that the hook could test it.",
+        "correct": false,
+        "why": "Nothing merges on a push; the branch arrived as it was, beside `main`."
+      }
+    ]
+  },
+  {
+    "id": "ex-mzknwqe5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On a branch nobody has pushed, Ana committed `deploy/production.env` with the carrier token, then removed it in the next commit. Bruno says that since the branch never left her laptop, `git reset --hard HEAD~2` settles it. What do the two courses say to do?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 10; Automated Testing and CI/CD, lesson 9.",
+    "choices": [
+      {
+        "text": "Leave it: the second commit already took the token out of the history.",
+        "correct": false,
+        "why": "`git show HEAD~1:deploy/production.env` still prints it; deleting a file does not change the commit that added it."
+      },
+      {
+        "text": "The reset settles it: a commit kept on her own laptop has reached no other copy.",
+        "correct": false,
+        "why": "Both courses treat a committed secret as public from that moment; the reset only stops it spreading."
+      },
+      {
+        "text": "Run `git filter-repo` over the history and replace each clone before anything else.",
+        "correct": false,
+        "why": "That is the route for commits already pushed, and even then it comes after revoking the token."
+      },
+      {
+        "text": "Rotate the token first; after that, the reset is a fine way to drop both commits.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ga313da5",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each thing that went wrong to the quickest way back the two courses give for it.",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 4; Automated Testing and CI/CD, lesson 10.",
+    "pairs": [
+      {
+        "left": "An edit to `menu.html` that was never staged",
+        "right": "`git restore menu.html`"
+      },
+      {
+        "left": "A bad commit already on the shared `main`",
+        "right": "`git revert` of that commit"
+      },
+      {
+        "left": "A canary at 25% erring 2 points above the baseline",
+        "right": "Its weight set to 0 in the routes file"
+      },
+      {
+        "left": "A new feature on for 50% of customers",
+        "right": "Its percentage set to 0 in the flags file"
+      }
+    ],
+    "right_distractors": [
+      "The old release rebuilt from its tag"
+    ]
+  },
+  {
+    "id": "ex-8c5v9mtw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A team works trunk based: the half-built delivery estimate is merged into `main` every day behind `delivery_estimate`, which production now has at 10%. Its CI runs the suite with every flag off. What does that leave untested?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 9; Automated Testing and CI/CD, lesson 10.",
+    "choices": [
+      {
+        "text": "Little that matters: below 100% most customers have it off, so off is the state to test.",
+        "correct": false,
+        "why": "At 10% both paths run in production; a suite that only knows every flag off tests a program nobody runs."
+      },
+      {
+        "text": "The merging: with a flag, trunk-based work should stay on its branch until it is done.",
+        "correct": false,
+        "why": "Merging unfinished work behind a flag is the point of trunk based; the gap is in the tests, not the branch."
+      },
+      {
+        "text": "The flags file, which the program reads once at start-up and then keeps in memory.",
+        "correct": false,
+        "why": "`flags.load()` reads the file on every request; that is how 10% became 50% with no restart."
+      },
+      {
+        "text": "The path the 10% of customers take: a flag mid-rollout has to be tested in both of its states.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ztnyxmfv",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A team of four finishes about 30 points in a normal sprint, with each person there for all 10 days. This sprint Carla is away for 5 days and Diego for 3. By lesson 18's arithmetic, about how many points of capacity does the team have, before any slack is left?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 18.",
+    "value": 24,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-h0deeb34",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Before tidying up old branches, Ana runs `git branch ___`, which lists the ones whose commits are all already in the branch she is on: the ones `git branch -d` will delete without complaint.",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 5.",
+    "blanks": [
+      {
+        "accept": [
+          "--merged"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5hvqsc1g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "At 15:00 on a later day, Ana runs `git log --oneline --since=\"2026-09-17\"` on the bakery's week. `6555c9b` and `eadf998` are listed, but `31a6298 Add cheese rolls`, committed at 10:15 on the 17th, is not. Why?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 3.",
+    "choices": [
+      {
+        "text": "`--since` keeps what came after the day named, so the 17th itself is left out.",
+        "correct": false,
+        "why": "The day is not excluded as such; with `00:00` written after the date, the same command lists `31a6298`."
+      },
+      {
+        "text": "The commit's date is in `-0300`, and `--since` compares it in UTC, three hours later.",
+        "correct": false,
+        "why": "The zone is part of the stored date and is taken into account; the missing piece is the hour."
+      },
+      {
+        "text": "A date with no time means that day at the current time of day, here 15:00.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The log filled the first screen and waited, so the older commit sits further down.",
+        "correct": false,
+        "why": "`git log` does page long output, but three lines fit on any screen; nothing is waiting below."
+      }
+    ]
+  },
+  {
+    "id": "ex-4jt2tq9p",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "prompt": "Ana is on `main` with a clean working tree, and Bruno has just pushed a new commit to `origin`. Which of these commands change files in her working tree? Choose all that apply.",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lessons 5 and 7.",
+    "choices": [
+      {
+        "text": "`git fetch`, to bring in what Bruno pushed",
+        "correct": false,
+        "why": "It copies his commit and moves `origin/main`; her own `main` and her files stay as they were."
+      },
+      {
+        "text": "`git pull`, which here fast-forwards `main`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`git branch menu-prices`, to start new work",
+        "correct": false,
+        "why": "It writes a name for the current commit and copies nothing; she is still on `main`."
+      },
+      {
+        "text": "`git switch experiment`, whose `index.html` differs",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-3fmdkx99",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "By `shipquote`'s freight table in lesson 1, what does a parcel of 1600 g to the CEP `70040-010` cost, in cents, for a basket whose subtotal is 5000 cents?",
+    "hint": "Automated Testing and CI/CD, lesson 1.",
+    "value": 3540,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-qd8tjn9k",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A service takes about 2,000,000 quote requests a month and sets its objective at 99.99% of requests succeeding. By lesson 11's reasoning, how many failed requests does its error budget allow in that month?",
+    "hint": "Automated Testing and CI/CD, lesson 11.",
+    "value": 200,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-bav0zah9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Every quote from production comes back with a 200, but the one for `01310-100`, 1200 g, subtotal 5000, is R$ 21,90 today where it was R$ 18,60 yesterday. Nobody deployed. Where does the course say the cause shows first?",
+    "hint": "Automated Testing and CI/CD, lessons 2 and 9.",
+    "choices": [
+      {
+        "text": "In `/version`, which stops naming the carrier once the shop falls back to its table.",
+        "correct": false,
+        "why": "`/version` reports the configured carrier URL whether or not the carrier is answering."
+      },
+      {
+        "text": "In the smoke test, which fails as soon as a price comes from the table instead.",
+        "correct": false,
+        "why": "The smoke test asks only `/health` and `/version`, and both still answer as expected."
+      },
+      {
+        "text": "In the error rate, which climbs with each request the carrier fails to answer now.",
+        "correct": false,
+        "why": "A fallback is answered with a 200; an error rate counts 5xx and silence, so it stays at zero."
+      },
+      {
+        "text": "In the log, as `carrier unavailable, using the table:` followed by the carrier's error.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-5b1hsr59",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Mutation testing left a survivor in `store.py`: `ORDER BY created_at DESC, id DESC` changed to `ORDER BY created_at DESC`. Which new test would kill it?",
+    "hint": "Automated Testing and CI/CD, lesson 4.",
+    "choices": [
+      {
+        "text": "Two quotes with the same `created_at`, and `recent(2)` expected to list the newer id first.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A quote saved with negative cents, and the database expected to refuse it.",
+        "correct": false,
+        "why": "That kills the other survivor, the loosened `CHECK (cents >= 0)`; it never reaches the ordering."
+      },
+      {
+        "text": "Any test that raises the coverage of `store.py`, since a survivor marks a line nobody ran.",
+        "correct": false,
+        "why": "`store.py` is already at 100%: the line ran, and what is missing is an assertion that tells the orders apart."
+      },
+      {
+        "text": "Ten quotes from the factory, and `recent(10)` expected to list the ten, newest first.",
+        "correct": false,
+        "why": "The factory gives every quote its own `created_at`, so the tie-break on `id` is never needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-qkjmfnyj",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "On GitHub Actions, a suite has one failing test and coverage stands at 81%. Which of these `run:` steps would still show green? Choose all that apply.",
+    "hint": "Automated Testing and CI/CD, lessons 4 and 5.",
+    "choices": [
+      {
+        "text": "No `shell:` line, running `python -m pytest -q | tee run.log`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`shell: bash`, running `python -m pytest -q | tee run.log`",
+        "correct": false,
+        "why": "Naming the shell gives `-eo pipefail`, so pytest's failure fails the pipe and the step."
+      },
+      {
+        "text": "No `shell:` line, running `coverage report --fail-under=85 | tail -1`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "No `shell:` line, running `python -m pytest -q` on its own",
+        "correct": false,
+        "why": "`bash -e` stops on pytest's non-zero status; it is the pipe that hides one."
+      }
+    ]
+  },
+  {
+    "id": "ex-we68qfk9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A script reads a setting from a file a colleague wrote in a Windows editor: `mode=$(cat mode.txt)`. `echo \"$mode\"` prints `prod`, and yet `[ \"$mode\" = prod ]` is false every time it runs. What is going on?",
+    "hint": "Linux and the Command Line, lesson 1.",
+    "choices": [
+      {
+        "text": "`$( )` keeps the file's final newline, so the value is really `prod` followed by a line break.",
+        "correct": false,
+        "why": "`$( )` strips trailing newlines; the `\\n` is gone, and the character before it is not."
+      },
+      {
+        "text": "The lines end in `\\r\\n`, so the value is `prod` and a carriage return, which `cat -A` shows as `^M`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Inside `[ ]`, `=` compares numbers, so two words do not compare as equal; a comparison of strings needs `==` there.",
+        "correct": false,
+        "why": "`=` is the string comparison in `[ ]`; the letter operators, `-eq` and the rest, are for numbers."
+      },
+      {
+        "text": "`mode` was never exported, so the `[` command receives an empty value to compare.",
+        "correct": false,
+        "why": "`[` is handed the value already expanded, as an argument; `export` only matters to a child reading its environment."
+      }
+    ]
+  },
+  {
+    "id": "ex-r4m1s148",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your service's image is `FROM alpine:3.22`, and the build copies in a monitoring agent downloaded as a prebuilt Linux x86_64 binary. The file is there and executable, but it refuses to start, with an error about a missing shared library. The same binary runs on your Ubuntu laptop. What is wrong, and what do the two lessons suggest?",
+    "hint": "Linux and the Command Line, lesson 2; Docker and Containers, lesson 13.",
+    "choices": [
+      {
+        "text": "Alpine's `/bin/sh` is busybox `ash`, not bash, so it has to be added with `apk add --no-cache bash`.",
+        "correct": false,
+        "why": "That is what breaks a `#!/bin/bash` script. A compiled program needs no shell, and the library it misses is the C library."
+      },
+      {
+        "text": "It was built for another processor, and rebuilding the image for `arm64` will let it start.",
+        "correct": false,
+        "why": "It runs on an x86_64 laptop, so the architecture matches; what differs between the two machines is the C library."
+      },
+      {
+        "text": "Busybox lacks the GNU flags the agent calls `ls` and `grep` with, so install the GNU tools beside it.",
+        "correct": false,
+        "why": "A missing flag fails later, on that flag. A missing shared library is the program refused before it runs at all."
+      },
+      {
+        "text": "It was linked against glibc and Alpine ships musl; build on a Debian `-slim` base, which has glibc.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-b7ysk2m8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An image builds a tool into `/app/bin` during `docker build`. To try a code change, a teammate runs it with `-v \"$PWD\":/app`, and inside the container `/app/bin` is not there. Run without the `-v`, it is. What happened to it?",
+    "hint": "Linux and the Command Line, lesson 3; Docker and Containers, lesson 8.",
+    "choices": [
+      {
+        "text": "The host directory lies over `/app` and covers what the image put there, which is untouched.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The mount copied the host directory into the image and replaced `/app/bin` there for good, layer and all.",
+        "correct": false,
+        "why": "Nothing in the image changes. Without the mount the files are back, the way `oops.txt` came back after `umount`."
+      },
+      {
+        "text": "A bind mount is read-only by default, so the container does not see what it did not write itself.",
+        "correct": false,
+        "why": "Read-only is `:ro`, added on purpose, and it is about writing; it does not decide what is visible."
+      },
+      {
+        "text": "`docker run` discards the build layer holding `/app/bin` whenever a volume is passed to it at start.",
+        "correct": false,
+        "why": "No layer is thrown away; the mount sits on top of the directory and the layer is still underneath it."
+      }
+    ]
+  },
+  {
+    "id": "ex-4apb6hyh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On a new server you ran `sudo usermod -aG docker ana`. In the same terminal, `getent group docker` prints `docker:x:996:ana`, yet `docker ps` answers `permission denied while trying to connect to the docker API at unix:///var/run/docker.sock`. What do you do?",
+    "hint": "Linux and the Command Line, lesson 4; Docker and Containers, lesson 5.",
+    "choices": [
+      {
+        "text": "Run `usermod -G docker ana` instead, since `-a` only appends to the file and grants nothing yet.",
+        "correct": false,
+        "why": "`-G` without `-a` replaces every other supplementary group, which is how people lose `sudo`; the change is already written."
+      },
+      {
+        "text": "Run `sudo chmod 666 /var/run/docker.sock`, so the socket stops checking the group of whoever connects.",
+        "correct": false,
+        "why": "That hands every account on the machine what the docker group amounts to, and the group amounts to root."
+      },
+      {
+        "text": "Log out and in again: a shell keeps the groups it began with, and `id -nG` then shows `docker`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Start the engine with `sudo systemctl start docker`, because the daemon is not running yet.",
+        "correct": false,
+        "why": "A stopped engine answers `failed to connect to the docker API`; `permission denied` means it is up and refused you."
+      }
+    ]
+  },
+  {
+    "id": "ex-xpfhw277",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "A colleague hand-wrote a unit file for a nightly importer. Match each line in it to what systemd actually does with it, by lesson 5.",
+    "hint": "Linux and the Command Line, lesson 5.",
+    "pairs": [
+      {
+        "left": "`Descriptoin=Nightly importer`",
+        "right": "dropped with a warning nobody sees unless `systemd-analyze verify` is run"
+      },
+      {
+        "left": "`ExecStart=/usr/bin/importer > /var/log/importer.log`",
+        "right": "the `>` and the path reach the program as two more arguments"
+      },
+      {
+        "left": "`Type=forking`, for a program that stays in the foreground",
+        "right": "the start hangs, then times out, with nothing actually broken"
+      },
+      {
+        "left": "`After=network.target`",
+        "right": "it starts once the network is configured, which is not when it is reachable"
+      }
+    ],
+    "right_distractors": [
+      "the whole unit is refused and never loads"
+    ]
+  },
+  {
+    "id": "ex-8k3156sp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A service's Dockerfile ends with `CMD ./start.sh`, in shell form, and the script starts the server on its last line. Every `docker stop` takes ten seconds, the container then shows `Exited (137)`, and the server's log never has its shutdown message. What explains all three?",
+    "hint": "Linux and the Command Line, lesson 6; Docker and Containers, lesson 11.",
+    "choices": [
+      {
+        "text": "The server catches `TERM` and is still flushing when the ten seconds run out, so a longer stop timeout would turn 137 into 0.",
+        "correct": false,
+        "why": "With no shutdown line in the log the server never received the signal at all, and waiting longer only delays the `KILL`."
+      },
+      {
+        "text": "`TERM` reaches a shell that does not pass it on; after the wait comes `KILL`, 128 + 9. Use exec form and `exec` the server.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "137 is the out-of-memory killer at work, so the container needs a higher memory limit before it can stop any faster.",
+        "correct": false,
+        "why": "137 is any `KILL`. A memory kill is recorded as `OOMKilled=true`; this one is `docker stop`'s own `KILL` after its wait."
+      },
+      {
+        "text": "`docker stop` sends `KILL` straight away, and the ten seconds are the engine first saving the container's layer.",
+        "correct": false,
+        "why": "It sends the polite signal first and waits ten seconds before the `KILL`; the stopped container keeps its layer regardless."
+      }
+    ]
+  },
+  {
+    "id": "ex-e8f7dz3g",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "You are writing the `RUN` instruction that installs `ca-certificates` in a Dockerfile built on Debian. Which of these belong in it, by the two lessons? Choose all that apply.",
+    "hint": "Linux and the Command Line, lesson 7; Docker and Containers, lesson 14.",
+    "choices": [
+      {
+        "text": "`apt-get` rather than `apt`, whose output its authors may change",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`rm -rf /var/lib/apt/lists/*` as a separate `RUN`, at the end of the file",
+        "correct": false,
+        "why": "A file deleted in a later layer is still in the earlier one; the cleanup has to be in the same `RUN`."
+      },
+      {
+        "text": "`--no-install-recommends`, so only what `Depends` lists arrives",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`dpkg -i` on a `.deb` fetched first, so no dependency resolution runs",
+        "correct": false,
+        "why": "`dpkg` resolves nothing: a missing dependency leaves the package unpacked and unconfigured, `iU`."
+      }
+    ]
+  },
+  {
+    "id": "ex-jtsp8ef5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your Nginx access log is in the combined format, with lines like `127.0.0.1 - - [07/Oct/2026:00:11:23 -0300] \"GET /css/site.css HTTP/1.0\" 200 237 \"-\" \"ApacheBench/2.3\"`. To count client errors, a teammate runs `grep -c ' 4[0-9][0-9] ' access.log`, which reports more than `awk '$9 >= 400 && $9 < 500' access.log | wc -l`. Which count do you trust?",
+    "hint": "Linux and the Command Line, lesson 8; Web Servers and Caching, lesson 1.",
+    "choices": [
+      {
+        "text": "grep's: awk splits on spaces, so it loses the lines whose user agent has a space inside it.",
+        "correct": false,
+        "why": "The user agent comes after field nine. A free-text field only moves the fields after it, so `$9` is the status on every line."
+      },
+      {
+        "text": "grep's: awk reads each field as text, so a status such as `404` is not `>= 400` to it.",
+        "correct": false,
+        "why": "`$9 >= 400` is arithmetic on a field, which is the thing `grep` cannot do."
+      },
+      {
+        "text": "awk's: the status is field nine, and the pattern also matches a `200` whose size, in field ten, happens to be 410.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "awk's: `grep -c` counts each match on a line, so a line holding two such numbers is counted twice.",
+        "correct": false,
+        "why": "`grep -c` counts matching lines, not matches; a line is counted once however many times it matches."
+      }
+    ]
+  },
+  {
+    "id": "ex-3t8p7tyg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A CI step runs a script that begins `set -euo pipefail`, defines `check() { ./migrate --dry-run; echo \"migrations checked\"; }` and then runs `if check; then ./deploy.sh; fi`. `./migrate` fails and prints an error, the deploy happens anyway, and the job is green. Why did nothing stop?",
+    "hint": "Linux and the Command Line, lesson 9; Automated Testing and CI/CD, lesson 5.",
+    "choices": [
+      {
+        "text": "`-e` is suspended for the whole of a function called as a condition, so `check` ran on and returned the `echo`'s 0.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The CI reads the step's output for errors, and `migrations checked` was the last line it saw printed there.",
+        "correct": false,
+        "why": "A CI decides on the exit status alone; it never reads the output, so the words printed cannot turn a step green or red."
+      },
+      {
+        "text": "With `pipefail` set, `-e` stops applying, and `pipefail` itself looks at pipelines and nothing else.",
+        "correct": false,
+        "why": "The two are independent: `pipefail` changes what a pipeline reports, and `-e` still applies everywhere it applies."
+      },
+      {
+        "text": "`-e` does not reach inside a function, so a failure inside `check` is ignored wherever it is called from.",
+        "correct": false,
+        "why": "Called as a plain command, a failing line inside a function does stop the script; the suspension comes from the `if`."
+      }
+    ]
+  },
+  {
+    "id": "ex-vhb5xf8w",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "On lesson 10's `sales.csv`, `Get-Content sales.csv | Measure-Object -Line` reports 33 lines. How many does `Import-Csv sales.csv | Measure-Object` count?",
+    "hint": "Linux and the Command Line, lesson 10.",
+    "value": 32,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-k9psz5cn",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "A host where `nproc` prints 4 runs a container started with `--cpus 1`, so the container gets one processor's worth of time. What does `nproc` print inside that container?",
+    "hint": "Linux and the Command Line, lesson 11; Docker and Containers, lesson 2.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-18s49qjq",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "`git commit` without `-m` opens an editor for the message. Put the places it looks for one in order, the one consulted first at the top.",
+    "hint": "Linux and the Command Line, lesson 12; Git and Teamwork: Version Control, Review and Process, lesson 1.",
+    "items": [
+      "`core.editor` in git's own configuration",
+      "the `$VISUAL` variable",
+      "the `$EDITOR` variable",
+      "the system's fallback, `/usr/bin/editor` on Ubuntu or `vi`"
+    ],
+    "trap": "`$EDITOR` is the famous one and feels like it must win; git's own setting beats both variables, and `$VISUAL` is read before `$EDITOR`."
+  },
+  {
+    "id": "ex-66dgr1hj",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "Two hundred servers share one timer unit with `OnCalendar=*-*-* 03:00:00`, and the file server they all upload to falls over at three every night. To break that synchrony, the `[Timer]` section gets `___=30m`, which gives each machine its own fixed delay of up to thirty minutes.",
+    "hint": "Linux and the Command Line, lesson 13; Scale and Observability, lesson 10.",
+    "blanks": [
+      {
+        "accept": [
+          "RandomizedDelaySec",
+          "RandomizedDelaySec="
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
