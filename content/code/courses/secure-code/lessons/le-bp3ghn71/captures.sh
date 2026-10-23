@@ -26,7 +26,7 @@
 
 D=/home/ana/sc/search
 rm -rf "$D"
-( . /home/ana/sc/.venv/bin/activate && flock /var/tmp/secure-code-pip.lock pip uninstall -q -y sqlalchemy greenlet ) >/dev/null 2>&1
+( . /home/ana/sc/.venv/bin/activate && flock /var/tmp/secure-code-pip.lock pip uninstall -q -y sqlalchemy ) >/dev/null 2>&1
 
 block setup
 run /home/ana/sc 'mkdir search'
