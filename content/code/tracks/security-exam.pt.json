@@ -1,0 +1,2961 @@
+{
+  "ex-55mc7fc6": {
+    "prompt": "O achado JTB-2026-02, do nginx no `web`, não tem como ser corrigido até a data: o pacote corrigido quebra a configuração de proxy do portal. A ana, da TI, escreve uma exceção com um limite de taxa na borda como controle compensatório, e pretende aprovar ela mesma, sem validade, porque é quem mais conhece o servidor. O que transforma isso numa decisão de risco legítima?",
+    "hint": "Fundamentos de Segurança da Informação, aula 3; Defesa de Endpoint e Hardening, aula 16.",
+    "choices": [
+      {
+        "text": "Quem responde pelo risco do ativo assina, e ela caduca numa data marcada",
+        "why": "A TI propõe os controles e o dono do ativo aceita o que sobra. Uma exceção sem validade é como um achado vira permanente."
+      },
+      {
+        "text": "Nada mais: o limite de taxa mitiga o risco, então não sobra nada para aceitar",
+        "why": "Todo tratamento, menos evitar, deixa um risco residual, e alguém com autoridade tem de aceitá-lo."
+      },
+      {
+        "text": "Registrar como transferido ao fornecedor, cujo chamado segue aberto até hoje",
+        "why": "Um chamado não leva consequência nenhuma a lugar nenhum. Mesmo uma transferência de verdade deixa a responsabilização com quem escolheu o fornecedor."
+      },
+      {
+        "text": "Chamar de evitar, já que a porta 80 agora limita a velocidade com que se chega ao nginx",
+        "why": "Evitar é parar a atividade que cria o risco. O portal continua rodando o nginx vulnerável."
+      }
+    ]
+  },
+  "ex-7hbhem0r": {
+    "prompt": "O SOC revisa o detector de logins da semana da loja. No limite 3, deixando `svc-backup` de fora, o `detect.py` imprimiu TP 9, FP 5, FN 2 e TN 75. Qual é a taxa de falsos positivos desse detector, em porcentagem?",
+    "hint": "Fundamentos de Segurança da Informação, aula 11.",
+    "unit": "%"
+  },
+  "ex-jrewjngj": {
+    "prompt": "Uma regra sobre o log do portal dispara às 03:10 para uma conta. A primeira linha é `192.168.10.20 ana \"GET /payslips/bruno HTTP/1.1\" 403 -`, e em poucos minutos a mesma conta pede carla, diego e mais vinte nomes, todos respondidos com 403. O que o analista lê nisso, e o que vem depois?",
+    "hint": "Fundamentos de Segurança da Informação, aula 8; SOC, Monitoramento e Resposta a Incidentes, aula 7.",
+    "choices": [
+      {
+        "text": "Alguém está adivinhando a senha da ana e os 403 são logins que o portal recusou, então o endereço tem de ser bloqueado",
+        "why": "Um login que falha é 401, e estas linhas trazem o nome da ana porque as requisições se autenticaram."
+      },
+      {
+        "text": "O portal acabou de contar a quem pediu quais nomes estão na folha, então a folha está exposta",
+        "why": "O portal recusa pela permissão antes de checar se existe, então todo nome recebe o mesmo 403 e nada se aprende."
+      },
+      {
+        "text": "A conta da ana provou quem é e pede o que não lhe é permitido; pergunte a ela, e escale se não foi ela",
+        "why": "Uma alta de 403 é uma identidade autenticada explorando ou um papel errado. Se era esperado é pergunta para a ana ou para a gestora dela, registrada na nota."
+      },
+      {
+        "text": "Nada aconteceu, já que toda requisição foi recusada, então o alerta fecha como falso positivo com esse motivo",
+        "why": "A regra pegou exatamente o que descreve. Fechar um alerta verdadeiro sem perguntar é o erro mais caro da triagem."
+      }
+    ]
+  },
+  "ex-r668gr34": {
+    "prompt": "Na quinta-feira às 02:33, depois de 57 falhas em 19 contas, o `203.0.113.66` entrou no `gw` como bruno, com senha. Quais destes seriam um segundo fator no sentido da aula 9, de modo que a senha adivinhada sozinha não bastaria mais? Marque todas as corretas.",
+    "hint": "Fundamentos de Segurança da Informação, aula 9; SOC, Monitoramento e Resposta a Incidentes, aula 7.",
+    "choices": [
+      {
+        "text": "Um código TOTP de seis dígitos do app autenticador no celular do bruno",
+        "why": "Algo que ele tem. Quem adivinhou a senha não tem o segredo de que os códigos são calculados."
+      },
+      {
+        "text": "A resposta a uma pergunta de segurança que o bruno escolheu quando entrou",
+        "why": "Algo que ele sabe, como a senha, e perdido do mesmo jeito. O login fica mais longo e não mais forte em tipo."
+      },
+      {
+        "text": "Uma regra que recusa logins de países com que a empresa não faz negócios",
+        "why": "Localização é um sinal que aumenta ou diminui a suspeita, não prova de quem alguém é."
+      },
+      {
+        "text": "Uma aprovação por push no celular do bruno, com correspondência de número",
+        "why": "Posse do celular, e a correspondência de número impede a derrota pelo cansaço de tocar em sim."
+      },
+      {
+        "text": "Uma segunda senha, que o bruno tem de manter diferente da primeira",
+        "why": "Duas senhas são um fator só: as duas são algo que você sabe."
+      },
+      {
+        "text": "Uma chave de segurança que assina um desafio para o endereço em que foi registrada",
+        "why": "Posse de uma chave que nunca sai do dispositivo, e a mais forte das quatro da aula."
+      }
+    ]
+  },
+  "ex-t3y48c0g": {
+    "prompt": "Uma revisão do portal encontra as senhas da equipe guardadas como hashes Argon2id e os segredos TOTP guardados cifrados, com uma chave do gerenciador de segredos. Um colega pede que os segredos TOTP também passem por Argon2id, \"como as senhas\". Por que isso quebraria o MFA?",
+    "hint": "Fundamentos de Segurança da Informação, aula 9; Criptografia Aplicada, aula 5.",
+    "choices": [
+      {
+        "text": "O Argon2id misturaria um salt por conta em cada segredo, então os códigos que o servidor calcula deixariam de bater com os do celular",
+        "why": "O celular nunca vê o valor guardado. O problema é que o servidor não conseguiria mais recuperar o segredo de jeito nenhum."
+      },
+      {
+        "text": "Para conferir um código o servidor o calcula a partir do segredo, então precisa dele de volta, e um hash não devolve nada",
+        "why": "Uma senha só precisa ser reconhecida, então um hash de mão única basta. A conferência do TOTP é um HMAC calculado com o próprio segredo."
+      },
+      {
+        "text": "Nada quebraria, mas também não acrescentaria nada, já que os segredos TOTP já são aleatórios",
+        "why": "Quebraria todo login: guardado só o hash, nada consegue calcular o código esperado."
+      },
+      {
+        "text": "O Argon2id é lento demais para rodar dentro de um passo de 30 segundos",
+        "why": "O custo dele é o que um login com senha já paga. O problema é que um hash não volta a ser a chave."
+      }
+    ]
+  },
+  "ex-d4gdnn39": {
+    "prompt": "Meça as regras da semana contra o que de fato aconteceu, do jeito que a aula 11 conta um detector. Associe cada evento da semana ao seu resultado.",
+    "hint": "Fundamentos de Segurança da Informação, aula 11; SOC, Monitoramento e Resposta a Incidentes, aula 7.",
+    "pairs": [
+      {
+        "left": "um erro de digitação da helena e depois um sucesso, do endereço de sempre, na segunda, que gerou um alerta",
+        "right": "um falso positivo"
+      },
+      {
+        "left": "o alerta do login do bruno a partir de `203.0.113.66` às 02:33",
+        "right": "um verdadeiro positivo"
+      },
+      {
+        "left": "o `files` enviando 612,408,119 bytes para `203.0.113.200` às 02:41, sem regra nenhuma alertar",
+        "right": "um falso negativo"
+      },
+      {
+        "left": "o login do bruno a partir de `203.0.113.17` às 08:35, sem regra nenhuma alertar",
+        "right": "um verdadeiro negativo"
+      }
+    ],
+    "right_distractors": [
+      "um duplicado",
+      "um verdadeiro positivo benigno"
+    ]
+  },
+  "ex-53fkx85a": {
+    "prompt": "A clínica chama seu acesso à AWS de Zero Trust: a equipe entra pelo provedor de identidade com MFA, e a dani foi desativada lá na semana em que o contrato dela acabou, em março. Em outubro o relatório de credenciais ainda tem a linha dela como `dani,false,true,...`: sem MFA, uma chave de acesso ativa, usada hoje. O que essa linha significa para essa afirmação?",
+    "hint": "Fundamentos de Segurança da Informação, aula 7; Segurança em Nuvem, aula 6.",
+    "choices": [
+      {
+        "text": "Nada, porque a AWS ainda confere cada requisição contra a política da chave, que é o ponto de aplicação",
+        "why": "Essa conferência pergunta o que a chave pode fazer. Nunca pergunta quem está com a chave nem de que dispositivo, que é a decisão que a aula 7 põe na frente de cada recurso."
+      },
+      {
+        "text": "A chave devia ter sido limitada à rede do escritório, o que a teria mantido segura",
+        "why": "Localização não concede nada no Zero Trust. Uma chave aceita a partir do escritório continua sendo uma chave que qualquer um lá dentro pode ter."
+      },
+      {
+        "text": "É a identidade de emergência que todo desenho mantém fora do provedor, então ali ela é esperada",
+        "why": "Um usuário de emergência tem uma chave de hardware num cofre e nunca é usado. Este é usado, não tem MFA e pertence a alguém que saiu."
+      },
+      {
+        "text": "A identidade é o perímetro, e esta identidade fica fora do provedor que decide, e sem MFA",
+        "why": "Quando a localização deixa de decidir, a identidade decide. Um usuário do IAM que o processo de desligamento nunca toca é uma porta destrancada ao lado da que é vigiada."
+      }
+    ]
+  },
+  "ex-dy332k2x": {
+    "prompt": "O job de backup da loja no `db` roda toda noite desde março sem nenhum erro. Ponha o primeiro teste de restauração da ana, e o conserto, na ordem em que a aula 12 conta.",
+    "hint": "Fundamentos de Segurança da Informação, aula 12.",
+    "items": [
+      "`./backup.sh 2026-10-04` roda e não imprime nada",
+      "`tar -tzf` lista `data/` e os dois arquivos dela",
+      "o arquivo é restaurado numa pasta vazia",
+      "`diff -r` contra `/srv/shop` imprime `Only in /srv/shop: invoices`",
+      "`sed` acrescenta `invoices` à linha do `tar` no `backup.sh`",
+      "uma restauração nova comparada com `diff -r` não imprime nada e dá `exit 0`"
+    ],
+    "trap": "Uma listagem do `tar -tzf` parece prova, e parar ali é o erro: só a restauração comparada com os dados vivos mostrou que as notas fiscais nunca estiveram no arquivo."
+  },
+  "ex-q7en5bdg": {
+    "prompt": "Em 20 de maio a chave privada de `files.vereda.example` foi achada num repositório público, e o serial `3A03` entrou na CRL da Vereda como Key Compromise. Uma máquina no caminho agora serve o `files.pem` verdadeiro com essa chave. Quatro clientes se conectam a `files.vereda.example`. Qual deles recusa?",
+    "hint": "Criptografia Aplicada, aula 9; Segurança de Redes, aula 13.",
+    "choices": [
+      {
+        "text": "Um rodado com `-k`, para que ao menos tudo o que ele envia continue cifrado",
+        "why": "Cifrado para quem respondeu. O `-k` pula todas as verificações, então aceitaria até um certificado que o impostor fez sozinho."
+      },
+      {
+        "text": "Um que confere a cadeia contra a raiz da Vereda e as datas",
+        "why": "O certificado é verdadeiro e está dentro das datas, então os dois passam. Só a revogação sabe que a chave vazou."
+      },
+      {
+        "text": "Um que também confere o nome com `-verify_hostname`",
+        "why": "O nome na lista SAN é exatamente `files.vereda.example`. Uma chave roubada com o certificado verdadeiro passa na conferência de nome."
+      },
+      {
+        "text": "Um que confere `-crl_check` contra a CRL em vigor",
+        "why": "A CRL nomeia o `3A03`, e a verificação falha com `certificate revoked`. Cliente que não olha não fica sabendo."
+      }
+    ]
+  },
+  "ex-pvnak9hj": {
+    "prompt": "Um pull request no repositório de releases acrescenta uma linha para uma chave nova no `allowed_signers` e muda o script de release. Nesse branch, a tag de release assinada com a chave nova verifica como assinatura válida. O autor pede um merge rápido porque a assinatura confere. O que o revisor deve concluir?",
+    "hint": "Criptografia Aplicada, aula 6; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 8.",
+    "choices": [
+      {
+        "text": "Só diz que a chave está na lista, e é este branch que a põe lá, então essa linha precisa de revisão própria",
+        "why": "Quem controla o arquivo de signatários permitidos decide que chaves valem. É por isso que ele muda por revisão e é lido de um branch protegido."
+      },
+      {
+        "text": "A tag é confiável, já que uma assinatura só verifica quando a chave privada correspondente foi usada para fazê-la",
+        "why": "É verdade, e não diz nada sobre de quem é essa chave. O arquivo liga nomes a chaves, e o mesmo branch escreveu essa ligação."
+      },
+      {
+        "text": "Assinaturas Ed25519 são determinísticas, então o revisor pode assinar a tag de novo e comparar",
+        "why": "Assinar de novo exige a chave privada, que o revisor não tem, e bytes iguais não provariam nada sobre a lista."
+      },
+      {
+        "text": "O namespace `git` mostra que a chave foi feita para releases, então a linha nova é segura",
+        "why": "O namespace impede que uma assinatura feita para um propósito seja reaproveitada para outro. Não diz nada sobre quem é dono da chave."
+      }
+    ]
+  },
+  "ex-jh8t1ev1": {
+    "prompt": "A Vereda ensaia restaurar o portal numa máquina nova a partir do backup do banco da noite anterior. A aplicação sobe, as linhas do repositório começam com `$argon2id$v=19$m=19456,t=2,p=1$` como antes, e todo login da equipe, com a senha certa, responde `wrong password`. Qual a causa mais provável?",
+    "hint": "Criptografia Aplicada, aula 5; Fundamentos de Segurança da Informação, aula 12.",
+    "choices": [
+      {
+        "text": "A restauração deu um salt novo a cada conta, então os hashes guardados não batem mais",
+        "why": "O salt está escrito dentro de cada string guardada, então voltou junto com o banco a que pertence."
+      },
+      {
+        "text": "O custo do Argon2id depende do hardware, então a máquina nova calcula hashes diferentes",
+        "why": "Os parâmetros estão escritos em cada string, `m=19456,t=2,p=1`, e dão o mesmo resultado em qualquer máquina."
+      },
+      {
+        "text": "A pimenta fica fora do banco de dados, no gerenciador de segredos, e a máquina nova nunca a recebeu",
+        "why": "Sem a pimenta a senha certa é recusada, exatamente como o laboratório mostrou. Ela tem backup separado, e um teste de restauração tem de trazê-la também."
+      },
+      {
+        "text": "O arquivo se danificou na transferência, o que uma conferência contra o `SHA256SUMS` teria mostrado como um hash diferente",
+        "why": "Um arquivo danificado não restauraria linhas bem formadas que recusam todas do mesmo jeito. O repositório está inteiro e sem a chave dele."
+      }
+    ]
+  },
+  "ex-41xmz610": {
+    "prompt": "A exportação da agenda da Vereda sela um arquivo por dia, tirando o nonce de um contador num arquivo de estado, e em 8 de junho o servidor de exportação foi restaurado do backup de 4 de junho, arquivo de estado incluído. Se o `vcrypt nonce-audit` tivesse rodado como verificação agendada no fim de 9 de junho, sobre `agenda-06-01.gcm` a `agenda-06-09.gcm`, quantos nonces repetidos teria relatado?",
+    "hint": "Criptografia Aplicada, aula 17.",
+    "unit": "nonces"
+  },
+  "ex-hy94dn43": {
+    "prompt": "A loja guarda o `SHA256SUMS` na mesma pasta dos arquivos de backup no disco externo e confere cada cópia com `sha256sum -c`. A ana quer que a verificação pegue também quem troca um arquivo de propósito. Do que isso precisa?",
+    "hint": "Criptografia Aplicada, aula 6; Fundamentos de Segurança da Informação, aula 12.",
+    "choices": [
+      {
+        "text": "Passar de SHA-256 para SHA-512, cujo resumo mais longo é bem mais difícil de forjar",
+        "why": "Um hash mais longo continua sem chave. Quem troca o arquivo recalcula o resumo com a mesma facilidade."
+      },
+      {
+        "text": "Um HMAC ou uma assinatura no lugar do resumo puro, feitos com uma chave que o disco não guarda",
+        "why": "Um hash puro prova que o arquivo não se danificou, não quem o calculou. Uma verificação com chave não pode ser refeita por quem não tem a chave."
+      },
+      {
+        "text": "Rodar o `sha256sum -c` toda noite em vez de só quando uma cópia chega",
+        "why": "Conferir mais vezes não ajuda quando quem mudou o arquivo também reescreveu o `SHA256SUMS`."
+      },
+      {
+        "text": "Uma segunda cópia do `SHA256SUMS` na mesma pasta, para comparar com a primeira",
+        "why": "Quem consegue escrever um arquivo ali consegue escrever dois. As duas cópias acabam concordando com o arquivo trocado."
+      }
+    ]
+  },
+  "ex-6tsksbe1": {
+    "prompt": "Uma revisão do repositório de deploy encontra o `portal-secret.yaml`, commitado meses atrás, com `password: Vi1kYi1zM2NyZXQtMjAyNg==` debaixo de `data:`. O desenvolvedor diz que está tudo bem, porque é um Secret do Kubernetes. O que a revisão deve dizer?",
+    "hint": "Criptografia Aplicada, aula 11; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10.",
+    "choices": [
+      {
+        "text": "É a senha do banco no Git: o `base64 -d` a recupera, então a senha tem de mudar",
+        "why": "Base64 é uma codificação sem chave, e um valor num commit fica em todo clone. Só uma senha nova torna essas cópias inúteis."
+      },
+      {
+        "text": "Está seguro enquanto o cluster cifrar seu armazenamento em repouso, com um provedor de chaves por trás",
+        "why": "Isso protege a cópia dentro do cluster. A cópia no repositório é lida por qualquer um que consiga cloná-lo."
+      },
+      {
+        "text": "Um commit novo apagando o arquivo basta, já que o valor estava só codificado",
+        "why": "Apagar um arquivo não muda o commit que o acrescentou, então o valor continua no histórico."
+      },
+      {
+        "text": "Só quem tem acesso de leitura ao Secret pelo `kubectl` consegue decodificar o valor",
+        "why": "Qualquer um que leia o repositório tem a mesma string, e decodificá-la não exige acesso a nada."
+      }
+    ]
+  },
+  "ex-mg2kjybr": {
+    "prompt": "O monitoramento da Vereda calcula os dias restantes de cada certificado que ela usa, do jeito que a aula 9 calculou 154 para o `portal.pem`, para que uma renovação que falhou em silêncio seja notada a tempo. Com quantos dias de antecedência a aula 9 diz que uma verificação dessas costuma alertar? ___",
+    "hint": "Criptografia Aplicada, aula 9.",
+    "blanks": [
+      {
+        "accept": [
+          "30",
+          "trinta"
+        ]
+      }
+    ]
+  },
+  "ex-pf0m3xf2": {
+    "prompt": "Três semanas depois de uma chave de pagamento ser enviada num `.env`, o time reescreveu o histórico com `git filter-repo`, todo desenvolvedor clonou de novo, e o `git log -S` no histórico novo não acha nada. O chamado pede para ser fechado. O que ainda falta?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10; Criptografia Aplicada, aula 17.",
+    "choices": [
+      {
+        "text": "Um `git revert` do commit que acrescentou a chave, para o histórico registrar a remoção",
+        "why": "Depois da reescrita não existe mais esse commit para reverter, e um revert nunca remove nada de um histórico."
+      },
+      {
+        "text": "Revogar a chave no provedor e emitir uma nova, porque cópias antigas ainda a guardam",
+        "why": "Os runners de CI, o clone de um terceirizado e os backups do servidor git foram feitos antes da reescrita. Só uma chave nova torna todos eles inúteis."
+      },
+      {
+        "text": "Nada: depois que todo clone foi trocado, não sobra mais cópia com a chave em lugar nenhum",
+        "why": "Trocar os clones que o time controla não alcança nenhuma das cópias feitas em outros lugares nessas três semanas."
+      },
+      {
+        "text": "Uma linha para `.env` no `.gitignore`, para o Git parar de guardar as versões antigas dele",
+        "why": "O `.gitignore` só mantém arquivos não rastreados fora dos próximos commits. Nunca mexe no que um histórico já guarda."
+      }
+    ]
+  },
+  "ex-qx6zt979": {
+    "prompt": "Para dimensionar o incidente, um analista precisa estabelecer desde quando, e até quando, a chave do webhook esteve no repositório do portal. O `settings.py` de hoje a lê do ambiente. Quais destes comandos respondem à pergunta? Marque todas as corretas.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 3; Criptografia Aplicada, aula 17.",
+    "choices": [
+      {
+        "text": "`git -C portal log --oneline -S \"$(cat keys/webhook.hex)\"`",
+        "why": "Lista todo commit que acrescentou ou removeu essa string: o que trouxe a chave e o que a tirou."
+      },
+      {
+        "text": "`git -C portal blame settings.py`",
+        "why": "O blame só enxerga linhas que existem agora, e a linha com a chave sumiu do arquivo de hoje."
+      },
+      {
+        "text": "`git -C portal log -p | grep -nE '[0-9a-f]{64}'`",
+        "why": "Procura em todos os diffs do histórico, e acha a chave no diff que a acrescentou e no que a removeu."
+      },
+      {
+        "text": "`grep -n WEBHOOK portal/settings.py`",
+        "why": "Lê o arquivo como está hoje, que só mostra a linha que lê o ambiente."
+      },
+      {
+        "text": "`git -C portal show HEAD:settings.py`",
+        "why": "`HEAD` é o commit mais recente, o limpo. Não diz nada sobre quando a chave esteve lá."
+      }
+    ]
+  },
+  "ex-4jze0xrz": {
+    "prompt": "No repositório do portal, `git log -1` num commit que mudou o código de pagamento imprime `Author: Bruno Reis <bruno.reis@vereda.example>`. O Bruno diz que nunca o fez. O que essa linha `Author` prova?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 3; Criptografia Aplicada, aula 6.",
+    "choices": [
+      {
+        "text": "Que o Bruno o fez, porque o id do commit é um hash que o Git calcula sobre tudo nele, autor incluído",
+        "why": "O hash faz aparecer uma edição posterior do autor. Não diz nada sobre quem digitou o nome lá no começo."
+      },
+      {
+        "text": "Que veio da própria máquina do Bruno, porque o Git lê o nome do autor da conta dele no sistema operacional",
+        "why": "O Git o tira da configuração ou de variáveis como `GIT_AUTHOR_NAME`, que é como um script fez a semana inteira como Ana e Bruno."
+      },
+      {
+        "text": "Que o Bruno o aprovou, porque a plataforma registra todo merge com um nome",
+        "why": "O veredito de uma revisão é registrado junto ao pull request no serviço de hospedagem. O campo de autor é escrito por quem rodou o `git commit`."
+      },
+      {
+        "text": "Só o que quem fez o commit quis escrever; uma assinatura conferida no `allowed_signers` a ligaria a uma chave",
+        "why": "Qualquer um define o autor. Uma assinatura só pode ser feita com a chave privada, e o arquivo de signatários permitidos diz de quem é essa chave."
+      }
+    ]
+  },
+  "ex-x8q7xxzf": {
+    "prompt": "A Ana commitou o `.env` com uma chave real e não fez push. Ela roda `git reset --hard HEAD~1`, e o `git log` não mostra mais esse commit. Que comando ainda lista o id dele na máquina dela, por semanas? `git ___`",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 4.",
+    "blanks": [
+      {
+        "accept": [
+          "reflog"
+        ]
+      }
+    ]
+  },
+  "ex-rprnf7ab": {
+    "prompt": "A chave de um provedor de SMS no `app.py` foi commitada e enviada ao `main` compartilhado ontem. Um desenvolvedor roda `git revert` nesse commit e envia o resultado. O que isso conseguiu?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 4; Codificação Segura, aula 16.",
+    "choices": [
+      {
+        "text": "O commit com a chave sumiu do `main`, então os clones feitos daqui em diante nunca a recebem",
+        "why": "Um revert não remove nada. Acrescenta um commit por cima, e o antigo fica no histórico que todo clone recebe."
+      },
+      {
+        "text": "A cópia de todo mundo perde a chave na próxima vez que fizer pull do repositório compartilhado",
+        "why": "Um pull traz o commit novo. O antigo, com chave e tudo, fica em todas as cópias."
+      },
+      {
+        "text": "Um commit novo tira a chave dos arquivos, e o commit antigo ainda a guarda",
+        "why": "É para isso que serve o revert, e é por isso que a chave continua exposta. Só a rotação no provedor faz a cópia do histórico não abrir nada."
+      },
+      {
+        "text": "A chave foi revogada, já que o commit que a levou ao `main` foi desfeito",
+        "why": "O Git não revoga nada. O provedor continua aceitando a chave até alguém emitir uma nova e revogar a antiga."
+      }
+    ]
+  },
+  "ex-w80vgccq": {
+    "prompt": "O `settings.local` foi commitado há muito tempo e depois entrou no `.gitignore`, mas toda edição nele continua aparecendo. Ponha em ordem os passos que fazem o Git parar de rastreá-lo e mantêm o arquivo no disco.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10.",
+    "items": [
+      "`git status --short` lista ` M settings.local` apesar da regra de ignorar",
+      "`git rm --cached settings.local`",
+      "`git status --short` lista `D  settings.local`",
+      "`git commit` registra a remoção",
+      "`git status --short` não imprime nada, e o `settings.local` continua no disco"
+    ],
+    "trap": "A regra de ignorar nunca foi o passo que faltava: o `.gitignore` só vale para arquivos que o Git ainda não rastreia, então nada muda até o `git rm --cached` tirar o arquivo da área de preparação e um commit registrar isso."
+  },
+  "ex-wstqe64z": {
+    "prompt": "Depois da correção do curso de hardening, `/opt/portal/backup.sh` está `-rwxr-xr-x root root`, e o cron do root continua a rodá-lo às 02:30. Uma verificação depois descobre que a pasta onde ele está, `/opt/portal`, está `drwxrwxrwx`. A conta `portal` ainda consegue decidir o que o root roda hoje à noite?",
+    "hint": "Sistemas Operacionais: Windows, Linux e macOS, aula 9; Defesa de Endpoint e Hardening, aula 6.",
+    "choices": [
+      {
+        "text": "Não: o arquivo é do root e está `755`, o que deixa a conta portal de fora",
+        "why": "Isso protege o conteúdo do arquivo, não o nome dele. Apagar ou renomear um nome é uma mudança na pasta."
+      },
+      {
+        "text": "Sim: apagando o nome e pondo um arquivo seu ali",
+        "why": "Numa pasta, `w` quer dizer criar, renomear e apagar nomes dentro. O bruno apagou um arquivo só de leitura do mesmo jeito na aula de sistemas operacionais, e a regra do hardening vale para as pastas onde esse script fica."
+      },
+      {
+        "text": "Sim, escrevendo dentro do script, já que `755` dá `x` aos outros",
+        "why": "O `x` deixa os outros executarem o arquivo, não mudá-lo; `755` não lhes dá `w` nele. O caminho é a pasta, não o arquivo."
+      },
+      {
+        "text": "Não: uma pasta em que todos escrevem tem o sticky bit, como o `/tmp`",
+        "why": "O sticky bit é o `t` no fim, e alguém precisa ligá-lo. `drwxrwxrwx` termina em `x`, então aqui qualquer um apaga o arquivo de qualquer um."
+      }
+    ]
+  },
+  "ex-trajzzqq": {
+    "prompt": "Algo em `/etc/ssh/sshd_config.d/` mudou durante a noite num servidor Ubuntu compartilhado. Você lê o `journalctl _COMM=sudo` daquela noite, e a única entrada do bruno é o comando `sudo -i`, à 01:12. O que essa entrada estabelece?",
+    "hint": "Sistemas Operacionais: Windows, Linux e macOS, aula 10; SOC, Monitoramento e Resposta a Incidentes, aula 2.",
+    "choices": [
+      {
+        "text": "Que o bruno editou o arquivo, já que um shell de root registra cada comando com o nome dele",
+        "why": "Um shell de root é um comando no registro do sudo. O que se digita dentro dele não aparece ali, nem com o nome dele nem com outro."
+      },
+      {
+        "text": "Nada sobre o bruno: o sudo registra senhas recusadas, e a dele foi aceita",
+        "why": "O sudo registra todo uso, com quem pediu, de onde, como quem e exatamente o quê. É isso que faz a linha valer a leitura."
+      },
+      {
+        "text": "Que o bruno abriu um shell de root à 01:12, e o que ele digitou ali não está nele",
+        "why": "O registro do sudo mostra um comando, o shell, e nada do que foi digitado dentro dele. Quem mudou o arquivo tem de sair de outra evidência, e é por isso que se preferem comandos avulsos."
+      },
+      {
+        "text": "Que alguém entrou direto como root, e é por isso que o registro não cita mais ninguém",
+        "why": "O Ubuntu trava o root, e a entrada cita sim uma pessoa: o bruno, que pegou o poder emprestado pelo sudo."
+      }
+    ]
+  },
+  "ex-5b3vq4ye": {
+    "prompt": "O chamado de hardening do `web` diz que o avahi tem de ficar desligado. Um colega rodou `sudo systemctl stop avahi-daemon`; agora `systemctl is-active` diz `inactive` e `systemctl is-enabled` diz `enabled`. Quais afirmações estão certas? Marque todas as que se aplicam.",
+    "hint": "Sistemas Operacionais: Windows, Linux e macOS, aula 14; Defesa de Endpoint e Hardening, aula 1.",
+    "choices": [
+      {
+        "text": "No próximo boot o serviço sobe de novo, porque o `stop` só mudou o que roda agora",
+        "why": "Um serviço tem dois interruptores. O `stop` desliga o de agora e deixa o do boot em `enabled`."
+      },
+      {
+        "text": "`disable --now` teria desligado os dois interruptores num comando só",
+        "why": "O `disable` impede que ele suba no boot, e o `--now` também o para, que é o que um serviço que deve ficar desligado precisa."
+      },
+      {
+        "text": "Mesmo desabilitado, o `avahi-daemon.socket` sobe o serviço de novo na primeira conexão",
+        "why": "É a ativação por socket: o systemd escuta na porta pelo serviço. A aula de hardening desabilitou o socket e o serviço juntos."
+      },
+      {
+        "text": "O `is-enabled` vai dizer `disabled` assim que o colega que rodou o `stop` sair da sessão",
+        "why": "Nada numa sessão muda o interruptor de boot de uma unidade. Ele fica `enabled` até alguém rodar `disable`."
+      },
+      {
+        "text": "O `mask` removeria o pacote e a configuração dele da máquina",
+        "why": "Isso é o `apt-get purge`. O `mask` liga a unidade a `/dev/null` para nada conseguir iniciá-la, e a deixa instalada."
+      },
+      {
+        "text": "Parar o serviço fechou a porta dele de vez, então a configuração de boot já não importa",
+        "why": "Um serviço parado fica fechado só até o próximo boot, ou até o socket dele devolver a porta."
+      }
+    ]
+  },
+  "ex-0fqtgtef": {
+    "prompt": "Num PC do domínio, um técnico roda `reg add` num valor sob `HKLM\\SOFTWARE\\Policies` para a tela parar de bloquear. No dia seguinte o valor antigo voltou, e ninguém mexeu na máquina. O que aconteceu?",
+    "hint": "Sistemas Operacionais: Windows, Linux e macOS, aula 15; Defesa de Endpoint e Hardening, aula 3.",
+    "choices": [
+      {
+        "text": "A Política de Grupo escreve sob essa chave, e a atualização seguinte dela regravou o valor da política",
+        "why": "As políticas caem em `HKLM\\SOFTWARE\\Policies`, e um membro do domínio as reaplica em segundo plano, com as configurações de segurança a cada 16 horas mesmo sem mudança. Uma edição local ali dura até a próxima atualização."
+      },
+      {
+        "text": "O `HKCU` guarda as configurações de cada pessoa, e no login ele sobrescreveu o valor da máquina",
+        "why": "O `HKCU` é a árvore de uma pessoa. Ele não regrava um valor no `HKLM`, e o valor que voltou era o da máquina."
+      },
+      {
+        "text": "A Restauração do Sistema tinha salvo o registro, e a reinicialização pôs a cópia antiga de volta",
+        "why": "Um ponto de restauração é usado quando alguém o escolhe, pelas ferramentas de recuperação. Uma reinicialização comum não volta o registro."
+      },
+      {
+        "text": "O `reg add` grava um arquivo exportado, e o `reg import` o aplica",
+        "why": "É o contrário: o `reg add` muda o valor na hora, e `reg export` e `reg import` são o backup e o caminho de volta."
+      }
+    ]
+  },
+  "ex-31zs6dm9": {
+    "prompt": "Você herda um servidor que outra pessoa configurou. Para imprimir só as linhas de `/etc/systemd/journald.conf` que definem algo, escondendo comentários e linhas vazias, você roda `grep ___ '^(#|$)' /etc/systemd/journald.conf`.",
+    "hint": "Sistemas Operacionais: Windows, Linux e macOS, aula 15.",
+    "blanks": [
+      {
+        "accept": [
+          "-Ev",
+          "-vE",
+          "-E -v",
+          "-v -E"
+        ]
+      }
+    ]
+  },
+  "ex-5saf94tp": {
+    "prompt": "Revisando um PC Windows que reinicia sozinho, você lê os canais System e Security dele e encontra quatro ids de evento. Ligue cada um ao que ele diz.",
+    "hint": "Sistemas Operacionais: Windows, Linux e macOS, aula 17; SOC, Monitoramento e Resposta a Incidentes, aula 2.",
+    "pairs": [
+      {
+        "left": "41, de Kernel-Power",
+        "right": "o PC reiniciou sem desligar de forma limpa"
+      },
+      {
+        "left": "7000, do Service Control Manager",
+        "right": "um serviço não conseguiu iniciar"
+      },
+      {
+        "left": "7045, no canal System",
+        "right": "um serviço foi instalado"
+      },
+      {
+        "left": "1102, no canal Security",
+        "right": "o log de auditoria foi apagado"
+      }
+    ],
+    "right_distractors": [
+      "uma conta foi bloqueada",
+      "um logon falhou"
+    ]
+  },
+  "ex-36twxz8b": {
+    "prompt": "Toda noite um serviço oneshot roda um script que copia o log rotacionado do dia para `/srv/evidence` e depois roda `echo \"sealed\"`. Por uma semana, `systemctl --failed` não listou nada, e a pasta está vazia. O journal da unidade mostra um erro do `cp` sobre `/srv/evidence`, depois `sealed`, depois `Deactivated successfully`. Por que o systemd chamou aquilo de sucesso, e o que faz a próxima falha aparecer?",
+    "hint": "Sistemas Operacionais: Windows, Linux e macOS, aula 17; SOC, Monitoramento e Resposta a Incidentes, aula 3.",
+    "choices": [
+      {
+        "text": "Uma unidade oneshot nunca relata falha; trocar para um tipo que fica rodando relataria",
+        "why": "O relatório de disco da aula também era oneshot, e depois da correção mostrou `failed (Result: exit-code)`. O tipo nunca foi o problema."
+      },
+      {
+        "text": "O systemd julga uma unidade pelas linhas com prioridade `err`, e a mensagem do `cp` era um aviso",
+        "why": "O resultado de uma unidade vem de como o processo dela terminou, não da prioridade do que ele imprimiu."
+      },
+      {
+        "text": "O `--failed` lista unidades mortas por um sinal, e uma cópia recusada não manda sinal",
+        "why": "O `--failed` listou o relatório da aula assim que o script dele saiu com código diferente de zero. Nenhum sinal entrou na história."
+      },
+      {
+        "text": "O script seguiu depois do `cp` que falhou; o `set -e` o para ali",
+        "why": "Um script de shell continua depois de um comando que falhou, e um serviço é julgado pelo último. Com `set -e` a unidade falha na primeira noite, e isso importa aqui porque um dia sem cópia é um buraco na evidência."
+      }
+    ]
+  },
+  "ex-ngaqvzfc": {
+    "prompt": "Uma auditoria roda `apt-mark showhold` num servidor e recebe `openssl`. Ninguém lembra por que ele está ali. O que transforma essa retenção em algo que a equipe consegue defender?",
+    "hint": "Sistemas Operacionais: Windows, Linux e macOS, aula 16; Defesa de Endpoint e Hardening, aula 17.",
+    "choices": [
+      {
+        "text": "Nada: as atualizações automáticas ainda corrigem um pacote retido",
+        "why": "Uma retenção é respeitada por todo comando do apt que atualiza, as atualizações automáticas inclusive. O pacote retido não recebe correção nenhuma."
+      },
+      {
+        "text": "Trocar a retenção por um pin, que aparece no e-mail da manhã",
+        "why": "O pin é mais preciso e mais fácil de esquecer, e nenhum dos dois se anuncia."
+      },
+      {
+        "text": "Um registro ao lado dela: o motivo, o dono, um controle compensatório e uma data de fim",
+        "why": "Uma retenção é uma dívida sem data. Escrever por quê, quem e até quando a transforma numa exceção, e comparar o `showhold` com essa lista acha a próxima."
+      },
+      {
+        "text": "Tirar a retenção na hora, já que uma retenção nunca é a ferramenta certa para uma biblioteca de segurança",
+        "why": "As aulas mantêm a retenção para casos reais, uma versão certificada por um fornecedor, por exemplo. O que elas recusam é uma retenção sem registro."
+      }
+    ]
+  },
+  "ex-e1zf8613": {
+    "prompt": "Um Ubuntu Server padrão tem o `unattended-upgrades` ligado e o arquivo `50unattended-upgrades` intocado. Uma correção chega na suíte `-updates` da versão e outra na `-security`. O que acontece com cada uma?",
+    "hint": "Sistemas Operacionais: Windows, Linux e macOS, aula 16.",
+    "choices": [
+      {
+        "text": "As duas são instaladas na manhã seguinte, já que o `20auto-upgrades` aplica toda atualização diariamente",
+        "why": "O `20auto-upgrades` é o par de interruptores que o liga. Quais atualizações ele pega é a lista do `50unattended-upgrades`."
+      },
+      {
+        "text": "O que vem da `-security` entra sozinho, e o resto espera uma pessoa",
+        "why": "Por padrão as origens permitidas são a versão e a suíte `-security` dela. As atualizações comuns não estão na lista."
+      },
+      {
+        "text": "Nenhuma, até alguém rodar `apt upgrade`, já que a ferramenta só baixa",
+        "why": "O `Unattended-Upgrade \"1\"` aplica as atualizações diariamente, por um timer, sem ninguém digitar nada."
+      },
+      {
+        "text": "Só a de `-updates`, já que as de segurança esperam a reinicialização",
+        "why": "As correções de segurança são exatamente o que ela instala. Reinicializar só é devido quando algo como um kernel novo deixa o arquivo de aviso."
+      }
+    ]
+  },
+  "ex-x8tk8447": {
+    "prompt": "O curso de SOC lista o `/var/log/auth.log` como `-rw-r----- 1 syslog adm`, então só o `syslog` e o grupo `adm` o leem. Escrito nos três dígitos que o `stat -c \"%a\"` imprime, qual é o modo desse arquivo?",
+    "hint": "Sistemas Operacionais: Windows, Linux e macOS, aula 9; SOC, Monitoramento e Resposta a Incidentes, aula 2.",
+    "unit": ""
+  },
+  "ex-j9tdprp3": {
+    "prompt": "Um host não tem SIEM. Você extraiu os logins bem-sucedidos dele para `logins.txt`, uma linha por login com a conta e o endereço de origem. Para empilhá-los como faz a aula de caça, qual pipeline imprime as combinações com as mais raras no topo?",
+    "hint": "Linux e Linha de Comando, aula 8; SOC, Monitoramento e Resposta a Incidentes, aula 10.",
+    "choices": [
+      {
+        "text": "`sort logins.txt | uniq -c | sort -n`",
+        "why": "Agrupar as linhas iguais, contar cada grupo, ordenar pela contagem. Em ordem crescente, a cauda curta vem primeiro, que é onde o empilhamento lê."
+      },
+      {
+        "text": "`uniq -c logins.txt | sort -n`",
+        "why": "Sem o primeiro `sort`, o `uniq -c` conta sequências de linhas vizinhas. Um par que se repete a semana toda se parte em várias contagens pequenas e parece raro."
+      },
+      {
+        "text": "`sort -u logins.txt | uniq -c | sort -n`",
+        "why": "O `sort -u` guarda uma cópia de cada linha antes de qualquer contagem, então toda contagem sai 1."
+      },
+      {
+        "text": "`sort logins.txt | uniq -c | sort -rn | head`",
+        "why": "As contagens estão certas, mas invertidas: as mais comuns vêm primeiro e o `head` corta a ponta rara que a caça procura."
+      }
+    ]
+  },
+  "ex-em4h20db": {
+    "prompt": "O job do cron que calcula o hash dos logs do dia não rodou ontem à noite, num servidor que você não configurou. Ponha as verificações na ordem em que a aula 13 as faz.",
+    "hint": "Linux e Linha de Comando, aula 13.",
+    "items": [
+      "Ele está no crontab da conta que você imagina, por `crontab -l` ou `sudo crontab -u deploy -l`",
+      "O daemon do cron está rodando, por `systemctl status cron`",
+      "O cron tentou iniciá-lo, por `grep CRON /var/log/syslog`",
+      "O arquivo dele em `/etc/cron.d` tem nome sem ponto",
+      "Ele roda no ambiente do cron, reproduzido com `env -i`"
+    ],
+    "trap": "A maioria começa pelo ambiente e pelo `env -i`, e a resposta costuma ser a primeira verificação: o job está no crontab de outra conta. Cada verificação é mais barata que a seguinte."
+  },
+  "ex-x9m8y0v6": {
+    "prompt": "Para listar os endereços de cliente que fizeram exatamente uma requisição num log de acesso, que muitas vezes é a lista interessante, você roda `cut -d\" \" -f1 logs/access.log | sort | uniq ___`.",
+    "hint": "Linux e Linha de Comando, aula 8.",
+    "blanks": [
+      {
+        "accept": [
+          "-u",
+          "--unique"
+        ]
+      }
+    ]
+  },
+  "ex-9c63e7fe": {
+    "prompt": "A hipótese da sua caça: se alguém deixou um job agendado num servidor Linux para manter o acesso, ele está num lugar que o cron ou o systemd leem. Antes de registrar o resultado como negativo, que lugares a busca precisa ter coberto? Marque todas as que se aplicam.",
+    "hint": "Linux e Linha de Comando, aula 13; SOC, Monitoramento e Resposta a Incidentes, aula 10.",
+    "choices": [
+      {
+        "text": "Os arquivos em `/etc/cron.d`",
+        "why": "Os pacotes põem jobs ali e ninguém os põe à mão, o que o torna o lugar mais esquecido."
+      },
+      {
+        "text": "O spool por trás do `crontab -e`, `/var/spool/cron/crontabs`",
+        "why": "Ele guarda um crontab para cada conta que tem um, o `www-data` inclusive, não só o seu."
+      },
+      {
+        "text": "Todos os timers, por `systemctl list-timers --all`",
+        "why": "Timers também são jobs agendados, e sem `--all` os que não estão ativos ficam fora da lista."
+      },
+      {
+        "text": "Os nomes terminados em `.cron` dentro de `/etc/cron.d`, os que o cron lê ali",
+        "why": "É o contrário: o cron ignora qualquer arquivo em `/etc/cron.d` cujo nome tenha um ponto."
+      },
+      {
+        "text": "O `~/.bashrc` de cada conta, já que o cron o lê antes de todo job",
+        "why": "Um job do cron não é shell interativo nem de login, e não lê nenhum arquivo de inicialização."
+      },
+      {
+        "text": "Só o `grep CRON /var/log/syslog`, já que ele lista todo job que existe",
+        "why": "O log registra cada job que o cron iniciou. Um job que ainda não rodou, ou que roda por semana, não está nele."
+      }
+    ]
+  },
+  "ex-wpktbg60": {
+    "prompt": "O `chain.sh` do curso de SOC lê cada linha do log com `while IFS= read -r line` e calcula o hash dela junto com o anterior. Um colega arruma o laço para `while read line`. O que a mudança custa à corrente?",
+    "hint": "Linux e Linha de Comando, aula 9; SOC, Monitoramento e Resposta a Incidentes, aula 3.",
+    "choices": [
+      {
+        "text": "Nada: o `read` devolve cada linha exatamente como está gravada, sejam quais forem as opções",
+        "why": "Sem `-r`, as barras invertidas somem, e sem `IFS=`, os espaços das pontas são cortados. A linha que entra no hash já não é a linha gravada."
+      },
+      {
+        "text": "O script para na primeira linha que tiver um espaço",
+        "why": "O `read` com uma variável põe a linha inteira nela, com os espaços de dentro. Só as pontas são cortadas."
+      },
+      {
+        "text": "Cada hash vira aleatório, então duas execuções sobre o mesmo arquivo discordam",
+        "why": "A corrente ainda parte de um valor fixo, então duas execuções batem entre si. O que quebra é a concordância com os bytes no disco."
+      },
+      {
+        "text": "Linhas que só diferem em barras invertidas ou espaços nas pontas dão o mesmo hash",
+        "why": "O `read` sem `-r` trata `\\` como escape, e sem `IFS=` corta as pontas. As duas versões de uma linha editada chegam ao `sha256sum` como o mesmo texto, e a corrente não as distingue."
+      }
+    ]
+  },
+  "ex-4vahdk7y": {
+    "prompt": "Num host comprometido, `ls -l /proc/4410/fd` mostra o descritor 3 apontando para um arquivo em `/tmp` marcado `(deleted)`, e o processo 4410 continua rodando. O plano de contenção diz para pará-lo. Por que importa o que você faz primeiro?",
+    "hint": "Linux e Linha de Comando, aula 6; SOC, Monitoramento e Resposta a Incidentes, aula 13.",
+    "choices": [
+      {
+        "text": "Parar primeiro é seguro: o `rm` só tirou o nome, então os dados continuam no disco",
+        "why": "Os dados só ficam enquanto algo os mantém abertos. O kernel libera os blocos quando o último nome e o último descritor aberto somem."
+      },
+      {
+        "text": "Anotar antes de tudo o que há em `/proc/4410`: os dados só duram enquanto ele os mantiver abertos",
+        "why": "O descritor agora é a única referência ao arquivo. Coletar, depois agir: quando o processo some, o kernel libera os blocos, e o arquivo vai junto."
+      },
+      {
+        "text": "Qualquer ordem serve, já que o `du` continua contando o arquivo e ele pode ser achado depois",
+        "why": "O `du` percorre nomes, e esse arquivo não tem mais nenhum. É por isso que um arquivo apagado e ainda aberto é tão difícil de achar."
+      },
+      {
+        "text": "O `kill -9` tem de vir primeiro, porque o `TERM` deixaria o processo apagar o arquivo",
+        "why": "A ordem dos passos é sobre a evidência, não sobre o sinal. E o `KILL` encerra o processo do mesmo jeito, o que libera o arquivo do mesmo jeito."
+      }
+    ]
+  },
+  "ex-p2jbt8ay": {
+    "prompt": "Durante a contenção, um minerador roda como vários processos cujas linhas de comando contêm `miner`, e o plano é `pkill -f miner`. O que a aula 6 manda rodar antes?",
+    "hint": "Linux e Linha de Comando, aula 6.",
+    "choices": [
+      {
+        "text": "`kill -9` no primeiro PID, para os outros pararem como filhos dele",
+        "why": "Matar um pai deixa os filhos rodando, adotados pelo PID 1. Nada para junto."
+      },
+      {
+        "text": "`killall -v miner` no lugar dele, já que ele casa padrões com mais cuidado",
+        "why": "O `killall` casa o nome exato do programa, não um padrão. O `-v` dele diz o que atingiu, depois do fato."
+      },
+      {
+        "text": "`kill -0` em cada PID, que para um processo sem mandar sinal",
+        "why": "O `kill -0` não manda nada e não para nada. Só responde se o processo existe e se pode receber sinal."
+      },
+      {
+        "text": "`pgrep -a -f miner`, para ler a lista do que o padrão atingiria",
+        "why": "O `-f` casa a linha de comando inteira, então um `tail -f miner.log` que alguém deixou aberto também casa. Leia a lista, depois troque `pgrep` por `pkill`."
+      }
+    ]
+  },
+  "ex-b0feggwk": {
+    "prompt": "Num servidor que você herdou, `find / -perm -4000 -type f` lista um arquivo em `/usr/local/bin`, e o `dpkg -S` não acha pacote que seja dono dele. Como você lê esse achado?",
+    "hint": "Linux e Linha de Comando, aula 4; Defesa de Endpoint e Hardening, aula 6.",
+    "choices": [
+      {
+        "text": "Ele roda como o dono, seja quem for que o inicie, e um que nenhum pacote possui é o que merece a pergunta",
+        "why": "O bit setuid faz o processo rodar como o dono do arquivo. Os poucos legítimos vêm de pacotes; um sem dono é como uma invasão pode persistir."
+      },
+      {
+        "text": "Inofensivo: o Linux ignora o setuid em tudo fora de `/usr/bin`",
+        "why": "O Linux ignora o bit em scripts, estejam onde estiverem. Um binário em qualquer pasta ainda roda como o dono."
+      },
+      {
+        "text": "Só importa se todos puderem escrever nele, que é o que o `-perm -4000` testa",
+        "why": "O `-4000` é o bit setuid. O teste para um arquivo em que todos escrevem é `-perm -0002`, outra pergunta."
+      },
+      {
+        "text": "Corrigir na hora com `chmod 755`, que mantém o bit e arruma o resto",
+        "why": "Um número de três dígitos zera o quarto, então o `chmod 755` apaga o setuid. Mudar antes de perguntar também muda a evidência."
+      }
+    ]
+  },
+  "ex-71hfdjg3": {
+    "prompt": "O Lynis sugeriu o AUTH-9328, um umask padrão mais estrito em `/etc/login.defs`, então entra `UMASK 027`. As sessões SSH novas agora criam arquivos `640`, mas o serviço do portal, reiniciado depois disso, continua gravando arquivos `644`. Por quê?",
+    "hint": "Linux e Linha de Comando, aula 4; Defesa de Endpoint e Hardening, aula 2.",
+    "choices": [
+      {
+        "text": "Um umask novo vale depois que o servidor inteiro reinicia",
+        "why": "As sessões SSH já mostram `640` sem reinicialização. Um umask vale para o que um processo cria a partir do momento em que ele o tem."
+      },
+      {
+        "text": "O `027` não mexe no dono nem no grupo, então `644` é exatamente o que ele deve dar",
+        "why": "O `027` tira o `w` do grupo e tudo dos outros: um arquivo pedido como `666` sai `640`."
+      },
+      {
+        "text": "O `login.defs` chega aos logins; um serviço pega o `UMask=` da unidade dele",
+        "why": "Um serviço é iniciado pelo systemd, não por um login, então o padrão de login nunca chega a ele. O arquivo de unidade é onde se define o umask de um daemon."
+      },
+      {
+        "text": "A conta do serviço precisa de `umask 027` no `~/.bashrc` dela",
+        "why": "Um serviço não lê os dotfiles da conta com que roda. Editá-los não muda nada para o daemon."
+      }
+    ]
+  },
+  "ex-vqhy0g8s": {
+    "prompt": "Na aula 5, a linha do `demo` em `/etc/shadow` mostra a última troca de senha no dia `20733`, contado em dias desde 1970. Depois de `chage -M 90 demo`, em que número de dia, contado do mesmo jeito, a senha expira?",
+    "hint": "Linux e Linha de Comando, aula 5.",
+    "unit": ""
+  },
+  "ex-x0pmzxpk": {
+    "prompt": "Um servidor foi endurecido acrescentando `PasswordAuthentication no` ao `/etc/ssh/sshd_config`, e o script de conformidade que procura essa linha no arquivo com grep dá aprovado. Uma semana depois, o log do servidor ainda mostra `Accepted password for ana`. O que explica as duas coisas?",
+    "hint": "Redes e Protocolos, aula 7; Defesa de Endpoint e Hardening, aula 2.",
+    "choices": [
+      {
+        "text": "Ninguém mandou o sshd reler o arquivo, então a configuração antiga ainda é a que vale",
+        "why": "Esquecer o reload é um deslize real, mas aí a linha passaria a valer no próximo restart. Um valor lido antes, de outro arquivo, nunca cede a ela, com reload ou sem."
+      },
+      {
+        "text": "Essas linhas do log são logins antigos, guardados dos dias anteriores à mudança",
+        "why": "Cada linha é uma tentativa, escrita na hora em que aconteceu. Linhas de depois da mudança são logins novos por senha, e esse é o problema."
+      },
+      {
+        "text": "Uma linha em `/etc/ssh/sshd_config.d/` diz `yes`, e o sshd fica com o primeiro valor lido",
+        "why": "O Ubuntu lê esse diretório antes do resto do arquivo principal, então o `no` acrescentado no fim não muda nada. Uma verificação que pergunta ao programa que decide, o `sshd -T`, teria falhado onde o grep passou."
+      },
+      {
+        "text": "O `PasswordAuthentication` vale só para o root; as contas comuns seguem o `PermitRootLogin`",
+        "why": "É o contrário: o `PermitRootLogin` é a configuração sobre o root, e o `PasswordAuthentication` vale para todas as contas."
+      }
+    ]
+  },
+  "ex-wexv5k1a": {
+    "prompt": "Uma captura feita do lado do provedor, no link do escritório, contém `FTP: PASS Sunflower-77`, a senha da conta de hospedagem do site. A equipe vai migrar para SFTP no mês que vem. O que o curso diz sobre essa senha agora?",
+    "hint": "Redes e Protocolos, aula 8; Criptografia Aplicada, aula 12.",
+    "choices": [
+      {
+        "text": "Tratá-la como já conhecida: não usá-la em nenhum outro lugar, e trocá-la quando o FTP for substituído",
+        "why": "O FTP puro foi projetado para mandar credenciais às claras, então qualquer um no caminho pode tê-la lido. Ela é também a da conta de hospedagem, e quem a tem pode trocar o site."
+      },
+      {
+        "text": "Ela fica segura depois da migração, porque o SFTP passa a cifrar essa mesma senha dali em diante",
+        "why": "Cifrar os logins futuros não resolve nada para uma senha que já passou às claras pelo caminho. Ela também tem de ser trocada."
+      },
+      {
+        "text": "Só o provedor a viu, então ela só precisa ser trocada se o provedor não for de confiança",
+        "why": "Todo mundo no caminho vê os mesmos bytes: o Wi-Fi do hotel, um notebook na rede do escritório, qualquer salto no meio."
+      },
+      {
+        "text": "Só os arquivos viajam às claras; o login vai por uma conexão de controle separada e cifrada",
+        "why": "A conexão de controle na porta 21 também é texto puro, e a captura mostra `USER` e `PASS` nela. Os arquivos são igualmente legíveis nas conexões de dados."
+      }
+    ]
+  },
+  "ex-jwf4w85m": {
+    "prompt": "Um analista do SOC recebe uma captura feita no roteador do escritório enquanto um notebook buscava `https://www.example.com/prices.txt`. Quais destas coisas dá para ler nessa captura? Marque todas as que se aplicam.",
+    "hint": "Redes e Protocolos, aula 5; Segurança de Redes, aula 16.",
+    "choices": [
+      {
+        "text": "O nome `www.example.com`",
+        "why": "Ele viaja às claras no Client hello, porque o servidor precisa dele antes de existir qualquer chave."
+      },
+      {
+        "text": "O caminho `/prices.txt`, da linha da requisição",
+        "why": "Nenhum dos pacotes contém `GET` ou `prices`: a requisição está dentro da cifra. O caminho está no log da máquina onde o TLS termina."
+      },
+      {
+        "text": "O endereço do servidor e o endereço do escritório que fala com ele",
+        "why": "Os endereços estão no cabeçalho de todo pacote. O HTTPS esconde o que foi pedido, não qual site foi visitado."
+      },
+      {
+        "text": "A primeira linha do arquivo que o servidor devolveu",
+        "why": "A resposta também é cifrada; uma busca na captura pela primeira linha do arquivo não acha nada."
+      },
+      {
+        "text": "Que uma conexão foi feita, quando, e quantos pacotes ela levou",
+        "why": "O tcpdump conta e marca a hora de cada um. A forma de uma conversa fica visível mesmo quando o conteúdo não fica."
+      },
+      {
+        "text": "O cabeçalho `Location:` do redirecionamento do servidor",
+        "why": "Esse cabeçalho dava para ler na captura de HTTP puro. No HTTPS, todo cabeçalho viaja dentro do TLS."
+      }
+    ]
+  },
+  "ex-2sen8smj": {
+    "prompt": "O resolvedor da empresa responde `NXDOMAIN` para o domínio imitador denunciado, `example-support.test`. No `desk`, `dig www.example-support.test` concorda, mas o navegador do `desk` abre a página de phishing, e o log de consultas do resolvedor não tem nenhuma linha do `desk` para esse nome. Onde o analista deve olhar primeiro?",
+    "hint": "Redes e Protocolos, aula 4; Segurança de Redes, aula 9.",
+    "choices": [
+      {
+        "text": "Na lista de bloqueio: uma linha `address=` bloqueia o nome puro e deixa o `www.` debaixo dele livre",
+        "why": "O `address=/example-support.test/` do dnsmasq cobre o nome e tudo o que está debaixo dele, e é por isso que `www.example-support.test` voltou `NXDOMAIN`."
+      },
+      {
+        "text": "No cache do resolvedor, que ainda guarda o endereço de antes de o nome ser bloqueado",
+        "why": "Uma resposta em cache ainda seria o resolvedor respondendo, e o log mostraria o `desk` perguntando. Nenhuma consulta quer dizer que o nome nunca chegou ao DNS."
+      },
+      {
+        "text": "No firewall: o `desk` deve usar um resolvedor de fora que a matriz esqueceu de bloquear",
+        "why": "Aí o `dig` no `desk` também teria usado esse resolvedor e mostrado um endereço, não `NXDOMAIN`. As ferramentas só discordam quando uma delas pula o DNS."
+      },
+      {
+        "text": "No `/etc/hosts` do `desk`: ele é lido antes do DNS, e nenhuma pergunta saiu da máquina",
+        "why": "O `hosts: files dns` põe o arquivo primeiro, e uma linha deixada por um malware vence qualquer servidor DNS. O `dig` pergunta ao DNS e ignora o arquivo; compará-lo com o `getent hosts` acha isso toda vez."
+      }
+    ]
+  },
+  "ex-4qgqqzf9": {
+    "prompt": "Do `home`, alguém manda ao servidor da Ana uma mensagem que diz vir de `bruno@example.net`, cujo domínio publica `p=reject`. Ponha a troca na ordem em que a sessão do `swaks` a mostra.",
+    "hint": "Redes e Protocolos, aula 9.",
+    "items": [
+      "O cliente diz `EHLO home`, e o servidor lista o que aceita",
+      "O remetente do envelope, `bruno@example.net`, é aceito com `250 2.1.0 Ok`",
+      "O destinatário `ana@example.com` é aceito",
+      "Os cabeçalhos e o corpo são enviados, entre eles `From: bruno@example.net`",
+      "O servidor responde `550 5.7.1 rejected by DMARC policy for example.net`"
+    ],
+    "trap": "A recusa não vem no `MAIL FROM`, embora o SPF já falhe no envelope. O DMARC julga o cabeçalho `From:`, que só chega com a própria mensagem, então o envelope é aceito e a recusa vem depois dos dados."
+  },
+  "ex-pyn8py8v": {
+    "prompt": "O sshd do laboratório escreve as linhas `Accepted` e `Failed password` num arquivo só dele. Num Ubuntu de verdade, onde o rsyslog manda toda mensagem das facilities `auth,authpriv`, o analista acha as mesmas linhas num arquivo dentro de `/var/log/` chamado ___.",
+    "hint": "Redes e Protocolos, aula 7; SOC, Monitoramento e Resposta a Incidentes, aula 2.",
+    "blanks": [
+      {
+        "accept": [
+          "auth.log",
+          "/var/log/auth.log"
+        ]
+      }
+    ]
+  },
+  "ex-srk6093a": {
+    "prompt": "Na segunda de manhã, o `ssh` para o servidor do financeiro para com `REMOTE HOST IDENTIFICATION HAS CHANGED!`. Ninguém reinstalou, reconstruiu nem mudou esse servidor de lugar. Um colega sugere `ssh-keygen -R` para todo mundo voltar a trabalhar. O que o analista deve fazer?",
+    "hint": "Redes e Protocolos, aula 7; SOC, Monitoramento e Resposta a Incidentes, aula 7.",
+    "choices": [
+      {
+        "text": "Rodar `ssh-keygen -R` e aceitar a chave nova na próxima primeira conexão",
+        "why": "Esse é o passo depois de a impressão digital nova ser confirmada no próprio servidor. Sem um motivo para a mudança, ele aceita qualquer chave que tenha respondido."
+      },
+      {
+        "text": "Reportar como um alerta a investigar, já que nada explica a chave nova",
+        "why": "De onde o ssh está, um servidor reconstruído e alguém no meio parecem iguais. Sem uma reconstrução que explique, fechar isso como ruído seria o erro mais caro da triagem, porque nada mais adiante volta a olhar."
+      },
+      {
+        "text": "Digitar `yes` no aviso para aceitar a chave nova só nesta sessão",
+        "why": "Não existe `yes` para digitar: com a chave trocada, o ssh recusa de vez e o aviso não oferece passagem."
+      },
+      {
+        "text": "Comparar os tipos de chave: se a antiga e a nova forem ED25519, a troca é rotina",
+        "why": "O tipo da chave não diz nada sobre quem a tem. Só a impressão digital lida no console do próprio servidor separa uma reconstrução de um impostor."
+      }
+    ]
+  },
+  "ex-h0xszxzm": {
+    "prompt": "Uma rotina noturna confere os sites internos da empresa com `openssl s_client` e `curl`, e manda o que eles imprimem para o SIEM. Ligue cada linha enviada à correção que o curso dá para ela.",
+    "hint": "Redes e Protocolos, aula 6; Segurança de Redes, aula 13.",
+    "pairs": [
+      {
+        "left": "`Verify return code: 10 (certificate has expired)`",
+        "right": "renová-lo, e automatizar a renovação"
+      },
+      {
+        "left": "`Verify return code: 18 (self-signed certificate)`",
+        "right": "um certificado de uma CA em que os clientes confiam"
+      },
+      {
+        "left": "`Verify return code: 21 (unable to verify the first certificate)`",
+        "right": "configurar o servidor com a cadeia completa"
+      },
+      {
+        "left": "`no alternative certificate subject name matches target host name`",
+        "right": "um certificado com esse nome no SAN"
+      }
+    ],
+    "right_distractors": [
+      "rodar a verificação com `-k` até o certificado ser trocado",
+      "copiar o certificado do servidor à mão para cada cliente"
+    ]
+  },
+  "ex-p4j3zj3p": {
+    "prompt": "A network ACL de uma sub-rede pública nega `198.51.100.0/24` na regra 90 e permite TCP 443 de `0.0.0.0/0` na regra 100. As instâncias também baixam atualizações, então alguém acrescenta a regra de entrada 110: TCP 1024–65535 de `0.0.0.0/0`, permitir. Raciocinando como o curso faz sobre filtros sem estado, o que mais a regra 110 deixou entrar?",
+    "hint": "Segurança de Redes, aula 1; Nuvem e Serverless, aula 6.",
+    "choices": [
+      {
+        "text": "Uma conexão nova de qualquer lugar para qualquer porta alta da sub-rede, como 5432 ou 8080",
+        "why": "Uma regra sem estado julga cada pacote pelos próprios cabeçalhos e não distingue uma resposta do primeiro pacote de uma conversa nova, exatamente como `tcp sport 8080 accept` deixou o `db` chegar ao `laptop`. Só os security groups, que têm estado, ainda ficam no caminho."
+      },
+      {
+        "text": "Nada além de respostas, porque as portas de 1024 para cima são efêmeras e só carregam respostas",
+        "why": "Efêmera é um costume dos clientes, não uma propriedade do número. Um serviço escutando na 5432 ou na 8080 está dentro dessa faixa, e uma regra sem estado não vê a diferença."
+      },
+      {
+        "text": "Respostas a conexões que as instâncias abriram, já que a ACL casa cada resposta com o seu pedido",
+        "why": "Isso é o que um security group faz. Uma network ACL não se lembra de nada, e cada pacote é julgado sozinho."
+      },
+      {
+        "text": "Também o tráfego de `198.51.100.0/24`, porque a regra 110 alarga o que a regra 90 recusava",
+        "why": "As regras são lidas do menor número para o maior e a primeira que casa decide, então a regra 90 continua recusando essa faixa antes de a 110 ser lida."
+      }
+    ]
+  },
+  "ex-1mdm6nm7": {
+    "prompt": "Durante um incidente, um analista bloqueia a faixa de origem com `nft insert rule ip fw forward ip saddr 203.0.113.0/16 counter drop`, querendo dizer o `/24` de onde vieram os logins. Na manhã seguinte, um parceiro em `203.0.50.20` não consegue chegar à empresa de jeito nenhum. O que aconteceu, e que hábito teria pegado isso?",
+    "hint": "Segurança de Redes, aula 18; SOC, Monitoramento e Resposta a Incidentes, aula 13.",
+    "choices": [
+      {
+        "text": "O `insert` pôs a regra acima do tráfego estabelecido, então ela cortou as conexões abertas de todo mundo",
+        "why": "Inserir no topo corta, sim, conexões que já estavam abertas, mas só dos endereços que a regra casa. O parceiro ficou de fora porque a regra casa com ele."
+      },
+      {
+        "text": "O parceiro divide um endereço de NAT com o invasor, então qualquer bloqueio ao invasor o atinge",
+        "why": "O endereço do parceiro, `203.0.50.20`, não é um dos que o invasor usou. Ele cai dentro do bloqueio só por causa da máscara."
+      },
+      {
+        "text": "O nftables recusa a parte de host num prefixo, então a regra entrou como um descarte para toda origem",
+        "why": "Ele carregou e reescreveu o endereço. A regra nomeia uma rede só, não toda origem, e parceiros de outras faixas continuam passando."
+      },
+      {
+        "text": "O nftables guardou `203.0.0.0/16`, um bloco 256 vezes maior, e listar a regra de volta teria mostrado isso",
+        "why": "Um `/16` mantém só os dois primeiros bytes, então a regra guardada cobre todo endereço que começa com `203.0`. A verdade é a listagem, não o texto digitado, e é essa listagem que vai para o registro de decisões do incidente."
+      }
+    ]
+  },
+  "ex-t49hmk2b": {
+    "prompt": "Quatro alertas do Suricata chegam à triagem, cada um lido campo a campo como a aula 14 lê o `eve.json`. Ligue cada um ao jeito como o alerta deve terminar.",
+    "hint": "Segurança de Redes, aula 14; SOC, Monitoramento e Resposta a Incidentes, aula 7.",
+    "pairs": [
+      {
+        "left": "`/admin/` de um endereço desconhecido, `action` allowed, `http.status` 200",
+        "right": "escalar: o console foi servido para a internet"
+      },
+      {
+        "left": "`/admin/` do endereço listado para o teste de segurança aprovado desta semana",
+        "right": "fechar como verdadeiro positivo benigno"
+      },
+      {
+        "left": "`/admin-guide.html`, uma página de ajuda para clientes, casada por uma regra que só pede `/admin`",
+        "right": "fechar como falso positivo, e estreitar a regra"
+      },
+      {
+        "left": "um segundo alerta de uma requisição `/admin/` que já está dentro de um incidente aberto",
+        "right": "fechar como duplicado"
+      }
+    ],
+    "right_distractors": [
+      "fechar: um alerta de IDS quer dizer que a requisição foi barrada",
+      "fechar: um 200 só prova que a página existe"
+    ]
+  },
+  "ex-tf5z5xry": {
+    "prompt": "Um chamado de hardening insere `icmp type destination-unreachable drop` no topo da chain forward do `fw`, acima de `ct state established,related accept`, com o argumento de que ping só serve a atacantes. No dia seguinte, páginas pequenas carregam e downloads grandes travam. Por quê?",
+    "hint": "Segurança de Redes, aula 1; Redes e Protocolos, aula 2.",
+    "choices": [
+      {
+        "text": "Descartar ICMP para o ping e mais nada, então o travamento deve vir do link do provedor",
+        "why": "O MTU menor do link já existia antes da mudança. O que mudou é que a mensagem que o anuncia não volta mais, e esse é o buraco negro do curso de redes."
+      },
+      {
+        "text": "Downloads grandes vão por UDP, e o conntrack esquece um fluxo UDP parado depois de 30 segundos",
+        "why": "Esses downloads são TCP. O tempo de 30 segundos existe, mas esquecer um fluxo UDP parado não travaria uma transferência TCP."
+      },
+      {
+        "text": "Os erros que dizem que um pacote é grande demais são `related`, e a regra nova os descarta antes de qualquer regra aceitá-los",
+        "why": "A descoberta do MTU do caminho precisa que essa mensagem ICMP chegue a quem envia. A primeira regra que casa decide, então o descarte acima da regra de estado vence, e os pacotes de tamanho cheio somem sem aviso."
+      },
+      {
+        "text": "Os erros pertencem a conexões estabelecidas, então a regra de estado os aceita onde quer que o descarte esteja",
+        "why": "Um erro ICMP tem protocolo e endereços próprios, e isso o faz `related`, não `established`. E a posição decide: a regra de cima é lida primeiro."
+      }
+    ]
+  },
+  "ex-k9xkxft6": {
+    "prompt": "Depois de um incidente no `www`, o log de acesso do nginx não mostra nenhuma requisição para `/admin/` a tarde toda. O sensor da DMZ registrou o alerta 1000101 para `/admin/` por HTTP puro, respondido com 200, às 18:06. Em qual registro o analista confia, e por quê?",
+    "hint": "Segurança de Redes, aula 16; SOC, Monitoramento e Resposta a Incidentes, aula 3.",
+    "choices": [
+      {
+        "text": "No log de acesso, porque ele fica onde o TLS termina e vê mais do que o sensor",
+        "why": "Ele vê mais, sim, enquanto está intacto. Num host que foi tomado, o registro que pode ser editado é o que merece dúvida."
+      },
+      {
+        "text": "No do sensor, porque quem controlava o `www` nunca tocou no sensor",
+        "why": "Os logs do próprio host e os relatórios do AIDE podem ser editados por quem o controla. O registro da rede foi escrito numa máquina que o invasor nunca alcançou, e é também por isso que os logs do host saem dele assim que são escritos."
+      },
+      {
+        "text": "Em nenhum, já que os dois discordam e um sinal fraco sozinho nunca é prova",
+        "why": "A discordância entre um host e um sensor independente já é o achado: ela aponta para um registro que alguém mudou."
+      },
+      {
+        "text": "No log de acesso, já que um alerta de IDS diz que uma regra casou e nunca se a página foi servida",
+        "why": "Esse alerta traz `http.status` 200, que é exatamente se funcionou. O sensor leu isso da resposta em HTTP puro."
+      }
+    ]
+  },
+  "ex-chqcg3e9": {
+    "prompt": "O log de descartes do `fw` tem duas linhas: `203.0.113.50` tentando o `db` na 5432, e `192.168.10.20`, na LAN da equipe, tentando o `db` na 6379. Qual das duas o curso chama de mais interessante, e por quê?",
+    "hint": "Segurança de Redes, aula 5.",
+    "choices": [
+      {
+        "text": "A do estranho, porque a porta do banco é a coisa mais valiosa atrás do firewall",
+        "why": "A política a recusou, como recusa o ruído de fundo da internet o dia todo. O que faz uma linha valer a leitura é ser rara, não o alvo dela."
+      },
+      {
+        "text": "Nenhuma das duas: as duas foram descartadas, então a política já fez o trabalho dela",
+        "why": "Um log de descartes existe para ser lido justamente para isso. Uma tentativa recusada vinda de dentro diz algo sobre o lado de dentro."
+      },
+      {
+        "text": "As duas igualmente, então o registro inteiro é lido linha por linha, a olho",
+        "why": "O log de descartes de um firewall movimentado é quase todo ruído e é lido com filtros, não a olho; as linhas de dentro são o que o filtro procura."
+      },
+      {
+        "text": "A da máquina da equipe, porque ela tentou um serviço que nunca lhe foi dado",
+        "why": "Estranhos testando portas é o que a internet faz o dia todo. Uma máquina de dentro batendo numa célula fechada é bem mais rara, e muitas vezes é o primeiro sinal de um programa mal configurado ou de um notebook comprometido."
+      }
+    ]
+  },
+  "ex-22eeaw4g": {
+    "prompt": "O laboratório mediu cerca de 860 bytes por registro de descarte. O firewall de uma filial recusa cerca de 20 pacotes por segundo, o dia inteiro, e registra cada recusa. Com esse tamanho, cerca de quantos gigabytes de registros de descarte ele escreve num dia?",
+    "hint": "Segurança de Redes, aula 23.",
+    "unit": "GB"
+  },
+  "ex-1nw4k4g0": {
+    "prompt": "Desde as 02:00, o log de descartes mostra o `www`, o proxy da loja na DMZ, tentando abrir conexões com um endereço de fora na 443 a cada poucos minutos. Quais destas são leituras ou próximos passos corretos? Marque todas as que se aplicam.",
+    "hint": "Segurança de Redes, aula 4; Fundamentos de Segurança da Informação, aula 5.",
+    "choices": [
+      {
+        "text": "Acrescentar uma regra da DMZ para a internet na 443, já que tráfego de saída não prejudica o lado de dentro",
+        "why": "A DMZ vale a pena porque um servidor público comprometido só consegue fazer o que já lhe era permitido. Uma linha de saída deixa um invasor receber instruções e mandar para fora o que achou."
+      },
+      {
+        "text": "A matriz não dá à DMZ nenhuma linha para a internet, então cada tentativa foi recusada e contada",
+        "why": "É essa linha vazia que transformou as tentativas em linhas no log de descartes, em vez de conexões."
+      },
+      {
+        "text": "Fechar: os descartes provam que as tentativas falharam, então nada aconteceu no `www`",
+        "why": "O descarte barrou a conexão; não explicou por que o `www` tentou. O que quer que tenha começado isso continua rodando."
+      },
+      {
+        "text": "Algo no `www` está chamando para fora, como faz um software que tomou um servidor, então isso é investigado",
+        "why": "Um servidor na DMZ responde; ele não tem motivo para começar conversas. Chamar para fora atrás de instruções é o passo seguinte de costume de um invasor."
+      },
+      {
+        "text": "Mudar o `www` para o segmento de servidores, onde dá para vigiá-lo mais de perto",
+        "why": "Isso poria a máquina mais exposta ao lado das mais valiosas, o contrário daquilo para que a DMZ existe."
+      },
+      {
+        "text": "Se o `www` precisar mesmo de atualizações, ele ganha uma regra para um destino só, de preferência um proxy de atualizações interno",
+        "why": "Um servidor que precisa chamar para fora ganha um destino, não a internet inteira, e o resto da linha continua vazio."
+      }
+    ]
+  },
+  "ex-vvw849d6": {
+    "prompt": "Uma revisão de código acha um script Python que manda alertas para o SIEM interno com `requests.post(url, json=alert, verify=False)`. O comentário diz que o certificado do SIEM é autoassinado. Que correção o curso dá?",
+    "hint": "Segurança de Redes, aula 13.",
+    "choices": [
+      {
+        "text": "Fazer a CA da empresa certificar o SIEM, confiar nessa raiz e tirar o `verify=False`",
+        "why": "O erro era a defesa: com a verificação desligada, os alertas são cifrados para quem quer que responda. Um serviço interno autoassinado ganha um certificado da CA da empresa, nunca a verificação desligada."
+      },
+      {
+        "text": "Manter o `verify=False`, já que o tráfego continua cifrado até o SIEM",
+        "why": "Cifrado, sim, e para a máquina errada se outra responder. Cifra sem verificação não diz quem está do outro lado."
+      },
+      {
+        "text": "Trocar para `ssl.create_default_context()`, que aceita um certificado autoassinado sozinho",
+        "why": "O contexto padrão exige um certificado válido e confere o nome. Ele recusaria esse mesmo certificado, e é para isso que se usa ele."
+      },
+      {
+        "text": "Apontar o script para o endereço IP do SIEM, para uma resposta DNS errada não o mandar para outro lugar",
+        "why": "O DNS é um jeito de o tráfego chegar à máquina errada, o ARP é outro, e um endereço não prova a identidade de ninguém. Um certificado verificado prova."
+      }
+    ]
+  },
+  "ex-930z7m3w": {
+    "prompt": "Ponha as partes de uma chain forward com estado no `fw` na ordem em que um pacote é conferido contra elas, como o curso escreve.",
+    "hint": "Segurança de Redes, aula 1.",
+    "items": [
+      "`ct state established,related accept`",
+      "`ct state invalid drop`",
+      "as regras de aceite com `ct state new`, uma para cada conversa que a política permite",
+      "uma regra só com contador e comentário, para o que passou por tudo",
+      "a `policy drop` da chain, para o que nenhuma regra aceitou"
+    ],
+    "trap": "As permissões específicas não vêm primeiro. Quase todo pacote pertence a uma conversa já permitida, então a regra de estabelecidas fica no topo: ela poupa a maioria dos pacotes de descer a chain e deixa as respostas passarem sem regra de volta."
+  },
+  "ex-th8jczp9": {
+    "prompt": "Os servidores da aplicação não conseguem chegar a uma API interna nova na 8443, e toda tentativa estoura o tempo. Um colega muda o security group da API para permitir a 8443 de `0.0.0.0/0` só para testar, e as chamadas passam a funcionar. O que deve acontecer em seguida?",
+    "hint": "Nuvem e Serverless, aula 6; Segurança de Redes, aula 19.",
+    "choices": [
+      {
+        "text": "Manter a regra aberta: a API está numa sub-rede privada, então nada de fora chega a ela mesmo",
+        "why": "Dentro da VPC, `0.0.0.0/0` admite todas as máquinas de lá, não só a aplicação. Privilégio mínimo na rede é um serviço, uma origem."
+      },
+      {
+        "text": "Tirar a regra e ir para a network ACL, já que estourar o tempo quer dizer que a ACL descartou",
+        "why": "Um security group também descarta em silêncio, e esse teste acabou de mostrar que a causa era o grupo."
+      },
+      {
+        "text": "Restringir a 8443 ao grupo a que pertencem as instâncias do app, e nada mais",
+        "why": "O teste provou que a origem estava errada, então a correção é a origem. Se ficar, a regra de teste é um buraco que fica para trás, mais largo do que o trabalho precisa."
+      },
+      {
+        "text": "Mantê-la, e acrescentar uma negação na network ACL para a internet, o que restaura a intenção",
+        "why": "Uma negação na ACL barraria a internet e deixaria todas as máquinas da VPC na regra aberta. A intenção era uma origem só."
+      }
+    ]
+  },
+  "ex-ydxzd494": {
+    "prompt": "A network ACL das sub-redes de dados só admite as faixas das sub-redes da aplicação, e o security group do banco já admite a 5432 só a partir do grupo da aplicação. Um revisor diz que a ACL é redundante. Que argumento o curso dá para mantê-la?",
+    "hint": "Nuvem e Serverless, aula 6; Fundamentos de Segurança da Informação, aula 4.",
+    "choices": [
+      {
+        "text": "A ACL se lembra das conexões, então também protege as respostas que o grupo deixa sair",
+        "why": "Uma network ACL não tem estado: ela precisa da faixa efêmera das respostas escrita, e não acrescenta nada sobre respostas."
+      },
+      {
+        "text": "Um security group aberto demais por engano continua sem expor o banco",
+        "why": "Os dois falham por motivos diferentes: um fica na interface e nomeia grupos, o outro fica na sub-rede e nomeia faixas. Um deslize num deixa o outro de pé, e isso os faz duas camadas, não uma desenhada duas vezes."
+      },
+      {
+        "text": "Security groups só sabem permitir, então é a ACL que recusa todo o resto",
+        "why": "O que nenhuma regra de um grupo permite já é descartado. O que a ACL acrescenta é uma negação explícita para a sub-rede inteira."
+      },
+      {
+        "text": "A ACL pode nomear o security group da aplicação, que sobrevive à troca de instâncias",
+        "why": "Só um security group pode nomear outro grupo; uma ACL só conhece faixas de endereços, e é por isso que esta é escrita com as faixas das sub-redes da aplicação."
+      }
+    ]
+  },
+  "ex-xez394qt": {
+    "prompt": "Para impedir exclusões sem segundo fator, uma bucket policy tem `\"Effect\": \"Deny\"` em `s3:DeleteObject` com a condição `\"Bool\": { \"aws:MultiFactorAuthPresent\": \"false\" }`. Um script noturno assinado com uma chave de acesso de longa duração continua apagando relatórios. Por que a negação não valeu?",
+    "hint": "Nuvem e Serverless, aula 7; Segurança em Nuvem, aula 7.",
+    "choices": [
+      {
+        "text": "A política de identidade do script permite `s3:*`, e política de identidade passa na frente de bucket policy",
+        "why": "Não existe hierarquia. Todas as políticas que se aplicam são somadas, e uma negação explícita que casa encerra a questão."
+      },
+      {
+        "text": "Uma negação só vale para pessoas; programas com chaves só respondem ao seu papel",
+        "why": "Uma negação vale para qualquer principal que ela casar. Essa chave é de um usuário e nada a isenta; a condição simplesmente não casou."
+      },
+      {
+        "text": "Chaves de longa duração sempre passam em condições de MFA, porque a própria chave conta como segundo fator",
+        "why": "Uma chave é um segredo só, guardado por um programa, então a requisição não traz informação nenhuma de MFA, e não uma que passa."
+      },
+      {
+        "text": "Uma requisição assinada com chave de acesso não traz chave de MFA nenhuma, então o `Bool` não acha nada para comparar",
+        "why": "Uma chave de acesso assina as requisições direto, sem página de login e sem segundo fator. O `BoolIfExists` trata a chave ausente como casamento, e a negação teria pegado o script."
+      }
+    ]
+  },
+  "ex-4yexk55y": {
+    "prompt": "O CloudTrail mostra chamadas da VM de relatórios assinadas com uma chave cujo id começa com `AKIA`, embora a VM tenha um papel associado. Esse prefixo marca uma chave de usuário de longa duração; as credenciais temporárias entregues por um papel começam com as quatro letras ___. A causa mais provável é um `AWS_ACCESS_KEY_ID` esquecido no ambiente da VM, que a cadeia de credenciais lê antes do papel.",
+    "hint": "Nuvem e Serverless, aula 7; Segurança em Nuvem, aula 7.",
+    "blanks": [
+      {
+        "accept": [
+          "ASIA"
+        ]
+      }
+    ]
+  },
+  "ex-jx358rzv": {
+    "prompt": "Uma conta tem o CloudTrail no padrão do provedor e nada além disso. Duas semanas depois de um suposto vazamento de chave, quais destas coisas o analista pode esperar achar no log? Marque todas as que se aplicam.",
+    "hint": "Nuvem e Serverless, aula 7; SOC, Monitoramento e Resposta a Incidentes, aula 3.",
+    "choices": [
+      {
+        "text": "Uma chamada `TerminateInstances` feita com a chave vazada na semana passada",
+        "why": "Chamadas que mudam coisas são registradas sem ninguém pedir, e noventa dias delas ficam guardados."
+      },
+      {
+        "text": "Cada `GetObject` que a chave fez no bucket dos clientes",
+        "why": "Leituras dos dados são outro tipo de evento, que a AWS só registra quando alguém configurou isso."
+      },
+      {
+        "text": "Uma sequência de recusas `AccessDenied` para essa mesma identidade",
+        "why": "O resultado faz parte de cada entrada, recusas incluídas, e uma sequência delas é a cara, vista de dentro, de uma chave roubada tentando a sorte."
+      },
+      {
+        "text": "Uma mudança de política feita cinco meses atrás, antes de o vazamento começar",
+        "why": "O padrão guarda noventa dias. Qualquer coisa mais antiga depende de uma decisão tomada antes, e investigações muitas vezes precisam voltar até lá."
+      },
+      {
+        "text": "Uma concessão `AttachUserPolicy` que a chave fez dez dias atrás",
+        "why": "Conceder é uma mudança, então está no registro padrão, com quem, sobre o quê, quando e de qual endereço."
+      },
+      {
+        "text": "O conteúdo dos arquivos que a chave baixou",
+        "why": "Um log de auditoria registra quem chamou o quê, nunca os dados em si, e aqui nem as leituras foram registradas."
+      }
+    ]
+  },
+  "ex-x5k0tsbr": {
+    "prompt": "O bucket de backups tem versionamento ligado. Um relatório de incidente diz que uma chave roubada com `s3:*` nesse bucket foi usada contra ele. Por que o versionamento sozinho não responde se os backups sobreviveram?",
+    "hint": "Nuvem e Serverless, aula 5; Segurança de Redes, aula 9.",
+    "choices": [
+      {
+        "text": "Uma chave com permissão de apagar versões apaga todas, uma a uma",
+        "why": "O versionamento protege contra enganos, não contra quem tem essa permissão. Tornar as versões impossíveis de apagar exige object lock: um backup em que o atacante consegue escrever é um backup que ele consegue destruir, e é por isso que uma cópia imutável faz parte do desenho."
+      },
+      {
+        "text": "O versionamento guarda só a versão mais recente, então uma sobrescrita perde o original",
+        "why": "Ele guarda todas as versões de cada chave. Uma sobrescrita deixa a antiga não corrente, não apagada."
+      },
+      {
+        "text": "Uma exclusão deixa um marcador, e um marcador nunca pode ser removido depois de escrito",
+        "why": "Apagar o marcador pelo id de versão traz a última versão de volta; é assim que se desfaz uma exclusão simples."
+      },
+      {
+        "text": "O versionamento pode ser desligado, e isso descarta as versões já guardadas",
+        "why": "Depois de ligado, um bucket só pode ser suspenso, e as versões já guardadas ficam até algo apagá-las."
+      }
+    ]
+  },
+  "ex-0saj6ph6": {
+    "prompt": "Um bucket versionado guarda 200 GB de arquivos e não tem regra de ciclo de vida. Um ransomware rodando com uma chave roubada sobrescreve cada objeto uma vez com uma cópia cifrada do mesmo tamanho, e não apaga nada. Quantos GB o bucket guarda e cobra agora?",
+    "hint": "Nuvem e Serverless, aula 5; Segurança de Redes, aula 9.",
+    "unit": "GB"
+  },
+  "ex-nnj02b7j": {
+    "prompt": "Uma varredura descobre que um bucket criado em junho de 2026 serve seus arquivos para qualquer um. Um colega diz que a AWS deve tê-lo deixado público por padrão. O que um achado assim quer dizer?",
+    "hint": "Nuvem e Serverless, aula 5; Segurança em Nuvem, aula 9.",
+    "choices": [
+      {
+        "text": "A AWS abre um bucket ao público quando ele passa a servir um site",
+        "why": "Nada se abre sozinho. Buckets são privados por padrão, e servir arquivos a todo mundo é uma concessão que alguém escreveu."
+      },
+      {
+        "text": "O Block Public Access cobre buckets criados antes de 2023, não os mais novos",
+        "why": "É o contrário: todo bucket criado desde abril de 2023 já nasce com ele ligado, e os mais antigos mantêm as configurações que tinham."
+      },
+      {
+        "text": "Alguém o deixou público: buckets novos nascem bloqueados, então foram duas mudanças deliberadas",
+        "why": "Desde abril de 2023, um bucket novo tem o Block Public Access ligado e as ACLs de objeto desativadas. O armazenamento então fez exatamente o que mandaram, para cada objeto debaixo dele."
+      },
+      {
+        "text": "As ACLs de objeto continuam ligadas por padrão, então um arquivo compartilhado às pressas abre o resto",
+        "why": "Buckets novos têm as ACLs de objeto desativadas, e uma concessão num arquivo nunca cobriu os outros, de todo modo."
+      }
+    ]
+  },
+  "ex-pfc4mf16": {
+    "prompt": "Uma cópia da tabela `USERS` do portal, de antes da correção de ana, aparece anexada a um chamado. Uma analista agrupa as linhas pelo valor guardado, como faz o `audit.py` do curso de criptografia. O que o agrupamento mostra sobre lucia e rafael, cuja senha de teste é a mesma, e que parte da correção acaba com esse achado?",
+    "hint": "Codificação Segura, aula 11; Criptografia Aplicada, aula 5.",
+    "choices": [
+      {
+        "text": "Os dois têm o mesmo valor guardado, e o custo do Argon2id acaba com isso, porque um hash lento afasta entradas iguais",
+        "why": "O custo encarece cada palpite; não muda o fato de duas entradas iguais darem saídas iguais. Isso é trabalho do salt."
+      },
+      {
+        "text": "Os dois têm o mesmo valor guardado, e o salt aleatório escrito em cada string do Argon2id acaba com isso",
+        "why": "SHA-256 sem salt dá linhas iguais para senhas iguais. O Argon2id mistura um salt diferente em cada hash, e as duas linhas deixam de ter qualquer coisa em comum."
+      },
+      {
+        "text": "As linhas já são diferentes, porque o código antigo misturava o nome do paciente no SHA-256",
+        "why": "O `set_password` antigo calculava o hash só da senha, e é por isso que a aula de criptografia reconstrói um valor guardado a partir da senha com `sha256sum`."
+      },
+      {
+        "text": "Os dois têm o mesmo valor guardado, e o hash de fachada acaba com isso, já que nomes desconhecidos são verificados contra ele",
+        "why": "A fachada iguala a resposta e o tempo para um nome desconhecido no login. Não muda nada nas linhas já guardadas."
+      }
+    ]
+  },
+  "ex-mnawj5at": {
+    "prompt": "Pedem a uma analista que diga se a chave de SMS `sms_live_4f9a1c7e2b8d6a3f` chegou a entrar no repositório do portal. Ela roda `git blame app.py` no último commit, não acha nenhuma linha com `sms_live_` e está prestes a escrever \"nunca foi para um commit\". O que ela deveria fazer?",
+    "hint": "Codificação Segura, aula 16; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 3.",
+    "choices": [
+      {
+        "text": "Rodar `git check-ignore -v app.py`, que mostra a regra que deixou a chave de fora",
+        "why": "Esse comando explica por que o git ignora um arquivo. O `app.py` é rastreado, e uma regra de ignorar não diz nada sobre o que as versões antigas dele continham."
+      },
+      {
+        "text": "Confiar no resultado, já que o blame lista todos os commits que mexeram em cada linha do arquivo",
+        "why": "O blame mostra o commit que mudou por último cada linha que existe hoje. Uma linha apagada não está no arquivo, e o blame não tem como vê-la."
+      },
+      {
+        "text": "Procurar com `grep -r sms_live_ .`, que também lê as versões antigas que o git guarda",
+        "why": "O grep lê os arquivos do disco como estão hoje. As versões antigas ficam nos commits, e só os comandos do próprio git procuram nelas."
+      },
+      {
+        "text": "Rodar `git log -S sms_live_`, que lista os commits que acrescentaram ou removeram essa string",
+        "why": "A picareta procura em todo commit um que tenha acrescentado ou removido o texto. Na aula, ela acha o commit que pôs a chave e o que a tirou."
+      }
+    ]
+  },
+  "ex-5ckq5s32": {
+    "prompt": "O SIEM lê o log do portal como um evento por linha. Na triagem, uma analista acha uma linha de login bem-sucedido num momento em que a tabela de sessões do portal não mostra sessão nova, e a linha logo acima é uma tentativa falha cujo nome vai até o fim da linha. O portal escreve os nomes no log com `%s`. O que explica isso, e o que corrige?",
+    "hint": "Codificação Segura, aula 15; SOC, Monitoramento e Resposta a Incidentes, aula 4.",
+    "choices": [
+      {
+        "text": "O nome trazia uma quebra de linha, e uma tentativa virou duas linhas, a segunda escolhida por quem enviou; `%r` a mantém numa linha só",
+        "why": "Com `%s` o valor é escrito como chegou. `%r` o escreve como literal de Python, com o `\\n` à vista, e um objeto JSON por linha resolve o mesmo problema por construção."
+      },
+      {
+        "text": "O normalizador leu errado o fuso do portal e trouxe um sucesso antigo para perto dessa falha",
+        "why": "Um fuso errado desloca todos os eventos de uma fonte pelas mesmas horas. Não põe um sucesso embaixo de uma falha escrita pela mesma requisição."
+      },
+      {
+        "text": "O login deu certo mesmo e a tabela de sessões perdeu a linha; corrija o código para gravar a sessão primeiro",
+        "why": "Nada indica uma linha perdida. As duas linhas surgiram juntas, de uma requisição, e só uma delas é um login que o portal tratou."
+      },
+      {
+        "text": "O parser do SIEM tem um bug; guarde as linhas brutas e processe a semana inteira de novo com um padrão corrigido",
+        "why": "Guardar a linha bruta é o hábito certo, mas processar de novo lê as mesmas duas linhas. O defeito está no que o portal escreveu, não em como foi lido."
+      }
+    ]
+  },
+  "ex-612wwecw": {
+    "prompt": "O SOC quer que a regra `many_accounts_one_source` da aula, que conta valores distintos de `user` por `src_ip` dentro de `1h`, leia também os logins falhos do portal, além dos do SSH. O que cada linha de login falho do portal precisa trazer para essa regra ser possível? Marque todas as que se aplicam.",
+    "hint": "Codificação Segura, aula 15; SOC, Monitoramento e Resposta a Incidentes, aula 4.",
+    "choices": [
+      {
+        "text": "a conta que a tentativa citou, pelo identificador",
+        "why": "A regra conta contas distintas, e um campo que nenhuma etapa anterior produziu não pode ser contado. Quem é uma das cinco coisas que uma linha de segurança traz."
+      },
+      {
+        "text": "o endereço de onde veio a requisição, onde a lei e a política permitem",
+        "why": "O `group-by: src_ip` precisa dele, e de onde é outra das cinco coisas que toda linha de segurança traz."
+      },
+      {
+        "text": "um carimbo de tempo com o fuso",
+        "why": "O `timespan: 1h` é medido sobre ele, e um horário lido no fuso errado desloca todos os eventos da fonte em horas."
+      },
+      {
+        "text": "a senha digitada, para separar um erro de digitação de um palpite",
+        "why": "Senha nunca vai para o log, nem a errada. Erro de digitação e lista se separam por quantas contas um endereço tenta."
+      },
+      {
+        "text": "o id da sessão, para ligar a tentativa a um navegador",
+        "why": "Quem lê uma linha com o id de sessão pode agir como aquela sessão, e é por isso que ids estão na tabela do que nunca se registra."
+      },
+      {
+        "text": "o nome completo e o telefone do paciente, para enriquecer o alerta",
+        "why": "Um identificador basta. Cada cópia a mais dos dados de uma pessoa é mais um lugar aonde um pedido de exclusão precisa chegar."
+      }
+    ]
+  },
+  "ex-979hkv20": {
+    "prompt": "O WAF da loja recusou uma mensagem de suporte que continha `select id from orders where total > 100`, e a equipe tirou a regra 942100 do campo `comment` em `/support`. Um desenvolvedor pergunta se a aplicação por trás agora está aberta a injeção de SQL pelo `comment`. O que decide a resposta?",
+    "hint": "Codificação Segura, aula 5; Segurança de Redes, aula 3.",
+    "choices": [
+      {
+        "text": "Nada no código: o WAF era a única verificação desse campo, e a exclusão a tirou",
+        "why": "Um WAF conhece padrões, não a aplicação. Se o texto de um campo pode virar SQL é decidido onde a consulta é montada."
+      },
+      {
+        "text": "As regras de XSS, que continuam lendo o `comment` e também pegam uma aspa que fecha uma string",
+        "why": "As regras de XSS procuram script e marcação. Ficaram ligadas para continuar recusando `<script>`, não para fazer as vezes da regra de SQL."
+      },
+      {
+        "text": "Se o código passa o comentário para a consulta por um placeholder",
+        "why": "Com `?` o banco analisa o programa antes de ver qualquer valor, e o comentário continua texto, diga o que disser. Colado no texto do SQL, seria injeção com ou sem WAF."
+      },
+      {
+        "text": "O limite de 16 KiB no corpo, que deixa qualquer comentário curto demais para levar um comando que funcione",
+        "why": "O `client_max_body_size` recusa corpos grandes. Um valor curto ainda fecha uma string: um apóstrofo em D'Ávila bastou para quebrar a busca falha."
+      }
+    ]
+  },
+  "ex-s7ac5pn4": {
+    "prompt": "lucia entra no portal de sessões corrigido às 09:00 e nunca sai. Às 11:30 uma cópia do cookie de sessão dela é tirada do log de um proxy, e a partir daí um script a apresenta a cada dez minutos. O portal mantém os limites da aula: 15 minutos de inatividade e 8 horas no absoluto. Por quantas horas depois das 11:30 a cópia continua funcionando?",
+    "hint": "Codificação Segura, aula 10; Segurança de Redes, aula 7.",
+    "unit": "horas"
+  },
+  "ex-efqg2p25": {
+    "prompt": "Depois que `HASHER.verify` aceita uma senha, o portal corrigido chama `HASHER.___(USERS[name])` e, quando a resposta é verdadeira, guarda um hash novo da senha que acabou de conferir. Escreva o nome desse método.",
+    "hint": "Codificação Segura, aula 11.",
+    "blanks": [
+      {
+        "accept": [
+          "check_needs_rehash",
+          "check_needs_rehash()"
+        ]
+      }
+    ]
+  },
+  "ex-r23f23wq": {
+    "prompt": "O console da equipe da clínica passa a pedir um segundo fator no login, além da senha. Seguindo a SP 800-63B como a aula a apresenta, que tamanho mínimo a política de senhas do console deve pedir?",
+    "hint": "Codificação Segura, aula 11.",
+    "choices": [
+      {
+        "text": "8 caracteres, já que outra prova de identidade agora fica ao lado dela",
+        "why": "A diretriz pede pelo menos 15 quando a senha é o único fator e pelo menos 8 quando há um segundo fator ao lado."
+      },
+      {
+        "text": "15 caracteres, o mesmo mínimo que o portal dos pacientes aplica a todos",
+        "why": "15 é o número para a senha que é o único fator, que é o caso dos pacientes e não o do console."
+      },
+      {
+        "text": "64 caracteres, o tamanho que a diretriz manda todo serviço exigir",
+        "why": "64 é o tamanho de senha que um serviço precisa aceitar. É um teto a permitir, não um piso a exigir."
+      },
+      {
+        "text": "12 caracteres com maiúscula, dígito e símbolo",
+        "why": "A diretriz abandona as regras de composição, porque elas produzem `Vereda2026!`, não senhas fortes."
+      }
+    ]
+  },
+  "ex-gpc1f93v": {
+    "prompt": "Uma recepcionista digita `%` na busca de pacientes corrigida. Ponha em ordem o que acontece com esse caractere até a resposta.",
+    "hint": "Codificação Segura, aula 5.",
+    "items": [
+      "`like_pattern` escapa o `%` e põe o termo entre dois curingas sem escape",
+      "`sqlite3` manda o texto do SQL com `?`, e o padrão viaja ao lado",
+      "O banco analisa o programa, deixando um buraco onde estava o `?`",
+      "`LIKE` lê o valor como padrão, no qual `\\%` é um sinal de porcentagem literal",
+      "Nenhum sobrenome tem sinal de porcentagem, e a lista volta vazia"
+    ],
+    "trap": "O escape não é feito pelo banco depois que o valor chega: `like_pattern` roda no Python antes de qualquer envio, e o programa é analisado antes de qualquer valor ser lido."
+  },
+  "ex-zs3xs2h7": {
+    "prompt": "Um pull request mexe em seis coisas. Quais delas pertencem à quarta pergunta da revisão, quais segredos e configurações mudaram? Marque todas as que se aplicam.",
+    "hint": "Codificação Segura, aula 18.",
+    "choices": [
+      {
+        "text": "um modo de depuração ligado onde a aplicação inicia",
+        "why": "O modo de depuração é uma configuração, e o B201 da aula 19 mostra o que o depurador do Flask expõe quando roda num servidor."
+      },
+      {
+        "text": "uma flag retirada do cookie de sessão",
+        "why": "A aula cita a flag de cookie retirada como um dos exemplos desta pergunta, ao lado da chave no código."
+      },
+      {
+        "text": "um tempo limite aumentado",
+        "why": "Um tempo limite aumentado está na mesma lista que o modo de depuração e a flag do cookie: uma configuração cuja mudança o revisor questiona."
+      },
+      {
+        "text": "uma rota nova para cancelar um agendamento",
+        "why": "Rota nova é a primeira pergunta, quem pode fazer isso, e vem antes de tudo na lista."
+      },
+      {
+        "text": "um valor escrito num atributo HTML",
+        "why": "Para onde um valor sai é a terceira pergunta, sobre codificá-lo para o lugar onde ele cai."
+      },
+      {
+        "text": "um pacote novo no `requirements.txt`",
+        "why": "Dependências são a quinta pergunta, separada porque a aula 17 tem verificações próprias para elas."
+      }
+    ]
+  },
+  "ex-p33nv4fr": {
+    "prompt": "No `load.py` do curso de SOC, o padrão `SSH` começa com o carimbo de tempo, o host e `sshd: `, depois põe as três alternativas, `Accepted …`, `Failed password for …` e `Invalid user …`, dentro de `(?:` e `)`, e termina com ` from (?P<src>\\S+)`. Por que as alternativas estão embrulhadas assim e não soltas?",
+    "hint": "Python, aula 10; SOC, Monitoramento e Resposta a Incidentes, aula 4.",
+    "choices": [
+      {
+        "text": "`(?:…)` torna as alternativas preguiçosas, e cada uma para no primeiro espaço",
+        "why": "Preguiça é `*?` e `+?`. `(?:…)` não diz nada sobre quanto é consumido, e `\\S+` já para no espaço."
+      },
+      {
+        "text": "Grupos nomeados como `(?P<ok>…)` só funcionam dentro de um grupo sem captura",
+        "why": "Um grupo nomeado funciona em qualquer lugar: `(?P<ts>\\S+)`, no começo do mesmo padrão, não está dentro de grupo nenhum."
+      },
+      {
+        "text": "Soltas, a alternância também seria capturada como grupo 1 e jogaria `m[\"ok\"]` no texto errado",
+        "why": "Grupos nomeados são lidos pelo nome, e um grupo numerado a mais na frente não os desloca. Manter a numeração estável é um motivo menor para o `(?:…)`."
+      },
+      {
+        "text": "`|` tem a menor precedência: sem o grupo, data e máquina iriam apenas com a primeira opção, e o ` from` com a última",
+        "why": "`|` tem a menor precedência da linguagem, e solto ele parte o padrão inteiro em três. Entre parênteses, a escolha fica entre três meios que dividem o começo e o fim."
+      }
+    ]
+  },
+  "ex-ggg28wae": {
+    "prompt": "Uma analista lê o `auth.log` da semana em Python e conta as falhas por endereço com `for src, group in groupby(failures, key=src_of)`, em que `failures` mantém a ordem do arquivo. O relatório lista alguns endereços várias vezes, cada vez com uma contagem menor do que o endereço tem de fato. O que aconteceu?",
+    "hint": "Python, aula 11; Linux e Linha de Comando, aula 8.",
+    "choices": [
+      {
+        "text": "O `groupby` fecha um grupo depois de uma hora do mesmo endereço e abre outro",
+        "why": "O groupby não tem noção de tempo. Ele começa um grupo novo sempre que a chave muda de um item para o seguinte."
+      },
+      {
+        "text": "O `groupby` só agrupa vizinhos iguais, e a entrada não estava em ordem de endereço",
+        "why": "É o `uniq -c` sem `sort`: entrada fora de ordem dá a mesma chave várias vezes e não avisa nada. Ordene antes pela mesma chave, ou conte com um `Counter`, que dispensa ordem."
+      },
+      {
+        "text": "Um laço anterior já tinha esgotado o gerador, e o `groupby` só viu o fim do arquivo",
+        "why": "Um gerador esgotado não entrega nada. Não produziria o mesmo endereço várias vezes com contagens plausíveis."
+      },
+      {
+        "text": "O `src_of` devolve o endereço junto com a porta, e cada conexão vira uma chave só sua",
+        "why": "Aí as chaves seriam endereço e porta, cada uma uma string diferente. O relatório não mostraria o mesmo endereço puro várias vezes."
+      }
+    ]
+  },
+  "ex-5937tnek": {
+    "prompt": "O `load.py` do SOC lê o `auth.log` com `m = SSH.match(line)` e `if not m: continue`. Depois que uma atualização do servidor SSH muda a redação das linhas de falha, a tabela da semana seguinte tem sucessos e nenhuma falha, e o script não mostra erro nenhum. O que o script deveria ter feito, pelos dois cursos?",
+    "hint": "Python, aula 10; SOC, Monitoramento e Resposta a Incidentes, aula 4.",
+    "choices": [
+      {
+        "text": "Usar `re.search` no lugar de `match`, para achar a linha reescrita em qualquer ponto dela",
+        "why": "O `search` só solta o padrão do começo da linha. Uma linha cujas palavras mudaram falha no `search` tanto quanto no `match`."
+      },
+      {
+        "text": "Pôr o laço dentro de `try`/`except Exception`, para uma linha estranha não parar a carga",
+        "why": "Nada foi lançado aqui: o `continue` já descartou as linhas em silêncio. Um `except` amplo acrescentaria uma segunda forma de perdê-las."
+      },
+      {
+        "text": "Contar as linhas que o padrão não casou e imprimir essa contagem, para a perda aparecer",
+        "why": "A aula de Python termina nessa contagem, e a aula de SIEM diz que um SIEM que informa quantas linhas não conseguiu processar está dizendo a verdade sobre si."
+      },
+      {
+        "text": "Guardar só os campos extraídos, que são tudo o que as regras leem, e descartar a linha bruta",
+        "why": "A linha bruta é o que permite processar a semana de novo depois de corrigir o padrão; a aula de SIEM manda nunca jogá-la fora."
+      }
+    ]
+  },
+  "ex-wh7cnjw6": {
+    "prompt": "Um pull request troca, no `password_is_right` do portal, `except VerifyMismatchError:` por `except Exception:`, os dois devolvendo `False`, \"por segurança\". Depois, uma migração com defeito corta um hash guardado pela metade. O que acontece no próximo login dessa conta, antes e depois da mudança?",
+    "hint": "Python, aula 8; Codificação Segura, aula 11.",
+    "choices": [
+      {
+        "text": "Antes, o erro é lançado e aparece; depois, parece senha errada e ninguém sabe por quê",
+        "why": "Pegar `Exception` pega tudo abaixo dela, inclusive o que um hash danificado lançar. A aula pega exatamente `VerifyMismatchError` para que só uma senha errada pareça senha errada."
+      },
+      {
+        "text": "Antes e depois, a resposta é \"wrong name or password\", já que um hash danificado não casa com senha nenhuma",
+        "why": "A aula diz o contrário: pegar exatamente `VerifyMismatchError` é o que faz um hash corrompido falhar alto, em vez de parecer senha errada."
+      },
+      {
+        "text": "Depois da mudança, `Ctrl-C` e `sys.exit()` também são engolidos, e o servidor não para mais",
+        "why": "`KeyboardInterrupt` e `SystemExit` ficam fora de `Exception` de propósito. Só um `except:` sem nada os pega."
+      },
+      {
+        "text": "Depois da mudança o portal refaz o hash do valor danificado com os parâmetros de hoje e deixa o paciente entrar",
+        "why": "O novo hash só vem depois de uma verificação bem-sucedida, com a senha recém-conferida. Um tratador que devolve `False` nunca chega lá."
+      }
+    ]
+  },
+  "ex-d9fjvagv": {
+    "prompt": "O script de uma analista confere o endereço de origem de cada linha de uma semana de logs de firewall contra um feed de indicadores atômicos, carregado uma vez numa lista, com `if row[\"src_ip\"] in feed:` dentro do laço. Leva minutos. Que mudança o curso de Python faz?",
+    "hint": "Python, aula 20; SOC, Monitoramento e Resposta a Incidentes, aula 9.",
+    "choices": [
+      {
+        "text": "Escrever `if row[\"src_ip\"] in set(feed):` dentro do laço",
+        "why": "Isso monta o set de novo a cada linha, o que custa o mesmo que a varredura, mais a alocação."
+      },
+      {
+        "text": "Ordenar a lista uma vez e parar cada varredura no primeiro endereço depois do procurado",
+        "why": "Continua sendo uma varredura por linha. Para busca exata o curso transforma a coleção em set; lista ordenada com `bisect` é para faixas."
+      },
+      {
+        "text": "Montar um `Counter` do feed dentro do laço, para contar quantas vezes cada endereço aparece",
+        "why": "Montado dentro do laço, volta a ser O(n) por linha, e a pergunta feita é só se o endereço está lá."
+      },
+      {
+        "text": "Rodar `feed = set(feed)` uma vez, antes do laço: cada conferência vira uma só consulta",
+        "why": "Uma lista é varrida a cada `in`; um set responde num passo. Um indicador atômico é consultado como é, e isso é um teste de pertencimento."
+      }
+    ]
+  },
+  "ex-4xeasvcj": {
+    "prompt": "Um script consulta uma API de inteligência de ameaças sobre cada endereço com `requests.get(f\"{base}/ip/{addr}?token={TOKEN}\", timeout=10)`. Um colega diz que o token está seguro no endereço porque a chamada usa HTTPS. Qual é a resposta melhor?",
+    "hint": "Python, aula 21; Codificação Segura, aula 15.",
+    "choices": [
+      {
+        "text": "Concordar: o TLS também cifra a query string, e ninguém no caminho consegue lê-la",
+        "why": "No caminho, sim. Mas a URL é anotada nas duas pontas: pelos proxies, pelos logs do servidor e no histórico do seu próprio terminal."
+      },
+      {
+        "text": "Codificar o token em Base64 na URL, para os logs não o guardarem como está",
+        "why": "Base64 é uma codificação que qualquer um desfaz. Uma linha de log com o token codificado ainda deixa quem a lê agir como o script."
+      },
+      {
+        "text": "Mandá-lo num cabeçalho `Authorization` lido de `os.environ`, porque uma URL acaba em logs",
+        "why": "A aula 21 de Python põe o token num cabeçalho e fora do arquivo. A aula 15 de codificação segura lista tokens entre o que nunca vai para o log, porque quem lê a linha pode usá-lo."
+      },
+      {
+        "text": "Manter na URL e pedir aos donos da API que desliguem o log desse caminho",
+        "why": "O histórico do seu terminal e cada proxy no caminho também guardam a URL. A correção é parar de pôr o token ali."
+      }
+    ]
+  },
+  "ex-5jx79v11": {
+    "prompt": "O `requirements.txt` de um serviço diz `requests~=2.31.0`. Numa instalação nova, o `pip-audit` aponta alertas contra o requests cujas versões corrigidas são `2.32.0`, `2.32.4` e `2.33.0`. Um colega diz que o `~=` vai pegar essas correções sozinho na próxima instalação. O que está certo?",
+    "hint": "Python, aula 18; Codificação Segura, aula 17.",
+    "choices": [
+      {
+        "text": "`~=2.31.0` aceita qualquer coisa abaixo da próxima versão maior, e a próxima instalação traz a 2.34.2",
+        "why": "Isso é `~=2.31`, com dois componentes. Com três, só o último pode mexer: `>=2.31.0, ==2.31.*`."
+      },
+      {
+        "text": "Fica na 2.31.x, abaixo de toda correção; fixe exatamente uma versão corrigida, como `requests==2.34.2`",
+        "why": "Com três componentes só o patch pode mexer, e no ambiente novo da aula `~=2.31.0` resolveu para 2.31.0. O curso de codificação segura fixa versões exatas numa aplicação e sobe o pin para uma versão corrigida de propósito."
+      },
+      {
+        "text": "As correções estão nas dependências do próprio requests, e o especificador do requests não muda nada aqui",
+        "why": "O pip-audit lista esses alertas contra o próprio requests, com as versões corrigidas do requests na última coluna."
+      },
+      {
+        "text": "Trocar por `requests>=2.26`, para toda correção futura chegar sem ninguém precisar agir",
+        "why": "Uma faixa também deixa entrar uma versão maior que pode quebrar o serviço, sem aviso. Uma aplicação fixa a versão e atualiza de propósito."
+      }
+    ]
+  },
+  "ex-m0tmh3c5": {
+    "prompt": "Uma analista quer as dez maiores transferências de um pipeline de geradores sobre um arquivo de fluxos, sem guardar todos os valores como faz `sorted(...)[:10]`. A resposta da aula guarda dez: `heapq.___(10, sizes)`.",
+    "hint": "Python, aula 11.",
+    "blanks": [
+      {
+        "accept": [
+          "nlargest"
+        ]
+      }
+    ]
+  },
+  "ex-mrjf4zff": {
+    "prompt": "Um script roda `total = sum(durations(errors(lines(path))))` com os três geradores da aula. Ponha em ordem o que acontece quando `sum` pede o primeiro valor.",
+    "hint": "Python, aula 11.",
+    "items": [
+      "`sum` pede um valor a `durations`",
+      "`durations` pede uma linha a `errors`",
+      "`errors` pede uma linha a `lines`",
+      "`lines` abre o arquivo e entrega a primeira linha",
+      "`errors` só repassa essa linha se ela for uma linha de erro"
+    ],
+    "trap": "Nada roda quando os três geradores são criados: o arquivo só é aberto quando `sum` puxa pela primeira vez, a partir do fim da cadeia, e não quando `lines(path)` é chamado."
+  },
+  "ex-hws1bnpm": {
+    "prompt": "Um script abre uma lista exportada de indicadores e a carrega num set. Ligue cada tarefa à cláusula que a aula dá a ela.",
+    "hint": "Python, aula 8.",
+    "pairs": [
+      {
+        "left": "a única linha que abre o arquivo, que pode falhar",
+        "right": "`try`"
+      },
+      {
+        "left": "dizer à analista qual arquivo está faltando",
+        "right": "`except FileNotFoundError`"
+      },
+      {
+        "left": "carregar as linhas, só se a abertura deu certo",
+        "right": "`else`"
+      },
+      {
+        "left": "avisar que a execução terminou, aconteça o que acontecer",
+        "right": "`finally`"
+      }
+    ],
+    "right_distractors": [
+      "`except Exception: pass`",
+      "um `return` dentro do `finally`"
+    ]
+  },
+  "ex-cwqhyrsd": {
+    "prompt": "Depois do incidente de quinta, o `gw` vai aceitar só chaves, e a equipe precisa continuar conseguindo entrar durante a troca. Ponha os passos na ordem que as duas aulas dão.",
+    "hint": "Defesa de Endpoint e Hardening, aula 1; SOC, Monitoramento e Resposta a Incidentes, aula 14.",
+    "items": [
+      "Cada usuário recebe uma chave, registrada no inventário com a forma como foi confirmada",
+      "Um arquivo próprio em `sshd_config.d/` diz `PasswordAuthentication no`",
+      "O `sshd -T` imprime `passwordauthentication no` antes de qualquer reload",
+      "O servidor é recarregado, com uma segunda sessão já aberta",
+      "De outra máquina, um login só com senha é recusado e um login com chave continua funcionando"
+    ],
+    "trap": "Desligar as senhas vem depois de todo usuário ter uma chave no inventário, não antes: na outra ordem a correção tranca a equipe do lado de fora junto com o intruso."
+  },
+  "ex-zc0t1yj9": {
+    "prompt": "Na quinta, o intruso acrescentou uma chave ao `authorized_keys` do bruno no `gw` e voltou com ela às 03:05, de `203.0.113.66`. Quais destas, já em vigor no `gw`, teriam tornado essa chave inútil ou a mostrado no mesmo dia? Marque todas as que se aplicam.",
+    "hint": "Defesa de Endpoint e Hardening, aula 15; SOC, Monitoramento e Resposta a Incidentes, aula 14.",
+    "choices": [
+      {
+        "text": "`AuthorizedKeysFile none` com `TrustedUserCAKeys` no servidor",
+        "why": "Com os arquivos de chaves desligados, uma linha acrescentada ao `authorized_keys` não faz nada: o servidor confia na autoridade, não nas chaves."
+      },
+      {
+        "text": "Uma regra de firewall no `gw` que aceita SSH de um jump server e recusa o resto",
+        "why": "Uma chave roubada é inútil a partir de qualquer máquina de onde o servidor não aceita SSH, e `203.0.113.66` teria sido recusado no primeiro pacote."
+      },
+      {
+        "text": "O `keyaudit.sh` rodando com agendamento contra o inventário",
+        "why": "Uma chave que aparece entre duas execuções é um alerta, horas antes de alguém ler os alertas de login."
+      },
+      {
+        "text": "Uma regra de firewall no `gw` descartando todo pacote de `203.0.113.66`",
+        "why": "A mesma chave funciona de qualquer outro endereço. Um endereço fica embaixo na pirâmide da dor: trocá-lo custa minutos ao outro lado."
+      },
+      {
+        "text": "`MaxAuthTries 3` num arquivo próprio dentro de `sshd_config.d/`",
+        "why": "Isso limita as tentativas por conexão, o que deixa o chute mais lento e mais visível; uma chave válida entra na primeira tentativa."
+      },
+      {
+        "text": "`PasswordAuthentication no`, configurado na manhã depois que a chave foi acrescentada",
+        "why": "Isso fecha o caminho por onde a senha entrou e deixa todas as chaves em paz, a do intruso inclusive, e por isso remover a chave é um passo à parte."
+      }
+    ]
+  },
+  "ex-cxpwyb8x": {
+    "prompt": "Uma empresa leva a honey account do laboratório para o Active Directory: uma conta real chamada `svc_backup`, que nada usa, citada num arquivo-isca ao lado de uma senha que não é a dela. Meses depois, alguém tenta essa senha num controlador de domínio. Que registro o alerta deve procurar?",
+    "hint": "Defesa de Endpoint e Hardening, aula 13; SOC, Monitoramento e Resposta a Incidentes, aula 2.",
+    "choices": [
+      {
+        "text": "Evento 4625 com status `0xC0000064`, como a linha `Invalid user` do Linux",
+        "why": "Esse código quer dizer que a conta não existe. No laboratório a `svc_backup` não existia em lugar nenhum; no diretório ela existe, então o logon falha como senha errada."
+      },
+      {
+        "text": "Evento 4625 com status `0xC000006A`, senha errada",
+        "why": "A conta é real no diretório e a senha da isca não é a dela, então toda tentativa falha assim, e qualquer 4625 com esse nome é o alerta."
+      },
+      {
+        "text": "Evento 4624, já que a senha da isca entra antes que alguém perceba",
+        "why": "A isca nunca enfraquece o que está ao lado dela: o arquivo jamais traz uma senha que abra uma conta real."
+      },
+      {
+        "text": "Evento 1102, porque o intruso limpa o log logo depois de tentar",
+        "why": "Nada num logon que falhou limpa um log. O 1102 registra a limpeza do canal Security, um ato separado e muito mais barulhento."
+      }
+    ]
+  },
+  "ex-yqzpk6jg": {
+    "prompt": "A triagem descobriu que o `files` enviou 612.408.119 bytes para `203.0.113.200` às 02:41, embora seu único destino lá fora seja o backup em `203.0.113.150`. Que controle no `files`, em vigor antes de quinta, teria impedido essa transferência e contado a tentativa?",
+    "hint": "Defesa de Endpoint e Hardening, aula 10; SOC, Monitoramento e Resposta a Incidentes, aula 7.",
+    "choices": [
+      {
+        "text": "Uma chain de saída com `policy drop` que deixa sair o backup, nomes e respostas",
+        "why": "As necessidades de saída de um servidor são curtas e cabem numa lista; todo o resto é descartado, e o contador mostra o que tentou."
+      },
+      {
+        "text": "Uma chain de entrada com `policy drop` no `files` que aceita SSH do `gw` e mais nada",
+        "why": "Ela filtra o que chega. A transferência foi uma conexão aberta pelo próprio `files`, e uma chain de entrada nunca vê isso."
+      },
+      {
+        "text": "O `ufw` ligado com os padrões do Ubuntu, para que o host tenha um firewall só seu",
+        "why": "O `ufw` do Ubuntu nega a entrada e permite a saída, então a transferência teria saído exatamente como saiu."
+      },
+      {
+        "text": "Uma regra rejeitando `203.0.113.200` quando um feed de ameaças o listar",
+        "why": "Uma lista de bloqueio só barra destinos que alguém já listou. Uma lista do que o servidor precisa barra todos os outros, listados ou não."
+      }
+    ]
+  },
+  "ex-z52faec4": {
+    "prompt": "Um relatório de ameaças diz que um malware busca seus arquivos em nomes sob `cobranca-urgente.example.org`, que hoje resolvem para `198.51.100.66`. Um colega propõe uma regra de firewall descartando esse endereço. O que a entrada curinga da zona de política, apontando a família para o sinkhole, dá à empresa que a regra não dá?",
+    "hint": "Defesa de Endpoint e Hardening, aula 14; SOC, Monitoramento e Resposta a Incidentes, aula 9.",
+    "choices": [
+      {
+        "text": "Nada duradouro, já que um nome e um endereço ficam exatamente na mesma altura da pirâmide da dor",
+        "why": "A pirâmide põe o domínio acima do endereço: trocar um endereço custa minutos ao outro lado, um domínio um pouco mais."
+      },
+      {
+        "text": "Ela também barra o malware quando ele disca um endereço escrito no próprio programa",
+        "why": "Um programa que nunca pede um nome passa ao lado do resolvedor; as regras de saída no host são o controle para isso."
+      },
+      {
+        "text": "Segura a família pelo nome aonde quer que ela vá, e o sinkhole registra qual máquina pediu",
+        "why": "O nome é a parte estável, uma família de nomes é uma linha curinga, e o sinkhole transforma cada bloqueio num achado com uma máquina junto."
+      },
+      {
+        "text": "Ela decifra o HTTPS do malware, para o sinkhole ler cada caminho que ele pediu",
+        "why": "O sinkhole da aula fala HTTP puro na porta 80. Uma conexão TLS na 443 não encontra serviço ali, e o log do resolvedor é tudo o que sobra."
+      }
+    ]
+  },
+  "ex-nbpxaxj6": {
+    "prompt": "Outro servidor da empresa ainda tem o pacote `sudo` abaixo de `1.9.15p5-3ubuntu5.24.04.2`, então o `vulncheck.py` marca JTB-2026-03 como `VULNERABLE` ali. Pela política escrita no `prioritise.py`, quantos dias depois do achado vence o prazo?",
+    "hint": "Defesa de Endpoint e Hardening, aula 16.",
+    "unit": "dias"
+  },
+  "ex-ac0077wc": {
+    "prompt": "Cada linha abaixo apareceu num log ou numa listagem de regras da Jatobá. Ligue cada uma ao controle deste curso que a produziu.",
+    "hint": "Defesa de Endpoint e Hardening, aulas 10, 13, 14 e 15.",
+    "pairs": [
+      {
+        "left": "`rpz: applied [feed] boletos-jatoba.example.net. rpz-nxdomain 192.168.60.20@46963`",
+        "right": "uma zona de política de resposta no resolvedor da empresa"
+      },
+      {
+        "left": "`Invalid user svc_backup from 192.168.60.20 port 36808`",
+        "right": "um nome de usuário que só existe num arquivo-isca"
+      },
+      {
+        "left": "`counter packets 2 bytes 120 comment \"web starts nothing else\"`",
+        "right": "uma lista de saída permitida no servidor"
+      },
+      {
+        "left": "`tcp dport 22 counter packets 1 bytes 60 reject with tcp reset`",
+        "right": "SSH aceito apenas a partir do jump server"
+      }
+    ],
+    "right_distractors": [
+      "uma lista de dispositivos permitidos no USBGuard",
+      "um banimento escrito pelo fail2ban"
+    ]
+  },
+  "ex-vkprr93n": {
+    "prompt": "Um colega copia o `prioritise.py` para um segundo portal e escreve `EXPOSED = {\"nginx\", \"openssh-server\"}` a partir de uma varredura antiga, embora o `vsftpd` ainda escute ali. JTB-2026-05 se aplica a essa máquina. O que o script imprime para ele, e o que deu errado?",
+    "hint": "Defesa de Endpoint e Hardening, aula 16; SOC, Monitoramento e Resposta a Incidentes, aula 7.",
+    "choices": [
+      {
+        "text": "P2, com prazo de 30 dias, porque uma nota 7.5 já é grave o bastante sozinha",
+        "why": "A gravidade só chega a P2 para um pacote que está em `EXPOSED`; fora dele, um 7.5 cai para o nível de baixo."
+      },
+      {
+        "text": "P4, com prazo de 90 dias, porque seu EPSS de 0.05 fica abaixo da marca de 0.10",
+        "why": "Um EPSS abaixo de 0.10 só pula o P2 por probabilidade. Uma nota base de 7.5 ainda fica um nível acima do P4."
+      },
+      {
+        "text": "P1, com prazo de 7 dias, já que um servidor FTP na rede é sempre urgente",
+        "why": "O P1 é dos defeitos que estão na lista KEV, e JTB-2026-05 não está nela."
+      },
+      {
+        "text": "P3, com prazo de 60 dias: a lista velha esconde um serviço alcançável, como o contexto de ativo velho faz na triagem",
+        "why": "O código está certo e a entrada dele está errada. Uma lista de ativos que diz menos que a rede baixa a prioridade justamente do achado que importava."
+      }
+    ]
+  },
+  "ex-143h92kz": {
+    "prompt": "Dois alertas sobre o `desk` chegam à triagem. O resolvedor registrou `rpz: applied [feed] *.cobranca-urgente.example.org.` para a consulta dele, e o sinkhole depois registrou `192.168.60.20 pagamento.cobranca-urgente.example.org /boleto.pdf`. O que a segunda linha estabelece que a primeira não estabelece?",
+    "hint": "Defesa de Endpoint e Hardening, aula 14; SOC, Monitoramento e Resposta a Incidentes, aula 7.",
+    "choices": [
+      {
+        "text": "Que um programa no `desk` quis buscar um arquivo",
+        "why": "Uma consulta pode vir de uma prévia, de um scanner de e-mail ou de um link que ninguém clicou. Uma conexão com caminho é um programa que quis buscar algo."
+      },
+      {
+        "text": "Que o `desk` está infectado e precisa ser reconstruído antes do fim do dia",
+        "why": "O sinkhole não limpa nada e sozinho não prova infecção. Ele aponta a máquina a examinar, e o exame decide."
+      },
+      {
+        "text": "Que a zona de política falhou, já que a visita ainda chegou a um servidor",
+        "why": "Chegar ao sinkhole é a zona funcionando: ela respondeu ao nome com o endereço da própria empresa de propósito."
+      },
+      {
+        "text": "Nada de novo, já que as duas linhas saem do mesmo log do resolvedor",
+        "why": "A segunda vem do journal do próprio sinkhole, no endereço para onde a zona apontou, com o caminho que o programa pediu."
+      }
+    ]
+  },
+  "ex-ygtbarv2": {
+    "prompt": "A triagem precisa do contexto de ativo de um servidor que gerou um alerta de madrugada. A linha dele no inventário dá como dono `IT`. O que essa linha deixa de dar ao analista?",
+    "hint": "Defesa de Endpoint e Hardening, aula 18; SOC, Monitoramento e Resposta a Incidentes, aula 7.",
+    "choices": [
+      {
+        "text": "Nada, já que uma equipe nunca sai de férias e uma pessoa sozinha sai",
+        "why": "Um achado mandado para uma equipe é lido por todos e tratado por ninguém; a linha precisa dar o nome de quem responde quando ele atrasa."
+      },
+      {
+        "text": "A criticidade do servidor, que só a coluna de dono da linha do inventário consegue guardar",
+        "why": "A criticidade é um campo próprio da linha. O que falta aqui é um nome."
+      },
+      {
+        "text": "Uma pessoa a quem perguntar e entregar o achado, porque uma equipe não é dona de nada",
+        "why": "O dono é uma pessoa, não uma equipe: alguém a quem se pode perguntar hoje à noite e que responde pelo achado."
+      },
+      {
+        "text": "O histórico do endereço, que o inventário guarda para cada host",
+        "why": "O histórico vem do próprio SIEM, ao longo de semanas. O inventário dá o ativo e o dono dele."
+      }
+    ]
+  },
+  "ex-q9gnd1fg": {
+    "prompt": "O portal corrigido da clínica registra um login que falhou como `WARNING portal sign-in failed name='lucia'`. O SOC aponta para ele a ideia do `rules-v2.yml`: contar valores distintos de `user` por `src_ip` dentro de uma hora, e alertar em 10. O que acontece?",
+    "hint": "SOC, Monitoramento e Resposta a Incidentes, aula 4; Codificação Segura, aula 15.",
+    "choices": [
+      {
+        "text": "Funciona assim que um pipeline de processamento mapear `src_ip` para o campo do próprio portal",
+        "why": "Um pipeline renomeia campos que existem. Esta linha não traz endereço com nome nenhum, então não há o que mapear."
+      },
+      {
+        "text": "Funciona, desde que o SIEM guarde a hora de cada linha em UTC, como a aula 2 pede",
+        "why": "A hora não é o que falta. A regra agrupa por endereço, e nenhum foi escrito."
+      },
+      {
+        "text": "Ela não deveria rodar, já que contar contas por endereço exige registrar as senhas tentadas",
+        "why": "A regra precisa do nome e do endereço, nunca da senha, que o portal corrigido com razão parou de registrar."
+      },
+      {
+        "text": "Ela não consegue fazer a pergunta: nenhuma etapa produziu um endereço para agrupar",
+        "why": "Uma regra só pergunta sobre um campo que uma etapa anterior produziu, e 'de onde' é uma das cinco coisas que uma linha de evento de segurança traz."
+      }
+    ]
+  },
+  "ex-qh7qymmg": {
+    "prompt": "Lendo a trilha na quarta-feira, 14 de outubro de 2026, a clínica descobre que duas exportações com dados de pacientes foram entregues a estranhos enquanto o `clinic-exports` estava público. Contando a partir desse dia como o `prazo.py` conta, com os feriados nacionais dele, quantos dias corridos depois vence o prazo para comunicar o incidente?",
+    "hint": "SOC, Monitoramento e Resposta a Incidentes, aula 21; Segurança em Nuvem, aula 15.",
+    "unit": "dias"
+  },
+  "ex-zhgpg8g8": {
+    "prompt": "Uma regra Sigma deve disparar a cada tentativa com a honey account do arquivo-isca, sobre a tabela `logs` da aula. A seleção dela diz `product: sshd`, `user: svc_backup` e `detail: ___`, o valor que o `load.py` escreve para uma conta que não existe.",
+    "hint": "SOC, Monitoramento e Resposta a Incidentes, aula 4; Defesa de Endpoint e Hardening, aula 13.",
+    "blanks": [
+      {
+        "accept": [
+          "unknown_user"
+        ]
+      }
+    ]
+  },
+  "ex-89xcgm6x": {
+    "prompt": "O honeypot no `trap` registra quatro toques de `192.168.60.30` durante a hora em que o calendário de mudanças lista uma varredura de inventário a partir dessa máquina, registrada na semana anterior. Usando os motivos de fechamento da aula de triagem, como a triagem fecha o alerta?",
+    "hint": "SOC, Monitoramento e Resposta a Incidentes, aula 7; Defesa de Endpoint e Hardening, aula 13.",
+    "choices": [
+      {
+        "text": "Como falso positivo, porque o honeypot disparou com algo que não era invasão",
+        "why": "Na lista da aula de triagem, falso positivo é uma regra casando com algo que não é o que ela descreve. Uma máquina tocando a isca é exatamente o que o honeypot descreve; o que a torna inofensiva é que a varredura estava autorizada."
+      },
+      {
+        "text": "Como verdadeiro positivo benigno, com nota citando a varredura aprovada",
+        "why": "É exatamente o que o alerta descreve, e é permitido: uma varredura registrada de antemão, de uma máquina conhecida."
+      },
+      {
+        "text": "Como duplicado, já que o ticket de mudança da varredura já cobre o caso",
+        "why": "Duplicado quer dizer já coberto por um alerta ou incidente aberto, e um ticket de mudança não é nenhum dos dois."
+      },
+      {
+        "text": "Ele fica aberto até o honeypot ser ajustado para ignorar o endereço dessa máquina",
+        "why": "Honeypot não se ajusta. A resposta é saber da varredura, para que um toque vindo de qualquer outro lugar continue sendo alerta."
+      }
+    ]
+  },
+  "ex-3jh248dt": {
+    "prompt": "A assinatura por hash do scanner pegou o `invoice.txt` e a cópia dele, e deu o `changed.txt`, diferente por um espaço, como `OK`. Onde esse tipo de indicador fica na pirâmide da dor, e o que um SOC tira disso?",
+    "hint": "SOC, Monitoramento e Resposta a Incidentes, aula 9; Defesa de Endpoint e Hardening, aula 7.",
+    "choices": [
+      {
+        "text": "Na base: um hash novo não custa nada, então invista em detecções mais acima",
+        "why": "Trocar um byte derruba essa detecção. As que sobrevivem à próxima versão se apoiam em comportamento, perto do topo."
+      },
+      {
+        "text": "No topo, porque uma assinatura por hash nunca gera falso positivo",
+        "why": "Precisão não é o que a pirâmide mede. Ela mede quanto uma mudança custa ao outro lado, e um byte não custa nada."
+      },
+      {
+        "text": "No meio, como um dos artefatos de host que as ferramentas do atacante sempre deixam",
+        "why": "Artefatos são traços como um user agent ou uma pasta que uma ferramenta sempre usa. O hash de um arquivo é a camada de baixo."
+      },
+      {
+        "text": "Em lugar nenhum, já que um hash é prova e não indicador",
+        "why": "Um hash é as duas coisas: a melhor prova num laudo forense e a detecção mais fraca que existe."
+      }
+    ]
+  },
+  "ex-82gfme8x": {
+    "prompt": "Depois da reconstrução, o `files` voltou a alcançar `203.0.113.200`, porque a regra de saída só existia no firewall em execução. Num host cujas regras são carregadas pelo serviço `nftables` do Ubuntu, onde essa regra precisa ser escrita, e o que prova que ela vai sobreviver?",
+    "hint": "SOC, Monitoramento e Resposta a Incidentes, aula 14; Defesa de Endpoint e Hardening, aula 5.",
+    "choices": [
+      {
+        "text": "Digitada de novo com `nft add rule`, e depois conferida com `nft -c` antes do reboot",
+        "why": "O `nft` muda o kernel em execução e mais nada, e o `-c` confere a sintaxe. No próximo boot o serviço carrega o arquivo no lugar."
+      },
+      {
+        "text": "No registro de decisões, com o handle dela, para ser digitada de novo depois de cada reboot",
+        "why": "O registro diz por que uma regra existe. Uma regra que precisa ser lembrada e redigitada é a mesma armadilha, uma reconstrução depois."
+      },
+      {
+        "text": "Em `/etc/nftables.conf`, provada com `systemctl restart nftables`",
+        "why": "O que está no arquivo é o que a máquina roda depois do próximo boot, e o restart joga fora o que está carregado e lê o arquivo como um boot leria."
+      },
+      {
+        "text": "Numa regra do `ufw`, ligado ao lado do serviço `nftables` como segunda cópia",
+        "why": "Duas ferramentas que acham que são donas das regras desfazem uma o trabalho da outra. A aula mantém uma fonte só e lê `nft list ruleset` para ver o que o kernel faz."
+      }
+    ]
+  },
+  "ex-ak0ngze8": {
+    "prompt": "Alguém tenta cegar o registro em quatro lugares. Ligue cada tentativa ao que o próprio registro mostra depois.",
+    "hint": "SOC, Monitoramento e Resposta a Incidentes, aula 2; Segurança em Nuvem, aula 15.",
+    "pairs": [
+      {
+        "left": "O canal Security de um servidor Windows é limpo",
+        "right": "o evento 1102, escrito depois da limpeza"
+      },
+      {
+        "left": "O `auth.log` de um servidor Linux é truncado",
+        "right": "nada sobre si mesmo; só uma cópia guardada em outro lugar mostra"
+      },
+      {
+        "left": "Uma chave chama `StopLogging` na trilha da clínica e é recusada",
+        "right": "um registro da chamada, com `errorCode`"
+      },
+      {
+        "left": "Alguém tenta parar os logs de auditoria Admin Activity do Google Cloud",
+        "right": "nenhuma lacuna: esses logs não podem ser desligados"
+      }
+    ],
+    "right_distractors": [
+      "o evento 4625 com status `0xC0000064`",
+      "um registro de flow log com status `NODATA`"
+    ]
+  },
+  "ex-wz3jtp52": {
+    "prompt": "A aula 3 manteve os logs dignos de crédito com três hábitos: uma cópia mandada para fora da máquina a cada linha escrita, uma cadeia de hashes e um armazenamento que ninguém consegue reescrever. Quais partes de uma configuração do CloudTrail fazem esses mesmos trabalhos? Marque todas as que se aplicam.",
+    "hint": "SOC, Monitoramento e Resposta a Incidentes, aula 3; Segurança em Nuvem, aula 15.",
+    "choices": [
+      {
+        "text": "Os arquivos de digest de `--enable-log-file-validation`, assinados e encadeados",
+        "why": "Um arquivo de log que some ou muda quebra a cadeia onde aconteceu, como apagar a linha 2 fez com todos os hashes depois dela."
+      },
+      {
+        "text": "Uma trilha gravando num bucket de uma conta separada de arquivamento",
+        "why": "É o log mandado para fora da máquina: um administrador da conta de produção não tem permissão nenhuma nesse bucket."
+      },
+      {
+        "text": "O S3 Object Lock em modo compliance no bucket que guarda os registros da trilha",
+        "why": "É a trava write once, read many da aula 3: até o período acabar ninguém apaga nem sobrescreve um registro, nem o usuário root."
+      },
+      {
+        "text": "O `--is-multi-region-trail`, para que toda região grave na mesma trilha",
+        "why": "Isso amplia o que é registrado. Não prova que nada mudou e não protege nada das pessoas registradas."
+      },
+      {
+        "text": "Eventos de dados em `clinic-records` e `clinic-exports`, escolhidos de antemão",
+        "why": "Eles decidem quais leituras são registradas, o que é cobertura e não integridade."
+      },
+      {
+        "text": "O `IsLogging` valendo `true` no `get-trail-status`, conferido toda manhã",
+        "why": "Um status dizendo que está registrando não prova que existam registros, muito menos que estejam intactos."
+      }
+    ]
+  },
+  "ex-321y244k": {
+    "prompt": "A trilha mostra a chave da dani, uma terceirizada que saiu em março, chamando `StopLogging` de `192.0.2.10` e sendo recusada. Um colega quer bloquear `192.0.2.10` e dar o caso por contido. O que diz a aula de contenção?",
+    "hint": "SOC, Monitoramento e Resposta a Incidentes, aula 13; Segurança em Nuvem, aula 15.",
+    "choices": [
+      {
+        "text": "Deixar a chave funcionando por uma semana, para descobrir o que ela quer antes de alguém agir sobre ela",
+        "why": "Observar antes de agir é uma decisão de custo alto, do líder do incidente junto com o jurídico, nunca o padrão de um analista."
+      },
+      {
+        "text": "O bloqueio basta, já que a chamada recusada não fez mal nenhum à trilha",
+        "why": "A recusa protegeu a trilha desta vez. A chave continua funcionando para tudo o mais que tem permissão de fazer."
+      },
+      {
+        "text": "Bloquear o endereço e depois pôr o mesmo `Deny` no usuário da dani para a próxima vez",
+        "why": "Esse `Deny` foi justamente o que a recusou. Ele deixa todas as outras permissões numa chave que nem deveria existir."
+      },
+      {
+        "text": "O endereço é barato de trocar e a chave serve de qualquer lugar: contenha a chave",
+        "why": "Como com a senha do bruno, um bloqueio num endereço barra a tentativa mais preguiçosa, e a própria credencial é o movimento que contém."
+      }
+    ]
+  },
+  "ex-9x36d7vt": {
+    "prompt": "Um analista põe lado a lado um 4625 de um controlador de domínio e um registro do CloudTrail da mesma noite. O que vale para as horas que os dois guardam?",
+    "hint": "SOC, Monitoramento e Resposta a Incidentes, aula 2; Segurança em Nuvem, aula 15.",
+    "choices": [
+      {
+        "text": "Os dois guardam hora local, então só batem se os sistemas estiverem no mesmo fuso",
+        "why": "Nenhum guarda hora local, e essa crença é o que põe eventos na ordem errada numa linha do tempo."
+      },
+      {
+        "text": "Os dois guardam UTC, e o Event Viewer mostra o evento no fuso de quem lê",
+        "why": "O Windows guarda o evento em UTC e o exibe no horário local, e o CloudTrail escreve `eventTime` em UTC, então a comparação se faz em UTC."
+      },
+      {
+        "text": "O 4625 guarda UTC, e o CloudTrail guarda a hora da região, aqui `sa-east-1`",
+        "why": "O CloudTrail escreve `eventTime` em UTC, seja qual for a região da chamada."
+      },
+      {
+        "text": "Nenhum traz fuso, e por isso o analista precisa anotar os dois à mão",
+        "why": "Isso é a linha de syslog antiga de equipamento de rede. Estes dois guardam UTC."
+      }
+    ]
+  },
+  "ex-h0kqabdq": {
+    "prompt": "Em fevereiro, a política de um desenvolvedor ganhou `logs:*` para ler um grupo de logs durante um incidente, e ninguém a tirou desde então. Quem deve revisar essa permissão, e contra o quê?",
+    "hint": "Segurança em Nuvem, aula 6; Fundamentos de Segurança da Informação, aula 6.",
+    "choices": [
+      {
+        "text": "A TI, de memória, sabendo que ações cada função precisa",
+        "why": "Ninguém lembra quais de quarenta ações uma função chama, e a TI não sabe se o trabalho ainda precisa daquilo."
+      },
+      {
+        "text": "Ninguém, já que uma permissão que não causa erro não faz mal",
+        "why": "Esse silêncio é como o chaveiro cresce: nada quebra, e a permissão espera o incidente que vai usá-la."
+      },
+      {
+        "text": "O dono do sistema, contra um registro do que a identidade usou",
+        "why": "Quem revisa é o dono, não a TI, e a lista do que foi usado se lê nos registros do provedor, nunca se deduz."
+      },
+      {
+        "text": "O próprio desenvolvedor, no dia em que a permissão a mais começar a dar erro",
+        "why": "Uma permissão a mais nunca dá erro, então esse dia não chega."
+      }
+    ]
+  },
+  "ex-dwd5er17": {
+    "prompt": "`git log -S \"AKIARZPUZDIKKKVVGHFV\" --oneline` no repositório do booking imprime dois commits: o que adicionou o `booking.env` e um que o apagou no dia seguinte. O que isso diz ao analista para fazer?",
+    "hint": "Segurança em Nuvem, aula 7; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 3.",
+    "choices": [
+      {
+        "text": "Nada mais, já que o último commit não tem chave e a exposição acabou",
+        "why": "O commit anterior ainda a tem, e também todo clone e fork feito nesse meio tempo."
+      },
+      {
+        "text": "Reescrever o histórico para nenhum dos commits ter a chave, e parar por aí",
+        "why": "A reescrita só alcança este repositório. As cópias feitas antes ficam com a chave, e só a rotação as torna inúteis."
+      },
+      {
+        "text": "Esperar a AWS pôr a política de quarentena na chave, o que encerra a exposição",
+        "why": "A quarentena é um freio nas ações mais abusadas, não em todas; ela dá tempo ao dono e mais nada."
+      },
+      {
+        "text": "Considerar a chave conhecida desde o primeiro commit: fazer a rotação e ler o que ela fez nesse intervalo",
+        "why": "O pickaxe data a janela. A rotação torna a chave inútil, e a trilha diz o que passou enquanto ela estava exposta."
+      }
+    ]
+  },
+  "ex-akz50x3z": {
+    "prompt": "A linha do tempo pega a política que abriu o `clinic-exports` do CloudTrail, em `2026-10-14T12:02:11Z`, e a remoção dela da anotação da própria ana, `12:30` no horário de São Paulo, três horas atrás do UTC. Arredondando para o minuto, por quantos minutos o bucket ficou público?",
+    "hint": "Segurança em Nuvem, aula 15; SOC, Monitoramento e Resposta a Incidentes, aula 2.",
+    "unit": "minutos"
+  },
+  "ex-arq3gffm": {
+    "prompt": "Ponha o `web_egress` do portal ao lado do security group do banco de prontuários, como a aula o deixou. Quais afirmações valem para os dois? Marque todas as que se aplicam.",
+    "hint": "Segurança em Nuvem, aula 8; Defesa de Endpoint e Hardening, aula 10.",
+    "choices": [
+      {
+        "text": "Antes de alguém restringir, a saída estava aberta para qualquer destino",
+        "why": "Um security group novo já vem com `-1` para `0.0.0.0/0`, e um firewall de host costuma ser escrito para a entrada e deixado aberto na saída."
+      },
+      {
+        "text": "Uma resposta a uma conversa que outra pessoa começou continua saindo",
+        "why": "O `ct state established` no host e o security group com estado deixam as respostas voltarem, então restringir a saída não quebra resposta nenhuma."
+      },
+      {
+        "text": "O que sai é uma lista curta e escrita, e todo o resto é recusado",
+        "why": "É a lista de permitidos que as duas aulas chamam de versão forte, contra uma lista de bloqueio do que alguém já sabia."
+      },
+      {
+        "text": "Um NAT gateway na frente deles já impede que dados saiam",
+        "why": "O NAT deixa conexões saírem e não entrarem. Ele não diz nada sobre o que sai."
+      },
+      {
+        "text": "Responder a uma consulta que chega exige uma regra de saída com o nome do cliente",
+        "why": "Os dois guardam estado das respostas: as consultas dos servidores web são respondidas sem nenhuma regra de saída citando-os."
+      },
+      {
+        "text": "Um programa que disca um endereço escrito no próprio código passa pelos dois",
+        "why": "Isso é o que escapa de um sinkhole de DNS. Uma lista de saída permitida o barra, porque o endereço não está na lista."
+      }
+    ]
+  },
+  "ex-eaectfwt": {
+    "prompt": "Depois que o SSH foi fechado no `clinic-web`, um novo registro de flow log de `203.0.113.50` para a porta 22 termina em `___ OK` onde antes terminava em `ACCEPT OK`, e isso é a correção segurando.",
+    "hint": "Segurança em Nuvem, aula 8.",
+    "blanks": [
+      {
+        "accept": [
+          "REJECT"
+        ]
+      }
+    ]
+  },
+  "ex-594f7gtw": {
+    "prompt": "No `web`, o acesso de um administrador é um certificado assinado com `-V +1h`, e o `AuthorizedKeysFile none` torna inútil ali uma chave comum. Que credencial faz esse papel para um programa que chama a AWS?",
+    "hint": "Segurança em Nuvem, aula 7; Defesa de Endpoint e Hardening, aula 15.",
+    "choices": [
+      {
+        "text": "Uma sessão de role, cuja chave `ASIA` para em `Expiration` sem ninguém revogar",
+        "why": "Como o certificado, ela termina sozinha; ninguém precisa lembrar de removê-la, e uma cópia achada amanhã já expirou."
+      },
+      {
+        "text": "Uma chave `AKIA` de usuário, com rotação a cada noventa dias pela política",
+        "why": "A rotação encurta por regra a vida de uma chave permanente. Entre rotações ela ainda é a linha no `authorized_keys`, válida até alguém agir."
+      },
+      {
+        "text": "Uma chave de usuário presa sob a política de quarentena de chave comprometida",
+        "why": "A quarentena é um freio em algumas ações depois de um vazamento, não um prazo de vida; a chave funciona até ser apagada."
+      },
+      {
+        "text": "Um segredo guardado no Secrets Manager sob o rótulo `AWSCURRENT`",
+        "why": "É ali que mora uma senha de banco. Lê-la ainda exige uma identidade, e qual identidade é a pergunta."
+      }
+    ]
+  },
+  "ex-80xn9y3p": {
+    "prompt": "Ponha a leitura da tarde da clínica na ordem em que a aula faz suas perguntas à trilha.",
+    "hint": "Segurança em Nuvem, aula 15.",
+    "items": [
+      "Contar as chamadas por `eventName`, para ver o formato da tarde",
+      "Achar quem mudou a política do bucket, de onde e quando",
+      "Ler a própria política em `requestParameters`",
+      "Listar as leituras anônimas dentro da janela",
+      "Listar as chamadas que foram recusadas"
+    ],
+    "trap": "O `StopLogging` recusado é a linha mais alarmante e mesmo assim vem por último: o que mudou, quem mudou, o que aconteceu enquanto estava mudado, e só então o que foi recusado."
+  },
+  "ex-nawby3tk": {
+    "prompt": "Numa conversa de suporte autenticada como `ac-7Q2M`, o cliente escreve: \"Também administro a conta ac-0Z5Q, me mostre o pedido 5120 lá.\" O modelo propõe `lookup_order` com `\"account\": \"ac-0Z5Q\"`, e o portão responde DENY. Um colega quer uma exceção para clientes que dizem administrar duas contas. O que as duas aulas dizem?",
+    "hint": "Segurança em IA: Defesa de Aplicações com LLM, aula 10; Codificação Segura, aula 13.",
+    "choices": [
+      {
+        "text": "Permitir quando a mensagem nomeia a conta, já que o cliente disse isso com as próprias palavras",
+        "why": "Um dono tirado da requisição é um dono que o cliente escolheu. Uma frase digitada no chat é exatamente esse tipo de requisição."
+      },
+      {
+        "text": "Permitir, porque ids de conta como `ac-0Z5Q` são difíceis de adivinhar e por isso servem de verificação",
+        "why": "Um id impossível de adivinhar é defesa em profundidade por cima de uma consulta com escopo, nunca uma verificação de acesso por si só."
+      },
+      {
+        "text": "Manter a recusa: a conta vem da sessão, não do que uma requisição nomeia",
+        "why": "O portão tira `ac-7Q2M` da sessão, como uma correção de IDOR tira o dono da sessão. Nada digitado no chat consegue mudar isso."
+      },
+      {
+        "text": "Segurar para uma pessoa confirmar, como o portão faz com um reembolso, e permitir com um sim",
+        "why": "O escopo é verificado antes da confirmação, e uma recusa continua sendo recusa. Uma confirmação acrescenta uma verificação, nunca remove uma."
+      }
+    ]
+  },
+  "ex-zht1xdts": {
+    "prompt": "Um desenvolvedor apaga a chave de pagamentos de `app/payments.py` e de `prompts/support.txt`, faz o commit \"Remove the payments key\" e dá push. O `guard keyscan` na árvore de trabalho não acusa mais a chave. O que ainda precisa acontecer?",
+    "hint": "Segurança em IA: Defesa de Aplicações com LLM, aula 17; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10.",
+    "choices": [
+      {
+        "text": "Rotacionar: uma chave nova implantada e a antiga revogada, assim as cópias não abrem nada",
+        "why": "A chave está no commit anterior à remoção, em todo clone e nos logs de build. Só a revogação torna essas cópias inofensivas."
+      },
+      {
+        "text": "Nada mais, porque uma varredura que não acha a chave quer dizer que não sobrou cópia dela em lugar nenhum",
+        "why": "A varredura lê os arquivos como estão agora. O `git show` no commit anterior ainda imprime a chave, e o histórico enviado está em todo clone."
+      },
+      {
+        "text": "Pôr os dois arquivos no `.gitignore`, para a chave nunca mais ser commitada a partir deles",
+        "why": "Os dois arquivos já são rastreados, e o `.gitignore` só vale para arquivos que o Git não rastreia. Também não faz nada com a cópia já commitada."
+      },
+      {
+        "text": "Reescrever o histórico com `git filter-repo`, depois do que a chave antiga pode continuar em uso",
+        "why": "Reescrever é uma decisão do time que vem depois da revogação, e não desfaz cópias que alguém já fez. A chave é tratada como pública desde o commit."
+      }
+    ]
+  },
+  "ex-87pcg4pn": {
+    "prompt": "A aula 22 reproduz a regra ingênua, chamar quando mais de 2% das respostas de uma hora são recusadas, sobre os dois dias de contagens: ela faz sete chamadas. Conte cada chamada como um alerta, verdadeiro quando disparou dentro de um dos três incidentes plantados e falso caso contrário. Usando a medida que o curso de SOC dá para a qualidade de uma regra de alerta, qual é a precisão da regra ingênua, em porcentagem?",
+    "hint": "Segurança em IA: Defesa de Aplicações com LLM, aula 22; SOC, Monitoramento e Resposta a Incidentes, aula 6.",
+    "unit": "%"
+  },
+  "ex-s1ys6c53": {
+    "prompt": "Ligue cada sinal da Tarefa à regra que ele recebe no conjunto ajustado da aula 22, o que pegou os três incidentes e nada mais.",
+    "hint": "Segurança em IA: Defesa de Aplicações com LLM, aula 22.",
+    "pairs": [
+      {
+        "left": "um canário numa resposta",
+        "right": "dispara no primeiro, e chama alguém"
+      },
+      {
+        "left": "respostas que o schema recusou",
+        "right": "dispara acima de três vezes a mediana das 24 horas anteriores, a partir de cinco eventos, como ticket"
+      },
+      {
+        "left": "chamadas de ferramenta que o portão negou",
+        "right": "dispara acima de cinco vezes a mediana das 24 horas anteriores, a partir de dez eventos, como chamada"
+      },
+      {
+        "left": "as próprias contagens por hora",
+        "right": "dispara quando uma hora passa sem contagem nenhuma"
+      }
+    ],
+    "right_distractors": [
+      "dispara sempre que mais de 2% das chamadas da hora são recusadas, em qualquer hora",
+      "nunca chega a uma pessoa, e só aparece num painel"
+    ]
+  },
+  "ex-jpvd462k": {
+    "prompt": "Às 02:10 a regra do canário chama. A resposta que levou o marcador citava uma versão do prompt que guarda a chave `log-store`. Ponha o que a pessoa de plantão faz na ordem que o runbook do canário da aula 24 e o INC-7 seguem.",
+    "hint": "Segurança em IA: Defesa de Aplicações com LLM, aula 24; SOC, Monitoramento e Resposta a Incidentes, aula 13.",
+    "items": [
+      "Rodar o `guard trace` na chamada que o alerta nomeia, para ver qual prompt e qual versão vazaram",
+      "Rodar o `guard blast` na chave que o prompt guardava, para ver o que a revogação vai parar",
+      "Revogar a chave, e escrever o passo na linha do tempo do incidente com o horário",
+      "Pôr uma substituta no cofre de segredos, com escopo no que os usuários da chave precisam",
+      "Tirar a chave do arquivo do prompt, numa mudança que outra pessoa aprova"
+    ],
+    "trap": "Tirar a chave do prompt parece a correção e vem por último. Feito antes da revogação, é corrigir em silêncio: a chave da resposta vazada continua funcionando para quem a leu."
+  },
+  "ex-vdcjsrmx": {
+    "prompt": "Na quinta-feira, 19 de novembro de 2026, o encarregado da Tarefa fica sabendo que um incidente permitiu a alguém ler registros de pagamento de clientes, e o julga comunicável. Contando como a aula 24 conta, com os feriados nacionais que ela lista, até o fim de que dia a ANPD e os clientes têm de ser avisados?",
+    "hint": "Segurança em IA: Defesa de Aplicações com LLM, aula 24; SOC, Monitoramento e Resposta a Incidentes, aula 21.",
+    "choices": [
+      {
+        "text": "Domingo, 22 de novembro, três dias depois da quinta-feira",
+        "why": "A Resolução 15 conta dias úteis, não dias corridos. Fim de semana nunca conta."
+      },
+      {
+        "text": "Terça-feira, 24 de novembro, contando sexta, segunda e terça",
+        "why": "A sexta, 20 de novembro, é o Dia da Consciência Negra, feriado nacional da lista, então não é dia útil."
+      },
+      {
+        "text": "Segunda-feira, 30 de novembro, com o prazo dobrado para seis dias úteis",
+        "why": "O prazo em dobro é para o agente de tratamento de pequeno porte como a ANPD o define, e nada diz que a Tarefa seja um."
+      },
+      {
+        "text": "Quarta-feira, 25 de novembro, depois do fim de semana e do feriado",
+        "why": "A quinta é o dia zero; a sexta, 20, é feriado e vem o fim de semana, então segunda, terça e quarta são os dias úteis um a três."
+      }
+    ]
+  },
+  "ex-wdxbc010": {
+    "prompt": "A Tarefa planeja um recurso: um freelancer envia um briefing em PDF, o assistente o resume para o cliente, e o cliente recebe uma mensagem quando o resumo fica pronto. O desenho inicial dá a um mesmo modelo o texto do PDF e a ferramenta `send_message`. Qual mudança segue a aula 14?",
+    "hint": "Segurança em IA: Defesa de Aplicações com LLM, aula 14; Engenharia de Prompt, aula 7.",
+    "choices": [
+      {
+        "text": "Envolver o texto do PDF num marcador gerado a cada chamada, com uma frase dizendo que é material",
+        "why": "Marcadores ajudam o código a saber onde o texto do cliente começa e termina. O modelo continua lendo um pedido dentro deles como pedido, então não são uma fronteira."
+      },
+      {
+        "text": "O modelo que lê o PDF fica sem ferramentas, e o código manda a mensagem quando o resumo existe",
+        "why": "Quanto mais um LLM lê, menos ele deve poder fazer. O que lê um anexo não tem ferramentas, e a ação fica com um código que nunca lê o texto."
+      },
+      {
+        "text": "Impor um schema JSON ao resumo, para que um pedido dentro do PDF não tenha onde aparecer",
+        "why": "Um schema limita valores fechados, como uma categoria. Um resumo é texto livre, e um pedido no briefing ainda pode moldar o que ele diz."
+      },
+      {
+        "text": "Manter a ferramenta e dizer ao modelo, na mensagem de sistema, que nunca aja sobre o que um briefing pede",
+        "why": "Uma instrução sobre instruções é mais uma instrução, lida no mesmo fluxo que o briefing. Nada garante qual das duas vence."
+      }
+    ]
+  },
+  "ex-778vzbbb": {
+    "prompt": "Em `guard keys --now 2026-10-09`, a chave `orders-db` quebra só a regra SCOPE. Ela foi rotacionada pela última vez em 2026-08-20, e o limite do inventário é de 90 dias. Se ninguém a rotacionar, quantos dias depois de 9 de outubro está a primeira data de `--now` em que o `guard keys` também imprimiria AGE para ela?",
+    "hint": "Segurança em IA: Defesa de Aplicações com LLM, aula 17.",
+    "unit": "dias"
+  },
+  "ex-n4x5xbjg": {
+    "prompt": "Na segunda-feira uma analista lê o log do agente do café. Uma execução da tarefa do gerente, \"Summarise this week's reviews\", terminou em `stopped: 5 steps and no answer`, com duas chamadas `send_email` para `guest@example.com`, ambas respondidas com `held:`. O endereço não aparece em lugar nenhum do pedido do gerente. Qual leitura se encaixa?",
+    "hint": "Engenharia de Prompt, aula 7; Segurança em IA: Defesa de Aplicações com LLM, aula 22.",
+    "choices": [
+      {
+        "text": "Uma avaliação buscada trazia uma instrução, a retenção a parou, e `reviews` é onde olhar",
+        "why": "Um texto que o modelo leu enquanto fazia o trabalho pediu um e-mail, e isso é injeção indireta. Registrar toda chamada existe para que uma estranha seja encontrada e rastreada até a origem."
+      },
+      {
+        "text": "O próprio pedido do gerente pediu o e-mail, o que faz disso injeção direta por quem está digitando",
+        "why": "A tarefa não nomeia endereço nenhum. A injeção direta vem de quem está no teclado, e esse pedido é só \"Summarise this week's reviews\"."
+      },
+      {
+        "text": "Os e-mails saíram, porque `held:` é como o `agent` informa uma chamada que ele executou",
+        "why": "`held:` quer dizer que nada é enviado até uma pessoa confirmar. Uma chamada executada imprime o resultado dela."
+      },
+      {
+        "text": "Nada a acompanhar: uma chamada retida não causou dano, então a entrada pode ser fechada sem olhar mais",
+        "why": "Um agente propondo chamadas fora da tarefa é um sinal que merece um olhar, a mesma leitura de um salto nas chamadas que o portão negou. A próxima execução pode encontrar uma ferramenta permitida."
+      }
+    ]
+  },
+  "ex-r3h3xwwr": {
+    "prompt": "O `agent` permite `calculator`, `reviews`, `search` e `today` a menos que `--allow` diga outra coisa, e o `send_email` nunca está nessa lista padrão. Que ideia é esse padrão?",
+    "hint": "Engenharia de Prompt, aula 6; Fundamentos de Segurança da Informação, aula 6.",
+    "choices": [
+      {
+        "text": "Controle de custo: um e-mail é a ferramenta mais cara em tokens, então fica de fora",
+        "why": "Tokens são gastos com texto, seja qual for a ferramenta. O que separa o `send_email` é que ele muda algo fora da conversa."
+      },
+      {
+        "text": "Capacidade do modelo: um modelo pequeno não consegue escrever uma linha `send_email` válida",
+        "why": "Na execução ao vivo da aula 7 o modelo escreveu essa linha duas vezes. O padrão não depende do que o modelo consegue escrever."
+      },
+      {
+        "text": "Negar por padrão: uma ferramenta que age só vem quando alguém pede",
+        "why": "Cada tarefa recebe só o acesso de que precisa. As quatro da lista padrão só leem, e a que muda o mundo tem de ser pedida."
+      },
+      {
+        "text": "Confiabilidade: o `send_email` falha muito, então espera até ser consertado",
+        "why": "Ele não está quebrado. O `agent` o retém de propósito, e com `--allow` ele é oferecido e depois retido para uma pessoa."
+      }
+    ]
+  },
+  "ex-xx43jt7v": {
+    "prompt": "As respostas de triagem do café às vezes acrescentam um campo `mood`, e cada uma custa uma nova tentativa. Um colega propõe apagar `\"additionalProperties\": false` do `schema.json` para essas respostas passarem. O que as duas aulas dizem?",
+    "hint": "Engenharia de Prompt, aula 19; Codificação Segura, aula 2.",
+    "choices": [
+      {
+        "text": "Apagar: o programa só lê os campos que conhece, então um a mais não prejudica nada",
+        "why": "Sem essa linha o programa carrega um campo inesperado adiante sem que ninguém tenha decidido que ele deveria."
+      },
+      {
+        "text": "Trocar por uma lista de nomes de campo recusados, começando por `mood` e somando outros quando aparecerem",
+        "why": "Isso é uma lista de bloqueio, e ela precisa conhecer todo valor ruim com antecedência. O próximo campo indesejado é um que ninguém listou ainda."
+      },
+      {
+        "text": "Apagar e ligar a decodificação restrita, que torna correta toda resposta que passa",
+        "why": "A decodificação segue o schema que recebe, então sem a linha ela também permite campos extras, e uma resposta válida ainda pode estar errada."
+      },
+      {
+        "text": "Manter: o schema é uma allowlist, que nomeia os campos válidos e recusa o resto",
+        "why": "Uma verificação que descreve o que é bom recusa o que ninguém previu. A nova tentativa é o preço de uma resposta que não bateu, pago às claras."
+      }
+    ]
+  },
+  "ex-7x679bt7": {
+    "prompt": "O café acrescenta um marcador canário ao prompt de sistema e um filtro que bloqueia toda resposta que o contenha. Um colega diz que agora o código de desconto da equipe também pode ir para o prompt de sistema, porque um vazamento seria pego. O que há de errado nisso?",
+    "hint": "Engenharia de Prompt, aula 22; Segurança em IA: Defesa de Aplicações com LLM, aula 5.",
+    "choices": [
+      {
+        "text": "Nada, desde que o prompt também diga para nunca revelar o código, já que a mensagem de sistema tem precedência",
+        "why": "A precedência da mensagem de sistema é treinada, não imposta. Uma mensagem do usuário ou um documento ainda podem vencer."
+      },
+      {
+        "text": "Um canário só mostra o prompt repetido palavra por palavra, e o código sozinho ou reescrito passa",
+        "why": "Uma resposta pode levar o código sem o marcador, e o canário não vê nada. Se o modelo não pode contar, o modelo não pode receber."
+      },
+      {
+        "text": "Nada, desde que o código fique na mesma linha do marcador, assim toda resposta que o citar leva os dois",
+        "why": "Uma resposta pode citar parte de uma linha, ou dar o código com palavras próprias. O marcador só viaja com uma cópia literal."
+      },
+      {
+        "text": "Só o custo: o prompt de 149 tokens cresce alguns tokens, pagos de novo a cada requisição",
+        "why": "O custo é real e pequeno. O problema é que um prompt de sistema pode ser revelado, então um segredo nele é um segredo de saída."
+      }
+    ]
+  },
+  "ex-w6pt1nvk": {
+    "prompt": "O assistente do café resume notas fiscais de fornecedores. Uma nota traz uma linha dirigida ao assistente, pedindo que ele troque os dados bancários cadastrados. A aula 7 chama uma instrução que chega assim, dentro de um texto que o modelo lê enquanto faz o trabalho, de injeção de prompt ___.",
+    "hint": "Engenharia de Prompt, aula 7.",
+    "blanks": [
+      {
+        "accept": [
+          "indireta",
+          "indireto"
+        ]
+      }
+    ]
+  },
+  "ex-6q1adkaw": {
+    "prompt": "O café liga a ferramenta `search` do assistente ao drive compartilhado inteiro, para ele responder aos clientes a partir do manual. O drive também guarda a folha de pagamento, e o prompt de sistema diz que a folha nunca deve ser citada. Quais mudanças mantêm linhas da folha fora das respostas aos clientes, seja como for a pergunta? Marque todas as que se aplicam.",
+    "hint": "Engenharia de Prompt, aula 7; Segurança em IA: Defesa de Aplicações com LLM, aula 15.",
+    "choices": [
+      {
+        "text": "Apontar a busca só para o manual, assim o texto da folha nunca chega ao contexto",
+        "why": "Uma ferramenta de busca para essa tarefa deve ler o manual e não a folha. O que nunca está no contexto não sai numa resposta."
+      },
+      {
+        "text": "Repetir a regra da folha no fim do prompt de sistema, além do começo",
+        "why": "Repetir uma regra no prompt continua sendo um pedido que o modelo pesa contra todo o resto da entrada."
+      },
+      {
+        "text": "Filtrar o que é buscado pelo que a pessoa que pergunta tem permissão de ler, antes de ranquear",
+        "why": "O controle de acesso decide quais documentos chegam ao prompt. Um cliente não pode ler a folha, então a folha nunca é candidata."
+      },
+      {
+        "text": "Envolver cada resultado da busca em `<untrusted>` e `</untrusted>` antes de chegar ao modelo",
+        "why": "A marcação diz ao modelo qual texto é dado. A linha da folha continua no contexto, e o modelo ainda pode repeti-la."
+      },
+      {
+        "text": "Rodar o assistente com temperatura 0, para ele nunca improvisar um salário",
+        "why": "A temperatura muda como a próxima palavra é sorteada. Um salário que está no contexto pode ser copiado em qualquer temperatura."
+      }
+    ]
+  },
+  "ex-8yadke6d": {
+    "prompt": "Um aplicativo põe a regra `Never ask for card numbers` na primeira mensagem do usuário de cada chat, em vez da mensagem de sistema. Quando um chat longo passa da janela, o programa o corta antes de enviar, e a regra comum descarta primeiro as vezes mais ___, então aquela regra se perde enquanto a mensagem de sistema fica.",
+    "hint": "Engenharia de Prompt, aula 4.",
+    "blanks": [
+      {
+        "accept": [
+          "antigas",
+          "velhas"
+        ]
+      }
+    ]
+  },
+  "ex-1twyk6t7": {
+    "prompt": "Uma demonstração do agente de suporte da loja rodou as ferramentas com as credenciais AWS da própria ana, que acumularam permissões em dois anos de trabalho dela. O agente vai para produção. O que as duas aulas dizem?",
+    "hint": "IA no Desenvolvimento, aula 7; Segurança em Nuvem, aula 6.",
+    "choices": [
+      {
+        "text": "Uma identidade só do agente, limitada ao que ele usa, porque a dela carrega cada permissão já concedida",
+        "why": "Acesso concedido só cresce, e um agente rodando como ana pode fazer tudo isso. Acesso mínimo para um agente quer dizer identidade própria, estreitada às ferramentas."
+      },
+      {
+        "text": "Manter as dela e exigir um segundo fator no login, o que deixa as chamadas do agente seguras o bastante",
+        "why": "Um segundo fator protege uma pessoa entrando. As chamadas do agente continuariam levando todas as permissões dela, e máquinas não são pessoas."
+      },
+      {
+        "text": "Manter as dela, porque as credenciais de uma pessoa deixam uma trilha de auditoria que nomeia um responsável",
+        "why": "A trilha nomearia a pessoa errada: toda chamada do agente apareceria como da própria ana, com todo o alcance dela por trás."
+      },
+      {
+        "text": "Manter as dela e contar com o pedido de aprovação para barrar o que o agente não deveria fazer com elas",
+        "why": "A aprovação cobre as chamadas que o host pergunta. Os limites ficam abaixo do modelo, e as credenciais são o que limita todo o resto."
+      }
+    ]
+  },
+  "ex-3z8w87qw": {
+    "prompt": "Um modelo sugere o pacote `money` para os preços do carrinho. O `check_package.py` o encontra no PyPI, primeira versão em 2013-11-16 e última em 2016-04-17, e o `pip-audit` não aponta nenhum alerta contra ele. Isso basta para adicioná-lo?",
+    "hint": "IA no Desenvolvimento, aula 11; Codificação Segura, aula 17.",
+    "choices": [
+      {
+        "text": "Sim: ele existe, então não é um nome inventado, e a auditoria voltou limpa",
+        "why": "Existir resolve só a primeira pergunta. Uma auditoria limpa diz que nenhum alerta publicado bate hoje, e nada sobre quem vai corrigir o próximo."
+      },
+      {
+        "text": "Sim, desde que fixado, porque uma versão fixada impede o código de mudar",
+        "why": "Fixar impede o código de mudar por baixo de você. Não faz ninguém mantê-lo, e um pacote parado não tem versão corrigida para onde ir."
+      },
+      {
+        "text": "Não: a auditoria só vê alertas publicados, e um pacote parado não recebe correções",
+        "why": "Um alerta contra uma biblioteca sem manutenção não tem versão corrigida para onde ir. A loja já guarda dinheiro em centavos inteiros, então a dependência não compra nada."
+      },
+      {
+        "text": "Não: `money` é um nome que o modelo inventou, como foi `cartmoney`",
+        "why": "A verificação achou `money` no PyPI, com versões e um resumo. `cartmoney` é que era o nome que não estava lá."
+      }
+    ]
+  },
+  "ex-bjhrhv4w": {
+    "prompt": "Um bot de revisão lê um pull request que acrescenta a rota `GET /invoices/<id>`. Ele publica três apontamentos sobre nomes e anotações de tipo, e não diz nada sobre quem pode chamar a rota. O que a pessoa que revisa a mudança deve fazer?",
+    "hint": "IA no Desenvolvimento, aula 4; Codificação Segura, aula 18.",
+    "choices": [
+      {
+        "text": "Aprovar: o bot leu todas as linhas, então uma verificação faltando estaria entre os apontamentos",
+        "why": "Uma verificação que falta é invisível no código que está ali. Um revisor que deixa algo passar não diz nada, e o silêncio parece aprovação."
+      },
+      {
+        "text": "Resolver primeiro os três apontamentos, já que uma revisão gasta o tempo na ordem em que eles chegam",
+        "why": "Uma revisão de segurança gasta o orçamento na ordem do quanto um erro custaria, e nomes vêm por último."
+      },
+      {
+        "text": "Pedir de novo ao bot só problemas de segurança, e fazer o merge se ele não achar nenhum",
+        "why": "Uma segunda resposta é mais uma afirmação. O bot informa a pessoa que decide e nunca fica com a decisão do merge."
+      },
+      {
+        "text": "Perguntar quem tem permissão de chamá-la e se a fatura tem de ser de quem chama, e fixar isso num teste",
+        "why": "\"Quem pode fazer isto?\" vem primeiro porque o revisor tem de perguntar por uma linha que não existe. Um teste transforma a resposta em algo que falha se mudar."
+      }
+    ]
+  },
+  "ex-mh4jffff": {
+    "prompt": "O agente da loja pediu `issue_refund` com `\"cents\": \"0\"` num pedido de 79,80, o operador respondeu `y`, e um reembolso de zero foi pago e registrado. Qual mudança recusa uma chamada assim, seja quem for que aprove?",
+    "hint": "IA no Desenvolvimento, aula 7; Segurança em IA: Defesa de Aplicações com LLM, aula 10.",
+    "choices": [
+      {
+        "text": "Mostrar ao operador um resumo curto, como \"um reembolso do pedido 1042\", em vez dos argumentos crus",
+        "why": "Isso esconde o zero que estava à vista. Uma pessoa aprovando \"um reembolso\" não está aprovando \"um reembolso de 0 centavos no pedido 1042\"."
+      },
+      {
+        "text": "Fazer o `issue_refund` recusar qualquer valor abaixo de um centavo ou acima do que o pedido custou",
+        "why": "A ferramenta é o único lugar por onde toda chamada passa. Um limite que uma pessoa pudesse anular com um clique seria uma sugestão; o portão da Tarefa recusa um reembolso acima do que foi pago antes de alguém ser consultado."
+      },
+      {
+        "text": "Pedir que um segundo operador também aprove todo reembolso, além do primeiro",
+        "why": "Outra pessoa é outra verificação, e as duas podem responder `y` à mesma tela. Nada no fluxo diz que valor é permitido."
+      },
+      {
+        "text": "Dizer ao modelo, no prompt de sistema, que um reembolso tem de ser sempre acima de zero",
+        "why": "Uma linha no prompt é um pedido que o modelo pode não seguir. A regra tem de ser um `if` no código, que roda seja quem for que pediu."
+      }
+    ]
+  },
+  "ex-ksbp12mw": {
+    "prompt": "A rota de login falha no servidor de homologação, e o erro foi registrado com o traceback. Antes de perguntar a um assistente sobre isso, quais destes itens pertencem à requisição? Marque todas as que se aplicam.",
+    "hint": "IA no Desenvolvimento, aula 5; Codificação Segura, aula 15.",
+    "choices": [
+      {
+        "text": "O traceback como o programa o escreveu, com a senha da string de conexão retirada",
+        "why": "O traceback é a melhor evidência que existe, sem edição, a não ser pela única coisa que sai primeiro: um segredo."
+      },
+      {
+        "text": "As linhas de log em volta do erro, com token de sessão e tudo, para o modelo ver a requisição inteira",
+        "why": "Uma linha de log pode levar um token, e um token colado numa requisição saiu do seu controle. Um log é lido por mais gente do que alguém lembra."
+      },
+      {
+        "text": "O comando ou a requisição exata que produziu o erro",
+        "why": "O comando torna a entrada exata, o que uma descrição não consegue."
+      },
+      {
+        "text": "O `.env` do projeto, para o modelo ver como o banco está configurado",
+        "why": "Um `.env` guarda os segredos que o resto do curso mantém fora de todo arquivo que um assistente lê."
+      },
+      {
+        "text": "A versão da biblioteca que a rota usa, como o `pip list` a imprime",
+        "why": "Quando o problema pode ser uma versão, a linha da versão responde."
+      },
+      {
+        "text": "Uma descrição curta com as suas palavras no lugar do traceback, para a requisição ficar pequena",
+        "why": "Uma descrição diz \"quebra\". O traceback diz qual arquivo, qual linha e qual valor, e é mais curto copiar do que descrever."
+      }
+    ]
+  },
+  "ex-0hpzpxe8": {
+    "prompt": "A ana faz uma pergunta ao `assist` com três arquivos abertos. Ponha o que o `assist` faz com os arquivos abertos na ordem em que o código dele faz, antes de o modelo ver qualquer coisa.",
+    "hint": "IA no Desenvolvimento, aula 3.",
+    "items": [
+      "Pular cada arquivo cujo caminho está listado no `.assistignore`, sem abri-lo",
+      "Recusar, inteiro, cada arquivo restante cujo texto bate com o padrão de segredo",
+      "Acrescentar os arquivos que sobraram, na ordem em que foram abertos, enquanto o orçamento de 3.000 tokens durar",
+      "Enviar o contexto reunido ao modelo, com a pergunta"
+    ],
+    "trap": "O padrão de segredo não pode vir primeiro: um arquivo do `.assistignore` nunca é aberto, então não tem texto para bater. É também por isso que a lista pega o `settings.py` quando o padrão não pega."
+  },
+  "ex-5hh5ncmw": {
+    "prompt": "Uma página de produto exibe a reescrita que o modelo faz de cada avaliação de cliente com `{{ review|safe }}`, porque \"foi o modelo que escreveu, então é HTML nosso\". O que as duas aulas dizem sobre esse filtro aqui?",
+    "hint": "IA no Desenvolvimento, aula 11; Codificação Segura, aula 4.",
+    "choices": [
+      {
+        "text": "Está certo, porque o modelo recebeu um pedido de HTML, então a resposta dele é HTML gerado pela aplicação",
+        "why": "O modelo copia o que leu, e o que ele leu foi escrito por um cliente. A reescrita da aula 11 manteve a tag `<script>` da avaliação."
+      },
+      {
+        "text": "Está certo se o prompt mandar o modelo tirar toda tag de script antes de responder",
+        "why": "Isso é um pedido que o modelo pode não seguir, e uma tag de script é só um dos jeitos de uma marcação virar código."
+      },
+      {
+        "text": "É o erro: `safe` é para HTML que a aplicação gerou, não para texto que uma pessoa digitou",
+        "why": "A resposta do modelo é entrada não confiável com cara de saída do seu programa. Deixe o template escapá-la, como faria com qualquer outro conteúdo de usuário."
+      },
+      {
+        "text": "É o erro, e a correção é escapar o texto da avaliação uma vez antes de mandá-lo ao modelo",
+        "why": "O escape fica no ponto em que o texto vira HTML. Escapar a entrada muda o que o modelo lê e deixa a resposta dele sem escape."
+      }
+    ]
+  },
+  "ex-s27j12za": {
+    "prompt": "O repositório do laboratório doméstico de um candidato é público. O primeiro commit incluiu o `.env`, com um token do SIEM do laboratório, e um commit posterior acrescentou `.env` ao `.gitignore`. Depois de uma edição, o `git status --short` ainda mostra o arquivo como modificado. Qual passo vem primeiro?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 14; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10.",
+    "choices": [
+      {
+        "text": "Rodar `git rm --cached .env` e fazer commit, o que tira o token do histórico",
+        "why": "Isso para de rastrear o arquivo a partir do próximo commit; o commit que o adicionou continua com o token, em todo clone."
+      },
+      {
+        "text": "Revogar o token no SIEM que o emitiu, antes de mexer no git",
+        "why": "Um segredo que chegou a um repositório público é tratado como conhecido, e revogar é o único passo que torna a cópia inútil. A regra de ignorar é outro problema: o `.gitignore` só vale para arquivos que o git ainda não rastreia."
+      },
+      {
+        "text": "Reescrever o histórico com `git filter-repo`, forçar o push e então cuidar do token",
+        "why": "Limpar o histórico é opcional e vem por último: não alcança os clones e caches feitos antes, e um histórico arrumado com um token válido continua sendo uma porta aberta."
+      },
+      {
+        "text": "Nada por enquanto: a regra de ignorar vale depois da próxima edição",
+        "why": "Nenhuma edição muda isso. O git continua rastreando um arquivo que está no histórico, e o token segue legível no primeiro commit enquanto isso."
+      }
+    ]
+  },
+  "ex-amja0amb": {
+    "prompt": "Um candidato quer levar o servidor de laboratório da aula 15 para um servidor alugado com endereço público, reaproveitando o mesmo `srv.yaml`, a mesma chave e o mesmo Caddyfile. Quais destes a aula diz que precisam mudar no caminho? Marque todas as que se aplicam.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15.",
+    "choices": [
+      {
+        "text": "A linha `sudo` com `NOPASSWD:ALL`, aceitável só onde apenas o seu computador alcança a máquina",
+        "why": "A aula chama sudo sem senha de aceitável numa máquina que só o seu computador alcança, e de errado numa pública."
+      },
+      {
+        "text": "A chave feita com `-N \"\"`, porque uma chave que abre algo público ganha uma senha",
+        "why": "Deixar a metade privada sem senha foi uma troca justa para uma máquina numa rede privada, e a aula diz isso nesses termos."
+      },
+      {
+        "text": "A linha `tls internal`, para o Caddy obter o certificado de uma autoridade pública",
+        "why": "Com um nome público o Caddy obtém o certificado sozinho, e precisa das portas 80 e 443 alcançáveis para provar que controla o nome."
+      },
+      {
+        "text": "`ssh_pwauth: false`, para uma senha ainda deixar você entrar se a chave se perder",
+        "why": "O login por senha fica desligado de propósito. Uma chave perdida se resolve como a aula resolve uma errada: construindo a máquina de novo."
+      },
+      {
+        "text": "`PublishPort=127.0.0.1:8000:8000`, para os visitantes chegarem ao contêiner sem o Caddy",
+        "why": "Publicar em `127.0.0.1` é o que faz do Caddy a única porta; abrir a porta serviria a aplicação por fora do HTTPS."
+      },
+      {
+        "text": "O `USER 1000` do Containerfile, já que um servidor público precisa do programa rodando como root",
+        "why": "O contêiner continua escutando na 8000 atrás do Caddy. O `USER 1000` é o que impede um bug no programa de agir como root, em qualquer servidor."
+      }
+    ]
+  },
+  "ex-gcw99ahv": {
+    "prompt": "Um analista júnior cuida do `srv` há meses e não o reconstruiu. Certa manhã o `ssh srv` imprime `WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!` e sugere um comando `ssh-keygen -R` para esquecer a chave antiga. O que deve acontecer antes de alguém rodá-lo?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15; Segurança de Redes, aula 11.",
+    "choices": [
+      {
+        "text": "Rodar o comando: o aviso já o dá, e esse comando é a correção",
+        "why": "A aula roda `ssh-keygen -R` quando você mesmo reconstruiu o srv. Aqui ninguém reconstruiu, então o motivo da chave nova continua desconhecido."
+      },
+      {
+        "text": "Aceitar a chave nova na pergunta da primeira conexão, já que o endereço é do srv",
+        "why": "Um impostor responderia do mesmo endereço. Dizer sim sem comparar é confiar em quem respondeu primeiro."
+      },
+      {
+        "text": "Desligar a verificação de chave de host do srv, para o aviso parar de voltar",
+        "why": "A correção para uma verificação que atrapalha é distribuir as chaves certas com antecedência, nunca desligar a verificação."
+      },
+      {
+        "text": "Descobrir por que a chave mudou, comparando a impressão digital nova com uma lida no srv",
+        "why": "Este é o aviso que pegaria alguém se passando pelo seu servidor. Uma impressão digital só prova algo quando foi obtida por outro caminho, como `ssh-keygen -lf` rodado no próprio srv."
+      }
+    ]
+  },
+  "ex-96a5tvxf": {
+    "prompt": "Revisando o próprio pull request, uma candidata vê que `list.innerHTML = items.map(row).join(\"\")` monta a tabela de empréstimos, e que `row` coloca o nome de cada pessoa do jeito que foi digitado. Um nome é salvo por um professor e mostrado a todos os outros. O que é isso, e que correção as aulas usam?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 10; Codificação Segura, aula 7.",
+    "choices": [
+      {
+        "text": "Cross-site scripting armazenado; montar cada linha da tabela com `textContent`",
+        "why": "Texto salvo antes e mostrado depois a outras pessoas é o tipo armazenado, e `textContent` define texto e não interpreta nada."
+      },
+      {
+        "text": "Cross-site scripting refletido; escapar o nome na requisição que o devolve",
+        "why": "O texto refletido chega numa requisição e volta para a mesma pessoa. Este nome foi salvo, e todo outro professor o vê."
+      },
+      {
+        "text": "Cross-site scripting baseado no DOM; ignorar o que vem depois do `#` no endereço",
+        "why": "O tipo baseado no DOM lê o endereço depois do `#`. Estes nomes vêm da lista do servidor, não do endereço."
+      },
+      {
+        "text": "Um deslize que o `grep` nas linhas adicionadas aponta; apagar a linha e refazer o commit",
+        "why": "A aula diz que nenhum grep acha isso; quem acha é a pergunta da lista sobre entrada do usuário desenhada como HTML. A linha, aliás, é anterior a esta mudança."
+      }
+    ]
+  },
+  "ex-h9k1pkth": {
+    "prompt": "Uma analista quer juntar o `app.log` do loanbook, com linhas como `POST /api/items/1/loan 409`, aos registros do firewall no SIEM. Qual mudança deixa essas linhas serem juntadas e ainda mantém a regra da aula de portfólio sobre o que este log diz?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 11; SOC, Monitoramento e Resposta a Incidentes, aula 1.",
+    "choices": [
+      {
+        "text": "Acrescentar o corpo de cada requisição, para a analista ver quem pegou o quê",
+        "why": "O corpo traz nomes de pessoas, e um log é guardado por mais tempo e lido por mais gente do que o banco de dados."
+      },
+      {
+        "text": "Deixar como está: método, caminho e status já respondem o que um log deve",
+        "why": "A linha diz o quê e com que resultado, mas não quando nem de onde, e uma junção precisa de campos que os dois registros compartilham."
+      },
+      {
+        "text": "Trazer de volta a hora, com o fuso, e o endereço do cliente; deixar o corpo de fora",
+        "why": "A sobrescrita do loanbook tirou justamente a data e o endereço do cliente, que são o quando e o de onde que um log precisa para ser juntado. O corpo fica de fora porque traz nomes."
+      },
+      {
+        "text": "Escrever um traceback para cada resposta `4xx`, para que toda recusa também fique registrada",
+        "why": "Traceback é para o inesperado. Um `409` é uma regra dizendo não, e o status no fim da linha já registra isso."
+      }
+    ]
+  },
+  "ex-xva6b88w": {
+    "prompt": "O portfólio de segurança de um candidato é uma avaliação escrita de uma aplicação vulnerável de propósito, num laboratório doméstico. Um dos achados diz apenas: *O formulário de login é vulnerável a injeção de SQL. Severidade: alta.* O que mais as duas aulas pedem que este achado traga?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 3; SOC, Monitoramento e Resposta a Incidentes, aula 20.",
+    "choices": [
+      {
+        "text": "O nome do scanner que o encontrou, que dá peso ao achado",
+        "why": "O nome de uma ferramenta não deixa ninguém conferir a afirmação. Quem pergunta quer ver o que foi enviado e o que voltou."
+      },
+      {
+        "text": "Uma nota única para a aplicação inteira, para os clientes compararem",
+        "why": "O relatório sobre o qual um cliente consegue agir é feito achado por achado; um número para a aplicação não diz a ninguém o que mudar."
+      },
+      {
+        "text": "A palavra *provável*, para a afirmação não poder ser cobrada do autor",
+        "why": "Confirmado e provável descrevem o que a evidência mostra. Uma requisição reproduzida é um fato confirmado, e atenuá-la não é honestidade."
+      },
+      {
+        "text": "A evidência que um leitor possa conferir, e o que fazer com a falha",
+        "why": "A aula de portfólio pede achados com severidade, evidência e o que fazer com cada um, e a aula de relatório diz que toda afirmação deve poder ser conferida na fonte."
+      }
+    ]
+  },
+  "ex-tk64gjsw": {
+    "prompt": "O arquivo de unidade do loanbook define `HealthInterval=30s`, e a aula 15 avisa que um serviço que chama um modelo não deve ter uma verificação de saúde que gaste dinheiro a cada execução. Se cada verificação fizesse uma chamada paga, quantas chamadas seriam num dia?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15.",
+    "unit": "chamadas"
+  },
+  "ex-tk3eccjc": {
+    "prompt": "Um candidato monta o servidor de laboratório da aula 15 num notebook que ainda não tem chave SSH. Ponha os passos na ordem em que a aula os faz.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15.",
+    "items": [
+      "Gerar um par de chaves com `ssh-keygen -t ed25519`",
+      "Colar a metade pública no `srv.yaml`, em `ssh_authorized_keys`",
+      "Criar a máquina com `multipass launch` e `--cloud-init srv.yaml`",
+      "Acrescentar uma entrada `Host srv` ao `~/.ssh/config` com o endereço que o `multipass info` mostrou",
+      "Comparar a impressão digital e responder à pergunta da primeira conexão",
+      "Esperar com `cloud-init status --wait` antes de pedir as ferramentas"
+    ],
+    "trap": "A chave vem antes da máquina: o cloud-init lê o `srv.yaml` só no primeiro boot, então uma chave colada depois do `launch` não muda nada numa máquina que já existe."
+  },
+  "ex-zs2zvab7": {
+    "prompt": "Um candidato rascunha a linha do currículo para um projeto de SOC no laboratório doméstico e testa quatro trechos. Ligue cada trecho ao que a aula 4 diz dele.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 4; SOC, Monitoramento e Resposta a Incidentes, aula 15.",
+    "pairs": [
+      {
+        "left": "*Detectei 100% dos ataques no meu laboratório*",
+        "right": "um número que não sabe dizer como foi medido, nem contra o quê"
+      },
+      {
+        "left": "*Ajudei a montar um SIEM com um grupo de estudos*",
+        "right": "um verbo que esconde qual parte foi sua"
+      },
+      {
+        "left": "*Desenvolvi um laboratório usando Python, sqlite e Sigma*",
+        "right": "a pilha de ferramentas, que serve para dez mil currículos"
+      },
+      {
+        "left": "*uma regra Sigma que dispara num evento de teste e aparece no SIEM*",
+        "right": "a parte do comprovado por: evidência que qualquer pessoa confere"
+      }
+    ],
+    "right_distractors": [
+      "a parte do que mudou: o que agora é verdade e antes não era",
+      "uma linha de base, que transforma um número num achado"
+    ]
+  },
+  "ex-4yz9xz6b": {
+    "prompt": "Na sua terceira semana como analista de SOC, você fechou o alerta de ontem vindo de `203.0.113.66` como falso positivo, com o motivo *usuário conhecido*. Hoje de manhã o histórico da própria conta mostra que ela nunca tinha entrado daquele endereço antes. O que as duas aulas dizem para fazer primeiro?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 20; SOC, Monitoramento e Resposta a Incidentes, aula 7.",
+    "choices": [
+      {
+        "text": "Avisar agora quem coordena o turno que você o fechou, e por que acha que é real",
+        "why": "Diga cedo a quem precisa saber. Um alerta verdadeiro fechado é o erro mais caro de um SOC porque nada adiante olha para ele de novo, então enquanto você não falar ninguém vai olhar."
+      },
+      {
+        "text": "Reabrir e investigar sozinho, para levar à coordenação algo pronto",
+        "why": "Uma hora de silêncio tentando consertar sozinho transforma um erro pequeno num incidente, e quem usou a conta fica com essa hora."
+      },
+      {
+        "text": "Deixar fechado e esperar: se for real, a regra vai disparar de novo",
+        "why": "Uma regra dispara com eventos, e nada garante que os próximos vão casar. O alerta fechado é o registro que ninguém adiante vai reabrir."
+      },
+      {
+        "text": "Reescrever a nota de fechamento por inteiro, para o próximo analista ver o que você viu",
+        "why": "Uma nota melhor num alerta fechado não muda a prioridade de ninguém. Ele precisa de alguém trabalhando nele agora, não de um registro mais completo."
+      }
+    ]
+  },
+  "ex-c31p4dkw": {
+    "prompt": "Diante de *conte de uma vez em que você falhou*, um candidato responde com o postmortem de um incidente do laboratório doméstico, nas palavras dele: *o servidor aceitava senhas vindas da internet, e os alertas não chegavam a ninguém à noite.* Essas frases estavam certas no postmortem. Por que ficam aquém aqui?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 15; SOC, Monitoramento e Resposta a Incidentes, aula 15.",
+    "choices": [
+      {
+        "text": "Deveriam dizer quem escolheu a senha fraca, para o resultado ser honesto",
+        "why": "Apontar para outra pessoa é a resposta de falha que culpa alguém. A pergunta é sobre a sua parte."
+      },
+      {
+        "text": "São curtas demais: uma resposta de dois minutos pede também os intervalos do `milestones.sql`",
+        "why": "Intervalos são situação, e a situação fica com cerca de um décimo do tempo. A ação é o que quem entrevista está perguntando."
+      },
+      {
+        "text": "Um postmortem procura condições; a entrevista pergunta o que *você* fez e o que mudou depois",
+        "why": "A linguagem sem culpados serve a uma revisão que muda sistemas. Uma resposta sobre falha é uma história STAR cuja ação diz *eu* e cuja última frase é o que mudou."
+      },
+      {
+        "text": "Não ficam: condições sem culpado são o que essa pergunta quer ouvir",
+        "why": "A resposta de falha que falha é a que não tem falha nenhuma, e condições sem ninguém agindo não têm."
+      }
+    ]
+  },
+  "ex-y8v3cssr": {
+    "prompt": "Um candidato cronometra uma resposta STAR sobre um incidente do laboratório doméstico em dois minutos. Se as quatro partes ficarem com as fatias que a aula 15 dá a elas, cerca de quantos segundos vão para a Ação?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 15.",
+    "unit": "segundos"
+  },
+  "ex-1459nn21": {
+    "prompt": "Num SOC, a primeira entrega costuma ser o primeiro alerta que você fecha sozinho. A aula 20 diz que um chamado bem fechado traz o que estava errado, o que você fez e como ___. Que palavra preenche a lacuna?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 20.",
+    "blanks": [
+      {
+        "accept": [
+          "confirmou",
+          "confirmei",
+          "verificou"
+        ]
+      }
+    ]
+  },
+  "ex-6rg4757q": {
+    "prompt": "Numa entrevista para uma vaga de SOC perguntam: *como você faria nosso SOAR conter sozinho uma conta comprometida, de ponta a ponta?* Você nunca operou um SOAR fora de um laboratório. Qual resposta segue a aula 14?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 14; SOC, Monitoramento e Resposta a Incidentes, aula 5.",
+    "choices": [
+      {
+        "text": "Apresentar um desenho em que o playbook desativa a conta e apaga o notebook sozinho",
+        "why": "Uma resposta confiante e errada é a que mais custa, e desativar uma conta e apagar um notebook são os passos que a aula de SOAR não entrega a uma máquina."
+      },
+      {
+        "text": "Dizer que nunca operou um, que desativar uma conta pede a decisão de uma pessoa, e como testaria",
+        "why": "Os três passos da aula 14: dizer com franqueza, dizer o que sabe de perto, e dizer como descobriria. O fato de perto vem da aula de SOAR: desativar uma conta exige julgamento sobre de quem ela é."
+      },
+      {
+        "text": "Explicar que o SOAR existe para responder mais rápido que gente, então tudo vira automático",
+        "why": "Essa é a crença comum que a aula de SOAR corrige: a maior parte do valor está no enriquecimento antes da decisão, que continua sendo de uma pessoa."
+      },
+      {
+        "text": "Dizer que não conhece SOAR e esperar a próxima pergunta",
+        "why": "Esse é o primeiro de três passos, e para nele. O que você sabe de perto, e como descobriria, é o que quem entrevista está observando."
+      }
+    ]
+  }
+}
