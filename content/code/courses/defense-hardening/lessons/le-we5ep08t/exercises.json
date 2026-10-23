@@ -1,0 +1,600 @@
+[
+  {
+    "id": "ex-cx7rk28c",
+    "version": 1,
+    "section": "permission-bits",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is a world-writable script run by root's cron a path to root?",
+    "choices": [
+      {
+        "text": "Because cron runs every script with a shell that has no password",
+        "correct": false,
+        "why": "The danger is who can change the script, not the shell."
+      },
+      {
+        "text": "What root runs next is any account's to rewrite tonight",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because world-writable files are executed twice",
+        "correct": false,
+        "why": "Nothing runs them twice."
+      },
+      {
+        "text": "Because cron refuses to log scripts with those bits",
+        "correct": false,
+        "why": "cron logs normally; logging is not the issue."
+      }
+    ]
+  },
+  {
+    "id": "ex-f031zcer",
+    "version": 1,
+    "section": "permission-bits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `sudo -u portal test -w /opt/portal/backup.sh` answer, and what does it change?",
+    "choices": [
+      {
+        "text": "Whether ana may write the file; it changes its owner to portal",
+        "correct": false,
+        "why": "It runs as portal, and changes nothing."
+      },
+      {
+        "text": "Whether the file is executable; it marks it as tested",
+        "correct": false,
+        "why": "-w asks about writing; nothing is marked."
+      },
+      {
+        "text": "Whether portal may write it, and nothing changes",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Whether portal wrote to it recently; it resets the timestamp",
+        "correct": false,
+        "why": "test asks about permission, not history."
+      }
+    ]
+  },
+  {
+    "id": "ex-xc5sjk0f",
+    "version": 1,
+    "section": "permission-bits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `find / -perm -4000` look for?",
+    "choices": [
+      {
+        "text": "Files that run with their owner's privilege",
+        "correct": true,
+        "why": "Right: the set-user-id bit."
+      },
+      {
+        "text": "Files larger than 4000 bytes in the root file system",
+        "correct": false,
+        "why": "-perm is about mode bits, not size."
+      },
+      {
+        "text": "Directories anybody may write without the sticky bit",
+        "correct": false,
+        "why": "That is another search with other bits."
+      },
+      {
+        "text": "Files that every user may read but nobody may write",
+        "correct": false,
+        "why": "4000 is the set-user-id bit."
+      }
+    ]
+  },
+  {
+    "id": "ex-ktesdkxq",
+    "version": 1,
+    "section": "beyond-three",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can the nine bits not give the auditor read-only access to a file the accountants write?",
+    "choices": [
+      {
+        "text": "Because read and write cannot be separated in the bits",
+        "correct": false,
+        "why": "They are separate bits."
+      },
+      {
+        "text": "They name one owner and one group, and both slots are taken",
+        "correct": true,
+        "why": "Right. Other would give it to everybody."
+      },
+      {
+        "text": "Because auditors are not allowed accounts on Linux",
+        "correct": false,
+        "why": "She has one, auditoria."
+      },
+      {
+        "text": "Because the set-group-id bit forbids extra readers",
+        "correct": false,
+        "why": "It only sets the group of new files."
+      }
+    ]
+  },
+  {
+    "id": "ex-f8q1vb7a",
+    "version": 1,
+    "section": "beyond-three",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the `+` after the bits in `ls -l` mean?",
+    "choices": [
+      {
+        "text": "The file is larger than the block size",
+        "correct": false,
+        "why": "ls shows size elsewhere."
+      },
+      {
+        "text": "The file has the sticky bit set",
+        "correct": false,
+        "why": "That shows as t in the bits."
+      },
+      {
+        "text": "The file was changed since the last backup",
+        "correct": false,
+        "why": "ls knows nothing of backups."
+      },
+      {
+        "text": "More access exists than the bits show",
+        "correct": true,
+        "why": "Right: an ACL."
+      }
+    ]
+  },
+  {
+    "id": "ex-z7sexetp",
+    "version": 1,
+    "section": "beyond-three",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the auditor need `rx` on the directory as well as `r` on the file?",
+    "choices": [
+      {
+        "text": "x enters the directory, r lists it",
+        "correct": true,
+        "why": "Right. Without x the file is unreachable."
+      },
+      {
+        "text": "Because files inherit the directory's entries when read",
+        "correct": false,
+        "why": "Entries are inherited only at creation, by defaults."
+      },
+      {
+        "text": "Because cat executes the file it reads",
+        "correct": false,
+        "why": "cat reads; it does not execute."
+      },
+      {
+        "text": "Because the mask on the directory is rwx",
+        "correct": false,
+        "why": "The mask limits; it does not require."
+      }
+    ]
+  },
+  {
+    "id": "ex-mxb5qe4w",
+    "version": 1,
+    "section": "the-mask",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On a file with a named entry `user:portal:rw-`, an administrator runs `chmod 640`. What can portal do now?",
+    "choices": [
+      {
+        "text": "Read and write, because its own entry still says rw-",
+        "correct": false,
+        "why": "The entry is capped by the mask."
+      },
+      {
+        "text": "Nothing, because chmod removes every ACL entry",
+        "correct": false,
+        "why": "The entries remain; getfacl lists them."
+      },
+      {
+        "text": "Read only: chmod set the mask to r--",
+        "correct": true,
+        "why": "Right. The middle bits of ls are the mask."
+      },
+      {
+        "text": "Write only, because the group bits became r--",
+        "correct": false,
+        "why": "The mask allows r, not w."
+      }
+    ]
+  },
+  {
+    "id": "ex-2gnmsg1k",
+    "version": 1,
+    "section": "the-mask",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the mask exist at all?",
+    "choices": [
+      {
+        "text": "To store the owning group's permissions in a second place",
+        "correct": false,
+        "why": "It caps entries; it is not a copy."
+      },
+      {
+        "text": "So nine-bit tools still narrow a file that has an ACL",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "To hide the ACL from users who are not root",
+        "correct": false,
+        "why": "Anybody may read it with getfacl where they can reach the file."
+      },
+      {
+        "text": "To make files inherit their directory's entries",
+        "correct": false,
+        "why": "That is the default ACL."
+      }
+    ]
+  },
+  {
+    "id": "ex-gxdckahm",
+    "version": 1,
+    "section": "the-mask",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On a file marked `+`, where do you read the access people actually have?",
+    "choices": [
+      {
+        "text": "In the middle three bits of ls -l",
+        "correct": false,
+        "why": "Those are the mask."
+      },
+      {
+        "text": "In getfacl's #effective column, beside each entry",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "In /etc/group, next to each member's name",
+        "correct": false,
+        "why": "Groups list members, not file access."
+      },
+      {
+        "text": "In the file's own first line",
+        "correct": false,
+        "why": "Content says nothing about access."
+      }
+    ]
+  },
+  {
+    "id": "ex-f8nsxn8d",
+    "version": 1,
+    "section": "default-acls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `setfacl -d` on /srv/clientes, the auditor still cannot read costa.txt. Why?",
+    "choices": [
+      {
+        "text": "Defaults apply only to files created by root",
+        "correct": false,
+        "why": "souza.txt was created by maria and got them."
+      },
+      {
+        "text": "The default needs a reboot to take effect",
+        "correct": false,
+        "why": "It applied to the next file at once."
+      },
+      {
+        "text": "A default applies at creation, and costa.txt already existed",
+        "correct": true,
+        "why": "Right. setfacl -R -m fixes what exists."
+      },
+      {
+        "text": "Because joao's umask overrides any default ACL",
+        "correct": false,
+        "why": "A default ACL replaces the umask for new files."
+      }
+    ]
+  },
+  {
+    "id": "ex-e00tm2nx",
+    "version": 1,
+    "section": "default-acls",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A document is moved with `mv` from a user's home into /srv/clientes on the same file system. What ACL does it have?",
+    "choices": [
+      {
+        "text": "The one it had in the home",
+        "correct": true,
+        "why": "Right. A move creates nothing, so no default applies."
+      },
+      {
+        "text": "The directory's default, because it now lives there",
+        "correct": false,
+        "why": "Defaults apply at creation only."
+      },
+      {
+        "text": "None: mv strips every ACL",
+        "correct": false,
+        "why": "It keeps the file's attributes."
+      },
+      {
+        "text": "The union of both",
+        "correct": false,
+        "why": "Nothing merges lists."
+      }
+    ]
+  },
+  {
+    "id": "ex-81h5mm2v",
+    "version": 1,
+    "section": "how-an-acl-resolves",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The auditor joins contabil, which has rw-, but keeps her named entry r--. She asks to write. What happens?",
+    "choices": [
+      {
+        "text": "Allowed: her group grants write, and access is added up",
+        "correct": false,
+        "why": "Linux never adds entries up."
+      },
+      {
+        "text": "Refused: her named entry is found first",
+        "correct": true,
+        "why": "Right. Step 2 stops before groups are asked."
+      },
+      {
+        "text": "Allowed once, then refused until she logs in again",
+        "correct": false,
+        "why": "The answer is the same every time."
+      },
+      {
+        "text": "Refused, because members of contabil may only read",
+        "correct": false,
+        "why": "contabil may write; joao did."
+      }
+    ]
+  },
+  {
+    "id": "ex-vmddcc9c",
+    "version": 1,
+    "section": "how-an-acl-resolves",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Maria owns silva.txt. Which entry decides what she may do with it?",
+    "choices": [
+      {
+        "text": "The group entry, because she is in contabil",
+        "correct": false,
+        "why": "Ownership is checked before groups."
+      },
+      {
+        "text": "The mask, which limits everybody",
+        "correct": false,
+        "why": "The owner is outside the mask."
+      },
+      {
+        "text": "The owner entry, user::",
+        "correct": true,
+        "why": "Right, and nothing else is looked at."
+      },
+      {
+        "text": "Whichever of her entries grants the most",
+        "correct": false,
+        "why": "Entries are not compared or summed."
+      }
+    ]
+  },
+  {
+    "id": "ex-8c679drq",
+    "version": 1,
+    "section": "ntfs-acls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On NTFS, a group has an explicit deny for write and a user in it has an explicit allow. Can the user write?",
+    "choices": [
+      {
+        "text": "Yes, because the user's own entry is more specific",
+        "correct": false,
+        "why": "That is Linux's rule, not NTFS's."
+      },
+      {
+        "text": "No: at the same level, deny is evaluated first",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Only if inheritance is broken on the folder",
+        "correct": false,
+        "why": "Both entries are explicit; inheritance is not involved."
+      },
+      {
+        "text": "Yes, if the user logs in after the deny was written",
+        "correct": false,
+        "why": "Timing does not change evaluation order."
+      }
+    ]
+  },
+  {
+    "id": "ex-vqhajh0c",
+    "version": 1,
+    "section": "ntfs-acls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `icacls D:\\Clientes /grant \"JATOBA\\Auditoria:(OI)(CI)R\"`, what do (OI)(CI) do?",
+    "choices": [
+      {
+        "text": "Grant ownership and full control",
+        "correct": false,
+        "why": "R is read; OI and CI are inheritance."
+      },
+      {
+        "text": "Remove all inherited entries from the folder",
+        "correct": false,
+        "why": "That is /inheritance:r."
+      },
+      {
+        "text": "Make the entry flow down to files and subfolders",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Limit the grant to the folder itself",
+        "correct": false,
+        "why": "They do the opposite."
+      }
+    ]
+  },
+  {
+    "id": "ex-trwx85k2",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the classes in the order Linux checks them.",
+    "items": [
+      "owner",
+      "named user",
+      "owning and named groups",
+      "other"
+    ]
+  },
+  {
+    "id": "ex-622brfd3",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order how this lesson set up the client directory.",
+    "items": [
+      "create the contabil group and its members",
+      "create /srv/clientes with mode 2770",
+      "add named entries for the auditor and the portal",
+      "set a default ACL for new files"
+    ]
+  },
+  {
+    "id": "ex-d2jps346",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each command with what it does.",
+    "pairs": [
+      {
+        "left": "setfacl -m u:auditoria:r f",
+        "right": "adds a named entry"
+      },
+      {
+        "left": "setfacl -d -m u:auditoria:r d",
+        "right": "sets a template for new files"
+      },
+      {
+        "left": "setfacl -x u:auditoria f",
+        "right": "removes a named entry"
+      },
+      {
+        "left": "setfacl -m m::rw f",
+        "right": "sets the mask"
+      }
+    ],
+    "right_distractors": [
+      "changes the file's owner"
+    ]
+  },
+  {
+    "id": "ex-2pvhexqa",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The fixed backup script is owner rwx, group r-x, other r-x. What is that mode in octal?",
+    "value": 755,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-rnt9be9c",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "silva.txt was 30 bytes. After João appended `edited` and a newline, how many bytes was it?",
+    "value": 37,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-5cwqbz45",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The ACL entry that caps every named entry and the owning group is called the ___.",
+    "blanks": [
+      {
+        "accept": [
+          "mask"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-87daqgrh",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which statements about POSIX ACLs are true? Choose all that apply.",
+    "choices": [
+      {
+        "text": "chmod on a file with an ACL changes the mask",
+        "correct": true,
+        "why": "The middle bits are the mask."
+      },
+      {
+        "text": "A default ACL also grants access to the directory itself",
+        "correct": false,
+        "why": "It is a template only."
+      },
+      {
+        "text": "A named user entry can restrict a member of a writing group",
+        "correct": true,
+        "why": "Step 2 stops."
+      },
+      {
+        "text": "The owner is limited by the mask",
+        "correct": false,
+        "why": "The owner is outside it."
+      }
+    ]
+  }
+]
