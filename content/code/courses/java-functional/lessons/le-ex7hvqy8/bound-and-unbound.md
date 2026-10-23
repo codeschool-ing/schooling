@@ -3,9 +3,9 @@ title: Bound and unbound
 version: 1
 ---
 
-**`String::length` and `title::length` look alike and are different things.** The first is
+**`String::length` and `name::length` look alike and are different things.** The first is
 unbound: it has no string yet and takes one as its argument, so its shape is
-`Function<String, Integer>`. The second is bound: it already holds the string in `title`, takes
+`Function<String, Integer>`. The second is bound: it already holds the string in `name`, takes
 nothing, and its shape is `Supplier<Integer>`. Which one you have depends on whether a class or an
 object is written before the `::`.
 

@@ -3,9 +3,9 @@ title: Ligada e não ligada
 version: 1
 ---
 
-**`String::length` e `title::length` parecem iguais e são coisas diferentes.** A primeira é não
+**`String::length` e `name::length` parecem iguais e são coisas diferentes.** A primeira é não
 ligada: ainda não tem string e recebe uma como argumento, então sua forma é
-`Function<String, Integer>`. A segunda é ligada: já guarda a string que está em `title`, não recebe
+`Function<String, Integer>`. A segunda é ligada: já guarda a string que está em `name`, não recebe
 nada, e sua forma é `Supplier<Integer>`. Qual das duas você tem depende de haver uma classe ou um
 objeto antes do `::`.
 
