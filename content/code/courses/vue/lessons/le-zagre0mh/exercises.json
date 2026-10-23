@@ -1,0 +1,660 @@
+[
+  {
+    "id": "ex-wz196707",
+    "version": 1,
+    "section": "default-slot",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The second `<InfoCard />` was given no content. What did it draw?",
+    "hint": "Look at the second line of the text of `#app`.",
+    "choices": [
+      {
+        "text": "An empty `<div class=\"card\">` and a warning",
+        "correct": false,
+        "why": "A slot with nothing in it is not an error, and this one had text of its own to fall back on."
+      },
+      {
+        "text": "The first card's markup again",
+        "correct": false,
+        "why": "Each `<InfoCard>` is filled by its own tags; nothing carries from one card to the next."
+      },
+      {
+        "text": "Its fallback, `Nothing to show.`",
+        "correct": true,
+        "why": "Right. The text written inside `<slot>…</slot>` is drawn when the parent writes nothing."
+      },
+      {
+        "text": "Nothing at all, not even the `<div>`",
+        "correct": false,
+        "why": "The card's own `<div>` is in its template whatever the parent writes; only the slot's part changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-afvwyrr7",
+    "version": 1,
+    "section": "default-slot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The third card's content reads `typeof secret`, and `secret` is a constant in `InfoCard`'s own script. Why did it print `undefined`?",
+    "hint": "Where is the content written?",
+    "choices": [
+      {
+        "text": "`secret` is not a ref, so the template does not see it",
+        "correct": false,
+        "why": "A plain constant in `<script setup>` is visible to that component's own template; reactivity is not the question here."
+      },
+      {
+        "text": "Slot content sees the parent's scope",
+        "correct": true,
+        "why": "Right. It is written in `DefaultSlot.vue`, so it sees that file's variables and none of the card's."
+      },
+      {
+        "text": "The slot replaced `secret` with its fallback text",
+        "correct": false,
+        "why": "The fallback is drawn only when the parent writes nothing; this card was given content."
+      },
+      {
+        "text": "`typeof` runs before the card has mounted",
+        "correct": false,
+        "why": "Timing has nothing to do with it: the name is looked up in the parent, and the parent has no `secret`."
+      }
+    ]
+  },
+  {
+    "id": "ex-yts798n2",
+    "version": 1,
+    "section": "default-slot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `StatusBadge` comes in three looks: success, warning and error. How should the parent choose one?",
+    "hint": "The last row of the table.",
+    "choices": [
+      {
+        "text": "A named slot for each look, filled by the parent",
+        "correct": false,
+        "why": "Slots carry markup the parent writes; a choice among fixed looks is a value, and three slots would let the parent draw anything in any of them."
+      },
+      {
+        "text": "The default slot, with the look's own markup",
+        "correct": false,
+        "why": "That hands the parent the freedom to write anything inside the badge, which is the temptation the section warns about."
+      },
+      {
+        "text": "A scoped slot that receives the current look",
+        "correct": false,
+        "why": "A scoped slot lends values to content the parent writes; here there is nothing for the parent to write."
+      },
+      {
+        "text": "A prop whose value names one of the three looks",
+        "correct": true,
+        "why": "Right. A few fixed looks are a value, and a prop keeps the badge's markup the badge's own."
+      }
+    ]
+  },
+  {
+    "id": "ex-aak6yee1",
+    "version": 1,
+    "section": "default-slot",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Slot content is compiled in the scope of the ___, the component whose template it is written in.",
+    "hint": "Not the child that places it.",
+    "blanks": [
+      {
+        "accept": [
+          "parent"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hms6vfq5",
+    "version": 1,
+    "section": "named-slots",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is `#header` on a `<template>` short for?",
+    "hint": "The same kind of shorthand as `@` for `v-on`.",
+    "choices": [
+      {
+        "text": "`:header`, binding a prop named `header`",
+        "correct": false,
+        "why": "`:` is `v-bind`, which passes a value; `#` names the slot the content goes into."
+      },
+      {
+        "text": "`v-slot:header`, which names the slot to fill",
+        "correct": true,
+        "why": "Right. `#` is to `v-slot` what `@` is to `v-on`."
+      },
+      {
+        "text": "An element id, like `#header` in CSS",
+        "correct": false,
+        "why": "It looks like a selector, and it is not one: nothing with that id ends up on the page."
+      },
+      {
+        "text": "`name=\"header\"` on the parent's `<template>`",
+        "correct": false,
+        "why": "`name` is written on the child's `<slot>`; the parent's side is `v-slot`."
+      }
+    ]
+  },
+  {
+    "id": "ex-k9rh6d8y",
+    "version": 1,
+    "section": "named-slots",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The second `TitledPanel` had no `#footer`. What does the HTML show where the footer would be?",
+    "hint": "Read the end of the printed HTML.",
+    "choices": [
+      {
+        "text": "An empty `<footer></footer>`",
+        "correct": false,
+        "why": "That is what drawing the box anyway would give, and `v-if=\"$slots.footer\"` is there to prevent it."
+      },
+      {
+        "text": "A `<footer>` holding the text `Untitled`",
+        "correct": false,
+        "why": "`Untitled` is the header slot's fallback; the footer slot has none."
+      },
+      {
+        "text": "The first panel's footer, `75 of 195 minutes done`",
+        "correct": false,
+        "why": "Each panel is filled by its own tags; the first panel's footer stays in the first panel."
+      },
+      {
+        "text": "The comment `<!--v-if-->`",
+        "correct": true,
+        "why": "Right. `$slots.footer` was not there, so the `v-if` drew no element and left its placeholder."
+      }
+    ]
+  },
+  {
+    "id": "ex-vaknknf9",
+    "version": 1,
+    "section": "named-slots",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of named slots, as the section shows them? Choose all that apply.",
+    "hint": "One of them is what happens to a misspelt name.",
+    "choices": [
+      {
+        "text": "Content outside every `<template #…>` goes to the slot called `default`",
+        "correct": true,
+        "why": "Right. The paragraph in the first panel went there."
+      },
+      {
+        "text": "The `<template>`s must come in the order the child places them",
+        "correct": false,
+        "why": "The child's template decides where each slot goes; the parent's order does not matter."
+      },
+      {
+        "text": "A misspelt slot name fills nothing and prints no warning",
+        "correct": true,
+        "why": "Right. The content does not appear, which is the one silent failure of slots."
+      },
+      {
+        "text": "The `<template>` element itself leaves nothing on the page",
+        "correct": true,
+        "why": "Right. Only what is inside it is drawn, in the slot it names."
+      },
+      {
+        "text": "Vue warns in the console about a slot name the child does not have",
+        "correct": false,
+        "why": "It does not, and that silence is why the section says to compare the names first."
+      }
+    ]
+  },
+  {
+    "id": "ex-9gd5s5ng",
+    "version": 1,
+    "section": "named-slots",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A parent fills `TitledPanel`'s footer with `<template #footer><span v-if=\"false\">late</span></template>`. What is drawn at the foot of the panel?",
+    "hint": "The panel asks `$slots`, and the parent did write a footer.",
+    "choices": [
+      {
+        "text": "No `<footer>`, as when the parent writes no footer",
+        "correct": false,
+        "why": "That would hold if the panel looked at what the content rendered; `$slots.footer` only says whether the parent wrote one, and it did."
+      },
+      {
+        "text": "A `<footer>` element with nothing visible in it",
+        "correct": true,
+        "why": "Right. `$slots.footer` is truthy because the parent wrote the template, so the box is drawn around a `v-if` that came out false."
+      },
+      {
+        "text": "A `<footer>` holding the word `late`",
+        "correct": false,
+        "why": "`v-if=\"false\"` draws nothing in any slot; the span never reaches the page."
+      },
+      {
+        "text": "The header's fallback, `Untitled`, in the footer",
+        "correct": false,
+        "why": "A fallback belongs to the slot it is written in; the footer slot has none to draw."
+      }
+    ]
+  },
+  {
+    "id": "ex-zgmkfheq",
+    "version": 1,
+    "section": "scoped-slots",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The first `<SessionTable>` was given no `#row`. What did each of its rows show?",
+    "hint": "The fallback inside `<slot name=\"row\">`.",
+    "choices": [
+      {
+        "text": "The course and the minutes",
+        "correct": false,
+        "why": "That is the parent's `#row` template, which only the second table had."
+      },
+      {
+        "text": "An empty `<li>`",
+        "correct": false,
+        "why": "The slot has a fallback, so a row with no template still draws something."
+      },
+      {
+        "text": "Its position: `1.`, then `2.`",
+        "correct": false,
+        "why": "The position is a slot prop; the fallback does not print it."
+      },
+      {
+        "text": "The session's id",
+        "correct": true,
+        "why": "Right. `s2` and `s5`, the fallback written inside the slot."
+      }
+    ]
+  },
+  {
+    "id": "ex-19rc95wj",
+    "version": 1,
+    "section": "scoped-slots",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many slot props does `SessionTable`'s `<slot name=\"row\">` bind?",
+    "hint": "Count the attributes that start with `:`.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-861dpft3",
+    "version": 1,
+    "section": "scoped-slots",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What can the content inside `<template #row=\"{ session, position }\">` read?",
+    "hint": "Two sources, and the child decides one of them.",
+    "choices": [
+      {
+        "text": "Everything in `SessionTable`'s script, now that the slot is scoped",
+        "correct": false,
+        "why": "A scoped slot opens no door to the child's script: only what the `<slot>` binds is lent."
+      },
+      {
+        "text": "The parent's own variables, plus the two slot props it was lent",
+        "correct": true,
+        "why": "Right. Nothing else of the child's: the child names exactly what it shares."
+      },
+      {
+        "text": "The slot props, without the parent's variables",
+        "correct": false,
+        "why": "The content is still written in the parent and still sees the parent's scope; the slot props are added to it."
+      },
+      {
+        "text": "`session` and `position`, plus the `sessions` prop of the child",
+        "correct": false,
+        "why": "`sessions` is the child's prop and is not bound on the `<slot>`; the parent has its own `sessions`, which is why the name looks reachable."
+      }
+    ]
+  },
+  {
+    "id": "ex-8qeyjsd5",
+    "version": 1,
+    "section": "scoped-slots",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Written without destructuring, as `<template #row=\"props\">`, how does the content print the course?",
+    "hint": "The slot props arrive as one object.",
+    "choices": [
+      {
+        "text": "`{{ session.course }}`, as before",
+        "correct": false,
+        "why": "Without the braces nothing is unpacked, so there is no `session` in scope to read."
+      },
+      {
+        "text": "`{{ props[0].course }}`",
+        "correct": false,
+        "why": "The slot props are an object keyed by name, not a list in the order they were bound."
+      },
+      {
+        "text": "`{{ props.session.course }}`",
+        "correct": true,
+        "why": "Right. `props` is the whole object, and `session` is one of its keys."
+      },
+      {
+        "text": "`{{ $slots.row.session.course }}`",
+        "correct": false,
+        "why": "`$slots` is the child's way of asking which slots were filled; the content receives its values through `#row`."
+      }
+    ]
+  },
+  {
+    "id": "ex-3kwmfy22",
+    "version": 1,
+    "section": "render-props",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`WeekPager` starts on 2026-10-19. If a student clicks Next once and then Previous three times, which day of the month does `monday` show?",
+    "hint": "Each click moves seven days.",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-xp0htv8x",
+    "version": 1,
+    "section": "render-props",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes `WeekPager` a renderless component?",
+    "hint": "Look at its whole template.",
+    "choices": [
+      {
+        "text": "Its template is its slot and nothing else",
+        "correct": true,
+        "why": "Right. It holds `monday` and two functions, and every element on the page is the parent's."
+      },
+      {
+        "text": "It has no `<script setup>`, only a template",
+        "correct": false,
+        "why": "It is the other way round: the script holds the state, and the template holds no markup."
+      },
+      {
+        "text": "Vue skips rendering it until a button is clicked",
+        "correct": false,
+        "why": "It renders on the first pass like any component; the week was drawn before any click."
+      },
+      {
+        "text": "It returns a function as its children, as React does",
+        "correct": false,
+        "why": "That is the React render prop; in Vue the parent writes a template and the child passes values to `<slot>`."
+      }
+    ]
+  },
+  {
+    "id": "ex-y4j6wpy5",
+    "version": 1,
+    "section": "render-props",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the section expect you to write few renderless components?",
+    "hint": "What is shared, when the component draws nothing?",
+    "choices": [
+      {
+        "text": "Vue 3 removed scoped slots on the default slot",
+        "correct": false,
+        "why": "The demo uses `v-slot` on `WeekPager` itself in Vue 3; nothing was removed."
+      },
+      {
+        "text": "A renderless component re-renders the whole page on each click",
+        "correct": false,
+        "why": "Only what depends on `monday` changes; the cost is an extra layer, not the rendering."
+      },
+      {
+        "text": "Shared state and logic need no component: a composable does it",
+        "correct": true,
+        "why": "Right. A function that creates refs and returns them adds no layer to the tree and no template."
+      },
+      {
+        "text": "Scoped slots are slower than props",
+        "correct": false,
+        "why": "Speed is not the argument; the argument is that a component is the wrong container for logic alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-6j950r8p",
+    "version": 1,
+    "section": "render-props",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Underneath, what does Vue turn the parent's `#row` template into?",
+    "hint": "The section says the two models are closer than they look.",
+    "choices": [
+      {
+        "text": "Static HTML, copied into the child once",
+        "correct": false,
+        "why": "The rows differ per session, so the content has to run once per item with that item's values."
+      },
+      {
+        "text": "A child component of `SessionTable`",
+        "correct": false,
+        "why": "No extra component appears; the content stays the parent's and is placed where the `<slot>` is."
+      },
+      {
+        "text": "A prop the parent passes and the child reads",
+        "correct": false,
+        "why": "Close to React's version, but in Vue the parent writes no prop: the template goes in, and Vue hands it over."
+      },
+      {
+        "text": "A function the child calls with the slot props",
+        "correct": true,
+        "why": "Right. That is the render prop's shape; what differs is that you write a template, and Vue knows which parts are static."
+      }
+    ]
+  },
+  {
+    "id": "ex-bdee5hwg",
+    "version": 1,
+    "section": "panel",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The week of 26 October has no sessions, and the panel drew `Nothing here yet.` Why, when `App.vue` wrote a `<ul>` into the default slot?",
+    "hint": "What did the `<ul>` render?",
+    "choices": [
+      {
+        "text": "`App.vue` checks the week and passes the text as a prop",
+        "correct": false,
+        "why": "`App.vue` has no such text any more; the sentence is the panel's own fallback."
+      },
+      {
+        "text": "Its `v-if` came out false, and content like that counts as empty",
+        "correct": true,
+        "why": "Right. The content rendered only a placeholder comment, so the slot drew its fallback."
+      },
+      {
+        "text": "`$slots.default` was missing, so the panel switched to its fallback",
+        "correct": false,
+        "why": "The parent did write default content, so `$slots.default` was there; the panel does not ask `$slots` for this slot."
+      },
+      {
+        "text": "The footer's total was zero, and that hides the body",
+        "correct": false,
+        "why": "The footer and the body are separate slots; the footer was still drawn, with its zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-swt19fhy",
+    "version": 1,
+    "section": "panel",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did the course cards change from `<h2>` to `<h3>`?",
+    "hint": "What is the panel's title?",
+    "choices": [
+      {
+        "text": "`<h3>` is smaller, and the panel needs the room",
+        "correct": false,
+        "why": "Size is the stylesheet's business; a heading's level says where it sits in the page's outline."
+      },
+      {
+        "text": "Scoped styles in `PlannerPanel` restyle every `<h2>` inside it",
+        "correct": false,
+        "why": "Scoped styles reach the panel's own elements; the change is about structure, not style."
+      },
+      {
+        "text": "Vue refuses two `<h2>`s in one component",
+        "correct": false,
+        "why": "Vue checks nothing of the sort; the reason is the reader, not the framework."
+      },
+      {
+        "text": "They sit under the panel's `<h2>`, and headings are a screen reader's map",
+        "correct": true,
+        "why": "Right. A level that jumps or repeats makes that map wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-wk3e1zje",
+    "version": 1,
+    "section": "panel",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the planner's transcript for the week of 19 October, how many minutes were planned in total?",
+    "hint": "The footer of the second panel.",
+    "value": 195,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-vzhdwpz9",
+    "version": 1,
+    "section": "panel",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does `PlannerPanel` have? Choose all that apply.",
+    "hint": "Read its template, then its props.",
+    "choices": [
+      {
+        "text": "A title slot, so the parent writes the `<h2>` itself",
+        "correct": false,
+        "why": "The title is a prop, because it is only text; the panel writes the `<h2>` around it."
+      },
+      {
+        "text": "An `actions` slot beside the title",
+        "correct": true,
+        "why": "Right. The week's buttons are markup, so they go in a slot."
+      },
+      {
+        "text": "A default slot with a fallback paragraph",
+        "correct": true,
+        "why": "Right. `Nothing here yet.` is drawn when the body comes out empty."
+      },
+      {
+        "text": "A footer it draws whether or not the parent fills it",
+        "correct": false,
+        "why": "The `<footer>` has `v-if=\"$slots.footer\"`, so it is drawn only when the parent fills it."
+      },
+      {
+        "text": "A `title` prop that is required",
+        "correct": true,
+        "why": "Right. `defineProps({ title: { type: String, required: true } })`."
+      }
+    ]
+  },
+  {
+    "id": "ex-n8n7f1t4",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match what a component needs from outside to the tool this lesson gives it.",
+    "hint": "A value, markup, markup per item, or logic with no markup.",
+    "pairs": [
+      {
+        "left": "a number of minutes",
+        "right": "a prop"
+      },
+      {
+        "left": "a heading with a link in it",
+        "right": "the default slot"
+      },
+      {
+        "left": "how each item of the child's list is drawn",
+        "right": "a scoped slot"
+      },
+      {
+        "left": "a week and the functions that move it, with no markup",
+        "right": "a composable"
+      }
+    ],
+    "right_distractors": [
+      "a fallback inside `<slot>`"
+    ]
+  },
+  {
+    "id": "ex-ehcsecba",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these steps of drawing the second `SessionTable` in the order they happen.",
+    "hint": "The structure is the child's; the inside of each row is the parent's.",
+    "items": [
+      "The parent passes `sessions` as a prop",
+      "The child's `v-for` reaches a session",
+      "The `<slot>` binds `session` and `position`",
+      "The parent's `#row` template receives them",
+      "Its markup is drawn inside that `<li>`"
+    ]
+  },
+  {
+    "id": "ex-wsn32n4v",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague writes `<SessionTable :sessions=\"sessions\"><template #row>{{ session.course }}</template></SessionTable>`. What goes wrong?",
+    "hint": "Where does the content look `session` up?",
+    "choices": [
+      {
+        "text": "Nothing: inside `SessionTable` the name `session` exists",
+        "correct": false,
+        "why": "That is where the loop runs, not where the content is compiled; the content sees the parent's scope."
+      },
+      {
+        "text": "The rows fall back to the id, because `#row` is empty",
+        "correct": false,
+        "why": "The template is not empty, so the fallback is not drawn; it is the content itself that fails."
+      },
+      {
+        "text": "`session` is not in the parent's scope: the template never received it",
+        "correct": true,
+        "why": "Right. Without `#row=\"{ session }\"`, the slot props are lent and nobody takes them."
+      },
+      {
+        "text": "Vue refuses `#row` without a value, as a misspelt name",
+        "correct": false,
+        "why": "A slot with no props named is ordinary; and a misspelt name is the silent case, not a refusal."
+      }
+    ]
+  }
+]
