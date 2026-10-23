@@ -58,4 +58,4 @@ block arrow
 session '~/planner' 'look http://localhost:5173/ --press ArrowLeft'
 block arrow-field
 session '~/planner' "look http://localhost:5173/ --fill 'Minutes=45' --press ArrowLeft"
-quiet '~/planner' 'git add -A && git commit -qm "Lesson 7: a form that submits, and the week shortcuts"'
+done_lesson 7 "a form that submits, and the week shortcuts"

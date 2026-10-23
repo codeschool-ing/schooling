@@ -44,4 +44,4 @@ session '~/planner' "look http://localhost:5173/ --console --click 'Add 30 minut
 
 # As the lesson says: the page goes back to the version without the observer.
 shown runs-once.md src/routes/+page.svelte '~/planner/src/routes/+page.svelte'
-quiet '~/planner' 'git add -A && git commit -qm "Lesson 2: the counter with a goal, and probes"'
+done_lesson 2 "the counter with a goal, and probes"

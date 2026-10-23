@@ -83,4 +83,4 @@ sleep 1
 block unused
 bg_show dev
 shown styles.md src/lib/CourseList.svelte '~/planner/src/lib/CourseList.svelte'
-quiet '~/planner' 'git add -A && git commit -qm "Lesson 5: CourseList, AddSession, bindings and styles"'
+done_lesson 5 "CourseList, AddSession, bindings and styles"

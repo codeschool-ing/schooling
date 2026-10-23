@@ -96,4 +96,4 @@ sleep 1
 block new
 session '~/planner' 'look http://localhost:5173/old'
 quiet '~/planner' 'rm -r src/routes/old'
-quiet '~/planner' 'git add -A && git commit -qm "Lesson 4: WeekNav, from Svelte 4 to Svelte 5"'
+done_lesson 4 "WeekNav, from Svelte 4 to Svelte 5"

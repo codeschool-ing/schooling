@@ -109,4 +109,4 @@ session '~/planner' 'npm run build'
 block sizes
 session '~/planner' 'ls .svelte-kit/output/client/_app/immutable/nodes' \
   'cat .svelte-kit/output/client/_app/immutable/nodes/2.*.js'
-quiet '~/planner' 'git add -A && git commit -qm "Lesson 1: the planner page, Counter and compile.mjs"'
+done_lesson 1 "the planner page, Counter and compile.mjs"

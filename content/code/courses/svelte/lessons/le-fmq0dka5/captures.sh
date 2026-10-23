@@ -3,7 +3,8 @@
 # produces them. Its output is pasted into the lesson by lab/fill.py.
 #
 #   sudo bash captures.sh > /tmp/l3.txt
-#   for f in *.md; do python3 ../../lab/fill.py $f /tmp/l3.txt; done
+#   for f in the-data state derived deep-state props; do python3 ../../lab/fill.py $f.md /tmp/l3.txt; done
+#   python3 ../../lab/fill.py effect.md /tmp/l3.txt --blocks effect
 #
 # It starts from the project as lesson 2 left it, with the development server
 # running. STAGED: the files ana writes, taken out of the lesson's .md by
@@ -47,4 +48,4 @@ shown props.md src/routes/+page.svelte '~/planner/src/routes/+page.svelte'
 sleep 1
 block props
 session '~/planner' "look http://localhost:5173/ --click 'Guitar'"
-quiet '~/planner' 'git add -A && git commit -qm "Lesson 3: the planner page, with runes"'
+done_lesson 3 "the planner page, with runes"

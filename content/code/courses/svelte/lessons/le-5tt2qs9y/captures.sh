@@ -3,7 +3,8 @@
 # produces them. Its output is pasted into the lesson by lab/fill.py.
 #
 #   sudo bash captures.sh > /tmp/l6.txt
-#   for f in children snippets passing-snippets what-a-snippet-is; do
+#   python3 ../../lab/fill.py snippets.md /tmp/l6.txt --blocks snippet
+#   for f in children passing-snippets what-a-snippet-is; do
 #     python3 ../../lab/fill.py $f.md /tmp/l6.txt; done
 #
 # It starts from the project as lesson 5 committed it. STAGED: the files ana
@@ -46,4 +47,4 @@ session '~/planner' "look http://localhost:5173/ --click 'Next week'"
 
 block compile-list
 session '~/planner' 'node compile.mjs src/lib/List.svelte'
-quiet '~/planner' 'git add -A && git commit -qm "Lesson 6: Panel and List, with snippets"'
+done_lesson 6 "Panel and List, with snippets"

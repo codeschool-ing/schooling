@@ -25,6 +25,7 @@ Replace the `$inspect` line of the previous section with this effect, and leave 
 ana@dev:~/planner$ look http://localhost:5173/ --click 'Previous week'
 -- click Previous week
 at /
+title: 90 min this week · Study planner
 - main:
   - heading "Study planner" [level=1]
   - paragraph:
@@ -32,10 +33,25 @@ at /
     - text: Week of 12 Oct 2026
     - button "Next week"
   - list:
-    - listitem: "Linear algebra: 60 min"
-    - listitem: "Spanish: 30 min"
-    - listitem: "Guitar: 0 min"
+    - listitem:
+      - button "Linear algebra" [pressed]
+      - text: 60 min
+    - listitem:
+      - button "Spanish"
+      - text: 30 min
+    - listitem:
+      - button "Guitar"
+      - text: 0 min
   - paragraph: 90 minutes this week
+  - heading "Linear algebra" [level=2]
+  - list:
+    - listitem:
+      - button "13 Oct 2026, 60 min" [pressed]
+    - listitem:
+      - button "19 Oct 2026, 90 min" [pressed]
+    - listitem:
+      - button "24 Oct 2026, 60 min"
+  - button "Add 30 minutes on 12 Oct 2026"
 ```
 
 The title says 90 because the button moved the week, the total changed, and the effect, which had
