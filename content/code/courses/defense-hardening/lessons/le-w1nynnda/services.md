@@ -12,15 +12,15 @@ screen:
 ```
 ana@web:~$ sudo ss -Htulpn | awk '{split($7, p, "\""); print $1, $5, p[2]}'
 udp 0.0.0.0:5353 avahi-daemon
+udp 0.0.0.0:56134 avahi-daemon
 udp 0.0.0.0:111 rpcbind
 udp 0.0.0.0:161 snmpd
-udp 0.0.0.0:52315 avahi-daemon
+tcp 127.0.0.1:8080 python3
 tcp 0.0.0.0:80 nginx
 tcp 0.0.0.0:111 rpcbind
-tcp 0.0.0.0:23 inetd
 tcp 0.0.0.0:22 sshd
+tcp 0.0.0.0:23 inetd
 tcp 0.0.0.0:21 vsftpd
-tcp 127.0.0.1:8080 python3
 ```
 
 Everything the scan found is here, with a name beside it, plus two things it could not see. The
@@ -93,8 +93,8 @@ rpcbind.socket
 Stopping 'rpcbind.service', but its triggering units are still active:
 rpcbind.socket
 ana@web:~$ sudo ss -Htulpn | grep ':111 '
-udp UNCONN 0      0        0.0.0.0:111   0.0.0.0:* users:(("systemd",pid=1,fd=117))                                                                                     
-tcp LISTEN 0      4096     0.0.0.0:111   0.0.0.0:* users:(("systemd",pid=1,fd=116))                                                                                     
+udp UNCONN 0      0        0.0.0.0:111   0.0.0.0:* users:(("systemd",pid=1,fd=109))                                                                                     
+tcp LISTEN 0      4096     0.0.0.0:111   0.0.0.0:* users:(("systemd",pid=1,fd=108))                                                                                     
 ```
 
 The service stopped, and port 111 is still open, now held by `systemd` itself, process 1. This is

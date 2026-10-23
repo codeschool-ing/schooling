@@ -75,9 +75,9 @@ The lesson started with a scan from `desk`, and it ends with the same one:
 
 ```
 ana@desk:~$ nmap web
-Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-10-23 09:14 -03
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-10-23 09:46 -03
 Nmap scan report for web (192.168.60.10)
-Host is up (0.000085s latency).
+Host is up (0.000098s latency).
 rDNS record for 192.168.60.10: web.jatoba.example
 Not shown: 998 closed tcp ports (conn-refused)
 PORT   STATE SERVICE
@@ -86,9 +86,9 @@ PORT   STATE SERVICE
 
 Nmap done: 1 IP address (1 host up) scanned in 0.04 seconds
 ana@desk:~$ sudo nmap -sU -p 111,161,5353 web
-Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-10-23 09:14 -03
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-10-23 09:46 -03
 Nmap scan report for web (192.168.60.10)
-Host is up (0.000078s latency).
+Host is up (0.000073s latency).
 rDNS record for 192.168.60.10: web.jatoba.example
 
 PORT     STATE  SERVICE
@@ -97,7 +97,7 @@ PORT     STATE  SERVICE
 5353/udp closed zeroconf
 MAC Address: 52:54:00:A8:3C:0A (QEMU virtual NIC)
 
-Nmap done: 1 IP address (1 host up) scanned in 0.23 seconds
+Nmap done: 1 IP address (1 host up) scanned in 0.24 seconds
 ```
 
 **Two TCP ports, the two the job needs, and every UDP port the first scan found now answers
