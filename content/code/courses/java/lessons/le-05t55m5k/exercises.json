@@ -1,0 +1,540 @@
+[
+  {
+    "id": "ex-w5g43hm1",
+    "version": 1,
+    "section": "lists",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did inserting at position 0 cost the `ArrayList` hundreds of milliseconds and the `LinkedList` a few?",
+    "hint": "Think of what has to move.",
+    "choices": [
+      {
+        "text": "The `ArrayList` reallocates and copies its whole backing array on every single insertion",
+        "correct": false,
+        "why": "It grows its array only when it is full, by half again; the cost here is the shifting."
+      },
+      {
+        "text": "Each insertion shifts every element already in the array one slot right",
+        "correct": true,
+        "why": "Right: the hundred-thousandth insertion moves 99,999 references; the linked list changes two links."
+      },
+      {
+        "text": "`LinkedList` stores `int` values directly, without boxing them",
+        "correct": false,
+        "why": "Both hold `Integer` objects; neither stores primitives."
+      },
+      {
+        "text": "The JIT compiles the `LinkedList` loop and not the other",
+        "correct": false,
+        "why": "Both loops run hot; the difference is in the work each operation does."
+      }
+    ]
+  },
+  {
+    "id": "ex-gbehzrfm",
+    "version": 1,
+    "section": "lists",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`LinkedList.get(i)` took seconds over a hundred thousand calls. What does one call do?",
+    "hint": "There is no array to index.",
+    "choices": [
+      {
+        "text": "It copies the list into an array and indexes that",
+        "correct": false,
+        "why": "Nothing is copied; it follows links."
+      },
+      {
+        "text": "It searches the list for the element equal to `i`",
+        "correct": false,
+        "why": "That would be `indexOf`; `get(i)` wants the element at position `i`."
+      },
+      {
+        "text": "It walks node by node from the nearer end",
+        "correct": true,
+        "why": "Right: up to fifty thousand steps per call for a hundred thousand elements."
+      }
+    ]
+  },
+  {
+    "id": "ex-3av3ay7s",
+    "version": 1,
+    "section": "lists",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program builds a list of loans once and then reads it by position thousands of times. Which class?",
+    "hint": "Which operation dominates?",
+    "choices": [
+      {
+        "text": "`ArrayList`",
+        "correct": true,
+        "why": "Right: reading by position is one step, and building it at the end is cheap."
+      },
+      {
+        "text": "`LinkedList`, because it was built by adding",
+        "correct": false,
+        "why": "Adding at the end is cheap for both; the reads are what cost, and they cost the linked list a walk each."
+      },
+      {
+        "text": "Either: both implement `List`, so they cost the same",
+        "correct": false,
+        "why": "They keep the same promise at very different costs; section 02 measured it."
+      },
+      {
+        "text": "`TreeSet`, so that the reads are sorted",
+        "correct": false,
+        "why": "A set drops duplicates and has no positions; two loans of one book would become one."
+      }
+    ]
+  },
+  {
+    "id": "ex-deevf0fz",
+    "version": 1,
+    "section": "lists",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `List<Integer> list = new ArrayList<>();` the declared type is the interface, and only the word after `___` names the class.",
+    "hint": "The keyword that creates the object.",
+    "blanks": [
+      {
+        "accept": [
+          "new"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vpt4a6dz",
+    "version": 1,
+    "section": "sets",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Orders.java` put seven titles, two of them repeated, into a `HashSet`. How many came out, and in what order?",
+    "hint": "A set keeps each element once.",
+    "choices": [
+      {
+        "text": "Seven, in the order they went in",
+        "correct": false,
+        "why": "The repeated `Dune` and `Emma` were dropped, and insertion order is `LinkedHashSet`'s."
+      },
+      {
+        "text": "Five, in alphabetical order",
+        "correct": false,
+        "why": "Five is right; alphabetical order is `TreeSet`'s."
+      },
+      {
+        "text": "Five, in an order the class does not promise",
+        "correct": true,
+        "why": "Right: `Beloved, Dune, Ulysses, Middlemarch, Emma`, which is whatever the buckets produced."
+      }
+    ]
+  },
+  {
+    "id": "ex-h04wp4d4",
+    "version": 1,
+    "section": "sets",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each set to the order it keeps.",
+    "hint": "The table in section 03.",
+    "pairs": [
+      {
+        "left": "`HashSet`",
+        "right": "No order you can rely on"
+      },
+      {
+        "left": "`LinkedHashSet`",
+        "right": "The order of first insertion"
+      },
+      {
+        "left": "`TreeSet`",
+        "right": "Sorted order"
+      }
+    ],
+    "right_distractors": [
+      "The order of last access"
+    ]
+  },
+  {
+    "id": "ex-ycdk4har",
+    "version": 1,
+    "section": "sets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`BrokenKey` printed `size 2`, `contains false` and `equal? true`. What single change made it print `size 1` and `contains true`?",
+    "hint": "`equals` was already right.",
+    "choices": [
+      {
+        "text": "Replacing `HashSet` with `ArrayList`",
+        "correct": false,
+        "why": "A list keeps duplicates by design, so `size` would stay 2."
+      },
+      {
+        "text": "A `hashCode` built from `isbn`, the field `equals` compares",
+        "correct": true,
+        "why": "Right: equal books then land in the same bucket, where `equals` can see them."
+      },
+      {
+        "text": "Making `isbn` a `final` field",
+        "correct": false,
+        "why": "It already was `final`; the missing piece was the hash code."
+      },
+      {
+        "text": "Adding `@Override` above `equals`, so that the compiler checks its signature",
+        "correct": false,
+        "why": "It was already there, and it only makes the compiler check the signature."
+      }
+    ]
+  },
+  {
+    "id": "ex-4dzvmdzv",
+    "version": 1,
+    "section": "sets",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two `Book` objects are `equals` but have different hash codes. Which statement about a `HashSet` holding one of them is true?",
+    "hint": "The hash code chooses where to look.",
+    "choices": [
+      {
+        "text": "`contains` with the other one is `true`, because `contains` calls `equals`",
+        "correct": false,
+        "why": "`equals` only runs inside the bucket the hash code picked, and that is the wrong bucket."
+      },
+      {
+        "text": "Adding it throws an exception",
+        "correct": false,
+        "why": "Nothing checks the contract; the set just quietly holds both."
+      },
+      {
+        "text": "Adding the other one gives two entries",
+        "correct": true,
+        "why": "Right: different hash codes send them to different buckets, so the set never compares them."
+      }
+    ]
+  },
+  {
+    "id": "ex-kze24xgp",
+    "version": 1,
+    "section": "sets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A test prints a `HashSet<String>` and compares the result with a fixed string. It passes today. What is wrong with it?",
+    "hint": "What did the class promise about order?",
+    "choices": [
+      {
+        "text": "It relies on an order `HashSet` never promised",
+        "correct": true,
+        "why": "Right: the same elements print the same way until the table resizes or the elements change."
+      },
+      {
+        "text": "Nothing: a `String`'s hash code is fixed, so the order is too",
+        "correct": false,
+        "why": "The hash codes are fixed; the order also depends on the table's size, which grows with the set."
+      },
+      {
+        "text": "Printing a set calls `hashCode`, which is slow",
+        "correct": false,
+        "why": "`toString` walks the set; the speed is not the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-ep7xnzhg",
+    "version": 1,
+    "section": "maps",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `Counts.java`, what did `count.merge(title, 1, Integer::sum)` do the first time it met `Dune`?",
+    "hint": "The key was absent.",
+    "choices": [
+      {
+        "text": "It threw, because there was no value to add 1 to",
+        "correct": false,
+        "why": "`merge` handles the absent key itself; that is why it replaces the hand-written test."
+      },
+      {
+        "text": "It stored `1` under `Dune`",
+        "correct": true,
+        "why": "Right: absent key, so the given value goes in; later calls add 1 to it."
+      },
+      {
+        "text": "It stored `0`, and the second loan made it 1",
+        "correct": false,
+        "why": "The map ended with `Dune=3` for three loans, so the first one counted."
+      },
+      {
+        "text": "It called `Integer.sum(null, 1)`",
+        "correct": false,
+        "why": "The function only runs when there is an old value to combine with."
+      }
+    ]
+  },
+  {
+    "id": "ex-ft6n1pt6",
+    "version": 1,
+    "section": "maps",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`int n = count.get(\"Beloved\");` runs, and `Beloved` is not in the map. What happens?",
+    "hint": "`get` printed `null` for it.",
+    "choices": [
+      {
+        "text": "`n` is 0, because a missing `int` takes its default value",
+        "correct": false,
+        "why": "Defaults apply to fields; here `null` is unboxed into an `int`, and that fails."
+      },
+      {
+        "text": "A `NullPointerException`, unboxing the `null` that `get` returned",
+        "correct": true,
+        "why": "Right: `getOrDefault(\"Beloved\", 0)` is the way to say what absent means."
+      },
+      {
+        "text": "A compile error, because `get` returns `Integer`",
+        "correct": false,
+        "why": "Auto-unboxing makes it compile; the failure waits for run time."
+      }
+    ]
+  },
+  {
+    "id": "ex-esvvr08k",
+    "version": 1,
+    "section": "maps",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To group titles by first letter, `byLetter.___(title.charAt(0), k -> new ArrayList<>()).add(title)` returns the list for the key, creating it first if there is none.",
+    "hint": "Compute it if it is absent.",
+    "blanks": [
+      {
+        "accept": [
+          "computeIfAbsent"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-48q6v5tr",
+    "version": 1,
+    "section": "maps",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `HashMap<Book, Loan>` uses a mutable `Book` whose `hashCode` reads its title. A book is put in, then its title is corrected. What does `get` with that same object answer?",
+    "hint": "Where was the entry filed?",
+    "choices": [
+      {
+        "text": "The loan, because it is the very same object",
+        "correct": false,
+        "why": "The map looks in the bucket the new hash code picks, and the entry is in the old one."
+      },
+      {
+        "text": "Very likely `null`, though the entry is still in the map",
+        "correct": true,
+        "why": "Right: it sits in the bucket of the old hash code, where no lookup goes."
+      },
+      {
+        "text": "A `ConcurrentModificationException`",
+        "correct": false,
+        "why": "That is about changing a collection while iterating it, lesson 34; nothing iterates here."
+      },
+      {
+        "text": "The map rehashes the key automatically when its field changes",
+        "correct": false,
+        "why": "The map has no way to know a field changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-1szchqb3",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A program must answer, for each loan request, whether that ISBN is already reserved. Which interface fits the question?",
+    "hint": "\"Is this one in there?\"",
+    "choices": [
+      {
+        "text": "`List`",
+        "correct": false,
+        "why": "A list answers by position; `contains` on it reads every element."
+      },
+      {
+        "text": "`Set`",
+        "correct": true,
+        "why": "Right: membership is the question a set is built around."
+      },
+      {
+        "text": "`Queue`",
+        "correct": false,
+        "why": "A queue answers which one leaves next."
+      },
+      {
+        "text": "`Deque`",
+        "correct": false,
+        "why": "A deque is a queue open at both ends; it still does not answer membership quickly."
+      }
+    ]
+  },
+  {
+    "id": "ex-b46gypnd",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the section prefer `List<Book> loans = new ArrayList<>();` to `ArrayList<Book> loans = new ArrayList<>();`?",
+    "hint": "What can the rest of the program call?",
+    "choices": [
+      {
+        "text": "The first form runs faster, because interface calls are cheaper",
+        "correct": false,
+        "why": "Speed is not the reason; the object is the same `ArrayList` either way."
+      },
+      {
+        "text": "The second form does not compile",
+        "correct": false,
+        "why": "Both compile; the diamond works with either declared type."
+      },
+      {
+        "text": "It limits every later call to the methods of `List`",
+        "correct": true,
+        "why": "Right: with only `List` methods in use, changing the class later is one word after `new`."
+      }
+    ]
+  },
+  {
+    "id": "ex-jcnpqb5q",
+    "version": 1,
+    "section": "choosing",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these are good reasons to choose a `TreeMap` over a `HashMap`? Choose all that apply.",
+    "hint": "Pay for an order only when something reads it.",
+    "choices": [
+      {
+        "text": "A report prints the entries sorted by key",
+        "correct": true,
+        "why": "Yes: the sorted order is read, so it is worth its comparisons."
+      },
+      {
+        "text": "The map will hold a great many entries",
+        "correct": false,
+        "why": "Size alone favours the hash map, whose lookups do not compare along a tree."
+      },
+      {
+        "text": "The program asks for the first key after a given one",
+        "correct": true,
+        "why": "Yes: `ceilingKey` and its relatives exist only on sorted maps."
+      },
+      {
+        "text": "The keys are strings",
+        "correct": false,
+        "why": "Strings work as keys of either map."
+      }
+    ]
+  },
+  {
+    "id": "ex-kykgb9cy",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A loan screen needs the borrowed titles in the order they were borrowed, each title once. Which class?",
+    "hint": "Once each, and an order that is not sorted.",
+    "choices": [
+      {
+        "text": "`ArrayList`",
+        "correct": false,
+        "why": "It keeps the order and also the duplicates."
+      },
+      {
+        "text": "`TreeSet`",
+        "correct": false,
+        "why": "Once each, but in sorted order, not the order of borrowing."
+      },
+      {
+        "text": "`HashSet`",
+        "correct": false,
+        "why": "Once each, in no order you can rely on."
+      },
+      {
+        "text": "`LinkedHashSet`",
+        "correct": true,
+        "why": "Right: uniqueness from the set, insertion order from the list through its entries."
+      }
+    ]
+  },
+  {
+    "id": "ex-hjjrf49j",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Counts.java` saw six loans of three titles. How many entries did the `HashMap` named `count` hold at the end?",
+    "hint": "One entry per key.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-xzfww1nj",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the steps of `shelf.contains(book)` on a `HashSet` in the order they happen.",
+    "hint": "Two steps decide it, after one call.",
+    "items": [
+      "`book.hashCode()` is called",
+      "The hash code picks a bucket",
+      "`equals` compares `book` with each element in that bucket",
+      "`contains` answers `true` or `false`"
+    ]
+  },
+  {
+    "id": "ex-gc7tc473",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program keeps reserved ISBNs in an `ArrayList<String>` and calls `contains` on every request. It is slow with fifty thousand reservations. What is the smallest correct change?",
+    "hint": "The collection is doing a set's job.",
+    "choices": [
+      {
+        "text": "Switch it to a `LinkedList`, which is faster to search",
+        "correct": false,
+        "why": "Searching is a walk in both lists; the linked one is not faster at it."
+      },
+      {
+        "text": "Keep them in a `HashSet<String>` instead",
+        "correct": true,
+        "why": "Right: `contains` then jumps to a bucket instead of reading every element."
+      },
+      {
+        "text": "Sort the list once and keep calling `contains`",
+        "correct": false,
+        "why": "`contains` on a list does not know it is sorted; it still reads element by element."
+      }
+    ]
+  }
+]

@@ -1,0 +1,559 @@
+[
+  {
+    "id": "ex-6kd9jhpz",
+    "version": 1,
+    "section": "static-nested",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Code outside `Catalogue` wants to create an `Entry`. How does it name the class?",
+    "hint": "`main` used this spelling for the third entry.",
+    "choices": [
+      {
+        "text": "`Entry`, because nested names are visible everywhere in the file's directory",
+        "correct": false,
+        "why": "The short name works inside `Catalogue` only; outside it, the outer name comes first."
+      },
+      {
+        "text": "`Catalogue.Entry`",
+        "correct": true,
+        "why": "Right: the outer name, a dot, the inner name."
+      },
+      {
+        "text": "`Catalogue$Entry`",
+        "correct": false,
+        "why": "That is the name of the class file and of the class at run time; the source writes a dot."
+      },
+      {
+        "text": "`new Catalogue().Entry`, through an object of the outer class",
+        "correct": false,
+        "why": "A static nested class needs no outer object; that shape belongs to inner classes, with `new` after the dot."
+      }
+    ]
+  },
+  {
+    "id": "ex-692wzbjr",
+    "version": 1,
+    "section": "static-nested",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Compiling `Catalogue.java` wrote two class files: `Catalogue.class` and `___`.",
+    "hint": "Outer name and inner name, joined by one character.",
+    "blanks": [
+      {
+        "accept": [
+          "Catalogue$Entry.class"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3rjthqaf",
+    "version": 1,
+    "section": "static-nested",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Shelf.Label.text()` reads `capacity`, an instance field of `Shelf`, and the compiler refuses. What is the reason?",
+    "hint": "Ask which shelf the label would read it from.",
+    "choices": [
+      {
+        "text": "`capacity` is `private`, and a nested class may not see private members",
+        "correct": false,
+        "why": "Nested classes do see private members of the outer class; the error message did not mention access."
+      },
+      {
+        "text": "No `Shelf` exists to read it from",
+        "correct": true,
+        "why": "Right: a static nested object has no outer object, and the message says a static context cannot reach an instance member."
+      },
+      {
+        "text": "Fields of the outer class have to be passed in with `super`",
+        "correct": false,
+        "why": "`super` reaches a parent class, lesson 20; nesting is not inheritance."
+      },
+      {
+        "text": "`text()` would need to be declared `static` as well",
+        "correct": false,
+        "why": "A static `text()` has no object either; the field would still have no shelf to come from."
+      }
+    ]
+  },
+  {
+    "id": "ex-d9a54d1q",
+    "version": 1,
+    "section": "static-nested",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these may a static nested class `Entry` do inside `Catalogue`? Choose all that apply.",
+    "hint": "It sits inside the outer class's braces, and it has no outer object.",
+    "choices": [
+      {
+        "text": "Use a `private static` constant declared in `Catalogue`",
+        "correct": true,
+        "why": "Yes: nesting puts it inside the line lesson 14 drew, and a static member needs no object."
+      },
+      {
+        "text": "Be created in `main` with no `Catalogue` object",
+        "correct": true,
+        "why": "Yes: that is how the third entry was made."
+      },
+      {
+        "text": "Read `size`, the instance field of whichever catalogue is current",
+        "correct": false,
+        "why": "There is no current catalogue for a static nested object; that is `Shelf`'s compile error."
+      },
+      {
+        "text": "Refer to its owner as `Catalogue.this`",
+        "correct": false,
+        "why": "Only inner classes have an owner to name; a static nested one has none."
+      }
+    ]
+  },
+  {
+    "id": "ex-528bzj5e",
+    "version": 1,
+    "section": "static-nested",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You are writing a `Graph` class and need a small `Edge` type that only `Graph` uses and that holds two node numbers. Following the section's rule of thumb, how do you declare it?",
+    "hint": "Does an edge need to read the fields of one particular graph?",
+    "choices": [
+      {
+        "text": "As an inner class, so every edge can reach its graph if it ever needs to",
+        "correct": false,
+        "why": "That buys a hidden reference in every edge for a need nobody has; the rule says start with `static`."
+      },
+      {
+        "text": "As a `static` nested class of `Graph`",
+        "correct": true,
+        "why": "Right: it belongs to `Graph`'s implementation and needs no graph object, which is exactly the static nested case."
+      },
+      {
+        "text": "As an anonymous class created inside `Graph`'s constructor",
+        "correct": false,
+        "why": "An anonymous class makes one object with one job; a graph has many edges of one type."
+      },
+      {
+        "text": "As a separate public class in `Edge.java`",
+        "correct": false,
+        "why": "That works, and exposes to everyone a type only `Graph` uses; nesting keeps it where it belongs."
+      }
+    ]
+  },
+  {
+    "id": "ex-fcdrrme3",
+    "version": 1,
+    "section": "inner-classes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `main`, how was the first card for Ana created?",
+    "hint": "`new` was called on something.",
+    "choices": [
+      {
+        "text": "`new Member.Card(1)`",
+        "correct": false,
+        "why": "That spelling makes a static nested object; an inner one needs an owner, and the compiler asked for one."
+      },
+      {
+        "text": "`ana.new Card(1)`",
+        "correct": true,
+        "why": "Right: `new` called on `ana`, which becomes the card's owner."
+      },
+      {
+        "text": "`new Card(ana, 1)`",
+        "correct": false,
+        "why": "The compiled constructor does take the member first, but the source never writes it that way."
+      }
+    ]
+  },
+  {
+    "id": "ex-s80tghfm",
+    "version": 1,
+    "section": "inner-classes",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `a1.borrow()`, `a2.borrow()` and `r1.borrow()`, what is Ana's `borrowed` count?",
+    "hint": "Two of the three cards belong to Ana.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-x79t2dfw",
+    "version": 1,
+    "section": "inner-classes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`javap -p 'Member$Card'` listed a field `final Member this$0` that nobody wrote. What is it for?",
+    "hint": "Where does `name` inside `borrow()` come from?",
+    "choices": [
+      {
+        "text": "It counts how many cards a member has",
+        "correct": false,
+        "why": "The count is `borrowed`, an ordinary field of `Member`; `this$0` holds an object, not a number."
+      },
+      {
+        "text": "It is a debugging aid `javap` adds when printing, and is not in the class file",
+        "correct": false,
+        "why": "`javap` prints what the class file holds; the field is there, and the constructor fills it."
+      },
+      {
+        "text": "The card's owner: `name` compiles into `this$0.name`",
+        "correct": true,
+        "why": "Right: the compiler turns the owner into a field the JVM understands, filled by the hidden constructor parameter."
+      },
+      {
+        "text": "It points at the first card created, so the others can share its number",
+        "correct": false,
+        "why": "Each card keeps its own `number`; `this$0` points at a `Member`, not at another card."
+      }
+    ]
+  },
+  {
+    "id": "ex-g00r4e21",
+    "version": 1,
+    "section": "inner-classes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside `Card`, what is the difference between `this` and `Member.this`?",
+    "hint": "`owner()` returns one of them.",
+    "choices": [
+      {
+        "text": "`this` is the card; `Member.this` is the member it belongs to",
+        "correct": true,
+        "why": "Right: the long form names the outer object, which `owner()` returns."
+      },
+      {
+        "text": "None: both mean the current object, and the long form is only clearer",
+        "correct": false,
+        "why": "They are two different objects; `owner() == a2.owner()` would be false if `this` were returned."
+      },
+      {
+        "text": "`this` is the member, and `Member.this` is the class `Member` itself",
+        "correct": false,
+        "why": "A class is not an object you can reach with `this`; `Member.this` is an object of `Member`."
+      },
+      {
+        "text": "`Member.this` is only allowed inside static methods of `Card`",
+        "correct": false,
+        "why": "An inner class's static method has no card and no member; the long form is used in instance methods."
+      }
+    ]
+  },
+  {
+    "id": "ex-g4gycmy2",
+    "version": 1,
+    "section": "inner-classes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program keeps a list of event handlers that lives as long as the program. Each handler is an inner class of a large `Report` object, and the reports never seem to leave memory. Why?",
+    "hint": "Every inner object holds something.",
+    "choices": [
+      {
+        "text": "Inner classes are loaded once and never unloaded, so their outer objects stay too",
+        "correct": false,
+        "why": "Classes and objects are different things; what keeps an object alive is a reference to it."
+      },
+      {
+        "text": "Each one's hidden `this$0` points at the object that made it, and stays reachable",
+        "correct": true,
+        "why": "Right: while the handler is reachable, so is the report it points at; a static nested handler would not hold one."
+      },
+      {
+        "text": "A `Report` cannot be collected until each of its inner classes calls `Report.this.close()`",
+        "correct": false,
+        "why": "Java has no such rule; lesson 19 shows that reachability alone decides."
+      },
+      {
+        "text": "The JVM copies the report into every handler, multiplying its size",
+        "correct": false,
+        "why": "Only a reference is stored, not a copy; one report, many arrows to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-n3jnxzzx",
+    "version": 1,
+    "section": "local-and-anonymous",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`new Comparator<String>() { ... }` in `Sorting.java` creates what?",
+    "hint": "`Comparator` is an interface.",
+    "choices": [
+      {
+        "text": "An object of the interface `Comparator` itself",
+        "correct": false,
+        "why": "An interface cannot be instantiated alone; the braces supply a class."
+      },
+      {
+        "text": "A new named class called `Comparator` that replaces the JDK's",
+        "correct": false,
+        "why": "It has no name in the source, and the compiler called it `Sorting$1`."
+      },
+      {
+        "text": "One object of a class with no name, supplying the missing `compare`",
+        "correct": true,
+        "why": "Right: declared and instantiated in one expression, with `compare` supplied in the braces."
+      }
+    ]
+  },
+  {
+    "id": "ex-17h1pdhf",
+    "version": 1,
+    "section": "local-and-anonymous",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the plain `Arrays.sort(titles)` put `effective Java` last?",
+    "hint": "Compare the first letters' codes.",
+    "choices": [
+      {
+        "text": "Strings are sorted by length, and it is the shortest",
+        "correct": false,
+        "why": "`Head First Java` is shorter than `Modern Java in Action` and came first, so length was not the order."
+      },
+      {
+        "text": "Capitals sort before small letters, and it starts with `e`",
+        "correct": true,
+        "why": "Right: the comparator that ignores case put it first."
+      },
+      {
+        "text": "`sort` keeps the array's original order for strings it cannot compare",
+        "correct": false,
+        "why": "Every pair of strings can be compared; the order is the natural one, by code."
+      },
+      {
+        "text": "Arrays are sorted from the end, and it was the second element",
+        "correct": false,
+        "why": "It was second in the source array; sorting does not start from the end."
+      }
+    ]
+  },
+  {
+    "id": "ex-w3n5ymy5",
+    "version": 1,
+    "section": "local-and-anonymous",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each class the lesson compiled to the name of its class file.",
+    "hint": "`ls` printed each one.",
+    "pairs": [
+      {
+        "left": "the anonymous comparator in `Sorting`",
+        "right": "`Sorting$1.class`"
+      },
+      {
+        "left": "the local class `Notice` in `Overdue`",
+        "right": "`Overdue$1Notice.class`"
+      },
+      {
+        "left": "the inner class `Card` in `Member`",
+        "right": "`Member$Card.class`"
+      },
+      {
+        "left": "the static nested class `Entry` in `Catalogue`",
+        "right": "`Catalogue$Entry.class`"
+      }
+    ],
+    "right_distractors": [
+      "`Catalogue.Entry.class`"
+    ]
+  },
+  {
+    "id": "ex-vye7a9tp",
+    "version": 1,
+    "section": "local-and-anonymous",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Adding `days = 21;` made `Overdue.java` fail to compile. Which line did the error point at?",
+    "hint": "Read the caret.",
+    "choices": [
+      {
+        "text": "The new assignment `days = 21;`",
+        "correct": false,
+        "why": "The assignment is legal on its own; the error is where the class reads the variable."
+      },
+      {
+        "text": "The use of `days` inside `Notice.text`",
+        "correct": true,
+        "why": "Right: line 7, where the local class reads a variable that is no longer effectively final."
+      },
+      {
+        "text": "The declaration `int days = 14;`, which should have said `final`",
+        "correct": false,
+        "why": "Writing `final` would make the assignment illegal instead; the message pointed at the read."
+      }
+    ]
+  },
+  {
+    "id": "ex-mhd17j1y",
+    "version": 1,
+    "section": "local-and-anonymous",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does Java insist that a captured local variable be effectively final, rather than letting the class see later changes?",
+    "hint": "What does the object actually hold?",
+    "choices": [
+      {
+        "text": "Because changing a local variable from two places at once is a race between threads",
+        "correct": false,
+        "why": "The rule holds in single-threaded code too, as `Overdue` showed."
+      },
+      {
+        "text": "Because the class runs before the method's later statements",
+        "correct": false,
+        "why": "The class runs when its method is called, which can be any time."
+      },
+      {
+        "text": "The object holds a copy taken at creation, which would go stale",
+        "correct": true,
+        "why": "Right: the compiler copies the value into a field; Java refuses rather than let the two disagree."
+      },
+      {
+        "text": "Because local variables are deleted when the class is compiled",
+        "correct": false,
+        "why": "Local variables live in the method's frame while it runs; compilation deletes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-vt9j0mwa",
+    "version": 1,
+    "section": "local-and-anonymous",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Since Java 8, what usually replaces an anonymous class that implements a one-method interface such as `Comparator`?",
+    "hint": "`java-functional` starts there.",
+    "choices": [
+      {
+        "text": "A static nested class",
+        "correct": false,
+        "why": "That needs a name and a declaration; it is longer, not shorter."
+      },
+      {
+        "text": "A lambda expression",
+        "correct": true,
+        "why": "Right: `(a, b) -> a.compareToIgnoreCase(b)` is the same comparator in one line."
+      },
+      {
+        "text": "A local class",
+        "correct": false,
+        "why": "A local class is still a full class declaration, used by one method."
+      }
+    ]
+  },
+  {
+    "id": "ex-fwb9hqsv",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the four kinds from the one tied to nothing to the one that exists only inside a single expression.",
+    "hint": "The table at the end of section 04.",
+    "items": [
+      "static nested class",
+      "inner class",
+      "local class",
+      "anonymous class"
+    ]
+  },
+  {
+    "id": "ex-1qmhxr1e",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `Parser` reads a file and needs a small `Token` type that records the token's text and its position in the file. No token needs to read the parser's fields. Which declaration fits, and what does the wrong choice cost?",
+    "hint": "Count what each token would carry as an inner class.",
+    "choices": [
+      {
+        "text": "An inner class; static nested would make every token share one text",
+        "correct": false,
+        "why": "Fields of a nested object are per object either way; `static` on the class does not make its fields static."
+      },
+      {
+        "text": "A static nested class; as an inner class each of thousands of tokens would also hold the parser",
+        "correct": true,
+        "why": "Right: a hidden `this$0` per token, for a need no token has, and the parser kept alive by any token still referenced."
+      },
+      {
+        "text": "An anonymous class, created once per token inside the read loop",
+        "correct": false,
+        "why": "An anonymous class is one class; using it as a data type gives a type nobody can name in a variable."
+      },
+      {
+        "text": "Either: static and inner differ only in how the class is written",
+        "correct": false,
+        "why": "They differ in a field every object carries, as `javap` showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-at9j8khj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these compiles in `Member.main` as written in the lesson?",
+    "hint": "`main` is static, so it has no `this`.",
+    "choices": [
+      {
+        "text": "`Member.Card c = new Card(9);`",
+        "correct": false,
+        "why": "That was the edited line, and the compiler said `this` cannot be referenced from a static context."
+      },
+      {
+        "text": "`Member.Card c = Member.this.new Card(9);`",
+        "correct": false,
+        "why": "`Member.this` is the outer object of an inner one; in a static method there is none."
+      },
+      {
+        "text": "`Member.Card c = rui.new Card(9);`",
+        "correct": true,
+        "why": "Right: `rui` is an existing member, and it becomes the card's owner."
+      },
+      {
+        "text": "`Member.Card c = new Member.Card(9);`",
+        "correct": false,
+        "why": "The outer name does not supply an outer object; an inner class still needs one."
+      }
+    ]
+  },
+  {
+    "id": "ex-ndnvw5ge",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A local variable that is never changed after it is first set, whether or not it says `final`, is called effectively ___.",
+    "hint": "Two words in English, and the course keeps them in English.",
+    "blanks": [
+      {
+        "accept": [
+          "final"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

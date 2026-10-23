@@ -1,0 +1,608 @@
+{
+  "ex-mj2tnfdj": {
+    "prompt": "O que um ORM escreve por você, a partir das suas structs?",
+    "hint": "Mapeador objeto-relacional.",
+    "choices": [
+      {
+        "text": "Os handlers HTTP que expõem cada struct como rota",
+        "why": "Rotas são assunto da aula 1; um ORM para no banco."
+      },
+      {
+        "text": "A configuração do servidor PostgreSQL para as tabelas que cria",
+        "why": "O servidor é configurado por quem o roda; o GORM só manda comandos."
+      },
+      {
+        "text": "Os comandos SQL",
+        "why": "Certo. Ele cria tabelas, insere, lê e segue relacionamentos a partir dos tipos."
+      },
+      {
+        "text": "Uma cópia do banco guardada em memória entre requisições",
+        "why": "Toda leitura do log foi ao PostgreSQL."
+      }
+    ]
+  },
+  "ex-wvp0v212": {
+    "prompt": "Por que esta aula dá ao GORM um projeto e um banco próprios em vez de mudar o boxoffice para ele?",
+    "hint": "O AutoMigrate cria tabelas.",
+    "choices": [
+      {
+        "text": "O GORM não conecta a um banco que já tem tabelas",
+        "why": "Ele conecta a qualquer banco; a separação é escolha da aula."
+      },
+      {
+        "text": "Porque o GORM e o pgx se recusam a dividir um módulo",
+        "why": "O próprio driver de PostgreSQL do GORM é construído sobre o pgx."
+      },
+      {
+        "text": "Para criar tabelas à vontade e comparar lado a lado",
+        "why": "Certo. Nada nesta aula muda o boxoffice."
+      },
+      {
+        "text": "Porque as tabelas do boxoffice usam um tipo que o GORM não conhece",
+        "why": "integer e text são os tipos mais comuns que há."
+      }
+    ]
+  },
+  "ex-xnncchyc": {
+    "prompt": "O `go mod tidy` no gormlab baixou o `go-sqlite3`. O binário do gormlab o contém?",
+    "hint": "Quem precisava dele?",
+    "choices": [
+      {
+        "text": "Sim, o driver carrega o SQLite como reserva ao iniciar",
+        "why": "Nada nos programas o importa; só o grafo de módulos o cita."
+      },
+      {
+        "text": "Sim, porque o go.mod do gormlab o exige diretamente",
+        "why": "O go.mod listou duas dependências diretas, o GORM e o driver."
+      },
+      {
+        "text": "Não, porque o go mod tidy o apagou depois de baixar",
+        "why": "Ele fica no cache de módulos; só não é ligado."
+      },
+      {
+        "text": "Não: os testes do próprio driver de PostgreSQL o usam",
+        "why": "Certo. Um grafo de módulos vai além do que um programa chama."
+      }
+    ]
+  },
+  "ex-mw8pg42t": {
+    "prompt": "Ligue cada parte dos modelos ao que o GORM leu dela.",
+    "hint": "Convenções, depois tags.",
+    "pairs": [
+      {
+        "left": "`type Event struct`",
+        "right": "a tabela `events`"
+      },
+      {
+        "left": "`EventID uint` mais `Event Event`",
+        "right": "um ingresso pertence a um evento"
+      },
+      {
+        "left": "`Tickets []Ticket`",
+        "right": "um evento tem muitos ingressos"
+      },
+      {
+        "left": "`gorm:\"size:100;not null;uniqueIndex\"`",
+        "right": "varchar(100), not null, um índice único"
+      }
+    ],
+    "right_distractors": [
+      "um CHECK de que sold fica dentro de seats"
+    ]
+  },
+  "ex-y2cs5e4x": {
+    "prompt": "Quais campos o `gorm.Model` embutido acrescenta a `Ticket`? Marque todos que se aplicam.",
+    "hint": "Quatro campos, três deles carimbos de tempo.",
+    "choices": [
+      {
+        "text": "`ID`",
+        "why": "Certo."
+      },
+      {
+        "text": "`CreatedAt` e `UpdatedAt`",
+        "why": "Certo, preenchidos pelo próprio GORM."
+      },
+      {
+        "text": "`DeletedAt`",
+        "why": "Certo, e ele transforma o Delete em soft delete."
+      },
+      {
+        "text": "`EventID`",
+        "why": "Esse a própria struct declara, para o relacionamento."
+      },
+      {
+        "text": "`Version`, para trava otimista",
+        "why": "Esse campo não existe no gorm.Model."
+      }
+    ]
+  },
+  "ex-mxcdaxq8": {
+    "prompt": "Comparando o `events` do AutoMigrate com o `schema.sql` da aula 6, o que falta?",
+    "hint": "A regra que impedia o boxoffice de vender demais.",
+    "choices": [
+      {
+        "text": "O índice único em `name`",
+        "why": "O AutoMigrate criou idx_events_name a partir da tag uniqueIndex."
+      },
+      {
+        "text": "As duas regras CHECK",
+        "why": "Certo. A struct não tinha como dizê-las, então a tabela não as impõe."
+      },
+      {
+        "text": "A chave primária",
+        "why": "PRIMARY KEY (\"id\") está no CREATE TABLE."
+      },
+      {
+        "text": "A chave estrangeira de tickets para events",
+        "why": "fk_events_tickets veio do relacionamento, sem tag pedindo."
+      }
+    ]
+  },
+  "ex-6qftr4v7": {
+    "prompt": "Um campo é removido de uma struct do GORM e o AutoMigrate roda no banco de produção. O que acontece com a coluna?",
+    "hint": "Em que direção o AutoMigrate é cauteloso?",
+    "choices": [
+      {
+        "text": "Ela é apagada, com os dados",
+        "why": "Apagar destruiria dados, e o AutoMigrate nunca apaga coluna."
+      },
+      {
+        "text": "Ela fica, e nada registra que o schema mudou",
+        "why": "Certo. É por isso que a aula 9 troca o AutoMigrate por passos revisados e versionados."
+      },
+      {
+        "text": "O AutoMigrate se recusa a rodar até a coluna ser apagada à mão",
+        "why": "Ele roda; cria o que falta e deixa o resto."
+      },
+      {
+        "text": "A coluna é renomeada para marcá-la como sem uso",
+        "why": "Nenhuma renomeação acontece."
+      }
+    ]
+  },
+  "ex-2y64s23x": {
+    "prompt": "A chamada do GORM que cria as tabelas e índices que faltam a partir das structs se chama ___.",
+    "hint": "cmd/migrate.",
+    "blanks": [
+      {
+        "accept": [
+          "AutoMigrate",
+          "db.AutoMigrate"
+        ]
+      }
+    ]
+  },
+  "ex-x7z7zp88": {
+    "prompt": "Por que `jazz` é passado ao `db.Create` como `&jazz`?",
+    "hint": "Olhe o que o programa imprimiu em seguida.",
+    "choices": [
+      {
+        "text": "Ponteiros deixam o INSERT mais rápido que cópias",
+        "why": "Velocidade não é o motivo; o valor é preenchido."
+      },
+      {
+        "text": "Senão o Create inseriria uma linha vazia",
+        "why": "Uma cópia tem os mesmos campos; a diferença é escrever de volta."
+      },
+      {
+        "text": "O GORM escreve o id novo nele",
+        "why": "Certo. O RETURNING \"id\" voltou e preencheu jazz.ID."
+      },
+      {
+        "text": "O Go recusa passar uma struct por valor para uma interface",
+        "why": "O Go passa structs por valor para interfaces o tempo todo."
+      }
+    ]
+  },
+  "ex-bhyctgsg": {
+    "prompt": "`db.First(&e, jazz.ID)` mandou `... ORDER BY \"events\".\"id\" LIMIT 1`. De onde veio o ORDER BY?",
+    "hint": "O que \"primeiro\" quer dizer para o GORM?",
+    "choices": [
+      {
+        "text": "O PostgreSQL acrescenta a toda consulta com LIMIT",
+        "why": "O PostgreSQL roda o que recebe; a cláusula estava no comando."
+      },
+      {
+        "text": "O logger o inventa para a linha ficar legível",
+        "why": "O logger junta valores ao SQL; não acrescenta cláusulas."
+      },
+      {
+        "text": "O GORM acrescentou: First quer dizer o primeiro pela chave primária",
+        "why": "Certo. Uma decisão visível só no log ou na documentação."
+      },
+      {
+        "text": "A tag primaryKey em ID pede isso",
+        "why": "A tag nomeia a chave; a ordenação é do próprio First."
+      }
+    ]
+  },
+  "ex-979pjm2m": {
+    "prompt": "O log mostra `WHERE seats - sold > 100`, com o número dentro do SQL. O que o PostgreSQL recebeu?",
+    "hint": "Aula 6, seção 07.",
+    "choices": [
+      {
+        "text": "O comando com `$1`, e 100 mandado à parte",
+        "why": "Certo. O logger junta os dois para uma pessoa ler."
+      },
+      {
+        "text": "O mesmo texto, com 100 colado",
+        "why": "Isso seria a consulta colada da aula 6; o GORM manda placeholders."
+      },
+      {
+        "text": "Uma consulta com `?`, que o próprio PostgreSQL preenche",
+        "why": "O GORM transforma cada ? no placeholder do banco, $1 no PostgreSQL."
+      },
+      {
+        "text": "Uma consulta preparada guardada no arquivo de log e reutilizada",
+        "why": "O log é saída para pessoas; o banco nunca o lê."
+      }
+    ]
+  },
+  "ex-m04sf5td": {
+    "prompt": "O log imprimiu o INSERT dos ingressos antes do do evento. A linha do evento foi escrita primeiro?",
+    "hint": "Olhe o event_id nos valores dos ingressos.",
+    "choices": [
+      {
+        "text": "Não: o GORM escreve os filhos primeiro e corrige os ids depois",
+        "why": "Os ingressos já levavam event_id 2 no próprio INSERT."
+      },
+      {
+        "text": "Sim; a linha de log espera o Create inteiro",
+        "why": "Certo. O event_id 2 dos ingressos prova que o evento veio antes."
+      },
+      {
+        "text": "Não: os dois foram mandados num comando só",
+        "why": "O log mostra dois INSERTs em duas tabelas."
+      },
+      {
+        "text": "Sim, e a ordem do log é aleatória",
+        "why": "A ordem tem causa: quando cada operação termina."
+      }
+    ]
+  },
+  "ex-610jfj3j": {
+    "prompt": "Ligue cada jeito de carregar um relacionamento ao que ele mandou.",
+    "hint": "Um deles não manda nada a mais.",
+    "pairs": [
+      {
+        "left": "`Preload(\"Tickets\")`",
+        "right": "uma segunda consulta em tickets por event_id"
+      },
+      {
+        "left": "`Joins(\"Event\")`",
+        "right": "uma consulta com LEFT JOIN e colunas renomeadas"
+      },
+      {
+        "left": "um `First` simples",
+        "right": "o evento sozinho, Tickets vazio"
+      }
+    ],
+    "right_distractors": [
+      "uma consulta por ingresso"
+    ]
+  },
+  "ex-55q3ymkr": {
+    "prompt": "Para carregar um ingresso junto com o evento a que ele pertence, o que serve melhor?",
+    "hint": "Belongs to, ou has many?",
+    "choices": [
+      {
+        "text": "`Preload(\"Tickets\")`",
+        "why": "Isso carrega os muitos ingressos de um evento, o outro sentido."
+      },
+      {
+        "text": "Um laço que chama First em events para cada ingresso",
+        "why": "Esse é o formato N+1 da seção 06."
+      },
+      {
+        "text": "`Joins(\"Event\")`",
+        "why": "Certo. Um ingresso, um evento: uma consulta com LEFT JOIN."
+      },
+      {
+        "text": "AutoMigrate com o modelo Event passado primeiro",
+        "why": "O AutoMigrate monta tabelas; não carrega linhas."
+      }
+    ]
+  },
+  "ex-rdeg4j97": {
+    "prompt": "Quantas consultas o laço mandou para somar os lugares dos 20 recitais?",
+    "hint": "Uma para a lista, uma por evento.",
+    "unit": "consultas"
+  },
+  "ex-d0fmg5wd": {
+    "prompt": "E com `Preload`?",
+    "hint": "Eventos, depois todos os ingressos.",
+    "unit": "consultas"
+  },
+  "ex-12b0h6fb": {
+    "prompt": "Com código N+1, uma lista de 1.000 eventos custa quantas consultas?",
+    "hint": "N mais um.",
+    "choices": [
+      {
+        "text": "2, porque o GORM agrupa o laço sozinho",
+        "why": "Só o Preload agrupa; um laço de Find continua laço."
+      },
+      {
+        "text": "1.001, uma ida e volta cada",
+        "why": "Certo. Cresce com os dados, por isso o desenvolvimento nunca mostra."
+      },
+      {
+        "text": "21, o mesmo que com vinte eventos",
+        "why": "A contagem acompanha o número de eventos."
+      },
+      {
+        "text": "1, já que todas as linhas estão numa tabela",
+        "why": "Cada volta do laço mandou a própria consulta."
+      }
+    ]
+  },
+  "ex-f0qx50vm": {
+    "prompt": "Um endpoint é rápido no desenvolvimento e lento em produção, e o tempo cresce com quantos itens ele devolve. Qual o jeito mais barato de confirmar N+1?",
+    "hint": "A ferramenta que esta aula usou o tempo todo.",
+    "choices": [
+      {
+        "text": "Pôr índice em toda chave estrangeira e medir de novo",
+        "why": "Um índice barateia cada consulta, e a contagem continua igual."
+      },
+      {
+        "text": "Dar mais memória ao banco de produção",
+        "why": "O custo são idas e voltas, que memória não remove."
+      },
+      {
+        "text": "Contar as consultas que o endpoint manda, pelo log de consultas",
+        "why": "Certo, e um teste que confere essa contagem pega o problema no dia em que é escrito."
+      },
+      {
+        "text": "Pôr o logger em Silent para custar menos",
+        "why": "Isso esconde a evidência; o log não é a parte lenta."
+      }
+    ]
+  },
+  "ex-b6zfv9jf": {
+    "prompt": "Mesmo com Preload, o programa trouxe cada linha de ingresso para o Go para somar números. Qual é a resposta melhor segundo a seção?",
+    "hint": "Quem soma linhas melhor?",
+    "choices": [
+      {
+        "text": "Carregar os ingressos em goroutines paralelas",
+        "why": "Toda linha ainda atravessa para o Go; o banco soma sozinho."
+      },
+      {
+        "text": "Um SUM com GROUP BY em SQL, um número por evento",
+        "why": "Certo. Fácil em SQL, desajeitado pelo ORM."
+      },
+      {
+        "text": "Guardar as linhas de ingresso num mapa Go",
+        "why": "Um cache não reduz o que a primeira carga traz."
+      },
+      {
+        "text": "Usar Joins em vez de Preload",
+        "why": "Joins ainda devolve toda linha de ingresso, agora com colunas do evento ao lado."
+      }
+    ]
+  },
+  "ex-33pqnfjg": {
+    "prompt": "`db.Model(&e).Updates(models.Event{Sold: 0})` deixou `sold` em 2. Por quê?",
+    "hint": "Algum UPDATE foi mandado?",
+    "choices": [
+      {
+        "text": "Uma transação desfez a mudança",
+        "why": "Nenhum UPDATE foi mandado; não havia nada para desfazer."
+      },
+      {
+        "text": "A restrição CHECK recusou sold igual a zero",
+        "why": "Zero é válido, e a tabela do gormlab nem tem esse CHECK."
+      },
+      {
+        "text": "O Updates precisa da chave primária dentro da struct literal",
+        "why": "O Model(&e) fornece a chave; o zero é que foi pulado."
+      },
+      {
+        "text": "Com struct, o GORM pula campos em valor zero",
+        "why": "Certo. Nomeie a coluna, use um mapa, ou um Select para escrever um zero."
+      }
+    ]
+  },
+  "ex-dnmwksx5": {
+    "prompt": "Depois de `db.Delete(&t)` num ingresso, o `psql` ainda mostra a linha. O que aconteceu?",
+    "hint": "Ticket embute gorm.Model.",
+    "choices": [
+      {
+        "text": "O DELETE falhou em silêncio na chave estrangeira",
+        "why": "O log mostra um UPDATE pondo deleted_at, não um DELETE."
+      },
+      {
+        "text": "O GORM carimbou deleted_at; a linha fica",
+        "why": "Certo. Soft delete: as consultas do GORM acrescentam deleted_at IS NULL, e o psql não sabe disso."
+      },
+      {
+        "text": "O psql lê de uma cópia atrasada",
+        "why": "Há um banco só; o psql leu a mesma linha que o GORM carimbou."
+      },
+      {
+        "text": "O Delete precisa de Unscoped() para rodar",
+        "why": "Ele rodou; o Unscoped() é que o transforma num DELETE de verdade."
+      }
+    ]
+  },
+  "ex-xsq00rbt": {
+    "prompt": "Um script de relatório em Python lê a tabela `tickets` diretamente. O que o soft delete do GORM faz com os números dele?",
+    "hint": "Onde mora a regra?",
+    "choices": [
+      {
+        "text": "Nada: o PostgreSQL esconde linhas com deleted_at preenchido",
+        "why": "O banco não conhece essa regra; o psql mostrou a linha carimbada."
+      },
+      {
+        "text": "Conta ingressos apagados como vivos",
+        "why": "Certo. A regra mora no GORM, não no banco."
+      },
+      {
+        "text": "Ele falha, porque as linhas apagadas ficam travadas",
+        "why": "Nada fica travado; são linhas comuns com um carimbo."
+      },
+      {
+        "text": "Ele não vê nada, porque o GORM as moveu para outra tabela",
+        "why": "Elas ficam em tickets."
+      }
+    ]
+  },
+  "ex-c8m76txa": {
+    "prompt": "`db.Delete(&models.Event{})` não nomeia linha. O que o GORM fez?",
+    "hint": "A linha de log termina com rows:0.",
+    "choices": [
+      {
+        "text": "Apagou todos os eventos",
+        "why": "É exatamente isso que a proteção impede."
+      },
+      {
+        "text": "Recusou: WHERE conditions required",
+        "why": "Certo. Montou o comando e não o mandou."
+      },
+      {
+        "text": "Apagou o evento de id 0",
+        "why": "Não havia condição nenhuma, nem uma em id 0."
+      },
+      {
+        "text": "Fez soft delete de todos os eventos pondo deleted_at",
+        "why": "Event não tem gorm.Model nem deleted_at; e a chamada foi recusada."
+      }
+    ]
+  },
+  "ex-e86vj4dz": {
+    "prompt": "Ligue cada chamada, sem linha correspondente, ao que ela devolveu.",
+    "hint": "Um espera uma linha, o outro uma lista.",
+    "pairs": [
+      {
+        "left": "`First`",
+        "right": "`record not found`"
+      },
+      {
+        "left": "`Find` numa slice",
+        "right": "nenhum erro e tamanho 0"
+      }
+    ],
+    "right_distractors": [
+      "um pânico de ponteiro nil"
+    ]
+  },
+  "ex-13w3nkeh": {
+    "prompt": "Num handler, qual chamada e verificação dão o 404 da aula 3 para um evento ausente?",
+    "hint": "Seção 07, armadilha 4.",
+    "choices": [
+      {
+        "text": "`First` e `errors.Is(err, gorm.ErrRecordNotFound)`",
+        "why": "Certo."
+      },
+      {
+        "text": "`Find` e uma verificação de que o erro não é nil",
+        "why": "O Find não devolve erro sem linha, então o 404 escapa."
+      },
+      {
+        "text": "`Unscoped().Find` e uma verificação de tamanho",
+        "why": "O Unscoped também devolveria linhas com soft delete."
+      },
+      {
+        "text": "`First` e uma verificação de que o ID é maior que zero",
+        "why": "O erro diz o que aconteceu; ler o ID zero é adivinhar."
+      }
+    ]
+  },
+  "ex-5g856ycw": {
+    "prompt": "Qual serviço ganha mais com o GORM?",
+    "hint": "Aquilo para que um ORM foi inventado.",
+    "choices": [
+      {
+        "text": "Um serviço de relatórios cujos endpoints são agregações e funções de janela",
+        "why": "Quando as consultas são o produto, o SQL fica melhor escrito à mão."
+      },
+      {
+        "text": "Um banco que outros programas compartilham",
+        "why": "As convenções do GORM, como o soft delete, moram no GORM."
+      },
+      {
+        "text": "Uma ferramenta administrativa interna com trinta tabelas e um formulário cada",
+        "why": "Certo. Criar, ler, atualizar e apagar simples, escritos corretamente para você."
+      },
+      {
+        "text": "Um caminho crítico afinado consulta por consulta",
+        "why": "Todo comando é gerado; achar o lento quer dizer ler o log."
+      }
+    ]
+  },
+  "ex-fccbhq4h": {
+    "prompt": "Por que o boxoffice continua no código pgx da aula 6?",
+    "hint": "A operação mais importante dele.",
+    "choices": [
+      {
+        "text": "O GORM não usa o UPDATE ... RETURNING do PostgreSQL",
+        "why": "O log mostrou o próprio GORM escrevendo RETURNING."
+      },
+      {
+        "text": "O GORM é mais lento que o pgx para uma tabela",
+        "why": "A aula não mediu velocidade; o motivo é visibilidade."
+      },
+      {
+        "text": "A licença do GORM proíbe venda comercial de ingressos",
+        "why": "Nada na aula trata de licenças."
+      },
+      {
+        "text": "Um ORM esconderia o UPDATE-chave dele",
+        "why": "Certo. Uma escolha sobre este serviço, não um veredito sobre o GORM."
+      }
+    ]
+  },
+  "ex-smnje65a": {
+    "prompt": "Um produto precisa mesmo rodar em PostgreSQL e em MySQL. Como isso pesa na escolha do GORM?",
+    "hint": "A última linha da primeira tabela.",
+    "choices": [
+      {
+        "text": "A favor: SQL portável é um lugar onde ele cabe",
+        "why": "Certo, ao custo das regras próprias dele."
+      },
+      {
+        "text": "Contra: o GORM suporta um banco por programa",
+        "why": "Uma API para vários bancos está entre o que ele dá."
+      },
+      {
+        "text": "Nenhum: o banco é irrelevante para um ORM",
+        "why": "O dialeto importa, e o GORM o escreve por banco."
+      },
+      {
+        "text": "Contra: o MySQL exige AutoMigrate desligado",
+        "why": "Nada na aula diz isso."
+      }
+    ]
+  },
+  "ex-h93702cw": {
+    "prompt": "Ponha em ordem o que o `db.Create(&choir)` fez, do primeiro comando ao que o programa pôde ler depois.",
+    "hint": "O evento precisa de um id antes dos ingressos.",
+    "items": [
+      "INSERT do evento, com RETURNING id",
+      "Escrever o id novo, 2, no EventID de cada ingresso",
+      "INSERT dos dois ingressos num comando de várias linhas",
+      "Registrar o comando do evento quando o Create inteiro termina"
+    ],
+    "trap": "A ordem do log não é a ordem de execução."
+  },
+  "ex-c0yxkhsk": {
+    "prompt": "Um colega pede ao GORM para cancelar uma venda pondo `Quantity` em 0 com `Updates(models.Ticket{Quantity: 0})`, e depois apaga o ingresso com `Delete`. O que fica na tabela?",
+    "hint": "Duas armadilhas de uma vez.",
+    "choices": [
+      {
+        "text": "A linha com a quantity antiga e um carimbo em deleted_at",
+        "why": "Certo: o zero foi pulado e o delete foi soft."
+      },
+      {
+        "text": "Nenhuma linha: o ingresso sumiu",
+        "why": "Ticket embute gorm.Model, então o Delete só carimba deleted_at."
+      },
+      {
+        "text": "A linha, com quantity 0 e deleted_at preenchido",
+        "why": "O zero foi pulado pelo Updates; quantity nunca mudou."
+      },
+      {
+        "text": "Um erro: o Delete é recusado depois de um Updates",
+        "why": "O Delete nomeia esta linha pela chave; nada o recusa."
+      }
+    ]
+  }
+}

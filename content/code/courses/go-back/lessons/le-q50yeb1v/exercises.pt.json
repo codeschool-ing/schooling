@@ -1,0 +1,635 @@
+{
+  "ex-en6kjkk7": {
+    "prompt": "Antes do Go 1.22, por que uma rota como `GET /events/{id}` precisava de um roteador de fora da biblioteca padrão, ou de código extra no handler?",
+    "hint": "Aula 1, seção 05.",
+    "choices": [
+      {
+        "text": "O `net/http` não tinha como escrever respostas JSON na época",
+        "why": "O `encoding/json` escreve em qualquer writer; JSON nunca foi a lacuna."
+      },
+      {
+        "text": "O `ServeMux` não casava nem métodos nem curingas",
+        "why": "Certo. O handler de `/events/` tinha de conferir `r.Method` e recortar o id do caminho sozinho."
+      },
+      {
+        "text": "O servidor padrão recusava caminhos com mais de um segmento",
+        "why": "Padrões de subárvore como `/events/` casavam todo caminho abaixo deles."
+      },
+      {
+        "text": "Um handler não conseguia ler o método da requisição antes da 1.22",
+        "why": "O `r.Method` sempre esteve lá; o mux só não roteava por ele."
+      }
+    ]
+  },
+  "ex-7ajmqj32": {
+    "prompt": "Ligue cada projeto ao que ele trouxe.",
+    "hint": "A tabela da seção 02.",
+    "pairs": [
+      {
+        "left": "`julienschmidt/httprouter`",
+        "right": "parâmetros `:id` casados numa árvore; o roteador do Gin começou como cópia"
+      },
+      {
+        "left": "`gorilla/mux`",
+        "right": "expressões regulares e casamento por host; arquivado em 2022, retomado em 2023"
+      },
+      {
+        "left": "`go-chi/chi`",
+        "right": "handlers que continuam `http.Handler`, middleware no formato padrão"
+      }
+    ],
+    "right_distractors": [
+      "handlers que rodam sobre fasthttp"
+    ]
+  },
+  "ex-vwkv60gn": {
+    "prompt": "O que um framework traz que um roteador sozinho não traz?",
+    "hint": "A seção 02 lista quatro coisas.",
+    "choices": [
+      {
+        "text": "Casamento por método, para `GET` e `POST` num caminho chegarem a códigos diferentes",
+        "why": "Um roteador já faz isso; o httprouter fazia em 2013."
+      },
+      {
+        "text": "Decodificar um corpo numa struct com validação por tags, e um lugar central onde erros viram respostas",
+        "why": "Certo, mais um tipo de requisição próprio e um catálogo de middlewares."
+      },
+      {
+        "text": "Um compilador mais rápido",
+        "why": "Toda versão aqui foi compilada pelo mesmo `go build`."
+      },
+      {
+        "text": "Curingas nos caminhos, lidos de volta por nome dentro do handler que casou",
+        "why": "Roteadores tinham isso muito antes de frameworks os embutirem."
+      }
+    ]
+  },
+  "ex-68ngyv99": {
+    "prompt": "Por que a API de referência foi escrita na biblioteca padrão antes de qualquer framework?",
+    "hint": "Uma comparação precisa de uma base.",
+    "choices": [
+      {
+        "text": "Porque um framework se recusa a compilar a menos que uma versão da mesma API na biblioteca padrão esteja ao lado",
+        "why": "Cada versão com framework é um programa próprio."
+      },
+      {
+        "text": "Para ser copiada para o boxoffice",
+        "why": "O boxoffice mantém o estilo dele; esta é o estilo simples da aula 1."
+      },
+      {
+        "text": "Porque ela é a mais rápida das cinco, e as outras são medidas contra a velocidade dela",
+        "why": "Nenhuma velocidade foi medida nesta aula."
+      },
+      {
+        "text": "Para que o que difere entre as versões seja o framework, com o mesmo store, verificação e status",
+        "why": "Certo. Toda versão mantém as mesmas regras e recebe as mesmas seis perguntas."
+      }
+    ]
+  },
+  "ex-snda8emd": {
+    "prompt": "O que o `gin.Default()` acopla ao roteador antes de você registrar uma única rota?",
+    "hint": "O primeiro aviso dele diz.",
+    "choices": [
+      {
+        "text": "CORS para toda origem e uma checagem de token em toda rota",
+        "why": "Nenhum dos dois é acoplado por padrão."
+      },
+      {
+        "text": "Um log e uma recuperação de pânico",
+        "why": "Certo, os dois middlewares que a aula 2 escreveu à mão."
+      },
+      {
+        "text": "Um `http.Server` com os quatro timeouts da aula 1",
+        "why": "O `r.Run` usa `http.ListenAndServe`, sem timeout nenhum."
+      },
+      {
+        "text": "Um validador para toda struct",
+        "why": "A validação roda quando o `ShouldBindJSON` lê tags `binding`, não como middleware."
+      }
+    ]
+  },
+  "ex-1tszht6j": {
+    "prompt": "`curl -X DELETE localhost:8080/events/1` contra a versão Gin responde 404. O que explica isso?",
+    "hint": "O roteador do Gin sabe dizer 405.",
+    "choices": [
+      {
+        "text": "O evento 1 foi apagado por uma requisição anterior",
+        "why": "Não existe rota de delete; o evento ainda respondeu `GET` um instante antes."
+      },
+      {
+        "text": "O Gin só suporta os métodos `GET` e `POST`",
+        "why": "O Gin registra rotas `r.DELETE` como qualquer outra."
+      },
+      {
+        "text": "`HandleMethodNotAllowed` vem desligado",
+        "why": "Certo. Ligado, o método errado recebe 405; desligado, o cliente ouve que o evento não existe."
+      },
+      {
+        "text": "O padrão de caminho `:id` recusa números",
+        "why": "`GET /events/1` casou com ele e respondeu 200."
+      }
+    ]
+  },
+  "ex-4bn8vbe8": {
+    "prompt": "O Gin respondeu uma quantidade de 40 com `Key: 'purchase.Quantity' Error:Field validation for 'Quantity' failed on the 'max' tag`. O que há de errado nisso como resposta para um cliente?",
+    "hint": "De quem são os nomes nela?",
+    "choices": [
+      {
+        "text": "Ela nomeia campos de struct Go e nomes de tag, o vocabulário do servidor e não o do cliente",
+        "why": "Certo. O Gin dá as regras de graça e deixa a tradução da mensagem com você."
+      },
+      {
+        "text": "Nada: ela nomeia a chave JSON que o cliente mandou",
+        "why": "O cliente mandou `quantity`; a mensagem diz `purchase.Quantity`."
+      },
+      {
+        "text": "Ela veio com status 500",
+        "why": "O handler escolheu 422 para erros de binding."
+      },
+      {
+        "text": "Ela vaza o token",
+        "why": "Nenhum token está envolvido nesta rota."
+      }
+    ]
+  },
+  "ex-5tvmqzmn": {
+    "prompt": "Um serviço Gin limita a taxa de cada cliente pelo `c.ClientIP()` e deixa os proxies confiáveis no padrão. O que um cliente abusivo faz?",
+    "hint": "O aviso sobre proxies.",
+    "choices": [
+      {
+        "text": "Nada: o limite usa o endereço TCP",
+        "why": "Por padrão o `ClientIP` acredita no `X-Forwarded-For` de qualquer um."
+      },
+      {
+        "text": "Muda o `GIN_MODE` para `debug`",
+        "why": "Isso é o ambiente do servidor, fora do alcance de um cliente."
+      },
+      {
+        "text": "Manda requisições sem corpo",
+        "why": "Um corpo ausente não muda nada sobre quem o cliente parece ser."
+      },
+      {
+        "text": "Manda um `X-Forwarded-For` diferente a cada requisição e parece um cliente novo toda vez",
+        "why": "Certo. O `SetTrustedProxies` nomeia de quem o cabeçalho vale."
+      }
+    ]
+  },
+  "ex-7ypgw2ta": {
+    "prompt": "Você mantém o Gin e quer os quatro timeouts da aula 1. O que você faz?",
+    "hint": "Um engine do Gin é um `http.Handler`.",
+    "choices": [
+      {
+        "text": "Chamar `r.Run` com uma string de endereço mais longa",
+        "why": "O `Run` chama `http.ListenAndServe`, que não tem timeouts seja qual for o endereço."
+      },
+      {
+        "text": "Definir `GIN_MODE=release`",
+        "why": "O modo release cala as notas de debug e não define prazo nenhum."
+      },
+      {
+        "text": "Pôr o engine no campo `Handler` de um `http.Server` e nunca chamar `Run`",
+        "why": "Certo, o mesmo servidor que o boxoffice já monta."
+      },
+      {
+        "text": "Acrescentar a tag de binding `ReadHeaderTimeout`",
+        "why": "Tags de binding validam corpos; não têm nada a ver com a conexão."
+      }
+    ]
+  },
+  "ex-w2t8pg68": {
+    "prompt": "Quantos módulos além do próprio programa o `go list -m all` nomeou para a versão Gin?",
+    "hint": "A tabela da seção 07.",
+    "unit": "módulos"
+  },
+  "ex-99jxm7kw": {
+    "prompt": "Qual é a ideia central do Echo sobre falhas?",
+    "hint": "Olhe o tipo de retorno dos handlers.",
+    "choices": [
+      {
+        "text": "Erros são pânicos, e um middleware de recuperação em volta do servidor inteiro transforma cada um em resposta",
+        "why": "Handlers do Echo dão `return` em erros; nada entra em pânico."
+      },
+      {
+        "text": "Erros são escritos como páginas HTML",
+        "why": "Isso foi o Beego. O Echo respondeu JSON."
+      },
+      {
+        "text": "Um handler devolve o erro, e um tratador de erros para o servidor inteiro o transforma em resposta",
+        "why": "Certo, o formato que a aula 3 montou com o `fail`, dentro do framework."
+      },
+      {
+        "text": "Cada handler escreve o próprio formato de erro na resposta e depois devolve um valor vazio",
+        "why": "Esse é o jeito da biblioteca padrão, e o que o Echo leva para um lugar só."
+      }
+    ]
+  },
+  "ex-t4r5ms9j": {
+    "prompt": "A versão Echo respondeu o corpo `{\"quantity\": \"two\"}` com `{\"message\":\"Bad Request\"}`. Para onde foi o detalhe?",
+    "hint": "Leia o log do servidor.",
+    "choices": [
+      {
+        "text": "Para lugar nenhum: o Echo descarta erros de decodificação",
+        "why": "A linha de log o traz inteiro."
+      },
+      {
+        "text": "Para um cabeçalho da resposta",
+        "why": "Os cabeçalhos não trazem nada disso."
+      },
+      {
+        "text": "Para o cliente, numa segunda resposta",
+        "why": "Uma requisição recebe uma resposta."
+      },
+      {
+        "text": "Para o log do servidor",
+        "why": "Certo. O Echo guarda o texto do erro de decodificação para o operador, o padrão cauteloso."
+      }
+    ]
+  },
+  "ex-7s6h60nj": {
+    "prompt": "Qual dos quatro respondeu um caminho desconhecido com JSON, sem ninguém escrever um formato?",
+    "hint": "O tratador central de erros.",
+    "choices": [
+      {
+        "text": "Gin",
+        "why": "O 404 do Gin foi texto puro."
+      },
+      {
+        "text": "Fiber",
+        "why": "O tratador de erros padrão do Fiber escreve texto."
+      },
+      {
+        "text": "Beego",
+        "why": "O Beego mandou uma página HTML de 2.000 bytes."
+      },
+      {
+        "text": "Echo",
+        "why": "Certo, `{\"message\":\"Not Found\"}`, e o 405 dele manteve o cabeçalho `Allow`."
+      }
+    ]
+  },
+  "ex-mnxa5qfy": {
+    "prompt": "No Echo v5, a assinatura de um handler é `func(c *echo.Context) ___`.",
+    "hint": "O que todo handler devolve?",
+    "blanks": [
+      {
+        "accept": [
+          "error"
+        ]
+      }
+    ]
+  },
+  "ex-6gj9jpwd": {
+    "prompt": "Um time quer erros JSON em toda rota, incluindo caminhos desconhecidos, sem perder o 405, e quer poucas dependências. Qual versão desta aula serve melhor como foi escrita?",
+    "hint": "Compare as linhas da segunda tabela.",
+    "choices": [
+      {
+        "text": "A biblioteca padrão",
+        "why": "O 404 e o 405 do mux são texto, e a aula 3 mostrou que um pega-tudo custa o 405."
+      },
+      {
+        "text": "Gin, porque tem mais estrelas e as tags de binding",
+        "why": "O Gin responde método errado com um 404 em texto por padrão e traz 55 módulos."
+      },
+      {
+        "text": "Echo",
+        "why": "Certo: JSON para o 405 e o 404 por padrão, e oito módulos além do seu."
+      },
+      {
+        "text": "Beego, porque traz a pilha inteira",
+        "why": "O 404 padrão dele é HTML e ele traz 102 módulos."
+      }
+    ]
+  },
+  "ex-p3heypaq": {
+    "prompt": "Sobre o que o Fiber é construído?",
+    "hint": "Não o que os outros três compartilham.",
+    "choices": [
+      {
+        "text": "`fasthttp`",
+        "why": "Certo, uma implementação HTTP separada escrita para velocidade."
+      },
+      {
+        "text": "`net/http`, como Gin e Echo",
+        "why": "É exatamente o que o Fiber não é."
+      },
+      {
+        "text": "`httprouter`, o roteador de que o Gin partiu",
+        "why": "Essa é a ascendência do Gin."
+      },
+      {
+        "text": "O Express, compilado para Go a partir do código JavaScript",
+        "why": "O Fiber copia o estilo da API do Express, não o código dele."
+      }
+    ]
+  },
+  "ex-834e7ayt": {
+    "prompt": "Um handler do Fiber guarda `c.Params(\"id\")` num mapa lido depois por uma goroutine em segundo plano, e alguns ids guardados viram outros valores. Por quê?",
+    "hint": "De onde vem a memória daquela string?",
+    "choices": [
+      {
+        "text": "O mapa precisa de um mutex",
+        "why": "Uma corrida corromperia o mapa, não transformaria um id em outro de uma requisição posterior."
+      },
+      {
+        "text": "O `c.Params` devolve um id aleatório",
+        "why": "Ele devolve o segmento do caminho, naquele momento."
+      },
+      {
+        "text": "O Fiber reinicia entre requisições",
+        "why": "Um processo serviu todas as requisições; o banner saiu uma vez."
+      },
+      {
+        "text": "A string aponta para um buffer que a próxima requisição reaproveita; ela precisa ser copiada antes",
+        "why": "Certo. A documentação do Fiber avisa disso e tem uma configuração que copia todo valor."
+      }
+    ]
+  },
+  "ex-pzr177rn": {
+    "prompt": "Quais destas decorrem de um handler do Fiber não ser um `http.Handler`? Marque todas as que se aplicam.",
+    "hint": "A lista da seção 05.",
+    "choices": [
+      {
+        "text": "Os middlewares da aula 2 não encaixam diretamente",
+        "why": "Certo. O Fiber traz um pacote adaptador e os próprios middlewares."
+      },
+      {
+        "text": "O `httptest` não serve como está; o `app.Test` o substitui",
+        "why": "Certo. Os testes de handler da aula 15 usam `httptest`."
+      },
+      {
+        "text": "O servidor não fala HTTP/2",
+        "why": "Certo. O `fasthttp` não tem, e o `net/http` tem sem ninguém pedir."
+      },
+      {
+        "text": "Respostas JSON são recusadas",
+        "why": "O `c.JSON` respondeu o evento como JSON."
+      },
+      {
+        "text": "Handlers têm de não devolver nada",
+        "why": "Handlers do Fiber devolvem um `error`, como os do Echo."
+      }
+    ]
+  },
+  "ex-h6bm6hrk": {
+    "prompt": "O Fiber respondeu uma quantidade inválida com `quantity must be between 1 and 10`, sem JSON em volta. O que o faria responder JSON?",
+    "hint": "Quem escreve o erro?",
+    "choices": [
+      {
+        "text": "Usar `fiber.Map` em vez de `fiber.NewError` em todo handler",
+        "why": "Isso leva o formato de volta para cada handler, o que um tratador central evita."
+      },
+      {
+        "text": "Mandar a requisição com `--json`",
+        "why": "Ela foi mandada com `--json`; isso descreve a requisição, não a resposta."
+      },
+      {
+        "text": "Um tratador de erros próprio no `fiber.Config`",
+        "why": "Certo. O padrão escreve `err.Error()` como texto."
+      },
+      {
+        "text": "Atualizar para o Fiber v4",
+        "why": "A aula usou a v3.6.1 e não citou outra versão."
+      }
+    ]
+  },
+  "ex-an8bk3v8": {
+    "prompt": "Que tipo de framework é o Beego?",
+    "hint": "Rails e Django.",
+    "choices": [
+      {
+        "text": "Um roteador na tradição do httprouter, que deixa o ORM e a configuração com você",
+        "why": "Isso descreve o httprouter ou o chi."
+      },
+      {
+        "text": "Um invólucro do fasthttp que copia a API do Express para quem vem do Node.js",
+        "why": "Esse é o Fiber; o Beego roda sobre `net/http`."
+      },
+      {
+        "text": "Um framework MVC full-stack com ORM, configuração, sessões, cache e a ferramenta `bee`",
+        "why": "Certo. O roteamento é uma parte do que ele traz."
+      },
+      {
+        "text": "Uma biblioteca de validação",
+        "why": "Essa é a `go-playground/validator`."
+      }
+    ]
+  },
+  "ex-cmsar0mq": {
+    "prompt": "Um cliente JSON chama um caminho desconhecido na versão Beego. O que ele recebe?",
+    "hint": "A transcrição da seção 06.",
+    "choices": [
+      {
+        "text": "`{\"error\":\"no such event\"}`",
+        "why": "Esse é o 404 do handler para um evento; nenhum handler rodou aqui."
+      },
+      {
+        "text": "Um 405 com `Allow: GET`, como o mux da biblioteca padrão teria respondido a mesma requisição",
+        "why": "O Beego respondeu até o método errado com o 404 em HTML."
+      },
+      {
+        "text": "Uma resposta vazia, a conexão fechada sem linha de status nem cabeçalhos",
+        "why": "O corpo foi uma página inteira."
+      },
+      {
+        "text": "Uma página 404 de 2.000 bytes de HTML, feita com beego 2.0.0",
+        "why": "Certo, feita para uma pessoa num navegador, e nomeando uma versão que o módulo não é."
+      }
+    ]
+  },
+  "ex-5m3nmmgs": {
+    "prompt": "O log do Beego começa reclamando de `conf/app.conf`. O que isso te diz?",
+    "hint": "O layout de quem está faltando?",
+    "choices": [
+      {
+        "text": "O servidor não subiu",
+        "why": "A linha seguinte diz que ele está rodando, e ele respondeu toda requisição."
+      },
+      {
+        "text": "As rotas foram lidas daquele arquivo",
+        "why": "Elas foram registradas no `main` com `web.Get` e `web.Post`."
+      },
+      {
+        "text": "O download do módulo falhou",
+        "why": "O programa compilou e rodou; é um aviso em tempo de execução."
+      },
+      {
+        "text": "O Beego espera um projeto organizado do jeito dele, arquivo de configuração incluído",
+        "why": "Certo. Um framework full-stack pressupõe uma estrutura."
+      }
+    ]
+  },
+  "ex-0pmz8ngh": {
+    "prompt": "Por que a versão Beego precisa de `web.BConfig.CopyRequestBody = true`?",
+    "hint": "O handler lê `ctx.Input.RequestBody`.",
+    "choices": [
+      {
+        "text": "Sem isso o `ctx.Input.RequestBody` não guarda o corpo",
+        "why": "Certo, uma configuração do objeto de configuração global do Beego."
+      },
+      {
+        "text": "Limita o corpo a 1 MiB",
+        "why": "Isso foi o `MaxBytesReader` da aula 3, no boxoffice."
+      },
+      {
+        "text": "Faz o Beego decodificar JSON em vez de formulários",
+        "why": "O próprio handler decodifica com `json.Unmarshal`."
+      },
+      {
+        "text": "Desliga as páginas de erro HTML para toda rota do programa",
+        "why": "O 404 em HTML ainda chegou com essa configuração ligada."
+      }
+    ]
+  },
+  "ex-qeb0968p": {
+    "prompt": "O `cat -v` mostra `^[[1;34m[I]^[[0m` no log do Beego. O que são esses caracteres?",
+    "hint": "`^[` é o caractere de escape.",
+    "choices": [
+      {
+        "text": "Bytes de um arquivo de log corrompido por dois processos escrevendo nele ao mesmo tempo",
+        "why": "São sequências de escape deliberadas."
+      },
+      {
+        "text": "O id que o Beego dá a cada requisição, para as linhas dela serem agrupadas depois",
+        "why": "O `[I]` marca o nível, informação."
+      },
+      {
+        "text": "Códigos de cor de terminal, escritos sem nenhum terminal olhando",
+        "why": "Certo. Um log feito para máquina não deveria contê-los."
+      },
+      {
+        "text": "Texto compactado",
+        "why": "Nada no log é compactado."
+      }
+    ]
+  },
+  "ex-ahjkw4w8": {
+    "prompt": "Ligue cada versão ao tamanho do binário.",
+    "hint": "A primeira tabela da seção 07.",
+    "pairs": [
+      {
+        "left": "biblioteca padrão",
+        "right": "9,8 MB"
+      },
+      {
+        "left": "Gin",
+        "right": "31,6 MB"
+      },
+      {
+        "left": "Echo",
+        "right": "11,1 MB"
+      },
+      {
+        "left": "Beego",
+        "right": "21,7 MB"
+      }
+    ],
+    "right_distractors": [
+      "15,3 MB"
+    ]
+  },
+  "ex-3mra3zwt": {
+    "prompt": "Entre as cinco versões, que medida quase não se moveu?",
+    "hint": "Três números foram lidos de cada uma.",
+    "choices": [
+      {
+        "text": "Os módulos no grafo de módulos de cada programa",
+        "why": "De 0 a 102 além do seu."
+      },
+      {
+        "text": "As linhas não vazias do `main.go`",
+        "why": "Certo, de 60 a 75: um framework economizou umas doze linhas aqui."
+      },
+      {
+        "text": "O tamanho em bytes de cada binário que o `go build` escreveu",
+        "why": "De 9,8 MB a 31,6 MB."
+      },
+      {
+        "text": "O número de rotas",
+        "why": "Toda versão tem as mesmas duas, de propósito."
+      }
+    ]
+  },
+  "ex-rts79d8z": {
+    "prompt": "Segundo a aula, qual é o custo de verdade de um framework?",
+    "hint": "Não os bytes.",
+    "choices": [
+      {
+        "text": "Os bytes de um binário maior",
+        "why": "A aula diz explicitamente: não os bytes."
+      },
+      {
+        "text": "As linhas extras que cada handler precisa",
+        "why": "Os frameworks economizaram linhas em vez de acrescentá-las."
+      },
+      {
+        "text": "Uma taxa de licença",
+        "why": "Os quatro são gratuitos; licenças só aparecem como algo a aprovar."
+      },
+      {
+        "text": "Comportamentos que você não escolheu",
+        "why": "Certo: o 404 do Gin para método errado, o detalhe escondido do Echo, a página HTML do Beego."
+      }
+    ]
+  },
+  "ex-7dw3z8gw": {
+    "prompt": "O serviço que o seu time já tem é escrito em Gin, e você vai acrescentar um segundo serviço. O que a aula aconselha?",
+    "hint": "A primeira frase de \"Qual, se algum\".",
+    "choices": [
+      {
+        "text": "Usar Gin de novo",
+        "why": "Certo: consistência dentro de uma base de código vale mais que qualquer linha da tabela."
+      },
+      {
+        "text": "Trocar para o Echo, que tem menos módulos",
+        "why": "Menos módulos é uma linha; a aula põe a consistência acima de toda linha."
+      },
+      {
+        "text": "Levar os dois serviços para o Fiber pela velocidade",
+        "why": "Só onde se mediu que a velocidade dele importa."
+      },
+      {
+        "text": "Escrever o novo em Beego para ganhar um ORM",
+        "why": "O Beego é o que mais custa para mudar de ideia."
+      }
+    ]
+  },
+  "ex-xmhewpga": {
+    "prompt": "Quantos módulos além do próprio programa vieram com a versão Beego?",
+    "hint": "O maior número dos quatro.",
+    "unit": "módulos"
+  },
+  "ex-emv32shs": {
+    "prompt": "Ordene as cinco versões pelo tamanho do binário, a menor primeiro.",
+    "hint": "9,8, 11,1, 15,3, 21,7, 31,6.",
+    "items": [
+      "biblioteca padrão",
+      "Echo",
+      "Fiber",
+      "Beego",
+      "Gin"
+    ],
+    "trap": "O Gin carrega mais módulos que o Fiber e o Echo juntos."
+  },
+  "ex-s4txs6wv": {
+    "prompt": "Um serviço passa a maior parte de cada requisição esperando um banco de dados, e o time conhece a biblioteca padrão e os middlewares dela. Alguém propõe o Fiber pela velocidade. Qual é a resposta da aula?",
+    "hint": "Medida, e a que custo?",
+    "choices": [
+      {
+        "text": "Adotar: o fasthttp é mais rápido e nada mais muda",
+        "why": "Os middlewares, o `httptest` e o HTTP/2 mudam todos."
+      },
+      {
+        "text": "Recusar porque o Fiber escreve erros como texto",
+        "why": "Esse é um padrão que se muda no `fiber.Config`, não a questão decisiva."
+      },
+      {
+        "text": "Duvidar que a velocidade se note, e contar o custo de deixar o `net/http`",
+        "why": "Certo. O Fiber combina com serviços em que se mediu que a velocidade dele importa."
+      },
+      {
+        "text": "Adotar porque ele tem menos módulos",
+        "why": "O Fiber traz 25; o Echo traz 8."
+      }
+    ]
+  }
+}

@@ -1,0 +1,336 @@
+{
+  "ex-2yp9q39b": {
+    "prompt": "No stack trace do `Fine.java`, qual linha cita o primeiro método do código do próprio programa?",
+    "hint": "Pule as linhas que começam com `java.base/`.",
+    "choices": [
+      {
+        "text": "`at java.base/java.lang.Integer.parseInt(Integer.java:565)`",
+        "why": "Isso está dentro da classe `Integer` do JDK, cujo código você não escreveu."
+      },
+      {
+        "text": "`at Fine.daysLate(Fine.java:6)`",
+        "why": "Isso: a chamada a `parseInt`, e o lugar onde começar a ler."
+      },
+      {
+        "text": "`at Fine.main(Fine.java:15)`",
+        "why": "Também é código do programa, mas é o último quadro, não o primeiro."
+      }
+    ]
+  },
+  "ex-v9md9scs": {
+    "prompt": "O `Fine.java` imprimiu `150` e depois um stack trace. Por que o `done` nunca foi impresso?",
+    "hint": "Onde a exceção foi capturada?",
+    "choices": [
+      {
+        "text": "Porque o `println` pula a sua linha depois de um erro",
+        "why": "O `println` nem foi alcançado; a exceção saiu do `main` antes."
+      },
+      {
+        "text": "Porque o `parseInt` devolveu 0 e o programa parou",
+        "why": "O `parseInt` não devolveu nada: lançou."
+      },
+      {
+        "text": "Nada capturou a exceção, então ela saiu do `main` e encerrou a thread",
+        "why": "Isso: status de saída 1, e cada linha depois do lançamento foi pulada."
+      }
+    ]
+  },
+  "ex-t24a5rsa": {
+    "prompt": "Ponha os quadros do stack trace do `Fine.java` na ordem em que foram impressos, ignorando os de `java.base`.",
+    "hint": "O mais recente primeiro.",
+    "items": [
+      "`Fine.daysLate(Fine.java:6)`",
+      "`Fine.fine(Fine.java:10)`",
+      "`Fine.main(Fine.java:15)`"
+    ]
+  },
+  "ex-xntp2dhf": {
+    "prompt": "O `Desk.java` passou quatro valores pelo `perBook`. O que tratou o `\"0\"`?",
+    "hint": "Dividir por zero não é problema de conversão.",
+    "choices": [
+      {
+        "text": "O bloco de `NumberFormatException`, já que `0` é um número ruim de livros",
+        "why": "O `\"0\"` vira número sem problema; a falha veio na divisão."
+      },
+      {
+        "text": "O bloco de `ArithmeticException`, imprimindo `/ by zero`",
+        "why": "Isso: divisão inteira por zero lança `ArithmeticException`."
+      },
+      {
+        "text": "Nada, e o laço parou ali",
+        "why": "O laço seguiu e imprimiu `2 -> 300` depois."
+      },
+      {
+        "text": "Os dois blocos, um depois do outro",
+        "why": "Só o primeiro `catch` que combina roda."
+      }
+    ]
+  },
+  "ex-gp9rherz": {
+    "prompt": "Um colega envolve o `main` inteiro em `try { ... } catch (Exception e) {}` para o programa \"nunca quebrar\". O que a seção 02 sugere que há de errado?",
+    "hint": "Capture o que você esperava.",
+    "choices": [
+      {
+        "text": "Captura o que ninguém esperava, e joga fora o stack trace que o explicaria",
+        "why": "Isso: para o inesperado, o stack trace é melhor que qualquer tratamento, e um bloco vazio não é tratamento."
+      },
+      {
+        "text": "Não compila, porque `Exception` é geral demais para capturar",
+        "why": "Compila; capturar `Exception` é permitido, e esse é o perigo."
+      },
+      {
+        "text": "Deixa o programa mais lento em cada linha",
+        "why": "Um `try` não custa quase nada quando nada é lançado; o problema é o que ele esconde."
+      }
+    ]
+  },
+  "ex-ab2b3vb4": {
+    "prompt": "Um único `catch (NumberFormatException | ArithmeticException e)` que trata duas classes se chama ___.",
+    "hint": "Duas palavras unidas por hífen.",
+    "blanks": [
+      {
+        "accept": [
+          "multi-catch",
+          "multicatch",
+          "multi catch"
+        ]
+      }
+    ]
+  },
+  "ex-182km7bt": {
+    "prompt": "O que `e.getMessage()` devolve para o `NumberFormatException` de `\"four\"`?",
+    "hint": "A transcrição o imprimiu depois de `not a number:`.",
+    "choices": [
+      {
+        "text": "O stack trace inteiro, como uma string",
+        "why": "Isso é o que o `printStackTrace` escreve; a mensagem é uma linha."
+      },
+      {
+        "text": "`NumberFormatException`, o nome da classe",
+        "why": "O nome da classe vem antes dos dois-pontos num stack trace; a mensagem é o que vem depois."
+      },
+      {
+        "text": "`For input string: \"four\"`",
+        "why": "Isso: o texto depois dos dois-pontos num stack trace."
+      }
+    ]
+  },
+  "ex-txbb2n0z": {
+    "prompt": "Por que o primeiro `Count.java` não compilou?",
+    "hint": "Leia o erro até o fim.",
+    "choices": [
+      {
+        "text": "Porque o `loans.txt` ainda não existia",
+        "why": "O compilador não procura o arquivo; o programa falhou nisso depois, na execução."
+      },
+      {
+        "text": "`IOException` é checada, e o `main` não a capturou nem a declarou",
+        "why": "Isso: `must be caught or declared to be thrown`."
+      },
+      {
+        "text": "Porque o `Files.readString` não está em `java.lang` e não foi importado",
+        "why": "`Files` e `Path` foram importados; o erro citou uma exceção não declarada."
+      }
+    ]
+  },
+  "ex-nkj16ewd": {
+    "prompt": "Depois de acrescentar `throws IOException`, o `java Count` falhou com `NoSuchFileException`. O que havia de errado no programa?",
+    "hint": "O que a declaração dizia que poderia acontecer?",
+    "choices": [
+      {
+        "text": "A declaração estava no lugar errado e deveria ficar no `readString`",
+        "why": "O `readString` já a declara; o `main` era o método que precisava escolher."
+      },
+      {
+        "text": "Nada: ele fez o que declarou, e o arquivo não existia",
+        "why": "Isso: assim que o `loans.txt` passou a existir, ele imprimiu `3 loans`."
+      },
+      {
+        "text": "Declarar `throws` transforma um erro de compilação num erro de execução",
+        "why": "Transforma um caso não decidido num decidido; o arquivo faltava de verdade."
+      }
+    ]
+  },
+  "ex-gatwm3jb": {
+    "prompt": "Quantos quadros do stack trace do `NoSuchFileException` estavam dentro do JDK, começando com `java.base/`?",
+    "hint": "Toda linha `at` menos a última.",
+    "unit": "quadros"
+  },
+  "ex-a9zftjgx": {
+    "prompt": "Ligue cada exceção ao seu tipo.",
+    "hint": "A tabela no fim da seção.",
+    "pairs": [
+      {
+        "left": "`IOException`",
+        "right": "Checada"
+      },
+      {
+        "left": "`NumberFormatException`",
+        "right": "Não checada, uma `RuntimeException`"
+      },
+      {
+        "left": "`OutOfMemoryError`",
+        "right": "Não checada, um `Error`"
+      }
+    ],
+    "right_distractors": [
+      "Checada, mas só no Linux"
+    ]
+  },
+  "ex-5xw3kncp": {
+    "prompt": "Por que `IOException` é checada e `NumberFormatException` não?",
+    "hint": "Um programa correto conseguiria evitar cada uma?",
+    "choices": [
+      {
+        "text": "Porque entrada e saída são mais lentas, e o compilador quer que fiquem visíveis",
+        "why": "Velocidade não é o critério; o critério é se um programa correto consegue evitá-la."
+      },
+      {
+        "text": "Um programa correto ainda encontra um arquivo faltando; nunca precisa passar `\"ten\"` ao `parseInt`",
+        "why": "Isso: checada é para condições de fora do programa, não checada para erros dentro dele."
+      },
+      {
+        "text": "Porque a `NumberFormatException` entrou no Java depois de as exceções checadas serem abolidas",
+        "why": "As duas são tão antigas quanto o JDK, e exceções checadas nunca foram abolidas."
+      },
+      {
+        "text": "Porque a `IOException` não pode ser capturada, só declarada",
+        "why": "Pode ser capturada; o compilador ofereceu as duas escolhas."
+      }
+    ]
+  },
+  "ex-mmfnbts8": {
+    "prompt": "Quais classes são não checadas? Escolha a descrição que a tabela da seção dá.",
+    "hint": "Dois ramos de `Throwable`.",
+    "choices": [
+      {
+        "text": "Toda exceção lançada pelo próprio JDK",
+        "why": "O `Files.readString` é o JDK, e a `IOException` dele é checada."
+      },
+      {
+        "text": "`RuntimeException`, `Error` e as suas subclasses",
+        "why": "Isso: toda outra `Exception` é checada."
+      },
+      {
+        "text": "As exceções cujo nome termina em `Error`",
+        "why": "Nomes são convenção; a regra é a classe que cada uma estende."
+      }
+    ]
+  },
+  "ex-vje2e3td": {
+    "prompt": "Em `lend(\"Dune\")`, quando o `close the ledger` foi impresso em relação ao `return \"lent\"`?",
+    "hint": "O `lent` foi impresso por quem chamou.",
+    "choices": [
+      {
+        "text": "Nunca: o `return` sai do método na hora",
+        "why": "Foi impresso: um `return` espera o `finally`."
+      },
+      {
+        "text": "Antes de `lend Dune`",
+        "why": "O `try` rodou primeiro; o `finally` roda quando o controle sai dele."
+      },
+      {
+        "text": "Depois de o `return` ser avaliado, antes de o método retornar de fato",
+        "why": "Isso: o `close the ledger` veio entre `lend Dune` e `lent`."
+      }
+    ]
+  },
+  "ex-wdqhpqcq": {
+    "prompt": "O `lend(\" \")` lançou. Em que ordem `close the ledger` e `caught: no title` foram impressos, e por quê?",
+    "hint": "A exceção precisa sair do `lend` antes de o `main` poder capturá-la.",
+    "choices": [
+      {
+        "text": "Primeiro `close the ledger`: o `finally` rodou na saída da exceção",
+        "why": "Isso: depois a exceção chegou ao `catch` do `main`."
+      },
+      {
+        "text": "Primeiro `caught: no title`: o `catch` roda antes de qualquer `finally`",
+        "why": "O `catch` estava no `main`; o `finally` do `lend` rodou antes de a exceção chegar lá."
+      },
+      {
+        "text": "Só `caught: no title`: um `finally` é pulado quando há exceção",
+        "why": "Rodar nesse caminho é exatamente para o que serve o `finally`."
+      }
+    ]
+  },
+  "ex-ezmf1chy": {
+    "prompt": "O `swallow()` lançou `IllegalStateException` e o programa imprimiu `all fine`. O que aconteceu com a exceção?",
+    "hint": "O que estava saindo do método quando o `finally` retornou?",
+    "choices": [
+      {
+        "text": "Foi impressa no fluxo de erro, longe da vista",
+        "why": "Os dois fluxos chegam ao terminal, e nada foi impresso."
+      },
+      {
+        "text": "Foi capturada pelo `main` e ignorada",
+        "why": "O `main` não tinha `catch` em volta do `swallow()`."
+      },
+      {
+        "text": "O `return` no `finally` a substituiu, e ela sumiu",
+        "why": "Isso: nenhum stack trace e nenhuma mensagem, e é por isso que um `finally` não deve dar `return`."
+      }
+    ]
+  },
+  "ex-2r8ft8g8": {
+    "prompt": "Em quais destas saídas um bloco `finally` roda? Escolha todas as que se aplicam.",
+    "hint": "Todo jeito de o método terminar, não todo jeito de o programa terminar.",
+    "choices": [
+      {
+        "text": "O `try` chega ao fim",
+        "why": "Sim: a saída comum."
+      },
+      {
+        "text": "Um `return` dentro do `try`",
+        "why": "Sim: o `close the ledger` saiu antes de `lent`."
+      },
+      {
+        "text": "Uma exceção lançada dentro do `try` e não capturada ali",
+        "why": "Sim: rodou enquanto o `no title` ia a caminho do `main`."
+      },
+      {
+        "text": "`System.exit(0)` dentro do `try`",
+        "why": "Não: a JVM parou, e o `this line never prints` nunca foi impresso."
+      }
+    ]
+  },
+  "ex-gfp2yj1f": {
+    "prompt": "Com que status de saída o `Always.java` terminou, depois do `System.exit(0)`?",
+    "hint": "A última linha da transcrição."
+  },
+  "ex-weq53jcy": {
+    "prompt": "Um método converte um número de sócio digitado no balcão e procura o sócio num arquivo. Que exceções ele deveria obrigar quem chama a tratar?",
+    "hint": "Que falha um programa correto ainda pode encontrar?",
+    "choices": [
+      {
+        "text": "Nenhuma: ele deveria capturar as duas e devolver `null`",
+        "why": "Devolver `null` esconde a falha de cada chamador, que então precisa adivinhar o que aconteceu."
+      },
+      {
+        "text": "A `IOException`, declarada; a entrada errada se trata onde ela nasce",
+        "why": "Isso: o arquivo é de fora do programa, e a digitação é mais bem conferida no balcão."
+      },
+      {
+        "text": "Só a `NumberFormatException`, já que usuários erram a digitação mais que discos falham",
+        "why": "Frequência não decide; a regra do compilador é sobre o que um programa correto consegue evitar."
+      }
+    ]
+  },
+  "ex-fe4nc8s5": {
+    "prompt": "Um método declara `throws IOException` e quem o chama não captura nem declara. O que acontece?",
+    "hint": "A mesma regra vale para cada chamador, um de cada vez.",
+    "choices": [
+      {
+        "text": "Quem chama não compila",
+        "why": "Isso: a obrigação sobe, e cada método precisa capturar ou declarar."
+      },
+      {
+        "text": "Compila, e a exceção é ignorada se acontecer",
+        "why": "O compilador recusa: exceção não declarada."
+      },
+      {
+        "text": "Compila com um aviso que pode ser suprimido",
+        "why": "É erro, não aviso, para uma exceção checada."
+      }
+    ]
+  }
+}

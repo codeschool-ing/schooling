@@ -1,0 +1,915 @@
+[
+  {
+    "id": "ex-21ferbwm",
+    "version": 1,
+    "section": "your-machine",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`go version` prints `go version go1.22.4 linux/amd64` on your machine. What does that tell you before lesson 1 goes any further?",
+    "hint": "Compare with the release the transcripts were recorded with.",
+    "choices": [
+      {
+        "text": "An older release than the course's 1.27.1 is first in `PATH`",
+        "correct": true,
+        "why": "Right. Either the new install did not happen or another `go` is found first; `command -v go` names the file that runs."
+      },
+      {
+        "text": "Go is not installed and the shell guessed a version",
+        "correct": false,
+        "why": "A missing `go` is `command not found`, exit 127. Something answered here."
+      },
+      {
+        "text": "The machine is not Linux",
+        "correct": false,
+        "why": "`linux/amd64` says it is."
+      },
+      {
+        "text": "Everything is fine: any 1.x release behaves the same for a web server",
+        "correct": false,
+        "why": "The 1.22 routing in this very lesson did not exist before 1.22, and later lessons use newer additions still."
+      }
+    ]
+  },
+  {
+    "id": "ex-5me9pfmr",
+    "version": 1,
+    "section": "your-machine",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does this course recommend installing Go on your own computer rather than using the Go Playground?",
+    "hint": "What does the course type besides Go code?",
+    "choices": [
+      {
+        "text": "The Playground runs an older Go",
+        "correct": false,
+        "why": "The release is not the problem the section names."
+      },
+      {
+        "text": "The Playground charges for programs that open ports",
+        "correct": false,
+        "why": "It costs nothing; it simply has no terminal."
+      },
+      {
+        "text": "A server needs a terminal beside it to send requests from, and the Playground has none",
+        "correct": true,
+        "why": "Right. It shows one program's output; there is nowhere to type `curl`."
+      },
+      {
+        "text": "A virtual machine is required by Go 1.27",
+        "correct": false,
+        "why": "A virtual machine is one of the three paths, not a requirement."
+      }
+    ]
+  },
+  {
+    "id": "ex-k7pp00sm",
+    "version": 1,
+    "section": "first-server",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `hello`, the handler is registered with the pattern `\"/\"`. Which requests does it answer?",
+    "hint": "A pattern ending in a slash claims a subtree.",
+    "choices": [
+      {
+        "text": "Only `GET /`",
+        "correct": false,
+        "why": "That is `GET /{$}`. A bare `/` with no method matches everything below it, whatever the method."
+      },
+      {
+        "text": "Only the path `/`, with any method",
+        "correct": false,
+        "why": "The trailing slash makes it a subtree, the whole site."
+      },
+      {
+        "text": "Every path, with every method",
+        "correct": true,
+        "why": "Right. `/events/7` and `POST /anything` reached it too."
+      },
+      {
+        "text": "Every `GET`, and other methods get 405",
+        "correct": false,
+        "why": "There is no method in the pattern, so no method is refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-5r4baxyb",
+    "version": 1,
+    "section": "first-server",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `ListenAndServe` return when the server is working?",
+    "hint": "Why is it wrapped in `log.Fatal`?",
+    "choices": [
+      {
+        "text": "Nothing until it fails",
+        "correct": true,
+        "why": "Right. It returns only with an error, and `log.Fatal` prints it and exits."
+      },
+      {
+        "text": "A `*Server` value the program keeps and later uses to stop it",
+        "correct": false,
+        "why": "It returns an error and nothing else; the `*Server` is something you build yourself in section 08."
+      },
+      {
+        "text": "nil, straight after the port is open",
+        "correct": false,
+        "why": "Then `log.Fatal(nil)` would end the program the moment it started."
+      },
+      {
+        "text": "A running count of the requests it has served so far",
+        "correct": false,
+        "why": "No such count exists in its signature: `func ListenAndServe(addr string, handler Handler) error`."
+      }
+    ]
+  },
+  {
+    "id": "ex-t8a3hqh8",
+    "version": 1,
+    "section": "first-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go run .` prints `listen tcp 127.0.0.1:8080: bind: address already in use`. What is the likeliest cause on a laptop?",
+    "hint": "Who else would want port 8080?",
+    "choices": [
+      {
+        "text": "A firewall rule on the laptop is blocking every connection to port 8080",
+        "correct": false,
+        "why": "A firewall filters traffic; it does not make `bind` fail with this message."
+      },
+      {
+        "text": "The handler panicked",
+        "correct": false,
+        "why": "No request had arrived; the program failed while opening the port."
+      },
+      {
+        "text": "An earlier copy of it, still running",
+        "correct": true,
+        "why": "Right. One program per port; stop the old one with Ctrl+C, or find it with `ss -ltnp`."
+      },
+      {
+        "text": "`localhost` is not allowed as an address",
+        "correct": false,
+        "why": "It is allowed, and the message shows it resolved to `127.0.0.1`."
+      }
+    ]
+  },
+  {
+    "id": "ex-vjzdgbxe",
+    "version": 1,
+    "section": "first-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does every program after section 03 build its own mux instead of passing `nil`?",
+    "hint": "What else can register on `DefaultServeMux`?",
+    "choices": [
+      {
+        "text": "`nil` is slower",
+        "correct": false,
+        "why": "Speed is not the argument; `nil` simply means the package's shared mux."
+      },
+      {
+        "text": "`DefaultServeMux` ignores the 1.22 patterns",
+        "correct": false,
+        "why": "It is a `ServeMux` like any other and understands them."
+      },
+      {
+        "text": "Imported packages add routes to it, as `net/http/pprof` does",
+        "correct": true,
+        "why": "Right. With a mux of its own, the routes a server answers are the ones `main` registered."
+      },
+      {
+        "text": "Passing `nil` as the handler makes the server listen on every network interface of the machine",
+        "correct": false,
+        "why": "The address decides that; the handler argument has nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-699zth8c",
+    "version": 1,
+    "section": "handlers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes a type an `http.Handler`?",
+    "hint": "Go interfaces are satisfied implicitly.",
+    "choices": [
+      {
+        "text": "Embedding `http.Handler` in the struct",
+        "correct": false,
+        "why": "That would give it a nil handler to call. A method of its own is what is needed."
+      },
+      {
+        "text": "Registering it with `http.Handle`, which checks the type and turns it into a handler",
+        "correct": false,
+        "why": "`Handle` accepts only what is already a handler; it does not make one."
+      },
+      {
+        "text": "A method `ServeHTTP(http.ResponseWriter, *http.Request)`",
+        "correct": true,
+        "why": "Right. The method set is the whole requirement; nothing is declared."
+      },
+      {
+        "text": "An `implements http.Handler` comment above the type",
+        "correct": false,
+        "why": "Go has no `implements`, in code or in comments."
+      }
+    ]
+  },
+  {
+    "id": "ex-8766q1ws",
+    "version": 1,
+    "section": "handlers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`mux.Handle(\"/hello\", http.HandlerFunc(hello))` and `mux.HandleFunc(\"/hi\", hello)`: what is the difference between the two registrations?",
+    "hint": "`HandlerFunc` is a type.",
+    "choices": [
+      {
+        "text": "The first runs `hello` in a new goroutine and the second does not",
+        "correct": false,
+        "why": "The server starts one goroutine per request either way."
+      },
+      {
+        "text": "Only the path; `HandleFunc` does the same conversion for you",
+        "correct": true,
+        "why": "Right. Both end up registering an `http.HandlerFunc` wrapping `hello`."
+      },
+      {
+        "text": "The second copies `hello` for each request",
+        "correct": false,
+        "why": "A function value is not copied per request; it is called."
+      },
+      {
+        "text": "The first does not compile: a function is not a handler",
+        "correct": false,
+        "why": "The conversion to `http.HandlerFunc` gives it the method; it compiled and answered."
+      }
+    ]
+  },
+  {
+    "id": "ex-4a9vwsy2",
+    "version": 1,
+    "section": "handlers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The three `curl` calls to `/visits` came one after another and the count was right. Why does `visits` still lock a mutex?",
+    "hint": "How does `net/http` run requests?",
+    "choices": [
+      {
+        "text": "To make the numbers come out in the terminal in the order the requests were sent",
+        "correct": false,
+        "why": "Order in a terminal is not what a lock protects; it protects `v.n` from two writers."
+      },
+      {
+        "text": "Because `ServeHTTP` on a pointer receiver will not compile without one",
+        "correct": false,
+        "why": "It compiles without one, and races without one."
+      },
+      {
+        "text": "Requests run concurrently, one goroutine each",
+        "correct": true,
+        "why": "Right. Correct only when requests take turns is not correct."
+      },
+      {
+        "text": "`fmt.Fprintf` to a `ResponseWriter` is not safe without a lock",
+        "correct": false,
+        "why": "Each request has its own writer; the shared thing is the counter."
+      }
+    ]
+  },
+  {
+    "id": "ex-x41r4kpf",
+    "version": 1,
+    "section": "handlers",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A `*ServeMux` can be registered inside another mux, because it has a method called ___.",
+    "hint": "The one method of `http.Handler`.",
+    "blanks": [
+      {
+        "accept": [
+          "ServeHTTP"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tmb3rhp6",
+    "version": 1,
+    "section": "patterns",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the pattern `GET /events/{id}`, what does `r.PathValue(\"id\")` return for a request to `/events/42`?",
+    "hint": "Look at the type `PathValue` returns.",
+    "choices": [
+      {
+        "text": "The int `42`",
+        "correct": false,
+        "why": "The mux knows nothing of numbers; converting is the handler's job."
+      },
+      {
+        "text": "The string `\"42\"`",
+        "correct": true,
+        "why": "Right. `strconv.Atoi` turns it into a number, and its error is the handler's 400."
+      },
+      {
+        "text": "The whole path, `/events/42`",
+        "correct": false,
+        "why": "That is `r.URL.Path`; `PathValue` returns the one segment the wildcard took."
+      },
+      {
+        "text": "An empty string until `r.ParseForm` is called",
+        "correct": false,
+        "why": "Path values are set by the mux before the handler runs; forms are another matter."
+      }
+    ]
+  },
+  {
+    "id": "ex-f7v6xpd4",
+    "version": 1,
+    "section": "patterns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`curl -X DELETE localhost:8080/events` gets `405 Method Not Allowed` with `Allow: GET, HEAD, POST`. Who wrote that `Allow` header?",
+    "hint": "Nobody in `routes/main.go` mentions `HEAD`.",
+    "choices": [
+      {
+        "text": "`curl`, which guessed it",
+        "correct": false,
+        "why": "It printed what the server sent."
+      },
+      {
+        "text": "The mux, from the methods registered for that path",
+        "correct": true,
+        "why": "Right, with `HEAD` added because a `GET` pattern answers it too."
+      },
+      {
+        "text": "The handler for `GET /events`",
+        "correct": false,
+        "why": "No handler ran: the method matched no pattern for that path."
+      },
+      {
+        "text": "The operating system's network stack",
+        "correct": false,
+        "why": "HTTP status codes are above anything the kernel knows about."
+      }
+    ]
+  },
+  {
+    "id": "ex-2qnqrd8j",
+    "version": 1,
+    "section": "patterns",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each pattern to a request it answers and the others do not.",
+    "hint": "One segment, the rest of the path, or exactly the end.",
+    "pairs": [
+      {
+        "left": "`GET /{$}`",
+        "right": "`GET /`"
+      },
+      {
+        "left": "`GET /events/{id}`",
+        "right": "`GET /events/42`"
+      },
+      {
+        "left": "`GET /files/{path...}`",
+        "right": "`GET /files/posters/2026/jazz.png`"
+      },
+      {
+        "left": "`/static/`",
+        "right": "`DELETE /static/site.css`"
+      }
+    ],
+    "right_distractors": [
+      "`GET /events/42/tickets`"
+    ]
+  },
+  {
+    "id": "ex-ew4x1vbd",
+    "version": 1,
+    "section": "patterns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `GET /about` answer 404 in `routes`, when `GET /` would have answered it?",
+    "hint": "What does `{$}` add?",
+    "choices": [
+      {
+        "text": "`/about` is reserved by `net/http`",
+        "correct": false,
+        "why": "No path is reserved; no pattern here matched it."
+      },
+      {
+        "text": "Patterns are matched in the order they were registered, and `/about` came too late",
+        "correct": false,
+        "why": "Registration order plays no part in `ServeMux`."
+      },
+      {
+        "text": "Wildcards need at least one segment, and `/about` has none",
+        "correct": false,
+        "why": "There is no wildcard in `GET /{$}`, and `/about` has one segment."
+      },
+      {
+        "text": "`{$}` makes the home pattern match `/` and stop there",
+        "correct": true,
+        "why": "Right. Without it, a pattern ending in a slash is a subtree and catches `/about`."
+      }
+    ]
+  },
+  {
+    "id": "ex-h17xyk4z",
+    "version": 1,
+    "section": "patterns",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A client that does not follow redirects calls `GET /static` on `routes` and reports an error. What did it receive?",
+    "hint": "`/static` is not under `/static/`.",
+    "choices": [
+      {
+        "text": "A 404, because `/static` is not registered",
+        "correct": false,
+        "why": "The mux knows a subtree exists one slash away and says so."
+      },
+      {
+        "text": "A 405, because the pattern has no method",
+        "correct": false,
+        "why": "A pattern with no method accepts every method."
+      },
+      {
+        "text": "A 200 with an empty body from the `/static/` handler",
+        "correct": false,
+        "why": "The handler did not run; the mux answered before it."
+      },
+      {
+        "text": "A 307 with `Location: /static/`",
+        "correct": true,
+        "why": "Right. Helpful for a directory, surprising for an API client."
+      }
+    ]
+  },
+  {
+    "id": "ex-8bw64g4h",
+    "version": 1,
+    "section": "precedence",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Both `GET /events/{id}` and `GET /events/latest` are registered. Which one answers `/events/latest`?",
+    "hint": "Which one matches fewer requests?",
+    "choices": [
+      {
+        "text": "Whichever was registered first",
+        "correct": false,
+        "why": "That is how many routers work, and not `ServeMux`."
+      },
+      {
+        "text": "Whichever was registered last",
+        "correct": false,
+        "why": "Order plays no part."
+      },
+      {
+        "text": "Neither: the program panics at start",
+        "correct": false,
+        "why": "They overlap, but one is more specific, so there is no conflict."
+      },
+      {
+        "text": "The literal one, wherever it sits in the file",
+        "correct": true,
+        "why": "Right. It matches a strict subset of what the wildcard matches, so it is more specific."
+      }
+    ]
+  },
+  {
+    "id": "ex-ptcjwbpt",
+    "version": 1,
+    "section": "precedence",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `conflict` panic instead of picking a handler for `/events/42`?",
+    "hint": "Read the third and fourth lines of the message.",
+    "choices": [
+      {
+        "text": "Neither is more specific than the other",
+        "correct": true,
+        "why": "Right. The mux refuses at registration rather than guess at request time."
+      },
+      {
+        "text": "A wildcard may not be the first segment of a pattern",
+        "correct": false,
+        "why": "`/{kind}/42` is allowed on its own; the problem is the pair."
+      },
+      {
+        "text": "Both patterns name the method `GET`, and one method may only appear once per mux",
+        "correct": false,
+        "why": "Many patterns share a method. Overlap with no winner is the problem."
+      },
+      {
+        "text": "`42` is a number and patterns only hold text",
+        "correct": false,
+        "why": "`42` in a pattern is literal text, and that is fine."
+      }
+    ]
+  },
+  {
+    "id": "ex-8cqpshvg",
+    "version": 1,
+    "section": "precedence",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An old service moves to a `go.mod` saying `go 1.21`, and every route with a method in it starts answering 404. What happened?",
+    "hint": "The `go` line decides which mux behaviour you get.",
+    "choices": [
+      {
+        "text": "The old mux reads `GET /events` as a literal path, which no request ever has",
+        "correct": true,
+        "why": "Right. Below `go 1.22`, or with `GODEBUG=httpmuxgo121=1`, methods and wildcards are just text."
+      },
+      {
+        "text": "Go 1.21 cannot compile `HandleFunc`",
+        "correct": false,
+        "why": "`HandleFunc` is as old as the package; it compiled."
+      },
+      {
+        "text": "The server now refuses every method except `GET`",
+        "correct": false,
+        "why": "A refused method would be 405, not 404, and `GET` fails too."
+      },
+      {
+        "text": "The patterns conflict under 1.21 and are silently dropped",
+        "correct": false,
+        "why": "Nothing is dropped; they are registered as literal paths."
+      }
+    ]
+  },
+  {
+    "id": "ex-148qg534",
+    "version": 1,
+    "section": "the-response",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A handler writes the body first and then calls `w.Header().Set(\"X-Seats\", \"40\")`. What does the client receive?",
+    "hint": "The order of an HTTP response.",
+    "choices": [
+      {
+        "text": "The body, and `X-Seats: 40` at the end of it",
+        "correct": false,
+        "why": "Headers do not travel after the body in an ordinary response."
+      },
+      {
+        "text": "A 500, because the header came too late",
+        "correct": false,
+        "why": "The 200 had already gone; nothing can replace it."
+      },
+      {
+        "text": "A compile error",
+        "correct": false,
+        "why": "Nothing about call order is checked by the compiler."
+      },
+      {
+        "text": "The body, and no `X-Seats` header",
+        "correct": true,
+        "why": "Right. The first write sent the headers; later changes to the map go nowhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-15f0d9q3",
+    "version": 1,
+    "section": "the-response",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The server prints `http: superfluous response.WriteHeader call from main.main.func2 (main.go:20)`. What does it mean?",
+    "hint": "Which call is superfluous, and why?",
+    "choices": [
+      {
+        "text": "Line 20 set a status after one was sent",
+        "correct": true,
+        "why": "Right. A write had sent 200 on its own; the second status went nowhere."
+      },
+      {
+        "text": "Line 20 is unreachable code",
+        "correct": false,
+        "why": "It ran; that is why it was reported."
+      },
+      {
+        "text": "The handler set a status code that does not exist",
+        "correct": false,
+        "why": "202 exists. It came too late."
+      },
+      {
+        "text": "Two different handlers were registered for the same path and both of them ran",
+        "correct": false,
+        "why": "That would be a conflict panic at start, not a line per request."
+      }
+    ]
+  },
+  {
+    "id": "ex-3qesyndj",
+    "version": 1,
+    "section": "the-response",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`/sniffed` sets no `Content-Type` and writes `<h1>boxoffice</h1>`. Why does the response say `text/html`?",
+    "hint": "`http.DetectContentType`.",
+    "choices": [
+      {
+        "text": "`fmt.Fprint` marks its output as HTML",
+        "correct": false,
+        "why": "`fmt` knows nothing about content types."
+      },
+      {
+        "text": "It guessed from the first bytes",
+        "correct": true,
+        "why": "Right. With no type set, it sniffs up to 512 bytes; a JSON API sets its own."
+      },
+      {
+        "text": "`curl` added the header on its side when it saw the angle brackets",
+        "correct": false,
+        "why": "`-i` prints what the server sent."
+      },
+      {
+        "text": "Every `GET` defaults to HTML",
+        "correct": false,
+        "why": "`hello` answered a `GET` with `text/plain`; the bytes decided."
+      }
+    ]
+  },
+  {
+    "id": "ex-w7acwpnn",
+    "version": 1,
+    "section": "the-response",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the line right after `http.Error(w, \"no such event\", http.StatusNotFound)` in a handler, and why?",
+    "hint": "`http.Error` is an ordinary function call.",
+    "choices": [
+      {
+        "text": "`w.WriteHeader(404)`, to make sure the status is sent",
+        "correct": false,
+        "why": "`http.Error` sent it already; a second call is the superfluous line."
+      },
+      {
+        "text": "`panic`, so that the server logs the failure",
+        "correct": false,
+        "why": "A panic is for the impossible, not for a missing event."
+      },
+      {
+        "text": "`return`, because `http.Error` does not stop the handler",
+        "correct": true,
+        "why": "Right. Without it the code below runs and writes after the error."
+      },
+      {
+        "text": "Nothing; `http.Error` returns from the handler itself",
+        "correct": false,
+        "why": "No function can return from its caller in Go."
+      }
+    ]
+  },
+  {
+    "id": "ex-0pex6t93",
+    "version": 1,
+    "section": "the-server",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What timeouts does a server started with `http.ListenAndServe(addr, h)` have?",
+    "hint": "The zero value of each field.",
+    "choices": [
+      {
+        "text": "None",
+        "correct": true,
+        "why": "Right. Zero means no deadline, for reading, writing and idling."
+      },
+      {
+        "text": "Thirty seconds for everything",
+        "correct": false,
+        "why": "No such default exists in `net/http`."
+      },
+      {
+        "text": "Whatever the operating system sets for TCP",
+        "correct": false,
+        "why": "The kernel's keepalive is not a deadline on an HTTP request; the held connection stayed open."
+      },
+      {
+        "text": "A read timeout, but no write timeout",
+        "correct": false,
+        "why": "The connection held by hand proved there was no read deadline either."
+      }
+    ]
+  },
+  {
+    "id": "ex-g8973kty",
+    "version": 1,
+    "section": "the-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which field defends a server against a client that sends half a request and then waits?",
+    "hint": "The connection held in this section never finished its headers.",
+    "choices": [
+      {
+        "text": "`IdleTimeout`",
+        "correct": false,
+        "why": "Idle is the gap between requests on a kept-alive connection."
+      },
+      {
+        "text": "`WriteTimeout`",
+        "correct": false,
+        "why": "Its clock starts after the headers were read, which never happened."
+      },
+      {
+        "text": "`MaxHeaderBytes`",
+        "correct": false,
+        "why": "That limits size, and a slow client sends very little."
+      },
+      {
+        "text": "`ReadHeaderTimeout`",
+        "correct": true,
+        "why": "Right. Two seconds, and the server closed the connection."
+      }
+    ]
+  },
+  {
+    "id": "ex-ssqkvpwg",
+    "version": 1,
+    "section": "the-server",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Against `patient`, after how many seconds did the server close the half-sent request?",
+    "hint": "The last line of the capture.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "s"
+  },
+  {
+    "id": "ex-8p617841",
+    "version": 1,
+    "section": "the-server",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A handler streams a report that takes 25 seconds, on a server with `WriteTimeout: 10 * time.Second`. What happens?",
+    "hint": "When does the write clock start, and what happens when it runs out?",
+    "choices": [
+      {
+        "text": "The server waits, because the handler is still writing",
+        "correct": false,
+        "why": "The deadline is a deadline; writing does not extend it."
+      },
+      {
+        "text": "The client receives a 408 Request Timeout",
+        "correct": false,
+        "why": "The status went out long before; the connection is simply cut."
+      },
+      {
+        "text": "The handler's context is cancelled at ten seconds and it returns cleanly",
+        "correct": false,
+        "why": "`WriteTimeout` is a deadline on the connection, and the handler is not told."
+      },
+      {
+        "text": "The response is cut off about ten seconds after the headers were read",
+        "correct": true,
+        "why": "Right. Set it above the slowest response, or lift it for that route, as lesson 13 does."
+      }
+    ]
+  },
+  {
+    "id": "ex-nwft5hzz",
+    "version": 1,
+    "section": "boxoffice",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In boxoffice, `/events/nine` answers 400 and `/events/9` answers 404. Why two different statuses?",
+    "hint": "What was wrong with each request?",
+    "choices": [
+      {
+        "text": "`nine` is no id; `9` is nobody's",
+        "correct": true,
+        "why": "Right. One is a malformed request, the other a missing resource."
+      },
+      {
+        "text": "The mux refuses words in a wildcard",
+        "correct": false,
+        "why": "The mux took `nine` happily; `strconv.Atoi` refused it."
+      },
+      {
+        "text": "404 is for numbers above 2",
+        "correct": false,
+        "why": "It is for ids the store does not hold, whatever their size."
+      },
+      {
+        "text": "The 400 is produced by `curl` before sending, and the 404 by the server",
+        "correct": false,
+        "why": "Both came from `getEvent`."
+      }
+    ]
+  },
+  {
+    "id": "ex-exz80wvm",
+    "version": 1,
+    "section": "boxoffice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `memStore.List` sort the events before returning them?",
+    "hint": "Where do they come from?",
+    "choices": [
+      {
+        "text": "Sorting makes the lock shorter",
+        "correct": false,
+        "why": "It makes it longer, if anything."
+      },
+      {
+        "text": "A map has no order of its own",
+        "correct": true,
+        "why": "Right. An API that lists the same data in two orders is a bug report waiting."
+      },
+      {
+        "text": "`fmt.Fprintf` needs sorted input",
+        "correct": false,
+        "why": "It prints whatever it is given."
+      },
+      {
+        "text": "The mux expects the ids it serves to arrive in ascending order",
+        "correct": false,
+        "why": "The mux never sees the store."
+      }
+    ]
+  },
+  {
+    "id": "ex-e1q1vanx",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens to one request to boxoffice in order, from the connection to the bytes the client reads.",
+    "hint": "The mux is a handler that calls another handler.",
+    "items": [
+      "The server accepts the connection and reads the headers within `ReadHeaderTimeout`",
+      "The server calls the mux's `ServeHTTP` in a goroutine for this request",
+      "The mux picks the most specific pattern and fills in `{id}`",
+      "`getEvent` reads `PathValue(\"id\")` and asks the store",
+      "The first write sends status 200 and the headers, then the body"
+    ],
+    "trap": "The status leaves with the first write, not when the handler returns."
+  },
+  {
+    "id": "ex-0h3rfh8s",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new route `GET /events/{id}/seats` is added to boxoffice. What does `curl -X POST localhost:8080/events/1/seats` get?",
+    "hint": "The path exists; does the method?",
+    "choices": [
+      {
+        "text": "404 page not found",
+        "correct": false,
+        "why": "The path matches a registered pattern, so the mux knows it exists."
+      },
+      {
+        "text": "The `GET` handler runs, because `POST` falls back to it",
+        "correct": false,
+        "why": "Methods do not fall back to each other; only `HEAD` rides on `GET`."
+      },
+      {
+        "text": "405 with `Allow: GET, HEAD`",
+        "correct": true,
+        "why": "Right. The path is known and only `GET`, with its `HEAD`, is registered for it."
+      },
+      {
+        "text": "A panic, because the new pattern conflicts with `GET /events/{id}`",
+        "correct": false,
+        "why": "They do not overlap: one segment after `/events/` against two."
+      }
+    ]
+  }
+]

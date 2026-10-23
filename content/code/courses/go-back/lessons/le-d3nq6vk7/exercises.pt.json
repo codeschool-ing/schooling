@@ -1,0 +1,619 @@
+{
+  "ex-b4686092": {
+    "prompt": "Ligue cada distância do código a um defeito que ela pega.",
+    "hint": "A tabela da seção 02.",
+    "pairs": [
+      {
+        "left": "um handler",
+        "right": "validação que deixa passar um valor ruim"
+      },
+      {
+        "left": "o roteador inteiro",
+        "right": "middleware na ordem errada"
+      },
+      {
+        "left": "um banco de verdade",
+        "right": "um gatilho que nunca dispara"
+      }
+    ],
+    "right_distractors": [
+      "um erro de digitação num comentário"
+    ]
+  },
+  "ex-e5zwtsa2": {
+    "prompt": "Por que os testes de handler do boxoffice não precisam de banco nenhum?",
+    "hint": "A interface da aula 6.",
+    "choices": [
+      {
+        "text": "O `go test` sobe um PostgreSQL em memória",
+        "why": "O `go test` não sobe banco nenhum; a seção 07 precisa de um servidor de verdade para isso."
+      },
+      {
+        "text": "O `httptest` intercepta toda consulta SQL e a responde da memória",
+        "why": "O `httptest` lida com requisições e respostas HTTP, nunca com SQL."
+      },
+      {
+        "text": "Cada handler recebe o `memStore` pela `Store`",
+        "why": "Certo. A interface escrita para o PostgreSQL substituir a memória deixa a memória substituir o PostgreSQL aqui."
+      },
+      {
+        "text": "Os handlers só leem o banco na inicialização",
+        "why": "O `getEvent` consulta o store em toda requisição."
+      }
+    ]
+  },
+  "ex-52242gnp": {
+    "prompt": "Por que a aula testa as vendas concorrentes do `pgStore` contra o PostgreSQL e não contra uma imitação?",
+    "hint": "O que está sendo confiado?",
+    "choices": [
+      {
+        "text": "Uma imitação roda rápido demais para mostrar a disputa entre transações",
+        "why": "Velocidade não é o ponto: a imitação simplesmente não é o código em questão."
+      },
+      {
+        "text": "O Go proíbe interfaces nos arquivos de teste do `package main`",
+        "why": "Arquivos de teste usam interfaces como qualquer outro arquivo Go."
+      },
+      {
+        "text": "A imitação não é a coisa em que se confia",
+        "why": "Certo. Só o banco mostra se o `UPDATE` da aula 8 é seguro sob concorrência."
+      },
+      {
+        "text": "Mutexes não funcionam dentro do `go test`",
+        "why": "Funcionam igual; o `memStore` segura um o tempo todo."
+      }
+    ]
+  },
+  "ex-2v2jnx1y": {
+    "prompt": "O `TestGetEvent` chama o `getEvent` diretamente. Por que ele chama `req.SetPathValue(\"id\", tt.id)`?",
+    "hint": "Quem o preenche numa requisição de verdade?",
+    "choices": [
+      {
+        "text": "Sem isso o recorder descarta o corpo",
+        "why": "O recorder guarda o que o handler escrever; o valor do caminho é sobre a requisição."
+      },
+      {
+        "text": "Nenhum mux rodou, então nada o definiu",
+        "why": "Certo. O `ServeMux` define o `{id}` ao casar `/events/{id}`, e uma chamada direta pula o mux."
+      },
+      {
+        "text": "O `NewRequest` recusa uma URL com um número",
+        "why": "O `NewRequest` aceita `/events/1` sem reclamar."
+      },
+      {
+        "text": "Faz o teste rodar em paralelo",
+        "why": "Paralelismo vem do `t.Parallel`, que estes testes não chamam."
+      }
+    ]
+  },
+  "ex-5tjjybw5": {
+    "prompt": "Por que cada caso do `TestBuyTickets` ganha o seu próprio `newMemStore()`?",
+    "hint": "Uma compra muda algo.",
+    "choices": [
+      {
+        "text": "Os resultados dependeriam da ordem dos casos",
+        "why": "Certo. A compra de dois lugares muda o store."
+      },
+      {
+        "text": "O `newMemStore` é barato e o Go desencoraja reuso",
+        "why": "Custo não é o motivo; independência entre os casos é."
+      },
+      {
+        "text": "Um store sobrevive a uma só requisição",
+        "why": "O `memStore` guarda os eventos enquanto o valor existir."
+      },
+      {
+        "text": "O detector de corrida exige isso",
+        "why": "Esses casos rodam um depois do outro; não há corrida para detectar."
+      }
+    ]
+  },
+  "ex-95gx32m6": {
+    "prompt": "Num caso de falha, o que o `TestBuyTickets` verifica além do status?",
+    "hint": "A promessa da aula 3.",
+    "choices": [
+      {
+        "text": "Que a resposta levou menos de um milissegundo",
+        "why": "Nenhum caso mede tempo."
+      },
+      {
+        "text": "Que há um cabeçalho `X-Request-ID` no recorder",
+        "why": "Um handler sozinho nunca passa pelo `requestID`; a seção 04 verifica esse cabeçalho."
+      },
+      {
+        "text": "Que o store não guarda nenhum ticket novo",
+        "why": "O teste lê só a resposta, nunca o store."
+      },
+      {
+        "text": "Um documento de problema",
+        "why": "Certo. O corpo decodifica como um `problem` com `status` igual, enviado como `application/problem+json`."
+      }
+    ]
+  },
+  "ex-03sbhkxv": {
+    "prompt": "O `go test` repete um resultado aprovado como `(cached)` enquanto as entradas não mudam; passar a flag ___ desliga isso numa execução, como a CI sempre faz.",
+    "hint": "Um número de execuções.",
+    "blanks": [
+      {
+        "accept": [
+          "-count=1",
+          "count=1",
+          "-count 1"
+        ]
+      }
+    ]
+  },
+  "ex-s81r0fey": {
+    "prompt": "O `newTestServer` chama `t.Helper()`. O que isso muda?",
+    "hint": "Veja as linhas de skip da seção 07.",
+    "choices": [
+      {
+        "text": "Fecha o servidor quando o teste termina",
+        "why": "Isso é o `t.Cleanup(srv.Close)`."
+      },
+      {
+        "text": "Roda o helper numa goroutine própria",
+        "why": "O `t.Helper` não inicia nada; só marca a função."
+      },
+      {
+        "text": "Falhas apontam a linha de quem chamou",
+        "why": "Certo. Por isso os skips apontaram para os testes, e não para dentro do `testDB`."
+      },
+      {
+        "text": "Esconde a saída do helper",
+        "why": "A saída não muda; só a linha relatada muda."
+      }
+    ]
+  },
+  "ex-c3h1q1es": {
+    "prompt": "Ligue cada token que o `TestStaffRoutes` envia ao status que ele espera em `/admin/report`.",
+    "hint": "Aulas 2 e 3.",
+    "pairs": [
+      {
+        "left": "nenhum token",
+        "right": "401"
+      },
+      {
+        "left": "o token da portaria",
+        "right": "403"
+      },
+      {
+        "left": "o token do gerente",
+        "right": "200"
+      }
+    ],
+    "right_distractors": [
+      "404"
+    ]
+  },
+  "ex-ma68hdzk": {
+    "prompt": "O `TestTheLogHoldsNoToken` passa hoje. Por que mantê-lo?",
+    "hint": "Quem mudaria o `logRequests`?",
+    "choices": [
+      {
+        "text": "Acelera os outros testes ao aquecer o logger",
+        "why": "Ele não aquece nada; afirma algo sobre o log."
+      },
+      {
+        "text": "O executor de testes do Go reprova um pacote sem teste de log",
+        "why": "Essa regra não existe."
+      },
+      {
+        "text": "Para o dia em que alguém registrar os cabeçalhos para ajudar a depurar",
+        "why": "Certo. Hoje o `logRequests` não registra cabeçalhos; o teste transforma isso em promessa."
+      },
+      {
+        "text": "Verifica que o token chega intacto ao handler",
+        "why": "Ele verifica o log, não o handler."
+      }
+    ]
+  },
+  "ex-jewxe15h": {
+    "prompt": "O `TestMain` manda o logger padrão para o `io.Discard`. Por que nenhum teste do roteador chama `t.Parallel()`?",
+    "hint": "O logger padrão é um valor só para o processo inteiro.",
+    "choices": [
+      {
+        "text": "O `httptest.NewServer` se recusa a iniciar duas vezes",
+        "why": "Cada chamada ganha uma porta própria."
+      },
+      {
+        "text": "Dois testes leriam as linhas de log um do outro",
+        "why": "Certo. Trocar o logger padrão é trocar uma global."
+      },
+      {
+        "text": "O `TestMain` roda de novo para cada teste paralelo",
+        "why": "O `TestMain` roda uma vez por pacote."
+      },
+      {
+        "text": "Testes paralelos pulam o `t.Cleanup`",
+        "why": "Os cleanups rodam também em testes paralelos."
+      }
+    ]
+  },
+  "ex-05g68tbs": {
+    "prompt": "Por que o `load` recebe `getenv func(string) string` em vez de chamar `os.Getenv`?",
+    "hint": "Veja o `env(map)`.",
+    "choices": [
+      {
+        "text": "O `os.Getenv` é mais lento que um valor de função",
+        "why": "Velocidade não é o motivo; testabilidade é."
+      },
+      {
+        "text": "O `os.Getenv` não está disponível no `package main`",
+        "why": "O próprio `main` passa o `os.Getenv` ao `load`."
+      },
+      {
+        "text": "Deixa o `load` ler variáveis do Windows",
+        "why": "A plataforma não tem nada a ver com isso."
+      },
+      {
+        "text": "Os testes lhe entregam um mapa e deixam o ambiente do processo em paz",
+        "why": "Certo. Nada que um teste define chega ao processo."
+      }
+    ]
+  },
+  "ex-zprpqzjc": {
+    "prompt": "Com o `load` da aula 14, a portaria e o gerente receberam o mesmo token. O que acontecia na inicialização?",
+    "hint": "Dois mapas, um deles só para percorrer.",
+    "choices": [
+      {
+        "text": "Cara ou coroa: a ordem do mapa escolhia o papel",
+        "why": "Certo. O Go visita um mapa em ordem diferente de propósito, então o papel era cara ou coroa."
+      },
+      {
+        "text": "O `load` se recusava a iniciar, com uma mensagem clara",
+        "why": "Ele aceitava: o teste falhou com `error <nil>`."
+      },
+      {
+        "text": "A portaria era sempre o gerente",
+        "why": "Nem sempre: dependia da ordem daquela inicialização."
+      },
+      {
+        "text": "O servidor caía no primeiro pedido da equipe",
+        "why": "Nada caía; um papel substituía o outro em silêncio."
+      }
+    ]
+  },
+  "ex-tg1caaar": {
+    "prompt": "Ordene como o defeito do token duplicado foi tratado na seção 05.",
+    "hint": "O teste veio primeiro.",
+    "items": [
+      "escrever um caso que dá à portaria o token do gerente",
+      "rodá-lo contra o `load` da aula 14 e vê-lo falhar",
+      "ler os papéis de uma fatia e recusar um token que já tem papel",
+      "rodá-lo de novo e ver `ok`"
+    ]
+  },
+  "ex-vt3qpmsa": {
+    "prompt": "O `TestLoadSecretFromFile` escreve `from-a-file\\n` em `t.TempDir()`. O que ele verifica?",
+    "hint": "Um editor deixa algo no fim.",
+    "choices": [
+      {
+        "text": "Que o arquivo é apagado depois de ser lido",
+        "why": "O framework apaga o diretório; o `load` não apaga nada."
+      },
+      {
+        "text": "A quebra de linha final é aparada",
+        "why": "Certo. O token precisa ser `from-a-file`, aparado."
+      },
+      {
+        "text": "Que o arquivo tem modo 0600",
+        "why": "O `load` nunca verifica o modo."
+      },
+      {
+        "text": "Que uma flag sobrepõe o arquivo",
+        "why": "Segredos não têm flag."
+      }
+    ]
+  },
+  "ex-y06wccff": {
+    "prompt": "Sem `-race`, o `TestConcurrentPurchases` imprimiu `ok`. O que havia de errado com ele?",
+    "hint": "Linha 35.",
+    "choices": [
+      {
+        "text": "O `memStore` vendeu mais de dez lugares",
+        "why": "O servidor vendeu exatamente dez; o mutex segurou."
+      },
+      {
+        "text": "O `wg.Go` iniciou menos de cinquenta goroutines",
+        "why": "Ele iniciou cinquenta; o relatório de corrida é sobre o `sold`."
+      },
+      {
+        "text": "O evento número 3 não existe",
+        "why": "O teste o cria; o `newMemStore` já tem o 1 e o 2."
+      },
+      {
+        "text": "Cinquenta goroutines rodavam `sold++` num inteiro sem nada que as ordenasse",
+        "why": "Certo. Duas goroutines leem 7 e escrevem 8, e a contagem sai baixa de vez em quando."
+      }
+    ]
+  },
+  "ex-v1qpgg8z": {
+    "prompt": "Em que linha do `concurrency_test.go` o detector de corrida apontou os dois acessos?",
+    "hint": "A linha do `sold++`.",
+    "unit": ""
+  },
+  "ex-p78rqh7f": {
+    "prompt": "Qual é a correção da corrida no `TestConcurrentPurchases`?",
+    "hint": "Um passo indivisível.",
+    "choices": [
+      {
+        "text": "Menos compradores, para que as goroutines quase nunca se sobreponham",
+        "why": "Mais raro continua sendo corrida; o detector ainda a acharia."
+      },
+      {
+        "text": "Um mutex dentro do `memStore`",
+        "why": "O `memStore` já segura um; a corrida está no contador do próprio teste."
+      },
+      {
+        "text": "Um `atomic.Int64`",
+        "why": "Certo. O `Add` é um passo indivisível, e o `Load` lê o total depois do `Wait`."
+      },
+      {
+        "text": "Rodar o teste sem `-race`",
+        "why": "Isso esconde a corrida; não a remove."
+      }
+    ]
+  },
+  "ex-pgt7ba3j": {
+    "prompt": "Qual afirmação sobre o detector de corrida bate com a seção 06?",
+    "hint": "O que ele observa.",
+    "choices": [
+      {
+        "text": "Precisa do cgo e só vê corridas que rodam",
+        "why": "Certo. Por isso o teste existe: para fazer o caso concorrente acontecer."
+      },
+      {
+        "text": "Ele lê o código-fonte e acha toda corrida do pacote",
+        "why": "Ele observa a execução; código que nunca roda concorrente não mostra nada."
+      },
+      {
+        "text": "Ele pertence aos binários de produção",
+        "why": "A seção 08 o deixa nos testes e em homologação por causa do custo."
+      },
+      {
+        "text": "Precisa de um PostgreSQL para comparar",
+        "why": "Ele precisa de um compilador C, não de um banco."
+      }
+    ]
+  },
+  "ex-kv766mxb": {
+    "prompt": "Por que o `testDB` dá a cada teste um banco com nome aleatório?",
+    "hint": "A frase em negrito da seção 07.",
+    "choices": [
+      {
+        "text": "O PostgreSQL proíbe dois testes num banco",
+        "why": "Ele não proíbe nada disso; o isolamento é escolha do teste."
+      },
+      {
+        "text": "Nomes aleatórios deixam as migrações mais rápidas",
+        "why": "O nome não afeta a velocidade."
+      },
+      {
+        "text": "Para esconder os dados de teste do `psql -l`",
+        "why": "Os nomes começam com `boxoffice_test_` e são apagados depois."
+      },
+      {
+        "text": "Isolamento entre os testes",
+        "why": "Certo. Cada um começa das migrações e dos dois eventos semeados."
+      }
+    ]
+  },
+  "ex-1m66fwp8": {
+    "prompt": "O `testDB` registra o drop primeiro e o `pool.Close` depois. Em que ordem eles rodam?",
+    "hint": "Os cleanups rodam do último registrado ao primeiro.",
+    "choices": [
+      {
+        "text": "Drop, depois close",
+        "why": "Os cleanups rodam na ordem inversa do registro."
+      },
+      {
+        "text": "Os dois ao mesmo tempo, em duas goroutines",
+        "why": "Os cleanups rodam um depois do outro."
+      },
+      {
+        "text": "Close, depois drop",
+        "why": "Certo. O pool fecha primeiro, e o `WITH (FORCE)` cobre qualquer conexão ainda aberta."
+      },
+      {
+        "text": "Só o drop; o pool vaza",
+        "why": "O `t.Cleanup(pool.Close)` também roda."
+      }
+    ]
+  },
+  "ex-72wfcvf8": {
+    "prompt": "Por que o `TestASaleReachesTheHub` consulta o `pg_stat_activity` antes de vender?",
+    "hint": "Uma notificação enviada antes do LISTEN.",
+    "choices": [
+      {
+        "text": "Para contar quantos lugares sobram",
+        "why": "A contagem vem da notificação, 117."
+      },
+      {
+        "text": "Uma venda antes de o `listen` rodar `LISTEN` nunca é ouvida",
+        "why": "Certo. Esperar pelo fato substitui um sleep que falha numa máquina lenta."
+      },
+      {
+        "text": "O PostgreSQL descarta notificações de sessões ociosas",
+        "why": "Uma sessão ociosa que rodou `LISTEN` as recebe."
+      },
+      {
+        "text": "Para deixar o teste mais lento e portanto mais realista",
+        "why": "A espera termina no instante em que o `LISTEN` aparece."
+      }
+    ]
+  },
+  "ex-ap8yd615": {
+    "prompt": "Sem `BOXOFFICE_TEST_DATABASE_URL`, o que a última linha da execução dizia?",
+    "hint": "Pulado não é aprovado.",
+    "choices": [
+      {
+        "text": "`FAIL`",
+        "why": "Pular não é falhar; esse é o perigo."
+      },
+      {
+        "text": "`SKIP` para o pacote",
+        "why": "A linha do pacote disse `ok`."
+      },
+      {
+        "text": "`[no test files]`",
+        "why": "Isso é para pacotes sem testes."
+      },
+      {
+        "text": "`ok`",
+        "why": "Certo. Sem `-v`, nada diz que dois testes não rodaram, então a CI precisa definir a variável."
+      }
+    ]
+  },
+  "ex-6nhx36wf": {
+    "prompt": "A segunda execução idêntica imprimiu `(cached)`. Por que isso é uma armadilha para um teste de banco?",
+    "hint": "O que entra na chave do cache?",
+    "choices": [
+      {
+        "text": "Uma execução em cache apaga os bancos de teste",
+        "why": "Uma execução em cache não roda nada."
+      },
+      {
+        "text": "A chave do cache cobre o código, as flags e as variáveis lidas, e nunca o conteúdo do banco",
+        "why": "Certo. O `-count=1` desliga o cache, e a CI sempre o passa."
+      },
+      {
+        "text": "Resultados em cache expiram depois de um segundo",
+        "why": "Eles ficam até uma entrada mudar."
+      },
+      {
+        "text": "`(cached)` significa que o teste falhou antes",
+        "why": "Só resultados aprovados vão para o cache."
+      }
+    ]
+  },
+  "ex-9vdrdcka": {
+    "prompt": "Que cobertura o `go test -count=1 -cover .` relatou para o boxoffice?",
+    "hint": "A última transcrição da seção 08.",
+    "unit": "%"
+  },
+  "ex-cjypd9bh": {
+    "prompt": "Como a aula lê o número de cobertura?",
+    "hint": "Ao contrário.",
+    "choices": [
+      {
+        "text": "Como uma meta a subir antes de toda versão",
+        "why": "Subi-lo testando linhas não afirma nada de que alguém precisasse."
+      },
+      {
+        "text": "Como prova de que 60,6% do código está correto",
+        "why": "Uma linha que rodou não foi necessariamente verificada."
+      },
+      {
+        "text": "Como a fração de testes aprovados",
+        "why": "Ela conta instruções, não testes."
+      },
+      {
+        "text": "Como uma lista do que nenhum teste tocou",
+        "why": "Certo. O `go tool cover -html` mostra essa lista."
+      }
+    ]
+  },
+  "ex-0y3bk5n1": {
+    "prompt": "Quanto o detector de corrida custou na suíte inteira do boxoffice?",
+    "hint": "Compare as duas linhas `real`.",
+    "choices": [
+      {
+        "text": "Cerca do dobro, ainda dois segundos",
+        "why": "Certo. Para uma suíte deste tamanho o preço é nada."
+      },
+      {
+        "text": "Dez vezes o tempo",
+        "why": "As execuções levaram uns 0,9 e 2,1 segundos."
+      },
+      {
+        "text": "Nada mensurável numa suíte deste tamanho",
+        "why": "O tempo praticamente dobrou."
+      },
+      {
+        "text": "Não terminou sem um banco",
+        "why": "A variável estava definida e as duas execuções terminaram `ok`."
+      }
+    ]
+  },
+  "ex-t5cdh92q": {
+    "prompt": "Ligue cada momento ao que a seção 08 roda nele.",
+    "hint": "Os três hábitos.",
+    "pairs": [
+      {
+        "left": "a cada salvamento",
+        "right": "`go test -run` para a parte que você está mudando"
+      },
+      {
+        "left": "antes de cada commit",
+        "right": "`go vet ./...` e `go test -race ./...`"
+      },
+      {
+        "left": "na CI, a cada push",
+        "right": "`go test -race -count=1 ./...` com a variável do banco definida"
+      }
+    ],
+    "right_distractors": [
+      "só `go build`"
+    ]
+  },
+  "ex-fsaw3t67": {
+    "prompt": "Quais afirmações batem com esta aula? Marque todas as que se aplicam.",
+    "hint": "Seções 04, 06 e 07.",
+    "choices": [
+      {
+        "text": "O código do próprio teste também roda concorrente e segue as mesmas regras",
+        "why": "Certo. A corrida da seção 06 estava no teste."
+      },
+      {
+        "text": "O `t.Cleanup` roda só quando o teste passa",
+        "why": "Ele roda como quer que o teste termine."
+      },
+      {
+        "text": "Um teste de integração pulado imprime `ok` sem `-v`",
+        "why": "Certo. Por isso a CI define a variável."
+      },
+      {
+        "text": "O `httptest.NewServer` escuta numa porta real em `127.0.0.1`",
+        "why": "Certo. O roteador inteiro é servido numa conexão real."
+      },
+      {
+        "text": "Os testes da seção 07 compartilham um banco para poupar tempo",
+        "why": "Cada um ganha o seu, criado e apagado."
+      }
+    ]
+  },
+  "ex-sy1b4kc9": {
+    "prompt": "Um colega acrescenta `t.Parallel()` ao `TestTheLogHoldsNoToken` e ao `TestStaffRoutes`. O que a aula prevê?",
+    "hint": "Um teste troca uma global.",
+    "choices": [
+      {
+        "text": "Nada muda, já que cada um tem seu servidor",
+        "why": "Os servidores são separados; o logger padrão não."
+      },
+      {
+        "text": "O teste de log lê linhas das requisições do outro teste",
+        "why": "Certo. O logger padrão é um valor só para o processo."
+      },
+      {
+        "text": "O `go test` se recusa a compilá-los",
+        "why": "Os dois compilam; o problema aparece na execução."
+      },
+      {
+        "text": "O `TestMain` para de descartar o log",
+        "why": "O `TestMain` já rodou uma vez; paralelismo não desfaz isso."
+      }
+    ]
+  },
+  "ex-hjjy48n3": {
+    "prompt": "Ordene o que o `testDB` faz para um teste, do primeiro passo ao último.",
+    "hint": "Os cleanups rodam no fim.",
+    "items": [
+      "criar um banco com nome aleatório",
+      "migrá-lo",
+      "abrir um pool e entregá-lo ao teste",
+      "fechar o pool",
+      "apagar o banco `WITH (FORCE)`"
+    ]
+  }
+}

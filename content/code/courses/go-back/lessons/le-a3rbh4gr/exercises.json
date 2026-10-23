@@ -1,0 +1,897 @@
+[
+  {
+    "id": "ex-xpnqpega",
+    "version": 1,
+    "section": "encoding",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `writeJSON` call `json.Marshal` before writing anything to `w`?",
+    "hint": "What has already left once the first byte of the body is sent?",
+    "choices": [
+      {
+        "text": "Because `json.Marshal` is faster than writing to the connection byte by byte through an encoder",
+        "correct": false,
+        "why": "Speed is not the reason the section gives; the order of status and body is."
+      },
+      {
+        "text": "Because a `ResponseWriter` refuses a write of more than one line",
+        "correct": false,
+        "why": "It accepts any bytes, in as many writes as you like."
+      },
+      {
+        "text": "So that a value that cannot be encoded still becomes an honest 500 with nothing sent",
+        "correct": true,
+        "why": "Right. Encoding into memory first means nothing was sent yet when it fails."
+      },
+      {
+        "text": "So that the `Content-Length` header comes out right",
+        "correct": false,
+        "why": "`net/http` works out the length either way for a small body; the reason is the status."
+      }
+    ]
+  },
+  {
+    "id": "ex-xypg42p1",
+    "version": 1,
+    "section": "encoding",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Event` has the tag `json:\"id\"` on its `ID` field. What does a client see without that tag?",
+    "hint": "Where does the default key name come from?",
+    "choices": [
+      {
+        "text": "The key `ID`, spelled the way the Go field is spelled",
+        "correct": true,
+        "why": "Right. Legal, and unusual enough that clients in other languages trip over it."
+      },
+      {
+        "text": "The key `id`, because `encoding/json` lowercases names by itself",
+        "correct": false,
+        "why": "It does not change the case; the tag is what makes it `id`."
+      },
+      {
+        "text": "No `ID` at all, because untagged fields are skipped",
+        "correct": false,
+        "why": "Exported fields are encoded with or without a tag."
+      },
+      {
+        "text": "A compile error in `writeJSON`",
+        "correct": false,
+        "why": "Tags are read at run time; nothing about them is checked by the compiler."
+      }
+    ]
+  },
+  {
+    "id": "ex-qjfa94kn",
+    "version": 1,
+    "section": "encoding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The answer for event 1 is one flat object with `available` beside `id` and `sold`. How did `available` get there?",
+    "hint": "Look at `eventView`.",
+    "choices": [
+      {
+        "text": "The store saves it with every sale",
+        "correct": false,
+        "why": "The store keeps `Seats` and `Sold`; nothing stores what is left."
+      },
+      {
+        "text": "`json.Marshal` computes it from the tags",
+        "correct": false,
+        "why": "Tags rename fields; they compute nothing."
+      },
+      {
+        "text": "The client adds it after reading `seats` and `sold`",
+        "correct": false,
+        "why": "It is in the bytes the server sent."
+      },
+      {
+        "text": "`eventView` embeds `Event` and adds it, and embedded fields appear as the outer struct's own",
+        "correct": true,
+        "why": "Right. Worked out as `Seats - Sold` when the answer is built."
+      }
+    ]
+  },
+  {
+    "id": "ex-dnqxy4cd",
+    "version": 1,
+    "section": "encoding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An export endpoint returns four hundred megabytes of rows. Which way of writing JSON does the lesson point it to, and at what price?",
+    "hint": "Holding everything in memory first is what `writeJSON` does.",
+    "choices": [
+      {
+        "text": "`writeJSON`, because an honest 500 matters more than memory",
+        "correct": false,
+        "why": "For megabytes of rows the lesson prefers streaming."
+      },
+      {
+        "text": "Streaming with `json.NewEncoder(w)`, accepting that a failure shows up as a truncated body",
+        "correct": true,
+        "why": "Right. The error arrives after the 200, and the client has to notice the cut."
+      },
+      {
+        "text": "Streaming, which also lets the server change the status if it fails",
+        "correct": false,
+        "why": "The status left with the first bytes; nothing changes it after that."
+      },
+      {
+        "text": "Neither: JSON is refused above one mebibyte",
+        "correct": false,
+        "why": "The 1 MiB limit is on request bodies read by `decodeJSON`, not on responses."
+      }
+    ]
+  },
+  {
+    "id": "ex-9m1bkf14",
+    "version": 1,
+    "section": "decoding",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A client misspells `quantity` as `quantiy`. What does the one-liner `json.NewDecoder(r.Body).Decode(&p)` do with it?",
+    "hint": "What does a plain decoder do with a field the struct lacks?",
+    "choices": [
+      {
+        "text": "Drops it silently",
+        "correct": true,
+        "why": "Right. The purchase becomes zero tickets with no complaint; `DisallowUnknownFields` turns it into an error."
+      },
+      {
+        "text": "Returns a syntax error with the byte offset of the misspelled key",
+        "correct": false,
+        "why": "The JSON is valid; only the name is unknown."
+      },
+      {
+        "text": "Guesses the closest field and fills `Quantity`",
+        "correct": false,
+        "why": "`encoding/json` matches names, case-insensitively, and never by similarity."
+      },
+      {
+        "text": "Panics inside the handler",
+        "correct": false,
+        "why": "Decoding returns errors; it does not panic."
+      }
+    ]
+  },
+  {
+    "id": "ex-ehxvrwmg",
+    "version": 1,
+    "section": "decoding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `decodeJSON` call `dec.Decode(&struct{}{})` a second time after the first `Decode` succeeded?",
+    "hint": "`{\"quantity\": 2}{\"quantity\": 9}`.",
+    "choices": [
+      {
+        "text": "To check the first object again with stricter rules",
+        "correct": false,
+        "why": "The first object is done; the second call looks past it."
+      },
+      {
+        "text": "To read the rest of the body so the connection can be reused by the next request",
+        "correct": false,
+        "why": "Its purpose is the check: anything other than the end is refused."
+      },
+      {
+        "text": "It has to find the end of the input, and anything else after the object is refused",
+        "correct": true,
+        "why": "Right. Anything after the object, even another valid object, is refused."
+      },
+      {
+        "text": "To decode the `email` field, which the first call skips",
+        "correct": false,
+        "why": "One `Decode` fills every field of the struct."
+      }
+    ]
+  },
+  {
+    "id": "ex-t6062zxh",
+    "version": 1,
+    "section": "decoding",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bytes long was the limit in the refusal of the two-million-character body?",
+    "hint": "`1 << 20`.",
+    "value": 1048576,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-1gnfpfk9",
+    "version": 1,
+    "section": "decoding",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`{\"quantity\": 2,}` was refused as not valid JSON at which byte?",
+    "hint": "The offset points at the `}` after the comma.",
+    "value": 16,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-fkzphsgv",
+    "version": 1,
+    "section": "decoding",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each body sent to `POST /events/1/tickets` with the `detail` it got.",
+    "hint": "Which case of the `switch` caught each?",
+    "pairs": [
+      {
+        "left": "no body at all",
+        "right": "the body is empty"
+      },
+      {
+        "left": "`{\"quantity\": 2`",
+        "right": "the body ends in the middle of a JSON value"
+      },
+      {
+        "left": "`{\"quantity\": \"two\"}`",
+        "right": "the field \"quantity\" has the wrong type: want int"
+      },
+      {
+        "left": "`{\"quantity\": 2, \"seat\": \"A1\"}`",
+        "right": "the body has an unknown field \"seat\""
+      }
+    ],
+    "right_distractors": [
+      "the purchase is not valid"
+    ]
+  },
+  {
+    "id": "ex-hz4b4sxd",
+    "version": 1,
+    "section": "decoding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the unknown-field case of `decodeJSON` test the error's text with `strings.HasPrefix` instead of `errors.As`?",
+    "hint": "What type does `encoding/json` give that error?",
+    "choices": [
+      {
+        "text": "`errors.As` is slower and the decoder runs on every request",
+        "correct": false,
+        "why": "Speed has nothing to do with it."
+      },
+      {
+        "text": "Because the message has to be translated before it reaches the client",
+        "correct": false,
+        "why": "The text is reworded, but that is not why it is matched by prefix."
+      },
+      {
+        "text": "`DisallowUnknownFields` returns a `*json.SyntaxError`, which the case above already caught",
+        "correct": false,
+        "why": "If it did, the syntax case would have answered; it did not."
+      },
+      {
+        "text": "It has no type of its own to match",
+        "correct": true,
+        "why": "Right. `encoding/json` reports an unknown field only as a plain message."
+      }
+    ]
+  },
+  {
+    "id": "ex-pvvnt6rv",
+    "version": 1,
+    "section": "validation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`{}` is sent to buy tickets. Why is the answer 422 and not 400?",
+    "hint": "Did the body decode?",
+    "choices": [
+      {
+        "text": "An empty object is not valid JSON, and 422 is the status for broken JSON",
+        "correct": false,
+        "why": "`{}` is valid JSON, and broken JSON gets 400 in boxoffice."
+      },
+      {
+        "text": "The store refused it because event 1 has no seats",
+        "correct": false,
+        "why": "The store was never reached; and event 1 had 120 seats."
+      },
+      {
+        "text": "It decoded; the zero values failed the checks",
+        "correct": true,
+        "why": "Right. `0` and `\"\"` are read fine and then refused by `validate`."
+      },
+      {
+        "text": "The mux turned a 400 into a 422",
+        "correct": false,
+        "why": "The mux writes only its own 404 and 405."
+      }
+    ]
+  },
+  {
+    "id": "ex-nxm38zjm",
+    "version": 1,
+    "section": "validation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `validate` collect every problem into a map instead of returning at the first one?",
+    "hint": "Think of the client fixing its request.",
+    "choices": [
+      {
+        "text": "A map is the only type `writeProblem` accepts",
+        "correct": false,
+        "why": "It accepts nil too; the map is a choice about the client."
+      },
+      {
+        "text": "Go maps keep their keys in insertion order",
+        "correct": false,
+        "why": "They have no order; `encoding/json` sorts the keys when it writes them."
+      },
+      {
+        "text": "So that one answer names every mistake, instead of making the client send one request per mistake",
+        "correct": true,
+        "why": "Right. `{\"quantity\": 40, \"email\": \"ana\"}` got both fields named at once."
+      },
+      {
+        "text": "Returning early would skip the store",
+        "correct": false,
+        "why": "A failed validation skips the store anyway, on purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-c790ypa2",
+    "version": 1,
+    "section": "validation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new field `discount` may legitimately be `0`, and leaving it out must mean \"use the default\". How does the lesson say to declare it?",
+    "hint": "`encoding/json` cannot tell a missing field from one sent as zero.",
+    "choices": [
+      {
+        "text": "As `int` with `omitempty`",
+        "correct": false,
+        "why": "`omitempty` affects writing, not reading; a missing field still reads as 0."
+      },
+      {
+        "text": "As a string, parsed by hand in `validate`",
+        "correct": false,
+        "why": "That changes the JSON type the client has to send; a pointer keeps it a number."
+      },
+      {
+        "text": "As `int`, and treat 0 as missing",
+        "correct": false,
+        "why": "Then a real discount of 0 is indistinguishable from none."
+      },
+      {
+        "text": "As `*int`",
+        "correct": true,
+        "why": "Right. It stays `nil` when the key is missing and points at 0 when 0 was sent."
+      }
+    ]
+  },
+  {
+    "id": "ex-e3g8vb9w",
+    "version": 1,
+    "section": "validation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `strings.Contains(p.Email, \"@\")` check, according to the lesson?",
+    "hint": "What is the only real test of an address?",
+    "choices": [
+      {
+        "text": "That a name was not typed into the wrong box, and nothing more",
+        "correct": true,
+        "why": "Right. Weak on purpose: stricter patterns reject real addresses and still let typos through."
+      },
+      {
+        "text": "That the address exists",
+        "correct": false,
+        "why": "Only sending a message tests that."
+      },
+      {
+        "text": "That the address follows RFC 5322",
+        "correct": false,
+        "why": "One `@` says nothing about the full grammar."
+      },
+      {
+        "text": "That the domain accepts mail",
+        "correct": false,
+        "why": "No network is consulted."
+      }
+    ]
+  },
+  {
+    "id": "ex-wgqbc2dp",
+    "version": 1,
+    "section": "validation",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the checks of `buyTickets` in the order it runs them.",
+    "hint": "Cheapest first.",
+    "items": [
+      "`pathID` reads the id in the path",
+      "`decodeJSON` reads the body",
+      "`validate` checks the values",
+      "`store.Sell` takes the seats"
+    ],
+    "trap": "`/events/nine/tickets` got a 400 before the body was looked at."
+  },
+  {
+    "id": "ex-fs87cyd1",
+    "version": 1,
+    "section": "problem-details",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What media type does `writeProblem` send?",
+    "hint": "RFC 9457 has one of its own.",
+    "choices": [
+      {
+        "text": "`application/json`",
+        "correct": false,
+        "why": "That is `writeJSON`'s default, which `writeProblem` sets before calling it."
+      },
+      {
+        "text": "`text/plain; charset=utf-8`",
+        "correct": false,
+        "why": "That is what `http.Error` and the mux's own 404 and 405 send."
+      },
+      {
+        "text": "`application/problem+json`",
+        "correct": true,
+        "why": "Right. `writeJSON` keeps a `Content-Type` that is already set."
+      },
+      {
+        "text": "`application/error+json`",
+        "correct": false,
+        "why": "No such type is in the RFC."
+      }
+    ]
+  },
+  {
+    "id": "ex-n0bqemd1",
+    "version": 1,
+    "section": "problem-details",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An unexpected database error reaches `fail`. What `detail` does the client receive?",
+    "hint": "The `default` case.",
+    "choices": [
+      {
+        "text": "None",
+        "correct": true,
+        "why": "Right. The `detail` is empty and left out; the status 500 is all the client gets."
+      },
+      {
+        "text": "The error's message, so the client can report it",
+        "correct": false,
+        "why": "The message can name a file, a query or a host; it goes to the log."
+      },
+      {
+        "text": "A stack trace, as `recoverPanics` logs",
+        "correct": false,
+        "why": "The stack goes to the log, never into a response."
+      },
+      {
+        "text": "`about:blank`",
+        "correct": false,
+        "why": "That is the `type`, not the `detail`."
+      }
+    ]
+  },
+  {
+    "id": "ex-vjynvvkf",
+    "version": 1,
+    "section": "problem-details",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `catchall`, `DELETE /events` answered 404 with a JSON body. What did the catch-all pattern `/` cost?",
+    "hint": "Before it was registered, what did the mux answer for that request?",
+    "choices": [
+      {
+        "text": "Nothing: the mux writes a JSON 404 by itself for wrong methods",
+        "correct": false,
+        "why": "The mux writes a text 405 for a wrong method, as boxoffice still shows."
+      },
+      {
+        "text": "The `GET /events` route, which `/` replaced",
+        "correct": false,
+        "why": "`GET /events` still answered `every event`; it is more specific."
+      },
+      {
+        "text": "The honest 405 and its `Allow` header, because `/` now matches every path and method",
+        "correct": true,
+        "why": "Right. The mux always finds a pattern, so it never says the method is wrong."
+      },
+      {
+        "text": "A panic at start, because `/` conflicts with `GET /events`",
+        "correct": false,
+        "why": "One is more specific, so there is no conflict; the server ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-vkt3wp1t",
+    "version": 1,
+    "section": "problem-details",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each member of a problem details object to what it holds.",
+    "hint": "The table of section 05.",
+    "pairs": [
+      {
+        "left": "`type`",
+        "right": "a URI naming the kind of problem"
+      },
+      {
+        "left": "`title`",
+        "right": "the same short summary for every occurrence"
+      },
+      {
+        "left": "`detail`",
+        "right": "this occurrence, in words a developer can act on"
+      },
+      {
+        "left": "`errors`",
+        "right": "boxoffice's extension: problems field by field"
+      }
+    ],
+    "right_distractors": [
+      "the stack trace of the failure"
+    ]
+  },
+  {
+    "id": "ex-n1y6t0gf",
+    "version": 1,
+    "section": "problem-details",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When the status says it all, the `type` of a problem is ___.",
+    "hint": "A URI that points nowhere.",
+    "blanks": [
+      {
+        "accept": [
+          "about:blank"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-04qz1hzx",
+    "version": 1,
+    "section": "domain-errors",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the store return `ErrSoldOut` instead of an HTTP 409?",
+    "hint": "Who else will call the store?",
+    "choices": [
+      {
+        "text": "Callers without HTTP will use it",
+        "correct": true,
+        "why": "Right. PostgreSQL in lesson 6 and gRPC in lesson 10 have no 404 or 409."
+      },
+      {
+        "text": "Because a Go function is not allowed to import `net/http` outside `main`",
+        "correct": false,
+        "why": "Any package may import it; the store chooses not to speak HTTP."
+      },
+      {
+        "text": "409 does not exist in `net/http`",
+        "correct": false,
+        "why": "`http.StatusConflict` is 409, and `fail` uses it."
+      },
+      {
+        "text": "Errors are faster to compare than status codes",
+        "correct": false,
+        "why": "The reason is who speaks which vocabulary."
+      }
+    ]
+  },
+  {
+    "id": "ex-ecsj5k4w",
+    "version": 1,
+    "section": "domain-errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `fail` use `errors.Is(err, ErrNotFound)` rather than `err == ErrNotFound`?",
+    "hint": "What will the store do to its errors from lesson 6 on?",
+    "choices": [
+      {
+        "text": "It also matches a wrapped error",
+        "correct": true,
+        "why": "Right. `==` would miss the wrapped error and answer 500."
+      },
+      {
+        "text": "`==` does not compile on two errors",
+        "correct": false,
+        "why": "It compiles; errors are interfaces and comparable."
+      },
+      {
+        "text": "`errors.Is` ignores the case of the message",
+        "correct": false,
+        "why": "It compares error values, never messages."
+      },
+      {
+        "text": "`==` compares the messages, which change between versions",
+        "correct": false,
+        "why": "`==` compares the values themselves."
+      }
+    ]
+  },
+  {
+    "id": "ex-a25jcp7j",
+    "version": 1,
+    "section": "domain-errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a purchase that does not fit a 409 Conflict rather than a 422?",
+    "hint": "Would the same request ever succeed?",
+    "choices": [
+      {
+        "text": "The values are invalid, and 409 is the newer name for 422",
+        "correct": false,
+        "why": "They are distinct statuses; the values here are valid."
+      },
+      {
+        "text": "Valid request, conflicting with the event's current state",
+        "correct": true,
+        "why": "Right. A refund that frees seats could make the same request succeed tomorrow."
+      },
+      {
+        "text": "Because the store returned it before `validate` ran",
+        "correct": false,
+        "why": "`validate` runs first; the store is last."
+      },
+      {
+        "text": "Because 409 tells the client to retry immediately in a loop",
+        "correct": false,
+        "why": "Nothing in 409 says that."
+      }
+    ]
+  },
+  {
+    "id": "ex-kjwx7gah",
+    "version": 1,
+    "section": "domain-errors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`Sell` reads the event, checks the seats and writes, all under the write lock. What goes wrong if it released the lock between the check and the write?",
+    "hint": "Two buyers, one seat.",
+    "choices": [
+      {
+        "text": "Both read one seat left, both pass, both are sold it",
+        "correct": true,
+        "why": "Right. Holding the lock from read to write makes the sale all or nothing."
+      },
+      {
+        "text": "The second buyer waits forever for the lock that was released",
+        "correct": false,
+        "why": "A released lock is free to take; nobody waits forever."
+      },
+      {
+        "text": "The map panics because it is read and written by the same goroutine twice in a row",
+        "correct": false,
+        "why": "One goroutine reading and writing a map is fine."
+      },
+      {
+        "text": "Nothing, because `ErrSoldOut` is a sentinel",
+        "correct": false,
+        "why": "A sentinel names the refusal; it does not prevent the race."
+      }
+    ]
+  },
+  {
+    "id": "ex-zrfd7mn4",
+    "version": 1,
+    "section": "domain-errors",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the first purchase of 2 tickets for event 1, how many seats did `remaining` report?",
+    "hint": "Event 1 has 120 seats.",
+    "value": 118,
+    "tolerance": 0,
+    "unit": "seats"
+  },
+  {
+    "id": "ex-1tahfs6a",
+    "version": 1,
+    "section": "boxoffice",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The manager creates the Organ Recital. Besides 201, what tells the client where to read the new event?",
+    "hint": "A header.",
+    "choices": [
+      {
+        "text": "`Content-Location: /admin/events/3`, the address of the staff copy",
+        "correct": false,
+        "why": "boxoffice sends `Location`, pointing at the public route."
+      },
+      {
+        "text": "`Location: /events/3`",
+        "correct": true,
+        "why": "Right. That is what 201 promises a client."
+      },
+      {
+        "text": "A `link` field inside the JSON body of the answer",
+        "correct": false,
+        "why": "The body is the event's view; it carries no link."
+      },
+      {
+        "text": "Nothing; the client has to list every event and look for it",
+        "correct": false,
+        "why": "The `Location` header was there in the capture."
+      }
+    ]
+  },
+  {
+    "id": "ex-pp0f7a22",
+    "version": 1,
+    "section": "boxoffice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The door token posts a new event. Who refuses it, and with what?",
+    "hint": "The token is real.",
+    "choices": [
+      {
+        "text": "`requireManager`, with a 403 problem",
+        "correct": true,
+        "why": "Right. `only a manager may do this`, as `application/problem+json`."
+      },
+      {
+        "text": "`requireStaff`, with a 401 problem",
+        "correct": false,
+        "why": "The token is known, so `requireStaff` lets it through."
+      },
+      {
+        "text": "`validate`, with a 422 listing the role as an invalid field",
+        "correct": false,
+        "why": "The role check runs before the body is read."
+      },
+      {
+        "text": "The mux, with a text 405",
+        "correct": false,
+        "why": "`POST /admin/events` is registered."
+      }
+    ]
+  },
+  {
+    "id": "ex-0wjr86wy",
+    "version": 1,
+    "section": "boxoffice",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After lesson 3, which of these answers does boxoffice send as `application/problem+json`? Choose all that apply.",
+    "hint": "Two middlewares were changed; the mux was not.",
+    "choices": [
+      {
+        "text": "the 401 from `requireStaff`",
+        "correct": true,
+        "why": "Right. It now calls `writeProblem`."
+      },
+      {
+        "text": "the 500 from `recoverPanics`",
+        "correct": true,
+        "why": "Right, with no `detail`."
+      },
+      {
+        "text": "the 405 for `DELETE /events`",
+        "correct": false,
+        "why": "The mux writes that one, in plain text."
+      },
+      {
+        "text": "the 409 for the sold-out Chamber Choir",
+        "correct": true,
+        "why": "Right. `fail` maps `ErrSoldOut` to it."
+      },
+      {
+        "text": "the 201 receipt of a purchase",
+        "correct": false,
+        "why": "A success is plain `application/json`."
+      }
+    ]
+  },
+  {
+    "id": "ex-2brfdgpv",
+    "version": 1,
+    "section": "boxoffice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The server is stopped and started again. What is left of the Organ Recital and the two tickets sold?",
+    "hint": "Where does the store keep them?",
+    "choices": [
+      {
+        "text": "Both survive, because `writeJSON` wrote them to disk",
+        "correct": false,
+        "why": "`writeJSON` writes to the response, nowhere else."
+      },
+      {
+        "text": "Nothing of either: both lived in a map in memory",
+        "correct": true,
+        "why": "Right. The store is a map in memory; lesson 6 puts it in PostgreSQL."
+      },
+      {
+        "text": "The event survives but the sale does not",
+        "correct": false,
+        "why": "Both live in the same map."
+      },
+      {
+        "text": "Whatever the server's log recorded is replayed at start",
+        "correct": false,
+        "why": "The log is read by people, not by boxoffice."
+      }
+    ]
+  },
+  {
+    "id": "ex-kc3jrb5q",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put these requests to `POST /events/1/tickets` in the order of the check that stops them, earliest first.",
+    "hint": "The path, the body, the values, the seats.",
+    "items": [
+      "`/events/nine/tickets` with a good body",
+      "a body of `{\"quantity\": 2,}`",
+      "a body of `{\"quantity\": 40, \"email\": \"ana\"}`",
+      "200 tickets bought 10 at a time until event 1 runs out"
+    ],
+    "trap": "Only the last one ever reaches the store."
+  },
+  {
+    "id": "ex-1esf12jy",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A client sends `{\"quantity\": 2, \"email\": \"ana@example.com\"}` to `/events/2/tickets` and then `{\"Quantity\": 2}` to `/events/1/tickets`. What does it get?",
+    "hint": "Event 2 is the Chamber Choir. `encoding/json` matches names case-insensitively.",
+    "choices": [
+      {
+        "text": "409, then 422 for the missing e-mail",
+        "correct": true,
+        "why": "Right. Sold out first; then `Quantity` fills `quantity` and only `email` is missing."
+      },
+      {
+        "text": "409, then 400 for an unknown field `Quantity`",
+        "correct": false,
+        "why": "The decoder matches `Quantity` to the `quantity` tag, so it is not unknown."
+      },
+      {
+        "text": "404, then 422",
+        "correct": false,
+        "why": "Event 2 exists; it is sold out."
+      },
+      {
+        "text": "201 twice, since both bodies are valid JSON objects with a quantity of two",
+        "correct": false,
+        "why": "Valid JSON is the first step of four."
+      }
+    ]
+  }
+]

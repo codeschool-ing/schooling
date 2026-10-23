@@ -1,0 +1,566 @@
+[
+  {
+    "id": "ex-48j54bgd",
+    "version": 1,
+    "section": "initialiser-blocks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `Shelf`'s output, `static block: [fiction, history]` came before `main starts`. Why?",
+    "hint": "`main` is a static method of `Shelf`.",
+    "choices": [
+      {
+        "text": "Static blocks run when the JVM starts, before any class is chosen",
+        "correct": false,
+        "why": "They run per class, when that class is first used; section 03 shows a class whose block waited until `new Book()`."
+      },
+      {
+        "text": "The class must be initialised before any of its static methods runs",
+        "correct": true,
+        "why": "Right: running `main` is a use of `Shelf`, so its static initialisers and blocks ran first."
+      },
+      {
+        "text": "The block is written above `main` in the file",
+        "correct": false,
+        "why": "Position in the file orders static initialisers among themselves, not against `main`."
+      },
+      {
+        "text": "`javac` moved the block into the first line of `main`",
+        "correct": false,
+        "why": "`javap -p` showed it as its own member, `static {}`, separate from `main`."
+      }
+    ]
+  },
+  {
+    "id": "ex-gsvg7f3g",
+    "version": 1,
+    "section": "initialiser-blocks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`javap -p Shelf` listed `static {}` and no member for the instance block. Where did the instance block's code go?",
+    "hint": "It ran before each constructor's own line.",
+    "choices": [
+      {
+        "text": "Into the class initialiser, next to the static block",
+        "correct": false,
+        "why": "Then it would have run once; the output showed it twice, once per object."
+      },
+      {
+        "text": "Into `main`, before each `new Shelf`",
+        "correct": false,
+        "why": "`main` is one method among many callers; the block runs whoever calls the constructor."
+      },
+      {
+        "text": "Into the start of every constructor, after its superclass call",
+        "correct": true,
+        "why": "Right: the compiler copies instance initialisers and blocks into each constructor, which is why none can skip them."
+      },
+      {
+        "text": "Nowhere: it is interpreted from the source at run time",
+        "correct": false,
+        "why": "The JVM runs bytecode only; the source is not in the class file."
+      }
+    ]
+  },
+  {
+    "id": "ex-m40n3p8x",
+    "version": 1,
+    "section": "initialiser-blocks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A class has two constructors that both need the same five lines of set-up. What does the section recommend over an instance block?",
+    "hint": "Lesson 13 had one constructor call another.",
+    "choices": [
+      {
+        "text": "One constructor calling the other with `this(...)`",
+        "correct": true,
+        "why": "Right: the shared work is then visible in the constructor somebody is reading."
+      },
+      {
+        "text": "A static block, so the set-up runs only once",
+        "correct": false,
+        "why": "Set-up for each object cannot run once for the class; the objects would share one result."
+      },
+      {
+        "text": "Copying the five lines into both constructors",
+        "correct": false,
+        "why": "That is two copies to keep in step, which is what both the block and `this(...)` avoid."
+      }
+    ]
+  },
+  {
+    "id": "ex-3yfj3rcm",
+    "version": 1,
+    "section": "initialiser-blocks",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A block of braces inside a class, marked with the keyword `___`, runs once per class rather than once per object.",
+    "hint": "It is the same keyword lesson 15 put on fields and methods.",
+    "blanks": [
+      {
+        "accept": [
+          "static"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6a2hjgjy",
+    "version": 1,
+    "section": "the-order",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Book extends Item`, and neither class has been used yet. Put what happens on the first `new Book()` in order.",
+    "hint": "Classes before objects, superclass before subclass.",
+    "items": [
+      "`Item`'s static block",
+      "`Book`'s static block",
+      "`Item`'s instance block",
+      "`Item`'s constructor body",
+      "`Book`'s field initialiser",
+      "`Book`'s constructor body"
+    ]
+  },
+  {
+    "id": "ex-sj8wr8xf",
+    "version": 1,
+    "section": "the-order",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Order` printed lines numbered 1 to 7 for the first `Book`. How many numbered lines did the second `new Book()` print?",
+    "hint": "Which steps happen once per class?",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "lines"
+  },
+  {
+    "id": "ex-gv6xhejn",
+    "version": 1,
+    "section": "the-order",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`main: before the first Book` printed before either static block of `Item` or `Book`. What does that show?",
+    "hint": "When is a class initialised?",
+    "choices": [
+      {
+        "text": "That `System.out` buffered the static blocks' lines",
+        "correct": false,
+        "why": "The lines are in the order they were printed; nothing was held back."
+      },
+      {
+        "text": "That `Order`'s static block runs before every other class's",
+        "correct": false,
+        "why": "`Order` has no static block, and the point is when `Item` and `Book` ran theirs."
+      },
+      {
+        "text": "That a class is initialised the first time it is used, not when the program starts",
+        "correct": true,
+        "why": "Right: `Item` and `Book` waited until `new Book()` needed them."
+      },
+      {
+        "text": "That static blocks run after `main` returns",
+        "correct": false,
+        "why": "They ran in the middle of `main`, at the first `new Book()`, and `main` carried on after them."
+      }
+    ]
+  },
+  {
+    "id": "ex-b2d4pm4p",
+    "version": 1,
+    "section": "the-order",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You swap `Book`'s field `title = note(\"5 ...\")` and its instance block in the source, so the block is written first. What changes in the output?",
+    "hint": "Inside one class, which rule decides?",
+    "choices": [
+      {
+        "text": "Nothing: field initialisers always run before instance blocks",
+        "correct": false,
+        "why": "There is no such ranking between the two; they run together, in source order."
+      },
+      {
+        "text": "Lines 5 and 6 change places, in both objects",
+        "correct": true,
+        "why": "Right: initialisers and blocks of one class run in the order they are written."
+      },
+      {
+        "text": "Line 6 moves before line 3, ahead of `Item`'s part",
+        "correct": false,
+        "why": "`Item`'s part still finishes first; the swap only reorders steps inside `Book`."
+      },
+      {
+        "text": "The compiler refuses a field declared below an instance block",
+        "correct": false,
+        "why": "Fields and blocks may come in any order; only reading a field before its declaration is restricted."
+      }
+    ]
+  },
+  {
+    "id": "ex-anbz76jk",
+    "version": 1,
+    "section": "the-order",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`javac Order.java` compiled one file. How many `.class` files did it write, and why?",
+    "hint": "`ls *.class` listed `Shelf.class` too, from section 02.",
+    "choices": [
+      {
+        "text": "One, `Order.class`, because a file compiles to one class file",
+        "correct": false,
+        "why": "The listing had `Book.class` and `Item.class` beside it."
+      },
+      {
+        "text": "Four, one per class plus one for the file itself",
+        "correct": false,
+        "why": "`Shelf.class` was the fourth, and it belongs to section 02's file."
+      },
+      {
+        "text": "Three, one per class declared in it",
+        "correct": true,
+        "why": "Right: `Book`, `Item` and `Order`, each initialised separately by the JVM."
+      }
+    ]
+  },
+  {
+    "id": "ex-8d6c3ah9",
+    "version": 1,
+    "section": "constructor-traps",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Trap` printed `Item() sees: null, 0 pages`. Why was `pages` 0 when its declaration says `= 100`?",
+    "hint": "When does `Book`'s field initialiser run relative to `super()`?",
+    "choices": [
+      {
+        "text": "Because `int` fields ignore their initialiser when the class has a superclass",
+        "correct": false,
+        "why": "The initialiser ran; `afterwards` printed 100."
+      },
+      {
+        "text": "Because it runs after `super()` returns, and `Item()` read it before",
+        "correct": true,
+        "why": "Right: during `Item()` the field still held its default, 0."
+      },
+      {
+        "text": "Because `describe()` in `Item` has its own `pages` field",
+        "correct": false,
+        "why": "`Item` has no `pages`; the call reached `Book`'s `describe()` and read `Book`'s field."
+      },
+      {
+        "text": "Because `final` on `title` made the whole object read-only during construction",
+        "correct": false,
+        "why": "`pages` is not `final`, and nothing is read-only during construction; it is simply unset."
+      }
+    ]
+  },
+  {
+    "id": "ex-w62brv8x",
+    "version": 1,
+    "section": "constructor-traps",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `Trap`, `Item()` calls `describe()`. Which version runs, and why does that create the problem?",
+    "hint": "What kind of object is being built?",
+    "choices": [
+      {
+        "text": "`Item`'s version, because the call is written inside `Item`",
+        "correct": false,
+        "why": "Then it would have printed `an item`; it printed `null, 0 pages`."
+      },
+      {
+        "text": "`Book`'s, because the object is a `Book`, and its fields are not set yet",
+        "correct": true,
+        "why": "Right: the override runs before the code that sets the fields it reads."
+      },
+      {
+        "text": "Neither: a constructor cannot call instance methods, so the JVM substitutes defaults",
+        "correct": false,
+        "why": "It can, and it did; the defaults are the fields' values, not a substitution."
+      }
+    ]
+  },
+  {
+    "id": "ex-zf164xq3",
+    "version": 1,
+    "section": "constructor-traps",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the section give as the rule that avoids the trap?",
+    "hint": "Which methods can a subclass not replace?",
+    "choices": [
+      {
+        "text": "Declare every field `final`, so that it can be set only once",
+        "correct": false,
+        "why": "`title` was `final` and still read `null`."
+      },
+      {
+        "text": "Give every field an initialiser",
+        "correct": false,
+        "why": "`pages` had one and still read 0."
+      },
+      {
+        "text": "A constructor should not call a method a subclass can override",
+        "correct": true,
+        "why": "Right: call a `private`, `static` or `final` method, or do the work after construction."
+      },
+      {
+        "text": "Put the subclass's constructor body above the superclass's",
+        "correct": false,
+        "why": "Java runs the superclass's part first; no arrangement of the source changes that."
+      }
+    ]
+  },
+  {
+    "id": "ex-hxmnxapn",
+    "version": 1,
+    "section": "constructor-traps",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `Early`, `this.title = title;` comes before `super();`. Why did `Item()` then see the title but still see `0 pages`?",
+    "hint": "`pages = 100` is not a statement in the constructor.",
+    "choices": [
+      {
+        "text": "The field initialiser still runs after `super()` returns",
+        "correct": true,
+        "why": "Right: only what is written above the call moves; step 5 stays where section 03 put it."
+      },
+      {
+        "text": "Code before `super()` may set reference fields but not `int` ones",
+        "correct": false,
+        "why": "Any field of the object may be assigned there; `pages` simply was not."
+      },
+      {
+        "text": "`Item()` caches the first value it reads and ignores later ones",
+        "correct": false,
+        "why": "`Item()` caches nothing; it read what the field held at that moment."
+      },
+      {
+        "text": "Java 25 runs field initialisers before constructors only for `final` fields",
+        "correct": false,
+        "why": "There is no such rule; the order of initialisers is the same for every field."
+      }
+    ]
+  },
+  {
+    "id": "ex-q92fg3t6",
+    "version": 1,
+    "section": "constructor-traps",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these may a Java 25 constructor do before its `super(...)` call? Choose all that apply.",
+    "hint": "The object is not built yet, so it may be written to and not read.",
+    "choices": [
+      {
+        "text": "Check an argument and throw an exception",
+        "correct": true,
+        "why": "Yes: `Early` refused a blank title before `Item` was involved."
+      },
+      {
+        "text": "Assign one of the object's own fields",
+        "correct": true,
+        "why": "Yes: `this.title = title;` did exactly that."
+      },
+      {
+        "text": "Call one of the object's own instance methods",
+        "correct": false,
+        "why": "No: the object is not built yet, so its methods may not be called there."
+      },
+      {
+        "text": "Read a field the superclass's constructor sets",
+        "correct": false,
+        "why": "No: the superclass's constructor has not run, and reading the object is not allowed there."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ngxsceh",
+    "version": 1,
+    "section": "constructor-traps",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`javac --release 21 Early.java` refused the file. What did the message name?",
+    "hint": "It named the feature and the release that has it.",
+    "choices": [
+      {
+        "text": "A missing semicolon on line 20",
+        "correct": false,
+        "why": "Line 20 was the assignment before `super()`, and the message was about the feature, not punctuation."
+      },
+      {
+        "text": "Flexible constructors, which need source 25",
+        "correct": true,
+        "why": "Right: statements before `super(...)` do not exist on 21."
+      },
+      {
+        "text": "An `IllegalArgumentException` thrown at compile time",
+        "correct": false,
+        "why": "The exception came when `java Early` ran on 25; the 21 compile never got that far."
+      }
+    ]
+  },
+  {
+    "id": "ex-2rsqf88b",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A class `Report` has `static int count = 0;` and a static block `count = 10;` written below it. What is `Report.count` the first time a program reads it?",
+    "hint": "Static initialisers and blocks run as one, in source order.",
+    "choices": [
+      {
+        "text": "0, because the initialiser on the declaration wins",
+        "correct": false,
+        "why": "The declaration's initialiser runs first, and then the block below it overwrites it."
+      },
+      {
+        "text": "10",
+        "correct": true,
+        "why": "Right: `count = 0` runs, then the block sets 10, all before the read."
+      },
+      {
+        "text": "It depends on whether an object of `Report` was created first",
+        "correct": false,
+        "why": "Static fields are initialised once per class, with or without objects."
+      },
+      {
+        "text": "The compiler refuses two assignments to a static field",
+        "correct": false,
+        "why": "Only a `static final` field may be assigned once; this one is not final."
+      }
+    ]
+  },
+  {
+    "id": "ex-q0a33hf8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program creates a thousand objects of `Shelf`. How many times does `Shelf`'s static block run?",
+    "hint": "It belongs to the class.",
+    "choices": [
+      {
+        "text": "Once",
+        "correct": true,
+        "why": "Right: static initialisation happens once per class, whatever the number of objects."
+      },
+      {
+        "text": "A thousand times, once per object",
+        "correct": false,
+        "why": "That is the instance block; the static one ran once in section 02's output."
+      },
+      {
+        "text": "Twice, because `Shelf` has two constructors",
+        "correct": false,
+        "why": "Constructors decide nothing about static blocks; they belong to objects."
+      },
+      {
+        "text": "Zero times, unless `main` calls it",
+        "correct": false,
+        "why": "A static block cannot be called; the JVM runs it when the class is first used."
+      }
+    ]
+  },
+  {
+    "id": "ex-4e8zd6n8",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of a class to how often it runs.",
+    "hint": "Class or object?",
+    "pairs": [
+      {
+        "left": "a static block",
+        "right": "once per class"
+      },
+      {
+        "left": "an instance block",
+        "right": "once per object, in every constructor"
+      },
+      {
+        "left": "a constructor body",
+        "right": "once per object, only for the constructor called"
+      }
+    ],
+    "right_distractors": [
+      "once per method call"
+    ]
+  },
+  {
+    "id": "ex-wr4zcrbw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `Book` constructor with `this.title = title;` before `super();` compiles on JDK 25. The team's servers run Java 21. What happens when they build with `--release 21`?",
+    "hint": "Lesson 1's `--release` compiles as that release would.",
+    "choices": [
+      {
+        "text": "It compiles, and the JVM on the server reorders the statements",
+        "correct": false,
+        "why": "The refusal happens at compile time; no class file is produced."
+      },
+      {
+        "text": "It compiles, and fails with `UnsupportedClassVersionError` on the server",
+        "correct": false,
+        "why": "With `--release 21` the version would be 65, which 21 accepts; the problem comes earlier."
+      },
+      {
+        "text": "The compiler refuses it: flexible constructors need source 25",
+        "correct": true,
+        "why": "Right: that is the transcript at the end of section 04."
+      },
+      {
+        "text": "It compiles with a warning that the order is not guaranteed",
+        "correct": false,
+        "why": "There is no such warning; it is an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-cpqy9f32",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Item()` calls a `private` method `label()` instead of the overridable `describe()`. Can `Book` change what `Item()` prints?",
+    "hint": "Can a subclass override a private method?",
+    "choices": [
+      {
+        "text": "Yes, by declaring its own `label()`",
+        "correct": false,
+        "why": "A `label()` in `Book` is a different method; `Item()` still calls its own private one."
+      },
+      {
+        "text": "No: `Item()` keeps calling its own, whatever `Book` declares",
+        "correct": true,
+        "why": "Right: a private method is not inherited, so nothing in `Book` replaces it; that is why the rule names private, static and final methods as safe to call."
+      },
+      {
+        "text": "Only if `Book`'s fields are set before `super()`",
+        "correct": false,
+        "why": "Setting fields early changes what an override would read, not whether a private method can be replaced."
+      }
+    ]
+  }
+]

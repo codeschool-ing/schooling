@@ -1,0 +1,928 @@
+[
+  {
+    "id": "ex-fs61cydn",
+    "version": 1,
+    "section": "the-idea",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Lesson 6 wrote SQL and Go by hand, lesson 7 let GORM write the SQL. What does sqlc change?",
+    "hint": "Who writes which half?",
+    "choices": [
+      {
+        "text": "You write the SQL; a program writes the Go",
+        "correct": true,
+        "why": "Right. The queries stay yours, and the scanning code is generated from them."
+      },
+      {
+        "text": "You write structs; sqlc writes the SQL from them at run time",
+        "correct": false,
+        "why": "That describes an ORM such as GORM, the opposite direction."
+      },
+      {
+        "text": "Both halves are still written by hand, with a linter between them",
+        "correct": false,
+        "why": "The Go half is generated; nobody keeps it in step by hand."
+      },
+      {
+        "text": "sqlc replaces pgx as the driver",
+        "correct": false,
+        "why": "The generated code calls pgx; sqlc is not a driver."
+      }
+    ]
+  },
+  {
+    "id": "ex-vqcqfwp0",
+    "version": 1,
+    "section": "the-idea",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When does sqlc itself run?",
+    "hint": "Is it imported by boxoffice?",
+    "choices": [
+      {
+        "text": "On every request, to build the query",
+        "correct": false,
+        "why": "Nothing of sqlc runs inside the server; only the code it left behind."
+      },
+      {
+        "text": "When the server starts, to read queries.sql from disk",
+        "correct": false,
+        "why": "The SQL is copied into the generated Go file; the server reads no .sql file."
+      },
+      {
+        "text": "Inside PostgreSQL, as a stored procedure that the driver calls on each query",
+        "correct": false,
+        "why": "sqlc is a program on your machine, not something installed in the database."
+      },
+      {
+        "text": "Before go build, like a compiler",
+        "correct": true,
+        "why": "Right. It writes ordinary Go that is checked in beside the code that calls it."
+      }
+    ]
+  },
+  {
+    "id": "ex-wx3v9d7m",
+    "version": 1,
+    "section": "the-idea",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each input of the pipeline to what it says.",
+    "hint": "Three files go in.",
+    "pairs": [
+      {
+        "left": "`schema.sql`",
+        "right": "the tables and their columns"
+      },
+      {
+        "left": "`queries.sql`",
+        "right": "each query, with a name and what it returns"
+      },
+      {
+        "left": "`sqlc.yaml`",
+        "right": "where the other two are and what to generate"
+      }
+    ],
+    "right_distractors": [
+      "the HTTP routes of the service"
+    ]
+  },
+  {
+    "id": "ex-h13tq7ec",
+    "version": 1,
+    "section": "installing-sqlc",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `go install` of sqlc need a C compiler when most Go tools do not?",
+    "hint": "How does sqlc understand PostgreSQL's SQL?",
+    "choices": [
+      {
+        "text": "It generates C files instead of Go",
+        "correct": false,
+        "why": "The output is Go; the C is inside sqlc itself."
+      },
+      {
+        "text": "Go 1.27 compiles every module through gcc",
+        "correct": false,
+        "why": "Pure Go builds without gcc; only cgo needs it."
+      },
+      {
+        "text": "It embeds PostgreSQL's C parser via cgo",
+        "correct": true,
+        "why": "Right. cgo is Go's bridge to C, and it needs a C compiler to build."
+      },
+      {
+        "text": "The gcc package carries PostgreSQL's headers",
+        "correct": false,
+        "why": "gcc is the compiler; the parser's source comes with sqlc's module."
+      }
+    ]
+  },
+  {
+    "id": "ex-frhxj2zn",
+    "version": 1,
+    "section": "installing-sqlc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why install `sqlc@v1.31.1` rather than `sqlc@latest`?",
+    "hint": "Look at the top of a generated file.",
+    "choices": [
+      {
+        "text": "`@latest` is refused by go install",
+        "correct": false,
+        "why": "It is accepted; it is just not reproducible."
+      },
+      {
+        "text": "Later releases need a newer gcc",
+        "correct": false,
+        "why": "The lesson says nothing about that; the argument is reproducible output."
+      },
+      {
+        "text": "Generated files record the version that made them",
+        "correct": true,
+        "why": "Right. Pinning keeps every machine producing the same files."
+      },
+      {
+        "text": "v1.31.1 is the only release that supports pgx/v5",
+        "correct": false,
+        "why": "The lesson pins it for consistency, not because others lack pgx support."
+      }
+    ]
+  },
+  {
+    "id": "ex-q853fp8a",
+    "version": 1,
+    "section": "installing-sqlc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The build stops with `cgo: C compiler \"gcc\" not found` in `runtime/cgo`. What is the fix on Ubuntu?",
+    "hint": "Read the message to its end.",
+    "choices": [
+      {
+        "text": "Set `CGO_ENABLED=1`",
+        "correct": false,
+        "why": "cgo was already trying; it found no compiler to run."
+      },
+      {
+        "text": "`sudo apt install -y gcc`",
+        "correct": true,
+        "why": "Right. One package, and lesson 15's race detector needs it too."
+      },
+      {
+        "text": "Reinstall Go from the archive",
+        "correct": false,
+        "why": "Go is fine; the C compiler is what is missing."
+      },
+      {
+        "text": "Run go install as root with sudo",
+        "correct": false,
+        "why": "Permissions are not the problem; the compiler does not exist."
+      }
+    ]
+  },
+  {
+    "id": "ex-jd91cewh",
+    "version": 1,
+    "section": "configuration",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `queries.sql`, what does the line `-- name: SellSeats :one` do?",
+    "hint": "It is not an ordinary comment.",
+    "choices": [
+      {
+        "text": "Nothing; SQL ignores comments",
+        "correct": false,
+        "why": "PostgreSQL ignores it, sqlc reads it."
+      },
+      {
+        "text": "Marks the query to run once at start-up",
+        "correct": false,
+        "why": ":one is about rows returned, not how often it runs."
+      },
+      {
+        "text": "Names the Go function and says it returns one row",
+        "correct": true,
+        "why": "Right. The annotation decides the function's name and its result."
+      },
+      {
+        "text": "Restricts the query to a single connection of the pool",
+        "correct": false,
+        "why": "The pool is not mentioned by the annotation."
+      }
+    ]
+  },
+  {
+    "id": "ex-p2hfck3e",
+    "version": 1,
+    "section": "configuration",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each annotation to what the generated function returns.",
+    "hint": "Four annotations from the table.",
+    "pairs": [
+      {
+        "left": "`:one`",
+        "right": "one struct, or pgx.ErrNoRows"
+      },
+      {
+        "left": "`:many`",
+        "right": "a slice, empty when there are no rows"
+      },
+      {
+        "left": "`:exec`",
+        "right": "an error and nothing else"
+      },
+      {
+        "left": "`:execrows`",
+        "right": "the rows affected, and an error"
+      }
+    ],
+    "right_distractors": [
+      "a channel of rows"
+    ]
+  },
+  {
+    "id": "ex-wndm8k82",
+    "version": 1,
+    "section": "configuration",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `SellSeats`, why is the quantity written `sqlc.arg(quantity)` instead of `$1`?",
+    "hint": "What does sqlc name a `$1` after?",
+    "choices": [
+      {
+        "text": "It is compared with an expression, not a column, so sqlc has no column to name it after; the same name twice is one parameter",
+        "correct": true,
+        "why": "Right. It becomes the field Quantity of SellSeatsParams."
+      },
+      {
+        "text": "PostgreSQL rejects `$1` in an UPDATE",
+        "correct": false,
+        "why": "The generated SQL uses `$1`; PostgreSQL accepts it."
+      },
+      {
+        "text": "`sqlc.arg` makes the parameter optional",
+        "correct": false,
+        "why": "That is `sqlc.narg`, section 08."
+      },
+      {
+        "text": "To keep the value out of the SQL text",
+        "correct": false,
+        "why": "`$1` keeps it out as well; this is about naming."
+      }
+    ]
+  },
+  {
+    "id": "ex-q4qb52z7",
+    "version": 1,
+    "section": "configuration",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Code under a directory called ___ can only be imported from inside the same module, which is why sqlc's output goes there.",
+    "hint": "The `out` of sqlc.yaml begins with it.",
+    "blanks": [
+      {
+        "accept": [
+          "internal"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7rfvmpf4",
+    "version": 1,
+    "section": "generated-code",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many lines of Go did `sqlc generate` write, across its three files?",
+    "hint": "The `wc -l` total.",
+    "value": 146,
+    "tolerance": 0,
+    "unit": "lines"
+  },
+  {
+    "id": "ex-tb08q5f8",
+    "version": 1,
+    "section": "generated-code",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are the fields of the generated `Event` `int32` while boxoffice's own `Event` uses `int`?",
+    "hint": "Where does sqlc take the types from?",
+    "choices": [
+      {
+        "text": "sqlc rounds every number down to save memory",
+        "correct": false,
+        "why": "It follows the column type, nothing else."
+      },
+      {
+        "text": "pgx/v5 has no 64-bit integer",
+        "correct": false,
+        "why": "pgx handles bigint fine; the column here is 32-bit."
+      },
+      {
+        "text": "sqlc.yaml asks for int32",
+        "correct": false,
+        "why": "The configuration says nothing about integer sizes."
+      },
+      {
+        "text": "The columns are 32-bit `integer`",
+        "correct": true,
+        "why": "Right. Types come from the table, and section 06 converts between the two."
+      }
+    ]
+  },
+  {
+    "id": "ex-86hmz3fw",
+    "version": 1,
+    "section": "generated-code",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What lets the same generated `Queries` run through a pool, a single connection or a transaction?",
+    "hint": "Look at db.go.",
+    "choices": [
+      {
+        "text": "A type switch inside every generated function that tests for each of the three",
+        "correct": false,
+        "why": "The generated functions only call q.db; no switch exists."
+      },
+      {
+        "text": "A global variable set by main",
+        "correct": false,
+        "why": "Queries holds its DBTX as a field; nothing is global."
+      },
+      {
+        "text": "Reflection on the value passed to New",
+        "correct": false,
+        "why": "It is an ordinary interface; no reflection is involved."
+      },
+      {
+        "text": "The `DBTX` interface, three methods all of them have",
+        "correct": true,
+        "why": "Right. New wraps any of them, and WithTx swaps in a transaction."
+      }
+    ]
+  },
+  {
+    "id": "ex-hn4pvrpm",
+    "version": 1,
+    "section": "generated-code",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A generated file starts with `Code generated by sqlc. DO NOT EDIT.` You need its SQL changed. What do you do?",
+    "hint": "Where does the file come from?",
+    "choices": [
+      {
+        "text": "Edit it, and commit before anyone regenerates",
+        "correct": false,
+        "why": "The next `sqlc generate` silently undoes the edit."
+      },
+      {
+        "text": "Copy it to a new file and edit the copy",
+        "correct": false,
+        "why": "Then the copy drifts from the SQL, the problem sqlc removes."
+      },
+      {
+        "text": "Change queries.sql, then regenerate",
+        "correct": true,
+        "why": "Right. A generated file is changed through its inputs."
+      },
+      {
+        "text": "Delete the header line, then edit freely",
+        "correct": false,
+        "why": "The header is a warning, not a lock; removing it does not stop regeneration."
+      }
+    ]
+  },
+  {
+    "id": "ex-shv30y8k",
+    "version": 1,
+    "section": "using-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the first sqlc version of `pgStore`, `GET /events/4294967297` answered with the Jazz at the Docks. Why?",
+    "hint": "4294967297 is 2³² + 1.",
+    "choices": [
+      {
+        "text": "PostgreSQL rounds ids that are too large",
+        "correct": false,
+        "why": "PostgreSQL was asked for event 1, correctly; the change happened in Go."
+      },
+      {
+        "text": "`int32(id)` kept the low 32 bits, which are 1",
+        "correct": true,
+        "why": "Right. Go defines the conversion as a wrap-around: no panic, no log."
+      },
+      {
+        "text": "strconv.Atoi reads only the last digit",
+        "correct": false,
+        "why": "Atoi returned 4294967297 exactly; the conversion afterwards wrapped it."
+      },
+      {
+        "text": "The mux matched the longest prefix, /events/1",
+        "correct": false,
+        "why": "The wildcard took the whole segment; the mux has no such rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-9m09mt17",
+    "version": 1,
+    "section": "using-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Lesson 6's hand-written store got the same request and did not answer with event 1. What happened there?",
+    "hint": "Which type did it pass to pgx?",
+    "choices": [
+      {
+        "text": "A 404, because pgx returned ErrNoRows",
+        "correct": false,
+        "why": "pgx refused to encode the value, so no query ran and no row was looked for."
+      },
+      {
+        "text": "The store converted to int32 too, and returned event 1",
+        "correct": false,
+        "why": "It passed the int unconverted; that is the difference."
+      },
+      {
+        "text": "pgx refused the value; a 500",
+        "correct": true,
+        "why": "Right. Not the right answer, but not somebody else's event either."
+      },
+      {
+        "text": "The validation of lesson 3 refused ids above 10",
+        "correct": false,
+        "why": "Validation covers quantity and e-mail, not the path id."
+      }
+    ]
+  },
+  {
+    "id": "ex-ajmsqq2t",
+    "version": 1,
+    "section": "using-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the fixed store do with an id above `math.MaxInt32`?",
+    "hint": "Read `eventID`.",
+    "choices": [
+      {
+        "text": "Clamps it to MaxInt32 and queries that",
+        "correct": false,
+        "why": "That would answer for another event again."
+      },
+      {
+        "text": "Panics, and the recoverPanics middleware turns it into a 500 response",
+        "correct": false,
+        "why": "It returns an error; nothing panics."
+      },
+      {
+        "text": "Returns ErrNotFound at once",
+        "correct": true,
+        "why": "Right. No such event can exist in an int4 column, so 404 is the truth."
+      },
+      {
+        "text": "Converts it to int64 for the query",
+        "correct": false,
+        "why": "The generated function takes int32; the store refuses instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-ggq4fgze",
+    "version": 1,
+    "section": "using-it",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When `pgStore` switched to sqlc, which files of boxoffice changed besides `pgstore.go`?",
+    "hint": "What did the handlers ever see?",
+    "choices": [
+      {
+        "text": "Every handler, to call the generated functions",
+        "correct": false,
+        "why": "Handlers call the Store; the store calls the generated code."
+      },
+      {
+        "text": "main.go, to build a db.Queries for the routes",
+        "correct": false,
+        "why": "pgStore builds it itself in q(); main keeps &pgStore{pool: pool}."
+      },
+      {
+        "text": "routes.go, which now takes a *db.Queries in place of the Store",
+        "correct": false,
+        "why": "routes still takes a Store."
+      },
+      {
+        "text": "None of the handlers, routes or main",
+        "correct": true,
+        "why": "Right. They only saw the Store interface."
+      }
+    ]
+  },
+  {
+    "id": "ex-q3jfyw44",
+    "version": 1,
+    "section": "what-it-catches",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the configuration of section 04, `sould` typed for `sold` inside the WHERE of `SellSeats`. When was it found?",
+    "hint": "Follow the transcript.",
+    "choices": [
+      {
+        "text": "At sqlc generate",
+        "correct": false,
+        "why": "generate and go build both succeeded; that is the point."
+      },
+      {
+        "text": "At the first purchase",
+        "correct": true,
+        "why": "Right. PostgreSQL refused it with SQLSTATE 42703."
+      },
+      {
+        "text": "At go build",
+        "correct": false,
+        "why": "The column name is inside a string of SQL; the compiler does not read it."
+      },
+      {
+        "text": "At go vet, as a warning",
+        "correct": false,
+        "why": "vet does not read SQL either."
+      }
+    ]
+  },
+  {
+    "id": "ex-0m7svvwc",
+    "version": 1,
+    "section": "what-it-catches",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "PostgreSQL refused the misspelled column with SQLSTATE ___, undefined column.",
+    "hint": "Five characters, in the log line.",
+    "blanks": [
+      {
+        "accept": [
+          "42703"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ex4es5ds",
+    "version": 1,
+    "section": "what-it-catches",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did adding `database: uri: ${DATABASE_URL}` to sqlc.yaml change?",
+    "hint": "Who checks the queries now?",
+    "choices": [
+      {
+        "text": "sqlc prepares every query against PostgreSQL during generate, so the typo became a generate error",
+        "correct": true,
+        "why": "Right. queries.sql:15:12, before any Go was built."
+      },
+      {
+        "text": "The server connects with that URL instead of its own",
+        "correct": false,
+        "why": "The server still reads DATABASE_URL in main; the block is for sqlc."
+      },
+      {
+        "text": "sqlc applies schema.sql to the database",
+        "correct": false,
+        "why": "It asks the database; the tables must already exist."
+      },
+      {
+        "text": "Generated code stores the address",
+        "correct": false,
+        "why": "The address is read from the environment, never written."
+      }
+    ]
+  },
+  {
+    "id": "ex-ehvsg392",
+    "version": 1,
+    "section": "what-it-catches",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`env -u DATABASE_URL sqlc generate` failed to connect. What does that tell you about the database-backed check?",
+    "hint": "Think of a continuous integration machine.",
+    "choices": [
+      {
+        "text": "It is optional at generate time and skipped when no database answers",
+        "correct": false,
+        "why": "generate did not skip; it failed."
+      },
+      {
+        "text": "sqlc caches the last schema and uses it next time",
+        "correct": false,
+        "why": "Nothing cached it; the run failed."
+      },
+      {
+        "text": "It only works for the user postgres",
+        "correct": false,
+        "why": "It connected as ana and asked for database ana; the URL was missing."
+      },
+      {
+        "text": "The database must exist, with the tables, wherever generate runs",
+        "correct": true,
+        "why": "Right. In CI that means a PostgreSQL beside the build."
+      }
+    ]
+  },
+  {
+    "id": "ex-a80bq5xg",
+    "version": 1,
+    "section": "what-it-catches",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`WHERE seats - sold >= $1` is mistyped as `<=` in SellSeats. Which check catches it?",
+    "hint": "Is it valid SQL?",
+    "choices": [
+      {
+        "text": "sqlc's static analysis",
+        "correct": false,
+        "why": "The SQL is valid; there is nothing to flag."
+      },
+      {
+        "text": "The database-backed analysis",
+        "correct": false,
+        "why": "PostgreSQL prepares it without complaint."
+      },
+      {
+        "text": "go vet's printf check",
+        "correct": false,
+        "why": "vet reads Go, not SQL meaning."
+      },
+      {
+        "text": "A test",
+        "correct": true,
+        "why": "Right. sqlc checks the SQL means something; only tests check it means the right thing."
+      }
+    ]
+  },
+  {
+    "id": "ex-a7gff550",
+    "version": 1,
+    "section": "dynamic-queries",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is a search with optional filters awkward for sqlc?",
+    "hint": "When must the SQL exist?",
+    "choices": [
+      {
+        "text": "Each function is one fixed statement",
+        "correct": true,
+        "why": "Right. It cannot add a condition per filter at run time, as an ORM does."
+      },
+      {
+        "text": "sqlc rejects ILIKE",
+        "correct": false,
+        "why": "SearchEvents uses ILIKE and generates cleanly."
+      },
+      {
+        "text": "pgx cannot send NULL",
+        "correct": false,
+        "why": "pgtype.Int4 with Valid false is sent as NULL."
+      },
+      {
+        "text": "Query parameters cannot reach a :many query",
+        "correct": false,
+        "why": "Any value reaches it as a parameter; the SQL shape is the issue."
+      }
+    ]
+  },
+  {
+    "id": "ex-mks4rt3b",
+    "version": 1,
+    "section": "dynamic-queries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `(sqlc.narg(min_available)::int IS NULL OR seats - sold >= sqlc.narg(min_available)::int)`, what happens when the filter is not given?",
+    "hint": "Evaluate the left half.",
+    "choices": [
+      {
+        "text": "The query fails, because NULL cannot be compared",
+        "correct": false,
+        "why": "The left half is true, so the comparison does not matter."
+      },
+      {
+        "text": "Every row passes it",
+        "correct": true,
+        "why": "Right. A missing filter filters nothing."
+      },
+      {
+        "text": "No row passes, because NULL is false",
+        "correct": false,
+        "why": "`IS NULL` of a NULL is true, not NULL."
+      },
+      {
+        "text": "sqlc removes the condition from the generated SQL",
+        "correct": false,
+        "why": "The SQL is fixed; the database evaluates it."
+      }
+    ]
+  },
+  {
+    "id": "ex-x8jkbrb7",
+    "version": 1,
+    "section": "dynamic-queries",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Over millions of rows, why can the single optional-filter query be slow where separate queries are fast?",
+    "hint": "How many times is it planned?",
+    "choices": [
+      {
+        "text": "NULL parameters cost a round trip each",
+        "correct": false,
+        "why": "Parameters travel together with the query."
+      },
+      {
+        "text": "ILIKE disables every index in PostgreSQL",
+        "correct": false,
+        "why": "The lesson's argument is about the shared plan, not ILIKE."
+      },
+      {
+        "text": "One plan must cover every combination, so an index that suits one filter goes unused",
+        "correct": true,
+        "why": "Right. Write the common combinations separately, or build that one statement at run time."
+      },
+      {
+        "text": "pgtype.Text is slower to decode than string",
+        "correct": false,
+        "why": "Decoding is not the cost the lesson names."
+      }
+    ]
+  },
+  {
+    "id": "ex-15ecm5ty",
+    "version": 1,
+    "section": "comparison",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each approach to where its SQL can be read.",
+    "hint": "The third row of the table.",
+    "pairs": [
+      {
+        "left": "pgx by hand",
+        "right": "in the Go file"
+      },
+      {
+        "left": "GORM",
+        "right": "only in the log"
+      },
+      {
+        "left": "sqlc",
+        "right": "in queries.sql and in the generated file"
+      }
+    ],
+    "right_distractors": [
+      "in the database's catalogue"
+    ]
+  },
+  {
+    "id": "ex-rnpe95bp",
+    "version": 1,
+    "section": "comparison",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which are true of sqlc and not of pgx by hand? Choose all that apply.",
+    "hint": "Rows of the comparison table.",
+    "choices": [
+      {
+        "text": "A column and a field cannot get out of step",
+        "correct": true,
+        "why": "Right. Both are generated together."
+      },
+      {
+        "text": "A misspelled column is found at generate, with a database to ask",
+        "correct": true,
+        "why": "Right. By hand it is found when the query runs."
+      },
+      {
+        "text": "Its new modules include GORM",
+        "correct": false,
+        "why": "sqlc's generated code needs pgx only."
+      },
+      {
+        "text": "It needs an extra tool and gcc to build that tool",
+        "correct": true,
+        "why": "Right. pgx by hand needs no extra tool."
+      },
+      {
+        "text": "Optional filters are natural",
+        "correct": false,
+        "why": "That is GORM's column; for sqlc they are awkward."
+      }
+    ]
+  },
+  {
+    "id": "ex-45zserqd",
+    "version": 1,
+    "section": "comparison",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team is building an admin screen with fifty optional search filters over one big table. What does the lesson's comparison point to?",
+    "hint": "Where is sqlc awkward?",
+    "choices": [
+      {
+        "text": "Weigh a query builder or an ORM",
+        "correct": true,
+        "why": "Right. The lesson says such a service would weigh the trade differently."
+      },
+      {
+        "text": "sqlc, because generated code is fastest",
+        "correct": false,
+        "why": "Speed was never the argument; optional filters are sqlc's weak spot."
+      },
+      {
+        "text": "pgx by hand with values pasted into the SQL string",
+        "correct": false,
+        "why": "Values never go into the SQL text; lesson 6 section 07."
+      },
+      {
+        "text": "No database at all",
+        "correct": false,
+        "why": "Nothing in the lesson suggests dropping the database."
+      }
+    ]
+  },
+  {
+    "id": "ex-ngf6q7nj",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of changing a query in boxoffice in order, from editing to a running server.",
+    "hint": "The generated code comes from queries.sql.",
+    "items": [
+      "Edit the query in queries.sql",
+      "Run sqlc generate, which asks PostgreSQL about it",
+      "Adjust pgstore.go to the new generated signature",
+      "go build, then start the server"
+    ],
+    "trap": "Never start by editing internal/db by hand."
+  },
+  {
+    "id": "ex-ysmq35zk",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new column `price` is added to the table as `bigint`, and to the queries. Where should you look first for a bug like section 06's?",
+    "hint": "Compare the generated type with boxoffice's own.",
+    "choices": [
+      {
+        "text": "In the generated file, which must be edited",
+        "correct": false,
+        "why": "Generated files are not edited; the conversion is yours."
+      },
+      {
+        "text": "At the conversion lines",
+        "correct": true,
+        "why": "Right. A bigint maps to int64; storing it in a narrower Go type wraps silently."
+      },
+      {
+        "text": "In the mux patterns",
+        "correct": false,
+        "why": "The mux knows nothing about column types."
+      },
+      {
+        "text": "In sqlc.yaml's database block",
+        "correct": false,
+        "why": "That block checks names and types against PostgreSQL, not Go conversions."
+      }
+    ]
+  }
+]

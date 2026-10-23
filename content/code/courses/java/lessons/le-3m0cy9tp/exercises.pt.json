@@ -1,0 +1,334 @@
+{
+  "ex-r6dwhqjk": {
+    "prompt": "Com `Item` abstrata, qual linha do `Desk` o compilador recusou?",
+    "hint": "Uma classe abstrata pode ser um tipo; não pode ser um objeto.",
+    "choices": [
+      {
+        "text": "`Item mystery = new Item(\"Untitled\");`",
+        "why": "Isso: `Item is abstract; cannot be instantiated`."
+      },
+      {
+        "text": "`Item item = new Book(\"Effective Java\");`",
+        "why": "Uma variável do tipo abstrato guardando um `Book` concreto é permitida e útil."
+      },
+      {
+        "text": "`System.out.println(item.describe());`, já que o `describe()` chama um método abstrato",
+        "why": "Num `Book`, o `loanDays()` tem corpo; a chamada imprimiu `14 days` assim que a outra linha saiu."
+      }
+    ]
+  },
+  "ex-m8jqmycz": {
+    "prompt": "`Magazine extends Item` e não escreve `loanDays()`. Quais duas mudanças fariam, cada uma, ela compilar?",
+    "hint": "A mensagem de erro contém as duas.",
+    "choices": [
+      {
+        "text": "Acrescentar `@Override`, ou tornar `final` o `loanDays()` de `Item`",
+        "why": "O `@Override` precisa de um método para anotar, e um método abstrato não pode ser `final`."
+      },
+      {
+        "text": "Dar um construtor ao `Magazine`, ou tirar o `super(title)`",
+        "why": "O construtor está certo; o problema é o corpo que falta."
+      },
+      {
+        "text": "Tornar `Magazine` `final`, ou deixar `Item` concreta de novo com um `return 0`",
+        "why": "Uma classe `final` ainda precisa de todo corpo; a segunda funcionaria e traria de volta o padrão que ninguém escolheu."
+      },
+      {
+        "text": "Dar a ela o corpo que falta, ou marcar a subclasse como `abstract` também",
+        "why": "Isso: `is not abstract and does not override abstract method`."
+      }
+    ]
+  },
+  "ex-wqcnq070": {
+    "prompt": "O `describe()` de `Item` chama o `loanDays()`, que `Item` nunca escreveu. Por que isso é seguro?",
+    "hint": "Sobre que objetos o `describe()` pode rodar?",
+    "choices": [
+      {
+        "text": "Porque a JVM pula uma chamada a um método sem corpo",
+        "why": "Nada é pulado; o `describe()` imprimiu os 14 dias do livro."
+      },
+      {
+        "text": "Porque o `loanDays()` devolve 0 até uma subclasse escrevê-lo",
+        "why": "Um método abstrato não tem valor padrão; não tem corpo nenhum."
+      },
+      {
+        "text": "Todo objeto sobre o qual ele roda é de uma classe concreta, que tem o corpo",
+        "why": "Isso: `Item` não pode ser instanciada, e toda subclasse concreta tem de escrever o `loanDays()`."
+      }
+    ]
+  },
+  "ex-14he9a6x": {
+    "prompt": "Um método declarado sem corpo, terminando em ponto e vírgula, para cada subclasse escrever, é declarado com a palavra ___.",
+    "hint": "A mesma palavra vai na classe.",
+    "blanks": [
+      {
+        "accept": [
+          "abstract"
+        ]
+      }
+    ]
+  },
+  "ex-e3gbgkqd": {
+    "prompt": "Em `Loanable`, qual método guarda a própria regra da taxa?",
+    "hint": "O que as subclasses não podem substituir.",
+    "choices": [
+      {
+        "text": "`lateFeeCents`",
+        "why": "Isso: é `final`, e chama as duas lacunas."
+      },
+      {
+        "text": "`dailyFeeCents`",
+        "why": "Essa é uma lacuna que cada subclasse preenche com um número."
+      },
+      {
+        "text": "`maximumFeeCents`",
+        "why": "Esse é o gancho com padrão de 2000."
+      },
+      {
+        "text": "O construtor, que define a taxa quando o item é criado",
+        "why": "O construtor define só o título; a taxa é calculada a cada chamada."
+      }
+    ]
+  },
+  "ex-tmee0app": {
+    "prompt": "Que taxa, em centavos, um `Dvd` cobra por 30 dias de atraso?",
+    "hint": "150 por dia, mas o máximo dele limita.",
+    "unit": "centavos"
+  },
+  "ex-ty5x39e4": {
+    "prompt": "`Book` não sobrescreve o `maximumFeeCents()`. Que máximo vale para um livro?",
+    "hint": "Um gancho tem padrão.",
+    "choices": [
+      {
+        "text": "Nenhum: a taxa de um livro cresce sem limite",
+        "why": "O `lateFeeCents` sempre aplica o `Math.min` com o máximo que o objeto tiver."
+      },
+      {
+        "text": "3000 centavos, o último máximo que alguma subclasse declarou",
+        "why": "Cada objeto usa o método da própria classe; os 3000 do `Dvd` valem só para DVDs."
+      },
+      {
+        "text": "2000 centavos, herdados de `Loanable`",
+        "why": "Isso: não fez diferença aqui, porque 30 dias a 50 centavos dão 1500."
+      }
+    ]
+  },
+  "ex-fq7rrgn6": {
+    "prompt": "Ligue cada método de `Loanable` ao que uma subclasse pode fazer com ele.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "`lateFeeCents`",
+        "right": "Chamá-lo, nunca substituí-lo"
+      },
+      {
+        "left": "`dailyFeeCents`",
+        "right": "Tem de escrevê-lo"
+      },
+      {
+        "left": "`maximumFeeCents`",
+        "right": "Pode substituí-lo, ou herdar 2000"
+      }
+    ],
+    "right_distractors": [
+      "Tem de chamá-lo do construtor"
+    ]
+  },
+  "ex-9fff6pn5": {
+    "prompt": "Por que o `lateFeeCents` é declarado `final`, se nenhuma subclasse da lição quis mudá-lo?",
+    "hint": "Pense no `Ebook`.",
+    "choices": [
+      {
+        "text": "Para a regra valer para toda subclasse, até para uma escrita depois",
+        "why": "Isso: sem ele, o `Ebook` teria compilado e cobrado -1."
+      },
+      {
+        "text": "Porque a JVM executa métodos `final` mais rápido",
+        "why": "Velocidade não é o motivo dado; a regra é."
+      },
+      {
+        "text": "Porque um método que chama um método abstrato tem de ser `final`",
+        "why": "Não existe essa regra; o `describe()` da seção 02 chamou um e não era `final`."
+      },
+      {
+        "text": "Para as subclasses poderem ler o `title`, que é privado",
+        "why": "O `final` num método não tem nada a ver com acesso a atributo; o `title()` dá o acesso."
+      }
+    ]
+  },
+  "ex-v419evta": {
+    "prompt": "Por que `dailyFeeCents` e `maximumFeeCents` são `protected` e não `public`?",
+    "hint": "Quem deve usá-los?",
+    "choices": [
+      {
+        "text": "Métodos abstratos não podem ser `public`",
+        "why": "Podem; o `loanDays()` da seção 02 era `public abstract`."
+      },
+      {
+        "text": "Para o `Fees` poder chamá-los sem objeto",
+        "why": "O `protected` não torna nada estático, e o `Fees` só chama o `lateFeeCents`."
+      },
+      {
+        "text": "São para as subclasses preencherem, não para outras classes chamarem",
+        "why": "Isso: o resto do código deve pedir o `lateFeeCents`, a regra."
+      }
+    ]
+  },
+  "ex-3cjqzme2": {
+    "prompt": "Como o `Fees` imprime 450 centavos como `4.50` sem um `double`?",
+    "hint": "Divisão inteira e resto.",
+    "choices": [
+      {
+        "text": "`cents / 100.0`, arredondado",
+        "why": "Isso é um `double`, que o programa evita."
+      },
+      {
+        "text": "`String.format(\"%.2f\", cents)`",
+        "why": "O `%.2f` precisa de um argumento de ponto flutuante."
+      },
+      {
+        "text": "`cents / 100`, um ponto, e `cents % 100` com dois dígitos",
+        "why": "Isso: 4, depois 50; o `%02d` imprimiria 5 centavos como `05`."
+      }
+    ]
+  },
+  "ex-1aa605cr": {
+    "prompt": "`new Loanable(...)` é proibido. Quem chama o construtor de `Loanable`?",
+    "hint": "`super(title)`.",
+    "choices": [
+      {
+        "text": "Ninguém: o construtor de uma classe abstrata existe para documentação",
+        "why": "Ele roda para todo objeto de subclasse; é assim que o `title` recebe valor."
+      },
+      {
+        "text": "Todo construtor de subclasse, por meio de `super(title)`",
+        "why": "Isso: e o `protected` diz isso."
+      },
+      {
+        "text": "A JVM, uma vez por classe, quando o `Loanable` é carregado",
+        "why": "Isso descreve um inicializador estático; um construtor roda uma vez por objeto."
+      }
+    ]
+  },
+  "ex-q6s6g7t1": {
+    "prompt": "O `Special` imprimiu `Special$1 extends Loanable`. O que foi criado?",
+    "hint": "O tipo de classe da lição 17.",
+    "choices": [
+      {
+        "text": "Um objeto de uma subclasse concreta anônima de `Loanable`",
+        "why": "Isso: as chaves forneceram o `dailyFeeCents()` e a classe não tem nome no código-fonte."
+      },
+      {
+        "text": "Um objeto do próprio `Loanable`, permitido porque o corpo foi fornecido",
+        "why": "Nenhum objeto tem `Loanable` como classe; o `getClass()` disse `Special$1`."
+      },
+      {
+        "text": "Uma cópia do `Book` com outra taxa diária",
+        "why": "O `Book` não entrou nisso; a classe anônima estende `Loanable` diretamente."
+      }
+    ]
+  },
+  "ex-njdh8jqv": {
+    "prompt": "O mapa cobra 500 centavos por dia e herda o máximo padrão. Quantos centavos por 10 dias de atraso?",
+    "hint": "5000 antes do limite.",
+    "unit": "centavos"
+  },
+  "ex-dydnjds5": {
+    "prompt": "Livro e DVD diferem só na taxa diária, um número, e em mais nada. O que a seção sugere?",
+    "hint": "Dados diferentes, ou código diferente?",
+    "choices": [
+      {
+        "text": "Um método abstrato `dailyFeeCents()` numa superclasse abstrata",
+        "why": "Isso se justifica quando as subclasses executam código diferente; aqui elas diferem em dados."
+      },
+      {
+        "text": "Uma interface `Feeable` com uma constante por classe",
+        "why": "Uma interface ainda precisaria de uma classe por tipo; o valor pode ser só um atributo."
+      },
+      {
+        "text": "Uma classe concreta, com a taxa num atributo",
+        "why": "Isso: nenhuma hierarquia é necessária quando só um valor muda."
+      }
+    ]
+  },
+  "ex-7dxk7kzb": {
+    "prompt": "Quais destas coisas uma classe abstrata pode ter? Escolha todas as que se aplicam.",
+    "hint": "`javap -p Loanable`.",
+    "choices": [
+      {
+        "text": "Um atributo privado",
+        "why": "Sim: o `title`."
+      },
+      {
+        "text": "Um construtor",
+        "why": "Sim: `protected Loanable(java.lang.String)`."
+      },
+      {
+        "text": "Um método `final` com corpo",
+        "why": "Sim: o `lateFeeCents`."
+      },
+      {
+        "text": "Um objeto da própria classe, feito com `new`",
+        "why": "Não: essa é a única coisa que ela não pode ter."
+      }
+    ]
+  },
+  "ex-d0nk77b0": {
+    "prompt": "`item.lateFeeCents(30)` roda num `Dvd`. Ponha o que acontece em ordem.",
+    "hint": "A regra primeiro confere se o item está atrasado.",
+    "items": [
+      "O `lateFeeCents` confere que 30 é mais que 0",
+      "Ele chama o `dailyFeeCents()`, e o do `Dvd` devolve 150",
+      "Ele chama o `maximumFeeCents()`, e o do `Dvd` devolve 3000",
+      "O `Math.min` devolve 3000"
+    ]
+  },
+  "ex-8k0p7n56": {
+    "prompt": "Um colega acrescenta `public int lateFeeCents(int d) { return 0; }` ao `Book` para isentar livros de taxa. O que acontece?",
+    "hint": "Veja como o `Loanable` o declarou.",
+    "choices": [
+      {
+        "text": "Erro de compilação: `overridden method is final`",
+        "why": "Isso: o jeito de isentar livros é o `dailyFeeCents()` devolver 0, uma lacuna que a regra oferece."
+      },
+      {
+        "text": "Funciona, e livros não são cobrados",
+        "why": "É exatamente isso que o `final` existe para impedir."
+      },
+      {
+        "text": "Compila, e a versão de `Loanable` continua rodando porque é `final`",
+        "why": "Um método `final` não pode ser sobrescrito de jeito nenhum; o compilador recusa o arquivo."
+      }
+    ]
+  },
+  "ex-as4xw2f5": {
+    "prompt": "Você está escrevendo uma superclasse `Report`: todo relatório imprime um cabeçalho, um corpo que muda por relatório e um rodapé, nessa ordem. Como você a organiza?",
+    "hint": "A regra da taxa da lição tem o mesmo formato.",
+    "choices": [
+      {
+        "text": "Três métodos públicos abstratos, e cada chamador os chama em ordem",
+        "why": "Aí todo chamador tem de lembrar a ordem, e um vai errar."
+      },
+      {
+        "text": "Um `print()` concreto que as subclasses sobrescrevem inteiro",
+        "why": "Aí cada subclasse reescreve cabeçalho e rodapé, e eles se afastam."
+      },
+      {
+        "text": "Um `final print()` que faz os três, com o corpo num método `protected abstract`",
+        "why": "Isso: o template method, com a ordem nas mãos da superclasse."
+      }
+    ]
+  },
+  "ex-vqmmw91q": {
+    "prompt": "Um método com corpo padrão que uma subclasse pode substituir, como o `maximumFeeCents`, se chama ___.",
+    "hint": "Uma palavra curta em inglês, e uma palavra de pescaria em português.",
+    "blanks": [
+      {
+        "accept": [
+          "gancho",
+          "hook"
+        ]
+      }
+    ]
+  }
+}
