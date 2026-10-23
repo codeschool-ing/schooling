@@ -1,0 +1,639 @@
+[
+  {
+    "id": "ex-gtdp8xcm",
+    "version": 1,
+    "section": "what-it-reads",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You know an image contains a library at a version with a published advisory, and the scan of the image reports nothing for it. Which explanation fits how an image scanner works?",
+    "choices": [
+      {
+        "text": "The layer holding it was cached, so the scanner skipped it",
+        "correct": false,
+        "why": "A scanner reads every layer of the image it is given; the build cache plays no part in a scan."
+      },
+      {
+        "text": "It was copied in with no package record beside it",
+        "correct": true,
+        "why": "Right. A scanner reads the lists package managers leave; a file no list mentions is invisible to it."
+      },
+      {
+        "text": "Its files are compressed, and the scanner cannot open them",
+        "correct": false,
+        "why": "The scanner does not open the library's files at all. It reads records such as the dpkg database and METADATA files."
+      },
+      {
+        "text": "The advisory was published after the image was built",
+        "correct": false,
+        "why": "The database is what has to know the advisory, not the image. An advisory newer than the image is found by any scan after it reaches the database."
+      }
+    ]
+  },
+  {
+    "id": "ex-t9qdn00x",
+    "version": 1,
+    "section": "what-it-reads",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How did Trivy learn that the pip inside `python:3.13` carries urllib3 2.7.0?",
+    "choices": [
+      {
+        "text": "From the Debian package database in `/var/lib/dpkg`",
+        "correct": false,
+        "why": "pip in that image was not installed by dpkg; the Debian database does not list it or what it contains."
+      },
+      {
+        "text": "By comparing the files of urllib3 with known releases",
+        "correct": false,
+        "why": "Trivy does not recognise code by its bytes, which is why the copy with no list was invisible."
+      },
+      {
+        "text": "From pip's `METADATA`, which lists its requirements",
+        "correct": false,
+        "why": "pip declares no requirements: it ships its libraries inside itself instead of depending on them."
+      },
+      {
+        "text": "From `bom.cdx.json`, the SBOM pip ships in `pip/_vendor`",
+        "correct": true,
+        "why": "Right. 18 of the image's packages were found by reading that list."
+      }
+    ]
+  },
+  {
+    "id": "ex-hwt8ybc8",
+    "version": 1,
+    "section": "what-it-reads",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You scan an image by its digest, the same digest a colleague scanned a week ago, and you get more findings than they did. What changed?",
+    "choices": [
+      {
+        "text": "The image: a digest can point at new layers after a push",
+        "correct": false,
+        "why": "A digest is the hash of the content; the same digest is the same bytes, today and in a year."
+      },
+      {
+        "text": "The database",
+        "correct": true,
+        "why": "Right. Advisories were published during the week, and your scan read a database that knows them."
+      },
+      {
+        "text": "The severity threshold Trivy applies on each machine",
+        "correct": false,
+        "why": "Severity comes from the advisory's data, and no threshold was given; both scans counted everything."
+      },
+      {
+        "text": "Trivy samples files, so two scans read different ones",
+        "correct": false,
+        "why": "Trivy reads the package records completely, every time; there is no sampling."
+      }
+    ]
+  },
+  {
+    "id": "ex-28hge246",
+    "version": 1,
+    "section": "what-it-reads",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these would an image scanner such as Trivy fail to see? Choose all that apply.",
+    "choices": [
+      {
+        "text": "a tool downloaded with `curl` in a `RUN` line",
+        "correct": true,
+        "why": "Right: no package manager installed it, so no record names it."
+      },
+      {
+        "text": "a Debian package installed with `apt-get`",
+        "why": "dpkg records it in its database, which is the first list a scanner reads."
+      },
+      {
+        "text": "a library copied into the repository without its metadata",
+        "correct": true,
+        "why": "Right: vendored code with no record is what `blind:code` showed."
+      },
+      {
+        "text": "a C program compiled in the build stage and copied across",
+        "correct": true,
+        "why": "Right: a C binary records nothing about what it was built from."
+      },
+      {
+        "text": "a Go program compiled in the build stage and copied across",
+        "why": "Go records its module dependencies inside the binary, and Trivy reads that record."
+      }
+    ]
+  },
+  {
+    "id": "ex-mwj78f71",
+    "version": 1,
+    "section": "three-bases",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many Debian findings did the scan report for `python:3.13`?",
+    "value": 3484,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-nsr8epfk",
+    "version": 1,
+    "section": "three-bases",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Going from `python:3.13-slim` to the distroless image moved the Debian count only from 164 to 162. What did the move change that the count does not show?",
+    "choices": [
+      {
+        "text": "It removed glibc and OpenSSL, which carry most findings",
+        "correct": false,
+        "why": "Both are still there: distroless keeps the core libraries, which is why the count hardly moved."
+      },
+      {
+        "text": "Nothing; the two images are equivalent for security",
+        "correct": false,
+        "why": "The shell, apt and pip are gone, and with pip went the six findings that had a fix."
+      },
+      {
+        "text": "No shell, apt or pip left, nor pip's fixable findings",
+        "correct": true,
+        "why": "Right. The difference is in what code running in the container reaches, and in the column \"with a fix\"."
+      },
+      {
+        "text": "It fixed two Debian vulnerabilities that slim still had",
+        "correct": false,
+        "why": "Two packages are absent, not fixed; nothing was patched."
+      }
+    ]
+  },
+  {
+    "id": "ex-adbd4crn",
+    "version": 1,
+    "section": "three-bases",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `--severity HIGH,CRITICAL --ignore-unfixed --exit-code 1`, `python:3.13-slim` exits 1. What decided it?",
+    "choices": [
+      {
+        "text": "Its 44 high Debian findings",
+        "correct": false,
+        "why": "None of them has a fix, and `--ignore-unfixed` leaves every one of them out of the verdict."
+      },
+      {
+        "text": "Four fixable highs inside pip",
+        "correct": true,
+        "why": "Right: msgpack, setuptools and urllib3 inside pip, all with fixed versions."
+      },
+      {
+        "text": "The image's size, above what the gate accepts",
+        "correct": false,
+        "why": "The gate has no size rule; it judges findings."
+      },
+      {
+        "text": "A rule that fails the image on any finding at all",
+        "correct": false,
+        "why": "Then the distroless image, with 162 findings, would have failed too, and it exited 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-w5f2je9r",
+    "version": 1,
+    "section": "three-bases",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team keeps `python:3.13-slim` as the run base and adds `RUN pip install --upgrade pip` to get the gate green. Reasoning from the lesson, what is likely to happen over the following months?",
+    "choices": [
+      {
+        "text": "Green from now on, since pip is current",
+        "correct": false,
+        "why": "pip is current today. Its vendored libraries will get new advisories, and the image will carry them until the next upgrade."
+      },
+      {
+        "text": "Red within weeks, for the Debian findings of slim",
+        "correct": false,
+        "why": "The Debian findings have no fix and the gate ignores those; they cannot turn it red."
+      },
+      {
+        "text": "Green, then red at pip's next vendored advisory",
+        "correct": true,
+        "why": "Right, and each time for a program linkbox never runs after the build. Removing pip from the image ends that."
+      },
+      {
+        "text": "Green, because the gate does not scan pip once it has been upgraded",
+        "correct": false,
+        "why": "The gate scans whatever the image holds, upgraded or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-j6re34b7",
+    "version": 1,
+    "section": "no-fix",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each status Trivy reports with what the distribution has said.",
+    "pairs": [
+      {
+        "left": "fixed",
+        "right": "a newer version of the package carries the fix"
+      },
+      {
+        "left": "affected",
+        "right": "vulnerable, and no fix is published for this release yet"
+      },
+      {
+        "left": "fix_deferred",
+        "right": "a fix is planned and postponed"
+      },
+      {
+        "left": "will_not_fix",
+        "right": "it will not be fixed in this release"
+      }
+    ],
+    "right_distractors": [
+      "the image was scanned before the advisory existed"
+    ]
+  },
+  {
+    "id": "ex-d1hs12yh",
+    "version": 1,
+    "section": "no-fix",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The distroless image's 162 findings are how many distinct CVEs?",
+    "value": 64,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-wbvpnnh5",
+    "version": 1,
+    "section": "no-fix",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "CVE-2024-26458 appears on four lines of the distroless report. Why four?",
+    "choices": [
+      {
+        "text": "The image has four layers, and each layer reports it",
+        "correct": false,
+        "why": "A finding is reported per package, not per layer; the four packages happen to share one source."
+      },
+      {
+        "text": "Four binary packages are built from one source, krb5",
+        "correct": true,
+        "why": "Right. One upload of krb5 fixes all four, or none."
+      },
+      {
+        "text": "Four vendors each scored it, and each score is a row",
+        "correct": false,
+        "why": "Scores from several vendors are fields of one finding, not separate rows."
+      },
+      {
+        "text": "Four versions of Kerberos are installed side by side",
+        "correct": false,
+        "why": "All four packages are the same version, 1.21.3-5+deb13u1."
+      }
+    ]
+  },
+  {
+    "id": "ex-vce3x53b",
+    "version": 1,
+    "section": "no-fix",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A weekly report counts rows of the image scan. Last week 162, this week 158, and no other row changed. What is the most that can safely be said?",
+    "choices": [
+      {
+        "text": "Four vulnerabilities were fixed this week",
+        "correct": false,
+        "why": "Four rows went, which may be a single CVE in a source package that builds four binaries."
+      },
+      {
+        "text": "The team fixed 2.5% of the image's risk",
+        "correct": false,
+        "why": "Rows are not risk, and the team did not necessarily fix anything; a new base image may have."
+      },
+      {
+        "text": "Something changed, perhaps a single CVE",
+        "correct": true,
+        "why": "Right. Count distinct CVEs per source package to know more."
+      },
+      {
+        "text": "Nothing changed in the image; the database dropped rows",
+        "correct": false,
+        "why": "The database could have changed, but so could the image; the count alone cannot tell which."
+      }
+    ]
+  },
+  {
+    "id": "ex-kk7w4m0w",
+    "version": 1,
+    "section": "no-fix",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these turns one of the counted, no-fix findings into work for this week?",
+    "choices": [
+      {
+        "text": "The finding has been open for thirty days",
+        "correct": false,
+        "why": "Age alone changes nothing a rebuild can do; the status still says no fix exists."
+      },
+      {
+        "text": "It is rated MEDIUM rather than LOW",
+        "correct": false,
+        "why": "Severity was already known when the gate decided to count it; it is not news."
+      },
+      {
+        "text": "It lands in CISA KEV, on a library linkbox loads",
+        "correct": true,
+        "why": "Right. Known exploitation of something reachable is a reason to patch or change base, whatever the gate says."
+      },
+      {
+        "text": "The total rose from 162 to 163",
+        "correct": false,
+        "why": "A new no-fix finding is still no-fix; the count moving is worth reading, not an emergency."
+      }
+    ]
+  },
+  {
+    "id": "ex-17v2b460",
+    "version": 1,
+    "section": "two-stages",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `pip install --target /packages` achieve in the build stage?",
+    "choices": [
+      {
+        "text": "It installs the packages for user 65532 instead of root",
+        "correct": false,
+        "why": "Ownership is not what `--target` changes; it changes where the packages go."
+      },
+      {
+        "text": "It puts the packages, and only them, in a directory of their own",
+        "correct": true,
+        "why": "Right: that directory crosses to the run stage while pip stays behind."
+      },
+      {
+        "text": "It skips the packages' compiled parts",
+        "correct": false,
+        "why": "Compiled parts are installed as usual; that is why both stages use Python 3.13."
+      },
+      {
+        "text": "It checks each package against the hashes in requirements.txt",
+        "correct": false,
+        "why": "That is `--require-hashes`, which lesson 15 adds; `--target` is about where."
+      }
+    ]
+  },
+  {
+    "id": "ex-088dmdfp",
+    "version": 1,
+    "section": "two-stages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the Dockerfile start the service with `python3 -m gunicorn` rather than `gunicorn`?",
+    "choices": [
+      {
+        "text": "Distroless images refuse to run scripts",
+        "correct": false,
+        "why": "They run any executable; this script fails for a different reason, the interpreter its first line names."
+      },
+      {
+        "text": "`-m` makes gunicorn run as a user that is not root",
+        "correct": false,
+        "why": "The user comes from the image's `USER`, 65532 here, whatever the command is."
+      },
+      {
+        "text": "Its script names a Python this image lacks",
+        "correct": true,
+        "why": "Right. The first line of `/packages/bin/gunicorn` points at the slim image's interpreter; `python3 -m` uses the one that exists."
+      },
+      {
+        "text": "gunicorn has no script in `/packages/bin`",
+        "correct": false,
+        "why": "pip writes the script there; the problem is the interpreter it names, not its absence."
+      }
+    ]
+  },
+  {
+    "id": "ex-fmbf6wx1",
+    "version": 1,
+    "section": "two-stages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The final image has no shell. According to the lesson, what does that protect against?",
+    "choices": [
+      {
+        "text": "Code execution inside the container becomes impossible",
+        "correct": false,
+        "why": "Python is still there, and it is a complete programming language."
+      },
+      {
+        "text": "The easy path, and the findings of what is gone",
+        "correct": true,
+        "why": "Right. The one-line commands most intrusions start with need a shell, and absent programs bring no findings."
+      },
+      {
+        "text": "It stops anybody from running `docker exec` on it",
+        "correct": false,
+        "why": "`docker exec` works; it just has no `sh` to start, and `python3` still runs."
+      },
+      {
+        "text": "It hides the image's packages from scanners",
+        "correct": false,
+        "why": "The scanner read all 38 Debian packages and every `METADATA` in `/packages`."
+      }
+    ]
+  },
+  {
+    "id": "ex-q9rj7f30",
+    "version": 1,
+    "section": "two-stages",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the run stage, the line that brings the installed packages across from the first stage is: `COPY --from=___ /packages /packages`",
+    "blanks": [
+      {
+        "accept": [
+          "build"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-n7sgz7ck",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `push` come after `image` in `ci/stages`?",
+    "choices": [
+      {
+        "text": "So nothing reaches the registry that the scan refused",
+        "correct": true,
+        "why": "Right: the run stops at the first stage that fails, and push never runs."
+      },
+      {
+        "text": "Because Trivy can scan only images that are not in a registry yet",
+        "correct": false,
+        "why": "Trivy scans images in a registry just as well; the order is about what may be published."
+      },
+      {
+        "text": "So the registry can tag the image with the scan's result",
+        "correct": false,
+        "why": "The registry stores what it is given; it knows nothing about scans."
+      },
+      {
+        "text": "Because pushing first would make the scan slower",
+        "correct": false,
+        "why": "Speed is not the reason; the order decides what the registry may hold."
+      }
+    ]
+  },
+  {
+    "id": "ex-c1gk1j80",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A typo in `ci/build.sh` makes it tag the image `linkbox:dev` while `ci/image.sh` scans `linkbox:<commit>`, which does not exist. What does the image stage do?",
+    "choices": [
+      {
+        "text": "It passes, because there is no image and so no finding",
+        "correct": false,
+        "why": "That is the failure lesson 7 named: a scanner that did not run reporting a pass."
+      },
+      {
+        "text": "It breaks the build, as a scan that did not run",
+        "correct": true,
+        "why": "Right. Trivy exits 1 when it cannot run, `|| exit 1` stops there, and the capture with `CI_COMMIT=0000000` shows it."
+      },
+      {
+        "text": "It scans `linkbox:dev` instead, the nearest match",
+        "correct": false,
+        "why": "Trivy looks for the name it is given and nothing else."
+      },
+      {
+        "text": "It warns, because a missing image is not a vulnerability",
+        "correct": false,
+        "why": "Exit status 3 is the warning; this stage turns any trouble with the scan into a break."
+      }
+    ]
+  },
+  {
+    "id": "ex-vht2ykag",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Google republished the distroless image yesterday with a fixed glibc. Tonight `ci/nightly` runs its `docker build --no-cache`. Does linkbox's image get the fix?",
+    "choices": [
+      {
+        "text": "Yes: with no cache, every layer is rebuilt, the base included",
+        "correct": false,
+        "why": "Every layer of the Dockerfile is rebuilt; the base image is reused from the machine, as it was."
+      },
+      {
+        "text": "Yes, because the gate fails until the base is updated",
+        "correct": false,
+        "why": "The gate scans what was built; it does not fetch a newer base."
+      },
+      {
+        "text": "Not unless the build asks the registry again, with `--pull`",
+        "correct": true,
+        "why": "Right. `--no-cache` reuses the local base; `--pull` fetches the tag's current image. Lesson 15 makes the base a digest instead."
+      },
+      {
+        "text": "No: distroless images are never updated under the same tag",
+        "correct": false,
+        "why": "They are; `:nonroot` is a tag that moves when Google rebuilds it."
+      }
+    ]
+  },
+  {
+    "id": "ex-g03v6dc7",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The option of `docker build` that asks the registry for the current image behind each `FROM` tag, instead of reusing the copy on the machine, is `docker build ___`",
+    "blanks": [
+      {
+        "accept": [
+          "--pull"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jqw3bfv4",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens to an image in one passing run of the pipeline in order, from first to last.",
+    "items": [
+      "built and tagged with the commit",
+      "scanned for fixable high and critical findings",
+      "every finding counted into the log",
+      "tagged for localhost:5000",
+      "pushed to the registry"
+    ]
+  },
+  {
+    "id": "ex-js698bdh",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statements about the image this lesson ships are true? Choose all that apply.",
+    "choices": [
+      {
+        "text": "it runs as user 65532",
+        "correct": true,
+        "why": "Right: the distroless `nonroot` variant sets it."
+      },
+      {
+        "text": "it has pip, for installing a hotfix in place",
+        "why": "pip stayed in the build stage, on purpose."
+      },
+      {
+        "text": "its scan still counts 162 Debian findings",
+        "correct": true,
+        "why": "Right: the floor of the distroless base, counted in every run's log."
+      },
+      {
+        "text": "the application can rewrite its own `app.py`",
+        "why": "The code is owned by root and the process is 65532; only `/data` is its own."
+      },
+      {
+        "text": "it carries no high finding that has a fixed version",
+        "correct": true,
+        "why": "Right, which is what the image stage checks on every push."
+      }
+    ]
+  }
+]

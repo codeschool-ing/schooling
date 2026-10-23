@@ -1,0 +1,638 @@
+[
+  {
+    "id": "ex-k693mzk5",
+    "version": 1,
+    "section": "a-rule-as-code",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A wiki page says that nothing runs as root. What does moving that rule into the repository as code add?",
+    "choices": [
+      {
+        "text": "It runs on every push",
+        "correct": true,
+        "why": "Right, and it refuses before merge: the rule no longer depends on somebody remembering it at review."
+      },
+      {
+        "text": "It makes the containers run as a non-root user",
+        "correct": false,
+        "why": "The rule refuses a file that breaks it; the Dockerfile or manifest is what sets the user."
+      },
+      {
+        "text": "New developers read it in their first week",
+        "correct": false,
+        "why": "That is what the wiki page already got, and it is the weak part."
+      },
+      {
+        "text": "Nobody needs to review it any more",
+        "correct": false,
+        "why": "A rule as code is reviewed more, in every commit that changes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-90ps156a",
+    "version": 1,
+    "section": "a-rule-as-code",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each name to what it is.",
+    "pairs": [
+      {
+        "left": "OPA",
+        "right": "an engine that evaluates rules over a JSON document"
+      },
+      {
+        "left": "Rego",
+        "right": "the language the rules are written in"
+      },
+      {
+        "left": "conftest",
+        "right": "a command that parses configuration files and runs the rules over them"
+      },
+      {
+        "left": "Gatekeeper",
+        "right": "OPA running as a Kubernetes admission controller"
+      }
+    ],
+    "right_distractors": [
+      "a registry that stores signed images"
+    ]
+  },
+  {
+    "id": "ex-42ys5vmb",
+    "version": 1,
+    "section": "a-rule-as-code",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which candidate rule passes the lesson's test for being worth writing as code?",
+    "choices": [
+      {
+        "text": "Code is reviewed by somebody who understands it",
+        "correct": false,
+        "why": "No file shows understanding, so no parser can check it."
+      },
+      {
+        "text": "Every container declares a memory limit",
+        "correct": true,
+        "why": "Right. A manifest shows it, the answer is yes or no, and a container without one can starve its node."
+      },
+      {
+        "text": "Memory limits are sensible for the workload",
+        "correct": false,
+        "why": "Sensible needs a person or an indefensible number; it is not yes or no."
+      },
+      {
+        "text": "YAML files are indented with spaces, never tabs",
+        "correct": false,
+        "why": "A file shows it, but nobody is hurt; it would teach people to ignore the stage."
+      }
+    ]
+  },
+  {
+    "id": "ex-a6xs1e4h",
+    "version": 1,
+    "section": "rego",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "policy/docker.rego has three deny rules. How does conftest combine them?",
+    "choices": [
+      {
+        "text": "All three must fail for the file to fail",
+        "correct": false,
+        "why": "One message in the set is enough to fail the file."
+      },
+      {
+        "text": "Only the first rule that fires is reported",
+        "correct": false,
+        "why": "Every rule that holds adds its message; the run printed all of them."
+      },
+      {
+        "text": "One set, deny; any message fails",
+        "correct": true,
+        "why": "Right. Each rule that holds adds its message; separate rules are alternatives joined into one set."
+      },
+      {
+        "text": "They are evaluated in order and stop at the first false line",
+        "correct": false,
+        "why": "Lines inside one rule must all hold, but separate rules do not stop each other."
+      }
+    ]
+  },
+  {
+    "id": "ex-8cjy3wvv",
+    "version": 1,
+    "section": "rego",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "linkbox's image runs as 65532, yet the user rule failed on lesson 15's Dockerfile. Why?",
+    "choices": [
+      {
+        "text": "The distroless image runs as root by default",
+        "correct": false,
+        "why": "It runs as 65532; docker image inspect printed it."
+      },
+      {
+        "text": "The Dockerfile never states the user",
+        "correct": true,
+        "why": "Right. The user came from the base image, and a check that reads the file sees only what the file says."
+      },
+      {
+        "text": "The rule reads the wrong stage",
+        "correct": false,
+        "why": "It reads the final stage, which is the one that ships; there was no USER in it."
+      },
+      {
+        "text": "conftest cannot parse multi-stage Dockerfiles",
+        "correct": false,
+        "why": "It parsed both stages and numbered them 0 and 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-je6gme20",
+    "version": 1,
+    "section": "rego",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes USER nonroot instead of USER 65532:65532, since the name is clearer. What goes wrong with the manifests of lesson 10?",
+    "choices": [
+      {
+        "text": "The image would run as root",
+        "correct": false,
+        "why": "nonroot is a real user in the distroless image; the image would not run as root."
+      },
+      {
+        "text": "The registry would refuse the image",
+        "correct": false,
+        "why": "The registry stores whatever is pushed; the user is not its concern."
+      },
+      {
+        "text": "Nothing; a name and a number are equivalent",
+        "correct": false,
+        "why": "They are equivalent inside the image, and not to the kubelet checking runAsNonRoot."
+      },
+      {
+        "text": "runAsNonRoot cannot be checked against a name",
+        "correct": true,
+        "why": "Right: the kubelet refuses to start the pod. It needs a number to know the user is not 0, which is why the rule asks for one."
+      }
+    ]
+  },
+  {
+    "id": "ex-0y0rbg7w",
+    "version": 1,
+    "section": "rego",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When a Rego helper such as final_user has no value, it is ___, and not final_user is then true.",
+    "blanks": [
+      {
+        "accept": [
+          "undefined"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-g7em6hgh",
+    "version": 1,
+    "section": "manifests",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "conftest ran the 7 rules of policy/kubernetes.rego against the documents in k8s/. How many tests did it report?",
+    "value": 35,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-nccyqd8s",
+    "version": 1,
+    "section": "manifests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the policy read the tag from the part of the image name after the last slash?",
+    "choices": [
+      {
+        "text": "Because a digest uses a slash",
+        "correct": false,
+        "why": "A digest follows @, which the rule checks separately."
+      },
+      {
+        "text": "localhost:5000 has a colon of its own",
+        "correct": true,
+        "why": "Right, so the whole name always looks tagged. Checking the whole string for a colon would pass localhost:5000/linkbox, which has no tag."
+      },
+      {
+        "text": "Because Kubernetes ignores the registry part",
+        "correct": false,
+        "why": "Kubernetes pulls from the registry the name gives; it does not ignore it."
+      },
+      {
+        "text": "Because tags are case-sensitive",
+        "correct": false,
+        "why": "Case has nothing to do with where the tag starts."
+      }
+    ]
+  },
+  {
+    "id": "ex-qqthd23h",
+    "version": 1,
+    "section": "manifests",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody changes the admission binding's validationActions from Deny to Audit. What would a cluster show, without the policy stage?",
+    "choices": [
+      {
+        "text": "kubectl apply fails, because Audit is not a valid value",
+        "correct": false,
+        "why": "Audit is a valid action; the binding installs."
+      },
+      {
+        "text": "Every Deployment is refused until the binding is fixed",
+        "correct": false,
+        "why": "Audit does the opposite: nothing is refused."
+      },
+      {
+        "text": "A warning on every kubectl command",
+        "correct": false,
+        "why": "Audit records; it does not warn the client. Warn would."
+      },
+      {
+        "text": "Nothing different; every Deployment gets through",
+        "correct": true,
+        "why": "Right, and the policy is still listed. That silence is why the pipeline checks the policy's own settings."
+      }
+    ]
+  },
+  {
+    "id": "ex-9tkd7rvf",
+    "version": 1,
+    "section": "manifests",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The hurried edit changed the image to linkbox:latest and readOnlyRootFilesystem to false. Which rules failed? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "the read-only root filesystem",
+        "correct": true,
+        "why": "Right. One of the two edited lines."
+      },
+      {
+        "text": "the floating tag",
+        "correct": true,
+        "why": "Right. linkbox:latest ends in :latest."
+      },
+      {
+        "text": "the registry",
+        "correct": true,
+        "why": "Right. linkbox:latest does not start with localhost:5000/."
+      },
+      {
+        "text": "the memory limit",
+        "why": "The limit was not touched, and the run reported three failures, not four."
+      },
+      {
+        "text": "runAsNonRoot",
+        "why": "The pod still sets runAsNonRoot: true."
+      }
+    ]
+  },
+  {
+    "id": "ex-5m083xjs",
+    "version": 1,
+    "section": "testing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the floating rule was \"simplified\" to check the whole name for a colon, conftest test on k8s/ still passed 35 of 35. Why?",
+    "choices": [
+      {
+        "text": "linkbox's image has a tag",
+        "correct": true,
+        "why": "Right, and the broken line only matters without one. The real manifests never exercise the case; only a test does."
+      },
+      {
+        "text": "conftest caches results between runs",
+        "correct": false,
+        "why": "It evaluates the rules afresh every time."
+      },
+      {
+        "text": "The change made the rule stricter, not weaker",
+        "correct": false,
+        "why": "It made it weaker: localhost:5000/linkbox now passes untagged."
+      },
+      {
+        "text": "conftest test does not read policy changes until committed",
+        "correct": false,
+        "why": "It reads the files on disk, committed or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-x5bqyf2d",
+    "version": 1,
+    "section": "testing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does each test assert one exact message rather than only that deny is not empty?",
+    "choices": [
+      {
+        "text": "Rego cannot count the elements of a set at all",
+        "correct": false,
+        "why": "count() works on sets; the good-input tests use it."
+      },
+      {
+        "text": "conftest verify requires a message",
+        "correct": false,
+        "why": "verify only needs the test's body to hold."
+      },
+      {
+        "text": "To catch a rule that fires for the wrong reason",
+        "correct": true,
+        "why": "Right. A different rule's message would make \"not empty\" pass."
+      },
+      {
+        "text": "Messages are faster to compare than sets",
+        "correct": false,
+        "why": "Speed is not the reason; the tests run in well under a second either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-cpjr5f62",
+    "version": 1,
+    "section": "testing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You add a rule that refuses a Deployment with hostNetwork: true. Which test is the one most worth writing first?",
+    "choices": [
+      {
+        "text": "One that runs the rule against the real k8s/ files",
+        "correct": false,
+        "why": "Those files pass today; a test against them proves nothing about the rule firing."
+      },
+      {
+        "text": "One where hostNetwork: true gives its message",
+        "correct": true,
+        "why": "Right, its exact message. It shows the deny fires at least once, which a passing manifest never shows."
+      },
+      {
+        "text": "One that times the rule on a large manifest",
+        "correct": false,
+        "why": "Speed is not where a policy fails; silence is."
+      },
+      {
+        "text": "One where hostNetwork is absent and deny is empty",
+        "correct": false,
+        "why": "Useful later, but it passes even if the rule never fires."
+      }
+    ]
+  },
+  {
+    "id": "ex-tv13fkb6",
+    "version": 1,
+    "section": "built-in",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Trivy flags linkbox's manifest with KSV-0125, images from an untrusted registry. What is the right reading?",
+    "choices": [
+      {
+        "text": "Move the image to Docker Hub, where Trivy trusts it",
+        "correct": false,
+        "why": "That would break this project's own rule and lesson 10's admission policy."
+      },
+      {
+        "text": "The check is wrong for this project",
+        "correct": true,
+        "why": "Right: its only trusted registry is localhost:5000. A library cannot know your registry; your own rule does."
+      },
+      {
+        "text": "The registry needs TLS before anyone trusts it",
+        "correct": false,
+        "why": "The finding is about which registry, not how it is reached."
+      },
+      {
+        "text": "Delete the image tag and let the cluster pick one",
+        "correct": false,
+        "why": "A missing tag would break a different rule and fix nothing here."
+      }
+    ]
+  },
+  {
+    "id": "ex-warzvcfz",
+    "version": 1,
+    "section": "built-in",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the pipeline gate on conftest and not on trivy config?",
+    "choices": [
+      {
+        "text": "trivy config is slower",
+        "correct": false,
+        "why": "Speed is not among the reasons given; both are quick on three files."
+      },
+      {
+        "text": "trivy config cannot read Kubernetes manifests",
+        "correct": false,
+        "why": "It read them and raised four findings."
+      },
+      {
+        "text": "Its checks change under you, and some contradict decisions",
+        "correct": true,
+        "why": "Right: the bundle updates itself. A gate should fail on reviewed decisions, not on a library's opinions."
+      },
+      {
+        "text": "Trivy checks are not written in Rego",
+        "correct": false,
+        "why": "They are written in Rego, the same language as yours."
+      }
+    ]
+  },
+  {
+    "id": "ex-7dpf9bw9",
+    "version": 1,
+    "section": "built-in",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Trivy raises KSV-0020 because the manifest sets no runAsUser above 10000, although the image runs as 65532. What does that share with DS-0002 on lesson 15's Dockerfile?",
+    "choices": [
+      {
+        "text": "Both are false positives to put in .trivyignore",
+        "correct": false,
+        "why": "Both are fair: each file leaves out a fact it could state."
+      },
+      {
+        "text": "Both come from the same Rego rule",
+        "correct": false,
+        "why": "One is a Dockerfile check and one a Kubernetes check."
+      },
+      {
+        "text": "Both mean the container runs as root",
+        "correct": false,
+        "why": "It runs as 65532 in both cases."
+      },
+      {
+        "text": "Each file leaves the fact to the image",
+        "correct": true,
+        "why": "Right. Stating it in the file, USER or runAsUser, answers both."
+      }
+    ]
+  },
+  {
+    "id": "ex-q8ae591g",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the first stages of ci/stages, as this lesson leaves it, in the order they run.",
+    "items": [
+      "secrets",
+      "workflows",
+      "policy",
+      "test",
+      "sast"
+    ]
+  },
+  {
+    "id": "ex-tcs48p3v",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "ci/policy.sh runs conftest verify before conftest test. What would go wrong the other way round?",
+    "choices": [
+      {
+        "text": "conftest test would refuse to run without verified rules",
+        "correct": false,
+        "why": "It runs any rules it is given; that is the danger."
+      },
+      {
+        "text": "Nothing, as long as both run",
+        "correct": false,
+        "why": "With set -e, a failing test stage stops first and the order decides what the log says."
+      },
+      {
+        "text": "Passes from a broken rule would be trusted",
+        "correct": true,
+        "why": "Right. Verify first, so no pass is trusted from a rule that no longer refuses."
+      },
+      {
+        "text": "verify would test the files instead of the rules",
+        "correct": false,
+        "why": "verify runs the test_ rules; it never reads the project's files."
+      }
+    ]
+  },
+  {
+    "id": "ex-6hem0ssq",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The same registry rule is enforced in the pipeline and at admission. Which situation does only admission stop?",
+    "choices": [
+      {
+        "text": "A pull request that changes k8s/linkbox.yaml to another registry",
+        "correct": false,
+        "why": "The pipeline refuses that commit before it is ever applied."
+      },
+      {
+        "text": "A rule test that no longer fires",
+        "correct": false,
+        "why": "That is conftest verify, in the pipeline."
+      },
+      {
+        "text": "A Dockerfile whose base image has no digest",
+        "correct": false,
+        "why": "That is a pipeline check; admission never sees a Dockerfile."
+      },
+      {
+        "text": "kubectl apply from a laptop",
+        "correct": true,
+        "why": "Right, with a manifest that never went through the repository. Only the cluster sees objects that did not come from a commit."
+      }
+    ]
+  },
+  {
+    "id": "ex-m9pq4yzb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A new rule needs to check that every Service in k8s/ has type ClusterIP. Where does it go, and what proves it works?",
+    "choices": [
+      {
+        "text": "In ci/stages as a new stage, proved by the next push",
+        "correct": false,
+        "why": "A push of manifests that pass shows nothing about the rule firing."
+      },
+      {
+        "text": "In policy/kubernetes.rego, with a test in kubernetes_test.rego that expects its message",
+        "correct": true,
+        "why": "Right. Same package, same stage, and a test that sees it fire."
+      },
+      {
+        "text": "In policy/docker.rego, which already runs in the pipeline",
+        "correct": false,
+        "why": "That package runs on the Dockerfile only, with --namespace docker."
+      },
+      {
+        "text": "In k8s/admission.yaml only, so the cluster refuses it",
+        "correct": false,
+        "why": "That leaves the author to find out at deploy time; the lesson argues for both doors."
+      }
+    ]
+  },
+  {
+    "id": "ex-8yddetnp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team copies this lesson's policies into another service whose images are built FROM scratch with a static binary. Which rule will fail at once, and is that right?",
+    "choices": [
+      {
+        "text": "The memory-limit rule; it is wrong for static binaries",
+        "correct": false,
+        "why": "Memory limits are about the container, not how its binary was linked."
+      },
+      {
+        "text": "The registry rule; it is fine",
+        "correct": false,
+        "why": "The registry rule reads manifests, not FROM lines."
+      },
+      {
+        "text": "The digest rule; scratch needs an exception",
+        "correct": true,
+        "why": "Right: scratch has no digest, because it is not an image to pin, and a test should cover the exception."
+      },
+      {
+        "text": "None; every rule here applies to any image",
+        "correct": false,
+        "why": "Rules encode one project's decisions, and FROM scratch breaks the digest rule's assumption."
+      }
+    ]
+  }
+]

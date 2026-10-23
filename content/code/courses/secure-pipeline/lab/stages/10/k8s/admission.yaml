@@ -1,0 +1,36 @@
+# Two rules the cluster itself enforces on every Deployment in the linkbox
+# namespace, whoever applies it and however: images come from this
+# project's registry, and every container declares a memory limit.
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: linkbox-deployments
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+      - apiGroups: ["apps"]
+        apiVersions: ["v1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["deployments"]
+  validations:
+    - expression: >-
+        object.spec.template.spec.containers.all(c,
+        c.image.startsWith('localhost:5000/'))
+      message: images come from the registry at localhost:5000 and nowhere else
+    - expression: >-
+        object.spec.template.spec.containers.all(c,
+        has(c.resources.limits) && 'memory' in c.resources.limits)
+      message: every container declares a memory limit
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: linkbox-deployments
+spec:
+  policyName: linkbox-deployments
+  validationActions: ["Deny"]
+  matchResources:
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: linkbox

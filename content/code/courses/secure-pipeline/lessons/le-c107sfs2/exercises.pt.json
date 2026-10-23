@@ -1,0 +1,443 @@
+{
+  "ex-mt6mkhzc": {
+    "prompt": "O token de staging em `ci/dast.sh` e a senha de assinatura em `~/ci/keys` são segredos que o pipeline usa. Por que o token de staging preocupa menos?",
+    "choices": [
+      {
+        "text": "Ele é mais curto, então é mais difícil de adivinhar",
+        "why": "Dezoito bytes aleatórios não se adivinham de jeito nenhum. A diferença é por quanto tempo cada um funciona."
+      },
+      {
+        "text": "Vive uma execução e morre com o contêiner dela",
+        "why": "Isso. Uma cópia vazada destranca um serviço de staging que já não existe."
+      },
+      {
+        "text": "Ele está em base64, o que o mantém fora de um log legível",
+        "why": "base64 é uma codificação. Quem lê o log decodifica com um comando."
+      },
+      {
+        "text": "Só o estágio de DAST o lê",
+        "why": "A senha também é lida por um estágio só, o `sign`. Qual estágio lê um segredo não é o que separa os dois."
+      }
+    ]
+  },
+  "ex-x100czxt": {
+    "prompt": "`~/ci/keys/password` tem modo 600 e pertence a `ana`. Quais execuções do pipeline do linkbox conseguem lê-lo?",
+    "choices": [
+      {
+        "text": "Só as execuções de `main`, a branch que assina releases",
+        "why": "Nada no hook olha a branch antes de rodar o pipeline."
+      },
+      {
+        "text": "Nenhuma: o modo 600 mantém o arquivo longe de processos",
+        "why": "O modo 600 deixa a dona ler, e todo pipeline roda como a dona."
+      },
+      {
+        "text": "Toda execução de toda branch",
+        "why": "Isso. O hook roda o pipeline de cada branch enviada como `ana`, e o `ci/` da própria branch decide o que a execução faz."
+      },
+      {
+        "text": "Só as execuções cujos estágios anteriores passaram",
+        "why": "Qualquer estágio da execução lê um arquivo que `ana` lê; uma branch pode mudar o primeiro."
+      }
+    ]
+  },
+  "ex-m7xgnnn9": {
+    "prompt": "Todo gerenciador de segredos precisa de uma primeira credencial que o destranque, e guardá-la em algum lugar é o problema do segredo ___.",
+    "blanks": [
+      {
+        "accept": [
+          "zero",
+          "0"
+        ]
+      }
+    ]
+  },
+  "ex-ysb8at5p": {
+    "prompt": "Qual destas é uma conveniência do modo dev que um Vault de produção transforma em controle?",
+    "choices": [
+      {
+        "text": "Atender requisições na porta 8200",
+        "why": "Um Vault de produção também escuta na 8200. A porta não é o que muda."
+      },
+      {
+        "text": "Guardar segredos em caminhos como `secret/`",
+        "why": "Caminhos e o armazenamento chave/valor funcionam igual em produção."
+      },
+      {
+        "text": "Aceitar tokens num cabeçalho HTTP",
+        "why": "Todo Vault recebe o token assim; a produção põe TLS em volta."
+      },
+      {
+        "text": "Subir desselado",
+        "why": "Isso. Um Vault de produção sobe selado e não consegue ler o próprio armazenamento até ser desselado."
+      }
+    ]
+  },
+  "ex-4t62zcb8": {
+    "prompt": "Uma policy concede `read` em `secret/linkbox/signing`, o caminho usado no `vault kv put`, e a leitura do pipeline é recusada. Por quê?",
+    "choices": [
+      {
+        "text": "A policy precisa de `list` além de `read`",
+        "why": "`list` mostra nomes sob um caminho. Ler um caminho conhecido só precisa de `read`, no caminho certo."
+      },
+      {
+        "text": "A versão 2 do armazenamento põe `data/` no caminho",
+        "why": "Isso. O caminho da API é `secret/data/linkbox/signing`, e policies casam com caminhos da API, não com o mais curto da CLI."
+      },
+      {
+        "text": "Policies só valem depois que o servidor reinicia",
+        "why": "Uma policy vale a partir da próxima requisição. Reiniciar um servidor dev perderia tudo."
+      },
+      {
+        "text": "Um servidor dev ignora policies em requisições HTTP",
+        "why": "O modo dev aplica policies exatamente como a produção; as recusas da aula vieram dele."
+      }
+    ]
+  },
+  "ex-re756ssw": {
+    "prompt": "Por que todo comando `vault` da aula age com o poder de root?",
+    "choices": [
+      {
+        "text": "`VAULT_ADDR` aponta para 127.0.0.1",
+        "why": "O endereço diz onde está o servidor, não quem pergunta."
+      },
+      {
+        "text": "O cliente roda dentro do contêiner, onde o modo dev deixou o root token",
+        "why": "Isso. É a ferramenta do operador; o pipeline usa `curl` e o próprio token."
+      },
+      {
+        "text": "Pertencer ao grupo `docker` equivale a ser root na máquina",
+        "why": "Verdade sobre a máquina, como a aula 16 disse, mas o Vault decide pelo token, não pelo usuário Unix."
+      },
+      {
+        "text": "A imagem roda o servidor como o usuário Unix root",
+        "why": "As permissões do Vault não têm relação com os usuários do sistema operacional."
+      }
+    ]
+  },
+  "ex-pz2t7c77": {
+    "prompt": "Com o token de `linkbox-sign`, a leitura de `secret/data/linkbox/registry` responde \"permission denied\" e nunca \"not found\". Por que o Vault não diz se esse caminho existe?",
+    "choices": [
+      {
+        "text": "Deixaria um token mapear o que lhe é negado",
+        "why": "Isso. Distinguir um caminho ausente de um proibido revelaria o que existe além da policy."
+      },
+      {
+        "text": "Porque o caminho não existe, e o Vault informa isso como recusa",
+        "why": "Ele responde igual exista o caminho ou não; esse é o ponto."
+      },
+      {
+        "text": "HTTP não tem código de status para um segredo ausente",
+        "why": "HTTP tem o 404, e o Vault o usa onde o token pode ler o caminho."
+      },
+      {
+        "text": "O modo dev esconde o motivo de todo erro",
+        "why": "O erro do token expirado deu dois motivos; o modo dev não esconde nada."
+      }
+    ]
+  },
+  "ex-y9sh3hf6": {
+    "prompt": "Trinta segundos depois de criado, a leitura com o token feito à mão responde \"permission denied\" e \"invalid token\". Quem o revogou?",
+    "choices": [
+      {
+        "text": "O `trap` do script do pipeline",
+        "why": "Esse `trap` é do `ci/vault-read.sh`, e este token nunca passou por ele."
+      },
+      {
+        "text": "O root token, numa agenda que o Vault mantém",
+        "why": "Não houve agenda nem ação de root."
+      },
+      {
+        "text": "Ninguém: o tempo de vida acabou, e o Vault o esqueceu",
+        "why": "Isso. A expiração não exige ação de ninguém, e esse é todo o valor dela."
+      },
+      {
+        "text": "A policy `default`, que todo token leva",
+        "why": "A `default` deixa um token se revogar; ela não faz isso sozinha."
+      }
+    ]
+  },
+  "ex-hnebrhgh": {
+    "prompt": "Um time dá ao pipeline `read` em `secret/data/payments/*` \"para simplificar\". O que há de errado nisso?",
+    "choices": [
+      {
+        "text": "O Vault recusa curingas em caminhos de policy",
+        "why": "Um `*` no fim é válido, e é por isso que é tão fácil de escrever."
+      },
+      {
+        "text": "Alcança segredos que forem acrescentados ali depois",
+        "why": "Isso. Todo segredo que alguém guardar depois sob esse prefixo fica concedido também, sem ninguém decidir."
+      },
+      {
+        "text": "Concede também `update` nesses caminhos",
+        "why": "Capabilities são listadas uma a uma; `read` concede ler e mais nada."
+      },
+      {
+        "text": "Remove o tempo de vida do token",
+        "why": "Uma policy diz o que pode ser feito, não por quanto tempo."
+      }
+    ]
+  },
+  "ex-gdgrswr7": {
+    "prompt": "Qualquer um que copie um token de identidade de um log consegue decodificar e ler os claims. Por que isso é aceitável?",
+    "choices": [
+      {
+        "text": "Os claims são cifrados com a chave do servidor de CI",
+        "why": "São base64url, uma codificação; o `jq` os decodificou na aula."
+      },
+      {
+        "text": "Só o Vault sabe decodificar base64url",
+        "why": "Qualquer ferramenta decodifica, como o único comando `jq` da aula fez."
+      },
+      {
+        "text": "Não há segredo neles; a assinatura os garante",
+        "why": "Isso. Lê-los não dá nada; mudá-los quebra a assinatura."
+      },
+      {
+        "text": "Os claims passam por hash e não podem ser lidos de volta",
+        "why": "Só a assinatura é calculada sobre eles; os claims em si são JSON puro."
+      }
+    ]
+  },
+  "ex-gkkyf7dh": {
+    "prompt": "No token que o `mint.py` fez para `main`, quantos segundos separam `iat` de `exp`?",
+    "unit": "segundos"
+  },
+  "ex-kz5hzr4a": {
+    "prompt": "O que acontece com o problema do segredo zero quando o servidor de CI passa a assinar tokens de identidade?",
+    "choices": [
+      {
+        "text": "Não sobra segredo de vida longa em lugar nenhum",
+        "why": "A chave privada é de vida longa; ela só nunca chega a uma execução."
+      },
+      {
+        "text": "A chave privada vai para o Vault junto com a senha",
+        "why": "O Vault guarda a chave pública. A privada fica com o servidor de CI."
+      },
+      {
+        "text": "Sobra a chave privada, que nenhuma execução tem",
+        "why": "Isso. Uma execução tem um token que a chave assinou, que morre em cinco minutos."
+      },
+      {
+        "text": "Cada execução recebe uma chave privada própria",
+        "why": "Execuções recebem tokens assinados, não chaves; uma chave assina todos."
+      }
+    ]
+  },
+  "ex-7gvh7v99": {
+    "prompt": "Alguém edita o claim `ref` de um token de `try-something` para `refs/heads/main`, mantém o resto e envia à role `linkbox-main` do Vault. O que acontece?",
+    "choices": [
+      {
+        "text": "Recusado: a assinatura não bate mais com os claims",
+        "why": "Isso. A assinatura cobre os claims byte a byte, então a edição a quebra."
+      },
+      {
+        "text": "É aceito, já que os claims agora casam com a role exatamente",
+        "why": "Os claims casam, mas não são mais os que o servidor de CI assinou."
+      },
+      {
+        "text": "É aceito por cinco minutos e depois revogado",
+        "why": "Ele nunca recebe um token do Vault para ser revogado."
+      },
+      {
+        "text": "É recusado porque o `jti` dele já foi usado",
+        "why": "O Vault aceitou um mesmo token duas vezes na aula; aqui ele não acompanha o `jti`."
+      }
+    ]
+  },
+  "ex-r3xqvgd4": {
+    "prompt": "A role `linkbox-any` conferia só a audiência. Por que uma execução de `try-something` recebeu a policy de assinatura por ela?",
+    "choices": [
+      {
+        "text": "O token foi forjado com uma cópia da chave da CI",
+        "why": "Nada foi forjado. O servidor de CI o assinou, como assina um para toda branch."
+      },
+      {
+        "text": "Faltava `bound_issuer` na configuração do método",
+        "why": "Estava definido, e o emissor do token casava."
+      },
+      {
+        "text": "Um Vault em modo dev aceita qualquer token apresentado",
+        "why": "O mesmo servidor recusou três tokens um minuto depois."
+      },
+      {
+        "text": "A role nunca olhou para qual branch o token nomeava",
+        "why": "Isso. A CI assina um token válido para toda branch, e uma role que confia só na assinatura confia em todos."
+      }
+    ]
+  },
+  "ex-2rkmq2n9": {
+    "prompt": "Ponha em ordem os passos de uma execução de `main` lendo a senha de assinatura pelo `ci/vault-read.sh`.",
+    "items": [
+      "o servidor de CI emite um token para `refs/heads/main`",
+      "o script faz login em `auth/jwt/login` com role e token",
+      "o Vault responde com um token que leva `linkbox-sign`",
+      "o script lê `secret/data/linkbox/signing`",
+      "o `trap` revoga o token do Vault"
+    ]
+  },
+  "ex-0am2fktf": {
+    "prompt": "Por que o `ci/vault-read.sh` lê o campo com `jq -e`?",
+    "choices": [
+      {
+        "text": "Para a senha nunca aparecer no log da execução",
+        "why": "`jq -e` imprime o valor como o `jq` normal; o que muda é o status de saída."
+      },
+      {
+        "text": "Para uma leitura recusada fazer o estágio falhar",
+        "why": "Isso. Em vez de passar adiante uma senha vazia, um campo ausente é erro, então o script falha fechado com a mensagem do Vault."
+      },
+      {
+        "text": "Para decodificar o base64 da resposta do Vault",
+        "why": "O Vault responde JSON puro; nada nele está em base64."
+      },
+      {
+        "text": "Para tirar a quebra de linha que o `cmp` veria",
+        "why": "`-e` trata do status de saída, e a comparação disse `same`."
+      }
+    ]
+  },
+  "ex-4jn7w6rk": {
+    "prompt": "O token de `main` fez login duas vezes nos cinco minutos dele e o Vault aceitou as duas. Se ele vazasse num log, o que limita o estrago?",
+    "choices": [
+      {
+        "text": "O Vault recusa um token cujo `jti` já viu",
+        "why": "A captura mostra o contrário: o mesmo token fez login duas vezes."
+      },
+      {
+        "text": "O `trap` o revoga quando o script termina",
+        "why": "O `trap` revoga o token do Vault. O token de identidade é um JWT que ninguém revoga."
+      },
+      {
+        "text": "A audiência e a vida dele: vale só no Vault, até o `exp`",
+        "why": "Isso. Dentro dessa janela ele funciona para quem o tiver, e por isso logs não devem imprimi-lo."
+      },
+      {
+        "text": "A assinatura muda depois do primeiro uso",
+        "why": "A assinatura é fixada quando o token é emitido."
+      }
+    ]
+  },
+  "ex-4za786cf": {
+    "prompt": "Quais destes logins o Vault da aula recusou? Escolha todos.",
+    "choices": [
+      {
+        "text": "um token emitido para a audiência `registry`",
+        "why": "Recusado: audiência inválida."
+      },
+      {
+        "text": "um token de `try-something` na role `linkbox-any`",
+        "why": "Aceito, e esse era o defeito que a role amarrada corrigiu."
+      },
+      {
+        "text": "um token assinado por uma chave que o Vault nunca viu",
+        "why": "Recusado: nenhuma chave conhecida validou a assinatura."
+      },
+      {
+        "text": "o token de `main` usado pela segunda vez",
+        "why": "Aceito: um JWT funciona para quem o tiver até expirar."
+      },
+      {
+        "text": "um token de `try-something` na role `linkbox-main`",
+        "why": "Recusado: o claim `ref` não casava."
+      }
+    ]
+  },
+  "ex-tt0aq9m4": {
+    "prompt": "Uma role da AWS confia no serviço de tokens do GitHub com condição em `aud` e nenhuma em `sub`. Os workflows de quem podem assumi-la?",
+    "choices": [
+      {
+        "text": "Todo repositório que peça a audiência",
+        "why": "Isso. O emissor do GitHub assina para todo repositório, e qualquer um que peça essa audiência entra."
+      },
+      {
+        "text": "Os do repositório que registrou o provedor",
+        "why": "O provedor é registrado para a conta, e é o mesmo emissor para todo mundo."
+      },
+      {
+        "text": "Nenhum, já que a AWS rejeita uma role sem `sub`",
+        "why": "A policy é válida assim. Por isso é um erro que vai para produção."
+      },
+      {
+        "text": "Os da própria organização da dona da conta",
+        "why": "Nada numa condição em `aud` nomeia uma organização."
+      }
+    ]
+  },
+  "ex-pwkyeqnj": {
+    "prompt": "Uma role de deploy exige `sub` = `repo:ana/linkbox:ref:refs/heads/main`. O time acrescenta `environment: production` ao job de deploy, e o job não consegue mais assumir a role. Por quê?",
+    "choices": [
+      {
+        "text": "Um environment exige `id-token: read` em vez de `write`",
+        "why": "Essa variação não existe; a permissão é a mesma com ou sem environment."
+      },
+      {
+        "text": "O subject do job passa à forma de environment, sem `ref`",
+        "why": "Isso. Amarre a role a `environment:production` e deixe as regras do environment escolherem as branches."
+      },
+      {
+        "text": "Environments tiram o claim `aud` do token",
+        "why": "A audiência é a que o job pede, com environment ou sem."
+      },
+      {
+        "text": "Regras de proteção seguram todo token até uma pessoa aprovar",
+        "why": "A aprovação segura o início do job; quando ele roda, o token leva o subject de environment."
+      }
+    ]
+  },
+  "ex-122s93vq": {
+    "prompt": "Configurado com `___` em vez de uma chave pública colada, o Vault busca as chaves publicadas pelo emissor e acompanha uma rotação sozinho.",
+    "blanks": [
+      {
+        "accept": [
+          "oidc_discovery_url"
+        ]
+      }
+    ]
+  },
+  "ex-xbt7y8za": {
+    "prompt": "Associe cada pergunta de escopo mínimo ao que a respondeu nesta aula.",
+    "pairs": [
+      {
+        "left": "o que pode ser feito",
+        "right": "uma policy que nomeia um caminho com `read`"
+      },
+      {
+        "left": "quais execuções podem fazer",
+        "right": "`bound_claims` na role"
+      },
+      {
+        "left": "por quanto tempo",
+        "right": "`token_ttl` e `token_max_ttl`"
+      },
+      {
+        "left": "em quais afirmações acreditar",
+        "right": "`jwt_validation_pubkeys` e `bound_issuer`"
+      }
+    ],
+    "right_distractors": [
+      "mascarar o valor no log da execução"
+    ]
+  },
+  "ex-xdvpnqyf": {
+    "prompt": "Qual mudança remove a credencial de vida longa do pipeline do linkbox, em vez de mudá-la de lugar?",
+    "choices": [
+      {
+        "text": "Levar a senha de `~/ci/keys` para o Vault",
+        "why": "Aí a execução precisa de um token do Vault, que é o mesmo problema um passo adiante."
+      },
+      {
+        "text": "Guardar um token do Vault no ambiente do hook para toda execução",
+        "why": "Esse token é de vida longa e legível por toda execução: a senha com outro nome."
+      },
+      {
+        "text": "Um token assinado pela CI por execução",
+        "why": "Isso. A execução não guarda nada durável; apresenta uma afirmação que morre em cinco minutos."
+      },
+      {
+        "text": "Cifrar o arquivo da senha com uma segunda chave",
+        "why": "A segunda chave vira o segredo de vida longa de que a execução precisa."
+      }
+    ]
+  }
+}

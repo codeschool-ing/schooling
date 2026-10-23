@@ -1,0 +1,599 @@
+[
+  {
+    "id": "ex-z6b3gg5e",
+    "version": 1,
+    "section": "noise",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A gate breaks the build on every finding, including advisories with no fixed version. Why does that end up less safe than a gate that warns on those?",
+    "choices": [
+      {
+        "text": "Breaking builds slows the pipeline down",
+        "correct": false,
+        "why": "A broken build is not slower; the damage is to what people learn from it."
+      },
+      {
+        "text": "Red stops meaning anything, and one line switches it off",
+        "correct": true,
+        "why": "Right. allow_failure, continue-on-error or a commented stage, and the true finding then reaches nobody."
+      },
+      {
+        "text": "Scanners report fewer findings when they break the build",
+        "correct": false,
+        "why": "The scanner reports the same findings whatever the pipeline does with them."
+      },
+      {
+        "text": "Advisories without a fix are false positives",
+        "correct": false,
+        "why": "They are real; the point is that nobody can act on them by changing a pin."
+      }
+    ]
+  },
+  {
+    "id": "ex-70e3chgp",
+    "version": 1,
+    "section": "noise",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each line to where it turns a gate into a decoration.",
+    "pairs": [
+      {
+        "left": "allow_failure: true",
+        "right": "a GitLab CI job"
+      },
+      {
+        "left": "continue-on-error: true",
+        "right": "a GitHub Actions step"
+      },
+      {
+        "left": "--no-verify",
+        "right": "a commit on a laptop"
+      },
+      {
+        "left": "|| true",
+        "right": "the end of a command in a shell stage"
+      }
+    ],
+    "right_distractors": [
+      "the exceptions file of the composition gate"
+    ]
+  },
+  {
+    "id": "ex-fwanew6r",
+    "version": 1,
+    "section": "noise",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which findings break the build whether or not the rule \"only what the person who broke it can fix, now\" would say so?",
+    "choices": [
+      {
+        "text": "A secret in a pushed commit",
+        "correct": true,
+        "why": "Right. Its owner can always act, by revoking it, and every minute costs."
+      },
+      {
+        "text": "A check that did not run to the end",
+        "correct": true,
+        "why": "Right. Silence is not a pass; this is failing closed."
+      },
+      {
+        "text": "An advisory rated critical with no fixed version",
+        "why": "Severity does not create a fix. It warns, and somebody owns it."
+      },
+      {
+        "text": "A finding in code older than a year",
+        "why": "Old code is the case baselines exist for; age alone breaks nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-y45n8xa1",
+    "version": 1,
+    "section": "verdicts",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which exit status does a stage return, in the lesson's pipeline, to pass with a warning?",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-4mec05rw",
+    "version": 1,
+    "section": "verdicts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a warning 3 and not 2?",
+    "choices": [
+      {
+        "text": "2 is reserved by POSIX for warnings from the shell",
+        "correct": false,
+        "why": "No such reservation exists; the shell said 127 for a missing command."
+      },
+      {
+        "text": "Python exits 2 on a bad option",
+        "correct": true,
+        "why": "Right: a typo in a flag would then pass as a warning. A crash has to land on a status the pipeline treats as a break."
+      },
+      {
+        "text": "ZAP exits 3 for warnings, and the pipeline copies it",
+        "correct": false,
+        "why": "ZAP exits 2 for warnings; dast.sh translates it to 3."
+      },
+      {
+        "text": "Bash cannot read statuses below 3 inside a while loop",
+        "correct": false,
+        "why": "The loop reads any status; the choice is about what failures produce."
+      }
+    ]
+  },
+  {
+    "id": "ex-d544zdq7",
+    "version": 1,
+    "section": "verdicts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "ZAP's baseline scan exits 3 when the scan itself could not finish. What does the lesson's `ci/dast.sh` turn that into?",
+    "choices": [
+      {
+        "text": "3, a warning, because the number is the same",
+        "correct": false,
+        "why": "The case sends only ZAP's 2 to 3; any other status goes to 1."
+      },
+      {
+        "text": "0, since a scan that did not finish found nothing",
+        "correct": false,
+        "why": "Finding nothing because nothing ran is the pass this lesson refuses."
+      },
+      {
+        "text": "1, a break",
+        "correct": true,
+        "why": "Right. Everything but 0 and 2 goes to 1: the stage fails closed."
+      },
+      {
+        "text": "It retries the scan once before deciding",
+        "correct": false,
+        "why": "Nothing in the script retries; it maps the status and exits."
+      }
+    ]
+  },
+  {
+    "id": "ex-f758vt3k",
+    "version": 1,
+    "section": "verdicts",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Lesson 4's scan told ZAP to exit 0 on warnings with a one-letter flag, which this lesson removes. The flag is ___",
+    "blanks": [
+      {
+        "accept": [
+          "-I"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xwgvswth",
+    "version": 1,
+    "section": "the-gate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `ci/sca.sh` write pip-audit's report to a file made by `mktemp` instead of `audit.json` in the project?",
+    "choices": [
+      {
+        "text": "pip-audit refuses to write inside a git repository",
+        "correct": false,
+        "why": "It wrote audit.json into the project without complaint in the first version."
+      },
+      {
+        "text": "So no earlier run's report ever stands in for one that was not written",
+        "correct": true,
+        "why": "Right. On the laptop, a failed run passed on yesterday's report."
+      },
+      {
+        "text": "Temporary files are faster to read",
+        "correct": false,
+        "why": "Speed has nothing to do with it."
+      },
+      {
+        "text": "The CI clone is read-only",
+        "correct": false,
+        "why": "The CI's clone is writable; the defect showed on the laptop."
+      }
+    ]
+  },
+  {
+    "id": "ex-nfwzzk3s",
+    "version": 1,
+    "section": "the-gate",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody adds the line `PYSEC-2026-1475 2026-11-20` to `ci/exceptions.txt`, with no reason after the date. What happens on the next run?",
+    "choices": [
+      {
+        "text": "The exception holds, since the date is in the future",
+        "correct": false,
+        "why": "The line never becomes an exception: it does not unpack into three fields."
+      },
+      {
+        "text": "The gate skips the line as a comment",
+        "correct": false,
+        "why": "Only lines starting with # are comments."
+      },
+      {
+        "text": "The gate warns that a reason is missing and passes",
+        "correct": false,
+        "why": "There is no such warning in the code; it raises."
+      },
+      {
+        "text": "Python raises; the gate exits 1 and breaks",
+        "correct": true,
+        "why": "Right. An exception nobody explained is refused, and nothing was written to refuse it."
+      }
+    ]
+  },
+  {
+    "id": "ex-c0n0zxzq",
+    "version": 1,
+    "section": "the-gate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `werkzeug==3.0.1` pinned beside `flask==3.1.3`, the composition stage exited 1. Why?",
+    "choices": [
+      {
+        "text": "werkzeug 3.0.1 has advisories with fixed versions",
+        "correct": false,
+        "why": "It does, but pip-audit never got that far: it could not install the set."
+      },
+      {
+        "text": "The two pins conflict, so no report was written",
+        "correct": true,
+        "why": "Right. A file nobody can install is not a file without advisories."
+      },
+      {
+        "text": "The gate breaks on any downgrade",
+        "correct": false,
+        "why": "The gate reads advisories; it knows nothing of versions going down."
+      },
+      {
+        "text": "The tests failed first and stopped the run",
+        "correct": false,
+        "why": "This was ci/sca.sh run on its own, and the error is pip's resolver."
+      }
+    ]
+  },
+  {
+    "id": "ex-x9xt5n34",
+    "version": 1,
+    "section": "the-gate",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `judge()` take `today` as a parameter rather than reading the clock?",
+    "choices": [
+      {
+        "text": "To fix the day in the tests",
+        "correct": true,
+        "why": "Right. The tests use 14 October, check both sides of a date and pass on any day."
+      },
+      {
+        "text": "Because the CI server has no clock",
+        "correct": false,
+        "why": "It has one; the shell scripts print timings from it."
+      },
+      {
+        "text": "So exceptions are judged in UTC",
+        "correct": false,
+        "why": "The parameter is a date, and the program passes the local one."
+      },
+      {
+        "text": "pip-audit puts the date in its report",
+        "correct": false,
+        "why": "The report carries no date; the gate supplies it."
+      }
+    ]
+  },
+  {
+    "id": "ex-g7xzqt39",
+    "version": 1,
+    "section": "dependency-cases",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On the branch that moved Jinja2 back to 3.1.4, how many distinct advisories did the gate list as BREAKS?",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-4s6t61zg",
+    "version": 1,
+    "section": "dependency-cases",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An advisory with a fixed version is published against pytest, which only the tests use. What does the gate do, and is it right by the lesson's rule?",
+    "choices": [
+      {
+        "text": "It warns, because development dependencies never ship",
+        "correct": false,
+        "why": "The gate reads both files the same way, and pytest runs in the pipeline with its credentials."
+      },
+      {
+        "text": "It passes, because pip-audit reads requirements.txt alone",
+        "correct": false,
+        "why": "sca.sh passes both files to pip-audit."
+      },
+      {
+        "text": "It breaks: one pin, movable now by whoever pushed",
+        "correct": true,
+        "why": "Right. Fixable now by the person who pushed, whatever the dependency is for."
+      },
+      {
+        "text": "It breaks, but the rule says it should warn",
+        "correct": false,
+        "why": "The rule asks whether the pusher can fix it now; here they can."
+      }
+    ]
+  },
+  {
+    "id": "ex-8jkcbk3j",
+    "version": 1,
+    "section": "dependency-cases",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The ecdsa branch passed with a warning. What made the advisory not apply to the planned use, according to its own text?",
+    "choices": [
+      {
+        "text": "The advisory concerns the P-384 curve, and the service uses P-256",
+        "correct": false,
+        "why": "It names P-256 itself."
+      },
+      {
+        "text": "A fix is due in the next release",
+        "correct": false,
+        "why": "The project says there is no planned fix."
+      },
+      {
+        "text": "Verification is unaffected, and the service only verifies",
+        "correct": true,
+        "why": "Right. Without a private key to sign with, there is nothing for the timing leak to reveal."
+      },
+      {
+        "text": "Timing attacks need physical access to the server",
+        "correct": false,
+        "why": "The advisory says nothing of the kind; the reading turns on signing versus verifying."
+      }
+    ]
+  },
+  {
+    "id": "ex-7geyykvt",
+    "version": 1,
+    "section": "dependency-cases",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the life of an exception in order.",
+    "items": [
+      "a line with the advisory, a date and a reason is committed",
+      "the advisory passes, logged as excepted",
+      "in its last week, the gate warns",
+      "the day after the date, the finding breaks the build again",
+      "a new commit with a new date and reason renews it"
+    ]
+  },
+  {
+    "id": "ex-4fjygaxg",
+    "version": 1,
+    "section": "dependency-cases",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The exception lines name advisories, not the package. What follows when a fourth advisory is published against Jinja2 3.1.4?",
+    "choices": [
+      {
+        "text": "It is covered, since the package is excepted",
+        "correct": false,
+        "why": "Nothing excepts a package; each line is one advisory id."
+      },
+      {
+        "text": "It warns until somebody adds a line",
+        "correct": false,
+        "why": "It has a fixed version or not; with one, it breaks."
+      },
+      {
+        "text": "The gate refuses the whole exceptions file",
+        "correct": false,
+        "why": "The other lines still hold; only the new advisory is unexcepted."
+      },
+      {
+        "text": "It breaks, if it has a fix",
+        "correct": true,
+        "why": "Right. A decision about three advisories says nothing about a fourth."
+      }
+    ]
+  },
+  {
+    "id": "ex-etttv7d2",
+    "version": 1,
+    "section": "other-cases",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each case to its verdict and reason.",
+    "pairs": [
+      {
+        "left": "a secret pushed with --no-verify",
+        "right": "break: its owner can revoke it at once"
+      },
+      {
+        "left": "rule 10031 on /search, proven false",
+        "right": "warn: kept visible, scoped out when it becomes noise"
+      },
+      {
+        "left": "B108 in a function nothing calls",
+        "right": "break: fixable now, and unreachability is not checked"
+      },
+      {
+        "left": "an advisory with no fixed version",
+        "right": "warn: somebody owns it and reads it"
+      }
+    ],
+    "right_distractors": [
+      "pass: it is in last year's baseline"
+    ]
+  },
+  {
+    "id": "ex-rf6w696c",
+    "version": 1,
+    "section": "other-cases",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Rule 10031 is a proven false positive on `/search`. Why not set it to IGNORE in `ci/zap-rules.conf`?",
+    "choices": [
+      {
+        "text": "IGNORE silences the rule on every page, the next one included",
+        "correct": true,
+        "why": "Right. OUTOFSCOPE for /search is the precise tool when the warning becomes noise."
+      },
+      {
+        "text": "ZAP refuses IGNORE for passive rules",
+        "correct": false,
+        "why": "IGNORE is one of the levels the configuration accepts."
+      },
+      {
+        "text": "IGNORE would make the nightly run fail",
+        "correct": false,
+        "why": "It drops the rule; the run would pass with no warning."
+      },
+      {
+        "text": "The rule might stop being a false positive tomorrow on /search",
+        "correct": false,
+        "why": "The response proves it false there; the risk is the other pages."
+      }
+    ]
+  },
+  {
+    "id": "ex-g47pjrjm",
+    "version": 1,
+    "section": "other-cases",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the webhook branch was deleted from the CI server, where was the pushed secret still to be found?",
+    "choices": [
+      {
+        "text": "Nowhere: deleting the branch on the server removed its commits with it",
+        "correct": false,
+        "why": "Deleting a branch removes a name; the commit stays until Git collects it, and the run's clone keeps a copy."
+      },
+      {
+        "text": "Only in the developer's laptop",
+        "correct": false,
+        "why": "The server and the run's clone hold it too."
+      },
+      {
+        "text": "In the server's objects until collected, and in the run's clone",
+        "correct": true,
+        "why": "Right. Which is why the response starts with revoking it."
+      },
+      {
+        "text": "In the image the build stage pushed",
+        "correct": false,
+        "why": "The run stopped at the first stage; no image was built."
+      }
+    ]
+  },
+  {
+    "id": "ex-2evq311y",
+    "version": 1,
+    "section": "baselines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does an exception line carry that a line in a baseline does not?",
+    "choices": [
+      {
+        "text": "The rule that found it",
+        "correct": false,
+        "why": "A baseline records the finding, rule included."
+      },
+      {
+        "text": "A date, a reason and, through its commit, an owner",
+        "correct": true,
+        "why": "Right. A baseline has no day on which the decision is looked at again."
+      },
+      {
+        "text": "The file and line of the finding",
+        "correct": false,
+        "why": "Baselines carry those; they are how a finding is matched."
+      },
+      {
+        "text": "A severity score",
+        "correct": false,
+        "why": "Neither carries one in this lesson."
+      }
+    ]
+  },
+  {
+    "id": "ex-6nsvfdp3",
+    "version": 1,
+    "section": "baselines",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The owner of an exception is not a field of the file. The Git command that names the commit behind each of its lines is git ___",
+    "blanks": [
+      {
+        "accept": [
+          "blame"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vf89n7p3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team adds Semgrep to a five-year-old service, and the first run reports 300 findings. Which first move follows the lesson?",
+    "choices": [
+      {
+        "text": "Break the build on all 300 until they are fixed",
+        "correct": false,
+        "why": "Nobody pushing on Tuesday wrote them; the gate is switched off by Thursday."
+      },
+      {
+        "text": "Warn on all 300 and break on nothing",
+        "correct": false,
+        "why": "The next real finding is lost among three hundred old ones."
+      },
+      {
+        "text": "Write one exception per finding, each with a date",
+        "correct": false,
+        "why": "Three hundred dated decisions is a baseline with extra paperwork, and they all expire together."
+      },
+      {
+        "text": "Baseline today, break on new ones, and own the old",
+        "correct": true,
+        "why": "Right. New findings follow the rule, and the old ones are debt with an owner and a budget."
+      }
+    ]
+  }
+]

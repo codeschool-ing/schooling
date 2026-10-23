@@ -1,0 +1,406 @@
+{
+  "ex-s3r42qzb": {
+    "prompt": "Por que toda checagem que este curso acrescentou torna o pipeline mais atraente para um atacante?",
+    "choices": [
+      {
+        "text": "Os scanners publicam os achados onde qualquer um lê",
+        "why": "Os achados ficam nos logs da execução; a atração são as credenciais."
+      },
+      {
+        "text": "Cada uma é um job que segura credenciais",
+        "why": "Isso. Rodar uma linha sua nesse job dá acesso a todas: tokens, acesso ao registry e a chave de assinatura estão no job durante toda a duração dele."
+      },
+      {
+        "text": "Mais estágios deixam cada execução mais lenta",
+        "why": "Velocidade é assunto da aula 2; ela não atrai ninguém."
+      },
+      {
+        "text": "As ferramentas são baixadas da internet a cada execução",
+        "why": "Este curso instala cada ferramenta uma vez, conferida; o ponto é o que o job segura."
+      }
+    ]
+  },
+  "ex-1m5h4t36": {
+    "prompt": "No incidente do tj-actions/changed-files em 2025, que workflows rodaram o código alterado?",
+    "choices": [
+      {
+        "text": "Os que nomeavam a action por hash de commit",
+        "why": "Um hash de commit não pode ser movido, então esses workflows continuaram rodando o código antigo."
+      },
+      {
+        "text": "Só workflows em runners self-hosted",
+        "why": "O tipo de runner não importou; a tag importou."
+      },
+      {
+        "text": "Os que a nomeavam por uma tag de versão",
+        "why": "Isso. As tags foram movidas para um commit novo, e toda execução que as resolveu o pegou."
+      },
+      {
+        "text": "Os que usavam `pull_request_target` como gatilho",
+        "why": "Não foi o gatilho que decidiu; foi a referência à action."
+      }
+    ]
+  },
+  "ex-4qhy4yw8": {
+    "prompt": "Associe cada parte ao jeito como ela pode influenciar o que um job de CI roda.",
+    "pairs": [
+      {
+        "left": "o autor de um pull request",
+        "right": "o código que o job baixa"
+      },
+      {
+        "left": "o autor de uma action",
+        "right": "o commit para o qual uma tag aponta"
+      },
+      {
+        "left": "o dono do runner",
+        "right": "a máquina em que o job roda"
+      }
+    ],
+    "right_distractors": [
+      "o formato de armazenamento do registry"
+    ]
+  },
+  "ex-1n1bm6tx": {
+    "prompt": "Quantos achados o zizmor reportou no workflow descuidado com a persona padrão?"
+  },
+  "ex-szj7aet2": {
+    "prompt": "Por que `pull_request_target` combinado com um checkout da head do pull request é o par perigoso, e não cada um sozinho?",
+    "choices": [
+      {
+        "text": "O checkout roda código de um estranho com os privilégios do gatilho",
+        "why": "Isso. O gatilho dá um token de escrita e os segredos. Sozinho, o gatilho roda o código da branch base; sozinho, o checkout roda com token só de leitura."
+      },
+      {
+        "text": "Baixar um fork é mais lento sob esse gatilho",
+        "why": "Velocidade não é o problema; privilégios são."
+      },
+      {
+        "text": "O gatilho desliga a proteção contra template injection do GitHub",
+        "why": "Não existe essa proteção para desligar; injeção é um achado à parte."
+      },
+      {
+        "text": "O commit da head não é assinado, e o GitHub recusa commits sem assinatura ali",
+        "why": "O GitHub roda commits sem assinatura; assinatura não é o risco aqui."
+      }
+    ]
+  },
+  "ex-wy5580dj": {
+    "prompt": "O que faz de `${{ github.event.pull_request.title }}` dentro de `run:` uma injeção de código?",
+    "choices": [
+      {
+        "text": "O título é mandado para a API do GitHub sem criptografia",
+        "why": "O transporte não é o problema; onde o texto cai é."
+      },
+      {
+        "text": "O texto vira parte do script",
+        "why": "Isso. Ela é expandida antes de o shell interpretar o script, então o que o autor digitou vira parte do programa; uma variável de ambiente o mantém como valor."
+      },
+      {
+        "text": "O título é maior que o limite de linha do shell",
+        "why": "O tamanho não é o perigo; o significado é."
+      },
+      {
+        "text": "O `echo` imprime segredos quando recebe um título",
+        "why": "O `echo` imprime o que recebe; o problema é que o título já virou código."
+      }
+    ]
+  },
+  "ex-nxvetewz": {
+    "prompt": "A persona padrão do zizmor não reportou `permissions: write-all`; a persona `auditor` reportou. O que a aula tira disso?",
+    "choices": [
+      {
+        "text": "`write-all` é inofensivo num workflow de pull request",
+        "why": "Ele dá ao job um token que escreve; o silêncio da persona padrão é uma escolha de ajuste."
+      },
+      {
+        "text": "A persona padrão está quebrada e não deve ser usada",
+        "why": "Ela é ajustada para poucos falsos positivos, e por isso é a padrão no pipeline."
+      },
+      {
+        "text": "Ler um workflow novo primeiro como auditor, depois confiar na padrão",
+        "why": "Isso. A padrão fica quieta de propósito; uma primeira passada deliberada olha tudo."
+      },
+      {
+        "text": "A persona auditor precisa de rede para funcionar",
+        "why": "As duas rodaram com `--offline`."
+      }
+    ]
+  },
+  "ex-6t3zxtbs": {
+    "prompt": "O `git ls-remote` mostrou `v6` e `v6.1.0` nomeando o mesmo commit. Qual é fixado no workflow, e como?",
+    "choices": [
+      {
+        "text": "`v6`, porque recebe correções automaticamente",
+        "why": "Receber mudanças automaticamente é exatamente o que um pin recusa."
+      },
+      {
+        "text": "O hash do commit, com `# v6.1.0` ao lado",
+        "why": "Isso. O hash não se move, e o comentário diz a quem lê e aos bots de atualização qual release é."
+      },
+      {
+        "text": "`v6.1.0`, porque uma tag de versão exata não se move",
+        "why": "Qualquer tag pode ser movida por quem controla o repositório."
+      },
+      {
+        "text": "Os dois, para um servir de reserva do outro",
+        "why": "Um workflow nomeia uma referência por passo."
+      }
+    ]
+  },
+  "ex-tja35hm4": {
+    "prompt": "O `actions/checkout` grava o token do job no `.git/config`, a menos que o passo defina `persist-credentials: ___`.",
+    "blanks": [
+      {
+        "accept": [
+          "false"
+        ]
+      }
+    ]
+  },
+  "ex-g1hmw1hn": {
+    "prompt": "Por que declarar `permissions: contents: read` no arquivo em vez de depender do padrão do repositório?",
+    "choices": [
+      {
+        "text": "Uma linha no arquivo é revisada com o código",
+        "why": "Isso. Uma configuração do repositório muda sem revisão. O arquivo torna os privilégios do job parte do que quem revisa lê."
+      },
+      {
+        "text": "O padrão do repositório é sempre write-all",
+        "why": "O padrão é o que o repositório ou a organização definiu; o arquivo o torna independente disso."
+      },
+      {
+        "text": "O zizmor não consegue ler as configurações do repositório",
+        "why": "Verdade offline, mas o motivo da aula é a revisão, não o scanner."
+      },
+      {
+        "text": "O GITHUB_TOKEN não existe se as permissões não forem declaradas",
+        "why": "O token existe para todo job; a declaração o limita."
+      }
+    ]
+  },
+  "ex-a9f5t09g": {
+    "prompt": "Por que `workflows` roda em segundo em `ci/stages`, antes dos testes?",
+    "choices": [
+      {
+        "text": "O zizmor precisa da imagem que o estágio de build faz",
+        "why": "O zizmor lê arquivos de texto; não precisa de imagem."
+      },
+      {
+        "text": "É barato, só lê texto e falha antes dos estágios caros",
+        "why": "Isso: falha antes dos estágios caros, o mesmo motivo de `secrets` vir primeiro."
+      },
+      {
+        "text": "Os testes sobrescreveriam o `.github` se rodassem antes",
+        "why": "Nada nos testes mexe no `.github`."
+      },
+      {
+        "text": "O GitHub exige que arquivos de workflow sejam checados antes dos testes",
+        "why": "O GitHub não exige nada desta CI local."
+      }
+    ]
+  },
+  "ex-j7v2b9h8": {
+    "prompt": "A branch `title-in-run` parou no estágio `workflows`. O que, por causa disso, não aconteceu?",
+    "choices": [
+      {
+        "text": "O commit não foi registrado no repositório da CI",
+        "why": "O push foi aceito; o que parou foi a execução."
+      },
+      {
+        "text": "O zizmor não imprimiu a linha do achado",
+        "why": "Ele imprimiu o achado com a linha."
+      },
+      {
+        "text": "O hook de pre-commit não varreu a mudança atrás de segredos",
+        "why": "O hook rodou no commit, antes do push."
+      },
+      {
+        "text": "Nenhuma imagem foi construída, enviada ou assinada",
+        "why": "Isso. O pipeline para na primeira falha, então nada chegou ao registry."
+      }
+    ]
+  },
+  "ex-yb7s405p": {
+    "prompt": "Que risco o `zizmor --offline` deixa sem checar que as auditorias online cobririam?",
+    "choices": [
+      {
+        "text": "Um passo `run:` que expande o título de um pull request",
+        "why": "Isso é template injection, achado offline a partir do arquivo."
+      },
+      {
+        "text": "Um hash fixado que não pertence à action que ele nomeia",
+        "why": "Isso: a auditoria impostor-commit precisa da API do GitHub."
+      },
+      {
+        "text": "Uma action referenciada por tag",
+        "why": "O `unpinned-uses` achou isso offline, duas vezes."
+      },
+      {
+        "text": "Um checkout que mantém o token no `.git/config`",
+        "why": "O `artipacked` achou isso offline."
+      }
+    ]
+  },
+  "ex-8wzam9vz": {
+    "prompt": "O que um runner persistente permite que um efêmero não permite?",
+    "choices": [
+      {
+        "text": "Rodar jobs de mais de um repositório",
+        "why": "Os dois tipos podem servir vários repositórios; o tempo de vida é a diferença."
+      },
+      {
+        "text": "Um job deixar algo no disco sobre o qual o próximo job roda",
+        "why": "Isso. Caches, ferramentas e processos sobrevivem, então um job pode envenenar todos os seguintes."
+      },
+      {
+        "text": "Usar um token com permissões só de leitura",
+        "why": "As permissões do token vêm do workflow, não do tempo de vida do runner."
+      },
+      {
+        "text": "Rodar um workflow em `pull_request`",
+        "why": "Os dois tipos rodam qualquer gatilho."
+      }
+    ]
+  },
+  "ex-8avx1ncx": {
+    "prompt": "O workflow de um repositório público usa `pull_request` com token só de leitura e sem segredos, num runner self-hosted na rede do escritório. O que continua exposto?",
+    "choices": [
+      {
+        "text": "O conteúdo do repositório, pelo token só de leitura",
+        "why": "Só leitura num repositório público não expõe nada que já não seja público."
+      },
+      {
+        "text": "Os segredos do repositório",
+        "why": "O `pull_request` vindo de um fork os retém."
+      },
+      {
+        "text": "Nada, porque o gatilho é o seguro",
+        "why": "O gatilho protege o repositório, não a máquina em que o código do estranho roda."
+      },
+      {
+        "text": "A máquina do runner e o que ela alcança na rede",
+        "why": "Isso. O código do fork roda ali, dentro da rede do escritório."
+      }
+    ]
+  },
+  "ex-5n944d0g": {
+    "prompt": "Que dois fatos na tela estabelecem que um estágio da CI neste laptop pode agir como root?",
+    "choices": [
+      {
+        "text": "O `id` mostra o grupo docker; o grupo escreve no socket",
+        "why": "Isso. Com o daemon rodando como root, escrever no socket dele é ser root."
+      },
+      {
+        "text": "A CI roda como ana, e ana é dona de `~/ci`",
+        "why": "Ser dona de um diretório dá poder sobre ele, não sobre o host."
+      },
+      {
+        "text": "A ana tem senha, e o `sudo` está instalado",
+        "why": "Nenhum dos dois apareceu na tela, e nenhum é o caminho que a aula aponta."
+      },
+      {
+        "text": "O registry escuta em localhost, e o Docker construiu a imagem",
+        "why": "Nenhum dos dois diz quem pode controlar o daemon."
+      }
+    ]
+  },
+  "ex-2v4007w2": {
+    "prompt": "O que o Docker rootless muda no acesso ao socket do daemon?",
+    "choices": [
+      {
+        "text": "Ele remove o socket, então ninguém conversa com o daemon",
+        "why": "O socket vai para o diretório de execução do usuário; ele continua existindo."
+      },
+      {
+        "text": "Ele cifra o socket com a senha do usuário",
+        "why": "Não existe essa cifragem; a mudança é como quem o daemon roda."
+      },
+      {
+        "text": "O acesso ao socket vale os direitos do usuário, não os do root",
+        "why": "Isso. O daemon roda como esse usuário, dentro de um user namespace."
+      },
+      {
+        "text": "Ele deixa contêineres usarem portas abaixo de 1024 sem configuração",
+        "why": "A documentação lista portas baixas como limitação que exige configuração extra."
+      }
+    ]
+  },
+  "ex-jkkvyygz": {
+    "prompt": "Ponha em ordem os elos da cadeia que torna uma branch enviada tão poderosa quanto root neste laptop, a partir do push.",
+    "items": [
+      "o hook roda os scripts de estágio do próprio commit",
+      "os scripts rodam como ana",
+      "ana está no grupo docker",
+      "o grupo pode escrever no socket do daemon",
+      "o daemon roda como root"
+    ]
+  },
+  "ex-fxz0d01d": {
+    "prompt": "Um time leva o linkbox para o GitHub com o workflow desta aula e acrescenta um job de release que assina imagens com uma chave guardada como segredo do repositório. De que controle das aulas 14 e 16 esse job ainda mais precisa?",
+    "choices": [
+      {
+        "text": "Rodar o zizmor com a persona `auditor` a cada push",
+        "why": "Vale fazer, mas não tira a chave do alcance dos passos do job."
+      },
+      {
+        "text": "Nenhum passo do job lê a chave",
+        "why": "Isso: assinar fora dos passos do job, ou sem chave com a identidade do workflow. É o que separa o L2 do L3, e elimina o segredo de longa duração."
+      },
+      {
+        "text": "Fixar `ubuntu-24.04` em vez de `ubuntu-latest`",
+        "why": "Isso fixa a versão da imagem do runner, não quem pode usar a chave."
+      },
+      {
+        "text": "Acrescentar `concurrency` para dois releases nunca se sobreporem",
+        "why": "Sobreposição é questão de confiabilidade; a chave continua legível por todo passo."
+      }
+    ]
+  },
+  "ex-d651c8ar": {
+    "prompt": "Um pull request muda o `ci/workflows.sh` para `zizmor --offline .github || true`. O que quem revisa deve concluir?",
+    "choices": [
+      {
+        "text": "É uma melhoria de velocidade para o estágio",
+        "why": "Muda o veredito, não a velocidade."
+      },
+      {
+        "text": "É inofensivo, porque os achados ainda aparecem no log",
+        "why": "Um achado que não para ninguém é um achado que ninguém lê, como a aula 7 argumentou."
+      },
+      {
+        "text": "É necessário para que alertas sejam contados",
+        "why": "Alertas neste pipeline são status de saída 3, que esta mudança também esconderia."
+      },
+      {
+        "text": "Um commit desligou a checagem",
+        "why": "Isso. O estágio deixa de falhar. Como os estágios vêm do commit, é na revisão que isto se pega."
+      }
+    ]
+  },
+  "ex-3rjxnta2": {
+    "prompt": "Quais destas mudanças fazem parte do workflow corrigido? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "permissions reduzidas a contents: read",
+        "why": "Sim: o token lê o repositório e mais nada."
+      },
+      {
+        "text": "cada action fixada num commit, com a versão num comentário",
+        "why": "Sim: uma tag pode ser movida, um commit não."
+      },
+      {
+        "text": "o título do pull request passado por uma variável de ambiente",
+        "why": "Sim: o shell o lê como dado, nunca como código."
+      },
+      {
+        "text": "pull_request_target mantido, para forks receberem os segredos do repositório",
+        "why": "Não: esse gatilho com checkout do head é o que tornava o workflow antigo perigoso."
+      },
+      {
+        "text": "o checkout mantém as credenciais para os passos seguintes",
+        "why": "Não: persist-credentials fica false para nenhum passo seguinte achar o token no disco."
+      }
+    ]
+  }
+}

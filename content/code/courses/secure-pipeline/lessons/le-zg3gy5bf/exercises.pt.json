@@ -1,0 +1,427 @@
+{
+  "ex-gtdp8xcm": {
+    "prompt": "Você sabe que uma imagem contém uma biblioteca numa versão com aviso publicado, e o scan da imagem não aponta nada sobre ela. Qual explicação combina com o modo como um scanner de imagem funciona?",
+    "choices": [
+      {
+        "text": "A camada que a contém estava em cache, então o scanner a pulou",
+        "why": "O scanner lê todas as camadas da imagem que recebe; o cache do build não participa do scan."
+      },
+      {
+        "text": "Ela foi copiada sem registro de pacote ao lado",
+        "why": "Isso. O scanner lê as listas que os gerenciadores de pacote deixam; um arquivo que nenhuma lista menciona é invisível para ele."
+      },
+      {
+        "text": "Os arquivos dela estão comprimidos e o scanner não consegue abri-los",
+        "why": "O scanner nem abre os arquivos da biblioteca. Ele lê registros como o banco do dpkg e os arquivos METADATA."
+      },
+      {
+        "text": "O aviso foi publicado depois que a imagem foi construída",
+        "why": "Quem precisa conhecer o aviso é o banco, não a imagem. Um aviso mais novo que a imagem aparece em qualquer scan depois de chegar ao banco."
+      }
+    ]
+  },
+  "ex-t9qdn00x": {
+    "prompt": "Como o Trivy soube que o pip de dentro do `python:3.13` carrega o urllib3 2.7.0?",
+    "choices": [
+      {
+        "text": "Pelo banco de pacotes do Debian em `/var/lib/dpkg`",
+        "why": "O pip dessa imagem não foi instalado pelo dpkg; o banco do Debian não lista ele nem o que ele contém."
+      },
+      {
+        "text": "Comparando os arquivos do urllib3 com versões conhecidas",
+        "why": "O Trivy não reconhece código pelos bytes, e é por isso que a cópia sem lista ficou invisível."
+      },
+      {
+        "text": "Pelo `METADATA` do pip, que lista os requisitos dele",
+        "why": "O pip não declara requisitos: ele carrega as bibliotecas dentro de si em vez de depender delas."
+      },
+      {
+        "text": "Pelo `bom.cdx.json`, o SBOM que o pip traz em `pip/_vendor`",
+        "why": "Isso. 18 pacotes da imagem foram achados lendo essa lista."
+      }
+    ]
+  },
+  "ex-hwt8ybc8": {
+    "prompt": "Você faz o scan de uma imagem pelo digest, o mesmo digest que um colega escaneou há uma semana, e obtém mais achados que ele. O que mudou?",
+    "choices": [
+      {
+        "text": "A imagem: um digest pode apontar para camadas novas depois de um push",
+        "why": "O digest é o hash do conteúdo; o mesmo digest é o mesmo conteúdo, hoje e daqui a um ano."
+      },
+      {
+        "text": "O banco de dados",
+        "why": "Isso. Avisos foram publicados durante a semana, e o seu scan leu um banco que já os conhece."
+      },
+      {
+        "text": "O limite de severidade que o Trivy aplica em cada máquina",
+        "why": "A severidade vem dos dados do aviso, e nenhum limite foi passado; os dois scans contaram tudo."
+      },
+      {
+        "text": "O Trivy amostra arquivos, então dois scans leem arquivos diferentes",
+        "why": "O Trivy lê os registros de pacotes inteiros, toda vez; não há amostragem."
+      }
+    ]
+  },
+  "ex-28hge246": {
+    "prompt": "Quais destes um scanner de imagem como o Trivy não enxergaria? Marque todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "uma ferramenta baixada com `curl` numa linha `RUN`",
+        "why": "Certo: nenhum gerenciador de pacotes a instalou, então nenhum registro a nomeia."
+      },
+      {
+        "text": "um pacote Debian instalado com `apt-get`",
+        "why": "O dpkg registra no banco dele, que é a primeira lista que o scanner lê."
+      },
+      {
+        "text": "uma biblioteca copiada para o repositório sem os metadados",
+        "why": "Certo: código vendorizado sem registro é o que o `blind:code` mostrou."
+      },
+      {
+        "text": "um programa em C compilado no estágio de build e copiado",
+        "why": "Certo: um binário C não registra nada sobre aquilo de que foi construído."
+      },
+      {
+        "text": "um programa em Go compilado no estágio de build e copiado",
+        "why": "O Go grava as dependências de módulo dentro do binário, e o Trivy lê esse registro."
+      }
+    ]
+  },
+  "ex-mwj78f71": {
+    "prompt": "Quantos achados do Debian o scan apontou para `python:3.13`?"
+  },
+  "ex-nsr8epfk": {
+    "prompt": "Passar de `python:3.13-slim` para a imagem distroless mudou a contagem do Debian só de 164 para 162. O que a troca mudou que a contagem não mostra?",
+    "choices": [
+      {
+        "text": "Tirou a glibc e o OpenSSL, que concentram a maior parte dos achados",
+        "why": "Os dois continuam lá: o distroless mantém as bibliotecas centrais, e é por isso que a contagem quase não mudou."
+      },
+      {
+        "text": "Nada; as duas imagens são equivalentes em segurança",
+        "why": "O shell, o apt e o pip saíram, e com o pip foram os seis achados que tinham correção."
+      },
+      {
+        "text": "Não sobram shell, apt nem pip, nem os achados corrigíveis do pip",
+        "why": "Isso. A diferença está no que um código rodando no contêiner alcança, e na coluna \"com correção\"."
+      },
+      {
+        "text": "Corrigiu duas vulnerabilidades do Debian que o slim ainda tinha",
+        "why": "Dois pacotes estão ausentes, não corrigidos; nada recebeu patch."
+      }
+    ]
+  },
+  "ex-adbd4crn": {
+    "prompt": "Com `--severity HIGH,CRITICAL --ignore-unfixed --exit-code 1`, o `python:3.13-slim` sai com 1. O que decidiu?",
+    "choices": [
+      {
+        "text": "Os 44 achados altos do Debian",
+        "why": "Nenhum tem correção, e `--ignore-unfixed` deixa todos eles fora do veredito."
+      },
+      {
+        "text": "Quatro altos corrigíveis dentro do pip",
+        "why": "Isso: msgpack, setuptools e urllib3 de dentro do pip, todos com versão corrigida."
+      },
+      {
+        "text": "O tamanho da imagem, acima do que o portão aceita",
+        "why": "O portão não tem regra de tamanho; ele julga achados."
+      },
+      {
+        "text": "Uma regra que reprova a imagem por qualquer achado",
+        "why": "Aí a imagem distroless, com 162 achados, teria falhado também, e ela saiu com 0."
+      }
+    ]
+  },
+  "ex-w5f2je9r": {
+    "prompt": "Um time mantém o `python:3.13-slim` como base de execução e acrescenta `RUN pip install --upgrade pip` para deixar o portão verde. Raciocinando a partir da aula, o que é provável que aconteça nos meses seguintes?",
+    "choices": [
+      {
+        "text": "Verde daqui em diante, já que o pip está atualizado",
+        "why": "O pip está atualizado hoje. As bibliotecas vendorizadas dele vão ganhar avisos novos, e a imagem vai carregá-los até a próxima atualização."
+      },
+      {
+        "text": "Vermelho em semanas, pelos achados do Debian do slim",
+        "why": "Os achados do Debian não têm correção e o portão os ignora; eles não conseguem deixá-lo vermelho."
+      },
+      {
+        "text": "Verde, e vermelho de novo no próximo aviso vendorizado do pip",
+        "why": "Isso, e a cada vez por um programa que o linkbox nem roda depois do build. Tirar o pip da imagem acaba com isso."
+      },
+      {
+        "text": "Verde, porque o portão não examina o pip depois de atualizado",
+        "why": "O portão examina o que a imagem tiver, atualizado ou não."
+      }
+    ]
+  },
+  "ex-j6re34b7": {
+    "prompt": "Associe cada status que o Trivy reporta ao que a distribuição disse.",
+    "pairs": [
+      {
+        "left": "fixed",
+        "right": "uma versão mais nova do pacote traz a correção"
+      },
+      {
+        "left": "affected",
+        "right": "vulnerável, e ainda não há correção publicada para esta versão"
+      },
+      {
+        "left": "fix_deferred",
+        "right": "uma correção está prevista e foi adiada"
+      },
+      {
+        "left": "will_not_fix",
+        "right": "não será corrigido nesta versão"
+      }
+    ],
+    "right_distractors": [
+      "a imagem foi escaneada antes de o aviso existir"
+    ]
+  },
+  "ex-d1hs12yh": {
+    "prompt": "Os 162 achados da imagem distroless são quantos CVEs distintos?"
+  },
+  "ex-wbvpnnh5": {
+    "prompt": "O CVE-2024-26458 aparece em quatro linhas do relatório do distroless. Por que quatro?",
+    "choices": [
+      {
+        "text": "A imagem tem quatro camadas, e cada uma o reporta",
+        "why": "Um achado é reportado por pacote, não por camada; os quatro pacotes compartilham uma mesma fonte."
+      },
+      {
+        "text": "Quatro pacotes binários vêm de uma fonte só, krb5",
+        "why": "Isso. Um upload do krb5 corrige os quatro, ou nenhum."
+      },
+      {
+        "text": "Quatro fornecedores deram nota a ele, e cada nota é uma linha",
+        "why": "Notas de vários fornecedores são campos de um achado só, não linhas separadas."
+      },
+      {
+        "text": "Quatro versões do Kerberos estão instaladas lado a lado",
+        "why": "Os quatro pacotes estão na mesma versão, 1.21.3-5+deb13u1."
+      }
+    ]
+  },
+  "ex-vce3x53b": {
+    "prompt": "Um relatório semanal conta linhas do scan da imagem. Na semana passada 162, nesta 158, e nenhuma outra linha mudou. O máximo que dá para afirmar com segurança é o quê?",
+    "choices": [
+      {
+        "text": "Quatro vulnerabilidades foram corrigidas na semana",
+        "why": "Quatro linhas sumiram, o que pode ser um único CVE num pacote-fonte que gera quatro binários."
+      },
+      {
+        "text": "O time corrigiu 2,5% do risco da imagem",
+        "why": "Linhas não são risco, e o time não necessariamente corrigiu nada; uma base nova pode ter corrigido."
+      },
+      {
+        "text": "Algo mudou, talvez um único CVE",
+        "why": "Isso. Conte CVEs distintos por pacote-fonte para saber mais."
+      },
+      {
+        "text": "Nada mudou na imagem; o banco deixou de listar linhas",
+        "why": "O banco pode ter mudado, mas a imagem também; a contagem sozinha não diz qual."
+      }
+    ]
+  },
+  "ex-kk7w4m0w": {
+    "prompt": "Qual destes transforma um dos achados contados e sem correção em trabalho para esta semana?",
+    "choices": [
+      {
+        "text": "O achado está aberto há trinta dias seguidos",
+        "why": "A idade sozinha não muda o que um rebuild consegue fazer; o status ainda diz que não há correção."
+      },
+      {
+        "text": "A severidade dele é MEDIUM, e não LOW",
+        "why": "A severidade já era conhecida quando o portão decidiu só contar; não é novidade."
+      },
+      {
+        "text": "Entra no CISA KEV, numa biblioteca que o linkbox carrega",
+        "why": "Isso. Exploração conhecida de algo alcançável é motivo para corrigir ou trocar de base, diga o portão o que disser."
+      },
+      {
+        "text": "O total do relatório subiu de 162 para 163",
+        "why": "Um achado novo sem correção continua sem correção; a contagem mexer merece leitura, não é emergência."
+      }
+    ]
+  },
+  "ex-17v2b460": {
+    "prompt": "O que `pip install --target /packages` consegue no estágio de build?",
+    "choices": [
+      {
+        "text": "Instala os pacotes para o usuário 65532 em vez do root",
+        "why": "Dono não é o que `--target` muda; ele muda para onde os pacotes vão."
+      },
+      {
+        "text": "Põe os pacotes, e só eles, num diretório próprio",
+        "why": "Isso, para que esse diretório passe ao estágio de execução e o pip fique para trás."
+      },
+      {
+        "text": "Pula as partes compiladas dos pacotes",
+        "why": "Partes compiladas são instaladas normalmente; é por isso que os dois estágios usam o Python 3.13."
+      },
+      {
+        "text": "Confere cada pacote contra os hashes do requirements.txt",
+        "why": "Isso é `--require-hashes`, que a aula 15 acrescenta; `--target` é sobre onde."
+      }
+    ]
+  },
+  "ex-088dmdfp": {
+    "prompt": "Por que o Dockerfile inicia o serviço com `python3 -m gunicorn` em vez de `gunicorn`?",
+    "choices": [
+      {
+        "text": "Imagens distroless se recusam a rodar scripts",
+        "why": "Elas rodam qualquer executável; este script falha por outro motivo, o interpretador que a primeira linha nomeia."
+      },
+      {
+        "text": "O `-m` faz o gunicorn rodar como usuário que não é root",
+        "why": "O usuário vem do `USER` da imagem, 65532 aqui, qualquer que seja o comando."
+      },
+      {
+        "text": "O script aponta para um Python que esta imagem não tem",
+        "why": "Isso. A primeira linha dele aponta para o caminho do interpretador da imagem slim; `python3 -m` usa o que existe."
+      },
+      {
+        "text": "O gunicorn não tem script em `/packages/bin`",
+        "why": "O pip escreve o script lá; o problema é o interpretador que ele nomeia, não a falta dele."
+      }
+    ]
+  },
+  "ex-fmbf6wx1": {
+    "prompt": "A imagem final não tem shell. Segundo a aula, contra o que isso protege?",
+    "choices": [
+      {
+        "text": "Execução de código dentro do contêiner fica impossível",
+        "why": "O Python continua lá, e é uma linguagem de programação completa."
+      },
+      {
+        "text": "O caminho fácil e os achados do que não está lá",
+        "why": "Isso. Os comandos de uma linha com que a maioria das intrusões começa precisam de shell, e programas ausentes não trazem achados."
+      },
+      {
+        "text": "Impede qualquer um de rodar `docker exec` nela",
+        "why": "`docker exec` funciona; só não tem `sh` para iniciar, e `python3` ainda roda."
+      },
+      {
+        "text": "Esconde os pacotes da imagem dos scanners",
+        "why": "O scanner leu os 38 pacotes do Debian e cada `METADATA` em `/packages`."
+      }
+    ]
+  },
+  "ex-q9rj7f30": {
+    "prompt": "No estágio de execução, a linha que traz os pacotes instalados do primeiro estágio é: `COPY --from=___ /packages /packages`",
+    "blanks": [
+      {
+        "accept": [
+          "build"
+        ]
+      }
+    ]
+  },
+  "ex-n7sgz7ck": {
+    "prompt": "Por que `push` vem depois de `image` em `ci/stages`?",
+    "choices": [
+      {
+        "text": "Para nada chegar ao registry depois de o scan recusar",
+        "why": "Isso: a execução para no primeiro estágio que falha, e o push nem roda."
+      },
+      {
+        "text": "Porque o Trivy só examina imagens que ainda não estão num registry",
+        "why": "O Trivy examina imagens num registry do mesmo jeito; a ordem é sobre o que pode ser publicado."
+      },
+      {
+        "text": "Para o registry marcar a imagem com o resultado do scan",
+        "why": "O registry guarda o que recebe; ele não sabe nada de scans."
+      },
+      {
+        "text": "Porque fazer push antes deixaria o scan mais lento",
+        "why": "Velocidade não é o motivo; a ordem decide o que o registry pode guardar."
+      }
+    ]
+  },
+  "ex-c1gk1j80": {
+    "prompt": "Um erro de digitação em `ci/build.sh` faz a imagem receber a tag `linkbox:dev`, enquanto `ci/image.sh` examina `linkbox:<commit>`, que não existe. O que o estágio image faz?",
+    "choices": [
+      {
+        "text": "Passa, porque não há imagem e portanto nenhum achado",
+        "why": "Essa é a falha que a aula 7 nomeou: um scanner que não rodou relatando aprovação."
+      },
+      {
+        "text": "Quebra o build, como todo scan que não rodou",
+        "why": "Isso. O Trivy sai com 1 quando não consegue rodar, o `|| exit 1` para ali, e a captura com `CI_COMMIT=0000000` mostra isso."
+      },
+      {
+        "text": "Examina `linkbox:dev` no lugar, o nome mais próximo",
+        "why": "O Trivy procura o nome que recebe e nenhum outro."
+      },
+      {
+        "text": "Emite um alerta, porque imagem ausente não é vulnerabilidade",
+        "why": "O status 3 é o alerta; este estágio transforma qualquer problema no scan em quebra."
+      }
+    ]
+  },
+  "ex-vht2ykag": {
+    "prompt": "O Google republicou ontem a imagem distroless com uma glibc corrigida. Esta noite o `ci/nightly` roda o `docker build --no-cache` dele. A imagem do linkbox recebe a correção?",
+    "choices": [
+      {
+        "text": "Sim: sem cache, toda camada é refeita, a base também",
+        "why": "Toda camada do Dockerfile é refeita; a imagem base é reaproveitada da máquina, como estava."
+      },
+      {
+        "text": "Sim, porque o portão falha até a base ser atualizada",
+        "why": "O portão não baixa imagens, e ele não é o que atualiza a base."
+      },
+      {
+        "text": "Não, a menos que o build pergunte de novo ao registry, com `--pull`",
+        "why": "Isso. `--no-cache` reaproveita a base local; `--pull` busca a imagem atual da tag. A aula 15 troca a base por um digest."
+      },
+      {
+        "text": "Não: imagens distroless nunca são atualizadas sob a mesma tag",
+        "why": "São; `:nonroot` é uma tag que se move quando o Google a reconstrói."
+      }
+    ]
+  },
+  "ex-g03v6dc7": {
+    "prompt": "A opção do `docker build` que pede ao registry a imagem atual por trás de cada tag do `FROM`, em vez de reaproveitar a cópia da máquina, é `docker build ___`",
+    "blanks": [
+      {
+        "accept": [
+          "--pull"
+        ]
+      }
+    ]
+  },
+  "ex-jqw3bfv4": {
+    "prompt": "Ponha em ordem o que acontece com uma imagem numa execução aprovada do pipeline, do primeiro ao último.",
+    "items": [
+      "construída e marcada com o commit",
+      "examinada atrás de achados altos e críticos corrigíveis",
+      "todos os achados contados no log",
+      "marcada para localhost:5000",
+      "enviada ao registry"
+    ]
+  },
+  "ex-js698bdh": {
+    "prompt": "Quais afirmações sobre a imagem que esta aula entrega são verdadeiras? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "roda como o usuário 65532",
+        "why": "Certo: a variante `nonroot` do distroless define isso."
+      },
+      {
+        "text": "tem pip, para instalar uma correção no lugar",
+        "why": "O pip ficou no estágio de build, de propósito."
+      },
+      {
+        "text": "o scan dela ainda conta 162 achados do Debian",
+        "why": "Certo: o piso da base distroless, contado no log de toda execução."
+      },
+      {
+        "text": "a aplicação consegue reescrever o próprio `app.py`",
+        "why": "O código é do root e o processo é 65532; só `/data` é dele."
+      },
+      {
+        "text": "não carrega nenhum achado alto que tenha versão corrigida",
+        "why": "Certo, e é o que o estágio image confere a cada push."
+      }
+    ]
+  }
+}
