@@ -28,7 +28,12 @@ shown() { local d=$1; d=${d/#\/home\/ana/\~}; printf '%s' "$d"; }
 run() {
   local dir=$1; shift
   printf 'ana@dev:%s$ %s\n' "$(shown "$dir")" "$*"
-  LAB as "${RUNENV:+$RUNENV; }cd $dir && $*" 2>&1
+  local out
+  out=$(LAB as "${RUNENV:+$RUNENV; }cd $dir && $*" 2>&1; printf x)
+  out=${out%x}
+  printf '%s' "$out"
+  # A file with no newline at its end must not glue the next prompt to it.
+  [ -z "$out" ] || [ "${out: -1}" = $'\n' ] || printf '\n'
   return 0
 }
 quiet() { local dir=$1; shift; LAB as "cd $dir && $*" >/dev/null 2>&1; return 0; }
@@ -67,7 +72,7 @@ commit() {
 # IN ORDER the first time; after that any lesson can be run again on its own.
 # What a student types to get from one lesson to the next is in the lessons.
 SNAP=/var/lib/machines/fm-snapshots
-PROJECTS="planner planner-native planner-electron"
+PROJECTS="planner keep-awake planner-native planner-electron"
 save_as() {
   mkdir -p $SNAP
   ( cd "$M/home/ana" && tar -cf "$SNAP/after-$1.tar" --exclude='*/src-tauri/target' $(ls -d $PROJECTS 2>/dev/null) )

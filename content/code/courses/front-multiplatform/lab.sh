@@ -142,7 +142,7 @@ as() {
     $(env | grep -iE '^(https?_proxy|no_proxy)=' | tr '\n' ' ') \
     NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt \
     PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers EXPO_OFFLINE=1 \
-    NO_UPDATE_NOTIFIER=1 npm_config_update_notifier=false npm_config_fund=false \
+    NO_UPDATE_NOTIFIER=1 npm_config_update_notifier=false npm_config_fund=false NO_COLOR=1 FORCE_COLOR=0 \
     bash -c '. ~/.profile; [ -f ~/.cargo/env ] && . ~/.cargo/env; cd ~; eval "$1"' bash "$*"
 }
 

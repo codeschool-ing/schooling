@@ -28,8 +28,29 @@ def Q(id, section, type, difficulty, prompt, **kw):
     return dict(id=id, section=section, type=type, difficulty=difficulty, prompt=prompt, **kw)
 
 
-def build(where, qs, exam=False, out_en=None, out_pt=None):
+PATTERN = [2, 0, 3, 1, 1, 3, 0, 2, 0, 2, 1, 3]
+
+
+def spread(qs):
+    """Move each quiz's key to a position from PATTERN, in turn, by swapping it
+    with the option there: the order of the options carries no meaning, so
+    this is the cheapest way to keep position from being a tell."""
+    k = 0
+    for q in qs:
+        if q["type"] != "quiz":
+            continue
+        cs = q["choices"]
+        i = [n for n, c in enumerate(cs) if c["correct"]][0]
+        t = PATTERN[k % len(PATTERN)] % len(cs)
+        cs[i], cs[t] = cs[t], cs[i]
+        k += 1
+    return qs
+
+
+def build(where, qs, exam=False, out_en=None, out_pt=None, spread_keys=False):
     where = pathlib.Path(where)
+    if spread_keys:
+        spread(qs)
     en, pt = [], {}
     seen = set()
     for q in qs:
