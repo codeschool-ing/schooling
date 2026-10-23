@@ -28,7 +28,7 @@ box to tick for each, and a form to add one. A link goes back.
 The week has to come from somewhere. In your browser it is the week of today. In the transcripts it
 is the week of **Monday 19 October 2026**, because a transcript recorded on one day and read on
 another must show the same numbers, so `look --today 2026-10-21` tells the page it is that
-Wednesday. The data below sits in that week on purpose; lesson 4 adds buttons to move between weeks,
+Wednesday. The data below sits in that week on purpose; lesson 3 adds buttons to move between weeks,
 and with them you can reach it from any date.
 
 ## The data

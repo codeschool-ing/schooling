@@ -29,7 +29,7 @@ marcar cada uma, e um formulário para acrescentar outra. Um link volta.
 A semana precisa vir de algum lugar. No seu navegador ela é a semana de hoje. Nas transcrições ela é
 a semana de **segunda-feira, 19 de outubro de 2026**, porque uma transcrição gravada num dia e lida em
 outro precisa mostrar os mesmos números, então `look --today 2026-10-21` diz à página que é aquela
-quarta-feira. Os dados abaixo caem nessa semana de propósito; a aula 4 acrescenta botões para andar
+quarta-feira. Os dados abaixo caem nessa semana de propósito; a aula 3 acrescenta botões para andar
 entre semanas, e com eles você chega a ela de qualquer data.
 
 ## Os dados

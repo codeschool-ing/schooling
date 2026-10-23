@@ -15,7 +15,7 @@ import { courses, sessions } from './sample'
 import { inWeek } from './week'
 import { WeekSummary } from './WeekSummary'
 
-// Until lesson 4 lets you move between weeks, the planner shows this one.
+// Until lesson 3 lets you move between weeks, the planner shows this one.
 const MONDAY = '2026-10-19'
 
 function App() {
@@ -83,5 +83,5 @@ The planner's first screen is now five components, and each does one thing:
 `App` decides which sessions are in the week. `WeekSummary` adds them up. `CourseList` walks the
 courses. `CourseCard` describes one course, and `Card` draws a frame around anything. None of them
 knows how the others work inside; each knows only what it is given. That is what makes it possible
-to change the frame without reading the arithmetic, and lesson 4 will move the week into state
+to change the frame without reading the arithmetic, and lesson 3 will move the week into state
 without touching `CourseCard` at all.

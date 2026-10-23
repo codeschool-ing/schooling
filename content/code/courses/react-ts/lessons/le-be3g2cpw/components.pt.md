@@ -14,7 +14,7 @@ import { courses, sessions } from './sample'
 import { inWeek } from './week'
 import { WeekSummary } from './WeekSummary'
 
-// Until lesson 4 lets you move between weeks, the planner shows this one.
+// Until lesson 3 lets you move between weeks, the planner shows this one.
 const MONDAY = '2026-10-19'
 
 function App() {
@@ -82,5 +82,5 @@ A primeira tela do planejador agora são cinco componentes, e cada um faz uma co
 O `App` decide quais sessões estão na semana. O `WeekSummary` soma. O `CourseList` percorre os
 cursos. O `CourseCard` descreve um curso, e o `Card` desenha uma moldura em volta de qualquer coisa.
 Nenhum deles sabe como os outros funcionam por dentro; cada um sabe só o que recebe. É isso que
-permite mudar a moldura sem ler a aritmética, e a aula 4 vai pôr a semana em estado sem tocar no
+permite mudar a moldura sem ler a aritmética, e a aula 3 vai pôr a semana em estado sem tocar no
 `CourseCard`.

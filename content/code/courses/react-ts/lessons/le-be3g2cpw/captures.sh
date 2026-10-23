@@ -220,7 +220,7 @@ import { courses, sessions } from './sample'
 import { inWeek } from './week'
 import { WeekSummary } from './WeekSummary'
 
-// Until lesson 4 lets you move between weeks, the planner shows this one.
+// Until lesson 3 lets you move between weeks, the planner shows this one.
 const MONDAY = '2026-10-19'
 
 function App() {

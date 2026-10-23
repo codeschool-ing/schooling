@@ -21,6 +21,16 @@ put() {
   printf '#####F %s\n%s\n#####E\n' "$f" "$body"
   lab exec ana "cd $(here) && mkdir -p \"\$(dirname '$f')\" && cat > '$f'" <<<"$body"
 }
+# Lines ana added to the end of a file. The lesson shows them, and shown.mjs
+# holds it to that.
+append() {
+  local f=$1 body n
+  body=$(cat)
+  n=$(ls "$SHOWN" | wc -l)
+  printf '%s\n' "$body" > "$SHOWN/$n-$(basename "$f")"
+  printf '#####F +%s\n%s\n#####E\n' "$f" "$body"
+  lab exec ana "cd $(here) && cat >> '$f'" <<<"$body"
+}
 # A file ana wrote that an earlier lesson already showed, or that this lesson
 # shows only in part: it is NOT checked against the prose, so each use says why.
 quietly_put() {
