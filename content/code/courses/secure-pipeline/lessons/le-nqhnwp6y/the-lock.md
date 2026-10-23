@@ -118,7 +118,7 @@ means a dependency nobody pinned cannot slip in: the tests' environment is the l
 ```
 ana@vm:~/linkbox$ bash ci/test.sh
 ..........                                                               [100%]
-10 passed in 0.60s
+10 passed in 0.52s
 ```
 
 ### Where `packaging` went

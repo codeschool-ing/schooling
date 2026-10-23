@@ -17,15 +17,15 @@ com correção. O Jinja2 3.1.4 tem três:
 ana@vm:~/linkbox$ git switch -q -c jinja-3.1.4
 ana@vm:~/linkbox$ sed -i s/jinja2==3.1.6/jinja2==3.1.4/ requirements.txt
 ana@vm:~/linkbox$ git commit -q -am "jinja2 back to 3.1.4"
-9:34AM INF 0 commits scanned.
-9:34AM INF scanned ~14 bytes (14 bytes) in 259ms
-9:34AM INF no leaks found
+9:52AM INF 0 commits scanned.
+9:52AM INF scanned ~14 bytes (14 bytes) in 330ms
+9:52AM INF no leaks found
 ana@vm:~/linkbox$ git push ci jinja-3.1.4
-remote: run 2: jinja-3.1.4 at c068c95        
-remote: secrets: passed in 0s        
-remote: test: passed in 2s        
+remote: run 2: jinja-3.1.4 at c011726        
+remote: secrets: passed in 1s        
+remote: test: passed in 1s        
 remote: sast: passed in 3s        
-remote: sca: FAILED in 11s, the end of sca.log:        
+remote: sca: FAILED in 10s, the end of sca.log:        
 remote:   Found 6 known vulnerabilities in 1 package        
 remote:   BREAKS: jinja2 3.1.4 PYSEC-2026-1475, fixed in 3.1.5        
 remote:   BREAKS: jinja2 3.1.4 PYSEC-2026-1472, fixed in 3.1.5        
@@ -54,18 +54,18 @@ recente:
 ana@vm:~/linkbox$ git switch -q main && git switch -q -c ecdsa
 ana@vm:~/linkbox$ echo ecdsa==0.19.2 >>requirements.txt
 ana@vm:~/linkbox$ git commit -q -am "ecdsa, to check the signatures of incoming webhooks"
-9:35AM INF 0 commits scanned.
-9:35AM INF scanned ~14 bytes (14 bytes) in 230ms
-9:35AM INF no leaks found
+9:52AM INF 0 commits scanned.
+9:52AM INF scanned ~14 bytes (14 bytes) in 239ms
+9:52AM INF no leaks found
 ana@vm:~/linkbox$ git push ci ecdsa
-remote: run 3: ecdsa at c6418bf        
+remote: run 3: ecdsa at 608fc14        
 remote: secrets: passed in 1s        
 remote: test: passed in 2s        
 remote: sast: passed in 3s        
-remote: sca: WARNING in 11s, the end of sca.log:        
+remote: sca: WARNING in 9s, the end of sca.log:        
 remote:   Found 2 known vulnerabilities in 1 package        
 remote:   warns: ecdsa 0.19.2 PYSEC-2026-1325, no fixed version yet        
-remote: build: passed in 1s        
+remote: build: passed in 2s        
 remote: pipeline passed with 1 warning(s)        
 remote: run 3: passed        
 To /home/ana/ci/linkbox.git
@@ -106,11 +106,11 @@ PYSEC-2026-1475 2026-11-20 templates need rework for 3.1.5; Ana, see issue 41
 PYSEC-2026-1472 2026-11-20 templates need rework for 3.1.5; Ana, see issue 41
 PYSEC-2026-1471 2026-11-20 templates need rework for 3.1.6; Ana, see issue 41
 ana@vm:~/linkbox$ git commit -q -am "jinja2 3.1.4 excepted for four weeks, while the templates are reworked"
-9:35AM INF 0 commits scanned.
-9:35AM INF scanned ~234 bytes (234 bytes) in 228ms
-9:35AM INF no leaks found
+9:53AM INF 0 commits scanned.
+9:53AM INF scanned ~234 bytes (234 bytes) in 192ms
+9:53AM INF no leaks found
 ana@vm:~/linkbox$ git push ci jinja-3.1.4
-remote: run 4: jinja-3.1.4 at ae520bf        
+remote: run 4: jinja-3.1.4 at 9c38800        
 remote: secrets: passed in 0s        
 remote: test: passed in 2s        
 remote: sast: passed in 3s        
@@ -119,7 +119,7 @@ remote: build: passed in 1s
 remote: pipeline passed with 0 warning(s)        
 remote: run 4: passed        
 To /home/ana/ci/linkbox.git
-   c068c95..ae520bf  jinja-3.1.4 -> jinja-3.1.4
+   c011726..9c38800  jinja-3.1.4 -> jinja-3.1.4
 ana@vm:~/linkbox$ cat ~/ci/runs/4/logs/sca.log
 Found 6 known vulnerabilities in 1 package
 excepted until 2026-11-20: jinja2 3.1.4 PYSEC-2026-1475

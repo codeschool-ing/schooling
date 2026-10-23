@@ -53,7 +53,7 @@ Waiting for deployment "linkbox" rollout to finish: 0 of 1 updated replicas are 
 deployment "linkbox" successfully rolled out
 ana@vm:~/linkbox$ kubectl get pods -n linkbox
 NAME                       READY   STATUS    RESTARTS   AGE
-linkbox-56f7558485-jsxj4   1/1     Running   0          4s
+linkbox-56f7558485-dtb2v   1/1     Running   0          4s
 ```
 
 **Um pod, rodando.** O aviso acima dele é sobre o namespace, que a seção anterior criou com
@@ -94,7 +94,7 @@ máquina enquanto estiver rodando:
 ```
 ana@vm:~/linkbox$ token=$(kubectl get secret linkbox -n linkbox -o jsonpath='{.data.token}' | base64 -d)
 ana@vm:~/linkbox$ curl -s -X POST -H "X-Token: $token" -d url=https://example.org/handbook http://127.0.0.1:8080/links
-{"code":"96QGlQ"}
+{"code":"PhiNBQ"}
 ana@vm:~/linkbox$ curl -s -o /dev/null -w "%{http_code}\n" -X POST -d url=https://example.org/handbook http://127.0.0.1:8080/links
 401
 ```

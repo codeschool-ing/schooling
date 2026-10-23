@@ -39,14 +39,14 @@ Success! Uploaded policy: linkbox-sign
 ana@vm:~/linkbox$ t=$(vault token create -policy=linkbox-sign -ttl=30s -field=token)
 ana@vm:~/linkbox$ vault token lookup "$t" | grep -E "^(policies|ttl) "
 policies            [default linkbox-sign]
-ttl                 29s
+ttl                 30s
 ```
 
 `vault token create` prints a table by default; `-field=token` prints only the token, which goes
 into the shell variable `t` and never onto the screen. The lookup confirms two things. The token
 carries `linkbox-sign` and also `default`, a policy every token gets, which lets a token look itself
-up and renew or revoke itself. And it has 29 seconds left, because a second passed between making it
-and asking.
+up and renew or revoke itself. And its `ttl` is the thirty seconds it was made with, counting down from
+the moment it was created.
 
 ### Using it the way a pipeline would
 

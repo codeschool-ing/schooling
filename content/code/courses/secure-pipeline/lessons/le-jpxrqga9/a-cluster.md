@@ -20,7 +20,7 @@ The pipeline pushes on every run, and lesson 9's push left `main` pointing at th
 ```
 ana@vm:~$ cd ~/linkbox
 ana@vm:~/linkbox$ curl -s http://localhost:5000/v2/linkbox/tags/list
-{"name":"linkbox","tags":["8bd2e60","main"]}
+{"name":"linkbox","tags":["793498f","main"]}
 ```
 
 ### The cluster's configuration
@@ -56,39 +56,21 @@ with cgroup v2, on Docker Desktop or in a Codespace, delete both, and if the clu
 with them deleted, `kind create cluster` prints the reason in its last lines.
 
 ```
-ana@vm:~/linkbox$ kind create cluster --name linkbox --config ~/kind.yaml
-cgroup v1 is deprecated in Kubernetes and will not be supported in a future kind release, please upgrade to cgroup v2
-Creating cluster "linkbox" ...
- • Ensuring node image (kindest/node:v1.37.0) 🖼️  ...
- ✓ Ensuring node image (kindest/node:v1.37.0) 🖼️
- • Preparing nodes 📦   ...
- ✓ Preparing nodes 📦 
- • Writing configuration 📜  ...
- ✓ Writing configuration 📜
- • Starting control-plane 🕹️  ...
- ✓ Starting control-plane 🕹️
- • Installing CNI 🔌  ...
- ✓ Installing CNI 🔌
- • Installing StorageClass 💾  ...
- ✓ Installing StorageClass 💾
-Set kubectl context to "kind-linkbox"
-You can now use your cluster with:
-
-kubectl cluster-info --context kind-linkbox
-
-Thanks for using kind! 😊
+ana@vm:~/linkbox$ kind create cluster --name linkbox --config ~/kind.yaml --quiet
+ana@vm:~/linkbox$ kubectl config current-context
+kind-linkbox
 ```
 
-The first line is kind's own warning about cgroup v1, the reason for the third patch, and
-everything after it is a cluster starting. The node needs a few seconds more to report itself
+`--quiet` hides kind's progress list, one line per step with an emoji beside each, and the context
+kind set for `kubectl` says the cluster is there. The node needs a few seconds more to report itself
 ready, which the next commands wait for.
 
 ### Teaching the node where `localhost:5000` is
 
 Inside the node, `localhost` is the node itself, not your machine, so `localhost:5000` would point at
-nothing. The fix is the one kind's documentation gives for a local registry, in two parts: a
-`hosts.toml` that says "for `localhost:5000`, ask `http://registry:5000`", and the registry container
-joined to the network the node is on, so that the name `registry` resolves:
+nothing. The fix is the one kind's documentation gives for a local registry, and it has two parts. One is a
+`hosts.toml` that says "for `localhost:5000`, ask `http://registry:5000`"; the other is the registry container joined to the network the node is on, so that the name
+`registry` resolves:
 
 ```
 ana@vm:~/linkbox$ docker exec linkbox-control-plane mkdir -p /etc/containerd/certs.d/localhost:5000
@@ -98,7 +80,7 @@ ana@vm:~/linkbox$ kubectl wait --for=condition=Ready node --all --timeout=180s
 node/linkbox-control-plane condition met
 ana@vm:~/linkbox$ kubectl get nodes
 NAME                    STATUS   ROLES           AGE   VERSION
-linkbox-control-plane   Ready    control-plane   21s   v1.37.0
+linkbox-control-plane   Ready    control-plane   23s   v1.37.0
 ```
 
 **The image keeps the name it was pushed under**, `localhost:5000/linkbox:main`, on your machine

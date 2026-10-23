@@ -63,6 +63,7 @@ def main():
                 continue
             for name, body in blocks(md):
                 rel = "_home/" + name[2:] if name.startswith("~/") else name
+                rel = rel.replace("/.git/", "/_git/")  # git cannot store a .git
                 want = stage / rel
                 if not want.exists():
                     if name.startswith("~/"):

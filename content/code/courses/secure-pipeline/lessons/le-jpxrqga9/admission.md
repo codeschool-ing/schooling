@@ -3,8 +3,7 @@ title: Admission rules of your own, at the Deployment's door
 version: 1
 ---
 
-Pod Security Admission answers one question, how much a pod may do on its node. linkbox's team has
-two more, both from earlier lessons: **an image must come from the registry the pipeline pushes to,
+Pod Security Admission answers one question, how much a pod may do on its node. linkbox's team has two more, both from earlier lessons. **An image must come from the registry the pipeline pushes to,
 because only those images went through lesson 8's scan; and a container must declare a memory
 limit, because lesson 9 showed what one without does to its neighbours.** Neither is in any Pod
 Security profile. A ValidatingAdmissionPolicy is a rule like that, written as an expression in CEL

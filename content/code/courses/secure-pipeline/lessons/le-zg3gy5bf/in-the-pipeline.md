@@ -172,9 +172,8 @@ have turned the image check into a stage that passes every image forever.
 ### What the gate does with the old image
 
 To see the stage break, put lesson 1's Dockerfile back on a branch of its own and push it. Every
-stage before `image` passes, because nothing about the code changed. The table the scanner prints
-is too wide for this page, so the lines of the table are filtered out of the push's output here, and
-the second command prints the same findings one per line:
+stage before `image` passes, because nothing about the code changed. The table the scanner prints is too wide for this page. Its lines are filtered out of the push's
+output here, and the second command prints the same findings one per line:
 
 ```
 ana@vm:~/linkbox$ git switch -q -c old-base

@@ -160,9 +160,9 @@ error validating claims: claim "ref" does not match any associated bound claim v
 exit 1
 ana@vm:~/linkbox$ git add ci/vault-read.sh
 ana@vm:~/linkbox$ git commit -q -m "the pipeline reads its secrets from Vault with an identity of its own"
-9:44AM INF 0 commits scanned.
-9:44AM INF scanned ~939 bytes (939 bytes) in 209ms
-9:44AM INF no leaks found
+9:58AM INF 0 commits scanned.
+9:58AM INF scanned ~939 bytes (939 bytes) in 247ms
+9:58AM INF no leaks found
 ```
 
 The `main` run reads a value equal to the file on the CI server's disk, and the comparison says so

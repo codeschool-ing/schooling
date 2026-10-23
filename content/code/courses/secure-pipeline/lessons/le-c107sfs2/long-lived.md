@@ -21,10 +21,10 @@ ci/sign.sh:3:# The key and its password belong to the CI server, in ~/ci/keys, a
 ci/sign.sh:12:COSIGN_PASSWORD=$(cat "$keys/password")
 ana@vm:~/linkbox$ ls -l ~/ci/keys
 total 16
--rw------- 1 ana ana 653 Oct 23 09:43 cosign.key
--rw-r--r-- 1 ana ana 178 Oct 23 09:43 cosign.pub
--rw------- 1 ana ana 104 Oct 23 09:43 offline.json
--rw------- 1 ana ana  33 Oct 23 09:43 password
+-rw------- 1 ana ana 653 Oct 23 09:57 cosign.key
+-rw-r--r-- 1 ana ana 178 Oct 23 09:57 cosign.pub
+-rw------- 1 ana ana 104 Oct 23 09:57 offline.json
+-rw------- 1 ana ana  33 Oct 23 09:57 password
 ```
 
 They are opposites, and the difference is the subject of this lesson.

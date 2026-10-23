@@ -102,8 +102,8 @@ that has an interpreter in it. That is why this lesson does not stop at the file
 
 ### Finding the places for any image
 
-linkbox needed two places and found both in two tries. A larger application can need more, and the
-order of work is the same: run it read-only in staging, exercise it (start it, send a request to
-every route that writes, run a job if it has one), read the errors, add a mount for each, and
+linkbox needed two places and found both in two tries. A larger application can need more, and the order of work is the same. Run it read-only in staging
+and exercise it: start it, send a request to every route that writes, run a job if it has one. Read
+the errors, add a mount for each, and
 **write the list down in the place that starts the container**, so it is reviewed like code. For
 linkbox that place is the staging script of the last section, and from lesson 10 the manifest.

@@ -21,7 +21,8 @@ HERE=$(cd "$(dirname "$0")" && pwd)
 MD=lessons/le-rk8bxs0t
 NODE=node-v24.21.0-linux-x64
 lab project 18 >/dev/null 2>&1 || { echo "##### the project did not build" >&2; exit 1; }
-bash "$COURSE/lab.sh" as sh -c "rm -rf ~/.npm ~/.local/$NODE /tmp/renovate /tmp/report.json /tmp/renovate.log"
+rm -rf /tmp/renovate /tmp/report.json /tmp/renovate.log
+bash "$COURSE/lab.sh" as sh -c "rm -rf ~/.npm ~/.local/$NODE"
 
 block dependabot-first
 run 'cd linkbox'
@@ -58,7 +59,7 @@ run 'git add renovate.json'
 run 'git commit -q -m "renovate: the same rules, for running it anywhere"'
 
 block renovate-main
-run 'npx --yes renovate@44.164.10 --platform=local --report-type=file --report-path=/tmp/report.json'
+run 'npx --yes renovate@44.164.10 --platform=local --report-type=file --report-path=/tmp/report.json 2>&1 | grep -v "^npm "'
 run 'jq -c .repositories.local.libYearsWithStatus.dependencyStatus /tmp/report.json'
 
 block stale
@@ -89,8 +90,13 @@ block push-fix
 run 'git commit -q -am "pip-audit --fix"'
 run 'git push ci stale-lock'
 
+block hash-check
+run 'uv venv -q /tmp/hashcheck'
+run 'uv pip install -q --python /tmp/hashcheck --require-hashes -r requirements.txt'
+quiet 'rm -rf /tmp/hashcheck'
+
 block right-fix
-run 'git reset -q --hard HEAD~1'
+run 'git revert --no-edit HEAD'
 run 'uv pip compile -q requirements.in --generate-hashes --exclude-newer 2026-10-16 -P werkzeug -o requirements.txt'
 run 'git diff'
 
@@ -104,6 +110,7 @@ place "$MD/noise-budget.md" "~/releases.py"
 run 'python3 ~/releases.py 2026-10-16 requirements.txt requirements-dev.txt'
 
 block end
-bash "$COURSE/lab.sh" as sh -c "rm -rf ~/.npm ~/.local/$NODE /tmp/renovate /tmp/report.json /tmp/renovate.log ~/releases.py"
+bash "$COURSE/lab.sh" as sh -c "rm -rf ~/.npm ~/.local/$NODE ~/releases.py"
+rm -rf /tmp/renovate /tmp/report.json /tmp/renovate.log
 docker rmi -f $(docker images -q linkbox) >/dev/null 2>&1
 exit 0

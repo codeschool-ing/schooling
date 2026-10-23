@@ -46,7 +46,7 @@ run 'printf "flask>=3.1.3,<4\ngunicorn>=22,<23\n" | uv pip compile - --exclude-n
 
 block dates
 run 'for d in 2024-06-01 2026-10-16; do echo "$d: $(echo flask | uv pip compile - --exclude-newer $d --no-header 2>/dev/null | grep -E "^(flask|werkzeug)==" | tr "\n" " ")"; done'
-run 'uv pip compile requirements.in --exclude-newer 2026-08-01 --no-header'
+run 'uv pip compile requirements.in --exclude-newer 2026-08-01 --no-header 2>&1 | tail -n 1'
 
 block tests
 place "$MD/the-lock.md" ci/test.sh

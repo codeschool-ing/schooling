@@ -13,7 +13,13 @@ mudança respondendo a um achado da seção anterior.
 Um pin é um hash de commit, e o hash tem de ser o que a versão nomeia. O `git ls-remote` pergunta a um
 repositório para onde as tags dele apontam, sem cloná-lo:
 
-@@FENCE 1@@
+```
+ana@vm:~/linkbox$ git ls-remote https://github.com/actions/checkout refs/tags/v6 refs/tags/v6.1.0
+d23441a48e516b6c34aea4fa41551a30e30af803	refs/tags/v6
+d23441a48e516b6c34aea4fa41551a30e30af803	refs/tags/v6.1.0
+ana@vm:~/linkbox$ git ls-remote https://github.com/astral-sh/setup-uv refs/tags/v9.0.0
+c771a70e6277c0a99b617c7a806ffedaca235ff9	refs/tags/v9.0.0
+```
 
 Duas coisas a ler. **`v6` e `v6.1.0` nomeiam o mesmo commit hoje**, que é o propósito de uma tag de
 major que se move: ela acompanha o último release, e vai nomear outro commit depois do próximo. O pin
@@ -27,7 +33,36 @@ comentário para saber qual release o pin representa.
 
 Salve-o como `.github/workflows/ci.yml`:
 
-@@FENCE 2@@
+```yaml
+# linkbox's tests on GitHub Actions, for a copy of the repository hosted
+# there. Nothing in it runs with more than it needs: the token reads the
+# code and nothing else, every action is pinned to a commit, and text that
+# a pull request's author wrote reaches a shell only as data.
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    name: tests
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+      - name: Say which change this is
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: echo "testing $TITLE"
+      - run: bash ci/test.sh
+```
 
 Linha a linha, contra os achados:
 
@@ -48,7 +83,13 @@ que o workflow concede; quando o arquivo não diz nada, vale o padrão do reposi
 
 A varredura, nas duas personas:
 
-@@FENCE 3@@
+```
+ana@vm:~/linkbox$ zizmor --quiet --offline .github; echo "exit status $?"
+No findings to report. Good job!
+exit status 0
+ana@vm:~/linkbox$ zizmor --quiet --offline --persona auditor .github
+No findings to report. Good job!
+```
 
 Nada reportado, e nada suprimido. **Este workflow nunca foi executado**: a máquina de gravação não
 consegue rodar os runners hospedados do GitHub, então o que ele imprimiria no GitHub não aparece aqui.

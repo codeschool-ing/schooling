@@ -18,7 +18,7 @@ ana@vm:~/linkbox$ git switch -q main && git switch -q -c webhook
 ana@vm:~/linkbox$ printf "WEBHOOK_SECRET = \"Zr4tq8LmW2xK9vB6nP3sH7yC1dF5gJ0a\"\n" >webhook.py
 ana@vm:~/linkbox$ git add webhook.py && git commit -q --no-verify -m "verify incoming webhooks"
 ana@vm:~/linkbox$ git push ci webhook
-remote: run 5: webhook at 3d1183f        
+remote: run 5: webhook at 595d2f1        
 remote: secrets: FAILED in 1s, the end of secrets.log:        
 remote:   Finding:     WEBHOOK_SECRET = "REDACTED"        
 remote:   Secret:      REDACTED        
@@ -26,15 +26,15 @@ remote:   RuleID:      generic-api-key
 remote:   Entropy:     5.000000        
 remote:   File:        webhook.py        
 remote:   Line:        1        
-remote:   Commit:      3d1183f8fcc944e3a929df90fded0c12046f2e4e        
+remote:   Commit:      595d2f1dfdf2e74bcc9bbcc5fcbd8b08829ed087        
 remote:   Author:      Ana Lima        
 remote:   Email:       ana@example.org        
-remote:   Date:        2026-10-23T12:36:07Z        
-remote:   Fingerprint: 3d1183f8fcc944e3a929df90fded0c12046f2e4e:webhook.py:generic-api-key:1        
+remote:   Date:        2026-10-23T12:53:39Z        
+remote:   Fingerprint: 595d2f1dfdf2e74bcc9bbcc5fcbd8b08829ed087:webhook.py:generic-api-key:1        
 remote:           
-remote:   9:36AM INF 11 commits scanned.        
-remote:   9:36AM INF scanned ~15312 bytes (15.31 KB) in 276ms        
-remote:   9:36AM WRN leaks found: 1        
+remote:   9:53AM INF 11 commits scanned.        
+remote:   9:53AM INF scanned ~15320 bytes (15.32 KB) in 222ms        
+remote:   9:53AM WRN leaks found: 1        
 remote: run 5: failed, the logs are in ~/ci/runs/5/logs        
 To /home/ana/ci/linkbox.git
  * [new branch]      webhook -> webhook
@@ -69,12 +69,12 @@ rodaria, num clone limpo de `main`:
 ana@vm:~/linkbox$ rm -rf /tmp/nightly && git clone -q ~/ci/linkbox.git /tmp/nightly
 ana@vm:~/linkbox$ /tmp/nightly/ci/pipeline.sh && /tmp/nightly/ci/pipeline.sh ci/nightly
 secrets: passed in 1s
-test: passed in 1s
+test: passed in 2s
 sast: passed in 3s
-sca: passed in 10s
-build: passed in 0s
+sca: passed in 9s
+build: passed in 1s
 pipeline passed with 0 warning(s)
-rebuild: passed in 11s
+rebuild: passed in 13s
 dast: WARNING in 21s, the end of dast.log:
   PASS: Sub Resource Integrity Attribute Missing [90003]
   PASS: Charset Mismatch [90011]
@@ -82,7 +82,7 @@ dast: WARNING in 21s, the end of dast.log:
   PASS: WSDL File Detection [90030]
   PASS: Loosely Scoped Cookie [90033]
   WARN-NEW: User Controllable HTML Element Attribute (Potential XSS) [10031] x 1 
-  	http://linkbox-staging-8690-app:8000/search?q=ZAP (200 OK)
+  	http://linkbox-staging-3656-app:8000/search?q=ZAP (200 OK)
   FAIL-NEW: 0	FAIL-INPROG: 0	WARN-NEW: 1	WARN-INPROG: 0	INFO: 0	IGNORE: 0	PASS: 60
 pipeline passed with 1 warning(s)
 ```
@@ -118,14 +118,14 @@ ana@vm:~/linkbox$ git diff | grep '^+'
 +        for code, url in db().execute("SELECT code, url FROM links"):
 +            out.write(f"{code},{url}\n")
 ana@vm:~/linkbox$ git commit -q -am "an export of every link, for the quarterly report"
-9:36AM INF 0 commits scanned.
-9:36AM INF scanned ~187 bytes (187 bytes) in 188ms
-9:36AM INF no leaks found
+9:54AM INF 0 commits scanned.
+9:54AM INF scanned ~187 bytes (187 bytes) in 189ms
+9:54AM INF no leaks found
 ana@vm:~/linkbox$ git push ci export
-remote: run 6: export at 407638e        
-remote: secrets: passed in 1s        
+remote: run 6: export at 16308d4        
+remote: secrets: passed in 0s        
 remote: test: passed in 2s        
-remote: sast: FAILED in 2s, the end of sast.log:        
+remote: sast: FAILED in 3s, the end of sast.log:        
 remote:   	Total lines skipped (#nosec): 0        
 remote:   	Total potential issues skipped due to specifically being disabled (e.g., #nosec BXXX): 0        
 remote:           

@@ -37,10 +37,9 @@ bugs have been reachable from, which is why the default profile only allows crea
 process that already holds `CAP_SYS_ADMIN`.
 
 `seccomp=unconfined` appears here only to show what the filter is doing. **It belongs in no script
-that starts a real container.** Where an application genuinely needs a call the default refuses,
-the remedy is a custom profile that allows that call and nothing else; Docker's documentation
-describes the format, and Kubernetes takes the same files, which is why lesson 10's manifest names
-the profile explicitly rather than trusting a default.
+that starts a real container.** Where an application genuinely needs a call the default refuses, the remedy is a custom profile that
+allows that call and nothing else. Docker's documentation describes the format, and Kubernetes takes
+the same files; lesson 10's manifest names its profile explicitly rather than trusting a default.
 
 The recording machine runs without AppArmor, so the daemon lists no AppArmor profile. On Ubuntu with AppArmor
 enabled, Docker applies a second default profile, `docker-default`, which restricts file access

@@ -34,7 +34,8 @@ run 'curl -s http://localhost:5000/v2/linkbox/tags/list'
 
 block create
 place "$MD/a-cluster.md" "~/kind.yaml"
-run 'kind create cluster --name linkbox --config ~/kind.yaml'
+run 'kind create cluster --name linkbox --config ~/kind.yaml --quiet'
+run 'kubectl config current-context'
 
 block hosts
 run 'docker exec linkbox-control-plane mkdir -p /etc/containerd/certs.d/localhost:5000'

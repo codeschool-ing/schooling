@@ -120,7 +120,7 @@ o lock, ou nada.
 ```
 ana@vm:~/linkbox$ bash ci/test.sh
 ..........                                                               [100%]
-10 passed in 0.60s
+10 passed in 0.52s
 ```
 
 ### Para onde foi o `packaging`

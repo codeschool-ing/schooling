@@ -126,7 +126,7 @@ ana@vm:~/linkbox$ bash ci/sca.sh; echo "exit $?"
 ERROR:pip_audit._virtual_env:internal pip failure: ERROR: Cannot install -r requirements.txt (line 1) and werkzeug==3.0.1 because these package versions have conflicting dependencies.
 ERROR: ResolutionImpossible: for help visit https://pip.pypa.io/en/latest/topics/dependency-resolution/#dealing-with-dependency-conflicts
 
-ERROR:pip_audit._cli:Failed to install packages: ['/tmp/tmpohb9secr/bin/python3.13', '-m', 'pip', 'install', '--no-input', '--keyring-provider=subprocess', '--dry-run', '--report', '/tmp/tmpiymnvy4p/tmpf5vjtp9o', '-r', 'requirements.txt', '-r', 'requirements-dev.txt']
+ERROR:pip_audit._cli:Failed to install packages: ['/tmp/tmp_tustqwi/bin/python3.13', '-m', 'pip', 'install', '--no-input', '--keyring-provider=subprocess', '--dry-run', '--report', '/tmp/tmpxjf394f0/tmpbe7emzb7', '-r', 'requirements.txt', '-r', 'requirements-dev.txt']
 exit 1
 ana@vm:~/linkbox$ git checkout -q requirements.txt
 ```
@@ -144,20 +144,20 @@ Faça o commit de tudo e o push:
 ```
 ana@vm:~/linkbox$ git add -A
 ana@vm:~/linkbox$ git commit -q -m "a gate that breaks, warns or passes, and exceptions that expire"
-9:34AM INF 0 commits scanned.
-9:34AM INF scanned ~4950 bytes (4.95 KB) in 283ms
-9:34AM INF no leaks found
+9:52AM INF 0 commits scanned.
+9:52AM INF scanned ~4958 bytes (4.96 KB) in 187ms
+9:52AM INF no leaks found
 ana@vm:~/linkbox$ git push ci main
-remote: run 1: main at c7570d2        
+remote: run 1: main at 80c87e1        
 remote: secrets: passed in 0s        
 remote: test: passed in 2s        
 remote: sast: passed in 3s        
-remote: sca: passed in 11s        
+remote: sca: passed in 9s        
 remote: build: passed in 1s        
 remote: pipeline passed with 0 warning(s)        
 remote: run 1: passed        
 To /home/ana/ci/linkbox.git
-   8ab3d2a..c7570d2  main -> main
+   8ab3d2a..80c87e1  main -> main
 ```
 
 **`pipeline passed with 0 warning(s)`** é a nova última linha, e neste commit ela é verdadeira: o

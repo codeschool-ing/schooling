@@ -60,7 +60,12 @@ Python program that crashes. 2 is taken twice over: Python exits 2 when it is ca
 option it does not know, and ZAP's baseline scan exits 2 when it has warnings. 127 is the shell
 saying a command does not exist:
 
-@@CAPTURE statuses@@
+```
+ana@vm:~/linkbox$ python3 -m json.tool --no-such-option 2>/dev/null; echo "exit $?"
+exit 2
+ana@vm:~/linkbox$ no-such-scanner 2>/dev/null; echo "exit $?"
+exit 127
+```
 
 **Had a warning been 2, a stage whose program was called with a typo in a flag would have passed
 with a warning**, and a run that checked nothing would have gone on. 3 is not free in the wider

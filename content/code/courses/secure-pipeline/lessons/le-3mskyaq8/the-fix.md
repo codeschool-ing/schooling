@@ -13,7 +13,13 @@ answering one finding from the previous section.
 A pin is a commit hash, and the hash has to be the one the version names. `git ls-remote` asks a
 repository what its tags point at, without cloning it:
 
-@@CAPTURE ls-remote@@
+```
+ana@vm:~/linkbox$ git ls-remote https://github.com/actions/checkout refs/tags/v6 refs/tags/v6.1.0
+d23441a48e516b6c34aea4fa41551a30e30af803	refs/tags/v6
+d23441a48e516b6c34aea4fa41551a30e30af803	refs/tags/v6.1.0
+ana@vm:~/linkbox$ git ls-remote https://github.com/astral-sh/setup-uv refs/tags/v9.0.0
+c771a70e6277c0a99b617c7a806ffedaca235ff9	refs/tags/v9.0.0
+```
 
 Two things to read. **`v6` and `v6.1.0` name the same commit today**, which is the point of a
 moving major tag: it follows the latest release, and it will name a different commit after the next
@@ -77,7 +83,13 @@ file says nothing, the repository's or organisation's default applies.
 
 The scan, both personas:
 
-@@CAPTURE fixed@@
+```
+ana@vm:~/linkbox$ zizmor --quiet --offline .github; echo "exit status $?"
+No findings to report. Good job!
+exit status 0
+ana@vm:~/linkbox$ zizmor --quiet --offline --persona auditor .github
+No findings to report. Good job!
+```
 
 Nothing reported, and nothing suppressed. **This workflow was never executed**: the recording
 machine cannot run GitHub's hosted runners, so what it would print on GitHub is not shown here.
@@ -86,6 +98,6 @@ What was checked is the file, which is where these mistakes live.
 ### What the file does not fix
 
 The workflow runs only `ci/test.sh`. The rest of linkbox's pipeline needs the registry, the
-scanners and the signing key of the local CI, and moving it to a hosted runner is a project of its
+scanners and the signing key of the local CI. Moving it to a hosted runner is a project of its
 own, with the keys moving into the platform's secret store or, better, replaced by the federated
 identity of lesson 17. The four controls above apply to it unchanged when it moves.

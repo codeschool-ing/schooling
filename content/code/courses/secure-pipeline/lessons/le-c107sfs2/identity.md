@@ -45,9 +45,9 @@ by its owner alone:
 ```
 ana@vm:~/ci/oidc$ ls -l
 total 12
--rw------- 1 ana ana 1704 Oct 23 09:44 ci-oidc.key
--rw-r--r-- 1 ana ana  451 Oct 23 09:44 ci-oidc.pub
--rw-r--r-- 1 ana ana 1636 Oct 23 09:44 mint.py
+-rw------- 1 ana ana 1704 Oct 23 09:58 ci-oidc.key
+-rw-r--r-- 1 ana ana  451 Oct 23 09:58 ci-oidc.pub
+-rw-r--r-- 1 ana ana 1636 Oct 23 09:58 mint.py
 ana@vm:~/ci/oidc$ cd ~/linkbox
 ```
 
@@ -72,10 +72,10 @@ ana@vm:~/linkbox$ jq -R 'split(".")[1] | gsub("-";"+") | gsub("_";"/") | @base64
   "aud": "vault",
   "repository": "ana/linkbox",
   "ref": "refs/heads/main",
-  "iat": 1792759471,
-  "nbf": 1792759471,
-  "exp": 1792759771,
-  "jti": "39d66bb6-3d6b-4844-b727-ea4847cd4ab4"
+  "iat": 1792760320,
+  "nbf": 1792760320,
+  "exp": 1792760620,
+  "jti": "5668db92-dcd0-45bc-98bd-36708218e25e"
 }
 ```
 

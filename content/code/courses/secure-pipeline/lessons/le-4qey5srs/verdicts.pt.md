@@ -62,7 +62,12 @@ trava. 2 está ocupado duas vezes: o Python sai com 2 quando é chamado com uma 
 a varredura baseline do ZAP sai com 2 quando tem alertas. 127 é o shell dizendo que um comando não
 existe:
 
-@@CAPTURE statuses@@
+```
+ana@vm:~/linkbox$ python3 -m json.tool --no-such-option 2>/dev/null; echo "exit $?"
+exit 2
+ana@vm:~/linkbox$ no-such-scanner 2>/dev/null; echo "exit $?"
+exit 127
+```
 
 **Se o alerta fosse 2, um estágio cujo programa foi chamado com um erro de digitação numa flag teria
 passado com alerta**, e uma execução que não checou nada teria seguido. O 3 não está livre no mundo; o

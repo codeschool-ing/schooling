@@ -19,8 +19,23 @@ Sem argumentos, a imagem sobe o **servidor de desenvolvimento** do Vault:
 
 ```
 ana@vm:~/linkbox$ docker run -d --name vault -p 127.0.0.1:8200:8200 -e VAULT_ADDR=http://127.0.0.1:8200 -e VAULT_DEV_ROOT_TOKEN_ID=dev-only-root hashicorp/vault:2.1.2
-faa318a2f888a2b2d1cff1cf7b5d4130297db75311016dbd4b6570539b156d38
+dfd069d97cde03e95618cf2a2ee2f8b348d341e1ab8c1b8e5abc1afb3cb91c0b
 ana@vm:~/linkbox$ docker logs vault 2>&1 | sed -n "/WARNING!/,/production/p"
+WARNING! dev mode is enabled! In this mode, Vault runs entirely in-memory
+and starts unsealed with a single unseal key. The root token is already
+authenticated to the CLI, so you can immediately begin using Vault.
+
+You may need to set the following environment variables:
+
+    $ export VAULT_ADDR='http://0.0.0.0:8200'
+
+The unseal key and root token are displayed below in case you want to
+seal/unseal the Vault or re-authenticate.
+
+Unseal Key: sufNxFr8jjwXp/Fs7bBGaCz3eXLjVdfuaF452IJDBkM=
+Root Token: dev-only-root
+
+Development mode should NOT be used in production installations!
 ```
 
 `-p 127.0.0.1:8200:8200` publica a porta só na sua própria máquina, e `VAULT_ADDR` diz ao cliente de
@@ -63,7 +78,19 @@ ao seu terminal, e `vault` passa a se comportar como se estivesse instalado:
 ```
 ana@vm:~/linkbox$ vault() { docker exec -i vault vault "$@"; }
 ana@vm:~/linkbox$ vault status
-Error checking seal status: Get "http://127.0.0.1:8200/v1/sys/seal-status": dial tcp 127.0.0.1:8200: connect: connection refused
+Key             Value
+---             -----
+Seal Type       shamir
+Initialized     true
+Sealed          false
+Total Shares    1
+Threshold       1
+Version         2.1.2
+Build Date      2026-10-06T15:17:37Z
+Storage Type    inmem
+Cluster Name    vault-cluster-1b519551
+Cluster ID      faece368-c621-00ce-9384-6840c93e996c
+HA Enabled      false
 ```
 
 `Sealed false` e `Storage Type inmem` são as duas primeiras linhas do aviso, confirmadas pelo próprio
@@ -86,7 +113,7 @@ secret/data/linkbox/signing
 ======= Metadata =======
 Key                Value
 ---                -----
-created_time       2026-10-23T12:44:00.019630078Z
+created_time       2026-10-23T12:58:08.439839357Z
 custom_metadata    <nil>
 deletion_time      n/a
 destroyed          false

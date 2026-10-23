@@ -201,7 +201,10 @@ project() { # N: ~/linkbox with the files of lessons 1..N-1, one commit each,
     [ -d "$st" ] || continue
     msg=$(cat "$st.msg" 2>/dev/null || echo "lesson $i")
     (cd "$st" && tar -cf - --exclude=./.deleted --exclude=./_home .) | as_ana tar -xf - -C linkbox
-    if [ -d "$st/_home" ]; then (cd "$st/_home" && tar -cf - .) | as_ana tar -xf - -C "$ANA"; fi
+    # git never stores a directory called .git, so the stages spell it _git
+    if [ -d "$st/_home" ]; then
+      (cd "$st/_home" && tar -cf - --transform 's#/_git/#/.git/#' .) | as_ana tar -xf - -C "$ANA"
+    fi
     if [ -f "$st/.deleted" ]; then
       while read -r f; do as_ana rm -f "linkbox/$f"; done <"$st/.deleted"
     fi

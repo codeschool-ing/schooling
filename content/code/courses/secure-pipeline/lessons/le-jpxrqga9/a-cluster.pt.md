@@ -21,7 +21,7 @@ recente:
 ```
 ana@vm:~$ cd ~/linkbox
 ana@vm:~/linkbox$ curl -s http://localhost:5000/v2/linkbox/tags/list
-{"name":"linkbox","tags":["8bd2e60","main"]}
+{"name":"linkbox","tags":["793498f","main"]}
 ```
 
 ### A configuração do cluster
@@ -58,32 +58,14 @@ cgroup v2, no Docker Desktop ou num Codespace, apague os dois, e se o cluster n�
 `kind create cluster` imprime o motivo nas últimas linhas.
 
 ```
-ana@vm:~/linkbox$ kind create cluster --name linkbox --config ~/kind.yaml
-cgroup v1 is deprecated in Kubernetes and will not be supported in a future kind release, please upgrade to cgroup v2
-Creating cluster "linkbox" ...
- • Ensuring node image (kindest/node:v1.37.0) 🖼️  ...
- ✓ Ensuring node image (kindest/node:v1.37.0) 🖼️
- • Preparing nodes 📦   ...
- ✓ Preparing nodes 📦 
- • Writing configuration 📜  ...
- ✓ Writing configuration 📜
- • Starting control-plane 🕹️  ...
- ✓ Starting control-plane 🕹️
- • Installing CNI 🔌  ...
- ✓ Installing CNI 🔌
- • Installing StorageClass 💾  ...
- ✓ Installing StorageClass 💾
-Set kubectl context to "kind-linkbox"
-You can now use your cluster with:
-
-kubectl cluster-info --context kind-linkbox
-
-Thanks for using kind! 😊
+ana@vm:~/linkbox$ kind create cluster --name linkbox --config ~/kind.yaml --quiet
+ana@vm:~/linkbox$ kubectl config current-context
+kind-linkbox
 ```
 
-A primeira linha é o aviso do próprio kind sobre o cgroup v1, o motivo do terceiro patch, e tudo o
-que vem depois é um cluster subindo. O nó precisa de mais alguns segundos para se declarar pronto, e
-os próximos comandos esperam por isso.
+`--quiet` esconde a lista de progresso do kind, uma linha por passo com um emoji ao lado, e o contexto
+que o kind definiu para o `kubectl` diz que o cluster está lá. O nó precisa de mais alguns segundos
+para se declarar pronto, e os próximos comandos esperam por isso.
 
 ### Ensinando ao nó onde fica `localhost:5000`
 
@@ -100,7 +82,7 @@ ana@vm:~/linkbox$ kubectl wait --for=condition=Ready node --all --timeout=180s
 node/linkbox-control-plane condition met
 ana@vm:~/linkbox$ kubectl get nodes
 NAME                    STATUS   ROLES           AGE   VERSION
-linkbox-control-plane   Ready    control-plane   21s   v1.37.0
+linkbox-control-plane   Ready    control-plane   23s   v1.37.0
 ```
 
 **A imagem mantém o nome com que foi enviada**, `localhost:5000/linkbox:main`, na sua máquina e no

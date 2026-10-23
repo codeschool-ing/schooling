@@ -83,10 +83,9 @@ truststore 0.10.4  null
 urllib3 2.7.0  null
 ```
 
-They are pip and what pip carries. `msgpack` and `urllib3` are inside `pip/_vendor`, listed in the
-`bom.cdx.json` of the last section, and the setuptools 70.3.0 entry is pip's vendored copy of
-setuptools' `pkg_resources`; their `FilePath` is `null` because Trivy learnt about them from pip's
-list rather than from a file of their own. Only pip itself has a `METADATA` file.
+They are pip and what pip carries. `msgpack` and `urllib3` are inside `pip/_vendor`, listed in the `bom.cdx.json` of the last section.
+The setuptools 70.3.0 entry is pip's vendored copy of setuptools' `pkg_resources`. Their `FilePath`
+is `null` because Trivy learnt about them from pip's list rather than from a file of their own. Only pip itself has a `METADATA` file.
 
 So the base images that include pip ship four high-severity vulnerabilities that a newer pip has
 fixed, in a program linkbox never runs once the image is built. pip is needed to install the

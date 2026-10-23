@@ -142,7 +142,7 @@ assert_used:
 
 ```
 ana@vm:~/linkbox$ bash ci/build.sh
-sha256:3eb4828fe170b6f19b746285bff755dd61df3dc4ca5b136b5ac1026b2a7e75b1
+sha256:5166c06625b3d2996257a6f3104a23b77b5b974512b4f4bcdc97f3f11ae202ba
 ana@vm:~/linkbox$ ls wheels
 blinker-1.9.0-py3-none-any.whl
 click-8.5.0-py3-none-any.whl
@@ -171,15 +171,15 @@ M  requirements-dev.txt
 A  requirements.in
 M  requirements.txt
 ana@vm:~/linkbox$ git commit -q -m "dependencies compiled with their hashes, base images by digest, and a build with no network"
-9:42AM INF 0 commits scanned.
-9:42AM INF scanned ~17631 bytes (17.63 KB) in 210ms
-9:42AM INF no leaks found
+9:55AM INF 0 commits scanned.
+9:55AM INF scanned ~17631 bytes (17.63 KB) in 263ms
+9:55AM INF no leaks found
 ana@vm:~/linkbox$ git push ci main
-remote: run 1: main at 077b93e        
-remote: secrets: passed in 1s        
-remote: test: passed in 1s        
+remote: run 1: main at 0edaebf        
+remote: secrets: passed in 0s        
+remote: test: passed in 2s        
 remote: sast: passed in 3s        
-remote: sca: passed in 6s        
+remote: sca: passed in 8s        
 remote: build: passed in 2s        
 remote: image: passed in 1s        
 remote: push: passed in 1s        
@@ -188,7 +188,7 @@ remote: sign: passed in 2s
 remote: pipeline passed with 0 warning(s)        
 remote: run 1: passed        
 To /home/ana/ci/linkbox.git
-   73c0fea..077b93e  main -> main
+   f021bc5..0edaebf  main -> main
 ```
 
 Todos os estágios passaram, inclusive as varreduras da aula 5 contra o lock novo e da aula 8 contra

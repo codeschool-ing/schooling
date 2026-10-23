@@ -54,7 +54,7 @@ deployment.apps/plain   0/1     0            0           3s
 NAME                               DESIRED   CURRENT   READY   AGE
 replicaset.apps/plain-5bfc78fc94   1         0         0       3s
 ana@vm:~/linkbox$ kubectl get events -n linkbox --field-selector reason=FailedCreate -o jsonpath='{.items[0].message}{"\n"}'
-Error creating: pods "plain-5bfc78fc94-cgkj2" is forbidden: violates PodSecurity "restricted:latest": allowPrivilegeEscalation != false (container "linkbox" must set securityContext.allowPrivilegeEscalation=false), unrestricted capabilities (container "linkbox" must set securityContext.capabilities.drop=["ALL"]), runAsNonRoot != true (pod or container "linkbox" must set securityContext.runAsNonRoot=true), seccompProfile (pod or container "linkbox" must set securityContext.seccompProfile.type to "RuntimeDefault" or "Localhost")
+Error creating: pods "plain-5bfc78fc94-k7nrf" is forbidden: violates PodSecurity "restricted:latest": allowPrivilegeEscalation != false (container "linkbox" must set securityContext.allowPrivilegeEscalation=false), unrestricted capabilities (container "linkbox" must set securityContext.capabilities.drop=["ALL"]), runAsNonRoot != true (pod or container "linkbox" must set securityContext.runAsNonRoot=true), seccompProfile (pod or container "linkbox" must set securityContext.seccompProfile.type to "RuntimeDefault" or "Localhost")
 ana@vm:~/linkbox$ kubectl delete deployment plain -n linkbox
 deployment.apps "plain" deleted from linkbox namespace
 ```

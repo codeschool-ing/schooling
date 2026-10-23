@@ -8,11 +8,18 @@ repository, which on this machine is Ana. A stage is whatever script the pushed 
 the honest question about this course's CI is not what the stages do, but **what any script running
 as Ana could do**. The answer turns on one line of output.
 
-@@CAPTURE this-ci@@
+```
+ana@vm:~/linkbox$ id
+uid=30033(ana) gid=30033(ana) groups=30033(ana),996(docker)
+ana@vm:~/linkbox$ ls -l /var/run/docker.sock
+srw-rw---- 1 root docker 0 Oct 23 09:17 /var/run/docker.sock
+ana@vm:~/linkbox$ ps -C dockerd -o user=,pid=,comm=
+root      9084 dockerd
+```
 
 ### The docker group is root
 
-Ana is in the group `docker` (gid 990 here), because lesson 1 put her there so the pipeline could
+Ana is in the group `docker` (gid 996 here), because lesson 1 put her there so the pipeline could
 build images without `sudo`. The daemon's socket is owned by root and writable by that group, and
 the daemon itself runs as root. Whoever can write to the socket can ask the daemon, which is root,
 to start a container with any options it accepts, including a container that mounts the host's
@@ -27,7 +34,9 @@ script the CI runs, because it runs as a member.
 This lesson does not demonstrate the step from the group to root, and you do not need to see it to
 act on it. The two lines above, `id` and the socket's permissions, are the whole finding.
 
-@@FIGURE socket@@
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 130\" role=\"img\" data-fig=\"sp-l16-socket\" aria-label=\"Why the docker group is root on this machine. The CI's scripts run as ana, who is in the docker group. The socket /var/run/docker.sock is owned by root, group docker, writable by the group. The daemon behind it runs as root and starts containers with whatever options it is asked for, so whoever can write to the socket can act as root on the host.\"><defs><marker id=\"sp-l16-socket-ah-amber\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--amber)\"></path></marker></defs><rect x=\"10\" y=\"30\" width=\"150\" height=\"54\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\"></rect><text x=\"85.0\" y=\"49.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">every CI stage</text><text x=\"85.0\" y=\"66.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">as ana, in group docker</text><rect x=\"190\" y=\"30\" width=\"180\" height=\"54\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"280.0\" y=\"49.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">/var/run/docker.sock</text><text x=\"280.0\" y=\"66.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">writable by the group</text><rect x=\"400\" y=\"30\" width=\"150\" height=\"54\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"475.0\" y=\"49.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">the Docker daemon</text><text x=\"475.0\" y=\"66.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">runs as root</text><rect x=\"580\" y=\"30\" width=\"130\" height=\"54\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"645.0\" y=\"49.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">the host</text><text x=\"645.0\" y=\"66.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper-dim)\">anything it is asked</text><path d=\"M160 57 L188 57\" stroke=\"var(--amber)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#sp-l16-socket-ah-amber)\"></path><path d=\"M370 57 L398 57\" stroke=\"var(--amber)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#sp-l16-socket-ah-amber)\"></path><path d=\"M550 57 L578 57\" stroke=\"var(--amber)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#sp-l16-socket-ah-amber)\"></path></svg>", "caption": "Each step is ordinary on its own; together they make write access to one socket the same as root."}
+```
 
 ### What follows for the pipeline
 

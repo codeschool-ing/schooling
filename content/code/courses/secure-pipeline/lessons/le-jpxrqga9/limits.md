@@ -76,9 +76,9 @@ ana@vm:~/linkbox$ kubectl scale deployment linkbox -n linkbox --replicas=5
 deployment.apps/linkbox scaled
 ana@vm:~/linkbox$ kubectl get deployment linkbox -n linkbox
 NAME      READY   UP-TO-DATE   AVAILABLE   AGE
-linkbox   4/5     4            4           17s
+linkbox   4/5     4            4           19s
 ana@vm:~/linkbox$ kubectl get events -n linkbox --field-selector reason=FailedCreate -o jsonpath='{range .items[*]}{.message}{"\n"}{end}' | grep -m 1 'exceeded quota'
-Error creating: pods "linkbox-56f7558485-d4kbh" is forbidden: exceeded quota: linkbox, requested: limits.memory=128Mi,pods=1, used: limits.memory=512Mi,pods=4, limited: limits.memory=512Mi,pods=4
+Error creating: pods "linkbox-56f7558485-g2nfb" is forbidden: exceeded quota: linkbox, requested: limits.memory=128Mi,pods=1, used: limits.memory=512Mi,pods=4, limited: limits.memory=512Mi,pods=4
 ana@vm:~/linkbox$ kubectl scale deployment linkbox -n linkbox --replicas=1
 deployment.apps/linkbox scaled
 ```
@@ -104,9 +104,9 @@ ana@vm:~/linkbox$ kubectl set resources deployment linkbox -n linkbox --limits=m
 deployment.apps/linkbox resource requirements updated
 ana@vm:~/linkbox$ kubectl get pods -n linkbox
 NAME                       READY   STATUS    RESTARTS   AGE
-linkbox-56f7558485-jsxj4   1/1     Running   0          20s
+linkbox-56f7558485-dtb2v   1/1     Running   0          22s
 ana@vm:~/linkbox$ kubectl get events -n linkbox --field-selector reason=FailedCreate -o jsonpath='{range .items[*]}{.message}{"\n"}{end}' | grep -m 1 'maximum memory'
-Error creating: pods "linkbox-5bc4f6895f-5pvfh" is forbidden: maximum memory usage per Container is 256Mi, but limit is 512Mi
+Error creating: pods "linkbox-5bc4f6895f-g58sl" is forbidden: maximum memory usage per Container is 256Mi, but limit is 512Mi
 ana@vm:~/linkbox$ kubectl rollout undo deployment linkbox -n linkbox
 Warning: resource deployments/linkbox was previously managed with 'kubectl apply'. Rolling back will not update the kubectl.kubernetes.io/last-applied-configuration annotation, which may cause unexpected behavior on future 'kubectl apply' operations. Consider using 'kubectl apply' with your previous configuration file instead.
 deployment.apps/linkbox rolled back
@@ -130,9 +130,8 @@ source, so in real work the change is corrected in `k8s/linkbox.yaml` and applie
 | the LimitRange | each container: is the limit within bounds? fills one in if missing | the pod, as an event |
 | the ResourceQuota | the namespace: does this pod fit what is left? | the pod, as an event |
 
-The three overlap on purpose. The policy catches the Deployment that forgot, at the moment somebody
-can fix it; the LimitRange catches a pod made by anything the policy does not match, a Job or a bare
-pod, and fills in a default instead of refusing; the quota catches the total, which no single
+The three overlap on purpose. The policy catches the Deployment that forgot, at the moment somebody can fix it. The LimitRange catches a pod made by anything the policy does not match, a Job or a bare
+pod, and fills in a default instead of refusing. The quota catches the total, which no single
 manifest can see. **Lesson 19 adds a fourth, in the pipeline**: the same rule checked against
 `k8s/` before anything reaches a cluster, so the refusal arrives in a build log rather than at
 deploy time.
@@ -142,9 +141,9 @@ deploy time.
 ```
 ana@vm:~/linkbox$ git add k8s
 ana@vm:~/linkbox$ git commit -q -m "linkbox on Kubernetes, held to the restricted profile, and two admission rules"
-9:45AM INF 0 commits scanned.
-9:45AM INF scanned ~2980 bytes (2.98 KB) in 332ms
-9:45AM INF no leaks found
+9:57AM INF 0 commits scanned.
+9:57AM INF scanned ~2980 bytes (2.98 KB) in 370ms
+9:57AM INF no leaks found
 ```
 
 `ci/stages` does not change in this lesson. The manifests are in the repository, reviewed with the
