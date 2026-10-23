@@ -1,0 +1,570 @@
+{
+  "ex-yxy20tw2": {
+    "prompt": "Qual parte do Node roda o seu JavaScript?",
+    "choices": [
+      {
+        "text": "O pool de threads da libuv",
+        "why": "O pool nunca roda JavaScript; ele faz trabalho em C por baixo de algumas funções."
+      },
+      {
+        "text": "O epoll do sistema operacional",
+        "why": "O epoll vigia sockets; ele não roda nada seu."
+      },
+      {
+        "text": "Os bindings em C++",
+        "why": "Os bindings são onde uma chamada sai do JavaScript, não onde ela roda."
+      },
+      {
+        "text": "O V8",
+        "why": "Certo. Ele compila e roda, na thread principal."
+      }
+    ]
+  },
+  "ex-32c34ja4": {
+    "prompt": "\"O Node tem uma thread só.\" Quanto isso é verdade, segundo a aula?",
+    "choices": [
+      {
+        "text": "Totalmente: o processo inteiro tem exatamente uma thread",
+        "why": "O `threads.js` contou 7 no início e 11 depois de ler um arquivo."
+      },
+      {
+        "text": "Falso: cada requisição ganha uma thread",
+        "why": "Esse é o modelo que o Node não usa."
+      },
+      {
+        "text": "O seu código roda em uma; o processo tem várias",
+        "why": "Certo. Os auxiliares do V8 e o pool também são threads."
+      },
+      {
+        "text": "Verdade só no Windows",
+        "why": "O modelo é o mesmo em todo sistema."
+      }
+    ]
+  },
+  "ex-p243kzxq": {
+    "prompt": "A biblioteca em C que dá ao Node o event loop e o pool de threads se chama ___.",
+    "blanks": [
+      {
+        "accept": [
+          "libuv"
+        ]
+      }
+    ]
+  },
+  "ex-1bv0hz70": {
+    "prompt": "A aula 13 do javascript disse quando a fila de microtasks é esvaziada. Qual afirmação é essa?",
+    "choices": [
+      {
+        "text": "Por completo, depois de cada tarefa",
+        "why": "Certo, e no Node depois de cada callback."
+      },
+      {
+        "text": "Uma vez por segundo",
+        "why": "Nada na fila é cronometrado."
+      },
+      {
+        "text": "Só quando o programa termina",
+        "why": "Assim os callbacks de promise nunca rodariam num servidor."
+      },
+      {
+        "text": "Sempre que a fila de tarefas está vazia",
+        "why": "Ela não espera a fila de tarefas esvaziar."
+      }
+    ]
+  },
+  "ex-9wv166xw": {
+    "prompt": "O que esta aula acrescenta ao modelo da aula 13 do javascript?",
+    "choices": [
+      {
+        "text": "Várias filas de tarefas, visitadas numa ordem fixa",
+        "why": "Certo. Essas são as fases."
+      },
+      {
+        "text": "Um código agora pode rodar enquanto outro roda",
+        "why": "Continua uma pilha de chamadas, uma coisa por vez."
+      },
+      {
+        "text": "Microtasks rodam antes do código síncrono no Node",
+        "why": "O código síncrono sempre roda primeiro."
+      },
+      {
+        "text": "O modelo do navegador estava errado para o Node e foi trocado aqui",
+        "why": "Continua certo; isto acrescenta detalhe a uma parte dele."
+      }
+    ]
+  },
+  "ex-kctqy3aq": {
+    "prompt": "Ponha as quatro fases na ordem em que o loop as visita, começando pelos timers.",
+    "items": [
+      "timers",
+      "poll",
+      "check",
+      "close"
+    ]
+  },
+  "ex-hr73xypz": {
+    "prompt": "Dentro do callback de um `fs.readFile`, um programa chama `setTimeout(f, 0)` e depois `setImmediate(g)`. Qual roda primeiro?",
+    "choices": [
+      {
+        "text": "`f`, porque foi agendado primeiro",
+        "why": "A ordem das chamadas não decide; as fases decidem."
+      },
+      {
+        "text": "`g`: o check vem logo depois do poll",
+        "why": "Certo. Os timers só voltam depois do check."
+      },
+      {
+        "text": "Muda de uma execução para outra",
+        "why": "Esse é o caso no topo de um arquivo, não dentro de I/O."
+      },
+      {
+        "text": "Os dois ao mesmo tempo, em duas threads",
+        "why": "Callbacks nunca rodam ao mesmo tempo."
+      }
+    ]
+  },
+  "ex-bhs6k222": {
+    "prompt": "O `race.js` imprimiu `immediate timeout` vinte vezes em vinte num computador. Um colega escreve código que depende dessa ordem. O que está errado?",
+    "choices": [
+      {
+        "text": "Ali decide o tempo, não regra",
+        "why": "Certo. Código que precisa de ordem deve chamar um a partir do outro."
+      },
+      {
+        "text": "Nada: vinte execuções idênticas em vinte já são prova suficiente",
+        "why": "Cinco milissegundos de trabalho na inicialização inverteram a ordem todas as vezes."
+      },
+      {
+        "text": "O setImmediate é obsoleto",
+        "why": "Não é; é a função da própria fase check."
+      },
+      {
+        "text": "O timer devia ser 1 em vez de 0",
+        "why": "0 já significa 1 milissegundo; a questão é se ele já passou."
+      }
+    ]
+  },
+  "ex-8fa48yxn": {
+    "prompt": "Onde o loop espera quando nada está para vencer?",
+    "choices": [
+      {
+        "text": "No poll, até chegar entrada ou vencer um timer",
+        "why": "Certo."
+      },
+      {
+        "text": "Na fase timers, contando o tempo até o próximo timer",
+        "why": "Ele não conta; dorme até o sistema acordá-lo."
+      },
+      {
+        "text": "Na fase check",
+        "why": "O check roda os callbacks de setImmediate e segue."
+      },
+      {
+        "text": "Nunca espera; fica girando",
+        "why": "Um loop girando usaria um processador inteiro parado."
+      }
+    ]
+  },
+  "ex-6mscacbz": {
+    "prompt": "No `ticks.js`, ponha o que foi impresso em ordem.",
+    "hint": "Os números foram escritos para bater.",
+    "items": [
+      "código síncrono",
+      "o callback do nextTick",
+      "o callback da promise",
+      "o callback do setTimeout",
+      "o callback do setImmediate"
+    ]
+  },
+  "ex-s5wd175r": {
+    "prompt": "No `starve.js` o timer vencia em um milissegundo. Depois de quantos ticks ele rodou?",
+    "unit": "ticks"
+  },
+  "ex-q5zj7z65": {
+    "prompt": "Uma função às vezes chama o callback na hora e às vezes depois de uma requisição de rede. O que adiar o primeiro caso com `process.nextTick` resolve?",
+    "choices": [
+      {
+        "text": "A requisição de rede fica mais rápida",
+        "why": "Nada na requisição muda."
+      },
+      {
+        "text": "O callback vai para o pool de threads",
+        "why": "Callbacks de nextTick rodam na thread principal."
+      },
+      {
+        "text": "Erros lançados dentro do callback passam a ser capturados por você",
+        "why": "O nextTick não captura nada."
+      },
+      {
+        "text": "Uma ordem só, sempre",
+        "why": "Certo. O código depois da chamada sempre roda antes do callback."
+      }
+    ]
+  },
+  "ex-jtvyed4q": {
+    "prompt": "Quantas threads o pool da libuv tem, a não ser que você mude?",
+    "choices": [
+      {
+        "text": "Uma por processador",
+        "why": "É fixo, qualquer que seja o número de processadores."
+      },
+      {
+        "text": "Uma por requisição",
+        "why": "Isso seria de novo uma thread por requisição."
+      },
+      {
+        "text": "Nenhuma até o `UV_THREADPOOL_SIZE` ser definido",
+        "why": "O pool existe por padrão, criado no primeiro uso."
+      },
+      {
+        "text": "Quatro",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-40b22fr7": {
+    "prompt": "Quais destes esperam uma thread do pool? Marque todos que se aplicam.",
+    "choices": [
+      {
+        "text": "`fs.readFile`",
+        "why": "Certo. A maior parte do node:fs."
+      },
+      {
+        "text": "`crypto.pbkdf2`",
+        "why": "Certo. É computação pura e longa."
+      },
+      {
+        "text": "Ler dados de um socket",
+        "why": "Sockets são vigiados pelo epoll, sem thread."
+      },
+      {
+        "text": "`dns.lookup` para um nome de host",
+        "why": "Certo. O resolvedor do sistema bloqueia."
+      },
+      {
+        "text": "Um callback de `setTimeout`",
+        "why": "Os timers são guardados pelo próprio loop."
+      }
+    ]
+  },
+  "ex-th9abkfv": {
+    "prompt": "`node pool.js 6` com o pool padrão. Quantos hashes terminaram na segunda leva?",
+    "hint": "Seis hashes, quatro threads."
+  },
+  "ex-63swm8xn": {
+    "prompt": "Num computador com quatro processadores, subir o `UV_THREADPOOL_SIZE` de 4 para 6 não fez seis hashes de senha terminarem antes. Por quê?",
+    "choices": [
+      {
+        "text": "A variável é ignorada depois que o programa começa",
+        "why": "Ela foi definida antes do início, e os seis começaram juntos."
+      },
+      {
+        "text": "O pool não passa de quatro threads",
+        "why": "Ele vai até 1024."
+      },
+      {
+        "text": "Seis threads de cálculo dividiram quatro CPUs",
+        "why": "Certo. Mais threads ajudam trabalho que espera, não trabalho que calcula."
+      },
+      {
+        "text": "O pbkdf2 roda na thread principal",
+        "why": "A forma com callback roda no pool."
+      }
+    ]
+  },
+  "ex-9s538c7p": {
+    "prompt": "100 requisições, cada uma esperando um segundo. Quanto tempo o `threads.js` levou para receber todas as respostas?",
+    "choices": [
+      {
+        "text": "Cerca de 100 segundos",
+        "why": "Isso seria uma por vez."
+      },
+      {
+        "text": "Cerca de 25 segundos, quatro por vez",
+        "why": "Sockets não usam as quatro threads do pool."
+      },
+      {
+        "text": "Um pouco mais de um segundo",
+        "why": "Certo. As cem esperaram juntas."
+      },
+      {
+        "text": "Menos de um milissegundo",
+        "why": "Cada resposta foi segurada por um segundo."
+      }
+    ]
+  },
+  "ex-qj3bc4we": {
+    "prompt": "Por que a contagem de threads foi de 7 para 11 depois de um `fs.readFile`?",
+    "choices": [
+      {
+        "text": "Cada arquivo aberto ganha uma thread",
+        "why": "Subiu uma vez, em quatro, o tamanho do pool."
+      },
+      {
+        "text": "As cem requisições deixaram threads para trás",
+        "why": "A contagem ainda era 7 depois delas."
+      },
+      {
+        "text": "A libuv iniciou o pool de quatro no primeiro uso",
+        "why": "Certo."
+      },
+      {
+        "text": "O V8 começou a coletar lixo",
+        "why": "As threads do V8 já estavam nas 7."
+      }
+    ]
+  },
+  "ex-n259n4zc": {
+    "prompt": "O `threads.js` usou `127.0.0.1` em vez de `localhost`. O que um nome teria mudado nos números?",
+    "choices": [
+      {
+        "text": "Nada: nomes são resolvidos pelo epoll",
+        "why": "O epoll vigia sockets; ele não resolve nomes."
+      },
+      {
+        "text": "As respostas teriam sido recusadas",
+        "why": "localhost chega ao mesmo servidor."
+      },
+      {
+        "text": "As consultas usariam o pool, então as threads dele apareceriam antes",
+        "why": "Certo. O dns.lookup fica no pool."
+      },
+      {
+        "text": "Cada requisição teria aberto um processo novo",
+        "why": "Consultas de nome não iniciam processos."
+      }
+    ]
+  },
+  "ex-8mye405n": {
+    "prompt": "Atrás do `/slow`, cerca de quantos segundos o `/fast` levou? Arredonde para o segundo inteiro mais próximo.",
+    "unit": "segundos"
+  },
+  "ex-a7t1h202": {
+    "prompt": "O que o `monitorEventLoopDelay` mede?",
+    "choices": [
+      {
+        "text": "O atraso com que os próprios timers disparam",
+        "why": "Certo. Um timer atrasado significa que algum código segurou a thread."
+      },
+      {
+        "text": "Quanto tempo cada requisição levou",
+        "why": "Isso é o que o `-w` do curl mediu de fora."
+      },
+      {
+        "text": "O quanto o pool de threads está ocupado",
+        "why": "O pool pode estar ocupado com o loop livre."
+      },
+      {
+        "text": "Quantos callbacks estão esperando",
+        "why": "Ele não conta fila nenhuma; ele cronometra um timer."
+      }
+    ]
+  },
+  "ex-m5hfzx47": {
+    "prompt": "Uma rota de relatório ordena 500.000 linhas na memória e todas as outras rotas ficam lentas enquanto ela roda. Qual solução mantém a ordenação e libera as outras rotas?",
+    "choices": [
+      {
+        "text": "Envolver a ordenação numa `async function`",
+        "why": "Uma async function ainda roda o código síncrono na thread principal."
+      },
+      {
+        "text": "Subir o `UV_THREADPOOL_SIZE`",
+        "why": "A ordenação é JavaScript, e o pool nunca roda JavaScript."
+      },
+      {
+        "text": "Chamá-la com `process.nextTick`",
+        "why": "Ela rodaria um instante depois e bloquearia o mesmo tempo."
+      },
+      {
+        "text": "Rodar a ordenação numa worker thread",
+        "why": "Certo. A aula 10."
+      }
+    ]
+  },
+  "ex-26df6tb7": {
+    "prompt": "Onde o `fs.readFileSync` é inofensivo?",
+    "choices": [
+      {
+        "text": "Dentro de um handler, se o arquivo for pequeno",
+        "why": "Um arquivo pequeno num disco lento ainda segura todas as requisições."
+      },
+      {
+        "text": "Na inicialização",
+        "why": "Certo. Nada mais está esperando ainda."
+      },
+      {
+        "text": "Dentro de um callback de promise",
+        "why": "Isso ainda é a thread principal."
+      },
+      {
+        "text": "Em lugar nenhum; ele é obsoleto",
+        "why": "Ele é estável e tem um uso certo."
+      }
+    ]
+  },
+  "ex-rste5z79": {
+    "prompt": "Quantos avisos uma requisição ao `motd.js` imprimiu com `--trace-sync-io`?",
+    "hint": "Um por chamada de sistema.",
+    "unit": "avisos"
+  },
+  "ex-bft8my5r": {
+    "prompt": "O `--trace-sync-io` não imprime nada para o seu servidor. O que você pode concluir?",
+    "choices": [
+      {
+        "text": "Que nenhum handler em lugar nenhum dele bloqueia num arquivo",
+        "why": "O `motd-utf8.js` bloqueava em toda requisição e não imprimia nada."
+      },
+      {
+        "text": "Pouco: o silêncio dela não é prova",
+        "why": "Certo. Só não aconteceram as chamadas que ela vigia."
+      },
+      {
+        "text": "O servidor só usa a API de promises",
+        "why": "Um readFileSync com utf8 é invisível para ela."
+      },
+      {
+        "text": "A flag está quebrada no Node 22",
+        "why": "Ela pegou a forma com Buffer quatro vezes."
+      }
+    ]
+  },
+  "ex-20qabfm5": {
+    "prompt": "Quando um processo Node termina sozinho?",
+    "choices": [
+      {
+        "text": "Quando a última linha do arquivo termina de rodar",
+        "why": "O `alive.js` imprimiu a última linha e continuou fazendo tick."
+      },
+      {
+        "text": "Depois de um minuto sem requisições",
+        "why": "Não existe timeout assim."
+      },
+      {
+        "text": "Quando o `beforeExit` é emitido",
+        "why": "Um handler ali pode agendar mais trabalho e mantê-lo vivo."
+      },
+      {
+        "text": "Quando não sobra nada para esperar",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-4ydes7c2": {
+    "prompt": "`timeout 3.5 node alive.js` encerrou depois de três ticks. Por que nem `beforeExit` nem `exit` imprimiram?",
+    "choices": [
+      {
+        "text": "Eles só disparam com `unref`",
+        "why": "Eles disparam sempre que o processo termina sozinho."
+      },
+      {
+        "text": "O processo foi morto de fora",
+        "why": "Certo. A aula 10 trata de sinais."
+      },
+      {
+        "text": "O console.log desliga depois de três segundos",
+        "why": "Nada desliga o console.log."
+      },
+      {
+        "text": "O intervalo os cancelou",
+        "why": "Um intervalo não cancela um handler de evento."
+      }
+    ]
+  },
+  "ex-wa9y0e2k": {
+    "prompt": "Chamar `timer.___()` impede que um timer mantenha o processo vivo.",
+    "blanks": [
+      {
+        "accept": [
+          "unref"
+        ]
+      }
+    ]
+  },
+  "ex-gz8ggxns": {
+    "prompt": "Desde o Node 15, o que acontece por padrão com uma promise rejeitada que ninguém trata?",
+    "choices": [
+      {
+        "text": "Sai com código 1",
+        "why": "Certo. O timer do `reject.js` nunca rodou."
+      },
+      {
+        "text": "Um aviso é impresso e o programa segue como se nada fosse",
+        "why": "Isso era no Node 14 e antes."
+      },
+      {
+        "text": "O Node tenta a promise de novo",
+        "why": "O Node não tenta nada de novo por você."
+      },
+      {
+        "text": "É ignorada em silêncio",
+        "why": "Ela imprimiu o erro inteiro."
+      }
+    ]
+  },
+  "ex-j1jnsmt4": {
+    "prompt": "Qual linha do `reject.js` é o bug?",
+    "choices": [
+      {
+        "text": "`loadPrices();` sozinho na linha",
+        "why": "Certo. Toda promise é esperada ou ganha um `.catch`."
+      },
+      {
+        "text": "O `throw` dentro de `loadPrices`, que encerra a função mais cedo",
+        "why": "Lançar é um bom jeito de relatar uma falha."
+      },
+      {
+        "text": "O `setTimeout` lá da última linha",
+        "why": "Ele nem teve chance de rodar."
+      },
+      {
+        "text": "O `async` na função",
+        "why": "O async é o que a tornou promise; o bug é não tratá-la."
+      }
+    ]
+  },
+  "ex-2rxkz97t": {
+    "prompt": "Um handler de `uncaughtException` registra o erro e deixa o servidor continuar atendendo. Por que a aula manda sair em vez disso?",
+    "choices": [
+      {
+        "text": "O processo está num estado que ninguém planejou",
+        "why": "Certo. Saia, e deixe um limpo começar."
+      },
+      {
+        "text": "O Node proíbe um handler que não sai",
+        "why": "Ele permite; esse é o perigo."
+      },
+      {
+        "text": "Registrar não é possível depois de uma exceção",
+        "why": "O handler registrou normalmente."
+      },
+      {
+        "text": "Sair faz o erro sumir dos logs",
+        "why": "A ideia é o contrário: registrar, depois sair."
+      }
+    ]
+  },
+  "ex-wssm5kdw": {
+    "prompt": "Ligue cada callback à fila ou fase em que ele espera.",
+    "pairs": [
+      {
+        "left": "`setTimeout(f, 0)`",
+        "right": "timers"
+      },
+      {
+        "left": "`setImmediate(f)`",
+        "right": "check"
+      },
+      {
+        "left": "`process.nextTick(f)`",
+        "right": "a fila do nextTick"
+      },
+      {
+        "left": "`promise.then(f)`",
+        "right": "a fila de microtasks"
+      }
+    ],
+    "right_distractors": [
+      "o pool de threads"
+    ]
+  }
+}

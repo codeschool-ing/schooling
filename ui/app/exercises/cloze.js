@@ -40,12 +40,16 @@ export default {
   body(ex, uid) {
     const count = (ex.blanks || []).length;
 
-    // A NUL cannot appear in a prompt that came out of JSON text a person
-    // wrote, and esc() leaves it alone, so it survives formatting untouched.
+    // A control character cannot appear in a prompt that came out of JSON text
+    // a person wrote, and esc() leaves it alone, so it survives formatting.
+    // NOT NUL: formatted() sets its code spans aside as NUL, a number and NUL,
+    // and puts back whatever it finds in that shape, so a hole written that way
+    // came out as `<code>undefined</code>`, or as some other span of the same
+    // prompt, in every cloze in the catalogue.
     let hole = 0;
-    const marked = String(ex.prompt || '').replace(/___/g, () => '\u0000' + (hole++) + '\u0000');
+    const marked = String(ex.prompt || '').replace(/___/g, () => '\u0001' + (hole++) + '\u0001');
 
-    const sentence = formatted(marked).replace(/\u0000(\d+)\u0000/g, (_, n) => {
+    const sentence = formatted(marked).replace(/\u0001(\d+)\u0001/g, (_, n) => {
       const i = Number(n);
       // More holes than blanks: the extra ones draw nothing, as they always did.
       if (i >= count) return '';

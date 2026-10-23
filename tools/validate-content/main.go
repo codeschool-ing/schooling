@@ -797,6 +797,14 @@ var allowedOutsideTheFont = map[rune]string{
 		"passing one with U+2713, which the terminal cut carries; IBM Plex Mono has no U+2718 " +
 		"at all. It opens a line and nothing is aligned to what follows it, and a capture is " +
 		"pasted byte for byte, so the alternative is a transcript that is not the one printed",
+	// Node's own test runner, in the spec reporter a terminal shows: U+2714 above
+	// opens a passing test's line, these two a failing one's and each line of the
+	// summary. IBM Plex Mono has neither.
+	'\u2716': "`node --test` opens the line of a failed test with it (`✖ failing tests:`). " +
+		"IBM Plex Mono has no U+2716 at all. It opens a line and nothing is aligned to what " +
+		"follows it, and a capture is pasted byte for byte",
+	'\u2139': "`node --test` opens each line of its summary with it (`ℹ tests 3`). IBM Plex " +
+		"Mono has no U+2139 at all. It opens a line and nothing is aligned to what follows it",
 }
 
 // coverage is the set of code points the interface declares a face for.

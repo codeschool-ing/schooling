@@ -1,0 +1,839 @@
+[
+  {
+    "id": "ex-h6tvx41y",
+    "version": 1,
+    "section": "the-http-module",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When does Node call the handler given to `createServer`?",
+    "choices": [
+      {
+        "text": "When the whole request, body included, has arrived",
+        "correct": false,
+        "why": "It does not wait for the body."
+      },
+      {
+        "text": "When the client opens the connection",
+        "correct": false,
+        "why": "A connection may carry no request yet."
+      },
+      {
+        "text": "Once per second, for every waiting request",
+        "correct": false,
+        "why": "Nothing about it is on a timer."
+      },
+      {
+        "text": "As soon as the headers are complete",
+        "correct": true,
+        "why": "Right. The body arrives afterwards, on req."
+      }
+    ]
+  },
+  {
+    "id": "ex-44gar1tb",
+    "version": 1,
+    "section": "the-http-module",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does `node:http` do for you, with nothing else installed? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Parse the request line and headers",
+        "correct": true,
+        "why": "Right: llhttp does that."
+      },
+      {
+        "text": "Send each path to its own function",
+        "correct": false,
+        "why": "There is no routing; every request reaches one function."
+      },
+      {
+        "text": "Parse a JSON body",
+        "correct": false,
+        "why": "The body arrives as bytes, for you to read."
+      },
+      {
+        "text": "Write a Date header on every reply",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Turn a thrown error into a 500",
+        "correct": false,
+        "why": "Uncaught, it ends the process."
+      }
+    ]
+  },
+  {
+    "id": "ex-0gke9gaj",
+    "version": 1,
+    "section": "create-server",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A server on your laptop listens on `0.0.0.0`. Who can reach it?",
+    "choices": [
+      {
+        "text": "Only programs on the laptop",
+        "correct": false,
+        "why": "That is 127.0.0.1."
+      },
+      {
+        "text": "Anyone on its networks",
+        "correct": true,
+        "why": "Right: everyone on the café's network, say."
+      },
+      {
+        "text": "Nobody, because 0.0.0.0 is not an address",
+        "correct": false,
+        "why": "As a listening address it means every one."
+      },
+      {
+        "text": "Only the router",
+        "correct": false,
+        "why": "It is not limited to one device."
+      }
+    ]
+  },
+  {
+    "id": "ex-7p9bjab6",
+    "version": 1,
+    "section": "create-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a test start its server with port 0?",
+    "choices": [
+      {
+        "text": "Port 0 needs no permission, unlike 3000",
+        "correct": false,
+        "why": "Neither needs root; only ports below 1024 do."
+      },
+      {
+        "text": "Port 0 is faster",
+        "correct": false,
+        "why": "Every port is the same speed."
+      },
+      {
+        "text": "Two tests never pick the same port",
+        "correct": true,
+        "why": "Right. `server.address()` says which."
+      },
+      {
+        "text": "Port 0 cannot be reached from outside",
+        "correct": false,
+        "why": "The host decides that, not the port."
+      }
+    ]
+  },
+  {
+    "id": "ex-zh9y8v6r",
+    "version": 1,
+    "section": "create-server",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server in a container listens on `127.0.0.1` and nobody outside the container can reach it. Why?",
+    "choices": [
+      {
+        "text": "Containers block every port by default",
+        "correct": false,
+        "why": "A published port is reachable; this one is not even listening there."
+      },
+      {
+        "text": "Node cannot run in containers",
+        "correct": false,
+        "why": "It runs in them every day."
+      },
+      {
+        "text": "Requests arrive elsewhere",
+        "correct": true,
+        "why": "Right. Inside a container it must listen on 0.0.0.0."
+      },
+      {
+        "text": "127.0.0.1 is reserved for root",
+        "correct": false,
+        "why": "Any user can listen there."
+      }
+    ]
+  },
+  {
+    "id": "ex-btp4fc1j",
+    "version": 1,
+    "section": "the-request",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A client sends the header `X-Request-Id`. How does the handler read it?",
+    "choices": [
+      {
+        "text": "`req.headers[\"X-Request-Id\"]`",
+        "correct": false,
+        "why": "Node lower-cases every name."
+      },
+      {
+        "text": "`req.xRequestId`",
+        "correct": false,
+        "why": "Headers are not copied onto req as properties."
+      },
+      {
+        "text": "`req.headers[\"x-request-id\"]`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Only through `req.rawHeaders`",
+        "correct": false,
+        "why": "rawHeaders works, and is not the only way."
+      }
+    ]
+  },
+  {
+    "id": "ex-pfd8ew90",
+    "version": 1,
+    "section": "the-request",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`/links/7ctxqn?visits=1` arrives. What type is `url.searchParams.get(\"visits\")`?",
+    "choices": [
+      {
+        "text": "A string",
+        "correct": true,
+        "why": "Right: `\"1\"`."
+      },
+      {
+        "text": "A number",
+        "correct": false,
+        "why": "Nothing in a URL is a number until you make it one."
+      },
+      {
+        "text": "A boolean",
+        "correct": false,
+        "why": "It is the client's text."
+      },
+      {
+        "text": "An array",
+        "correct": false,
+        "why": "`get` returns the first value as text."
+      }
+    ]
+  },
+  {
+    "id": "ex-7kfj7kgj",
+    "version": 1,
+    "section": "the-request",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server trusts the `host` header to decide which customer's data to show. What is wrong?",
+    "choices": [
+      {
+        "text": "Node removes `host` before the handler runs",
+        "correct": false,
+        "why": "It was in the echo, first."
+      },
+      {
+        "text": "`host` is only sent by browsers",
+        "correct": false,
+        "why": "curl sent it."
+      },
+      {
+        "text": "Header names are case-sensitive",
+        "correct": false,
+        "why": "They are not, which is why Node lower-cases them."
+      },
+      {
+        "text": "The client chooses what `host` says",
+        "correct": true,
+        "why": "Right. It is the client's text like every other header."
+      }
+    ]
+  },
+  {
+    "id": "ex-7g0jmaqj",
+    "version": 1,
+    "section": "the-response",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A handler writes its body with two `res.write` calls and then `res.end`. How does the client learn where the body ends?",
+    "choices": [
+      {
+        "text": "From Transfer-Encoding: chunked",
+        "correct": true,
+        "why": "Right: each piece carries its own length."
+      },
+      {
+        "text": "From a Content-Length Node counted",
+        "correct": false,
+        "why": "After the first write Node could not know the total."
+      },
+      {
+        "text": "The connection is closed after it",
+        "correct": false,
+        "why": "It stayed keep-alive."
+      },
+      {
+        "text": "From a blank line after the body",
+        "correct": false,
+        "why": "A blank line ends the headers, not the body."
+      }
+    ]
+  },
+  {
+    "id": "ex-d5et4m6b",
+    "version": 1,
+    "section": "the-response",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the header written as `Buffer.byteLength(body)` and not `body.length`?",
+    "choices": [
+      {
+        "text": "`body.length` is always zero",
+        "correct": false,
+        "why": "It is the number of characters."
+      },
+      {
+        "text": "Node rejects a number in a header",
+        "correct": false,
+        "why": "It accepts numbers there."
+      },
+      {
+        "text": "Bytes, not characters",
+        "correct": true,
+        "why": "Right: `olá` is three characters and four bytes."
+      },
+      {
+        "text": "To make the body compress",
+        "correct": false,
+        "why": "Length has nothing to do with compression."
+      }
+    ]
+  },
+  {
+    "id": "ex-jrjns2t9",
+    "version": 1,
+    "section": "the-response",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A handler throws `ERR_HTTP_HEADERS_SENT` on some requests only. What is the likeliest cause?",
+    "choices": [
+      {
+        "text": "The client disconnected early",
+        "correct": false,
+        "why": "That gives other errors; this one is about answering twice."
+      },
+      {
+        "text": "One branch answers, then another",
+        "correct": true,
+        "why": "Right. Return after every reply."
+      },
+      {
+        "text": "The response was too large",
+        "correct": false,
+        "why": "Size never causes it."
+      },
+      {
+        "text": "Headers were written in lower case",
+        "correct": false,
+        "why": "Lower case is fine."
+      }
+    ]
+  },
+  {
+    "id": "ex-gb1zp5dx",
+    "version": 1,
+    "section": "routing-by-hand",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`DELETE /links` reaches a resource that only supports GET and POST. What should the server answer?",
+    "choices": [
+      {
+        "text": "404 Not Found",
+        "correct": false,
+        "why": "The resource exists; that would say it does not."
+      },
+      {
+        "text": "400 Bad Request",
+        "correct": false,
+        "why": "The request is well formed; the method is the problem."
+      },
+      {
+        "text": "405, with an Allow header",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "200 with an empty body",
+        "correct": false,
+        "why": "That would pretend it worked."
+      }
+    ]
+  },
+  {
+    "id": "ex-anf210d7",
+    "version": 1,
+    "section": "routing-by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the router look at `pathname` rather than `req.url`?",
+    "choices": [
+      {
+        "text": "`req.url` holds the host",
+        "correct": false,
+        "why": "It holds the path and the query, no host."
+      },
+      {
+        "text": "pathname is decoded and req.url is not",
+        "correct": false,
+        "why": "pathname is still percent-encoded."
+      },
+      {
+        "text": "The query would spoil the match",
+        "correct": true,
+        "why": "Right: `/health?verbose=1` still reached /health."
+      },
+      {
+        "text": "`req.url` is undefined for POST",
+        "correct": false,
+        "why": "Every request has one."
+      }
+    ]
+  },
+  {
+    "id": "ex-csjev048",
+    "version": 1,
+    "section": "path-parameters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why decode each part of the path after splitting it on `/`, rather than the whole path first?",
+    "choices": [
+      {
+        "text": "Decoding twice is faster",
+        "correct": false,
+        "why": "Speed is not the point."
+      },
+      {
+        "text": "decodeURIComponent cannot handle slashes",
+        "correct": false,
+        "why": "It turns `%2F` into a slash, which is the problem."
+      },
+      {
+        "text": "An encoded `/` would otherwise split one part into two",
+        "correct": true,
+        "why": "Right. `a%2Fb` arrived as one part."
+      },
+      {
+        "text": "Node decodes the first part already",
+        "correct": false,
+        "why": "Node decodes nothing in the path."
+      }
+    ]
+  },
+  {
+    "id": "ex-qt48x1m5",
+    "version": 1,
+    "section": "path-parameters",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`/links/%E0%A4%A` reached `params.js`. What answered?",
+    "choices": [
+      {
+        "text": "A 400 saying the encoding was invalid",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A crash of the server",
+        "correct": false,
+        "why": "params.js catches the URIError."
+      },
+      {
+        "text": "A 404 for a link that does not exist",
+        "correct": false,
+        "why": "It never got as far as looking."
+      },
+      {
+        "text": "A 200 with the raw text",
+        "correct": false,
+        "why": "The decode failed before any reply."
+      }
+    ]
+  },
+  {
+    "id": "ex-j2p32cac",
+    "version": 1,
+    "section": "path-parameters",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A bad percent-encoding makes `decodeURIComponent` throw an error of type ___.",
+    "blanks": [
+      {
+        "accept": [
+          "URIError"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mx9nk8yg",
+    "version": 1,
+    "section": "reading-a-body",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each problem with a request body to the status `body.js` answered it with.",
+    "pairs": [
+      {
+        "left": "sent as a form, not JSON",
+        "right": "415"
+      },
+      {
+        "left": "2000 bytes, over the 1024 limit",
+        "right": "413"
+      },
+      {
+        "left": "`{\"url\": ` and nothing more",
+        "right": "400"
+      },
+      {
+        "left": "valid JSON within the limit",
+        "right": "200"
+      }
+    ],
+    "right_distractors": [
+      "500"
+    ]
+  },
+  {
+    "id": "ex-vd1drwd2",
+    "version": 1,
+    "section": "reading-a-body",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `readJson` count bytes as the pieces arrive instead of after joining them?",
+    "choices": [
+      {
+        "text": "To stop a big body early",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Joining Buffers is not allowed in Node",
+        "correct": false,
+        "why": "Buffer.concat joins them."
+      },
+      {
+        "text": "To make the JSON parse faster",
+        "correct": false,
+        "why": "Counting does not change parsing."
+      },
+      {
+        "text": "Content-Length is never sent",
+        "correct": false,
+        "why": "curl sent one; a client may lie or leave it out."
+      }
+    ]
+  },
+  {
+    "id": "ex-153cgjx9",
+    "version": 1,
+    "section": "reading-a-body",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A piece of the body ends halfway through `é`. Why does `readJson` still decode it correctly?",
+    "choices": [
+      {
+        "text": "Node never splits a character between pieces",
+        "correct": false,
+        "why": "Pieces are bytes, and can split anywhere."
+      },
+      {
+        "text": "JSON forbids accented characters",
+        "correct": false,
+        "why": "JSON allows any Unicode."
+      },
+      {
+        "text": "curl sends text, not bytes",
+        "correct": false,
+        "why": "Everything on the wire is bytes."
+      },
+      {
+        "text": "It decodes only after joining every piece",
+        "correct": true,
+        "why": "Right. A character split across pieces is whole again."
+      }
+    ]
+  },
+  {
+    "id": "ex-zw7pjpjr",
+    "version": 1,
+    "section": "errors-in-handlers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `fragile.js`, what happened to the third request, after the malformed one?",
+    "choices": [
+      {
+        "text": "curl could not connect: exit code 7",
+        "correct": true,
+        "why": "Right. The second request had killed the process."
+      },
+      {
+        "text": "It was answered normally",
+        "correct": false,
+        "why": "Nothing was listening any more."
+      },
+      {
+        "text": "It got a 500",
+        "correct": false,
+        "why": "There was no server left to send one."
+      },
+      {
+        "text": "It waited until the server restarted",
+        "correct": false,
+        "why": "Nothing restarted it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1v66st9x",
+    "version": 1,
+    "section": "errors-in-handlers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `sturdy.js`, why does the client get `internal error` and not the error's message?",
+    "choices": [
+      {
+        "text": "Messages cannot be sent in a 500",
+        "correct": false,
+        "why": "Any body can go in a 500."
+      },
+      {
+        "text": "The message is not known at that point",
+        "correct": false,
+        "why": "It was logged on the line above."
+      },
+      {
+        "text": "To make the response shorter",
+        "correct": false,
+        "why": "Length is not the reason."
+      },
+      {
+        "text": "Details go to the log",
+        "correct": true,
+        "why": "Right. A stack trace tells them what the server is made of."
+      }
+    ]
+  },
+  {
+    "id": "ex-n4vq8zs5",
+    "version": 1,
+    "section": "errors-in-handlers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An `async` handler awaits a database call that rejects, and nothing catches it. What happens?",
+    "choices": [
+      {
+        "text": "The whole process exits with it",
+        "correct": true,
+        "why": "Right, as in lesson 2."
+      },
+      {
+        "text": "Node answers 500 by itself",
+        "correct": false,
+        "why": "node:http turns nothing into a reply."
+      },
+      {
+        "text": "The request hangs and the server carries on",
+        "correct": false,
+        "why": "An unhandled rejection ends the process, since Node 15."
+      },
+      {
+        "text": "The rejection is retried",
+        "correct": false,
+        "why": "Nothing retries."
+      }
+    ]
+  },
+  {
+    "id": "ex-2frpvnqw",
+    "version": 1,
+    "section": "timeouts",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is `keepAliveTimeout` by default, in milliseconds?",
+    "value": 5000,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-zrd32y6d",
+    "version": 1,
+    "section": "timeouts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`slow.js` sent half a request line. What did the server do after its headers timeout?",
+    "choices": [
+      {
+        "text": "Answered 408 and closed the connection",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Waited for the rest indefinitely",
+        "correct": false,
+        "why": "That is what the timeout prevents."
+      },
+      {
+        "text": "Called the handler with half a request",
+        "correct": false,
+        "why": "The handler runs only after complete headers."
+      },
+      {
+        "text": "Crashed with a timeout error",
+        "correct": false,
+        "why": "The server went on running."
+      }
+    ]
+  },
+  {
+    "id": "ex-7vtyd56w",
+    "version": 1,
+    "section": "timeouts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With Node's defaults, a server sets `headersTimeout` to 2 seconds, and a slow client is cut off after about 30. Why?",
+    "choices": [
+      {
+        "text": "headersTimeout is in seconds, not milliseconds",
+        "correct": false,
+        "why": "It is milliseconds."
+      },
+      {
+        "text": "keepAliveTimeout overrides it",
+        "correct": false,
+        "why": "That limits idle connections between requests."
+      },
+      {
+        "text": "Node checks every 30 s",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The client's own timeout is 30 seconds",
+        "correct": false,
+        "why": "The server sent the 408."
+      }
+    ]
+  },
+  {
+    "id": "ex-cgtsxd49",
+    "version": 1,
+    "section": "the-whole-server",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `GET /CODE` answer in the links service?",
+    "choices": [
+      {
+        "text": "200 with the link as JSON",
+        "correct": false,
+        "why": "That is GET /links/CODE."
+      },
+      {
+        "text": "201 with a new link",
+        "correct": false,
+        "why": "That is POST /links."
+      },
+      {
+        "text": "302 with the address in `location`",
+        "correct": true,
+        "why": "Right, and the visit is counted."
+      },
+      {
+        "text": "204 with no body",
+        "correct": false,
+        "why": "That is DELETE."
+      }
+    ]
+  },
+  {
+    "id": "ex-hkxr5b6e",
+    "version": 1,
+    "section": "the-whole-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the service refuse `javascript:alert(1)` as a URL?",
+    "choices": [
+      {
+        "text": "It is longer than the limit",
+        "correct": false,
+        "why": "It is a few bytes."
+      },
+      {
+        "text": "Browsers would run it",
+        "correct": true,
+        "why": "Right. Only http and https are stored."
+      },
+      {
+        "text": "`new URL` cannot parse it",
+        "correct": false,
+        "why": "It parses; its protocol is the problem."
+      },
+      {
+        "text": "JSON cannot hold a colon",
+        "correct": false,
+        "why": "It holds any text."
+      }
+    ]
+  },
+  {
+    "id": "ex-1f070mve",
+    "version": 1,
+    "section": "the-whole-server",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After one visit to the short link, what did `visits` say?",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-fbvqjaas",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what `server.js` does with a `POST /links` in order.",
+    "items": [
+      "Split and decode the path",
+      "Check the content-type is JSON",
+      "Read the body, counting bytes",
+      "Parse the JSON and check the url",
+      "Store the link under a new code",
+      "Answer 201 with a location"
+    ]
+  }
+]
