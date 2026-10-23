@@ -93,3 +93,15 @@ bg_logpid() {
   done
   echo "bg_logpid: $1 printed no pid" >&2
 }
+
+# tty DIR 'command' 'line' ...: a command that asks questions at a terminal,
+# answered line by line. It runs on a pseudo-terminal, as it would for a
+# person, so a password is not echoed; colour and carriage returns are removed.
+tty() {
+  local dir=$1 cmd=$2 feed="sleep 2" l
+  shift 2
+  for l in "$@"; do feed+="; printf '%s\\r' $(printf '%q' "$l"); sleep 1"; done
+  printf 'ana@dev:%s$ %s\n' "$dir" "$cmd"
+  bash "$LAB_SH" script "cd $dir; ($feed; sleep 3) | script -qec $(printf '%q' "$cmd") /dev/null" 2>&1 \
+    | tr -d '\r' | sed -E 's/\x1b\[[0-9;]*m//g'
+}
