@@ -797,6 +797,12 @@ var allowedOutsideTheFont = map[rune]string{
 		"passing one with U+2713, which the terminal cut carries; IBM Plex Mono has no U+2718 " +
 		"at all. It opens a line and nothing is aligned to what follows it, and a capture is " +
 		"pasted byte for byte, so the alternative is a transcript that is not the one printed",
+	// Vite's dev server opens each address it prints with this arrow
+	// (`  ➜  Local:   http://localhost:5173/`), and so does every tool built on it.
+	'\u279c': "Vite prints it before each line of its banner (`➜  Local:   http://localhost:5173/`); " +
+		"IBM Plex Mono has no U+279C at all. Every line of the banner opens with it at the same " +
+		"column, so whatever width the reader's machine gives it moves them all together and the " +
+		"addresses stay aligned with each other",
 	// Node's own test runner, in the spec reporter a terminal shows: U+2714 above
 	// opens a passing test's line, these two a failing one's and each line of the
 	// summary. IBM Plex Mono has neither.
