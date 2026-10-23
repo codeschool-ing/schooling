@@ -14,8 +14,7 @@ uploaded by mistake. This lesson's folder is `~/sc/exams`:
 Initialized empty Git repository in /home/ana/sc/exams/.git/
 ```
 
-This is the first application of the course to keep its data in **SQLite**, through Python's built-in
-`sqlite3` module, because the flaw lives in a query. Values reach each query through `?`
+The exams live in **SQLite**, as lesson 5's patients did, and values reach each query through `?`
 placeholders, never by building the SQL string; lesson 5 is about why. Save it as `app.py`:
 
 ```schooling-example
