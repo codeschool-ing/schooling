@@ -1271,5 +1271,283 @@
   "ex-z4wqxbfa": {
     "prompt": "O plano da aula 11 conta uma leitura como 1,1 ms de CPU e uma venda como 10 ms, e cada comprador do primeiro minuto abre umas 10 páginas e tenta comprar uma vez. Para 9.000 compradores no primeiro minuto em vez de 6.000, quantas cópias a regra do plano dá: no máximo 70% ocupadas, mais uma para falhas?",
     "hint": "Escala e Observabilidade, aula 11."
+  },
+  "ex-zdhgx788": {
+    "prompt": "Aos preços de Lambda que a aula 3 cita (US$ 0,20 por milhão de pedidos, US$ 0,0000166667 por GB-s), uma função com 1.024 MB roda 250 ms em cada um de 4 milhões de pedidos por mês. Sem contar a franquia gratuita, qual é a conta do mês, em dólares? Duas casas decimais.",
+    "hint": "Arquitetura de Sistemas, aula 3."
+  },
+  "ex-4hesk28y": {
+    "prompt": "O catálogo da Quitanda instala um handler de SIGTERM e parava em menos de um segundo na aula 4. Um colega reescreve a última linha do Dockerfile como `CMD python catalogue.py`. O container atende os pedidos como antes, mas `docker compose stop` agora leva uns dez segundos, o log nunca mostra `SIGTERM: finishing requests in progress, then exiting`, e o código de saída é 137. Por quê?",
+    "hint": "Arquitetura de Sistemas, aula 4; Docker e Containers, aula 11.",
+    "choices": [
+      {
+        "text": "Python rodando como processo 1 ignora SIGTERM mesmo com um handler instalado, então o handler nunca roda.",
+        "why": "O kernel ignora um sinal para o qual o PID 1 não tem handler; o catálogo rodava como PID 1 com o handler antes da mudança e parava direito."
+      },
+      {
+        "text": "A forma de string faz de `/bin/sh -c` o processo 1, e esse shell não repassa o SIGTERM.",
+        "why": "Isso."
+      },
+      {
+        "text": "O Compose manda SIGKILL na hora, sem SIGTERM antes, para qualquer container cujo comando seja uma string.",
+        "why": "O `docker stop` manda SIGTERM primeiro, seja qual for a forma; os dez segundos são o prazo antes do SIGKILL."
+      },
+      {
+        "text": "A forma de string inicia o Python sem o ambiente do container, então o handler nunca chega a ser registrado.",
+        "why": "O ambiente chega ao programa nas duas formas, e o serviço responde como antes."
+      }
+    ]
+  },
+  "ex-ggag32gq": {
+    "prompt": "A API de pagamentos da Quitanda aceita um cabeçalho `Idempotency-Key` em `POST /charges` e segue as regras do rascunho da IETF. Ligue cada pedido que ela recebe ao que ela responde.",
+    "hint": "Arquitetura de Sistemas, aula 7; APIs e Autenticação, aula 2.",
+    "pairs": [
+      {
+        "left": "Uma chave que ela nunca viu",
+        "right": "A cobrança, e depois a chave guardada com a resposta"
+      },
+      {
+        "left": "Uma chave conhecida com o mesmo corpo, cuja primeira tentativa já terminou",
+        "right": "A resposta guardada de novo, marcada como repetição"
+      },
+      {
+        "left": "Uma chave conhecida com um corpo diferente",
+        "right": "`422`, e nada é cobrado"
+      },
+      {
+        "left": "Uma chave conhecida cuja primeira tentativa ainda está rodando",
+        "right": "`409`, para quem chamou esperar e perguntar de novo"
+      }
+    ],
+    "right_distractors": [
+      "Uma segunda cobrança, com um id novo"
+    ]
+  },
+  "ex-m1hbk9wy": {
+    "prompt": "A tabela `stock` da Quitanda tem `CHECK (units >= 0)`, e um standby segue o primário de forma assíncrona. Durante uma partição o primário vende um pacote, o café vai a 10, e o standby continua respondendo 11. Um colega diz que os dois servidores são ACID, então os dados estão consistentes. Que afirmação as duas aulas sustentam?",
+    "hint": "Arquitetura de Sistemas, aula 8; Bancos de Dados Relacionais e SQL, aula 8.",
+    "choices": [
+      {
+        "text": "O colega tem razão: um banco que é ACID em cada um dos seus nós devolve a escrita mais recente de qualquer nó consultado.",
+        "why": "ACID descreve as transações de cada servidor; não diz nada sobre cópias em outras máquinas concordarem."
+      },
+      {
+        "text": "O standby quebra a durabilidade, porque uma venda que o primário confirmou não sobreviveu nele.",
+        "why": "Durabilidade é sobre a máquina que confirmou; uma réplica que ainda não recebeu a mudança não é uma violação."
+      },
+      {
+        "text": "Os dois mantêm as restrições declaradas, o C do ACID; o standby falha o C do CAP, que pede a escrita mais recente.",
+        "why": "Isso."
+      },
+      {
+        "text": "O standby quebra o C do ACID, já que o 11 que ele responde contradiz o 10 que o primário confirmou.",
+        "why": "11 obedece a toda restrição declarada; o C do ACID é sobre restrições, não sobre concordar com outra cópia."
+      }
+    ]
+  },
+  "ex-274ns4ss": {
+    "prompt": "Atrás do Nginx da Quitanda, que guarda as respostas da API por sessenta segundos, alguém da equipe baixa um preço com um `PUT` que responde `\"price_cents\": 7990`. A pessoa recarrega o produto e vê `8990`, com `X-Cache-Status: HIT`; perguntada direto, sem passar pelo cache, a loja diz `7990`. Que leitura e que correção as duas aulas sustentam?",
+    "hint": "Arquitetura de Sistemas, aula 9; Servidores Web e Cache, aula 6.",
+    "choices": [
+      {
+        "text": "Read-your-writes: a tela de quem muda os preços lê a própria loja, e o cache fica para os visitantes.",
+        "why": "Isso."
+      },
+      {
+        "text": "Leituras monotônicas: prender a pessoa a uma máquina Nginx, para as versões que ela vê só andarem para a frente.",
+        "why": "Há um cache só, e ele guarda a resposta velha; prender-se a ele não muda nada. Quem escreveu é quem foi enganado."
+      },
+      {
+        "text": "O `PUT` nunca chegou ao banco, então tem de ser mandado de novo, desta vez levando uma chave de idempotência.",
+        "why": "A loja, perguntada sem o cache, já diz 7990; a escrita chegou."
+      },
+      {
+        "text": "Um cache mal configurado: cortar toda validade para um segundo, para ninguém conseguir ver um preço velho.",
+        "why": "Uma validade de um segundo quase não poupa a aplicação, e a pessoa ainda pode ler errado a própria mudança."
+      }
+    ]
+  },
+  "ex-2qs99e8r": {
+    "prompt": "O replay de um standby está pausado enquanto o primário escreve 200.000 linhas. No primário, `pg_stat_replication` mostra `replay_lag` de `00:00:00.284866` e 15 MB entre `sent_lsn` e `replay_lsn`. A loja manda a leitura de um usuário ao standby só depois que `pg_last_wal_replay_lsn()` alcançou o LSN da última escrita desse usuário. O que é verdade nesse momento?",
+    "hint": "Arquitetura de Sistemas, aula 10; Escala e Observabilidade, aula 2.",
+    "choices": [
+      {
+        "text": "O standby está menos de um terço de segundo atrás, e a conferência passa para escritas mais antigas.",
+        "why": "`replay_lag` é o atraso da última mudança aplicada, e nada foi aplicado desde a pausa."
+      },
+      {
+        "text": "O `replay_lag` está certo, e os 15 MB são log que o standby já aplicou mas ainda não gravou em disco.",
+        "why": "A diferença é entre o enviado e o reaplicado: 15 MB que o standby não aplicou."
+      },
+      {
+        "text": "A conferência não é confiável com o replay pausado, então as leituras ficam no primário até o `replay_lag` zerar.",
+        "why": "A comparação de LSN é a exata; a coluna de tempo é que engana aqui."
+      },
+      {
+        "text": "Está bem atrás, porque esse tempo para de crescer quando nada é aplicado; a comparação falha e o primário atende a leitura.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-zq63ra85": {
+    "prompt": "A aula 10 de Escala mediu que o jitter completo reduziu as novas tentativas que caem nos 10 ms mais cheios de 1.000 para 85. Um colega põe jitter completo nas três novas tentativas do checkout e repete o congelamento de três segundos da aula 11. Vinte segundos depois o checkout ainda falha nove pedidos em dez. Por que o jitter não ajudou?",
+    "hint": "Arquitetura de Sistemas, aula 11; Escala e Observabilidade, aula 10.",
+    "choices": [
+      {
+        "text": "Jitter só importa quando os chamadores tentam de novo no mesmo instante, e o backoff do checkout já espalhava as tentativas.",
+        "why": "Backoff sem jitter muda o pico de lugar em vez de espalhá-lo; é para isso que o jitter existe."
+      },
+      {
+        "text": "O jitter completo pode sortear espera zero, e algumas tentativas voltam na hora e reiniciam a tempestade sozinhas.",
+        "why": "Algumas tentativas imediatas fazem parte do espalhamento; a tempestade precisa de muito mais chamadas que isso."
+      },
+      {
+        "text": "Ele espalha as tentativas no tempo sem diminuí-las: cada pedido ainda faz até quatro chamadas.",
+        "why": "Isso."
+      },
+      {
+        "text": "O jitter tinha de estar no serviço de estoque, que decide quando responder.",
+        "why": "Jitter é a espera aleatória de quem chama antes de tentar de novo; o serviço não tem o que sortear."
+      }
+    ]
+  },
+  "ex-7fgtv24z": {
+    "prompt": "A loja da aula 12 roda sem limite na fila de pedidos (`QUEUE` não definido), e seu único worker trata dez pedidos por segundo. Uma rajada de 300 pedidos chega de uma vez e todos recebem `202 Accepted`. Mais ou menos quantos segundos o último deles espera antes de ser tratado?",
+    "hint": "Arquitetura de Sistemas, aula 12."
+  },
+  "ex-hqhcjfcx": {
+    "prompt": "No desenho da aula 13 cada pedido é seu próprio fluxo de eventos, protegido por `UNIQUE (stream, version)`. Dois clientes, cada um no seu pedido, adicionam o último pacote de café e pagam no mesmo instante. O que impede a loja de vender dois pacotes que não tem?",
+    "hint": "Arquitetura de Sistemas, aula 13.",
+    "choices": [
+      {
+        "text": "Nada nos pedidos: nenhum comando carrega dois fluxos, então a regra pede um fluxo de estoque em que todo pedido anexe, ou uma saga.",
+        "why": "Isso."
+      },
+      {
+        "text": "A restrição única, já que os dois comandos tentam anexar o mesmo número de versão na mesma tabela de eventos, e o segundo é recusado.",
+        "why": "A restrição vale por fluxo; dois pedidos diferentes escrevendo cada um a sua versão 2 nunca colidem."
+      },
+      {
+        "text": "A projeção, que recusa um `OrderPaid` que levaria `units_sold` além do estoque da prateleira.",
+        "why": "Uma projeção monta modelos de leitura depois do fato; ela não recusa eventos."
+      },
+      {
+        "text": "A concorrência otimista, que recarrega o segundo pedido antes de anexar e encontra o café já vendido.",
+        "why": "Recarregar um pedido reaplica só os eventos daquele pedido; a venda de outro cliente não está neles."
+      }
+    ]
+  },
+  "ex-6bejfck5": {
+    "prompt": "O checkout orquestrado da Quitanda reserva o café, cobra o cartão, agenda a entrega e confirma a reserva como vendida. A equipe agora quer que ele mande também um e-mail de \"pedido confirmado\". Onde a aula 14 põe esse passo?",
+    "hint": "Arquitetura de Sistemas, aula 14.",
+    "choices": [
+      {
+        "text": "Primeiro, para o cliente saber na hora, com um e-mail de correção como compensação se um passo seguinte falhar.",
+        "why": "Um e-mail enviado não volta; um segundo é outro fato, não um desfazer."
+      },
+      {
+        "text": "Entre a reserva e a cobrança, porque a reserva já garante que o café está na prateleira.",
+        "why": "A cobrança e a entrega ainda podem falhar depois disso, e o e-mail ficaria falso."
+      },
+      {
+        "text": "Em qualquer ponto da lista, desde que o passo seja idempotente, já que um e-mail repetido sai uma vez só.",
+        "why": "Idempotência evita a duplicata; não desfaz um e-mail que uma falha posterior torna falso."
+      },
+      {
+        "text": "Depois de agendada a entrega, o pivô, porque um e-mail não pode ser compensado e dali em diante a saga só vai para a frente.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-8jthzqs6": {
+    "prompt": "A Quitanda está tirando os dados de estoque do monólito e levando para o novo serviço de estoque atrás da fachada do strangler. Ponha os passos na ordem que a aula 15 dá.",
+    "hint": "Arquitetura de Sistemas, aula 15.",
+    "items": [
+      "Fazer do módulo de estoque a única entrada para as tabelas dele, ainda dentro do monólito",
+      "Dar ao novo serviço uma cópia, alimentada por change data capture ou por um outbox",
+      "Mandar as leituras ao novo serviço pela fachada, uma parte de cada vez",
+      "Mover as escritas, para o novo serviço virar o dono",
+      "Parar a cópia e apagar as tabelas antigas"
+    ],
+    "trap": "Mover as escritas cedo parece a migração de verdade, mas o dono só deve mudar depois que as leituras mostraram que a cópia concorda, e as tabelas antigas saem por último, quando nada mais as lê."
+  },
+  "ex-d6bnrp2v": {
+    "prompt": "O `pg_stat_statements` mostra a consulta de itens do histórico de pedidos da Quitanda chamada uma vez por pedido, um múltiplo da consulta de pedidos. Um colega corrige marcando os itens do pedido como sempre carregados de forma antecipada, na classe do modelo. O que as duas aulas dizem dessa correção?",
+    "hint": "Arquitetura de Sistemas, aula 16; Bancos de Dados Relacionais e SQL, aula 11.",
+    "choices": [
+      {
+        "text": "É a correção recomendada, porque o carregamento antecipado marcado na classe tira todo N+1 da aplicação inteira de uma vez.",
+        "why": "Ela tira este N+1 e acrescenta um custo a toda outra tela que carrega um pedido."
+      },
+      {
+        "text": "Este N+1 some, mas toda tela que abre um pedido passa a buscar os itens também; a instrução vai onde o laço começa.",
+        "why": "Isso."
+      },
+      {
+        "text": "Não funciona, porque carregamento antecipado é um join, e um join numa relação para-muitos devolve linhas erradas para cada pedido.",
+        "why": "Um join numa relação para-muitos repete o pai; as linhas estão certas, só maiores."
+      },
+      {
+        "text": "Ela leva o problema para o banco, que agora roda o mesmo N+1 dentro dele como uma stored procedure.",
+        "why": "O carregamento antecipado manda uma consulta por nível, ou um join; nada fica em laço dentro do banco."
+      }
+    ]
+  },
+  "ex-renw76n1": {
+    "prompt": "O índice da Quitanda analisa os nomes com `portuguese_folded`: `lowercase`, `asciifolding` e o stemmer brasileiro. Sem `--fuzzy`, quais destas palavras, digitadas sozinhas na caixa de busca, viram um termo com que `Café torrado em grãos` foi guardado? Marque todas as que se aplicam.",
+    "hint": "Arquitetura de Sistemas, aula 17.",
+    "choices": [
+      {
+        "text": "`cafe`",
+        "why": "Dobrada e reduzida ao radical, vira `caf`, o mesmo termo de `Café`."
+      },
+      {
+        "text": "`torado`",
+        "why": "Falta uma letra; não é um termo do índice, e só o `--fuzzy` chega a `torr` a partir dela."
+      },
+      {
+        "text": "`torrada`",
+        "why": "O stemmer corta `torrado`, `torrada` e `torrados` para `torr`."
+      },
+      {
+        "text": "`tostado`",
+        "why": "Outra palavra, com outro radical, que está no nome do chá mate e não neste."
+      }
+    ]
+  },
+  "ex-tergvrzf": {
+    "prompt": "A página de pedido da Quitanda abre um fluxo de Server-Sent Events pelo Nginx, cuja location `/api/` define `proxy_read_timeout 3s`. Um pedido muda algumas vezes por hora. O que acontece com o fluxo, e o que as duas aulas sugerem?",
+    "hint": "Arquitetura de Sistemas, aula 18; Servidores Web e Cache, aula 2.",
+    "choices": [
+      {
+        "text": "O Nginx o corta após três segundos de silêncio; dar a ele um bloco próprio com timeout maior, ou escrever antes.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada, porque `proxy_read_timeout` só limita quanto tempo a loja leva para começar a responder, e o fluxo começou na hora.",
+        "why": "É o intervalo entre duas leituras da resposta, e um fluxo ocioso tem intervalos longos."
+      },
+      {
+        "text": "O Nginx o fecha depois de três segundos, mande-se o que for, porque o timeout limita o pedido inteiro.",
+        "why": "Nenhum timeout do Nginx limita o total; uma resposta que pinga um byte a tempo nunca expira."
+      },
+      {
+        "text": "O fluxo sobrevive, porque o Nginx nunca aplica o timeout de leitura a uma resposta do tipo `text/event-stream`.",
+        "why": "O Nginx trata o fluxo como qualquer outra resposta da loja."
+      }
+    ]
+  },
+  "ex-0z7e0fxm": {
+    "prompt": "O Kubernetes faz duas perguntas a um pod. Uma é se o processo deveria ser reiniciado. A outra, feita pela sonda de ___, é se a instância deveria receber tráfego agora, e um pod que falha nela sai dos endpoints do Service sem ser reiniciado.",
+    "hint": "Arquitetura de Sistemas, aula 19.",
+    "blanks": [
+      {
+        "accept": [
+          "readiness",
+          "readiness probe",
+          "prontidão"
+        ]
+      }
+    ]
   }
 }

@@ -1787,5 +1787,390 @@
     "value": 6,
     "tolerance": 0,
     "unit": ""
+  },
+  {
+    "id": "ex-zdhgx788",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "At the Lambda prices lesson 3 quotes (US$ 0.20 per million requests, US$ 0.0000166667 per GB-s), a function given 1,024 MB runs for 250 ms on each of 4 million requests a month. Ignoring the free allowance, what is the month's bill in US dollars? Two decimal places.",
+    "hint": "Systems Architecture, lesson 3.",
+    "value": 17.47,
+    "tolerance": 0.01,
+    "unit": ""
+  },
+  {
+    "id": "ex-4hesk28y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Quitanda's catalogue installs a SIGTERM handler and stopped in under a second in lesson 4. A teammate rewrites the Dockerfile's last line as `CMD python catalogue.py`. The container serves requests as before, but `docker compose stop` now takes about ten seconds, the log never shows `SIGTERM: finishing requests in progress, then exiting`, and the exit code is 137. Why?",
+    "hint": "Systems Architecture, lesson 4; Docker and Containers, lesson 11.",
+    "choices": [
+      {
+        "text": "Python running as process 1 ignores SIGTERM even when a handler is installed, so the handler never runs.",
+        "correct": false,
+        "why": "The kernel ignores a signal PID 1 has no handler for; the catalogue ran as PID 1 with its handler before the change and stopped cleanly."
+      },
+      {
+        "text": "The string form makes `/bin/sh -c` process 1, and that shell does not pass SIGTERM on.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Compose sends SIGKILL straight away, without a SIGTERM first, to any container whose command is a string.",
+        "correct": false,
+        "why": "`docker stop` sends SIGTERM first whatever the form; the ten seconds are the grace period before SIGKILL."
+      },
+      {
+        "text": "The string form starts Python without the container's environment, so the handler is never registered.",
+        "correct": false,
+        "why": "The environment reaches the program either way, and the service answers as before."
+      }
+    ]
+  },
+  {
+    "id": "ex-ggag32gq",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Quitanda's payments API takes an `Idempotency-Key` header on `POST /charges` and follows the IETF draft's rules. Match each request it receives to what it answers.",
+    "hint": "Systems Architecture, lesson 7; APIs and Authentication, lesson 2.",
+    "pairs": [
+      {
+        "left": "A key it has never seen",
+        "right": "The charge, then the key stored with its response"
+      },
+      {
+        "left": "A known key with the same body, whose first attempt has finished",
+        "right": "The stored response again, marked as a replay"
+      },
+      {
+        "left": "A known key with a different body",
+        "right": "`422`, and nothing is charged"
+      },
+      {
+        "left": "A known key whose first attempt is still running",
+        "right": "`409`, so the caller waits and asks again"
+      }
+    ],
+    "right_distractors": [
+      "A second charge, with a new id"
+    ]
+  },
+  {
+    "id": "ex-m1hbk9wy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Quitanda's `stock` table carries `CHECK (units >= 0)`, and a standby follows the primary asynchronously. During a partition the primary sells a bag, coffee goes to 10, and the standby still answers 11. A teammate says both servers are ACID, so the data is consistent. Which statement do the two lessons support?",
+    "hint": "Systems Architecture, lesson 8; Relational Databases and SQL, lesson 8.",
+    "choices": [
+      {
+        "text": "The teammate is right: a database that is ACID on every one of its nodes returns the latest write from whichever node is asked.",
+        "correct": false,
+        "why": "ACID describes each server's own transactions; it says nothing about copies on other machines agreeing."
+      },
+      {
+        "text": "The standby breaks durability, because a sale the primary committed did not survive on it.",
+        "correct": false,
+        "why": "Durability is about the machine that committed; a replica that has not received the change yet is not a violation."
+      },
+      {
+        "text": "Both keep their declared constraints, which is ACID's C; the standby fails CAP's C, which asks for the latest write.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The standby breaks ACID's C, since the 11 it answers contradicts the 10 the primary committed.",
+        "correct": false,
+        "why": "11 obeys every declared constraint; ACID's C is about constraints, not about agreeing with another copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-274ns4ss",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Behind Quitanda's Nginx, which keeps the API's answers for sixty seconds, a staff member lowers a price with a `PUT` that answers `\"price_cents\": 7990`. They reload the product and see `8990`, with `X-Cache-Status: HIT`; asked directly, past the cache, the shop says `7990`. Which reading and fix do the two lessons support?",
+    "hint": "Systems Architecture, lesson 9; Web Servers and Caching, lesson 6.",
+    "choices": [
+      {
+        "text": "Read-your-writes: send the staff screen past the cache to the shop, and keep the cache for visitors.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Monotonic reads: stick the staff member to one Nginx machine, so the versions they see only move forward.",
+        "correct": false,
+        "why": "There is one cache and it holds the old answer; affinity to it changes nothing. The person who wrote is the one misled."
+      },
+      {
+        "text": "The `PUT` never reached the database, so it has to be sent again, this time carrying an idempotency key.",
+        "correct": false,
+        "why": "The shop, asked past the cache, already says 7990; the write arrived."
+      },
+      {
+        "text": "A badly configured cache: cut every lifetime to one second, so that nobody can ever see an old price.",
+        "correct": false,
+        "why": "A one-second lifetime spares the application almost nothing, and the staff member can still read their own change wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-2qs99e8r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A standby's replay is paused while the primary writes 200,000 rows. On the primary, `pg_stat_replication` shows a `replay_lag` of `00:00:00.284866` and 15 MB between `sent_lsn` and `replay_lsn`. The shop sends a user's read to the standby only once `pg_last_wal_replay_lsn()` has reached the LSN of that user's last write. What is true at that moment?",
+    "hint": "Systems Architecture, lesson 10; Scale and Observability, lesson 2.",
+    "choices": [
+      {
+        "text": "The standby is under a third of a second behind, so the check passes for every write older than that.",
+        "correct": false,
+        "why": "`replay_lag` is the delay of the last change applied, and nothing has been applied since the pause."
+      },
+      {
+        "text": "`replay_lag` is right, and the 15 MB is log the standby has already applied but not yet flushed to disk.",
+        "correct": false,
+        "why": "The difference is between what was sent and what was replayed: 15 MB the standby has not applied."
+      },
+      {
+        "text": "The check cannot be trusted while replay is paused, so reads should stay on the primary until `replay_lag` is zero.",
+        "correct": false,
+        "why": "The LSN comparison is the exact one; the time column is the one that misleads here."
+      },
+      {
+        "text": "It is well behind, since that time stops growing while nothing is applied; the comparison fails and the primary serves the read.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-zq63ra85",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Scale lesson 10 measured that full jitter cut the retries landing in the busiest 10 ms from 1,000 to 85. A teammate adds full jitter to the checkout's three retries and reruns lesson 11's three-second freeze. Twenty seconds later the checkout is still failing nine requests in ten. Why did jitter not help?",
+    "hint": "Systems Architecture, lesson 11; Scale and Observability, lesson 10.",
+    "choices": [
+      {
+        "text": "Jitter only matters when callers retry at the same instant, and the checkout's backoff had already spread its retries.",
+        "correct": false,
+        "why": "Backoff without jitter moves the spike rather than spreading it; that is why jitter exists."
+      },
+      {
+        "text": "Full jitter can draw a wait of zero, so some retries come straight back and restart the storm by themselves.",
+        "correct": false,
+        "why": "A few immediate retries are part of the spread; the storm needs far more calls than that."
+      },
+      {
+        "text": "It spreads retries in time without making fewer of them: every request still makes up to four calls.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Jitter belongs in the stock service, which decides when to answer, not in the client.",
+        "correct": false,
+        "why": "Jitter is the caller's random wait before retrying; the service has nothing to randomise."
+      }
+    ]
+  },
+  {
+    "id": "ex-7fgtv24z",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "The shop of lesson 12 runs with no bound on its orders queue (`QUEUE` unset), and its one worker handles ten orders a second. A burst of 300 orders arrives all at once and every one is answered `202 Accepted`. About how many seconds does the last of them wait before it is handled?",
+    "hint": "Systems Architecture, lesson 12.",
+    "value": 30,
+    "tolerance": 1,
+    "unit": ""
+  },
+  {
+    "id": "ex-hqhcjfcx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In lesson 13's design each order is its own event stream, guarded by `UNIQUE (stream, version)`. Two customers, each in their own order, add the last bag of coffee and pay at the same moment. What stops the shop from selling two bags it does not have?",
+    "hint": "Systems Architecture, lesson 13.",
+    "choices": [
+      {
+        "text": "Nothing in the order streams: no command loads two streams, so the rule needs a stock stream every order appends to, or a saga.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The unique constraint, since both commands try to append the same version number to the one events table, and the later is refused.",
+        "correct": false,
+        "why": "The constraint is per stream; two different orders each writing their own version 2 never collide."
+      },
+      {
+        "text": "The projection, which refuses an `OrderPaid` that would take `units_sold` past the stock.",
+        "correct": false,
+        "why": "A projection builds read models after the fact; it does not refuse events."
+      },
+      {
+        "text": "Optimistic concurrency, which reloads the second order and finds the coffee already sold.",
+        "correct": false,
+        "why": "Reloading an order replays that order's events only; another customer's sale is not in them."
+      }
+    ]
+  },
+  {
+    "id": "ex-6bejfck5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Quitanda's orchestrated checkout reserves the coffee, charges the card, schedules the delivery and confirms the reservation as sold. The team now wants it to send an \"order confirmed\" e-mail too. Where does lesson 14 put that step?",
+    "hint": "Systems Architecture, lesson 14.",
+    "choices": [
+      {
+        "text": "First, so the customer hears at once, with a correction e-mail as its compensation if a later step fails.",
+        "correct": false,
+        "why": "An e-mail sent cannot be taken back; a second one is another fact, not an undo."
+      },
+      {
+        "text": "Between the reservation and the charge, because the reservation already guarantees that the coffee is there.",
+        "correct": false,
+        "why": "The charge and the delivery can still fail after it, and the e-mail would then be false."
+      },
+      {
+        "text": "Anywhere in the list, as long as the step is idempotent, since a retried e-mail then goes out only once.",
+        "correct": false,
+        "why": "Idempotency stops a duplicate; it does not undo an e-mail that a later failure makes untrue."
+      },
+      {
+        "text": "After the delivery is scheduled, the pivot, because an e-mail cannot be compensated and the saga only goes forward from there.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-8jthzqs6",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Quitanda is moving its stock data out of the monolith and into the new stock service behind the strangler facade. Put the steps in the order lesson 15 gives them.",
+    "hint": "Systems Architecture, lesson 15.",
+    "items": [
+      "Make the stock module the only way in to its tables, inside the monolith",
+      "Give the new service a copy, fed by change data capture or an outbox",
+      "Send the reads to the new service through the facade, a share at a time",
+      "Move the writes, so the new service becomes the owner",
+      "Stop the copying and drop the old tables"
+    ],
+    "trap": "Moving the writes early feels like the real migration, but the owner should change only after the reads have shown the copy agrees, and the old tables go last, once nothing reads them."
+  },
+  {
+    "id": "ex-d6bnrp2v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`pg_stat_statements` shows the items query of Quitanda's order history called once per order, a multiple of the orders query. A teammate fixes it by marking the order's items as always loaded eagerly, on the model class. What do the two lessons say about that fix?",
+    "hint": "Systems Architecture, lesson 16; Relational Databases and SQL, lesson 11.",
+    "choices": [
+      {
+        "text": "It is the recommended fix, because eager loading marked on the class removes every N+1 in the whole application at once.",
+        "correct": false,
+        "why": "It removes this N+1 and adds a cost to every other screen that loads an order."
+      },
+      {
+        "text": "This N+1 goes, but every screen that loads an order now fetches its items too; the instruction belongs at the loop.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It cannot work, because eager loading is a join, and a join on a to-many relationship returns the wrong rows for each order.",
+        "correct": false,
+        "why": "A join on a to-many relationship repeats the parent; the rows are correct, only larger."
+      },
+      {
+        "text": "It moves the problem into the database, which now runs the same N+1 as a stored procedure.",
+        "correct": false,
+        "why": "Eager loading sends one query per level, or a join; nothing loops inside the database."
+      }
+    ]
+  },
+  {
+    "id": "ex-renw76n1",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Quitanda's index analyses names with `portuguese_folded`: `lowercase`, `asciifolding` and the Brazilian stemmer. Without `--fuzzy`, which of these words, typed alone into the search box, become a term that `Café torrado em grãos` was stored with? Choose all that apply.",
+    "hint": "Systems Architecture, lesson 17.",
+    "choices": [
+      {
+        "text": "`cafe`",
+        "correct": true,
+        "why": "Folded and stemmed, it is `caf`, the same term as `Café`."
+      },
+      {
+        "text": "`torado`",
+        "correct": false,
+        "why": "One letter short; it is not a term in the index, and only `--fuzzy` reaches `torr` from it."
+      },
+      {
+        "text": "`torrada`",
+        "correct": true,
+        "why": "The stemmer cuts `torrado`, `torrada` and `torrados` to `torr`."
+      },
+      {
+        "text": "`tostado`",
+        "correct": false,
+        "why": "A different word with a different stem, found in the mate tea's name and not in this one."
+      }
+    ]
+  },
+  {
+    "id": "ex-tergvrzf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Quitanda's order page opens a Server-Sent Events stream through Nginx, whose `/api/` location sets `proxy_read_timeout 3s`. An order changes a few times an hour. What happens to the stream, and what do the two lessons suggest?",
+    "hint": "Systems Architecture, lesson 18; Web Servers and Caching, lesson 2.",
+    "choices": [
+      {
+        "text": "Nginx cuts it after three silent seconds; give it a block of its own with a longer timeout, or write something sooner.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing, because `proxy_read_timeout` only limits how long the shop takes to start answering, and the stream started at once.",
+        "correct": false,
+        "why": "It is the gap between two reads of the response, and an idle stream has long gaps."
+      },
+      {
+        "text": "Nginx closes it after three seconds whatever is sent, because the timeout caps the whole request.",
+        "correct": false,
+        "why": "None of Nginx's timeouts caps the total; a response that trickles a byte in time never times out."
+      },
+      {
+        "text": "The stream survives, because Nginx never applies its read timeout to a response of type `text/event-stream`.",
+        "correct": false,
+        "why": "Nginx treats the stream like any other response from the shop."
+      }
+    ]
+  },
+  {
+    "id": "ex-0z7e0fxm",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Kubernetes asks two questions of a pod. One is whether the process should be restarted. The other, asked by the ___ probe, is whether the instance should get traffic right now, and a pod failing it leaves the Service's endpoints without being restarted.",
+    "hint": "Systems Architecture, lesson 19.",
+    "blanks": [
+      {
+        "accept": [
+          "readiness",
+          "readiness probe"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
   }
 ]
