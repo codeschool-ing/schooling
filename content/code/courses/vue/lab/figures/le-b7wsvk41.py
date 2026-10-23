@@ -17,7 +17,7 @@ def keys(T):
         c.rect(x, y, 140, 30, fill="none" if gone else "var(--ink)",
                stroke="var(--amber)" if gone else "var(--phosphor)", dash="4 3" if gone else None)
         c.text(x + 8, y + 15, key, mono=True, size=10, anchor="start", fill="var(--paper-dim)")
-        c.text(x + 132, y + 15, text + (" ★" if star else ""), mono=True, size=10.5, anchor="end",
+        c.text(x + 132, y + 15, text + (" *" if star else ""), mono=True, size=10.5, anchor="end",
                fill="var(--amber)" if gone else "var(--paper)")
 
     for i, (title, x) in enumerate([(T("key = index", "chave = índice"), 20), (T("key = the course", "chave = o curso"), 380)]):
@@ -35,7 +35,7 @@ def keys(T):
             for j in range(2):
                 c.line(x + 142, 70 + j * 40, x + 178, 70 + j * 40, stroke="var(--wire)", arrow=True)
         else:
-            row(x + 180, 55, "stat…", T("removed ★", "removido ★"), gone=True)
+            row(x + 180, 55, "stat…", T("removed *", "removido *"), gone=True)
             row(x + 180, 95, "span…", "spanish")
             row(x + 180, 135, "guit…", "guitar")
             for j in range(3):
