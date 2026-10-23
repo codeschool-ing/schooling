@@ -12,8 +12,8 @@
 #     with emoji and draws a spinner the interface has no glyph for. So does `expo export`'s,
 #     which draws with U+203A.
 #   - `npx expo serve` runs in the background, as from a second terminal.
-#   - EXPO_OFFLINE=1 is in the environment (lab.sh says why); `expo export`
-#     and `expo serve` print nothing different for it.
+#   - EXPO_OFFLINE=1 is in the environment (lab.sh says why); nothing quoted
+#     here prints anything different for it.
 #   - The commit carries a fixed date.
 #
 # Recorded on Ubuntu 24.04 with Node.js 22.22.0, TZ=America/Sao_Paulo.

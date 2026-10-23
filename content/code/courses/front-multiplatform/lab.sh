@@ -32,8 +32,8 @@
 #     or APK was ever made here: lesson 3 says so where it shows the steps.
 #   - It also refuses api.expo.dev, which the Expo CLI asks about versions:
 #     the expo commands run with EXPO_OFFLINE=1, set in the environment and
-#     not typed. Lesson 7 says what that changes (nothing in the output the
-#     lessons quote), and EAS, which needs an Expo account, was never run.
+#     not typed. Two lines of `npx expo install` in lesson 8 come from it, and
+#     the lesson says so; EAS, which needs an Expo account, was never run.
 #   - Playwright's browser is the build already on the recording machine
 #     (/opt/pw-browsers, bound read-only into the container), the same
 #     version `npx playwright install chromium` downloads for Playwright
