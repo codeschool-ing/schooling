@@ -89,6 +89,8 @@ navegador não cabe numa aula, então este curso lê páginas com um programa cu
 //                  (_ngcontent-…, _nghost-…); --raw keeps them
 //   --a11y SEL     print SEL's accessibility tree: the roles and names a
 //                  screen reader announces
+//   --styles       print the CSS rules the page's stylesheets hold, as the
+//                  browser read them
 //   --today DATE   make the browser's clock say DATE (YYYY-MM-DD), at 09:00
 //   --network      list every request the page made, and its status
 //   --no-js        open the page with JavaScript turned off
@@ -106,6 +108,7 @@ while (args.length) {
   else if (a === "--html") opt.html = args.shift();
   else if (a === "--raw") opt.raw = true;
   else if (a === "--a11y") opt.a11y = args.shift();
+  else if (a === "--styles") opt.styles = true;
   else if (a === "--today") opt.today = args.shift();
   else if (a === "--network") opt.network = true;
   else if (a === "--no-js") opt.noJs = true;
@@ -163,6 +166,10 @@ if (opt.html) {
   say(html);
 } else if (opt.a11y) {
   say(await page.locator(opt.a11y).first().ariaSnapshot());
+} else if (opt.styles) {
+  const rules = await page.evaluate(() =>
+    [...document.styleSheets].flatMap((sheet) => [...sheet.cssRules].map((r) => r.cssText)));
+  say(rules.join("\n"));
 } else {
   say((await page.locator(opt.text || "body").first().innerText()).trim());
 }
