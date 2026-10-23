@@ -2,7 +2,7 @@
 
 A program the student is given is shown whole, in one of two ways: a fence
 whose first line is a comment naming it ("// NAME", "# NAME" or
-"<!-- NAME -->", the first two alone or followed by a colon), or a schooling-example whose "file" is NAME, whose
+"<!-- NAME -->" or "/* NAME: ... */", the first two alone or followed by a colon), or a schooling-example whose "file" is NAME, whose
 parts are joined with a newline, as the copy button joins them. The capture
 runs exactly that text, so the lesson and the run cannot drift. A name shown
 zero times, or twice, is an error.
@@ -20,7 +20,7 @@ for m in re.finditer(r"^```([a-z-]*)\n(.*?)^```$", text, re.S | re.M):
             found.append("\n".join(p["code"] for p in ex["parts"]).rstrip("\n") + "\n")
         continue
     first = body.split("\n", 1)[0]
-    if first == f"<!-- {name} -->":
+    if first == f"<!-- {name} -->" or first.startswith(f"/* {name}:") or first == f"/* {name} */":
         found.append(body)
         continue
     for c in ("//", "#"):
