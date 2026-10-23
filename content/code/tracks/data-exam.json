@@ -1,0 +1,1081 @@
+[
+  {
+    "id": "ex-c9q9kqb4",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A survey export lands as CSV with three columns of digits: `region` (codes 11 to 53), `rating` (1 to 5 stars) and `basket` (reais). The loader read all three as numbers. Which of these summaries describe their column honestly? Choose all that apply.",
+    "hint": "Statistics for Data Analysis, lesson 2; Data Engineering Fundamentals, lesson 6.",
+    "choices": [
+      {
+        "text": "The mean of `basket`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The median of `rating`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The mean of `region`.",
+        "correct": false,
+        "why": "The codes name places. A CSV file carries text and no types, so the loader guessed they were numbers, and their mean means nothing."
+      },
+      {
+        "text": "A rating of 4 being twice as good as a rating of 2.",
+        "correct": false,
+        "why": "A rating has an order and no true zero, and nobody measured its steps; ratios need a ratio scale."
+      }
+    ]
+  },
+  {
+    "id": "ex-j610s7fd",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Horta's nine monthly salaries have a mean of R$ 5,338.89 and a median of R$ 2,400. Next month the founder's pay goes from R$ 28,000 to R$ 37,000 and nobody else's changes. The mean salary rises by R$ ___.",
+    "hint": "Statistics for Data Analysis, lesson 4.",
+    "blanks": [
+      {
+        "accept": [
+          "1000",
+          "1,000",
+          "1000.00",
+          "1,000.00"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1229jw2a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The data team adds one alert for every numeric column in the warehouse: flag the column when its coefficient of variation, the standard deviation over the mean, passes 0.5. On which column is that number meaningless, whatever it comes out as?",
+    "hint": "Statistics for Data Analysis, lesson 5.",
+    "choices": [
+      {
+        "text": "`basket`, whose CV of 0.75 is the highest of Horta's columns",
+        "correct": false,
+        "why": "A high CV is a finding, not a fault. Baskets have a true zero, and the alert reads them correctly."
+      },
+      {
+        "text": "`items`, because a count is discrete rather than continuous",
+        "correct": false,
+        "why": "Discrete or continuous makes no difference to a CV; zero items is none, so the ratio means what it says."
+      },
+      {
+        "text": "`temp_c`, the temperature at the door in degrees Celsius",
+        "correct": true,
+        "why": "Right. A mean in Celsius depends on where the zero was put, so the CV changes with the scale."
+      },
+      {
+        "text": "`minutes`, because its CV of 0.25 stays far below the line",
+        "correct": false,
+        "why": "Staying under the line is the alert working. Minutes have a true zero, and the CV compares them honestly."
+      }
+    ]
+  },
+  {
+    "id": "ex-rfjnpjs0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A colleague wants a new rule among the door checks of the basket feed: quarantine any basket above Q3 + 1.5 × IQR, which for last month's 400 baskets is R$ 202.12. What would the rule do?",
+    "hint": "Statistics for Data Analysis, lesson 6; Data Engineering Fundamentals, lesson 7.",
+    "choices": [
+      {
+        "text": "Catch slipped decimal points safely, since quartiles are robust and one wrong value cannot move the fence.",
+        "correct": false,
+        "why": "The fence is robust, and that is not the trouble: it also flags the big shops that are real, and quarantine takes them out of every report."
+      },
+      {
+        "text": "Set aside about seventeen real orders a month: on a right-skewed column the fence flags the tail by design.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Lose nothing, because a quarantined row is kept with its reason and can be put back later.",
+        "correct": false,
+        "why": "It is kept, and it is out of every report until somebody reads the file. Seventeen real orders a month is a quarantine that is no longer noise."
+      },
+      {
+        "text": "Let too much through: for money, a z-score above 3 is the stricter and safer rule.",
+        "correct": false,
+        "why": "The z-score rule fails on exactly this kind of data, where the large values inflate the yardstick they are judged by."
+      }
+    ]
+  },
+  {
+    "id": "ex-76axvq3q",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "A contractor's repair file arrives with 8 rows, and a door check quarantines any row whose `minutes` has a z-score beyond ±3, computed within that file. By lesson 9, what is the largest z-score any value in an 8-row file can reach, whatever is in it? Give two decimal places.",
+    "hint": "Statistics for Data Analysis, lesson 9; Data Engineering Fundamentals, lesson 7.",
+    "value": 2.47,
+    "tolerance": 0.01,
+    "unit": ""
+  },
+  {
+    "id": "ex-z8m00e61",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The dock sensors send one reading a minute per dock, 1,440 a day. To keep a long-term study cheap, Davi stores, for each dock, every 1,440th reading after a random start. What is wrong with that sample?",
+    "hint": "Statistics for Data Analysis, lesson 10; Data Engineering Fundamentals, lesson 7.",
+    "choices": [
+      {
+        "text": "Nothing: the random start makes a systematic sample behave like a simple random sample of the readings.",
+        "correct": false,
+        "why": "On most lists it does. On a list with a daily rhythm, a step equal to the rhythm keeps one minute and throws away the rest of the day."
+      },
+      {
+        "text": "It is too small, since one reading a day per dock cannot give a precise answer.",
+        "correct": false,
+        "why": "Size is not the trouble: 150 docks over a year is plenty. More readings chosen this way would all fall on the same minute too."
+      },
+      {
+        "text": "It is a convenience sample, because nobody chose the docks at random.",
+        "correct": false,
+        "why": "Every dock is in it. What was chosen is the minute, and choosing it once and repeating it daily is the trap."
+      },
+      {
+        "text": "Each dock's readings all fall at the same minute of the day, so the study sees one moment.",
+        "correct": true,
+        "why": "Right. The step matches the daily cycle, so the sample is orderly and biased: one minute stands in for the whole day."
+      }
+    ]
+  },
+  {
+    "id": "ex-adgyems9",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A dashboard shows the mean basket of a random sample of 40 orders as R$ 82.39 ± 12.63, where 12.63 is the sample's spread of R$ 79.86 divided by the square root of 40. That ± is the ___ of the mean.",
+    "hint": "Statistics for Data Analysis, lesson 12.",
+    "blanks": [
+      {
+        "accept": [
+          "standard error",
+          "SE",
+          "the standard error"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-58a9w9p5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A nightly check tests whether each station's ride count fell, and flags Batel with p = 0.01. The operations lead writes: \"so there is a 99% chance that Batel's sensor is broken\". What is wrong with that sentence?",
+    "hint": "Statistics for Data Analysis, lesson 14.",
+    "choices": [
+      {
+        "text": "It reads p as the odds of a fault, though p assumes nothing changed.",
+        "correct": true,
+        "why": "Right. A p-value is how often data this extreme would turn up if nothing had changed; it is not the chance that anything is broken."
+      },
+      {
+        "text": "Nothing is wrong with it: one minus the p-value is the probability that the alternative is true.",
+        "correct": false,
+        "why": "That is one of the misreadings lesson 14 lists. The p-value is computed inside the world where nothing changed."
+      },
+      {
+        "text": "The figure should be 98%, because a test of whether a count fell is one-sided.",
+        "correct": false,
+        "why": "Sidedness changes how p is computed, not what it means; no version of p is the probability of a hypothesis."
+      },
+      {
+        "text": "It holds only when the check uses α = 0.01 rather than 0.05.",
+        "correct": false,
+        "why": "α is the line the p-value is compared with. It does not turn p into the probability that the sensor broke."
+      }
+    ]
+  },
+  {
+    "id": "ex-qtktx0qy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Two pipeline changes were trialled for their effect on delivery time, and only changes beyond ±2 minutes matter. Change X has a 95% interval of −0.3 to +0.4 minutes, change Y one of −4.1 to +1.5. Neither is significant. Which reading is right?",
+    "hint": "Statistics for Data Analysis, lesson 22.",
+    "choices": [
+      {
+        "text": "Both changes do nothing worth measuring, because both intervals contain zero.",
+        "correct": false,
+        "why": "Containing zero is the test's verdict. Y's interval also allows a saving of four minutes, so it settles nothing."
+      },
+      {
+        "text": "Y is the stronger result, because its interval reaches further from zero.",
+        "correct": false,
+        "why": "A wide interval is a sign of little data, not of a large effect."
+      },
+      {
+        "text": "X rules out a change that matters; Y could not tell either way.",
+        "correct": true,
+        "why": "Right. X sits wholly inside the band; Y reaches zero and a saving past two minutes alike."
+      },
+      {
+        "text": "Neither says anything until both trials are repeated with more data.",
+        "correct": false,
+        "why": "X already does: its whole interval sits inside the band, which is evidence that any effect is too small to matter."
+      }
+    ]
+  },
+  {
+    "id": "ex-gxtrwnhd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Since the rides were partitioned by hash of ride id, each of the four partitions holds between 2,446 and 2,573 rows a night. Over a month of nightly runs, the correlation between a partition's rows and its job time is 0.1, and somebody concludes that rows do not drive the runtime. What does that miss?",
+    "hint": "Statistics for Data Analysis, lesson 17; Data Engineering Fundamentals, lesson 9.",
+    "choices": [
+      {
+        "text": "Skew: a hot station still sits in one of the partitions, and its long runs hide the pattern in the other three.",
+        "correct": false,
+        "why": "By ride id there is no hot key, because each id is a single row; that is why the sizes came out so even."
+      },
+      {
+        "text": "The hash made the partitions nearly equal, so rows barely vary, and in that narrow window noise swamps them.",
+        "correct": true,
+        "why": "Right. A correlation describes the data only in the range it was measured, and the hash squeezed that range to about a hundred rows."
+      },
+      {
+        "text": "Nothing: a correlation of 0.1 shares about 1% of the variation, which is as good as no effect.",
+        "correct": false,
+        "why": "That share holds inside this window only. A correlation describes the data in the range it was measured, and here the range is a hundred rows wide."
+      },
+      {
+        "text": "Pearson is the wrong measure here, and Spearman's coefficient would show the effect.",
+        "correct": false,
+        "why": "Ranks help with curves and wild values; they do not widen a range of 2,446 to 2,573 rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-kwxg4kvx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A new dock firmware went first to the stations with the weakest mobile signal. A month later, stations on the new firmware have far more readings arriving over a minute late. Before anybody blames the firmware, what should the team check?",
+    "hint": "Statistics for Data Analysis, lesson 18; Data Engineering Fundamentals, lesson 8.",
+    "choices": [
+      {
+        "text": "Whether the gap is statistically significant, since a small p-value would show the firmware is the cause.",
+        "correct": false,
+        "why": "Significance says the gap is not chance. The coupons' gap was significant too, and distance explained all of it."
+      },
+      {
+        "text": "Whether the late readings were counted by arrival time instead of by event time.",
+        "correct": false,
+        "why": "The clock decides which window a reading lands in. Lateness is the gap between the two clocks, and it exists whichever one you count by."
+      },
+      {
+        "text": "Whether the firmware arrived before the lateness began, since a cause has to come first.",
+        "correct": false,
+        "why": "Time order is needed and not enough. Here the weak signal came before both, and can drive both."
+      },
+      {
+        "text": "Whether the gap holds within groups of equal coverage, since weak coverage both decided the rollout and delays arrival.",
+        "correct": true,
+        "why": "Right. A confounder is tested by holding it fixed and seeing whether the association survives."
+      }
+    ]
+  },
+  {
+    "id": "ex-xyn5be5k",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Horta's line for the 120 deliveries is minutes = 25.03 + 2.48 × km, with a residual standard deviation of 4.28 minutes. By lesson 19's rule, what promise for a 10 km delivery would be broken by about one delivery in forty? Give one decimal place.",
+    "hint": "Statistics for Data Analysis, lesson 19.",
+    "value": 58.4,
+    "tolerance": 0.05,
+    "unit": ""
+  },
+  {
+    "id": "ex-dkp2ry26",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each count or measurement on Roda Livre's platform to the distribution lesson 8 would model it with.",
+    "hint": "Statistics for Data Analysis, lesson 8; Data Engineering Fundamentals, lesson 7.",
+    "pairs": [
+      {
+        "left": "How many of tonight's 40 file deliveries fail their row count, each with the same 5% chance, independently",
+        "right": "binomial"
+      },
+      {
+        "left": "How many `429` answers an API sends in an hour, arriving at random at a steady rate",
+        "right": "Poisson"
+      },
+      {
+        "left": "When, inside a 15-minute polling interval, a ride ended, with no moment favoured",
+        "right": "uniform"
+      },
+      {
+        "left": "A sensor's voltage reading: the true value plus many small independent errors",
+        "right": "normal"
+      }
+    ],
+    "right_distractors": [
+      "Student's t"
+    ]
+  },
+  {
+    "id": "ex-afrxqsh6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Ride minutes have a long tail, so Marta wants the median ride length per station. The rides are stored on three nodes by hash of ride id, and to avoid moving rides the job computes each node's median per station and sends only those. What is wrong?",
+    "hint": "Data Engineering Fundamentals, lesson 9; Statistics for Data Analysis, lesson 4.",
+    "choices": [
+      {
+        "text": "A median does not combine in pieces; the median of three medians is not the median of the rides.",
+        "correct": true,
+        "why": "Right. A count or a sum adds up from pieces; a median needs the values brought together."
+      },
+      {
+        "text": "Nothing: counting on each node first sends partial results for the same reason, and it gave the same answer.",
+        "correct": false,
+        "why": "That plan sent counts, which add up. Three medians do not, and the true median can sit anywhere between them."
+      },
+      {
+        "text": "The median is the wrong summary, and for minutes the mean is the number to report.",
+        "correct": false,
+        "why": "The mean answers questions about totals. Marta asked what a typical ride lasts, which is the median's question."
+      },
+      {
+        "text": "It works provided each node holds the same number of that station's rides.",
+        "correct": false,
+        "why": "Equal groups do not save it: the middle of the whole depends on how every value is ordered, not on the size of each group."
+      }
+    ]
+  },
+  {
+    "id": "ex-11g7amqq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Davi, Caio and Marta each score three warehouse options from 1 to 5 on five criteria, and a script averages their scores before applying the weights. The top two options finish on 36.4 and 35.9. What does that half point decide?",
+    "hint": "Data Engineering Fundamentals, lesson 2; Statistics for Data Analysis, lesson 2.",
+    "choices": [
+      {
+        "text": "The first option, because averaging three people's scores cancels the doubt in any single one of them.",
+        "correct": false,
+        "why": "Averaging still treats the step from 2 to 3 as the step from 4 to 5. Nobody measured that, and one score moved by one still swings the total."
+      },
+      {
+        "text": "The second option, once bill and upkeep are merged so that cost is not counted twice.",
+        "correct": false,
+        "why": "Merging them may be right, and it rebuilds the matrix rather than reading it. As it stands, the totals do not separate the two."
+      },
+      {
+        "text": "The first option, provided each set of weights adds up to ten.",
+        "correct": false,
+        "why": "Weights adding to ten make totals comparable between weightings. They do not make half a point mean anything."
+      },
+      {
+        "text": "Nothing: ordinal scores summed cannot carry half a point.",
+        "correct": true,
+        "why": "Right. Each score is a judgement on an ordinal scale, adding them assumes equal steps, and one cell moved by one point swings the total by more than half a point."
+      }
+    ]
+  },
+  {
+    "id": "ex-hgvcbbjh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Monday's morning report says 352 rides, where weekdays hover around 180. An analyst calls it a genuine extreme, a busy Monday, and wants it kept. Which check settles the question fastest?",
+    "hint": "Data Engineering Fundamentals, lesson 3; Statistics for Data Analysis, lesson 9.",
+    "choices": [
+      {
+        "text": "A z-score against the last month of Mondays: above 3 it is an error, below 3 it is real.",
+        "correct": false,
+        "why": "A z-score lists candidates. It cannot tell a real busy day from a doubled copy; only the source can."
+      },
+      {
+        "text": "Count Monday in the app's database and in raw: 187 rides against 374 lines blames the copy.",
+        "correct": true,
+        "why": "Right. \"Does the source agree?\" settles it: the app holds half of what raw does."
+      },
+      {
+        "text": "Run the transformation again: if it prints the same count a second time, the number in the report is real.",
+        "correct": false,
+        "why": "The transformation counts faithfully what raw holds. Run again over doubled raw, it doubles again."
+      },
+      {
+        "text": "Compare the station ranking with last Monday's: if the order holds, the volume is real.",
+        "correct": false,
+        "why": "Every station doubled together, so the ranking did not change; that is why the report looked trustworthy."
+      }
+    ]
+  },
+  {
+    "id": "ex-n7g7gddp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "The nightly copy of the rides table asks for every row whose `updated_at` is after the watermark. A ride cancelled at 09:20 is deleted from the app's database. How can the data team's copy learn about it?",
+    "hint": "Data Engineering Fundamentals, lesson 4.",
+    "choices": [
+      {
+        "text": "Widen the overlap, so that the next run reads the last hour again.",
+        "correct": false,
+        "why": "An overlap re-reads rows that are still there; a deleted row has no `updated_at` left to be found by."
+      },
+      {
+        "text": "Copy by `started_at` instead, since a ride's start time stays fixed.",
+        "correct": false,
+        "why": "Any query against the table finds only the rows still in it, and the deleted ride is not one of them."
+      },
+      {
+        "text": "Follow the database's log of changes, which records the delete.",
+        "correct": true,
+        "why": "Right. A delete is a change, so the log has it, where no query on the table can find the row."
+      },
+      {
+        "text": "Ask the app for each ride by its id on each run.",
+        "correct": false,
+        "why": "The app answers with what it holds now, and it no longer holds that ride."
+      }
+    ]
+  },
+  {
+    "id": "ex-8d2tv6at",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`rides.parquet` holds a month of rides in three row groups, written in time order; group 2 runs from 24 Sep 10:28 to 30 Sep 04:50. A query asks for the average `minutes` of rides after 25 September. What does the reader have to read?",
+    "hint": "Data Engineering Fundamentals, lesson 6.",
+    "choices": [
+      {
+        "text": "The footer, then the `started_at` and `minutes` chunks of group 2 only.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The whole file, because an average needs each ride's minutes.",
+        "correct": false,
+        "why": "Only rides after the 25th count, and the footer's statistics show that groups 0 and 1 end before it."
+      },
+      {
+        "text": "The `minutes` chunks of all three groups, since a column is stored whole.",
+        "correct": false,
+        "why": "A column is stored per row group, and the statistics rule two groups out before any chunk is read."
+      },
+      {
+        "text": "Group 2 in full, every column, because a row group is read as one block.",
+        "correct": false,
+        "why": "Inside a group each column is its own chunk; the reader takes the two it needs and passes over the rest."
+      }
+    ]
+  },
+  {
+    "id": "ex-2bnhgrj8",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "The payments copy is checked against the provider's daily statement. Put the three levels of reconciliation in order, from the cheapest to the most thorough.",
+    "hint": "Data Engineering Fundamentals, lesson 7.",
+    "items": [
+      "Compare the number of payments per day",
+      "Compare the sum of the amounts per day, in centavos",
+      "Compare every payment id on both sides"
+    ],
+    "trap": "A count passes a day with one payment doubled and another missing; a total catches that unless the two amounts are equal; only the ids say which payments, and they cost every key from both sides."
+  },
+  {
+    "id": "ex-bbe7yxf8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The live count of rides per quarter of an hour drops Parque Barigui's rides when its link fails for half an hour, and Passeio Público's outage lasted until the next morning. Marta wants fast numbers and correct ones. Which design gives her both without holding every window back for a day?",
+    "hint": "Data Engineering Fundamentals, lesson 8.",
+    "choices": [
+      {
+        "text": "Raise the allowed lateness to twenty-five minutes, which caught every late ride in the lesson.",
+        "correct": false,
+        "why": "It caught Parque Barigui's, and every window is then 25 minutes old; Passeio Público's rides arrived more than 21 hours late."
+      },
+      {
+        "text": "Keep the short allowed lateness for the live count and let the nightly job recount each closed day from the raw events.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Count by arrival time instead, so that a ride cannot arrive late.",
+        "correct": false,
+        "why": "Nothing is dropped, and rides land in the wrong quarter of an hour; the 08:45 surge would be invented."
+      },
+      {
+        "text": "Make the consumer idempotent by event id, so a late ride is counted exactly once.",
+        "correct": false,
+        "why": "Idempotence stops a repeat being counted twice. It does nothing for a ride whose window has already been sent."
+      }
+    ]
+  },
+  {
+    "id": "ex-wrpjy0ya",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "During a cut, Roda Livre lets copies keep answering on both sides only for data whose two versions can be merged afterwards. Which of these can live on that side? Choose all that apply.",
+    "hint": "Data Engineering Fundamentals, lesson 10.",
+    "choices": [
+      {
+        "text": "The dock map's count of bicycles at a station, kept as taken and returned per node",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The set of stations a customer has saved as favourites",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Which customer bicycle B017 is unlocked for",
+        "correct": false,
+        "why": "Two customers holding one bicycle cannot be merged into a correct answer, so this decision refuses during a cut."
+      },
+      {
+        "text": "Whether a ride's charge has been taken",
+        "correct": false,
+        "why": "A payment is taken once. Answering on both sides could charge twice, and no merge undoes that."
+      }
+    ]
+  },
+  {
+    "id": "ex-qxpxk99p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A colleague on Windows sends `extract.sh`. On the server, `./extract.sh` answers `bash: ./extract.sh: cannot execute: required file not found`, and `ls` shows the file right there. What does lesson 1 reach for first?",
+    "hint": "Linux and the Command Line, lesson 1.",
+    "choices": [
+      {
+        "text": "`chmod +x extract.sh`, since the kernel will not run a file without its execute bit.",
+        "correct": false,
+        "why": "A missing execute bit is reported as `Permission denied`. This message is about the program the first line names."
+      },
+      {
+        "text": "`file extract.sh`, to see whether it reports `with CRLF line terminators`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`bash -x extract.sh`, to trace it line by line until the failing one shows up.",
+        "correct": false,
+        "why": "Naming bash skips the first line, so the script may well run, carrying the `\\r` into its values to fail somewhere else later."
+      },
+      {
+        "text": "`which bash`, because the message means bash is missing from the server.",
+        "correct": false,
+        "why": "Bash is there. The kernel looked for `/bin/bash\\r`, carriage return included, and that program does not exist."
+      }
+    ]
+  },
+  {
+    "id": "ex-bjm0zf3m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "To shrink the image, a teammate moves a pandas loader from `python:3.13-slim` to an Alpine base. The build passes; at run time `import pandas` fails with an error about a shared object, and nothing in it explains why. What is the likely cause, and the fix?",
+    "hint": "Linux and the Command Line, lesson 2; Docker and Containers, lesson 13.",
+    "choices": [
+      {
+        "text": "Native code built for glibc meets Alpine's musl; go back to a `-slim` Debian base image.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Busybox lacks a GNU flag the import relies on; `apk add --no-cache bash` puts the GNU tools back.",
+        "correct": false,
+        "why": "Busybox explains a script failing on a flag. An import does not go through `ls` or `sed`, and installing bash changes nothing here."
+      },
+      {
+        "text": "The image is too small to hold pandas' data, so the loader needs a higher `--memory` to import it.",
+        "correct": false,
+        "why": "A memory limit ends a process with 137. It does not make a library impossible to load."
+      },
+      {
+        "text": "`--no-cache` removed the package index that Python reads at import; drop it from `apk add`.",
+        "correct": false,
+        "why": "`--no-cache` only avoids keeping apk's index on disk. Python never reads that index."
+      }
+    ]
+  },
+  {
+    "id": "ex-5b43x9t1",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A scraper saves every API page as a file of its own: 10,000 files of 440 bytes each, on a filesystem that allocates 4 KiB blocks like lesson 3's. How many KiB of disk does `du` count for them?",
+    "hint": "Linux and the Command Line, lesson 3.",
+    "value": 40000,
+    "tolerance": 0,
+    "unit": "KiB"
+  },
+  {
+    "id": "ex-3vjb2wky",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "The nightly export runs with a umask of 027, the hardening setting lesson 4 names for servers. In octal, every CSV it creates is born with mode ___ and every directory with mode ___.",
+    "hint": "Linux and the Command Line, lesson 4.",
+    "blanks": [
+      {
+        "accept": [
+          "640",
+          "0640"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      },
+      {
+        "accept": [
+          "750",
+          "0750"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yq21ywrt",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A unit file for the nightly load:\n\n```\n[Unit]\nDescriptoin=Nightly load into the warehouse\nAfter=network.target\n\n[Service]\nExecStart=/opt/etl/load.sh > /var/log/etl/load.log\nRestart=maybe\nUser=etl\n```\n\nWhich lines will not do what their author meant? Choose all that apply.",
+    "hint": "Linux and the Command Line, lesson 5.",
+    "choices": [
+      {
+        "text": "`Descriptoin=Nightly load into the warehouse`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`After=network.target`",
+        "correct": false,
+        "why": "It orders the start after the network, which is all it was meant to do. It needs no `Requires=` for that."
+      },
+      {
+        "text": "`ExecStart=/opt/etl/load.sh > /var/log/etl/load.log`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`Restart=maybe`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`User=etl`",
+        "correct": false,
+        "why": "It runs the service as `etl`, which is exactly what the line says."
+      }
+    ]
+  },
+  {
+    "id": "ex-b4f49ny1",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "A week of the loader's runs ended with these exit statuses. Match each to what it means.",
+    "hint": "Linux and the Command Line, lesson 6; Docker and Containers, lesson 17.",
+    "pairs": [
+      {
+        "left": "`127` from the wrapper script",
+        "right": "the shell could not find the command"
+      },
+      {
+        "left": "`126` from the wrapper script",
+        "right": "the file was found and could not be run"
+      },
+      {
+        "left": "`137`, with `oom=true` in `docker inspect`",
+        "right": "`SIGKILL`, sent by the out-of-memory killer"
+      },
+      {
+        "left": "`1` from the `grep` in the check step",
+        "right": "the pattern was not there"
+      }
+    ],
+    "right_distractors": [
+      "the arguments were wrong",
+      "`SIGTERM`, a polite request to stop"
+    ]
+  },
+  {
+    "id": "ex-p7m5k55d",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On the team's Ubuntu server, `/usr/bin/python3 -m pip install requests` for a new ingestion script stops with `error: externally-managed-environment`. A colleague says to repeat it with `sudo` and `--break-system-packages`. What do the two lessons say to do instead?",
+    "hint": "Linux and the Command Line, lesson 7; Python, lesson 18.",
+    "choices": [
+      {
+        "text": "Repeat it with `sudo` alone: the refusal is about writing into a directory that root owns.",
+        "correct": false,
+        "why": "The refusal is the distribution protecting its own Python, and `sudo pip install` is the one the lesson says breaks things."
+      },
+      {
+        "text": "Add the flag, since it is the documented override and no other script on the server imports `requests`.",
+        "correct": false,
+        "why": "The system Python belongs to the operating system's own tools. A library upgraded under them breaks something unrelated an hour later."
+      },
+      {
+        "text": "Copy `requests` from a laptop into the system's `dist-packages`, so that apt can see it.",
+        "correct": false,
+        "why": "Apt knows only what it installed. A copied library collides with the distribution's exactly the way `sudo pip install` does."
+      },
+      {
+        "text": "Give the project its own virtual environment and install into it with that environment's `pip`.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-9dmqpqy2",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Which client addresses call the ingestion API most? Put the stages of the pipeline in order, so that it prints the six busiest, busiest first.",
+    "hint": "Linux and the Command Line, lesson 8.",
+    "items": [
+      "`cut -d\" \" -f1 logs/access.log`",
+      "`sort`",
+      "`uniq -c`",
+      "`sort -rn`",
+      "`head -6`"
+    ],
+    "trap": "`uniq` only collapses lines that are next to each other, so a `sort` has to come before it; the count it puts in front is a number, and only `sort -rn` orders it so that `100` comes before `99`."
+  },
+  {
+    "id": "ex-cr0jwc0s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A nightly script starts with `set -e`, runs `work=$(mktemp -d /tmp/extract.XXXXXX)`, downloads three files into it, validates them, loads them and exits. Months later `/tmp` is full of `extract.*` directories. Where does lesson 9 put `trap 'rm -rf \"$work\"' EXIT`?",
+    "hint": "Linux and the Command Line, lesson 9.",
+    "choices": [
+      {
+        "text": "On the line right after the `mktemp`, before any other step has a chance to fail.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "As the last line, after the load, which is the point where a successful run arrives.",
+        "correct": false,
+        "why": "The bottom of the file is exactly what a failing run never reaches. A trap set there covers almost nothing."
+      },
+      {
+        "text": "Right after the validation, once the files are known to be good enough to load.",
+        "correct": false,
+        "why": "Every step before it is a window in which the script dies and leaves the directory; the download is the step most likely to fail."
+      },
+      {
+        "text": "Nowhere: when `set -e` stops a script, it also removes what the script created.",
+        "correct": false,
+        "why": "`set -e` stops the script and cleans up nothing. The directories in `/tmp` are what it leaves behind."
+      }
+    ]
+  },
+  {
+    "id": "ex-2j5tjrzx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A transform step runs under `docker run --memory 512m`. Before each file it reads `free -m`, sees about 15 GB free and loads the whole file at once; the container ends with `exit=137 oom=true`. Where should it have read the memory it may use?",
+    "hint": "Linux and the Command Line, lesson 11; Docker and Containers, lesson 17.",
+    "choices": [
+      {
+        "text": "Straight from `/proc/meminfo`, because `free` rounds the figure it prints.",
+        "correct": false,
+        "why": "`free` reads `/proc/meminfo`, and inside a container that file shows the host's memory."
+      },
+      {
+        "text": "From `nproc` and the load average, which show the share of the host the container got.",
+        "correct": false,
+        "why": "Both describe the whole machine: `nproc` ignores the quota, and `/proc/loadavg` is the host's."
+      },
+      {
+        "text": "From `top`, whose memory column is per process and therefore per container.",
+        "correct": false,
+        "why": "`top` reads `/proc/meminfo` just as `free` does, and reports the host."
+      },
+      {
+        "text": "From `memory.max` in its own control group, under `/sys/fs/cgroup`.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-pby99vnf",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "On a production server, crontab -e opens vim, and you have already typed something you did not mean. After pressing Esc, you type ___ and Enter to leave without saving.",
+    "hint": "Linux and the Command Line, lesson 12.",
+    "blanks": [
+      {
+        "accept": [
+          ":q!"
+        ],
+        "ignore_case": false,
+        "ignore_accents": false
+      }
+    ]
+  },
+  {
+    "id": "ex-578dv56t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`python3 load.py` works in Ana's terminal, where her `~/.bashrc` runs `source ~/etl/.venv/bin/activate`. From the crontab line `0 3 * * * cd ~/etl && python3 load.py` it fails with `ModuleNotFoundError: No module named 'pandas'`. What fixes it?",
+    "hint": "Linux and the Command Line, lesson 13; Python, lesson 18.",
+    "choices": [
+      {
+        "text": "Put `SHELL=/bin/bash` at the top of the crontab, so that cron reads `~/.bashrc` as a terminal does.",
+        "correct": false,
+        "why": "A cron job is neither an interactive shell nor a login shell, so bash still skips `~/.bashrc`."
+      },
+      {
+        "text": "Call the environment's own interpreter by its path: `/home/ana/etl/.venv/bin/python load.py`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Install pandas into the system Python with `sudo pip`, since cron runs its jobs as root.",
+        "correct": false,
+        "why": "Ana's crontab runs as Ana, and installing into the system Python is what the externally-managed refusal exists to stop."
+      },
+      {
+        "text": "Run `source .venv/bin/activate` once in a terminal, so that the environment stays active for later jobs.",
+        "correct": false,
+        "why": "Activating edits the `PATH` of the shell that ran it and nothing else. A job at three in the morning starts from cron's six variables."
+      }
+    ]
+  },
+  {
+    "id": "ex-kaps4g1a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On the shared analytics server, `/srv/finance` is `drwx------ root root`. An analyst asks to join the `docker` group so she can run the team's pipeline images without `sudo`. What does joining give her?",
+    "hint": "Docker and Containers, lesson 6; Linux and the Command Line, lesson 4.",
+    "choices": [
+      {
+        "text": "The pipeline images, but a container's process still meets the directory's `700` and is refused.",
+        "correct": false,
+        "why": "The daemon runs as root and mounts any host directory it is asked to. That is how lesson 6 read `/srv/payroll`."
+      },
+      {
+        "text": "A way to read `/srv/finance` by mounting it into a container, which is root by another route.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The right to list containers; starting one still needs `sudo`.",
+        "correct": false,
+        "why": "The group owns the socket, and the socket accepts every request, starting a container included."
+      },
+      {
+        "text": "Root inside containers, while host files stay out of reach unless the run passes `--privileged`.",
+        "correct": false,
+        "why": "A bind mount needs no `--privileged`. `-v /srv/finance:/p` is enough, as `/srv/payroll` showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-eh2qrjz8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "For local tests Ana runs `docker run -d --name db -e POSTGRES_PASSWORD=lab-only postgres:17` and loads a day of orders. To change a setting she runs `docker rm -f db` and then the same `docker run`, and the `orders` table is gone. Where did it go?",
+    "hint": "Docker and Containers, lesson 7.",
+    "choices": [
+      {
+        "text": "Into the container's writable layer, which `docker rm -f` deleted along with the container.",
+        "correct": false,
+        "why": "The image declares `/var/lib/postgresql/data` a volume, so the data never sat in the writable layer."
+      },
+      {
+        "text": "PostgreSQL dropped it at start-up, because a new container counts as a new server.",
+        "correct": false,
+        "why": "Nothing was dropped. The new server started on a new, empty data directory and never saw the old one."
+      },
+      {
+        "text": "Into an anonymous volume the first container left behind; the new one was given a fresh, empty volume.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Into the image, from which `docker commit` would bring it back.",
+        "correct": false,
+        "why": "Nothing is copied into an image at run time. The data sits in a volume with a hash for a name."
+      }
+    ]
+  },
+  {
+    "id": "ex-pcp80hyj",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "In CI, `docker run --rm -v \"$PWD/out\":/out loader:1.4` writes `daily.csv` into `out/`, a directory owned by the runner's ordinary user. The image runs as root. Which statements about `out/daily.csv` on the host are true? Choose all that apply.",
+    "hint": "Docker and Containers, lesson 8; Linux and the Command Line, lesson 4.",
+    "choices": [
+      {
+        "text": "It belongs to `root`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The runner's user can delete it, because deleting writes to `out/`, which is theirs.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Running `chmod 777 out` before the job makes the file the runner's.",
+        "correct": false,
+        "why": "That opens the directory to everybody. The new file still belongs to whichever user the container runs as."
+      },
+      {
+        "text": "With `--user \"$(id -u):$(id -g)\"` on the run, the next file is the runner's.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "With `:ro` at the end of the mount, the next file is the runner's.",
+        "correct": false,
+        "why": "`:ro` stops the container writing into the mount at all, so the loader cannot write its CSV."
+      }
+    ]
+  },
+  {
+    "id": "ex-7axf6rnv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "An export image ends with `CMD ./export.sh`. The script makes its scratch space with `mktemp -d /data/export.XXXXXX` on a mounted volume and sets `trap 'rm -rf \"$work\"' EXIT` on the next line. Every `docker stop` takes ten seconds and leaves an `export.*` directory behind. Why?",
+    "hint": "Docker and Containers, lesson 11; Linux and the Command Line, lesson 9.",
+    "choices": [
+      {
+        "text": "The trap is on `EXIT`, which a signal never fires, so the script needed a second trap, on `TERM`, beside it.",
+        "correct": false,
+        "why": "The script never received a signal at all: the shell wrapping it as process 1 kept it."
+      },
+      {
+        "text": "Deleting a directory on a mounted volume takes ten seconds, and `docker stop` cut the running `rm -rf` short before it finished.",
+        "correct": false,
+        "why": "The exec-form stop took a fifth of a second. The ten seconds are Docker's default wait before `SIGKILL`."
+      },
+      {
+        "text": "`SIGTERM` reached `/bin/sh -c`, which kept it; ten seconds later `SIGKILL` ended both, and it cannot be trapped.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`docker stop` sends `SIGKILL` first to a container with a volume, so nothing inside gets to react.",
+        "correct": false,
+        "why": "It sends `SIGTERM` first, volume or not, and `SIGKILL` only after the default ten seconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-xcnbpwzd",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "hard",
+    "prompt": "A Python loader's image is rebuilt on every commit. Its `.py` files change daily and `requirements.txt` changes about once a month. After `FROM python:3.13-slim`, put these instructions in the order that makes an edit to the code rebuild the fewest layers.",
+    "hint": "Docker and Containers, lesson 12; Python, lesson 18.",
+    "items": [
+      "`WORKDIR /app`",
+      "`COPY requirements.txt ./`",
+      "`RUN pip install -r requirements.txt`",
+      "`COPY *.py ./`"
+    ],
+    "trap": "Copy the code before installing and every edit invalidates the install layer, so `pip install` runs again for a change that touched no dependency."
+  },
+  {
+    "id": "ex-y5cxvd9a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Three workers run the ingestion image as `registry.example.com/ingest`, with no tag, and each pulled it on a different day. A bug report says some rows were parsed by the old logic. What does lesson 16 make of this?",
+    "hint": "Docker and Containers, lesson 16.",
+    "choices": [
+      {
+        "text": "`docker run` checks the registry before each start, so the three are on the newest build.",
+        "correct": false,
+        "why": "It pulls only when the name is missing on the machine. Each server keeps whatever it pulled."
+      },
+      {
+        "text": "The three run one build, since a tag points at a single image; the old rows predate the bug.",
+        "correct": false,
+        "why": "A tag points at one image at a time. Each machine pulled at a different moment, and so got a different one."
+      },
+      {
+        "text": "Starting each container with `--pull always` gives each worker a known version from then on.",
+        "correct": false,
+        "why": "It swaps the stale image for a restart that quietly changes the version. A known version is a version tag or a digest."
+      },
+      {
+        "text": "`latest` points wherever the last push left it, so each machine runs the build it fetched that day.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-kk0j9xwy",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A loader started with `--restart on-failure:5` cannot reach its database, so it exits with status 1 straight away every time. Following lesson 17's run with `on-failure:3`, how many `database: failed to connect` lines does `docker logs` hold once the daemon gives up?",
+    "hint": "Docker and Containers, lesson 17.",
+    "value": 6,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-q0e7a0bv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "PostgreSQL runs on the host itself, listening on `127.0.0.1:5432`. A pipeline container connects to `localhost:5432` and gets `Connection refused`. What does lesson 23 say is going on?",
+    "hint": "Docker and Containers, lesson 23.",
+    "choices": [
+      {
+        "text": "In there, `localhost` is its own loopback interface, and the database sits outside it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The host blocks containers from port 5432 until it is published with `-p 5432:5432`.",
+        "correct": false,
+        "why": "`-p` publishes a container's port on the host. The database is not in a container, and the address is what is wrong."
+      },
+      {
+        "text": "PostgreSQL refuses clients on a bridge address until its access rules allow them.",
+        "correct": false,
+        "why": "That would be a refusal after connecting to the host. A connection to `localhost` never left the container."
+      },
+      {
+        "text": "The container needs `--network none`, so that its `localhost` falls through to the host's.",
+        "correct": false,
+        "why": "`none` leaves only the container's own loopback. It is `host` that shares the host's network namespace."
+      }
+    ]
+  }
+]
