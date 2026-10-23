@@ -15,7 +15,7 @@ In **2 tracks** — `devsecops`(8), `security`(8).
 
 ## Assumes, and leaves ready
 
-**Assumes:** `attacks-threats` — you cannot defend against an injection you have not seen work.
+**Assumes:** nothing in `requires`. Each lesson shows the flaw it fixes in the student's own app, so `attacks-threats` is sequence rather than knowledge: it comes first in `security` and `devsecops` through their `links`.
 
 **Leaves ready:** secure development, for `threat-modeling`.
 
