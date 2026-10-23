@@ -1,0 +1,615 @@
+[
+  {
+    "id": "ex-t7nev3r0",
+    "version": 1,
+    "section": "sap-landscape",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One of Edson's developers corrects a pricing program in DEV, and the key users approve it in QAS. What is imported into PRD?",
+    "hint": "Think about what moved from DEV to QAS.",
+    "choices": [
+      {
+        "text": "The same transport request that was imported into QAS",
+        "correct": true,
+        "why": "Right: the request recorded in DEV moves on unchanged, so production gets exactly what was tested."
+      },
+      {
+        "text": "A copy of the QAS program, exported after the test so it carries the fixes found there",
+        "correct": false,
+        "why": "Nothing is exported from QAS. A fix found in testing goes back to DEV and travels in a new request."
+      },
+      {
+        "text": "The developer repeats the change by hand in PRD",
+        "correct": false,
+        "why": "PRD is set so that its programs cannot be edited; a change typed again by hand would be untested."
+      },
+      {
+        "text": "A full copy of the DEV system, replacing PRD overnight",
+        "correct": false,
+        "why": "Each system keeps its own database; copying DEV over PRD would replace production data with development data."
+      }
+    ]
+  },
+  {
+    "id": "ex-na3vgxcw",
+    "version": 1,
+    "section": "sap-landscape",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the steps of a change to SAP at Serra Alta in order, from the developer to production.",
+    "hint": "The figure of the three systems.",
+    "items": [
+      "The change is made in DEV",
+      "SAP records it in a transport request",
+      "The developer releases the request",
+      "The request is imported into QAS",
+      "Key users test it in QAS",
+      "The same request is imported into PRD"
+    ],
+    "trap": "Importing into PRD before the test in QAS puts untested work into the books."
+  },
+  {
+    "id": "ex-62e5psqh",
+    "version": 1,
+    "section": "sap-landscape",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The Rota team's test environment connects to QAS, client 300, and posts a batch of test documents. Where do they land?",
+    "hint": "QAS has two clients, and they are not the same thing.",
+    "choices": [
+      {
+        "text": "In the testing client, 200, since QAS keeps all test data together",
+        "correct": false,
+        "why": "Business data is separated by client inside one system; 200 does not see what was posted in 300."
+      },
+      {
+        "text": "Nowhere: SAP refuses a connection that does not name the testing client",
+        "correct": false,
+        "why": "SAP accepts any client the user is set up in; the connection logs on and posts without complaint."
+      },
+      {
+        "text": "In production, because client numbers are shared across DEV, QAS and PRD",
+        "correct": false,
+        "why": "Each system has its own database; a client number in QAS reaches nothing in PRD."
+      },
+      {
+        "text": "In the training data that new users learn on",
+        "correct": true,
+        "why": "Right: client 300 is training, and a connection names a system and a client, so the wrong client gets the documents."
+      }
+    ]
+  },
+  {
+    "id": "ex-wes5mfjs",
+    "version": 1,
+    "section": "sap-landscape",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When the Alagoa plant joins SAP, which kind of change is SAP's own upgrade path designed to carry forward with least effort?",
+    "hint": "One kind of change is SAP code behaving as configured.",
+    "choices": [
+      {
+        "text": "A Z report written for the plant",
+        "correct": false,
+        "why": "A Z object is your code inside SAP; every upgrade has to check it against what changed."
+      },
+      {
+        "text": "A change to SAP's own sales order program, made with a modification key",
+        "correct": false,
+        "why": "That is a modification of SAP's code, the ring lesson 1 said never to use, and every upgrade has to redo it."
+      },
+      {
+        "text": "Customising: the new plant entered in the Implementation Guide",
+        "correct": true,
+        "why": "Right: customising is rows in configuration tables that SAP code reads, and SAP designs its upgrades to carry it."
+      },
+      {
+        "text": "A Z table holding the plant’s cheese recipes, read by SAP transactions",
+        "correct": false,
+        "why": "SAP's upgrade knows nothing of a customer table; it is carried only if somebody checks the code that uses it."
+      }
+    ]
+  },
+  {
+    "id": "ex-83m8gfed",
+    "version": 1,
+    "section": "hana",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Marcos asks for UHT litres sold per plant last quarter, from a sales line table with forty fields. Why does a column store answer faster than a row store?",
+    "hint": "How many of the forty fields does the question need?",
+    "choices": [
+      {
+        "text": "It reads the three fields it needs and skips the other thirty-seven",
+        "correct": true,
+        "why": "Right: each column is stored together, so the sum touches three blocks instead of every whole row."
+      },
+      {
+        "text": "It keeps every row of the table in a single block, so one read fetches the whole quarter at once",
+        "correct": false,
+        "why": "That describes keeping rows together, which is what a row store does and why it has to read all forty fields."
+      },
+      {
+        "text": "It stores pre-computed quarterly totals per plant",
+        "correct": false,
+        "why": "The opposite: HANA let S/4HANA drop totals tables and compute sums from the line items when asked."
+      },
+      {
+        "text": "It writes nothing to disk, so no read waits for one",
+        "correct": false,
+        "why": "HANA keeps a log and saves its memory to disk; being in memory is not the reason one column is cheaper than forty."
+      }
+    ]
+  },
+  {
+    "id": "ex-yfbkx2g8",
+    "version": 1,
+    "section": "hana",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A billing line table at Serra Alta has 25 million lines. Its plant column holds one of the three SAP plants, stored as a dictionary and a 2-bit code per line. How many megabytes do the codes take, ignoring the dictionary? (1 MB = 1,000,000 bytes.)",
+    "hint": "Lines × 2 bits, then 8 bits to a byte.",
+    "value": 6.25,
+    "tolerance": 0.01,
+    "unit": "MB",
+    "accept_units": [
+      "megabytes"
+    ]
+  },
+  {
+    "id": "ex-5nz11yad",
+    "version": 1,
+    "section": "hana",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "If Serra Alta buys every year of extended maintenance SAP offers for ECC 6.0, how many months does it buy after mainstream maintenance ends?",
+    "hint": "From 1 January 2028 to 31 December 2030.",
+    "value": 36,
+    "tolerance": 0,
+    "unit": "months",
+    "accept_units": [
+      "month"
+    ]
+  },
+  {
+    "id": "ex-b1rap8xq",
+    "version": 1,
+    "section": "hana",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Serra Alta converts ECC to S/4HANA in place. Which of these will have to change? Choose all that apply.",
+    "hint": "Check each one against the table of what S/4HANA removed, and what survives as a view.",
+    "choices": [
+      {
+        "text": "An EDI map that cuts material numbers at 18 characters",
+        "correct": true,
+        "why": "Yes: S/4HANA allows 40 characters, and the map breaks on the first longer number."
+      },
+      {
+        "text": "A Z program that writes rows into the index table BSID",
+        "correct": true,
+        "why": "Yes: BSID survives as a view computed from the line items, and a view is not written to."
+      },
+      {
+        "text": "A Z report whose ABAP reads open customer items from BSID",
+        "correct": false,
+        "why": "Reads keep working, because the old name answers as a compatibility view."
+      },
+      {
+        "text": "A Z interface that creates customers with no business partner",
+        "correct": true,
+        "why": "Yes: in S/4HANA every customer and supplier is a business partner."
+      }
+    ]
+  },
+  {
+    "id": "ex-p12fg8pc",
+    "version": 1,
+    "section": "hana",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A consultant tells Marcos that Serra Alta could simply stay on ECC after 2030 and pay for whatever support SAP still sells. What is the strongest objection for a Brazilian company?",
+    "hint": "What stops arriving after extended maintenance?",
+    "choices": [
+      {
+        "text": "Legal changes stop, and the tax reform keeps changing the NF-e until 2033",
+        "correct": true,
+        "why": "Right: without legal changes the system falls behind the NF-e layout, and without a valid NF-e no pallet ships."
+      },
+      {
+        "text": "ECC stops running on 1 January 2031",
+        "correct": false,
+        "why": "The software keeps running; what ends is what SAP delivers for it."
+      },
+      {
+        "text": "Its database is no longer supported by any vendor after 2030",
+        "correct": false,
+        "why": "The lesson gives no such date for the database; the date that matters is SAP’s maintenance for ECC."
+      },
+      {
+        "text": "The 1,800 Z objects stop compiling once mainstream maintenance ends",
+        "correct": false,
+        "why": "Code keeps compiling on an unchanged system; the Z objects become a problem when the system moves, not when support ends."
+      }
+    ]
+  },
+  {
+    "id": "ex-asneda3p",
+    "version": 1,
+    "section": "integrating-with-sap",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each door into SAP to the Serra Alta conversation it suits.",
+    "hint": "The table \"Choosing a door\".",
+    "pairs": [
+      {
+        "left": "IDoc",
+        "right": "a supermarket chain's order arriving through the EDI provider"
+      },
+      {
+        "left": "BAPI over RFC",
+        "right": "a bakery waiting on screen for its order number"
+      },
+      {
+        "left": "OData",
+        "right": "the portal asking how much butter is available to promise for Friday"
+      },
+      {
+        "left": "file",
+        "right": "a day's milk collection from 1,900 farms, every night"
+      }
+    ],
+    "right_distractors": [
+      "a nightly SQL update of the stock tables"
+    ]
+  },
+  {
+    "id": "ex-btkepvbb",
+    "version": 1,
+    "section": "integrating-with-sap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A supermarket chain says its order reached Serra Alta yesterday: the bus confirms it handed SAP an ORDERS IDoc. SD has no sales order for it. Where does Rui’s team look first?",
+    "hint": "Accepted and posted are two different moments for an IDoc.",
+    "choices": [
+      {
+        "text": "In the EDI provider's logs, because a missing order means the IDoc never reached SAP at all",
+        "correct": false,
+        "why": "The bus confirmed the handover; the IDoc is in SAP, and the question is what happened when it was posted."
+      },
+      {
+        "text": "In the IDoc monitor, for that IDoc stopped in status 51",
+        "correct": true,
+        "why": "Right: SAP accepted it, then failed to post it, and it waits in status 51 until someone fixes the cause and reprocesses it."
+      },
+      {
+        "text": "In the BAPI return table, which holds the reason the order was refused",
+        "correct": false,
+        "why": "That table belongs to a synchronous BAPI call; this order came in as an asynchronous IDoc."
+      },
+      {
+        "text": "In the order tables in PRD, with a SQL query by order date",
+        "correct": false,
+        "why": "If SD has no order, the tables have none either, and the lesson’s rule is not to read them."
+      }
+    ]
+  },
+  {
+    "id": "ex-p070j8tc",
+    "version": 1,
+    "section": "integrating-with-sap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A new integration calls BAPI_SALESORDER_CREATEFROMDAT2, receives an order number and shows it to the user. Next morning SD has no such order. What did the integration most plausibly leave out?",
+    "hint": "A BAPI that writes needs a second call.",
+    "choices": [
+      {
+        "text": "An IDoc to confirm the order to SAP afterwards",
+        "correct": false,
+        "why": "An IDoc is a separate door; the BAPI call is complete in itself once it is committed."
+      },
+      {
+        "text": "A transport request moving the order from DEV into PRD",
+        "correct": false,
+        "why": "Transports move programs and configuration between systems, never a business document."
+      },
+      {
+        "text": "A check that the returned message table was empty before trusting the number",
+        "correct": false,
+        "why": "Checking the messages matters, but here a number came back, which means the BAPI did build the order."
+      },
+      {
+        "text": "The call to BAPI_TRANSACTION_COMMIT",
+        "correct": true,
+        "why": "Right: a BAPI that writes does not commit on its own, so the number belonged to an order that was never saved."
+      }
+    ]
+  },
+  {
+    "id": "ex-0t9tmk8e",
+    "version": 1,
+    "section": "integrating-with-sap",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An IDoc whose application document was posted reaches status 53. One that SAP accepted but could not post stops in status ___ until somebody reprocesses it.",
+    "hint": "The number Rui’s team watches every morning.",
+    "blanks": [
+      {
+        "accept": [
+          "51"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-n7dkaw33",
+    "version": 1,
+    "section": "integrating-with-sap",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The Rota team wants farms' bank details for route planning and proposes a read-only database account on SAP: \"read-only, so nothing in SAP can break\". Which point in the lesson answers that argument most directly?",
+    "hint": "The argument is about writing. Which problem with reading has nothing to do with writing?",
+    "choices": [
+      {
+        "text": "A read takes locks that stop clerks working in VA01",
+        "correct": false,
+        "why": "The lesson’s point about locks concerns writing; it does not say a read blocks clerks."
+      },
+      {
+        "text": "SAP checks authorisations in its application tier, which that login never passes through",
+        "correct": true,
+        "why": "Right: the login sees every row, including bank data no Rota user is allowed to see through SAP."
+      },
+      {
+        "text": "Reading a table creates documents that count towards the licence",
+        "correct": false,
+        "why": "The licence register counts documents an integration creates; a read creates none."
+      },
+      {
+        "text": "Read-only accounts stop working during the Sunday maintenance window, and route planning runs on Sundays",
+        "correct": false,
+        "why": "True of anything synchronous with SAP, and the same for every door; it does not answer the claim that reading is harmless."
+      }
+    ]
+  },
+  {
+    "id": "ex-054jgacg",
+    "version": 1,
+    "section": "business-objects",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The board pack shows two net sales figures for the same month, and they differ by exactly the month's returns. What is the cause, and who settles it?",
+    "hint": "Nothing is broken; two definitions are both being applied correctly.",
+    "choices": [
+      {
+        "text": "Two universes define the measure differently; Marcos decides which is right",
+        "correct": true,
+        "why": "Right: the definition lives in the semantic layer, and which one is correct is a finance decision, not a tool setting."
+      },
+      {
+        "text": "A bug in Web Intelligence, fixed by the BusinessObjects team with the next upgrade",
+        "correct": false,
+        "why": "Both reports compute exactly what their universe says; an upgrade would reproduce both numbers."
+      },
+      {
+        "text": "BW loaded the returns late, so one report ran before the nightly extraction",
+        "correct": false,
+        "why": "A timing gap would differ from day to day; a gap exactly equal to the returns every month points at the definition."
+      },
+      {
+        "text": "One report reads production and the other reads BW",
+        "correct": false,
+        "why": "At Serra Alta the universes query BW; the lesson traces the two figures to two definitions of the measure."
+      }
+    ]
+  },
+  {
+    "id": "ex-6sgv6yyc",
+    "version": 1,
+    "section": "business-objects",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A bakery moved from the Juiz de Fora sales region to Barbacena's in June. Why does BW still credit its January sales to Juiz de Fora when a report run against SAP would not?",
+    "hint": "What does SAP do to a master record when it changes?",
+    "choices": [
+      {
+        "text": "SAP keeps every past version of the customer record",
+        "correct": false,
+        "why": "SAP overwrites the master record; the old region is gone from it."
+      },
+      {
+        "text": "BW is refreshed once a year, so it has not heard about the move yet, and catches up at year end",
+        "correct": false,
+        "why": "Extractors send changes every night; BW knows about the move and still keeps the old region on the old sales."
+      },
+      {
+        "text": "BW kept the region each sale had when it happened",
+        "correct": true,
+        "why": "Right: the warehouse remembers what the ERP overwrites, which is what the regional bonuses are calculated on."
+      },
+      {
+        "text": "The universe hard-codes the region on each bakery",
+        "correct": false,
+        "why": "A universe maps names onto tables and calculations; history comes from how BW stored the facts."
+      }
+    ]
+  },
+  {
+    "id": "ex-vtpdrwkh",
+    "version": 1,
+    "section": "business-objects",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Twelve months of audit show 300 of the 900 reports unopened. Joana wants them gone before the S/4HANA project starts. What is the right next step?",
+    "hint": "Some reports are opened once a year.",
+    "choices": [
+      {
+        "text": "Delete the 300 now, since twelve months without a reader is proof enough",
+        "correct": false,
+        "why": "An annual report, such as the FSSC 22000 batch records, falls outside a twelve-month window by a few weeks."
+      },
+      {
+        "text": "Migrate all 900 to S/4HANA and clean up afterwards, so that no user loses a report",
+        "correct": false,
+        "why": "Carrying the 300 means paying to convert and test them, and cleaning up is cheaper before the move than during it."
+      },
+      {
+        "text": "Rebuild the 300 in SAP Analytics Cloud",
+        "correct": false,
+        "why": "Rebuilding a report nobody reads moves the cost to a new product instead of removing it."
+      },
+      {
+        "text": "Measure over more than a year, find each owner, and archive rather than delete",
+        "correct": true,
+        "why": "Right: a longer window catches the annual reports, and an archive comes back if somebody asks."
+      }
+    ]
+  },
+  {
+    "id": "ex-jqfj7fhe",
+    "version": 1,
+    "section": "business-objects",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a move to S/4HANA, which argument against reporting straight on production still stands?",
+    "hint": "One argument was about load on a row database.",
+    "choices": [
+      {
+        "text": "A long scan of order lines slows down the clerks taking orders",
+        "correct": false,
+        "why": "This is the argument HANA weakens: a column store answers many such questions on live data without hurting transactions."
+      },
+      {
+        "text": "Reports on production cannot use universes",
+        "correct": false,
+        "why": "The lesson makes no such claim; the argument is about what production holds, not which tool reads it."
+      },
+      {
+        "text": "Production holds one system’s current state, not history or other systems",
+        "correct": true,
+        "why": "Right: the bakery’s old region and the cheese plant’s sales in Business Central are not in S/4HANA."
+      },
+      {
+        "text": "Live figures change during the day, and the board prefers figures fixed at midnight by the nightly load",
+        "correct": false,
+        "why": "Freshness is what reporting on production gains; the lesson’s remaining argument is about history and breadth."
+      }
+    ]
+  },
+  {
+    "id": "ex-fva3sgwx",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Talita wants Salesforce reps to create orders in SAP and see the order number at once. Which belong in Joana's design? Choose all that apply.",
+    "hint": "The door, its two habits, the register, and where tests point.",
+    "choices": [
+      {
+        "text": "A BAPI called over RFC through the bus, followed by the commit",
+        "correct": true,
+        "why": "Yes: a rep waiting for a number needs a synchronous call, and a BAPI that writes needs the commit."
+      },
+      {
+        "text": "Testing against PRD, client 100, because QAS data is less realistic",
+        "correct": false,
+        "why": "Tests point at QAS and never at PRD; keeping QAS realistic is the work to do instead."
+      },
+      {
+        "text": "Reading the returned messages, not only the order number",
+        "correct": true,
+        "why": "Yes: a BAPI reports failure as data, and a caller reading only the number reads an empty one as success."
+      },
+      {
+        "text": "A line in the register: about how many sales orders a month it creates",
+        "correct": true,
+        "why": "Yes: the documents an integration creates are what indirect use is priced on, so the contracts team needs the count."
+      }
+    ]
+  },
+  {
+    "id": "ex-h30tgjx0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Sebastião asks whether Coleta’s nightly file must change for a brownfield move to S/4HANA. What should Joana tell him?",
+    "hint": "The file is one thing; the Z program that reads it is another.",
+    "choices": [
+      {
+        "text": "Yes: goods receipts move to MATDOC, so Coleta has to write a new layout",
+        "correct": false,
+        "why": "MATDOC is inside SAP; Coleta never sees a table, so the file layout is not what the new table changes."
+      },
+      {
+        "text": "No: a brownfield conversion keeps everything, so nothing on either side of the file changes",
+        "correct": false,
+        "why": "It keeps the Z program, but every Z object is checked against the Simplification List, the loader included."
+      },
+      {
+        "text": "The file is unaffected; the Z loader is checked, and posting through SAP's logic decides the work",
+        "correct": true,
+        "why": "Right: if the loader posts goods receipts through SAP’s own logic it carries over easily; if it writes tables itself, it is rewritten."
+      },
+      {
+        "text": "Only if the loader appears in the usage log as unused",
+        "correct": false,
+        "why": "The loader runs every night at 02:00, so it is the opposite of a deletion candidate."
+      }
+    ]
+  },
+  {
+    "id": "ex-7k9x0efe",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the third working day of the month, Rui's team finds that a change inside SAP is needed to stop EDI orders failing. What happens to it?",
+    "hint": "Two calendars meet here: the transport windows and the close.",
+    "choices": [
+      {
+        "text": "It goes into PRD that evening, because EDI failures cost sales",
+        "correct": false,
+        "why": "Imports stop in the first five working days while finance closes; urgency alone does not reopen the window."
+      },
+      {
+        "text": "Rui’s team edits the mapping in PRD directly and records it in DEV afterwards",
+        "correct": false,
+        "why": "PRD cannot be edited, and the auditors who certify the books check that setting."
+      },
+      {
+        "text": "It skips QAS so that it reaches the Tuesday import",
+        "correct": false,
+        "why": "A request reaches PRD after QAS, in release order; skipping the test does not move the calendar."
+      },
+      {
+        "text": "It waits for the window after the close, unless Edson signs an emergency transport",
+        "correct": true,
+        "why": "Right: the close week freezes imports, and an emergency transport is the one exception, decided by Edson."
+      }
+    ]
+  }
+]
