@@ -251,10 +251,24 @@ func TestRun(t *testing.T) {
 
 ```
 ana@vm:~/cli-hits$ go test -v .
-# example.com/hits
-main_test.go:1:1: expected 'package', found 'EOF'
-FAIL	example.com/hits [setup failed]
-FAIL
+=== RUN   TestRun
+=== RUN   TestRun/count_from_stdin
+=== RUN   TestRun/flags_after_the_file
+=== RUN   TestRun/no_command
+=== RUN   TestRun/typo
+=== RUN   TestRun/bad_value
+=== RUN   TestRun/bad_line
+=== RUN   TestRun/two_files
+--- PASS: TestRun (0.00s)
+    --- PASS: TestRun/count_from_stdin (0.00s)
+    --- PASS: TestRun/flags_after_the_file (0.00s)
+    --- PASS: TestRun/no_command (0.00s)
+    --- PASS: TestRun/typo (0.00s)
+    --- PASS: TestRun/bad_value (0.00s)
+    --- PASS: TestRun/bad_line (0.00s)
+    --- PASS: TestRun/two_files (0.00s)
+PASS
+ok  	example.com/hits	0.003s
 ```
 
 **The second row, `flags after the file`, is a test lesson 1's version would fail**, and the
@@ -262,9 +276,8 @@ FAIL
 
 ```
 ana@vm:~/cli-hits$ sed -i '/ExitErrHandler/d' main.go; go test .
-# example.com/hits
-main_test.go:1:1: expected 'package', found 'EOF'
-FAIL	example.com/hits [setup failed]
+hits: no command given (see 'hits --help')
+FAIL	example.com/hits	0.003s
 FAIL
 ```
 

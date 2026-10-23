@@ -192,7 +192,6 @@ ana@vm:~/cli-hits$ ./hits --generate-shell-completion
 count:requests per status code
 top:the paths with the most requests
 help:Shows a list of commands or help for one command
-/home/user/schooling/content/code/courses/go-production/lessons/le-jnxddvfk/help-errors-and-exit.md: 0 blocks printing main_test.go, and this needs exactly one
 ```
 
 **O script chama o próprio `hits` toda vez que se aperta Tab**, com `--generate-shell-completion`
@@ -256,10 +255,24 @@ func TestRun(t *testing.T) {
 
 ```
 ana@vm:~/cli-hits$ go test -v .
-# example.com/hits
-main_test.go:1:1: expected 'package', found 'EOF'
-FAIL	example.com/hits [setup failed]
-FAIL
+=== RUN   TestRun
+=== RUN   TestRun/count_from_stdin
+=== RUN   TestRun/flags_after_the_file
+=== RUN   TestRun/no_command
+=== RUN   TestRun/typo
+=== RUN   TestRun/bad_value
+=== RUN   TestRun/bad_line
+=== RUN   TestRun/two_files
+--- PASS: TestRun (0.00s)
+    --- PASS: TestRun/count_from_stdin (0.00s)
+    --- PASS: TestRun/flags_after_the_file (0.00s)
+    --- PASS: TestRun/no_command (0.00s)
+    --- PASS: TestRun/typo (0.00s)
+    --- PASS: TestRun/bad_value (0.00s)
+    --- PASS: TestRun/bad_line (0.00s)
+    --- PASS: TestRun/two_files (0.00s)
+PASS
+ok  	example.com/hits	0.003s
 ```
 
 **A segunda linha, `flags after the file`, é um teste em que a versão da lição 1 falharia**, e a
@@ -267,9 +280,8 @@ linha `typo` fixa a sugestão. Agora apague a linha do `ExitErrHandler` e rode o
 
 ```
 ana@vm:~/cli-hits$ sed -i '/ExitErrHandler/d' main.go; go test .
-# example.com/hits
-main_test.go:1:1: expected 'package', found 'EOF'
-FAIL	example.com/hits [setup failed]
+hits: no command given (see 'hits --help')
+FAIL	example.com/hits	0.003s
 FAIL
 ```
 

@@ -135,7 +135,10 @@ case "${1:-}" in
   place)
     need_root
     [ $# -eq 5 ] || { echo "usage: lab.sh place LESSON SECTION FILE DIR" >&2; exit 2; }
-    body=$(show "$2" "$3" "$4"; printf x)
+    # show fails on a missing or ambiguous block; place must fail with it
+    # rather than leave an empty file for the next command to trip over.
+    body=$(show "$2" "$3" "$4") || exit 1
+    body="$body"$'\n'x
     printf '%s' "${body%x}" | as_student "mkdir -p \"\$(dirname ~/'$5/$4')\" && cat > ~/'$5/$4'"
     ;;
   *)

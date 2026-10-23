@@ -217,7 +217,9 @@ de fato entra no binário é uma pergunta sobre pacotes, e o `go list -deps` a r
 
 ```
 ana@vm:~/cli-hits$ go list -deps . | grep "\."
-main_test.go:1:1: expected 'package', found 'EOF'
+example.com/hits/internal/tally
+github.com/urfave/cli/v3
+example.com/hits
 ana@vm:~/cobra-cmp$ go list -deps . | grep "\."
 example.com/hits/internal/tally
 vendor/golang.org/x/net/dns/dnsmessage
