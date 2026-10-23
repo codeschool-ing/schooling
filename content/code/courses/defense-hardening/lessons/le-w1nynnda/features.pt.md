@@ -75,20 +75,20 @@ A aula começou com uma varredura a partir do `desk`, e termina com a mesma:
 
 ```
 ana@desk:~$ nmap web
-Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-10-23 09:46 -03
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-10-23 10:10 -03
 Nmap scan report for web (192.168.60.10)
-Host is up (0.000098s latency).
+Host is up (0.00013s latency).
 rDNS record for 192.168.60.10: web.jatoba.example
 Not shown: 998 closed tcp ports (conn-refused)
 PORT   STATE SERVICE
 22/tcp open  ssh
 80/tcp open  http
 
-Nmap done: 1 IP address (1 host up) scanned in 0.04 seconds
+Nmap done: 1 IP address (1 host up) scanned in 0.06 seconds
 ana@desk:~$ sudo nmap -sU -p 111,161,5353 web
-Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-10-23 09:46 -03
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-10-23 10:10 -03
 Nmap scan report for web (192.168.60.10)
-Host is up (0.000073s latency).
+Host is up (0.00011s latency).
 rDNS record for 192.168.60.10: web.jatoba.example
 
 PORT     STATE  SERVICE

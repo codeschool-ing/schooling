@@ -10,16 +10,16 @@ endereço e porta, e o nome do programa, porque a linha completa é mais larga q
 
 ```
 ana@web:~$ sudo ss -Htulpn | awk '{split($7, p, "\""); print $1, $5, p[2]}'
-udp 0.0.0.0:5353 avahi-daemon
-udp 0.0.0.0:56134 avahi-daemon
 udp 0.0.0.0:111 rpcbind
 udp 0.0.0.0:161 snmpd
-tcp 127.0.0.1:8080 python3
+udp 0.0.0.0:5353 avahi-daemon
+udp 0.0.0.0:55827 avahi-daemon
 tcp 0.0.0.0:80 nginx
 tcp 0.0.0.0:111 rpcbind
-tcp 0.0.0.0:22 sshd
 tcp 0.0.0.0:23 inetd
+tcp 0.0.0.0:22 sshd
 tcp 0.0.0.0:21 vsftpd
+tcp 127.0.0.1:8080 python3
 ```
 
 Tudo o que a varredura achou está aqui, com um nome do lado, e mais duas coisas que ela não
@@ -93,8 +93,8 @@ rpcbind.socket
 Stopping 'rpcbind.service', but its triggering units are still active:
 rpcbind.socket
 ana@web:~$ sudo ss -Htulpn | grep ':111 '
-udp UNCONN 0      0        0.0.0.0:111   0.0.0.0:* users:(("systemd",pid=1,fd=109))                                                                                     
-tcp LISTEN 0      4096     0.0.0.0:111   0.0.0.0:* users:(("systemd",pid=1,fd=108))                                                                                     
+udp UNCONN 0      0        0.0.0.0:111   0.0.0.0:* users:(("systemd",pid=1,fd=115))                                                                                     
+tcp LISTEN 0      4096     0.0.0.0:111   0.0.0.0:* users:(("systemd",pid=1,fd=114))                                                                                     
 ```
 
 O serviço parou, e a porta 111 continua aberta, agora segura pelo próprio `systemd`, o processo 1.
