@@ -1,0 +1,719 @@
+[
+  {
+    "id": "ex-ws7t6b3x",
+    "version": 1,
+    "section": "two-models",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The `RunsOnce` button was clicked three times. How many lines of the transcript start with `render read count`?",
+    "hint": "The first draw counts too.",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-1fdq6r5x",
+    "version": 1,
+    "section": "two-models",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the `RunsOnce` demo, why does `setup ran` appear once although the button was clicked three times?",
+    "hint": "Which part of the component is the render?",
+    "choices": [
+      {
+        "text": "`<script setup>` runs once, when the component is created",
+        "correct": true,
+        "why": "Right. After that, only the render that read `count` runs again on each click."
+      },
+      {
+        "text": "Vue prints a repeated console line once",
+        "correct": false,
+        "why": "Nothing is merged: `render read count` was printed four times, one line per render."
+      },
+      {
+        "text": "The inline handler `count++` bypasses the setup, and a named function would have run it again",
+        "correct": false,
+        "why": "How the handler is written makes no difference. A change in Vue runs the renders that read the value, whatever wrote it."
+      },
+      {
+        "text": "The setup ran on every click, but Vite's console shows a line from the setup only on the first load",
+        "correct": false,
+        "why": "The transcript shows every line the page logged; `setup ran` is there once because the setup ran once."
+      }
+    ]
+  },
+  {
+    "id": "ex-5shwx1fh",
+    "version": 1,
+    "section": "two-models",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A React component and a Vue component each log a line at the top of their code, outside anything rendered. The value they show changes three times. How many times is each line printed in all?",
+    "hint": "In React, the whole function is the render.",
+    "choices": [
+      {
+        "text": "React 4, Vue 4",
+        "correct": false,
+        "why": "That is the picture of Vue as React with different syntax. Vue's setup is not the render, and it does not run again."
+      },
+      {
+        "text": "React 4, Vue 1",
+        "correct": true,
+        "why": "Right. React calls the whole function for the first draw and for each change; Vue runs its setup once and reruns only the render."
+      },
+      {
+        "text": "React 1, Vue 4",
+        "correct": false,
+        "why": "The models are the other way round: React reruns the function, and Vue remembers what was read."
+      },
+      {
+        "text": "React 3, Vue 3",
+        "correct": false,
+        "why": "This forgets the first draw, and it treats the two models as one."
+      }
+    ]
+  },
+  {
+    "id": "ex-ma6d833k",
+    "version": 1,
+    "section": "two-models",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `RunsOnce`, the button changes `count`. Which of these run again after a click? Choose all that apply.",
+    "hint": "What did the template read?",
+    "choices": [
+      {
+        "text": "`console.log('setup ran')`",
+        "correct": false,
+        "why": "It is in the setup, which ran once; the transcript shows it a single time."
+      },
+      {
+        "text": "The template's render",
+        "correct": true,
+        "why": "Right. It read `count`, so a write to `count` runs it again."
+      },
+      {
+        "text": "The call to `ref(0)` that made `count`",
+        "correct": false,
+        "why": "That would make a new ref at 0 on every click and the count would never grow. It belongs to the setup."
+      },
+      {
+        "text": "`label()`, called from the template",
+        "correct": true,
+        "why": "Right. The template calls it, so it runs every time the template does, and it logs each time."
+      }
+    ]
+  },
+  {
+    "id": "ex-ve55ygkb",
+    "version": 1,
+    "section": "ref",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `const counts = { total: ref(0) }` in `<script setup>`, what did `{{ counts.total + 1 }}` show?",
+    "hint": "`counts` is a plain object, and the ref is inside it.",
+    "choices": [
+      {
+        "text": "`1`",
+        "correct": false,
+        "why": "That is what `{{ total + 1 }}` showed, because `total` is a top-level name and was unwrapped before the `+`."
+      },
+      {
+        "text": "`NaN`, because the `+` met an object it could not turn into a number",
+        "correct": false,
+        "why": "When one side is an object, `+` turns it into a string and joins; it does not try for a number."
+      },
+      {
+        "text": "`0`, because the interpolation unwrapped the ref and then ignored the addition",
+        "correct": false,
+        "why": "That is `{{ counts.total }}` on its own. The unwrapping at the end happens after the `+` has already met the wrapper."
+      },
+      {
+        "text": "`[object Object]1`",
+        "correct": true,
+        "why": "Right. A ref nested in a plain object is not unwrapped inside an expression, so the `+` turned the wrapper into a string."
+      }
+    ]
+  },
+  {
+    "id": "ex-c6p69624",
+    "version": 1,
+    "section": "ref",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A helper `startTimer(m)` reads `m` once a minute and logs it. The component calls `startTimer(minutes.value)`, and later sets `minutes.value = 50`. What does the timer log after that?",
+    "hint": "What was the helper handed: the wrapper, or what was inside it?",
+    "choices": [
+      {
+        "text": "50, because a write to `.value` reaches everybody who read the ref",
+        "correct": false,
+        "why": "The helper never read the ref. It was given the number that was inside it at that moment."
+      },
+      {
+        "text": "The old number",
+        "correct": true,
+        "why": "Right. `minutes.value` handed over a plain number, and a number does not change. Passing `minutes` itself would let the helper read the current value."
+      },
+      {
+        "text": "A `RefImpl` object, because the ref is passed whole",
+        "correct": false,
+        "why": "That is what passing `minutes` without `.value` would log. With `.value`, the number is passed."
+      },
+      {
+        "text": "50, once the update queue has run",
+        "correct": false,
+        "why": "The queue reruns renders that read the ref. A function holding a copy of the number is not one of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-3ewf4fqg",
+    "version": 1,
+    "section": "ref",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "For large data you replace whole and never change in place, `___` watches `.value` and nothing inside it.",
+    "hint": "A variant of `ref`, named for how deep it looks.",
+    "blanks": [
+      {
+        "accept": [
+          "shallowRef"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tg7mzygr",
+    "version": 1,
+    "section": "reactive",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `ReactiveProxy`, the first click went through the proxy and the second added 10 to `raw.minutes`. What did the page say after both?",
+    "hint": "`raw.minutes is now 50` was logged.",
+    "choices": [
+      {
+        "text": "spanish: 40 minutes",
+        "correct": true,
+        "why": "Right. Only the first change went through the proxy, so only the first was seen."
+      },
+      {
+        "text": "spanish: 50 minutes",
+        "correct": false,
+        "why": "That is the value inside the object, but nothing told Vue it changed, so the page was not redrawn."
+      },
+      {
+        "text": "spanish: 30 minutes",
+        "correct": false,
+        "why": "The first click went through the proxy and was drawn: 30 became 40."
+      },
+      {
+        "text": "An error, because the original was changed after a proxy was made of it",
+        "correct": false,
+        "why": "Changing the original is ordinary JavaScript and raises nothing. That silence is the trap."
+      }
+    ]
+  },
+  {
+    "id": "ex-ahvev45j",
+    "version": 1,
+    "section": "reactive",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the second `ReactiveProxy` run, a third click went through the proxy and the page jumped from 40 to 60. Why 60 and not 50?",
+    "hint": "What was inside the object before the third click?",
+    "choices": [
+      {
+        "text": "The proxy queued the change made through the original and replayed it on the next write",
+        "correct": false,
+        "why": "No change was recorded. The proxy reads and writes the same object, which already held 50."
+      },
+      {
+        "text": "The third click added 20, to make up for the one that was missed",
+        "correct": false,
+        "why": "`viaProxy` adds 10 every time; it knows nothing about the earlier click."
+      },
+      {
+        "text": "`raw` became reactive once a proxy existed",
+        "correct": false,
+        "why": "`isReactive(raw)` printed `false`. Making a proxy does not change the object it wraps."
+      },
+      {
+        "text": "The object already held 50, because the second click changed it, and the redraw showed what it held",
+        "correct": true,
+        "why": "Right. The change behind Vue's back was never lost, only unseen until something else caused a redraw."
+      }
+    ]
+  },
+  {
+    "id": "ex-evx5y9ry",
+    "version": 1,
+    "section": "reactive",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these can `reactive()` make reactive? Choose all that apply.",
+    "hint": "The demo tried one that cannot, and Vue warned.",
+    "choices": [
+      {
+        "text": "A Map",
+        "correct": true,
+        "why": "Right. Objects, arrays, Maps and Sets are what a Proxy can stand in for."
+      },
+      {
+        "text": "The number 25",
+        "correct": false,
+        "why": "The demo logged `value cannot be made reactive: 25` and handed the number back. A number has no properties to watch; that is what `ref` is for."
+      },
+      {
+        "text": "An array of sessions",
+        "correct": true,
+        "why": "Right. An array is an object, and its reads and writes go through the proxy."
+      },
+      {
+        "text": "A plain object such as `{ course: 'spanish' }`",
+        "correct": true,
+        "why": "Right. That is the case the demo built."
+      }
+    ]
+  },
+  {
+    "id": "ex-wq8qpnmq",
+    "version": 1,
+    "section": "reactive",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`isReactive(session.tags)` printed `true`, although `tags` was a plain array in `raw`. What does that show?",
+    "hint": "The array was reached through something.",
+    "choices": [
+      {
+        "text": "`reactive()` copied the whole object, arrays included, when it was called",
+        "correct": false,
+        "why": "Nothing was copied: `isReactive(raw)` stayed `false` and the proxy reads the original. The nested proxy is made when it is read."
+      },
+      {
+        "text": "Arrays are reactive in Vue by default",
+        "correct": false,
+        "why": "`raw.tags` is the same array, and it is not reactive. What made the difference is the path it was read through."
+      },
+      {
+        "text": "`tags` was turned into a ref",
+        "correct": false,
+        "why": "It is read as `session.tags` with no `.value`. Inside `reactive`, it is a proxy rather than a ref."
+      },
+      {
+        "text": "Reading a nested object through a proxy returns a proxy of it",
+        "correct": true,
+        "why": "Right. That is what deep means here: however far down a change is made, the path to it went through a proxy."
+      }
+    ]
+  },
+  {
+    "id": "ex-tzvabqr8",
+    "version": 1,
+    "section": "losing-it",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `LostReactivity`, `week.done` went from 75 to 95. What did the line `destructured: {{ done }}` show after the click?",
+    "hint": "`const { done } = week` ran once, in the setup.",
+    "choices": [
+      {
+        "text": "95, a moment after the click",
+        "correct": false,
+        "why": "That is how the update queue looks, but there is nothing to catch up: `done` is a plain number, and nothing will redraw it to 95."
+      },
+      {
+        "text": "95",
+        "correct": false,
+        "why": "That is the `toRefs` line. Destructuring the proxy itself took a copy of the number."
+      },
+      {
+        "text": "75",
+        "correct": true,
+        "why": "Right. Destructuring read `week.done` once and put the number in a new variable, and a number cannot report a change."
+      },
+      {
+        "text": "Nothing, and a warning that a reactive object was destructured",
+        "correct": false,
+        "why": "Vue gives no warning, because taking a value out of an object is ordinary JavaScript. The page showed a number, the wrong one."
+      }
+    ]
+  },
+  {
+    "id": "ex-mcbehw9p",
+    "version": 1,
+    "section": "losing-it",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`const { done } = week` takes a copy. To get a single ref that stays linked to that property instead, write `___(week, 'done')`.",
+    "hint": "The singular of the function that does it for every property.",
+    "blanks": [
+      {
+        "accept": [
+          "toRef"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bc0wv5ag",
+    "version": 1,
+    "section": "losing-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A component declares `let week = reactive({ planned: 0, done: 0 })`, and when the data arrives runs `week = reactive(loaded)`. What does the page show?",
+    "hint": "Which proxy does the template hold?",
+    "choices": [
+      {
+        "text": "The loaded data, once the update queue has run",
+        "correct": false,
+        "why": "The queue reruns renders that read a value that changed. Nothing the template read changed: it still holds the first proxy."
+      },
+      {
+        "text": "The zeros of the first object",
+        "correct": true,
+        "why": "Right. Pointing the variable at a second proxy changes nothing on the screen. A `ref` and `week.value = loaded` is the fix."
+      },
+      {
+        "text": "An error, because a reactive variable is a constant",
+        "correct": false,
+        "why": "It was declared with `let`, so the assignment is legal JavaScript. Nothing complains, which is why it slips through."
+      },
+      {
+        "text": "The loaded data, and the old proxy is thrown away",
+        "correct": false,
+        "why": "The template was compiled against the first proxy and keeps it; the second is one nobody watches."
+      }
+    ]
+  },
+  {
+    "id": "ex-gqp4hjza",
+    "version": 1,
+    "section": "losing-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The script has `const left = minutesLeft(week.goal, week.done)` and the template shows `{{ left }}`. When `week.done` changes, `left` stays. What is the fix the lesson gives?",
+    "hint": "A value that has to be recomputed whenever its inputs change.",
+    "choices": [
+      {
+        "text": "`await nextTick()` before reading `left`",
+        "correct": false,
+        "why": "`nextTick` waits for the page to catch up. It does not recompute a number that was taken once."
+      },
+      {
+        "text": "Wrap the result: `const left = ref(minutesLeft(week.goal, week.done))`",
+        "correct": false,
+        "why": "That makes a ref holding the first answer. Nothing writes to it when `week.done` changes, so it stays."
+      },
+      {
+        "text": "`computed(() => minutesLeft(week.goal, week.done))`",
+        "correct": true,
+        "why": "Right. The reads happen inside the `computed`, so they are tracked and it recomputes. Lesson 3 is about it."
+      },
+      {
+        "text": "Destructure first: `const { goal, done } = toRefs(week)` and pass those",
+        "correct": false,
+        "why": "The function would receive refs and subtract wrappers. It also still runs once; the call itself is what needs to be repeated."
+      }
+    ]
+  },
+  {
+    "id": "ex-bbfc5jag",
+    "version": 1,
+    "section": "the-update-queue",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`addThree` changed `count` three times in a row. How many times was `render with count = 3` logged?",
+    "hint": "The writes queue redraws.",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-tt5xdkd4",
+    "version": 1,
+    "section": "the-update-queue",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside `addThree`, right after the three increments, the code reads the `<output>`. What did it find, and why?",
+    "hint": "Look at the line that starts `count is 3`.",
+    "choices": [
+      {
+        "text": "1, because the first write redrew the page and the other two waited",
+        "correct": false,
+        "why": "No write redrew the page on the spot. All three were queued into one redraw that ran after the function paused."
+      },
+      {
+        "text": "3, because each write redraws at once",
+        "correct": false,
+        "why": "That is the common picture, and the transcript refutes it: `the page still says 0`."
+      },
+      {
+        "text": "Nothing yet, because the `<output>` is drawn only after `nextTick`",
+        "correct": false,
+        "why": "The output was drawn on the first render with 0; it is waiting to be redrawn, not to exist."
+      },
+      {
+        "text": "0, because the redraw is queued and waits for the code that changed `count` to finish",
+        "correct": true,
+        "why": "Right. The value was 3 and the page still said 0; the queue runs as a microtask once the current code is done."
+      }
+    ]
+  },
+  {
+    "id": "ex-63bkyfq0",
+    "version": 1,
+    "section": "the-update-queue",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's total is wrong for a moment after each change, so they `await nextTick()` before computing it from the DOM. What does the lesson say this signals?",
+    "hint": "`nextTick` is about the page, not about values.",
+    "choices": [
+      {
+        "text": "The total is computed in the wrong place, and belongs in `computed`",
+        "correct": true,
+        "why": "Right. A `computed` is never stale. `nextTick` is for touching the DOM after a change, such as focusing a field that just appeared."
+      },
+      {
+        "text": "Nothing wrong: this is what `nextTick` is for",
+        "correct": false,
+        "why": "Waiting for the page and then reading a value off it puts a value where the DOM is the source. The lesson keeps `nextTick` for work on the DOM itself."
+      },
+      {
+        "text": "The update queue is broken and has to be flushed by hand",
+        "correct": false,
+        "why": "The queue did what it does: one redraw after the code finished. There is nothing to flush."
+      },
+      {
+        "text": "The changes should be made with `reactive` instead of `ref`",
+        "correct": false,
+        "why": "Both queue their redraws the same way. Which wrapper holds the value does not change when the page catches up."
+      }
+    ]
+  },
+  {
+    "id": "ex-6p31r0hr",
+    "version": 1,
+    "section": "loading-the-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `public/courses.json` moved away, the page said `Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON`. What happened?",
+    "hint": "`curl -si` showed the reply's first lines.",
+    "choices": [
+      {
+        "text": "The file was found but had a stray `<` in it",
+        "correct": false,
+        "why": "There was no file at all. The `<` starts the HTML of a page."
+      },
+      {
+        "text": "The server answered 404, and `fetch` turned it into a JSON error",
+        "correct": false,
+        "why": "A 404 would have failed the `response.ok` check with its own message. `curl` showed `HTTP/1.1 200 OK`."
+      },
+      {
+        "text": "The request got the application's HTML page, with a 200",
+        "correct": true,
+        "why": "Right. Vite answers an address it does not have with the page, so `response.ok` was true and `response.json()` failed on the first `<`."
+      },
+      {
+        "text": "Vite had not started yet, and answered with its loading screen",
+        "correct": false,
+        "why": "The dev server was running and served the rest of the page; it answered this address with the application, as it does for anything unknown."
+      }
+    ]
+  },
+  {
+    "id": "ex-ejf08pht",
+    "version": 1,
+    "section": "loading-the-data",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the planner's header have a `Loading…` state at all?",
+    "hint": "When does the request start, and what is drawn before it ends?",
+    "choices": [
+      {
+        "text": "Vite shows it on its own while modules load",
+        "correct": false,
+        "why": "The paragraph is in `App.vue`, chosen by `v-else-if=\"courses.length === 0\"`. Vite draws nothing of the page."
+      },
+      {
+        "text": "The refs start empty and the page is drawn before the file arrives",
+        "correct": true,
+        "why": "Right. The setup starts the request and the template draws what the refs hold, an empty list, until the data replaces it."
+      },
+      {
+        "text": "`fetch` blocks the component until the file is read, and the paragraph covers that pause",
+        "correct": false,
+        "why": "`fetch` does not block anything. The component is drawn at once, which is why there is a state to draw."
+      },
+      {
+        "text": "Every `ref` is shown as loading until its first write",
+        "correct": false,
+        "why": "A ref has no loading state. The template decides what an empty list means."
+      }
+    ]
+  },
+  {
+    "id": "ex-rqf7db1w",
+    "version": 1,
+    "section": "loading-the-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The data arrives and the code runs `courses.value = data.courses`. Why does the list appear, though the template was drawn while `courses` was empty?",
+    "hint": "What did the template read the first time it was drawn?",
+    "choices": [
+      {
+        "text": "Assigning `.value` reruns every render that read `courses`",
+        "correct": true,
+        "why": "Right. The template read `courses.value` without saying so, and replacing it redrew what depended on it."
+      },
+      {
+        "text": "The `.then` calls tell Vue to draw the component again from the start",
+        "correct": false,
+        "why": "Promises know nothing about Vue, and nothing is drawn again from the start: the setup runs once."
+      },
+      {
+        "text": "`v-for` checks its array again on a timer",
+        "correct": false,
+        "why": "There is no polling. The redraw happens because of the write, not because time passed."
+      },
+      {
+        "text": "The browser replaces the empty `<ul>` when `fetch` resolves",
+        "correct": false,
+        "why": "The browser does not connect a request to an element. Vue redrew the list because a ref the template read was written."
+      }
+    ]
+  },
+  {
+    "id": "ex-6cwcp4z9",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens when the planner opens in the order it happens.",
+    "items": [
+      "`<script setup>` runs and starts the `fetch`",
+      "The template draws `Loading…`",
+      "`/courses.json` arrives",
+      "`courses.value` is assigned",
+      "The render that read `courses` runs again"
+    ]
+  },
+  {
+    "id": "ex-4pe7wraf",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each line of code to what it leaves you with.",
+    "hint": "Each of them either reads through the wrapper or takes something out of it.",
+    "pairs": [
+      {
+        "left": "`const { done } = week`",
+        "right": "A number taken once"
+      },
+      {
+        "left": "`week = reactive(other)`",
+        "right": "A second proxy nobody watches"
+      },
+      {
+        "left": "`const { done } = toRefs(week)`",
+        "right": "A ref linked to the proxy"
+      },
+      {
+        "left": "`raw.minutes += 10`",
+        "right": "A change the page has not seen"
+      }
+    ],
+    "right_distractors": [
+      "A warning in the console"
+    ]
+  },
+  {
+    "id": "ex-xw48808q",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A component has `const goal = ref(180)` and `const doubled = goal.value * 2`, and the template shows `{{ goal }}` and `{{ doubled }}`. A button sets `goal.value = 200`. After the redraw, what does the page show?",
+    "hint": "One of the two names is a ref; the other was computed from one, once.",
+    "choices": [
+      {
+        "text": "200 and 400",
+        "correct": false,
+        "why": "That would need `doubled` to be a `computed`. As written, it is a number taken once in the setup."
+      },
+      {
+        "text": "180 and 360, because the template unwraps refs only on the first draw",
+        "correct": false,
+        "why": "The template reads `goal` on every render, and the write to `goal.value` reruns it, so `goal` shows 200."
+      },
+      {
+        "text": "200 and 360",
+        "correct": true,
+        "why": "Right. `goal` is read through the wrapper at render time; `doubled` is a plain number that the setup computed once."
+      },
+      {
+        "text": "200 and `[object Object]2`",
+        "correct": false,
+        "why": "`goal.value` is the number 180, so `goal.value * 2` is 360. The wrapper meets an operator only when `.value` is left out."
+      }
+    ]
+  },
+  {
+    "id": "ex-spw83fmj",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`week` is a `reactive` object. Which of these show the current `week.done` after it changes? Choose all that apply.",
+    "hint": "Read through the wrapper at the last moment.",
+    "choices": [
+      {
+        "text": "`{{ week.done }}` in the template",
+        "correct": true,
+        "why": "Right. The template reads through the proxy on every render, so the read is tracked."
+      },
+      {
+        "text": "`const shown = week.done` in the script, then `{{ shown }}`",
+        "correct": false,
+        "why": "That reads early, into a plain variable, and holds a copy of the number."
+      },
+      {
+        "text": "`const left = computed(() => week.goal - week.done)`, then `{{ left }}`",
+        "correct": true,
+        "why": "Right. The read happens inside the `computed`, which recomputes when `week.done` changes."
+      },
+      {
+        "text": "`const { done } = toRefs(week)`, then `{{ done }}`",
+        "correct": true,
+        "why": "Right. Each piece is a ref linked to the proxy's property."
+      }
+    ]
+  }
+]
