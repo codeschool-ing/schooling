@@ -44,10 +44,10 @@ serviço tentou mandar para um endereço fora da faixa de loopback, sem resposta
 pequeno programa BPF preso ao grupo de controle do serviço, e vale para todo processo que o serviço
 iniciar, com qualquer conta.
 
-**Testar não foi formalidade.** Quando este laboratório foi montado pela primeira vez, os contêineres
-dele não tinham permissão para a chamada de sistema que o systemd usa para prender esses programas, e
-o mesmo comando conectou: as opções apareciam exatamente como acima e não faziam nada, sem erro em
-tela nenhuma. Essa é a regra da aula 1 na forma mais afiada: **uma configuração é uma afirmação até um
+**Testar não é formalidade.** O systemd prende esses programas com a chamada de sistema `bpf`, e o
+`systemd-nspawn` proíbe essa chamada dentro de um contêiner a não ser que receba ordem em contrário,
+e é por isso que o `hostlab.sh` a libera no boot. Sem ela o mesmo comando conecta: as opções aparecem
+exatamente como acima e não fazem nada, sem erro em tela nenhuma. Essa é a regra da aula 1 na forma mais afiada: **uma configuração é uma afirmação até um
 cliente ser recusado**, e uma configuração de firewall que em silêncio não faz nada é pior que
 nenhuma, porque todo mundo acredita nela.
 

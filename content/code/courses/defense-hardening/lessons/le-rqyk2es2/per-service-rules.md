@@ -43,9 +43,10 @@ service tried to send to an address outside the loopback range, without a word b
 a small BPF program attached to the service's control group, and it applies to every process the
 service starts, under any account.
 
-**Testing it was not a formality.** When this lab was first built, its containers were not allowed
-the system call systemd uses to attach those programs, and the same command connected: the settings
-printed exactly as above and did nothing at all, with no error on any screen. That is lesson 1's
+**Testing it is not a formality.** systemd attaches those programs with the `bpf` system call, and
+`systemd-nspawn` forbids that call inside a container unless it is told otherwise, which is why
+`hostlab.sh` allows it at boot. Without it the same command connects: the settings print exactly as
+above and do nothing at all, with no error on any screen. That is lesson 1's
 rule in its sharpest form: **a setting is a claim until a client has been refused**, and a firewall
 setting that silently does nothing is worse than none, because everybody believes it.
 
