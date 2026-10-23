@@ -1,0 +1,799 @@
+[
+  {
+    "id": "ex-1rfqtm7x",
+    "version": 1,
+    "section": "controllers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `@RequestMapping(\"/books\")` on the controller class do?",
+    "hint": "Look at what the paths of the two methods are once the application runs.",
+    "choices": [
+      {
+        "text": "It limits the whole class to GET requests",
+        "correct": false,
+        "why": "No. It names a path and no method; `@GetMapping` and `@PostMapping` on the methods choose the method."
+      },
+      {
+        "text": "It registers a servlet of its own, listening at `/books`",
+        "correct": false,
+        "why": "There is one servlet, the `DispatcherServlet`; the annotation adds rows to its table of mappings."
+      },
+      {
+        "text": "It makes the class a bean, so the component scan finds it",
+        "correct": false,
+        "why": "That is `@RestController`, which carries `@Component` inside it. `@RequestMapping` only describes paths."
+      },
+      {
+        "text": "It prefixes every method's path with `/books`",
+        "correct": true,
+        "why": "Right. `@GetMapping(\"/{id}\")` below it answers `/books/{id}`, and `@GetMapping` alone answers `/books`."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ez25916",
+    "version": 1,
+    "section": "controllers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`GET /books/99` answered 404 with `Content-Length: 0`, and `GET /authors` answered 404 with a JSON body. Why the difference?",
+    "choices": [
+      {
+        "text": "Book 99 was deleted earlier, and Spring answers a request for a deleted resource with an empty 404",
+        "correct": false,
+        "why": "Nothing was ever deleted; book 99 never existed. The difference is who wrote the answer."
+      },
+      {
+        "text": "Tomcat answered `/authors` directly, before Spring saw it",
+        "correct": false,
+        "why": "The body has Spring Boot's fields, `timestamp`, `status`, `error` and `path`. Spring did see it, and mapped it nowhere."
+      },
+      {
+        "text": "The controller chose an empty 404; nothing handled `/authors`, so Spring Boot wrote that one",
+        "correct": true,
+        "why": "Right. `ResponseEntity.notFound().build()` is a status and nothing else. A path with no mapping ends in Spring Boot's own error handling, which always writes that body."
+      },
+      {
+        "text": "curl dropped the body of the first because it was sent with `-i`",
+        "correct": false,
+        "why": "Both requests were sent with `-i`. `Content-Length: 0` is the server saying there is nothing to drop."
+      }
+    ]
+  },
+  {
+    "id": "ex-7470m3e0",
+    "version": 1,
+    "section": "controllers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`DELETE /books/1` got `405` and the header `Allow: GET`. What did Spring know in order to answer that?",
+    "choices": [
+      {
+        "text": "That book 1 exists, and existing books cannot be deleted",
+        "correct": false,
+        "why": "Spring never asked the service about book 1. The answer comes from the mappings alone."
+      },
+      {
+        "text": "That the path matches a mapping, and only for GET",
+        "correct": true,
+        "why": "Right. `/books/{id}` is in the table with GET and nothing else, so the method is wrong rather than the path."
+      },
+      {
+        "text": "Nothing: 405 is what Tomcat answers to any DELETE",
+        "correct": false,
+        "why": "`DELETE /authors` would be a 404, because no mapping matches that path for any method."
+      },
+      {
+        "text": "That the client is not allowed to delete, which is a permission",
+        "correct": false,
+        "why": "A missing permission is 403, and this application has no permissions until lesson 15."
+      }
+    ]
+  },
+  {
+    "id": "ex-syqxrtsq",
+    "version": 1,
+    "section": "controllers",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The lesson sends requests with `curl -si -w '\\n'`. Which statements about those flags are true? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "`-i` prints the status line and the headers before the body",
+        "correct": true,
+        "why": "Right. Without it you see only the body, as the list of books showed."
+      },
+      {
+        "text": "`-s` keeps curl from printing anything of its own, such as a progress meter",
+        "correct": true,
+        "why": "Right. It silences curl, not the server."
+      },
+      {
+        "text": "`-w '\\n'` writes a newline after the answer",
+        "correct": true,
+        "why": "Right. JSON does not end with one, and the next prompt would start on the same line."
+      },
+      {
+        "text": "`-s` hides the body and keeps only the status",
+        "correct": false,
+        "why": "The body was printed in every answer that had one. `-s` is about curl's own messages."
+      },
+      {
+        "text": "`-i` turns the request into a HEAD request that asks only for headers",
+        "correct": false,
+        "why": "That is `-I`, capital. Lower-case `-i` sends the same GET and shows more of the answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-bky5np5g",
+    "version": 1,
+    "section": "dispatcher",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens to `GET /books/2` from the moment it reaches the application.",
+    "hint": "Only one of these is your code.",
+    "items": [
+      "Tomcat hands the request to the DispatcherServlet",
+      "the handler mapping finds BookController#get(long)",
+      "the path text \"2\" becomes the long 2",
+      "the method asks the service and returns a ResponseEntity",
+      "Jackson writes the BookResponse as JSON"
+    ]
+  },
+  {
+    "id": "ex-xrrq216j",
+    "version": 1,
+    "section": "dispatcher",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`GET /books/abc` was answered 400, and the method `get` never ran. At which step of the `DispatcherServlet` did the request stop?",
+    "hint": "Read the exception name in the WARN line.",
+    "choices": [
+      {
+        "text": "Finding the method: no mapping matches `abc`",
+        "correct": false,
+        "why": "The pattern `/books/{id}` matches any segment. The log line says the mapping was found and a conversion failed."
+      },
+      {
+        "text": "Resolving the arguments",
+        "correct": true,
+        "why": "Right. `MethodArgumentTypeMismatchException`: \"abc\" could not become the `long` that `@PathVariable long id` asks for."
+      },
+      {
+        "text": "Inside the method, when the service found no book",
+        "correct": false,
+        "why": "A missing book is the empty 404 of book 99. Here the method was never called."
+      },
+      {
+        "text": "Writing the return value, because there was nothing to write",
+        "correct": false,
+        "why": "There was no return value at all; the call never happened."
+      }
+    ]
+  },
+  {
+    "id": "ex-3rjj61zd",
+    "version": 1,
+    "section": "dispatcher",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The bookshop grows to five controllers with twenty mapped methods between them. How many servlets does Tomcat send API requests to?",
+    "choices": [
+      {
+        "text": "Five, one per controller class",
+        "correct": false,
+        "why": "A controller is a bean, not a servlet. Adding one adds rows to the mapping table."
+      },
+      {
+        "text": "Twenty, one per mapped method",
+        "correct": false,
+        "why": "The methods are rows in one table, looked up by one servlet."
+      },
+      {
+        "text": "One, the DispatcherServlet",
+        "correct": true,
+        "why": "Right. A front controller: one entrance, and the routing behind it grows with the controllers."
+      },
+      {
+        "text": "None: Tomcat calls the controller methods directly",
+        "correct": false,
+        "why": "Tomcat knows servlets and nothing about Spring's annotations; it is the dispatcher that reads them."
+      }
+    ]
+  },
+  {
+    "id": "ex-b0azh4ng",
+    "version": 1,
+    "section": "json",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A tutorial writes `import com.fasterxml.jackson.databind.ObjectMapper;`. What does that tell you about it, read from this course's project?",
+    "choices": [
+      {
+        "text": "It predates Jackson 3, whose classes moved to `tools.jackson`",
+        "correct": true,
+        "why": "Right. That import is Jackson 2. Spring Boot 4 runs on Jackson 3, where the class is `tools.jackson.databind.ObjectMapper`."
+      },
+      {
+        "text": "Nothing: that is still the package of every Jackson class",
+        "correct": false,
+        "why": "The dependency tree showed `tools.jackson.core:jackson-databind:3.1.5`. Only the annotations kept the old package."
+      },
+      {
+        "text": "It uses the annotations artifact, which is the only Jackson that Spring Boot 4 ships",
+        "correct": false,
+        "why": "Boot 4 ships all of Jackson 3. The annotations are the part that kept `com.fasterxml`, and `ObjectMapper` is not one of them."
+      },
+      {
+        "text": "It was written for Gson, the other JSON library",
+        "correct": false,
+        "why": "Gson lives in `com.google.gson`. `com.fasterxml.jackson` is Jackson, the version before 3."
+      }
+    ]
+  },
+  {
+    "id": "ex-8zt1gsn2",
+    "version": 1,
+    "section": "json",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A controller returns `new Author(\"Machado de Assis\", 1839)`, where `record Author(String name, int born)`. What JSON does Jackson write?",
+    "choices": [
+      {
+        "text": "`{\"born\":1839,\"name\":\"Machado de Assis\"}`",
+        "correct": false,
+        "why": "The order is the record's, not the alphabet's; `name` is declared first."
+      },
+      {
+        "text": "`{\"getName\":\"Machado de Assis\",\"getBorn\":1839}`",
+        "correct": false,
+        "why": "A record's accessors are `name()` and `born()`, and the property takes the component's name."
+      },
+      {
+        "text": "`{\"name\":\"Machado de Assis\",\"born\":1839}`",
+        "correct": true,
+        "why": "Right: the component names, in declaration order, the `int` as a JSON number."
+      },
+      {
+        "text": "`{\"name\":\"Machado de Assis\",\"born\":\"1839\"}`",
+        "correct": false,
+        "why": "An `int` becomes a JSON number, as `priceCents` did; only a `String` is quoted."
+      }
+    ]
+  },
+  {
+    "id": "ex-k1qf9dsj",
+    "version": 1,
+    "section": "json",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the bookshop send a price as `3990` rather than `39.90`?",
+    "choices": [
+      {
+        "text": "JSON has no way to write a number with a decimal point in it",
+        "correct": false,
+        "why": "JSON writes `39.9` perfectly well. The trouble starts when a program stores it as a binary fraction."
+      },
+      {
+        "text": "Whole cents are exact, and 0.10 has no exact binary form",
+        "correct": true,
+        "why": "Right. An integer count of the smallest unit is exact, and every sum of prices stays exact."
+      },
+      {
+        "text": "An integer takes fewer bytes on the wire than a decimal does",
+        "correct": false,
+        "why": "Four characters against five; nobody designs a price format around one byte."
+      },
+      {
+        "text": "Jackson cannot write a `double`, only whole numbers",
+        "correct": false,
+        "why": "It can, and would. The choice is about what a `double` does to money, not about Jackson."
+      }
+    ]
+  },
+  {
+    "id": "ex-amtq2e4h",
+    "version": 1,
+    "section": "dtos",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the section on POST, a client sent `\"id\": 1` in the body of a new book. What happened?",
+    "choices": [
+      {
+        "text": "Book 1 was overwritten with the new title",
+        "correct": false,
+        "why": "Book 1 was still *Dom Casmurro* afterwards. The request record has nowhere to keep an id."
+      },
+      {
+        "text": "The request was refused with 400, because `id` is not a component of `BookRequest`",
+        "correct": false,
+        "why": "Jackson 3 ignores a property the record has no component for, with no error and no log line."
+      },
+      {
+        "text": "The property was dropped and the book got the next id, 5",
+        "correct": true,
+        "why": "Right. `BookRequest` has no `id`, so the server decided, as it should."
+      },
+      {
+        "text": "The new book took id 1 and *Dom Casmurro* moved to 5",
+        "correct": false,
+        "why": "Nothing moves an existing book. The id came from the repository's counter."
+      }
+    ]
+  },
+  {
+    "id": "ex-e26j4mcg",
+    "version": 1,
+    "section": "dtos",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Lesson 10 turns `Book` into an entity whose author is an `Author` object. With `BookResponse` in place, what has to change so that clients still receive `\"author\": \"Machado de Assis\"`?",
+    "choices": [
+      {
+        "text": "Nothing: Jackson notices the change and keeps the old shape",
+        "correct": false,
+        "why": "Jackson writes whatever it is given. Something has to turn an `Author` into the name."
+      },
+      {
+        "text": "The `author` component of `BookResponse` becomes an `Author`",
+        "correct": false,
+        "why": "Then the JSON would change shape, which is exactly what the DTO is there to prevent."
+      },
+      {
+        "text": "Every client, which has to read the new nested object",
+        "correct": false,
+        "why": "That is the cost a DTO saves: the clients never see `Author` at all."
+      },
+      {
+        "text": "One line of `BookResponse.from`",
+        "correct": true,
+        "why": "Right: the line that reads the author's name. The mapping absorbs the domain's change, and the contract stays as it was."
+      }
+    ]
+  },
+  {
+    "id": "ex-dqz96k74",
+    "version": 1,
+    "section": "dtos",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each type of the bookshop to its job.",
+    "pairs": [
+      {
+        "left": "BookRequest",
+        "right": "what a client may send to create a book"
+      },
+      {
+        "left": "BookResponse",
+        "right": "what the API answers about a book"
+      },
+      {
+        "left": "Book",
+        "right": "what the shop knows about a book"
+      },
+      {
+        "left": "BookController",
+        "right": "which request calls which method"
+      }
+    ],
+    "right_distractors": [
+      "the JSON text exactly as it travels"
+    ]
+  },
+  {
+    "id": "ex-k77hawn7",
+    "version": 1,
+    "section": "creating",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `ResponseEntity.created(URI.create(\"/books/\" + book.id()))` add to the answer?",
+    "choices": [
+      {
+        "text": "Status 200 and a header with the new id",
+        "correct": false,
+        "why": "200 means \"here it is\". A creation answers 201, and the header carries a path rather than a bare id."
+      },
+      {
+        "text": "A redirect, so curl fetches the new book on its own",
+        "correct": false,
+        "why": "A 201 is not a redirect; curl printed the `Location` and asked for nothing else."
+      },
+      {
+        "text": "Status 201 and the new book in the body, with nothing in the headers",
+        "correct": false,
+        "why": "The body comes from `.body(...)`; `created(...)` is the status and the `Location` header."
+      },
+      {
+        "text": "Status 201 and a `Location` header naming the new book",
+        "correct": true,
+        "why": "Right: `HTTP/1.1 201` and `Location: /books/4` in the capture. The body is set separately, by `.body(...)`."
+      }
+    ]
+  },
+  {
+    "id": "ex-zn50v3vr",
+    "version": 1,
+    "section": "creating",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A POST with a perfectly good JSON body, sent with `-d` and no `-H`, was answered 415. Why?",
+    "choices": [
+      {
+        "text": "The JSON was malformed, and 415 is how Spring says so",
+        "correct": false,
+        "why": "A malformed body is a 400, refused by Jackson. Here Jackson was never even asked."
+      },
+      {
+        "text": "curl sends `-d` bodies as GET requests, which this path does not accept",
+        "correct": false,
+        "why": "`-d` makes curl send a POST. A wrong method would have been a 405."
+      },
+      {
+        "text": "The server could not tell which book to create, having no id in the body",
+        "correct": false,
+        "why": "The server picks ids itself; the same body with the header created a book."
+      },
+      {
+        "text": "curl labelled it as a form, and the endpoint reads only JSON",
+        "correct": true,
+        "why": "Right. Without the header the `Content-Type` is `application/x-www-form-urlencoded`, and the answer's `Accept` header lists what it does read."
+      }
+    ]
+  },
+  {
+    "id": "ex-ns5rmga6",
+    "version": 1,
+    "section": "creating",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before validation existed, the body `{\"isbn\":\"12345\",\"title\":\"\",\"author\":\"José de Alencar\",\"priceCents\":-5}` was stored as a book. Which checks did it pass? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "It was well-formed JSON",
+        "correct": true,
+        "why": "Right. Jackson parsed it, or the answer would have been a 400."
+      },
+      {
+        "text": "Every value fitted the type of its component",
+        "correct": true,
+        "why": "Right. Strings into `String`s and `-5` into an `int`: types say nothing about whether a value is sensible."
+      },
+      {
+        "text": "The title was checked and found acceptable",
+        "correct": false,
+        "why": "Nothing checked the title at all; an empty string is a perfectly good `String`."
+      },
+      {
+        "text": "The ISBN was checked for thirteen digits",
+        "correct": false,
+        "why": "Nothing checked it until the custom constraint; `12345` went straight into the repository."
+      }
+    ]
+  },
+  {
+    "id": "ex-zb42fdzm",
+    "version": 1,
+    "section": "validation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The constraints are on `BookRequest` and the starter is in the pom, but the parameter reads `@RequestBody BookRequest request`. What does a POST of an empty title get?",
+    "choices": [
+      {
+        "text": "A 201: the book is stored with its empty title",
+        "correct": true,
+        "why": "Right, as the capture showed. Spring validates a `@RequestBody` argument only when the parameter carries `@Valid`."
+      },
+      {
+        "text": "A 400, because the starter validates every record it finds",
+        "correct": false,
+        "why": "The starter brings the validator; something still has to ask it to run."
+      },
+      {
+        "text": "A compilation error, because `@NotBlank` needs `@Valid` beside it",
+        "correct": false,
+        "why": "It compiled and ran. Unused constraints are not an error, which is what makes this mistake quiet."
+      },
+      {
+        "text": "A 500, because the record breaks its own constraints when it is built",
+        "correct": false,
+        "why": "A record does not check its annotations in its constructor; only a validator reads them."
+      }
+    ]
+  },
+  {
+    "id": "ex-hj5k895b",
+    "version": 1,
+    "section": "validation",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The annotation on a controller's parameter that makes Spring check the constraints of the record Jackson built is `@___`.",
+    "blanks": [
+      {
+        "accept": [
+          "Valid",
+          "@Valid"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-v8jbkec2",
+    "version": 1,
+    "section": "validation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `priceCents` change from `int` to `Integer` when the constraints arrived?",
+    "choices": [
+      {
+        "text": "Bean Validation cannot read the value of a primitive component",
+        "correct": false,
+        "why": "`@PositiveOrZero` works on an `int` as well. The difference is what happens when the price is missing."
+      },
+      {
+        "text": "With `int`, a missing price silently became 0 and was stored",
+        "correct": false,
+        "why": "Jackson 3 refused it instead, with a 400. The problem was where the refusal came from, not that it was silent."
+      },
+      {
+        "text": "So that a missing price is a field error naming `priceCents`",
+        "correct": true,
+        "why": "Right. A missing price becomes `null`, which `@NotNull` reports. With `int`, Jackson refused before the record existed, and its message named a type."
+      },
+      {
+        "text": "`Integer` holds larger prices than `int` can",
+        "correct": false,
+        "why": "Both hold the same range of values. The extra value an `Integer` can hold is `null`."
+      }
+    ]
+  },
+  {
+    "id": "ex-1hxmmbtq",
+    "version": 1,
+    "section": "validation",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each request to the exception the second terminal named for it.",
+    "pairs": [
+      {
+        "left": "a body cut off after the ISBN",
+        "right": "HttpMessageNotReadableException"
+      },
+      {
+        "left": "an empty title, with @Valid in place",
+        "right": "MethodArgumentNotValidException"
+      },
+      {
+        "left": "GET /books/abc",
+        "right": "MethodArgumentTypeMismatchException"
+      }
+    ],
+    "right_distractors": [
+      "NullPointerException"
+    ]
+  },
+  {
+    "id": "ex-1q1qb0jt",
+    "version": 1,
+    "section": "validation",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With the final `BookRequest`, a client sends `{\"isbn\":\"9786500000047\",\"title\":\"   \",\"author\":\"José de Alencar\",\"priceCents\":null}`. How many field errors does the validator report?",
+    "hint": "Check each component against each of its constraints, and remember who handles null.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-88y2sjtx",
+    "version": 1,
+    "section": "custom-constraint",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The first twelve digits of an ISBN are `978650000006`. What is its check digit?",
+    "hint": "Only the last digit differs from 9786500000047, and its weight is 3.",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-mcj8w2yf",
+    "version": 1,
+    "section": "custom-constraint",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `IsbnValidator.isValid` return `true` when the value is `null`?",
+    "choices": [
+      {
+        "text": "A null ISBN is acceptable, so a book may be created without one",
+        "correct": false,
+        "why": "`@NotNull` beside it still refuses that book; the validator is only declining to judge."
+      },
+      {
+        "text": "Null is `@NotNull`'s business, so a missing ISBN produces one error and not two",
+        "correct": true,
+        "why": "Right, as the capture showed: one field error, `NotNull`. Every standard constraint follows the same convention."
+      },
+      {
+        "text": "Calling `Isbn.isValid` with null would throw a `NullPointerException`",
+        "correct": false,
+        "why": "`Isbn.isValid` checks for `null` itself and returns `false`. The reason is about which constraint reports."
+      },
+      {
+        "text": "Bean Validation never passes `null` to a validator, so the branch is never taken",
+        "correct": false,
+        "why": "It does pass it: that is why the convention exists and why the branch is there."
+      }
+    ]
+  },
+  {
+    "id": "ex-dcej9yfb",
+    "version": 1,
+    "section": "custom-constraint",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `Isbn.isValid`, the check digit is `(10 - sum % 10) % 10`. What is the outer `% 10` for?",
+    "choices": [
+      {
+        "text": "So that a sum ending in 0 gives 0 instead of 10",
+        "correct": true,
+        "why": "Right. `10 - 0` would be 10, which is not a digit, and 10 % 10 is 0."
+      },
+      {
+        "text": "To keep the result positive when the sum is negative",
+        "correct": false,
+        "why": "The sum of digits times 1 or 3 is never negative."
+      },
+      {
+        "text": "To drop the 978 prefix from the calculation",
+        "correct": false,
+        "why": "The prefix is part of the twelve digits and is weighted like the rest."
+      },
+      {
+        "text": "It does nothing; it is there for symmetry with the inner one",
+        "correct": false,
+        "why": "Try a sum of 70: without it the check digit would be 10, which is not a digit."
+      }
+    ]
+  },
+  {
+    "id": "ex-5x2ayzs7",
+    "version": 1,
+    "section": "custom-constraint",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the detour, `FIELD` was taken out of `@Target` on `@ValidIsbn`. What made that mistake dangerous rather than merely wrong?",
+    "choices": [
+      {
+        "text": "It compiled, ran and accepted the bad ISBN in silence",
+        "correct": true,
+        "why": "Right. A constraint nobody checks looks exactly like one that passes, and only a request that should fail tells them apart."
+      },
+      {
+        "text": "The build failed with an error message that is hard to read",
+        "correct": false,
+        "why": "The build printed nothing at all. A loud failure would have been the safe outcome."
+      },
+      {
+        "text": "Every request was refused, including valid ones",
+        "correct": false,
+        "why": "The opposite: the wrong check digit was accepted with a 201."
+      },
+      {
+        "text": "The log filled with warnings on every request",
+        "correct": false,
+        "why": "There was no warning anywhere; the second terminal had nothing to say about it."
+      }
+    ]
+  },
+  {
+    "id": "ex-3y1jpsgv",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A POST to `/books` with an empty title, a JSON `Content-Type` and the final code. Put in order what happens until the client receives its 400.",
+    "hint": "The method add is not in the list, because it never runs.",
+    "items": [
+      "the DispatcherServlet finds BookController#add",
+      "Jackson builds a BookRequest from the body",
+      "@Valid runs the validator, which finds a blank title",
+      "Spring throws MethodArgumentNotValidException",
+      "Spring Boot's error handling writes the 400 body"
+    ]
+  },
+  {
+    "id": "ex-v5c6axqe",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With the final code, the method `add` has just been called. What is guaranteed about the request at that moment? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "Its body was JSON that Jackson could read into a `BookRequest`",
+        "correct": true,
+        "why": "Right. Otherwise Jackson would have refused it at step 2."
+      },
+      {
+        "text": "Every constraint on `BookRequest`, `@ValidIsbn` included, held",
+        "correct": true,
+        "why": "Right. `@Valid` runs them all before the call, and any violation stops it."
+      },
+      {
+        "text": "It declared a JSON content type",
+        "correct": true,
+        "why": "Right. A form body was refused with 415 before anything else was tried."
+      },
+      {
+        "text": "No book in the shop already has its ISBN",
+        "correct": false,
+        "why": "Nothing checks that yet: a constraint sees one request, not the shop. Lesson 7 adds `DuplicateIsbnException` for it."
+      },
+      {
+        "text": "The id the client sent will be the new book's id",
+        "correct": false,
+        "why": "`BookRequest` has no id; whatever the client sent was dropped by Jackson."
+      }
+    ]
+  },
+  {
+    "id": "ex-g3gjdgt5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A client sends a POST with a JSON `Content-Type` and the body `{\"isbn\":\"9786500000047\",\"title\":\"Iracema\",\"author\":\"José de Alencar\",\"priceCents\":\"free\"}`. Who refuses it, and what does the log name?",
+    "hint": "Two gates stand in front of the method. Which one needs a record to exist?",
+    "choices": [
+      {
+        "text": "The validator, with a `PositiveOrZero` field error on `priceCents`",
+        "correct": false,
+        "why": "The validator needs a record to check, and `\"free\"` cannot become the `Integer` the record needs."
+      },
+      {
+        "text": "Nobody: Jackson stores `null` and the book is created without a price",
+        "correct": false,
+        "why": "Jackson refuses a value it cannot convert; it does not swap it for `null`."
+      },
+      {
+        "text": "The method `add`, when the service tries to store the price",
+        "correct": false,
+        "why": "The method never runs: both gates stand in front of it."
+      },
+      {
+        "text": "Jackson, with `HttpMessageNotReadableException`",
+        "correct": true,
+        "why": "Right, before any constraint runs. A value that cannot fit its type stops at the first gate, like the body cut off after the ISBN."
+      }
+    ]
+  }
+]

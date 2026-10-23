@@ -1,0 +1,380 @@
+{
+  "ex-9dtan2v1": {
+    "prompt": "Seja qual for a biblioteca de persistência de uma aplicação Java, em que forma o driver do PostgreSQL envia o comando no fim?",
+    "hint": "A aula 9 o chamou de base sobre a qual todo o resto se apoia.",
+    "choices": [
+      {
+        "text": "JPQL, que o driver traduz para o dialeto do próprio PostgreSQL",
+        "why": "O driver não conhece JPQL. O Hibernate traduz o JPQL para SQL antes de qualquer coisa chegar ao JDBC, então o driver só vê SQL."
+      },
+      {
+        "text": "Um `PreparedStatement` do JDBC, com os parâmetros ligados",
+        "why": "Isso. JdbcClient, JDBI, MyBatis, jOOQ, EBean e Hibernate terminam todos nas mesmas chamadas JDBC, e o PostgreSQL nunca fica sabendo qual biblioteca montou o comando."
+      },
+      {
+        "text": "Os objetos de consulta do jOOQ, serializados para o servidor",
+        "why": "O jOOQ transforma os objetos de consulta em texto SQL e entrega esse texto ao JDBC. O builder é um jeito de escrever SQL, não um protocolo diferente."
+      },
+      {
+        "text": "Depende da biblioteca: o JDBI e o MyBatis passam por fora do JDBC para falar com o servidor",
+        "why": "Os dois são camadas sobre o JDBC. Uma biblioteca fina é fina porque acrescenta pouco ao JDBC, não porque o substitui."
+      }
+    ]
+  },
+  "ex-erhkm2dn": {
+    "prompt": "Uma equipe gosta das interfaces de repositório do Spring Data JPA, mas vive perdendo tardes com `LazyInitializationException`. O que o Spring Data JDBC mudaria para ela?",
+    "hint": "Ele mantém uma metade da aula 11 e larga a parte que lança a exceção.",
+    "choices": [
+      {
+        "text": "Mantém o Hibernate e desliga o carregamento preguiçoso na aplicação inteira",
+        "why": "O Spring Data JDBC nem roda sobre o Hibernate. É um módulo separado que vai direto ao JDBC."
+      },
+      {
+        "text": "Troca os repositórios por strings SQL passadas ao `JdbcClient`",
+        "why": "Essa é a abordagem da aula 9. O Spring Data JDBC mantém as interfaces de repositório, com consultas derivadas e `@Query`."
+      },
+      {
+        "text": "Mantém o carregamento preguiçoso, mas abre uma sessão nova sempre que uma associação é tocada tarde",
+        "why": "Isso está mais perto do comportamento do EBean. O Spring Data JDBC não tem carregamento preguiçoso para manter: o que pertence a um objeto é carregado junto com ele."
+      },
+      {
+        "text": "As interfaces ficam; não há contexto de persistência, e um objeto é carregado inteiro",
+        "why": "Isso. Sem nada carregado depois, não há sessão para sobreviver, e a exceção não tem como acontecer."
+      }
+    ]
+  },
+  "ex-91nptmx1": {
+    "prompt": "Quais destes fazem parte do preço que o JPA cobra pelo que oferece? Marque todos que se aplicam.",
+    "hint": "A coluna da direita da tabela da primeira seção, e as aulas 10 e 11.",
+    "choices": [
+      {
+        "text": "Um `select` a mais por livro quando o autor de cada um carrega de forma preguiçosa",
+        "why": "Isso. É o N+1 da aula 10, o custo das associações preguiçosas atrás de proxies."
+      },
+      {
+        "text": "Uma `LazyInitializationException` quando uma entidade é usada depois que a sessão fechou",
+        "why": "Isso. O contexto de persistência tem um tempo de vida, e uma entidade lida depois que ele acabou não tem quem carregue as associações dela."
+      },
+      {
+        "text": "Valores concatenados no texto SQL, o que deixa a aplicação aberta a injeção",
+        "why": "O JPA liga parâmetros, tanto no JPQL quanto nas consultas derivadas. A injeção vem de código que monta SQL juntando strings, seja qual for a biblioteca."
+      },
+      {
+        "text": "Uma função de janela ou um `ON CONFLICT` escritos como consulta nativa",
+        "why": "Isso. O JPQL é portável entre bancos, então o que só o PostgreSQL tem passa por consultas nativas."
+      },
+      {
+        "text": "SQL que não dá para ver de jeito nenhum, porque o Hibernate nunca o registra em log",
+        "why": "A aula 10 registrou cada comando com o perfil `sql`. O custo é ler o SQL depois que ele rodou, não ficar sem poder lê-lo."
+      }
+    ]
+  },
+  "ex-1b4tr65q": {
+    "prompt": "Onde o EBean registra quais propriedades de uma entidade mudaram?",
+    "hint": "Não existe `EntityManager` no EBean.",
+    "choices": [
+      {
+        "text": "Num contexto de persistência, do jeito que o Hibernate faz",
+        "why": "Essa é justamente a parte do Hibernate que o EBean deixa de fora. Sem contexto, esse conhecimento tem de morar em outro lugar."
+      },
+      {
+        "text": "Na própria entidade, via enhancement",
+        "why": "Isso. A classe modificada registra quais propriedades foram carregadas e quais mudaram, então o objeto carrega o próprio estado."
+      },
+      {
+        "text": "Em lugar nenhum: sem sessão, todo save grava todas as colunas",
+        "why": "Quem grava todas as colunas por padrão é o Hibernate. O `UPDATE` do EBean cita só as colunas alteradas, e isso exige justamente o rastreamento que esta opção nega."
+      },
+      {
+        "text": "No query bean gerado, `QBook`",
+        "why": "Query beans montam consultas. Eles não guardam estado de entidade nenhuma; os objetos `Book` que a consulta devolve é que guardam."
+      }
+    ]
+  },
+  "ex-wbtvctb5": {
+    "prompt": "Com o EBean, um código lê `book.getAuthor().getName()` depois que a transação que carregou o livro terminou, e nada tocou essa associação antes. O que acontece?",
+    "hint": "Compare com a última coisa que a aula 10 capturou.",
+    "choices": [
+      {
+        "text": "Uma `LazyInitializationException`, como a que o bookshop da aula 10 lançou",
+        "why": "Essa exceção pertence a um contexto de persistência fechado, e o EBean não tem nenhum para fechar."
+      },
+      {
+        "text": "`getAuthor()` devolve null, porque nada mais o carrega",
+        "why": "Devolver null faria um autor inexistente e um autor não carregado parecerem iguais. O EBean o carrega em vez disso."
+      },
+      {
+        "text": "Um comando próprio o busca ali mesmo",
+        "why": "Isso. O carregamento preguiçoso funciona fora da transação, ao preço de mais uma consulta, e é por isso que o N+1 continua possível."
+      },
+      {
+        "text": "O build falha, porque os query beans se recusam a compilar um caminho preguiçoso",
+        "why": "Query beans conferem nomes de propriedade em consultas. Navegar por uma associação de uma entidade é Java comum, e o compilador não tem do que reclamar."
+      }
+    ]
+  },
+  "ex-160a10ka": {
+    "prompt": "Um projeto com EBean passa no `mvn test`. Iniciado pela IDE, o mesmo teste falha na partida, reclamando que uma classe de entidade não passou pelo enhancement. O que falta na execução pela IDE?",
+    "hint": "Qual passo do build reescreve as classes compiladas?",
+    "choices": [
+      {
+        "text": "O enhancement: a IDE rodou as classes como o javac as deixou",
+        "why": "Isso. O plugin do Maven reescreveu as classes e a IDE não. Todo jeito de rodar o código precisa das classes modificadas, e é por isso que o EBean publica um plugin para a IDE e que a seção chama isso de preço."
+      },
+      {
+        "text": "Os query beans, que o processador de anotações não gerou",
+        "why": "A falta de `QBook` impediria a compilação, tanto no Maven quanto na IDE. Este teste compilou e depois falhou."
+      },
+      {
+        "text": "Um `EntityManager`, de que o EBean precisa sempre que roda fora do Maven",
+        "why": "O EBean não tem `EntityManager` em lugar nenhum. A diferença entre as duas execuções está nas classes, não num objeto."
+      },
+      {
+        "text": "A autoconfiguração do Spring Boot para o EBean, que só o Maven liga",
+        "why": "O Spring Boot não tem autoconfiguração nenhuma para o EBean, nem no Maven nem em lugar algum."
+      }
+    ]
+  },
+  "ex-08hxqdkv": {
+    "prompt": "Uma migração renomeia `book.price_cents` para `book.price`, e a equipe regenera as classes do jOOQ. Quando falha uma consulta que ainda diz `BOOK.PRICE_CENTS`?",
+    "hint": "De onde vem `BOOK.PRICE_CENTS`, para começar?",
+    "choices": [
+      {
+        "text": "Na compilação: esse campo sumiu",
+        "why": "Isso. O `BOOK` regenerado tem um campo `PRICE` e nenhum `PRICE_CENTS`, então o javac interrompe o build."
+      },
+      {
+        "text": "Quando a aplicação sobe e valida as consultas",
+        "why": "É nesse momento que o Spring Data JPA confere um `@Query` em JPQL. A verificação do jOOQ vem antes, porque o campo é Java."
+      },
+      {
+        "text": "Quando a consulta roda pela primeira vez e o PostgreSQL rejeita a coluna",
+        "why": "Esse é o destino de uma string SQL, como no JDBI ou no MyBatis. Aqui o build falha antes que alguma consulta possa rodar."
+      },
+      {
+        "text": "Nunca: o jOOQ guarda o nome antigo e o escreve como antes",
+        "why": "As classes são regeneradas a partir do esquema como ele está agora. O nome antigo só sobrevive no código que ainda o usa, e esse código não compila mais."
+      }
+    ]
+  },
+  "ex-4fe75jps": {
+    "prompt": "O starter do Spring Boot que entrega à aplicação um bean `DSLContext` pronto é `spring-boot-starter-___`.",
+    "hint": "Tem o nome da biblioteca que gera uma classe por tabela.",
+    "blanks": [
+      {
+        "accept": [
+          "jooq"
+        ]
+      }
+    ]
+  },
+  "ex-wvmxf45b": {
+    "prompt": "O comando `search` do MyBatis, da seção, é chamado com `title` null e `maxPrice` 3000. Que condição o MyBatis envia?",
+    "hint": "Qual `<if>` sobra, e o que `<where>` faz com o resto?",
+    "choices": [
+      {
+        "text": "`WHERE AND price_cents <= ?`, que o PostgreSQL rejeita",
+        "why": "`<where>` existe para evitar exatamente isso: ele tira o `AND` da frente da primeira condição que sobrou."
+      },
+      {
+        "text": "`WHERE price_cents <= 3000`, com o número escrito no texto",
+        "why": "`#{maxPrice}` é um parâmetro ligado, então o valor viaja separado do texto SQL. Escrevê-lo no texto seria juntar strings, o que a seção alerta para não fazer."
+      },
+      {
+        "text": "As duas condições, com `title` ligado a null",
+        "why": "Um `<if>` cujo teste é falso deixa o próprio texto inteiramente fora do comando. É isso que torna o SQL dinâmico."
+      },
+      {
+        "text": "`WHERE price_cents <= ?`, com 3000 ligado ao parâmetro",
+        "why": "Isso. O primeiro `<if>` é falso e não deixa nada; `<where>` escreve `WHERE` e tira o `AND` que ficou na frente."
+      }
+    ]
+  },
+  "ex-2p841jth": {
+    "prompt": "Para qual destes bancos uma equipe precisa de uma edição paga do jOOQ?",
+    "hint": "O parágrafo sobre os custos do jOOQ cita duas coisas de que ele depende.",
+    "choices": [
+      {
+        "text": "PostgreSQL, a partir do momento em que a aplicação dá dinheiro",
+        "why": "A edição depende do banco, não do negócio. O PostgreSQL é coberto pela edição gratuita, de licença Apache, seja o que for que a aplicação faça."
+      },
+      {
+        "text": "MySQL",
+        "why": "O MySQL é um banco de código aberto, coberto pela edição de código aberto."
+      },
+      {
+        "text": "Oracle",
+        "why": "Isso. Oracle, SQL Server e os outros bancos comerciais precisam de uma das edições pagas do jOOQ."
+      },
+      {
+        "text": "Qualquer banco, assim que o gerador de código entra em uso",
+        "why": "O gerador de código faz parte de todas as edições, inclusive a gratuita. É o jeito como o jOOQ foi feito para ser usado."
+      }
+    ]
+  },
+  "ex-8b7s8gvk": {
+    "prompt": "O que o JDBI faz por você que o JDBC puro deixa para o seu código?",
+    "hint": "Conte o que o `Titles.java` não precisou escrever.",
+    "choices": [
+      {
+        "text": "Acompanha os objetos que devolveu e grava as mudanças deles de volta",
+        "why": "Isso é um contexto de persistência, que o JDBI não tem. Ele não lembra de nada entre uma chamada e a próxima."
+      },
+      {
+        "text": "Lê o SQL na compilação e aponta colunas escritas errado",
+        "why": "O SQL é uma string, e nada o lê antes do PostgreSQL. O desvio da seção mostrou quando isso acontece."
+      },
+      {
+        "text": "Gera uma classe por tabela",
+        "why": "Esse é o gerador de código do jOOQ. O JDBI trabalha com o SQL que você entrega e não precisa de passo de build."
+      },
+      {
+        "text": "Cuida das conexões, liga parâmetros com nome, mapeia linhas",
+        "why": "Isso. Esse é todo o núcleo da biblioteca: JDBC sem a cerimônia."
+      }
+    ]
+  },
+  "ex-n3xj9ajc": {
+    "prompt": "Ponha em ordem o que acontece durante a chamada `jdbi.withHandle(...)` em `Titles.java`.",
+    "hint": "Um handle embrulha uma conexão, e é fechado quando a lambda retorna.",
+    "items": [
+      "O JDBI pega uma conexão do driver e a embrulha num handle",
+      "O comando é preparado com `Machado de Assis` ligado a `:name`",
+      "O PostgreSQL roda o comando e devolve duas linhas",
+      "O `ConstructorMapper` monta um `TitleAndPrice` a partir de cada linha",
+      "O handle é fechado, e a conexão junto com ele"
+    ],
+    "trap": "As linhas são mapeadas com o handle ainda aberto: depois que ele fecha, o result set que ele lia já era."
+  },
+  "ex-6txm1b8t": {
+    "prompt": "No desvio da seção, `b.price_cents` virou `b.price` na string da consulta. Que parte do sistema avisou?",
+    "hint": "Leia a transcrição: que comando imprimiu o erro, e de quem são as palavras nele?",
+    "choices": [
+      {
+        "text": "O javac, durante o `mvn -q compile`, antes de o programa começar",
+        "why": "A etapa de compilação não imprimiu nada. Para o javac o SQL é um literal de string como qualquer outro, e qualquer string compila."
+      },
+      {
+        "text": "O PostgreSQL, na execução, de volta pelo driver",
+        "why": "Isso. Uma string SQL é conferida pela única coisa que a lê, o banco, e só quando ela roda."
+      },
+      {
+        "text": "O JDBI, que conferiu os nomes das colunas antes de enviar o comando",
+        "why": "O JDBI não conhece o esquema. Ele enviou o comando como estava escrito, e a mensagem que lançou embrulha a do PostgreSQL."
+      },
+      {
+        "text": "Ninguém: o programa imprimiu `priceCents=0` para os dois livros",
+        "why": "Uma coluna que não existe é um erro no PostgreSQL, não um null. A execução parou com uma exceção em vez de imprimir números errados."
+      }
+    ]
+  },
+  "ex-efrn5t61": {
+    "prompt": "Ligue cada biblioteca ao que a distingue.",
+    "hint": "Quem escreve o SQL, e do que a biblioteca se lembra?",
+    "pairs": [
+      {
+        "left": "jOOQ",
+        "right": "classes Java geradas a partir do esquema"
+      },
+      {
+        "left": "MyBatis",
+        "right": "comandos numa anotação ou num mapper XML"
+      },
+      {
+        "left": "EBean",
+        "right": "entidades modificadas no build, sem EntityManager"
+      },
+      {
+        "left": "JDBI",
+        "right": "uma camada fluente sobre o JDBC que dispensa o Spring"
+      },
+      {
+        "left": "Spring Data JDBC",
+        "right": "interfaces de repositório sem contexto de persistência"
+      }
+    ],
+    "right_distractors": [
+      "um contexto de persistência que acompanha cada entidade carregada"
+    ]
+  },
+  "ex-5rsx5ver": {
+    "prompt": "Um serviço de relatórios roda quarenta consultas PostgreSQL afinadas à mão, cheias de funções de janela, e a equipe quer que uma coluna escrita errado quebre o build em vez de um relatório de madrugada. Qual biblioteca serve melhor?",
+    "hint": "Duas exigências: o dialeto completo do banco, e uma verificação antes de qualquer coisa rodar.",
+    "choices": [
+      {
+        "text": "MyBatis, com cada consulta num mapper XML",
+        "why": "O MyBatis guardaria bem o SQL escrito à mão, mas ele continua sendo texto: uma coluna escrita errado espera a execução da noite."
+      },
+      {
+        "text": "jOOQ, com classes geradas a partir do esquema de relatórios",
+        "why": "Isso. As consultas continuam sendo SQL, funções de janela incluídas, e uma coluna que não existe é um campo que não existe, então o javac a recusa."
+      },
+      {
+        "text": "EBean, cujos query beans são conferidos pelo compilador",
+        "why": "Os query beans pegam mesmo propriedades escritas errado, mas o EBean é um ORM que escreve o SQL a partir das entidades. Quarenta consultas de janela afinadas à mão são o SQL que a equipe quer escrever ela mesma."
+      },
+      {
+        "text": "Spring Data JPA, com cada relatório escrito como um `@Query` nativo",
+        "why": "O Spring Data valida JPQL quando a aplicação sobe, mas uma consulta nativa é SQL puro que ele repassa sem conferir, então o erro de digitação continua esperando a noite."
+      }
+    ]
+  },
+  "ex-hh9g4qty": {
+    "prompt": "Em quais destes um nome de coluna ou propriedade escrito errado é pego pelo compilador? Marque todos que se aplicam.",
+    "hint": "Três momentos aparecem ao longo da aula: compilação, partida e a primeira execução.",
+    "choices": [
+      {
+        "text": "Uma consulta jOOQ, sobre classes regeneradas",
+        "why": "Isso. Cada coluna é um campo de uma classe gerada, e um campo que não existe não compila."
+      },
+      {
+        "text": "Uma string JPQL no `@Query` do Spring Data",
+        "why": "O Spring Data a confere quando a aplicação sobe, o que é cedo, mas não é o compilador: o build passa mesmo assim."
+      },
+      {
+        "text": "Um query bean do EBean, `new QBook().titel.eq(...)`",
+        "why": "Isso. O `QBook` é gerado com um campo por propriedade, e não tem campo chamado `titel`."
+      },
+      {
+        "text": "O texto SQL dentro de uma chamada `createQuery(...)` do JDBI",
+        "why": "É uma string. O desvio da seção compilou sem problema e falhou quando o PostgreSQL o rodou."
+      },
+      {
+        "text": "O comando `<select>` num arquivo de mapper XML do MyBatis",
+        "why": "XML nem é compilado, e o comando lá dentro é conferido pelo banco quando roda."
+      }
+    ]
+  },
+  "ex-gssh8y33": {
+    "prompt": "A mesma coluna escrita errado aparece de três jeitos. Ordene-os pelo momento em que o erro é apontado, do mais cedo para o mais tarde.",
+    "hint": "Qual dos três é lido pelo javac, qual pelo Spring, e qual só pelo PostgreSQL?",
+    "items": [
+      "um campo da classe `BOOK` gerada pelo jOOQ",
+      "uma consulta JPQL no `@Query` do Spring Data",
+      "uma string SQL num `createQuery` do JDBI"
+    ],
+    "trap": "A verificação do Spring Data na partida vem antes de qualquer requisição, o que dá a impressão de ser o compilador; ainda assim ela precisa que a aplicação rode."
+  },
+  "ex-402nszrx": {
+    "prompt": "O bookshop continua no Spring Data JPA e agora precisa de um relatório de vendas feito com uma função de janela. O que a aula sugere?",
+    "hint": "Veja o último parágrafo da seção sobre o JDBI.",
+    "choices": [
+      {
+        "text": "Escrever essa consulta com `JdbcClient` ou jOOQ, ao lado dos repositórios",
+        "why": "Isso. Eles usam o mesmo `DataSource` e entram nas mesmas transações, então o relatório ganha o seu SQL e o resto do bookshop continua com o JPA."
+      },
+      {
+        "text": "Mudar a aplicação inteira para o MyBatis, já que o JPA não divide um banco com outra biblioteca",
+        "why": "Eles dividem o tempo todo. Toda biblioteca daqui termina nas mesmas chamadas JDBC, sobre o mesmo `DataSource`."
+      },
+      {
+        "text": "Escrever o relatório em JPQL, que cobre as funções de janela do PostgreSQL",
+        "why": "O JPQL é a parte portável do JPA. O que só o PostgreSQL tem é justamente o que o JPA manda para consultas nativas."
+      },
+      {
+        "text": "Trocar para o EBean, cujos query beans expressam funções de janela",
+        "why": "Trocar de ORM por causa de um relatório troca um custo conhecido por um desconhecido, e o EBean escreve SQL a partir das entidades como o Hibernate faz."
+      }
+    ]
+  }
+}

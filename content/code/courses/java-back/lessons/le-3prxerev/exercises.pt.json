@@ -1,0 +1,377 @@
+{
+  "ex-8arv4906": {
+    "prompt": "Antes de carregar qualquer conjunto de regras, o que o próprio Bazel sabe executar?",
+    "hint": "Ensinar Java a ele é o trabalho do rules_java.",
+    "choices": [
+      {
+        "text": "As fases do ciclo de vida do Maven, em ordem",
+        "why": "Fases são o modelo do Maven. O Bazel não tem ciclo de vida; tem um grafo de alvos e as ações que os constroem."
+      },
+      {
+        "text": "O layout padrão de Java, src/main/java e src/test/java",
+        "why": "Essa convenção é do Maven. O Bazel compila exatamente os arquivos que um alvo lista em srcs, onde quer que estejam."
+      },
+      {
+        "text": "Ações: comandos com entradas e saídas declaradas",
+        "why": "Isso. Todo o resto, Java incluído, são regras que transformam alvos em ações desse tipo."
+      },
+      {
+        "text": "As classes dentro de cada jar do classpath",
+        "why": "Para o Bazel, um jar é um arquivo com um hash. Ler classes é assunto do javac, dentro de uma ação."
+      }
+    ]
+  },
+  "ex-8smac6aw": {
+    "prompt": "Por que o seu build pode pegar uma saída compilada de um cache que o build de uma colega preencheu?",
+    "hint": "Pense em do que é feita a chave de uma ação.",
+    "choices": [
+      {
+        "text": "O jar dela tem o mesmo nome de arquivo e a mesma versão que o seu teria",
+        "why": "Nomes e versões não dizem nada sobre os bytes de dentro. A chave é um hash de todas as entradas, então duas fontes diferentes com o mesmo nome nunca a compartilhariam."
+      },
+      {
+        "text": "O cache remoto guarda o build mais recente de cada alvo",
+        "why": "Mais recente não é a questão. Uma saída só é reaproveitada quando a chave da ação bate, seja quando for que ela foi guardada."
+      },
+      {
+        "text": "O Bazel compara as datas de modificação das fontes",
+        "why": "Datas diferem entre máquinas para arquivos idênticos. O Bazel calcula o hash do conteúdo, e é por isso que o cache funciona entre máquinas."
+      },
+      {
+        "text": "A ação dela e a sua dão a mesma chave",
+        "why": "Isso. Mesmas fontes, jars, flags e JDK dão a mesma chave, e toda entrada é declarada, então chaves iguais significam que a saída sairia igual."
+      }
+    ]
+  },
+  "ex-266m6the": {
+    "prompt": "O código de um alvo lê um arquivo que o alvo nunca declarou. O que acontece quando o Bazel o compila?",
+    "hint": "Onde cada ação roda?",
+    "choices": [
+      {
+        "text": "Falha em toda máquina, porque o sandbox não o tem",
+        "why": "Isso. O erro aparece em todo lugar ao mesmo tempo, em vez de só na máquina onde o arquivo falta."
+      },
+      {
+        "text": "Compila nas máquinas que por acaso têm o arquivo",
+        "why": "Esse é o build não hermético que o Bazel existe para evitar: funciona num notebook e falha no próximo."
+      },
+      {
+        "text": "Adiciona o arquivo às entradas declaradas por você",
+        "why": "O Bazel nunca adivinha entradas. Um palpite faria a chave depender do que uma máquina por acaso tinha."
+      },
+      {
+        "text": "Compila, mas deixa o arquivo fora da chave da ação",
+        "why": "Esse seria o pior resultado, um cache servindo saídas velhas, e o sandbox existe para que isso não aconteça."
+      }
+    ]
+  },
+  "ex-btjx55fa": {
+    "prompt": "Quais destes entram na chave de uma ação de compilação? Marque todos os que se aplicam.",
+    "hint": "A coluna da esquerda da figura.",
+    "choices": [
+      {
+        "text": "O arquivo-fonte sendo compilado",
+        "why": "Isso. Mude um caractere e a chave muda."
+      },
+      {
+        "text": "O horário em que o build começou",
+        "why": "Se o relógio fosse uma entrada, nenhuma chave se repetiria e nada poderia ir para o cache."
+      },
+      {
+        "text": "O jar contra o qual a fonte compila",
+        "why": "Isso. Uma versão nova da biblioteca é uma entrada nova, então o código compila de novo."
+      },
+      {
+        "text": "A linha de comando do javac, com as flags",
+        "why": "Isso. --java_language_version=25 e 21 produzem classes diferentes, então são chaves diferentes."
+      },
+      {
+        "text": "O nome de quem está rodando o build",
+        "why": "Duas pessoas compilando o mesmo commit devem compartilhar saídas; é para isso que existe um cache remoto."
+      },
+      {
+        "text": "O JDK que roda o compilador",
+        "why": "Isso. Ele é uma ferramenta, e ferramentas também são entradas, por isso o Bazel fixa o dele."
+      }
+    ]
+  },
+  "ex-3xnqc94p": {
+    "prompt": "Um monorepo tem 300 módulos, a maioria dos commits mexe em um deles, e a CI passa o tempo recompilando e retestando os outros 299. Qual mudança ataca esse custo diretamente?",
+    "hint": "Rodar o trabalho mais rápido não é o mesmo que não rodar.",
+    "choices": [
+      {
+        "text": "Execução remota, para cada ação rodar numa fazenda de máquinas",
+        "why": "Isso espalha o mesmo trabalho por mais máquinas. Fica mais rápido, mas os 299 módulos intocados continuam sendo compilados e testados."
+      },
+      {
+        "text": "Um cache remoto que todo job de CI e toda pessoa da equipe lê e preenche",
+        "why": "Isso. Ações e resultados de teste sem mudança voltam do cache pela chave, então só roda o que o commit alcança."
+      },
+      {
+        "text": "Uma máquina de CI maior, com o dobro de núcleos",
+        "why": "Mais núcleos deixam o mesmo rebuild mais rápido. O custo é refazer código intocado, e ele continua."
+      },
+      {
+        "text": "Um repositório e um build Maven separados para cada módulo",
+        "why": "Isso acaba com os rebuilds, e perde o grafo único entre os módulos: uma mudança numa biblioteca compartilhada agora precisa ser publicada e adotada 299 vezes."
+      }
+    ]
+  },
+  "ex-994bbfg1": {
+    "prompt": "Para que serve o arquivo .bazelversion, de uma linha só?",
+    "hint": "Ele é lido antes de o próprio Bazel rodar.",
+    "choices": [
+      {
+        "text": "É a versão do próprio módulo, para outros módulos que dependem dele",
+        "why": "Essa é a versão em module(...) no MODULE.bazel."
+      },
+      {
+        "text": "Lista as versões para as quais os conjuntos de regras foram resolvidos",
+        "why": "Esse é o MODULE.bazel.lock, que o Bazel escreve."
+      },
+      {
+        "text": "Define a versão de Java para a qual o código é compilado",
+        "why": "Isso é o --java_language_version no .bazelrc."
+      },
+      {
+        "text": "Nomeia a versão do Bazel que o Bazelisk baixa e roda",
+        "why": "Isso. Ele fixa o Bazel no repositório, como o wrapper fixa o Gradle."
+      }
+    ]
+  },
+  "ex-0j9dvwy2": {
+    "prompt": "Ligue cada arquivo da raiz do projeto ao que ele guarda.",
+    "hint": "Um deles o próprio Bazel escreve.",
+    "pairs": [
+      {
+        "left": ".bazelversion",
+        "right": "a versão do Bazel com que o projeto compila"
+      },
+      {
+        "left": "MODULE.bazel",
+        "right": "o módulo e os conjuntos de regras de que ele depende"
+      },
+      {
+        "left": ".bazelrc",
+        "right": "flags lidas em todo comando"
+      },
+      {
+        "left": "MODULE.bazel.lock",
+        "right": "aquilo para que as dependências foram resolvidas, com hashes"
+      }
+    ],
+    "right_distractors": [
+      "os alvos de um pacote"
+    ]
+  },
+  "ex-t0z454st": {
+    "prompt": "Por que cada http_jar do MODULE.bazel traz um sha256?",
+    "hint": "O que acontece se o servidor entregar bytes diferentes?",
+    "choices": [
+      {
+        "text": "Para que as dependências do próprio jar também sejam baixadas",
+        "why": "Um hash não baixa nada. Isso é o que o Maven faz a partir de um pom, e o http_jar não faz: daí as quatro entradas a mais."
+      },
+      {
+        "text": "Para que o Bazel confira a assinatura de quem publicou o jar",
+        "why": "Um hash prova que os bytes são os que você fixou, não quem os publicou. Assinatura é outra verificação."
+      },
+      {
+        "text": "Para que outro arquivo naquele endereço derrube o build",
+        "why": "Isso. Um jar trocado ou um espelho entregando outra coisa é recusado em vez de entrar na compilação."
+      },
+      {
+        "text": "Para que o Bazel ache o jar no Maven Central pelo hash",
+        "why": "É a url que acha o jar. O hash é conferido depois do download."
+      }
+    ]
+  },
+  "ex-dqgcchj4": {
+    "prompt": "O pom da aula 1 tem uma <dependency> para o commons-validator. Quantas entradas http_jar no MODULE.bazel desta aula correspondem a ela?",
+    "hint": "O próprio jar, e aquilo de que ele depende."
+  },
+  "ex-1tbt359r": {
+    "prompt": "Em `//src/main/java/com/example/isbn:isbn`, o texto antes dos dois-pontos nomeia o ___ onde o alvo está.",
+    "blanks": [
+      {
+        "accept": [
+          "pacote",
+          "package"
+        ]
+      }
+    ]
+  },
+  "ex-6pf9thb2": {
+    "prompt": "Por que o java_test define use_testrunner = False e nomeia uma main_class?",
+    "hint": "Qual JUnit o runner do próprio Bazel fala?",
+    "choices": [
+      {
+        "text": "O runner do próprio Bazel só fala JUnit 4",
+        "why": "Isso. Então o console launcher do JUnit vira a classe main, e os args dizem qual classe rodar."
+      },
+      {
+        "text": "Para o teste rodar fora do sandbox, onde o JUnit acha o engine dele",
+        "why": "O teste continua rodando no sandbox; o engine está dentro do jar do console, uma dependência declarada."
+      },
+      {
+        "text": "Porque o rules_java não consegue compilar testes escritos para JUnit 6",
+        "why": "Ele compilou o IsbnCheckTest sem reclamar. O problema não é compilar; é rodar."
+      },
+      {
+        "text": "Porque um java_test sempre roda por um método main",
+        "why": "Normalmente o próprio Bazel fornece o main, o runner de JUnit 4 dele. Este teste o substitui."
+      }
+    ]
+  },
+  "ex-771a6fpz": {
+    "prompt": "O segundo `bazel test //...` imprimiu `(cached) PASSED in 1.0s`. O que rodou?",
+    "hint": "Executed 0 out of 1 test.",
+    "choices": [
+      {
+        "text": "O teste, mas sem compilar de novo",
+        "why": "Executed 0 out of 1 test. O próprio resultado foi reaproveitado, não só a compilação."
+      },
+      {
+        "text": "Nada: o resultado veio do cache, porque nenhuma entrada tinha mudado",
+        "why": "Isso. Os 1.0s são quanto durou a execução que produziu o resultado guardado."
+      },
+      {
+        "text": "O teste, mais rápido, no worker do compilador mantido vivo desde o último build",
+        "why": "Workers mantêm compiladores aquecidos. Um resultado de teste do cache não precisa de processo nenhum."
+      },
+      {
+        "text": "Só os métodos de teste que tinham falhado antes",
+        "why": "Nenhum tinha falhado, e o Bazel guarda no cache um alvo de teste inteiro, não método por método."
+      }
+    ]
+  },
+  "ex-5qfesvdx": {
+    "prompt": "Depois de passar um repositório para o Bazel 9, um BUILD falha com \"no such attribute 'srcs' in 'java_library' rule\". O que você confere primeiro?",
+    "hint": "A mensagem cita um atributo. A causa está em outro ponto do arquivo.",
+    "choices": [
+      {
+        "text": "Se o srcs foi renomeado no rules_java novo",
+        "why": "srcs é o atributo que toda regra Java sempre teve. A mensagem aponta para ele porque é o primeiro passado."
+      },
+      {
+        "text": "Se o arquivo se chama BUILD em vez de BUILD.bazel",
+        "why": "Os dois nomes fazem um pacote; a regra lá dentro falharia do mesmo jeito com qualquer um."
+      },
+      {
+        "text": "Se o load que traz a regra do rules_java está no topo",
+        "why": "Isso. Sem o load, o nome não é a regra do rules_java, e os atributos são desconhecidos para o que quer que ele seja."
+      },
+      {
+        "text": "Se o IsbnCheck.java está no mesmo diretório que o arquivo BUILD",
+        "why": "Uma fonte faltando dá outro erro, que nomeia o arquivo. Este falha antes de olhar arquivo algum."
+      }
+    ]
+  },
+  "ex-89p0r8ek": {
+    "prompt": "Cinco pessoas, um serviço Spring Boot no próprio repositório, um build Maven de um minuto. Elas devem passar para o Bazel?",
+    "hint": "Pese o que ele custa contra o que um minuto deixa para economizar.",
+    "choices": [
+      {
+        "text": "Sim: um cache remoto deixaria todo build instantâneo",
+        "why": "Um build de um minuto tem pouco a economizar com cache, e o cache é mais um servidor para manter."
+      },
+      {
+        "text": "Sim: builds herméticos pegam erros que o Maven deixa passar",
+        "why": "Pegam, e uma equipe desse tamanho encontra poucos deles. O preço é cada jar declarado por hash e ferramentas que esperam um pom."
+      },
+      {
+        "text": "Não: o que ele custa não compra quase nada nesse tamanho",
+        "why": "Isso. Cada dependência à mão, ferramentas feitas para o Maven e alguém cuidando do build, para economizar parte de um minuto."
+      },
+      {
+        "text": "Não: o Bazel não consegue compilar uma aplicação Spring Boot",
+        "why": "Consegue, com o rules_java e o rules_jvm_external. Aqui é uma troca ruim, não uma impossível."
+      }
+    ]
+  },
+  "ex-a7bn1w5z": {
+    "prompt": "Quais destas situações contam a favor do Bazel? Marque todas as que se aplicam.",
+    "hint": "A seção cita quatro condições.",
+    "choices": [
+      {
+        "text": "Vinte equipes fazem commit num mesmo repositório",
+        "why": "Isso. Um grafo só sobre o código de todo mundo é o que o Bazel foi feito para ter."
+      },
+      {
+        "text": "Serviços Java compartilham arquivos Protocol Buffers com uma ferramenta Go e um front end TypeScript",
+        "why": "Isso. Várias linguagens que dependem umas das outras compilam num grafo só em vez de três ferramentas coladas."
+      },
+      {
+        "text": "Uma pessoa nova precisa abrir o projeto numa IDE sem configurar nada",
+        "why": "Isso favorece o Maven: as IDEs abrem um pom do jeito que está e um projeto Bazel por meio de um plugin."
+      },
+      {
+        "text": "A CI passa a maior parte do tempo recompilando código que nenhum commit tocou",
+        "why": "Isso. Um cache remoto transforma esse tempo em downloads."
+      },
+      {
+        "text": "O projeto é uma biblioteca com três dependências",
+        "why": "Pequeno e de uma linguagem só é justamente onde as convenções do Maven custam menos."
+      }
+    ]
+  },
+  "ex-7zw2ykz4": {
+    "prompt": "Alguém clona o projeto desta aula numa máquina nova e roda `bazel build //...`. Ponha em ordem o que acontece.",
+    "hint": "O Bazel precisa existir antes de ler o MODULE.bazel.",
+    "items": [
+      "O Bazelisk lê o .bazelversion e baixa aquele Bazel",
+      "Um servidor do Bazel sobe e fica em segundo plano",
+      "O rules_java e os jars citados no MODULE.bazel são baixados",
+      "As ações de compilação rodam, cada uma no seu sandbox",
+      "As saídas aparecem em bazel-bin"
+    ],
+    "trap": "O download das dependências não pode vir primeiro: quem lê o MODULE.bazel é o Bazel, e o Bazel é o que o Bazelisk baixa."
+  },
+  "ex-f0h79kb1": {
+    "prompt": "Uma colega adiciona `import org.apache.commons.lang3.StringUtils;` ao IsbnCheck.java. Esse jar está no ~/.m2 do notebook dela por causa de um projeto Maven, e ela não muda mais nada. O que o `bazel build //...` faz?",
+    "hint": "O que existe no sandbox da ação de compilação?",
+    "choices": [
+      {
+        "text": "Compila no notebook dela, onde o jar está, e falha na CI",
+        "why": "É assim que um build não hermético se comporta. O Bazel nunca olha o ~/.m2; o sandbox só tem entradas declaradas."
+      },
+      {
+        "text": "Baixa o commons-lang3 do Maven Central, por ser uma biblioteca conhecida",
+        "why": "Nada é baixado sem estar no MODULE.bazel, e com hash."
+      },
+      {
+        "text": "Compila em todo lugar, porque o javac procura no classpath do JDK",
+        "why": "As classes do próprio JDK estão lá; um jar de terceiros não está."
+      },
+      {
+        "text": "Falha em todo lugar até um http_jar e um deps declararem o jar",
+        "why": "Isso. O mesmo erro em toda máquina, e a correção são duas declarações: o download e a dependência."
+      }
+    ]
+  },
+  "ex-j5wesyjs": {
+    "prompt": "Ligue cada peça do build Maven da aula 1 à sua correspondente no build Bazel desta aula.",
+    "hint": "Escopos viram atributos; o diretório de saída vira um link.",
+    "pairs": [
+      {
+        "left": "uma <dependency> de escopo compile",
+        "right": "uma entrada em deps"
+      },
+      {
+        "left": "uma <dependency> de escopo runtime",
+        "right": "uma entrada em runtime_deps"
+      },
+      {
+        "left": "mvn test",
+        "right": "bazel test //..."
+      },
+      {
+        "left": "o diretório target/",
+        "right": "bazel-bin"
+      }
+    ],
+    "right_distractors": [
+      "visibility"
+    ]
+  }
+}

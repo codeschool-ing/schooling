@@ -1,0 +1,565 @@
+[
+  {
+    "id": "ex-7wgn9emr",
+    "version": 1,
+    "section": "commands",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the Cobra version of `hits`, `newTopCmd` declares `var n int` inside the function instead of at package level. What does that buy?",
+    "hint": "Think of a test that runs the command twice.",
+    "choices": [
+      {
+        "text": "Every tree `run` builds starts with `-n` at its default of 3",
+        "correct": true,
+        "why": "Right. A package-level variable keeps the value of the last parse, so a second run without `-n` would still see the first run's number."
+      },
+      {
+        "text": "Cobra refuses to bind a flag to a package-level variable",
+        "correct": false,
+        "why": "It accepts any pointer; the generator's own template binds flags to package-level variables."
+      },
+      {
+        "text": "The binary is smaller",
+        "correct": false,
+        "why": "Where a variable is declared makes no difference worth measuring to the binary; the 1,076,140 extra bytes are Cobra, pflag and `text/template`."
+      },
+      {
+        "text": "`-n` becomes visible to `count` as well, as an inherited flag",
+        "correct": false,
+        "why": "Reach is decided by `Flags()` against `PersistentFlags()`, not by where the variable lives. `count -n 2` is still refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-f32k2fbd",
+    "version": 1,
+    "section": "commands",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 1's standard-library `hits` was 4,031,903 bytes and the Cobra build is 5,108,043 bytes. By what percentage did the binary grow, to the nearest whole number?",
+    "hint": "(5,108,043 − 4,031,903) ÷ 4,031,903.",
+    "value": 27,
+    "tolerance": 0.5,
+    "unit": "%"
+  },
+  {
+    "id": "ex-y0g37se7",
+    "version": 1,
+    "section": "commands",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go list -m all` printed eight modules, while `go version -m hits` showed only Cobra and pflag as dependencies. What explains the difference?",
+    "hint": "One command describes the module graph, the other reads the binary.",
+    "choices": [
+      {
+        "text": "The other modules failed to download and were skipped",
+        "correct": false,
+        "why": "A module that failed to download would stop the build with an error. These were resolved and simply not imported."
+      },
+      {
+        "text": "The graph includes what Cobra's dependencies need for their own tools and tests; only imported packages get linked",
+        "correct": true,
+        "why": "Right. `go-md2man`, `blackfriday`, `yaml` and `check.v1` serve Cobra's `doc` package and `yaml`'s tests, and `hits` imports neither."
+      },
+      {
+        "text": "The linker strips modules smaller than a threshold",
+        "correct": false,
+        "why": "No such threshold exists; a package is linked because something imports it, whatever its size."
+      },
+      {
+        "text": "`go version -m` lists direct dependencies only",
+        "correct": false,
+        "why": "pflag is an indirect dependency, marked `// indirect` in `go.mod`, and it is listed. The list is what was compiled in."
+      }
+    ]
+  },
+  {
+    "id": "ex-fgsw6xyp",
+    "version": 1,
+    "section": "commands",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside a command's `RunE`, the table is written to `cmd.___()`, so that it lands in whatever writer `run` passed to `SetOut`, a test's buffer included.",
+    "hint": "The method name says it falls back to standard output.",
+    "blanks": [
+      {
+        "accept": [
+          "OutOrStdout"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-36s1c8br",
+    "version": 1,
+    "section": "flags",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`./hits top -json access.log` fails with `unknown shorthand flag: 'j' in -json`. Why?",
+    "hint": "How many letters may follow a single dash in pflag?",
+    "choices": [
+      {
+        "text": "pflag reads one dash as a run of one-letter shorthands, and there is no `-j`",
+        "correct": true,
+        "why": "Right. `-json` is read like `ls -la`: `-j -s -o -n`. A long name takes two dashes, `--json`."
+      },
+      {
+        "text": "`--json` is declared on the root, so `top` cannot see it",
+        "correct": false,
+        "why": "It is persistent, so `top` sees it: `./hits top --number=2 access.log --json` printed JSON."
+      },
+      {
+        "text": "Flags must come after the file name in pflag",
+        "correct": false,
+        "why": "pflag accepts them on either side; the word `-json` itself is the problem."
+      },
+      {
+        "text": "Boolean flags need an explicit value",
+        "correct": false,
+        "why": "`--json` with no value set it to true in every transcript."
+      }
+    ]
+  },
+  {
+    "id": "ex-60306567",
+    "version": 1,
+    "section": "flags",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each command with what the Cobra `hits` did with it.",
+    "hint": "One of them names a flag on the wrong command.",
+    "pairs": [
+      {
+        "left": "`./hits top access.log -n 2`",
+        "right": "a table of two paths"
+      },
+      {
+        "left": "`./hits --json count access.log`",
+        "right": "the status counts as one JSON object"
+      },
+      {
+        "left": "`./hits count -n 2 access.log`",
+        "right": "`unknown shorthand flag: 'n' in -n`, status 2"
+      },
+      {
+        "left": "`./hits top --number=2 access.log --json`",
+        "right": "a JSON array of two paths"
+      }
+    ],
+    "right_distractors": [
+      "`access.log` read as the value of `-n`, status 2"
+    ]
+  },
+  {
+    "id": "ex-rgcb1qe9",
+    "version": 1,
+    "section": "flags",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You add a `--since` flag that both `count` and `top` should honour. Where does it go?",
+    "hint": "Lesson 1 would have declared it twice.",
+    "choices": [
+      {
+        "text": "In each subcommand's `Flags()`, once per command",
+        "correct": false,
+        "why": "That works and repeats it, which is lesson 1's arrangement; a third subcommand would need a third copy."
+      },
+      {
+        "text": "On the root, with `PersistentFlags()`",
+        "correct": true,
+        "why": "Right. Declared once, it reaches every command below the root and is listed under `Global Flags` in their help, like `--json`."
+      },
+      {
+        "text": "On the root, with `Flags()`, since the root runs first",
+        "correct": false,
+        "why": "`Flags()` is local: a root-only flag would be refused by `count` and `top` as unknown."
+      },
+      {
+        "text": "In `ValidArgsFunction`, which handles everything after the subcommand",
+        "correct": false,
+        "why": "That function answers Tab for positional arguments; it declares no flags."
+      }
+    ]
+  },
+  {
+    "id": "ex-s7hzn7jd",
+    "version": 1,
+    "section": "flags",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague adds `cmd.Flags().SetInterspersed(false)` to `top`. What does `./hits top access.log -n 2` do now?",
+    "hint": "Where does pflag stop reading flags once interspersing is off, and what does `top` accept as arguments?",
+    "choices": [
+      {
+        "text": "It prints the same two-row table as before",
+        "correct": false,
+        "why": "That needs `-n 2` read as a flag, which interspersing is what allowed after a file name."
+      },
+      {
+        "text": "It shows the default three paths and ignores `-n 2`",
+        "correct": false,
+        "why": "Nothing is ignored: the words become arguments, and `top` takes one at most."
+      },
+      {
+        "text": "It fails with `accepts at most 1 arg(s), received 3` and status 2",
+        "correct": true,
+        "why": "Right. Parsing stops at `access.log`, as in lesson 1, so `-n` and `2` become arguments and `MaximumNArgs(1)` refuses three."
+      },
+      {
+        "text": "It tries to open a file called `-n` and exits 1",
+        "correct": false,
+        "why": "The argument count is checked before `RunE` runs, so no file is opened."
+      }
+    ]
+  },
+  {
+    "id": "ex-75etcxz4",
+    "version": 1,
+    "section": "help-and-errors",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Who chooses the exit status of the Cobra `hits` when something goes wrong?",
+    "hint": "What does `ExecuteC` hand back?",
+    "choices": [
+      {
+        "text": "Cobra, which exits 2 by itself on any usage error",
+        "correct": false,
+        "why": "Cobra never calls `os.Exit` here; it returns the error and the command it reached."
+      },
+      {
+        "text": "pflag, as the standard library's `flag` did",
+        "correct": false,
+        "why": "Lesson 1 used `ContinueOnError` to stop `flag` exiting; pflag under Cobra also returns its error."
+      },
+      {
+        "text": "`run`, from the error `ExecuteC` returns",
+        "correct": true,
+        "why": "Right. `run` prints the error and returns 1 for a `runError`, 2 for anything else; `main` passes that to `os.Exit`."
+      },
+      {
+        "text": "The shell, which maps any error message to status 1",
+        "correct": false,
+        "why": "The shell only reports the status the process exited with."
+      }
+    ]
+  },
+  {
+    "id": "ex-55nafx89",
+    "version": 1,
+    "section": "help-and-errors",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these errors reach `run` WITHOUT the `runError` wrapper, and so end in status 2? Choose all that apply.",
+    "hint": "Ask which ones happen before any `RunE` starts.",
+    "choices": [
+      {
+        "text": "`unknown command \"cont\" for \"hits\"`",
+        "correct": true,
+        "why": "Yes. Cobra found no such command while walking the tree, before any `RunE`."
+      },
+      {
+        "text": "`invalid argument \"five\" for \"-n, --number\" flag`",
+        "correct": true,
+        "why": "Yes. pflag refused the value while parsing flags."
+      },
+      {
+        "text": "`accepts at most 1 arg(s), received 2`",
+        "correct": true,
+        "why": "Yes. `cobra.MaximumNArgs(1)` checked the arguments before `RunE`."
+      },
+      {
+        "text": "`open nope.log: no such file or directory`",
+        "correct": false,
+        "why": "No. `summarise` wraps it in `runError`: the command line was right and the run failed, so it is 1."
+      },
+      {
+        "text": "`line 1: want 5 fields, got 1`",
+        "correct": false,
+        "why": "No. A line that will not parse is a failed run, wrapped by `summarise`, and ends in 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-9ya8nabn",
+    "version": 1,
+    "section": "help-and-errors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody deletes `SilenceUsage: true` from the root and keeps everything else. What does `./hits top -n five access.log > out.txt` leave in `out.txt`?",
+    "hint": "Which writer does Cobra print the usage listing to?",
+    "choices": [
+      {
+        "text": "Nothing: the usage listing goes to standard error, like the message",
+        "correct": false,
+        "why": "Cobra prints the usage with `Println`, which uses the writer given to `SetOut` when there is one, and `run` gives it standard output."
+      },
+      {
+        "text": "`top`'s ten-line usage listing, though nothing was counted",
+        "correct": true,
+        "why": "Right. The message and the hint still go to standard error, but the listing follows `SetOut` into the file meant for results."
+      },
+      {
+        "text": "The table of three paths, because the bad value falls back to the default",
+        "correct": false,
+        "why": "A value that does not parse is refused; nothing is counted."
+      },
+      {
+        "text": "`Error: invalid argument` followed by the usage",
+        "correct": false,
+        "why": "`SilenceErrors` is still set, so Cobra prints no `Error:` line anywhere; `run` prints the message to standard error."
+      }
+    ]
+  },
+  {
+    "id": "ex-hd5vh3qp",
+    "version": 1,
+    "section": "help-and-errors",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Args: cobra.___(1)` on `top` is what produced `accepts at most 1 arg(s), received 2` when two files were named.",
+    "hint": "A function from Cobra's family of positional-argument validators, named for an upper bound.",
+    "blanks": [
+      {
+        "accept": [
+          "MaximumNArgs"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-shhfj2s1",
+    "version": 1,
+    "section": "help-and-errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the root command of `hits` have a `RunE` that only returns an error?",
+    "hint": "What does Cobra do with a root that has subcommands and nothing to run?",
+    "choices": [
+      {
+        "text": "Without it Cobra would not add `help` and `completion`",
+        "correct": false,
+        "why": "Those are added to any root with subcommands, runnable or not."
+      },
+      {
+        "text": "So that a bare `./hits` is a usage mistake with status 2",
+        "correct": true,
+        "why": "Right. A root with no `RunE` prints its help and returns `nil`, so `./hits` alone would exit 0; the price is a `hits [flags]` line in the help."
+      },
+      {
+        "text": "Cobra panics when a root has no function to run",
+        "correct": false,
+        "why": "It does not panic; it treats the root as help-only and prints the help."
+      },
+      {
+        "text": "It is how the `Did you mean this?` suggestion is switched on",
+        "correct": false,
+        "why": "Suggestions come from the unknown-command check while walking the tree, with or without a root `RunE`."
+      }
+    ]
+  },
+  {
+    "id": "ex-0d1ac6cp",
+    "version": 1,
+    "section": "completion",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When Ana presses Tab after `./hits t`, where does the word `top` come from?",
+    "hint": "The script line 26 printed shows what runs on each Tab.",
+    "choices": [
+      {
+        "text": "From a list of commands written into the bash script when it was generated",
+        "correct": false,
+        "why": "The script holds no command names; it runs the program and asks."
+      },
+      {
+        "text": "From `./hits __complete t`, which the script runs and reads",
+        "correct": true,
+        "why": "Right. The hidden command walks the same tree `hits` runs from and prints `top` and the directive on standard output."
+      },
+      {
+        "text": "From bash, which reads the Go source to find subcommand names",
+        "correct": false,
+        "why": "bash never sees the source; it only runs the binary it is completing."
+      },
+      {
+        "text": "From the `hits --help` output, which the script parses",
+        "correct": false,
+        "why": "The script calls `__complete`, whose output is made for it: one candidate per line and a `:4` directive."
+      }
+    ]
+  },
+  {
+    "id": "ex-ymwxj0e3",
+    "version": 1,
+    "section": "completion",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`./hits __complete top \"\"` ended with a directive line. What number did it carry?",
+    "hint": "The directive that turns the candidates into file extensions.",
+    "value": 8,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-5n113zds",
+    "version": 1,
+    "section": "completion",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`logFiles` returns `nil, cobra.ShellCompDirectiveNoFileComp` once a file is already named. What would Tab do without that check?",
+    "hint": "What would the function return on every call?",
+    "choices": [
+      {
+        "text": "Offer `.log` files again, for an argument `top` would refuse",
+        "correct": true,
+        "why": "Right. It would return `log` with directive 8 every time, and a second file would fail `MaximumNArgs(1)` with status 2."
+      },
+      {
+        "text": "Offer nothing, since Cobra already knows the command takes one file",
+        "correct": false,
+        "why": "Cobra calls the function and passes its answer on; it does not read `Args` for completion."
+      },
+      {
+        "text": "Crash the shell with an error from the script",
+        "correct": false,
+        "why": "Directive 8 with `log` is a valid answer; the script would filter files as usual."
+      },
+      {
+        "text": "Offer every file in the directory, `notes.txt` included",
+        "correct": false,
+        "why": "The filter still applies, so only `.log` files and directories would be offered."
+      }
+    ]
+  },
+  {
+    "id": "ex-jxk3x63a",
+    "version": 1,
+    "section": "completion",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Next month `hits` gains a third subcommand, `slow`. Users saved the bash script months ago. What do they need to do for Tab to offer `slow`?",
+    "hint": "What does the saved script contain, and what does it ask?",
+    "choices": [
+      {
+        "text": "Regenerate the script with `hits completion bash` and save it again",
+        "correct": false,
+        "why": "The script contains no command names, only the call to `__complete`, so the old one asks the new binary."
+      },
+      {
+        "text": "Install the new binary; the old script asks it",
+        "correct": true,
+        "why": "Right. Every Tab runs `hits __complete`, which reads the tree of whatever binary is installed."
+      },
+      {
+        "text": "Add `slow` to `ValidArgs` on the root",
+        "correct": false,
+        "why": "Subcommands are completed from the tree; `ValidArgs` is for a fixed list of positional arguments."
+      },
+      {
+        "text": "Install the `bash-completion` package again",
+        "correct": false,
+        "why": "The package is the script's dependency and does not change with `hits`."
+      }
+    ]
+  },
+  {
+    "id": "ex-09bdqa4j",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens when Ana types `./hits t` and presses Tab once.",
+    "hint": "From the key to the word on the screen.",
+    "items": [
+      "bash calls `__start_hits`, the function registered for `hits`",
+      "the script runs `./hits __complete t`",
+      "Cobra walks the tree and finds the commands whose names start with `t`",
+      "`hits` prints `top`, its description and `:4` on standard output",
+      "bash writes `top` on the command line"
+    ]
+  },
+  {
+    "id": "ex-hzsyz9w5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly script written for lesson 1 runs `hits count -json \"$f\" > counts.json` under `set -e`. The Cobra `hits` is installed in its place. What happens?",
+    "hint": "Follow the flag, then the exit status.",
+    "choices": [
+      {
+        "text": "`counts.json` gets the counts, since `-json` is still accepted",
+        "correct": false,
+        "why": "pflag reads `-json` as shorthands and refuses `-j`; only `--json` works now."
+      },
+      {
+        "text": "`counts.json` gets the table instead of JSON",
+        "correct": false,
+        "why": "An unknown flag stops the command before `RunE`; nothing is counted."
+      },
+      {
+        "text": "The file stays empty, the message goes to standard error, and status 2 halts everything",
+        "correct": true,
+        "why": "Right. `unknown shorthand flag: 'j' in -json` and the hint go to standard error, and `set -e` stops at the 2."
+      },
+      {
+        "text": "The script stops with status 1, because a file was involved",
+        "correct": false,
+        "why": "No file was opened; a refused flag is a mistake in the command line and ends in 2."
+      }
+    ]
+  },
+  {
+    "id": "ex-ta83g09g",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of the Cobra `hits` with the job it does.",
+    "hint": "One description belongs to code outside `main.go`.",
+    "pairs": [
+      {
+        "left": "`root.SetOut(stdout)`",
+        "right": "decides where the tables are written"
+      },
+      {
+        "left": "`runError`",
+        "right": "marks a run that failed after a correct command line"
+      },
+      {
+        "left": "`root.PersistentFlags()`",
+        "right": "makes `--json` reach both subcommands"
+      },
+      {
+        "left": "`ValidArgsFunction: logFiles`",
+        "right": "answers Tab for the file argument"
+      }
+    ],
+    "right_distractors": [
+      "counts the lines of the log"
+    ]
+  }
+]

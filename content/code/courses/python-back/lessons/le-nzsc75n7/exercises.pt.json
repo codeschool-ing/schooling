@@ -1,0 +1,490 @@
+{
+  "ex-t2hb5c0b": {
+    "prompt": "O que o \"pydantic[email]\" acrescentou ao projeto além do Pydantic?",
+    "hint": "Os colchetes dão nome a um extra.",
+    "choices": [
+      {
+        "text": "Um servidor de e-mail para mandar confirmações",
+        "why": "Nada manda e-mail ainda; a aula 13 manda."
+      },
+      {
+        "text": "email-validator e dnspython",
+        "why": "Isso: o que o EmailStr precisa para conferir um endereço."
+      },
+      {
+        "text": "Uma segunda cópia do Pydantic",
+        "why": "Extras acrescentam dependências opcionais, não cópias."
+      },
+      {
+        "text": "As rotas de e-mail do FastAPI",
+        "why": "Essas rotas não existem."
+      }
+    ]
+  },
+  "ex-4p6q7f0n": {
+    "prompt": "Por que a API roda na porta 8001?",
+    "choices": [
+      {
+        "text": "Para deixar a 8000 ao Django",
+        "why": "Isso: os dois nunca disputam uma porta, que só um servidor pode ocupar."
+      },
+      {
+        "text": "O Uvicorn recusa a porta 8000",
+        "why": "Ele aceita qualquer porta livre."
+      },
+      {
+        "text": "O FastAPI exige uma porta ímpar",
+        "why": "Essa regra não existe."
+      },
+      {
+        "text": "8001 é a porta padrão do ASGI",
+        "why": "O ASGI não tem porta padrão."
+      }
+    ]
+  },
+  "ex-zx818bag": {
+    "prompt": "O primeiro list_events devolvia dicionários com valores datetime. Como eles viraram JSON?",
+    "hint": "Ninguém escreveu um serializer.",
+    "choices": [
+      {
+        "text": "O json.dumps, que trata datetime",
+        "why": "O json.dumps recusa objetos datetime."
+      },
+      {
+        "text": "O Uvicorn converteu",
+        "why": "O Uvicorn manda os bytes que recebe."
+      },
+      {
+        "text": "O jsonable_encoder do FastAPI",
+        "why": "Isso: textos ISO 8601 com o deslocamento."
+      },
+      {
+        "text": "O store os guardava como texto",
+        "why": "O store.py monta objetos datetime."
+      }
+    ]
+  },
+  "ex-yhq8fjw8": {
+    "prompt": "EventIn(capacity=\"15\", ...) deu certo. O que o capacity guardava depois?",
+    "hint": "Modo lax.",
+    "choices": [
+      {
+        "text": "O texto \"15\"",
+        "why": "O Pydantic converteu."
+      },
+      {
+        "text": "O inteiro 15",
+        "why": "Isso: uma conversão sem ambiguidade."
+      },
+      {
+        "text": "15.0, um float",
+        "why": "O campo é int."
+      },
+      {
+        "text": "None, com um aviso",
+        "why": "Ele não avisa nem descarta o valor."
+      }
+    ]
+  },
+  "ex-zgbvx770": {
+    "prompt": "RegistrationIn(name=\"\", email=\"not-an-address\") levantou um ValidationError. Quantos erros ele tinha?",
+    "hint": "A validação é completa, não para no primeiro erro.",
+    "choices": [
+      {
+        "text": "Um, do primeiro campo que falhou",
+        "why": "Todo campo é conferido."
+      },
+      {
+        "text": "Dois, um por campo",
+        "why": "Isso: string_too_short e value_error."
+      },
+      {
+        "text": "Nenhum, já que EmailStr aceita qualquer coisa com letras",
+        "why": "Ele exige uma arroba."
+      },
+      {
+        "text": "Três, contando o próprio modelo",
+        "why": "Os erros são por campo."
+      }
+    ]
+  },
+  "ex-ajhfgr6a": {
+    "prompt": "O que a aula diz que distingue o Pydantic de um serializer do DRF, para uso fora da web?",
+    "hint": "Olhe a última linha da tabela.",
+    "choices": [
+      {
+        "text": "Ele conhece os modelos do Django",
+        "why": "Ele não conhece banco nenhum."
+      },
+      {
+        "text": "Ele só funciona dentro de uma rota FastAPI",
+        "why": "Ele é uma biblioteca própria."
+      },
+      {
+        "text": "Ele confere dados fora da web também",
+        "why": "Isso: configurações na aula 15, uma mensagem de fila, uma linha de CSV."
+      },
+      {
+        "text": "Ele escreve o SQL por você",
+        "why": "Nenhum SQL está envolvido."
+      }
+    ]
+  },
+  "ex-k523ekwe": {
+    "prompt": "Ligue cada declaração do schemas.py ao que ela garante.",
+    "pairs": [
+      {
+        "left": "Field(pattern=r\"^[a-z0-9-]+$\")",
+        "right": "letras minúsculas, dígitos e hífens"
+      },
+      {
+        "left": "Field(ge=1, le=1000)",
+        "right": "um número de 1 a 1000"
+      },
+      {
+        "left": "EmailStr",
+        "right": "um endereço de e-mail válido"
+      },
+      {
+        "left": "Field(min_length=1)",
+        "right": "não vazio"
+      }
+    ],
+    "right_distractors": [
+      "único no banco"
+    ]
+  },
+  "ex-vrxcxhfr": {
+    "prompt": "Ligue cada parâmetro de uma rota FastAPI ao lugar de onde o valor é lido.",
+    "hint": "A assinatura decide.",
+    "pairs": [
+      {
+        "left": "slug, citado em \"/events/{slug}\"",
+        "right": "o caminho"
+      },
+      {
+        "left": "limit: int, fora do caminho",
+        "right": "a query string"
+      },
+      {
+        "left": "event: EventIn",
+        "right": "o corpo JSON"
+      }
+    ],
+    "right_distractors": [
+      "um cookie"
+    ]
+  },
+  "ex-n17awvrx": {
+    "prompt": "GET /events?limit=500 respondeu 422. Por quê?",
+    "choices": [
+      {
+        "text": "Não existem 500 eventos",
+        "why": "A lista só seria menor."
+      },
+      {
+        "text": "O limit foi declarado le=100",
+        "why": "Isso: Input should be less than or equal to 100."
+      },
+      {
+        "text": "Parâmetros de query não podem ser números",
+        "why": "O limit é um int."
+      },
+      {
+        "text": "O servidor ficou sem memória",
+        "why": "Nada chegou a rodar."
+      }
+    ]
+  },
+  "ex-had07tzt": {
+    "prompt": "venue: str | None = None no list_events significa o quê?",
+    "choices": [
+      {
+        "text": "venue é obrigatório no corpo",
+        "why": "Tipos simples fora do caminho vêm da query string."
+      },
+      {
+        "text": "Um parâmetro de query opcional",
+        "why": "Isso: ausente quer dizer sem filtro."
+      },
+      {
+        "text": "venue tem de ser o texto \"None\"",
+        "why": "None é o None do Python."
+      },
+      {
+        "text": "Um parâmetro de caminho com padrão",
+        "why": "Ele não está no caminho."
+      }
+    ]
+  },
+  "ex-639t1az5": {
+    "prompt": "O find_event levanta HTTPException três chamadas abaixo da rota. O que o cliente recebe?",
+    "hint": "Quem a captura?",
+    "choices": [
+      {
+        "text": "Um 500, porque a rota não a capturou",
+        "why": "O FastAPI a captura para toda rota."
+      },
+      {
+        "text": "Nada até a rota acrescentar try/except",
+        "why": "Nenhum try/except é necessário."
+      },
+      {
+        "text": "O 404 e o detail dele",
+        "why": "Isso: o FastAPI a transforma na resposta."
+      },
+      {
+        "text": "Um 422 com o slug como erro",
+        "why": "O 422 é para validação."
+      }
+    ]
+  },
+  "ex-czxa9vn8": {
+    "prompt": "A lista de inscrições mostrou nomes e horas, mas nenhum endereço. O que os removeu?",
+    "choices": [
+      {
+        "text": "A função apagou a chave email",
+        "why": "A função devolveu as linhas inteiras."
+      },
+      {
+        "text": "response_model=list[RegistrationPublic]",
+        "why": "Isso: campos que ele não cita nunca saem."
+      },
+      {
+        "text": "O Uvicorn, por privacidade",
+        "why": "O servidor não sabe nada de campos."
+      },
+      {
+        "text": "O store nunca os guardou",
+        "why": "As linhas do store têm a chave email."
+      }
+    ]
+  },
+  "ex-fce2mdkp": {
+    "prompt": "Alguém acrescenta um campo de telefone às linhas de inscrição do store no ano que vem. O que a lista pública manda?",
+    "hint": "O que o modelo de resposta cita?",
+    "choices": [
+      {
+        "text": "O telefone, já que a função o devolve",
+        "why": "O modelo o filtra."
+      },
+      {
+        "text": "Um erro, já que falta o campo no modelo",
+        "why": "Campos a mais são descartados, não recusados."
+      },
+      {
+        "text": "Ainda um nome e uma hora",
+        "why": "Isso. O modelo na saída diz o que pode sair."
+      },
+      {
+        "text": "O que o cliente pedir",
+        "why": "Clientes não escolhem campos aqui."
+      }
+    ]
+  },
+  "ex-ft7vgv9t": {
+    "prompt": "Por que a aula diz que as regras de inscrição em memória não sobrevivem à aula 16?",
+    "hint": "Quantos processos vão servir a API?",
+    "choices": [
+      {
+        "text": "O Pydantic valida em paralelo",
+        "why": "A validação é por requisição."
+      },
+      {
+        "text": "Cada processo de trabalho tem a própria lista",
+        "why": "Isso. A aula 10 as leva para o PostgreSQL, que todos compartilham."
+      },
+      {
+        "text": "O Uvicorn atende uma requisição por vez",
+        "why": "Um processo ou vários, esse não é o problema."
+      },
+      {
+        "text": "Listas em Python não têm ordem",
+        "why": "Elas têm ordem."
+      }
+    ]
+  },
+  "ex-sw0agdh0": {
+    "prompt": "Que código de status uma nova inscrição recebeu?",
+    "hint": "status_code na rota.",
+    "unit": "código de status"
+  },
+  "ex-krtsmq4n": {
+    "prompt": "Que status o FastAPI responde quando um corpo falha na validação?",
+    "choices": [
+      {
+        "text": "400",
+        "why": "Essa é a escolha do DRF."
+      },
+      {
+        "text": "409",
+        "why": "Esse é para um estado que recusa dados válidos."
+      },
+      {
+        "text": "422",
+        "why": "Isso: Unprocessable Content."
+      },
+      {
+        "text": "500",
+        "why": "Nada quebrou."
+      }
+    ]
+  },
+  "ex-skpnq4tz": {
+    "prompt": "Ligue cada chave de um erro de validação ao que ela guarda.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "type",
+        "right": "um código estável para um programa"
+      },
+      {
+        "left": "loc",
+        "right": "onde: body, query ou path, depois o campo"
+      },
+      {
+        "left": "msg",
+        "right": "uma frase para uma pessoa"
+      },
+      {
+        "left": "input",
+        "right": "o valor recusado"
+      }
+    ],
+    "right_distractors": [
+      "o stack trace"
+    ]
+  },
+  "ex-j5f651f3": {
+    "prompt": "Criar um evento cujo slug já existe: por que isso é 409 e não 422?",
+    "hint": "Formato, ou estado?",
+    "choices": [
+      {
+        "text": "Os dados cabem no modelo; o estado atual os recusa",
+        "why": "Isso: corrija a entrada versus o mundo mudou."
+      },
+      {
+        "text": "O 422 é reservado a parâmetros de query",
+        "why": "Corpos também recebem 422."
+      },
+      {
+        "text": "O Pydantic não confere slugs",
+        "why": "Ele conferiu o padrão."
+      },
+      {
+        "text": "409 é o padrão do FastAPI para POST",
+        "why": "201 é o padrão desta rota."
+      }
+    ]
+  },
+  "ex-qafjf01e": {
+    "prompt": "Um 422 por um valor ruim em ?limit= dá a localização como loc [\"___\", \"limit\"].",
+    "hint": "Por onde viaja o ?limit=?",
+    "blanks": [
+      {
+        "accept": [
+          "query"
+        ]
+      }
+    ]
+  },
+  "ex-gsazejbf": {
+    "prompt": "DELETE /events/pycon-watch respondeu 405 com um cabeçalho allow. O que o allow dizia?",
+    "choices": [
+      {
+        "text": "GET",
+        "why": "Isso: o único método que esse caminho tem."
+      },
+      {
+        "text": "GET, POST, DELETE",
+        "why": "Não há rota DELETE."
+      },
+      {
+        "text": "POST",
+        "why": "O POST fica em /events, não num evento."
+      },
+      {
+        "text": "Nada; o FastAPI o omite",
+        "why": "Ele estava lá."
+      }
+    ]
+  },
+  "ex-9dhft2mt": {
+    "prompt": "Por que a aula desaconselha responder 200 com {\"error\": ...} no corpo?",
+    "hint": "Quem lê a linha de status?",
+    "choices": [
+      {
+        "text": "JSON não pode ter uma chave chamada error",
+        "why": "Pode."
+      },
+      {
+        "text": "O FastAPI recusa",
+        "why": "Ele mandaria."
+      },
+      {
+        "text": "Clientes, proxies e logs reconhecem falha pelo status",
+        "why": "Isso, sem ler o corpo."
+      },
+      {
+        "text": "Deixa a resposta maior",
+        "why": "Tamanho não é o ponto."
+      }
+    ]
+  },
+  "ex-04cr4yaa": {
+    "prompt": "Ligue cada situação ao status com que o agenda-api responde.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "o evento não existe",
+        "right": "404"
+      },
+      {
+        "left": "o endereço já está inscrito",
+        "right": "409"
+      },
+      {
+        "left": "limit é \"ten\"",
+        "right": "422"
+      },
+      {
+        "left": "um evento novo foi criado",
+        "right": "201"
+      }
+    ],
+    "right_distractors": [
+      "302"
+    ]
+  },
+  "ex-0xx31v69": {
+    "prompt": "Ponha em ordem o que acontece com POST /events/testing-dojo/registrations.",
+    "items": [
+      "o caminho dá slug=\"testing-dojo\"",
+      "o corpo é validado contra o RegistrationIn",
+      "o register() roda, ou volta um 422",
+      "o resultado passa pelo filtro do RegistrationOut"
+    ]
+  },
+  "ex-r9qkgy7q": {
+    "prompt": "Um cliente manda {\"capacity\": \"15\"} para uma API feita com modelos strict=True e para o agenda-api. O que muda?",
+    "hint": "Lax e strict.",
+    "choices": [
+      {
+        "text": "Nada: as duas convertem",
+        "why": "O strict recusa a conversão."
+      },
+      {
+        "text": "As duas recusam",
+        "why": "Os modelos lax do agenda-api convertem."
+      },
+      {
+        "text": "A estrita responde 422; o agenda-api aceita 15",
+        "why": "Isso."
+      },
+      {
+        "text": "O agenda-api responde 422; a estrita aceita",
+        "why": "É o contrário."
+      }
+    ]
+  }
+}

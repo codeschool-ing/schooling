@@ -1,0 +1,782 @@
+[
+  {
+    "id": "ex-kv4c94j0",
+    "version": 1,
+    "section": "passwords",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the auth_user table hold for Bruno's password?",
+    "choices": [
+      {
+        "text": "The password, encrypted with SECRET_KEY so Django can decrypt it at login",
+        "correct": false,
+        "why": "Nothing is decrypted; it cannot be reversed."
+      },
+      {
+        "text": "A slow, salted hash, with its algorithm and iterations",
+        "correct": true,
+        "why": "Right: pbkdf2_sha256$1500000$salt$hash."
+      },
+      {
+        "text": "One SHA-256 of the password",
+        "correct": false,
+        "why": "One SHA-256 is fast, which is what a password hash must not be."
+      },
+      {
+        "text": "Nothing at all; Django asks the operating system who is logging in",
+        "correct": false,
+        "why": "Peer authentication is PostgreSQL's, not Django's."
+      }
+    ]
+  },
+  {
+    "id": "ex-2p2b4z7r",
+    "version": 1,
+    "section": "passwords",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "passwords.py hashed m4-orchard-copper-17 twice and printed two different strings. Why?",
+    "choices": [
+      {
+        "text": "The iteration count rises with each call",
+        "correct": false,
+        "why": "Both said 1500000."
+      },
+      {
+        "text": "make_password adds the current time",
+        "correct": false,
+        "why": "There is no time in the string."
+      },
+      {
+        "text": "Each hash gets a new random salt",
+        "correct": true,
+        "why": "Right, so equal passwords give unequal rows."
+      },
+      {
+        "text": "The second call hashed the first result again",
+        "correct": false,
+        "why": "Each call hashed the password."
+      }
+    ]
+  },
+  {
+    "id": "ex-nh48w1hh",
+    "version": 1,
+    "section": "passwords",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many seconds did one check_password take in passwords.py, as printed?",
+    "hint": "The line ends in s per check.",
+    "value": 0.29,
+    "tolerance": 0.02,
+    "unit": "s"
+  },
+  {
+    "id": "ex-tcbe9spg",
+    "version": 1,
+    "section": "passwords",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a password hash made slow on purpose?",
+    "choices": [
+      {
+        "text": "A thief pays per guess; a person, per login",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "So that logins queue up and the server stays under its limit",
+        "correct": false,
+        "why": "Throttling is a different tool."
+      },
+      {
+        "text": "Slow hashes are shorter to store",
+        "correct": false,
+        "why": "Length has nothing to do with it."
+      },
+      {
+        "text": "The salt takes that long to generate",
+        "correct": false,
+        "why": "The salt is a few random bytes."
+      }
+    ]
+  },
+  {
+    "id": "ex-r1q53jdh",
+    "version": 1,
+    "section": "passwords",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Django's hasher for the winner of the 2015 Password Hashing Competition is ___PasswordHasher.",
+    "blanks": [
+      {
+        "accept": [
+          "Argon2"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wbqk7msg",
+    "version": 1,
+    "section": "django-sessions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the login post, the cookie file held sessionid marked #HttpOnly_. What does HttpOnly do?",
+    "choices": [
+      {
+        "text": "Sends the cookie only over plain HTTP, never HTTPS",
+        "correct": false,
+        "why": "That is not what it means."
+      },
+      {
+        "text": "Keeps the cookie out of reach of JavaScript",
+        "correct": true,
+        "why": "Right: an injected script cannot read it."
+      },
+      {
+        "text": "Makes it expire as soon as the browser window is closed",
+        "correct": false,
+        "why": "Expiry is a separate attribute."
+      },
+      {
+        "text": "Stops curl from saving it",
+        "correct": false,
+        "why": "curl saved it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1x8yndxk",
+    "version": 1,
+    "section": "django-sessions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A PATCH with the session cookie and no X-CSRFToken header was refused. Why does the API insist?",
+    "choices": [
+      {
+        "text": "The session expired between the two requests",
+        "correct": false,
+        "why": "The next request with the token worked."
+      },
+      {
+        "text": "DRF requires CSRF tokens on every request",
+        "correct": false,
+        "why": "Only on those authenticated by a session."
+      },
+      {
+        "text": "Bruno has no permission to change events",
+        "correct": false,
+        "why": "With the token, his PATCH went through."
+      },
+      {
+        "text": "Browsers attach cookies to requests other sites make them send",
+        "correct": true,
+        "why": "Right: the token proves the page is ours."
+      }
+    ]
+  },
+  {
+    "id": "ex-vh4ma938",
+    "version": 1,
+    "section": "django-sessions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After logout, the copy of the old cookie file was refused. What happened on the server?",
+    "choices": [
+      {
+        "text": "The row in django_session was deleted",
+        "correct": true,
+        "why": "Right: the key leads nowhere now."
+      },
+      {
+        "text": "SECRET_KEY was rotated",
+        "correct": false,
+        "why": "Nothing changed the key."
+      },
+      {
+        "text": "Bruno's password hash changed when he logged out",
+        "correct": false,
+        "why": "Logout does not touch the password."
+      },
+      {
+        "text": "The cookie expired in the browser",
+        "correct": false,
+        "why": "The copy still held it; the server refused it."
+      }
+    ]
+  },
+  {
+    "id": "ex-0jhpa77m",
+    "version": 1,
+    "section": "django-sessions",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Django puts whoever is logged in into request.___, through AuthenticationMiddleware.",
+    "blanks": [
+      {
+        "accept": [
+          "user"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qq5eb5hj",
+    "version": 1,
+    "section": "drf-tokens",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which header does DRF's token authentication read?",
+    "choices": [
+      {
+        "text": "Authorization: Bearer <key>",
+        "correct": false,
+        "why": "That is the JWT's, in agenda-api."
+      },
+      {
+        "text": "X-CSRFToken: <key>",
+        "correct": false,
+        "why": "That is the CSRF token."
+      },
+      {
+        "text": "Cookie: token=<key>",
+        "correct": false,
+        "why": "Tokens here are not cookies."
+      },
+      {
+        "text": "Authorization: Token <key>",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-vdayst6r",
+    "version": 1,
+    "section": "drf-tokens",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 6 got 403 for an anonymous write; this lesson got 401 with WWW-Authenticate: Token. What changed?",
+    "choices": [
+      {
+        "text": "IsAuthenticatedOrReadOnly was removed",
+        "correct": false,
+        "why": "It is still in the settings."
+      },
+      {
+        "text": "TokenAuthentication came first, and it names a scheme",
+        "correct": true,
+        "why": "Right: a 401 must say how to authenticate."
+      },
+      {
+        "text": "The migration of authtoken changed the status codes",
+        "correct": false,
+        "why": "Migrations make tables."
+      },
+      {
+        "text": "Django 6.1 replaced 403 with 401 everywhere",
+        "correct": false,
+        "why": "No such change."
+      }
+    ]
+  },
+  {
+    "id": "ex-5pzptzdk",
+    "version": 1,
+    "section": "drf-tokens",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the authtoken_token table reveal about DRF's tokens? Choose all that apply.",
+    "choices": [
+      {
+        "text": "The key is stored as it was sent",
+        "correct": true,
+        "why": "Right: no hash."
+      },
+      {
+        "text": "There is one per user",
+        "correct": true,
+        "why": "Right: asking twice gave the same key."
+      },
+      {
+        "text": "Each one expires after two weeks",
+        "correct": false,
+        "why": "There is no expiry column."
+      },
+      {
+        "text": "It is signed with SECRET_KEY",
+        "correct": false,
+        "why": "That is a JWT."
+      }
+    ]
+  },
+  {
+    "id": "ex-nh1xnjjz",
+    "version": 1,
+    "section": "drf-tokens",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Bruno's phone was stolen with a DRF token in it. How is that token stopped?",
+    "choices": [
+      {
+        "text": "Wait for it to expire",
+        "correct": false,
+        "why": "It has no expiry."
+      },
+      {
+        "text": "drf_create_token -r bruno replaces it",
+        "correct": true,
+        "why": "Right: the old key answered Invalid token."
+      },
+      {
+        "text": "Log Bruno out of the admin on his laptop and phone",
+        "correct": false,
+        "why": "That deletes a session row, not the token."
+      },
+      {
+        "text": "Change SECRET_KEY",
+        "correct": false,
+        "why": "DRF tokens are not signed with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-h54gkqkc",
+    "version": 1,
+    "section": "jwt-in-fastapi",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does create_user.py ask for the password with getpass instead of taking it as an argument?",
+    "choices": [
+      {
+        "text": "Command-line arguments are cut at the first dash or digit",
+        "correct": false,
+        "why": "They can."
+      },
+      {
+        "text": "pwdlib only hashes what getpass returns",
+        "correct": false,
+        "why": "It hashes any string."
+      },
+      {
+        "text": "It is not echoed, nor kept in the shell's history",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "SQLAlchemy refuses values from sys.argv",
+        "correct": false,
+        "why": "It has no idea where values came from."
+      }
+    ]
+  },
+  {
+    "id": "ex-m7pyk72j",
+    "version": 1,
+    "section": "jwt-in-fastapi",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A request to POST /events had no Authorization header. Which piece answered 401 Not authenticated?",
+    "choices": [
+      {
+        "text": "current_user, after jwt.decode failed",
+        "correct": false,
+        "why": "Its message is Could not validate the token."
+      },
+      {
+        "text": "The OAuth2PasswordBearer object, bearer",
+        "correct": true,
+        "why": "Right: it found no header."
+      },
+      {
+        "text": "create_event itself",
+        "correct": false,
+        "why": "It never ran."
+      },
+      {
+        "text": "PostgreSQL, refusing the insert",
+        "correct": false,
+        "why": "Nothing reached the database."
+      }
+    ]
+  },
+  {
+    "id": "ex-yqn26tc8",
+    "version": 1,
+    "section": "jwt-in-fastapi",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens when ana creates an event with a token.",
+    "items": [
+      "bearer reads the Authorization header",
+      "jwt.decode checks the signature and exp",
+      "current_user loads ana from users",
+      "create_event inserts the event",
+      "the API answers 201"
+    ]
+  },
+  {
+    "id": "ex-8x6d52ej",
+    "version": 1,
+    "section": "jwt-in-fastapi",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Without the decoy, a wrong password took about 0.004 s for nobody and 0.05 s for ana. What does that give away?",
+    "choices": [
+      {
+        "text": "ana's password",
+        "correct": false,
+        "why": "Timing says nothing about the password itself here."
+      },
+      {
+        "text": "The SECRET_KEY",
+        "correct": false,
+        "why": "Logins never touch it before succeeding."
+      },
+      {
+        "text": "Which names have an account",
+        "correct": true,
+        "why": "Right: only real names pay for a hash."
+      },
+      {
+        "text": "How many users exist",
+        "correct": false,
+        "why": "Each answer is about one name."
+      }
+    ]
+  },
+  {
+    "id": "ex-azcmy0eq",
+    "version": 1,
+    "section": "jwt-in-fastapi",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the decoy in authenticate() change?",
+    "choices": [
+      {
+        "text": "An unknown name now costs one hash, like a known one",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Wrong passwords now get a different message from unknown names",
+        "correct": false,
+        "why": "They get the same message."
+      },
+      {
+        "text": "nobody can log in with the decoy's password",
+        "correct": false,
+        "why": "The check also requires a user."
+      },
+      {
+        "text": "The hash of every user is computed twice",
+        "correct": false,
+        "why": "Once per request."
+      }
+    ]
+  },
+  {
+    "id": "ex-dg351z0x",
+    "version": 1,
+    "section": "what-a-jwt-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "base64 -d printed the JWT's payload with no key. What does that mean?",
+    "choices": [
+      {
+        "text": "The token was broken",
+        "correct": false,
+        "why": "It was valid; /me accepted it."
+      },
+      {
+        "text": "It is signed, not encrypted",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "SECRET_KEY was empty",
+        "correct": false,
+        "why": "The key has 43 characters."
+      },
+      {
+        "text": "base64 -d knows the server's key",
+        "correct": false,
+        "why": "base64 is an encoding, with no key."
+      }
+    ]
+  },
+  {
+    "id": "ex-863bd3e8",
+    "version": 1,
+    "section": "what-a-jwt-is",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of the JWT to what it holds.",
+    "pairs": [
+      {
+        "left": "header",
+        "right": "alg HS256, typ JWT"
+      },
+      {
+        "left": "payload",
+        "right": "sub and exp"
+      },
+      {
+        "left": "signature",
+        "right": "an HMAC of the other two"
+      }
+    ]
+  },
+  {
+    "id": "ex-8m0th81t",
+    "version": 1,
+    "section": "what-a-jwt-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "bad_tokens.py changed ana to bruno in the payload and kept the signature. Why was it refused?",
+    "choices": [
+      {
+        "text": "bruno does not exist in users",
+        "correct": false,
+        "why": "The check fails before any lookup."
+      },
+      {
+        "text": "The token had expired",
+        "correct": false,
+        "why": "It had the same exp as ana's valid token."
+      },
+      {
+        "text": "What was signed is no longer what it says",
+        "correct": true,
+        "why": "Right: a new one would need the key."
+      },
+      {
+        "text": "PyJWT refuses tokens it can decode without a key",
+        "correct": false,
+        "why": "Any JWT can be decoded without a key."
+      }
+    ]
+  },
+  {
+    "id": "ex-67746zkb",
+    "version": 1,
+    "section": "what-a-jwt-is",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana is dismissed at 10:00 and her JWT has exp at 10:25. What is true of agenda-api as written?",
+    "choices": [
+      {
+        "text": "The token stops at 10:00, when her row is updated",
+        "correct": false,
+        "why": "The signature check does not read the row's state."
+      },
+      {
+        "text": "The token was revoked on the server when she logged out",
+        "correct": false,
+        "why": "There is no logout to revoke it."
+      },
+      {
+        "text": "Changing her password ends the token",
+        "correct": false,
+        "why": "The token does not depend on the password."
+      },
+      {
+        "text": "It works until 10:25 unless her row is deleted",
+        "correct": true,
+        "why": "Right: current_user only refuses a missing user."
+      }
+    ]
+  },
+  {
+    "id": "ex-a1ps8hts",
+    "version": 1,
+    "section": "what-a-jwt-is",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The claim that says until when a JWT is valid is called ___.",
+    "blanks": [
+      {
+        "accept": [
+          "exp"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kzrh5m9w",
+    "version": 1,
+    "section": "choosing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each case to the credential the lesson recommends.",
+    "pairs": [
+      {
+        "left": "a site serving its own pages to a browser",
+        "right": "a session"
+      },
+      {
+        "left": "a script that updates events every night",
+        "right": "a token from a table"
+      },
+      {
+        "left": "five services trusting one login service",
+        "right": "a short-lived JWT"
+      }
+    ]
+  },
+  {
+    "id": "ex-t8bxg0a8",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of the three needs a CSRF token?",
+    "choices": [
+      {
+        "text": "The session: its cookie goes by itself",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The JWT, because it is signed with SECRET_KEY",
+        "correct": false,
+        "why": "Signing has nothing to do with CSRF."
+      },
+      {
+        "text": "The DRF token, because it is stored in a table",
+        "correct": false,
+        "why": "Where it is stored is not the point."
+      },
+      {
+        "text": "None of them",
+        "correct": false,
+        "why": "A cookie sent by the browser needs it."
+      }
+    ]
+  },
+  {
+    "id": "ex-5n4k6xv3",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A single-page app on one domain keeps its JWT in localStorage. What is the risk the lesson names?",
+    "choices": [
+      {
+        "text": "localStorage is cleared at every page load",
+        "correct": false,
+        "why": "It survives reloads."
+      },
+      {
+        "text": "Any script injected into the page reads it and takes it away",
+        "correct": true,
+        "why": "Right: HttpOnly cookies are out of its reach."
+      },
+      {
+        "text": "The browser sends it to every other site",
+        "correct": false,
+        "why": "localStorage is never sent by itself."
+      },
+      {
+        "text": "The token becomes encrypted and the server cannot read it",
+        "correct": false,
+        "why": "Nothing encrypts it."
+      }
+    ]
+  },
+  {
+    "id": "ex-4nerpxv7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which credential can the server take back at once, without waiting? Choose the best answer.",
+    "choices": [
+      {
+        "text": "Only a JWT, by changing exp",
+        "correct": false,
+        "why": "exp is inside the signed token."
+      },
+      {
+        "text": "A session or a DRF token, by changing a row",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "None; every credential lasts until it expires",
+        "correct": false,
+        "why": "Rows can be deleted."
+      },
+      {
+        "text": "The three of them, by restarting the server processes",
+        "correct": false,
+        "why": "A restart changes no row and no key."
+      }
+    ]
+  },
+  {
+    "id": "ex-j0kr77tw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate wants to put the user's e-mail address and phone number in agenda-api's JWT to save a query. What is the objection?",
+    "choices": [
+      {
+        "text": "PyJWT limits a payload to two claims at most",
+        "correct": false,
+        "why": "No such limit."
+      },
+      {
+        "text": "The signature would no longer verify",
+        "correct": false,
+        "why": "It is computed over whatever the payload holds."
+      },
+      {
+        "text": "Whoever holds the token reads them all",
+        "correct": true,
+        "why": "Right: the payload is base64."
+      },
+      {
+        "text": "Tokens with personal data expire sooner",
+        "correct": false,
+        "why": "exp is whatever the server sets."
+      }
+    ]
+  }
+]

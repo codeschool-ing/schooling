@@ -1,0 +1,367 @@
+{
+  "ex-m4y63p31": {
+    "prompt": "Quando uma aplicação Spring Boot, construída como este curso constrói o bookshop, descobre quais beans existem e qual deles cada construtor recebe?",
+    "hint": "A aula 5 viu isso acontecer dentro do `java -jar`.",
+    "choices": [
+      {
+        "text": "A cada vez que inicia",
+        "why": "Isso. O contêiner varre o pacote, lê os construtores por reflexão e confere as condições da autoconfiguração a cada início, e não guarda nada disso para o próximo."
+      },
+      {
+        "text": "Enquanto o `javac` compila as classes",
+        "why": "Esse é o momento do Micronaut. O passo de compilação do Spring produz classes comuns e nada sobre a ligação."
+      },
+      {
+        "text": "Durante o `mvn package`, quando o jar é montado",
+        "why": "É onde o Quarkus faz isso, e onde faria o passo AOT opcional do Spring. O bookshop não usa esse passo."
+      },
+      {
+        "text": "Na primeira vez que uma requisição chega a cada controller",
+        "why": "O Spring constrói os beans singleton antes de abrir a porta, e é por isso que um bean faltando impede o início em vez de falhar numa requisição."
+      }
+    ]
+  },
+  "ex-5cnvs5rt": {
+    "prompt": "Em qual destas implantações alguns segundos de início custam mais caro?",
+    "hint": "Conte quantas vezes um usuário espera por um início.",
+    "choices": [
+      {
+        "text": "Um monólito publicado uma vez por semana e mantido no ar",
+        "why": "Ele paga o início uma vez por semana, e quem espera por isso é a pessoa que publica."
+      },
+      {
+        "text": "Um serviço com muito tráfego que roda em três instâncias de vida longa",
+        "why": "Muito tráfego é uma questão de vazão depois de rodando. Os três inícios acontecem na publicação, e os usuários não chegam a vê-los."
+      },
+      {
+        "text": "Um job em lote noturno que roda por duas horas",
+        "why": "Alguns segundos em duas horas são ruído, e ninguém está esperando pela primeira resposta."
+      },
+      {
+        "text": "Uma função iniciada a partir de zero cópias a cada requisição",
+        "why": "Isso. Cada início a frio é um usuário esperando, então o tempo de início faz parte do tempo de resposta."
+      }
+    ]
+  },
+  "ex-qn484yt7": {
+    "prompt": "Um serviço Quarkus está publicado, e o operador muda uma propriedade no ambiente e o reinicia. O valor novo é ignorado. Qual é a explicação mais provável?",
+    "hint": "Nem toda propriedade é lida no mesmo momento.",
+    "choices": [
+      {
+        "text": "É uma propriedade de build, que exige um build novo",
+        "why": "Isso. Trabalho levado para o build é decidido lá, e o Quarkus marca essas propriedades como de build; mudá-las no início não faz nada."
+      },
+      {
+        "text": "O Quarkus nunca lê o ambiente, só o arquivo de propriedades",
+        "why": "Propriedades lidas no início podem vir do ambiente, como no Spring. A questão é quais propriedades são lidas no início."
+      },
+      {
+        "text": "Uma imagem nativa não consegue ler configuração nenhuma",
+        "why": "Uma imagem nativa ainda lê a configuração de execução quando inicia; o que ela não consegue é mudar o que foi decidido no build dela."
+      },
+      {
+        "text": "O reinício reaproveitou um contêiner em cache do início anterior",
+        "why": "O Quarkus não guarda contêiner entre inícios; o que ele reproduz é uma gravação feita pelo build, e esse é o ponto."
+      }
+    ]
+  },
+  "ex-v9wsbznc": {
+    "prompt": "Quais destas coisas o Spring Boot faz a cada início e o Micronaut já fez enquanto compilava? Marque todas as que se aplicam.",
+    "hint": "Pense no trabalho do contêiner, não no do servidor.",
+    "choices": [
+      {
+        "text": "Varrer o pacote atrás de classes anotadas",
+        "why": "Isso. Os processadores de anotação do Micronaut viram cada anotação dentro do `javac`."
+      },
+      {
+        "text": "Ler construtores por reflexão para descobrir do que cada bean precisa",
+        "why": "Isso. O Micronaut gerou uma classe por bean que chama o construtor diretamente."
+      },
+      {
+        "text": "Abrir a porta HTTP",
+        "why": "Todo servidor abre a porta quando inicia; uma porta não pode ser aberta por um compilador."
+      },
+      {
+        "text": "Ler os valores de propriedades de execução como a senha do banco",
+        "why": "Os dois leem a configuração de execução no início, já que uma senha não pode ser compilada para dentro do programa."
+      }
+    ]
+  },
+  "ex-sd1z4pam": {
+    "prompt": "Ligue cada framework a onde ele resolve a ligação.",
+    "hint": "A figura da primeira seção de leitura.",
+    "pairs": [
+      {
+        "left": "Quarkus",
+        "right": "as extensões dele, durante o build"
+      },
+      {
+        "left": "Micronaut",
+        "right": "processadores de anotação, dentro do javac"
+      },
+      {
+        "left": "Javalin",
+        "right": "o seu próprio código, no main"
+      },
+      {
+        "left": "Play",
+        "right": "o Guice, quando a aplicação inicia"
+      }
+    ],
+    "right_distractors": [
+      "um operador, quando o serviço é publicado"
+    ]
+  },
+  "ex-xh8r7mmr": {
+    "prompt": "Numa aplicação Play, uma rota em `conf/routes` cita um método de controller que foi renomeado. Quando o erro aparece?",
+    "hint": "O arquivo de rotas não é lido no início.",
+    "choices": [
+      {
+        "text": "No início, quando o Guice constrói os controllers e as rotas",
+        "why": "O Guice roda no início, mas o arquivo de rotas virou código muito antes disso."
+      },
+      {
+        "text": "No build, porque o arquivo de rotas é compilado para código",
+        "why": "Isso. Uma rota que cita um método que não existe é um erro de compilação, e nada é publicado com ela."
+      },
+      {
+        "text": "Só quando uma requisição chega a essa rota",
+        "why": "Esse seria o comportamento de rotas lidas por reflexão na hora da requisição; as do Play são conferidas antes."
+      },
+      {
+        "text": "Nunca: a rota responde 404 em silêncio",
+        "why": "Uma rota que sumisse em silêncio seria o pior resultado, e compilar o arquivo é como o Play evita isso."
+      }
+    ]
+  },
+  "ex-4kg07p63": {
+    "prompt": "Por que gerar uma imagem nativa do GraalVM é mais simples para o Quarkus e o Micronaut do que para uma aplicação Spring Boot deixada como este curso a constrói?",
+    "hint": "O que precisa ser declarado antes de construir uma imagem nativa?",
+    "choices": [
+      {
+        "text": "O GraalVM só aceita anotações Jakarta, que o Spring não usa",
+        "why": "O native-image compila qualquer Java; ele não sabe nada de quais anotações um framework escolheu."
+      },
+      {
+        "text": "O jar do Spring é grande demais para o native-image compilar",
+        "why": "Tamanho deixa o build mais lento, não impossível. O obstáculo é a reflexão, não os bytes."
+      },
+      {
+        "text": "Tudo o que é alcançado por reflexão tem de ser conhecido antes do build, e a ligação deles já está decidida nesse momento",
+        "why": "Isso. Um framework que liga no início por reflexão precisa primeiro adiantar essa análise, que é o trabalho do passo AOT do Spring."
+      },
+      {
+        "text": "Uma imagem nativa não consegue abrir uma porta de rede sem o Jetty",
+        "why": "Uma imagem nativa abre sockets como qualquer programa; o Tomcat do Spring também funciona numa depois que o passo AOT rodou."
+      }
+    ]
+  },
+  "ex-dxybn28e": {
+    "prompt": "O Micronaut liga a aplicação em tempo de compilação: os processadores de anotação dele rodam dentro do ___ e escrevem uma classe para cada bean.",
+    "blanks": [
+      {
+        "accept": [
+          "javac",
+          "compilador",
+          "compilador java",
+          "compilador do java"
+        ]
+      }
+    ]
+  },
+  "ex-6075a5vd": {
+    "prompt": "Um repositório do Micronaut Data declara `findByTitel`, mas o campo da entidade é `title`. Quando a equipe descobre?",
+    "hint": "O Micronaut Data monta a consulta a partir do nome do método, e a pergunta é quando.",
+    "choices": [
+      {
+        "text": "Quando a aplicação inicia e monta o repositório",
+        "why": "É quando o Spring Data reclamaria de uma consulta derivada; o Micronaut Data já analisou o nome antes disso."
+      },
+      {
+        "text": "Na primeira vez que o método é chamado",
+        "why": "Nada dessa consulta fica para a chamada; o nome foi conferido antes."
+      },
+      {
+        "text": "Nunca: o método devolve uma lista vazia",
+        "why": "Uma consulta que cita um campo inexistente é recusada, e não executada contra o vazio."
+      },
+      {
+        "text": "Quando o código é compilado",
+        "why": "Isso. O processador de anotação transforma o nome numa consulta dentro do javac e falha o build com um campo que não existe, então o erro de digitação nunca chega a uma aplicação rodando."
+      }
+    ]
+  },
+  "ex-8ec2472s": {
+    "prompt": "O primeiro build do `javalin-hello` não tinha Jackson no pom, e o `GET /books` respondeu 500. O que isso mostra sobre o Javalin?",
+    "hint": "Compare com o que os starters da aula 4 fizeram pelo bookshop.",
+    "choices": [
+      {
+        "text": "Fora do Spring, records não viram JSON",
+        "why": "O mesmo record virou JSON assim que o jackson-databind entrou no pom."
+      },
+      {
+        "text": "O Javalin precisa de uma anotação no handler para saber que ele devolve JSON",
+        "why": "O Javalin não lê anotações; o `ctx.json` é a instrução inteira, e ele precisa de um mapper para cumpri-la."
+      },
+      {
+        "text": "A biblioteca de JSON é escolha sua; o starter do Spring já trazia uma",
+        "why": "Isso. O spring-boot-starter-webmvc traz o Jackson e o configura; uma biblioteca deixa essa decisão, e a falta dela, com você."
+      },
+      {
+        "text": "A porta 7070 ainda estava presa pela execução anterior, então o servidor respondeu com um erro",
+        "why": "Uma porta ocupada impede o servidor de iniciar; este servidor iniciou e respondeu, com um 500."
+      }
+    ]
+  },
+  "ex-r8w32nhv": {
+    "prompt": "Por que o pom do `javalin-hello` traz o maven-shade-plugin?",
+    "hint": "A aula 1 tentou rodar um jar que precisava de uma biblioteca.",
+    "choices": [
+      {
+        "text": "Para deixar as classes menores, renomeando os pacotes enquanto as copia para o jar",
+        "why": "O plugin consegue realocar pacotes, mas este pom não pede isso; o jar que ele produz é maior, não menor."
+      },
+      {
+        "text": "Porque o Javalin se recusa a iniciar de um jar feito pelo plugin de jar comum",
+        "why": "O Javalin não sabe como foi empacotado. O jar comum falha antes de chegar ao Javalin, porque as classes dele não estão lá."
+      },
+      {
+        "text": "Para juntar todas as dependências num jar executável, com a classe principal",
+        "why": "Isso. O jar comum só tem o `HelloApp`; o sombreado tem também o Javalin, o Jetty, o Jackson e o logger."
+      },
+      {
+        "text": "Para fixar as versões das dependências",
+        "why": "As versões são fixadas pelo `<version>` de cada dependência; o shade copia o que foi resolvido."
+      }
+    ]
+  },
+  "ex-sd0v67n2": {
+    "prompt": "Ponha em ordem o que acontece entre o `java -jar` e a resposta a `GET /books/2` no `javalin-hello`.",
+    "hint": "A configuração vem antes do servidor; o handler antes do JSON.",
+    "items": [
+      "O `main` chama `Javalin.create`, e o lambda registra as duas rotas",
+      "O `start(7070)` abre o Jetty na porta 7070",
+      "O Jetty aceita a requisição e o Javalin a casa com `/books/{id}`",
+      "O handler converte o `{id}`, acha o livro e chama `ctx.json`",
+      "O Jackson escreve o record como JSON na resposta"
+    ],
+    "trap": "No Javalin 7 as rotas fazem parte da configuração, então são registradas antes de a porta abrir, e não depois."
+  },
+  "ex-fk575b6s": {
+    "prompt": "O jar do bookshop tem 21.580.405 bytes e o do `javalin-hello` tem 9.534.256. Quantas vezes maior é o do bookshop? Responda com duas casas decimais.",
+    "hint": "Divida o primeiro pelo segundo."
+  },
+  "ex-brj206jy": {
+    "prompt": "Por que o `first-answer.sh` mede o início de fora, em vez de comparar a linha que cada framework imprime sobre o próprio início?",
+    "hint": "Pergunte onde cada cronômetro começa.",
+    "choices": [
+      {
+        "text": "As linhas dos frameworks são arredondadas demais para comparar",
+        "why": "As duas informam até o milissegundo. O problema é o que elas contam, não a precisão."
+      },
+      {
+        "text": "Cada linha dispara o cronômetro num momento diferente",
+        "why": "Isso. Nenhuma conta o início da própria JVM, e elas não começam no mesmo ponto depois dele; o tempo do `java -jar` até a primeira resposta é um só trecho para os dois."
+      },
+      {
+        "text": "O Javalin não imprime um tempo de início",
+        "why": "Imprime: `Javalin started in ...ms`, embaixo do banner."
+      },
+      {
+        "text": "A linha do Spring é impressa antes de o Tomcat abrir a porta",
+        "why": "O Spring escreve o `Started` depois que o servidor web está de pé, então o número dele não fica antes da porta."
+      }
+    ]
+  },
+  "ex-1hh58drq": {
+    "prompt": "Em três execuções de cada, o bookshop levou várias vezes o tempo do `javalin-hello` para responder à primeira requisição. Que conclusão essa medida sustenta?",
+    "hint": "O que foi cronometrado, e com que frequência isso acontece?",
+    "choices": [
+      {
+        "text": "O Javalin responde requisições umas três vezes mais rápido quando os dois estão rodando",
+        "why": "A primeira resposta foi a única coisa medida. A velocidade depois de rodando é outra medida, e a aula 20 faz uma."
+      },
+      {
+        "text": "Cada início do bookshop custa alguns segundos a mais que o do Javalin, naquela máquina",
+        "why": "Isso. É um custo por início, medido numa máquina, que importa exatamente tantas vezes quanto o serviço inicia."
+      },
+      {
+        "text": "O bookshop completo da aula 23 vai iniciar três vezes mais devagar que um serviço Javalin com as mesmas funções",
+        "why": "Nenhum desses dois programas foi medido. Banco, segurança e métricas acrescentam trabalho de início aos dois."
+      },
+      {
+        "text": "O Spring Boot não serve para serviços em produção",
+        "why": "A maioria dos serviços em produção inicia uma vez por publicação e roda por dias; para eles, alguns segundos no início passam despercebidos."
+      }
+    ]
+  },
+  "ex-cc9rw6s4": {
+    "prompt": "Cada sintoma abaixo é típico de um framework, por causa de onde esse framework faz a ligação. Ligue-os.",
+    "hint": "Pergunte em qual fase cada erro poderia ser notado primeiro.",
+    "pairs": [
+      {
+        "left": "uma rota que cita um método renomeado quebra o build",
+        "right": "Play"
+      },
+      {
+        "left": "uma propriedade mudada em produção só vale depois de um build novo",
+        "right": "Quarkus"
+      },
+      {
+        "left": "um build sem os processadores de anotação produz uma aplicação que não acha nenhum bean",
+        "right": "Micronaut"
+      },
+      {
+        "left": "uma biblioteca de JSON faltando aparece como um 500 na primeira requisição",
+        "right": "Javalin"
+      }
+    ],
+    "right_distractors": [
+      "Spring Boot"
+    ]
+  },
+  "ex-8sr6se29": {
+    "prompt": "Uma equipe roda uma API Spring Boot com Spring Security e Spring Data em quatro instâncias que vivem por semanas. Um início leva nove segundos, e alguém propõe reescrevê-la em Javalin para resolver isso. Qual é a objeção mais forte?",
+    "hint": "Quando os nove segundos são pagos, e quanto a reescrita custaria?",
+    "choices": [
+      {
+        "text": "O Javalin não roda em mais de uma instância atrás de um balanceador",
+        "why": "Um serviço Javalin é um processo comum com uma porta, e roda em tantas instâncias quanto qualquer outro."
+      },
+      {
+        "text": "O Javalin não consegue falar com um banco de dados",
+        "why": "Consegue, por qualquer biblioteca que a equipe acrescente, como o JDBC da aula 9. Escolher e ligar essa biblioteca é o custo."
+      },
+      {
+        "text": "O Javalin também inicia devagar quando tem tantas rotas quanto esta API",
+        "why": "Registrar um lambda por rota é barato; nada nesta aula sugere que as rotas sejam onde vão os segundos do Spring."
+      },
+      {
+        "text": "Os inícios são raros, e a reescrita perderia as bibliotecas do Spring",
+        "why": "Isso. O início importa quando os inícios são frequentes e alguém espera por eles; aqui não são nem uma coisa nem outra, e o ecossistema é o que a equipe perderia."
+      }
+    ]
+  },
+  "ex-ckhy1xpj": {
+    "prompt": "Um colega lê `Javalin started in` com algumas centenas de milissegundos e `Started BookshopApplication in` com alguns segundos, e diz: \"Então o Javalin é várias vezes mais rápido que o Spring.\" O que está errado nisso? Marque todas as que se aplicam.",
+    "hint": "Três perguntas separadas: o que cada linha conta, o que o início diz sobre requisições e onde foi medido.",
+    "choices": [
+      {
+        "text": "As duas linhas disparam o cronômetro em momentos diferentes, então não são uma mesma medida",
+        "why": "Isso. Compare o tempo do `java -jar` até a primeira resposta, que é um só trecho para os dois."
+      },
+      {
+        "text": "O tempo de início não diz nada sobre quão rápido cada um responde depois de rodando",
+        "why": "Isso. \"Mais rápido\" para um serviço costuma querer dizer requisições, e isso é um teste de carga, não um início."
+      },
+      {
+        "text": "Uma execução numa máquina não é uma medida dos frameworks em geral",
+        "why": "Isso. As execuções da própria aula diferiram entre si em centenas de milissegundos ou mais."
+      },
+      {
+        "text": "O número do Spring deixa de fora o tempo que o Tomcat leva para abrir a porta",
+        "why": "O Spring imprime o `Started` depois que o servidor web está de pé; o que o número dele deixa de fora é o início da própria JVM, que o `process running for` acrescenta."
+      }
+    ]
+  }
+}

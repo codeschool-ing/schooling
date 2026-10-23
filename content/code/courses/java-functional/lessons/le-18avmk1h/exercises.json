@@ -1,0 +1,429 @@
+[
+  {
+    "id": "ex-kpv6j78j",
+    "version": 1,
+    "section": "bytes-and-characters",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Encoding.java` wrote `Sertão` as UTF-8. How many bytes did the file hold?",
+    "hint": "One letter is not from the plain alphabet.",
+    "choices": [
+      {
+        "text": "Seven: one per letter, two for `ã`",
+        "correct": true,
+        "why": "Right: `c3 a3`."
+      },
+      {
+        "text": "Six, one per character",
+        "correct": false,
+        "why": "`ã` takes two."
+      },
+      {
+        "text": "Twelve, two for every character",
+        "correct": false,
+        "why": "That is UTF-16, which the file did not use."
+      },
+      {
+        "text": "Eight, with a marker at the end of the text",
+        "correct": false,
+        "why": "The capture lists every byte, and there is no marker."
+      }
+    ]
+  },
+  {
+    "id": "ex-taf7pzny",
+    "version": 1,
+    "section": "bytes-and-characters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The UTF-8 file was read back as ISO-8859-1. What happened?",
+    "hint": "Look at the last line of the capture.",
+    "choices": [
+      {
+        "text": "A `MalformedInputException` stopped the read",
+        "correct": false,
+        "why": "Nothing was thrown."
+      },
+      {
+        "text": "`SertÃ£o`, printed without an error or a warning",
+        "correct": true,
+        "why": "Right: each byte became a character."
+      },
+      {
+        "text": "The word came back whole, since Java 18 fixed it",
+        "correct": false,
+        "why": "Java 18 changed the default, not a charset named in the code."
+      },
+      {
+        "text": "The `ã` was dropped and `Serto` came back",
+        "correct": false,
+        "why": "Both of its bytes came back, as characters."
+      }
+    ]
+  },
+  {
+    "id": "ex-7k5n34ae",
+    "version": 1,
+    "section": "bytes-and-characters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which class turns an `InputStream` into a `Reader`?",
+    "hint": "The bridge in the table.",
+    "choices": [
+      {
+        "text": "`InputStreamReader`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`FileReader`",
+        "correct": false,
+        "why": "That opens a file by name; it does not wrap a stream you hand it."
+      },
+      {
+        "text": "`BufferedInputStream`",
+        "correct": false,
+        "why": "That adds a buffer and stays a byte stream."
+      },
+      {
+        "text": "`OutputStreamWriter`",
+        "correct": false,
+        "why": "That is the bridge in the other direction."
+      }
+    ]
+  },
+  {
+    "id": "ex-ebt72sgr",
+    "version": 1,
+    "section": "bytes-and-characters",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Since Java 18 the platform's default encoding is ___ on every system.",
+    "hint": "The one the lesson tells you to name.",
+    "blanks": [
+      {
+        "accept": [
+          "UTF-8",
+          "UTF8"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-b1xrafy4",
+    "version": 1,
+    "section": "buffering",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the capture, how many milliseconds did the buffered read of the 5 MB file take?",
+    "hint": "The second line.",
+    "value": 95,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-2y8by2cs",
+    "version": 1,
+    "section": "buffering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was the unbuffered read so much slower, with the same loop?",
+    "hint": "Count the trips.",
+    "choices": [
+      {
+        "text": "The sum overflowed and had to be recomputed",
+        "correct": false,
+        "why": "Both sums are the same and fit in a `long`."
+      },
+      {
+        "text": "Each `read()` was a separate trip into the kernel",
+        "correct": true,
+        "why": "Right: over five million of them."
+      },
+      {
+        "text": "`FileInputStream` decodes every byte as UTF-8",
+        "correct": false,
+        "why": "It moves bytes and decodes nothing."
+      },
+      {
+        "text": "The disk had to spin up for the first one",
+        "correct": false,
+        "why": "The file was written a moment before, and the gap is per byte."
+      }
+    ]
+  },
+  {
+    "id": "ex-j5d7qt34",
+    "version": 1,
+    "section": "buffering",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program writes a report through a `BufferedWriter`, never closes it, and exits. What is in the file?",
+    "hint": "Where the last characters still are.",
+    "choices": [
+      {
+        "text": "Only what had already been written out before the end",
+        "correct": true,
+        "why": "Right: the rest was still in memory."
+      },
+      {
+        "text": "The whole report, since exiting flushes every buffer",
+        "correct": false,
+        "why": "Nothing flushes a Java buffer at exit."
+      },
+      {
+        "text": "Nothing at all; the file is not even created",
+        "correct": false,
+        "why": "Opening the stream creates the file."
+      },
+      {
+        "text": "The report followed by the buffer's unused bytes",
+        "correct": false,
+        "why": "Unused room is never written."
+      }
+    ]
+  },
+  {
+    "id": "ex-vdzsndpp",
+    "version": 1,
+    "section": "buffering",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the layers of `Layers.java` in order, from the file outwards.",
+    "hint": "The figure.",
+    "items": [
+      "`FileInputStream`, which reads bytes",
+      "`InputStreamReader`, which decodes them",
+      "`BufferedReader`, which hands out lines"
+    ]
+  },
+  {
+    "id": "ex-szwdctp2",
+    "version": 1,
+    "section": "closing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `ulimit -n 64`, which `FileInputStream` did `Leak.java` fail to open?",
+    "hint": "The JVM holds some descriptors itself.",
+    "choices": [
+      {
+        "text": "The 65th",
+        "correct": false,
+        "why": "The JVM had already taken some."
+      },
+      {
+        "text": "The 61st",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The 101st, after the loop",
+        "correct": false,
+        "why": "The loop stops at 100."
+      },
+      {
+        "text": "The first: the limit was too low",
+        "correct": false,
+        "why": "Sixty of them opened."
+      }
+    ]
+  },
+  {
+    "id": "ex-24zf2ymn",
+    "version": 1,
+    "section": "closing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `BufferedReader` wraps an `InputStreamReader`, which wraps a `FileInputStream`. What should the code close?",
+    "hint": "Each one closes what it wraps.",
+    "choices": [
+      {
+        "text": "Only the `FileInputStream`, which holds the file",
+        "correct": false,
+        "why": "That skips what the outer layers hold."
+      },
+      {
+        "text": "Nothing, as the garbage collector closes them",
+        "correct": false,
+        "why": "Maybe, and maybe never."
+      },
+      {
+        "text": "All three, from the inside out",
+        "correct": false,
+        "why": "Closing the inner ones first leaves the outer buffer pointing at a closed stream."
+      },
+      {
+        "text": "Only the outermost, the `BufferedReader`",
+        "correct": true,
+        "why": "Right: its `close` reaches the other two."
+      }
+    ]
+  },
+  {
+    "id": "ex-n5y8fn7v",
+    "version": 1,
+    "section": "closing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server leaks one descriptor per request. Where does `Too many open files` appear?",
+    "hint": "Who asks for the next one?",
+    "choices": [
+      {
+        "text": "At the line that forgot to close",
+        "correct": false,
+        "why": "That line succeeded every time."
+      },
+      {
+        "text": "At start-up, before the first request",
+        "correct": false,
+        "why": "The limit is reached after thousands."
+      },
+      {
+        "text": "In the garbage collector's log",
+        "correct": false,
+        "why": "It arrives as an `IOException` in the program."
+      },
+      {
+        "text": "In whatever code opens the next file or socket",
+        "correct": true,
+        "why": "Right: often far from the leak."
+      }
+    ]
+  },
+  {
+    "id": "ex-00e6yy0j",
+    "version": 1,
+    "section": "standard-streams",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`java WordCount.java < /dev/null 2> errors.txt` printed one line. Where did the warning go?",
+    "hint": "What `2>` names.",
+    "choices": [
+      {
+        "text": "It was never printed, since a line arrived",
+        "correct": false,
+        "why": "Nothing arrived, so it was printed."
+      },
+      {
+        "text": "Into `errors.txt`, where `cat` found it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nowhere: `/dev/null` swallowed it",
+        "correct": false,
+        "why": "`/dev/null` was the input."
+      },
+      {
+        "text": "Into the count, on standard output",
+        "correct": false,
+        "why": "The count line was printed alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-drbccvm1",
+    "version": 1,
+    "section": "standard-streams",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `WordCount` leave `System.in` open?",
+    "hint": "Who it belongs to.",
+    "choices": [
+      {
+        "text": "It belongs to the process, not to `main`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Closing it throws an `IOException`",
+        "correct": false,
+        "why": "It can be closed."
+      },
+      {
+        "text": "The shell closes it before the program starts",
+        "correct": false,
+        "why": "The program read three lines from it."
+      },
+      {
+        "text": "A `BufferedReader` around it closes it already",
+        "correct": false,
+        "why": "The reader was never closed either."
+      }
+    ]
+  },
+  {
+    "id": "ex-9jk4h71h",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each job with the stream to use.",
+    "hint": "Bytes or characters, and the bridge between them.",
+    "pairs": [
+      {
+        "left": "copying a PNG image",
+        "right": "`InputStream`"
+      },
+      {
+        "left": "reading a CSV in Latin-1",
+        "right": "`InputStreamReader` with `ISO_8859_1`"
+      },
+      {
+        "left": "printing a complaint",
+        "right": "`System.err`"
+      }
+    ],
+    "right_distractors": [
+      "`Writer`"
+    ]
+  },
+  {
+    "id": "ex-emk9skx6",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these leak a file descriptor? Choose all that apply.",
+    "hint": "Who calls `close`?",
+    "choices": [
+      {
+        "text": "`try (var in = new FileInputStream(f)) { in.read(); }`",
+        "correct": false,
+        "why": "No: the `try` closes it."
+      },
+      {
+        "text": "`new FileInputStream(f).read()` in a loop",
+        "correct": true,
+        "why": "Yes: nothing closes it."
+      },
+      {
+        "text": "A `BufferedReader` kept in a field and never closed",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "`Files.readString(path)`",
+        "correct": false,
+        "why": "No: it opens and closes the file itself."
+      }
+    ]
+  }
+]

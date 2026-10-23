@@ -1,0 +1,567 @@
+{
+  "ex-8zfe7wbp": {
+    "prompt": "Como o JPA e o Hibernate se relacionam?",
+    "hint": "Um dos dois é só um conjunto de interfaces e anotações.",
+    "choices": [
+      {
+        "text": "O Hibernate é uma especificação, e o JPA é a implementação dela feita pelo Spring",
+        "why": "É o contrário, e o Spring não faz parte disso: o JPA é a especificação, o Hibernate a implementa, e o Spring Boot só o configura."
+      },
+      {
+        "text": "O JPA é a especificação, e o Hibernate a implementa",
+        "why": "Isso. `jakarta.persistence` define as anotações, o `EntityManager` e a JPQL; o Hibernate faz o trabalho. O EclipseLink implementa a mesma especificação."
+      },
+      {
+        "text": "São dois mapeadores concorrentes, e cada projeto escolhe um deles",
+        "why": "Um projeto escolhe uma implementação do JPA, e o Hibernate é uma delas. Código escrito contra `jakarta.persistence` roda no Hibernate sem citá-lo."
+      },
+      {
+        "text": "JPA é o nome antigo do Hibernate, mantido por compatibilidade",
+        "why": "O nome antigo é o da própria especificação: Java Persistence API, hoje Jakarta Persistence. O Hibernate sempre foi um projeto à parte."
+      }
+    ]
+  },
+  "ex-y1vtnnj3": {
+    "prompt": "Um colega diz que, com o Hibernate, a aplicação para de mandar SQL ao banco e passa a trabalhar com objetos guardados na memória. O que há de errado nisso?",
+    "hint": "De onde vem cada entidade, e como uma alteração é gravada?",
+    "choices": [
+      {
+        "text": "Nada: o Hibernate guarda as entidades em cache na memória e só lê o banco uma vez, na inicialização",
+        "why": "Essa é a imagem errada de que a aula parte. Cada entidade é carregada por um `SELECT` quando é pedida, e o log do relatório do catálogo mostra um."
+      },
+      {
+        "text": "Toda entidade continua vindo de um SELECT e toda alteração sai como UPDATE; quem os escreve é o Hibernate",
+        "why": "Isso. O que muda é quem escreve os comandos e quando eles rodam. O log de SQL desta aula mostra cada um."
+      },
+      {
+        "text": "O Hibernate manda JPQL ao banco em vez de SQL",
+        "why": "O banco nunca vê JPQL. O Hibernate traduz `select b from Book b` para o SQL do PostgreSQL antes de enviar."
+      },
+      {
+        "text": "O Hibernate só manda SQL quando save() é chamado",
+        "why": "A demonstração do reprice mudou um preço sem save nenhum, e um `UPDATE` saiu no commit. Carregar também manda SQL."
+      }
+    ]
+  },
+  "ex-ej4btk5y": {
+    "prompt": "Ligue cada coisa do código Java ao que a representa no PostgreSQL.",
+    "hint": "Classe com tabela, objeto com linha, e a referência com a coluna que a substitui.",
+    "pairs": [
+      {
+        "left": "a classe de entidade Book",
+        "right": "a tabela book"
+      },
+      {
+        "left": "um objeto Book",
+        "right": "uma linha de book"
+      },
+      {
+        "left": "o campo priceCents",
+        "right": "a coluna price_cents"
+      },
+      {
+        "left": "o campo author, que guarda um Author",
+        "right": "a coluna author_id, que guarda um número"
+      }
+    ],
+    "right_distractors": [
+      "o índice em isbn"
+    ]
+  },
+  "ex-by87gtx1": {
+    "prompt": "Por que esta aula apaga e recria o banco do bookshop em vez de deixar o novo schema.sql rodar contra ele?",
+    "hint": "Leia as primeiras palavras de cada comando do schema.sql.",
+    "choices": [
+      {
+        "text": "O Hibernate se recusa a subir quando o banco já tem tabelas",
+        "why": "Com `ddl-auto=none` o Hibernate nem mexe nas tabelas, e sobe contra tabelas existentes todo dia. A falha vem do `data.sql`."
+      },
+      {
+        "text": "O PostgreSQL não consegue acrescentar uma chave estrangeira a uma tabela que já tem linhas",
+        "why": "Consegue, com `ALTER TABLE`, desde que todas as linhas a satisfaçam. Nada aqui roda um `ALTER`; a tabela velha simplesmente fica como estava."
+      },
+      {
+        "text": "O papel bookshop perde a senha quando o esquema muda",
+        "why": "O papel e a senha pertencem ao cluster, não a um esquema, e os dois comandos mantêm o mesmo dono."
+      },
+      {
+        "text": "O `IF NOT EXISTS` mantém a tabela `book` da aula 9 como estava",
+        "why": "Isso. A tabela velha existe, então o comando não faz nada, e o `INSERT` que cita `author_id` encontra uma tabela sem essa coluna. A falha aparece na seção sobre o entity manager."
+      }
+    ]
+  },
+  "ex-qjbg61k2": {
+    "prompt": "O que `spring.jpa.hibernate.ddl-auto=none` diz ao Hibernate?",
+    "hint": "DDL é CREATE, ALTER e DROP.",
+    "choices": [
+      {
+        "text": "Para deixar as tabelas em paz: quem as cria é outra coisa",
+        "why": "Isso. Aqui quem manda nelas é o `schema.sql`, e a aula 13 as entrega a uma ferramenta de migração."
+      },
+      {
+        "text": "Para criar as tabelas a partir das entidades quando a aplicação sobe",
+        "why": "Isso é o `create`. É tentador no primeiro dia, e depois o esquema passa a ser o que o Java diz naquela manhã."
+      },
+      {
+        "text": "Para conferir se as tabelas batem com as entidades, e se recusar a subir se não baterem",
+        "why": "Isso é o `validate`, que a aula 13 liga."
+      },
+      {
+        "text": "Para não rodar SQL nenhum até a primeira requisição chegar",
+        "why": "O `ddl-auto` trata só do esquema. O relatório do catálogo roda um `SELECT` na inicialização, diga isto o que disser."
+      }
+    ]
+  },
+  "ex-krh55frx": {
+    "prompt": "O que o `spring-boot-starter-data-jpa` traz para o bookshop? Marque todas as que se aplicam.",
+    "hint": "A seção rodou `mvn dependency:tree` e guardou seis linhas.",
+    "choices": [
+      {
+        "text": "O próprio Hibernate, `hibernate-core`",
+        "why": "Isso: a implementação da especificação."
+      },
+      {
+        "text": "As anotações e interfaces do JPA, `jakarta.persistence-api`",
+        "why": "Isso: o que as entidades e os repositórios importam."
+      },
+      {
+        "text": "Tudo o que o starter de JDBC trazia, inclusive o HikariCP",
+        "why": "Isso. Ele depende de `spring-boot-starter-jdbc`, e por isso trocar um pelo outro não perde nada."
+      },
+      {
+        "text": "O driver do PostgreSQL",
+        "why": "O driver continua sendo uma dependência própria no pom, com escopo `runtime`. O starter funciona com qualquer banco cujo driver você acrescente."
+      },
+      {
+        "text": "Uma ferramenta de migração do esquema",
+        "why": "Nenhum starter deste pom cuida de migrações. A aula 13 acrescenta o Flyway para isso."
+      }
+    ]
+  },
+  "ex-9ygbw3f4": {
+    "prompt": "O `Book` da aula 5 era um record. Por que agora ele é uma classe com um construtor `protected`?",
+    "hint": "Pense em como o Hibernate monta o objeto e no que acontece com ele depois.",
+    "choices": [
+      {
+        "text": "Um record não pode guardar uma referência a outro record, então um livro não poderia apontar para o seu autor",
+        "why": "Pode; o `Book` da aula 5 poderia guardar um record `Author`. O problema é como o mapeador cria e altera os seus objetos."
+      },
+      {
+        "text": "O Hibernate o cria vazio, o preenche e depois percebe alterações, e um record não permite nada disso",
+        "why": "Isso. O construtor `protected` sem argumentos é para o Hibernate; o código da aplicação usa o que recebe todos os valores."
+      },
+      {
+        "text": "O Spring não consegue injetar um record num serviço",
+        "why": "Entidades nem são injetadas. O Spring injeta o repositório; quem cria as entidades é o Hibernate."
+      },
+      {
+        "text": "O Jackson não consegue transformar um record em JSON",
+        "why": "O Jackson transforma records em JSON sem problema: `BookResponse` é um record, e é o que a API envia."
+      }
+    ]
+  },
+  "ex-zp880bpc": {
+    "prompt": "Com `@ManyToOne(fetch = FetchType.LAZY)`, o que um `Book` recém-carregado guarda no campo `author`?",
+    "hint": "Ele conhece o id do autor e mais nada.",
+    "choices": [
+      {
+        "text": "`null`, até o código chamar um setter",
+        "why": "O campo nunca é `null` num livro que tem autor; e a entidade nem tem setter para ele."
+      },
+      {
+        "text": "O próprio autor, lido no mesmo SELECT que carregou o livro um instante antes",
+        "why": "Isso é o que o `join fetch` pede. Sozinho, o `LAZY` deixa o autor fora da consulta do livro."
+      },
+      {
+        "text": "O número da coluna `author_id`, guardado como `Long` até alguém precisar do nome",
+        "why": "O tipo do campo é `Author`. O número fica dentro do proxy, que é uma subclasse de `Author` gerada pelo Hibernate."
+      },
+      {
+        "text": "Um proxy que carrega a linha do autor na primeira vez que os dados dele são pedidos",
+        "why": "Isso. O `getName()` em `BookResponse.from` é o que manda o segundo comando na seção sobre o entity manager."
+      }
+    ]
+  },
+  "ex-0ynfr2z7": {
+    "prompt": "Alguém tira o `fetch = FetchType.LAZY` e deixa `@ManyToOne(optional = false)`. Que tipo de fetch o relacionamento passa a ter?",
+    "hint": "O padrão do JPA para uma referência simples é o contrário do que esta aula recomenda.",
+    "choices": [
+      {
+        "text": "LAZY, porque o Hibernate deixa todo relacionamento lazy",
+        "why": "O Hibernate segue os padrões da especificação, e para `@ManyToOne` o padrão é `EAGER`."
+      },
+      {
+        "text": "LAZY, porque `optional = false` implica isso",
+        "why": "`optional = false` diz que todo livro tem autor, o que deixa o Hibernate usar `inner join`. Não diz nada sobre quando o autor é carregado."
+      },
+      {
+        "text": "EAGER, o padrão da especificação para `@ManyToOne`",
+        "why": "Isso, e é por isso que o bookshop escreve o `LAZY` por extenso. A seção sobre N+1 mostra que o `EAGER` nem evita as consultas extras."
+      },
+      {
+        "text": "Nenhum: a anotação não compila sem um tipo de fetch",
+        "why": "`fetch` tem um valor padrão, então a anotação está completa sem ele. Esse padrão é a armadilha."
+      }
+    ]
+  },
+  "ex-vkeyy9fx": {
+    "prompt": "A coluna id é um `bigserial`, então quem inventa cada número é o banco. A entidade diz isso com `@GeneratedValue(strategy = GenerationType.___)`.",
+    "blanks": [
+      {
+        "accept": [
+          "IDENTITY"
+        ]
+      }
+    ]
+  },
+  "ex-jmwq7dqe": {
+    "prompt": "Na consulta JPQL `select b from Book b order by b.id`, o que é `Book`?",
+    "hint": "A JPQL nunca cita uma tabela.",
+    "choices": [
+      {
+        "text": "O nome da tabela no PostgreSQL",
+        "why": "A tabela por acaso se chama `book`, mas a JPQL cita a entidade. Renomeie a classe e a consulta muda; renomeie a tabela e só o mapeamento muda."
+      },
+      {
+        "text": "A classe de entidade `Book`",
+        "why": "Isso. A JPQL fala de entidades e campos, e o Hibernate escreve o SQL com os nomes de tabela e de coluna."
+      },
+      {
+        "text": "Uma view que o Hibernate cria no banco na inicialização",
+        "why": "O Hibernate não cria nada aqui (`ddl-auto=none`), e o SQL que ele envia lê a tabela `book` diretamente."
+      },
+      {
+        "text": "Um apelido, escolhido livremente como o `b`",
+        "why": "O apelido é o `b`. `Book` precisa corresponder a uma classe `@Entity`, senão o Hibernate recusa a consulta."
+      }
+    ]
+  },
+  "ex-4zw3ptg0": {
+    "prompt": "Por que `BookService.list()` monta os records `BookResponse` ele mesmo, em vez de devolver as entidades `Book` ao controller?",
+    "hint": "Onde termina a transação, e o que ainda precisa do banco depois disso?",
+    "choices": [
+      {
+        "text": "Controllers não podem importar classes anotadas com `@Entity`",
+        "why": "Nada proíbe isso, e compilaria. O problema aparece quando o código roda."
+      },
+      {
+        "text": "O Jackson serializa records mais depressa que classes, e a lista pode ser longa",
+        "why": "Velocidade não é o motivo. O motivo é o que o mapeamento lê: o nome do autor, vindo de um relacionamento lazy."
+      },
+      {
+        "text": "O nome do autor só carrega enquanto a transação do serviço está aberta",
+        "why": "Isso. Montados dentro da transação, os records levam os nomes; uma entidade entregue para fora chegaria ao controller desanexada, e a última seção mostra a exceção que vem em seguida."
+      },
+      {
+        "text": "A entidade não tem getters que o controller possa chamar",
+        "why": "Ela tem getters para todos os campos. Eles funcionam num livro desanexado; o que não carrega é o autor lazy por trás de `getAuthor()`."
+      }
+    ]
+  },
+  "ex-xz2bwzv0": {
+    "prompt": "Com o perfil `sql` ligado, `curl -s localhost:8080/books/2` roda `BookService.get`, que chama `em.find(Book.class, 2L)` e depois `BookResponse.from`. Quantos comandos SQL a requisição envia?",
+    "hint": "O `find` carrega o livro sozinho, e o autor é lazy.",
+    "unit": "comandos"
+  },
+  "ex-7hcpdw1r": {
+    "prompt": "Dentro de uma transação, `em.find(Book.class, 3L)` é chamado duas vezes. O que acontece?",
+    "hint": "O contexto de persistência é um mapa de chave para objeto.",
+    "choices": [
+      {
+        "text": "Um SELECT, e o mesmo objeto devolvido nas duas vezes",
+        "why": "Isso: o log mostrou um `select` e `the same object twice: true`."
+      },
+      {
+        "text": "Dois SELECTs, e dois objetos diferentes que são `equals` entre si",
+        "why": "É o que duas consultas JDBC fazem. Dentro de um contexto de persistência, o segundo `find` é respondido pelo mapa."
+      },
+      {
+        "text": "Dois SELECTs, e o mesmo objeto devolvido nas duas vezes",
+        "why": "O mesmo objeto, sim, mas sem segundo `select`: o mapa já tem o livro 3."
+      },
+      {
+        "text": "Um SELECT, e uma cópia do primeiro objeto na segunda vez",
+        "why": "Uma cópia deixaria o `==` falso. A demonstração imprimiu `true`."
+      }
+    ]
+  },
+  "ex-3fp6n1e7": {
+    "prompt": "`RepriceOnce` mudou um campo e nunca chamou um método de salvar. Por que um UPDATE chegou ao banco?",
+    "hint": "Ele saiu depois das duas linhas de log, não quando o `reprice` rodou.",
+    "choices": [
+      {
+        "text": "O `reprice` manda um UPDATE assim que muda o campo",
+        "why": "As duas linhas de log saíram antes do `update`; nada é enviado quando o campo muda. O Hibernate nem vê esse momento."
+      },
+      {
+        "text": "O Spring chama `save` em toda entidade no fim de um método `@Transactional`",
+        "why": "O Spring só faz o commit da transação. Quem escreve a alteração é o Hibernate, durante o flush que o commit dispara."
+      },
+      {
+        "text": "O commit comparou o livro com a cópia tirada ao carregar",
+        "why": "Isso. É o dirty checking: o flush escreve um `UPDATE` para cada objeto gerenciado cujos valores mudaram."
+      },
+      {
+        "text": "O PostgreSQL viu o preço novo na conexão aberta e o gravou",
+        "why": "O banco não sabe nada de objetos Java. Ele só grava o que um comando SQL manda."
+      }
+    ]
+  },
+  "ex-0sjmmwz3": {
+    "prompt": "O bookshop sobe uma segunda vez com o `RepriceOnce` ainda nele. O livro é carregado e `reprice(3800)` é chamado de novo, mas o log não mostra UPDATE. Por quê?",
+    "hint": "O que o flush compara?",
+    "choices": [
+      {
+        "text": "O contexto de persistência lembrou do UPDATE da primeira execução e o pulou",
+        "why": "Um contexto de persistência dura uma transação, e este é um processo novo. Nada da primeira execução é lembrado."
+      },
+      {
+        "text": "O Hibernate só grava uma entidade uma vez por inicialização da aplicação",
+        "why": "Essa regra não existe; qualquer transação pode gravar qualquer entidade. A segunda execução não tinha nada a gravar."
+      },
+      {
+        "text": "O `@Order(1)` fez ele rodar depois do commit do relatório do catálogo",
+        "why": "O `@Order(1)` só põe esta tarefa antes do relatório. Cada uma roda a sua própria transação."
+      },
+      {
+        "text": "A linha já dizia 3800, então nada mudou",
+        "why": "Isso. O dirty checking compara valores, não chamadas: pôr num campo o que ele já tem não é alteração."
+      }
+    ]
+  },
+  "ex-jf73m34k": {
+    "prompt": "Ponha em ordem o que acontece durante `RepriceOnce.run`.",
+    "hint": "Nada é gravado antes de o método retornar.",
+    "items": [
+      "O primeiro find manda um SELECT e guarda uma cópia dos valores da linha",
+      "O segundo find devolve o mesmo objeto sem SQL nenhum",
+      "O reprice muda o preço no objeto, e nada é enviado",
+      "O método retorna, e a transação começa o commit",
+      "O flush compara o objeto com a cópia e manda um UPDATE"
+    ],
+    "trap": "O UPDATE não vem logo depois da chamada ao reprice; vem depois da comparação no commit."
+  },
+  "ex-5d0xndkw": {
+    "prompt": "A consulta simples carregou seis livros, mas o log mostrou só quatro SELECTs em `author`. Por que não seis?",
+    "hint": "Dois autores escreveram dois livros cada.",
+    "choices": [
+      {
+        "text": "O Hibernate junta os dois últimos autores num só comando",
+        "why": "Não há agrupamento configurado; cada comando do log cita um id. Os dois últimos livros não mandaram nada."
+      },
+      {
+        "text": "Dois livros não têm autor",
+        "why": "`author_id` é `NOT NULL`, e todo livro do JSON tem o nome de um autor."
+      },
+      {
+        "text": "O segundo livro de um autor encontrou esse autor já no contexto de persistência",
+        "why": "Isso. Machado de Assis e H. G. Wells foram carregados pelos primeiros livros deles; Quincas Borba e The War of the Worlds foram respondidos pelo mapa."
+      },
+      {
+        "text": "O PostgreSQL respondeu os comandos repetidos do cache dele sem o Hibernate enviá-los",
+        "why": "Um comando que o banco responde de um cache continua sendo um comando no log do Hibernate. Estes nunca foram enviados."
+      }
+    ]
+  },
+  "ex-1hg5vk5a": {
+    "prompt": "Uma página lista 20 livros escritos por 3 autores diferentes, usando `select b from Book b` com o autor LAZY, e lê o nome de cada autor dentro de uma transação. Quantos comandos SQL ela envia?",
+    "hint": "Um para a lista, depois um por autor que ainda não está no contexto de persistência.",
+    "unit": "comandos"
+  },
+  "ex-1atj9039": {
+    "prompt": "Depois que `LAZY` virou `EAGER`, a lista continuou mandando um SELECT em `book` e quatro em `author`. Por que o EAGER não ajudou?",
+    "hint": "Quem escreveu o SQL da lista, e ele citava o autor?",
+    "choices": [
+      {
+        "text": "A consulta não cita autor nenhum, então eles continuam carregando um a um",
+        "why": "Isso. O `EAGER` decide que o autor chega junto com o livro, não como; uma consulta JPQL é traduzida como foi escrita. Ele só ajudou o `find`, cujo SQL o próprio Hibernate escreve."
+      },
+      {
+        "text": "O EAGER só vale depois que a aplicação reinicia duas vezes",
+        "why": "A aplicação foi recompilada e reiniciada uma vez, e a mudança valeu: os autores foram carregados na hora da consulta em vez de depois."
+      },
+      {
+        "text": "O EAGER só se aplica a `@OneToMany`",
+        "why": "Ele se aplica a `@ManyToOne` também, e o `find` de um livro virou um único `select` com join."
+      },
+      {
+        "text": "O contexto de persistência ignora o EAGER dentro de uma transação somente leitura",
+        "why": "O `readOnly` pula a detecção de alterações. Ele não muda como os relacionamentos carregam."
+      }
+    ]
+  },
+  "ex-ehrds2gh": {
+    "prompt": "`LazyInitializationException: Could not initialize proxy [com.example.bookshop.catalogue.Author#1] - no session`. O que isso diz?",
+    "hint": "Session é o nome que o Hibernate dá ao contexto de persistência.",
+    "choices": [
+      {
+        "text": "O autor 1 não existe no banco",
+        "why": "Aí não haveria proxy: o livro 1 aponta para o autor 1 e a linha está lá. O proxy é que não conseguiu pedi-la."
+      },
+      {
+        "text": "A sessão HTTP que o Tomcat mantém para o usuário que fez a requisição tinha expirado",
+        "why": "O bookshop não tem sessões HTTP. Aqui session quer dizer a sessão do Hibernate, o contexto de persistência."
+      },
+      {
+        "text": "O pool de conexões ficou sem conexões",
+        "why": "Aí o erro viria do pool, esperando uma conexão. Aqui ninguém nem tentou pegar uma."
+      },
+      {
+        "text": "O autor foi lido depois que o contexto de persistência que carregou o livro já tinha fechado",
+        "why": "Isso. Sem transação em volta do `get`, o livro já estava desanexado quando `BookResponse.from` pediu o nome."
+      }
+    ]
+  },
+  "ex-5qx2af42": {
+    "prompt": "Sem o `@Transactional` no `get`, a requisição falhou com `open-in-view=false` e funcionou com `open-in-view=true`. O que a configuração mudou?",
+    "hint": "Quando cada configuração abre e fecha o contexto de persistência?",
+    "choices": [
+      {
+        "text": "Ela deixou o `get` transacional de novo",
+        "why": "Não houve transação: o autor foi carregado por um contexto de persistência sem nenhuma, mantido aberto pela configuração."
+      },
+      {
+        "text": "Ela manteve um contexto de persistência aberto durante a requisição web inteira, e o proxy ainda conseguiu carregar",
+        "why": "Isso. O open session in view abre um quando a requisição chega e o fecha depois da resposta, e o `select` do autor rodou dentro dele."
+      },
+      {
+        "text": "Ela carregou todos os autores na memória na inicialização, antes da primeira requisição, e nenhuma consulta foi necessária",
+        "why": "O log daquela requisição mostrou o `select` do autor rodando durante a requisição, depois do `select` do livro."
+      },
+      {
+        "text": "Ela trocou o relacionamento para EAGER nas requisições web",
+        "why": "O livro continuou sendo carregado sozinho e o autor por um segundo comando, que é carregamento lazy."
+      }
+    ]
+  },
+  "ex-3j3kh7r6": {
+    "prompt": "Por que `spring.jpa.open-in-view` está `false` no bookshop? Marque todas as que se aplicam.",
+    "hint": "A seção dá três motivos.",
+    "choices": [
+      {
+        "text": "Qualquer código que toque num getter pode rodar uma consulta, e o serviço deixa de decidir o que é carregado",
+        "why": "Isso. Com ele desligado, a transação do serviço é o único lugar onde se carrega alguma coisa."
+      },
+      {
+        "text": "Ele pode segurar uma conexão com o banco até a resposta ser escrita",
+        "why": "Isso, inclusive o tempo que um cliente lento leva para recebê-la; a aula 14 conta conexões."
+      },
+      {
+        "text": "Ele só existe para requisições web, e o mesmo código pode funcionar num controller e falhar numa tarefa de inicialização",
+        "why": "Isso. Um job agendado ou um `CommandLineRunner` não ganha esse contexto."
+      },
+      {
+        "text": "Com ele ligado, o Hibernate recusa consultas com `join fetch`",
+        "why": "Uma consulta com `join fetch` pode rodar de um jeito ou de outro. O OSIV muda quanto tempo o contexto de persistência vive, não o que as consultas podem dizer."
+      },
+      {
+        "text": "Com ele ligado, o dirty checking para de funcionar",
+        "why": "O dirty checking acontece num commit, e o OSIV não muda nada ali."
+      }
+    ]
+  },
+  "ex-nn8c6ke6": {
+    "prompt": "Na versão do bookshop de um colega, um serviço `@Transactional` devolve entidades `List<Book>`, e um controller as mapeia com `BookResponse.from`. O `findAll` não tem `join fetch` e o `open-in-view` está false. O que `GET /books` faz?",
+    "hint": "Onde termina a transação, e onde o nome do autor é lido?",
+    "choices": [
+      {
+        "text": "Funciona, mandando um SELECT em book e depois um em author para cada um dos quatro autores, como a aula contou",
+        "why": "Esses comandos precisariam de um contexto de persistência aberto, e o mapeamento roda no controller, depois que a transação do serviço fechou."
+      },
+      {
+        "text": "Falha com uma LazyInitializationException quando o controller lê o nome do primeiro autor",
+        "why": "Isso. As entidades saem da transação desanexadas e os autores ainda são proxies, então o primeiro `getName()` no controller lança a exceção."
+      },
+      {
+        "text": "Funciona, com um único SELECT com join",
+        "why": "Ninguém pediu join: sem `join fetch`, a consulta carrega só os livros."
+      },
+      {
+        "text": "Falha na inicialização, quando o relatório do catálogo pede a lista antes de qualquer requisição",
+        "why": "O relatório do catálogo chama `list().size()`, que conta entidades sem tocar em autor nenhum. A inicialização dá certo; a requisição falha."
+      }
+    ]
+  },
+  "ex-katvhpj2": {
+    "prompt": "Dentro de um método `@Transactional`, um livro é carregado com `find`, o título dele é mudado no objeto, e depois uma linha mais adiante lança uma `RuntimeException`, então a transação sofre rollback. O título novo está no banco depois disso?",
+    "hint": "Quando o dirty checking manda o UPDATE, e o que um rollback faz com ele?",
+    "choices": [
+      {
+        "text": "Sim: mudar um objeto gerenciado grava a mudança na hora",
+        "why": "A demonstração do reprice mostrou o contrário: as duas linhas de log saíram antes de qualquer `update`. A alteração espera o flush."
+      },
+      {
+        "text": "Sim, porque o dirty checking roda mesmo quando o método lança exceção",
+        "why": "Um flush a caminho de um rollback só mandaria comandos que o rollback depois desfaz. Nada do que a transação fez é mantido."
+      },
+      {
+        "text": "Não, porque o `find` devolve uma cópia que nunca é gravada de volta",
+        "why": "O `find` devolve um objeto gerenciado, o que o contexto de persistência vigia. Um commit o teria gravado."
+      },
+      {
+        "text": "Não: não houve commit para gravá-lo",
+        "why": "Isso. O objeto mudou só na memória; a aula 14 mostra o rollback nos pedidos do próprio bookshop."
+      }
+    ]
+  },
+  "ex-fdmx2byz": {
+    "prompt": "Com o código final da aula, ponha em ordem os passos de `GET /books`.",
+    "hint": "A transação é do serviço, e o JSON é escrito por último.",
+    "items": [
+      "O controller chama BookService.list()",
+      "Uma transação somente leitura começa",
+      "Um SELECT junta book e author",
+      "Cada Book vira um BookResponse, com o nome do autor já carregado",
+      "A transação faz commit e o contexto de persistência fecha",
+      "O Jackson escreve os records como JSON"
+    ],
+    "trap": "Os records são montados antes do commit; é isso que deixa o contexto de persistência fechar sem nada pendente para carregar."
+  },
+  "ex-f178sch3": {
+    "prompt": "Partindo do código final da aula, quais destas mudanças trariam de volta os comandos N+1 em `GET /books`? Marque todas as que se aplicam.",
+    "hint": "O N+1 precisa de duas coisas: uma consulta que deixa os autores de fora, e um código que os lê.",
+    "choices": [
+      {
+        "text": "Tirar `join fetch b.author` da consulta",
+        "why": "Isso. É exatamente a versão que a aula contou: um SELECT em book e quatro em author."
+      },
+      {
+        "text": "Tirar `join fetch b.author` e trocar o relacionamento para EAGER",
+        "why": "Isso. O desvio com EAGER mostrou os mesmos cinco comandos, mandados na hora da consulta em vez de depois."
+      },
+      {
+        "text": "Ligar `spring.jpa.open-in-view=true`",
+        "why": "A consulta continua juntando os autores, então nada fica para carregar de forma lazy, seja quem for que mantenha o contexto aberto."
+      },
+      {
+        "text": "Tirar `@Transactional(readOnly = true)` de `list()`",
+        "why": "Os autores chegam com os livros na consulta com join, então o mapeamento não toca em proxy nenhum, e a consulta roda igual com ou sem a anotação."
+      }
+    ]
+  },
+  "ex-rgx170gx": {
+    "prompt": "Ligue cada sintoma à sua causa.",
+    "hint": "Cada sintoma apareceu nesta aula.",
+    "pairs": [
+      {
+        "left": "LazyInitializationException ... no session",
+        "right": "um campo lazy lido depois que a transação acabou"
+      },
+      {
+        "left": "uma coluna de SELECTs idênticos em author no log",
+        "right": "um relacionamento lazy lido dentro de um laço"
+      },
+      {
+        "left": "um UPDATE que nenhum código do projeto contém",
+        "right": "um objeto gerenciado alterado antes do commit"
+      },
+      {
+        "left": "column \"author_id\" of relation \"book\" does not exist",
+        "right": "uma tabela que sobrou de um esquema antigo"
+      }
+    ],
+    "right_distractors": [
+      "uma consulta JPQL que cita uma tabela em vez de uma entidade"
+    ]
+  }
+}

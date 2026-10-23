@@ -1,0 +1,445 @@
+[
+  {
+    "id": "ex-sg9xexvy",
+    "version": 1,
+    "section": "grouping",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `Collectors.groupingBy(Book::genre)` return?",
+    "hint": "A map, and what is in each value?",
+    "choices": [
+      {
+        "text": "A map from each book to its genre",
+        "correct": false,
+        "why": "The genre is the key, not the value."
+      },
+      {
+        "text": "The books sorted by genre",
+        "correct": false,
+        "why": "It groups; it does not sort."
+      },
+      {
+        "text": "A map from each genre to a list of its books",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A list of genres",
+        "correct": false,
+        "why": "It returns the books too, grouped."
+      }
+    ]
+  },
+  {
+    "id": "ex-vdh35nkh",
+    "version": 1,
+    "section": "grouping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "No book is a crime novel. What does `byGenre.get(\"crime\")` return?",
+    "hint": "Keys come from the data.",
+    "choices": [
+      {
+        "text": "An empty list",
+        "correct": false,
+        "why": "That would need a `crime` key, and no book produced one."
+      },
+      {
+        "text": "A list of every book, since none is excluded",
+        "correct": false,
+        "why": "Nothing maps the missing key to the whole shelf."
+      },
+      {
+        "text": "`null`",
+        "correct": true,
+        "why": "Right: the key does not exist."
+      },
+      {
+        "text": "It throws `NoSuchElementException`",
+        "correct": false,
+        "why": "`Map.get` returns `null` for a missing key."
+      }
+    ]
+  },
+  {
+    "id": "ex-y8jmd5rn",
+    "version": 1,
+    "section": "grouping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why pass `TreeMap::new` to `groupingBy`?",
+    "hint": "The second form takes a map factory.",
+    "choices": [
+      {
+        "text": "So the keys come out sorted",
+        "correct": true,
+        "why": "Right: a `HashMap`'s order is not one to rely on."
+      },
+      {
+        "text": "Because `groupingBy` refuses a `HashMap`",
+        "correct": false,
+        "why": "`HashMap` is its default."
+      },
+      {
+        "text": "To make the grouping run in parallel",
+        "correct": false,
+        "why": "The map type has nothing to do with threads."
+      },
+      {
+        "text": "To keep the books inside each group in insertion order",
+        "correct": false,
+        "why": "The map factory orders the keys; the lists keep the stream's order regardless."
+      }
+    ]
+  },
+  {
+    "id": "ex-dm0dp24x",
+    "version": 1,
+    "section": "grouping",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By `b.year() / 100 + 1`, which century is Beowulf (dated 1000) in?",
+    "hint": "Integer division.",
+    "value": 11,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-8pccfsec",
+    "version": 1,
+    "section": "what-each-group-holds",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each downstream collector with what each group becomes.",
+    "hint": "The output of `Downstream.java`.",
+    "pairs": [
+      {
+        "left": "`counting()`",
+        "right": "the number of books, as a `Long`"
+      },
+      {
+        "left": "`summingLong(Book::priceCents)`",
+        "right": "the total value in cents"
+      },
+      {
+        "left": "`averagingInt(Book::pages)`",
+        "right": "a `Double` average of pages"
+      },
+      {
+        "left": "`maxBy(...)`",
+        "right": "an `Optional` of one book"
+      }
+    ],
+    "right_distractors": [
+      "a sorted `List` of every book"
+    ]
+  },
+  {
+    "id": "ex-x9ez9g82",
+    "version": 1,
+    "section": "what-each-group-holds",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the value of the classic stock in cents, from `summingLong`?",
+    "hint": "The `value:` line.",
+    "value": 31940,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-f26gtzwf",
+    "version": 1,
+    "section": "what-each-group-holds",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Inside a `groupingBy`, `maxBy` still returns an `Optional` for every group. Why can `orElseThrow()` never throw there?",
+    "hint": "How does a group come to exist?",
+    "choices": [
+      {
+        "text": "A group exists only if some element is in it",
+        "correct": true,
+        "why": "Right, so no group is empty."
+      },
+      {
+        "text": "`orElseThrow` is disabled inside collectors",
+        "correct": false,
+        "why": "Nothing disables it."
+      },
+      {
+        "text": "The comparator ranks every book above `null`",
+        "correct": false,
+        "why": "There is no `null` to rank."
+      },
+      {
+        "text": "`maxBy` returns `null` instead of empty inside a grouping",
+        "correct": false,
+        "why": "It returns an `Optional`, never `null`."
+      }
+    ]
+  },
+  {
+    "id": "ex-jtte232w",
+    "version": 1,
+    "section": "what-each-group-holds",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`groupingBy(Book::genre, Collectors.___(Book::title, Collectors.toList()))` makes each group a list of titles.",
+    "hint": "It maps each element before collecting.",
+    "blanks": [
+      {
+        "accept": [
+          "mapping"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qt7wjrvy",
+    "version": 1,
+    "section": "partitioning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "No book is free. What did `partitioningBy(b -> b.priceCents() == 0, counting())` return?",
+    "hint": "Both keys, always.",
+    "choices": [
+      {
+        "text": "`{false=12, true=0}`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`{false=12}`",
+        "correct": false,
+        "why": "That was `groupingBy`'s answer."
+      },
+      {
+        "text": "`{}`",
+        "correct": false,
+        "why": "`partitioningBy` always has two keys."
+      },
+      {
+        "text": "`{true=0}`",
+        "correct": false,
+        "why": "The twelve books went to `false`."
+      }
+    ]
+  },
+  {
+    "id": "ex-192qwqnj",
+    "version": 1,
+    "section": "partitioning",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Code reads `freeGrouped.get(true)` from the `groupingBy` result and adds it to a `long`. What happens?",
+    "hint": "The key is absent, and the value is a `Long`.",
+    "choices": [
+      {
+        "text": "`NullPointerException` when the `null` is unboxed",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A compile error, because `Map<Boolean, Long>` has no `true` key",
+        "correct": false,
+        "why": "Keys are checked at run time, not by the compiler."
+      },
+      {
+        "text": "It adds 0",
+        "correct": false,
+        "why": "That is what `partitioningBy` would give."
+      },
+      {
+        "text": "It adds 12, the count of the other key",
+        "correct": false,
+        "why": "`get(true)` reads only the `true` key."
+      }
+    ]
+  },
+  {
+    "id": "ex-c7z65ajz",
+    "version": 1,
+    "section": "partitioning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When should you choose `partitioningBy` over `groupingBy`?",
+    "hint": "How many outcomes does the question have?",
+    "choices": [
+      {
+        "text": "When the stream is parallel",
+        "correct": false,
+        "why": "Both work on parallel streams."
+      },
+      {
+        "text": "When the question is yes or no",
+        "correct": true,
+        "why": "Right, and both answers will be present."
+      },
+      {
+        "text": "When the result must be sorted",
+        "correct": false,
+        "why": "Sorting is the map factory's job."
+      },
+      {
+        "text": "When there are more than two groups",
+        "correct": false,
+        "why": "That is `groupingBy`'s job."
+      }
+    ]
+  },
+  {
+    "id": "ex-5fqbhv02",
+    "version": 1,
+    "section": "finishing-and-combining",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `teeing(minBy(...), maxBy(...), merger)` add over calling `min` and `max` separately?",
+    "hint": "How many passes?",
+    "choices": [
+      {
+        "text": "It sorts the stream so both ends are known",
+        "correct": false,
+        "why": "Nothing is sorted."
+      },
+      {
+        "text": "It runs the two collectors on two threads",
+        "correct": false,
+        "why": "It runs both on the same element, in the same thread."
+      },
+      {
+        "text": "One pass instead of two",
+        "correct": true,
+        "why": "Right: every element goes to both collectors."
+      },
+      {
+        "text": "It removes the `Optional` from both results automatically",
+        "correct": false,
+        "why": "The merger still received two `Optional` values."
+      }
+    ]
+  },
+  {
+    "id": "ex-gpdm9prt",
+    "version": 1,
+    "section": "finishing-and-combining",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`collectingAndThen(maxBy(...), b -> b.orElseThrow().title())` inside `groupingBy` gives what per genre?",
+    "hint": "A finisher on each group's result.",
+    "choices": [
+      {
+        "text": "A list of titles",
+        "correct": false,
+        "why": "`maxBy` keeps one book."
+      },
+      {
+        "text": "The title of the dearest book",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The price of the dearest book",
+        "correct": false,
+        "why": "The finisher took the title."
+      },
+      {
+        "text": "An `Optional<Book>`",
+        "correct": false,
+        "why": "The finisher unwrapped it."
+      }
+    ]
+  },
+  {
+    "id": "ex-vah423kd",
+    "version": 1,
+    "section": "finishing-and-combining",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these does `Collectors.toCollection(TreeSet::new)` give you over `toSet()`? Choose all that apply.",
+    "hint": "What a `TreeSet` is.",
+    "choices": [
+      {
+        "text": "`first()` and `last()`",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A list instead of a set",
+        "correct": false,
+        "why": "It is still a set."
+      },
+      {
+        "text": "Elements in sorted order",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Repeats kept, unlike a set",
+        "correct": false,
+        "why": "A `TreeSet` is a set too."
+      }
+    ]
+  },
+  {
+    "id": "ex-dvqwr7a1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You need the total value per author, with authors in alphabetical order. Which collector does it?",
+    "hint": "A classifier, a map factory, a downstream.",
+    "choices": [
+      {
+        "text": "`toMap(Book::author, Book::priceCents)`",
+        "correct": false,
+        "why": "Frank Herbert's two books would clash."
+      },
+      {
+        "text": "`partitioningBy(b -> b.author() != null, summingLong(Book::priceCents))`",
+        "correct": false,
+        "why": "Two groups, not one per author."
+      },
+      {
+        "text": "`groupingBy(Book::author, TreeMap::new, summingLong(Book::priceCents))`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`groupingBy(Book::author, counting())`",
+        "correct": false,
+        "why": "That counts books; it adds no prices."
+      }
+    ]
+  },
+  {
+    "id": "ex-35w4c28v",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the parts of a collector, as section 05 lists them, in the order they are used.",
+    "hint": "Make, add, merge, finish.",
+    "items": [
+      "make an empty container",
+      "add one element to it",
+      "merge two containers",
+      "finish"
+    ]
+  }
+]

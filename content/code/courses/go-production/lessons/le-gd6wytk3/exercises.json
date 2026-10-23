@@ -1,0 +1,552 @@
+[
+  {
+    "id": "ex-0qme65m9",
+    "version": 1,
+    "section": "staticcheck",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`report.go` has `n := uint(r.lines)` followed by `if n >= 0 { return float64(r.errors) / float64(n) }`, and staticcheck reports `SA4003`. What does `ErrorShare` return for an empty log?",
+    "hint": "Ask what `>= 0` excludes for an unsigned number, and what Go does with 0.0 / 0.0.",
+    "choices": [
+      {
+        "text": "Zero, from the `return 0` below the `if`",
+        "correct": false,
+        "why": "That line is never reached: every `uint` is `>= 0`, which is exactly what `SA4003` says."
+      },
+      {
+        "text": "`NaN`",
+        "correct": true,
+        "why": "Right. The guard guards nothing, so it divides 0.0 by 0.0, and floating-point division by zero returns `NaN` in Go instead of panicking."
+      },
+      {
+        "text": "It panics with `integer divide by zero`",
+        "correct": false,
+        "why": "Both operands were converted to `float64` first; only integer division by zero panics."
+      },
+      {
+        "text": "It does not compile, because staticcheck found a bug",
+        "correct": false,
+        "why": "staticcheck reads code that already compiles, and its findings never stop `go build`."
+      }
+    ]
+  },
+  {
+    "id": "ex-bm4ad851",
+    "version": 1,
+    "section": "staticcheck",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each finding staticcheck printed for `report.go` with the family its check belongs to.",
+    "hint": "The letters before the digits name the family.",
+    "pairs": [
+      {
+        "left": "`SA4003`: every value of type uint is >= 0",
+        "right": "code that is wrong, or very likely to be"
+      },
+      {
+        "left": "`S1003`: should use strings.Contains",
+        "right": "a shorter way to say the same thing"
+      },
+      {
+        "left": "`ST1005`: error strings should not be capitalized",
+        "right": "a convention the Go project writes down"
+      },
+      {
+        "left": "`U1000`: func percent is unused",
+        "right": "code nothing uses"
+      }
+    ],
+    "right_distractors": [
+      "a data race between two goroutines"
+    ]
+  },
+  {
+    "id": "ex-vkhp81ys",
+    "version": 1,
+    "section": "staticcheck",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana puts `//lint:ignore S1003 a loop over paths` on the line above `for path, n := range s.ByPath {`. The `strings.Index` it is meant to excuse is on the `if` inside the loop. What does staticcheck print?",
+    "hint": "How many lines does one directive cover?",
+    "choices": [
+      {
+        "text": "Nothing about `S1003`: the directive covers the whole loop",
+        "correct": false,
+        "why": "It covers one line, the `for`, and the finding is two lines below it."
+      },
+      {
+        "text": "An error, because a directive inside a function is not allowed",
+        "correct": false,
+        "why": "Directives work anywhere; the `U1000` one above `func percent` worked, and placement inside a function body is legal too."
+      },
+      {
+        "text": "Both the `S1003` finding and a warning that the directive matched nothing",
+        "correct": true,
+        "why": "Right. The directive excused nothing on its own line, so staticcheck reports it as `didn't match anything; should it be removed?`, and `S1003` still prints."
+      },
+      {
+        "text": "The `S1003` finding only; an unused directive is ignored",
+        "correct": false,
+        "why": "staticcheck reports a directive that matched nothing, so a stale one cannot linger unnoticed."
+      }
+    ]
+  },
+  {
+    "id": "ex-2nvkc67a",
+    "version": 1,
+    "section": "staticcheck",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A `staticcheck.conf` line that keeps the checks the parent directory chose and switches on `ST1003` as well reads `checks = [\"___\", \"ST1003\"]`.",
+    "hint": "The word means: whatever was in force above.",
+    "blanks": [
+      {
+        "accept": [
+          "inherit"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-35f7fg71",
+    "version": 1,
+    "section": "revive",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A CI step runs `revive ./...` with no flags and no configuration file. revive prints four findings. What does the step report?",
+    "hint": "Look at revive's two exit codes in its defaults.",
+    "choices": [
+      {
+        "text": "Failure, since any finding is exit status 1",
+        "correct": false,
+        "why": "That is what `staticcheck` and `golangci-lint` do. revive exited 0 with four findings printed."
+      },
+      {
+        "text": "Success, with the four findings left in the log",
+        "correct": true,
+        "why": "Right. Its defaults set `error-code` and `warning-code` to 0, so only `-set_exit_status` or a configuration file makes it fail."
+      },
+      {
+        "text": "Failure, but only for the `exported` finding",
+        "correct": false,
+        "why": "No default rule is an error, and even an error is exit 0 while `error-code` is 0."
+      },
+      {
+        "text": "Nothing: revive refuses to run without `revive.toml`",
+        "correct": false,
+        "why": "With no file it applies its 23 default rules; it found four things that way."
+      }
+    ]
+  },
+  {
+    "id": "ex-1wny95hq",
+    "version": 1,
+    "section": "revive",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team's `revive.toml` holds the global settings and one table, `[rule.unhandled-error]`, and no `enable-default-rules`. On `report.go`, which rules run?",
+    "hint": "Naming a rule changes what happens to the ones not named.",
+    "choices": [
+      {
+        "text": "`unhandled-error` and nothing else",
+        "correct": true,
+        "why": "Right. Naming any rule switches off every default not named; `exported`, `error-strings` and the rest stop running without a word."
+      },
+      {
+        "text": "The 23 defaults, with `unhandled-error` added on top",
+        "correct": false,
+        "why": "That is what `enable-default-rules = true` gives; without it the file means exactly the rules it names."
+      },
+      {
+        "text": "All 105 rules, because a table was given",
+        "correct": false,
+        "why": "That would be `enable-all-rules = true`, a separate setting."
+      },
+      {
+        "text": "None: revive reports the missing defaults as an error",
+        "correct": false,
+        "why": "The file is valid and revive runs it; the defaults simply are not part of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-d39vk6yp",
+    "version": 1,
+    "section": "revive",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`[rule.unhandled-error]` has `arguments = ['^fmt\\.Fprint']`, and revive still reports `Unhandled error in call to function fmt.Fprintf`. Why?",
+    "hint": "The expression is compared with the function's name in a particular way.",
+    "choices": [
+      {
+        "text": "The arguments of a rule are ignored unless its severity is set",
+        "correct": false,
+        "why": "Severity and arguments are independent; the rule read the argument and found that it did not match."
+      },
+      {
+        "text": "The match must cover the whole name",
+        "correct": true,
+        "why": "Right. `^fmt\\.Fprint` matches only the start of `fmt.Fprintf`; the file in section 03 writes `'^fmt\\.Fprint(f|ln)?$'`."
+      },
+      {
+        "text": "TOML strings in single quotes are not regular expressions",
+        "correct": false,
+        "why": "Single quotes are TOML's literal strings, which is why the backslash survives; the expression is read as written."
+      },
+      {
+        "text": "`fmt` functions cannot be excused, because their errors are always real",
+        "correct": false,
+        "why": "The rule excuses whatever its list matches; section 03's configuration lets off all three `fmt.Fprint` forms."
+      }
+    ]
+  },
+  {
+    "id": "ex-rgpgg0mp",
+    "version": 1,
+    "section": "revive",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With section 03's `revive.toml`, the run on `~/lint` exits 1 because of `context-as-argument` and `unhandled-error`, while `exported` only prints. Which settings in the file produce that split? Choose all that apply.",
+    "hint": "One setting raises two rules; two decide what each severity is worth.",
+    "choices": [
+      {
+        "text": "`severity = \"error\"` on those two rules",
+        "correct": true,
+        "why": "Yes. It raises them above the global `severity = \"warning\"` that `exported` keeps."
+      },
+      {
+        "text": "`error-code = 1`",
+        "correct": true,
+        "why": "Yes. It is the exit code when the worst finding is an error."
+      },
+      {
+        "text": "`warning-code = 0`",
+        "correct": true,
+        "why": "Yes. Warnings still print and the run still passes, which is why `exported` alone would not fail it."
+      },
+      {
+        "text": "`confidence = 0.8`",
+        "correct": false,
+        "why": "Confidence filters out findings a rule is unsure of; it has nothing to do with exit codes."
+      },
+      {
+        "text": "`exclude = [\"TEST\"]`",
+        "correct": false,
+        "why": "That keeps `cognitive-complexity` away from test files and touches neither rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-yhpqgrhy",
+    "version": 1,
+    "section": "golangci-lint",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`golangci-lint run --no-config` on `~/lint` reported 16 issues. How many of them came from `errcheck`?",
+    "hint": "Look at the summary under the list.",
+    "value": 10,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-dwms9zdh",
+    "version": 1,
+    "section": "golangci-lint",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "staticcheck run alone printed two `ST1005` lines for line 45 of `report.go`; `golangci-lint run --no-config` printed one. Where did the other go?",
+    "hint": "It is a default of the output, not of the linter.",
+    "choices": [
+      {
+        "text": "golangci-lint's staticcheck is older and lacks half of `ST1005`",
+        "correct": false,
+        "why": "It is v0.8.1 against v0.8.2, but with `uniq-by-line: false` both messages come back, so the check found both."
+      },
+      {
+        "text": "`max-same-issues` hid it as a repeat",
+        "correct": false,
+        "why": "That cap is three findings with the same text, and the two messages differ."
+      },
+      {
+        "text": "By default golangci-lint keeps one finding per line",
+        "correct": true,
+        "why": "Right. `uniq-by-line` is true by default; section 04's file sets it to false and both `ST1005` lines return, beside revive's on the same line."
+      },
+      {
+        "text": "The `comments` preset excludes style messages",
+        "correct": false,
+        "why": "No preset was enabled in that run: `--no-config` reads no file at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-5c0rbn98",
+    "version": 1,
+    "section": "golangci-lint",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague copies an old `.golangci.yml` that starts with `linters:` and has no `version` key, and runs golangci-lint 2.14.0. What happens?",
+    "hint": "Version 2 of the tool expects a version 2 file.",
+    "choices": [
+      {
+        "text": "It runs the standard set and ignores the file",
+        "correct": false,
+        "why": "An unknown key is ignored; a file with no version is refused before anything runs."
+      },
+      {
+        "text": "It refuses with `unsupported version of the configuration` and exits 3",
+        "correct": true,
+        "why": "Right. The message points at the migration guide, and `golangci-lint migrate` converts a version 1 file."
+      },
+      {
+        "text": "It converts the file to version 2 in place",
+        "correct": false,
+        "why": "Conversion is a separate command, `golangci-lint migrate`; `run` never rewrites the configuration."
+      },
+      {
+        "text": "It treats the file as version 2 and reads it",
+        "correct": false,
+        "why": "Without the key the version is empty, and golangci-lint 2 says so instead of guessing."
+      }
+    ]
+  },
+  {
+    "id": "ex-tp0zp122",
+    "version": 1,
+    "section": "golangci-lint",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With section 04's `.golangci.yml` (`nolintlint` with `require-specific` and `require-explanation`), somebody ends the `os.WriteFile` line with a bare `//nolint` to get a build green. What does `golangci-lint run` report about that line?",
+    "hint": "Two linters had something to say about it before; one of them still does.",
+    "choices": [
+      {
+        "text": "Nothing: the bare directive silences every linter on the line",
+        "correct": false,
+        "why": "It silences the linters it covers, and `nolintlint` reports the directive itself; that is what it is for."
+      },
+      {
+        "text": "The `errcheck` finding, because a directive without a reason is ignored",
+        "correct": false,
+        "why": "The bare `//nolint` did hide `errcheck`; the missing name and reason are reported, not used to cancel the directive."
+      },
+      {
+        "text": "Both the `errcheck` finding and a `nolintlint` finding",
+        "correct": false,
+        "why": "The `errcheck` line at column 14 disappeared from the output; only the directive was reported."
+      },
+      {
+        "text": "One complaint, about the directive itself",
+        "correct": true,
+        "why": "Right. `directive //nolint should mention specific linter`, while the dropped error it hid is gone from the list."
+      }
+    ]
+  },
+  {
+    "id": "ex-7pvxw7qn",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order the steps for rolling golangci-lint out on an old codebase.",
+    "hint": "Report before gating, and gate new code before old.",
+    "items": [
+      "start from `default: standard` and the `std-error-handling` preset",
+      "run it in CI with `--issues-exit-code=0` and read what it says",
+      "fix the cheap findings, exclude the wrong ones, and turn on `--new-from-merge-base`",
+      "pay down the old findings package by package until the flag can come off",
+      "add further linters one at a time, each with a change that makes the code pass"
+    ]
+  },
+  {
+    "id": "ex-3e9x0sbp",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the baseline commit, `share.go` is added and `golangci-lint run` reports 12 issues, while `golangci-lint run --new-from-rev=HEAD` reports 1. What did the flag do?",
+    "hint": "Compare with what the commit already contained.",
+    "choices": [
+      {
+        "text": "Ran only the linters that changed since `HEAD`",
+        "correct": false,
+        "why": "The set of linters is the same in both runs; what differs is which findings are kept."
+      },
+      {
+        "text": "Kept only findings on lines that differ from that commit",
+        "correct": true,
+        "why": "Right. The eleven in `report.go` sit on committed lines, and the `S1002` in `share.go` is on new ones."
+      },
+      {
+        "text": "Linted only the files Git does not track yet, and skipped every committed one",
+        "correct": false,
+        "why": "It works on changed lines in any file; on the branch, `--new-from-merge-base` gave the same answer with `share.go` committed."
+      },
+      {
+        "text": "Fixed the eleven old findings automatically",
+        "correct": false,
+        "why": "Nothing was fixed; they are still in `report.go`, filtered out of the report."
+      }
+    ]
+  },
+  {
+    "id": "ex-gzcnk14a",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A pull request deletes the only call to an old exported-nowhere helper, leaving the helper's definition untouched. CI runs `golangci-lint run --new-from-merge-base=origin/main`. Does `unused` stop the merge?",
+    "hint": "Where is `unused` reported, and which lines does the flag keep?",
+    "choices": [
+      {
+        "text": "Yes, because `unused` analyses the whole package and reports whatever it finds in it",
+        "correct": false,
+        "why": "It does analyse the whole package, and then the flag drops every finding on a line the change did not touch."
+      },
+      {
+        "text": "Yes, because a deleted line counts as changed",
+        "correct": false,
+        "why": "The finding is placed on the function's definition, which the change left alone, not on the deleted call."
+      },
+      {
+        "text": "No: the finding lands on an old line and is filtered out",
+        "correct": true,
+        "why": "Right. That is the blind spot of keeping findings by changed line, and why the old pile has to shrink until the flag can come off."
+      },
+      {
+        "text": "No, because `unused` is not in the standard set",
+        "correct": false,
+        "why": "It is one of the five, alongside `errcheck`, `govet`, `ineffassign` and `staticcheck`."
+      }
+    ]
+  },
+  {
+    "id": "ex-d159mxv0",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each golangci-lint exit status with what it says.",
+    "hint": "Section 05's table, and the runs that produced each code.",
+    "pairs": [
+      {
+        "left": "0",
+        "right": "it ran and found nothing it was asked to report"
+      },
+      {
+        "left": "1",
+        "right": "it found issues, a syntax error among them"
+      },
+      {
+        "left": "3",
+        "right": "it refused the configuration file"
+      },
+      {
+        "left": "7",
+        "right": "it ran and logged an error, such as a pattern naming no package"
+      }
+    ],
+    "right_distractors": [
+      "it ran out of memory and was killed"
+    ]
+  },
+  {
+    "id": "ex-m0gj0t1j",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Section 04's `std-error-handling` preset also silenced `genlog`'s `defer w.Flush()`. What can that cost?",
+    "hint": "What does `Flush` write, and what happens to its error now?",
+    "choices": [
+      {
+        "text": "Nothing: `Flush` cannot fail on a `bufio.Writer`",
+        "correct": false,
+        "why": "`Flush` writes the buffered bytes to the file underneath, and that write can fail like any other."
+      },
+      {
+        "text": "A panic at the end of every run",
+        "correct": false,
+        "why": "A dropped error is silent; nothing panics, and that is the trouble."
+      },
+      {
+        "text": "A truncated log on a full disk, with `genlog` exiting 0",
+        "correct": true,
+        "why": "Right. The last buffered lines never reach the file and nobody is told. A preset is a trade, made on purpose for eight lines of noise."
+      },
+      {
+        "text": "A slower log, since the buffer is never emptied",
+        "correct": false,
+        "why": "The `defer` still runs `Flush`; only its error is thrown away."
+      }
+    ]
+  },
+  {
+    "id": "ex-zt11azy0",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a pull request, the flag that keeps only findings on lines changed since the branch left `main` is `golangci-lint run --new-from-___=main`.",
+    "hint": "It names the commit Git finds with the command of the same name.",
+    "blanks": [
+      {
+        "accept": [
+          "merge-base"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fd1yyv1c",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does section 05 pin `version: v2.14.0` in the workflow rather than ask for the latest golangci-lint?",
+    "hint": "What else changes when golangci-lint changes?",
+    "choices": [
+      {
+        "text": "Releases change the bundled linters, and with them what is reported",
+        "correct": true,
+        "why": "Right. 2.14.0 alone moved revive from 1.15.0 to 1.17.0 and switched `gosec`'s `G407` back on; a pin turns that into a pull request of its own."
+      },
+      {
+        "text": "The action refuses to run without an exact version",
+        "correct": false,
+        "why": "golangci-lint's own workflow passes `version: latest` to the same action."
+      },
+      {
+        "text": "Newer releases need a newer Go",
+        "correct": false,
+        "why": "That may happen, but the reason given is that findings move between releases with no change to the code."
+      },
+      {
+        "text": "Pinning makes the cache work",
+        "correct": false,
+        "why": "The cache has nothing to do with the version the workflow names; the reason is findings that move between releases."
+      }
+    ]
+  }
+]

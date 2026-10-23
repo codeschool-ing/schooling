@@ -1,0 +1,522 @@
+{
+  "ex-kv4c94j0": {
+    "prompt": "O que a tabela auth_user guarda da senha do Bruno?",
+    "choices": [
+      {
+        "text": "A senha, criptografada com a SECRET_KEY para o Django decifrar no login",
+        "why": "Nada é decifrado; não há volta."
+      },
+      {
+        "text": "Um hash lento, com salt, junto do algoritmo e das iterações",
+        "why": "Isso: pbkdf2_sha256$1500000$salt$hash."
+      },
+      {
+        "text": "Um SHA-256 da senha",
+        "why": "Um SHA-256 é rápido, o que um hash de senha não pode ser."
+      },
+      {
+        "text": "Nada; o Django pergunta ao sistema operacional quem está entrando",
+        "why": "A autenticação peer é do PostgreSQL, não do Django."
+      }
+    ]
+  },
+  "ex-2p2b4z7r": {
+    "prompt": "O passwords.py fez o hash de m4-orchard-copper-17 duas vezes e imprimiu duas strings diferentes. Por quê?",
+    "choices": [
+      {
+        "text": "O número de iterações sobe a cada chamada",
+        "why": "As duas diziam 1500000."
+      },
+      {
+        "text": "O make_password acrescenta a hora atual",
+        "why": "Não há hora na string."
+      },
+      {
+        "text": "Cada hash ganha um salt aleatório novo",
+        "why": "Isso, então senhas iguais dão linhas diferentes."
+      },
+      {
+        "text": "A segunda chamada fez o hash do primeiro resultado",
+        "why": "Cada chamada fez o hash da senha."
+      }
+    ]
+  },
+  "ex-nh48w1hh": {
+    "prompt": "Quantos segundos uma chamada de check_password levou no passwords.py, como impresso?",
+    "hint": "A linha termina em s per check.",
+    "unit": "s"
+  },
+  "ex-tcbe9spg": {
+    "prompt": "Por que um hash de senha é feito lento de propósito?",
+    "choices": [
+      {
+        "text": "Um ladrão paga por palpite; uma pessoa, por login",
+        "why": "Isso."
+      },
+      {
+        "text": "Para que os logins façam fila e o servidor fique dentro do limite",
+        "why": "Limitar a taxa é outra ferramenta."
+      },
+      {
+        "text": "Hashes lentos são mais curtos de guardar",
+        "why": "O tamanho não tem nada a ver."
+      },
+      {
+        "text": "O salt leva esse tempo para ser gerado",
+        "why": "O salt é alguns bytes aleatórios."
+      }
+    ]
+  },
+  "ex-r1q53jdh": {
+    "prompt": "O hasher do Django para o vencedor da Password Hashing Competition de 2015 é o ___PasswordHasher.",
+    "blanks": [
+      {
+        "accept": [
+          "Argon2"
+        ]
+      }
+    ]
+  },
+  "ex-wbqk7msg": {
+    "prompt": "Depois do envio do login, o arquivo de cookies tinha o sessionid marcado #HttpOnly_. O que o HttpOnly faz?",
+    "choices": [
+      {
+        "text": "Manda o cookie só por HTTP simples, nunca por HTTPS",
+        "why": "Não é isso que significa."
+      },
+      {
+        "text": "Mantém o cookie fora do alcance do JavaScript",
+        "why": "Isso: um script injetado não consegue lê-lo."
+      },
+      {
+        "text": "Faz o cookie expirar assim que a janela do navegador é fechada",
+        "why": "A expiração é outro atributo."
+      },
+      {
+        "text": "Impede o curl de salvá-lo",
+        "why": "O curl o salvou."
+      }
+    ]
+  },
+  "ex-1x8yndxk": {
+    "prompt": "Um PATCH com o cookie de sessão e sem o cabeçalho X-CSRFToken foi recusado. Por que a API insiste?",
+    "choices": [
+      {
+        "text": "A sessão expirou entre as duas requisições",
+        "why": "A requisição seguinte, com o token, funcionou."
+      },
+      {
+        "text": "O DRF exige token de CSRF em toda requisição",
+        "why": "Só nas autenticadas por sessão."
+      },
+      {
+        "text": "O Bruno não tem permissão para mudar eventos",
+        "why": "Com o token, o PATCH dele passou."
+      },
+      {
+        "text": "Navegadores anexam cookies a requisições que outros sites os fazem mandar",
+        "why": "Isso: o token prova que a página é nossa."
+      }
+    ]
+  },
+  "ex-vh4ma938": {
+    "prompt": "Depois do logout, a cópia do arquivo de cookies antigo foi recusada. O que aconteceu no servidor?",
+    "choices": [
+      {
+        "text": "A linha da sessão em django_session foi apagada",
+        "why": "Isso: a chave não leva mais a lugar nenhum."
+      },
+      {
+        "text": "A SECRET_KEY foi trocada",
+        "why": "Nada mudou a chave."
+      },
+      {
+        "text": "O hash da senha do Bruno mudou quando ele saiu",
+        "why": "O logout não toca na senha."
+      },
+      {
+        "text": "O cookie expirou no navegador",
+        "why": "A cópia ainda o guardava; o servidor o recusou."
+      }
+    ]
+  },
+  "ex-0jhpa77m": {
+    "prompt": "O Django põe quem está logado em request.___, pelo AuthenticationMiddleware.",
+    "blanks": [
+      {
+        "accept": [
+          "user"
+        ]
+      }
+    ]
+  },
+  "ex-qq5eb5hj": {
+    "prompt": "Que cabeçalho a autenticação por token do DRF lê?",
+    "choices": [
+      {
+        "text": "Authorization: Bearer <chave>",
+        "why": "Esse é o do JWT, no agenda-api."
+      },
+      {
+        "text": "X-CSRFToken: <chave>",
+        "why": "Esse é o token de CSRF."
+      },
+      {
+        "text": "Cookie: token=<chave>",
+        "why": "Aqui tokens não são cookies."
+      },
+      {
+        "text": "Authorization: Token <chave>",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-vdayst6r": {
+    "prompt": "A aula 6 recebeu 403 numa escrita anônima; esta aula recebeu 401 com WWW-Authenticate: Token. O que mudou?",
+    "choices": [
+      {
+        "text": "O IsAuthenticatedOrReadOnly foi removido",
+        "why": "Ele ainda está nas configurações."
+      },
+      {
+        "text": "A TokenAuthentication veio primeiro, e ela sabe nomear um esquema",
+        "why": "Isso: um 401 precisa dizer como se autenticar."
+      },
+      {
+        "text": "A migração do authtoken mudou os códigos de status",
+        "why": "Migrações fazem tabelas."
+      },
+      {
+        "text": "O Django 6.1 trocou 403 por 401 em todo lugar",
+        "why": "Não houve essa mudança."
+      }
+    ]
+  },
+  "ex-5pzptzdk": {
+    "prompt": "O que a tabela authtoken_token revela sobre os tokens do DRF? Escolha todos que se aplicam.",
+    "choices": [
+      {
+        "text": "A chave fica guardada do jeito que foi mandada",
+        "why": "Isso: sem hash."
+      },
+      {
+        "text": "Existe um por usuário",
+        "why": "Isso: pedir duas vezes deu a mesma chave."
+      },
+      {
+        "text": "Cada um expira depois de duas semanas",
+        "why": "Não há coluna de expiração."
+      },
+      {
+        "text": "Ele é assinado com a SECRET_KEY",
+        "why": "Isso é um JWT."
+      }
+    ]
+  },
+  "ex-nh1xnjjz": {
+    "prompt": "O celular do Bruno foi roubado com um token do DRF dentro. Como esse token é barrado?",
+    "choices": [
+      {
+        "text": "Esperar ele expirar",
+        "why": "Ele não expira."
+      },
+      {
+        "text": "drf_create_token -r bruno o troca",
+        "why": "Isso: a chave antiga respondeu Invalid token."
+      },
+      {
+        "text": "Tirar o Bruno do admin no notebook e no celular",
+        "why": "Isso apaga uma linha de sessão, não o token."
+      },
+      {
+        "text": "Trocar a SECRET_KEY",
+        "why": "Tokens do DRF não são assinados com ela."
+      }
+    ]
+  },
+  "ex-h54gkqkc": {
+    "prompt": "Por que o create_user.py pede a senha com getpass em vez de recebê-la como argumento?",
+    "choices": [
+      {
+        "text": "Argumentos de linha de comando são cortados no primeiro hífen ou dígito",
+        "why": "Podem."
+      },
+      {
+        "text": "O pwdlib só faz hash do que o getpass devolve",
+        "why": "Ele faz hash de qualquer string."
+      },
+      {
+        "text": "Ela não aparece na tela nem fica no histórico do shell",
+        "why": "Isso."
+      },
+      {
+        "text": "O SQLAlchemy recusa valores vindos do sys.argv",
+        "why": "Ele não sabe de onde os valores vieram."
+      }
+    ]
+  },
+  "ex-m7pyk72j": {
+    "prompt": "Uma requisição para POST /events não tinha cabeçalho Authorization. Que peça respondeu 401 Not authenticated?",
+    "choices": [
+      {
+        "text": "O current_user, depois de o jwt.decode falhar",
+        "why": "A mensagem dele é Could not validate the token."
+      },
+      {
+        "text": "O próprio objeto OAuth2PasswordBearer, o bearer",
+        "why": "Isso: ele não achou cabeçalho."
+      },
+      {
+        "text": "O próprio create_event",
+        "why": "Ele nem rodou."
+      },
+      {
+        "text": "O PostgreSQL, recusando o insert",
+        "why": "Nada chegou ao banco."
+      }
+    ]
+  },
+  "ex-yqn26tc8": {
+    "prompt": "Ponha em ordem o que acontece quando a ana cria um evento com um token.",
+    "items": [
+      "o bearer lê o cabeçalho Authorization",
+      "o jwt.decode confere a assinatura e o exp",
+      "o current_user carrega a ana de users",
+      "o create_event insere o evento",
+      "a API responde 201"
+    ]
+  },
+  "ex-8x6d52ej": {
+    "prompt": "Sem o chamariz, uma senha errada levou cerca de 0,004 s para nobody e 0,05 s para ana. O que isso entrega?",
+    "choices": [
+      {
+        "text": "A senha da ana",
+        "why": "O tempo não diz nada sobre a senha em si aqui."
+      },
+      {
+        "text": "A SECRET_KEY",
+        "why": "O login nem toca nela antes de dar certo."
+      },
+      {
+        "text": "Quais nomes têm conta",
+        "why": "Isso: só nomes reais pagam um hash."
+      },
+      {
+        "text": "Quantos usuários há",
+        "why": "Cada resposta é sobre um nome."
+      }
+    ]
+  },
+  "ex-azcmy0eq": {
+    "prompt": "O que o chamariz no authenticate() muda?",
+    "choices": [
+      {
+        "text": "Um nome desconhecido agora custa um hash, como um conhecido",
+        "why": "Isso."
+      },
+      {
+        "text": "Senhas erradas agora recebem uma mensagem diferente da de nomes desconhecidos",
+        "why": "Elas recebem a mesma mensagem."
+      },
+      {
+        "text": "nobody consegue entrar com a senha do chamariz",
+        "why": "A conferência também exige um usuário."
+      },
+      {
+        "text": "O hash de cada usuário é calculado duas vezes",
+        "why": "Uma vez por requisição."
+      }
+    ]
+  },
+  "ex-dg351z0x": {
+    "prompt": "O base64 -d imprimiu o payload do JWT sem chave. O que isso quer dizer?",
+    "choices": [
+      {
+        "text": "O token estava quebrado",
+        "why": "Ele era válido; o /me o aceitou."
+      },
+      {
+        "text": "Ele é assinado, não criptografado",
+        "why": "Isso."
+      },
+      {
+        "text": "A SECRET_KEY estava vazia",
+        "why": "A chave tinha 43 caracteres."
+      },
+      {
+        "text": "O base64 -d sabe a chave",
+        "why": "Base64 é uma codificação, sem chave."
+      }
+    ]
+  },
+  "ex-863bd3e8": {
+    "prompt": "Ligue cada parte do JWT ao que ela guarda.",
+    "pairs": [
+      {
+        "left": "header",
+        "right": "alg HS256, typ JWT"
+      },
+      {
+        "left": "payload",
+        "right": "sub e exp"
+      },
+      {
+        "left": "assinatura",
+        "right": "um HMAC das outras duas"
+      }
+    ]
+  },
+  "ex-8m0th81t": {
+    "prompt": "O bad_tokens.py trocou ana por bruno no payload e manteve a assinatura. Por que ele foi recusado?",
+    "choices": [
+      {
+        "text": "bruno não existe em users",
+        "why": "A conferência falha antes de qualquer busca."
+      },
+      {
+        "text": "O token tinha expirado",
+        "why": "Ele tinha o mesmo exp do token válido da ana."
+      },
+      {
+        "text": "O que foi assinado não é mais o que ele diz",
+        "why": "Isso: uma nova precisaria da chave."
+      },
+      {
+        "text": "O PyJWT recusa tokens que consegue decodificar sem chave",
+        "why": "Qualquer JWT pode ser decodificado sem chave."
+      }
+    ]
+  },
+  "ex-67746zkb": {
+    "prompt": "A ana é demitida às 10:00 e o JWT dela tem exp às 10:25. O que vale para o agenda-api como está?",
+    "choices": [
+      {
+        "text": "O token para às 10:00, quando a linha dela é atualizada",
+        "why": "A conferência da assinatura não lê o estado da linha."
+      },
+      {
+        "text": "O token foi revogado no servidor quando ela saiu",
+        "why": "Não há logout que o revogue."
+      },
+      {
+        "text": "Trocar a senha dela encerra o token",
+        "why": "O token não depende da senha."
+      },
+      {
+        "text": "Vale até 10:25, a menos que a linha dela suma",
+        "why": "Isso: o current_user só recusa um usuário ausente."
+      }
+    ]
+  },
+  "ex-a1ps8hts": {
+    "prompt": "A claim que diz até quando um JWT vale se chama ___.",
+    "blanks": [
+      {
+        "accept": [
+          "exp"
+        ]
+      }
+    ]
+  },
+  "ex-kzrh5m9w": {
+    "prompt": "Ligue cada caso à credencial que a aula recomenda.",
+    "pairs": [
+      {
+        "left": "um site servindo as próprias páginas a um navegador",
+        "right": "uma sessão"
+      },
+      {
+        "left": "um script que atualiza eventos toda noite",
+        "right": "um token de uma tabela"
+      },
+      {
+        "left": "cinco serviços confiando num serviço de login",
+        "right": "um JWT de vida curta"
+      }
+    ]
+  },
+  "ex-t8bxg0a8": {
+    "prompt": "Qual dos três precisa de token de CSRF?",
+    "choices": [
+      {
+        "text": "A sessão: o cookie dela vai sozinho",
+        "why": "Isso."
+      },
+      {
+        "text": "O JWT, porque ele é assinado com a SECRET_KEY",
+        "why": "Assinatura não tem nada a ver com CSRF."
+      },
+      {
+        "text": "O token do DRF, porque fica numa tabela",
+        "why": "Onde ele fica não é o ponto."
+      },
+      {
+        "text": "Nenhum deles",
+        "why": "Um cookie mandado pelo navegador precisa."
+      }
+    ]
+  },
+  "ex-5n4k6xv3": {
+    "prompt": "Uma aplicação de página única num domínio guarda o JWT no localStorage. Qual risco a aula nomeia?",
+    "choices": [
+      {
+        "text": "O localStorage é limpo a cada carregamento de página",
+        "why": "Ele sobrevive a recargas."
+      },
+      {
+        "text": "Qualquer script injetado na página o lê e o leva",
+        "why": "Isso: cookies HttpOnly ficam fora do alcance dele."
+      },
+      {
+        "text": "O navegador o manda para todos os outros sites",
+        "why": "O localStorage nunca é mandado sozinho."
+      },
+      {
+        "text": "O token fica criptografado e o servidor não o lê",
+        "why": "Nada o criptografa."
+      }
+    ]
+  },
+  "ex-4nerpxv7": {
+    "prompt": "Que credencial o servidor consegue tomar de volta na hora, sem esperar? Escolha a melhor resposta.",
+    "choices": [
+      {
+        "text": "Só um JWT, trocando o exp",
+        "why": "O exp está dentro do token assinado."
+      },
+      {
+        "text": "Sessão ou token do DRF: muda-se uma linha",
+        "why": "Isso."
+      },
+      {
+        "text": "Nenhuma; toda credencial dura até a hora em que expira",
+        "why": "Linhas podem ser apagadas."
+      },
+      {
+        "text": "As três, reiniciando os processos do servidor",
+        "why": "Reiniciar não muda linha nem chave."
+      }
+    ]
+  },
+  "ex-j0kr77tw": {
+    "prompt": "Um colega quer pôr o e-mail e o telefone do usuário no JWT do agenda-api para economizar uma consulta. Qual é a objeção?",
+    "choices": [
+      {
+        "text": "O PyJWT limita o payload a duas claims no máximo",
+        "why": "Esse limite não existe."
+      },
+      {
+        "text": "A assinatura deixaria de conferir no servidor",
+        "why": "Ela é calculada sobre o que o payload tiver."
+      },
+      {
+        "text": "Qualquer um com o token consegue lê-los",
+        "why": "Isso: o payload é base64."
+      },
+      {
+        "text": "Tokens com dados pessoais expiram antes",
+        "why": "O exp é o que o servidor define."
+      }
+    ]
+  }
+}

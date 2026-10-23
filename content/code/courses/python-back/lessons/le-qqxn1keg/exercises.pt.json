@@ -1,0 +1,500 @@
+{
+  "ex-s9ghxq9m": {
+    "prompt": "Um cliente manda um corpo que não é JSON válido para uma view que usa json.loads(request.body). O que ele recebe, comparado ao DRF?",
+    "hint": "A tabela da primeira seção.",
+    "choices": [
+      {
+        "text": "O mesmo 400 nos dois casos",
+        "why": "Só o DRF transforma um erro de parse num 400."
+      },
+      {
+        "text": "500 à mão, 400 com o DRF",
+        "why": "Isso: o 400 do DRF diz onde o JSON quebrou, como a seção de inscrição mostrou."
+      },
+      {
+        "text": "Um dicionário vazio nos dois",
+        "why": "Nenhum aceita em silêncio."
+      },
+      {
+        "text": "Um 415 do Django, um 200 do DRF",
+        "why": "O DRF não responde 200 a JSON quebrado."
+      }
+    ]
+  },
+  "ex-j5xemy8c": {
+    "prompt": "O que o IsAuthenticatedOrReadOnly, como padrão, significa para a API do agenda?",
+    "choices": [
+      {
+        "text": "Só usuários logados podem ler",
+        "why": "Ler é aberto."
+      },
+      {
+        "text": "Ninguém pode escrever pela API",
+        "why": "Usuários autenticados podem."
+      },
+      {
+        "text": "Ler é livre; escrever pede login",
+        "why": "Isso, a menos que uma view diga outra coisa."
+      },
+      {
+        "text": "Toda requisição precisa de um token",
+        "why": "A autenticação Basic funcionou, e leituras não precisam de nada."
+      }
+    ]
+  },
+  "ex-vy341gnb": {
+    "prompt": "Um serializer do DRF é o equivalente de quê num site Django?",
+    "hint": "A aula 3.",
+    "choices": [
+      {
+        "text": "O Form da aula 3",
+        "why": "Isso: descreve campos, valida a entrada e produz valores limpos."
+      },
+      {
+        "text": "Um template",
+        "why": "Templates renderizam; serializers validam e convertem."
+      },
+      {
+        "text": "Uma migração",
+        "why": "Migrações mudam o esquema."
+      },
+      {
+        "text": "Um middleware",
+        "why": "Middleware envolve requisições."
+      }
+    ]
+  },
+  "ex-40ex4n8g": {
+    "prompt": "Por que o EventSerializer lista os campos em vez de usar \"__all__\"?",
+    "hint": "O que acontece quando o modelo cresce?",
+    "choices": [
+      {
+        "text": "O \"__all__\" não é permitido num ModelSerializer",
+        "why": "É permitido; o que importa é o risco."
+      },
+      {
+        "text": "Listar campos deixa as consultas mais rápidas",
+        "why": "A consulta é assunto do queryset."
+      },
+      {
+        "text": "Para colunas novas não vazarem",
+        "why": "Isso: uma coluna acrescentada depois não aparece por acidente. A API mostra exatamente o que cita."
+      },
+      {
+        "text": "Porque taken não é campo do modelo",
+        "why": "Isso pede uma declaração, não uma lista."
+      }
+    ]
+  },
+  "ex-kbhrz1sy": {
+    "prompt": "Serializado a partir de um get() simples, o Testing dojo saiu sem o taken. Por quê?",
+    "hint": "De onde vem o taken?",
+    "choices": [
+      {
+        "text": "O taken é só de escrita",
+        "why": "Ele é só de leitura."
+      },
+      {
+        "text": "O objeto não tinha anotação para ler",
+        "why": "Isso. Um campo só de leitura que o objeto não tem fica de fora."
+      },
+      {
+        "text": "O evento não tinha inscrições",
+        "why": "Tinha duas; zero imprimiria 0."
+      },
+      {
+        "text": "O serializer só mostra o taken em listas",
+        "why": "Ele apareceu no detalhe do viewset."
+      }
+    ]
+  },
+  "ex-2z6xnf7j": {
+    "prompt": "EventSerializer(data={\"slug\": \"bad slug\", \"title\": \"\", \"capacity\": -1}).errors citou quais campos? Escolha todos que se aplicam.",
+    "hint": "Todos os erros vêm de uma vez.",
+    "choices": [
+      {
+        "text": "slug",
+        "why": "Isso: não é um slug válido."
+      },
+      {
+        "text": "title",
+        "why": "Isso: não pode ficar em branco."
+      },
+      {
+        "text": "starts_at",
+        "why": "Isso: obrigatório e ausente."
+      },
+      {
+        "text": "description",
+        "why": "Tem blank=True, então ficar de fora é aceito."
+      },
+      {
+        "text": "taken",
+        "why": "Campos só de leitura nunca são validados na entrada."
+      }
+    ]
+  },
+  "ex-ctt5qfd0": {
+    "prompt": "O que o lookup_field = \"slug\" muda no EventViewSet?",
+    "choices": [
+      {
+        "text": "Torna o slug a chave primária",
+        "why": "A tabela mantém o id."
+      },
+      {
+        "text": "O slug entra no lugar do id",
+        "why": "Isso, nas URLs de detalhe: /api/events/django-night/."
+      },
+      {
+        "text": "Ordena a lista pelo slug",
+        "why": "A ordenação está no get_queryset."
+      },
+      {
+        "text": "Esconde o slug do JSON",
+        "why": "O slug está nos fields."
+      }
+    ]
+  },
+  "ex-0nrb2etb": {
+    "prompt": "A mesma URL respondeu JSON ao curl e uma página HTML a uma requisição com Accept: text/html. O que decidiu?",
+    "hint": "Um cabeçalho que o cliente manda.",
+    "choices": [
+      {
+        "text": "Duas views montadas num endereço",
+        "why": "Uma view, dois renderizadores."
+      },
+      {
+        "text": "Se o cliente estava logado",
+        "why": "Logar muda os formulários mostrados, não o formato."
+      },
+      {
+        "text": "O cabeçalho User-Agent",
+        "why": "O DRF olha o Accept."
+      },
+      {
+        "text": "Negociação de conteúdo pelo Accept",
+        "why": "Isso, a API navegável."
+      }
+    ]
+  },
+  "ex-tvc6bmtb": {
+    "prompt": "Por que o EventViewSet.get_queryset acrescenta order_by(\"starts_at\") se o Meta do Event já ordena por ele?",
+    "hint": "A última seção da aula 4.",
+    "choices": [
+      {
+        "text": "O GROUP BY da anotação o deixa de fora",
+        "why": "Isso: um GROUP BY deixa o Meta.ordering de fora, e páginas precisam de uma ordem estável."
+      },
+      {
+        "text": "O DRF ignora as opções Meta dos modelos",
+        "why": "O DRF não decide a ordem do SQL."
+      },
+      {
+        "text": "O PostgreSQL ordena datas errado sem isso",
+        "why": "Ele ordena datas certo quando pedem."
+      },
+      {
+        "text": "Para os filtros por venue funcionarem",
+        "why": "Filtrar não precisa de ordenação."
+      }
+    ]
+  },
+  "ex-qz45f5vf": {
+    "prompt": "Ligue cada requisição ao método do viewset que a responde.",
+    "hint": "A tabela do roteador.",
+    "pairs": [
+      {
+        "left": "GET /api/events/",
+        "right": "list"
+      },
+      {
+        "left": "POST /api/events/",
+        "right": "create"
+      },
+      {
+        "left": "PATCH /api/events/django-night/",
+        "right": "partial_update"
+      },
+      {
+        "left": "DELETE /api/events/pycon-watch/",
+        "right": "destroy"
+      }
+    ],
+    "right_distractors": [
+      "retrieve_all"
+    ]
+  },
+  "ex-96658d59": {
+    "prompt": "Um PATCH anônimo num evento respondeu 403. Que configuração decidiu isso?",
+    "choices": [
+      {
+        "text": "PAGE_SIZE",
+        "why": "Paginação não tem nada a dizer sobre escritas."
+      },
+      {
+        "text": "ALLOWED_HOSTS",
+        "why": "Esse confere nomes de host."
+      },
+      {
+        "text": "DEFAULT_PERMISSION_CLASSES",
+        "why": "Isso: IsAuthenticatedOrReadOnly."
+      },
+      {
+        "text": "CSRF_COOKIE_SECURE",
+        "why": "A requisição nem levava cookie."
+      }
+    ]
+  },
+  "ex-1t7m3b02": {
+    "prompt": "Que código de status a API devolveu ao apagar o evento pycon-watch?",
+    "hint": "No Content.",
+    "unit": "código de status"
+  },
+  "ex-gpsshqe1": {
+    "prompt": "Por que a aula diz que a autenticação Basic só é aceitável por HTTPS, e mal?",
+    "hint": "O que viaja em toda requisição?",
+    "choices": [
+      {
+        "text": "É mais lenta que tokens",
+        "why": "Velocidade não é a preocupação."
+      },
+      {
+        "text": "A própria senha viaja em cada requisição",
+        "why": "Isso. A aula 11 a troca por tokens."
+      },
+      {
+        "text": "Navegadores não conseguem mandá-la",
+        "why": "Conseguem."
+      },
+      {
+        "text": "O DRF a desliga em produção",
+        "why": "Ela fica ligada a menos que você mude a configuração."
+      }
+    ]
+  },
+  "ex-vbg6g5se": {
+    "prompt": "Um PATCH com capacity 1 no Testing dojo, que tem duas inscrições, respondeu 400. Que código produziu a mensagem?",
+    "choices": [
+      {
+        "text": "O PositiveIntegerField do modelo",
+        "why": "1 é um inteiro positivo."
+      },
+      {
+        "text": "O método validate_capacity",
+        "why": "Isso: 2 people are already registered."
+      },
+      {
+        "text": "A restrição CHECK do banco",
+        "why": "1 passa no CHECK."
+      },
+      {
+        "text": "O services.register",
+        "why": "Mudar um evento não inscreve ninguém."
+      }
+    ]
+  },
+  "ex-kjrky575": {
+    "prompt": "Ligue cada regra ao lugar onde a aula diz que ela pertence.",
+    "hint": "A última tabela da seção de validação.",
+    "pairs": [
+      {
+        "left": "capacity é número inteiro",
+        "right": "o campo do modelo"
+      },
+      {
+        "left": "capacity não fica abaixo das inscrições",
+        "right": "validate_capacity"
+      },
+      {
+        "left": "um fim depois de um começo",
+        "right": "validate(self, attrs)"
+      },
+      {
+        "left": "uma inscrição por endereço sob carga",
+        "right": "a restrição do banco"
+      }
+    ],
+    "right_distractors": [
+      "o template"
+    ]
+  },
+  "ex-f4h9fvxx": {
+    "prompt": "Um método chamado validate____ roda depois das conferências do próprio campo; para capacity é validate_capacity.",
+    "hint": "Um sublinhado, depois algo.",
+    "blanks": [
+      {
+        "accept": [
+          "_<field>",
+          "_field",
+          "_<campo>",
+          "_campo"
+        ]
+      }
+    ]
+  },
+  "ex-spfv7r2v": {
+    "prompt": "Uma segunda inscrição de elisa@example.org recebeu qual código de status?",
+    "choices": [
+      {
+        "text": "400 Bad Request",
+        "why": "Os dados estavam bem formados."
+      },
+      {
+        "text": "409 Conflict",
+        "why": "Isso: o estado dos dados recusou."
+      },
+      {
+        "text": "403 Forbidden",
+        "why": "Inscrever-se é aberto a qualquer um."
+      },
+      {
+        "text": "500 Internal Server Error",
+        "why": "A recusa do serviço foi tratada."
+      }
+    ]
+  },
+  "ex-yzy2t14t": {
+    "prompt": "Por que o endpoint de inscrição chama o services.register em vez de contar no serializer?",
+    "hint": "Duas requisições ao mesmo tempo.",
+    "choices": [
+      {
+        "text": "Serializers não podem rodar consultas",
+        "why": "Podem; a contagem só ficaria sujeita a corrida."
+      },
+      {
+        "text": "O DRF proíbe regras de negócio em serializers",
+        "why": "Ele não proíbe nada disso."
+      },
+      {
+        "text": "O serviço segura a trava enquanto conta",
+        "why": "Isso: a mesma regra, com a mesma trava, que o formulário."
+      },
+      {
+        "text": "Para devolver 201 em vez de 200",
+        "why": "Códigos de status são escolha da view."
+      }
+    ]
+  },
+  "ex-aswa88mh": {
+    "prompt": "Ligue cada recusa ao seu código de status.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "o e-mail não é um endereço",
+        "right": "400"
+      },
+      {
+        "left": "o evento está cheio",
+        "right": "409"
+      },
+      {
+        "left": "GET no endpoint de inscrição",
+        "right": "405"
+      },
+      {
+        "left": "um PATCH anônimo num evento",
+        "right": "403"
+      }
+    ],
+    "right_distractors": [
+      "404"
+    ]
+  },
+  "ex-35a04brf": {
+    "prompt": "Os POSTs anônimos de inscrição não levavam token CSRF e foram aceitos. Quando o DRF teria exigido um?",
+    "hint": "O CSRF é um ataque a quê?",
+    "choices": [
+      {
+        "text": "Sempre, para qualquer POST",
+        "why": "Ele aceitou estes."
+      },
+      {
+        "text": "Só para requisições com autenticação Basic",
+        "why": "Basic é um cabeçalho que o navegador não põe sozinho."
+      },
+      {
+        "text": "Quando há um cookie de sessão",
+        "why": "Isso: quando a requisição é autenticada por um, já que o cookie é o que uma requisição forjada aproveita."
+      },
+      {
+        "text": "Quando o corpo é JSON e não formulário",
+        "why": "O formato não decide isso."
+      }
+    ]
+  },
+  "ex-c43y5100": {
+    "prompt": "Com PAGE_SIZE 2 e três eventos, o que o campo next da primeira página tinha?",
+    "choices": [
+      {
+        "text": "null",
+        "why": "Esse foi o da segunda página."
+      },
+      {
+        "text": "2",
+        "why": "O next é um endereço, não um número."
+      },
+      {
+        "text": "O endereço da página 2",
+        "why": "Isso: http://127.0.0.1:8000/api/events/?page=2."
+      },
+      {
+        "text": "O slug do terceiro evento",
+        "why": "Páginas não se ligam por slug."
+      }
+    ]
+  },
+  "ex-xpmtyse9": {
+    "prompt": "Por que um queryset paginado precisa de uma ordem estável?",
+    "hint": "O que a página 2 poderia ter de outro jeito?",
+    "choices": [
+      {
+        "text": "Linhas se repetem ou somem entre páginas",
+        "why": "Isso, e o DRF avisa."
+      },
+      {
+        "text": "O count fica errado sem ORDER BY",
+        "why": "O COUNT não depende de ordem."
+      },
+      {
+        "text": "O PostgreSQL recusa OFFSET sem ORDER BY",
+        "why": "Ele aceita, com resultado imprevisível."
+      },
+      {
+        "text": "A API navegável precisa disso",
+        "why": "Qualquer cliente é afetado."
+      }
+    ]
+  },
+  "ex-f3nfbc7s": {
+    "prompt": "Um feed de milhões de linhas que os clientes só rolam para a frente. Que paginação a aula indica?",
+    "hint": "Sem count, sem offset.",
+    "choices": [
+      {
+        "text": "PageNumberPagination com um PAGE_SIZE maior",
+        "why": "Páginas maiores ainda contam e usam offset."
+      },
+      {
+        "text": "LimitOffsetPagination",
+        "why": "Mesmos custos que números de página."
+      },
+      {
+        "text": "CursorPagination",
+        "why": "Isso: pede as linhas depois da última vista."
+      },
+      {
+        "text": "Sem paginação, e gzip",
+        "why": "Compressão não diminui a consulta."
+      }
+    ]
+  },
+  "ex-vx2p6n0f": {
+    "prompt": "Ponha em ordem o que acontece com um POST de inscrição.",
+    "hint": "Ler, validar, inscrever, responder.",
+    "items": [
+      "o DRF lê o JSON para request.data",
+      "o RegistrationSerializer valida",
+      "o register() trava o evento e conta",
+      "a view responde 201 ou 409"
+    ]
+  }
+}

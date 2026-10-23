@@ -1,0 +1,60 @@
+{
+  "id": "le-14t60sj7",
+  "title": "Background tasks: Celery and queues",
+  "sections": [
+    {
+      "id": "se-ff3zqf0m",
+      "slug": "intro",
+      "kind": "video",
+      "videos": [
+        {
+          "id": "vd-rtnjg60z",
+          "version": 1,
+          "script": "Somebody registers, and agenda sends them an e-mail. The obvious place is the view, right after the save. {{title}} Then the mail server goes down. The registration is saved, and the answer is a 500. The person tries again, and hears they are already registered. {{inline}} So the mail leaves the request. Redis holds the message, and a Celery worker sends it. The request answers 201 and moves on. {{queue}} A task that fails, though, is simply gone. So it retries, with growing pauses, until the mail server is back. {{retry}} And a task that retries must be safe to run twice. The row records that the mail went out, and a second run stops there. {{twice}} Then Redis goes down, and the 500 comes back. The queue took the mail server out of the request and put Redis in it. One argument contains it. {{redis}} A sweep, run every minute by beat, finds what was missed and sends it. {{beat}} Last, FastAPI's background tasks. They are simpler, they run after the response, and they forget everything when they fail.",
+          "seconds": 95,
+          "locales": []
+        }
+      ]
+    },
+    {
+      "id": "se-ndte10a1",
+      "slug": "out-of-the-request",
+      "kind": "reading"
+    },
+    {
+      "id": "se-9b3wpp6y",
+      "slug": "installing-redis",
+      "kind": "reading"
+    },
+    {
+      "id": "se-km5eybyx",
+      "slug": "a-celery-app",
+      "kind": "reading"
+    },
+    {
+      "id": "se-f0ff6d3w",
+      "slug": "retries-and-idempotency",
+      "kind": "reading"
+    },
+    {
+      "id": "se-tvh01p28",
+      "slug": "when-redis-fails",
+      "kind": "reading"
+    },
+    {
+      "id": "se-6xgc0q8t",
+      "slug": "periodic-tasks",
+      "kind": "reading"
+    },
+    {
+      "id": "se-sc0bsx1f",
+      "slug": "fastapi-background",
+      "kind": "reading"
+    },
+    {
+      "id": "se-c348eqy0",
+      "slug": "drill",
+      "kind": "practice"
+    }
+  ]
+}

@@ -1,0 +1,737 @@
+[
+  {
+    "id": "ex-7kjyxqvf",
+    "version": 1,
+    "section": "domain-exceptions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `BookService` throw `DuplicateIsbnException` instead of answering a 409 itself?",
+    "hint": "Which layer knows what HTTP is?",
+    "choices": [
+      {
+        "text": "A 409 is the web layer's word, and the rule is the shop's",
+        "correct": true,
+        "why": "Right. \"An ISBN appears once\" is true for a controller, an import job or a test alike, so the service states it in the shop's words and the web layer translates."
+      },
+      {
+        "text": "Spring forbids a `@Service` from returning a `ResponseEntity`",
+        "correct": false,
+        "why": "Nothing forbids it, and it would compile and run. The objection is design: the service would then speak HTTP to callers that are not web requests at all."
+      },
+      {
+        "text": "Throwing is quicker than building a response object",
+        "correct": false,
+        "why": "Speed is not the reason. Creating an exception captures a stack trace, which costs more than building a small object, not less."
+      },
+      {
+        "text": "Only an exception handler can produce a 409",
+        "correct": false,
+        "why": "A controller can return `ResponseEntity.status(409)` directly, the way lesson 6's `get` returned its 404. The lesson moves that job out of the controller on purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-56k1gdqx",
+    "version": 1,
+    "section": "domain-exceptions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The service throws `BookNotFoundException` now, and `ApiErrorHandler` does not exist yet. What does `GET /books/99` answer?",
+    "hint": "Lesson 6's `Optional` handling is gone, and nothing claims the exception.",
+    "choices": [
+      {
+        "text": "404 with an empty body, as in lesson 6",
+        "correct": false,
+        "why": "That 404 came from the controller turning an empty `Optional` into `ResponseEntity.notFound()`. The controller no longer does that; the exception goes straight through it."
+      },
+      {
+        "text": "404 with the exception's message as the body",
+        "correct": false,
+        "why": "Turning the exception into a 404 is exactly what is missing. Nothing in the application maps `BookNotFoundException` to any status yet."
+      },
+      {
+        "text": "500 from Spring Boot's error page",
+        "correct": true,
+        "why": "Right. The exception crossed Spring MVC unclaimed, and Boot's error page answered the only way it can for that: the server failed."
+      },
+      {
+        "text": "Nothing: the application refuses to start without a handler",
+        "correct": false,
+        "why": "Spring does not check at startup that every exception has a handler. An exception happens per request, and this one became a 500."
+      }
+    ]
+  },
+  {
+    "id": "ex-7bjw95wt",
+    "version": 1,
+    "section": "domain-exceptions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do `BookNotFoundException` and `DuplicateIsbnException` extend `RuntimeException` rather than `Exception`?",
+    "hint": "Think about the controller that sits between the service and the client.",
+    "choices": [
+      {
+        "text": "`@ExceptionHandler` accepts unchecked exceptions and no others",
+        "correct": false,
+        "why": "An `@ExceptionHandler` can name any exception type, checked or not. The choice is about the code between the throw and the handler."
+      },
+      {
+        "text": "A checked exception cannot carry a message",
+        "correct": false,
+        "why": "Both kinds pass a message to `super`, exactly as these two classes do."
+      },
+      {
+        "text": "Spring Boot logs unchecked exceptions and ignores checked ones",
+        "correct": false,
+        "why": "Logging does not depend on that. Boot logged the 500 because nothing handled the exception, and it would have logged a checked one the same way."
+      },
+      {
+        "text": "So the controller need not catch or declare them",
+        "correct": true,
+        "why": "Right. A checked exception would force every method on the way to handle or declare it. Lesson 14 adds a second reason: Spring rolls a transaction back on a `RuntimeException` by default and not on a checked one."
+      }
+    ]
+  },
+  {
+    "id": "ex-7z88se3r",
+    "version": 1,
+    "section": "domain-exceptions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two requests with the same new ISBN reach `BookService.add` at the same instant, with the in-memory repository. What can happen?",
+    "hint": "`add` is a check and then a save: two steps.",
+    "choices": [
+      {
+        "text": "The second waits for the first, because the map is a concurrent one",
+        "correct": false,
+        "why": "`ConcurrentSkipListMap` makes each single operation safe. It does nothing to make the pair \"look, then save\" one step."
+      },
+      {
+        "text": "Both pass the check, and the ISBN is stored twice",
+        "correct": true,
+        "why": "Right. Each request checks before either has saved. Lesson 9's table closes the gap with a `UNIQUE` constraint, which the database enforces whatever the timing."
+      },
+      {
+        "text": "Spring hands requests to a service bean one at a time",
+        "correct": false,
+        "why": "The service is a single shared bean, and Tomcat runs requests on several threads at once, all calling it."
+      },
+      {
+        "text": "The second always gets a 409, since the check is in the service",
+        "correct": false,
+        "why": "The check is in the service, but it only sees what has been saved. Neither request has saved anything when both check."
+      }
+    ]
+  },
+  {
+    "id": "ex-bhzp9wy7",
+    "version": 1,
+    "section": "problem-details",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each member of an RFC 9457 problem document to what it holds.",
+    "hint": "One is for programs, one is for this occurrence, one never changes for a kind.",
+    "pairs": [
+      {
+        "left": "`type`",
+        "right": "a URI naming the kind of problem, which a program compares"
+      },
+      {
+        "left": "`title`",
+        "right": "a short summary, the same every time the kind occurs"
+      },
+      {
+        "left": "`detail`",
+        "right": "an explanation of this occurrence, for a person"
+      },
+      {
+        "left": "`instance`",
+        "right": "a URI for this occurrence"
+      },
+      {
+        "left": "`status`",
+        "right": "the HTTP status code, repeated"
+      }
+    ],
+    "right_distractors": [
+      "the moment the error happened"
+    ]
+  },
+  {
+    "id": "ex-j0c9fkgp",
+    "version": 1,
+    "section": "problem-details",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A mobile app must show a \"this ISBN is already listed\" screen when adding a book fails for that reason. Which member of the problem should it test?",
+    "hint": "Which member is still the same after somebody rewords the sentences?",
+    "choices": [
+      {
+        "text": "`detail`, because it names the ISBN",
+        "correct": false,
+        "why": "`detail` is written for a person and may be reworded at any time. An app that matches its words breaks on the day it is, with no error anywhere."
+      },
+      {
+        "text": "`status`, because a 409 means a duplicate",
+        "correct": false,
+        "why": "409 means a conflict with the current state, and more than one kind of problem can share it: lesson 14 adds a 409 for a book that is out of stock."
+      },
+      {
+        "text": "`type`",
+        "correct": true,
+        "why": "Right. It names the kind of problem and is the member the RFC means programs to compare: here `https://bookshop.example/problems/duplicate-isbn`."
+      },
+      {
+        "text": "`title`, because it is short and fixed",
+        "correct": false,
+        "why": "`title` is the same for every occurrence, but it is still text for people, free to be reworded or translated. `type` is the identifier."
+      }
+    ]
+  },
+  {
+    "id": "ex-gz8whcyx",
+    "version": 1,
+    "section": "problem-details",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What status code did the bookshop answer when it was sent a second book with ISBN `9786500000016`?",
+    "hint": "The request was valid; it conflicted with the catalogue.",
+    "value": 409,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-r8mpfy1v",
+    "version": 1,
+    "section": "problem-details",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Nothing in `ApiErrorHandler` sets `instance`, yet the 404 for book 99 carried `\"instance\": \"/books/99\"`. Where did it come from?",
+    "hint": "The handler left one member empty.",
+    "choices": [
+      {
+        "text": "Spring filled in the request's path",
+        "correct": true,
+        "why": "Right. When a returned `ProblemDetail` has no `instance`, Spring MVC sets it to the path of the request being answered."
+      },
+      {
+        "text": "`forStatusAndDetail` copies the request's URL into it",
+        "correct": false,
+        "why": "`forStatusAndDetail` sets `status` and `detail` and nothing else. It never sees the request."
+      },
+      {
+        "text": "Jackson adds an `instance` member to every object it writes",
+        "correct": false,
+        "why": "Jackson writes the members an object has. A `BookResponse` gets no `instance`."
+      },
+      {
+        "text": "Tomcat appends it to the body of every error",
+        "correct": false,
+        "why": "Tomcat does not touch the body. The member that looks like it, `path`, belongs to Spring Boot's own error page, a different shape altogether."
+      }
+    ]
+  },
+  {
+    "id": "ex-2rt1twav",
+    "version": 1,
+    "section": "problem-details",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An RFC 9457 error body is sent with the media type `application/___+json`.",
+    "blanks": [
+      {
+        "accept": [
+          "problem"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2bdv0k21",
+    "version": 1,
+    "section": "springs-own-errors",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does extending `ResponseEntityExceptionHandler` give `ApiErrorHandler`?",
+    "hint": "Whose exceptions does the base class know about?",
+    "choices": [
+      {
+        "text": "A handler for every exception, the bookshop's own included",
+        "correct": false,
+        "why": "It knows nothing about `BookNotFoundException`, which needed a method of its own, and an unexpected exception still reached Spring Boot's error page."
+      },
+      {
+        "text": "The `@RestControllerAdvice` annotation, inherited from the base class",
+        "correct": false,
+        "why": "The annotation is written on `ApiErrorHandler` itself. Without it the class would not be an advice at all, whatever it extended."
+      },
+      {
+        "text": "The validation of request bodies",
+        "correct": false,
+        "why": "`@Valid` and Bean Validation do the validating, as in lesson 6. The base class only answers the failure."
+      },
+      {
+        "text": "Handlers for Spring MVC's own exceptions, in the problem shape",
+        "correct": true,
+        "why": "Right: a body that is not JSON, a path nobody maps, a wrong method or media type, a failed validation, all in the same shape as the bookshop's errors."
+      }
+    ]
+  },
+  {
+    "id": "ex-pn9ayk6y",
+    "version": 1,
+    "section": "springs-own-errors",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each request to the status the rebuilt bookshop answered it with.",
+    "hint": "Each status is the one HTTP has for the case.",
+    "pairs": [
+      {
+        "left": "`POST /books` with a body that is not JSON",
+        "right": "400"
+      },
+      {
+        "left": "`DELETE /books/1`",
+        "right": "405"
+      },
+      {
+        "left": "`POST /books` with `Content-Type: text/plain`",
+        "right": "415"
+      },
+      {
+        "left": "`GET /nope`",
+        "right": "404"
+      }
+    ],
+    "right_distractors": [
+      "409",
+      "500"
+    ]
+  },
+  {
+    "id": "ex-5rgn6b6f",
+    "version": 1,
+    "section": "springs-own-errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The 400 for a body that is not JSON has no `type` member. What does the RFC say an absent `type` means?",
+    "hint": "Spring omits one particular value when it writes the JSON.",
+    "choices": [
+      {
+        "text": "`about:blank`: nothing beyond what the status code itself says",
+        "correct": true,
+        "why": "Right. Spring leaves `type` at `about:blank` and omits it, and `title` is then the status's own phrase, \"Bad Request\"."
+      },
+      {
+        "text": "The server forgot it, so the document is invalid",
+        "correct": false,
+        "why": "All five members are optional, and an absent `type` has a defined meaning rather than being a mistake."
+      },
+      {
+        "text": "The client has to read `detail` to learn the kind",
+        "correct": false,
+        "why": "There is no further kind to learn: the problem is what the status code says. Reading `detail` is the habit the lesson warns against."
+      },
+      {
+        "text": "The server does not know what happened, as with a 500",
+        "correct": false,
+        "why": "It knows exactly: the body could not be read. That is a client error with nothing more specific to name."
+      }
+    ]
+  },
+  {
+    "id": "ex-w522k94y",
+    "version": 1,
+    "section": "springs-own-errors",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these answers from the rebuilt bookshop carried a header saying what the server would have accepted? Choose all that apply.",
+    "hint": "Two of them list what would have worked.",
+    "choices": [
+      {
+        "text": "The 405 for `DELETE /books/1`",
+        "correct": true,
+        "why": "Right: `Allow: GET` lists the methods `/books/1` takes."
+      },
+      {
+        "text": "The 404 for `GET /nope`",
+        "correct": false,
+        "why": "A 404 has nothing to list. Its headers were only `Content-Type`, `Transfer-Encoding` and `Date`."
+      },
+      {
+        "text": "The 415 for a `text/plain` body",
+        "correct": true,
+        "why": "Right: `Accept: application/json, application/*+json` lists the media types `/books` can read."
+      },
+      {
+        "text": "The 409 for a duplicate ISBN",
+        "correct": false,
+        "why": "A conflict is described in the body, and no header lists an alternative: the fix is a different ISBN."
+      }
+    ]
+  },
+  {
+    "id": "ex-9pjrx0q0",
+    "version": 1,
+    "section": "springs-own-errors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A client posts a book and gets a 400 whose `detail` is \"Failed to read request\", with no `type` and no `errors` member. What went wrong?",
+    "hint": "Validation needs an object to validate.",
+    "choices": [
+      {
+        "text": "A field broke a constraint, and the bookshop hid which one",
+        "correct": false,
+        "why": "A broken constraint goes through `handleMethodArgumentNotValid`, whose answer has the `invalid-request` type and an `errors` map naming the field."
+      },
+      {
+        "text": "The path variable was not a number",
+        "correct": false,
+        "why": "There is no path variable on `POST /books`, and that failure reads \"Failed to convert 'id' with value...\"."
+      },
+      {
+        "text": "The body never became a `BookRequest`, so nothing was validated",
+        "correct": true,
+        "why": "Right. A body that is not JSON, or a value of the wrong type such as `\"cheap\"` for `priceCents`, fails while Jackson reads it, before `@Valid` has anything to look at."
+      },
+      {
+        "text": "The ISBN is already in the catalogue",
+        "correct": false,
+        "why": "A duplicate is found by the service, after reading and validation have both succeeded, and it answers 409."
+      }
+    ]
+  },
+  {
+    "id": "ex-aj8nnvha",
+    "version": 1,
+    "section": "validation-errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `ApiErrorHandler` override `handleMethodArgumentNotValid` instead of declaring `@ExceptionHandler(MethodArgumentNotValidException.class)`?",
+    "hint": "The detour in the section tried the second way.",
+    "choices": [
+      {
+        "text": "Two handlers for one exception stop the start",
+        "correct": true,
+        "why": "Right. Spring found two handlers for one exception in one class and failed with \"Ambiguous @ExceptionHandler method mapped\". Overriding changes the inherited handler's answer instead."
+      },
+      {
+        "text": "An `@ExceptionHandler` method cannot return a `ProblemDetail`",
+        "correct": false,
+        "why": "`notFound` and `duplicate` are `@ExceptionHandler` methods and return exactly that."
+      },
+      {
+        "text": "The override runs before validation, so it can repair the fields",
+        "correct": false,
+        "why": "It runs after validation has failed, with the failures in hand. Nothing here repairs a request."
+      },
+      {
+        "text": "An override is cheaper than a handler lookup on every request",
+        "correct": false,
+        "why": "Both are found once, at startup. The reason is the ambiguity, not speed."
+      }
+    ]
+  },
+  {
+    "id": "ex-gyy02txe",
+    "version": 1,
+    "section": "validation-errors",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The bookshop is sent `{\"isbn\": \"9786500000016\", \"title\": \"Emma\", \"priceCents\": -5}`. How many entries does the `errors` map of its 400 hold?",
+    "hint": "Check each field of `BookRequest` against its constraints. The ISBN's check digit is valid, and validation runs before the service looks at the catalogue.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-dvk0qb0n",
+    "version": 1,
+    "section": "validation-errors",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is the errors map a `TreeMap`?",
+    "hint": "What did the lesson say about the order Bean Validation reports in?",
+    "choices": [
+      {
+        "text": "Jackson cannot write a `HashMap` as JSON",
+        "correct": false,
+        "why": "Jackson writes any `Map`. The choice is about order, not about whether it can be written."
+      },
+      {
+        "text": "So that one field can hold two messages",
+        "correct": false,
+        "why": "A `TreeMap` holds one value per key like any other map. A field that breaks two constraints still shows one message."
+      },
+      {
+        "text": "So the order is the same every time",
+        "correct": true,
+        "why": "Right. Bean Validation reports violations in no particular order; a sorted map makes two identical requests give two identical bodies."
+      },
+      {
+        "text": "Bean Validation returns the violations already sorted",
+        "correct": false,
+        "why": "It returns them in no particular order, which is the reason for sorting them here."
+      }
+    ]
+  },
+  {
+    "id": "ex-9n7zer25",
+    "version": 1,
+    "section": "validation-errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 6's bad book is sent again with `Accept-Language: pt-BR`. Which message in `errors` stays in English?",
+    "hint": "Which constraint declares its message as a plain sentence rather than a key?",
+    "choices": [
+      {
+        "text": "`must not be blank`, for the title",
+        "correct": false,
+        "why": "`@NotBlank` is a standard constraint whose message is a key, so Hibernate Validator looked it up for Portuguese."
+      },
+      {
+        "text": "`must be a valid ISBN-13`, for the ISBN",
+        "correct": true,
+        "why": "Right. `@ValidIsbn` declares `message() default \"must be a valid ISBN-13\"`, a literal sentence, so there is nothing to look up in another language."
+      },
+      {
+        "text": "`must be greater than or equal to 0`, for the price",
+        "correct": false,
+        "why": "`@PositiveOrZero` is a standard constraint too, and its message came back in Portuguese."
+      },
+      {
+        "text": "All of them: Bean Validation answers in English everywhere",
+        "correct": false,
+        "why": "Spring hands Hibernate Validator the request's language, and three of the four messages came back in Portuguese."
+      }
+    ]
+  },
+  {
+    "id": "ex-jz9mvq9b",
+    "version": 1,
+    "section": "validation-errors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A title of 201 spaces breaks `@NotBlank` and `@Size(max = 200)` at once. What does `errors.title` hold?",
+    "hint": "The map is `Map<String, String>`, and `put` replaces.",
+    "choices": [
+      {
+        "text": "The `@NotBlank` message, because it is written first in `BookRequest`",
+        "correct": false,
+        "why": "The order of annotations in the source decides nothing here; violations arrive in no particular order."
+      },
+      {
+        "text": "Both messages, in a list",
+        "correct": false,
+        "why": "That needs `Map<String, List<String>>`. With one `String` per key, the second `put` replaces the first."
+      },
+      {
+        "text": "Both messages joined into one string",
+        "correct": false,
+        "why": "Nothing joins them. `errors.put` replaces whatever the field already had."
+      },
+      {
+        "text": "One of the two, and which one is not defined",
+        "correct": true,
+        "why": "Right. Both violations are reported, the map keeps the last one `put`, and the order they arrive in is not defined."
+      }
+    ]
+  },
+  {
+    "id": "ex-qy3pc3q6",
+    "version": 1,
+    "section": "what-not-to-leak",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With no handler for it, the stand-in database failure reached Spring Boot's error page. What did the client's body contain?",
+    "hint": "Spring Boot's defaults decide, and the bookshop leaves them alone.",
+    "choices": [
+      {
+        "text": "The exception's message, with the host and the database user",
+        "correct": false,
+        "why": "Only with `spring.web.error.include-message=always`, which the lesson turned on to show what the default keeps out."
+      },
+      {
+        "text": "The stack trace",
+        "correct": false,
+        "why": "Only with `spring.web.error.include-stacktrace=always`. By default the trace goes to the log and nowhere else."
+      },
+      {
+        "text": "A timestamp, the status, its phrase and the path",
+        "correct": true,
+        "why": "Right: `timestamp`, `status`, `error` and `path`. The message and the trace went to the second terminal."
+      },
+      {
+        "text": "Nothing: a 500 is sent with an empty body",
+        "correct": false,
+        "why": "Boot's error page writes a small JSON body, the same shape lesson 6's errors had."
+      }
+    ]
+  },
+  {
+    "id": "ex-d9qymk6m",
+    "version": 1,
+    "section": "what-not-to-leak",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The hurried catch-all answered every `Exception` with `e.getMessage()` as its detail. What went wrong? Choose all that apply.",
+    "hint": "Look at the response, and then at the second terminal.",
+    "choices": [
+      {
+        "text": "The host, the port and the database user reached the client",
+        "correct": true,
+        "why": "Right. The exception's message was written for whoever reads the log, and the handler sent it to a stranger."
+      },
+      {
+        "text": "`GET /nope` started answering 500",
+        "correct": false,
+        "why": "It still answered 404. Spring picks the handler whose exception type is closest to the one thrown, and `NoResourceFoundException` has its own."
+      },
+      {
+        "text": "Nothing was logged, so nobody running the server learnt of the failure",
+        "correct": true,
+        "why": "Right. The exception counted as handled, so nothing reached the log, and the one person who could fix the database was the one person not told."
+      },
+      {
+        "text": "The status became 200, because the exception was handled",
+        "correct": false,
+        "why": "The handler built the problem with `HttpStatus.INTERNAL_SERVER_ERROR`, and that status is what the response carried."
+      }
+    ]
+  },
+  {
+    "id": "ex-mp7vtpdf",
+    "version": 1,
+    "section": "what-not-to-leak",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the bookshop keep no handler for `Exception` at all, not even one that logs and names nothing?",
+    "hint": "Think about exceptions the bookshop did not write, thrown by parts of Spring that arrive in later lessons.",
+    "choices": [
+      {
+        "text": "Spring refuses to start with a handler for `Exception`",
+        "correct": false,
+        "why": "It started without complaint in the detour. Only two handlers for the same type are refused."
+      },
+      {
+        "text": "A handler for `Exception` would turn every 404 for a missing book into a 500",
+        "correct": false,
+        "why": "The handler naming the closest type wins, so `BookNotFoundException` still reaches `notFound`."
+      },
+      {
+        "text": "The RFC does not allow a problem document with status 500",
+        "correct": false,
+        "why": "A problem document may carry any status. The objection is about what a catch-all catches, not about the shape."
+      },
+      {
+        "text": "It would catch exceptions Spring Security expects to handle, and answer 500",
+        "correct": true,
+        "why": "Right. Spring Security turns its refusals into 401 or 403 further out, after the controller; a catch-all in the advice gets there first. Boot's error page already logs everything and says nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-p03fvs06",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `GET /books/99` on the finished bookshop in order.",
+    "hint": "The exception goes in one direction, and the answer comes back the other way.",
+    "items": [
+      "`BookService.get` throws `BookNotFoundException`",
+      "The exception passes back through `BookController.get`",
+      "The `DispatcherServlet` finds the `@ExceptionHandler` that names it",
+      "`ApiErrorHandler.notFound` returns a `ProblemDetail`",
+      "The client receives 404 as `application/problem+json`"
+    ],
+    "trap": "The controller does not catch anything: the exception goes through it on its way to the DispatcherServlet."
+  },
+  {
+    "id": "ex-zwff5nbt",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new rule: a book may not leave the catalogue while an order for it is still open. Following this lesson's design, how is the refusal built?",
+    "hint": "Where does a rule live, and where does HTTP live?",
+    "choices": [
+      {
+        "text": "A new exception thrown by the service, mapped to 409 in `ApiErrorHandler`",
+        "correct": true,
+        "why": "Right. The rule is the shop's, so the service states it, and one handler gives it a status and a `type` a client can compare."
+      },
+      {
+        "text": "The controller looks for open orders and returns `ResponseEntity.status(409)`",
+        "correct": false,
+        "why": "That puts the rule in the web layer, where an import job or a test calling the service would never meet it."
+      },
+      {
+        "text": "The service throws an `IllegalStateException`, and Boot's error page answers it",
+        "correct": false,
+        "why": "That would be a 500 that says nothing, for a refusal that was planned. A client could not tell it from a crash."
+      },
+      {
+        "text": "The service returns a `ProblemDetail`, and the controller passes it on",
+        "correct": false,
+        "why": "Then the service speaks HTTP, which is the coupling the lesson's first section removed."
+      }
+    ]
+  },
+  {
+    "id": "ex-jm1p74p8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate adds `@ExceptionHandler(RuntimeException.class)` to `ApiErrorHandler`, answering a fixed 500 problem. What does `GET /books/99` answer now?",
+    "hint": "`BookNotFoundException` is a `RuntimeException`, and it also has a handler of its own.",
+    "choices": [
+      {
+        "text": "500, because the broader handler catches everything beneath it",
+        "correct": false,
+        "why": "Spring does not pick the broadest handler. It picks the one whose type is closest to the exception thrown."
+      },
+      {
+        "text": "The application fails to start, as with two handlers for one exception",
+        "correct": false,
+        "why": "Only two handlers for the same type are ambiguous. `RuntimeException` and `BookNotFoundException` are different types."
+      },
+      {
+        "text": "404 from Spring Boot's error page",
+        "correct": false,
+        "why": "Boot's error page only answers what no handler claimed, and two handlers claim this one."
+      },
+      {
+        "text": "404 from `notFound`: the closest type wins",
+        "correct": true,
+        "why": "Right, just as `/nope` kept its 404 under the catch-all for `Exception`. The new handler only gets what nothing more specific claims."
+      }
+    ]
+  }
+]

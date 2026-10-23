@@ -1,0 +1,464 @@
+[
+  {
+    "id": "ex-jwah5e6d",
+    "version": 1,
+    "section": "paths",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Names.java` built `Path.of(\"library\", \"fiction\", \"dune.txt\")` for a file that is not there. When did anything fail?",
+    "hint": "A `Path` is a name.",
+    "choices": [
+      {
+        "text": "Never: `Files.exists` said `false`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "At `Path.of`, with `NoSuchFileException`",
+        "correct": false,
+        "why": "Building a path checks nothing."
+      },
+      {
+        "text": "At `toAbsolutePath`, which needs the file",
+        "correct": false,
+        "why": "It used the working directory only."
+      },
+      {
+        "text": "At `getParent`, which returned `null`",
+        "correct": false,
+        "why": "It returned `library/fiction`."
+      }
+    ]
+  },
+  {
+    "id": "ex-wsrnrwep",
+    "version": 1,
+    "section": "paths",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `Path.of(\"library\").resolve(\"fiction/../poetry/./odes.txt\").normalize()` give?",
+    "hint": "`name/..` cancels out.",
+    "choices": [
+      {
+        "text": "`poetry/odes.txt`",
+        "correct": false,
+        "why": "`library` stays."
+      },
+      {
+        "text": "`library/fiction/poetry/odes.txt`",
+        "correct": false,
+        "why": "`..` removed `fiction`."
+      },
+      {
+        "text": "an exception, if `fiction` is missing",
+        "correct": false,
+        "why": "`normalize` reads names, not the disk."
+      },
+      {
+        "text": "`library/poetry/odes.txt`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-3jsey5av",
+    "version": 1,
+    "section": "paths",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these touch the disk? Choose all that apply.",
+    "hint": "The table.",
+    "choices": [
+      {
+        "text": "`Files.size(path)`",
+        "correct": true,
+        "why": "Yes: it reads the file's size."
+      },
+      {
+        "text": "`path.normalize()`",
+        "correct": false,
+        "why": "No: it reads the names."
+      },
+      {
+        "text": "`Files.exists(path)`",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "`base.relativize(path)`",
+        "correct": false,
+        "why": "No."
+      }
+    ]
+  },
+  {
+    "id": "ex-0qxdmbwg",
+    "version": 1,
+    "section": "reading-and-writing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Catalogue.java` called `Files.writeString` with `StandardOpenOption.APPEND`. What would the same call have done with no options?",
+    "hint": "The default of both write methods.",
+    "choices": [
+      {
+        "text": "Written to a new file named `catalogue.csv.1`",
+        "correct": false,
+        "why": "Nothing renames files."
+      },
+      {
+        "text": "Replaced the three lines with one",
+        "correct": true,
+        "why": "Right: the default replaces the file."
+      },
+      {
+        "text": "Thrown, since the file already existed",
+        "correct": false,
+        "why": "Without options an existing file is fine."
+      },
+      {
+        "text": "Added to the end, as appending is the default",
+        "correct": false,
+        "why": "Appending has to be asked for."
+      }
+    ]
+  },
+  {
+    "id": "ex-yyk2djfw",
+    "version": 1,
+    "section": "reading-and-writing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many pages did the books published after 1900 add up to?",
+    "hint": "Dune and Neuromancer.",
+    "value": 683,
+    "tolerance": 0,
+    "unit": "pages"
+  },
+  {
+    "id": "ex-7h49gyfs",
+    "version": 1,
+    "section": "reading-and-writing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A log is two gigabytes. Which call reads it without holding all of it in memory?",
+    "hint": "Read as it is pulled.",
+    "choices": [
+      {
+        "text": "`Files.size(path)`",
+        "correct": false,
+        "why": "That reads the size and no content."
+      },
+      {
+        "text": "`Files.lines(path)`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`Files.readString(path)`",
+        "correct": false,
+        "why": "That builds one string of all of it."
+      },
+      {
+        "text": "`Files.readAllLines(path)`",
+        "correct": false,
+        "why": "That builds a list of all of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-j5ntytab",
+    "version": 1,
+    "section": "reading-and-writing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `Files.lines` go in a `try` with resources when a stream from a list does not?",
+    "hint": "Lesson 19 section 04.",
+    "choices": [
+      {
+        "text": "A parallel stream needs it to join its threads",
+        "correct": false,
+        "why": "The stream was sequential."
+      },
+      {
+        "text": "It throws `IOException` from every element",
+        "correct": false,
+        "why": "The `try` is there to close, not to catch."
+      },
+      {
+        "text": "Its lines are lost when the method returns",
+        "correct": false,
+        "why": "The sum was printed inside the block."
+      },
+      {
+        "text": "It holds a file descriptor open until it is closed",
+        "correct": true,
+        "why": "Right, and `sum` does not close it."
+      }
+    ]
+  },
+  {
+    "id": "ex-bss6373m",
+    "version": 1,
+    "section": "walking-a-tree",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `Tree.java`, what did `Files.list(root)` show?",
+    "hint": "One level.",
+    "choices": [
+      {
+        "text": "Only `emma.txt`",
+        "correct": false,
+        "why": "That was `find`."
+      },
+      {
+        "text": "`library/fiction` and `library/poetry`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "All four files and four directories",
+        "correct": false,
+        "why": "That is `walk`."
+      },
+      {
+        "text": "The three `.txt` files",
+        "correct": false,
+        "why": "Those were kept by the filters on `walk`."
+      }
+    ]
+  },
+  {
+    "id": "ex-fv4g22zf",
+    "version": 1,
+    "section": "walking-a-tree",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`dune.txt` is 2,000 bytes. Why did `Files.find` with `attrs.size() > 2_000` leave it out?",
+    "hint": "Read the comparison.",
+    "choices": [
+      {
+        "text": "The attributes were read before the file was written",
+        "correct": false,
+        "why": "The files were all written first."
+      },
+      {
+        "text": "`find` skips the files directly inside `fiction`",
+        "correct": false,
+        "why": "It searched every level."
+      },
+      {
+        "text": "2,000 is not more than 2,000",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The `.txt` filter of the walk above removed it",
+        "correct": false,
+        "why": "Each stream is separate."
+      }
+    ]
+  },
+  {
+    "id": "ex-yrefweqw",
+    "version": 1,
+    "section": "walking-a-tree",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `Tree.java` sort the walk in reverse before deleting?",
+    "hint": "What `Files.delete` refuses.",
+    "choices": [
+      {
+        "text": "Deleting in order would skip every second path",
+        "correct": false,
+        "why": "The stream does not skip."
+      },
+      {
+        "text": "Reverse order is faster on most file systems",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "So every directory is empty when its turn comes",
+        "correct": true,
+        "why": "Right: children before parents."
+      },
+      {
+        "text": "`Files.walk` returns paths in reverse already",
+        "correct": false,
+        "why": "It starts at the root."
+      }
+    ]
+  },
+  {
+    "id": "ex-jt6b16k4",
+    "version": 1,
+    "section": "walking-a-tree",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A lambda that calls `Files.size` catches the `IOException` and rethrows it as `___IOException`.",
+    "hint": "The kind the stream lets through.",
+    "blanks": [
+      {
+        "accept": [
+          "Unchecked"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tx8cy2f0",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each call in `Failures.java` with what it threw.",
+    "hint": "The capture.",
+    "pairs": [
+      {
+        "left": "`Files.readString` on `missing.txt`",
+        "right": "`NoSuchFileException`"
+      },
+      {
+        "left": "`Files.createDirectory` on `shelf` again",
+        "right": "`FileAlreadyExistsException`"
+      },
+      {
+        "left": "`Files.delete` on `shelf`",
+        "right": "`DirectoryNotEmptyException`"
+      },
+      {
+        "left": "`Files.createDirectories` on `shelf`",
+        "right": "nothing"
+      }
+    ],
+    "right_distractors": [
+      "`AccessDeniedException`"
+    ]
+  },
+  {
+    "id": "ex-bayqm24t",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`BASE.resolve(\"/etc/hostname\")` was refused by `Inside.java`. What did `resolve` return?",
+    "hint": "An absolute path as the argument.",
+    "choices": [
+      {
+        "text": "`/etc/hostname` itself, the base ignored",
+        "correct": true,
+        "why": "Right: only the check stopped it."
+      },
+      {
+        "text": "`library/etc/hostname`, inside the base",
+        "correct": false,
+        "why": "That would have been accepted."
+      },
+      {
+        "text": "An empty path, since two roots cannot join",
+        "correct": false,
+        "why": "It returned the other path."
+      },
+      {
+        "text": "It threw before the check could run",
+        "correct": false,
+        "why": "The message came from the check."
+      }
+    ]
+  },
+  {
+    "id": "ex-b9w57shd",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `Inside.java` check with `Path.startsWith` rather than `String.startsWith`?",
+    "hint": "The last two lines of the capture.",
+    "choices": [
+      {
+        "text": "`String.startsWith` ignores case on Linux",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "`Path.startsWith` also follows symbolic links",
+        "correct": false,
+        "why": "It does not; that is `toRealPath`."
+      },
+      {
+        "text": "The text check let `library-old` through",
+        "correct": true,
+        "why": "Right: `Path` compares whole names."
+      },
+      {
+        "text": "`String.startsWith` cannot read `..`",
+        "correct": false,
+        "why": "The path was already normalized."
+      }
+    ]
+  },
+  {
+    "id": "ex-wm1fff36",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the check in `Inside.java` in order.",
+    "hint": "Join, tidy, compare.",
+    "items": [
+      "join the name to the base with `resolve`",
+      "remove `.` and `name/..` with `normalize`",
+      "test `startsWith(BASE)`",
+      "refuse the name, or use the path"
+    ]
+  },
+  {
+    "id": "ex-8t4nj716",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each job with the method of `Files` that does it.",
+    "hint": "Sections 03 and 04.",
+    "pairs": [
+      {
+        "left": "read a small template whole",
+        "right": "`readString`"
+      },
+      {
+        "left": "sum a column of a huge CSV",
+        "right": "`lines`"
+      },
+      {
+        "left": "see what is directly inside a folder",
+        "right": "`list`"
+      },
+      {
+        "left": "find every file over 1 MB below a folder",
+        "right": "`find`"
+      }
+    ],
+    "right_distractors": [
+      "`exists`"
+    ]
+  }
+]

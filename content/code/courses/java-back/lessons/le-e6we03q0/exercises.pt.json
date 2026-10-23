@@ -1,0 +1,524 @@
+{
+  "ex-z2642pqf": {
+    "prompt": "O `pom.xml` da livraria ganha a dependência `org.postgresql:postgresql`. O que esse jar dá à aplicação?",
+    "hint": "Pense no que ainda precisa estar rodando antes de a aplicação subir.",
+    "choices": [
+      {
+        "text": "Uma cópia do PostgreSQL que sobe dentro da própria JVM da aplicação",
+        "why": "Isso é um banco embutido, como o H2. O PostgreSQL é um processo servidor separado; o jar não contém nada dele."
+      },
+      {
+        "text": "O driver, que fala o protocolo do PostgreSQL com um servidor rodando em outro lugar",
+        "why": "Isso. O jar é um cliente. Um servidor precisa já estar escutando, nesta máquina ou em outra, antes de a livraria conseguir se conectar."
+      },
+      {
+        "text": "O servidor PostgreSQL, que o Maven instala na máquina durante o build",
+        "why": "O Maven só põe jars num class path. Instalar um servidor é trabalho do `apt`, e por isso a aula instala um antes."
+      },
+      {
+        "text": "A linguagem SQL, que o JDK não consegue ler sem uma biblioteca a mais",
+        "why": "O Java nunca lê SQL: ele manda o texto para o servidor, e é o servidor que o interpreta."
+      }
+    ]
+  },
+  "ex-5wtbrp8h": {
+    "prompt": "Você foi pelo caminho online: um PostgreSQL hospedado, com endereço, usuário e senha próprios. O que você muda na livraria para ela se conectar lá?",
+    "hint": "Que arquivo diz onde está o banco?",
+    "choices": [
+      {
+        "text": "A dependência do driver, já que um servidor hospedado fala outro protocolo",
+        "why": "Um PostgreSQL hospedado continua sendo PostgreSQL, e o mesmo driver fala com ele. Só mudam o endereço e as credenciais."
+      },
+      {
+        "text": "Nada: o Spring Boot encontra sozinho um banco hospedado na rede",
+        "why": "O Boot não descobre nada numa rede. Ele se conecta exatamente à URL que recebe, e `localhost` não é o servidor hospedado."
+      },
+      {
+        "text": "A URL, o usuário e a senha de `spring.datasource` no `application.properties`",
+        "why": "Isso. Essas três linhas dizem onde está o servidor e quem entra. A página do serviço dá os valores, em geral com uma opção de criptografia na URL."
+      },
+      {
+        "text": "O SQL do `schema.sql`, porque um servidor hospedado usa outro dialeto",
+        "why": "O dialeto é o do PostgreSQL onde quer que o servidor rode. O script não muda."
+      }
+    ]
+  },
+  "ex-j5kavzky": {
+    "prompt": "Logo depois de instalar, o `psql` responde `FATAL:  role \"ana\" does not exist`. O que isso diz?",
+    "hint": "A palavra FATAL vem do servidor.",
+    "choices": [
+      {
+        "text": "O PostgreSQL não foi instalado, então não há a que se conectar",
+        "why": "Um servidor parado não responde nada, e o psql diz isso de outro jeito. Uma linha FATAL é o servidor recusando você, então ele está rodando."
+      },
+      {
+        "text": "A senha de `ana` está errada",
+        "why": "Nenhuma senha foi pedida. Pelo socket local o servidor confere quem você é no computador, e o problema é que ele não tem esse usuário de banco."
+      },
+      {
+        "text": "O servidor está no ar e não tem um usuário de banco chamado `ana`",
+        "why": "Isso. Os usuários do banco, chamados de papéis, são uma lista do próprio servidor, separada dos usuários da máquina. O instalador cria só o `postgres`."
+      },
+      {
+        "text": "A máquina não tem um usuário Linux chamado `ana`",
+        "why": "Você está logada como `ana`, então esse usuário existe. O que falta é o papel do servidor com esse nome."
+      }
+    ]
+  },
+  "ex-fdkvk5w5": {
+    "prompt": "`psql -U bookshop bookshop` falha com `Peer authentication failed`, mas `psql postgresql://bookshop:bookshop@localhost:5432/bookshop` entra. Por que a diferença?",
+    "hint": "Os dois comandos chegam ao servidor por portas diferentes.",
+    "choices": [
+      {
+        "text": "O papel foi criado sem `LOGIN`, que só as conexões TCP ignoram",
+        "why": "Sem `LOGIN` os dois seriam recusados. A versão com URL entrou, então o papel pode fazer login."
+      },
+      {
+        "text": "Eles usam portas diferentes: o socket confere por peer, o TCP por senha",
+        "why": "Isso. Pelo socket o servidor compara o usuário do computador, `ana`, com `bookshop`; por TCP ele pede a senha. O `pg_hba.conf` do Ubuntu usa peer no socket e senha em `localhost`. O JDBC sempre se conecta por TCP, então a regra da senha é a que a livraria encontra."
+      },
+      {
+        "text": "O PostgreSQL 16 não aceita `-U`, e uma URL é o único jeito de nomear um usuário",
+        "why": "O `-U` funciona; a recusa veio do servidor, depois de ele ler o nome do usuário."
+      },
+      {
+        "text": "A senha `bookshop` está errada para o socket e certa para o TCP",
+        "why": "Nenhuma senha foi pedida no socket. A autenticação peer nunca olha para uma."
+      }
+    ]
+  },
+  "ex-07phb8df": {
+    "prompt": "Ponha a preparação do banco da livraria na ordem em que ela precisa acontecer.",
+    "hint": "Cada passo precisa que o anterior já exista.",
+    "items": [
+      "Instalar o pacote postgresql",
+      "Criar o papel bookshop, com LOGIN e senha",
+      "Criar o banco bookshop, pertencente a esse papel",
+      "Conectar como bookshop por localhost e rodar um SELECT"
+    ],
+    "trap": "createdb -O bookshop nomeia um dono, então o papel precisa existir antes do banco."
+  },
+  "ex-rs7g5t52": {
+    "prompt": "Inserir The Time Machine uma segunda vez, com o mesmo ISBN, é recusado. Que parte da definição da tabela recusa?",
+    "hint": "A linha nova teria ganhado um `id` novo.",
+    "choices": [
+      {
+        "text": "A `PRIMARY KEY` em `id`, porque a linha é repetida",
+        "why": "A segunda linha ganharia um `id` novo da sequência, então a chave primária nunca vê repetição. Ela só protege o `id`."
+      },
+      {
+        "text": "O `UNIQUE` em `isbn`",
+        "why": "Isso. O erro nomeia a restrição `book_isbn_key`, que o PostgreSQL criou a partir do `UNIQUE`, e o detalhe mostra o ISBN que já existe."
+      },
+      {
+        "text": "O `NOT NULL` em `title`",
+        "why": "O título foi dado. O `NOT NULL` recusa um valor ausente, não um repetido."
+      },
+      {
+        "text": "O `CHECK (price_cents >= 0)`",
+        "why": "2950 passa nessa verificação. Foi o CHECK que recusou o -1 de Frankenstein."
+      }
+    ]
+  },
+  "ex-17dh5qqr": {
+    "prompt": "O tipo de coluna que faz o PostgreSQL numerar as linhas sozinho, 1, 2, 3, com uma sequência própria, é `___`.",
+    "hint": "É o tipo de `id` no CREATE TABLE.",
+    "blanks": [
+      {
+        "accept": [
+          "bigserial"
+        ]
+      }
+    ]
+  },
+  "ex-khygwjdj": {
+    "prompt": "Quais destas linhas a tabela `book` recusa? Marque todas as que se aplicam.",
+    "hint": "Leia as quatro restrições do CREATE TABLE, uma por coluna que tem uma.",
+    "choices": [
+      {
+        "text": "Um livro com preço de -100 centavos",
+        "why": "Isso: `CHECK (price_cents >= 0)` o recusa."
+      },
+      {
+        "text": "Um livro cujo ISBN já está na tabela",
+        "why": "Isso: o `UNIQUE` em `isbn` o recusa."
+      },
+      {
+        "text": "Um livro sem título",
+        "why": "Isso: `title` é `NOT NULL`, e um valor ausente é um nulo."
+      },
+      {
+        "text": "Um terceiro livro de H. G. Wells",
+        "why": "Nada restringe `author`. Vários livros de um autor é o caso normal."
+      },
+      {
+        "text": "Um segundo livro chamado Dom Casmurro, com outro ISBN",
+        "why": "Títulos não são únicos, nem devem ser: duas edições dividem o título e diferem no ISBN."
+      }
+    ]
+  },
+  "ex-fsdcnwkv": {
+    "prompt": "`java Jdbc.java 'H. G. Wells'`, rodado sem `-cp`, falha com `No suitable driver found for jdbc:postgresql://localhost:5432/bookshop`. O que falta?",
+    "hint": "O `DriverManager` pergunta a todos os drivers que enxerga.",
+    "choices": [
+      {
+        "text": "O jar do driver do PostgreSQL no class path",
+        "why": "Isso. Sem ele nenhum driver assume uma URL `jdbc:postgresql:`, e o `DriverManager` desiste antes de qualquer tráfego de rede."
+      },
+      {
+        "text": "Um servidor rodando na porta 5432",
+        "why": "Um servidor ausente dá outra mensagem, sobre conexão recusada. Esta sai antes de qualquer coisa ser enviada."
+      },
+      {
+        "text": "Uma URL escrita corretamente",
+        "why": "A URL é a mesma que funciona com `-cp`. Ninguém a assumiu porque nada capaz disso foi carregado."
+      },
+      {
+        "text": "`Class.forName(\"org.postgresql.Driver\")` no começo do `main`",
+        "why": "Essa linha era necessária antes do JDBC 4. Hoje um jar de driver se registra sozinho quando está no class path, e sem o jar a linha também falharia."
+      }
+    ]
+  },
+  "ex-q2gy1be7": {
+    "prompt": "`Jdbc.java 'Mary Shelley'` roda enquanto não há livro dela na tabela. O que acontece?",
+    "hint": "Onde um `ResultSet` começa?",
+    "choices": [
+      {
+        "text": "O `executeQuery` lança uma `SQLException`, porque a consulta não achou nada",
+        "why": "Nenhuma linha é uma resposta perfeitamente válida para uma consulta. O JDBC a informa como resultado vazio, não como erro."
+      },
+      {
+        "text": "`rows` é `null`, e o `while` lança uma `NullPointerException`",
+        "why": "O `executeQuery` sempre devolve um `ResultSet`. Um vazio continua sendo um objeto."
+      },
+      {
+        "text": "O primeiro `next()` responde `false`, o corpo do laço nunca roda, e nada é impresso",
+        "why": "Isso. O cursor começa antes da primeira linha; sem linhas, não há para onde andar. O programa termina normalmente sem saída."
+      },
+      {
+        "text": "`getLong(\"id\")` lança erro, porque não há linha atual para ler",
+        "why": "Lançaria, se fosse alcançado. A condição do laço para o programa antes de qualquer getter rodar."
+      }
+    ]
+  },
+  "ex-43b5enm4": {
+    "prompt": "Ligue cada tipo JDBC do `Jdbc.java` ao que ele é.",
+    "hint": "Siga o programa de cima para baixo: abrir, preparar, executar, ler.",
+    "pairs": [
+      {
+        "left": "DriverManager",
+        "right": "encontra o driver que aceita a URL e abre uma conexão"
+      },
+      {
+        "left": "Connection",
+        "right": "uma sessão autenticada com o servidor"
+      },
+      {
+        "left": "PreparedStatement",
+        "right": "SQL com marcadores ?, cujos valores são definidos à parte"
+      },
+      {
+        "left": "ResultSet",
+        "right": "um cursor sobre as linhas que uma consulta devolveu"
+      }
+    ],
+    "right_distractors": [
+      "um pool que empresta conexões já abertas"
+    ]
+  },
+  "ex-f03s4289": {
+    "prompt": "Dentro do laço `while` do `Jdbc.java`, `getInt(\"price_cents\")` lança uma `SQLException`. Nada no programa a captura. O que acontece com a conexão?",
+    "hint": "O que o try-with-resources promete sobre a saída?",
+    "choices": [
+      {
+        "text": "Ela fica aberta até o coletor de lixo achar o objeto `Connection`",
+        "why": "Esse era o risco antes do try-with-resources, e é assim que um servidor fica sem conexões. O `try` a fecha em qualquer saída."
+      },
+      {
+        "text": "Ela só é fechada se um bloco `catch` for acrescentado para a `SQLException`",
+        "why": "Não é preciso `catch` para fechar. Os recursos fecham quer o bloco termine normalmente, quer por exceção, e depois a exceção segue."
+      },
+      {
+        "text": "Ela é fechada primeiro, para que o result set e o statement possam fechar direito depois dela",
+        "why": "A ordem é a inversa da abertura: o result set primeiro, o statement depois, a conexão por último."
+      },
+      {
+        "text": "Os três fecham, do mais interno para fora, e a exceção sai do `main`",
+        "why": "Isso. O result set, depois o statement, depois a conexão. Cada `try` fecha o que abriu, do mais interno para fora, antes de a exceção se propagar. O programa então termina com o stack trace."
+      }
+    ]
+  },
+  "ex-agrptsz1": {
+    "prompt": "`Unsafe.java \"Flannery O'Connor\"` falha com erro de sintaxe, enquanto o `Jdbc.java` com o mesmo nome acha Wise Blood. O que deu errado no `Unsafe.java`?",
+    "hint": "Leia o SQL que o `Unsafe.java` imprimiu antes de falhar.",
+    "choices": [
+      {
+        "text": "O PostgreSQL não consegue guardar um apóstrofo numa coluna `text`",
+        "why": "Ele guardou um: Wise Blood está na tabela, e o `Jdbc.java` leu o nome de volta."
+      },
+      {
+        "text": "O Java exige o apóstrofo escapado como `\\'` dentro da `String`",
+        "why": "A string Java está certa; o programa compilou e a imprimiu. O problema é o que o texto quer dizer como SQL."
+      },
+      {
+        "text": "O apóstrofo fechou o texto entre aspas, e o resto virou SQL",
+        "why": "Isso. Colada no comando, a entrada deixou de ser um valor e virou SQL. Aqui o driver, lendo esse SQL, achou uma string que nunca termina."
+      },
+      {
+        "text": "O driver rejeita qualquer caractere fora do ASCII antes de enviar a consulta",
+        "why": "Um apóstrofo é ASCII. O driver parou mesmo a consulta, mas porque a própria leitura que ele faz do SQL achou uma string entre aspas sem fim."
+      }
+    ]
+  },
+  "ex-s5pnkb6d": {
+    "prompt": "Um colega conserta o `Unsafe.java` dobrando cada apóstrofo da entrada antes de concatenar, o que é SQL válido. Por que o `PreparedStatement` continua sendo a correção a manter?",
+    "hint": "Conte os lugares que precisam lembrar a regra.",
+    "choices": [
+      {
+        "text": "O PostgreSQL não aceita apóstrofos dobrados",
+        "why": "Aceita: a aula insere `'Flannery O''Connor'` exatamente assim, à mão."
+      },
+      {
+        "text": "O valor nunca entra no texto do SQL, então não há nada para escapar",
+        "why": "Isso. O escape precisa estar certo em toda consulta que monta texto, para todo tipo de valor. Um parâmetro elimina a pergunta em vez de respondê-la."
+      },
+      {
+        "text": "Um prepared statement é mais rápido, e a velocidade é o motivo de preferi-lo",
+        "why": "Pode ser, quando um comando é reutilizado, mas isso é efeito colateral. O motivo nesta aula é que dado não pode virar SQL."
+      },
+      {
+        "text": "Dobrar apóstrofos estragaria todos os ISBNs do catálogo",
+        "why": "Um ISBN não tem apóstrofo, então dobrá-los não muda nada nele. A objeção não é sobre estragar os dados."
+      }
+    ]
+  },
+  "ex-xvq3c6g5": {
+    "prompt": "Uma tela de busca deixa o usuário escolher a coluna de ordenação. Que parte de `SELECT ... FROM book WHERE author = ? ORDER BY title` um `?` pode representar?",
+    "hint": "Um parâmetro é enviado como valor.",
+    "choices": [
+      {
+        "text": "O nome da tabela, `book`",
+        "why": "Um nome de tabela faz parte do comando que o servidor planeja, então não pode chegar depois como valor. Nomes precisam estar no texto do SQL."
+      },
+      {
+        "text": "A coluna depois de `ORDER BY`, como o usuário escolheu",
+        "why": "Mesmo motivo: um nome de coluna é um nome. Para deixar o usuário escolher, mapeie a escolha para um nome de uma lista fixa escrita no código."
+      },
+      {
+        "text": "O valor comparado com `author`",
+        "why": "Isso. É o único dos quatro que é dado. Todo o resto dá forma ao comando e precisa estar escrito nele."
+      },
+      {
+        "text": "A palavra-chave `WHERE`",
+        "why": "Uma palavra-chave é a gramática do comando. Um parâmetro só preenche um lugar onde vai um valor."
+      }
+    ]
+  },
+  "ex-s0krkyac": {
+    "prompt": "Por que o `application.properties` define `spring.sql.init.mode=always`?",
+    "hint": "O que o Boot faz com o `schema.sql` por padrão?",
+    "choices": [
+      {
+        "text": "Para apagar as tabelas e criá-las de novo a cada subida",
+        "why": "Nada nos scripts apaga coisa alguma: `CREATE TABLE IF NOT EXISTS` deixa em paz uma tabela que já existe."
+      },
+      {
+        "text": "O Boot só os roda sozinho num banco embutido",
+        "why": "Isso. O PostgreSQL não é embutido, e para um servidor de verdade o padrão é não rodar nada, e esta propriedade pede os scripts toda vez."
+      },
+      {
+        "text": "Para ligar o JDBC, que fica desligado até uma propriedade o habilitar",
+        "why": "Quem traz o JDBC é o starter no class path. Esta propriedade trata só dos dois scripts."
+      },
+      {
+        "text": "Para o Flyway aplicar os scripts como migrações",
+        "why": "Ainda não há Flyway. A aula 13 o traz, e remove estes dois scripts quando o faz."
+      }
+    ]
+  },
+  "ex-541cdg16": {
+    "prompt": "O `data.sql` roda a cada subida da livraria. Por que o catálogo não ganha mais três cópias dos mesmos livros a cada vez?",
+    "hint": "Leia a última linha do `data.sql`, e a coluna que ela nomeia.",
+    "choices": [
+      {
+        "text": "O Boot registra quais scripts já rodou e os pula",
+        "why": "O Boot não guarda registro nenhum; esse histórico é o que o Flyway acrescenta na aula 13. O script roda mesmo toda vez."
+      },
+      {
+        "text": "O `schema.sql` apaga a tabela antes, então as três linhas recomeçam do zero",
+        "why": "Ele não apaga nada, e o livro acrescentado pela API sobrevive ao reinício, o que um apagamento teria eliminado."
+      },
+      {
+        "text": "`ON CONFLICT (isbn) DO NOTHING` pula os ISBNs existentes",
+        "why": "Isso. A inserção é tentada toda vez, e cada linha que violaria a restrição fica de fora sem erro."
+      },
+      {
+        "text": "O `JdbcClient` ignora uma linha repetida quando lê a tabela",
+        "why": "As linhas estariam mesmo na tabela. Ler não desfaz uma escrita; as repetições são evitadas na inserção."
+      }
+    ]
+  },
+  "ex-wk993sfq": {
+    "prompt": "`query(Book.class)` preenche o record `Book(long id, String isbn, String title, String author, int priceCents)` com as colunas `id, isbn, title, author, price_cents`. Como `priceCents` recebe o valor?",
+    "hint": "`Book` é um record, então tem um construtor.",
+    "choices": [
+      {
+        "text": "Por posição: a quinta coluna vai para o quinto componente",
+        "why": "O mapeamento é por nome. Reordenar as colunas no `SELECT` não mudaria os valores de lugar."
+      },
+      {
+        "text": "Por uma anotação `@Column(\"price_cents\")` de que o record precisa",
+        "why": "Não há anotação em `Book`. Mapear por anotação é o jeito do JPA, na aula 10."
+      },
+      {
+        "text": "Por nome: cada parâmetro do construtor casa com uma coluna",
+        "why": "Isso. O Spring chama o construtor do record, e casa cada parâmetro do construtor com uma coluna, tratando um sublinhado seguido de letra e a maiúscula correspondente como o mesmo nome."
+      },
+      {
+        "text": "O Jackson transforma a linha em JSON e a lê de volta no record",
+        "why": "O Jackson é da camada web, para o corpo HTTP. Linhas nunca viram JSON a caminho de um record."
+      }
+    ]
+  },
+  "ex-xg6x6bp0": {
+    "prompt": "Por que o `INSERT` em `JdbcBookRepository.save` termina com `RETURNING id`?",
+    "hint": "Quem escolhe o id do livro novo?",
+    "choices": [
+      {
+        "text": "Porque o banco gera o id, e isso o devolve no mesmo comando",
+        "why": "Isso. O `bigserial` pega o próximo número de uma sequência que só o servidor conhece. O `RETURNING` o devolve, e o `withId` o põe no record."
+      },
+      {
+        "text": "Para confirmar que a inserção deu certo; sem ele uma falha passaria em silêncio",
+        "why": "Uma inserção que falha lança exceção de qualquer jeito. O `RETURNING` serve para receber um valor de volta, não para erros."
+      },
+      {
+        "text": "Porque o `JdbcClient` não consegue rodar um `INSERT` sem um resultado para ler",
+        "why": "O `JdbcClient` tem `update()` para comandos que não devolvem nada. Este usa `query` porque devolve algo."
+      },
+      {
+        "text": "Para mandar ao banco o id que o `BookService` escolheu",
+        "why": "O serviço passa 0, e o `INSERT` nem nomeia a coluna `id`. O valor vem do servidor."
+      }
+    ]
+  },
+  "ex-hcr2basp": {
+    "prompt": "Em `save`, os marcadores nomeados `:isbn`, `:title`, `:author` e `:priceCents` são preenchidos pelos acessores do record com a chamada `.___(book)`.",
+    "hint": "É a linha entre o texto SQL e `.query(Long.class)`.",
+    "blanks": [
+      {
+        "accept": [
+          "paramSource"
+        ]
+      }
+    ]
+  },
+  "ex-bm8gdvwy": {
+    "prompt": "Com a livraria rodando e ninguém usando, o `pg_stat_activity` contou as conexões que o pool mantinha abertas. Quantas eram?",
+    "hint": "O tamanho padrão do HikariCP, que nenhuma propriedade desta aula mudou.",
+    "unit": "conexões"
+  },
+  "ex-fps557v5": {
+    "prompt": "Ligue cada mensagem que a livraria ou o `Jdbc.java` imprimiu ao que ela quer dizer.",
+    "hint": "Pergunte até onde cada tentativa chegou: o class path, a rede, o login, o banco.",
+    "pairs": [
+      {
+        "left": "No suitable driver found for jdbc:postgresql://…",
+        "right": "nenhum driver no class path aceita a URL"
+      },
+      {
+        "left": "Connection to localhost:5433 refused",
+        "right": "nada escuta naquele host e porta"
+      },
+      {
+        "left": "FATAL: password authentication failed for user \"bookshp\"",
+        "right": "o login foi recusado, e só o log do servidor diz por quê"
+      },
+      {
+        "left": "FATAL: database \"bookshp\" does not exist",
+        "right": "o login funcionou, e falta o banco"
+      }
+    ],
+    "right_distractors": [
+      "a tabela book ainda não foi criada"
+    ]
+  },
+  "ex-2r05psb8": {
+    "prompt": "A cópia da livraria de um colega falha com `password authentication failed for user \"bookshop\"`. Ele conferiu a senha três vezes contra a que definiu com `CREATE ROLE`. Qual é o próximo passo mais útil?",
+    "hint": "O cliente fica sabendo menos do que o servidor sabe.",
+    "choices": [
+      {
+        "text": "Redefinir a senha do papel e tentar de novo",
+        "why": "Se a senha bate mesmo, redefini-la não muda nada. A mesma mensagem cobre também um papel que não existe, e uma redefinição esconderia isso."
+      },
+      {
+        "text": "Aumentar o timeout de conexão do HikariCP, já que o servidor pode estar lento para responder",
+        "why": "Um servidor lento dá timeout, não uma linha FATAL. Esta resposta voltou rápida e definitiva."
+      },
+      {
+        "text": "Ler o log do servidor, cuja linha DETAIL diz se o papel existe",
+        "why": "Isso. O servidor só diz ao cliente que o login falhou, para que estranhos não testem quais nomes existem. O log dá a causa real, por exemplo um papel escrito de outro jeito."
+      },
+      {
+        "text": "Trocar `localhost` por `127.0.0.1` na URL",
+        "why": "Os dois chegam pela mesma porta TCP e pela mesma regra de senha. O servidor respondeu, então o endereço não é o problema."
+      }
+    ]
+  },
+  "ex-n0b2534q": {
+    "prompt": "Um `POST /books` com um ISBN novo chega à livraria. Ponha em ordem o que acontece.",
+    "hint": "O serviço confere antes de salvar, e a conexão só é emprestada.",
+    "items": [
+      "O BookService pergunta ao findByIsbn se o ISBN já existe",
+      "O JdbcClient pega uma conexão emprestada do pool para o INSERT",
+      "O PostgreSQL tira o próximo id da sequência e o devolve",
+      "A conexão volta para o pool",
+      "O controller responde 201 com um Location que nomeia o id novo"
+    ],
+    "trap": "A conexão volta antes de a resposta ser escrita: ela é emprestada para o comando, não para a requisição."
+  },
+  "ex-zgqye9wj": {
+    "prompt": "Dois `POST /books` com o mesmo ISBN novo chegam no mesmo instante. Os dois rodam o `findByIsbn` antes de qualquer um inserir, então os dois não acham nada. O que impede o catálogo de ficar com duas linhas com esse ISBN?",
+    "hint": "Que regra vale seja qual for o programa que escreve?",
+    "choices": [
+      {
+        "text": "A verificação do `BookService`, porque ela roda antes de todo `save`",
+        "why": "Ela rodou, duas vezes, e nas duas não achou nada, com razão. Uma verificação e uma inserção depois dela deixam uma brecha por onde duas requisições passam."
+      },
+      {
+        "text": "O pool, que entrega uma conexão por vez para que as requisições não se sobreponham",
+        "why": "O pool tinha dez conexões, então duas requisições rodam lado a lado em duas delas."
+      },
+      {
+        "text": "`ON CONFLICT (isbn) DO NOTHING`, que pula a segunda linha",
+        "why": "Essa cláusula só está no `data.sql`. O `INSERT` do repositório não tem nenhuma, então a segunda inserção é recusada, não pulada."
+      },
+      {
+        "text": "A restrição `UNIQUE` em `isbn`, no banco",
+        "why": "Isso. O banco recusa o segundo `INSERT`, e ele falha com uma exceção. A tabela é a última linha de defesa, e ela segura. A segunda requisição recebe um erro em vez de um 409, que é do que a aula 14 trata."
+      }
+    ]
+  },
+  "ex-z2kmdh55": {
+    "prompt": "Um colega escreve `connection.prepareStatement(String.format(\"SELECT id, title FROM book WHERE author = '%s'\", author))` e diz que é seguro porque usa um prepared statement. É?",
+    "hint": "O que chega ao servidor como texto SQL?",
+    "choices": [
+      {
+        "text": "Sim: o `prepareStatement` escapa qualquer texto que recebe, aspas inclusive",
+        "why": "Ele não escapa nada no texto SQL. Só mantém à parte os valores definidos pelo `?`, e aqui não há nenhum."
+      },
+      {
+        "text": "Não: o nome está no texto SQL antes de o `prepareStatement` vê-lo",
+        "why": "Isso. É exatamente o `Unsafe.java`. A proteção é o marcador e o valor separado. Montado com `String.format`, o comando é concatenação com outro nome de método."
+      },
+      {
+        "text": "Sim, desde que a coluna `author` seja declarada com o tipo `text`",
+        "why": "O tipo da coluna não importa. Flannery O'Connor quebra este comando do mesmo jeito que o `Unsafe.java`."
+      },
+      {
+        "text": "Não, porque o `String.format` não pode ser usado com JDBC de jeito nenhum",
+        "why": "Ele pode montar qualquer string, e essa string é o problema. Formatar serve bem para texto que não é SQL."
+      }
+    ]
+  }
+}

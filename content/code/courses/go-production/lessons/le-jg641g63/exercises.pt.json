@@ -1,0 +1,416 @@
+{
+  "ex-bkhm3cc1": {
+    "prompt": "No `go tool pprof -top`, o que a coluna `cum` de uma função conta?",
+    "hint": "Compare com o `flat` na linha de `strings.Fields`.",
+    "choices": [
+      {
+        "text": "Amostras em que ela estava em qualquer ponto da pilha",
+        "why": "Isso. O código dela e tudo o que ela chamou, por isso `strings.Fields` teve 1.20 s de flat e 2.53 s de cum."
+      },
+      {
+        "text": "Quantas vezes ela foi chamada durante o profile",
+        "why": "Um profile de CPU não conta chamadas; `cum` é tempo, em amostras de 10 ms."
+      },
+      {
+        "text": "Amostras em que ela era a função rodando no topo da pilha",
+        "why": "Isso é o `flat`. O `cum` soma as amostras gastas nas funções que ela chamou."
+      },
+      {
+        "text": "O total acumulado da coluna à esquerda, descendo a lista",
+        "why": "Esse é o `sum%`, que soma o `flat%` linha a linha."
+      }
+    ]
+  },
+  "ex-q82xmf4c": {
+    "prompt": "`tally.Count` mostra 0.22 s de flat e 4.95 s de cum, 82.50%. Um colega propõe reescrever o laço do próprio `Count` para acelerar o programa. O máximo que reescrever só esse laço pode economizar é quanto?",
+    "hint": "Qual coluna é o código da própria função?",
+    "choices": [
+      {
+        "text": "Metade do cum, porque flat e cum se dividem por igual",
+        "why": "Não existe essa divisão; as duas colunas são medições independentes."
+      },
+      {
+        "text": "Uns 82% do tempo, já que o `Count` está em 82.50% das pilhas",
+        "why": "Esse tempo é gasto quase todo nas funções que o `Count` chama; as instruções dele mesmo respondem só pela coluna flat."
+      },
+      {
+        "text": "Uns 3,7%, o flat dela",
+        "why": "Isso. O código próprio de uma função que delega é o flat dela; a grande economia está no que ela chama, ou em quantas vezes."
+      },
+      {
+        "text": "Nada: uma função com cum não pode ser otimizada",
+        "why": "Os 0,22 s dela são tempo real; só são pequenos perto do que ela delega."
+      }
+    ]
+  },
+  "ex-qaammcg0": {
+    "prompt": "`strings.Fields` ficou na pilha por 2.53 s durante 200 iterações sobre 100.000 linhas, uma chamada por linha. Quantos nanossegundos custou, aproximadamente, uma chamada?",
+    "hint": "2,53 s divididos por 20 milhões de chamadas.",
+    "unit": "ns"
+  },
+  "ex-5mg13tcr": {
+    "prompt": "Com `-sample_index=alloc_objects`, `strings.Fields` e `Scanner.Text` empataram em uns 20 milhões de alocações cada; com `alloc_space`, `Fields` teve 1,552.12 MB contra 997.55 MB. O que explica a diferença?",
+    "hint": "Mesmo número de chamadas, coisas diferentes alocadas.",
+    "choices": [
+      {
+        "text": "O `Text` libera a memória na hora, então os bytes dele não contam",
+        "why": "O `alloc_space` conta todo byte alocado, liberado ou não; é isso que o separa do `inuse_space`."
+      },
+      {
+        "text": "O `Fields` é chamado duas vezes por linha",
+        "why": "As contagens iguais de objetos dizem o contrário: uma chamada de cada por linha."
+      },
+      {
+        "text": "O amostrador escolheu `Fields` mais vezes por acaso",
+        "why": "O acaso explica os poucos por cento entre as contagens; não faz os bytes de um alocador serem metade maiores que os do outro."
+      },
+      {
+        "text": "Os dois alocam uma vez por linha, mas uma fatia de cinco strings é maior que a linha",
+        "why": "Isso. 5 × 16 = 80 bytes de cabeçalhos, contra uma cópia da linha de uns 45 bytes, arredondada para 48 ou 64."
+      }
+    ]
+  },
+  "ex-g5tcagkk": {
+    "prompt": "Que opção do `go tool pprof` imprime o código de uma função com flat e cum ao lado de cada linha?",
+    "hint": "A seção 03 a usou em `tally.Parse`.",
+    "choices": [
+      {
+        "text": "`-peek`",
+        "why": "O `-peek` mostra quem chamou e quem foi chamado, com os tempos, não as linhas do código."
+      },
+      {
+        "text": "`-list`",
+        "why": "Isso. O `-list \"tally.Parse\"` pôs 2.53 s na linha 27, a chamada de `strings.Fields`."
+      },
+      {
+        "text": "`-traces`",
+        "why": "O `-traces` imprime cada pilha distinta com seu tempo; não abre arquivos de código."
+      },
+      {
+        "text": "`-focus`",
+        "why": "O `-focus` filtra amostras por uma função na pilha; o relatório filtrado continua sendo uma lista de funções."
+      }
+    ]
+  },
+  "ex-v4vfem0k": {
+    "prompt": "Com `-ignore=runtime`, o `tally.Count` caiu de 82.50% para 37.67%. Por quê?",
+    "hint": "O que o `-ignore` faz com uma amostra?",
+    "choices": [
+      {
+        "text": "Toda amostra com um quadro `runtime.` em qualquer ponto foi descartada",
+        "why": "Isso. Alocação, write barriers e preempção acontecem dentro das chamadas do `Count`, então essas amostras saíram junto."
+      },
+      {
+        "text": "O próprio `Count` está no pacote runtime",
+        "why": "O `Count` está em `example.com/hits/internal/tally`; o padrão casou com quadros acima dele."
+      },
+      {
+        "text": "A opção arredonda funções pequenas para zero",
+        "why": "Isso se parece mais com o `-nodefraction`, e ele esconde linhas em vez de mudar porcentagens."
+      },
+      {
+        "text": "O runtime foi cobrado de quem chamou o `Count`",
+        "why": "Isso é o `-hide`, que mantém as amostras e passa o tempo delas para quem chamou."
+      }
+    ]
+  },
+  "ex-mnx50zkc": {
+    "prompt": "Associe cada opção do `go tool pprof` ao que ela faz com um relatório.",
+    "hint": "Duas delas se confundem fácil, e uma descrição não serve para nenhuma.",
+    "pairs": [
+      {
+        "left": "`-focus=tally.Parse`",
+        "right": "mantém só as amostras cuja pilha contém um casamento"
+      },
+      {
+        "left": "`-hide=runtime`",
+        "right": "remove os quadros que casam, cobrando o tempo deles de quem chamou"
+      },
+      {
+        "left": "`-ignore=runtime`",
+        "right": "descarta toda amostra cuja pilha contém um casamento"
+      },
+      {
+        "left": "`-nodefraction=0.05`",
+        "right": "esconde linhas cujo cum fica abaixo de 5% do total"
+      }
+    ],
+    "right_distractors": [
+      "conta quantas vezes cada função foi chamada"
+    ]
+  },
+  "ex-w4vbas60": {
+    "prompt": "Você desconfia do `time.Parse` e vai escrever seu próprio parser de horário. O `-list tally.Parse` mostra a linha 31, a chamada de `time.Parse`, com 670 ms e a linha 27, `strings.Fields`, com 2.53 s. O que a listagem diz sobre o seu plano?",
+    "hint": "Compare as duas linhas antes de escolher qual reescrever.",
+    "choices": [
+      {
+        "text": "Pode seguir: datas são sempre a parte lenta de um parser de log",
+        "why": "A listagem mede este parser, e aqui o horário custa cerca de um quarto da separação."
+      },
+      {
+        "text": "Reescreva os dois, já que juntos passam de 3 segundos",
+        "why": "Cada mudança se paga em separado; a da linha 27 rende quase quatro vezes mais que a da linha 31."
+      },
+      {
+        "text": "Comece pela linha 27; o horário custa um quarto disso",
+        "why": "Isso. O profile descartou o plano antes de ele custar uma tarde; o horário já passa por um caminho feito para RFC 3339."
+      },
+      {
+        "text": "A listagem não compara linhas, só funções",
+        "why": "Comparar linhas é justamente para o que o `-list` serve: flat e cum por linha."
+      }
+    ]
+  },
+  "ex-7bstwxmd": {
+    "prompt": "Num flame graph, o que a largura de uma caixa mostra?",
+    "hint": "A caixa de `tally.Count` ocupa 82,5% da figura.",
+    "choices": [
+      {
+        "text": "Em que momento da execução a função rodava",
+        "why": "Esquerda para a direita não é tempo; a ordem dos irmãos é escolha do desenho e não significa nada."
+      },
+      {
+        "text": "Quantas vezes a função foi chamada",
+        "why": "Um flame graph é desenhado a partir de amostras; como a tabela, não tem contagem de chamadas."
+      },
+      {
+        "text": "O tempo flat da função",
+        "why": "Flat é a borda de cima que nada cobre. A largura inclui os filhos acima."
+      },
+      {
+        "text": "O cum: as amostras que passaram por ela",
+        "why": "Isso. Uma caixa é tão larga quanto o número de pilhas em que aparece."
+      }
+    ]
+  },
+  "ex-28vrt0nt": {
+    "prompt": "No flame graph da seção 04, o `tally.Count` é bem largo e quase todo coberto por caixas acima dele. O que esse formato diz?",
+    "hint": "Largura e borda de cima descoberta respondem perguntas diferentes.",
+    "choices": [
+      {
+        "text": "As caixas de cima escondem parte do tempo do `Count` no profile",
+        "why": "Cobrir não é esconder: as caixas de cima são onde o cum do `Count` foi gasto."
+      },
+      {
+        "text": "O Count delega: cum grande, flat fino",
+        "why": "Isso. O tempo dele é gasto nas funções acima, o formato dos 0,22 s de flat contra 4,95 s de cum na tabela."
+      },
+      {
+        "text": "O `Count` é chamado mais vezes que qualquer outra coisa",
+        "why": "Nada num flame graph conta chamadas; o `Count` rodou 200 vezes e o `Parse` 20 milhões."
+      },
+      {
+        "text": "O `Count` é o ponto quente a reescrever primeiro",
+        "why": "O código dele é fino; reescrever o laço rende no máximo o flat dele."
+      }
+    ]
+  },
+  "ex-95jsqbvk": {
+    "prompt": "Este é o flame graph do benchmark do `hits`, com a raiz embaixo. Ponha cada rótulo na caixa que ele descreve.",
+    "hint": "Largura é cum; borda de cima descoberta é flat. Procure os nomes nas caixas.",
+    "labels": [
+      "a borda de cima descoberta mais larga: o maior tempo flat",
+      "a chamada do pacote tally que mais custa no total",
+      "o horário sendo interpretado",
+      "cada linha sendo copiada do buffer do scanner"
+    ]
+  },
+  "ex-sv9t39a3": {
+    "prompt": "O `go tool pprof -http=localhost:8080 cpu.out` desenha o flame graph com a raiz em cima e as chamadas penduradas embaixo. Lendo-o, onde fica o tempo flat de uma função?",
+    "hint": "Vire de cabeça para baixo as regras da seção 04.",
+    "choices": [
+      {
+        "text": "Na borda de baixo descoberta, sem filho pendurado",
+        "why": "Isso. A figura é a mesma, invertida: a parte de uma caixa sem filho embaixo é onde as amostras terminaram."
+      },
+      {
+        "text": "Na cor da caixa, que marca as funções quentes",
+        "why": "A cor não significa nada num flame graph, em qualquer orientação."
+      },
+      {
+        "text": "Em lugar nenhum: o gráfico invertido mostra só cum",
+        "why": "Virar a figura não muda número algum; a borda descoberta continua lá, do outro lado."
+      },
+      {
+        "text": "Na borda de cima da caixa, como na seção 04",
+        "why": "De cabeça para baixo, os filhos da caixa ficam embaixo, então a borda descoberta é a de baixo."
+      }
+    ]
+  },
+  "ex-ypnxhgnb": {
+    "prompt": "Quando o `split5` recusa uma linha, o que o novo `Parse` faz?",
+    "hint": "Leia o bloco `if !ok`.",
+    "choices": [
+      {
+        "text": "Tenta de novo o `split5` com os tabs trocados por espaços",
+        "why": "Nada é reescrito; a linha vai para o `strings.Fields` como está."
+      },
+      {
+        "text": "Devolve um erro dizendo que a linha não é simples",
+        "why": "Recusar não é erro; muitas linhas válidas, com tabs ou acentos, não são o caso simples."
+      },
+      {
+        "text": "Recorre ao `strings.Fields`, o código antigo",
+        "why": "Isso. O caminho antigo roda sem mudança, então uma linha estranha recebe exatamente a resposta, ou o erro, de antes."
+      },
+      {
+        "text": "Pula a linha e segue para a próxima",
+        "why": "O `Parse` trata uma linha e retorna; nada nele pula."
+      }
+    ]
+  },
+  "ex-48mnrrqa": {
+    "prompt": "Por que o `split5` recusa qualquer byte fora de `!` a `~`, e não só o tab?",
+    "hint": "Em que mais o `strings.Fields` separa?",
+    "choices": [
+      {
+        "text": "O `strconv.Atoi` não lê bytes acima de `~`",
+        "why": "O `Atoi` só vê o campo de status, e a checagem cobre a linha inteira."
+      },
+      {
+        "text": "Porque caminhos fora do ASCII são inválidos num log de acesso",
+        "why": "São válidos, e o `Parse` continua aceitando; só os manda pelo caminho antigo."
+      },
+      {
+        "text": "Para o laço ficar mais rápido, já que uma comparação custa menos que duas",
+        "why": "O motivo é correção: a velocidade vem de não alocar."
+      },
+      {
+        "text": "Espaços Unicode, como U+00A0, também separam campos no `strings.Fields`",
+        "why": "Isso. Os bytes deles ficam fora do ASCII imprimível; o teste quebrou justamente neles quando a checagem foi removida."
+      }
+    ]
+  },
+  "ex-w5s5reg9": {
+    "prompt": "O `go test` roda um alvo de fuzz nas sementes toda vez; para gerar entradas novas por dez segundos você acrescenta `-fuzz FuzzSplit5 -___ 10s`.",
+    "hint": "A flag que limita quanto tempo o fuzzer roda.",
+    "blanks": [
+      {
+        "accept": [
+          "fuzztime"
+        ]
+      }
+    ]
+  },
+  "ex-fzr1ypcm": {
+    "prompt": "A versão de um colega do `split5` devolve `ok` para toda linha com exatamente quatro espaços simples, sem outra checagem. Todos os testes da lição 5 e da lição 1 passam. Por que isso não basta?",
+    "hint": "O que esses testes dão ao `Parse`?",
+    "choices": [
+      {
+        "text": "Só passam porque os testes estão em cache",
+        "why": "Mudar o `split5` muda o pacote, então o comando go roda os testes de novo."
+      },
+      {
+        "text": "As linhas deles não têm tabs nem espaços Unicode, então o bug nunca roda",
+        "why": "Isso. Testes só acham o que recebem; as linhas difíceis e o alvo de fuzz existem para as entradas que ninguém pôs numa linha da tabela."
+      },
+      {
+        "text": "Os testes da lição 5 checam mensagens de erro, não campos",
+        "why": "Também checam o status de uma linha boa; o ponto é que nenhuma linha deles é uma que a versão do colega erra."
+      },
+      {
+        "text": "Testes passando não provam nada até o benchmark passar também",
+        "why": "Um benchmark mede tempo e só falha num erro; também não notaria campos errados."
+      }
+    ]
+  },
+  "ex-qzscmf0y": {
+    "prompt": "Por que os dois profiles de CPU comparados com `-diff_base` usam `-benchtime 200x` e não `-benchtime 5s`?",
+    "hint": "O que duas execuções de cinco segundos conteriam?",
+    "choices": [
+      {
+        "text": "O mesmo trabalho nos dois, então a subtração compara iguais",
+        "why": "Isso. Cinco segundos de um programa mais rápido são mais iterações, e toda linha cresceria só por fazer mais trabalho."
+      },
+      {
+        "text": "O benchstat precisa de exatamente 200 amostras de cada lado",
+        "why": "O benchstat lê os arquivos de resultado do `-count 10`, não os profiles."
+      },
+      {
+        "text": "O `-diff_base` recusa profiles de durações diferentes",
+        "why": "Ele subtrai o que receber; o problema é que o resultado diria pouco."
+      },
+      {
+        "text": "200 iterações são mais rápidas de medir que cinco segundos",
+        "why": "A execução antiga levou uns seis segundos; velocidade não é o motivo."
+      }
+    ]
+  },
+  "ex-jgja86mq": {
+    "prompt": "O benchstat imprimiu `33.52m ± 7%   18.33m ± 7%  -45.31% (p=0.000 n=10)`. O que ele teria impresso no lugar de `-45.31%` se as dez execuções novas fossem indistinguíveis das dez antigas?",
+    "hint": "O símbolo que o benchstat usa para \"sem mudança significativa\".",
+    "choices": [
+      {
+        "text": "`n=0`",
+        "why": "O `n` é o número de execuções usadas, dez de cada lado aqui."
+      },
+      {
+        "text": "`+0.00%`",
+        "why": "Duas amostras com ruído quase nunca têm medianas idênticas; o benchstat mostra o veredito, não um zero."
+      },
+      {
+        "text": "`~`",
+        "why": "Isso. O til quer dizer que a diferença não foi significativa no limite do p-valor, digam o que disserem as medianas."
+      },
+      {
+        "text": "`± 0%`",
+        "why": "O `±` é o intervalo de confiança de cada coluna, não o veredito sobre a mudança."
+      }
+    ]
+  },
+  "ex-kc8600dy": {
+    "prompt": "Ponha os passos das seções 05 e 06 na ordem em que a lição os fez.",
+    "hint": "A linha de base precisa existir antes de o código mudar.",
+    "items": [
+      "gravar dez execuções do benchmark em `old.txt`",
+      "escrever o `split5` e o novo `Parse`",
+      "rodar os testes, depois o fuzzer",
+      "gravar dez execuções novas em `new.txt` e rodar o benchstat",
+      "medir de novo e comparar com `-diff_base`"
+    ]
+  },
+  "ex-xgrvz3bv": {
+    "prompt": "Depois da correção, a linha do topo é o `split5` com 19.15% de flat e a seguinte tem 7.04%. Seu gerente pede mais 30% de redução na contagem. O que o profile diz sobre o pedido?",
+    "hint": "Quanto, no máximo, remover a linha do topo inteira poderia render?",
+    "choices": [
+      {
+        "text": "Remova o `runtime.asyncPreempt`, que são 7% de puro desperdício",
+        "why": "É o runtime interrompendo goroutines; não há código do `hits` para apagar ali."
+      },
+      {
+        "text": "Rode o benchmark com `-count 20`, que dá um número melhor",
+        "why": "Mais execuções estreitam o intervalo de confiança; não deixam o código mais rápido."
+      },
+      {
+        "text": "Reescreva o `split5` de novo; é a linha do topo, então tem os 30%",
+        "why": "Ela tem 19%. Nem um `split5` de graça chegaria a 30%."
+      },
+      {
+        "text": "Nenhuma mudança sozinha consegue; 30% exige várias pequenas ou outro desenho",
+        "why": "Isso. O profile está plano: a maior linha fica abaixo de 20%, então 30% significa mudar o desenho, como deixar de copiar cada linha."
+      }
+    ]
+  },
+  "ex-t8p669nd": {
+    "prompt": "O novo profile de memória mostra 1.02 GB alocados, quase tudo pelo `Scanner.Text`. Por que essa alocação continua lá?",
+    "hint": "O que o `Count` passa para o `Parse`, e do que uma chave de mapa precisa?",
+    "choices": [
+      {
+        "text": "O `split5` não conseguiu removê-la por causa de um bug",
+        "why": "O `split5` removeu a fatia, a alocação para a qual foi escrito; o `Text` é outra."
+      },
+      {
+        "text": "O `Count` pede uma string por linha, e o `Text` copia a linha para fazê-la",
+        "why": "Isso. Removê-la significa trabalhar nos bytes do scanner e converter só o que precisa sobreviver à linha, uma mudança maior com testes próprios."
+      },
+      {
+        "text": "O coletor de lixo mantém linhas antigas vivas para reuso",
+        "why": "O heap vivo estava quase vazio na lição 12; os bytes são alocados e liberados, de novo e de novo."
+      },
+      {
+        "text": "O `-memprofile` conta o `os.ReadFile` do benchmark 200 vezes",
+        "why": "O arquivo é lido uma vez, antes do laço, e apareceu com 4.37 MB na lição 12."
+      }
+    ]
+  }
+}

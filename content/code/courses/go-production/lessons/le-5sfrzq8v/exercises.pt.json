@@ -1,0 +1,374 @@
+{
+  "ex-bprjq65n": {
+    "prompt": "Ana roda `go vet ./...` no módulo dela e não aparece nada; depois `echo $?` imprime `0`. O que isso diz a ela?",
+    "hint": "O vet só imprime quando tem algo a relatar.",
+    "choices": [
+      {
+        "text": "Nenhum analisador relatou coisa alguma em nenhum pacote",
+        "why": "Isso. Uma execução limpa é silenciosa e sai com 0, e é isso que deixa um script ler só o código de saída."
+      },
+      {
+        "text": "O vet pulou os pacotes porque nenhum tem testes",
+        "why": "O vet lê código, não testes; o `hits` da lição 1 foi verificado pacote por pacote, `tools/genlog` incluído."
+      },
+      {
+        "text": "O módulo está livre de bugs",
+        "why": "O vet procura algumas dezenas de tipos de erro. Uma execução limpa diz que nenhum deles aparece, e a seção 05 mostra um crash que ele deixou passar."
+      },
+      {
+        "text": "Só o pacote do diretório atual foi verificado",
+        "why": "`./...` quer dizer todos os pacotes abaixo do diretório atual, não só o que está nele."
+      }
+    ]
+  },
+  "ex-4fnsa6p7": {
+    "prompt": "`fmt.Printf(\"%d%%\\n\", share)`, com `share` do tipo `float64`, compila e imprime `%!d(float64=9.365)%`. Por que o compilador aceitou?",
+    "hint": "Veja os tipos dos parâmetros do `Printf`.",
+    "choices": [
+      {
+        "text": "O compilador converte o float em inteiro quando o verbo pede",
+        "why": "Nada foi convertido: a saída mostra o `fmt` recebendo um `float64` e se recusando a imprimi-lo como `%d`."
+      },
+      {
+        "text": "Para ele o formato é string e os argumentos são `...any`",
+        "why": "Isso. Qualquer argumento de qualquer tipo é válido; só algo que sabe o que o `fmt` faz com a string consegue comparar os dois, e esse algo é o vet."
+      },
+      {
+        "text": "A checagem de formato fica desligada a menos que o build use `-gcflags`",
+        "why": "Não existe flag do compilador para isso; a checagem fica no analisador `printf` do vet."
+      },
+      {
+        "text": "`%d` vale para floats em Go e só arredonda",
+        "why": "Se valesse, o programa teria impresso `9`. Ele imprimiu `%!d(float64=9.365)`, o sinal do `fmt` para verbo errado."
+      }
+    ]
+  },
+  "ex-q460zry4": {
+    "prompt": "Cada checagem proposta abaixo foi recusada no vet. Associe-a ao critério do `cmd/vet/README` em que ela falha.",
+    "hint": "Correção, frequência, precisão: uma de cada.",
+    "pairs": [
+      {
+        "left": "uma checagem que aponta funções exportadas sem comentário de documentação",
+        "right": "correção"
+      },
+      {
+        "left": "uma checagem de um bug real encontrado num punhado de programas no mundo todo",
+        "right": "frequência"
+      },
+      {
+        "left": "uma checagem cujos avisos erram com frequência suficiente para ninguém mais lê-los",
+        "right": "precisão"
+      }
+    ],
+    "right_distractors": [
+      "velocidade de compilação"
+    ]
+  },
+  "ex-48ha9vxf": {
+    "prompt": "Uma equipe atualiza as máquinas para o Go 1.27.1, mas deixa `go 1.21` no `go.mod`. Uma goroutine iniciada num laço `for` lê a variável do laço. O que o `go vet` faz, e o programa está errado?",
+    "hint": "Qual arquivo decide a semântica do laço?",
+    "choices": [
+      {
+        "text": "O vet fica quieto e o programa está certo, porque o toolchain é 1.27.1",
+        "why": "O toolchain dá a cada arquivo a semântica que o módulo declara. O `oldloop` com `go 1.21` imprimiu `/health` três vezes."
+      },
+      {
+        "text": "O vet relata `loop variable captured by func literal`, e o bug é real",
+        "why": "Isso. A linha `go` mantém o laço antigo de variável compartilhada, então o bug existe, e o `loopclosure` o relata porque o arquivo declara um Go anterior ao 1.22."
+      },
+      {
+        "text": "O vet se recusa a rodar até o `go.mod` bater com o toolchain",
+        "why": "Um módulo que declara um Go mais antigo compila e passa pelo vet normalmente num toolchain mais novo; só uma linha `go` mais nova falha com `GOTOOLCHAIN=local`."
+      },
+      {
+        "text": "O vet relata, mas o aviso é alarme falso no 1.27.1",
+        "why": "O aviso corresponde ao que o programa faz: com `go 1.21` todas as goroutines veem o último valor."
+      }
+    ]
+  },
+  "ex-2a86hndr": {
+    "prompt": "O `Add` do `counter` tem o receptor `(c Counter)`, e `Counter` guarda um `sync.Mutex` e um mapa. Por que oito goroutines o derrubaram com `concurrent map writes`?",
+    "hint": "O que cada chamada recebe, e o que as cópias compartilham?",
+    "choices": [
+      {
+        "text": "`sync.Mutex` não pode ficar numa struct com mapa",
+        "why": "Um mutex ao lado do mapa que ele protege é o formato comum; funciona desde que todos travem o mesmo mutex."
+      },
+      {
+        "text": "Cada chamada trava sua cópia do mutex, e todas as cópias dividem um só mapa",
+        "why": "Isso. O receptor por valor copia a struct; o mapa copiado continua apontando para a mesma tabela, então as escritas colidem sem trava entre elas."
+      },
+      {
+        "text": "O `wg.Go` dispara goroutines antes de o `Add` retornar",
+        "why": "O `wg.Go` só agenda a função; o crash vem das escritas dentro do `Add`, não de quando as goroutines começam."
+      },
+      {
+        "text": "O `defer` destrava o mutex antes de o mapa ser escrito",
+        "why": "Uma chamada adiada roda quando a função retorna, depois de `c.n[path]++`."
+      }
+    ]
+  },
+  "ex-gr589bg1": {
+    "prompt": "A tag de `Hits` foi escrita `json: \"hits\"`, com um espaço depois dos dois-pontos. O que o `encoding/json` fez com o campo?",
+    "hint": "Uma tag que ele não consegue ler conta como tag nenhuma.",
+    "choices": [
+      {
+        "text": "Recusou-se a codificar e devolveu um erro",
+        "why": "Nada falhou: o `Encode` escreveu o array. É por isso que o bug sobrevive."
+      },
+      {
+        "text": "Escreveu como `\"hits\"` mesmo assim, ignorando o espaço",
+        "why": "A saída mostra `\"Hits\":2576`; a tag não foi lida."
+      },
+      {
+        "text": "Deixou o campo fora da saída",
+        "why": "Ele está lá, com outro nome."
+      },
+      {
+        "text": "Escreveu com o nome Go, `Hits`",
+        "why": "Isso. O `reflect.StructTag.Get` desistiu da tag malformada, então o campo ficou com o nome Go, e um cliente que lê `hits` não acha nada."
+      }
+    ]
+  },
+  "ex-c6dp511x": {
+    "prompt": "O `length` do `header` é corrigido para `return uint16(hi)<<8 | uint16(lo)`. O que `length([]byte{0x02, 0x10})` devolve agora?",
+    "hint": "0x0210 em decimal: o byte alto vezes 256, mais o byte baixo."
+  },
+  "ex-x8mjdapp": {
+    "prompt": "Associe cada mensagem impressa pelo `go vet` ao analisador que a escreveu.",
+    "hint": "Cada analisador tem o nome do erro que procura.",
+    "pairs": [
+      {
+        "left": "`result of slices.Compact call not used`",
+        "right": "`unusedresult`"
+      },
+      {
+        "left": "`the cancel function is not used on all paths (possible context leak)`",
+        "right": "`lostcancel`"
+      },
+      {
+        "left": "`self-assignment of l.limit`",
+        "right": "`assign`"
+      },
+      {
+        "left": "`hi (8 bits) too small for shift of 8`",
+        "right": "`shift`"
+      }
+    ],
+    "right_distractors": [
+      "`copylocks`"
+    ]
+  },
+  "ex-ag8zqggf": {
+    "prompt": "`go test ./status` imprimiu duas mensagens do vet e `FAIL example.com/vetted/status [build failed]`. Quantos testes do pacote rodaram?",
+    "hint": "Onde o `go test` coloca a etapa do vet?",
+    "choices": [
+      {
+        "text": "Todos, e as mensagens do vet saíram depois",
+        "why": "O vet roda antes do binário de teste; com uma descoberta, o binário nunca roda."
+      },
+      {
+        "text": "Só o `TestParse`, já que o outro tem nome errado",
+        "why": "Isso foi o que o `-vet=off` fez. Com o vet ligado, nada rodou."
+      },
+      {
+        "text": "Nenhum",
+        "why": "Isso. O comando go trata o vet como parte do build do binário de teste, e uma descoberta do vet interrompe o build, então nenhum teste roda."
+      },
+      {
+        "text": "Todos, menos os do arquivo de que o vet reclamou",
+        "why": "A descoberta do vet derruba o build do pacote inteiro, seja qual for o arquivo."
+      }
+    ]
+  },
+  "ex-dc8ev1yd": {
+    "prompt": "No Go 1.27.1, quantos analisadores do vet o `go test` roda por padrão, contando pela lista compilada no comando go?",
+    "hint": "O texto de ajuda cita um a menos do que o código-fonte."
+  },
+  "ex-h6t4dfrb": {
+    "prompt": "Com `-vet=off`, `go test -v ./status` imprimiu `--- PASS: TestParse` e `ok`. O que essa linha verde escondeu?",
+    "hint": "Conte os testes do arquivo e os testes da saída.",
+    "choices": [
+      {
+        "text": "Um teste que nunca rodou, e o bug de faixa que ele pegaria",
+        "why": "Isso. `TestparseRejects` não é um nome que o `testing` reconhece, então foi pulado em silêncio, e era ele que acha o `Parse` aceitando `600`."
+      },
+      {
+        "text": "Nada: as descobertas do vet eram de estilo, e o que conta são os testes",
+        "why": "Nenhuma das duas era estilo: uma era um teste que nunca roda, a outra uma chamada a `errors.As` que entra em pânico quando executada."
+      },
+      {
+        "text": "Um resultado em cache de uma execução anterior",
+        "why": "O cache foi limpo antes da execução, e um resultado em cache diz `(cached)` na linha `ok`."
+      },
+      {
+        "text": "Um pânico no `TestParse` que o `-vet=off` engoliu",
+        "why": "O `-vet=off` tira a etapa do vet e nada mais; o `TestParse` passou de verdade."
+      }
+    ]
+  },
+  "ex-y1mgfd04": {
+    "prompt": "`go test ./counter` passou embora o `counter` copie um mutex. Para esse mesmo comando rodar todos os analisadores, Ana acrescenta `-vet=___`.",
+    "hint": "O contrário de `off`.",
+    "blanks": [
+      {
+        "accept": [
+          "all"
+        ]
+      }
+    ]
+  },
+  "ex-rz0mb0gs": {
+    "prompt": "O que `go vet -printf=false ./...` roda?",
+    "hint": "Desligar um analisador deixa os outros ligados.",
+    "choices": [
+      {
+        "text": "Só o analisador `printf`, sem a inferência de wrappers",
+        "why": "Isso seria escolher o `printf`. O `=false` o exclui."
+      },
+      {
+        "text": "Todos os analisadores menos o `printf`",
+        "why": "Isso. Desligar um com `-NOME=false` roda todos os outros; citar um com `-NOME` roda só os citados."
+      },
+      {
+        "text": "Nada: um `=false` desliga a suíte inteira",
+        "why": "Os dois programas cujo único bug era de `printf` passaram, e o `counter` ainda teria falhado."
+      },
+      {
+        "text": "Os doze analisadores do `go test`, menos o `printf`",
+        "why": "O `go vet` não usa a lista do `go test`; ele parte dos 35."
+      }
+    ]
+  },
+  "ex-0az0jzn1": {
+    "prompt": "O `logf` chama `fmt.Fprintf(os.Stderr, \"applog: \"+format+\"\\n\", args...)`, e o vet não checou quem o chama. Qual é a correção que dispensa flag?",
+    "hint": "Veja como o `warnf` foi escrito.",
+    "choices": [
+      {
+        "text": "Renomear para `Logf`, porque o vet checa nomes exportados",
+        "why": "O vet inferiu o `warnf`, não exportado, como wrapper; não é o nome que decide."
+      },
+      {
+        "text": "Mover para um pacote próprio",
+        "why": "Wrappers são inferidos dentro do pacote e entre pacotes; o que o esconde é o formato concatenado."
+      },
+      {
+        "text": "Formatar primeiro com `fmt.Sprintf(format, args...)` e depois pôr o prefixo",
+        "why": "Isso. Passar `format` e `args...` direto a um formatador conhecido faz dele um wrapper que o vet reconhece, como o `warnf`."
+      },
+      {
+        "text": "Pôr um comentário de documentação dizendo que recebe um formato",
+        "why": "O vet não lê comentários de documentação para decidir o que uma função é."
+      }
+    ]
+  },
+  "ex-w34t6mgm": {
+    "prompt": "Qual destas coisas o `go vet`, como vem, nunca relata? Marque todas as que valem.",
+    "hint": "Duas delas apareceram reprovando no vet na seção 03.",
+    "choices": [
+      {
+        "text": "Uma variável declarada de novo com `:=` dentro de um `if`, escondendo a de fora",
+        "why": "Sim. O `load` fez isso, o vet deixou passar, e só o analisador `shadow`, à parte, apontou a linha."
+      },
+      {
+        "text": "Uma função não exportada que ninguém chama",
+        "why": "Sim. É válida e muitas vezes proposital, então falha no critério de correção; é terreno da lição 8."
+      },
+      {
+        "text": "`l.limit = l.limit`",
+        "why": "O `assign` relata: `self-assignment of l.limit`."
+      },
+      {
+        "text": "Uma instrução depois de um `return` no mesmo bloco",
+        "why": "O `unreachable` relata, como fez no `limit`."
+      }
+    ]
+  },
+  "ex-1ytp6h97": {
+    "prompt": "Para rodar uma ferramenta de análise instalada no lugar da suíte do vet, Ana digita `go vet -___=$(command -v shadow) ./load`.",
+    "hint": "A flag dá o nome do programa que o vet deve rodar.",
+    "blanks": [
+      {
+        "accept": [
+          "vettool"
+        ]
+      }
+    ]
+  },
+  "ex-w5p3m0b0": {
+    "prompt": "Ponha em ordem o que acontece quando `go test ./status` roda num pacote sem erros.",
+    "hint": "A etapa do vet faz parte do build do binário de teste.",
+    "items": [
+      "o compilador checa os tipos do pacote e dos arquivos de teste",
+      "os doze analisadores padrão rodam sobre o mesmo código",
+      "o binário de teste é compilado e executado",
+      "o `go test` imprime `ok` para o pacote"
+    ]
+  },
+  "ex-vwqnndht": {
+    "prompt": "O tipo `Stats` de um serviço guarda um `sync.RWMutex`, e o método `Snapshot` tem receptor por valor. O pipeline de CI roda só `go test ./...`, cujos testes chamam `Snapshot` de uma goroutine. O que o pipeline relata?",
+    "hint": "Quais analisadores o `go test` roda por padrão?",
+    "choices": [
+      {
+        "text": "Uma falha de `copylocks`, porque toda descoberta do vet derruba o `go test`",
+        "why": "Só o subconjunto padrão derruba uma execução de teste, e o `copylocks` não está nele; o `counter` passou no `go test` do mesmo jeito."
+      },
+      {
+        "text": "Verde, e o lock copiado vai para produção",
+        "why": "Isso. O `copylocks` fica fora dos doze do `go test` e uma goroutine não disputa consigo mesma. Uma etapa `go vet ./...`, ou `-vet=all`, teria falhado."
+      },
+      {
+        "text": "Um erro de compilação, porque mutex não pode ser copiado",
+        "why": "Copiar uma struct com mutex é Go válido; é por isso que o vet existe para isso."
+      },
+      {
+        "text": "Um relatório de corrida de dados vindo dos testes",
+        "why": "Corridas são relatadas pelo detector de corrida, com `-race`, e só quando duas goroutines de fato se encontram."
+      }
+    ]
+  },
+  "ex-t8hnkmgg": {
+    "prompt": "`type Timeout struct{}` tem `func (e *Timeout) Error() string`, com receptor ponteiro. Qual embrulho a checagem de `%w` do vet relata, num módulo que declara `go 1.27.1`?",
+    "hint": "Qual tipo implementa `error` aqui: `Timeout` ou `*Timeout`?",
+    "choices": [
+      {
+        "text": "`fmt.Errorf(\"read: %w\", &Timeout{})`",
+        "why": "Com receptor ponteiro o tipo de erro é `*Timeout`, então embrulhar `&Timeout{}` é o operando certo."
+      },
+      {
+        "text": "Nenhum: o `%w` só é checado com receptores por valor",
+        "why": "A checagem é sobre o operando não ser um erro, e `Timeout{}` não é um aqui; o `printf` relata isso também."
+      },
+      {
+        "text": "Os dois, porque o `%w` sempre quer um valor",
+        "why": "O `%w` quer o tipo que implementa `error`; com receptor ponteiro, é o ponteiro."
+      },
+      {
+        "text": "`fmt.Errorf(\"read: %w\", Timeout{})`",
+        "why": "Isso. Só `*Timeout` tem o método `Error`, então `Timeout{}` nem é um erro; o `notfound` era o caso espelhado, receptor por valor embrulhado como ponteiro."
+      }
+    ]
+  },
+  "ex-w0dxzad5": {
+    "prompt": "O `fetch` imprimiu `<nil>` e `no path to fetch`, ambos corretos, e o vet ainda o reprovou com `lostcancel`. Quanto custa o bug?",
+    "hint": "O que o `cancel` libera, e quando isso é liberado sem ele?",
+    "choices": [
+      {
+        "text": "A resposta errada no retorno antecipado",
+        "why": "O retorno antecipado imprimiu o erro certo; a saída estava correta nos dois caminhos."
+      },
+      {
+        "text": "Uma goroutine que nunca termina",
+        "why": "O timer do contexto dispara depois de dois segundos e o libera; nada fica preso para sempre."
+      },
+      {
+        "text": "Um contexto e seu timer, retidos dois segundos a cada retorno antecipado",
+        "why": "Isso. Sem o `cancel` eles vivem até o timeout disparar; a milhares de chamadas por segundo, é memória crescendo com o tráfego."
+      },
+      {
+        "text": "Um pânico quando o contexto pai é cancelado",
+        "why": "Cancelar o pai cancela os filhos em silêncio; nada entra em pânico."
+      }
+    ]
+  }
+}

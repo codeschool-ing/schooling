@@ -1,0 +1,580 @@
+[
+  {
+    "id": "ex-tcndymre",
+    "version": 1,
+    "section": "type-and-value",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `type Celsius float64`, what do `reflect.TypeOf(Celsius(21.5))` and its `Kind()` print?",
+    "hint": "One is the exact type, the other the family it belongs to.",
+    "choices": [
+      {
+        "text": "`main.Celsius` as the type, `float64` as its kind",
+        "correct": true,
+        "why": "Right. The type keeps its own name; the kind is what it is underneath, which is what reflective code switches on."
+      },
+      {
+        "text": "`float64` and `float64`, since a named type is only an alias",
+        "correct": false,
+        "why": "`type Celsius float64` declares a new type, not an alias, and `TypeOf` printed `main.Celsius` in the transcript."
+      },
+      {
+        "text": "`main.Celsius` and `main.Celsius`",
+        "correct": false,
+        "why": "A kind is one of 26 fixed families such as `float64` or `struct`; no program can add one, so a kind is never a type name of yours."
+      },
+      {
+        "text": "`any` and `float64`, because the argument was converted to `any`",
+        "correct": false,
+        "why": "The conversion loses the static type of the variable, but the dynamic type travels in the interface's type word, and that is what `TypeOf` returns."
+      }
+    ]
+  },
+  {
+    "id": "ex-zxawnerz",
+    "version": 1,
+    "section": "type-and-value",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`err := errors.New(\"disk full\")` has the static type `error`. Why does `reflect.TypeOf(err)` print `*errors.errorString`?",
+    "hint": "What happened to the value before `TypeOf` ran?",
+    "choices": [
+      {
+        "text": "`errors.New` returns a pointer, and `TypeOf` always follows pointers",
+        "correct": false,
+        "why": "`TypeOf` follows nothing: for `&PathCount{...}` it printed `*main.PathCount`. Following a pointer is `Elem`'s job."
+      },
+      {
+        "text": "Passing it as `any` kept only the dynamic type, which is the concrete one",
+        "correct": true,
+        "why": "Right. The parameter is `any`, the interface type `error` is gone by the time the function runs, and the type word holds the concrete type."
+      },
+      {
+        "text": "`error` is a built-in, so reflect has no descriptor for it",
+        "correct": false,
+        "why": "`reflect.TypeFor[error]()` describes `error` perfectly well. It never reached `TypeOf` here because the conversion to `any` replaced it with the dynamic type."
+      },
+      {
+        "text": "`TypeOf` reports the type of the function that created the value",
+        "correct": false,
+        "why": "Types are not tied to the function that made a value; `errorString` is the type of the value itself, declared in package `errors`."
+      }
+    ]
+  },
+  {
+    "id": "ex-s1n9qrnz",
+    "version": 1,
+    "section": "type-and-value",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`v := reflect.ValueOf(&PathCount{\"/login\", 2576})` has kind `ptr`. To ask how many fields the struct has, the code first calls `v.___()`, which follows the pointer.",
+    "hint": "The method that `go doc` says panics unless the kind is `Interface` or `Pointer`.",
+    "blanks": [
+      {
+        "accept": [
+          "Elem"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rm2mzayz",
+    "version": 1,
+    "section": "type-and-value",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function receives `var err error` that is nil and passes it to `reflect.ValueOf`. What does it get back?",
+    "hint": "There is nothing in either word of the interface.",
+    "choices": [
+      {
+        "text": "The zero `Value`, whose kind is `Invalid`",
+        "correct": true,
+        "why": "Right. A nil interface has no type word to read, so `ValueOf` returns `Value{}`, printed as `<invalid reflect.Value>`; most methods panic on it."
+      },
+      {
+        "text": "A `Value` of kind `Interface` holding a nil `error`",
+        "correct": false,
+        "why": "The static type `error` was lost when the value became an `any`, and a nil `error` becomes a nil `any`: there is no `Interface` left to report."
+      },
+      {
+        "text": "A `Value` of kind `Pointer` that is nil",
+        "correct": false,
+        "why": "That would need a type word naming some pointer type. A nil interface carries neither a type nor data."
+      },
+      {
+        "text": "Nothing: `ValueOf` panics on a nil argument",
+        "correct": false,
+        "why": "`ValueOf(nil)` returns the zero `Value` without panicking, as the last line of `typeof` showed; the panic comes later, from a method that needs a real value."
+      }
+    ]
+  },
+  {
+    "id": "ex-ew8tfqg6",
+    "version": 1,
+    "section": "struct-tags",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A field is declared `Method string `json:\",omitempty\"`` and holds `\"GET\"`. Under what key does `json.Marshal` write it?",
+    "hint": "The tag is present, but look at what comes before the comma.",
+    "choices": [
+      {
+        "text": "`\"\"`, the empty name the tag gives",
+        "correct": false,
+        "why": "An empty name in the tag means \"no name given\", and the encoder falls back to the field's own name rather than writing an empty key."
+      },
+      {
+        "text": "`\"method\"`, lower-cased by the encoder",
+        "correct": false,
+        "why": "`encoding/json` never changes a name's case when it encodes; `Status`, untagged, went out as `\"Status\"`."
+      },
+      {
+        "text": "`\"Method\"`, the name of the field itself",
+        "correct": true,
+        "why": "Right. The tag sets only an option; with no name before the comma, the field keeps its own, which is what the `tags` program printed."
+      },
+      {
+        "text": "None: a tag with no name makes the field skipped",
+        "correct": false,
+        "why": "Skipping is what `json:\"-\"` asks for. `,omitempty` only skips the field when it holds its zero value, and `\"GET\"` is not zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-whgscf3p",
+    "version": 1,
+    "section": "struct-tags",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each field of `Row`, with the value it held, to what `json.Marshal` did with it.",
+    "hint": "Read the tag first, then the value.",
+    "pairs": [
+      {
+        "left": "`Path string `json:\"path\"``, holding `\"/login\"`",
+        "right": "written under the key `path`"
+      },
+      {
+        "left": "`Hits int `json:\"hits,omitempty\"``, holding 0",
+        "right": "left out, because it held its zero value"
+      },
+      {
+        "left": "`Total time.Duration `json:\"-\"``, holding one second",
+        "right": "left out whatever it holds"
+      },
+      {
+        "left": "`Status int`, no tag, holding 200",
+        "right": "written under the key `Status`"
+      }
+    ],
+    "right_distractors": [
+      "written as `null`",
+      "written under the key `status`"
+    ]
+  },
+  {
+    "id": "ex-d2x7m480",
+    "version": 1,
+    "section": "struct-tags",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In another package, code holds `c := reflect.ValueOf(r).FieldByName(\"comment\")`, where `comment` is an unexported `string` field. Which call works?",
+    "hint": "The `tags` program printed one of them and panicked on another.",
+    "choices": [
+      {
+        "text": "`c.Interface()`, which returns the string as an `any`",
+        "correct": false,
+        "why": "That is the call that panicked: `cannot return value obtained from unexported field or method`. Handing it out as `any` would bypass the package boundary."
+      },
+      {
+        "text": "`c.SetString(\"open\")`, as long as `r` was passed by pointer",
+        "correct": false,
+        "why": "A pointer makes a value addressable, but a field reached through an unexported name stays read-only; `CanSet` reports false either way."
+      },
+      {
+        "text": "None: reflection cannot see unexported fields at all",
+        "correct": false,
+        "why": "It can see them: `comment` appeared in the table with its tag, and `c.String()` read `busy` out of it."
+      },
+      {
+        "text": "`c.String()`",
+        "correct": true,
+        "why": "Right. Reading through a kind-specific getter is allowed; it is leaving as an `any`, or being changed, that reflection refuses."
+      }
+    ]
+  },
+  {
+    "id": "ex-wcz2r449",
+    "version": 1,
+    "section": "struct-tags",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A config loader reads tags like `env:\"PORT\"`. It must treat `env:\"\"` as \"never read from the environment\" and a missing tag as \"use the field name\". What does it need?",
+    "hint": "One method of `StructTag` cannot tell these two apart.",
+    "choices": [
+      {
+        "text": "`Tag.Get(\"env\")` and a check for the empty string",
+        "correct": false,
+        "why": "`Get` returns `\"\"` both for a missing key and for an empty one, which is exactly the pair this loader must tell apart."
+      },
+      {
+        "text": "`Tag.Lookup(\"env\")`, whose second result says whether the key is there",
+        "correct": true,
+        "why": "Right. `Lookup` returns the value and `ok`; the `tags` program showed `present=false` for `Status`, which `Get` would have reported as an empty string."
+      },
+      {
+        "text": "`strings.Contains(string(f.Tag), \"env\")`",
+        "correct": false,
+        "why": "That would also match a tag such as `json:\"env\"`, and it ignores the tag format that `Get` and `Lookup` already parse."
+      },
+      {
+        "text": "`FieldByName`, which fails when the field has no tag",
+        "correct": false,
+        "why": "`FieldByName` finds a field by its Go name and knows nothing about tags; it succeeds whether a tag is there or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-5hgq1806",
+    "version": 1,
+    "section": "setting-values",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `reflect.ValueOf(x).CanSet()` report false for an `int` variable `x`?",
+    "hint": "What did `ValueOf` actually receive?",
+    "choices": [
+      {
+        "text": "`int` is a basic type, and only struct fields can be set",
+        "correct": false,
+        "why": "`reflect.ValueOf(&x).Elem().SetInt(25)` set the same `int` in the transcript; the kind was never the problem."
+      },
+      {
+        "text": "It received a copy of `x` inside an `any`, not the variable",
+        "correct": true,
+        "why": "Right. Converting to `any` copied the value, and setting the copy would change nothing anybody can see, so the package refuses."
+      },
+      {
+        "text": "`x` was declared with `:=`, which makes it read-only to reflection",
+        "correct": false,
+        "why": "How a variable is declared makes no difference; `x := 10` was set through its address in the same program."
+      },
+      {
+        "text": "Reflection may only set variables declared in another package",
+        "correct": false,
+        "why": "The opposite rule applies to unexported fields, and a local `int` is neither; the only missing ingredient is the address."
+      }
+    ]
+  },
+  {
+    "id": "ex-j23jat8g",
+    "version": 1,
+    "section": "setting-values",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order the steps that set `c.Limit` to 10 through reflection, as the `set` program does.",
+    "hint": "Start from something that leads back to `c`.",
+    "items": [
+      "take the address, `&c`",
+      "pass it to `reflect.ValueOf`",
+      "call `Elem()` to reach the struct itself",
+      "call `FieldByName(\"Limit\")`",
+      "call `SetInt(10)`"
+    ]
+  },
+  {
+    "id": "ex-937bej0d",
+    "version": 1,
+    "section": "setting-values",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`reflect.ValueOf(c).MethodByName(\"Describ\").Call(nil)` has a typo in the method's name. Where does the program fail, and saying what?",
+    "hint": "What does `MethodByName` return for a name it cannot find?",
+    "choices": [
+      {
+        "text": "At compile time, with `Describ` undefined",
+        "correct": false,
+        "why": "The name is a string, and the compiler checks only that `MethodByName` gets a string. The program built and ran."
+      },
+      {
+        "text": "In `MethodByName`, with a panic naming `Describ`",
+        "correct": false,
+        "why": "`MethodByName` does not complain: it returns the zero `Value`, and the name is in no message at all."
+      },
+      {
+        "text": "In `go vet`, which checks method names given to `reflect`",
+        "correct": false,
+        "why": "`go vet ./set` ran clean on this very program; no analyser reads the strings passed to `MethodByName`."
+      },
+      {
+        "text": "In `Call`, with a panic about calling a zero `Value`",
+        "correct": true,
+        "why": "Right. `MethodByName` returned the zero `Value` silently, and `Call` panicked with `call of reflect.Value.Call on zero Value`, a line away from the typo."
+      }
+    ]
+  },
+  {
+    "id": "ex-ahfhangw",
+    "version": 1,
+    "section": "setting-values",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In package `main`, with `x := 10`, `e := reflect.ValueOf(&x).Elem()` and `c` a `Config`, which of these lines compile and pass `go vet`? Choose every one.",
+    "hint": "The compiler sees the types of the arguments, never what reflection will do with them.",
+    "choices": [
+      {
+        "text": "`e.SetString(\"ten\")`",
+        "correct": true,
+        "why": "Yes. `SetString` takes a string and gets one; the mismatch with an `int` is found at run time, as a panic."
+      },
+      {
+        "text": "`x = \"ten\"`",
+        "correct": false,
+        "why": "Assigning a string to an `int` variable is a compile error; this is the check reflection gives away."
+      },
+      {
+        "text": "`reflect.ValueOf(c).MethodByName(\"Describe\").Call(nil)`",
+        "correct": true,
+        "why": "Yes. It compiles and passes `go vet`, and panics with `Call with too few input arguments` when it runs."
+      },
+      {
+        "text": "`c.Describe()`, with no argument",
+        "correct": false,
+        "why": "Calling a method with too few arguments is a compile error; through `Call` the same mistake waits for the run."
+      }
+    ]
+  },
+  {
+    "id": "ex-87tcx8tr",
+    "version": 1,
+    "section": "the-cost",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the benchmark run, `FieldDirect` took about 15.4 ns per operation and `FieldByName` between 376.3 and 409.6 ns. Roughly how many times slower is reading a field by name?",
+    "hint": "Divide one by the other; any run of the three will do.",
+    "value": 25,
+    "tolerance": 3
+  },
+  {
+    "id": "ex-fa04bhzp",
+    "version": 1,
+    "section": "the-cost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A field read by index is about 2.5 times slower than a direct one, yet `Reflect` printed the whole table only about a sixth slower than `Table`. Why?",
+    "hint": "What else happens for every row besides reading two fields?",
+    "choices": [
+      {
+        "text": "The compiler turned the reflective calls into direct reads",
+        "correct": false,
+        "why": "It cannot: the field index is only known at run time, from a name the user typed. The 2.5 times is measured on exactly those calls."
+      },
+      {
+        "text": "Formatting and writing the table cost the same in both and dominate",
+        "correct": true,
+        "why": "Right. `tabwriter`, `strings.Join` and the writes are shared, so the reflective part is a small slice of each operation."
+      },
+      {
+        "text": "`Table` makes more allocations, which cancels out the difference",
+        "correct": false,
+        "why": "It is the other way round: `Table` made 50 allocations and `Reflect` 58."
+      },
+      {
+        "text": "Reflection only costs anything on the first call",
+        "correct": false,
+        "why": "`FieldIndex` paid its extra on every one of millions of iterations; nothing about reflection gets cheaper after the first call unless the code caches, as `Reflect` caches indexes."
+      }
+    ]
+  },
+  {
+    "id": "ex-b3ew99f7",
+    "version": 1,
+    "section": "the-cost",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Adding `[0]` to `columns.Reflect(os.Stdout, tally.Top(s, *n)[0], …)` passed `go vet` and the compiler, and failed only when `cols` ran. What made that possible?",
+    "hint": "Look at the type of `Reflect`'s second parameter.",
+    "choices": [
+      {
+        "text": "`go vet` skips files under `cmd/`",
+        "correct": false,
+        "why": "`go vet ./...` covers every package in the module, `cmd/cols` included; it simply had nothing to report."
+      },
+      {
+        "text": "The parameter is `any`, so every value type-checks",
+        "correct": true,
+        "why": "Right. The compiler can only check that the argument is an `any`, which everything is; the real requirement, a slice of structs, is checked inside `Reflect` at run time."
+      },
+      {
+        "text": "Indexing with `[0]` returns an interface value",
+        "correct": false,
+        "why": "Indexing a `[]tally.PathCount` gives a `tally.PathCount`, a concrete struct; the program's own error message named it."
+      },
+      {
+        "text": "A `tally.PathCount` converts automatically into a slice of one",
+        "correct": false,
+        "why": "Go never converts on your behalf, as the `go` course put it; `Reflect` received a struct and said so."
+      }
+    ]
+  },
+  {
+    "id": "ex-zftm2x5n",
+    "version": 1,
+    "section": "the-cost",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation with the tool the section recommends for it.",
+    "hint": "Ask when the types become known: when the code is written, when it is built, or only when it runs.",
+    "pairs": [
+      {
+        "left": "an encoder for structs its callers will write next year",
+        "right": "`reflect`, behind an API that returns errors"
+      },
+      {
+        "left": "one sorting routine for `[]int`, `[]string` and `[]time.Duration`",
+        "right": "generics"
+      },
+      {
+        "left": "column lists for a dozen known row types, boring to write by hand",
+        "right": "code generation with `go generate`"
+      },
+      {
+        "left": "printing the two columns of one row type, in one place",
+        "right": "plain code"
+      }
+    ],
+    "right_distractors": [
+      "`unsafe`, to read the fields faster"
+    ]
+  },
+  {
+    "id": "ex-1g2mmg3h",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A report loops over a million rows and calls `reflect.ValueOf(row).FieldByName(col)` for each one. Profiling shows the call on top. What is the fix that keeps the code generic?",
+    "hint": "What does `columns.Reflect` do before its loop, and `encoding/json` per type?",
+    "choices": [
+      {
+        "text": "Replace `FieldByName` with `FieldByNameFunc` and a case-insensitive match",
+        "correct": false,
+        "why": "`FieldByNameFunc` also walks the fields on every call, with a function call per comparison; it is no cheaper."
+      },
+      {
+        "text": "Resolve the name to a field index once, before the loop, and use `Field(i)`",
+        "correct": true,
+        "why": "Right. The name lookup is the 25-fold part; done once, each row pays only the 2.5-fold index read, which is how `fieldNamed` and the encoder's field cache work."
+      },
+      {
+        "text": "Pass `&row` instead of `row`, so reflect does not copy it",
+        "correct": false,
+        "why": "Copying a small struct is not what the profile shows; `FieldByName` searching by string is, and it searches the same way through a pointer."
+      },
+      {
+        "text": "Run the loop in several goroutines",
+        "correct": false,
+        "why": "That spreads the waste over more cores and still does a million name searches that one lookup would replace."
+      }
+    ]
+  },
+  {
+    "id": "ex-rwhdkgv0",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go vet` on a struct with `comment string `json:\"comment\"`` reports: `struct field comment has json tag but is not ___`.",
+    "hint": "The property a field needs before `encoding/json` will look at it.",
+    "blanks": [
+      {
+        "accept": [
+          "exported"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jh2t7as0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Tests often compare results with `reflect.DeepEqual`, although reflection is slow and unchecked. Why is that an accepted use?",
+    "hint": "Think about who writes the types a test helper compares, and what a test's speed is worth.",
+    "choices": [
+      {
+        "text": "`DeepEqual` is checked by the compiler, unlike the rest of `reflect`",
+        "correct": false,
+        "why": "It takes two `any` values, so the compiler checks nothing about them; comparing an `int` with a `string` compiles and returns false."
+      },
+      {
+        "text": "It is a test helper that must handle any type, fields included, and a test pays the run time once",
+        "correct": true,
+        "why": "Right. It compares values of types the helper's author never saw, unexported fields too, and a few hundred nanoseconds in a test cost nobody anything."
+      },
+      {
+        "text": "`DeepEqual` uses generics internally, so it costs nothing extra",
+        "correct": false,
+        "why": "It is written with `reflect`, as its signature `DeepEqual(x, y any) bool` suggests, and walks both values at run time."
+      },
+      {
+        "text": "`go test` disables reflection's panics",
+        "correct": false,
+        "why": "A test that misuses `reflect` panics like any program; `go test` reports the panic as a failure."
+      }
+    ]
+  },
+  {
+    "id": "ex-5z5nr9de",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A logging helper takes `v any` and must print every integer the same way, including named ones such as `type UserID int64` and `type Port uint16`. Which test picks them out?",
+    "hint": "The helper cannot list types that do not exist yet.",
+    "choices": [
+      {
+        "text": "A type switch with `case int, int64, uint16:`",
+        "correct": false,
+        "why": "A type switch matches exact types, and `UserID` is not `int64`: it would fall through to the default, like `main.Celsius` is not `float64`."
+      },
+      {
+        "text": "Compare `reflect.TypeOf(v).String()` with `\"int64\"` and `\"uint16\"`",
+        "correct": false,
+        "why": "`String()` of a named type is its own name, `main.UserID`, so the comparison misses exactly the named types the helper was asked to handle."
+      },
+      {
+        "text": "A switch on `reflect.ValueOf(v).Kind()`, one case per integer kind",
+        "correct": true,
+        "why": "Right. The kind is the family underneath, `int64` for `UserID` and `uint16` for `Port`, so one case per kind covers every named type anybody declares later."
+      },
+      {
+        "text": "`reflect.ValueOf(v).CanInt()` alone, which also accepts unsigned kinds",
+        "correct": false,
+        "why": "`go doc reflect.Value.CanInt` says it reports whether `Int` can be used without panicking, which is true only for the signed kinds; `Port` would be refused."
+      }
+    ]
+  }
+]

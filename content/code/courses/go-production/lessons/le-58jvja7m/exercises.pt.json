@@ -1,0 +1,376 @@
+{
+  "ex-5fe2tb5p": {
+    "prompt": "Na entrada OSV da GO-2022-1059, qual campo restringe o problema em `golang.org/x/text` a `MatchStrings` e `ParseAcceptLanguage`?",
+    "hint": "Uma entrada tem três níveis, e este é o mais interno.",
+    "choices": [
+      {
+        "text": "`aliases`",
+        "why": "`aliases` lista os outros nomes do mesmo problema, um número CVE e um alerta do GitHub. Não diz nada sobre código."
+      },
+      {
+        "text": "`ranges`, com os eventos `introduced` e `fixed`",
+        "why": "O intervalo é o nível de módulo: quais versões, de `0` até `0.3.8` exclusive. Toda função de todo pacote está dentro dele."
+      },
+      {
+        "text": "`ecosystem_specific.imports[].symbols`",
+        "why": "Isso. Sob o caminho do pacote `golang.org/x/text/language`, `symbols` cita as duas funções que a correção mudou, e é contra essa lista que o alcance é verificado."
+      },
+      {
+        "text": "`package.name`",
+        "why": "Esse é o módulo, `golang.org/x/text`: o mais grosso dos três níveis."
+      }
+    ]
+  },
+  "ex-b6tmkkd7": {
+    "prompt": "`govulncheck -version` imprime `Go: go1.27.1` na primeira linha. Que Go é esse?",
+    "hint": "Pense em qual biblioteca padrão uma varredura de código julga.",
+    "choices": [
+      {
+        "text": "O Go que compilou o binário do `govulncheck` em `~/go/bin`",
+        "why": "Uma leitura plausível, e não é o que a linha informa. Uma varredura de código julga a biblioteca padrão com que você compila, então pergunta ao comando go do seu `PATH`."
+      },
+      {
+        "text": "O comando go achado no `PATH`",
+        "why": "Isso. Ele roda `go env GOVERSION`, e é a biblioteca padrão dessa versão que a varredura verifica; com `GOTOOLCHAIN=go1.27.2` a mesma varredura não achou nada."
+      },
+      {
+        "text": "A versão da linha `go` do `go.mod` atual",
+        "why": "O `go.mod` diz o Go mais antigo que o módulo aceita. A varredura usa o toolchain que de fato vai compilar."
+      },
+      {
+        "text": "A versão mais nova do Go que tem entradas no banco",
+        "why": "O banco não é uma versão do Go. O endereço dele é a terceira linha, `DB: https://vuln.go.dev`."
+      }
+    ]
+  },
+  "ex-t61s1e8c": {
+    "prompt": "Ponha em ordem o que o `govulncheck` verifica para a GO-2022-1059, da afirmação mais ampla para a mais precisa.",
+    "hint": "A entrada OSV se lê de fora para dentro, e o alcance vem por último.",
+    "items": [
+      "o módulo `golang.org/x/text` é exigido numa versão abaixo de `0.3.8`",
+      "o pacote `golang.org/x/text/language` é importado",
+      "uma função citada pela entrada, como `ParseAcceptLanguage`, está no grafo de chamadas",
+      "um caminho de chamadas a partir do `main` chega a essa função"
+    ]
+  },
+  "ex-tvn6pfs1": {
+    "prompt": "Você roda `govulncheck ./...` num módulo de biblioteca: sem pacote `main`, só funções exportadas que outras pessoas chamam. Onde o grafo de chamadas começa?",
+    "hint": "A lição citou os pontos de entrada dos dois tipos de pacote.",
+    "choices": [
+      {
+        "text": "Em lugar nenhum, então uma biblioteca só pode ter achados de nível de pacote",
+        "why": "A biblioteca seria limpa por construção. O `govulncheck` trata a superfície pública dela como o lugar de onde vêm as chamadas."
+      },
+      {
+        "text": "Nos testes, que fazem o papel do `main`",
+        "why": "Arquivos de teste ficam de fora sem `-test`, e mesmo com ele somam pontos de entrada; não substituem a API exportada."
+      },
+      {
+        "text": "Em toda função e método exportados, e nas funções `init`",
+        "why": "Isso. Qualquer um deles pode ser chamado por um programa que você nunca vê, então cada um conta como ponto de entrada, e um caminho dele até uma função citada é achado de nível de símbolo."
+      },
+      {
+        "text": "No `main` do programa que a importou por último",
+        "why": "O `govulncheck` vê apenas o código à frente dele. Não sabe nada dos programas que vão importar a biblioteca."
+      }
+    ]
+  },
+  "ex-86xjpc3f": {
+    "prompt": "`accept` e `tag` importam `golang.org/x/text/language` na v0.3.7. `govulncheck ./accept` sai com 3 e `govulncheck ./tag` sai com 0. O que separa os dois?",
+    "hint": "Veja qual função do pacote cada um chama.",
+    "choices": [
+      {
+        "text": "O `accept` importa o pacote direto e o `tag` o recebe de forma indireta",
+        "why": "Os dois importam `golang.org/x/text/language` no próprio código; as linhas de import são idênticas."
+      },
+      {
+        "text": "Só o `accept` chega a `ParseAcceptLanguage`",
+        "why": "Isso. O `main` chama `preferred`, que chama uma função citada pela GO-2022-1059. O `tag` chama `language.Parse`, que a entrada não cita, então o achado dele fica no nível de pacote."
+      },
+      {
+        "text": "O `tag` foi varrido com uma cópia mais antiga do banco",
+        "why": "As duas varreduras usaram o mesmo `-db file:///home/ana/vulndb`, com um minuto de diferença."
+      },
+      {
+        "text": "O `tag` trata o erro de `language.Parse`, e um erro tratado torna a chamada segura",
+        "why": "O `accept` também verifica o erro. O `govulncheck` pergunta se a função é alcançada, não o que acontece com o resultado."
+      }
+    ]
+  },
+  "ex-t3bpxq3b": {
+    "prompt": "`govulncheck -show verbose ./tag` listou 14 entradas em Module Results. Duas eram de outros pacotes de `golang.org/x/text`. Quantas das 14 eram da biblioteca padrão do Go 1.27.1?",
+    "hint": "As duas entradas de `golang.org/x/text` eram a GO-2026-6629 e a GO-2026-5970."
+  },
+  "ex-vn9v02dj": {
+    "prompt": "No Linux, uma varredura de código do `tag` lista a GO-2026-6604, marcada `Platforms: windows`, em Package Results. Por que um bug do Windows aparece?",
+    "hint": "Compare com o que a varredura do binário compilado fez com a mesma entrada.",
+    "choices": [
+      {
+        "text": "Sem um sistema de destino, nada é filtrado por plataforma",
+        "why": "Isso. O código não está preso a um sistema, então a varredura lista a entrada e marca a plataforma. O binário, que registra `GOOS=linux`, tirou a entrada da contagem."
+      },
+      {
+        "text": "Todo programa importa `os`, então ela sempre entra na conta",
+        "why": "Importar `os` a põe no nível de pacote; a linha de plataforma diz em que sistemas o bug existe, e a varredura do binário a deixou de fora."
+      },
+      {
+        "text": "O `govulncheck` deduziu que o `tag` vai ser compilado para outro sistema",
+        "why": "Nada no módulo diz isso, e o `govulncheck` não adivinha intenções; ele só não filtra código por plataforma."
+      },
+      {
+        "text": "A cópia local do banco perdeu o campo de plataforma",
+        "why": "O campo está lá: a saída imprime `Platforms: windows` a partir dele."
+      }
+    ]
+  },
+  "ex-xnqq4e0b": {
+    "prompt": "O relatório padrão mostra um passo do caminho de chamadas. `govulncheck -show ___ ./accept` imprime o caminho todo: `main`, depois `preferred`, depois `ParseAcceptLanguage` em `parse.go`.",
+    "hint": "O plural, em inglês, da palavra que o relatório usa para um caminho de chamadas.",
+    "blanks": [
+      {
+        "accept": [
+          "traces"
+        ]
+      }
+    ]
+  },
+  "ex-b0vts0h7": {
+    "prompt": "O `accept-bin` varrido com `-mode binary` relatou 1 vulnerabilidade. O mesmo programa compilado com `-ldflags=\"-s -w\"` relatou 15. O que aconteceu?",
+    "hint": "Pergunte o que a varredura de binário lê, e o que `-s -w` remove.",
+    "choices": [
+      {
+        "text": "Sem símbolos, entrou todo símbolo vulnerável de todo módulo",
+        "why": "Isso. Tirar a tabela de símbolos deixou o arquivo sem nomes de função. Sem onde procurar nomes, ele cai para a precisão de módulo, e doze entradas da biblioteca padrão que o `accept` nem importa entraram na lista."
+      },
+      {
+        "text": "O binário menor usa outro código, que é vulnerável de fato",
+        "why": "`-s -w` tira informação de depuração e de símbolos; o código de máquina que roda é o mesmo."
+      },
+      {
+        "text": "O linker manteve mais funções",
+        "why": "O arquivo sem símbolos é menor, 1.740.960 bytes contra 2.683.796. Nada foi acrescentado."
+      },
+      {
+        "text": "O registro de build foi removido, então as versões foram chutadas",
+        "why": "As versões na saída são as verdadeiras, `v0.3.7` e `go1.27.1`; o registro de build sobrevive ao `-s -w`."
+      }
+    ]
+  },
+  "ex-2xcv20q6": {
+    "prompt": "Um passo de CI roda `govulncheck -format json ./... > vulns.json` e envia o arquivo. Meses depois alguém nota nele um achado de nível de símbolo que o job nunca acusou. Por que o passo ficou verde?",
+    "hint": "Veja a tabela de status de saída para `-format`.",
+    "choices": [
+      {
+        "text": "Achados de nível de símbolo só aparecem na saída em texto",
+        "why": "O JSON tinha o achado: um finding cujo primeiro quadro cita uma função, exatamente o que o filtro `jq` separou."
+      },
+      {
+        "text": "Redirecionar a saída com `>` esconde o status de saída",
+        "why": "Um redirecionamento manda a saída padrão para um arquivo; o status ainda chega ao shell, como o `echo $?` mostrou."
+      },
+      {
+        "text": "Com saída JSON o status é sempre 0",
+        "why": "Isso. Com `-format json` o `govulncheck` sai com 0 seja o que for que tenha encontrado. O mesmo vale para `sarif` e `openvex`. Um job que grava JSON precisa ler os achados ele mesmo, ou rodar uma segunda varredura em texto pelo status."
+      },
+      {
+        "text": "Runners de CI não alcançam o vuln.go.dev",
+        "why": "Aí a varredura teria falhado com erro, e não haveria achado nenhum no arquivo."
+      }
+    ]
+  },
+  "ex-s3ewacc0": {
+    "prompt": "Ligue cada `level` de SARIF que o `govulncheck -format sarif` gravou ao achado que ele representa.",
+    "hint": "A varredura do `accept` deu 1 error, 1 warning e 14 notes.",
+    "pairs": [
+      {
+        "left": "`error`",
+        "right": "uma função vulnerável é alcançada a partir do seu código"
+      },
+      {
+        "left": "`warning`",
+        "right": "um pacote vulnerável é importado, sem chamar as funções citadas"
+      },
+      {
+        "left": "`note`",
+        "right": "um módulo vulnerável é exigido, sem importar o pacote"
+      }
+    ],
+    "right_distractors": [
+      "a varredura não conseguiu carregar os pacotes"
+    ]
+  },
+  "ex-s7xrzjj8": {
+    "prompt": "`govulncheck ./...` no `hits` da lição 1 sai com 0 e \"affected by 0 vulnerabilities\". `govulncheck -scan module` no mesmo código sai com 3 e \"may be affected by 13\". Qual leitura está certa?",
+    "hint": "O que cada nível examina?",
+    "choices": [
+      {
+        "text": "A varredura de módulo está certa, e a de símbolo deixou passar 13 chamadas",
+        "why": "Nada foi rastreado no nível de módulo, por isso ele diz \"may\". A de símbolo procurou caminhos de chamadas e não achou nenhum."
+      },
+      {
+        "text": "As duas estão certas: nenhuma chamada chega a uma função citada, e o Go 1.27.1 tem 13 entradas",
+        "why": "Isso. O nível de módulo conta toda entrada dos módulos e da versão do Go em uso; o `hits` não chama nenhuma. O status segue o nível pedido."
+      },
+      {
+        "text": "Nenhuma: o `hits` não tem dependências, então 13 só pode ser erro do banco",
+        "why": "As 13 são entradas reais contra a biblioteca padrão, da qual todo programa Go depende; a correção é o Go 1.27.2."
+      },
+      {
+        "text": "A de símbolo, porque `-scan module` só funciona com binários",
+        "why": "O `-scan module` rodou sobre o código do `hits` na transcrição. Ele recusa padrão de pacote; não precisa de binário."
+      }
+    ]
+  },
+  "ex-9q5k1epj": {
+    "prompt": "Todo achado que resta no `hits` diz `Fixed in: stdlib@go1.27.2`. O que os fecha?",
+    "hint": "A biblioteca padrão não está nos requisitos do `go.mod`.",
+    "choices": [
+      {
+        "text": "`go get stdlib@go1.27.2`",
+        "why": "Não existe módulo chamado `stdlib` para baixar. O nome no relatório é um rótulo para a biblioteca padrão, que vem com o toolchain."
+      },
+      {
+        "text": "Instalar o Go 1.27.2 e recompilar todos os binários",
+        "why": "Isso. Com `GOTOOLCHAIN=go1.27.2` a varredura não achou nada; a correção de fato é instalar essa versão e trocar os binários feitos com a 1.27.1."
+      },
+      {
+        "text": "`go mod tidy`, que atualiza cada requisito para o patch mais novo",
+        "why": "O `tidy` acrescenta requisitos que faltam e tira os que sobram. Não atualiza nada, e nunca mexe na versão do Go."
+      },
+      {
+        "text": "Nada: entradas da biblioteca padrão são informativas e nunca importam",
+        "why": "Importam assim que o código alcança uma, e um servidor que chama `net/http` alcançaria. Para o `hits` são de nível de módulo só porque ele não chama nenhuma."
+      }
+    ]
+  },
+  "ex-czb4eezb": {
+    "prompt": "Depois de `go get golang.org/x/text@latest`, `govulncheck ./...` sai com 0. O `accept-bin` no servidor foi compilado antes da atualização. O que diz uma varredura do binário?",
+    "hint": "O binário carrega o próprio registro dos módulos com que foi compilado.",
+    "choices": [
+      {
+        "text": "Limpo: o binário lê as versões dos módulos do `go.mod` atual",
+        "why": "Um binário nunca lê o `go.mod`; ele carrega as versões com que foi compilado, e `go version -m` as imprime."
+      },
+      {
+        "text": "Ainda afetado, `Found in: golang.org/x/text@v0.3.7`, até ser recompilado",
+        "why": "Isso. A varredura saiu com 3 até o `go build` trocar o arquivo, e então com 0. A atualização só chega à produção com o binário novo."
+      },
+      {
+        "text": "Não consegue dizer nada sem o código-fonte",
+        "why": "O modo binário existe justamente para este caso; ele leu o registro de build e a tabela de símbolos."
+      },
+      {
+        "text": "Afetado por 15 vulnerabilidades, porque binários antigos perdem os símbolos",
+        "why": "As 15 vieram do build sem símbolos. Um binário comum mantém a tabela de símbolos, por mais antigo que seja."
+      }
+    ]
+  },
+  "ex-m798y46t": {
+    "prompt": "O job de CI roda o `govulncheck` em `push` e `pull_request`. Por que ele também tem um gatilho `schedule`?",
+    "hint": "Qual das duas entradas de uma varredura pode mudar num dia em que ninguém faz commit?",
+    "choices": [
+      {
+        "text": "Execuções agendadas saem mais baratas nos runners do GitHub",
+        "why": "Custo não é o motivo dado; a execução agendada faz o mesmo trabalho que qualquer outra."
+      },
+      {
+        "text": "O `govulncheck` guarda resultados em cache e precisa ser renovado todo dia",
+        "why": "Cada execução busca no banco o que precisa. Não há cache de resultados para renovar."
+      },
+      {
+        "text": "O banco muda enquanto o código não muda",
+        "why": "Isso. Um commit que passou na segunda falha na quinta quando sai uma entrada para uma função que ele sempre chamou, e o agendamento acha isso sem esperar um pull request sem relação."
+      },
+      {
+        "text": "Pull requests de forks pulam a verificação de vulnerabilidades",
+        "why": "Nada no arquivo do job diz isso; o motivo do agendamento tem a ver com o tempo, não com quem abriu o pull request."
+      }
+    ]
+  },
+  "ex-d8zv6tmh": {
+    "prompt": "`govulncheck ./...` sai com 3 com um achado de nível de símbolo num módulo que você exige. Ponha a correção em ordem.",
+    "hint": "Ache o caminho, ache quem escolheu a versão, mude, prove que nada quebrou, prove que fechou, entregue.",
+    "items": [
+      "ler o caminho inteiro com `-show traces`",
+      "rodar `go mod why -m` no módulo para ver o que o traz",
+      "dar `go get` no módulo na versão corrigida ou na mais nova",
+      "rodar `go mod tidy` e `go test ./...`",
+      "rodar `govulncheck ./...` de novo e ver sair com 0",
+      "recompilar os binários e trocar os que estão rodando"
+    ]
+  },
+  "ex-e7s561en": {
+    "prompt": "Quais destes são limites do `govulncheck` que a documentação dele ou as execuções desta lição mostraram? Marque todos os que se aplicam.",
+    "hint": "Três são limites; os outros três são coisas que ele simplesmente não faz.",
+    "choices": [
+      {
+        "text": "Uma chamada feita por `reflect` é invisível para a varredura de código",
+        "why": "Isso. Análise estática não vê qual função uma chamada por reflexão vai escolher, então um caminho por ela escapa."
+      },
+      {
+        "text": "Um binário sem símbolos é relatado com precisão de módulo",
+        "why": "Isso. O `accept-small` foi de 1 achado para 15 porque não sobrou nome de função para conferir."
+      },
+      {
+        "text": "Não há como marcar um achado como aceito",
+        "why": "Isso. A documentação lista essa falta; a decisão de conviver com um achado tem de ficar fora da ferramenta."
+      },
+      {
+        "text": "Ele manda seu código-fonte para o vuln.go.dev analisar",
+        "why": "A análise roda na sua máquina. Pela documentação, as requisições levam caminhos de módulo e nada sobre o seu código."
+      },
+      {
+        "text": "Ele só verifica os módulos listados direto no `go.mod`",
+        "why": "Ele verifica o build inteiro, biblioteca padrão incluída: o `hits` não tem requisitos e ainda teve 13 entradas no nível de módulo."
+      },
+      {
+        "text": "Ele ignora a biblioteca padrão a menos que você passe `-std`",
+        "why": "Não existe flag `-std` em `govulncheck -h`, e toda varredura da lição listou entradas da biblioteca padrão."
+      }
+    ]
+  },
+  "ex-tswkmr4e": {
+    "prompt": "`go mod why -m golang.org/x/net` mostra seu código chegando a ele pelo `example.com/client`, cuja versão mais nova ainda exige um `golang.org/x/net` vulnerável. O que corrige o achado hoje?",
+    "hint": "O Go compila com a maior versão que qualquer módulo do build pede.",
+    "choices": [
+      {
+        "text": "Esperar o `example.com/client` publicar uma versão que exija a correção",
+        "why": "Funciona um dia, e deixa o achado aberto até um estranho agir. Nada impede você de subir a versão por conta própria."
+      },
+      {
+        "text": "Fazer fork do `example.com/client` e apontar uma diretiva `replace` para o fork",
+        "why": "Pesado, e desnecessário: o código do client não muda, só a versão de um módulo que ele usa."
+      },
+      {
+        "text": "`go get golang.org/x/net` na versão corrigida no seu próprio módulo",
+        "why": "Isso. A seleção de versão mínima pega a maior versão que alguém exige, então o seu requisito vence o mais antigo do client. Rode os testes, porque o client agora roda numa versão com que não foi lançado."
+      },
+      {
+        "text": "Apagar `golang.org/x/net` do `go.sum`",
+        "why": "O `go.sum` guarda checksums, não escolhas; o próximo build põe a mesma linha de volta."
+      }
+    ]
+  },
+  "ex-w8e38qm5": {
+    "prompt": "Uma varredura de binário relata `Vulnerable symbols found: #1: language.ParseAcceptLanguage` onde a de código imprimiu um trace. O que você não consegue saber pela varredura do binário?",
+    "hint": "O que um binário Go guarda, e o que ele joga fora?",
+    "choices": [
+      {
+        "text": "Qual versão do módulo está no binário",
+        "why": "Isso ele sabe com exatidão: `Found in: golang.org/x/text@v0.3.7`, do registro de build."
+      },
+      {
+        "text": "Quem a chama, e de onde",
+        "why": "Isso. Um binário guarda nomes de função mas nenhuma informação de chamadas, então não há trace nem linha do seu código para onde ir."
+      },
+      {
+        "text": "Se a função está ligada no arquivo",
+        "why": "É exatamente isso que a tabela de símbolos responde, e por isso o achado é de nível de símbolo."
+      },
+      {
+        "text": "Qual versão corrige",
+        "why": "A varredura do binário imprimiu `Fixed in: golang.org/x/text@v0.3.8`, do banco, como a de código."
+      }
+    ]
+  }
+}

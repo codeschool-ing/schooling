@@ -1,0 +1,687 @@
+[
+  {
+    "id": "ex-nepva4pd",
+    "version": 1,
+    "section": "waiting",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does async change about a single piece of Python code?",
+    "choices": [
+      {
+        "text": "It runs on several processors at once, so the arithmetic finishes sooner",
+        "correct": false,
+        "why": "One coroutine runs at a time, on one thread."
+      },
+      {
+        "text": "Nothing; other work runs while it waits",
+        "correct": true,
+        "why": "Right. Waiting overlaps; computing does not get faster."
+      },
+      {
+        "text": "It compiles the function to machine code before the request arrives",
+        "correct": false,
+        "why": "No compilation is involved."
+      },
+      {
+        "text": "It caches every answer the function has ever returned",
+        "correct": false,
+        "why": "Nothing is cached."
+      }
+    ]
+  },
+  {
+    "id": "ex-hyw41qxz",
+    "version": 1,
+    "section": "waiting",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "three.py asked the slow partner three questions one after the other. How many seconds did that take, as printed?",
+    "hint": "Three waits of a second, added up.",
+    "value": 3.1,
+    "tolerance": 0.05,
+    "unit": "s"
+  },
+  {
+    "id": "ex-7c09dm62",
+    "version": 1,
+    "section": "waiting",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each slow thing to what the server spends that time doing.",
+    "pairs": [
+      {
+        "left": "a query to PostgreSQL",
+        "right": "waiting for another process on the same machine"
+      },
+      {
+        "left": "a call to a payment gateway",
+        "right": "waiting for a server across the internet"
+      },
+      {
+        "left": "resizing an uploaded photo",
+        "right": "computing on pixels it already holds"
+      },
+      {
+        "left": "summing twenty million squares",
+        "right": "computing on numbers, with nothing to wait for"
+      }
+    ]
+  },
+  {
+    "id": "ex-v620vtvz",
+    "version": 1,
+    "section": "the-event-loop",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In loop.py, why did made a coroutine print before alone starts waiting?",
+    "choices": [
+      {
+        "text": "Calling an async def only builds the coroutine",
+        "correct": true,
+        "why": "Right. It runs when awaited."
+      },
+      {
+        "text": "print statements always run before asyncio.sleep",
+        "correct": false,
+        "why": "Order depends on awaits, not on the kind of statement."
+      },
+      {
+        "text": "The event loop had not started yet",
+        "correct": false,
+        "why": "asyncio.run had started it."
+      },
+      {
+        "text": "stamp is a coroutine and ran first",
+        "correct": false,
+        "why": "stamp is a plain function."
+      }
+    ]
+  },
+  {
+    "id": "ex-fwwe5wnx",
+    "version": 1,
+    "section": "the-event-loop",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "gather(wait(\"a\", 2), wait(\"b\", 1), wait(\"c\", 1.5)) returned ['a', 'b', 'c']. Why in that order, when b finished first?",
+    "choices": [
+      {
+        "text": "gather sorts the results alphabetically",
+        "correct": false,
+        "why": "It does not sort."
+      },
+      {
+        "text": "b was cancelled and restarted",
+        "correct": false,
+        "why": "Nothing was cancelled."
+      },
+      {
+        "text": "Results follow the order passed",
+        "correct": true,
+        "why": "Right, not the order finished."
+      },
+      {
+        "text": "The loop runs coroutines strictly one after another",
+        "correct": false,
+        "why": "They overlapped; b finished at 2.0 s."
+      }
+    ]
+  },
+  {
+    "id": "ex-91d9hqpc",
+    "version": 1,
+    "section": "the-event-loop",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where can the event loop switch from one coroutine to another?",
+    "choices": [
+      {
+        "text": "After every line of Python, whenever the operating system decides",
+        "correct": false,
+        "why": "That describes threads, not coroutines."
+      },
+      {
+        "text": "Only at an await",
+        "correct": true,
+        "why": "Right, which is why a blocking call holds every coroutine."
+      },
+      {
+        "text": "Only when a coroutine returns",
+        "correct": false,
+        "why": "It switches at every await on something not ready."
+      },
+      {
+        "text": "Every ten milliseconds, on a timer it sets",
+        "correct": false,
+        "why": "There is no preemption."
+      }
+    ]
+  },
+  {
+    "id": "ex-f59yc30m",
+    "version": 1,
+    "section": "the-event-loop",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside a coroutine, waiting with time.___(1) blocks the loop, while await asyncio.___(1) hands it back.",
+    "hint": "The same function name, twice.",
+    "blanks": [
+      {
+        "accept": [
+          "sleep"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      },
+      {
+        "accept": [
+          "sleep"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zbh7nder",
+    "version": 1,
+    "section": "gather",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tool to when the lesson says to use it.",
+    "pairs": [
+      {
+        "left": "asyncio.gather",
+        "right": "you need every answer"
+      },
+      {
+        "left": "asyncio.TaskGroup",
+        "right": "one failure should stop the others"
+      },
+      {
+        "left": "asyncio.create_task",
+        "right": "work starts before you know what else you need"
+      },
+      {
+        "left": "asyncio.wait_for",
+        "right": "a partner might never answer"
+      }
+    ]
+  },
+  {
+    "id": "ex-r1b75tvz",
+    "version": 1,
+    "section": "gather",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With plain gather, one of three coroutines raises. What happens to the other two?",
+    "choices": [
+      {
+        "text": "They are cancelled at once",
+        "correct": false,
+        "why": "That is TaskGroup's behaviour."
+      },
+      {
+        "text": "They keep running, results lost",
+        "correct": true,
+        "why": "Right, unless return_exceptions=True."
+      },
+      {
+        "text": "gather retries the failed one until it succeeds",
+        "correct": false,
+        "why": "gather never retries."
+      },
+      {
+        "text": "The event loop stops",
+        "correct": false,
+        "why": "Only the awaiting code sees the exception."
+      }
+    ]
+  },
+  {
+    "id": "ex-jy4e36dg",
+    "version": 1,
+    "section": "gather",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson insist on a timeout for every call to something outside the process?",
+    "hint": "Think of the day a partner takes thirty seconds.",
+    "choices": [
+      {
+        "text": "httpx2 refuses to send a request without one",
+        "correct": false,
+        "why": "It has a default; the point is choosing one."
+      },
+      {
+        "text": "Timeouts make the partner answer faster",
+        "correct": false,
+        "why": "They only bound how long you wait."
+      },
+      {
+        "text": "Waiting coroutines pile up when it slows",
+        "correct": true,
+        "why": "Right: every request stuck on the same slow partner."
+      },
+      {
+        "text": "The event loop cancels anything without a timeout after a minute",
+        "correct": false,
+        "why": "The loop cancels nothing on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-980k6v6f",
+    "version": 1,
+    "section": "async-in-fastapi",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each FastAPI route to where it runs.",
+    "pairs": [
+      {
+        "left": "async def",
+        "right": "on the event loop"
+      },
+      {
+        "left": "def",
+        "right": "in a pool of threads"
+      }
+    ],
+    "right_distractors": [
+      "in a separate process"
+    ]
+  },
+  {
+    "id": "ex-6hjcw9h2",
+    "version": 1,
+    "section": "async-in-fastapi",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many threads does FastAPI's pool give def routes by default?",
+    "hint": "A hundred requests went through in three waves.",
+    "value": 40,
+    "tolerance": 0,
+    "unit": "threads"
+  },
+  {
+    "id": "ex-m5wcm9tw",
+    "version": 1,
+    "section": "async-in-fastapi",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "100 requests took 3.3 s with async def and 5.2 s with def. What explains the gap?",
+    "choices": [
+      {
+        "text": "def ran out of threads and went in waves",
+        "correct": true,
+        "why": "Right: forty at a time, about three waves."
+      },
+      {
+        "text": "The partner answers async clients faster",
+        "correct": false,
+        "why": "It answers everybody after one second."
+      },
+      {
+        "text": "async def routes skip validation, which saves time",
+        "correct": false,
+        "why": "Both validate the same way."
+      },
+      {
+        "text": "def routes run on the event loop and block it",
+        "correct": false,
+        "why": "def routes run in threads."
+      }
+    ]
+  },
+  {
+    "id": "ex-rx17zfx4",
+    "version": 1,
+    "section": "async-in-fastapi",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does the lesson say most of the async route's remaining 3.3 s went to?",
+    "choices": [
+      {
+        "text": "Waiting for the database",
+        "correct": false,
+        "why": "agenda-api has no database yet."
+      },
+      {
+        "text": "The partner's one second, a hundred times over",
+        "correct": false,
+        "why": "The seconds overlapped."
+      },
+      {
+        "text": "A new client per request",
+        "correct": true,
+        "why": "Right; a real app keeps one AsyncClient open."
+      },
+      {
+        "text": "JSON validation of the forecast",
+        "correct": false,
+        "why": "That costs microseconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-nm2bk2z3",
+    "version": 1,
+    "section": "blocking-the-loop",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ten requests to the async def route with a blocking call took how many seconds?",
+    "hint": "Roughly one per request.",
+    "value": 10.2,
+    "tolerance": 0.05,
+    "unit": "s"
+  },
+  {
+    "id": "ex-h13kh36f",
+    "version": 1,
+    "section": "blocking-the-loop",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "While the blocking route waits for its one second, what else does the process do?",
+    "choices": [
+      {
+        "text": "It serves the other requests on its forty threads",
+        "correct": false,
+        "why": "async def routes do not use the pool."
+      },
+      {
+        "text": "It answers other requests from a cache",
+        "correct": false,
+        "why": "There is no cache."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right: the loop is held until the call returns."
+      },
+      {
+        "text": "It queues them in Uvicorn's own threads",
+        "correct": false,
+        "why": "Uvicorn has one loop and nothing else to run them on."
+      }
+    ]
+  },
+  {
+    "id": "ex-a31j5y6q",
+    "version": 1,
+    "section": "blocking-the-loop",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A library you need has no async version. Which are sound ways to call it from FastAPI? Choose all that apply.",
+    "choices": [
+      {
+        "text": "From a def route",
+        "correct": true,
+        "why": "Right: it blocks one thread."
+      },
+      {
+        "text": "With await asyncio.to_thread(...) in an async def",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Directly in an async def, since it works one at a time",
+        "correct": false,
+        "why": "It blocks the loop under load."
+      },
+      {
+        "text": "Wrapped in asyncio.sleep(0) first",
+        "correct": false,
+        "why": "That yields once and then blocks anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-wcr0mtd9",
+    "version": 1,
+    "section": "blocking-the-loop",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Four requests of arithmetic took about four times one, even as def. Why did threads not help?",
+    "choices": [
+      {
+        "text": "FastAPI runs only one def route at a time",
+        "correct": false,
+        "why": "It runs up to forty."
+      },
+      {
+        "text": "The interpreter lock lets one thread run Python at a time",
+        "correct": true,
+        "why": "Right: computing needs processes."
+      },
+      {
+        "text": "The machine has one processor",
+        "correct": false,
+        "why": "It has four."
+      },
+      {
+        "text": "load.py sent them one after another",
+        "correct": false,
+        "why": "It sends them at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-hdgsqcjg",
+    "version": 1,
+    "section": "async-django",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside an async function, Event.objects.get(...) raised what?",
+    "choices": [
+      {
+        "text": "Event.DoesNotExist",
+        "correct": false,
+        "why": "The event exists."
+      },
+      {
+        "text": "TimeoutError",
+        "correct": false,
+        "why": "Nothing timed out."
+      },
+      {
+        "text": "SynchronousOnlyOperation",
+        "correct": true,
+        "why": "Right: use aget, or sync_to_async."
+      },
+      {
+        "text": "RuntimeWarning",
+        "correct": false,
+        "why": "That is for an unawaited coroutine."
+      }
+    ]
+  },
+  {
+    "id": "ex-gx1gmwm6",
+    "version": 1,
+    "section": "async-django",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the agenda project need uv add uvicorn before serving the async view?",
+    "choices": [
+      {
+        "text": "Async views refuse to run under runserver",
+        "correct": false,
+        "why": "They run under WSGI too, without overlapping waits."
+      },
+      {
+        "text": "runserver is a WSGI server",
+        "correct": true,
+        "why": "Right: ASGI needs an ASGI server."
+      },
+      {
+        "text": "httpx2 depends on uvicorn",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "Django 6.1 removed config/asgi.py",
+        "correct": false,
+        "why": "The file is there."
+      }
+    ]
+  },
+  {
+    "id": "ex-w2btkfbq",
+    "version": 1,
+    "section": "async-django",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does agenda keep WSGI and Gunicorn in lesson 16 despite the async view working?",
+    "choices": [
+      {
+        "text": "Gunicorn cannot serve Django",
+        "correct": false,
+        "why": "It is the usual server for Django."
+      },
+      {
+        "text": "ASGI forbids the admin",
+        "correct": false,
+        "why": "The admin runs under ASGI, in threads."
+      },
+      {
+        "text": "Its views mostly read a nearby database",
+        "correct": true,
+        "why": "Right: little waiting to overlap."
+      },
+      {
+        "text": "async views are slower under every server",
+        "correct": false,
+        "why": "The measurement showed otherwise."
+      }
+    ]
+  },
+  {
+    "id": "ex-g3qgktxq",
+    "version": 1,
+    "section": "when-it-helps",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which application gains most from async def, by the lesson's questions?",
+    "choices": [
+      {
+        "text": "A gateway that calls three partners per request",
+        "correct": true,
+        "why": "Right: lots of waiting, at once."
+      },
+      {
+        "text": "A site that resizes every uploaded photo while the visitor waits for it",
+        "correct": false,
+        "why": "That is computing."
+      },
+      {
+        "text": "A blog that reads one row per page from a local database",
+        "correct": false,
+        "why": "Little to gain."
+      },
+      {
+        "text": "A report generator that builds a spreadsheet from memory",
+        "correct": false,
+        "why": "That is computing."
+      }
+    ]
+  },
+  {
+    "id": "ex-pn7pvqsb",
+    "version": 1,
+    "section": "when-it-helps",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson say async code is harder to review than to write?",
+    "choices": [
+      {
+        "text": "The syntax is longer",
+        "correct": false,
+        "why": "Length is not the problem."
+      },
+      {
+        "text": "A blocking call looks like correct code",
+        "correct": true,
+        "why": "Right: it passes one-at-a-time tests."
+      },
+      {
+        "text": "Reviewers cannot run it",
+        "correct": false,
+        "why": "They can."
+      },
+      {
+        "text": "Type checkers ignore async functions",
+        "correct": false,
+        "why": "They check them."
+      }
+    ]
+  },
+  {
+    "id": "ex-hkp6f6z7",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put loop.py's done lines in the order they were printed.",
+    "hint": "The shortest wait after alone finishes first.",
+    "items": [
+      "alone is done",
+      "b is done",
+      "c is done",
+      "a is done"
+    ]
+  },
+  {
+    "id": "ex-fmtsf6dp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague turns every def route of agenda-api into async def without changing anything inside. What is the risk?",
+    "choices": [
+      {
+        "text": "None; async def is always faster",
+        "correct": false,
+        "why": "Not with blocking calls inside."
+      },
+      {
+        "text": "Any blocking call inside now holds the loop",
+        "correct": true,
+        "why": "Right: the def version was safe in its thread."
+      },
+      {
+        "text": "Validation stops working",
+        "correct": false,
+        "why": "Validation is unchanged."
+      },
+      {
+        "text": "The schema loses those routes",
+        "correct": false,
+        "why": "The schema is unchanged."
+      }
+    ]
+  }
+]

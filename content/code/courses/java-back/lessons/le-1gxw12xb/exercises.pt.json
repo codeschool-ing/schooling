@@ -1,0 +1,527 @@
+{
+  "ex-ccze8aen": {
+    "prompt": "`Wiring.java` roda as classes da livraria com `@Service` e `@Repository` ainda nelas, e o Spring nunca inicia. O que essas anotações fizeram nessa execução?",
+    "hint": "Quem lê uma anotação?",
+    "choices": [
+      {
+        "text": "Iniciaram o Spring em segundo plano, a partir dos jars no class path",
+        "why": "Um jar no class path não executa nada sozinho. Ninguém chamou `SpringApplication.run`, então não havia contêiner para iniciar."
+      },
+      {
+        "text": "Nada, porque nenhum código as leu",
+        "why": "Uma anotação é uma etiqueta para o código que a procura. O `main` nunca procurou, então as classes rodaram como Java comum e o relatório contou os três livros mesmo assim."
+      },
+      {
+        "text": "Fizeram o compilador escrever as chamadas `new` dentro do `main`",
+        "why": "O compilador copia a anotação para o arquivo de classe e a deixa lá. Cada `new` dessa execução é um que você lê no `main`."
+      },
+      {
+        "text": "Impediram o `main` de criar um segundo `BookService`",
+        "why": "Nada impõe uma única instância fora de um contêiner. O `main` poderia chamar `new BookService(...)` duas vezes e obter dois objetos."
+      }
+    ]
+  },
+  "ex-18te3bf1": {
+    "prompt": "Em `Wiring.java`, por que `new BookService(repository)` precisa vir depois de `new InMemoryBookRepository()`?",
+    "hint": "Leia o construtor de `BookService`.",
+    "choices": [
+      {
+        "text": "O Spring sempre cria repositórios antes de serviços",
+        "why": "O Spring não está rodando em `Wiring.java`, e na aplicação nenhuma regra ordena os estereótipos: quem decide a ordem são os construtores."
+      },
+      {
+        "text": "O repositório precisa carregar os livros antes que o serviço possa ser compilado",
+        "why": "Compilar não executa construtor nenhum. A ordem importa quando o programa roda, não quando é compilado."
+      },
+      {
+        "text": "O seu único construtor recebe o repositório como argumento",
+        "why": "Um argumento precisa existir antes da chamada. O Spring encontra a mesma restrição e a resolve do mesmo jeito, a dependência primeiro."
+      },
+      {
+        "text": "Senão `BookService` criaria um repositório próprio",
+        "why": "`BookService` não tem código que crie um repositório; ele guarda o que receber. Sem nada para dar, a chamada nem compilaria."
+      }
+    ]
+  },
+  "ex-j7eb1vvs": {
+    "prompt": "Qual destas é inversão de controle na livraria?",
+    "hint": "Quem chama quem?",
+    "choices": [
+      {
+        "text": "`BookService` chamar `new InMemoryBookRepository()` por conta própria",
+        "why": "Isso é o contrário: uma classe indo buscar a própria dependência, de modo que nada de fora consegue escolher outra."
+      },
+      {
+        "text": "`BookRepository` ser uma interface e não uma classe",
+        "why": "Uma interface permite trocar a implementação. Ela não diz nada sobre quem cria os objetos nem sobre quem os chama."
+      },
+      {
+        "text": "O Spring executar os construtores na ordem inversa da natural",
+        "why": "A ordem não é invertida: uma dependência continua sendo montada antes de quem precisa dela, como em `Wiring.java`."
+      },
+      {
+        "text": "`CatalogueReport.run` ser chamado por código que não é da livraria",
+        "why": "O relatório nunca decide quando roda. O Spring Boot chama todo `CommandLineRunner` depois da inicialização, e nada na livraria chama `run`."
+      }
+    ]
+  },
+  "ex-keat79cx": {
+    "prompt": "A varredura de componentes dá à classe `InMemoryBookRepository` o nome de bean `___`.",
+    "hint": "O nome simples, com uma letra trocada.",
+    "blanks": [
+      {
+        "accept": [
+          "inMemoryBookRepository"
+        ]
+      }
+    ]
+  },
+  "ex-js4waq0g": {
+    "prompt": "No log dos beans, o Spring começa por `bookService` e cria `inMemoryBookRepository` antes de terminar `bookService`. Por quê?",
+    "hint": "Do que `bookService` precisa antes de poder existir?",
+    "choices": [
+      {
+        "text": "`bookService` não pode ser montado até que o argumento do construtor exista",
+        "why": "O repositório é o argumento do único construtor de `BookService`, então é criado antes, quando se precisa dele. A linha seguinte do log o cita."
+      },
+      {
+        "text": "O Spring cria os beans em ordem alfabética dos nomes",
+        "why": "Em ordem alfabética, `inMemoryBookRepository` seria o último dos seis. Ele foi criado em segundo, no momento em que foi preciso."
+      },
+      {
+        "text": "Um `@Repository` é criado antes de um `@Service` em toda aplicação",
+        "why": "Nenhuma regra põe um estereótipo acima do outro. Tire o parâmetro do construtor e nada forçaria esta ordem."
+      },
+      {
+        "text": "A primeira tentativa de `bookService` falhou e o Spring tentou de novo",
+        "why": "Nada falhou: o log mostra uma criação de cada bean e nenhum erro, e o relatório rodou."
+      }
+    ]
+  },
+  "ex-h3gvq5gj": {
+    "prompt": "O construtor de `BookService` pede um `BookRepository`, e o log diz que ele foi ligado ao bean `inMemoryBookRepository`. O que fez o Spring escolher esse bean?",
+    "hint": "Leia as palavras \"by type\".",
+    "choices": [
+      {
+        "text": "O nome dele coincide com o do parâmetro",
+        "why": "O parâmetro se chama `books`, que não é nome de bean nenhum. O nome só desempata, e não havia empate."
+      },
+      {
+        "text": "`BookService` importa `InMemoryBookRepository`",
+        "why": "Não importa nada disso. Ele só cita a interface, que é o motivo de ter uma."
+      },
+      {
+        "text": "Era o único bean daquele tipo",
+        "why": "O Spring casa um parâmetro primeiro pelo tipo. Um candidato só quer dizer que não há o que decidir."
+      },
+      {
+        "text": "Era o primeiro `@Repository` encontrado no pacote",
+        "why": "A posição de uma classe no pacote não decide nada. Com dois candidatos o Spring pararia em vez de pegar o primeiro."
+      }
+    ]
+  },
+  "ex-91spg68c": {
+    "prompt": "Quais destes a varredura de componentes da livraria transformaria em bean? Escolha todos os que se aplicam.",
+    "hint": "Duas condições: a etiqueta e o pacote.",
+    "choices": [
+      {
+        "text": "`ClockConfig`, uma classe `@Configuration` em `com.example.bookshop.config`",
+        "why": "`@Configuration` é um estereótipo e o pacote fica abaixo de `com.example.bookshop`. O log o criou como `clockConfig`."
+      },
+      {
+        "text": "Uma classe `@Component` em `com.example.billing`",
+        "why": "A etiqueta está certa e o pacote não: `com.example.billing` fica ao lado do pacote da livraria, não abaixo dele."
+      },
+      {
+        "text": "Uma classe `@Service` em `com.example.bookshop.ordering`",
+        "why": "Um estereótipo num pacote abaixo do da aplicação: as duas condições valem. O serviço de pedidos da lição 14 fica exatamente ali."
+      },
+      {
+        "text": "A interface `BookRepository`",
+        "why": "Uma interface não pode ser instanciada. Ela é o tipo pelo qual os beans são casados, não um bean."
+      },
+      {
+        "text": "Uma classe sem anotação em `com.example.bookshop.catalogue`",
+        "why": "O pacote está certo e falta a etiqueta. A varredura procura estereótipos, como mostrou a linha `@Repository` apagada."
+      }
+    ]
+  },
+  "ex-0z5qprc9": {
+    "prompt": "Por que o construtor de `BookService` não leva `@Autowired`?",
+    "hint": "Quantos construtores a classe tem?",
+    "choices": [
+      {
+        "text": "O Spring Framework 7 removeu o `@Autowired`",
+        "why": "Ele continua existindo; o desvio pela injeção em campo o usa. Só não é necessário aqui."
+      },
+      {
+        "text": "`@Service` põe `@Autowired` em todos os métodos",
+        "why": "`@Service` marca a classe para a varredura e não diz nada sobre os seus métodos nem construtores."
+      },
+      {
+        "text": "Records nunca precisam dele, e `BookService` é um",
+        "why": "`BookService` é uma classe com um campo e métodos. `Book` é que é o record."
+      },
+      {
+        "text": "É o único construtor da classe",
+        "why": "Com um construtor só não há o que escolher, então o Spring o usa. `@Autowired` serve para escolher um entre vários."
+      }
+    ]
+  },
+  "ex-z6t9wkbk": {
+    "prompt": "Depois que `BookService` passou para injeção em campo, a aplicação ainda subiu. O que falhou, e onde?",
+    "hint": "Duas execuções: dentro do Spring e em `Wiring.java`.",
+    "choices": [
+      {
+        "text": "O Spring se recusou a escrever num campo privado",
+        "why": "O Spring escreve campos privados por reflexão. Escreveu, e a aplicação contou três livros."
+      },
+      {
+        "text": "Fora do Spring: `new BookService()` deixou `books` nulo e `list()` lançou uma exceção",
+        "why": "Só o contêiner preenche o campo. Montado à mão, o objeto existe sem a dependência até a primeira chamada."
+      },
+      {
+        "text": "O compilador rejeitou o campo `@Autowired` de `BookService`",
+        "why": "`BookService` compilou. O que parou de compilar foi a chamada de `Wiring.java` a um construtor que não existe mais."
+      },
+      {
+        "text": "Dentro do Spring o relatório contou zero livros",
+        "why": "Contou três: dentro do Spring o campo foi preenchido antes que alguém o usasse."
+      }
+    ]
+  },
+  "ex-1hpx0fwe": {
+    "prompt": "O `PriceService` de um colega tem onze parâmetros no construtor, e ele propõe injeção em campo para o construtor parecer menos cheio. O que a troca muda?",
+    "hint": "O que a lista de parâmetros estava dizendo?",
+    "choices": [
+      {
+        "text": "O Spring cria menos beans, já que campos são mais baratos que parâmetros",
+        "why": "Toda dependência continua sendo um bean. Só muda o jeito como ela chega à classe."
+      },
+      {
+        "text": "Esconde as onze dependências; a classe precisa das mesmas onze",
+        "why": "Uma lista longa de parâmetros é sinal de que a classe faz coisas demais. A injeção em campo tira o sinal, mantém a causa e acrescenta um jeito de montar o objeto incompleto."
+      },
+      {
+        "text": "Os campos agora podem ser `final`, o que o construtor não permitia",
+        "why": "É o inverso: um campo escrito depois da construção não pode ser `final`, e um atribuído no construtor pode."
+      },
+      {
+        "text": "Um bean ausente agora é avisado na inicialização, o que antes não acontecia",
+        "why": "As duas formas falham na inicialização quando falta um bean. Só a forma com construtor falha também na compilação quando alguém a monta à mão."
+      }
+    ]
+  },
+  "ex-g5ctycfn": {
+    "prompt": "Quando a interface `BookRepository` da livraria paga pelo arquivo a mais?",
+    "hint": "O Spring não exige.",
+    "choices": [
+      {
+        "text": "Sempre, porque o Spring não consegue injetar uma classe que não implementa interface",
+        "why": "Um construtor pode pedir uma classe, e o Spring injeta o bean dessa classe."
+      },
+      {
+        "text": "Agora, porque a interface torna o repositório seguro para compartilhar entre threads",
+        "why": "A segurança entre threads vem de `ConcurrentSkipListMap` e `AtomicLong` dentro da classe. Um tipo não a fornece."
+      },
+      {
+        "text": "Na lição 9, quando um repositório PostgreSQL o substitui e `BookService` fica intacto",
+        "why": "Essa é a segunda implementação para a qual a interface foi escrita. Sem nenhuma à vista, uma interface é um arquivo e nada mais."
+      },
+      {
+        "text": "Nunca, já que a interface só tem uma implementação nesta lição",
+        "why": "Uma implementação hoje não é o critério; uma à vista é. A da lição 9 está a quatro lições de distância."
+      }
+    ]
+  },
+  "ex-jcbyatdg": {
+    "prompt": "Por que o relógio da livraria é definido por um método `@Bean` e não por uma anotação de estereótipo?",
+    "hint": "De quem é a classe `Clock`?",
+    "choices": [
+      {
+        "text": "`Clock` é uma classe do JDK, não uma que a livraria escreveu",
+        "why": "Um estereótipo vai numa classe que você escreveu. Para uma que você não escreveu, um método que devolve uma instância é a definição."
+      },
+      {
+        "text": "A varredura de componentes pula o pacote `config`",
+        "why": "Ela varreu: foi assim que o próprio `ClockConfig` virou o bean `clockConfig`."
+      },
+      {
+        "text": "Um método `@Bean` faz do relógio um prototype",
+        "why": "Um `@Bean` é singleton a menos que diga outra coisa; o Spring chamou `clock()` uma vez e guardou o resultado."
+      },
+      {
+        "text": "Anotações de estereótipo só funcionam em interfaces",
+        "why": "Todo estereótipo da livraria está numa classe. `Clock` fica de fora por causa de quem é o dono, não do que ela é."
+      }
+    ]
+  },
+  "ex-p8xd91ww": {
+    "prompt": "Um método `@Bean` declarado como `public Clock clock()` define um bean cujo nome é `___`.",
+    "hint": "Vem do método, não do tipo.",
+    "blanks": [
+      {
+        "accept": [
+          "clock"
+        ]
+      }
+    ]
+  },
+  "ex-b317vrm3": {
+    "prompt": "Um novo `DiscountService` decide se hoje é dia de promoção chamando `LocalDate.now()`. Que problema o relógio injetado da livraria evita e este tem?",
+    "hint": "Tente escrever um teste para o último dia da promoção.",
+    "choices": [
+      {
+        "text": "`LocalDate.now()` é muito mais lento que ler um relógio injetado",
+        "why": "Velocidade não é a diferença. No fim, os dois leem o mesmo relógio do sistema."
+      },
+      {
+        "text": "`LocalDate.now()` não pode ser chamado de dentro de um singleton",
+        "why": "Qualquer código pode chamá-lo, de qualquer lugar. É exatamente por isso que ninguém consegue trocar o que ele devolve."
+      },
+      {
+        "text": "Nenhum chamador escolhe o dia, então o resultado de um teste depende de quando ele roda",
+        "why": "A data é uma entrada escondida. Com um parâmetro `Clock`, um teste passa `Clock.fixed` no último dia da promoção e confere a resposta."
+      },
+      {
+        "text": "`LocalDate.now()` devolve a data em UTC e não em São Paulo",
+        "why": "Ele usa o fuso padrão da máquina, que é uma segunda entrada escondida. A primeira é que ninguém consegue trocar o relógio."
+      }
+    ]
+  },
+  "ex-sn9kqfnf": {
+    "prompt": "Um relatório diz: `Parameter 0 of constructor in com.example.bookshop.catalogue.BookService required a single bean, but 2 were found`. O que aconteceu?",
+    "hint": "O parâmetro 0 é o repositório.",
+    "choices": [
+      {
+        "text": "`BookService` foi criado duas vezes",
+        "why": "O relatório é sobre os candidatos a um parâmetro. `BookService` nem chegou a ser criado."
+      },
+      {
+        "text": "`BookService` tem dois construtores e o Spring não conseguiu escolher",
+        "why": "Ele cita um parâmetro de um construtor. Uma escolha entre construtores falha com outra mensagem."
+      },
+      {
+        "text": "Dois beans têm o tipo que o parâmetro pede",
+        "why": "Duas classes implementam `BookRepository` e as duas são beans, então casar pelo tipo já não decide."
+      },
+      {
+        "text": "Dois parâmetros de `BookService` têm o mesmo tipo",
+        "why": "O construtor tem um parâmetro só. O 2 conta beans, não parâmetros."
+      }
+    ]
+  },
+  "ex-axwmtreb": {
+    "prompt": "Associe cada relatório de inicialização ao conserto que remove a sua causa.",
+    "hint": "Um item da direita não conserta nada.",
+    "pairs": [
+      {
+        "left": "required a single bean, but 2 were found",
+        "right": "marcar um candidato com @Primary, ou qualificar o parâmetro"
+      },
+      {
+        "left": "required a bean of type ... that could not be found",
+        "right": "dar à classe um estereótipo, num pacote abaixo do da aplicação"
+      },
+      {
+        "left": "the dependencies of some of the beans form a cycle",
+        "right": "levar o que as duas classes precisam para uma terceira classe"
+      }
+    ],
+    "right_distractors": [
+      "definir spring.main.allow-circular-references=true"
+    ]
+  },
+  "ex-gjdc4xhw": {
+    "prompt": "`EmptyBookRepository` e `InMemoryBookRepository` são beans. `InMemoryBookRepository` leva `@Primary`, e o parâmetro de `BookService` leva `@Qualifier(\"emptyBookRepository\")`. O que `BookService` recebe?",
+    "hint": "Um é decidido pelo candidato, o outro pelo consumidor.",
+    "choices": [
+      {
+        "text": "`inMemoryBookRepository`, porque `@Primary` passa por cima de qualquer qualificador",
+        "why": "`@Primary` é o padrão para consumidores que não dizem nada. Este diz."
+      },
+      {
+        "text": "Nenhum: a inicialização para com dois candidatos",
+        "why": "Cada anotação sozinha já desempata, então juntas não reabrem o empate."
+      },
+      {
+        "text": "`emptyBookRepository`, porque o qualificador o nomeia",
+        "why": "Um qualificador é o consumidor nomeando exatamente o bean que quer, e ele ganha de `@Primary`."
+      },
+      {
+        "text": "Os dois, como uma lista de dois repositórios",
+        "why": "O Spring só injeta uma lista quando o tipo do parâmetro é `List`. Este é um único `BookRepository`."
+      }
+    ]
+  },
+  "ex-t275dv8w": {
+    "prompt": "Outro projeto tem dois beans `PaymentGateway`, nenhum `@Primary` e nenhum `@Qualifier`, e ainda assim sobe. Que explicação serve?",
+    "hint": "O último critério de desempate do Spring.",
+    "choices": [
+      {
+        "text": "O parâmetro do construtor tem o mesmo nome de um dos dois beans",
+        "why": "Um parâmetro com o nome de um candidato ganha o desempate, desde que o compilador tenha guardado os nomes. Renomeá-lo mudaria a ligação em silêncio."
+      },
+      {
+        "text": "O Spring pegou o primeiro dos dois que encontrou",
+        "why": "O Spring não chuta entre candidatos. Os dois repositórios da livraria pararam a inicialização com um relatório."
+      },
+      {
+        "text": "A build deixou de passar `-parameters` ao compilador",
+        "why": "Isso apagaria os nomes que o desempate lê, e o empate terminaria no relatório de dois candidatos."
+      },
+      {
+        "text": "Os dois beans estão declarados em pacotes diferentes",
+        "why": "O pacote decide se uma classe é varrida, não qual de dois beans varridos um parâmetro recebe."
+      }
+    ]
+  },
+  "ex-pa7qj881": {
+    "prompt": "Com `spring.main.allow-circular-references=true`, o ciclo de construtores entre `bookService` e `catalogueReport` ainda para a inicialização. Por quê?",
+    "hint": "O que o Spring teria de entregar primeiro?",
+    "choices": [
+      {
+        "text": "Uma propriedade na linha de comando é ignorada quando trata de referências circulares",
+        "why": "Ela foi lida: o Action do relatório mudou para dizer que as referências eram permitidas e o ciclo ainda assim não podia ser quebrado."
+      },
+      {
+        "text": "Cada construtor precisa que o outro objeto já exista",
+        "why": "A propriedade deixa o Spring entregar um objeto pela metade, o que exige que o objeto já exista. Um construtor que não rodou não montou nada."
+      },
+      {
+        "text": "A propriedade só vale para beans criados por métodos `@Bean`",
+        "why": "Ela vale para qualquer bean injetado por campo ou por setter. São os construtores que ela não consegue ajudar."
+      },
+      {
+        "text": "O Spring Boot 4 removeu a propriedade e manteve só a mensagem",
+        "why": "A propriedade existe e foi respeitada; o segundo relatório difere do primeiro por causa dela."
+      }
+    ]
+  },
+  "ex-7tegzmba": {
+    "prompt": "No Spring, um bean no escopo singleton padrão existe uma vez por quê?",
+    "hint": "Não é o padrão de projeto.",
+    "choices": [
+      {
+        "text": "Por máquina virtual Java, garantido pela própria classe",
+        "why": "Esse é o padrão de projeto singleton. `Wiring.java` fez um segundo repositório com `new` e nada reclamou."
+      },
+      {
+        "text": "Por thread",
+        "why": "Um objeto é compartilhado por todas as threads, e é por isso que precisa ser seguro para compartilhar."
+      },
+      {
+        "text": "Por requisição HTTP",
+        "why": "Esse é o escopo de requisição, que uma aplicação web acrescenta."
+      },
+      {
+        "text": "Por contexto de aplicação",
+        "why": "O contêiner faz um e entrega o mesmo objeto a todos que pedem a ele."
+      }
+    ]
+  },
+  "ex-21ne4swt": {
+    "prompt": "`BookService` vira prototype e é injetado no singleton `ScopeCheck`. Com que frequência `ScopeCheck` recebe um `BookService` novo?",
+    "hint": "Quando um construtor roda?",
+    "choices": [
+      {
+        "text": "Toda vez que um dos seus métodos usa o campo",
+        "why": "O campo guarda o que o construtor recebeu. Nada o troca entre uma chamada e outra."
+      },
+      {
+        "text": "Uma vez, quando o próprio `ScopeCheck` é criado",
+        "why": "A injeção acontece quando o construtor roda, e o construtor de um singleton roda uma vez. Essa é a armadilha de um prototype dentro de um singleton."
+      },
+      {
+        "text": "Nunca: um prototype não pode ser injetado num singleton",
+        "why": "Pode, e foi: a execução comparou o objeto injetado com os outros."
+      },
+      {
+        "text": "Uma vez por requisição HTTP que chega à aplicação",
+        "why": "Isso seria um bean de escopo de requisição atrás de um proxy. Um prototype não tem proxy nem ligação com requisições."
+      }
+    ]
+  },
+  "ex-kytne2dv": {
+    "prompt": "Por que `InMemoryBookRepository` guarda os livros num `ConcurrentSkipListMap` e os numera com um `AtomicLong`?",
+    "hint": "Quantos objetos dele existem, e quem os chama?",
+    "choices": [
+      {
+        "text": "O Spring recusa um `@Repository` cujos campos não sejam de tipos seguros entre threads",
+        "why": "O Spring não confere nada disso. A segurança é tarefa de quem escreve a classe, e por isso foram escolhidos esses dois."
+      },
+      {
+        "text": "É um singleton, então um objeto atende todas as threads que o chamam",
+        "why": "Duas requisições podem salvar um livro no mesmo instante. Um mapa e um contador comuns poderiam então entregar o mesmo id duas vezes."
+      },
+      {
+        "text": "Para manter os livros em ordem alfabética de título",
+        "why": "O mapa é ordenado pelas chaves, que são os ids. Os títulos não entram nisso."
+      },
+      {
+        "text": "Porque é um prototype, criado de novo a cada requisição",
+        "why": "É um singleton: um objeto, criado uma vez, como o log disse. Um objeto novo por requisição não precisaria de proteção nenhuma."
+      }
+    ]
+  },
+  "ex-rmdngmfr": {
+    "prompt": "Ponha em ordem o que acontece quando a livraria inicia, do primeiro passo até o relatório.",
+    "hint": "Definições antes de objetos, e um argumento antes de quem precisa dele.",
+    "items": [
+      "A varredura de componentes lê com.example.bookshop e os pacotes abaixo dele",
+      "Uma definição de bean é juntada para cada classe com estereótipo",
+      "inMemoryBookRepository é criado, porque o construtor de bookService precisa dele",
+      "bookService é terminado com o repositório como argumento",
+      "O Spring Boot chama CatalogueReport.run"
+    ],
+    "trap": "Criar bookService antes do repositório é a ordem que espera quem não leu o construtor; o Spring não consegue, porque o construtor não teria com o que ser chamado."
+  },
+  "ex-9sjt5ssy": {
+    "prompt": "Uma nova classe `@Component`, `ShelfLabelPrinter`, fica em `com.example.printing` e recebe um `BookService` no construtor. A aplicação sobe sem erro e a impressora nunca faz nada. Que explicações servem? Escolha todas as que se aplicam.",
+    "hint": "Quais classes dependem da impressora?",
+    "choices": [
+      {
+        "text": "`com.example.printing` está fora dos pacotes varridos, então nenhum bean foi criado",
+        "why": "Fica ao lado de `com.example.bookshop`, não abaixo dele, então a varredura nunca leu a classe."
+      },
+      {
+        "text": "Um `@Component` precisa de `@Autowired` no construtor para ser criado",
+        "why": "Um construtor único é usado sem ele, como foi o de `BookService`."
+      },
+      {
+        "text": "Nada depende da impressora, então a ausência dela não quebra construtor nenhum",
+        "why": "O relatório \"could not be found\" precisa de um consumidor pedindo o tipo ausente. Sem nenhum, uma classe que nunca é criada falha em silêncio."
+      },
+      {
+        "text": "Um `BookService` não pode ser injetado numa classe de outro pacote",
+        "why": "A injeção não liga para pacotes depois que o bean existe. `CatalogueReport` e `ClockConfig` vivem em pacotes diferentes e se encontram."
+      }
+    ]
+  },
+  "ex-6h3d5jw3": {
+    "prompt": "`BookService` é um prototype. `CatalogueReport` e `ScopeCheck` recebem um cada no construtor, e `ScopeCheck.run` chama `getBean(BookService.class)` duas vezes. Quantos objetos `BookService` o Spring criou até o fim dessa execução?",
+    "hint": "Cada injeção e cada `getBean` de um prototype é um objeto novo."
+  },
+  "ex-0sctv90m": {
+    "prompt": "Qual mudança isolada no código desta lição faria a aplicação parar na inicialização?",
+    "hint": "Um bean ausente só é erro quando alguém o pede.",
+    "choices": [
+      {
+        "text": "Mover `CatalogueReport` para o pacote `com.example.reports`",
+        "why": "Ele deixaria de ser bean e de rodar, e nada o pede, então a inicialização daria certo sem relatório."
+      },
+      {
+        "text": "Renomear o parâmetro de `BookService` de `books` para `repository`",
+        "why": "Com um candidato só, o tipo decide e o nome nunca é consultado."
+      },
+      {
+        "text": "Mover `InMemoryBookRepository` para o pacote `com.example.storage`",
+        "why": "Não existiria bean do tipo `BookRepository`, e o construtor de `BookService` pede um: o relatório \"could not be found\"."
+      },
+      {
+        "text": "Acrescentar `@Autowired` ao construtor de `BookService`",
+        "why": "É permitido num construtor único e não muda nada."
+      }
+    ]
+  }
+}

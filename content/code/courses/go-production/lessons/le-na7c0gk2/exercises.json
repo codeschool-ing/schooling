@@ -1,0 +1,568 @@
+[
+  {
+    "id": "ex-rpcjrtrp",
+    "version": 1,
+    "section": "a-plugin",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `go build -buildmode=plugin -o csv.so ./plugins/csv` produce, and how does a Go program use it?",
+    "hint": "Two functions and one type make up the whole package.",
+    "choices": [
+      {
+        "text": "A Go source archive that the host compiles the first time it starts",
+        "correct": false,
+        "why": "Nothing is compiled at run time. The file is already machine code; the host only maps it in."
+      },
+      {
+        "text": "A shared object the host opens at run time and searches by name",
+        "correct": true,
+        "why": "Right. The `.so` is loaded into the host's process, the `init` functions of its new packages run, and exported names are found by string."
+      },
+      {
+        "text": "A separate executable that the host starts and feeds over a pipe",
+        "correct": false,
+        "why": "That is the subprocess reporter of section 04. A plugin runs inside the host's own process."
+      },
+      {
+        "text": "A static library linked into `hits-plugin` when it is built",
+        "correct": false,
+        "why": "The host was built before the plugin and knows nothing about `csv.so` until it is named on the command line."
+      }
+    ]
+  },
+  {
+    "id": "ex-e3c8xyba",
+    "version": 1,
+    "section": "a-plugin",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`plugins/csv/main.go` declares `var Reporter report.Reporter = csv.Reporter{}`. What is the dynamic type of the value `p.Lookup(\"Reporter\")` returns?",
+    "hint": "A variable and a function come back differently.",
+    "choices": [
+      {
+        "text": "`report.Reporter`",
+        "correct": false,
+        "why": "That is the variable's type, but `Lookup` hands back the variable's address. Asserting `sym.(report.Reporter)` fails, because a pointer to an interface has no methods."
+      },
+      {
+        "text": "`*report.Reporter`",
+        "correct": true,
+        "why": "Right. A variable comes back as a pointer to the variable, so the host asserts `*report.Reporter` and dereferences it."
+      },
+      {
+        "text": "`csv.Reporter`, the concrete type stored in the interface",
+        "correct": false,
+        "why": "The host never sees the concrete type unless it digs into the interface; what `Lookup` returns is a pointer to the interface variable."
+      },
+      {
+        "text": "`func() report.Reporter`",
+        "correct": false,
+        "why": "That is what `plugins/mean` returns, because there `Reporter` is declared as a function."
+      }
+    ]
+  },
+  {
+    "id": "ex-f8w6zdrj",
+    "version": 1,
+    "section": "a-plugin",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`./hits-plugin access.log csv.so csv.so` printed 22 lines and `hits-plugin: registered [csv]`. `report.Register` panics on a duplicate name. Why did it not panic?",
+    "hint": "Count how many times `init` ran, not how many times the reporter ran.",
+    "choices": [
+      {
+        "text": "`Register` silently ignores a second call that passes the very same reporter value",
+        "correct": false,
+        "why": "`Register` panics on any name already in the map, whatever the value; section 02's file shows it."
+      },
+      {
+        "text": "The second `.so` received a registry of its own",
+        "correct": false,
+        "why": "There is one `report` package in the process, the host's. That is why the plugins' names appear in the host's registry at all."
+      },
+      {
+        "text": "Opening a path again returns the plugin already loaded, without `init`",
+        "correct": true,
+        "why": "Right. The reporter ran twice, so the CSV appears twice, but the plugin was initialised once."
+      },
+      {
+        "text": "The host skips the second argument because it repeats the first",
+        "correct": false,
+        "why": "The host loops over every argument and does run the reporter twice: 22 lines is the 11-line CSV twice."
+      }
+    ]
+  },
+  {
+    "id": "ex-gcjt714b",
+    "version": 1,
+    "section": "a-plugin",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Loading a shared object at run time is the C library's `dlopen`, so a host that imports `plugin` is dynamically linked: `readelf -d hits-plugin | grep NEEDED` prints `Shared library: [___]`.",
+    "hint": "The one library every dynamically linked program on Linux asks for.",
+    "blanks": [
+      {
+        "accept": [
+          "libc.so.6",
+          "libc"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2re88qj8",
+    "version": 1,
+    "section": "where-it-breaks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `internal/tally/errors.go` added a method `Errors`, only the host was rebuilt, and the old `csv.so` failed with `plugin was built with a different version of package example.com/hits/internal/tally`. The CSV reporter never calls `Errors`. Why does it fail anyway?",
+    "hint": "What does the runtime compare at `Open`, and for which packages?",
+    "choices": [
+      {
+        "text": "The runtime compares a hash of every package the two share, whether the plugin calls into it or not",
+        "correct": true,
+        "why": "Right. The check is per shared package and runs before any `init`; one added method changes `tally`'s hash."
+      },
+      {
+        "text": "`csv.so` calls `Errors` indirectly through `report`",
+        "correct": false,
+        "why": "Neither `report` nor `reporters/csv` mentions `Errors`. The failure does not depend on any call."
+      },
+      {
+        "text": "The host rebuilt `csv.so` automatically and the build failed",
+        "correct": false,
+        "why": "The host never builds anything; it opened the file left from before, which is exactly the problem."
+      },
+      {
+        "text": "A method on `Summary` changes the size of the struct",
+        "correct": false,
+        "why": "A method adds no field, so the struct is the same size. The hash covers what the package exports, and that changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-t67jap2p",
+    "version": 1,
+    "section": "where-it-breaks",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these made `hits-plugin` refuse a plugin at `plugin.Open`? Choose all that apply.",
+    "hint": "Three refusals named a package deep in the runtime; two arrangements loaded fine.",
+    "choices": [
+      {
+        "text": "The host built with `-trimpath`, the plugin without",
+        "correct": true,
+        "why": "Right: `different version of package internal/goarch`."
+      },
+      {
+        "text": "The host built with `-race`, the plugin without",
+        "correct": true,
+        "why": "Right: `different version of package internal/runtime/sys`."
+      },
+      {
+        "text": "The plugin built with Go 1.27.2, the host with 1.27.1",
+        "correct": true,
+        "why": "Right: one patch release apart, and the message names `internal/goarch`."
+      },
+      {
+        "text": "Host and both plugins rebuilt after `errors.go` was added",
+        "correct": false,
+        "why": "Built together from the same source, they loaded and printed `registered [csv mean]`."
+      },
+      {
+        "text": "The same `csv.so` named twice on one command line",
+        "correct": false,
+        "why": "The second open returned the plugin already in memory, and the CSV printed twice."
+      }
+    ]
+  },
+  {
+    "id": "ex-8tdw39d9",
+    "version": 1,
+    "section": "where-it-breaks",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`go list -deps -buildmode=plugin ./plugins/csv` listed 69 packages and `go list -deps ./cmd/hits-plugin` listed 68. `comm -23` printed the three that only the plugin has. How many packages does `csv.so` share with the host?",
+    "hint": "69 minus the plugin's own.",
+    "value": 66,
+    "tolerance": 0,
+    "unit": "packages"
+  },
+  {
+    "id": "ex-atmq5hqw",
+    "version": 1,
+    "section": "where-it-breaks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team builds its host with `CGO_ENABLED=0`, so that it fits a static image, and loads reporters from `.so` files that were built correctly on another machine. What happens?",
+    "hint": "One of the four refusals in the section was not a build error.",
+    "choices": [
+      {
+        "text": "`go build` refuses: `-buildmode=plugin requires external (cgo) linking`",
+        "correct": false,
+        "why": "That message is for building a plugin with cgo off. The host is an ordinary program and builds."
+      },
+      {
+        "text": "It works, because each `.so` brings its own runtime",
+        "correct": false,
+        "why": "A plugin's own copies of shared packages are never used, and here there is no loader to use them anyway: `Open` itself is a stub."
+      },
+      {
+        "text": "It builds, and `plugin.Open` fails at run time with `plugin: not implemented`",
+        "correct": true,
+        "why": "Right. Without cgo the `plugin` package compiles to stubs, so the mistake shows up only when the program runs."
+      },
+      {
+        "text": "`plugin.Open` succeeds and `Lookup` fails for every symbol",
+        "correct": false,
+        "why": "Both are stubs without cgo, and `Open` already returns the error."
+      }
+    ]
+  },
+  {
+    "id": "ex-c28w6qwn",
+    "version": 1,
+    "section": "where-it-breaks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A server has opened `reporter.so`. A bug is fixed, the same package is rebuilt to `reporter-v2.so`, and the server opens that file without restarting. What does it get?",
+    "hint": "Think about how the runtime identifies a plugin.",
+    "choices": [
+      {
+        "text": "The new version, replacing the old one",
+        "correct": false,
+        "why": "Nothing can be unloaded, and a second plugin with the same package path does not load beside the first."
+      },
+      {
+        "text": "Both versions side by side, each with its own symbols",
+        "correct": false,
+        "why": "That is what a new file name might suggest, but even a byte-identical copy was refused with `plugin already loaded`."
+      },
+      {
+        "text": "An error, `plugin already loaded`",
+        "correct": true,
+        "why": "Right. The plugin is identified by its package path, which is already in the process; only a new process can run the new version."
+      },
+      {
+        "text": "The old version again, because `Open` caches by file contents",
+        "correct": false,
+        "why": "The cache is by path; a new path is refused for another reason, its package path."
+      }
+    ]
+  },
+  {
+    "id": "ex-e66rdz6h",
+    "version": 1,
+    "section": "the-alternatives",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Given an empty log, `hits-plugin` died with exit status 2, while `hits-exec` reported `./mean-exec: exit status 2`, ran the Python reporter and exited with 1. What explains the difference?",
+    "hint": "Both ran the same `mean` code with the same bug.",
+    "choices": [
+      {
+        "text": "`hits-exec` recovers panics and `hits-plugin` does not",
+        "correct": false,
+        "why": "Neither host calls `recover`. The panic in `hits-exec`'s case happened in another process."
+      },
+      {
+        "text": "The panic ran in the child, and the host only saw an exit status",
+        "correct": true,
+        "why": "Right. In the plugin the same panic is the host's own; through `os/exec` it is one failed command."
+      },
+      {
+        "text": "`GOTRACEBACK=none` turns the panic into an error in the subprocess",
+        "correct": false,
+        "why": "It only shortens what the panic prints; the child still died with status 2."
+      },
+      {
+        "text": "JSON cannot carry an empty summary, so `mean-exec` was never called",
+        "correct": false,
+        "why": "It was called and it panicked: `panic: runtime error: integer divide by zero` is in the transcript."
+      }
+    ]
+  },
+  {
+    "id": "ex-crfqygkz",
+    "version": 1,
+    "section": "the-alternatives",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`hits-exec` sends `{\"protocol\":1,\"summary\":…}` to each reporter. What is the number for?",
+    "hint": "`echo '{\"protocol\":2}' | ./mean-exec` answered in a sentence.",
+    "choices": [
+      {
+        "text": "It tells the reporter which Go version built the host",
+        "correct": false,
+        "why": "The reporter cannot and need not know that; no package is shared between the two processes."
+      },
+      {
+        "text": "It numbers the reporters, so their output comes back in order",
+        "correct": false,
+        "why": "Every reporter gets the same bytes, and the order comes from the loop over the arguments."
+      },
+      {
+        "text": "The version of the message",
+        "correct": true,
+        "why": "Right. `mean-exec` answered `protocol 2, and this reporter speaks 1` and exited with 1, instead of misreading the message."
+      },
+      {
+        "text": "`encoding/json` requires a numeric first field",
+        "correct": false,
+        "why": "JSON objects have no required fields at all; the field is the program's own decision."
+      }
+    ]
+  },
+  {
+    "id": "ex-9efdz0qb",
+    "version": 1,
+    "section": "the-alternatives",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`hits-static` never calls `report.Register`, yet `-r xml` answers `have [csv mean]`. How did the two reporters get into the registry?",
+    "hint": "Look at the import block.",
+    "choices": [
+      {
+        "text": "`report` scans the module's `reporters` directory when the program starts",
+        "correct": false,
+        "why": "A Go binary has no source tree to scan at run time; the registry only holds what code put there."
+      },
+      {
+        "text": "The blank imports linked both packages in, and their `init` functions registered them at start-up",
+        "correct": true,
+        "why": "Right. `import _` keeps a package for its side effect, and here the side effect is `Register`, as with `image/png`."
+      },
+      {
+        "text": "`flag` loads the package named by `-r` when it parses the flag",
+        "correct": false,
+        "why": "`flag` only stores a string. Nothing in Go loads a package by name at run time except `plugin`."
+      },
+      {
+        "text": "`go generate` wrote the calls into `main.go`",
+        "correct": false,
+        "why": "`go generate` could write the list of imports, but this file was written by hand and calls nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-0rnwnt7h",
+    "version": 1,
+    "section": "the-alternatives",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way of adding code from outside to the place the section names it.",
+    "hint": "One description belongs to none of them.",
+    "pairs": [
+      {
+        "left": "`init` plus a blank import",
+        "right": "`database/sql` drivers and `image/png`"
+      },
+      {
+        "left": "a child process fed JSON on a pipe",
+        "right": "`hits-exec` and `exec/top.py`"
+      },
+      {
+        "left": "one long-running plugin process called over RPC",
+        "right": "HashiCorp's `go-plugin`"
+      },
+      {
+        "left": "a module run inside the host by a pure-Go runtime",
+        "right": "WebAssembly with `wazero`"
+      }
+    ],
+    "right_distractors": [
+      "a `.dll` opened with `plugin.Open` on Windows"
+    ]
+  },
+  {
+    "id": "ex-mkxnyk5v",
+    "version": 1,
+    "section": "choosing",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the benchmark, `BenchmarkProcess` took 1581082 ns/op and `BenchmarkCompiledIn` took 132.0 ns/op. Roughly how many times as expensive is a call through a new process? Give the nearest thousand.",
+    "hint": "Divide the first by the second.",
+    "value": 12000,
+    "tolerance": 1000,
+    "unit": "times"
+  },
+  {
+    "id": "ex-h6c3r60r",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `gcr.io/distroless/static-debian12`, `./hits-plugin` failed with `exec ./hits-plugin: no such file or directory`, though the file was mounted and `./hits-static` ran beside it. What was missing?",
+    "hint": "`readelf -l hits-plugin | grep interpreter`.",
+    "choices": [
+      {
+        "text": "Execute permission on the mounted file",
+        "correct": false,
+        "why": "A missing permission says `permission denied`, and `hits-static`, built the same way, ran."
+      },
+      {
+        "text": "The dynamic loader `/lib64/ld-linux-x86-64.so.2`, which the static image does not have",
+        "correct": true,
+        "why": "Right. A dynamically linked program asks the kernel to run its interpreter first, and the error names the program because the interpreter is not there."
+      },
+      {
+        "text": "The plugins, which were not copied into the image",
+        "correct": false,
+        "why": "The whole directory was mounted, `csv.so` included; the program never started, so it never tried to open one."
+      },
+      {
+        "text": "A network, because of `--network=none`",
+        "correct": false,
+        "why": "None of these programs uses a network, and `hits-static` ran under the same flag."
+      }
+    ]
+  },
+  {
+    "id": "ex-9yd8r2w7",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A log shipper lets customers write filters in any language and replace them without restarting the shipper. A filter is called once per batch of about 5,000 events. Which design fits?",
+    "hint": "Weigh each column of the table against the two requirements, then the call rate.",
+    "choices": [
+      {
+        "text": "Go plugins, because a call costs the same as a compiled-in one",
+        "correct": false,
+        "why": "Customers would need the shipper's exact toolchain, flags and packages, filters would have to be in Go, and a new version is refused with `plugin already loaded`."
+      },
+      {
+        "text": "Filters compiled into the shipper behind blank imports",
+        "correct": false,
+        "why": "Fast and simple, but every new filter means rebuilding the shipper, which customers cannot do."
+      },
+      {
+        "text": "Separate filter programs, each kept running and sent batches over a pipe or RPC",
+        "correct": true,
+        "why": "Right. Any language, replaceable by starting the new program, and a long-lived process pays its start once rather than per batch."
+      },
+      {
+        "text": "A new process for every event, as `hits-exec` does",
+        "correct": false,
+        "why": "The shape is right but the rate is not: about 1.6 ms per process start, 5,000 times per batch, is about eight seconds per batch."
+      }
+    ]
+  },
+  {
+    "id": "ex-41arxb2b",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`BenchmarkPlugin` measured 136.1 ns/op and `BenchmarkCompiledIn` 132.0 ns/op. What is the right reading?",
+    "hint": "What is a plugin's `Report` once `Lookup` has returned?",
+    "choices": [
+      {
+        "text": "Every plugin call goes through `dlsym`, which costs about four nanoseconds",
+        "correct": false,
+        "why": "The symbol is resolved once, in `Lookup`; the loop afterwards never touches the loader."
+      },
+      {
+        "text": "The plugin is 3 per cent slower and should be avoided in a hot loop",
+        "correct": false,
+        "why": "Three per cent between two benchmark runs is noise that another run can close or reverse."
+      },
+      {
+        "text": "The same cost: after `Lookup`, both are an interface call",
+        "correct": true,
+        "why": "Right. Speed is the plugin's real advantage, and the compiled-in reporter has it too."
+      },
+      {
+        "text": "The plugin's copy of `fmt` is slower than the host's",
+        "correct": false,
+        "why": "The plugin's own copies of shared packages are not used; its calls go to the host's `fmt`."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ccfq0sd",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens when `hits-plugin` loads `csv.so` and uses it.",
+    "hint": "The hash check comes before any code from the plugin runs.",
+    "items": [
+      "`plugin.Open` maps `csv.so` into the process",
+      "the runtime compares the hash of every shared package with the host's",
+      "the `init` functions of the new packages run, and `csv` registers itself",
+      "`Lookup(\"Reporter\")` returns a `*report.Reporter`",
+      "the host dereferences it and calls `Report`"
+    ]
+  },
+  {
+    "id": "ex-zxrxv7y4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "CI builds the host with `go build -trimpath` from tag v2.3.0. A plugin author checks out the same tag, runs plain `go build -buildmode=plugin` with the same Go 1.27.1, and `plugin.Open` fails naming `internal/goarch`. What fixes it?",
+    "hint": "Same source and same toolchain were not enough in section 03.",
+    "choices": [
+      {
+        "text": "Upgrade both the host and the plugin to the next Go release",
+        "correct": false,
+        "why": "A new release changes nothing about the mismatch; the flags would still differ."
+      },
+      {
+        "text": "Build the plugin with the host's exact flags",
+        "correct": true,
+        "why": "Right. `-trimpath` changes how every package is compiled, so the plugin needs it too; building both in one job keeps every flag equal."
+      },
+      {
+        "text": "Delete `internal/goarch` from the plugin package's import list",
+        "correct": false,
+        "why": "Nobody imports it directly; it is part of the runtime every Go program carries."
+      },
+      {
+        "text": "Set `GOTOOLCHAIN=local` on the machine where the plugin author builds",
+        "correct": false,
+        "why": "Both already used 1.27.1; the toolchain is not what differs."
+      }
+    ]
+  },
+  {
+    "id": "ex-5zvvzp94",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`import _ \"image/png\"` keeps the package only for its side effect: its ___ function calls `image.RegisterFormat(\"png\", …)`, the same way `reporters/csv` registers itself in `report`.",
+    "hint": "The function that runs before `main` and that `plugin.Open` also runs.",
+    "blanks": [
+      {
+        "accept": [
+          "init"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

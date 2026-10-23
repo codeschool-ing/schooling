@@ -1,0 +1,371 @@
+[
+  {
+    "id": "ex-hy2kz6mx",
+    "version": 1,
+    "section": "the-fix",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `volatile` on `stop` forbid the compiler to do?",
+    "hint": "The freedom that broke lesson 12's program.",
+    "choices": [
+      {
+        "text": "Run the worker on a different processor from `main`",
+        "correct": false,
+        "why": "Scheduling is untouched."
+      },
+      {
+        "text": "Compile the loop at all",
+        "correct": false,
+        "why": "The loop was compiled, and ran 3.7 billion times."
+      },
+      {
+        "text": "Read the field once and keep it",
+        "correct": true,
+        "why": "Right: every read goes to memory."
+      },
+      {
+        "text": "Write the field from more than one thread at a time",
+        "correct": false,
+        "why": "Any thread may still write it."
+      }
+    ]
+  },
+  {
+    "id": "ex-5vqcp7sk",
+    "version": 1,
+    "section": "the-fix",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `volatile` loop spun about 3.7 billion times in a second. What does that say about the cost of a `volatile` read on x86?",
+    "hint": "Compare with the interpreted loop.",
+    "choices": [
+      {
+        "text": "Little more than a plain read",
+        "correct": true,
+        "why": "Right: x86 already keeps reads in order."
+      },
+      {
+        "text": "It costs nothing, because the JIT removes it",
+        "correct": false,
+        "why": "The JIT may not remove it; that is the point."
+      },
+      {
+        "text": "It costs as much as a lock taken on every turn of the loop",
+        "correct": false,
+        "why": "Nothing in the run suggests that."
+      },
+      {
+        "text": "It is expensive, and the loop would be faster without it",
+        "correct": false,
+        "why": "Without it the loop never ended at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-shraec69",
+    "version": 1,
+    "section": "what-it-guarantees",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which two promises does `volatile` make? Choose all that apply.",
+    "hint": "Section 03's numbered list.",
+    "choices": [
+      {
+        "text": "Writes before it are visible after a read that sees it",
+        "correct": true,
+        "why": "Yes: ordering."
+      },
+      {
+        "text": "A read sees the latest write to the field",
+        "correct": true,
+        "why": "Yes: visibility."
+      },
+      {
+        "text": "`count++` on it runs as one step",
+        "correct": false,
+        "why": "No: section 04."
+      },
+      {
+        "text": "Only one thread may write it",
+        "correct": false,
+        "why": "No such restriction."
+      }
+    ]
+  },
+  {
+    "id": "ex-bwzpycr2",
+    "version": 1,
+    "section": "what-it-guarantees",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `Handoff.java`, `ready = true` is moved above `copies = 3`. What may the consumer now print?",
+    "hint": "Which writes does the promise cover?",
+    "choices": [
+      {
+        "text": "The same line, every time",
+        "correct": false,
+        "why": "It may; nothing guarantees it any more."
+      },
+      {
+        "text": "Nothing: it compiles but never starts",
+        "correct": false,
+        "why": "The consumer still sees `ready` and prints."
+      },
+      {
+        "text": "A compile error about the order",
+        "correct": false,
+        "why": "The compiler checks nothing here."
+      },
+      {
+        "text": "`0 copies`",
+        "correct": true,
+        "why": "Right: that write is no longer before the flag."
+      }
+    ]
+  },
+  {
+    "id": "ex-brat52j4",
+    "version": 1,
+    "section": "what-it-guarantees",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside a busy-wait loop, `Thread.___()` tells the processor the thread is spinning.",
+    "hint": "On spin, wait.",
+    "blanks": [
+      {
+        "accept": [
+          "onSpinWait"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7qnmqc55",
+    "version": 1,
+    "section": "what-it-does-not",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Four threads did `count++` a million times each on a `volatile long`. Why was the total short?",
+    "hint": "Read, add, write.",
+    "choices": [
+      {
+        "text": "Both read one value, both wrote it plus one",
+        "correct": true,
+        "why": "Right: a lost update."
+      },
+      {
+        "text": "`volatile` writes are sometimes dropped",
+        "correct": false,
+        "why": "Every write happened; some overwrote others."
+      },
+      {
+        "text": "Some threads ended before the others started",
+        "correct": false,
+        "why": "That would give the right total."
+      },
+      {
+        "text": "A `long` is too small for four million",
+        "correct": false,
+        "why": "It holds far more."
+      }
+    ]
+  },
+  {
+    "id": "ex-nebnggvj",
+    "version": 1,
+    "section": "what-it-does-not",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tool with what it does about `count++`.",
+    "hint": "Section 04's last list.",
+    "pairs": [
+      {
+        "left": "`volatile`",
+        "right": "makes each read and write visible, and nothing more"
+      },
+      {
+        "left": "a lock",
+        "right": "lets one thread at a time run the three steps"
+      },
+      {
+        "left": "`AtomicLong`",
+        "right": "does the three steps as one operation"
+      }
+    ],
+    "right_distractors": [
+      "runs the three steps on three processors"
+    ]
+  },
+  {
+    "id": "ex-s7gnbaxb",
+    "version": 1,
+    "section": "what-it-does-not",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Reading a value, changing it and writing it back is a ___-modify-write.",
+    "hint": "The first of the three steps.",
+    "blanks": [
+      {
+        "accept": [
+          "read"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gq0jsven",
+    "version": 1,
+    "section": "when-to-use-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which field is a good fit for `volatile`?",
+    "hint": "Each write independent of the current value.",
+    "choices": [
+      {
+        "text": "A shutdown flag set by one thread",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A minimum and a maximum that must agree",
+        "correct": false,
+        "why": "They are visible one at a time, never as a pair."
+      },
+      {
+        "text": "A count of requests",
+        "correct": false,
+        "why": "Same problem as `count++`."
+      },
+      {
+        "text": "A running total of sales",
+        "correct": false,
+        "why": "The new total depends on the old."
+      }
+    ]
+  },
+  {
+    "id": "ex-wcaw76t6",
+    "version": 1,
+    "section": "when-to-use-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `Lazy.java`, what would go wrong if `index` were not `volatile`?",
+    "hint": "The fast path takes no lock.",
+    "choices": [
+      {
+        "text": "The index would be built twice, once by each thread",
+        "correct": false,
+        "why": "The second check, inside the lock, prevents that."
+      },
+      {
+        "text": "`synchronized` would stop working",
+        "correct": false,
+        "why": "It works; the fast path does not use it."
+      },
+      {
+        "text": "The program would not compile without the keyword",
+        "correct": false,
+        "why": "It compiles either way."
+      },
+      {
+        "text": "A fast-path thread could see it unfinished",
+        "correct": true,
+        "why": "Right: unsafe publication."
+      }
+    ]
+  },
+  {
+    "id": "ex-c6fxrsf2",
+    "version": 1,
+    "section": "when-to-use-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before writing double-checked locking, what does the lesson suggest considering?",
+    "hint": "Simpler ways first.",
+    "choices": [
+      {
+        "text": "Calling `System.gc()` first",
+        "correct": false,
+        "why": "Irrelevant."
+      },
+      {
+        "text": "A nested holder class, or eager building",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A parallel stream to build it on every processor",
+        "correct": false,
+        "why": "Irrelevant to initialising once."
+      },
+      {
+        "text": "Making every field in the class `volatile` as well",
+        "correct": false,
+        "why": "That does not make the build happen once."
+      }
+    ]
+  },
+  {
+    "id": "ex-p7sqxfv5",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lost update of the figure in order.",
+    "hint": "Both reads before either write.",
+    "items": [
+      "thread 1 reads 41",
+      "thread 2 reads 41",
+      "thread 1 writes 42",
+      "thread 2 writes 42"
+    ]
+  },
+  {
+    "id": "ex-f50dkjac",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A price list is shared as `static volatile List<Long> prices`, and an admin thread calls `prices.add(...)` on it. Is that safe?",
+    "hint": "What is volatile: the field, or the list?",
+    "choices": [
+      {
+        "text": "Yes, if the admin thread is the only writer",
+        "correct": false,
+        "why": "Readers may still see the list mid-change."
+      },
+      {
+        "text": "No, because `List<Long>` cannot be volatile",
+        "correct": false,
+        "why": "Any field can be volatile."
+      },
+      {
+        "text": "Yes: `volatile` covers the list's contents",
+        "correct": false,
+        "why": "It covers the field, the reference."
+      },
+      {
+        "text": "No: only the reference is volatile",
+        "correct": true,
+        "why": "Right: replace a whole immutable list instead, lesson 12's `PriceList` pattern."
+      }
+    ]
+  }
+]

@@ -1,0 +1,561 @@
+[
+  {
+    "id": "ex-64g33zgh",
+    "version": 1,
+    "section": "sizes-and-alignment",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The five fields of `Loose` (three `bool`s, an `int32` and an `int64`) add up to 15 bytes, yet `unsafe.Sizeof` says 32 on amd64. Where do the other 17 come from?",
+    "hint": "Look at the offsets the program printed, and at where each field could have started.",
+    "choices": [
+      {
+        "text": "A `bool` takes a whole 8-byte word on a 64-bit machine, like an `int64`",
+        "correct": false,
+        "why": "`Tight` puts its three `bool`s at offsets 12, 13 and 14, one byte each. The gaps in `Loose` come from what follows each `bool`."
+      },
+      {
+        "text": "The runtime adds a hidden header to every struct for the garbage collector",
+        "correct": false,
+        "why": "`tally.Entry` is 72 bytes and its fields add up to exactly 72, so there is no header. The extra bytes in `Loose` sit between and after its fields."
+      },
+      {
+        "text": "Padding, so that each field starts at a multiple of its alignment",
+        "correct": true,
+        "why": "Right. Seven bytes after `Cached` put `Bytes` at 8, three after `TLS` put `Status` at 20, and seven after `Retry` round 25 up to 32."
+      },
+      {
+        "text": "`unsafe.Sizeof` counts the memory the fields point to",
+        "correct": false,
+        "why": "None of `Loose`'s fields is a pointer. And the documentation says `Sizeof` does not include memory a value refers to: for a slice it is the 24-byte header only."
+      }
+    ]
+  },
+  {
+    "id": "ex-cn7sharh",
+    "version": 1,
+    "section": "sizes-and-alignment",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On linux/amd64, what does `unsafe.Sizeof` return for `struct { A bool; B int64; C bool }`?",
+    "hint": "Place each field at a multiple of its alignment, then round the end up to the largest alignment.",
+    "value": 24,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-7g5d7cr6",
+    "version": 1,
+    "section": "sizes-and-alignment",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`fieldalignment` reports `Summary has 24 leading bytes of pointer data but optimal value is 16` for lesson 1's `tally.Summary`. What is the right response in `hits`?",
+    "hint": "How many `Summary` values does one run of `hits` make?",
+    "choices": [
+      {
+        "text": "Leave it: one `Summary` per run saves nothing",
+        "correct": true,
+        "why": "Right. The diagnostic is about how far the collector scans for pointers. Saved once per run it is nothing, and the analyzer's documentation says these findings very rarely matter."
+      },
+      {
+        "text": "Reorder it at once, because the struct wastes 8 bytes of padding",
+        "correct": false,
+        "why": "The report is not about size: `Summary` has no padding. It is about pointer bytes, the part of the value the collector scans."
+      },
+      {
+        "text": "Add `go vet` to CI, which runs the same check on every build",
+        "correct": false,
+        "why": "`fieldalignment` is deliberately not part of `go vet`; its documentation says so, because its findings so rarely matter."
+      },
+      {
+        "text": "Make both maps pointers to maps so they scan faster",
+        "correct": false,
+        "why": "A map value is already a pointer to the runtime's table. Wrapping it in another pointer adds an indirection and changes nothing the analyzer measured."
+      }
+    ]
+  },
+  {
+    "id": "ex-3he3n1ty",
+    "version": 1,
+    "section": "sizes-and-alignment",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team runs `fieldalignment` over a service and proposes to apply every suggested order. Which of these are sound objections? Choose all that apply.",
+    "hint": "One objection comes from the analyzer's documentation, one from the arithmetic of how many values exist.",
+    "choices": [
+      {
+        "text": "Fields updated by separate goroutines may share a cache line",
+        "correct": true,
+        "why": "Right. The documentation names this false sharing: the compact order can make two goroutines slow each other down, and there the padding was doing a job."
+      },
+      {
+        "text": "A struct that exists a few times saves nothing worth a diff",
+        "correct": true,
+        "why": "Right. The million-element slice halved from 32 to 16 MB; one value saves 16 bytes, and the readable order is worth more."
+      },
+      {
+        "text": "Code that uses `unsafe.Offsetof` on those fields will stop compiling",
+        "correct": false,
+        "why": "`Offsetof` is worked out by the compiler for the struct as it is declared now, so moving a field changes the constant and nothing breaks. A hand-written offset would break, silently."
+      },
+      {
+        "text": "The collector cannot scan a struct whose pointer fields come first",
+        "correct": false,
+        "why": "It is the reverse: putting pointers first lets the collector stop scanning sooner. That is what the pointer-bytes diagnostic is about."
+      }
+    ]
+  },
+  {
+    "id": "ex-7agcvqq3",
+    "version": 1,
+    "section": "the-pointer-rules",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does the garbage collector treat an `unsafe.Pointer` and a `uintptr` holding the same address?",
+    "hint": "One of the two is a pointer type and the other is an integer type.",
+    "choices": [
+      {
+        "text": "Both keep the object alive, since they hold the same address",
+        "correct": false,
+        "why": "The address is the same, the type is not. The `alive` program held the entry's address in a `uintptr` and the cleanup ran anyway."
+      },
+      {
+        "text": "Neither: values from package `unsafe` are invisible to the collector",
+        "correct": false,
+        "why": "An `unsafe.Pointer` is still a pointer to the runtime; only the type checks are switched off. That is why pattern 3 must convert back within one expression."
+      },
+      {
+        "text": "The collector updates the `uintptr` when it moves the object",
+        "correct": false,
+        "why": "The documentation says the opposite: it will not update a `uintptr`'s value if the object moves, nor will the integer keep the object from being reclaimed."
+      },
+      {
+        "text": "It follows the first as a reference and ignores the second",
+        "correct": true,
+        "why": "Right. The collector finds live objects by following pointers, and a `uintptr` is not one, so an object reachable only through one is garbage."
+      }
+    ]
+  },
+  {
+    "id": "ex-qqvg2zr6",
+    "version": 1,
+    "section": "the-pointer-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `field` program reads `Status` three ways and all three print `404`, yet `go vet` flags the third, where the address is first stored in `u := uintptr(...)`. Why is code that printed the right answer wrong?",
+    "hint": "Think about what can happen between two statements that cannot happen inside one expression.",
+    "choices": [
+      {
+        "text": "`go vet` rejects any arithmetic on addresses, valid or not",
+        "correct": false,
+        "why": "The first version does the same arithmetic in one expression, which is pattern 3, and `vet` said nothing about it."
+      },
+      {
+        "text": "Between the two lines the object exists only as an integer, which the collector and stack copying ignore",
+        "correct": true,
+        "why": "Right. On this run nothing moved and nothing was collected in that moment. On another, a growing stack or a collection between the lines leaves `u` naming memory that is no longer the entry."
+      },
+      {
+        "text": "A stored `uintptr` loses its upper 32 bits",
+        "correct": false,
+        "why": "A `uintptr` is wide enough to hold any address on its platform; that is its definition. Nothing is truncated."
+      },
+      {
+        "text": "`Offsetof` gives the wrong answer outside a single expression",
+        "correct": false,
+        "why": "`Offsetof` is a constant the compiler computes; it is 56 wherever it is written. The problem is the address, not the offset."
+      }
+    ]
+  },
+  {
+    "id": "ex-3r3kearh",
+    "version": 1,
+    "section": "the-pointer-rules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these lines is valid under the documented patterns for `unsafe.Pointer`? Assume `p` points into an allocated struct `s` and `b` is a non-empty `[]byte`.",
+    "hint": "Pattern 3 has three conditions: one expression, still inside the original allocation, and never nil.",
+    "choices": [
+      {
+        "text": "`end := unsafe.Add(unsafe.Pointer(&b[0]), len(b))`",
+        "correct": false,
+        "why": "That points one byte past the end of the slice's allocation. C allows it; the documentation lists exactly this as invalid, and `unsafe.Add` keeps the same rules."
+      },
+      {
+        "text": "`f := unsafe.Pointer(uintptr(p) + unsafe.Offsetof(s.f))`",
+        "correct": true,
+        "why": "Right. Pointer to `uintptr`, arithmetic and back, all in one expression, landing on a field inside the same struct."
+      },
+      {
+        "text": "`u := uintptr(p); q := unsafe.Pointer(u + 8)`",
+        "correct": false,
+        "why": "The address is stored in a variable between the two conversions, which is the invalid form `go vet` reported in the `field` program."
+      },
+      {
+        "text": "`q := unsafe.Pointer(uintptr(unsafe.Pointer(nil)) + unsafe.Offsetof(s.f))`",
+        "correct": false,
+        "why": "The documentation says the pointer must point into an allocated object, so it may not be nil, and gives this very line as invalid."
+      }
+    ]
+  },
+  {
+    "id": "ex-5m8vvszj",
+    "version": 1,
+    "section": "the-pointer-rules",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Building the `cast` program with `-race` stopped it on the cut record, because `-race` also turns on the compiler's ___ instrumentation of `unsafe.Pointer` conversions.",
+    "hint": "The same check `-gcflags=all=-d=...` turns on by name.",
+    "blanks": [
+      {
+        "accept": [
+          "checkptr"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qen7qebx",
+    "version": 1,
+    "section": "the-pointer-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a run without checkptr, `cast` printed `18 bytes: quick   3602879701896396948` for the record cut one byte into the status, and `go vet` reported nothing. Why did `vet` stay silent?",
+    "hint": "Ask what `vet` can know about the length of `rec`.",
+    "choices": [
+      {
+        "text": "The `unsafeptr` check is only enabled by `go vet -all`",
+        "correct": false,
+        "why": "`unsafeptr` is in `go vet`'s default set; it is what flagged the `field` program. It looks for a different mistake."
+      },
+      {
+        "text": "The read happened inside `encoding/binary`, which `vet` skips",
+        "correct": false,
+        "why": "The cast is in `quick`, in the program itself. `encoding/binary` is the half that panicked with a bounds error."
+      },
+      {
+        "text": "Reading memory is allowed; only writing through a cast is invalid",
+        "correct": false,
+        "why": "The rules are about which conversions are valid, whatever is done with the pointer afterwards. Reading past an allocation is as invalid as writing there."
+      },
+      {
+        "text": "It depends on `len(rec)` at run time, which code cannot show",
+        "correct": true,
+        "why": "Right. `vet` reads the code, and the code is the same for the 25-byte record that works and the 18-byte one that does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-n0pd4p6n",
+    "version": 1,
+    "section": "zero-copy-strings",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does an ordinary `string(b)` conversion copy the bytes of `b`?",
+    "hint": "Compare what each of the two types promises about its contents.",
+    "choices": [
+      {
+        "text": "A string's bytes never change and a slice's do, so the string needs its own",
+        "correct": true,
+        "why": "Right. Without the copy, a later write to `b` would change a value the language promises is immutable, which is what `mutate` showed."
+      },
+      {
+        "text": "Strings are stored in UTF-16 internally, so every byte has to be converted",
+        "correct": false,
+        "why": "Go strings are bytes, usually UTF-8, and the conversion changes nothing in them. The copy is about ownership, not encoding."
+      },
+      {
+        "text": "The garbage collector cannot follow a pointer into a slice",
+        "correct": false,
+        "why": "It can, and does: a slice's header holds an ordinary pointer to its array. `zc.String` shares those bytes and the collector keeps them alive."
+      },
+      {
+        "text": "A string needs a terminating zero byte that a slice lacks",
+        "correct": false,
+        "why": "That is C. A Go string carries its length in its header and has no terminator; `unsafe.String(p, n)` takes the length as an argument."
+      }
+    ]
+  },
+  {
+    "id": "ex-qewdsgnp",
+    "version": 1,
+    "section": "zero-copy-strings",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the benchmarks, `k := string(path)` followed by `hits[k]` allocated nothing for a 10-byte key and 48 bytes for a 40-byte one. Up to how many bytes can a converted string that does not escape be built in a buffer on the stack?",
+    "hint": "The constant is `tmpStringBufSize` in `runtime/string.go`.",
+    "value": 32,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-gwz7gw8d",
+    "version": 1,
+    "section": "zero-copy-strings",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`hits[string(path)]` allocated nothing, but `hits[string(path)]++` allocated 16 bytes on every call, with the key already in the map. Why the difference?",
+    "hint": "One of the two expressions may have to store something.",
+    "choices": [
+      {
+        "text": "Increments are slower, so the runtime caches each key's string in a side table",
+        "correct": false,
+        "why": "There is no cache; the 16 bytes are the size class for the 10-byte key, built as a string on every call."
+      },
+      {
+        "text": "The benchmark loop allocates the string, not the map expression",
+        "correct": false,
+        "why": "The lookup benchmarks use the same `b.Loop()` and report 0 B/op, so the loop allocates nothing."
+      },
+      {
+        "text": "`++` inserts the key when it is missing, and a stored key must be an immutable string",
+        "correct": true,
+        "why": "Right. A lookup only compares bytes, so the compiler passes them without building a string. An insert keeps the key, and a key has to be a real, immutable string."
+      },
+      {
+        "text": "Map values of type `int` are boxed on every write",
+        "correct": false,
+        "why": "Map values are stored in place in the map's table; an `int` is not boxed. The allocation is the key."
+      }
+    ]
+  },
+  {
+    "id": "ex-2xmf13mq",
+    "version": 1,
+    "section": "zero-copy-strings",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`paths` counted 20,000 requests under about 1,536 keys with `zc.String(fields[2])`, against 8 keys with `string(fields[2])`. What happened to the keys?",
+    "hint": "Read what `bufio.Scanner.Bytes` says about the array its result points into.",
+    "choices": [
+      {
+        "text": "The map's hash seed is random, so the zero-copy keys were hashed differently",
+        "correct": false,
+        "why": "The seed changes where keys sit in the table, never what they read. Over a thousand keys contained a space or a newline, which no path does."
+      },
+      {
+        "text": "A goroutine inside the scanner raced with the counting loop",
+        "correct": false,
+        "why": "A `Scanner` runs on the caller's goroutine, and the race detector passed. One goroutine overwrote its own buffer."
+      },
+      {
+        "text": "The collector freed the field slices and reused their memory",
+        "correct": false,
+        "why": "A string from `unsafe.String` is a real pointer that keeps the bytes alive. Nothing was freed; the owner of the bytes rewrote them."
+      },
+      {
+        "text": "They were windows onto the scanner's buffer, which later lines overwrote",
+        "correct": true,
+        "why": "Right. Each key shared bytes with `sc.Bytes()`, and the scanner reused that buffer for the next lines, so stored keys changed into pieces of other lines."
+      }
+    ]
+  },
+  {
+    "id": "ex-z3wv9whs",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`go doc unsafe` says packages that import it are not protected by the Go 1 compatibility guidelines. What does that mean for such a package?",
+    "hint": "What does the promise give every other package?",
+    "choices": [
+      {
+        "text": "It is refused by `go vet` until it is marked with a build tag",
+        "correct": false,
+        "why": "`vet` checks some conversions but refuses no package for importing `unsafe`; 101 packages of the standard library import it."
+      },
+      {
+        "text": "It cannot be published to the module proxy",
+        "correct": false,
+        "why": "The proxy serves any module; the compatibility promise is about Go releases, not about distribution."
+      },
+      {
+        "text": "Nothing stops a later release from breaking it, without notice",
+        "correct": true,
+        "why": "Right. The promise that a program keeps building and behaving the same way does not cover code relying on how the runtime lays out memory."
+      },
+      {
+        "text": "It has to be rebuilt with `CGO_ENABLED=1`",
+        "correct": false,
+        "why": "`unsafe` is part of the language and needs no C compiler; every program in this lesson built with the defaults."
+      }
+    ]
+  },
+  {
+    "id": "ex-yfbw3y5v",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Built with `GOARCH=386`, the `layout` program puts `tally.Entry`'s `Status` at offset 36, against 56 on amd64. What should code that reads that field through a pointer take from this?",
+    "hint": "One way of writing the offset is right on both machines.",
+    "choices": [
+      {
+        "text": "Always write `unsafe.Offsetof(e.Status)`, never a number",
+        "correct": true,
+        "why": "Right. `Offsetof` is a constant the compiler works out for the platform it is building, so it is 36 on 386 and 56 on amd64 with no change to the code."
+      },
+      {
+        "text": "Hard-code 36 behind a `//go:build 386` tag and 56 elsewhere",
+        "correct": false,
+        "why": "That works until a field is added or a third architecture is built, and then reads the wrong bytes in silence. The compiler already knows the answer for every platform."
+      },
+      {
+        "text": "Avoid 32-bit targets, since Go no longer supports them",
+        "correct": false,
+        "why": "Go 1.27.1 built and ran the 386 program on this machine in the same section. The offsets differ; the platform is supported."
+      },
+      {
+        "text": "Reorder `tally.Entry` so `Status` comes first",
+        "correct": false,
+        "why": "Offset 0 would match on both, but by accident, and only for that one field. The rule has to hold for every field read this way."
+      }
+    ]
+  },
+  {
+    "id": "ex-qzcfy5af",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each bug from the lesson with what found it.",
+    "hint": "One of them found nothing at all, and one tool is listed that found none of them.",
+    "pairs": [
+      {
+        "left": "a `uintptr` stored in a variable, then turned back into a pointer",
+        "right": "`go vet`, by its `unsafeptr` check"
+      },
+      {
+        "left": "eight bytes read where a record had one",
+        "right": "checkptr, turned on by `-race` or `-gcflags=all=-d=checkptr`"
+      },
+      {
+        "left": "a zero-copy string as a map key over the scanner's buffer",
+        "right": "no tool: only a reader of the code"
+      },
+      {
+        "left": "a string literal written through `zc.Bytes`",
+        "right": "the operating system, with a segmentation fault"
+      }
+    ],
+    "right_distractors": [
+      "the tests `go test` runs by default"
+    ]
+  },
+  {
+    "id": "ex-yfhbtt3f",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the lesson's rule for using `unsafe` in your own code in order.",
+    "hint": "Nothing is written until something has been measured.",
+    "items": [
+      "Measure the copy or allocation with a profile or a benchmark",
+      "Look for a safe version, such as `m[string(b)]` or `encoding/binary`",
+      "Isolate the unsafe code in one small package with its promise in the doc comments",
+      "Run `go test -race` and `go vet ./...` on it in CI, and again on every Go upgrade"
+    ]
+  },
+  {
+    "id": "ex-sr1j817r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`strings.Builder.String` returns `unsafe.String(unsafe.SliceData(b.buf), len(b.buf))`, the same zero-copy conversion as `zc.String`. Why is it safe there when `zc.String` broke `paths`?",
+    "hint": "Ask who can write to the bytes after the string exists.",
+    "choices": [
+      {
+        "text": "Code in the standard library is exempt from the `unsafe.Pointer` rules",
+        "correct": false,
+        "why": "The rules apply to every package that imports `unsafe`, the standard library included. `Builder` keeps them; what makes it safe is who can reach the buffer."
+      },
+      {
+        "text": "The builder owns its buffer, never exposes it, and only appends past the end",
+        "correct": true,
+        "why": "Right. No caller can reach `b.buf`, and appending writes beyond the length any returned string covers, so the promise is kept by the type rather than by every caller."
+      },
+      {
+        "text": "`String` copies the buffer whenever the builder is used again",
+        "correct": false,
+        "why": "There is no copy-on-write in `Builder`; `go doc -src` shows `String` is that one line. Growing the buffer allocates a new array, which leaves old strings alone."
+      },
+      {
+        "text": "The race detector checks every `Builder` in tests",
+        "correct": false,
+        "why": "`-race` finds two goroutines touching memory unsynchronised; it would not have caught `paths` either, which had one goroutine."
+      }
+    ]
+  },
+  {
+    "id": "ex-e8rmwvcm",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague wants to speed up a function that looks lines up in a `map[string]Route`, keyed by the request path, by converting each `[]byte` path with `zc.String` before the lookup. Which statements are true? Choose all that apply.",
+    "hint": "Two of the benchmarks in the lesson are about exactly this, and one of the tools was run against exactly this bug.",
+    "choices": [
+      {
+        "text": "Writing `routes[string(path)]` already does the lookup without building a string",
+        "correct": true,
+        "why": "Right. `BenchmarkLookup` and `BenchmarkLookupLong` showed 0 B/op for a 10-byte and a 40-byte key: the compiler handles a conversion inside an index expression."
+      },
+      {
+        "text": "If the zero-copy string were ever stored, `-race` would not catch the damage",
+        "correct": true,
+        "why": "Right. `paths` passed `vet`, `-race` and checkptr while its keys turned into pieces of other lines. One goroutine overwriting its own buffer is invisible to all three."
+      },
+      {
+        "text": "checkptr would stop the program at the first `zc.String` call",
+        "correct": false,
+        "why": "The conversion itself is valid: the pointer and length describe bytes inside one allocation. checkptr has nothing to object to at that moment."
+      },
+      {
+        "text": "A map copies a key's bytes when it stores it, so storing is safe too",
+        "correct": false,
+        "why": "A map stores the string header it was given, pointer and length. That is how `paths` filed counts under keys that later changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-xw42tra1",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go test` runs only a high-confidence subset of `vet` before a test binary, so the check that reports a `uintptr` turned back into a pointer, ___, needs `go vet ./...` as a CI step of its own.",
+    "hint": "It printed `possible misuse of unsafe.Pointer` for the `field` program.",
+    "blanks": [
+      {
+        "accept": [
+          "unsafeptr"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

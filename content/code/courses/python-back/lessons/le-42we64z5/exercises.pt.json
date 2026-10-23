@@ -1,0 +1,537 @@
+{
+  "ex-7f0rzqmz": {
+    "prompt": "Por que o agenda trocou o SQLite pelo PostgreSQL nesta aula?",
+    "hint": "Em que a última seção da aula se apoia?",
+    "choices": [
+      {
+        "text": "O SQLite não guarda datas com fuso",
+        "why": "O Django as guarda em UTC de qualquer jeito."
+      },
+      {
+        "text": "O SQLite não tem travas de linha",
+        "why": "Isso: inscrições simultâneas precisam delas, e o select_for_update não faz nada lá."
+      },
+      {
+        "text": "O Django 6.1 deixou de suportar SQLite",
+        "why": "Ainda suporta; o agenda o usou nas aulas 2 e 3."
+      },
+      {
+        "text": "O SQLite não tem chaves estrangeiras",
+        "why": "Tem."
+      }
+    ]
+  },
+  "ex-dgnn0fmw": {
+    "prompt": "O DATABASES do agenda não tem usuário, senha nem host. Como o Django entra?",
+    "hint": "Quem está conectando, por onde?",
+    "choices": [
+      {
+        "text": "O PostgreSQL aceita qualquer um em localhost sem conferir",
+        "why": "Ele confere; a conferência é o usuário do sistema."
+      },
+      {
+        "text": "O psycopg lê a senha do ~/.pgpass por padrão",
+        "why": "Não há senha envolvida aqui."
+      },
+      {
+        "text": "O papel superuser pula a autenticação",
+        "why": "Superuser é sobre permissões depois de conectado."
+      },
+      {
+        "text": "Por autenticação peer, pelo socket",
+        "why": "Isso: como o papel ana, cujo nome bate com o login."
+      }
+    ]
+  },
+  "ex-h2dp58s6": {
+    "prompt": "Ponha em uma ordem que funcione a preparação do banco do agenda.",
+    "hint": "O servidor, depois quem você é, depois onde.",
+    "items": [
+      "sudo apt install -y postgresql",
+      "sudo -u postgres createuser --superuser $USER",
+      "createdb agenda",
+      "uv add psycopg, e o DATABASES no settings.py",
+      "uv run python manage.py migrate"
+    ]
+  },
+  "ex-h8qxf40r": {
+    "prompt": "Ligue cada erro ao passo que o resolve.",
+    "hint": "A ordem da seção.",
+    "pairs": [
+      {
+        "left": "Error loading psycopg2 or psycopg module",
+        "right": "uv add psycopg"
+      },
+      {
+        "left": "FATAL:  role \"ana\" does not exist",
+        "right": "createuser --superuser $USER"
+      },
+      {
+        "left": "FATAL:  database \"agenda\" does not exist",
+        "right": "createdb agenda"
+      },
+      {
+        "left": "Is the server running locally and accepting connections",
+        "right": "sudo systemctl start postgresql"
+      }
+    ],
+    "right_distractors": [
+      "uv sync --frozen"
+    ]
+  },
+  "ex-d2vzs39y": {
+    "prompt": "O migrate diz que o banco \"agneda\" não existe, e o createdb agenda rodou antes. O que está errado?",
+    "hint": "Leia o nome na mensagem.",
+    "choices": [
+      {
+        "text": "Um erro de digitação no NAME do settings.py",
+        "why": "Isso. A mensagem imprime o nome que o Django pediu."
+      },
+      {
+        "text": "O createdb o criou sob o papel postgres, fora de vista",
+        "why": "O createdb rodou como ana e o nome era agenda."
+      },
+      {
+        "text": "O servidor está parado",
+        "why": "Um servidor parado dá um erro de socket, não este."
+      },
+      {
+        "text": "Falta o psycopg",
+        "why": "Esse erro vem antes de qualquer nome de banco ser lido."
+      }
+    ]
+  },
+  "ex-0kmp7nap": {
+    "prompt": "Uma configuração tem USER 'agenda' sem HOST, e o PostgreSQL responde Peer authentication failed. Que mudança segue o conselho da aula?",
+    "hint": "A autenticação peer compara dois nomes.",
+    "choices": [
+      {
+        "text": "Renomear a sua conta Linux para agenda",
+        "why": "Isso resolve por acaso e quebra todo o resto."
+      },
+      {
+        "text": "Fazer do papel agenda um superuser",
+        "why": "A autenticação peer falha antes de as permissões importarem."
+      },
+      {
+        "text": "Conectar por TCP com HOST 'localhost' e a senha do papel",
+        "why": "Isso. A aula 15 faz exatamente isso."
+      },
+      {
+        "text": "Reiniciar o PostgreSQL",
+        "why": "Nada no estado do servidor está errado."
+      }
+    ]
+  },
+  "ex-qz2req0e": {
+    "prompt": "O que o related_name=\"registrations\" em Registration.event dá a você?",
+    "choices": [
+      {
+        "text": "Uma coluna chamada registrations em events_event",
+        "why": "Nenhuma coluna é acrescentada a events."
+      },
+      {
+        "text": "event.registrations",
+        "why": "Isso: o caminho de volta a partir de um evento, um manager das inscrições dele."
+      },
+      {
+        "text": "Um nome para a restrição de chave estrangeira",
+        "why": "A restrição ganha um nome gerado."
+      },
+      {
+        "text": "Uma segunda tabela ligando eventos a inscrições",
+        "why": "Isso seria muitos-para-muitos; aqui é chave estrangeira."
+      }
+    ]
+  },
+  "ex-mdk4mrgd": {
+    "prompt": "Quais destes vieram dos modelos para o SQL que o sqlmigrate imprimiu? Escolha todos que se aplicam.",
+    "hint": "Leia as linhas de CREATE TABLE.",
+    "choices": [
+      {
+        "text": "CHECK (\"capacity\" >= 0)",
+        "why": "Isso, do PositiveIntegerField."
+      },
+      {
+        "text": "CONSTRAINT \"one_registration_per_email\" UNIQUE (\"event_id\", \"email\")",
+        "why": "Isso, do Meta.constraints."
+      },
+      {
+        "text": "ON DELETE CASCADE na chave estrangeira",
+        "why": "O Django aplica o CASCADE ele mesmo; a chave estrangeira no SQL tinha DEFERRABLE INITIALLY DEFERRED."
+      },
+      {
+        "text": "Um índice em events_registration.event_id",
+        "why": "Isso. O Django indexa toda chave estrangeira."
+      },
+      {
+        "text": "Um DEFAULT para created_at",
+        "why": "O auto_now_add é preenchido em Python."
+      }
+    ]
+  },
+  "ex-rp8ap7ve": {
+    "prompt": "O psql mostra o Django Night em 2026-11-12 19:00:00-03, e o Python imprimiu o testing-dojo às 22:00:00+00:00. Isso é coerente?",
+    "hint": "Cada um mostra o mesmo tipo de instante num fuso diferente.",
+    "choices": [
+      {
+        "text": "Não: o seed gravou a hora errada",
+        "why": "Os dois são 19:00 em São Paulo."
+      },
+      {
+        "text": "Não: o USE_TZ deveria ser False",
+        "why": "O USE_TZ é o que mantém isso certo."
+      },
+      {
+        "text": "Sim: 19:00 em UTC-3 é 22:00 UTC",
+        "why": "Isso. O psql mostra o fuso da sessão; o Django devolve UTC."
+      },
+      {
+        "text": "Só por acaso, já que novembro não tem horário de verão lá",
+        "why": "Não há acaso; a base de fusos sabe."
+      }
+    ]
+  },
+  "ex-zmy4xegv": {
+    "prompt": "Quantas linhas o seed.py criou em events_event?",
+    "hint": "Conte as linhas created.",
+    "unit": "linhas"
+  },
+  "ex-e1j3e175": {
+    "prompt": "Por que a migração 0002 acrescentou a coluna com DEFAULT '' e depois tirou o padrão?",
+    "hint": "Linhas existentes, e onde o Django guarda padrões.",
+    "choices": [
+      {
+        "text": "Linhas antigas precisam de valor; padrões ficam no Python",
+        "why": "Isso. Os três eventos ganharam '', depois o padrão saiu."
+      },
+      {
+        "text": "O PostgreSQL proíbe colunas text sem padrão",
+        "why": "Ele permite."
+      },
+      {
+        "text": "O blank=True exige um padrão no banco",
+        "why": "O blank é sobre formulários, não sobre o banco."
+      },
+      {
+        "text": "Para tornar a migração reversível",
+        "why": "A reversibilidade vem da operação, não do padrão."
+      }
+    ]
+  },
+  "ex-2jkcmq5d": {
+    "prompt": "Uma migração que já rodou na máquina de um colega tem um erro. O que a aula manda fazer?",
+    "hint": "O que acontece com uma migração editada num banco que já a rodou?",
+    "choices": [
+      {
+        "text": "Editá-la e pedir a todos que rodem o migrate",
+        "why": "O migrate a pula lá: ela já está registrada como aplicada."
+      },
+      {
+        "text": "Escrever uma nova migração que corrija",
+        "why": "Isso. O histórico só cresce."
+      },
+      {
+        "text": "Apagar a pasta migrations e rodar o makemigrations",
+        "why": "Isso deixa órfão todo banco que já as rodou."
+      },
+      {
+        "text": "Rodar migrate --fake nas duas máquinas",
+        "why": "Fingir esconde a diferença em vez de corrigir."
+      }
+    ]
+  },
+  "ex-2et12w7a": {
+    "prompt": "No CI, manage.py makemigrations --___ --dry-run falha quando um modelo mudou e ninguém escreveu a migração.",
+    "hint": "Ele respondeu No changes detected.",
+    "blanks": [
+      {
+        "accept": [
+          "check"
+        ]
+      }
+    ]
+  },
+  "ex-g8d7a9pf": {
+    "prompt": "O que faz Event.objects.get(slug=\"no-such-slug\")?",
+    "hint": "O get promete exatamente um.",
+    "choices": [
+      {
+        "text": "Devolve None",
+        "why": "Isso é o first() num QuerySet vazio."
+      },
+      {
+        "text": "Devolve um QuerySet vazio",
+        "why": "Isso é o filter()."
+      },
+      {
+        "text": "Levanta Event.DoesNotExist",
+        "why": "Isso; o get_object_or_404 o transforma num 404."
+      },
+      {
+        "text": "Cria o evento com esse slug",
+        "why": "Isso é o get_or_create."
+      }
+    ]
+  },
+  "ex-rnywjhke": {
+    "prompt": "Ligue cada filtro ao SQL em que ele vira.",
+    "hint": "A tabela de lookups.",
+    "pairs": [
+      {
+        "left": "capacity__gte=20",
+        "right": "capacity >= 20"
+      },
+      {
+        "left": "venue__startswith=\"Community\"",
+        "right": "venue LIKE 'Community%'"
+      },
+      {
+        "left": "slug__in=[\"a\", \"b\"]",
+        "right": "slug IN ('a', 'b')"
+      },
+      {
+        "left": "description__isnull=True",
+        "right": "description IS NULL"
+      }
+    ],
+    "right_distractors": [
+      "capacity BETWEEN 0 AND 20"
+    ]
+  },
+  "ex-0d5av15a": {
+    "prompt": "O queries.py imprimiu QuerySet para type(events).__name__. O que o banco tinha feito até ali?",
+    "hint": "Montar versus usar.",
+    "choices": [
+      {
+        "text": "Devolvido duas linhas, guardadas na memória",
+        "why": "Nada tinha sido buscado ainda."
+      },
+      {
+        "text": "Contado as linhas, para dimensionar o QuerySet",
+        "why": "Nenhuma contagem foi enviada."
+      },
+      {
+        "text": "Travado as linhas que batem",
+        "why": "Nada trava sem select_for_update."
+      },
+      {
+        "text": "Nada ainda",
+        "why": "Isso. A linha seguinte, a compreensão, rodou a consulta."
+      }
+    ]
+  },
+  "ex-x6py21dt": {
+    "prompt": "O print(events.query) mostrou LIKE Community% sem aspas. O que isso diz a você?",
+    "hint": "Compare com o connection.queries.",
+    "choices": [
+      {
+        "text": "O Django esqueceu de escapar o parâmetro, o que é risco de injeção",
+        "why": "A consulta que rodou recebeu o parâmetro separado."
+      },
+      {
+        "text": "O texto é para ler; os parâmetros são colados, não citados",
+        "why": "Isso. Nunca cole no psql."
+      },
+      {
+        "text": "O PostgreSQL aceita textos sem aspas no LIKE",
+        "why": "Não aceita."
+      },
+      {
+        "text": "O filtro está quebrado e não casa com nada",
+        "why": "Ele casou com dois eventos."
+      }
+    ]
+  },
+  "ex-kehsm7fz": {
+    "prompt": "Por que o connection.queries é ferramenta de desenvolvimento e não algo para ler em produção?",
+    "hint": "Quando o Django o preenche?",
+    "choices": [
+      {
+        "text": "Ele deixa as consultas dez vezes mais lentas",
+        "why": "Custo não é o motivo dado."
+      },
+      {
+        "text": "Ele mostra senhas",
+        "why": "Ele mostra SQL e parâmetros."
+      },
+      {
+        "text": "O Django só o mantém com o DEBUG ligado",
+        "why": "Isso, e o DEBUG nunca fica ligado em produção."
+      },
+      {
+        "text": "Só superusers conseguem lê-lo",
+        "why": "Qualquer código consegue."
+      }
+    ]
+  },
+  "ex-wc99y4ay": {
+    "prompt": "O explain() imprimiu Seq Scan on events_event. Numa tabela de um milhão de eventos, o que essa linha sugeriria?",
+    "hint": "O que uma varredura sequencial lê?",
+    "choices": [
+      {
+        "text": "Nada: Seq Scan é sempre o plano mais rápido",
+        "why": "Para três linhas é; para um milhão, ele lê todas."
+      },
+      {
+        "text": "Uma leitura da tabela inteira; um índice ajudaria",
+        "why": "Isso: o filtro por venue lê toda linha. Ler planos a fundo é trabalho do sql-databases."
+      },
+      {
+        "text": "Que o ORM escreveu SQL ruim e é preciso SQL cru",
+        "why": "O SQL está bom; falta um índice na tabela."
+      },
+      {
+        "text": "Que é preciso tirar a ordenação",
+        "why": "Ordenar é um nó separado no plano."
+      }
+    ]
+  },
+  "ex-9z4ydx55": {
+    "prompt": "Quem recusou a segunda inscrição de bruno@example.org no Django Night pelo shell?",
+    "hint": "Leia o módulo da exceção.",
+    "choices": [
+      {
+        "text": "O validador de e-mail do RegistrationForm",
+        "why": "O shell não usou formulário nenhum."
+      },
+      {
+        "text": "O register() do services.py",
+        "why": "O shell chamou objects.create direto."
+      },
+      {
+        "text": "O PostgreSQL, pela restrição de unicidade",
+        "why": "Isso: IntegrityError, duplicate key value violates unique constraint."
+      },
+      {
+        "text": "O CsrfViewMiddleware",
+        "why": "Nenhuma requisição estava envolvida."
+      }
+    ]
+  },
+  "ex-hn2rkvf6": {
+    "prompt": "Sem o select_for_update, quantas inscrições o crowd.py deixou no workshop de 12 lugares?",
+    "hint": "rows for 12 seats.",
+    "unit": "inscrições"
+  },
+  "ex-60cf1bqy": {
+    "prompt": "Por que o select_for_update só funciona dentro do transaction.atomic()?",
+    "hint": "Quanto tempo uma trava dura?",
+    "choices": [
+      {
+        "text": "O atomic() é o que manda o FOR UPDATE ao banco",
+        "why": "O QuerySet manda; o atomic() o delimita."
+      },
+      {
+        "text": "Fora de uma transação o PostgreSQL ignora a trava em silêncio",
+        "why": "O Django recusa antes de chegar ao PostgreSQL."
+      },
+      {
+        "text": "Uma trava dura o mesmo que a transação dela",
+        "why": "Isso. Sem uma, ela acabaria com o comando."
+      },
+      {
+        "text": "Senão as threads compartilham uma conexão",
+        "why": "Cada thread tem a própria conexão de qualquer jeito."
+      }
+    ]
+  },
+  "ex-9qfhnqw4": {
+    "prompt": "Ponha em ordem o que o register() faz, com a trava.",
+    "hint": "Travar primeiro, decidir, gravar, confirmar.",
+    "items": [
+      "abrir uma transação",
+      "travar a linha do evento",
+      "contar as inscrições dele",
+      "inserir a inscrição",
+      "confirmar, soltando a trava"
+    ]
+  },
+  "ex-x8exdd5z": {
+    "prompt": "O laço sobre eventos com event.registrations.count() mandou 4 consultas para 3 eventos. Quantas para 1.000 eventos?",
+    "hint": "Uma, mais uma por evento.",
+    "choices": [
+      {
+        "text": "4",
+        "why": "A contagem cresce com os eventos."
+      },
+      {
+        "text": "1.000",
+        "why": "Não esqueça a consulta dos próprios eventos."
+      },
+      {
+        "text": "1.001",
+        "why": "Isso: 1 + N."
+      },
+      {
+        "text": "2",
+        "why": "Esse é o formato do prefetch_related."
+      }
+    ]
+  },
+  "ex-eqx3wm68": {
+    "prompt": "Ligue cada necessidade à ferramenta que a aula cita.",
+    "hint": "Para frente, para trás, ou só um número.",
+    "pairs": [
+      {
+        "left": "inscrições, cada uma com o evento",
+        "right": "select_related(\"event\")"
+      },
+      {
+        "left": "eventos, cada um com a lista de inscrições",
+        "right": "prefetch_related(\"registrations\")"
+      },
+      {
+        "left": "eventos, cada um com quantos se inscreveram",
+        "right": "annotate(Count(\"registrations\"))"
+      }
+    ],
+    "right_distractors": [
+      "values_list(\"email\")"
+    ]
+  },
+  "ex-z25dv4mk": {
+    "prompt": "A lista anotada voltou como Async, Testing, Django, embora o Meta.ordering diga starts_at. Por quê?",
+    "hint": "Que tipo de consulta era?",
+    "choices": [
+      {
+        "text": "O Count ordena pelo número de inscrições",
+        "why": "O Async tem 12, mas a ordem não é pela contagem."
+      },
+      {
+        "text": "As inscrições foram inseridas nessa ordem, e as linhas voltam desse jeito",
+        "why": "Ordem de inserção não é promessa que o SQL faz."
+      },
+      {
+        "text": "Consultas que agregam pulam a ordem padrão do modelo",
+        "why": "Isso: o Django deixa o Meta.ordering fora de um GROUP BY desde a 3.1. Diga order_by() quando a ordem importa."
+      },
+      {
+        "text": "O PostgreSQL ordena linhas agregadas pelo id",
+        "why": "Nenhuma ordenação foi pedida, então a ordem é a que o plano der."
+      }
+    ]
+  },
+  "ex-vqjvgkq0": {
+    "prompt": "Um colega propõe contar os lugares livres no template, com {{ event.capacity|add:... }}, para evitar a trava. O que isso deixa de lado?",
+    "hint": "Onde a decisão é tomada, e quando?",
+    "choices": [
+      {
+        "text": "Templates não fazem conta",
+        "why": "O add faz conta; esse não é o problema."
+      },
+      {
+        "text": "A contagem precisa ser conferida no insert",
+        "why": "Isso: a página é desenhada antes do POST, e só a trava deixa a contagem verdadeira quando é usada."
+      },
+      {
+        "text": "O template precisaria de select_related",
+        "why": "Carregar relacionados não deixa uma contagem atual."
+      },
+      {
+        "text": "Nada; mostrar os lugares livres substitui a conferência",
+        "why": "Duas pessoas podem ver um lugar livre ao mesmo tempo."
+      }
+    ]
+  }
+}

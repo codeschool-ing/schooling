@@ -1,0 +1,677 @@
+[
+  {
+    "id": "ex-cbx1pxxz",
+    "version": 1,
+    "section": "where-the-bytes-go",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which section of the `hits` binary does the Go runtime read while the program runs, to print a stack trace or to grow a goroutine's stack?",
+    "hint": "One of them maps every instruction address to a function, a file and a line.",
+    "choices": [
+      {
+        "text": "`.debug_info`, the DWARF description of every function",
+        "correct": false,
+        "why": "DWARF sits at address 0: it is never loaded into memory, so the running program cannot read it. Debuggers read it from the file."
+      },
+      {
+        "text": "`.gopclntab`",
+        "correct": true,
+        "why": "Right. It maps addresses to functions, files and lines and records frame sizes; the runtime walks stacks with it, which is why no flag removes it."
+      },
+      {
+        "text": "`.symtab`, the ELF symbol table",
+        "correct": false,
+        "why": "The symbol table is for tools outside the program, like `nm` and `gdb`. It is not loaded either, and a stripped binary still prints stack traces without it."
+      },
+      {
+        "text": "`.bss`",
+        "correct": false,
+        "why": "`.bss` is zeroed memory for variables, with no bytes in the file. It holds no names and no line numbers."
+      }
+    ]
+  },
+  {
+    "id": "ex-rjn4t86q",
+    "version": 1,
+    "section": "where-the-bytes-go",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The default build of `hits` is 4,031,935 bytes, and its eight `.debug_` sections add up to 1,162,307. To the nearest whole number, what percentage of the file is DWARF?",
+    "hint": "Divide, multiply by 100, round.",
+    "value": 29,
+    "tolerance": 1,
+    "unit": "%"
+  },
+  {
+    "id": "ex-1zqk20r0",
+    "version": 1,
+    "section": "where-the-bytes-go",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of the `hits` binary with who reads it.",
+    "hint": "Ask whether the part is loaded into memory at all.",
+    "pairs": [
+      {
+        "left": "`.text`",
+        "right": "the processor, executing it"
+      },
+      {
+        "left": "`.gopclntab`",
+        "right": "the Go runtime, walking a stack"
+      },
+      {
+        "left": "`.debug_info`",
+        "right": "a debugger such as `gdb` or Delve"
+      },
+      {
+        "left": "`.symtab`",
+        "right": "`go tool nm`, listing names"
+      }
+    ],
+    "right_distractors": [
+      "`go version -m`, printing the module"
+    ]
+  },
+  {
+    "id": "ex-3c91vfpe",
+    "version": 1,
+    "section": "where-the-bytes-go",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`go tool nm` counts 3,886 symbols in `hits`, and only ten functions are from `hits` itself. A colleague concludes that every Go binary carries the whole standard library. What do the measurements say?",
+    "hint": "Look at which packages showed up in the sums, and what `tally.Parse` calls.",
+    "choices": [
+      {
+        "text": "He is right: the standard library is linked whole, so the size is fixed whatever the program does",
+        "correct": false,
+        "why": "Section 05's three programs differ by more than a megabyte, from 1,310,880 to 2,568,352 bytes, and they differ only in what they import."
+      },
+      {
+        "text": "Only the runtime is shared; standard packages are compiled into a separate shared library",
+        "correct": false,
+        "why": "The binary is statically linked and `file` says so. `time.parse` and `encoding/json` appear as code inside it."
+      },
+      {
+        "text": "What is in it is what `hits` reaches: `time` through `tally.Parse`, `encoding/json` through `-json`",
+        "correct": true,
+        "why": "Right. The runtime is always there, and the rest follows the imports: `time.parse` is the largest function because `Parse` calls it, and JSON is there for two flags."
+      },
+      {
+        "text": "The 3,886 symbols are mostly DWARF entries, not code",
+        "correct": false,
+        "why": "`go tool nm` reads the ELF symbol table, not DWARF, and the letters `T` and `t` mark code. The runtime alone is 438,417 bytes of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-vy2mrwv6",
+    "version": 1,
+    "section": "linker-flags",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `-ldflags=\"-w\"` remove from the `hits` binary?",
+    "hint": "It saved 1,162,426 bytes.",
+    "choices": [
+      {
+        "text": "The DWARF that a debugger like gdb reads",
+        "correct": true,
+        "why": "Right. 1,162,426 bytes is within 119 of what the eight `.debug_` sections added up to."
+      },
+      {
+        "text": "The table the runtime uses to name functions in a stack trace",
+        "correct": false,
+        "why": "That is `.gopclntab`, and it was still there: the stripped binary named every function when it got `SIGQUIT`."
+      },
+      {
+        "text": "The file paths of the build machine",
+        "correct": false,
+        "why": "That is `-trimpath`, a flag of `go build` itself, and it saved 5,042 bytes rather than a megabyte."
+      },
+      {
+        "text": "Every function that `main` never calls",
+        "correct": false,
+        "why": "The linker leaves out unreachable functions in every build, flags or not. `-w` touches no code."
+      }
+    ]
+  },
+  {
+    "id": "ex-j60p2qk6",
+    "version": 1,
+    "section": "linker-flags",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A build script passes only `-ldflags=-s`. Does the binary still carry DWARF?",
+    "hint": "Compare the sizes of the `-s` and `-s -w` builds, and what `go doc cmd/link` says.",
+    "choices": [
+      {
+        "text": "Yes, because `-s` removes only the symbol table, as the short help says",
+        "correct": false,
+        "why": "The short help is incomplete. The `-s` build came out at exactly the size of `-s -w`, 2,654,368 bytes."
+      },
+      {
+        "text": "No: `-s` implies `-w` unless the script adds `-w=0`",
+        "correct": true,
+        "why": "Right. `go doc cmd/link` says so, and `-s -w=0` put 1,162,362 bytes of DWARF back."
+      },
+      {
+        "text": "Only on Linux; on macOS and Windows `-w` has to be given as well",
+        "correct": false,
+        "why": "Nothing in the documentation makes the rule depend on the system, and this lesson measured Linux only. The rule is the linker's."
+      },
+      {
+        "text": "It depends on `-trimpath`, which decides whether debugging information is kept",
+        "correct": false,
+        "why": "`-trimpath` rewrites paths and saved 5,042 bytes. Whether DWARF is written is up to `-s` and `-w`."
+      }
+    ]
+  },
+  {
+    "id": "ex-gsjdvksx",
+    "version": 1,
+    "section": "linker-flags",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`hits`, built with `-trimpath -ldflags=\"-s -w\"`, gets `SIGQUIT` while it reads standard input. What does the frame for `main.main` look like?",
+    "hint": "Which table names functions for the runtime, and what did `-trimpath` do to the paths?",
+    "choices": [
+      {
+        "text": "`main.main()` with `example.com/hits/main.go:28` under it",
+        "correct": true,
+        "why": "Right. `.gopclntab` survives stripping, and `-trimpath` turned `/home/ana/small/main.go` into a path that starts with the module."
+      },
+      {
+        "text": "Bare addresses such as `pc=0x52b60c`, because the names went with the symbol table",
+        "correct": false,
+        "why": "The names a stack trace prints come from `.gopclntab`, which no flag removes. The symbol table is for tools like `nm`."
+      },
+      {
+        "text": "`main.main()` with `/home/ana/small/main.go:28` under it",
+        "correct": false,
+        "why": "That is the default build's frame. `-trimpath` replaces the directory with the module path."
+      },
+      {
+        "text": "No trace at all: a stripped binary just exits on `SIGQUIT`",
+        "correct": false,
+        "why": "The stripped build printed every goroutine's stack, from `tally.Count` down to `main.main`."
+      }
+    ]
+  },
+  {
+    "id": "ex-4dqt5awy",
+    "version": 1,
+    "section": "linker-flags",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`strings hits | grep -c /home/ana` printed 2 for the default build and 0 for the build made with `go build ___`.",
+    "hint": "A flag of `go build` itself, not of the linker, that rewrites recorded file names.",
+    "blanks": [
+      {
+        "accept": [
+          "-trimpath"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-snzmxtv8",
+    "version": 1,
+    "section": "linker-flags",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Version v1.4.0 of a tool ships built with `-s -w`. A customer's copy crashes, and you want to step through the failing function in `gdb`. What should the release process have done for this to be possible?",
+    "hint": "gdb needs the parts `-s -w` removed, from a build of exactly the same code.",
+    "choices": [
+      {
+        "text": "Nothing: `gdb` can read the stack trace's function names from `.gopclntab`",
+        "correct": false,
+        "why": "`gdb` printed `No symbol table is loaded` on the stripped build. It reads DWARF and the symbol table, not the runtime's table."
+      },
+      {
+        "text": "Kept the unstripped binary built from the same commit",
+        "correct": true,
+        "why": "Right. The stripped and unstripped builds hold the same code; the second carries the DWARF and symbols `gdb` needs."
+      },
+      {
+        "text": "Built with `-trimpath`, so that `gdb` finds the source files by module path",
+        "correct": false,
+        "why": "`-trimpath` changes paths and leaves the DWARF question alone; with `-s -w` there is still no debugging information."
+      },
+      {
+        "text": "Recorded `go version -m` output, from which the symbols can be rebuilt",
+        "correct": false,
+        "why": "`go version -m` lists the module, the settings and the revision. It holds no symbols and no line tables."
+      }
+    ]
+  },
+  {
+    "id": "ex-ryrafv0c",
+    "version": 1,
+    "section": "stamping-a-version",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`go build -ldflags=\"-X main.Version=v1.1.0\"` succeeds, and `./hits version` still prints `hits dev`. Why?",
+    "hint": "Look at how the variable is spelt in `version.go`.",
+    "choices": [
+      {
+        "text": "The variable is `version`, and `-X` ignores a name it cannot find",
+        "correct": true,
+        "why": "Right. Go names are case-sensitive, and the linker gave no warning; a release script has to check the output itself."
+      },
+      {
+        "text": "`-X` only works when the tree has been committed and tagged",
+        "correct": false,
+        "why": "The earlier build with `-X main.version=v1.1.0` set the name on a dirty tree. `-X` does not read git at all."
+      },
+      {
+        "text": "`-X` sets constants, and `version` is a variable",
+        "correct": false,
+        "why": "It is the other way round: `-X` sets string variables and cannot touch a `const`."
+      },
+      {
+        "text": "The value has to be quoted twice inside `-ldflags`",
+        "correct": false,
+        "why": "The same quoting with the lower-case name worked. The difference between the two builds is one letter."
+      }
+    ]
+  },
+  {
+    "id": "ex-afzhkdnw",
+    "version": 1,
+    "section": "stamping-a-version",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these declarations in package `main` can `-ldflags=\"-X main.name=v2\"` set? Choose all that apply.",
+    "hint": "`go doc cmd/link` states the condition in two sentences.",
+    "choices": [
+      {
+        "text": "`var name string`",
+        "correct": true,
+        "why": "Right. An uninitialised string variable is one of the two cases the documentation names."
+      },
+      {
+        "text": "`var name = \"dev\"`",
+        "correct": true,
+        "why": "Right. A string variable initialised to a constant expression is the other case, and it is how `version.go` declares `version`."
+      },
+      {
+        "text": "`const name = \"dev\"`",
+        "correct": false,
+        "why": "A constant has no storage for the linker to fill in. `-X` sets variables only."
+      },
+      {
+        "text": "`var name = strings.ToLower(\"DEV\")`",
+        "correct": false,
+        "why": "The documentation says `-X` does not work when the initializer makes a function call."
+      },
+      {
+        "text": "`var name int`",
+        "correct": false,
+        "why": "`-X` sets string variables; the value on the command line is text."
+      }
+    ]
+  },
+  {
+    "id": "ex-xfjyabx0",
+    "version": 1,
+    "section": "stamping-a-version",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order the steps that produce a `hits` binary that reports itself as `v1.2.0`, with no DWARF and no home directory in it.",
+    "hint": "The tag names a commit, and the build reads the tag.",
+    "items": [
+      "`git add . && git commit -m \"the change\"`",
+      "`git tag v1.2.0`",
+      "`go build -trimpath -ldflags=\"-s -w -X main.version=$(git describe --tags)\" -o hits .`",
+      "`./hits version | grep -q v1.2.0`"
+    ]
+  },
+  {
+    "id": "ex-tp1vnhxf",
+    "version": 1,
+    "section": "stamping-a-version",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A build server downloads a source archive of tag v1.1.0, with no `.git` directory, and runs a plain `go build`. What does `./hits version` print on its second line?",
+    "hint": "Where does the go command get the module version from?",
+    "choices": [
+      {
+        "text": "`module example.com/hits v1.1.0, go1.27.1`, read from the archive's name",
+        "correct": false,
+        "why": "The go command takes the version from version control, not from a directory or archive name."
+      },
+      {
+        "text": "`module example.com/hits (devel), go1.27.1`, and no `vcs` lines after it",
+        "correct": true,
+        "why": "Right. That is what the build in `/tmp/small-v1.1.0` printed; only `-X` could still have named the release."
+      },
+      {
+        "text": "Nothing: the build fails, because `-buildvcs` requires a repository",
+        "correct": false,
+        "why": "In its default mode, `auto`, the go command stamps what it finds and builds anyway; only `-buildvcs=true` turns the absence into an error."
+      },
+      {
+        "text": "`module example.com/hits v1.1.0+dirty`, because the files are not in a commit",
+        "correct": false,
+        "why": "`+dirty` marks a repository with uncommitted changes. With no repository there is nothing to compare against, and no version either."
+      }
+    ]
+  },
+  {
+    "id": "ex-vhzkcyx2",
+    "version": 1,
+    "section": "beyond-the-flags",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "UPX took `hits` from 2,666,656 to 1,140,620 bytes. What does the smaller file cost?",
+    "hint": "Look at the hundred starts, and at `go version -m`.",
+    "choices": [
+      {
+        "text": "Every start pays for decompressing, and `go version -m` cannot read it",
+        "correct": true,
+        "why": "Right. A hundred starts took 2.182 seconds against 0.270, and `go version -m` said `not a Go executable`."
+      },
+      {
+        "text": "Nothing at run time; only the build takes longer",
+        "correct": false,
+        "why": "The decompressor runs inside every start of the program. That is where the 2.182 seconds came from."
+      },
+      {
+        "text": "It counts the log more slowly, because the code stays compressed in memory",
+        "correct": false,
+        "why": "The program is rebuilt in memory before it runs and then runs as before; the measured cost is the start."
+      },
+      {
+        "text": "It no longer runs on other Linux machines",
+        "correct": false,
+        "why": "A UPX file is still an ordinary executable for the same system and processor; it carries its own decompressor."
+      }
+    ]
+  },
+  {
+    "id": "ex-e3e6xbtz",
+    "version": 1,
+    "section": "beyond-the-flags",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Built with `-s -w`, a program that only writes `hello` to standard output is 1,310,880 bytes, and the same program encoding the word with `encoding/json` is 2,568,352. How many bytes does the import add?",
+    "hint": "Subtract.",
+    "value": 1257472,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-zp1z4sn3",
+    "version": 1,
+    "section": "beyond-the-flags",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the difference between `go build -gcflags=-l` and `go build -gcflags=all=-l`?",
+    "hint": "One of them reaches the standard library.",
+    "choices": [
+      {
+        "text": "None; `all=` is an older spelling",
+        "correct": false,
+        "why": "The prefix is a package pattern. Without one, the flag goes only to the packages named on the command line."
+      },
+      {
+        "text": "The first applies to the packages named on the command line, the second to every package",
+        "correct": true,
+        "why": "Right. Without `all=`, only `main` would lose inlining here, and the runtime and the standard library would not."
+      },
+      {
+        "text": "The first goes to the linker, the second to the compiler",
+        "correct": false,
+        "why": "Both go to the compiler; `-ldflags` is the one for the linker."
+      },
+      {
+        "text": "`all=` also strips the symbol table",
+        "correct": false,
+        "why": "Stripping is the linker's `-s`. `all=` only widens which packages get `-l`."
+      }
+    ]
+  },
+  {
+    "id": "ex-esvv7g8k",
+    "version": 1,
+    "section": "beyond-the-flags",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A tool is downloaded as a `.tar.gz`, and its maintainer proposes adding UPX to the release to make the download smaller. Going by the `hits` measurements, what will it buy?",
+    "hint": "Compare `gzip -9` on the plain binary and on the UPX one.",
+    "choices": [
+      {
+        "text": "Half the download, since UPX shrank the binary to 43%",
+        "correct": false,
+        "why": "That was against the uncompressed file. `gzip -9` already brought the plain binary to 1,171,128 bytes."
+      },
+      {
+        "text": "Nothing either way, because `gzip` undoes UPX",
+        "correct": false,
+        "why": "`gzip` does not undo anything; it compresses the UPX file a little further, to 1,118,110 bytes."
+      },
+      {
+        "text": "A few per cent off the archive, for a slower start on every run",
+        "correct": true,
+        "why": "Right. 1,118,110 bytes against 1,171,128 is under 5%, and every start pays the decompression."
+      },
+      {
+        "text": "A smaller download and a faster start, since less is read from disk",
+        "correct": false,
+        "why": "The start measured about eight times slower: decompressing costs far more than reading a few hundred kilobytes."
+      }
+    ]
+  },
+  {
+    "id": "ex-1rx3zvvv",
+    "version": 1,
+    "section": "a-container-runtime",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In this lab, `podman run --rm docker.io/library/busybox:1.36 echo ok` fails with a message about `/dev/net/tun`, and the same command with `--network=none` prints `ok`. Why?",
+    "hint": "Which program builds a rootless container's network, and what did `stat` say about the device?",
+    "choices": [
+      {
+        "text": "Podman is not installed correctly and must be reinstalled",
+        "correct": false,
+        "why": "The container started and printed `ok` with `--network=none`; Podman works."
+      },
+      {
+        "text": "busybox needs a network to start up, and this sandbox machine has no network at all",
+        "correct": false,
+        "why": "busybox started without any network. What failed was setting one up."
+      },
+      {
+        "text": "`slirp4netns` opens `/dev/net/tun`, which only root is allowed to open here",
+        "correct": true,
+        "why": "Right. `stat` showed `crw------- root`; with no network asked for, `slirp4netns` is never started."
+      },
+      {
+        "text": "Ana has no range in `/etc/subuid`",
+        "correct": false,
+        "why": "`grep` found her range, 165536 and 65,536 ids, and a missing range fails with a different message."
+      }
+    ]
+  },
+  {
+    "id": "ex-wp3w70n6",
+    "version": 1,
+    "section": "a-container-runtime",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A brand-new account's first container fails: the log says no id ranges were found for the user, then `insufficient UIDs or GIDs`. What fixes it?",
+    "hint": "Two steps: one as root, one as the account.",
+    "choices": [
+      {
+        "text": "Running `podman` with `sudo`",
+        "correct": false,
+        "why": "That would run the container as root, the thing rootless Podman exists to avoid; the account's own setup stays broken."
+      },
+      {
+        "text": "A range for the user in `/etc/subuid` and `/etc/subgid`, then `podman system migrate`",
+        "correct": true,
+        "why": "Right. `usermod --add-subuids` and `--add-subgids` write the range, and `migrate` makes Podman pick it up."
+      },
+      {
+        "text": "Adding `--network=none` to the command, which skips the user namespace and its id mapping",
+        "correct": false,
+        "why": "`--network=none` avoids the `/dev/net/tun` problem and nothing else. The user namespace is set up either way, and this failure is about its ids."
+      },
+      {
+        "text": "Pulling a smaller image with fewer files",
+        "correct": false,
+        "why": "The size is irrelevant: busybox failed because one of its owners, id 65534, had nothing to map to."
+      }
+    ]
+  },
+  {
+    "id": "ex-sv5241xy",
+    "version": 1,
+    "section": "a-container-runtime",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`/etc/subuid` has the line `ana:165536:65536`. What is the first id after the end of Ana's range, where a new account's range can start without overlapping hers?",
+    "hint": "Start plus length.",
+    "value": 231072,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-qsshghn7",
+    "version": 1,
+    "section": "a-container-runtime",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague installs Docker Engine and adds every developer to the `docker` group so that nobody has to type `sudo`. What has he given them?",
+    "hint": "Who does the work when a member of the group runs `docker run`?",
+    "choices": [
+      {
+        "text": "The same as rootless Podman: containers that belong to each user",
+        "correct": false,
+        "why": "Podman's containers are started by the user's own process. Docker's are started by a daemon running as root, on behalf of whoever may ask it."
+      },
+      {
+        "text": "Access to the daemon's socket only, which cannot affect the host",
+        "correct": false,
+        "why": "The daemon runs as root and does what it is asked, including mounting the host's files into a container; being allowed to ask is the power."
+      },
+      {
+        "text": "Nothing beyond what `sudo` already gave them, since they had to type a password for it",
+        "correct": false,
+        "why": "Group membership needs no password at each use, and it reaches a root daemon directly."
+      },
+      {
+        "text": "The equivalent of root on that machine",
+        "correct": true,
+        "why": "Right. Asking a root daemon to run anything is root by another route, which is the reason this course uses rootless Podman."
+      }
+    ]
+  },
+  {
+    "id": "ex-mamhq8db",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each flag with what it did to `hits`.",
+    "hint": "Four belong to the build of section 03 or 04; one to section 05.",
+    "pairs": [
+      {
+        "left": "`-ldflags=\"-w\"`",
+        "right": "removed 1,162,426 bytes of DWARF"
+      },
+      {
+        "left": "`-ldflags=\"-s\"`",
+        "right": "removed the symbol table, and the DWARF with it"
+      },
+      {
+        "left": "`-trimpath`",
+        "right": "replaced `/home/ana/small` with the module path"
+      },
+      {
+        "left": "`-ldflags=\"-X main.version=v1.1.0\"`",
+        "right": "set a string variable at link time"
+      },
+      {
+        "left": "`-gcflags=all=-l`",
+        "right": "turned inlining off in every package"
+      }
+    ],
+    "right_distractors": [
+      "removed `.gopclntab`"
+    ]
+  },
+  {
+    "id": "ex-y2y78wca",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On a server you find a Linux executable that runs and answers like a Go tool, but `go version -m` says `not a Go executable` and `go tool nm` finds no symbols. What is the likeliest explanation?",
+    "hint": "One thing measured in this lesson hides the build information, and one removes the symbols.",
+    "choices": [
+      {
+        "text": "It was built with `-s -w`, which removes the build information",
+        "correct": false,
+        "why": "A `-s -w` build still answered `go version -m`: the build information has a section of its own that `-s` leaves alone."
+      },
+      {
+        "text": "It was compiled with `-trimpath`",
+        "correct": false,
+        "why": "`-trimpath` rewrites paths; the trimmed builds kept both their symbols and their build information."
+      },
+      {
+        "text": "It was packed with UPX after the build",
+        "correct": true,
+        "why": "Right. UPX compresses everything, build information and symbols included, and `go version -m` on the UPX file of `hits` said exactly `not a Go executable`."
+      },
+      {
+        "text": "It was built from a source archive with no `.git`",
+        "correct": false,
+        "why": "Such a build still has build information, with `(devel)` as its version, and `go version -m` reads it."
+      }
+    ]
+  },
+  {
+    "id": "ex-0t5k1gxg",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To set the string variable `version` of the program's `main` package to v2.0.0 while linking, the build passes `-ldflags=\"-X ___=v2.0.0\"`.",
+    "hint": "The package path, a dot, and the variable's name, with the case exactly as declared.",
+    "blanks": [
+      {
+        "accept": [
+          "main.version"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,655 @@
+[
+  {
+    "id": "ex-q2ef6ff6",
+    "version": 1,
+    "section": "pytest-django",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where did the rows the Django tests wrote end up?",
+    "choices": [
+      {
+        "text": "In agenda, the development database",
+        "correct": false,
+        "why": "Nothing there changed."
+      },
+      {
+        "text": "Nowhere; each was rolled back",
+        "correct": true,
+        "why": "Right, in a test database destroyed at the end."
+      },
+      {
+        "text": "In a SQLite file pytest made",
+        "correct": false,
+        "why": "pytest-django used PostgreSQL, as the settings say."
+      },
+      {
+        "text": "In Redis",
+        "correct": false,
+        "why": "Redis was not involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-t0cen5zf",
+    "version": 1,
+    "section": "pytest-django",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why could pytest-django create test_agenda without a password or a new role?",
+    "choices": [
+      {
+        "text": "Test databases need no permissions",
+        "correct": false,
+        "why": "Creating a database does."
+      },
+      {
+        "text": "It used the postgres role",
+        "correct": false,
+        "why": "It connected as ana."
+      },
+      {
+        "text": "Lesson 4 made ana a superuser role",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "pytest-django ships its own PostgreSQL server for tests",
+        "correct": false,
+        "why": "It uses the one installed."
+      }
+    ]
+  },
+  {
+    "id": "ex-xkwt6x7r",
+    "version": 1,
+    "section": "pytest-django",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Fixtures shared by several test files go in tests/___.py.",
+    "blanks": [
+      {
+        "accept": [
+          "conftest"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-v5z6z2vb",
+    "version": 1,
+    "section": "pytest-django",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the service tests need no Redis, although register() queues a Celery task?",
+    "choices": [
+      {
+        "text": "No commit, so on_commit never fired",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "pytest-django starts a Redis of its own",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "Celery is disabled when DEBUG is true",
+        "correct": false,
+        "why": "DEBUG has nothing to do with it."
+      },
+      {
+        "text": "The fixtures replaced send_confirmation",
+        "correct": false,
+        "why": "Only test_tasks.py replaces anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-4wy41yn5",
+    "version": 1,
+    "section": "pytest-django",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In conftest.py, why does asking for the workshop fixture also create ana?",
+    "choices": [
+      {
+        "text": "pytest creates every fixture for every test",
+        "correct": false,
+        "why": "Only those asked for, directly or not."
+      },
+      {
+        "text": "workshop asks for ana as a parameter",
+        "correct": true,
+        "why": "Right: fixtures ask for fixtures."
+      },
+      {
+        "text": "ana is the superuser, created by migrate",
+        "correct": false,
+        "why": "migrate creates no users."
+      },
+      {
+        "text": "The db fixture copies the development users",
+        "correct": false,
+        "why": "The test database starts empty."
+      }
+    ]
+  },
+  {
+    "id": "ex-7tx7z6c3",
+    "version": 1,
+    "section": "the-test-client",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The form test posted without a CSRF token and passed. Why?",
+    "choices": [
+      {
+        "text": "The view is exempt from CSRF",
+        "correct": false,
+        "why": "It is not."
+      },
+      {
+        "text": "pytest-django sends the token automatically",
+        "correct": false,
+        "why": "No token was sent."
+      },
+      {
+        "text": "CSRF only applies to the admin",
+        "correct": false,
+        "why": "It applies to every POST form."
+      },
+      {
+        "text": "The test client skips CSRF by default",
+        "correct": true,
+        "why": "Right: enforce_csrf_checks=True turns it on."
+      }
+    ]
+  },
+  {
+    "id": "ex-vkd78xve",
+    "version": 1,
+    "section": "the-test-client",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the count was added to the template, how many queries did the list make for the two events?",
+    "hint": "One for the list, one per event.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "queries"
+  },
+  {
+    "id": "ex-ad6wb1f9",
+    "version": 1,
+    "section": "the-test-client",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What fixed test_the_list_costs_one_query?",
+    "choices": [
+      {
+        "text": "Raising the expected number to 3",
+        "correct": false,
+        "why": "That would hide the N+1, not fix it."
+      },
+      {
+        "text": "annotate(taken=Count(...)) in the view",
+        "correct": true,
+        "why": "Right: one query again."
+      },
+      {
+        "text": "Caching the template",
+        "correct": false,
+        "why": "The queries come from the template's calls, every render."
+      },
+      {
+        "text": "select_related(\"registrations\") on the list",
+        "correct": false,
+        "why": "select_related follows foreign keys forwards only."
+      }
+    ]
+  },
+  {
+    "id": "ex-63av0dab",
+    "version": 1,
+    "section": "the-test-client",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To fail a test when a block runs more SQL than expected, pytest-django offers django_assert_num____.",
+    "blanks": [
+      {
+        "accept": [
+          "queries"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kw3d605m",
+    "version": 1,
+    "section": "the-test-client",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does a query-count test matter more than one that checks the page's text?",
+    "choices": [
+      {
+        "text": "Text changes too often to test",
+        "correct": false,
+        "why": "Text tests are fine; they test something else."
+      },
+      {
+        "text": "An N+1 looks right and is slow",
+        "correct": true,
+        "why": "Right: nothing else would notice."
+      },
+      {
+        "text": "PostgreSQL charges per query",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "Query counts also check permissions",
+        "correct": false,
+        "why": "They check cost, not doors."
+      }
+    ]
+  },
+  {
+    "id": "ex-41cpcdx3",
+    "version": 1,
+    "section": "the-api-client",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does force_authenticate(user) do in DRF's APIClient?",
+    "choices": [
+      {
+        "text": "Makes every request that user's, with no token",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Logs the user in through the login form, as a browser would",
+        "correct": false,
+        "why": "No form is involved."
+      },
+      {
+        "text": "Gives the user every permission for the test",
+        "correct": false,
+        "why": "Permissions are unchanged; that is the point."
+      },
+      {
+        "text": "Creates a DRF token in authtoken_token",
+        "correct": false,
+        "why": "No token is made."
+      }
+    ]
+  },
+  {
+    "id": "ex-s4avb9dw",
+    "version": 1,
+    "section": "the-api-client",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is each door a test of its own instead of one test with a loop?",
+    "choices": [
+      {
+        "text": "pytest cannot run loops inside tests",
+        "correct": false,
+        "why": "It can."
+      },
+      {
+        "text": "It is faster",
+        "correct": false,
+        "why": "It is a little slower."
+      },
+      {
+        "text": "Each failure names its row",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "parametrize skips rows that fail",
+        "correct": false,
+        "why": "It reports them."
+      }
+    ]
+  },
+  {
+    "id": "ex-79zhdy7d",
+    "version": 1,
+    "section": "the-api-client",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does request.getfixturevalue(who) do in test_doors?",
+    "choices": [
+      {
+        "text": "Reads the who column from the database",
+        "correct": false,
+        "why": "who is a string from the table."
+      },
+      {
+        "text": "Gets the fixture named in the row",
+        "correct": true,
+        "why": "Right: \"bruno\" becomes the bruno fixture."
+      },
+      {
+        "text": "Logs in as who with the password",
+        "correct": false,
+        "why": "No password is used."
+      },
+      {
+        "text": "Returns the expected status code",
+        "correct": false,
+        "why": "That is the expected column."
+      }
+    ]
+  },
+  {
+    "id": "ex-wwma0me3",
+    "version": 1,
+    "section": "the-api-client",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Compared with lesson 12's doors.py, what does the test version change? Choose all that apply.",
+    "choices": [
+      {
+        "text": "It needs no running server",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It needs no passwords or tokens",
+        "correct": true,
+        "why": "Right: force_authenticate."
+      },
+      {
+        "text": "It checks different status codes",
+        "correct": false,
+        "why": "The same decisions."
+      },
+      {
+        "text": "It writes to the development database",
+        "correct": false,
+        "why": "It writes to the test database, and rolls back."
+      }
+    ]
+  },
+  {
+    "id": "ex-kcgn33hh",
+    "version": 1,
+    "section": "testing-tasks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does test_registering_queues_the_confirmation_after_commit replace send_confirmation.delay?",
+    "choices": [
+      {
+        "text": "delay() is too slow for a test",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "Celery refuses tasks during tests",
+        "correct": false,
+        "why": "It would just try to reach Redis."
+      },
+      {
+        "text": "To record what is queued without Redis",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "To make the mail go to mailoutbox",
+        "correct": false,
+        "why": "That is the second test, which calls the function."
+      }
+    ]
+  },
+  {
+    "id": "ex-sx1s4jj6",
+    "version": 1,
+    "section": "testing-tasks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does django_capture_on_commit_callbacks(execute=True) make possible?",
+    "choices": [
+      {
+        "text": "Running the deferred callbacks",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Committing the test's transaction",
+        "correct": false,
+        "why": "Nothing commits."
+      },
+      {
+        "text": "Running the Celery worker in the test",
+        "correct": false,
+        "why": "No worker runs."
+      },
+      {
+        "text": "Skipping register's atomic block",
+        "correct": false,
+        "why": "The block runs as a savepoint."
+      }
+    ]
+  },
+  {
+    "id": "ex-3nwfemze",
+    "version": 1,
+    "section": "testing-tasks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why would CELERY_TASK_ALWAYS_EAGER weaken these tests?",
+    "choices": [
+      {
+        "text": "It needs a second Redis",
+        "correct": false,
+        "why": "It needs none."
+      },
+      {
+        "text": "It disables retries",
+        "correct": false,
+        "why": "Retries are not what the tests check."
+      },
+      {
+        "text": "It sends real e-mail",
+        "correct": false,
+        "why": "The test backend still catches mail."
+      },
+      {
+        "text": "It hides when a task is queued",
+        "correct": true,
+        "why": "Right: that is what the first test checks."
+      }
+    ]
+  },
+  {
+    "id": "ex-5zjsd0pg",
+    "version": 1,
+    "section": "testing-tasks",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The messages Django's test mail backend collects are in the fixture ___.",
+    "blanks": [
+      {
+        "accept": [
+          "mailoutbox"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-j790jca7",
+    "version": 1,
+    "section": "fastapi-testclient",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In agenda-api's session fixture, what does join_transaction_mode=\"create_savepoint\" do to a route's session.commit()?",
+    "choices": [
+      {
+        "text": "Makes it raise, so tests catch it",
+        "correct": false,
+        "why": "It succeeds."
+      },
+      {
+        "text": "Turns it into a savepoint release",
+        "correct": true,
+        "why": "Right: the outer transaction still rolls back."
+      },
+      {
+        "text": "Commits for real, then deletes the rows",
+        "correct": false,
+        "why": "Nothing is committed."
+      },
+      {
+        "text": "Delays it until the test ends",
+        "correct": false,
+        "why": "It happens at once, inside the transaction."
+      }
+    ]
+  },
+  {
+    "id": "ex-grxbeew6",
+    "version": 1,
+    "section": "fastapi-testclient",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does monkeypatch target \"app.mail.confirmation\" rather than importing the function into the test?",
+    "choices": [
+      {
+        "text": "Background tasks cannot be imported",
+        "correct": false,
+        "why": "They can."
+      },
+      {
+        "text": "monkeypatch only accepts strings",
+        "correct": false,
+        "why": "It accepts objects too."
+      },
+      {
+        "text": "register looks it up on the module when it runs",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The test file must not import app",
+        "correct": false,
+        "why": "conftest imports app."
+      }
+    ]
+  },
+  {
+    "id": "ex-419557sb",
+    "version": 1,
+    "section": "fastapi-testclient",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what one FastAPI test goes through.",
+    "items": [
+      "the session fixture begins the outer transaction",
+      "the client fixture overrides get_session",
+      "the test sends its request through TestClient",
+      "the overrides are cleared",
+      "the outer transaction is rolled back"
+    ]
+  },
+  {
+    "id": "ex-agq4tmdv",
+    "version": 1,
+    "section": "fastapi-testclient",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With EventDep in place of EditableEvent, how many doors failed?",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "doors"
+  },
+  {
+    "id": "ex-c1datak2",
+    "version": 1,
+    "section": "fastapi-testclient",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With the guard removed, why did the anonymous PATCH answer 200 instead of 401?",
+    "choices": [
+      {
+        "text": "TestClient sends a token by default",
+        "correct": false,
+        "why": "It sends none."
+      },
+      {
+        "text": "Nothing in the route asked for a user any more",
+        "correct": true,
+        "why": "Right: the 401 came from the guard's CurrentUser."
+      },
+      {
+        "text": "EventDep logs anonymous users in",
+        "correct": false,
+        "why": "It only finds the event."
+      },
+      {
+        "text": "PATCH is a safe method",
+        "correct": false,
+        "why": "It is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-dyc198st",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A new endpoint must only be open to admins. What should come with it?",
+    "choices": [
+      {
+        "text": "A comment saying it is admin-only",
+        "correct": false,
+        "why": "A comment fails nothing."
+      },
+      {
+        "text": "Rows in the doors table for each person",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A query-count test",
+        "correct": false,
+        "why": "That checks cost."
+      },
+      {
+        "text": "A manual check with curl before each release",
+        "correct": false,
+        "why": "It runs once; a test runs every time."
+      }
+    ]
+  }
+]

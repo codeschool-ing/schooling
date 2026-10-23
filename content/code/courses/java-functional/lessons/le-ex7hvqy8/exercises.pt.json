@@ -1,0 +1,338 @@
+{
+  "ex-zrg8wen0": {
+    "prompt": "Ligue cada referência à sua espécie.",
+    "hint": "O que vem antes do `::`?",
+    "pairs": [
+      {
+        "left": "`Integer::parseInt`",
+        "right": "estática"
+      },
+      {
+        "left": "`shop::equals`",
+        "right": "ligada"
+      },
+      {
+        "left": "`String::toUpperCase`",
+        "right": "não ligada"
+      },
+      {
+        "left": "`ArrayList::new`",
+        "right": "construtor"
+      }
+    ],
+    "right_distractors": [
+      "anônima"
+    ]
+  },
+  "ex-1ckv9ap2": {
+    "prompt": "Que lambda `String::toUpperCase` representa?",
+    "hint": "Não ligada: o objeto vem do argumento.",
+    "choices": [
+      {
+        "text": "`s -> s.toUpperCase()`",
+        "why": "Isso."
+      },
+      {
+        "text": "`() -> String.toUpperCase()`",
+        "why": "Não há `toUpperCase` estático para chamar sem uma string."
+      },
+      {
+        "text": "`(a, b) -> a.toUpperCase(b)`",
+        "why": "`toUpperCase` não recebe string como argumento."
+      },
+      {
+        "text": "`s -> String.toUpperCase(s)`",
+        "why": "`toUpperCase` é método de instância, não estático recebendo uma string."
+      }
+    ]
+  },
+  "ex-yvk7c09a": {
+    "prompt": "`parse.apply(\"42\") + 1` imprimiu `43`. O que isso diz sobre `Integer::parseInt` como `Function<String, Integer>`?",
+    "hint": "`+` com uma string teria concatenado.",
+    "choices": [
+      {
+        "text": "Contou os caracteres e somou um",
+        "why": "Isso imprimiria 3."
+      },
+      {
+        "text": "Devolveu a string `\"42\"`, e o Java a converteu",
+        "why": "Uma string mais 1 imprime `421`."
+      },
+      {
+        "text": "Devolveu um número, ao qual o `+ 1` somou",
+        "why": "Isso: o `int` do `parseInt`, embrulhado em `Integer`."
+      },
+      {
+        "text": "Devolveu uma referência ao método",
+        "why": "`apply` roda o método e devolve o resultado."
+      }
+    ]
+  },
+  "ex-zqq0hk9t": {
+    "prompt": "Uma referência a método é mais rápida que o lambda equivalente?",
+    "hint": "Como cada um vira objeto.",
+    "choices": [
+      {
+        "text": "Sim, porque não precisa de `invokedynamic`",
+        "why": "Os dois são construídos pelo `invokedynamic`."
+      },
+      {
+        "text": "Não: a escolha é sobre leitura",
+        "why": "Isso. A JVM trata os dois igual."
+      },
+      {
+        "text": "Não, é mais lenta, porque é procurada pelo nome a cada chamada",
+        "why": "A busca acontece uma vez, quando o objeto é construído."
+      },
+      {
+        "text": "Sim, porque o método é embutido na compilação",
+        "why": "O `javac` não embute nenhum dos dois."
+      }
+    ]
+  },
+  "ex-m3gmqctg": {
+    "prompt": "`String title = \"Dune\";` Qual é a forma de `title::length`?",
+    "hint": "A string já foi escolhida.",
+    "choices": [
+      {
+        "text": "`Function<String, Integer>`",
+        "why": "Essa é `String::length`, que ainda precisa de uma string."
+      },
+      {
+        "text": "`Consumer<String>`",
+        "why": "Um consumer não devolve nada; `length` devolve um `int`."
+      },
+      {
+        "text": "`Supplier<Integer>`",
+        "why": "Isso: nada entra, sai um tamanho."
+      },
+      {
+        "text": "`Predicate<String>`",
+        "why": "`length` não devolve `boolean`."
+      }
+    ]
+  },
+  "ex-shc4r20x": {
+    "prompt": "Como `String::compareToIgnoreCase`, que recebe uma string, pode ser um `Comparator<String>`, cujo `compare` recebe duas?",
+    "hint": "Referências não ligadas tiram o objeto de algum lugar.",
+    "choices": [
+      {
+        "text": "O primeiro argumento é o objeto",
+        "why": "Isso: `compare(a, b)` vira `a.compareToIgnoreCase(b)`."
+      },
+      {
+        "text": "`compareToIgnoreCase` tem uma versão oculta de dois argumentos",
+        "why": "Há uma versão; o receptor fornece a outra string."
+      },
+      {
+        "text": "O segundo argumento é ignorado, e só o primeiro é comparado",
+        "why": "É com ele que `a` é comparado."
+      },
+      {
+        "text": "O Java chama o método duas vezes, uma por argumento",
+        "why": "Uma comparação, uma chamada."
+      }
+    ]
+  },
+  "ex-v4rvbsbp": {
+    "prompt": "Em `Bound.java`, a referência imprimiu 4 e o lambda imprimiu 29 depois que `current` mudou. Por quê?",
+    "hint": "Quando `current` é lido, em cada um?",
+    "choices": [
+      {
+        "text": "A referência guardou o resultado da primeira chamada",
+        "why": "Ela não tinha sido chamada antes da mudança."
+      },
+      {
+        "text": "`length` numa referência conta palavras, não caracteres",
+        "why": "Mesmo método, mesmo significado: 4 é o tamanho de `\"Dune\"`."
+      },
+      {
+        "text": "Referências não enxergam campos estáticos",
+        "why": "Ela leu o campo, uma vez, quando foi feita."
+      },
+      {
+        "text": "Uma leu `current` na criação, o outro a cada `get`",
+        "why": "Isso. Uma referência ligada fixa o objeto de antemão."
+      }
+    ]
+  },
+  "ex-prncarzn": {
+    "prompt": "`current` é `null`. Onde cada um destes falha: `() -> current.length()` e `current::length`?",
+    "hint": "Veja o número da linha no stack trace.",
+    "choices": [
+      {
+        "text": "O lambda só ao ser chamado; a referência onde é feita",
+        "why": "Isso, no `Objects.requireNonNull`."
+      },
+      {
+        "text": "A referência só ao ser chamada; o lambda onde é feito",
+        "why": "É o contrário."
+      },
+      {
+        "text": "Nenhum falha até `get` ser chamado",
+        "why": "A referência falhou na linha 17, antes de qualquer `get`."
+      },
+      {
+        "text": "Os dois falham na linha que os cria",
+        "why": "O lambda foi feito sem reclamação."
+      }
+    ]
+  },
+  "ex-jgwcdfvy": {
+    "prompt": "`Book` tem um construtor de um argumento e um de dois. Qual deles `Book::new` significa?",
+    "hint": "O texto é o mesmo nas duas vezes.",
+    "choices": [
+      {
+        "text": "Sempre o declarado primeiro",
+        "why": "A ordem de declaração não conta."
+      },
+      {
+        "text": "É erro de compilação quando uma classe tem dois construtores",
+        "why": "O tipo-alvo resolve."
+      },
+      {
+        "text": "O que tem menos parâmetros",
+        "why": "Significou o de dois argumentos como `BiFunction`."
+      },
+      {
+        "text": "O que combinar com o método do tipo-alvo",
+        "why": "Isso: `Function<String, Book>` escolhe um, `BiFunction<String, Integer, Book>` o outro."
+      }
+    ]
+  },
+  "ex-29b1kh2a": {
+    "prompt": "`titles.toArray(String[]___)` monta um `String[]` do tamanho certo a partir de uma lista.",
+    "hint": "Uma referência a construtor de array.",
+    "blanks": [
+      {
+        "accept": [
+          "::new"
+        ]
+      }
+    ]
+  },
+  "ex-w7whe0s4": {
+    "prompt": "Por que `map.computeIfAbsent(key, ArrayList::new)` se comporta mal com chaves `Integer` e não com chaves `String`?",
+    "hint": "O que `computeIfAbsent` passa para a função?",
+    "choices": [
+      {
+        "text": "Uma chave `int` serve em `ArrayList(int)`",
+        "why": "Isso. Com chaves `String` nenhum construtor combina, então nem compila."
+      },
+      {
+        "text": "Chaves `Integer` são comparadas com `==`",
+        "why": "Mapas comparam chaves com `equals`."
+      },
+      {
+        "text": "`computeIfAbsent` só aceita lambdas",
+        "why": "Ele aceita qualquer `Function`, referências incluídas."
+      },
+      {
+        "text": "`ArrayList` não guarda valores `Integer`",
+        "why": "Ele guarda qualquer objeto."
+      }
+    ]
+  },
+  "ex-e09k1xt7": {
+    "prompt": "Por que `Integer::toString` é recusado como `Function<Integer, String>`?",
+    "hint": "Ela serve de dois jeitos.",
+    "choices": [
+      {
+        "text": "Referências não podem devolver `String`",
+        "why": "`String::toUpperCase` devolve uma."
+      },
+      {
+        "text": "`Integer` não tem método `toString`",
+        "why": "Tem dois, e esse é o problema."
+      },
+      {
+        "text": "O `toString(int)` estático e o `toString()` de instância servem",
+        "why": "Isso, e o compilador não adivinha."
+      },
+      {
+        "text": "`Function` precisa de um `Supplier` para a saída",
+        "why": "Uma `Function` devolve a saída diretamente."
+      }
+    ]
+  },
+  "ex-070gy9be": {
+    "prompt": "Quais destes lambdas podem ser escritos como referência a método? Marque todos os que se aplicam.",
+    "hint": "Uma referência só repassa os argumentos que recebe.",
+    "choices": [
+      {
+        "text": "`n -> n % 2 == 0`",
+        "why": "Não: não é chamada de método."
+      },
+      {
+        "text": "`b -> b.author().name()`",
+        "why": "Não: duas chamadas seguidas."
+      },
+      {
+        "text": "`() -> new HashMap<>()`",
+        "why": "Sim: `HashMap::new`."
+      },
+      {
+        "text": "`x -> Math.abs(x)`",
+        "why": "Sim: `Math::abs`."
+      },
+      {
+        "text": "`s -> s.substring(2)`",
+        "why": "Não: o `2` não é argumento."
+      }
+    ]
+  },
+  "ex-yrzqp0t4": {
+    "prompt": "Um lambda passado ao `filter` cresceu até vinte linhas. O que a aula sugere?",
+    "hint": "Dê um nome a ele.",
+    "choices": [
+      {
+        "text": "Deixar como está: tamanho não importa num lambda",
+        "why": "A aula 1 o chamou de método que ainda não ganhou nome."
+      },
+      {
+        "text": "Dividi-lo em vários lambdas menores em sequência",
+        "why": "A aula 5 combina lambdas pequenos, mas o conselho aqui é um método com nome."
+      },
+      {
+        "text": "Um método privado, passado como `this::isWorthShipping`",
+        "why": "Isso: uma linha legível, e um método que se testa sozinho."
+      },
+      {
+        "text": "Transformá-lo numa classe anônima, que combina melhor com corpos longos",
+        "why": "Isso acrescenta cerimônia e nenhum nome."
+      }
+    ]
+  },
+  "ex-hk1vgrv8": {
+    "prompt": "Ordene estas, da referência sem objeto algum até a que constrói um objeto novo a cada chamada.",
+    "hint": "Estática, ligada, não ligada, construtor: a ordem da figura.",
+    "items": [
+      "`Integer::parseInt`",
+      "`shop::equals`",
+      "`String::toUpperCase`",
+      "`ArrayList::new`"
+    ]
+  },
+  "ex-962jxhbr": {
+    "prompt": "`List<String> names` precisa ser ordenada com `names.sort(...)` para que `\"anna\"` venha antes de `\"Bob\"`. Que argumento faz isso?",
+    "hint": "Uma referência não ligada com duas strings.",
+    "choices": [
+      {
+        "text": "`Comparator.comparing(String::length)`",
+        "why": "Isso ordena por tamanho, e `\"Bob\"` é mais curto que `\"anna\"`."
+      },
+      {
+        "text": "`String::equalsIgnoreCase`",
+        "why": "Isso responde `boolean`, e um `Comparator` precisa responder um `int`."
+      },
+      {
+        "text": "`String::compareToIgnoreCase`",
+        "why": "Isso, como `Unbound.java` ordenou os autores."
+      },
+      {
+        "text": "`String::compareTo`",
+        "why": "Sensível a maiúsculas: `\"Bob\"` vem antes de `\"anna\"`, porque maiúsculas vêm primeiro."
+      }
+    ]
+  }
+}

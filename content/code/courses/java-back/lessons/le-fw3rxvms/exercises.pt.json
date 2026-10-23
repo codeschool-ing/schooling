@@ -1,0 +1,461 @@
+{
+  "ex-hkbtcdm2": {
+    "prompt": "Que comentário de um arquivo Java a ferramenta `javadoc` transforma em documentação?",
+    "hint": "Conte os asteriscos e veja onde ele fica.",
+    "choices": [
+      {
+        "text": "Qualquer comentário `/* */`, onde quer que esteja na classe",
+        "why": "Um comentário de bloco com um asterisco só é ignorado, diga o que disser. A ferramenta procura `/**`."
+      },
+      {
+        "text": "Um comentário `/**` logo antes de uma declaração",
+        "why": "Certo. Dois asteriscos, e imediatamente antes da classe, do campo, do construtor ou do método que documenta; anotações podem ficar entre os dois."
+      },
+      {
+        "text": "Toda linha `//` que termina com ponto final",
+        "why": "Comentários de linha nunca são lidos pelo `javadoc`. São notas para quem edita o arquivo."
+      },
+      {
+        "text": "Qualquer comentário que contenha uma tag `@param` ou `@return`",
+        "why": "As tags só significam algo dentro de um comentário Javadoc. Num comentário `/* */` ou `//` são texto comum."
+      }
+    ]
+  },
+  "ex-jsnqxy97": {
+    "prompt": "Depois de trocar `@param q` por `@param query` no `BookController`, `mvn -q javadoc:javadoc` não imprimiu nada. Por quê?",
+    "hint": "Veja o que o plugin guarda em `target` entre uma execução e outra.",
+    "choices": [
+      {
+        "text": "`-q` esconde os erros além das informações",
+        "why": "`-q` esconde tudo menos os erros. O mesmo `-q` imprimiu o erro assim que o `clean` entrou."
+      },
+      {
+        "text": "Um nome errado em `@param` é um aviso, e avisos não aparecem com `-q`",
+        "why": "É um erro, `error: @param name not found`, e derrubou o build quando a ferramenta de fato rodou."
+      },
+      {
+        "text": "O doclint só confere comentários de classes, não de métodos",
+        "why": "O erro que ele apontou estava na linha 48, dentro do comentário do método `search`."
+      },
+      {
+        "text": "O plugin viu a linha de comando igual e pulou a execução",
+        "why": "Certo. O arquivo de dados antigos registra a linha de comando, não os fontes, então um comentário editado não muda nada do que ele compara. O `clean` apaga o registro."
+      }
+    ]
+  },
+  "ex-qynkyypg": {
+    "prompt": "`BookNotFoundException` não é checada, então `get(long id)` não a declara. A tag de bloco que a documenta no comentário é `@___`.",
+    "blanks": [
+      {
+        "accept": [
+          "throws",
+          "exception"
+        ]
+      }
+    ]
+  },
+  "ex-dv80ms2n": {
+    "prompt": "Com `<doclint>all</doclint>`, o doclint apontou 92 elementos sem comentário, entre eles os tratadores do `ApiErrorHandler` e o construtor do controller. O que `all,-missing` faz com eles?",
+    "hint": "Leia o sinal de menos como uma subtração numa lista de grupos de verificação.",
+    "choices": [
+      {
+        "text": "Deixa-os sem documentação e continua conferindo todo comentário que existe",
+        "why": "Certo. Só o grupo que exige comentário em tudo é desligado; um `@param` errado continua derrubando o build."
+      },
+      {
+        "text": "Esconde-os das páginas geradas",
+        "why": "O que entra nas páginas é decidido por `<show>public</show>`. O doclint confere comentários e não decide nada sobre as páginas."
+      },
+      {
+        "text": "Escreve um comentário provisório para cada um",
+        "why": "Nenhuma ferramenta aqui escreve comentários. O doclint só aponta, e `-missing` faz ele parar de apontar um tipo de coisa."
+      },
+      {
+        "text": "Transforma os 92 avisos em erros, e o build falha até cada um ser documentado",
+        "why": "É o sentido contrário. O menos tira o grupo `missing` de dentro do `all`."
+      }
+    ]
+  },
+  "ex-fcc7eh3j": {
+    "prompt": "Sua equipe publica a verificação de ISBN da classe `Isbn` como uma pequena biblioteca no Maven Central, para outras livrarias usarem. O que deve mudar na configuração de Javadoc dela, em comparação com a da livraria?",
+    "hint": "Quem lê os métodos públicos de uma biblioteca, e como?",
+    "choices": [
+      {
+        "text": "Nada: `-missing` serve para qualquer projeto",
+        "why": "`-missing` serve quando os métodos são públicos só porque um framework os chama. Numa biblioteca, todo método público é a API de alguém."
+      },
+      {
+        "text": "Religar o grupo `missing` e publicar também um jar das páginas",
+        "why": "Certo. Outros projetos leem uma biblioteca pelo Javadoc, então um método público sem documentação é um defeito ali, e o Central espera um jar de javadoc ao lado da biblioteca."
+      },
+      {
+        "text": "Usar `<show>private</show>`, para quem usa ver como o dígito verificador é calculado",
+        "why": "Documentar membros privados convida quem usa a depender do que você tem liberdade para mudar. O que essa pessoa precisa é o contrato público."
+      },
+      {
+        "text": "Adicionar o springdoc, porque quem usa uma biblioteca precisa de um documento OpenAPI",
+        "why": "OpenAPI descreve uma API HTTP. Uma biblioteca é chamada de dentro do Java, que é exatamente o leitor do Javadoc."
+      }
+    ]
+  },
+  "ex-ampg9q0e": {
+    "prompt": "Com o springdoc adicionado e o `SecurityConfig` da aula 15 sem mudança, `GET /v3/api-docs` respondeu 401. Por quê?",
+    "hint": "Como termina o `apiChain`?",
+    "choices": [
+      {
+        "text": "O springdoc protege o documento com uma senha própria",
+        "why": "O springdoc não tem segurança própria. O 401 veio da cadeia de filtros da livraria, com um cabeçalho `WWW-Authenticate: Bearer`."
+      },
+      {
+        "text": "O documento só é montado depois da primeira requisição que traz um token válido",
+        "why": "A mesma requisição sem token recebeu o documento assim que o caminho foi liberado."
+      },
+      {
+        "text": "A aplicação não tinha sido recompilada depois da mudança no pom",
+        "why": "Um caminho desconhecido é fechado pelo mesmo `anyRequest().authenticated()`, então um 401 não diz nada sobre o build. O que resolveu foi uma regra."
+      },
+      {
+        "text": "Todo caminho que a cadeia não nomeia cai em `anyRequest().authenticated()`",
+        "why": "Certo. Caminhos novos ficam fechados até alguém liberá-los, o que é o padrão seguro, e a correção foi uma linha de `requestMatchers`."
+      }
+    ]
+  },
+  "ex-1g7tgczs": {
+    "prompt": "Depois que `/v3/api-docs/**` foi liberado, o documento respondeu 200, mas `/v3/api-docs.yaml` continuou respondendo 401. Por quê?",
+    "choices": [
+      {
+        "text": "O springdoc só serve YAML a clientes autenticados",
+        "why": "O springdoc não decide nada sobre quem pode ler. O 401 é da cadeia de filtros."
+      },
+      {
+        "text": "O padrão não casa com `/v3/api-docs.yaml`",
+        "why": "Certo. `/v3/api-docs/**` casa com `/v3/api-docs` e com os caminhos abaixo dele; `/v3/api-docs.yaml` é irmão do caminho, não filho, então cai em `anyRequest().authenticated()`."
+      },
+      {
+        "text": "O YAML vem desligado por padrão, e 401 é como um endpoint desligado responde",
+        "why": "Um endpoint desligado responde 404, como o documento inteiro fez com `springdoc.api-docs.enabled=false`."
+      },
+      {
+        "text": "A aplicação precisava ser reiniciada mais uma vez para servir o outro formato",
+        "why": "Os dois formatos vêm da mesma aplicação rodando; reiniciar não muda nada sobre quais caminhos a regra nomeia."
+      }
+    ]
+  },
+  "ex-ettpb91z": {
+    "prompt": "Antes de qualquer anotação de OpenAPI, quais destas coisas o springdoc acertou só a partir do código? Marque todas que se aplicam.",
+    "hint": "Ele lê mapeamentos, tipos de parâmetro, tipos de retorno e as restrições padrão.",
+    "choices": [
+      {
+        "text": "o 404 que `GET /books/{id}` dá para um id desconhecido",
+        "why": "O 404 vem de uma exceção e do tratador da aula 7; a assinatura devolve um `BookResponse`, e o primeiro documento listou só um 200."
+      },
+      {
+        "text": "o `id` de `/books/{id}` como `integer` obrigatório de formato `int64`",
+        "why": "Certo: `@PathVariable long id`, e uma variável de caminho não pode faltar."
+      },
+      {
+        "text": "o 201 que `POST /orders` responde",
+        "why": "Ele disse 200: o status é escolhido em tempo de execução, dentro do método."
+      },
+      {
+        "text": "`maxLength: 200` no título de `BookRequest`",
+        "why": "Certo, de `@Size(max = 200)`."
+      },
+      {
+        "text": "que `POST /books` precisa de um token",
+        "why": "O springdoc não lê a cadeia de filtros. Nenhuma operação mencionou token até o `@SecurityRequirement`."
+      }
+    ]
+  },
+  "ex-f8e12bv8": {
+    "prompt": "Um cliente envia só requisições que obedecem ao schema de `BookRequest` à risca. Qual delas ainda pode ser recusada com 400?",
+    "hint": "Qual das restrições do record não tem palavra-chave de JSON Schema no documento?",
+    "choices": [
+      {
+        "text": "Um livro com `stock` 0",
+        "why": "`minimum: 0` permite 0, e `@PositiveOrZero` também."
+      },
+      {
+        "text": "Um título de exatamente 200 caracteres",
+        "why": "`maxLength: 200` e `@Size(max = 200)` permitem 200."
+      },
+      {
+        "text": "Uma requisição sem `priceCents`",
+        "why": "Essa não obedece ao schema: `priceCents` está em `required`."
+      },
+      {
+        "text": "Treze dígitos com o dígito verificador errado",
+        "why": "Certo. `@ValidIsbn` é uma restrição da própria livraria e o springdoc não a conhece, então o schema diz só `string`."
+      }
+    ]
+  },
+  "ex-zk0425xz": {
+    "prompt": "`OrderController.place` responde 201, mas o documento gerado lista um 200 para `POST /orders`. Por quê?",
+    "choices": [
+      {
+        "text": "O springdoc lê a declaração, e o status é escolhido dentro do método",
+        "why": "Certo. `ResponseEntity<OrderResponse>` não diz nada sobre qual status; `ResponseEntity.created(...)` só roda quando chega uma requisição."
+      },
+      {
+        "text": "O springdoc chama cada operação uma vez na subida, e essa chamada falhou sem token",
+        "why": "O springdoc nunca chama seus métodos. Fazer um pedido teria mudado o banco de dados."
+      },
+      {
+        "text": "201 não é um status que o OpenAPI consiga descrever",
+        "why": "O documento final lista um 201 para `POST /books`, declarado com `@ApiResponse`."
+      },
+      {
+        "text": "Os endpoints de pedidos precisam de token, então o springdoc não conseguiu inspecioná-los",
+        "why": "Ele os descreveu por inteiro, caminho, corpo e schema. Ele lê o código, não os endpoints pelo HTTP."
+      }
+    ]
+  },
+  "ex-m4e1y7e0": {
+    "prompt": "Todo método do `BookController` tem comentário Javadoc, e o springdoc não usou nenhum. Por quê?",
+    "hint": "O que o `javap` encontrou no arquivo .class, e o que não encontrou?",
+    "choices": [
+      {
+        "text": "O springdoc roda antes do `javadoc` no build, então as páginas ainda não existem",
+        "why": "O springdoc nem roda no build; roda dentro da aplicação, e nunca lê páginas HTML."
+      },
+      {
+        "text": "O springdoc ignora comentários de propósito, para os dois documentos ficarem separados",
+        "why": "Ele não tem escolha: quando ele roda, os comentários já se foram. Mantê-los separados foi decisão deste projeto, não do springdoc."
+      },
+      {
+        "text": "O `javac` deixa os comentários fora do arquivo .class, e o springdoc lê a aplicação rodando",
+        "why": "Certo. O `grep -c` encontrou as palavras do comentário 0 vezes no `BookController.class`, e encontrou a string do `summary` duas vezes."
+      },
+      {
+        "text": "Só comentários de classe chegam ao springdoc, e os dos métodos são descartados",
+        "why": "O comentário da classe também não chegou: a tag do documento veio de `@Tag`, não do comentário da classe."
+      }
+    ]
+  },
+  "ex-13f3mc2g": {
+    "prompt": "Suponha que o 404 de `get` fosse escrito `@ApiResponse(responseCode = \"404\", description = \"No book has that id\")`, sem `content`. O que o documento diria que um 404 traz?",
+    "choices": [
+      {
+        "text": "Nada: uma resposta sem `content` não tem corpo",
+        "why": "O springdoc preenche o que não foi declarado, e preenche a partir do método."
+      },
+      {
+        "text": "Um `ProblemDetail`, porque o springdoc lê o `ApiErrorHandler`",
+        "why": "O schema `ProblemDetail` só apareceu quando o `content` o nomeou."
+      },
+      {
+        "text": "Um `BookResponse`, como `*/*`",
+        "why": "Certo. Sem `content`, toda resposta recebe o tipo de retorno do método, o que é mentira para um erro."
+      },
+      {
+        "text": "Uma mensagem de texto puro, o padrão para erros",
+        "why": "O OpenAPI não tem padrão para erros, e os erros da livraria são problem details em JSON."
+      }
+    ]
+  },
+  "ex-se00t4az": {
+    "prompt": "Ligue cada anotação ao que ela muda no documento.",
+    "pairs": [
+      {
+        "left": "`@Tag(name = \"Catalogue\")` na classe",
+        "right": "o grupo em que as operações aparecem"
+      },
+      {
+        "left": "`@Operation(summary = ...)`",
+        "right": "a descrição de uma linha de uma operação"
+      },
+      {
+        "left": "`@ParameterObject` no `Pageable`",
+        "right": "`page`, `size` e `sort` como parâmetros separados"
+      },
+      {
+        "left": "`@SecurityRequirement(name = \"bearer\")`",
+        "right": "a operação precisa do esquema de token declarado"
+      }
+    ],
+    "right_distractors": [
+      "qual escopo o token precisa trazer"
+    ]
+  },
+  "ex-ybdr375a": {
+    "prompt": "Um cliente é gerado a partir do documento final e lê o mapa `errors` de um 400 no membro `properties` de `ProblemDetail`. O que acontece quando uma validação falha?",
+    "hint": "Compare o schema com o corpo que a aula 7 imprimiu.",
+    "choices": [
+      {
+        "text": "Encontra o mapa ali, já que o documento foi gerado da classe real",
+        "why": "Gerado da classe, sim; mas o Jackson escreve os membros extras no nível de cima, então o corpo e a classe têm formatos diferentes."
+      },
+      {
+        "text": "Não encontra nada em `properties`: `errors` chega ao lado de `title` e `detail`",
+        "why": "Certo. `properties` é o campo Java que guarda os membros extras, não um membro do JSON. O documento descreve a classe, e não o que trafega."
+      },
+      {
+        "text": "A livraria responde 500, porque a requisição do cliente traz um membro `properties`",
+        "why": "O schema descreve uma resposta. Nada que o cliente lê muda o que ele envia."
+      },
+      {
+        "text": "Ele nem pode ser gerado, porque `additionalProperties: {}` é inválido",
+        "why": "Um schema vazio é JSON Schema válido e significa \"qualquer coisa\". O problema é onde os membros ficam, não a sintaxe."
+      }
+    ]
+  },
+  "ex-v3phkp37": {
+    "prompt": "De onde o Swagger UI tira as operações que desenha?",
+    "choices": [
+      {
+        "text": "Dos controllers, que ele varre dentro do jar",
+        "why": "O Swagger UI é HTML e JavaScript no seu navegador. Ele só sabe o que o documento diz."
+      },
+      {
+        "text": "Do documento que o `swagger-config` indica",
+        "why": "Certo: `/v3/api-docs/swagger-config` responde `\"url\":\"/v3/api-docs\"`. Um documento errado dá uma página errada."
+      },
+      {
+        "text": "Das páginas de Javadoc em `target/reports/apidocs`",
+        "why": "Essas páginas não estão no jar e o Swagger UI nunca as lê."
+      },
+      {
+        "text": "Das requisições que viu a livraria responder",
+        "why": "Ele só envia requisições quando você aperta Execute, e desenha as operações antes disso."
+      }
+    ]
+  },
+  "ex-zy0kcxx8": {
+    "prompt": "A livraria sobe com `--springdoc.api-docs.enabled=false` e nada mais muda. O que respondem `/v3/api-docs` e `/swagger-ui.html`?",
+    "choices": [
+      {
+        "text": "404 e 200: a página carrega e mostra um erro",
+        "why": "A página também foi embora: `/swagger-ui.html` também deu 404."
+      },
+      {
+        "text": "401 para os dois, já que não estão mais liberados",
+        "why": "A regra do `SecurityConfig` não mudou. Os caminhos estão liberados e nada responde neles."
+      },
+      {
+        "text": "404 para os dois",
+        "why": "Certo. O Swagger UI não tem o que desenhar sem o documento, então a propriedade desliga os dois, e os dois avisos param."
+      },
+      {
+        "text": "Os dois continuam respondendo, porque o aviso disse que é preciso uma segunda propriedade",
+        "why": "O segundo aviso cita uma propriedade só para a página; desligar o documento bastou para os dois."
+      }
+    ]
+  },
+  "ex-wem5eghe": {
+    "prompt": "Para desligar o documento pelo ambiente em vez da linha de comando, a livraria é iniciada com `___=false java -jar target/bookshop-0.1.0.jar`.",
+    "blanks": [
+      {
+        "accept": [
+          "SPRINGDOC_APIDOCS_ENABLED"
+        ]
+      }
+    ]
+  },
+  "ex-17y5q9ah": {
+    "prompt": "O parâmetro de busca foi renomeado de `q` para `text`. No código primeiro, o que percebeu?",
+    "choices": [
+      {
+        "text": "A aplicação, que se recusou a subir com um contrato mudado",
+        "why": "Ela subiu sem dizer nada. Não há contrato com que ela compare."
+      },
+      {
+        "text": "O springdoc, que imprimiu um aviso sobre um parâmetro removido",
+        "why": "O springdoc descreve o código como ele está agora e não guarda versão anterior."
+      },
+      {
+        "text": "Só um `diff` contra o documento salvo antes da mudança",
+        "why": "Certo. Uma linha mudou no documento, e um cliente usando `?q=` recebeu 400. Um documento guardado no repositório faz essa linha aparecer na revisão."
+      },
+      {
+        "text": "O compilador, porque o `@param q` do Javadoc não batia mais",
+        "why": "O `sed` renomeou o `@param` também, e o compilador nunca lê Javadoc de qualquer jeito; o doclint leria, mas só quando chamado."
+      }
+    ]
+  },
+  "ex-4d3nb167": {
+    "prompt": "Ponha em ordem o que foi preciso para o Swagger UI mostrar `POST /books` com um cadeado e enviá-lo com um token.",
+    "hint": "O documento precisa estar acessível antes que se acrescente algo a ele.",
+    "items": [
+      "Adicionar `springdoc-openapi-starter-webmvc-ui` ao pom",
+      "Liberar `/v3/api-docs/**` e os caminhos do Swagger UI no `apiChain`",
+      "Declarar o esquema de segurança `bearer` no bean `OpenAPI`",
+      "Citar `bearer` no `security` do `@Operation` de `add`",
+      "Colar o token do clerk no diálogo Authorize"
+    ],
+    "trap": "Citar um esquema no `@Operation` antes de o bean `OpenAPI` declará-lo é se referir a um esquema que não existe."
+  },
+  "ex-xvemzw7z": {
+    "prompt": "Os endpoints de pedidos continuam documentados como o springdoc deduziu. Quais mudanças tornariam o documento verdadeiro? Marque todas que se aplicam.",
+    "hint": "Duas coisas nele são falsas: um status, e a ausência de uma exigência.",
+    "choices": [
+      {
+        "text": "Um `@return` de Javadoc em `place` dizendo que responde 201",
+        "why": "Bom para quem lê Java, invisível para o springdoc: o comentário não sobrevive no arquivo .class."
+      },
+      {
+        "text": "`@ApiResponse(responseCode = \"201\", ...)` em `place`",
+        "why": "Certo. O código responde 201, que o springdoc não enxerga em `ResponseEntity<OrderResponse>`."
+      },
+      {
+        "text": "`@ParameterObject` no parâmetro `OrderRequest`",
+        "why": "`OrderRequest` é um corpo de requisição, já descrito como tal. `@ParameterObject` serve para um objeto lido da query string."
+      },
+      {
+        "text": "Um segundo esquema de segurança chamado `orders`, para combinar com o escopo",
+        "why": "Os pedidos usam o mesmo token bearer do catálogo; um esquema diz como o token é enviado, não que escopo ele traz."
+      },
+      {
+        "text": "`security = @SecurityRequirement(name = \"bearer\")` no `@Operation` dos dois métodos",
+        "why": "Certo. Toda chamada de pedidos precisa de token, e o documento não tem como saber disso pela cadeia de filtros."
+      }
+    ]
+  },
+  "ex-qhdv6vph": {
+    "prompt": "Um parceiro precisa do documento OpenAPI da livraria em produção, e a equipe não quer o Swagger UI lá. Quais destas opções mantêm o documento e removem a página? Marque todas que se aplicam.",
+    "hint": "Releia o segundo aviso, e o que o `-ui` no nome do starter traz.",
+    "choices": [
+      {
+        "text": "`springdoc.swagger-ui.enabled=false`",
+        "why": "Certo. O segundo aviso cita esta propriedade só para a página."
+      },
+      {
+        "text": "`springdoc.api-docs.enabled=false`",
+        "why": "Isso remove o documento também, e o parceiro recebe 404."
+      },
+      {
+        "text": "Apagar o `OpenApiConfig`",
+        "why": "O documento perderia o título e o esquema de segurança, e a página continuaria."
+      },
+      {
+        "text": "Depender de `springdoc-openapi-starter-webmvc-api` em vez do starter `-ui`",
+        "why": "Certo. O starter `-ui` é o `-api` mais o Swagger UI; sem ele não há página para servir."
+      }
+    ]
+  },
+  "ex-688sy5zc": {
+    "prompt": "Três empresas vão construir aplicativos móveis sobre uma API de pagamentos que sua equipe ainda não escreveu, e elas começam no mês que vem. Que abordagem serve, e por quê?",
+    "choices": [
+      {
+        "text": "Código primeiro, porque o documento sempre vai bater com o código",
+        "why": "Vai bater, quando o código existir. Elas começam antes disso, e um documento que segue o código pode mudar debaixo delas sem ninguém decidir."
+      },
+      {
+        "text": "Contrato primeiro: elas precisam do documento antes do código",
+        "why": "Certo. O contrato é escrito e acordado antes, elas constroem sobre ele, e o servidor fica preso a ele pelas interfaces geradas."
+      },
+      {
+        "text": "Javadoc, publicado num site, porque é o mais completo",
+        "why": "Javadoc descreve classes Java. Aplicativos móveis chamam HTTP, e precisam de caminhos, corpos e status."
+      },
+      {
+        "text": "Swagger UI no servidor de produção, para elas testarem cada operação",
+        "why": "Não há o que testar antes de a API existir, e o Swagger UI só desenha um documento que alguém precisa escrever antes."
+      }
+    ]
+  },
+  "ex-nrgvspbn": {
+    "prompt": "Se `list` fosse declarado com `@PageableDefault(size = 50, sort = \"id\")`, que `default` o documento final daria ao parâmetro `size`?",
+    "hint": "O documento leu 20 da anotação como ela está.",
+    "unit": "livros"
+  }
+}

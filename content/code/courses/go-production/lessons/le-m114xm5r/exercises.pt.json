@@ -1,0 +1,377 @@
+{
+  "ex-0yqhk2gz": {
+    "prompt": "Ana roda `GOOS=windows GOARCH=amd64 go build .` em `~/cross`, sem `-o`. O que aparece no diretório?",
+    "hint": "Veja o `ls` que veio depois dos quatro builds.",
+    "choices": [
+      {
+        "text": "Nada: um binário de Windows precisa ser feito no Windows",
+        "why": "O build deu certo no Linux e o `file` leu o resultado como executável do Windows. Nenhuma máquina Windows participou."
+      },
+      {
+        "text": "`hits.exe`, um executável PE32+ para x86-64",
+        "why": "Isso. Sem `-o`, o comando go dá ao arquivo o nome do módulo e acrescenta `.exe` porque o alvo é Windows."
+      },
+      {
+        "text": "Um arquivo `hits` que sobrescreve o binário de Linux",
+        "why": "O `hits` nativo continuou lá no `ls`. O `.exe` é acrescentado num alvo Windows quando o próprio comando go escolhe o nome."
+      },
+      {
+        "text": "`hits-windows-amd64`, com o nome das duas variáveis",
+        "why": "Esse é o nome que o `release.sh` escolhe na seção 05. O `go build` sozinho só acrescenta a extensão."
+      }
+    ]
+  },
+  "ex-st9xvhd7": {
+    "prompt": "Fazer o `hits` para `linux/arm64` num notebook Intel não precisou de compilador ARM nem de biblioteca C de ARM. Por quê?",
+    "hint": "Duas metades: o que constrói o binário, e o que o binário precisa quando roda.",
+    "choices": [
+      {
+        "text": "O comando go baixa um conjunto de ferramentas ARM do proxy de módulos na primeira vez",
+        "why": "Nada foi baixado; o build funciona sem rede. O compilador de todos os alvos é o que já está em `/usr/local/go`."
+      },
+      {
+        "text": "O binário é bytecode que um pequeno runtime interpreta em qualquer processador",
+        "why": "O `file` o leu como código de máquina ARM aarch64, e o kernel desta máquina Intel se recusou a rodá-lo. Go compila para instruções nativas."
+      },
+      {
+        "text": "Ferramentas e biblioteca padrão são Go, e no Linux o binário dispensa a libc",
+        "why": "Isso. A biblioteca padrão é compilada para `arm64` no cache de build, e o resultado sai `statically linked` porque faz as próprias chamadas de sistema."
+      },
+      {
+        "text": "O `gcc` do Ubuntu já traz um back end para cada processador que o Go suporta",
+        "why": "A seção 04 mostrou o `gcc` da máquina falhando no assembly de ARM. Um build cruzado de um programa só em Go nem chama o `gcc`."
+      }
+    ]
+  },
+  "ex-fn5tdwzf": {
+    "prompt": "Quantos pares `GOOS/GOARCH` o `go tool dist list | wc -l` contou no Go 1.27.1?",
+    "hint": "Um par por linha."
+  },
+  "ex-9thcmkqh": {
+    "prompt": "Associe cada alvo com o que o `file` disse sobre o binário feito para ele.",
+    "hint": "O formato indica o sistema; o processador vem em seguida.",
+    "pairs": [
+      {
+        "left": "`linux/arm64`",
+        "right": "ELF 64-bit, ARM aarch64, ligado estaticamente"
+      },
+      {
+        "left": "`darwin/arm64`",
+        "right": "Mach-O 64-bit arm64, flags DYLDLINK e PIE"
+      },
+      {
+        "left": "`windows/amd64`",
+        "right": "executável PE32+ (console) x86-64"
+      },
+      {
+        "left": "`linux/amd64`",
+        "right": "ELF 64-bit, x86-64, ligado estaticamente"
+      }
+    ],
+    "right_distractors": [
+      "ELF 32-bit, ARM, EABI5"
+    ]
+  },
+  "ex-z88q89jk": {
+    "prompt": "`./hits-arm64 count access.log` termina com `Exec format error` e status 126 na máquina Intel de Ana. O que isso diz?",
+    "hint": "Compare com o 127 da lição 1.",
+    "choices": [
+      {
+        "text": "O kernel achou o arquivo e não sabe carregar o formato",
+        "why": "Isso. 126 quer dizer achado e não executável; o cabeçalho cita um processador que este kernel não opera."
+      },
+      {
+        "text": "O build saiu corrompido e precisa ser refeito",
+        "why": "O mesmo arquivo rodou no `qemu-aarch64-static` e imprimiu a tabela da lição 1 até o último dígito."
+      },
+      {
+        "text": "Falta permissão de execução no arquivo",
+        "why": "Permissão negada é outra mensagem. O `go build` já deixa a saída executável."
+      },
+      {
+        "text": "O shell não achou `./hits-arm64` no diretório",
+        "why": "Não encontrado é 127, como na lição 1. Aqui o arquivo foi achado."
+      }
+    ]
+  },
+  "ex-byqrg092": {
+    "prompt": "Alguém lhe entrega um binário chamado `hits` e pergunta para qual máquina ele é. Que comando responde, inclusive se o cgo estava ligado, sem executá-lo?",
+    "hint": "Um comando leu `GOOS`, `GOARCH` e `CGO_ENABLED` de dentro do `hits-arm64`.",
+    "choices": [
+      {
+        "text": "`go env GOOS GOARCH`",
+        "why": "Isso imprime as configurações do comando go nesta máquina, não as que um binário usou no build."
+      },
+      {
+        "text": "`go version -m hits`",
+        "why": "Isso. Ele lê o registro de build dentro do binário: a versão do Go, `GOOS`, `GOARCH`, `CGO_ENABLED` e o nível, como `GOARM64=v8.0`."
+      },
+      {
+        "text": "`qemu-aarch64-static ./hits -h`",
+        "why": "Isso o executa, e só funciona se for binário ARM; imprime o uso, não as configurações do build."
+      },
+      {
+        "text": "`file hits | cut -d, -f1,2`",
+        "why": "O `file` dá o formato e o processador, mas não sabe nada de `CGO_ENABLED`."
+      }
+    ]
+  },
+  "ex-5rj9w61p": {
+    "prompt": "`GOARCH=arm64 go test -count=1 ___ qemu-aarch64-static .` compila um binário de teste ARM e o roda pelo emulador.",
+    "hint": "A flag do `go test` que indica um programa pelo qual rodar o binário de teste.",
+    "blanks": [
+      {
+        "accept": [
+          "-exec"
+        ]
+      }
+    ]
+  },
+  "ex-kmk5endx": {
+    "prompt": "Um projeto passa a distribuir um build `linux/riscv64`, e você não tem máquina RISC-V. Como rodar os testes nesse processador a partir do seu notebook Intel?",
+    "hint": "A lição fez isso para um processador; o pacote de emuladores tem um programa por processador.",
+    "choices": [
+      {
+        "text": "`GOARCH=riscv64 go test -exec qemu-riscv64-static .`",
+        "why": "Isso. Mesma forma da execução em `arm64`: o comando go compila um binário de teste RISC-V e o `-exec` o entrega ao emulador do QEMU para aquele processador."
+      },
+      {
+        "text": "`go test .`, já que um teste que passa em amd64 passa em qualquer processador",
+        "why": "O teste da lição 1 passa nos dois, mas é a execução no outro processador que mostra isso; a execução nativa não prova."
+      },
+      {
+        "text": "`GOARCH=riscv64 go test .`, que emula o alvo sozinho",
+        "why": "Com `GOARCH=arm64` e sem `-exec`, o mesmo comando falhou com `exec format error`. Nada é emulado sem pedido."
+      },
+      {
+        "text": "`qemu-riscv64-static go test .`",
+        "why": "Isso tentaria rodar o binário Intel do `go` num RISC-V emulado. Quem precisa do emulador é o binário de teste, não o comando go."
+      }
+    ]
+  },
+  "ex-p1r07mmj": {
+    "prompt": "Numa máquina com `gcc` instalado, `go env CGO_ENABLED` imprime `1` e `GOARCH=arm64 go env CGO_ENABLED` imprime `0`. Por que a diferença?",
+    "hint": "Para qual processador o `gcc` instalado gera código?",
+    "choices": [
+      {
+        "text": "Build cruzado desliga o cgo: o `gcc` da máquina gera código dela",
+        "why": "Isso. A documentação do cgo diz que ele vem desligado por padrão em build cruzado; um compilador C do alvo precisa ser indicado em `CC`."
+      },
+      {
+        "text": "Processadores ARM não têm como chamar código C, então cgo não faz sentido ali",
+        "why": "O `go tool dist list -json` marca a maioria dos ports, inclusive os ARM, como `CgoSupported`. O que falta aqui é um compilador C para ARM."
+      },
+      {
+        "text": "Definir `GOARCH` tirou o `gcc` do `PATH` durante aquele comando",
+        "why": "O `GOARCH` não mexe no `PATH`. O caso do `gcc` ausente da lição 1 é outra causa com o mesmo sintoma."
+      },
+      {
+        "text": "O Go 1.27.1 tirou o suporte a cgo em `arm64`",
+        "why": "Não tirou; com um compilador C cruzado em `CC` e `CGO_ENABLED=1`, o build funciona."
+      }
+    ]
+  },
+  "ex-8z0pqy7c": {
+    "prompt": "O `who` nativo saiu `dynamically linked` e o de `arm64` saiu `statically linked`, do mesmo código. O que fez a diferença?",
+    "hint": "`go list -f '{{.CgoFiles}}' os/user` respondeu diferente para os dois alvos.",
+    "choices": [
+      {
+        "text": "O linker de ARM não sabe escrever executável com ligação dinâmica",
+        "why": "O build de macOS saiu ligado dinamicamente à `libSystem` nesta mesma máquina. A diferença aqui é quais arquivos do `os/user` foram compilados."
+      },
+      {
+        "text": "O `os/user` usou arquivos cgo no nativo e Go puro no ARM",
+        "why": "Isso. Com cgo ligado ele chama as funções de conta da biblioteca C; desligado, lê `/etc/passwd` e `/etc/group` por conta própria."
+      },
+      {
+        "text": "O `qemu-aarch64-static` embutiu a biblioteca C no binário ao rodá-lo",
+        "why": "O `file` leu o binário antes de qualquer emulador tocá-lo. O QEMU executa um binário; não o altera."
+      },
+      {
+        "text": "O `user.Current` devolve outro usuário em ARM",
+        "why": "Os dois imprimiram `ana /home/ana`. A resposta foi a mesma; o caminho até ela mudou."
+      }
+    ]
+  },
+  "ex-vkkrjbjk": {
+    "prompt": "O `GOARCH=arm64 go build` do `twice`, cujo `main.go` tem `import \"C\"`, falha com `build constraints exclude all Go files`. O que aconteceu?",
+    "hint": "Um arquivo que importa \"C\" carrega uma condição implícita.",
+    "choices": [
+      {
+        "text": "Com o cgo desligado o arquivo ficou de fora, e não sobrou nenhum",
+        "why": "Isso. `import \"C\"` implica a restrição de build `cgo`; o cgo fica desligado em build cruzado, então `main.go` foi excluído e o pacote ficou sem nada para compilar."
+      },
+      {
+        "text": "O `twice/main.go` tem um erro de sintaxe que só o parser de ARM percebe",
+        "why": "O build nativo o compilou e imprimiu 42. O parser é o mesmo para todos os alvos."
+      },
+      {
+        "text": "O módulo precisa de uma linha `//go:build arm64` para mirar ARM",
+        "why": "O `hits` não tem essa linha e foi compilado para todos os alvos. Nenhum arquivo precisa declarar um processador para ser compilado para ele."
+      },
+      {
+        "text": "O `gcc` recusou a função C do comentário",
+        "why": "Isso aconteceu com `CGO_ENABLED=1`, e a mensagem era sobre instruções de assembly. Com cgo desligado o `gcc` nem é chamado."
+      }
+    ]
+  },
+  "ex-4asfxftr": {
+    "prompt": "Uma equipe compila o seu agente com `GOAMD64=v3` porque um benchmark nos notebooks deles foi mais rápido. Um cliente o roda em servidores com processadores Intel de 2009. O que esses servidores veem?",
+    "hint": "O Nehalem emulado é um projeto de 2008.",
+    "choices": [
+      {
+        "text": "O programa roda, um pouco mais lento, usando as instruções v1 no lugar",
+        "why": "Não há caminho v1 dentro de um binário v3. O Nehalem emulado recebeu uma recusa, não uma execução mais lenta."
+      },
+      {
+        "text": "Uma recusa citando v3, saída 1, antes do `main`",
+        "why": "Isso. O runtime confere o processador na partida; o `hits-v3` imprimiu exatamente isso com `-cpu Nehalem` e saiu com 1."
+      },
+      {
+        "text": "O kernel o recusa com `Exec format error`",
+        "why": "O formato é o mesmo ELF para x86-64; o kernel carrega. Quem recusa é o runtime do Go, com mensagem própria."
+      },
+      {
+        "text": "Uma falha por instrução ilegal no meio da execução",
+        "why": "É isso que a checagem na partida existe para evitar: a recusa vem antes de qualquer instrução v3 rodar."
+      }
+    ]
+  },
+  "ex-m2n1y1nf": {
+    "prompt": "Quais destas coisas podem mudar entre dois builds do mesmo pacote que diferem só em `GOOS` e `GOARCH`? Marque todas as que valem.",
+    "hint": "Pense em cgo, seleção de arquivos e no que o binário registra.",
+    "choices": [
+      {
+        "text": "Se o cgo é usado, por padrão",
+        "why": "Sim. Builds nativos usam `CGO_ENABLED=1` por padrão quando há compilador; builds cruzados usam `0`."
+      },
+      {
+        "text": "Quais arquivos de um pacote são compilados",
+        "why": "Sim. O `os/user` compilou seus arquivos cgo para um alvo e nenhum para o outro, e arquivos com nome de um sistema são ignorados nos demais."
+      },
+      {
+        "text": "O caminho do módulo escrito no `go.mod`",
+        "why": "O `go version -m` mostrou `example.com/hits` no build ARM, como em todos. O módulo é o código, não o alvo."
+      },
+      {
+        "text": "O que o `hits count access.log` imprime",
+        "why": "As execuções nativa e emulada imprimiram a mesma tabela, e o `diff` não achou diferença no `top -n 8`."
+      }
+    ]
+  },
+  "ex-vhky26tm": {
+    "prompt": "O `release.sh` compila todos os alvos com `CGO_ENABLED=0`, até `linux/amd64`, a máquina em que roda. O que isso compra?",
+    "hint": "Compare o `CGO_ENABLED` que o `go version -m` leu do `hits` comum e do `linux/amd64` da versão.",
+    "choices": [
+      {
+        "text": "Builds mais rápidos",
+        "why": "Velocidade de build não é o ponto; o cache deixa a segunda versão rápida de qualquer jeito."
+      },
+      {
+        "text": "Os seis feitos do mesmo jeito",
+        "why": "Isso. Sem ele, o alvo nativo sairia com cgo ligado e os outros cinco com ele desligado, e um programa que usa `os/user` ou `net` se comportaria diferente num sistema."
+      },
+      {
+        "text": "Remove a informação de depuração de cada binário",
+        "why": "Os binários continuam com ela; removê-la é assunto das flags de linker da lição 17."
+      },
+      {
+        "text": "Deixa o `hits` chamar C nos alvos Windows",
+        "why": "O `0` desliga o cgo. O `hits` não chama C em lugar nenhum."
+      }
+    ]
+  },
+  "ex-b48rye04": {
+    "prompt": "Por que o `release.sh` começa com `rm -rf release` em vez de compilar no que já estiver lá?",
+    "hint": "Pense num alvo que estava na lista no mês passado e agora não está.",
+    "choices": [
+      {
+        "text": "O `go build -o` se recusa a sobrescrever um arquivo existente",
+        "why": "O `go build -o` sobrescreve sem reclamar; o `hits` nativo foi refeito no lugar mais de uma vez."
+      },
+      {
+        "text": "O binário de um alvo tirado da lista ficaria lá e seria enviado",
+        "why": "Isso. Compilar num diretório antigo troca o que está na lista e deixa o resto, inclusive binários que ninguém fez desta vez."
+      },
+      {
+        "text": "Limpa o cache de build para cada binário ser compilado do zero",
+        "why": "O cache de build fica em `~/.cache/go-build`, não em `release/`, e o script conta com ele para a segunda execução ser rápida."
+      },
+      {
+        "text": "O `set -eu` falha num diretório que já existe",
+        "why": "O `set -eu` para num comando que falha ou numa variável sem valor. O `mkdir release` falharia num diretório existente, por isso vem depois do `rm`, mas o motivo do `rm` são os arquivos velhos."
+      }
+    ]
+  },
+  "ex-grckyh70": {
+    "prompt": "Ponha em ordem o que uma volta do laço do `release.sh` faz para `windows/arm64`.",
+    "hint": "Da palavra na lista até a linha impressa.",
+    "items": [
+      "`os` vira `windows` e `arch` vira `arm64`",
+      "`ext` recebe `.exe`, porque o sistema é Windows",
+      "`out` vira `release/hits-windows-arm64.exe`",
+      "o `go build` roda com `CGO_ENABLED=0 GOOS=windows GOARCH=arm64`",
+      "o script imprime o nome do arquivo"
+    ]
+  },
+  "ex-3pg7gxrx": {
+    "prompt": "No diretório da versão, o maior binário foi `hits-windows-amd64.exe`, com 4.217.344 bytes, e o menor `hits-linux-arm64`, com 3.831.466. Quantos bytes os separam?",
+    "hint": "Subtraia.",
+    "unit": "bytes"
+  },
+  "ex-5dbw0v9w": {
+    "prompt": "Um usuário pede o `hits` para um Raspberry Pi de primeira geração com Linux de 32 bits. Você acrescenta `linux/arm` à lista do `release.sh` e não muda mais nada. O que há de errado no binário gerado?",
+    "hint": "O que `GOARCH=arm go env GOARM` imprime numa máquina Intel?",
+    "choices": [
+      {
+        "text": "Nada; `GOARCH=arm` roda em qualquer placa ARM",
+        "why": "O `arm` cobre várias gerações, e o padrão de um build cruzado é a mais nova delas."
+      },
+      {
+        "text": "Sai feito para ARMv7, e o ARMv6 desse Pi não tem instruções que código ARMv7 usa",
+        "why": "Isso. Um build cruzado para `arm` usa `GOARM=7` por padrão; essa placa precisa de `GOARM=6`, que o laço teria de definir só para esse alvo."
+      },
+      {
+        "text": "É um binário de 64 bits que um sistema de 32 não carrega",
+        "why": "O `GOARCH=arm` é de 32 bits; o `file` leu o build `GOARM=6` como ELF 32-bit. ARM de 64 bits é `arm64`."
+      },
+      {
+        "text": "Precisa de `CGO_ENABLED=1` para rodar num Raspberry Pi",
+        "why": "O `hits` não chama C, e o build `GOARM=6` rodou no `qemu-arm-static` com cgo desligado."
+      }
+    ]
+  },
+  "ex-wwxsbvg2": {
+    "prompt": "Um colega acrescenta ao `hits` um recurso que chama uma biblioteca C via cgo, e o `release.sh` começa a falhar. Qual alvo falha primeiro, e por quê?",
+    "hint": "O script compila a lista em ordem, com `CGO_ENABLED=0` em todos os alvos.",
+    "choices": [
+      {
+        "text": "`windows/amd64`, porque o Windows não tem biblioteca C",
+        "why": "O Windows tem bibliotecas C. A falha vem antes de qualquer questão de sistema: o cgo está desligado em todos os alvos do script."
+      },
+      {
+        "text": "Só os alvos `arm64`, porque precisam de um `gcc` de ARM",
+        "why": "Precisariam se o cgo estivesse ligado. Com `CGO_ENABLED=0`, o alvo nativo falha do mesmo jeito."
+      },
+      {
+        "text": "`linux/amd64`, o primeiro, porque com cgo desligado os arquivos cgo saem",
+        "why": "Isso. Os arquivos que importam \"C\" são excluídos em todos os alvos, então o primeiro build já falha e o `set -eu` para o script ali."
+      },
+      {
+        "text": "Nenhum falha; o comando go troca por uma versão em Go puro da biblioteca",
+        "why": "Isso acontece com pacotes padrão como o `os/user`, que trazem duas implementações. Uma biblioteca C do colega não tem gêmea em Go."
+      }
+    ]
+  },
+  "ex-b79wc6h3": {
+    "prompt": "`go tool dist list ___` imprime cada par com dois campos a mais, `CgoSupported` e `FirstClass`.",
+    "hint": "A flag que muda a saída para um formato legível por máquina.",
+    "blanks": [
+      {
+        "accept": [
+          "-json"
+        ]
+      }
+    ]
+  }
+}

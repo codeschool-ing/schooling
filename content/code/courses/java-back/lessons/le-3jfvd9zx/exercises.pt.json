@@ -1,0 +1,539 @@
+{
+  "ex-1rfqtm7x": {
+    "prompt": "O que faz `@RequestMapping(\"/books\")` na classe do controlador?",
+    "choices": [
+      {
+        "text": "Limita a classe inteira a requisições GET",
+        "why": "Não. Ele dá um caminho e nenhum método; `@GetMapping` e `@PostMapping` nos métodos escolhem o método."
+      },
+      {
+        "text": "Registra um servlet próprio, que escuta em `/books`",
+        "why": "Há um servlet só, o `DispatcherServlet`; a anotação acrescenta linhas à tabela de mapeamentos dele."
+      },
+      {
+        "text": "Faz da classe um bean, para a varredura de componentes achá-la",
+        "why": "Isso é o `@RestController`, que traz `@Component` dentro dele. `@RequestMapping` só descreve caminhos."
+      },
+      {
+        "text": "Prefixa com `/books` o caminho de todo método",
+        "why": "Certo. `@GetMapping(\"/{id}\")` abaixo dele atende `/books/{id}`, e `@GetMapping` sozinho atende `/books`."
+      }
+    ],
+    "hint": "Veja quais são os caminhos dos dois métodos quando a aplicação roda."
+  },
+  "ex-6ez25916": {
+    "prompt": "`GET /books/99` respondeu 404 com `Content-Length: 0`, e `GET /authors` respondeu 404 com um corpo JSON. Por que a diferença?",
+    "choices": [
+      {
+        "text": "O livro 99 foi apagado antes, e o Spring responde a um pedido por um recurso apagado com um 404 vazio",
+        "why": "Nada foi apagado; o livro 99 nunca existiu. A diferença é quem escreveu a resposta."
+      },
+      {
+        "text": "O Tomcat respondeu `/authors` direto, antes de o Spring vê-lo",
+        "why": "O corpo tem os campos do Spring Boot, `timestamp`, `status`, `error` e `path`. O Spring o viu, e não o mapeou para nada."
+      },
+      {
+        "text": "O controlador escolheu um 404 vazio; nada tratou `/authors`, então o Spring Boot escreveu aquele",
+        "why": "Certo. `ResponseEntity.notFound().build()` é um status e mais nada. Um caminho sem mapeamento acaba no tratamento de erro do próprio Spring Boot, que sempre escreve aquele corpo."
+      },
+      {
+        "text": "O curl descartou o corpo da primeira porque ela foi enviada com `-i`",
+        "why": "As duas requisições foram enviadas com `-i`. `Content-Length: 0` é o servidor dizendo que não há nada a descartar."
+      }
+    ]
+  },
+  "ex-7470m3e0": {
+    "prompt": "`DELETE /books/1` recebeu `405` e o cabeçalho `Allow: GET`. O que o Spring sabia para responder isso?",
+    "choices": [
+      {
+        "text": "Que o livro 1 existe, e livros existentes não podem ser apagados",
+        "why": "O Spring nunca perguntou ao serviço sobre o livro 1. A resposta vem só dos mapeamentos."
+      },
+      {
+        "text": "Que o caminho bate com um mapeamento, e só para GET",
+        "why": "Certo. `/books/{id}` está na tabela com GET e mais nada, então o errado é o método e não o caminho."
+      },
+      {
+        "text": "Nada: 405 é o que o Tomcat responde a qualquer DELETE",
+        "why": "`DELETE /authors` seria 404, porque nenhum mapeamento bate com esse caminho para método nenhum."
+      },
+      {
+        "text": "Que o cliente não tem permissão para apagar, o que é uma questão de permissão",
+        "why": "Falta de permissão é 403, e esta aplicação não tem permissões até a aula 15."
+      }
+    ]
+  },
+  "ex-syqxrtsq": {
+    "prompt": "A aula envia requisições com `curl -si -w '\\n'`. Quais afirmações sobre essas opções são verdadeiras? Escolha todas as que valem.",
+    "choices": [
+      {
+        "text": "`-i` imprime a linha de status e os cabeçalhos antes do corpo",
+        "why": "Certo. Sem ela você vê só o corpo, como a lista de livros mostrou."
+      },
+      {
+        "text": "`-s` impede o curl de imprimir qualquer coisa própria, como um medidor de progresso",
+        "why": "Certo. Ela silencia o curl, não o servidor."
+      },
+      {
+        "text": "`-w '\\n'` escreve uma quebra de linha depois da resposta",
+        "why": "Certo. O JSON não termina com uma, e o próximo prompt começaria na mesma linha."
+      },
+      {
+        "text": "`-s` esconde o corpo e mantém só o status",
+        "why": "O corpo foi impresso em toda resposta que tinha um. `-s` é sobre as mensagens do próprio curl."
+      },
+      {
+        "text": "`-i` transforma a requisição num HEAD, que pede só os cabeçalhos",
+        "why": "Isso é `-I`, maiúsculo. O `-i` minúsculo envia o mesmo GET e mostra mais da resposta."
+      }
+    ]
+  },
+  "ex-bky5np5g": {
+    "prompt": "Ponha em ordem o que acontece com `GET /books/2` a partir do momento em que chega à aplicação.",
+    "items": [
+      "O Tomcat entrega a requisição ao DispatcherServlet",
+      "o handler mapping acha BookController#get(long)",
+      "o texto \"2\" do caminho vira o long 2",
+      "o método pergunta ao serviço e devolve um ResponseEntity",
+      "o Jackson escreve o BookResponse como JSON"
+    ],
+    "hint": "Só um destes passos é código seu."
+  },
+  "ex-xrrq216j": {
+    "prompt": "`GET /books/abc` foi respondido com 400, e o método `get` nunca rodou. Em que passo do `DispatcherServlet` a requisição parou?",
+    "choices": [
+      {
+        "text": "Achar o método: nenhum mapeamento bate com `abc`",
+        "why": "O padrão `/books/{id}` bate com qualquer segmento. A linha do log diz que o mapeamento foi achado e uma conversão falhou."
+      },
+      {
+        "text": "Resolver os argumentos",
+        "why": "Certo. `MethodArgumentTypeMismatchException`: \"abc\" não pôde virar o `long` que `@PathVariable long id` pede."
+      },
+      {
+        "text": "Dentro do método, quando o serviço não achou livro",
+        "why": "Um livro inexistente é o 404 vazio do livro 99. Aqui o método nunca foi chamado."
+      },
+      {
+        "text": "Escrever o valor devolvido, porque não havia o que escrever",
+        "why": "Não houve valor devolvido nenhum; a chamada nunca aconteceu."
+      }
+    ],
+    "hint": "Leia o nome da exceção na linha WARN."
+  },
+  "ex-3rjj61zd": {
+    "prompt": "A livraria cresce para cinco controladores com vinte métodos mapeados entre eles. Para quantos servlets o Tomcat manda as requisições da API?",
+    "choices": [
+      {
+        "text": "Cinco, um por classe controladora",
+        "why": "Um controlador é um bean, não um servlet. Acrescentar um acrescenta linhas à tabela de mapeamentos."
+      },
+      {
+        "text": "Vinte, um por método mapeado",
+        "why": "Os métodos são linhas de uma tabela, consultada por um servlet só."
+      },
+      {
+        "text": "Um, o DispatcherServlet",
+        "why": "Certo. Um front controller: uma entrada só, e o roteamento atrás dela cresce com os controladores."
+      },
+      {
+        "text": "Nenhum: o Tomcat chama os métodos dos controladores direto",
+        "why": "O Tomcat conhece servlets e nada das anotações do Spring; quem as lê é o dispatcher."
+      }
+    ]
+  },
+  "ex-b0azh4ng": {
+    "prompt": "Um tutorial escreve `import com.fasterxml.jackson.databind.ObjectMapper;`. O que isso diz sobre ele, lido a partir do projeto deste curso?",
+    "choices": [
+      {
+        "text": "É anterior ao Jackson 3, cujas classes mudaram para `tools.jackson`",
+        "why": "Certo. Esse import é do Jackson 2. O Spring Boot 4 roda sobre o Jackson 3, em que a classe é `tools.jackson.databind.ObjectMapper`."
+      },
+      {
+        "text": "Nada: esse ainda é o pacote de toda classe do Jackson",
+        "why": "A árvore de dependências mostrou `tools.jackson.core:jackson-databind:3.1.5`. Só as anotações mantiveram o pacote antigo."
+      },
+      {
+        "text": "Usa o artefato de anotações, que é o único Jackson que o Spring Boot 4 traz",
+        "why": "O Boot 4 traz o Jackson 3 inteiro. As anotações são a parte que manteve `com.fasterxml`, e `ObjectMapper` não é uma delas."
+      },
+      {
+        "text": "Foi escrito para o Gson, a outra biblioteca de JSON",
+        "why": "O Gson fica em `com.google.gson`. `com.fasterxml.jackson` é o Jackson, a versão anterior à 3."
+      }
+    ]
+  },
+  "ex-8zt1gsn2": {
+    "prompt": "Um controlador devolve `new Author(\"Machado de Assis\", 1839)`, sendo `record Author(String name, int born)`. Que JSON o Jackson escreve?",
+    "choices": [
+      {
+        "text": "`{\"born\":1839,\"name\":\"Machado de Assis\"}`",
+        "why": "A ordem é a do record, não a do alfabeto; `name` é declarado primeiro."
+      },
+      {
+        "text": "`{\"getName\":\"Machado de Assis\",\"getBorn\":1839}`",
+        "why": "Os acessores de um record são `name()` e `born()`, e a propriedade leva o nome do componente."
+      },
+      {
+        "text": "`{\"name\":\"Machado de Assis\",\"born\":1839}`",
+        "why": "Certo: os nomes dos componentes, na ordem de declaração, o `int` como número JSON."
+      },
+      {
+        "text": "`{\"name\":\"Machado de Assis\",\"born\":\"1839\"}`",
+        "why": "Um `int` vira um número JSON, como `priceCents` virou; só uma `String` vai entre aspas."
+      }
+    ]
+  },
+  "ex-k1qf9dsj": {
+    "prompt": "Por que a livraria envia um preço como `3990` em vez de `39.90`?",
+    "choices": [
+      {
+        "text": "O JSON não tem como escrever um número que tenha ponto decimal",
+        "why": "O JSON escreve `39.9` muito bem. O problema começa quando um programa o guarda como fração binária."
+      },
+      {
+        "text": "Centavos inteiros são exatos, e 0,10 não tem forma binária exata",
+        "why": "Certo. Uma contagem inteira da menor unidade é exata, e toda soma de preços continua exata."
+      },
+      {
+        "text": "Um inteiro ocupa menos bytes na transmissão do que um decimal",
+        "why": "Quatro caracteres contra cinco; ninguém desenha um formato de preço por causa de um byte."
+      },
+      {
+        "text": "O Jackson não sabe escrever um `double`, só números inteiros",
+        "why": "Sabe, e escreveria. A escolha é sobre o que um `double` faz com dinheiro, não sobre o Jackson."
+      }
+    ]
+  },
+  "ex-amtq2e4h": {
+    "prompt": "Na seção sobre POST, um cliente enviou `\"id\": 1` no corpo de um livro novo. O que aconteceu?",
+    "choices": [
+      {
+        "text": "O livro 1 foi sobrescrito com o título novo",
+        "why": "O livro 1 continuou sendo *Dom Casmurro* depois. O record da requisição não tem onde guardar um id."
+      },
+      {
+        "text": "A requisição foi recusada com 400, porque `id` não é componente de `BookRequest`",
+        "why": "O Jackson 3 ignora uma propriedade para a qual o record não tem componente, sem erro e sem linha no log."
+      },
+      {
+        "text": "A propriedade foi descartada e o livro ganhou o próximo id, 5",
+        "why": "Certo. `BookRequest` não tem `id`, então o servidor decidiu, como deve."
+      },
+      {
+        "text": "O livro novo ficou com o id 1 e *Dom Casmurro* passou para o 5",
+        "why": "Nada move um livro existente. O id veio do contador do repositório."
+      }
+    ]
+  },
+  "ex-e26j4mcg": {
+    "prompt": "A aula 10 transforma `Book` numa entidade cujo autor é um objeto `Author`. Com `BookResponse` no lugar, o que precisa mudar para os clientes continuarem recebendo `\"author\": \"Machado de Assis\"`?",
+    "choices": [
+      {
+        "text": "Nada: o Jackson percebe a mudança e mantém o formato antigo",
+        "why": "O Jackson escreve o que recebe. Alguma coisa tem de transformar um `Author` no nome."
+      },
+      {
+        "text": "O componente `author` de `BookResponse` vira um `Author`",
+        "why": "Aí o JSON mudaria de formato, que é exatamente o que o DTO existe para evitar."
+      },
+      {
+        "text": "Todo cliente, que precisa ler o novo objeto aninhado",
+        "why": "Esse é o custo que um DTO poupa: os clientes nem chegam a ver `Author`."
+      },
+      {
+        "text": "Uma linha de `BookResponse.from`",
+        "why": "Certo: a linha que lê o nome do autor. O mapeamento absorve a mudança do domínio, e o contrato fica como estava."
+      }
+    ]
+  },
+  "ex-dqz96k74": {
+    "prompt": "Associe cada tipo da livraria à sua função.",
+    "pairs": [
+      {
+        "left": "BookRequest",
+        "right": "o que um cliente pode enviar para criar um livro"
+      },
+      {
+        "left": "BookResponse",
+        "right": "o que a API responde sobre um livro"
+      },
+      {
+        "left": "Book",
+        "right": "o que a loja sabe sobre um livro"
+      },
+      {
+        "left": "BookController",
+        "right": "qual requisição chama qual método"
+      }
+    ],
+    "right_distractors": [
+      "o texto JSON exatamente como trafega"
+    ]
+  },
+  "ex-k77hawn7": {
+    "prompt": "O que `ResponseEntity.created(URI.create(\"/books/\" + book.id()))` acrescenta à resposta?",
+    "choices": [
+      {
+        "text": "Status 200 e um cabeçalho com o id novo",
+        "why": "200 quer dizer \"aqui está\". Uma criação responde 201, e o cabeçalho traz um caminho, não só um id."
+      },
+      {
+        "text": "Um redirecionamento, para o curl buscar o livro novo sozinho",
+        "why": "Um 201 não é redirecionamento; o curl imprimiu o `Location` e não pediu mais nada."
+      },
+      {
+        "text": "Status 201 e o livro novo no corpo, sem nada nos cabeçalhos",
+        "why": "O corpo vem de `.body(...)`; `created(...)` é o status e o cabeçalho `Location`."
+      },
+      {
+        "text": "Status 201 e um cabeçalho `Location` com o livro novo",
+        "why": "Certo: `HTTP/1.1 201` e `Location: /books/4` na captura. O corpo é definido à parte, por `.body(...)`."
+      }
+    ]
+  },
+  "ex-zn50v3vr": {
+    "prompt": "Um POST com um corpo JSON perfeito, enviado com `-d` e sem `-H`, foi respondido com 415. Por quê?",
+    "choices": [
+      {
+        "text": "O JSON estava malformado, e 415 é como o Spring diz isso",
+        "why": "Um corpo malformado é 400, recusado pelo Jackson. Aqui o Jackson nem foi consultado."
+      },
+      {
+        "text": "O curl envia corpos de `-d` como GET, que esse caminho não aceita",
+        "why": "`-d` faz o curl enviar um POST. Um método errado teria sido 405."
+      },
+      {
+        "text": "O servidor não sabia que livro criar, já que não havia id no corpo",
+        "why": "O servidor escolhe os ids sozinho; o mesmo corpo com o cabeçalho criou um livro."
+      },
+      {
+        "text": "O curl o rotulou como formulário, e o endpoint só lê JSON",
+        "why": "Certo. Sem o cabeçalho, o `Content-Type` é `application/x-www-form-urlencoded`, e o cabeçalho `Accept` da resposta lista o que ele lê."
+      }
+    ]
+  },
+  "ex-ns5rmga6": {
+    "prompt": "Antes de existir validação, o corpo `{\"isbn\":\"12345\",\"title\":\"\",\"author\":\"José de Alencar\",\"priceCents\":-5}` foi guardado como livro. Por quais verificações ele passou? Escolha todas as que valem.",
+    "choices": [
+      {
+        "text": "Era JSON bem formado",
+        "why": "Certo. O Jackson o leu, senão a resposta teria sido 400."
+      },
+      {
+        "text": "Todo valor cabia no tipo do seu componente",
+        "why": "Certo. Textos em `String`s e `-5` num `int`: tipos não dizem nada sobre um valor fazer sentido."
+      },
+      {
+        "text": "O título foi verificado e considerado aceitável",
+        "why": "Nada verificou o título; uma string vazia é uma `String` perfeitamente boa."
+      },
+      {
+        "text": "O ISBN foi verificado quanto aos treze dígitos",
+        "why": "Nada o verificou até a restrição própria; `12345` foi direto para o repositório."
+      }
+    ]
+  },
+  "ex-zb42fdzm": {
+    "prompt": "As restrições estão em `BookRequest` e o starter está no pom, mas o parâmetro é `@RequestBody BookRequest request`. O que recebe um POST com título vazio?",
+    "choices": [
+      {
+        "text": "Um 201: o livro é guardado com o título vazio",
+        "why": "Certo, como a captura mostrou. O Spring valida um argumento `@RequestBody` só quando o parâmetro tem `@Valid`."
+      },
+      {
+        "text": "Um 400, porque o starter valida todo record que encontra",
+        "why": "O starter traz o validador; alguém ainda precisa pedir que ele rode."
+      },
+      {
+        "text": "Um erro de compilação, porque `@NotBlank` precisa de `@Valid` ao lado",
+        "why": "Compilou e rodou. Restrições sem uso não são erro, e é isso que torna esse engano silencioso."
+      },
+      {
+        "text": "Um 500, porque o record quebra as próprias restrições ao ser construído",
+        "why": "Um record não verifica as anotações no construtor; só um validador as lê."
+      }
+    ]
+  },
+  "ex-hj5k895b": {
+    "prompt": "A anotação no parâmetro do controlador que faz o Spring verificar as restrições do record montado pelo Jackson é `@___`.",
+    "blanks": [
+      {
+        "accept": [
+          "Valid",
+          "@Valid"
+        ]
+      }
+    ]
+  },
+  "ex-v8jbkec2": {
+    "prompt": "Por que `priceCents` mudou de `int` para `Integer` quando as restrições chegaram?",
+    "choices": [
+      {
+        "text": "O Bean Validation não sabe ler o valor de um componente primitivo",
+        "why": "`@PositiveOrZero` funciona num `int` também. A diferença é o que acontece quando o preço falta."
+      },
+      {
+        "text": "Com `int`, um preço ausente virava 0 e era guardado em silêncio",
+        "why": "O Jackson 3 o recusou, com 400. O problema era de onde vinha a recusa, não o silêncio."
+      },
+      {
+        "text": "Para um preço ausente ser um erro de campo que cita `priceCents`",
+        "why": "Certo. Um preço ausente vira `null`, que o `@NotNull` informa. Com `int`, o Jackson recusava antes de o record existir, e a mensagem dele citava um tipo."
+      },
+      {
+        "text": "`Integer` guarda preços maiores que `int`",
+        "why": "Os dois guardam a mesma faixa de valores. O valor a mais que um `Integer` guarda é `null`."
+      }
+    ]
+  },
+  "ex-1hxmmbtq": {
+    "prompt": "Associe cada requisição à exceção que o segundo terminal citou para ela.",
+    "pairs": [
+      {
+        "left": "um corpo cortado depois do ISBN",
+        "right": "HttpMessageNotReadableException"
+      },
+      {
+        "left": "um título vazio, com @Valid no lugar",
+        "right": "MethodArgumentNotValidException"
+      },
+      {
+        "left": "GET /books/abc",
+        "right": "MethodArgumentTypeMismatchException"
+      }
+    ],
+    "right_distractors": [
+      "NullPointerException"
+    ]
+  },
+  "ex-1q1qb0jt": {
+    "prompt": "Com o `BookRequest` final, um cliente envia `{\"isbn\":\"9786500000047\",\"title\":\"   \",\"author\":\"José de Alencar\",\"priceCents\":null}`. Quantos erros de campo o validador reporta?",
+    "hint": "Confira cada componente contra cada uma das suas restrições, e lembre quem cuida do null."
+  },
+  "ex-88y2sjtx": {
+    "prompt": "Os doze primeiros dígitos de um ISBN são `978650000006`. Qual é o dígito verificador?",
+    "hint": "Só o último dígito difere de 9786500000047, e o peso dele é 3."
+  },
+  "ex-mcj8w2yf": {
+    "prompt": "Por que `IsbnValidator.isValid` devolve `true` quando o valor é `null`?",
+    "choices": [
+      {
+        "text": "Um ISBN nulo é aceitável, então um livro pode ser criado sem um",
+        "why": "`@NotNull` ao lado ainda recusa esse livro; o validador só não está julgando."
+      },
+      {
+        "text": "Nulo é assunto do `@NotNull`, então um ISBN ausente produz um erro e não dois",
+        "why": "Certo, como a captura mostrou: um erro de campo, `NotNull`. Toda restrição padrão segue a mesma convenção."
+      },
+      {
+        "text": "Chamar `Isbn.isValid` com null lançaria um `NullPointerException`",
+        "why": "`Isbn.isValid` verifica `null` sozinho e devolve `false`. O motivo é qual restrição reporta."
+      },
+      {
+        "text": "O Bean Validation nunca passa `null` a um validador, então o desvio nunca é usado",
+        "why": "Passa, sim: é por isso que a convenção existe e o desvio está ali."
+      }
+    ]
+  },
+  "ex-dcej9yfb": {
+    "prompt": "Em `Isbn.isValid`, o dígito verificador é `(10 - sum % 10) % 10`. Para que serve o `% 10` de fora?",
+    "choices": [
+      {
+        "text": "Para uma soma terminada em 0 dar 0, e não 10",
+        "why": "Certo. `10 - 0` seria 10, que não é um dígito, e 10 % 10 é 0."
+      },
+      {
+        "text": "Para manter o resultado positivo quando a soma é negativa",
+        "why": "A soma de dígitos vezes 1 ou 3 nunca é negativa."
+      },
+      {
+        "text": "Para tirar o prefixo 978 do cálculo",
+        "why": "O prefixo faz parte dos doze dígitos e recebe peso como o resto."
+      },
+      {
+        "text": "Não faz nada; está ali por simetria com o de dentro",
+        "why": "Tente uma soma de 70: sem ele o dígito verificador seria 10, que não é um dígito."
+      }
+    ]
+  },
+  "ex-5x2ayzs7": {
+    "prompt": "No desvio, `FIELD` saiu do `@Target` de `@ValidIsbn`. O que tornou esse engano perigoso, e não só errado?",
+    "choices": [
+      {
+        "text": "Compilou, subiu e aceitou o ISBN ruim em silêncio",
+        "why": "Certo. Uma restrição que ninguém verifica parece exatamente uma que passa, e só uma requisição que devia falhar as distingue."
+      },
+      {
+        "text": "O build falhou com uma mensagem de erro difícil de ler",
+        "why": "O build não imprimiu nada. Uma falha barulhenta teria sido o resultado seguro."
+      },
+      {
+        "text": "Toda requisição era recusada, inclusive as válidas",
+        "why": "O contrário: o dígito verificador errado foi aceito com 201."
+      },
+      {
+        "text": "O log se encheu de avisos a cada requisição",
+        "why": "Não houve aviso em lugar nenhum; o segundo terminal não tinha nada a dizer."
+      }
+    ]
+  },
+  "ex-3y1jpsgv": {
+    "prompt": "Um POST para `/books` com título vazio, `Content-Type` JSON e o código final. Ponha em ordem o que acontece até o cliente receber o 400.",
+    "items": [
+      "o DispatcherServlet acha BookController#add",
+      "o Jackson monta um BookRequest a partir do corpo",
+      "@Valid roda o validador, que acha um título em branco",
+      "o Spring lança MethodArgumentNotValidException",
+      "o tratamento de erro do Spring Boot escreve o corpo do 400"
+    ],
+    "hint": "O método add não está na lista, porque nunca roda."
+  },
+  "ex-v5c6axqe": {
+    "prompt": "Com o código final, o método `add` acaba de ser chamado. O que está garantido sobre a requisição nesse momento? Escolha todas as que valem.",
+    "choices": [
+      {
+        "text": "O corpo era JSON que o Jackson conseguiu ler num `BookRequest`",
+        "why": "Certo. Senão o Jackson a teria recusado no passo 2."
+      },
+      {
+        "text": "Toda restrição de `BookRequest`, incluindo `@ValidIsbn`, foi satisfeita",
+        "why": "Certo. `@Valid` roda todas antes da chamada, e qualquer violação a impede."
+      },
+      {
+        "text": "Ela declarou um tipo de conteúdo JSON",
+        "why": "Certo. Um corpo de formulário foi recusado com 415 antes de qualquer outra tentativa."
+      },
+      {
+        "text": "Nenhum livro da loja já tem esse ISBN",
+        "why": "Nada verifica isso ainda: uma restrição vê uma requisição, não a loja. A aula 7 acrescenta `DuplicateIsbnException` para isso."
+      },
+      {
+        "text": "O id que o cliente enviou será o id do livro novo",
+        "why": "`BookRequest` não tem id; o que o cliente enviou foi descartado pelo Jackson."
+      }
+    ]
+  },
+  "ex-g3gjdgt5": {
+    "prompt": "Um cliente envia um POST com `Content-Type` JSON e o corpo `{\"isbn\":\"9786500000047\",\"title\":\"Iracema\",\"author\":\"José de Alencar\",\"priceCents\":\"free\"}`. Quem o recusa, e o que o log cita?",
+    "choices": [
+      {
+        "text": "O validador, com um erro de campo `PositiveOrZero` em `priceCents`",
+        "why": "O validador precisa de um record para verificar, e `\"free\"` não vira o `Integer` de que o record precisa."
+      },
+      {
+        "text": "Ninguém: o Jackson guarda `null` e o livro é criado sem preço",
+        "why": "O Jackson recusa um valor que não consegue converter; não o troca por `null`."
+      },
+      {
+        "text": "O método `add`, quando o serviço tenta guardar o preço",
+        "why": "O método nunca roda: os dois portões ficam na frente dele."
+      },
+      {
+        "text": "O Jackson, com `HttpMessageNotReadableException`",
+        "why": "Certo, antes de qualquer restrição rodar. Um valor que não cabe no tipo para no primeiro portão, como o corpo cortado depois do ISBN."
+      }
+    ],
+    "hint": "Há dois portões na frente do método. Qual deles precisa que um record exista?"
+  }
+}

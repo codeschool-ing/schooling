@@ -1,0 +1,480 @@
+{
+  "ex-4q9xwmzp": {
+    "prompt": "Os testes da livraria rodam no JUnit 6.0.3, e a maioria dos artigos diz \"JUnit 5\". Qual é a relação entre os dois?",
+    "choices": [
+      {
+        "text": "O JUnit 6 é o JUnit 4 com outro nome, e a API Jupiter foi abandonada",
+        "why": "Não. O JUnit 4 é a API mais antiga, `org.junit.Test`. Os testes daqui importam `org.junit.jupiter.api`, que é o Jupiter, e o Jupiter é o que o JUnit 6 manteve."
+      },
+      {
+        "text": "O JUnit 6 continua o modelo Jupiter do JUnit 5: mesmos pacotes, mesmas anotações",
+        "why": "Isso. O JUnit 6 manteve as anotações de `org.junit.jupiter.api`, subiu o Java mínimo para 17 e pôs todas as partes num só número de versão."
+      },
+      {
+        "text": "JUnit 5 e JUnit 6 são dois engines que o Spring Boot roda lado a lado em todo build",
+        "why": "Não. A árvore de dependências mostra um só `junit-jupiter`, na 6.0.3. Não existe um engine de JUnit 5 separado no projeto."
+      },
+      {
+        "text": "O JUnit 6 mudou as anotações para um pacote novo, então todo teste de JUnit 5 precisa ter os imports reescritos",
+        "why": "Não. Os imports de `IsbnTest` são `org.junit.jupiter.api.Test` e companhia, os mesmos pacotes que o JUnit 5 introduziu em 2017."
+      }
+    ]
+  },
+  "ex-0q2n3vs9": {
+    "prompt": "Associe cada peça ao que ela faz quando você digita `mvn test` na livraria.",
+    "pairs": [
+      {
+        "left": "maven-surefire-plugin",
+        "right": "acha as classes de teste pelo nome e as roda numa JVM própria"
+      },
+      {
+        "left": "a JUnit Platform",
+        "right": "descobre os testes e entrega cada um a um engine"
+      },
+      {
+        "left": "o engine Jupiter",
+        "right": "dá sentido a `@Test` e a `@ParameterizedTest`"
+      },
+      {
+        "left": "spring-boot-starter-test",
+        "right": "traz JUnit, AssertJ e Mockito no escopo de teste"
+      }
+    ],
+    "right_distractors": [
+      "compila as classes de src/test/java"
+    ]
+  },
+  "ex-vk6mvj5k": {
+    "prompt": "Antes desta lição, o `mvn test` na livraria imprimiu `No tests to run.` e depois `BUILD SUCCESS`. O que esse par diz?",
+    "hint": "Leia o veredito e a linha logo antes dele separadamente.",
+    "choices": [
+      {
+        "text": "Que o surefire faltava no pom e o Maven pulou a fase",
+        "why": "Não. A linha acima dele cita `maven-surefire-plugin:3.5.6:test`: o surefire rodou, e não achou nada para rodar."
+      },
+      {
+        "text": "Que todos os testes do projeto passaram",
+        "why": "Não havia nenhum. Um sucesso sem testes não afirma nada sobre código nenhum."
+      },
+      {
+        "text": "Que, para o Maven, uma rodada sem testes é um sucesso",
+        "why": "Isso. Nada falha quando nada roda, e é por isso que a classe com nome errado, mais adiante na lição, também passa no build."
+      },
+      {
+        "text": "Que o engine do JUnit recusou o projeto porque o starter ainda não estava lá",
+        "why": "Nenhum engine participou. Sem o starter, o surefire não tinha JUnit Platform a quem entregar nada, e nem classes de teste."
+      }
+    ]
+  },
+  "ex-a7ed8v0t": {
+    "prompt": "`IsbnTest` e seus métodos são declarados sem `public`. Por que isso funciona?",
+    "choices": [
+      {
+        "text": "O Jupiter os alcança por reflexão, qualquer que seja a visibilidade",
+        "why": "Isso. O JUnit 4 exigia `public`; o Jupiter não, então os testes podem ficar com visibilidade de pacote."
+      },
+      {
+        "text": "Porque o Maven torna públicas todas as classes de src/test/java ao compilá-las",
+        "why": "O Maven compila as fontes como estão escritas. A visibilidade é a do código Java, e a classe de teste continua com visibilidade de pacote."
+      },
+      {
+        "text": "Porque uma classe de teste no mesmo pacote de `Isbn` herda a visibilidade dele",
+        "why": "Classes não herdam visibilidade das vizinhas. Estar no mesmo pacote só deixa o teste enxergar os membros de pacote de `Isbn`."
+      },
+      {
+        "text": "Só funciona quando os testes rodam por uma IDE, não pelo Maven",
+        "why": "A lição os rodou pelo Maven: `Tests run: 3`. O surefire os entrega à mesma Platform que uma IDE usa."
+      }
+    ]
+  },
+  "ex-ycg0krzn": {
+    "prompt": "Um teste chama um método que lança `NullPointerException` antes de o teste chegar à asserção. Como o surefire relata esse teste?",
+    "choices": [
+      {
+        "text": "Em Failures, porque o teste não passou",
+        "why": "Failures são asserções que não se confirmaram. Este teste nem chegou à asserção."
+      },
+      {
+        "text": "Em Skipped, porque a asserção nunca rodou",
+        "why": "Skipped é para um teste que de propósito não rodou. Este rodou e lançou exceção."
+      },
+      {
+        "text": "Como aprovado, porque nenhuma asserção falhou",
+        "why": "Um teste só passa se nada que ele chama lançar exceção. Uma exceção escapando do teste nunca é aprovação."
+      },
+      {
+        "text": "Em Errors, e o build falha",
+        "why": "Isso. Um erro é qualquer exceção que não seja uma asserção falhando; ele derruba o build e diz que o código nem chegou a responder."
+      }
+    ]
+  },
+  "ex-wws4q10n": {
+    "prompt": "O surefire só roda uma classe quando o nome dela casa com um padrão de inclusão. Renomeada para `IsbnChecks`, a classe compilou e nada rodou; de volta a `Isbn___`, os três métodos voltaram a rodar.",
+    "blanks": [
+      {
+        "accept": [
+          "Test"
+        ]
+      }
+    ],
+    "hint": "Os padrões são quatro, e os nomes de classe da livraria usam um deles."
+  },
+  "ex-4n0h3eve": {
+    "prompt": "Quais afirmações sobre os comandos que esta seção rodou são verdadeiras? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "`mvn -q test` não imprimiu nada quando todos os testes passaram",
+        "why": "Isso. `-q` deixa só avisos e erros, então uma rodada que passa deixa apenas o código de saída."
+      },
+      {
+        "text": "`-Dtest='IsbnTest#refusesNull'` rodou um único teste",
+        "why": "Isso. `Tests run: 1`: a classe, e depois um método após o `#`."
+      },
+      {
+        "text": "`-q` pula os testes para deixar o build mais rápido",
+        "why": "Isso é o `-DskipTests`. `-q` só muda quanto o Maven imprime; os testes rodaram e o código de saída foi 0."
+      },
+      {
+        "text": "Depois desta lição, um teste falhando também impede o `mvn package` de gerar o jar",
+        "why": "Isso. `package` vem depois de `test` no ciclo de vida, então os testes rodam antes e uma falha para o build."
+      },
+      {
+        "text": "`-q` esconde testes falhando, então um build quebrado sai com 0",
+        "why": "`-q` esconde mensagens informativas, não erros: uma falha continua sendo impressa e o código de saída continua diferente de zero."
+      }
+    ]
+  },
+  "ex-9qtxgddm": {
+    "prompt": "Uma classe de teste tem um método com `@ParameterizedTest` e `@ValueSource(ints = {1, 2, 3})`, outro com `@ParameterizedTest` e um `@CsvSource` de quatro linhas, e dois métodos `@Test` simples. Que número o surefire imprime depois de `Tests run:` para esta classe?",
+    "hint": "O surefire conta invocações, não métodos."
+  },
+  "ex-araywhzj": {
+    "prompt": "`refusesAnythingElse` tem `@ParameterizedTest(name = \"{1}: {0}\")` e recebe `(String isbn, String reason)`. O que o padrão faz?",
+    "choices": [
+      {
+        "text": "Diz ao `@CsvSource` para ler a segunda coluna antes da primeira",
+        "why": "As colunas vão para os parâmetros na ordem, diga o padrão o que disser: `isbn` continua sendo a primeira coluna."
+      },
+      {
+        "text": "Renomeia o método de teste no relatório XML do surefire",
+        "why": "O XML continua dizendo `refusesAnythingElse(String, String)[1]`. O padrão dá nome à exibição, não ao método."
+      },
+      {
+        "text": "Dá nome a cada invocação: o motivo, depois o ISBN",
+        "why": "Isso. `{1}` é o segundo argumento e `{0}` o primeiro, então o launcher imprimiu `\"a hyphen\": \"978-6500000016\"`."
+      },
+      {
+        "text": "Faz a asserção imprimir o motivo quando o teste falha",
+        "why": "A asserção é `assertFalse`, e a mensagem dela é a mesma qualquer que seja o nome; `reason` nunca é passado a ela."
+      }
+    ]
+  },
+  "ex-yyj2eex4": {
+    "prompt": "Um colega diz que o padrão `name` de um teste parametrizado é inútil, porque o `mvn test` nunca o imprime. Qual resposta é exata?",
+    "choices": [
+      {
+        "text": "O surefire imprime, sim, como nome do teste na linha `Tests run`",
+        "why": "A linha `Tests run` dá o nome da classe, e a linha de falha cita `acceptsAValidIsbn13(String)[3]`. O padrão não estava em nenhuma."
+      },
+      {
+        "text": "Ele está certo sobre o surefire, e os nomes servem para o que mostra os nomes de exibição do JUnit: a janela de testes de uma IDE, ou o console launcher",
+        "why": "Isso. O surefire relata por assinatura e índice; o launcher e as IDEs mostram os nomes que o JUnit monta a partir do padrão."
+      },
+      {
+        "text": "O padrão também decide a ordem em que as invocações rodam, então não é inútil",
+        "why": "As invocações rodam na ordem das linhas da fonte; o padrão só dá nome a elas."
+      },
+      {
+        "text": "Ele está certo, e o padrão só tem efeito no JUnit 4",
+        "why": "O JUnit 4 não tinha `@ParameterizedTest`. O padrão é do Jupiter, e o launcher imprimiu os nomes que ele monta."
+      }
+    ]
+  },
+  "ex-fc1nhffr": {
+    "prompt": "Ponha estas linhas da rodada que falhou na ordem em que o surefire as imprimiu, de cima para baixo.",
+    "items": [
+      "Running com.example.bookshop.catalogue.IsbnTest",
+      "Tests run: 10, Failures: 1 ... <<< FAILURE! -- in com.example.bookshop.catalogue.IsbnTest",
+      "com.example.bookshop.catalogue.IsbnTest.acceptsAValidIsbn13(String)[3] ... <<< FAILURE!",
+      "org.opentest4j.AssertionFailedError: expected: <true> but was: <false>",
+      "Results:",
+      "BUILD FAILURE"
+    ],
+    "hint": "A linha da classe, depois o detalhe, depois os totais, depois o veredito."
+  },
+  "ex-mk34dkj1": {
+    "prompt": "Sem o `% 10` de fora, tirar o `9786500000030` de Frankenstein do `@ValueSource` deixou a rodada verde. Por que nenhum dos três ISBNs restantes conseguia pegar o bug?",
+    "choices": [
+      {
+        "text": "Porque os três ISBNs restantes são testados por `refusesAnythingElse`, que espera `false`",
+        "why": "Eles estão em `acceptsAValidIsbn13`, que espera `true`, e continuaram recebendo `true` da regra quebrada."
+      },
+      {
+        "text": "Porque o surefire para de comparar depois do primeiro ISBN que passa",
+        "why": "Toda invocação roda e relata por conta própria: a rodada disse `Tests run: 9`."
+      },
+      {
+        "text": "Porque os dígitos verificadores deles não são 0, e o `% 10` de fora só muda o resultado quando a soma já termina em 0",
+        "why": "Isso. Para qualquer outra soma, `10 - sum % 10` já fica abaixo de 10 e o `% 10` de fora não mexe nele, então as duas regras concordam nesses três."
+      },
+      {
+        "text": "Porque `9780306406157` tem outro prefixo, então a regra o trata à parte",
+        "why": "A regra nunca olha o prefixo: ela pondera os doze dígitos do mesmo jeito para todo ISBN."
+      }
+    ]
+  },
+  "ex-4az13mkp": {
+    "prompt": "Mantenha a regra quebrada, `int check = 10 - sum % 10;`. Quantos destes cinco ISBNs válidos o `Isbn.isValid` ainda aceita: `9786500000016`, `9786500000023`, `9786500000030`, `9780306406157`, `9786500000160`?",
+    "hint": "Olhe só o último dígito de cada um."
+  },
+  "ex-343519q6": {
+    "prompt": "A falha disse apenas `expected: <true> but was: <false>`. Por que ela não citou o ISBN que falhou?",
+    "choices": [
+      {
+        "text": "Porque o surefire encurta toda mensagem de asserção para as primeiras palavras",
+        "why": "O surefire imprimiu as mensagens do AssertJ em várias linhas mais adiante na lição. Ele imprime o que a asserção entrega."
+      },
+      {
+        "text": "Porque o `assertTrue` recebe só um boolean e não tem mais nada a relatar",
+        "why": "Isso. O ISBN já tinha sumido quando o `assertTrue` foi chamado; o índice `[3]` no nome do teste é o que apontou para ele."
+      },
+      {
+        "text": "Porque o JUnit esconde os argumentos de teste da saída a menos que uma flag os habilite",
+        "why": "Nenhuma flag está envolvida. O launcher mostrou os argumentos nos nomes sem que ninguém pedisse; a asserção nunca os teve."
+      },
+      {
+        "text": "Porque a mensagem está invertida: a regra devolveu true e o teste esperava false",
+        "why": "O teste é `acceptsAValidIsbn13`, que espera `true`; a regra quebrada devolveu `false` para Frankenstein."
+      }
+    ]
+  },
+  "ex-n0na8b6d": {
+    "prompt": "O JUnit roda os três testes de `BookTest.Take`. Quantas instâncias de `BookTest` ele cria?",
+    "choices": [
+      {
+        "text": "Uma, compartilhada pelos três testes",
+        "why": "Esse é o modelo do TestNG. O padrão do Jupiter é uma instância nova por método de teste."
+      },
+      {
+        "text": "Três, uma para cada teste",
+        "why": "Isso. Cada teste ganha um `BookTest` novo e um `Take` novo dentro dele, e o `@BeforeEach` roda em cada um."
+      },
+      {
+        "text": "Nenhuma, porque os testes estão na classe aninhada",
+        "why": "`Take` é uma classe interna, e uma instância interna não existe sem uma externa."
+      },
+      {
+        "text": "Seis, duas para cada teste",
+        "why": "Dois objetos por teste, sim, mas só um deles é um `BookTest`; o outro é um `Take`."
+      }
+    ]
+  },
+  "ex-87gy9f31": {
+    "prompt": "Com `@BeforeAll` e um livro `static`, dois dos três testes de `take` falharam. O que estava errado?",
+    "choices": [
+      {
+        "text": "O próprio `take`, que só falha quando o livro é static",
+        "why": "`Book.take` não mudou e passava com `@BeforeEach`. Os testes dividiam um livro, o que é propriedade do teste, não do código."
+      },
+      {
+        "text": "O `@BeforeAll` rodou depois dos testes em vez de antes",
+        "why": "Ele rodou uma vez, antes de todos, e o problema é esse: um livro para três testes que o alteram."
+      },
+      {
+        "text": "Os dois testes que falharam, cujas expectativas foram escritas para outro livro",
+        "why": "As expectativas deles estão certas para um livro com dois exemplares. Eles receberam um livro que outro teste já tinha esvaziado."
+      },
+      {
+        "text": "A fixture: um livro compartilhado, esvaziado primeiro por `lowersTheStock`",
+        "why": "Isso. `but was: <0>` e `Only 0 of 'Dom Casmurro' left` são os dois o rastro do `take(2)` do primeiro teste."
+      }
+    ]
+  },
+  "ex-nxmmzc9n": {
+    "prompt": "Quais afirmações sobre o AssertJ, do jeito que o `OrderTest` o usa, são verdadeiras? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "`assertThat` começa pelo valor obtido, e o método depois dele diz o que se espera",
+        "why": "Isso. `assertThat(order.totalCents()).isEqualTo(11670)` se lê obtido, depois esperado."
+      },
+      {
+        "text": "`containsExactly(2, 1)` falha se as quantidades estiverem certas mas em outra ordem",
+        "why": "Isso. O desvio com `(1, 2)` falhou nas duas posições."
+      },
+      {
+        "text": "A mensagem de falha mostrou as duas listas e cada índice em que elas diferiam",
+        "why": "Isso. É o motivo que a lição dá para preferi-lo em coleções."
+      },
+      {
+        "text": "Usar o AssertJ dispensa o engine do JUnit para rodar o teste",
+        "why": "O AssertJ é só asserções. O `OrderTest` continua com `@Test`, e o engine Jupiter continua rodando o teste."
+      },
+      {
+        "text": "`isEqualTo` compara dois valores `int` com `==` nas referências",
+        "why": "Um `int` não tem referência. `isEqualTo` compara valores, e a mensagem mostrou `expected: 11680` e `but was: 11670`."
+      }
+    ]
+  },
+  "ex-dbgk7cqr": {
+    "prompt": "Uma rodada do projeto inteiro imprime `Tests run: 3 ... -- in take` e depois `Tests run: 0 ... -- in com.example.bookshop.catalogue.BookTest`. O que aconteceu com o `BookTest`?",
+    "choices": [
+      {
+        "text": "Rodaram na classe aninhada, relatada pelo surefire como `take`",
+        "why": "Isso. A classe de fora não tem métodos de teste próprios, então relata zero; o total no fim continua contando 15."
+      },
+      {
+        "text": "Os testes foram descobertos mas pulados, porque `@DisplayName` desativa uma classe",
+        "why": "Um teste pulado é contado em `Skipped`, que diz 0. `@DisplayName` só dá nome."
+      },
+      {
+        "text": "Os testes rodaram duas vezes, uma como `take` e outra como `BookTest`",
+        "why": "O total é 15, que é 2 + 3 + 10: cada teste de `take` contou uma vez."
+      },
+      {
+        "text": "O nome dela não termina em `Test`, então o surefire a ignorou",
+        "why": "`BookTest` termina em `Test`, e o surefire a rodou: `Running com.example.bookshop.catalogue.BookTest`."
+      }
+    ]
+  },
+  "ex-nc8rzf25": {
+    "prompt": "No `BookTest`, o método que monta um livro novo com dois exemplares antes de cada teste é anotado com `@___`.",
+    "blanks": [
+      {
+        "accept": [
+          "BeforeEach",
+          "@BeforeEach"
+        ]
+      }
+    ]
+  },
+  "ex-trm3g0wy": {
+    "prompt": "`ShelfTest` chama `assertEquals(shelf.count(\"Dom Casmurro\"), 2)` de `org.testng.Assert`. Qual argumento é qual?",
+    "choices": [
+      {
+        "text": "O primeiro é o esperado e o segundo o obtido, como no JUnit",
+        "why": "Essa é a ordem do JUnit. A do TestNG é a contrária, e é por isso que uma linha copiada de um para o outro culpa o lado errado."
+      },
+      {
+        "text": "A ordem não importa, porque os dois valores só são comparados",
+        "why": "A comparação não se importa; a mensagem sim. A rodada disse `expected [3] but found [2]` porque os argumentos estavam na ordem do TestNG."
+      },
+      {
+        "text": "O primeiro é o obtido e o segundo o esperado",
+        "why": "Isso. O TestNG põe o valor obtido primeiro, o contrário do `assertEquals` do JUnit."
+      },
+      {
+        "text": "O primeiro é a mensagem a imprimir e o segundo o valor a conferir",
+        "why": "A mensagem é um terceiro argumento opcional no TestNG; os dois aqui são valores."
+      }
+    ]
+  },
+  "ex-zn360sx9": {
+    "prompt": "`takesOne` tem `dependsOnMethods = \"addsCopies\"`. Quando `addsCopies` falhou, o que o TestNG fez com `takesOne`?",
+    "choices": [
+      {
+        "text": "Rodou-o numa `Shelf` nova, então ele falhou com uma exceção",
+        "why": "O TestNG mantém uma instância por classe, e nem rodou `takesOne`: `Skipped: 1`."
+      },
+      {
+        "text": "Pulou-o, e o arquivo de resultados o marcou como `SKIP`",
+        "why": "Isso. Um teste cuja dependência falhou não roda, então o relatório tem uma falha em vez de duas."
+      },
+      {
+        "text": "Rodou-o mesmo assim e o contou como segunda falha",
+        "why": "O resumo disse `Failures: 1`; o segundo teste ficou `SKIP`, não `FAIL`."
+      },
+      {
+        "text": "Rodou-o primeiro, porque uma dependência inverte a ordem",
+        "why": "Uma dependência põe primeiro o método de quem se depende; `takesOne` espera `addsCopies`."
+      }
+    ]
+  },
+  "ex-7eqdfsc8": {
+    "prompt": "Por que um projeto Spring Boot como a livraria usa JUnit em vez de TestNG?",
+    "choices": [
+      {
+        "text": "Porque o TestNG não roda no Java 25",
+        "why": "O `~/testng-look` compilou e rodou seis testes no mesmo JDK 25."
+      },
+      {
+        "text": "Porque o Spring não tem suporte nenhum ao TestNG",
+        "why": "O Spring o suporta por `AbstractTestNGSpringContextTests`; é o caminho menos usado, não um caminho fechado."
+      },
+      {
+        "text": "Porque o JUnit tem recursos que faltam ao TestNG, como data providers e grupos",
+        "why": "Esses são recursos do TestNG; o Jupiter tem as suas versões deles. A escolha não é de recursos."
+      },
+      {
+        "text": "Porque o starter traz o Jupiter, e as anotações de teste do Boot são extensões do Jupiter que uma classe TestNG não lê",
+        "why": "Isso. `@SpringBootTest` carrega `@ExtendWith(SpringExtension.class)`, que só o Jupiter lê."
+      }
+    ]
+  },
+  "ex-h2br26qb": {
+    "prompt": "Associe cada recurso do TestNG visto em `~/testng-look` ao que um projeto JUnit Jupiter usa para a mesma tarefa.",
+    "pairs": [
+      {
+        "left": "@Test(groups = \"stress\")",
+        "right": "@Tag(\"stress\") no teste"
+      },
+      {
+        "left": "@DataProvider",
+        "right": "@ParameterizedTest com uma fonte como @CsvSource"
+      },
+      {
+        "left": "<exclude name=\"stress\"/> no testng.xml",
+        "right": "-DexcludedGroups=stress na linha de comando do Maven"
+      },
+      {
+        "left": "dependsOnMethods",
+        "right": "nada: os testes do Jupiter são feitos para ser independentes"
+      }
+    ],
+    "right_distractors": [
+      "@Nested com @DisplayName"
+    ]
+  },
+  "ex-7r7xqnx6": {
+    "prompt": "Um colega acrescenta `src/test/java/com/example/bookshop/ordering/PriceRules.java` com cinco métodos `@Test`. Por semanas o `mvn package` fica verde, e então um bug de preço que esses testes teriam pegado chega à produção. Qual é o motivo mais provável?",
+    "hint": "Compare o nome da classe com os quatro padrões que o surefire usa por padrão.",
+    "choices": [
+      {
+        "text": "O escopo `test` deixa as classes de src/test/java fora do build",
+        "why": "O escopo é sobre dependências. As classes de src/test/java são compiladas, e o build compilou o `IsbnChecks` do mesmo jeito."
+      },
+      {
+        "text": "O surefire nunca a rodou: nenhum padrão de inclusão casa",
+        "why": "Isso. A classe compila e nada a roda, e uma rodada vazia é um sucesso."
+      },
+      {
+        "text": "O `mvn package` não roda testes a menos que `-Dtest` os cite",
+        "why": "`package` vem depois de `test` no ciclo de vida, e roda toda classe que os padrões do surefire selecionam."
+      },
+      {
+        "text": "Os testes passaram porque faltava o AssertJ no classpath",
+        "why": "Uma biblioteca faltando quebra a compilação, o que teria deixado o build vermelho."
+      }
+    ]
+  },
+  "ex-kvnk0zfe": {
+    "prompt": "O `ShelfTest` é portado para o JUnit Jupiter: os imports de `org.testng` viram os do Jupiter, os atributos `dependsOnMethods` saem e o campo `private final Shelf shelf = new Shelf();` fica. Qualquer que seja a ordem que o JUnit escolher, o que acontece com `takesOne`?",
+    "choices": [
+      {
+        "text": "Passa se o JUnit por acaso rodar `addsCopies` primeiro, e falha caso contrário",
+        "why": "A ordem importaria se a instância fosse compartilhada. No Jupiter, `takesOne` tem o próprio `ShelfTest`, então `addsCopies` nunca toca na estante dele."
+      },
+      {
+        "text": "É pulado, porque o JUnit percebe que ele precisa de `addsCopies`",
+        "why": "Nada mais diz isso ao JUnit; o atributo saiu, e o Jupiter não tem esse tipo de pulo."
+      },
+      {
+        "text": "Passa, porque o campo é inicializado uma vez para a classe toda",
+        "why": "Esse é o modelo do TestNG. O Jupiter cria uma instância nova, e portanto uma `Shelf` nova e vazia, para cada teste."
+      },
+      {
+        "text": "Errors: a estante própria e vazia faz `take` lançar `IllegalStateException`",
+        "why": "Isso. Instância nova quer dizer estante nova e vazia, e uma exceção que não é asserção falhando é um erro."
+      }
+    ]
+  }
+}

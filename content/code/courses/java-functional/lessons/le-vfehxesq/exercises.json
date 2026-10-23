@@ -1,0 +1,516 @@
+[
+  {
+    "id": "ex-cc7ekxna",
+    "version": 1,
+    "section": "java-serialisation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What must a class do before an `ObjectOutputStream` will write it?",
+    "hint": "A marker interface.",
+    "choices": [
+      {
+        "text": "Override `toString` with every field",
+        "correct": false,
+        "why": "`toString` is for people."
+      },
+      {
+        "text": "Declare a constructor with no arguments",
+        "correct": false,
+        "why": "Records have none, and `Book` was written."
+      },
+      {
+        "text": "Implement `Serializable`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Be declared in a package of its own",
+        "correct": false,
+        "why": "`Shelve$Book` has none."
+      }
+    ]
+  },
+  {
+    "id": "ex-1mvbzb6t",
+    "version": 1,
+    "section": "java-serialisation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`tr` showed the readable parts of `books.ser`. What did the file name besides the values?",
+    "hint": "The root of the danger.",
+    "choices": [
+      {
+        "text": "A checksum of the bytes that follow",
+        "correct": false,
+        "why": "There is none."
+      },
+      {
+        "text": "The program that wrote it and the day",
+        "correct": false,
+        "why": "Neither is in the file."
+      },
+      {
+        "text": "Only the encoding of the strings",
+        "correct": false,
+        "why": "The class names were there."
+      },
+      {
+        "text": "The classes to build, and their fields",
+        "correct": true,
+        "why": "Right: `java.util.CollSer` and `Shelve$Book`."
+      }
+    ]
+  },
+  {
+    "id": "ex-1fvv0qna",
+    "version": 1,
+    "section": "java-serialisation",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bytes did `Shelve.java` write for the two books?",
+    "hint": "The first line it printed.",
+    "value": 191,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-508vjt7f",
+    "version": 1,
+    "section": "java-serialisation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A class gains a field. Why can last month's serialised file stop reading?",
+    "hint": "What the bytes are tied to.",
+    "choices": [
+      {
+        "text": "`readObject` only reads records, and it is a class",
+        "correct": false,
+        "why": "It reads any serialisable class."
+      },
+      {
+        "text": "The bytes are tied to the class as it was",
+        "correct": true,
+        "why": "Right: unless a `serialVersionUID` and code bridge it."
+      },
+      {
+        "text": "The JVM deletes `.ser` files after a release",
+        "correct": false,
+        "why": "Nothing deletes them."
+      },
+      {
+        "text": "New fields make the stream longer than its header says",
+        "correct": false,
+        "why": "The stream does not change; the class does."
+      }
+    ]
+  },
+  {
+    "id": "ex-dzz72m50",
+    "version": 1,
+    "section": "reading-untrusted-bytes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was the `Note` refused by the filter, though it is harmless?",
+    "hint": "What kind of list it is.",
+    "choices": [
+      {
+        "text": "No rule allowed it, and `!*` refuses the rest",
+        "correct": true,
+        "why": "Right: the filter does not judge harm."
+      },
+      {
+        "text": "Records cannot be deserialised with a filter",
+        "correct": false,
+        "why": "`Book` is a record and was read."
+      },
+      {
+        "text": "Its text field was longer than `maxarray`",
+        "correct": false,
+        "why": "`maxarray` counts array elements."
+      },
+      {
+        "text": "The filter found code inside it that could run",
+        "correct": false,
+        "why": "It reads names, not code."
+      }
+    ]
+  },
+  {
+    "id": "ex-myszz99f",
+    "version": 1,
+    "section": "reading-untrusted-bytes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When does the filter see the array of five million `int`s?",
+    "hint": "Twenty megabytes.",
+    "choices": [
+      {
+        "text": "Before the array is allocated",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "After it is read, when the cast fails",
+        "correct": false,
+        "why": "Then the memory would be spent."
+      },
+      {
+        "text": "Never: a filter checks classes, not arrays",
+        "correct": false,
+        "why": "`maxarray` is a rule for arrays."
+      },
+      {
+        "text": "When the garbage collector reclaims it",
+        "correct": false,
+        "why": "The filter runs during the read."
+      }
+    ]
+  },
+  {
+    "id": "ex-3z5p1w96",
+    "version": 1,
+    "section": "reading-untrusted-bytes",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A filter for the whole JVM is set with the system property `jdk.___`.",
+    "hint": "Serial, filter.",
+    "blanks": [
+      {
+        "accept": [
+          "serialFilter"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6aajmzzg",
+    "version": 1,
+    "section": "reading-untrusted-bytes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What would the filter have done with the `Note` if the pattern ended at `Filter$Book`, with no `!*`?",
+    "hint": "Undecided is not refused.",
+    "choices": [
+      {
+        "text": "Thrown when the pattern was created",
+        "correct": false,
+        "why": "The pattern is valid without it."
+      },
+      {
+        "text": "Asked the JVM-wide filter, which refuses by default",
+        "correct": false,
+        "why": "No JVM-wide filter was set."
+      },
+      {
+        "text": "Refused it, as everything unlisted is refused",
+        "correct": false,
+        "why": "That is what `!*` adds."
+      },
+      {
+        "text": "Left it undecided, and the stream would have read it",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-zyh08myd",
+    "version": 1,
+    "section": "json-with-jackson",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How did Jackson know which fields to write for `Book`?",
+    "hint": "What a record declares.",
+    "choices": [
+      {
+        "text": "From the record's components",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "From the getters named `getTitle` and so on",
+        "correct": false,
+        "why": "A record's accessors are `title()`, and it was enough."
+      },
+      {
+        "text": "From a schema file next to `pom.xml`",
+        "correct": false,
+        "why": "There is no schema."
+      },
+      {
+        "text": "From an annotation on each component",
+        "correct": false,
+        "why": "`Book` has none."
+      }
+    ]
+  },
+  {
+    "id": "ex-9q49981n",
+    "version": 1,
+    "section": "json-with-jackson",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `App` read the list with `new TypeReference<List<Book>>() {}` instead of `List.class`?",
+    "hint": "Erasure.",
+    "choices": [
+      {
+        "text": "It makes the read run in parallel",
+        "correct": false,
+        "why": "Nothing here is parallel."
+      },
+      {
+        "text": "Jackson 3 refuses raw types at compile time",
+        "correct": false,
+        "why": "It compiles; the result is just wrong."
+      },
+      {
+        "text": "`List.class` is not allowed as an argument",
+        "correct": false,
+        "why": "It is allowed, and gives a list of maps."
+      },
+      {
+        "text": "It keeps `Book`, which erasure removes",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-p464m61m",
+    "version": 1,
+    "section": "json-with-jackson",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Maven project names a library it needs inside `<___>` in `pom.xml`.",
+    "hint": "Plural, around each `<dependency>`.",
+    "blanks": [
+      {
+        "accept": [
+          "dependencies"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-sw83hj26",
+    "version": 1,
+    "section": "json-with-jackson",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the reader of JSON decide that the reader of Java serialisation does not?",
+    "hint": "The end of the section.",
+    "choices": [
+      {
+        "text": "The order of the fields",
+        "correct": false,
+        "why": "Order is not the point."
+      },
+      {
+        "text": "How many objects the input holds",
+        "correct": false,
+        "why": "The input decides that in both."
+      },
+      {
+        "text": "The encoding of the strings",
+        "correct": false,
+        "why": "That is not the difference drawn."
+      },
+      {
+        "text": "The class each object becomes",
+        "correct": true,
+        "why": "Right: `Book`, named in the code."
+      }
+    ]
+  },
+  {
+    "id": "ex-scyh7jfs",
+    "version": 1,
+    "section": "json-from-outside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did the default mapper make of `{\"title\":\"Dune\"}`?",
+    "hint": "Look for a year 0.",
+    "choices": [
+      {
+        "text": "It returned `null` for the whole book",
+        "correct": false,
+        "why": "It built a book."
+      },
+      {
+        "text": "A `Book` with a null author and the year 0",
+        "correct": true,
+        "why": "Right, without a word."
+      },
+      {
+        "text": "A `Book` with the author `\"\"` and no year",
+        "correct": false,
+        "why": "A missing string is `null`, and an `int` cannot be absent."
+      },
+      {
+        "text": "It threw `MismatchedInputException`",
+        "correct": false,
+        "why": "That was the strict one."
+      }
+    ]
+  },
+  {
+    "id": "ex-8reef0tw",
+    "version": 1,
+    "section": "json-from-outside",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which inputs did the strict mapper refuse that the default one accepted? Choose all that apply.",
+    "hint": "Two of the five.",
+    "choices": [
+      {
+        "text": "the one with only a title",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "the year written in words",
+        "correct": false,
+        "why": "Both refused it."
+      },
+      {
+        "text": "the one with an extra `isbn`",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "the text that stops halfway",
+        "correct": false,
+        "why": "Both refused it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2x9q4h23",
+    "version": 1,
+    "section": "json-from-outside",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can `Input.read` call `readValue` in a lambda with no wrapping, unlike `Files.size`?",
+    "hint": "The type of its exception.",
+    "choices": [
+      {
+        "text": "Maven wraps every exception of a dependency",
+        "correct": false,
+        "why": "Maven only builds and runs."
+      },
+      {
+        "text": "`JacksonException` is unchecked in Jackson 3",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`readValue` never fails on bad input",
+        "correct": false,
+        "why": "It failed three times above."
+      },
+      {
+        "text": "Records turn checked exceptions off inside lambdas",
+        "correct": false,
+        "why": "No class can do that."
+      }
+    ]
+  },
+  {
+    "id": "ex-akcmnjvg",
+    "version": 1,
+    "section": "json-from-outside",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team turns on Jackson's default typing for JSON from a public API. What has it done?",
+    "hint": "Section 03.",
+    "choices": [
+      {
+        "text": "Let the sender choose which classes are built",
+        "correct": true,
+        "why": "Right: Java serialisation's danger, in JSON."
+      },
+      {
+        "text": "Made the JSON smaller by leaving class names out",
+        "correct": false,
+        "why": "It adds class names."
+      },
+      {
+        "text": "Nothing, as it only affects writing",
+        "correct": false,
+        "why": "It affects reading too."
+      },
+      {
+        "text": "Turned on the strict checks of section 05",
+        "correct": false,
+        "why": "Those are other features."
+      }
+    ]
+  },
+  {
+    "id": "ex-0gcxwfex",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each problem with what stops it.",
+    "hint": "Sections 03 and 05.",
+    "pairs": [
+      {
+        "left": "a stream naming an unexpected class",
+        "right": "an allow-list ending in `!*`"
+      },
+      {
+        "left": "a tiny stream asking for a huge array",
+        "right": "`maxarray`"
+      },
+      {
+        "left": "JSON that leaves out a constructor argument",
+        "right": "`FAIL_ON_MISSING_CREATOR_PROPERTIES`"
+      },
+      {
+        "left": "JSON with a field the class does not have",
+        "right": "`FAIL_ON_UNKNOWN_PROPERTIES`"
+      }
+    ],
+    "right_distractors": [
+      "a `serialVersionUID`"
+    ]
+  },
+  {
+    "id": "ex-tgw7rwjz",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens when an `ObjectInputStream` with a filter reads a `Note` in order.",
+    "hint": "The check comes first.",
+    "items": [
+      "the stream reads the class descriptor",
+      "the filter is asked about `Filter$Note`",
+      "`!*` rejects it",
+      "`readObject` throws `InvalidClassException`"
+    ]
+  }
+]

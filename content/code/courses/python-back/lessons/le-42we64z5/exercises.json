@@ -1,0 +1,782 @@
+[
+  {
+    "id": "ex-7f0rzqmz",
+    "version": 1,
+    "section": "installing-postgresql",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did agenda move from SQLite to PostgreSQL in this lesson?",
+    "hint": "What does the last section of the lesson rely on?",
+    "choices": [
+      {
+        "text": "SQLite cannot store dates with a time zone",
+        "correct": false,
+        "why": "Django stores them in UTC either way."
+      },
+      {
+        "text": "SQLite has no row locks",
+        "correct": true,
+        "why": "Right: concurrent registrations need them, and select_for_update does nothing there."
+      },
+      {
+        "text": "Django 6.1 dropped support for SQLite",
+        "correct": false,
+        "why": "It still supports it; agenda used it in lessons 2 and 3."
+      },
+      {
+        "text": "SQLite has no foreign keys",
+        "correct": false,
+        "why": "It has them."
+      }
+    ]
+  },
+  {
+    "id": "ex-dgnn0fmw",
+    "version": 1,
+    "section": "installing-postgresql",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "agenda's DATABASES names no user, password or host. How does Django get in?",
+    "hint": "Who is connecting, through what?",
+    "choices": [
+      {
+        "text": "PostgreSQL accepts anyone on localhost without checking",
+        "correct": false,
+        "why": "It checks; the check is the operating-system user."
+      },
+      {
+        "text": "psycopg reads the password from ~/.pgpass by default",
+        "correct": false,
+        "why": "There is no password involved here."
+      },
+      {
+        "text": "The superuser role skips authentication",
+        "correct": false,
+        "why": "Superuser is about permissions once connected."
+      },
+      {
+        "text": "By peer authentication over the socket",
+        "correct": true,
+        "why": "Right: as the role ana, whose name matches the login."
+      }
+    ]
+  },
+  {
+    "id": "ex-h2dp58s6",
+    "version": 1,
+    "section": "installing-postgresql",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the setup of agenda's database in a working order.",
+    "hint": "The server, then who you are, then where.",
+    "items": [
+      "sudo apt install -y postgresql",
+      "sudo -u postgres createuser --superuser $USER",
+      "createdb agenda",
+      "uv add psycopg, and DATABASES in settings.py",
+      "uv run python manage.py migrate"
+    ]
+  },
+  {
+    "id": "ex-h8qxf40r",
+    "version": 1,
+    "section": "when-postgresql-fails",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each error to the step that fixes it.",
+    "hint": "The order of the section.",
+    "pairs": [
+      {
+        "left": "Error loading psycopg2 or psycopg module",
+        "right": "uv add psycopg"
+      },
+      {
+        "left": "FATAL:  role \"ana\" does not exist",
+        "right": "createuser --superuser $USER"
+      },
+      {
+        "left": "FATAL:  database \"agenda\" does not exist",
+        "right": "createdb agenda"
+      },
+      {
+        "left": "Is the server running locally and accepting connections",
+        "right": "sudo systemctl start postgresql"
+      }
+    ],
+    "right_distractors": [
+      "uv sync --frozen"
+    ]
+  },
+  {
+    "id": "ex-d2vzs39y",
+    "version": 1,
+    "section": "when-postgresql-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "migrate says database \"agneda\" does not exist, and createdb agenda ran earlier. What is wrong?",
+    "hint": "Read the name in the message.",
+    "choices": [
+      {
+        "text": "A typo in NAME in settings.py",
+        "correct": true,
+        "why": "Right. The message prints the name Django asked for."
+      },
+      {
+        "text": "createdb created it under the postgres role, out of sight",
+        "correct": false,
+        "why": "createdb ran as ana and the name was agenda."
+      },
+      {
+        "text": "The server is stopped",
+        "correct": false,
+        "why": "A stopped server gives a socket error, not this one."
+      },
+      {
+        "text": "psycopg is missing",
+        "correct": false,
+        "why": "That error comes before any database name is read."
+      }
+    ]
+  },
+  {
+    "id": "ex-0kmp7nap",
+    "version": 1,
+    "section": "when-postgresql-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A settings file names USER 'agenda' with no HOST, and PostgreSQL answers Peer authentication failed. Which change follows the lesson's advice?",
+    "hint": "Peer authentication compares two names.",
+    "choices": [
+      {
+        "text": "Rename your Linux account to agenda",
+        "correct": false,
+        "why": "That fixes it by accident and breaks everything else."
+      },
+      {
+        "text": "Make the agenda role a superuser",
+        "correct": false,
+        "why": "Peer authentication fails before permissions matter."
+      },
+      {
+        "text": "Connect over TCP with HOST 'localhost' and the role's password",
+        "correct": true,
+        "why": "Right. Lesson 15 does exactly that."
+      },
+      {
+        "text": "Restart PostgreSQL",
+        "correct": false,
+        "why": "Nothing about the server's state is wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-qz2req0e",
+    "version": 1,
+    "section": "models",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does related_name=\"registrations\" on Registration.event give you?",
+    "choices": [
+      {
+        "text": "A column called registrations in events_event",
+        "correct": false,
+        "why": "No column is added to events."
+      },
+      {
+        "text": "event.registrations",
+        "correct": true,
+        "why": "Right: the way back from an event, a manager for its registrations."
+      },
+      {
+        "text": "A name for the foreign key constraint",
+        "correct": false,
+        "why": "The constraint gets a generated name."
+      },
+      {
+        "text": "A second table joining events to registrations",
+        "correct": false,
+        "why": "That would be many-to-many; this is a foreign key."
+      }
+    ]
+  },
+  {
+    "id": "ex-mdk4mrgd",
+    "version": 1,
+    "section": "models",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these came from the models into the SQL that sqlmigrate printed? Choose all that apply.",
+    "hint": "Read the CREATE TABLE lines.",
+    "choices": [
+      {
+        "text": "CHECK (\"capacity\" >= 0)",
+        "correct": true,
+        "why": "Right, from PositiveIntegerField."
+      },
+      {
+        "text": "CONSTRAINT \"one_registration_per_email\" UNIQUE (\"event_id\", \"email\")",
+        "correct": true,
+        "why": "Right, from Meta.constraints."
+      },
+      {
+        "text": "ON DELETE CASCADE on the foreign key",
+        "correct": false,
+        "why": "Django applies CASCADE itself; the SQL foreign key had DEFERRABLE INITIALLY DEFERRED."
+      },
+      {
+        "text": "An index on events_registration.event_id",
+        "correct": true,
+        "why": "Right. Django indexes every foreign key."
+      },
+      {
+        "text": "A DEFAULT for created_at",
+        "correct": false,
+        "why": "auto_now_add is filled in Python."
+      }
+    ]
+  },
+  {
+    "id": "ex-rp8ap7ve",
+    "version": 1,
+    "section": "models",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "psql shows Django Night at 2026-11-12 19:00:00-03, and Python printed testing-dojo at 22:00:00+00:00. Are they consistent?",
+    "hint": "Each shows the same kind of instant in a different zone.",
+    "choices": [
+      {
+        "text": "No: the seed stored the wrong time",
+        "correct": false,
+        "why": "Both are 19:00 in São Paulo."
+      },
+      {
+        "text": "No: USE_TZ should be False",
+        "correct": false,
+        "why": "USE_TZ is what keeps this right."
+      },
+      {
+        "text": "Yes: 19:00 at UTC-3 is 22:00 UTC",
+        "correct": true,
+        "why": "Right. psql shows its session's zone; Django returns UTC."
+      },
+      {
+        "text": "Only by chance, since November has no daylight saving there",
+        "correct": false,
+        "why": "There is no chance involved; the zone database knows."
+      }
+    ]
+  },
+  {
+    "id": "ex-zmy4xegv",
+    "version": 1,
+    "section": "models",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many rows did seed.py create in events_event?",
+    "hint": "Count the created lines.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-e1j3e175",
+    "version": 1,
+    "section": "migrations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the 0002 migration add the column with DEFAULT '' and then drop the default?",
+    "hint": "Existing rows, and where Django keeps defaults.",
+    "choices": [
+      {
+        "text": "Old rows need a value; defaults live in Python",
+        "correct": true,
+        "why": "Right. The three events got '', then the default went, since Django keeps defaults in Python."
+      },
+      {
+        "text": "PostgreSQL forbids text columns without a default",
+        "correct": false,
+        "why": "It allows them."
+      },
+      {
+        "text": "blank=True requires a database default",
+        "correct": false,
+        "why": "blank is about forms, not the database."
+      },
+      {
+        "text": "To make the migration reversible",
+        "correct": false,
+        "why": "Reversibility comes from the operation, not the default."
+      }
+    ]
+  },
+  {
+    "id": "ex-2jkcmq5d",
+    "version": 1,
+    "section": "migrations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A migration that already ran on your colleague's machine has a mistake. What does the lesson say to do?",
+    "hint": "What happens to an edited migration on a database that already ran it?",
+    "choices": [
+      {
+        "text": "Edit it and ask everyone to run migrate",
+        "correct": false,
+        "why": "migrate skips it there: it is already recorded as applied."
+      },
+      {
+        "text": "Write a new migration that fixes it",
+        "correct": true,
+        "why": "Right. History is only added to."
+      },
+      {
+        "text": "Delete the migrations folder and run makemigrations",
+        "correct": false,
+        "why": "That orphans every database that already ran them."
+      },
+      {
+        "text": "Run migrate --fake on both machines",
+        "correct": false,
+        "why": "Faking hides the difference instead of fixing it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2et12w7a",
+    "version": 1,
+    "section": "migrations",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In CI, manage.py makemigrations --___ --dry-run fails when a model changed and nobody wrote its migration.",
+    "hint": "It answered No changes detected.",
+    "blanks": [
+      {
+        "accept": [
+          "check"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-g8d7a9pf",
+    "version": 1,
+    "section": "querysets",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does Event.objects.get(slug=\"no-such-slug\") do?",
+    "hint": "get promises exactly one.",
+    "choices": [
+      {
+        "text": "Returns None",
+        "correct": false,
+        "why": "That is first() on an empty QuerySet."
+      },
+      {
+        "text": "Returns an empty QuerySet",
+        "correct": false,
+        "why": "That is filter()."
+      },
+      {
+        "text": "Raises Event.DoesNotExist",
+        "correct": true,
+        "why": "Right; get_object_or_404 turns it into a 404."
+      },
+      {
+        "text": "Creates the event with that slug",
+        "correct": false,
+        "why": "That is get_or_create."
+      }
+    ]
+  },
+  {
+    "id": "ex-rnywjhke",
+    "version": 1,
+    "section": "querysets",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each filter to the SQL it becomes.",
+    "hint": "The lookups table.",
+    "pairs": [
+      {
+        "left": "capacity__gte=20",
+        "right": "capacity >= 20"
+      },
+      {
+        "left": "venue__startswith=\"Community\"",
+        "right": "venue LIKE 'Community%'"
+      },
+      {
+        "left": "slug__in=[\"a\", \"b\"]",
+        "right": "slug IN ('a', 'b')"
+      },
+      {
+        "left": "description__isnull=True",
+        "right": "description IS NULL"
+      }
+    ],
+    "right_distractors": [
+      "capacity BETWEEN 0 AND 20"
+    ]
+  },
+  {
+    "id": "ex-0d5av15a",
+    "version": 1,
+    "section": "querysets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "queries.py printed QuerySet for type(events).__name__. What had the database done at that point?",
+    "hint": "Building versus using.",
+    "choices": [
+      {
+        "text": "Returned two rows, held in memory",
+        "correct": false,
+        "why": "Nothing had been fetched yet."
+      },
+      {
+        "text": "Counted the rows, to size the QuerySet",
+        "correct": false,
+        "why": "No count was sent."
+      },
+      {
+        "text": "Locked the matching rows",
+        "correct": false,
+        "why": "Nothing locks without select_for_update."
+      },
+      {
+        "text": "Nothing yet",
+        "correct": true,
+        "why": "Right. The next line, the comprehension, ran the query."
+      }
+    ]
+  },
+  {
+    "id": "ex-x6py21dt",
+    "version": 1,
+    "section": "the-sql",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "print(events.query) showed LIKE Community% without quotes. What does that tell you?",
+    "hint": "Compare it with connection.queries.",
+    "choices": [
+      {
+        "text": "Django forgot to escape the parameter, which is an injection risk",
+        "correct": false,
+        "why": "The query that ran had the parameter passed separately."
+      },
+      {
+        "text": "The text is for reading; parameters are pasted in, not quoted",
+        "correct": true,
+        "why": "Right. Never paste it into psql."
+      },
+      {
+        "text": "PostgreSQL accepts unquoted strings in LIKE",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "The filter is broken and matches nothing",
+        "correct": false,
+        "why": "It matched two events."
+      }
+    ]
+  },
+  {
+    "id": "ex-kehsm7fz",
+    "version": 1,
+    "section": "the-sql",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is connection.queries a development tool and not something to read in production?",
+    "hint": "When does Django fill it?",
+    "choices": [
+      {
+        "text": "It slows queries down tenfold",
+        "correct": false,
+        "why": "Cost is not the reason given."
+      },
+      {
+        "text": "It shows passwords",
+        "correct": false,
+        "why": "It shows SQL and parameters."
+      },
+      {
+        "text": "Django keeps it only while DEBUG is on",
+        "correct": true,
+        "why": "Right, and DEBUG is never on in production."
+      },
+      {
+        "text": "Only superusers can read it",
+        "correct": false,
+        "why": "Any code can."
+      }
+    ]
+  },
+  {
+    "id": "ex-wc99y4ay",
+    "version": 1,
+    "section": "the-sql",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "explain() printed Seq Scan on events_event. On a table of a million events, what would that line suggest?",
+    "hint": "What does a sequential scan read?",
+    "choices": [
+      {
+        "text": "Nothing: Seq Scan is always the fastest plan",
+        "correct": false,
+        "why": "For three rows it is; for a million it reads them all."
+      },
+      {
+        "text": "A full-table read; an index would help",
+        "correct": true,
+        "why": "Right: the venue filter reads every row. Reading plans in depth is sql-databases' job."
+      },
+      {
+        "text": "That the ORM wrote bad SQL and raw SQL is needed",
+        "correct": false,
+        "why": "The SQL is fine; the table lacks an index."
+      },
+      {
+        "text": "That ordering must be removed",
+        "correct": false,
+        "why": "Sorting is a separate node in the plan."
+      }
+    ]
+  },
+  {
+    "id": "ex-9z4ydx55",
+    "version": 1,
+    "section": "constraints-and-transactions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Who refused the second registration for bruno@example.org on Django Night in the shell?",
+    "hint": "Read the exception's module.",
+    "choices": [
+      {
+        "text": "The RegistrationForm's email validator",
+        "correct": false,
+        "why": "The shell used no form."
+      },
+      {
+        "text": "register() in services.py",
+        "correct": false,
+        "why": "The shell called objects.create directly."
+      },
+      {
+        "text": "PostgreSQL, through the unique constraint",
+        "correct": true,
+        "why": "Right: IntegrityError, duplicate key value violates unique constraint."
+      },
+      {
+        "text": "CsrfViewMiddleware",
+        "correct": false,
+        "why": "No request was involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-hn2rkvf6",
+    "version": 1,
+    "section": "constraints-and-transactions",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without select_for_update, how many registrations did crowd.py leave for the 12-seat workshop?",
+    "hint": "rows for 12 seats.",
+    "value": 20,
+    "tolerance": 0,
+    "unit": "registrations"
+  },
+  {
+    "id": "ex-60cf1bqy",
+    "version": 1,
+    "section": "constraints-and-transactions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does select_for_update only work inside transaction.atomic()?",
+    "hint": "How long does a lock last?",
+    "choices": [
+      {
+        "text": "atomic() is what sends FOR UPDATE to the database",
+        "correct": false,
+        "why": "The QuerySet sends it; atomic() bounds it."
+      },
+      {
+        "text": "Outside a transaction PostgreSQL ignores the lock silently",
+        "correct": false,
+        "why": "Django refuses it before it reaches PostgreSQL."
+      },
+      {
+        "text": "A lock lasts as long as its transaction",
+        "correct": true,
+        "why": "Right. Without one, it would end with the statement."
+      },
+      {
+        "text": "Threads share one connection otherwise",
+        "correct": false,
+        "why": "Each thread has its own connection either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-9qfhnqw4",
+    "version": 1,
+    "section": "constraints-and-transactions",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what register() does, with the lock, in order.",
+    "hint": "Lock first, decide, write, commit.",
+    "items": [
+      "open a transaction",
+      "lock the event's row",
+      "count its registrations",
+      "insert the registration",
+      "commit, releasing the lock"
+    ]
+  },
+  {
+    "id": "ex-x8exdd5z",
+    "version": 1,
+    "section": "relations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The loop over events with event.registrations.count() sent 4 queries for 3 events. How many for 1,000 events?",
+    "hint": "One, plus one per event.",
+    "choices": [
+      {
+        "text": "4",
+        "correct": false,
+        "why": "The count grows with the events."
+      },
+      {
+        "text": "1,000",
+        "correct": false,
+        "why": "Do not forget the query for the events themselves."
+      },
+      {
+        "text": "1,001",
+        "correct": true,
+        "why": "Right: 1 + N."
+      },
+      {
+        "text": "2",
+        "correct": false,
+        "why": "That is prefetch_related's shape."
+      }
+    ]
+  },
+  {
+    "id": "ex-eqx3wm68",
+    "version": 1,
+    "section": "relations",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need to the tool the lesson names.",
+    "hint": "Forwards, backwards, or just a number.",
+    "pairs": [
+      {
+        "left": "registrations, each with its event",
+        "right": "select_related(\"event\")"
+      },
+      {
+        "left": "events, each with its list of registrations",
+        "right": "prefetch_related(\"registrations\")"
+      },
+      {
+        "left": "events, each with how many registered",
+        "right": "annotate(Count(\"registrations\"))"
+      }
+    ],
+    "right_distractors": [
+      "values_list(\"email\")"
+    ]
+  },
+  {
+    "id": "ex-z25dv4mk",
+    "version": 1,
+    "section": "relations",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The annotated list came back as Async, Testing, Django, though Meta.ordering says starts_at. Why?",
+    "hint": "What kind of query was it?",
+    "choices": [
+      {
+        "text": "Count sorts by the number of registrations",
+        "correct": false,
+        "why": "Async has 12, but the order is not by count."
+      },
+      {
+        "text": "The registrations were inserted in that order, and rows come back that way",
+        "correct": false,
+        "why": "Insertion order is not a promise SQL makes."
+      },
+      {
+        "text": "Aggregating queries skip the model's default order",
+        "correct": true,
+        "why": "Right: Django leaves Meta.ordering out of a GROUP BY since 3.1. Say order_by() when order matters."
+      },
+      {
+        "text": "PostgreSQL sorts aggregated rows by id",
+        "correct": false,
+        "why": "No sort was asked for, so the order is whatever the plan gives."
+      }
+    ]
+  },
+  {
+    "id": "ex-vqjvgkq0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate proposes counting the free seats in the template, with {{ event.capacity|add:... }}, to avoid the lock. What does that miss?",
+    "hint": "Where is the decision made, and when?",
+    "choices": [
+      {
+        "text": "Templates cannot do arithmetic",
+        "correct": false,
+        "why": "add does arithmetic; that is not the problem."
+      },
+      {
+        "text": "The count must be checked at the insert",
+        "correct": true,
+        "why": "Right: the page is drawn before the POST, and only the lock makes the count true when it is used."
+      },
+      {
+        "text": "The template would need select_related",
+        "correct": false,
+        "why": "Related loading does not make a count current."
+      },
+      {
+        "text": "Nothing; showing free seats replaces the check",
+        "correct": false,
+        "why": "Two people can see one free seat at once."
+      }
+    ]
+  }
+]
