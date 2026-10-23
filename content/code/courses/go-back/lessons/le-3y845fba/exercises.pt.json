@@ -1,0 +1,634 @@
+{
+  "ex-cqxh00ya": {
+    "prompt": "Logo depois de `apt install postgresql`, `psql -c \"SELECT 1\"` responde `role \"ana\" does not exist`. O que falta?",
+    "hint": "O PostgreSQL mantém a própria lista de usuários.",
+    "choices": [
+      {
+        "text": "Uma senha para o usuário ana do sistema operacional em `/etc/passwd`",
+        "why": "A mensagem fala da lista de roles do PostgreSQL, que é separada dos usuários do sistema."
+      },
+      {
+        "text": "O servidor, que o instalador deixa parado",
+        "why": "O `pg_lsclusters` mostrou o cluster online; um servidor parado dá outra mensagem, sobre o socket."
+      },
+      {
+        "text": "Um role com o nome do seu login",
+        "why": "Certo. O instalador criou só o `postgres`; `sudo -u postgres createuser --superuser $USER` acrescenta o seu."
+      },
+      {
+        "text": "Um banco chamado `boxoffice` para o psql abrir",
+        "why": "Um banco ausente diz `database ... does not exist`; esta recusa vem antes de qualquer banco ser escolhido."
+      }
+    ]
+  },
+  "ex-xjx243n2": {
+    "prompt": "Por que o `DATABASE_URL` do boxoffice traz `host=/var/run/postgresql` e nenhuma senha?",
+    "hint": "Como o PostgreSQL do Ubuntu trata uma conexão pelo socket?",
+    "choices": [
+      {
+        "text": "Um cabeçalho do pgx",
+        "why": "Não existe esse cabeçalho; esse role nem tem senha."
+      },
+      {
+        "text": "O PostgreSQL aceita sem senha toda conexão TCP vinda do localhost",
+        "why": "O contrário: `psql -h localhost -w` falhou com `no password supplied`."
+      },
+      {
+        "text": "Autenticação peer no socket",
+        "why": "Certo. Pelo socket Unix nenhuma senha é pedida."
+      },
+      {
+        "text": "A opção `--superuser` dispensa qualquer senha",
+        "why": "Superuser trata do que o role pode fazer, não de como ele entra."
+      }
+    ]
+  },
+  "ex-ng3vs6kh": {
+    "prompt": "Por que um banco hospedado na nuvem não é um dos três caminhos do curso?",
+    "hint": "A seção cita dois motivos.",
+    "choices": [
+      {
+        "text": "O PostgreSQL 16 não existe em nenhuma nuvem",
+        "why": "Não é o motivo dado; a objeção é sobre contas e dependência."
+      },
+      {
+        "text": "O pgx se recusa a conectar num servidor de outra máquina",
+        "why": "O pgx conecta por TCP em qualquer host; a escolha é sobre o ambiente do aluno."
+      },
+      {
+        "text": "Bancos na nuvem não têm códigos SQLSTATE",
+        "why": "Um PostgreSQL hospedado fala o mesmo protocolo e os mesmos códigos."
+      },
+      {
+        "text": "Uma conta, e a camada gratuita de uma empresa",
+        "why": "Certo, e toda consulta ainda atravessaria a rede."
+      }
+    ]
+  },
+  "ex-1cjvczjr": {
+    "prompt": "Ligue cada mensagem à sua causa.",
+    "hint": "Leia a última oração de cada uma.",
+    "pairs": [
+      {
+        "left": "`FATAL:  role \"ana\" does not exist`",
+        "right": "o passo do createuser foi pulado"
+      },
+      {
+        "left": "`FATAL:  database \"ana\" does not exist`",
+        "right": "o psql não recebeu nome de banco"
+      },
+      {
+        "left": "`No such file or directory` no socket",
+        "right": "o servidor está parado"
+      },
+      {
+        "left": "`fe_sendauth: no password supplied`",
+        "right": "uma conexão TCP em vez do socket"
+      }
+    ],
+    "right_distractors": [
+      "o disco está cheio"
+    ]
+  },
+  "ex-4p07hwmm": {
+    "prompt": "`psql boxoffice` diz `No such file or directory` sobre `/var/run/postgresql/.s.PGSQL.5432`. O que você roda primeiro?",
+    "hint": "O arquivo de socket só existe enquanto algo escuta.",
+    "choices": [
+      {
+        "text": "`pg_lsclusters`, depois iniciar o cluster",
+        "why": "Certo. A mensagem quer dizer que nada está escutando."
+      },
+      {
+        "text": "`createdb boxoffice`, já que o banco é o que o caminho do socket nomeia",
+        "why": "O createdb também precisa do servidor rodando; não é o banco que falta."
+      },
+      {
+        "text": "`sudo apt install postgresql` de novo",
+        "why": "A instalação está boa; o servidor está parado."
+      },
+      {
+        "text": "`ALTER ROLE` para dar uma senha à ana",
+        "why": "Senha ajuda um login por TCP, não um servidor parado."
+      }
+    ]
+  },
+  "ex-4zmm5t8f": {
+    "prompt": "Uma ferramenta na sua máquina só fala TCP e falha com `fe_sendauth: no password supplied`. O que a seção recomenda?",
+    "hint": "O socket é o preferido, e o TCP tem o próprio caminho.",
+    "choices": [
+      {
+        "text": "Dar uma senha ao role com ALTER ROLE e passá-la na URL ou no ~/.pgpass",
+        "why": "Certo. Para todo o resto, o socket evita a questão."
+      },
+      {
+        "text": "Fazer o PostgreSQL aceitar logins TCP sem senha nenhuma",
+        "why": "A seção nunca afrouxa a autenticação; usa o socket ou uma senha."
+      },
+      {
+        "text": "Rodar a ferramenta como o usuário postgres",
+        "why": "A confiança peer é coisa do socket; por TCP o postgres também precisaria de senha."
+      },
+      {
+        "text": "Acrescentar `-w` para o psql parar de perguntar",
+        "why": "`-w` só torna a falha imediata; não fornece nada."
+      }
+    ]
+  },
+  "ex-tz9p62y1": {
+    "prompt": "Por que o boxoffice chama `pool.Ping` no `main` antes de abrir a porta?",
+    "hint": "O que o `pgxpool.New` faz sozinho?",
+    "choices": [
+      {
+        "text": "Para aquecer um cache de planos de consulta",
+        "why": "O Ping não roda consulta sua; ele abre uma conexão."
+      },
+      {
+        "text": "Para falhar no início, não numa requisição",
+        "why": "Certo. O pgxpool.New monta o pool sem conectar."
+      },
+      {
+        "text": "O pgx exige um ping antes de cada consulta",
+        "why": "Um ping no início; consultas conectam quando precisam."
+      },
+      {
+        "text": "Para criar o banco quando ele falta",
+        "why": "Ele relatou `database \"nowhere\" does not exist` e o programa parou."
+      }
+    ]
+  },
+  "ex-bnacdprk": {
+    "prompt": "Por que a tabela `events` repete regras que o `memStore` já impunha em Go, como `CHECK (sold BETWEEN 0 AND seats)`?",
+    "hint": "Quem mais escreve num banco?",
+    "choices": [
+      {
+        "text": "Porque o Go não compara inteiros dentro de uma transação",
+        "why": "O Go comparou bem na aula 3; a questão é quem mais escreve."
+      },
+      {
+        "text": "Existem outros escritores além deste handler",
+        "why": "Certo. O banco cumpre a promessa até contra código que a esqueceu."
+      },
+      {
+        "text": "Restrições CHECK deixam as consultas mais rápidas",
+        "why": "Elas protegem os dados; velocidade não é o propósito."
+      },
+      {
+        "text": "O pgx recusa tabelas sem restrições",
+        "why": "O pgx funciona com qualquer tabela."
+      }
+    ]
+  },
+  "ex-naxp0w5r": {
+    "prompt": "O PostgreSQL chamou a restrição de unicidade de `name` de `events_name_key` e a regra de `sold` de `events____`.",
+    "hint": "`\\d events` lista as restrições check.",
+    "blanks": [
+      {
+        "accept": [
+          "check"
+        ]
+      }
+    ]
+  },
+  "ex-vny9sh99": {
+    "prompt": "O que acontece se você rodar `psql boxoffice -f schema.sql` uma segunda vez?",
+    "hint": "O arquivo começa com CREATE TABLE.",
+    "choices": [
+      {
+        "text": "A tabela é substituída e as linhas voltam ao início",
+        "why": "CREATE TABLE nunca substitui nada."
+      },
+      {
+        "text": "Nada; o PostgreSQL pula arquivos que já rodou",
+        "why": "O PostgreSQL não guarda registro de arquivos; a aula 9 acrescenta um."
+      },
+      {
+        "text": "Falha no `CREATE TABLE`, porque a tabela existe",
+        "why": "Certo, o problema que as migrações da aula 9 resolvem."
+      },
+      {
+        "text": "Mais duas cópias de cada evento são inseridas",
+        "why": "A execução para no CREATE TABLE, e os nomes são UNIQUE de qualquer forma."
+      }
+    ]
+  },
+  "ex-3bspshp5": {
+    "prompt": "Um colega chama `sql.Open` dentro de todo handler \"para pegar uma conexão nova\". O que está errado?",
+    "hint": "O que o `sql.Open` devolve?",
+    "choices": [
+      {
+        "text": "Cada chamada cria um pool novo",
+        "why": "Certo. Abra um `sql.DB` no início e compartilhe."
+      },
+      {
+        "text": "Conecta por TLS",
+        "why": "O `sql.Open` nem conecta."
+      },
+      {
+        "text": "Um `*sql.DB` não é seguro para compartilhar entre goroutines",
+        "why": "Ele é seguro justamente para isso."
+      },
+      {
+        "text": "Handlers não têm contexto para passar a ele",
+        "why": "O `r.Context()` está lá; o problema é o pool."
+      }
+    ]
+  },
+  "ex-5z5sgsnn": {
+    "prompt": "Um laço de `rows` termina cedo porque a rede caiu. Qual chamada avisa, e como o laço parece sem ela?",
+    "hint": "Verifique depois do laço.",
+    "choices": [
+      {
+        "text": "`rows.Close()`; sem ela o programa entra em pânico",
+        "why": "O Close devolve a conexão; um Close esquecido a vaza, em silêncio."
+      },
+      {
+        "text": "`rows.Scan`; ele devolve o erro de rede na próxima linha",
+        "why": "Não há próxima linha para ler depois que o Next devolveu false."
+      },
+      {
+        "text": "`db.Stats()`; ele conta leituras que falharam",
+        "why": "O Stats informa conexões, não o erro deste laço."
+      },
+      {
+        "text": "`rows.Err()`; parece terminado",
+        "why": "Certo. Os dois finais fazem `rows.Next` devolver false."
+      }
+    ]
+  },
+  "ex-rrwr1vx4": {
+    "prompt": "O que faz o import com sublinhado `_ \"github.com/jackc/pgx/v5/stdlib\"`?",
+    "hint": "Ele é importado só pelo que faz ao carregar.",
+    "choices": [
+      {
+        "text": "Substitui o `database/sql` pela interface própria do pgx",
+        "why": "O programa ainda chama o `database/sql`; o driver fica embaixo dele."
+      },
+      {
+        "text": "Abre a primeira conexão enquanto o programa carrega",
+        "why": "Nada conecta antes de uma consulta; o pool abriu uma nessa hora."
+      },
+      {
+        "text": "Registra o driver \"pgx\"",
+        "why": "Certo."
+      },
+      {
+        "text": "Silencia erros de import não usado para os tipos do pgx",
+        "why": "Ele existe pelo registro, que é um efeito colateral."
+      }
+    ]
+  },
+  "ex-8rpcp3fb": {
+    "prompt": "Depois de o `dbsql` rodar as consultas, quantas conexões ociosas o `db.Stats()` informou?",
+    "hint": "A última linha da saída.",
+    "unit": "conexões"
+  },
+  "ex-1abzj67n": {
+    "prompt": "Dois compradores pedem o último lugar do evento 1 no mesmo instante. Por que o `pgStore.Sell` não consegue vendê-lo duas vezes?",
+    "hint": "Olhe o WHERE do UPDATE.",
+    "choices": [
+      {
+        "text": "Uma instrução confere e altera",
+        "why": "Certo. O UPDATE do segundo comprador não acha linha que passe na verificação."
+      },
+      {
+        "text": "Um mutex Go no pgStore deixa entrar um comprador por vez",
+        "why": "O pgStore não tem mutex; o banco faz o trabalho."
+      },
+      {
+        "text": "O pgx repete uma venda que colide com outra até uma desistir",
+        "why": "Não há repetição; a verificação e a mudança são uma instrução."
+      },
+      {
+        "text": "O handler lê o evento primeiro e compara em Go",
+        "why": "Esse ler-e-depois-escrever é justamente a corrida que a instrução única evita."
+      }
+    ]
+  },
+  "ex-e6hks73r": {
+    "prompt": "Quando o UPDATE do `Sell` não devolve linha, por que o pgStore roda uma segunda consulta?",
+    "hint": "Nenhuma linha tem dois motivos possíveis.",
+    "choices": [
+      {
+        "text": "Para tentar a venda mais uma vez",
+        "why": "A segunda consulta é um Get, não outro UPDATE."
+      },
+      {
+        "text": "Para liberar o lock de linha que o UPDATE deixou",
+        "why": "A instrução terminou; nada fica preso."
+      },
+      {
+        "text": "Porque `RETURNING` não é permitido em UPDATE",
+        "why": "O UPDATE usa RETURNING no mesmo arquivo."
+      },
+      {
+        "text": "Para distinguir evento ausente, 404, de esgotado, 409",
+        "why": "Certo, e custa uma ida e volta só na falha."
+      }
+    ]
+  },
+  "ex-c1wj36gy": {
+    "prompt": "`pgx.RowToStructByPos[Event]` preenche `Event` a partir das colunas. O que isso exige do SELECT?",
+    "hint": "Por posição.",
+    "choices": [
+      {
+        "text": "Colunas com nomes iguais às tags JSON",
+        "why": "Isso seria por nome; esta vai pela ordem."
+      },
+      {
+        "text": "Um `SELECT *`",
+        "why": "Nomear as colunas é o que fixa a ordem."
+      },
+      {
+        "text": "Colunas na ordem dos campos",
+        "why": "Certo: id, name, seats, sold."
+      },
+      {
+        "text": "Um `rows.Close` separado depois da chamada",
+        "why": "O `CollectRows` fecha as linhas sozinho."
+      }
+    ]
+  },
+  "ex-h8cxgw74": {
+    "prompt": "A consulta colada com *Rock 'n' Roll Night* falhou com SQLSTATE 42601. O que aconteceu?",
+    "hint": "Onde terminou a string que o PostgreSQL estava lendo?",
+    "choices": [
+      {
+        "text": "O PostgreSQL recusa nomes com mais de 16 caracteres",
+        "why": "O limite é 100 e só para inserção; isso foi erro de sintaxe."
+      },
+      {
+        "text": "O pgx bloqueou a consulta como ataque",
+        "why": "O parser do PostgreSQL falhou; o pgx só repassou o erro."
+      },
+      {
+        "text": "O evento não existe, então a contagem falhou",
+        "why": "A versão com parâmetro contou 0 sem erro."
+      },
+      {
+        "text": "O apóstrofo fechou a string",
+        "why": "Certo, um erro de sintaxe perto de `n`."
+      }
+    ]
+  },
+  "ex-x8kja2qf": {
+    "prompt": "Por que um placeholder é uma defesa contra SQL injection, e escapar aspas não é?",
+    "hint": "Quando o valor é interpretado?",
+    "choices": [
+      {
+        "text": "O pgx escapa cada aspa com mais cuidado do que você",
+        "why": "Nada é escapado; valor e instrução viajam separados."
+      },
+      {
+        "text": "Placeholders recusam valores com apóstrofos",
+        "why": "Os apóstrofos chegaram como três caracteres, e a contagem funcionou."
+      },
+      {
+        "text": "O PostgreSQL registra toda consulta com placeholder para revisão",
+        "why": "Nenhum log faz parte da defesa."
+      },
+      {
+        "text": "O valor nunca é interpretado como SQL",
+        "why": "Certo. Não existe entrada para a qual isso dê errado."
+      }
+    ]
+  },
+  "ex-c2qb2r0g": {
+    "prompt": "Um endpoint recebe `?sort=` e precisa ordenar por `name` ou `seats`. Como a seção deixa isso seguro?",
+    "hint": "Um placeholder representa só um valor.",
+    "choices": [
+      {
+        "text": "`ORDER BY $1`, com a palavra do cliente como parâmetro",
+        "why": "Nome de coluna não é valor, então um placeholder ali ordena por uma constante."
+      },
+      {
+        "text": "Tirar aspas e ponto e vírgula da palavra, depois colá-la",
+        "why": "Limpar valores é a abordagem que a seção diz que falha."
+      },
+      {
+        "text": "Ordenar em Go depois de ler todas as linhas",
+        "why": "Funciona, mas não é a resposta da seção e lê a tabela inteira."
+      },
+      {
+        "text": "Um mapa de palavras permitidas para strings constantes; o resto cai em `id`",
+        "why": "Certo. A entrada do cliente só escolhe entre strings que você escreveu."
+      }
+    ]
+  },
+  "ex-8gv4w4z8": {
+    "prompt": "`SELECT NULL::text` lido para uma `string`. O que o pgx fez?",
+    "hint": "A primeira linha do programa nulls.",
+    "choices": [
+      {
+        "text": "Guardou `\"\"` e não devolveu erro",
+        "why": "Isso faria um valor ausente parecer vazio; o pgx recusou."
+      },
+      {
+        "text": "Guardou o texto `NULL`",
+        "why": "Isso é configuração de exibição do psql, não resultado de leitura."
+      },
+      {
+        "text": "Devolveu `cannot scan NULL into *string`",
+        "why": "Certo. Use `*string` ou `pgtype.Text` para uma coluna que aceita NULL."
+      },
+      {
+        "text": "Entrou em pânico dentro do driver",
+        "why": "Devolveu um erro comum."
+      }
+    ]
+  },
+  "ex-dbbcvqqy": {
+    "prompt": "Ligue cada SQLSTATE ao que significou nesta aula.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "`23505`",
+        "right": "um nome de evento duplicado"
+      },
+      {
+        "left": "`23514`",
+        "right": "vendido acima dos lugares"
+      },
+      {
+        "left": "`42601`",
+        "right": "o apóstrofo colado"
+      },
+      {
+        "left": "`3D000`",
+        "right": "um banco que não existe"
+      }
+    ],
+    "right_distractors": [
+      "um role que não existe"
+    ]
+  },
+  "ex-9a9988v6": {
+    "prompt": "Por que o pgStore transforma `23505` em resposta para o cliente mas deixa `23514` virar 500?",
+    "hint": "Qual deles um cliente provoca com uma requisição válida?",
+    "choices": [
+      {
+        "text": "23514 não é um código real do PostgreSQL",
+        "why": "É check_violation, impresso pelo programa nulls."
+      },
+      {
+        "text": "Violações de check são repetidas automaticamente pelo pgx",
+        "why": "O pgx não repete nada aqui."
+      },
+      {
+        "text": "Só o 23505 é obra do cliente",
+        "why": "Certo: um cabe ao cliente corrigir, o outro o operador precisa saber."
+      },
+      {
+        "text": "A mensagem de 23514 está em português",
+        "why": "As mensagens são em inglês; o código é que é comparado."
+      }
+    ]
+  },
+  "ex-z4dtm7hx": {
+    "prompt": "Por que o `pgStore.Add` compara `pgErr.Code` com `\"23505\"` e não procura \"duplicate\" na mensagem?",
+    "hint": "Qual dos dois é um contrato?",
+    "choices": [
+      {
+        "text": "Busca em string é lenta",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "O pgx esconde a mensagem do código Go",
+        "why": "A mensagem foi impressa inteira pelo programa nulls."
+      },
+      {
+        "text": "O código é o contrato",
+        "why": "Certo."
+      },
+      {
+        "text": "A mensagem é traduzida para a língua do usuário pelo PostgreSQL",
+        "why": "A questão é que texto é instável; o código não."
+      }
+    ]
+  },
+  "ex-yjadrpyd": {
+    "prompt": "O Organ Recital foi criado depois dos eventos 1 e 2, e recebeu o id 5. Por quê?",
+    "hint": "Duas inserções falharam antes dela.",
+    "choices": [
+      {
+        "text": "Inserções que falharam gastaram 3 e 4",
+        "why": "Certo. Números de identidade são únicos e crescentes, nunca sem buracos."
+      },
+      {
+        "text": "As linhas 3 e 4 foram apagadas pelo laboratório",
+        "why": "Nada foi apagado."
+      },
+      {
+        "text": "O PostgreSQL pula números para dificultar adivinhar ids",
+        "why": "Os buracos vieram das duas inserções que falharam."
+      },
+      {
+        "text": "O pgx numera os eventos sozinho, contando toda requisição",
+        "why": "O banco os numera, com `GENERATED ALWAYS AS IDENTITY`."
+      }
+    ]
+  },
+  "ex-5ejmfqnm": {
+    "prompt": "Por que `Store` é uma interface definida no próprio pacote do boxoffice com exatamente quatro métodos?",
+    "hint": "Quem a chama, e o que mais a satisfaz?",
+    "choices": [
+      {
+        "text": "O Go exige",
+        "why": "Interfaces são opcionais e satisfeitas implicitamente."
+      },
+      {
+        "text": "O pgx só aceita interface como argumento do pool",
+        "why": "O pgx não sabe nada sobre Store."
+      },
+      {
+        "text": "Para esconder os quatro métodos de outros pacotes",
+        "why": "Os métodos são o que os handlers chamam; nada é escondido."
+      },
+      {
+        "text": "Dois stores a satisfazem",
+        "why": "Certo, o hábito da interface pequena da aula 27 do `go`."
+      }
+    ]
+  },
+  "ex-s4dz9zp7": {
+    "prompt": "O log da aula 2 media dezenas de microssegundos por requisição; o desta aula mediu milissegundos. O que mudou?",
+    "hint": "Para onde vai agora o tempo do handler?",
+    "choices": [
+      {
+        "text": "Todo handler agora espera uma ida e volta ao PostgreSQL",
+        "why": "Certo, e gravações em disco custam mais."
+      },
+      {
+        "text": "Problem details são mais lentos de codificar que texto",
+        "why": "A aula 3 os codificava em microssegundos contra o mapa."
+      },
+      {
+        "text": "A cadeia de middlewares cresceu nesta aula",
+        "why": "A cadeia é a da aula 2, sem mudança."
+      },
+      {
+        "text": "O `go run` compila uma vez por requisição",
+        "why": "Ele compila uma vez, antes de o servidor subir."
+      }
+    ]
+  },
+  "ex-b9gnk3cj": {
+    "prompt": "Quais destas coisas mudaram nos handlers quando o boxoffice passou para o PostgreSQL? Marque todas as que se aplicam.",
+    "hint": "Compare o events.go com o da aula 3.",
+    "choices": [
+      {
+        "text": "Eles passam `r.Context()` em toda chamada ao store",
+        "why": "Certo."
+      },
+      {
+        "text": "Eles tratam um erro de `List`, que antes não falhava",
+        "why": "Certo."
+      },
+      {
+        "text": "Eles recebem um `Store` em vez de um `*memStore`",
+        "why": "Certo."
+      },
+      {
+        "text": "Eles mesmos escrevem SQL com placeholders",
+        "why": "O SQL fica no pgStore; os handlers nunca o veem."
+      },
+      {
+        "text": "Eles comparam códigos SQLSTATE",
+        "why": "O pgStore os compara; os handlers só veem erros do store."
+      }
+    ]
+  },
+  "ex-jspfv51t": {
+    "prompt": "Ponha em ordem a preparação de uma máquina nova, até o boxoffice responder a partir do PostgreSQL.",
+    "hint": "Cada passo precisa do anterior.",
+    "items": [
+      "`sudo apt install -y postgresql`",
+      "`sudo -u postgres createuser --superuser $USER`",
+      "`createdb boxoffice`",
+      "`psql boxoffice -f schema.sql`",
+      "exportar `DATABASE_URL` e `go run .`"
+    ],
+    "trap": "O role vem antes do banco que ele possui."
+  },
+  "ex-18sv2jk3": {
+    "prompt": "Depois de um reinício, `GET /events` ainda lista o Organ Recital. Na aula 3 o mesmo reinício o perdia. Qual é o motivo completo?",
+    "hint": "Onde os eventos moram agora?",
+    "choices": [
+      {
+        "text": "O pgx guarda a última resposta em disco entre execuções",
+        "why": "O pgx não guarda nada entre execuções; a tabela guarda as linhas."
+      },
+      {
+        "text": "O `go run` guarda a memória",
+        "why": "Um processo novo começa vazio."
+      },
+      {
+        "text": "O memStore agora grava um arquivo ao parar",
+        "why": "O memStore continua só em memória; o main usa o pgStore."
+      },
+      {
+        "text": "As linhas sobrevivem ao processo",
+        "why": "Certo. O mapa morreu com o processo; a tabela não."
+      }
+    ]
+  }
+}

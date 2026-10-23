@@ -1,0 +1,546 @@
+[
+  {
+    "id": "ex-6t9x8jh8",
+    "version": 1,
+    "section": "packages",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `javac -d out`, where is the class file for `com.example.library.app.Main`?",
+    "hint": "One directory per part of the name.",
+    "choices": [
+      {
+        "text": "`out/Main.class`",
+        "correct": false,
+        "why": "That is where the default package would put it; a package becomes directories."
+      },
+      {
+        "text": "`out/com/example/library/app/Main.class`",
+        "correct": true,
+        "why": "Right: `find out -type f` listed exactly that path."
+      },
+      {
+        "text": "`out/com.example.library.app.Main.class`",
+        "correct": false,
+        "why": "The dots become slashes; no file name contains the package."
+      },
+      {
+        "text": "`src/com/example/library/app/Main.class`, beside the source",
+        "correct": false,
+        "why": "That is where it would go without `-d`; with `-d out` it goes under `out`."
+      }
+    ]
+  },
+  {
+    "id": "ex-jsa8zcqr",
+    "version": 1,
+    "section": "packages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Standing in `out/com/example/library/app`, Ana ran `java Main` and got `NoClassDefFoundError: Main (wrong name: com/example/library/app/Main)`. What happened?",
+    "hint": "The file was found. Then it was read.",
+    "choices": [
+      {
+        "text": "The JVM could not find `Main.class` in the current directory",
+        "correct": false,
+        "why": "It found it: that is why the error quotes the name written inside the file."
+      },
+      {
+        "text": "It found the file, whose recorded name is the full one",
+        "correct": true,
+        "why": "Right: a class file knows its package, and is only valid at the path the package spells."
+      },
+      {
+        "text": "The class file was corrupted when `-d` created the directories",
+        "correct": false,
+        "why": "The same file ran perfectly with `java -cp out com.example.library.app.Main`."
+      },
+      {
+        "text": "`Main` needs `Book`, and `Book` is in another directory",
+        "correct": false,
+        "why": "The message is about `Main`'s own name, before `Book` is ever needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-bwst9yhe",
+    "version": 1,
+    "section": "packages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do Java package names start with a domain written backwards, like `com.example`?",
+    "hint": "Who may use `com.example`?",
+    "choices": [
+      {
+        "text": "Because the JVM downloads classes from that domain at run time",
+        "correct": false,
+        "why": "The JVM loads classes from the class path on disk; the name is only a name."
+      },
+      {
+        "text": "So that owners of different domains do not collide on one package name",
+        "correct": true,
+        "why": "Right: whoever owns the domain owns the names under it."
+      },
+      {
+        "text": "Because `javac` refuses a package that is not a registered domain",
+        "correct": false,
+        "why": "`javac` checks nothing about domains; `com.example` compiles like any name."
+      }
+    ]
+  },
+  {
+    "id": "ex-4w9pqw92",
+    "version": 1,
+    "section": "packages",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The JVM looks for classes in the directories and jars listed on the class ___, which `-cp` sets.",
+    "hint": "Two words; the second is the one missing.",
+    "blanks": [
+      {
+        "accept": [
+          "path"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-km3vtd3j",
+    "version": 1,
+    "section": "packages",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague moves `Book.java` to the top of `src` and says it still compiles, because `javac src/Book.java src/com/example/library/app/Main.java` works. Who is right about the layout?",
+    "hint": "What happens when `javac` has to find `Book` instead of being handed it?",
+    "choices": [
+      {
+        "text": "The colleague: the package line is what counts, and the directory is cosmetic",
+        "correct": false,
+        "why": "Every tool that has to find a source looks at the directory, as `-sourcepath` showed with three errors."
+      },
+      {
+        "text": "The layout is broken: naming every file on the command line hides it",
+        "correct": true,
+        "why": "Right: `javac -sourcepath src` failed with `cannot find symbol` until the file went back."
+      },
+      {
+        "text": "Both: `javac` accepts sources anywhere, so nothing will ever fail",
+        "correct": false,
+        "why": "Maven, an editor and `-sourcepath` all look for the file where the package says it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-pmyfwdff",
+    "version": 1,
+    "section": "imports",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `import java.util.List;` add to the compiled class file?",
+    "hint": "An import is a promise about short names.",
+    "choices": [
+      {
+        "text": "A copy of `List`'s code",
+        "correct": false,
+        "why": "Imports copy nothing; the class file refers to `java.util.List` by name either way."
+      },
+      {
+        "text": "Nothing; it only explains a short name",
+        "correct": true,
+        "why": "Right: the class file holds full names whether you imported or wrote them out."
+      },
+      {
+        "text": "An instruction to load `java.util` when the program starts",
+        "correct": false,
+        "why": "Classes are loaded when first used, import or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-1eqh5185",
+    "version": 1,
+    "section": "imports",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A file imports `java.util.*` and `java.sql.*` and uses `Date`. What makes it compile with `java.util.Date`?",
+    "hint": "One kind of import beats another.",
+    "choices": [
+      {
+        "text": "Putting `import java.util.*;` after `import java.sql.*;`",
+        "correct": false,
+        "why": "The order of imports decides nothing; both on-demand imports still match."
+      },
+      {
+        "text": "Adding `import static java.util.Date;`",
+        "correct": false,
+        "why": "A static import is for static members, not for a class."
+      },
+      {
+        "text": "Adding `import java.util.Date;`",
+        "correct": true,
+        "why": "Right: a single-type import wins over on-demand ones, and the program printed `java.util.Date`."
+      },
+      {
+        "text": "Nothing: the compiler picks the package that was imported first",
+        "correct": false,
+        "why": "It refused with `reference to Date is ambiguous` and named both."
+      }
+    ]
+  },
+  {
+    "id": "ex-nkasnk77",
+    "version": 1,
+    "section": "imports",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these classes can a file use by its short name with no import line at all? Choose all that apply.",
+    "hint": "One package is imported into every file.",
+    "choices": [
+      {
+        "text": "`String`",
+        "correct": true,
+        "why": "Yes: it is in `java.lang`."
+      },
+      {
+        "text": "`Math`",
+        "correct": true,
+        "why": "Yes: `java.lang.Math`."
+      },
+      {
+        "text": "`List`",
+        "correct": false,
+        "why": "No: it is `java.util.List`, which needs an import or the full name."
+      },
+      {
+        "text": "`ExecutorService`, after `import java.util.*;`",
+        "correct": false,
+        "why": "No: it is in `java.util.concurrent`, a different package the `*` does not reach."
+      }
+    ]
+  },
+  {
+    "id": "ex-mjgjsmzy",
+    "version": 1,
+    "section": "imports",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`Modules.java` starts with `import module java.base;`. A teammate compiles it with `--release 21` for an older server. What happens, and why?",
+    "hint": "When did module imports arrive?",
+    "choices": [
+      {
+        "text": "It compiles, because `--release` changes only the class file version",
+        "correct": false,
+        "why": "`--release` also fixes the language level, and the error said module imports need 25."
+      },
+      {
+        "text": "It compiles with a warning, and fails on the server when `List` is first used",
+        "correct": false,
+        "why": "It does not get that far: `javac` refused at the import line."
+      },
+      {
+        "text": "It fails to compile: module imports need 25",
+        "correct": true,
+        "why": "Right: `use -source 25 or higher to enable module imports`."
+      },
+      {
+        "text": "It fails because `java.base` does not exist in Java 21",
+        "correct": false,
+        "why": "`java.base` has existed since Java 9; what is new is importing it."
+      }
+    ]
+  },
+  {
+    "id": "ex-zhs79cn5",
+    "version": 1,
+    "section": "imports",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each import to what it makes available.",
+    "hint": "The table at the top of the section.",
+    "pairs": [
+      {
+        "left": "`import java.util.List;`",
+        "right": "One class, by its short name"
+      },
+      {
+        "left": "`import java.util.*;`",
+        "right": "Every class of one package, when used"
+      },
+      {
+        "left": "`import static java.lang.Math.max;`",
+        "right": "A static member, called without its class"
+      },
+      {
+        "left": "`import module java.base;`",
+        "right": "Every package a module exports"
+      }
+    ],
+    "right_distractors": [
+      "Every sub-package of `java.util` as well"
+    ]
+  },
+  {
+    "id": "ex-st3hzhxk",
+    "version": 1,
+    "section": "maven-project",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the course's layout, where does the source of `com.example.library.App` go?",
+    "hint": "Maven's source root, then the package.",
+    "choices": [
+      {
+        "text": "`src/main/java/com/example/library/App.java`",
+        "correct": true,
+        "why": "Right: `src/main/java` is the root, and the package path follows."
+      },
+      {
+        "text": "`src/com/example/library/App.java`",
+        "correct": false,
+        "why": "That was section 02's layout for plain `javac`; Maven's root is `src/main/java`."
+      },
+      {
+        "text": "`src/main/java/App.java`, with the package declared inside",
+        "correct": false,
+        "why": "The package says where the file must be, and Maven looks there."
+      },
+      {
+        "text": "`target/classes/com/example/library/App.java`",
+        "correct": false,
+        "why": "`target` is what Maven produces and deletes on `clean`; source never goes there."
+      }
+    ]
+  },
+  {
+    "id": "ex-wapey2sk",
+    "version": 1,
+    "section": "maven-project",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the course's `pom.xml` pin a version for every plugin, including ones it never configures?",
+    "hint": "What would Ubuntu's Maven 3.8.7 use otherwise?",
+    "choices": [
+      {
+        "text": "Because Maven refuses to build without a version for each plugin",
+        "correct": false,
+        "why": "Maven builds without them, using its own defaults; that is the problem."
+      },
+      {
+        "text": "Otherwise Maven 3.8.7 runs its own, much older plugins",
+        "correct": true,
+        "why": "Right: pinned, the old Maven builds exactly what a current one would."
+      },
+      {
+        "text": "To stop the four `Unsafe` warnings that every build prints",
+        "correct": false,
+        "why": "The warnings come from Maven's own Guava, and nothing in `pom.xml` removes them."
+      },
+      {
+        "text": "So that the first build downloads nothing",
+        "correct": false,
+        "why": "The first build still downloaded 158 files; pinning decides which versions, not whether."
+      }
+    ]
+  },
+  {
+    "id": "ex-tb7hwwqq",
+    "version": 1,
+    "section": "maven-project",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many files did Ana's first build download, according to `grep -c \"Downloaded from\"`?",
+    "hint": "The build after it downloaded none.",
+    "value": 158,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-bv1vnnq9",
+    "version": 1,
+    "section": "maven-project",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every `mvn` command in the course prints four `WARNING` lines about `sun.misc.Unsafe`. What are they telling you?",
+    "hint": "Read which jar the second line names.",
+    "choices": [
+      {
+        "text": "That the project's code uses an internal JDK class it should not",
+        "correct": false,
+        "why": "The second line names `/usr/share/maven/lib/guava.jar`, part of Maven, not the project."
+      },
+      {
+        "text": "That the build failed and `BUILD SUCCESS` should not be trusted",
+        "correct": false,
+        "why": "A warning does not stop a build; the verdict is the last lines and the exit status."
+      },
+      {
+        "text": "That Maven's own copy of Guava calls JDK methods that are being retired",
+        "correct": true,
+        "why": "Right: harmless to the project, and absent when Maven ran on Java 21 in section 05."
+      }
+    ]
+  },
+  {
+    "id": "ex-h0hq03qm",
+    "version": 1,
+    "section": "maven-project",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the plugins in the order `mvn clean package` ran them.",
+    "hint": "Clean first, then the phases up to `package`.",
+    "items": [
+      "`maven-clean-plugin`",
+      "`maven-resources-plugin`",
+      "`maven-compiler-plugin`",
+      "`maven-surefire-plugin`",
+      "`maven-jar-plugin`"
+    ]
+  },
+  {
+    "id": "ex-eybdjc7q",
+    "version": 1,
+    "section": "building",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`java -jar target/library-1.0-SNAPSHOT.jar` said `no main manifest attribute`. What was missing?",
+    "hint": "A line in a file inside the jar.",
+    "choices": [
+      {
+        "text": "The classes: Maven packs only the `pom.xml` until told otherwise",
+        "correct": false,
+        "why": "`jar tf` listed both classes in the jar."
+      },
+      {
+        "text": "A `Main-Class` line in the manifest",
+        "correct": true,
+        "why": "Right: the jar plugin wrote it once configured, and `java -jar` started `App`."
+      },
+      {
+        "text": "A `main` method in `App`",
+        "correct": false,
+        "why": "`App` had one all along; `java -cp target/classes` ran it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1sqc9x1b",
+    "version": 1,
+    "section": "building",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The second `pom.xml` adds `maven-jar-plugin` under `<plugins>` with no `<version>`. Which version runs?",
+    "hint": "Which element decides versions?",
+    "choices": [
+      {
+        "text": "Maven 3.8.7's own default for the jar plugin",
+        "correct": false,
+        "why": "That is what happens with no pin at all; here `pluginManagement` has one."
+      },
+      {
+        "text": "The newest version on Maven Central",
+        "correct": false,
+        "why": "Maven never picks the newest on its own; that would make two builds of one commit differ."
+      },
+      {
+        "text": "3.5.1, the version pinned in `pluginManagement`",
+        "correct": true,
+        "why": "Right: the manifest said `Created-By: Maven JAR Plugin 3.5.1`."
+      }
+    ]
+  },
+  {
+    "id": "ex-3eyv3wjs",
+    "version": 1,
+    "section": "building",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A build fails with `Fatal error compiling: error: release version 25 not supported`. `pom.xml` says 25 and `java -version` says 25. What do you check, and what will it probably show?",
+    "hint": "Maven does not necessarily run on the shell's `java`.",
+    "choices": [
+      {
+        "text": "`javac -version`, which will show a compiler older than 25",
+        "correct": false,
+        "why": "The shell's `javac` is not the one Maven used; Maven follows `JAVA_HOME` first."
+      },
+      {
+        "text": "`mvn -v`: it will name an older JDK",
+        "correct": true,
+        "why": "Right: with `JAVA_HOME` at `default-java`, Maven ran on 21 while the shell's `java` was 25."
+      },
+      {
+        "text": "The compiler plugin's version, which will be too old for 25",
+        "correct": false,
+        "why": "Pinned at 3.15.0 it compiled for 25 in the same project a moment later."
+      },
+      {
+        "text": "`~/.m2/repository`, which will hold a damaged plugin download",
+        "correct": false,
+        "why": "A damaged download fails with a resolution error, not a release error."
+      }
+    ]
+  },
+  {
+    "id": "ex-9qnt0pbj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`java -cp target/classes com.example.library.App` and `java -jar target/library-1.0-SNAPSHOT.jar` both printed the same line. What does each one rely on to find `App`?",
+    "hint": "One is told the class; the other reads it.",
+    "choices": [
+      {
+        "text": "Both search every jar under `target` for a `main` method",
+        "correct": false,
+        "why": "Neither searches; one is given the name and the other reads it from the manifest."
+      },
+      {
+        "text": "The first is given a name and a class path; the second reads the manifest's `Main-Class`",
+        "correct": true,
+        "why": "Right: and `java -jar` ignores `-cp` entirely."
+      },
+      {
+        "text": "Both read `pom.xml`, which Maven copies next to the classes",
+        "correct": false,
+        "why": "The copy under `META-INF/maven` is for people; the JVM never reads it."
+      }
+    ]
+  },
+  {
+    "id": "ex-es4fj6ne",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Maven keeps every plugin and library it downloads in `~/.m2/___`, and a second build finds them there.",
+    "hint": "The local one, as opposed to Maven Central.",
+    "blanks": [
+      {
+        "accept": [
+          "repository",
+          "repository/"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

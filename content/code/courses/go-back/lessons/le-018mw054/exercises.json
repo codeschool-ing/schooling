@@ -1,0 +1,779 @@
+[
+  {
+    "id": "ex-xdd0j1yy",
+    "version": 1,
+    "section": "what-each-is-good-at",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which property belongs to gRPC and not to REST with JSON, in section 02's table?",
+    "hint": "Look at the contract row.",
+    "choices": [
+      {
+        "text": "Responses that proxies and CDNs store for later",
+        "correct": false,
+        "why": "That is REST's GET; every gRPC call is a POST that no cache keeps."
+      },
+      {
+        "text": "Messages a person reads straight off the wire with curl",
+        "correct": false,
+        "why": "That is JSON; protobuf needs the contract to be read."
+      },
+      {
+        "text": "Native calls from fetch inside a web page",
+        "correct": false,
+        "why": "Browsers reach REST natively and gRPC only through a translator."
+      },
+      {
+        "text": "A contract that both sides are generated from",
+        "correct": true,
+        "why": "Right. The .proto is required, and clients and servers come out of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-5rjy1t0w",
+    "version": 1,
+    "section": "what-each-is-good-at",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does section 02 say its comparison table should be read?",
+    "hint": "A score, or something else?",
+    "choices": [
+      {
+        "text": "As a score: the column with more wins is the better protocol",
+        "correct": false,
+        "why": "The section says the opposite: neither style is better in general."
+      },
+      {
+        "text": "As questions about who calls the service",
+        "correct": true,
+        "why": "Right. Browser, mobile app, partner script or your own service decide the answer."
+      },
+      {
+        "text": "As a ranking of speed, since speed decides most choices",
+        "correct": false,
+        "why": "Section 03 shows speed matters little for a service like boxoffice."
+      },
+      {
+        "text": "As a migration plan from REST to gRPC",
+        "correct": false,
+        "why": "Nothing in the lesson asks to migrate; boxoffice keeps both."
+      }
+    ]
+  },
+  {
+    "id": "ex-7df0kgyy",
+    "version": 1,
+    "section": "what-each-is-good-at",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each row of the table to the style it favours.",
+    "hint": "Think of browsers, caches and streams.",
+    "pairs": [
+      {
+        "left": "caching by CDNs",
+        "right": "REST with JSON"
+      },
+      {
+        "left": "four kinds of call built in",
+        "right": "gRPC"
+      },
+      {
+        "left": "poking it with plain curl",
+        "right": "plain HTTP and JSON"
+      },
+      {
+        "left": "deadlines sent with every call",
+        "right": "gRPC with its propagation"
+      }
+    ],
+    "right_distractors": [
+      "neither"
+    ]
+  },
+  {
+    "id": "ex-depay068",
+    "version": 1,
+    "section": "measured-size",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bytes did 200 events take as raw JSON in cmd/sizes?",
+    "hint": "The second line of the output.",
+    "value": 12094,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-qhsqz5fb",
+    "version": 1,
+    "section": "measured-size",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "And as raw protobuf?",
+    "hint": "Same line, after JSON.",
+    "value": 5671,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-g199jdwn",
+    "version": 1,
+    "section": "measured-size",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Gzipped, 200 events were 1,430 bytes in JSON and 1,350 in protobuf. Why did the gap shrink so much?",
+    "hint": "What made JSON large in the first place?",
+    "choices": [
+      {
+        "text": "gzip turns JSON into protobuf on the way",
+        "correct": false,
+        "why": "Compression changes bytes, not the format; the reader still decompresses JSON."
+      },
+      {
+        "text": "protobuf is already compressed, so gzip adds nothing to it",
+        "correct": false,
+        "why": "Protobuf also shrank, from 5,671 to 1,350; it is compact, not compressed."
+      },
+      {
+        "text": "gzip removes the repeated key names that made JSON big",
+        "correct": true,
+        "why": "Right. Repetition is exactly what compression is good at."
+      },
+      {
+        "text": "The program measured the wrong list for protobuf",
+        "correct": false,
+        "why": "Both encodings carry the same four fields of the same 200 events."
+      }
+    ]
+  },
+  {
+    "id": "ex-fb66q17g",
+    "version": 1,
+    "section": "measured-size",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two events: JSON 117 bytes raw and 142 gzipped. What does that tell you?",
+    "hint": "gzip has a fixed cost.",
+    "choices": [
+      {
+        "text": "JSON compresses badly at every size",
+        "correct": false,
+        "why": "At 200 events it went from 12,094 to 1,430."
+      },
+      {
+        "text": "gzip's header outweighs a tiny body",
+        "correct": true,
+        "why": "Right. For small messages the raw difference is the whole difference."
+      },
+      {
+        "text": "The measurement failed",
+        "correct": false,
+        "why": "Protobuf grew too, 56 to 81: the same effect on both."
+      },
+      {
+        "text": "curl had gzip switched off for that request",
+        "correct": false,
+        "why": "No curl was involved; cmd/sizes compressed in memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-fj4b55he",
+    "version": 1,
+    "section": "measured-size",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Encoding 200 events took about 27 µs in protobuf and 33 to 35 µs in JSON. Why does the lesson call this irrelevant for boxoffice?",
+    "hint": "Compare with lesson 6's log.",
+    "choices": [
+      {
+        "text": "Microbenchmarks give random numbers",
+        "correct": false,
+        "why": "The two runs agreed closely; the numbers are real, just small."
+      },
+      {
+        "text": "A database query costs milliseconds",
+        "correct": true,
+        "why": "Right. It matters for a service that only moves messages at very high rates."
+      },
+      {
+        "text": "JSON is faster in production",
+        "correct": false,
+        "why": "Nothing in the lesson measured that; JSON was slower here."
+      },
+      {
+        "text": "boxoffice encodes nothing on its own",
+        "correct": false,
+        "why": "Every answer it sends is encoded, as JSON or protobuf."
+      }
+    ]
+  },
+  {
+    "id": "ex-2pvg0yc1",
+    "version": 1,
+    "section": "measured-size",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "cmd/sizes writes the repeated field one tag and length per event with the package ___, which knows the wire format byte by byte.",
+    "hint": "It is imported from google.golang.org/protobuf/encoding.",
+    "blanks": [
+      {
+        "accept": [
+          "protowire"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mtr7mew0",
+    "version": 1,
+    "section": "debugging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A curl over HTTP/2 to the gRPC port got HTTP/2 200 with grpc-status: 13. What happened to the call?",
+    "hint": "Where does gRPC put its outcome?",
+    "choices": [
+      {
+        "text": "It succeeded, as the 200 says",
+        "correct": false,
+        "why": "Every gRPC call answers 200; the outcome is the grpc-status."
+      },
+      {
+        "text": "curl sent HTTP/1.1, which gRPC refuses with 13",
+        "correct": false,
+        "why": "That was the second request, which got no usable answer at all; this one spoke HTTP/2."
+      },
+      {
+        "text": "The server sent the status as the HTTP status code, 13",
+        "correct": false,
+        "why": "HTTP has no status 13; it arrived in a header after the body."
+      },
+      {
+        "text": "It failed with Internal",
+        "correct": true,
+        "why": "Right. 13 is Internal: the call carried no message at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-mtb01pf3",
+    "version": 1,
+    "section": "debugging",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team's load balancer reports zero errors on the gRPC service while clients see NotFound and Internal. What explains it?",
+    "hint": "What does a proxy see when it looks only at HTTP statuses?",
+    "choices": [
+      {
+        "text": "Errors travel as HTTP 200, grpc-status in a trailer",
+        "correct": true,
+        "why": "Right. A proxy that only counts HTTP statuses sees every gRPC failure as a success."
+      },
+      {
+        "text": "The balancer drops gRPC errors to save bandwidth",
+        "correct": false,
+        "why": "Nothing is dropped; the errors arrive, in trailers the balancer does not read."
+      },
+      {
+        "text": "The clients misread success as failure",
+        "correct": false,
+        "why": "The clients read grpc-status correctly; the balancer does not."
+      },
+      {
+        "text": "NotFound is not an error in gRPC",
+        "correct": false,
+        "why": "It is one of the status codes, and toStatus sends it for a missing event."
+      }
+    ]
+  },
+  {
+    "id": "ex-28dvksjr",
+    "version": 1,
+    "section": "debugging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "grpcurl printed event 1 without a \"sold\" field. Why?",
+    "hint": "What is sold for event 1?",
+    "choices": [
+      {
+        "text": "Zero values are left out",
+        "correct": true,
+        "why": "Right. Event 1 had sold 0, so a reader must know that missing means zero."
+      },
+      {
+        "text": "The server forgot to fill the field",
+        "correct": false,
+        "why": "GetEvent copies Sold; its value was 0."
+      },
+      {
+        "text": "grpcurl lacked the contract for that field",
+        "correct": false,
+        "why": "It was given seats.proto with -proto, which declares sold."
+      },
+      {
+        "text": "Reflection was off, so grpcurl showed only some fields",
+        "correct": false,
+        "why": "Reflection was off, and -proto replaced it fully."
+      }
+    ]
+  },
+  {
+    "id": "ex-rcna7d94",
+    "version": 1,
+    "section": "debugging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does boxoffice leave gRPC reflection off?",
+    "hint": "What does reflection give to whoever reaches the port?",
+    "choices": [
+      {
+        "text": "It slows every call",
+        "correct": false,
+        "why": "The lesson names no speed cost; the concern is exposure."
+      },
+      {
+        "text": "grpcurl refuses to work with servers that have it",
+        "correct": false,
+        "why": "The opposite: with it grpcurl needs no .proto."
+      },
+      {
+        "text": "It hands out a map of the API",
+        "correct": true,
+        "why": "Right. The contract stays in the repository, where clients get it anyway."
+      },
+      {
+        "text": "It needs a second port",
+        "correct": false,
+        "why": "It is one more service on the same server, registered in one line."
+      }
+    ]
+  },
+  {
+    "id": "ex-8z0by97x",
+    "version": 1,
+    "section": "debugging",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order what grpcurl does with -proto and -d for one unary call.",
+    "hint": "JSON in, JSON out, protobuf between.",
+    "items": [
+      "reads the request written as JSON",
+      "encodes it as protobuf using seats.proto",
+      "makes the call to localhost:9090",
+      "decodes the answer with the same contract",
+      "prints the answer back as JSON"
+    ]
+  },
+  {
+    "id": "ex-w295pfe9",
+    "version": 1,
+    "section": "browsers-and-public-apis",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can a web page not be a gRPC client of boxoffice as it is?",
+    "hint": "Two things gRPC needs from HTTP/2.",
+    "choices": [
+      {
+        "text": "fetch cannot read trailers",
+        "correct": true,
+        "why": "Right. grpc-status arrives in a trailer, which a page cannot read."
+      },
+      {
+        "text": "Browsers do not speak HTTP/2",
+        "correct": false,
+        "why": "They do; what they lack is access to trailers and framing."
+      },
+      {
+        "text": "Protobuf cannot be decoded in JavaScript",
+        "correct": false,
+        "why": "Decoding is possible; the transport is the obstacle."
+      },
+      {
+        "text": "CORS forbids it",
+        "correct": false,
+        "why": "CORS is about origins; the problem here is the protocol."
+      }
+    ]
+  },
+  {
+    "id": "ex-a8qwqtz9",
+    "version": 1,
+    "section": "browsers-and-public-apis",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way around the browser problem to what it does.",
+    "hint": "None was run for the course.",
+    "pairs": [
+      {
+        "left": "gRPC-Web",
+        "right": "a browser-friendly variant, translated by a proxy such as Envoy"
+      },
+      {
+        "left": "Connect",
+        "right": "serves gRPC, gRPC-Web and plain JSON from the same handlers"
+      },
+      {
+        "left": "grpc-gateway",
+        "right": "generates a REST and JSON front from annotations in the .proto"
+      }
+    ],
+    "right_distractors": [
+      "compresses protobuf so a browser accepts it"
+    ]
+  },
+  {
+    "id": "ex-bymf85yy",
+    "version": 1,
+    "section": "browsers-and-public-apis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A company opens an API to partners it will never meet. What does the lesson recommend?",
+    "hint": "What do all their callers share?",
+    "choices": [
+      {
+        "text": "gRPC only, since the contract protects them",
+        "correct": false,
+        "why": "Strangers start with curl; a toolchain first costs adoption."
+      },
+      {
+        "text": "GraphQL, because the lesson compares three styles",
+        "correct": false,
+        "why": "The lesson compares REST and gRPC only."
+      },
+      {
+        "text": "Whatever the internal services use, for consistency",
+        "correct": false,
+        "why": "The choice follows the callers, and these callers are strangers."
+      },
+      {
+        "text": "REST and JSON with an OpenAPI description",
+        "correct": true,
+        "why": "Right. Clients can still be generated, without gRPC's tooling."
+      }
+    ]
+  },
+  {
+    "id": "ex-p9cbtxc1",
+    "version": 1,
+    "section": "browsers-and-public-apis",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A public catalogue of events is read by thousands of visitors. Which property of REST matters most here?",
+    "hint": "Who can answer instead of the server?",
+    "choices": [
+      {
+        "text": "Its smaller size on the wire",
+        "correct": false,
+        "why": "JSON is the larger of the two raw."
+      },
+      {
+        "text": "Its deadlines",
+        "correct": false,
+        "why": "Deadlines are gRPC's strength."
+      },
+      {
+        "text": "A GET is cacheable",
+        "correct": true,
+        "why": "Right. Every gRPC call is a POST that no cache stores."
+      },
+      {
+        "text": "Its generated clients in every language",
+        "correct": false,
+        "why": "That is gRPC's row; REST needs OpenAPI for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-prv9w1dp",
+    "version": 1,
+    "section": "both-at-once",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did an HTTP purchase reach a gRPC watcher half a second later?",
+    "hint": "Two adapters, one core.",
+    "choices": [
+      {
+        "text": "Both doors call one store and one table",
+        "correct": true,
+        "why": "Right. A sale is the same Sell whichever door it came through."
+      },
+      {
+        "text": "The HTTP handler calls the gRPC server",
+        "correct": false,
+        "why": "The adapters never call each other; both call the store."
+      },
+      {
+        "text": "gRPC copies the HTTP log",
+        "correct": false,
+        "why": "Watch reads the event from the store every half-second."
+      },
+      {
+        "text": "PostgreSQL pushes the change to gRPC clients",
+        "correct": false,
+        "why": "Nothing pushes; Watch polls the store on a ticker."
+      }
+    ]
+  },
+  {
+    "id": "ex-k1pm4skh",
+    "version": 1,
+    "section": "both-at-once",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each caller to its door in boxoffice.",
+    "hint": "Browsers, staff scripts, programs the venue owns.",
+    "pairs": [
+      {
+        "left": "the public ticket site",
+        "right": "HTTP on 8080"
+      },
+      {
+        "left": "staff tools and scripts",
+        "right": "HTTP under /admin/"
+      },
+      {
+        "left": "the scanners at the door",
+        "right": "gRPC on 9090, Scan"
+      },
+      {
+        "left": "the box office's live screen",
+        "right": "gRPC on 9090, Watch"
+      }
+    ]
+  },
+  {
+    "id": "ex-a9118smn",
+    "version": 1,
+    "section": "both-at-once",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does serving both doors cost, according to section 06?",
+    "hint": "Think of what cuts across requests.",
+    "choices": [
+      {
+        "text": "Two copies of the store, kept in sync by a job",
+        "correct": false,
+        "why": "There is one store; that is the point of the pattern."
+      },
+      {
+        "text": "Cross-cutting code, twice",
+        "correct": true,
+        "why": "Right. Logging, metrics, authentication and errors exist in both shapes."
+      },
+      {
+        "text": "A second database for gRPC",
+        "correct": false,
+        "why": "Both share one pool and one PostgreSQL."
+      },
+      {
+        "text": "Business rules duplicated in each adapter",
+        "correct": false,
+        "why": "The adapters contain no business rule; the store does."
+      }
+    ]
+  },
+  {
+    "id": "ex-er3dp643",
+    "version": 1,
+    "section": "deciding",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put section 07's four questions in the order the lesson asks them.",
+    "hint": "The first one decides REST on its own.",
+    "items": [
+      "Is the caller a browser, or a stranger's program?",
+      "Do you own both ends, for years?",
+      "Is the conversation a stream?",
+      "Is the volume extreme?"
+    ]
+  },
+  {
+    "id": "ex-43tnj9r5",
+    "version": 1,
+    "section": "deciding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two services of the same team will exchange a few hundred requests a minute for years, no browser involved, no streaming. What does the lesson's reasoning lead to?",
+    "hint": "Which of the four questions is yes?",
+    "choices": [
+      {
+        "text": "gRPC, for the required contract",
+        "correct": true,
+        "why": "Right. A renamed field breaks the build of every client instead of production."
+      },
+      {
+        "text": "REST, because the volume is low",
+        "correct": false,
+        "why": "Volume is only the fourth question; the second one is already yes."
+      },
+      {
+        "text": "gRPC-Web, to keep a browser option open",
+        "correct": false,
+        "why": "No browser is involved; a translator would be pure cost."
+      },
+      {
+        "text": "Both doors from day one",
+        "correct": false,
+        "why": "Section 06 says not to add a second protocol before a caller needs it."
+      }
+    ]
+  },
+  {
+    "id": "ex-a416p9d8",
+    "version": 1,
+    "section": "deciding",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which are signs, per section 07, that gRPC was the wrong choice? Choose all that apply.",
+    "hint": "Three of them are listed for gRPC.",
+    "choices": [
+      {
+        "text": "every caller goes through a gateway back to JSON",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "most debugging starts by installing grpcurl",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "a browser client is the main user",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "polling loops imitate streams everywhere",
+        "correct": false,
+        "why": "That is a sign REST was the wrong choice."
+      },
+      {
+        "text": "hand-written client structs drift from the server's",
+        "correct": false,
+        "why": "Also a sign against REST, which has no required contract."
+      }
+    ]
+  },
+  {
+    "id": "ex-kc30045n",
+    "version": 1,
+    "section": "deciding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "If none of the four questions is yes, what does the lesson recommend, and why?",
+    "hint": "Lesson 5's default.",
+    "choices": [
+      {
+        "text": "gRPC, since it is newer",
+        "correct": false,
+        "why": "Age is not one of the criteria."
+      },
+      {
+        "text": "REST, the simpler one",
+        "correct": true,
+        "why": "Right. Simplicity is the default lesson 5 argued for."
+      },
+      {
+        "text": "Both, to be safe",
+        "correct": false,
+        "why": "Two doors write every cross-cutting concern twice."
+      },
+      {
+        "text": "Whichever the framework of lesson 4 prefers",
+        "correct": false,
+        "why": "The choice follows the callers, not a framework."
+      }
+    ]
+  },
+  {
+    "id": "ex-xsptvz79",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A mobile app of your own shows a live seat count and must work on a train with patchy signal. Which door, from what the lesson argued?",
+    "hint": "You own both ends, and the conversation is a stream.",
+    "choices": [
+      {
+        "text": "gRPC, for server streaming with deadlines on each call",
+        "correct": true,
+        "why": "Right. Questions 2 and 3 are yes, and no browser is involved."
+      },
+      {
+        "text": "REST, because mobile apps are browsers",
+        "correct": false,
+        "why": "A native app is a program with its own HTTP/2 client, not a web page."
+      },
+      {
+        "text": "REST, because protobuf is larger on bad networks",
+        "correct": false,
+        "why": "Protobuf was the smaller of the two in every measurement."
+      },
+      {
+        "text": "Neither: a live count needs a CDN",
+        "correct": false,
+        "why": "A CDN caches; a live count changes with every sale."
+      }
+    ]
+  },
+  {
+    "id": "ex-6yrgy3qt",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague proposes moving boxoffice's public HTTP API to gRPC to save bandwidth. Which measurement answers them?",
+    "hint": "Answers are compressed.",
+    "choices": [
+      {
+        "text": "12,094 against 5,671 bytes raw",
+        "correct": false,
+        "why": "Raw is not what travels when HTTP compresses its answers."
+      },
+      {
+        "text": "27 µs against 33 µs to encode",
+        "correct": false,
+        "why": "That is speed, not bandwidth, and it is dwarfed by the database."
+      },
+      {
+        "text": "1,430 against 1,350 bytes gzipped",
+        "correct": true,
+        "why": "Right. About six per cent, and the public callers would lose curl and caches."
+      },
+      {
+        "text": "56 against 117 bytes for two events",
+        "correct": false,
+        "why": "A list of two is not a public catalogue, and both grew when gzipped."
+      }
+    ]
+  }
+]

@@ -1,0 +1,362 @@
+{
+  "ex-6ph4kqks": {
+    "prompt": "Sem o `@Override`, a classe `Book` com `tostring()` compila. O que a anotação acrescenta?",
+    "hint": "O que o `javac` disse com ela?",
+    "choices": [
+      {
+        "text": "Faz o `tostring` contar como `toString`",
+        "why": "Nenhuma anotação muda qual método sobrescreve qual; a grafia decide."
+      },
+      {
+        "text": "Uma conferência: recusar se nada acima é sobrescrito",
+        "why": "Isso: `method does not override or implement a method from a supertype`."
+      },
+      {
+        "text": "Chamadas mais rápidas, porque a JVM pode pular a busca",
+        "why": "O `@Override` tem retenção SOURCE; a JVM nunca o vê."
+      }
+    ]
+  },
+  "ex-a7r8200b": {
+    "prompt": "O `lendBook` carrega `@Deprecated(since = \"2.0\", forRemoval = true)`. O que acontece quando o `Counter` o chama?",
+    "hint": "Compile, depois rode.",
+    "choices": [
+      {
+        "text": "O `javac` se recusa a compilar o `Counter`",
+        "why": "Compilou com um aviso; nada em obsolescência é erro."
+      },
+      {
+        "text": "Compila, e a chamada lança `UnsupportedOperationException` ao rodar",
+        "why": "O `java Counter` imprimiu `lent 978-0-13-468599-1`: um método obsoleto funciona como antes."
+      },
+      {
+        "text": "Um aviso `[removal]` na chamada, e roda como antes",
+        "why": "Isso: o aviso é sobre uma versão futura, não esta."
+      },
+      {
+        "text": "Nada, a menos que se passe `-Xlint:deprecation`",
+        "why": "Esse é o `@Deprecated` simples; o `forRemoval` avisa por padrão."
+      }
+    ]
+  },
+  "ex-b78qnpgr": {
+    "prompt": "Ligue cada anotação ao que o compilador faz com ela.",
+    "hint": "A seção 02 mostrou cada uma.",
+    "pairs": [
+      {
+        "left": "`@Override`",
+        "right": "recusa um método que não sobrescreve nada"
+      },
+      {
+        "left": "`@Deprecated`",
+        "right": "anota ou avisa em cada uso"
+      },
+      {
+        "left": "`@SuppressWarnings`",
+        "right": "fica quieto sobre um tipo de aviso nomeado"
+      },
+      {
+        "left": "`@FunctionalInterface`",
+        "right": "recusa uma interface com dois métodos abstratos"
+      }
+    ],
+    "right_distractors": [
+      "gera o corpo do método"
+    ]
+  },
+  "ex-d43p5mf5": {
+    "prompt": "Onde deve ir o `@SuppressWarnings(\"removal\")`?",
+    "hint": "Pense no próximo aviso que ninguém viu.",
+    "choices": [
+      {
+        "text": "Na classe, para uma anotação cobrir todos os métodos dela",
+        "why": "Isso também esconde todo aviso de remoção posterior na classe, inclusive os que ninguém leu."
+      },
+      {
+        "text": "No próprio método obsoleto, na biblioteca",
+        "why": "O autor da biblioteca quer os chamadores avisados; silenciar cabe a um chamador que decidiu."
+      },
+      {
+        "text": "Na menor declaração que precisa dela, como um método só",
+        "why": "Isso: um método e não uma classe, com um comentário quando o motivo não é óbvio."
+      }
+    ]
+  },
+  "ex-9erct522": {
+    "prompt": "Por que o `javac` recusou o `Rule`?",
+    "hint": "Conte os métodos abstratos dele.",
+    "choices": [
+      {
+        "text": "Tem dois métodos abstratos, e a anotação promete um",
+        "why": "Isso: o `@FunctionalInterface` promete exatamente um, para um lambda poder implementá-la."
+      },
+      {
+        "text": "Uma interface não pode carregar anotação nenhuma",
+        "why": "Interfaces carregam anotações o tempo todo; esta quebrou a promessa que fez."
+      },
+      {
+        "text": "O `describe` devolve `String`, e interfaces funcionais só devolvem `boolean`",
+        "why": "O tipo de retorno é livre; o que importa é a contagem de métodos abstratos."
+      }
+    ]
+  },
+  "ex-es4c0bza": {
+    "prompt": "Três anotações foram postas em `Target`. Quantas o `getAnnotations()` devolveu com o programa rodando?",
+    "hint": "Só uma retenção chega à JVM.",
+    "choices": [
+      {
+        "text": "Três, todas elas",
+        "why": "`InSource` e `InClassFile` nunca chegaram ao programa rodando."
+      },
+      {
+        "text": "Duas: as que foram gravadas no arquivo de classe",
+        "why": "Duas estavam no arquivo de classe, e só a `RUNTIME` foi carregada."
+      },
+      {
+        "text": "Uma, `@AtRunTime`",
+        "why": "Isso: a única com retenção `RUNTIME`."
+      },
+      {
+        "text": "Nenhuma, porque tipos de anotação aninhados são invisíveis à reflexão",
+        "why": "Imprimiu `@Kept.AtRunTime()`; estar aninhado não muda nada."
+      }
+    ]
+  },
+  "ex-7ypkkdhw": {
+    "prompt": "Ordene as retenções da que vive menos para a que vive mais.",
+    "hint": "Código-fonte, arquivo de classe, programa rodando.",
+    "items": [
+      "`SOURCE`",
+      "`CLASS`",
+      "`RUNTIME`"
+    ]
+  },
+  "ex-e1azgw2f": {
+    "prompt": "O `javap -v` listou `Kept$InClassFile` em `RuntimeInvisibleAnnotations`. O que isso quer dizer?",
+    "hint": "É a retenção padrão.",
+    "choices": [
+      {
+        "text": "A anotação foi descartada pelo compilador",
+        "why": "Anotações descartadas não aparecem em lugar nenhum; a descartada foi a `InSource`."
+      },
+      {
+        "text": "Está no arquivo de classe, e a JVM não a carrega",
+        "why": "Isso: retenção `CLASS`, lá para ferramentas de bytecode e invisível à reflexão."
+      },
+      {
+        "text": "A JVM a carrega, mas só o `javap` tem permissão para lê-la",
+        "why": "Nada a carrega em tempo de execução; o `javap` lê o arquivo, não uma JVM rodando."
+      },
+      {
+        "text": "Fica escondida da reflexão só até alguém chamar `setAccessible(true)`",
+        "why": "O `setAccessible` trata de membros privados; não traz de volta o que nunca foi carregado."
+      }
+    ]
+  },
+  "ex-vg6r1wtr": {
+    "prompt": "Você escreve a anotação `@Test` de um framework de testes e esquece o `@Retention`. Aí todo teste é ignorado. Por quê?",
+    "hint": "Qual é a retenção padrão, e quem lê a anotação?",
+    "choices": [
+      {
+        "text": "Sem `@Retention` a anotação não compila",
+        "why": "Compila; o padrão só não é o de que um framework precisa."
+      },
+      {
+        "text": "O padrão é `CLASS`, então a reflexão não acha `@Test` em método nenhum",
+        "why": "Isso: o `isAnnotationPresent` responde falso, e o runner pula todo método como pulou o `helper`."
+      },
+      {
+        "text": "O padrão é `SOURCE`, e o compilador rejeita métodos marcados com ela",
+        "why": "O padrão é `CLASS`, e nada é rejeitado: os métodos compilam e nunca são achados."
+      }
+    ]
+  },
+  "ex-1wkjmr6m": {
+    "prompt": "O `Runner` imprimiu `FAILED: acceptsTheSecondBook`. O que estava errado de fato?",
+    "hint": "Recalcule o dígito verificador.",
+    "choices": [
+      {
+        "text": "O `validIsbn` tem um erro nos pesos",
+        "why": "Ele aceitou `978-0-13-468599-1` e rejeitou o erro de digitação, então os pesos funcionam."
+      },
+      {
+        "text": "A reflexão chamou o método no objeto errado",
+        "why": "Havia uma instância só, e as outras duas conferências rodaram certo nela."
+      },
+      {
+        "text": "O `getDeclaredMethods` o rodou antes de a classe estar pronta",
+        "why": "A ordem não importa aqui; cada conferência é independente."
+      },
+      {
+        "text": "O `978-1-61729-136-8` tem o dígito verificador errado",
+        "why": "Isso: foi inventado para exemplos anteriores e ninguém o calculou; a conferência achou um dado errado de verdade."
+      }
+    ]
+  },
+  "ex-pms7pk67": {
+    "prompt": "Um método chamado com `m.invoke(instance)` lança `AssertionError`. O que o `Runner` captura, e onde está o `AssertionError`?",
+    "hint": "A causa da lição 38.",
+    "choices": [
+      {
+        "text": "Uma `InvocationTargetException`, com o `AssertionError` como causa",
+        "why": "Isso: por isso o `Runner` relata `e.getCause().getMessage()`."
+      },
+      {
+        "text": "O próprio `AssertionError`, lançado direto através do `invoke`",
+        "why": "A reflexão embrulha o que o método lança; capturar `AssertionError` não o pegaria."
+      },
+      {
+        "text": "Uma `IllegalAccessException`, porque a conferência falhou",
+        "why": "Essa é para chamar algo a que você não tem acesso; uma conferência que falha é outra coisa."
+      }
+    ]
+  },
+  "ex-7b6n0cs7": {
+    "prompt": "A parte da biblioteca que deixa um programa rodando listar os métodos de uma classe e chamá-los pelo nome se chama ___.",
+    "hint": "`java.lang.reflect`",
+    "blanks": [
+      {
+        "accept": [
+          "reflexão",
+          "reflexao",
+          "reflection"
+        ]
+      }
+    ]
+  },
+  "ex-117p92sm": {
+    "prompt": "O que o `@Target(ElementType.FIELD)` em `@NotBlank` decide?",
+    "hint": "O `Misplaced` tentou outra coisa.",
+    "choices": [
+      {
+        "text": "Que objeto o validador confere",
+        "why": "O validador confere o que receber; o `@Target` trata de onde a anotação é escrita."
+      },
+      {
+        "text": "Que ela só pode ser escrita em campos",
+        "why": "Isso: num método ela é recusada na compilação."
+      },
+      {
+        "text": "Que o campo que ela marca precisa ser `private`",
+        "why": "`name` e `email` são de pacote e foram marcados sem problema."
+      },
+      {
+        "text": "Que a reflexão pode lê-la com o programa rodando",
+        "why": "Isso é o `@Retention(RUNTIME)`, a outra anotação nela."
+      }
+    ]
+  },
+  "ex-egrhj82p": {
+    "prompt": "O segundo `Member` tinha `phone` igual a `\"\"`. Por que ele não está na lista de problemas?",
+    "hint": "O que o validador faz com um campo sem `@NotBlank`?",
+    "choices": [
+      {
+        "text": "Uma string vazia não é em branco",
+        "why": "`\"\".isBlank()` é verdadeiro; o campo nunca foi conferido."
+      },
+      {
+        "text": "O `phone` não tem `@NotBlank`, então o `getAnnotation` devolveu `null` e ele foi pulado",
+        "why": "Isso: a regra mora no campo, e sem regra não há conferência."
+      },
+      {
+        "text": "O `getDeclaredFields` pula campos declarados depois dos anotados",
+        "why": "Ele devolve todo campo que a classe declara."
+      }
+    ]
+  },
+  "ex-7a3mtdgq": {
+    "prompt": "Um tipo de anotação é declarado com a palavra-chave `___`, e um elemento como `message()` ganha um valor usado quando nenhum é escrito com `default`.",
+    "hint": "Uma arroba e uma palavra-chave conhecida.",
+    "blanks": [
+      {
+        "accept": [
+          "@interface"
+        ]
+      }
+    ]
+  },
+  "ex-668f3d5g": {
+    "prompt": "Um colega põe `@NotBlank` num campo de uma classe nova e se surpreende porque valores em branco continuam sendo salvos. A anotação está declarada exatamente como nesta lição. Qual é o motivo mais provável?",
+    "hint": "Uma anotação não faz nada sozinha.",
+    "choices": [
+      {
+        "text": "A classe nova está em outro pacote, então a anotação fica invisível",
+        "why": "A visibilidade do tipo de anotação é assunto de compilação, e compilou."
+      },
+      {
+        "text": "A retenção `RUNTIME` se perde quando o objeto é salvo",
+        "why": "Retenção é sobre a classe, não sobre objetos nem sobre salvá-los."
+      },
+      {
+        "text": "Nada no programa chama o validador nos objetos dessa classe, em momento algum",
+        "why": "Isso: um campo marcado com uma anotação que nenhum código lê é um campo com um comentário."
+      }
+    ]
+  },
+  "ex-08avwxgq": {
+    "prompt": "Quais destes podem ser o tipo de um elemento de anotação como `message()`? Escolha todos os que se aplicam.",
+    "hint": "O valor precisa ser gravado no arquivo de classe.",
+    "choices": [
+      {
+        "text": "`String`",
+        "why": "Sim: o `message()` é um."
+      },
+      {
+        "text": "`int[]`",
+        "why": "Sim: primitivos e arrays deles são permitidos."
+      },
+      {
+        "text": "`java.util.List<String>`",
+        "why": "Não: uma coleção não pode ser gravada como constante num arquivo de classe; um array pode."
+      },
+      {
+        "text": "`Member`",
+        "why": "Não: uma classe comum não está entre os tipos permitidos."
+      }
+    ]
+  },
+  "ex-k1h0x54h": {
+    "prompt": "Que anotação faria o `Kept` imprimir duas linhas em vez de uma, sem nenhuma outra mudança?",
+    "hint": "Qual das outras duas poderia chegar ao programa rodando?",
+    "choices": [
+      {
+        "text": "Acrescentar `@Target(ElementType.TYPE)` ao `InClassFile`",
+        "why": "O `@Target` decide onde ela pode ser escrita, não quanto ela vive."
+      },
+      {
+        "text": "Mudar a retenção do `InClassFile` para `RUNTIME`",
+        "why": "Isso: aí a JVM a carrega e o `getAnnotations()` devolve as duas."
+      },
+      {
+        "text": "Acrescentar `@Override` ao `main`",
+        "why": "Essa é uma conferência de compilação, e o `main` não sobrescreve nada, então nem compilaria."
+      },
+      {
+        "text": "Chamar `setAccessible(true)` em `Target.class` antes de perguntar",
+        "why": "O `setAccessible` trata de acesso a membros; não carrega uma anotação que a JVM nunca guardou."
+      }
+    ]
+  },
+  "ex-mn6za2ch": {
+    "prompt": "Um método de framework tem `@GetMapping(\"/books\")`. Que retenção o `@GetMapping` precisa ter para o framework rotear requisições por ela?",
+    "hint": "O framework a lê com o programa rodando.",
+    "choices": [
+      {
+        "text": "`SOURCE`",
+        "why": "Some depois da compilação; não sobraria nada para rotear."
+      },
+      {
+        "text": "`CLASS`",
+        "why": "No arquivo de classe, mas nunca carregada, então a reflexão não a veria."
+      },
+      {
+        "text": "`RUNTIME`",
+        "why": "Isso: toda anotação que um framework lê em execução tem essa."
+      }
+    ]
+  },
+  "ex-m3xse98r": {
+    "prompt": "O `LoanChecks` declara quatro métodos públicos. Quantos o `Runner` chamou?",
+    "hint": "O `helper` não carrega anotação."
+  }
+}

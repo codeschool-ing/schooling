@@ -1,0 +1,632 @@
+{
+  "ex-ertcbwyf": {
+    "prompt": "Que necessidade empurrou a maioria dos projetos Go para um roteador de fora antes do Go 1.22?",
+    "hint": "Olhe as primeiras linhas da tabela.",
+    "choices": [
+      {
+        "text": "Escrever middleware, para o qual o `net/http` não tinha formato",
+        "why": "O formato `func(http.Handler) http.Handler` é Go puro e sempre foi."
+      },
+      {
+        "text": "Agrupar rotas, o que exigia os grupos de rotas de um framework",
+        "why": "Um mux montado dentro de outro agrupa rotas, como faz `/admin/`."
+      },
+      {
+        "text": "Servir HTTPS, que faltava ao servidor padrão",
+        "why": "TLS nem está na tabela; a lacuna era o roteamento."
+      },
+      {
+        "text": "Rotear por método e ler valores do caminho",
+        "why": "Certo. Essas linhas estão fechadas agora por `GET /events` e `{id}`."
+      }
+    ]
+  },
+  "ex-qmbpw1rs": {
+    "prompt": "Qual destes ainda falta no `net/http` e é um motivo real de um framework ajudar?",
+    "hint": "A segunda lista da seção 02.",
+    "choices": [
+      {
+        "text": "Curingas num caminho",
+        "why": "`{id}` chegou na 1.22."
+      },
+      {
+        "text": "Um 405 com cabeçalho `Allow` para um método errado",
+        "why": "O mux da 1.22 escreve isso sozinho."
+      },
+      {
+        "text": "Decodificar e validar um corpo numa chamada só",
+        "why": "Certo. O boxoffice precisou de `decodeJSON` mais um método `validate` para isso."
+      },
+      {
+        "text": "Escolher entre dois padrões sobrepostos",
+        "why": "O mais específico vence, e um empate entra em pânico no registro."
+      }
+    ]
+  },
+  "ex-q7sc6d7h": {
+    "prompt": "A aula diz que a pergunta não é \"o framework tem mais?\". Qual é a pergunta?",
+    "hint": "Um framework tem mais, por definição.",
+    "choices": [
+      {
+        "text": "Se ele é mais novo que a biblioteca padrão",
+        "why": "Idade não decide nada aqui; custo contra benefício decide."
+      },
+      {
+        "text": "Se ele é mais rápido que o `net/http` num benchmark de hello world",
+        "why": "A seção 08 descarta esse benchmark como evidência sobre um serviço real."
+      },
+      {
+        "text": "Se o que ele tem vale o que custa",
+        "why": "Certo. As seções 03 e 04 medem cada lado."
+      },
+      {
+        "text": "Se a equipe gosta da sintaxe dele",
+        "why": "Gosto não é a medida que a aula usa."
+      }
+    ]
+  },
+  "ex-qr4rtmaf": {
+    "prompt": "Um colega diz: \"precisamos do Gin, porque a biblioteca padrão não consegue agrupar as rotas `/admin/` atrás de uma verificação de autenticação\". O que você responde?",
+    "hint": "Como o boxoffice protege `/admin/`?",
+    "choices": [
+      {
+        "text": "Um sub-mux envolvido em `/admin/` faz isso",
+        "why": "Certo. É o `requireStaff(tokens)(admin)` da aula 2."
+      },
+      {
+        "text": "Certo: grupos de rotas são uma das lacunas que o Go 1.22 deixou abertas",
+        "why": "Grupos nunca precisaram de framework; essa linha da tabela diz \"o mesmo\"."
+      },
+      {
+        "text": "Só verificando o token dentro de cada handler admin",
+        "why": "A verificação fica na subárvore, uma vez, não em cada handler."
+      },
+      {
+        "text": "Só com `{path...}` e um despacho manual no resto do caminho",
+        "why": "Nada manual é preciso; um sub-mux montado roteia o resto."
+      }
+    ]
+  },
+  "ex-3v8afg29": {
+    "prompt": "Quantas linhas, no total, têm os sete arquivos de encanamento do boxoffice segundo o `wc -l`?",
+    "hint": "A primeira linha `total`.",
+    "unit": "linhas"
+  },
+  "ex-p534bpea": {
+    "prompt": "O que essas linhas de encanamento acrescentaram ao `go.mod` do boxoffice?",
+    "hint": "Elas usam `http.Handler`, `encoding/json` e `context`.",
+    "choices": [
+      {
+        "text": "Um módulo, `golang.org/x/net`, para o CORS",
+        "why": "O CORS são trinta linhas de `net/http` no `cors.go`."
+      },
+      {
+        "text": "A biblioteca de validação por trás dos métodos `validate`",
+        "why": "Os métodos `validate` são `if` comuns."
+      },
+      {
+        "text": "Um módulo de log para o `logRequests`",
+        "why": "Ele chama `log.Printf` da biblioteca padrão."
+      },
+      {
+        "text": "Nada",
+        "why": "Certo. O `go.mod` lista o próprio módulo e mais nada."
+      }
+    ]
+  },
+  "ex-jjaja4cg": {
+    "prompt": "Qual é o argumento mais forte de um framework contra o encanamento escrito à mão, segundo a seção 03?",
+    "hint": "Pense no `decode.go`.",
+    "choices": [
+      {
+        "text": "Ele poupa as linhas de um `writeJSON` de 25 linhas",
+        "why": "A seção diz que isso mal é argumento."
+      },
+      {
+        "text": "Milhares de usuários acharam os bugs dele",
+        "why": "Certo. O decodificador óbvio de uma linha está errado de quatro jeitos."
+      },
+      {
+        "text": "Ele compila mais rápido",
+        "why": "Tempo de compilação não é o argumento."
+      },
+      {
+        "text": "Ele deixa o binário menor",
+        "why": "A aula 4 mediu o binário de cada framework como maior."
+      }
+    ]
+  },
+  "ex-bzeamjqd": {
+    "prompt": "Código escrito contra o `net/http` em 2012 ainda compila por causa da promessa de compatibilidade do Go ___.",
+    "hint": "Um número de versão.",
+    "blanks": [
+      {
+        "accept": [
+          "1"
+        ]
+      }
+    ]
+  },
+  "ex-dw4g5pck": {
+    "prompt": "Quantos erros de compilação o programa Echo deu quando o import passou da v5 para a v4?",
+    "hint": "Conte as linhas debaixo de `# example.com/fw/echo4`.",
+    "unit": "erros"
+  },
+  "ex-g489e08v": {
+    "prompt": "Por que mudar só a linha de import do Echo quebrou o arquivo em sete lugares?",
+    "hint": "A quem pertence a assinatura do handler?",
+    "choices": [
+      {
+        "text": "A v4 exige Go 1.22 e o laboratório rodou um Go mais antigo",
+        "why": "O laboratório rodou Go 1.27.1, e os erros nomeiam o tipo do contexto."
+      },
+      {
+        "text": "O `go mod tidy` não conseguiu baixar a v4",
+        "why": "Ele baixou a v4.16.0; o que falhou foi a compilação."
+      },
+      {
+        "text": "O tipo de contexto do handler mudou",
+        "why": "Certo. Na v4 `echo.Context` é uma interface; na v5 uma struct recebida por ponteiro."
+      },
+      {
+        "text": "O sed trocou o import no arquivo errado",
+        "why": "O `grep` mostra que os dois imports agora dizem v4."
+      }
+    ]
+  },
+  "ex-hna8m6t2": {
+    "prompt": "Seu serviço importa o Gin e nunca chama nenhuma função de uma das dependências dele. Essa dependência ganha uma vulnerabilidade conhecida. O serviço é afetado?",
+    "hint": "A seção 04 e a ferramenta da aula 9 do `go-production`.",
+    "choices": [
+      {
+        "text": "Sim, até alguém conferir se ela é alcançável e atualizá-la",
+        "why": "Certo. O módulo está no seu processo; uma checagem de alcance e uma atualização resolvem."
+      },
+      {
+        "text": "Não, um módulo que você nunca chama nunca está no binário",
+        "why": "O próprio Gin chama as dependências dele; código que você não chama direto ainda roda."
+      },
+      {
+        "text": "Não, vulnerabilidades em dependências indiretas são responsabilidade do Gin",
+        "why": "Seu serviço a distribui; a responsabilidade é sua."
+      },
+      {
+        "text": "Sim, e o conserto é remover o Gin na hora",
+        "why": "Conferir o alcance e atualizar é o conserto, não reescrever."
+      }
+    ]
+  },
+  "ex-r9wz0hs0": {
+    "prompt": "O que aconteceu com o `gorilla/mux` em dezembro de 2022?",
+    "hint": "Ele foi por anos o roteador padrão do mundo Go.",
+    "choices": [
+      {
+        "text": "Foi incorporado ao `net/http`",
+        "why": "Os padrões da 1.22 foram escritos pelo time do Go, não incorporados do gorilla."
+      },
+      {
+        "text": "Lançou a v2 com um tipo de handler novo",
+        "why": "Isso descreve a v5 do Echo, não o gorilla."
+      },
+      {
+        "text": "Foi arquivado, depois revivido em 2023",
+        "why": "Certo. Todo projeto que o usava teve de decidir entre esperar e migrar."
+      },
+      {
+        "text": "Mudou de licença",
+        "why": "A seção cita o arquivamento, não mudança de licença."
+      }
+    ]
+  },
+  "ex-zx2dzf7y": {
+    "prompt": "Dos custos da seção 04, qual a aula chama de menor e mais fácil de medir?",
+    "hint": "31,6 MB contra 9,8 MB.",
+    "choices": [
+      {
+        "text": "A segunda coisa que todo novato tem de aprender",
+        "why": "Esse custo dura enquanto a equipe mudar."
+      },
+      {
+        "text": "Uma versão maior que mexe em cada handler",
+        "why": "A seção 04 mostra esse em sete erros e o chama de caro."
+      },
+      {
+        "text": "As vulnerabilidades que chegam com cada módulo",
+        "why": "Essas pedem conferência semanal; nada pequeno."
+      },
+      {
+        "text": "O tamanho do binário",
+        "why": "Certo. Ele importa um pouco mais numa imagem de container, e ainda é o menor."
+      }
+    ]
+  },
+  "ex-w1rqbg1k": {
+    "prompt": "Um handler Gin inicia uma goroutine que registra `c.Param(\"id\")` um segundo depois. Nos testes registra o id certo; sob carga registra ids de outros clientes. Por quê?",
+    "hint": "O que acontece com o contexto quando o handler retorna?",
+    "choices": [
+      {
+        "text": "Uma corrida de dados no mapa de eventos",
+        "why": "O id vem do contexto, não do mapa."
+      },
+      {
+        "text": "O Gin embaralha parâmetros entre rotas sob carga",
+        "why": "Nada é embaralhado; um objeto é reaproveitado."
+      },
+      {
+        "text": "O logger guarda linhas e as imprime fora de ordem",
+        "why": "Os próprios ids estão errados, não a ordem."
+      },
+      {
+        "text": "Faltou `c.Copy()`: o Gin recicla o original",
+        "why": "Certo. A documentação do Gin manda dar à goroutine uma cópia, nunca o original."
+      }
+    ]
+  },
+  "ex-5639pmxg": {
+    "prompt": "O middleware `logRequests` da aula 2 tem o formato padrão. Onde ele NÃO funciona sem mudança?",
+    "hint": "Qual destes não é `net/http`?",
+    "choices": [
+      {
+        "text": "Em qualquer lugar do Fiber",
+        "why": "Certo. O Fiber roda sobre o fasthttp e precisa de middleware próprio ou de um adaptador."
+      },
+      {
+        "text": "Em volta de um roteador chi",
+        "why": "Um roteador chi é um `http.Handler`."
+      },
+      {
+        "text": "Em volta do engine do Echo",
+        "why": "O engine do Echo é um `http.Handler` no topo."
+      },
+      {
+        "text": "Em volta do engine do Gin",
+        "why": "Em volta do engine funciona; dentro de uma rota, não."
+      }
+    ]
+  },
+  "ex-zsdes1sw": {
+    "prompt": "Por que a aula diz que os padrões de um framework são uma superfície maior que os do `net/http`?",
+    "hint": "Conte os lugares em que escolhas são feitas.",
+    "choices": [
+      {
+        "text": "O `net/http` não tem padrões",
+        "why": "Ele tem alguns; os timeouts ausentes são um."
+      },
+      {
+        "text": "Os padrões de framework mudam a cada versão",
+        "why": "O argumento é sobre quantos são."
+      },
+      {
+        "text": "Centenas de escolhas contra um punhado",
+        "why": "Certo. Cada uma é achada no dia em que um cliente ou auditor a acha."
+      },
+      {
+        "text": "Padrões de framework são inseguros",
+        "why": "Cada um é razoável para alguém; poucos são inseguros."
+      }
+    ]
+  },
+  "ex-dbgrsf1n": {
+    "prompt": "Um serviço Gin precisa definir um cabeçalho depois que um middleware já escreveu, e transmitir uma resposta longa. O que a aula diz que acontece?",
+    "hint": "O que o `c.JSON` esconde?",
+    "choices": [
+      {
+        "text": "O Gin resolve os dois com opções do `c.JSON`",
+        "why": "O helper é justamente o que precisa ser contornado."
+      },
+      {
+        "text": "Isso não dá para fazer em Go",
+        "why": "A aula 13 transmite uma resposta em Go."
+      },
+      {
+        "text": "O serviço precisa ir para o Fiber",
+        "why": "Nada disso precisa do fasthttp."
+      },
+      {
+        "text": "O helper é contornado e o HTTP aprendido mesmo assim",
+        "why": "Certo. Um framework adia o dia em que você precisa do HTTP; não o elimina."
+      }
+    ]
+  },
+  "ex-ckpnjvj0": {
+    "prompt": "Doze desenvolvedores vão escrever oitenta rotas, e gente nova entra todo mês. O que a aula chama de argumento mais forte para um framework aqui?",
+    "hint": "Que cara cada handler precisa ter?",
+    "choices": [
+      {
+        "text": "Velocidade sob carga",
+        "why": "As rotas esperam um banco; velocidade é o outro caso da seção 06."
+      },
+      {
+        "text": "Binários menores",
+        "why": "Os frameworks fizeram binários maiores na aula 4."
+      },
+      {
+        "text": "Consistência entre todos os handlers",
+        "why": "Certo, e o argumento cresce com a equipe."
+      },
+      {
+        "text": "Menos módulos para auditar",
+        "why": "Um framework traz mais módulos, não menos."
+      }
+    ]
+  },
+  "ex-p9r8x9ar": {
+    "prompt": "Você gosta das tags `binding:\"required,max=100\"` do Gin e de mais nada do Gin. O que a seção 06 sugere?",
+    "hint": "Que biblioteca fica por baixo?",
+    "choices": [
+      {
+        "text": "Usar o `go-playground/validator` sozinho",
+        "why": "Certo. É a única parte do Gin que você tem sem o Gin."
+      },
+      {
+        "text": "Adotar o Gin, porque as tags só funcionam dentro dele",
+        "why": "O validador funciona em qualquer struct em qualquer handler."
+      },
+      {
+        "text": "Escrever um parser de tags próprio com `reflect`",
+        "why": "Uma biblioteca pronta já faz isso."
+      },
+      {
+        "text": "Evitar tags; elas são mais lentas que `if`",
+        "why": "A aula pesa legibilidade e erros, não velocidade."
+      }
+    ]
+  },
+  "ex-6xn12sy8": {
+    "prompt": "Uma equipe quer o Fiber \"porque é mais rápido\". O serviço responde toda requisição depois de uma consulta ao PostgreSQL. O que a aula pede antes de concordar?",
+    "hint": "Para onde vai o tempo?",
+    "choices": [
+      {
+        "text": "Um benchmark de hello world comparando Fiber e `net/http`",
+        "why": "Isso mede um serviço que ninguém roda."
+      },
+      {
+        "text": "Nada; o Fiber é mais rápido, então é a melhor escolha",
+        "why": "Velocidade que ninguém nota não paga a saída do `net/http`."
+      },
+      {
+        "text": "Uma contagem dos módulos que o Fiber traz",
+        "why": "Isso é um custo, não evidência de que a velocidade importa."
+      },
+      {
+        "text": "Um profile do serviço real sob a carga real dele",
+        "why": "Certo. Com um banco atrás de cada requisição, reduzir à metade a parte HTTP não se nota."
+      }
+    ]
+  },
+  "ex-fznq879j": {
+    "prompt": "Todos os serviços da sua equipe são escritos em Echo. Você vai começar um novo. O que a aula recomenda?",
+    "hint": "O motivo menos técnico.",
+    "choices": [
+      {
+        "text": "Echo",
+        "why": "Certo. Conhecimento e middleware compartilhados ganham de qualquer diferença da tabela."
+      },
+      {
+        "text": "A biblioteca padrão, o padrão do curso",
+        "why": "A pergunta da equipe vem primeiro e passa por cima do padrão."
+      },
+      {
+        "text": "O chi, como meio-termo entre os dois",
+        "why": "Um serviço solitário noutro estilo custa a todos que mexem nele."
+      },
+      {
+        "text": "O Gin, porque mais gente o conhece",
+        "why": "As pessoas que importam aqui já conhecem Echo."
+      }
+    ]
+  },
+  "ex-naz7vm8g": {
+    "prompt": "Qual é o teste da aula para distinguir uma biblioteca de um framework?",
+    "hint": "Olhe os parâmetros de uma função.",
+    "choices": [
+      {
+        "text": "Se está na biblioteca padrão",
+        "why": "O chi está fora dela e conta como biblioteca."
+      },
+      {
+        "text": "Se a assinatura do handler continua `func(w http.ResponseWriter, r *http.Request)`",
+        "why": "Certo. Uma biblioteca deixa a forma do seu programa em paz."
+      },
+      {
+        "text": "Se tem mais de dez módulos",
+        "why": "Número de módulos é custo, não definição."
+      },
+      {
+        "text": "Se traz middleware",
+        "why": "O chi traz middleware e continua sendo biblioteca."
+      }
+    ]
+  },
+  "ex-x9d8x3k2": {
+    "prompt": "Quantos módulos além do próprio programa o `go list -m all` imprimiu na versão chi?",
+    "hint": "O último comando da compilação.",
+    "unit": "módulos"
+  },
+  "ex-2mgena7k": {
+    "prompt": "A versão chi respondeu `DELETE /events/1`. Em que a resposta dela diferiu da do `ServeMux`?",
+    "hint": "Compare os cabeçalhos `Allow`.",
+    "choices": [
+      {
+        "text": "O 405 dele listou só `GET` e veio sem corpo",
+        "why": "Certo. O `ServeMux` acrescenta `HEAD` e escreve `Method Not Allowed`."
+      },
+      {
+        "text": "Respondeu 404 em vez de 405",
+        "why": "Respondeu 405; o 404 é do Gin."
+      },
+      {
+        "text": "Respondeu com uma página HTML",
+        "why": "Isso foi o Beego, na aula 4."
+      },
+      {
+        "text": "O 405 dele voltou como JSON",
+        "why": "Esse foi o Echo; o do chi veio com corpo vazio."
+      }
+    ]
+  },
+  "ex-wxmg1eb8": {
+    "prompt": "O boxoffice precisa de limite de taxa. Qual escolha segue o caminho do meio?",
+    "hint": "Cada peça substituível sozinha.",
+    "choices": [
+      {
+        "text": "`x/time/rate` num middleware padrão",
+        "why": "Certo. Um pacote pequeno, no formato que a aula 2 usa."
+      },
+      {
+        "text": "Ir para o Echo, que traz um limitador de taxa",
+        "why": "Isso muda cada handler para ganhar um middleware."
+      },
+      {
+        "text": "Um contador em cada handler, comparado com uma constante",
+        "why": "Trabalho de toda requisição pertence a um middleware, uma vez."
+      },
+      {
+        "text": "Nada; limite de taxa exige framework",
+        "why": "A seção 07 cita uma biblioteca para isso."
+      }
+    ]
+  },
+  "ex-m67c903g": {
+    "prompt": "Ligue cada lacuna da seção 02 à resposta do caminho do meio que a seção 07 dá.",
+    "hint": "Cada peça no formato padrão.",
+    "pairs": [
+      {
+        "left": "validação",
+        "right": "`go-playground/validator` chamado de um handler"
+      },
+      {
+        "left": "limite de taxa",
+        "right": "`golang.org/x/time/rate` num middleware"
+      },
+      {
+        "left": "expressões regulares num caminho",
+        "right": "um roteador como o `chi`"
+      }
+    ],
+    "right_distractors": [
+      "o `app.Test` do Fiber"
+    ]
+  },
+  "ex-1xsgqn1a": {
+    "prompt": "Ponha as quatro perguntas da seção 08 na ordem em que a aula as faz.",
+    "hint": "O primeiro sim encerra a busca.",
+    "items": [
+      "A equipe já tem um framework?",
+      "Uma medição mostrou que o tempo vai para a camada HTTP?",
+      "Muita gente vai escrever muitas rotas que precisam ter a mesma cara?",
+      "Falta ao `ServeMux` um recurso de roteamento de que você precisa?"
+    ],
+    "trap": "A pergunta da equipe vem primeiro porque passa por cima de todas as outras."
+  },
+  "ex-jxrka05n": {
+    "prompt": "Seis meses num serviço de biblioteca padrão, as mesmas vinte linhas de decodificação e tratamento de erro estão coladas em cada handler e se afastando. O que a seção 08 lê nisso?",
+    "hint": "Um sinal de escolha errada, e o que fazer.",
+    "choices": [
+      {
+        "text": "Escrever o helper agora, ou adotar um que o tenha",
+        "why": "Certo, e o conserto é mais barato cedo."
+      },
+      {
+        "text": "Nada: duplicação é o preço normal da biblioteca padrão",
+        "why": "A seção cita exatamente isso como sinal."
+      },
+      {
+        "text": "Um sinal de que a equipe precisa do Fiber",
+        "why": "Velocidade não tem nada a ver com código colado."
+      },
+      {
+        "text": "Um motivo para reescrever o serviço em outra linguagem",
+        "why": "Um helper resolve."
+      }
+    ]
+  },
+  "ex-bd3rvpy6": {
+    "prompt": "Qual é o sinal, na seção 08, de que adotar um framework foi a escolha errada?",
+    "hint": "Para onde vai o tempo da equipe?",
+    "choices": [
+      {
+        "text": "Metade do tempo vai em sobrescrever os padrões dele",
+        "why": "Certo. Os dois querem dizer que a forma do framework custa mais do que poupa."
+      },
+      {
+        "text": "O binário é maior que o da biblioteca padrão",
+        "why": "Isso se sabe no primeiro dia e é o menor custo."
+      },
+      {
+        "text": "Um desenvolvedor novo precisa de um dia para aprendê-lo",
+        "why": "Um dia é barato; a seção cita sinais maiores."
+      },
+      {
+        "text": "Ele tem uma issue aberta no GitHub",
+        "why": "Todo projeto ativo tem issues abertas."
+      }
+    ]
+  },
+  "ex-rfk0ae51": {
+    "prompt": "Para quais destes serviços novos a seção 08 termina na biblioteca padrão? Marque todas as que se aplicam.",
+    "hint": "As quatro respostas precisam ser não.",
+    "choices": [
+      {
+        "text": "A API de seis rotas de um desenvolvedor solo, sem framework em volta, sem gargalo medido, sem roteamento especial",
+        "why": "Certo. Quatro nãos."
+      },
+      {
+        "text": "Um serviço novo numa equipe cujos outros serviços usam Gin",
+        "why": "A pergunta 1 diz sim: use o Gin."
+      },
+      {
+        "text": "Uma API interna de uma equipe pequena, esperando o PostgreSQL, rotas como `/events/{id}`",
+        "why": "Certo. Nada ali precisa de mais que os padrões da 1.22."
+      },
+      {
+        "text": "Um serviço que precisa de padrões `{id:[0-9]+}`",
+        "why": "A pergunta 4 diz sim: acrescente um roteador como o chi."
+      }
+    ]
+  },
+  "ex-gsb1h3gn": {
+    "prompt": "Um produto de API pública precisa de um documento OpenAPI em dia com oitenta rotas, e a empresa ainda não tem framework. Qual resposta segue a aula?",
+    "hint": "A seção 06 diz que só isso pode decidir.",
+    "choices": [
+      {
+        "text": "Escrever o OpenAPI à mão e ficar na biblioteca padrão",
+        "why": "Uma descrição escrita à mão se descola do código."
+      },
+      {
+        "text": "O Fiber, porque APIs públicas precisam de velocidade",
+        "why": "Nenhum profile foi citado; a necessidade é o documento."
+      },
+      {
+        "text": "O chi, porque ele gera OpenAPI",
+        "why": "O chi é um roteador; a seção 07 diz que ele faz roteamento e middleware."
+      },
+      {
+        "text": "Adotar um que o gere a partir do código",
+        "why": "Certo. Quando a API é um produto, só isso pode decidir."
+      }
+    ]
+  },
+  "ex-6h2mej1t": {
+    "prompt": "Por que a aula chama a escolha de framework de uma das poucas decisões num serviço Go que custam caro desfazer?",
+    "hint": "Onde o framework aparece no código?",
+    "choices": [
+      {
+        "text": "Frameworks cobram licença para sair",
+        "why": "Todo framework daqui é gratuito."
+      },
+      {
+        "text": "Os módulos dele não saem do `go.sum`",
+        "why": "O `go mod tidy` remove módulos sem uso."
+      },
+      {
+        "text": "O binário guarda o código dele depois que você para de importá-lo",
+        "why": "Uma recompilação descarta o que não é importado."
+      },
+      {
+        "text": "Ele está na assinatura de cada handler",
+        "why": "Certo. Mudá-lo mexe em cada rota, como mostrou a compilação com a v4 do Echo."
+      }
+    ]
+  }
+}

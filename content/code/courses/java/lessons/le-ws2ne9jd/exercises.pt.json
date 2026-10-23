@@ -1,0 +1,367 @@
+{
+  "ex-6t9x8jh8": {
+    "prompt": "Depois de `javac -d out`, onde está o arquivo de classe de `com.example.library.app.Main`?",
+    "hint": "Um diretório por parte do nome.",
+    "choices": [
+      {
+        "text": "`out/Main.class`",
+        "why": "Ali é onde o pacote padrão o poria; um pacote vira diretórios."
+      },
+      {
+        "text": "`out/com/example/library/app/Main.class`",
+        "why": "Isso: o `find out -type f` listou exatamente esse caminho."
+      },
+      {
+        "text": "`out/com.example.library.app.Main.class`",
+        "why": "Os pontos viram barras; nenhum nome de arquivo contém o pacote."
+      },
+      {
+        "text": "`src/com/example/library/app/Main.class`, ao lado do fonte",
+        "why": "Ali é onde iria sem o `-d`; com `-d out` vai para baixo de `out`."
+      }
+    ]
+  },
+  "ex-jsa8zcqr": {
+    "prompt": "Dentro de `out/com/example/library/app`, a Ana rodou `java Main` e recebeu `NoClassDefFoundError: Main (wrong name: com/example/library/app/Main)`. O que aconteceu?",
+    "hint": "O arquivo foi encontrado. Depois foi lido.",
+    "choices": [
+      {
+        "text": "A JVM não encontrou o `Main.class` no diretório atual",
+        "why": "Encontrou: é por isso que o erro cita o nome escrito dentro do arquivo."
+      },
+      {
+        "text": "Achou o arquivo, cujo nome gravado é o completo",
+        "why": "Isso: um arquivo de classe conhece o seu pacote, e só é válido no caminho que o pacote soletra."
+      },
+      {
+        "text": "O arquivo de classe se corrompeu quando o `-d` criou os diretórios",
+        "why": "O mesmo arquivo rodou perfeitamente com `java -cp out com.example.library.app.Main`."
+      },
+      {
+        "text": "O `Main` precisa do `Book`, e o `Book` está noutro diretório",
+        "why": "A mensagem é sobre o nome do próprio `Main`, antes de o `Book` ser necessário."
+      }
+    ]
+  },
+  "ex-bwst9yhe": {
+    "prompt": "Por que os nomes de pacote Java começam com um domínio escrito de trás para a frente, como `com.example`?",
+    "hint": "Quem pode usar `com.example`?",
+    "choices": [
+      {
+        "text": "Porque a JVM baixa classes desse domínio em tempo de execução",
+        "why": "A JVM carrega classes do class path no disco; o nome é só um nome."
+      },
+      {
+        "text": "Para donos de domínios diferentes não colidirem num mesmo nome de pacote",
+        "why": "Isso: quem é dono do domínio é dono dos nomes sob ele."
+      },
+      {
+        "text": "Porque o `javac` recusa um pacote que não seja um domínio registrado",
+        "why": "O `javac` não confere nada sobre domínios; `com.example` compila como qualquer nome."
+      }
+    ]
+  },
+  "ex-4w9pqw92": {
+    "prompt": "A JVM procura classes nos diretórios e jars listados no class ___, que o `-cp` define.",
+    "hint": "Duas palavras; falta a segunda.",
+    "blanks": [
+      {
+        "accept": [
+          "path"
+        ]
+      }
+    ]
+  },
+  "ex-km3vtd3j": {
+    "prompt": "Um colega move o `Book.java` para o topo de `src` e diz que ainda compila, porque `javac src/Book.java src/com/example/library/app/Main.java` funciona. Quem tem razão sobre o layout?",
+    "hint": "O que acontece quando o `javac` tem de encontrar o `Book` em vez de recebê-lo?",
+    "choices": [
+      {
+        "text": "O colega: o que conta é a linha package, e o diretório é estético",
+        "why": "Toda ferramenta que tem de encontrar um fonte olha o diretório, como o `-sourcepath` mostrou com três erros."
+      },
+      {
+        "text": "O layout está quebrado: nomear cada arquivo na linha de comando esconde isso",
+        "why": "Isso: `javac -sourcepath src` falhou com `cannot find symbol` até o arquivo voltar."
+      },
+      {
+        "text": "Os dois: o `javac` aceita fontes em qualquer lugar, então nada vai falhar nunca",
+        "why": "O Maven, um editor e o `-sourcepath` procuram o arquivo onde o pacote diz que ele está."
+      }
+    ]
+  },
+  "ex-pmyfwdff": {
+    "prompt": "O que `import java.util.List;` acrescenta ao arquivo de classe compilado?",
+    "hint": "Um import é uma promessa sobre nomes curtos.",
+    "choices": [
+      {
+        "text": "Uma cópia do código de `List`",
+        "why": "Imports não copiam nada; o arquivo de classe se refere a `java.util.List` pelo nome de qualquer jeito."
+      },
+      {
+        "text": "Nada; só explica um nome curto",
+        "why": "Isso: o arquivo de classe guarda nomes completos, tendo você importado ou escrito por extenso."
+      },
+      {
+        "text": "Uma instrução para carregar `java.util` quando o programa começa",
+        "why": "Classes são carregadas quando usadas pela primeira vez, com import ou sem."
+      }
+    ]
+  },
+  "ex-1eqh5185": {
+    "prompt": "Um arquivo importa `java.util.*` e `java.sql.*` e usa `Date`. O que o faz compilar com `java.util.Date`?",
+    "hint": "Um tipo de import vence o outro.",
+    "choices": [
+      {
+        "text": "Pôr `import java.util.*;` depois de `import java.sql.*;`",
+        "why": "A ordem dos imports não decide nada; os dois imports sob demanda continuam valendo."
+      },
+      {
+        "text": "Acrescentar `import static java.util.Date;`",
+        "why": "Um import estático é para membros estáticos, não para uma classe."
+      },
+      {
+        "text": "Acrescentar `import java.util.Date;`",
+        "why": "Isso: um import de um tipo vence os sob demanda, e o programa imprimiu `java.util.Date`."
+      },
+      {
+        "text": "Nada: o compilador escolhe o pacote importado primeiro",
+        "why": "Ele recusou com `reference to Date is ambiguous` e nomeou as duas."
+      }
+    ]
+  },
+  "ex-nkasnk77": {
+    "prompt": "Quais destas classes um arquivo pode usar pelo nome curto sem linha de import nenhuma? Escolha todas as que se aplicam.",
+    "hint": "Um pacote é importado em todo arquivo.",
+    "choices": [
+      {
+        "text": "`String`",
+        "why": "Sim: está em `java.lang`."
+      },
+      {
+        "text": "`Math`",
+        "why": "Sim: `java.lang.Math`."
+      },
+      {
+        "text": "`List`",
+        "why": "Não: é `java.util.List`, que precisa de import ou do nome completo."
+      },
+      {
+        "text": "`ExecutorService`, depois de `import java.util.*;`",
+        "why": "Não: está em `java.util.concurrent`, outro pacote que o `*` não alcança."
+      }
+    ]
+  },
+  "ex-mjgjsmzy": {
+    "prompt": "`Modules.java` começa com `import module java.base;`. Um colega o compila com `--release 21` para um servidor mais antigo. O que acontece, e por quê?",
+    "hint": "Quando os imports de módulo chegaram?",
+    "choices": [
+      {
+        "text": "Compila, porque o `--release` só muda a versão do arquivo de classe",
+        "why": "O `--release` também fixa o nível da linguagem, e o erro disse que imports de módulo precisam do 25."
+      },
+      {
+        "text": "Compila com um aviso, e falha no servidor quando o `List` é usado pela primeira vez",
+        "why": "Nem chega lá: o `javac` recusou na linha do import."
+      },
+      {
+        "text": "Falha na compilação: imports de módulo pedem o 25",
+        "why": "Isso: `use -source 25 or higher to enable module imports`."
+      },
+      {
+        "text": "Falha porque o `java.base` não existe no Java 21",
+        "why": "O `java.base` existe desde o Java 9; novo é importá-lo."
+      }
+    ]
+  },
+  "ex-zhs79cn5": {
+    "prompt": "Ligue cada import ao que ele torna disponível.",
+    "hint": "A tabela no começo da seção.",
+    "pairs": [
+      {
+        "left": "`import java.util.List;`",
+        "right": "Uma classe, pelo nome curto"
+      },
+      {
+        "left": "`import java.util.*;`",
+        "right": "Toda classe de um pacote, quando usada"
+      },
+      {
+        "left": "`import static java.lang.Math.max;`",
+        "right": "Um membro estático, chamado sem a classe"
+      },
+      {
+        "left": "`import module java.base;`",
+        "right": "Todo pacote que um módulo exporta"
+      }
+    ],
+    "right_distractors": [
+      "Todo subpacote de `java.util` também"
+    ]
+  },
+  "ex-st3hzhxk": {
+    "prompt": "No layout do curso, onde fica o código-fonte de `com.example.library.App`?",
+    "hint": "A raiz de fontes do Maven, e depois o pacote.",
+    "choices": [
+      {
+        "text": "`src/main/java/com/example/library/App.java`",
+        "why": "Isso: `src/main/java` é a raiz, e o caminho do pacote vem depois."
+      },
+      {
+        "text": "`src/com/example/library/App.java`",
+        "why": "Esse era o layout da seção 02 para o `javac` puro; a raiz do Maven é `src/main/java`."
+      },
+      {
+        "text": "`src/main/java/App.java`, com o pacote declarado dentro",
+        "why": "O pacote diz onde o arquivo tem de estar, e o Maven procura ali."
+      },
+      {
+        "text": "`target/classes/com/example/library/App.java`",
+        "why": "`target` é o que o Maven produz e apaga no `clean`; código-fonte nunca vai para lá."
+      }
+    ]
+  },
+  "ex-wapey2sk": {
+    "prompt": "Por que o `pom.xml` do curso fixa uma versão para cada plugin, inclusive os que ele nunca configura?",
+    "hint": "O que o Maven 3.8.7 do Ubuntu usaria do contrário?",
+    "choices": [
+      {
+        "text": "Porque o Maven se recusa a construir sem uma versão para cada plugin",
+        "why": "O Maven constrói sem elas, usando os padrões dele; esse é o problema."
+      },
+      {
+        "text": "Senão o Maven 3.8.7 roda os plugins dele, bem mais velhos",
+        "why": "Isso: com versões fixadas, o Maven antigo constrói exatamente o que um atual construiria."
+      },
+      {
+        "text": "Para acabar com os quatro avisos de `Unsafe` que todo build imprime",
+        "why": "Os avisos vêm do Guava do próprio Maven, e nada no `pom.xml` os tira."
+      },
+      {
+        "text": "Para que o primeiro build não baixe nada",
+        "why": "O primeiro build ainda baixou 158 arquivos; fixar decide quais versões, não se baixa."
+      }
+    ]
+  },
+  "ex-tb7hwwqq": {
+    "prompt": "Quantos arquivos o primeiro build da Ana baixou, segundo o `grep -c \"Downloaded from\"`?",
+    "hint": "O build seguinte não baixou nenhum."
+  },
+  "ex-bv1vnnq9": {
+    "prompt": "Todo comando `mvn` do curso imprime quatro linhas `WARNING` sobre `sun.misc.Unsafe`. O que elas estão dizendo?",
+    "hint": "Leia qual jar a segunda linha nomeia.",
+    "choices": [
+      {
+        "text": "Que o código do projeto usa uma classe interna do JDK que não devia",
+        "why": "A segunda linha nomeia `/usr/share/maven/lib/guava.jar`, parte do Maven, e não do projeto."
+      },
+      {
+        "text": "Que o build falhou e o `BUILD SUCCESS` não merece confiança",
+        "why": "Um aviso não interrompe um build; o veredito são as últimas linhas e o status de saída."
+      },
+      {
+        "text": "Que a cópia do Guava do próprio Maven chama métodos que o JDK está aposentando",
+        "why": "Isso: inofensivo para o projeto, e ausente quando o Maven rodou no Java 21 na seção 05."
+      }
+    ]
+  },
+  "ex-h0hq03qm": {
+    "prompt": "Ponha os plugins na ordem em que `mvn clean package` os executou.",
+    "hint": "Primeiro o clean, depois as fases até `package`.",
+    "items": [
+      "`maven-clean-plugin`",
+      "`maven-resources-plugin`",
+      "`maven-compiler-plugin`",
+      "`maven-surefire-plugin`",
+      "`maven-jar-plugin`"
+    ]
+  },
+  "ex-eybdjc7q": {
+    "prompt": "`java -jar target/library-1.0-SNAPSHOT.jar` disse `no main manifest attribute`. O que faltava?",
+    "hint": "Uma linha num arquivo dentro do jar.",
+    "choices": [
+      {
+        "text": "As classes: o Maven só empacota o `pom.xml` até ouvir outra coisa",
+        "why": "O `jar tf` listou as duas classes no jar."
+      },
+      {
+        "text": "Uma linha `Main-Class` no manifesto",
+        "why": "Isso: o plugin de jar a escreveu depois de configurado, e o `java -jar` iniciou o `App`."
+      },
+      {
+        "text": "Um método `main` em `App`",
+        "why": "O `App` sempre teve um; o `java -cp target/classes` o executou."
+      }
+    ]
+  },
+  "ex-1sqc9x1b": {
+    "prompt": "O segundo `pom.xml` acrescenta o `maven-jar-plugin` sob `<plugins>` sem `<version>`. Qual versão roda?",
+    "hint": "Que elemento decide versões?",
+    "choices": [
+      {
+        "text": "O padrão do próprio Maven 3.8.7 para o plugin de jar",
+        "why": "Isso acontece quando não há fixação nenhuma; aqui o `pluginManagement` tem uma."
+      },
+      {
+        "text": "A versão mais nova no Maven Central",
+        "why": "O Maven nunca escolhe sozinho a mais nova; isso faria dois builds do mesmo commit serem diferentes."
+      },
+      {
+        "text": "A 3.5.1, a versão fixada no `pluginManagement`",
+        "why": "Isso: o manifesto disse `Created-By: Maven JAR Plugin 3.5.1`."
+      }
+    ]
+  },
+  "ex-3eyv3wjs": {
+    "prompt": "Um build falha com `Fatal error compiling: error: release version 25 not supported`. O `pom.xml` diz 25 e o `java -version` diz 25. O que você confere, e o que isso provavelmente vai mostrar?",
+    "hint": "O Maven não roda necessariamente no `java` do shell.",
+    "choices": [
+      {
+        "text": "O `javac -version`, que vai mostrar um compilador mais velho que o 25",
+        "why": "O `javac` do shell não é o que o Maven usou; o Maven segue o `JAVA_HOME` antes."
+      },
+      {
+        "text": "O `mvn -v`: vai nomear um JDK mais velho",
+        "why": "Isso: com o `JAVA_HOME` em `default-java`, o Maven rodou no 21 enquanto o `java` do shell era o 25."
+      },
+      {
+        "text": "A versão do plugin do compilador, que vai estar velha demais para o 25",
+        "why": "Fixado em 3.15.0 ele compilou para o 25 no mesmo projeto um instante depois."
+      },
+      {
+        "text": "O `~/.m2/repository`, que vai ter o download de um plugin danificado",
+        "why": "Um download danificado falha com um erro de resolução, não de versão."
+      }
+    ]
+  },
+  "ex-9qnt0pbj": {
+    "prompt": "`java -cp target/classes com.example.library.App` e `java -jar target/library-1.0-SNAPSHOT.jar` imprimiram a mesma linha. Em que cada um se apoia para encontrar o `App`?",
+    "hint": "Um recebe a classe; o outro a lê.",
+    "choices": [
+      {
+        "text": "Os dois procuram um método `main` em todo jar sob `target`",
+        "why": "Nenhum procura; um recebe o nome e o outro o lê do manifesto."
+      },
+      {
+        "text": "O primeiro recebe um nome e um class path; o segundo lê o `Main-Class` do manifesto",
+        "why": "Isso: e o `java -jar` ignora o `-cp` por completo."
+      },
+      {
+        "text": "Os dois leem o `pom.xml`, que o Maven copia ao lado das classes",
+        "why": "A cópia sob `META-INF/maven` é para pessoas; a JVM nunca a lê."
+      }
+    ]
+  },
+  "ex-es4fj6ne": {
+    "prompt": "O Maven guarda todo plugin e biblioteca que baixa em `~/.m2/___`, e um segundo build os encontra ali.",
+    "hint": "O local, em oposição ao Maven Central.",
+    "blanks": [
+      {
+        "accept": [
+          "repository",
+          "repository/"
+        ]
+      }
+    ]
+  }
+}

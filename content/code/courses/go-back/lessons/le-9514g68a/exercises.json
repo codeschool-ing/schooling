@@ -1,0 +1,887 @@
+[
+  {
+    "id": "ex-mj2tnfdj",
+    "version": 1,
+    "section": "what-an-orm-does",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does an ORM write for you, given your structs?",
+    "hint": "Object-relational mapper.",
+    "choices": [
+      {
+        "text": "The HTTP handlers that expose each struct as a route",
+        "correct": false,
+        "why": "Routes are lesson 1's business; an ORM stops at the database."
+      },
+      {
+        "text": "The PostgreSQL server configuration for the tables it creates",
+        "correct": false,
+        "why": "The server is configured by whoever runs it; GORM only sends statements."
+      },
+      {
+        "text": "The SQL statements",
+        "correct": true,
+        "why": "Right. It creates tables, inserts, reads and follows relationships from the types."
+      },
+      {
+        "text": "A copy of the database kept in memory between requests",
+        "correct": false,
+        "why": "Every read in the log went to PostgreSQL."
+      }
+    ]
+  },
+  {
+    "id": "ex-wvp0v212",
+    "version": 1,
+    "section": "what-an-orm-does",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does this lesson give GORM a project and a database of its own instead of moving boxoffice to it?",
+    "hint": "AutoMigrate creates tables.",
+    "choices": [
+      {
+        "text": "GORM cannot connect to a database that already has tables",
+        "correct": false,
+        "why": "It connects to any database; the separation is a choice of the lesson."
+      },
+      {
+        "text": "Because GORM and pgx refuse to share one module",
+        "correct": false,
+        "why": "GORM's PostgreSQL driver is itself built on pgx."
+      },
+      {
+        "text": "To create tables freely and compare side by side",
+        "correct": true,
+        "why": "Right. Nothing in this lesson changes boxoffice."
+      },
+      {
+        "text": "Because boxoffice's tables use a type GORM does not know",
+        "correct": false,
+        "why": "integer and text are as ordinary as types get."
+      }
+    ]
+  },
+  {
+    "id": "ex-xnncchyc",
+    "version": 1,
+    "section": "what-an-orm-does",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go mod tidy` in gormlab downloaded `go-sqlite3`. Does the gormlab binary contain it?",
+    "hint": "Who needed it?",
+    "choices": [
+      {
+        "text": "Yes, the driver loads SQLite as a fallback at start-up",
+        "correct": false,
+        "why": "Nothing in the programs imports it; only the module graph names it."
+      },
+      {
+        "text": "Yes, because gormlab's go.mod requires it directly",
+        "correct": false,
+        "why": "go.mod listed two direct requirements, GORM and its driver."
+      },
+      {
+        "text": "No, because go mod tidy deleted it after downloading",
+        "correct": false,
+        "why": "It stays in the module cache; it is simply not linked."
+      },
+      {
+        "text": "No: the PostgreSQL driver's own tests use it",
+        "correct": true,
+        "why": "Right. A module graph reaches beyond what a program calls."
+      }
+    ]
+  },
+  {
+    "id": "ex-mw8pg42t",
+    "version": 1,
+    "section": "models",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each piece of the models to what GORM read from it.",
+    "hint": "Conventions, then tags.",
+    "pairs": [
+      {
+        "left": "`type Event struct`",
+        "right": "the table `events`"
+      },
+      {
+        "left": "`EventID uint` plus `Event Event`",
+        "right": "a ticket belongs to an event"
+      },
+      {
+        "left": "`Tickets []Ticket`",
+        "right": "an event has many tickets"
+      },
+      {
+        "left": "`gorm:\"size:100;not null;uniqueIndex\"`",
+        "right": "varchar(100), not null, a unique index"
+      }
+    ],
+    "right_distractors": [
+      "a CHECK that sold stays within seats"
+    ]
+  },
+  {
+    "id": "ex-y2cs5e4x",
+    "version": 1,
+    "section": "models",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which fields does embedding `gorm.Model` add to `Ticket`? Choose all that apply.",
+    "hint": "Four fields, three of them timestamps.",
+    "choices": [
+      {
+        "text": "`ID`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`CreatedAt` and `UpdatedAt`",
+        "correct": true,
+        "why": "Right, filled in by GORM itself."
+      },
+      {
+        "text": "`DeletedAt`",
+        "correct": true,
+        "why": "Right, and it turns Delete into a soft delete."
+      },
+      {
+        "text": "`EventID`",
+        "correct": false,
+        "why": "That one the struct declares itself, for the relationship."
+      },
+      {
+        "text": "`Version`, for optimistic locking",
+        "correct": false,
+        "why": "No such field is in gorm.Model."
+      }
+    ]
+  },
+  {
+    "id": "ex-mxcdaxq8",
+    "version": 1,
+    "section": "models",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Comparing AutoMigrate's `events` with lesson 6's `schema.sql`, what is missing?",
+    "hint": "The rule that kept boxoffice from overselling.",
+    "choices": [
+      {
+        "text": "The unique index on `name`",
+        "correct": false,
+        "why": "AutoMigrate created idx_events_name from the uniqueIndex tag."
+      },
+      {
+        "text": "The two CHECK rules",
+        "correct": true,
+        "why": "Right. The struct had no way to say them, so the table does not enforce them."
+      },
+      {
+        "text": "The primary key",
+        "correct": false,
+        "why": "PRIMARY KEY (\"id\") is in the CREATE TABLE."
+      },
+      {
+        "text": "The foreign key from tickets to events",
+        "correct": false,
+        "why": "fk_events_tickets came from the relationship, with no tag asking."
+      }
+    ]
+  },
+  {
+    "id": "ex-6qftr4v7",
+    "version": 1,
+    "section": "models",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A field is removed from a GORM struct and AutoMigrate runs against the production database. What happens to the column?",
+    "hint": "Which direction is AutoMigrate cautious in?",
+    "choices": [
+      {
+        "text": "It is dropped, with its data",
+        "correct": false,
+        "why": "Dropping could destroy data, and AutoMigrate never drops a column."
+      },
+      {
+        "text": "It stays, and nothing records that the schema changed",
+        "correct": true,
+        "why": "Right. That is why lesson 9 replaces AutoMigrate with reviewed, versioned steps."
+      },
+      {
+        "text": "AutoMigrate refuses to start until the column is dropped by hand",
+        "correct": false,
+        "why": "It runs; it creates what is missing and leaves the rest."
+      },
+      {
+        "text": "The column is renamed to mark it as unused",
+        "correct": false,
+        "why": "No renaming happens."
+      }
+    ]
+  },
+  {
+    "id": "ex-2y64s23x",
+    "version": 1,
+    "section": "models",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The GORM call that creates missing tables and indexes from the structs is called ___.",
+    "hint": "cmd/migrate.",
+    "blanks": [
+      {
+        "accept": [
+          "AutoMigrate",
+          "db.AutoMigrate"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-x7z7zp88",
+    "version": 1,
+    "section": "crud",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is `jazz` passed to `db.Create` as `&jazz`?",
+    "hint": "Look at what the program printed next.",
+    "choices": [
+      {
+        "text": "Pointers make the INSERT faster than copies",
+        "correct": false,
+        "why": "Speed is not the reason; the value is filled in."
+      },
+      {
+        "text": "Create would otherwise insert an empty row",
+        "correct": false,
+        "why": "A copy holds the same fields; the difference is writing back."
+      },
+      {
+        "text": "GORM writes the new id back into it",
+        "correct": true,
+        "why": "Right. RETURNING \"id\" came back and filled jazz.ID."
+      },
+      {
+        "text": "Go refuses to pass a struct by value to an interface",
+        "correct": false,
+        "why": "Go passes structs by value to interfaces all the time."
+      }
+    ]
+  },
+  {
+    "id": "ex-bhyctgsg",
+    "version": 1,
+    "section": "crud",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`db.First(&e, jazz.ID)` sent `... ORDER BY \"events\".\"id\" LIMIT 1`. Where did the ORDER BY come from?",
+    "hint": "What does \"first\" mean to GORM?",
+    "choices": [
+      {
+        "text": "PostgreSQL adds it to every query with a LIMIT",
+        "correct": false,
+        "why": "PostgreSQL runs what it is sent; the clause was in the statement."
+      },
+      {
+        "text": "The logger invents it to make the line readable",
+        "correct": false,
+        "why": "The logger merges values into the SQL; it does not add clauses."
+      },
+      {
+        "text": "GORM added it: First means first by primary key",
+        "correct": true,
+        "why": "Right. A decision visible only in the log or the documentation."
+      },
+      {
+        "text": "The primary key tag on ID asks for it",
+        "correct": false,
+        "why": "The tag names the key; First's ordering is First's own."
+      }
+    ]
+  },
+  {
+    "id": "ex-979pjm2m",
+    "version": 1,
+    "section": "crud",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The log shows `WHERE seats - sold > 100`, the number inside the SQL. What did PostgreSQL receive?",
+    "hint": "Lesson 6 section 07.",
+    "choices": [
+      {
+        "text": "The statement with `$1`, and 100 sent apart",
+        "correct": true,
+        "why": "Right. The logger merges the two for a person to read."
+      },
+      {
+        "text": "The same text, with 100 glued in",
+        "correct": false,
+        "why": "That would be the glued query of lesson 6; GORM sends placeholders."
+      },
+      {
+        "text": "A query with `?` in it, which PostgreSQL itself fills",
+        "correct": false,
+        "why": "GORM turns each ? into the database's own placeholder, $1 for PostgreSQL."
+      },
+      {
+        "text": "A prepared query stored in the log file and reused",
+        "correct": false,
+        "why": "The log is output for people; the database never reads it."
+      }
+    ]
+  },
+  {
+    "id": "ex-m04sf5td",
+    "version": 1,
+    "section": "relationships",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The log printed the tickets' INSERT before the event's. Was the event row written first?",
+    "hint": "Look at the event_id in the tickets' values.",
+    "choices": [
+      {
+        "text": "No: GORM writes children first and fixes the ids afterwards",
+        "correct": false,
+        "why": "The tickets already carried event_id 2 in their own INSERT."
+      },
+      {
+        "text": "Yes; its log line waits for the whole Create",
+        "correct": true,
+        "why": "Right. The tickets' event_id of 2 proves the event came first."
+      },
+      {
+        "text": "No: both were sent in one statement",
+        "correct": false,
+        "why": "The log shows two INSERTs into two tables."
+      },
+      {
+        "text": "Yes, and the log order is random",
+        "correct": false,
+        "why": "The order has a cause: when each operation finishes."
+      }
+    ]
+  },
+  {
+    "id": "ex-610jfj3j",
+    "version": 1,
+    "section": "relationships",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way of loading a relationship to what it sent.",
+    "hint": "One of them sends nothing extra.",
+    "pairs": [
+      {
+        "left": "`Preload(\"Tickets\")`",
+        "right": "a second query on tickets by event_id"
+      },
+      {
+        "left": "`Joins(\"Event\")`",
+        "right": "one query with a LEFT JOIN and renamed columns"
+      },
+      {
+        "left": "a plain `First`",
+        "right": "the event alone, Tickets left empty"
+      }
+    ],
+    "right_distractors": [
+      "one query per ticket"
+    ]
+  },
+  {
+    "id": "ex-55q3ymkr",
+    "version": 1,
+    "section": "relationships",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For loading one ticket together with the event it belongs to, which suits better?",
+    "hint": "Belongs to, or has many?",
+    "choices": [
+      {
+        "text": "`Preload(\"Tickets\")`",
+        "correct": false,
+        "why": "That loads the many tickets of an event, the other direction."
+      },
+      {
+        "text": "A loop that calls First on events for each ticket",
+        "correct": false,
+        "why": "That is the N+1 shape of section 06."
+      },
+      {
+        "text": "`Joins(\"Event\")`",
+        "correct": true,
+        "why": "Right. One ticket, one event: a single query with a LEFT JOIN."
+      },
+      {
+        "text": "AutoMigrate with the Event model passed first",
+        "correct": false,
+        "why": "AutoMigrate builds tables; it loads no rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-rdeg4j97",
+    "version": 1,
+    "section": "n-plus-one",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many queries did the loop send to sum the seats of the 20 recitals?",
+    "hint": "One for the list, one per event.",
+    "value": 21,
+    "tolerance": 0,
+    "unit": "queries"
+  },
+  {
+    "id": "ex-d0fmg5wd",
+    "version": 1,
+    "section": "n-plus-one",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "And with `Preload`?",
+    "hint": "Events, then all their tickets.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "queries"
+  },
+  {
+    "id": "ex-12b0h6fb",
+    "version": 1,
+    "section": "n-plus-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With N+1 code, a list of 1,000 events costs how many queries?",
+    "hint": "N plus one.",
+    "choices": [
+      {
+        "text": "2, because GORM batches the loop by itself",
+        "correct": false,
+        "why": "Only Preload batches; a loop of Find calls stays a loop."
+      },
+      {
+        "text": "1,001, one round trip each",
+        "correct": true,
+        "why": "Right. It grows with the data, which is why development never shows it."
+      },
+      {
+        "text": "21, the same as with twenty events",
+        "correct": false,
+        "why": "The count follows the number of events."
+      },
+      {
+        "text": "1, since all rows share one table",
+        "correct": false,
+        "why": "Each loop iteration sent its own query."
+      }
+    ]
+  },
+  {
+    "id": "ex-f0qx50vm",
+    "version": 1,
+    "section": "n-plus-one",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An endpoint is fast in development and slow in production, and its time grows with how many items it returns. What is the cheapest way to confirm N+1?",
+    "hint": "The tool this lesson used throughout.",
+    "choices": [
+      {
+        "text": "Add an index on every foreign key and measure again",
+        "correct": false,
+        "why": "An index makes each query cheaper, and the count stays the same."
+      },
+      {
+        "text": "Give the production database more memory",
+        "correct": false,
+        "why": "The cost is round trips, which memory does not remove."
+      },
+      {
+        "text": "Count the queries the endpoint sends, from the query log",
+        "correct": true,
+        "why": "Right, and a test asserting that count catches it the day it is written."
+      },
+      {
+        "text": "Switch the logger to Silent so it costs less",
+        "correct": false,
+        "why": "That hides the evidence; logging is not the slow part."
+      }
+    ]
+  },
+  {
+    "id": "ex-b6zfv9jf",
+    "version": 1,
+    "section": "n-plus-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Even with Preload, the program brought every ticket row into Go to add numbers. What does the section call the better answer?",
+    "hint": "Who is best at summing rows?",
+    "choices": [
+      {
+        "text": "Load the tickets in parallel goroutines",
+        "correct": false,
+        "why": "Still every row crosses to Go; the database sums them itself."
+      },
+      {
+        "text": "A SUM with GROUP BY in SQL, one number per event",
+        "correct": true,
+        "why": "Right. Easy in SQL, awkward through the ORM."
+      },
+      {
+        "text": "Cache the ticket rows in a Go map",
+        "correct": false,
+        "why": "A cache does not reduce what the first load brings over."
+      },
+      {
+        "text": "Use Joins instead of Preload",
+        "correct": false,
+        "why": "Joins still returns every ticket row, now with event columns beside it."
+      }
+    ]
+  },
+  {
+    "id": "ex-33pqnfjg",
+    "version": 1,
+    "section": "pitfalls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`db.Model(&e).Updates(models.Event{Sold: 0})` left `sold` at 2. Why?",
+    "hint": "Was any UPDATE sent?",
+    "choices": [
+      {
+        "text": "A transaction rolled the change back",
+        "correct": false,
+        "why": "No UPDATE was sent at all; there was nothing to roll back."
+      },
+      {
+        "text": "The CHECK constraint refused a sold of zero",
+        "correct": false,
+        "why": "Zero is valid, and gormlab's table has no such CHECK anyway."
+      },
+      {
+        "text": "Updates needs the primary key inside the struct literal",
+        "correct": false,
+        "why": "Model(&e) supplies the key; the zero was what got skipped."
+      },
+      {
+        "text": "With a struct, GORM skips zero-valued fields",
+        "correct": true,
+        "why": "Right. Name the column, use a map, or Select it to write a zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-dnmwksx5",
+    "version": 1,
+    "section": "pitfalls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `db.Delete(&t)` on a ticket, `psql` still shows the row. What happened?",
+    "hint": "Ticket embeds gorm.Model.",
+    "choices": [
+      {
+        "text": "The DELETE failed silently on the foreign key",
+        "correct": false,
+        "why": "The log shows an UPDATE setting deleted_at, not a DELETE."
+      },
+      {
+        "text": "GORM stamped deleted_at; the row stays",
+        "correct": true,
+        "why": "Right. A soft delete: GORM's queries add deleted_at IS NULL, and psql knows nothing of that."
+      },
+      {
+        "text": "psql reads from a copy that lags behind",
+        "correct": false,
+        "why": "There is one database; psql read the same row GORM stamped."
+      },
+      {
+        "text": "Delete needs Unscoped() to run at all",
+        "correct": false,
+        "why": "It ran; Unscoped() is what turns it into a real DELETE."
+      }
+    ]
+  },
+  {
+    "id": "ex-xsq00rbt",
+    "version": 1,
+    "section": "pitfalls",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A reporting script written in Python reads the `tickets` table directly. What does GORM's soft delete do to its numbers?",
+    "hint": "Where does the rule live?",
+    "choices": [
+      {
+        "text": "Nothing: PostgreSQL hides rows with deleted_at set",
+        "correct": false,
+        "why": "The database knows no such rule; psql showed the stamped row."
+      },
+      {
+        "text": "It counts deleted tickets as alive",
+        "correct": true,
+        "why": "Right. The rule lives in GORM, not in the database."
+      },
+      {
+        "text": "It fails, because the deleted rows are locked",
+        "correct": false,
+        "why": "Nothing is locked; the rows are ordinary rows with a timestamp."
+      },
+      {
+        "text": "It sees nothing, because GORM moved them to another table",
+        "correct": false,
+        "why": "They stay in tickets."
+      }
+    ]
+  },
+  {
+    "id": "ex-c8m76txa",
+    "version": 1,
+    "section": "pitfalls",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`db.Delete(&models.Event{})` names no row. What did GORM do?",
+    "hint": "The log line ends with rows:0.",
+    "choices": [
+      {
+        "text": "Deleted every event",
+        "correct": false,
+        "why": "That is exactly what the guard prevents."
+      },
+      {
+        "text": "Refused it: WHERE conditions required",
+        "correct": true,
+        "why": "Right. It built the statement and did not send it."
+      },
+      {
+        "text": "Deleted the event with id 0",
+        "correct": false,
+        "why": "There was no condition at all, not one on id 0."
+      },
+      {
+        "text": "Soft-deleted every event by setting deleted_at",
+        "correct": false,
+        "why": "Event has no gorm.Model and no deleted_at; and the call was refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-e86vj4dz",
+    "version": 1,
+    "section": "pitfalls",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each call, with no matching row, to what it returned.",
+    "hint": "One expects a row, one a list.",
+    "pairs": [
+      {
+        "left": "`First`",
+        "right": "`record not found`"
+      },
+      {
+        "left": "`Find` into a slice",
+        "right": "no error and length 0"
+      }
+    ],
+    "right_distractors": [
+      "a nil pointer panic"
+    ]
+  },
+  {
+    "id": "ex-13w3nkeh",
+    "version": 1,
+    "section": "pitfalls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a handler, which call and check gives lesson 3's 404 for a missing event?",
+    "hint": "Section 07, pitfall 4.",
+    "choices": [
+      {
+        "text": "`First` and `errors.Is(err, gorm.ErrRecordNotFound)`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`Find` and a check that the error is not nil",
+        "correct": false,
+        "why": "Find returns no error for no row, so this misses the 404."
+      },
+      {
+        "text": "`Unscoped().Find` and a length check",
+        "correct": false,
+        "why": "Unscoped would also return soft-deleted rows."
+      },
+      {
+        "text": "`First` and a check that the ID is above zero",
+        "correct": false,
+        "why": "The error says what happened; reading the zero ID is guessing."
+      }
+    ]
+  },
+  {
+    "id": "ex-5g856ycw",
+    "version": 1,
+    "section": "when-gorm",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which service gains the most from GORM?",
+    "hint": "What an ORM was invented for.",
+    "choices": [
+      {
+        "text": "A reporting service whose endpoints are aggregations and window functions",
+        "correct": false,
+        "why": "When the queries are the product, the SQL is better written by hand."
+      },
+      {
+        "text": "A database other programs share",
+        "correct": false,
+        "why": "GORM's conventions, like soft delete, live in GORM."
+      },
+      {
+        "text": "An internal admin tool with thirty tables and a form each",
+        "correct": true,
+        "why": "Right. Plain create, read, update and delete, written correctly for you."
+      },
+      {
+        "text": "A hot path tuned query by query",
+        "correct": false,
+        "why": "Every statement is generated; finding the slow one means reading the log."
+      }
+    ]
+  },
+  {
+    "id": "ex-fccbhq4h",
+    "version": 1,
+    "section": "when-gorm",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does boxoffice stay on lesson 6's pgx code?",
+    "hint": "Its most important operation.",
+    "choices": [
+      {
+        "text": "GORM cannot use PostgreSQL's UPDATE ... RETURNING",
+        "correct": false,
+        "why": "The log showed GORM writing RETURNING itself."
+      },
+      {
+        "text": "GORM is slower than pgx for one table",
+        "correct": false,
+        "why": "The lesson made no speed measurement; the reason is visibility."
+      },
+      {
+        "text": "GORM's license forbids commercial ticket sales",
+        "correct": false,
+        "why": "Nothing in the lesson is about licences."
+      },
+      {
+        "text": "An ORM would hide its key UPDATE",
+        "correct": true,
+        "why": "Right. A choice about this service, not a verdict on GORM."
+      }
+    ]
+  },
+  {
+    "id": "ex-smnje65a",
+    "version": 1,
+    "section": "when-gorm",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A product must really run on both PostgreSQL and MySQL. How does that bear on the choice of GORM?",
+    "hint": "The last row of the first table.",
+    "choices": [
+      {
+        "text": "In its favour: portable SQL is one place it fits",
+        "correct": true,
+        "why": "Right, at the cost of its own rules."
+      },
+      {
+        "text": "Against it: GORM supports one database per program",
+        "correct": false,
+        "why": "One API for several databases is listed among what it gives."
+      },
+      {
+        "text": "Neither: the database is irrelevant to an ORM",
+        "correct": false,
+        "why": "The dialect matters, and GORM writes it per database."
+      },
+      {
+        "text": "Against it: MySQL needs AutoMigrate disabled",
+        "correct": false,
+        "why": "Nothing in the lesson says so."
+      }
+    ]
+  },
+  {
+    "id": "ex-h93702cw",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what `db.Create(&choir)` did in order, from the first statement to what the program could read afterwards.",
+    "hint": "The event needs an id before its tickets.",
+    "items": [
+      "INSERT the event, with RETURNING id",
+      "Write the new id, 2, into each ticket's EventID",
+      "INSERT both tickets in one multi-row statement",
+      "Log the event's statement as the whole Create finishes"
+    ],
+    "trap": "The log order is not the order of execution."
+  },
+  {
+    "id": "ex-c0yxkhsk",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate asks GORM to cancel one sale by setting `Quantity` to 0 with `Updates(models.Ticket{Quantity: 0})`, then deletes the ticket with `Delete`. What is in the table afterwards?",
+    "hint": "Two pitfalls at once.",
+    "choices": [
+      {
+        "text": "The row with its old quantity and a deleted_at stamp",
+        "correct": true,
+        "why": "Right: the zero was skipped and the delete was soft."
+      },
+      {
+        "text": "No row: the ticket is gone",
+        "correct": false,
+        "why": "Ticket embeds gorm.Model, so Delete only stamps deleted_at."
+      },
+      {
+        "text": "The row, with quantity 0 and deleted_at set",
+        "correct": false,
+        "why": "The zero was skipped by Updates; quantity never changed."
+      },
+      {
+        "text": "An error: Delete is refused after an Updates",
+        "correct": false,
+        "why": "Delete names this row through its key; nothing refuses it."
+      }
+    ]
+  }
+]

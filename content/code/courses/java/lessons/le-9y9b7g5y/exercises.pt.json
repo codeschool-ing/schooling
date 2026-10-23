@@ -1,0 +1,377 @@
+{
+  "ex-6kd9jhpz": {
+    "prompt": "Um código fora de `Catalogue` quer criar um `Entry`. Como ele nomeia a classe?",
+    "hint": "O `main` usou essa grafia para a terceira entrada.",
+    "choices": [
+      {
+        "text": "`Entry`, porque nomes aninhados são visíveis em todo o diretório do arquivo",
+        "why": "O nome curto só funciona dentro de `Catalogue`; fora dele, o nome de fora vem primeiro."
+      },
+      {
+        "text": "`Catalogue.Entry`",
+        "why": "Isso: o nome de fora, um ponto, o nome de dentro."
+      },
+      {
+        "text": "`Catalogue$Entry`",
+        "why": "Esse é o nome do arquivo de classe e da classe em tempo de execução; o código-fonte escreve um ponto."
+      },
+      {
+        "text": "`new Catalogue().Entry`, através de um objeto da classe de fora",
+        "why": "Uma classe aninhada estática não precisa de objeto de fora; esse formato é das classes internas, com `new` depois do ponto."
+      }
+    ]
+  },
+  "ex-692wzbjr": {
+    "prompt": "Compilar `Catalogue.java` gerou dois arquivos de classe: `Catalogue.class` e `___`.",
+    "hint": "O nome de fora e o de dentro, unidos por um caractere.",
+    "blanks": [
+      {
+        "accept": [
+          "Catalogue$Entry.class"
+        ]
+      }
+    ]
+  },
+  "ex-3rjthqaf": {
+    "prompt": "`Shelf.Label.text()` lê `capacity`, um atributo de instância de `Shelf`, e o compilador recusa. Qual é o motivo?",
+    "hint": "Pergunte de qual estante a etiqueta o leria.",
+    "choices": [
+      {
+        "text": "`capacity` é `private`, e uma classe aninhada não enxerga membros privados",
+        "why": "Classes aninhadas enxergam, sim, os membros privados da de fora; a mensagem de erro não falou de acesso."
+      },
+      {
+        "text": "Não existe `Shelf` de onde lê-lo",
+        "why": "Isso: um objeto aninhado estático não tem objeto de fora, e a mensagem diz que um contexto estático não alcança um membro de instância."
+      },
+      {
+        "text": "Atributos da classe de fora têm de ser passados com `super`",
+        "why": "O `super` alcança uma classe mãe, lição 20; aninhamento não é herança."
+      },
+      {
+        "text": "`text()` também precisaria ser declarado `static`",
+        "why": "Um `text()` estático também não tem objeto; o atributo continuaria sem estante de onde vir."
+      }
+    ]
+  },
+  "ex-d9a54d1q": {
+    "prompt": "Quais destas coisas uma classe aninhada estática `Entry` pode fazer dentro de `Catalogue`? Escolha todas as que se aplicam.",
+    "hint": "Ela fica dentro das chaves da classe de fora, e não tem objeto de fora.",
+    "choices": [
+      {
+        "text": "Usar uma constante `private static` declarada em `Catalogue`",
+        "why": "Sim: o aninhamento a põe dentro da linha que a lição 14 traçou, e um membro estático não precisa de objeto."
+      },
+      {
+        "text": "Ser criada no `main` sem objeto `Catalogue` nenhum",
+        "why": "Sim: foi assim que a terceira entrada foi criada."
+      },
+      {
+        "text": "Ler `size`, o atributo de instância do catálogo atual",
+        "why": "Não existe catálogo atual para um objeto aninhado estático; esse é o erro de compilação de `Shelf`."
+      },
+      {
+        "text": "Referir-se ao dono como `Catalogue.this`",
+        "why": "Só classes internas têm um dono para nomear; uma aninhada estática não tem nenhum."
+      }
+    ]
+  },
+  "ex-528bzj5e": {
+    "prompt": "Você está escrevendo uma classe `Graph` e precisa de um tipo pequeno `Edge`, usado só por `Graph`, que guarda dois números de nós. Seguindo a regra prática da seção, como você o declara?",
+    "hint": "Uma aresta precisa ler os atributos de um grafo específico?",
+    "choices": [
+      {
+        "text": "Como classe interna, para que toda aresta alcance o seu grafo se um dia precisar",
+        "why": "Isso compra uma referência escondida em cada aresta para uma necessidade que ninguém tem; a regra manda começar pelo `static`."
+      },
+      {
+        "text": "Como classe aninhada `static` de `Graph`",
+        "why": "Isso: ela pertence à implementação de `Graph` e não precisa de objeto grafo, que é exatamente o caso aninhado estático."
+      },
+      {
+        "text": "Como classe anônima criada dentro do construtor de `Graph`",
+        "why": "Uma classe anônima cria um objeto com uma tarefa; um grafo tem muitas arestas de um mesmo tipo."
+      },
+      {
+        "text": "Como uma classe pública separada em `Edge.java`",
+        "why": "Funciona, e expõe a todo mundo um tipo que só `Graph` usa; o aninhamento o deixa onde ele pertence."
+      }
+    ]
+  },
+  "ex-fcdrrme3": {
+    "prompt": "No `main`, como foi criada a primeira carteirinha da Ana?",
+    "hint": "O `new` foi chamado sobre alguma coisa.",
+    "choices": [
+      {
+        "text": "`new Member.Card(1)`",
+        "why": "Essa grafia cria um objeto aninhado estático; um interno precisa de dono, e o compilador pediu um."
+      },
+      {
+        "text": "`ana.new Card(1)`",
+        "why": "Isso: `new` chamado sobre `ana`, que vira a dona da carteirinha."
+      },
+      {
+        "text": "`new Card(ana, 1)`",
+        "why": "O construtor compilado recebe mesmo o sócio primeiro, mas o código-fonte nunca escreve assim."
+      }
+    ]
+  },
+  "ex-s80tghfm": {
+    "prompt": "Depois de `a1.borrow()`, `a2.borrow()` e `r1.borrow()`, qual é a contagem `borrowed` da Ana?",
+    "hint": "Duas das três carteirinhas são da Ana."
+  },
+  "ex-x79t2dfw": {
+    "prompt": "`javap -p 'Member$Card'` listou um atributo `final Member this$0` que ninguém escreveu. Para que ele serve?",
+    "hint": "De onde vem o `name` dentro de `borrow()`?",
+    "choices": [
+      {
+        "text": "Conta quantas carteirinhas um sócio tem",
+        "why": "A contagem é `borrowed`, um atributo comum de `Member`; o `this$0` guarda um objeto, não um número."
+      },
+      {
+        "text": "É uma ajuda de depuração que o `javap` acrescenta ao imprimir, e não está no arquivo de classe",
+        "why": "O `javap` imprime o que o arquivo de classe contém; o atributo está lá, e o construtor o preenche."
+      },
+      {
+        "text": "O dono da carteirinha: `name` compila em `this$0.name`",
+        "why": "Isso: o compilador transforma o dono num atributo que a JVM entende, preenchido pelo parâmetro escondido do construtor."
+      },
+      {
+        "text": "Aponta para a primeira carteirinha criada, para as outras dividirem o número dela",
+        "why": "Cada carteirinha guarda o seu `number`; o `this$0` aponta para um `Member`, não para outra carteirinha."
+      }
+    ]
+  },
+  "ex-g00r4e21": {
+    "prompt": "Dentro de `Card`, qual é a diferença entre `this` e `Member.this`?",
+    "hint": "O `owner()` devolve um deles.",
+    "choices": [
+      {
+        "text": "`this` é a carteirinha; `Member.this` é o sócio a quem ela pertence",
+        "why": "Isso: a forma longa nomeia o objeto de fora, que o `owner()` devolve."
+      },
+      {
+        "text": "Nenhuma: os dois são o objeto atual, e a forma longa só é mais clara",
+        "why": "São dois objetos diferentes; se `owner()` devolvesse o `this`, a comparação com `a2.owner()` daria false."
+      },
+      {
+        "text": "`this` é o sócio, e `Member.this` é a própria classe `Member`",
+        "why": "Uma classe não é um objeto alcançável com `this`; `Member.this` é um objeto de `Member`."
+      },
+      {
+        "text": "`Member.this` só é permitido dentro de métodos estáticos de `Card`",
+        "why": "Um método estático da classe interna não tem carteirinha nem sócio; a forma longa é usada em métodos de instância."
+      }
+    ]
+  },
+  "ex-g4gycmy2": {
+    "prompt": "Um programa mantém uma lista de tratadores de eventos que vive enquanto o programa vive. Cada tratador é uma classe interna de um objeto `Report` grande, e os relatórios parecem nunca sair da memória. Por quê?",
+    "hint": "Todo objeto interno guarda alguma coisa.",
+    "choices": [
+      {
+        "text": "Classes internas são carregadas uma vez e nunca descarregadas, então os objetos de fora também ficam",
+        "why": "Classes e objetos são coisas diferentes; o que mantém um objeto vivo é uma referência a ele."
+      },
+      {
+        "text": "O `this$0` escondido de cada um aponta para o objeto que o criou, e continua alcançável",
+        "why": "Isso: enquanto o tratador é alcançável, o relatório para onde ele aponta também é; um tratador aninhado estático não guardaria um."
+      },
+      {
+        "text": "Um `Report` não pode ser coletado até cada classe interna chamar `Report.this.close()`",
+        "why": "O Java não tem regra assim; a lição 19 mostra que só a alcançabilidade decide."
+      },
+      {
+        "text": "A JVM copia o relatório para dentro de cada tratador, multiplicando o tamanho",
+        "why": "Só uma referência é guardada, não uma cópia; um relatório, muitas setas para ele."
+      }
+    ]
+  },
+  "ex-n3jnxzzx": {
+    "prompt": "`new Comparator<String>() { ... }` em `Sorting.java` cria o quê?",
+    "hint": "`Comparator` é uma interface.",
+    "choices": [
+      {
+        "text": "Um objeto da própria interface `Comparator`",
+        "why": "Uma interface não pode ser instanciada sozinha; as chaves fornecem uma classe."
+      },
+      {
+        "text": "Uma nova classe com nome, chamada `Comparator`, que substitui a do JDK",
+        "why": "Ela não tem nome no código-fonte, e o compilador a chamou de `Sorting$1`."
+      },
+      {
+        "text": "Um objeto de uma classe sem nome, que fornece o `compare` que falta",
+        "why": "Isso: declarada e instanciada numa expressão, com o `compare` fornecido nas chaves."
+      }
+    ]
+  },
+  "ex-17h1pdhf": {
+    "prompt": "Por que o `Arrays.sort(titles)` simples pôs `effective Java` por último?",
+    "hint": "Compare os códigos das primeiras letras.",
+    "choices": [
+      {
+        "text": "Strings são ordenadas pelo tamanho, e ela é a menor",
+        "why": "`Head First Java` é menor que `Modern Java in Action` e veio primeiro, então o tamanho não foi a ordem."
+      },
+      {
+        "text": "Maiúsculas vêm antes de minúsculas, e ela começa com `e`",
+        "why": "Isso: o comparador que ignora maiúsculas a pôs em primeiro."
+      },
+      {
+        "text": "O `sort` mantém a ordem original para strings que não consegue comparar",
+        "why": "Todo par de strings pode ser comparado; a ordem é a natural, pelo código."
+      },
+      {
+        "text": "Arrays são ordenados a partir do fim, e ela era o segundo elemento",
+        "why": "Ela era a segunda no array de origem; a ordenação não começa pelo fim."
+      }
+    ]
+  },
+  "ex-w3n5ymy5": {
+    "prompt": "Ligue cada classe que a lição compilou ao nome do seu arquivo de classe.",
+    "hint": "O `ls` imprimiu cada um.",
+    "pairs": [
+      {
+        "left": "o comparador anônimo em `Sorting`",
+        "right": "`Sorting$1.class`"
+      },
+      {
+        "left": "a classe local `Notice` em `Overdue`",
+        "right": "`Overdue$1Notice.class`"
+      },
+      {
+        "left": "a classe interna `Card` em `Member`",
+        "right": "`Member$Card.class`"
+      },
+      {
+        "left": "a classe aninhada estática `Entry` em `Catalogue`",
+        "right": "`Catalogue$Entry.class`"
+      }
+    ],
+    "right_distractors": [
+      "`Catalogue.Entry.class`"
+    ]
+  },
+  "ex-vye7a9tp": {
+    "prompt": "Acrescentar `days = 21;` fez o `Overdue.java` falhar na compilação. Para qual linha o erro apontou?",
+    "hint": "Leia o acento circunflexo.",
+    "choices": [
+      {
+        "text": "A nova atribuição `days = 21;`",
+        "why": "A atribuição sozinha é legal; o erro fica onde a classe lê a variável."
+      },
+      {
+        "text": "O uso de `days` dentro de `Notice.text`",
+        "why": "Isso: a linha 7, onde a classe local lê uma variável que deixou de ser effectively final."
+      },
+      {
+        "text": "A declaração `int days = 14;`, que deveria dizer `final`",
+        "why": "Escrever `final` tornaria ilegal a atribuição; a mensagem apontou para a leitura."
+      }
+    ]
+  },
+  "ex-mhd17j1y": {
+    "prompt": "Por que o Java exige que uma variável local capturada seja effectively final, em vez de deixar a classe ver as mudanças posteriores?",
+    "hint": "O que o objeto guarda de fato?",
+    "choices": [
+      {
+        "text": "Porque mudar uma variável local de dois lugares ao mesmo tempo é uma disputa entre threads",
+        "why": "A regra vale também em código de uma thread só, como o `Overdue` mostrou."
+      },
+      {
+        "text": "Porque a classe roda antes dos comandos seguintes do método",
+        "why": "A classe roda quando o método dela é chamado, o que pode ser a qualquer momento."
+      },
+      {
+        "text": "O objeto guarda uma cópia feita na criação, que ficaria velha",
+        "why": "Isso: o compilador copia o valor para um atributo; o Java recusa em vez de deixar os dois discordarem."
+      },
+      {
+        "text": "Porque variáveis locais são apagadas quando a classe é compilada",
+        "why": "Variáveis locais vivem no frame do método enquanto ele roda; a compilação não apaga nada."
+      }
+    ]
+  },
+  "ex-vt9j0mwa": {
+    "prompt": "Desde o Java 8, o que costuma substituir uma classe anônima que implementa uma interface de um método, como `Comparator`?",
+    "hint": "O `java-functional` começa por aí.",
+    "choices": [
+      {
+        "text": "Uma classe aninhada estática",
+        "why": "Ela precisa de nome e de declaração; é mais longa, não mais curta."
+      },
+      {
+        "text": "Uma expressão lambda",
+        "why": "Isso: `(a, b) -> a.compareToIgnoreCase(b)` é o mesmo comparador numa linha."
+      },
+      {
+        "text": "Uma classe local",
+        "why": "Uma classe local continua sendo uma declaração de classe completa, usada por um método."
+      }
+    ]
+  },
+  "ex-fwb9hqsv": {
+    "prompt": "Ordene os quatro tipos, do que não está preso a nada até o que só existe dentro de uma única expressão.",
+    "hint": "A tabela no fim da seção 04.",
+    "items": [
+      "classe aninhada estática",
+      "classe interna",
+      "classe local",
+      "classe anônima"
+    ]
+  },
+  "ex-1qmhxr1e": {
+    "prompt": "Um `Parser` lê um arquivo e precisa de um tipo pequeno `Token` que registra o texto do token e a posição dele no arquivo. Nenhum token precisa ler os atributos do parser. Qual declaração serve, e quanto custa a escolha errada?",
+    "hint": "Conte o que cada token carregaria como classe interna.",
+    "choices": [
+      {
+        "text": "Uma classe interna; aninhada estática faria todos os tokens dividirem um texto",
+        "why": "Os atributos de um objeto aninhado são por objeto de qualquer jeito; o `static` na classe não torna estáticos os atributos dela."
+      },
+      {
+        "text": "Uma classe aninhada estática; como interna, cada um dos milhares de tokens guardaria também o parser",
+        "why": "Isso: um `this$0` escondido por token, para uma necessidade que nenhum tem, e o parser mantido vivo por qualquer token ainda referenciado."
+      },
+      {
+        "text": "Uma classe anônima, criada uma vez por token dentro do laço de leitura",
+        "why": "Uma classe anônima é uma classe só; usá-la como tipo de dados dá um tipo que ninguém consegue nomear numa variável."
+      },
+      {
+        "text": "Tanto faz: estática e interna só diferem no jeito de escrever a classe",
+        "why": "Elas diferem num atributo que todo objeto carrega, como o `javap` mostrou."
+      }
+    ]
+  },
+  "ex-at9j8khj": {
+    "prompt": "Qual destas linhas compila no `Member.main` como escrito na lição?",
+    "hint": "O `main` é estático, então não tem `this`.",
+    "choices": [
+      {
+        "text": "`Member.Card c = new Card(9);`",
+        "why": "Essa foi a linha editada, e o compilador disse que o `this` não pode ser referenciado num contexto estático."
+      },
+      {
+        "text": "`Member.Card c = Member.this.new Card(9);`",
+        "why": "`Member.this` é o objeto de fora de um objeto interno; num método estático não existe nenhum."
+      },
+      {
+        "text": "`Member.Card c = rui.new Card(9);`",
+        "why": "Isso: `rui` é um sócio que existe, e ele vira o dono da carteirinha."
+      },
+      {
+        "text": "`Member.Card c = new Member.Card(9);`",
+        "why": "O nome de fora não fornece um objeto de fora; uma classe interna continua precisando de um."
+      }
+    ]
+  },
+  "ex-ndnvw5ge": {
+    "prompt": "Uma variável local que nunca muda depois de receber o primeiro valor, diga ela `final` ou não, é chamada de effectively ___.",
+    "hint": "Duas palavras em inglês, e o curso as mantém em inglês.",
+    "blanks": [
+      {
+        "accept": [
+          "final"
+        ]
+      }
+    ]
+  }
+}

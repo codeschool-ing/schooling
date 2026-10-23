@@ -1,0 +1,867 @@
+[
+  {
+    "id": "ex-yxy20tw2",
+    "version": 1,
+    "section": "the-pieces",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which part of Node runs your JavaScript?",
+    "choices": [
+      {
+        "text": "libuv's thread pool",
+        "correct": false,
+        "why": "The pool never runs JavaScript; it does C work underneath some functions."
+      },
+      {
+        "text": "The operating system's epoll",
+        "correct": false,
+        "why": "epoll watches sockets; it runs nothing of yours."
+      },
+      {
+        "text": "The C++ bindings",
+        "correct": false,
+        "why": "The bindings are where a call leaves JavaScript, not where it runs."
+      },
+      {
+        "text": "V8",
+        "correct": true,
+        "why": "Right. It compiles and runs it, on the main thread."
+      }
+    ]
+  },
+  {
+    "id": "ex-32c34ja4",
+    "version": 1,
+    "section": "the-pieces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "\"Node is single-threaded.\" How true is that, according to the lesson?",
+    "choices": [
+      {
+        "text": "Entirely true: the whole process has exactly one thread",
+        "correct": false,
+        "why": "`threads.js` counted 7 at start and 11 after a file read."
+      },
+      {
+        "text": "False: each request gets its own thread",
+        "correct": false,
+        "why": "That is the model Node does not use."
+      },
+      {
+        "text": "Your code runs on one; the process has several",
+        "correct": true,
+        "why": "Right. V8's helpers and the pool are threads too."
+      },
+      {
+        "text": "True only on Windows",
+        "correct": false,
+        "why": "The model is the same on every system."
+      }
+    ]
+  },
+  {
+    "id": "ex-p243kzxq",
+    "version": 1,
+    "section": "the-pieces",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The C library that gives Node its event loop and thread pool is called ___.",
+    "blanks": [
+      {
+        "accept": [
+          "libuv"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1bv0hz70",
+    "version": 1,
+    "section": "what-you-know",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "javascript lesson 13 said the microtask queue is emptied when. Which statement is it?",
+    "choices": [
+      {
+        "text": "Completely, after every task",
+        "correct": true,
+        "why": "Right, and in Node after every callback."
+      },
+      {
+        "text": "Once per second",
+        "correct": false,
+        "why": "Nothing about the queue is timed."
+      },
+      {
+        "text": "Only when the program ends",
+        "correct": false,
+        "why": "Promise callbacks would then never run in a server."
+      },
+      {
+        "text": "Whenever the task queue is empty",
+        "correct": false,
+        "why": "It does not wait for the task queue to empty."
+      }
+    ]
+  },
+  {
+    "id": "ex-9wv166xw",
+    "version": 1,
+    "section": "what-you-know",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does this lesson add to the model from javascript lesson 13?",
+    "choices": [
+      {
+        "text": "Several task queues, visited in a fixed order",
+        "correct": true,
+        "why": "Right. Those are the phases."
+      },
+      {
+        "text": "Code can now run while other code runs",
+        "correct": false,
+        "why": "Still one call stack, still one thing at a time."
+      },
+      {
+        "text": "Microtasks run before synchronous code in Node",
+        "correct": false,
+        "why": "Synchronous code always runs first."
+      },
+      {
+        "text": "The browser's model was wrong for Node and is replaced here",
+        "correct": false,
+        "why": "It is still right; this adds detail to one part of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-kctqy3aq",
+    "version": 1,
+    "section": "phases",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the four phases in the order the loop visits them, starting from timers.",
+    "items": [
+      "timers",
+      "poll",
+      "check",
+      "close"
+    ]
+  },
+  {
+    "id": "ex-hr73xypz",
+    "version": 1,
+    "section": "phases",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside an `fs.readFile` callback, a program calls `setTimeout(f, 0)` and then `setImmediate(g)`. Which runs first?",
+    "choices": [
+      {
+        "text": "`f`, because it was scheduled first",
+        "correct": false,
+        "why": "The order of the calls does not decide; the phases do."
+      },
+      {
+        "text": "`g`: check comes straight after poll",
+        "correct": true,
+        "why": "Right. Timers only come round after check."
+      },
+      {
+        "text": "It changes from run to run",
+        "correct": false,
+        "why": "That is the case at the top of a file, not inside I/O."
+      },
+      {
+        "text": "Both at once, on two threads",
+        "correct": false,
+        "why": "Callbacks never run at the same time."
+      }
+    ]
+  },
+  {
+    "id": "ex-bhs6k222",
+    "version": 1,
+    "section": "phases",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`race.js` printed `immediate timeout` twenty times out of twenty on one computer. A colleague writes code that depends on that order. What is wrong?",
+    "choices": [
+      {
+        "text": "Timing decides it there, not a rule",
+        "correct": true,
+        "why": "Right. Code that needs an order must call one from the other."
+      },
+      {
+        "text": "Nothing: twenty identical runs out of twenty is enough evidence",
+        "correct": false,
+        "why": "Five milliseconds of start-up work turned it round every time."
+      },
+      {
+        "text": "setImmediate is deprecated",
+        "correct": false,
+        "why": "It is not; it is the check phase's own function."
+      },
+      {
+        "text": "The timer should have been 1 instead of 0",
+        "correct": false,
+        "why": "0 already means 1 millisecond; the question is whether it has passed."
+      }
+    ]
+  },
+  {
+    "id": "ex-8fa48yxn",
+    "version": 1,
+    "section": "phases",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does the loop wait when nothing is due?",
+    "choices": [
+      {
+        "text": "In poll, until input arrives or a timer is due",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "In the timers phase, counting down to the next timer",
+        "correct": false,
+        "why": "It does not count; it sleeps until the system wakes it."
+      },
+      {
+        "text": "In the check phase",
+        "correct": false,
+        "why": "check runs setImmediate callbacks and moves on."
+      },
+      {
+        "text": "It never waits; it spins",
+        "correct": false,
+        "why": "A spinning loop would use a whole processor while idle."
+      }
+    ]
+  },
+  {
+    "id": "ex-6mscacbz",
+    "version": 1,
+    "section": "next-tick",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `ticks.js`, put what printed in order.",
+    "hint": "The numbers were written to match.",
+    "items": [
+      "synchronous code",
+      "the nextTick callback",
+      "the promise callback",
+      "the setTimeout callback",
+      "the setImmediate callback"
+    ]
+  },
+  {
+    "id": "ex-s5wd175r",
+    "version": 1,
+    "section": "next-tick",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `starve.js` the timer was due after one millisecond. After how many ticks did it run?",
+    "value": 1000000,
+    "tolerance": 0,
+    "unit": "ticks"
+  },
+  {
+    "id": "ex-q5zj7z65",
+    "version": 1,
+    "section": "next-tick",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function sometimes calls its callback at once and sometimes after a network request. What does deferring the first case with `process.nextTick` fix?",
+    "choices": [
+      {
+        "text": "The network request becomes faster",
+        "correct": false,
+        "why": "Nothing about the request changes."
+      },
+      {
+        "text": "The callback moves to the thread pool",
+        "correct": false,
+        "why": "nextTick callbacks run on the main thread."
+      },
+      {
+        "text": "Errors thrown inside the callback are now caught for you",
+        "correct": false,
+        "why": "nextTick catches nothing."
+      },
+      {
+        "text": "One order, every time",
+        "correct": true,
+        "why": "Right. The code after the call always runs before the callback."
+      }
+    ]
+  },
+  {
+    "id": "ex-jtvyed4q",
+    "version": 1,
+    "section": "thread-pool",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many threads does libuv's pool have unless you change it?",
+    "choices": [
+      {
+        "text": "One per processor",
+        "correct": false,
+        "why": "It is fixed, whatever the processor count."
+      },
+      {
+        "text": "One per request",
+        "correct": false,
+        "why": "That would be a thread per request again."
+      },
+      {
+        "text": "None until `UV_THREADPOOL_SIZE` is set",
+        "correct": false,
+        "why": "The pool exists by default, created on first use."
+      },
+      {
+        "text": "Four",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-40b22fr7",
+    "version": 1,
+    "section": "thread-pool",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these wait for a thread from the pool? Choose all that apply.",
+    "choices": [
+      {
+        "text": "`fs.readFile`",
+        "correct": true,
+        "why": "Right. Most of node:fs."
+      },
+      {
+        "text": "`crypto.pbkdf2`",
+        "correct": true,
+        "why": "Right. It is long pure computation."
+      },
+      {
+        "text": "Reading data from a socket",
+        "correct": false,
+        "why": "Sockets are watched by epoll, with no thread."
+      },
+      {
+        "text": "`dns.lookup` for a host name",
+        "correct": true,
+        "why": "Right. The system's resolver blocks."
+      },
+      {
+        "text": "A `setTimeout` callback",
+        "correct": false,
+        "why": "Timers are kept by the loop itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-th9abkfv",
+    "version": 1,
+    "section": "thread-pool",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`node pool.js 6` with the default pool. How many hashes finished in the second wave?",
+    "hint": "Six hashes, four threads.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-63swm8xn",
+    "version": 1,
+    "section": "thread-pool",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On a four-processor computer, raising `UV_THREADPOOL_SIZE` from 4 to 6 did not make six password hashes finish sooner. Why?",
+    "choices": [
+      {
+        "text": "The variable is ignored once the program starts",
+        "correct": false,
+        "why": "It was set before start, and all six started at once."
+      },
+      {
+        "text": "The pool cannot go above four threads",
+        "correct": false,
+        "why": "It goes up to 1024."
+      },
+      {
+        "text": "Six computing threads shared four processors",
+        "correct": true,
+        "why": "Right. More threads help work that waits, not work that computes."
+      },
+      {
+        "text": "pbkdf2 runs on the main thread",
+        "correct": false,
+        "why": "The callback form runs on the pool."
+      }
+    ]
+  },
+  {
+    "id": "ex-9s538c7p",
+    "version": 1,
+    "section": "network-io",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "100 requests each waiting a second. How long did `threads.js` take to get all the replies?",
+    "choices": [
+      {
+        "text": "About 100 seconds",
+        "correct": false,
+        "why": "That would be one at a time."
+      },
+      {
+        "text": "About 25 seconds, four at a time",
+        "correct": false,
+        "why": "Sockets do not use the four pool threads."
+      },
+      {
+        "text": "A little over one second",
+        "correct": true,
+        "why": "Right. All hundred waited together."
+      },
+      {
+        "text": "Under a millisecond",
+        "correct": false,
+        "why": "Each reply was held for a second."
+      }
+    ]
+  },
+  {
+    "id": "ex-qj3bc4we",
+    "version": 1,
+    "section": "network-io",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the thread count go from 7 to 11 after one `fs.readFile`?",
+    "choices": [
+      {
+        "text": "Each file opened gets a thread of its own",
+        "correct": false,
+        "why": "It went up once, by four, the pool's size."
+      },
+      {
+        "text": "The hundred requests left threads behind",
+        "correct": false,
+        "why": "The count was still 7 after them."
+      },
+      {
+        "text": "libuv started its pool of four on first use",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "V8 started collecting garbage",
+        "correct": false,
+        "why": "V8's threads were already in the 7."
+      }
+    ]
+  },
+  {
+    "id": "ex-n259n4zc",
+    "version": 1,
+    "section": "network-io",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`threads.js` used `127.0.0.1` rather than `localhost`. What would a name have changed in its numbers?",
+    "choices": [
+      {
+        "text": "Nothing at all: names are resolved by epoll",
+        "correct": false,
+        "why": "epoll watches sockets; it does not resolve names."
+      },
+      {
+        "text": "The replies would have been refused",
+        "correct": false,
+        "why": "localhost reaches the same server."
+      },
+      {
+        "text": "The lookups would have used the pool, so its threads would appear earlier",
+        "correct": true,
+        "why": "Right. dns.lookup is on the pool."
+      },
+      {
+        "text": "Each request would have opened a new process",
+        "correct": false,
+        "why": "Name lookups do not start processes."
+      }
+    ]
+  },
+  {
+    "id": "ex-8mye405n",
+    "version": 1,
+    "section": "blocking-the-loop",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Behind `/slow`, roughly how many seconds did `/fast` take? Round to the nearest whole second.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-a7t1h202",
+    "version": 1,
+    "section": "blocking-the-loop",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `monitorEventLoopDelay` measure?",
+    "choices": [
+      {
+        "text": "How late its own timers fire",
+        "correct": true,
+        "why": "Right. A late timer means code held the thread."
+      },
+      {
+        "text": "How long each request took",
+        "correct": false,
+        "why": "That is what curl's `-w` measured from outside."
+      },
+      {
+        "text": "How busy the thread pool is",
+        "correct": false,
+        "why": "The pool can be busy while the loop is free."
+      },
+      {
+        "text": "How many callbacks are waiting",
+        "correct": false,
+        "why": "It counts no queue; it times a timer."
+      }
+    ]
+  },
+  {
+    "id": "ex-m5hfzx47",
+    "version": 1,
+    "section": "blocking-the-loop",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A report route sorts 500,000 rows in memory and every other route slows down while it runs. Which fix keeps the sort and frees the other routes?",
+    "choices": [
+      {
+        "text": "Wrap the sort in `async function`",
+        "correct": false,
+        "why": "An async function still runs its synchronous code on the main thread."
+      },
+      {
+        "text": "Raise `UV_THREADPOOL_SIZE`",
+        "correct": false,
+        "why": "The sort is JavaScript, and the pool never runs JavaScript."
+      },
+      {
+        "text": "Call it with `process.nextTick`",
+        "correct": false,
+        "why": "It would run a moment later and block just as long."
+      },
+      {
+        "text": "Run the sort in a worker thread",
+        "correct": true,
+        "why": "Right. Lesson 10."
+      }
+    ]
+  },
+  {
+    "id": "ex-26df6tb7",
+    "version": 1,
+    "section": "sync-apis",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where is `fs.readFileSync` harmless?",
+    "choices": [
+      {
+        "text": "Inside a request handler, if the file is small",
+        "correct": false,
+        "why": "A small file on a slow disk still holds every request."
+      },
+      {
+        "text": "At start-up",
+        "correct": true,
+        "why": "Right. Nothing else is waiting yet."
+      },
+      {
+        "text": "Inside a promise callback",
+        "correct": false,
+        "why": "That is still the main thread."
+      },
+      {
+        "text": "Nowhere; it is deprecated",
+        "correct": false,
+        "why": "It is stable and has a proper use."
+      }
+    ]
+  },
+  {
+    "id": "ex-rste5z79",
+    "version": 1,
+    "section": "sync-apis",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many warnings did one request to `motd.js` print under `--trace-sync-io`?",
+    "hint": "One per system call.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "warnings"
+  },
+  {
+    "id": "ex-bft8my5r",
+    "version": 1,
+    "section": "sync-apis",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`--trace-sync-io` prints nothing for your server. What may you conclude?",
+    "choices": [
+      {
+        "text": "That no request handler anywhere in it blocks on a file",
+        "correct": false,
+        "why": "`motd-utf8.js` blocked on every request and printed nothing."
+      },
+      {
+        "text": "Little: its silence is not proof",
+        "correct": true,
+        "why": "Right. Only the calls it watches did not happen."
+      },
+      {
+        "text": "The server uses only the promise API",
+        "correct": false,
+        "why": "A utf8 readFileSync is invisible to it."
+      },
+      {
+        "text": "The flag is broken in Node 22",
+        "correct": false,
+        "why": "It caught the Buffer form four times."
+      }
+    ]
+  },
+  {
+    "id": "ex-20qabfm5",
+    "version": 1,
+    "section": "staying-alive",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When does a Node process exit on its own?",
+    "choices": [
+      {
+        "text": "When the last line of the file has run to the end",
+        "correct": false,
+        "why": "`alive.js` printed its last line and went on ticking."
+      },
+      {
+        "text": "After one minute without requests",
+        "correct": false,
+        "why": "No timeout like that exists."
+      },
+      {
+        "text": "When `beforeExit` is emitted",
+        "correct": false,
+        "why": "A handler there can schedule more work and keep it alive."
+      },
+      {
+        "text": "When nothing is left to wait for",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ydes7c2",
+    "version": 1,
+    "section": "staying-alive",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`timeout 3.5 node alive.js` ended it after three ticks. Why did neither `beforeExit` nor `exit` print?",
+    "choices": [
+      {
+        "text": "They only fire with `unref`",
+        "correct": false,
+        "why": "They fire whenever the process ends by itself."
+      },
+      {
+        "text": "The process was killed from outside",
+        "correct": true,
+        "why": "Right. Lesson 10 handles signals."
+      },
+      {
+        "text": "console.log is off after three seconds",
+        "correct": false,
+        "why": "Nothing turns console.log off."
+      },
+      {
+        "text": "The interval cancelled them",
+        "correct": false,
+        "why": "An interval cannot cancel an event handler."
+      }
+    ]
+  },
+  {
+    "id": "ex-wa9y0e2k",
+    "version": 1,
+    "section": "staying-alive",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Calling `timer.___()` stops a timer from keeping the process alive.",
+    "blanks": [
+      {
+        "accept": [
+          "unref"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gz8ggxns",
+    "version": 1,
+    "section": "crashing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Since Node 15, what happens by default to a rejected promise nobody handles?",
+    "choices": [
+      {
+        "text": "It exits with code 1",
+        "correct": true,
+        "why": "Right. `reject.js`'s timer never ran."
+      },
+      {
+        "text": "A warning is printed and the program carries on regardless",
+        "correct": false,
+        "why": "That was Node 14 and before."
+      },
+      {
+        "text": "Node retries the promise",
+        "correct": false,
+        "why": "Node never retries anything for you."
+      },
+      {
+        "text": "It is silently ignored",
+        "correct": false,
+        "why": "It printed the whole error."
+      }
+    ]
+  },
+  {
+    "id": "ex-j1jnsmt4",
+    "version": 1,
+    "section": "crashing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which line in `reject.js` is the bug?",
+    "choices": [
+      {
+        "text": "`loadPrices();` on its own line",
+        "correct": true,
+        "why": "Right. Every promise is awaited or given a `.catch`."
+      },
+      {
+        "text": "The `throw` inside `loadPrices`, which ends the function early",
+        "correct": false,
+        "why": "Throwing is a fine way to report a failure."
+      },
+      {
+        "text": "The `setTimeout` on the last line",
+        "correct": false,
+        "why": "It never got the chance to run."
+      },
+      {
+        "text": "`async` on the function",
+        "correct": false,
+        "why": "async is what made it a promise; the bug is not handling it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2rxkz97t",
+    "version": 1,
+    "section": "crashing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An `uncaughtException` handler logs the error and lets the server carry on serving. Why does the lesson say to exit instead?",
+    "choices": [
+      {
+        "text": "The process is in a state nobody planned for",
+        "correct": true,
+        "why": "Right. Exit, and let a clean one start."
+      },
+      {
+        "text": "Node forbids a handler that does not exit",
+        "correct": false,
+        "why": "It allows it; that is the danger."
+      },
+      {
+        "text": "Logging is not possible after an exception",
+        "correct": false,
+        "why": "The handler logged fine."
+      },
+      {
+        "text": "Exiting makes the error disappear from the logs",
+        "correct": false,
+        "why": "The point is the opposite: log it, then exit."
+      }
+    ]
+  },
+  {
+    "id": "ex-wssm5kdw",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each callback to the queue or phase it waits in.",
+    "pairs": [
+      {
+        "left": "`setTimeout(f, 0)`",
+        "right": "timers"
+      },
+      {
+        "left": "`setImmediate(f)`",
+        "right": "check"
+      },
+      {
+        "left": "`process.nextTick(f)`",
+        "right": "the nextTick queue"
+      },
+      {
+        "left": "`promise.then(f)`",
+        "right": "the microtask queue"
+      }
+    ],
+    "right_distractors": [
+      "the thread pool"
+    ]
+  }
+]

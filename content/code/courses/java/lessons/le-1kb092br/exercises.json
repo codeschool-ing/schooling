@@ -1,0 +1,534 @@
+[
+  {
+    "id": "ex-hchh222b",
+    "version": 1,
+    "section": "declaring",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`String[] titles = new String[3];` What does each element hold before anything is assigned?",
+    "hint": "`Arrays.toString` printed them.",
+    "choices": [
+      {
+        "text": "An empty string, `\"\"`",
+        "correct": false,
+        "why": "An empty string is an object; a new array of a class type holds no object at all."
+      },
+      {
+        "text": "`null`",
+        "correct": true,
+        "why": "Right: `[null, null, null]`, the default for any class type."
+      },
+      {
+        "text": "Nothing: reading one before assigning it is a compile error",
+        "correct": false,
+        "why": "Array elements always have a default; it is local variables that must be assigned first."
+      },
+      {
+        "text": "Whatever was in that memory before, as in C",
+        "correct": false,
+        "why": "Java fills every new array with defaults, so there is no leftover memory to see."
+      }
+    ]
+  },
+  {
+    "id": "ex-81tpctg0",
+    "version": 1,
+    "section": "declaring",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`int[] years = {1899, 1881, 1943};` Which expression is the last element, whatever the array's length?",
+    "hint": "Positions start at 0.",
+    "choices": [
+      {
+        "text": "`years[years.length]`",
+        "correct": false,
+        "why": "That is one past the end, and throws `ArrayIndexOutOfBoundsException`."
+      },
+      {
+        "text": "`years[3]`",
+        "correct": false,
+        "why": "It is one past the end for this array, and it is not general either."
+      },
+      {
+        "text": "`years[years.length - 1]`",
+        "correct": true,
+        "why": "Right: it printed `1943`."
+      },
+      {
+        "text": "`years[years.length() - 1]`",
+        "correct": false,
+        "why": "`length` on an array is a field, without brackets; this does not compile."
+      }
+    ]
+  },
+  {
+    "id": "ex-fwwh98e8",
+    "version": 1,
+    "section": "declaring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`System.out.println(years)` printed `[I@25b485ba`. What is that?",
+    "hint": "An array is an object without its own way to describe itself.",
+    "choices": [
+      {
+        "text": "The type's code name, `[I`, and a number from the array's identity",
+        "correct": true,
+        "why": "Right: and the number differs on every run. `Arrays.toString` prints the elements."
+      },
+      {
+        "text": "The memory address where the array is stored",
+        "correct": false,
+        "why": "It is derived from the object's identity and is not an address you can use; it changes between runs too."
+      },
+      {
+        "text": "A sign the array was corrupted by the earlier assignment",
+        "correct": false,
+        "why": "Nothing is corrupted; the next line printed the elements correctly."
+      },
+      {
+        "text": "The sum of the elements, written in hexadecimal",
+        "correct": false,
+        "why": "1899 + 1880 + 1943 is not 25b485ba in any base; the number has nothing to do with the contents."
+      }
+    ]
+  },
+  {
+    "id": "ex-4d82nc0f",
+    "version": 1,
+    "section": "declaring",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Reading index 3 of a three-element array throws `Array___Exception`.",
+    "hint": "Index ... out of bounds.",
+    "blanks": [
+      {
+        "accept": [
+          "IndexOutOfBounds"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-q30yg34q",
+    "version": 1,
+    "section": "declaring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program creates `int[] shelves = new int[5];` and later needs a sixth shelf. What can it do?",
+    "hint": "The length is fixed when the array is created.",
+    "choices": [
+      {
+        "text": "`shelves[5] = 0;`, which grows the array by one",
+        "correct": false,
+        "why": "Index 5 is past the end of a five-element array: it throws."
+      },
+      {
+        "text": "`shelves.length = 6;`",
+        "correct": false,
+        "why": "`length` is final; the compiler refuses the assignment."
+      },
+      {
+        "text": "Create a longer array, for example with `Arrays.copyOf(shelves, 6)`",
+        "correct": true,
+        "why": "Right: a new array of six, with the old values copied and the new place at 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-4vszbcky",
+    "version": 1,
+    "section": "traversing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When is `for (int n : stock)` the better loop?",
+    "hint": "What does it hand you, and what does it not?",
+    "choices": [
+      {
+        "text": "When you need to write a new value into each position",
+        "correct": false,
+        "why": "It gives you the value and no position, so it cannot write into the array."
+      },
+      {
+        "text": "When only the values matter",
+        "correct": true,
+        "why": "Right: it cannot go out of bounds, as finding the largest value showed."
+      },
+      {
+        "text": "When the array is longer than a thousand elements",
+        "correct": false,
+        "why": "Both loops visit every element; length does not decide between them."
+      }
+    ]
+  },
+  {
+    "id": "ex-2yb7k1pa",
+    "version": 1,
+    "section": "traversing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Arrays.binarySearch(stock, 2)` on `{4, 0, 7, 2, 9}` printed `-1`, although 2 is at index 3. Why?",
+    "hint": "What must be true of an array before a binary search?",
+    "choices": [
+      {
+        "text": "`binarySearch` only finds values at even positions",
+        "correct": false,
+        "why": "There is no such rule; on the sorted copy it found 2 at index 1."
+      },
+      {
+        "text": "Because `stock[0]` had been changed to 100 by then",
+        "correct": false,
+        "why": "The search ran before the `alias` line changed anything."
+      },
+      {
+        "text": "The array is not sorted, so the halving skips past it",
+        "correct": true,
+        "why": "Right: on an unsorted array it answers wrongly and says nothing."
+      },
+      {
+        "text": "`-1` means found at the last position, counting backwards",
+        "correct": false,
+        "why": "A negative result means not found; it is not a position."
+      }
+    ]
+  },
+  {
+    "id": "ex-mgpppbn4",
+    "version": 1,
+    "section": "traversing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`int[] alias = stock; alias[0] = 100;` What does `stock[0]` hold afterwards?",
+    "hint": "How many arrays exist after the first statement?",
+    "choices": [
+      {
+        "text": "100",
+        "correct": true,
+        "why": "Right: both variables refer to the same array, so the change shows through either."
+      },
+      {
+        "text": "4, its original value, because `alias` is a copy",
+        "correct": false,
+        "why": "Assignment copies the reference, not the array; `Arrays.copyOf` makes copies."
+      },
+      {
+        "text": "Nothing: two variables may not name the same array, so it fails to compile",
+        "correct": false,
+        "why": "It compiles and runs; sharing one array between variables is ordinary."
+      }
+    ]
+  },
+  {
+    "id": "ex-t2ymr1ew",
+    "version": 1,
+    "section": "traversing",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`copy` was made with `Arrays.copyOf(stock, stock.length)`. Which of these print `true`? Choose all that apply.",
+    "hint": "One operator asks about identity, one method about contents.",
+    "choices": [
+      {
+        "text": "`copy == stock`",
+        "correct": false,
+        "why": "Two different arrays: `false`."
+      },
+      {
+        "text": "`Arrays.equals(copy, stock)`",
+        "correct": true,
+        "why": "Yes: same length and the same elements in order."
+      },
+      {
+        "text": "`copy.length == stock.length`",
+        "correct": true,
+        "why": "Yes: the copy was made at the same length."
+      },
+      {
+        "text": "`copy.equals(stock)`",
+        "correct": false,
+        "why": "An array's own `equals` is identity, the same as `==`: `false`. That is why `Arrays.equals` exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-2dwsvmaf",
+    "version": 1,
+    "section": "traversing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Arrays.copyOf(stock, 7)` on a five-element `int` array returns a seven-element one. How many of its places hold 0 that were not copied from `stock`?",
+    "hint": "The extra places get the default.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-b07w833c",
+    "version": 1,
+    "section": "multidimensional",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`int[][] grid = new int[3][4];` What are `grid.length` and `grid[0].length`?",
+    "hint": "Rows first.",
+    "choices": [
+      {
+        "text": "12 and 4",
+        "correct": false,
+        "why": "`grid.length` is the outer array's length, the number of rows; there is no total of cells."
+      },
+      {
+        "text": "3 and 4",
+        "correct": true,
+        "why": "Right: three rows, each of four."
+      },
+      {
+        "text": "4 and 3",
+        "correct": false,
+        "why": "The first number in `new int[3][4]` is the number of rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-sk77syy8",
+    "version": 1,
+    "section": "multidimensional",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`int[][] shelves = {{1, 2, 3}, {4}, {5, 6}};` Is this legal, and what is `shelves[1].length`?",
+    "hint": "Each row is its own array.",
+    "choices": [
+      {
+        "text": "Illegal: every row of a two-dimensional array must have the same length",
+        "correct": false,
+        "why": "Rows are separate arrays, so their lengths are independent; this is a jagged array."
+      },
+      {
+        "text": "Legal, and 3, the length of the longest row",
+        "correct": false,
+        "why": "Each row answers its own length."
+      },
+      {
+        "text": "Legal, and 1",
+        "correct": true,
+        "why": "Right: the second row holds only `4`."
+      },
+      {
+        "text": "Legal, and 0, because the short rows are padded to the longest",
+        "correct": false,
+        "why": "Nothing is padded; `{4}` is an array of length 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-3rh3n7xq",
+    "version": 1,
+    "section": "multidimensional",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`int[][] jagged = new int[2][]; jagged[0] = new int[3];` Then `System.out.println(jagged[1].length);`. What happens, and why?",
+    "hint": "What was `jagged[1]` set to?",
+    "choices": [
+      {
+        "text": "It prints 0, the length of an empty row",
+        "correct": false,
+        "why": "No row was created there, not even an empty one."
+      },
+      {
+        "text": "It prints 3, copying the length of the row before it",
+        "correct": false,
+        "why": "Rows are independent; nothing copies lengths between them."
+      },
+      {
+        "text": "It throws `ArrayIndexOutOfBoundsException`, because index 1 does not exist",
+        "correct": false,
+        "why": "Index 1 exists in the outer array of two; it holds `null`."
+      },
+      {
+        "text": "It throws `NullPointerException`: the row was never created",
+        "correct": true,
+        "why": "Right: `jagged[1]` is `null`, and `null` has no length."
+      }
+    ]
+  },
+  {
+    "id": "ex-5awsk5t3",
+    "version": 1,
+    "section": "multidimensional",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Run from source, the `NullPointerException` named `\"<local4>[1]\"`; after `javac -g` it named `\"jagged[1]\"`. What made the difference?",
+    "hint": "What does the class file keep about local variables?",
+    "choices": [
+      {
+        "text": "`-g` makes the JVM check arrays more carefully",
+        "correct": false,
+        "why": "The check and the exception were the same; only the wording of the name changed."
+      },
+      {
+        "text": "`-g` keeps local variable names in the class file",
+        "correct": true,
+        "why": "Right: without them the JVM can only number the variable, and `jagged` is local 4."
+      },
+      {
+        "text": "The source launcher renames variables to save memory",
+        "correct": false,
+        "why": "It compiles the same way plain `javac` does, without variable names; nothing is renamed."
+      }
+    ]
+  },
+  {
+    "id": "ex-vzst81ac",
+    "version": 1,
+    "section": "multidimensional",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each call to what it printed in `Grid.java`.",
+    "hint": "Look at the transcript.",
+    "pairs": [
+      {
+        "left": "`Arrays.deepToString(grid)`",
+        "right": "`[[0, 0, 0, 0], [0, 0, 5, 0], [0, 0, 0, 0]]`"
+      },
+      {
+        "left": "`Arrays.toString(jagged)`, before any row existed",
+        "right": "`[null, null]`"
+      },
+      {
+        "left": "`Arrays.deepToString(jagged)`, after the first row",
+        "right": "`[[0, 0, 0], null]`"
+      }
+    ],
+    "right_distractors": [
+      "`[[0, 0, 0], []]`"
+    ]
+  },
+  {
+    "id": "ex-qjpmmvvr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which loop header visits every index of `int[] a` exactly once?",
+    "hint": "Start at 0, stop before the length.",
+    "choices": [
+      {
+        "text": "`for (int i = 1; i <= a.length; i++)`",
+        "correct": false,
+        "why": "It skips index 0 and then reads one past the end."
+      },
+      {
+        "text": "`for (int i = 0; i <= a.length; i++)`",
+        "correct": false,
+        "why": "The last pass reads `a[a.length]`, which throws."
+      },
+      {
+        "text": "`for (int i = 0; i < a.length; i++)`",
+        "correct": true,
+        "why": "Right: from 0 up to `length - 1`."
+      },
+      {
+        "text": "`for (int i = 0; i < a.length - 1; i++)`",
+        "correct": false,
+        "why": "It stops one short and never reads the last element."
+      }
+    ]
+  },
+  {
+    "id": "ex-bv6k52qp",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps in order to find whether 7 is in `int[] stock` with `binarySearch`, without changing `stock`.",
+    "hint": "Never sort the original.",
+    "items": [
+      "Copy it with `Arrays.copyOf`",
+      "Sort the copy with `Arrays.sort`",
+      "Call `Arrays.binarySearch` on the copy",
+      "Read a negative result as \"not there\""
+    ]
+  },
+  {
+    "id": "ex-vj5t3nwh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A method receives `int[] scores`, sorts it with `Arrays.sort(scores)` to find the median, and returns. The caller then prints its own array. What does the caller see?",
+    "hint": "How many arrays are there?",
+    "choices": [
+      {
+        "text": "Its array sorted, because the method sorted the same array",
+        "correct": true,
+        "why": "Right: the parameter refers to the caller's array; copy it first to leave it alone."
+      },
+      {
+        "text": "Its array in the original order, because the method had a copy",
+        "correct": false,
+        "why": "Passing an array passes a reference to it, not a copy; lesson 30 is about exactly this."
+      },
+      {
+        "text": "A compile error, because a method may not change its parameters",
+        "correct": false,
+        "why": "Methods may change the objects their parameters refer to, and this one did."
+      }
+    ]
+  },
+  {
+    "id": "ex-s34p26jy",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which call prints the elements of `int[] years` as `[1899, 1880, 1943]`?",
+    "hint": "A helper in `java.util`.",
+    "choices": [
+      {
+        "text": "`System.out.println(years)`",
+        "correct": false,
+        "why": "That prints `[I@` and a number."
+      },
+      {
+        "text": "`System.out.println(years.toString())`",
+        "correct": false,
+        "why": "The same thing: an array has no `toString` of its own that lists elements."
+      },
+      {
+        "text": "`System.out.println(Arrays.toString(years))`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-5w88p2a8",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`{{1, 2, 3}, {4}, {5, 6}}`: how many arrays exist in memory, counting the outer one?",
+    "hint": "The figure in section 04.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "arrays"
+  }
+]
