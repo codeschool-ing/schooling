@@ -29,7 +29,9 @@
 #   - the network. The recording computer reaches the internet through a
 #     proxy that re-signs TLS, so ana's shell is given the proxy's variables
 #     and NODE_EXTRA_CA_CERTS pointing at its certificate. A student's
-#     computer needs neither, and nothing in a transcript shows them.
+#     computer needs neither, and nothing in a transcript shows them. The
+#     name lesson 4 serves under, planner.test, is added to no_proxy, since a
+#     student's curl would reach it directly.
 #   - the browser. Playwright is told, through PLAYWRIGHT_BROWSERS_PATH, to use
 #     the Chromium already on the recording computer, in /opt/pw-browsers,
 #     which is the build Playwright 1.63.0 downloads. A student downloads the
@@ -66,7 +68,7 @@ up() {
 # /usr/local is left out: the recording machine keeps a Node of its own there.
 ana_env() {
   local net
-  net=$(env | grep -iE '^(https?_proxy|no_proxy)=' | tr '\n' ' ' || true)
+  net=$(env | grep -iE '^(https?_proxy|no_proxy)=' | sed -E 's/^(no_proxy|NO_PROXY)=(.*)$/\1=\2,planner.test/' | tr '\n' ' ' || true)
   # shellcheck disable=SC2086
   echo env -i HOME=/home/ana USER=ana LOGNAME=ana SHELL=/bin/bash LANG=C.UTF-8 TERM=dumb \
     PATH=/usr/sbin:/usr/bin:/sbin:/bin TZ=America/Sao_Paulo \
