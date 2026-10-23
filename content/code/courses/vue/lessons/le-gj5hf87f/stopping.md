@@ -93,8 +93,8 @@ reach. The watcher created during setup stopped with the component, as it should
 `<script setup>` runs synchronously, and while it runs Vue knows which component is being set up. A
 watcher created in that window is registered with that component, and removing the component stops it.
 The `setTimeout` callback ran a moment later, when no component was being set up, so its watcher was
-registered with nothing. The same is true of a watcher created after an `await` in setup, or inside a
-`.then()`: **if you cannot see it at the top level of the script, assume it will not stop itself.**
+registered with nothing. The same is true of a watcher created inside a `.then()`, an event handler, or any
+other callback that runs later: **if you cannot see it at the top level of the script, assume it will not stop itself.**
 
 ## Stopping one by hand
 

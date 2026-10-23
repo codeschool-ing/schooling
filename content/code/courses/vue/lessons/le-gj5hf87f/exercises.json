@@ -489,18 +489,18 @@
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "In a `<script setup>`, a watcher is created on the line after `await loadCourses()`. The component is shown and hidden many times. What follows from the lesson?",
-    "hint": "What does Vue know about the component once the `await` has resumed?",
+    "prompt": "In a `<script setup>`, a watcher is created inside `loadCourses().then(() => { … })`. The component is shown and hidden many times. What follows from the lesson?",
+    "hint": "What does Vue know about the component when the `.then()` callback runs?",
     "choices": [
       {
         "text": "The watchers pile up: keep each stop function and call it in `onUnmounted`",
         "correct": true,
-        "why": "Right. Created after an `await`, it belongs to nobody and outlives its component."
+        "why": "Right. Created in a callback that runs later, it belongs to nobody and outlives its component."
       },
       {
-        "text": "Nothing changes: the line is still at the top level of the script",
+        "text": "Nothing changes: the `.then()` is written at the top level of the script",
         "correct": false,
-        "why": "It is written at the top level but runs after the `await`, when no component is being set up."
+        "why": "It is written there, but the callback runs later, when no component is being set up."
       },
       {
         "text": "Vue stops it at the next change of its source",

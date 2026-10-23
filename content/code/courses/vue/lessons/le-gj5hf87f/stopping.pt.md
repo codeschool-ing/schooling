@@ -93,8 +93,8 @@ alcançar. O watcher criado durante o setup parou junto com o componente, como d
 O `<script setup>` roda de forma síncrona, e enquanto ele roda o Vue sabe qual componente está sendo
 montado. Um watcher criado nessa janela é registrado com esse componente, e remover o componente o
 para. O callback do `setTimeout` rodou um instante depois, quando nenhum componente estava sendo
-montado, então o watcher dele foi registrado com nada. O mesmo vale para um watcher criado depois de um
-`await` no setup, ou dentro de um `.then()`: **se você não o vê no nível de cima do script, suponha que
+montado, então o watcher dele foi registrado com nada. O mesmo vale para um watcher criado dentro de um
+`.then()`, de um handler de evento ou de qualquer outro callback que rode depois: **se você não o vê no nível de cima do script, suponha que
 ele não vai parar sozinho.**
 
 ## Parando um na mão
