@@ -133,6 +133,7 @@ vez.
 //   --network             list every request the page made
 //   --clock ISO           the date the page's clock says, e.g. 2026-10-21T10:00
 //   --width PX            the window's width (1024)
+//   --reduced-motion      the reader has asked their system for less motion
 import { chromium } from "playwright";
 
 const args = process.argv.slice(2);
@@ -149,6 +150,7 @@ while (args.length) {
   else if (a === "--network") opt.network = true;
   else if (a === "--clock") opt.clock = args.shift();
   else if (a === "--width") opt.width = Number(args.shift());
+  else if (a === "--reduced-motion") opt.reducedMotion = "reduce";
   else { console.error(`look: unknown option ${a}`); process.exit(2); }
 }
 
@@ -158,6 +160,7 @@ const context = await browser.newContext({
   locale: "en-GB",
   timezoneId: process.env.TZ || undefined,
   viewport: { width: opt.width, height: 768 },
+  reducedMotion: opt.reducedMotion || "no-preference",
 });
 const page = await context.newPage();
 const say = (s) => process.stdout.write(s + "\n");
