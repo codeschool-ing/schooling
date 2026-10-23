@@ -25,7 +25,7 @@ run 'CI_COMMIT=$(git rev-parse --short=7 HEAD) CI_BRANCH=main ci/pipeline.sh'
 
 block outside
 run 'docker run -d --rm --name linkbox-scan -p 127.0.0.1:8000:8000 -e LINKBOX_TOKEN=scan-only localhost:5000/linkbox:main'
-quiet 'sleep 2'
+quiet 'for i in $(seq 30); do curl -s -o /dev/null http://127.0.0.1:8000/ && break; sleep 1; done'
 run 'curl -sI "http://127.0.0.1:8000/search?q=x"'
 run 'docker rm -f linkbox-scan'
 

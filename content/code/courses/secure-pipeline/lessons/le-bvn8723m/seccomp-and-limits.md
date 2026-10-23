@@ -15,7 +15,18 @@ seccomp profile, that refuses a list of calls an ordinary container has no use f
 modules, rebooting, changing the clock, managing kernel keyrings, and creating some kinds of
 namespace. `Seccomp: 2` in every status earlier in this lesson was that filter, in filtering mode:
 
-@@CAPTURE seccomp@@
+```
+ana@vm:~/linkbox$ docker info --format "{{.SecurityOptions}}"
+[name=seccomp,profile=builtin]
+ana@vm:~/linkbox$ docker run --rm --user 0 --entrypoint python3 linkbox:dev -c "import os; os.unshare(os.CLONE_NEWUSER); print('in a new user namespace')"
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import os; os.unshare(os.CLONE_NEWUSER); print('in a new user namespace')
+               ~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+ana@vm:~/linkbox$ docker run --rm --user 0 --security-opt seccomp=unconfined --entrypoint python3 linkbox:dev -c "import os; os.unshare(os.CLONE_NEWUSER); print('in a new user namespace')"
+in a new user namespace
+```
 
 The first line says this daemon applies the built-in profile. The two runs ask for the same thing,
 a new user namespace, as root and with the default capabilities. **With the default profile the
@@ -42,7 +53,14 @@ out, the kernel's out-of-memory killer picks a victim that may well be another s
 turns that into a contained failure: the container that exceeds its own allowance is the one
 killed. Ask for 300 MB inside a 128 MB limit:
 
-@@CAPTURE memory@@
+```
+ana@vm:~/linkbox$ docker run --name hog --memory 128m --memory-swap 128m --entrypoint python3 linkbox:dev -c "b = bytearray(300 * 1024 * 1024)"; echo "exit $?"
+exit 137
+ana@vm:~/linkbox$ docker inspect --format "{{.State.OOMKilled}}" hog
+true
+ana@vm:~/linkbox$ docker rm hog
+hog
+```
 
 **Exit status 137 is 128 plus 9, the process killed with `SIGKILL`, and Docker records why:
 `OOMKilled` is true.** `--memory-swap` equal to `--memory` means no swap on top of the limit, so the
@@ -75,7 +93,10 @@ except RuntimeError as error:
 
 The image has no copy of it, and it needs none: `python3 -` reads the program from standard input.
 
-@@CAPTURE pids@@
+```
+ana@vm:~/linkbox$ docker run --rm -i --pids-limit 32 --entrypoint python3 linkbox:dev - < ~/threads.py
+31 threads started, then: can't start new thread
+```
 
 **31 threads and the main one make 32, the limit**, and the 33rd was refused with an error Python
 could catch. The program reported it and exited, and the machine never noticed.
@@ -85,7 +106,16 @@ could catch. The program reported it and exited, and the machine never noticed.
 What to set comes from what the service uses, measured with room to spare, not from a guess. Run
 linkbox with every control from this lesson and both limits, and ask Docker what it uses:
 
-@@CAPTURE stats@@
+```
+ana@vm:~/linkbox$ docker rm -f linkbox
+linkbox
+ana@vm:~/linkbox$ docker run -d --name linkbox --read-only --tmpfs /tmp --tmpfs /data:uid=65532,gid=65532 --cap-drop ALL --security-opt no-new-privileges --memory 256m --pids-limit 64 -p 127.0.0.1:8000:8000 -e LINKBOX_TOKEN=local-only linkbox:dev
+301074253ca5b9515bb2e08216f9ce1f541603d469cb76f9dd978d8a6cb2c690
+ana@vm:~/linkbox$ docker stats --no-stream --format "{{.Name}}  memory {{.MemUsage}}  pids {{.PIDs}}" linkbox
+linkbox  memory 39.28MiB / 256MiB  pids 2
+ana@vm:~/linkbox$ docker rm -f linkbox
+linkbox
+```
 
 **39 MiB of 256 and two processes**, the gunicorn master and its one worker. 256 MiB leaves room for
 traffic and a leak's early hours; 64 processes leaves room for more workers. A limit set far above

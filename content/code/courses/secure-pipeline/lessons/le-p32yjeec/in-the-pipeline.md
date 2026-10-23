@@ -49,13 +49,48 @@ the advisory is too late.
 
 Commit both, and push to the CI:
 
-@@CAPTURE commit@@
+```
+ana@vm:~/linkbox$ git add ci/sbom.sh ci/stages
+ana@vm:~/linkbox$ git commit -q -m "a bill of materials for every image pushed"
+8:54AM INF 0 commits scanned.
+8:54AM INF scanned ~286 bytes (286 bytes) in 182ms
+8:54AM INF no leaks found
+```
 
-@@CAPTURE push@@
+```
+ana@vm:~/linkbox$ git push ci main
+remote: run 1: main at 4e552d7        
+remote: secrets: passed in 1s        
+remote: test: passed in 2s        
+remote: sast: passed in 3s        
+remote: sca: passed in 10s        
+remote: build: passed in 1s        
+remote: image: passed in 1s        
+remote: push: passed in 1s        
+remote: sbom: passed in 6s        
+remote: pipeline passed with 0 warning(s)        
+remote: run 1: passed        
+To /home/ana/ci/linkbox.git
+   1d23ec6..4e552d7  main -> main
+```
 
 The two files are in the run's directory, beside the logs:
 
-@@CAPTURE run-files@@
+```
+ana@vm:~/linkbox$ ls ~/ci/runs/1/logs
+build.log
+image.log
+push.log
+sast.log
+sbom.cdx.json
+sbom.log
+sbom.spdx.json
+sca.log
+secrets.log
+test.log
+ana@vm:~/linkbox$ jq ".components | length" ~/ci/runs/1/logs/sbom.cdx.json
+2190
+```
 
 ### Where to keep it
 
@@ -63,7 +98,10 @@ The two files are in the run's directory, beside the logs:
 run, and the commit and the image tag tie them together. That is enough to answer "which runs
 shipped packaging 26.3" with one loop over the directory:
 
-@@CAPTURE across-runs@@
+```
+ana@vm:~/linkbox$ for f in ~/ci/runs/*/logs/sbom.cdx.json; do jq -r --arg f "$f" ".components[] | select(.name == \"packaging\") | \"\(\$f): \(.name) \(.version)\"" "$f"; done
+/home/ana/ci/runs/1/logs/sbom.cdx.json: packaging 26.3
+```
 
 It has two weaknesses that a real installation has to fix. The SBOM and the image live in different
 places, so a copy of the image somewhere else arrives without its list; and nothing proves the list
@@ -92,7 +130,23 @@ record is invisible to it:
 
 The source tree is a different measurement again, not a better one:
 
-@@CAPTURE dir@@
+```
+ana@vm:~/linkbox$ syft -q dir:. | head -n 14
+NAME          VERSION  TYPE                    
+blinker       1.9.0    python  (+1 duplicate)  
+click         8.1.7    python  (+1 duplicate)  
+flask         3.1.3    python  (+1 duplicate)  
+gunicorn      22.0.0   python  (+1 duplicate)  
+iniconfig     2.3.1    python                  
+itsdangerous  2.2.0    python  (+1 duplicate)  
+jinja2        3.1.6    python  (+1 duplicate)  
+markupsafe    2.1.3    python  (+1 duplicate)  
+packaging     26.3     python                  
+pluggy        1.7.0    python                  
+pygments      2.21.0   python                  
+pytest        9.0.3    python  (+1 duplicate)  
+werkzeug      3.1.9    python  (+1 duplicate)
+```
 
 From the repository, with the virtual environment the tests made, syft finds every pin twice (once
 in `requirements.txt`, once installed in `.venv`), finds pytest and its dependencies, which never

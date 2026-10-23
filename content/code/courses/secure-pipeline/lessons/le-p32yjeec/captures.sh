@@ -34,7 +34,7 @@ run 'CI_COMMIT=$(git rev-parse --short=7 HEAD) CI_BRANCH=main ci/pipeline.sh'
 
 block table
 run 'syft -q localhost:5000/linkbox:main | head -n 12'
-run 'syft -q localhost:5000/linkbox:main | grep -c " deb "'
+run 'syft -q localhost:5000/linkbox:main | awk "\$NF == \"deb\"" | wc -l'
 run 'syft -q localhost:5000/linkbox:main | grep " python "'
 
 block both
