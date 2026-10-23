@@ -1,0 +1,427 @@
+{
+  "ex-791z7ra8": {
+    "prompt": "O que o processo mestre do Gunicorn faz depois que os workers estão rodando?",
+    "choices": [
+      {
+        "text": "Responde requisições quando todo worker está ocupado, como reserva",
+        "why": "Só os workers respondem requisições."
+      },
+      {
+        "text": "Repõe um que morre",
+        "why": "Isso."
+      },
+      {
+        "text": "Serve os arquivos estáticos",
+        "why": "O nginx serve, nesta aula."
+      },
+      {
+        "text": "Roda o Celery",
+        "why": "O Celery tem os próprios serviços."
+      }
+    ]
+  },
+  "ex-c3ar4p5b": {
+    "prompt": "Por que cada worker do Gunicorn tem sua própria cópia do Django?",
+    "choices": [
+      {
+        "text": "O Django se recusa a ser importado duas vezes num processo",
+        "why": "Ele é importado uma vez por worker, como de costume."
+      },
+      {
+        "text": "Para dividir memória entre requisições",
+        "why": "Processos separados não dividem nada."
+      },
+      {
+        "text": "Cada worker é um processo separado",
+        "why": "Isso: uma queda leva um worker."
+      },
+      {
+        "text": "O mestre manda a cada worker um arquivo de configurações diferente para servirem sites diferentes",
+        "why": "Todos usam as mesmas configurações."
+      }
+    ]
+  },
+  "ex-a7xr34jy": {
+    "prompt": "O Gunicorn carrega o Django pelo módulo que o startproject escreveu: config.___.",
+    "blanks": [
+      {
+        "accept": [
+          "wsgi"
+        ]
+      }
+    ]
+  },
+  "ex-gpza3tvx": {
+    "prompt": "Quando a aula rodaria um projeto Django sob o Uvicorn em vez do Gunicorn?",
+    "choices": [
+      {
+        "text": "Quando ele tem views assíncronas",
+        "why": "Isso: pelo config.asgi."
+      },
+      {
+        "text": "Quando ele usa o PostgreSQL",
+        "why": "Os dois funcionam com qualquer banco."
+      },
+      {
+        "text": "Sempre, porque o Uvicorn é mais novo e todo projeto Django deveria migrar para ele",
+        "why": "Mais novo não é o motivo."
+      },
+      {
+        "text": "Quando ele tem mais de três workers",
+        "why": "O número de workers não decide."
+      }
+    ]
+  },
+  "ex-tks25753": {
+    "prompt": "Por que o /etc/agenda/agenda.env pode ser legível só pelo root, se o serviço roda como ana?",
+    "choices": [
+      {
+        "text": "A ana está no grupo root",
+        "why": "Não está."
+      },
+      {
+        "text": "O systemd o lê como root, antes",
+        "why": "Isso."
+      },
+      {
+        "text": "O Gunicorn pede sudo",
+        "why": "Nunca pede."
+      },
+      {
+        "text": "O arquivo é copiado para a pasta da ana ao ligar",
+        "why": "Nada o copia."
+      }
+    ]
+  },
+  "ex-v09xnkbf": {
+    "prompt": "Ligue cada linha da unit ao que ela faz.",
+    "pairs": [
+      {
+        "left": "EnvironmentFile=",
+        "right": "as variáveis, lidas como root"
+      },
+      {
+        "left": "Restart=on-failure",
+        "right": "iniciar de novo depois de um erro"
+      },
+      {
+        "left": "WantedBy=multi-user.target",
+        "right": "iniciar ao ligar, depois de habilitada"
+      },
+      {
+        "left": "User=ana",
+        "right": "a conta com que o processo roda"
+      }
+    ]
+  },
+  "ex-2mg3z5zs": {
+    "prompt": "Por que o ExecStart nomeia /home/ana/agenda/.venv/bin/gunicorn em vez de uv run gunicorn?",
+    "choices": [
+      {
+        "text": "O systemd não consegue rodar o uv",
+        "why": "Ele roda qualquer programa."
+      },
+      {
+        "text": "O uv instalaria pacotes da internet a cada inicialização, e a unit falharia sem rede",
+        "why": "Não é o que a aula diz."
+      },
+      {
+        "text": "O Gunicorn se recusa a iniciar pelo uv",
+        "why": "Ele rodou com uv run antes."
+      },
+      {
+        "text": "Um caminho completo não deixa nada a resolver na inicialização",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-6vk7p2te": {
+    "prompt": "O que o celery -A config inspect ping respondendo pong prova?",
+    "choices": [
+      {
+        "text": "Broker e worker funcionam",
+        "why": "Isso."
+      },
+      {
+        "text": "Toda tarefa rodou pelo menos uma vez desde que o worker subiu",
+        "why": "Ele não roda tarefa nenhuma."
+      },
+      {
+        "text": "O servidor de e-mail aceita e-mail",
+        "why": "O e-mail não participa."
+      },
+      {
+        "text": "O Gunicorn está de pé",
+        "why": "O Celery não sabe nada do Gunicorn."
+      }
+    ]
+  },
+  "ex-cfkaznbs": {
+    "prompt": "Depois de escrever um arquivo de unit novo, o systemd o lê com sudo systemctl daemon-___.",
+    "blanks": [
+      {
+        "accept": [
+          "reload"
+        ]
+      }
+    ]
+  },
+  "ex-f0w9j89h": {
+    "prompt": "Por que o STATIC_ROOT foi posto em /var/www/agenda/static e não dentro do projeto?",
+    "choices": [
+      {
+        "text": "O Django recusa um STATIC_ROOT dentro do BASE_DIR",
+        "why": "Ele permite; o padrão aqui fica dentro."
+      },
+      {
+        "text": "O nginx roda como www-data, que não entra em /home/ana",
+        "why": "Isso."
+      },
+      {
+        "text": "O collectstatic só escreve em /var/www",
+        "why": "Ele escreve onde o STATIC_ROOT disser."
+      },
+      {
+        "text": "Para tornar os arquivos privados",
+        "why": "Eles são públicos por natureza."
+      }
+    ]
+  },
+  "ex-ydjk8ay3": {
+    "prompt": "Qual destes é trabalho do proxy reverso nesta aula?",
+    "choices": [
+      {
+        "text": "Rodar as migrações do banco antes de cada requisição chegar à aplicação",
+        "why": "Migrações rodam à mão."
+      },
+      {
+        "text": "Encerrar o TLS",
+        "why": "Isso."
+      },
+      {
+        "text": "Fazer hash de senhas",
+        "why": "Isso é da aplicação."
+      },
+      {
+        "text": "Pôr tarefas do Celery na fila",
+        "why": "O Redis guarda tarefas."
+      }
+    ]
+  },
+  "ex-2qnrw42e": {
+    "prompt": "Por que o bloco do servidor da API acrescenta X-Content-Type-Options e X-Frame-Options, e o do site não?",
+    "choices": [
+      {
+        "text": "O nginx só acrescenta cabeçalhos a JSON",
+        "why": "Ele acrescenta o que mandarem."
+      },
+      {
+        "text": "O site não precisa deles",
+        "why": "Precisa e os recebe."
+      },
+      {
+        "text": "O middleware do Django já os manda; o FastAPI não",
+        "why": "Isso."
+      },
+      {
+        "text": "Os cabeçalhos só funcionam em subdomínios como api.",
+        "why": "Funcionam em qualquer nome."
+      }
+    ]
+  },
+  "ex-zbpmerk7": {
+    "prompt": "Por que todo reload da aula vem depois de sudo nginx -t?",
+    "choices": [
+      {
+        "text": "O reload se recusa a rodar sem ele",
+        "why": "Ele roda; manteria a configuração antiga."
+      },
+      {
+        "text": "Para um erro nunca chegar ao servidor rodando",
+        "why": "Isso."
+      },
+      {
+        "text": "O nginx -t limpa o cache, de que um reload precisa para ver arquivos estáticos novos",
+        "why": "Ele só testa."
+      },
+      {
+        "text": "Ele reinicia as aplicações",
+        "why": "Ele não toca em nada."
+      }
+    ]
+  },
+  "ex-e3ceqng4": {
+    "prompt": "A folha de estilos voltou com Server: nginx e nenhuma requisição chegou ao Django. Que diretiva fez isso?",
+    "choices": [
+      {
+        "text": "proxy_pass",
+        "why": "Ela manda requisições ao Django."
+      },
+      {
+        "text": "server_name",
+        "why": "Ela escolhe o bloco, não o arquivo."
+      },
+      {
+        "text": "add_header",
+        "why": "Ela acrescenta cabeçalhos."
+      },
+      {
+        "text": "location /static/ com alias",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-6pb1cz9q": {
+    "prompt": "O curl respondeu 000 para https://agenda.example.org/ até receber --cacert. Por que esse é o conserto certo?",
+    "choices": [
+      {
+        "text": "Ele desliga a conferência do certificado para esta requisição",
+        "why": "Ele mantém a conferência, com um certificado contra que conferir."
+      },
+      {
+        "text": "Ele confia neste certificado, e ainda o confere em toda requisição",
+        "why": "Isso."
+      },
+      {
+        "text": "Ele faz o nginx mandar outro certificado",
+        "why": "O nginx manda o mesmo."
+      },
+      {
+        "text": "Ele passa para HTTP",
+        "why": "A requisição continuou HTTPS."
+      }
+    ]
+  },
+  "ex-p3jnhhp5": {
+    "prompt": "Por que a aula deixa o HSTS em max-age=3600 e sem preload?",
+    "choices": [
+      {
+        "text": "Navegadores ignoram valores maiores",
+        "why": "Eles os respeitam."
+      },
+      {
+        "text": "O preload exige pagar um registro",
+        "why": "É gratuito; é difícil de desfazer."
+      },
+      {
+        "text": "Os dois são difíceis de desfazer, então sobem depois",
+        "why": "Isso."
+      },
+      {
+        "text": "O Django proíbe HSTS acima de uma hora com o DEBUG desligado",
+        "why": "Esse limite não existe."
+      }
+    ]
+  },
+  "ex-r04tx9vp": {
+    "prompt": "Com um X-Forwarded-For: 203.0.113.9 forjado, por que o Uvicorn ainda registrou 127.0.0.2?",
+    "choices": [
+      {
+        "text": "O nginx apaga cabeçalhos X-Forwarded-For dos clientes",
+        "why": "Ele acrescenta a eles."
+      },
+      {
+        "text": "Ele lê pela direita e só confia no endereço do nginx",
+        "why": "Isso."
+      },
+      {
+        "text": "203.0.113.9 não é um endereço válido",
+        "why": "É válido, reservado para documentação."
+      },
+      {
+        "text": "O --proxy-headers ignora o X-Forwarded-For e lê só o par TCP",
+        "why": "Ele lê o cabeçalho."
+      }
+    ]
+  },
+  "ex-jvps3k8c": {
+    "prompt": "O Django trata uma requisição como HTTPS atrás de um proxy quando o cabeçalho nomeado em SECURE_PROXY____ diz https.",
+    "blanks": [
+      {
+        "accept": [
+          "SSL_HEADER"
+        ]
+      }
+    ]
+  },
+  "ex-hpdq71tx": {
+    "prompt": "O nginx respondeu 502 Bad Gateway. Onde a aula olha primeiro?",
+    "choices": [
+      {
+        "text": "O log de erros do nginx, depois o serviço da aplicação",
+        "why": "Isso."
+      },
+      {
+        "text": "O cache do navegador",
+        "why": "O erro está no servidor."
+      },
+      {
+        "text": "O certificado",
+        "why": "O TLS funcionou; o destino não."
+      },
+      {
+        "text": "O arquivo de configuração do PostgreSQL, porque um 502 costuma querer dizer banco fora",
+        "why": "502 quer dizer que o destino não respondeu."
+      }
+    ]
+  },
+  "ex-hx6q84hw": {
+    "prompt": "Ligue cada código do nginx ao que ele diz.",
+    "pairs": [
+      {
+        "left": "502",
+        "right": "nada respondeu no destino"
+      },
+      {
+        "left": "504",
+        "right": "o destino demorou demais"
+      },
+      {
+        "left": "301 para a mesma URL, de novo",
+        "right": "o Django não viu o X-Forwarded-Proto"
+      }
+    ]
+  },
+  "ex-kktg80t6": {
+    "prompt": "O que acontece com um nginx rodando se um reload vier depois de uma configuração que falhou no nginx -t?",
+    "choices": [
+      {
+        "text": "Ele para de servir",
+        "why": "Ele continua rodando."
+      },
+      {
+        "text": "Ele mantém a configuração antiga, e continua servindo com ela",
+        "why": "Isso."
+      },
+      {
+        "text": "Ele carrega as partes que passaram e pula a linha quebrada",
+        "why": "Ele carrega tudo ou nada."
+      },
+      {
+        "text": "Ele volta ao site padrão",
+        "why": "Nada volta."
+      }
+    ]
+  },
+  "ex-kbqr23cc": {
+    "prompt": "Um colega tira o proxy_set_header Host $host do site. O que o Django vai responder?",
+    "choices": [
+      {
+        "text": "200, já que o nginx ainda repassa",
+        "why": "O Django confere o Host que recebe."
+      },
+      {
+        "text": "502",
+        "why": "O destino ainda responde."
+      },
+      {
+        "text": "400, porque o Host não está no ALLOWED_HOSTS",
+        "why": "Isso: o nginx manda 127.0.0.1:8000 no lugar."
+      },
+      {
+        "text": "301 para HTTPS",
+        "why": "A conferência de host vem antes."
+      }
+    ]
+  }
+}
