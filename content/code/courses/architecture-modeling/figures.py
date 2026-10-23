@@ -150,7 +150,9 @@ class Fig:
         """A person: a head over a box, C4's way and the use-case actor's cousin."""
         self.circle(x, y - 34, 12, fill='--panel', stroke=stroke, width=1.4)
         self.rect(x - 46, y - 20, 92, 44, stroke=stroke, fill='--panel', rx=12, width=1.4)
-        self.lines(x, y + 2, [rows] if isinstance(rows, str) else rows, size=size)
+        rows = [rows] if isinstance(rows, str) else [r for r in (rows or []) if r]
+        if rows:
+            self.lines(x, y + 2, rows, size=size)
 
     def actor(self, x, y, label=None, size=10, stroke='--paper'):
         """A UML actor: the stick figure, with its name under it."""
