@@ -20,7 +20,7 @@ não siga a sugestão, pelo motivo da seção depois da próxima.
 Um arquivo para o processador errado se descompacta sem reclamar e depois se recusa a rodar, com
 `cannot execute binary file: Exec format error`. Apague a pasta, confira `uname -m` de novo e baixe
 o outro arquivo. Um Mac com chip da Apple e muitos notebooks Windows recentes com Snapdragon são
-`arm64`; a maioria dos outros computadores é `x86_64`. A seção "When the setup fails" da aula 1 de
+`arm64`; a maioria dos outros computadores é `x86_64`. A seção "Quando a instalação falha" da aula 1 de
 javascript tem a transcrição.
 
 ## Um segundo Node, mais antigo
@@ -84,7 +84,7 @@ para. O servidor que você vai escrever nesta aula escuta na porta 3000 e não m
 
 O pacote `playwright` e o navegador que ele controla são dois downloads, e o primeiro não busca o
 segundo. Um programa que abre o Chromium antes de `npx playwright install chromium` rodar falha
-como este, o `tools/look.ts`, que a seção "Client-side rendering, measured" entrega a você.
+como este, o `tools/look.ts`, que a seção "Renderização no cliente, medida" entrega a você.
 `PLAYWRIGHT_BROWSERS_PATH` manda o Playwright procurar numa pasta vazia, que é o que tem um
 computador que nunca rodou a instalação:
 

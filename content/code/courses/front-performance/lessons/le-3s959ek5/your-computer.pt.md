@@ -14,7 +14,7 @@ precisa dela primeiro.
 
 | caminho | o que você ganha | quanto custa ao seu computador | as transcrições |
 |---|---|---|---|
-| **instalado** (recomendado) | o Node.js numa pasta da sua home, e o Chromium na do Playwright | cerca de 205 MB para o Node, 650 MB para o navegador, 100 a 300 MB por projeto | iguais às impressas, no Linux |
+| **instalado** (recomendado) | o Node.js numa pasta da sua home, e o Chromium na do Playwright | cerca de 205 MB para o Node, 650 MB para o navegador, 100 a 500 MB por projeto | iguais às impressas, no Linux |
 | uma máquina virtual | Ubuntu Server 24.04 separado do seu sistema | o mesmo, mais alguns gigabytes para o sistema, e 4 GB de memória enquanto ela roda | iguais às impressas |
 | online | uma máquina Linux numa aba do navegador | nada no seu computador; horas de uma cota mensal | parecidas, não exatas |
 
@@ -38,7 +38,7 @@ em que sistema você está.
 
 ## O Node.js, em resumo
 
-Esta é a seção "Your computer, set up for this course" da aula 1 de javascript, sem a explicação;
+Esta é a seção "O seu computador, pronto para este curso" da aula 1 de javascript, sem a explicação;
 leia lá se algum passo for novo para você. `uname -m` diz qual arquivo baixar: `x86_64` fica com o
 que termina em `linux-x64`, e `aarch64` com o que termina em `linux-arm64`.
 

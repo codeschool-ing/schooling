@@ -12,6 +12,7 @@ id that appears nowhere in the repository, so an id is assigned once and is
 then written down like every other.
 """
 import importlib.util, json, os, re, secrets, subprocess, sys
+sys.dont_write_bytecode = True
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 A = "0123456789abcdefghjkmnpqrstvwxyz"
@@ -74,7 +75,7 @@ def fresh(n, text):
     used = set(subprocess.run(["git", "-C", HERE, "grep", "-ohE", r"\bex-[0-9a-hjkmnp-tv-z]{8}\b"],
                               capture_output=True, text=True).stdout.split())
     used |= set(re.findall(r"\bex-[0-9a-z]{8}\b", text))
-    for f in os.listdir(os.path.join(HERE, "questions")):
+    for f in (x for x in os.listdir(os.path.join(HERE, "questions")) if x.endswith(".py")):
         used |= set(re.findall(r"\bex-[0-9a-z]{8}\b", open(os.path.join(HERE, "questions", f)).read()))
     out = []
     while len(out) < n:

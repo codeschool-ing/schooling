@@ -13,7 +13,7 @@ in the next section, and later a few more tools, each in the lesson that first n
 
 | path | what you get | what it costs your computer | the transcripts |
 |---|---|---|---|
-| **installed** (recommended) | Node.js in a folder in your home directory, and Chromium in Playwright's | about 205 MB for Node, 650 MB for the browser, 100 to 300 MB per project | match as printed on Linux |
+| **installed** (recommended) | Node.js in a folder in your home directory, and Chromium in Playwright's | about 205 MB for Node, 650 MB for the browser, 100 to 500 MB per project | match as printed on Linux |
 | a virtual machine | Ubuntu Server 24.04 apart from your own system | the same, plus a few gigabytes for the system, and 4 GB of memory while it runs | match as printed |
 | online | a Linux machine in a browser tab | nothing on your computer; hours from a monthly allowance | close, not exact |
 

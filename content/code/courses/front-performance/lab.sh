@@ -33,15 +33,21 @@
 #     `npx playwright install chromium` would have unpacked it. The lesson
 #     that installs it says this line was not run here.
 #   - the network. The recording computer reaches the internet through a
-#     proxy that re-signs TLS, so ana's shell is given the proxy's variables
-#     and NODE_EXTRA_CA_CERTS pointing at its certificate. A student's
-#     computer needs neither, and nothing in a transcript shows them.
+#     proxy that re-signs TLS, so a shell of ana's that needs the network is
+#     given the proxy's variables and NODE_EXTRA_CA_CERTS pointing at its
+#     certificate; builds, servers and requests to localhost run without
+#     them (`offline` below). A student's computer needs neither, and nothing
+#     in a transcript shows them.
 #   - the clock's zone: TZ=America/Sao_Paulo. The clock itself is not staged,
 #     so a Date header or a timing is what the machine said that day.
 #
 #   sudo bash lab.sh up                    create ana and link the browser
 #   sudo bash lab.sh exec 'command'        one command in ana's shell, in ~/planner
 #   sudo bash lab.sh script 'script'       a script in a fresh login shell of ana's
+#   sudo bash lab.sh offline 'script'      the same, with no proxy: for builds,
+#                                          servers and localhost, which need no
+#                                          network, so a tool that warns about a
+#                                          proxy (Nuxt's does) has none to warn of
 #   sudo bash lab.sh down                  stop every process ana is running
 #
 # Recorded on Ubuntu 24.04 with Node.js 22.22.0 (npm 10.9.4),
@@ -55,7 +61,7 @@ up() {
   # Ubuntu's own ~/.profile, which puts ~/.local/bin on the PATH once it exists.
   [ -f /home/ana/.profile ] || cp /etc/skel/.profile /home/ana/.profile
   if [ -f /root/.ccr/ca-bundle.crt ]; then install -m 644 /root/.ccr/ca-bundle.crt $CA; fi
-  install -d -o ana -g ana /home/ana/.cache/ms-playwright
+  install -d -o ana -g ana /home/ana/.cache /home/ana/.cache/ms-playwright
   for b in chromium-1243 chromium_headless_shell-1243 ffmpeg-1011; do
     [ -e /home/ana/.cache/ms-playwright/$b ] || ln -s /opt/pw-browsers/$b /home/ana/.cache/ms-playwright/$b
   done
@@ -64,11 +70,11 @@ up() {
 
 # The environment of ana's shell: Ubuntu's PATH, and nothing of this machine's.
 ana_env() {
-  local net
-  net=$(env | grep -iE '^(https?_proxy|no_proxy)=' | tr '\n' ' ' || true)
+  local net=""
+  [ "${OFFLINE:-}" = 1 ] || net=$(env | grep -iE '^(https?_proxy|no_proxy)=' | tr '\n' ' ' || true)
   # shellcheck disable=SC2086
   echo env -i HOME=/home/ana USER=ana LOGNAME=ana SHELL=/bin/bash LANG=C.UTF-8 TERM=dumb \
-    PATH=/usr/sbin:/usr/bin:/sbin:/bin TZ=America/Sao_Paulo NO_COLOR=1 \
+    PATH=/usr/sbin:/usr/bin:/sbin:/bin TZ=America/Sao_Paulo \
     $net ${CA:+NODE_EXTRA_CA_CERTS=$CA}
 }
 
@@ -84,6 +90,7 @@ case ${1:-} in
   up) up ;;
   exec) shift; run "cd ~/planner 2>/dev/null || cd ~; $*" ;;
   script) shift; run "$1" ;;
+  offline) shift; OFFLINE=1 run "$1" ;;
   down) pkill -u ana || true ;;
   *) echo "usage: lab.sh up | exec 'command' | script 'script' | down" >&2; exit 2 ;;
 esac

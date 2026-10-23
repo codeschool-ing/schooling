@@ -23,6 +23,17 @@ session() {
   bash "$LAB_SH" script "$script" 2>&1 || true
 }
 
+# osession DIR 'command' ...: the same, in a shell with no proxy (lab.sh offline).
+osession() {
+  local dir=$1 script c
+  shift
+  script="cd $dir"
+  for c in "$@"; do
+    script+=$'\n'"printf 'ana@dev:%s\$ %s\\n' \"\$(dirs +0)\" $(printf '%q' "$c")"$'\n'"$c 2>&1"
+  done
+  bash "$LAB_SH" offline "$script" 2>&1 || true
+}
+
 # quiet DIR 'command': run something as ana and show nothing, for the steps
 # a lesson has already shown (or says it does not show).
 quiet() { bash "$LAB_SH" script "cd $1; $2" >/dev/null 2>&1 || true; }
@@ -40,7 +51,7 @@ shown() {
 bg() {
   local name=$1 dir=$2 cmd=$3
   printf '%s\n%s\n' "$dir" "$cmd" > $STATE/$name.cmd
-  bash "$LAB_SH" script "cd $dir; setsid bash -c $(printf '%q' "$cmd") > $STATE/$name.log 2>&1 < /dev/null & echo \$! > $STATE/$name.pid"
+  bash "$LAB_SH" offline "cd $dir; setsid bash -c $(printf '%q' "$cmd") > $STATE/$name.log 2>&1 < /dev/null & echo \$! > $STATE/$name.pid"
 }
 # bg_show NAME: that terminal as it stands, prompt first.
 bg_show() {

@@ -1,8 +1,8 @@
 """shown.py MD NAME: print the file NAME exactly as the lesson MD shows it.
 
 A program the student is given is shown whole, in one of two ways: a fence
-whose first line is a comment naming it ("// NAME" or "# NAME", alone or
-followed by a colon), or a schooling-example whose "file" is NAME, whose
+whose first line is a comment naming it ("// NAME", "# NAME" or
+"<!-- NAME", alone or followed by a colon), or a schooling-example whose "file" is NAME, whose
 parts are joined with a newline, as the copy button joins them. The capture
 runs exactly that text, so the lesson and the run cannot drift. A file that cannot
 carry a comment in that form (JSON, a stylesheet, or an HTML page whose
@@ -27,8 +27,8 @@ for m in re.finditer(r"^```([a-z-]*)\n(.*?)^```$", text, re.S | re.M):
             found.append("\n".join(p["code"] for p in ex["parts"]).rstrip("\n") + "\n")
         continue
     first = body.split("\n", 1)[0]
-    for c in ("//", "#"):
-        if first == f"{c} {name}" or first.startswith(f"{c} {name}:"):
+    for c in ("//", "#", "<!--"):
+        if first in (f"{c} {name}", f"{c} {name} -->") or first.startswith(f"{c} {name}:"):
             found.append(body)
 if len(found) != 1:
     sys.exit(f"shown: {name} is shown {len(found)} times in {md}, and must be shown once")
