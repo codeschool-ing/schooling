@@ -31,7 +31,8 @@ dia 10, então quanto mais longe do próximo dia 10 o cutover ficasse, mais temp
 para se provar antes de pagar alguém.
 
 A janela escolhida foi **de sábado 20:00 a domingo 10:00, no sábado seguinte ao pagamento de
-agosto**: catorze horas, quatro dias depois de um pagamento e vinte e sete dias antes do próximo.
+setembro**: catorze horas, logo depois de um pagamento e o mais longe do próximo que o calendário
+permitia.
 Durante essas horas os caminhões continuam coletando. Os coletores guardam as leituras e as enviam
 assim que um sistema estiver pronto para recebê-las, o comportamento de armazenar e reenviar que a
 aula 12 descreve.
@@ -103,7 +104,7 @@ levou quatro horas. Cada dia depois do cutover acrescenta um dia de leituras par
 então o custo cresce dia a dia, mas voltar ainda é possível.
 
 **O primeiro pagamento do novo sistema é o ponto sem volta.** As fazendas são fornecedores no SAP
-(aula 1): o novo sistema calcula quanto cada uma ganhou em agosto, os valores são lançados no SAP, e a
+(aula 1): o novo sistema calcula quanto cada uma ganhou em setembro, os valores são lançados no SAP, e a
 rodada de pagamento do SAP gera o arquivo do banco que o financeiro envia no dia 9. Depois que esse
 arquivo sai, voltar ao Coleta significaria que o registro do que foi pago mora num sistema que não o
 calcula mais, e desfazer isso significaria pedir a cerca de 1.900 fazendas que devolvessem o dinheiro.

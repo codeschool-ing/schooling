@@ -4,8 +4,8 @@ version: 1
 ---
 
 Um padrão de roteamento decide para onde uma mensagem vai e deixa a mensagem em paz. **Quem envia
-escreve num canal só e não sabe onde suas mensagens vão parar; o roteador sabe.** Esse é todo o valor
-do grupo, e o hábito oposto é comum o bastante para ser nomeado primeiro: pôr a decisão em quem envia.
+escreve num canal só e não sabe onde suas mensagens vão parar; o roteador sabe.** O hábito oposto é
+comum o bastante para ser nomeado primeiro: pôr a decisão em quem envia.
 Suponha que o Portal B2B soubesse que o queijo é vendido pelo Business Central e todo o resto pelo SAP.
 Aí o fluxo de EDI e o Salesforce teriam de saber disso também, cada um aprendendo a mesma regra por
 conta própria, e cada mudança na regra seriam três mudanças.

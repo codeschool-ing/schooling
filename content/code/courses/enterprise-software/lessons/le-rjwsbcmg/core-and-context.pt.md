@@ -86,10 +86,10 @@ como a multiplicação é feita.
 
 Passada pelo teste da cópia, a função se divide em duas:
 
-- **a política** — as faixas, as bonificações, as penalidades, o programa dos técnicos — é núcleo. Um
+- *a política* — as faixas, as bonificações, as penalidades, o programa dos técnicos — é núcleo. Um
   concorrente que comprasse qualquer software ainda não teria as tabelas da Serra Alta, nem os trinta
-  anos de histórico de laboratório de cada fazenda que a Coleta guarda, nem os técnicos dela;
-- **o cálculo** — pegar os litros, pegar os resultados de laboratório, aplicar as tabelas, produzir o
+  anos de histórico de laboratório de cada fazenda que o Coleta guarda, nem os técnicos dela;
+- *o cálculo* — pegar os litros, pegar os resultados de laboratório, aplicar as tabelas, produzir o
   valor de cada fazenda, entregá-lo ao SAP para pagar — é contexto. Todo laticínio do Brasil faz isso,
   e vários produtos já fazem por eles.
 

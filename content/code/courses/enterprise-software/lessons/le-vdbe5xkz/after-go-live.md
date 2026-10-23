@@ -12,8 +12,8 @@ the same care as the night, because that is when the remaining mistakes are foun
 ## Hypercare
 
 **Hypercare is a fixed period of extra support after go-live**, with the people who built and
-migrated the system kept close to the people using it. At Serra Alta it was set at eight weeks,
-long enough to cover two payments, and it had a shape written down before the cutover:
+migrated the system kept close to the people using it. At Serra Alta it was set to cover the first
+two payments, and it had a shape written down before the cutover:
 
 - a call every morning at 08:30 for the first two weeks, then twice a week, with the migration team,
   Sebastião, Rui's integration team, Cláudia's quality team and finance;
@@ -30,17 +30,19 @@ then belong to a support team that never saw the migration.
 
 ## The old system, read-only
 
-Coleta did not disappear at 10:00. It stayed up, **read-only**, for twelve months: nobody could
-change anything in it, and anybody could look something up. In the first weeks that was used every
+Coleta did not disappear at 10:00. It stayed up, **read-only**, until it was switched off at the
+end of December 2027, the date lesson 15's decision sets: nobody could change anything in it, and
+anybody could look something up. In the first weeks that was used every
 day. A farm disputing July's payment is asking about a month Coleta calculated, and the answer is
 in Coleta's screens, with Coleta's rules. A field technician checking whether a farm's tank used to
 be collected every day or every other day looks it up there too.
 
-Read-only is a decision with a cost: the IBM i machine, its licences and Sebastião's time for
-another year. It buys an answer to every question about the past without anybody having to
+Read-only is a decision with a cost: the IBM i machine, its licences, and Sebastião's time for
+every month it stays up. It buys an answer to every question about the past without anybody having to
 migrate the whole past. The `legacy_code` the mapping kept in the new system is what makes the two
-usable side by side. When the year is over, what is still needed goes to the archive, and lesson 13
-covers switching the machine off.
+usable side by side. Those months cover the first two payments, the first close and the disputes
+that follow them. After December, a question about the past is answered from the archive described
+below, and lesson 13 covers switching the machine off.
 
 ## Parallel reports
 
@@ -62,16 +64,16 @@ night. That was correct, and worth knowing.
 
 ## The first close and the first payment
 
-The first real test is the first month-end. Finance closes August in the first five working days
-of September, and the milk bought in August is the largest cost in Serra Alta's books. Fourteen days of
-that month's collections were migrated and seventeen were taken by the new system, so the close
-is where any gap between the two halves shows. Finance compared August's litres with July's and with the
-same month the year before, and closed on time.
+The first real test is the first month-end. Finance closes September in the first five working days
+of October, and the milk bought in September is the largest cost in Serra Alta's books. Part of that
+month's collections were migrated and the rest were taken by the new system, so the close is where
+any gap between the two halves shows. Finance compared September's litres with August's and with
+the same month the year before, and closed on time.
 
 **The first payment on the 10th is the test that matters most**, because it is the first time the
 new system decides how much money 1,900 farms receive, and the point of no return of the previous
-section comes just before it. Before the run was posted, finance compared each farm's August
-payment with its July payment and checked by hand every farm whose payment had moved by more than
+section comes just before it. Before the run was posted, finance compared each farm's September
+payment with its August payment and checked by hand every farm whose payment had moved by more than
 15%. There were 38. Thirty-five had a reason in the data: more litres, fewer litres, a better or
 worse laboratory result. **Three had no reason**: their fat result was exactly 3.50%, and the new
 system put that in the lower band of the quality bonus where Coleta had put it in the upper one.

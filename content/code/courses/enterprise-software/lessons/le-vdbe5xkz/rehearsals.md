@@ -35,10 +35,10 @@ twenty minutes taking three hours on the full volume.
 
 Every run produces the same measurements, so that each can be compared with the last:
 
-- **duration**, step by step, from the freeze to the moment the go/no-go decision can be taken;
-- **rejects**, by reason, at each step of the pipeline;
-- **the reconciliation result** at each of its levels (the next section);
-- **the rollback**, timed, in the dress rehearsals: after the decision, the team undoes everything
+- *duration*, step by step, from the freeze to the moment the go/no-go decision can be taken;
+- *rejects*, by reason, at each step of the pipeline;
+- *the reconciliation result* at each of its levels (the next section);
+- *the rollback*, timed, in the dress rehearsals: after the decision, the team undoes everything
   and measures how long that takes.
 
 Here are Serra Alta's four runs.
@@ -92,7 +92,7 @@ in Coleta the week before the cutover.
 **It rejected 2,412 collection rows, and the data was right.** The new system's model declared the
 lab results mandatory. In those rows the sample had been lost or spoiled, and in that case Serra
 Alta pays the farm the base price for the milk: a lost sample is a fact of the business, not a
-fault in the data. **The specification was wrong, not the rows.** Cláudia signed a new rule, lab
+fault in the data. Cláudia signed a new rule, lab
 results optional with a reason code, and the rows loaded in the next run.
 
 **Its reconciliation passed at two levels and failed at the third.** The counts agreed and so did

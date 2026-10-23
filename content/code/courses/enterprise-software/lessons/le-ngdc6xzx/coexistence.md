@@ -29,8 +29,11 @@ published where the clerks, the SAP team and the bus team can all read it.
 | nightly file to SAP | Coleta | Coleta | Coleta | **new** |
 | vendor record and bank account | SAP | SAP | SAP | SAP |
 
-Each column is a phase with a date, and each bold cell is a change of master on that date. Reading
-along a row shows the life of one kind of data. Laboratory results move first, as asset capture
+Each column is a phase with a date, and each bold cell is a change of master on that date. The dates
+are the plan's first draft, made before anybody had chosen what replaces the payment, and they
+assume it is built in house; lesson 15 compares the options, and its decision moves phase 3, the
+read-only date and the switch-off with it. With the dates lesson 15 settles, phases 2 and 3
+collapse into the single cutover lesson 14 describes. Reading along a row shows the life of one kind of data. Laboratory results move first, as asset capture
 said they should. Collections follow in phase 2, which is when the handheld intake stops passing
 files to Coleta raw and starts sending it the collections the new service has accepted. The farm
 register and the payment move together in phase 3, because the payment needs the register's
@@ -137,8 +140,14 @@ has to match it, farm by farm, for three more months before phase 3 moves a sing
 
 The middle lasts longer than planned because each phase finds something, and because the company
 does not stop asking for changes while it lasts. The plan therefore treats coexistence as a
-system with its own operations: the master table published and dated; the copy paths monitored with
-alarms someone answers; the morning reconciliation with a named owner; a runbook for "the copy to
-Coleta has stopped", tested before it is needed; and a change process that knows, for every
-request from the business, which side it has to be made on this month. None of that is waste. It
-is what the company is paying for when it chooses not to bet everything on one weekend.
+system with its own operations:
+
+- the master table, published and dated;
+- the copy paths, monitored, with alarms someone answers;
+- the morning reconciliation, with a named owner;
+- a runbook for "the copy to Coleta has stopped", tested before it is needed;
+- a change process that knows, for every request from the business, which side it has to be made
+  on this month.
+
+None of that is waste. It is what the company is paying for when it chooses not to bet everything
+on one weekend.

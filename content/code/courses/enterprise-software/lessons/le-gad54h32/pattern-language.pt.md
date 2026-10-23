@@ -8,8 +8,7 @@ lê em voz alta: um nó MQInput, um nó Compute, um nó SAPRequest, um segundo n
 AggregateControl, um nó Route, um nó AggregateReply, um MQOutput. Cada palavra está certa e nenhuma
 diz para que o fluxo serve. Joana precisava da outra descrição: **o fluxo traduz o pedido de uma
 rede, divide-o por loja, manda cada parte para o sistema que a vende e junta as respostas numa
-confirmação só.** Essa frase está escrita no vocabulário que esta aula ensina, e ela é o motivo de
-o vocabulário existir.
+confirmação só.** A segunda descrição está escrita no vocabulário que esta aula ensina.
 
 Gregor Hohpe e Bobby Woolf o publicaram em 2003, em *Enterprise Integration Patterns*
 (Addison-Wesley). Você conheceu o primeiro capítulo do livro na aula 9, quando os quatro estilos de

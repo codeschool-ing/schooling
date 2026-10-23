@@ -49,20 +49,20 @@ Serra Alta pays both.
 Three clauses in A's contract decide what the exit costs, and **they are negotiated at signature,
 when Serra Alta can still walk away, or not at all**.
 
-**The export.** The vendor exports the current farm master as a CSV file at any time, free. The full
+*The export.* The vendor exports the current farm master as a CSV file at any time, free. The full
 history — thirty-six months of collections and lab results — comes as a paid service, R$ 30,000, in a
 documented format with a data dictionary that names every field and its unit. Without that
 dictionary the export is a file of numbers whose meaning somebody has to rediscover, which is lesson
 14 again at the worst moment. The contract also says the vendor keeps Serra Alta's data for 90 days
 after the end and then deletes it, so the export has a deadline.
 
-**The notice.** The first term is 24 months. To leave at its end, Serra Alta must give six months'
+*The notice.* The first term is 24 months. To leave at its end, Serra Alta must give six months'
 notice, by the end of month 18 — June 2028, the month Sebastião retires. Miss that date and the
 contract renews for year 3, R$ 655,200 committed whatever Serra Alta then decides. **The notice
 period is the part of lock-in that shows up as a date**, and it belongs in somebody's calendar with
 their name on it, not in the contract's appendix.
 
-**Termination before the term.** Leaving early means paying the rest of the term. If Serra Alta left
+*Termination before the term.* Leaving early means paying the rest of the term. If Serra Alta left
 at the end of year 1, it would owe year 2's twelve months anyway: R$ 25 × 2,000 farms × 12 =
 R$ 600,000. That is the price of a two-year term, and it buys the R$ 25 price; a one-year term would
 have cost more per farm and less to leave.
@@ -92,7 +92,7 @@ Serra Alta negotiate a renewal as somebody who could leave.
 | retraining | 60,000 | 60,000 | 60,000 |
 | **exit** | **397,800** | **190,000** | **307,000** |
 
-**B has the smallest exit, and the reason is worth understanding rather than celebrating.** Leaving
+B has the smallest exit, for a reason worth understanding. Leaving
 B means taking the farm payment out of SAP. SAP itself stays, so there is no subscription to overlap,
 and the farms remain vendor records whatever replaces the calculation. Getting the history out of
 custom tables costs R$ 40,000, and 60% of B's smaller integration line, R$ 90,000, is rebuilt.

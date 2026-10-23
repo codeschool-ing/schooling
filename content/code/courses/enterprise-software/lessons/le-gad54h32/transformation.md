@@ -70,7 +70,7 @@ There are three ways to defuse it, each with its own price:
 A *content filter* is the enricher's opposite: it removes what the receiver does not need. SAP's
 customer record carries the credit limit, the payment history and the bank details. When customer
 changes are published to the Portal B2B, the portal needs the name, the delivery address and the
-price list, and nothing else. Filtering is not only tidiness. **Data that never left SAP is data that
+price list, and nothing else. **Data that never left SAP is data that
 cannot leak from the portal**, and some of Serra Alta's bakeries are sole traders whose record holds a
 person's tax number, which makes it personal data under the LGPD.
 
@@ -83,8 +83,8 @@ Vale Verde's quality team asks for the certificate of analysis of every batch it
 certificates are PDFs of about 2 MB each, and they live in Documentum (lesson 5). Putting the PDF
 inside the shipping notice would copy 2 MB through every hop and into every log a wire tap writes. It
 would also sit close to IBM MQ's default maximum message length on a queue, 4 MB, so one large
-certificate would make a shipping notice fail. So the message carries the Documentum object id, and the chain's portal fetches the PDF when
-somebody opens it.
+certificate would make a shipping notice fail. So the message carries the Documentum object id, and
+the chain's portal fetches the PDF when somebody opens it.
 
 The pattern has two costs that are easy to skip. **The stored payload has to outlive every message
 that refers to it**, so somebody decides when it may be deleted. And the receiver needs access to the

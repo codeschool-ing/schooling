@@ -204,14 +204,14 @@ def translators():
 def trace():
     f = Fig('l11-trace', 720, 300, T(
         'Five hops of a farm payment from left to right, each with the identifier it knows the farm '
-        'by. Coleta: producer 0417. SAP goods receipts: vendor 300417. SAP payment run: payment '
+        'by. Coleta: producer 004417. SAP goods receipts: vendor 300417. SAP payment run: payment '
         'document 1500048213. IIB remittance flow: the CNAB line, with reference 1500048213. Bank '
         'return file: reference 1500048213, rejected, account closed. Hops one and two are joined by a '
         'mapping table from producer to vendor; hops three to five share one reference, carried end '
         'to end. Under the IIB flow a wire tap copies every message to a message store, searchable by '
         'vendor and by reference.',
         'Cinco saltos do pagamento de uma fazenda, da esquerda para a direita, cada um com o '
-        'identificador pelo qual conhece a fazenda. Coleta: produtor 0417. Entradas de mercadoria no '
+        'identificador pelo qual conhece a fazenda. Coleta: produtor 004417. Entradas de mercadoria no '
         'SAP: fornecedor 300417. Programa de pagamento no SAP: documento de pagamento 1500048213. Fluxo '
         'de remessa no IIB: a linha CNAB, com referência 1500048213. Arquivo de retorno do banco: '
         'referência 1500048213, rejeitado, conta encerrada. Os saltos um e dois se ligam por uma tabela '
@@ -221,7 +221,7 @@ def trace():
     xs = [74, 218, 362, 506, 650]
     heads = ['Coleta', T('SAP receipts', 'SAP: entradas'), T('SAP payment run', 'SAP: pagamento'),
              T('IIB remittance', 'IIB: remessa'), T('bank return', 'retorno do banco')]
-    ids = [[T('producer', 'produtor'), '0417'], [T('vendor', 'fornecedor'), '300417'],
+    ids = [[T('producer', 'produtor'), '004417'], [T('vendor', 'fornecedor'), '300417'],
            [T('payment doc', 'doc. pagamento'), '1500048213'], [T('CNAB line, ref', 'linha CNAB, ref.'), '1500048213'],
            [T('ref', 'ref.'), '1500048213']]
     y = 120

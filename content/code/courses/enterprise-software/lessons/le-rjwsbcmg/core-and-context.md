@@ -86,10 +86,10 @@ done.
 
 Put through the copy test, the function comes apart in two:
 
-- **the policy** — the bands, the bonuses, the penalties, the technicians' programme — is core. A
+- *the policy* — the bands, the bonuses, the penalties, the technicians' programme — is core. A
   competitor who bought any software at all would still not have Serra Alta's tables, or the thirty
   years of each farm's lab history that Coleta holds, or its technicians;
-- **the calculation** — take the litres, take the lab results, apply the tables, produce the amount
+- *the calculation* — take the litres, take the lab results, apply the tables, produce the amount
   for each farm, hand it to SAP to pay — is context. Every dairy in Brazil does it, and several
   products already do it for them.
 

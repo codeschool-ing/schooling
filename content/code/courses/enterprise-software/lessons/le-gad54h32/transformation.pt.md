@@ -71,7 +71,7 @@ Há três jeitos de desarmar isso, cada um com seu preço:
 Um *content filter* é o oposto do enricher: ele remove o que o receptor não precisa. O cadastro de
 cliente do SAP leva o limite de crédito, o histórico de pagamentos e os dados bancários. Quando as
 mudanças de cliente são publicadas para o Portal B2B, o portal precisa do nome, do endereço de entrega
-e da tabela de preços, e de mais nada. Filtrar não é só arrumação. **Dado que nunca saiu do SAP é dado
+e da tabela de preços, e de mais nada. **Dado que nunca saiu do SAP é dado
 que não vaza pelo portal**, e algumas padarias da Serra Alta são empresários individuais cujo cadastro
 traz o CPF de uma pessoa, o que faz dele dado pessoal pela LGPD.
 

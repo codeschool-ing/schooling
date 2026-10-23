@@ -13,17 +13,17 @@ quatro coisas, para as três opções da Serra Alta.
 A planilha de A está na seção 03 desta aula. B e C são montadas do mesmo jeito, a partir destas
 premissas, todas estimativas inventadas da Serra Alta:
 
-- **B, estender o SAP.** Não pode entrar em produção antes do S/4HANA, e a conversão da Serra Alta
+- *B, estender o SAP.* Não pode entrar em produção antes do S/4HANA, e a conversão da Serra Alta
   está planejada para entrar em produção em janeiro de 2028, o mês 13. Consultores funcionais a
   desenham e configuram do mês 1 ao mês 16, a R$ 62.500 por mês. Das 46 regras, 30 viram condições de
   preço padrão de compras do SAP; as outras 16, e o aplicativo de coleta nos coletores dos caminhões,
   são desenvolvimento customizado do mês 4 ao mês 16, a R$ 120.000 por mês. Licenças adicionais do
   SAP e a plataforma em que o aplicativo dos coletores roda custam R$ 15.000 por mês. Uma pessoa do
   time de Edson trabalha nela o tempo todo. O primeiro pagamento aos produtores é em maio de 2028, o
-  mês 17, e a Coleta é desligada depois do mês 19.
-- **C, construir.** Sete pessoas por doze meses a constroem na mesma stack do Rota, Kotlin e
+  mês 17, e o Coleta é desligado depois do mês 19.
+- *C, construir.* Sete pessoas por doze meses a constroem na mesma stack do Rota, Kotlin e
   PostgreSQL. A execução em paralelo vai do mês 13 ao 15, o primeiro pagamento aos produtores é em
-  abril de 2028, o mês 16, e a Coleta é desligada depois do mês 18. A manutenção a partir do mês 13
+  abril de 2028, o mês 16, e o Coleta é desligado depois do mês 18. A manutenção a partir do mês 13
   segue a premissa de 20% da seção 04 desta aula: R$ 35.000 por mês.
 
 ## A planilha
@@ -42,7 +42,7 @@ Todos os valores em reais, nos 36 meses:
 | time interno | 562.500 | 900.000 | 840.000 |
 | treinamento | 80.000 | 80.000 | 80.000 |
 | atualizações | 90.000 | 150.000 | 60.000 |
-| Coleta mantida no ar | 180.000 | 285.000 | 270.000 |
+| Coleta mantido no ar | 180.000 | 285.000 | 270.000 |
 | **gasto** | **3.835.700** | **5.071.000** | **4.372.000** |
 | saída | 397.800 | 190.000 | 307.000 |
 | **TCO** | **4.233.500** | **5.261.000** | **4.679.000** |
@@ -76,15 +76,15 @@ As curvas dizem o que os totais não dizem:
 | | A: comprar | B: estender o SAP | C: construir |
 |---|---|---|---|
 | primeiro pagamento aos produtores | outubro de 2027, mês 10 | maio de 2028, mês 17 | abril de 2028, mês 16 |
-| Coleta desligada | depois do mês 12 | depois do mês 19 | depois do mês 18 |
+| Coleta desligado | depois do mês 12 | depois do mês 19 | depois do mês 18 |
 | em relação à aposentadoria de Sebastião, fim de junho de 2028 | seis meses antes | um mês depois | no mesmo mês |
 | como as 46 regras se encaixam | 41 configuradas, 5 estendidas ao lado | 30 como condições de preço, 16 customizadas | as 46 escritas pela Serra Alta |
 | do que depende | de um fornecedor manter o produto e o preço | do S/4HANA em produção em janeiro de 2028 | de contratar sete pessoas e mantê-las |
 
 **A linha do prazo foi a que Marcos leu duas vezes.** Sebastião é a única pessoa capaz de explicar o
-que a Coleta faz quando a resposta dela e a do sistema novo diferem, e a execução em paralelo da aula
-13 é o período em que essas diferenças aparecem. A termina a execução em paralelo e desliga a Coleta
-com seis meses de Sebastião ainda na empresa. C desliga a Coleta no mês em que ele sai. B precisa da
+que o Coleta faz quando a resposta dele e a do sistema novo diferem, e a execução em paralelo da aula
+13 é o período em que essas diferenças aparecem. A termina a execução em paralelo e desliga o Coleta
+com seis meses de Sebastião ainda na empresa. C desliga o Coleta no mês em que ele sai. B precisa do
 Coleta, e portanto dele, por um mês depois que ele já foi, e só começa quando outro programa — o
 S/4HANA — termina no prazo.
 
@@ -96,13 +96,13 @@ Uma ordem é tão forte quanto a premissa a que ela é mais sensível. Duas são
 projeto de software comum. Os seis meses a mais do time somam R$ 1.050.000 (6 × R$ 175.000). Algumas
 linhas caem, porque o sistema começa a rodar mais tarde: a manutenção começa no mês 19 em vez do 13,
 R$ 210.000 a menos; a operação, R$ 60.000 a menos; a infraestrutura, R$ 36.000 a menos (seis meses a
-mais do ambiente de desenvolvimento a R$ 3.000, seis a menos de produção a R$ 9.000). A Coleta roda
+mais do ambiente de desenvolvimento a R$ 3.000, seis a menos de produção a R$ 9.000). O Coleta roda
 seis meses a mais, R$ 90.000 a mais. A variação líquida é:
 
 > R$ 1.050.000 − 210.000 − 60.000 − 36.000 + 90.000 = **R$ 834.000**
 
 C passa a R$ 5.513.000 — **mais cara que B**, então a ordem das duas atrás de A muda. As datas mudam
-mais: o primeiro pagamento aos produtores vai para outubro de 2028, e a Coleta roda até dezembro,
+mais: o primeiro pagamento aos produtores vai para outubro de 2028, e o Coleta roda até dezembro,
 seis meses depois de Sebastião ter saído.
 
 **E se o preço do SaaS subir 15% na renovação em vez de 4%?** O preço do ano 3 passa a R$ 28,75 por

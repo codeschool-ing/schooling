@@ -3,8 +3,8 @@ title: Por que não simplesmente reescrever
 version: 1
 ---
 
-A Coleta precisa sair. Ela roda a coleta de leite da Serra Alta desde 1996, no IBM i, em RPG, e a
-maior parte dela foi escrita por uma pessoa só. Sebastião Lima se aposenta em 2028, e as regras que
+O Coleta precisa sair. Ele roda a coleta de leite da Serra Alta desde 1996, no IBM i, em RPG, e a
+maior parte dele foi escrita por uma pessoa só. Sebastião Lima se aposenta em 2028, e as regras que
 decidem quanto 1.900 fazendas recebem por mês estão no código dele e na cabeça dele. Ninguém discute
 que é preciso um substituto. A discussão é sobre como chegar lá.
 
@@ -19,15 +19,15 @@ na própria forma dele, e os três estão presentes na Serra Alta.
 
 ## O alvo se mexe enquanto você copia
 
-**Uma reescrita copia um sistema que não fica parado enquanto é copiado.** A Coleta não está
-congelada. Nos últimos doze meses o Sebastião fez 23 mudanças nela: uma tabela nova de bonificação
+**Uma reescrita copia um sistema que não fica parado enquanto é copiado.** O Coleta não está
+congelado. Nos últimos doze meses o Sebastião fez 23 mudanças nele: uma tabela nova de bonificação
 por proteína combinada com as associações de produtores, uma mudança no jeito de pagar uma fazenda
 suspensa por qualidade quando ela volta, um campo novo que o laboratório começou a mandar, e vinte
 mudanças menores. Nenhuma era opcional. O negócio pediu, e o sistema que paga as fazendas tinha de
 acompanhar.
 
-Durante uma reescrita cada uma dessas mudanças precisa ser feita duas vezes: uma na Coleta, porque é
-ela que paga as fazendas hoje, e outra no sistema novo, porque senão ele estará errado no dia em que
+Durante uma reescrita cada uma dessas mudanças precisa ser feita duas vezes: uma no Coleta, porque é
+ele que paga as fazendas hoje, e outra no sistema novo, porque senão ele estará errado no dia em que
 assumir. Na prática a segunda cópia fica para trás. O time que constrói o sistema novo está ocupado
 construindo, a lista de mudanças é longa, e a distância entre os dois só aparece no fim, quando
 alguém os compara. Uma reescrita planejada para dois anos contra um sistema que muda duas vezes por
@@ -36,7 +36,7 @@ mês é a reescrita de um alvo que ninguém viu.
 ## A especificação é o código
 
 O segundo motivo é que os documentos descrevem o que alguém pretendia em 1996, e o código descreve o
-que acontece. **Num sistema tão antigo, o programa é a única descrição completa das regras.** A
+que acontece. **Num sistema tão antigo, o programa é a única descrição completa das regras.** O
 Coleta tem um manual, escrito em 2003 e atualizado pela última vez em 2011. Ele cobre a fórmula
 principal de pagamento e nenhuma das exceções: as fazendas de tanque comunitário, o jeito de datar
 uma coleta feita depois da meia-noite, a cooperativa cujas fazendas ganham um bônus de inverno por
@@ -54,14 +54,14 @@ fora do primeiro, o que deixa a cópia maior que o original.
 
 O terceiro motivo é o que torna a reescrita perigosa, e não apenas lenta. **No big bang nada está
 provado até o cutover, e o cutover prova tudo de uma vez.** Dois anos de trabalho chegam às fazendas
-de verdade num único dia. Para a Coleta esse dia é o dia 10 de um mês, quando 1.900 fazendas esperam
+de verdade num único dia. Para o Coleta esse dia é o dia 10 de um mês, quando 1.900 fazendas esperam
 dinheiro na conta. Se o cálculo novo estiver errado para algumas delas, o primeiro sinal é um
 produtor ligando para a fábrica, e o caminho de volta não é um novo deploy. Pagamentos já feitos
 precisam ser estornados ou complementados à mão, e a aula 14 mostra por que esse é o ponto sem
 volta de qualquer migração que movimenta dinheiro.
 
 Um big bang também não entrega valor nenhum até terminar. Durante dois anos a empresa paga dois
-times, um mantendo a Coleta viva e outro construindo o substituto, e a única coisa que a diretoria
+times, um mantendo o Coleta vivo e outro construindo o substituto, e a única coisa que a diretoria
 enxerga é uma data que já mudou duas vezes. Projetos nesse estado perdem os patrocinadores antes de
 perder os problemas técnicos.
 
@@ -104,9 +104,9 @@ sido a duração que ela conseguiu.
 Por isso o strangler não é sempre a resposta. Um big bang é razoável quando o sistema é pequeno,
 quando as regras estão congeladas e escritas, quando ninguém o chama, ou quando a coexistência
 custaria mais do que o risco que ela elimina. Trocar uma ferramenta isolada que dez pessoas usam,
-cujos dados podem ser levados numa tarde e conferidos à mão, não pede um programa de migração. A
+cujos dados podem ser levados numa tarde e conferidos à mão, não pede um programa de migração. O
 Coleta é o oposto em todos os pontos: é grande, muda todo mês, as regras estão no código, metade da
-empresa depende do que ela produz e ela movimenta dinheiro.
+empresa depende do que ele produz e ele movimenta dinheiro.
 
 ## A decisão da Joana
 
@@ -116,9 +116,9 @@ fez uma pergunta só: o que a Serra Alta faria no dia 10 do mês seguinte ao cut
 tivessem recebido o valor errado. O rascunho não tinha resposta, e o segundo rascunho foi um
 strangler.
 
-A forma dele é o resto desta aula. Uma camada de roteamento onde a Coleta tem uma borda, e
-interceptação onde não tem. Uma camada de tradução para que o modelo novo não nasça à imagem da
+A forma dele é o resto desta aula. Uma camada de roteamento onde o Coleta tem uma borda, e
+interceptação onde não tem. Uma camada de tradução para que o modelo novo não nasça à imagem do
 Coleta. Um meio longo em que os dois sistemas rodam, com um dono para cada dado em cada momento. E
 um fim, escrito com data, em que o IBM i é desligado. Se o sistema que vai substituir o cálculo de
-pagamento da Coleta será comprado, construído ou acrescentado ao SAP é outra pergunta, e a aula 15
+pagamento do Coleta será comprado, construído ou acrescentado ao SAP é outra pergunta, e a aula 15
 responde. O strangler funciona do mesmo jeito para as três.

@@ -24,7 +24,7 @@ one for Coleta's farm master looks like this:
 | `vendor` | SAP vendor number | copied; refused if SAP has blocked that vendor | finance |
 | `bank_account` | bank account | **not migrated**: SAP's vendor master is the only source | finance |
 | `litres` (history) | litres × 100, an integer | divided by 100, stored with two decimals | Sebastião |
-| `collected_on` (history) | date, eight digits, day first | read as day, month, year; refused if it is not a real date | Sebastião |
+| `collected_on` (history) | date, seven digits, `CYYMMDD` | read as century, year, month, day; refused if it is not a real date | Sebastião |
 | lab results (history) | fat, protein, cell count, bacterial count | copied; units checked against Cláudia's table | Cláudia |
 
 Three things in that table are worth noticing.
@@ -75,10 +75,10 @@ its owner.
 
 The same applies to rows. Not everything in the old system belongs in the new one:
 
-- **history outside the period** goes to the archive: the 182 farms with no collection in six
+- *history outside the period* goes to the archive: the 182 farms with no collection in six
   years, and about 10.5 million old collection rows;
-- **orphans** go to the archive with a note, since nothing in the new system can refer to them;
-- **fields with a better master elsewhere**, like the bank account, go nowhere.
+- *orphans* go to the archive with a note, since nothing in the new system can refer to them;
+- *fields with a better master elsewhere*, like the bank account, go nowhere.
 
 Each exclusion is a rule in the specification. The reconciliation later in this lesson has to
 account for every source row, and a row that was left out on purpose needs a rule to point at.
@@ -97,10 +97,10 @@ and they are not equivalent.
 Joana's first instinct was to do everything in flight. At the fintech she came from, a data fix
 was a script in the migration, and the source was a database nobody would ever read again.
 Sebastião pointed out the difference. **Coleta keeps running for months after the farm master
-moves**, because lesson 13's strangler moves one capability at a time, and every night it still
-writes the file SAP loads. An invalid CPF corrected only in flight stays invalid in Coleta, in
-every file it writes, until the day it is switched off. A fact that is wrong is corrected where it
-lives.
+moves**: until the cutover it writes the file SAP loads every night, and for a year after it,
+read-only, it is where every question about a past payment is answered. An invalid CPF corrected
+only in flight stays invalid in Coleta, in every file it writes and every screen somebody checks,
+until the day it is switched off. A fact that is wrong is corrected where it lives.
 
 So Serra Alta split the work by kind. **Wrong facts are corrected at the source by their owner:**
 finance fixed the 9 CPFs and the 4 blocked vendors in Coleta's own screens. **Wrong forms are

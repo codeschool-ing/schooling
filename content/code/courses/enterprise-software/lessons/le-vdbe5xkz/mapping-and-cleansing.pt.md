@@ -24,7 +24,7 @@ Parte da especificação do cadastro de fazendas do Coleta é assim:
 | `vendor` | número do fornecedor no SAP | copiado; recusado se o SAP tiver bloqueado esse fornecedor | financeiro |
 | `bank_account` | conta bancária | **não migrado**: o cadastro de fornecedores do SAP é a única fonte | financeiro |
 | `litres` (histórico) | litros × 100, um inteiro | dividido por 100, guardado com duas casas decimais | Sebastião |
-| `collected_on` (histórico) | data, oito dígitos, dia primeiro | lida como dia, mês, ano; recusada se não for uma data real | Sebastião |
+| `collected_on` (histórico) | data, sete dígitos, `CYYMMDD` | lida como século, ano, mês, dia; recusada se não for uma data real | Sebastião |
 | resultados de laboratório (histórico) | gordura, proteína, contagem de células, contagem bacteriana | copiados; unidades conferidas contra a tabela de Cláudia | Cláudia |
 
 Três coisas nessa tabela merecem atenção.
@@ -76,10 +76,10 @@ aceite, ou uma recusa que devolva a linha ao dono.
 
 O mesmo vale para linhas. Nem tudo do sistema antigo pertence ao novo:
 
-- **o histórico fora do período** vai para o arquivo: as 182 fazendas sem coleta em seis anos, e
+- *o histórico fora do período* vai para o arquivo: as 182 fazendas sem coleta em seis anos, e
   cerca de 10,5 milhões de coletas antigas;
-- **os órfãos** vão para o arquivo com uma nota, já que nada no novo sistema pode se referir a eles;
-- **campos com um dono melhor em outro lugar**, como a conta bancária, não vão para lugar nenhum.
+- *os órfãos* vão para o arquivo com uma nota, já que nada no novo sistema pode se referir a eles;
+- *campos com um dono melhor em outro lugar*, como a conta bancária, não vão para lugar nenhum.
 
 Cada exclusão é uma regra na especificação. A reconciliação, mais adiante nesta aula, precisa
 prestar contas de cada linha da origem, e uma linha deixada de fora de propósito precisa de uma
@@ -98,10 +98,11 @@ não são equivalentes.
 
 O primeiro instinto de Joana foi fazer tudo no caminho. Na fintech de onde ela veio, uma correção de
 dados era um script na migração, e a origem era um banco que ninguém mais leria. Sebastião apontou a
-diferença. **O Coleta continua rodando meses depois de o cadastro de fazendas mudar de sistema**,
-porque o estrangulamento da aula 13 move uma capacidade de cada vez, e toda noite ele ainda escreve
-o arquivo que o SAP carrega. Um CPF inválido corrigido só no caminho continua inválido no Coleta, em
-todo arquivo que ele escreve, até o dia em que for desligado. Um fato errado é corrigido onde ele
+diferença. **O Coleta continua rodando meses depois de o cadastro de fazendas mudar de sistema**:
+até o cutover ele escreve toda noite o arquivo que o SAP carrega, e por um ano depois dele, só para
+leitura, é onde se responde qualquer pergunta sobre um pagamento passado. Um CPF inválido corrigido
+só no caminho continua inválido no Coleta, em todo arquivo que ele escreve e em toda tela que alguém
+consulta, até o dia em que for desligado. Um fato errado é corrigido onde ele
 mora.
 
 Então a Serra Alta dividiu o trabalho por tipo. **Fatos errados são corrigidos na origem pelo dono:**

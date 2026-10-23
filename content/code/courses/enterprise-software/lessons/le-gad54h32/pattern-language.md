@@ -8,8 +8,8 @@ out: an MQInput node, a Compute node, a SAPRequest node, a second Compute node, 
 node, a Route node, an AggregateReply node, an MQOutput. Every word is accurate and none of it says
 what the flow is for. Joana needed the other description: **the
 flow translates a chain's order, splits it per store, sends each part to the system that sells it,
-and gathers the replies into one confirmation.** That sentence is written in the vocabulary this
-lesson teaches, and it is the reason the vocabulary exists.
+and gathers the replies into one confirmation.** The second description is written in the vocabulary
+this lesson teaches.
 
 Gregor Hohpe and Bobby Woolf published it in 2003, in *Enterprise Integration Patterns*
 (Addison-Wesley). You met the book's first chapter in lesson 9, where its four integration styles

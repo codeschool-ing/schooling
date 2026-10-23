@@ -24,27 +24,27 @@ and R$ 2,579,000 were not on the first page. The tie was an accident of what eac
 
 ## What buyers forget
 
-**Integration.** A product arrives with an API, not with interfaces to your systems. The SaaS product
+*Integration.* A product arrives with an API, not with interfaces to your systems. The SaaS product
 has to send each month's amounts to SAP, where the farms are vendor records and the bank files are
 made; take lab results from the lab's system; and exchange the day's collections with Rota. That is
 lessons 8 to 11 applied to one product, R$ 240,000 on A's sheet, and it is the line a vendor's
 proposal most often leaves to the customer.
 
-**Customisation that blocks upgrades.** The five rules the product cannot express cost R$ 150,000 to
+*Customisation that blocks upgrades.* The five rules the product cannot express cost R$ 150,000 to
 write beside it. The larger cost is what they do to every release afterwards. The vendor ships four
 releases a year, and each one has to be tested against the five extensions and the interfaces before
 it reaches the farms' money: R$ 10,000 a release, R$ 90,000 over the period. An extension built
 through the published interface survives a release and gets tested; **a modification of the
 product's own code turns every release into a project**, which is why lesson 1's rings say never.
 
-**The licence metric that grows with you.** The subscription is per active farm. Serra Alta's milk
+*The licence metric that grows with you.* The subscription is per active farm. Serra Alta's milk
 plan adds 100 farms a year, so the bill grows without anybody signing anything: R$ 30,000 more in
 year 2 and R$ 60,000 more in year 3, against a proposal that priced 1,900 farms for three years.
 Read the metric's definition before reading its price. "Active farm" and "registered farm" are
 different numbers in any collection system, because farms stop delivering and their records stay,
 and lesson 14 is where you find out how different.
 
-**The price at renewal.** The proposal priced year 3 as it priced year 1. Serra Alta's contract caps
+*The price at renewal.* The proposal priced year 3 as it priced year 1. Serra Alta's contract caps
 the rise at the first renewal at 4%, worth R$ 25,200 in year 3 (R$ 1 × 2,100 farms × 12). Without the
 cap, the renewal price is whatever the vendor asks on a day when Serra Alta has no other system ready;
 section 06 of this lesson tests a rise of 15%.
@@ -52,21 +52,21 @@ section 06 of this lesson tests a rise of 15%.
 The three subscription effects together come to R$ 115,200: the proposal's R$ 1,710,000 against the
 sheet's R$ 1,825,200.
 
-**Indirect use of the system of record.** Every month the product's amounts become documents in SAP.
+*Indirect use of the system of record.* Every month the product's amounts become documents in SAP.
 Lesson 1 told the story of SAP v Diageo (2017), and lesson 2 how SAP now licenses documents created
 in its system by other software. Whether Serra Alta's existing SAP contract already covers the farm
 payments created from outside is a question for the SAP account team before signature, not after,
 because the answer depends on the contract and not on the architecture.
 
-**Data migration.** R$ 150,000. Proposals say "data load" and mean loading a file you give them.
+*Data migration.* R$ 150,000. Proposals say "data load" and mean loading a file you give them.
 Getting thirty years of Coleta into a file that loads, and proving it arrived, is lesson 14.
 
-**Paying while implementing.** The subscription starts at signature. Nine months of it, R$ 427,500,
+*Paying while implementing.* The subscription starts at signature. Nine months of it, R$ 427,500,
 are paid before the product pays a single farm.
 
 ## What builders forget
 
-**Maintenance, every year, for as long as it runs.** A system finished in month 12 is not
+*Maintenance, every year, for as long as it runs.* A system finished in month 12 is not
 finished. Rules change twice a year, SAP moves to S/4HANA under it, the bank changes a file layout,
 somebody finds the bug that only appears in a 31-day month with a public holiday on the 10th. Serra
 Alta's planning assumption is that **maintaining a system it built costs 20% of the build a year**.
@@ -74,33 +74,33 @@ That figure is the company's assumption, chosen by Marcos's team from its own pr
 law, and some systems cost far more. On C's sheet it is R$ 420,000 a year, R$ 840,000 over the 24
 months after go-live.
 
-**On-call.** Farms are paid on the 10th, and the payment run happens whether or not it is convenient.
+*On-call.* Farms are paid on the 10th, and the payment run happens whether or not it is convenient.
 A built system needs somebody who answers at night during payment week, monitoring that wakes them,
 and a first line for the questions from the field. C's sheet carries R$ 10,000 a month for it.
 
-**Security patches and a yearly test.** Every library in the build has vulnerabilities announced
+*Security patches and a yearly test.* Every library in the build has vulnerabilities announced
 against it, and someone has to apply the fixes and test the payment run afterwards. C's sheet adds an
 outside penetration test once a year, R$ 40,000 each, because a system that holds 1,900 farmers' bank
 accounts is worth attacking.
 
-**Production is more expensive than development.** C's environments cost R$ 3,000 a month while it
+*Production is more expensive than development.* C's environments cost R$ 3,000 a month while it
 is built and R$ 9,000 a month once it runs with a standby and backups: R$ 252,000 over the period,
 of which R$ 216,000 is after go-live.
 
-**Upgrades.** A product's vendor upgrades the product. A builder upgrades the database's major
+*Upgrades.* A product's vendor upgrades the product. A builder upgrades the database's major
 version, the language runtime, the framework, and the Android version on the handhelds in the trucks,
 R$ 60,000 in year 3.
 
-**Coleta, for longer.** The build reaches its first farm payment in month 16, so Coleta runs until
+*Coleta, for longer.* The build reaches its first farm payment in month 16, so Coleta runs until
 month 18: R$ 270,000, against A's R$ 180,000.
 
-**The team that cannot leave.** Seven people build it. The maintenance budget pays for 1.4 of them
+*The team that cannot leave.* Seven people build it. The maintenance budget pays for 1.4 of them
 afterwards (R$ 420,000 ÷ R$ 300,000 a year), so most of the knowledge of how the farm payment works
 leaves with the other five or six. **The remaining people are now the only ones who understand a
 mission-critical system**, and Serra Alta has been here before: Coleta is what that looks like after
 thirty years, and Sebastião's retirement is why this lesson exists.
 
-**What the team would have built instead.** Opportunity cost is not on the sheet, because it is not
+*What the team would have built instead.* Opportunity cost is not on the sheet, because it is not
 money paid to anybody, and it belongs in the decision anyway. Seven engineers for a year is more
 than Rota's whole product team of five. If they build the farm-payment calculation — context — they do not build
 whatever Serra Alta's next differentiator was going to be. A decision record that chooses C should

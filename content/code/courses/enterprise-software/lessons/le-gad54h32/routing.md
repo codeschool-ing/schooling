@@ -4,9 +4,8 @@ version: 1
 ---
 
 A routing pattern decides where a message goes and leaves the message itself alone. **The sender
-writes to one channel and does not know where its messages end up; the router knows.** That is the
-whole value of the group, and the opposite habit is common enough to name first: putting the
-decision in the sender. Suppose the Portal B2B knew that cheese is sold by Business Central and
+writes to one channel and does not know where its messages end up; the router knows.** The opposite
+habit is common enough to name first: putting the decision in the sender. Suppose the Portal B2B knew that cheese is sold by Business Central and
 everything else by SAP. Then the EDI flow and Salesforce would have to know it too, each learning the
 same rule separately, and every change to the rule would be three changes.
 

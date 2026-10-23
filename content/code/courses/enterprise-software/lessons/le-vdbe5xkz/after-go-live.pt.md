@@ -13,7 +13,7 @@ noite, porque é nelas que os erros que sobraram aparecem.
 
 **Hypercare é um período fixo de suporte reforçado depois da entrada no ar**, com as pessoas que
 construíram e migraram o sistema perto das pessoas que o usam. Na Serra Alta ele foi marcado para
-oito semanas, tempo suficiente para cobrir dois pagamentos, e tinha um formato escrito antes do
+cobrir os dois primeiros pagamentos, e tinha um formato escrito antes do
 cutover:
 
 - uma reunião toda manhã às 08:30 nas duas primeiras semanas, depois duas vezes por semana, com o
@@ -32,17 +32,19 @@ e eles passam a pertencer a um time de suporte que nunca viu a migração.
 
 ## O sistema antigo, somente leitura
 
-O Coleta não sumiu às 10:00. Ele continuou no ar, **somente leitura**, por doze meses: ninguém podia
-mudar nada nele, e qualquer um podia consultar. Nas primeiras semanas isso foi usado todos os dias.
+O Coleta não sumiu às 10:00. Ele continuou no ar, **somente leitura**, até ser desligado no fim de
+dezembro de 2027, a data que a decisão da aula 15 fixa: ninguém podia mudar nada nele, e qualquer um
+podia consultar. Nas primeiras semanas isso foi usado todos os dias.
 Uma fazenda que contesta o pagamento de julho está perguntando sobre um mês que o Coleta calculou, e a
 resposta está nas telas do Coleta, com as regras do Coleta. Um técnico de campo que quer saber se o
 tanque de uma fazenda era coletado todo dia ou dia sim, dia não também consulta lá.
 
-Somente leitura é uma decisão com custo: a máquina IBM i, as licenças e o tempo de Sebastião por mais
-um ano. Em troca, toda pergunta sobre o passado tem resposta sem que ninguém precise migrar o passado
+Somente leitura é uma decisão com custo: a máquina IBM i, as licenças, e o tempo de Sebastião em
+cada mês que ele fica no ar. Em troca, toda pergunta sobre o passado tem resposta sem que ninguém precise migrar o passado
 inteiro. O `legacy_code` que o mapeamento guardou no novo sistema é o que permite usar os dois lado a
-lado. Quando o ano acabar, o que ainda for necessário vai para o arquivo, e a aula 13 trata de
-desligar a máquina.
+lado. Esses meses cobrem os dois primeiros pagamentos, o primeiro fechamento e as contestações que
+vêm depois deles. Depois de dezembro, uma pergunta sobre o passado é respondida pelo arquivo descrito
+abaixo, e a aula 13 trata de desligar a máquina.
 
 ## Relatórios em paralelo
 
@@ -64,16 +66,16 @@ chegaram ao novo sistema no domingo e ao SAP na noite de segunda. Estava certo, 
 
 ## O primeiro fechamento e o primeiro pagamento
 
-O primeiro teste de verdade é o primeiro fim de mês. O financeiro fecha agosto nos primeiros cinco
-dias úteis de setembro, e o leite comprado em agosto é o maior custo nos livros da Serra Alta.
-Catorze dias das coletas daquele mês foram migrados e dezessete foram recebidos pelo novo sistema,
-então o fechamento é onde aparece qualquer buraco entre as duas metades. O financeiro comparou os
-litros de agosto com os de julho e com os do mesmo mês do ano anterior, e fechou no prazo.
+O primeiro teste de verdade é o primeiro fim de mês. O financeiro fecha setembro nos primeiros cinco
+dias úteis de outubro, e o leite comprado em setembro é o maior custo nos livros da Serra Alta. Parte
+das coletas daquele mês foi migrada e o resto foi recebido pelo novo sistema, então o fechamento é
+onde aparece qualquer buraco entre as duas metades. O financeiro comparou os litros de setembro com
+os de agosto e com os do mesmo mês do ano anterior, e fechou no prazo.
 
 **O primeiro pagamento, no dia 10, é o teste que mais importa**, porque é a primeira vez que o novo
 sistema decide quanto dinheiro 1.900 fazendas recebem, e o ponto sem volta da seção anterior vem logo
-antes dele. Antes de a rodada ser lançada, o financeiro comparou o pagamento de agosto de cada fazenda
-com o de julho e conferiu à mão toda fazenda cujo pagamento tinha mudado mais de 15%. Foram 38.
+antes dele. Antes de a rodada ser lançada, o financeiro comparou o pagamento de setembro de cada fazenda
+com o de agosto e conferiu à mão toda fazenda cujo pagamento tinha mudado mais de 15%. Foram 38.
 Trinta e cinco tinham um motivo nos dados: mais litros, menos litros, um resultado de laboratório
 melhor ou pior. **Três não tinham motivo**: o resultado de gordura delas era exatamente 3,50%, e o
 novo sistema o pôs na faixa de baixo da bonificação por qualidade, onde o Coleta o punha na de cima.

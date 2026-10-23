@@ -122,14 +122,14 @@ def intercept():
         'nightly file to SAP and the monthly payment amounts to SAP. Below, Coleta\'s journal '
         'feeds change data capture, which sends the changes the clerks make to the new side. Each '
         'path is labelled with the technique that reaches it.',
-        'A Coleta, no IBM i, no meio, com todos os fluxos que cruzam a sua fronteira. À esquerda, '
+        'O Coleta, no IBM i, no meio, com todos os fluxos que cruzam a sua fronteira. À esquerda, '
         'as entradas: os arquivos de rota dos coletores portáteis dos caminhões passam agora por '
         'um serviço novo de recepção, que guarda uma cópia e repassa o arquivo; o arquivo de '
         'resultados do laboratório passa pelo novo serviço de qualidade do mesmo jeito; as telas '
-        'verdes dos funcionários gravam direto na Coleta, sem nada no meio. Em cima, os dois '
+        'verdes dos funcionários gravam direto no Coleta, sem nada no meio. Em cima, os dois '
         'fluxos do barramento, consulta de fazenda para o Rota e o resumo da coleta, que já fazem '
         'papel de fachada. À direita, as saídas: o arquivo noturno para o SAP e os valores mensais '
-        'de pagamento para o SAP. Embaixo, o journal da Coleta alimenta a captura de mudanças, que '
+        'de pagamento para o SAP. Embaixo, o journal do Coleta alimenta a captura de mudanças, que '
         'manda para o lado novo as alterações feitas pelos funcionários. Cada caminho tem o nome da '
         'técnica que o alcança.'))
     cx, cy = 400, 205
@@ -172,7 +172,7 @@ def intercept():
     f.text(517, 322, T('change data capture', 'captura de mudanças'), size=9.5, fill='--phosphor',
            italic=True)
     return f, T('Coleta has no front door, so each flow is reached where it can be: files in their path, the bus flows at the bus, and the clerks\' typing only afterwards, from the journal.',
-                'A Coleta não tem porta da frente, então cada fluxo é alcançado onde dá: os arquivos no caminho deles, os fluxos do barramento no barramento, e o que os funcionários digitam só depois, pelo journal.')
+                'O Coleta não tem porta da frente, então cada fluxo é alcançado onde dá: os arquivos no caminho deles, os fluxos do barramento no barramento, e o que os funcionários digitam só depois, pelo journal.')
 
 
 @figure('l13-acl', 13)
@@ -191,14 +191,14 @@ def acl():
         'a person.',
         'Três colunas. À esquerda, o contexto novo: o serviço de coleta e o serviço de qualidade, '
         'que falam o modelo novo. No meio, a camada anticorrupção, do time novo, com um tradutor '
-        'de entrada e um tradutor de saída. À direita, a Coleta, com o seu journal e o carregador '
+        'de entrada e um tradutor de saída. À direita, o Coleta, com o seu journal e o carregador '
         'de laboratório das 22:00. Na entrada, as linhas do journal viajam por captura de mudanças '
         'até o tradutor de entrada, que transforma 0413275 numa fazenda com id opaco, 1261023 em '
         '2026-10-23, 123450 em 1234,50 litros, e o status S mais uma observação em suspensa por '
         'qualidade ou documento pendente, antes de chegarem aos serviços novos. Na saída, os '
         'resultados de laboratório, cujo dono é o serviço de qualidade, vão ao tradutor de saída, '
         'que os grava como um arquivo no layout antigo do laboratório, em milhares de células por '
-        'mililitro, para o carregador da Coleta. O que a camada não consegue classificar vai para '
+        'mililitro, para o carregador do Coleta. O que a camada não consegue classificar vai para '
         'uma fila, para uma pessoa olhar.'))
     f.text(100, 22, T('new context', 'contexto novo'), size=11.5, weight='600')
     f.text(360, 22, T('anti-corruption layer', 'camada anticorrupção'), size=11.5, weight='600')
@@ -236,7 +236,7 @@ def acl():
                        'os formatos do legado aparecem aqui e em nenhum outro lugar'),
            size=10.5, fill='--paper-dim', italic=True)
     return f, T('The layer belongs to the new side and translates in both directions: what Coleta knows becomes the new model\'s facts, and what the new side owns is written back in Coleta\'s own forms.',
-                'A camada é do lado novo e traduz nas duas direções: o que a Coleta sabe vira fato no modelo novo, e o que o lado novo controla volta escrito nas formas da própria Coleta.')
+                'A camada é do lado novo e traduz nas duas direções: o que o Coleta sabe vira fato no modelo novo, e o que o lado novo controla volta escrito nas formas do próprio Coleta.')
 
 
 @figure('l13-parallel', 13)
@@ -248,7 +248,7 @@ def parallel():
         'defect on the new side. August: 1,897 identical and 3 different, all an accepted change '
         'of rule. September: 1,898 identical and 2 different, both the same accepted change.',
         'Os três meses do cálculo-sombra, uma barra por mês, contando só as fazendas cujo pagamento '
-        'diferiu do da Coleta; as outras ficaram idênticas até o centavo. Julho de 2026: 1.871 '
+        'diferiu do do Coleta; as outras ficaram idênticas até o centavo. Julho de 2026: 1.871 '
         'idênticas e 29 diferentes, sendo 17 de arredondamento, 9 de uma regra não escrita e 3 de '
         'um defeito no lado novo. Agosto: 1.897 idênticas e 3 diferentes, todas uma mudança de '
         'regra aceita. Setembro: 1.898 idênticas e 2 diferentes, as duas a mesma mudança aceita.'))

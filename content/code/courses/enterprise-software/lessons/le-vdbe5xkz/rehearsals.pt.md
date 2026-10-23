@@ -36,11 +36,11 @@ mundo achava que levava vinte minutos levando três horas no volume completo.
 
 Toda execução produz as mesmas medidas, para cada uma poder ser comparada com a anterior:
 
-- **a duração**, passo a passo, do congelamento até o momento em que a decisão de go/no-go pode ser
+- *a duração*, passo a passo, do congelamento até o momento em que a decisão de go/no-go pode ser
   tomada;
-- **os rejeitos**, por motivo, em cada passo do pipeline;
-- **o resultado da reconciliação** em cada um dos níveis (a próxima seção);
-- **o rollback**, cronometrado, nos ensaios gerais: depois da decisão, o time desfaz tudo e mede
+- *os rejeitos*, por motivo, em cada passo do pipeline;
+- *o resultado da reconciliação* em cada um dos níveis (a próxima seção);
+- *o rollback*, cronometrado, nos ensaios gerais: depois da decisão, o time desfaz tudo e mede
   quanto tempo isso leva.
 
 Estas são as quatro execuções da Serra Alta.
@@ -94,7 +94,7 @@ financeiro corrigiu no Coleta na semana anterior ao cutover.
 **Rejeitou 2.412 coletas, e os dados estavam certos.** O modelo do novo sistema declarava os
 resultados de laboratório obrigatórios. Nessas linhas a amostra tinha se perdido ou estragado, e
 nesse caso a Serra Alta paga à fazenda o preço base pelo leite: amostra perdida é um fato do negócio,
-não um defeito nos dados. **A especificação estava errada, não as linhas.** Cláudia assinou uma regra
+não um defeito nos dados. Cláudia assinou uma regra
 nova, resultados de laboratório opcionais com um código de motivo, e as linhas entraram na execução
 seguinte.
 

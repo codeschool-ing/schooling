@@ -95,7 +95,7 @@ capability where a mistake costs the most.
 After the first slice the order follows two pressures. Value pulls towards the capabilities the
 business most wants improved. Dependency pushes towards moving what other capabilities need
 first, because a capability that reads data the legacy still owns needs a synchronisation that is
-work in itself. Coexistence is the subject of the section after next.
+work in itself. Coexistence comes three sections on.
 
 ## Where Coleta has an edge
 
@@ -106,7 +106,8 @@ Rui Andrade's team runs (lesson 8). One is farm lookup, which Rota calls every e
 plans the next day's routes. The other is the day's collection summary, which the quality team's
 dashboard asks for every hour.
 
-Both flows were built in 2015, long before anybody talked about replacing Coleta, and both already
+Both flows date from the bus's first years (farm lookup is lesson 8's FarmRegistry, built in 2016),
+long before anybody talked about replacing Coleta, and both already
 do what a facade does: Rota and the dashboard call the bus, and only the bus knows that the answer
 comes from an RPG program on the IBM i. **The bus Serra Alta spent years trying to shrink is, for
 these two capabilities, a facade that is already installed.** Moving farm lookup is a change to one

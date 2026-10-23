@@ -16,10 +16,10 @@ decidiu e de quem discordou.
 
 Joana o escreveu numa tarde, depois da reunião com Marcos e Regina. Tem cerca de 500 palavras.
 
-> **Pagamento aos produtores: substituir a parte da Coleta que atende as fazendas por um produto SaaS
+> **Pagamento aos produtores: substituir a parte do Coleta que atende as fazendas por um produto SaaS
 > comprado.** Status: aceito, 26 de novembro de 2026.
 >
-> **Pergunta.** Como a Serra Alta substitui o que a Coleta faz para as fazendas — registrar cada
+> **Pergunta.** Como a Serra Alta substitui o que o Coleta faz para as fazendas — registrar cada
 > coleta, guardar os resultados de laboratório e calcular o pagamento mensal — antes de Sebastião Lima
 > se aposentar, no fim de junho de 2028?
 >
@@ -31,8 +31,8 @@ Joana o escreveu numa tarde, depois da reunião com Marcos e Regina. Tem cerca d
 > **Opções, em 36 meses a partir de janeiro de 2027, em reais.** A, comprar um produto SaaS:
 > 4.233.500, primeiro pagamento aos produtores em outubro de 2027. B, estender o SAP depois da
 > conversão para o S/4HANA: 5.261.000, primeiro pagamento em maio de 2028. C, construir internamente:
-> 4.679.000, primeiro pagamento em abril de 2028. Os totais incluem integração, o time interno, a
-> Coleta mantida no ar e o custo de sair. A planilha completa vai anexa.
+> 4.679.000, primeiro pagamento em abril de 2028. Os totais incluem integração, o time interno, o
+> Coleta mantido no ar e o custo de sair. A planilha completa vai anexa.
 >
 > **Premissas.** A Serra Alta acrescenta 100 fazendas por ano. O reajuste na primeira renovação tem
 > teto de 4%. Uma pessoa custa R$ 25.000 por mês. Um sistema que construímos custa 20% da construção
@@ -44,9 +44,9 @@ Joana o escreveu numa tarde, depois da reunião com Marcos e Regina. Tem cerca d
 > dentro dele. Toda interface passa pela nossa própria camada anticorrupção. O contrato inclui a
 > exportação do histórico com dicionário de dados.
 >
-> **Por quê.** A é a mais barata, por R$ 445.500, e a única opção que desliga a Coleta com Sebastião
+> **Por quê.** A é a mais barata, por R$ 445.500, e a única opção que desliga o Coleta com Sebastião
 > ainda aqui. Ela continua a mais barata contra um reajuste de até 61% na renovação, e uma construção
-> atrasada só aumenta a diferença: com 50% de atraso, C custaria R$ 5.513.000 e desligaria a Coleta
+> atrasada só aumenta a diferença: com 50% de atraso, C custaria R$ 5.513.000 e desligaria o Coleta
 > seis meses depois de Sebastião sair.
 >
 > **Ponto fraco.** As cinco regras estendidas são onde a nossa política de qualidade encontra o

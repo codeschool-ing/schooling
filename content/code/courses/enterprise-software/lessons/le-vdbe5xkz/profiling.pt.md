@@ -25,10 +25,10 @@ levá-los.
 
 Duas coisas viajam nesse passo:
 
-- **o cadastro de fazendas**: um registro por fazenda, com o código, o CPF ou CNPJ do produtor, o
+- *o cadastro de fazendas*: um registro por fazenda, com o código, o CPF ou CNPJ do produtor, o
   município, a rota, o tanque e o número do cadastro de fornecedor da fazenda no SAP, que é quem
   paga (aula 1);
-- **o histórico de coletas**: uma linha por fazenda por coleta, com os litros e os resultados de
+- *o histórico de coletas*: uma linha por fazenda por coleta, com os litros e os resultados de
   laboratório a partir dos quais o pagamento é calculado. Desde 1996, chegou a cerca de 14,6
   milhões de linhas.
 

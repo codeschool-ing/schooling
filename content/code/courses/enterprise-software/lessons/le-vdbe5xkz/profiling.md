@@ -23,10 +23,10 @@ way, the data has to move, and this lesson is about moving it.
 
 Two things travel in that step:
 
-- **the farm master**: one record per farm, with its code, the producer's CPF or CNPJ, the
+- *the farm master*: one record per farm, with its code, the producer's CPF or CNPJ, the
   municipality, the route, the tank, and the number of the farm's vendor record in SAP, which is
   what SAP pays (lesson 1);
-- **the collection history**: one row per farm per collection, with the litres and the laboratory
+- *the collection history*: one row per farm per collection, with the litres and the laboratory
   results that the payment is calculated from. Since 1996 it has grown to about 14.6 million rows.
 
 Joana's first draft of the mapping was written from Coleta's documentation, a binder of record

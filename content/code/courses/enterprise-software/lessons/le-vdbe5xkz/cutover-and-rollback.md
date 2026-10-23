@@ -30,8 +30,8 @@ week (lesson 1), so the first week of the month was out. And the farms are paid 
 further the cutover sat from the next 10th, the longer the new system had to prove itself before
 it paid anybody.
 
-The window chosen was **Saturday 20:00 to Sunday 10:00, on the Saturday after the August payment**:
-fourteen hours, four days after a payment and twenty-seven days before the next one. During those
+The window chosen was **Saturday 20:00 to Sunday 10:00, on the Saturday after the September payment**:
+fourteen hours, just after one payment and as far from the next as the calendar allowed. During those
 hours the trucks still collect. Their handhelds keep the readings and send them once a system is
 ready to take them, the store-and-forward behaviour lesson 12 describes.
 
@@ -103,7 +103,7 @@ it took four hours. Every day after the cutover adds a day of readings to carry 
 grows daily, but it is still possible.
 
 **The first payment from the new system is the point of no return.** The farms are SAP vendors
-(lesson 1): the new system calculates what each one has earned for August, the amounts are posted
+(lesson 1): the new system calculates what each one has earned for September, the amounts are posted
 in SAP, and SAP's payment run produces the bank file that finance sends on the 9th. Once that file has gone, going back to
 Coleta would mean that the record of what was paid lives in a system that no longer calculates it,
 and undoing it would mean asking about 1,900 farms to return their money. Nobody would do that, so

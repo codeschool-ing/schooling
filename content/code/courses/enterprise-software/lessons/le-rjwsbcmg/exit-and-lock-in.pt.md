@@ -50,7 +50,7 @@ três meses a Serra Alta paga os dois.
 Três cláusulas do contrato de A decidem quanto custa a saída, e **elas são negociadas na assinatura,
 quando a Serra Alta ainda pode ir embora, ou não são negociadas nunca**.
 
-**A exportação.** O fornecedor exporta o cadastro atual das fazendas num arquivo CSV a qualquer
+*A exportação.* O fornecedor exporta o cadastro atual das fazendas num arquivo CSV a qualquer
 momento, de graça. O histórico completo — trinta e seis meses de coletas e resultados de laboratório —
 vem como serviço pago, R$ 30.000, num formato documentado com um dicionário de dados que nomeia cada
 campo e sua unidade. Sem esse dicionário a exportação é um arquivo de números cujo significado alguém
@@ -58,13 +58,13 @@ tem de redescobrir, que é a aula 14 de novo no pior momento. O contrato também
 guarda os dados da Serra Alta por 90 dias depois do fim e então os apaga, então a exportação tem
 prazo.
 
-**O aviso prévio.** O primeiro prazo é de 24 meses. Para sair no fim dele, a Serra Alta precisa avisar
+*O aviso prévio.* O primeiro prazo é de 24 meses. Para sair no fim dele, a Serra Alta precisa avisar
 com seis meses de antecedência, até o fim do mês 18 — junho de 2028, o mês em que Sebastião se
 aposenta. Perca essa data e o contrato renova para o ano 3, R$ 655.200 comprometidos seja o que for
 que a Serra Alta decida depois. **O aviso prévio é a parte do lock-in que aparece como uma data**, e
 ela pertence ao calendário de alguém, com o nome dessa pessoa, não ao anexo do contrato.
 
-**Rescisão antes do prazo.** Sair cedo significa pagar o resto do prazo. Se a Serra Alta saísse no
+*Rescisão antes do prazo.* Sair cedo significa pagar o resto do prazo. Se a Serra Alta saísse no
 fim do ano 1, deveria os doze meses do ano 2 mesmo assim: R$ 25 × 2.000 fazendas × 12 = R$ 600.000.
 Esse é o preço de um prazo de dois anos, e ele compra o preço de R$ 25; um prazo de um ano teria
 custado mais por fazenda e menos para sair.
@@ -73,7 +73,7 @@ custado mais por fazenda e menos para sair.
 
 Os 60% da linha de integrações não são um palpite sobre o fornecedor. São consequência de como a Serra
 Alta constrói as interfaces dela. A aula 13 apresentou a **camada anticorrupção** para manter o modelo
-da Coleta fora do modelo novo. O plano de integração da Serra Alta usa o mesmo padrão do outro lado:
+do Coleta fora do modelo novo. O plano de integração da Serra Alta usa o mesmo padrão do outro lado:
 o SAP, o laboratório e o Rota falam com o modelo da própria Serra Alta de uma fazenda, uma coleta e um
 pagamento, e só a camada fala com o produto. Sair do produto significa reescrever o lado da camada
 voltado para ele, não todas as interfaces atrás dela.
@@ -94,7 +94,7 @@ renovação como quem poderia ir embora.
 | retreinamento | 60.000 | 60.000 | 60.000 |
 | **saída** | **397.800** | **190.000** | **307.000** |
 
-**B tem a menor saída, e o motivo merece ser entendido mais que comemorado.** Sair de B significa
+B tem a menor saída, por um motivo que vale entender. Sair de B significa
 tirar o pagamento aos produtores do SAP. O SAP em si fica, então não há assinatura para sobrepor, e as
 fazendas continuam cadastros de fornecedor seja o que for que substitua o cálculo. Tirar o histórico
 das tabelas customizadas custa R$ 40.000, e 60% da linha de integração menor de B, R$ 90.000, são

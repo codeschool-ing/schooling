@@ -11,7 +11,7 @@ responde encolhe até não sobrar nada.
 
 Esse algo costuma se chamar fachada, ou camada de roteamento. Para uma aplicação web é um proxy
 reverso ou um API gateway, e a regra de roteamento é um caminho de URL. Para um sistema cujos
-clientes chegam por um barramento de integração, é o barramento. Para a Coleta, cujas entradas são
+clientes chegam por um barramento de integração, é o barramento. Para o Coleta, cujas entradas são
 quase todas arquivos, é outra coisa ainda, e a próxima seção trata desse caso. Esta trata da fachada
 em si, porque as regras dela valem qualquer que seja a forma.
 
@@ -29,7 +29,7 @@ No segundo, algumas capacidades são atendidas pelo sistema novo e o resto ainda
 mudou de lado foi uma capacidade, de ponta a ponta: algo que alguém pede e que é respondido por
 inteiro por um lado só.** A consulta de fazenda, por exemplo, é uma capacidade. O Rota pede uma
 fazenda pelo código e recebe a localização, o tamanho do tanque e os dias em que ela é coletada. Ou
-a Coleta responde isso, ou o serviço novo responde; não existe versão em que a Coleta faz metade.
+o Coleta responde isso, ou o serviço novo responde; não existe versão em que o Coleta faz metade.
 
 No terceiro, o legado não responde nada e pode ser removido. O que acontece com a fachada nessa hora
 é uma escolha. Às vezes ela é apagada junto com o legado, e quem chama passa a apontar direto para o
@@ -94,25 +94,26 @@ em que um erro custa mais.
 Depois da primeira fatia, a ordem segue duas pressões. O valor puxa para as capacidades que o
 negócio mais quer ver melhoradas. A dependência empurra para mudar primeiro o que outras capacidades
 usam, porque uma capacidade que lê dados que o legado ainda controla precisa de uma sincronização que
-já é trabalho por si só. A coexistência é o assunto da seção depois da próxima.
+já é trabalho por si só. A coexistência vem três seções adiante.
 
-## Onde a Coleta tem uma borda
+## Onde o Coleta tem uma borda
 
-A Coleta quase não tem interface de pergunta e resposta. Os usuários digitam em terminais de tela
-verde, as entradas chegam como arquivos, e a saída principal é um arquivo. Ela tem exatamente dois
+O Coleta quase não tem interface de pergunta e resposta. Os usuários digitam em terminais de tela
+verde, as entradas chegam como arquivos, e a saída principal é um arquivo. Ele tem exatamente dois
 lugares em que outro sistema faz uma pergunta e espera a resposta, e os dois são fluxos no
 barramento de integração que o time do Rui Andrade opera (aula 8). Um é a consulta de fazenda, que o
 Rota chama toda noite ao planejar as rotas do dia seguinte. O outro é o resumo da coleta do dia, que
 o painel do time de qualidade pede a cada hora.
 
-Os dois fluxos foram construídos em 2015, muito antes de alguém falar em substituir a Coleta, e os
+Os dois fluxos são dos primeiros anos do barramento (a consulta de fazenda é o FarmRegistry da aula 8,
+construído em 2016), muito antes de alguém falar em substituir o Coleta, e os
 dois já fazem o que uma fachada faz: o Rota e o painel chamam o barramento, e só o barramento sabe
 que a resposta vem de um programa RPG no IBM i. **O barramento que a Serra Alta passou anos tentando
 encolher é, para essas duas capacidades, uma fachada já instalada.** Mudar a consulta de fazenda de
 lado é trocar o destino de um fluxo, mais uma tradução do modelo do serviço novo para a resposta que
 o Rota espera.
 
-Isso cobre duas capacidades das doze do inventário da Joana sobre o que a Coleta faz. As outras dez
+Isso cobre duas capacidades das doze do inventário da Joana sobre o que o Coleta faz. As outras dez
 não têm borda onde se apoiar. Os coletores portáteis dos caminhões, os arquivos de resultado do
 laboratório, as telas dos funcionários e o arquivo noturno para o SAP pedem outra técnica, e esse é
 o assunto da próxima seção.

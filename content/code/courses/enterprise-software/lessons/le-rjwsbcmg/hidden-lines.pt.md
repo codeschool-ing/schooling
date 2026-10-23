@@ -26,27 +26,27 @@ deixa de fora.
 
 ## O que quem compra esquece
 
-**Integração.** Um produto chega com uma API, não com interfaces para os seus sistemas. O produto SaaS
+*Integração.* Um produto chega com uma API, não com interfaces para os seus sistemas. O produto SaaS
 precisa mandar os valores de cada mês para o SAP, onde as fazendas são cadastros de fornecedor e os
 arquivos do banco são gerados; receber os resultados do sistema do laboratório; e trocar as coletas
 do dia com o Rota. Isso são as aulas 8 a 11 aplicadas a um produto, R$ 240.000 na planilha de A, e é a
 linha que a proposta de um fornecedor mais costuma deixar para o cliente.
 
-**Customização que trava atualizações.** As cinco regras que o produto não expressa custam R$ 150.000
+*Customização que trava atualizações.* As cinco regras que o produto não expressa custam R$ 150.000
 para escrever ao lado dele. O custo maior é o que elas fazem com cada versão depois. O fornecedor
 lança quatro versões por ano, e cada uma tem de ser testada contra as cinco extensões e as interfaces
 antes de chegar ao dinheiro das fazendas: R$ 10.000 por versão, R$ 90.000 no período. Uma extensão
 feita pela interface publicada sobrevive a uma versão e é testada; **uma modificação no código do
 próprio produto transforma cada versão num projeto**, e é por isso que os anéis da aula 1 dizem nunca.
 
-**A métrica de licença que cresce com você.** A assinatura é por fazenda ativa. O plano de leite da
+*A métrica de licença que cresce com você.* A assinatura é por fazenda ativa. O plano de leite da
 Serra Alta acrescenta 100 fazendas por ano, então a conta cresce sem ninguém assinar nada: R$ 30.000 a
 mais no ano 2 e R$ 60.000 a mais no ano 3, contra uma proposta que precificou 1.900 fazendas por três
 anos. Leia a definição da métrica antes de ler o preço. "Fazenda ativa" e "fazenda cadastrada" são
 números diferentes em qualquer sistema de coleta, porque fazendas param de entregar e os cadastros
 ficam, e a aula 14 é onde você descobre o quanto diferem.
 
-**O preço na renovação.** A proposta precificou o ano 3 como precificou o ano 1. O contrato da Serra
+*O preço na renovação.* A proposta precificou o ano 3 como precificou o ano 1. O contrato da Serra
 Alta limita o reajuste na primeira renovação a 4%, o que vale R$ 25.200 no ano 3 (R$ 1 × 2.100
 fazendas × 12). Sem esse teto, o preço da renovação é o que o fornecedor pedir num dia em que a Serra
 Alta não tem outro sistema pronto; a seção 06 desta aula testa um reajuste de 15%.
@@ -54,22 +54,22 @@ Alta não tem outro sistema pronto; a seção 06 desta aula testa um reajuste de
 Os três efeitos na assinatura somam R$ 115.200: os R$ 1.710.000 da proposta contra os R$ 1.825.200 da
 planilha.
 
-**Uso indireto do sistema de registro.** Todo mês os valores do produto viram documentos no SAP. A
+*Uso indireto do sistema de registro.* Todo mês os valores do produto viram documentos no SAP. A
 aula 1 contou o caso SAP v Diageo (2017), e a aula 2, como o SAP licencia hoje os documentos criados
 nele por outro software. Se o contrato atual da Serra Alta com o SAP já cobre os pagamentos aos
 produtores criados de fora é uma pergunta para o time de contas do SAP antes da assinatura, não
 depois, porque a resposta depende do contrato e não da arquitetura.
 
-**Migração de dados.** R$ 150.000. Propostas dizem "carga de dados" e querem dizer carregar um arquivo
+*Migração de dados.* R$ 150.000. Propostas dizem "carga de dados" e querem dizer carregar um arquivo
 que você entrega. Pôr trinta anos de Coleta num arquivo que carrega, e provar que ele chegou, é a aula
 14.
 
-**Pagar enquanto implanta.** A assinatura começa na assinatura do contrato. Nove meses dela,
+*Pagar enquanto implanta.* A assinatura começa na assinatura do contrato. Nove meses dela,
 R$ 427.500, são pagos antes de o produto pagar uma única fazenda.
 
 ## O que quem constrói esquece
 
-**Manutenção, todo ano, enquanto ele rodar.** Um sistema terminado no mês 12 não está terminado. As
+*Manutenção, todo ano, enquanto ele rodar.* Um sistema terminado no mês 12 não está terminado. As
 regras mudam duas vezes por ano, o SAP vira S/4HANA embaixo dele, o banco muda um layout de arquivo,
 alguém acha o bug que só aparece num mês de 31 dias com feriado no dia 10. A premissa de planejamento
 da Serra Alta é que **manter um sistema que ela construiu custa 20% da construção por ano**. Esse
@@ -77,34 +77,34 @@ número é premissa da empresa, escolhida pelo time de Marcos a partir dos próp
 lei, e alguns sistemas custam muito mais. Na planilha de C ele dá R$ 420.000 por ano, R$ 840.000 nos
 24 meses depois da entrada em produção.
 
-**Plantão.** As fazendas são pagas no dia 10, e o processamento do pagamento acontece seja ou não
+*Plantão.* As fazendas são pagas no dia 10, e o processamento do pagamento acontece seja ou não
 conveniente. Um sistema construído precisa de alguém que atenda à noite na semana do pagamento, de
 monitoramento que acorde essa pessoa e de um primeiro atendimento para as dúvidas do campo. A
 planilha de C carrega R$ 10.000 por mês para isso.
 
-**Patches de segurança e um teste anual.** Toda biblioteca da construção tem vulnerabilidades
+*Patches de segurança e um teste anual.* Toda biblioteca da construção tem vulnerabilidades
 anunciadas contra ela, e alguém tem de aplicar as correções e testar o processamento do pagamento
 depois. A planilha de C acrescenta um teste de intrusão externo por ano, R$ 40.000 cada, porque um
 sistema que guarda as contas bancárias de 1.900 produtores vale a pena ser atacado.
 
-**Produção é mais cara que desenvolvimento.** Os ambientes de C custam R$ 3.000 por mês enquanto ele
+*Produção é mais cara que desenvolvimento.* Os ambientes de C custam R$ 3.000 por mês enquanto ele
 é construído e R$ 9.000 por mês quando roda com contingência e backups: R$ 252.000 no período, dos
 quais R$ 216.000 depois da entrada em produção.
 
-**Atualizações.** Quem atualiza um produto é o fornecedor dele. Quem constrói atualiza a versão
+*Atualizações.* Quem atualiza um produto é o fornecedor dele. Quem constrói atualiza a versão
 principal do banco de dados, o runtime da linguagem, o framework e a versão do Android dos coletores
 nos caminhões, R$ 60.000 no ano 3.
 
-**A Coleta, por mais tempo.** A construção chega ao primeiro pagamento aos produtores no mês 16, então
-a Coleta roda até o mês 18: R$ 270.000, contra R$ 180.000 de A.
+*O Coleta, por mais tempo.* A construção chega ao primeiro pagamento aos produtores no mês 16, então
+o Coleta roda até o mês 18: R$ 270.000, contra R$ 180.000 de A.
 
-**O time que não pode sair.** Sete pessoas o constroem. O orçamento de manutenção paga 1,4 delas
+*O time que não pode sair.* Sete pessoas o constroem. O orçamento de manutenção paga 1,4 delas
 depois (R$ 420.000 ÷ R$ 300.000 por ano), então a maior parte do conhecimento de como o pagamento aos
 produtores funciona sai com as outras cinco ou seis. **As pessoas que ficam passam a ser as únicas que
-entendem um sistema crítico para a missão**, e a Serra Alta já passou por isso: a Coleta é a cara que
+entendem um sistema crítico para a missão**, e a Serra Alta já passou por isso: o Coleta é a cara que
 isso tem depois de trinta anos, e a aposentadoria de Sebastião é o motivo desta aula existir.
 
-**O que o time teria construído no lugar.** O custo de oportunidade não está na planilha, porque não
+*O que o time teria construído no lugar.* O custo de oportunidade não está na planilha, porque não
 é dinheiro pago a ninguém, e ele pertence à decisão mesmo assim. Sete engenheiros por um ano é mais
 que o time de produto inteiro do Rota, que tem cinco. Se eles constroem o cálculo do pagamento aos
 produtores — contexto —, não constroem o que quer que fosse o próximo diferencial da Serra Alta. Um

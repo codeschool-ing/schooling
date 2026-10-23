@@ -87,17 +87,19 @@ as nobody reads the invoice.
 **A switch-off that is not written down with a date does not happen.** It slides, one month at a
 time, behind whatever the business needs this month. So the switch-off is a decision record like
 any other (`architecture-role` taught their shape), and Joana wrote it at the start of the
-migration rather than at the end: Coleta is switched off on 30 November 2028; this is what will be
-archived and where; these are the contracts that end and when; these people own each part. Regina
+migration rather than at the end. It says that Coleta is switched off on 30 November 2028, what will
+be archived and where, which contracts end and when, and who owns each part. Regina
 signed it as CIO, Marcos for the financial records and Cláudia for the quality records. A record
 written at the start can be revised, and revising it is a visible act with a reason; a date that
 only exists in people's heads moves without anybody deciding to move it.
 
-The date was chosen with one person in mind. Sebastião leaves at the end of 2028, and the plan puts
-the switch-off a month before his last day, so that the person who knows Coleta best is still
-there for the first month in which it is gone. His last task at Serra Alta is not writing code. It
-is walking through the archive with the clerks, to confirm they can find a farm's history without
-him, and reading the anti-corruption layer's tests one more time.
+The dates were chosen with one person in mind. Sebastião leaves at the end of June 2028, and the
+plan moves the payment in April, so that the person who knows Coleta best is still there for the
+first payments Coleta does not calculate. Coleta goes read-only the Monday after his last day, and
+stays up until the end of November so that several month-end closes run against it before the
+machine goes off. His last task at Serra Alta is not writing code. It is walking through Coleta's
+history with the clerks, to confirm they can find a farm's record without him, and reading the
+anti-corruption layer's tests one more time.
 
 ## Measure what was switched off
 

@@ -121,7 +121,7 @@ def a_by_year():
         "Serra Alta leaves.",
         "A opção A, o produto SaaS, em quatro barras. O ano 1 é a mais alta, R$ 2.044.500: "
         "R$ 1.160.000 pagos uma vez (implantação, migração, integração, customização, treinamento e "
-        "os últimos doze meses da Coleta) e R$ 884.500 que se repetem. O ano 2 é R$ 868.000 e o ano 3, "
+        "os últimos doze meses do Coleta) e R$ 884.500 que se repetem. O ano 2 é R$ 868.000 e o ano 3, "
         "R$ 923.200, tudo recorrente. Uma quarta barra, tracejada, é a saída, R$ 397.800, paga só se "
         "a Serra Alta sair."))
     base, k = 250, 200 / 2_100_000

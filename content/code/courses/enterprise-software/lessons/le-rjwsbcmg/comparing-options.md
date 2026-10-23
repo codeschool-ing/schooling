@@ -13,14 +13,14 @@ for Serra Alta's three options.
 A's sheet is in section 03 of this lesson. B and C are built the same way, from these assumptions,
 all of them Serra Alta's invented estimates:
 
-- **B, extend SAP.** It cannot go live before S/4HANA does, and Serra Alta's conversion is planned to
+- *B, extend SAP.* It cannot go live before S/4HANA does, and Serra Alta's conversion is planned to
   go live in January 2028, month 13. Functional consultants design and configure it from month 1 to
   month 16, R$ 62,500 a month. Of the 46 rules, 30 become standard SAP purchasing price conditions; the
   other 16, and the collection app on the truck handhelds, are custom development from month 4 to
   month 16 at R$ 120,000 a month. Additional SAP licences and the platform the handheld app runs on
   cost R$ 15,000 a month. One person from Edson's team works on it throughout. The first farm payment
   is in May 2028, month 17, and Coleta is switched off after month 19.
-- **C, build.** Seven people for twelve months build it on the same stack as Rota, Kotlin and
+- *C, build.* Seven people for twelve months build it on the same stack as Rota, Kotlin and
   PostgreSQL. Parallel running is months 13 to 15, the first farm payment is in April 2028, month 16,
   and Coleta is switched off after month 18. Maintenance from month 13 follows the 20% assumption of
   section 04 of this lesson: R$ 35,000 a month.
