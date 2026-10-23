@@ -48,9 +48,9 @@ dono**. O dono não é um campo do arquivo. É quem fez o commit da linha, e o G
 
 ```
 ana@vm:~/linkbox$ git blame -s ci/exceptions.txt | tail -n 3
-f7d51a98 4) PYSEC-2026-1475 2026-11-20 templates need rework for 3.1.5; Ana, see issue 41
-f7d51a98 5) PYSEC-2026-1472 2026-11-20 templates need rework for 3.1.5; Ana, see issue 41
-f7d51a98 6) PYSEC-2026-1471 2026-11-20 templates need rework for 3.1.6; Ana, see issue 41
+ae520bf7 4) PYSEC-2026-1475 2026-11-20 templates need rework for 3.1.5; Ana, see issue 41
+ae520bf7 5) PYSEC-2026-1472 2026-11-20 templates need rework for 3.1.5; Ana, see issue 41
+ae520bf7 6) PYSEC-2026-1471 2026-11-20 templates need rework for 3.1.6; Ana, see issue 41
 ana@vm:~/linkbox$ git log -1 --format="%an, %ad" --date=short -- ci/exceptions.txt
 Ana Lima, 2026-10-23
 ```

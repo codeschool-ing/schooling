@@ -65,17 +65,26 @@ Faça o commit e o push:
 ```
 ana@vm:~/linkbox$ git add ci
 ana@vm:~/linkbox$ git commit -q -m "the policies on every push"
-1:55AM INF 0 commits scanned.
-1:55AM INF scanned ~448 bytes (448 bytes) in 172ms
-1:55AM INF no leaks found
+9:38AM INF 0 commits scanned.
+9:38AM INF scanned ~438 bytes (438 bytes) in 180ms
+9:38AM INF no leaks found
 ana@vm:~/linkbox$ git push ci main
-remote: run 1: main at 8e4c80c        
+remote: run 1: main at 02c69f4        
 remote: secrets: passed in 1s        
-remote: workflows: FAILED in 0s, the end of workflows.log:        
-remote:   bash: ci/workflows.sh: No such file or directory        
-remote: run 1: failed, the logs are in ~/ci/runs/1/logs        
+remote: workflows: passed in 0s        
+remote: policy: passed in 0s        
+remote: test: passed in 1s        
+remote: sast: passed in 3s        
+remote: sca: passed in 9s        
+remote: build: passed in 2s        
+remote: image: passed in 1s        
+remote: push: passed in 1s        
+remote: sbom: passed in 5s        
+remote: sign: passed in 2s        
+remote: pipeline passed with 0 warning(s)        
+remote: run 1: passed        
 To /home/ana/ci/linkbox.git
-   0979302..8e4c80c  main -> main
+   a212f98..02c69f4  main -> main
 ```
 
 Todos os estágios passaram, `policy` entre eles, e cada linha do log dele fica no diretório da
@@ -99,14 +108,21 @@ index fbd2608..6ea106d 100644
 -  validationActions: ["Deny"]
 +  validationActions: ["Warn"]
 ana@vm:~/linkbox$ git commit -q -am "admission: warn while debugging"
-1:55AM INF 0 commits scanned.
-1:55AM INF scanned ~30 bytes (30 bytes) in 178ms
-1:55AM INF no leaks found
+9:38AM INF 0 commits scanned.
+9:38AM INF scanned ~30 bytes (30 bytes) in 216ms
+9:38AM INF no leaks found
 ana@vm:~/linkbox$ git push ci debug-admission
-remote: run 2: debug-admission at b892ec2        
-remote: secrets: passed in 1s        
-remote: workflows: FAILED in 0s, the end of workflows.log:        
-remote:   bash: ci/workflows.sh: No such file or directory        
+remote: run 2: debug-admission at 931b742        
+remote: secrets: passed in 0s        
+remote: workflows: passed in 0s        
+remote: policy: FAILED in 1s, the end of policy.log:        
+remote:           
+remote:   18 tests, 18 passed, 0 warnings, 0 failures, 0 exceptions, 0 skipped        
+remote:           
+remote:   3 tests, 3 passed, 0 warnings, 0 failures, 0 exceptions        
+remote:   FAIL - k8s/admission.yaml - kubernetes - linkbox-deployments: validationActions must include Deny        
+remote:           
+remote:   35 tests, 34 passed, 0 warnings, 1 failure, 0 exceptions        
 remote: run 2: failed, the logs are in ~/ci/runs/2/logs        
 To /home/ana/ci/linkbox.git
  * [new branch]      debug-admission -> debug-admission
@@ -122,7 +138,7 @@ Jogue o branch fora:
 ```
 ana@vm:~/linkbox$ git switch -q main
 ana@vm:~/linkbox$ git branch -D debug-admission
-Deleted branch debug-admission (was b892ec2).
+Deleted branch debug-admission (was 931b742).
 ```
 
 ### Uma regra, checada duas vezes

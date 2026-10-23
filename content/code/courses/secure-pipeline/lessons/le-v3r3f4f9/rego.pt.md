@@ -122,12 +122,11 @@ nome, porque não consegue saber que número o nome representa. Essa recusa não
 
 ```
 ana@vm:~/linkbox$ mkdir policy
-ana@vm:~/linkbox$ conftest test --no-color --namespace docker Dockerfile
+ana@vm:~/linkbox$ conftest test --no-color --namespace docker Dockerfile; echo "exit status $?"
 FAIL - Dockerfile - docker - the final stage sets no USER: name a numeric user that is not root
 
 3 tests, 2 passed, 0 warnings, 1 failure, 0 exceptions
-ana@vm:~/linkbox$ echo $?
-0
+exit status 1
 ```
 
 A regra do digest passou para as duas linhas FROM. A regra do usuário falhou, e o status de saída 1 é

@@ -230,7 +230,7 @@ Faça o commit dos testes junto com as regras que eles testam:
 ```
 ana@vm:~/linkbox$ git add policy
 ana@vm:~/linkbox$ git commit -q -m "tests for the policies"
-1:55AM INF 0 commits scanned.
-1:55AM INF scanned ~5223 bytes (5.22 KB) in 196ms
-1:55AM INF no leaks found
+9:38AM INF 0 commits scanned.
+9:38AM INF scanned ~5223 bytes (5.22 KB) in 249ms
+9:38AM INF no leaks found
 ```

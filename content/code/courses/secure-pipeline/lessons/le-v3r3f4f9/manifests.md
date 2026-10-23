@@ -185,9 +185,9 @@ arrive together:
 ```
 ana@vm:~/linkbox$ git add Dockerfile policy
 ana@vm:~/linkbox$ git commit -q -m "policy as code: the Dockerfile and the manifests"
-1:55AM INF 0 commits scanned.
-1:55AM INF scanned ~4406 bytes (4.41 KB) in 180ms
-1:55AM INF no leaks found
+9:38AM INF 0 commits scanned.
+9:38AM INF scanned ~4406 bytes (4.41 KB) in 202ms
+9:38AM INF no leaks found
 ```
 
 The three lines after the commit are lesson 6's pre-commit hook scanning the staged files for

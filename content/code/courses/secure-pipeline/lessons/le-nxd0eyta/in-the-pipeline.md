@@ -57,13 +57,43 @@ the author of a change do with credentials the author was never given.
 
 Commit the three files and push:
 
-@@CAPTURE pipeline@@
+```
+ana@vm:~/linkbox$ git add ci
+ana@vm:~/linkbox$ git commit -q -m "every pushed image signed, with its bill of materials and its provenance attested"
+9:33AM INF 0 commits scanned.
+9:33AM INF scanned ~1968 bytes (1.97 KB) in 184ms
+9:33AM INF no leaks found
+ana@vm:~/linkbox$ git push ci main
+remote: run 1: main at 0764386        
+remote: secrets: passed in 1s        
+remote: test: passed in 1s        
+remote: sast: passed in 4s        
+remote: sca: passed in 8s        
+remote: build: passed in 0s        
+remote: image: passed in 1s        
+remote: push: passed in 1s        
+remote: sbom: passed in 4s        
+remote: sign: passed in 3s        
+remote: pipeline passed with 0 warning(s)        
+remote: run 1: passed        
+To /home/ana/ci/linkbox.git
+   de3591e..0764386  main -> main
+```
 
 The pre-commit hook from lesson 6 scanned the staged files on the way, which is the three lines
 that start with a time. Then the run: `sign` is the ninth stage and it passed. Its log carries the same
-`WARNING` about Sigstore's trust root three times, once per call, and apart from those it reads:
+`WARNING` about Sigstore's trust root three times, once per call. Apart from those it reads:
 
-@@CAPTURE sign-log@@
+```
+ana@vm:~/linkbox$ grep -v ^WARNING ~/ci/runs/1/logs/sign.log
+Signing artifact...
+Pushing signature to: localhost:5000/linkbox
+Using payload from: /home/ana/ci/runs/1/logs/sbom.cdx.json
+Signing artifact...
+Using payload from: /home/ana/ci/runs/1/logs/provenance.json
+Signing artifact...
+signed localhost:5000/linkbox@sha256:a0b743b9eaa4d253341ca2509a1e281fb96602c54ca51f102bdf2dbd53ee923b
+```
 
 **One signature and two attestations, all over one digest.** `Using payload from` names the file
 each attestation was made of, and the last line is the reference a deployment can use. Every push
