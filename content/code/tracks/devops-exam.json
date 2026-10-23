@@ -1,5 +1,470 @@
 [
   {
+    "id": "ex-wavvajyj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "The zone file in the infrastructure repository gains the line `docs   CNAME   docs-host.provider.net`. After the deploy, `docs.example.com` resolves to nothing, and `dig` shows the alias pointing at `docs-host.provider.net.example.com`. What went wrong?",
+    "hint": "Web and Internet Fundamentals, lesson 8.",
+    "choices": [
+      {
+        "text": "A `CNAME` can only sit at the bare domain, never at a subdomain",
+        "correct": false,
+        "why": "It is the other way round: the bare domain is the one name that cannot carry a `CNAME`, because its `NS` records sit there."
+      },
+      {
+        "text": "The target has no final dot, so the zone's own name was added to it",
+        "correct": true,
+        "why": "In a record file a name without a trailing dot is completed with the domain, which is exactly the `.example.com` on the end."
+      },
+      {
+        "text": "The record is still propagating, and resolvers will catch up within two days",
+        "correct": false,
+        "why": "Nothing propagates, and what `dig` printed is already the wrong name rather than an old answer."
+      },
+      {
+        "text": "`docs` also holds a `TXT` record, and an alias may sit beside nothing else",
+        "correct": false,
+        "why": "That rule is real, but breaking it would not invent a name ending in `example.com`; a missing dot does."
+      }
+    ]
+  },
+  {
+    "id": "ex-jxkry1b6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The shop's owner lowers a price. A developer reloads the API response with *Disable cache* ticked in the network panel and still sees the old price, and the response carries `X-Cache-Status: HIT`, which the Nginx in front of the application adds. Why did ticking the box not help?",
+    "hint": "Web and Internet Fundamentals, lesson 11; Web Servers and Caching, lesson 5.",
+    "choices": [
+      {
+        "text": "The browser ignored the box and answered from the copy on its own disk",
+        "correct": false,
+        "why": "A copy from the browser's disk never reaches Nginx, and the `X-Cache-Status` header shows that this request did."
+      },
+      {
+        "text": "The new price never reached the database, which is what `HIT` reports",
+        "correct": false,
+        "why": "`HIT` says where Nginx found the answer, not what the database holds; asked past the cache, the application gives the new price."
+      },
+      {
+        "text": "Nginx obeys the box only once `proxy_ignore_headers Cache-Control` is set",
+        "correct": false,
+        "why": "That line makes Nginx ignore what the application says about caching, and it is the line that turns a cache into a leak."
+      },
+      {
+        "text": "The box rules the browser's copies; Nginx's shared cache takes no orders from clients",
+        "correct": true,
+        "why": "Nginx ignores what a client asks for by design, so the stale copy is on the server, and that is where it has to be refreshed or removed."
+      }
+    ]
+  },
+  {
+    "id": "ex-qz4773pg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The checkout's availability SLI is `sum(rate(http_server_requests_total{route=\"/checkout\",code!~\"5..\"}[5m])) / sum(rate(http_server_requests_total{route=\"/checkout\"}[5m]))`, and it read 1 all week. Meanwhile twenty customers report that their order was never placed, and the network panel on one of them shows the checkout answered `200` with `{\"error\": \"stock service unavailable\"}` in the body. Why did the indicator not move?",
+    "hint": "Web and Internet Fundamentals, lesson 6; Observability and Operations, lesson 15.",
+    "choices": [
+      {
+        "text": "The service reported its failures as successes, and the SLI reads the status code",
+        "correct": true,
+        "why": "Everything between the service and its caller acts on the number, and this one said success; an SLI that counts every non-`5xx` as good counted these orders as good."
+      },
+      {
+        "text": "The `/health` probe was counted with the checkouts and drowned the failures",
+        "correct": false,
+        "why": "The expression names `route=\"/checkout\"`, so a probe on another route never entered either sum."
+      },
+      {
+        "text": "They were `4xx` errors caused by the customers, which the SLI rightly counts as good",
+        "correct": false,
+        "why": "The status line said `200`; the error existed only in the body, where no indicator looks."
+      },
+      {
+        "text": "A five-minute window smooths short bursts of failures down to nothing",
+        "correct": false,
+        "why": "A ratio over five minutes still falls below 1 when a single checkout in it is counted bad; none of these was."
+      }
+    ]
+  },
+  {
+    "id": "ex-rm85cayb",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "A nightly copy from São Paulo to Northern Virginia runs over one TCP connection whose window never grows past 64 kilobytes. Take the round trip at the 76.6 ms floor the cloud course works out for that pair. Reasoning as lesson 3 does about data in flight, about how many megabits per second can that connection carry, whatever the link's bandwidth?",
+    "hint": "Web and Internet Fundamentals, lesson 3; Cloud and Serverless, lesson 9.",
+    "value": 6.76,
+    "tolerance": 0.15,
+    "unit": "Mbps"
+  },
+  {
+    "id": "ex-zss6fz1m",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "prompt": "A new virtual server has just come up on a public address, with nothing installed on it yet. Which of these does lesson 9 put in its first hour? Choose all that apply.",
+    "hint": "Web and Internet Fundamentals, lesson 9.",
+    "choices": [
+      {
+        "text": "Apply the waiting updates, and arrange for security updates to keep arriving",
+        "correct": true,
+        "why": "An unpatched machine on a public address is found by automated scanning within hours of going up."
+      },
+      {
+        "text": "Buy a size above what you expect, so the machine never runs short",
+        "correct": false,
+        "why": "The lesson says to buy small and watch; the headroom worth leaving is memory, which is what small applications run out of first."
+      },
+      {
+        "text": "Turn password logins off and log in with a key",
+        "correct": true,
+        "why": "The scanning that finds the machine is guessing passwords, and a key makes the guessing pointless rather than slow."
+      },
+      {
+        "text": "Run the application as the administrator, so it can reach whatever it needs",
+        "correct": false,
+        "why": "A separate account with only the access the application needs turns a compromise into a smaller one."
+      },
+      {
+        "text": "Leave every port open until the application is finished, then close the unused ones",
+        "correct": false,
+        "why": "The first hour closes everything not in use: a firewall that permits the web ports and your way in, and refuses the rest."
+      },
+      {
+        "text": "Decide the backups while the machine is still empty",
+        "correct": true,
+        "why": "It takes ten minutes now, and nobody backs up the database unless somebody arranges it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2g2417e0",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A storefront can hold two hundred requests in flight. Its search service becomes slow, though not broken. Put what follows in the order lesson 1 tells it.",
+    "hint": "Web and Internet Fundamentals, lesson 1.",
+    "items": [
+      "Search starts taking four seconds to answer instead of forty milliseconds",
+      "Each request that needs search keeps its slot for those four seconds",
+      "All two hundred slots end up held by requests waiting on search",
+      "Requests that never touch search find no free slot and cannot get in",
+      "Everybody sees an outage while the storefront's own measurements look healthy"
+    ],
+    "trap": "Requests that have nothing to do with search are not hurt first: they are turned away only after every slot is already held by one waiting on search."
+  },
+  {
+    "id": "ex-ada2pdxj",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "The pipeline gives every built asset a hashed name and serves those names for a year. The HTML page that lists them has to be checked with the server on every load, which mostly comes back `304`. Its header is `Cache-Control: ___`.",
+    "hint": "Web and Internet Fundamentals, lesson 7.",
+    "blanks": [
+      {
+        "accept": [
+          "no-cache"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1zsfq53s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your API allows each source address 100 requests a minute and answers `429` after that. A customer says most of their office has been getting `429` all morning, though each person sends only a few requests. What explains it?",
+    "hint": "Networks and Protocols, lesson 2.",
+    "choices": [
+      {
+        "text": "Their browsers open several connections each, and the limit counts connections",
+        "correct": false,
+        "why": "The limit counts requests per address, and the number of connections carrying them changes nothing about that."
+      },
+      {
+        "text": "Their line loses packets, and each TCP retransmission arrives as another request",
+        "correct": false,
+        "why": "A retransmitted segment is resent below HTTP and handed to the program once; it is never a second request."
+      },
+      {
+        "text": "The office goes out through NAT, so all of its people arrive from one address",
+        "correct": true,
+        "why": "Every machine in the office appears outside as the router's one public address, which is how a per-address rule shuts out a whole office."
+      },
+      {
+        "text": "Their resolver keeps an old address and sends the whole office to one server",
+        "correct": false,
+        "why": "Which server answers does not change the address the requests come from, and that address is what the limit counts."
+      }
+    ]
+  },
+  {
+    "id": "ex-g3hmcrje",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "After a release, every call from the `front` pods to `http://shop` fails at once with `Connection refused`. From a debug pod, `nslookup shop` returns the Service's cluster address, and the `shop` pods are all Running and Ready. Which explanation fits?",
+    "hint": "Networks and Protocols, lesson 3; Kubernetes: Orchestration in Production, lesson 15.",
+    "choices": [
+      {
+        "text": "The Service's selector matches no pod, so its endpoint list is empty",
+        "correct": true,
+        "why": "A Service with nobody behind it still resolves, and its address refuses connections straight away: the symptom of a typo in the selector's labels."
+      },
+      {
+        "text": "A NetworkPolicy added in the release now drops everything sent to `shop`",
+        "correct": false,
+        "why": "A drop sends nothing back, so the caller waits until it times out; this refusal came at once."
+      },
+      {
+        "text": "CoreDNS is failing, so `front` cannot turn the name `shop` into an address",
+        "correct": false,
+        "why": "The name resolved to the cluster address, and a connection can only be refused once an address has been tried."
+      },
+      {
+        "text": "The Service listens on port 80 while the pods use 8080, and the two numbers must match",
+        "correct": false,
+        "why": "`targetPort` maps one to the other; port 80 on the Service in front of 8080 in the container is the ordinary arrangement."
+      }
+    ]
+  },
+  {
+    "id": "ex-c5x82c1q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The application servers, all Linux, call a partner's API on port 443. Their subnet's network ACL, which is stateless, allows outbound TCP to port 443 and inbound TCP on ports 1024 to 32767, because somebody took that for the ephemeral range. Every call times out. Why?",
+    "hint": "Networks and Protocols, lesson 2; Cloud and Serverless, lesson 6.",
+    "choices": [
+      {
+        "text": "The outbound rule has to cover ports 1024 to 65535, since requests leave from them",
+        "correct": false,
+        "why": "The outbound rule matches the request's destination, 443, which is allowed; the ports that are judged wrongly here are the ones the replies come back to."
+      },
+      {
+        "text": "Linux takes source ports from 32768 to 60999, so every reply lands outside the rule",
+        "correct": true,
+        "why": "The kernel's `ip_local_port_range` runs from 32768 to 60999, and a stateless filter judges each reply on its own; none of them falls between 1024 and 32767."
+      },
+      {
+        "text": "The instances' security group needs an inbound rule for the replies as well",
+        "correct": false,
+        "why": "A security group is stateful: the reply to a connection the instance opened comes back in without a rule of its own."
+      },
+      {
+        "text": "The partner's API refuses connections on port 443 from addresses it does not know",
+        "correct": false,
+        "why": "A refusal comes back at once as `Connection refused`; a timeout means something dropped the packets without a word."
+      }
+    ]
+  },
+  {
+    "id": "ex-cvjjsgvk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A new container's `/etc/resolv.conf` says `nameserver 192.0.2.53`, which is `ns1`, the company's authoritative server for `example.com`. Names under `example.com` resolve; every other name fails, and `dig` for one of them shows `status: REFUSED` and `WARNING: recursion requested but not available`. What is wrong?",
+    "hint": "Networks and Protocols, lesson 4.",
+    "choices": [
+      {
+        "text": "A firewall blocks port 53 from the container towards the internet",
+        "correct": false,
+        "why": "A blocked port gives no answer at all, and `dig` would time out; here a server answered."
+      },
+      {
+        "text": "Those names do not exist, and `REFUSED` is how a resolver says so",
+        "correct": false,
+        "why": "A name that does not exist comes back as `NXDOMAIN`, with the zone's `SOA` in the answer."
+      },
+      {
+        "text": "The authoritative servers of those other domains are down",
+        "correct": false,
+        "why": "A resolver that tried and failed answers `SERVFAIL`; `REFUSED` means this server would not take the question."
+      },
+      {
+        "text": "It was given a server that answers for its own zones only and never recurses",
+        "correct": true,
+        "why": "`ns1` holds `example.com` and walks the tree for nobody, which is what the warning says; the container needs a recursive resolver."
+      }
+    ]
+  },
+  {
+    "id": "ex-pabh8j6f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On the monitoring box, CHECK stands for `echo | openssl s_client -connect www.example.com:443 -servername www.example.com 2>/dev/null | openssl x509 -noout -checkend 2592000 >/dev/null`. Which crontab line mails you only once the certificate the site serves has less than thirty days left?",
+    "hint": "Networks and Protocols, lesson 6; Linux and the Command Line, lesson 13.",
+    "choices": [
+      {
+        "text": "`0 7 * * * CHECK && echo \"www: certificate ends within 30 days\"`",
+        "correct": false,
+        "why": "`&&` runs on exit status 0, which is *will not expire*: a mail every morning while all is well, and silence from the day it matters."
+      },
+      {
+        "text": "`0 7 * * * CHECK || echo \"www: certificate ends within 30 days\" >/dev/null 2>&1`",
+        "correct": false,
+        "why": "Cron mails what a job prints, and this line sends the warning to `/dev/null`, so it can never tell anybody anything."
+      },
+      {
+        "text": "`0 7 * * * CHECK || echo \"www: certificate ends within 30 days\"`",
+        "correct": true,
+        "why": "`-checkend` exits non-zero when the certificate ends within the 2592000 seconds, `||` runs only then, and cron mails the line `echo` prints."
+      },
+      {
+        "text": "The same line with `-checkend 30` inside CHECK, then `|| echo \"www: ends soon\"`",
+        "correct": false,
+        "why": "`-checkend` counts seconds, so 30 warns half a minute before the end; thirty days is `2592000`."
+      }
+    ]
+  },
+  {
+    "id": "ex-wy0r3zb9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Before changing DNS, you want to see `https://www.example.com/` exactly as a visitor will once the name points at the new server, 192.0.2.81, which also hosts several other sites. Which command shows it?",
+    "hint": "Networks and Protocols, lesson 6; Web and Internet Fundamentals, lesson 6.",
+    "choices": [
+      {
+        "text": "`curl --resolve www.example.com:443:192.0.2.81 https://www.example.com/`",
+        "correct": true,
+        "why": "The name stays in the URL, so it travels in `Host:` and in the handshake and is checked against the certificate; only the address is chosen by hand, without touching DNS."
+      },
+      {
+        "text": "`curl -H 'Host: www.example.com' https://192.0.2.81/`",
+        "correct": false,
+        "why": "`Host:` picks the right site, but curl checks the certificate against `192.0.2.81` and stops with `no alternative certificate subject name matches`."
+      },
+      {
+        "text": "`curl -k https://192.0.2.81/`, taking whatever certificate it gets",
+        "correct": false,
+        "why": "With no name in the request the server cannot tell which of its sites you mean, and `-k` switches off the one check that tells a real server from an impostor."
+      },
+      {
+        "text": "`curl https://www.example.com/`, run once DNS points the name at 192.0.2.81",
+        "correct": false,
+        "why": "That tests after the switch, which is what you set out to avoid; `--resolve` reaches the new address without waiting for DNS."
+      }
+    ]
+  },
+  {
+    "id": "ex-myfxhdwx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A new service on cloud machines sends password-reset mail as `noreply@example.com`, delivering each message straight to the customer's mail server. `example.com` publishes `v=spf1 mx -all` and a DMARC record with `p=reject`. Customers receive nothing. Which fix keeps the domain's policy as it is?",
+    "hint": "Networks and Protocols, lesson 9.",
+    "choices": [
+      {
+        "text": "Change `-all` to `~all`, so those machines count only as a soft fail",
+        "correct": false,
+        "why": "DMARC passes only when SPF or DKIM passes for the `From:` domain; a soft fail is still not a pass, and nothing signed the message."
+      },
+      {
+        "text": "Send through `example.com`'s own server on 587, with a login",
+        "correct": true,
+        "why": "That server is in the SPF record through `mx` and signs what leaves with DKIM, so both checks pass for `example.com`, and DMARC with them."
+      },
+      {
+        "text": "Have the provider set `PTR` records naming the machines `mail.example.com`",
+        "correct": false,
+        "why": "A reverse name helps a sender's reputation, but neither SPF nor DKIM reads it, so DMARC fails all the same."
+      },
+      {
+        "text": "Publish `p=none` until the service is finished, then put `p=reject` back",
+        "correct": false,
+        "why": "That changes the policy, and while it lasts anybody can send as `example.com`; the reset mail still fails both checks."
+      }
+    ]
+  },
+  {
+    "id": "ex-bk4ynj6a",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Behind a new tunnel to another office, `ping -M do -s 1372` to a server on the far side gets an answer and `ping -M do -s 1373` fails. So that large transfers stop hanging, the router will clamp the MSS of TCP over IPv4 to fit that path. What MSS should it set?",
+    "hint": "Networks and Protocols, lesson 2.",
+    "value": 1360,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-xm82af1t",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A service's calls to an HTTPS API fail with `SSL certificate problem: unable to get local issuer certificate`. Which of these produce exactly that message? Choose all that apply.",
+    "hint": "Networks and Protocols, lesson 6.",
+    "choices": [
+      {
+        "text": "The certificate's `notAfter` date is already in the past",
+        "correct": false,
+        "why": "That one is `certificate has expired`, verify code 10."
+      },
+      {
+        "text": "The API's server sends its own certificate without the intermediate",
+        "correct": true,
+        "why": "The client holds the root and cannot reach it, because the link in the middle was never sent."
+      },
+      {
+        "text": "The certificate names other hosts and not the one in the URL",
+        "correct": false,
+        "why": "That one is `no alternative certificate subject name matches target host name`."
+      },
+      {
+        "text": "The chain ends at the company's own CA, which the client's trust store lacks",
+        "correct": true,
+        "why": "Nothing in the store signed anything in the chain: the message the office CA gave until it was installed."
+      },
+      {
+        "text": "The certificate was signed by the server it identifies",
+        "correct": false,
+        "why": "That one is `self-signed certificate`, verify code 18."
+      },
+      {
+        "text": "The service runs from an image whose trust store holds no roots at all",
+        "correct": true,
+        "why": "With an empty store nothing on the client signed anything in the chain, exactly as with an internal CA nobody installed."
+      }
+    ]
+  },
+  {
+    "id": "ex-3fzvraya",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "A check from another region runs `curl -w` against the API every minute and prints `dns`, `tcp`, `tls`, `first byte` and `total`, each counted from the start. Match each reading to the suspect lesson 5 names for it.",
+    "hint": "Networks and Protocols, lesson 5.",
+    "pairs": [
+      {
+        "left": "`dns` is large, and every step after it is small",
+        "right": "the resolver"
+      },
+      {
+        "left": "the step from `dns` to `tcp` is large",
+        "right": "distance, or loss on the path"
+      },
+      {
+        "left": "the step from `tcp` to `tls` is large, though `tcp` itself was quick",
+        "right": "an overloaded server"
+      },
+      {
+        "left": "the step from `tls` to `first byte` is large, and the rest quick",
+        "right": "the application, still thinking"
+      }
+    ],
+    "right_distractors": [
+      "the size of the response",
+      "a firewall dropping the first packet"
+    ]
+  },
+  {
     "id": "ex-5bdfv4pd",
     "version": 1,
     "type": "quiz",
@@ -322,6 +787,1629 @@
       "the machine's time zone, which is not the one in the line",
       "a crontab file with no final newline"
     ]
+  },
+  {
+    "id": "ex-3h4cd4c8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Production's Deployment uses `strategy: Recreate`, because the application migrates its database when it starts. A reviewed pull request moves production to `bulletin:1.9`, a tag nobody ever pushed; `validate.sh` passes it, and the production Kustomization has `wait: true` and `timeout: 2m`. What do production's users see, and what does Flux do?",
+    "hint": "GitOps, Artefacts and Secrets, lesson 4; Kubernetes: Orchestration in Production, lesson 35.",
+    "choices": [
+      {
+        "text": "The old version: the rollout keeps the old pods until a new one is ready.",
+        "correct": false,
+        "why": "That is a rolling update holding back; `Recreate` removes every old pod before it creates any new one."
+      },
+      {
+        "text": "The old version: two minutes later the health check fails and Flux applies the last revision that succeeded.",
+        "correct": false,
+        "why": "`REVISION` names the last good commit as the one to return to; Flux does not go back by itself, and the fix is a revert."
+      },
+      {
+        "text": "No page at all: the old pods go before the new ones fail to pull, and Flux reports a failed health check and undoes nothing.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "No change: Flux checks that the image exists in the registry before it applies the Deployment, and it stops at the missing tag.",
+        "correct": false,
+        "why": "Nothing asks the registry first; a tag that was never pushed is a valid string, and the Deployment is applied."
+      }
+    ]
+  },
+  {
+    "id": "ex-8kvp4a0q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The database's PersistentVolumeClaim `orders` uses a StorageClass whose `reclaimPolicy` is `Retain`. A pull request moves its files from `apps/shop/staging/`, which the Kustomization `staging` applies, to `infrastructure/db/`, which a new Kustomization `databases` applies; both have `prune: true`. After the merge, what does the database pod find on its disk?",
+    "hint": "GitOps, Artefacts and Secrets, lesson 5; Kubernetes: Orchestration in Production, lesson 26.",
+    "choices": [
+      {
+        "text": "Its data: a move in Git is not a delete in the cluster, so the claim stays where it was, adopted by `databases`.",
+        "correct": false,
+        "why": "That holds while the same Kustomization keeps owning what moved; here `staging` prunes the claim and `databases` creates it again."
+      },
+      {
+        "text": "An empty disk: the old claim was pruned, its volume sits `Released`, and the new claim got a new one.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Its data: with `Retain`, the claim that `databases` creates binds to the old volume, which still holds the rows.",
+        "correct": false,
+        "why": "A `Released` volume still remembers its old claim and is not bound to a new one on its own; somebody has to clear `claimRef`."
+      },
+      {
+        "text": "Its data: Flux refuses to apply `databases`, because the claim already belongs to the Kustomization `staging`.",
+        "correct": false,
+        "why": "Flux has no such refusal here; the first Kustomization prunes what left its path and the second creates what arrived."
+      }
+    ]
+  },
+  {
+    "id": "ex-712xz4d0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "At three in the morning the person on call fixes an outage twice by hand and commits neither: an edit to nginx's file on a VM whose Puppet agent runs with `runinterval = 1800`, and a change to a Deployment managed by an Argo CD Application with `selfHeal: true`. What happens to the two fixes?",
+    "hint": "GitOps, Artefacts and Secrets, lesson 3; Infrastructure as Code, lesson 19.",
+    "choices": [
+      {
+        "text": "Both stay until the next merge, because an agent compares when its description changes.",
+        "correct": false,
+        "why": "Both agents compare on their own: Puppet every half hour, and Argo CD whenever the objects it watches change."
+      },
+      {
+        "text": "Argo CD reverts the Deployment on its next look at Git, up to three minutes later; Puppet keeps the edit until somebody runs it.",
+        "correct": false,
+        "why": "The three-minute timer is for Git; `selfHeal` reacts to the cluster at once. And a Puppet agent runs on its timer, not when somebody remembers."
+      },
+      {
+        "text": "Neither is reverted: an agent cannot tell a fix from a mistake, so it leaves alone what a person edited.",
+        "correct": false,
+        "why": "It cannot tell them apart, which is exactly why it undoes both with the same confidence."
+      },
+      {
+        "text": "The Deployment goes back within seconds, the nginx edit within half an hour, so a fix only lasts in the description.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-6mc2rnmg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`bulletin:1.2` was signed with cosign by its digest, and production names that digest. A CI job is rerun on the same commit and pushes its rebuild as `bulletin:1.2` again. What does the course's `cosign verify` of `bulletin:1.2` report now, and what does production run?",
+    "hint": "GitOps, Artefacts and Secrets, lesson 8; Docker and Containers, lesson 16.",
+    "choices": [
+      {
+        "text": "`no signatures found`, because the rebuild has a new digest; production keeps running the signed build.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Verified: the same commit and Dockerfile give the same digest, so the old signature still matches.",
+        "correct": false,
+        "why": "Building the same commit again does not give the same image; its configuration records when it was built, so the digest differs."
+      },
+      {
+        "text": "Verified, because the signature follows the tag `1.2` to wherever it points now.",
+        "correct": false,
+        "why": "A signature covers a digest, never a tag; `cosign` resolves the tag and checks the digest it finds."
+      },
+      {
+        "text": "`accepted signatures do not match threshold`, and production pulls the rebuild when its pods next start.",
+        "correct": false,
+        "why": "That message means somebody else's signature exists; here there is none. And a reference by digest cannot follow a moved tag."
+      }
+    ]
+  },
+  {
+    "id": "ex-3qp5c5f7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Eight months after staging went from two replicas to three, an auditor asks why. In a setup like this course's, which record holds the answer?",
+    "hint": "GitOps, Artefacts and Secrets, lesson 12.",
+    "choices": [
+      {
+        "text": "Flux's events on the `staging` Kustomization, which name each revision it applied.",
+        "correct": false,
+        "why": "They say which revision and when, never why, and they are kept for an hour by default."
+      },
+      {
+        "text": "The pull request that made the change, with its description and its review.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The API server's audit log, which recorded the patch to the Deployment.",
+        "correct": false,
+        "why": "It records who sent which request to which object; the reason was never part of the request."
+      },
+      {
+        "text": "The Deployment's `managedFields`, which names the client that set `spec.replicas`.",
+        "correct": false,
+        "why": "It names a client, not a person or a reason, and it keeps only the last writer of each field."
+      }
+    ]
+  },
+  {
+    "id": "ex-ybe75wgp",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Production's ExternalSecret is changed to `refreshInterval: 15m`, and `bulletin` reads its token file on every request. Just after the operator's last read, a new token is put in Vault. Allowing for the kubelet's own sync, about how many minutes at most pass before the page shows the new fingerprint?",
+    "hint": "GitOps, Artefacts and Secrets, lesson 10.",
+    "value": 16,
+    "tolerance": 1,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-vyn86tmd",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "Publishing the chart to the course's registry, `helm push bulletin-0.1.0.tgz oci://localhost:5001/charts` fails with `server gave HTTP response to HTTPS client`. The registry runs on your own machine with no TLS, so the command needs one more flag: `--___`.",
+    "hint": "GitOps, Artefacts and Secrets, lesson 7.",
+    "blanks": [
+      {
+        "accept": [
+          "plain-http",
+          "--plain-http",
+          "plain http"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2tcpe8wp",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Pull request 3 moved staging to an image nobody built, the agent applied it, and `main` is protected. Put the way back in order.",
+    "hint": "GitOps, Artefacts and Secrets, lesson 2; Git and Teamwork: Version Control, Review and Process, lesson 4.",
+    "items": [
+      "bring `main` up to date from the server and start a branch from it",
+      "`git revert -m 1` the merge commit, which adds a commit undoing it",
+      "push the branch and open a pull request",
+      "wait for the `validate` status and an approval from somebody else",
+      "merge, and let the agent apply the new `main` on its next pass"
+    ],
+    "trap": "The revert is a change like any other: it goes through the check and the review before the merge, and never straight onto `main`."
+  },
+  {
+    "id": "ex-140z0nrc",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "On a cluster moving from Argo CD to Flux, Argo CD's root Application manages the others. Put the switch in order, so that staging keeps running and only one agent ever applies its objects.",
+    "hint": "GitOps, Artefacts and Secrets, lesson 4.",
+    "items": [
+      "delete the root Application",
+      "delete the remaining Applications",
+      "delete Argo CD's own installation",
+      "install Flux and point it at `fleet`"
+    ],
+    "trap": "Deleting the other Applications before the root lets the root recreate them from `argocd/` on its next sync."
+  },
+  {
+    "id": "ex-wj007c50",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "One bad morning with secrets produced four messages. Match each to what it means.",
+    "hint": "GitOps, Artefacts and Secrets, lesson 9.",
+    "pairs": [
+      {
+        "left": "`ErrUnsealFailed` in a SealedSecret's events",
+        "right": "a seal used under a name or namespace it was not made for"
+      },
+      {
+        "left": "`Failed to get the data key` from `sops --decrypt`",
+        "right": "nothing on this machine can open the file's data key"
+      },
+      {
+        "left": "`Code: 503` and `Vault is sealed`",
+        "right": "the store restarted and nobody has presented an unseal key"
+      },
+      {
+        "left": "`service account name not authorized` at a Vault login",
+        "right": "a genuine token from an account the role does not name"
+      }
+    ],
+    "right_distractors": [
+      "a token whose policy names a different path",
+      "a file edited without SOPS, so its MAC no longer matches"
+    ]
+  },
+  {
+    "id": "ex-c2pp6e8s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A customer asks whether the fix in `bulletin` commit `a41c9e0` is live. In `bulletin`, `git tag --contains a41c9e0` prints `v1.3`. With Flux posting commit statuses to `fleet`, what completes the answer?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 12; GitOps, Artefacts and Secrets, lesson 12.",
+    "choices": [
+      {
+        "text": "That is enough: a tag in the application's repository marks a release, so 1.3 is what production runs today.",
+        "correct": false,
+        "why": "The tag says which release contains the fix; in GitOps a release runs only once `fleet` names it."
+      },
+      {
+        "text": "The image `bulletin:1.3` in the registry: once CI has pushed it there, production pulls it on its own.",
+        "correct": false,
+        "why": "A registry is not a deployment; an image no directory names is run by nobody."
+      },
+      {
+        "text": "A `kustomization/production` success status from Flux on a `fleet` commit whose production directory names 1.3.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The ticket's state: it closed by itself when the pull request carrying the fix was merged into `main`.",
+        "correct": false,
+        "why": "A ticket closes on merge, before anybody outside the team can see the change; closed is not done."
+      }
+    ]
+  },
+  {
+    "id": "ex-1821hpjd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The app reads a carrier token from `config.env`, which `.gitignore` keeps out of the repository. The contract test passes on Ana's laptop and fails in CI on the pull request, because the clean machine has no such file. What is the right fix?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 17; Automated Testing and CI/CD, lesson 9.",
+    "choices": [
+      {
+        "text": "Commit `config.env` as well, so that the clean machine CI creates has exactly what the laptop has.",
+        "correct": false,
+        "why": "A secret that reaches a commit is leaked for good, in every clone and in the history."
+      },
+      {
+        "text": "Add `!config.env` after the ignore rule, so that CI's clone brings the file while people keep their own copies.",
+        "correct": false,
+        "why": "It is the same commit by another route: the token enters the history."
+      },
+      {
+        "text": "Make the check optional on `main`, since what fails is the machine CI creates and not the code anybody wrote.",
+        "correct": false,
+        "why": "A red check anybody can ignore gets ignored, and this failure is real: the code needs a value it does not have."
+      },
+      {
+        "text": "Hand the token from CI's secrets to the one step that needs it, and have the program say when it is missing.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-xt7tg4jr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "At 15:00 on 21 September, Ana runs `git log --oneline --since=2026-09-17` to list everything from the 17th on. `31a6298 Add cheese rolls`, committed at 10:15 on the 17th, is not in the list. Why?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 3.",
+    "choices": [
+      {
+        "text": "A date with no time means that day at the current hour, 15:00, so the morning is cut off.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`--since` keeps only what came after the day it names, so the whole of the 17th is skipped.",
+        "correct": false,
+        "why": "It keeps what happened from a moment on; what was misread is the moment, not the day."
+      },
+      {
+        "text": "The commit is dated in UTC, and 10:15 at -03:00 already falls on the 16th by that clock.",
+        "correct": false,
+        "why": "10:15 at -03:00 is 13:15 UTC, the same day; the time zone is not what cut it."
+      },
+      {
+        "text": "The date needed quotes, and without them Git ignores what follows the first of the hyphens.",
+        "correct": false,
+        "why": "The shell passes `2026-09-17` whole; quotes only matter when the value has a space, as `2026-09-17 00:00` does."
+      }
+    ]
+  },
+  {
+    "id": "ex-tcfhdw6r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On the team's board a card takes about two days from being started to being done, while the people who ask for something wait about five weeks for it. Where is the work waiting, and what is the question to ask?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 15.",
+    "choices": [
+      {
+        "text": "In review; lower the WIP limit on *in review* so that cards stop queuing there.",
+        "correct": false,
+        "why": "Waiting in review would make cycle time long, and it is two days."
+      },
+      {
+        "text": "In *to do*, before anybody starts it; the question is priorities or people.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "In progress; the tickets are too big and should be split before anybody starts them.",
+        "correct": false,
+        "why": "Big tickets would also stretch the two days a card takes once it is started."
+      },
+      {
+        "text": "Nowhere: lead time includes writing the ticket, so it dwarfs cycle time by design.",
+        "correct": false,
+        "why": "Lead time does start when the ticket is written, but nothing makes five weeks normal; the gap is work waiting."
+      }
+    ]
+  },
+  {
+    "id": "ex-k788ydxv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Bruno asks Ana to review a pull request of 1,900 lines before the end of the day, and she knows she cannot read it with care in that time. What should she do?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 13.",
+    "choices": [
+      {
+        "text": "Approve it once the checks are green, since a machine has already read the whole change.",
+        "correct": false,
+        "why": "Checks catch what a script can; whether it does what the ticket asked needs somebody who read it."
+      },
+      {
+        "text": "Comment on the names and the spacing, the part a quick read can cover.",
+        "correct": false,
+        "why": "That spends the time on the last and least important of the four questions, which machines mostly cover."
+      },
+      {
+        "text": "Say so plainly, and ask whether it can be split, or whether Bruno can walk her through it first.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Request changes on each file, so that the merge waits until she has time.",
+        "correct": false,
+        "why": "That blocks the change with no reason anybody can act on; saying she cannot read it is the honest version."
+      }
+    ]
+  },
+  {
+    "id": "ex-d7v8a6b3",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Ana's branch is pushed, and Bruno has already pulled it. Which of these would give commits Bruno already has new ids? Choose all that apply.",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 6.",
+    "choices": [
+      {
+        "text": "`git commit --amend` on the last commit",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`git rebase main`, now that `main` has moved",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`git revert HEAD~1`, to undo a commit Bruno has",
+        "correct": false,
+        "why": "Revert adds a new commit on top and leaves every existing one as it was."
+      },
+      {
+        "text": "`git merge main` into the branch, to bring it up to date",
+        "correct": false,
+        "why": "A merge adds a commit with two parents and rewrites nothing."
+      },
+      {
+        "text": "`git rebase -i --autosquash HEAD~3`, with a `fixup!` in them",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`git push` of a new commit made on top of the branch",
+        "correct": false,
+        "why": "A push only moves the branch forward; the commits Bruno has keep their ids."
+      }
+    ]
+  },
+  {
+    "id": "ex-zk1wdv4m",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A team of five finishes about 40 points in a normal ten-day sprint. This sprint two people have all ten days, one has six (a course), one has eight (two days on support) and one has six (a holiday). By lesson 18's arithmetic, about how many points is the team's capacity, before any slack is left?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 18.",
+    "value": 32,
+    "tolerance": 1,
+    "unit": "points"
+  },
+  {
+    "id": "ex-brhstybz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The nightly backup runs as a Kubernetes CronJob, and each run is a pod that completes in about three seconds. The team wants to hear about any night the backup did not finish, including a night when no run started at all. Which arrangement tells them?",
+    "hint": "Observability and Operations, lesson 5; Kubernetes: Orchestration in Production, lesson 12.",
+    "choices": [
+      {
+        "text": "Prometheus scrapes the backup pod's `/metrics` every fifteen seconds, and an alert fires when its success counter stops growing",
+        "correct": false,
+        "why": "The pod is gone seconds after it starts, so a scrape every fifteen seconds rarely finds it, and a pod that never ran has nothing to scrape."
+      },
+      {
+        "text": "An alert on the Job condition `BackoffLimitExceeded`, which Kubernetes sets on a run whose every retry has failed",
+        "correct": false,
+        "why": "It catches a run that failed every retry. A night when the controller never created a Job leaves no Job and no condition to alert on."
+      },
+      {
+        "text": "Each run pushes its finish time to a Pushgateway, and an alert fires once that time is 26 hours old",
+        "correct": true,
+        "why": "The gap grows by a second every second whatever happens, so it fires on the night nothing runs, which no record of a run can do."
+      },
+      {
+        "text": "Each run opens a root span named `nightly backup`, and the on-call engineer searches the trace store every morning",
+        "correct": false,
+        "why": "A trace exists only for work that happened. The night the schedule failed leaves no span to find, and a morning search is a habit rather than an alert."
+      }
+    ]
+  },
+  {
+    "id": "ex-rx135t65",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "An API runs as a Deployment of 4 healthy replicas, each with a `readinessProbe` on `/ready` with `periodSeconds: 5` and a `livenessProbe` on `/healthz` with `periodSeconds: 10`. Its availability SLI counts every response that is not a `5xx`, on every route, as a good event. How many of the good events it counts each minute come from the kubelet rather than from customers?",
+    "hint": "Observability and Operations, lesson 15; Kubernetes: Orchestration in Production, lesson 22.",
+    "value": 72,
+    "tolerance": 0,
+    "unit": "requests per minute"
+  },
+  {
+    "id": "ex-tmg7fk6f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A worker that exports its spans through the batch span processor keeps restarting. `docker inspect` gives its last exit code as 137, and Jaeger holds the traces of its older requests but none from the last few seconds before each restart. What explains the gap?",
+    "hint": "Observability and Operations, lesson 2; Linux and the Command Line, lesson 6.",
+    "choices": [
+      {
+        "text": "The bounded queue of 2048 spans overflowed under load and dropped the newest ones",
+        "correct": false,
+        "why": "A full queue drops spans whenever the Collector stops answering, at any moment; it does not explain a gap that lines up with every death."
+      },
+      {
+        "text": "137 is 128 plus 9: `SIGKILL`, which cannot be caught, so the queued spans were never sent",
+        "correct": true,
+        "why": "`SIGKILL` is very often the out-of-memory killer. A normal exit flushes the queue through the shutdown the SDK registered. A `KILL` gives the process no chance to run it, and the last seconds go with it."
+      },
+      {
+        "text": "137 is a clean exit after `SIGTERM`, so the spans were flushed and later dropped by the Collector",
+        "correct": false,
+        "why": "`TERM` gives 143, not 137, and a process that handles it gets to empty its queue on the way out."
+      },
+      {
+        "text": "The worker's traces are sampled, and its last seconds happened to fall among the dropped ones each time",
+        "correct": false,
+        "why": "Sampling drops traces at random across the whole run, not in a block just before every restart."
+      }
+    ]
+  },
+  {
+    "id": "ex-wwmm3nm1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Payments maintenance between 02:00 and 02:30 will make checkouts fail and trip the fast burn-rate page. The alert rules are manifests in Git, synced by Argo CD with `selfHeal: true`. At 01:55 the on-call engineer raises the rule's threshold with `kubectl edit`. What happens, and what was the right tool?",
+    "hint": "Observability and Operations, lesson 16; GitOps, Artefacts and Secrets, lesson 3.",
+    "choices": [
+      {
+        "text": "The edit holds until somebody pushes a new commit, so the page stays quiet; the engineer has to remember to undo it at 02:30",
+        "correct": false,
+        "why": "`selfHeal` reacts to changes in the cluster, not only to commits, so the edit is undone within seconds."
+      },
+      {
+        "text": "Argo CD reverts the edit; switching `selfHeal` off for the monitoring application during the work was the tool",
+        "correct": false,
+        "why": "It gives up the guarantee for every other object in that application, and the switch outlives the maintenance unless somebody remembers it."
+      },
+      {
+        "text": "The edit holds and the application shows OutOfSync; committing the higher threshold through a pull request was the tool",
+        "correct": false,
+        "why": "Self-healing reverts the edit rather than reporting it, and a threshold raised in Git outlives the maintenance, which is what a silence avoids."
+      },
+      {
+        "text": "Argo CD reverts it as drift in seconds and the page comes anyway; a silence with an end and a comment was the tool",
+        "correct": true,
+        "why": "A silence lives in Alertmanager, outside what Argo CD reconciles, ends by itself at 02:30, and tells whoever finds the pager quiet who did it and why."
+      }
+    ]
+  },
+  {
+    "id": "ex-c9jr51c2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The catalogue API's latency SLI is computed from the shop's own request histogram: the share of requests answered within 500 ms. Nginx caches the API in front of the shop, with a hit ratio of 95 per cent. What does that SLI describe?",
+    "hint": "Observability and Operations, lesson 15; Web Servers and Caching, lesson 5.",
+    "choices": [
+      {
+        "text": "Only the one request in twenty that missed the cache, measured too far inside to see what customers got",
+        "correct": true,
+        "why": "The shop never hears of a hit. The SLI judges the slowest twentieth of the traffic and nothing else, so it belongs at Nginx, nearer the customer."
+      },
+      {
+        "text": "Every request a customer made, since Nginx passes each one to the shop through `proxy_pass`",
+        "correct": false,
+        "why": "A hit is answered from Nginx's disk and no upstream is asked, which is why the cache log shows `upstream_time=-` for it."
+      },
+      {
+        "text": "Every request, because Nginx checks each cached copy with the shop before it serves that copy to anybody",
+        "correct": false,
+        "why": "That is a conditional request, used once a copy is stale. A fresh copy is served without asking anybody."
+      },
+      {
+        "text": "Only the requests Nginx found in its cache, since a miss is Nginx refilling itself",
+        "correct": false,
+        "why": "It is the other way round: a miss is exactly the request the shop sees."
+      }
+    ]
+  },
+  {
+    "id": "ex-djj9t880",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Checkouts are failing, and the fast burn-rate page has just arrived, three minutes after a payments release. Put the response in the order lesson 17 runs it.",
+    "hint": "Observability and Operations, lesson 17.",
+    "items": [
+      "Declare the incident where everybody can see it, naming the commander",
+      "Ask what changed, from the deploy marks of the last half hour",
+      "Roll back the release, and mark the rollback as it happens",
+      "Wait for the five-minute burn rate to fall below 1",
+      "Mark the incident resolved, with the follow-ups written down",
+      "Find the bug in the release that was rolled back"
+    ],
+    "trap": "Finding the bug before rolling back keeps customers failing while somebody reads code. The release is not lost, and understanding it is the postmortem's job once service is back."
+  },
+  {
+    "id": "ex-1e89vpym",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "A team's on-call channel is noisy. Match each source of noise to the fix lesson 16 pairs with it.",
+    "hint": "Observability and Operations, lesson 16.",
+    "pairs": [
+      {
+        "left": "alerts on causes that often heal themselves",
+        "right": "page on the symptom, and turn the causes into tickets"
+      },
+      {
+        "left": "one short blip, at any hour",
+        "right": "require a high burn rate over a long window and a short one at once"
+      },
+      {
+        "left": "one failure that sets off a hundred alerts",
+        "right": "grouping in Alertmanager, and a page inhibiting its tickets"
+      },
+      {
+        "left": "alerts during planned work",
+        "right": "a silence with a reason and an end"
+      }
+    ],
+    "right_distractors": [
+      "raise each threshold until the alert stops firing",
+      "delete the rule for as long as the work lasts"
+    ]
+  },
+  {
+    "id": "ex-amwjd6w1",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "The Collector holds every span of a trace until the trace is complete, then keeps every error, every slow request and 5% of the rest. Deciding there, once the request has ended, is called ___ sampling.",
+    "hint": "Observability and Operations, lesson 12.",
+    "blanks": [
+      {
+        "accept": [
+          "tail",
+          "tail-based",
+          "tail based"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-774vrkes",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A request counter is getting labels so that dashboards can break the traffic down. Which of these can it carry without the number of series growing with traffic?",
+    "hint": "Observability and Operations, lesson 6.",
+    "choices": [
+      {
+        "text": "the route's template, `/orders/{id}`",
+        "correct": true,
+        "why": "One value per route the code defines, a handful however busy the shop gets."
+      },
+      {
+        "text": "the id of the user who made the request",
+        "correct": false,
+        "why": "One series per user: the experiment turned 3782 series into 43805 with this label."
+      },
+      {
+        "text": "the HTTP method",
+        "correct": true,
+        "why": "A few values at most, fixed by the protocol."
+      },
+      {
+        "text": "the full URL, query string included",
+        "correct": false,
+        "why": "Every distinct query string is a new value, and lesson 6 names it among the classic mistakes."
+      },
+      {
+        "text": "the response's status code",
+        "correct": true,
+        "why": "A short, known list, which is why lesson 5 could ask for every `5..` code at once."
+      },
+      {
+        "text": "the order's id",
+        "correct": false,
+        "why": "Every order becomes a series that lives on; the id belongs on the span or in the log line."
+      }
+    ]
+  },
+  {
+    "id": "ex-q4rh8rrk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A product page calls a prices service, which takes 300 ms, and a stock service, which takes 140 ms, at the same moment, and answers when both have replied. A teammate spends a sprint bringing the stock call down to 40 ms. How much sooner does the page answer?",
+    "hint": "Observability and Operations, lesson 11.",
+    "choices": [
+      {
+        "text": "About 100 ms, since every millisecond cut from a span is cut from the request",
+        "correct": false,
+        "why": "That holds only on the critical path. Here the request ends when the prices call does."
+      },
+      {
+        "text": "About 50 ms, because two calls in parallel share any time one of them saves",
+        "correct": false,
+        "why": "Parallel calls do not share a saving; the request waits for the slower one, whatever happens to the faster."
+      },
+      {
+        "text": "Not noticeably: the page waits for prices, and stock had slack",
+        "correct": true,
+        "why": "Stock finished 160 ms before prices even before the work. Shortening a span off the critical path shortens nothing."
+      },
+      {
+        "text": "About 100 ms, provided stock was the span with the most self time",
+        "correct": false,
+        "why": "Self time says who did the work, not what the request was waiting for, and the most self time can sit off the critical path."
+      }
+    ]
+  },
+  {
+    "id": "ex-v95xcn30",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The storefront samples traces with `parentbased_traceidratio` at `0.1`, and every other service follows its decision. Support pastes the trace id from the log line of a failed checkout into Jaeger and gets `trace not found`. What happened?",
+    "hint": "Observability and Operations, lesson 12.",
+    "choices": [
+      {
+        "text": "A service further down lost the context, so the storefront's id names a trace that never started",
+        "correct": false,
+        "why": "A lost context splits a trace in two; it does not stop the storefront's own trace from existing."
+      },
+      {
+        "text": "It was among the traces dropped at the root; its log line carries the id whatever the decision",
+        "correct": true,
+        "why": "Head sampling decides before anything has happened, so a failed checkout is dropped as often as a fast one, and the formatter writes the id regardless."
+      },
+      {
+        "text": "The formatter writes a trace id into a line when the trace is kept, so this id belongs to another request",
+        "correct": false,
+        "why": "The id comes from the current span, recorded or not: every checkout in the lesson logged one, and none of the last ten was kept."
+      },
+      {
+        "text": "Head sampling keeps every failed request, so the trace must still be waiting in the Collector",
+        "correct": false,
+        "why": "That is what a tail policy on errors does. At the head nothing has failed yet when the decision is made."
+      }
+    ]
+  },
+  {
+    "id": "ex-8dt6chg4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The Collector sends every trace to Jaeger and, through a second exporter, to a hosted product's intake, at the lab's 35 spans a second. The intake stops answering for two hours. What happens to each copy?",
+    "hint": "Observability and Operations, lesson 13.",
+    "choices": [
+      {
+        "text": "Neither loses anything: the exporter keeps retrying until the intake is back, however long that takes",
+        "correct": false,
+        "why": "Its queue holds 1000 batches, which at the lab's rate lasts about three quarters of an hour; after that it drops."
+      },
+      {
+        "text": "Jaeger falls behind as well, because a pipeline waits for its slowest exporter",
+        "correct": false,
+        "why": "Each exporter has its own queue and retries; in the lesson Jaeger kept receiving 35 spans a second while the other exporter sent none."
+      },
+      {
+        "text": "Jaeger loses nothing; the hosted copy queues for about three quarters of an hour, then drops spans",
+        "correct": true,
+        "why": "Each destination fails alone. The queue is memory with room for 1000 batches, so the outage it can ride out is a decision about its size."
+      },
+      {
+        "text": "Both copies lose spans, since the Collector drops any batch that one of its destinations refuses",
+        "correct": false,
+        "why": "A refusal stays with the exporter that met it. The other destinations never see it."
+      }
+    ]
+  },
+  {
+    "id": "ex-harbxja3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "To find a checkout's log lines faster, a colleague proposes turning each line's `trace_id` field into a Loki label. What would that do?",
+    "hint": "Observability and Operations, lesson 9.",
+    "choices": [
+      {
+        "text": "Nothing, because Loki already indexes every field of every line it stores",
+        "correct": false,
+        "why": "That is Elasticsearch's choice. Loki indexes the labels of each stream and reads the lines when asked."
+      },
+      {
+        "text": "Speed lookups up at no cost, because labels are compressed along with the chunks",
+        "correct": false,
+        "why": "The chunks are compressed; the labels are the index, and every new value adds to it."
+      },
+      {
+        "text": "Be refused, because Loki allows the service name as a stream's one label",
+        "correct": false,
+        "why": "The lab has one label because the Collector made one. Loki takes others, which is why the advice is about which values belong there."
+      },
+      {
+        "text": "Make every trace id its own stream, so Loki's index grows with traffic",
+        "correct": true,
+        "why": "A label per request is a stream per value. The id belongs in the line, where a line filter or `| json` finds it."
+      }
+    ]
+  },
+  {
+    "id": "ex-x5rc1mvq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A product manager asks for an objective of 99.99% of checkouts succeeding over 28 days. Being paged, reading the alert and opening a laptop takes the on-call engineer about ten minutes. What is wrong with the objective?",
+    "hint": "Observability and Operations, lesson 15.",
+    "choices": [
+      {
+        "text": "The window: 28 days counts a Monday rush twice against some months",
+        "correct": false,
+        "why": "Twenty-eight days is chosen because it holds four of each weekday, so no rush is counted twice."
+      },
+      {
+        "text": "It allows about 4 minutes of outage in 28 days, less than the response itself takes",
+        "correct": true,
+        "why": "Each nine is a factor of ten, and the fourth leaves less time than it takes to notice. An objective tighter than the team can respond to is a promise nobody can keep."
+      },
+      {
+        "text": "It is too loose, since customers notice failures long before the fourth nine",
+        "correct": false,
+        "why": "The reverse: a customer cannot tell 99.99% from 100%, because their own phone and network fail more often than that."
+      },
+      {
+        "text": "Nothing, as long as the contract's SLA states the same 99.99%",
+        "correct": false,
+        "why": "An SLA is kept looser than the SLO so that the team hears about trouble from its own objective first; equal numbers remove that warning."
+      }
+    ]
+  },
+  {
+    "id": "ex-sbjhc6mz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "To raise the edge's hit ratio, the stylesheets and images move to `static.ipelivros.example`, behind the same Varnish, so that their requests carry no cookies. That host's hit ratio stays near zero. The analytics script on `www.ipelivros.example` sets its cookie with `Domain=ipelivros.example`. Why?",
+    "hint": "Web Servers and Caching, lesson 7; Web and Internet Fundamentals, lesson 7.",
+    "choices": [
+      {
+        "text": "That `Domain` sends the cookie to every subdomain, `static.` included, and Varnish passes any request carrying a `Cookie`",
+        "correct": true,
+        "why": "Widening the cookie undid the move. Leave `Domain` out so it returns only to the host that set it, or remove cookies at the edge for the assets."
+      },
+      {
+        "text": "A cookie set by a script stays with the host that set it, so the misses come from `utm_` parameters on the asset links",
+        "correct": false,
+        "why": "Who set it does not matter; the `Domain` attribute decides where it goes. And the lab's VCL already strips `utm_` before the key is made."
+      },
+      {
+        "text": "Varnish's built-in logic passes static files to the origin, cookie or not, until the VCL says otherwise",
+        "correct": false,
+        "why": "The built-in logic stores public responses of any type; it passes a request because of its `Cookie` or `Authorization`, not its file type."
+      },
+      {
+        "text": "A cookie for the parent domain is third-party on `static.`, so the browser blocks it and the edge cannot recognise the visitor",
+        "correct": false,
+        "why": "Third-party means set by something embedded from another site. This cookie is the site's own, and the browser sends it."
+      }
+    ]
+  },
+  {
+    "id": "ex-nd0p1v72",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An old landing page still has a newsletter form that posts to `http://ipelivros.example/api/subscribe`. Since the port-80 block began answering `return 301 https://$host$request_uri;`, no subscription arrives, and the shop logs `GET /api/subscribe` with no body. What should that block answer instead?",
+    "hint": "Web Servers and Caching, lesson 3; Web and Internet Fundamentals, lesson 6.",
+    "choices": [
+      {
+        "text": "`308`, which tells the browser to repeat the request with the same method and body",
+        "correct": true,
+        "why": "`308` is the permanent redirect that keeps the method, the meaning `301` was meant to have. Caddy answered HTTP with it in the same lesson."
+      },
+      {
+        "text": "`302`, so that browsers do not remember the move while it is being tested",
+        "correct": false,
+        "why": "A `302` is not remembered, and it has the same history as `301`: browsers turn the `POST` into a `GET`."
+      },
+      {
+        "text": "`303`, which sends the browser to the HTTPS address of the same path",
+        "correct": false,
+        "why": "`303` turns the request into a `GET` on purpose; it is for the page after a form, not for the form itself."
+      },
+      {
+        "text": "The same `301` with `Strict-Transport-Security` added, so that the browser goes to HTTPS before it posts",
+        "correct": false,
+        "why": "A browser ignores HSTS received over plain HTTP, which is why the site sends it on 443 alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ph9eskf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "With the catch-all block in place, `curl -k https://<the server's IP>/` fails with `tlsv1 unrecognized name`, and no certificate ever reaches the client. How does Nginx pick the catch-all block before the client has sent a `Host` header?",
+    "hint": "Web Servers and Caching, lesson 4; Networks and Protocols, lesson 5.",
+    "choices": [
+      {
+        "text": "The client's certificate, sent first in the handshake, names the site it wants",
+        "correct": false,
+        "why": "An ordinary browser or `curl` sends no certificate at all; the server is the side that proves its name."
+      },
+      {
+        "text": "Nginx reads the request's `Host` header first, and only then decides whether to finish the handshake",
+        "correct": false,
+        "why": "The request travels after the handshake, encrypted. Nginx has to choose before it holds any key to read it with."
+      },
+      {
+        "text": "Each site on the machine has its own IP address, so the address chooses the block",
+        "correct": false,
+        "why": "One address serves every site here; that is why Nginx needs the name at all."
+      },
+      {
+        "text": "The wanted name rides in the Client hello as SNI, readable before any key exists, and a bare IP gives no name to match",
+        "correct": true,
+        "why": "The server needs the name to pick a certificate, so it arrives in the clear. `ssl_reject_handshake` refuses right there, and no `server_name` matches an address."
+      }
+    ]
+  },
+  {
+    "id": "ex-qcggxtr9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`shop@2` crashes and stays down. The upstream lists both copies with default settings, the catalogue API serves only `GET`s, and the one paging alert is a burn-rate alert on the share of `5xx` answers Nginx gives. What does the next hour look like?",
+    "hint": "Web Servers and Caching, lesson 2; Observability and Operations, lesson 16.",
+    "choices": [
+      {
+        "text": "A page every ten seconds or so, each time `fail_timeout` lets one real request through to the dead copy",
+        "correct": false,
+        "why": "That request is refused and Nginx tries it again on `shop1` before the client notices, so it ends as a `200`."
+      },
+      {
+        "text": "No page, and rightly: customers see no errors, and the dead copy should surface as a ticket, such as one on `up == 0`",
+        "correct": true,
+        "why": "Nginx's retry turns every refused connection into an answer from `shop1`. The symptom is absent, so the cause belongs to working hours."
+      },
+      {
+        "text": "A page at once: half the upstream is gone, and with it half the capacity",
+        "correct": false,
+        "why": "The alert watches what customers receive, and they receive `200`s. A missing copy is a cause, and causes are tickets."
+      },
+      {
+        "text": "No page, which is a gap: a page on `shop2`'s own error ratio has to be added",
+        "correct": false,
+        "why": "A copy that refuses connections reports no ratio at all, and paging on causes is the noise lesson 16 removes."
+      }
+    ]
+  },
+  {
+    "id": "ex-rqn47ngp",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A bestseller's page is read 800 times a second, and the database query that rebuilds its cached copy takes 150 milliseconds. With plain cache-aside and no protection, about how many identical queries reach the database when its key expires?",
+    "hint": "Web Servers and Caching, lesson 11.",
+    "value": 120,
+    "tolerance": 5,
+    "unit": "queries"
+  },
+  {
+    "id": "ex-w3de8c5m",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Each copy of an application keeps a visitor's half-filled basket in its own memory, so the upstream uses `hash $remote_addr` to send each client to the same copy every time. That arrangement is called session ___.",
+    "hint": "Web Servers and Caching, lesson 2.",
+    "blanks": [
+      {
+        "accept": [
+          "affinity",
+          "stickiness"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2pgy4ds8",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "A team runs Redis in four places. Match each use to the `maxmemory-policy` it should run with.",
+    "hint": "Web Servers and Caching, lesson 8.",
+    "pairs": [
+      {
+        "left": "the one copy of a queue of orders waiting to be processed",
+        "right": "`noeviction`"
+      },
+      {
+        "left": "a cache where any key may go to make room",
+        "right": "`allkeys-lru`"
+      },
+      {
+        "left": "a cache whose popular keys stay the same week after week",
+        "right": "`allkeys-lfu`"
+      },
+      {
+        "left": "one instance holding cache keys with a lifetime beside data keys without one",
+        "right": "`volatile-lru`"
+      }
+    ],
+    "right_distractors": [
+      "`appendonly yes`"
+    ]
+  },
+  {
+    "id": "ex-v7pczbgm",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Nginx caches the shop's API with `proxy_cache` and its default settings. Which of these responses will it store and hand to the next visitor who asks?",
+    "hint": "Web Servers and Caching, lesson 5.",
+    "choices": [
+      {
+        "text": "an account page sent with `Cache-Control: private, max-age=60`",
+        "correct": false,
+        "why": "`private` keeps it out of every shared cache; three requests in the lesson gave three `MISS`es."
+      },
+      {
+        "text": "a catalogue listing sent with `Cache-Control: public, max-age=60`",
+        "correct": true,
+        "why": "Public, with a lifetime: exactly what a shared cache is for."
+      },
+      {
+        "text": "a basket sent with `Cache-Control: no-store`",
+        "correct": false,
+        "why": "`no-store` forbids storing it anywhere at all."
+      },
+      {
+        "text": "a book sent with `Cache-Control: max-age=60`",
+        "correct": true,
+        "why": "Nginx took its lifetime from this header in the lesson: `MISS`, then `HIT`, `HIT`."
+      },
+      {
+        "text": "a book sent with `Cache-Control: max-age=60` and a `Set-Cookie` header",
+        "correct": false,
+        "why": "Nginx refuses on its own to store a response that sets a cookie."
+      }
+    ]
+  },
+  {
+    "id": "ex-8xfhtr9p",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "A self-run control plane keeps etcd on seven members, which agree on every write by a majority. How many members can fail at the same time while etcd still accepts writes?",
+    "hint": "Kubernetes: Orchestration in Production, lesson 47.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-897afxn8",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Ana changes `GREETING` in the base's `configMapGenerator` and runs `kubectl apply -k deploy/overlays/production`. Put what follows in order, until the new greeting reaches the pods.",
+    "hint": "Kubernetes: Orchestration in Production, lesson 38.",
+    "items": [
+      "Kustomize renders a ConfigMap whose name carries a new hash of its contents",
+      "the new ConfigMap is created, and the old one is left where it was",
+      "the Deployment's pod template now names the new ConfigMap",
+      "the Deployment makes a new ReplicaSet for the changed template",
+      "new pods start with the new `GREETING` in their environment"
+    ],
+    "trap": "Running pods never see a variable change in a ConfigMap; the greeting arrives only because the new name changes the template, and a changed template is a rollout."
+  },
+  {
+    "id": "ex-1fnrseqh",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A customer's request reaches the shop through a Service of type LoadBalancer. Put the places it passes through in order, from the outside in.",
+    "hint": "Kubernetes: Orchestration in Production, lesson 15.",
+    "items": [
+      "the provider's balancer, at the Service's `EXTERNAL-IP` on port 80",
+      "the Service's NodePort on one of the nodes",
+      "the rules kube-proxy wrote into that node's kernel, which pick one pod",
+      "port 8080 of the chosen pod, the Service's `targetPort`"
+    ],
+    "trap": "The balancer does not send to pods: a LoadBalancer is a NodePort with a machine in front of it, and the pod is chosen on the node."
+  },
+  {
+    "id": "ex-rh9bggsr",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "A team reads the VerticalPodAutoscaler's recommendations for a month before trusting it. Match each `updateMode` with what the VPA then does to the pods.",
+    "hint": "Kubernetes: Orchestration in Production, lesson 34.",
+    "pairs": [
+      {
+        "left": "`Off`",
+        "right": "recommends requests and changes no pod"
+      },
+      {
+        "left": "`Initial`",
+        "right": "writes its requests into new pods and never touches running ones"
+      },
+      {
+        "left": "`Recreate`",
+        "right": "evicts pods so that their replacements start with new requests"
+      },
+      {
+        "left": "`InPlaceOrRecreate`",
+        "right": "resizes pods in place where it can, and evicts them where it cannot"
+      }
+    ],
+    "right_distractors": [
+      "adds replicas when the average use passes a target"
+    ]
+  },
+  {
+    "id": "ex-2pw2ydx4",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A pipeline's Role grants `get`, `list` and `watch` on `pods`, yet its request for what a container printed is refused. The Role also has to name the subresource `pods/___`.",
+    "hint": "Kubernetes: Orchestration in Production, lesson 23.",
+    "blanks": [
+      {
+        "accept": [
+          "log"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0b4628w5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The release `shop` runs `shop:1.1` with three copies, yet the chart's `values.yaml` says tag `1.0` and two replicas. A colleague concludes that the chart is broken. Which command answers first, and what will it show?",
+    "hint": "Kubernetes: Orchestration in Production, lesson 37.",
+    "choices": [
+      {
+        "text": "`helm history shop`, whose list of revisions records the values each upgrade set.",
+        "correct": false,
+        "why": "It lists revisions with their status and chart version; the values somebody supplied are not in it."
+      },
+      {
+        "text": "`helm get values shop`, listing only what was supplied at install or upgrade.",
+        "correct": true,
+        "why": "It shows the overrides, such as `--set image.tag=1.1`, and leaves the defaults out, which is why it is the first check for a release that differs from its chart."
+      },
+      {
+        "text": "`helm template shop shop-chart`, which prints what the cluster is running now.",
+        "correct": false,
+        "why": "It renders the chart with its defaults and touches no cluster; without the overrides it would show tag `1.0`."
+      },
+      {
+        "text": "`helm lint shop-chart`, since a chart that renders the wrong values fails lint.",
+        "correct": false,
+        "why": "Lint checks that the chart renders and follows the conventions; a release's values are unknown to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-d420rjkq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A CronJob runs a backup at `0 2 * * *`, with `timeZone` set. The control plane is upgraded from 01:50 to 02:20, so the controller manager is not running at 02:00. What happens to that night's backup?",
+    "hint": "Kubernetes: Orchestration in Production, lesson 12.",
+    "choices": [
+      {
+        "text": "It runs at 02:00 anyway, because the kubelet on a worker node keeps the CronJob's schedule.",
+        "correct": false,
+        "why": "The schedule belongs to the CronJob controller, inside the controller manager; a kubelet only runs pods it is given."
+      },
+      {
+        "text": "It is skipped until the next night, because a schedule fires on its own minute or not at all.",
+        "correct": false,
+        "why": "A run that was due while the controller was down is started when it comes back, unless a deadline says it is too late."
+      },
+      {
+        "text": "It runs twice after 02:20: once for the minute it missed, once to catch up.",
+        "correct": false,
+        "why": "The missed run is started once; nothing in the lesson makes a second one."
+      },
+      {
+        "text": "It starts once the controller is back, unless `startingDeadlineSeconds` is shorter.",
+        "correct": true,
+        "why": "Lesson 12's rule: a run that was due while the controller was down starts late, and only `startingDeadlineSeconds` can declare it too late."
+      }
+    ]
+  },
+  {
+    "id": "ex-gqa44xd3",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "The cluster autoscaler keeps more nodes on the bill than the workload seems to need. By lesson 34, which of these can be the reason? Choose all that apply.",
+    "hint": "Kubernetes: Orchestration in Production, lesson 34.",
+    "choices": [
+      {
+        "text": "Requests far above what the pods use, since a node is added when requests do not fit",
+        "correct": true,
+        "why": "It buys machines for requests, never for usage, so the waste of lesson 21 turns into nodes."
+      },
+      {
+        "text": "Pods that use more CPU than they request, which the autoscaler counts as demand",
+        "correct": false,
+        "why": "Usage is not what it reads: it adds a node for pods that are `Pending` for lack of room."
+      },
+      {
+        "text": "A PodDisruptionBudget that allows no disruption to a pod on that node",
+        "correct": true,
+        "why": "Removing a node drains it, and a pod it may not move keeps the whole machine alive."
+      },
+      {
+        "text": "metrics-server keeping only the newest sample, so the quiet hours are forgotten",
+        "correct": false,
+        "why": "The cluster autoscaler decides from pending pods and from pods that fit elsewhere, not from a history of metrics."
+      },
+      {
+        "text": "A pod annotated as not safe to evict, which the autoscaler is not allowed to move",
+        "correct": true,
+        "why": "The `safe-to-evict` annotation is the other thing lesson 34 names: one such pod can keep a node on the bill."
+      },
+      {
+        "text": "A VerticalPodAutoscaler with `updateMode: \"Off\"` beside the Deployment",
+        "correct": false,
+        "why": "`Off` only recommends; it changes no request, so it changes no node either."
+      }
+    ]
+  },
+  {
+    "id": "ex-048c9m37",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Under Docker, `shelf` ran with `--memory 64m --cpus 0.5`. Moved to Kubernetes, its manifest says `resources.requests: {cpu: 500m, memory: 64Mi}` and has no `limits`. A leak makes the process grow past 300 MiB. What happens at 64 MiB?",
+    "hint": "Kubernetes: Orchestration in Production, lesson 19; Docker and Containers, lesson 17.",
+    "choices": [
+      {
+        "text": "Nothing: a request reserves room for the scheduler; only a limit is an enforced ceiling.",
+        "correct": true,
+        "why": "Docker's `--memory` and `--cpus` are cgroup limits; in a manifest that is `limits`, while `requests` is a reservation nobody measures usage against."
+      },
+      {
+        "text": "The kernel kills it with `OOMKilled`, as Docker did, since a request sets the same cgroup ceiling.",
+        "correct": false,
+        "why": "Only a limit is handed to the kernel as a cgroup ceiling; a request is arithmetic for the scheduler."
+      },
+      {
+        "text": "The kubelet throttles its memory at 64 MiB, the way a CPU limit slows a container.",
+        "correct": false,
+        "why": "Memory cannot be paused and given back; at a memory limit the container dies, and here there is no limit at all."
+      },
+      {
+        "text": "The scheduler moves the pod to another node that has more free memory.",
+        "correct": false,
+        "why": "The scheduler places a pod once and never moves a running one."
+      }
+    ]
+  },
+  {
+    "id": "ex-s7y75vbq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Argo CD manages the `shop` Deployment with `selfHeal: true`, and the manifest in Git says `replicas: 2`. An HPA on the same Deployment scales it to six under load. What happens, and what do the lessons do about it?",
+    "hint": "Kubernetes: Orchestration in Production, lesson 33; GitOps, Artefacts and Secrets, lesson 3.",
+    "choices": [
+      {
+        "text": "The HPA wins, because Argo CD never compares a field that a controller has written.",
+        "correct": false,
+        "why": "Argo CD compares every field it manages; lesson 3 shows it putting a scale made by hand back within seconds."
+      },
+      {
+        "text": "Turn `selfHeal` off for the Application, so that the autoscaler's changes are kept.",
+        "correct": false,
+        "why": "That keeps the replicas and gives up the correction for every other field as well, which lesson 3 warns against."
+      },
+      {
+        "text": "They fight; drop `replicas` from Git, or have Argo CD ignore that one field.",
+        "correct": true,
+        "why": "One owner per field: the autoscaler owns `replicas`, so Git must not state it, or `ignoreDifferences` must cover exactly that field."
+      },
+      {
+        "text": "Set the HPA's `minReplicas` to 2, so that Git and the autoscaler agree on the number.",
+        "correct": false,
+        "why": "Under load the HPA still asks for six and Argo CD still puts back two; a minimum does not change who owns the field."
+      }
+    ]
+  },
+  {
+    "id": "ex-880gq5nx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Under `kubectl apply -k`, every change to the base's greeting left one more `shop-settings-<hash>` ConfigMap behind in `production`. The team puts the overlay under Argo CD with automated sync and `prune: true`. What changes, and what risk comes with it?",
+    "hint": "Kubernetes: Orchestration in Production, lesson 38; GitOps, Artefacts and Secrets, lesson 3.",
+    "choices": [
+      {
+        "text": "Nothing changes for the ConfigMaps, because prune acts on whole namespaces and not on the objects in them.",
+        "correct": false,
+        "why": "Prune deletes any object it tracks that the rendered manifests no longer contain, ConfigMaps included."
+      },
+      {
+        "text": "The stale ConfigMaps are deleted, and so is anything deleted from Git by mistake.",
+        "correct": true,
+        "why": "That is prune: the cluster follows Git in removals too, so a file deleted by mistake becomes an object deleted on the next sync."
+      },
+      {
+        "text": "Argo CD stops adding the hash, so a new greeting edits one ConfigMap in place.",
+        "correct": false,
+        "why": "The hash comes from Kustomize's generator, and it is what makes a changed setting roll out new pods."
+      },
+      {
+        "text": "The ConfigMaps stay where they are, because Argo CD prunes just the objects that came from a Helm chart.",
+        "correct": false,
+        "why": "Argo CD renders plain manifests, Kustomize and Helm alike, and prunes whatever it tracks."
+      }
+    ]
+  },
+  {
+    "id": "ex-nngd1rwx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The front end's readiness probe calls the shop's `/ready`, and the shop's `/ready` checks the database. The database stops for two minutes. What do the probes do, and what is wrong with the design?",
+    "hint": "Kubernetes: Orchestration in Production, lesson 22; Observability and Operations, lesson 14.",
+    "choices": [
+      {
+        "text": "The shop pods leave their Service and the front end stays in, because readiness is judged separately for each pod.",
+        "correct": false,
+        "why": "The front end's own probe gets the shop's 503, so the front-end pods fail readiness as well."
+      },
+      {
+        "text": "Both sets of pods are restarted every few seconds until the database comes back.",
+        "correct": false,
+        "why": "A readiness failure takes a pod out of its Service and restarts nothing; restarting is liveness."
+      },
+      {
+        "text": "The shop's containers restart once their readiness probe passes its `failureThreshold`.",
+        "correct": false,
+        "why": "Readiness has no restart; `failureThreshold` only decides when the pod leaves the endpoints."
+      },
+      {
+        "text": "Both leave their Services, pages without the database included; check only your own dependencies.",
+        "correct": true,
+        "why": "The first rule of a readiness check: test what this service needs, never another service's readiness, or one outage spreads to everything that asks."
+      }
+    ]
+  },
+  {
+    "id": "ex-h1ypphb8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A CronJob runs `pg_dump` every night, and its pod finishes in about three seconds. To alert when a backup does not happen, the team gives the container a `/metrics` endpoint and adds it to Prometheus, which scrapes every fifteen seconds. The scrape never finds it. What do the lessons do instead?",
+    "hint": "Kubernetes: Orchestration in Production, lesson 12; Observability and Operations, lesson 5.",
+    "choices": [
+      {
+        "text": "Push a last-success timestamp to a Pushgateway, and alert on `time()` minus it.",
+        "correct": true,
+        "why": "A job that ends is gone before the scrape; the time since the last success keeps growing on a night the backup does not run, so the alert fires."
+      },
+      {
+        "text": "Alert on `up` for the backup pod, which turns to 0 on any night that a dump fails.",
+        "correct": false,
+        "why": "`up` belongs to a scrape target, and a pod that has already exited is not scraped at all."
+      },
+      {
+        "text": "Push the count of rows dumped to a Pushgateway, and alert when that count drops to zero.",
+        "correct": false,
+        "why": "The Pushgateway keeps the last value forever, so a night with no run leaves last night's count in place and nothing fires."
+      },
+      {
+        "text": "Scrape the backup pod every second, so that a scrape lands inside each run.",
+        "correct": false,
+        "why": "Pull assumes the target is still there; a run that never starts leaves nothing to scrape however often Prometheus asks."
+      }
+    ]
+  },
+  {
+    "id": "ex-b8qpbs6a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A teammate tidies the `front-dns` policy, keeping `port: 53, protocol: UDP` and dropping the TCP entry. Name lookups from `front` still work in every test. Which lookups will fail from now on?",
+    "hint": "Kubernetes: Orchestration in Production, lesson 24; Networks and Protocols, lesson 3.",
+    "choices": [
+      {
+        "text": "None: DNS travels over UDP only, so the TCP entry was never used.",
+        "correct": false,
+        "why": "Resolvers listen on port 53 over both, because an answer too big for one packet is fetched again over TCP."
+      },
+      {
+        "text": "Every lookup after the first, since the resolver keeps one TCP connection to CoreDNS.",
+        "correct": false,
+        "why": "Questions normally go over UDP, one small packet each way; there is no long-lived connection to keep."
+      },
+      {
+        "text": "Those whose answer is too big for one packet, because DNS falls back to TCP for those answers.",
+        "correct": true,
+        "why": "DNS uses UDP and falls back to TCP for large answers; with TCP 53 refused only those fail, which is why tests with small answers stay green."
+      },
+      {
+        "text": "All names outside the cluster, because CoreDNS forwards those questions over TCP.",
+        "correct": false,
+        "why": "The size of the answer decides when TCP is used, not where the name lives."
+      }
+    ]
+  },
+  {
+    "id": "ex-f5746xh6",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A build server's disk is nearly full. Before pruning anything, Ana wants the space broken down into images, containers, local volumes and build cache, each with what could be reclaimed. The command is `docker system ___`.",
+    "hint": "Docker and Containers, lesson 22.",
+    "blanks": [
+      {
+        "accept": [
+          "df"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-repryr38",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Right after `sudo usermod -aG docker $USER`, Ana's `docker ps` says `permission denied while trying to connect to the docker API at unix:///var/run/docker.sock`. Which of these are sound next steps? Choose all that apply.",
+    "hint": "Docker and Containers, lesson 5.",
+    "choices": [
+      {
+        "text": "Run `id -nG` and look for `docker` among the groups",
+        "correct": true,
+        "why": "Without `docker` in that list, the new group has not reached this shell yet."
+      },
+      {
+        "text": "`sudo chmod 666 /var/run/docker.sock`, so that the socket stops refusing her",
+        "correct": false,
+        "why": "That hands every account on the machine what the group amounts to, which is root."
+      },
+      {
+        "text": "Leave the shell and log in again, so that the new group applies",
+        "correct": true,
+        "why": "A new group takes effect at the next login; the shell keeps the groups it started with."
+      },
+      {
+        "text": "Put `sudo` in front of every `docker` command from now on",
+        "correct": false,
+        "why": "It works, and it leaves files owned by root in her own directories."
+      },
+      {
+        "text": "`sudo systemctl start docker`, since the engine is not answering",
+        "correct": false,
+        "why": "Permission denied means the engine is running and refused her; a stopped engine says `failed to connect` instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-ckt60401",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "On an Ubuntu server, `ufw status` lists port 5432 as closed. A PostgreSQL container was started with `-p 5432:5432`, and a scan from another machine finds the database answering. How did the scan get through?",
+    "hint": "Docker and Containers, lesson 17.",
+    "choices": [
+      {
+        "text": "The image's `EXPOSE 5432` added an allow rule to ufw when the container started.",
+        "correct": false,
+        "why": "`EXPOSE` documents a port; it publishes nothing and writes no firewall rule."
+      },
+      {
+        "text": "Docker writes its own firewall rules for published ports, and they act before ufw's.",
+        "correct": true,
+        "why": "Lesson 17 names this trap on Ubuntu; publishing on `127.0.0.1` is the defence that does not depend on it."
+      },
+      {
+        "text": "A changed ufw rule takes effect after `ufw reload`, which nobody ran.",
+        "correct": false,
+        "why": "The port was listed as closed; what opened it were Docker's rules, which come first whatever ufw says."
+      },
+      {
+        "text": "`-p 5432:5432` binds `127.0.0.1` by default, and the scanner came in through a tunnel.",
+        "correct": false,
+        "why": "With no address, `-p` listens on `0.0.0.0`, every address the machine has, as `ss` showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-c2g9jhqd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A pipeline builds with `--cache-from type=registry,ref=$IMAGE:buildcache` and `--cache-to type=registry,ref=$IMAGE:buildcache`, with no `mode=max`. On every fresh runner the dependency compile in the build stage still runs in full. Why?",
+    "hint": "Docker and Containers, lesson 26.",
+    "choices": [
+      {
+        "text": "A registry cache belongs to the runner that wrote it, so a fresh runner starts with nothing.",
+        "correct": false,
+        "why": "Any runner can read it; that is how lesson 26's build, with its local cache emptied, still got seven steps `CACHED`."
+      },
+      {
+        "text": "`--cache-from` matches the tag being built, and every run builds a new tag.",
+        "correct": false,
+        "why": "The cache is a reference of its own, `buildcache`, read whatever tags the build pushes."
+      },
+      {
+        "text": "A multi-platform build cannot use a cache, since each platform compiles separately.",
+        "correct": false,
+        "why": "Lesson 26's release built two platforms and still reused cached steps."
+      },
+      {
+        "text": "Without `mode=max` only the final image's layers are exported, and the compile is in the build stage.",
+        "correct": true,
+        "why": "`mode=max` keeps the build stage's layers too, which is where the expensive steps are."
+      }
+    ]
+  },
+  {
+    "id": "ex-3xzme82q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A tool in a container on the default bridge must call `shelf` on the host, through `host.docker.internal` mapped to `host-gateway`. `shelf` must stay unreachable from other machines. Which way of publishing it fits?",
+    "hint": "Docker and Containers, lesson 23.",
+    "choices": [
+      {
+        "text": "`-p 172.17.0.1:8081:8080`, listening on the bridge's address alone.",
+        "correct": true,
+        "why": "From the bridge the host is `172.17.0.1`, and an address there is not on the network card."
+      },
+      {
+        "text": "`-p 127.0.0.1:8081:8080`, which keeps it to programs on this machine.",
+        "correct": false,
+        "why": "Lesson 23 saw that refused: the container reaches the host at `172.17.0.1`, where nothing listened."
+      },
+      {
+        "text": "`-p 8081:8080`, since the bridge carries traffic between containers and nothing else.",
+        "correct": false,
+        "why": "It listens on every address, network card included, which is lesson 17's warning."
+      },
+      {
+        "text": "`--network host` for `shelf`, so that it shares the host's `localhost`.",
+        "correct": false,
+        "why": "With `host` it listens on the machine's own addresses, `0.0.0.0` in the capture, and the network walls are gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-entttt8x",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 21 ran PostgreSQL read-only with `--tmpfs /var/run/postgresql --tmpfs /tmp` and a volume for its data. The same image now runs in a pod with `readOnlyRootFilesystem: true` and its data on a claim, and its log reports `Read-only file system` for `/var/run/postgresql` again. What is the pod's version of the Docker fix?",
+    "hint": "Docker and Containers, lesson 21; Kubernetes: Orchestration in Production, lesson 25.",
+    "choices": [
+      {
+        "text": "Set `runAsUser: 0`, because root may still write in places where the filesystem is mounted read-only.",
+        "correct": false,
+        "why": "A read-only filesystem refuses root too; lesson 21's `touch` failed as root."
+      },
+      {
+        "text": "Turn `readOnlyRootFilesystem` off, since a pod cannot mount anything over a read-only image.",
+        "correct": false,
+        "why": "A pod mounts volumes over its read-only root all the time, as the hardened pod's `/tmp` did."
+      },
+      {
+        "text": "Mount an `emptyDir` at `/var/run/postgresql` and one at `/tmp`, beside the data's claim.",
+        "correct": true,
+        "why": "The same method: start read-only, read what fails to write, and give exactly those places; in a pod, a scratch place is an `emptyDir`."
+      },
+      {
+        "text": "Point `PGDATA` at the claim, so that PostgreSQL has no reason to write elsewhere.",
+        "correct": false,
+        "why": "`PGDATA` moves the data files only; the socket and the lock file still go to `/var/run/postgresql`, as the log says."
+      }
+    ]
+  },
+  {
+    "id": "ex-k62q0pp3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Staging ran `shelf` by the digest the pipeline printed for the tag `v1.8.0`, and every check passed. For production, a second job checks out `v1.8.0`, runs `docker build`, and pushes the result as `1.8.0`. What is wrong with that?",
+    "hint": "Docker and Containers, lesson 16; Automated Testing and CI/CD, lesson 7.",
+    "choices": [
+      {
+        "text": "Nothing serious: the same commit rebuilds into the same bytes, so the cost is a few more build minutes.",
+        "correct": false,
+        "why": "Lesson 16 built the same source twice and got two ids, because an image records when it was built."
+      },
+      {
+        "text": "The rebuild has a new digest, bytes no stage tested; production should run the digest staging ran.",
+        "correct": true,
+        "why": "Build once and promote the same bytes: a rebuild is a different artefact that has never run anywhere."
+      },
+      {
+        "text": "The registry refuses a second push of `1.8.0`, so the job fails before production.",
+        "correct": false,
+        "why": "`registry:3` accepted an overwrite of `1.2.3`; a tag is fixed only by convention unless the registry is set to refuse."
+      },
+      {
+        "text": "Production should pull `latest` instead, so that its servers always get the newest release.",
+        "correct": false,
+        "why": "`latest` names whatever was pushed last, which is the very doubt a digest removes."
+      }
+    ]
+  },
+  {
+    "id": "ex-kmk73bnq",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Lesson 4 read an exit status of 137 as 128 plus the number of the signal that ended the process. A container's process is ended instead by the signal that a plain `kill PID` sends when no signal is named. What exit status does Docker report for it?",
+    "hint": "Docker and Containers, lesson 4; Linux and the Command Line, lesson 6.",
+    "value": 143,
+    "tolerance": 0,
+    "unit": ""
   },
   {
     "id": "ex-28jn6jy2",
@@ -1449,448 +3537,6 @@
         "why": "A revert of the manifest only changes which digest is named; the reconciler then undoes any rollback made outside Git."
       }
     ]
-  },
-  {
-    "id": "ex-3h4cd4c8",
-    "version": 1,
-    "type": "quiz",
-    "difficulty": "hard",
-    "prompt": "Production's Deployment uses `strategy: Recreate`, because the application migrates its database when it starts. A reviewed pull request moves production to `bulletin:1.9`, a tag nobody ever pushed; `validate.sh` passes it, and the production Kustomization has `wait: true` and `timeout: 2m`. What do production's users see, and what does Flux do?",
-    "hint": "GitOps, Artefacts and Secrets, lesson 4; Kubernetes: Orchestration in Production, lesson 35.",
-    "choices": [
-      {
-        "text": "The old version: the rollout keeps the old pods until a new one is ready.",
-        "correct": false,
-        "why": "That is a rolling update holding back; `Recreate` removes every old pod before it creates any new one."
-      },
-      {
-        "text": "The old version: two minutes later the health check fails and Flux applies the last revision that succeeded.",
-        "correct": false,
-        "why": "`REVISION` names the last good commit as the one to return to; Flux does not go back by itself, and the fix is a revert."
-      },
-      {
-        "text": "No page at all: the old pods go before the new ones fail to pull, and Flux reports a failed health check and undoes nothing.",
-        "correct": true,
-        "why": "Right."
-      },
-      {
-        "text": "No change: Flux checks that the image exists in the registry before it applies the Deployment, and it stops at the missing tag.",
-        "correct": false,
-        "why": "Nothing asks the registry first; a tag that was never pushed is a valid string, and the Deployment is applied."
-      }
-    ]
-  },
-  {
-    "id": "ex-8kvp4a0q",
-    "version": 1,
-    "type": "quiz",
-    "difficulty": "hard",
-    "prompt": "The database's PersistentVolumeClaim `orders` uses a StorageClass whose `reclaimPolicy` is `Retain`. A pull request moves its files from `apps/shop/staging/`, which the Kustomization `staging` applies, to `infrastructure/db/`, which a new Kustomization `databases` applies; both have `prune: true`. After the merge, what does the database pod find on its disk?",
-    "hint": "GitOps, Artefacts and Secrets, lesson 5; Kubernetes: Orchestration in Production, lesson 26.",
-    "choices": [
-      {
-        "text": "Its data: a move in Git is not a delete in the cluster, so the claim stays where it was, adopted by `databases`.",
-        "correct": false,
-        "why": "That holds while the same Kustomization keeps owning what moved; here `staging` prunes the claim and `databases` creates it again."
-      },
-      {
-        "text": "An empty disk: the old claim was pruned, its volume sits `Released`, and the new claim got a new one.",
-        "correct": true,
-        "why": "Right."
-      },
-      {
-        "text": "Its data: with `Retain`, the claim that `databases` creates binds to the old volume, which still holds the rows.",
-        "correct": false,
-        "why": "A `Released` volume still remembers its old claim and is not bound to a new one on its own; somebody has to clear `claimRef`."
-      },
-      {
-        "text": "Its data: Flux refuses to apply `databases`, because the claim already belongs to the Kustomization `staging`.",
-        "correct": false,
-        "why": "Flux has no such refusal here; the first Kustomization prunes what left its path and the second creates what arrived."
-      }
-    ]
-  },
-  {
-    "id": "ex-712xz4d0",
-    "version": 1,
-    "type": "quiz",
-    "difficulty": "hard",
-    "prompt": "At three in the morning the person on call fixes an outage twice by hand and commits neither: an edit to nginx's file on a VM whose Puppet agent runs with `runinterval = 1800`, and a change to a Deployment managed by an Argo CD Application with `selfHeal: true`. What happens to the two fixes?",
-    "hint": "GitOps, Artefacts and Secrets, lesson 3; Infrastructure as Code, lesson 19.",
-    "choices": [
-      {
-        "text": "Both stay until the next merge, because an agent compares when its description changes.",
-        "correct": false,
-        "why": "Both agents compare on their own: Puppet every half hour, and Argo CD whenever the objects it watches change."
-      },
-      {
-        "text": "Argo CD reverts the Deployment on its next look at Git, up to three minutes later; Puppet keeps the edit until somebody runs it.",
-        "correct": false,
-        "why": "The three-minute timer is for Git; `selfHeal` reacts to the cluster at once. And a Puppet agent runs on its timer, not when somebody remembers."
-      },
-      {
-        "text": "Neither is reverted: an agent cannot tell a fix from a mistake, so it leaves alone what a person edited.",
-        "correct": false,
-        "why": "It cannot tell them apart, which is exactly why it undoes both with the same confidence."
-      },
-      {
-        "text": "The Deployment goes back within seconds, the nginx edit within half an hour, so a fix only lasts in the description.",
-        "correct": true,
-        "why": "Right."
-      }
-    ]
-  },
-  {
-    "id": "ex-6mc2rnmg",
-    "version": 1,
-    "type": "quiz",
-    "difficulty": "hard",
-    "prompt": "`bulletin:1.2` was signed with cosign by its digest, and production names that digest. A CI job is rerun on the same commit and pushes its rebuild as `bulletin:1.2` again. What does the course's `cosign verify` of `bulletin:1.2` report now, and what does production run?",
-    "hint": "GitOps, Artefacts and Secrets, lesson 8; Docker and Containers, lesson 16.",
-    "choices": [
-      {
-        "text": "`no signatures found`, because the rebuild has a new digest; production keeps running the signed build.",
-        "correct": true,
-        "why": "Right."
-      },
-      {
-        "text": "Verified: the same commit and Dockerfile give the same digest, so the old signature still matches.",
-        "correct": false,
-        "why": "Building the same commit again does not give the same image; its configuration records when it was built, so the digest differs."
-      },
-      {
-        "text": "Verified, because the signature follows the tag `1.2` to wherever it points now.",
-        "correct": false,
-        "why": "A signature covers a digest, never a tag; `cosign` resolves the tag and checks the digest it finds."
-      },
-      {
-        "text": "`accepted signatures do not match threshold`, and production pulls the rebuild when its pods next start.",
-        "correct": false,
-        "why": "That message means somebody else's signature exists; here there is none. And a reference by digest cannot follow a moved tag."
-      }
-    ]
-  },
-  {
-    "id": "ex-3qp5c5f7",
-    "version": 1,
-    "type": "quiz",
-    "difficulty": "easy",
-    "prompt": "Eight months after staging went from two replicas to three, an auditor asks why. In a setup like this course's, which record holds the answer?",
-    "hint": "GitOps, Artefacts and Secrets, lesson 12.",
-    "choices": [
-      {
-        "text": "Flux's events on the `staging` Kustomization, which name each revision it applied.",
-        "correct": false,
-        "why": "They say which revision and when, never why, and they are kept for an hour by default."
-      },
-      {
-        "text": "The pull request that made the change, with its description and its review.",
-        "correct": true,
-        "why": "Right."
-      },
-      {
-        "text": "The API server's audit log, which recorded the patch to the Deployment.",
-        "correct": false,
-        "why": "It records who sent which request to which object; the reason was never part of the request."
-      },
-      {
-        "text": "The Deployment's `managedFields`, which names the client that set `spec.replicas`.",
-        "correct": false,
-        "why": "It names a client, not a person or a reason, and it keeps only the last writer of each field."
-      }
-    ]
-  },
-  {
-    "id": "ex-ybe75wgp",
-    "version": 1,
-    "type": "numeric",
-    "difficulty": "medium",
-    "prompt": "Production's ExternalSecret is changed to `refreshInterval: 15m`, and `bulletin` reads its token file on every request. Just after the operator's last read, a new token is put in Vault. Allowing for the kubelet's own sync, about how many minutes at most pass before the page shows the new fingerprint?",
-    "hint": "GitOps, Artefacts and Secrets, lesson 10.",
-    "value": 16,
-    "tolerance": 1,
-    "unit": "minutes"
-  },
-  {
-    "id": "ex-vyn86tmd",
-    "version": 1,
-    "type": "cloze",
-    "difficulty": "medium",
-    "prompt": "Publishing the chart to the course's registry, `helm push bulletin-0.1.0.tgz oci://localhost:5001/charts` fails with `server gave HTTP response to HTTPS client`. The registry runs on your own machine with no TLS, so the command needs one more flag: `--___`.",
-    "hint": "GitOps, Artefacts and Secrets, lesson 7.",
-    "blanks": [
-      {
-        "accept": [
-          "plain-http",
-          "--plain-http",
-          "plain http"
-        ],
-        "ignore_case": true,
-        "ignore_accents": true
-      }
-    ]
-  },
-  {
-    "id": "ex-2tcpe8wp",
-    "version": 1,
-    "type": "ordering",
-    "difficulty": "medium",
-    "prompt": "Pull request 3 moved staging to an image nobody built, the agent applied it, and `main` is protected. Put the way back in order.",
-    "hint": "GitOps, Artefacts and Secrets, lesson 2; Git and Teamwork: Version Control, Review and Process, lesson 4.",
-    "items": [
-      "bring `main` up to date from the server and start a branch from it",
-      "`git revert -m 1` the merge commit, which adds a commit undoing it",
-      "push the branch and open a pull request",
-      "wait for the `validate` status and an approval from somebody else",
-      "merge, and let the agent apply the new `main` on its next pass"
-    ],
-    "trap": "The revert is a change like any other: it goes through the check and the review before the merge, and never straight onto `main`."
-  },
-  {
-    "id": "ex-140z0nrc",
-    "version": 1,
-    "type": "ordering",
-    "difficulty": "medium",
-    "prompt": "On a cluster moving from Argo CD to Flux, Argo CD's root Application manages the others. Put the switch in order, so that staging keeps running and only one agent ever applies its objects.",
-    "hint": "GitOps, Artefacts and Secrets, lesson 4.",
-    "items": [
-      "delete the root Application",
-      "delete the remaining Applications",
-      "delete Argo CD's own installation",
-      "install Flux and point it at `fleet`"
-    ],
-    "trap": "Deleting the other Applications before the root lets the root recreate them from `argocd/` on its next sync."
-  },
-  {
-    "id": "ex-wj007c50",
-    "version": 1,
-    "type": "matching",
-    "difficulty": "medium",
-    "prompt": "One bad morning with secrets produced four messages. Match each to what it means.",
-    "hint": "GitOps, Artefacts and Secrets, lesson 9.",
-    "pairs": [
-      {
-        "left": "`ErrUnsealFailed` in a SealedSecret's events",
-        "right": "a seal used under a name or namespace it was not made for"
-      },
-      {
-        "left": "`Failed to get the data key` from `sops --decrypt`",
-        "right": "nothing on this machine can open the file's data key"
-      },
-      {
-        "left": "`Code: 503` and `Vault is sealed`",
-        "right": "the store restarted and nobody has presented an unseal key"
-      },
-      {
-        "left": "`service account name not authorized` at a Vault login",
-        "right": "a genuine token from an account the role does not name"
-      }
-    ],
-    "right_distractors": [
-      "a token whose policy names a different path",
-      "a file edited without SOPS, so its MAC no longer matches"
-    ]
-  },
-  {
-    "id": "ex-c2pp6e8s",
-    "version": 1,
-    "type": "quiz",
-    "difficulty": "hard",
-    "prompt": "A customer asks whether the fix in `bulletin` commit `a41c9e0` is live. In `bulletin`, `git tag --contains a41c9e0` prints `v1.3`. With Flux posting commit statuses to `fleet`, what completes the answer?",
-    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 12; GitOps, Artefacts and Secrets, lesson 12.",
-    "choices": [
-      {
-        "text": "That is enough: a tag in the application's repository marks a release, so 1.3 is what production runs today.",
-        "correct": false,
-        "why": "The tag says which release contains the fix; in GitOps a release runs only once `fleet` names it."
-      },
-      {
-        "text": "The image `bulletin:1.3` in the registry: once CI has pushed it there, production pulls it on its own.",
-        "correct": false,
-        "why": "A registry is not a deployment; an image no directory names is run by nobody."
-      },
-      {
-        "text": "A `kustomization/production` success status from Flux on a `fleet` commit whose production directory names 1.3.",
-        "correct": true,
-        "why": "Right."
-      },
-      {
-        "text": "The ticket's state: it closed by itself when the pull request carrying the fix was merged into `main`.",
-        "correct": false,
-        "why": "A ticket closes on merge, before anybody outside the team can see the change; closed is not done."
-      }
-    ]
-  },
-  {
-    "id": "ex-1821hpjd",
-    "version": 1,
-    "type": "quiz",
-    "difficulty": "medium",
-    "prompt": "The app reads a carrier token from `config.env`, which `.gitignore` keeps out of the repository. The contract test passes on Ana's laptop and fails in CI on the pull request, because the clean machine has no such file. What is the right fix?",
-    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 17; Automated Testing and CI/CD, lesson 9.",
-    "choices": [
-      {
-        "text": "Commit `config.env` as well, so that the clean machine CI creates has exactly what the laptop has.",
-        "correct": false,
-        "why": "A secret that reaches a commit is leaked for good, in every clone and in the history."
-      },
-      {
-        "text": "Add `!config.env` after the ignore rule, so that CI's clone brings the file while people keep their own copies.",
-        "correct": false,
-        "why": "It is the same commit by another route: the token enters the history."
-      },
-      {
-        "text": "Make the check optional on `main`, since what fails is the machine CI creates and not the code anybody wrote.",
-        "correct": false,
-        "why": "A red check anybody can ignore gets ignored, and this failure is real: the code needs a value it does not have."
-      },
-      {
-        "text": "Hand the token from CI's secrets to the one step that needs it, and have the program say when it is missing.",
-        "correct": true,
-        "why": "Right."
-      }
-    ]
-  },
-  {
-    "id": "ex-xt7tg4jr",
-    "version": 1,
-    "type": "quiz",
-    "difficulty": "medium",
-    "prompt": "At 15:00 on 21 September, Ana runs `git log --oneline --since=2026-09-17` to list everything from the 17th on. `31a6298 Add cheese rolls`, committed at 10:15 on the 17th, is not in the list. Why?",
-    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 3.",
-    "choices": [
-      {
-        "text": "A date with no time means that day at the current hour, 15:00, so the morning is cut off.",
-        "correct": true,
-        "why": "Right."
-      },
-      {
-        "text": "`--since` keeps only what came after the day it names, so the whole of the 17th is skipped.",
-        "correct": false,
-        "why": "It keeps what happened from a moment on; what was misread is the moment, not the day."
-      },
-      {
-        "text": "The commit is dated in UTC, and 10:15 at -03:00 already falls on the 16th by that clock.",
-        "correct": false,
-        "why": "10:15 at -03:00 is 13:15 UTC, the same day; the time zone is not what cut it."
-      },
-      {
-        "text": "The date needed quotes, and without them Git ignores what follows the first of the hyphens.",
-        "correct": false,
-        "why": "The shell passes `2026-09-17` whole; quotes only matter when the value has a space, as `2026-09-17 00:00` does."
-      }
-    ]
-  },
-  {
-    "id": "ex-tcfhdw6r",
-    "version": 1,
-    "type": "quiz",
-    "difficulty": "medium",
-    "prompt": "On the team's board a card takes about two days from being started to being done, while the people who ask for something wait about five weeks for it. Where is the work waiting, and what is the question to ask?",
-    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 15.",
-    "choices": [
-      {
-        "text": "In review; lower the WIP limit on *in review* so that cards stop queuing there.",
-        "correct": false,
-        "why": "Waiting in review would make cycle time long, and it is two days."
-      },
-      {
-        "text": "In *to do*, before anybody starts it; the question is priorities or people.",
-        "correct": true,
-        "why": "Right."
-      },
-      {
-        "text": "In progress; the tickets are too big and should be split before anybody starts them.",
-        "correct": false,
-        "why": "Big tickets would also stretch the two days a card takes once it is started."
-      },
-      {
-        "text": "Nowhere: lead time includes writing the ticket, so it dwarfs cycle time by design.",
-        "correct": false,
-        "why": "Lead time does start when the ticket is written, but nothing makes five weeks normal; the gap is work waiting."
-      }
-    ]
-  },
-  {
-    "id": "ex-k788ydxv",
-    "version": 1,
-    "type": "quiz",
-    "difficulty": "easy",
-    "prompt": "Bruno asks Ana to review a pull request of 1,900 lines before the end of the day, and she knows she cannot read it with care in that time. What should she do?",
-    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 13.",
-    "choices": [
-      {
-        "text": "Approve it once the checks are green, since a machine has already read the whole change.",
-        "correct": false,
-        "why": "Checks catch what a script can; whether it does what the ticket asked needs somebody who read it."
-      },
-      {
-        "text": "Comment on the names and the spacing, the part a quick read can cover.",
-        "correct": false,
-        "why": "That spends the time on the last and least important of the four questions, which machines mostly cover."
-      },
-      {
-        "text": "Say so plainly, and ask whether it can be split, or whether Bruno can walk her through it first.",
-        "correct": true,
-        "why": "Right."
-      },
-      {
-        "text": "Request changes on each file, so that the merge waits until she has time.",
-        "correct": false,
-        "why": "That blocks the change with no reason anybody can act on; saying she cannot read it is the honest version."
-      }
-    ]
-  },
-  {
-    "id": "ex-d7v8a6b3",
-    "version": 1,
-    "type": "multiple-choice",
-    "difficulty": "medium",
-    "prompt": "Ana's branch is pushed, and Bruno has already pulled it. Which of these would give commits Bruno already has new ids? Choose all that apply.",
-    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 6.",
-    "choices": [
-      {
-        "text": "`git commit --amend` on the last commit",
-        "correct": true,
-        "why": "Right."
-      },
-      {
-        "text": "`git rebase main`, now that `main` has moved",
-        "correct": true,
-        "why": "Right."
-      },
-      {
-        "text": "`git revert HEAD~1`, to undo a commit Bruno has",
-        "correct": false,
-        "why": "Revert adds a new commit on top and leaves every existing one as it was."
-      },
-      {
-        "text": "`git merge main` into the branch, to bring it up to date",
-        "correct": false,
-        "why": "A merge adds a commit with two parents and rewrites nothing."
-      },
-      {
-        "text": "`git rebase -i --autosquash HEAD~3`, with a `fixup!` in them",
-        "correct": true,
-        "why": "Right."
-      },
-      {
-        "text": "`git push` of a new commit made on top of the branch",
-        "correct": false,
-        "why": "A push only moves the branch forward; the commits Bruno has keep their ids."
-      }
-    ]
-  },
-  {
-    "id": "ex-zk1wdv4m",
-    "version": 1,
-    "type": "numeric",
-    "difficulty": "medium",
-    "prompt": "A team of five finishes about 40 points in a normal ten-day sprint. This sprint two people have all ten days, one has six (a course), one has eight (two days on support) and one has six (a holiday). By lesson 18's arithmetic, about how many points is the team's capacity, before any slack is left?",
-    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 18.",
-    "value": 32,
-    "tolerance": 1,
-    "unit": "points"
   },
   {
     "id": "ex-rrz99r1a",

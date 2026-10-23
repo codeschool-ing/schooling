@@ -1,4 +1,343 @@
 {
+  "ex-wavvajyj": {
+    "prompt": "O arquivo de zona no repositório de infraestrutura ganha a linha `docs   CNAME   docs-host.provider.net`. Depois do deploy, `docs.example.com` não resolve para nada, e o `dig` mostra o apelido apontando para `docs-host.provider.net.example.com`. O que deu errado?",
+    "hint": "Fundamentos da Web e Internet, aula 8.",
+    "choices": [
+      {
+        "text": "Um `CNAME` só pode ficar no domínio puro, nunca num subdomínio",
+        "why": "É o contrário: o domínio puro é o único nome que não pode ter um `CNAME`, porque os registros `NS` ficam ali."
+      },
+      {
+        "text": "O destino ficou sem o ponto final, e o nome da própria zona foi acrescentado a ele",
+        "why": "Num arquivo de registros, um nome sem ponto no fim é completado com o domínio, e é exatamente esse `.example.com` no final."
+      },
+      {
+        "text": "O registro ainda está se propagando, e os resolvedores se atualizam em até dois dias",
+        "why": "Nada se propaga, e o que o `dig` imprimiu já é o nome errado, não uma resposta antiga."
+      },
+      {
+        "text": "`docs` também tem um registro `TXT`, e um apelido não pode ficar ao lado de nada",
+        "why": "Essa regra existe, mas quebrá-la não inventaria um nome terminado em `example.com`; a falta do ponto inventa."
+      }
+    ]
+  },
+  "ex-jxkry1b6": {
+    "prompt": "O dono da loja baixa um preço. Um desenvolvedor recarrega a resposta da API com *Desativar o cache* marcado no painel de rede e continua vendo o preço antigo, e a resposta traz `X-Cache-Status: HIT`, que o Nginx na frente da aplicação acrescenta. Por que marcar a caixa não adiantou?",
+    "hint": "Fundamentos da Web e Internet, aula 11; Servidores Web e Cache, aula 5.",
+    "choices": [
+      {
+        "text": "O navegador ignorou a caixa e respondeu com a cópia do próprio disco",
+        "why": "Uma cópia do disco do navegador nunca chega ao Nginx, e o cabeçalho `X-Cache-Status` mostra que esta requisição chegou."
+      },
+      {
+        "text": "O preço novo nunca chegou ao banco de dados, e é isso que o `HIT` informa",
+        "why": "`HIT` diz onde o Nginx achou a resposta, não o que o banco guarda; consultada por fora do cache, a aplicação dá o preço novo."
+      },
+      {
+        "text": "O Nginx só obedece à caixa depois de configurado `proxy_ignore_headers Cache-Control`",
+        "why": "Essa linha faz o Nginx ignorar o que a aplicação diz sobre cache, e é a linha que transforma um cache num vazamento."
+      },
+      {
+        "text": "A caixa vale para as cópias do navegador; o cache compartilhado do Nginx não recebe ordens de cliente",
+        "why": "O Nginx ignora o que o cliente pede, de propósito; a cópia velha está no servidor, e é lá que ela tem de ser renovada ou apagada."
+      }
+    ]
+  },
+  "ex-qz4773pg": {
+    "prompt": "O SLI de disponibilidade do checkout é `sum(rate(http_server_requests_total{route=\"/checkout\",code!~\"5..\"}[5m])) / sum(rate(http_server_requests_total{route=\"/checkout\"}[5m]))`, e marcou 1 a semana inteira. Enquanto isso, vinte clientes relatam que o pedido nunca foi feito, e o painel de rede de um deles mostra o checkout respondendo `200` com `{\"error\": \"stock service unavailable\"}` no corpo. Por que o indicador não se mexeu?",
+    "hint": "Fundamentos da Web e Internet, aula 6; Observabilidade e Operação, aula 15.",
+    "choices": [
+      {
+        "text": "O serviço relatou as falhas como sucesso, e o SLI lê o código de status",
+        "why": "Tudo o que fica entre o serviço e quem o chama age pelo número, e este disse sucesso; um SLI que conta todo não `5xx` como bom contou esses pedidos como bons."
+      },
+      {
+        "text": "A sonda de `/health` entrou na conta junto com os checkouts e diluiu as falhas",
+        "why": "A expressão nomeia `route=\"/checkout\"`, então uma sonda em outra rota nunca entrou em nenhuma das somas."
+      },
+      {
+        "text": "Eram erros `4xx` causados pelos clientes, que o SLI conta como bons, com razão",
+        "why": "A linha de status disse `200`; o erro existia só no corpo, onde nenhum indicador olha."
+      },
+      {
+        "text": "Uma janela de cinco minutos suaviza rajadas curtas de falha até elas sumirem",
+        "why": "Uma razão de cinco minutos cai abaixo de 1 quando um único checkout nela conta como ruim; nenhum destes contou."
+      }
+    ]
+  },
+  "ex-rm85cayb": {
+    "prompt": "Uma cópia noturna de São Paulo para o norte da Virgínia passa por uma única conexão TCP cuja janela nunca passa de 64 kilobytes. Tome a ida e volta pelo piso de 76,6 ms que o curso de nuvem calcula para esse par. Raciocinando como a aula 3 sobre os dados em trânsito, cerca de quantos megabits por segundo essa conexão consegue levar, seja qual for a largura de banda do enlace?",
+    "hint": "Fundamentos da Web e Internet, aula 3; Nuvem e Serverless, aula 9.",
+    "unit": "Mbps"
+  },
+  "ex-zss6fz1m": {
+    "prompt": "Um servidor virtual novo acabou de subir num endereço público, ainda sem nada instalado. Quais destas a aula 9 põe na primeira hora dele? Marque todas as que se aplicam.",
+    "hint": "Fundamentos da Web e Internet, aula 9.",
+    "choices": [
+      {
+        "text": "Aplicar as atualizações pendentes e garantir que as de segurança continuem chegando",
+        "why": "Uma máquina desatualizada num endereço público é encontrada por varredura automática poucas horas depois de subir."
+      },
+      {
+        "text": "Comprar um tamanho acima do esperado, para a máquina nunca ficar curta",
+        "why": "A aula manda comprar pequeno e observar; a folga que vale deixar é de memória, que é o que as aplicações pequenas esgotam primeiro."
+      },
+      {
+        "text": "Desligar o login por senha e entrar com chave",
+        "why": "A varredura que encontra a máquina está chutando senhas, e uma chave torna o chute inútil, não só lento."
+      },
+      {
+        "text": "Rodar a aplicação como administrador, para ela alcançar tudo de que precisar",
+        "why": "Uma conta separada, só com o acesso de que a aplicação precisa, transforma uma invasão numa invasão menor."
+      },
+      {
+        "text": "Deixar todas as portas abertas até a aplicação ficar pronta, e então fechar as que sobraram",
+        "why": "A primeira hora fecha tudo o que não está em uso: um firewall que permite as portas web e o seu caminho de entrada, e recusa o resto."
+      },
+      {
+        "text": "Decidir os backups enquanto a máquina ainda está vazia",
+        "why": "Leva dez minutos agora, e ninguém faz backup do banco a menos que alguém providencie."
+      }
+    ]
+  },
+  "ex-2g2417e0": {
+    "prompt": "Uma loja virtual consegue segurar duzentas requisições em curso. O serviço de busca dela fica lento, mas não quebra. Ponha o que acontece em seguida na ordem em que a aula 1 conta.",
+    "hint": "Fundamentos da Web e Internet, aula 1.",
+    "items": [
+      "A busca passa a levar quatro segundos para responder em vez de quarenta milissegundos",
+      "Cada requisição que precisa da busca segura sua vaga durante esses quatro segundos",
+      "As duzentas vagas acabam todas presas por requisições esperando a busca",
+      "Requisições que nem tocam a busca não acham vaga livre e não conseguem entrar",
+      "Todo mundo vê uma queda enquanto as medições da própria loja parecem saudáveis"
+    ],
+    "trap": "As requisições que nada têm a ver com a busca não são as primeiras a sofrer: só são barradas depois que todas as vagas já estão presas por requisições esperando a busca."
+  },
+  "ex-ada2pdxj": {
+    "prompt": "O pipeline dá a cada arquivo gerado um nome com hash e serve esses nomes por um ano. A página HTML que os lista tem de ser conferida com o servidor a cada carregamento, o que quase sempre volta `304`. O cabeçalho dela é `Cache-Control: ___`.",
+    "hint": "Fundamentos da Web e Internet, aula 7.",
+    "blanks": [
+      {
+        "accept": [
+          "no-cache"
+        ]
+      }
+    ]
+  },
+  "ex-1zsfq53s": {
+    "prompt": "Sua API permite 100 requisições por minuto a cada endereço de origem e responde `429` depois disso. Um cliente diz que boa parte do escritório dele recebe `429` a manhã inteira, embora cada pessoa mande só umas poucas requisições. O que explica isso?",
+    "hint": "Redes e Protocolos, aula 2.",
+    "choices": [
+      {
+        "text": "Os navegadores abrem várias conexões cada um, e o limite conta conexões",
+        "why": "O limite conta requisições por endereço, e o número de conexões que as levam não muda nada nisso."
+      },
+      {
+        "text": "A linha deles perde pacotes, e cada retransmissão do TCP chega como mais uma requisição",
+        "why": "Um segmento retransmitido é reenviado abaixo do HTTP e entregue ao programa uma vez só; nunca vira uma segunda requisição."
+      },
+      {
+        "text": "O escritório sai por NAT, então todas as pessoas chegam de um mesmo endereço",
+        "why": "Toda máquina do escritório aparece lá fora como o único endereço público do roteador, e é assim que uma regra por endereço barra um escritório inteiro."
+      },
+      {
+        "text": "O resolvedor deles guarda um endereço antigo e manda o escritório todo para um só servidor",
+        "why": "Qual servidor responde não muda o endereço de onde as requisições vêm, e é esse endereço que o limite conta."
+      }
+    ]
+  },
+  "ex-g3hmcrje": {
+    "prompt": "Depois de um release, toda chamada dos pods `front` para `http://shop` falha na hora com `Connection refused`. De um pod de depuração, `nslookup shop` devolve o endereço de cluster do Service, e os pods `shop` estão todos Running e Ready. Qual explicação se encaixa?",
+    "hint": "Redes e Protocolos, aula 3; Kubernetes: Orquestração em Produção, aula 15.",
+    "choices": [
+      {
+        "text": "O seletor do Service não casa com nenhum pod, e a lista de endpoints dele está vazia",
+        "why": "Um Service sem ninguém atrás continua resolvendo, e o endereço dele recusa conexões na hora: o sintoma de um erro de digitação nos rótulos do seletor."
+      },
+      {
+        "text": "Uma NetworkPolicy criada no release agora descarta tudo o que vai para `shop`",
+        "why": "Um descarte não devolve nada, então quem chama espera até estourar o tempo; esta recusa veio na hora."
+      },
+      {
+        "text": "O CoreDNS está falhando, e o `front` não consegue transformar o nome `shop` num endereço",
+        "why": "O nome resolveu para o endereço de cluster, e uma conexão só pode ser recusada depois que um endereço foi tentado."
+      },
+      {
+        "text": "O Service escuta na porta 80 e os pods usam a 8080, e os dois números têm de ser iguais",
+        "why": "O `targetPort` liga um ao outro; a porta 80 no Service na frente da 8080 no contêiner é o arranjo comum."
+      }
+    ]
+  },
+  "ex-c5x82c1q": {
+    "prompt": "Os servidores de aplicação, todos Linux, chamam a API de um parceiro na porta 443. A network ACL da sub-rede deles, que é sem estado, permite TCP de saída para a porta 443 e TCP de entrada nas portas 1024 a 32767, porque alguém tomou isso pela faixa efêmera. Toda chamada estoura o tempo. Por quê?",
+    "hint": "Redes e Protocolos, aula 2; Nuvem e Serverless, aula 6.",
+    "choices": [
+      {
+        "text": "A regra de saída precisa cobrir as portas 1024 a 65535, já que as requisições saem delas",
+        "why": "A regra de saída casa com o destino da requisição, 443, que está liberado; as portas julgadas errado aqui são aquelas para onde as respostas voltam."
+      },
+      {
+        "text": "O Linux tira as portas de origem de 32768 a 60999, e toda resposta cai fora da regra",
+        "why": "O `ip_local_port_range` do kernel vai de 32768 a 60999, e um filtro sem estado julga cada resposta sozinha; nenhuma cai entre 1024 e 32767."
+      },
+      {
+        "text": "O security group das instâncias também precisa de uma regra de entrada para as respostas",
+        "why": "Um security group tem estado: a resposta a uma conexão que a instância abriu volta sem regra própria."
+      },
+      {
+        "text": "A API do parceiro recusa conexões na porta 443 vindas de endereços que não conhece",
+        "why": "Uma recusa volta na hora como `Connection refused`; estourar o tempo quer dizer que algo descartou os pacotes sem dizer nada."
+      }
+    ]
+  },
+  "ex-cvjjsgvk": {
+    "prompt": "O `/etc/resolv.conf` de um contêiner novo diz `nameserver 192.0.2.53`, que é o `ns1`, o servidor autoritativo da empresa para `example.com`. Nomes sob `example.com` resolvem; todos os outros falham, e o `dig` de um deles mostra `status: REFUSED` e `WARNING: recursion requested but not available`. O que está errado?",
+    "hint": "Redes e Protocolos, aula 4.",
+    "choices": [
+      {
+        "text": "Um firewall bloqueia a porta 53 do contêiner em direção à internet",
+        "why": "Uma porta bloqueada não dá resposta nenhuma, e o `dig` estouraria o tempo; aqui um servidor respondeu."
+      },
+      {
+        "text": "Esses nomes não existem, e `REFUSED` é o jeito de um resolvedor dizer isso",
+        "why": "Um nome que não existe volta como `NXDOMAIN`, com o `SOA` da zona na resposta."
+      },
+      {
+        "text": "Os servidores autoritativos desses outros domínios estão fora do ar",
+        "why": "Um resolvedor que tentou e falhou responde `SERVFAIL`; `REFUSED` quer dizer que este servidor não aceitou a pergunta."
+      },
+      {
+        "text": "Ele recebeu um servidor que só responde pelas próprias zonas e nunca faz recursão",
+        "why": "O `ns1` guarda `example.com` e não percorre a árvore para ninguém, que é o que o aviso diz; o contêiner precisa de um resolvedor recursivo."
+      }
+    ]
+  },
+  "ex-pabh8j6f": {
+    "prompt": "Na máquina de monitoramento, CHECK quer dizer `echo | openssl s_client -connect www.example.com:443 -servername www.example.com 2>/dev/null | openssl x509 -noout -checkend 2592000 >/dev/null`. Qual linha de crontab manda e-mail só quando o certificado que o site serve tiver menos de trinta dias pela frente?",
+    "hint": "Redes e Protocolos, aula 6; Linux e Linha de Comando, aula 13.",
+    "choices": [
+      {
+        "text": "`0 7 * * * CHECK && echo \"www: certificate ends within 30 days\"`",
+        "why": "O `&&` roda com status de saída 0, que é *will not expire*: um e-mail toda manhã enquanto está tudo bem, e silêncio a partir do dia em que importa."
+      },
+      {
+        "text": "`0 7 * * * CHECK || echo \"www: certificate ends within 30 days\" >/dev/null 2>&1`",
+        "why": "O cron manda por e-mail o que o job imprime, e esta linha joga o aviso em `/dev/null`; ela nunca vai avisar ninguém de nada."
+      },
+      {
+        "text": "`0 7 * * * CHECK || echo \"www: certificate ends within 30 days\"`",
+        "why": "O `-checkend` sai com status diferente de zero quando o certificado acaba dentro dos 2592000 segundos, o `||` só roda nesse caso, e o cron manda por e-mail a linha que o `echo` imprime."
+      },
+      {
+        "text": "A mesma linha com `-checkend 30` dentro de CHECK, e depois `|| echo \"www: ends soon\"`",
+        "why": "O `-checkend` conta segundos, então 30 avisa meio minuto antes do fim; trinta dias são `2592000`."
+      }
+    ]
+  },
+  "ex-wy0r3zb9": {
+    "prompt": "Antes de mudar o DNS, você quer ver `https://www.example.com/` exatamente como um visitante verá quando o nome apontar para o servidor novo, 192.0.2.81, que também hospeda vários outros sites. Qual comando mostra isso?",
+    "hint": "Redes e Protocolos, aula 6; Fundamentos da Web e Internet, aula 6.",
+    "choices": [
+      {
+        "text": "`curl --resolve www.example.com:443:192.0.2.81 https://www.example.com/`",
+        "why": "O nome continua na URL, então vai no `Host:` e no handshake e é conferido contra o certificado; só o endereço é escolhido à mão, sem mexer no DNS."
+      },
+      {
+        "text": "`curl -H 'Host: www.example.com' https://192.0.2.81/`",
+        "why": "O `Host:` escolhe o site certo, mas o curl confere o certificado contra `192.0.2.81` e para com `no alternative certificate subject name matches`."
+      },
+      {
+        "text": "`curl -k https://192.0.2.81/`, aceitando o certificado que vier",
+        "why": "Sem nome na requisição o servidor não sabe qual dos seus sites você quer, e o `-k` desliga a única verificação que separa um servidor de verdade de um impostor."
+      },
+      {
+        "text": "`curl https://www.example.com/`, rodado quando o DNS já apontar o nome para 192.0.2.81",
+        "why": "Isso testa depois da troca, que é justamente o que você queria evitar; o `--resolve` chega ao endereço novo sem esperar o DNS."
+      }
+    ]
+  },
+  "ex-myfxhdwx": {
+    "prompt": "Um serviço novo em máquinas na nuvem manda e-mails de redefinição de senha como `noreply@example.com`, entregando cada mensagem direto no servidor de e-mail do cliente. O `example.com` publica `v=spf1 mx -all` e um registro DMARC com `p=reject`. Os clientes não recebem nada. Qual conserto mantém a política do domínio como está?",
+    "hint": "Redes e Protocolos, aula 9.",
+    "choices": [
+      {
+        "text": "Trocar `-all` por `~all`, para essas máquinas contarem só como falha leve",
+        "why": "O DMARC só passa quando o SPF ou o DKIM passa para o domínio do `From:`; uma falha leve continua não sendo um passe, e nada assinou a mensagem."
+      },
+      {
+        "text": "Enviar pelo próprio servidor do `example.com` na porta 587, com login",
+        "why": "Esse servidor está no registro SPF por causa do `mx` e assina com DKIM o que sai, então as duas verificações passam para `example.com`, e o DMARC junto."
+      },
+      {
+        "text": "Pedir ao provedor registros `PTR` que deem às máquinas o nome `mail.example.com`",
+        "why": "Um nome reverso ajuda a reputação de quem envia, mas nem o SPF nem o DKIM o leem, então o DMARC falha do mesmo jeito."
+      },
+      {
+        "text": "Publicar `p=none` até o serviço ficar pronto e depois voltar a `p=reject`",
+        "why": "Isso muda a política, e enquanto durar qualquer um pode mandar como `example.com`; o e-mail de redefinição continua falhando nas duas verificações."
+      }
+    ]
+  },
+  "ex-bk4ynj6a": {
+    "prompt": "Atrás de um túnel novo até outro escritório, `ping -M do -s 1372` para um servidor do outro lado recebe resposta e `ping -M do -s 1373` falha. Para as transferências grandes pararem de travar, o roteador vai fazer o clamping do MSS do TCP sobre IPv4 para caber nesse caminho. Que MSS ele deve usar?",
+    "hint": "Redes e Protocolos, aula 2.",
+    "unit": "bytes"
+  },
+  "ex-xm82af1t": {
+    "prompt": "As chamadas de um serviço a uma API HTTPS falham com `SSL certificate problem: unable to get local issuer certificate`. Quais destas produzem exatamente essa mensagem? Marque todas as que se aplicam.",
+    "hint": "Redes e Protocolos, aula 6.",
+    "choices": [
+      {
+        "text": "O `notAfter` do certificado já ficou no passado",
+        "why": "Essa é `certificate has expired`, código de verificação 10."
+      },
+      {
+        "text": "O servidor da API manda o próprio certificado sem o intermediário",
+        "why": "O cliente tem a raiz e não consegue chegar a ela, porque o elo do meio nunca foi enviado."
+      },
+      {
+        "text": "O certificado cita outros hosts, e não o da URL",
+        "why": "Essa é `no alternative certificate subject name matches target host name`."
+      },
+      {
+        "text": "A cadeia termina na CA da própria empresa, que falta no repositório de confiança do cliente",
+        "why": "Nada no repositório assinou nada da cadeia: a mensagem que a CA do escritório dava até ser instalada."
+      },
+      {
+        "text": "O certificado foi assinado pelo próprio servidor que ele identifica",
+        "why": "Essa é `self-signed certificate`, código de verificação 18."
+      },
+      {
+        "text": "O serviço roda de uma imagem cujo repositório de confiança não tem raiz nenhuma",
+        "why": "Com o repositório vazio, nada no cliente assinou nada da cadeia, exatamente como com uma CA interna que ninguém instalou."
+      }
+    ]
+  },
+  "ex-3fzvraya": {
+    "prompt": "Uma verificação a partir de outra região roda `curl -w` contra a API a cada minuto e imprime `dns`, `tcp`, `tls`, `first byte` e `total`, todos contados desde o início. Ligue cada leitura ao suspeito que a aula 5 aponta para ela.",
+    "hint": "Redes e Protocolos, aula 5.",
+    "pairs": [
+      {
+        "left": "`dns` é grande, e todos os passos depois dele são pequenos",
+        "right": "o resolvedor"
+      },
+      {
+        "left": "o passo de `dns` para `tcp` é grande",
+        "right": "a distância, ou perda no caminho"
+      },
+      {
+        "left": "o passo de `tcp` para `tls` é grande, embora o próprio `tcp` tenha sido rápido",
+        "right": "um servidor sobrecarregado"
+      },
+      {
+        "left": "o passo de `tls` para `first byte` é grande, e o resto é rápido",
+        "right": "a aplicação, ainda pensando"
+      }
+    ],
+    "right_distractors": [
+      "o tamanho da resposta",
+      "um firewall descartando o primeiro pacote"
+    ]
+  },
   "ex-5bdfv4pd": {
     "prompt": "Num servidor de build você rodou `sudo usermod -aG docker bruno`, e o `getent group docker` já mostra o nome dele. Na sessão ssh que ele já tinha aberta, `docker ps` continua respondendo `permission denied while trying to connect to the docker API at unix:///var/run/docker.sock`. O que você diz a ele?",
     "hint": "Linux e Linha de Comando, aula 4; Docker e Containers, aula 6.",
@@ -236,6 +575,1190 @@
       "o fuso horário da máquina, que não é o da linha",
       "um arquivo de crontab sem a quebra de linha final"
     ]
+  },
+  "ex-3h4cd4c8": {
+    "prompt": "O Deployment da produção usa `strategy: Recreate`, porque a aplicação migra o banco de dados ao iniciar. Um pull request revisado muda a produção para `bulletin:1.9`, uma tag que ninguém nunca enviou; o `validate.sh` a aprova, e a Kustomization da produção tem `wait: true` e `timeout: 2m`. O que os usuários da produção veem, e o que o Flux faz?",
+    "hint": "GitOps, Artefatos e Segredos, aula 4; Kubernetes: Orquestração em Produção, aula 35.",
+    "choices": [
+      {
+        "text": "A versão antiga: o rollout mantém os pods antigos até um novo ficar pronto.",
+        "why": "Isso é um rolling update se segurando; o `Recreate` remove todo pod antigo antes de criar qualquer novo."
+      },
+      {
+        "text": "A versão antiga: depois de dois minutos a verificação de saúde falha e o Flux reaplica a última revisão bem-sucedida.",
+        "why": "O `REVISION` aponta o último commit bom como aquele para onde voltar; o Flux não volta sozinho, a correção é um revert."
+      },
+      {
+        "text": "Página nenhuma: os pods antigos saem antes de os novos falharem no pull, e o Flux acusa a falha de saúde e não desfaz nada.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada muda: antes de aplicar o Deployment, o Flux confere no registry se a imagem existe, e ele para na tag que está faltando.",
+        "why": "Nada consulta o registry antes; uma tag nunca enviada é uma string válida, e o Deployment é aplicado."
+      }
+    ]
+  },
+  "ex-8kvp4a0q": {
+    "prompt": "O PersistentVolumeClaim `orders` do banco de dados usa uma StorageClass cujo `reclaimPolicy` é `Retain`. Um pull request move os arquivos dele de `apps/shop/staging/`, que a Kustomization `staging` aplica, para `infrastructure/db/`, que uma Kustomization nova, `databases`, aplica; as duas têm `prune: true`. Depois do merge, o que o pod do banco encontra no disco?",
+    "hint": "GitOps, Artefatos e Segredos, aula 5; Kubernetes: Orquestração em Produção, aula 26.",
+    "choices": [
+      {
+        "text": "Os dados: mover no Git não é apagar no cluster, então o claim fica onde estava, adotado pela `databases`.",
+        "why": "Isso vale quando a mesma Kustomization continua dona do que mudou de lugar; aqui a `staging` poda o claim e a `databases` o cria de novo."
+      },
+      {
+        "text": "Um disco vazio: o claim antigo foi podado, o volume dele está `Released`, e o claim novo ganhou outro.",
+        "why": "Isso."
+      },
+      {
+        "text": "Os dados: com `Retain`, o claim criado pela `databases` se liga ao volume antigo, que ainda guarda as linhas.",
+        "why": "Um volume `Released` ainda lembra o claim antigo e não se liga a um novo sozinho; alguém precisa limpar o `claimRef`."
+      },
+      {
+        "text": "Os dados: o Flux se recusa a aplicar a `databases`, porque o claim já pertence à Kustomization `staging`.",
+        "why": "O Flux não tem essa recusa aqui; a primeira Kustomization poda o que saiu do caminho dela e a segunda cria o que chegou."
+      }
+    ]
+  },
+  "ex-712xz4d0": {
+    "prompt": "Às três da manhã, quem está de plantão corrige uma queda duas vezes à mão e não commita nenhuma das duas: uma edição no arquivo do nginx numa VM cujo agente Puppet roda com `runinterval = 1800`, e uma mudança num Deployment gerenciado por uma Application do Argo CD com `selfHeal: true`. O que acontece com as duas correções?",
+    "hint": "GitOps, Artefatos e Segredos, aula 3; Infraestrutura como Código, aula 19.",
+    "choices": [
+      {
+        "text": "As duas ficam até o próximo merge, porque um agente compara quando a descrição dele muda.",
+        "why": "Os dois agentes comparam por conta própria: o Puppet a cada meia hora, e o Argo CD sempre que os objetos que ele observa mudam."
+      },
+      {
+        "text": "O Argo CD desfaz o Deployment na próxima olhada no Git, até três minutos depois; o Puppet deixa a edição até alguém rodá-lo.",
+        "why": "O timer de três minutos é do Git; o `selfHeal` reage ao cluster na hora. E um agente Puppet roda no timer dele, não quando alguém lembra."
+      },
+      {
+        "text": "Nenhuma é desfeita: um agente não distingue uma correção de um erro, então deixa em paz o que uma pessoa editou.",
+        "why": "Ele não distingue, e é por isso que desfaz as duas com a mesma confiança."
+      },
+      {
+        "text": "O Deployment volta em segundos, a edição do nginx em até meia hora, então uma correção só dura na descrição.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-6mc2rnmg": {
+    "prompt": "O `bulletin:1.2` foi assinado com cosign pelo digest, e a produção referencia esse digest. Um job de CI roda de novo sobre o mesmo commit e envia o rebuild como `bulletin:1.2` outra vez. O que o `cosign verify` do curso diz agora sobre `bulletin:1.2`, e o que a produção roda?",
+    "hint": "GitOps, Artefatos e Segredos, aula 8; Docker e Containers, aula 16.",
+    "choices": [
+      {
+        "text": "`no signatures found`, porque o rebuild tem outro digest; a produção segue com o build assinado.",
+        "why": "Isso."
+      },
+      {
+        "text": "Verificado: o mesmo commit e o mesmo Dockerfile dão o mesmo digest, então a assinatura antiga ainda bate.",
+        "why": "Construir o mesmo commit de novo não dá a mesma imagem; a configuração registra quando o build foi feito, então o digest muda."
+      },
+      {
+        "text": "Verificado, porque a assinatura segue a tag `1.2` para onde ela apontar agora.",
+        "why": "Uma assinatura cobre um digest, nunca uma tag; o `cosign` resolve a tag e confere o digest que encontra."
+      },
+      {
+        "text": "`accepted signatures do not match threshold`, e a produção puxa o rebuild quando os pods reiniciarem.",
+        "why": "Essa mensagem quer dizer que existe a assinatura de outra pessoa; aqui não há nenhuma. E uma referência por digest não acompanha uma tag movida."
+      }
+    ]
+  },
+  "ex-3qp5c5f7": {
+    "prompt": "Oito meses depois de o staging passar de duas réplicas para três, uma auditora pergunta por quê. Num arranjo como o deste curso, qual registro guarda a resposta?",
+    "hint": "GitOps, Artefatos e Segredos, aula 12.",
+    "choices": [
+      {
+        "text": "Os eventos do Flux na Kustomization `staging`, que nomeiam cada revisão que ele aplicou.",
+        "why": "Eles dizem qual revisão e quando, nunca por quê, e por padrão ficam guardados uma hora."
+      },
+      {
+        "text": "O pull request que fez a mudança, com a descrição e a revisão dele.",
+        "why": "Isso."
+      },
+      {
+        "text": "O log de auditoria do API server, que registrou o patch no Deployment.",
+        "why": "Ele registra quem mandou qual requisição para qual objeto; o motivo nunca fez parte da requisição."
+      },
+      {
+        "text": "O `managedFields` do Deployment, que nomeia o cliente que definiu `spec.replicas`.",
+        "why": "Ele nomeia um cliente, não uma pessoa nem um motivo, e guarda só o último a escrever cada campo."
+      }
+    ]
+  },
+  "ex-ybe75wgp": {
+    "prompt": "O ExternalSecret da produção passa a ter `refreshInterval: 15m`, e o `bulletin` lê o arquivo do token a cada requisição. Logo depois da última leitura do operador, um token novo é gravado no Vault. Contando a sincronização do próprio kubelet, quantos minutos, no máximo e aproximadamente, se passam até a página mostrar a nova impressão digital?",
+    "hint": "GitOps, Artefatos e Segredos, aula 10.",
+    "unit": "minutos"
+  },
+  "ex-vyn86tmd": {
+    "prompt": "Ao publicar o chart no registry do curso, `helm push bulletin-0.1.0.tgz oci://localhost:5001/charts` falha com `server gave HTTP response to HTTPS client`. O registry roda na sua própria máquina, sem TLS, então o comando precisa de mais uma flag: `--___`.",
+    "hint": "GitOps, Artefatos e Segredos, aula 7.",
+    "blanks": [
+      {
+        "accept": [
+          "plain-http",
+          "--plain-http",
+          "plain http"
+        ]
+      }
+    ]
+  },
+  "ex-2tcpe8wp": {
+    "prompt": "O pull request 3 mudou o staging para uma imagem que ninguém construiu, o agente aplicou, e o `main` é protegido. Ponha em ordem o caminho de volta.",
+    "hint": "GitOps, Artefatos e Segredos, aula 2; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 4.",
+    "items": [
+      "atualizar o `main` a partir do servidor e começar um branch dele",
+      "`git revert -m 1` no commit de merge, o que acrescenta um commit que o desfaz",
+      "enviar o branch e abrir um pull request",
+      "esperar o status `validate` e a aprovação de outra pessoa",
+      "fazer o merge e deixar o agente aplicar o novo `main` na próxima passada"
+    ],
+    "trap": "O revert é uma mudança como outra qualquer: passa pela checagem e pela revisão antes do merge, e nunca vai direto para o `main`."
+  },
+  "ex-140z0nrc": {
+    "prompt": "Num cluster que está passando do Argo CD para o Flux, a Application raiz do Argo CD gerencia as outras. Ponha a troca em ordem, de modo que o staging continue rodando e só um agente aplique os objetos dele a cada momento.",
+    "hint": "GitOps, Artefatos e Segredos, aula 4.",
+    "items": [
+      "apagar a Application raiz",
+      "apagar as Applications restantes",
+      "apagar a instalação do próprio Argo CD",
+      "instalar o Flux e apontá-lo para o `fleet`"
+    ],
+    "trap": "Apagar as outras Applications antes da raiz deixa a raiz recriá-las a partir de `argocd/` na próxima sincronização."
+  },
+  "ex-wj007c50": {
+    "prompt": "Uma manhã ruim com segredos produziu quatro mensagens. Associe cada uma ao que ela quer dizer.",
+    "hint": "GitOps, Artefatos e Segredos, aula 9.",
+    "pairs": [
+      {
+        "left": "`ErrUnsealFailed` nos eventos de um SealedSecret",
+        "right": "um selo usado sob um nome ou namespace para o qual não foi feito"
+      },
+      {
+        "left": "`Failed to get the data key` vindo do `sops --decrypt`",
+        "right": "nada nesta máquina abre a chave de dados do arquivo"
+      },
+      {
+        "left": "`Code: 503` e `Vault is sealed`",
+        "right": "o cofre reiniciou e ninguém apresentou uma chave de destrancamento"
+      },
+      {
+        "left": "`service account name not authorized` num login no Vault",
+        "right": "um token genuíno, de uma conta que o role não nomeia"
+      }
+    ],
+    "right_distractors": [
+      "um token cuja política nomeia outro caminho",
+      "um arquivo editado sem o SOPS, cujo MAC não bate mais"
+    ]
+  },
+  "ex-c2pp6e8s": {
+    "prompt": "Um cliente pergunta se a correção do commit `a41c9e0` do `bulletin` já está no ar. No `bulletin`, `git tag --contains a41c9e0` imprime `v1.3`. Com o Flux postando status de commit no `fleet`, o que completa a resposta?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 12; GitOps, Artefatos e Segredos, aula 12.",
+    "choices": [
+      {
+        "text": "Isso já basta: uma tag no repositório da aplicação marca um release, então o 1.3 é o que a produção roda hoje.",
+        "why": "A tag diz qual release contém a correção; em GitOps um release só roda quando o `fleet` o nomeia."
+      },
+      {
+        "text": "A imagem `bulletin:1.3` no registry: depois que o CI a envia para lá, a produção a puxa sozinha.",
+        "why": "Um registry não é um deploy; uma imagem que nenhum diretório nomeia não roda em lugar nenhum."
+      },
+      {
+        "text": "Um status de sucesso `kustomization/production` do Flux num commit do `fleet` cujo diretório da produção nomeia o 1.3.",
+        "why": "Isso."
+      },
+      {
+        "text": "O estado do ticket: ele fechou sozinho quando o pull request com a correção teve merge no `main`.",
+        "why": "O ticket fecha no merge, antes de alguém de fora da equipe ver a mudança; fechado não é pronto."
+      }
+    ]
+  },
+  "ex-1821hpjd": {
+    "prompt": "A aplicação lê o token da transportadora de `config.env`, que o `.gitignore` deixa fora do repositório. O teste de contrato passa no laptop da Ana e falha no CI do pull request, porque a máquina limpa não tem esse arquivo. Qual é a correção certa?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 17; Testes Automatizados e CI/CD, aula 9.",
+    "choices": [
+      {
+        "text": "Commitar também o `config.env`, para a máquina limpa que o CI cria ter exatamente o que o laptop tem.",
+        "why": "Um segredo que chega a um commit vazou de vez, em todo clone e no histórico."
+      },
+      {
+        "text": "Pôr `!config.env` depois da regra de ignorar, para o clone do CI trazer o arquivo e cada pessoa manter a sua cópia.",
+        "why": "É o mesmo commit por outro caminho: o token entra no histórico."
+      },
+      {
+        "text": "Tornar a checagem opcional no `main`, já que quem falha é a máquina que o CI cria e não o código escrito.",
+        "why": "Uma checagem vermelha que qualquer um pode ignorar acaba ignorada, e a falha é real: o código precisa de um valor que não tem."
+      },
+      {
+        "text": "Passar o token dos segredos do CI só ao passo que precisa dele, e fazer o programa avisar quando ele falta.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-xt7tg4jr": {
+    "prompt": "Às 15:00 do dia 21 de setembro, a Ana roda `git log --oneline --since=2026-09-17` para listar tudo a partir do dia 17. O `31a6298 Add cheese rolls`, commitado às 10:15 do dia 17, não aparece. Por quê?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 3.",
+    "choices": [
+      {
+        "text": "Uma data sem hora quer dizer aquele dia na hora atual, 15:00, então a manhã fica de fora.",
+        "why": "Isso."
+      },
+      {
+        "text": "O `--since` só guarda o que veio depois do dia que ele nomeia, então o próprio dia 17 é pulado.",
+        "why": "Ele guarda o que aconteceu a partir de um momento; o que foi mal lido é o momento, não o dia."
+      },
+      {
+        "text": "O commit é datado em UTC, e 10:15 em -03:00 já cai no dia 16 por aquele relógio.",
+        "why": "10:15 em -03:00 é 13:15 UTC, no mesmo dia; não foi o fuso que cortou o commit."
+      },
+      {
+        "text": "A data precisava de aspas, e sem elas o Git ignora o que vem depois do primeiro dos hífens.",
+        "why": "O shell entrega `2026-09-17` inteiro; as aspas só importam quando o valor tem um espaço, como em `2026-09-17 00:00`."
+      }
+    ]
+  },
+  "ex-tcfhdw6r": {
+    "prompt": "No quadro da equipe, um card leva uns dois dias de quando é começado até ficar pronto, enquanto quem pede alguma coisa espera umas cinco semanas por ela. Onde o trabalho está esperando, e qual é a pergunta a fazer?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 15.",
+    "choices": [
+      {
+        "text": "Em revisão; baixar o limite de WIP de *em revisão* para os cards não fazerem fila ali.",
+        "why": "Espera na revisão deixaria o cycle time longo, e ele é de dois dias."
+      },
+      {
+        "text": "Em *a fazer*, antes de alguém começar; a pergunta é de prioridade ou de gente.",
+        "why": "Isso."
+      },
+      {
+        "text": "Em andamento; os tickets são grandes demais e deveriam ser divididos antes de começar.",
+        "why": "Tickets grandes também esticariam os dois dias que um card leva depois de começado."
+      },
+      {
+        "text": "Em lugar algum: o lead time inclui escrever o ticket, então fica muito acima do cycle time por definição.",
+        "why": "O lead time começa quando o ticket é escrito, mas nada torna cinco semanas normais; a diferença é trabalho esperando."
+      }
+    ]
+  },
+  "ex-k788ydxv": {
+    "prompt": "O Bruno pede à Ana que revise um pull request de 1.900 linhas até o fim do dia, e ela sabe que não consegue lê-lo com cuidado nesse tempo. O que ela deve fazer?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 13.",
+    "choices": [
+      {
+        "text": "Aprovar quando as checagens ficarem verdes, já que uma máquina já leu a mudança inteira.",
+        "why": "As checagens pegam o que um script pega; saber se a mudança faz o que o ticket pediu exige alguém que a leu."
+      },
+      {
+        "text": "Comentar os nomes e o espaçamento, a parte que uma leitura rápida cobre.",
+        "why": "Isso gasta o tempo na última e menos importante das quatro perguntas, que as máquinas já cobrem quase toda."
+      },
+      {
+        "text": "Dizer isso com franqueza, e perguntar se dá para dividir, ou se o Bruno pode antes mostrar a mudança a ela.",
+        "why": "Isso."
+      },
+      {
+        "text": "Pedir mudanças em cada arquivo, para o merge esperar até ela ter tempo.",
+        "why": "Isso trava a mudança sem um motivo que alguém possa resolver; dizer que não consegue ler é a versão honesta."
+      }
+    ]
+  },
+  "ex-d7v8a6b3": {
+    "prompt": "O branch da Ana já foi enviado, e o Bruno já fez pull dele. Quais destes dariam ids novos a commits que o Bruno já tem? Marque todas as que se aplicam.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 6.",
+    "choices": [
+      {
+        "text": "`git commit --amend` no último commit",
+        "why": "Isso."
+      },
+      {
+        "text": "`git rebase main`, agora que o `main` andou",
+        "why": "Isso."
+      },
+      {
+        "text": "`git revert HEAD~1`, para desfazer um commit que o Bruno tem",
+        "why": "O revert acrescenta um commit novo por cima e deixa cada commit existente como estava."
+      },
+      {
+        "text": "`git merge main` no branch, para atualizá-lo",
+        "why": "Um merge acrescenta um commit com dois pais e não reescreve nada."
+      },
+      {
+        "text": "`git rebase -i --autosquash HEAD~3`, com um `fixup!` entre eles",
+        "why": "Isso."
+      },
+      {
+        "text": "`git push` de um commit novo feito por cima do branch",
+        "why": "Um push só move o branch para a frente; os commits que o Bruno tem mantêm os ids."
+      }
+    ]
+  },
+  "ex-zk1wdv4m": {
+    "prompt": "Uma equipe de cinco pessoas termina uns 40 pontos numa sprint normal de dez dias. Nesta sprint, duas pessoas têm os dez dias, uma tem seis (um curso), uma tem oito (dois dias no suporte) e uma tem seis (férias). Pela conta da aula 18, qual é a capacidade da equipe em pontos, aproximadamente, antes de deixar qualquer folga?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 18.",
+    "unit": "pontos"
+  },
+  "ex-brhstybz": {
+    "prompt": "O backup noturno roda como um CronJob do Kubernetes, e cada execução é um pod que termina em uns três segundos. A equipe quer saber de toda noite em que o backup não terminou, inclusive uma noite em que nenhuma execução começou. Que arranjo avisa a equipe?",
+    "hint": "Observabilidade e Operação, aula 5; Kubernetes: Orquestração em Produção, aula 12.",
+    "choices": [
+      {
+        "text": "O Prometheus faz scrape do `/metrics` do pod do backup a cada quinze segundos, e um alerta dispara quando o contador de sucessos para de crescer",
+        "why": "O pod some segundos depois de começar, então um scrape a cada quinze segundos raramente o encontra, e um pod que nunca rodou não tem o que expor."
+      },
+      {
+        "text": "Um alerta na condição `BackoffLimitExceeded` do Job, que o Kubernetes põe numa execução cujas tentativas falharam todas",
+        "why": "Pega uma execução que falhou em todas as tentativas. Uma noite em que o controller nem criou o Job não deixa Job nem condição para alertar."
+      },
+      {
+        "text": "Cada execução envia ao Pushgateway a hora em que terminou, e um alerta dispara quando ela fica 26 horas para trás",
+        "why": "A diferença cresce um segundo a cada segundo, aconteça o que acontecer, então dispara na noite em que nada roda, o que nenhum registro de execução consegue."
+      },
+      {
+        "text": "Cada execução abre um span raiz chamado `nightly backup`, e quem está de plantão busca no armazenamento de rastros toda manhã",
+        "why": "Um rastro só existe para trabalho que aconteceu. A noite em que o agendamento falhou não deixa span para achar, e uma busca matinal é um hábito, não um alerta."
+      }
+    ]
+  },
+  "ex-rx135t65": {
+    "prompt": "Uma API roda como um Deployment de 4 réplicas saudáveis, cada uma com um `readinessProbe` em `/ready` com `periodSeconds: 5` e um `livenessProbe` em `/healthz` com `periodSeconds: 10`. O SLI de disponibilidade conta como evento bom toda resposta que não é `5xx`, em qualquer rota. Quantos dos eventos bons que ele conta a cada minuto vêm do kubelet e não de clientes?",
+    "hint": "Observabilidade e Operação, aula 15; Kubernetes: Orquestração em Produção, aula 22.",
+    "unit": "requisições por minuto"
+  },
+  "ex-tmg7fk6f": {
+    "prompt": "Um worker que exporta seus spans pelo processador em lote reinicia sem parar. O `docker inspect` dá 137 como o último código de saída, e o Jaeger tem os rastros das requisições mais antigas, mas nenhum dos últimos segundos antes de cada reinício. O que explica o buraco?",
+    "hint": "Observabilidade e Operação, aula 2; Linux e Linha de Comando, aula 6.",
+    "choices": [
+      {
+        "text": "A fila limitada de 2048 spans transbordou sob carga e descartou os mais novos",
+        "why": "Uma fila cheia descarta spans quando o Collector para de responder, em qualquer momento; não explica um buraco que coincide com cada morte."
+      },
+      {
+        "text": "137 é 128 mais 9: `SIGKILL`, que não pode ser capturado, então os spans da fila nunca foram enviados",
+        "why": "O `SIGKILL` muitas vezes é o matador de falta de memória. Uma saída normal esvazia a fila pelo shutdown que o SDK registrou. Um `KILL` não dá ao processo a chance de rodá-lo, e os últimos segundos vão junto."
+      },
+      {
+        "text": "137 é uma saída limpa depois de um `SIGTERM`, então os spans foram enviados e descartados depois pelo Collector",
+        "why": "`TERM` dá 143, não 137, e um processo que o trata consegue esvaziar a fila na saída."
+      },
+      {
+        "text": "Os rastros do worker são amostrados, e os últimos segundos caíram entre os descartados toda vez, por acaso",
+        "why": "A amostragem descarta rastros ao acaso ao longo de toda a execução, não num bloco logo antes de cada reinício."
+      }
+    ]
+  },
+  "ex-wwmm3nm1": {
+    "prompt": "Uma manutenção do payments entre 02:00 e 02:30 vai fazer checkouts falharem e disparar o page de taxa de queima rápida. As regras de alerta são manifestos no Git, sincronizados pelo Argo CD com `selfHeal: true`. Às 01:55 quem está de plantão sobe o limite da regra com `kubectl edit`. O que acontece, e qual era a ferramenta certa?",
+    "hint": "Observabilidade e Operação, aula 16; GitOps, Artefatos e Segredos, aula 3.",
+    "choices": [
+      {
+        "text": "A edição fica até alguém enviar um commit novo, então o page fica quieto; é preciso lembrar de desfazê-la às 02:30",
+        "why": "O `selfHeal` reage a mudanças no cluster, não só a commits, então a edição é desfeita em segundos."
+      },
+      {
+        "text": "O Argo CD reverte a edição; desligar o `selfHeal` da aplicação de monitoramento enquanto dura o trabalho era a ferramenta",
+        "why": "Abre mão da garantia para todos os outros objetos daquela aplicação, e o desligamento dura mais que a manutenção se ninguém lembrar dele."
+      },
+      {
+        "text": "A edição fica e a aplicação aparece como OutOfSync; fazer commit do limite maior por meio de um pull request era a ferramenta",
+        "why": "O self-heal reverte a edição em vez de só relatá-la, e um limite subido no Git dura mais que a manutenção, que é o que um silêncio evita."
+      },
+      {
+        "text": "O Argo CD a reverte como desvio em segundos e o page vem mesmo assim; um silêncio com fim e comentário era a ferramenta",
+        "why": "Um silêncio vive no Alertmanager, fora do que o Argo CD reconcilia, termina sozinho às 02:30 e diz a quem achar o pager quieto quem fez e por quê."
+      }
+    ]
+  },
+  "ex-c9jr51c2": {
+    "prompt": "O SLI de latência da API do catálogo é calculado a partir do histograma de requisições da própria loja: a fração de requisições respondidas em até 500 ms. O Nginx faz cache da API na frente da loja, com uma taxa de acerto de 95 por cento. O que esse SLI descreve?",
+    "hint": "Observabilidade e Operação, aula 15; Servidores Web e Cache, aula 5.",
+    "choices": [
+      {
+        "text": "Só a requisição em cada vinte que não achou cópia no cache, medida lá dentro demais para ver o que o cliente recebeu",
+        "why": "A loja nunca fica sabendo de um HIT. O SLI julga a vigésima parte mais lenta do tráfego e nada mais, então ele pertence ao Nginx, mais perto do cliente."
+      },
+      {
+        "text": "Toda requisição que um cliente fez, já que o Nginx passa cada uma para a loja pelo `proxy_pass`",
+        "why": "Um HIT é respondido do disco do Nginx e nenhum upstream é consultado, e é por isso que o log do cache mostra `upstream_time=-` para ele."
+      },
+      {
+        "text": "Toda requisição, porque o Nginx confere cada cópia guardada com a loja antes de entregar essa cópia a qualquer pessoa",
+        "why": "Isso é uma requisição condicional, usada quando a cópia já está velha. Uma cópia fresca é entregue sem perguntar a ninguém."
+      },
+      {
+        "text": "Só as requisições que o Nginx achou no cache, já que um MISS é o próprio Nginx se reabastecendo",
+        "why": "É o contrário: um MISS é justamente a requisição que a loja vê."
+      }
+    ]
+  },
+  "ex-djj9t880": {
+    "prompt": "Checkouts estão falhando, e o page de taxa de queima rápida acabou de chegar, três minutos depois de uma versão nova do payments. Ponha a resposta na ordem em que a aula 17 a conduz.",
+    "hint": "Observabilidade e Operação, aula 17.",
+    "items": [
+      "Declarar o incidente onde todos veem, nomeando quem comanda",
+      "Perguntar o que mudou, pelas marcas de deploy da última meia hora",
+      "Reverter a versão, e marcar a reversão quando ela acontece",
+      "Esperar a taxa de queima de cinco minutos cair abaixo de 1",
+      "Marcar o incidente como resolvido, com os follow-ups anotados",
+      "Achar o bug na versão que foi revertida"
+    ],
+    "trap": "Achar o bug antes de reverter deixa os clientes falhando enquanto alguém lê código. A versão não se perde, e entendê-la é trabalho do postmortem depois que o serviço voltou."
+  },
+  "ex-1e89vpym": {
+    "prompt": "O canal de plantão de uma equipe está barulhento. Ligue cada fonte de ruído à correção que a aula 16 associa a ela.",
+    "hint": "Observabilidade e Operação, aula 16.",
+    "pairs": [
+      {
+        "left": "alertas sobre causas que muitas vezes se curam sozinhas",
+        "right": "fazer page pelo sintoma, e transformar as causas em tickets"
+      },
+      {
+        "left": "um pico curto, a qualquer hora",
+        "right": "exigir taxa de queima alta numa janela longa e numa curta ao mesmo tempo"
+      },
+      {
+        "left": "uma falha que dispara cem alertas",
+        "right": "agrupamento no Alertmanager, e o page inibindo seus tickets"
+      },
+      {
+        "left": "alertas durante trabalho planejado",
+        "right": "um silêncio com motivo e fim"
+      }
+    ],
+    "right_distractors": [
+      "subir cada limite até o alerta parar de disparar",
+      "apagar a regra enquanto durar o trabalho"
+    ]
+  },
+  "ex-amwjd6w1": {
+    "prompt": "O Collector guarda todos os spans de um rastro até o rastro estar completo, e então mantém todo erro, toda requisição lenta e 5% do resto. Decidir ali, quando a requisição já acabou, chama-se amostragem ___.",
+    "hint": "Observabilidade e Operação, aula 12.",
+    "blanks": [
+      {
+        "accept": [
+          "na cauda",
+          "de cauda",
+          "cauda",
+          "tail"
+        ]
+      }
+    ]
+  },
+  "ex-774vrkes": {
+    "prompt": "Um contador de requisições vai ganhar labels para os painéis poderem dividir o tráfego. Quais destes ele pode levar sem que o número de séries cresça com o tráfego?",
+    "hint": "Observabilidade e Operação, aula 6.",
+    "choices": [
+      {
+        "text": "o modelo da rota, `/orders/{id}`",
+        "why": "Um valor por rota que o código define, um punhado por mais movimentada que a loja fique."
+      },
+      {
+        "text": "o id do usuário que fez a requisição",
+        "why": "Uma série por usuário: o experimento levou 3782 séries a 43805 com esse label."
+      },
+      {
+        "text": "o método HTTP",
+        "why": "Uns poucos valores no máximo, fixados pelo protocolo."
+      },
+      {
+        "text": "a URL completa, com a query string",
+        "why": "Cada query string diferente é um valor novo, e a aula 6 a cita entre os erros clássicos."
+      },
+      {
+        "text": "o código de status da resposta",
+        "why": "Uma lista curta e conhecida, e é por isso que a aula 5 pôde pedir todos os códigos `5..` de uma vez."
+      },
+      {
+        "text": "o id do pedido",
+        "why": "Cada pedido vira uma série que continua existindo; o id pertence ao span ou à linha de log."
+      }
+    ]
+  },
+  "ex-q4rh8rrk": {
+    "prompt": "Uma página de produto chama um serviço de preços, que leva 300 ms, e um de estoque, que leva 140 ms, no mesmo instante, e responde quando os dois responderam. Um colega passa uma sprint baixando a chamada de estoque para 40 ms. Quanto mais cedo a página responde?",
+    "hint": "Observabilidade e Operação, aula 11.",
+    "choices": [
+      {
+        "text": "Uns 100 ms, já que todo milissegundo cortado de um span é cortado da requisição",
+        "why": "Isso só vale no caminho crítico. Aqui a requisição termina quando a chamada de preços termina."
+      },
+      {
+        "text": "Uns 50 ms, porque duas chamadas em paralelo dividem o tempo que uma delas economiza",
+        "why": "Chamadas em paralelo não dividem economia; a requisição espera a mais lenta, aconteça o que acontecer com a mais rápida."
+      },
+      {
+        "text": "Nada que se note: a página espera os preços, e o estoque tinha folga",
+        "why": "O estoque já terminava 160 ms antes dos preços antes do trabalho. Encurtar um span fora do caminho crítico não encurta nada."
+      },
+      {
+        "text": "Uns 100 ms, desde que o estoque fosse o span com mais tempo próprio dos dois",
+        "why": "Tempo próprio diz quem fez o trabalho, não o que a requisição esperava, e o maior tempo próprio pode estar fora do caminho crítico."
+      }
+    ]
+  },
+  "ex-v95xcn30": {
+    "prompt": "A vitrine amostra rastros com `parentbased_traceidratio` em `0.1`, e todos os outros serviços seguem a decisão dela. O suporte cola no Jaeger o trace id da linha de log de um checkout que falhou e recebe `trace not found`. O que aconteceu?",
+    "hint": "Observabilidade e Operação, aula 12.",
+    "choices": [
+      {
+        "text": "Um serviço abaixo perdeu o contexto, então o id da vitrine nomeia um rastro que não existe",
+        "why": "Um contexto perdido parte o rastro em dois; não impede que o rastro da própria vitrine exista."
+      },
+      {
+        "text": "Estava entre os rastros descartados na raiz; a linha de log leva o id seja qual for a decisão",
+        "why": "A amostragem na cabeça decide antes de qualquer coisa acontecer, então um checkout que falhou é descartado tanto quanto um rápido, e o formatador escreve o id de qualquer jeito."
+      },
+      {
+        "text": "O formatador escreve um trace id na linha quando o rastro é mantido, então esse id é de outra requisição",
+        "why": "O id vem do span corrente, gravado ou não: todo checkout da aula registrou um, e nenhum dos últimos dez foi mantido."
+      },
+      {
+        "text": "A amostragem na cabeça mantém toda requisição que falhou, então o rastro ainda deve estar esperando no Collector",
+        "why": "Isso é o que uma política de cauda para erros faz. Na cabeça, nada falhou ainda quando a decisão é tomada."
+      }
+    ]
+  },
+  "ex-8dt6chg4": {
+    "prompt": "O Collector manda cada rastro para o Jaeger e, por um segundo exportador, para a entrada de um produto hospedado, aos 35 spans por segundo do laboratório. A entrada para de responder por duas horas. O que acontece com cada cópia?",
+    "hint": "Observabilidade e Operação, aula 13.",
+    "choices": [
+      {
+        "text": "Nenhuma perde nada: o exportador continua tentando até a entrada voltar, por mais que isso demore, horas ou dias",
+        "why": "A fila dele comporta 1000 lotes, o que no ritmo do laboratório dura uns três quartos de hora; depois disso, ele descarta."
+      },
+      {
+        "text": "O Jaeger também fica para trás, porque um pipeline espera o exportador mais lento",
+        "why": "Cada exportador tem sua fila e suas tentativas; na aula o Jaeger continuou recebendo 35 spans por segundo enquanto o outro exportador não enviava nada."
+      },
+      {
+        "text": "O Jaeger não perde nada; a cópia hospedada enfileira por uns três quartos de hora e depois perde spans",
+        "why": "Cada destino falha sozinho. A fila é memória com espaço para 1000 lotes, então a queda que ela aguenta é uma decisão sobre o tamanho dela."
+      },
+      {
+        "text": "As duas cópias perdem spans, já que o Collector descarta todo lote que um dos destinos recusa",
+        "why": "Uma recusa fica com o exportador que a encontrou. Os outros destinos nem a veem."
+      }
+    ]
+  },
+  "ex-harbxja3": {
+    "prompt": "Para achar as linhas de log de um checkout mais rápido, um colega propõe transformar o campo `trace_id` de cada linha num label do Loki. O que isso faria?",
+    "hint": "Observabilidade e Operação, aula 9.",
+    "choices": [
+      {
+        "text": "Nada, porque o Loki já indexa todos os campos de cada linha que guarda",
+        "why": "Essa é a escolha do Elasticsearch. O Loki indexa os labels de cada stream e lê as linhas quando perguntado."
+      },
+      {
+        "text": "Aceleraria as buscas sem custo, porque os labels são comprimidos junto com os chunks",
+        "why": "Os chunks são comprimidos; os labels são o índice, e cada valor novo aumenta esse índice."
+      },
+      {
+        "text": "Seria recusado, porque o Loki aceita o nome do serviço como único label",
+        "why": "O laboratório tem um label porque o Collector criou um. O Loki aceita outros, e por isso o conselho é sobre quais valores cabem ali."
+      },
+      {
+        "text": "Faria de cada trace id um stream, e o índice do Loki cresceria",
+        "why": "Um label por requisição é um stream por valor. O id fica na linha, onde um filtro de linha ou `| json` o encontra."
+      }
+    ]
+  },
+  "ex-x5rc1mvq": {
+    "prompt": "Uma gerente de produto pede um objetivo de 99,99% de checkouts com sucesso em 28 dias. Receber o page, ler o alerta e abrir o notebook leva uns dez minutos para quem está de plantão. O que há de errado com o objetivo?",
+    "hint": "Observabilidade e Operação, aula 15.",
+    "choices": [
+      {
+        "text": "A janela: 28 dias contam duas vezes o movimento de uma segunda-feira",
+        "why": "Vinte e oito dias são escolhidos porque têm quatro de cada dia da semana, então nenhum pico conta duas vezes."
+      },
+      {
+        "text": "Permite uns 4 minutos de queda em 28 dias, menos do que a própria resposta leva",
+        "why": "Cada nove é um fator de dez, e o quarto deixa menos tempo do que leva para perceber. Um objetivo mais apertado do que a equipe consegue responder é uma promessa que ninguém cumpre."
+      },
+      {
+        "text": "É frouxo demais, já que os clientes notam falhas muito antes do quarto nove",
+        "why": "O contrário: um cliente não distingue 99,99% de 100%, porque o próprio celular e a própria rede falham mais do que isso."
+      },
+      {
+        "text": "Nada, desde que o SLA do contrato diga os mesmos 99,99%",
+        "why": "O SLA fica mais frouxo que o SLO para a equipe saber do problema pelo próprio objetivo primeiro; números iguais tiram esse aviso."
+      }
+    ]
+  },
+  "ex-sbjhc6mz": {
+    "prompt": "Para subir a taxa de acerto da borda, as folhas de estilo e as imagens vão para `static.ipelivros.example`, atrás do mesmo Varnish, para que as requisições delas não levem cookies. A taxa de acerto desse host continua perto de zero. O script de analytics em `www.ipelivros.example` define o cookie dele com `Domain=ipelivros.example`. Por quê?",
+    "hint": "Servidores Web e Cache, aula 7; Fundamentos da Web e Internet, aula 7.",
+    "choices": [
+      {
+        "text": "Esse `Domain` manda o cookie para todo subdomínio, `static.` incluído, e o Varnish passa adiante qualquer requisição com `Cookie`",
+        "why": "Alargar o cookie desfez a mudança. Deixe o `Domain` de fora para ele voltar só ao host que o definiu, ou tire os cookies na borda para os arquivos estáticos."
+      },
+      {
+        "text": "Um cookie definido por script fica com o host que o definiu, então os misses vêm dos parâmetros `utm_` nos links dos arquivos estáticos",
+        "why": "Quem definiu não importa; o atributo `Domain` decide para onde ele vai. E a VCL do laboratório já tira os `utm_` antes de montar a chave."
+      },
+      {
+        "text": "A lógica embutida do Varnish passa arquivos estáticos para a origem, com ou sem cookie, até a VCL dizer o contrário",
+        "why": "A lógica embutida guarda respostas públicas de qualquer tipo; ela passa uma requisição adiante pelo `Cookie` ou pelo `Authorization`, não pelo tipo do arquivo."
+      },
+      {
+        "text": "Um cookie do domínio pai é de terceiros em `static.`, então o navegador o bloqueia e a borda não reconhece o visitante",
+        "why": "Terceiros quer dizer definido por algo embutido de outro site. Este cookie é do próprio site, e o navegador o envia."
+      }
+    ]
+  },
+  "ex-nd0p1v72": {
+    "prompt": "Uma landing page antiga ainda tem um formulário de newsletter que faz post para `http://ipelivros.example/api/subscribe`. Desde que o bloco da porta 80 passou a responder `return 301 https://$host$request_uri;`, nenhuma inscrição chega, e a loja registra `GET /api/subscribe` sem corpo. O que esse bloco deveria responder?",
+    "hint": "Servidores Web e Cache, aula 3; Fundamentos da Web e Internet, aula 6.",
+    "choices": [
+      {
+        "text": "`308`, que diz ao navegador para repetir a requisição com o mesmo método e o mesmo corpo",
+        "why": "O `308` é o redirecionamento permanente que mantém o método, o significado que o `301` deveria ter. O Caddy respondeu o HTTP com ele na mesma aula."
+      },
+      {
+        "text": "`302`, para os navegadores não memorizarem a mudança enquanto ela é testada",
+        "why": "Um `302` não é memorizado, e tem a mesma história do `301`: os navegadores transformam o `POST` em `GET`."
+      },
+      {
+        "text": "`303`, que manda o navegador para o endereço HTTPS do mesmo caminho",
+        "why": "O `303` transforma a requisição em `GET` de propósito; serve para a página depois de um formulário, não para o próprio formulário."
+      },
+      {
+        "text": "O mesmo `301` com `Strict-Transport-Security`, para o navegador ir ao HTTPS antes de fazer o post",
+        "why": "Um navegador ignora HSTS recebido por HTTP simples, e por isso o site o manda só na 443."
+      }
+    ]
+  },
+  "ex-7ph9eskf": {
+    "prompt": "Com o bloco que pega tudo no lugar, `curl -k https://<the server's IP>/` falha com `tlsv1 unrecognized name`, e nenhum certificado chega ao cliente. Como o Nginx escolhe esse bloco antes de o cliente mandar um cabeçalho `Host`?",
+    "hint": "Servidores Web e Cache, aula 4; Redes e Protocolos, aula 5.",
+    "choices": [
+      {
+        "text": "O certificado do cliente, enviado primeiro no handshake, diz qual site ele quer",
+        "why": "Um navegador comum ou o `curl` não manda certificado nenhum; é o servidor que prova o próprio nome."
+      },
+      {
+        "text": "O Nginx lê primeiro o cabeçalho `Host` da requisição, e só então decide se termina o handshake",
+        "why": "A requisição viaja depois do handshake, cifrada. O Nginx precisa escolher antes de ter qualquer chave para lê-la."
+      },
+      {
+        "text": "Cada site da máquina tem um endereço IP próprio, então o endereço escolhe o bloco",
+        "why": "Um endereço serve todos os sites aqui; é por isso que o Nginx precisa do nome."
+      },
+      {
+        "text": "O nome desejado vai no Client hello como SNI, legível antes de existir chave, e um IP puro não dá nome para casar",
+        "why": "O servidor precisa do nome para escolher um certificado, então ele chega às claras. O `ssl_reject_handshake` recusa ali mesmo, e nenhum `server_name` casa com um endereço."
+      }
+    ]
+  },
+  "ex-qcggxtr9": {
+    "prompt": "O `shop@2` cai e fica fora. O upstream lista as duas cópias com as configurações padrão, a API do catálogo só atende `GET`, e o único alerta de page é um de taxa de queima sobre a fração de respostas `5xx` que o Nginx dá. Como fica a próxima hora?",
+    "hint": "Servidores Web e Cache, aula 2; Observabilidade e Operação, aula 16.",
+    "choices": [
+      {
+        "text": "Um page a cada dez segundos mais ou menos, cada vez que o `fail_timeout` deixa uma requisição real passar para a cópia morta",
+        "why": "Essa requisição é recusada e o Nginx a tenta de novo no `shop1` antes de o cliente perceber, então ela termina como `200`."
+      },
+      {
+        "text": "Nenhum page, e com razão: os clientes não veem erros, e a cópia morta deve aparecer como ticket, por exemplo um sobre `up == 0`",
+        "why": "A nova tentativa do Nginx transforma cada conexão recusada numa resposta do `shop1`. O sintoma não existe, então a causa fica para o horário de trabalho."
+      },
+      {
+        "text": "Um page na hora: metade do upstream se foi, e com ela metade da capacidade",
+        "why": "O alerta olha o que os clientes recebem, e eles recebem `200`. Uma cópia a menos é uma causa, e causas são tickets."
+      },
+      {
+        "text": "Nenhum page, e isso é uma falha: falta um page sobre a taxa de erros do próprio `shop2`",
+        "why": "Uma cópia que recusa conexões não relata taxa nenhuma, e fazer page por causas é o ruído que a aula 16 tira."
+      }
+    ]
+  },
+  "ex-rqn47ngp": {
+    "prompt": "A página de um livro mais vendido é lida 800 vezes por segundo, e a consulta ao banco que refaz a cópia em cache leva 150 milissegundos. Com cache-aside simples e nenhuma proteção, cerca de quantas consultas idênticas chegam ao banco quando a chave expira?",
+    "hint": "Servidores Web e Cache, aula 11.",
+    "unit": "consultas"
+  },
+  "ex-w3de8c5m": {
+    "prompt": "Cada cópia de uma aplicação guarda na própria memória o carrinho pela metade de um visitante, então o upstream usa `hash $remote_addr` para mandar cada cliente sempre para a mesma cópia. Esse arranjo se chama ___ de sessão.",
+    "hint": "Servidores Web e Cache, aula 2.",
+    "blanks": [
+      {
+        "accept": [
+          "afinidade",
+          "affinity"
+        ]
+      }
+    ]
+  },
+  "ex-2pgy4ds8": {
+    "prompt": "Uma equipe roda o Redis em quatro lugares. Ligue cada uso à `maxmemory-policy` com que ele deveria rodar.",
+    "hint": "Servidores Web e Cache, aula 8.",
+    "pairs": [
+      {
+        "left": "a única cópia de uma fila de pedidos esperando processamento",
+        "right": "`noeviction`"
+      },
+      {
+        "left": "um cache em que qualquer chave pode sair para abrir espaço",
+        "right": "`allkeys-lru`"
+      },
+      {
+        "left": "um cache cujas chaves populares são as mesmas semana após semana",
+        "right": "`allkeys-lfu`"
+      },
+      {
+        "left": "uma instância com chaves de cache com tempo de vida ao lado de chaves de dados sem",
+        "right": "`volatile-lru`"
+      }
+    ],
+    "right_distractors": [
+      "`appendonly yes`"
+    ]
+  },
+  "ex-v7pczbgm": {
+    "prompt": "O Nginx faz cache da API da loja com `proxy_cache` e as configurações padrão. Quais destas respostas ele guarda e entrega ao próximo visitante que pedir?",
+    "hint": "Servidores Web e Cache, aula 5.",
+    "choices": [
+      {
+        "text": "uma página de conta enviada com `Cache-Control: private, max-age=60`",
+        "why": "`private` a mantém fora de todo cache compartilhado; três requisições na aula deram três `MISS`."
+      },
+      {
+        "text": "uma listagem do catálogo enviada com `Cache-Control: public, max-age=60`",
+        "why": "Pública e com tempo de vida: exatamente o que um cache compartilhado serve para guardar."
+      },
+      {
+        "text": "um carrinho enviado com `Cache-Control: no-store`",
+        "why": "`no-store` proíbe guardá-lo em qualquer lugar."
+      },
+      {
+        "text": "um livro enviado com `Cache-Control: max-age=60`",
+        "why": "Na aula o Nginx tirou o tempo de vida desse cabeçalho: `MISS`, depois `HIT`, `HIT`."
+      },
+      {
+        "text": "um livro enviado com `Cache-Control: max-age=60` e um cabeçalho `Set-Cookie`",
+        "why": "O Nginx se recusa sozinho a guardar uma resposta que define um cookie."
+      }
+    ]
+  },
+  "ex-8xfhtr9p": {
+    "prompt": "Um control plane mantido pela própria equipe roda o etcd com sete membros, que concordam em cada escrita por maioria. Quantos membros podem falhar ao mesmo tempo sem que o etcd deixe de aceitar escritas?",
+    "hint": "Kubernetes: Orquestração em Produção, aula 47."
+  },
+  "ex-897afxn8": {
+    "prompt": "Ana muda `GREETING` no `configMapGenerator` da base e roda `kubectl apply -k deploy/overlays/production`. Ponha em ordem o que acontece em seguida, até a nova saudação chegar aos pods.",
+    "hint": "Kubernetes: Orquestração em Produção, aula 38.",
+    "items": [
+      "o Kustomize gera um ConfigMap cujo nome traz um novo hash do conteúdo",
+      "o ConfigMap novo é criado, e o antigo fica onde estava",
+      "o template de pod do Deployment passa a citar o ConfigMap novo",
+      "o Deployment cria um novo ReplicaSet para o template alterado",
+      "pods novos sobem com o novo `GREETING` no ambiente"
+    ],
+    "trap": "Pods em execução nunca veem a mudança de uma variável num ConfigMap; a saudação só chega porque o nome novo altera o template, e template alterado é rollout."
+  },
+  "ex-1fnrseqh": {
+    "prompt": "A requisição de um cliente chega à loja por um Service do tipo LoadBalancer. Ponha em ordem os lugares por onde ela passa, de fora para dentro.",
+    "hint": "Kubernetes: Orquestração em Produção, aula 15.",
+    "items": [
+      "o balanceador do provedor, no `EXTERNAL-IP` do Service, na porta 80",
+      "a NodePort do Service em um dos nós",
+      "as regras que o kube-proxy escreveu no kernel daquele nó, que escolhem um pod",
+      "a porta 8080 do pod escolhido, o `targetPort` do Service"
+    ],
+    "trap": "O balanceador não manda para os pods: um LoadBalancer é uma NodePort com uma máquina na frente, e o pod é escolhido no nó."
+  },
+  "ex-rh9bggsr": {
+    "prompt": "Uma equipe lê as recomendações do VerticalPodAutoscaler durante um mês antes de confiar nele. Associe cada `updateMode` ao que o VPA passa a fazer com os pods.",
+    "hint": "Kubernetes: Orquestração em Produção, aula 34.",
+    "pairs": [
+      {
+        "left": "`Off`",
+        "right": "recomenda requests e não altera nenhum pod"
+      },
+      {
+        "left": "`Initial`",
+        "right": "grava suas requests nos pods novos e nunca mexe nos que estão rodando"
+      },
+      {
+        "left": "`Recreate`",
+        "right": "despeja pods para que os substitutos subam com requests novas"
+      },
+      {
+        "left": "`InPlaceOrRecreate`",
+        "right": "redimensiona os pods no lugar quando dá, e os despeja quando não dá"
+      }
+    ],
+    "right_distractors": [
+      "acrescenta réplicas quando o uso médio passa de uma meta"
+    ]
+  },
+  "ex-2pw2ydx4": {
+    "prompt": "O Role de um pipeline concede `get`, `list` e `watch` em `pods`, mas o pedido do que um container imprimiu é recusado. O Role também precisa citar o sub-recurso `pods/___`.",
+    "hint": "Kubernetes: Orquestração em Produção, aula 23.",
+    "blanks": [
+      {
+        "accept": [
+          "log"
+        ]
+      }
+    ]
+  },
+  "ex-0b4628w5": {
+    "prompt": "O release `shop` roda `shop:1.1` com três cópias, mas o `values.yaml` do chart diz tag `1.0` e duas réplicas. Um colega conclui que o chart está quebrado. Qual comando responde primeiro, e o que ele vai mostrar?",
+    "hint": "Kubernetes: Orquestração em Produção, aula 37.",
+    "choices": [
+      {
+        "text": "`helm history shop`, cuja lista de revisões registra os valores de cada upgrade.",
+        "why": "Ele lista as revisões com status e versão do chart; os valores que alguém passou não estão ali."
+      },
+      {
+        "text": "`helm get values shop`, que lista só o que foi passado no install ou upgrade.",
+        "why": "Mostra as substituições, como `--set image.tag=1.1`, e deixa os padrões de fora, e por isso é a primeira verificação para um release que difere do chart."
+      },
+      {
+        "text": "`helm template shop shop-chart`, que imprime o que o cluster está rodando agora.",
+        "why": "Ele renderiza o chart com os padrões e não toca em cluster nenhum; sem as substituições, mostraria a tag `1.0`."
+      },
+      {
+        "text": "`helm lint shop-chart`, porque um chart que gera valores errados falha no lint.",
+        "why": "O lint confere se o chart renderiza e segue as convenções; os valores de um release ele não conhece."
+      }
+    ]
+  },
+  "ex-d420rjkq": {
+    "prompt": "Um CronJob roda um backup às `0 2 * * *`, com `timeZone` definido. O control plane passa por upgrade das 01:50 às 02:20, então o controller manager não está rodando às 02:00. O que acontece com o backup daquela noite?",
+    "hint": "Kubernetes: Orquestração em Produção, aula 12.",
+    "choices": [
+      {
+        "text": "Roda às 02:00 assim mesmo, porque o kubelet de um nó worker guarda o agendamento do CronJob.",
+        "why": "O agendamento é do controller de CronJob, dentro do controller manager; um kubelet só roda os pods que recebe."
+      },
+      {
+        "text": "Fica para a noite seguinte, porque um agendamento só dispara no seu próprio minuto.",
+        "why": "Uma execução que vencia enquanto o controller estava fora começa quando ele volta, a menos que um prazo diga que é tarde demais."
+      },
+      {
+        "text": "Roda duas vezes após as 02:20: uma pelo minuto perdido, outra para compensar.",
+        "why": "A execução perdida começa uma vez; nada na aula cria uma segunda."
+      },
+      {
+        "text": "Começa quando o controller volta, salvo se `startingDeadlineSeconds` for menor.",
+        "why": "É a regra da aula 12: a execução que vencia com o controller fora começa atrasada, e só `startingDeadlineSeconds` pode declará-la tardia demais."
+      }
+    ]
+  },
+  "ex-gqa44xd3": {
+    "prompt": "O cluster autoscaler mantém na conta mais nós do que a carga parece precisar. Pela aula 34, quais destes podem ser a causa? Marque todas as que se aplicam.",
+    "hint": "Kubernetes: Orquestração em Produção, aula 34.",
+    "choices": [
+      {
+        "text": "Requests bem acima do que os pods usam, já que um nó entra quando as requests não cabem",
+        "why": "Ele compra máquinas por requests, nunca por uso, e o desperdício da aula 21 vira nós."
+      },
+      {
+        "text": "Pods que usam mais CPU do que pedem, o que o autoscaler conta como demanda",
+        "why": "Uso não é o que ele lê: ele acrescenta um nó para pods `Pending` por falta de espaço."
+      },
+      {
+        "text": "Um PodDisruptionBudget que não permite nenhuma interrupção de um pod naquele nó",
+        "why": "Remover um nó é drená-lo, e um pod que ele não pode mover mantém a máquina inteira viva."
+      },
+      {
+        "text": "O metrics-server guardar só a amostra mais recente, esquecendo as horas calmas",
+        "why": "O cluster autoscaler decide por pods pendentes e por pods que cabem em outro lugar, não por um histórico de métricas."
+      },
+      {
+        "text": "Um pod anotado como não seguro para despejo, que o autoscaler não pode mover",
+        "why": "A anotação `safe-to-evict` é a outra coisa que a aula 34 cita: um pod assim pode manter um nó na conta."
+      },
+      {
+        "text": "Um VerticalPodAutoscaler com `updateMode: \"Off\"` ao lado do Deployment",
+        "why": "`Off` só recomenda; não muda nenhuma request, então também não muda nenhum nó."
+      }
+    ]
+  },
+  "ex-048c9m37": {
+    "prompt": "No Docker, o `shelf` rodava com `--memory 64m --cpus 0.5`. Levado para o Kubernetes, o manifesto diz `resources.requests: {cpu: 500m, memory: 64Mi}` e não tem `limits`. Um vazamento faz o processo passar de 300 MiB. O que acontece nos 64 MiB?",
+    "hint": "Kubernetes: Orquestração em Produção, aula 19; Docker e Containers, aula 17.",
+    "choices": [
+      {
+        "text": "Nada: uma request reserva espaço para o scheduler, e só um limit é um teto.",
+        "why": "`--memory` e `--cpus` do Docker são limites de cgroup; no manifesto isso é `limits`, enquanto `requests` é uma reserva contra a qual ninguém mede o uso."
+      },
+      {
+        "text": "O kernel o mata com `OOMKilled`, como no Docker, porque a request define o mesmo teto de cgroup.",
+        "why": "Só o limit vai para o kernel como teto de cgroup; a request é conta do scheduler."
+      },
+      {
+        "text": "O kubelet estrangula a memória nos 64 MiB, como faz com a CPU.",
+        "why": "Memória não pode ser pausada e devolvida; no limite de memória o container morre, e aqui nem há limite."
+      },
+      {
+        "text": "O scheduler move o pod para outro nó que tenha mais memória livre.",
+        "why": "O scheduler posiciona um pod uma vez e nunca move um que já está rodando."
+      }
+    ]
+  },
+  "ex-s7y75vbq": {
+    "prompt": "O Argo CD gerencia o Deployment `shop` com `selfHeal: true`, e o manifesto no Git diz `replicas: 2`. Um HPA no mesmo Deployment o escala para seis sob carga. O que acontece, e o que as aulas fazem a respeito?",
+    "hint": "Kubernetes: Orquestração em Produção, aula 33; GitOps, Artefatos e Segredos, aula 3.",
+    "choices": [
+      {
+        "text": "O HPA vence, porque o Argo CD nunca compara um campo que um controller escreveu.",
+        "why": "O Argo CD compara todo campo que gerencia; a aula 3 o mostra desfazendo em segundos uma escala feita à mão."
+      },
+      {
+        "text": "Desligar o `selfHeal` da Application, para que as mudanças do autoscaler fiquem.",
+        "why": "Isso mantém as réplicas e abre mão da correção de todos os outros campos também, o que a aula 3 desaconselha."
+      },
+      {
+        "text": "Brigam; tire `replicas` do Git ou faça o Argo CD ignorar só esse campo.",
+        "why": "Um dono por campo: o autoscaler é dono de `replicas`, então o Git não deve declará-lo, ou o `ignoreDifferences` deve cobrir exatamente esse campo."
+      },
+      {
+        "text": "Pôr o `minReplicas` do HPA em 2, para que o Git e o autoscaler concordem no número.",
+        "why": "Sob carga o HPA continua pedindo seis e o Argo CD continua voltando para dois; um mínimo não muda quem é dono do campo."
+      }
+    ]
+  },
+  "ex-880gq5nx": {
+    "prompt": "Com `kubectl apply -k`, cada mudança na saudação da base deixou mais um ConfigMap `shop-settings-<hash>` para trás em `production`. A equipe põe o overlay sob o Argo CD, com sync automático e `prune: true`. O que muda, e que risco vem junto?",
+    "hint": "Kubernetes: Orquestração em Produção, aula 38; GitOps, Artefatos e Segredos, aula 3.",
+    "choices": [
+      {
+        "text": "Nada muda para os ConfigMaps, porque o prune age sobre namespaces inteiros e não sobre os objetos dentro deles.",
+        "why": "O prune apaga qualquer objeto que ele acompanha e que os manifestos renderizados não contêm mais, ConfigMaps inclusive."
+      },
+      {
+        "text": "Os ConfigMaps velhos são apagados, e também tudo o que for apagado do Git por engano.",
+        "why": "Isso é o prune: o cluster segue o Git também nas remoções, então um arquivo apagado por engano vira um objeto apagado no sync seguinte."
+      },
+      {
+        "text": "O Argo CD para de pôr o hash, e uma saudação nova edita um ConfigMap no lugar.",
+        "why": "O hash vem do gerador do Kustomize, e é ele que faz uma configuração alterada subir pods novos."
+      },
+      {
+        "text": "Os ConfigMaps ficam onde estão, porque o Argo CD só faz prune dos objetos que vieram de um chart Helm.",
+        "why": "O Argo CD renderiza manifestos puros, Kustomize e Helm, e faz prune de tudo o que acompanha."
+      }
+    ]
+  },
+  "ex-nngd1rwx": {
+    "prompt": "A readiness probe do front end chama o `/ready` da loja, e o `/ready` da loja verifica o banco. O banco para por dois minutos. O que as probes fazem, e o que há de errado no desenho?",
+    "hint": "Kubernetes: Orquestração em Produção, aula 22; Observabilidade e Operação, aula 14.",
+    "choices": [
+      {
+        "text": "Os pods da loja saem do Service e o front end fica, porque a readiness é avaliada separadamente para cada pod.",
+        "why": "A probe do próprio front end recebe o 503 da loja, então os pods do front end também falham na readiness."
+      },
+      {
+        "text": "Os dois conjuntos de pods são reiniciados a cada poucos segundos até o banco voltar.",
+        "why": "Uma falha de readiness tira o pod do Service e não reinicia nada; reiniciar é coisa da liveness."
+      },
+      {
+        "text": "Os containers da loja reiniciam quando a readiness probe passa do `failureThreshold`.",
+        "why": "Readiness não reinicia nada; o `failureThreshold` só decide quando o pod sai dos endpoints."
+      },
+      {
+        "text": "Os dois saem dos Services, até páginas sem banco; verifique só as próprias dependências.",
+        "why": "A primeira regra de uma verificação de readiness: testar o que este serviço precisa, nunca a readiness de outro, senão uma queda se espalha para todo mundo que pergunta."
+      }
+    ]
+  },
+  "ex-h1ypphb8": {
+    "prompt": "Um CronJob roda `pg_dump` toda noite, e o pod termina em uns três segundos. Para alertar quando um backup não acontece, a equipe dá ao container um endpoint `/metrics` e o põe no Prometheus, que faz scrape a cada quinze segundos. O scrape nunca o encontra. O que as aulas fazem no lugar?",
+    "hint": "Kubernetes: Orquestração em Produção, aula 12; Observabilidade e Operação, aula 5.",
+    "choices": [
+      {
+        "text": "Enviar a um Pushgateway o timestamp do último sucesso e alertar sobre `time()` menos ele.",
+        "why": "Um job que termina some antes do scrape; o tempo desde o último sucesso continua crescendo numa noite em que o backup não roda, e o alerta dispara."
+      },
+      {
+        "text": "Alertar sobre o `up` do pod de backup, que vai a 0 em qualquer noite em que um dump falhe.",
+        "why": "`up` pertence a um alvo de scrape, e um pod que já saiu nem é consultado."
+      },
+      {
+        "text": "Enviar a um Pushgateway a contagem de linhas exportadas e alertar quando essa contagem cair a zero.",
+        "why": "O Pushgateway guarda o último valor para sempre, então uma noite sem execução deixa a contagem da véspera no lugar e nada dispara."
+      },
+      {
+        "text": "Fazer scrape do pod a cada segundo, para cair sempre um scrape durante a execução.",
+        "why": "O pull supõe que o alvo continua lá; uma execução que nem começa não deixa nada para consultar, por mais vezes que o Prometheus pergunte."
+      }
+    ]
+  },
+  "ex-b8qpbs6a": {
+    "prompt": "Um colega enxuga a política `front-dns`, mantendo `port: 53, protocol: UDP` e tirando a entrada TCP. As consultas de nomes a partir do `front` continuam funcionando em todos os testes. Quais consultas vão falhar daqui em diante?",
+    "hint": "Kubernetes: Orquestração em Produção, aula 24; Redes e Protocolos, aula 3.",
+    "choices": [
+      {
+        "text": "Nenhuma: DNS só trafega por UDP, então a entrada TCP nunca foi usada.",
+        "why": "Resolvedores escutam a porta 53 nos dois, porque uma resposta grande demais para um pacote é buscada de novo por TCP."
+      },
+      {
+        "text": "Toda consulta depois da primeira, já que o resolvedor mantém uma conexão TCP com o CoreDNS.",
+        "why": "As perguntas vão normalmente por UDP, um pacote pequeno em cada sentido; não há conexão duradoura a manter."
+      },
+      {
+        "text": "As que têm resposta grande demais para um único pacote, porque o DNS recorre ao TCP para essas respostas.",
+        "why": "O DNS usa UDP e recorre ao TCP para respostas grandes; com o TCP 53 recusado só essas falham, e por isso os testes com respostas pequenas continuam verdes."
+      },
+      {
+        "text": "Todos os nomes de fora do cluster, porque o CoreDNS encaminha essas perguntas por TCP.",
+        "why": "É o tamanho da resposta que decide quando o TCP entra, não onde o nome mora."
+      }
+    ]
+  },
+  "ex-f5746xh6": {
+    "prompt": "O disco de um servidor de build está quase cheio. Antes de apagar qualquer coisa, Ana quer o espaço dividido em imagens, containers, volumes locais e cache de build, cada um com o que daria para recuperar. O comando é `docker system ___`.",
+    "hint": "Docker e Containers, aula 22.",
+    "blanks": [
+      {
+        "accept": [
+          "df"
+        ]
+      }
+    ]
+  },
+  "ex-repryr38": {
+    "prompt": "Logo depois de `sudo usermod -aG docker $USER`, o `docker ps` de Ana diz `permission denied while trying to connect to the docker API at unix:///var/run/docker.sock`. Quais destes são próximos passos sensatos? Marque todas as que se aplicam.",
+    "hint": "Docker e Containers, aula 5.",
+    "choices": [
+      {
+        "text": "Rodar `id -nG` e procurar `docker` entre os grupos",
+        "why": "Sem `docker` nessa lista, o grupo novo ainda não chegou a este shell."
+      },
+      {
+        "text": "`sudo chmod 666 /var/run/docker.sock`, para o socket parar de recusá-la",
+        "why": "Isso entrega a toda conta da máquina o que o grupo equivale a ter, ou seja, root."
+      },
+      {
+        "text": "Sair do shell e entrar de novo, para o grupo novo valer",
+        "why": "Um grupo novo vale a partir do próximo login; o shell guarda os grupos com que começou."
+      },
+      {
+        "text": "Pôr `sudo` antes de todo comando `docker` daqui em diante",
+        "why": "Funciona, e deixa arquivos de root espalhados nos diretórios dela."
+      },
+      {
+        "text": "`sudo systemctl start docker`, já que o engine não está respondendo",
+        "why": "Permission denied quer dizer que o engine está rodando e a recusou; um engine parado diz `failed to connect`."
+      }
+    ]
+  },
+  "ex-ckt60401": {
+    "prompt": "Num servidor Ubuntu, `ufw status` mostra a porta 5432 como fechada. Um container PostgreSQL foi iniciado com `-p 5432:5432`, e uma varredura feita de outra máquina encontra o banco respondendo. Como a varredura passou?",
+    "hint": "Docker e Containers, aula 17.",
+    "choices": [
+      {
+        "text": "O `EXPOSE 5432` da imagem acrescentou uma regra de liberação no ufw quando o container subiu.",
+        "why": "`EXPOSE` documenta uma porta; não publica nada nem escreve regra de firewall."
+      },
+      {
+        "text": "O Docker escreve as próprias regras de firewall para portas publicadas, e elas agem antes das do ufw.",
+        "why": "A aula 17 aponta essa armadilha no Ubuntu; publicar em `127.0.0.1` é a defesa que não depende disso."
+      },
+      {
+        "text": "Uma regra alterada no ufw só vale depois de `ufw reload`, que ninguém rodou.",
+        "why": "A porta aparecia como fechada; quem a abriu foram as regras do Docker, que vêm antes, diga o ufw o que disser."
+      },
+      {
+        "text": "`-p 5432:5432` usa `127.0.0.1` quando nenhum endereço é dado, e a varredura chegou por um túnel SSH aberto.",
+        "why": "Sem endereço, o `-p` escuta em `0.0.0.0`, todos os endereços da máquina, como o `ss` mostrou."
+      }
+    ]
+  },
+  "ex-c2g9jhqd": {
+    "prompt": "Um pipeline faz build com `--cache-from type=registry,ref=$IMAGE:buildcache` e `--cache-to type=registry,ref=$IMAGE:buildcache`, sem `mode=max`. Em todo runner novo, a compilação das dependências no estágio de build roda inteira. Por quê?",
+    "hint": "Docker e Containers, aula 26.",
+    "choices": [
+      {
+        "text": "Um cache no registry só é lido pelo runner que o escreveu, então um runner novo começa sem nada.",
+        "why": "Qualquer runner pode lê-lo; foi assim que o build da aula 26, com o cache local esvaziado, ainda teve sete passos `CACHED`."
+      },
+      {
+        "text": "O `--cache-from` só casa com a tag em construção, e cada execução constrói uma tag nova.",
+        "why": "O cache é uma referência própria, `buildcache`, lida sejam quais forem as tags que o build envia."
+      },
+      {
+        "text": "Um build multiplataforma não pode usar cache, já que cada plataforma compila separado.",
+        "why": "O release da aula 26 construiu duas plataformas e reaproveitou passos do cache."
+      },
+      {
+        "text": "Sem `mode=max` só as camadas da imagem final são exportadas, e a compilação está no estágio de build.",
+        "why": "`mode=max` guarda também as camadas do estágio de build, que é onde estão os passos caros."
+      }
+    ]
+  },
+  "ex-3xzme82q": {
+    "prompt": "Uma ferramenta num container da bridge padrão precisa chamar o `shelf` no host, por `host.docker.internal` mapeado para `host-gateway`. O `shelf` tem de continuar inalcançável a partir de outras máquinas. Que forma de publicá-lo serve?",
+    "hint": "Docker e Containers, aula 23.",
+    "choices": [
+      {
+        "text": "`-p 172.17.0.1:8081:8080`, escutando só no endereço da bridge.",
+        "why": "Vista da bridge, a máquina é `172.17.0.1`, e um endereço ali não fica na placa de rede."
+      },
+      {
+        "text": "`-p 127.0.0.1:8081:8080`, que o limita aos programas desta máquina.",
+        "why": "A aula 23 viu isso ser recusado: o container chega ao host por `172.17.0.1`, onde nada escutava."
+      },
+      {
+        "text": "`-p 8081:8080`, já que a bridge só leva tráfego entre containers.",
+        "why": "Escuta em todos os endereços, placa de rede inclusive, que é o aviso da aula 17."
+      },
+      {
+        "text": "`--network host` para o `shelf`, para ele dividir o `localhost` do host.",
+        "why": "Com `host` ele escuta nos endereços da própria máquina, `0.0.0.0` na captura, e as paredes de rede somem."
+      }
+    ]
+  },
+  "ex-entttt8x": {
+    "prompt": "A aula 21 rodou o PostgreSQL somente leitura com `--tmpfs /var/run/postgresql --tmpfs /tmp` e um volume para os dados. A mesma imagem agora roda num pod com `readOnlyRootFilesystem: true` e os dados num claim, e o log volta a acusar `Read-only file system` em `/var/run/postgresql`. Qual é a versão, no pod, da correção feita no Docker?",
+    "hint": "Docker e Containers, aula 21; Kubernetes: Orquestração em Produção, aula 25.",
+    "choices": [
+      {
+        "text": "Pôr `runAsUser: 0`, porque o root ainda pode escrever em lugares onde o sistema de arquivos está montado como somente leitura.",
+        "why": "Um sistema de arquivos somente leitura recusa o root também; o `touch` da aula 21 falhou como root."
+      },
+      {
+        "text": "Desligar o `readOnlyRootFilesystem`, já que um pod não monta nada por cima de uma imagem somente leitura.",
+        "why": "Um pod monta volumes por cima da raiz somente leitura o tempo todo, como fez o `/tmp` do pod endurecido."
+      },
+      {
+        "text": "Montar um `emptyDir` em `/var/run/postgresql` e outro em `/tmp`, além do claim dos dados.",
+        "why": "O mesmo método: subir somente leitura, ler o que falha ao escrever e dar exatamente esses lugares; num pod, um lugar de rascunho é um `emptyDir`."
+      },
+      {
+        "text": "Apontar o `PGDATA` para o claim, para o PostgreSQL não escrever em outro lugar.",
+        "why": "O `PGDATA` só muda os arquivos de dados; o socket e o arquivo de lock continuam indo para `/var/run/postgresql`, como diz o log."
+      }
+    ]
+  },
+  "ex-k62q0pp3": {
+    "prompt": "Staging rodou o `shelf` pelo digest que o pipeline imprimiu para a tag `v1.8.0`, e todas as verificações passaram. Para produção, um segundo job faz checkout de `v1.8.0`, roda `docker build` e envia o resultado como `1.8.0`. O que há de errado nisso?",
+    "hint": "Docker e Containers, aula 16; Testes Automatizados e CI/CD, aula 7.",
+    "choices": [
+      {
+        "text": "Nada sério: o mesmo commit gera a mesma imagem byte a byte, então o custo é só alguns minutos a mais de build.",
+        "why": "A aula 16 construiu o mesmo código duas vezes e obteve dois ids, porque uma imagem registra quando foi construída."
+      },
+      {
+        "text": "O rebuild tem outro digest, bytes que nenhuma etapa testou; produção deve rodar o digest que staging rodou.",
+        "why": "Construir uma vez e promover os mesmos bytes: um rebuild é outro artefato, que nunca rodou em lugar nenhum."
+      },
+      {
+        "text": "O registry recusa um segundo push de `1.8.0`, e o job falha antes de produção.",
+        "why": "O `registry:3` aceitou sobrescrever `1.2.3`; uma tag só é fixa por convenção, a menos que o registry esteja configurado para recusar."
+      },
+      {
+        "text": "Produção deveria puxar `latest`, para os servidores sempre receberem o release mais novo.",
+        "why": "`latest` aponta para o que foi enviado por último, que é justamente a dúvida que um digest elimina."
+      }
+    ]
+  },
+  "ex-kmk73bnq": {
+    "prompt": "A aula 4 leu o status de saída 137 como 128 mais o número do sinal que encerrou o processo. O processo de um container é encerrado, em vez disso, pelo sinal que um `kill PID` simples envia quando nenhum sinal é indicado. Que status de saída o Docker informa para ele?",
+    "hint": "Docker e Containers, aula 4; Linux e Linha de Comando, aula 6."
   },
   "ex-28jn6jy2": {
     "prompt": "A Ana reescreveu três subnets de `count` para `for_each` sem mudar mais nada, e o plano quer destruir três subnets e criar três. O bloco que ela escreve na configuração, ligando cada endereço antigo (`from`) ao novo (`to`) para que as mesmas subnets fiquem com seus ids, se chama ___.",
@@ -1063,328 +2586,6 @@
         "why": "Um revert do manifesto só muda qual digest é nomeado; o reconciliador então desfaz qualquer rollback feito fora do Git."
       }
     ]
-  },
-  "ex-3h4cd4c8": {
-    "prompt": "O Deployment da produção usa `strategy: Recreate`, porque a aplicação migra o banco de dados ao iniciar. Um pull request revisado muda a produção para `bulletin:1.9`, uma tag que ninguém nunca enviou; o `validate.sh` a aprova, e a Kustomization da produção tem `wait: true` e `timeout: 2m`. O que os usuários da produção veem, e o que o Flux faz?",
-    "hint": "GitOps, Artefatos e Segredos, aula 4; Kubernetes: Orquestração em Produção, aula 35.",
-    "choices": [
-      {
-        "text": "A versão antiga: o rollout mantém os pods antigos até um novo ficar pronto.",
-        "why": "Isso é um rolling update se segurando; o `Recreate` remove todo pod antigo antes de criar qualquer novo."
-      },
-      {
-        "text": "A versão antiga: depois de dois minutos a verificação de saúde falha e o Flux reaplica a última revisão bem-sucedida.",
-        "why": "O `REVISION` aponta o último commit bom como aquele para onde voltar; o Flux não volta sozinho, a correção é um revert."
-      },
-      {
-        "text": "Página nenhuma: os pods antigos saem antes de os novos falharem no pull, e o Flux acusa a falha de saúde e não desfaz nada.",
-        "why": "Isso."
-      },
-      {
-        "text": "Nada muda: antes de aplicar o Deployment, o Flux confere no registry se a imagem existe, e ele para na tag que está faltando.",
-        "why": "Nada consulta o registry antes; uma tag nunca enviada é uma string válida, e o Deployment é aplicado."
-      }
-    ]
-  },
-  "ex-8kvp4a0q": {
-    "prompt": "O PersistentVolumeClaim `orders` do banco de dados usa uma StorageClass cujo `reclaimPolicy` é `Retain`. Um pull request move os arquivos dele de `apps/shop/staging/`, que a Kustomization `staging` aplica, para `infrastructure/db/`, que uma Kustomization nova, `databases`, aplica; as duas têm `prune: true`. Depois do merge, o que o pod do banco encontra no disco?",
-    "hint": "GitOps, Artefatos e Segredos, aula 5; Kubernetes: Orquestração em Produção, aula 26.",
-    "choices": [
-      {
-        "text": "Os dados: mover no Git não é apagar no cluster, então o claim fica onde estava, adotado pela `databases`.",
-        "why": "Isso vale quando a mesma Kustomization continua dona do que mudou de lugar; aqui a `staging` poda o claim e a `databases` o cria de novo."
-      },
-      {
-        "text": "Um disco vazio: o claim antigo foi podado, o volume dele está `Released`, e o claim novo ganhou outro.",
-        "why": "Isso."
-      },
-      {
-        "text": "Os dados: com `Retain`, o claim criado pela `databases` se liga ao volume antigo, que ainda guarda as linhas.",
-        "why": "Um volume `Released` ainda lembra o claim antigo e não se liga a um novo sozinho; alguém precisa limpar o `claimRef`."
-      },
-      {
-        "text": "Os dados: o Flux se recusa a aplicar a `databases`, porque o claim já pertence à Kustomization `staging`.",
-        "why": "O Flux não tem essa recusa aqui; a primeira Kustomization poda o que saiu do caminho dela e a segunda cria o que chegou."
-      }
-    ]
-  },
-  "ex-712xz4d0": {
-    "prompt": "Às três da manhã, quem está de plantão corrige uma queda duas vezes à mão e não commita nenhuma das duas: uma edição no arquivo do nginx numa VM cujo agente Puppet roda com `runinterval = 1800`, e uma mudança num Deployment gerenciado por uma Application do Argo CD com `selfHeal: true`. O que acontece com as duas correções?",
-    "hint": "GitOps, Artefatos e Segredos, aula 3; Infraestrutura como Código, aula 19.",
-    "choices": [
-      {
-        "text": "As duas ficam até o próximo merge, porque um agente compara quando a descrição dele muda.",
-        "why": "Os dois agentes comparam por conta própria: o Puppet a cada meia hora, e o Argo CD sempre que os objetos que ele observa mudam."
-      },
-      {
-        "text": "O Argo CD desfaz o Deployment na próxima olhada no Git, até três minutos depois; o Puppet deixa a edição até alguém rodá-lo.",
-        "why": "O timer de três minutos é do Git; o `selfHeal` reage ao cluster na hora. E um agente Puppet roda no timer dele, não quando alguém lembra."
-      },
-      {
-        "text": "Nenhuma é desfeita: um agente não distingue uma correção de um erro, então deixa em paz o que uma pessoa editou.",
-        "why": "Ele não distingue, e é por isso que desfaz as duas com a mesma confiança."
-      },
-      {
-        "text": "O Deployment volta em segundos, a edição do nginx em até meia hora, então uma correção só dura na descrição.",
-        "why": "Isso."
-      }
-    ]
-  },
-  "ex-6mc2rnmg": {
-    "prompt": "O `bulletin:1.2` foi assinado com cosign pelo digest, e a produção referencia esse digest. Um job de CI roda de novo sobre o mesmo commit e envia o rebuild como `bulletin:1.2` outra vez. O que o `cosign verify` do curso diz agora sobre `bulletin:1.2`, e o que a produção roda?",
-    "hint": "GitOps, Artefatos e Segredos, aula 8; Docker e Containers, aula 16.",
-    "choices": [
-      {
-        "text": "`no signatures found`, porque o rebuild tem outro digest; a produção segue com o build assinado.",
-        "why": "Isso."
-      },
-      {
-        "text": "Verificado: o mesmo commit e o mesmo Dockerfile dão o mesmo digest, então a assinatura antiga ainda bate.",
-        "why": "Construir o mesmo commit de novo não dá a mesma imagem; a configuração registra quando o build foi feito, então o digest muda."
-      },
-      {
-        "text": "Verificado, porque a assinatura segue a tag `1.2` para onde ela apontar agora.",
-        "why": "Uma assinatura cobre um digest, nunca uma tag; o `cosign` resolve a tag e confere o digest que encontra."
-      },
-      {
-        "text": "`accepted signatures do not match threshold`, e a produção puxa o rebuild quando os pods reiniciarem.",
-        "why": "Essa mensagem quer dizer que existe a assinatura de outra pessoa; aqui não há nenhuma. E uma referência por digest não acompanha uma tag movida."
-      }
-    ]
-  },
-  "ex-3qp5c5f7": {
-    "prompt": "Oito meses depois de o staging passar de duas réplicas para três, uma auditora pergunta por quê. Num arranjo como o deste curso, qual registro guarda a resposta?",
-    "hint": "GitOps, Artefatos e Segredos, aula 12.",
-    "choices": [
-      {
-        "text": "Os eventos do Flux na Kustomization `staging`, que nomeiam cada revisão que ele aplicou.",
-        "why": "Eles dizem qual revisão e quando, nunca por quê, e por padrão ficam guardados uma hora."
-      },
-      {
-        "text": "O pull request que fez a mudança, com a descrição e a revisão dele.",
-        "why": "Isso."
-      },
-      {
-        "text": "O log de auditoria do API server, que registrou o patch no Deployment.",
-        "why": "Ele registra quem mandou qual requisição para qual objeto; o motivo nunca fez parte da requisição."
-      },
-      {
-        "text": "O `managedFields` do Deployment, que nomeia o cliente que definiu `spec.replicas`.",
-        "why": "Ele nomeia um cliente, não uma pessoa nem um motivo, e guarda só o último a escrever cada campo."
-      }
-    ]
-  },
-  "ex-ybe75wgp": {
-    "prompt": "O ExternalSecret da produção passa a ter `refreshInterval: 15m`, e o `bulletin` lê o arquivo do token a cada requisição. Logo depois da última leitura do operador, um token novo é gravado no Vault. Contando a sincronização do próprio kubelet, quantos minutos, no máximo e aproximadamente, se passam até a página mostrar a nova impressão digital?",
-    "hint": "GitOps, Artefatos e Segredos, aula 10.",
-    "unit": "minutos"
-  },
-  "ex-vyn86tmd": {
-    "prompt": "Ao publicar o chart no registry do curso, `helm push bulletin-0.1.0.tgz oci://localhost:5001/charts` falha com `server gave HTTP response to HTTPS client`. O registry roda na sua própria máquina, sem TLS, então o comando precisa de mais uma flag: `--___`.",
-    "hint": "GitOps, Artefatos e Segredos, aula 7.",
-    "blanks": [
-      {
-        "accept": [
-          "plain-http",
-          "--plain-http",
-          "plain http"
-        ]
-      }
-    ]
-  },
-  "ex-2tcpe8wp": {
-    "prompt": "O pull request 3 mudou o staging para uma imagem que ninguém construiu, o agente aplicou, e o `main` é protegido. Ponha em ordem o caminho de volta.",
-    "hint": "GitOps, Artefatos e Segredos, aula 2; Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 4.",
-    "items": [
-      "atualizar o `main` a partir do servidor e começar um branch dele",
-      "`git revert -m 1` no commit de merge, o que acrescenta um commit que o desfaz",
-      "enviar o branch e abrir um pull request",
-      "esperar o status `validate` e a aprovação de outra pessoa",
-      "fazer o merge e deixar o agente aplicar o novo `main` na próxima passada"
-    ],
-    "trap": "O revert é uma mudança como outra qualquer: passa pela checagem e pela revisão antes do merge, e nunca vai direto para o `main`."
-  },
-  "ex-140z0nrc": {
-    "prompt": "Num cluster que está passando do Argo CD para o Flux, a Application raiz do Argo CD gerencia as outras. Ponha a troca em ordem, de modo que o staging continue rodando e só um agente aplique os objetos dele a cada momento.",
-    "hint": "GitOps, Artefatos e Segredos, aula 4.",
-    "items": [
-      "apagar a Application raiz",
-      "apagar as Applications restantes",
-      "apagar a instalação do próprio Argo CD",
-      "instalar o Flux e apontá-lo para o `fleet`"
-    ],
-    "trap": "Apagar as outras Applications antes da raiz deixa a raiz recriá-las a partir de `argocd/` na próxima sincronização."
-  },
-  "ex-wj007c50": {
-    "prompt": "Uma manhã ruim com segredos produziu quatro mensagens. Associe cada uma ao que ela quer dizer.",
-    "hint": "GitOps, Artefatos e Segredos, aula 9.",
-    "pairs": [
-      {
-        "left": "`ErrUnsealFailed` nos eventos de um SealedSecret",
-        "right": "um selo usado sob um nome ou namespace para o qual não foi feito"
-      },
-      {
-        "left": "`Failed to get the data key` vindo do `sops --decrypt`",
-        "right": "nada nesta máquina abre a chave de dados do arquivo"
-      },
-      {
-        "left": "`Code: 503` e `Vault is sealed`",
-        "right": "o cofre reiniciou e ninguém apresentou uma chave de destrancamento"
-      },
-      {
-        "left": "`service account name not authorized` num login no Vault",
-        "right": "um token genuíno, de uma conta que o role não nomeia"
-      }
-    ],
-    "right_distractors": [
-      "um token cuja política nomeia outro caminho",
-      "um arquivo editado sem o SOPS, cujo MAC não bate mais"
-    ]
-  },
-  "ex-c2pp6e8s": {
-    "prompt": "Um cliente pergunta se a correção do commit `a41c9e0` do `bulletin` já está no ar. No `bulletin`, `git tag --contains a41c9e0` imprime `v1.3`. Com o Flux postando status de commit no `fleet`, o que completa a resposta?",
-    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 12; GitOps, Artefatos e Segredos, aula 12.",
-    "choices": [
-      {
-        "text": "Isso já basta: uma tag no repositório da aplicação marca um release, então o 1.3 é o que a produção roda hoje.",
-        "why": "A tag diz qual release contém a correção; em GitOps um release só roda quando o `fleet` o nomeia."
-      },
-      {
-        "text": "A imagem `bulletin:1.3` no registry: depois que o CI a envia para lá, a produção a puxa sozinha.",
-        "why": "Um registry não é um deploy; uma imagem que nenhum diretório nomeia não roda em lugar nenhum."
-      },
-      {
-        "text": "Um status de sucesso `kustomization/production` do Flux num commit do `fleet` cujo diretório da produção nomeia o 1.3.",
-        "why": "Isso."
-      },
-      {
-        "text": "O estado do ticket: ele fechou sozinho quando o pull request com a correção teve merge no `main`.",
-        "why": "O ticket fecha no merge, antes de alguém de fora da equipe ver a mudança; fechado não é pronto."
-      }
-    ]
-  },
-  "ex-1821hpjd": {
-    "prompt": "A aplicação lê o token da transportadora de `config.env`, que o `.gitignore` deixa fora do repositório. O teste de contrato passa no laptop da Ana e falha no CI do pull request, porque a máquina limpa não tem esse arquivo. Qual é a correção certa?",
-    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 17; Testes Automatizados e CI/CD, aula 9.",
-    "choices": [
-      {
-        "text": "Commitar também o `config.env`, para a máquina limpa que o CI cria ter exatamente o que o laptop tem.",
-        "why": "Um segredo que chega a um commit vazou de vez, em todo clone e no histórico."
-      },
-      {
-        "text": "Pôr `!config.env` depois da regra de ignorar, para o clone do CI trazer o arquivo e cada pessoa manter a sua cópia.",
-        "why": "É o mesmo commit por outro caminho: o token entra no histórico."
-      },
-      {
-        "text": "Tornar a checagem opcional no `main`, já que quem falha é a máquina que o CI cria e não o código escrito.",
-        "why": "Uma checagem vermelha que qualquer um pode ignorar acaba ignorada, e a falha é real: o código precisa de um valor que não tem."
-      },
-      {
-        "text": "Passar o token dos segredos do CI só ao passo que precisa dele, e fazer o programa avisar quando ele falta.",
-        "why": "Isso."
-      }
-    ]
-  },
-  "ex-xt7tg4jr": {
-    "prompt": "Às 15:00 do dia 21 de setembro, a Ana roda `git log --oneline --since=2026-09-17` para listar tudo a partir do dia 17. O `31a6298 Add cheese rolls`, commitado às 10:15 do dia 17, não aparece. Por quê?",
-    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 3.",
-    "choices": [
-      {
-        "text": "Uma data sem hora quer dizer aquele dia na hora atual, 15:00, então a manhã fica de fora.",
-        "why": "Isso."
-      },
-      {
-        "text": "O `--since` só guarda o que veio depois do dia que ele nomeia, então o próprio dia 17 é pulado.",
-        "why": "Ele guarda o que aconteceu a partir de um momento; o que foi mal lido é o momento, não o dia."
-      },
-      {
-        "text": "O commit é datado em UTC, e 10:15 em -03:00 já cai no dia 16 por aquele relógio.",
-        "why": "10:15 em -03:00 é 13:15 UTC, no mesmo dia; não foi o fuso que cortou o commit."
-      },
-      {
-        "text": "A data precisava de aspas, e sem elas o Git ignora o que vem depois do primeiro dos hífens.",
-        "why": "O shell entrega `2026-09-17` inteiro; as aspas só importam quando o valor tem um espaço, como em `2026-09-17 00:00`."
-      }
-    ]
-  },
-  "ex-tcfhdw6r": {
-    "prompt": "No quadro da equipe, um card leva uns dois dias de quando é começado até ficar pronto, enquanto quem pede alguma coisa espera umas cinco semanas por ela. Onde o trabalho está esperando, e qual é a pergunta a fazer?",
-    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 15.",
-    "choices": [
-      {
-        "text": "Em revisão; baixar o limite de WIP de *em revisão* para os cards não fazerem fila ali.",
-        "why": "Espera na revisão deixaria o cycle time longo, e ele é de dois dias."
-      },
-      {
-        "text": "Em *a fazer*, antes de alguém começar; a pergunta é de prioridade ou de gente.",
-        "why": "Isso."
-      },
-      {
-        "text": "Em andamento; os tickets são grandes demais e deveriam ser divididos antes de começar.",
-        "why": "Tickets grandes também esticariam os dois dias que um card leva depois de começado."
-      },
-      {
-        "text": "Em lugar algum: o lead time inclui escrever o ticket, então fica muito acima do cycle time por definição.",
-        "why": "O lead time começa quando o ticket é escrito, mas nada torna cinco semanas normais; a diferença é trabalho esperando."
-      }
-    ]
-  },
-  "ex-k788ydxv": {
-    "prompt": "O Bruno pede à Ana que revise um pull request de 1.900 linhas até o fim do dia, e ela sabe que não consegue lê-lo com cuidado nesse tempo. O que ela deve fazer?",
-    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 13.",
-    "choices": [
-      {
-        "text": "Aprovar quando as checagens ficarem verdes, já que uma máquina já leu a mudança inteira.",
-        "why": "As checagens pegam o que um script pega; saber se a mudança faz o que o ticket pediu exige alguém que a leu."
-      },
-      {
-        "text": "Comentar os nomes e o espaçamento, a parte que uma leitura rápida cobre.",
-        "why": "Isso gasta o tempo na última e menos importante das quatro perguntas, que as máquinas já cobrem quase toda."
-      },
-      {
-        "text": "Dizer isso com franqueza, e perguntar se dá para dividir, ou se o Bruno pode antes mostrar a mudança a ela.",
-        "why": "Isso."
-      },
-      {
-        "text": "Pedir mudanças em cada arquivo, para o merge esperar até ela ter tempo.",
-        "why": "Isso trava a mudança sem um motivo que alguém possa resolver; dizer que não consegue ler é a versão honesta."
-      }
-    ]
-  },
-  "ex-d7v8a6b3": {
-    "prompt": "O branch da Ana já foi enviado, e o Bruno já fez pull dele. Quais destes dariam ids novos a commits que o Bruno já tem? Marque todas as que se aplicam.",
-    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 6.",
-    "choices": [
-      {
-        "text": "`git commit --amend` no último commit",
-        "why": "Isso."
-      },
-      {
-        "text": "`git rebase main`, agora que o `main` andou",
-        "why": "Isso."
-      },
-      {
-        "text": "`git revert HEAD~1`, para desfazer um commit que o Bruno tem",
-        "why": "O revert acrescenta um commit novo por cima e deixa cada commit existente como estava."
-      },
-      {
-        "text": "`git merge main` no branch, para atualizá-lo",
-        "why": "Um merge acrescenta um commit com dois pais e não reescreve nada."
-      },
-      {
-        "text": "`git rebase -i --autosquash HEAD~3`, com um `fixup!` entre eles",
-        "why": "Isso."
-      },
-      {
-        "text": "`git push` de um commit novo feito por cima do branch",
-        "why": "Um push só move o branch para a frente; os commits que o Bruno tem mantêm os ids."
-      }
-    ]
-  },
-  "ex-zk1wdv4m": {
-    "prompt": "Uma equipe de cinco pessoas termina uns 40 pontos numa sprint normal de dez dias. Nesta sprint, duas pessoas têm os dez dias, uma tem seis (um curso), uma tem oito (dois dias no suporte) e uma tem seis (férias). Pela conta da aula 18, qual é a capacidade da equipe em pontos, aproximadamente, antes de deixar qualquer folga?",
-    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 18.",
-    "unit": "pontos"
   },
   "ex-rrz99r1a": {
     "prompt": "Seu projeto de portfólio faz deploy como o loanbook: `sudo podman build -t loanbook .` no servidor, e um arquivo de unidade com `Image=localhost/loanbook:latest`. Você refaz o build para uma versão nova, ela quebra, e você quer de volta a versão que rodava antes. O que impede?",
