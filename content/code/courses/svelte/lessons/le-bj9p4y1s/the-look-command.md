@@ -74,6 +74,7 @@ when it has one, and the tree of the page's `<main>`, or of the whole page when 
 //   --press KEY         press a key, such as Enter or ArrowRight
 //   --wait MS           let the page run for MS milliseconds
 //   --no-js             open the page with JavaScript turned off
+//   --reduce-motion     open it as a browser set to prefer reduced motion
 //   --console           print what the page wrote to its console, too
 // At the end it prints the path it is on, the page's title if it has one,
 // and the tree of <main>.
@@ -82,14 +83,17 @@ import { chromium } from "playwright";
 const [url, ...args] = process.argv.slice(2);
 if (!url) { console.error("usage: look URL [options]"); process.exit(2); }
 const browser = await chromium.launch();
-const page = await browser.newPage({ javaScriptEnabled: !args.includes("--no-js") });
+const page = await browser.newPage({
+  javaScriptEnabled: !args.includes("--no-js"),
+  reducedMotion: args.includes("--reduce-motion") ? "reduce" : "no-preference",
+});
 if (args.includes("--console")) page.on("console", (m) => console.log(`console: ${m.text()}`));
 page.on("pageerror", (e) => console.log(`error: ${e.message}`));
 await page.goto(url, { waitUntil: "networkidle" });
 
 for (let i = 0; i < args.length; i++) {
   const [flag, value] = [args[i], args[i + 1]];
-  if (flag === "--no-js" || flag === "--console") continue;
+  if (["--no-js", "--console", "--reduce-motion"].includes(flag)) continue;
   i++;
   console.log(`-- ${flag.slice(2)} ${value}`);
   if (flag === "--click") {
