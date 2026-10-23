@@ -1,0 +1,477 @@
+{
+  "ex-yn33vq3f": {
+    "prompt": "Associe cada lugar da página à codificação de que ele precisa.",
+    "pairs": [
+      {
+        "left": "texto entre tags",
+        "right": "escape de HTML"
+      },
+      {
+        "left": "um valor dentro de <script>",
+        "right": "tojson"
+      },
+      {
+        "left": "um valor em /search?q=…",
+        "right": "codificação de URL"
+      },
+      {
+        "left": "um atributo entre aspas",
+        "right": "escape de HTML, mantendo as aspas"
+      }
+    ],
+    "right_distractors": [
+      "base64"
+    ]
+  },
+  "ex-0j5gnwn5": {
+    "prompt": "O que há de errado na ideia de uma função `escape()` para todo lugar da página?",
+    "choices": [
+      {
+        "text": "É lenta demais para chamar em todo lugar numa página movimentada",
+        "why": "Velocidade não é o problema."
+      },
+      {
+        "text": "Contextos pedem codificações diferentes",
+        "why": "Isso. Cada contexto tem leitor e caracteres especiais próprios; as codificações não se trocam."
+      },
+      {
+        "text": "O Python não tem função de escape",
+        "why": "markupsafe.escape existe; só não é a única codificação."
+      },
+      {
+        "text": "O escape deveria acontecer na entrada, uma vez, antes de guardar qualquer coisa",
+        "why": "Na entrada o destino é desconhecido; a aula 2 diz por quê."
+      }
+    ]
+  },
+  "ex-jnt7xh82": {
+    "prompt": "O `json.dumps` escreve uma string JavaScript correta. Por que não basta dentro de `<script>`?",
+    "choices": [
+      {
+        "text": "Ele não escapa aspas duplas",
+        "why": "Escapa: o contexts.py imprimiu \\\"."
+      },
+      {
+        "text": "Navegadores não leem JSON",
+        "why": "JSON é JavaScript válido."
+      },
+      {
+        "text": "Ele deixa o <, então </script> ainda encerra o script",
+        "why": "Isso. O interpretador de HTML roda primeiro, e não liga para strings JavaScript."
+      },
+      {
+        "text": "Escapa demais, e a nota aparece com barras invertidas na página",
+        "why": "Ele escapa de menos para este lugar."
+      }
+    ]
+  },
+  "ex-hyzek83r": {
+    "prompt": "Por que as aspas em volta de um atributo HTML fazem parte da defesa?",
+    "choices": [
+      {
+        "text": "Navegadores recusam atributos sem aspas",
+        "why": "Navegadores aceitam, e é esse o problema."
+      },
+      {
+        "text": "Sem elas, um espaço encerra o valor",
+        "why": "Isso. Um atributo sem aspas termina num espaço, que o escape não toca."
+      },
+      {
+        "text": "Aspas fazem o atributo carregar mais rápido",
+        "why": "Não existe esse efeito."
+      },
+      {
+        "text": "Aspas ligam o escape no Jinja, que fica desligado em atributos sem aspas",
+        "why": "O escape está ligado de qualquer jeito; as aspas decidem se ele basta."
+      }
+    ]
+  },
+  "ex-jmwt9krw": {
+    "prompt": "O nome de um paciente vai num link de busca dentro de href=\"…\". Ponha os passos na ordem em que o servidor os aplica.",
+    "items": [
+      "pegar o valor",
+      "codificar para a query da URL",
+      "escapar para HTML a URL inteira, para o atributo",
+      "escrever o atributo na página"
+    ]
+  },
+  "ex-jvf1nrg8": {
+    "prompt": "Numa query de URL, o caractere & é codificado como %___.",
+    "blanks": [
+      {
+        "accept": [
+          "26"
+        ]
+      }
+    ]
+  },
+  "ex-ban159fv": {
+    "prompt": "Por que uma f-string não codifica nada quando monta a página?",
+    "choices": [
+      {
+        "text": "Ela cola texto em texto, sem saber que é HTML",
+        "why": "Isso. Codificar exige conhecer o contexto, e a f-string não conhece nenhum."
+      },
+      {
+        "text": "f-strings foram removidas no Python 3.13",
+        "why": "Estão vivas e bem."
+      },
+      {
+        "text": "O Flask desliga o escape só para f-strings",
+        "why": "O Flask nem vê a f-string; recebe o texto pronto."
+      },
+      {
+        "text": "Os valores já estavam escapados no profiles.py",
+        "why": "Estão guardados crus, como devem estar."
+      }
+    ]
+  },
+  "ex-vd69tgf5": {
+    "prompt": "Na página com f-string, `value=\"Lu \"the fast\"\"`. Onde o navegador acha que o atributo termina?",
+    "choices": [
+      {
+        "text": "Na última aspa",
+        "why": "O interpretador para na primeira aspa de fechamento."
+      },
+      {
+        "text": "Depois de `Lu `, na segunda aspa",
+        "why": "Isso. O resto é lido como algo que não é atributo."
+      },
+      {
+        "text": "Nunca termina, e a página fica em branco",
+        "why": "Termina cedo, o que é pior."
+      },
+      {
+        "text": "No fim da linha",
+        "why": "Fim de linha não significa nada dentro de uma tag."
+      }
+    ]
+  },
+  "ex-e9d2jcac": {
+    "prompt": "A nota `back pain </script> again`, colada num script pela f-string, imprime ` again\";` na página. Por quê?",
+    "choices": [
+      {
+        "text": "O JavaScript não permite a palavra again",
+        "why": "As palavras não são o problema."
+      },
+      {
+        "text": "A nota é mais longa do que um script pode ser",
+        "why": "Tamanho não tem nada a ver."
+      },
+      {
+        "text": "O Python imprimiu por engano",
+        "why": "O Python produziu exatamente o texto recebido."
+      },
+      {
+        "text": "O interpretador de HTML encerrou o script em </script>",
+        "why": "Isso. O que vem depois é texto da página, seja qual for a intenção da string."
+      }
+    ]
+  },
+  "ex-z22brqtr": {
+    "prompt": "Quantos dos seis testes falharam contra a página com f-string?"
+  },
+  "ex-p3p41gkm": {
+    "prompt": "Um endereço `https://lucia.example/blog?a=1&b=2` está correto num href. Por que um teste ainda exige `&amp;` ali?",
+    "choices": [
+      {
+        "text": "Porque o endereço é inválido sem isso, e os navegadores se recusam a segui-lo",
+        "why": "O endereço está bom; o contexto é o atributo."
+      },
+      {
+        "text": "Num atributo, & começa uma entidade",
+        "why": "Isso. O navegador volta &amp; para & antes de seguir o link."
+      },
+      {
+        "text": "Para impedir que o link seja clicado duas vezes",
+        "why": "O link funciona igual."
+      },
+      {
+        "text": "Porque a codificação de URL exige",
+        "why": "A codificação de URL escreveria %26; &amp; é do HTML."
+      }
+    ]
+  },
+  "ex-k6rewz0b": {
+    "prompt": "Por que `{{ p.note|tojson }}` não tem aspas em volta no template?",
+    "choices": [
+      {
+        "text": "O Jinja acrescenta depois",
+        "why": "Quem acrescenta é o tojson, como parte do literal."
+      },
+      {
+        "text": "O filtro já as escreve",
+        "why": "Isso. Aspas a mais produziriam \"\"…\"\", outro erro."
+      },
+      {
+        "text": "Notas não podem conter aspas",
+        "why": "Podem; o tojson as escapa."
+      },
+      {
+        "text": "Scripts não usam strings",
+        "why": "Este atribui uma string a const note."
+      }
+    ]
+  },
+  "ex-0q2v27gb": {
+    "prompt": "Que função monta a query do link de busca na página corrigida?",
+    "choices": [
+      {
+        "text": "escape()",
+        "why": "escape é a codificação do HTML; a query precisa antes da de URL."
+      },
+      {
+        "text": "tojson",
+        "why": "tojson escreve literais JavaScript."
+      },
+      {
+        "text": "url_for()",
+        "why": "Isso. Ele codifica o valor para URL, e o escape automático depois escapa a URL para o atributo."
+      },
+      {
+        "text": "uma f-string",
+        "why": "Essa era a falha."
+      }
+    ]
+  },
+  "ex-cy0qzjwx": {
+    "prompt": "O que o `web_link()` acrescenta que o escape não faz?",
+    "choices": [
+      {
+        "text": "Deixa o texto do link em negrito para chamar atenção",
+        "why": "Não muda nada no texto."
+      },
+      {
+        "text": "Codifica o endereço duas vezes",
+        "why": "Não codifica nada."
+      },
+      {
+        "text": "Verifica se o site está no ar antes de desenhar o link na página",
+        "why": "Não faz requisição nenhuma."
+      },
+      {
+        "text": "Só http e https viram links",
+        "why": "Isso. Uma lista de permissão de esquemas: o escape torna o texto inofensivo e não diz nada sobre para onde o link vai."
+      }
+    ]
+  },
+  "ex-s6xktk9s": {
+    "prompt": "Um colega escreve `value={{ p.nickname }}`, sem aspas, no template corrigido. O que acontece com o apelido `Lu \"the fast\"`?",
+    "choices": [
+      {
+        "text": "O atributo termina no primeiro espaço, escapado ou não",
+        "why": "Isso. As aspas são escapadas e o espaço não, então o valor é cortado em `Lu`."
+      },
+      {
+        "text": "Nada: o escape automático cobre atributos sem aspas tanto quanto os com aspas",
+        "why": "Ele escapa aspas e sinais de menor e maior, não espaços."
+      },
+      {
+        "text": "O Jinja se recusa a renderizar o template",
+        "why": "O Jinja renderiza sem reclamar."
+      },
+      {
+        "text": "O navegador acrescenta as aspas que faltam",
+        "why": "O navegador lê o que está lá."
+      }
+    ]
+  },
+  "ex-cjg5f6e1": {
+    "prompt": "No navegador, o que a página corrigida mostra no título?",
+    "choices": [
+      {
+        "text": "Lucia &amp; Bia &lt;3",
+        "why": "Isso é o código-fonte; o navegador decodifica as entidades."
+      },
+      {
+        "text": "Lucia & Bia <3",
+        "why": "Isso. O escape correto é invisível para quem lê."
+      },
+      {
+        "text": "Lucia",
+        "why": "Nada é mais cortado."
+      },
+      {
+        "text": "Um título vazio",
+        "why": "O título está lá, completo."
+      }
+    ]
+  },
+  "ex-efwynnbq": {
+    "prompt": "Quais destes desligam o escape do Jinja para um valor? Escolha todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "o filtro safe",
+        "why": "Marca o valor como HTML."
+      },
+      {
+        "text": "Markup(value) no Python",
+        "why": "O mesmo, no código, e mais fácil de passar despercebido."
+      },
+      {
+        "text": "{% autoescape false %}",
+        "why": "Desliga o escape num bloco inteiro."
+      },
+      {
+        "text": "o filtro tojson",
+        "why": "O tojson codifica para JavaScript; não desliga o escape."
+      }
+    ]
+  },
+  "ex-m4kys41n": {
+    "prompt": "Onde devem ir os dados de que um script precisa, em vez de um atributo onclick?",
+    "choices": [
+      {
+        "text": "No onclick, escapado para HTML",
+        "why": "O motor de JavaScript lê depois de as entidades serem desfeitas."
+      },
+      {
+        "text": "Um atributo data-, lido pelo JavaScript",
+        "why": "Isso. Dado continua dado, e o script o lê como string."
+      },
+      {
+        "text": "Um atributo style",
+        "why": "CSS é outro contexto com regras próprias; mantenha dados do usuário fora."
+      },
+      {
+        "text": "Um cookie",
+        "why": "Cookies vão em toda requisição; esse dado é para a página."
+      }
+    ]
+  },
+  "ex-859567d5": {
+    "prompt": "Um template `email.txt` monta um e-mail HTML com o nome do paciente. O que o Flask faz com o nome?",
+    "choices": [
+      {
+        "text": "Escapa, como em todo template",
+        "why": "Só alguns nomes de arquivo têm escape automático."
+      },
+      {
+        "text": "Recusa renderizar HTML de um arquivo .txt",
+        "why": "Renderiza o que o template disser."
+      },
+      {
+        "text": "Nada: .txt não está na lista com escape automático",
+        "why": "Isso. .html, .htm, .xml, .xhtml, .svg e render_template_string estão; .txt não."
+      },
+      {
+        "text": "Converte para codificação de URL",
+        "why": "Nenhum contexto é adivinhado pelo conteúdo."
+      }
+    ]
+  },
+  "ex-9z1e5dq6": {
+    "prompt": "HTML é montado no Python com uma f-string e passado ao template com `|safe`. O que deu errado?",
+    "choices": [
+      {
+        "text": "Nada, se o template escapa",
+        "why": "|safe manda não escapar."
+      },
+      {
+        "text": "A página é renderizada duas vezes",
+        "why": "É renderizada uma vez, sem escape."
+      },
+      {
+        "text": "Todo valor lá dentro pulou o escape",
+        "why": "Isso. Passe os valores ao template e deixe que ele monte o HTML."
+      },
+      {
+        "text": "f-strings não guardam HTML",
+        "why": "Guardam qualquer texto, e esse é o problema."
+      }
+    ]
+  },
+  "ex-vzccn8df": {
+    "prompt": "O Flask escapa automaticamente templates cujo nome termina em .html, .htm, .xml, .xhtml ou .___.",
+    "blanks": [
+      {
+        "accept": [
+          "svg"
+        ]
+      }
+    ]
+  },
+  "ex-2hmq1hev": {
+    "prompt": "Uma página escreve `<a href=\"/exams?clinic={{ clinic }}\">`, com escape automático. Chega um nome de clínica `Moema & Sul`. O que ainda está errado?",
+    "choices": [
+      {
+        "text": "Nada: o escape automático cobre",
+        "why": "Cobre a camada HTML, não a query."
+      },
+      {
+        "text": "O valor não foi codificado para URL, então a query quebra no &",
+        "why": "Isso. Falta a camada interna; url_for, ou urlencode, a acrescenta."
+      },
+      {
+        "text": "O atributo precisa de aspas simples",
+        "why": "Aspas duplas servem."
+      },
+      {
+        "text": "O valor deveria passar pelo tojson, que o codifica para qualquer contexto",
+        "why": "Isso poria aspas de JavaScript numa URL."
+      }
+    ]
+  },
+  "ex-f7qm2e0g": {
+    "prompt": "Uma mensagem da clínica precisa manter negrito e itálico, então o desenvolvedor a renderiza com `|safe`. O que o curso sugere em vez disso?",
+    "choices": [
+      {
+        "text": "Escapar duas vezes",
+        "why": "Aí a formatação aparece como tags."
+      },
+      {
+        "text": "Usar tojson",
+        "why": "Isso é para scripts."
+      },
+      {
+        "text": "Confiar, já que só contas da equipe conseguem escrever mensagens da clínica",
+        "why": "Mensagens também vêm de pacientes, e contas da equipe podem ser mal usadas."
+      },
+      {
+        "text": "Limpar para um conjunto permitido de tags, como a aula 7 mostra",
+        "why": "Isso. Limpar para uma lista de permissão mantém a formatação sem confiar no resto."
+      }
+    ]
+  },
+  "ex-2wsfcqfc": {
+    "prompt": "Associe cada linha de saída do contexts.py à chamada que a imprimiu.",
+    "pairs": [
+      {
+        "left": "Lu &#34;B&#34; &lt;3 &amp; co",
+        "right": "escape(value)"
+      },
+      {
+        "left": "Lu+%22B%22+%3C3+%26+co",
+        "right": "quote_plus(value)"
+      },
+      {
+        "left": "\"Lu \\\"B\\\" <3 & co\"",
+        "right": "json.dumps(value)"
+      }
+    ],
+    "right_distractors": [
+      "base64.b64encode(value)"
+    ]
+  },
+  "ex-6n7792pw": {
+    "prompt": "Por que falhas de escape sobrevivem anos em páginas que parecem funcionar?",
+    "choices": [
+      {
+        "text": "Navegadores as corrigem sozinhos ao desenhar a página",
+        "why": "Navegadores leem o que recebem."
+      },
+      {
+        "text": "Nomes comuns não têm esses caracteres",
+        "why": "Isso. Só um teste com esses caracteres mostra o defeito."
+      },
+      {
+        "text": "Ninguém usa aspas na internet",
+        "why": "As pessoas usam, só não na maioria dos nomes."
+      },
+      {
+        "text": "O escape é verificado pelo banco quando o valor é guardado",
+        "why": "O banco guarda os valores crus, como deve."
+      }
+    ]
+  }
+}

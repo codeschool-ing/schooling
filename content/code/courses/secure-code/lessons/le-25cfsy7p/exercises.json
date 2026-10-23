@@ -1,0 +1,784 @@
+[
+  {
+    "id": "ex-tedp0s09",
+    "version": 1,
+    "section": "denylists-fail",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a denylist need to know in order to work?",
+    "choices": [
+      {
+        "text": "The valid format of each field",
+        "correct": false,
+        "why": "That is what an allowlist knows. A denylist never describes the valid values."
+      },
+      {
+        "text": "Every bad value, in advance",
+        "correct": true,
+        "why": "Right, and nobody knows them all. The input was written by people who never read the list."
+      },
+      {
+        "text": "Which user sent the request",
+        "correct": false,
+        "why": "Who sent it is an access question, not a validation question."
+      },
+      {
+        "text": "The database the value will be stored in",
+        "correct": false,
+        "why": "The storage has nothing to do with what the list must predict."
+      }
+    ]
+  },
+  {
+    "id": "ex-7qp6w1as",
+    "version": 1,
+    "section": "denylists-fail",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The old booking form refuses <, >, ; and --. Which of these does it accept? Choose all that apply.",
+    "choices": [
+      {
+        "text": "the date 2026-11-31",
+        "correct": true,
+        "why": "No forbidden character in it, and November has 30 days."
+      },
+      {
+        "text": "the clinic paulista",
+        "correct": true,
+        "why": "Plain letters; and there is no clinic on Paulista."
+      },
+      {
+        "text": "a booking with no phone at all",
+        "correct": true,
+        "why": "A missing field becomes an empty string, which contains nothing forbidden."
+      },
+      {
+        "text": "the phone 11-98765-4321--",
+        "why": "This one contains --, so the denylist refuses it, for the wrong reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-ky4a91s2",
+    "version": 1,
+    "section": "denylists-fail",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `<` the wrong thing to look for when a phone number arrives?",
+    "choices": [
+      {
+        "text": "Phones never contain symbols",
+        "correct": false,
+        "why": "Some people type +, spaces or hyphens. That is a format question, not a danger question."
+      },
+      {
+        "text": "Python escapes angle brackets automatically in every string it handles",
+        "correct": false,
+        "why": "Python does no such thing; templates escape, strings do not."
+      },
+      {
+        "text": "Whether a character is dangerous depends on where the value goes next",
+        "correct": true,
+        "why": "Right. At the input the useful question is whether this is a valid phone; the output handles its own context."
+      },
+      {
+        "text": "Angle brackets are only dangerous in passwords",
+        "correct": false,
+        "why": "They are harmless in passwords, which are hashed and never shown."
+      }
+    ]
+  },
+  {
+    "id": "ex-6a84c31z",
+    "version": 1,
+    "section": "denylists-fail",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Where does a short denylist still earn its place?",
+    "choices": [
+      {
+        "text": "Over an open field, like a list of leaked passwords",
+        "correct": true,
+        "why": "Right. It refuses known values inside a space that is otherwise open, which is the one job it does well."
+      },
+      {
+        "text": "As the only check on a date field",
+        "correct": false,
+        "why": "A date has a shape, and a parser checks it far better."
+      },
+      {
+        "text": "Instead of escaping, on fields shown as HTML",
+        "correct": false,
+        "why": "Escaping by context is the defence there; lesson 4 explains it."
+      },
+      {
+        "text": "On the clinic field, listing every clinic that closed or never existed",
+        "correct": false,
+        "why": "Four open clinics are easier to list than every name that is not one."
+      }
+    ]
+  },
+  {
+    "id": "ex-4s9v6yvv",
+    "version": 1,
+    "section": "allowlist",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the five questions an allowlist asks of a field in the order the lesson gives.",
+    "items": [
+      "is it there?",
+      "is it the right type?",
+      "is it the right length?",
+      "is it in range?",
+      "is it one of the allowed values or formats?"
+    ]
+  },
+  {
+    "id": "ex-vfcewp24",
+    "version": 1,
+    "section": "allowlist",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which call checks that a pattern describes the whole of a string?",
+    "choices": [
+      {
+        "text": "re.search",
+        "correct": false,
+        "why": "search finds the pattern anywhere, so a valid phone followed by junk passes."
+      },
+      {
+        "text": "re.match",
+        "correct": false,
+        "why": "match anchors only the start; the end is free."
+      },
+      {
+        "text": "re.fullmatch",
+        "correct": true,
+        "why": "Right. The pattern must be all of the string."
+      },
+      {
+        "text": "re.findall",
+        "correct": false,
+        "why": "findall lists every occurrence; it says nothing about what surrounds them."
+      }
+    ]
+  },
+  {
+    "id": "ex-1cb15nqs",
+    "version": 1,
+    "section": "allowlist",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are the four clinics checked with `clinic in CLINICS` rather than with a regular expression?",
+    "choices": [
+      {
+        "text": "Regular expressions cannot match lower-case letters",
+        "correct": false,
+        "why": "They match lower case perfectly well."
+      },
+      {
+        "text": "A set is faster, and speed is the only thing that matters in a web form",
+        "correct": false,
+        "why": "Speed is irrelevant at four values. The argument is correctness."
+      },
+      {
+        "text": "When the valid values fit in a list, membership has no edge cases",
+        "correct": true,
+        "why": "Right. True or false, and nothing to get wrong; a pattern is for values too many to list."
+      },
+      {
+        "text": "Flask requires sets for form fields",
+        "correct": false,
+        "why": "Flask has no opinion about how you validate."
+      }
+    ]
+  },
+  {
+    "id": "ex-9ejaz5mh",
+    "version": 1,
+    "section": "allowlist",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`\\d{4}-\\d{2}-\\d{2}` accepts `2026-11-31`. What catches it?",
+    "choices": [
+      {
+        "text": "A stricter regular expression with month lengths",
+        "correct": false,
+        "why": "Possible in theory and unreadable in practice, and it still forgets leap years."
+      },
+      {
+        "text": "Parsing it with date.fromisoformat",
+        "correct": true,
+        "why": "Right. The parser knows how many days November has, and it raises ValueError."
+      },
+      {
+        "text": "Escaping the hyphens",
+        "correct": false,
+        "why": "The hyphens are not the problem; the day is."
+      },
+      {
+        "text": "Nothing; the database refuses it later",
+        "correct": false,
+        "why": "The booking list in this lesson refuses nothing, and a later refusal is a worse error message anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-4nty4x6c",
+    "version": 1,
+    "section": "allowlist",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In Python, the pattern ^[0-9]{11}$ accepts \"11987654321\\n\", because $ also matches just before a final ___.",
+    "blanks": [
+      {
+        "accept": [
+          "newline",
+          "line break",
+          "\\n"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-01z1ewf6",
+    "version": 1,
+    "section": "canonical-first",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which pattern refuses a phone written in full-width digits?",
+    "choices": [
+      {
+        "text": "\\d{11}",
+        "correct": false,
+        "why": "\\d matches any Unicode decimal digit, full-width included."
+      },
+      {
+        "text": "[0-9]{11}",
+        "correct": true,
+        "why": "Right. The class names the ten ASCII digits and nothing else."
+      },
+      {
+        "text": "\\w{11}",
+        "correct": false,
+        "why": "\\w is wider still: letters and underscores too."
+      },
+      {
+        "text": ".{11}",
+        "correct": false,
+        "why": "The dot matches any character at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-v0jqmfbt",
+    "version": 1,
+    "section": "canonical-first",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "digits.py prints `int(phone)` for the eleven full-width digits. What number does it print?",
+    "value": 11987654321,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-ky7g9rtk",
+    "version": 1,
+    "section": "canonical-first",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function validates `value` and then stores `value.strip().lower()`. What is wrong?",
+    "choices": [
+      {
+        "text": "Nothing; tidying after the check is harmless",
+        "correct": false,
+        "why": "The stored value is a different string, and nobody checked that one."
+      },
+      {
+        "text": "lower() is slow on long strings",
+        "correct": false,
+        "why": "Speed is not the issue."
+      },
+      {
+        "text": "The stored value was never checked",
+        "correct": true,
+        "why": "Right. Canonicalise first, check the canonical form, keep exactly what was checked."
+      },
+      {
+        "text": "strip() removes the digits of a phone",
+        "correct": false,
+        "why": "strip removes surrounding whitespace only."
+      }
+    ]
+  },
+  {
+    "id": "ex-wgyttcgc",
+    "version": 1,
+    "section": "canonical-first",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each expression from digits.py to what it printed.",
+    "pairs": [
+      {
+        "left": "re.fullmatch(r\"[0-9]{11}\", phone) is not None",
+        "right": "False"
+      },
+      {
+        "left": "\"²\".isdigit()",
+        "right": "True"
+      },
+      {
+        "left": "unicodedata.normalize(\"NFKC\", phone)",
+        "right": "11987654321"
+      }
+    ],
+    "right_distractors": [
+      "ValueError"
+    ]
+  },
+  {
+    "id": "ex-e5re99vz",
+    "version": 1,
+    "section": "canonical-first",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A name field should accept what people type on any keyboard. What does the lesson recommend?",
+    "choices": [
+      {
+        "text": "Refuse anything outside ASCII letters",
+        "correct": false,
+        "why": "That refuses João and Conceição, which is most of Vereda's patients."
+      },
+      {
+        "text": "Normalise to NFKC first, then validate it",
+        "correct": true,
+        "why": "Right. Decide the canonical form first, then check and keep exactly that."
+      },
+      {
+        "text": "Validate the raw value, then normalise it before storing",
+        "correct": false,
+        "why": "That stores a value nobody checked."
+      },
+      {
+        "text": "Accept anything, because names have no format",
+        "correct": false,
+        "why": "A name still has a length and a set of characters it should not contain, such as control characters."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ha3pgxn",
+    "version": 1,
+    "section": "canonical-first",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An exam file name arrives as input. Which check holds?",
+    "choices": [
+      {
+        "text": "Refuse any name that contains ..",
+        "correct": false,
+        "why": "A denylist again: it checks the text, not the file the name resolves to."
+      },
+      {
+        "text": "Refuse names longer than 64 characters, or with more than one dot",
+        "correct": false,
+        "why": "Length says nothing about which directory the path ends in."
+      },
+      {
+        "text": "Accept it if it ends in .pdf",
+        "correct": false,
+        "why": "The extension says nothing about where the file is."
+      },
+      {
+        "text": "Resolve it, then confirm it is still inside exams/",
+        "correct": true,
+        "why": "Right. The resolved path is the canonical form; lesson 14 does this with Path.resolve() and is_relative_to()."
+      }
+    ]
+  },
+  {
+    "id": "ex-zynbkmzv",
+    "version": 1,
+    "section": "booking-form",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Against the old form, how many of the nine tests failed?",
+    "value": 8,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-g925rn4g",
+    "version": 1,
+    "section": "booking-form",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `@pytest.mark.parametrize` do in test_app.py?",
+    "choices": [
+      {
+        "text": "It runs one test per pair of values",
+        "correct": true,
+        "why": "Right. One function, seven cases, seven lines in the report."
+      },
+      {
+        "text": "It runs the tests in parallel to save time",
+        "correct": false,
+        "why": "pytest runs them one after another here."
+      },
+      {
+        "text": "It skips the test when a value is missing",
+        "correct": false,
+        "why": "Nothing is skipped; every pair runs."
+      },
+      {
+        "text": "It generates random values to try",
+        "correct": false,
+        "why": "The values are the seven written in the list, every time."
+      }
+    ]
+  },
+  {
+    "id": "ex-e6wyhaxm",
+    "version": 1,
+    "section": "booking-form",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does each refusal test also check `response.get_json() == {\"error\": f\"invalid {field}\"}`?",
+    "choices": [
+      {
+        "text": "To make sure the response is JSON and not HTML",
+        "correct": false,
+        "why": "It does check that, as a side effect; the point is which field it names."
+      },
+      {
+        "text": "It must name the field that was wrong",
+        "correct": true,
+        "why": "Right. A status check alone passes a 400 about the wrong box, and sends the patient after the wrong mistake."
+      },
+      {
+        "text": "pytest fails tests that do not read the body",
+        "correct": false,
+        "why": "pytest has no such rule."
+      },
+      {
+        "text": "To store the error message in the database",
+        "correct": false,
+        "why": "Tests read the response; they store nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-gmdnyshn",
+    "version": 1,
+    "section": "booking-form",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did nobody using the old form notice that it checked nothing?",
+    "choices": [
+      {
+        "text": "The form showed a warning nobody read",
+        "correct": false,
+        "why": "There was no warning to show."
+      },
+      {
+        "text": "Patients always typed invalid data",
+        "correct": false,
+        "why": "Most typed correct data, which is exactly why nobody noticed."
+      },
+      {
+        "text": "A denylist never gets in the way of correct data",
+        "correct": true,
+        "why": "Right. The good booking passes, so the form looks fine to everybody who uses it properly."
+      },
+      {
+        "text": "The tests were never run",
+        "correct": false,
+        "why": "There were no tests before this lesson; that is a different problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-e8ypnjw1",
+    "version": 1,
+    "section": "the-fix",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does the lesson put the validation, and how often does it run?",
+    "choices": [
+      {
+        "text": "In every function that uses a field, each time",
+        "correct": false,
+        "why": "A scattered check is the one somebody forgets on the new route."
+      },
+      {
+        "text": "At the boundary where data enters, once",
+        "correct": true,
+        "why": "Right. Past the boundary the code receives a Booking and never asks again."
+      },
+      {
+        "text": "In the database, through constraints",
+        "correct": false,
+        "why": "Constraints are a useful second layer; the lesson validates at the route."
+      },
+      {
+        "text": "In the browser, before the form is sent",
+        "correct": false,
+        "why": "The browser is the client's; lesson 3 says why that cannot be the check."
+      }
+    ]
+  },
+  {
+    "id": "ex-5h9matkh",
+    "version": 1,
+    "section": "the-fix",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `validate` return a `Booking` instead of the dictionary it received?",
+    "choices": [
+      {
+        "text": "Dataclasses use less memory than dictionaries",
+        "correct": false,
+        "why": "Memory is not the argument."
+      },
+      {
+        "text": "Flask cannot serialise dictionaries",
+        "correct": false,
+        "why": "jsonify serialises dictionaries all day long."
+      },
+      {
+        "text": "The type says the fields were checked",
+        "correct": true,
+        "why": "Right. Code that receives a Booking knows validation happened, and a raw dict stands out in review."
+      },
+      {
+        "text": "Booking encrypts the phone number",
+        "correct": false,
+        "why": "It stores the phone as text; nothing is encrypted."
+      }
+    ]
+  },
+  {
+    "id": "ex-mqag1feb",
+    "version": 1,
+    "section": "the-fix",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the fixed version not need a separate check for a missing phone?",
+    "choices": [
+      {
+        "text": "None fails like any wrong value",
+        "correct": true,
+        "why": "Right. A missing field is None, and absent and wrong are refused by the same line."
+      },
+      {
+        "text": "Flask refuses JSON bodies with missing keys",
+        "correct": false,
+        "why": "Flask hands over whatever JSON arrived."
+      },
+      {
+        "text": "The phone is optional in the fixed version",
+        "correct": false,
+        "why": "It is required; the test for a missing phone passes."
+      },
+      {
+        "text": "The dataclass fills it with an empty string",
+        "correct": false,
+        "why": "validate raises before any Booking is built."
+      }
+    ]
+  },
+  {
+    "id": "ex-2f9n2yhg",
+    "version": 1,
+    "section": "the-fix",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The error body says `invalid phone` and nothing else. Why not echo the value and the rule back?",
+    "choices": [
+      {
+        "text": "JSON cannot carry the original value",
+        "correct": false,
+        "why": "It could; the choice is deliberate."
+      },
+      {
+        "text": "Echoing it would make the response too large",
+        "correct": false,
+        "why": "A phone number is a few bytes."
+      },
+      {
+        "text": "The patient already knows the rule",
+        "correct": false,
+        "why": "The form shows the rule; the response does not need to explain how to probe it."
+      },
+      {
+        "text": "The field's name is enough for the form",
+        "correct": true,
+        "why": "Right. The form highlights the box, and an echoed value is one more thing to escape; echoing input back into a response is how the next flaw starts."
+      }
+    ]
+  },
+  {
+    "id": "ex-jhyy8t6t",
+    "version": 1,
+    "section": "the-fix",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`request.get_json(___=True)` returns None for a body that is not JSON, so validate refuses it like any other bad input.",
+    "blanks": [
+      {
+        "accept": [
+          "silent"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kh6fjkgx",
+    "version": 1,
+    "section": "the-fix",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A clinic name passed the allowlist. Can it now go straight into HTML, SQL or a shell command?",
+    "choices": [
+      {
+        "text": "Yes: validated data is safe everywhere",
+        "correct": false,
+        "why": "Validation says the value means what it claims; it does not prepare it for each place."
+      },
+      {
+        "text": "No: each of those places needs its own handling",
+        "correct": true,
+        "why": "Right. Lessons 4 to 6 are about those places."
+      },
+      {
+        "text": "Only into SQL, because the database checks types",
+        "correct": false,
+        "why": "Types do not stop text from being read as SQL; lesson 5 explains."
+      },
+      {
+        "text": "Only into HTML, because browsers ignore bad markup",
+        "correct": false,
+        "why": "Browsers interpret markup eagerly; lesson 4 explains."
+      }
+    ]
+  },
+  {
+    "id": "ex-wwqb49tm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new field arrives: the patient's CPF, eleven digits with a check digit at the end. Which validation fits the lesson best?",
+    "choices": [
+      {
+        "text": "Refuse it if it contains letters or symbols",
+        "correct": false,
+        "why": "A denylist: it accepts eleven digits that are not a CPF."
+      },
+      {
+        "text": "Accept any 11 characters, since the database stores text",
+        "correct": false,
+        "why": "Length alone is one question of five."
+      },
+      {
+        "text": "Decide the canonical form, fullmatch [0-9]{11}, then verify the check digits",
+        "correct": true,
+        "why": "Right. Canonical form, format, and then the rule a parser would know, like a date's calendar."
+      },
+      {
+        "text": "Use \\d{11} with re.match",
+        "correct": false,
+        "why": "Two mistakes: \\d takes full-width digits and match leaves the end open."
+      }
+    ]
+  },
+  {
+    "id": "ex-07sd7q3c",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague adds a second route, `/bookings/<id>` with PUT, that copies the JSON into the stored booking. What should the review ask first?",
+    "choices": [
+      {
+        "text": "Does it go through validate, like the POST does?",
+        "correct": true,
+        "why": "Right. A second route that skips the boundary undoes the whole lesson."
+      },
+      {
+        "text": "Does it return 200 or 204?",
+        "correct": false,
+        "why": "A detail of the protocol; the open door is the missing validation."
+      },
+      {
+        "text": "Is PUT faster than POST?",
+        "correct": false,
+        "why": "Not a meaningful difference, and not a security question."
+      },
+      {
+        "text": "Does it log the request body?",
+        "correct": false,
+        "why": "Logging is lesson 15's subject, and it may be the wrong thing to log."
+      }
+    ]
+  },
+  {
+    "id": "ex-nb3s62ad",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each value to the allowlist question that refuses it first.",
+    "pairs": [
+      {
+        "left": "no phone in the body",
+        "right": "is it there?"
+      },
+      {
+        "left": "the phone sent as the number 11987654321",
+        "right": "is it the right type?"
+      },
+      {
+        "left": "the phone 1198765",
+        "right": "is it the right length?"
+      },
+      {
+        "left": "the time 23:00",
+        "right": "is it in range?"
+      }
+    ],
+    "right_distractors": [
+      "is it encrypted?"
+    ]
+  }
+]

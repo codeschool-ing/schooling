@@ -1,0 +1,708 @@
+[
+  {
+    "id": "ex-yn33vq3f",
+    "version": 1,
+    "section": "four-places",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each place in a page to the encoding it needs.",
+    "pairs": [
+      {
+        "left": "text between tags",
+        "right": "HTML escaping"
+      },
+      {
+        "left": "a value inside <script>",
+        "right": "tojson"
+      },
+      {
+        "left": "a value in /search?q=…",
+        "right": "URL encoding"
+      },
+      {
+        "left": "a quoted attribute",
+        "right": "HTML escaping, with the quotes kept"
+      }
+    ],
+    "right_distractors": [
+      "base64"
+    ]
+  },
+  {
+    "id": "ex-0j5gnwn5",
+    "version": 1,
+    "section": "four-places",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is wrong with the idea of one `escape()` function for every place in a page?",
+    "choices": [
+      {
+        "text": "It is too slow to call everywhere on a busy page",
+        "correct": false,
+        "why": "Speed is not the problem."
+      },
+      {
+        "text": "Contexts need different encodings",
+        "correct": true,
+        "why": "Right. Each context has its own reader and its own special characters; the encodings are not interchangeable."
+      },
+      {
+        "text": "Python has no escape function",
+        "correct": false,
+        "why": "markupsafe.escape exists; it is just not the only encoding."
+      },
+      {
+        "text": "Escaping should happen at the input, once, before anything is stored",
+        "correct": false,
+        "why": "At the input the destination is unknown; lesson 2 says why."
+      }
+    ]
+  },
+  {
+    "id": "ex-jnt7xh82",
+    "version": 1,
+    "section": "four-places",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`json.dumps` writes a correct JavaScript string. Why is it not enough inside `<script>`?",
+    "choices": [
+      {
+        "text": "It does not escape double quotes",
+        "correct": false,
+        "why": "It does: contexts.py printed \\\"."
+      },
+      {
+        "text": "Browsers cannot read JSON",
+        "correct": false,
+        "why": "JSON is valid JavaScript."
+      },
+      {
+        "text": "It leaves <, so </script> still ends the script",
+        "correct": true,
+        "why": "Right. The HTML parser runs first, and it does not care about JavaScript strings."
+      },
+      {
+        "text": "It escapes too much, and the note shows backslashes on the page",
+        "correct": false,
+        "why": "It escapes too little for this place."
+      }
+    ]
+  },
+  {
+    "id": "ex-hyzek83r",
+    "version": 1,
+    "section": "four-places",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are the quotes around an HTML attribute part of the defence?",
+    "choices": [
+      {
+        "text": "Browsers refuse unquoted attributes",
+        "correct": false,
+        "why": "Browsers accept them, which is the trouble."
+      },
+      {
+        "text": "Without them, a space ends the value",
+        "correct": true,
+        "why": "Right. An unquoted attribute ends at a space, which escaping leaves alone."
+      },
+      {
+        "text": "Quotes make the attribute load faster",
+        "correct": false,
+        "why": "No such effect."
+      },
+      {
+        "text": "Quotes turn on escaping in Jinja, which is off for unquoted attributes",
+        "correct": false,
+        "why": "Escaping is on either way; the quotes decide whether it is enough."
+      }
+    ]
+  },
+  {
+    "id": "ex-jmwt9krw",
+    "version": 1,
+    "section": "four-places",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A patient's name goes into a search link inside href=\"…\". Put the steps in the order the server applies them.",
+    "items": [
+      "take the value",
+      "URL-encode it for the query",
+      "HTML-escape the whole URL for the attribute",
+      "write the attribute into the page"
+    ]
+  },
+  {
+    "id": "ex-jvf1nrg8",
+    "version": 1,
+    "section": "four-places",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a URL query, the character & is encoded as %___.",
+    "blanks": [
+      {
+        "accept": [
+          "26"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ban159fv",
+    "version": 1,
+    "section": "the-profile",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does an f-string encode nothing when it builds the page?",
+    "choices": [
+      {
+        "text": "It pastes text into text, without knowing it is HTML",
+        "correct": true,
+        "why": "Right. Encoding needs to know the context, and an f-string knows none."
+      },
+      {
+        "text": "f-strings were removed in Python 3.13",
+        "correct": false,
+        "why": "They are alive and well."
+      },
+      {
+        "text": "Flask turns escaping off for f-strings only",
+        "correct": false,
+        "why": "Flask never sees the f-string; it receives the finished text."
+      },
+      {
+        "text": "The values were already escaped in profiles.py",
+        "correct": false,
+        "why": "They are stored raw, as they should be."
+      }
+    ]
+  },
+  {
+    "id": "ex-vd69tgf5",
+    "version": 1,
+    "section": "the-profile",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the f-string page, `value=\"Lu \"the fast\"\"`. Where does the browser think the attribute ends?",
+    "choices": [
+      {
+        "text": "At the last quotation mark",
+        "correct": false,
+        "why": "The parser stops at the first closing quote."
+      },
+      {
+        "text": "After `Lu `, at the second quotation mark",
+        "correct": true,
+        "why": "Right. The rest is read as something that is not an attribute."
+      },
+      {
+        "text": "It never ends, and the page goes blank",
+        "correct": false,
+        "why": "It ends early, which is worse than never."
+      },
+      {
+        "text": "At the end of the line",
+        "correct": false,
+        "why": "Line ends mean nothing inside a tag."
+      }
+    ]
+  },
+  {
+    "id": "ex-e9d2jcac",
+    "version": 1,
+    "section": "the-profile",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The note `back pain </script> again`, pasted into a script by the f-string, prints ` again\";` on the page. Why?",
+    "choices": [
+      {
+        "text": "JavaScript does not allow the word again",
+        "correct": false,
+        "why": "Words are not the issue."
+      },
+      {
+        "text": "The note is longer than a script may be",
+        "correct": false,
+        "why": "Length has nothing to do with it."
+      },
+      {
+        "text": "Python printed it by mistake",
+        "correct": false,
+        "why": "Python produced exactly the text it was given."
+      },
+      {
+        "text": "The HTML parser ended the script at </script>",
+        "correct": true,
+        "why": "Right. What follows is page text, whatever the JavaScript string intended."
+      }
+    ]
+  },
+  {
+    "id": "ex-z22brqtr",
+    "version": 1,
+    "section": "the-profile",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many of the six tests failed against the f-string page?",
+    "value": 6,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-p3p41gkm",
+    "version": 1,
+    "section": "the-profile",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A website address `https://lucia.example/blog?a=1&b=2` sits correctly in an href. Why does a test still demand `&amp;` there?",
+    "choices": [
+      {
+        "text": "Because the address is invalid without it, and browsers refuse to follow it",
+        "correct": false,
+        "why": "The address is fine; the attribute is the context."
+      },
+      {
+        "text": "In an attribute, & starts an entity",
+        "correct": true,
+        "why": "Right. The browser turns &amp; back into & before following the link."
+      },
+      {
+        "text": "To stop the link from being clicked twice",
+        "correct": false,
+        "why": "The link works the same."
+      },
+      {
+        "text": "Because URL encoding requires it",
+        "correct": false,
+        "why": "URL encoding would write %26; &amp; is HTML's."
+      }
+    ]
+  },
+  {
+    "id": "ex-k6rewz0b",
+    "version": 1,
+    "section": "the-fix",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `{{ p.note|tojson }}` have no quotes around it in the template?",
+    "choices": [
+      {
+        "text": "Jinja adds them later",
+        "correct": false,
+        "why": "tojson adds them, as part of the literal."
+      },
+      {
+        "text": "The filter writes them itself",
+        "correct": true,
+        "why": "Right. Extra quotes would produce \"\"…\"\", a different bug."
+      },
+      {
+        "text": "Notes cannot contain quotes",
+        "correct": false,
+        "why": "They can; tojson escapes them."
+      },
+      {
+        "text": "Scripts do not use strings",
+        "correct": false,
+        "why": "This one assigns a string to const note."
+      }
+    ]
+  },
+  {
+    "id": "ex-0q2v27gb",
+    "version": 1,
+    "section": "the-fix",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which function builds the search link's query in the fixed page?",
+    "choices": [
+      {
+        "text": "escape()",
+        "correct": false,
+        "why": "escape is HTML's encoding; the query needs URL encoding first."
+      },
+      {
+        "text": "tojson",
+        "correct": false,
+        "why": "tojson writes JavaScript literals."
+      },
+      {
+        "text": "url_for()",
+        "correct": true,
+        "why": "Right. It URL-encodes the value, and autoescaping then escapes the URL for the attribute."
+      },
+      {
+        "text": "an f-string",
+        "correct": false,
+        "why": "That was the flaw."
+      }
+    ]
+  },
+  {
+    "id": "ex-cy0qzjwx",
+    "version": 1,
+    "section": "the-fix",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `web_link()` add that escaping does not?",
+    "choices": [
+      {
+        "text": "It makes the link text bold so people notice it",
+        "correct": false,
+        "why": "It changes nothing about the text."
+      },
+      {
+        "text": "It encodes the address twice",
+        "correct": false,
+        "why": "It encodes nothing."
+      },
+      {
+        "text": "It checks that the website is online before drawing the link",
+        "correct": false,
+        "why": "It makes no request."
+      },
+      {
+        "text": "Only http and https become links",
+        "correct": true,
+        "why": "Right. An allowlist of schemes: escaping makes the text harmless and says nothing about where the link goes."
+      }
+    ]
+  },
+  {
+    "id": "ex-s6xktk9s",
+    "version": 1,
+    "section": "the-fix",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague writes `value={{ p.nickname }}`, without quotes, in the fixed template. What happens with the nickname `Lu \"the fast\"`?",
+    "choices": [
+      {
+        "text": "The attribute ends at the first space, escaped or not",
+        "correct": true,
+        "why": "Right. The quotes are escaped and the space is not, so the value is cut at `Lu`."
+      },
+      {
+        "text": "Nothing: autoescaping covers unquoted attributes as well as quoted ones",
+        "correct": false,
+        "why": "It escapes quotes and angle brackets, not spaces."
+      },
+      {
+        "text": "Jinja refuses to render the template",
+        "correct": false,
+        "why": "Jinja renders it happily."
+      },
+      {
+        "text": "The browser adds the missing quotes",
+        "correct": false,
+        "why": "The browser reads what is there."
+      }
+    ]
+  },
+  {
+    "id": "ex-cjg5f6e1",
+    "version": 1,
+    "section": "the-fix",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a browser, what does the fixed page show in its heading?",
+    "choices": [
+      {
+        "text": "Lucia &amp; Bia &lt;3",
+        "correct": false,
+        "why": "That is the source; the browser decodes the entities."
+      },
+      {
+        "text": "Lucia & Bia <3",
+        "correct": true,
+        "why": "Right. Correct escaping is invisible to the reader."
+      },
+      {
+        "text": "Lucia",
+        "correct": false,
+        "why": "Nothing is cut off anymore."
+      },
+      {
+        "text": "An empty heading",
+        "correct": false,
+        "why": "The heading is there, complete."
+      }
+    ]
+  },
+  {
+    "id": "ex-efwynnbq",
+    "version": 1,
+    "section": "what-autoescape-misses",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these switch Jinja's escaping off for a value? Choose all that apply.",
+    "choices": [
+      {
+        "text": "the safe filter",
+        "correct": true,
+        "why": "It marks the value as HTML."
+      },
+      {
+        "text": "Markup(value) in Python",
+        "correct": true,
+        "why": "The same, in code, and easier to miss in review."
+      },
+      {
+        "text": "{% autoescape false %}",
+        "correct": true,
+        "why": "It switches escaping off for a whole block."
+      },
+      {
+        "text": "the tojson filter",
+        "why": "tojson encodes for JavaScript; it does not switch escaping off."
+      }
+    ]
+  },
+  {
+    "id": "ex-m4kys41n",
+    "version": 1,
+    "section": "what-autoescape-misses",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where should data that a script needs go, instead of an onclick attribute?",
+    "choices": [
+      {
+        "text": "Into the onclick, HTML-escaped",
+        "correct": false,
+        "why": "The JavaScript engine reads it after the entities are undone."
+      },
+      {
+        "text": "A data- attribute, read from JavaScript",
+        "correct": true,
+        "why": "Right. Data stays data, and the script reads it as a string."
+      },
+      {
+        "text": "A style attribute",
+        "correct": false,
+        "why": "CSS is another context with its own rules; keep user data out of it."
+      },
+      {
+        "text": "A cookie",
+        "correct": false,
+        "why": "Cookies are sent on every request; this data is for the page."
+      }
+    ]
+  },
+  {
+    "id": "ex-859567d5",
+    "version": 1,
+    "section": "what-autoescape-misses",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A template `email.txt` builds an HTML e-mail with the patient's name in it. What does Flask do with the name?",
+    "choices": [
+      {
+        "text": "Escapes it, as in every template",
+        "correct": false,
+        "why": "Only some file names get autoescaping."
+      },
+      {
+        "text": "Refuses to render HTML from a .txt file",
+        "correct": false,
+        "why": "It renders whatever the template says."
+      },
+      {
+        "text": "Nothing: .txt is not in the autoescaped list",
+        "correct": true,
+        "why": "Right. .html, .htm, .xml, .xhtml, .svg and render_template_string are; .txt is not."
+      },
+      {
+        "text": "Converts it to URL encoding",
+        "correct": false,
+        "why": "No context is guessed from the content."
+      }
+    ]
+  },
+  {
+    "id": "ex-9z1e5dq6",
+    "version": 1,
+    "section": "what-autoescape-misses",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "HTML is assembled in Python with an f-string and passed to the template with `|safe`. What went wrong?",
+    "choices": [
+      {
+        "text": "Nothing, if the template itself escapes",
+        "correct": false,
+        "why": "|safe tells it not to."
+      },
+      {
+        "text": "The page is rendered twice",
+        "correct": false,
+        "why": "It is rendered once, without escaping."
+      },
+      {
+        "text": "Every value inside skipped the escaping",
+        "correct": true,
+        "why": "Right. Pass the values to the template and let it build the HTML."
+      },
+      {
+        "text": "f-strings cannot hold HTML",
+        "correct": false,
+        "why": "They hold any text, which is the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-vzccn8df",
+    "version": 1,
+    "section": "what-autoescape-misses",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Flask autoescapes templates whose names end in .html, .htm, .xml, .xhtml or .___.",
+    "blanks": [
+      {
+        "accept": [
+          "svg"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2hmq1hev",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A page writes `<a href=\"/exams?clinic={{ clinic }}\">`, with autoescaping on. A clinic name `Moema & Sul` arrives. What is still wrong?",
+    "choices": [
+      {
+        "text": "Nothing: autoescaping covers it",
+        "correct": false,
+        "why": "It covers the HTML layer, not the query."
+      },
+      {
+        "text": "The value is not URL-encoded, so the query breaks at &",
+        "correct": true,
+        "why": "Right. The inner layer is missing; url_for, or urlencode, adds it."
+      },
+      {
+        "text": "The attribute needs single quotes",
+        "correct": false,
+        "why": "Double quotes are fine."
+      },
+      {
+        "text": "The value should be passed through tojson, which encodes it for any context",
+        "correct": false,
+        "why": "That would put JavaScript quotes into a URL."
+      }
+    ]
+  },
+  {
+    "id": "ex-f7qm2e0g",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A message from the clinic must keep bold and italics, so the developer renders it with `|safe`. What does the course suggest instead?",
+    "choices": [
+      {
+        "text": "Escape it twice",
+        "correct": false,
+        "why": "Then the formatting shows as tags."
+      },
+      {
+        "text": "Use tojson instead",
+        "correct": false,
+        "why": "That is for scripts."
+      },
+      {
+        "text": "Trust it, since only staff accounts can write clinic messages",
+        "correct": false,
+        "why": "Messages also come from patients, and staff accounts can be misused."
+      },
+      {
+        "text": "Clean it to an allowed set of tags, as lesson 7 shows",
+        "correct": true,
+        "why": "Right. Cleaning to an allowlist keeps the formatting without trusting the rest."
+      }
+    ]
+  },
+  {
+    "id": "ex-2wsfcqfc",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each output line from contexts.py to the call that printed it.",
+    "pairs": [
+      {
+        "left": "Lu &#34;B&#34; &lt;3 &amp; co",
+        "right": "escape(value)"
+      },
+      {
+        "left": "Lu+%22B%22+%3C3+%26+co",
+        "right": "quote_plus(value)"
+      },
+      {
+        "left": "\"Lu \\\"B\\\" <3 & co\"",
+        "right": "json.dumps(value)"
+      }
+    ],
+    "right_distractors": [
+      "base64.b64encode(value)"
+    ]
+  },
+  {
+    "id": "ex-6n7792pw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do escaping flaws survive for years in pages that seem to work?",
+    "choices": [
+      {
+        "text": "Browsers fix them automatically when they render",
+        "correct": false,
+        "why": "Browsers read what they are given."
+      },
+      {
+        "text": "Ordinary names lack those characters",
+        "correct": true,
+        "why": "Right. Only a test with those characters shows the defect."
+      },
+      {
+        "text": "Nobody uses quotation marks online",
+        "correct": false,
+        "why": "People do, just not in most names."
+      },
+      {
+        "text": "Escaping is checked by the database when the value is stored",
+        "correct": false,
+        "why": "The database stores raw values, as it should."
+      }
+    ]
+  }
+]
