@@ -5,13 +5,14 @@
 #   sudo bash captures.sh > /tmp/l2.txt
 #   for f in *.md; do python3 ../../lab/fill.py $f /tmp/l2.txt; done
 #
-# It starts from the project as lesson 1 left it. STAGED: the files ana
+# It starts from the project as lesson 1 committed it. STAGED: the files ana
 # writes, taken out of the lesson's .md by lab/shown.py; "a second terminal"
 # is the development server started in the background, and what it printed
 # is shown where the lesson shows that terminal.
 set -uo pipefail
 cd "$(dirname "$0")"
 . ../../lab/lib.sh
+from_lesson 1
 
 bg_stop dev
 shown runs-once.md 'src/lib/Counter.svelte#1' '~/planner/src/lib/Counter.svelte'

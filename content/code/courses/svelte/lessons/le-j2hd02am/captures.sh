@@ -31,7 +31,7 @@ open(p, "w").write("\n".join(lines))
 PY
 }
 
-quiet '~/planner' 'git reset -q --hard && git clean -qfd'
+from_lesson 4
 bg_stop dev
 bg dev '~/planner' 'npm run dev'
 wait_port 5173

@@ -93,3 +93,11 @@ bg_logpid() {
   done
   echo "bg_logpid: $1 printed no pid" >&2
 }
+
+# from_lesson N: put ~/planner back exactly as lesson N's captures committed
+# it, so that a lesson's captures can be run again on their own, in any
+# order, and always start from the project the previous lesson left.
+from_lesson() {
+  bash "$LAB_SH" script "cd ~/planner && c=\$(git log --format=%H --grep='^Lesson $1:' -1) && [ -n \"\$c\" ] && git reset -q --hard \$c && git clean -qfd" \
+    || { echo "from_lesson: no commit for lesson $1 in ~/planner" >&2; exit 1; }
+}

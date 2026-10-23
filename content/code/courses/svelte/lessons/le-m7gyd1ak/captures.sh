@@ -7,7 +7,7 @@
 #     python3 ../../lab/fill.py $f.md /tmp/l4.txt; done
 #   python3 ../../lab/fill.py old-code.md /tmp/l4.txt --blocks old,old-dev,stores,stores-dev,new
 #
-# It starts from the project as lesson 3 left it. The development server is
+# It starts from the project as lesson 3 committed it. The development server is
 # started again at the beginning, so that its terminal holds only this
 # lesson's lines, and again before each of the old-code pages, so that each
 # error is shown on its own. STAGED: the files ana writes, taken out of the lesson's .md
@@ -18,6 +18,7 @@
 set -uo pipefail
 cd "$(dirname "$0")"
 . ../../lab/lib.sh
+from_lesson 3
 P=/home/ana/planner/src/routes/+page.svelte
 
 # page LINE: the page as lesson 3 left it, with WeekNav imported and the

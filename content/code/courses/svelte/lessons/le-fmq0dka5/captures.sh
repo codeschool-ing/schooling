@@ -11,6 +11,7 @@
 set -uo pipefail
 cd "$(dirname "$0")"
 . ../../lab/lib.sh
+from_lesson 2
 
 if ! (exec 3<>/dev/tcp/127.0.0.1/5173) 2>/dev/null; then bg dev '~/planner' 'npm run dev'; wait_port 5173; fi
 
