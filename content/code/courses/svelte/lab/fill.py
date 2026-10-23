@@ -7,7 +7,11 @@ command; its whole body is then replaced by the block. A
 fence nobody captured, and a block no fence takes, are both reported, and
 the file is written only when every transcript fence found its block.
 
-    python3 fill.py lesson.md out.txt [--check]
+    python3 fill.py lesson.md out.txt [--check] [--blocks a,b,c]
+
+--blocks limits the candidates to the blocks named, for a file whose fences
+start with the same typed line as blocks meant for another file (a bare
+`npm run dev`, say).
 """
 import re, sys
 
@@ -35,6 +39,9 @@ for line in open(cap, encoding="utf-8").read().split("\n"):
     elif name is not None:
         blocks[name].append(line)
 bodies = {k: "\n".join(v).rstrip("\n") + "\n" for k, v in blocks.items()}
+if "--blocks" in sys.argv:
+    only = sys.argv[sys.argv.index("--blocks") + 1].split(",")
+    bodies = {k: bodies[k] for k in only}
 
 text = open(md, encoding="utf-8").read()
 used, missing, changed = set(), [], 0
