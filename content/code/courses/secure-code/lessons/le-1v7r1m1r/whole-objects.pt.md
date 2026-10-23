@@ -4,7 +4,7 @@ version: 1
 ---
 
 A maior parte deste curso tratou de valores: um sobrenome, um termo, um recado. Esta aula trata de dois
-recursos que aceitam algo maior de fora do portal: **um objeto serializado**, e **um arquivo**. Cada um
+recursos que aceitam algo maior de fora do portal: um objeto serializado, e um arquivo. Cada um
 é uma versão maior da mesma pergunta, *o que o código faz com o que recebeu?*, e cada um tem um hábito
 que a responde mal.
 
@@ -14,7 +14,7 @@ que a responde mal.
 
 ### Desserialização
 
-Para guardar um valor entre requisições, um programa o **serializa** em bytes e depois **desserializa**
+Para guardar um valor entre requisições, um programa o *serializa* em bytes e depois *desserializa*
 os bytes de volta em valor. Os formatos diferem no que os bytes podem descrever:
 
 - **Formatos de dados**, o JSON entre eles, descrevem dados: strings, números, listas, objetos com
@@ -27,7 +27,7 @@ A documentação do Python põe a consequência no topo da página do `pickle`: 
 só se deve desfazer o pickle de dados em cuja origem se confia, porque um pickle pode ser construído
 para rodar código ao ser carregado. **Um cookie vem do navegador, e tudo o que vem do navegador pode ser
 editado**, então um portal que desfaz o pickle de um cookie roda bytes escolhidos por quem o manda. A
-regra é simples e não tem exceção que valha a pena: **nunca desserialize um formato de objetos vindo de
+regra: **nunca desserialize um formato de objetos vindo de
 fora da fronteira de confiança do próprio programa; use um formato de dados, e valide o que ele traz.**
 
 ### Envio de arquivos

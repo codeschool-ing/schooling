@@ -4,8 +4,8 @@ version: 1
 ---
 
 Most of this course has been about values: a surname, a term, a note. This lesson is about two
-features that accept something larger from outside the portal: **a serialised object**, and **a
-file**. Each one is a bigger version of the same question, *what does the code do with what it
+features that accept something larger from outside the portal: a serialised object, and a
+file. Each one is a bigger version of the same question, *what does the code do with what it
 received?*, and each has a habit that answers it badly.
 
 ```schooling-figure
@@ -14,7 +14,7 @@ received?*, and each has a habit that answers it badly.
 
 ### Deserialisation
 
-To keep a value between requests, a program **serialises** it into bytes and later **deserialises**
+To keep a value between requests, a program *serialises* it into bytes and later *deserialises*
 the bytes back into a value. Formats differ in what the bytes are allowed to describe:
 
 - **Data formats**, JSON among them, describe data: strings, numbers, lists, objects with keys.
@@ -27,7 +27,7 @@ Python's documentation puts the consequence at the top of the `pickle` page: the
 secure, and data should be unpickled only if you trust where it came from, because a pickle can be
 built to run code while it is loaded. **A cookie comes from the browser, and anything that comes from
 the browser can be edited**, so a portal that unpickles a cookie runs bytes chosen by whoever sends
-it. The rule is simple and has no exceptions worth making: **never deserialise an object format from
+it. The rule: **never deserialise an object format from
 outside the program's own trust boundary; use a data format, and validate what it contains.**
 
 ### Upload
