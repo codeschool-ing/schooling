@@ -61,6 +61,11 @@ run 'git commit -q -m "renovate: the same rules, for running it anywhere"'
 block renovate-main
 run 'npx --yes renovate@44.164.10 --platform=local --report-type=file --report-path=/tmp/report.json 2>&1 | grep -v "^npm "'
 run 'jq -c .repositories.local.libYearsWithStatus.dependencyStatus /tmp/report.json'
+cmd=$(cat <<'EOF'
+jq -c '.repositories.local.packageFiles[][] | .packageFile as $file | .deps[] | select(.updates | length > 0) | {$file, dep: .depName, to: (.updates[0].newVersion // .updates[0].newDigest), waiting: (.updates[0].pendingChecks // false)}' /tmp/report.json
+EOF
+)
+run "$cmd"
 
 block stale
 run 'git switch -c stale-lock'
@@ -72,7 +77,7 @@ run 'git commit -q -am "the lock as it was compiled on 20 September"'
 block renovate-stale
 run 'npx --yes renovate@44.164.10 --platform=local --report-type=file --report-path=/tmp/report.json >/tmp/renovate.log 2>&1'
 cmd=$(cat <<'EOF'
-jq -c '.repositories.local.packageFiles.pip_requirements[] | .packageFile as $file | .deps[] | select(.updates | length > 0) | {$file, dep: .depName, from: .currentVersion, to: .updates[0].newVersion, waiting: (.updates[0].pendingChecks // false)}' /tmp/report.json
+jq -c '.repositories.local.packageFiles[][] | .packageFile as $file | .deps[] | select(.updates | length > 0) | {$file, dep: .depName, to: (.updates[0].newVersion // .updates[0].newDigest), waiting: (.updates[0].pendingChecks // false)}' /tmp/report.json
 EOF
 )
 run "$cmd"
