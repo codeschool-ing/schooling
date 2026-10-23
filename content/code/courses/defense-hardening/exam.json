@@ -1,0 +1,2939 @@
+[
+  {
+    "id": "ex-3c3wtgbx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A server you have just inherited needs hardening. What does this course do first?",
+    "choices": [
+      {
+        "text": "Install an endpoint protection product on it",
+        "correct": false,
+        "why": "A control protects what is there; first find out what is there."
+      },
+      {
+        "text": "Measure what it exposes",
+        "correct": true,
+        "why": "Right: measure, change, measure again."
+      },
+      {
+        "text": "Reinstall it from a clean image before looking at anything",
+        "correct": false,
+        "why": "Reinstalling throws away the answer to what the machine was doing and for whom."
+      },
+      {
+        "text": "Change every password on it, starting with root's",
+        "correct": false,
+        "why": "Useful later, and it misses the services and the second root."
+      }
+    ]
+  },
+  {
+    "id": "ex-khj7z75q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which command answers, in one line per account, who on a Linux machine is root?",
+    "choices": [
+      {
+        "text": "getent group sudo",
+        "correct": false,
+        "why": "That lists who may use sudo, not who is user id 0."
+      },
+      {
+        "text": "grep root /etc/passwd",
+        "correct": false,
+        "why": "It finds the name root, and misses a second root with another name."
+      },
+      {
+        "text": "awk -F: '$3 == 0' /etc/passwd",
+        "correct": true,
+        "why": "Right: the kernel checks the number, so the question is about the number."
+      },
+      {
+        "text": "sudo passwd -S -a",
+        "correct": false,
+        "why": "That reports password states, not user ids."
+      }
+    ]
+  },
+  {
+    "id": "ex-w4qkqpbw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A port is still open after its service was stopped and disabled, and ss names systemd as the holder. What is the fix?",
+    "choices": [
+      {
+        "text": "Disable the matching .socket unit as well",
+        "correct": true,
+        "why": "Right: socket activation lets systemd listen for the service."
+      },
+      {
+        "text": "Restart systemd so that it lets go of the port",
+        "correct": false,
+        "why": "systemd would listen again at once, because the socket is still enabled."
+      },
+      {
+        "text": "Block the port in the network firewall in front of the server",
+        "correct": false,
+        "why": "That hides the listener from some clients and leaves it on the machine."
+      },
+      {
+        "text": "Wait: the kernel releases a closed port after a timeout",
+        "correct": false,
+        "why": "Nothing is closing; systemd is listening on purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-tzxkvkrr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Two drop-in files set PasswordAuthentication: 20-a.conf says no and 60-b.conf says yes. What does sshd do?",
+    "choices": [
+      {
+        "text": "Accepts passwords, because the later file overrides the earlier one",
+        "correct": false,
+        "why": "That is how most programs work, and not sshd."
+      },
+      {
+        "text": "Refuses to start, because the two values conflict",
+        "correct": false,
+        "why": "Repeating a keyword is valid; sshd -t passes."
+      },
+      {
+        "text": "Refuses passwords",
+        "correct": true,
+        "why": "Right: sshd keeps the first value it reads, and 20 is read before 60."
+      }
+    ]
+  },
+  {
+    "id": "ex-vfc8cpgq",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A scan found ports 21, 22, 23, 80 and 111 open over TCP on a portal whose job needs SSH and HTTP. How many TCP ports should the scan show after hardening?",
+    "value": 2,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-8pxyjdxb",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which statements about switching a service off are true? Choose all that apply.",
+    "choices": [
+      {
+        "text": "A masked unit cannot be started, even by a unit that depends on it",
+        "correct": true,
+        "why": "It is linked to /dev/null."
+      },
+      {
+        "text": "A disabled unit can no longer be started by hand",
+        "correct": false,
+        "why": "disable only removes it from boot; systemctl start still works."
+      },
+      {
+        "text": "A purged package leaves no configuration file behind",
+        "correct": true,
+        "why": "That is the difference between purge and remove."
+      },
+      {
+        "text": "Masking a service also removes its binary from disk",
+        "correct": false,
+        "why": "The binary stays, and keeps getting updated."
+      }
+    ]
+  },
+  {
+    "id": "ex-ebwy44qb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Which CIS profile is meant to be safe to apply to any server without losing a function?",
+    "choices": [
+      {
+        "text": "Level 2 Server, because it is the stricter of the two",
+        "correct": false,
+        "why": "Stricter is exactly why it may cost a function."
+      },
+      {
+        "text": "Level 1",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The STIG profile, which every guide derives from",
+        "correct": false,
+        "why": "STIGs are a separate, stricter source."
+      },
+      {
+        "text": "The Standard profile of the vendor's own guide",
+        "correct": false,
+        "why": "That is SSG's profile name, not a CIS level."
+      }
+    ]
+  },
+  {
+    "id": "ex-jpxtpza2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why keep the check that proves a baseline separate from the playbook that applies it?",
+    "choices": [
+      {
+        "text": "Because Ansible cannot run shell commands on the target machine",
+        "correct": false,
+        "why": "It can; the reason is what each one can see."
+      },
+      {
+        "text": "Because checks must run as root and playbooks must not",
+        "correct": false,
+        "why": "The playbook runs with become: true as well."
+      },
+      {
+        "text": "A playbook reports what it changed; a check reports what is true",
+        "correct": true,
+        "why": "Right. Drift in a file the playbook does not own is invisible to it."
+      },
+      {
+        "text": "To keep the baseline secret from the administrators who run Ansible",
+        "correct": false,
+        "why": "Nothing about a baseline is secret from the people who apply it."
+      }
+    ]
+  },
+  {
+    "id": "ex-px19m8g5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A scanner evaluates a guide written for Ubuntu 22.04 against a 24.04 server and every rule comes back not applicable. What is the right next step?",
+    "choices": [
+      {
+        "text": "Edit the guide's platform names so the rules run",
+        "correct": false,
+        "why": "The results would look real and mean nothing."
+      },
+      {
+        "text": "Report the server as compliant, since no rule failed",
+        "correct": false,
+        "why": "No rule passed either: nothing was tested."
+      },
+      {
+        "text": "Get content for 24.04, or write the checks yourself",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Downgrade the server to 22.04 so that the guide applies",
+        "correct": false,
+        "why": "Changing the system to fit an audit tool is backwards."
+      }
+    ]
+  },
+  {
+    "id": "ex-wcr8y8k3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What turns a documented exception into a permanent weakness?",
+    "choices": [
+      {
+        "text": "Having no expiry date",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Having been approved by the administrator rather than a manager",
+        "correct": false,
+        "why": "Who approves matters less than whether it is ever reviewed."
+      },
+      {
+        "text": "Being recorded in a Lynis profile with skip-test",
+        "correct": false,
+        "why": "Recording it is good; the reason and expiry are what is missing."
+      },
+      {
+        "text": "Having a compensating control that covers the risk",
+        "correct": false,
+        "why": "That is what makes an exception acceptable."
+      }
+    ]
+  },
+  {
+    "id": "ex-1fpk43cy",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "Put the parts of a CIS recommendation in the order an administrator uses them.",
+    "items": [
+      "read the rationale to decide whether it fits",
+      "check the impact for what may stop working",
+      "run the audit to see whether the machine complies",
+      "apply the remediation"
+    ]
+  },
+  {
+    "id": "ex-w31wdyvz",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "A playbook is run a second time on a machine it has already brought into line. If it is idempotent, how many changes does the recap report?",
+    "value": 0,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-n16hdcmp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Which command shows what Group Policy actually applied on a Windows machine, and from which GPO?",
+    "choices": [
+      {
+        "text": "gpupdate /force",
+        "correct": false,
+        "why": "That asks for a refresh; it does not report."
+      },
+      {
+        "text": "gpresult /r, or /h for the full report",
+        "correct": true,
+        "why": "Right: the resultant set of policy."
+      },
+      {
+        "text": "secedit /export",
+        "correct": false,
+        "why": "That dumps local security settings, without the GPO each came from."
+      },
+      {
+        "text": "reg query on the policy key",
+        "correct": false,
+        "why": "It shows values, not which GPO set them."
+      }
+    ]
+  },
+  {
+    "id": "ex-sg1zg6jk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A domain-joined computer's local policy sets a password length of 8 and the domain baseline sets 14. Which applies?",
+    "choices": [
+      {
+        "text": "14",
+        "correct": true,
+        "why": "Right. Local is processed first and overwritten."
+      },
+      {
+        "text": "8, because the machine's own setting is the most specific",
+        "correct": false,
+        "why": "That is Ansible's rule for host variables, not Group Policy's."
+      },
+      {
+        "text": "Whichever was changed most recently",
+        "correct": false,
+        "why": "Order decides, not dates."
+      },
+      {
+        "text": "Neither: the conflict disables the setting until resolved",
+        "correct": false,
+        "why": "There is no conflict state; the last one processed wins."
+      }
+    ]
+  },
+  {
+    "id": "ex-1sdxscqz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What turns a configuration tool such as Ansible into an audit tool without changing any machine?",
+    "choices": [
+      {
+        "text": "Running it as a user without sudo so it cannot write",
+        "correct": false,
+        "why": "Tasks would fail rather than report a difference."
+      },
+      {
+        "text": "Check mode with a diff",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Removing the handlers from the playbook so nothing restarts",
+        "correct": false,
+        "why": "The tasks would still change files."
+      },
+      {
+        "text": "Pointing it at an empty inventory first",
+        "correct": false,
+        "why": "Then it compares nothing at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-3m0fx28q",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "A playbook manages only the SSH drop-in file. Which drift would its check mode miss? Choose all that apply.",
+    "choices": [
+      {
+        "text": "A new drop-in file that sorts before it",
+        "correct": true,
+        "why": "Not managed, so not compared."
+      },
+      {
+        "text": "A hand edit inside the file it manages",
+        "correct": false,
+        "why": "That is exactly what it reports."
+      },
+      {
+        "text": "A package installed by hand",
+        "correct": true,
+        "why": "No task looks at packages."
+      },
+      {
+        "text": "A second account with user id 0",
+        "correct": true,
+        "why": "No task looks at accounts."
+      }
+    ]
+  },
+  {
+    "id": "ex-6qyh88hf",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put in order what happens to a new baseline GPO before a machine applies it.",
+    "items": [
+      "the settings are written into a GPO",
+      "the GPO is linked to an OU",
+      "the machine refreshes in the background",
+      "gpresult shows the GPO as applied"
+    ]
+  },
+  {
+    "id": "ex-qhw7ywxq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "In an Ansible inventory, where does a value that only one machine should have belong?",
+    "choices": [
+      {
+        "text": "In group_vars/all.yml, with a comment naming the machine",
+        "correct": false,
+        "why": "all.yml applies to every machine."
+      },
+      {
+        "text": "In host_vars/<machine>.yml",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "In the playbook, inside an if around the task",
+        "correct": false,
+        "why": "That hides a declared difference inside the logic."
+      },
+      {
+        "text": "In the systemd unit that runs the playbook on a timer",
+        "correct": false,
+        "why": "The unit only runs the playbook; it holds no values."
+      }
+    ]
+  },
+  {
+    "id": "ex-6whqrmag",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Why is MAC filtering a convenience control rather than an access control?",
+    "choices": [
+      {
+        "text": "Because MAC addresses change every time a device reboots",
+        "correct": false,
+        "why": "They stay fixed unless somebody changes them."
+      },
+      {
+        "text": "The device writes its own address",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because switches can store only a few addresses per port",
+        "correct": false,
+        "why": "Capacity is not the weakness."
+      },
+      {
+        "text": "Because MAC filtering slows every frame down noticeably",
+        "correct": false,
+        "why": "It is cheap, which is its merit."
+      }
+    ]
+  },
+  {
+    "id": "ex-am8ydkxk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In 802.1X, which party decides whether a device may join?",
+    "choices": [
+      {
+        "text": "The supplicant, after checking the server's certificate",
+        "correct": false,
+        "why": "It checks the server; it does not decide its own access."
+      },
+      {
+        "text": "The switch port, by comparing the MAC with its list",
+        "correct": false,
+        "why": "That is MAC filtering, not 802.1X."
+      },
+      {
+        "text": "The authentication server, behind the switch",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The DHCP server, by giving or withholding an address",
+        "correct": false,
+        "why": "DHCP comes after the port opens."
+      }
+    ]
+  },
+  {
+    "id": "ex-dw9kwa56",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What makes EAP-TLS stronger than PEAP with a password?",
+    "choices": [
+      {
+        "text": "No password exists to guess or phish",
+        "correct": true,
+        "why": "Right: a key the network signed."
+      },
+      {
+        "text": "It encrypts the traffic after login, which PEAP does not",
+        "correct": false,
+        "why": "Neither encrypts wired traffic after login."
+      },
+      {
+        "text": "It runs without any certificate authority",
+        "correct": false,
+        "why": "It needs one more than PEAP does."
+      },
+      {
+        "text": "It lets the switch skip asking the RADIUS server",
+        "correct": false,
+        "why": "The server still decides."
+      }
+    ]
+  },
+  {
+    "id": "ex-2pw0kxmd",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which are sound outcomes for devices that fail or skip 802.1X? Choose all that apply.",
+    "choices": [
+      {
+        "text": "A guest VLAN with internet and no internal route",
+        "correct": true,
+        "why": "For devices that do not speak 802.1X."
+      },
+      {
+        "text": "Nothing beyond the login conversation",
+        "correct": true,
+        "why": "The safe default."
+      },
+      {
+        "text": "The staff VLAN, logged for later review",
+        "correct": false,
+        "why": "Logging is not restricting."
+      },
+      {
+        "text": "A printers-only segment for a MAC-authenticated printer",
+        "correct": true,
+        "why": "Limited to what a printer needs."
+      }
+    ]
+  },
+  {
+    "id": "ex-9288ss5z",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "Put the life of an 802.1X port in order.",
+    "items": [
+      "unauthorised: only EAPOL passes",
+      "the device completes EAP with the server",
+      "authorised: the device's traffic flows",
+      "logoff: the port closes again"
+    ]
+  },
+  {
+    "id": "ex-7py26523",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A NAC server admits a known laptop but places it in a remediation network. What is the most likely reason?",
+    "choices": [
+      {
+        "text": "Its certificate is signed by an unknown authority",
+        "correct": false,
+        "why": "Then it would not have been admitted as known."
+      },
+      {
+        "text": "Its posture failed, for example missing updates",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Its MAC address appeared on two ports",
+        "correct": false,
+        "why": "That is a switch alert, not a posture result."
+      },
+      {
+        "text": "It logged in during a guest's session on the same socket",
+        "correct": false,
+        "why": "Sessions on a port do not overlap like that."
+      }
+    ]
+  },
+  {
+    "id": "ex-3hfvm2dj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "On Ubuntu, what makes an nftables rule set survive a reboot?",
+    "choices": [
+      {
+        "text": "Loading it with nft -f once",
+        "correct": false,
+        "why": "That changes only the running kernel."
+      },
+      {
+        "text": "/etc/nftables.conf with nftables.service enabled",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Saving it with nft -c before the reboot",
+        "correct": false,
+        "why": "-c only checks."
+      },
+      {
+        "text": "Adding the counter keyword to every rule",
+        "correct": false,
+        "why": "Counters count; they do not persist anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-n7zzafzr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which answer suits a port on an address the internet can reach, and why?",
+    "choices": [
+      {
+        "text": "Drop: a scan is slower and learns less",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Reject: the scanner gives up and never comes back",
+        "correct": false,
+        "why": "A refusal is an answer, and scanners return."
+      },
+      {
+        "text": "Drop: it makes the machine invisible on every other port too",
+        "correct": false,
+        "why": "A host that answers on one port is a host."
+      },
+      {
+        "text": "Reject: it uses less bandwidth than silence",
+        "correct": false,
+        "why": "Silence sends nothing at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-d1n9b51b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why keep both the purge of unneeded services and a default-deny firewall?",
+    "choices": [
+      {
+        "text": "Because a firewall cannot block ports below 1024",
+        "correct": false,
+        "why": "It blocks any port."
+      },
+      {
+        "text": "Each covers what the other misses",
+        "correct": true,
+        "why": "Right: today's flaws and tomorrow's listeners."
+      },
+      {
+        "text": "Because CIS requires two controls for every risk",
+        "correct": false,
+        "why": "No such rule; the reason is coverage."
+      },
+      {
+        "text": "Because a purged service comes back after every reboot",
+        "correct": false,
+        "why": "Purged is gone; the lab's up resets it, a real server does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-px6ap32k",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which USB risks does a device allow-list that checks interfaces address? Choose all that apply.",
+    "choices": [
+      {
+        "text": "An unknown stick from the car park",
+        "correct": true,
+        "why": "Not on the list."
+      },
+      {
+        "text": "A stick that also presents a keyboard",
+        "correct": true,
+        "why": "Interfaces must match."
+      },
+      {
+        "text": "Malware on an allowed stick",
+        "correct": false,
+        "why": "The stick is allowed; its files are another control's job."
+      },
+      {
+        "text": "A device built to copy an allowed one's ids",
+        "correct": false,
+        "why": "Ids are self-reported."
+      }
+    ]
+  },
+  {
+    "id": "ex-dq6vjgpj",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "hard",
+    "prompt": "Put the rules of the portal's input chain in the order they appear.",
+    "items": [
+      "accept the loopback",
+      "accept established and related",
+      "drop invalid",
+      "accept HTTP from anybody",
+      "accept SSH from admin and jump"
+    ]
+  },
+  {
+    "id": "ex-fpwb3daf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What should be open before you load a new firewall on a remote server?",
+    "choices": [
+      {
+        "text": "A browser tab on the server's web page",
+        "correct": false,
+        "why": "That does not get you back in."
+      },
+      {
+        "text": "Every port, until the rules are tested",
+        "correct": false,
+        "why": "That is no firewall at all."
+      },
+      {
+        "text": "A second session, or a console",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A ticket with the hosting provider",
+        "correct": false,
+        "why": "Useful after a lockout, not instead of avoiding one."
+      }
+    ]
+  },
+  {
+    "id": "ex-yqyrvke0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Which command lists every regular file on the root file system that any user may write?",
+    "choices": [
+      {
+        "text": "find / -xdev -type f -perm -4000",
+        "correct": false,
+        "why": "That finds set-user-id files."
+      },
+      {
+        "text": "find / -xdev -type f -perm -0002",
+        "correct": true,
+        "why": "Right: the other-write bit."
+      },
+      {
+        "text": "ls -l / | grep rwx",
+        "correct": false,
+        "why": "It lists one directory, and rwx matches owners too."
+      },
+      {
+        "text": "getfacl -R / | grep other",
+        "correct": false,
+        "why": "It prints every other entry, writable or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-jaw046t8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why can `chmod g-w` on a file with an ACL remove write access from a named user?",
+    "choices": [
+      {
+        "text": "On an ACL file the group bits are the mask",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because chmod deletes named entries it does not recognise",
+        "correct": false,
+        "why": "The entries stay; the mask caps them."
+      },
+      {
+        "text": "Because named users are always members of the owning group",
+        "correct": false,
+        "why": "They need not be."
+      },
+      {
+        "text": "Because g-w is applied to every group on the system",
+        "correct": false,
+        "why": "It changes one file's bits."
+      }
+    ]
+  },
+  {
+    "id": "ex-8en10qaq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does a default ACL on a directory grant on the directory itself?",
+    "choices": [
+      {
+        "text": "The same entries it gives new files",
+        "correct": false,
+        "why": "It is a template, not access."
+      },
+      {
+        "text": "Read to everybody named in it",
+        "correct": false,
+        "why": "It grants nothing on the directory."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Full control to the directory's owner",
+        "correct": false,
+        "why": "The owner's access comes from the bits."
+      }
+    ]
+  },
+  {
+    "id": "ex-fv3dwfxx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Where does most of an NTFS file system's access usually come from?",
+    "choices": [
+      {
+        "text": "From entries written on each file one by one",
+        "correct": false,
+        "why": "Most are not written on the file."
+      },
+      {
+        "text": "From inheritance down from parent folders",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "From the nine permission bits underneath",
+        "correct": false,
+        "why": "NTFS has no bits underneath."
+      },
+      {
+        "text": "From the user's group membership alone, with no lists",
+        "correct": false,
+        "why": "Every object has a list."
+      }
+    ]
+  },
+  {
+    "id": "ex-709td1h8",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "Which files must not be writable by accounts with less privilege than the program that uses them? Choose all that apply.",
+    "choices": [
+      {
+        "text": "A script in /etc/cron.d run as root",
+        "correct": true,
+        "why": "Root runs whatever it says."
+      },
+      {
+        "text": "A systemd unit file of a root service",
+        "correct": true,
+        "why": "It decides what root starts."
+      },
+      {
+        "text": "A client's tax document read by the auditor",
+        "correct": false,
+        "why": "Confidential, but nothing runs it with privilege."
+      },
+      {
+        "text": "The directory holding /etc/sudoers.d",
+        "correct": true,
+        "why": "A new file there changes sudo."
+      }
+    ]
+  },
+  {
+    "id": "ex-zdnh33tr",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put the questions Linux asks of a POSIX ACL in order.",
+    "items": [
+      "is this the owner?",
+      "is there an entry with this user's name?",
+      "does one of this user's groups appear?",
+      "otherwise, what does other allow?"
+    ]
+  },
+  {
+    "id": "ex-f1asczyj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A file differs from a known bad one in a single byte. Which signature can still match it?",
+    "choices": [
+      {
+        "text": "A SHA-256 hash signature of the known file",
+        "correct": false,
+        "why": "Any byte changes the hash."
+      },
+      {
+        "text": "A content signature for bytes both still share",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "An MD5 hash signature, because MD5 is weaker",
+        "correct": false,
+        "why": "Weak against collisions, still exact to the byte."
+      },
+      {
+        "text": "None: one byte makes it a different file to any scanner",
+        "correct": false,
+        "why": "Only to a hash."
+      }
+    ]
+  },
+  {
+    "id": "ex-6wvhgeq0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "After changing the mail gateway's policy, how do you check its scanner still works, without real malware?",
+    "choices": [
+      {
+        "text": "Send it the EICAR test file",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Wait for the next real detection in the logs",
+        "correct": false,
+        "why": "That could take weeks and proves nothing now."
+      },
+      {
+        "text": "Read the policy file again carefully",
+        "correct": false,
+        "why": "A claim until a file has been caught."
+      },
+      {
+        "text": "Turn off quarantine so detections are visible",
+        "correct": false,
+        "why": "That weakens it."
+      }
+    ]
+  },
+  {
+    "id": "ex-zcwhnve8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why is deleting on detection worse than quarantine when heuristics are enabled?",
+    "choices": [
+      {
+        "text": "Because deletion is slower than moving a file",
+        "correct": false,
+        "why": "Speed is not the issue."
+      },
+      {
+        "text": "Because quarantined files are scanned again until clean",
+        "correct": false,
+        "why": "They are held, not cleaned."
+      },
+      {
+        "text": "Some detections are wrong, and deletion cannot be undone",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because heuristics refuse to run when deletion is set",
+        "correct": false,
+        "why": "They run either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-f8q2qgav",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these does a file scanner miss by design? Choose all that apply.",
+    "choices": [
+      {
+        "text": "A file nobody has described yet",
+        "correct": true,
+        "why": "No signature exists."
+      },
+      {
+        "text": "Commands run with tools already installed",
+        "correct": true,
+        "why": "No bad file."
+      },
+      {
+        "text": "An exact copy of a file on its hash list",
+        "correct": false,
+        "why": "That is what it catches best."
+      },
+      {
+        "text": "An intruder using a stolen password",
+        "correct": true,
+        "why": "Nothing malicious to scan."
+      }
+    ]
+  },
+  {
+    "id": "ex-afgztja9",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put the parts of a YARA rule in the order they are written.",
+    "items": [
+      "rule and its name",
+      "strings: the patterns",
+      "condition: how they combine"
+    ]
+  },
+  {
+    "id": "ex-yhpfkh53",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Which monitoring check catches a scanner that quietly stopped protecting, while still reporting clean?",
+    "choices": [
+      {
+        "text": "Whether the scanner process is running",
+        "correct": false,
+        "why": "It runs, with old signatures."
+      },
+      {
+        "text": "The age of the signature database",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The number of files scanned last night",
+        "correct": false,
+        "why": "It scans as many as ever."
+      },
+      {
+        "text": "The size of the quarantine directory",
+        "correct": false,
+        "why": "An empty quarantine looks like good news."
+      }
+    ]
+  },
+  {
+    "id": "ex-hv3g4cyr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A script that never writes to disk runs on a server. Which tool has a chance of noticing it?",
+    "choices": [
+      {
+        "text": "An antivirus that scans every file written to the disk",
+        "correct": false,
+        "why": "Nothing is written, so there is nothing to scan."
+      },
+      {
+        "text": "An EDR watching processes",
+        "correct": true,
+        "why": "Right: it judges what runs, not what is stored."
+      },
+      {
+        "text": "A vulnerability scanner run once a week against the server",
+        "correct": false,
+        "why": "It reports missing patches, not what is running now."
+      },
+      {
+        "text": "The file integrity checker, comparing hashes of system files",
+        "correct": false,
+        "why": "No file changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-zt5x8vze",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which single field of process telemetry most often turns an ordinary program into an alert?",
+    "choices": [
+      {
+        "text": "Its parent chain",
+        "correct": true,
+        "why": "Right: bash is normal; bash under the web server is not."
+      },
+      {
+        "text": "The size of the program file on disk",
+        "correct": false,
+        "why": "Size says nothing about why it ran."
+      },
+      {
+        "text": "The process id the kernel gave it",
+        "correct": false,
+        "why": "Ids are handed out in order and mean nothing alone."
+      },
+      {
+        "text": "How much memory it used in its first second of life",
+        "correct": false,
+        "why": "A resource figure, not a behaviour."
+      }
+    ]
+  },
+  {
+    "id": "ex-52pcx79k",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Order the response to a suspicious process on a server.",
+    "items": [
+      "record its program hash and environment",
+      "stop the process",
+      "isolate the machine, leaving the responders' access",
+      "rebuild or restore the machine"
+    ]
+  },
+  {
+    "id": "ex-fv5es8sf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A sensor polls the process list every second. Which activity is it most likely to miss?",
+    "choices": [
+      {
+        "text": "A reverse shell that stays connected for an hour",
+        "correct": false,
+        "why": "It lives across thousands of looks."
+      },
+      {
+        "text": "A web server worker that runs all day",
+        "correct": false,
+        "why": "Long-lived processes are the easy case."
+      },
+      {
+        "text": "A one-line command that copies a file and exits",
+        "correct": true,
+        "why": "Right: it can start and end between two looks."
+      },
+      {
+        "text": "A cron job that sleeps for five minutes before working",
+        "correct": false,
+        "why": "Sleeping keeps it alive across many looks."
+      }
+    ]
+  },
+  {
+    "id": "ex-9pbag36n",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does tamper protection in an EDR product defend against?",
+    "choices": [
+      {
+        "text": "Malware hiding inside compressed archives",
+        "correct": false,
+        "why": "That is the scanner's business."
+      },
+      {
+        "text": "Somebody with root stopping or removing the agent",
+        "correct": true,
+        "why": "Right: and an agent that falls silent is itself an alert."
+      },
+      {
+        "text": "Users changing their own passwords too often",
+        "correct": false,
+        "why": "Nothing to do with the agent."
+      },
+      {
+        "text": "Network packets altered on their way to the console",
+        "correct": false,
+        "why": "Transport encryption covers that, not tamper protection."
+      }
+    ]
+  },
+  {
+    "id": "ex-fvgrsypg",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "On Linux, small programs that the kernel verifies and then runs at chosen points, used by modern sensors, are called ___.",
+    "blanks": [
+      {
+        "accept": [
+          "eBPF",
+          "BPF"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0qnkw3dt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Data being pasted into a browser from an open spreadsheet is in which state, and where can it be watched?",
+    "choices": [
+      {
+        "text": "At rest, by a scan of the file server",
+        "correct": false,
+        "why": "The file server never sees a paste."
+      },
+      {
+        "text": "In use, on the endpoint",
+        "correct": true,
+        "why": "Right: only an agent there sees the action."
+      },
+      {
+        "text": "In motion, at the network edge, before it is encrypted",
+        "correct": false,
+        "why": "By the time it crosses the edge it is encrypted."
+      },
+      {
+        "text": "At rest, by the mail gateway reading attachments",
+        "correct": false,
+        "why": "No mail is involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-cfa1387a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A scanner validates CPF check digits and still reports an invoice number. What is the most useful next step?",
+    "choices": [
+      {
+        "text": "Remove the check digits from the rule, since they failed",
+        "correct": false,
+        "why": "That would multiply the false positives."
+      },
+      {
+        "text": "Report the invoice number to the ANPD as a leaked CPF",
+        "correct": false,
+        "why": "It is not anybody's CPF in that file."
+      },
+      {
+        "text": "Add context or a count threshold to the rule",
+        "correct": true,
+        "why": "Right: those reduce what the arithmetic cannot."
+      },
+      {
+        "text": "Delete the invoice file so the alert stops",
+        "correct": false,
+        "why": "The invoice is legitimate data the firm needs."
+      }
+    ]
+  },
+  {
+    "id": "ex-qd0674e4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Why should a DLP tool's alerts mask the numbers they found?",
+    "choices": [
+      {
+        "text": "Otherwise every alert copies the personal data",
+        "correct": true,
+        "why": "Right: into logs, tickets and mail."
+      },
+      {
+        "text": "Because full numbers make the alerts too long to read",
+        "correct": false,
+        "why": "Length is not the reason."
+      },
+      {
+        "text": "Because masked numbers are easier to search for later",
+        "correct": false,
+        "why": "They are harder to search, on purpose."
+      },
+      {
+        "text": "Because the check digits are only valid when masked",
+        "correct": false,
+        "why": "Masking does not change validity."
+      }
+    ]
+  },
+  {
+    "id": "ex-wjyarzyw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A new DLP rule is about to go live. What should it do in its first weeks?",
+    "choices": [
+      {
+        "text": "Block at once, so that nothing leaks while it is tested",
+        "correct": false,
+        "why": "It would stop legitimate work and be switched off."
+      },
+      {
+        "text": "Log what it would have blocked, for somebody to read",
+        "correct": true,
+        "why": "Right: monitor first, then tune, then block."
+      },
+      {
+        "text": "Stay off until a person has reviewed every file on the shares",
+        "correct": false,
+        "why": "That review would never end."
+      },
+      {
+        "text": "Run only at night, when nobody is working",
+        "correct": false,
+        "why": "It would miss everything that happens during the day."
+      }
+    ]
+  },
+  {
+    "id": "ex-7fst4c2c",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "A card number reads 9999 8797 3091 141? with the last digit missing. Using Luhn's rule, what must the last digit be?",
+    "value": 0,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-mffwzv8e",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these are LGPD principles the lesson ties to DLP? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Necessity",
+        "correct": true,
+        "why": "Hold only what the purpose needs."
+      },
+      {
+        "text": "Security",
+        "correct": true,
+        "why": "Technical and administrative measures to protect the data."
+      },
+      {
+        "text": "Anonymity of the controller",
+        "correct": false,
+        "why": "No such principle exists."
+      },
+      {
+        "text": "Free circulation of data between companies",
+        "correct": false,
+        "why": "Not a principle of the law."
+      }
+    ]
+  },
+  {
+    "id": "ex-14rkeyyb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Which traffic does a host firewall see that a firewall between segments never does?",
+    "choices": [
+      {
+        "text": "A connection from a neighbour on the same switch",
+        "correct": true,
+        "why": "Right: it crosses no network device."
+      },
+      {
+        "text": "Traffic from the internet to the firm's public web site",
+        "correct": false,
+        "why": "That crosses the edge firewall."
+      },
+      {
+        "text": "Encrypted traffic to cloud services",
+        "correct": false,
+        "why": "It also crosses the edge."
+      },
+      {
+        "text": "DNS queries to the internet's root servers",
+        "correct": false,
+        "why": "Those go through the edge too."
+      }
+    ]
+  },
+  {
+    "id": "ex-mtm49yza",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why is outbound filtering worth more on a server than on a workstation?",
+    "choices": [
+      {
+        "text": "Servers are attacked less often from inside",
+        "correct": false,
+        "why": "That is not the argument."
+      },
+      {
+        "text": "Its few destinations can be listed, so anything else is a signal",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Workstations have no outbound traffic worth filtering",
+        "correct": false,
+        "why": "They have plenty; it is just unpredictable."
+      },
+      {
+        "text": "Servers have no inbound rules to rely on",
+        "correct": false,
+        "why": "They do; lesson 5 wrote some."
+      }
+    ]
+  },
+  {
+    "id": "ex-qfh67pdj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A drop-in sets IPAddressDeny=any for a service, and systemctl show prints it. What still has to be done before relying on it?",
+    "choices": [
+      {
+        "text": "Nothing: systemctl show proves the setting is enforced",
+        "correct": false,
+        "why": "This lesson showed it printed and did nothing."
+      },
+      {
+        "text": "Reboot the machine so the kernel reads it",
+        "correct": false,
+        "why": "Restarting the service is what applies it, where it applies at all."
+      },
+      {
+        "text": "See a connection from that service refused",
+        "correct": true,
+        "why": "Right: a setting is a claim until a client has been refused."
+      },
+      {
+        "text": "Add the same rule to the network firewall",
+        "correct": false,
+        "why": "A different control, not a test of this one."
+      }
+    ]
+  },
+  {
+    "id": "ex-7r0mnk4g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which nftables feature shows the rule that decided a particular packet's fate?",
+    "choices": [
+      {
+        "text": "A counter on every rule",
+        "correct": false,
+        "why": "Counters total packets; they do not follow one."
+      },
+      {
+        "text": "meta nftrace with nft monitor trace",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A comment on the rule",
+        "correct": false,
+        "why": "Comments explain rules; they record nothing."
+      },
+      {
+        "text": "nft list ruleset -a",
+        "correct": false,
+        "why": "That lists rules with handles, not verdicts."
+      }
+    ]
+  },
+  {
+    "id": "ex-vk53ncw3",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each way of naming a program in a rule to where it is written.",
+    "pairs": [
+      {
+        "left": "by account",
+        "right": "meta skuid in nftables"
+      },
+      {
+        "left": "by control group",
+        "right": "socket cgroupv2 in nftables"
+      },
+      {
+        "left": "by executable path",
+        "right": "-Program in a Windows firewall rule"
+      }
+    ],
+    "right_distractors": [
+      "ct state in nftables"
+    ]
+  },
+  {
+    "id": "ex-nf8t0gfb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What does Windows Defender Firewall do by default with outbound traffic?",
+    "choices": [
+      {
+        "text": "Blocks it unless a rule allows it",
+        "correct": false,
+        "why": "That is the inbound default."
+      },
+      {
+        "text": "Allows it unless a rule blocks it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Asks the user for each new program",
+        "correct": false,
+        "why": "The question is about listening for inbound connections."
+      },
+      {
+        "text": "Allows it only on the Domain profile",
+        "correct": false,
+        "why": "The defaults are the same in all three profiles."
+      }
+    ]
+  },
+  {
+    "id": "ex-f9cbyxg8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A rule flags every login outside office hours. Should it block or alert?",
+    "choices": [
+      {
+        "text": "Block: anything outside office hours is an intrusion",
+        "correct": false,
+        "why": "Administrators fix things at night; the rule is often wrong."
+      },
+      {
+        "text": "Alert: a late login by a real employee is ordinary",
+        "correct": true,
+        "why": "Right: only rules that are never wrong earn the block."
+      },
+      {
+        "text": "Neither: time of day is not telemetry",
+        "correct": false,
+        "why": "Login times are exactly the kind of thing logged."
+      },
+      {
+        "text": "Block only on weekends, when nobody works",
+        "correct": false,
+        "why": "Somebody always works on a weekend, sooner or later."
+      }
+    ]
+  },
+  {
+    "id": "ex-6hm8yrft",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "After changing a fail2ban jail, what is the one test that proves it works?",
+    "choices": [
+      {
+        "text": "Get banned on purpose from a test machine and see the refusal",
+        "correct": true,
+        "why": "Right: the ban is real only if the firewall refuses."
+      },
+      {
+        "text": "Run fail2ban-client status and read the jail's name",
+        "correct": false,
+        "why": "Status lists bans whose action may have failed."
+      },
+      {
+        "text": "Restart the server and check that fail2ban starts",
+        "correct": false,
+        "why": "Starting proves nothing about banning."
+      },
+      {
+        "text": "Read jail.conf to see the defaults",
+        "correct": false,
+        "why": "Reading the configuration tests nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-hajztxgk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What makes a file integrity database worth trusting?",
+    "choices": [
+      {
+        "text": "Being rebuilt every night so it is always current",
+        "correct": false,
+        "why": "A nightly rebuild approves every change unread."
+      },
+      {
+        "text": "Built on a known-good machine, approved by a person, kept off it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Covering every file on the disk, including logs",
+        "correct": false,
+        "why": "Logs change all the time; the report becomes noise."
+      },
+      {
+        "text": "Using the strongest hash available",
+        "correct": false,
+        "why": "A strong hash of an unapproved state proves nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-evqrz6gv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "What can mandatory access control stop that file permissions cannot?",
+    "choices": [
+      {
+        "text": "A user reading another user's home directory",
+        "correct": false,
+        "why": "Permissions already stop that."
+      },
+      {
+        "text": "A program using rights its account has but its job does not need",
+        "correct": true,
+        "why": "Right: confinement is per program."
+      },
+      {
+        "text": "Root changing the owner of a file",
+        "correct": false,
+        "why": "Ownership is a permissions matter."
+      },
+      {
+        "text": "A disk failing and losing files",
+        "correct": false,
+        "why": "No access control prevents hardware failure."
+      }
+    ]
+  },
+  {
+    "id": "ex-84ak5rkj",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "A jail has maxretry = 4. How many failed logins from one address, within findtime, lead to a ban?",
+    "value": 4,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-n4xg5m7r",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each Windows feature to the idea from this lesson it corresponds to.",
+    "pairs": [
+      {
+        "left": "account lockout",
+        "right": "banning after repeated failures"
+      },
+      {
+        "left": "attack surface reduction rules in audit mode",
+        "right": "monitor before you block"
+      },
+      {
+        "left": "controlled folder access",
+        "right": "confining which program may write"
+      }
+    ],
+    "right_distractors": [
+      "approving an integrity database"
+    ]
+  },
+  {
+    "id": "ex-601j2m6z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The portal is the firm's own program, but it reads requests from strangers. Which layer of isolation fits it?",
+    "choices": [
+      {
+        "text": "A confined process, built by systemd",
+        "correct": true,
+        "why": "Right: limit what a flaw in it reaches."
+      },
+      {
+        "text": "A separate physical computer for each request",
+        "correct": false,
+        "why": "Absurd cost for a trusted program."
+      },
+      {
+        "text": "None: trusted programs need no walls",
+        "correct": false,
+        "why": "Trusted programs still have flaws."
+      },
+      {
+        "text": "A disposable machine reset after every page served",
+        "correct": false,
+        "why": "Far more than the risk needs."
+      }
+    ]
+  },
+  {
+    "id": "ex-8f8g8sc0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What does PrivateNetwork=yes give a service?",
+    "choices": [
+      {
+        "text": "An encrypted connection to every other machine",
+        "correct": false,
+        "why": "It gives no connection at all."
+      },
+      {
+        "text": "A network of its own with only loopback",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A separate address on the same segment",
+        "correct": false,
+        "why": "It is not on the segment at all."
+      },
+      {
+        "text": "Access to the network only during business hours",
+        "correct": false,
+        "why": "No such option."
+      }
+    ]
+  },
+  {
+    "id": "ex-0t8v0x6q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A sandboxed program's attempt to create a file in /etc is answered with EROFS. Which wall produced that answer?",
+    "choices": [
+      {
+        "text": "ProtectHome",
+        "correct": false,
+        "why": "That hides homes; it does not touch /etc."
+      },
+      {
+        "text": "PrivateTmp",
+        "correct": false,
+        "why": "That only replaces /tmp."
+      },
+      {
+        "text": "ProtectSystem=strict",
+        "correct": true,
+        "why": "Right: the whole file system read-only."
+      },
+      {
+        "text": "NoNewPrivileges",
+        "correct": false,
+        "why": "That stops gaining rights, and answers differently."
+      }
+    ]
+  },
+  {
+    "id": "ex-jgcdw3bp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Why is a namespace sandbox not enough for a file that may have been built to escape?",
+    "choices": [
+      {
+        "text": "Because namespaces only hide files, not the network",
+        "correct": false,
+        "why": "Network namespaces exist and were used here."
+      },
+      {
+        "text": "All its walls rest on the shared kernel",
+        "correct": true,
+        "why": "Right: one kernel flaw crosses all of them."
+      },
+      {
+        "text": "Because strace can be used to leave it",
+        "correct": false,
+        "why": "strace observes; it opens no door."
+      },
+      {
+        "text": "Because sandboxes expire after an hour",
+        "correct": false,
+        "why": "They last as long as the program."
+      }
+    ]
+  },
+  {
+    "id": "ex-ary3q9kj",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "The command that scores a unit's sandboxing from 0 to 10 is systemd-analyze ___.",
+    "blanks": [
+      {
+        "accept": [
+          "security"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ts11dqm8",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Order the places to open an unknown file, from most preferred to least, as the lesson ranks them.",
+    "items": [
+      "a service that analyses it on another computer",
+      "a disposable machine",
+      "a confined process on this machine"
+    ]
+  },
+  {
+    "id": "ex-r2tgqera",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What makes a touch on a honeypot a finding without any further analysis?",
+    "choices": [
+      {
+        "text": "The honeypot recognises the attack tool used",
+        "correct": false,
+        "why": "It recognises nothing."
+      },
+      {
+        "text": "It has no legitimate users",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It sits outside the firewall, where only attackers are",
+        "correct": false,
+        "why": "It sits inside, among the real machines."
+      },
+      {
+        "text": "Its logs are signed and cannot be forged",
+        "correct": false,
+        "why": "Nothing in the lesson signs logs."
+      }
+    ]
+  },
+  {
+    "id": "ex-4rrrj76v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A fake credential planted in a file is tried months later from an address abroad. What has the honeytoken shown?",
+    "choices": [
+      {
+        "text": "That the planted file is still on the server",
+        "correct": false,
+        "why": "It shows nothing about where the file is now."
+      },
+      {
+        "text": "That the server's firewall is misconfigured",
+        "correct": false,
+        "why": "The attempt may never have touched that server."
+      },
+      {
+        "text": "That a copy of the file left the firm and is being used",
+        "correct": true,
+        "why": "Right: it fires wherever the stolen data is used."
+      },
+      {
+        "text": "That the password was too weak",
+        "correct": false,
+        "why": "It opens nothing; strength is irrelevant."
+      }
+    ]
+  },
+  {
+    "id": "ex-z5tea737",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Where is a honeypot least useful for a firm that wants to detect intrusions?",
+    "choices": [
+      {
+        "text": "Among the servers, named like them",
+        "correct": false,
+        "why": "That is where it belongs."
+      },
+      {
+        "text": "On an idle workstation in the office",
+        "correct": false,
+        "why": "A good place: intrusions spread from workstations."
+      },
+      {
+        "text": "On the internet",
+        "correct": true,
+        "why": "Right: noise from everyone, signal about nobody."
+      },
+      {
+        "text": "Inside a backup directory, as a credentials file",
+        "correct": false,
+        "why": "That is a honeytoken, well placed."
+      }
+    ]
+  },
+  {
+    "id": "ex-aq047mqb",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these are safe as bait? Choose all that apply.",
+    "choices": [
+      {
+        "text": "A listener that accepts a connection and closes it",
+        "correct": true,
+        "why": "Nothing behind it."
+      },
+      {
+        "text": "A real database with a default password",
+        "correct": false,
+        "why": "That is a way in."
+      },
+      {
+        "text": "A username that exists in no system",
+        "correct": true,
+        "why": "Trying it opens nothing."
+      },
+      {
+        "text": "A former employee's account left enabled",
+        "correct": false,
+        "why": "A real account that still works."
+      }
+    ]
+  },
+  {
+    "id": "ex-p4h73k02",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A honeypot that records a touch and offers nothing to work with is called ___-interaction.",
+    "blanks": [
+      {
+        "accept": [
+          "low"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-001c6j2t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What is the one common false positive of an internal honeypot?",
+    "choices": [
+      {
+        "text": "An authorised scan, such as an inventory",
+        "correct": true,
+        "why": "Right: known beforehand, closed with a note."
+      },
+      {
+        "text": "Users browsing the web during lunch",
+        "correct": false,
+        "why": "Browsing never reaches the honeypot."
+      },
+      {
+        "text": "Backups copying files at night",
+        "correct": false,
+        "why": "Backups do not connect to bait ports."
+      },
+      {
+        "text": "The honeypot's own log rotation",
+        "correct": false,
+        "why": "That raises no touch."
+      }
+    ]
+  },
+  {
+    "id": "ex-3xb4yx1f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Why is a company's own resolver a good place for a control?",
+    "choices": [
+      {
+        "text": "Because it encrypts every question the machines send",
+        "correct": false,
+        "why": "A resolver does not encrypt by itself; that is a separate choice."
+      },
+      {
+        "text": "Nearly every connection passes through it first",
+        "correct": true,
+        "why": "Right: a name is looked up before the connection starts."
+      },
+      {
+        "text": "Because it can inspect the files that machines download",
+        "correct": false,
+        "why": "It sees names, not contents."
+      },
+      {
+        "text": "Because no program can work without asking it",
+        "correct": false,
+        "why": "Programs can ask another resolver or use an address directly."
+      }
+    ]
+  },
+  {
+    "id": "ex-e472d9cb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A policy zone can answer a listed name with NXDOMAIN or with a sinkhole address. What does the sinkhole add?",
+    "choices": [
+      {
+        "text": "Protection for machines that use another resolver",
+        "correct": false,
+        "why": "Those never receive the sinkhole address."
+      },
+      {
+        "text": "A faster failure for the program that asked",
+        "correct": false,
+        "why": "NXDOMAIN fails faster; the program does not even connect."
+      },
+      {
+        "text": "A record of what the program tried to do next, such as the path it requested",
+        "correct": true,
+        "why": "Right: the connection lands on a machine you own."
+      },
+      {
+        "text": "The removal of the program that made the request",
+        "correct": false,
+        "why": "A sinkhole cleans nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-sb5wwmqj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A reputation feed starts blocking a domain the firm depends on. What does the lesson do?",
+    "choices": [
+      {
+        "text": "Remove the feed until its publisher corrects the list",
+        "correct": false,
+        "why": "That throws away every correct entry for one wrong one."
+      },
+      {
+        "text": "Edit the feed's zone file to delete the line",
+        "correct": false,
+        "why": "The next transfer brings the line back."
+      },
+      {
+        "text": "Point the firm's machines at a resolver without the feed",
+        "correct": false,
+        "why": "That removes the control from everybody."
+      },
+      {
+        "text": "Add a passthru entry in an allowlist zone read first",
+        "correct": true,
+        "why": "Right, with a reason, an owner and a review date."
+      }
+    ]
+  },
+  {
+    "id": "ex-yjzbzk8z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Browsers on managed laptops start using DNS over HTTPS and the firm's resolver log goes quiet. Which control fits?",
+    "choices": [
+      {
+        "text": "The browsers' enterprise policy that switches DoH off",
+        "correct": true,
+        "why": "Right: it is configuration, applied centrally."
+      },
+      {
+        "text": "A switch rule dropping every packet to port 53 except the resolver's",
+        "correct": false,
+        "why": "DoH does not use port 53."
+      },
+      {
+        "text": "A longer list in the policy zone",
+        "correct": false,
+        "why": "The questions never reach the zone."
+      },
+      {
+        "text": "Blocking port 853 at the edge",
+        "correct": false,
+        "why": "853 is DNS over TLS; DoH travels on 443."
+      }
+    ]
+  },
+  {
+    "id": "ex-yg6d32de",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each kind of feed with how it reaches the resolver.",
+    "pairs": [
+      {
+        "left": "an RPZ feed",
+        "right": "a zone transfer from the publisher's server"
+      },
+      {
+        "left": "a hosts-style list",
+        "right": "a script that turns it into a zone file"
+      },
+      {
+        "left": "a protective public resolver",
+        "right": "the forwarder points at it"
+      }
+    ],
+    "right_distractors": [
+      "a kernel module on every machine"
+    ]
+  },
+  {
+    "id": "ex-myrphw9m",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "So that the firm's resolver does not answer strangers, Unbound's configuration says `___-control: 192.168.60.0/24 allow`.",
+    "blanks": [
+      {
+        "accept": [
+          "access"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wwkwak88",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why does an administrator use ProxyJump instead of logging in to the bastion and opening a second SSH session from there?",
+    "choices": [
+      {
+        "text": "ProxyJump is faster because it skips encryption on the second hop",
+        "correct": false,
+        "why": "Nothing is skipped; the inner session is encrypted end to end."
+      },
+      {
+        "text": "The key stays on the workstation and the bastion needs no shell",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The bastion's log then records the commands typed on the server",
+        "correct": false,
+        "why": "The bastion cannot read an end-to-end encrypted session."
+      },
+      {
+        "text": "A second session from the bastion is refused by every SSH server",
+        "correct": false,
+        "why": "It works; it is just the weaker design."
+      }
+    ]
+  },
+  {
+    "id": "ex-2835wpqm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A firm installs a bastion but leaves every server accepting SSH from the whole office. What has it gained against a stolen key?",
+    "choices": [
+      {
+        "text": "Nothing: the key still works from any machine",
+        "correct": true,
+        "why": "Right. The servers have to insist on the bastion."
+      },
+      {
+        "text": "Protection, because the bastion inspects every key used in the office",
+        "correct": false,
+        "why": "Connections that skip the bastion are never seen by it."
+      },
+      {
+        "text": "A full log of every login, kept on the bastion",
+        "correct": false,
+        "why": "Only the logins that chose to go through it."
+      },
+      {
+        "text": "Two-factor authentication on every server",
+        "correct": false,
+        "why": "Nothing in that setup adds a second factor."
+      }
+    ]
+  },
+  {
+    "id": "ex-jvev66tt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What removes an SSH user certificate's access once its validity period is over?",
+    "choices": [
+      {
+        "text": "An administrator deleting it from authorized_keys on each server",
+        "correct": false,
+        "why": "Certificates are not listed per server."
+      },
+      {
+        "text": "The authority sending a revocation to every server",
+        "correct": false,
+        "why": "No message is needed for expiry."
+      },
+      {
+        "text": "Nothing: the server checks the dates itself",
+        "correct": true,
+        "why": "Right. The refusal says expired."
+      },
+      {
+        "text": "fail2ban, after the first refused attempt",
+        "correct": false,
+        "why": "fail2ban is not involved in certificate checks."
+      }
+    ]
+  },
+  {
+    "id": "ex-20t27n14",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On a bastion with `PermitOpen web:22`, an administrator with a valid key runs `ssh -J jump db`. What happens?",
+    "choices": [
+      {
+        "text": "It works, since the key is valid on jump",
+        "correct": false,
+        "why": "The key opens jump; PermitOpen decides where jump connects."
+      },
+      {
+        "text": "It works, but the session is not encrypted",
+        "correct": false,
+        "why": "It does not work at all."
+      },
+      {
+        "text": "jump refuses to open the connection to db",
+        "correct": true,
+        "why": "Right: stdio forwarding failed."
+      },
+      {
+        "text": "db refuses, because its firewall names admin",
+        "correct": false,
+        "why": "The refusal happens on jump, before db is reached."
+      }
+    ]
+  },
+  {
+    "id": "ex-vf2sm810",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put in order what happens when admin runs `ssh web` with ProxyJump configured.",
+    "items": [
+      "admin authenticates to jump",
+      "jump checks PermitOpen and opens a connection to web:22",
+      "web's firewall accepts it because it comes from jump",
+      "web checks the certificate against the trusted authority",
+      "web logs the certificate's ID"
+    ]
+  },
+  {
+    "id": "ex-sh5ncm38",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which problem does Windows LAPS solve?",
+    "choices": [
+      {
+        "text": "Administrators reading mail on the machines they administer from",
+        "correct": false,
+        "why": "That is the privileged access workstation's subject."
+      },
+      {
+        "text": "The same local administrator password on every machine",
+        "correct": true,
+        "why": "Right: each machine gets its own, rotated and stored where reads are logged."
+      },
+      {
+        "text": "Expired certificates on Windows servers",
+        "correct": false,
+        "why": "LAPS manages passwords, not certificates."
+      },
+      {
+        "text": "SSH keys left behind by people who left the firm",
+        "correct": false,
+        "why": "That is what short-lived certificates address."
+      }
+    ]
+  },
+  {
+    "id": "ex-t37g6mhx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A scanner flags nginx 1.24.0 on an Ubuntu server as vulnerable to a flaw fixed upstream in 1.25. What should the defender check before acting?",
+    "choices": [
+      {
+        "text": "Whether nginx 1.25 is available in the firm's mirror",
+        "correct": false,
+        "why": "Ubuntu rarely moves to a new upstream; the fix may already be in."
+      },
+      {
+        "text": "Ubuntu's advisory and the installed packaging revision",
+        "correct": true,
+        "why": "Right: a backported fix leaves 1.24.0 in the banner."
+      },
+      {
+        "text": "The CVSS score, to decide whether it matters",
+        "correct": false,
+        "why": "First find out whether it applies at all."
+      },
+      {
+        "text": "Whether the banner can be hidden with server_tokens off",
+        "correct": false,
+        "why": "Hiding the banner changes nothing about the flaw."
+      }
+    ]
+  },
+  {
+    "id": "ex-5cgs03sk",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "What CVSS 3.1 base score does AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H get?",
+    "value": 9.8,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-rnwkyayd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Two open findings: a 9.8 nobody is known to exploit, and a 7.5 on the KEV list, both on internet-facing servers. Which goes first under a policy like the lesson's?",
+    "choices": [
+      {
+        "text": "The 7.5 on the KEV list",
+        "correct": true,
+        "why": "Right: known exploitation beats a higher score."
+      },
+      {
+        "text": "The 9.8, because the higher score always wins",
+        "correct": false,
+        "why": "Score is one signal; use in the wild outranks it."
+      },
+      {
+        "text": "Both share the same day, because both are exposed",
+        "correct": false,
+        "why": "Exposure is one input; KEV puts the 7.5 a level higher."
+      },
+      {
+        "text": "Neither, until EPSS is checked for both",
+        "correct": false,
+        "why": "KEV is already the stronger evidence."
+      }
+    ]
+  },
+  {
+    "id": "ex-0cb1wwcd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What makes an exception to a patching deadline acceptable?",
+    "choices": [
+      {
+        "text": "A note in the ticket saying the patch is difficult",
+        "correct": false,
+        "why": "That is a risk accepted by default."
+      },
+      {
+        "text": "Agreement from the team that will apply the patch",
+        "correct": false,
+        "why": "The risk's owner approves, not only the people doing the work."
+      },
+      {
+        "text": "A named approver, a compensating control and an expiry date",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Moving the finding's discovery date to today",
+        "correct": false,
+        "why": "That hides lateness; the finding's date stays."
+      }
+    ]
+  },
+  {
+    "id": "ex-0kxkw5bs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What does an authenticated vulnerability check read that an unauthenticated one cannot?",
+    "choices": [
+      {
+        "text": "The open ports of the machine",
+        "correct": false,
+        "why": "Both can see those."
+      },
+      {
+        "text": "The installed package versions",
+        "correct": true,
+        "why": "Right: from the package database, not a banner."
+      },
+      {
+        "text": "The banner each service sends",
+        "correct": false,
+        "why": "That is exactly what an outside scan reads."
+      },
+      {
+        "text": "The EPSS score of each flaw",
+        "correct": false,
+        "why": "EPSS comes from FIRST, not from the machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-fjm19ecf",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "To decide which of two Debian package versions is newer, use `dpkg --___-versions`.",
+    "blanks": [
+      {
+        "accept": [
+          "compare"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jrh8g5v4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What is the point of deploying an update in rings?",
+    "choices": [
+      {
+        "text": "To spread the download over several days so the network is not saturated",
+        "correct": false,
+        "why": "Bandwidth is not the reason."
+      },
+      {
+        "text": "A bad update reaches few machines before it is caught",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "To give each department its own version of the software",
+        "correct": false,
+        "why": "Every ring ends on the same version."
+      },
+      {
+        "text": "To satisfy the vendor's licence terms",
+        "correct": false,
+        "why": "Licences have nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-tekn9p8v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A firm runs its own package repository. What makes it safe for machines to install from it?",
+    "choices": [
+      {
+        "text": "Serving it only on the internal network",
+        "correct": false,
+        "why": "Anybody who can answer for the server could still install anything."
+      },
+      {
+        "text": "Adding [trusted=yes] to every machine's sources",
+        "correct": false,
+        "why": "That is the check switched off."
+      },
+      {
+        "text": "A signed Release file, checked against a key each machine names",
+        "correct": true,
+        "why": "Right: signed-by=."
+      },
+      {
+        "text": "Keeping only the latest version of each package",
+        "correct": false,
+        "why": "That only removes the ability to roll back."
+      }
+    ]
+  },
+  {
+    "id": "ex-pfmw84cy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A package has been held on a server for eight months and nobody knows why. What was missing?",
+    "choices": [
+      {
+        "text": "A pin in /etc/apt/preferences.d instead of a hold",
+        "correct": false,
+        "why": "A pin is as easily forgotten."
+      },
+      {
+        "text": "An exception record with an owner and an expiry",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Unattended upgrades, which would have removed the hold",
+        "correct": false,
+        "why": "They respect holds."
+      },
+      {
+        "text": "A newer version in the repository",
+        "correct": false,
+        "why": "The newer version is exactly what the hold blocks."
+      }
+    ]
+  },
+  {
+    "id": "ex-7mww1gyy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "An update fixed a flaw and also converted stored data. It breaks a report. Which answer does the lesson prefer?",
+    "choices": [
+      {
+        "text": "Downgrade at once, since the old version worked",
+        "correct": false,
+        "why": "The old version may not read the converted data, and the flaw reopens."
+      },
+      {
+        "text": "Hold the update on every machine until next year",
+        "correct": false,
+        "why": "That leaves the flaw open with no date."
+      },
+      {
+        "text": "Roll forward to a fixed newer version, or restore the snapshot taken before",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Edit the data back by hand",
+        "correct": false,
+        "why": "Hand-editing a migration is the risk, not the remedy."
+      }
+    ]
+  },
+  {
+    "id": "ex-vf3v1965",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each apt mechanism with its effect.",
+    "pairs": [
+      {
+        "left": "Origins-Pattern in unattended-upgrades",
+        "right": "which repositories may be installed from automatically"
+      },
+      {
+        "left": "apt-mark hold",
+        "right": "one package stays at its version"
+      },
+      {
+        "left": "--allow-downgrades",
+        "right": "permits installing an older version"
+      }
+    ],
+    "right_distractors": [
+      "signs a repository"
+    ]
+  },
+  {
+    "id": "ex-k2ssjd27",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "A finding is P2 under lesson 16's policy. Ring two is scheduled on day 8. How many days remain before the due date after ring two?",
+    "hint": "P2 has 30 days.",
+    "value": 22,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-2ympyt85",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A small firm has budget for one security project this year and no inventory. Where does this course say to start?",
+    "choices": [
+      {
+        "text": "An EDR product on every workstation",
+        "correct": false,
+        "why": "Every workstation is exactly what nobody has listed yet."
+      },
+      {
+        "text": "Listing the machines, measuring them and giving each an owner",
+        "correct": true,
+        "why": "Right: every later control is applied to that list."
+      },
+      {
+        "text": "A vulnerability scanner run once a month",
+        "correct": false,
+        "why": "It scans what it is pointed at, which needs the list."
+      },
+      {
+        "text": "A honeypot to find out what attackers try",
+        "correct": false,
+        "why": "A honeypot means something only against a known inventory."
+      }
+    ]
+  },
+  {
+    "id": "ex-gyrbcm1d",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A sweep finds an address that answers and appears in no record. What is the first step?",
+    "choices": [
+      {
+        "text": "Add it to the list and close the finding",
+        "correct": false,
+        "why": "A row with no owner moves the problem, it does not close it."
+      },
+      {
+        "text": "Find its owner",
+        "correct": true,
+        "why": "Right; then list it or take it off the network."
+      },
+      {
+        "text": "Run a full vulnerability scan against it",
+        "correct": false,
+        "why": "That may follow; ownership decides what happens to it."
+      },
+      {
+        "text": "Ignore it unless it listens on a port",
+        "correct": false,
+        "why": "An unknown machine is a finding whatever it listens on."
+      }
+    ]
+  },
+  {
+    "id": "ex-3hkqjp4f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What is the difference between lesson 3's playbook and this lesson's baseline?",
+    "choices": [
+      {
+        "text": "The playbook is for Windows and the baseline for Linux",
+        "correct": false,
+        "why": "Both are used on Linux in this course."
+      },
+      {
+        "text": "None: they are two names for the same file",
+        "correct": false,
+        "why": "One applies, the other checks."
+      },
+      {
+        "text": "The playbook applies a desired state; the baseline checks one",
+        "correct": true,
+        "why": "Right, and a machine can drift between runs of the first."
+      },
+      {
+        "text": "The baseline is enforced by the kernel",
+        "correct": false,
+        "why": "It is a file a script reads."
+      }
+    ]
+  },
+  {
+    "id": "ex-5d9amqn3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Which finding does no vulnerability scanner report, so the inventory has to?",
+    "choices": [
+      {
+        "text": "A package with a known exploited flaw",
+        "correct": false,
+        "why": "That is exactly what scanners and KEV report."
+      },
+      {
+        "text": "A machine whose operating system no longer receives updates",
+        "correct": true,
+        "why": "Right: no advisory will ever list a fix for it."
+      },
+      {
+        "text": "A service listening on an unexpected port",
+        "correct": false,
+        "why": "An outside scan finds that."
+      },
+      {
+        "text": "A package with a high CVSS score",
+        "correct": false,
+        "why": "Scanners report scores routinely."
+      }
+    ]
+  },
+  {
+    "id": "ex-q0ceja1f",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each inventory field with a lesson that depends on it.",
+    "pairs": [
+      {
+        "left": "owner",
+        "right": "who approves an exception in lesson 16"
+      },
+      {
+        "left": "role",
+        "right": "which services lesson 1 may remove"
+      },
+      {
+        "left": "criticality",
+        "right": "which ring goes last in lesson 17"
+      }
+    ],
+    "right_distractors": [
+      "the colour of the machine's case"
+    ]
+  },
+  {
+    "id": "ex-en008g19",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "What does a network sweep miss? Choose all that apply.",
+    "choices": [
+      {
+        "text": "a laptop that is at home this week",
+        "correct": true,
+        "why": "It is not there to answer."
+      },
+      {
+        "text": "machines on another segment",
+        "correct": true,
+        "why": "The sweep covered one range."
+      },
+      {
+        "text": "a switch with a management address",
+        "correct": false,
+        "why": "It answered: sw at .2."
+      },
+      {
+        "text": "a machine whose firewall drops the probe",
+        "correct": true,
+        "why": "Silence looks like absence."
+      }
+    ]
+  },
+  {
+    "id": "ex-b4atfc51",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A suspicious attachment arrives. What is the first thing to do with it?",
+    "choices": [
+      {
+        "text": "Upload it to VirusTotal for a verdict",
+        "correct": false,
+        "why": "Uploading publishes it; it is the last step, if any."
+      },
+      {
+        "text": "Open it in a preview to see what it is",
+        "correct": false,
+        "why": "Opening is what triage avoids."
+      },
+      {
+        "text": "Look at it locally: type, hash, strings",
+        "correct": true,
+        "why": "Right: nothing leaves the machine."
+      },
+      {
+        "text": "Forward it to the whole team so everyone can check",
+        "correct": false,
+        "why": "That spreads it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ydv897m8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why search VirusTotal by hash before uploading anything?",
+    "choices": [
+      {
+        "text": "A hash reveals nothing, and a known file already has a report",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because uploads are only allowed after a hash search",
+        "correct": false,
+        "why": "No such rule; it is about what you give away."
+      },
+      {
+        "text": "Because a hash search runs the file in a sandbox",
+        "correct": false,
+        "why": "A search runs nothing."
+      },
+      {
+        "text": "Because the hash is shorter and uploads faster",
+        "correct": false,
+        "why": "Speed is not the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-3dek4772",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A file has 0 detections out of 70 on VirusTotal. What can you conclude?",
+    "choices": [
+      {
+        "text": "That it is safe to open",
+        "correct": false,
+        "why": "New or targeted files start at zero."
+      },
+      {
+        "text": "That it is malware designed to avoid detection",
+        "correct": false,
+        "why": "Zero is not evidence of evasion either."
+      },
+      {
+        "text": "Only that no engine flagged it, on that date",
+        "correct": true,
+        "why": "Right: evidence with a date, not a verdict."
+      },
+      {
+        "text": "That VirusTotal never received it",
+        "correct": false,
+        "why": "A ratio means it was received and scanned."
+      }
+    ]
+  },
+  {
+    "id": "ex-ebcwfe08",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A colleague wants to scan a link to a client's shared folder on urlscan, publicly. What is wrong?",
+    "choices": [
+      {
+        "text": "urlscan cannot open shared folders",
+        "correct": false,
+        "why": "It can, which is the problem."
+      },
+      {
+        "text": "A public scan exposes the client's link and contents to strangers",
+        "correct": true,
+        "why": "Right: a link like that is not scanned at all."
+      },
+      {
+        "text": "Public scans are slower than private ones",
+        "correct": false,
+        "why": "Speed is not the issue."
+      },
+      {
+        "text": "Nothing, as long as the scan is deleted afterwards",
+        "correct": false,
+        "why": "Once public, it may already have been read or copied."
+      }
+    ]
+  },
+  {
+    "id": "ex-bgtjx6ry",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "Match each service with what it is given.",
+    "pairs": [
+      {
+        "left": "VirusTotal",
+        "right": "a file or its hash"
+      },
+      {
+        "left": "urlscan.io",
+        "right": "a web address"
+      },
+      {
+        "left": "RDAP",
+        "right": "a domain name"
+      }
+    ],
+    "right_distractors": [
+      "a password"
+    ]
+  },
+  {
+    "id": "ex-zpx70sg5",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "The command that reads the first bytes of a document and names the format they announce, whatever its name, is ___.",
+    "blanks": [
+      {
+        "accept": [
+          "file"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
