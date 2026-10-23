@@ -73,3 +73,40 @@ def figures(lang):
     f.box(440, 188, 260, 36, [t["t2b"]], stroke="phosphor", size=9.5)
     out["l05-split"] = f.json(t["cap"])
     return out
+
+
+T2 = {
+    "en": dict(
+        aria="The same search term read by two interpreters in turn. Above, the term % is passed as a placeholder, so SQL reads it as a value and not as code; then LIKE reads the same value as a pattern, where % means any run of characters, and every surname matches. Below, like_pattern turns the term into a backslash and a percent sign; SQL still reads it as a value, and LIKE, told that the backslash escapes, reads a literal percent sign, which no surname contains.",
+        typed="typed", sql="read by SQL", like="read by LIKE",
+        a1="a value, not code", a2="any run of characters", a2b="every patient matches",
+        b1="a value, not code", b2="a literal %", b2b="no patient matches",
+        cap="The placeholder settles the first reader and nothing more. The pattern needs its own escape, because LIKE is a second reader.",
+    ),
+    "pt": dict(
+        aria="O mesmo termo de busca lido por dois interpretadores em sequência. Em cima, o termo % vai como placeholder, então o SQL o lê como valor e não como código; depois o LIKE lê o mesmo valor como padrão, em que % quer dizer qualquer sequência de caracteres, e todo sobrenome casa. Embaixo, o like_pattern transforma o termo numa barra invertida e um sinal de porcentagem; o SQL continua lendo um valor, e o LIKE, avisado de que a barra escapa, lê um sinal de porcentagem literal, que nenhum sobrenome contém.",
+        typed="digitado", sql="lido pelo SQL", like="lido pelo LIKE",
+        a1="um valor, não código", a2="qualquer sequência de caracteres", a2b="todo paciente casa",
+        b1="um valor, não código", b2="um % literal", b2b="nenhum paciente casa",
+        cap="O placeholder resolve o primeiro leitor e nada mais. O padrão precisa do próprio escape, porque o LIKE é um segundo leitor.",
+    ),
+}
+_first = figures
+
+
+def figures(lang):
+    out = _first(lang)
+    t = T2[lang]
+    f = Fig("l05-like", 720, 200, t["aria"])
+    for x, s in ((80, t["typed"]), (330, t["sql"]), (580, t["like"])):
+        f.text(x, 20, s, bold=True)
+    rows = ((50, "%", "amber", t["a1"], [t["a2"], t["a2b"]]), (124, "\\%", "phosphor", t["b1"], [t["b2"], t["b2b"]]))
+    for y, term, colour, mid, end in rows:
+        f.box(20, y, 120, 50, [term], stroke=colour, mono=True, size=12)
+        f.arrow([(140, y + 25), (240, y + 25)])
+        f.box(240, y, 180, 50, [mid], stroke="wire", size=9.5)
+        f.arrow([(420, y + 25), (480, y + 25)])
+        f.box(480, y, 220, 50, end, stroke=colour, size=9.5)
+    f.text(190, 114, "like_pattern()", mono=True, size=9, fill="paper-dim")
+    out["l05-like"] = f.json(t["cap"])
+    return out

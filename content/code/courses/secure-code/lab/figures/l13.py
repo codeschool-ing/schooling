@@ -63,3 +63,39 @@ def figures(lang):
     f.text(370, 226, t["fixed"], size=9.5, italic=True, fill="phosphor")
     out["l13-two"] = f.json(t["cap"], same=t.get("same"))
     return out
+
+
+T2 = {
+    "en": dict(
+        aria="The grid test drawn as a table. Rows are the patient who is signed in, lucia, marta and rafael; columns are exams 1, 2 and 3, owned by lucia, marta and rafael in that order. The cells on the diagonal, where the patient owns the exam, must answer 200. Every other cell must answer 404. Against the flawed portal all nine answered 200, so the six off the diagonal failed.",
+        who="signed in as", exam="GET /exams/", ok="200", no="404",
+        note="before the fix, all nine answered 200",
+        cap="Nine requests, and only the diagonal may answer 200. A fourth exam adds a column, and the test checks it without a new line.",
+    ),
+    "pt": dict(
+        aria="O teste da grade desenhado como tabela. As linhas são a paciente que entrou, lucia, marta e rafael; as colunas são os exames 1, 2 e 3, de lucia, marta e rafael nessa ordem. As células da diagonal, em que a paciente é dona do exame, precisam responder 200. Todas as outras precisam responder 404. Contra o portal falho as nove responderam 200, então as seis fora da diagonal falharam.",
+        who="entrou como", exam="GET /exams/", ok="200", no="404",
+        note="antes da correção, as nove responderam 200",
+        cap="Nove requisições, e só a diagonal pode responder 200. Um quarto exame acrescenta uma coluna, e o teste o confere sem uma linha nova.",
+    ),
+}
+_first = figures
+
+
+def figures(lang):
+    out = _first(lang)
+    t = T2[lang]
+    f = Fig("l13-grid", 720, 220, t["aria"])
+    names = ["lucia", "marta", "rafael"]
+    f.text(120, 22, t["who"], bold=True)
+    for j in range(3):
+        f.text(300 + j * 140, 22, t["exam"] + str(j + 1), mono=True, size=10)
+    for i, n in enumerate(names):
+        y = 40 + i * 50
+        f.box(60, y, 120, 40, [n], stroke="wire", mono=True)
+        for j in range(3):
+            own = i == j
+            f.box(240 + j * 140, y, 120, 40, [t["ok"] if own else t["no"]], stroke="phosphor" if own else "amber", mono=True, size=11)
+    f.text(450, 204, t["note"], size=9, italic=True, fill="paper-dim")
+    out["l13-grid"] = f.json(t["cap"])
+    return out
