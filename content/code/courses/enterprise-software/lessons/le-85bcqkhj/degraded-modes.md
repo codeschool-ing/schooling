@@ -19,30 +19,30 @@ says every chain fails a few days a year. A degraded mode is what the business d
 Most degraded modes are one of a small number of shapes. Serra Alta has all of them, some on
 purpose and some by habit.
 
-**Store and forward.** The work is accepted and kept until the other side can take it. Coleta's
+*Store and forward.* The work is accepted and kept until the other side can take it. Coleta's
 nightly file waiting in its directory through SAP's Sunday window is the oldest example. A queue in
 front of a system is the same idea with better tools, and lesson 10 is about making it trustworthy.
 What it needs is room to store, a promise that nothing stored is lost, and a consumer that can catch
 up.
 
-**Serve stale data, with its age.** When the source cannot answer, give the last answer it gave and
+*Serve stale data, with its age.* When the source cannot answer, give the last answer it gave and
 say when that was. Since lesson 1, the portal does exactly this on Sunday nights: the bakery sees
 the stock figure from before the window, with the time beside it. **The age is what makes stale data
 honest.** The same figure without its time is a lie that happens to be mostly right.
 
-**Accept now, confirm later.** The order is taken without the system that would confirm it, and
+*Accept now, confirm later.* The order is taken without the system that would confirm it, and
 confirmed or refused when that system returns. It moves a failure from the moment the customer is
 waiting to a moment when somebody can deal with it. It also creates a new case the business has to
 own: the order accepted on Sunday night that SAP cannot fill on Monday morning. The portal's rule is
 that the bakery is told before the delivery trucks are loaded, by message, with the item that could
 not be supplied.
 
-**Do it by hand.** A paper form in a drawer is a degraded mode, and often the most reliable one.
+*Do it by hand.* A paper form in a drawer is a degraded mode, and often the most reliable one.
 When Coleta's machine is unreachable, the reception at each plant records the trucks arriving on a
 printed sheet, and somebody keys the sheets in when it returns. It is slow, and it needs people who
 know where the drawer is, which means it has to be practised.
 
-**Work offline at the edge.** The handheld in each milk truck records each farm's litres, the tank
+*Work offline at the edge.* The handheld in each milk truck records each farm's litres, the tank
 temperature and the label on the sample bottle. Much of the route is in valleys with no mobile
 signal, so the handheld never needed the network to work. It stores the collections, prints the
 farmer a receipt, and sends everything when it next has a signal. It keeps the last seven days, so a

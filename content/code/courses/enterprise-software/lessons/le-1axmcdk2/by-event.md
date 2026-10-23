@@ -23,8 +23,9 @@ that a bakery can download its invoice, and the EDI provider so that a supermark
 system receives it.
 
 Today each of those is its own integration, triggered from SAP's side. When an invoice is authorised,
-SAP sends it to an ESB flow, and the flow calls Salesforce's API, writes a row for the portal, and
-builds an EDI message, one after another. That is three calls for every invoice, about **4,200 a
+SAP sends it to an ESB flow, and the flow sends it to Salesforce (in the batches of up to 200 that lesson 4
+introduced), writes a row for the portal, and builds an EDI message, one after another. That is three
+deliveries for every invoice, about **4,200 a
 day**, and SAP's side knows about all three receivers. When finance asked for invoices in a Power BI
 dataset in 2025, it took a change on SAP's side of the flow and a release in the ESB, and the ESB's
 release calendar put it four months away. When Salesforce is unavailable, the flow fails part-way:

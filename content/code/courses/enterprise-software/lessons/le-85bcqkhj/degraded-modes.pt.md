@@ -20,31 +20,31 @@ faz nesses dias.
 A maioria dos modos degradados tem um entre poucos formatos. A Serra Alta tem todos eles, alguns de
 propósito e alguns por costume.
 
-**Guardar e encaminhar.** O trabalho é aceito e guardado até o outro lado poder recebê-lo. O arquivo
+*Guardar e encaminhar.* O trabalho é aceito e guardado até o outro lado poder recebê-lo. O arquivo
 noturno do Coleta esperando no diretório durante a janela de domingo do SAP é o exemplo mais antigo.
 Uma fila na frente de um sistema é a mesma ideia com ferramentas melhores, e a aula 10 trata de
 torná-la confiável. O que ela precisa é de espaço para guardar, da garantia de que nada guardado se
 perde e de um consumidor que consiga alcançar o atraso.
 
-**Servir dados velhos, com a idade deles.** Quando a fonte não consegue responder, dê a última
+*Servir dados velhos, com a idade deles.* Quando a fonte não consegue responder, dê a última
 resposta que ela deu e diga quando foi. Desde a aula 1 o portal faz exatamente isso nas noites de
 domingo: a padaria vê o número de estoque de antes da janela, com o horário ao lado. **A idade é o que
 torna honesto o dado velho.** O mesmo número sem o horário é uma mentira que por acaso está quase
 certa.
 
-**Aceitar agora, confirmar depois.** O pedido é recebido sem o sistema que o confirmaria, e é
+*Aceitar agora, confirmar depois.* O pedido é recebido sem o sistema que o confirmaria, e é
 confirmado ou recusado quando esse sistema volta. Isso tira uma falha do momento em que o cliente
 está esperando e a leva para um momento em que alguém consegue tratar dela. Também cria um caso novo
 de que o negócio tem de ser dono: o pedido aceito no domingo à noite que o SAP não consegue atender
 na segunda de manhã. A regra do portal é que a padaria é avisada antes de os caminhões de entrega
 serem carregados, por mensagem, com o item que não pôde ser fornecido.
 
-**Fazer à mão.** Um formulário de papel numa gaveta é um modo degradado, e muitas vezes o mais
+*Fazer à mão.* Um formulário de papel numa gaveta é um modo degradado, e muitas vezes o mais
 confiável. Quando a máquina do Coleta está inacessível, a recepção de cada fábrica anota os
 caminhões que chegam numa folha impressa, e alguém digita as folhas quando ela volta. É lento, e
 precisa de pessoas que saibam onde fica a gaveta, o que significa que precisa ser treinado.
 
-**Trabalhar desconectado na borda.** O coletor de mão em cada caminhão de leite registra os litros de
+*Trabalhar desconectado na borda.* O coletor de mão em cada caminhão de leite registra os litros de
 cada fazenda, a temperatura do tanque e a etiqueta do frasco de amostra. Boa parte da rota passa por
 vales sem sinal de celular, então o coletor nunca precisou da rede para funcionar. Ele guarda as
 coletas, imprime um comprovante para o produtor e envia tudo quando volta a ter sinal. Ele mantém os

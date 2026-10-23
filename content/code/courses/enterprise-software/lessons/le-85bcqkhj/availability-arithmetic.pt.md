@@ -30,7 +30,7 @@ não faz nada além disso:
 Cada nove a mais divide o tempo fora do ar por dez. O preço não se divide junto. Passar de 99,9% para 99,99% significa sobreviver à perda de um servidor inteiro ou de um site inteiro sem acordar
 ninguém, e isso é outra arquitetura, não uma versão melhor da mesma.
 
-Dois detalhes pegam as pessoas toda vez que elas leem um desses números.
+Dois detalhes pegam muita gente desprevenida.
 
 *Qual mês.* 43,2 minutos é um décimo de por cento de um mês de 30 dias. Um mês médio, um doze avos
 do ano, permite 43,8 minutos; um mês de 31 dias permite 44,64; fevereiro permite 40,32. As
@@ -122,7 +122,7 @@ estavam as horas: o SAP, com 1,0%, é o maior fator, e o SAP é o sistema que a 
 como mudar. Acrescentar noves ao barramento ou ao portal mexe no total em décimos. **Tirar o SAP do
 caminho enquanto a padaria espera** mexe em pontos percentuais inteiros, e o cache curto da aula 1 é
 o primeiro passo disso: um carrinho aberto enquanto o SAP está lento é atendido com um número de
-poucos minutos atrás em vez de falhar. A seção sobre modos degradados, duas adiante, transforma isso
+poucos minutos atrás em vez de falhar. A seção sobre modos degradados, quatro seções adiante, transforma isso
 num projeto em vez de um acidente.
 
 Há uma segunda coisa que a tabela acima não mostra. Os 99,0% do SAP são medidos fora da janela

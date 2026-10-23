@@ -21,8 +21,9 @@ Portal B2B precisa para que a padaria possa baixar a sua nota, e o provedor de E
 sistema de uma rede de supermercados a receba.
 
 Hoje cada um deles é uma integração própria, disparada do lado do SAP. Quando uma nota é autorizada,
-o SAP a manda a um fluxo do ESB, e o fluxo chama a API do Salesforce, grava uma linha para o portal e
-monta uma mensagem EDI, um depois do outro. São três chamadas por nota, cerca de **4.200 por dia**, e
+o SAP a manda a um fluxo do ESB, e o fluxo a envia ao Salesforce (nos lotes de até 200 que a aula 4
+introduziu), grava uma linha para o portal e monta uma mensagem EDI, um depois do outro. São três
+entregas por nota, cerca de **4.200 por dia**, e
 o lado do SAP conhece os três destinatários. Quando o financeiro pediu as notas num conjunto de dados
 do Power BI em 2025, foi preciso uma mudança no lado do SAP do fluxo e uma liberação no ESB, e o
 calendário de liberações do ESB a jogou quatro meses para frente. Quando o Salesforce está fora do

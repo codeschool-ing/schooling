@@ -25,7 +25,7 @@ porque são planejadas, e para quem as planeja isso é razoável. Uma padaria qu
 forma síncrona.** Planejá-la só significa que todos podem saber com antecedência.
 
 A integração mais antiga da empresa mostra como é saber com antecedência. O Coleta grava o arquivo de
-coletas do dia pouco depois da meia-noite e o SAP o carrega às 02:00. No domingo, 02:00 está dentro
+coletas do dia por volta das 23:30 e o SAP o carrega às 02:00. No domingo, 02:00 está dentro
 da janela. O arquivo carrega mesmo assim, porque anos atrás alguém da equipe de Edson passou a
 execução de domingo do job de carga para as 06:00. Essa regra vivia no agendador de jobs e em nenhum
 outro lugar; Joana só a encontrou porque perguntou por que as entradas de mercadoria de domingo sempre

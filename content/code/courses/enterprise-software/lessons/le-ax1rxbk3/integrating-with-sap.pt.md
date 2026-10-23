@@ -54,10 +54,11 @@ quem vem de fora do SAP. **Uma BAPI que escreve não confirma sozinha**: quem ch
 foi gravada. E uma BAPI informa a falha nessa tabela de mensagens devolvida, e não como exceção,
 então quem lê só o número da ordem lê uma string vazia como sucesso.
 
-O Portal B2B cria os pedidos dele assim, pelo barramento. Uma padaria que aperta *confirmar* quer um
-número de pedido na tela, e uma chamada síncrona é o jeito honesto de dar um. O preço é o quarto
-ponto da aula 1: nas noites de domingo, entre 01:00 e 05:00, não há quem responda, e o portal precisa
-enfileirar o pedido e dizer isso.
+Os pedidos do Portal B2B chegam ao SAP assim. O portal põe cada pedido numa fila do barramento, e um
+fluxo o retira e chama a BAPI; a aula 10 é sobre essa fila. O número do pedido volta pelo mesmo
+caminho, em geral em segundos, e a tela da padaria o mostra quando chega. O preço é o quarto ponto da
+aula 1: nas noites de domingo, entre 01:00 e 05:00, não há quem responda, então os pedidos esperam na
+fila e a tela avisa que serão confirmados depois.
 
 ## OData: o SAP sobre HTTP
 

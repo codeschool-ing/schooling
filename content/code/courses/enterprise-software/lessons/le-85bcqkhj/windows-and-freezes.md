@@ -24,7 +24,7 @@ available 0.99 × (164 ÷ 168) = 96.64% of the time, and the stock-check chain f
 synchronously.** Planning it only means everybody can know in advance.
 
 The oldest integration in the company shows what knowing in advance looks like. Coleta writes the
-day's collection file a little after midnight and SAP loads it at 02:00. On Sunday, 02:00 is inside
+day's collection file at about 23:30 and SAP loads it at 02:00. On Sunday, 02:00 is inside
 the window. The file loads anyway, because years ago somebody in Edson's team moved the Sunday run
 of the load job to 06:00. That rule lived in the job scheduler and nowhere else; Joana found it only
 because she asked why the Sunday goods receipts always carried a later time than the rest of the

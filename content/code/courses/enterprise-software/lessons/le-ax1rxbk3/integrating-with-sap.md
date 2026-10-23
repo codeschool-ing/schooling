@@ -53,10 +53,11 @@ from outside SAP. **A BAPI that writes does not commit on its own**: the caller 
 never saved. And a BAPI reports failure in that returned message table rather than as an exception,
 so a caller that reads only the order number reads an empty string as success.
 
-The Portal B2B creates its orders this way, through the bus. A bakery that presses *confirm* wants
-an order number on its screen, and a synchronous call is the honest way to give it one. The price is
-lesson 1's fourth point: on Sunday nights between 01:00 and 05:00 there is nobody to answer, and the
-portal has to queue the order and say so.
+The Portal B2B's orders reach SAP this way. The portal puts each order on a queue in the bus, and a
+flow takes it off and calls the BAPI; lesson 10 is about that queue. The order number comes back the
+same way, usually within seconds, and the bakery's screen shows it when it arrives. The price is
+lesson 1's fourth point: on Sunday nights between 01:00 and 05:00 there is nobody to answer, so the
+orders wait on the queue and the screen says they will be confirmed later.
 
 ## OData: SAP on HTTP
 

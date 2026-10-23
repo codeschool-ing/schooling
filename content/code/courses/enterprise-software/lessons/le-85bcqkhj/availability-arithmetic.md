@@ -27,10 +27,11 @@ does:
 | 99.95% | 4.38 h | 21.6 min |
 | 99.99% | 52.56 min | 4.32 min |
 
-Each extra nine divides the downtime by ten. The price does not divide with it. The step from 99.9% to 99.99% means surviving the loss of a whole server or a whole site without a person waking up,
+Each extra nine divides the downtime by ten. The price does not divide with it. The step from 99.9%
+to 99.99% means surviving the loss of a whole server or a whole site without a person waking up,
 and that is a different architecture rather than a better version of the same one.
 
-Two details catch people every time they read one of these numbers.
+Two details catch people out.
 
 *Which month.* 43.2 minutes is a tenth of a per cent of a 30-day month. An average month, a
 twelfth of a year, allows 43.8 minutes; a 31-day month allows 44.64; February allows 40.32. The
@@ -119,7 +120,7 @@ SAP at 1.0% is the biggest factor, and SAP is the system Serra Alta can least ch
 to the bus or to the portal moves the total by tenths. **Taking SAP out of the path while the
 bakery waits** moves it by whole percentage points, and the short cache from lesson 1 is the first
 step of that: a basket opened while SAP is slow is served from a figure a few minutes old instead
-of failing. The section on degraded modes, two on from here, makes that a design rather than an
+of failing. The section on degraded modes, four sections on, makes that a design rather than an
 accident.
 
 There is a second thing the table above does not show. SAP's 99.0% is measured outside its planned
