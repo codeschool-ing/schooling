@@ -805,6 +805,14 @@ var allowedOutsideTheFont = map[rune]string{
 		"follows it, and a capture is pasted byte for byte",
 	'\u2139': "`node --test` opens each line of its summary with it (`ℹ tests 3`). IBM Plex " +
 		"Mono has no U+2139 at all. It opens a line and nothing is aligned to what follows it",
+	// Vite's development server, and create-vite, which every front-end course
+	// built on Vite starts with.
+	'\u279c': "Vite's development server opens each address it prints with it (`➜  Local:`). " +
+		"IBM Plex Mono has no U+279C at all. It opens the line after the indentation, and the " +
+		"two lines that carry it carry it in the same column, so they move together",
+	'\u25c7': "create-vite marks the step it is on with it (`◇  Scaffolding project in …`). " +
+		"IBM Plex Mono has no U+25C7 at all. It opens a line and nothing is aligned to what " +
+		"follows it",
 }
 
 // coverage is the set of code points the interface declares a face for.
