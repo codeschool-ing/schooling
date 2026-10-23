@@ -95,10 +95,9 @@ def report(en, pt):
             texts = [c["text"] for c in e["choices"]] if lang == "en" else [c["text"] for c in pt[e["id"]]["choices"]]
             k = [i for i, c in enumerate(e["choices"]) if c.get("correct")][0]
             L = [len(x) for x in texts]
-            if len(set(L)) == 1:
+            if L.count(L[k]) > 1:      # a tie is counted at no rank, as check-exercises does
                 continue
-            order = sorted(set(L), reverse=True)
-            r = order.index(L[k]); n += 1
+            r = sum(1 for x in L if x > L[k]); n += 1
             ranks[r] = ranks.get(r, 0) + 1
             pos[k] = pos.get(k, 0) + 1
         print(lang, "quiz:", n, "rank shares:", {r: f"{v}/{n}" for r, v in sorted(ranks.items())}, "positions:", dict(sorted(pos.items())))
