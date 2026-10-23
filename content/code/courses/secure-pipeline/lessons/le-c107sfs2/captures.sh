@@ -29,7 +29,7 @@ run 'ls -l ~/ci/keys'
 
 block vault-start
 run 'docker run -d --name vault -p 127.0.0.1:8200:8200 -e VAULT_ADDR=http://127.0.0.1:8200 -e VAULT_DEV_ROOT_TOKEN_ID=dev-only-root hashicorp/vault:2.1.2'
-quiet 'sleep 3'
+quiet 'until docker exec vault vault status >/dev/null 2>&1; do sleep 1; done'
 run 'docker logs vault 2>&1 | sed -n "/WARNING!/,/production/p"'
 
 block vault-cli
