@@ -51,9 +51,9 @@ ana@dev:~/planner$ npm test
 
  RUN  v5.0.5 /home/ana/planner
 
- ❯ src/planner.test.ts (3 tests | 2 failed) 11ms
+ ❯ src/planner.test.ts (3 tests | 2 failed) 14ms
    ❯ weekOf (1)
-     × a Wednesday's week runs from the Monday before to the Sunday after 8ms
+     × a Wednesday's week runs from the Monday before to the Sunday after 7ms
    ❯ weekTotal (2)
      × adds every session of the week, done or not 1ms
 
@@ -104,8 +104,8 @@ AssertionError: expected 155 to be 160 // Object.is equality
 
  Test Files  1 failed (1)
       Tests  2 failed | 1 passed (3)
-   Start at  19:31:26
-   Duration  213ms (transform 68%, import 15%, tests 13%, worker 4%)
+   Start at  19:52:47
+   Duration  239ms (transform 68%, tests 14%, import 13%, worker 4%)
 ```
 
 **Two of three fail**, and the report says how. `weekOf` gave Tuesday 20 to Monday 26 instead of

@@ -14,7 +14,7 @@ conferem.
 ```
 ana@dev:~/planner$ npm install --save-exact -D @testing-library/dom@10.4.2 @testing-library/user-event@14.6.8 @testing-library/jest-dom@7.0.1
 
-added 22 packages, and audited 111 packages in 5s
+added 22 packages, and audited 111 packages in 2s
 
 found 0 vulnerabilities
 ```

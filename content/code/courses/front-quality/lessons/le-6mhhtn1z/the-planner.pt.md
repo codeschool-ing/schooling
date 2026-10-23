@@ -116,7 +116,7 @@ número sem o símbolo:
 ```
 ana@dev:~/planner$ npm install --save-exact vite@8.3.5 typescript@6.0.3
 
-added 16 packages, and audited 17 packages in 9s
+added 16 packages, and audited 17 packages in 4s
 
 found 0 vulnerabilities
 ana@dev:~/planner$ cat package.json

@@ -12,7 +12,7 @@ npm reclama a cada instalação de um Node que não lhe foi prometido.
 ```
 ana@dev:~/planner$ npm install --save-exact -D jsdom@29.1.1
 
-added 38 packages, and audited 77 packages in 1s
+added 38 packages, and audited 77 packages in 2s
 
 found 0 vulnerabilities
 ```
@@ -84,8 +84,8 @@ ana@dev:~/planner$ npx vitest run src/view.test.ts
 
  Test Files  1 passed (1)
       Tests  3 passed (3)
-   Start at  19:31:32
-   Duration  849ms (environment 78%, transform 13%, tests 6%, import 2%, worker 1%)
+   Start at  19:52:54
+   Duration  833ms (environment 82%, transform 9%, tests 7%, import 2%, worker 1%)
 ```
 
 ## O que o jsdom não faz

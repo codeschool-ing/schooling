@@ -16,7 +16,7 @@ ana@dev:~/planner-jest$ npm pkg set type=module
 ana@dev:~/planner-jest$ npm install --save-exact -D jest@30.5.2 @jest/globals@30.5.2 ts-jest@29.4.15 typescript@6.0.3
 npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
-added 291 packages, and audited 292 packages in 5s
+added 291 packages, and audited 292 packages in 12s
 
 found 0 vulnerabilities
 ana@dev:~/planner-jest$ cp ../planner/src/planner.ts ../planner/public/courses.json .
@@ -72,7 +72,7 @@ FAIL ./planner.test.ts
 Test Suites: 1 failed, 1 total
 Tests:       0 total
 Snapshots:   0 total
-Time:        1.364 s
+Time:        1.285 s
 Ran all test suites.
 ```
 
@@ -99,7 +99,7 @@ ana@dev:~/planner-jest$ npx jest
 Test Suites: 1 passed, 1 total
 Tests:       2 passed, 2 total
 Snapshots:   0 total
-Time:        0.333 s
+Time:        0.313 s
 Ran all test suites.
 ```
 

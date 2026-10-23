@@ -60,8 +60,8 @@ ana@dev:~/planner$ npx vitest run src/today.test.ts
 
  Test Files  1 passed (1)
       Tests  2 passed (2)
-   Start at  19:31:33
-   Duration  201ms (transform 73%, import 15%, tests 8%, worker 4%)
+   Start at  19:52:55
+   Duration  186ms (transform 69%, import 17%, tests 8%, worker 6%)
 ```
 
 This file depends on the time zone on purpose, like the code it tests: `today()` is meant to follow

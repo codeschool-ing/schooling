@@ -31,8 +31,8 @@ ana@dev:~/planner$ TZ=UTC npm test
 
  Test Files  1 passed (1)
       Tests  3 passed (3)
-   Start at  22:31:27
-   Duration  150ms (transform 50%, import 29%, tests 12%, worker 9%)
+   Start at  22:52:48
+   Duration  155ms (import 52%, transform 28%, tests 10%, worker 9%)
 ```
 
 A variável `TZ` diz a um programa que fuso usar, só naquele comando. No UTC não há o que errar, e

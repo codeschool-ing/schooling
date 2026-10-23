@@ -13,7 +13,7 @@ Ele entra como dependência de desenvolvimento, na versão com que este curso fo
 ```
 ana@dev:~/planner$ npm install --save-exact -D vitest@5.0.5
 
-added 20 packages, and audited 39 packages in 2s
+added 20 packages, and audited 39 packages in 3s
 
 found 0 vulnerabilities
 ```

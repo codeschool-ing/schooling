@@ -18,7 +18,7 @@ npm error errno -2
 npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/home/ana/package.json'
 npm error enoent This is related to npm not being able to find a file.
 npm error enoent
-npm error A complete log of this run can be found in: /home/ana/.npm/_logs/2026-10-23T22_14_51_956Z-debug-0.log
+npm error A complete log of this run can be found in: /home/ana/.npm/_logs/2026-10-23T22_52_38_470Z-debug-0.log
 ```
 
 **O npm procura o `package.json` na pasta em que você está**, e o terminal estava na sua pasta
@@ -37,7 +37,7 @@ ana@dev:~/planner$ npm run dev
 sh: 1: vite: not found
 ana@dev:~/planner$ npm ci
 
-added 18 packages, and audited 19 packages in 1s
+added 18 packages, and audited 19 packages in 924ms
 
 found 0 vulnerabilities
 ```
@@ -58,7 +58,7 @@ ana@dev:~/planner$ npm run dev
 
 Port 5173 is in use, trying another one...
 
-  VITE v8.3.5  ready in 214 ms
+  VITE v8.3.5  ready in 182 ms
 
   ➜  Local:   http://localhost:5174/
   ➜  Network: use --host to expose

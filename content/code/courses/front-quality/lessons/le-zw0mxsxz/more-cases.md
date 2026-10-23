@@ -74,8 +74,8 @@ ana@dev:~/planner$ npx vitest run src/planner.test.ts
 
  Test Files  1 passed (1)
       Tests  20 passed (20)
-   Start at  19:31:30
-   Duration  184ms (transform 57%, import 21%, tests 16%, worker 6%)
+   Start at  19:52:51
+   Duration  179ms (transform 51%, import 25%, tests 17%, worker 7%)
 ```
 
 Twenty tests, in a fraction of a second, and each name says what the planner promises.

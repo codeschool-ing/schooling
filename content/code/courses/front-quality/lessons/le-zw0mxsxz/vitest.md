@@ -13,7 +13,7 @@ It goes in as a development dependency, at the version this course was recorded 
 ```
 ana@dev:~/planner$ npm install --save-exact -D vitest@5.0.5
 
-added 20 packages, and audited 39 packages in 2s
+added 20 packages, and audited 39 packages in 3s
 
 found 0 vulnerabilities
 ```

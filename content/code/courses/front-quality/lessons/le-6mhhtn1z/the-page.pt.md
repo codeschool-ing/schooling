@@ -110,7 +110,7 @@ ana@dev:~/planner$ npm run dev
 > vite
 
 
-  VITE v8.3.5  ready in 208 ms
+  VITE v8.3.5  ready in 176 ms
 
   ➜  Local:   http://localhost:5173/
   ➜  Network: use --host to expose

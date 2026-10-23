@@ -48,6 +48,9 @@ for md in sorted(lesson.glob("*.md")):
             ks = by_first.get(first, [])
             if body in (blocks[k] for k in ks):
                 return m.group(0)
+            if len(ks) > 1:   # several blocks open the same way: take the one closest to what is there
+                import difflib
+                ks = [max(ks, key=lambda k: difflib.SequenceMatcher(None, body, blocks[k]).ratio())]
             if len(ks) != 1:
                 print(f"{md.name}: transcript starting {first!r} matches {len(ks)} blocks"); bad += 1
                 return m.group(0)

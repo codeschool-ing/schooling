@@ -59,8 +59,8 @@ ana@dev:~/planner$ npx vitest run src/view.test.ts
 
  Test Files  1 passed (1)
       Tests  3 passed (3)
-   Start at  19:40:01
-   Duration  1.18s (environment 58%, tests 25%, import 9%, transform 6%, worker 1%)
+   Start at  19:53:22
+   Duration  1.08s (environment 58%, tests 26%, import 9%, transform 6%)
 ```
 
 Os três passam, e o formulário do planner agora tem nomes que um teste, um leitor de tela e uma pessoa

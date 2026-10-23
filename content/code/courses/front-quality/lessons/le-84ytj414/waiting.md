@@ -86,8 +86,8 @@ ana@dev:~/planner$ npx vitest run src/app.test.ts
 
  Test Files  1 passed (1)
       Tests  2 passed (2)
-   Start at  19:40:04
-   Duration  1.07s (environment 67%, tests 14%, import 11%, transform 7%)
+   Start at  19:53:26
+   Duration  983ms (environment 70%, tests 14%, import 9%, transform 7%, worker 1%)
 
 ana@dev:~/planner$ npx tsc --noEmit
 ```
@@ -110,8 +110,8 @@ ana@dev:~/planner$ npm test
 
  Test Files  4 passed (4)
       Tests  27 passed (27)
-   Start at  19:40:09
-   Duration  1.26s (environment 66%, tests 19%, import 10%, transform 4%, worker 1%)
+   Start at  19:53:30
+   Duration  1.25s (environment 67%, tests 20%, import 9%, transform 4%, worker 1%)
 ```
 
 ```

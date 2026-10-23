@@ -25,8 +25,8 @@ ana@dev:~/planner$ npx vitest run --coverage
 
  Test Files  3 passed (3)
       Tests  25 passed (25)
-   Start at  19:31:46
-   Duration  922ms (environment 63%, transform 16%, worker 8%, tests 8%, import 6%)
+   Start at  19:53:15
+   Duration  936ms (environment 66%, transform 15%, worker 8%, tests 7%, import 5%)
 
  % Coverage report from v8
 No files with missing coverage.
@@ -68,7 +68,7 @@ ana@dev:~/planner$ echo coverage >> .gitignore
 ana@dev:~/planner$ git add -A
 ana@dev:~/planner$ git commit -q -m "Unit and component tests with Vitest"
 ana@dev:~/planner$ git log --oneline
-13c594d Unit and component tests with Vitest
+9a0eaac Unit and component tests with Vitest
 925ced3 Test the week, and compute it in UTC
 050e2d3 The study planner
 ```

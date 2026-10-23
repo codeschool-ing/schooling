@@ -43,7 +43,7 @@ exec 2> >(grep --line-buffered -v '^Terminated$' >&2)
 # the recording machine's is the same release, 22.22.0, in /opt/node22.
 export HOME=/home/ana USER=ana LOGNAME=ana TZ=America/Sao_Paulo LC_ALL=C.UTF-8 LANG=C.UTF-8
 export PATH=/home/ana/.local/bin:/opt/node22/bin:/usr/local/bin:/usr/bin:/bin
-export PAGER=cat GIT_PAGER=cat TERM=dumb NO_COLOR=1 FORCE_COLOR=0 CI=
+export PAGER=cat GIT_PAGER=cat TERM=dumb CI=
 export npm_config_update_notifier=false npm_config_fund=false npm_config_progress=false
 export PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers COLORS=false
 unset NODE_PATH NPM_CONFIG_USERCONFIG

@@ -48,8 +48,8 @@ ana@dev:~/planner$ npx vitest run src/scratch.test.ts
 
  Test Files  1 passed (1)
       Tests  2 passed (2)
-   Start at  19:40:03
-   Duration  1.03s (environment 69%, tests 15%, import 10%, transform 5%, worker 1%)
+   Start at  19:53:24
+   Duration  1.08s (environment 70%, tests 17%, import 8%, transform 5%)
 
 ana@dev:~/planner$ rm src/scratch.test.ts
 ```

@@ -71,8 +71,8 @@ ana@dev:~/planner$ npx vitest run src/view.test.ts 2>&1 | head -n 30
 
  RUN  v5.0.5 /home/ana/planner
 
- ❯ src/view.test.ts (3 tests | 1 failed) 200ms
-   × the form adds a session and the total follows 11ms
+ ❯ src/view.test.ts (3 tests | 1 failed) 195ms
+   × the form adds a session and the total follows 9ms
 
 ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
 
