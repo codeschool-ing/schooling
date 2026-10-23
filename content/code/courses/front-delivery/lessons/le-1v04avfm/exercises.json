@@ -1,0 +1,823 @@
+[
+  {
+    "id": "ex-pcgx6wyf",
+    "version": 1,
+    "section": "baked-in",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The planner is deployed, and somebody changes `VITE_TITLE` in the host's settings without starting a new deploy. What do readers see?",
+    "hint": "When was the value read?",
+    "choices": [
+      {
+        "text": "The new title, on the next page load",
+        "correct": false,
+        "why": "The browser has no environment to read; the value is a string in the bundle."
+      },
+      {
+        "text": "The old title, until the next build",
+        "correct": true,
+        "why": "Right. The build wrote the value into the JavaScript, and nothing reads the variable again."
+      },
+      {
+        "text": "An error, because the variable no longer matches the bundle",
+        "correct": false,
+        "why": "Nothing compares them; the bundle simply keeps its string."
+      },
+      {
+        "text": "The default, `Study planner`",
+        "correct": false,
+        "why": "The default only appears when the build saw no value."
+      }
+    ]
+  },
+  {
+    "id": "ex-sdk34gap",
+    "version": 1,
+    "section": "baked-in",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After building with `VITE_TITLE` set, `grep -c VITE_TITLE dist/assets/*.js` prints `0`. Why?",
+    "choices": [
+      {
+        "text": "The build failed and wrote an empty file",
+        "correct": false,
+        "why": "The same file contains the title's value, so the build worked."
+      },
+      {
+        "text": "Minifying renamed the variable to one letter",
+        "correct": false,
+        "why": "Minifying renames local variables; this one was replaced before that."
+      },
+      {
+        "text": "Vite swapped it for the value",
+        "correct": true,
+        "why": "Right. The bundle has the string and no trace of the variable's name."
+      },
+      {
+        "text": "Variables live in `index.html`, not in the script",
+        "correct": false,
+        "why": "This one was used in `env.ts`, so its value went into the script."
+      }
+    ]
+  },
+  {
+    "id": "ex-3y5x295r",
+    "version": 1,
+    "section": "baked-in",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Vite exposes variables to the code under `import.meta.___`.",
+    "hint": "Three letters.",
+    "blanks": [
+      {
+        "accept": [
+          "env"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-b387z8pe",
+    "version": 1,
+    "section": "env-files",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each file to when Vite reads it.",
+    "pairs": [
+      {
+        "left": "`.env`",
+        "right": "In every mode, and it is committed"
+      },
+      {
+        "left": "`.env.local`",
+        "right": "In every mode, and git ignores it"
+      },
+      {
+        "left": "`.env.staging`",
+        "right": "Only with `--mode staging`"
+      },
+      {
+        "left": "`.env.development`",
+        "right": "When `npm run dev` starts"
+      }
+    ],
+    "right_distractors": [
+      "Only on the host, never locally"
+    ]
+  },
+  {
+    "id": "ex-31hhyjft",
+    "version": 1,
+    "section": "env-files",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`VITE_TITLE` is set in four places for a staging build. Order them from the one that wins to the one that loses.",
+    "hint": "The shell beats every file.",
+    "items": [
+      "The shell that runs the build",
+      "`.env.staging.local`",
+      "`.env.staging`",
+      "`.env`"
+    ]
+  },
+  {
+    "id": "ex-hw9r9n4t",
+    "version": 1,
+    "section": "env-files",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which mode does `npm run build` use when no `--mode` is given?",
+    "choices": [
+      {
+        "text": "`development`",
+        "correct": false,
+        "why": "That is the dev server's mode."
+      },
+      {
+        "text": "`production`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`staging`",
+        "correct": false,
+        "why": "Only when you name it."
+      },
+      {
+        "text": "None, so no file is read",
+        "correct": false,
+        "why": "`.env` and `.env.production` are read."
+      }
+    ]
+  },
+  {
+    "id": "ex-dwqwknvz",
+    "version": 1,
+    "section": "env-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A value typed into a host's dashboard should beat the `.env.staging` committed in the repository. Which rule makes that happen?",
+    "choices": [
+      {
+        "text": "The environment beats every file",
+        "correct": true,
+        "why": "Right. The host passes dashboard values to the build as ordinary environment variables."
+      },
+      {
+        "text": "Files ending in `.local` are read last",
+        "correct": false,
+        "why": "That orders the files among themselves; the dashboard is not a file."
+      },
+      {
+        "text": "The host deletes `.env.staging` before building",
+        "correct": false,
+        "why": "It does not need to; the environment wins anyway."
+      },
+      {
+        "text": "Vite reads the dashboard through the host's API",
+        "correct": false,
+        "why": "Vite knows nothing about hosts; it reads its environment and its files."
+      }
+    ]
+  },
+  {
+    "id": "ex-8z0prrff",
+    "version": 1,
+    "section": "the-prefix",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`SUPPORT_TOKEN` is in `.env.local`, and `main.ts` logs `import.meta.env.SUPPORT_TOKEN`. What does the bundle contain there?",
+    "choices": [
+      {
+        "text": "The token, because the code asked for it",
+        "correct": false,
+        "why": "Asking is not enough; the name lacks the prefix."
+      },
+      {
+        "text": "`void 0`, which is `undefined`",
+        "correct": true,
+        "why": "Right. Without `VITE_`, the build refuses to hand the value over."
+      },
+      {
+        "text": "A build error naming the variable",
+        "correct": false,
+        "why": "A missing variable is normal to ask about, so there is no error."
+      },
+      {
+        "text": "The string `SUPPORT_TOKEN`",
+        "correct": false,
+        "why": "Neither the name nor the value is written."
+      }
+    ]
+  },
+  {
+    "id": "ex-7caa67z6",
+    "version": 1,
+    "section": "the-prefix",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Someone sets `envPrefix: \"\"` in `vite.config.ts` so every variable is available. What happens?",
+    "choices": [
+      {
+        "text": "Every variable in the shell goes into the bundle",
+        "correct": false,
+        "why": "That is what it would mean, which is why Vite does not allow it."
+      },
+      {
+        "text": "Only variables from `.env` files are exposed",
+        "correct": false,
+        "why": "The setting does not distinguish files from the shell."
+      },
+      {
+        "text": "Vite refuses to build",
+        "correct": true,
+        "why": "Right: the error names sensitive information. The prefix can be another word, never nothing."
+      },
+      {
+        "text": "Vite ignores the setting and keeps `VITE_`",
+        "correct": false,
+        "why": "It does not ignore it; it refuses it."
+      }
+    ]
+  },
+  {
+    "id": "ex-wg6c6w4m",
+    "version": 1,
+    "section": "the-prefix",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each tool to the prefix that marks a value for the browser.",
+    "pairs": [
+      {
+        "left": "Vite",
+        "right": "`VITE_`"
+      },
+      {
+        "left": "Next.js",
+        "right": "`NEXT_PUBLIC_`"
+      },
+      {
+        "left": "SvelteKit",
+        "right": "`PUBLIC_`"
+      }
+    ],
+    "right_distractors": [
+      "`SECRET_`"
+    ]
+  },
+  {
+    "id": "ex-ys9j806h",
+    "version": 1,
+    "section": "nothing-shipped-is-secret",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A secret token was deployed in the bundle for a week, then removed from the code and redeployed. What still has to be done?",
+    "choices": [
+      {
+        "text": "Nothing; the new bundle no longer has it",
+        "correct": false,
+        "why": "Anybody who downloaded the old bundle still has it."
+      },
+      {
+        "text": "Purge the CDN's cache",
+        "correct": false,
+        "why": "That stops new copies, not the ones already downloaded."
+      },
+      {
+        "text": "Minify the next build harder",
+        "correct": false,
+        "why": "Minifying never hides a string."
+      },
+      {
+        "text": "Replace the token at whatever issued it",
+        "correct": true,
+        "why": "Right. Only that makes the leaked copies useless."
+      }
+    ]
+  },
+  {
+    "id": "ex-g8t7vhab",
+    "version": 1,
+    "section": "nothing-shipped-is-secret",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A maps service gives you a `pk_` key and an `sk_` key. Which one may go in `VITE_MAPS_KEY`?",
+    "hint": "Publishable or secret?",
+    "choices": [
+      {
+        "text": "The `pk_` one, restricted to your domain at the service",
+        "correct": true,
+        "why": "Right. It is meant to be public, and the domain limit protects it."
+      },
+      {
+        "text": "The `sk_` one, since the prefix keeps it private",
+        "correct": false,
+        "why": "The prefix publishes; it does not protect."
+      },
+      {
+        "text": "Either, as long as the bundle is minified",
+        "correct": false,
+        "why": "A minified string is still readable."
+      },
+      {
+        "text": "Neither: no key may ever be in a front end",
+        "correct": false,
+        "why": "Publishable keys exist precisely to be in a front end."
+      }
+    ]
+  },
+  {
+    "id": "ex-rs7cght3",
+    "version": 1,
+    "section": "nothing-shipped-is-secret",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a visitor to the deployed planner have access to? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Every string in the JavaScript bundle",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Every header the page sends with a request",
+        "correct": true,
+        "why": "Right: the network panel shows them."
+      },
+      {
+        "text": "Variables without the `VITE_` prefix",
+        "correct": false,
+        "why": "Those never reach the bundle."
+      },
+      {
+        "text": "A source map, if one was published",
+        "correct": true,
+        "why": "Right; lesson 11 keeps them private."
+      }
+    ]
+  },
+  {
+    "id": "ex-ksg2a93f",
+    "version": 1,
+    "section": "typing-the-variables",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before `vite-env.d.ts`, `import.meta.env.VITE_TITEL` built without complaint. Why?",
+    "choices": [
+      {
+        "text": "TypeScript does not check `import.meta`",
+        "correct": false,
+        "why": "It does; once the names are declared it rejects the typo."
+      },
+      {
+        "text": "Vite's types accept any name by default",
+        "correct": true,
+        "why": "Right. An index signature lets every name through."
+      },
+      {
+        "text": "Vite corrects close misspellings automatically",
+        "correct": false,
+        "why": "It does nothing of the kind; the fallback took over."
+      },
+      {
+        "text": "`.env.staging` declared `VITE_TITEL` too",
+        "correct": false,
+        "why": "It declared `VITE_TITLE`, which is why the heading lost its value."
+      }
+    ]
+  },
+  {
+    "id": "ex-3ehjjaem",
+    "version": 1,
+    "section": "typing-the-variables",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The declarations are saved as `src/env.d.ts`, next to `src/env.ts`, and the misspelling still builds. What is wrong?",
+    "choices": [
+      {
+        "text": "The interfaces need an `export`",
+        "correct": false,
+        "why": "They are global declarations; an export would not help here."
+      },
+      {
+        "text": "`strictImportMetaEnv` must be `true`, not `unknown`",
+        "correct": false,
+        "why": "Vite checks that the key exists, not its type."
+      },
+      {
+        "text": "TypeScript reads it as `env.ts`'s own declarations and skips it",
+        "correct": true,
+        "why": "Right. A `.d.ts` beside a `.ts` of the same name is ignored; `vite-env.d.ts` collides with nothing."
+      },
+      {
+        "text": "`tsc` checks `.d.ts` files only with `--strict`",
+        "correct": false,
+        "why": "Declaration files are read without that flag."
+      }
+    ]
+  },
+  {
+    "id": "ex-2vas8jqn",
+    "version": 1,
+    "section": "typing-the-variables",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The switch that makes Vite's env types strict is the key `___` in the interface `ViteTypeOptions`.",
+    "blanks": [
+      {
+        "accept": [
+          "strictImportMetaEnv"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-a4806k8p",
+    "version": 1,
+    "section": "one-build-or-many",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The staging and production builds of one commit have different hashes. What does that mean for a release?",
+    "choices": [
+      {
+        "text": "One of the two builds is broken",
+        "correct": false,
+        "why": "Both are correct builds of the same code with different values."
+      },
+      {
+        "text": "What reaches users is not what was checked",
+        "correct": true,
+        "why": "Right. It is a second build, made later, with other values."
+      },
+      {
+        "text": "The CDN will serve both to every visitor",
+        "correct": false,
+        "why": "Each environment serves its own build."
+      },
+      {
+        "text": "The hash includes the date, so it always differs",
+        "correct": false,
+        "why": "Two builds of the same content gave the same hash in lesson 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-2k75qt6m",
+    "version": 1,
+    "section": "one-build-or-many",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team promotes one build from staging to production and keeps per-environment values in a `config.json` fetched at start. Which value must still never go in it?",
+    "choices": [
+      {
+        "text": "The address of the API for that environment",
+        "correct": false,
+        "why": "An address is public anyway; this is what the file is for."
+      },
+      {
+        "text": "A title that says which environment it is",
+        "correct": false,
+        "why": "Harmless; the browser shows it on the page."
+      },
+      {
+        "text": "A key that lets its holder act as the team",
+        "correct": true,
+        "why": "Right. The file is fetched by the browser, so it is as public as the bundle."
+      },
+      {
+        "text": "The publishable key of an error reporter",
+        "correct": false,
+        "why": "That one is made to be public."
+      }
+    ]
+  },
+  {
+    "id": "ex-zrx493r3",
+    "version": 1,
+    "section": "on-the-host",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the workflow, which step should receive `CLOUDFLARE_API_TOKEN`? Choose all that apply.",
+    "hint": "Who needs the token to do their job?",
+    "choices": [
+      {
+        "text": "The build, so the page can call Cloudflare",
+        "correct": false,
+        "why": "The page must never hold it."
+      },
+      {
+        "text": "The deploy, which uploads `dist/`",
+        "correct": true,
+        "why": "Right; only the upload needs it."
+      },
+      {
+        "text": "Every step, through the job's `env:`",
+        "correct": false,
+        "why": "That would hand it to the build as well."
+      },
+      {
+        "text": "The checkout, to read the repository",
+        "correct": false,
+        "why": "Checkout uses the workflow's own token."
+      }
+    ]
+  },
+  {
+    "id": "ex-070xtd9z",
+    "version": 1,
+    "section": "on-the-host",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pull request from a fork runs your workflow, and the step needing a secret fails. Why?",
+    "choices": [
+      {
+        "text": "The fork's branch has no `.env` file",
+        "correct": false,
+        "why": "Secrets come from the repository's settings, not a file."
+      },
+      {
+        "text": "Secrets expire after each merge",
+        "correct": false,
+        "why": "They do not expire that way."
+      },
+      {
+        "text": "A fork's pull request gets no secrets",
+        "correct": true,
+        "why": "Right, so a stranger's code cannot print them."
+      },
+      {
+        "text": "Masking replaced the secret with `***`",
+        "correct": false,
+        "why": "Masking changes the log, not the value the step receives."
+      }
+    ]
+  },
+  {
+    "id": "ex-xyemdh7s",
+    "version": 1,
+    "section": "on-the-host",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which values should a preview build use?",
+    "choices": [
+      {
+        "text": "Production's, so the preview is realistic",
+        "correct": false,
+        "why": "A preview is public at its own address; production values do not belong there."
+      },
+      {
+        "text": "Staging's, set per environment at the host",
+        "correct": true,
+        "why": "Right. That is what per-environment settings are for."
+      },
+      {
+        "text": "None; previews cannot read variables",
+        "correct": false,
+        "why": "They read them like any build."
+      },
+      {
+        "text": "Whatever is in `.env.local`",
+        "correct": false,
+        "why": "That file never leaves your machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-8x6cbbfp",
+    "version": 1,
+    "section": "a-key-that-must-stay-secret",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the support example, what does the page's bundle contain?",
+    "choices": [
+      {
+        "text": "The token, encoded so it cannot be read",
+        "correct": false,
+        "why": "Any encoding the page can undo, a reader can undo."
+      },
+      {
+        "text": "The path `/api/support` and nothing else",
+        "correct": true,
+        "why": "Right. The token lives in the proxy's environment."
+      },
+      {
+        "text": "The address of the support service",
+        "correct": false,
+        "why": "Only the proxy talks to the service."
+      },
+      {
+        "text": "Half of the token, the other half on the server",
+        "correct": false,
+        "why": "Splitting a secret still hands half of it to every reader."
+      }
+    ]
+  },
+  {
+    "id": "ex-k4cgxn5n",
+    "version": 1,
+    "section": "a-key-that-must-stay-secret",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The proxy is changed to forward any path to the service, adding the key. What has gone wrong?",
+    "choices": [
+      {
+        "text": "Strangers get every power the key has",
+        "correct": true,
+        "why": "Right. The proxy should allow the one action the page needs."
+      },
+      {
+        "text": "The key is now visible in the bundle",
+        "correct": false,
+        "why": "The key is still on the server; the damage is what it can be used for."
+      },
+      {
+        "text": "Nothing; the key is still secret",
+        "correct": false,
+        "why": "Secret, and usable by anybody through the proxy."
+      },
+      {
+        "text": "The service will refuse requests that come through a proxy",
+        "correct": false,
+        "why": "It sees a correct key and accepts them."
+      }
+    ]
+  },
+  {
+    "id": "ex-jseh32m1",
+    "version": 1,
+    "section": "a-key-that-must-stay-secret",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What HTTP status did the support service answer without the key?",
+    "hint": "It printed `unauthorised`.",
+    "value": 401,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-p861mnfg",
+    "version": 1,
+    "section": "a-leak",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A secret was pushed to a public repository. Put the response in order.",
+    "items": [
+      "Replace the secret at the service and revoke the old one",
+      "Read the service's logs for use of the old one",
+      "Remove the file and add it to `.gitignore`",
+      "Rewrite the history, if others will clone it"
+    ]
+  },
+  {
+    "id": "ex-kzcz3hr3",
+    "version": 1,
+    "section": "a-leak",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`git check-ignore -v .env.local .env` prints one line, for `.env.local`. What does that tell you about `.env`?",
+    "choices": [
+      {
+        "text": "It is ignored by a rule in a global file",
+        "correct": false,
+        "why": "Then `check-ignore` would have printed that rule."
+      },
+      {
+        "text": "No rule ignores it, so `git add .` would commit it",
+        "correct": true,
+        "why": "Right. The template expects `.env` to hold shared values."
+      },
+      {
+        "text": "It does not exist",
+        "correct": false,
+        "why": "`check-ignore` answers about paths whether or not the file exists."
+      },
+      {
+        "text": "It is already committed",
+        "correct": false,
+        "why": "The command says nothing about what is committed."
+      }
+    ]
+  },
+  {
+    "id": "ex-7mdsxkgd",
+    "version": 1,
+    "section": "a-leak",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `git rm --cached .env` and a commit, is the secret gone from the repository?",
+    "choices": [
+      {
+        "text": "Yes, `--cached` removes it from every commit",
+        "correct": false,
+        "why": "It removes it from the next commit only."
+      },
+      {
+        "text": "No, the earlier commit still holds it",
+        "correct": true,
+        "why": "Right. `git log -p -- .env` shows the line."
+      },
+      {
+        "text": "Yes, once `.env` is in `.gitignore`",
+        "correct": false,
+        "why": "Ignoring affects files not yet tracked, never history."
+      },
+      {
+        "text": "No, but only because it was not pushed",
+        "correct": false,
+        "why": "Pushed or not, the local history has it."
+      }
+    ]
+  },
+  {
+    "id": "ex-fkwh59e7",
+    "version": 1,
+    "section": "a-leak",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "GitHub's push protection accepted a push containing your own made-up token format. What does that show?",
+    "choices": [
+      {
+        "text": "The token was not a secret after all",
+        "correct": false,
+        "why": "Whether it is a secret is about what it opens, not what a scanner knows."
+      },
+      {
+        "text": "Push protection was turned off",
+        "correct": false,
+        "why": "It can be on and still not know the format."
+      },
+      {
+        "text": "The scanner knows common formats, not every format",
+        "correct": true,
+        "why": "Right. It is a net under the rule, never the rule."
+      },
+      {
+        "text": "Private repositories are not scanned",
+        "correct": false,
+        "why": "The section says nothing of the kind."
+      }
+    ]
+  },
+  {
+    "id": "ex-1rc1h0rt",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A front end must call a service whose only key is secret. Which design keeps the key secret?",
+    "choices": [
+      {
+        "text": "`VITE_SERVICE_KEY` set only in the host's dashboard",
+        "correct": false,
+        "why": "The prefix copies it into the bundle wherever it was set."
+      },
+      {
+        "text": "The key in `config.json`, fetched after sign-in",
+        "correct": false,
+        "why": "Whatever the browser fetches, the reader has."
+      },
+      {
+        "text": "A small server of yours that holds it and does one action",
+        "correct": true,
+        "why": "Right: the page calls your server, and only your server holds the key."
+      },
+      {
+        "text": "The key without a prefix, read with `import.meta.env`",
+        "correct": false,
+        "why": "Then the page gets `undefined` and the feature does not work at all."
+      }
+    ]
+  }
+]

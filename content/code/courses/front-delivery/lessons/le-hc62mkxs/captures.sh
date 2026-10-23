@@ -15,7 +15,9 @@
 # apt before ana types anything, and removed afterwards; for "The wrong
 # processor", the arm64 tarball is downloaded beside the right one; for "The port
 # is taken", a first dev server is left running in another terminal. The files
-# ana writes are taken out of the lesson's .md by lab/shown.py.
+# ana writes are taken out of the lesson's .md by lab/shown.py. At the end the
+# commit the lesson leaves is tagged lesson-1, so that lesson 2's captures start
+# from it however many times they are run; no transcript shows the tag.
 set -uo pipefail
 cd "$(dirname "$0")"
 . ../../lab/lib.sh
@@ -139,3 +141,4 @@ session '~/planner' "curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8
   'rm -rf site'
 bg_stop sub INT
 quiet '~/planner' 'npm run build'
+quiet '~/planner' 'git tag -f lesson-1'
