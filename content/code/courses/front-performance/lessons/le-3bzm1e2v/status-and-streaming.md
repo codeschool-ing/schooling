@@ -12,6 +12,12 @@ with the shell.
 
 ```
 ana@dev:~/planner$ curl -si http://localhost:3005/courses/git | sed '/^\r$/q'
+HTTP/1.1 200 OK
+content-type: text/html; charset=utf-8
+Date: Fri, 23 Oct 2026 23:31:59 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
 ```
 
 There is no `Content-Length`, because the server did not know the length when it started.

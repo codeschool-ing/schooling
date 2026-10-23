@@ -47,6 +47,9 @@ Build again, restart `server.ts` with `TZ=UTC`, and open the page from São Paul
 
 ```
 ana@dev:~/planner$ node tools/hydrate.ts http://localhost:3000/courses/git
+painted at 108 ms, taken over by the script at 76 ms
+Sat 2026-10-24 · 25 min Mark done
+Tue 2026-10-27 · 40 min Mark done
 ```
 
 **No warning, and Saturday on both sides.** The same mistake in `mondayOf` would have put a session in

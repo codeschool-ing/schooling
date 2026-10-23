@@ -41,6 +41,17 @@ watcher, and prints the text of the page at the end instead.
 
 ```
 ana@dev:~/planner$ node tools/appear.ts http://localhost:3005/courses/git Git "Loading sessions" 2026-10-24
+   19 ms  Git
+   19 ms  Loading sessions
+ 1010 ms  2026-10-24
+ana@dev:~/planner$ node tools/appear.ts http://localhost:3005/courses/git Git "Loading sessions" 2026-10-24 --no-js
+     -    Git
+     -    Loading sessions
+     -    2026-10-24
+All courses
+
+Git
+Loading sessions…
 ```
 
 **The heading and the placeholder were on the screen a second before the sessions.** A page that

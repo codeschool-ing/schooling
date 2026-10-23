@@ -1,8 +1,8 @@
 from fig import Canvas
 
 # Numbers read off this lesson's captures, and checked against them by hand.
-PAINT, CLICK, TAKEN = 40, 300, 2036       # the-dead-window: hydrate.ts --script-delay 2000 --click-at 300
-FIRST, SECOND = 52, 1049                  # streaming-html: chunks.ts on stream.ts
+PAINT, CLICK, TAKEN = 52, 300, 2049       # the-dead-window: hydrate.ts --script-delay 2000 --click-at 300
+FIRST, SECOND = 50, 1049                  # streaming-html: chunks.ts on stream.ts
 
 
 def stages(T):

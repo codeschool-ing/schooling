@@ -40,6 +40,14 @@ Build, start it on port 3001, and look at the pieces:
 
 ```
 ana@dev:~/planner$ node tools/chunks.ts http://localhost:3001/slow
+87 ms  status 200
+122 ms  1302 bytes  <!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/>
+132 ms  4127 bytes  <script>(self.__next_f=self.__next_f||[]).push([0])</script>
+133 ms  4030 bytes  <script>self.__next_f.push([1,"1a:o1,~1a:o40d,2:\"$Sreact.fr
+1101 ms  211 bytes  <script>self.__next_f.push([1,"a:[\"$\",\"ul\",null,{\"child
+1101 ms  73 bytes  <script src="/_next/static/chunks/0cz1d0mv5g_q7.js" noModule
+1103 ms  964 bytes  <div hidden id="S:0"><ul><li>Sat 2026-10-24 · 25 min</li><li
+1104 ms  14 bytes  </body></html>
 ```
 
 The first pieces arrived together, the page and the fallback, and the sessions came a second later
@@ -83,6 +91,9 @@ export function load() {
 
 ```
 ana@dev:~/planner$ node tools/chunks.ts http://localhost:3003/slow
+69 ms  status 200
+70 ms  4519 bytes  <!doctype html> <html lang="en"> <head> <meta charset="utf-8
+1054 ms  113 bytes  <script>__sveltekit_1k3z5ml.resolve(1, () => [["Sat 2026-10-
 ```
 
 **The second piece is not HTML but data**: a call to a function SvelteKit put in the page, with the

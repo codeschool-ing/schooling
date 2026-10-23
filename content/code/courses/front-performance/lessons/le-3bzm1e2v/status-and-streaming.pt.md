@@ -11,7 +11,13 @@ tinha saído com a casca.
 O `curl -i` imprime os cabeçalhos antes do corpo, e o `sed` para na linha em branco que os termina:
 
 ```
-@@
+ana@dev:~/planner$ curl -si http://localhost:3005/courses/git | sed '/^\r$/q'
+HTTP/1.1 200 OK
+content-type: text/html; charset=utf-8
+Date: Fri, 23 Oct 2026 23:31:59 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
 ```
 
 Não há `Content-Length`, porque o servidor não sabia o tamanho quando começou.

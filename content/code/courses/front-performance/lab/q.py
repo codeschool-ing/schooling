@@ -97,6 +97,19 @@ def run(name):
     spec = importlib.util.spec_from_file_location("qs", src)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
+    if getattr(mod, "BALANCE", False):
+        # Move each quiz's key to a position that cycles 0, 2, 1, 3, so that no
+        # position holds it in more than a quarter of the questions. Run before
+        # the file is first committed: after that a choice's position is its
+        # identity, and moving it would change what a recorded answer means.
+        k = 0
+        for e, tr in mod.EX:
+            if e["type"] != "quiz":
+                continue
+            n = len(e["choices"]); key = [c["correct"] for c in e["choices"]].index(True)
+            want = (0, 2, 1, 3)[k % 4] % n; k += 1
+            for lst in (e["choices"], tr["choices"]):
+                lst.insert(want, lst.pop(key))
     ids = [e["id"] for e, _ in mod.EX]
     if len(ids) != len(set(ids)):
         sys.exit(f"{src}: an id is used twice")

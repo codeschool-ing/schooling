@@ -52,15 +52,21 @@ lesson 3 left them, open the same course page in each:
 
 ```
 ana@dev:~/planner$ node tools/cpu.ts http://localhost:3000/courses/git http://localhost:3001/courses/git http://localhost:3002/courses/git http://localhost:3003/courses/git http://localhost:3004/courses/git
+ script ms   all ms  address
+     47      154  http://localhost:3000/courses/git
+    131      557  http://localhost:3001/courses/git
+     73      370  http://localhost:3002/courses/git
+     51      233  http://localhost:3003/courses/git
+     77      307  http://localhost:3004/courses/git
 ```
 
 ## Reading it
 
 **Next.js again costs the most and SvelteKit the least, but not in proportion to what they sent.**
-Next.js sent about five times SvelteKit's JavaScript in lesson 2, and ran about three and a half times
-its script time here. And the plain planner, with 2.8 KB, measured as much script time as Angular:
-at this size the counters are measuring what any page with a script costs to start, as much as the
-framework, and only the large difference stands clear of it. What the numbers do agree with is the
+Next.js sent about five times SvelteKit's JavaScript in lesson 2, and ran about two and a half times
+its script time here, 131 milliseconds against 51. And SvelteKit measured barely more than the plain
+planner's 47, with 89 KB against 2.8: at this size the counters are measuring what any page with a
+script costs to start, as much as the framework, and only the large difference stands clear of it. What the numbers do agree with is the
 scale: a page with two links and two sessions costs a slowed processor tens of milliseconds to take
 over, and a real page, with a hundred components, costs proportionally more, all of it while the
 page looks ready.

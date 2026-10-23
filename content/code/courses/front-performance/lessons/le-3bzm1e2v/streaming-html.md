@@ -51,6 +51,12 @@ for await (const chunk of response.body!) {
 
 ```
 ana@dev:~/planner$ node tools/chunks.ts http://localhost:3005/courses/git
+49 ms  status 200
+50 ms  204 bytes  <!doctype html> <html lang="en"><head><meta charset="utf-8">
+1049 ms  217 bytes  <template id="later"><li>2026-10-24 · 25 min</li><li>2026-10
+ana@dev:~/planner$ node tools/chunks.ts http://localhost:3005/courses/nonsense
+49 ms  status 404
+50 ms  15 bytes  no such course 
 ```
 
 **The status and the first piece arrived at once, and the second a second later**, exactly where the
@@ -58,5 +64,5 @@ wait is. An unknown course got its 404 immediately, because the server looked th
 writing anything.
 
 ```schooling-figure
-@fig
+{"svg": "<svg viewBox=\"0 0 720 210\" role=\"img\" aria-label=\"The response of stream.ts over time. At 50 milliseconds the first piece arrives: the head, the heading and a Loading sessions placeholder, which the browser draws. At 1049 milliseconds the second piece arrives: the sessions in a template and a script that moves them into the list.\"><line x1=\"40\" y1=\"150\" x2=\"680\" y2=\"150\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\"></line><polygon points=\"680.0,150.0 672.6,153.1 672.6,146.9\" fill=\"var(--paper-dim)\"></polygon><text x=\"680\" y=\"168\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">ms</text><rect x=\"65.83333333333334\" y=\"40\" width=\"200\" height=\"90\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.6\"></rect><text x=\"165.83333333333334\" y=\"58\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--phosphor)\">piece 1 · 50 ms</text><text x=\"79.83333333333334\" y=\"84\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">&lt;h1&gt;Git&lt;/h1&gt;</text><text x=\"79.83333333333334\" y=\"106\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">&lt;li&gt;Loading sessions…</text><rect x=\"431.98333333333335\" y=\"40\" width=\"200\" height=\"90\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.6\"></rect><text x=\"531.9833333333333\" y=\"58\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--amber)\">piece 2 · 1049 ms</text><text x=\"445.98333333333335\" y=\"84\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">&lt;template&gt;…&lt;/template&gt;</text><text x=\"445.98333333333335\" y=\"106\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">&lt;script&gt;…replaceChildren</text><line x1=\"65.83333333333334\" y1=\"132\" x2=\"65.83333333333334\" y2=\"148\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></line><line x1=\"581.9833333333333\" y1=\"132\" x2=\"581.9833333333333\" y2=\"148\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></line><text x=\"40\" y=\"190\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">One response, one connection; the browser draws piece 1 a second before piece 2 exists.</text></svg>", "caption": "The quick part is not held hostage by the slow one."}
 ```

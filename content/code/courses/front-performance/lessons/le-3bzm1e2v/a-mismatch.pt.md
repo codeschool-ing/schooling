@@ -40,13 +40,16 @@ Uma data de calendário não tem fuso horário, então mostre-a como uma. `timeZ
 `src/view.ts`, mude a linha que define `day`:
 
 ```typescript
-@@
+const day = (date: string) => `${new Date(date).toLocaleDateString("en-GB", { weekday: "short", timeZone: "UTC" })} ${date}`;
 ```
 
 Faça o build de novo, reinicie o `server.ts` com `TZ=UTC`, e abra a página de São Paulo mais uma vez:
 
 ```
-@@
+ana@dev:~/planner$ node tools/hydrate.ts http://localhost:3000/courses/git
+painted at 108 ms, taken over by the script at 76 ms
+Sat 2026-10-24 · 25 min Mark done
+Tue 2026-10-27 · 40 min Mark done
 ```
 
 **Nenhum aviso, e sábado dos dois lados.** O mesmo erro em `mondayOf` teria posto uma sessão na semana

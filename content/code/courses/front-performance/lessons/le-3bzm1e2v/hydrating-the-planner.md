@@ -122,6 +122,15 @@ Then ask for the Git course, and open it as the person in São Paulo:
 
 ```
 ana@dev:~/planner$ curl -s http://localhost:3000/courses/git | grep -o '<li>[^<]*'
+<li>Sat 2026-10-24 · 25 min 
+<li>Tue 2026-10-27 · 40 min 
+ana@dev:~/planner$ node tools/hydrate.ts http://localhost:3000/courses/git
+console.warning: hydration mismatch: the page the server sent is not the page this script draws; drawing again
+painted at 228 ms, taken over by the script at 253 ms
+Fri 2026-10-24 · 25 min Mark done
+Mon 2026-10-27 · 40 min Mark done
+ana@dev:~/planner$ node tools/look.ts http://localhost:3000/courses/git | grep requests
+requests: /courses/git /assets/index-B8ViuWQI.js /assets/index-1yLCgpWc.css
 ```
 
 **The server said Saturday and the browser said Friday**, warned, and drew its own version over the

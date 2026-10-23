@@ -8,7 +8,31 @@ pena, e é fácil conferir: o `tools/appear.ts` abre uma página no Chromium e r
 pedaço de texto de que ele foi avisado apareceu pela primeira vez na tela. Salve em `tools/`:
 
 ```typescript
-@@
+// tools/appear.ts: open a page in Chromium and say when each piece of text
+// first appeared on the screen, in milliseconds after the request.
+//
+//   node tools/appear.ts URL TEXT...   [--no-js]
+import { chromium } from "playwright";
+
+const args = process.argv.slice(2);
+const js = !args.includes("--no-js");
+const [url, ...texts] = args.filter((a) => a !== "--no-js");
+const browser = await chromium.launch();
+const page = await browser.newPage({ javaScriptEnabled: js });
+await page.addInitScript((wanted: string[]) => {
+  const seen: Record<string, number> = {};
+  (window as any).seen = seen;
+  const check = () => {
+    for (const t of wanted) if (!(t in seen) && document.body?.innerText.includes(t)) seen[t] = Math.round(performance.now());
+  };
+  new MutationObserver(check).observe(document, { childList: true, subtree: true, characterData: true });
+}, texts);
+await page.goto(url, { waitUntil: "load" });
+await page.waitForTimeout(300);
+const seen = js ? await page.evaluate(() => (window as any).seen) : {};
+for (const t of texts) console.log(`${js ? (t in seen ? `${String(seen[t]).padStart(5)} ms` : "  never ") : "     -  "}  ${t}`);
+if (!js) console.log((await page.locator("body").innerText()).trim());
+await browser.close();
 ```
 
 Ele observa com um `MutationObserver`, o aviso do próprio navegador de que o documento mudou, então vê
@@ -16,7 +40,18 @@ o texto conforme o parser o acrescenta, antes de a página terminar de carregar.
 consegue rodar o seu observador, e imprime o texto da página no final.
 
 ```
-@@
+ana@dev:~/planner$ node tools/appear.ts http://localhost:3005/courses/git Git "Loading sessions" 2026-10-24
+   19 ms  Git
+   19 ms  Loading sessions
+ 1010 ms  2026-10-24
+ana@dev:~/planner$ node tools/appear.ts http://localhost:3005/courses/git Git "Loading sessions" 2026-10-24 --no-js
+     -    Git
+     -    Loading sessions
+     -    2026-10-24
+All courses
+
+Git
+Loading sessions…
 ```
 
 **O título e o marcador estavam na tela um segundo antes das sessões.** Uma página que esperasse a sua
