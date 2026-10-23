@@ -1,0 +1,452 @@
+{
+  "ex-0xdvxjpq": {
+    "prompt": "Separe cada valor do agenda conforme onde ele pertence.",
+    "pairs": [
+      {
+        "left": "INSTALLED_APPS",
+        "right": "o código"
+      },
+      {
+        "left": "DATABASE_HOST",
+        "right": "o ambiente"
+      },
+      {
+        "left": "DJANGO_SECRET_KEY",
+        "right": "o ambiente, nunca o git"
+      }
+    ]
+  },
+  "ex-qe3hxk7s": {
+    "prompt": "Que pergunta decide se um valor pertence ao ambiente?",
+    "choices": [
+      {
+        "text": "Ele ocupa mais de uma linha de código?",
+        "why": "O tamanho não importa."
+      },
+      {
+        "text": "Ele mudaria em outro lugar?",
+        "why": "Isso."
+      },
+      {
+        "text": "Ele é um número e não uma palavra, para o tipo poder convertê-lo?",
+        "why": "Tipos não têm nada a ver."
+      },
+      {
+        "text": "O Django o lê?",
+        "why": "O Django lê os dois tipos."
+      }
+    ]
+  },
+  "ex-71zz4hdj": {
+    "prompt": "De onde todo processo recebe o seu ambiente?",
+    "choices": [
+      {
+        "text": "De um arquivo chamado .env, que o sistema operacional lê ao ligar",
+        "why": "Um .env é lido por ferramentas que escolhem lê-lo."
+      },
+      {
+        "text": "Do settings.py",
+        "why": "O settings.py lê o ambiente."
+      },
+      {
+        "text": "De quem o iniciou",
+        "why": "Isso: ele é herdado."
+      },
+      {
+        "text": "Do PostgreSQL",
+        "why": "O banco não tem nenhum para dar."
+      }
+    ]
+  },
+  "ex-nhx8j1hv": {
+    "prompt": "Por que a SECRET_KEY usa os.environ[...] enquanto o DEBUG usa os.environ.get(...)?",
+    "choices": [
+      {
+        "text": "O os.environ[...] é mais rápido",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "Nenhuma chave é segura, então uma faltando precisa impedir a subida",
+        "why": "Isso: o DEBUG tem um padrão seguro, desligado."
+      },
+      {
+        "text": "O DEBUG não é string, então o .get() é necessário para convertê-lo antes em booleano",
+        "why": "O .get() não converte nada."
+      },
+      {
+        "text": "O Django lê a SECRET_KEY antes de o ambiente existir",
+        "why": "O ambiente existe antes de o Python começar."
+      }
+    ]
+  },
+  "ex-vwex6de7": {
+    "prompt": "Por que o ALLOWED_HOSTS descarta strings vazias em vez de usar .split(\",\") direto?",
+    "choices": [
+      {
+        "text": "\"\".split(\",\") é [\"\"], e uma lista não vazia anula o localhost do DEBUG",
+        "why": "Isso."
+      },
+      {
+        "text": "O Django recusa listas com vírgulas",
+        "why": "A lista não tem vírgulas."
+      },
+      {
+        "text": "Strings vazias combinam com todo host",
+        "why": "Elas não combinam com nenhum, que é o problema."
+      },
+      {
+        "text": "Para ordenar os hosts",
+        "why": "Nada os ordena."
+      }
+    ]
+  },
+  "ex-pmk8ewd6": {
+    "prompt": "Que variável vence quando ela está no shell e também no .env, e o comando roda com uv run --env-file .env?",
+    "choices": [
+      {
+        "text": "A do .env",
+        "why": "A do shell vence."
+      },
+      {
+        "text": "A definida no shell",
+        "why": "Isso."
+      },
+      {
+        "text": "Nenhuma: o uv recusa o conflito e pergunta qual usar",
+        "why": "O uv não recusa nada."
+      },
+      {
+        "text": "A que foi definida por último, em qualquer um dos lugares",
+        "why": "O arquivo é lido quando o comando roda; o shell ainda vence."
+      }
+    ]
+  },
+  "ex-pbjq8d00": {
+    "prompt": "O uv lê um arquivo de variáveis para o comando que roda com a opção --___ .env.",
+    "blanks": [
+      {
+        "accept": [
+          "env-file"
+        ]
+      }
+    ]
+  },
+  "ex-3sffwddq": {
+    "prompt": "O psql -U agenda_app agenda falhou com Peer authentication failed. Por quê?",
+    "choices": [
+      {
+        "text": "A senha estava errada",
+        "why": "Nenhuma senha foi pedida."
+      },
+      {
+        "text": "O agenda_app não tinha direitos no agenda",
+        "why": "A recusa veio antes de qualquer direito."
+      },
+      {
+        "text": "O PostgreSQL não escutava por TCP",
+        "why": "Ele foi alcançado pelo socket."
+      },
+      {
+        "text": "Pelo socket, o papel precisa ter o nome do usuário do sistema",
+        "why": "Isso: e não existe usuário agenda_app."
+      }
+    ]
+  },
+  "ex-andbgpqm": {
+    "prompt": "Por que o comando create role lê a senha com psql -v em vez de escrevê-la no SQL?",
+    "choices": [
+      {
+        "text": "Para ela nunca aparecer num comando nem no histórico",
+        "why": "Isso."
+      },
+      {
+        "text": "SQL não pode conter senhas, então o PostgreSQL recusaria o comando",
+        "why": "Pode; esse é o risco."
+      },
+      {
+        "text": "Para fazer o hash antes de chegar ao servidor",
+        "why": "O servidor faz o hash."
+      },
+      {
+        "text": "O psql -v criptografa a conexão",
+        "why": "O -v define uma variável."
+      }
+    ]
+  },
+  "ex-whd1dj78": {
+    "prompt": "Por que o papel da aplicação recebe a posse do seu banco e de nada mais?",
+    "choices": [
+      {
+        "text": "O PostgreSQL permite um dono por servidor",
+        "why": "Cada banco tem seu dono."
+      },
+      {
+        "text": "Superusuários não conseguem rodar migrações",
+        "why": "Conseguem."
+      },
+      {
+        "text": "Um vazamento alcança só o agenda",
+        "why": "Isso."
+      },
+      {
+        "text": "A posse deixa as consultas mais rápidas porque o planejador pula as conferências de permissão",
+        "why": "Não deixa."
+      }
+    ]
+  },
+  "ex-15q6bsm9": {
+    "prompt": "O que o select current_user, inet_server_addr() do dbshell mostrou? Escolha todos que se aplicam.",
+    "choices": [
+      {
+        "text": "A conexão era do agenda_app",
+        "why": "Isso."
+      },
+      {
+        "text": "Ela foi por TCP, até 127.0.0.1",
+        "why": "Isso."
+      },
+      {
+        "text": "Ela usou o socket local",
+        "why": "O inet_server_addr é nulo num socket."
+      },
+      {
+        "text": "A ana continuava sendo o usuário",
+        "why": "O papel era o agenda_app."
+      }
+    ]
+  },
+  "ex-9qxres1s": {
+    "prompt": "Iniciado sem as variáveis, o que o Settings() fez?",
+    "choices": [
+      {
+        "text": "Usou strings vazias",
+        "why": "Os campos são obrigatórios."
+      },
+      {
+        "text": "Recusou, nomeando os dois campos que faltavam no ambiente",
+        "why": "Isso."
+      },
+      {
+        "text": "Pediu-os no terminal, um por um, antes de seguir",
+        "why": "Ele não pede nada."
+      },
+      {
+        "text": "Leu-os do alembic.ini",
+        "why": "Ele lê o ambiente e o .env."
+      }
+    ]
+  },
+  "ex-1364gt5h": {
+    "prompt": "O que o SecretStr muda?",
+    "choices": [
+      {
+        "text": "Ele criptografa o valor na memória",
+        "why": "Ele só o esconde da impressão."
+      },
+      {
+        "text": "Ele guarda o valor num cofre fora do processo, que só a aplicação consegue abrir",
+        "why": "Ele não guarda nada em outro lugar."
+      },
+      {
+        "text": "Prints e tracebacks mostram estrelas no lugar",
+        "why": "Isso."
+      },
+      {
+        "text": "Ele recusa valores curtos",
+        "why": "Não há conferência de tamanho."
+      }
+    ]
+  },
+  "ex-k9ay0dmf": {
+    "prompt": "Com env_prefix=\"AGENDA_API_\", o campo token_minutes é lido da variável AGENDA_API____.",
+    "blanks": [
+      {
+        "accept": [
+          "TOKEN_MINUTES"
+        ]
+      }
+    ]
+  },
+  "ex-berh6ma1": {
+    "prompt": "Depois de a chave ir para o .env com um valor novo, o token do token.txt foi recusado. Por quê?",
+    "choices": [
+      {
+        "text": "Ele foi assinado com a chave antiga",
+        "why": "Isso: trocar a chave encerra todo token."
+      },
+      {
+        "text": "Ele tinha expirado antes da mudança",
+        "why": "Ele foi recusado pela assinatura."
+      },
+      {
+        "text": "O papel do Bruno mudou",
+        "why": "Papéis do banco não assinam tokens."
+      },
+      {
+        "text": "O pydantic-settings apaga tokens antigos quando a aplicação sobe com valores novos",
+        "why": "Ele não sabe nada de tokens."
+      }
+    ]
+  },
+  "ex-e2bydj8s": {
+    "prompt": "Por que o migrations/env.py define o sqlalchemy.url pelas configurações em vez de mantê-lo no alembic.ini?",
+    "choices": [
+      {
+        "text": "O alembic.ini não consegue guardar URLs",
+        "why": "Ele guardou uma até agora."
+      },
+      {
+        "text": "O Alembic só lê variáveis de ambiente",
+        "why": "Ele leu o arquivo ini por cinco aulas."
+      },
+      {
+        "text": "As configurações a criptografam para o Alembic",
+        "why": "Nada é criptografado."
+      },
+      {
+        "text": "Uma URL, escrita uma vez, e fora de um arquivo commitado",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-47069ywp": {
+    "prompt": "Por que o .env.example é commitado e o .env não?",
+    "choices": [
+      {
+        "text": "O git não guarda arquivos que começam com ponto",
+        "why": "Ele guarda o .gitignore."
+      },
+      {
+        "text": "Ele nomeia as variáveis e não guarda valores",
+        "why": "Isso."
+      },
+      {
+        "text": "Ele é criptografado",
+        "why": "É texto simples, sem segredos."
+      },
+      {
+        "text": "O uv lê o .env.example em produção, então o servidor precisa dele no repositório",
+        "why": "Nada o lê."
+      }
+    ]
+  },
+  "ex-zs3trbvb": {
+    "prompt": "Uma senha de banco foi colada num chat da equipe. O que a aula diz para fazer?",
+    "choices": [
+      {
+        "text": "Apagar a mensagem",
+        "why": "Cópias podem já existir."
+      },
+      {
+        "text": "Pôr o chat no .gitignore",
+        "why": "O .gitignore é para arquivos."
+      },
+      {
+        "text": "Trocá-la: ALTER ROLE ... PASSWORD e um reinício",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada, já que chats são privados da equipe e o servidor não fica exposto a eles",
+        "why": "Trate como vazada."
+      }
+    ]
+  },
+  "ex-tmraz38s": {
+    "prompt": "O comando do git que diz que linha do .gitignore exclui um arquivo é git ___ -v .env.",
+    "blanks": [
+      {
+        "accept": [
+          "check-ignore"
+        ]
+      }
+    ]
+  },
+  "ex-140t6c8t": {
+    "prompt": "O que o SECRET_KEY_FALLBACKS do Django torna possível?",
+    "choices": [
+      {
+        "text": "Rodar sem SECRET_KEY nenhuma",
+        "why": "Uma chave continua obrigatória."
+      },
+      {
+        "text": "Trocar a chave enquanto assinaturas antigas ainda conferem",
+        "why": "Isso: as antigas conferem, a nova assina."
+      },
+      {
+        "text": "Manter a chave no git, desde que uma segunda chave fique fora dele",
+        "why": "Nenhuma configuração torna isso seguro."
+      },
+      {
+        "text": "Assinar com várias chaves ao mesmo tempo",
+        "why": "Só a primeira assina."
+      }
+    ]
+  },
+  "ex-762v67v9": {
+    "prompt": "Com DEBUG=0 e ALLOWED_HOSTS=agenda.example.org, por que uma requisição a 127.0.0.1 recebeu 400?",
+    "choices": [
+      {
+        "text": "O runserver recusa requisições com o DEBUG desligado",
+        "why": "Ele respondeu 200 ao host nomeado."
+      },
+      {
+        "text": "O cabeçalho Host dela não estava no ALLOWED_HOSTS",
+        "why": "Isso."
+      },
+      {
+        "text": "A página de eventos precisa de cookie de sessão",
+        "why": "Ela é pública."
+      },
+      {
+        "text": "O banco recusou a conexão de 127.0.0.1, porque o papel só aceita nomes",
+        "why": "O banco não participou."
+      }
+    ]
+  },
+  "ex-7s1r8y0p": {
+    "prompt": "Com o DEBUG desligado e o ALLOWED_HOSTS definido, quantos avisos o check --deploy ainda imprimiu?",
+    "unit": "avisos"
+  },
+  "ex-fhqvfd7r": {
+    "prompt": "O que os quatro avisos restantes têm em comum?",
+    "choices": [
+      {
+        "text": "Eles são sobre o banco",
+        "why": "Nenhum o menciona."
+      },
+      {
+        "text": "Eles somem com o DEBUG desligado",
+        "why": "Eles continuaram com o DEBUG desligado."
+      },
+      {
+        "text": "Todos são sobre HTTPS",
+        "why": "Isso: o nginx da aula 16."
+      },
+      {
+        "text": "Eles só podem ser consertados mudando o código-fonte do Django, por isso continuam",
+        "why": "Eles são configurações."
+      }
+    ]
+  },
+  "ex-t0xvbhmj": {
+    "prompt": "Um colega escreve DEBUG = os.environ.get(\"DJANGO_DEBUG\", \"1\") == \"1\". O que há de errado?",
+    "choices": [
+      {
+        "text": "O DEBUG fica ligado sem a variável",
+        "why": "Isso: o padrão falha do lado inseguro."
+      },
+      {
+        "text": "Levanta KeyError quando a variável falta",
+        "why": "O .get() nunca levanta."
+      },
+      {
+        "text": "O DEBUG precisa ser string",
+        "why": "Precisa ser booleano, e é."
+      },
+      {
+        "text": "Nada; é igual à linha da aula, escrita ao contrário",
+        "why": "O padrão é diferente."
+      }
+    ]
+  }
+}
