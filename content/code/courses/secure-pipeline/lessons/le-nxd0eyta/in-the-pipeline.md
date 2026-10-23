@@ -59,8 +59,8 @@ Commit the three files and push:
 
 @@CAPTURE pipeline@@
 
-The pre-commit hook from lesson 6 scanned the staged files on the way, which is the first four
-lines of output. Then the run: `sign` is the ninth stage and it passed. Its log carries the same
+The pre-commit hook from lesson 6 scanned the staged files on the way, which is the three lines
+that start with a time. Then the run: `sign` is the ninth stage and it passed. Its log carries the same
 `WARNING` about Sigstore's trust root three times, once per call, and apart from those it reads:
 
 @@CAPTURE sign-log@@

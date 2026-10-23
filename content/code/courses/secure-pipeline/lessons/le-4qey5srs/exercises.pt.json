@@ -1,0 +1,401 @@
+{
+  "ex-z6b3gg5e": {
+    "prompt": "Um gate quebra o build em todo achado, inclusive avisos sem versão corrigida. Por que isso acaba menos seguro que um gate que alerta nesses casos?",
+    "choices": [
+      {
+        "text": "Quebrar builds deixa o pipeline mais lento",
+        "why": "Um build quebrado não é mais lento; o estrago está no que as pessoas aprendem com ele."
+      },
+      {
+        "text": "Vermelho deixa de significar algo, e uma linha o desliga",
+        "why": "Isso. allow_failure, continue-on-error ou um estágio comentado, e o achado verdadeiro passa a não chegar a ninguém."
+      },
+      {
+        "text": "Scanners apontam menos achados quando quebram o build",
+        "why": "O scanner aponta os mesmos achados seja o que for que o pipeline faça com eles."
+      },
+      {
+        "text": "Avisos sem correção são falsos positivos e não deveriam aparecer",
+        "why": "São reais; o ponto é que ninguém consegue agir sobre eles mudando um pin."
+      }
+    ]
+  },
+  "ex-70e3chgp": {
+    "prompt": "Associe cada linha ao lugar onde ela transforma um gate em enfeite.",
+    "pairs": [
+      {
+        "left": "allow_failure: true",
+        "right": "um job do GitLab CI"
+      },
+      {
+        "left": "continue-on-error: true",
+        "right": "um step do GitHub Actions"
+      },
+      {
+        "left": "--no-verify",
+        "right": "um commit num laptop"
+      },
+      {
+        "left": "|| true",
+        "right": "o fim de um comando num estágio de shell"
+      }
+    ],
+    "right_distractors": [
+      "o arquivo de exceções do gate de composição"
+    ]
+  },
+  "ex-fwanew6r": {
+    "prompt": "Quais achados quebram o build quer a regra \"só o que quem quebrou consegue corrigir, agora\" diga isso ou não?",
+    "choices": [
+      {
+        "text": "Um segredo num commit enviado",
+        "why": "Isso. O dono sempre pode agir, revogando-o, e cada minuto custa."
+      },
+      {
+        "text": "Uma checagem que não rodou até o fim",
+        "why": "Isso. Silêncio não é aprovação; isso é falhar fechado."
+      },
+      {
+        "text": "Um aviso classificado como crítico sem versão corrigida",
+        "why": "A severidade não cria uma correção. Ele alerta, e alguém é o dono."
+      },
+      {
+        "text": "Um achado em código com mais de um ano",
+        "why": "Código antigo é o caso para o qual existem baselines; a idade sozinha não quebra nada."
+      }
+    ]
+  },
+  "ex-y45n8xa1": {
+    "prompt": "Que código de saída um estágio devolve, no pipeline da aula, para passar com um alerta?"
+  },
+  "ex-4mec05rw": {
+    "prompt": "Por que um alerta é 3 e não 2?",
+    "choices": [
+      {
+        "text": "O POSIX reserva o 2 para alertas do shell",
+        "why": "Essa reserva não existe; o shell disse 127 para um comando que falta."
+      },
+      {
+        "text": "O Python sai com 2 numa opção inválida",
+        "why": "Isso: um erro numa flag passaria como alerta. Um crash tem de cair num código que o pipeline trate como quebra."
+      },
+      {
+        "text": "O ZAP sai com 3 para alertas, e o pipeline copia",
+        "why": "O ZAP sai com 2 para alertas; o dast.sh traduz para 3."
+      },
+      {
+        "text": "O bash não lê códigos abaixo de 3 dentro de um while",
+        "why": "O laço lê qualquer código; a escolha é sobre o que as falhas produzem."
+      }
+    ]
+  },
+  "ex-d544zdq7": {
+    "prompt": "A varredura baseline do ZAP sai com 3 quando a própria varredura não conseguiu terminar. Em que o `ci/dast.sh` da aula transforma isso?",
+    "choices": [
+      {
+        "text": "3, um alerta, porque o número é o mesmo",
+        "why": "O case manda só o 2 do ZAP para 3; qualquer outro código vai para 1."
+      },
+      {
+        "text": "0, já que uma varredura que não terminou não achou nada",
+        "why": "Não achar nada porque nada rodou é a aprovação que esta aula recusa."
+      },
+      {
+        "text": "1, uma quebra",
+        "why": "Isso. Tudo que não é 0 nem 2 vai para 1: o estágio falha fechado."
+      },
+      {
+        "text": "Ele repete a varredura uma vez antes de decidir",
+        "why": "Nada no script repete; ele mapeia o código e sai."
+      }
+    ]
+  },
+  "ex-f758vt3k": {
+    "prompt": "A varredura da aula 4 mandava o ZAP sair com 0 nos alertas com uma flag de uma letra, que esta aula tira. A flag é ___",
+    "blanks": [
+      {
+        "accept": [
+          "-I"
+        ]
+      }
+    ]
+  },
+  "ex-xwgvswth": {
+    "prompt": "Por que o `ci/sca.sh` escreve o relatório do pip-audit num arquivo criado pelo `mktemp` em vez de `audit.json` no projeto?",
+    "choices": [
+      {
+        "text": "O pip-audit se recusa a escrever dentro de um repositório git",
+        "why": "Ele escreveu audit.json no projeto sem reclamar na primeira versão."
+      },
+      {
+        "text": "Para que relatório de outra execução nunca substitua um que faltou",
+        "why": "Isso. No laptop, uma execução que falhou passou com o relatório de ontem."
+      },
+      {
+        "text": "Arquivos temporários são mais rápidos de ler",
+        "why": "Velocidade não tem nada a ver com isso."
+      },
+      {
+        "text": "O clone da CI é somente leitura",
+        "why": "O clone da CI aceita escrita; o defeito apareceu no laptop."
+      }
+    ]
+  },
+  "ex-nfwzzk3s": {
+    "prompt": "Alguém acrescenta a linha `PYSEC-2026-1475 2026-11-20` ao `ci/exceptions.txt`, sem motivo depois da data. O que acontece na próxima execução?",
+    "choices": [
+      {
+        "text": "A exceção vale, já que a data está no futuro",
+        "why": "A linha nunca vira exceção: ela não se desdobra em três campos."
+      },
+      {
+        "text": "O gate pula a linha como comentário",
+        "why": "Só linhas que começam com # são comentários."
+      },
+      {
+        "text": "O gate alerta que falta o motivo e passa",
+        "why": "Não existe esse alerta no código; ele levanta um erro."
+      },
+      {
+        "text": "O Python levanta um erro e o build quebra",
+        "why": "Isso. Uma exceção que ninguém explicou é recusada, e nada foi escrito para recusá-la."
+      }
+    ]
+  },
+  "ex-c0n0zxzq": {
+    "prompt": "Com `werkzeug==3.0.1` fixado ao lado de `flask==3.1.3`, o estágio de composição saiu com 1. Por quê?",
+    "choices": [
+      {
+        "text": "O werkzeug 3.0.1 tem avisos de segurança com versão corrigida",
+        "why": "Tem, mas o pip-audit nem chegou lá: não conseguiu instalar o conjunto."
+      },
+      {
+        "text": "Os pins não se instalam juntos, então não houve relatório",
+        "why": "Isso. Um arquivo que ninguém consegue instalar não é um arquivo sem avisos."
+      },
+      {
+        "text": "O gate quebra em qualquer downgrade",
+        "why": "O gate lê avisos; ele não sabe nada sobre versões descendo."
+      },
+      {
+        "text": "Os testes falharam antes e pararam a execução",
+        "why": "Foi o ci/sca.sh rodado sozinho, e o erro é do resolvedor do pip."
+      }
+    ]
+  },
+  "ex-x9xt5n34": {
+    "prompt": "Por que `judge()` recebe `today` como parâmetro em vez de ler o relógio?",
+    "choices": [
+      {
+        "text": "Para os testes fixarem o dia",
+        "why": "Isso. Os testes usam 14 de outubro, conferem os dois lados de uma data e passam em qualquer dia."
+      },
+      {
+        "text": "Porque o servidor de CI não tem relógio",
+        "why": "Tem; os scripts de shell imprimem tempos a partir dele."
+      },
+      {
+        "text": "Para as exceções serem julgadas em UTC",
+        "why": "O parâmetro é uma data, e o programa passa a local."
+      },
+      {
+        "text": "O pip-audit põe a data no relatório",
+        "why": "O relatório não traz data; o gate a fornece."
+      }
+    ]
+  },
+  "ex-g7xzqt39": {
+    "prompt": "No branch que voltou o Jinja2 para 3.1.4, quantos avisos distintos o gate listou como BREAKS?"
+  },
+  "ex-4s6t61zg": {
+    "prompt": "Sai um aviso com versão corrigida contra o pytest, que só os testes usam. O que o gate faz, e está certo pela regra da aula?",
+    "choices": [
+      {
+        "text": "Alerta, porque dependências de desenvolvimento nunca vão para produção",
+        "why": "O gate lê os dois arquivos do mesmo jeito, e o pytest roda no pipeline com as credenciais dele."
+      },
+      {
+        "text": "Passa, porque o pip-audit lê só o requirements.txt",
+        "why": "O sca.sh passa os dois arquivos ao pip-audit."
+      },
+      {
+        "text": "Quebra: um pin, que quem fez o push troca agora",
+        "why": "Isso. Corrigível agora por quem fez o push, seja para que for a dependência."
+      },
+      {
+        "text": "Quebra, mas a regra diz que deveria alertar",
+        "why": "A regra pergunta se quem fez o push corrige agora; aqui ele corrige."
+      }
+    ]
+  },
+  "ex-8jkcbk3j": {
+    "prompt": "O branch do ecdsa passou com alerta. O que fez o aviso não se aplicar ao uso planejado, segundo o próprio texto dele?",
+    "choices": [
+      {
+        "text": "O aviso trata da curva P-384, e o serviço usa a P-256",
+        "why": "Ele cita o próprio P-256."
+      },
+      {
+        "text": "Há correção prevista para a próxima versão",
+        "why": "O projeto diz que não há correção planejada."
+      },
+      {
+        "text": "A verificação não é afetada, e o serviço só verifica",
+        "why": "Isso. Sem chave privada para assinar, o vazamento por tempo não tem o que revelar."
+      },
+      {
+        "text": "Ataques de tempo exigem acesso físico ao servidor",
+        "why": "O aviso não diz nada disso; a leitura depende de assinar ou verificar."
+      }
+    ]
+  },
+  "ex-7geyykvt": {
+    "prompt": "Ponha em ordem a vida de uma exceção.",
+    "items": [
+      "uma linha com o aviso, uma data e um motivo entra num commit",
+      "o aviso passa, registrado como em exceção",
+      "na última semana, o gate alerta",
+      "no dia seguinte à data, o achado volta a quebrar o build",
+      "um commit novo, com data e motivo novos, a renova"
+    ]
+  },
+  "ex-4fjygaxg": {
+    "prompt": "As linhas de exceção nomeiam avisos, não o pacote. O que acontece quando sai um quarto aviso contra o Jinja2 3.1.4?",
+    "choices": [
+      {
+        "text": "Fica coberto, já que o pacote está em exceção",
+        "why": "Nada põe um pacote em exceção; cada linha é um id de aviso."
+      },
+      {
+        "text": "Alerta até alguém acrescentar uma linha",
+        "why": "Ou tem versão corrigida ou não; com uma, quebra."
+      },
+      {
+        "text": "O gate recusa o arquivo de exceções inteiro",
+        "why": "As outras linhas continuam valendo; só o aviso novo fica sem exceção."
+      },
+      {
+        "text": "Quebra, se tiver correção",
+        "why": "Isso. Uma decisão sobre três avisos não diz nada sobre um quarto."
+      }
+    ]
+  },
+  "ex-etttv7d2": {
+    "prompt": "Associe cada caso ao veredito e ao motivo.",
+    "pairs": [
+      {
+        "left": "um segredo enviado com --no-verify",
+        "right": "quebra: o dono pode revogá-lo na hora"
+      },
+      {
+        "left": "regra 10031 em /search, provada falsa",
+        "right": "alerta: mantida visível, tirada do escopo quando virar ruído"
+      },
+      {
+        "left": "B108 numa função que nada chama",
+        "right": "quebra: corrigível agora, e a inalcançabilidade não é checada"
+      },
+      {
+        "left": "um aviso sem versão corrigida",
+        "right": "alerta: alguém é o dono e o lê"
+      }
+    ],
+    "right_distractors": [
+      "passa: está na baseline do ano passado"
+    ]
+  },
+  "ex-rf6w696c": {
+    "prompt": "A regra 10031 é um falso positivo provado em `/search`. Por que não marcá-la como IGNORE em `ci/zap-rules.conf`?",
+    "choices": [
+      {
+        "text": "IGNORE cala a regra em toda página",
+        "why": "Isso. OUTOFSCOPE para /search é a ferramenta precisa quando o alerta virar ruído."
+      },
+      {
+        "text": "O ZAP recusa IGNORE para regras passivas",
+        "why": "IGNORE é um dos níveis que a configuração aceita."
+      },
+      {
+        "text": "IGNORE faria a execução noturna falhar",
+        "why": "Ele descarta a regra; a execução passaria sem alerta."
+      },
+      {
+        "text": "A regra pode deixar de ser falso positivo amanhã em /search",
+        "why": "A resposta prova que é falso ali; o risco são as outras páginas."
+      }
+    ]
+  },
+  "ex-g47pjrjm": {
+    "prompt": "Depois que o branch do webhook foi apagado do servidor de CI, onde o segredo enviado ainda estava?",
+    "choices": [
+      {
+        "text": "Em lugar nenhum: apagar o branch no servidor removeu os commits junto com ele",
+        "why": "Apagar um branch remove um nome; o commit fica até o Git recolhê-lo, e o clone da execução guarda uma cópia."
+      },
+      {
+        "text": "Só no laptop do desenvolvedor",
+        "why": "O servidor e o clone da execução também o guardam."
+      },
+      {
+        "text": "Nos objetos do servidor até serem recolhidos, e no clone da execução",
+        "why": "Isso. É por isso que a resposta começa por revogá-lo."
+      },
+      {
+        "text": "Na imagem que o estágio de build enviou",
+        "why": "A execução parou no primeiro estágio; nenhuma imagem foi construída."
+      }
+    ]
+  },
+  "ex-2evq311y": {
+    "prompt": "O que uma linha de exceção carrega que uma linha de baseline não carrega?",
+    "choices": [
+      {
+        "text": "A regra que o encontrou",
+        "why": "Uma baseline registra o achado, com a regra."
+      },
+      {
+        "text": "Uma data, um motivo e, pelo commit, um dono",
+        "why": "Isso. Uma baseline não tem dia em que a decisão seja revista."
+      },
+      {
+        "text": "O arquivo e a linha do achado",
+        "why": "Baselines carregam isso; é assim que um achado é reconhecido."
+      },
+      {
+        "text": "Uma nota de severidade",
+        "why": "Nenhuma das duas carrega, nesta aula."
+      }
+    ]
+  },
+  "ex-6nsvfdp3": {
+    "prompt": "O dono de uma exceção não é um campo do arquivo. O comando do Git que aponta o commit por trás de cada linha dele é git ___",
+    "blanks": [
+      {
+        "accept": [
+          "blame"
+        ]
+      }
+    ]
+  },
+  "ex-vf89n7p3": {
+    "prompt": "Um time acrescenta o Semgrep a um serviço de cinco anos, e a primeira execução aponta 300 achados. Qual primeiro passo segue a aula?",
+    "choices": [
+      {
+        "text": "Quebrar o build pelos 300 até serem corrigidos",
+        "why": "Ninguém que faz push na terça os escreveu; o gate é desligado até quinta."
+      },
+      {
+        "text": "Alertar pelos 300 e não quebrar por nada",
+        "why": "O próximo achado real se perde entre trezentos antigos."
+      },
+      {
+        "text": "Escrever uma exceção por achado, cada uma com data",
+        "why": "Trezentas decisões datadas são uma baseline com mais papelada, e todas vencem juntas."
+      },
+      {
+        "text": "Baseline hoje, quebrar nos novos, e dar dono aos antigos",
+        "why": "Isso. Os novos seguem a regra, e os antigos são dívida com dono e orçamento."
+      }
+    ]
+  }
+}

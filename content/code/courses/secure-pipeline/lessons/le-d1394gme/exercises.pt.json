@@ -1,0 +1,390 @@
+{
+  "ex-x7e687h2": {
+    "prompt": "Um time roda o Trivy em toda imagem no pipeline. O que isso diz sobre uma máquina virtual que alguém montou à mão três anos atrás?",
+    "choices": [
+      {
+        "text": "Nada: a máquina nunca passou pelo pipeline",
+        "why": "Isso. Um scanner de artefato vê o que passa por ele; só um scan da rede acha essa máquina."
+      },
+      {
+        "text": "Que ela está coberta, porque o Trivy também escaneia hosts em execução",
+        "why": "O Trivy lê arquivos; ele não varre uma rede atrás de hosts."
+      },
+      {
+        "text": "Que ela está coberta desde que rode a mesma imagem base",
+        "why": "Uma imagem base em comum não diz nada sobre o que foi instalado à mão por cima."
+      },
+      {
+        "text": "Que ela tem os mesmos 162 achados da imagem",
+        "why": "A contagem é da imagem que o scan leu, não de uma máquina que ele nunca viu."
+      }
+    ]
+  },
+  "ex-9s7yexcv": {
+    "prompt": "De fora, o linkbox respondeu `Server: gunicorn`. Por que um scanner que só vê esse cabeçalho não consegue decidir se o serviço tem os avisos de 2024 do gunicorn?",
+    "choices": [
+      {
+        "text": "O cabeçalho é escondido pelos cabeçalhos de segurança que a aula 4 pôs em toda resposta",
+        "why": "Esses cabeçalhos acrescentam políticas; não escondem nada, e o nome do servidor está à vista."
+      },
+      {
+        "text": "O gunicorn se esconde de scanners de propósito",
+        "why": "Ele disse o nome. O que deixou de fora foi a versão."
+      },
+      {
+        "text": "Ele não diz a versão, então nada casa com um aviso",
+        "why": "Isso. A 21.2.0 e a 22.0.0 respondem igual; só uma leitura de dentro as distingue."
+      },
+      {
+        "text": "Os avisos se aplicam só a pacotes do Debian",
+        "why": "São avisos sobre o próprio gunicorn, um pacote Python."
+      }
+    ]
+  },
+  "ex-fxrzqnmc": {
+    "prompt": "Ligue cada pergunta à família de scanner que a responde.",
+    "pairs": [
+      {
+        "left": "o que há dentro do release de amanhã?",
+        "right": "um scanner de artefato, no pipeline"
+      },
+      {
+        "left": "qual porta está aberta sem que ninguém quisesse?",
+        "right": "um scanner de rede, de fora"
+      },
+      {
+        "left": "quais hosts estão sem o patch do mês?",
+        "right": "um scanner de rede com credenciais"
+      },
+      {
+        "left": "o laptop que nunca fica na rede do escritório está atualizado?",
+        "right": "um agente no host"
+      }
+    ]
+  },
+  "ex-qk3wbgrq": {
+    "prompt": "Um scan sem autenticação aponta um aviso do OpenSSH num host Debian cujo pacote já tem a correção do Debian. O que produziu o falso positivo?",
+    "choices": [
+      {
+        "text": "Ele comparou um banner, e o Debian fez backport da correção",
+        "why": "Isso: o banner parece a versão antiga; o banco de pacotes teria mostrado a revisão corrigida."
+      },
+      {
+        "text": "O feed de plugins do scanner estava semanas desatualizado naquele dia",
+        "why": "Um feed antigo deixa de ver avisos novos; não inventa um para um pacote corrigido."
+      },
+      {
+        "text": "O Debian não publica aviso nenhum para os pacotes do OpenSSH",
+        "why": "O Debian publica; foi daí que veio a revisão corrigida."
+      },
+      {
+        "text": "O host foi escaneado por um agente",
+        "why": "Um agente lê o banco de pacotes, que é justamente o que evita esse erro."
+      }
+    ]
+  },
+  "ex-b8jffv3j": {
+    "prompt": "A sua empresa passa os scans de sem autenticação para com credenciais. Que risco novo ela assume, e precisa gerir?",
+    "choices": [
+      {
+        "text": "Mais falsos positivos, porque scans logados leem mais arquivos",
+        "why": "Ler o banco de pacotes reduz falsos positivos; é o chute pelo banner que os produz."
+      },
+      {
+        "text": "Uma conta em cada host, nas mãos de uma ferramenta",
+        "why": "Isso. A credencial do scanner alcança todas as máquinas, então recebe menor privilégio, cofre e rotação."
+      },
+      {
+        "text": "Hosts que ninguém listou deixam de ser achados",
+        "why": "A parte de rede do scan ainda varre a faixa; ela entra onde consegue."
+      },
+      {
+        "text": "O scan só pode rodar em Windows",
+        "why": "Hosts Linux são escaneados por SSH, hosts Windows pelos serviços administrativos dele."
+      }
+    ]
+  },
+  "ex-j3ram2gg": {
+    "prompt": "Por que um agente funciona para uma instância de nuvem que vive uma hora, onde um scan de rede semanal não funciona?",
+    "choices": [
+      {
+        "text": "Agentes são gratuitos e scanners não",
+        "why": "Os dois vêm com a licença do fornecedor; o custo não é a diferença."
+      },
+      {
+        "text": "Agentes varrem a rede mais rápido do que scanners",
+        "why": "Um agente nem varre a rede."
+      },
+      {
+        "text": "Um provedor de nuvem proíbe scans de rede",
+        "why": "Os provedores publicam o que pode ser testado; escanear as próprias instâncias costuma estar coberto."
+      },
+      {
+        "text": "Ele reporta de dentro do host",
+        "why": "Isso: nada precisa alcançá-lo, e a instância pode sumir antes de a janela semanal seguinte abrir."
+      }
+    ]
+  },
+  "ex-y3cxbcwv": {
+    "prompt": "Qual dos três produtos um aluno consegue rodar em casa, de graça, sem se registrar com ninguém?",
+    "choices": [
+      {
+        "text": "Qualys VMDR",
+        "why": "A Qualys é uma plataforma em nuvem vendida por assinatura."
+      },
+      {
+        "text": "Nessus Professional",
+        "why": "O Professional é uma licença paga por scanner."
+      },
+      {
+        "text": "Greenbone Community Edition",
+        "why": "Isso: código aberto, gratuita, e documentada como um conjunto de containers."
+      },
+      {
+        "text": "Tenable Security Center",
+        "why": "Essa é a plataforma de gestão da Tenable para grandes parques, vendida a organizações."
+      }
+    ]
+  },
+  "ex-mf0nxjt4": {
+    "prompt": "Um amigo pede que você \"rode um scan rápido\" na loja virtual onde ele trabalha, \"só para ver\". Quais condições precisam ser verdade antes de você escanear? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Autorização por escrito de quem é dono do sistema",
+        "why": "Sim. Um amigo que trabalha lá não é o dono, e uma conversa não é um escopo assinado."
+      },
+      {
+        "text": "Os endereços no escopo e a janela, por escrito",
+        "why": "Sim. Um escopo diz o que pode ser tocado e quando."
+      },
+      {
+        "text": "Um contato que possa parar o scan",
+        "why": "Sim. Alguns dispositivos caem quando sondados, e alguém precisa poder interromper."
+      },
+      {
+        "text": "A loja ser pública na internet",
+        "why": "Estar alcançável não é permissão; esse é o erro que a regra existe para impedir."
+      },
+      {
+        "text": "O scan ser sem autenticação, para só ler",
+        "why": "Para quem recebe, uma varredura parece o primeiro passo de um ataque, seja qual for a sua intenção."
+      }
+    ]
+  },
+  "ex-rkqfym46": {
+    "prompt": "Qual a principal diferença entre usar a Qualys e usar o OpenVAS, como a documentação deles os descreve?",
+    "choices": [
+      {
+        "text": "Só o OpenVAS escaneia com credenciais",
+        "why": "Os dois documentam scan com credenciais."
+      },
+      {
+        "text": "Onde ficam o motor e os resultados",
+        "why": "Isso: a nuvem da Qualys, ou um servidor seu. É todo o atrativo de um e toda a objeção a ele."
+      },
+      {
+        "text": "Só a Qualys acha vulnerabilidades em pacotes do Debian",
+        "why": "Os dois leem bancos de pacotes quando conseguem entrar."
+      },
+      {
+        "text": "O OpenVAS lê imagens e a Qualys lê hosts",
+        "why": "O OpenVAS é um scanner de rede e de host, como a Qualys."
+      }
+    ]
+  },
+  "ex-71xjp5tf": {
+    "prompt": "Quantos achados do Debian o `trivy rootfs` reportou no filesystem exportado da imagem do linkbox?"
+  },
+  "ex-kppzsgqc": {
+    "prompt": "`trivy fs .` no linkbox reporta 0 e `trivy image` reporta 162. Qual leitura está certa?",
+    "choices": [
+      {
+        "text": "A imagem está errada, porque o código está limpo",
+        "why": "O código não contém os pacotes do Debian, então não pode responder por eles."
+      },
+      {
+        "text": "Leem arquivos diferentes",
+        "why": "Isso: as versões fixadas, e os pacotes da imagem base. fs e image são duas checagens, não uma rodada duas vezes."
+      },
+      {
+        "text": "O fs usa um banco mais antigo que o image",
+        "why": "Os dois leem o mesmo banco na mesma execução."
+      },
+      {
+        "text": "O fs ignora achados HIGH por padrão",
+        "why": "Nenhum modo esconde uma severidade sem que se peça."
+      }
+    ]
+  },
+  "ex-s30khdz0": {
+    "prompt": "Alguém aplicou um Deployment à mão no mês passado, com uma imagem construída num laptop. Qual das checagens desta aula chegaria a mostrá-lo?",
+    "choices": [
+      {
+        "text": "O `trivy image` no pipeline",
+        "why": "A imagem nunca passou pelo pipeline, então o pipeline nunca a escaneou."
+      },
+      {
+        "text": "O `trivy config` no repositório",
+        "why": "O Deployment não está no repositório; foi aplicado à mão."
+      },
+      {
+        "text": "O `trivy k8s` contra o cluster",
+        "why": "Isso. Ele pergunta à API o que está implantado, seja quem for que implantou."
+      },
+      {
+        "text": "O `trivy sbom` no SBOM do último release",
+        "why": "Esse SBOM descreve a imagem que o pipeline construiu, não a do laptop."
+      }
+    ]
+  },
+  "ex-828hct75": {
+    "prompt": "Ponha em ordem os passos que transformam a imagem do linkbox em algo que o `trivy rootfs` consegue ler.",
+    "items": [
+      "docker create --name linkbox-rootfs localhost:5000/linkbox:main",
+      "docker export linkbox-rootfs | tar -xf - -C ~/scratch/rootfs",
+      "docker rm linkbox-rootfs",
+      "trivy rootfs ~/scratch/rootfs"
+    ]
+  },
+  "ex-9xaphaew": {
+    "prompt": "O `trivy config` aponta o DS-0002, sem `USER` no Dockerfile, mas a imagem roda como 65532. Por que a checagem erra?",
+    "choices": [
+      {
+        "text": "O usuário é definido pela imagem base, não pelo arquivo",
+        "why": "Isso, e a checagem lê só o Dockerfile. A regra está certa em geral e errada neste caso: um falso positivo."
+      },
+      {
+        "text": "65532 é root dentro de uma imagem distroless",
+        "why": "Root é o usuário 0; 65532 é o usuário nonroot."
+      },
+      {
+        "text": "A checagem lê o estágio de build, que roda como root",
+        "why": "Ela lê o arquivo e não acha instrução USER em estágio nenhum."
+      },
+      {
+        "text": "O Trivy não consegue ler Dockerfiles multi-stage",
+        "why": "Ele leu este e rodou 27 testes nele."
+      }
+    ]
+  },
+  "ex-r3fsd25z": {
+    "prompt": "Das duas saídas para o DS-0002, por que acrescentar `USER nonroot` ao estágio final é a mais forte?",
+    "choices": [
+      {
+        "text": "Muda o usuário com que a imagem roda, de root para nonroot",
+        "why": "A imagem já roda como nonroot; a linha não muda nada na imagem de hoje."
+      },
+      {
+        "text": "Resiste a uma troca futura por uma base que roda como root",
+        "why": "Isso: o arquivo passa a afirmar a decisão em vez de herdá-la."
+      },
+      {
+        "text": "Uma exceção nunca expiraria",
+        "why": "As exceções da aula 7 têm uma data justamente para expirar."
+      },
+      {
+        "text": "O Trivy recusa exceções para achados HIGH",
+        "why": "Nada no Trivy recusa isso; a escolha é do time."
+      }
+    ]
+  },
+  "ex-j8602m4r": {
+    "prompt": "O KSV-0125 diz que `localhost:5000` é um registry não confiável. O que é esse achado, neste projeto?",
+    "choices": [
+      {
+        "text": "Um defeito: o cluster puxa de um registry que ninguém controla",
+        "why": "O registry é do próprio projeto, e a admissão não permite nenhum outro."
+      },
+      {
+        "text": "Um sinal de que o scan não alcançou o registry",
+        "why": "O achado é sobre o texto do manifesto, não sobre uma conexão."
+      },
+      {
+        "text": "Duas políticas discordando sobre em quais registries confiar",
+        "why": "Isso: a lista da checagem e a do projeto, e a do projeto é a que o cluster aplica."
+      },
+      {
+        "text": "Uma nota de severidade baixa que pode ser ignorada sem decisão",
+        "why": "É média, e todo achado recebe um veredito registrado, até \"a política é outra\"."
+      }
+    ]
+  },
+  "ex-yn16dbqq": {
+    "prompt": "Para o gunicorn 21.2.0, a manchete do pip-audit disse 4 vulnerabilidades conhecidas. Quantos avisos distintos havia?"
+  },
+  "ex-3evyhen1": {
+    "prompt": "Dois scanners reportam contagens diferentes para o mesmo arquivo de requirements. Qual a primeira coisa a comparar?",
+    "choices": [
+      {
+        "text": "Os totais, para ver qual ferramenta é mais rigorosa",
+        "why": "Os totais são justamente o que engana: o gunicorn deu 2 e 4 para os mesmos dois problemas."
+      },
+      {
+        "text": "Cada aviso, pelos aliases",
+        "why": "Isso. Os nomes CVE, GHSA e PYSEC de um problema se alinham pelos aliases."
+      },
+      {
+        "text": "As versões das duas ferramentas que rodaram",
+        "why": "Uma diferença de versão pode importar, mas não é onde duas contagens do mesmo arquivo se separam."
+      },
+      {
+        "text": "Quanto tempo cada um dos scans levou",
+        "why": "Quanto um scan demorou não diz nada sobre o que ele achou."
+      }
+    ]
+  },
+  "ex-ts7jymes": {
+    "prompt": "Uma distribuição publica os avisos por pacote de ___, como `glibc`, enquanto o scanner encontra pacotes binários como `libc6`.",
+    "blanks": [
+      {
+        "accept": [
+          "origem",
+          "código-fonte",
+          "fonte"
+        ]
+      }
+    ]
+  },
+  "ex-pz31bwr8": {
+    "prompt": "Um cliente quer um produto só para substituir o Trivy do pipeline e o scan de rede trimestral. O que a aula diz que se perde de qualquer jeito?",
+    "choices": [
+      {
+        "text": "Nada, desde que o produto escolhido seja comercial",
+        "why": "O preço não muda onde um scanner fica."
+      },
+      {
+        "text": "A visão antes da entrega, ou a do que roda",
+        "why": "Isso. Uma família lê o artefato antes da entrega; a outra alcança o que já está rodando."
+      },
+      {
+        "text": "Só o formato em que os relatórios são impressos",
+        "why": "A diferença está no que cada um consegue ver, não em como imprime."
+      },
+      {
+        "text": "As credenciais, que um pipeline não pode guardar",
+        "why": "Pipelines guardam credenciais o tempo todo; a aula 17 trata de fazer isso bem."
+      }
+    ]
+  },
+  "ex-v9n51r15": {
+    "prompt": "Um scan com credenciais de um nó do Kubernetes volta limpo. O que ele diz sobre os pacotes dentro da imagem do linkbox rodando nesse nó?",
+    "choices": [
+      {
+        "text": "Que também estão limpos, porque o nó os executa",
+        "why": "Executar não é registrar; eles vivem nas camadas da imagem."
+      },
+      {
+        "text": "Que têm os avisos do kernel do nó",
+        "why": "O kernel do nó é do nó; a imagem leva os próprios pacotes de espaço de usuário."
+      },
+      {
+        "text": "Que a imagem foi escaneada pelo agente",
+        "why": "Um agente lê o banco de pacotes do host, não o de cada imagem."
+      },
+      {
+        "text": "Nada: eles não estão no banco de pacotes do nó",
+        "why": "Isso. Essa é a pergunta que um scanner de artefato responde, no pipeline."
+      }
+    ]
+  }
+}

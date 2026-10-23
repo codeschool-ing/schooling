@@ -43,8 +43,8 @@ The provenance is read the same way, and the interesting part is the predicate:
 
 The commit in `resolvedDependencies` is the commit `git rev-parse` names, character for character.
 **The image now says which commit it was built from, and the CI's key vouches for the saying.**
-`docker build` writes a provenance of its own too, which lesson 13 found in the image index as an
-`attestation-manifest`, and `gitops` lesson 8 read it; that one is written by the builder and
+`docker build` writes a provenance of its own too, the `attestation-manifest` the first section
+found in the image index, and `gitops` lesson 8 reads one. That one is written by the builder and
 signed by nobody, which is the difference this section adds.
 
 ### A question with a yes or a no

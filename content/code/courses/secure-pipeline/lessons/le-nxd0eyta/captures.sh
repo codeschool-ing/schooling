@@ -7,7 +7,9 @@
 # WHAT IS STAGED: ~/linkbox and ~/ci as they stand at the end of lesson 13 (one
 # commit per lesson, fixed dates), the registry on localhost:5000, and the
 # image of that last commit already built and pushed by the CI server, whose
-# runs were then removed. The keys are made on screen. ci/sign.sh,
+# runs were then removed. cosign is already in ~/.local/bin from the lab's
+# setup; the lesson's install writes the same release over it. The keys are
+# made on screen. ci/sign.sh,
 # ci/provenance.py, ci/stages and the two policies are copied out of the
 # lesson's own fences (`place`), so what runs here is what the student saves.
 #
@@ -22,6 +24,12 @@ HERE=$(cd "$(dirname "$0")" && pwd)
 . "$HERE/../../lab/capture.sh"
 MD=lessons/le-nxd0eyta
 lab project 14 >/dev/null 2>&1 || { echo "##### the project did not build" >&2; exit 1; }
+
+block install
+run 'curl -fsSLO https://github.com/sigstore/cosign/releases/download/v3.1.3/cosign-linux-amd64'
+run 'curl -fsSL https://github.com/sigstore/cosign/releases/download/v3.1.3/cosign_checksums.txt | grep " cosign-linux-amd64$" | sha256sum --check'
+run 'install -m 755 cosign-linux-amd64 ~/.local/bin/cosign && rm cosign-linux-amd64'
+run 'cosign version | grep GitVersion'
 
 block tags
 run 'cd linkbox'

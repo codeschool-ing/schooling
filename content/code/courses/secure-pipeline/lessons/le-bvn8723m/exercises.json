@@ -1,0 +1,620 @@
+[
+  {
+    "id": "ex-nbgg28nk",
+    "version": 1,
+    "section": "defaults",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "linkbox's container started with plain `docker run`. Which restriction did `docker inspect` show was in place?",
+    "choices": [
+      {
+        "text": "A read-only root filesystem",
+        "correct": false,
+        "why": "`read-only=false`: the root was writable."
+      },
+      {
+        "text": "A memory limit of 256 MB",
+        "correct": false,
+        "why": "`memory=0` means no limit at all."
+      },
+      {
+        "text": "None of them",
+        "correct": true,
+        "why": "Right: no capability dropped, no security option, no limit. Only the seccomp filter, which `inspect` does not list here, was on."
+      },
+      {
+        "text": "Every capability dropped",
+        "correct": false,
+        "why": "`cap-drop=[]`: nothing was dropped."
+      }
+    ]
+  },
+  {
+    "id": "ex-2nxkte7v",
+    "version": 1,
+    "section": "defaults",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the default container, `CapEff` was 0 and `CapBnd` was `00000000a80425fb`. What does that pair mean?",
+    "choices": [
+      {
+        "text": "None held now; fourteen within reach",
+        "correct": true,
+        "why": "Right. The bounding set is the ceiling for a root process or a setuid file."
+      },
+      {
+        "text": "The process holds fourteen capabilities and uses none",
+        "correct": false,
+        "why": "Effective is what it holds for use; zero effective means it holds none to use."
+      },
+      {
+        "text": "Docker failed to drop the capabilities it was asked to drop",
+        "correct": false,
+        "why": "Nobody asked; this was a plain `docker run`."
+      },
+      {
+        "text": "The seccomp filter is blocking fourteen calls",
+        "correct": false,
+        "why": "Seccomp is the `Seccomp` line; the capability lines are a different mechanism."
+      }
+    ]
+  },
+  {
+    "id": "ex-5vvyrtc6",
+    "version": 1,
+    "section": "defaults",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "As user 65532 the process could not change `/app/app.py`; started with `--user 0`, it could. What does that say about `USER` in a Dockerfile?",
+    "choices": [
+      {
+        "text": "A default, replaced by whoever starts it",
+        "correct": true,
+        "why": "Right, which is why the later controls do not depend on the user."
+      },
+      {
+        "text": "It is enforced by the kernel for the life of the image",
+        "correct": false,
+        "why": "The kernel enforces whatever user the process actually runs as, and that is chosen at start."
+      },
+      {
+        "text": "It only matters at build time, for `RUN` lines",
+        "correct": false,
+        "why": "It sets the user the container starts as, too: 65532 here unless overridden."
+      },
+      {
+        "text": "It makes the files of `/app` read-only",
+        "correct": false,
+        "why": "Ownership made them unwritable for 65532; root could still write them."
+      }
+    ]
+  },
+  {
+    "id": "ex-kvgm75g0",
+    "version": 1,
+    "section": "defaults",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The kernel's summary of a process, which the lesson read for its user, capabilities and seccomp state, is the file `/proc/<pid>/___`",
+    "blanks": [
+      {
+        "accept": [
+          "status"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8p5hm7k3",
+    "version": 1,
+    "section": "read-only",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Run read-only with no other change, linkbox's container exits. What does the log say it needed?",
+    "choices": [
+      {
+        "text": "A writable `/data` for the SQLite file",
+        "correct": false,
+        "why": "That is the second failure, once gunicorn starts; the first comes earlier."
+      },
+      {
+        "text": "A usable temporary directory",
+        "correct": true,
+        "why": "Right: `No usable temporary directory found`, raised by `tempfile` for gunicorn's worker heartbeat file."
+      },
+      {
+        "text": "Permission to bind port 8000",
+        "correct": false,
+        "why": "Binding a port above 1024 needs no capability and no file."
+      },
+      {
+        "text": "A shell to run its start script",
+        "correct": false,
+        "why": "There is no start script and no shell; gunicorn starts directly."
+      }
+    ]
+  },
+  {
+    "id": "ex-g1c30rge",
+    "version": 1,
+    "section": "read-only",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `--tmpfs /tmp` added, the container stays up and the first POST answers 500. Why is this failure the more dangerous of the two?",
+    "choices": [
+      {
+        "text": "It corrupts the database",
+        "correct": false,
+        "why": "Nothing was written; SQLite could not even open the file."
+      },
+      {
+        "text": "It looks healthy until somebody uses it",
+        "correct": true,
+        "why": "Right. A check that only looks at whether the container started passes it."
+      },
+      {
+        "text": "It leaks the token in the error page",
+        "correct": false,
+        "why": "The 500 carried no token; the error went to the log."
+      },
+      {
+        "text": "It restarts in a loop and fills the disk",
+        "correct": false,
+        "why": "The container stayed up; nothing restarted."
+      }
+    ]
+  },
+  {
+    "id": "ex-4pkhm1j9",
+    "version": 1,
+    "section": "read-only",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`/tmp` is a `tmpfs` mounted `noexec`. What does that stop, and what does it not?",
+    "choices": [
+      {
+        "text": "It stops any code in `/tmp` from running, including Python files",
+        "correct": false,
+        "why": "`python3 file.py` runs the interpreter, which lives elsewhere; the file is only read."
+      },
+      {
+        "text": "It stops writes to `/tmp` but not reads",
+        "correct": false,
+        "why": "`/tmp` is mounted `rw`; writing is the reason it exists."
+      },
+      {
+        "text": "Executing a file there as a program; an interpreter reading it still works",
+        "correct": true,
+        "why": "Right, which is why the lesson does not stop at the filesystem."
+      },
+      {
+        "text": "It stops nothing in a container with a read-only root",
+        "correct": false,
+        "why": "The root is read-only; `/tmp` is a separate, writable mount with its own options."
+      }
+    ]
+  },
+  {
+    "id": "ex-g8bkta3t",
+    "version": 1,
+    "section": "read-only",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each path in the read-only linkbox container with how it is mounted.",
+    "pairs": [
+      {
+        "left": "/",
+        "right": "overlay, ro: the image"
+      },
+      {
+        "left": "/tmp",
+        "right": "tmpfs, rw, noexec: gunicorn's scratch"
+      },
+      {
+        "left": "/data",
+        "right": "tmpfs owned by 65532: the database"
+      },
+      {
+        "left": "/app",
+        "right": "part of the read-only image"
+      }
+    ],
+    "right_distractors": [
+      "a named volume shared with the host"
+    ]
+  },
+  {
+    "id": "ex-hpb0z5hb",
+    "version": 1,
+    "section": "privileges",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Root in a container started with `--cap-drop ALL` tries `os.chown('/data', 0, 0)`. What happens, and why?",
+    "choices": [
+      {
+        "text": "It works: root can always change owners",
+        "correct": false,
+        "why": "Changing an owner needs `CAP_CHOWN`, and the bounding set is empty."
+      },
+      {
+        "text": "`Operation not permitted`: no `CAP_CHOWN`",
+        "correct": true,
+        "why": "Right. Same command, same user 0; only the capability differs."
+      },
+      {
+        "text": "`Read-only file system`: `/data` is part of the image",
+        "correct": false,
+        "why": "That run had no `--read-only`; the refusal came from the missing capability."
+      },
+      {
+        "text": "The container refuses to start as root",
+        "correct": false,
+        "why": "Docker starts it as root without complaint; Kubernetes' `runAsNonRoot` is what refuses user 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-16rgx0yk",
+    "version": 1,
+    "section": "privileges",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The distroless image has no setuid file under `/usr`. A colleague says `no-new-privileges` is therefore pointless for linkbox. What is the lesson's answer?",
+    "choices": [
+      {
+        "text": "It guards the next image",
+        "correct": true,
+        "why": "Right: the next image is the one nobody checks for setuid files, and the flag costs nothing to a program that never needed new privileges."
+      },
+      {
+        "text": "He is right; the flag only matters on images with a shell",
+        "correct": false,
+        "why": "A setuid file needs no shell to be executed; any program can exec it."
+      },
+      {
+        "text": "It also blocks system calls that seccomp lets through",
+        "correct": false,
+        "why": "Seccomp filters calls; `no-new-privileges` is about privilege gained by executing a file."
+      },
+      {
+        "text": "It drops the capabilities that `--cap-drop ALL` leaves",
+        "correct": false,
+        "why": "`--cap-drop ALL` leaves none; the two flags do different things."
+      }
+    ]
+  },
+  {
+    "id": "ex-mdyyrn3z",
+    "version": 1,
+    "section": "privileges",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A server must listen on port 80. Following the lesson, how should its container be started?",
+    "choices": [
+      {
+        "text": "With the default capabilities, since it needs one of them",
+        "correct": false,
+        "why": "That keeps thirteen it does not need within reach."
+      },
+      {
+        "text": "`--cap-drop ALL --cap-add NET_BIND_SERVICE`",
+        "correct": true,
+        "why": "Right: drop everything, add back the one, and justify it on review."
+      },
+      {
+        "text": "As `--user 0`, because binding below 1024 needs root",
+        "correct": false,
+        "why": "It needs one capability, not root; root brings all fourteen."
+      },
+      {
+        "text": "With `--privileged`, for the port and nothing else",
+        "correct": false,
+        "why": "`--privileged` grants every capability and device; it is the opposite of the lesson."
+      }
+    ]
+  },
+  {
+    "id": "ex-7rp2kg4r",
+    "version": 1,
+    "section": "privileges",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these controls hold whatever user the process runs as? Choose all that apply.",
+    "choices": [
+      {
+        "text": "`--read-only`",
+        "correct": true,
+        "why": "Right: `--user 0` got `Read-only file system` too."
+      },
+      {
+        "text": "`USER 65532` in the Dockerfile",
+        "why": "That one is the user, and `--user 0` replaces it."
+      },
+      {
+        "text": "`--cap-drop ALL`",
+        "correct": true,
+        "why": "Right: root without capabilities could not `chown`."
+      },
+      {
+        "text": "`--security-opt no-new-privileges`",
+        "correct": true,
+        "why": "Right: it holds for every process in the container and cannot be cleared."
+      },
+      {
+        "text": "files owned by root in `/app`",
+        "why": "Ownership protects them from 65532 and not from root."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ppn95b1",
+    "version": 1,
+    "section": "seccomp-and-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "As root with default capabilities, `os.unshare(os.CLONE_NEWUSER)` failed; with `--security-opt seccomp=unconfined` it worked. What refused it the first time?",
+    "choices": [
+      {
+        "text": "The missing `CAP_SYS_ADMIN` alone",
+        "correct": false,
+        "why": "The capabilities were the same in both runs; only the filter changed."
+      },
+      {
+        "text": "Docker's default seccomp profile",
+        "correct": true,
+        "why": "Right: one run with the filter, one without, nothing else different."
+      },
+      {
+        "text": "The read-only filesystem",
+        "correct": false,
+        "why": "Neither run was read-only, and a namespace is not a file."
+      },
+      {
+        "text": "AppArmor's docker-default profile",
+        "correct": false,
+        "why": "The recording machine runs no AppArmor; the daemon listed only seccomp."
+      }
+    ]
+  },
+  {
+    "id": "ex-2j1v1bfw",
+    "version": 1,
+    "section": "seccomp-and-limits",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A process killed by the kernel's out-of-memory killer with `SIGKILL` (signal 9) leaves which exit status in `docker run`?",
+    "value": 137,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-7zxh4bj7",
+    "version": 1,
+    "section": "seccomp-and-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson set `--memory-swap` equal to `--memory`?",
+    "choices": [
+      {
+        "text": "So the limit is the limit, with no swap on top",
+        "correct": true,
+        "why": "Right: equal values leave no room to swap beyond the memory limit."
+      },
+      {
+        "text": "Because Docker refuses `--memory` without it",
+        "correct": false,
+        "why": "Docker accepts `--memory` alone and adds swap of the same size by default on hosts with swap."
+      },
+      {
+        "text": "To double the memory the container may use",
+        "correct": false,
+        "why": "Equal values mean zero swap, not double."
+      },
+      {
+        "text": "To make `OOMKilled` appear in `docker inspect`",
+        "correct": false,
+        "why": "`OOMKilled` is recorded whenever the kernel kills for memory; swap does not decide that."
+      }
+    ]
+  },
+  {
+    "id": "ex-7z3tqf25",
+    "version": 1,
+    "section": "seccomp-and-limits",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `--pids-limit 32`, how many threads did `threads.py` start before one was refused?",
+    "value": 31,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-revj5nfs",
+    "version": 1,
+    "section": "seccomp-and-limits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "linkbox used 39 MiB under a 256 MiB limit. A colleague proposes `--memory 40m` to make the limit tight. What does the lesson's reasoning predict?",
+    "choices": [
+      {
+        "text": "Better protection for the host at no cost",
+        "correct": false,
+        "why": "The host was already protected by 256; 40 adds a cost and little protection."
+      },
+      {
+        "text": "No effect: the limit only applies at start",
+        "correct": false,
+        "why": "The limit applies for the container's whole life; that is how `hog` was killed."
+      },
+      {
+        "text": "Kills on the first busy afternoon of traffic",
+        "correct": true,
+        "why": "Right: a limit at today's idle use fails as soon as real traffic arrives."
+      },
+      {
+        "text": "Docker rounds it up to 256 MiB anyway",
+        "correct": false,
+        "why": "Docker applies the value it is given."
+      }
+    ]
+  },
+  {
+    "id": "ex-sgs0faw7",
+    "version": 1,
+    "section": "staging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the nightly dynamic scan now run linkbox read-only and without capabilities?",
+    "choices": [
+      {
+        "text": "To test what production runs",
+        "correct": true,
+        "why": "Right, and a flag that breaks linkbox shows up there rather than at the first deployment."
+      },
+      {
+        "text": "Because ZAP refuses to scan a privileged container",
+        "correct": false,
+        "why": "ZAP only sends HTTP requests; it cannot see how its target was started."
+      },
+      {
+        "text": "To find more warnings than lesson 4's scan",
+        "correct": false,
+        "why": "The flags change the container, not what ZAP reports; the verdict stayed the same."
+      },
+      {
+        "text": "So the scan finishes faster",
+        "correct": false,
+        "why": "Speed did not change in any way that matters; that was never the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-v7wmm0zr",
+    "version": 1,
+    "section": "staging",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `docker run` flag of the staging script with the Kubernetes field lesson 10 uses for it.",
+    "pairs": [
+      {
+        "left": "--read-only",
+        "right": "readOnlyRootFilesystem: true"
+      },
+      {
+        "left": "--cap-drop ALL",
+        "right": "capabilities: drop ALL"
+      },
+      {
+        "left": "--security-opt no-new-privileges",
+        "right": "allowPrivilegeEscalation: false"
+      },
+      {
+        "left": "--tmpfs /data",
+        "right": "an emptyDir volume at /data"
+      }
+    ],
+    "right_distractors": [
+      "hostNetwork: true"
+    ]
+  },
+  {
+    "id": "ex-yer63cwq",
+    "version": 1,
+    "section": "staging",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Suppose a later version of linkbox writes cache files to `/var/cache/linkbox`. Nobody updates `ci/dast.sh`. Where is the problem first seen?",
+    "choices": [
+      {
+        "text": "In the push of the change, at the image stage",
+        "correct": false,
+        "why": "The image stage scans packages; it never runs the application."
+      },
+      {
+        "text": "In production, since staging ignores the filesystem",
+        "correct": false,
+        "why": "Staging is read-only now, so the write fails there first."
+      },
+      {
+        "text": "In the unit tests, which run read-only too",
+        "correct": false,
+        "why": "The tests run in a virtual environment on the CI machine, not in the container."
+      },
+      {
+        "text": "In the nightly scan of the read-only staging",
+        "correct": true,
+        "why": "Right: the read-only staging container hits the write first, which is the point of making staging match production."
+      }
+    ]
+  },
+  {
+    "id": "ex-bp7c8kh9",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the method for running an unfamiliar image read-only in order.",
+    "items": [
+      "start it with --read-only",
+      "exercise every route and job that writes",
+      "read the errors for the paths it failed to write",
+      "give each path a tmpfs or a volume",
+      "write the list into the script or manifest that starts it"
+    ]
+  },
+  {
+    "id": "ex-xc9by1t2",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statements about the container staging now runs are true? Choose all that apply.",
+    "choices": [
+      {
+        "text": "its bounding set is empty",
+        "correct": true,
+        "why": "Right: `CapBnd: 0000000000000000`."
+      },
+      {
+        "text": "its seccomp filter is off",
+        "why": "`Seccomp: 2`: the default filter stayed on."
+      },
+      {
+        "text": "it can write to `/tmp` and `/data` and nowhere else",
+        "correct": true,
+        "why": "Right: two tmpfs mounts on a read-only root."
+      },
+      {
+        "text": "it has a 256 MiB memory limit",
+        "why": "Staging leaves the limits out; it lives for a minute."
+      },
+      {
+        "text": "`NoNewPrivs` is 1 for every process in it",
+        "correct": true,
+        "why": "Right: set at start and inherited by every child."
+      }
+    ]
+  }
+]

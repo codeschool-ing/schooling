@@ -109,7 +109,7 @@ misses a token whose variable is called `ADMIN` and flags a long random identifi
 nothing. Both kinds of mistake are why a finding is triaged by a person, and why the triage is
 written down, as the lesson's history section does with this one.
 
-If your own project mints tokens, giving them a prefix of their own, as `lbx_` is here, is the
+If your own project mints tokens, give them a prefix of their own, as `lbx_` is here. It is the
 cheapest thing you can do for every scanner that will ever read your code: a rule for them is one
 line, and it is never confused with anything else.
 

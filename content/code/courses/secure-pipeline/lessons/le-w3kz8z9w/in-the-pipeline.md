@@ -22,9 +22,8 @@ gitleaks git --no-banner --no-color --redact --verbose .
 ```
 
 `--redact` matters more here than anywhere else. **A CI log is read by everybody with access to the
-project's builds, and is often kept longer than the code**, so a scanner that printed the secret
-into it would publish it a second time, in a place nobody thinks of when the time comes to clean
-up. `--verbose` keeps the file, the line and the commit, which is everything a person needs to act.
+project's builds, and is often kept longer than the code.** A scanner that printed the secret into
+it would publish it a second time, in a place nobody thinks of when the time comes to clean up. `--verbose` keeps the file, the line and the commit, which is everything a person needs to act.
 
 ### Why it goes first
 

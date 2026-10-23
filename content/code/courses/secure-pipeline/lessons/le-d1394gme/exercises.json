@@ -1,0 +1,583 @@
+[
+  {
+    "id": "ex-x7e687h2",
+    "version": 1,
+    "section": "two-families",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A team runs Trivy on every image in its pipeline. What does that tell it about a virtual machine somebody set up by hand three years ago?",
+    "choices": [
+      {
+        "text": "Nothing: the machine never went through the pipeline",
+        "correct": true,
+        "why": "Right. An artefact scanner sees what passes through it; only a scan of the network finds that machine."
+      },
+      {
+        "text": "That it is covered, because Trivy also scans running hosts",
+        "correct": false,
+        "why": "Trivy reads files; it does not sweep a network for hosts."
+      },
+      {
+        "text": "That it is covered as long as it runs the same base image",
+        "correct": false,
+        "why": "A shared base image says nothing about what was installed by hand on top of it."
+      },
+      {
+        "text": "That it has the same 162 findings as the image",
+        "correct": false,
+        "why": "The count belongs to the image the scan read, not to a machine it never saw."
+      }
+    ]
+  },
+  {
+    "id": "ex-9s7yexcv",
+    "version": 1,
+    "section": "two-families",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "From outside, linkbox answered `Server: gunicorn`. Why can a scanner that only sees that header not decide whether the service has gunicorn's 2024 advisories?",
+    "choices": [
+      {
+        "text": "The header is hidden by the security headers lesson 4 added to every response",
+        "correct": false,
+        "why": "Those headers add policies; they hide nothing, and the server name is in plain sight."
+      },
+      {
+        "text": "Gunicorn hides itself from scanners on purpose",
+        "correct": false,
+        "why": "It named itself. What it left out was the version."
+      },
+      {
+        "text": "It names no version, so nothing matches an advisory",
+        "correct": true,
+        "why": "Right. 21.2.0 and 22.0.0 answer the same way; only a reading from inside tells them apart."
+      },
+      {
+        "text": "The advisories apply only to Debian packages",
+        "correct": false,
+        "why": "They are advisories on gunicorn itself, a Python package."
+      }
+    ]
+  },
+  {
+    "id": "ex-fxrzqnmc",
+    "version": 1,
+    "section": "two-families",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to the family of scanner that answers it.",
+    "pairs": [
+      {
+        "left": "what is inside tomorrow's release?",
+        "right": "an artefact scanner, in the pipeline"
+      },
+      {
+        "left": "which port is open that nobody meant to open?",
+        "right": "a network scanner, from outside"
+      },
+      {
+        "left": "which hosts lack this month's patch?",
+        "right": "a network scanner with credentials"
+      },
+      {
+        "left": "is the laptop that is never on the office network patched?",
+        "right": "an agent on the host"
+      }
+    ]
+  },
+  {
+    "id": "ex-qk3wbgrq",
+    "version": 1,
+    "section": "credentialed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An unauthenticated scan reports an OpenSSH advisory on a Debian host whose package already carries Debian's fix. What produced the false positive?",
+    "choices": [
+      {
+        "text": "It matched a banner, and Debian backported the fix",
+        "correct": true,
+        "why": "Right: the banner reads like the old version; the package database would have shown the fixed release."
+      },
+      {
+        "text": "The scanner's plugin feed was weeks out of date on that day",
+        "correct": false,
+        "why": "An old feed misses new advisories; it does not invent one for a fixed package."
+      },
+      {
+        "text": "Debian publishes no advisories at all for its OpenSSH packages",
+        "correct": false,
+        "why": "Debian publishes them; that is where the fixed release came from."
+      },
+      {
+        "text": "The host was scanned through an agent",
+        "correct": false,
+        "why": "An agent reads the package database, which is exactly what avoids this mistake."
+      }
+    ]
+  },
+  {
+    "id": "ex-b8jffv3j",
+    "version": 1,
+    "section": "credentialed",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Your company moves its scans from unauthenticated to credentialed. Which new risk does it take on, and must manage?",
+    "choices": [
+      {
+        "text": "More false positives, because logged-in scans read more files",
+        "correct": false,
+        "why": "Reading the package database reduces false positives; it is the banner guess that produces them."
+      },
+      {
+        "text": "An account on every host, held by one tool",
+        "correct": true,
+        "why": "Right. The scanner's credential reaches every machine, so it gets least privilege, a vault and rotation."
+      },
+      {
+        "text": "Hosts nobody listed stop being found",
+        "correct": false,
+        "why": "The network part of the scan still sweeps the range; it logs in where it can."
+      },
+      {
+        "text": "The scan can only run on Windows",
+        "correct": false,
+        "why": "Linux hosts are scanned over SSH, Windows hosts through its administrative services."
+      }
+    ]
+  },
+  {
+    "id": "ex-j3ram2gg",
+    "version": 1,
+    "section": "credentialed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does an agent work for a cloud instance that lives for one hour, where a weekly network scan does not?",
+    "choices": [
+      {
+        "text": "Agents are free and scanners are not",
+        "correct": false,
+        "why": "Both come with the vendor's licence; cost is not the difference."
+      },
+      {
+        "text": "Agents scan the network faster than scanners do",
+        "correct": false,
+        "why": "An agent does not scan the network at all."
+      },
+      {
+        "text": "A cloud provider forbids network scans",
+        "correct": false,
+        "why": "Providers publish what may be tested; scanning your own instances is usually covered."
+      },
+      {
+        "text": "It reports from inside the host",
+        "correct": true,
+        "why": "Right: nothing has to reach it, and the instance may be gone before the next weekly window opens."
+      }
+    ]
+  },
+  {
+    "id": "ex-y3cxbcwv",
+    "version": 1,
+    "section": "the-products",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of the three products can a student run at home, free, without registering with anybody?",
+    "choices": [
+      {
+        "text": "Qualys VMDR",
+        "correct": false,
+        "why": "Qualys is a cloud platform sold by subscription."
+      },
+      {
+        "text": "Nessus Professional",
+        "correct": false,
+        "why": "Professional is a paid licence per scanner."
+      },
+      {
+        "text": "Greenbone Community Edition",
+        "correct": true,
+        "why": "Right: open source, free, and documented as a set of containers."
+      },
+      {
+        "text": "Tenable Security Center",
+        "correct": false,
+        "why": "That is Tenable's management platform for large estates, sold to organisations."
+      }
+    ]
+  },
+  {
+    "id": "ex-mf0nxjt4",
+    "version": 1,
+    "section": "the-products",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A friend asks you to \"run a quick scan\" of the web shop where they work, \"just to see\". Which conditions must be true before you scan it? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Written authorisation from whoever owns the system",
+        "correct": true,
+        "why": "Yes. A friend who works there is not the owner, and a conversation is not a signed scope."
+      },
+      {
+        "text": "The addresses in scope and the window, written down",
+        "correct": true,
+        "why": "Yes. A scope says what may be touched and when."
+      },
+      {
+        "text": "A contact who can stop the scan",
+        "correct": true,
+        "why": "Yes. Some devices fall over when probed, and somebody has to be able to call it off."
+      },
+      {
+        "text": "The shop being public on the internet",
+        "why": "Being reachable is not permission; that is the mistake the rule exists to stop."
+      },
+      {
+        "text": "The scan being unauthenticated, so that it only reads",
+        "why": "To the receiving side a sweep looks like the first step of an attack, whatever you meant."
+      }
+    ]
+  },
+  {
+    "id": "ex-rkqfym46",
+    "version": 1,
+    "section": "the-products",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the main difference between running Qualys and running OpenVAS, as their documentation describes them?",
+    "choices": [
+      {
+        "text": "Only OpenVAS can scan with credentials",
+        "correct": false,
+        "why": "Both document credentialed scanning."
+      },
+      {
+        "text": "Where the engine and results live",
+        "correct": true,
+        "why": "Right: Qualys' cloud, or a server of yours. That is the whole appeal of one and the whole objection to it."
+      },
+      {
+        "text": "Only Qualys finds vulnerabilities in Debian packages",
+        "correct": false,
+        "why": "Both read package databases when they can log in."
+      },
+      {
+        "text": "OpenVAS reads images and Qualys reads hosts",
+        "correct": false,
+        "why": "OpenVAS is a network and host scanner, like Qualys."
+      }
+    ]
+  },
+  {
+    "id": "ex-71xjp5tf",
+    "version": 1,
+    "section": "trivy-modes",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many Debian findings did `trivy rootfs` report on the filesystem exported from linkbox's image?",
+    "value": 162,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-kppzsgqc",
+    "version": 1,
+    "section": "trivy-modes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`trivy fs .` on linkbox reports 0 and `trivy image` reports 162. Which reading is right?",
+    "choices": [
+      {
+        "text": "The image is wrong, because the source is clean",
+        "correct": false,
+        "why": "The source does not contain the Debian packages, so it cannot vouch for them."
+      },
+      {
+        "text": "They read different files",
+        "correct": true,
+        "why": "Right: the pins, and the packages of the base image. fs and image are two checks, not one check run twice."
+      },
+      {
+        "text": "fs uses an older database than image",
+        "correct": false,
+        "why": "Both read the same database in the same run."
+      },
+      {
+        "text": "fs skips HIGH findings by default",
+        "correct": false,
+        "why": "No mode hides a severity unless told to."
+      }
+    ]
+  },
+  {
+    "id": "ex-s30khdz0",
+    "version": 1,
+    "section": "trivy-modes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody applied a Deployment by hand last month, with an image built on a laptop. Which of the checks in this lesson would ever show it?",
+    "choices": [
+      {
+        "text": "`trivy image` in the pipeline",
+        "correct": false,
+        "why": "The image never went through the pipeline, so the pipeline never scanned it."
+      },
+      {
+        "text": "`trivy config` on the repository",
+        "correct": false,
+        "why": "The Deployment is not in the repository; it was applied by hand."
+      },
+      {
+        "text": "`trivy k8s` against the cluster",
+        "correct": true,
+        "why": "Right. It asks the API what is deployed, whoever deployed it."
+      },
+      {
+        "text": "`trivy sbom` on the SBOM of the last release",
+        "correct": false,
+        "why": "That SBOM describes the image the pipeline built, not the one from the laptop."
+      }
+    ]
+  },
+  {
+    "id": "ex-828hct75",
+    "version": 1,
+    "section": "trivy-modes",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps that turn linkbox's image into something `trivy rootfs` can read in order.",
+    "items": [
+      "docker create --name linkbox-rootfs localhost:5000/linkbox:main",
+      "docker export linkbox-rootfs | tar -xf - -C ~/scratch/rootfs",
+      "docker rm linkbox-rootfs",
+      "trivy rootfs ~/scratch/rootfs"
+    ]
+  },
+  {
+    "id": "ex-9xaphaew",
+    "version": 1,
+    "section": "misconfiguration",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`trivy config` flags DS-0002, no `USER` in the Dockerfile, but the image runs as 65532. Why does the check get it wrong?",
+    "choices": [
+      {
+        "text": "The user is set by the base image, not the file",
+        "correct": true,
+        "why": "Right, and the check reads only the Dockerfile. The rule is right in general and wrong about this case: a false positive."
+      },
+      {
+        "text": "65532 is root inside a distroless image",
+        "correct": false,
+        "why": "Root is user 0; 65532 is the nonroot user."
+      },
+      {
+        "text": "The check reads the build stage, which runs as root",
+        "correct": false,
+        "why": "It reads the file and finds no USER instruction in any stage."
+      },
+      {
+        "text": "Trivy cannot parse multi-stage Dockerfiles",
+        "correct": false,
+        "why": "It parsed this one and ran 27 tests on it."
+      }
+    ]
+  },
+  {
+    "id": "ex-r3fsd25z",
+    "version": 1,
+    "section": "misconfiguration",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Of the two ways out of DS-0002, why is adding `USER nonroot` to the final stage the stronger one?",
+    "choices": [
+      {
+        "text": "It changes the user that the image runs as, from root to nonroot",
+        "correct": false,
+        "why": "The image already runs as nonroot; the line changes nothing about today's image."
+      },
+      {
+        "text": "It survives a later change to a base that runs as root",
+        "correct": true,
+        "why": "Right: the file then states the decision instead of inheriting it."
+      },
+      {
+        "text": "An exception would never expire",
+        "correct": false,
+        "why": "Lesson 7's exceptions carry a date precisely so that they do."
+      },
+      {
+        "text": "Trivy refuses exceptions for HIGH findings",
+        "correct": false,
+        "why": "Nothing in Trivy refuses that; the choice is the team's."
+      }
+    ]
+  },
+  {
+    "id": "ex-j8602m4r",
+    "version": 1,
+    "section": "misconfiguration",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "KSV-0125 says `localhost:5000` is an untrusted registry. What is that finding, in this project?",
+    "choices": [
+      {
+        "text": "A defect: the cluster pulls from a registry nobody controls",
+        "correct": false,
+        "why": "The registry is the project's own, and admission allows nothing else."
+      },
+      {
+        "text": "A sign that the scan could not reach the registry",
+        "correct": false,
+        "why": "The finding is about the manifest's text, not about a connection."
+      },
+      {
+        "text": "Two policies disagreeing about which registries to trust",
+        "correct": true,
+        "why": "Right: the check's list and the project's, and the project's is the one the cluster enforces."
+      },
+      {
+        "text": "A low-severity note that can be ignored without a decision",
+        "correct": false,
+        "why": "It is a medium, and every finding gets a recorded verdict, even \"the policy differs\"."
+      }
+    ]
+  },
+  {
+    "id": "ex-yn16dbqq",
+    "version": 1,
+    "section": "choosing",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For gunicorn 21.2.0, pip-audit's headline said 4 known vulnerabilities. How many distinct advisories were there?",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-3evyhen1",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two scanners report different counts for the same requirements file. What is the first thing to compare?",
+    "choices": [
+      {
+        "text": "The totals, to see which tool is stricter",
+        "correct": false,
+        "why": "The totals are exactly what misleads: gunicorn gave 2 and 4 for the same two problems."
+      },
+      {
+        "text": "Each advisory, through its aliases",
+        "correct": true,
+        "why": "Right. CVE, GHSA and PYSEC names for one problem line up through the aliases."
+      },
+      {
+        "text": "The versions of both tools that ran",
+        "correct": false,
+        "why": "A version difference can matter, but it is not where two counts of the same file part."
+      },
+      {
+        "text": "How long each of the scans took to run",
+        "correct": false,
+        "why": "How long a scan took says nothing about what it found."
+      }
+    ]
+  },
+  {
+    "id": "ex-ts7jymes",
+    "version": 1,
+    "section": "choosing",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A distribution publishes its advisories by ___ package, such as `glibc`, while the scanner meets binary packages such as `libc6`.",
+    "blanks": [
+      {
+        "accept": [
+          "source"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pz31bwr8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A client wants one product to replace both the pipeline's Trivy and the quarterly network scan. What does the lesson say is lost either way?",
+    "choices": [
+      {
+        "text": "Nothing at all, as long as the product is a commercial one",
+        "correct": false,
+        "why": "Price does not change where a scanner stands."
+      },
+      {
+        "text": "The view before shipping, or the view of what runs",
+        "correct": true,
+        "why": "Right. One family reads the artefact before it ships; the other reaches what is already running."
+      },
+      {
+        "text": "Only the format the reports are printed in",
+        "correct": false,
+        "why": "The difference is in what each one can see, not in how it prints."
+      },
+      {
+        "text": "The credentials, which a pipeline cannot hold",
+        "correct": false,
+        "why": "Pipelines hold credentials all the time; lesson 17 is about doing it well."
+      }
+    ]
+  },
+  {
+    "id": "ex-v9n51r15",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A credentialed scan of a Kubernetes node comes back clean. What does it say about the packages inside linkbox's image running on that node?",
+    "choices": [
+      {
+        "text": "That they are clean too, because the node runs them",
+        "correct": false,
+        "why": "Running them is not the same as recording them; they live in image layers."
+      },
+      {
+        "text": "That they have the node's kernel advisories",
+        "correct": false,
+        "why": "The node's kernel is the node's; the image carries its own user-space packages."
+      },
+      {
+        "text": "That the image was scanned by the agent",
+        "correct": false,
+        "why": "An agent reads the host's package database, not each image's."
+      },
+      {
+        "text": "Nothing: they are not in the node's package database",
+        "correct": true,
+        "why": "Right. That is the question an artefact scanner answers, in the pipeline."
+      }
+    ]
+  }
+]

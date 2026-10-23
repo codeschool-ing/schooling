@@ -52,8 +52,8 @@ on it on any day since the secret was committed. The contractor who left in Marc
 clone they made in February. A repository made public a year later publishes every commit in it,
 and making a repository public is a setting somebody changes in a minute. Verizon's yearly Data
 Breach Investigations Report has put stolen credentials at or near the top of its list of ways in
-for years, and the leak is rarely somebody breaking in to read a repository: it is a repository
-read by somebody who was allowed to, once.
+for years. The leak is rarely somebody breaking in to read a repository: it is a repository read by
+somebody who was allowed to, once.
 
 So the rule this lesson works from is a strict one. **A secret that was committed has been
 published to everybody who could ever read the repository**, and the response is the one you would

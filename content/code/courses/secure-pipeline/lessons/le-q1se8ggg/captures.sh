@@ -90,7 +90,7 @@ run 'semgrep --version'
 
 block scan
 place "$MD/own-rules.md" .semgrep.yml
-run 'semgrep scan --metrics=off --quiet --config .semgrep.yml .'
+run 'semgrep scan --metrics=off --quiet --emacs --config .semgrep.yml .'
 
 block push-red
 place "$MD/the-build-breaks.md" ci/sast.sh
