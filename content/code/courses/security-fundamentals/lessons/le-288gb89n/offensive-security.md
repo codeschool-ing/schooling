@@ -32,5 +32,6 @@ authorisation, the agreed scope and the honest report are what make it a profess
 even to be helpful, ends careers and can be a crime.
 
 The first job is usually a junior tester working under a senior one, often after time in a SOC, in
-development or in system administration. `pentest` teaches the profession, and it starts with the rules,
-the authorisation and the legal limits in Brazil before any technique, in that order on purpose.
+development or in system administration. This catalogue teaches the defending side and not this
+profession, so whoever chooses it learns the techniques elsewhere, and a good course starts with the
+rules, the authorisation and the legal limits before any technique.

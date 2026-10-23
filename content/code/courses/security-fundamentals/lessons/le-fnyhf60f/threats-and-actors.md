@@ -44,5 +44,5 @@ what (lesson 1's accountability).
 
 A **threat vector**, or attack vector, is the path a threat uses to reach the asset: email, a
 public web page, a USB stick, a phone call to the help desk. Listing the vectors that reach an
-asset is how a defender finds where to put controls. `attacks-threats` takes the deliberate
-vectors one at a time; this course needs only the idea that they exist.
+asset is how a defender finds where to put controls, and this course needs only the idea that
+they exist.

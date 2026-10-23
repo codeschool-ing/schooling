@@ -44,8 +44,7 @@ siga em frente.
 ### O que o STRIDE não é
 
 **Não é uma lista de ataques.** "Injeção de SQL" não é categoria do STRIDE; é um jeito de causar
-adulteração, divulgação ou elevação, conforme o que a consulta faz. O curso `attacks-threats`
-cataloga técnicas. O STRIDE pergunta qual propriedade cada parte do seu sistema poderia perder,
+adulteração, divulgação ou elevação, conforme o que a consulta faz. O STRIDE pergunta qual propriedade cada parte do seu sistema poderia perder,
 que é uma pergunta sobre o seu projeto, e não sobre as ferramentas dos atacantes.
 
 **Não ordena nada.** Uma lista STRIDE diz o que pode dar errado. Quão provável é cada item e quanto

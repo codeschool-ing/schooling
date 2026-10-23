@@ -32,9 +32,7 @@ What separates a red team from a criminal is not the technique. It is **written 
 - what happens to any real data the testers see.
 
 Testing a system you do not own, or have not been given written permission to test, is a crime in
-Brazil as in most countries, whatever the intention. `pentest` lessons 1, 2 and 22 cover the rules,
-the authorisation document and the legal limits in detail, and they come before any technique in
-that course for a reason.
+Brazil as in most countries, whatever the intention.
 
 For the same reason, everything this course shows is done in its own lab, against machines the
 course built for the purpose. The red side in this lesson's exercise is ana, testing the shop's own

@@ -15,7 +15,7 @@ In **2 tracks** — `devsecops`(16), `security`(11).
 
 ## Assumes, and leaves ready
 
-**Assumes:** `attacks-threats` — an analyst recognises what they have already been shown.
+**Assumes:** `security-fundamentals` — an analyst recognises a threat by the vocabulary that course gives them. It assumed `attacks-threats` until 2026-10-23, when that course and `pentest` left both tracks: the catalogue teaches the defending side, and neither will be written.
 
 **Leaves ready:** **nothing.** No course requires it.
 

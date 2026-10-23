@@ -34,9 +34,6 @@ As defesas são de procedimento:
 - **ser lento de propósito**: um pequeno atraso antes de a redefinição valer dá ao dono verdadeiro tempo
   de contestar.
 
-As aulas 1 e 5 de `attacks-threats` desmontam como quem liga constrói um pretexto; esta aula só precisa
-do lado do defensor.
-
 ### Recuperação fraca desfaz login forte
 
 Perguntas de segurança, recuperação por SMS para um número que pode ser trocado, e e-mails de "clique
