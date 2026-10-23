@@ -12,14 +12,22 @@ from pathlib import Path
 
 
 def pieces(text):
-    out, name = {}, None
+    """The named pieces, and the files: `file:PATH` is what put wrote to PATH."""
+    out, name, infile = {}, None, None
     for line in text.splitlines(keepends=True):
         m = re.match(r"^##### (\S+)\n$", line)
-        if m:
+        f = re.match(r"^#####F (\S+)\n$", line)
+        if infile is not None:
+            if line == "#####E\n":
+                infile = None
+            else:
+                out[infile] += line
+        elif f:
+            infile = "file:" + f.group(1)
+            out[infile] = ""
+        elif m:
             name = m.group(1)
             out[name] = ""
-        elif line.startswith("#####F ") or line.startswith("#####E"):
-            continue
         elif name:
             out[name] += line
     return {k: v.rstrip("\n") for k, v in out.items()}
@@ -39,7 +47,7 @@ def main(lesson, capture):
                 bad += 1
                 return m.group(0)
             return got[name]
-        new = re.sub(r"^@@typed:([a-z0-9-]+)@@$", rep, text, flags=re.M)
+        new = re.sub(r"^@@typed:([a-zA-Z0-9_./:-]+)@@$", rep, text, flags=re.M)
         if new != text:
             md.write_text(new)
     sys.exit(1 if bad else 0)

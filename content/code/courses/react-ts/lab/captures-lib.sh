@@ -18,7 +18,7 @@ put() {
   body=$(cat)
   n=$(ls "$SHOWN" | wc -l)
   printf '%s\n' "$body" > "$SHOWN/$n-$(basename "$f")"
-  printf '#####F %s\n' "$f"
+  printf '#####F %s\n%s\n#####E\n' "$f" "$body"
   lab exec ana "cd $(here) && mkdir -p \"\$(dirname '$f')\" && cat > '$f'" <<<"$body"
 }
 # A file ana wrote that an earlier lesson already showed, or that this lesson
@@ -42,6 +42,7 @@ serve() {
 served() { cat /run/rtlab-server.out; }
 stop() { lab stop; }
 finish() {
+  block _end
   stop
   node "$(dirname "$LAB_SH")/lab/shown.mjs" "$LESSON_DIR" "$SHOWN"/* || exit 1
   rm -rf "$SHOWN"
