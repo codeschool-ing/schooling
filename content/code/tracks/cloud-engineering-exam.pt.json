@@ -361,24 +361,24 @@
     "trap": "Pôr o `--fix-broken install` antes do `dpkg -i` ignora que ele conserta uma instalação pela metade; não há nada para ele terminar até o dpkg parar."
   },
   "ex-4nnbfr3v": {
-    "prompt": "Um colega abre um terminal novo para o laboratório de IaC e roda `sh ~/iac-env.sh`. Termina sem erro, mas o `env` não lista nenhuma das variáveis que o arquivo exporta, e o comando seguinte não acha credenciais. O que deu errado?",
-    "hint": "Linux e Linha de Comando, aula 9; Infraestrutura como Código, aula 1.",
+    "prompt": "Um pod com `limits: cpu: 500m` responde rápido, depois trava por algumas dezenas de milissegundos, depois volta a ser rápido. Não há reinícios, e dentro do container o `top` mostra o processo perto de 50% com o load average baixo. Que leitura prova a causa?",
+    "hint": "Linux e Linha de Comando, aula 11; Kubernetes: Orquestração em Produção, aula 19.",
     "choices": [
       {
-        "text": "O arquivo não tem bit de execução, e o `sh` pulou as linhas de `export`",
-        "why": "`sh arquivo` roda as linhas seja qual for o modo; o bit só importa para `./arquivo`."
+        "text": "A coluna RESTARTS do `kubectl get pod`, subindo a cada travada",
+        "why": "Limite de CPU estrangula e não reinicia nada; reinícios com 137 são de memória."
       },
       {
-        "text": "Cada `export` vale só para o próximo comando, e uma linha desfez a outra",
-        "why": "Isso é `NOME=valor comando`; o `export` mantém a variável pelo resto daquele shell."
+        "text": "O `/proc/loadavg` dentro do container, comparado com o que o `nproc` diz",
+        "why": "Nenhum dos dois tem namespace: ambos descrevem o host inteiro, não este container."
       },
       {
-        "text": "O `env` mostra só o que o `~/.bashrc` define, então as variáveis existem e não aparecem",
-        "why": "O `env` lista exatamente o que está exportado no shell atual, venha de onde vier."
+        "text": "`free -m` dentro do container, já que travadas assim vêm de pressão de memória",
+        "why": "O `free` lê o `/proc/meminfo`, com os números do host, e memória no limite mata em vez de travar."
       },
       {
-        "text": "O `sh` rodou o arquivo num shell próprio, e os exports acabaram junto com ele",
-        "why": "Um filho não muda o pai; lido com `.`, as linhas rodam no seu shell."
+        "text": "Um `nr_throttled` que sobe no arquivo cpu.stat do cgroup do próprio container",
+        "why": "No limite de CPU o container espera o próximo período, e esse contador é o único número que diz isso."
       }
     ]
   },
@@ -648,24 +648,24 @@
     "unit": "segundos"
   },
   "ex-7g55b5ac": {
-    "prompt": "O `certbot` renovou o certificado de `www.example.com` na semana passada, e `openssl x509 -in` no arquivo novo mostra um `notAfter` em março. O serviço de monitoramento continua avisando que o certificado do site vence em três dias. Qual é a explicação mais provável?",
-    "hint": "Redes e Protocolos, aula 6.",
+    "prompt": "Um laptop alcança `192.0.2.80` pelo endereço, mas `dig +tries=1 +time=3 www.example.com` termina com `communications error to 192.168.10.53#53: timed out`. Uma captura com `tcpdump -i eth0 -n -l arp or port 53` mostra três linhas de `ARP, Request who-has 192.168.10.53 tell 192.168.10.20` e mais nada. O que essa captura diz?",
+    "hint": "Redes e Protocolos, aula 10.",
     "choices": [
       {
-        "text": "O serviço de monitoramento guarda certificados em cache e verá o novo mais tarde",
-        "why": "O monitoramento pergunta ao servidor a cada vez, e é assim que ele pega uma renovação que ninguém carregou."
+        "text": "O laptop perdeu a rota padrão, o que também o impede de alcançar qualquer resolvedor",
+        "why": "Sem rota padrão, `192.0.2.80` responderia `Network is unreachable`, e ele foi alcançado."
       },
       {
-        "text": "O relógio do serviço de monitoramento está errado e ele julga mal as datas que lê",
-        "why": "Um relógio errado discordaria de todas as datas, não só de um certificado renovado em disco."
+        "text": "Um firewall na frente do servidor DNS descarta toda pergunta enviada à porta 53",
+        "why": "Perguntas descartadas ainda apareceriam na captura saindo para a porta 53; nenhuma saiu."
       },
       {
-        "text": "Falta o intermediário no certificado novo, e o monitoramento relata isso como vencimento",
-        "why": "Intermediário faltando falha com `unable to get local issuer certificate`, uma mensagem própria."
+        "text": "O resolvedor está sobrecarregado e responde devagar demais para os três segundos dados",
+        "why": "Um resolvedor lento seria perguntado: a captura mostraria a pergunta saindo e uma resposta atrasada."
       },
       {
-        "text": "O servidor web nunca foi recarregado e continua mandando o certificado de antes",
-        "why": "Só conta o certificado que o servidor realmente envia; o arquivo em disco é o que deveria ser servido, não o que é."
+        "text": "Nada no enlace local tem esse IP, então nem um pacote DNS chega a ser enviado",
+        "why": "O servidor está na rede do escritório, então o ARP precisa achá-lo antes; ninguém responde, e a configuração está errada."
       }
     ]
   },
@@ -821,24 +821,24 @@
     ]
   },
   "ex-8sggppb5": {
-    "prompt": "O `.gitignore` de um repositório lista `.env`, que guarda uma senha de banco, e o `git status` nunca o mostrou. O Dockerfile roda `COPY . .`, e não há `.dockerignore`. A Ana faz o build da imagem e a envia. A senha está lá dentro?",
-    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10; Docker e Containers, aula 11.",
+    "prompt": "O Bruno enviou uma correção para o `main` dez minutos atrás. Na própria cópia, a Ana roda `git status`, que imprime `Your branch is up to date with 'origin/main'`, e começa o trabalho dali. Por que o Git disse isso, e o que ela devia ter rodado antes?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 7.",
     "choices": [
       {
-        "text": "Sim: o `.gitignore` só vale para o Git, e o contexto de build é o diretório",
-        "why": "Ele tira um arquivo do `git status` e do `git add .`, e nada mais; quem decide o que o builder recebe é o `.dockerignore`."
+        "text": "O `origin/main` é o registro que a cópia dela tem do servidor, da última vez; `git fetch`",
+        "why": "O Git só fala com um remoto quando um comando fala; o fetch move o marcador e não mexe em nada dela."
       },
       {
-        "text": "Não: o `docker build` envia só o que o Git rastreia, e os arquivos ignorados ficam",
-        "why": "O cliente empacota o diretório como está no disco, rastreado ou não."
+        "text": "O commit do Bruno foi para outro branch, porque o `main` é protegido; `git branch -a`",
+        "why": "Nada diz que o push dele foi recusado; a cópia dela só não perguntou ao servidor desde então."
       },
       {
-        "text": "Não: o Docker usa o `.gitignore` quando o build não tem `.dockerignore`",
-        "why": "O Docker só lê o `.dockerignore`; sem ele, vai tudo o que está no diretório."
+        "text": "O diretório de trabalho dela está limpo, e o status pula a checagem remota; `git status -v`",
+        "why": "O status nunca checa o remoto, limpo ou não; ele compara o branch dela com o marcador dela."
       },
       {
-        "text": "Só no cache do build, porque o `COPY` pula arquivos cujo nome começa com ponto",
-        "why": "O `COPY . .` copia arquivos com ponto também; a imagem da aula listava `.env` e `.git` em `/src`."
+        "text": "O push do Bruno ainda não chegou ao servidor; ela devia esperar e rodar `git status` de novo",
+        "why": "O push terminou do lado do Bruno; o `git status` não pergunta a servidor nenhum, então esperar não muda nada."
       }
     ]
   },
@@ -1302,24 +1302,24 @@
     ]
   },
   "ex-ef410me3": {
-    "prompt": "`docker stop worker` levou dez segundos, e depois `docker inspect -f \"OOMKilled={{.State.OOMKilled}} ExitCode={{.State.ExitCode}}\" worker` imprimiu `OOMKilled=false ExitCode=137`. O líder do time lê 137 como falta de memória e quer um `--memory` maior. O que de fato encerrou o processo?",
-    "hint": "Docker e Containers, aula 7; Linux e Linha de Comando, aula 6.",
+    "prompt": "Antes de um reboot planejado de um servidor, a Ana roda `docker stop` no `web`, iniciado com `--restart unless-stopped`, e no `worker`, iniciado com `--restart always`. Ela deixa rodando o `cache` (`--restart unless-stopped`) e o `batch` (sem política de restart). Depois do reboot, `systemctl is-enabled docker` responde `enabled`. Quais containers estão rodando?",
+    "hint": "Docker e Containers, aula 17; Linux e Linha de Comando, aula 5.",
     "choices": [
       {
-        "text": "Ignorou o `SIGTERM`, e após a espera o Docker mandou `SIGKILL`, o sinal 9",
-        "why": "137 é 128 mais 9, e `OOMKilled=false` põe a morte na espera de dez segundos do `docker stop`, não no kernel."
+        "text": "`cache` e `worker`",
+        "why": "O daemon sobe no boot; `always` volta quando o daemon reinicia, mesmo depois de um `docker stop`, e `unless-stopped` só traz de volta o que não foi parado."
       },
       {
-        "text": "O limite de memória; o `OOMKilled` só vira true quando o container reinicia",
-        "why": "O Docker grava `OOMKilled=true` assim que o kernel mata por memória; false quer dizer que outra coisa mandou o `SIGKILL`."
+        "text": "`cache` e `web`",
+        "why": "`unless-stopped` respeita um `docker stop` mesmo quando o daemon reinicia, então o `web` continua parado; quem volta é o `always`."
       },
       {
-        "text": "O próprio `SIGTERM`, que um shell relata como 128 mais o número dele, 137",
-        "why": "O `SIGTERM` é 15, o que daria 143; 137 é 128 mais 9, o `SIGKILL`."
+        "text": "`cache` e `batch`",
+        "why": "Sem política, o padrão `no`, um container nunca é reiniciado, faça o que fizesse antes do reboot."
       },
       {
-        "text": "O limite de processos do cgroup, que mata qualquer container que passa dele",
-        "why": "O limite de pids recusa o processo novo com `can't fork`; ele não mata nada."
+        "text": "apenas o `cache`, mais nada",
+        "why": "`always` só fica parado depois de `docker stop` até o daemon reiniciar, e o reboot o reiniciou."
       }
     ]
   },
@@ -1434,41 +1434,12 @@
     ]
   },
   "ex-ew5nwx6y": {
-    "prompt": "Numa VM na nuvem com endereço público, a Ana sobe o `shelf` com `docker run -d --name web -p 8080:8080 shelf:1.0.0`. Para ver qual endereço local ficou com a porta 8080, ela lista os sockets TCP em estado de escuta, com números em vez de nomes: `ss ___ | grep :8080`. Uma resposta `0.0.0.0:8080` quer dizer que quem alcança a VM alcança o `shelf`.",
-    "hint": "Docker e Containers, aula 17; Redes e Protocolos, aula 10.",
+    "prompt": "Um build precisa de um token para um servidor Git privado, e o token não pode parar no `docker history` nem em camada nenhuma. O build é iniciado com `--secret id=registry_token,src=token.txt`, e o único passo que o usa é escrito `RUN --mount=type=___,id=registry_token ...`, o que deixa o token legível em `/run/secrets/` só durante esse passo.",
+    "hint": "Docker e Containers, aula 18.",
     "blanks": [
       {
         "accept": [
-          "-lnpt",
-          "-lnt",
-          "-lntp",
-          "-lpnt",
-          "-lptn",
-          "-ltn",
-          "-ltnp",
-          "-ltpn",
-          "-nlpt",
-          "-nlt",
-          "-nltp",
-          "-nplt",
-          "-nptl",
-          "-ntl",
-          "-ntlp",
-          "-ntpl",
-          "-plnt",
-          "-pltn",
-          "-pnlt",
-          "-pntl",
-          "-ptln",
-          "-ptnl",
-          "-tln",
-          "-tlnp",
-          "-tlpn",
-          "-tnl",
-          "-tnlp",
-          "-tnpl",
-          "-tpln",
-          "-tpnl"
+          "secret"
         ]
       }
     ]
@@ -2563,24 +2534,24 @@
     ]
   },
   "ex-v3qyfz2y": {
-    "prompt": "Num portfólio de nuvem, o `terraform.tfvars`, com a senha de um banco de dados, foi commitado e enviado. A Ana roda `git rm --cached terraform.tfvars` e acrescenta `*.tfvars` ao `.gitignore`. O que é verdade agora?",
-    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 14; Infraestrutura como Código, aula 12.",
+    "prompt": "O loanbook só captura os erros que esperava, então um disco cheio ainda faz o servidor fechar a conexão sem resposta. A retrospectiva da aula 21 lista a correção como a próxima mudança. Qual deve ser essa resposta, pelas duas aulas?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 11; Fundamentos da Web e Internet, aula 6.",
     "choices": [
       {
-        "text": "O próximo push substitui o histórico do remoto pelo dela, e os clones perdem o commit antigo",
-        "why": "Um push manda commits novos; não alcança clones, forks ou backups que já têm o antigo."
+        "text": "Um 409 citando a regra que falhou, como se responde a um segundo empréstimo recusado",
+        "why": "O 409 é para uma regra que diz não; nenhuma regra entrou nisso, o próprio servidor falhou."
       },
       {
-        "text": "O arquivo e a senha saíram do histórico, porque o `.gitignore` vale também para os commits anteriores",
-        "why": "O padrão deixa o arquivo fora do próximo commit e de nenhum anterior."
+        "text": "Um 200 cujo campo `error` explica o disco cheio, para a página mostrar a frase",
+        "why": "O status é o que as máquinas leem: um monitor veria um serviço saudável, e nada tentaria de novo."
       },
       {
-        "text": "Fica seguro depois de marcar a variável com `sensitive = true`, que a esconde em toda parte",
-        "why": "Essa marcação muda o que aparece na tela e nada do que é gravado em disco, histórico incluído."
+        "text": "Um 400 com o traceback no corpo, para quem mandou a requisição poder relatá-lo",
+        "why": "Um 4xx diz que o cliente pediu errado; disco cheio é problema do servidor, e o traceback vai para o log."
       },
       {
-        "text": "A senha continua no commit anterior de cada clone, então ela é trocada antes de qualquer outra coisa",
-        "why": "Trate-a como conhecida: revogue ou troque primeiro, e arrume o histórico depois, se for o caso."
+        "text": "Um 500 com uma frase que não diz nada específico, e os detalhes guardados no log",
+        "why": "Um 5xx diz a qualquer programa que o servidor quebrou, e quem pode consertar lê o log."
       }
     ]
   },

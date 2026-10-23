@@ -500,28 +500,28 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
-    "prompt": "A colleague opens a new terminal for the IaC lab and runs `sh ~/iac-env.sh`. It finishes without an error, yet `env` lists none of the variables the file exports, and the next command cannot find credentials. What went wrong?",
-    "hint": "Linux and the Command Line, lesson 9; Infrastructure as Code, lesson 1.",
+    "prompt": "A pod with `limits: cpu: 500m` answers quickly, then stalls for a few tens of milliseconds, then is quick again. There are no restarts, and inside the container `top` shows the process near 50% with the load average low. Which reading proves the cause?",
+    "hint": "Linux and the Command Line, lesson 11; Kubernetes: Orchestration in Production, lesson 19.",
     "choices": [
       {
-        "text": "The file has no execute bit, so `sh` skipped the `export` lines in it",
+        "text": "The RESTARTS column of `kubectl get pod`, climbing with each stall",
         "correct": false,
-        "why": "`sh file` runs the lines whatever the mode; the bit only matters for `./file`."
+        "why": "A CPU limit throttles and never restarts anything; restarts with 137 are memory."
       },
       {
-        "text": "Each `export` applies to the next command only, so every line undid the one before",
+        "text": "`/proc/loadavg` inside the container, compared with what `nproc` says",
         "correct": false,
-        "why": "That is `NAME=value command`; `export` keeps a variable for the rest of that shell."
+        "why": "Neither is namespaced: both describe the whole host, not this container."
       },
       {
-        "text": "`env` lists only what `~/.bashrc` sets, so the new variables stay hidden",
+        "text": "`free -m` inside the container, as stalls like these come from memory pressure",
         "correct": false,
-        "why": "`env` lists exactly what is exported in the current shell, wherever it came from."
+        "why": "`free` reads `/proc/meminfo`, the host's figures, and memory at its limit kills rather than stalls."
       },
       {
-        "text": "`sh` ran the file in a shell of its own, and its exports ended with that shell",
+        "text": "A rising `nr_throttled` in the cpu.stat file of the container's cgroup",
         "correct": true,
-        "why": "A child cannot change its parent; reading it with `.` runs the lines in your shell."
+        "why": "At its CPU limit a container waits for the next period, and that counter is the only number that says so."
       }
     ]
   },
@@ -899,28 +899,28 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
-    "prompt": "`certbot` renewed `www.example.com`'s certificate last week, and `openssl x509 -in` on the new file shows a `notAfter` in March. The monitoring service still warns that the site's certificate ends in three days. What is the likeliest explanation?",
-    "hint": "Networks and Protocols, lesson 6.",
+    "prompt": "A laptop reaches `192.0.2.80` by address, but `dig +tries=1 +time=3 www.example.com` ends with `communications error to 192.168.10.53#53: timed out`. A capture with `tcpdump -i eth0 -n -l arp or port 53` shows three lines of `ARP, Request who-has 192.168.10.53 tell 192.168.10.20` and nothing else. What does that capture say?",
+    "hint": "Networks and Protocols, lesson 10.",
     "choices": [
       {
-        "text": "The monitoring service caches certificates and will see the new one later",
+        "text": "The laptop has lost its default route, which also stops it reaching any resolver",
         "correct": false,
-        "why": "A monitor asks the server each time, which is exactly how it catches a renewal nobody loaded."
+        "why": "With no default route `192.0.2.80` would answer `Network is unreachable`, and it was reached."
       },
       {
-        "text": "The monitoring service's clock is wrong, so it misjudges the dates it reads",
+        "text": "A firewall in front of the DNS server drops every question sent to port 53",
         "correct": false,
-        "why": "A wrong clock would disagree with every date, not single out a certificate that was renewed on disk."
+        "why": "Dropped questions would still appear in the capture as packets leaving for port 53; not one did."
       },
       {
-        "text": "The new certificate lacks its intermediate, which monitors then report as expiry",
+        "text": "The resolver is overloaded and answers too slowly for the three seconds given",
         "correct": false,
-        "why": "A missing intermediate fails with `unable to get local issuer certificate`, its own message."
+        "why": "A slow resolver would be asked: the capture would show the question leaving, then a late reply."
       },
       {
-        "text": "The web server was never reloaded and still sends the certificate it had",
+        "text": "Nothing on the local link owns that IP, so not one DNS packet goes out at all",
         "correct": true,
-        "why": "Only the certificate the server actually sends counts; the file on disk is what should be served, not what is."
+        "why": "The server is on the office network, so ARP must find it first; nobody replies, and the setting is wrong."
       }
     ]
   },
@@ -1127,29 +1127,29 @@
     "id": "ex-8sggppb5",
     "version": 1,
     "type": "quiz",
-    "difficulty": "hard",
-    "prompt": "A repository's `.gitignore` lists `.env`, which holds a database password, and `git status` has never shown it. The Dockerfile runs `COPY . .`, and there is no `.dockerignore`. Ana builds the image and pushes it. Is the password inside?",
-    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 10; Docker and Containers, lesson 11.",
+    "difficulty": "medium",
+    "prompt": "Bruno pushed a fix to `main` ten minutes ago. In her own copy, Ana runs `git status`, which prints `Your branch is up to date with 'origin/main'`, and she starts her work from there. Why did Git say that, and what should she have run first?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 7.",
     "choices": [
       {
-        "text": "Yes: `.gitignore` only governs Git; the build context is the whole directory",
+        "text": "`origin/main` is her copy's record of the server as it was last seen; run `git fetch`",
         "correct": true,
-        "why": "It keeps a file out of `git status` and `git add .`, and nothing more; `.dockerignore` decides what the builder gets."
+        "why": "Git contacts a remote only when a command does; fetch moves the bookmark and changes nothing of hers."
       },
       {
-        "text": "No: `docker build` sends just the files Git tracks, so ignored ones stay behind",
+        "text": "Bruno's commit went to another branch, since `main` is protected; `git branch -a`",
         "correct": false,
-        "why": "The client packs the directory as it is on disk, tracked or not."
+        "why": "Nothing says his push was refused; her copy simply has not asked the server since it happened."
       },
       {
-        "text": "No: Docker falls back on `.gitignore` when the build has no `.dockerignore`",
+        "text": "Her working tree is clean, so status skips the remote check; `git status -v`",
         "correct": false,
-        "why": "Docker reads only `.dockerignore`; without one, everything in the directory goes."
+        "why": "Status never checks the remote, clean or not; it compares her branch with her own bookmark."
       },
       {
-        "text": "Only in the build cache, since `COPY` skips files whose names start with a dot",
+        "text": "Bruno's push has not reached the server yet; she should wait and run `git status` again",
         "correct": false,
-        "why": "`COPY . .` copies dotfiles too; the lesson's image listed `.env` and `.git` in `/src`."
+        "why": "The push finished on Bruno's side; `git status` asks no server, so waiting changes nothing."
       }
     ]
   },
@@ -1796,28 +1796,28 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
-    "prompt": "`docker stop worker` took ten seconds, and then `docker inspect -f \"OOMKilled={{.State.OOMKilled}} ExitCode={{.State.ExitCode}}\" worker` printed `OOMKilled=false ExitCode=137`. The team lead reads 137 as out of memory and wants a larger `--memory`. What actually ended the process?",
-    "hint": "Docker and Containers, lesson 7; Linux and the Command Line, lesson 6.",
+    "prompt": "Before a planned reboot of a server, Ana runs `docker stop` on `web`, started with `--restart unless-stopped`, and on `worker`, started with `--restart always`. She leaves `cache` (`--restart unless-stopped`) and `batch` (no restart policy) running. After the reboot, `systemctl is-enabled docker` answers `enabled`. Which containers are running?",
+    "hint": "Docker and Containers, lesson 17; Linux and the Command Line, lesson 5.",
     "choices": [
       {
-        "text": "It ignored `SIGTERM`, so after the wait Docker sent `SIGKILL`, signal 9",
+        "text": "`cache` and `worker`",
         "correct": true,
-        "why": "137 is 128 plus 9, and `OOMKilled=false` puts the kill on `docker stop`'s ten-second wait rather than on the kernel."
+        "why": "The daemon starts at boot; `always` starts again when the daemon restarts even after a `docker stop`, and `unless-stopped` brings back only what was not stopped."
       },
       {
-        "text": "The memory limit; `OOMKilled` stays false until the container is restarted",
+        "text": "`cache` and `web`",
         "correct": false,
-        "why": "Docker records `OOMKilled=true` as soon as the kernel kills for memory; false means something else sent the `SIGKILL`."
+        "why": "`unless-stopped` respects a `docker stop` across a daemon restart, so `web` stays stopped; `always` is the one that comes back."
       },
       {
-        "text": "`SIGTERM` itself, which a shell reports as 128 plus its number, 137",
+        "text": "`cache` and `batch`",
         "correct": false,
-        "why": "`SIGTERM` is 15, which would read 143; 137 is 128 plus 9, `SIGKILL`."
+        "why": "With no policy, the default `no`, a container is never restarted, whatever it was doing before the reboot."
       },
       {
-        "text": "The cgroup's process limit, which kills any container that forks past it",
+        "text": "`cache` and nothing else",
         "correct": false,
-        "why": "The pids limit refuses the new process with `can't fork`; it kills nothing."
+        "why": "`always` stays stopped after `docker stop` only until the daemon restarts, and the reboot restarted it."
       }
     ]
   },
@@ -1975,42 +1975,13 @@
     "id": "ex-ew5nwx6y",
     "version": 1,
     "type": "cloze",
-    "difficulty": "easy",
-    "prompt": "On a cloud VM with a public address, Ana starts `shelf` with `docker run -d --name web -p 8080:8080 shelf:1.0.0`. To see which local address now holds port 8080, she lists TCP sockets in the listening state, with numbers rather than names: `ss ___ | grep :8080`. An answer of `0.0.0.0:8080` means anyone who can reach the VM can reach `shelf`.",
-    "hint": "Docker and Containers, lesson 17; Networks and Protocols, lesson 10.",
+    "difficulty": "medium",
+    "prompt": "A build needs a token for a private Git server, and the token must not end up in `docker history` or in any layer. The build is started with `--secret id=registry_token,src=token.txt`, and the one step that uses it is written `RUN --mount=type=___,id=registry_token ...`, which makes the token readable under `/run/secrets/` for that step alone.",
+    "hint": "Docker and Containers, lesson 18.",
     "blanks": [
       {
         "accept": [
-          "-lnpt",
-          "-lnt",
-          "-lntp",
-          "-lpnt",
-          "-lptn",
-          "-ltn",
-          "-ltnp",
-          "-ltpn",
-          "-nlpt",
-          "-nlt",
-          "-nltp",
-          "-nplt",
-          "-nptl",
-          "-ntl",
-          "-ntlp",
-          "-ntpl",
-          "-plnt",
-          "-pltn",
-          "-pnlt",
-          "-pntl",
-          "-ptln",
-          "-ptnl",
-          "-tln",
-          "-tlnp",
-          "-tlpn",
-          "-tnl",
-          "-tnlp",
-          "-tnpl",
-          "-tpln",
-          "-tpnl"
+          "secret"
         ],
         "ignore_case": false,
         "ignore_accents": true
@@ -3507,28 +3478,28 @@
     "version": 1,
     "type": "quiz",
     "difficulty": "medium",
-    "prompt": "In a cloud portfolio, `terraform.tfvars`, holding a database password, was committed and pushed. Ana runs `git rm --cached terraform.tfvars` and adds `*.tfvars` to `.gitignore`. What is true now?",
-    "hint": "The Portfolio Project: From Brief to Deploy, lesson 14; Infrastructure as Code, lesson 12.",
+    "prompt": "loanbook catches only the errors it expected, so a full disk still makes the server close the connection with no reply. Lesson 21's retrospective lists the fix as the next change. What should that answer be, by both lessons?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 11; Web and Internet Fundamentals, lesson 6.",
     "choices": [
       {
-        "text": "The next push replaces the remote's history with hers, so the clones lose the old commit",
+        "text": "A 409 naming the rule that failed, the way a refused second loan is answered",
         "correct": false,
-        "why": "A push sends new commits; it cannot reach clones, forks or backups that already have the old one."
+        "why": "409 is for a rule that says no; no rule was involved, the server itself failed."
       },
       {
-        "text": "The file and its password have left the history, since `.gitignore` applies to earlier commits too",
+        "text": "A 200 whose `error` field explains the full disk, so the page can show the sentence",
         "correct": false,
-        "why": "The pattern keeps the file out of the next commit and out of no earlier one."
+        "why": "The status is what machines act on: a monitor would see a healthy service, and nothing would retry."
       },
       {
-        "text": "It is safe once the variable is marked `sensitive = true`, which hides it everywhere",
+        "text": "A 400 with the traceback in its body, so whoever sent the request can report it",
         "correct": false,
-        "why": "That marking changes what is printed on screen and nothing written to disk, history included."
+        "why": "A 4xx says the client asked wrong; a full disk is the server's problem, and a traceback belongs in the log."
       },
       {
-        "text": "Every clone still has the password in the earlier commit, so it is rotated before anything else",
+        "text": "A 500 with a sentence that says nothing specific, and the details kept in the log",
         "correct": true,
-        "why": "Treat it as known: revoke or rotate first, and tidy the history afterwards if at all."
+        "why": "A 5xx tells every program the server broke, and the person who can fix it reads the log."
       }
     ]
   },
