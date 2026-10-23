@@ -1,0 +1,567 @@
+[
+  {
+    "id": "ex-w7naqasq",
+    "version": 1,
+    "section": "digests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the second push in this lesson, `cosign verify` against `linkbox:main` fails while the commit's tag passes. Why?",
+    "choices": [
+      {
+        "text": "Pushing under a tag deletes every signature stored in that repository",
+        "correct": false,
+        "why": "The commit's tag still verified after the push, so its signature was still there."
+      },
+      {
+        "text": "cosign compares the tag with the tag name recorded at signing time",
+        "correct": false,
+        "why": "cosign resolves the tag to a digest and checks the digest; the signed document names no tag."
+      },
+      {
+        "text": "main now names a digest that nobody signed",
+        "correct": true,
+        "why": "Right. The signature belongs to the first digest and stayed with it; the tag moved away."
+      },
+      {
+        "text": "The registry flags a moved tag as untrusted until someone approves it",
+        "correct": false,
+        "why": "The registry keeps no record of where a tag pointed before, so it has nothing to flag."
+      }
+    ]
+  },
+  {
+    "id": "ex-tmjw1cys",
+    "version": 1,
+    "section": "digests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`sha256sum` of the index the registry served printed exactly the `Docker-Content-Digest` header. What does that property give a client?",
+    "choices": [
+      {
+        "text": "A way to tell who built the image",
+        "correct": false,
+        "why": "A hash says which bytes, not who made them. Anybody can compute it, including whoever pushed the image."
+      },
+      {
+        "text": "A check that the bytes it received are the bytes it asked for by digest",
+        "correct": true,
+        "why": "Right. If a registry served other bytes under that digest, the client's own hash would disagree."
+      },
+      {
+        "text": "A guarantee that the tag will keep pointing at these bytes",
+        "correct": false,
+        "why": "The tag moved in the very next capture; a digest says nothing about tags."
+      },
+      {
+        "text": "Proof that a scanner has read the image",
+        "correct": false,
+        "why": "No scanner is involved in computing a digest."
+      }
+    ]
+  },
+  {
+    "id": "ex-xtzd5hpk",
+    "version": 1,
+    "section": "digests",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A registry answers a `HEAD` request for a manifest with its hash in the ___ header.",
+    "blanks": [
+      {
+        "accept": [
+          "Docker-Content-Digest"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-r6b320ke",
+    "version": 1,
+    "section": "signing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does this course sign with a signing config that lists no services?",
+    "choices": [
+      {
+        "text": "Without it, cosign refuses to sign images held in a registry on localhost",
+        "correct": false,
+        "why": "Nothing in the lesson shows such a refusal; the reason is what the default would publish, and that the services cannot be reached here."
+      },
+      {
+        "text": "An empty config lets the signature verify without any public key",
+        "correct": false,
+        "why": "Verification still needs `cosign.pub`, as every capture shows."
+      },
+      {
+        "text": "It removes the need for the password on `cosign.key`",
+        "correct": false,
+        "why": "The password is still read from `COSIGN_PASSWORD` for every signature."
+      },
+      {
+        "text": "The default records each signature in Rekor, a public log",
+        "correct": true,
+        "why": "Right: it would publish the digests and the name of a private registry, and the recording machine cannot reach Rekor anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-56xa4zdn",
+    "version": 1,
+    "section": "signing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Of the four files in `~/ci/keys`, which two together can sign anything in the CI's name?",
+    "choices": [
+      {
+        "text": "`cosign.key` and `cosign.pub`",
+        "correct": false,
+        "why": "Without the password the private key cannot be decrypted, and the public key cannot sign."
+      },
+      {
+        "text": "`cosign.key` and `password`",
+        "correct": true,
+        "why": "Right. The private key is encrypted with that password; either alone is not enough."
+      },
+      {
+        "text": "`password` and `offline.json`",
+        "correct": false,
+        "why": "`offline.json` only lists services, here none; it holds no key."
+      },
+      {
+        "text": "`cosign.pub` and `offline.json`",
+        "correct": false,
+        "why": "Neither holds anything secret; together they can verify, not sign."
+      }
+    ]
+  },
+  {
+    "id": "ex-eabqdm3t",
+    "version": 1,
+    "section": "signing",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statements are true of the signature `cosign sign` pushed by hand in this lesson? Choose every one that is.",
+    "choices": [
+      {
+        "text": "It sits in the same registry, under a tag named after the digest",
+        "correct": true,
+        "why": "Right: the tag list showed `sha256-` followed by the digest."
+      },
+      {
+        "text": "It was recorded in Rekor, Sigstore's public log",
+        "why": "The signing config listed no log, and the machine cannot reach Rekor."
+      },
+      {
+        "text": "What it signed names the image's digest, not its tag",
+        "correct": true,
+        "why": "Right: the verified JSON carries `docker-manifest-digest` and no tag."
+      },
+      {
+        "text": "A second registry had to be set up to hold it",
+        "why": "The registry of lesson 8 held it with no new feature."
+      }
+    ]
+  },
+  {
+    "id": "ex-rxk1gb3a",
+    "version": 1,
+    "section": "refusals",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Verifying the moved tag `main` printed `no signatures found`. What exit status did `cosign verify` return?",
+    "value": 10,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-cjrag94p",
+    "version": 1,
+    "section": "refusals",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate pushes an image and, beside it in the same registry, a `cosign.pub` of their own. Verification against that key passes. What is wrong with the check?",
+    "choices": [
+      {
+        "text": "Nothing: the signature is valid, so the image may be deployed",
+        "correct": false,
+        "why": "It is valid for a key anybody could have made. A signature is only as good as the trust in its key."
+      },
+      {
+        "text": "The verifier took its key from a place the image's author controls",
+        "correct": true,
+        "why": "Right. Whoever can push an image can push a key beside it; the key must come from where only the CI's is published."
+      },
+      {
+        "text": "Two public keys in one registry make every signature in it invalid",
+        "correct": false,
+        "why": "Signatures are checked against the key you pass; other keys nearby change nothing."
+      },
+      {
+        "text": "The image should have been verified by tag instead of by digest",
+        "correct": false,
+        "why": "Verifying by tag still checks a digest; the trouble is which key was trusted."
+      }
+    ]
+  },
+  {
+    "id": "ex-n4s60v45",
+    "version": 1,
+    "section": "refusals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A deployment runs `cosign verify` on `linkbox:main` at 10:00, and at 10:01 runs `docker pull linkbox:main`. What can go wrong?",
+    "choices": [
+      {
+        "text": "By 10:01 the tag names whatever was pushed last, verified or not",
+        "correct": true,
+        "why": "Right. What was verified is a digest; pull that digest instead of the tag."
+      },
+      {
+        "text": "The signature expires a few seconds after it is verified",
+        "correct": false,
+        "why": "A key-pair signature has no such expiry; the problem is the tag."
+      },
+      {
+        "text": "`docker pull` cannot read an image that cosign has signed already",
+        "correct": false,
+        "why": "The CI's own `docker pull` of a signed digest worked in this lesson."
+      },
+      {
+        "text": "Nothing, as long as both commands run on the same machine",
+        "correct": false,
+        "why": "Where the commands run does not stop somebody else moving the tag in the registry."
+      }
+    ]
+  },
+  {
+    "id": "ex-gzhrkvk1",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `sign` the last entry in `ci/stages`?",
+    "choices": [
+      {
+        "text": "cosign has to run after the tests because it imports the project's code",
+        "correct": false,
+        "why": "cosign reads the registry, not linkbox's code."
+      },
+      {
+        "text": "A signature then means every stage before it passed",
+        "correct": true,
+        "why": "Right. The pipeline stops at the first failure, so signing last turns the signature into a statement that the image went through the whole list."
+      },
+      {
+        "text": "Signing first would make the build stage slower",
+        "correct": false,
+        "why": "Order is about meaning, not speed; signing took seconds."
+      },
+      {
+        "text": "The image has no digest until the sbom stage has run",
+        "correct": false,
+        "why": "The digest exists from the push; the bill of materials is needed only for one attestation."
+      }
+    ]
+  },
+  {
+    "id": "ex-6j0zjwvk",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The key and its password live in `~/ci/keys`, outside every clone of linkbox. Which risk does that arrangement leave in place?",
+    "choices": [
+      {
+        "text": "A fork of linkbox carries the key to whoever forks it",
+        "correct": false,
+        "why": "That is exactly what keeping it out of the repository prevents."
+      },
+      {
+        "text": "A leaked backup of the git history exposes the password",
+        "correct": false,
+        "why": "The history never held it, so a backup of it cannot leak it."
+      },
+      {
+        "text": "A pushed branch changes `ci/sign.sh` and uses the key in its own run",
+        "correct": true,
+        "why": "Right. The hook runs the stage scripts of the pushed commit, so the commit decides what happens to the key."
+      },
+      {
+        "text": "Verifiers cannot reach `cosign.pub` from another machine",
+        "correct": false,
+        "why": "Publishing the public key is a separate step; it is meant to be everywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-gtj5738g",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `ci/sign.sh` in the order the script runs them.",
+    "items": [
+      "find the digest the push recorded",
+      "write the provenance beside the logs",
+      "sign the image",
+      "attest the bill of materials",
+      "attest the provenance"
+    ]
+  },
+  {
+    "id": "ex-6zdvrf8x",
+    "version": 1,
+    "section": "attestations",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each field of an in-toto statement to what it holds.",
+    "pairs": [
+      {
+        "left": "subject",
+        "right": "the artefact, named by its digest"
+      },
+      {
+        "left": "predicateType",
+        "right": "what kind of claim the statement makes"
+      },
+      {
+        "left": "predicate",
+        "right": "the claim itself"
+      }
+    ],
+    "right_distractors": [
+      "the public key that verifies it"
+    ]
+  },
+  {
+    "id": "ex-p7tg8b69",
+    "version": 1,
+    "section": "attestations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`cosign verify-attestation` with `~/hosted.cue` exits 1 with `conflicting values`. What did it find?",
+    "choices": [
+      {
+        "text": "The attestation's signature did not match `cosign.pub`",
+        "correct": false,
+        "why": "The signature checks passed and were listed; the failure came after, from the policy."
+      },
+      {
+        "text": "The image carried no provenance attestation at all, so there was nothing to read",
+        "correct": false,
+        "why": "Without one it would say no attestation matched the type; here it read the predicate and compared a field."
+      },
+      {
+        "text": "The builder id in the provenance is not the one the policy demands",
+        "correct": true,
+        "why": "Right. The signed statement says the laptop's hook built it, and the policy accepts only another builder."
+      },
+      {
+        "text": "CUE cannot read a predicate written by a Python program",
+        "correct": false,
+        "why": "The first policy read the same predicate and passed."
+      }
+    ]
+  },
+  {
+    "id": "ex-8sy3zny9",
+    "version": 1,
+    "section": "attestations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`docker build` already adds an `attestation-manifest` to the image index. What does the pipeline's own provenance add?",
+    "choices": [
+      {
+        "text": "A signature by the CI's key over the statement",
+        "correct": true,
+        "why": "Right. Docker's statement is written by the builder and signed by nobody; this one is vouched for by the CI."
+      },
+      {
+        "text": "The list of packages installed in the image",
+        "correct": false,
+        "why": "That is the bill of materials, a separate attestation."
+      },
+      {
+        "text": "A proof that the image has no known vulnerabilities",
+        "correct": false,
+        "why": "Provenance says how something was built, never whether it is free of flaws."
+      },
+      {
+        "text": "Build L3, because the provenance is now signed",
+        "correct": false,
+        "why": "Signing alone does not climb past L1 here; the builder is a laptop and the build's steps can read the key."
+      }
+    ]
+  },
+  {
+    "id": "ex-v2rb3xa3",
+    "version": 1,
+    "section": "slsa-and-keyless",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which SLSA Build level does this course's pipeline meet?",
+    "choices": [
+      {
+        "text": "Build L3: the provenance is signed and stored in the registry",
+        "correct": false,
+        "why": "L3 needs the signing key out of reach of the build's steps, and `ci/sign.sh` comes from the commit."
+      },
+      {
+        "text": "Build L2: a CI server writes and signs the provenance",
+        "correct": false,
+        "why": "The CI server is a hook on the developer's own laptop, not a hosted build platform."
+      },
+      {
+        "text": "Build L1: provenance exists for every image",
+        "correct": true,
+        "why": "Right. It has the shape of L2, a signature, without the hosted platform that gives it substance."
+      },
+      {
+        "text": "Build L0: provenance written by a script does not count",
+        "correct": false,
+        "why": "A script writing provenance is exactly what L1 asks; who writes and signs it decides the higher levels."
+      }
+    ]
+  },
+  {
+    "id": "ex-79j7bydb",
+    "version": 1,
+    "section": "slsa-and-keyless",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In keyless signing, what does Fulcio do?",
+    "choices": [
+      {
+        "text": "Records every signature in a public, append-only log",
+        "correct": false,
+        "why": "That is Rekor, the transparency log."
+      },
+      {
+        "text": "Exchanges an OIDC token for a certificate valid for ten minutes",
+        "correct": true,
+        "why": "Right: it binds a fresh key pair to the identity the token names."
+      },
+      {
+        "text": "Stores the CI's long-lived private key and signs every image on its behalf",
+        "correct": false,
+        "why": "No long-lived key exists in keyless signing; the fresh key is thrown away after one use."
+      },
+      {
+        "text": "Checks the image for vulnerabilities before it is signed",
+        "correct": false,
+        "why": "Fulcio never sees the image's contents; it issues certificates."
+      }
+    ]
+  },
+  {
+    "id": "ex-f7svzdqp",
+    "version": 1,
+    "section": "slsa-and-keyless",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can lesson 10's ValidatingAdmissionPolicy not require a cosign signature?",
+    "choices": [
+      {
+        "text": "CEL has no way to compare strings with a public key",
+        "correct": false,
+        "why": "The limit is not string handling; the signature is somewhere the rule cannot read."
+      },
+      {
+        "text": "Its rules read only the object being admitted and cannot fetch from a registry",
+        "correct": true,
+        "why": "Right. A signature lives in the registry, so the check needs a controller that asks for it."
+      },
+      {
+        "text": "Kubernetes refuses any image that carries an attestation",
+        "correct": false,
+        "why": "Kubernetes ignores the extra tags; pods ran from attested images in this course."
+      },
+      {
+        "text": "Admission policies run after the pod has started",
+        "correct": false,
+        "why": "Admission runs before the object is stored, which is its whole point."
+      }
+    ]
+  },
+  {
+    "id": "ex-048nj019",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A release script runs `cosign verify` on `localhost:5000/linkbox@sha256:…` and then applies a manifest that names `localhost:5000/linkbox:main`. Which single change closes the gap?",
+    "choices": [
+      {
+        "text": "Verify `linkbox:main` instead, so the check uses the same name",
+        "correct": false,
+        "why": "Then both steps use a tag, which can move between them; the gap is still there."
+      },
+      {
+        "text": "Sign the image a second time just before the apply",
+        "correct": false,
+        "why": "Another signature of the same digest says nothing about what the tag points at."
+      },
+      {
+        "text": "Add a CUE policy that checks the builder id",
+        "correct": false,
+        "why": "Useful, but it checks the verified digest too, and the manifest still deploys a tag."
+      },
+      {
+        "text": "Put the verified digest in the manifest instead of the tag",
+        "correct": true,
+        "why": "Right. What runs is then exactly what was checked."
+      }
+    ]
+  },
+  {
+    "id": "ex-xjdwh1br",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To save CI time, a colleague proposes that reviewers sign images on their own laptops after approving a merge. What does a signature stop meaning?",
+    "choices": [
+      {
+        "text": "That the signer is a member of the team",
+        "correct": false,
+        "why": "It would still mean that; a reviewer is on the team. What it loses is the link to the pipeline."
+      },
+      {
+        "text": "That the image went through the pipeline",
+        "correct": true,
+        "why": "Right. A key on many laptops says 'somebody approved', not 'this passed the list'."
+      },
+      {
+        "text": "That the image's digest matches its manifest",
+        "correct": false,
+        "why": "That is arithmetic, true of any digest whoever signs."
+      },
+      {
+        "text": "That the signature was recorded in a public log",
+        "correct": false,
+        "why": "No signature in this course is, by design."
+      }
+    ]
+  }
+]

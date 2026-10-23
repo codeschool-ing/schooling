@@ -1,0 +1,658 @@
+[
+  {
+    "id": "ex-mt6mkhzc",
+    "version": 1,
+    "section": "long-lived",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The staging token in `ci/dast.sh` and the signing password in `~/ci/keys` are both secrets the pipeline uses. Why is the staging token the smaller worry?",
+    "choices": [
+      {
+        "text": "It is shorter, so it is harder to guess",
+        "correct": false,
+        "why": "Eighteen random bytes cannot be guessed either way. The difference is how long each one keeps working."
+      },
+      {
+        "text": "It lives for one run and dies with its container",
+        "correct": true,
+        "why": "Right. A leaked copy unlocks a staging service that no longer exists."
+      },
+      {
+        "text": "It is base64, which keeps it out of a readable log",
+        "correct": false,
+        "why": "base64 is an encoding. Anybody reading the log can decode it in one command."
+      },
+      {
+        "text": "Only the DAST stage reads it",
+        "correct": false,
+        "why": "The password is also read by one stage only, `sign`. Which stage reads a secret is not what separates the two."
+      }
+    ]
+  },
+  {
+    "id": "ex-x100czxt",
+    "version": 1,
+    "section": "long-lived",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`~/ci/keys/password` is mode 600 and belongs to `ana`. Which runs of linkbox's pipeline can read it?",
+    "choices": [
+      {
+        "text": "Only runs of `main`, the branch that signs releases",
+        "correct": false,
+        "why": "Nothing in the hook looks at the branch before running the pipeline."
+      },
+      {
+        "text": "None: mode 600 keeps the file away from processes",
+        "correct": false,
+        "why": "Mode 600 lets its owner read it, and every pipeline runs as its owner."
+      },
+      {
+        "text": "Every run of every branch",
+        "correct": true,
+        "why": "Right. The hook runs each pushed branch's pipeline as `ana`, and the branch's own `ci/` decides what the run does."
+      },
+      {
+        "text": "Only runs whose earlier stages all passed",
+        "correct": false,
+        "why": "Any stage of the run can read a file `ana` can read; a branch can change the first one."
+      }
+    ]
+  },
+  {
+    "id": "ex-m7xgnnn9",
+    "version": 1,
+    "section": "long-lived",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Every secrets manager needs a first credential that unlocks it, and keeping that credential somewhere is called the secret ___ problem.",
+    "blanks": [
+      {
+        "accept": [
+          "zero",
+          "0"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ysb8at5p",
+    "version": 1,
+    "section": "vault-dev",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is a dev-mode convenience that a production Vault turns into a control?",
+    "choices": [
+      {
+        "text": "Answering requests on port 8200",
+        "correct": false,
+        "why": "A production Vault listens on 8200 too. The port is not what changes."
+      },
+      {
+        "text": "Keeping secrets under paths such as `secret/`",
+        "correct": false,
+        "why": "Paths and the key/value store work the same in production."
+      },
+      {
+        "text": "Accepting tokens in an HTTP header",
+        "correct": false,
+        "why": "Every Vault takes its token that way; production adds TLS around it."
+      },
+      {
+        "text": "Starting unsealed",
+        "correct": true,
+        "why": "Right. A production Vault starts sealed and cannot read its own storage until it is unsealed."
+      }
+    ]
+  },
+  {
+    "id": "ex-4t62zcb8",
+    "version": 1,
+    "section": "vault-dev",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A policy grants `read` on `secret/linkbox/signing`, the path used with `vault kv put`, and the pipeline's read of that secret is refused. Why?",
+    "choices": [
+      {
+        "text": "The policy needs `list` as well as `read`",
+        "correct": false,
+        "why": "`list` shows names under a path. Reading one known path needs only `read`, on the right path."
+      },
+      {
+        "text": "Version 2 of the store puts `data/` in the path",
+        "correct": true,
+        "why": "Right. The API path is `secret/data/linkbox/signing`, and policies match API paths, not the CLI's shorter one."
+      },
+      {
+        "text": "Policies take effect only after the server restarts",
+        "correct": false,
+        "why": "A policy applies to the next request. Restarting a dev server would lose everything."
+      },
+      {
+        "text": "A dev server ignores policies for HTTP requests",
+        "correct": false,
+        "why": "Dev mode enforces policies exactly as production does; the lesson's denials came from it."
+      }
+    ]
+  },
+  {
+    "id": "ex-re756ssw",
+    "version": 1,
+    "section": "vault-dev",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does every `vault` command in the lesson act with root's power?",
+    "choices": [
+      {
+        "text": "`VAULT_ADDR` points at 127.0.0.1",
+        "correct": false,
+        "why": "The address says where the server is, not who is asking."
+      },
+      {
+        "text": "The client runs inside the container, where dev mode left the root token",
+        "correct": true,
+        "why": "Right. That is the operator's tool; the pipeline uses `curl` and its own token."
+      },
+      {
+        "text": "Membership of the `docker` group is equivalent to root",
+        "correct": false,
+        "why": "True of the machine, as lesson 16 said, but Vault decides by the token, not by the Unix user."
+      },
+      {
+        "text": "The image runs its server as the Unix user root",
+        "correct": false,
+        "why": "Vault's permissions have nothing to do with the operating system's users."
+      }
+    ]
+  },
+  {
+    "id": "ex-pz2t7c77",
+    "version": 1,
+    "section": "policies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the `linkbox-sign` token, a read of `secret/data/linkbox/registry` answers \"permission denied\" and never \"not found\". Why does Vault not say whether that path exists?",
+    "choices": [
+      {
+        "text": "It would let a token map what it is refused",
+        "correct": true,
+        "why": "Right. Telling a missing path from a forbidden one would reveal what exists beyond the policy."
+      },
+      {
+        "text": "Because the path does not exist, and Vault reports that as a denial",
+        "correct": false,
+        "why": "It answers the same whether the path exists or not; that is the point."
+      },
+      {
+        "text": "HTTP has no status code for a missing secret",
+        "correct": false,
+        "why": "HTTP has 404, and Vault uses it where the token may read the path."
+      },
+      {
+        "text": "Dev mode hides the reason for every error",
+        "correct": false,
+        "why": "The expired token's error gave two reasons; dev mode hides nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-y9sh3hf6",
+    "version": 1,
+    "section": "policies",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Thirty seconds after it was made, the hand-made token's read answers \"permission denied\" and \"invalid token\". Who revoked it?",
+    "choices": [
+      {
+        "text": "The `trap` in the pipeline's script",
+        "correct": false,
+        "why": "That `trap` belongs to `ci/vault-read.sh`, and this token never went near it."
+      },
+      {
+        "text": "The root token, on a schedule Vault keeps",
+        "correct": false,
+        "why": "No schedule and no root action were involved."
+      },
+      {
+        "text": "Nobody: its time to live ran out, and Vault forgot it",
+        "correct": true,
+        "why": "Right. Expiry needs no action from anybody, which is its whole value."
+      },
+      {
+        "text": "The `default` policy, which every token carries",
+        "correct": false,
+        "why": "`default` lets a token revoke itself; it does not do it on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-hnebrhgh",
+    "version": 1,
+    "section": "policies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team gives its pipeline `read` on `secret/data/payments/*` \"to keep things simple\". What is wrong with it?",
+    "choices": [
+      {
+        "text": "Vault refuses wildcards in policy paths",
+        "correct": false,
+        "why": "A trailing `*` is valid, which is why it is so easy to write."
+      },
+      {
+        "text": "It reaches secrets added there later",
+        "correct": true,
+        "why": "Right. Every secret anybody stores under that prefix later is granted too, without anyone deciding it."
+      },
+      {
+        "text": "It also grants `update` on those paths",
+        "correct": false,
+        "why": "Capabilities are listed one by one; `read` grants reading and nothing else."
+      },
+      {
+        "text": "It removes the token's time to live",
+        "correct": false,
+        "why": "A policy says what may be done, not for how long."
+      }
+    ]
+  },
+  {
+    "id": "ex-gdgrswr7",
+    "version": 1,
+    "section": "identity",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Anybody who copies an identity token out of a log can decode and read its claims. Why is that acceptable?",
+    "choices": [
+      {
+        "text": "The claims are encrypted with the CI server's key",
+        "correct": false,
+        "why": "They are base64url, an encoding; `jq` decoded them in the lesson."
+      },
+      {
+        "text": "Only Vault knows how to decode base64url",
+        "correct": false,
+        "why": "Any tool decodes it, as the lesson's one `jq` command did."
+      },
+      {
+        "text": "No secret is in them; a signature vouches",
+        "correct": true,
+        "why": "Right. Reading them gains nothing; changing them breaks the signature."
+      },
+      {
+        "text": "The claims are hashed and cannot be read back",
+        "correct": false,
+        "why": "Only the signature is computed over them; the claims themselves are plain JSON."
+      }
+    ]
+  },
+  {
+    "id": "ex-gkkyf7dh",
+    "version": 1,
+    "section": "identity",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the token `mint.py` made for `main`, how many seconds separate `iat` from `exp`?",
+    "value": 300,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-kz5hzr4a",
+    "version": 1,
+    "section": "identity",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What happens to the secret zero problem once the CI server signs identity tokens?",
+    "choices": [
+      {
+        "text": "No long-lived secret is left anywhere",
+        "correct": false,
+        "why": "The private key is long-lived; it simply never reaches a run."
+      },
+      {
+        "text": "The private key moves into Vault with the password",
+        "correct": false,
+        "why": "Vault holds the public key. The private key stays with the CI server."
+      },
+      {
+        "text": "One remains, the private key, and no run holds it",
+        "correct": true,
+        "why": "Right. A run holds a token the key signed, which dies in five minutes."
+      },
+      {
+        "text": "Each run gets a private key of its own",
+        "correct": false,
+        "why": "Runs get signed tokens, not keys; one key signs them all."
+      }
+    ]
+  },
+  {
+    "id": "ex-7gvh7v99",
+    "version": 1,
+    "section": "identity",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody edits the `ref` claim of a `try-something` token to `refs/heads/main`, keeps the rest, and sends it to Vault's `linkbox-main` role. What happens?",
+    "choices": [
+      {
+        "text": "Refused: the signature no longer matches the claims",
+        "correct": true,
+        "why": "Right. The signature covers the claims byte for byte, so the edit breaks it."
+      },
+      {
+        "text": "It is accepted, since the claims now match the role exactly",
+        "correct": false,
+        "why": "The claims match, but they are no longer the ones the CI server signed."
+      },
+      {
+        "text": "It is accepted for five minutes and then revoked",
+        "correct": false,
+        "why": "It never gets a Vault token to revoke."
+      },
+      {
+        "text": "It is refused because its `jti` was used already",
+        "correct": false,
+        "why": "Vault accepted one token twice in the lesson; it does not track `jti` here."
+      }
+    ]
+  },
+  {
+    "id": "ex-r3xqvgd4",
+    "version": 1,
+    "section": "jwt-auth",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The role `linkbox-any` checked only the audience. Why did a run of `try-something` get the signing policy through it?",
+    "choices": [
+      {
+        "text": "The token was forged with a copy of the CI's key",
+        "correct": false,
+        "why": "Nothing was forged. The CI server signed it, as it signs one for every branch."
+      },
+      {
+        "text": "`bound_issuer` was missing from the method's configuration",
+        "correct": false,
+        "why": "It was set, and the token's issuer matched it."
+      },
+      {
+        "text": "A dev-mode Vault accepts any token presented",
+        "correct": false,
+        "why": "The same server refused three tokens a minute later."
+      },
+      {
+        "text": "The role never looked at which branch the token named",
+        "correct": true,
+        "why": "Right. The CI signs a valid token for every branch, and a role that trusts the signature alone trusts all of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-2rkmq2n9",
+    "version": 1,
+    "section": "jwt-auth",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a run of `main` reading the signing password through `ci/vault-read.sh` in order.",
+    "items": [
+      "the CI server mints a token for `refs/heads/main`",
+      "the script logs in to `auth/jwt/login` with role and token",
+      "Vault answers with a token carrying `linkbox-sign`",
+      "the script reads `secret/data/linkbox/signing`",
+      "the `trap` revokes the Vault token"
+    ]
+  },
+  {
+    "id": "ex-0am2fktf",
+    "version": 1,
+    "section": "jwt-auth",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `ci/vault-read.sh` read the field with `jq -e`?",
+    "choices": [
+      {
+        "text": "So the password never appears in the run's log",
+        "correct": false,
+        "why": "`jq -e` prints the value like plain `jq`; what it changes is the exit status."
+      },
+      {
+        "text": "So a refused read fails the stage loudly",
+        "correct": true,
+        "why": "Right. Instead of passing on an empty password, a missing field is an error, so the script fails closed with Vault's message."
+      },
+      {
+        "text": "To decode the base64 in Vault's answer",
+        "correct": false,
+        "why": "Vault answers plain JSON; nothing in it is base64."
+      },
+      {
+        "text": "To strip the newline that `cmp` would see",
+        "correct": false,
+        "why": "`-e` is about the exit status, and the comparison said `same`."
+      }
+    ]
+  },
+  {
+    "id": "ex-4jn7w6rk",
+    "version": 1,
+    "section": "jwt-auth",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The `main` token logged in twice within its five minutes and Vault accepted both. If that token leaked into a log, what limits the damage?",
+    "choices": [
+      {
+        "text": "Vault refuses a token whose `jti` it has seen",
+        "correct": false,
+        "why": "The capture shows the opposite: the same token logged in twice."
+      },
+      {
+        "text": "The `trap` revokes it when the script ends",
+        "correct": false,
+        "why": "The `trap` revokes the Vault token. The identity token is a JWT nobody can revoke."
+      },
+      {
+        "text": "Its audience and its life: it is good at Vault only, until `exp`",
+        "correct": true,
+        "why": "Right. Within that window it works for whoever holds it, which is why logs must not print it."
+      },
+      {
+        "text": "Its signature changes after the first use",
+        "correct": false,
+        "why": "A signature is fixed when the token is minted."
+      }
+    ]
+  },
+  {
+    "id": "ex-4za786cf",
+    "version": 1,
+    "section": "jwt-auth",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these logins did the lesson's Vault refuse? Choose every one.",
+    "choices": [
+      {
+        "text": "a token minted for the audience `registry`",
+        "correct": true,
+        "why": "Refused: invalid audience."
+      },
+      {
+        "text": "a `try-something` token at the role `linkbox-any`",
+        "why": "Accepted, which was the defect the bound role fixed."
+      },
+      {
+        "text": "a token signed by a key Vault had never seen",
+        "correct": true,
+        "why": "Refused: no known key validated the signature."
+      },
+      {
+        "text": "the `main` token used a second time",
+        "why": "Accepted: a JWT works for whoever holds it until it expires."
+      },
+      {
+        "text": "a `try-something` token at the role `linkbox-main`",
+        "correct": true,
+        "why": "Refused: the `ref` claim did not match."
+      }
+    ]
+  },
+  {
+    "id": "ex-tt0aq9m4",
+    "version": 1,
+    "section": "cloud-oidc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An AWS role trusts GitHub's token service with a condition on `aud` and none on `sub`. Whose workflows can assume it?",
+    "choices": [
+      {
+        "text": "Every repository that asks for that audience",
+        "correct": true,
+        "why": "Right. GitHub's issuer signs for every repository, so any of them that asks for that audience gets in."
+      },
+      {
+        "text": "Those of the repository that registered the provider",
+        "correct": false,
+        "why": "The provider is registered for the account, and it is the same issuer for everybody."
+      },
+      {
+        "text": "No workflow, since AWS rejects a role without `sub`",
+        "correct": false,
+        "why": "The policy is valid as written. That is why it is a mistake people ship."
+      },
+      {
+        "text": "Those of the account owner's own organisation",
+        "correct": false,
+        "why": "Nothing in an `aud` condition names an organisation."
+      }
+    ]
+  },
+  {
+    "id": "ex-pwkyeqnj",
+    "version": 1,
+    "section": "cloud-oidc",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A deploy role requires `sub` = `repo:ana/linkbox:ref:refs/heads/main`. The team adds `environment: production` to the deploy job, and the job can no longer assume the role. Why?",
+    "choices": [
+      {
+        "text": "An environment requires `id-token: read` instead of `write`",
+        "correct": false,
+        "why": "There is no such variant; the permission is the same with or without an environment."
+      },
+      {
+        "text": "The job's subject becomes the environment form, with no `ref`",
+        "correct": true,
+        "why": "Right. Bind the role to `environment:production` and let the environment's rules choose branches."
+      },
+      {
+        "text": "Environments remove the `aud` claim from the token",
+        "correct": false,
+        "why": "The audience is whatever the job asks for, environment or not."
+      },
+      {
+        "text": "Protection rules hold every token until a person approves",
+        "correct": false,
+        "why": "Approval gates the job's start; once it runs, its token carries the environment subject."
+      }
+    ]
+  },
+  {
+    "id": "ex-122s93vq",
+    "version": 1,
+    "section": "cloud-oidc",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Configured with `___` instead of a pasted public key, Vault fetches the issuer's published keys and follows a rotation on its own.",
+    "blanks": [
+      {
+        "accept": [
+          "oidc_discovery_url"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xbt7y8za",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question of minimal scope to what answered it in this lesson.",
+    "pairs": [
+      {
+        "left": "what may be done",
+        "right": "a policy naming one path with `read`"
+      },
+      {
+        "left": "which runs may do it",
+        "right": "`bound_claims` on the role"
+      },
+      {
+        "left": "for how long",
+        "right": "`token_ttl` and `token_max_ttl`"
+      },
+      {
+        "left": "whose statements to believe",
+        "right": "`jwt_validation_pubkeys` and `bound_issuer`"
+      }
+    ],
+    "right_distractors": [
+      "masking the value in the run's log"
+    ]
+  },
+  {
+    "id": "ex-xdvpnqyf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which change removes the long-lived credential from linkbox's pipeline, instead of moving it somewhere else?",
+    "choices": [
+      {
+        "text": "Moving the password from `~/ci/keys` into Vault",
+        "correct": false,
+        "why": "Then the run needs a Vault token, which is the same problem one step on."
+      },
+      {
+        "text": "Keeping a Vault token in the hook's environment for every run",
+        "correct": false,
+        "why": "That token is long-lived and readable by every run: the password with a new name."
+      },
+      {
+        "text": "A token the CI signs per run, checked by Vault",
+        "correct": true,
+        "why": "Right. The run holds nothing durable; it presents a statement that dies in five minutes."
+      },
+      {
+        "text": "Encrypting the password file with a second key",
+        "correct": false,
+        "why": "The second key is now the long-lived secret the run needs."
+      }
+    ]
+  }
+]

@@ -1,0 +1,606 @@
+[
+  {
+    "id": "ex-3pwkj5mt",
+    "version": 1,
+    "section": "what-a-bot-decides",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the remediation of a dependency, which step does a dependency bot own?",
+    "choices": [
+      {
+        "text": "Judging whether the new version behaves",
+        "correct": false,
+        "why": "That is the tests' job, and only as far as they reach."
+      },
+      {
+        "text": "Proposing the change",
+        "correct": true,
+        "why": "Right. It finds the newer version and writes the pull request; others decide whether it is right."
+      },
+      {
+        "text": "Deciding whether an advisory still matters without the update",
+        "correct": false,
+        "why": "That is a person's call, through lesson 7's gate and exceptions."
+      },
+      {
+        "text": "Merging what passed",
+        "correct": false,
+        "why": "A person merges, or a rule a person wrote; the bot only acts on that rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-9366wmrk",
+    "version": 1,
+    "section": "what-a-bot-decides",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A bot proposes gunicorn's next minor release, and linkbox's pipeline passes. What has that pass not checked?",
+    "choices": [
+      {
+        "text": "That the lock installs with its hashes",
+        "correct": false,
+        "why": "The test stage installs from the lock with `--require-hashes`, so that was checked."
+      },
+      {
+        "text": "That the routes still answer",
+        "correct": false,
+        "why": "linkbox's suite exercises every route, so that was checked."
+      },
+      {
+        "text": "How the server now treats a slow client",
+        "correct": true,
+        "why": "Right. No test exercises it, so a green pipeline says nothing about it."
+      },
+      {
+        "text": "That the new version has no published advisory",
+        "correct": false,
+        "why": "The composition stage checks exactly that."
+      }
+    ]
+  },
+  {
+    "id": "ex-hz170drs",
+    "version": 1,
+    "section": "what-a-bot-decides",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can a version number not tell a bot that an update is safe to run?",
+    "choices": [
+      {
+        "text": "It states what its author claims changed, and the newest release is the least examined",
+        "correct": true,
+        "why": "Right. Lesson 12's incidents include new versions that were the attack."
+      },
+      {
+        "text": "Semantic versioning forbids security fixes in patch releases",
+        "correct": false,
+        "why": "Patch releases are where most security fixes go."
+      },
+      {
+        "text": "Package indexes publish versions without dates",
+        "correct": false,
+        "why": "PyPI records an upload time for every file; the lesson's program reads them."
+      },
+      {
+        "text": "A bot reads only the major number",
+        "correct": false,
+        "why": "Both bots read the whole version, which is how they tell patch from minor."
+      }
+    ]
+  },
+  {
+    "id": "ex-53rxsj6h",
+    "version": 1,
+    "section": "dependabot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "zizmor reports `dependabot-cooldown` on the shortest `dependabot.yml`. What risk is the audit about?",
+    "choices": [
+      {
+        "text": "Too many pull requests opening in a single week",
+        "correct": false,
+        "why": "That is the noise budget, which `schedule` and `groups` address; the audit is about age."
+      },
+      {
+        "text": "A bad release proposed before anybody catches it",
+        "correct": true,
+        "why": "Right. Several of lesson 12's incidents were releases bad for hours or days."
+      },
+      {
+        "text": "Dependabot running with write permission on the repository",
+        "correct": false,
+        "why": "The file has no permissions in it; that is a workflow question."
+      },
+      {
+        "text": "Security updates arriving late",
+        "correct": false,
+        "why": "The cooldown does not delay security updates at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-w8knyzpq",
+    "version": 1,
+    "section": "dependabot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "linkbox's `dependabot.yml` waits 14 days. An advisory is published today for a pinned version, with a fix released yesterday. When does Dependabot propose it?",
+    "choices": [
+      {
+        "text": "In thirteen days, when the fix is fourteen days old",
+        "correct": false,
+        "why": "That is the rule for version updates. Security updates do not wait."
+      },
+      {
+        "text": "On the next scheduled Monday",
+        "correct": false,
+        "why": "Like the cooldown, the schedule applies to version updates only."
+      },
+      {
+        "text": "Never, because the release is younger than the cooldown",
+        "correct": false,
+        "why": "It is proposed; refusing every young fix would leave the advisory open."
+      },
+      {
+        "text": "As a security update, without waiting",
+        "correct": true,
+        "why": "Right. The cooldown covers version updates only."
+      }
+    ]
+  },
+  {
+    "id": "ex-tk5g95r0",
+    "version": 1,
+    "section": "dependabot",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does linkbox's file keep major versions out of the Python group?",
+    "choices": [
+      {
+        "text": "Dependabot cannot group major versions",
+        "correct": false,
+        "why": "It can; `update-types` was set to leave them out on purpose."
+      },
+      {
+        "text": "Its failure would have many suspects",
+        "correct": true,
+        "why": "Right. In a group, any update in it is a suspect when it fails; alone, a major's failure has one cause, and its changelog gets read."
+      },
+      {
+        "text": "Major versions skip the cooldown",
+        "correct": false,
+        "why": "They wait longer: `semver-major-days` is 30."
+      },
+      {
+        "text": "zizmor refuses groups that mix update types",
+        "correct": false,
+        "why": "zizmor has no audit about groups."
+      }
+    ]
+  },
+  {
+    "id": "ex-ybhg91c6",
+    "version": 1,
+    "section": "dependabot",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `dependabot.yml`, the block that makes Dependabot wait before proposing a new release is called `___`.",
+    "blanks": [
+      {
+        "accept": [
+          "cooldown"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mg2dkth4",
+    "version": 1,
+    "section": "renovate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `npx renovate --platform=local` on the stale branch, `git status --short` prints nothing. Why?",
+    "choices": [
+      {
+        "text": "Renovate committed its changes",
+        "correct": false,
+        "why": "No new commit appeared; the local platform makes none."
+      },
+      {
+        "text": "It found nothing to update",
+        "correct": false,
+        "why": "Its report listed four updates."
+      },
+      {
+        "text": "Its local platform only reports",
+        "correct": true,
+        "why": "Right. It is the mode for watching a bot decide without letting it act."
+      },
+      {
+        "text": "It wrote its branches to the CI server",
+        "correct": false,
+        "why": "Nothing was pushed; the CI server saw no run."
+      }
+    ]
+  },
+  {
+    "id": "ex-sh8rakez",
+    "version": 1,
+    "section": "renovate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the report on the stale branch, pluggy 1.7.0 shows `waiting: true` and werkzeug 3.1.9 does not. What separates them?",
+    "choices": [
+      {
+        "text": "pluggy's release is younger than `minimumReleaseAge`",
+        "correct": true,
+        "why": "Right. Eight days old against fourteen required; werkzeug's had been public longer."
+      },
+      {
+        "text": "werkzeug has an advisory and pluggy does not",
+        "correct": false,
+        "why": "The local run read no advisories; it held pluggy back for its age alone."
+      },
+      {
+        "text": "pluggy is a dev dependency, and Renovate waits on those",
+        "correct": false,
+        "why": "The age rule applies to every file alike."
+      },
+      {
+        "text": "The schedule allows only one update per Monday",
+        "correct": false,
+        "why": "The schedule says when, not how many; that is `prConcurrentLimit`."
+      }
+    ]
+  },
+  {
+    "id": "ex-7agjgecm",
+    "version": 1,
+    "section": "renovate",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson run `renovate@44.164.10` rather than `renovate@latest`?",
+    "choices": [
+      {
+        "text": "The latest release needs a newer Node",
+        "correct": false,
+        "why": "The version is pinned for repeatability, the same reason as lesson 15's pins."
+      },
+      {
+        "text": "Several releases a day",
+        "correct": true,
+        "why": "Right. With that many releases, `latest` would be a different program on every reading; a pinned tool behaves the same each time."
+      },
+      {
+        "text": "`npx` refuses the tag `latest`",
+        "correct": false,
+        "why": "`npx` accepts it; it is a choice not to use it."
+      },
+      {
+        "text": "Older releases support the `local` platform only",
+        "correct": false,
+        "why": "The platform exists in current releases too."
+      }
+    ]
+  },
+  {
+    "id": "ex-b1c2dbkg",
+    "version": 1,
+    "section": "fix-on-a-branch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Nothing on the stale branch changed after it was compiled, yet the pipeline broke on it. Why?",
+    "choices": [
+      {
+        "text": "The composition stage times out on old locks",
+        "correct": false,
+        "why": "It ran and gave a verdict with a reason."
+      },
+      {
+        "text": "An advisory came out for werkzeug 3.1.8",
+        "correct": true,
+        "why": "Right. It was published after the lock's date, with a fixed version. The verdict depends on the advisories known today, not on the lock alone."
+      },
+      {
+        "text": "The tests do not support pluggy 1.6.0",
+        "correct": false,
+        "why": "The test stage passed on that run."
+      },
+      {
+        "text": "Branches other than main always fail the gate",
+        "correct": false,
+        "why": "Every branch runs the same pipeline with the same rules."
+      }
+    ]
+  },
+  {
+    "id": "ex-12t7t47q",
+    "version": 1,
+    "section": "fix-on-a-branch",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After `pip-audit --fix`, `requirements.txt` says `werkzeug==3.1.9`. Why did the test stage break?",
+    "choices": [
+      {
+        "text": "The hashes under that line are still 3.1.8's, so the downloaded file matches none",
+        "correct": true,
+        "why": "Right. The installer cannot tell a stale hash from tampering, so it refuses both."
+      },
+      {
+        "text": "werkzeug 3.1.9 breaks one of linkbox's tests",
+        "correct": false,
+        "why": "No test ran: the install failed first."
+      },
+      {
+        "text": "pip-audit deleted `requirements.in`",
+        "correct": false,
+        "why": "It left `requirements.in` untouched, which is a problem of its own."
+      },
+      {
+        "text": "The gate refuses commits written by tools",
+        "correct": false,
+        "why": "The gate reads advisories, not authors, and it never ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-sppa188v",
+    "version": 1,
+    "section": "fix-on-a-branch",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the runs of the stale branch in the order they happened, with the stage that decided each.",
+    "items": [
+      "the stale lock: broken at `sca`",
+      "`pip-audit --fix`: broken at `test`",
+      "recompiled with `-P werkzeug`: passed"
+    ]
+  },
+  {
+    "id": "ex-j05wcrb4",
+    "version": 1,
+    "section": "fix-on-a-branch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `-P werkzeug` add to the `uv pip compile` command that fixed the branch?",
+    "choices": [
+      {
+        "text": "It ignores the hashes for werkzeug",
+        "correct": false,
+        "why": "The opposite: uv writes the new version's hashes."
+      },
+      {
+        "text": "Only werkzeug moves",
+        "correct": true,
+        "why": "Right. Every other pin stays as the file has it. The diff was the header and werkzeug's three lines."
+      },
+      {
+        "text": "It pins werkzeug in `requirements.in`",
+        "correct": false,
+        "why": "`requirements.in` was not touched."
+      },
+      {
+        "text": "It upgrades every package to its newest release",
+        "correct": false,
+        "why": "That is `--upgrade`; the other three old pins stayed old."
+      }
+    ]
+  },
+  {
+    "id": "ex-fy1sp3pt",
+    "version": 1,
+    "section": "merge-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which update does the lesson's table allow to merge with nobody looking?",
+    "choices": [
+      {
+        "text": "A minor release of Flask",
+        "correct": false,
+        "why": "The tests cover the routes, not every behaviour a Flask release can change."
+      },
+      {
+        "text": "A new base image digest",
+        "correct": false,
+        "why": "Nothing tests the behaviour of the new operating system packages."
+      },
+      {
+        "text": "A patch to pytest, after the cooldown",
+        "correct": true,
+        "why": "Right. It runs only in the test stage, so passing tests are the whole judgement."
+      },
+      {
+        "text": "A new commit of a pinned action",
+        "correct": false,
+        "why": "Its code runs with the workflow's permissions and needs reading."
+      }
+    ]
+  },
+  {
+    "id": "ex-xx5veend",
+    "version": 1,
+    "section": "merge-rules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team turns on auto-merge, but its bot's token can also push to `main` directly. What is wrong?",
+    "choices": [
+      {
+        "text": "Auto-merge needs the bot to have no token at all",
+        "correct": false,
+        "why": "The bot needs a token to open pull requests; the problem is its reach."
+      },
+      {
+        "text": "A direct push skips the checks",
+        "correct": true,
+        "why": "Right. Auto-merge waits for the checks; a direct push never meets them."
+      },
+      {
+        "text": "Pushes from bots are not recorded in the history",
+        "correct": false,
+        "why": "They are recorded like anybody's; recording does not stop them."
+      },
+      {
+        "text": "Auto-merge then merges majors as well",
+        "correct": false,
+        "why": "What auto-merge accepts is set by its rules, not by the token."
+      }
+    ]
+  },
+  {
+    "id": "ex-ea0vcq54",
+    "version": 1,
+    "section": "merge-rules",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each setting to the trade it makes.",
+    "pairs": [
+      {
+        "left": "grouping",
+        "right": "fewer reviews, but a failure has several possible causes"
+      },
+      {
+        "left": "a schedule",
+        "right": "proposals arrive together, later in the week"
+      },
+      {
+        "left": "a cooldown",
+        "right": "a bad release is likelier to be caught, and good fixes arrive later"
+      },
+      {
+        "left": "auto-merge",
+        "right": "no reviewer, so the pipeline is the whole judgement"
+      }
+    ],
+    "right_distractors": [
+      "security updates are delayed until Monday"
+    ]
+  },
+  {
+    "id": "ex-ae44730c",
+    "version": 1,
+    "section": "noise-budget",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`releases.py` counted linkbox's releases in the year to 16 October 2026. Grouped by week, how many pull requests would that year have needed?",
+    "value": 29,
+    "tolerance": 0,
+    "unit": "pull requests"
+  },
+  {
+    "id": "ex-80svq5cv",
+    "version": 1,
+    "section": "noise-budget",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A bot's pull requests start piling up unread. Which change does the lesson rule out?",
+    "choices": [
+      {
+        "text": "Grouping more updates together",
+        "correct": false,
+        "why": "That is one of the remedies the lesson names."
+      },
+      {
+        "text": "Batching the security updates monthly",
+        "correct": true,
+        "why": "Right. The advisory-driven updates are the reason the bot exists; cut the noise, never them."
+      },
+      {
+        "text": "Stopping minor updates of test tools",
+        "correct": false,
+        "why": "The lesson names it as a way back inside the budget."
+      },
+      {
+        "text": "Replacing a dependency that releases often",
+        "correct": false,
+        "why": "Fewer dependencies is the cheapest budget, as lesson 15's third move."
+      }
+    ]
+  },
+  {
+    "id": "ex-bdw788y6",
+    "version": 1,
+    "section": "noise-budget",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `releases.py` count transitive dependencies such as markupsafe and pluggy, which linkbox never names in a `.in` file?",
+    "choices": [
+      {
+        "text": "Transitive dependencies have more advisories",
+        "correct": false,
+        "why": "The program counts releases, not advisories."
+      },
+      {
+        "text": "PyPI lists them as direct dependencies of linkbox",
+        "correct": false,
+        "why": "linkbox is not on PyPI; the program reads the requirements files."
+      },
+      {
+        "text": "A bot proposes an update for every pin in the lock",
+        "correct": true,
+        "why": "Right. The lock pins them, so each of their releases is a proposal."
+      },
+      {
+        "text": "Without them the count would round to zero",
+        "correct": false,
+        "why": "The direct dependencies alone released several times."
+      }
+    ]
+  },
+  {
+    "id": "ex-mk17643a",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did the lesson actually run on your own machine? Choose every one.",
+    "choices": [
+      {
+        "text": "zizmor on `.github/dependabot.yml`",
+        "correct": true,
+        "why": "Run, locally and in the pipeline."
+      },
+      {
+        "text": "Dependabot opening a pull request",
+        "why": "Not run: Dependabot runs only on GitHub."
+      },
+      {
+        "text": "Renovate with the `local` platform",
+        "correct": true,
+        "why": "Run, and it wrote nothing."
+      },
+      {
+        "text": "`pip-audit --fix` on the stale branch",
+        "correct": true,
+        "why": "Run, and the pipeline broke on its result."
+      },
+      {
+        "text": "Renovate merging its own pull request",
+        "why": "Not run: that needs a hosted platform."
+      }
+    ]
+  }
+]

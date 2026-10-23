@@ -1,0 +1,550 @@
+[
+  {
+    "id": "ex-x37kw0g4",
+    "version": 1,
+    "section": "a-cluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside the kind node, why does `localhost:5000` not reach the registry without extra configuration?",
+    "choices": [
+      {
+        "text": "The registry refuses connections from containers",
+        "correct": false,
+        "why": "It answers anybody who reaches it; the problem is the address."
+      },
+      {
+        "text": "It points at the container it is typed in",
+        "correct": true,
+        "why": "Right. The node is a container of its own, so its `localhost` is itself, not your machine."
+      },
+      {
+        "text": "containerd only pulls over HTTPS",
+        "correct": false,
+        "why": "containerd pulls over HTTP when `hosts.toml` says so, which is what the fix does."
+      },
+      {
+        "text": "Kubernetes forbids image names that contain a port",
+        "correct": false,
+        "why": "`localhost:5000/linkbox:main` is a valid name; the manifest uses it."
+      }
+    ]
+  },
+  {
+    "id": "ex-a2wqzp75",
+    "version": 1,
+    "section": "a-cluster",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps that let the kind node pull `localhost:5000/linkbox:main` in order.",
+    "items": [
+      "create the cluster with containerd reading certs.d",
+      "make the certs.d directory for localhost:5000 in the node",
+      "write hosts.toml pointing at http://registry:5000",
+      "connect the registry container to the kind network"
+    ]
+  },
+  {
+    "id": "ex-mbkhqzgf",
+    "version": 1,
+    "section": "a-cluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson keep the image named `localhost:5000/linkbox:main` in the cluster rather than renaming it `registry:5000/...`?",
+    "choices": [
+      {
+        "text": "One name everywhere",
+        "correct": true,
+        "why": "Right. Only the node knows where the name points; everything else, the admission rule included, sees one name."
+      },
+      {
+        "text": "Because `registry` is not a valid host name",
+        "correct": false,
+        "why": "It is valid on the kind network; the choice is about consistency."
+      },
+      {
+        "text": "Because a rename would need the image rebuilt",
+        "correct": false,
+        "why": "A tag is a name; it costs no rebuild. The reason is elsewhere."
+      },
+      {
+        "text": "So the image is pulled over TLS",
+        "correct": false,
+        "why": "The pull is plain HTTP either way; the name decides nothing about TLS here."
+      }
+    ]
+  },
+  {
+    "id": "ex-86shpzjs",
+    "version": 1,
+    "section": "restricted",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The bare pod `probe`, from an image that runs as 65532 and needs no capability, was refused by the restricted profile. Why?",
+    "choices": [
+      {
+        "text": "The profile reads the pod's spec, which promised nothing",
+        "correct": true,
+        "why": "Right: it asks for statements, and the pod made none."
+      },
+      {
+        "text": "The profile scanned the image and found a shell",
+        "correct": false,
+        "why": "The profile never opens the image, and this image has no shell."
+      },
+      {
+        "text": "Bare pods are forbidden in a restricted namespace",
+        "correct": false,
+        "why": "Bare pods are allowed if their spec meets the profile."
+      },
+      {
+        "text": "The image came from a registry the cluster does not trust",
+        "correct": false,
+        "why": "Pod Security Admission does not look at registries; that is the lesson's own policy."
+      }
+    ]
+  },
+  {
+    "id": "ex-cqpffrss",
+    "version": 1,
+    "section": "restricted",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A deploy step in a pipeline runs `kubectl apply -f k8s/` against a restricted namespace and checks only its exit status. The pod template sets no securityContext. What does the pipeline report?",
+    "choices": [
+      {
+        "text": "Failure, because Pod Security Admission refuses the Deployment",
+        "correct": false,
+        "why": "It refuses pods, not Deployments; the Deployment is created with a warning."
+      },
+      {
+        "text": "Success, for a service that has no pod",
+        "correct": true,
+        "why": "Right. Only `kubectl rollout status`, or an admission rule on the Deployment, would make it fail."
+      },
+      {
+        "text": "Success, and the pods run with the default context",
+        "correct": false,
+        "why": "The pods are refused; none runs at all."
+      },
+      {
+        "text": "A timeout while the scheduler waits",
+        "correct": false,
+        "why": "Nothing is waiting: the ReplicaSet's create is refused at once and logged as an event."
+      }
+    ]
+  },
+  {
+    "id": "ex-btkyd80t",
+    "version": 1,
+    "section": "restricted",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each Pod Security Admission mode with what it does.",
+    "pairs": [
+      {
+        "left": "enforce",
+        "right": "refuses a pod that breaks the profile"
+      },
+      {
+        "left": "warn",
+        "right": "lets it in and prints a warning to whoever applied it"
+      },
+      {
+        "left": "audit",
+        "right": "lets it in and records it in the audit log"
+      }
+    ],
+    "right_distractors": [
+      "rewrites the pod to meet the profile"
+    ]
+  },
+  {
+    "id": "ex-gryewgdf",
+    "version": 1,
+    "section": "the-deployment",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does linkbox's token live once the Deployment runs?",
+    "choices": [
+      {
+        "text": "In `k8s/linkbox.yaml`, base64-encoded",
+        "correct": false,
+        "why": "The file names the Secret and holds no token; gitleaks would find one there."
+      },
+      {
+        "text": "In a Secret made by `kubectl`, never in a file",
+        "correct": true,
+        "why": "Right: `kubectl create secret` from random bytes, referenced by name."
+      },
+      {
+        "text": "In the image, as an environment variable set at build",
+        "correct": false,
+        "why": "The image has no token; lesson 6 moved it to the environment at run time."
+      },
+      {
+        "text": "In the registry, beside the image",
+        "correct": false,
+        "why": "The registry stores images only."
+      }
+    ]
+  },
+  {
+    "id": "ex-k2s31pm1",
+    "version": 1,
+    "section": "the-deployment",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each field of linkbox's Deployment with what it does.",
+    "pairs": [
+      {
+        "left": "runAsNonRoot: true",
+        "right": "the kubelet refuses a container whose user is 0"
+      },
+      {
+        "left": "allowPrivilegeEscalation: false",
+        "right": "sets no_new_privs on the process"
+      },
+      {
+        "left": "automountServiceAccountToken: false",
+        "right": "no API token is mounted in the pod"
+      },
+      {
+        "left": "seccompProfile: RuntimeDefault",
+        "right": "the runtime's default system-call filter"
+      }
+    ],
+    "right_distractors": [
+      "the image is pulled again on every start"
+    ]
+  },
+  {
+    "id": "ex-w3w04kpp",
+    "version": 1,
+    "section": "the-deployment",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An image declares `USER nonroot` by name, and its Deployment sets `runAsNonRoot: true`. What happens when the pod starts?",
+    "choices": [
+      {
+        "text": "It runs, since the name says it is not root",
+        "correct": false,
+        "why": "A name proves nothing to the kubelet; it needs a number to compare with 0."
+      },
+      {
+        "text": "Refused: a name cannot be verified",
+        "correct": true,
+        "why": "Right. Use a numeric `USER`, or set `runAsUser` in the manifest."
+      },
+      {
+        "text": "It runs as root, because the name is ignored",
+        "correct": false,
+        "why": "With `runAsNonRoot`, the kubelet never silently runs as root."
+      },
+      {
+        "text": "The admission policy refuses the Deployment",
+        "correct": false,
+        "why": "The lesson's policy checks the registry and memory; the user is the kubelet's check."
+      }
+    ]
+  },
+  {
+    "id": "ex-n28xpcfd",
+    "version": 1,
+    "section": "the-deployment",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the cluster, `/tmp` and `/data` are `emptyDir` volumes. How do they differ from the `tmpfs` mounts of lesson 9's staging?",
+    "choices": [
+      {
+        "text": "They survive the pod and keep the data",
+        "correct": false,
+        "why": "An emptyDir is deleted with the pod, like a tmpfs with its container."
+      },
+      {
+        "text": "They are read-only",
+        "correct": false,
+        "why": "Both are writable; they are the two writable places."
+      },
+      {
+        "text": "They live on the node's disk and carry no `noexec`",
+        "correct": true,
+        "why": "Right: the mount table showed `/dev/vda` and `ext4`. `medium: Memory` would put them in memory."
+      },
+      {
+        "text": "They belong to root, so the app cannot write them",
+        "correct": false,
+        "why": "linkbox wrote its database there and answered 201."
+      }
+    ]
+  },
+  {
+    "id": "ex-4j4gy2c4",
+    "version": 1,
+    "section": "admission",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`kubectl create deployment other -n linkbox --image=python:3.13-slim` printed a Warning and then an error. Which component refused it?",
+    "choices": [
+      {
+        "text": "Pod Security Admission, in the Warning",
+        "correct": false,
+        "why": "The Warning only warns; it says the pods would be refused."
+      },
+      {
+        "text": "The LimitRange",
+        "correct": false,
+        "why": "There was no LimitRange yet, and it judges pods, not Deployments."
+      },
+      {
+        "text": "The ValidatingAdmissionPolicy",
+        "correct": true,
+        "why": "Right: `images come from the registry at localhost:5000 and nowhere else`."
+      },
+      {
+        "text": "The kubelet, when it failed to pull",
+        "correct": false,
+        "why": "Nothing was stored, so nothing was ever pulled."
+      }
+    ]
+  },
+  {
+    "id": "ex-0j15zgwj",
+    "version": 1,
+    "section": "admission",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To send an object through admission without storing it, add `--dry-run=___` to the kubectl command.",
+    "blanks": [
+      {
+        "accept": [
+          "server"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9z1vj1af",
+    "version": 1,
+    "section": "admission",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the policy's `failurePolicy` set to `Fail`?",
+    "choices": [
+      {
+        "text": "So a check that errors refuses",
+        "correct": true,
+        "why": "Right: a check that errors must not let things in, lesson 7's fail-closed rule."
+      },
+      {
+        "text": "So refused Deployments are retried later",
+        "correct": false,
+        "why": "Nothing retries; `Fail` decides what an evaluation error means."
+      },
+      {
+        "text": "So `kubectl` exits with status 1 on a refusal",
+        "correct": false,
+        "why": "A refusal already exits non-zero; `failurePolicy` is about the policy failing."
+      },
+      {
+        "text": "So the binding applies to every namespace",
+        "correct": false,
+        "why": "Which namespaces is the binding's selector; this field is unrelated."
+      }
+    ]
+  },
+  {
+    "id": "ex-m0xes9f7",
+    "version": 1,
+    "section": "admission",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody pushes an image they built on their laptop to `localhost:5000/linkbox:main` by hand. What does the admission policy do when the Deployment rolls it out?",
+    "choices": [
+      {
+        "text": "Refuses it, because the pipeline did not build it",
+        "correct": false,
+        "why": "The policy cannot know who built it; it checks the name only."
+      },
+      {
+        "text": "Accepts it: the name starts with `localhost:5000/`",
+        "correct": true,
+        "why": "Right. A name is not an identity; lesson 14's signatures close that gap."
+      },
+      {
+        "text": "Refuses it, because the tag `main` already exists",
+        "correct": false,
+        "why": "Tags move; the registry accepts the push and the policy does not look at tags."
+      },
+      {
+        "text": "Scans it with Trivy before accepting",
+        "correct": false,
+        "why": "Admission runs no scanner; it evaluates expressions over the manifest."
+      }
+    ]
+  },
+  {
+    "id": "ex-b1c18t9s",
+    "version": 1,
+    "section": "admission",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can a ValidatingAdmissionPolicy on Deployments see? Choose all that apply.",
+    "choices": [
+      {
+        "text": "the image name of each container",
+        "correct": true,
+        "why": "Right: the first rule reads it."
+      },
+      {
+        "text": "whether a container declares a memory limit",
+        "correct": true,
+        "why": "Right: the second rule reads it."
+      },
+      {
+        "text": "the packages inside the image",
+        "why": "Admission reads the manifest, not the image's contents."
+      },
+      {
+        "text": "the securityContext fields of the pod template",
+        "correct": true,
+        "why": "Right: they are part of the Deployment object."
+      },
+      {
+        "text": "the connections the process opens at runtime",
+        "why": "Runtime behaviour is beyond admission; a runtime detector watches that."
+      }
+    ]
+  },
+  {
+    "id": "ex-wfbkzbd5",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `quota.yaml` live in the home directory and not in linkbox's `k8s/`?",
+    "choices": [
+      {
+        "text": "Because quotas cannot be applied with `kubectl apply`",
+        "correct": false,
+        "why": "They were applied with exactly that."
+      },
+      {
+        "text": "The budget is the cluster owner's",
+        "correct": true,
+        "why": "Right: the application team works inside limits somebody else sets."
+      },
+      {
+        "text": "Because it holds a secret",
+        "correct": false,
+        "why": "It holds numbers only."
+      },
+      {
+        "text": "Because gitleaks would flag it",
+        "correct": false,
+        "why": "Nothing in it looks like a secret."
+      }
+    ]
+  },
+  {
+    "id": "ex-efzfmdtv",
+    "version": 1,
+    "section": "limits",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The quota allows 512Mi of memory limits and each linkbox pod declares 128Mi. How many linkbox pods fit?",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-es80n7vh",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After `kubectl set resources ... --limits=memory=512Mi`, the old pod kept running. Why was there no outage?",
+    "choices": [
+      {
+        "text": "The LimitRange rewrote the limit down to 256Mi",
+        "correct": false,
+        "why": "A LimitRange fills in a missing limit; one above its maximum is refused, not rewritten."
+      },
+      {
+        "text": "A rollout removes old pods only as new ones start",
+        "correct": true,
+        "why": "Right: the new pods were refused, so the old one stayed until the undo."
+      },
+      {
+        "text": "The admission policy refused the update",
+        "correct": false,
+        "why": "The update declares a memory limit, so the policy accepted it."
+      },
+      {
+        "text": "Kubernetes ignores resource changes until a restart",
+        "correct": false,
+        "why": "It started a new ReplicaSet at once; its pods were what got refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-ks6aec44",
+    "version": 1,
+    "section": "limits",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each check with where it refuses.",
+    "pairs": [
+      {
+        "left": "the admission policy",
+        "right": "the Deployment, at kubectl apply"
+      },
+      {
+        "left": "the LimitRange",
+        "right": "each pod, against per-container bounds"
+      },
+      {
+        "left": "the ResourceQuota",
+        "right": "each pod, against the namespace's total"
+      }
+    ],
+    "right_distractors": [
+      "the image, at push time"
+    ]
+  },
+  {
+    "id": "ex-pf098n3d",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Deployment is applied to the linkbox namespace. Put what checks it, and its pods, in the order they run.",
+    "items": [
+      "the ValidatingAdmissionPolicy checks the Deployment",
+      "the ReplicaSet controller creates a pod",
+      "the LimitRange fills in and bounds the pod's limits",
+      "the ResourceQuota checks the namespace total",
+      "the kubelet checks runAsNonRoot as the container starts"
+    ]
+  }
+]

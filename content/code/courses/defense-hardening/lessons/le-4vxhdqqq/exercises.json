@@ -1,0 +1,593 @@
+[
+  {
+    "id": "ex-sesdhxe8",
+    "version": 1,
+    "section": "what-isolation-buys",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is a confined process called a thin wall?",
+    "choices": [
+      {
+        "text": "It shares the kernel with the rest of the machine",
+        "correct": true,
+        "why": "Right: one kernel flaw crosses every such wall."
+      },
+      {
+        "text": "Because it lets the program use the network",
+        "correct": false,
+        "why": "A confined process can be denied the network entirely."
+      },
+      {
+        "text": "Because it can only be built by root on a running system",
+        "correct": false,
+        "why": "Who builds it says nothing about its strength."
+      },
+      {
+        "text": "Because it disappears when the program ends",
+        "correct": false,
+        "why": "A virtual machine snapshot disappears too, and is a thick wall."
+      }
+    ]
+  },
+  {
+    "id": "ex-kvham722",
+    "version": 1,
+    "section": "what-isolation-buys",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order these layers from the thinnest wall to the thickest.",
+    "items": [
+      "a confined process",
+      "a virtual machine",
+      "another computer"
+    ]
+  },
+  {
+    "id": "ex-9gjea20g",
+    "version": 1,
+    "section": "what-isolation-buys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A file may have been built to escape whatever holds it. Where should it be opened?",
+    "choices": [
+      {
+        "text": "In a systemd-run sandbox on the firm's portal server",
+        "correct": false,
+        "why": "That wall shares the server's kernel, the very thing it might attack."
+      },
+      {
+        "text": "In a container next to the production containers",
+        "correct": false,
+        "why": "Same kernel as production."
+      },
+      {
+        "text": "In a virtual machine or on a machine set aside",
+        "correct": true,
+        "why": "Right: a thick wall for what may be built to escape."
+      },
+      {
+        "text": "On the analyst's own workstation, which has antivirus",
+        "correct": false,
+        "why": "An antivirus is not a wall."
+      }
+    ]
+  },
+  {
+    "id": "ex-q1428z8m",
+    "version": 1,
+    "section": "a-suspicious-file",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson write its own suspicious file instead of using a real malicious one?",
+    "choices": [
+      {
+        "text": "No lesson needs a dangerous one",
+        "correct": true,
+        "why": "Right: a harmless file that tries the same things shows the walls."
+      },
+      {
+        "text": "Because real malware does not run on Ubuntu",
+        "correct": false,
+        "why": "Plenty does."
+      },
+      {
+        "text": "Because sandboxes only stop scripts written in bash",
+        "correct": false,
+        "why": "They stop whatever runs inside them."
+      },
+      {
+        "text": "Because the lab has no internet to download one",
+        "correct": false,
+        "why": "Even with internet the lesson would not use one."
+      }
+    ]
+  },
+  {
+    "id": "ex-smtavdj9",
+    "version": 1,
+    "section": "a-suspicious-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You wrote relatorio.sh and know it is harmless. Why does the lesson still say not to run it outside a sandbox?",
+    "choices": [
+      {
+        "text": "Because it would delete the SSH keys",
+        "correct": false,
+        "why": "It only lists names."
+      },
+      {
+        "text": "Because bash refuses scripts that write to /etc",
+        "correct": false,
+        "why": "Root's bash writes to /etc happily."
+      },
+      {
+        "text": "For the day you turn out to be wrong about a file",
+        "correct": true,
+        "why": "Right: the one time it matters is when you were sure."
+      },
+      {
+        "text": "Because the lab forbids running scripts as ana",
+        "correct": false,
+        "why": "ana runs scripts all through the course."
+      }
+    ]
+  },
+  {
+    "id": "ex-phe15e1h",
+    "version": 1,
+    "section": "systemd-run-sandbox",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each attempt of relatorio.sh to the option that stopped it.",
+    "pairs": [
+      {
+        "left": "listing ~/.ssh",
+        "right": "ProtectHome=tmpfs"
+      },
+      {
+        "left": "writing to /etc",
+        "right": "ProtectSystem=strict"
+      },
+      {
+        "left": "connecting to trap",
+        "right": "PrivateNetwork=yes"
+      }
+    ],
+    "right_distractors": [
+      "NoNewPrivileges=yes"
+    ]
+  },
+  {
+    "id": "ex-kqbhcnc9",
+    "version": 1,
+    "section": "systemd-run-sandbox",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With ProtectHome=tmpfs, how can the program still read relatorio.sh from ana's home?",
+    "choices": [
+      {
+        "text": "ProtectHome only hides directories, never files",
+        "correct": false,
+        "why": "It replaces the whole home with an empty one."
+      },
+      {
+        "text": "Because --uid=ana makes ProtectHome skip ana's own home",
+        "correct": false,
+        "why": "ProtectHome hides every home, the runner's included."
+      },
+      {
+        "text": "bash reads scripts before the sandbox is built",
+        "correct": false,
+        "why": "The sandbox exists before bash starts."
+      },
+      {
+        "text": "BindReadOnlyPaths puts that one file back, read-only",
+        "correct": true,
+        "why": "Right: read-only, and nothing else."
+      }
+    ]
+  },
+  {
+    "id": "ex-gq4mbjqj",
+    "version": 1,
+    "section": "systemd-run-sandbox",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside the sandbox the script still printed done. What does that show?",
+    "choices": [
+      {
+        "text": "Walls limit what it touches, not whether it runs",
+        "correct": true,
+        "why": "Right: it needs no idea what the program is."
+      },
+      {
+        "text": "That the sandbox failed to stop it",
+        "correct": false,
+        "why": "All three attempts failed; the walls held."
+      },
+      {
+        "text": "That the script detected the sandbox and gave up",
+        "correct": false,
+        "why": "It simply carried on after each failure."
+      },
+      {
+        "text": "That NoNewPrivileges let the last line of the script through",
+        "correct": false,
+        "why": "Printing a word needs no privilege."
+      }
+    ]
+  },
+  {
+    "id": "ex-ta6zp0fm",
+    "version": 1,
+    "section": "tracing-what-it-tried",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why trace a suspicious program inside the sandbox rather than just running it there?",
+    "choices": [
+      {
+        "text": "Because strace makes the walls thicker",
+        "correct": false,
+        "why": "It only watches."
+      },
+      {
+        "text": "Because the sandbox does not work without it",
+        "correct": false,
+        "why": "The sandbox held without strace in the last section."
+      },
+      {
+        "text": "The trace records what the walls hid",
+        "correct": true,
+        "why": "Right: the files and addresses it reached for are the findings."
+      },
+      {
+        "text": "To slow it down so it cannot finish",
+        "correct": false,
+        "why": "Slowing it is a side effect, not the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-4j46n0gk",
+    "version": 1,
+    "section": "tracing-what-it-tried",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each answer the kernel gave in the trace to its cause.",
+    "pairs": [
+      {
+        "left": "ENOENT",
+        "right": "the file is not in this world"
+      },
+      {
+        "left": "EROFS",
+        "right": "the file system is read-only"
+      },
+      {
+        "left": "ENETUNREACH",
+        "right": "there is no route, because there is no network"
+      }
+    ],
+    "right_distractors": [
+      "the account lacks permission"
+    ]
+  },
+  {
+    "id": "ex-tw3t5w45",
+    "version": 1,
+    "section": "tracing-what-it-tried",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The tool that prints every system call a program makes, with the kernel's answer, is ___.",
+    "blanks": [
+      {
+        "accept": [
+          "strace"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kvy5d2vf",
+    "version": 1,
+    "section": "a-disposable-machine",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does firejail's --whitelist=~/relatorio.sh do to the home directory?",
+    "choices": [
+      {
+        "text": "Deletes everything in it except that file",
+        "correct": false,
+        "why": "Nothing is deleted; it is a view."
+      },
+      {
+        "text": "Makes the file executable for every user",
+        "correct": false,
+        "why": "Permissions are not touched."
+      },
+      {
+        "text": "Copies the file to a disposable machine",
+        "correct": false,
+        "why": "It stays on web, confined."
+      },
+      {
+        "text": "Shows only the named path inside the sandbox",
+        "correct": true,
+        "why": "Right: the program sees what it was given."
+      }
+    ]
+  },
+  {
+    "id": "ex-f01yzbjh",
+    "version": 1,
+    "section": "a-disposable-machine",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a disposable machine give that a confined process does not?",
+    "choices": [
+      {
+        "text": "Whatever the file did is thrown away with the machine",
+        "correct": true,
+        "why": "Right: and the file never had the production machine to work on."
+      },
+      {
+        "text": "A faster way to open large files",
+        "correct": false,
+        "why": "Speed is not the point."
+      },
+      {
+        "text": "Protection from flaws in the hypervisor",
+        "correct": false,
+        "why": "A virtual machine still depends on the hypervisor."
+      },
+      {
+        "text": "An automatic verdict on whether the file is malicious",
+        "correct": false,
+        "why": "That is what lesson 19's services try to give."
+      }
+    ]
+  },
+  {
+    "id": "ex-0btg8ah9",
+    "version": 1,
+    "section": "hardening-a-service",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does systemd-analyze security measure?",
+    "choices": [
+      {
+        "text": "How much sandboxing the unit uses",
+        "correct": true,
+        "why": "Right: from 0, confined, to 10, not at all."
+      },
+      {
+        "text": "How many vulnerabilities the service's program has",
+        "correct": false,
+        "why": "It knows nothing about bugs; that is lesson 16."
+      },
+      {
+        "text": "How long the service takes to start",
+        "correct": false,
+        "why": "That is systemd-analyze blame."
+      },
+      {
+        "text": "Whether the service's port is open from outside",
+        "correct": false,
+        "why": "Ports are lesson 1's scan."
+      }
+    ]
+  },
+  {
+    "id": "ex-jcannnfw",
+    "version": 1,
+    "section": "hardening-a-service",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After adding the sandbox drop-in, what does the lesson check before the new score?",
+    "choices": [
+      {
+        "text": "That the drop-in file is owned by root",
+        "correct": false,
+        "why": "It was copied with sudo; ownership is not the risk."
+      },
+      {
+        "text": "That systemd printed no warning on reload",
+        "correct": false,
+        "why": "A silent reload says nothing about the portal working."
+      },
+      {
+        "text": "That the portal still answers",
+        "correct": true,
+        "why": "Right: a sandbox that breaks the job is removed in a hurry."
+      },
+      {
+        "text": "That the score is below 5",
+        "correct": false,
+        "why": "The score comes last, and is a guide."
+      }
+    ]
+  },
+  {
+    "id": "ex-yhg0nhdh",
+    "version": 1,
+    "section": "hardening-a-service",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague wants every unit on the server scored 0 before the next audit. What is wrong with that goal?",
+    "choices": [
+      {
+        "text": "Nothing: 0 is the safest possible service",
+        "correct": false,
+        "why": "Some checks do not apply, and some walls break the job."
+      },
+      {
+        "text": "The score is a guide, not a target",
+        "correct": true,
+        "why": "Right: take away what the job does not need, not what the score asks."
+      },
+      {
+        "text": "A score of 0 is impossible on Ubuntu",
+        "correct": false,
+        "why": "That is not the objection."
+      },
+      {
+        "text": "Auditors only accept scores between 4 and 6",
+        "correct": false,
+        "why": "No auditor rule says so."
+      }
+    ]
+  },
+  {
+    "id": "ex-qsfzgt04",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many separate attempts did relatorio.sh make that the sandbox refused?",
+    "value": 3,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-jwejm6wa",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these lines in 20-sandbox.conf would break the portal if it were later changed to call an API on another machine? Choose all that apply.",
+    "choices": [
+      {
+        "text": "ProtectHome=yes",
+        "correct": false,
+        "why": "The portal's home is /srv/portal, and an API call needs no home."
+      },
+      {
+        "text": "RestrictAddressFamilies=AF_INET AF_UNIX",
+        "correct": false,
+        "why": "An IPv4 call is AF_INET, which is allowed."
+      },
+      {
+        "text": "NoNewPrivileges=yes",
+        "correct": false,
+        "why": "Calling an API needs no new privilege."
+      },
+      {
+        "text": "The IPAddressDeny=any from lesson 10, if both drop-ins are installed",
+        "correct": true,
+        "why": "That one denies every address but localhost."
+      }
+    ]
+  },
+  {
+    "id": "ex-vdahpdfv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A client mails an unknown spreadsheet with macros, and the accountant must see its contents today. What is the best first step from this lesson?",
+    "choices": [
+      {
+        "text": "Open it on the accountant's own workstation with macros off",
+        "correct": false,
+        "why": "That puts an unknown file on a machine full of client data."
+      },
+      {
+        "text": "Run it with systemd-run on the portal server",
+        "correct": false,
+        "why": "The portal server is the last place for an unknown file."
+      },
+      {
+        "text": "Forward it to everybody so that more people can judge it",
+        "correct": false,
+        "why": "That spreads the risk, not the judgement."
+      },
+      {
+        "text": "Open it on a disposable machine set aside for it",
+        "correct": true,
+        "why": "Right: whatever it does goes away with the machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-mmte0mnb",
+    "version": 1,
+    "section": "systemd-run-sandbox",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does PrivateTmp=yes protect against?",
+    "choices": [
+      {
+        "text": "The program filling the disk with temporary files",
+        "correct": false,
+        "why": "Its /tmp still uses disk; it is only private."
+      },
+      {
+        "text": "Other machines on the segment reading the program's files",
+        "correct": false,
+        "why": "/tmp is never shared across machines."
+      },
+      {
+        "text": "Sharing /tmp with other programs",
+        "correct": true,
+        "why": "Right: nothing it leaves there, or finds there, crosses the wall."
+      },
+      {
+        "text": "The program running as root",
+        "correct": false,
+        "why": "That is the account, not /tmp."
+      }
+    ]
+  },
+  {
+    "id": "ex-767zc258",
+    "version": 1,
+    "section": "systemd-run-sandbox",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "ProtectSystem=___ makes the whole file system read-only for the service.",
+    "blanks": [
+      {
+        "accept": [
+          "strict"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-40pxrtc5",
+    "version": 1,
+    "section": "hardening-a-service",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What exposure score did systemd-analyze give the portal before the drop-in?",
+    "value": 9.2,
+    "tolerance": 0.05,
+    "unit": ""
+  }
+]

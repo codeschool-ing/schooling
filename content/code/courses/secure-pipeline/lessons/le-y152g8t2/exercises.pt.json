@@ -1,0 +1,403 @@
+{
+  "ex-zwzdj8t8": {
+    "prompt": "Na visão geral de ameaças do SLSA, como as dependências entram na cadeia?",
+    "choices": [
+      {
+        "text": "Como a letra Z, depois do uso",
+        "why": "Não há letra para elas; esse é o ponto de como o SLSA as trata."
+      },
+      {
+        "text": "Cada uma traz a cadeia inteira de novo, de A a H",
+        "why": "Isso. Uma dependência comprometida é uma dessas letras dando errado um nível abaixo."
+      },
+      {
+        "text": "Só em H, a escolha do pacote",
+        "why": "H cobre a escolha de um pacote; uma dependência pode quebrar em qualquer uma das próprias letras."
+      },
+      {
+        "text": "Fora do SLSA, que só cobre o seu build",
+        "why": "O SLSA nomeia as ameaças por dependência explicitamente."
+      }
+    ]
+  },
+  "ex-pakz2rk6": {
+    "prompt": "Ligue cada letra do SLSA à parte do linkbox a que ela se refere.",
+    "pairs": [
+      {
+        "left": "C, gestão do código-fonte",
+        "right": "~/ci/linkbox.git"
+      },
+      {
+        "left": "E, o processo de build",
+        "right": "ci/pipeline.sh rodado pelo hook"
+      },
+      {
+        "left": "F, publicação do artefato",
+        "right": "docker push no ci/push.sh"
+      },
+      {
+        "left": "H, escolha do pacote",
+        "right": "o nome e a versão que o cluster pede"
+      }
+    ]
+  },
+  "ex-mcjd3qcc": {
+    "prompt": "Por que A, o produtor, e I, o uso, quase não aparecem na tabela de controles?",
+    "choices": [
+      {
+        "text": "Pipelines não checam intenção, nem a configuração posterior",
+        "why": "Isso: um é sobre em quem você confia, o outro pertence ao runtime e à admissão."
+      },
+      {
+        "text": "Nenhum incidente registrado aconteceu em qualquer uma dessas duas letras",
+        "why": "O SLSA lista exemplos nas duas; só estão fora do alcance de um pipeline."
+      },
+      {
+        "text": "As duas são cobertas pela assinatura dos artefatos",
+        "why": "Uma assinatura diz quem publicou, não se essa pessoa tinha boas intenções."
+      },
+      {
+        "text": "O SLSA desistiu delas na versão mais recente",
+        "why": "Estão na visão geral de ameaças; o SLSA diz que não as trata."
+      }
+    ]
+  },
+  "ex-xk4etkx6": {
+    "prompt": "Os builds comprometidos do Orion carregavam uma assinatura válida da SolarWinds. O que isso ensina sobre assinatura?",
+    "choices": [
+      {
+        "text": "Assinaturas já estão quebradas e deveriam sair dos pipelines de vez",
+        "why": "Elas fazem o que prometem; a promessa é mais estreita do que se supõe."
+      },
+      {
+        "text": "Os atacantes tinham roubado a chave de assinatura",
+        "why": "A assinatura era da própria SolarWinds, depois de um build alterado; não foi preciso roubar chave."
+      },
+      {
+        "text": "Ela diz quem publicou, não qual era o código",
+        "why": "Isso. Proveniência e um build independente respondem a segunda pergunta."
+      },
+      {
+        "text": "A assinatura deveria acontecer antes do build",
+        "why": "Não há o que assinar antes de o artefato existir."
+      }
+    ]
+  },
+  "ex-x8amj1fw": {
+    "prompt": "Como o Bash Uploader modificado da Codecov foi descoberto?",
+    "choices": [
+      {
+        "text": "Um scanner de malware marcou o script",
+        "why": "Nenhum scanner o achou; uma pessoa comparando dois valores achou."
+      },
+      {
+        "text": "Um cliente comparou o SHA-256",
+        "why": "Isso, com o publicado ao lado: exatamente a checagem que o modo de hash do pip faz."
+      },
+      {
+        "text": "O secret scanning do GitHub viu os tokens vazados",
+        "why": "Os segredos foram para um servidor de fora, não para um repositório."
+      },
+      {
+        "text": "Uma auditoria da própria Codecov no armazenamento",
+        "why": "A Codecov soube por um cliente."
+      }
+    ]
+  },
+  "ex-aan1wcdg": {
+    "prompt": "Em março de 2025, quais workflows que usavam tj-actions/changed-files continuaram rodando o código antigo e seguro?",
+    "choices": [
+      {
+        "text": "Os que usavam uma tag maior como @v45",
+        "why": "São justamente as tags que o atacante moveu."
+      },
+      {
+        "text": "Os de repositórios privados",
+        "why": "Repositórios privados rodaram o mesmo código; só os logs ficaram menos expostos."
+      },
+      {
+        "text": "Os fixados num hash de commit completo",
+        "why": "Isso: um hash de commit nomeia uma árvore de arquivos e ninguém o move."
+      },
+      {
+        "text": "Os que só a rodavam em pull requests",
+        "why": "O gatilho não importava; o código para onde a tag apontava, sim."
+      }
+    ]
+  },
+  "ex-6e4x6yfj": {
+    "prompt": "Por que o SLSA usa o event-stream como exemplo de ameaça por dependência?",
+    "choices": [
+      {
+        "text": "O código publicado não estava no código-fonte",
+        "why": "Isso: o código malicioso estava no npm e não no GitHub, um pacote que não bate com o próprio código."
+      },
+      {
+        "text": "O pacote tinha um erro de digitação no nome",
+        "why": "Isso é typosquatting, letra H; o nome do event-stream era o verdadeiro."
+      },
+      {
+        "text": "O próprio npm, o registry, foi comprometido pelo atacante",
+        "why": "O registry funcionou como projetado; o pacote mudou de mãos legitimamente."
+      },
+      {
+        "text": "O servidor de build dele foi invadido",
+        "why": "Nada no incidente envolve um servidor de build."
+      }
+    ]
+  },
+  "ex-jbb9vtef": {
+    "prompt": "O lockfile de um projeto fixava o ua-parser-js 0.7.28 no dia em que as versões 0.7.29, 0.8.0 e 1.0.0 foram publicadas pela conta roubada. Quais afirmações são verdadeiras? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Uma instalação nova a partir desse lockfile instalou a 0.7.28",
+        "why": "Sim: um lock não aceita versões novas sozinho."
+      },
+      {
+        "text": "Uma atualização automática naquele dia poderia trazer uma versão maliciosa",
+        "why": "Sim, e é por isso que um período de espera importa."
+      },
+      {
+        "text": "O lockfile tornou o projeto imune a todo comprometimento futuro do pacote",
+        "why": "Ele protege a versão fixada até alguém atualizar, e nada além disso."
+      },
+      {
+        "text": "Autenticação de dois fatores na conta do mantenedor teria ajudado",
+        "why": "Sim: a tomada da conta foi a porta de entrada."
+      }
+    ]
+  },
+  "ex-c1d383d0": {
+    "prompt": "O backdoor do xz era ativado a partir do tarball de release e não estava no repositório Git. Que controle mira exatamente essa lacuna?",
+    "choices": [
+      {
+        "text": "Fixar o xz por versão em toda imagem",
+        "why": "As versões maliciosas eram releases de verdade; uma fixação as teria fixado."
+      },
+      {
+        "text": "Construir a partir da fonte versionada",
+        "why": "Isso, ou comparar o tarball com ele: a diferença estava exatamente onde o gatilho estava."
+      },
+      {
+        "text": "Escanear o tarball com um scanner de imagens",
+        "why": "Nenhum aviso existia antes da divulgação, então um scanner não tinha o que comparar."
+      },
+      {
+        "text": "Assinar o tarball com a chave do mantenedor",
+        "why": "O tarball foi publicado por um mantenedor; uma assinatura teria sido válida."
+      }
+    ]
+  },
+  "ex-5ws2zr7z": {
+    "prompt": "Ponha os quatro incidentes de dependência na ordem em que aconteceram.",
+    "items": [
+      "event-stream",
+      "ua-parser-js",
+      "torchtriton",
+      "xz-utils"
+    ]
+  },
+  "ex-7gj2ktnv": {
+    "prompt": "O pip recusou a wheel do mirror local com `Expected` e `Got`. O que o `Got` continha?",
+    "choices": [
+      {
+        "text": "O hash do arquivo de requirements",
+        "why": "Esse é o `Expected`, o valor que você fixou."
+      },
+      {
+        "text": "O hash publicado pelo PyPI",
+        "why": "O pip nem perguntou ao PyPI; o arquivo veio do índice local."
+      },
+      {
+        "text": "O SHA-256 do arquivo que de fato chegou",
+        "why": "Isso: a wheel com um byte a mais, então um hash diferente."
+      },
+      {
+        "text": "O hash da versão anterior do blinker",
+        "why": "Nenhuma outra versão entrou na história; mesmo nome, mesma versão, bytes diferentes."
+      }
+    ]
+  },
+  "ex-4ssdfkaf": {
+    "prompt": "O seu lock tem um hash para cada arquivo, e a conta roubada de um mantenedor publica uma release maliciosa. Em que caso o hash não protege você?",
+    "choices": [
+      {
+        "text": "Quando o lock é atualizado para ela antes de alguém olhar",
+        "why": "Isso: o hash então fixa fielmente o arquivo malicioso. Um período de espera é a defesa."
+      },
+      {
+        "text": "Quando a release é instalada a partir de um mirror",
+        "why": "Um mirror servindo outros bytes é recusado; é para isso que serve o hash."
+      },
+      {
+        "text": "Quando o pacote publica mais de uma wheel por release",
+        "why": "Um lock lista um hash por arquivo; o pip aceita qualquer um listado."
+      },
+      {
+        "text": "Quando o pip roda fora de qualquer ambiente virtual",
+        "why": "Onde o pip instala não muda o que ele verifica."
+      }
+    ]
+  },
+  "ex-4bdx2bzm": {
+    "prompt": "O modo ___ do pip só instala um arquivo se o SHA-256 dele for um dos que o arquivo de requirements lista.",
+    "blanks": [
+      {
+        "accept": [
+          "--require-hashes",
+          "require-hashes"
+        ]
+      }
+    ]
+  },
+  "ex-6n0pmre0": {
+    "prompt": "De onde veio o hash no arquivo de requirements de rascunho, e por que a aula diz que esse passo merece cuidado?",
+    "choices": [
+      {
+        "text": "Da página web do PyPI, que alguém poderia ter falsificado",
+        "why": "Ele veio do `pip hash` sobre o seu próprio download."
+      },
+      {
+        "text": "O seu próprio download, que poderia estar adulterado",
+        "why": "Isso: o `pip hash` dele, e um download adulterado fixaria o arquivo adulterado. É por isso que a aula 15 tira os hashes dos registros do índice, numa data."
+      },
+      {
+        "text": "Do arquivo RECORD da própria wheel, que o lista",
+        "why": "O RECORD lista os hashes dos arquivos dentro da wheel, não da wheel."
+      },
+      {
+        "text": "Do cache do uv, que só guarda arquivos verificados",
+        "why": "O uv não teve papel nesse passo."
+      }
+    ]
+  },
+  "ex-65nkdwpc": {
+    "prompt": "Com `--extra-index-url` apontando para o seu índice (packaging 0.1) ao lado do PyPI, qual versão do packaging o pip baixou? Dê o número."
+  },
+  "ex-gdwmy3a0": {
+    "prompt": "Com os mesmos dois índices, por que o uv instalou o packaging 0.1 por padrão?",
+    "choices": [
+      {
+        "text": "O uv lê só os índices servidos em localhost, de propósito",
+        "why": "O uv lê qualquer índice; ele escolheu pela ordem, não pelo endereço."
+      },
+      {
+        "text": "Vence o primeiro índice com o nome, e o extra vem primeiro",
+        "why": "Isso. `unsafe-best-match` devolve a regra do pip da versão mais alta."
+      },
+      {
+        "text": "A 0.1 estava no cache do uv",
+        "why": "Cache não escolhe entre versões."
+      },
+      {
+        "text": "O uv prefere a versão mais baixa que acha, para ficar do lado seguro",
+        "why": "Ele nem comparou versões entre índices."
+      }
+    ]
+  },
+  "ex-nsbhw39d": {
+    "prompt": "A sua empresa registra pacotes reserva no PyPI para os doze nomes internos. Um décimo terceiro pacote interno é criado no mês que vem. O que a estratégia de reserva faz por ele?",
+    "choices": [
+      {
+        "text": "Protege, porque o namespace da empresa agora está reservado",
+        "why": "O PyPI não tem namespaces de empresa; cada nome é registrado um por um."
+      },
+      {
+        "text": "Nada, até alguém lembrar de registrar esse nome também",
+        "why": "Isso: reservas fecham a porta para esses nomes e nenhum outro, e por isso um índice só vem primeiro."
+      },
+      {
+        "text": "Faz o pip preferir o índice interno para todo nome",
+        "why": "A regra do pip não muda; ele ainda pega a versão mais alta do conjunto."
+      },
+      {
+        "text": "Bloqueia também o typosquatting dos doze nomes",
+        "why": "Um erro de digitação de um nome é outro nome, que ninguém registrou."
+      }
+    ]
+  },
+  "ex-bja7jaz0": {
+    "prompt": "O que é typosquatting, como o SLSA o posiciona?",
+    "choices": [
+      {
+        "text": "Um nome a uma tecla de um popular, em H",
+        "why": "Isso. Ele precisa que uma pessoa digite um nome errado uma vez."
+      },
+      {
+        "text": "Uma conta de publicação roubada, em F, a publicação",
+        "why": "Esse é o caso do ua-parser-js, outra porta de entrada."
+      },
+      {
+        "text": "Uma tag do Git movida, dentro do build",
+        "why": "Esse é o tj-actions."
+      },
+      {
+        "text": "Um backdoor escondido dentro de um tarball de release, na letra D",
+        "why": "Esse é o xz."
+      }
+    ]
+  },
+  "ex-wq1bf5s5": {
+    "prompt": "Ligue cada incidente ao controle que o teria pegado.",
+    "pairs": [
+      {
+        "left": "Codecov",
+        "right": "conferir o hash antes de rodar o script"
+      },
+      {
+        "left": "tj-actions",
+        "right": "fixar actions por commit"
+      },
+      {
+        "left": "torchtriton",
+        "right": "um índice só para toda instalação"
+      },
+      {
+        "left": "SolarWinds",
+        "right": "proveniência e um build independente"
+      }
+    ]
+  },
+  "ex-ycnsk4vc": {
+    "prompt": "Os instaladores de um time usam `--extra-index-url` para o índice da empresa, e todo requisito está fixado com hash. Alguém registra um dos nomes internos no PyPI com a versão 99. O que acontece na próxima instalação?",
+    "choices": [
+      {
+        "text": "O pip instala a versão 99 do PyPI, a mais alta",
+        "why": "A fixação e o hash nomeiam a versão interna; um arquivo diferente é recusado."
+      },
+      {
+        "text": "Exatamente o arquivo revisado, como antes",
+        "why": "Isso, porque o hash dela bate: o hash cobre o que o arranjo de índices não cobre. Um índice só seria melhor ainda."
+      },
+      {
+        "text": "O pip pergunta ao usuário em qual índice confiar",
+        "why": "O pip nunca pergunta; ele decide pela regra."
+      },
+      {
+        "text": "A instalação falha porque dois índices têm o nome",
+        "why": "Ter o nome em dois índices é normal; o pip não falha por isso."
+      }
+    ]
+  },
+  "ex-vasg7egc": {
+    "prompt": "Qual ideia única a aula diz que a maioria dos controles compartilha?",
+    "choices": [
+      {
+        "text": "Escanear tudo duas vezes",
+        "why": "Escanear acha falhas conhecidas; nenhuma das sete era conhecida antes."
+      },
+      {
+        "text": "Confiar só em software assinado",
+        "why": "A SolarWinds era assinada."
+      },
+      {
+        "text": "Comparar o que chegou com um registro do que se pretendia",
+        "why": "Isso: um hash, um commit, proveniência, o diff de um lockfile."
+      },
+      {
+        "text": "Usar menos dependências",
+        "why": "Menos ajuda, mas vários incidentes foram no build, não numa dependência."
+      }
+    ]
+  }
+}

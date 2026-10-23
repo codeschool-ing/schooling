@@ -1,0 +1,535 @@
+[
+  {
+    "id": "ex-vc1tyjzq",
+    "version": 1,
+    "section": "three-moves",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does this lesson call pinning the base of every move rather than an alternative to updating?",
+    "choices": [
+      {
+        "text": "Pinned packages receive security fixes from PyPI automatically",
+        "correct": false,
+        "why": "A pin receives nothing on its own; that is the point of it."
+      },
+      {
+        "text": "It makes every update a chosen, reviewed change",
+        "correct": true,
+        "why": "Right. Floating versions update in production by accident; pins turn each update into a reviewed change."
+      },
+      {
+        "text": "A pinned package is never affected by new advisories",
+        "correct": false,
+        "why": "An advisory is about a version; a pin keeps you on it, affected or not."
+      },
+      {
+        "text": "Replacing a package is impossible without a pin",
+        "correct": false,
+        "why": "Replacement is about leaving a project, and needs no pin to do it."
+      }
+    ]
+  },
+  {
+    "id": "ex-22t1973n",
+    "version": 1,
+    "section": "three-moves",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`uv pip tree` on lesson 5's environment showed which package pulling in `packaging`?",
+    "choices": [
+      {
+        "text": "flask",
+        "correct": false,
+        "why": "Flask's tree had six packages, and `packaging` was not among them."
+      },
+      {
+        "text": "werkzeug",
+        "correct": false,
+        "why": "Werkzeug pulls in markupsafe, not `packaging`."
+      },
+      {
+        "text": "pytest",
+        "correct": false,
+        "why": "pytest needs it too, but only in the development lock; the tree shown was linkbox's runtime."
+      },
+      {
+        "text": "gunicorn",
+        "correct": true,
+        "why": "Right: gunicorn 22 required it outright."
+      }
+    ]
+  },
+  {
+    "id": "ex-pd3hqbkd",
+    "version": 1,
+    "section": "three-moves",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "PyPI listed four gunicorn majors released after 22. What does that tell you about staying on 22?",
+    "choices": [
+      {
+        "text": "Version 22 is unsafe to run today",
+        "correct": false,
+        "why": "A release history says nothing about advisories against 22; that is a different question."
+      },
+      {
+        "text": "The project is abandoned and should be replaced",
+        "correct": false,
+        "why": "Regular releases up to August are the opposite of abandonment."
+      },
+      {
+        "text": "Each later jump will be larger",
+        "correct": true,
+        "why": "Right. The further a pin falls behind, the larger the jump an advisory forces. A moving project is healthy, and the cost lands on whoever stays behind."
+      },
+      {
+        "text": "Nothing, as long as the tests pass on 22",
+        "correct": false,
+        "why": "Passing tests today do not shorten the jump you will have to make later."
+      }
+    ]
+  },
+  {
+    "id": "ex-37kmynpk",
+    "version": 1,
+    "section": "three-moves",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation to the move this lesson recommends.",
+    "pairs": [
+      {
+        "left": "a healthy project releases a supported version past your pin",
+        "right": "update"
+      },
+      {
+        "left": "a new package is added to the service",
+        "right": "pin, with hashes"
+      },
+      {
+        "left": "the maintainers state an advisory will never be fixed, and you sign with it",
+        "right": "replace"
+      }
+    ],
+    "right_distractors": [
+      "remove the upper bound"
+    ]
+  },
+  {
+    "id": "ex-gkskgp0c",
+    "version": 1,
+    "section": "the-lock",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first compile, run with lesson 5's `requirements.txt` still in place, kept `click` and `markupsafe` at their old versions. Why?",
+    "choices": [
+      {
+        "text": "uv keeps pins already in the output file if they still fit",
+        "correct": true,
+        "why": "Right. A lock moves as little as possible, so a review reads only what moved."
+      },
+      {
+        "text": "Newer versions of both were excluded by the date",
+        "correct": false,
+        "why": "The clean compile with the same date picked newer versions of both."
+      },
+      {
+        "text": "flask's range forbids newer versions of click and markupsafe",
+        "correct": false,
+        "why": "The clean compile resolved click 8.5.0 under the same flask range."
+      },
+      {
+        "text": "gunicorn 26 requires those exact versions",
+        "correct": false,
+        "why": "gunicorn 26 requires nothing outside its extras."
+      }
+    ]
+  },
+  {
+    "id": "ex-7cht7vx8",
+    "version": 1,
+    "section": "the-lock",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a hash under a pin in `requirements.txt` protect against that the version number alone does not?",
+    "choices": [
+      {
+        "text": "A newer version being released",
+        "correct": false,
+        "why": "A newer version has a different number; the pin alone already ignores it."
+      },
+      {
+        "text": "A different file served under the same version",
+        "correct": true,
+        "why": "Right. The installer refuses bytes whose hash is not in the lock."
+      },
+      {
+        "text": "An advisory being published against that version",
+        "correct": false,
+        "why": "A hash says nothing about advisories; it pins bytes."
+      },
+      {
+        "text": "A dependency of the package changing its licence",
+        "correct": false,
+        "why": "Licences are not what a hash checks."
+      }
+    ]
+  },
+  {
+    "id": "ex-xv1a5hqj",
+    "version": 1,
+    "section": "the-lock",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`ci/test.sh` installs with `uv pip install --___`, so any package without a hash in the lock is refused.",
+    "blanks": [
+      {
+        "accept": [
+          "require-hashes"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-h4qb2ren",
+    "version": 1,
+    "section": "the-lock",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate edits `requirements.txt` by hand to bump one package and its hash, leaving `requirements.in` alone. What has been lost?",
+    "choices": [
+      {
+        "text": "Nothing, if the hash was copied correctly from PyPI",
+        "correct": false,
+        "why": "The bytes may be right; what is gone is the guarantee that the lock is what the ranges resolve to."
+      },
+      {
+        "text": "The image will be built from the network again",
+        "correct": false,
+        "why": "The build still uses the downloaded wheels; the problem is in the lock."
+      },
+      {
+        "text": "The lock no longer matches its header's command",
+        "correct": true,
+        "why": "Right. Nobody can rerun the header's command and get this file, and the `# via` comments may now lie."
+      },
+      {
+        "text": "`--require-hashes` will refuse the edited package",
+        "correct": false,
+        "why": "It accepts any package whose hash is in the file; a hand edit passes."
+      }
+    ]
+  },
+  {
+    "id": "ex-v1yzfq6k",
+    "version": 1,
+    "section": "a-date",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Compiled with `--exclude-newer 2026-08-01`, linkbox's ranges failed. Why?",
+    "choices": [
+      {
+        "text": "PyPI refuses dates more than a month in the past",
+        "correct": false,
+        "why": "The 2024 date worked for flask in the same capture."
+      },
+      {
+        "text": "No gunicorn 26.2 had been uploaded by then",
+        "correct": true,
+        "why": "Right. `>=26.2` cannot be met with files from before 24 August."
+      },
+      {
+        "text": "flask 3.1.3 did not exist in August",
+        "correct": false,
+        "why": "flask resolved to 3.1.3 at the October date; the resolver named gunicorn."
+      },
+      {
+        "text": "A date without `--generate-hashes` is an error",
+        "correct": false,
+        "why": "Dates and hashes are independent flags."
+      }
+    ]
+  },
+  {
+    "id": "ex-r1r258ek",
+    "version": 1,
+    "section": "a-date",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A malicious release of a dependency is published on Monday and removed on Wednesday. Your compile date is always a week behind today. On Thursday somebody updates the lock. What happens?",
+    "choices": [
+      {
+        "text": "The compile picks it up, because it was valid for two days",
+        "correct": false,
+        "why": "With the date a week back, Monday's upload is after the date on Thursday."
+      },
+      {
+        "text": "The compile never saw it",
+        "correct": true,
+        "why": "Right. It is gone before the date passes it: the release lived inside the window the date excludes."
+      },
+      {
+        "text": "The hashes catch it, since its file is new",
+        "correct": false,
+        "why": "Hashes are generated from what the compile chose; they do not judge a release."
+      },
+      {
+        "text": "pip-audit refuses it in the sca stage",
+        "correct": false,
+        "why": "A fresh malicious release often has no advisory yet; the date is what kept it out."
+      }
+    ]
+  },
+  {
+    "id": "ex-8nr54nfh",
+    "version": 1,
+    "section": "a-date",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the lesson name as the cost of a compile date a week behind?",
+    "choices": [
+      {
+        "text": "Locks become impossible to reproduce",
+        "correct": false,
+        "why": "The date is what makes them reproducible."
+      },
+      {
+        "text": "A fix published yesterday is held back too",
+        "correct": true,
+        "why": "Right. That is the case for a written exception for one package."
+      },
+      {
+        "text": "Every package must be downloaded twice",
+        "correct": false,
+        "why": "The date changes which versions are chosen, not how often they are fetched."
+      },
+      {
+        "text": "The tests stop running in the pipeline",
+        "correct": false,
+        "why": "The tests ran against the dated lock in this lesson."
+      }
+    ]
+  },
+  {
+    "id": "ex-zn1zahkk",
+    "version": 1,
+    "section": "a-date",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the checks this lesson applies to the gunicorn 22 to 26 update in the order it makes them.",
+    "items": [
+      "read what changed in each major",
+      "see what it brings in or takes out",
+      "run the tests on the new lock",
+      "build and run the image in the pipeline"
+    ]
+  },
+  {
+    "id": "ex-gxg30fmc",
+    "version": 1,
+    "section": "no-network",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 8's Dockerfile, built with `--network none`, failed. What did that failure show?",
+    "choices": [
+      {
+        "text": "That Docker cannot build images offline",
+        "correct": false,
+        "why": "The new Dockerfile built offline a moment later."
+      },
+      {
+        "text": "That the old build fetched packages from PyPI during the build",
+        "correct": true,
+        "why": "Right. The build depended on whatever the index answered, which nobody checked afterwards."
+      },
+      {
+        "text": "That the base image had been tampered with",
+        "correct": false,
+        "why": "Nothing about the base image changed; pip could not reach the index."
+      },
+      {
+        "text": "That the wheels directory was missing from `.dockerignore`",
+        "correct": false,
+        "why": "The old Dockerfile used no wheels at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-tv296qrj",
+    "version": 1,
+    "section": "no-network",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many wheels did `ci/build.sh` download into `wheels/` for linkbox's runtime lock?",
+    "value": 8,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-fx5dd9s2",
+    "version": 1,
+    "section": "no-network",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of the build after this lesson? Choose every one that is.",
+    "choices": [
+      {
+        "text": "Each wheel is checked against its hash twice, before and inside the build",
+        "correct": true,
+        "why": "Right: `pip download --require-hashes`, then `pip install --require-hashes` in the Dockerfile."
+      },
+      {
+        "text": "Both base images are named by digest",
+        "correct": true,
+        "why": "Right, with the tag kept in front for the reader."
+      },
+      {
+        "text": "The build's RUN steps reach PyPI through the proxy",
+        "why": "`--network none` gives them no network at all."
+      },
+      {
+        "text": "`packaging` is installed in the image for gunicorn",
+        "why": "Python's own check printed `None` for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2rr9p6t7",
+    "version": 1,
+    "section": "replace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The ecdsa advisory says signature verification is unaffected. A service only verifies signatures somebody else made. What does the lesson recommend?",
+    "choices": [
+      {
+        "text": "Replace it at once, because the advisory has no fix",
+        "correct": false,
+        "why": "The text says the vulnerable operations are signing and key generation, which this service never does."
+      },
+      {
+        "text": "Keep it pinned, with the reason written in the gate's exceptions",
+        "correct": true,
+        "why": "Right. The advisory does not apply to what the service does, and the exception records why."
+      },
+      {
+        "text": "Update to the latest release, which fixes it",
+        "correct": false,
+        "why": "There is no fixed version; `fixed_in` was empty."
+      },
+      {
+        "text": "Fork the library and patch the timing leak yourself",
+        "correct": false,
+        "why": "That makes you the maintainer of a cryptographic library, the most expensive option there is."
+      }
+    ]
+  },
+  {
+    "id": "ex-9kjep67q",
+    "version": 1,
+    "section": "replace",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service signs a token only so that the same service can check it on a later request. Which replacement for `ecdsa` does the lesson argue for?",
+    "choices": [
+      {
+        "text": "`cryptography`'s ECDSA on the same curve",
+        "correct": false,
+        "why": "It works, but a signature is more than the job needs; nobody else verifies it."
+      },
+      {
+        "text": "A newer release of `ecdsa` with the timing fix",
+        "correct": false,
+        "why": "The project stated there is no planned fix."
+      },
+      {
+        "text": "`hmac` from the standard library",
+        "correct": true,
+        "why": "Right, compared with `compare_digest`. One party creating and checking its own messages needs a MAC, and no dependency at all."
+      },
+      {
+        "text": "A hash of the token with SHA-256",
+        "correct": false,
+        "why": "Anybody can compute a plain hash, so it proves nothing about who made the token."
+      }
+    ]
+  },
+  {
+    "id": "ex-ct562ta3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team's lock is compiled without a date, and a nightly job recompiles it and commits the result. Which two properties of this lesson's lock does that give up?",
+    "choices": [
+      {
+        "text": "Hashes and the `# via` comments",
+        "correct": false,
+        "why": "Both are still written by every compile, dated or not."
+      },
+      {
+        "text": "Reproducing the file from its header, and the cooling-off period",
+        "correct": true,
+        "why": "Right. Without a date the same command answers differently tomorrow, and a release from an hour ago gets in."
+      },
+      {
+        "text": "The upper bounds and the lower bounds in `requirements.in`",
+        "correct": false,
+        "why": "Those are in the `.in` file and the job does not touch them."
+      },
+      {
+        "text": "The offline build and the base image digests",
+        "correct": false,
+        "why": "Those live in the Dockerfile and `ci/build.sh`, untouched by a recompile."
+      }
+    ]
+  },
+  {
+    "id": "ex-dx5afa5z",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After this lesson, how do you show that `packaging` is not in linkbox's image?",
+    "choices": [
+      {
+        "text": "Ask the image's own Python",
+        "correct": true,
+        "why": "Right. `find_spec` printed `None`, from inside the image, with no shell needed."
+      },
+      {
+        "text": "Open a shell in the container and run `pip list`",
+        "correct": false,
+        "why": "The distroless image has no shell and no pip, by lesson 8's design."
+      },
+      {
+        "text": "Search `requirements.in` for the word",
+        "correct": false,
+        "why": "It was never in `requirements.in`; it came in through gunicorn 22."
+      },
+      {
+        "text": "Check that `requirements-dev.txt` no longer lists it",
+        "correct": false,
+        "why": "It still does, for pytest, and that lock never reaches the image."
+      }
+    ]
+  }
+]

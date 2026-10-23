@@ -1,0 +1,28 @@
+rules:
+  - id: sql-built-from-a-string
+    languages: [python]
+    severity: ERROR
+    message: >-
+      SQL text built from a string reaches execute(). Write a ? where the
+      value goes and pass the value as a parameter.
+    pattern-either:
+      - pattern: $DB.execute(f"...", ...)
+      - pattern: $DB.execute("..." + $X, ...)
+      - pattern: $DB.execute("...".format(...), ...)
+      - pattern: $DB.execute("..." % $X, ...)
+  - id: writes-need-the-token
+    languages: [python]
+    severity: ERROR
+    message: >-
+      A POST route that never calls require_token() lets anybody write.
+    patterns:
+      - pattern: |
+          @app.post(...)
+          def $ROUTE(...):
+              ...
+      - pattern-not: |
+          @app.post(...)
+          def $ROUTE(...):
+              ...
+              require_token()
+              ...

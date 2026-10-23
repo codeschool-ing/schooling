@@ -1,0 +1,420 @@
+{
+  "ex-nbgg28nk": {
+    "prompt": "O contêiner do linkbox foi iniciado com um `docker run` simples. Que restrição o `docker inspect` mostrou em vigor?",
+    "choices": [
+      {
+        "text": "Um sistema de arquivos raiz somente leitura",
+        "why": "`read-only=false`: a raiz estava gravável."
+      },
+      {
+        "text": "Um limite de memória de 256 MB",
+        "why": "`memory=0` quer dizer nenhum limite."
+      },
+      {
+        "text": "Nenhuma delas",
+        "why": "Isso: nenhuma capability removida, nenhuma opção de segurança, nenhum limite. Só o filtro seccomp, que o `inspect` não lista aqui, estava ligado."
+      },
+      {
+        "text": "Todas as capabilities removidas",
+        "why": "`cap-drop=[]`: nada foi removido."
+      }
+    ]
+  },
+  "ex-2nxkte7v": {
+    "prompt": "No contêiner padrão, `CapEff` era 0 e `CapBnd` era `00000000a80425fb`. O que esse par quer dizer?",
+    "choices": [
+      {
+        "text": "Nenhuma agora; catorze ao alcance",
+        "why": "Isso. O conjunto limite é o teto para um processo root ou um arquivo setuid."
+      },
+      {
+        "text": "O processo tem catorze capabilities e não usa nenhuma",
+        "why": "Efetivo é o que ele tem para usar; zero efetivo quer dizer que ele não tem nenhuma para usar."
+      },
+      {
+        "text": "O Docker não conseguiu remover as capabilities pedidas",
+        "why": "Ninguém pediu; foi um `docker run` simples."
+      },
+      {
+        "text": "O filtro seccomp está bloqueando catorze chamadas",
+        "why": "O seccomp é a linha `Seccomp`; as linhas de capability são outro mecanismo."
+      }
+    ]
+  },
+  "ex-5vvyrtc6": {
+    "prompt": "Como usuário 65532 o processo não conseguiu mudar o `/app/app.py`; iniciado com `--user 0`, conseguiu. O que isso diz sobre o `USER` num Dockerfile?",
+    "choices": [
+      {
+        "text": "Um padrão, trocado por quem inicia o contêiner",
+        "why": "Isso, e é por isso que os controles seguintes não dependem do usuário."
+      },
+      {
+        "text": "É imposto pelo kernel por toda a vida da imagem",
+        "why": "O kernel impõe o usuário com que o processo de fato roda, e esse é escolhido na partida."
+      },
+      {
+        "text": "Só importa na hora do build, para as linhas `RUN`",
+        "why": "Ele também define o usuário com que o contêiner inicia: 65532 aqui, se ninguém trocar."
+      },
+      {
+        "text": "Torna somente leitura os arquivos de `/app`",
+        "why": "Quem impediu a escrita para o 65532 foi o dono dos arquivos; o root ainda escrevia."
+      }
+    ]
+  },
+  "ex-kvgm75g0": {
+    "prompt": "O resumo de um processo mantido pelo kernel, que a aula leu para ver usuário, capabilities e estado do seccomp, é o arquivo `/proc/<pid>/___`",
+    "blanks": [
+      {
+        "accept": [
+          "status"
+        ]
+      }
+    ]
+  },
+  "ex-8p5hm7k3": {
+    "prompt": "Rodando somente leitura e sem nenhuma outra mudança, o contêiner do linkbox sai. Do que o log diz que ele precisava?",
+    "choices": [
+      {
+        "text": "Um `/data` gravável para o arquivo do SQLite",
+        "why": "Essa é a segunda falha, depois que o gunicorn sobe; a primeira vem antes."
+      },
+      {
+        "text": "Um diretório temporário utilizável",
+        "why": "Isso: `No usable temporary directory found`, do `tempfile`, para o arquivo de heartbeat dos workers do gunicorn."
+      },
+      {
+        "text": "Permissão para escutar na porta 8000",
+        "why": "Escutar numa porta acima de 1024 não exige capability nem arquivo."
+      },
+      {
+        "text": "Um shell para rodar o script de partida",
+        "why": "Não há script de partida nem shell; o gunicorn sobe direto."
+      }
+    ]
+  },
+  "ex-g1c30rge": {
+    "prompt": "Com `--tmpfs /tmp`, o contêiner fica de pé e o primeiro POST responde 500. Por que esta falha é a mais perigosa das duas?",
+    "choices": [
+      {
+        "text": "Ela corrompe o banco de dados",
+        "why": "Nada foi escrito; o SQLite nem conseguiu abrir o arquivo."
+      },
+      {
+        "text": "Parece saudável até alguém usar",
+        "why": "Isso. Uma checagem que só olha se o contêiner subiu deixa passar."
+      },
+      {
+        "text": "Ela vaza o token na página de erro",
+        "why": "O 500 não trouxe token; o erro foi para o log."
+      },
+      {
+        "text": "Ela reinicia em loop e enche o disco",
+        "why": "O contêiner ficou de pé; nada reiniciou."
+      }
+    ]
+  },
+  "ex-4pkhm1j9": {
+    "prompt": "O `/tmp` é um `tmpfs` montado com `noexec`. O que isso impede, e o que não impede?",
+    "choices": [
+      {
+        "text": "Impede qualquer código em `/tmp` de rodar, inclusive arquivos Python",
+        "why": "`python3 arquivo.py` roda o interpretador, que fica em outro lugar; o arquivo só é lido."
+      },
+      {
+        "text": "Impede escrita em `/tmp`, mas não leitura",
+        "why": "O `/tmp` é montado `rw`; escrever é a razão de ele existir."
+      },
+      {
+        "text": "Executar o arquivo como programa; um interpretador lendo ainda funciona",
+        "why": "Isso, e é por isso que a aula não para no sistema de arquivos."
+      },
+      {
+        "text": "Não impede nada num contêiner de raiz somente leitura",
+        "why": "A raiz é somente leitura; o `/tmp` é uma montagem à parte, gravável, com opções próprias."
+      }
+    ]
+  },
+  "ex-g8bkta3t": {
+    "prompt": "Associe cada caminho do contêiner somente leitura do linkbox ao modo como está montado.",
+    "pairs": [
+      {
+        "left": "/",
+        "right": "overlay, ro: a imagem"
+      },
+      {
+        "left": "/tmp",
+        "right": "tmpfs, rw, noexec: rascunho do gunicorn"
+      },
+      {
+        "left": "/data",
+        "right": "tmpfs do usuário 65532: o banco"
+      },
+      {
+        "left": "/app",
+        "right": "parte da imagem somente leitura"
+      }
+    ],
+    "right_distractors": [
+      "um volume nomeado compartilhado com o host"
+    ]
+  },
+  "ex-hpb0z5hb": {
+    "prompt": "O root num contêiner iniciado com `--cap-drop ALL` tenta `os.chown('/data', 0, 0)`. O que acontece, e por quê?",
+    "choices": [
+      {
+        "text": "Funciona: root sempre pode trocar donos",
+        "why": "Trocar o dono exige `CAP_CHOWN`, e o conjunto limite está vazio."
+      },
+      {
+        "text": "`Operation not permitted`: sem `CAP_CHOWN`",
+        "why": "Isso. Mesmo comando, mesmo usuário 0; só a capability muda."
+      },
+      {
+        "text": "`Read-only file system`: o `/data` é parte da imagem",
+        "why": "Essa execução não tinha `--read-only`; a recusa veio da capability ausente."
+      },
+      {
+        "text": "O contêiner se recusa a subir como root",
+        "why": "O Docker sobe como root sem reclamar; quem recusa o usuário 0 é o `runAsNonRoot` do Kubernetes."
+      }
+    ]
+  },
+  "ex-16rgx0yk": {
+    "prompt": "A imagem distroless não tem arquivo setuid em `/usr`. Um colega diz que, por isso, `no-new-privileges` não serve para nada no linkbox. Qual é a resposta da aula?",
+    "choices": [
+      {
+        "text": "Protege a próxima imagem",
+        "why": "Isso: a próxima imagem é a que ninguém confere atrás de setuid, e a flag não custa nada a um programa que nunca precisou de privilégios novos."
+      },
+      {
+        "text": "Ele tem razão; a flag só importa em imagens com shell",
+        "why": "Um arquivo setuid não precisa de shell para ser executado; qualquer programa pode executá-lo."
+      },
+      {
+        "text": "Ela também bloqueia chamadas de sistema que o seccomp deixa passar",
+        "why": "O seccomp filtra chamadas; `no-new-privileges` é sobre privilégio ganho ao executar um arquivo."
+      },
+      {
+        "text": "Ela remove as capabilities que o `--cap-drop ALL` deixa",
+        "why": "O `--cap-drop ALL` não deixa nenhuma; as duas flags fazem coisas diferentes."
+      }
+    ]
+  },
+  "ex-mdyyrn3z": {
+    "prompt": "Um servidor precisa escutar na porta 80. Seguindo a aula, como o contêiner dele deve ser iniciado?",
+    "choices": [
+      {
+        "text": "Com as capabilities padrão, já que precisa de uma delas",
+        "why": "Isso mantém ao alcance treze de que ele não precisa."
+      },
+      {
+        "text": "`--cap-drop ALL --cap-add NET_BIND_SERVICE`",
+        "why": "Isso: tirar tudo, devolver a única, e justificar na revisão."
+      },
+      {
+        "text": "Como `--user 0`, porque abaixo de 1024 só o root escuta",
+        "why": "Exige uma capability, não o root; o root traz as catorze."
+      },
+      {
+        "text": "Com `--privileged`, só por causa da porta",
+        "why": "`--privileged` dá todas as capabilities e dispositivos; é o oposto da aula."
+      }
+    ]
+  },
+  "ex-7rp2kg4r": {
+    "prompt": "Quais destes controles valem qualquer que seja o usuário do processo? Marque todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "`--read-only`",
+        "why": "Certo: o `--user 0` também recebeu `Read-only file system`."
+      },
+      {
+        "text": "`USER 65532` no Dockerfile",
+        "why": "Esse é o próprio usuário, e o `--user 0` o substitui."
+      },
+      {
+        "text": "`--cap-drop ALL`",
+        "why": "Certo: o root sem capabilities não conseguiu `chown`."
+      },
+      {
+        "text": "`--security-opt no-new-privileges`",
+        "why": "Certo: vale para todo processo do contêiner e não pode ser desfeita."
+      },
+      {
+        "text": "arquivos do root em `/app`",
+        "why": "O dono protege do 65532, não do root."
+      }
+    ]
+  },
+  "ex-1ppn95b1": {
+    "prompt": "Como root e com as capabilities padrão, `os.unshare(os.CLONE_NEWUSER)` falhou; com `--security-opt seccomp=unconfined` funcionou. O que recusou da primeira vez?",
+    "choices": [
+      {
+        "text": "Só a falta de `CAP_SYS_ADMIN`",
+        "why": "As capabilities eram as mesmas nas duas execuções; só o filtro mudou."
+      },
+      {
+        "text": "O filtro de chamadas que o Docker aplica por padrão",
+        "why": "Isso: uma execução com o filtro, outra sem, e nada mais diferente."
+      },
+      {
+        "text": "O sistema de arquivos somente leitura",
+        "why": "Nenhuma das execuções era somente leitura, e um namespace não é arquivo."
+      },
+      {
+        "text": "O perfil docker-default do AppArmor",
+        "why": "A máquina da gravação não roda AppArmor; o daemon listou só o seccomp."
+      }
+    ]
+  },
+  "ex-2j1v1bfw": {
+    "prompt": "Um processo morto pelo OOM killer do kernel com `SIGKILL` (sinal 9) deixa qual status de saída no `docker run`?"
+  },
+  "ex-7zxh4bj7": {
+    "prompt": "Por que a aula põe `--memory-swap` igual a `--memory`?",
+    "choices": [
+      {
+        "text": "Para o limite ser o limite, sem swap por cima",
+        "why": "Isso: valores iguais não deixam espaço para swap além do limite de memória."
+      },
+      {
+        "text": "Porque o Docker recusa `--memory` sem ela",
+        "why": "O Docker aceita `--memory` sozinha e, em hosts com swap, acrescenta swap do mesmo tamanho."
+      },
+      {
+        "text": "Para dobrar a memória que o contêiner pode usar",
+        "why": "Valores iguais querem dizer zero de swap, não o dobro."
+      },
+      {
+        "text": "Para o `OOMKilled` aparecer no `docker inspect`",
+        "why": "O `OOMKilled` é registrado sempre que o kernel mata por memória; o swap não decide isso."
+      }
+    ]
+  },
+  "ex-7z3tqf25": {
+    "prompt": "Com `--pids-limit 32`, quantas threads o `threads.py` iniciou antes de uma ser recusada?"
+  },
+  "ex-revj5nfs": {
+    "prompt": "O linkbox usou 39 MiB com um limite de 256 MiB. Um colega propõe `--memory 40m` para deixar o limite justo. O que o raciocínio da aula prevê?",
+    "choices": [
+      {
+        "text": "Proteção melhor para o host sem custo",
+        "why": "O host já estava protegido com 256; 40 acrescenta custo e pouca proteção."
+      },
+      {
+        "text": "Nenhum efeito: o limite só vale na partida",
+        "why": "O limite vale a vida inteira do contêiner; foi assim que o `hog` morreu."
+      },
+      {
+        "text": "Mortes na primeira tarde de muito movimento",
+        "why": "Isso: um limite no uso ocioso de hoje falha assim que chega tráfego de verdade."
+      },
+      {
+        "text": "O Docker arredonda para 256 MiB de qualquer jeito",
+        "why": "O Docker aplica o valor que recebe."
+      }
+    ]
+  },
+  "ex-sgs0faw7": {
+    "prompt": "Por que a varredura dinâmica noturna agora roda o linkbox somente leitura e sem capabilities?",
+    "choices": [
+      {
+        "text": "Para testar o que a produção roda",
+        "why": "Isso, e uma flag que quebre o linkbox aparece ali, e não no primeiro deploy."
+      },
+      {
+        "text": "Porque o ZAP se recusa a examinar um contêiner privilegiado",
+        "why": "O ZAP só manda requisições HTTP; ele não enxerga como o alvo foi iniciado."
+      },
+      {
+        "text": "Para achar mais alertas que o scan da aula 4",
+        "why": "As flags mudam o contêiner, não o que o ZAP reporta; o veredito foi o mesmo."
+      },
+      {
+        "text": "Para o scan terminar mais rápido",
+        "why": "A velocidade não mudou de forma relevante; nunca foi esse o motivo."
+      }
+    ]
+  },
+  "ex-v7wmm0zr": {
+    "prompt": "Associe cada flag do `docker run` do script de staging ao campo do Kubernetes que a aula 10 usa para ela.",
+    "pairs": [
+      {
+        "left": "--read-only",
+        "right": "readOnlyRootFilesystem: true"
+      },
+      {
+        "left": "--cap-drop ALL",
+        "right": "capabilities: drop ALL"
+      },
+      {
+        "left": "--security-opt no-new-privileges",
+        "right": "allowPrivilegeEscalation: false"
+      },
+      {
+        "left": "--tmpfs /data",
+        "right": "um volume emptyDir em /data"
+      }
+    ],
+    "right_distractors": [
+      "hostNetwork: true"
+    ]
+  },
+  "ex-yer63cwq": {
+    "prompt": "Suponha que uma versão futura do linkbox grave cache em `/var/cache/linkbox`. Ninguém atualiza o `ci/dast.sh`. Onde o problema aparece primeiro?",
+    "choices": [
+      {
+        "text": "No push da mudança, no estágio de imagem",
+        "why": "O estágio de imagem examina pacotes; ele nunca roda a aplicação."
+      },
+      {
+        "text": "Em produção, já que o staging ignora o sistema de arquivos",
+        "why": "O staging agora é somente leitura, então a escrita falha ali primeiro."
+      },
+      {
+        "text": "Nos testes unitários, que também rodam somente leitura",
+        "why": "Os testes rodam num ambiente virtual na máquina de CI, não no contêiner."
+      },
+      {
+        "text": "Na varredura noturna",
+        "why": "Isso: o contêiner de staging somente leitura topa com a escrita primeiro, e esse é o motivo de o staging imitar a produção."
+      }
+    ]
+  },
+  "ex-bp7c8kh9": {
+    "prompt": "Ponha em ordem o método para rodar somente leitura uma imagem desconhecida.",
+    "items": [
+      "iniciá-la com --read-only",
+      "exercitar cada rota e tarefa que escreve",
+      "ler nos erros os caminhos em que ela não conseguiu escrever",
+      "dar a cada caminho um tmpfs ou um volume",
+      "escrever a lista no script ou manifesto que a inicia"
+    ]
+  },
+  "ex-xc9by1t2": {
+    "prompt": "Quais afirmações sobre o contêiner que o staging roda agora são verdadeiras? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "o conjunto limite dele está vazio",
+        "why": "Certo: `CapBnd: 0000000000000000`."
+      },
+      {
+        "text": "o filtro seccomp dele está desligado",
+        "why": "`Seccomp: 2`: o filtro padrão continuou ligado."
+      },
+      {
+        "text": "ele consegue escrever em `/tmp` e `/data` e em mais nenhum lugar",
+        "why": "Certo: dois tmpfs sobre uma raiz somente leitura."
+      },
+      {
+        "text": "ele tem limite de memória de 256 MiB",
+        "why": "O staging deixa os limites de fora; ele vive um minuto."
+      },
+      {
+        "text": "`NoNewPrivs` é 1 para todo processo dele",
+        "why": "Certo: definido na partida e herdado por todo filho."
+      }
+    ]
+  }
+}

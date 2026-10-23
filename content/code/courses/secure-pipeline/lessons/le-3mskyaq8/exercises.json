@@ -1,0 +1,603 @@
+[
+  {
+    "id": "ex-s3r42qzb",
+    "version": 1,
+    "section": "attack-surface",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does every check this course added make the pipeline more attractive to an attacker?",
+    "choices": [
+      {
+        "text": "Scanners publish their findings where anyone can read them",
+        "correct": false,
+        "why": "The findings stay in the run's logs; the attraction is the credentials."
+      },
+      {
+        "text": "Each one is a job that holds credentials",
+        "correct": true,
+        "why": "Right. Running a line of your choosing in that job gets them all: tokens, registry access and the signing key are in the job for its whole length."
+      },
+      {
+        "text": "More stages make every run slower",
+        "correct": false,
+        "why": "Speed is lesson 2's concern; it does not attract anybody."
+      },
+      {
+        "text": "The tools are downloaded from the internet on every run",
+        "correct": false,
+        "why": "This course installs each tool once, checked; the point is what a job holds."
+      }
+    ]
+  },
+  {
+    "id": "ex-1m5h4t36",
+    "version": 1,
+    "section": "attack-surface",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the tj-actions/changed-files incident of 2025, which workflows ran the altered code?",
+    "choices": [
+      {
+        "text": "Those that named the action by a commit hash",
+        "correct": false,
+        "why": "A commit hash cannot be moved, so those workflows kept running the old code."
+      },
+      {
+        "text": "Only workflows on self-hosted runners",
+        "correct": false,
+        "why": "The runner type did not matter; the tag did."
+      },
+      {
+        "text": "Those that named it by a version tag",
+        "correct": true,
+        "why": "Right. The tags were moved to a new commit, and every run that resolved them took it."
+      },
+      {
+        "text": "Those that used `pull_request_target` as their trigger",
+        "correct": false,
+        "why": "The trigger was not what decided it; the reference to the action was."
+      }
+    ]
+  },
+  {
+    "id": "ex-4qhy4yw8",
+    "version": 1,
+    "section": "attack-surface",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each party to how it can influence what a CI job runs.",
+    "pairs": [
+      {
+        "left": "a pull request's author",
+        "right": "the code the job checks out"
+      },
+      {
+        "left": "an action's author",
+        "right": "the commit a tag points at"
+      },
+      {
+        "left": "the runner's owner",
+        "right": "the machine the job runs on"
+      }
+    ],
+    "right_distractors": [
+      "the registry's storage format"
+    ]
+  },
+  {
+    "id": "ex-1n1bm6tx",
+    "version": 1,
+    "section": "a-workflow",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many findings did zizmor report on the careless workflow with its default persona?",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-szj7aet2",
+    "version": 1,
+    "section": "a-workflow",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is `pull_request_target` combined with a checkout of the pull request's head the dangerous pair, rather than either alone?",
+    "choices": [
+      {
+        "text": "The checkout runs a stranger's code with the trigger's privileges",
+        "correct": true,
+        "why": "Right. The trigger grants a write token and secrets. Alone, the trigger runs the base branch's code; alone, the checkout runs under a read-only token."
+      },
+      {
+        "text": "Checking out a fork is slower under that trigger",
+        "correct": false,
+        "why": "Speed is not the issue; privileges are."
+      },
+      {
+        "text": "The trigger disables the template-injection protection of GitHub",
+        "correct": false,
+        "why": "There is no such protection to disable; injection is a separate finding."
+      },
+      {
+        "text": "The head commit is unsigned, and GitHub refuses unsigned commits there",
+        "correct": false,
+        "why": "GitHub runs unsigned commits; signature is not the risk here."
+      }
+    ]
+  },
+  {
+    "id": "ex-wy5580dj",
+    "version": 1,
+    "section": "a-workflow",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes `${{ github.event.pull_request.title }}` inside `run:` a code injection?",
+    "choices": [
+      {
+        "text": "The title is sent to GitHub's API without encryption",
+        "correct": false,
+        "why": "Transport is not the issue; where the text lands is."
+      },
+      {
+        "text": "The text becomes part of the script",
+        "correct": true,
+        "why": "Right. It is expanded before the shell parses the script, so whatever the author typed becomes part of the program; an environment variable keeps it a value."
+      },
+      {
+        "text": "The title is longer than the shell's line limit",
+        "correct": false,
+        "why": "Length is not the danger; meaning is."
+      },
+      {
+        "text": "`echo` prints secrets when given a title",
+        "correct": false,
+        "why": "`echo` prints what it is given; the problem is that the title is code by then."
+      }
+    ]
+  },
+  {
+    "id": "ex-nxvetewz",
+    "version": 1,
+    "section": "a-workflow",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "zizmor's default persona did not report `permissions: write-all`; the `auditor` persona did. What does the lesson take from that?",
+    "choices": [
+      {
+        "text": "`write-all` is harmless on a pull request workflow",
+        "correct": false,
+        "why": "It hands the job a token that can write; the default persona's silence is a tuning choice."
+      },
+      {
+        "text": "The default persona is broken and should not be used",
+        "correct": false,
+        "why": "It is tuned for few false positives, which is why it is the pipeline's default."
+      },
+      {
+        "text": "Read a new workflow as an auditor first, then rely on the default",
+        "correct": true,
+        "why": "Right. The default stays quiet on purpose; a deliberate first pass looks at everything."
+      },
+      {
+        "text": "The auditor persona needs network access to work",
+        "correct": false,
+        "why": "Both ran with `--offline`."
+      }
+    ]
+  },
+  {
+    "id": "ex-6t3zxtbs",
+    "version": 1,
+    "section": "the-fix",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`git ls-remote` showed `v6` and `v6.1.0` naming the same commit. Which one is pinned in the workflow, and how?",
+    "choices": [
+      {
+        "text": "`v6`, because it receives fixes automatically",
+        "correct": false,
+        "why": "Receiving changes automatically is exactly what a pin refuses."
+      },
+      {
+        "text": "The commit hash, with `# v6.1.0` beside it",
+        "correct": true,
+        "why": "Right. The hash cannot move, and the comment tells the reader and the update bots which release it is."
+      },
+      {
+        "text": "`v6.1.0`, because an exact version tag cannot move",
+        "correct": false,
+        "why": "Any tag can be moved by whoever controls the repository."
+      },
+      {
+        "text": "Both, so either can be used as a fallback",
+        "correct": false,
+        "why": "A workflow names one reference per step."
+      }
+    ]
+  },
+  {
+    "id": "ex-tja35hm4",
+    "version": 1,
+    "section": "the-fix",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`actions/checkout` writes the job's token into `.git/config` unless the step sets `persist-credentials: ___`.",
+    "blanks": [
+      {
+        "accept": [
+          "false"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-g1hmw1hn",
+    "version": 1,
+    "section": "the-fix",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why declare `permissions: contents: read` in the file instead of relying on the repository's default?",
+    "choices": [
+      {
+        "text": "A line in the file is reviewed with the code",
+        "correct": true,
+        "why": "Right. A repository setting changes with no review. The file makes the job's privileges part of what a reviewer reads."
+      },
+      {
+        "text": "The repository default is always write-all",
+        "correct": false,
+        "why": "The default is whatever the repository or organisation set; the file makes it independent of that."
+      },
+      {
+        "text": "zizmor cannot read repository settings",
+        "correct": false,
+        "why": "True offline, but the reason the lesson gives is review, not the scanner."
+      },
+      {
+        "text": "GITHUB_TOKEN does not exist unless permissions are declared",
+        "correct": false,
+        "why": "The token exists for every job; the declaration limits it."
+      }
+    ]
+  },
+  {
+    "id": "ex-a9f5t09g",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `workflows` run second in `ci/stages`, before the tests?",
+    "choices": [
+      {
+        "text": "zizmor needs the image that the build stage makes",
+        "correct": false,
+        "why": "zizmor reads text files; it needs no image."
+      },
+      {
+        "text": "It is cheap, reads only text, and fails ahead of the costly work",
+        "correct": true,
+        "why": "Right: it fails before the costly stages, the same reason `secrets` is first."
+      },
+      {
+        "text": "The tests would overwrite `.github` if they ran first",
+        "correct": false,
+        "why": "Nothing in the tests touches `.github`."
+      },
+      {
+        "text": "GitHub requires workflow files to be checked before tests",
+        "correct": false,
+        "why": "GitHub requires nothing of this local CI."
+      }
+    ]
+  },
+  {
+    "id": "ex-j7v2b9h8",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The branch `title-in-run` stopped at the `workflows` stage. What did not happen as a result?",
+    "choices": [
+      {
+        "text": "The commit was not recorded in the CI's repository",
+        "correct": false,
+        "why": "The push was accepted; the run is what stopped."
+      },
+      {
+        "text": "zizmor did not print the line of the finding",
+        "correct": false,
+        "why": "It printed the finding with the line."
+      },
+      {
+        "text": "The pre-commit hook did not scan the change for secrets",
+        "correct": false,
+        "why": "The hook ran at commit time, before the push."
+      },
+      {
+        "text": "No image was built, pushed or signed",
+        "correct": true,
+        "why": "Right. The pipeline stops at the first failure, so nothing reached the registry."
+      }
+    ]
+  },
+  {
+    "id": "ex-yb7s405p",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which risk does `zizmor --offline` leave unchecked that its online audits would cover?",
+    "choices": [
+      {
+        "text": "A `run:` step that expands a pull request's title",
+        "correct": false,
+        "why": "That is template injection, found offline from the file."
+      },
+      {
+        "text": "A pinned hash that does not belong to the action it names",
+        "correct": true,
+        "why": "Right: the impostor-commit audit needs GitHub's API."
+      },
+      {
+        "text": "An action referenced by a tag",
+        "correct": false,
+        "why": "`unpinned-uses` found that offline, twice."
+      },
+      {
+        "text": "A checkout that keeps the token in `.git/config`",
+        "correct": false,
+        "why": "`artipacked` found that offline."
+      }
+    ]
+  },
+  {
+    "id": "ex-8wzam9vz",
+    "version": 1,
+    "section": "runners",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a persistent runner allow that an ephemeral one does not?",
+    "choices": [
+      {
+        "text": "Running jobs from more than one repository",
+        "correct": false,
+        "why": "Both kinds can serve several repositories; lifetime is the difference."
+      },
+      {
+        "text": "A job leaving something on disk that the next job runs on top of",
+        "correct": true,
+        "why": "Right. Caches, tools and processes survive, so one job can poison every later one."
+      },
+      {
+        "text": "Using a token with read-only permissions",
+        "correct": false,
+        "why": "Token permissions come from the workflow, not the runner's lifetime."
+      },
+      {
+        "text": "Running a workflow on `pull_request`",
+        "correct": false,
+        "why": "Both kinds run any trigger."
+      }
+    ]
+  },
+  {
+    "id": "ex-8avx1ncx",
+    "version": 1,
+    "section": "runners",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A public repository's workflow uses `pull_request` with a read-only token and no secrets, on a self-hosted runner in the office network. What is still exposed?",
+    "choices": [
+      {
+        "text": "The repository's contents, through the read-only token",
+        "correct": false,
+        "why": "Read-only on a public repository exposes nothing that is not already public."
+      },
+      {
+        "text": "The repository's secrets",
+        "correct": false,
+        "why": "`pull_request` from a fork withholds them."
+      },
+      {
+        "text": "Nothing, because the trigger is the safe one",
+        "correct": false,
+        "why": "The trigger protects the repository, not the machine the stranger's code runs on."
+      },
+      {
+        "text": "The runner machine and whatever it reaches on the network",
+        "correct": true,
+        "why": "Right. A fork's code runs there, inside the office network."
+      }
+    ]
+  },
+  {
+    "id": "ex-5n944d0g",
+    "version": 1,
+    "section": "this-ci",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which two facts on screen establish that a CI stage on this laptop can act as root?",
+    "choices": [
+      {
+        "text": "`id` shows the docker group; the group writes to the socket",
+        "correct": true,
+        "why": "Right. With the daemon running as root, write access to its socket is root."
+      },
+      {
+        "text": "The CI runs as ana, and ana owns `~/ci`",
+        "correct": false,
+        "why": "Owning a directory gives power over that directory, not over the host."
+      },
+      {
+        "text": "ana has a password, and `sudo` is installed",
+        "correct": false,
+        "why": "Neither appeared on screen, and neither is the path the lesson names."
+      },
+      {
+        "text": "The registry listens on localhost, and Docker built the image",
+        "correct": false,
+        "why": "Neither says who can control the daemon."
+      }
+    ]
+  },
+  {
+    "id": "ex-2v4007w2",
+    "version": 1,
+    "section": "this-ci",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does rootless Docker change about access to the daemon's socket?",
+    "choices": [
+      {
+        "text": "It removes the socket, so nobody can talk to the daemon",
+        "correct": false,
+        "why": "The socket moves to the user's runtime directory; it still exists."
+      },
+      {
+        "text": "It encrypts the socket with the user's password",
+        "correct": false,
+        "why": "There is no such encryption; the change is who the daemon runs as."
+      },
+      {
+        "text": "Access to the socket is worth the user's rights, not root's",
+        "correct": true,
+        "why": "Right. The daemon runs as that user, inside a user namespace."
+      },
+      {
+        "text": "It lets containers bind ports below 1024 without configuration",
+        "correct": false,
+        "why": "The documentation lists low ports as a limitation that needs extra configuration."
+      }
+    ]
+  },
+  {
+    "id": "ex-jkkvyygz",
+    "version": 1,
+    "section": "this-ci",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the links of the chain that makes a pushed branch as powerful as root on this laptop in order, from the push.",
+    "items": [
+      "the hook runs the commit's own stage scripts",
+      "the scripts run as ana",
+      "ana is in the docker group",
+      "the group can write to the daemon's socket",
+      "the daemon runs as root"
+    ]
+  },
+  {
+    "id": "ex-fxz0d01d",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team moves linkbox to GitHub with this lesson's workflow and adds a release job that signs images with a key stored as a repository secret. Which control from lesson 14 and this lesson does that job still need most?",
+    "choices": [
+      {
+        "text": "Running zizmor with the `auditor` persona on every push",
+        "correct": false,
+        "why": "Worth doing, but it does not keep the key away from the job's own steps."
+      },
+      {
+        "text": "No step of the job reads the key",
+        "correct": true,
+        "why": "Right: sign outside the job's steps, or keyless with the workflow's identity. That is what separates L2 from L3, and it removes the long-lived secret."
+      },
+      {
+        "text": "Pinning `ubuntu-24.04` instead of `ubuntu-latest`",
+        "correct": false,
+        "why": "That fixes the runner image's version, not who can use the key."
+      },
+      {
+        "text": "Adding `concurrency` so two releases never overlap",
+        "correct": false,
+        "why": "Overlap is a reliability concern; the key is still readable by every step."
+      }
+    ]
+  },
+  {
+    "id": "ex-d651c8ar",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pull request changes `ci/workflows.sh` to `zizmor --offline .github || true`. What should a reviewer conclude?",
+    "choices": [
+      {
+        "text": "It is a speed improvement for the stage",
+        "correct": false,
+        "why": "It changes the verdict, not the speed."
+      },
+      {
+        "text": "It is harmless, because the findings still appear in the log",
+        "correct": false,
+        "why": "A finding nobody is stopped by is a finding nobody reads, as lesson 7 argued."
+      },
+      {
+        "text": "It is needed so that warnings are counted",
+        "correct": false,
+        "why": "Warnings in this pipeline are exit status 3, which this change would also hide."
+      },
+      {
+        "text": "A commit has switched the check off",
+        "correct": true,
+        "why": "Right. The stage no longer fails. Because stages come from the commit, review is where this is caught."
+      }
+    ]
+  },
+  {
+    "id": "ex-3rjxnta2",
+    "version": 1,
+    "section": "the-fix",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these changes are part of the fixed workflow? Choose all that apply.",
+    "choices": [
+      {
+        "text": "permissions reduced to contents: read",
+        "correct": true,
+        "why": "Yes: the token can read the repository and nothing else."
+      },
+      {
+        "text": "each action pinned to a commit, with its version in a comment",
+        "correct": true,
+        "why": "Yes: a tag can be moved, a commit cannot."
+      },
+      {
+        "text": "the pull request's title passed through an environment variable",
+        "correct": true,
+        "why": "Yes: the shell reads it as data, never as code."
+      },
+      {
+        "text": "pull_request_target kept, so forks get the repository's secrets",
+        "why": "No: that trigger with a checkout of the head is what made the old workflow dangerous."
+      },
+      {
+        "text": "the checkout keeps its credentials for later steps",
+        "why": "No: persist-credentials is set to false so no later step finds the token on disk."
+      }
+    ]
+  }
+]

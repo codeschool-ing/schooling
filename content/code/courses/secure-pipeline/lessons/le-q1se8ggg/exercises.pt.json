@@ -1,0 +1,425 @@
+{
+  "ex-aeg00b9x": {
+    "prompt": "O que uma ferramenta de análise estática faz com o código que recebe?",
+    "choices": [
+      {
+        "text": "Roda num sandbox e observa o que ele faz",
+        "why": "Isso está mais perto da análise dinâmica; a análise estática nunca executa o programa."
+      },
+      {
+        "text": "Compara com regras que alguém escreveu, sem executá-lo",
+        "why": "Isso. Ela acha os formatos para os quais tem regra, e nada mais."
+      },
+      {
+        "text": "Compara com uma base de avisos de segurança publicados na internet",
+        "why": "Isso é análise de composição das dependências, a aula 5."
+      },
+      {
+        "text": "Prova que não sobrou nenhuma vulnerabilidade",
+        "why": "Uma execução limpa diz que nenhuma regra que rodou achou seu formato; não prova nada sobre o resto."
+      }
+    ]
+  },
+  "ex-s8zskja2": {
+    "prompt": "Associe cada parte da busca do linkbox ao papel dela no fluxo que uma regra de segurança procura.",
+    "pairs": [
+      {
+        "left": "request.args.get(\"q\", \"\")",
+        "right": "uma origem: dado que alguém de fora controla"
+      },
+      {
+        "left": "db().execute(...)",
+        "right": "um destino: uma chamada que roda o que recebe como SQL"
+      },
+      {
+        "left": "f\"... LIKE '%{q}%'\"",
+        "right": "o caminho: dado formatado dentro do código"
+      },
+      {
+        "left": "(f\"%{q}%\",)",
+        "right": "a correção: o valor passado como parâmetro"
+      }
+    ],
+    "right_distractors": [
+      "um cabeçalho que o navegador acrescenta à resposta"
+    ]
+  },
+  "ex-7g1bp8ae": {
+    "prompt": "Quais destes a análise estática do código do linkbox não consegue ver? Marque todos que se aplicam.",
+    "choices": [
+      {
+        "text": "Um cabeçalho de segurança ausente da resposta HTTP",
+        "why": "Isso: uma propriedade da resposta em tempo de execução, que é a análise dinâmica da aula 4."
+      },
+      {
+        "text": "Uma falha dentro do próprio Flask",
+        "why": "Isso: está numa dependência, que é a aula 5."
+      },
+      {
+        "text": "Uma variável de ambiente que liga a depuração em produção",
+        "why": "Isso: a configuração está fora do código que foi lido."
+      },
+      {
+        "text": "Uma consulta montada formatando o texto da busca dentro do SQL",
+        "why": "Esse é exatamente o formato que o B608 do Bandit e a regra do Semgrep do projeto pegam."
+      }
+    ]
+  },
+  "ex-drp66wsn": {
+    "prompt": "A primeira execução do Bandit em ~/linkbox, com o .venv dentro, apontou 436 achados. Quantos estavam nos arquivos do próprio projeto?"
+  },
+  "ex-xtxwf2xj": {
+    "prompt": "Por que a aula chama de mais danosa uma primeira execução com centenas de achados no .venv?",
+    "choices": [
+      {
+        "text": "Porque esses achados são todos falsos positivos",
+        "why": "Muitos podem ser reais no contexto deles; o dano é em como a ferramenta passa a ser vista."
+      },
+      {
+        "text": "O desenvolvedor conclui que a ferramenta é ruído, de vez",
+        "why": "Isso. A primeira coisa a ajustar é o que a ferramenta lê."
+      },
+      {
+        "text": "Porque ler o .venv leva mais que o orçamento do push",
+        "why": "A varredura foi rápida; o custo que a aula aponta é a confiança."
+      },
+      {
+        "text": "Porque o Bandit não consegue ler pacotes instalados direito",
+        "why": "Ele os leu do mesmo jeito que o projeto; só foi apontado para código que não é seu."
+      }
+    ]
+  },
+  "ex-f08aef88": {
+    "prompt": "O B608 na busca veio com confiança média. O que essa nota descreve?",
+    "choices": [
+      {
+        "text": "Quão danosa a injeção seria se for real",
+        "why": "Isso é a severidade, a outra nota."
+      },
+      {
+        "text": "Quão segura a checagem está de que o caso é real",
+        "why": "Isso. O Bandit não vê o que q contém, então não tem certeza."
+      },
+      {
+        "text": "Com que frequência a regra erra em todos os projetos Python",
+        "why": "É um julgamento sobre este achado, não uma estatística sobre a regra."
+      },
+      {
+        "text": "A chance de um atacante achar a falha",
+        "why": "O Bandit não diz nada sobre atacantes; ele dá nota à própria evidência."
+      }
+    ]
+  },
+  "ex-s0deaqrt": {
+    "prompt": "O Bandit aponta `assert user.is_admin` numa rota com severidade baixa e confiança alta. Um colega diz que severidade baixa quer dizer que pode esperar. O que a leitura das duas notas na aula sugere?",
+    "choices": [
+      {
+        "text": "Concordar: a severidade é a nota que decide a urgência",
+        "why": "Num teste seria justo; numa rota o assert é a checagem de acesso, e o -O a remove."
+      },
+      {
+        "text": "Discordar: confiança alta quer dizer que deve ser corrigido primeiro",
+        "why": "A confiança é sobre a evidência, não urgência; o motivo de agir é o que o assert protege."
+      },
+      {
+        "text": "Olhar a linha: aqui ela é a checagem de acesso",
+        "why": "Isso. As notas descrevem a visão da regra; o contexto diz que este é um defeito real."
+      },
+      {
+        "text": "Ignorar o B101 em todo lugar, já que ele dispara nos testes",
+        "why": "É a jogada que a aula rejeita: esconderia justamente esta linha."
+      }
+    ]
+  },
+  "ex-ams7vq8y": {
+    "prompt": "O Bandit não aponta que create() compara o token com !=. O que é isso, no vocabulário da aula?",
+    "choices": [
+      {
+        "text": "Um verdadeiro negativo",
+        "why": "Um verdadeiro negativo é um silêncio correto; este silêncio é sobre um defeito real."
+      },
+      {
+        "text": "Um falso positivo",
+        "why": "Um falso positivo é um apontamento; aqui não há apontamento nenhum."
+      },
+      {
+        "text": "Um falso negativo",
+        "why": "Isso: um defeito real que a ferramenta não apontou, o tipo caro."
+      },
+      {
+        "text": "Um verdadeiro positivo",
+        "why": "Um verdadeiro positivo é um apontamento sobre um defeito real, como o B608 na busca."
+      }
+    ]
+  },
+  "ex-f2sgss0b": {
+    "prompt": "Seis achados B101 estão nos asserts de tests/test_app.py. Por que o bandit.yaml ignora o B101 só nos testes, em vez de em todo lugar?",
+    "choices": [
+      {
+        "text": "Porque ignorar uma regra em todo lugar exige direitos de administrador",
+        "why": "É uma linha de configuração; o motivo é o que a regra ainda pega em outros lugares."
+      },
+      {
+        "text": "Porque um assert no código da aplicação é um defeito real com -O",
+        "why": "Isso. Ignorá-lo em todo lugar transformaria isso num falso negativo."
+      },
+      {
+        "text": "Porque o diretório de testes fica fora da varredura de qualquer jeito",
+        "why": "Só o .venv fica fora; os testes são lidos, e é por isso que o B101 disparou ali."
+      },
+      {
+        "text": "Porque o pytest remove os asserts quando roda com -O",
+        "why": "O pytest reescreve os asserts para relatá-los; o ponto é que ninguém roda testes com -O."
+      }
+    ]
+  },
+  "ex-51ydz3vj": {
+    "prompt": "Um comentário diz `# nosec B608: t is one of TABLES`. O que o Bandit fez com ele na aula?",
+    "choices": [
+      {
+        "text": "Ignorou o comentário inteiro e apontou o B608 mesmo assim",
+        "why": "O achado foi suprimido e o status de saída foi 0."
+      },
+      {
+        "text": "Suprimiu o B608 e guardou o motivo no relatório para os revisores",
+        "why": "O Bandit não tem campo para motivo; ele leu as palavras como ids de checagem."
+      },
+      {
+        "text": "Recusou o arquivo como erro de sintaxe",
+        "why": "Ele leu o arquivo normalmente e só avisou."
+      },
+      {
+        "text": "Suprimiu, e avisou sobre cada palavra como id desconhecido",
+        "why": "Isso. O motivo vai na linha de cima, com só os ids depois de nosec."
+      }
+    ]
+  },
+  "ex-zt98zwcb": {
+    "prompt": "No bandit.yaml, a configuração que deixa o ambiente virtual fora de toda varredura se chama ___.",
+    "blanks": [
+      {
+        "accept": [
+          "exclude_dirs"
+        ]
+      }
+    ]
+  },
+  "ex-8g7zdc10": {
+    "prompt": "create() confere o token por conta própria, e a regra writes-need-the-token a aponta. O que é o achado, nos termos da aula?",
+    "choices": [
+      {
+        "text": "Um falso positivo, já que a rota recusa um token ausente",
+        "why": "A regra não disse que a rota está aberta; disse que ela não chama require_token(), o que era verdade."
+      },
+      {
+        "text": "Um verdadeiro positivo da regra, que exige uma função só de checagem",
+        "why": "Isso. Se a regra tem razão em exigir a chamada é a pergunta que ele levanta."
+      },
+      {
+        "text": "Um falso negativo do Bandit que o Semgrep corrigiu",
+        "why": "O Semgrep apontou, então para o Semgrep é um positivo; o silêncio do Bandit é outra questão."
+      },
+      {
+        "text": "Um verdadeiro negativo, porque o teste da aula 1 passa",
+        "why": "Houve apontamento, então não pode ser negativo."
+      }
+    ]
+  },
+  "ex-wvxjzdzw": {
+    "prompt": "Por que a aula prefere secrets.compare_digest() a != para o token?",
+    "choices": [
+      {
+        "text": "Porque != falha com tokens de mais de 32 caracteres",
+        "why": "!= compara strings de qualquer tamanho; o problema é quanto tempo leva."
+      },
+      {
+        "text": "Porque compare_digest() também faz hash do token",
+        "why": "Ela não guarda nada; só compara."
+      },
+      {
+        "text": "Porque != para na primeira diferença, e o tempo dela vaza",
+        "why": "Isso: quanto ela demora diz quanto de um palpite está certo. compare_digest() leva o mesmo tempo seja qual for a entrada."
+      },
+      {
+        "text": "Porque o B105 do Bandit exige",
+        "why": "O B105 é sobre o token estar escrito no código; não diz nada sobre comparação."
+      }
+    ]
+  },
+  "ex-j0z16fx4": {
+    "prompt": "Com qual chamada a regra sql-built-from-a-string não casa?",
+    "choices": [
+      {
+        "text": "db().execute(\"SELECT url FROM links WHERE code = ?\", (code,))",
+        "why": "Isso: uma string simples e uma tupla de parâmetros, como em follow()."
+      },
+      {
+        "text": "db().execute(\"SELECT url FROM links WHERE code = '\" + code + \"'\")",
+        "why": "Uma string unida com + é um dos quatro padrões."
+      },
+      {
+        "text": "db().execute(\"SELECT url FROM links WHERE code = '{}'\".format(code))",
+        "why": ".format() é um dos quatro padrões."
+      },
+      {
+        "text": "db().execute(f\"SELECT url FROM links WHERE code = '{code}'\")",
+        "why": "Uma f-string é o primeiro padrão da regra."
+      }
+    ]
+  },
+  "ex-k3a6dz5x": {
+    "prompt": "O que acontece se o ci/sast.sh chamar o semgrep sem --error e o Semgrep achar o formato da regra do SQL?",
+    "choices": [
+      {
+        "text": "O achado sai no log e o estágio passa",
+        "why": "Isso. Sem --error o Semgrep sai com 0, e o pipeline parece ter conferido alguma coisa."
+      },
+      {
+        "text": "O Semgrep se recusa a começar sem uma política de saída",
+        "why": "Ele roda e aponta; só o status de saída muda."
+      },
+      {
+        "text": "O status de saída do Bandit quebra o build no lugar",
+        "why": "O Bandit só falha com os próprios achados; não sabe nada dos do Semgrep."
+      },
+      {
+        "text": "O estágio falha com um alerta que é contado",
+        "why": "Ainda não há status de alerta neste pipeline; a aula 7 acrescenta um."
+      }
+    ]
+  },
+  "ex-85pcv0ms": {
+    "prompt": "O B105, o token em settings.py, é um verdadeiro positivo, mas o ci/sast.sh não quebra por ele. Que motivo a aula dá?",
+    "choices": [
+      {
+        "text": "Achados de severidade baixa são falsos por definição",
+        "why": "A aula diz o contrário: o B105 é verdadeiro."
+      },
+      {
+        "text": "A confiança dele é só média",
+        "why": "O B608 também tem confiança média e quebra o build; o estágio filtra por severidade."
+      },
+      {
+        "text": "A correção não é mudança de código, então nenhum push a resolveria",
+        "why": "Isso: quebrar por ele bloquearia todo push por um trabalho que ninguém faz na própria mudança. A aula 6 é sobre ele, e a aula 7 generaliza a regra."
+      },
+      {
+        "text": "O Semgrep já o aponta no mesmo estágio, então o Bandit não precisa apontar",
+        "why": "Nenhuma das duas regras do Semgrep do projeto é sobre segredos."
+      }
+    ]
+  },
+  "ex-r2wk86w7": {
+    "prompt": "Ponha os estágios de ci/stages, como esta aula os deixa, na ordem em que rodam.",
+    "items": [
+      "test",
+      "sast",
+      "build"
+    ]
+  },
+  "ex-0msmz3zk": {
+    "prompt": "O que o teste novo mostrou antes da correção, ao buscar it's?",
+    "choices": [
+      {
+        "text": "Um 500 na busca, porque o SQLite recusou a consulta",
+        "why": "Isso: near \"s\": syntax error, e o Flask respondeu 500."
+      },
+      {
+        "text": "Uma página vazia, porque nada casou",
+        "why": "A página nem chegou a ser renderizada; a consulta falhou antes."
+      },
+      {
+        "text": "Um 401, porque o teste não mandou token",
+        "why": "A busca não precisa de token; o link foi criado com um."
+      },
+      {
+        "text": "Todos os links do banco",
+        "why": "Isso é o que uma busca vazia devolve; esta falhou."
+      }
+    ]
+  },
+  "ex-n7wpypk2": {
+    "prompt": "Por que a aula escreve o teste que falha antes de mudar a consulta?",
+    "choices": [
+      {
+        "text": "Porque o Bandit só para de apontar o B608 depois que existe um teste",
+        "why": "O Bandit lê o formato do código e não sabe nada de testes."
+      },
+      {
+        "text": "Para provar que o teste pega o defeito, em qualquer forma",
+        "why": "Isso. Um scanner calado diz que o formato sumiu, não que o comportamento está certo."
+      },
+      {
+        "text": "Porque o pipeline roda os testes antes da análise estática",
+        "why": "A ordem dos estágios não é o motivo; o valor do teste está em falhar primeiro."
+      },
+      {
+        "text": "Porque o pytest recusa um teste que passa na primeira execução",
+        "why": "O pytest não tem regra assim."
+      }
+    ]
+  },
+  "ex-nvptfhnm": {
+    "prompt": "A imagem do linkbox inicia o gunicorn, então app.run(debug=True) nunca rodou nela. Por que removê-lo mesmo assim?",
+    "choices": [
+      {
+        "text": "Porque o gunicorn se recusa a carregar um arquivo que o contém",
+        "why": "O gunicorn importa app e ignora o bloco; nunca recusou."
+      },
+      {
+        "text": "Porque deixa toda requisição mais lenta",
+        "why": "Sob o gunicorn ele não faz nada, e esse é o ponto: é código morto até alguém rodar o arquivo."
+      },
+      {
+        "text": "Ele ganha vida se alguém rodar python app.py",
+        "why": "Isso. O depurador então rodaria o Python digitado por quem alcançasse a página."
+      },
+      {
+        "text": "Porque a regra writes-need-the-token do Semgrep o aponta",
+        "why": "Essa regra é sobre rotas POST; quem apontou o depurador foi o B201 do Bandit."
+      }
+    ]
+  },
+  "ex-v5e8vgdc": {
+    "prompt": "Um colega propõe acrescentar `skips: [B608]` ao bandit.yaml porque a consulta com nome de tabela num script de relatório é um falso positivo. O que a aula faria ele fazer?",
+    "choices": [
+      {
+        "text": "Aceitar: um falso positivo justifica desligar a checagem",
+        "why": "Desligá-la em todo lugar esconde a próxima injeção real, o falso negativo de que a aula avisa."
+      },
+      {
+        "text": "Subir o limite do estágio para severidade alta",
+        "why": "Isso deixaria passar também o B608 da busca."
+      },
+      {
+        "text": "Um `# nosec B608` naquela linha, com o motivo na linha de cima",
+        "why": "Isso. Uma linha, a checagem nomeada, o motivo que um revisor confere."
+      },
+      {
+        "text": "Excluir do Bandit o diretório do script de relatório",
+        "why": "Excluir um diretório abre um buraco maior que a linha que está errada."
+      }
+    ]
+  },
+  "ex-jg09f5f4": {
+    "prompt": "Alguém acrescenta uma rota `@app.post(\"/links/<code>/delete\")` que apaga um link e esquece o require_token(). Com o pipeline como esta aula o deixa, o que barra o push?",
+    "choices": [
+      {
+        "text": "O Bandit, porque apagar sem checagem é um padrão Python conhecido",
+        "why": "Nenhuma checagem embutida do Bandit conhece a convenção de token do linkbox."
+      },
+      {
+        "text": "Os testes, porque o teste de token da aula 1 cobre toda rota",
+        "why": "Esse teste só faz POST em /links; ninguém escreveu um para a rota nova."
+      },
+      {
+        "text": "Nada, até a varredura dinâmica da aula 4",
+        "why": "O estágio de análise estática já tem uma regra para exatamente este formato."
+      },
+      {
+        "text": "O estágio sast, pela regra writes-need-the-token do Semgrep",
+        "why": "Isso. Uma rota POST que nunca chama require_token() é o formato que a regra do próprio projeto pega."
+      }
+    ]
+  }
+}

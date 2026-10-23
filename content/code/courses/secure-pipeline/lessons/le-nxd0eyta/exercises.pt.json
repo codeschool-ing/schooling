@@ -1,0 +1,381 @@
+{
+  "ex-w7naqasq": {
+    "prompt": "Depois do segundo push desta aula, o `cosign verify` contra `linkbox:main` falha enquanto a tag do commit passa. Por quê?",
+    "choices": [
+      {
+        "text": "Um push sob uma tag apaga todas as assinaturas guardadas naquele repositório",
+        "why": "A tag do commit ainda passou depois do push, então a assinatura dela continuava lá."
+      },
+      {
+        "text": "O cosign compara a tag com o nome de tag registrado na hora da assinatura",
+        "why": "O cosign resolve a tag para um digest e confere o digest; o documento assinado não nomeia tag."
+      },
+      {
+        "text": "main agora nomeia um digest que ninguém assinou",
+        "why": "Isso. A assinatura pertence ao primeiro digest e ficou com ele; a tag é que se moveu."
+      },
+      {
+        "text": "O registry marca uma tag movida como não confiável até alguém aprovar",
+        "why": "O registry não guarda registro de para onde a tag apontava, então não tem o que marcar."
+      }
+    ]
+  },
+  "ex-tmjw1cys": {
+    "prompt": "O `sha256sum` do índice que o registry serviu imprimiu exatamente o cabeçalho `Docker-Content-Digest`. O que essa propriedade dá a um cliente?",
+    "choices": [
+      {
+        "text": "Um jeito de saber quem construiu a imagem",
+        "why": "Um hash diz quais bytes, não quem os fez. Qualquer um pode calculá-lo, inclusive quem enviou a imagem."
+      },
+      {
+        "text": "Uma checagem de que os bytes recebidos são os bytes pedidos pelo digest",
+        "why": "Isso. Se um registry servisse outros bytes sob esse digest, o hash calculado pelo cliente discordaria."
+      },
+      {
+        "text": "Uma garantia de que a tag vai continuar apontando para estes bytes",
+        "why": "A tag se moveu na captura seguinte; um digest não diz nada sobre tags."
+      },
+      {
+        "text": "Prova de que um scanner leu a imagem",
+        "why": "Nenhum scanner participa do cálculo de um digest."
+      }
+    ]
+  },
+  "ex-xtzd5hpk": {
+    "prompt": "Um registry responde a um pedido `HEAD` de um manifesto com o hash dele no cabeçalho ___.",
+    "blanks": [
+      {
+        "accept": [
+          "Docker-Content-Digest"
+        ]
+      }
+    ]
+  },
+  "ex-r6b320ke": {
+    "prompt": "Por que este curso assina com uma configuração de assinatura que não lista nenhum serviço?",
+    "choices": [
+      {
+        "text": "Sem ela, o cosign se recusa a assinar imagens de um registry em localhost",
+        "why": "Nada na aula mostra essa recusa; o motivo é o que o padrão publicaria, e que os serviços não são alcançáveis aqui."
+      },
+      {
+        "text": "Uma configuração vazia deixa a assinatura ser verificada sem chave pública",
+        "why": "A verificação ainda precisa do `cosign.pub`, como toda captura mostra."
+      },
+      {
+        "text": "Ela dispensa a senha do `cosign.key`",
+        "why": "A senha ainda é lida de `COSIGN_PASSWORD` a cada assinatura."
+      },
+      {
+        "text": "O padrão registra cada assinatura no Rekor, um log público",
+        "why": "Isso: publicaria os digests e o nome de um registry privado, e a máquina de gravação nem alcança o Rekor."
+      }
+    ]
+  },
+  "ex-56xa4zdn": {
+    "prompt": "Dos quatro arquivos em `~/ci/keys`, quais dois juntos podem assinar qualquer coisa em nome da CI?",
+    "choices": [
+      {
+        "text": "`cosign.key` e `cosign.pub`",
+        "why": "Sem a senha a chave privada não pode ser decifrada, e a chave pública não assina."
+      },
+      {
+        "text": "`cosign.key` e `password`",
+        "why": "Isso. A chave privada é cifrada com essa senha; nenhum dos dois sozinho basta."
+      },
+      {
+        "text": "`password` e `offline.json`",
+        "why": "O `offline.json` só lista serviços, aqui nenhum; ele não guarda chave."
+      },
+      {
+        "text": "`cosign.pub` e `offline.json`",
+        "why": "Nenhum dos dois guarda algo secreto; juntos verificam, não assinam."
+      }
+    ]
+  },
+  "ex-eabqdm3t": {
+    "prompt": "Quais afirmações valem para a assinatura que o `cosign sign` enviou à mão nesta aula? Escolha todas as que valem.",
+    "choices": [
+      {
+        "text": "Ela fica no mesmo registry, numa tag com o nome do digest",
+        "why": "Isso: a lista de tags mostrou `sha256-` seguido do digest."
+      },
+      {
+        "text": "Ela foi registrada no Rekor, o log público do Sigstore",
+        "why": "A configuração de assinatura não listava log, e a máquina não alcança o Rekor."
+      },
+      {
+        "text": "O que ela assinou nomeia o digest da imagem, não a tag",
+        "why": "Isso: o JSON verificado traz `docker-manifest-digest` e nenhuma tag."
+      },
+      {
+        "text": "Foi preciso montar um segundo registry para guardá-la",
+        "why": "O registry da aula 8 a guardou sem nenhum recurso novo."
+      }
+    ]
+  },
+  "ex-rxk1gb3a": {
+    "prompt": "Verificar a tag movida `main` imprimiu `no signatures found`. Que status de saída o `cosign verify` devolveu?"
+  },
+  "ex-cjrag94p": {
+    "prompt": "Uma pessoa do time envia uma imagem e, ao lado dela no mesmo registry, um `cosign.pub` próprio. A verificação contra essa chave passa. O que está errado na checagem?",
+    "choices": [
+      {
+        "text": "Nada: a assinatura é válida, então a imagem pode ser implantada",
+        "why": "Ela é válida para uma chave que qualquer um poderia ter criado. Uma assinatura vale o quanto se confia na chave."
+      },
+      {
+        "text": "Quem verifica pegou a chave de um lugar que o autor da imagem controla",
+        "why": "Isso. Quem envia uma imagem envia uma chave junto; a chave tem de vir de onde só a da CI é publicada."
+      },
+      {
+        "text": "Duas chaves públicas no mesmo registry invalidam todas as assinaturas dele",
+        "why": "Assinaturas são conferidas contra a chave que você passa; outras chaves por perto não mudam nada."
+      },
+      {
+        "text": "A imagem devia ter sido verificada pela tag, e não pelo digest",
+        "why": "Verificar pela tag ainda confere um digest; o problema é em qual chave se confiou."
+      }
+    ]
+  },
+  "ex-n4s60v45": {
+    "prompt": "Um deploy roda `cosign verify` em `linkbox:main` às 10:00 e, às 10:01, roda `docker pull linkbox:main`. O que pode dar errado?",
+    "choices": [
+      {
+        "text": "Às 10:01 a tag nomeia o que foi enviado por último, verificado ou não",
+        "why": "Isso. O que foi verificado é um digest; puxe esse digest em vez da tag."
+      },
+      {
+        "text": "A assinatura expira alguns segundos depois de verificada",
+        "why": "Uma assinatura de par de chaves não tem esse prazo; o problema é a tag."
+      },
+      {
+        "text": "O `docker pull` não consegue ler uma imagem que o cosign já assinou",
+        "why": "O `docker pull` de um digest assinado funcionou nesta aula."
+      },
+      {
+        "text": "Nada, desde que os dois comandos rodem na mesma máquina",
+        "why": "Onde os comandos rodam não impede outra pessoa de mover a tag no registry."
+      }
+    ]
+  },
+  "ex-gzhrkvk1": {
+    "prompt": "Por que `sign` é a última entrada de `ci/stages`?",
+    "choices": [
+      {
+        "text": "O cosign tem de rodar depois dos testes porque importa o código do projeto",
+        "why": "O cosign lê o registry, não o código do linkbox."
+      },
+      {
+        "text": "Uma assinatura passa a dizer que todos os estágios anteriores passaram",
+        "why": "Isso. O pipeline para na primeira falha, então assinar por último faz da assinatura uma declaração de que a imagem passou pela lista inteira."
+      },
+      {
+        "text": "Assinar primeiro deixaria o estágio de build mais lento",
+        "why": "A ordem é questão de significado, não de velocidade; assinar levou segundos."
+      },
+      {
+        "text": "A imagem não tem digest até o estágio sbom rodar",
+        "why": "O digest existe desde o push; a lista de materiais só é necessária para uma atestação."
+      }
+    ]
+  },
+  "ex-6j0zjwvk": {
+    "prompt": "A chave e a senha ficam em `~/ci/keys`, fora de todo clone do linkbox. Que risco esse arranjo mantém?",
+    "choices": [
+      {
+        "text": "Um fork do linkbox leva a chave para quem o fizer",
+        "why": "É exatamente isso que manter a chave fora do repositório impede."
+      },
+      {
+        "text": "Um backup vazado do histórico do git expõe a senha",
+        "why": "O histórico nunca a guardou, então um backup dele não pode vazá-la."
+      },
+      {
+        "text": "Uma branch enviada muda o `ci/sign.sh` e usa a chave na própria execução",
+        "why": "Isso. O hook roda os scripts de estágio do commit enviado, então o commit decide o que acontece com a chave."
+      },
+      {
+        "text": "Quem verifica não alcança o `cosign.pub` a partir de outra máquina",
+        "why": "Publicar a chave pública é um passo à parte; ela é feita para estar em todo lugar."
+      }
+    ]
+  },
+  "ex-gtj5738g": {
+    "prompt": "Ponha os passos do `ci/sign.sh` na ordem em que o script os executa.",
+    "items": [
+      "achar o digest que o push registrou",
+      "escrever a proveniência ao lado dos logs",
+      "assinar a imagem",
+      "atestar a lista de materiais",
+      "atestar a proveniência"
+    ]
+  },
+  "ex-6zdvrf8x": {
+    "prompt": "Associe cada campo de uma declaração in-toto ao que ele guarda.",
+    "pairs": [
+      {
+        "left": "subject",
+        "right": "o artefato, nomeado pelo digest"
+      },
+      {
+        "left": "predicateType",
+        "right": "que tipo de afirmação a declaração faz"
+      },
+      {
+        "left": "predicate",
+        "right": "a afirmação em si"
+      }
+    ],
+    "right_distractors": [
+      "a chave pública que a verifica"
+    ]
+  },
+  "ex-p7tg8b69": {
+    "prompt": "O `cosign verify-attestation` com `~/hosted.cue` sai com 1 e `conflicting values`. O que ele encontrou?",
+    "choices": [
+      {
+        "text": "A assinatura da atestação não batia com o `cosign.pub`",
+        "why": "As checagens de assinatura passaram e foram listadas; a falha veio depois, da política."
+      },
+      {
+        "text": "A imagem não tinha atestação de proveniência nenhuma, então não havia o que ler",
+        "why": "Sem ela, diria que nenhuma atestação bateu com o tipo; aqui ele leu o predicado e comparou um campo."
+      },
+      {
+        "text": "O id do builder na proveniência não é o que a política exige",
+        "why": "Isso. A declaração assinada diz que o hook do laptop a construiu, e a política só aceita outro builder."
+      },
+      {
+        "text": "CUE não consegue ler um predicado escrito por um programa Python",
+        "why": "A primeira política leu o mesmo predicado e passou."
+      }
+    ]
+  },
+  "ex-8sy3zny9": {
+    "prompt": "O `docker build` já acrescenta um `attestation-manifest` ao índice da imagem. O que a proveniência do próprio pipeline acrescenta?",
+    "choices": [
+      {
+        "text": "Uma assinatura da chave da CI sobre a declaração",
+        "why": "Isso. A declaração do Docker é escrita pelo builder e assinada por ninguém; esta tem a CI respondendo por ela."
+      },
+      {
+        "text": "A lista de pacotes instalados na imagem",
+        "why": "Isso é a lista de materiais, uma atestação separada."
+      },
+      {
+        "text": "Uma prova de que a imagem não tem vulnerabilidades conhecidas",
+        "why": "Proveniência diz como algo foi construído, nunca se está livre de falhas."
+      },
+      {
+        "text": "Build L3, porque a proveniência agora é assinada",
+        "why": "Assinar sozinho não passa do L1 aqui; o builder é um laptop e os passos do build leem a chave."
+      }
+    ]
+  },
+  "ex-v2rb3xa3": {
+    "prompt": "Que nível Build da SLSA o pipeline deste curso atende?",
+    "choices": [
+      {
+        "text": "Build L3: a proveniência é assinada e guardada no registry",
+        "why": "O L3 exige a chave de assinatura fora do alcance dos passos do build, e o `ci/sign.sh` vem do commit."
+      },
+      {
+        "text": "Build L2: um servidor de CI escreve e assina a proveniência",
+        "why": "O servidor de CI é um hook no laptop de quem desenvolve, não uma plataforma de build hospedada."
+      },
+      {
+        "text": "Build L1: existe proveniência para toda imagem",
+        "why": "Isso. Ele tem a forma do L2, uma assinatura, sem a plataforma hospedada que lhe dá substância."
+      },
+      {
+        "text": "Build L0: proveniência escrita por um script não conta",
+        "why": "Um script escrevendo proveniência é exatamente o que o L1 pede; quem escreve e assina decide os níveis acima."
+      }
+    ]
+  },
+  "ex-79j7bydb": {
+    "prompt": "Na assinatura sem chave (keyless), o que o Fulcio faz?",
+    "choices": [
+      {
+        "text": "Registra toda assinatura num log público só de acréscimo",
+        "why": "Esse é o Rekor, o log de transparência."
+      },
+      {
+        "text": "Troca um token OIDC por um certificado válido por dez minutos",
+        "why": "Isso: ele liga um par de chaves novo à identidade que o token nomeia."
+      },
+      {
+        "text": "Guarda a chave privada de longa duração da CI e assina toda imagem em nome dela",
+        "why": "Na assinatura sem chave não existe chave de longa duração; a chave nova é jogada fora depois de um uso."
+      },
+      {
+        "text": "Varre a imagem atrás de vulnerabilidades antes da assinatura",
+        "why": "O Fulcio nunca vê o conteúdo da imagem; ele emite certificados."
+      }
+    ]
+  },
+  "ex-f7svzdqp": {
+    "prompt": "Por que a ValidatingAdmissionPolicy da aula 10 não consegue exigir uma assinatura do cosign?",
+    "choices": [
+      {
+        "text": "CEL não tem como comparar strings com uma chave pública",
+        "why": "O limite não é tratar strings; a assinatura está num lugar que a regra não consegue ler."
+      },
+      {
+        "text": "As regras dela leem só o objeto admitido e não conseguem buscar nada num registry",
+        "why": "Isso. A assinatura mora no registry, então a checagem precisa de um controlador que consiga pedi-la."
+      },
+      {
+        "text": "O Kubernetes recusa toda imagem que carrega uma atestação",
+        "why": "O Kubernetes ignora as tags a mais; pods rodaram de imagens atestadas neste curso."
+      },
+      {
+        "text": "Políticas de admissão rodam depois que o pod começou",
+        "why": "A admissão roda antes de o objeto ser gravado, e esse é o objetivo dela."
+      }
+    ]
+  },
+  "ex-048nj019": {
+    "prompt": "Um script de release roda `cosign verify` em `localhost:5000/linkbox@sha256:…` e depois aplica um manifesto que nomeia `localhost:5000/linkbox:main`. Que mudança única fecha a lacuna?",
+    "choices": [
+      {
+        "text": "Verificar `linkbox:main`, para a checagem usar o mesmo nome",
+        "why": "Aí os dois passos usam uma tag, que pode mudar entre eles; a lacuna continua."
+      },
+      {
+        "text": "Assinar a imagem uma segunda vez logo antes do apply",
+        "why": "Outra assinatura do mesmo digest não diz nada sobre para onde a tag aponta."
+      },
+      {
+        "text": "Acrescentar uma política CUE que confere o id do builder",
+        "why": "Útil, mas ela também confere o digest verificado, e o manifesto continua implantando uma tag."
+      },
+      {
+        "text": "Pôr no manifesto o digest verificado em vez da tag",
+        "why": "Isso. O que roda passa a ser exatamente o que foi conferido."
+      }
+    ]
+  },
+  "ex-xjdwh1br": {
+    "prompt": "Para economizar tempo de CI, alguém propõe que quem revisa assine as imagens no próprio laptop depois de aprovar um merge. O que a assinatura deixa de querer dizer?",
+    "choices": [
+      {
+        "text": "Que quem assinou é do time",
+        "why": "Ela continuaria dizendo isso; quem revisa é do time. O que ela perde é o vínculo com o pipeline."
+      },
+      {
+        "text": "Que a imagem passou pelo pipeline",
+        "why": "Isso. Uma chave em vários laptops diz 'alguém aprovou', não 'isto passou pela lista'."
+      },
+      {
+        "text": "Que o digest da imagem bate com o manifesto dela",
+        "why": "Isso é aritmética, vale para qualquer digest, seja quem for que assine."
+      },
+      {
+        "text": "Que a assinatura foi registrada num log público",
+        "why": "Nenhuma assinatura deste curso é, por desenho."
+      }
+    ]
+  }
+}

@@ -1,0 +1,620 @@
+[
+  {
+    "id": "ex-4djyen02",
+    "version": 1,
+    "section": "dependencies",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is a direct dependency of the linkbox service?",
+    "choices": [
+      {
+        "text": "werkzeug",
+        "correct": false,
+        "why": "Flask needs it; `app.py` never names it, so it is transitive although `requirements.txt` pins it."
+      },
+      {
+        "text": "markupsafe",
+        "correct": false,
+        "why": "Jinja and Werkzeug bring it in."
+      },
+      {
+        "text": "gunicorn",
+        "correct": true,
+        "why": "Right. The Dockerfile starts it by name, so the service depends on it directly."
+      },
+      {
+        "text": "packaging",
+        "correct": false,
+        "why": "gunicorn and pytest pull it in, and no file names it."
+      }
+    ]
+  },
+  {
+    "id": "ex-6bpg2bhq",
+    "version": 1,
+    "section": "dependencies",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many packages did the two requirements files of lesson 1 put in the environment, transitive ones included?",
+    "value": 13,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-mbv5rmsn",
+    "version": 1,
+    "section": "dependencies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pytest is not in linkbox's image. Why does the lesson audit `requirements-dev.txt` anyway?",
+    "choices": [
+      {
+        "text": "pip-audit refuses to audit one file without the other",
+        "correct": false,
+        "why": "It audits whatever `-r` files it is given, one or several."
+      },
+      {
+        "text": "It runs where the credentials are",
+        "correct": true,
+        "why": "Right: on the CI machine, beside the pipeline's credentials. A flaw in a test tool is a flaw on the build machine."
+      },
+      {
+        "text": "The image copies the whole repository, tests included",
+        "correct": false,
+        "why": "The image installs only `requirements.txt`; pytest is never installed in it."
+      },
+      {
+        "text": "Development dependencies have more advisories than others",
+        "correct": false,
+        "why": "There is no such rule; here one dev package had one flaw."
+      }
+    ]
+  },
+  {
+    "id": "ex-m6smz4xf",
+    "version": 1,
+    "section": "advisories",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pip-audit printed 29 rows for lesson 1's `requirements.txt`. Why does that not mean 29 flaws?",
+    "choices": [
+      {
+        "text": "pip-audit audits each package twice, once per file",
+        "correct": false,
+        "why": "It was given one file here, and the rows still doubled."
+      },
+      {
+        "text": "Some rows are for versions that are not installed",
+        "correct": false,
+        "why": "Every row names the installed version."
+      },
+      {
+        "text": "Most flaws arrive as two records, GHSA and PYSEC",
+        "correct": true,
+        "why": "Right. PyPI serves both and pip-audit prints a row each. Counting distinct CVE ids gives fifteen."
+      },
+      {
+        "text": "Withdrawn advisories are still listed",
+        "correct": false,
+        "why": "Nothing in the run was withdrawn; the duplicates are aliases."
+      }
+    ]
+  },
+  {
+    "id": "ex-fktrt844",
+    "version": 1,
+    "section": "advisories",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many distinct CVE ids did the audit of lesson 1's `requirements.txt` come down to?",
+    "value": 15,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-c7v2ttxx",
+    "version": 1,
+    "section": "advisories",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each kind of identifier to what it is.",
+    "pairs": [
+      {
+        "left": "CVE",
+        "right": "one id per flaw, across every language and product"
+      },
+      {
+        "left": "GHSA",
+        "right": "GitHub's reviewed advisory for a package ecosystem"
+      },
+      {
+        "left": "PYSEC",
+        "right": "the Python Packaging Authority's advisory for a PyPI package"
+      },
+      {
+        "left": "OSV",
+        "right": "a shared format, and a service that gathers the others"
+      }
+    ],
+    "right_distractors": [
+      "a score from 0 to 10 for how bad the flaw is"
+    ]
+  },
+  {
+    "id": "ex-2r87s8j3",
+    "version": 1,
+    "section": "advisories",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`pip-audit` reports no known vulnerabilities for a project. What does that result assert?",
+    "choices": [
+      {
+        "text": "The dependencies contain no exploitable flaw",
+        "correct": false,
+        "why": "A flaw nobody has disclosed passes every audit."
+      },
+      {
+        "text": "No advisory it knows of matched these versions",
+        "correct": true,
+        "why": "Right. SCA finds only what has been disclosed, in the database it asked, on that day."
+      },
+      {
+        "text": "Every package has been reviewed by its maintainers",
+        "correct": false,
+        "why": "Advisories say nothing about reviews of what is clean."
+      },
+      {
+        "text": "The project's own code is free of injection flaws",
+        "correct": false,
+        "why": "pip-audit never reads the project's code; that is lesson 3's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-186db9x9",
+    "version": 1,
+    "section": "reading-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the Flask advisory CVE-2026-27205 not reachable in linkbox?",
+    "choices": [
+      {
+        "text": "linkbox sets `Cache-Control: private` on every page",
+        "correct": false,
+        "why": "linkbox sets no `Cache-Control` at all; the headers of lesson 4 are three others."
+      },
+      {
+        "text": "`app.py` never touches the session",
+        "correct": true,
+        "why": "Right. The advisory needs session keys read, and linkbox has no session."
+      },
+      {
+        "text": "gunicorn strips the `Vary` header",
+        "correct": false,
+        "why": "gunicorn passes headers through; the condition fails much earlier."
+      },
+      {
+        "text": "Flask 3.0.0 predates the flaw",
+        "correct": false,
+        "why": "The audit says 3.0.0 is affected and 3.1.3 fixes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-eabn8p92",
+    "version": 1,
+    "section": "reading-one",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which change to linkbox would make its three Jinja template flaws (CVE-2024-56201, CVE-2024-56326, CVE-2025-27516) reachable?",
+    "choices": [
+      {
+        "text": "Moving the service to a Windows server",
+        "correct": false,
+        "why": "Windows matters to Werkzeug's `safe_join` flaws, not to these."
+      },
+      {
+        "text": "Putting a caching proxy in front of it",
+        "correct": false,
+        "why": "A cache is a condition of the Flask flaw."
+      },
+      {
+        "text": "Letting users save page templates that Jinja renders",
+        "correct": true,
+        "why": "Right. All three need an attacker able to write a template."
+      },
+      {
+        "text": "Adding a second search box to the page",
+        "correct": false,
+        "why": "A value in a template is escaped data; these flaws need control of the template itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-dma9xnqc",
+    "version": 1,
+    "section": "reading-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Twelve of linkbox's fifteen flaws are not reachable today. What does the lesson use that judgement for?",
+    "choices": [
+      {
+        "text": "To skip those twelve upgrades",
+        "correct": false,
+        "why": "Each has a cheap fix, and a later commit can make any of them reachable."
+      },
+      {
+        "text": "To order the work, and judge findings with no fix",
+        "correct": true,
+        "why": "Right. Reachability decides what comes first and what may wait when nothing can be upgraded."
+      },
+      {
+        "text": "To mark them IGNORE in the rules the scanner reads",
+        "correct": false,
+        "why": "pip-audit has no such file here, and the reasoning would be lost."
+      },
+      {
+        "text": "To lower their CVSS scores",
+        "correct": false,
+        "why": "CVSS base scores are the sources' to set; nothing here changes them."
+      }
+    ]
+  },
+  {
+    "id": "ex-mec9yhhk",
+    "version": 1,
+    "section": "three-scores",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each signal to the question it answers.",
+    "pairs": [
+      {
+        "left": "CVSS",
+        "right": "how bad would it be if exploited"
+      },
+      {
+        "left": "EPSS",
+        "right": "how likely is exploitation in the next 30 days"
+      },
+      {
+        "left": "KEV",
+        "right": "has it been exploited in the wild"
+      }
+    ],
+    "right_distractors": [
+      "does this service reach the vulnerable code"
+    ]
+  },
+  {
+    "id": "ex-2cxbk5cg",
+    "version": 1,
+    "section": "three-scores",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Trivy's report scores CVE-2024-1135 at 8.2 from GitHub and 7.5 from Red Hat. Why two numbers?",
+    "choices": [
+      {
+        "text": "One uses CVSS 3.1 and the other 2.0",
+        "correct": false,
+        "why": "Both vectors are version 3; they differ in one letter."
+      },
+      {
+        "text": "They judged the confidentiality impact differently",
+        "correct": true,
+        "why": "Right: `C:L` against `C:N`, from the same description."
+      },
+      {
+        "text": "Red Hat lowers its scores for its own paying customers",
+        "correct": false,
+        "why": "Each source scores the flaw as it reads it; nothing here is per customer."
+      },
+      {
+        "text": "One includes EPSS and the other does not",
+        "correct": false,
+        "why": "EPSS is a separate probability and never enters a CVSS score."
+      }
+    ]
+  },
+  {
+    "id": "ex-yqzhzwtm",
+    "version": 1,
+    "section": "three-scores",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many of linkbox's fifteen CVEs were in CISA's KEV catalogue on the day of the recording?",
+    "value": 0,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-mjgr12fz",
+    "version": 1,
+    "section": "three-scores",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two findings, time for one fix today. A: CVSS 9.8, not on KEV, code not reachable. B: CVSS 6.5, on KEV, code reachable. Both have a fixed version. Which first, by the lesson's order?",
+    "choices": [
+      {
+        "text": "A, because its score is higher",
+        "correct": false,
+        "why": "The score says how bad if exploited; B is being exploited, and you reach it."
+      },
+      {
+        "text": "Neither, until EPSS is checked",
+        "correct": false,
+        "why": "KEV is already stronger evidence than any probability."
+      },
+      {
+        "text": "A, because unreachable code can become reachable",
+        "correct": false,
+        "why": "True of both; it does not change which is urgent today."
+      },
+      {
+        "text": "B",
+        "correct": true,
+        "why": "Right. On KEV comes first whatever its score, and this one is on a path the service runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-e00njysp",
+    "version": 1,
+    "section": "second-opinion",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Trivy's summary for `requirements-dev.txt` shows `-` under Vulnerabilities. What does that mean?",
+    "choices": [
+      {
+        "text": "The file was not scanned at all",
+        "correct": true,
+        "why": "Right. Trivy recognises `requirements.txt` by name, and this file is not that name."
+      },
+      {
+        "text": "The file was scanned and found clean",
+        "correct": false,
+        "why": "Clean is `0`; the legend under the table says so."
+      },
+      {
+        "text": "Trivy's database has no Python advisories",
+        "correct": false,
+        "why": "It found fifteen in `requirements.txt` a moment earlier."
+      },
+      {
+        "text": "pytest has no advisory in Trivy's database",
+        "correct": false,
+        "why": "Trivy never looked pytest up; pip-audit found its advisory."
+      }
+    ]
+  },
+  {
+    "id": "ex-xp584wnv",
+    "version": 1,
+    "section": "second-opinion",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Given a file with the single line `flask==3.0.0`, pip-audit audited seven packages and Trivy one. Why?",
+    "choices": [
+      {
+        "text": "pip-audit counts duplicate advisories as packages",
+        "correct": false,
+        "why": "The seven are package names with versions, not advisories."
+      },
+      {
+        "text": "Trivy skips packages without advisories",
+        "correct": false,
+        "why": "It listed Flask, which has one, and nothing else exists in its view of the file."
+      },
+      {
+        "text": "pip-audit resolves what would be installed; Trivy reads the lines",
+        "correct": true,
+        "why": "Right. One audits the resolution today, the other what the file says."
+      },
+      {
+        "text": "Trivy needs a lock file to see Flask's dependencies",
+        "correct": false,
+        "why": "A lock file would name them, and then Trivy would read them; it does not resolve either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-0txjx93x",
+    "version": 1,
+    "section": "second-opinion",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A project's `requirements.txt` pins only its direct dependencies. pip-audit passes on Monday and fails on Thursday; nobody committed in between. What is the most likely explanation from this lesson?",
+    "choices": [
+      {
+        "text": "pip-audit's cache expired",
+        "correct": false,
+        "why": "A cache changes speed, not which packages are audited."
+      },
+      {
+        "text": "A transitive package moved, or an advisory appeared",
+        "correct": true,
+        "why": "Right. Unpinned packages move, and the database grows; a lock file removes the first cause."
+      },
+      {
+        "text": "Trivy's database was updated",
+        "correct": false,
+        "why": "pip-audit asks PyPI, not Trivy's database."
+      },
+      {
+        "text": "The direct pins were rewritten by pip during install",
+        "correct": false,
+        "why": "pip never edits a requirements file."
+      }
+    ]
+  },
+  {
+    "id": "ex-m3xpr05h",
+    "version": 1,
+    "section": "the-move",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the minimal move in order.",
+    "items": [
+      "audit the pins",
+      "set each flagged package to its highest fixed version",
+      "read what the new versions require",
+      "run the tests",
+      "audit again"
+    ]
+  },
+  {
+    "id": "ex-t8p8pq85",
+    "version": 1,
+    "section": "the-move",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The pip-audit option in `ci/sca.sh` that makes the audit fail when a dependency could not be collected is ___",
+    "blanks": [
+      {
+        "accept": [
+          "--strict",
+          "-S"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-g3s8cfgy",
+    "version": 1,
+    "section": "the-move",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the move, `pip-audit -r requirements.txt` was clean, and the first push still broke the build in `sca`. Why?",
+    "choices": [
+      {
+        "text": "The CI resolved newer versions, and they were vulnerable",
+        "correct": false,
+        "why": "Every version in `requirements.txt` is pinned; the CI installed the same ones."
+      },
+      {
+        "text": "pytest 8.4.2, in the second file, had an advisory",
+        "correct": true,
+        "why": "Right. The stage audits `requirements-dev.txt` too, and that file had never been audited."
+      },
+      {
+        "text": "`--strict` failed on a package it could not find on PyPI",
+        "correct": false,
+        "why": "The log shows a vulnerability row, not a collection failure."
+      },
+      {
+        "text": "The image still had Flask 3.0.0 in it",
+        "correct": false,
+        "why": "`sca` reads the requirements files and runs before the build."
+      }
+    ]
+  },
+  {
+    "id": "ex-syg50rsd",
+    "version": 1,
+    "section": "the-move",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these changes belong to linkbox's minimal move? Choose all that apply.",
+    "choices": [
+      {
+        "text": "itsdangerous from 2.1.2 to 2.2.0",
+        "correct": true,
+        "why": "Right: Flask 3.1.3 asks for 2.2.0 or later, as its metadata says."
+      },
+      {
+        "text": "click to its newest release",
+        "why": "click had no advisory and the new Flask accepts 8.1.7, so it stays."
+      },
+      {
+        "text": "blinker from 1.7.0 to 1.9.0",
+        "correct": true,
+        "why": "Right: Flask 3.1.3 asks for 1.9.0 or later."
+      },
+      {
+        "text": "markupsafe to 3.x",
+        "why": "It had no advisory and nothing required more than 2.1.3."
+      }
+    ]
+  },
+  {
+    "id": "ex-7n4rdg6p",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A week from now, a push that only edits the README fails in `sca`. What is the most likely cause?",
+    "choices": [
+      {
+        "text": "The README is audited as a requirements file",
+        "correct": false,
+        "why": "pip-audit reads only the files given with `-r`."
+      },
+      {
+        "text": "An advisory was published for a version already pinned",
+        "correct": true,
+        "why": "Right. The audit asks what is known today, and what is known grows."
+      },
+      {
+        "text": "The pins drifted because they lack hashes",
+        "correct": false,
+        "why": "A pinned version installs that version; hashes are about the file's bytes, lesson 15."
+      },
+      {
+        "text": "pip-audit fails every run after seven days without a dependency change",
+        "correct": false,
+        "why": "No such rule exists; the stage fails on findings."
+      }
+    ]
+  },
+  {
+    "id": "ex-05wg9pg2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate wants to leave Werkzeug at 3.0.1 because \"the `safe_join` flaws are Windows-only and we run Linux\". A fixed version exists. What does the lesson answer?",
+    "choices": [
+      {
+        "text": "Agree: unreachable findings need no action",
+        "correct": false,
+        "why": "They need a decision, and with a cheap fix the decision is to move."
+      },
+      {
+        "text": "Agree, and set the rule to IGNORE",
+        "correct": false,
+        "why": "There is no rule file in this stage, and IGNORE would hide the reachable one too."
+      },
+      {
+        "text": "Upgrade: one Werkzeug flaw is reachable, and the fix costs a test run",
+        "correct": true,
+        "why": "Right. CVE-2024-49767 is on the form path, and the move is six lines and green tests."
+      },
+      {
+        "text": "Wait for EPSS to rise above a threshold",
+        "correct": false,
+        "why": "EPSS was not even reachable here, and the fix is already available."
+      }
+    ]
+  }
+]

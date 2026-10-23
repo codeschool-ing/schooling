@@ -1,0 +1,431 @@
+{
+  "ex-k693mzk5": {
+    "prompt": "Uma página de wiki diz que nada roda como root. O que levar essa regra para o repositório como código acrescenta?",
+    "choices": [
+      {
+        "text": "Ela roda a cada push",
+        "why": "Isso, e recusa antes do merge: a regra deixa de depender de alguém lembrar dela na revisão."
+      },
+      {
+        "text": "Faz os contêineres rodarem com um usuário que não é root",
+        "why": "A regra recusa um arquivo que a quebra; quem define o usuário é o Dockerfile ou o manifesto."
+      },
+      {
+        "text": "Os desenvolvedores novos a leem na primeira semana",
+        "why": "Isso a página de wiki já tinha, e é a parte fraca."
+      },
+      {
+        "text": "Ninguém mais precisa revisá-la",
+        "why": "Uma regra como código é mais revisada, em cada commit que a muda."
+      }
+    ]
+  },
+  "ex-90ps156a": {
+    "prompt": "Associe cada nome ao que ele é.",
+    "pairs": [
+      {
+        "left": "OPA",
+        "right": "um motor que avalia regras sobre um documento JSON"
+      },
+      {
+        "left": "Rego",
+        "right": "a linguagem em que as regras são escritas"
+      },
+      {
+        "left": "conftest",
+        "right": "um comando que converte arquivos de configuração e roda as regras sobre eles"
+      },
+      {
+        "left": "Gatekeeper",
+        "right": "o OPA rodando como controlador de admissão do Kubernetes"
+      }
+    ],
+    "right_distractors": [
+      "um registry que guarda imagens assinadas"
+    ]
+  },
+  "ex-42ys5vmb": {
+    "prompt": "Qual regra candidata passa no teste da aula para valer a pena escrever como código?",
+    "choices": [
+      {
+        "text": "O código é revisado por alguém que o entende",
+        "why": "Nenhum arquivo mostra entendimento, então nenhum conversor consegue checar isso."
+      },
+      {
+        "text": "Todo contêiner declara um limite de memória",
+        "why": "Isso. Um manifesto mostra, a resposta é sim ou não, e um contêiner sem limite consegue esgotar o nó."
+      },
+      {
+        "text": "Os limites de memória são sensatos para a carga",
+        "why": "Sensato precisa de uma pessoa ou de um número indefensável; não é sim ou não."
+      },
+      {
+        "text": "Arquivos YAML são indentados com espaços, nunca com tabs",
+        "why": "Um arquivo mostra, mas ninguém é prejudicado; ensinaria as pessoas a ignorar o estágio."
+      }
+    ]
+  },
+  "ex-a6xs1e4h": {
+    "prompt": "policy/docker.rego tem três regras deny. Como o conftest as combina?",
+    "choices": [
+      {
+        "text": "As três precisam falhar para o arquivo falhar",
+        "why": "Uma mensagem no conjunto basta para o arquivo falhar."
+      },
+      {
+        "text": "Só a primeira regra que dispara é reportada",
+        "why": "Toda regra que vale acrescenta a mensagem; a execução imprimiu todas."
+      },
+      {
+        "text": "Juntam-se num conjunto, deny; qualquer mensagem reprova",
+        "why": "Isso. Cada regra que vale acrescenta a mensagem; regras separadas são alternativas reunidas num conjunto."
+      },
+      {
+        "text": "São avaliadas em ordem e param na primeira linha falsa",
+        "why": "As linhas dentro de uma regra precisam valer todas, mas regras separadas não param umas às outras."
+      }
+    ]
+  },
+  "ex-8cjy3wvv": {
+    "prompt": "A imagem do linkbox roda como 65532, e mesmo assim a regra do usuário falhou no Dockerfile da aula 15. Por quê?",
+    "choices": [
+      {
+        "text": "A imagem distroless roda como root por padrão",
+        "why": "Ela roda como 65532; o docker image inspect imprimiu isso."
+      },
+      {
+        "text": "Nada no arquivo declara isso",
+        "why": "Isso. O usuário vinha da imagem base, e uma checagem que lê o arquivo enxerga só o que o arquivo diz."
+      },
+      {
+        "text": "A regra lê o estágio errado",
+        "why": "Ela lê o estágio final, que é o que vai para produção; não havia USER nele."
+      },
+      {
+        "text": "O conftest não consegue converter Dockerfiles de vários estágios",
+        "why": "Ele converteu os dois estágios e os numerou 0 e 1."
+      }
+    ]
+  },
+  "ex-je6gme20": {
+    "prompt": "Um colega propõe USER nonroot em vez de USER 65532:65532, já que o nome é mais claro. O que dá errado com os manifestos da aula 10?",
+    "choices": [
+      {
+        "text": "A imagem rodaria como root",
+        "why": "nonroot é um usuário real da imagem distroless; a imagem não rodaria como root."
+      },
+      {
+        "text": "O registry recusaria a imagem",
+        "why": "O registry guarda o que for enviado; o usuário não é assunto dele."
+      },
+      {
+        "text": "Nada; um nome e um número são equivalentes",
+        "why": "São equivalentes dentro da imagem, e não para o kubelet que checa runAsNonRoot."
+      },
+      {
+        "text": "O kubelet não checa runAsNonRoot contra um nome",
+        "why": "Isso: ele se recusa a iniciar o pod. Ele precisa de um número para saber que o usuário não é 0, e é por isso que a regra pede um."
+      }
+    ]
+  },
+  "ex-0y0rbg7w": {
+    "prompt": "Quando um auxiliar Rego como final_user não tem valor, ele fica ___, e not final_user passa a ser verdadeiro.",
+    "blanks": [
+      {
+        "accept": [
+          "indefinido"
+        ]
+      }
+    ]
+  },
+  "ex-g7em6hgh": {
+    "prompt": "O conftest rodou as 7 regras de policy/kubernetes.rego contra os documentos de k8s/. Quantos testes ele reportou?"
+  },
+  "ex-nccyqd8s": {
+    "prompt": "Por que a política lê a tag na parte do nome da imagem depois da última barra?",
+    "choices": [
+      {
+        "text": "Porque um digest usa barra",
+        "why": "Um digest vem depois de @, que a regra checa à parte."
+      },
+      {
+        "text": "localhost:5000 tem dois-pontos próprios",
+        "why": "Isso, então o nome inteiro sempre parece ter tag. Procurar dois-pontos na string inteira aprovaria localhost:5000/linkbox, que não tem tag."
+      },
+      {
+        "text": "Porque o Kubernetes ignora a parte do registry",
+        "why": "O Kubernetes puxa do registry que o nome indica; não o ignora."
+      },
+      {
+        "text": "Porque tags diferenciam maiúsculas",
+        "why": "Maiúsculas não têm nada a ver com onde a tag começa."
+      }
+    ]
+  },
+  "ex-qqthd23h": {
+    "prompt": "Alguém muda as validationActions do binding de admissão de Deny para Audit. O que um cluster mostraria, sem o estágio de política?",
+    "choices": [
+      {
+        "text": "O kubectl apply falha, porque Audit não é um valor válido",
+        "why": "Audit é uma ação válida; o binding é instalado."
+      },
+      {
+        "text": "Todo Deployment é recusado até o binding ser corrigido",
+        "why": "Audit faz o contrário: nada é recusado."
+      },
+      {
+        "text": "Um alerta em cada comando kubectl",
+        "why": "Audit registra; não alerta o cliente. Warn alertaria."
+      },
+      {
+        "text": "Nada diferente; todo Deployment passa",
+        "why": "Isso, e a política continua listada. Esse silêncio é o motivo de o pipeline checar as configurações da própria política."
+      }
+    ]
+  },
+  "ex-9tkd7rvf": {
+    "prompt": "A edição apressada mudou a imagem para linkbox:latest e readOnlyRootFilesystem para false. Quais regras falharam? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "o sistema de arquivos raiz só de leitura",
+        "why": "Isso. Uma das duas linhas editadas."
+      },
+      {
+        "text": "a tag flutuante",
+        "why": "Isso. linkbox:latest termina em :latest."
+      },
+      {
+        "text": "o registry",
+        "why": "Isso. linkbox:latest não começa com localhost:5000/."
+      },
+      {
+        "text": "o limite de memória",
+        "why": "O limite não foi tocado, e a execução reportou três falhas, não quatro."
+      },
+      {
+        "text": "runAsNonRoot",
+        "why": "O pod continua definindo runAsNonRoot: true."
+      }
+    ]
+  },
+  "ex-5m083xjs": {
+    "prompt": "Depois que a regra floating foi \"simplificada\" para procurar dois-pontos no nome inteiro, o conftest test em k8s/ ainda passou 35 de 35. Por quê?",
+    "choices": [
+      {
+        "text": "A imagem do linkbox tem tag",
+        "why": "Isso, e a linha quebrada só importa sem tag. Os manifestos reais nunca exercitam o caso; só um teste exercita."
+      },
+      {
+        "text": "O conftest guarda resultados em cache entre execuções",
+        "why": "Ele avalia as regras do zero toda vez."
+      },
+      {
+        "text": "A mudança deixou a regra mais estrita, não mais fraca",
+        "why": "Deixou mais fraca: localhost:5000/linkbox agora passa sem tag."
+      },
+      {
+        "text": "O conftest test não lê mudanças de política até o commit",
+        "why": "Ele lê os arquivos em disco, com commit ou sem."
+      }
+    ]
+  },
+  "ex-x5bqyf2d": {
+    "prompt": "Por que cada teste afirma uma mensagem exata em vez de só que deny não está vazio?",
+    "choices": [
+      {
+        "text": "Rego não consegue contar os elementos de um conjunto",
+        "why": "count() funciona em conjuntos; os testes da entrada boa o usam."
+      },
+      {
+        "text": "O conftest verify exige uma mensagem",
+        "why": "O verify só precisa que o corpo do teste valha."
+      },
+      {
+        "text": "Para pegar uma regra que dispara pelo motivo errado",
+        "why": "Isso. A mensagem de outra regra faria \"não vazio\" passar."
+      },
+      {
+        "text": "Mensagens são mais rápidas de comparar que conjuntos",
+        "why": "Velocidade não é o motivo; os testes rodam em bem menos de um segundo de qualquer jeito."
+      }
+    ]
+  },
+  "ex-cpjr5f62": {
+    "prompt": "Você acrescenta uma regra que recusa um Deployment com hostNetwork: true. Qual teste vale mais a pena escrever primeiro?",
+    "choices": [
+      {
+        "text": "Um que roda a regra contra os arquivos reais de k8s/",
+        "why": "Esses arquivos passam hoje; um teste contra eles não prova nada sobre a regra disparar."
+      },
+      {
+        "text": "Um em que hostNetwork: true dá a mensagem dela",
+        "why": "Isso. Mostra que o deny dispara pelo menos uma vez, o que um manifesto aprovado nunca mostra."
+      },
+      {
+        "text": "Um que mede o tempo da regra num manifesto grande",
+        "why": "Não é na velocidade que uma política falha; é no silêncio."
+      },
+      {
+        "text": "Um em que hostNetwork está ausente e deny fica vazio",
+        "why": "Útil depois, mas passa mesmo se a regra nunca disparar."
+      }
+    ]
+  },
+  "ex-tv13fkb6": {
+    "prompt": "O Trivy aponta o manifesto do linkbox com KSV-0125, imagens de registry não confiável. Qual é a leitura certa?",
+    "choices": [
+      {
+        "text": "Mover a imagem para o Docker Hub, em que o Trivy confia",
+        "why": "Isso quebraria a regra do próprio projeto e a política de admissão da aula 10."
+      },
+      {
+        "text": "A checagem está errada para este projeto",
+        "why": "Isso: o único registry confiável dele é localhost:5000. Uma biblioteca não sabe qual é o seu registry; a sua regra sabe."
+      },
+      {
+        "text": "O registry precisa de TLS para ser confiável",
+        "why": "O achado é sobre qual registry, não sobre como se chega a ele."
+      },
+      {
+        "text": "Apagar a tag da imagem e deixar o cluster escolher",
+        "why": "Uma tag ausente quebraria outra regra e não corrigiria nada aqui."
+      }
+    ]
+  },
+  "ex-warzvcfz": {
+    "prompt": "Por que o pipeline bloqueia pelo conftest e não pelo trivy config?",
+    "choices": [
+      {
+        "text": "O trivy config é mais lento",
+        "why": "Velocidade não está entre os motivos dados; os dois são rápidos em três arquivos."
+      },
+      {
+        "text": "O trivy config não consegue ler manifestos de Kubernetes",
+        "why": "Ele os leu e levantou quatro achados."
+      },
+      {
+        "text": "As checagens mudam sozinhas, e algumas contradizem decisões",
+        "why": "Isso: o pacote se atualiza sozinho. Um portão deve falhar por decisões revisadas, não pelas opiniões de uma biblioteca."
+      },
+      {
+        "text": "As checagens do Trivy não são escritas em Rego",
+        "why": "São escritas em Rego, a mesma linguagem das suas."
+      }
+    ]
+  },
+  "ex-7dpf9bw9": {
+    "prompt": "O Trivy levanta KSV-0020 porque o manifesto não define runAsUser acima de 10000, embora a imagem rode como 65532. O que isso tem em comum com o DS-0002 no Dockerfile da aula 15?",
+    "choices": [
+      {
+        "text": "Os dois são falsos positivos para pôr no .trivyignore",
+        "why": "Os dois são justos: cada arquivo omite um fato que poderia declarar."
+      },
+      {
+        "text": "Os dois vêm da mesma regra Rego",
+        "why": "Um é checagem de Dockerfile e o outro de Kubernetes."
+      },
+      {
+        "text": "Os dois significam que o contêiner roda como root",
+        "why": "Ele roda como 65532 nos dois casos."
+      },
+      {
+        "text": "Cada arquivo deixa o fato para a imagem",
+        "why": "Isso. Declará-lo no arquivo, USER ou runAsUser, responde aos dois."
+      }
+    ]
+  },
+  "ex-q8ae591g": {
+    "prompt": "Ponha os primeiros estágios de ci/stages, como esta aula os deixa, na ordem em que rodam.",
+    "items": [
+      "secrets",
+      "workflows",
+      "policy",
+      "test",
+      "sast"
+    ]
+  },
+  "ex-tcs48p3v": {
+    "prompt": "O ci/policy.sh roda conftest verify antes de conftest test. O que daria errado na ordem inversa?",
+    "choices": [
+      {
+        "text": "O conftest test se recusaria a rodar sem regras verificadas",
+        "why": "Ele roda quaisquer regras que receber; esse é o perigo."
+      },
+      {
+        "text": "Nada, desde que os dois rodem",
+        "why": "Com set -e, um estágio de teste que falha para antes, e a ordem decide o que o log diz."
+      },
+      {
+        "text": "Aprovações de uma regra quebrada valeriam",
+        "why": "Isso. Verifique primeiro, para nenhuma aprovação vir de uma regra que não recusa mais."
+      },
+      {
+        "text": "O verify testaria os arquivos em vez das regras",
+        "why": "O verify roda as regras test_; ele nunca lê os arquivos do projeto."
+      }
+    ]
+  },
+  "ex-6hem0ssq": {
+    "prompt": "A mesma regra de registry é imposta no pipeline e na admissão. Que situação só a admissão para?",
+    "choices": [
+      {
+        "text": "Um pull request que muda k8s/linkbox.yaml para outro registry",
+        "why": "O pipeline recusa esse commit antes de ele ser aplicado."
+      },
+      {
+        "text": "Um teste de regra que parou de disparar",
+        "why": "Isso é o conftest verify, no pipeline."
+      },
+      {
+        "text": "Um Dockerfile cuja imagem base não tem digest",
+        "why": "Isso é checagem do pipeline; a admissão nunca vê um Dockerfile."
+      },
+      {
+        "text": "Um kubectl apply de um laptop",
+        "why": "Isso, com um manifesto que nunca passou pelo repositório. Só o cluster vê objetos que não vieram de um commit."
+      }
+    ]
+  },
+  "ex-m9pq4yzb": {
+    "prompt": "Uma regra nova precisa checar que todo Service em k8s/ é do tipo ClusterIP. Onde ela entra, e o que prova que funciona?",
+    "choices": [
+      {
+        "text": "Em ci/stages como um estágio novo, provada pelo próximo push",
+        "why": "Um push de manifestos que passam não mostra nada sobre a regra disparar."
+      },
+      {
+        "text": "Em policy/kubernetes.rego, com um teste em kubernetes_test.rego que espera a mensagem dela",
+        "why": "Isso. Mesmo pacote, mesmo estágio, e um teste que a vê disparar."
+      },
+      {
+        "text": "Em policy/docker.rego, que já roda no pipeline",
+        "why": "Esse pacote roda só no Dockerfile, com --namespace docker."
+      },
+      {
+        "text": "Só em k8s/admission.yaml, para o cluster recusar",
+        "why": "Isso deixa o autor descobrir na hora do deploy; a aula defende as duas portas."
+      }
+    ]
+  },
+  "ex-8yddetnp": {
+    "prompt": "Um time copia as políticas desta aula para outro serviço cujas imagens são construídas FROM scratch com um binário estático. Qual regra vai falhar de cara, e isso está certo?",
+    "choices": [
+      {
+        "text": "A do limite de memória; ela está errada para binários estáticos",
+        "why": "Limites de memória são sobre o contêiner, não sobre como o binário foi ligado."
+      },
+      {
+        "text": "A do registry; está certo",
+        "why": "A regra de registry lê manifestos, não linhas FROM."
+      },
+      {
+        "text": "A do digest; scratch pede uma exceção",
+        "why": "Isso: scratch não tem digest, porque não é uma imagem a fixar, e um teste deve cobrir a exceção."
+      },
+      {
+        "text": "Nenhuma; toda regra daqui serve para qualquer imagem",
+        "why": "Regras codificam as decisões de um projeto, e FROM scratch quebra a premissa da regra do digest."
+      }
+    ]
+  }
+}
