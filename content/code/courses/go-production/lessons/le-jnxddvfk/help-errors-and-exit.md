@@ -189,7 +189,6 @@ ana@vm:~/cli-hits$ ./hits --generate-shell-completion
 count:requests per status code
 top:the paths with the most requests
 help:Shows a list of commands or help for one command
-/home/user/schooling/content/code/courses/go-production/lessons/le-jnxddvfk/help-errors-and-exit.md: 0 blocks printing main_test.go, and this needs exactly one
 ```
 
 **The script calls `hits` itself every time Tab is pressed**, with `--generate-shell-completion` on
@@ -201,8 +200,8 @@ one. That step was not run here, because a transcript cannot press Tab. Lesson 1
 ## The contract, tested
 
 The test has the shape of lesson 1's: a table of argument lists, each with the exit code and the
-start of standard error it should produce, run through `run` with buffers in place of the streams.
-Save it as `main_test.go`, beside `main.go`:
+start of standard error it should produce, run through `run` with buffers in place of the streams. It goes beside `main.go`, saved as
+`main_test.go`:
 
 ```go
 package main

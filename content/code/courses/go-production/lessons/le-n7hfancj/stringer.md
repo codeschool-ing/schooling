@@ -26,7 +26,7 @@ wrappers, which is the shape of section 04.
 An HTTP status code says what kind of answer it is by its first digit: 2 for success, 4 for the
 client's mistake, 5 for the server's. `hits` counts codes one by one, and a report by class is a
 small step from there. This section works in a fresh copy of lesson 1's module, in `~/gen-hits`: the
-`tally` package and `main.go` from lesson 1 section 03, `genlog` from lesson 1 section 02, and the
+`tally` package and `main.go` from lesson 1 section 04, `genlog` from lesson 1 section 03, and the
 same 20,000-line `access.log`. The new package is `internal/status/class.go`:
 
 ```go

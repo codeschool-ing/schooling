@@ -157,8 +157,8 @@ ana@vm:~/tags$ go list -f '{{.TestGoFiles}} {{.IgnoredGoFiles}}' .
 
 **O `go test` simples não compilou `integration_test.go`**; o `go list` o cita entre os arquivos
 ignorados, junto com `debug.go` e os dois arquivos por sistema que esta máquina não usa. Com
-`-tags integration` o teste compilou o `hits`, rodou e passou em cerca de um quarto de segundo, cem
-vezes o `0.002s` da execução comum. O `-run TestBinary` escolheu o teste pelo nome, e o `-count=1`
+`-tags integration` o teste compilou o `hits`, rodou e passou em cerca de um terço de segundo, mais
+de cem vezes o `0.002s` da execução comum. O `-run TestBinary` escolheu o teste pelo nome, e o `-count=1`
 impediu que as duas execuções viessem do cache.
 
 ## O que uma tag custa

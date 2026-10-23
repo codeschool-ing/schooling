@@ -26,7 +26,7 @@ invólucros de chamadas de sistema, que é o formato da seção 04.
 Um código de status HTTP diz que tipo de resposta é pelo primeiro dígito: 2 para sucesso, 4 para
 erro do cliente, 5 para erro do servidor. O `hits` conta os códigos um a um, e um relatório por
 classe fica a um passo dali. Esta seção trabalha numa cópia nova do módulo da lição 1, em
-`~/gen-hits`: o pacote `tally` e o `main.go` da lição 1 seção 03, o `genlog` da lição 1 seção 02 e o
+`~/gen-hits`: o pacote `tally` e o `main.go` da lição 1 seção 04, o `genlog` da lição 1 seção 03 e o
 mesmo `access.log` de 20.000 linhas. O pacote novo é `internal/status/class.go`:
 
 ```go

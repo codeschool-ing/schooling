@@ -62,8 +62,8 @@ that imports zlib stays dynamic, whatever tags it is built with.
 
 In Go, a nil pointer dereference is a panic, and a deferred `recover` can stop it from ending the
 program. **In C, the same mistake is a signal that the Go runtime does not turn into a panic**: it
-cannot know what state the C code was left in, so it stops everything. `crash/main.go` makes the mistake twice,
-under the same `recover`:
+cannot know what state the C code was left in, so it stops everything.
+The program `crash/main.go` makes the mistake twice, under the same `recover`:
 
 ```go
 // Command crash reads through a null pointer twice: once in Go, where

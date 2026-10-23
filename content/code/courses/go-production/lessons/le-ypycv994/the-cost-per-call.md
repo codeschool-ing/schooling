@@ -186,8 +186,8 @@ paying for it; section 06 comes back to it.
 The crossing has a second cost, which a benchmark of a fast function cannot show. While a goroutine
 is inside C, the thread under it belongs to C. If the C function blocks, waiting on a disk, a lock
 or a network, the thread blocks with it, and the scheduler starts another thread so that Go code can
-keep running. `threads/main.go` starts 100 goroutines that sleep for half a second, in Go or in C's
-`usleep`. While they sleep, it reads the process's thread count from `/proc`:
+keep running. The next program starts 100 goroutines that sleep for half a second, in Go or in C's
+`usleep`, and while they sleep it reads the process's thread count from `/proc`. It is `threads/main.go`:
 
 ```go
 // Command threads starts 100 goroutines that each sleep for half a second,

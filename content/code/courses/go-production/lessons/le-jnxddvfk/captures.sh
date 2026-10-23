@@ -36,20 +36,28 @@ HERE=$(cd "$(dirname "$0")" && pwd)
 LAB_SH=${LAB_SH:-$HERE/../../lab.sh}
 LESSON=$(basename "$HERE")
 MODCACHE='$HOME/.cache/le-jnxddvfk-mod'
-lab() { bash "$LAB_SH" "$@"; }
-on() { local d=$1; shift; printf 'ana@vm:~/%s$ %s\n' "$d" "$*"; lab exec "$d" "$*" 2>&1 || true; }
+# A lab call that fails stops the script.
+lab() { bash "$LAB_SH" "$@" || { echo "captures.sh: lab $* failed" >&2; exit 1; }; }
+# `lab.sh place` exits 0 even when it finds no block, and leaves an empty file:
+# every transcript after it would then record the wrong program. So the block
+# is looked up with `show` first, and a miss stops the script.
+placefrom() {
+  bash "$LAB_SH" show "$1" "$2" "$3" >/dev/null || { echo "captures.sh: no block for $3 in $1/$2" >&2; exit 1; }
+  lab place "$@"
+}
+on() { local d=$1; shift; printf 'ana@vm:~/%s$ %s\n' "$d" "$*"; bash "$LAB_SH" exec "$d" "$*" 2>&1 || true; }
 # fetch prints the command as typed and runs it against a fresh module cache.
-fetch() { local d=$1; shift; printf 'ana@vm:~/%s$ %s\n' "$d" "$*"; lab exec "$d" "export GOMODCACHE=$MODCACHE; $*" 2>&1 || true; }
-quiet() { lab exec "$1" "$2" >/dev/null 2>&1 || true; }
-place() { lab place "$LESSON" "$1" "$2" "$3"; }
+fetch() { local d=$1; shift; printf 'ana@vm:~/%s$ %s\n' "$d" "$*"; bash "$LAB_SH" exec "$d" "export GOMODCACHE=$MODCACHE; $*" 2>&1 || true; }
+quiet() { bash "$LAB_SH" exec "$1" "$2" >/dev/null 2>&1 || true; }
+place() { placefrom "$LESSON" "$1" "$2" "$3"; }
 block() { printf '##### %s\n' "$1"; }
 
 quiet . "chmod -R u+w $MODCACHE 2>/dev/null; rm -rf $MODCACHE"
 
 block shape
 lab fresh cli-hits
-lab place le-03nqvqms arguments tools/genlog/main.go cli-hits
-lab place le-03nqvqms subcommands internal/tally/tally.go cli-hits
+placefrom le-03nqvqms arguments tools/genlog/main.go cli-hits
+placefrom le-03nqvqms subcommands internal/tally/tally.go cli-hits
 on cli-hits 'go mod init example.com/hits'
 place the-shape main.go cli-hits
 place the-shape report.go cli-hits
@@ -105,12 +113,12 @@ on cli-hits 'go test .'
 
 block choosing
 lab fresh std-hits
-lab place le-03nqvqms subcommands internal/tally/tally.go std-hits
-lab place le-03nqvqms subcommands main.go std-hits
+placefrom le-03nqvqms subcommands internal/tally/tally.go std-hits
+placefrom le-03nqvqms subcommands main.go std-hits
 quiet std-hits 'go mod init example.com/hits'
 quiet std-hits 'cp ../cli-hits/access.log .'
 lab fresh cobra-cmp
-lab place le-03nqvqms subcommands internal/tally/tally.go cobra-cmp
+placefrom le-03nqvqms subcommands internal/tally/tally.go cobra-cmp
 place choosing main.go cobra-cmp
 quiet cobra-cmp 'go mod init example.com/hits'
 quiet cobra-cmp 'cp ../cli-hits/access.log .'
