@@ -101,9 +101,8 @@ Nmap done: 1 IP address (1 host up) scanned in 0.19 seconds
 ```
 
 **Duas portas TCP, as duas de que o trabalho precisa, e cada porta UDP que a primeira varredura
-achou agora responde `closed`**, o que quer dizer que a máquina respondeu que não há nada ali. Entre
-as duas varreduras, uma máquina perdeu oito listeners, os seis pacotes por trás deles, mais dois sem
-motivo para estar ali, um segundo root, duas senhas utilizáveis, dois shells e uma regra de `sudo`
+achou agora responde `closed`**, o que quer dizer que a máquina respondeu que não há nada ali. Entre as duas varreduras, uma máquina perdeu oito listeners, os seis pacotes por trás deles e mais dois sem motivo para estar ali.
+Perdeu também um segundo root, duas senhas utilizáveis, dois shells e uma regra de `sudo`
 que nunca deveria ter tido, e as duas opções do SSH que deixavam qualquer um tentar uma senha como
 root.
 

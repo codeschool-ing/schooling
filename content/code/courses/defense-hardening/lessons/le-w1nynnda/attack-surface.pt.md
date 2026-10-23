@@ -15,8 +15,8 @@ tratam deles. Mas um controle protege o que está lá, e o serviço mais barato 
 está rodando. Uma porta em que ninguém escuta não precisa de patch, de regra de firewall nem de
 monitoramento.
 
-**Não dá para tirar o que você não listou.** Esse é o princípio em que as outras dezoito aulas se
-apoiam, e a aula 18 o trata por inteiro: o inventário, das máquinas e do que roda nelas, é a base de
+**Não dá para tirar o que você não listou.** Esse é o princípio em que as outras dezoito aulas se apoiam, e a aula 18 o trata por inteiro.
+O inventário, das máquinas e do que roda nelas, é a base de
 qualquer defesa, porque um controle aplicado a "todos os nossos servidores" protege exatamente os
 servidores de que alguém se lembrou. Esta aula começa pelo menor inventário que existe, uma máquina,
 e faz dele o hábito de todas as aulas seguintes: **medir primeiro, mudar e medir de novo.**

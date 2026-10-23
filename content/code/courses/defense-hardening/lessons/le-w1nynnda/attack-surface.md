@@ -14,8 +14,8 @@ setting there. Most of this course does add controls, and lessons 7 to 14 are ab
 control protects what is there, and the cheapest service to protect is the one that is not
 running. A port nobody listens on needs no patch, no firewall rule and no monitoring.
 
-**You cannot remove what you have not listed.** That is the principle the other eighteen lessons
-rest on, and lesson 18 gives it its full treatment: inventory, of machines and of what runs on
+**You cannot remove what you have not listed.** That is the principle the other eighteen lessons rest on, and lesson 18 gives it its full treatment.
+Inventory, of machines and of what runs on
 them, is the basis of every defence, because a control applied to "all our servers" protects
 exactly the servers somebody remembered. This lesson starts with the smallest inventory there is,
 one machine, and makes it the habit of every lesson after it: **measure first, change, then measure

@@ -80,7 +80,8 @@ web
 
 A recusa diz o que o servidor oferece, `publickey`, e mais nada; a senha nem chegou a ser pedida. O
 seu login continua funcionando. **Mantenha sempre uma sessão aberta enquanto muda o SSH de uma
-máquina remota**, e teste a partir de uma segunda antes de fechar a primeira: uma configuração errada
+máquina remota**, e teste a partir de uma segunda antes de fechar a primeira.
+Uma configuração errada
 que tranca você fora de um servidor em outra cidade é uma viagem, ou uma ligação para quem tem acesso
 ao console.
 

@@ -78,7 +78,8 @@ web
 
 The refusal says what the server offers, `publickey`, and nothing else; the password was never asked
 for. Your own login still works. **Always keep a session open while you change SSH on a remote
-machine**, and test from a second one before closing the first: a wrong setting that locks you out
+machine**, and test from a second one before closing the first.
+A wrong setting that locks you out
 of a server in another city is a drive, or a call to whoever has the console.
 
 Lesson 15 goes further down this road: one machine allowed to reach the others, and keys that

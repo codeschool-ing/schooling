@@ -85,8 +85,8 @@ Password inactive					: never
 Account expires						: Jan 02, 1970
 ```
 
-`getent passwd 0` agora só encontra o root. A conta do estagiário não é apagada, porque arquivos e
-logs podem ainda trazer o nome dela: `usermod -L` trava a senha, `-e 1` põe a expiração da conta no dia 1 do
+`getent passwd 0` agora só encontra o root. A conta do estagiário não é apagada, porque arquivos e logs podem ainda trazer o nome dela.
+Três mudanças a travam: `usermod -L` trava a senha, `-e 1` põe a expiração da conta no dia 1 do
 calendário Unix, que o `chage` imprime como 2 de janeiro de 1970, e `-s` tira o shell. Cada um sozinho já impediria um login; os três juntos
 deixam a intenção inconfundível para a próxima pessoa que ler a conta. O `passwd -S` agora imprime `L`
 para as duas contas. O portal continua subindo, como `active` mostra, porque um serviço nunca precisou de shell

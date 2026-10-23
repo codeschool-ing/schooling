@@ -101,8 +101,8 @@ Nmap done: 1 IP address (1 host up) scanned in 0.19 seconds
 ```
 
 **Two TCP ports, the two the job needs, and every UDP port the first scan found now answers
-`closed`**, which means the machine replied that nothing is there. Between the two scans, one
-machine lost eight listeners, the six packages behind them, two more with no reason to be there, a
+`closed`**, which means the machine replied that nothing is there. Between the two scans, one machine lost eight listeners, the six packages behind them and two more with no reason to be there.
+It also lost a
 second root, two usable passwords, two shells and a `sudo` rule it should never have had, and the
 two SSH settings that let anybody try a password as root.
 

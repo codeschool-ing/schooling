@@ -84,8 +84,8 @@ Password inactive					: never
 Account expires						: Jan 02, 1970
 ```
 
-`getent passwd 0` now finds only root. The intern's account is not deleted, because files and logs
-may still carry its name: `usermod -L` locks the password, `-e 1` sets the account's expiry to day 1
+`getent passwd 0` now finds only root. The intern's account is not deleted, because files and logs may still carry its name.
+Three changes lock it instead: `usermod -L` locks the password, `-e 1` sets the account's expiry to day 1
 of the Unix calendar, which `chage` prints as 2 January 1970, and `-s` takes the shell away. Each one alone would stop a login; all three
 make the intent unmistakable to the next person who reads the account. `passwd -S` now
 prints `L` for both accounts. The portal still starts, as `active` shows, because a service never needed a login shell.

@@ -30,8 +30,8 @@ Numa máquina virtual, tudo isso some junto com a máquina, e uma aula que quebr
 e não um dos contêineres, custa uma máquina virtual nova e mais nada. **Instalado** só serve para um
 computador que você possa apagar depois.
 
-Qualquer outro hipervisor serve no lugar do Multipass, com uma imagem Ubuntu Server 24.04 LTS e os
-mesmos 2 processadores, 4 GB e 20 GB: **VirtualBox** no Windows, no Linux ou num Mac Intel, **UTM**
+Qualquer outro hipervisor serve no lugar do Multipass, com uma imagem Ubuntu Server 24.04 LTS e os mesmos 2 processadores, 4 GB e 20 GB.
+Isso inclui **VirtualBox** no Windows, no Linux ou num Mac Intel, **UTM**
 num Mac com Apple silicon, **Hyper-V** no Windows, **GNOME Boxes** ou **virt-manager** no Linux.
 Custam meia hora de telas de instalação que o Multipass pula. **Online** é qualquer provedor que
 alugue uma máquina Ubuntu 24.04 com acesso de root. Um plano gratuito serve se você tiver um, mas

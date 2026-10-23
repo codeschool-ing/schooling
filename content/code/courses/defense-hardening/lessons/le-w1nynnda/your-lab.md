@@ -29,8 +29,8 @@ virtual machine all of that goes away with the machine, and a lesson that breaks
 itself, rather than one of the containers, costs you a new virtual machine and nothing else.
 **Installed** is right only for a computer you can wipe afterwards.
 
-Any other hypervisor works in place of Multipass, given an Ubuntu Server 24.04 LTS image and the same
-2 processors, 4 GB and 20 GB: **VirtualBox** on Windows, Linux or an Intel Mac, **UTM** on an
+Any other hypervisor works in place of Multipass, given an Ubuntu Server 24.04 LTS image and the same 2 processors, 4 GB and 20 GB.
+That includes **VirtualBox** on Windows, Linux or an Intel Mac, **UTM** on an
 Apple-silicon Mac, **Hyper-V** on Windows, **GNOME Boxes** or **virt-manager** on Linux. They cost
 half an hour of installer screens that Multipass skips. **Online** is any provider that rents an
 Ubuntu 24.04 machine with root access. A free tier will do if you have one, but nothing in the
