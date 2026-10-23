@@ -23,7 +23,7 @@ As aulas foram gravadas no **Ubuntu 24.04**, e há três jeitos de ter um termin
 
 | | o que é | quanto custa ao seu computador |
 |---|---|---|
-| **instalado** (recomendado) | as ferramentas no seu próprio sistema: o próprio Ubuntu 24.04, ou o Ubuntu 24.04 no WSL do Windows | uns 600 MB de disco na aula 1, 1 GB até a aula 13, e 80 MB de memória ou mais enquanto o moto roda |
+| **instalado** (recomendado) | as ferramentas no seu próprio sistema: o próprio Ubuntu 24.04, ou o Ubuntu 24.04 no WSL do Windows | uns 600 MB de disco na aula 1 e uns 2 GB da aula 12 em diante, e 80 MB de memória ou mais enquanto o moto roda |
 | uma máquina virtual | Ubuntu Server 24.04 num hipervisor, em qualquer sistema | 2 processadores, 2 GB de memória e 10 GB de disco enquanto roda |
 | online | um shell Linux alugado no navegador | nada no seu computador; uma conta com alguém, e um limite de quanto tempo dura |
 

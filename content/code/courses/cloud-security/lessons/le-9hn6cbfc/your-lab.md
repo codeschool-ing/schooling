@@ -23,7 +23,7 @@ The lessons were recorded on **Ubuntu 24.04**, and there are three ways to have 
 
 | | what it is | what it costs your computer |
 |---|---|---|
-| **installed** (recommended) | the tools in your own system: Ubuntu 24.04 itself, or Ubuntu 24.04 under WSL on Windows | about 600 MB of disk for lesson 1, 1 GB by lesson 13, and 80 MB of memory or more while moto runs |
+| **installed** (recommended) | the tools in your own system: Ubuntu 24.04 itself, or Ubuntu 24.04 under WSL on Windows | about 600 MB of disk for lesson 1 and about 2 GB from lesson 12 on, and 80 MB of memory or more while moto runs |
 | a virtual machine | Ubuntu Server 24.04 in a hypervisor, on any system | 2 processors, 2 GB of memory and 10 GB of disk while it runs |
 | online | a Linux shell rented in a browser | nothing on your computer; an account with somebody, and a limit on how long it lasts |
 
