@@ -1,0 +1,377 @@
+{
+  "ex-64g33zgh": {
+    "prompt": "Os cinco campos de `Loose` (três `bool`s, um `int32` e um `int64`) somam 15 bytes, e mesmo assim `unsafe.Sizeof` diz 32 no amd64. De onde vêm os outros 17?",
+    "hint": "Olhe os deslocamentos que o programa imprimiu, e onde cada campo poderia ter começado.",
+    "choices": [
+      {
+        "text": "Um `bool` ocupa uma palavra inteira de 8 bytes numa máquina de 64 bits, como um `int64`",
+        "why": "`Tight` põe seus três `bool`s nos deslocamentos 12, 13 e 14, um byte cada. As lacunas de `Loose` vêm do que vem depois de cada `bool`."
+      },
+      {
+        "text": "O runtime acrescenta um cabeçalho escondido a toda struct para o coletor de lixo",
+        "why": "`tally.Entry` tem 72 bytes e seus campos somam exatamente 72, então não há cabeçalho. Os bytes extras de `Loose` ficam entre os campos e depois deles."
+      },
+      {
+        "text": "Preenchimento, para cada campo começar num múltiplo do seu alinhamento",
+        "why": "Isso. Sete bytes depois de `Cached` põem `Bytes` em 8, três depois de `TLS` põem `Status` em 20, e sete depois de `Retry` arredondam 25 para 32."
+      },
+      {
+        "text": "`unsafe.Sizeof` conta a memória para a qual os campos apontam",
+        "why": "Nenhum campo de `Loose` é ponteiro. E a documentação diz que `Sizeof` não inclui memória referenciada: para um slice, é só o cabeçalho de 24 bytes."
+      }
+    ]
+  },
+  "ex-cn7sharh": {
+    "prompt": "No linux/amd64, quanto `unsafe.Sizeof` devolve para `struct { A bool; B int64; C bool }`?",
+    "hint": "Ponha cada campo num múltiplo do seu alinhamento e arredonde o fim para o maior alinhamento.",
+    "unit": "bytes"
+  },
+  "ex-7g5d7cr6": {
+    "prompt": "O `fieldalignment` reporta `Summary has 24 leading bytes of pointer data but optimal value is 16` para o `tally.Summary` da lição 1. Qual é a resposta certa no `hits`?",
+    "hint": "Quantos valores `Summary` uma execução do `hits` cria?",
+    "choices": [
+      {
+        "text": "Deixar: um `Summary` por execução não economiza nada",
+        "why": "Isso. O diagnóstico fala de até onde o coletor procura ponteiros. Economizado uma vez por execução, não é nada, e a documentação do analisador diz que esses achados quase nunca importam."
+      },
+      {
+        "text": "Reordenar já, porque a struct desperdiça 8 bytes de preenchimento",
+        "why": "O relatório não fala de tamanho: `Summary` não tem preenchimento. Fala de bytes de ponteiro, a parte do valor que o coletor varre."
+      },
+      {
+        "text": "Pôr o `go vet` no CI, que roda a mesma verificação em todo build",
+        "why": "O `fieldalignment` de propósito não faz parte do `go vet`; a documentação dele diz isso, porque seus achados raramente importam."
+      },
+      {
+        "text": "Transformar os dois mapas em ponteiros para mapas, que são varridos mais rápido",
+        "why": "Um valor de mapa já é um ponteiro para a tabela do runtime. Embrulhar em outro ponteiro acrescenta uma indireção e não muda nada do que o analisador mediu."
+      }
+    ]
+  },
+  "ex-3he3n1ty": {
+    "prompt": "Uma equipe roda o `fieldalignment` num serviço e propõe aplicar toda ordem sugerida. Quais destas objeções procedem? Marque todas as que se aplicam.",
+    "hint": "Uma objeção vem da documentação do analisador, outra da conta de quantos valores existem.",
+    "choices": [
+      {
+        "text": "Campos atualizados por goroutines diferentes podem dividir uma linha de cache",
+        "why": "Isso. A documentação chama isso de false sharing: a ordem compacta pode fazer duas goroutines se atrasarem, e ali o preenchimento tinha função."
+      },
+      {
+        "text": "Uma struct que existe poucas vezes não poupa nada que valha um diff",
+        "why": "Isso. O slice de um milhão caiu de 32 para 16 MB; um valor só economiza 16 bytes, e a ordem legível vale mais."
+      },
+      {
+        "text": "Todo código que usa `unsafe.Offsetof` nesses campos vai deixar de compilar",
+        "why": "O `Offsetof` é calculado pelo compilador para a struct como ela está declarada agora, então mover um campo muda a constante e nada quebra. Um deslocamento escrito à mão quebraria, em silêncio."
+      },
+      {
+        "text": "O coletor de lixo não consegue varrer uma struct cujos campos ponteiro vêm primeiro",
+        "why": "É o contrário: ponteiros primeiro deixam o coletor parar de varrer mais cedo. É disso que trata o diagnóstico de bytes de ponteiro."
+      }
+    ]
+  },
+  "ex-7agcvqq3": {
+    "prompt": "Como o coletor de lixo trata um `unsafe.Pointer` e um `uintptr` que guardam o mesmo endereço?",
+    "hint": "Um dos dois é um tipo ponteiro e o outro é um tipo inteiro.",
+    "choices": [
+      {
+        "text": "Os dois mantêm o objeto vivo, já que guardam o mesmo endereço",
+        "why": "O endereço é o mesmo, o tipo não. O programa `alive` guardou o endereço da entrada num `uintptr` e a limpeza rodou mesmo assim."
+      },
+      {
+        "text": "Nenhum dos dois: valores do pacote `unsafe` são invisíveis para o coletor",
+        "why": "Um `unsafe.Pointer` continua sendo ponteiro para o runtime; só as verificações de tipo é que somem. Por isso o padrão 3 precisa converter de volta numa expressão só."
+      },
+      {
+        "text": "O coletor atualiza o `uintptr` quando move o objeto",
+        "why": "A documentação diz o contrário: ele não atualiza o valor de um `uintptr` se o objeto se mover, e o inteiro também não impede que o objeto seja recolhido."
+      },
+      {
+        "text": "Segue o primeiro como referência e ignora o segundo",
+        "why": "Isso. O coletor encontra os objetos vivos seguindo ponteiros, e `uintptr` não é ponteiro; um objeto alcançável só por ele é lixo."
+      }
+    ]
+  },
+  "ex-qqvg2zr6": {
+    "prompt": "O programa `field` lê `Status` de três jeitos e os três imprimem `404`, mas o `go vet` acusa o terceiro, em que o endereço é guardado antes em `u := uintptr(...)`. Por que um código que imprimiu a resposta certa está errado?",
+    "hint": "Pense no que pode acontecer entre dois comandos e não pode acontecer dentro de uma expressão.",
+    "choices": [
+      {
+        "text": "O `go vet` rejeita qualquer aritmética com endereços, válida ou não",
+        "why": "A primeira versão faz a mesma aritmética numa expressão só, que é o padrão 3, e o `vet` não disse nada sobre ela."
+      },
+      {
+        "text": "Entre as duas linhas o objeto só existe como inteiro, que o coletor e a cópia de pilha ignoram",
+        "why": "Isso. Nesta execução nada se moveu nem foi coletado naquele instante. Em outra, uma pilha crescendo ou uma coleta entre as linhas deixa `u` apontando para uma memória que já não é a entrada."
+      },
+      {
+        "text": "Um `uintptr` guardado perde seus 32 bits de cima",
+        "why": "Um `uintptr` tem largura suficiente para qualquer endereço da sua plataforma; é a definição dele. Nada é truncado."
+      },
+      {
+        "text": "O `Offsetof` dá a resposta errada fora de uma expressão única",
+        "why": "O `Offsetof` é uma constante que o compilador calcula; vale 56 onde quer que seja escrito. O problema é o endereço, não o deslocamento."
+      }
+    ]
+  },
+  "ex-3r3kearh": {
+    "prompt": "Qual destas linhas é válida pelos padrões documentados de `unsafe.Pointer`? Suponha que `p` aponta para dentro de uma struct alocada `s` e que `b` é um `[]byte` não vazio.",
+    "hint": "O padrão 3 tem três condições: uma expressão só, ainda dentro da alocação original, e nunca nil.",
+    "choices": [
+      {
+        "text": "`end := unsafe.Add(unsafe.Pointer(&b[0]), len(b))`",
+        "why": "Isso aponta um byte depois do fim da alocação do slice. C permite; a documentação lista exatamente isso como inválido, e `unsafe.Add` segue as mesmas regras."
+      },
+      {
+        "text": "`f := unsafe.Pointer(uintptr(p) + unsafe.Offsetof(s.f))`",
+        "why": "Isso. Ponteiro para `uintptr`, aritmética e volta, tudo numa expressão, caindo num campo dentro da mesma struct."
+      },
+      {
+        "text": "`u := uintptr(p); q := unsafe.Pointer(u + 8)`",
+        "why": "O endereço fica guardado numa variável entre as duas conversões, que é a forma inválida que o `go vet` acusou no programa `field`."
+      },
+      {
+        "text": "`q := unsafe.Pointer(uintptr(unsafe.Pointer(nil)) + unsafe.Offsetof(s.f))`",
+        "why": "A documentação diz que o ponteiro precisa apontar para dentro de um objeto alocado, então não pode ser nil, e dá esta mesma linha como inválida."
+      }
+    ]
+  },
+  "ex-5m8vvszj": {
+    "prompt": "Compilar o programa `cast` com `-race` o parou no registro cortado, porque `-race` também liga a instrumentação ___ do compilador sobre conversões de `unsafe.Pointer`.",
+    "hint": "A mesma verificação que `-gcflags=all=-d=...` liga pelo nome.",
+    "blanks": [
+      {
+        "accept": [
+          "checkptr"
+        ]
+      }
+    ]
+  },
+  "ex-qen7qebx": {
+    "prompt": "Numa execução sem checkptr, o `cast` imprimiu `18 bytes: quick   3602879701896396948` para o registro cortado um byte depois do início do status, e o `go vet` não reportou nada. Por que o `vet` ficou calado?",
+    "hint": "Pergunte o que o `vet` pode saber sobre o tamanho de `rec`.",
+    "choices": [
+      {
+        "text": "A verificação `unsafeptr` só é ligada por `go vet -all`",
+        "why": "O `unsafeptr` está no conjunto padrão do `go vet`; foi ele que acusou o programa `field`. Ele procura outro erro."
+      },
+      {
+        "text": "A leitura aconteceu dentro do `encoding/binary`, que o `vet` pula",
+        "why": "O cast está em `quick`, no próprio programa. O `encoding/binary` é a metade que entrou em pânico com erro de limite."
+      },
+      {
+        "text": "Ler memória é permitido; só escrever por meio de um cast é inválido",
+        "why": "As regras tratam de quais conversões são válidas, seja lá o que se faça com o ponteiro depois. Ler além de uma alocação é tão inválido quanto escrever ali."
+      },
+      {
+        "text": "Depende de `len(rec)` em tempo de execução, que o código não mostra",
+        "why": "Isso. O `vet` lê o código, e o código é o mesmo para o registro de 25 bytes que funciona e para o de 18 que não funciona."
+      }
+    ]
+  },
+  "ex-n0pd4p6n": {
+    "prompt": "Por que uma conversão comum `string(b)` copia os bytes de `b`?",
+    "hint": "Compare o que cada um dos dois tipos promete sobre o seu conteúdo.",
+    "choices": [
+      {
+        "text": "Os bytes de uma string nunca mudam e os de um slice mudam, então a string precisa dos seus",
+        "why": "Isso. Sem a cópia, uma escrita posterior em `b` mudaria um valor que a linguagem promete imutável, que é o que o `mutate` mostrou."
+      },
+      {
+        "text": "Strings são guardadas internamente em UTF-16, então cada byte precisa ser convertido",
+        "why": "Strings em Go são bytes, geralmente UTF-8, e a conversão não muda nada neles. A cópia é questão de posse, não de codificação."
+      },
+      {
+        "text": "O coletor de lixo não consegue seguir um ponteiro para dentro de um slice",
+        "why": "Consegue, e segue: o cabeçalho de um slice guarda um ponteiro comum para o array. O `zc.String` compartilha esses bytes e o coletor os mantém vivos."
+      },
+      {
+        "text": "Uma string precisa de um byte zero no final, que o slice não tem",
+        "why": "Isso é C. Uma string em Go leva o tamanho no cabeçalho e não tem terminador; `unsafe.String(p, n)` recebe o tamanho como argumento."
+      }
+    ]
+  },
+  "ex-qewdsgnp": {
+    "prompt": "Nos benchmarks, `k := string(path)` seguido de `hits[k]` não alocou nada para uma chave de 10 bytes e alocou 48 bytes para uma de 40. Até quantos bytes uma string convertida que não escapa pode ser montada num buffer na pilha?",
+    "hint": "A constante é `tmpStringBufSize`, em `runtime/string.go`.",
+    "unit": "bytes"
+  },
+  "ex-gwz7gw8d": {
+    "prompt": "`hits[string(path)]` não alocou nada, mas `hits[string(path)]++` alocou 16 bytes a cada chamada, com a chave já no mapa. Por que a diferença?",
+    "hint": "Uma das duas expressões pode ter de guardar alguma coisa.",
+    "choices": [
+      {
+        "text": "Incrementos são mais lentos, então o runtime guarda a string de cada chave numa tabela à parte",
+        "why": "Não há cache; os 16 bytes são a classe de tamanho da chave de 10 bytes, montada como string a cada chamada."
+      },
+      {
+        "text": "Quem aloca a string é o laço do benchmark, não a expressão do mapa",
+        "why": "Os benchmarks de consulta usam o mesmo `b.Loop()` e mostram 0 B/op, então o laço não aloca nada."
+      },
+      {
+        "text": "O `++` insere a chave quando ela falta, e uma chave guardada precisa ser uma string imutável",
+        "why": "Isso. Uma consulta só compara bytes, então o compilador os passa sem montar string. Uma inserção guarda a chave, e a chave precisa ser uma string de verdade, imutável."
+      },
+      {
+        "text": "Valores `int` do mapa são encaixotados a cada escrita",
+        "why": "Valores de mapa ficam no lugar, na tabela do mapa; um `int` não é encaixotado. A alocação é a chave."
+      }
+    ]
+  },
+  "ex-2xmf13mq": {
+    "prompt": "O `paths` contou 20.000 requisições em cerca de 1.536 chaves com `zc.String(fields[2])`, contra 8 chaves com `string(fields[2])`. O que aconteceu com as chaves?",
+    "hint": "Leia o que `bufio.Scanner.Bytes` diz sobre o array para onde o resultado aponta.",
+    "choices": [
+      {
+        "text": "A semente de hash do mapa é aleatória, então as chaves sem cópia foram espalhadas de outro jeito",
+        "why": "A semente muda onde as chaves ficam na tabela, nunca o que elas dizem. Mais de mil chaves continham espaço ou quebra de linha, que nenhum caminho tem."
+      },
+      {
+        "text": "Uma goroutine dentro do scanner disputou com o laço de contagem",
+        "why": "Um `Scanner` roda na goroutine de quem chama, e o detector de corrida passou. Uma goroutine só sobrescreveu o próprio buffer."
+      },
+      {
+        "text": "O coletor liberou os slices dos campos e reaproveitou a memória",
+        "why": "Uma string vinda de `unsafe.String` é um ponteiro de verdade, que mantém os bytes vivos. Nada foi liberado; o dono dos bytes os reescreveu."
+      },
+      {
+        "text": "Eram janelas para o buffer do scanner, que as linhas seguintes sobrescreveram",
+        "why": "Isso. Cada chave compartilhava bytes com `sc.Bytes()`, e o scanner reaproveitou esse buffer nas linhas seguintes, então as chaves guardadas viraram pedaços de outras linhas."
+      }
+    ]
+  },
+  "ex-z3wv9whs": {
+    "prompt": "O `go doc unsafe` diz que pacotes que o importam não são protegidos pelas diretrizes de compatibilidade do Go 1. O que isso significa para um pacote desses?",
+    "hint": "O que a promessa dá a todos os outros pacotes?",
+    "choices": [
+      {
+        "text": "O `go vet` o recusa até que seja marcado com uma tag de build",
+        "why": "O `vet` verifica algumas conversões, mas não recusa pacote nenhum por importar `unsafe`; 101 pacotes da biblioteca padrão o importam."
+      },
+      {
+        "text": "Ele não pode ser publicado no proxy de módulos",
+        "why": "O proxy serve qualquer módulo; a promessa de compatibilidade é sobre versões do Go, não sobre distribuição."
+      },
+      {
+        "text": "Nada impede uma versão futura de quebrá-lo",
+        "why": "Isso. A promessa de que um programa continua compilando e se comportando igual não cobre código que depende de como o runtime organiza a memória."
+      },
+      {
+        "text": "Ele precisa ser recompilado com `CGO_ENABLED=1`",
+        "why": "O `unsafe` faz parte da linguagem e não precisa de compilador C; todo programa desta lição compilou com o padrão."
+      }
+    ]
+  },
+  "ex-yfbw3y5v": {
+    "prompt": "Compilado com `GOARCH=386`, o programa `layout` põe o `Status` de `tally.Entry` no deslocamento 36, contra 56 no amd64. O que um código que lê esse campo por ponteiro deve tirar disso?",
+    "hint": "Um dos jeitos de escrever o deslocamento acerta nas duas máquinas.",
+    "choices": [
+      {
+        "text": "Sempre escrever `unsafe.Offsetof(e.Status)`, nunca um número",
+        "why": "Isso. O `Offsetof` é uma constante que o compilador calcula para a plataforma do build, então vale 36 no 386 e 56 no amd64 sem mudar o código."
+      },
+      {
+        "text": "Escrever 36 atrás de uma tag `//go:build 386` e 56 nos outros casos",
+        "why": "Funciona até alguém acrescentar um campo ou compilar para uma terceira arquitetura, e aí lê os bytes errados em silêncio. O compilador já sabe a resposta para toda plataforma."
+      },
+      {
+        "text": "Evitar alvos de 32 bits, já que o Go não os suporta mais",
+        "why": "O Go 1.27.1 compilou e rodou o programa 386 nesta máquina na mesma seção. Os deslocamentos mudam; a plataforma é suportada."
+      },
+      {
+        "text": "Reordenar `tally.Entry` para `Status` vir primeiro",
+        "why": "O deslocamento 0 bateria nos dois, mas por acaso, e só para esse campo. A regra precisa valer para todo campo lido desse jeito."
+      }
+    ]
+  },
+  "ex-qzcfy5af": {
+    "prompt": "Associe cada bug da lição com o que o encontrou.",
+    "hint": "Um deles não foi encontrado por nada, e há uma ferramenta na lista que não encontrou nenhum.",
+    "pairs": [
+      {
+        "left": "um `uintptr` guardado numa variável e depois convertido de volta em ponteiro",
+        "right": "o `go vet`, pela verificação `unsafeptr`"
+      },
+      {
+        "left": "oito bytes lidos onde o registro tinha um",
+        "right": "o checkptr, ligado por `-race` ou `-gcflags=all=-d=checkptr`"
+      },
+      {
+        "left": "uma string sem cópia como chave de mapa sobre o buffer do scanner",
+        "right": "nenhuma ferramenta: só quem lê o código"
+      },
+      {
+        "left": "um literal de string escrito por meio de `zc.Bytes`",
+        "right": "o sistema operacional, com uma falha de segmentação"
+      }
+    ],
+    "right_distractors": [
+      "os testes que o `go test` roda por padrão"
+    ]
+  },
+  "ex-yfhbtt3f": {
+    "prompt": "Ponha em ordem os passos da regra da lição para usar `unsafe` no seu próprio código.",
+    "hint": "Nada é escrito antes de algo ser medido.",
+    "items": [
+      "Medir a cópia ou a alocação com um perfil ou um benchmark",
+      "Procurar uma versão segura, como `m[string(b)]` ou `encoding/binary`",
+      "Isolar o código unsafe num pacote pequeno, com a promessa nos comentários de documentação",
+      "Rodar `go test -race` e `go vet ./...` nele no CI, e de novo a cada atualização do Go"
+    ]
+  },
+  "ex-sr1j817r": {
+    "prompt": "`strings.Builder.String` devolve `unsafe.String(unsafe.SliceData(b.buf), len(b.buf))`, a mesma conversão sem cópia do `zc.String`. Por que ali é seguro, se o `zc.String` quebrou o `paths`?",
+    "hint": "Pergunte quem pode escrever nos bytes depois que a string existe.",
+    "choices": [
+      {
+        "text": "Código da biblioteca padrão está isento das regras de `unsafe.Pointer`",
+        "why": "As regras valem para todo pacote que importa `unsafe`, a biblioteca padrão incluída. O `Builder` as cumpre; o que o torna seguro é quem consegue alcançar o buffer."
+      },
+      {
+        "text": "O builder é dono do buffer, nunca o expõe e só acrescenta depois do fim",
+        "why": "Isso. Nenhum chamador alcança o `b.buf`, e acrescentar escreve além do tamanho que qualquer string devolvida cobre, então a promessa é cumprida pelo tipo, não por cada chamador."
+      },
+      {
+        "text": "O `String` copia o buffer sempre que o builder volta a ser usado",
+        "why": "Não há cópia na escrita no `Builder`; o `go doc -src` mostra que `String` é aquela linha só. Crescer o buffer aloca um array novo, o que deixa as strings antigas em paz."
+      },
+      {
+        "text": "O detector de corrida verifica todo `Builder` nos testes",
+        "why": "O `-race` encontra duas goroutines mexendo na memória sem sincronização; também não teria pego o `paths`, que tinha uma goroutine só."
+      }
+    ]
+  },
+  "ex-e8rmwvcm": {
+    "prompt": "Um colega quer acelerar uma função que consulta linhas num `map[string]Route`, indexado pelo caminho da requisição, convertendo cada caminho `[]byte` com `zc.String` antes da consulta. Quais afirmações são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "Dois dos benchmarks da lição tratam exatamente disso, e uma das ferramentas foi rodada contra exatamente esse bug.",
+    "choices": [
+      {
+        "text": "Escrever `routes[string(path)]` já faz a consulta sem montar string",
+        "why": "Isso. `BenchmarkLookup` e `BenchmarkLookupLong` mostraram 0 B/op para chaves de 10 e de 40 bytes: o compilador trata uma conversão dentro de uma expressão de índice."
+      },
+      {
+        "text": "Se a string sem cópia fosse guardada em algum momento, o `-race` não pegaria o estrago",
+        "why": "Isso. O `paths` passou no `vet`, no `-race` e no checkptr enquanto suas chaves viravam pedaços de outras linhas. Uma goroutine sobrescrevendo o próprio buffer é invisível para os três."
+      },
+      {
+        "text": "O checkptr pararia o programa na primeira chamada de `zc.String`",
+        "why": "A conversão em si é válida: o ponteiro e o tamanho descrevem bytes dentro de uma alocação. O checkptr não tem o que objetar naquele momento."
+      },
+      {
+        "text": "Um mapa copia os bytes da chave ao guardá-la, então guardar também é seguro",
+        "why": "Um mapa guarda o cabeçalho de string que recebeu, ponteiro e tamanho. Foi assim que o `paths` registrou contagens sob chaves que depois mudaram."
+      }
+    ]
+  },
+  "ex-xw42tra1": {
+    "prompt": "O `go test` roda só um subconjunto de alta confiança do `vet` antes de um binário de teste, então a verificação que acusa um `uintptr` convertido de volta em ponteiro, ___, precisa de `go vet ./...` como passo próprio no CI.",
+    "hint": "Ela imprimiu `possible misuse of unsafe.Pointer` para o programa `field`.",
+    "blanks": [
+      {
+        "accept": [
+          "unsafeptr"
+        ]
+      }
+    ]
+  }
+}

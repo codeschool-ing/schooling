@@ -1,0 +1,458 @@
+{
+  "ex-cbx1pxxz": {
+    "prompt": "Qual seção do binário do `hits` o runtime do Go lê enquanto o programa roda, para imprimir um rastro de pilha ou aumentar a pilha de uma goroutine?",
+    "hint": "Uma delas liga cada endereço de instrução a uma função, um arquivo e uma linha.",
+    "choices": [
+      {
+        "text": "`.debug_info`, a descrição DWARF de cada função",
+        "why": "O DWARF fica no endereço 0: nunca é carregado na memória, então o programa em execução não pode lê-lo. Os depuradores o leem do arquivo."
+      },
+      {
+        "text": "`.gopclntab`",
+        "why": "Isso. Ele liga endereços a funções, arquivos e linhas e registra o tamanho de cada quadro; o runtime percorre pilhas com ele, e por isso nenhuma flag o remove."
+      },
+      {
+        "text": "`.symtab`, a tabela de símbolos ELF",
+        "why": "A tabela de símbolos é para ferramentas de fora do programa, como `nm` e `gdb`. Ela também não é carregada, e um binário sem ela continua imprimindo rastros de pilha."
+      },
+      {
+        "text": "`.bss`",
+        "why": "`.bss` é memória zerada para variáveis, sem bytes no arquivo. Não guarda nomes nem números de linha."
+      }
+    ]
+  },
+  "ex-rjn4t86q": {
+    "prompt": "O build padrão do `hits` tem 4.031.935 bytes, e suas oito seções `.debug_` somam 1.162.307. Arredondando para o inteiro mais próximo, que porcentagem do arquivo é DWARF?",
+    "hint": "Divida, multiplique por 100 e arredonde.",
+    "unit": "%"
+  },
+  "ex-1zqk20r0": {
+    "prompt": "Associe cada parte do binário do `hits` com quem a lê.",
+    "hint": "Pergunte-se se a parte chega a ser carregada na memória.",
+    "pairs": [
+      {
+        "left": "`.text`",
+        "right": "o processador, ao executá-la"
+      },
+      {
+        "left": "`.gopclntab`",
+        "right": "o runtime do Go, ao percorrer uma pilha"
+      },
+      {
+        "left": "`.debug_info`",
+        "right": "um depurador como o `gdb` ou o Delve"
+      },
+      {
+        "left": "`.symtab`",
+        "right": "o `go tool nm`, ao listar nomes"
+      }
+    ],
+    "right_distractors": [
+      "o `go version -m`, ao imprimir o módulo"
+    ]
+  },
+  "ex-3c91vfpe": {
+    "prompt": "O `go tool nm` conta 3.886 símbolos no `hits`, e só dez funções são do próprio `hits`. Um colega conclui que todo binário Go carrega a biblioteca padrão inteira. O que dizem as medidas?",
+    "hint": "Veja quais pacotes apareceram nas somas, e o que o `tally.Parse` chama.",
+    "choices": [
+      {
+        "text": "Ele tem razão: a biblioteca padrão entra inteira, então o tamanho é fixo seja qual for o programa",
+        "why": "Os três programas da seção 05 diferem em mais de um megabyte, de 1.310.880 a 2.568.352 bytes, e só diferem no que importam."
+      },
+      {
+        "text": "Só o runtime é compartilhado; os pacotes padrão vão para uma biblioteca compartilhada à parte",
+        "why": "O binário é ligado estaticamente e o `file` diz isso. `time.parse` e `encoding/json` aparecem como código dentro dele."
+      },
+      {
+        "text": "Nele está o que o `hits` alcança: o `time` via `tally.Parse` e o `encoding/json` via `-json`",
+        "why": "Isso. O runtime sempre está lá, e o resto segue as importações: `time.parse` é a maior função porque o `Parse` a chama, e o JSON está lá por duas flags."
+      },
+      {
+        "text": "Os 3.886 símbolos são quase todos entradas DWARF, não código",
+        "why": "O `go tool nm` lê a tabela de símbolos ELF, não o DWARF, e as letras `T` e `t` marcam código. Só o runtime soma 438.417 bytes dele."
+      }
+    ]
+  },
+  "ex-vy2mrwv6": {
+    "prompt": "O que o `-ldflags=\"-w\"` remove do binário do `hits`?",
+    "hint": "Ele economizou 1.162.426 bytes.",
+    "choices": [
+      {
+        "text": "As informações DWARF que um depurador como o gdb lê",
+        "why": "Isso. 1.162.426 bytes ficam a 119 da soma das oito seções `.debug_`."
+      },
+      {
+        "text": "A tabela que o runtime usa para nomear funções num rastro de pilha",
+        "why": "Essa é a `.gopclntab`, e ela continuou lá: o binário enxugado nomeou cada função ao receber `SIGQUIT`."
+      },
+      {
+        "text": "Os caminhos de arquivo da máquina de build",
+        "why": "Isso é o `-trimpath`, uma flag do próprio `go build`, e ele economizou 5.042 bytes, não um megabyte."
+      },
+      {
+        "text": "Toda função que o `main` nunca chama",
+        "why": "O linker deixa de fora funções inalcançáveis em todo build, com ou sem flags. O `-w` não mexe em código."
+      }
+    ]
+  },
+  "ex-j60p2qk6": {
+    "prompt": "Um script de build passa só `-ldflags=-s`. O binário ainda carrega DWARF?",
+    "hint": "Compare os tamanhos dos builds `-s` e `-s -w`, e o que diz o `go doc cmd/link`.",
+    "choices": [
+      {
+        "text": "Sim, porque o `-s` remove só a tabela de símbolos, como diz a ajuda curta",
+        "why": "A ajuda curta está incompleta. O build com `-s` saiu exatamente do tamanho do `-s -w`, 2.654.368 bytes."
+      },
+      {
+        "text": "Não: o `-s` implica o `-w`, a menos que o script acrescente `-w=0`",
+        "why": "Isso. O `go doc cmd/link` diz isso, e o `-s -w=0` devolveu 1.162.362 bytes de DWARF."
+      },
+      {
+        "text": "Só no Linux; no macOS e no Windows é preciso passar o `-w` também",
+        "why": "Nada na documentação faz a regra depender do sistema, e esta lição só mediu Linux. A regra é do linker."
+      },
+      {
+        "text": "Depende do `-trimpath`, que decide se a informação de depuração fica",
+        "why": "O `-trimpath` reescreve caminhos e economizou 5.042 bytes. Quem decide se o DWARF é escrito são o `-s` e o `-w`."
+      }
+    ]
+  },
+  "ex-gsjdvksx": {
+    "prompt": "O `hits`, compilado com `-trimpath -ldflags=\"-s -w\"`, recebe `SIGQUIT` enquanto lê a entrada padrão. Como fica o quadro de `main.main`?",
+    "hint": "Qual tabela nomeia funções para o runtime, e o que o `-trimpath` fez com os caminhos?",
+    "choices": [
+      {
+        "text": "`main.main()` com `example.com/hits/main.go:28` embaixo",
+        "why": "Isso. A `.gopclntab` sobrevive ao enxugamento, e o `-trimpath` transformou `/home/ana/small/main.go` num caminho que começa pelo módulo."
+      },
+      {
+        "text": "Endereços soltos como `pc=0x52b60c`, porque os nomes saíram com a tabela de símbolos",
+        "why": "Os nomes que um rastro de pilha imprime vêm da `.gopclntab`, que nenhuma flag remove. A tabela de símbolos é para ferramentas como o `nm`."
+      },
+      {
+        "text": "`main.main()` com `/home/ana/small/main.go:28` embaixo",
+        "why": "Esse é o quadro do build padrão. O `-trimpath` troca o diretório pelo caminho do módulo."
+      },
+      {
+        "text": "Rastro nenhum: um binário enxugado simplesmente sai com `SIGQUIT`",
+        "why": "O build enxugado imprimiu a pilha de cada goroutine, de `tally.Count` até `main.main`."
+      }
+    ]
+  },
+  "ex-4dqt5awy": {
+    "prompt": "O `strings hits | grep -c /home/ana` imprimiu 2 para o build padrão e 0 para o build feito com `go build ___`.",
+    "hint": "Uma flag do próprio `go build`, não do linker, que reescreve os nomes de arquivo registrados.",
+    "blanks": [
+      {
+        "accept": [
+          "-trimpath"
+        ]
+      }
+    ]
+  },
+  "ex-snzmxtv8": {
+    "prompt": "A versão v1.4.0 de uma ferramenta sai compilada com `-s -w`. A cópia de um cliente quebra, e você quer percorrer a função com defeito no `gdb`. O que o processo de release deveria ter feito para isso ser possível?",
+    "hint": "O gdb precisa das partes que o `-s -w` removeu, de um build exatamente do mesmo código.",
+    "choices": [
+      {
+        "text": "Nada: o `gdb` lê os nomes de função do rastro na `.gopclntab`",
+        "why": "O `gdb` imprimiu `No symbol table is loaded` no build enxugado. Ele lê DWARF e a tabela de símbolos, não a tabela do runtime."
+      },
+      {
+        "text": "Guardado o binário não enxugado feito do mesmo commit",
+        "why": "Isso. Os builds com e sem enxugamento têm o mesmo código; o segundo carrega o DWARF e os símbolos de que o `gdb` precisa."
+      },
+      {
+        "text": "Compilado com `-trimpath`, para o `gdb` achar os fontes pelo caminho do módulo",
+        "why": "O `-trimpath` muda caminhos e não mexe na questão do DWARF; com `-s -w` continua sem informação de depuração."
+      },
+      {
+        "text": "Registrado a saída do `go version -m`, a partir da qual os símbolos se reconstroem",
+        "why": "O `go version -m` lista o módulo, as configurações e a revisão. Não guarda símbolos nem tabelas de linhas."
+      }
+    ]
+  },
+  "ex-ryrafv0c": {
+    "prompt": "O `go build -ldflags=\"-X main.Version=v1.1.0\"` dá certo, e o `./hits version` continua imprimindo `hits dev`. Por quê?",
+    "hint": "Veja como a variável está escrita no `version.go`.",
+    "choices": [
+      {
+        "text": "A variável é `version`, e o `-X` ignora um nome que não encontra",
+        "why": "Isso. Nomes em Go diferenciam maiúsculas, e o linker não avisou; um script de release precisa conferir a saída por conta própria."
+      },
+      {
+        "text": "O `-X` só funciona com a árvore commitada e com tag",
+        "why": "O build anterior com `-X main.version=v1.1.0` definiu o nome numa árvore suja. O `-X` nem lê o git."
+      },
+      {
+        "text": "O `-X` define constantes, e `version` é uma variável",
+        "why": "É o contrário: o `-X` define variáveis string e não alcança uma `const`."
+      },
+      {
+        "text": "O valor precisa de aspas duplas duas vezes dentro do `-ldflags`",
+        "why": "As mesmas aspas com o nome em minúscula funcionaram. A diferença entre os dois builds é uma letra."
+      }
+    ]
+  },
+  "ex-afzhkdnw": {
+    "prompt": "Quais destas declarações no pacote `main` o `-ldflags=\"-X main.name=v2\"` consegue definir? Escolha todas as que se aplicam.",
+    "hint": "O `go doc cmd/link` dá a condição em duas frases.",
+    "choices": [
+      {
+        "text": "`var name string`",
+        "why": "Isso. Uma variável string sem valor inicial é um dos dois casos que a documentação cita."
+      },
+      {
+        "text": "`var name = \"dev\"`",
+        "why": "Isso. Uma variável string iniciada com uma expressão constante é o outro caso, e é assim que o `version.go` declara `version`."
+      },
+      {
+        "text": "`const name = \"dev\"`",
+        "why": "Uma constante não tem espaço que o linker possa preencher. O `-X` só define variáveis."
+      },
+      {
+        "text": "`var name = strings.ToLower(\"DEV\")`",
+        "why": "A documentação diz que o `-X` não funciona quando o valor inicial chama uma função."
+      },
+      {
+        "text": "`var name int`",
+        "why": "O `-X` define variáveis string; o valor na linha de comando é texto."
+      }
+    ]
+  },
+  "ex-xfjyabx0": {
+    "prompt": "Ponha em ordem os passos que produzem um binário do `hits` que se apresenta como `v1.2.0`, sem DWARF e sem diretório pessoal dentro.",
+    "hint": "A tag nomeia um commit, e o build lê a tag.",
+    "items": [
+      "`git add . && git commit -m \"the change\"`",
+      "`git tag v1.2.0`",
+      "`go build -trimpath -ldflags=\"-s -w -X main.version=$(git describe --tags)\" -o hits .`",
+      "`./hits version | grep -q v1.2.0`"
+    ]
+  },
+  "ex-tp1vnhxf": {
+    "prompt": "Um servidor de build baixa um arquivo com o código-fonte da tag v1.1.0, sem diretório `.git`, e roda um `go build` simples. O que o `./hits version` imprime na segunda linha?",
+    "hint": "De onde o comando go tira a versão do módulo?",
+    "choices": [
+      {
+        "text": "`module example.com/hits v1.1.0, go1.27.1`, lido do nome do arquivo",
+        "why": "O comando go tira a versão do controle de versão, não do nome de um diretório ou arquivo compactado."
+      },
+      {
+        "text": "`module example.com/hits (devel), go1.27.1`, e nenhuma linha `vcs` depois",
+        "why": "Isso. Foi o que o build em `/tmp/small-v1.1.0` imprimiu; só o `-X` ainda poderia ter nomeado a versão."
+      },
+      {
+        "text": "Nada: o build falha, porque o `-buildvcs` exige um repositório",
+        "why": "No modo padrão, `auto`, o comando go registra o que encontra e compila assim mesmo; só o `-buildvcs=true` transforma a ausência em erro."
+      },
+      {
+        "text": "`module example.com/hits v1.1.0+dirty`, porque os arquivos não estão num commit",
+        "why": "`+dirty` marca um repositório com mudanças não commitadas. Sem repositório não há com que comparar, nem versão."
+      }
+    ]
+  },
+  "ex-vhzkcyx2": {
+    "prompt": "O UPX levou o `hits` de 2.666.656 para 1.140.620 bytes. Quanto custa o arquivo menor?",
+    "hint": "Veja as cem partidas, e o `go version -m`.",
+    "choices": [
+      {
+        "text": "Toda partida paga a descompressão, e o `go version -m` não o lê mais",
+        "why": "Isso. Cem partidas levaram 2,182 segundos contra 0,270, e o `go version -m` disse `not a Go executable`."
+      },
+      {
+        "text": "Nada em execução; só o build demora mais",
+        "why": "O descompactador roda em cada partida do programa. Foi daí que vieram os 2,182 segundos."
+      },
+      {
+        "text": "Conta o log mais devagar, porque o código continua compactado na memória",
+        "why": "O programa é reconstruído na memória antes de rodar e então roda como antes; o custo medido é a partida."
+      },
+      {
+        "text": "Deixa de rodar em outras máquinas Linux",
+        "why": "Um arquivo UPX continua um executável comum para o mesmo sistema e processador; ele leva o próprio descompactador."
+      }
+    ]
+  },
+  "ex-e3e6xbtz": {
+    "prompt": "Compilado com `-s -w`, um programa que só escreve `hello` na saída padrão tem 1.310.880 bytes, e o mesmo programa codificando a palavra com `encoding/json` tem 2.568.352. Quantos bytes a importação acrescenta?",
+    "hint": "Subtraia.",
+    "unit": "bytes"
+  },
+  "ex-zp1z4sn3": {
+    "prompt": "Qual é a diferença entre `go build -gcflags=-l` e `go build -gcflags=all=-l`?",
+    "hint": "Uma delas alcança a biblioteca padrão.",
+    "choices": [
+      {
+        "text": "Nenhuma; `all=` é uma grafia antiga",
+        "why": "O prefixo é um padrão de pacotes. Sem ele, a flag vai só para os pacotes citados na linha de comando."
+      },
+      {
+        "text": "A primeira vale para os pacotes da linha de comando, a segunda para todos",
+        "why": "Isso. Sem `all=`, só o `main` perderia o inlining aqui, e o runtime e a biblioteca padrão não."
+      },
+      {
+        "text": "A primeira vai para o linker, a segunda para o compilador",
+        "why": "As duas vão para o compilador; a do linker é a `-ldflags`."
+      },
+      {
+        "text": "O `all=` também remove a tabela de símbolos",
+        "why": "Remover símbolos é o `-s` do linker. O `all=` só amplia os pacotes que recebem o `-l`."
+      }
+    ]
+  },
+  "ex-esvv7g8k": {
+    "prompt": "Uma ferramenta é baixada como `.tar.gz`, e o mantenedor propõe acrescentar o UPX ao release para diminuir o download. Pelas medidas do `hits`, o que isso compra?",
+    "hint": "Compare o `gzip -9` do binário comum e o do binário UPX.",
+    "choices": [
+      {
+        "text": "Metade do download, já que o UPX reduziu o binário a 43%",
+        "why": "Isso foi contra o arquivo sem compressão. O `gzip -9` já levou o binário comum a 1.171.128 bytes."
+      },
+      {
+        "text": "Nada, porque o `gzip` desfaz o UPX",
+        "why": "O `gzip` não desfaz nada; ele compacta um pouco mais o arquivo UPX, para 1.118.110 bytes."
+      },
+      {
+        "text": "Uns poucos por cento a menos no arquivo, por uma partida mais lenta em toda execução",
+        "why": "Isso. 1.118.110 bytes contra 1.171.128 é menos de 5%, e toda partida paga a descompressão."
+      },
+      {
+        "text": "Um download menor e uma partida mais rápida, já que se lê menos do disco",
+        "why": "A partida medida ficou umas oito vezes mais lenta: descompactar custa bem mais do que ler algumas centenas de kilobytes."
+      }
+    ]
+  },
+  "ex-1rx3zvvv": {
+    "prompt": "Neste laboratório, `podman run --rm docker.io/library/busybox:1.36 echo ok` falha com uma mensagem sobre `/dev/net/tun`, e o mesmo comando com `--network=none` imprime `ok`. Por quê?",
+    "hint": "Qual programa monta a rede de um contêiner rootless, e o que o `stat` disse sobre o dispositivo?",
+    "choices": [
+      {
+        "text": "O Podman não está instalado direito e precisa ser reinstalado",
+        "why": "O contêiner subiu e imprimiu `ok` com `--network=none`; o Podman funciona."
+      },
+      {
+        "text": "O busybox precisa de rede para subir, e esta máquina de sandbox não tem rede nenhuma",
+        "why": "O busybox subiu sem rede nenhuma. O que falhou foi montar uma."
+      },
+      {
+        "text": "O `slirp4netns` abre o `/dev/net/tun`, que aqui só o root tem permissão de abrir",
+        "why": "Isso. O `stat` mostrou `crw------- root`; sem pedir rede, o `slirp4netns` nem é iniciado."
+      },
+      {
+        "text": "A Ana não tem faixa no `/etc/subuid`",
+        "why": "O `grep` achou a faixa dela, 165536 e 65.536 ids, e a falta de faixa falha com outra mensagem."
+      }
+    ]
+  },
+  "ex-wp3w70n6": {
+    "prompt": "O primeiro contêiner de uma conta recém-criada falha: o log diz que nenhuma faixa de ids foi encontrada para o usuário, e depois `insufficient UIDs or GIDs`. O que resolve?",
+    "hint": "Dois passos: um como root, outro como a própria conta.",
+    "choices": [
+      {
+        "text": "Rodar o `podman` com `sudo`",
+        "why": "Isso rodaria o contêiner como root, justamente o que o Podman rootless existe para evitar; a configuração da conta continua quebrada."
+      },
+      {
+        "text": "Uma faixa para a conta no `/etc/subuid` e no `/etc/subgid`, e depois `podman system migrate`",
+        "why": "Isso. O `usermod --add-subuids` e `--add-subgids` gravam a faixa, e o `migrate` faz o Podman passar a usá-la."
+      },
+      {
+        "text": "Acrescentar `--network=none` ao comando, que dispensa o namespace de usuário e o mapeamento de ids",
+        "why": "O `--network=none` contorna o problema do `/dev/net/tun` e nada mais. O namespace de usuário é montado de qualquer jeito, e esta falha é dos ids dele."
+      },
+      {
+        "text": "Baixar uma imagem menor, com menos arquivos",
+        "why": "O tamanho não importa: o busybox falhou porque um dos donos, o id 65534, não tinha para onde ser mapeado."
+      }
+    ]
+  },
+  "ex-sv5241xy": {
+    "prompt": "O `/etc/subuid` tem a linha `ana:165536:65536`. Qual é o primeiro id depois do fim da faixa da Ana, onde a faixa de uma conta nova pode começar sem se sobrepor à dela?",
+    "hint": "Início mais comprimento."
+  },
+  "ex-qsshghn7": {
+    "prompt": "Um colega instala o Docker Engine e põe todos os desenvolvedores no grupo `docker`, para ninguém precisar digitar `sudo`. O que ele deu a eles?",
+    "hint": "Quem faz o trabalho quando um membro do grupo roda `docker run`?",
+    "choices": [
+      {
+        "text": "O mesmo que o Podman rootless: contêineres que pertencem a cada usuário",
+        "why": "Os contêineres do Podman são iniciados pelo próprio processo do usuário. Os do Docker, por um daemon que roda como root, a pedido de quem tiver permissão."
+      },
+      {
+        "text": "Acesso só ao socket do daemon, que não afeta a máquina",
+        "why": "O daemon roda como root e faz o que lhe pedem, inclusive montar arquivos da máquina num contêiner; poder pedir é o poder."
+      },
+      {
+        "text": "Nada além do que o `sudo` já dava, já que pediam senha para ele",
+        "why": "Pertencer ao grupo dispensa senha a cada uso, e alcança direto um daemon root."
+      },
+      {
+        "text": "O equivalente a ser root naquela máquina, por outro caminho",
+        "why": "Isso. Pedir a um daemon root que rode qualquer coisa é root por outro caminho, e é por isso que este curso usa o Podman rootless."
+      }
+    ]
+  },
+  "ex-mamhq8db": {
+    "prompt": "Associe cada flag com o que ela fez no `hits`.",
+    "hint": "Quatro pertencem ao build da seção 03 ou 04; uma à seção 05.",
+    "pairs": [
+      {
+        "left": "`-ldflags=\"-w\"`",
+        "right": "removeu 1.162.426 bytes de DWARF"
+      },
+      {
+        "left": "`-ldflags=\"-s\"`",
+        "right": "removeu a tabela de símbolos, e o DWARF junto"
+      },
+      {
+        "left": "`-trimpath`",
+        "right": "trocou `/home/ana/small` pelo caminho do módulo"
+      },
+      {
+        "left": "`-ldflags=\"-X main.version=v1.1.0\"`",
+        "right": "definiu uma variável string na ligação"
+      },
+      {
+        "left": "`-gcflags=all=-l`",
+        "right": "desligou o inlining em todos os pacotes"
+      }
+    ],
+    "right_distractors": [
+      "removeu a `.gopclntab`"
+    ]
+  },
+  "ex-y2y78wca": {
+    "prompt": "Num servidor você encontra um executável Linux que roda e responde como uma ferramenta Go, mas o `go version -m` diz `not a Go executable` e o `go tool nm` não encontra símbolos. Qual é a explicação mais provável?",
+    "hint": "Uma coisa medida nesta lição esconde a informação de build, e outra remove os símbolos.",
+    "choices": [
+      {
+        "text": "Foi compilado com `-s -w`, que remove a informação de build",
+        "why": "Um build `-s -w` continuou respondendo ao `go version -m`: a informação de build tem seção própria, que o `-s` não toca."
+      },
+      {
+        "text": "Foi compilado com `-trimpath`",
+        "why": "O `-trimpath` reescreve caminhos; os builds com ele mantiveram os símbolos e a informação de build."
+      },
+      {
+        "text": "Ele foi compactado depois do build com o UPX",
+        "why": "Isso. O UPX compacta tudo, informação de build e símbolos inclusive, e o `go version -m` no arquivo UPX do `hits` disse exatamente `not a Go executable`."
+      },
+      {
+        "text": "Foi compilado de um arquivo de código-fonte sem `.git`",
+        "why": "Um build assim ainda tem informação de build, com `(devel)` como versão, e o `go version -m` a lê."
+      }
+    ]
+  },
+  "ex-0t5k1gxg": {
+    "prompt": "Para definir a variável string `version` do pacote `main` do programa como v2.0.0 na ligação, o build passa `-ldflags=\"-X ___=v2.0.0\"`.",
+    "hint": "O caminho do pacote, um ponto e o nome da variável, com as maiúsculas exatamente como declaradas.",
+    "blanks": [
+      {
+        "accept": [
+          "main.version"
+        ]
+      }
+    ]
+  }
+}

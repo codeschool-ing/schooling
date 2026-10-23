@@ -1,0 +1,390 @@
+{
+  "ex-hc6n0z69": {
+    "prompt": "O `internal/demo/demo.go` tem `//go:generate touch made-by-generate`. Ana roda `go build ./...` e depois `ls internal/demo`. O que ela vê?",
+    "hint": "Qual comando lê as diretivas?",
+    "choices": [
+      {
+        "text": "Só `demo.go`; um build compila o pacote e nunca roda uma diretiva",
+        "why": "Isso. O `go build` compila e nunca roda uma diretiva; o arquivo só apareceu depois do `go generate ./...`."
+      },
+      {
+        "text": "`demo.go` e `made-by-generate`",
+        "why": "Isso suporia que o build roda as diretivas antes de compilar. É assim que o `make` funciona, não o comando go. O `go help generate` diz que ele nunca roda sozinho no `go build` nem no `go test`."
+      },
+      {
+        "text": "Um erro de build, porque um pacote não pode ter diretivas que o `go build` não sabe rodar",
+        "why": "Para o compilador, uma diretiva é um comentário. O pacote compilou e não imprimiu nada."
+      },
+      {
+        "text": "`demo.go` e `made-by-generate`, gravado no cache de build e não no pacote",
+        "why": "Nada rodou, então nada foi gravado em lugar nenhum. O cache guarda pacotes compilados, não a saída de uma diretiva."
+      }
+    ]
+  },
+  "ex-32aqdx3v": {
+    "prompt": "Em `~/gen-try`, o arquivo `internal/demo/demo.go` tem `//go:generate pwd`. Ana digita `go generate ./...` na raiz do módulo. O que o `pwd` imprime?",
+    "hint": "Onde o go generate inicia cada comando?",
+    "choices": [
+      {
+        "text": "`/home/ana/gen-try`, o diretório em que ela digitou o comando",
+        "why": "Um shell iniciaria o comando ali. O go generate muda para o diretório do pacote antes."
+      },
+      {
+        "text": "`/home/ana/gen-try/internal/demo`",
+        "why": "Isso. Uma diretiva roda no diretório do pacote que a contém, então os caminhos relativos dela partem desse arquivo."
+      },
+      {
+        "text": "O diretório do cache de módulos, onde o comando go guarda os fontes",
+        "why": "O cache de módulos guarda módulos baixados. O seu pacote roda onde ele está."
+      },
+      {
+        "text": "Um diretório temporário, para o gerador não mexer na árvore de fontes",
+        "why": "O `touch made-by-generate` deixou o arquivo ao lado do `demo.go`; nada isola um gerador da árvore."
+      }
+    ]
+  },
+  "ex-svms1qt4": {
+    "prompt": "A linha `// go:generate echo hi` não é uma diretiva, porque uma diretiva não admite ___ entre `//` e `go:generate`.",
+    "hint": "Uma tecla só, a mais larga do teclado.",
+    "blanks": [
+      {
+        "accept": [
+          "espaço",
+          "um espaço",
+          "espaco",
+          "branco",
+          "espaço em branco"
+        ]
+      }
+    ]
+  },
+  "ex-jvc3k8za": {
+    "prompt": "Associe cada flag do `go generate` com o que ela faz.",
+    "hint": "Duas decidem quais diretivas rodam; duas decidem o que é impresso.",
+    "pairs": [
+      {
+        "left": "`-n`",
+        "right": "imprime cada comando e não roda nenhum"
+      },
+      {
+        "left": "`-x`",
+        "right": "imprime cada comando e depois o roda"
+      },
+      {
+        "left": "`-run echo`",
+        "right": "fica só com as diretivas cuja linha casa com `echo`"
+      },
+      {
+        "left": "`-skip \"touch|printf\"`",
+        "right": "descarta as diretivas cuja linha casa"
+      }
+    ],
+    "right_distractors": [
+      "roda as diretivas antes de todo `go build`"
+    ]
+  },
+  "ex-ma3a2skk": {
+    "prompt": "O que o `go tool stringer -type=Class` escreve quando roda a partir da diretiva em `internal/status/class.go`?",
+    "hint": "Veja o nome do arquivo que ele produziu e o único método dentro dele.",
+    "choices": [
+      {
+        "text": "Um método `String() string` para `Class`, em `class_string.go`",
+        "why": "Isso. Ele lê as constantes do tipo `Class` e escreve o método que dá nome a elas, num arquivo com o nome do tipo."
+      },
+      {
+        "text": "Uma nova versão de `class.go` com um método `String` no fim",
+        "why": "O stringer nunca edita o seu arquivo. A saída vai num arquivo separado, então regenerar não estraga o que você escreveu."
+      },
+      {
+        "text": "As constantes de `Class`, numeradas a partir dos nomes listados na diretiva",
+        "why": "É o contrário: você escreve as constantes, e o stringer as lê."
+      },
+      {
+        "text": "Um arquivo de teste que confere se cada constante imprime seu nome",
+        "why": "Não há teste; a verificação que ele escreve é o guarda `func _()`, que o compilador executa."
+      }
+    ]
+  },
+  "ex-krp47v2k": {
+    "prompt": "O stringer escreveu `_Class_name = \"InformationalSuccessRedirectionClientErrorServerError\"` e `_Class_index = [...]uint8{0, 13, 20, 31, 42, 53}`. Quantos bytes tem o nome que o `String` devolve para `Redirection`, a terceira constante?",
+    "hint": "O terceiro nome vai do terceiro número ao quarto.",
+    "unit": "bytes"
+  },
+  "ex-c8v9nfv3": {
+    "prompt": "Ana troca `Informational Class = iota + 1` por `Informational Class = iota` e roda `go build ./...` sem regenerar. O que acontece?",
+    "hint": "Todas as constantes caem um, e o `func _()` indexa um array de um elemento com cada uma.",
+    "choices": [
+      {
+        "text": "O build passa, e `Success` aparece como `Informational`",
+        "why": "Esse seria o resultado sem o guarda. Com ele, o arquivo velho nem compila."
+      },
+      {
+        "text": "O stringer roda de novo sozinho, já que o arquivo dele ficou velho",
+        "why": "Só o `go generate` roda o stringer; o `go build` só compila o que existe."
+      },
+      {
+        "text": "Um panic na primeira vez que `String` é chamado num `Class`",
+        "why": "A falha vem antes: os índices são constantes, então o compilador os confere."
+      },
+      {
+        "text": "Não compila: cada índice em `class_string.go` agora é -1",
+        "why": "Isso. `x[Informational-1]` virou `x[-1]`, e o compilador recusou as cinco linhas com `must not be negative`."
+      }
+    ]
+  },
+  "ex-0gk1enzt": {
+    "prompt": "Um colega acrescenta `Nonstandard` ao bloco de constantes, depois de `ServerError`, então ela vale 6, e não roda o `go generate`. O que fazem o `go build` e o `fmt.Println(status.Nonstandard)`?",
+    "hint": "O guarda lista as constantes que o stringer viu quando rodou.",
+    "choices": [
+      {
+        "text": "O build falha, porque o guarda confere toda constante do tipo",
+        "why": "O guarda tem uma linha por constante que viu, e `Nonstandard` não está entre elas, então nada a confere."
+      },
+      {
+        "text": "Compila, e o `String` cai no plano B: `Class(6)`",
+        "why": "Isso. Nenhum valor existente mudou, então todo índice continua 0; o `String` acha o 6 além do fim da tabela e cai no número."
+      },
+      {
+        "text": "Compila, e imprime `ServerError`, o último nome da tabela",
+        "why": "A verificação de faixa no `String` barra qualquer índice depois do último nome; ele nunca reaproveita um."
+      },
+      {
+        "text": "Compila, e imprime uma string vazia",
+        "why": "O plano B monta `Class(` mais o número mais `)`, nunca um nome vazio."
+      }
+    ]
+  },
+  "ex-6dksbckc": {
+    "prompt": "Por que o `genowners` passa a saída do template pelo `format.Source` antes de gravá-la?",
+    "hint": "Compare as entradas do mapa no template com as do `owners_gen.go`.",
+    "choices": [
+      {
+        "text": "Para dispor o código como o `gofmt` faria, e recusar saída que não seja Go válido",
+        "why": "Isso. O template escreveu as entradas encostadas à esquerda; o `format.Source` as analisou, indentou e alinhou os valores, e o `gofmt -l` não listou nada."
+      },
+      {
+        "text": "Porque o `go build` rejeita um arquivo que não está formatado",
+        "why": "O compilador aceita qualquer disposição. Saída sem formatação falha numa verificação de formato, como a da lição 6, não no build."
+      },
+      {
+        "text": "Para acrescentar o cabeçalho `// Code generated` que o template omite",
+        "why": "O cabeçalho é a primeira linha do próprio template; o `format.Source` só reformata."
+      },
+      {
+        "text": "Para ordenar as entradas do mapa pelo caminho",
+        "why": "As entradas saíram na ordem do `owners.txt`, `/` primeiro e `/health` por último; nada as ordenou."
+      }
+    ]
+  },
+  "ex-648319bm": {
+    "prompt": "A diretiva em `internal/owner/owner.go` roda `go run example.com/hits/tools/genowners` e não `go run ../../tools/genowners`. O que o caminho de import oferece?",
+    "hint": "Onde uma diretiva roda, e o que acontece com um caminho relativo quando o pacote muda de lugar?",
+    "choices": [
+      {
+        "text": "O `go run` recusa caminhos relativos dentro de uma diretiva",
+        "why": "Ele aceita; a seção diz que `../../tools/genowners` também funcionaria, hoje."
+      },
+      {
+        "text": "Ele baixa o genowners do proxy de módulos numa versão fixa",
+        "why": "`example.com/hits` é o próprio módulo; o `go run` compila o gerador da mesma árvore de trabalho."
+      },
+      {
+        "text": "A diretiva segue funcionando se o pacote descer de nível",
+        "why": "Isso. A diretiva roda no diretório do pacote, então `../../` depende da profundidade; o caminho de import nomeia o mesmo pacote de qualquer lugar do módulo."
+      },
+      {
+        "text": "Ele define o `$GOPACKAGE`, que um caminho relativo deixaria vazio",
+        "why": "O go generate define o `$GOPACKAGE` para toda diretiva, seja qual for o comando."
+      }
+    ]
+  },
+  "ex-2kktezkf": {
+    "prompt": "Ponha em ordem o que uma execução do `genowners` faz.",
+    "hint": "O arquivo em disco é tocado uma vez, bem no fim.",
+    "items": [
+      "ler o `owners.txt`, recusando linha errada ou repetida",
+      "preencher o template com o nome do pacote e as linhas",
+      "passar os bytes pelo `format.Source`",
+      "gravar o `owners_gen.go` numa chamada só"
+    ]
+  },
+  "ex-8yw45rkh": {
+    "prompt": "Outro gerador abre a saída com `os.Create(out)` primeiro e roda `tmpl.Execute` direto no arquivo. A entrada tem uma linha ruim, e o `Execute` falha no meio. O que sobra, e quando alguém percebe?",
+    "hint": "O `os.Create` esvazia o arquivo no momento em que o abre.",
+    "choices": [
+      {
+        "text": "O arquivo antigo, porque o `os.Create` mantém o conteúdo até o arquivo ser fechado",
+        "why": "O `os.Create` trunca ao abrir. O conteúdo antigo some antes do primeiro byte gravado."
+      },
+      {
+        "text": "Nada: o comando go apaga a saída de um gerador que falhou",
+        "why": "O go generate relata a falha e para o pacote; ele não sabe quais arquivos um gerador gravou."
+      },
+      {
+        "text": "Um arquivo completo, porque o `Execute` só grava quando o template termina",
+        "why": "O `Execute` grava conforme avança, direto no writer que recebeu."
+      },
+      {
+        "text": "Meio arquivo Go; o próximo build falha dentro dele",
+        "why": "Isso. O arquivo foi esvaziado e depois gravado em parte. Por isso o `genowners` monta tudo num buffer e grava uma vez, no fim."
+      }
+    ]
+  },
+  "ex-57ajyz1e": {
+    "prompt": "Por que `class_string.go` e `owners_gen.go` vão para o repositório em vez de entrar no `.gitignore`?",
+    "hint": "Quem roda o `go generate`, e quem nunca roda?",
+    "choices": [
+      {
+        "text": "Porque o comando go se recusa a compilar um arquivo que o git não rastreia",
+        "why": "O comando go não lê o índice do git; ele compilou os dois arquivos antes de o repositório existir."
+      },
+      {
+        "text": "Nenhum build roda `go generate`, então um clone ou download recebe só o commitado",
+        "why": "Isso. Sem eles, o `owner` não compila e o `classes` imprime números, em toda máquina menos a do autor."
+      },
+      {
+        "text": "Para que a linha de cabeçalho possa ser conferida pelo `git diff`",
+        "why": "O `git diff` compara conteúdos; ele não sabe o que é um cabeçalho. O cabeçalho é para ferramentas e pessoas."
+      },
+      {
+        "text": "Porque regenerá-los em cada máquina daria um arquivo diferente em cada uma",
+        "why": "Com a mesma versão do gerador, a saída é a mesma em toda parte; o motivo é que só o autor regenera."
+      }
+    ]
+  },
+  "ex-97n7wnqm": {
+    "prompt": "Quais destas primeiras linhas marcam um arquivo Go como gerado, pela regra do `go help generate`? Marque todas as que valem.",
+    "hint": "`^// Code generated .* DO NOT EDIT\\.$`, antes do primeiro texto que não seja comentário.",
+    "choices": [
+      {
+        "text": "`// Code generated by \"stringer -type=Class\"; DO NOT EDIT.`",
+        "why": "Sim. É o cabeçalho do próprio stringer e casa exatamente com a expressão."
+      },
+      {
+        "text": "`// Code generated by genowners from owners.txt; DO NOT EDIT.`",
+        "why": "Sim. Qualquer texto pode ficar entre `Code generated` e `DO NOT EDIT.`."
+      },
+      {
+        "text": "`// Code generated by genowners; DO NOT EDIT`",
+        "why": "Falta o ponto final, e a expressão termina em `\\.$`. As ferramentas leem esse arquivo como escrito à mão."
+      },
+      {
+        "text": "`/* Code generated by genowners; DO NOT EDIT. */`",
+        "why": "A expressão pede uma linha que comece com `// `, então um comentário de bloco não casa."
+      }
+    ]
+  },
+  "ex-ejh3s906": {
+    "prompt": "Um pull request acrescenta uma diretiva nova, e o autor nunca commita o arquivo que ela grava. A CI roda `go generate ./... && git diff --exit-code` e passa. Por quê?",
+    "hint": "O que o `git diff` compara?",
+    "choices": [
+      {
+        "text": "A diretiva é nova, então a CI não tem gerador para rodar",
+        "why": "O go generate a rodou na CI e gravou o arquivo; o problema é o que a comparação enxerga."
+      },
+      {
+        "text": "O `git diff` só compara arquivos rastreados, e o novo nunca foi adicionado",
+        "why": "Isso. O arquivo novo não é rastreado, então não entra no diff; `test -z \"$(git status --porcelain)\"` teria falhado."
+      },
+      {
+        "text": "O `--exit-code` só falha em mudanças de arquivos com o cabeçalho de gerado",
+        "why": "Ele falha em qualquer mudança de arquivo rastreado, gerado ou não; ele não sabe nada de cabeçalhos."
+      },
+      {
+        "text": "O go generate pula diretivas de arquivos que mudaram no último commit",
+        "why": "O go generate lê toda diretiva que encontra; ele não olha o histórico do git."
+      }
+    ]
+  },
+  "ex-q0ext9ab": {
+    "prompt": "Associe cada jeito de uma diretiva nomear o stringer com a versão que roda.",
+    "hint": "Uma versão está escrita no `go.mod`, outra na diretiva, e outra em lugar nenhum.",
+    "pairs": [
+      {
+        "left": "`stringer -type=Class`",
+        "right": "o que estiver primeiro no `PATH` de quem gera"
+      },
+      {
+        "left": "`go run golang.org/x/tools/cmd/stringer@v0.52.0 -type=Class`",
+        "right": "a v0.52.0, escrita na própria diretiva"
+      },
+      {
+        "left": "`go tool stringer -type=Class`",
+        "right": "a versão que o `go.mod` do módulo exige"
+      }
+    ],
+    "right_distractors": [
+      "a versão mais nova no proxy de módulos naquele dia"
+    ]
+  },
+  "ex-mshsmbfk": {
+    "prompt": "O `go fix -diff ./legacy` mostrou uma mudança só no `old.go`, embora o `old_gen.go` tenha o mesmo `interface{}`. Por que o `old_gen.go` ficou de fora?",
+    "hint": "Olhe a primeira linha de cada arquivo.",
+    "choices": [
+      {
+        "text": "O `go fix` só reescreve funções com nome começando em maiúscula",
+        "why": "As duas funções, `Echo` e `EchoGen`, são exportadas; não é o nome que difere."
+      },
+      {
+        "text": "O cabeçalho o marca como gerado, e o `go fix` pula arquivos gerados",
+        "why": "Isso. Uma correção ali seria desfeita pelo próximo `go generate`, então o `go fix` consulta o `ast.IsGenerated` e o deixa."
+      },
+      {
+        "text": "Um arquivo cujo nome termina em `_gen.go` não é compilado",
+        "why": "O nome é uma convenção para pessoas; o comando go compilou o `owners_gen.go` como qualquer outro."
+      },
+      {
+        "text": "O `-diff` mostra só o primeiro arquivo que mudaria",
+        "why": "Ele mostra toda mudança; só havia uma para mostrar."
+      }
+    ]
+  },
+  "ex-c1n2k397": {
+    "prompt": "Um colega acrescenta `-linecomment` à diretiva do stringer, roda `go build ./...`, vê que passa e commita sem rodar o `go generate`. Qual verificação impede que isso passe despercebido?",
+    "hint": "O que o guarda em `func _()` compara, e algo disso mudou?",
+    "choices": [
+      {
+        "text": "O compilador, pelo guarda em `func _()`",
+        "why": "O guarda confere valores de constantes, e nenhum valor mudou: o build passou na transcrição."
+      },
+      {
+        "text": "O `go vet`, que compara cada cabeçalho com a sua diretiva",
+        "why": "Nada no comando go compara um cabeçalho com uma diretiva; o cabeçalho é um marcador, não um registro a conferir."
+      },
+      {
+        "text": "O passo de CI que regenera e roda `git diff --exit-code`",
+        "why": "Isso. Ele gravou o novo `class_string.go`, viu que diferia do commitado, imprimiu o diff e saiu com 1."
+      },
+      {
+        "text": "O `go test`, porque o `class_string.go` está desatualizado",
+        "why": "O `go test` compila o que existe, igual ao `go build`, e nunca roda uma diretiva."
+      }
+    ]
+  },
+  "ex-xz54nyzb": {
+    "prompt": "Um serviço manda um e-mail de boas-vindas a partir de um arquivo HTML que a equipe de design edita, e o programa preenche um nome com `html/template`. Gerar Go a partir do arquivo, ou embuti-lo?",
+    "hint": "O programa precisa do arquivo como Go ou como dado?",
+    "choices": [
+      {
+        "text": "Gerar, para o compilador conferir o HTML",
+        "why": "O compilador confere Go, não HTML. Uma string gerada com a página seria tão conferida quanto o arquivo."
+      },
+      {
+        "text": "Gerar, porque arquivos embutidos são lidos do disco quando o programa inicia",
+        "why": "O `//go:embed` põe os bytes no binário na hora do build; nada é lido do disco em tempo de execução."
+      },
+      {
+        "text": "Embutir: o programa precisa dos bytes, e embutir não tem nada que fique velho",
+        "why": "Isso. Um template é dado para o `html/template`; o `//go:embed` lê o arquivo a cada build, então não há cópia gerada para esquecer."
+      },
+      {
+        "text": "Nenhum dos dois: um arquivo editado por outra equipe precisa ser buscado pela rede em tempo de execução",
+        "why": "Nada no caso pede isso, e acrescentaria uma falha em tempo de execução que as duas opções de build evitam."
+      }
+    ]
+  },
+  "ex-ps7xec1v": {
+    "prompt": "No `access.log` de 20.000 linhas, o `cmd/classes` imprimiu `Success 10058`, `Redirection 2421` e `ServerError 2523`, e não houve nenhum `1xx`. Quantas requisições caíram em `ClientError`?",
+    "hint": "As classes com requisições somam todas as linhas do log."
+  }
+}

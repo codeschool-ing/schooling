@@ -1,0 +1,403 @@
+{
+  "ex-rzqpmph3": {
+    "prompt": "Com `signals.go` definindo `progressSignals = []os.Signal{syscall.SIGUSR1}` e sem restrição, `GOOS=windows go build` para com um erro. Por quê?",
+    "hint": "Veja a mensagem que o build imprimiu.",
+    "choices": [
+      {
+        "text": "Esse nome existe para Linux e não para esse alvo",
+        "why": "Isso. O build informou `undefined: syscall.SIGUSR1`: o nome existe no `syscall` do Linux e não no do Windows, então o arquivo não compila lá."
+      },
+      {
+        "text": "O Windows proíbe programas de tratar sinais",
+        "why": "O Windows não tem `SIGUSR1`, mas o build falhou antes de qualquer execução: faltou um nome na compilação."
+      },
+      {
+        "text": "Builds cruzados desligam o cgo, e `os/signal` precisa de cgo",
+        "why": "`os/signal` é Go puro, e os builds de macOS e Windows da versão com três arquivos compilaram com cgo desligado."
+      },
+      {
+        "text": "`-o hits.exe` está errado, porque o Windows dá nome à própria saída",
+        "why": "Dar nome à saída vale para qualquer alvo; o erro foi `undefined: syscall.SIGUSR1`, sobre o código."
+      }
+    ]
+  },
+  "ex-zgyzsgm3": {
+    "prompt": "Um colega sugere manter um arquivo só e escrever `if runtime.GOOS != \"windows\" { signal.Notify(c, syscall.SIGUSR1) }`. Isso faz o build para Windows compilar?",
+    "hint": "Quando o compilador precisa que o nome exista?",
+    "choices": [
+      {
+        "text": "Sim, porque o ramo nunca roda no Windows",
+        "why": "Se um ramo roda é decidido na execução; se `syscall.SIGUSR1` existe é decidido na compilação, e para Windows não existe."
+      },
+      {
+        "text": "Sim, já que o compilador elimina o ramo morto antes",
+        "why": "`runtime.GOOS` é uma constante, mas o código do ramo ainda passa pela checagem de tipos, e um nome indefinido reprova nela."
+      },
+      {
+        "text": "Não: o nome precisa existir para compilar, rode o que rodar",
+        "why": "Isso. Um `switch` em `runtime.GOOS` serve para código que compila em todo lugar. Um nome que só existe em alguns sistemas pede um arquivo que os outros nunca compilam."
+      },
+      {
+        "text": "Não, porque `runtime.GOOS` não é conhecido no Windows",
+        "why": "`runtime.GOOS` existe em todo alvo e vale `windows` lá. O problema é o nome do sinal, não o teste."
+      }
+    ]
+  },
+  "ex-4g28pm0k": {
+    "prompt": "A primeira linha de `progress_other.go`, que todo sistema que não é do tipo Unix compila, é `//go:build ___`.",
+    "hint": "Uma tag e o operador que a nega.",
+    "blanks": [
+      {
+        "accept": [
+          "!unix"
+        ]
+      }
+    ]
+  },
+  "ex-cdhrbmt2": {
+    "prompt": "Alguém digita `// go:build !unix` no topo de `progress_other.go`, com um espaço depois das barras. O que `go vet .` informa no Linux?",
+    "hint": "Com o espaço, o que essa linha é para o comando go?",
+    "choices": [
+      {
+        "text": "`invalid //go:build line` no topo de `progress_other.go`",
+        "why": "Nada mais a lê como diretiva, então não há o que chamar de inválido. É um comentário comum."
+      },
+      {
+        "text": "Nada, e o arquivo fica fora do build Linux",
+        "why": "Um arquivo só fica de fora por uma restrição, e o espaço a removeu. Sem ela, o build Linux compilou o arquivo."
+      },
+      {
+        "text": "`progressSignals redeclared`, em outro arquivo",
+        "why": "Isso. A linha virou comentário, o Linux compilou `progress_other.go` junto com `progress_unix.go`, e o vet apontou o conflito em `progress_unix.go:11:5`."
+      },
+      {
+        "text": "`misplaced compiler directive`, por causa do espaço",
+        "why": "Isso é o que o compilador diz de uma diretiva abaixo da cláusula package. Uma diretiva com espaço nem é diretiva."
+      }
+    ]
+  },
+  "ex-frgwqezk": {
+    "prompt": "Associe cada tag ao build que a satisfaz, no Go 1.27.1 sem `-tags`.",
+    "hint": "Quatro das cinco descrições servem para uma tag cada.",
+    "pairs": [
+      {
+        "left": "`unix`",
+        "right": "um build para Linux, macOS ou um BSD"
+      },
+      {
+        "left": "`cgo`",
+        "right": "um build nativo numa máquina com compilador C"
+      },
+      {
+        "left": "`go1.21`",
+        "right": "todo build do Go 1.21 ou de qualquer versão posterior"
+      },
+      {
+        "left": "`ignore`",
+        "right": "nenhum build, por convenção"
+      }
+    ],
+    "right_distractors": [
+      "só um build do Go 1.21 exatamente"
+    ]
+  },
+  "ex-8ms6qjds": {
+    "prompt": "Qual destes arquivos é compilado para macOS e para nenhum outro sistema, sem linha `//go:build`?",
+    "hint": "O sufixo precisa ser um valor de `GOOS` que o toolchain conhece.",
+    "choices": [
+      {
+        "text": "`progress_mac.go`",
+        "why": "`mac` não é um `GOOS`, então o nome não carrega restrição e todo build compila o arquivo, inclusive o Linux."
+      },
+      {
+        "text": "`darwin_progress.go`",
+        "why": "O sistema precisa vir no fim do nome. Com `darwin` na frente, o arquivo é compilado em todo lugar."
+      },
+      {
+        "text": "`progress_darwin.go`",
+        "why": "Isso. `darwin` é o `GOOS` do macOS, e um nome terminado em `_darwin` restringe o arquivo como se `//go:build darwin` estivesse no topo."
+      },
+      {
+        "text": "`progress_macos.go`",
+        "why": "`macos` não está na lista que `go tool dist list` imprime; o Go chama o sistema de `darwin`. Este arquivo é compilado para todo alvo."
+      }
+    ]
+  },
+  "ex-s0tfrj4e": {
+    "prompt": "Quais destes nomes de arquivo carregam uma restrição de build própria? Marque todos.",
+    "hint": "Tire o `.go`, depois um `_test` final, e veja como o nome termina.",
+    "choices": [
+      {
+        "text": "`zerrors_linux_amd64.go`",
+        "why": "Sim: `_GOOS_GOARCH`, compilado só para Linux em `amd64`. O `go list` mostrou a troca pelo gêmeo `arm64` quando o `GOARCH` mudou."
+      },
+      {
+        "text": "`crc32_arm64.go`",
+        "why": "Sim: só `_GOARCH`, então todo sistema em `arm64` o compila."
+      },
+      {
+        "text": "`progress_windows_test.go`",
+        "why": "Sim. O `_test` sai primeiro, e o que sobra termina em `_windows`: testes que só rodam no Windows."
+      },
+      {
+        "text": "`linux.go`",
+        "why": "O sufixo precisa de um sublinhado antes. Um arquivo com o nome só do sistema é um arquivo comum."
+      },
+      {
+        "text": "`config_win.go`",
+        "why": "`win` não é um `GOOS`; o nome do Windows no Go é `windows`. Este arquivo compila em todo lugar."
+      }
+    ]
+  },
+  "ex-p9hqs0a9": {
+    "prompt": "Um arquivo chamado `progress_darwin.go` também começa com `//go:build !darwin`. Quais builds o compilam?",
+    "hint": "O nome e a linha são duas restrições. Como duas restrições se combinam?",
+    "choices": [
+      {
+        "text": "Todos os builds menos o macOS, já que a linha é mais explícita",
+        "why": "Nenhuma regra anula a outra. O texto de ajuda diz que a restrição do nome vale além de qualquer explícita."
+      },
+      {
+        "text": "Nenhum",
+        "why": "Isso. O nome exige `darwin` e a linha exige não `darwin`, e as duas precisam valer, então nenhum build compila o arquivo."
+      },
+      {
+        "text": "Só builds de macOS, porque o nome vence a linha",
+        "why": "O nome não vence; é mais uma condição ligada por \"e\". No macOS a linha é falsa, então o arquivo fica de fora lá também."
+      },
+      {
+        "text": "O build falha com um conflito de restrições no macOS",
+        "why": "O comando go não procura contradições. O arquivo fica de fora de todo build em silêncio, o que é pior."
+      }
+    ]
+  },
+  "ex-g9bpybey": {
+    "prompt": "O `hits` precisa do diretório padrão onde fica um log: `/var/log/nginx` no Linux, `/opt/homebrew/var/log/nginx` no macOS, `C:\\nginx\\logs` no Windows. Como escrever a escolha?",
+    "hint": "Todo ramo compila em todo sistema?",
+    "choices": [
+      {
+        "text": "Três arquivos, `logdir_linux.go`, `logdir_darwin.go` e `logdir_windows.go`",
+        "why": "Funciona, e custa três arquivos e um quarto para os sistemas que nenhum deles cobre. Para strings simples os arquivos não compram nada, já que todo valor compila em todo lugar."
+      },
+      {
+        "text": "Um `switch` em `runtime.GOOS`",
+        "why": "Isso. Todo ramo é uma string, que compila em qualquer sistema, então nada precisa ficar fora de um build; `os.UserConfigDir` é escrito do mesmo jeito."
+      },
+      {
+        "text": "Uma tag por sistema, escolhida com `-tags linux` e afins",
+        "why": "O próprio build já define `linux` para Linux; passá-la com `-tags` em outro sistema compilaria arquivos de Linux para o alvo errado."
+      },
+      {
+        "text": "Um arquivo com `//go:build linux || darwin || windows`",
+        "why": "Essa restrição tira o arquivo de todos os outros sistemas, e ainda assim ele precisa escolher entre três valores por dentro, com um `switch`."
+      }
+    ]
+  },
+  "ex-whm1zcwn": {
+    "prompt": "Ana compila com `go build -tags debgu -o hits .`, um erro de digitação de `debug`. O que acontece?",
+    "hint": "O comando go sabe quais tags o código usa?",
+    "choices": [
+      {
+        "text": "O build falha com `unknown build tag debgu`",
+        "why": "Não existe lista de tags próprias conhecidas. Qualquer palavra é aceita, e uma que nada cita não tem efeito."
+      },
+      {
+        "text": "O `go vet` avisa na próxima execução",
+        "why": "O vet confere as restrições escritas nos arquivos, não as palavras passadas a `-tags`."
+      },
+      {
+        "text": "Compila o binário comum sem dizer nada",
+        "why": "Isso. Nenhum arquivo cita `debgu`, então a tag não muda nada, e `debug.go` fica de fora. O binário só nunca imprime a linha de debug."
+      },
+      {
+        "text": "Compila um binário de debug, já que a tag é parecida o bastante",
+        "why": "Tags são comparadas exatamente; não há correção de grafia. `debug.go` pede `debug`, que não foi passada."
+      }
+    ]
+  },
+  "ex-vcakft57": {
+    "prompt": "Coloque em ordem o que acontece quando Ana roda `./hits-debug top -n 1 access.log`, o binário compilado com `-tags debug`.",
+    "hint": "Uma destas etapas roda antes do `main`.",
+    "items": [
+      "o `init` de `debug.go` põe uma função que imprime em `debugf`",
+      "`main` chama `run` com os argumentos e os fluxos",
+      "`summarise` abre `access.log` e o embrulha num `progress`",
+      "`tally.Count` lê as 20.000 linhas",
+      "`debugf` escreve `hits: debug: 20000 lines, 914867 bytes …` na saída de erro",
+      "`top` imprime a tabela na saída padrão"
+    ]
+  },
+  "ex-rwhan5n1": {
+    "prompt": "Depois de `gofmt -r 'usage -> usageText' -w main.go`, `go build`, `go vet ./...` e `go test ./...` passam. Qual comando acha o que a renomeação quebrou?",
+    "hint": "Qual arquivo ainda diz `usage`, e quais comandos o compilam?",
+    "choices": [
+      {
+        "text": "`go test -count=1 ./...`, já que o cache escondeu a falha",
+        "why": "A execução da seção já usava `-count=1` e passou. O arquivo quebrado nem foi compilado, com cache ou sem."
+      },
+      {
+        "text": "`go vet -tags integration .`",
+        "why": "Isso. `integration_test.go` compara a saída do binário com `usage`, e só um comando que cita a tag o compila; aí o vet informou `undefined: usage`."
+      },
+      {
+        "text": "`gofmt -l .`, que lista arquivos que ainda usam o nome antigo",
+        "why": "O `gofmt -l` lista arquivos com formatação diferente. Ele não resolve nomes, e `integration_test.go` está bem formatado."
+      },
+      {
+        "text": "`GOOS=windows go vet ./...`",
+        "why": "O teste de integração não tem restrição de sistema; o Windows o deixa de fora pelo mesmo motivo que o Linux, a falta da tag."
+      }
+    ]
+  },
+  "ex-skrbbqcw": {
+    "prompt": "Um binário chamado `hits` aparece num servidor, e você desconfia que seja um build de debug. Como descobrir sem rodá-lo?",
+    "hint": "Um binário Go carrega um registro de como foi compilado.",
+    "choices": [
+      {
+        "text": "Rodar `file hits`, que mostra as tags usadas no build",
+        "why": "O `file` lê o formato do executável e o processador; não sabe nada das configurações de build do Go."
+      },
+      {
+        "text": "Comparar o tamanho com o de um build comum",
+        "why": "Um arquivo pequeno a mais muda o tamanho em poucos bytes, o que outra versão do Go ou outro caminho também faria. Não prova nada."
+      },
+      {
+        "text": "`go version -m hits`, procurando `-tags=debug`",
+        "why": "Isso. O registro de build lista as tags entre as configurações, e o binário de debug mostrou `build -tags=debug`."
+      },
+      {
+        "text": "`go list -tags debug -f '{{.GoFiles}}' hits`",
+        "why": "O `go list` descreve pacotes em código-fonte. Não enxerga dentro de um binário pronto."
+      }
+    ]
+  },
+  "ex-5pq5tdhn": {
+    "prompt": "Por que `check.sh` roda `go vet` para cada alvo em vez de `go build`?",
+    "hint": "Pense em quais arquivos cada comando lê, e no que cada um produz.",
+    "choices": [
+      {
+        "text": "O `go build` não compila para outro alvo, e o `go vet` compila",
+        "why": "O `go build` compilou para macOS e Windows na seção 02 com as mesmas duas variáveis."
+      },
+      {
+        "text": "Ele checa os tipos dos arquivos de teste também, e não liga nada",
+        "why": "Isso. O `go build` pula os arquivos `_test.go`, então `integration_test.go` nunca seria checado; o vet os lê e nunca gera binário."
+      },
+      {
+        "text": "O `go vet` também roda os testes em cada alvo",
+        "why": "O vet compila e analisa; não roda nada. Rodar um binário de teste de macOS exige um Mac."
+      },
+      {
+        "text": "Um build para `darwin` precisa das ferramentas da Apple, e o vet não",
+        "why": "O build de macOS da seção 02 deu certo nesta máquina Linux sem nenhuma ferramenta da Apple."
+      }
+    ]
+  },
+  "ex-twqy9v5s": {
+    "prompt": "Depois que `progressHint` entrou só em `progress_unix.go`, o loop de `GOOS=… go vet ./...` sobre cinco alvos imprimiu cinco linhas `ok`. Por que ele não pegou a quebra?",
+    "hint": "Qual arquivo usa `progressHint`, e quando esse arquivo é compilado?",
+    "choices": [
+      {
+        "text": "O `go vet` não informa nomes indefinidos, só código suspeito",
+        "why": "Informa: o `check.sh` mostrou `vet: ./debug.go:15:47: undefined: progressHint` quando os arquivos certos foram compilados."
+      },
+      {
+        "text": "As checagens de macOS e Windows vieram do cache",
+        "why": "O vet checou de novo depois que os arquivos mudaram. Os arquivos que quebram nunca entraram nessas execuções."
+      },
+      {
+        "text": "O loop rodou sem tags, e por isso o `debug.go` nunca chegou a ser compilado",
+        "why": "Isso. Só `debug.go` usa `progressHint`, e só `-tags debug` o compila. O loop checou cinco das quinze combinações."
+      },
+      {
+        "text": "O `progress_unix.go` do FreeBSD o definiu para todos os sistemas",
+        "why": "Uma constante em `progress_unix.go` só existe nos builds que compilam esse arquivo; Windows e macOS não compilam."
+      }
+    ]
+  },
+  "ex-s33mk4rf": {
+    "prompt": "O `check.sh` roda `go vet` uma vez por alvo e conjunto de tags: 5 alvos e 3 conjuntos, 15 execuções. O projeto tira `freebsd/amd64` e acrescenta um quarto conjunto, `-tags debug,integration`. Quantas execuções do vet um `sh check.sh` faz agora?",
+    "hint": "Alvos vezes conjuntos de tags.",
+    "unit": "execuções"
+  },
+  "ex-8ybke7bq": {
+    "prompt": "Associe cada comando à pergunta que ele responde.",
+    "hint": "Uma resposta da direita é algo que nenhum deles sabe dizer.",
+    "pairs": [
+      {
+        "left": "`GOOS=darwin go list -f '{{.GoFiles}}' .`",
+        "right": "quais arquivos um build de macOS compila"
+      },
+      {
+        "left": "`go list -f '{{.IgnoredGoFiles}}' .`",
+        "right": "quais arquivos uma restrição deixa de fora aqui"
+      },
+      {
+        "left": "`GOOS=windows go vet ./...`",
+        "right": "se todo pacote passa na checagem de tipos para Windows"
+      },
+      {
+        "left": "`go version -m hits-debug`",
+        "right": "como um binário pronto foi compilado"
+      }
+    ],
+    "right_distractors": [
+      "se o programa se comporta corretamente no Windows"
+    ]
+  },
+  "ex-z76wge8r": {
+    "prompt": "Você precisa de um arquivo compilado só para Linux em ARM de 64 bits, e para nenhum outro sistema ou processador. Que nome faz isso sem linha `//go:build`?",
+    "hint": "O padrão nomeia o sistema primeiro.",
+    "choices": [
+      {
+        "text": "`fast_arm64_linux.go`",
+        "why": "O nome é lido do fim: `linux` vem por último, então é um arquivo só de Linux para todo processador, e `arm64` é só parte do nome."
+      },
+      {
+        "text": "`fast_linux_arm64.go`",
+        "why": "Isso. `_GOOS_GOARCH` restringe os dois, como `zerrors_linux_arm64.go` no `syscall`."
+      },
+      {
+        "text": "`fast_linux_aarch64.go`",
+        "why": "`aarch64` é como o `file` chama o processador; o Go o chama de `arm64`, e só a grafia do Go vale num nome. Este arquivo é compilado só para Linux, em todo processador."
+      },
+      {
+        "text": "`linux_arm64_fast.go`",
+        "why": "O sufixo precisa terminar o nome. Com `fast` no fim, nada é restringido e todo build o compila."
+      }
+    ]
+  },
+  "ex-esgbavxz": {
+    "prompt": "Um novo teste de integração envia `SIGUSR1` ao binário compilado e confere a linha de progresso. Ele precisa ficar fora das execuções comuns e não pode quebrar o build de testes para Windows. Que primeira linha serve?",
+    "hint": "Duas condições, as duas obrigatórias.",
+    "choices": [
+      {
+        "text": "`//go:build integration || unix`",
+        "why": "Com `||`, um `go test` simples no Linux o compila, já que `unix` vale ali; a tag deixa de mantê-lo de fora."
+      },
+      {
+        "text": "`//go:build integration && unix`",
+        "why": "Isso. Ele exige a tag, então execuções comuns o pulam, e exige um sistema Unix, então `GOOS=windows go vet -tags integration` nunca encontra `syscall.SIGUSR1`."
+      },
+      {
+        "text": "`//go:build integration`, com o nome `signal_test_unix.go`",
+        "why": "O `_test` precisa vir por último para o arquivo ser de teste, e `_unix` não é um `GOOS`, então o nome não restringe nada."
+      },
+      {
+        "text": "`//go:build integration && !windows && !darwin`",
+        "why": "Isso tira o macOS, onde `SIGUSR1` existe e o teste funcionaria, e deixa entrar Plan 9 ou WebAssembly, onde não existe."
+      }
+    ]
+  },
+  "ex-evz61q97": {
+    "prompt": "Para imprimir os arquivos que um build de Windows deixa fora do pacote atual por causa de restrições, Ana roda `GOOS=windows go list -f '{{.___}}' .`",
+    "hint": "O campo ao lado de `GoFiles` na seção 03.",
+    "blanks": [
+      {
+        "accept": [
+          "IgnoredGoFiles"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,406 @@
+{
+  "ex-0gbwadvc": {
+    "prompt": "Ana compila o `hits` com um `go build` simples numa máquina onde `CGO_ENABLED` é 1, e mesmo assim `ldd hits` diz `not a dynamic executable`. Por quê?",
+    "hint": "Veja o que `go list -deps . | grep -x runtime/cgo` respondeu.",
+    "choices": [
+      {
+        "text": "O Go nunca liga nada dinamicamente quando compila para Linux",
+        "why": "O `probe` da seção 02 saiu `dynamically linked` do mesmo compilador, porque o `os/user` usou cgo."
+      },
+      {
+        "text": "Nada que ele importa tem implementação em C",
+        "why": "Isso. O `grep` não achou `runtime/cgo` entre as dependências e saiu com 1, então a chave não tinha o que ligar."
+      },
+      {
+        "text": "O `ldd` só lê binários feitos com `CGO_ENABLED=0`",
+        "why": "O `ldd` leu o `probe` e listou a `libc.so.6` e o carregador. Ele lê qualquer arquivo ELF e diz o que seria carregado."
+      },
+      {
+        "text": "O `-trimpath` remove a seção dinâmica do arquivo",
+        "why": "Este build não usou flag nenhuma. O `-trimpath` reescreve caminhos registrados e não tem relação com a ligação."
+      }
+    ]
+  },
+  "ex-e2dne0m9": {
+    "prompt": "O `ldd probe` listou `/lib64/ld-linux-x86-64.so.2`. Qual é o papel desse arquivo?",
+    "hint": "Não é a biblioteca C em si; essa era a linha de cima.",
+    "choices": [
+      {
+        "text": "O carregador dinâmico, que junta a `libc.so.6` ao programa",
+        "why": "Isso. Um binário ligado dinamicamente nomeia o seu carregador, e o kernel roda o carregador, que encontra as bibliotecas e as liga."
+      },
+      {
+        "text": "É o runtime do Go, que todo programa Go da máquina compartilha",
+        "why": "O runtime do Go fica dentro de cada binário Go; o `hits` é estático e tem o seu. Nada específico do Go é compartilhado."
+      },
+      {
+        "text": "É uma página de código do kernel mapeada em todo processo, sem arquivo",
+        "why": "Essa é a `linux-vdso.so.1`, que nem é arquivo. O carregador é um arquivo de verdade no disco."
+      },
+      {
+        "text": "É o compilador do cgo, que transforma as partes em C em código ao iniciar",
+        "why": "O cgo roda no build, por meio do `gcc`. Nada é compilado quando o `probe` começa."
+      }
+    ]
+  },
+  "ex-fwh1dckw": {
+    "prompt": "Compilado com `CGO_ENABLED=0`, o `probe` sai `statically linked` e ainda mostra a conta da Ana, a hora de São Paulo e 127 autoridades. O que isso diz sobre a imagem em que ele vai entrar?",
+    "hint": "Estático tirou um tipo de dependência. Qual tipo sobrou?",
+    "choices": [
+      {
+        "text": "Nada: um binário estático leva tudo de que precisa",
+        "why": "As respostas vieram do `/etc/passwd`, do `/usr/share/zoneinfo` e do pacote de certificados desta máquina. A seção 04 roda o mesmo binário onde esses arquivos faltam, e as três respostas falham."
+      },
+      {
+        "text": "A imagem precisa da glibc, porque o `os/user` a chama",
+        "why": "Com o cgo desligado, o `os/user` lê o `/etc/passwd` sozinho; o `ldd` disse `not a dynamic executable`."
+      },
+      {
+        "text": "Não precisa de biblioteca C, mas ainda lê arquivos de dados que a imagem tem de conter",
+        "why": "Isso. O `CGO_ENABLED=0` tirou a biblioteca C e o carregador. A base de usuários, as regras de fuso e os certificados são dados, lidos na execução de qualquer sistema de arquivos que o programa enxergue."
+      },
+      {
+        "text": "Só vai rodar no Ubuntu 24.04",
+        "why": "Nada num binário estático de Linux está preso a uma distribuição. A seção 04 o roda sobre os arquivos distroless do Debian, e ele responde."
+      }
+    ]
+  },
+  "ex-4ar6j4kk": {
+    "prompt": "O `Containerfile` tem duas linhas `FROM`. O que acaba em `hits:1`?",
+    "hint": "Só um estágio vira a imagem.",
+    "choices": [
+      {
+        "text": "Os dois estágios, juntados num só sistema de arquivos",
+        "why": "Aí a imagem pesaria mais que os 912 MB do `golang`. Ela tem 5.84 MB."
+      },
+      {
+        "text": "A base distroless e o único arquivo que o `COPY --from=build` nomeou",
+        "why": "Isso. Só o último estágio vira a imagem, e a única coisa que ele pega do primeiro é o `/src/hits`."
+      },
+      {
+        "text": "O conjunto de ferramentas do Go e o código, para o programa se recompilar ao iniciar",
+        "why": "As ferramentas ficam no estágio de build. O `podman history` mostra a camada do binário e as doze da base, nada mais."
+      },
+      {
+        "text": "O primeiro estágio, porque ele tem nome",
+        "why": "O nome `build` é só uma alça para o `COPY --from`. Ter nome não faz um estágio ser entregue."
+      }
+    ]
+  },
+  "ex-bxrnj49f": {
+    "prompt": "Ponha as linhas do `Containerfile` da seção 03 na ordem em que o arquivo as tem.",
+    "hint": "Um estágio compila, o seguinte entrega.",
+    "items": [
+      "`FROM docker.io/library/golang:1.27.1 AS build`",
+      "`WORKDIR /src`",
+      "`COPY . .`",
+      "`RUN CGO_ENABLED=0 go build -trimpath -ldflags=\"-s -w\" -o hits .`",
+      "`FROM gcr.io/distroless/static-debian12:nonroot`",
+      "`COPY --from=build /src/hits /hits`",
+      "`ENTRYPOINT [\"/hits\"]`"
+    ]
+  },
+  "ex-ez1m38kj": {
+    "prompt": "O `~/ship/.containerignore` diz `*`, `!go.mod`, `!*.go`, `!internal/`. Quais destes arquivos chegam ao estágio de build pelo `COPY . .`? Escolha todos os que chegam.",
+    "hint": "O `*` barra tudo; cada `!` devolve um padrão, casado a partir do topo do contexto.",
+    "choices": [
+      {
+        "text": "`go.mod`",
+        "why": "Nomeado por `!go.mod`."
+      },
+      {
+        "text": "`internal/tally/tally.go`",
+        "why": "O `!internal/` devolve o diretório com tudo o que há dentro."
+      },
+      {
+        "text": "`main_test.go`",
+        "why": "É um arquivo `.go` no topo do contexto, então o `!*.go` o casa. Inofensivo, e um motivo para ler o que um padrão casa antes de confiar nele."
+      },
+      {
+        "text": "`access.log`",
+        "why": "Nada o devolve depois do `*`, e é essa a ideia: 20.000 linhas de que o build não precisa."
+      },
+      {
+        "text": "`cosign.key`",
+        "why": "Barrado pelo `*`. Uma chave privada no contexto de build é como chaves acabam publicadas dentro de imagens."
+      },
+      {
+        "text": "`tools/genlog/main.go`",
+        "why": "O `*.go` casa nomes só no topo, e nada nomeia `tools/`. A listagem do `/src` no estágio de build não tinha diretório `tools`."
+      }
+    ]
+  },
+  "ex-crz40gmh": {
+    "prompt": "O `private.log` tem modo 600 e pertence à Ana. Montado com `-v \"$PWD/private.log:/data/access.log:ro\"`, o `hits:1` responde `permission denied`. Por quê?",
+    "hint": "Quem é o processo lá dentro, visto de fora?",
+    "choices": [
+      {
+        "text": "O `:ro` proíbe ler o arquivo além de escrever nele",
+        "why": "A mesma montagem `:ro` do `access.log`, modo 644, foi lida sem problema."
+      },
+      {
+        "text": "O distroless não tem a chamada de sistema `open` para o programa",
+        "why": "Chamadas de sistema são do kernel, que todo contêiner compartilha; o `hits` abriu o `access.log` do mesmo jeito."
+      },
+      {
+        "text": "O usuário 65532 vira um id que não é a Ana",
+        "why": "Isso. O Podman sem root mapeia os usuários do contêiner em ids reservados para a Ana; 65532 cai num deles, que não tem permissão num arquivo que só a Ana lê."
+      },
+      {
+        "text": "O Podman se recusa a montar arquivos fora do contexto de build",
+        "why": "O `podman run -v` aceita qualquer caminho que o usuário alcance; o contexto só importa para o `podman build`."
+      }
+    ]
+  },
+  "ex-3bdrhtds": {
+    "prompt": "Logo depois dessa falha, `podman run --rm --network=none -i hits:1 top -n 1 < private.log` mostra `/login 2576`. Por que esse caminho funciona?",
+    "hint": "Quem abre o arquivo em cada caso?",
+    "choices": [
+      {
+        "text": "O `-i` faz o contêiner rodar como root, que lê qualquer arquivo",
+        "why": "O `-i` só mantém a entrada padrão aberta. O usuário continua 65532, da configuração da imagem."
+      },
+      {
+        "text": "O shell da Ana abre o arquivo e o manda pela entrada padrão do contêiner",
+        "why": "Isso. O `<` é do shell, que roda como a Ana, e o `hits` da lição 1 lê a entrada padrão quando não recebe arquivo."
+      },
+      {
+        "text": "Sem montagem, o Podman copia o arquivo para dentro da imagem antes de iniciá-la",
+        "why": "Nada é copiado para a imagem; ela continua com 5.84 MB. Os bytes passam por um pipe enquanto o contêiner roda."
+      },
+      {
+        "text": "O `top` precisa de menos permissões para rodar que o `count`",
+        "why": "Permissões são de arquivos e usuários, não de subcomandos. O `count` pela entrada padrão também funcionaria."
+      }
+    ]
+  },
+  "ex-tbsyv1w0": {
+    "prompt": "Associe cada falha ao arquivo cuja ausência a causou.",
+    "hint": "Três vieram do `probe` no scratch, uma de um `probe` dinâmico no distroless.",
+    "pairs": [
+      {
+        "left": "`user: Current requires cgo or $USER set in environment`",
+        "right": "`/etc/passwd`"
+      },
+      {
+        "left": "`unknown time zone America/Sao_Paulo`",
+        "right": "`/usr/share/zoneinfo`"
+      },
+      {
+        "left": "`certs: 0 authorities`",
+        "right": "`/etc/ssl/certs/ca-certificates.crt`"
+      },
+      {
+        "left": "`exec /probe: no such file or directory`",
+        "right": "`/lib64/ld-linux-x86-64.so.2`"
+      }
+    ],
+    "right_distractors": [
+      "`/bin/sh`"
+    ]
+  },
+  "ex-fyr4r0tz": {
+    "prompt": "No scratch, o `x509.SystemCertPool` devolveu um pool vazio e erro `nil`. Por que essa é a mais perigosa das três falhas?",
+    "hint": "O que um programa de verdade faria em seguida?",
+    "choices": [
+      {
+        "text": "Derruba o programa com um panic na inicialização, antes de `main` rodar",
+        "why": "Nada caiu: o `probe` mostrou `0 authorities` e saiu normalmente."
+      },
+      {
+        "text": "Não vem erro, então o programa falha depois, em outro lugar",
+        "why": "Isso. Sem erro para checar, a falha aparece depois e em outro lugar, como um certificado que o cliente não consegue verificar."
+      },
+      {
+        "text": "Desliga a verificação de certificados em toda conexão que o programa abrir",
+        "why": "Um pool vazio não confia em ninguém; todo certificado de servidor falha. É o oposto de desligado."
+      },
+      {
+        "text": "Deixa a imagem maior",
+        "why": "A imagem scratch era a menor, 4.52 MB contra 7.71 MB."
+      }
+    ]
+  },
+  "ex-nfgkmd3c": {
+    "prompt": "O `probe`, ligado à biblioteca C e copiado para a imagem base do Google para binários estáticos, falha com `exec /probe: no such file or directory`, embora o `/probe` esteja na imagem. O que resolve?",
+    "hint": "Qual arquivo falta de verdade, e qual imagem o tem?",
+    "choices": [
+      {
+        "text": "Copiar o binário para `/bin/probe`, que é onde o kernel procura programas",
+        "why": "O kernel achou o `/probe`; o que ele não achou foi o carregador que o binário pede. Mudar o binário de lugar não muda nada."
+      },
+      {
+        "text": "Rodá-lo como root com `--user 0`",
+        "why": "Um arquivo que falta falta para qualquer usuário. Root muda permissões, não o que existe."
+      },
+      {
+        "text": "Compilar com `CGO_ENABLED=0`, ou usar `distroless/base-debian12`",
+        "why": "Isso. O build estático não precisa de carregador nenhum; a imagem `base` é a feita para programas que precisam mesmo da biblioteca C."
+      },
+      {
+        "text": "Acrescentar `--network=host`",
+        "why": "Nenhuma rede participa do início de um processo. A mensagem é sobre um arquivo."
+      }
+    ]
+  },
+  "ex-12z78esa": {
+    "prompt": "Por que o `Containerfile` fixado escreve `static-debian12:nonroot@sha256:afa5c872…` em vez de só a tag?",
+    "hint": "O que pode mudar por trás de uma tag, e o que pode mudar por trás de um digest?",
+    "choices": [
+      {
+        "text": "Deixa o pull mais rápido, porque o Podman não consulta o registro",
+        "why": "O build da seção 04 não baixou nada de nenhum jeito: as duas bases já estavam na máquina."
+      },
+      {
+        "text": "Uma tag se move; um digest nomeia aqueles bytes para sempre",
+        "why": "Isso. A tag fica para as pessoas lerem; o digest decide, e passar a uma base mais nova vira uma edição que alguém revisa."
+      },
+      {
+        "text": "O Podman recusa tag sem digest",
+        "why": "A seção 03 compilou só com tags, sem reclamação."
+      },
+      {
+        "text": "Escolhe a imagem `amd64`, e um servidor ARM recebe erro",
+        "why": "O `afa5c872…` é o índice; ele nomeia cinco imagens, uma por processador, e cada máquina escolhe a sua."
+      }
+    ]
+  },
+  "ex-xcahb6g9": {
+    "prompt": "Para o `time.LoadLocation` funcionar numa imagem scratch sem copiar o `/usr/share/zoneinfo`, compile com `go build -tags ___`, que embute as regras de fuso por meio do `time/tzdata`.",
+    "hint": "Acrescentou 410.584 bytes ao `probe`.",
+    "blanks": [
+      {
+        "accept": [
+          "timetzdata"
+        ]
+      }
+    ]
+  },
+  "ex-7h7msxzz": {
+    "prompt": "Depois de `printf x >> hits-linux-arm64`, a Ana roda de novo o mesmo `go build -o dist/hits-linux-arm64` e o `sha256sum -c` ainda diz `FAILED`. Por quê?",
+    "hint": "O que o `go build` olha antes de escrever uma saída que já existe?",
+    "choices": [
+      {
+        "text": "O cache de build devolveu um objeto corrompido para o alvo arm64",
+        "why": "O cache estava bom: apagar o arquivo e compilar de novo produziu o hash certo do mesmo cache."
+      },
+      {
+        "text": "O `sha256sum` guarda os resultados por nome de arquivo entre execuções",
+        "why": "O `sha256sum` calcula o hash do arquivo a cada execução; não guarda nada entre execuções."
+      },
+      {
+        "text": "Builds cruzados para `arm64` nunca se reproduzem de uma execução para outra",
+        "why": "O hash do arm64 bateu com o `SHA256SUMS` assim que o arquivo foi refeito do zero."
+      },
+      {
+        "text": "O `go build` viu um build ID atual no arquivo e o manteve",
+        "why": "Isso. O byte extra foi para o fim e não tocou no build ID, então o comando go achou a saída atualizada. Um `rm` antes força uma escrita de verdade."
+      }
+    ]
+  },
+  "ex-rr8dasmq": {
+    "prompt": "O `hits` compilado sem flags em `~/ship` e em `~/ship-copy` dá dois hashes SHA-256 diferentes; com `-trimpath`, os hashes são iguais. O que diferia?",
+    "hint": "O código era o mesmo.",
+    "choices": [
+      {
+        "text": "O diretório, gravado no binário",
+        "why": "Isso. Sem `-trimpath`, nomes como `/home/ana/ship/main.go` entram no binário para os stack traces; com ele, caminhos de módulo os substituem."
+      },
+      {
+        "text": "A hora do build, que o Go carimba em todo binário",
+        "why": "O Go não grava hora de build; é por isso que os dois builds com `-trimpath`, feitos em momentos diferentes, saíram idênticos."
+      },
+      {
+        "text": "Uma semente aleatória que o linker sorteia em cada build",
+        "why": "Uma semente aleatória faria os builds com `-trimpath` diferirem também, e eles não diferiram."
+      },
+      {
+        "text": "A informação de controle de versão de cada diretório",
+        "why": "Nenhum dos diretórios é repositório git, então nenhum binário gravou isso."
+      }
+    ]
+  },
+  "ex-y7my94g0": {
+    "prompt": "Uma página de release lista os binários e o `SHA256SUMS` deles. Contra o que uma assinatura cosign do `SHA256SUMS` protege que os checksums sozinhos não protegem?",
+    "hint": "Quem consegue mudar cada um dos arquivos dessa página?",
+    "choices": [
+      {
+        "text": "Um download interrompido por uma conexão ruim",
+        "why": "O `sha256sum -c` já pega isso: um byte diferente bastou para mostrar `FAILED`."
+      },
+      {
+        "text": "Alguém que troca um binário e reescreve a linha dele no `SHA256SUMS` para bater",
+        "why": "Isso. Quem consegue mudar a página muda os dois arquivos; ninguém sem a `cosign.key` faz uma assinatura que verifique sobre a lista reescrita."
+      },
+      {
+        "text": "Um binário compilado para o processador errado",
+        "why": "Uma assinatura garante bytes, não onde eles rodam; quem responde isso é o `file`."
+      },
+      {
+        "text": "Um bug no próprio `hits`",
+        "why": "Uma assinatura diz quem responde pelo arquivo. Um programa assinado com bug continua com o bug."
+      }
+    ]
+  },
+  "ex-2arfn6h8": {
+    "prompt": "O `cosign verify-blob` da Ana precisa de `--insecure-ignore-tlog`. O que a flag diz ao cosign?",
+    "hint": "Veja o `no-tlog.json` e o que o `sign-blob` recebeu para usar.",
+    "choices": [
+      {
+        "text": "Para pular a verificação da assinatura",
+        "why": "A assinatura foi verificada: um `SHA256SUMS` forjado falhou com `invalid signature` com a mesma flag."
+      },
+      {
+        "text": "Para confiar em qualquer chave pública que achar, até uma dentro do bundle",
+        "why": "Só a `--key cosign.pub` era confiável. Outra chave não verificaria este bundle."
+      },
+      {
+        "text": "Para não esperar uma entrada no Rekor, que esta assinatura nunca teve",
+        "why": "Isso. A configuração de assinatura vazia não nomeava log, então não há o que verificar; o aviso diz o custo disso: ninguém mais vê quando a chave assinou."
+      },
+      {
+        "text": "Para funcionar sem acesso à rede",
+        "why": "A rede era o assunto do aviso no `sign-blob`. Esta flag trata da entrada no log, que existe ou não independentemente da rede."
+      }
+    ]
+  },
+  "ex-8227wb3f": {
+    "prompt": "Ponha em ordem um release assinado do `hits`, do build até a última verificação de quem baixa.",
+    "hint": "Quem publica age primeiro; quem baixa verifica a assinatura antes dos checksums.",
+    "items": [
+      "compilar cada alvo com `CGO_ENABLED=0 go build -trimpath -ldflags=\"-s -w\"`",
+      "escrever o `SHA256SUMS` com o `sha256sum`",
+      "assinar o `SHA256SUMS` com `cosign sign-blob --key cosign.key`",
+      "publicar os binários, o `SHA256SUMS`, o bundle e a `cosign.pub`",
+      "quem baixa roda `cosign verify-blob --key cosign.pub` no `SHA256SUMS`",
+      "quem baixa roda `sha256sum -c SHA256SUMS`"
+    ]
+  },
+  "ex-89gd5sfd": {
+    "prompt": "Um colega entrega um serviço Go com `CGO_ENABLED=0` que chama uma API HTTPS, numa imagem `FROM scratch`. Ele inicia, e toda requisição falha com um certificado assinado por uma autoridade desconhecida. Qual é a menor correção certa?",
+    "hint": "Qual das três perguntas do `probe` é esta?",
+    "choices": [
+      {
+        "text": "Recompilar com `CGO_ENABLED=1` para a biblioteca C fornecer os certificados",
+        "why": "A biblioteca C não guarda certificados, e no scratch um binário com cgo nem começaria: não há carregador."
+      },
+      {
+        "text": "Rodar o contêiner com `--user 0`",
+        "why": "Root não cria arquivos que não existem; o pool continua vazio."
+      },
+      {
+        "text": "Pôr um pacote de CAs na imagem, copiando do estágio de build ou passando para `distroless/static`",
+        "why": "Isso. O programa não achou pacote, então não confia em ninguém. Copie o `/etc/ssl/certs/ca-certificates.crt` ou use a base que traz o do Debian, mantido atualizado por outra pessoa."
+      },
+      {
+        "text": "Compilar com `-tags timetzdata`",
+        "why": "Isso embute as regras de fuso, a segunda pergunta do `probe`. Certificados são a terceira."
+      }
+    ]
+  },
+  "ex-r8zphfp5": {
+    "prompt": "O `podman images` mostrou `probe:distroless` com 7.71 MB e `probe:scratch` com 4.52 MB, o mesmo binário em duas bases. Quantos MB tem a base distroless?",
+    "hint": "O binário está nas duas; subtraia.",
+    "unit": "MB"
+  }
+}

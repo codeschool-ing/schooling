@@ -1,0 +1,384 @@
+{
+  "ex-7wgn9emr": {
+    "prompt": "Na versão com Cobra do `hits`, o `newTopCmd` declara `var n int` dentro da função e não no nível do pacote. O que isso garante?",
+    "hint": "Pense num teste que roda o comando duas vezes.",
+    "choices": [
+      {
+        "text": "Toda árvore que o `run` monta começa com `-n` no padrão 3",
+        "why": "Isso. Uma variável de pacote guarda o valor da última leitura, e uma segunda execução sem `-n` ainda veria o número da primeira."
+      },
+      {
+        "text": "O Cobra se recusa a ligar uma flag a uma variável de pacote",
+        "why": "Ele aceita qualquer ponteiro; o próprio modelo do gerador liga flags a variáveis de pacote."
+      },
+      {
+        "text": "O binário fica menor",
+        "why": "Onde a variável é declarada não muda o binário de forma mensurável; os 1.076.140 bytes a mais são Cobra, pflag e `text/template`."
+      },
+      {
+        "text": "O `-n` passa a valer também para o `count`, como flag herdada",
+        "why": "O alcance é decidido por `Flags()` contra `PersistentFlags()`, não por onde a variável mora. `count -n 2` continua recusado."
+      }
+    ]
+  },
+  "ex-f32k2fbd": {
+    "prompt": "O `hits` só com a biblioteca padrão da lição 1 tinha 4.031.903 bytes e o build com Cobra tem 5.108.043 bytes. Quantos por cento o binário cresceu, arredondando para inteiro?",
+    "hint": "(5.108.043 − 4.031.903) ÷ 4.031.903.",
+    "unit": "%"
+  },
+  "ex-y0g37se7": {
+    "prompt": "O `go list -m all` imprimiu oito módulos, enquanto o `go version -m hits` mostrou só Cobra e pflag como dependências. O que explica a diferença?",
+    "hint": "Um comando descreve o grafo de módulos; o outro lê o binário.",
+    "choices": [
+      {
+        "text": "Os outros módulos falharam no download e foram pulados",
+        "why": "Um módulo que falhasse no download pararia o build com erro. Estes foram resolvidos e apenas não foram importados."
+      },
+      {
+        "text": "O grafo inclui o que as dependências do Cobra usam em ferramentas e testes; só pacotes importados entram",
+        "why": "Isso. `go-md2man`, `blackfriday`, `yaml` e `check.v1` servem ao pacote `doc` do Cobra e aos testes do `yaml`, e o `hits` não importa nenhum dos dois."
+      },
+      {
+        "text": "O linker descarta módulos abaixo de um tamanho mínimo",
+        "why": "Esse limite não existe; um pacote entra porque alguém o importa, seja qual for o tamanho."
+      },
+      {
+        "text": "O `go version -m` só lista dependências diretas",
+        "why": "O pflag é indireto, marcado `// indirect` no `go.mod`, e aparece. A lista é o que foi compilado."
+      }
+    ]
+  },
+  "ex-fgsw6xyp": {
+    "prompt": "Dentro do `RunE` de um comando, a tabela é escrita em `cmd.___()`, para cair no writer que o `run` passou ao `SetOut`, inclusive o buffer de um teste.",
+    "hint": "O nome do método diz que ele recorre à saída padrão.",
+    "blanks": [
+      {
+        "accept": [
+          "OutOrStdout"
+        ]
+      }
+    ]
+  },
+  "ex-36s1c8br": {
+    "prompt": "`./hits top -json access.log` falha com `unknown shorthand flag: 'j' in -json`. Por quê?",
+    "hint": "Quantas letras podem vir depois de um traço só no pflag?",
+    "choices": [
+      {
+        "text": "O pflag lê um traço como uma série de atalhos de uma letra, e não existe `-j`",
+        "why": "Isso. `-json` é lido como `ls -la`: `-j -s -o -n`. Nome longo leva dois traços, `--json`."
+      },
+      {
+        "text": "O `--json` é declarado na raiz, então o `top` não o enxerga",
+        "why": "Ele é persistente, então o `top` o enxerga: `./hits top --number=2 access.log --json` imprimiu JSON."
+      },
+      {
+        "text": "No pflag as flags precisam vir depois do nome do arquivo",
+        "why": "O pflag aceita dos dois lados; o problema é a própria palavra `-json`."
+      },
+      {
+        "text": "Flags booleanas exigem um valor explícito",
+        "why": "`--json` sem valor ligou a flag em todas as transcrições."
+      }
+    ]
+  },
+  "ex-60306567": {
+    "prompt": "Associe cada comando com o que o `hits` com Cobra fez com ele.",
+    "hint": "Um deles usa uma flag no comando errado.",
+    "pairs": [
+      {
+        "left": "`./hits top access.log -n 2`",
+        "right": "uma tabela com dois caminhos"
+      },
+      {
+        "left": "`./hits --json count access.log`",
+        "right": "as contagens por status num objeto JSON"
+      },
+      {
+        "left": "`./hits count -n 2 access.log`",
+        "right": "`unknown shorthand flag: 'n' in -n`, status 2"
+      },
+      {
+        "left": "`./hits top --number=2 access.log --json`",
+        "right": "um array JSON com dois caminhos"
+      }
+    ],
+    "right_distractors": [
+      "`access.log` lido como valor de `-n`, status 2"
+    ]
+  },
+  "ex-rgcb1qe9": {
+    "prompt": "Você acrescenta uma flag `--since` que o `count` e o `top` devem respeitar. Onde ela entra?",
+    "hint": "A lição 1 a teria declarado duas vezes.",
+    "choices": [
+      {
+        "text": "No `Flags()` de cada subcomando, uma vez por comando",
+        "why": "Funciona e repete a flag, que é o arranjo da lição 1; um terceiro subcomando pediria uma terceira cópia."
+      },
+      {
+        "text": "Na raiz, com `PersistentFlags()`",
+        "why": "Isso. Declarada uma vez, chega a todos os comandos abaixo da raiz e aparece em `Global Flags` na ajuda deles, como o `--json`."
+      },
+      {
+        "text": "Na raiz, com `Flags()`, já que a raiz roda primeiro",
+        "why": "`Flags()` é local: uma flag só da raiz seria recusada por `count` e `top` como desconhecida."
+      },
+      {
+        "text": "Na `ValidArgsFunction`, que cuida de tudo depois do subcomando",
+        "why": "Essa função responde ao Tab para argumentos posicionais; não declara flags."
+      }
+    ]
+  },
+  "ex-s7hzn7jd": {
+    "prompt": "Um colega acrescenta `cmd.Flags().SetInterspersed(false)` ao `top`. O que `./hits top access.log -n 2` faz agora?",
+    "hint": "Onde o pflag para de ler flags sem a intercalação, e quantos argumentos o `top` aceita?",
+    "choices": [
+      {
+        "text": "Imprime a mesma tabela de duas linhas de antes",
+        "why": "Isso exige ler `-n 2` como flag, e era justamente a intercalação que permitia isso depois do nome do arquivo."
+      },
+      {
+        "text": "Mostra os três caminhos padrão e ignora o `-n 2`",
+        "why": "Nada é ignorado: as palavras viram argumentos, e o `top` aceita no máximo um."
+      },
+      {
+        "text": "Falha com `accepts at most 1 arg(s), received 3` e status 2",
+        "why": "Isso. A leitura para em `access.log`, como na lição 1, então `-n` e `2` viram argumentos e o `MaximumNArgs(1)` recusa três."
+      },
+      {
+        "text": "Tenta abrir um arquivo chamado `-n` e sai com 1",
+        "why": "A contagem de argumentos é verificada antes de o `RunE` rodar, então nenhum arquivo é aberto."
+      }
+    ]
+  },
+  "ex-75etcxz4": {
+    "prompt": "Quem escolhe o status de saída do `hits` com Cobra quando algo dá errado?",
+    "hint": "O que o `ExecuteC` devolve?",
+    "choices": [
+      {
+        "text": "O Cobra, que sai sozinho com 2 em qualquer erro de uso",
+        "why": "O Cobra não chama `os.Exit` aqui; ele devolve o erro e o comando a que chegou."
+      },
+      {
+        "text": "O pflag, como fazia o `flag` da biblioteca padrão",
+        "why": "A lição 1 usou `ContinueOnError` para o `flag` não sair; o pflag sob o Cobra também devolve o erro."
+      },
+      {
+        "text": "O `run`, a partir do erro que o `ExecuteC` devolve",
+        "why": "Isso. O `run` imprime o erro e devolve 1 para um `runError` e 2 para o resto; o `main` passa isso ao `os.Exit`."
+      },
+      {
+        "text": "O shell, que converte qualquer mensagem de erro em status 1",
+        "why": "O shell só informa o status com que o processo saiu."
+      }
+    ]
+  },
+  "ex-55nafx89": {
+    "prompt": "Quais destes erros chegam ao `run` SEM o invólucro `runError` e por isso terminam em status 2? Marque todos os que valem.",
+    "hint": "Pergunte quais acontecem antes de qualquer `RunE` começar.",
+    "choices": [
+      {
+        "text": "`unknown command \"cont\" for \"hits\"`",
+        "why": "Sim. O Cobra não achou o comando ao percorrer a árvore, antes de qualquer `RunE`."
+      },
+      {
+        "text": "`invalid argument \"five\" for \"-n, --number\" flag`",
+        "why": "Sim. O pflag recusou o valor ao ler as flags."
+      },
+      {
+        "text": "`accepts at most 1 arg(s), received 2`",
+        "why": "Sim. O `cobra.MaximumNArgs(1)` conferiu os argumentos antes do `RunE`."
+      },
+      {
+        "text": "`open nope.log: no such file or directory`",
+        "why": "Não. O `summarise` o embrulha em `runError`: a linha de comando estava certa e a execução falhou, então é 1."
+      },
+      {
+        "text": "`line 1: want 5 fields, got 1`",
+        "why": "Não. Uma linha que não se lê é execução que falhou, embrulhada pelo `summarise`, e termina em 1."
+      }
+    ]
+  },
+  "ex-9ya8nabn": {
+    "prompt": "Alguém apaga `SilenceUsage: true` da raiz e mantém todo o resto. O que `./hits top -n five access.log > out.txt` deixa em `out.txt`?",
+    "hint": "Em qual writer o Cobra imprime a listagem de uso?",
+    "choices": [
+      {
+        "text": "Nada: a listagem de uso vai para a saída de erro, como a mensagem",
+        "why": "O Cobra imprime o uso com `Println`, que usa o writer dado ao `SetOut` quando existe, e o `run` lhe dá a saída padrão."
+      },
+      {
+        "text": "A listagem de uso do `top`, de dez linhas, sem contagem nenhuma",
+        "why": "Isso. A mensagem e a dica continuam na saída de erro, mas a listagem segue o `SetOut` e cai no arquivo dos resultados."
+      },
+      {
+        "text": "A tabela de três caminhos, porque o valor ruim volta ao padrão",
+        "why": "Um valor que não converte é recusado; nada é contado."
+      },
+      {
+        "text": "`Error: invalid argument` seguido do uso",
+        "why": "O `SilenceErrors` continua ligado, então o Cobra não imprime linha `Error:` em lugar nenhum; o `run` imprime a mensagem na saída de erro."
+      }
+    ]
+  },
+  "ex-hd5vh3qp": {
+    "prompt": "`Args: cobra.___(1)` no `top` é o que produziu `accepts at most 1 arg(s), received 2` quando dois arquivos foram citados.",
+    "hint": "Uma função da família de validadores de argumentos posicionais do Cobra, com nome de limite superior.",
+    "blanks": [
+      {
+        "accept": [
+          "MaximumNArgs"
+        ]
+      }
+    ]
+  },
+  "ex-shhfj2s1": {
+    "prompt": "Por que o comando raiz do `hits` tem um `RunE` que só devolve um erro?",
+    "hint": "O que o Cobra faz com uma raiz que tem subcomandos e nada para rodar?",
+    "choices": [
+      {
+        "text": "Sem ele o Cobra não acrescentaria `help` e `completion`",
+        "why": "Esses são acrescentados a toda raiz com subcomandos, executável ou não."
+      },
+      {
+        "text": "Para que `./hits` sozinho seja erro de uso, com status 2",
+        "why": "Isso. Uma raiz sem `RunE` imprime a ajuda e devolve `nil`, e `./hits` sozinho sairia com 0; o preço é uma linha `hits [flags]` na ajuda."
+      },
+      {
+        "text": "O Cobra entra em pânico quando a raiz não tem função para rodar",
+        "why": "Não entra em pânico; trata a raiz como só de ajuda e imprime a ajuda."
+      },
+      {
+        "text": "É assim que se liga a sugestão `Did you mean this?`",
+        "why": "As sugestões vêm da verificação de comando desconhecido ao percorrer a árvore, com ou sem `RunE` na raiz."
+      }
+    ]
+  },
+  "ex-0d1ac6cp": {
+    "prompt": "Quando Ana aperta Tab depois de `./hits t`, de onde vem a palavra `top`?",
+    "hint": "A linha 26 do script mostra o que roda a cada Tab.",
+    "choices": [
+      {
+        "text": "De uma lista de comandos gravada no script de bash quando ele foi gerado",
+        "why": "O script não guarda nomes de comandos; ele roda o programa e pergunta."
+      },
+      {
+        "text": "Do `./hits __complete t`, que o script roda e lê",
+        "why": "Isso. O comando oculto percorre a mesma árvore que o `hits` usa e imprime `top` e a diretiva na saída padrão."
+      },
+      {
+        "text": "Do bash, que lê o código-fonte em Go para achar os subcomandos",
+        "why": "O bash nunca vê o código-fonte; ele só roda o binário que está completando."
+      },
+      {
+        "text": "Da saída de `hits --help`, que o script interpreta",
+        "why": "O script chama o `__complete`, cuja saída é feita para ele: um candidato por linha e a diretiva `:4`."
+      }
+    ]
+  },
+  "ex-ymwxj0e3": {
+    "prompt": "`./hits __complete top \"\"` terminou com uma linha de diretiva. Que número ela trazia?",
+    "hint": "A diretiva que transforma os candidatos em extensões de arquivo."
+  },
+  "ex-5n113zds": {
+    "prompt": "O `logFiles` devolve `nil, cobra.ShellCompDirectiveNoFileComp` quando um arquivo já foi citado. O que o Tab faria sem essa verificação?",
+    "hint": "O que a função devolveria em toda chamada?",
+    "choices": [
+      {
+        "text": "Oferecer arquivos `.log` de novo, para um argumento que o `top` recusaria",
+        "why": "Isso. Ela devolveria `log` com a diretiva 8 toda vez, e um segundo arquivo falharia no `MaximumNArgs(1)` com status 2."
+      },
+      {
+        "text": "Não oferecer nada, já que o Cobra sabe que o comando aceita um arquivo",
+        "why": "O Cobra chama a função e repassa a resposta; ele não lê o `Args` para completar."
+      },
+      {
+        "text": "Derrubar o shell com um erro do script",
+        "why": "A diretiva 8 com `log` é uma resposta válida; o script filtraria os arquivos como sempre."
+      },
+      {
+        "text": "Oferecer todos os arquivos do diretório, inclusive `notes.txt`",
+        "why": "O filtro continua valendo, então só arquivos `.log` e diretórios seriam oferecidos."
+      }
+    ]
+  },
+  "ex-jxk3x63a": {
+    "prompt": "No mês que vem o `hits` ganha um terceiro subcomando, `slow`. Os usuários salvaram o script de bash meses atrás. O que precisam fazer para o Tab oferecer `slow`?",
+    "hint": "O que o script salvo contém, e o que ele pergunta?",
+    "choices": [
+      {
+        "text": "Gerar de novo o script com `hits completion bash` e salvá-lo outra vez",
+        "why": "O script não contém nomes de comandos, só a chamada ao `__complete`, então o antigo pergunta ao binário novo."
+      },
+      {
+        "text": "Instalar o binário novo; o script antigo pergunta a ele",
+        "why": "Isso. Cada Tab roda `hits __complete`, que lê a árvore do binário que estiver instalado."
+      },
+      {
+        "text": "Acrescentar `slow` ao `ValidArgs` da raiz",
+        "why": "Subcomandos são completados a partir da árvore; o `ValidArgs` é para uma lista fixa de argumentos posicionais."
+      },
+      {
+        "text": "Instalar o pacote `bash-completion` de novo",
+        "why": "O pacote é dependência do script e não muda com o `hits`."
+      }
+    ]
+  },
+  "ex-09bdqa4j": {
+    "prompt": "Ponha em ordem o que acontece quando Ana digita `./hits t` e aperta Tab uma vez.",
+    "hint": "Da tecla até a palavra na tela.",
+    "items": [
+      "o bash chama `__start_hits`, a função registrada para `hits`",
+      "o script roda `./hits __complete t`",
+      "o Cobra percorre a árvore e acha os comandos cujo nome começa com `t`",
+      "o `hits` imprime `top`, sua descrição e `:4` na saída padrão",
+      "o bash escreve `top` na linha de comando"
+    ]
+  },
+  "ex-hzsyz9w5": {
+    "prompt": "Um script noturno escrito para a lição 1 roda `hits count -json \"$f\" > counts.json` com `set -e`. O `hits` com Cobra é instalado no lugar. O que acontece?",
+    "hint": "Acompanhe a flag e depois o status de saída.",
+    "choices": [
+      {
+        "text": "O `counts.json` recebe as contagens, já que `-json` ainda é aceito",
+        "why": "O pflag lê `-json` como atalhos e recusa o `-j`; agora só `--json` funciona."
+      },
+      {
+        "text": "O `counts.json` recebe a tabela em vez de JSON",
+        "why": "Uma flag desconhecida para o comando antes do `RunE`; nada é contado."
+      },
+      {
+        "text": "O arquivo fica vazio, a mensagem vai para a saída de erro e o status 2 interrompe tudo",
+        "why": "Isso. `unknown shorthand flag: 'j' in -json` e a dica vão para a saída de erro, e o `set -e` para no 2."
+      },
+      {
+        "text": "O script para com status 1, porque havia um arquivo envolvido",
+        "why": "Nenhum arquivo foi aberto; uma flag recusada é erro na linha de comando e termina em 2."
+      }
+    ]
+  },
+  "ex-ta83g09g": {
+    "prompt": "Associe cada peça do `hits` com Cobra ao trabalho que ela faz.",
+    "hint": "Uma descrição pertence a um código que não está no `main.go`.",
+    "pairs": [
+      {
+        "left": "`root.SetOut(stdout)`",
+        "right": "decide onde as tabelas são escritas"
+      },
+      {
+        "left": "`runError`",
+        "right": "marca uma execução que falhou com a linha de comando certa"
+      },
+      {
+        "left": "`root.PersistentFlags()`",
+        "right": "faz o `--json` chegar aos dois subcomandos"
+      },
+      {
+        "left": "`ValidArgsFunction: logFiles`",
+        "right": "responde ao Tab para o argumento de arquivo"
+      }
+    ],
+    "right_distractors": [
+      "conta as linhas do log"
+    ]
+  }
+}

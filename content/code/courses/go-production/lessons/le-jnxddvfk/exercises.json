@@ -1,0 +1,544 @@
+[
+  {
+    "id": "ex-1ty7ymvt",
+    "version": 1,
+    "section": "the-shape",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In urfave/cli v3, which signature does a command's `Action` have?",
+    "hint": "The function receives what Run passed down and the command it belongs to.",
+    "choices": [
+      {
+        "text": "`func(ctx context.Context, cmd *cli.Command) error`",
+        "correct": true,
+        "why": "Right. v3 passes a `context.Context` and the `*cli.Command` that holds the parsed flags, the arguments and the streams."
+      },
+      {
+        "text": "`func(c *cli.Context) error`",
+        "correct": false,
+        "why": "That is v2, which had a `*cli.Context` and a separate `cli.App`. Most answers on the web still show it."
+      },
+      {
+        "text": "`func(cmd *cobra.Command, args []string) error`",
+        "correct": false,
+        "why": "That is Cobra's `RunE`, where the arguments arrive as a slice beside the command."
+      },
+      {
+        "text": "`func(args []string, stdin io.Reader, stdout, stderr io.Writer) int`",
+        "correct": false,
+        "why": "That is the shape of `run` in lesson 1, which the library knows nothing about."
+      }
+    ]
+  },
+  {
+    "id": "ex-jfk94crp",
+    "version": 1,
+    "section": "the-shape",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the urfave/cli `hits`, both commands take `-json`, and `main.go` builds it with a function, `jsonFlag()`, instead of one package-level variable. Why?",
+    "hint": "What does a flag struct keep after the command line is read?",
+    "choices": [
+      {
+        "text": "Each flag holds the value it parsed",
+        "correct": true,
+        "why": "Right. A `cli.BoolFlag` is not only a declaration; it holds what the parse found, so each command gets a fresh one."
+      },
+      {
+        "text": "Go does not allow a pointer to be stored in two slices",
+        "correct": false,
+        "why": "Go allows it without complaint. The trouble would be the shared state, not the language."
+      },
+      {
+        "text": "A function is inlined and keeps the binary smaller",
+        "correct": false,
+        "why": "Whether a call is inlined changes a few bytes at most and nothing about behaviour. The reason is the state the flag keeps."
+      },
+      {
+        "text": "Package-level variables cannot hold an interface value such as `cli.Flag`",
+        "correct": false,
+        "why": "They can; `var f cli.Flag = &cli.BoolFlag{…}` compiles. Nothing in Go forbids it."
+      }
+    ]
+  },
+  {
+    "id": "ex-29afgzpq",
+    "version": 1,
+    "section": "the-shape",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `report.go`, `summarise` refuses two files with `return tally.Summary{}, cli.___(\"hits: one file at most, got 2\", 2)`, an error that carries the status the process should end with.",
+    "hint": "The library's helper that wraps a message and a number into a `cli.ExitCoder`.",
+    "blanks": [
+      {
+        "accept": [
+          "Exit"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bb7wsv0a",
+    "version": 1,
+    "section": "the-shape",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go mod tidy` in `~/cli-hits` downloaded `github.com/stretchr/testify` and `go.yaml.in/yaml/v3`, though nothing in `hits` imports them. Why?",
+    "hint": "`go mod why -m` would trace the path through somebody else's tests.",
+    "choices": [
+      {
+        "text": "`report.go` imports them indirectly to format the JSON",
+        "correct": false,
+        "why": "`report.go` uses `encoding/json` from the standard library. Neither module is in `go list -deps .`."
+      },
+      {
+        "text": "They are urfave/cli's test libraries, and `tidy` looks at the tests of what you import",
+        "correct": true,
+        "why": "Right. They sit in the module graph and in `go.sum`, and are never compiled into `hits`."
+      },
+      {
+        "text": "urfave/cli uses them at run time to render the help templates",
+        "correct": false,
+        "why": "Then `go list -deps .` would list them; it listed only `github.com/urfave/cli/v3` as third-party."
+      },
+      {
+        "text": "`go get` skipped them and `tidy` repaired a broken build",
+        "correct": false,
+        "why": "The build was not broken: `go get` added the one module `hits` needs, and `tidy` settled `go.mod` and `go.sum`."
+      }
+    ]
+  },
+  {
+    "id": "ex-fw84qb1q",
+    "version": 1,
+    "section": "flags-and-arguments",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana runs `./hits top access.log -n 2` against lesson 1's standard-library build and against the urfave/cli build. What happens?",
+    "hint": "One parser stops at the first word that is not a flag; the other reads the whole list.",
+    "choices": [
+      {
+        "text": "Both print the two busiest paths, since `-n` is a flag either way",
+        "correct": false,
+        "why": "Lesson 1's flag package stopped at `access.log`, so `-n` and `2` became two more file names."
+      },
+      {
+        "text": "Both refuse with `one file at most, got 3` and status 2",
+        "correct": false,
+        "why": "urfave/cli v3 takes `-n 2` as a flag wherever it sits, and printed `/login` and `/api/orders`."
+      },
+      {
+        "text": "Only the newer build prints two paths; the older refuses",
+        "correct": true,
+        "why": "Right. v3 reads flags anywhere on the line; the flag package of lesson 1 stops at the first argument."
+      },
+      {
+        "text": "Lesson 1's prints three paths, ignoring `-n`",
+        "correct": false,
+        "why": "It did not get as far as counting: three arguments is a usage mistake in `summarise`."
+      }
+    ]
+  },
+  {
+    "id": "ex-rxq61062",
+    "version": 1,
+    "section": "flags-and-arguments",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`top`'s `-n` is declared with `Value: 3` and `Sources: cli.EnvVars(\"HITS_TOP\")`. Put the three places its value can come from in the order urfave/cli tries them, the first to win at the top.",
+    "hint": "`HITS_TOP=4 ./hits top -n 2 access.log` printed two rows.",
+    "items": [
+      "`-n` typed on the command line",
+      "the `HITS_TOP` environment variable",
+      "`Value: 3` in the declaration"
+    ]
+  },
+  {
+    "id": "ex-vrn3cp02",
+    "version": 1,
+    "section": "flags-and-arguments",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each field in the declaration of `top` with what it produced in the transcripts.",
+    "hint": "Look at `./hits top -h` and at the runs around it.",
+    "pairs": [
+      {
+        "left": "`Aliases: []string{\"limit\"}`",
+        "right": "`--limit 2` set the same value as `-n 2`"
+      },
+      {
+        "left": "`Sources: cli.EnvVars(\"HITS_TOP\")`",
+        "right": "`[$HITS_TOP]` in the help, and four rows with no `-n`"
+      },
+      {
+        "left": "`Validator: atLeastOne`",
+        "right": "`-n 0` refused with `must be at least 1, got 0`"
+      },
+      {
+        "left": "`ArgsUsage: \"[file]\"`",
+        "right": "the usage line `hits top [options] [file]`"
+      }
+    ],
+    "right_distractors": [
+      "`hits top` refused to run until `-n` was given"
+    ]
+  },
+  {
+    "id": "ex-wjat1hmw",
+    "version": 1,
+    "section": "flags-and-arguments",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A log file in the current directory happens to be called `help`. What does `./hits top help` do with the urfave/cli build?",
+    "hint": "Every command in v3 carries a subcommand of its own.",
+    "choices": [
+      {
+        "text": "It counts the file `help`, since a word after a command is always an argument",
+        "correct": false,
+        "why": "In v3 every command has a built-in `help` subcommand, and `hits top help` printed `NAME:` and `top`'s help."
+      },
+      {
+        "text": "It prints `top`'s help; `./hits top ./help` reads the file",
+        "correct": true,
+        "why": "Right. The library claims the word `help`; `./help` names the same file and is not a command name."
+      },
+      {
+        "text": "It stops with `unknown command \"help\"` and status 2",
+        "correct": false,
+        "why": "That message comes from `noCommand`, the root's fallback, which only runs when the first word names no command. `help` is a command."
+      },
+      {
+        "text": "It prints the root help, the same as `./hits --help`",
+        "correct": false,
+        "why": "`help` after `top` belongs to `top`, so the help printed was `hits top - the paths with the most requests`."
+      }
+    ]
+  },
+  {
+    "id": "ex-0gsgwfxs",
+    "version": 1,
+    "section": "help-errors-and-exit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With section 02's `main.go`, `./hits top -n five access.log 2>/dev/null | head -3` printed `NAME:` and `hits top - the paths with the most requests`. What does that show?",
+    "hint": "Which stream did `2>/dev/null` throw away?",
+    "choices": [
+      {
+        "text": "The library wrote the help listing to standard output, where a pipeline reads data",
+        "correct": true,
+        "why": "Right. Only standard error was discarded and the listing still arrived, so it was on standard output."
+      },
+      {
+        "text": "`head` merged the two streams",
+        "correct": false,
+        "why": "`head` reads only its standard input, which is `hits`'s standard output; it never sees standard error."
+      },
+      {
+        "text": "The program counted the log and printed a table headed `NAME:`",
+        "correct": false,
+        "why": "Nothing was counted: the flag failed to parse, so no Action ran. `NAME:` is the first line of the generated help."
+      },
+      {
+        "text": "`2>/dev/null` failed because the help was too long to redirect",
+        "correct": false,
+        "why": "A redirection has no length limit; the listing reached `head` because it was never on standard error."
+      }
+    ]
+  },
+  {
+    "id": "ex-tszkkjb0",
+    "version": 1,
+    "section": "help-errors-and-exit",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With section 02's `main.go`, what exit status did `./hits cont access.log` end with?",
+    "hint": "A code lesson 1 never used, made by the library's help command.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-b6p9fwsc",
+    "version": 1,
+    "section": "help-errors-and-exit",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which one field of the final `newApp` is it that lets `main_test.go` call `run` for every row of its table?",
+    "hint": "Delete it and the test binary stopped on the third row.",
+    "choices": [
+      {
+        "text": "`OnUsageError: usageError`",
+        "correct": false,
+        "why": "It turns a bad flag into one line and a 2, but a `cli.Exit` would still reach the default handler, which exits the process."
+      },
+      {
+        "text": "`ErrWriter: stderr`",
+        "correct": false,
+        "why": "It sends the library's messages to the buffer, but the default handler would still call `os.Exit` from inside `Run`."
+      },
+      {
+        "text": "`ExitErrHandler` set to a function that does nothing",
+        "correct": true,
+        "why": "Right. With it, `Run` returns every `cli.Exit` instead of printing it and calling `os.Exit`, and `run` decides the code."
+      },
+      {
+        "text": "`Action: noCommand`",
+        "correct": false,
+        "why": "It answers an empty or unknown command with a `cli.Exit`, which without the handler is exactly what killed the test."
+      }
+    ]
+  },
+  {
+    "id": "ex-qgx87dek",
+    "version": 1,
+    "section": "help-errors-and-exit",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the final `main.go`, which of these calls end with a status that breaks lesson 1's rule (0 worked, 1 the run failed, 2 the call was wrong)? Choose all that apply.",
+    "hint": "Two paths get past all three hooks.",
+    "choices": [
+      {
+        "text": "`./hits help nope`",
+        "correct": true,
+        "why": "Yes. The built-in help command answered `No help topic for 'nope'` with 3, without asking the root's Action."
+      },
+      {
+        "text": "`HITS_TOP=x ./hits top access.log`",
+        "correct": true,
+        "why": "Yes. A bad value from the environment is a caller's mistake, but it arrives as a plain error and `run` gives it 1."
+      },
+      {
+        "text": "`./hits count nope.log`",
+        "correct": false,
+        "why": "It ended in 1, and a file that will not open is a run that failed: that is the rule."
+      },
+      {
+        "text": "`./hits cont access.log`",
+        "correct": false,
+        "why": "It ended in 2 with a suggestion, through `noCommand`."
+      }
+    ]
+  },
+  {
+    "id": "ex-cn1qhanm",
+    "version": 1,
+    "section": "choosing",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`stat` printed 6,276,176 bytes for the urfave/cli `hits` and 5,107,200 bytes for the Cobra one, built from the same `tally` package. By how many bytes is the urfave/cli binary larger?",
+    "hint": "Subtract.",
+    "value": 1168976,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-frysaa4k",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go list -m all` in `~/cli-hits` names `github.com/stretchr/testify`, but `go list -deps .` does not. Which is the right reading?",
+    "hint": "One command lists modules, the other packages.",
+    "choices": [
+      {
+        "text": "`-m all` is the module graph; `-deps` lists the packages compiled in",
+        "correct": true,
+        "why": "Right. A module can be required, even downloaded, without one of its packages entering the binary."
+      },
+      {
+        "text": "`-deps` hides test libraries to keep its output short",
+        "correct": false,
+        "why": "`-deps` hides nothing: it lists every package the build imports, and `testify` is imported only by urfave/cli's tests."
+      },
+      {
+        "text": "One of the two is out of date until `go mod tidy` runs again",
+        "correct": false,
+        "why": "Both answered from the same `go.mod` and `go.sum`, right after `tidy`. They answer different questions."
+      },
+      {
+        "text": "`testify` is linked dynamically, so it is not counted as compiled",
+        "correct": false,
+        "why": "Go links these packages statically when it uses them; `testify` is simply not used by `hits`."
+      }
+    ]
+  },
+  {
+    "id": "ex-nk9c5xec",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team needs a helper with one command and two flags, shipped inside a container image, in a repository whose policy is no third-party code. Which of the three versions measured fits?",
+    "hint": "Weigh the policy first, then what the helper needs.",
+    "choices": [
+      {
+        "text": "urfave/cli, because it depends on no other module",
+        "correct": false,
+        "why": "One module with nothing behind it is still one third-party module, which the policy forbids."
+      },
+      {
+        "text": "Cobra, for the generator and the man pages",
+        "correct": false,
+        "why": "Neither is worth two compiled modules and a policy exception for a single command."
+      },
+      {
+        "text": "The standard library, as in lesson 1",
+        "correct": true,
+        "why": "Right. One command and two flags are what the flag package covers, the build has no third-party module, and the binary was the smallest, 4,031,823 bytes."
+      },
+      {
+        "text": "Any of them, since all three produced the same table",
+        "correct": false,
+        "why": "The output matched, but the policy and the size did not: two of the three bring in third-party code."
+      }
+    ]
+  },
+  {
+    "id": "ex-j252vs3g",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`go list -deps .` for the Cobra `hits` includes `vendor/golang.org/x/net/dns/dnsmessage`, though `hits` never touches the network. Where does it come from?",
+    "hint": "Follow which package imports `net`.",
+    "choices": [
+      {
+        "text": "Cobra's completion script asks a server for suggestions",
+        "correct": false,
+        "why": "The completion script calls `hits` itself on the local machine; nothing goes over the network."
+      },
+      {
+        "text": "Through pflag, whose IP-address flags import `net`",
+        "correct": true,
+        "why": "Right. `dnsmessage` is a package the standard library vendors for `net`'s resolver, and `net` arrives through pflag."
+      },
+      {
+        "text": "The go command adds it to every binary built from downloaded modules",
+        "correct": false,
+        "why": "The urfave/cli build also used a downloaded module, and its `go list -deps` had no such package."
+      },
+      {
+        "text": "`mousetrap`, which Cobra uses to detect how it was started",
+        "correct": false,
+        "why": "`mousetrap` is imported only in a file built for Windows, and it is not in the Linux build's list at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-qb242a9h",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To let `-n` fall back on a shell variable when it is absent from the command line, its declaration carries `Sources: cli.___(\"HITS_TOP\")`.",
+    "hint": "The helper that builds a chain of environment lookups.",
+    "blanks": [
+      {
+        "accept": [
+          "EnvVars"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-a1nwzt7q",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens when Ana runs `./hits top -n five access.log` with the final `main.go`.",
+    "hint": "From the process's arguments to the exit status.",
+    "items": [
+      "`run` puts `hits` in front of the arguments and calls `Run`",
+      "`top`'s `-n` refuses `five` while the flags are parsed",
+      "`usageError` wraps the message in `cli.Exit(…, 2)`",
+      "the empty `ExitErrHandler` lets `Run` return that error",
+      "`run` prints the line to standard error and returns 2"
+    ]
+  },
+  {
+    "id": "ex-4j76ec7d",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate wants the Cobra `hits` to take an API token from `HITS_TOKEN` when `--token` is not given, the way `-n` reads `HITS_TOP` in the urfave/cli version. What does that take?",
+    "hint": "Look for an environment field in pflag's `Flag` struct.",
+    "choices": [
+      {
+        "text": "Setting `Sources` on the pflag flag",
+        "correct": false,
+        "why": "`Sources` is urfave/cli's field. pflag's `Flag` has `Name`, `Shorthand`, `Usage`, `Value` and a few more, none for the environment."
+      },
+      {
+        "text": "Nothing: Cobra reads `HITS_` variables for every flag",
+        "correct": false,
+        "why": "Cobra binds no flag to the environment by itself; the Cobra `hits` would ignore the variable."
+      },
+      {
+        "text": "Code that reads it, or a second library",
+        "correct": true,
+        "why": "Right. Read `os.Getenv` when the flag was not changed, or add Viper, which is one more module."
+      },
+      {
+        "text": "Declaring the flag with `IntVarP` instead of `IntVar`",
+        "correct": false,
+        "why": "`IntVarP` adds a one-letter shorthand, which is how `-n` and `--limit` share a value; it has nothing to do with the environment."
+      }
+    ]
+  },
+  {
+    "id": "ex-9zp6k4qq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the `ExitErrHandler` line deleted, `go test .` printed `hits: no command given (see 'hits --help')` straight to the terminal, although the row passed a buffer as standard error. Why?",
+    "hint": "Which writer does the library's default handler print to?",
+    "choices": [
+      {
+        "text": "`go test` prints every buffer when a test fails",
+        "correct": false,
+        "why": "`go test` shows what the test binary writes to its own streams; it knows nothing of a `bytes.Buffer` inside the test."
+      },
+      {
+        "text": "It printed to `cli.ErrWriter`, which is `os.Stderr`",
+        "correct": true,
+        "why": "Right. The default handler uses that package-level writer, not the command's `ErrWriter`, prints there and then calls `os.Exit(2)`, ending the run mid-table."
+      },
+      {
+        "text": "`run` printed the message before the test compared it",
+        "correct": false,
+        "why": "`run` never got the error back: the process ended inside `Run`."
+      },
+      {
+        "text": "Deleting the line also removed `ErrWriter: stderr`",
+        "correct": false,
+        "why": "`sed` deleted only the line containing `ExitErrHandler`; `ErrWriter` was still set."
+      }
+    ]
+  }
+]

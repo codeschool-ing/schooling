@@ -1,0 +1,402 @@
+{
+  "ex-jrsewq0m": {
+    "prompt": "O que um trace de execução registra que o profile de CPU da lição 12 não registra?",
+    "hint": "Um faz amostras, o outro anota.",
+    "choices": [
+      {
+        "text": "Cada evento de escalonamento, na hora, com timestamp",
+        "why": "Isso. Um trace anota cada criação, bloqueio, despertar e chamada de sistema com a hora; um profile de CPU pergunta o que está rodando umas cem vezes por segundo e conta."
+      },
+      {
+        "text": "As mesmas amostras do profile de CPU, tiradas mil vezes mais",
+        "why": "Um trace não tira amostras desse tipo. O custo dele acompanha quantos eventos acontecem, e é por isso que o tamanho acompanha os eventos e não a duração."
+      },
+      {
+        "text": "A linha de código de cada chamada de função do programa",
+        "why": "Chamadas não são eventos num trace. As pilhas vão presas a eventos como uma goroutine bloqueando, não a cada chamada."
+      },
+      {
+        "text": "Quanta memória cada linha de código alocou",
+        "why": "Isso é o profile de memória da lição 12. Um trace traz métricas do tamanho do heap ao longo do tempo, não alocações por linha."
+      }
+    ]
+  },
+  "ex-q4yw70cg": {
+    "prompt": "O `main` do `pcount` é só `os.Exit(run())`, e o trace é parado por uma chamada adiada dentro do `run`. O que daria errado se o `run` chamasse ele mesmo `os.Exit(0)` no fim, em vez de devolver 0?",
+    "hint": "Pense no que o `os.Exit` faz com as chamadas adiadas.",
+    "choices": [
+      {
+        "text": "O trace registraria a saída como vazamento de goroutine",
+        "why": "Não existe evento desse tipo. O problema é que o trace nem seria concluído."
+      },
+      {
+        "text": "O código de saída seria 2 em vez de 0",
+        "why": "`os.Exit(0)` sai com 0. O que ele pula é o trabalho adiado, não o código."
+      },
+      {
+        "text": "Nada: o `os.Exit` descarrega o trace antes de o processo acabar",
+        "why": "O `os.Exit` encerra o processo na hora e não roda nenhuma função adiada, então ninguém chamaria o `trace.Stop`."
+      },
+      {
+        "text": "O stop adiado nunca rodaria, e o arquivo de trace ficaria inacabado",
+        "why": "Isso. O `os.Exit` pula as chamadas adiadas; é o `trace.Stop` que espera as últimas escritas, então o arquivo ficaria cortado."
+      }
+    ]
+  },
+  "ex-cxp58vr6": {
+    "prompt": "O `startTrace` abre o arquivo e chama `trace.Start(f)`; a função que ele devolve chama ___ primeiro e fecha o arquivo depois, porque essa chamada só retorna quando todas as escritas terminaram.",
+    "hint": "A outra metade do `trace.Start`.",
+    "blanks": [
+      {
+        "accept": [
+          "trace.Stop",
+          "trace.Stop()",
+          "Stop",
+          "Stop()"
+        ]
+      }
+    ]
+  },
+  "ex-kvt14618": {
+    "prompt": "Três pares de execuções do `pcount`, sem trace e depois com, deram 1.021s/689ms, 953ms/878ms e 883ms/737ms. O que você pode concluir sobre o custo do trace?",
+    "hint": "É plausível que gravar mais deixe o programa mais rápido?",
+    "choices": [
+      {
+        "text": "O trace custa uns 20%, a diferença média entre os pares",
+        "why": "A diferença aponta para o lado contrário, o que é sinal de ruído. A média de três pares ruidosos mede a máquina, não o tracer."
+      },
+      {
+        "text": "Só que o ruído entre execuções foi maior que o custo",
+        "why": "Isso. O custo é pequeno demais para aparecer através desse ruído; medi-lo pede muitas execuções numa máquina quieta e uma comparação estatística."
+      },
+      {
+        "text": "O trace não custa nada, já que nenhum par mostra custo",
+        "why": "Não ver o custo através do ruído não é o mesmo que ele não existir: o tracer trabalha a cada evento."
+      },
+      {
+        "text": "O trace deixa o programa mais rápido, então deve ficar ligado",
+        "why": "Nenhum mecanismo faz a gravação de eventos acelerar o trabalho. Três execuções com trace mais rápidas são ruído numa máquina ocupada, não um resultado."
+      }
+    ]
+  },
+  "ex-b81s4c05": {
+    "prompt": "Ligue cada campo de uma linha do `go tool trace -d=parsed` ao que ele indica.",
+    "hint": "Três deles são as três partes do escalonador.",
+    "pairs": [
+      {
+        "left": "`M=`",
+        "right": "uma thread do sistema operacional"
+      },
+      {
+        "left": "`P=`",
+        "right": "um processador: a permissão para rodar código Go"
+      },
+      {
+        "left": "`G=`",
+        "right": "uma goroutine"
+      },
+      {
+        "left": "`Time=`",
+        "right": "quando aconteceu, em nanossegundos"
+      }
+    ],
+    "right_distractors": [
+      "um mutex que a goroutine segura",
+      "a memória que o evento usou"
+    ]
+  },
+  "ex-q5srjpqd": {
+    "prompt": "No trace de quatro workers, 1.045 transições dizem `Running->Waiting Reason=\"chan receive\"`. O que essas goroutines estavam fazendo?",
+    "hint": "Encontre o recebimento de canal no `pcount`.",
+    "choices": [
+      {
+        "text": "Goroutines esperando um P livre",
+        "why": "Uma goroutine que só espera um P está `Runnable`, não `Waiting`."
+      },
+      {
+        "text": "O laço de merge lendo o `part` de cada worker",
+        "why": "Isso acontece uma vez, no fim. Mil esperas vêm do laço que roda mil vezes."
+      },
+      {
+        "text": "Workers encontrando `batches` vazio, à espera do próximo lote da leitora",
+        "why": "Isso. O `range batches` de um worker bloqueia num canal vazio; cada uma dessas é um worker que terminou antes de a leitora ter mais pronto."
+      },
+      {
+        "text": "A leitora esperando vaga num canal cheio",
+        "why": "Isso é um envio bloqueando, e aparece como `chan send`, 396 vezes no mesmo trace."
+      }
+    ]
+  },
+  "ex-bae5z78x": {
+    "prompt": "O `pcount` envia linhas em lotes de 1.000 e marca cada lote como uma região `parse`. Quantas regiões `parse` tem o trace dele sobre o log de 3.000.000 de linhas?",
+    "hint": "Conte também o que a leitora envia depois do laço."
+  },
+  "ex-2p8t56se": {
+    "prompt": "Uma requisição é tratada por três goroutines, e você quer que o trace ligue o trabalho delas como uma operação só, com latência medida. Que anotação faz isso?",
+    "hint": "Uma das três atravessa goroutines; outra não.",
+    "choices": [
+      {
+        "text": "Um `trace.Log` com o id da requisição como categoria",
+        "why": "Um log é um instante. Pode ficar ligado a uma tarefa, mas sozinho não mede um intervalo."
+      },
+      {
+        "text": "Uma região com o id da requisição no nome",
+        "why": "Os tipos de região devem ser poucos, porque agrupam regiões; e uma região continua sem atravessar goroutines."
+      },
+      {
+        "text": "Uma região, com `trace.WithRegion`",
+        "why": "Uma região precisa começar e terminar na mesma goroutine, então não cobre trabalho espalhado por três."
+      },
+      {
+        "text": "Uma tarefa, criada com `trace.NewTask` e levada no contexto",
+        "why": "Isso. A tarefa viaja no contexto, então toda goroutine que o usa fica ligada a ela, e o `task.End` dá a latência."
+      }
+    ]
+  },
+  "ex-4a4mdq3v": {
+    "prompt": "O `pcount -workers 4 -shared` usou 1,213 s de processador contra 1,111 s de um worker, e demorou mais ou menos o mesmo. O que mostraria o profile de CPU da lição 12 da execução com `-shared`?",
+    "hint": "Uma goroutine parada num lock não está em processador nenhum.",
+    "choices": [
+      {
+        "text": "As funções de parse, em proporções parecidas com as de um worker",
+        "why": "Isso. O mesmo trabalho e quase o mesmo tempo de processador, então as mesmas funções; nada nele diz que três goroutines estavam paradas."
+      },
+      {
+        "text": "Quatro vezes as amostras da execução de um worker",
+        "why": "As amostras acompanham o tempo de processador, e ele foi quase igual: 1,213 s contra 1,111 s."
+      },
+      {
+        "text": "Principalmente tempo no escalonador, trocando goroutines",
+        "why": "Passar um lock adiante custa algo, mas o grosso de 1,2 s de processador continua sendo o parse."
+      },
+      {
+        "text": "Principalmente `sync.(*Mutex).Lock`, onde os workers passaram o tempo",
+        "why": "A espera acontece fora do processador, então o amostrador nunca a vê; foi no profile de sync do trace que apareceram 1,71 s de `Lock`."
+      }
+    ]
+  },
+  "ex-njseqmpm": {
+    "prompt": "Quais destas partes do tempo de uma goroutine um trace de execução mostra e um profile de CPU não? Escolha todas.",
+    "hint": "O profile de CPU só amostra o que está num processador.",
+    "choices": [
+      {
+        "text": "Executável: pronta, sem P livre",
+        "why": "Isso. A latência do escalonador não está em profile nenhum do pprof; o trace tem, e o `-pprof=sched` a transforma em um."
+      },
+      {
+        "text": "Bloqueada num mutex",
+        "why": "Isso. Parada fora do processador; o trace registra quando bloqueou e quando acordou."
+      },
+      {
+        "text": "Bloqueada num recebimento de canal",
+        "why": "Isso. O mesmo: a espera é um par de eventos no trace e invisível para o amostrador."
+      },
+      {
+        "text": "Rodando código Go num P",
+        "why": "Os dois veem este. Rodando é o único estado que o profile de CPU amostra."
+      }
+    ]
+  },
+  "ex-3xtqnca2": {
+    "prompt": "O `go tool trace -pprof=sched` da execução com `GOMAXPROCS=1` atribuiu 2.437,01ms a `runtime.chansend1` debaixo de `main.count`. Por que um envio da leitora carrega o tempo de espera dos workers?",
+    "hint": "Que pilha o profile sched guarda: onde a goroutine esperou ou onde ela ficou executável?",
+    "choices": [
+      {
+        "text": "O `-focus=main` passou o tempo dos workers para o `main.count`",
+        "why": "Um focus só mantém ou descarta pilhas; nunca move tempo de uma para outra."
+      },
+      {
+        "text": "A própria leitora esperou 2,4 s para enviar",
+        "why": "A execução durou 768ms; uma goroutine não espera 2,4 s nela. O tempo é das goroutines que os envios acordaram."
+      },
+      {
+        "text": "Ele atribui à pilha que deixou a goroutine executável",
+        "why": "Isso. Cada envio acordou um worker; o tempo até esse worker ganhar o único P vai para o envio que o acordou."
+      },
+      {
+        "text": "O canal não tinha buffer, então todo envio bloqueava",
+        "why": "O `batches` tem uma vaga por worker, e bloquear seria tempo de sync, não latência do escalonador."
+      }
+    ]
+  },
+  "ex-eyvzzz08": {
+    "prompt": "Ponha os estados de um worker na ordem em que um trace os registra, de esperar um lote a esperar o próximo.",
+    "hint": "Ser acordado e ser executado são dois eventos.",
+    "items": [
+      "O worker bloqueia no `range batches` com o canal vazio: Waiting",
+      "A leitora envia um lote e o worker fica Runnable",
+      "Um P fica livre e o worker passa a Running",
+      "Ele faz o parse das mil linhas do lote",
+      "Encontra o canal vazio de novo e volta a Waiting"
+    ]
+  },
+  "ex-kxe352k0": {
+    "prompt": "Com quatro workers que não dividem nada, o profile de sync do trace não mostrou mutex nenhum, e mesmo assim os workers esperaram 172ms cada em `sync`. De onde vieram essas esperas?",
+    "hint": "Leia as duas funções do runtime no topo daquele profile.",
+    "choices": [
+      {
+        "text": "Um mutex escondido dentro do `tally.Parse`",
+        "why": "O `Parse` não pega lock. As funções citadas são `runtime.gcStart` e `runtime.gcMarkDone`."
+      },
+      {
+        "text": "Os semáforos do coletor de lixo",
+        "why": "Isso. Workers que alocaram o bastante para iniciar ou ajudar a terminar uma coleta esperaram por ela, e é assim que 94 coletas apareceram como `sync`."
+      },
+      {
+        "text": "`sync.WaitGroup.Wait` em cada worker",
+        "why": "Só a goroutine leitora chama `Wait`, uma vez, no fim."
+      },
+      {
+        "text": "O sistema operacional pausando as threads deles",
+        "why": "O trace não enxerga o sistema operacional tirando uma CPU; uma goroutine numa thread pausada continua contando como rodando."
+      }
+    ]
+  },
+  "ex-544esbh6": {
+    "prompt": "O que o `trace.FlightRecorder` faz entre o `Start` e uma chamada a `WriteTo`?",
+    "hint": "Chama-se gravador, e não grava nada.",
+    "choices": [
+      {
+        "text": "Mantém em memória uma janela móvel de trace recente",
+        "why": "Isso. Dados antigos saem conforme chegam novos, e o `WriteTo` copia a janela quando o programa pede."
+      },
+      {
+        "text": "Amostra a pilha a cada poucos milissegundos, como um profile de CPU",
+        "why": "Ele roda o tracer de execução, que registra eventos; não tira amostras."
+      },
+      {
+        "text": "Nada: o trace só começa quando o `WriteTo` é chamado",
+        "why": "Aí o snapshot não teria nada de antes do incidente, que é a parte que vale a pena."
+      },
+      {
+        "text": "Grava o trace inteiro em disco e guarda o arquivo mais novo",
+        "why": "Ele não grava nada até ser pedido. Gravar tudo é exatamente o custo que ele existe para evitar."
+      }
+    ]
+  },
+  "ex-qk6bcdp0": {
+    "prompt": "Um flight recorder é configurado com `MinAge: 10 * time.Second` e `MaxBytes: 1 << 20`, e o programa produz uns 6 MB de trace por segundo. O que um snapshot contém?",
+    "hint": "Uma das duas configurações prevalece.",
+    "choices": [
+      {
+        "text": "Nada: as duas configurações se contradizem, então o `Start` devolve erro",
+        "why": "Elas não são conferidas uma contra a outra; uma simplesmente prevalece."
+      },
+      {
+        "text": "Os primeiros dez segundos do programa",
+        "why": "A janela anda: ela sempre guarda os dados mais recentes, nunca o começo."
+      },
+      {
+        "text": "Dez segundos, já que o `MinAge` é um limite inferior",
+        "why": "Dez segundos a 6 MB por segundo são 60 MB, muito acima do teto; o `go doc` diz que o `MaxBytes` prevalece."
+      },
+      {
+        "text": "Cerca de um megabyte do trace mais recente, bem menos que dez segundos",
+        "why": "Isso. O `MaxBytes` vence o `MinAge`, então a janela encolhe para mais ou menos o teto de bytes, e os dois são sugestões."
+      }
+    ]
+  },
+  "ex-e3kegy2r": {
+    "prompt": "No `snapshot`, a janela guardada em memória é copiada para o arquivo novo com `n, err := fr.___(f)`, que devolve o número de bytes escritos.",
+    "hint": "O nome do método diz para onde vão os bytes.",
+    "blanks": [
+      {
+        "accept": [
+          "WriteTo"
+        ]
+      }
+    ]
+  },
+  "ex-mkn0d1hx": {
+    "prompt": "Você põe um flight recorder num servidor HTTP e chama `WriteTo` para toda requisição acima de 500ms. Num minuto ruim, 2.000 requisições ficam lentas. O que dá errado primeiro?",
+    "hint": "O `go doc` limita quantas chamadas a `WriteTo` podem rodar, e pense no que 2.000 arquivos acrescentariam.",
+    "choices": [
+      {
+        "text": "Nada: cada requisição lenta ganha o próprio snapshot, o que é ideal",
+        "why": "Milhares de snapshots da mesma trava não explicam mais que um, e são gravados enquanto o servidor já está sofrendo."
+      },
+      {
+        "text": "As chamadas a `WriteTo` simultâneas falham, e as outras empilham snapshots num servidor já sobrecarregado",
+        "why": "Isso. Só um `WriteTo` roda por vez; limite a um snapshot por incidente, como o `flight` faz ao parar depois do primeiro."
+      },
+      {
+        "text": "O flight recorder para de gravar depois do primeiro snapshot",
+        "why": "O `WriteTo` o deixa rodando; quem encerra é o `Stop`."
+      },
+      {
+        "text": "Cada snapshot só traz a goroutine daquela requisição",
+        "why": "Um snapshot traz a janela inteira, com todas as goroutines dela."
+      }
+    ]
+  },
+  "ex-8mrk9t7h": {
+    "prompt": "Ligue cada tipo de `go tool trace -pprof=` à espera que ele transforma em profile.",
+    "hint": "Quatro tipos; sobram duas descrições.",
+    "pairs": [
+      {
+        "left": "`sync`",
+        "right": "bloqueada num canal, num `select`, num mutex ou num semáforo"
+      },
+      {
+        "left": "`sched`",
+        "right": "executável, esperando um P"
+      },
+      {
+        "left": "`syscall`",
+        "right": "dentro de uma chamada de sistema"
+      },
+      {
+        "left": "`net`",
+        "right": "bloqueada esperando a rede"
+      }
+    ],
+    "right_distractors": [
+      "tempo gasto alocando memória",
+      "tempo gasto rodando código Go"
+    ]
+  },
+  "ex-agc1jbt2": {
+    "prompt": "A latência p99 de um serviço dobrou. O profile de CPU da lição 12 está igual ao da semana passada e as CPUs estão meio ociosas. Qual é o próximo passo mais direto?",
+    "hint": "Pouco uso de CPU e requisições lentas: para onde vai o tempo?",
+    "choices": [
+      {
+        "text": "Pôr mais workers, como o `pcount` fez, para paralelizar a parte lenta",
+        "why": "No `pcount` mais workers não ajudaram, porque o limite não era o parse; ache o limite primeiro."
+      },
+      {
+        "text": "Um profile de CPU mais longo, para pegar a chamada cara e rara",
+        "why": "CPUs meio ociosas dizem que o tempo não está indo em cálculo; mais amostras de cálculo não vão achá-lo."
+      },
+      {
+        "text": "Um trace, e depois as visões `-pprof=sync` e `-pprof=sched` dele",
+        "why": "Isso. Lento com CPUs ociosas quer dizer espera, e o trace é a ferramenta que registra espera, por causa."
+      },
+      {
+        "text": "Aumentar o `GOMAXPROCS`, porque o programa precisa de mais processadores",
+        "why": "CPUs ociosas não são falta de processador; mais Ps não encurtam uma espera num lock ou canal."
+      }
+    ]
+  },
+  "ex-dxnnqbvg": {
+    "prompt": "No trace de quatro workers do `pcount`, os workers rodaram 31% do tempo. Qual leitura do resto está certa?",
+    "hint": "A figura dividiu o resto em executável, sync e chan receive.",
+    "choices": [
+      {
+        "text": "Estavam bloqueados no mutex compartilhado",
+        "why": "Sem `-shared` não há mutex compartilhado; o profile de sync desse trace não citou lock nenhum."
+      },
+      {
+        "text": "O trace perdeu o resto, porque gravar deixa o programa lento",
+        "why": "Cada nanossegundo da vida de cada worker está contado num estado; nada se perde."
+      },
+      {
+        "text": "Os workers eram lentos no parse, então pôr mais workers teria ajudado",
+        "why": "Rodar foi a menor parte; mais workers só acrescentam goroutines executáveis para os mesmos quatro Ps."
+      },
+      {
+        "text": "Fizeram fila por um P, esperaram o coletor e esperaram a leitora",
+        "why": "Isso. 35% executável, 18% nas esperas de sync do coletor e 15% em `chan receive`: o limite é a leitora e as alocações dela, não o parse."
+      }
+    ]
+  }
+}

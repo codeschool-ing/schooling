@@ -1,0 +1,570 @@
+[
+  {
+    "id": "ex-qxrpkhhx",
+    "version": 1,
+    "section": "gofmt",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana runs `gofmt internal/tally/classes.go`, with no flags. What happens to the file?",
+    "hint": "Look at where the formatted text appeared in section 02.",
+    "choices": [
+      {
+        "text": "Nothing: the formatted version goes to standard output",
+        "correct": true,
+        "why": "Right. With no flag, `gofmt` prints the result and leaves the file as it was; `-w` is what writes it back."
+      },
+      {
+        "text": "It is rewritten in place, and its name is printed",
+        "correct": false,
+        "why": "That is `go fmt`, which runs `gofmt -l -w`. Plain `gofmt` writes nothing unless it is given `-w`."
+      },
+      {
+        "text": "It is left alone, and each style problem is reported with its line number",
+        "correct": false,
+        "why": "`gofmt` is a printer, not a checker: it never lists problems, it prints the file in the one layout."
+      },
+      {
+        "text": "It is renamed to `classes.go.orig`",
+        "correct": false,
+        "why": "`.orig` appears only in the header of a `-d` diff, as a label. No file of that name is created."
+      }
+    ]
+  },
+  {
+    "id": "ex-tk7ghhbm",
+    "version": 1,
+    "section": "gofmt",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`gofmt` turned `if status/100==c` into `if status/100 == c`. Why are there spaces around `==` and none around `/`?",
+    "hint": "In the same file, `float64(n) / float64(s.Lines)` kept spaces around `/`.",
+    "choices": [
+      {
+        "text": "`gofmt` always writes arithmetic operators without spaces",
+        "correct": false,
+        "why": "The `Share` expression in the same output has spaces around `/`. The rule depends on the expression, not on the operator."
+      },
+      {
+        "text": "The tighter-binding operator is written without spaces",
+        "correct": true,
+        "why": "Right. `/` binds tighter than `==`, so it is written without spaces and the eye reads `status/100` as one piece. Alone in an expression, `/` gets spaces."
+      },
+      {
+        "text": "It kept the spacing Ana typed around `/` and only fixed `==`",
+        "correct": false,
+        "why": "Ana typed no spaces around either operator. `gofmt` decides the spacing from the syntax tree, not from the original."
+      },
+      {
+        "text": "A space after `/` could start a comment",
+        "correct": false,
+        "why": "A comment starts with `//` or `/*`; a space after a single `/` cannot make one."
+      }
+    ]
+  },
+  {
+    "id": "ex-eyqfkztp",
+    "version": 1,
+    "section": "gofmt",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way of running `gofmt` on an untidy file with what it does.",
+    "hint": "Three flags decide where the result goes; the fourth way uses none.",
+    "pairs": [
+      {
+        "left": "`gofmt file.go`",
+        "right": "prints the formatted file to standard output"
+      },
+      {
+        "left": "`gofmt -l .`",
+        "right": "prints the names of the files that differ"
+      },
+      {
+        "left": "`gofmt -d file.go`",
+        "right": "prints a unified diff of the changes"
+      },
+      {
+        "left": "`gofmt -w file.go`",
+        "right": "writes the result back and prints nothing"
+      }
+    ],
+    "right_distractors": [
+      "drops the type name from each element of a composite literal"
+    ]
+  },
+  {
+    "id": "ex-gdz1d8tt",
+    "version": 1,
+    "section": "gofmt",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`go fmt -n ./...` printed the command it would run: `/usr/local/go/bin/gofmt -l ___ main.go main_test.go ...`.",
+    "hint": "The flag that writes the result back into each file.",
+    "blanks": [
+      {
+        "accept": [
+          "-w"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-90k94d0s",
+    "version": 1,
+    "section": "gofmt",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Bruno's editor shows a tab as 2 columns and Carla's as 8. Both open the `Class` struct after `gofmt`, with its comments lined up. What does each of them see?",
+    "hint": "Indentation and alignment are made of different characters.",
+    "choices": [
+      {
+        "text": "Lined-up comments for Bruno only, since `gofmt` aligns for 2-column tabs",
+        "correct": false,
+        "why": "`gofmt` assumes no tab width for alignment: it aligns with spaces, which are one column in every editor."
+      },
+      {
+        "text": "Different indentation, but the columns aligned for both",
+        "correct": true,
+        "why": "Right. Each field line starts with one tab, which each editor draws at its own width; the padding between name, type and comment is spaces, so the columns survive."
+      },
+      {
+        "text": "Exactly the same thing, because `gofmt` replaced the tabs with spaces",
+        "correct": false,
+        "why": "`gofmt` indents with tabs: section 02's table shows one tab per level. Only the alignment is spaces."
+      },
+      {
+        "text": "Misaligned columns for both, until each runs `gofmt` with their own tab width",
+        "correct": false,
+        "why": "`gofmt` has no tab-width setting to run it with, and it does not need one: spaces align the same at any width."
+      }
+    ]
+  },
+  {
+    "id": "ex-n9fwp2ra",
+    "version": 1,
+    "section": "what-it-decides",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can no `gofmt` setting put a function's opening brace on a line of its own?",
+    "hint": "Section 03 piped such a function into `gofmt`.",
+    "choices": [
+      {
+        "text": "The setting was removed in favour of a `.gofmt` file in the module",
+        "correct": false,
+        "why": "`gofmt` reads no configuration file, and `gofmt -h` lists every flag it has: none of them chooses a style."
+      },
+      {
+        "text": "It is possible with `-r`, by rewriting `{` into a newline and `{`",
+        "correct": false,
+        "why": "`-r` rewrites expressions, and its output is printed in the same layout. It has no way to express a line break."
+      },
+      {
+        "text": "A line break there ends the statement: a syntax error",
+        "correct": true,
+        "why": "Right. A newline after `)` ends the statement, so a lone `{` on the next line cannot be parsed: `unexpected semicolon or newline before {`."
+      },
+      {
+        "text": "Only `go vet` may change braces",
+        "correct": false,
+        "why": "`go vet` reports suspicious code and changes none. The brace position is fixed by the language itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-9k8re008",
+    "version": 1,
+    "section": "what-it-decides",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does `gofmt` leave exactly as you wrote them? Choose all that apply.",
+    "hint": "Compare the untidy `classes.go` with what `gofmt` printed.",
+    "choices": [
+      {
+        "text": "A line of 109 characters",
+        "correct": true,
+        "why": "Yes. `gofmt` never wraps a long line; the `append` line came out on one line."
+      },
+      {
+        "text": "A variable called `n`",
+        "correct": true,
+        "why": "Yes. Names are untouched; whether `n` is a good name is for the linters of lesson 8."
+      },
+      {
+        "text": "Three blank lines in a row",
+        "correct": false,
+        "why": "No. The three blank lines after the struct became one."
+      },
+      {
+        "text": "Four spaces of indentation",
+        "correct": false,
+        "why": "No. Indentation became one tab per level."
+      },
+      {
+        "text": "The wording of a comment",
+        "correct": true,
+        "why": "Yes. A comment is moved with its code and never reworded or re-wrapped."
+      }
+    ]
+  },
+  {
+    "id": "ex-sm8g5jz0",
+    "version": 1,
+    "section": "what-it-decides",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`gofmt -l .` prints nothing, and `gofmt -s -l .` prints `internal/tally/classes_test.go`. What does that tell Ana?",
+    "hint": "What did `go fmt -n` show that `go fmt` passes to `gofmt`?",
+    "choices": [
+      {
+        "text": "`go fmt ./...` will shorten the literal on its next run",
+        "correct": false,
+        "why": "`go fmt` runs `gofmt -l -w` and nothing more, so it never applies `-s`; the literal stays until somebody asks for `-s` by name."
+      },
+      {
+        "text": "The test has a bug that `-s` detected",
+        "correct": false,
+        "why": "The test passed. `-s` looks for constructs it can shorten without changing what they mean, not for bugs."
+      },
+      {
+        "text": "The file is formatted, but `-s` has a literal to shorten",
+        "correct": true,
+        "why": "Right. Layout and simplification are separate questions: the `Class` before each element of `[]Class{...}` is correct and redundant."
+      },
+      {
+        "text": "`-s` will change what the test checks, so it has to be reviewed by hand",
+        "correct": false,
+        "why": "Every `-s` rewrite keeps the meaning: the diff took the type name off four rows and left their values as they were."
+      }
+    ]
+  },
+  {
+    "id": "ex-f6da69d7",
+    "version": 1,
+    "section": "what-it-decides",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana wants to rename `tally.Count` to `tally.Tally` and runs `gofmt -r 'a.Count -> a.Tally' -w .`. What is the state of the module afterwards?",
+    "hint": "Which occurrences of `Count` are written with a dot in front?",
+    "choices": [
+      {
+        "text": "Renamed everywhere, since `-r` checks which package each `Count` belongs to",
+        "correct": false,
+        "why": "`-r` matches syntax and has no types: in section 03 the `a` in `a.Duration` matched `time` as happily as `e`."
+      },
+      {
+        "text": "Unchanged, because `-r` refuses to touch an exported name",
+        "correct": false,
+        "why": "Nothing in `-r` looks at whether a name is exported; it rewrites any expression its pattern matches."
+      },
+      {
+        "text": "Broken: the calls say `tally.Tally`, the function is still `func Count`",
+        "correct": true,
+        "why": "Right. `func Count(...)` has no dot, so the pattern does not match the declaration, while every `x.Count` call changes, including any on other packages."
+      },
+      {
+        "text": "Renamed only inside `internal/tally`, where `Count` is declared",
+        "correct": false,
+        "why": "`-w .` walks the whole module, and the pattern knows nothing about where a name is declared."
+      }
+    ]
+  },
+  {
+    "id": "ex-vv6pbvka",
+    "version": 1,
+    "section": "goimports",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `goimports -w` do to the import block of `tools/classes/main.go`?",
+    "hint": "The block held one package before, and `go build` named nine problems.",
+    "choices": [
+      {
+        "text": "Sorted `strings` into place and left the rest to the compiler",
+        "correct": false,
+        "why": "It did more than sort: the build errors were missing and unused imports, and those are what `goimports` fixes."
+      },
+      {
+        "text": "Removed `strings` and added the five packages the file uses",
+        "correct": true,
+        "why": "Right. `fmt` and `os`, `tally`, and `message` and `language` from `golang.org/x/text`, in two groups, with the unused `strings` gone."
+      },
+      {
+        "text": "Added the missing packages and kept `strings` commented out",
+        "correct": false,
+        "why": "An unused import is removed outright. The compiler refuses one, so keeping it would leave the file unbuildable."
+      },
+      {
+        "text": "Added `go get` lines for the two modules it could not find",
+        "correct": false,
+        "why": "`goimports` changes only the Go file. The requirement on `golang.org/x/text` had to be added to `go.mod` with `go get` first."
+      }
+    ]
+  },
+  {
+    "id": "ex-6c8qtwa3",
+    "version": 1,
+    "section": "goimports",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lines of the import block in the order `goimports -local example.com/hits` writes them.",
+    "hint": "Standard library, other people's modules, then yours; sorted inside each group.",
+    "items": [
+      "`\"fmt\"`",
+      "`\"os\"`",
+      "`\"golang.org/x/text/language\"`",
+      "`\"golang.org/x/text/message\"`",
+      "`\"example.com/hits/internal/tally\"`"
+    ]
+  },
+  {
+    "id": "ex-ss69j1c0",
+    "version": 1,
+    "section": "goimports",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did Ana run `go get golang.org/x/text@v0.43.0` before `goimports`?",
+    "hint": "Where does `goimports` look for a package called `message`?",
+    "choices": [
+      {
+        "text": "So that `goimports` could find the two `x/text` packages",
+        "correct": true,
+        "why": "Right. It searches the standard library, the module itself and what `go.mod` requires; a module nobody requires is not a candidate."
+      },
+      {
+        "text": "Because `goimports` downloads nothing and `go get` formats the import block",
+        "correct": false,
+        "why": "`go get` edits `go.mod` and downloads; it never touches a `.go` file. The block was written by `goimports`."
+      },
+      {
+        "text": "Because `goimports` refuses to run in a module with no requirements",
+        "correct": false,
+        "why": "It ran fine on files that import only the standard library; the requirement matters only for the packages it has to find."
+      },
+      {
+        "text": "To remove the `// indirect` mark first",
+        "correct": false,
+        "why": "`go get` added the mark; `go mod tidy` removed it later, once a file imported the module."
+      }
+    ]
+  },
+  {
+    "id": "ex-hn6fxazm",
+    "version": 1,
+    "section": "goimports",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On a team, Davi runs `goimports` on save without `-local`, and Elisa runs it with `-local example.com/hits`. Neither changes any code. What do their commits show over a month?",
+    "hint": "Run each version over a file the other has just written.",
+    "choices": [
+      {
+        "text": "Nothing: `goimports` reads `-local` from `go.mod`",
+        "correct": false,
+        "why": "`goimports` reads no such thing: section 04's first run, without the flag, put `tally` in the same group as `golang.org/x/text`."
+      },
+      {
+        "text": "Build failures, since import order decides which package wins",
+        "correct": false,
+        "why": "The order of an import block changes nothing about the build; both arrangements compile to the same program."
+      },
+      {
+        "text": "Diffs that move the module's own imports between groups, back and forth",
+        "correct": true,
+        "why": "Right. Each save rewrites the other's block: Elisa splits a third group out, Davi merges it back. Section 05 puts the flag in one script for this reason."
+      },
+      {
+        "text": "A `gofmt -l .` check that fails on Elisa's files",
+        "correct": false,
+        "why": "Plain `gofmt` only sorts within groups and accepts either arrangement; it is a `goimports -local` check that would tell them apart."
+      }
+    ]
+  },
+  {
+    "id": "ex-ec8qd8tg",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A CI step runs `gofmt -l .` alone. A pull request with an untidy file passes it. Why?",
+    "hint": "Look at the exit status printed after the file name in section 05.",
+    "choices": [
+      {
+        "text": "`gofmt -l` lists the file and still exits 0",
+        "correct": true,
+        "why": "Right. Listing is what it was asked to do, so it reports success; the check has to look at the output, as `test -z \"$(gofmt -l .)\"` does."
+      },
+      {
+        "text": "CI runners use a `gofmt` configured more leniently than a laptop's",
+        "correct": false,
+        "why": "`gofmt` has no configuration at all. The same version prints the same layout on every machine."
+      },
+      {
+        "text": "`-l` only reads files that changed since the last commit",
+        "correct": false,
+        "why": "`-l .` reads every `.go` file under the directory, changed or not."
+      },
+      {
+        "text": "It printed to standard error, which CI does not show",
+        "correct": false,
+        "why": "The list goes to standard output; CI shows it in the log, under a green step."
+      }
+    ]
+  },
+  {
+    "id": "ex-3kw9kjgg",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the untidy `classes.go` in the tree, which of these commands exit with a status other than 0? Choose all that apply.",
+    "hint": "Two tools with the same flags did not agree.",
+    "choices": [
+      {
+        "text": "`gofmt -l .`",
+        "correct": false,
+        "why": "It listed the file and exited 0."
+      },
+      {
+        "text": "`test -z \"$(gofmt -l .)\"`",
+        "correct": true,
+        "why": "Yes, 1: the captured output was not empty."
+      },
+      {
+        "text": "`gofmt -d .`",
+        "correct": true,
+        "why": "Yes, 1: `gofmt -d` exits 1 whenever it prints a diff."
+      },
+      {
+        "text": "`goimports -d .`",
+        "correct": false,
+        "why": "It printed a diff and exited 0, unlike `gofmt -d`."
+      }
+    ]
+  },
+  {
+    "id": "ex-s16s2r6a",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `internal/tally/broken.go` unparseable, Ana runs `out=$(gofmt -l .) && test -z \"$out\"; echo $?`. What number does `echo` print?",
+    "hint": "The assignment carries the exit status of the command inside `$(...)`.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-58e9xfqq",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana's pre-commit hook passed, yet CI's `check-fmt.sh` failed on the same commit. Which explanation fits the hook of section 05?",
+    "hint": "What does the hook read: the files on disk, or what was staged?",
+    "choices": [
+      {
+        "text": "CI has a `gofmt` built with different layout settings from hers",
+        "correct": false,
+        "why": "There are no layout settings, and the script pins `goimports@v0.52.0` in both places."
+      },
+      {
+        "text": "She fixed a staged file on disk without adding it again",
+        "correct": true,
+        "why": "Right. The hook checked the tidy file on disk while Git committed the untidy version that was staged; CI checked out what was committed."
+      },
+      {
+        "text": "The hook ran without `-local` and CI with it",
+        "correct": false,
+        "why": "Both run the same `scripts/check-fmt.sh`, which carries `-local` itself; that is why it is one file."
+      },
+      {
+        "text": "CI also checks `vendor/`, which the hook skips",
+        "correct": false,
+        "why": "Both run the script on `.`, and `hits` has no `vendor/` anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-7spwg7d2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A module keeps a deliberately broken `.go` file in `parser/testdata/` as input for a test. Its copy of `check-fmt.sh` now fails with status 2 on every run. What is the right fix?",
+    "hint": "Which directories does `go fmt ./...` leave out, and why?",
+    "choices": [
+      {
+        "text": "Delete `|| exit 2` from the script",
+        "correct": false,
+        "why": "That would also let a real file that does not parse slip through, which is exactly the hole section 05 closed."
+      },
+      {
+        "text": "Name the module's own code directories instead of `.`",
+        "correct": true,
+        "why": "Right. `testdata/` holds inputs the go command never builds; naming your code's directories keeps the check strict where it should be."
+      },
+      {
+        "text": "Put `// Code generated ... DO NOT EDIT.` at the top so `gofmt` skips it",
+        "correct": false,
+        "why": "`gofmt` has no exemption for generated files: it reads them like any other, and this one would still fail to parse."
+      },
+      {
+        "text": "Run `gofmt -w` on `testdata/` once, so it stops failing",
+        "correct": false,
+        "why": "`gofmt` cannot write a file it cannot parse, and fixing the file would ruin the test that needs it broken."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ky6mhk4",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Git abandons a commit when the executable file `.git/hooks/___` exits with anything but 0.",
+    "hint": "The hook that runs before Git records the commit.",
+    "blanks": [
+      {
+        "accept": [
+          "pre-commit"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-g1mqwshc",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happened when Ana first committed with the untidy `classes.go`.",
+    "hint": "From `git commit` to the commit that went through.",
+    "items": [
+      "Git runs `.git/hooks/pre-commit`",
+      "`check-fmt.sh` runs `goimports -l`, which names `classes.go`",
+      "the script exits 1 and Git abandons the commit",
+      "`go fmt ./...` rewrites `classes.go`",
+      "`git add -u` stages it and the commit goes through"
+    ]
+  }
+]
