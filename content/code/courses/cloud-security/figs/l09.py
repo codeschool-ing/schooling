@@ -41,8 +41,8 @@ def paths():
     f.text(62, 238, T('each object, on its own', 'cada objeto, por conta própria'), size=10, anchor='start',
            weight='600', fill='--paper-dim')
     for y, n, what, code, who, _ in rows:
-        f.circle(70, y, 10, fill='--amber')
-        f.text(70, y + 0.5, n, size=10, weight='600', fill='--ink')
+        f.circle(70, y, 10, fill=None, stroke='--amber', width=1.4)
+        f.text(70, y + 0.5, n, size=10, weight='600', fill='--amber')
         f.text(90, y - 7, what, size=10.5, anchor='start')
         f.text(90, y + 9, code, size=9.5, anchor='start', mono=True, fill='--paper-dim')
         f.arrow([(400, y), (462, y)], stroke='--amber')
