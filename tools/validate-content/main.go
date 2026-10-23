@@ -814,6 +814,14 @@ var allowedOutsideTheFont = map[rune]string{
 	'\u279c': "Vite's dev server opens each address it prints with it (`➜  Local:`). IBM Plex " +
 		"Mono has no U+279C at all. It opens every such line at the same indentation, so " +
 		"whatever width it is given, the lines stay aligned with each other",
+	// Vitest's default reporter: an arrow before each file and each place in the
+	// code it points at, and a rule of these around the heading of a failure.
+	'\u276f': "Vitest opens the line of each test file, and each `file:line:column` it points " +
+		"at, with it (`❯ src/planner.test.ts`). IBM Plex Mono has no U+276F at all. It opens " +
+		"the line after the indentation and nothing below is aligned to the column it ends in",
+	'\u23af': "Vitest draws the rule around the heading of a failure with a run of it " +
+		"(`⎯⎯⎯ Failed Tests 2 ⎯⎯⎯`). IBM Plex Mono has no U+23AF at all. A rule is the whole " +
+		"line and nothing is aligned to where it ends",
 }
 
 // coverage is the set of code points the interface declares a face for.

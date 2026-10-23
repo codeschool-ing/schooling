@@ -45,7 +45,7 @@ export HOME=/home/ana USER=ana LOGNAME=ana TZ=America/Sao_Paulo LC_ALL=C.UTF-8 L
 export PATH=/home/ana/.local/bin:/opt/node22/bin:/usr/local/bin:/usr/bin:/bin
 export PAGER=cat GIT_PAGER=cat TERM=dumb NO_COLOR=1 FORCE_COLOR=0 CI=
 export npm_config_update_notifier=false npm_config_fund=false npm_config_progress=false
-export PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers
+export PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers COLORS=false
 unset NODE_PATH NPM_CONFIG_USERCONFIG
 FQ_LAB=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 LESSON=$(cd "$(dirname "$0")" && pwd)
@@ -56,7 +56,9 @@ run() {
   local dir=$1; shift
   local shown=${dir/#\/home\/ana/\~}
   printf 'ana@dev:%s$ %s\n' "$shown" "$*"
-  ( cd "$dir" && bash -c "$*" ) 2>&1
+  # A program that colours its output whatever NO_COLOR says (ts-jest does) is
+  # shown as the terminal shows it: the colour codes are not text, so they go.
+  ( cd "$dir" && bash -c "$*" ) 2>&1 | sed -r 's/\x1b\[[0-9;]*m//g'
   return 0
 }
 block() { printf '##### %s\n' "$1"; }

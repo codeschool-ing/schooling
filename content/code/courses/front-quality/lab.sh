@@ -29,7 +29,8 @@
 #     lesson 4 as a step the student runs, and was not run here.
 #   - npm's update notice and funding message are switched off, so the
 #     transcripts do not depend on the day they were made; COLORS=false and
-#     NO_COLOR=1 keep colour codes out of them.
+#     NO_COLOR=1 keep colour codes out of them, and the few a program writes
+#     anyway (ts-jest's) are removed by capture-lib.sh's run().
 #   - git knows ana as `ana <ana@planner.example>`, as the git course leaves
 #     it, and every commit carries a fixed date, so the hashes repeat.
 #   - TZ=America/Sao_Paulo and LC_ALL=C.UTF-8. Lesson 2 is about what the
