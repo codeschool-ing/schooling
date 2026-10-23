@@ -205,7 +205,8 @@ class Fig:
     def state(self, x, y, w, h, rows, size=10, stroke='--phosphor', fill='--panel'):
         """A state: a box with rounded corners, centred on x, y."""
         self.rect(x - w / 2, y - h / 2, w, h, stroke=stroke, fill=fill, rx=min(14, h / 2), width=1.5)
-        self.lines(x, y, [rows] if isinstance(rows, str) else rows, size=size)
+        if rows:
+            self.lines(x, y, [rows] if isinstance(rows, str) else rows, size=size)
 
     def start(self, x, y):
         self.circle(x, y, 7, fill='--paper')
