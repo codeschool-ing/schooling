@@ -16,7 +16,7 @@ própria página consegue ler. Troque a linha que monta o `html` por estas:
 
 ```typescript
   // The plan goes into the page as data, so the browser does not fetch it again. A "<" is
-  // written as <, so no title can close the script element early.
+  // written as \u003c, so no title can close the script element early.
   const data = JSON.stringify(plan).replace(/</g, "\\u003c");
   const html = shell.replace('<main id="app"></main>',
     `<main id="app">${page(plan, pathname)}</main><script type="application/json" id="plan">${data}</script>`);
@@ -24,7 +24,7 @@ própria página consegue ler. Troque a linha que monta o `html` por estas:
 
 **O `replace` não é enfeite.** Um curso com o título `</script><script>…` fecharia o elemento de dados
 no meio e começaria um script próprio, escrito por quem deu nome ao curso. O JSON permite escrever `<`
-como `<`, que é o mesmo caractere para o `JSON.parse` e não quer dizer nada para o parser de
+como `\u003c`, que é o mesmo caractere para o `JSON.parse` e não quer dizer nada para o parser de
 HTML.
 
 ## O script os lê

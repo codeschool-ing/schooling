@@ -16,7 +16,7 @@ can read. Replace the line that builds `html` with these:
 
 ```typescript
   // The plan goes into the page as data, so the browser does not fetch it again. A "<" is
-  // written as <, so no title can close the script element early.
+  // written as \u003c, so no title can close the script element early.
   const data = JSON.stringify(plan).replace(/</g, "\\u003c");
   const html = shell.replace('<main id="app"></main>',
     `<main id="app">${page(plan, pathname)}</main><script type="application/json" id="plan">${data}</script>`);
@@ -24,7 +24,7 @@ can read. Replace the line that builds `html` with these:
 
 **The `replace` is not decoration.** A course titled `</script><script>…` would otherwise end the
 data element in the middle and start a script of its own, written by whoever named the course. JSON
-allows `<` to be written as `<`, which means the same character to `JSON.parse` and means
+allows `<` to be written as `\u003c`, which means the same character to `JSON.parse` and means
 nothing at all to the HTML parser.
 
 ## The script reads it
