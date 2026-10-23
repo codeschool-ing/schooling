@@ -1,0 +1,225 @@
+# Lesson 6: signals
+
+@ signal quiz easy #ex-rtrbhk8f
+? How does a template read the value of a signal called `minutes`?
+?? Como um template lê o valor de um signal chamado `minutes`?
+- `{{ minutes }}`, as with a plain field :: Without parentheses that is the signal itself, a function, and the template check refuses it.
+-- `{{ minutes }}`, como um campo comum :: Sem parênteses isso é o próprio signal, uma função, e a conferência do template recusa.
++ `{{ minutes() }}` :: Right. A signal is read by calling it, in a template as in code.
+++ `{{ minutes() }}` :: Isso. Um signal é lido chamando-o, no template como no código.
+- `{{ minutes.value }}` :: That is how a resource exposes its value, as a signal you still call.
+-- `{{ minutes.value }}` :: É assim que um resource expõe o valor, como um signal que ainda se chama.
+- `{{ minutes.get() }}` :: There is no `get`; the call itself reads it.
+-- `{{ minutes.get() }}` :: Não existe `get`; a própria chamada lê.
+
+@ signal quiz medium #ex-r57xx0c3
+? Why does the lesson prefer `minutes.update((m) => m + 15)` to `minutes.set(minutes() + 15)`?
+?? Por que a aula prefere `minutes.update((m) => m + 15)` a `minutes.set(minutes() + 15)`?
+- `set` cannot take an expression :: It takes any value; the difference is where the old value comes from.
+-- O `set` não aceita uma expressão :: Ele aceita qualquer valor; a diferença está em de onde vem o valor antigo.
+- `update` is faster :: Speed is not the reason given.
+-- O `update` é mais rápido :: Velocidade não é o motivo dado.
++ Old and new in one call :: Right. The read and the write cannot drift apart.
+++ Antigo e novo na mesma chamada :: Isso. A leitura e a escrita não têm como se separar.
+- `set` does not notify readers :: Both notify readers of a change.
+-- O `set` não avisa quem lê :: Os dois avisam quem lê sobre uma mudança.
+
+@ signal quiz medium #ex-yq54arsq
+? Why is a signal field in a component declared `readonly`?
+?? Por que um campo signal num componente é declarado `readonly`?
+- So its value cannot change :: The value changes through `set` and `update`; `readonly` is about the field.
+-- Para o valor dele não mudar :: O valor muda pelo `set` e pelo `update`; o `readonly` é sobre o campo.
++ So nobody replaces the signal itself :: Right. The field always holds the same signal, whose value changes.
+++ Para ninguém trocar o próprio signal :: Isso. O campo guarda sempre o mesmo signal, cujo valor muda.
+- Templates can only read `readonly` fields :: They read `protected` and `public` fields alike.
+-- Templates só leem campos `readonly` :: Eles leem campos `protected` e `public` igualmente.
+- Angular requires it for signals to work :: Signals work in a mutable field too; it would just be a trap.
+-- O Angular exige isso para os signals funcionarem :: Signals funcionam num campo mutável também; só seria uma armadilha.
+
+@ computed quiz medium #ex-rxc58ptm
+? In `try/computed.mts`, how many times did `  computing left` appear before `done` changed, for the two reads?
+?? No `try/computed.mts`, quantas vezes `  computing left` apareceu antes de `done` mudar, nas duas leituras?
+- Twice, once per read :: The second read returned the stored value.
+-- Duas, uma por leitura :: A segunda leitura devolveu o valor guardado.
+- None, because nothing had changed :: The first read had to compute; there was no value yet.
+-- Nenhuma, porque nada tinha mudado :: A primeira leitura precisou calcular; ainda não havia valor.
++ Once :: Right. Computed at the first read, remembered for the second.
+++ Uma :: Isso. Calculado na primeira leitura, lembrado na segunda.
+- Three times, counting the moment it was created :: Creating it computed nothing; it is lazy.
+-- Três, contando o momento em que foi criado :: Criá-lo não calculou nada; ele é preguiçoso.
+
+@ computed quiz hard #ex-6p7znyv5
+? In `try/branches.mts`, `done` changed while `showDone` was false, and `label` did not compute again. Why?
+?? No `try/branches.mts`, `done` mudou enquanto `showDone` era falso, e `label` não calculou de novo. Por quê?
+- `computed` ignores changes made with `set` :: It reacts to `set`; it reacted to `showDone.set(true)`.
+-- O `computed` ignora mudanças feitas com `set` :: Ele reage a `set`; reagiu ao `showDone.set(true)`.
++ The last run never called `done()`, so it was not a dependency :: Right. A computed depends on what it read last time.
+++ A última execução nunca chamou `done()`, então ele não era dependência :: Isso. Um computed depende do que leu da última vez.
+- `done` was set to a value equal to the old one :: It went from 90 to 100.
+-- `done` recebeu um valor igual ao antigo :: Ele foi de 90 para 100.
+- Changes are only noticed in a component, not in a script :: The same script noticed the change to `showDone`.
+-- Mudanças só são percebidas num componente, não num script :: O mesmo script percebeu a mudança em `showDone`.
+
+@ computed quiz medium #ex-pxhez1nd
+? A colleague reads a signal inside a `setTimeout` within a `computed`. What does the lesson warn?
+?? Uma colega lê um signal dentro de um `setTimeout` num `computed`. O que a aula alerta?
+- The computed throws an error at the next read :: Nothing throws; the read simply goes unnoticed.
+-- O computed lança um erro na próxima leitura :: Nada lança erro; a leitura só passa despercebida.
+- The timer is cancelled when the computed runs :: The timer runs; the problem is tracking.
+-- O timer é cancelado quando o computed roda :: O timer roda; o problema é o rastreamento.
+- It turns into an effect without telling you :: It stays a computed, and a wrong one.
+-- Ele vira um effect sem avisar ninguém :: Ele continua sendo um computed, e errado.
++ That read is not tracked as a dependency :: Right. Only signals called while the function runs are tracked.
+++ Essa leitura não é rastreada como dependência :: Isso. Só os signals chamados enquanto a função roda são rastreados.
+
+@ computed cloze easy #ex-c4ng8t08
+? A computed computes nothing until somebody reads it: it is ___.
+?? Um computed não calcula nada até alguém lê-lo: ele é ___.
+= lazy
+== preguiçoso | lazy
+
+@ equality quiz medium #ex-cw1ap17v
+? After `sessions().push({ minutes: 25 })`, `total()` still said 90. What would have brought the 25 in?
+?? Depois de `sessions().push({ minutes: 25 })`, `total()` continuou dizendo 90. O que teria trazido o 25?
+- `sessions.set(sessions())`, to tell the signal it changed :: The same array again; `Object.is` finds no change.
+-- `sessions.set(sessions())`, para avisar o signal da mudança :: O mesmo array de novo; o `Object.is` não vê mudança.
+- Reading `total()` twice, so it computes again :: Nothing marked it stale, so every read returns the stored 90.
+-- Ler `total()` duas vezes, para ele calcular de novo :: Nada o marcou como velho, então toda leitura devolve o 90 guardado.
++ Any update that gives the signal a new array :: Right. A new array is a change, and the copy already held the 25.
+++ Qualquer update que dê ao signal um array novo :: Isso. Um array novo é uma mudança, e a cópia já tinha o 25.
+- Waiting a second for Angular to notice :: There is nothing to notice: the signal was never told.
+-- Esperar um segundo para o Angular perceber :: Não há o que perceber: o signal nunca foi avisado.
+
+@ equality numeric medium #ex-33whgpxm
+? What did `total()` print after the session of 50 minutes was added the right way?
+?? Quanto o `total()` imprimiu depois que a sessão de 50 minutos foi acrescentada do jeito certo?
+= 165
+== 165
+
+@ equality quiz hard #ex-w7w4qc44
+? Which of these marks a session done in a way a signal notices?
+?? Qual destes marca uma sessão como feita de um jeito que um signal percebe?
+- `sessions()[0].done = true` :: That changes an object in place; the signal holds the same array.
+-- `sessions()[0].done = true` :: Isso muda um objeto no lugar; o signal guarda o mesmo array.
+- `sessions.update((l) => { l[0].done = true; return l; })` :: It returns the same array, so `Object.is` finds no change.
+-- `sessions.update((l) => { l[0].done = true; return l; })` :: Devolve o mesmo array, então o `Object.is` não vê mudança.
++ `sessions.update((l) => l.map((s, i) => (i === 0 ? { ...s, done: true } : s)))` :: Right. A new array, with a new object for the changed session.
+++ `sessions.update((l) => l.map((s, i) => (i === 0 ? { ...s, done: true } : s)))` :: Isso. Um array novo, com um objeto novo para a sessão alterada.
+- `sessions.set(sessions())` after changing the object :: Setting the same array is no change.
+-- `sessions.set(sessions())` depois de mudar o objeto :: Definir o mesmo array não é mudança.
+
+@ effect quiz medium #ex-8wmndafs
+? After two clicks on `Mark 15 minutes done`, how many times had the effect run?
+?? Depois de dois cliques em `Mark 15 minutes done`, quantas vezes o effect tinha rodado?
+- Twice, once per click :: It also ran once when the component was created.
+-- Duas, uma por clique :: Ele também rodou uma vez quando o componente foi criado.
++ Three times :: Right. Once at creation, once after each click.
+++ Três vezes :: Isso. Uma na criação, uma depois de cada clique.
+- Once, because effects run only at creation :: It runs again whenever what it read changes.
+-- Uma, porque effects só rodam na criação :: Ele roda de novo sempre que o que ele leu muda.
+- Four times, once per signal per click :: It runs once per round of changes, not once per signal.
+-- Quatro vezes, uma por signal por clique :: Ele roda uma vez por rodada de mudanças, não uma por signal.
+
+@ effect quiz hard #ex-jdv2c6dw
+? A colleague writes `effect(() => this.left.set(this.planned() - this.done()))`. What does the lesson say to write instead?
+?? Uma colega escreve `effect(() => this.left.set(this.planned() - this.done()))`. O que a aula diz para escrever no lugar?
++ `left = computed(() => this.planned() - this.done())` :: Right. The same value, always right, with nothing to schedule.
+++ `left = computed(() => this.planned() - this.done())` :: Isso. O mesmo valor, sempre certo, sem nada para agendar.
+- The same effect, inside `ngOnInit` :: Moving it does not fix copying a value into a second source of truth.
+-- O mesmo effect, dentro do `ngOnInit` :: Mudar de lugar não resolve copiar um valor para uma segunda fonte de verdade.
+- A `@let` in the template, so the class has no field at all :: The class then cannot use the value, and the lesson's point is about deriving state.
+-- Um `@let` no template, para a classe não ter campo nenhum :: Aí a classe não pode usar o valor, e o ponto da aula é derivar estado.
+- `left.update` in each method that changes `done` :: That spreads the derivation across every writer.
+-- `left.update` em cada método que muda `done` :: Isso espalha a derivação por todo lugar que escreve.
+
+@ effect matching medium #ex-ppd6ya9j
+? Match each job with the tool the lesson gives it.
+?? Associe cada trabalho à ferramenta que a aula dá a ele.
+< a value that changes and is set by the component :: `signal`
+<< um valor que muda e é definido pelo componente :: `signal`
+< a value worked out from other signals :: `computed`
+<< um valor calculado a partir de outros signals :: `computed`
+< writing to `localStorage` when a value changes :: `effect`
+<< gravar no `localStorage` quando um valor muda :: `effect`
+< data that arrives later, with loading and error states :: `resource`
+<< dados que chegam depois, com estados de carregando e de erro :: `resource`
+x a value the template needs once
+xx um valor que o template usa uma vez
+
+@ resource quiz medium #ex-zsfdr4w7
+? The loader asked for `/course.json` and the page said `Unexpected token '<'`. Why did `fetch` not reject?
+?? O loader pediu `/course.json` e a página disse `Unexpected token '<'`. Por que o `fetch` não rejeitou?
+- The dev server answered 200, as it does for every unknown address :: `--network` showed 404; addresses with an extension are not answered with the page.
+-- O servidor de desenvolvimento respondeu 200, como faz para todo endereço desconhecido :: O `--network` mostrou 404; endereços com extensão não recebem a página.
++ A 404 is an answer, and `fetch` only rejects when there is none :: Right. The loader has to check `response.ok`.
+++ Um 404 é uma resposta, e o `fetch` só rejeita quando não há nenhuma :: Isso. O loader precisa conferir o `response.ok`.
+- `resource` swallows rejections from `fetch` :: It turns them into `error()`, which the template showed.
+-- O `resource` engole as rejeições do `fetch` :: Ele as transforma em `error()`, que o template mostrou.
+- The browser cached an older answer :: The request was made and answered 404 that time.
+-- O navegador guardou uma resposta antiga em cache :: A requisição foi feita e respondida com 404 naquela vez.
+
+@ resource quiz easy #ex-fhwb4rk5
+? Which three signals did the template read from the resource?
+?? Quais três signals o template leu do resource?
+- `pending()`, `failed()` and `result()` :: Those are not a resource's names.
+-- `pending()`, `failed()` e `result()` :: Esses não são os nomes de um resource.
++ `isLoading()`, `error()` and `value()` :: Right. Each is a signal, read with parentheses.
+++ `isLoading()`, `error()` e `value()` :: Isso. Cada um é um signal, lido com parênteses.
+- `loader()`, `params()` and `status()` :: `loader` and `params` are options you pass in, not signals you read.
+-- `loader()`, `params()` e `status()` :: `loader` e `params` são opções que você passa, não signals que você lê.
+- `then()`, `catch()` and `finally()` :: Those belong to a promise; a resource offers signals.
+-- `then()`, `catch()` e `finally()` :: Esses pertencem a uma promise; um resource oferece signals.
+
+@ resource quiz medium #ex-h9gt72nm
+? What does it mean that `resource` is marked experimental in Angular 21?
+?? O que significa o `resource` estar marcado como experimental no Angular 21?
+- It only works in development builds :: It works in every build; experimental is about the API's stability.
+-- Ele só funciona em builds de desenvolvimento :: Funciona em qualquer build; experimental é sobre a estabilidade da API.
+- It will be removed in Angular 22 :: Nothing says so; it is the direction the framework is heading.
+-- Ele vai ser removido no Angular 22 :: Nada diz isso; é a direção para onde o framework vai.
++ Its API is not frozen between versions :: Right. The framework says so in its own documentation.
+++ A API dele não está congelada entre versões :: Isso. O framework diz isso na própria documentação.
+- It needs a flag in `angular.json` :: No flag is needed; the planner uses it as it is.
+-- Ele precisa de uma opção no `angular.json` :: Nenhuma opção é necessária; o planner o usa como está.
+
+@ the-week-computed numeric easy #ex-my0kr6ft
+? With `--today 2026-10-28`, how many minutes did the planner say were planned?
+?? Com `--today 2026-10-28`, quantos minutos o planner disse estarem planejados?
+= 40
+== 40
+
+@ the-week-computed quiz medium #ex-5qm89mgn
+? `isoDay` builds the date from `getFullYear`, `getMonth` and `getDate` instead of calling `toISOString()`. Why?
+?? O `isoDay` monta a data com `getFullYear`, `getMonth` e `getDate` em vez de chamar `toISOString()`. Por quê?
+- `toISOString()` does not exist in Node :: It exists everywhere; the problem is its time zone.
+-- O `toISOString()` não existe no Node :: Existe em todo lugar; o problema é o fuso horário.
+- `toISOString()` is slower :: Speed is not the reason.
+-- O `toISOString()` é mais lento :: Velocidade não é o motivo.
++ `toISOString()` answers in UTC, a day ahead at 22:00 here :: Right. The planner's day is the person's day.
+++ O `toISOString()` responde em UTC, um dia à frente às 22h aqui :: Isso. O dia do planner é o dia da pessoa.
+- `toISOString()` includes the time, which breaks the comparison :: It does, and slicing it would still give UTC's date.
+-- O `toISOString()` inclui a hora, o que quebra a comparação :: Inclui, e cortá-la ainda daria a data em UTC.
+
+@ the-week-computed quiz medium #ex-168wvyzz
+? `--network` listed `GET /courses.json` twice for one page. What does the lesson say comes next?
+?? O `--network` listou `GET /courses.json` duas vezes para uma página. O que a aula diz que vem depois?
+- Nothing: two requests for one file are free :: The lesson calls it wasteful now and wrong the day the copies differ.
+-- Nada: duas requisições do mesmo arquivo não custam nada :: A aula diz que é desperdício agora e errado no dia em que as cópias divergirem.
+- Caching the file in `localStorage` :: Caching would hide the duplication, not remove it.
+-- Guardar o arquivo no `localStorage` :: Um cache esconderia a duplicação, não a removeria.
++ An input in lesson 8, then a service in lesson 11 :: Right. The week hands its numbers down, then one service holds the data.
+++ Um input na aula 8, depois um serviço na aula 11 :: Isso. A semana passa os números adiante, depois um serviço guarda os dados.
+- Merging the two components into one :: The tree keeps both; the data moves instead.
+-- Juntar os dois componentes num só :: A árvore mantém os dois; os dados é que se movem.
+
+@ drill quiz hard #ex-h8t2n8pg
+? Each session has a `minutes` field, and the course page will show the course's total. Which tool should compute it?
+?? Cada sessão tem um campo `minutes`, e a página do curso vai mostrar o total do curso. Que ferramenta deve calculá-lo?
+- An `effect` that sets a `total` signal :: That is the copy-into-a-signal mistake the lesson warns against.
+-- Um `effect` que define um signal `total` :: Esse é o erro de copiar para um signal contra o qual a aula alerta.
+- A method called from the template :: It works, recomputing on every check; a computed remembers.
+-- Um método chamado pelo template :: Funciona, recalculando a cada conferência; um computed lembra.
+- A `resource`, because the sessions came from a file :: The resource holds the data; the derivation is a different job.
+-- Um `resource`, porque as sessões vieram de um arquivo :: O resource guarda os dados; a derivação é outro trabalho.
++ A `computed` :: Right. Derived from signals, remembered until they change.
+++ Um `computed` :: Isso. Derivado de signals, lembrado até eles mudarem.

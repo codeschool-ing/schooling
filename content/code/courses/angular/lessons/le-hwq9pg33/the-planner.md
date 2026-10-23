@@ -39,8 +39,9 @@ them, so that adding a session survives a reload.
 | 6 | HTML and CSS | Tuesday 27 October | 40 | no |
 
 With today on the 23rd, the week is the 19th to the 25th, so sessions 2 to 5 are in it. **165
-minutes planned, 90 of them done**: those are the first two numbers the application will print, in
-lesson 6, and it is worth having worked them out by hand before a program does.
+minutes planned, 90 of them done**: those are the first two numbers the application prints, written
+in by hand in lesson 4 and computed from the data in lesson 6, and it is worth having worked them out
+yourself before a program does.
 
 ## The pieces
 

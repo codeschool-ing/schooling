@@ -59,11 +59,12 @@ sleep 1
 cap_bg serve
 cap_look http://localhost:4200/
 save ng-serve public/courses.json
-cap '~/planner' 'curl -s http://localhost:4200/courses.json | head -4'
+cap '~/planner' 'curl -si http://localhost:4200/courses.json | head -1'
 bg_stop serve
 serve
 cap_bg serve
 cap '~/planner' 'curl -s http://localhost:4200/courses.json | head -4'
+cap '~/planner' 'curl -si http://localhost:4200/courses/git | head -1'
 
 cap '~/planner' 'npx ng generate component week-summary --dry-run'
 cap '~/planner' 'npx ng generate component week-summary' 'cat src/app/week-summary/week-summary.ts'

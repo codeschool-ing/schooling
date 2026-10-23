@@ -19,7 +19,7 @@ for md in "$D"/*.md; do
   case $md in *.pt.md) continue ;; esac
   if [ -f /tmp/anglab/$L.txt ] && grep -q "^ana@dev:" "$md"; then python3 "$HERE/fill.py" "$md" /tmp/anglab/$L.txt; fi
 done
-python3 "$HERE/ex.py" "$D"/*.md >/dev/null
+for md in "$D"/*.md; do case $md in *.pt.md) ;; *) python3 "$HERE/ex.py" "$md" >/dev/null ;; esac; done
 for pt in "$D"/*.pt.md; do
   md=${pt%.pt.md}.md
   if grep -q '^```' "$md"; then python3 "$HERE/pt.py" "$md" "$pt" >/dev/null || echo "pt.py failed on $pt"; fi

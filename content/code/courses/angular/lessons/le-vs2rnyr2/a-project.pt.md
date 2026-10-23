@@ -41,7 +41,7 @@ CREATE planner/src/app/app.routes.ts (77 bytes)
 CREATE planner/public/favicon.ico (15086 bytes)
 - Installing packages (npm)...
 npm error Cannot read properties of null (reading 'edgesOut')
-npm error A complete log of this run can be found in: /home/ana/.npm/_logs/2026-10-23T22_43_26_493Z-debug-0.log
+npm error A complete log of this run can be found in: /home/ana/.npm/_logs/2026-10-23T23_32_54_625Z-debug-0.log
 ✖ Package install failed, see above.
 The Schematic workflow failed. See above.
 ```
@@ -102,7 +102,7 @@ no mesmo calendário, mas o número de patch de cada pacote anda quando aquele p
 ```
 ana@dev:~/planner$ npm install
 
-added 470 packages, and audited 471 packages in 17s
+added 470 packages, and audited 471 packages in 13s
 
 found 0 vulnerabilities
 ana@dev:~/planner$ npm ls --depth=0

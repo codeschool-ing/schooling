@@ -22,14 +22,14 @@ styles.css                            | styles                             |  56
 
                                       | Initial total                      |  10.11 kB
 
-Application bundle generation complete. [1.506 seconds] - 2026-10-23T22:44:15.887Z
+Application bundle generation complete. [1.453 seconds] - 2026-10-23T23:33:39.922Z
 
 
  RUN  v4.1.12 /home/ana/planner
 
- ✓ |planner| src/app/week-summary/week-summary.spec.ts (1 test) 41ms
- ❯ |planner| src/app/app.spec.ts (2 tests | 1 failed) 49ms
-     ✓ should create the app 34ms
+ ✓ |planner| src/app/week-summary/week-summary.spec.ts (1 test) 43ms
+ ❯ |planner| src/app/app.spec.ts (2 tests | 1 failed) 46ms
+     ✓ should create the app 32ms
      × should render title 13ms
 
 ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
@@ -53,8 +53,8 @@ Received: "Study planner"
 
  Test Files  1 failed | 1 passed (2)
       Tests  1 failed | 2 passed (3)
-   Start at  19:44:16
-   Duration  995ms (transform 119ms, setup 542ms, import 107ms, tests 90ms, environment 946ms)
+   Start at  20:33:40
+   Duration  1.09s (transform 127ms, setup 595ms, import 96ms, tests 89ms, environment 1.04s)
 ```
 
 One test failed, and it is right to. The test `ng new` wrote checks that the page's heading says
@@ -140,18 +140,18 @@ styles.css                            | styles                             |  56
 
                                       | Initial total                      |  10.11 kB
 
-Application bundle generation complete. [1.399 seconds] - 2026-10-23T22:44:19.398Z
+Application bundle generation complete. [1.559 seconds] - 2026-10-23T23:33:43.720Z
 
 
  RUN  v4.1.12 /home/ana/planner
 
- ✓ |planner| src/app/week-summary/week-summary.spec.ts (1 test) 37ms
- ✓ |planner| src/app/app.spec.ts (2 tests) 45ms
+ ✓ |planner| src/app/week-summary/week-summary.spec.ts (1 test) 36ms
+ ✓ |planner| src/app/app.spec.ts (2 tests) 43ms
 
  Test Files  2 passed (2)
       Tests  3 passed (3)
-   Start at  19:44:19
-   Duration  982ms (transform 106ms, setup 515ms, import 95ms, tests 82ms, environment 955ms)
+   Start at  20:33:43
+   Duration  1.06s (transform 119ms, setup 581ms, import 140ms, tests 79ms, environment 983ms)
 ```
 
 Three tests in two files: the two in `app.spec.ts`, and the one that came with `WeekSummary`.

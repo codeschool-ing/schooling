@@ -1,0 +1,379 @@
+{
+ "ex-rtrbhk8f": {
+  "prompt": "Como um template lê o valor de um signal chamado `minutes`?",
+  "choices": [
+   {
+    "text": "`{{ minutes }}`, como um campo comum",
+    "why": "Sem parênteses isso é o próprio signal, uma função, e a conferência do template recusa."
+   },
+   {
+    "text": "`{{ minutes() }}`",
+    "why": "Isso. Um signal é lido chamando-o, no template como no código."
+   },
+   {
+    "text": "`{{ minutes.value }}`",
+    "why": "É assim que um resource expõe o valor, como um signal que ainda se chama."
+   },
+   {
+    "text": "`{{ minutes.get() }}`",
+    "why": "Não existe `get`; a própria chamada lê."
+   }
+  ]
+ },
+ "ex-r57xx0c3": {
+  "prompt": "Por que a aula prefere `minutes.update((m) => m + 15)` a `minutes.set(minutes() + 15)`?",
+  "choices": [
+   {
+    "text": "O `set` não aceita uma expressão",
+    "why": "Ele aceita qualquer valor; a diferença está em de onde vem o valor antigo."
+   },
+   {
+    "text": "O `update` é mais rápido",
+    "why": "Velocidade não é o motivo dado."
+   },
+   {
+    "text": "Antigo e novo na mesma chamada",
+    "why": "Isso. A leitura e a escrita não têm como se separar."
+   },
+   {
+    "text": "O `set` não avisa quem lê",
+    "why": "Os dois avisam quem lê sobre uma mudança."
+   }
+  ]
+ },
+ "ex-yq54arsq": {
+  "prompt": "Por que um campo signal num componente é declarado `readonly`?",
+  "choices": [
+   {
+    "text": "Para o valor dele não mudar",
+    "why": "O valor muda pelo `set` e pelo `update`; o `readonly` é sobre o campo."
+   },
+   {
+    "text": "Para ninguém trocar o próprio signal",
+    "why": "Isso. O campo guarda sempre o mesmo signal, cujo valor muda."
+   },
+   {
+    "text": "Templates só leem campos `readonly`",
+    "why": "Eles leem campos `protected` e `public` igualmente."
+   },
+   {
+    "text": "O Angular exige isso para os signals funcionarem",
+    "why": "Signals funcionam num campo mutável também; só seria uma armadilha."
+   }
+  ]
+ },
+ "ex-rxc58ptm": {
+  "prompt": "No `try/computed.mts`, quantas vezes `  computing left` apareceu antes de `done` mudar, nas duas leituras?",
+  "choices": [
+   {
+    "text": "Duas, uma por leitura",
+    "why": "A segunda leitura devolveu o valor guardado."
+   },
+   {
+    "text": "Nenhuma, porque nada tinha mudado",
+    "why": "A primeira leitura precisou calcular; ainda não havia valor."
+   },
+   {
+    "text": "Uma",
+    "why": "Isso. Calculado na primeira leitura, lembrado na segunda."
+   },
+   {
+    "text": "Três, contando o momento em que foi criado",
+    "why": "Criá-lo não calculou nada; ele é preguiçoso."
+   }
+  ]
+ },
+ "ex-6p7znyv5": {
+  "prompt": "No `try/branches.mts`, `done` mudou enquanto `showDone` era falso, e `label` não calculou de novo. Por quê?",
+  "choices": [
+   {
+    "text": "O `computed` ignora mudanças feitas com `set`",
+    "why": "Ele reage a `set`; reagiu ao `showDone.set(true)`."
+   },
+   {
+    "text": "A última execução nunca chamou `done()`, então ele não era dependência",
+    "why": "Isso. Um computed depende do que leu da última vez."
+   },
+   {
+    "text": "`done` recebeu um valor igual ao antigo",
+    "why": "Ele foi de 90 para 100."
+   },
+   {
+    "text": "Mudanças só são percebidas num componente, não num script",
+    "why": "O mesmo script percebeu a mudança em `showDone`."
+   }
+  ]
+ },
+ "ex-pxhez1nd": {
+  "prompt": "Uma colega lê um signal dentro de um `setTimeout` num `computed`. O que a aula alerta?",
+  "choices": [
+   {
+    "text": "O computed lança um erro na próxima leitura",
+    "why": "Nada lança erro; a leitura só passa despercebida."
+   },
+   {
+    "text": "O timer é cancelado quando o computed roda",
+    "why": "O timer roda; o problema é o rastreamento."
+   },
+   {
+    "text": "Ele vira um effect sem avisar ninguém",
+    "why": "Ele continua sendo um computed, e errado."
+   },
+   {
+    "text": "Essa leitura não é rastreada como dependência",
+    "why": "Isso. Só os signals chamados enquanto a função roda são rastreados."
+   }
+  ]
+ },
+ "ex-c4ng8t08": {
+  "prompt": "Um computed não calcula nada até alguém lê-lo: ele é ___.",
+  "blanks": [
+   {
+    "accept": [
+     "preguiçoso",
+     "lazy"
+    ]
+   }
+  ]
+ },
+ "ex-cw1ap17v": {
+  "prompt": "Depois de `sessions().push({ minutes: 25 })`, `total()` continuou dizendo 90. O que teria trazido o 25?",
+  "choices": [
+   {
+    "text": "`sessions.set(sessions())`, para avisar o signal da mudança",
+    "why": "O mesmo array de novo; o `Object.is` não vê mudança."
+   },
+   {
+    "text": "Ler `total()` duas vezes, para ele calcular de novo",
+    "why": "Nada o marcou como velho, então toda leitura devolve o 90 guardado."
+   },
+   {
+    "text": "Qualquer update que dê ao signal um array novo",
+    "why": "Isso. Um array novo é uma mudança, e a cópia já tinha o 25."
+   },
+   {
+    "text": "Esperar um segundo para o Angular perceber",
+    "why": "Não há o que perceber: o signal nunca foi avisado."
+   }
+  ]
+ },
+ "ex-33whgpxm": {
+  "prompt": "Quanto o `total()` imprimiu depois que a sessão de 50 minutos foi acrescentada do jeito certo?"
+ },
+ "ex-w7w4qc44": {
+  "prompt": "Qual destes marca uma sessão como feita de um jeito que um signal percebe?",
+  "choices": [
+   {
+    "text": "`sessions()[0].done = true`",
+    "why": "Isso muda um objeto no lugar; o signal guarda o mesmo array."
+   },
+   {
+    "text": "`sessions.update((l) => { l[0].done = true; return l; })`",
+    "why": "Devolve o mesmo array, então o `Object.is` não vê mudança."
+   },
+   {
+    "text": "`sessions.update((l) => l.map((s, i) => (i === 0 ? { ...s, done: true } : s)))`",
+    "why": "Isso. Um array novo, com um objeto novo para a sessão alterada."
+   },
+   {
+    "text": "`sessions.set(sessions())` depois de mudar o objeto",
+    "why": "Definir o mesmo array não é mudança."
+   }
+  ]
+ },
+ "ex-8wmndafs": {
+  "prompt": "Depois de dois cliques em `Mark 15 minutes done`, quantas vezes o effect tinha rodado?",
+  "choices": [
+   {
+    "text": "Duas, uma por clique",
+    "why": "Ele também rodou uma vez quando o componente foi criado."
+   },
+   {
+    "text": "Três vezes",
+    "why": "Isso. Uma na criação, uma depois de cada clique."
+   },
+   {
+    "text": "Uma, porque effects só rodam na criação",
+    "why": "Ele roda de novo sempre que o que ele leu muda."
+   },
+   {
+    "text": "Quatro vezes, uma por signal por clique",
+    "why": "Ele roda uma vez por rodada de mudanças, não uma por signal."
+   }
+  ]
+ },
+ "ex-jdv2c6dw": {
+  "prompt": "Uma colega escreve `effect(() => this.left.set(this.planned() - this.done()))`. O que a aula diz para escrever no lugar?",
+  "choices": [
+   {
+    "text": "`left = computed(() => this.planned() - this.done())`",
+    "why": "Isso. O mesmo valor, sempre certo, sem nada para agendar."
+   },
+   {
+    "text": "O mesmo effect, dentro do `ngOnInit`",
+    "why": "Mudar de lugar não resolve copiar um valor para uma segunda fonte de verdade."
+   },
+   {
+    "text": "Um `@let` no template, para a classe não ter campo nenhum",
+    "why": "Aí a classe não pode usar o valor, e o ponto da aula é derivar estado."
+   },
+   {
+    "text": "`left.update` em cada método que muda `done`",
+    "why": "Isso espalha a derivação por todo lugar que escreve."
+   }
+  ]
+ },
+ "ex-ppd6ya9j": {
+  "prompt": "Associe cada trabalho à ferramenta que a aula dá a ele.",
+  "pairs": [
+   {
+    "left": "um valor que muda e é definido pelo componente",
+    "right": "`signal`"
+   },
+   {
+    "left": "um valor calculado a partir de outros signals",
+    "right": "`computed`"
+   },
+   {
+    "left": "gravar no `localStorage` quando um valor muda",
+    "right": "`effect`"
+   },
+   {
+    "left": "dados que chegam depois, com estados de carregando e de erro",
+    "right": "`resource`"
+   }
+  ],
+  "right_distractors": [
+   "um valor que o template usa uma vez"
+  ]
+ },
+ "ex-zsfdr4w7": {
+  "prompt": "O loader pediu `/course.json` e a página disse `Unexpected token '<'`. Por que o `fetch` não rejeitou?",
+  "choices": [
+   {
+    "text": "O servidor de desenvolvimento respondeu 200, como faz para todo endereço desconhecido",
+    "why": "O `--network` mostrou 404; endereços com extensão não recebem a página."
+   },
+   {
+    "text": "Um 404 é uma resposta, e o `fetch` só rejeita quando não há nenhuma",
+    "why": "Isso. O loader precisa conferir o `response.ok`."
+   },
+   {
+    "text": "O `resource` engole as rejeições do `fetch`",
+    "why": "Ele as transforma em `error()`, que o template mostrou."
+   },
+   {
+    "text": "O navegador guardou uma resposta antiga em cache",
+    "why": "A requisição foi feita e respondida com 404 naquela vez."
+   }
+  ]
+ },
+ "ex-fhwb4rk5": {
+  "prompt": "Quais três signals o template leu do resource?",
+  "choices": [
+   {
+    "text": "`pending()`, `failed()` e `result()`",
+    "why": "Esses não são os nomes de um resource."
+   },
+   {
+    "text": "`isLoading()`, `error()` e `value()`",
+    "why": "Isso. Cada um é um signal, lido com parênteses."
+   },
+   {
+    "text": "`loader()`, `params()` e `status()`",
+    "why": "`loader` e `params` são opções que você passa, não signals que você lê."
+   },
+   {
+    "text": "`then()`, `catch()` e `finally()`",
+    "why": "Esses pertencem a uma promise; um resource oferece signals."
+   }
+  ]
+ },
+ "ex-h9gt72nm": {
+  "prompt": "O que significa o `resource` estar marcado como experimental no Angular 21?",
+  "choices": [
+   {
+    "text": "Ele só funciona em builds de desenvolvimento",
+    "why": "Funciona em qualquer build; experimental é sobre a estabilidade da API."
+   },
+   {
+    "text": "Ele vai ser removido no Angular 22",
+    "why": "Nada diz isso; é a direção para onde o framework vai."
+   },
+   {
+    "text": "A API dele não está congelada entre versões",
+    "why": "Isso. O framework diz isso na própria documentação."
+   },
+   {
+    "text": "Ele precisa de uma opção no `angular.json`",
+    "why": "Nenhuma opção é necessária; o planner o usa como está."
+   }
+  ]
+ },
+ "ex-my0kr6ft": {
+  "prompt": "Com `--today 2026-10-28`, quantos minutos o planner disse estarem planejados?"
+ },
+ "ex-5qm89mgn": {
+  "prompt": "O `isoDay` monta a data com `getFullYear`, `getMonth` e `getDate` em vez de chamar `toISOString()`. Por quê?",
+  "choices": [
+   {
+    "text": "O `toISOString()` não existe no Node",
+    "why": "Existe em todo lugar; o problema é o fuso horário."
+   },
+   {
+    "text": "O `toISOString()` é mais lento",
+    "why": "Velocidade não é o motivo."
+   },
+   {
+    "text": "O `toISOString()` responde em UTC, um dia à frente às 22h aqui",
+    "why": "Isso. O dia do planner é o dia da pessoa."
+   },
+   {
+    "text": "O `toISOString()` inclui a hora, o que quebra a comparação",
+    "why": "Inclui, e cortá-la ainda daria a data em UTC."
+   }
+  ]
+ },
+ "ex-168wvyzz": {
+  "prompt": "O `--network` listou `GET /courses.json` duas vezes para uma página. O que a aula diz que vem depois?",
+  "choices": [
+   {
+    "text": "Nada: duas requisições do mesmo arquivo não custam nada",
+    "why": "A aula diz que é desperdício agora e errado no dia em que as cópias divergirem."
+   },
+   {
+    "text": "Guardar o arquivo no `localStorage`",
+    "why": "Um cache esconderia a duplicação, não a removeria."
+   },
+   {
+    "text": "Um input na aula 8, depois um serviço na aula 11",
+    "why": "Isso. A semana passa os números adiante, depois um serviço guarda os dados."
+   },
+   {
+    "text": "Juntar os dois componentes num só",
+    "why": "A árvore mantém os dois; os dados é que se movem."
+   }
+  ]
+ },
+ "ex-h8t2n8pg": {
+  "prompt": "Cada sessão tem um campo `minutes`, e a página do curso vai mostrar o total do curso. Que ferramenta deve calculá-lo?",
+  "choices": [
+   {
+    "text": "Um `effect` que define um signal `total`",
+    "why": "Esse é o erro de copiar para um signal contra o qual a aula alerta."
+   },
+   {
+    "text": "Um método chamado pelo template",
+    "why": "Funciona, recalculando a cada conferência; um computed lembra."
+   },
+   {
+    "text": "Um `resource`, porque as sessões vieram de um arquivo",
+    "why": "O resource guarda os dados; a derivação é outro trabalho."
+   },
+   {
+    "text": "Um `computed`",
+    "why": "Isso. Derivado de signals, lembrado até eles mudarem."
+   }
+  ]
+ }
+}

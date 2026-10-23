@@ -18,7 +18,7 @@ styles-5INURTSO.css | styles        |   0 bytes |                 0 bytes
 
                     | Initial total | 187.14 kB |                50.84 kB
 
-Application bundle generation complete. [3.578 seconds] - 2026-10-23T22:44:06.159Z
+Application bundle generation complete. [3.464 seconds] - 2026-10-23T23:33:30.254Z
 
 Output location: /home/ana/planner/dist/planner
 ```
@@ -99,20 +99,19 @@ Error code explanation: 404 - Nothing matches the given URI.
 Python's server looked for a file called `courses/git`, found none, and sent its own error page. The application never
 loaded, so it never had the chance to read the address and draw the right screen. **A host for an
 Angular application has to answer every address it does not have a file for with `index.html`**,
-and let the application decide. The dev server does it already: that is the page it sent for `/courses.json`, two
-sections back, before it had read the file. Every hosting service has a setting for it, and the
-course `front-delivery` is where you set one.
+and let the application decide. The dev server does it already, as two sections back showed for this very address.
+Every hosting service has a setting for it, and the course `front-delivery` is where you set one.
 
 Its terminal logged both requests, the second with its 404:
 
 ```
 ana@dev:~/planner$ python3 -m http.server 8081 --directory dist/planner/browser
 Serving HTTP on 0.0.0.0 port 8081 (http://0.0.0.0:8081/) ...
-127.0.0.1 - - [23/Oct/2026 19:44:06] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [23/Oct/2026 19:44:06] "GET /styles-5INURTSO.css HTTP/1.1" 200 -
-127.0.0.1 - - [23/Oct/2026 19:44:06] "GET /main-J4WVDBNH.js HTTP/1.1" 200 -
-127.0.0.1 - - [23/Oct/2026 19:44:07] code 404, message File not found
-127.0.0.1 - - [23/Oct/2026 19:44:07] "GET /courses/git HTTP/1.1" 404 -
+127.0.0.1 - - [23/Oct/2026 20:33:30] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2026 20:33:31] "GET /styles-5INURTSO.css HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2026 20:33:31] "GET /main-J4WVDBNH.js HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2026 20:33:32] code 404, message File not found
+127.0.0.1 - - [23/Oct/2026 20:33:32] "GET /courses/git HTTP/1.1" 404 -
 ```
 
 Stop it with Ctrl-C. The build output is not something to commit: `.gitignore`

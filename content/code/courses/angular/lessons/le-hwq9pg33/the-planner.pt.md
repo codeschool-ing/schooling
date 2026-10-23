@@ -40,8 +40,9 @@ pequeno servidor seu os guarda, para que acrescentar uma sessão sobreviva a um 
 | 6 | HTML and CSS | terça, 27 de outubro | 40 | não |
 
 Com hoje no dia 23, a semana vai do dia 19 ao 25, então as sessões 2 a 5 estão nela. **165 minutos
-planejados, 90 deles feitos**: são os dois primeiros números que a aplicação vai imprimir, na aula 6,
-e vale tê-los calculado à mão antes que um programa o faça.
+planejados, 90 deles feitos**: são os dois primeiros números que a aplicação imprime, escritos à mão
+na aula 4 e calculados a partir dos dados na aula 6, e vale tê-los calculado você mesmo antes que um
+programa o faça.
 
 ## As peças
 

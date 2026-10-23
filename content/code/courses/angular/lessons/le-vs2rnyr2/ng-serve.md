@@ -17,7 +17,7 @@ styles.css          | styles        | 95 bytes |
 
                     | Initial total | 47.85 kB
 
-Application bundle generation complete. [1.450 seconds] - 2026-10-23T22:43:50.048Z
+Application bundle generation complete. [1.466 seconds] - 2026-10-23T23:33:14.577Z
 
 Watch mode enabled. Watching for file changes...
 NOTE: Raw file sizes do not reflect development server per-request transformations.
@@ -34,9 +34,9 @@ memory each one holds, in kilobytes, in its first column:
 
 ```
 ana@dev:~/planner$ ps -o rss=,args= -u ana | sort -rn | head -3
-370528 ng serve (planner)
-82496 npm exec ng serve
-17724 /home/ana/planner/node_modules/@esbuild/linux-x64/bin/esbuild --service=0.28.1 --ping
+437964 ng serve (planner)
+82192 npm exec ng serve
+25952 /home/ana/planner/node_modules/@esbuild/linux-x64/bin/esbuild --service=0.28.1 --ping
 ```
 
 The first line is the dev server, the second the `npx` that started it, the third `esbuild`, the
@@ -48,7 +48,7 @@ running and it refuses, because the port is taken:
 ```
 ana@dev:~/planner$ npx ng serve
 An unhandled exception occurred: Port 4200 is already in use. Use '--port' to specify a different port.
-See "/tmp/ng-WloOfH/angular-errors.log" for further details.
+See "/tmp/ng-X7tgA8/angular-errors.log" for further details.
 ```
 
 At a terminal it asks instead whether to use another port. Either way, the fix is usually to find
@@ -91,7 +91,8 @@ be pasted into a lesson, so this course reads pages with a short program instead
 //   --styles       print the CSS rules the page's stylesheets hold, as the
 //                  browser read them
 //   --today DATE   make the browser's clock say DATE (YYYY-MM-DD), at 09:00
-//   --network      list every request the page made, and its status
+//   --network      list the requests the page's own code made with fetch or
+//                  XMLHttpRequest, and their status: the data, not the scripts
 //   --no-js        open the page with JavaScript turned off
 //   --wait MS      how long to let the page settle after each step (500)
 import { chromium } from "playwright";
@@ -133,9 +134,10 @@ page.on("console", (m) => {
 });
 page.on("pageerror", (e) => say(`Uncaught ${e.name}: ${e.message}`));
 const origin = new URL(url).origin;
+const data = (q) => ["fetch", "xhr"].includes(q.resourceType());
 if (opt.network) {
-  page.on("response", (r) => say(`net  ${r.request().method()} ${r.url().replace(origin, "")}  ${r.status()}`));
-  page.on("requestfailed", (r) => say(`net  ${r.method()} ${r.url().replace(origin, "")}  failed: ${r.failure()?.errorText}`));
+  page.on("response", (r) => data(r.request()) && say(`net  ${r.request().method()} ${r.url().replace(origin, "")}  ${r.status()}`));
+  page.on("requestfailed", (q) => data(q) && say(`net  ${q.method()} ${q.url().replace(origin, "")}  failed: ${q.failure()?.errorText}`));
 }
 
 // The accessibility tree of the element SEL matches, as the browser hands it to
@@ -277,7 +279,7 @@ styles.css          | styles        | 95 bytes |
 
                     | Initial total | 47.85 kB
 
-Application bundle generation complete. [1.450 seconds] - 2026-10-23T22:43:50.048Z
+Application bundle generation complete. [1.466 seconds] - 2026-10-23T23:33:14.577Z
 
 Watch mode enabled. Watching for file changes...
 NOTE: Raw file sizes do not reflect development server per-request transformations.
@@ -287,7 +289,7 @@ NOTE: Raw file sizes do not reflect development server per-request transformatio
 Initial chunk files | Names | Raw size
 main.js             | main  |  2.39 kB | 
 
-Application bundle generation complete. [0.135 seconds] - 2026-10-23T22:43:53.033Z
+Application bundle generation complete. [0.115 seconds] - 2026-10-23T23:33:17.626Z
 
 Component update sent to client(s).
 ```
@@ -316,21 +318,16 @@ Last, the planner's data from lesson 1, in the folder the build copies as it is.
 ```
 
 Anything in `public/` is served at the root of the site, so the file should now be at
-`/courses.json`:
+`/courses.json`. `-i` asks `curl` for the status line before the body:
 
 ```
-ana@dev:~/planner$ curl -s http://localhost:4200/courses.json | head -4
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
+ana@dev:~/planner$ curl -si http://localhost:4200/courses.json | head -1
+HTTP/1.1 404 Not Found
 ```
 
-That is not JSON. It is the start of the page, `index.html`, and two facts about the dev server
-explain it. **It reads `public/` when it starts**, so a file added while it runs is not there for it
-yet. And **it answers every address it has no file for with `index.html`**, which is what an
-Angular application needs from a server, for a reason the build section shows in a moment. Stop the
-server with Ctrl-C in its terminal, and start it again:
+**The dev server reads `public/` when it starts**, so a file added while it runs is not there for it
+yet, and an address that looks like a file it does not have, with an extension such as `.json`, gets
+a 404. Stop the server with Ctrl-C in its terminal, and start it again:
 
 ```
 ana@dev:~/planner$ npx ng serve
@@ -342,7 +339,7 @@ styles.css          | styles        | 95 bytes |
 
                     | Initial total |  2.48 kB
 
-Application bundle generation complete. [1.468 seconds] - 2026-10-23T22:43:59.268Z
+Application bundle generation complete. [1.383 seconds] - 2026-10-23T23:33:23.246Z
 
 Watch mode enabled. Watching for file changes...
 NOTE: Raw file sizes do not reflect development server per-request transformations.
@@ -355,6 +352,15 @@ ana@dev:~/planner$ curl -s http://localhost:4200/courses.json | head -4
   "courses": [
     { "id": "html-css", "name": "HTML and CSS" },
     { "id": "javascript", "name": "JavaScript" },
+```
+
+An address **without** an extension is treated differently, and it matters from lesson 17 on: the
+dev server answers `/courses/git`, which is no file at all, with the page itself, `index.html`, so
+that the application can read the address and decide what to draw:
+
+```
+ana@dev:~/planner$ curl -si http://localhost:4200/courses/git | head -1
+HTTP/1.1 200 OK
 ```
 
 Nothing in the application reads it yet. Lesson 6 does, with the first signal that waits for

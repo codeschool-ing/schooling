@@ -17,7 +17,7 @@ styles.css          | styles        | 95 bytes |
 
                     | Initial total | 47.85 kB
 
-Application bundle generation complete. [1.450 seconds] - 2026-10-23T22:43:50.048Z
+Application bundle generation complete. [1.466 seconds] - 2026-10-23T23:33:14.577Z
 
 Watch mode enabled. Watching for file changes...
 NOTE: Raw file sizes do not reflect development server per-request transformations.
@@ -35,9 +35,9 @@ memória de cada um, em kilobytes, na primeira coluna:
 
 ```
 ana@dev:~/planner$ ps -o rss=,args= -u ana | sort -rn | head -3
-370528 ng serve (planner)
-82496 npm exec ng serve
-17724 /home/ana/planner/node_modules/@esbuild/linux-x64/bin/esbuild --service=0.28.1 --ping
+437964 ng serve (planner)
+82192 npm exec ng serve
+25952 /home/ana/planner/node_modules/@esbuild/linux-x64/bin/esbuild --service=0.28.1 --ping
 ```
 
 A primeira linha é o servidor de desenvolvimento, a segunda o `npx` que o iniciou, a terceira o
@@ -49,7 +49,7 @@ enquanto o primeiro roda e ele recusa, porque a porta está ocupada:
 ```
 ana@dev:~/planner$ npx ng serve
 An unhandled exception occurred: Port 4200 is already in use. Use '--port' to specify a different port.
-See "/tmp/ng-WloOfH/angular-errors.log" for further details.
+See "/tmp/ng-X7tgA8/angular-errors.log" for further details.
 ```
 
 Num terminal, ele pergunta em vez disso se deve usar outra porta. De qualquer jeito, o conserto
@@ -92,7 +92,8 @@ navegador não cabe numa aula, então este curso lê páginas com um programa cu
 //   --styles       print the CSS rules the page's stylesheets hold, as the
 //                  browser read them
 //   --today DATE   make the browser's clock say DATE (YYYY-MM-DD), at 09:00
-//   --network      list every request the page made, and its status
+//   --network      list the requests the page's own code made with fetch or
+//                  XMLHttpRequest, and their status: the data, not the scripts
 //   --no-js        open the page with JavaScript turned off
 //   --wait MS      how long to let the page settle after each step (500)
 import { chromium } from "playwright";
@@ -134,9 +135,10 @@ page.on("console", (m) => {
 });
 page.on("pageerror", (e) => say(`Uncaught ${e.name}: ${e.message}`));
 const origin = new URL(url).origin;
+const data = (q) => ["fetch", "xhr"].includes(q.resourceType());
 if (opt.network) {
-  page.on("response", (r) => say(`net  ${r.request().method()} ${r.url().replace(origin, "")}  ${r.status()}`));
-  page.on("requestfailed", (r) => say(`net  ${r.method()} ${r.url().replace(origin, "")}  failed: ${r.failure()?.errorText}`));
+  page.on("response", (r) => data(r.request()) && say(`net  ${r.request().method()} ${r.url().replace(origin, "")}  ${r.status()}`));
+  page.on("requestfailed", (q) => data(q) && say(`net  ${q.method()} ${q.url().replace(origin, "")}  failed: ${q.failure()?.errorText}`));
 }
 
 // The accessibility tree of the element SEL matches, as the browser hands it to
@@ -278,7 +280,7 @@ styles.css          | styles        | 95 bytes |
 
                     | Initial total | 47.85 kB
 
-Application bundle generation complete. [1.450 seconds] - 2026-10-23T22:43:50.048Z
+Application bundle generation complete. [1.466 seconds] - 2026-10-23T23:33:14.577Z
 
 Watch mode enabled. Watching for file changes...
 NOTE: Raw file sizes do not reflect development server per-request transformations.
@@ -288,7 +290,7 @@ NOTE: Raw file sizes do not reflect development server per-request transformatio
 Initial chunk files | Names | Raw size
 main.js             | main  |  2.39 kB | 
 
-Application bundle generation complete. [0.135 seconds] - 2026-10-23T22:43:53.033Z
+Application bundle generation complete. [0.115 seconds] - 2026-10-23T23:33:17.626Z
 
 Component update sent to client(s).
 ```
@@ -317,21 +319,17 @@ Por último, os dados do planner da aula 1, na pasta que o build copia como est�
 ]}
 ```
 
-Tudo em `public/` é servido na raiz do site, então o arquivo devia estar agora em `/courses.json`:
+Tudo em `public/` é servido na raiz do site, então o arquivo devia estar agora em `/courses.json`.
+O `-i` pede ao `curl` a linha de status antes do corpo:
 
 ```
-ana@dev:~/planner$ curl -s http://localhost:4200/courses.json | head -4
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
+ana@dev:~/planner$ curl -si http://localhost:4200/courses.json | head -1
+HTTP/1.1 404 Not Found
 ```
 
-Isso não é JSON. É o começo da página, o `index.html`, e dois fatos sobre o servidor de
-desenvolvimento explicam o porquê. **Ele lê o `public/` quando inicia**, então um arquivo acrescentado
-com ele rodando ainda não existe para ele. E **ele responde todo endereço para o qual não tem arquivo
-com o `index.html`**, que é o que uma aplicação Angular precisa de um servidor, por um motivo que a
-seção de build mostra daqui a pouco. Pare o servidor com Ctrl-C no terminal dele, e inicie de novo:
+**O servidor de desenvolvimento lê o `public/` quando inicia**, então um arquivo acrescentado com ele
+rodando ainda não existe para ele, e um endereço que parece um arquivo que ele não tem, com uma
+extensão como `.json`, recebe um 404. Pare o servidor com Ctrl-C no terminal dele, e inicie de novo:
 
 ```
 ana@dev:~/planner$ npx ng serve
@@ -343,7 +341,7 @@ styles.css          | styles        | 95 bytes |
 
                     | Initial total |  2.48 kB
 
-Application bundle generation complete. [1.468 seconds] - 2026-10-23T22:43:59.268Z
+Application bundle generation complete. [1.383 seconds] - 2026-10-23T23:33:23.246Z
 
 Watch mode enabled. Watching for file changes...
 NOTE: Raw file sizes do not reflect development server per-request transformations.
@@ -356,6 +354,15 @@ ana@dev:~/planner$ curl -s http://localhost:4200/courses.json | head -4
   "courses": [
     { "id": "html-css", "name": "HTML and CSS" },
     { "id": "javascript", "name": "JavaScript" },
+```
+
+Um endereço **sem** extensão é tratado de outro jeito, e isso importa a partir da aula 17: o servidor
+de desenvolvimento responde `/courses/git`, que não é arquivo nenhum, com a própria página, o
+`index.html`, para que a aplicação possa ler o endereço e decidir o que desenhar:
+
+```
+ana@dev:~/planner$ curl -si http://localhost:4200/courses/git | head -1
+HTTP/1.1 200 OK
 ```
 
 Nada na aplicação lê o arquivo ainda. A aula 6 lê, com o primeiro signal que espera por alguma coisa.
