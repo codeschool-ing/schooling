@@ -11,16 +11,16 @@ screen:
 
 ```
 ana@web:~$ sudo ss -Htulpn | awk '{split($7, p, "\""); print $1, $5, p[2]}'
+udp 0.0.0.0:54453 avahi-daemon
 udp 0.0.0.0:5353 avahi-daemon
-udp 0.0.0.0:47984 avahi-daemon
 udp 0.0.0.0:111 rpcbind
 udp 0.0.0.0:161 snmpd
-tcp 127.0.0.1:8080 python3
-tcp 0.0.0.0:80 nginx
-tcp 0.0.0.0:111 rpcbind
 tcp 0.0.0.0:22 sshd
 tcp 0.0.0.0:23 inetd
 tcp 0.0.0.0:21 vsftpd
+tcp 0.0.0.0:111 rpcbind
+tcp 0.0.0.0:80 nginx
+tcp 127.0.0.1:8080 python3
 ```
 
 Everything the scan found is here, with a name beside it, plus two things it could not see. The
@@ -70,7 +70,7 @@ ana@desk:~$ snmpget -v2c -c public web 1.3.6.1.2.1.1.5.0
 iso.3.6.1.2.1.1.5.0 = STRING: "web"
 ana@desk:~$ snmpwalk -v2c -c public web 1.3.6.1.2.1.25.4.2.1.2 | wc -l; snmpwalk -v2c -c public web 1.3.6.1.2.1.25.6.3.1.2 | wc -l
 23
-308
+322
 ```
 
 The FTP server gives its name and exact version in its first line. The SNMP agent was asked for the
@@ -93,8 +93,8 @@ rpcbind.socket
 Stopping 'rpcbind.service', but its triggering units are still active:
 rpcbind.socket
 ana@web:~$ sudo ss -Htulpn | grep ':111 '
-udp UNCONN 0      0        0.0.0.0:111   0.0.0.0:* users:(("systemd",pid=1,fd=111))                                                                                     
-tcp LISTEN 0      4096     0.0.0.0:111   0.0.0.0:* users:(("systemd",pid=1,fd=110))                                                                                     
+udp UNCONN 0      0        0.0.0.0:111   0.0.0.0:* users:(("systemd",pid=1,fd=116))                                                                                     
+tcp LISTEN 0      4096     0.0.0.0:111   0.0.0.0:* users:(("systemd",pid=1,fd=115))                                                                                     
 ```
 
 The service stopped, and port 111 is still open, now held by `systemd` itself, process 1. This is

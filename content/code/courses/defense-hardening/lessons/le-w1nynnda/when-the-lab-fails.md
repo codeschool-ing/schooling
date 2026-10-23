@@ -65,7 +65,7 @@ shell on it and ask which: `systemctl --failed` names the unit, and `journalctl 
 that name says why. Nothing in the lab should be degraded after a plain `up`, so a degraded machine
 there means the image is not the one the course was recorded with: run `build` again.
 
-**The disk is full.** The images take 1.4 GB and the seven machines 4.9 GB, and each `up` replaces
+**The disk is full.** The images take 1.8 GB and the seven machines 6.4 GB, and each `up` replaces
 them rather than adding to them. A virtual machine created with less than 20 GB fills up the first
 time every machine runs at once. `sudo bash hostlab.sh up web` starts one machine and the switch;
 `sudo rm -rf /var/lib/hostlab/machines` frees the space the copies take, after a `down`.

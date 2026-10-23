@@ -21,11 +21,11 @@ ficar.
 | | o que é | quanto custa |
 |---|---|---|
 | **uma máquina virtual com Multipass** (recomendado) | a ferramenta da Canonical que cria uma máquina Ubuntu Server 24.04 com um comando, no Windows, no macOS e no Linux | 2 processadores, 4 GB de memória e 20 GB de disco enquanto roda |
-| instalado | o Ubuntu 24.04 como sistema de um computador que você possa dispensar | nada a comprar, e os dois pacotes do laboratório e 7 GB de máquinas nesse computador até você apagá-los |
+| instalado | o Ubuntu 24.04 como sistema de um computador que você possa dispensar | nada a comprar, e os dois pacotes do laboratório e 8 GB de máquinas nesse computador até você apagá-los |
 | online | uma pequena máquina Ubuntu 24.04 alugada por hora de um provedor de nuvem | dinheiro enquanto ela existir |
 
 **O laboratório pede root no computador em que roda**, e é por isso que a máquina virtual vem
-primeiro. Ele cria namespaces de rede, dá boot em contêineres e grava 7 GB em `/var/lib/hostlab`.
+primeiro. Ele cria namespaces de rede, dá boot em contêineres e grava 8 GB em `/var/lib/hostlab`.
 Numa máquina virtual, tudo isso some junto com a máquina, e uma aula que quebre o próprio computador,
 e não um dos contêineres, custa uma máquina virtual nova e mais nada. **Instalado** só serve para um
 computador que você possa apagar depois.

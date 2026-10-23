@@ -67,7 +67,7 @@ motivo. Nada no laboratório deveria ficar degradado depois de um `up` simples, 
 degradada ali quer dizer que a imagem não é a mesma com que o curso foi gravado: rode o `build` de
 novo.
 
-**O disco encheu.** As imagens ocupam 1,4 GB e as sete máquinas 4,9 GB, e cada `up` as substitui em
+**O disco encheu.** As imagens ocupam 1,8 GB e as sete máquinas 6,4 GB, e cada `up` as substitui em
 vez de somar. Uma máquina virtual criada com menos de 20 GB enche na primeira vez que todas as
 máquinas rodam juntas. `sudo bash hostlab.sh up web` sobe uma máquina e o switch; `sudo rm -rf
 /var/lib/hostlab/machines` libera o espaço que as cópias ocupam, depois de um `down`.

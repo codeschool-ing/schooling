@@ -20,11 +20,11 @@ There are three ways to get it. Pick the virtual machine unless you have a reaso
 | | what it is | what it costs |
 |---|---|---|
 | **a virtual machine with Multipass** (recommended) | Canonical's tool that creates an Ubuntu Server 24.04 machine with one command, on Windows, macOS and Linux | 2 processors, 4 GB of memory and 20 GB of disk while it runs |
-| installed | Ubuntu 24.04 as the system of a computer you can spare | nothing to buy, and the lab's two packages and 7 GB of machines on that computer until you delete them |
+| installed | Ubuntu 24.04 as the system of a computer you can spare | nothing to buy, and the lab's two packages and 8 GB of machines on that computer until you delete them |
 | online | a small Ubuntu 24.04 machine rented by the hour from a cloud provider | money for as long as it exists |
 
 **The lab asks for root on the computer it runs on**, and that is why a virtual machine comes first.
-It creates network namespaces, boots containers and writes 7 GB under `/var/lib/hostlab`. In a
+It creates network namespaces, boots containers and writes 8 GB under `/var/lib/hostlab`. In a
 virtual machine all of that goes away with the machine, and a lesson that breaks the computer
 itself, rather than one of the containers, costs you a new virtual machine and nothing else.
 **Installed** is right only for a computer you can wipe afterwards.

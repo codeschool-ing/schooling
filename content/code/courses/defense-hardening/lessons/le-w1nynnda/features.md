@@ -9,13 +9,13 @@ programs that nothing uses: clients for protocols nobody speaks, tools somebody 
 for hardware the machine does not have. None of them listens on a port, so the scan never shows
 them. They still need updates, and some of them run.
 
-`web` has three hundred packages, and half of them were asked for by name; the rest came as
+`web` has 316 packages installed, and 156 of them were asked for by name; the other 160 came as
 dependencies:
 
 ```
 ana@web:~$ dpkg -l | grep -c ^ii; apt-mark showmanual | wc -l
-302
-152
+316
+156
 ana@web:~$ apt-cache rdepends --installed wpasupplicant hostapd
 wpasupplicant
 Reverse Depends:
@@ -75,20 +75,20 @@ The lesson started with a scan from `desk`, and it ends with the same one:
 
 ```
 ana@desk:~$ nmap web
-Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-10-23 01:24 -03
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-10-23 01:37 -03
 Nmap scan report for web (192.168.60.10)
-Host is up (0.00015s latency).
+Host is up (0.000079s latency).
 rDNS record for 192.168.60.10: web.jatoba.example
 Not shown: 998 closed tcp ports (conn-refused)
 PORT   STATE SERVICE
 22/tcp open  ssh
 80/tcp open  http
 
-Nmap done: 1 IP address (1 host up) scanned in 0.07 seconds
+Nmap done: 1 IP address (1 host up) scanned in 0.06 seconds
 ana@desk:~$ sudo nmap -sU -p 111,161,5353 web
-Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-10-23 01:24 -03
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-10-23 01:37 -03
 Nmap scan report for web (192.168.60.10)
-Host is up (0.000074s latency).
+Host is up (0.000055s latency).
 rDNS record for 192.168.60.10: web.jatoba.example
 
 PORT     STATE  SERVICE
@@ -97,7 +97,7 @@ PORT     STATE  SERVICE
 5353/udp closed zeroconf
 MAC Address: 52:54:00:A8:3C:0A (QEMU virtual NIC)
 
-Nmap done: 1 IP address (1 host up) scanned in 0.24 seconds
+Nmap done: 1 IP address (1 host up) scanned in 0.19 seconds
 ```
 
 **Two TCP ports, the two the job needs, and every UDP port the first scan found now answers

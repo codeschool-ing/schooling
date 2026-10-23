@@ -32,9 +32,9 @@ accepted:
 
 ```
 ana@desk:~$ nmap web
-Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-10-23 01:23 -03
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-10-23 01:37 -03
 Nmap scan report for web (192.168.60.10)
-Host is up (0.000095s latency).
+Host is up (0.000079s latency).
 rDNS record for 192.168.60.10: web.jatoba.example
 Not shown: 995 closed tcp ports (conn-refused)
 PORT    STATE SERVICE
@@ -44,11 +44,11 @@ PORT    STATE SERVICE
 80/tcp  open  http
 111/tcp open  rpcbind
 
-Nmap done: 1 IP address (1 host up) scanned in 0.04 seconds
+Nmap done: 1 IP address (1 host up) scanned in 0.05 seconds
 ana@desk:~$ sudo nmap -sU -p 111,161,5353 web
-Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-10-23 01:23 -03
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-10-23 01:37 -03
 Nmap scan report for web (192.168.60.10)
-Host is up (0.000090s latency).
+Host is up (0.000075s latency).
 rDNS record for 192.168.60.10: web.jatoba.example
 
 PORT     STATE         SERVICE
@@ -57,7 +57,7 @@ PORT     STATE         SERVICE
 5353/udp open|filtered zeroconf
 MAC Address: 52:54:00:A8:3C:0A (QEMU virtual NIC)
 
-Nmap done: 1 IP address (1 host up) scanned in 1.38 seconds
+Nmap done: 1 IP address (1 host up) scanned in 1.53 seconds
 ```
 
 Five TCP ports accept a connection, where the job needs two: **22** for SSH and **80** for the
