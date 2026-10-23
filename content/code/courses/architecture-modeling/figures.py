@@ -52,6 +52,21 @@ def width(s, size=10, weight=None):
     return len(s) * size * k
 
 
+def marker(fig, mid, colour, head):
+    """The arrowheads UML tells apart: filled, open, hollow triangle, and the two diamonds."""
+    c = f'var({colour})'
+    shapes = {
+        'fill': ('0 0 10 8', 9, 4, 8, 7, f'<path d="M0 0 L10 4 L0 8 z" fill="{c}"></path>'),
+        'open': ('0 0 10 8', 9.5, 4, 9, 8, f'<path d="M0 0.5 L9.5 4 L0 7.5" fill="none" stroke="{c}" stroke-width="1.3"></path>'),
+        'hollow': ('0 0 12 10', 11, 5, 11, 10, f'<path d="M1 1 L11 5 L1 9 z" fill="var(--ink)" stroke="{c}" stroke-width="1.1"></path>'),
+        'diamond': ('0 0 18 10', 17, 5, 13, 8, f'<path d="M1 5 L9 1 L17 5 L9 9 z" fill="{c}" stroke="{c}" stroke-width="1"></path>'),
+        'odiamond': ('0 0 18 10', 17, 5, 13, 8, f'<path d="M1 5 L9 1 L17 5 L9 9 z" fill="var(--ink)" stroke="{c}" stroke-width="1.1"></path>'),
+    }
+    vb, rx, ry, mw, mh, body = shapes[head]
+    return (f'<marker id="{fig}-{mid}" viewBox="{vb}" refX="{rx}" refY="{ry}" markerWidth="{mw}" '
+            f'markerHeight="{mh}" markerUnits="userSpaceOnUse" orient="auto-start-reverse">{body}</marker>')
+
+
 class Fig:
     def __init__(self, name, w, h, label):
         self.name, self.w, self.h, self.label = name, w, h, label
@@ -75,13 +90,13 @@ class Fig:
             self.text(x, top + i * gap, r, size=size, **kw)
 
     def path(self, d, stroke='--paper-dim', width=1.2, fill='none', dash=None, arrow=False,
-             opacity=None, cap=None, start=False):
+             opacity=None, cap=None, start=False, head='fill'):
         extra = ''
         if dash:
             extra += f' stroke-dasharray="{dash}"'
         if arrow or start:
-            mid = f'am-ah{stroke.replace("--", "-")}'
-            self.markers.add((mid, stroke))
+            mid = f'am-{head}{stroke.replace("--", "-")}'
+            self.markers.add((mid, stroke, head))
             if arrow:
                 extra += f' marker-end="url(#{mid})"'
             if start:
@@ -216,12 +231,9 @@ class Fig:
     def svg(self):
         defs = ''
         if self.markers:
-            defs = '<defs>' + ''.join(
-                f'<marker id="{self.name}-{m}" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="8" '
-                f'markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" '
-                f'fill="var({c})"></path></marker>' for m, c in sorted(self.markers)) + '</defs>'
+            defs = '<defs>' + ''.join(marker(self.name, m, c, h) for m, c, h in sorted(self.markers)) + '</defs>'
         body = ''.join(self.parts)
-        for m, _ in self.markers:
+        for m, _, _ in self.markers:
             body = body.replace(f'url(#{m})', f'url(#{self.name}-{m})')
         return (f'<svg viewBox="0 0 {self.w} {self.h}" role="img" data-fig="{self.name}" '
                 f'aria-label="{esc(self.label)}">{defs}{body}</svg>')
@@ -305,7 +317,8 @@ def apply(path):
 
     def swap_placeholder(m):
         if m.group(1) not in FIGURES:
-            raise SystemExit(f'{path}: no figure called {m.group(1)}')
+            print(f'WARNING {path}: no figure called {m.group(1)} yet; the placeholder stays', file=sys.stderr)
+            return m.group(0)
         return render(m.group(1), lang)
 
     new = FENCE.sub(swap_fence, text)

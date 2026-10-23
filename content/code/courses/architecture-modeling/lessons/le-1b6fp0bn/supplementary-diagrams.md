@@ -1,0 +1,49 @@
+---
+title: Landscape, dynamic and deployment diagrams
+version: 1
+---
+
+**The four levels describe one system's static structure. C4 adds three supplementary diagrams for
+what that structure leaves out: the whole estate, behaviour over time and where things run.** Each
+reuses the same five words, which is what keeps them consistent with the four levels.
+
+## System landscape
+
+A **system landscape diagram** is a context diagram with no system in the middle: every software
+system the organisation runs, the people who use them and the relationships between them. At
+Carcará it has seven systems on it, from ticketing and Frota to payroll and the finance package. It
+is the enterprise architect's starting picture, and lessons 8 to 10 come back to that level.
+
+## Dynamic diagrams
+
+A **dynamic diagram** shows how elements collaborate to carry out one scenario, by **numbering the
+relationships** in the order they happen. It uses the boxes of a container or component diagram and
+adds the numbers, so it reads like a sequence diagram laid out as a map.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 300\" role=\"img\" data-fig=\"l03-dynamic\" aria-label=\"A dynamic diagram of the purchase on the container boxes, with numbered relationships: 1, the mobile app creates a booking at the ticketing API; 2, the API holds the seat in the seat-hold store; 3, it writes the pending booking to the booking database; 4, the app pays; 5, the API charges the payment gateway; 6, it marks the booking paid; 7, it publishes ticket sold to the broker; 8, the notification worker sends the ticket.\"><defs><marker id=\"l03-dynamic-am-fill-paper\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" markerUnits=\"userSpaceOnUse\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper)\"></path></marker></defs><rect x=\"25.0\" y=\"38.0\" width=\"150.0\" height=\"44.0\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"100.0\" y=\"53.8\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--paper)\">Mobile app</text><text x=\"100.0\" y=\"66.2\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.0\" fill=\"var(--paper-dim)\">[Container]</text><rect x=\"275.0\" y=\"38.0\" width=\"170.0\" height=\"44.0\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"360.0\" y=\"53.8\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--paper)\">Ticketing API</text><text x=\"360.0\" y=\"66.2\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.0\" fill=\"var(--paper-dim)\">[Container]</text><rect x=\"545.0\" y=\"38.0\" width=\"150.0\" height=\"44.0\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" stroke-dasharray=\"5 3\"></rect><text x=\"620.0\" y=\"53.8\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--paper)\">Payment gateway</text><text x=\"620.0\" y=\"66.2\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.0\" fill=\"var(--paper-dim)\">[Software system]</text><path d=\"M165.0 177.0 L165.0 223.0 A65.0 7 0 0 0 295.0 223.0 L295.0 177.0\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\" fill=\"var(--panel)\"></path><ellipse cx=\"230.0\" cy=\"177.0\" rx=\"65.0\" ry=\"7\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></ellipse><text x=\"230.0\" y=\"198.2\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" font-weight=\"600\" fill=\"var(--paper)\">Seat holds</text><text x=\"230.0\" y=\"209.8\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"7.5\" fill=\"var(--paper-dim)\">[Redis]</text><path d=\"M335.0 177.0 L335.0 223.0 A65.0 7 0 0 0 465.0 223.0 L465.0 177.0\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\" fill=\"var(--panel)\"></path><ellipse cx=\"400.0\" cy=\"177.0\" rx=\"65.0\" ry=\"7\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></ellipse><text x=\"400.0\" y=\"198.2\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" font-weight=\"600\" fill=\"var(--paper)\">Booking DB</text><text x=\"400.0\" y=\"209.8\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"7.5\" fill=\"var(--paper-dim)\">[PostgreSQL]</text><rect x=\"530.0\" y=\"168.0\" width=\"140.0\" height=\"44.0\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"600.0\" y=\"183.8\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" font-weight=\"600\" fill=\"var(--paper)\">Message broker</text><text x=\"600.0\" y=\"196.2\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.0\" fill=\"var(--paper-dim)\">[RabbitMQ]</text><rect x=\"525.0\" y=\"250.0\" width=\"150.0\" height=\"40.0\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"600.0\" y=\"264.1\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" font-weight=\"600\" fill=\"var(--paper)\">Notification worker</text><text x=\"600.0\" y=\"275.8\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"7.5\" fill=\"var(--paper-dim)\">[Container]</text><path d=\"M175.0 52.0 L275.0 52.0\" stroke=\"var(--paper)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#l03-dynamic-am-fill-paper)\"></path><text x=\"225.0\" y=\"42.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper)\">1 create booking</text><path d=\"M175.0 70.0 L275.0 70.0\" stroke=\"var(--paper)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#l03-dynamic-am-fill-paper)\"></path><text x=\"225.0\" y=\"84.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper)\">4 pay</text><path d=\"M320.0 82.0 L250.0 168.0\" stroke=\"var(--paper)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#l03-dynamic-am-fill-paper)\"></path><text x=\"274.0\" y=\"120.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper)\">2 hold seat</text><path d=\"M370.0 82.0 L395.0 168.0\" stroke=\"var(--paper)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#l03-dynamic-am-fill-paper)\"></path><text x=\"390.0\" y=\"116.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper)\">3 pending · 6 paid</text><path d=\"M445.0 60.0 L545.0 60.0\" stroke=\"var(--paper)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#l03-dynamic-am-fill-paper)\"></path><text x=\"495.0\" y=\"50.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper)\">5 charge</text><path d=\"M430.0 82.0 L560.0 168.0\" stroke=\"var(--paper)\" stroke-width=\"1.3\" fill=\"none\" stroke-dasharray=\"5 3\" marker-end=\"url(#l03-dynamic-am-fill-paper)\"></path><text x=\"512.0\" y=\"112.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper)\">7 ticket sold</text><path d=\"M600.0 212.0 L600.0 250.0\" stroke=\"var(--paper)\" stroke-width=\"1.3\" fill=\"none\" marker-end=\"url(#l03-dynamic-am-fill-paper)\"></path><text x=\"608.0\" y=\"232.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper)\">8 consumes, sends</text></svg>", "caption": "The same story as lesson 2's sequence diagram, told on boxes the reader already knows. The numbers carry the order; the layout carries the structure."}
+```
+
+Which one to use is a matter of the reader. **A sequence diagram is better when the order and the
+waits matter**, because time is a dimension of the page. **A dynamic diagram is better when the
+layout matters**: the reader already knows the container diagram, and the numbers on familiar boxes
+tell the story faster than a new picture with lifelines.
+
+## Deployment diagrams
+
+A C4 **deployment diagram** shows how containers map onto infrastructure: deployment nodes, which
+can nest (a cloud region, a cluster, a node pool), and the container instances inside them. It is
+the same idea as UML's deployment diagram from lesson 2, with C4's words: an instance of the
+ticketing API container runs inside a deployment node, three times.
+
+It is also the right place for everything the container diagram deliberately left out: **load
+balancers, firewalls, regions, replicas and counts**. A container diagram with a load balancer on
+it is mixing two kinds of picture.
+
+## One model, many diagrams
+
+Behind all seven diagrams is a single idea worth naming now, because lesson 12 builds on it. If the
+elements and relationships exist once, in a **model**, then each diagram is a **view** of that model,
+and the diagrams cannot disagree about whether the ticketing API talks to Redis. Drawing tools keep
+seven separate pictures; modelling tools keep one model and draw seven views. That difference is
+lesson 1's viewpoint and view, made into software.
