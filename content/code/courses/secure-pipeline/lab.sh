@@ -79,7 +79,7 @@ as_ana() { # CMD...: as ana, in ana's home, with the environment every capture h
     REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt \
     TRIVY_SKIP_DB_UPDATE=${TRIVY_SKIP_DB_UPDATE:-true} \
     TRIVY_SKIP_JAVA_DB_UPDATE=true SEMGREP_ENABLE_VERSION_CHECK=0 \
-    bash -c 'cd ~ && "$@"' bash "$@"
+    bash -c 'exec 9>&-; cd ~ && "$@"' bash "$@"
 }
 
 docker_up() {
@@ -234,6 +234,15 @@ shown() { # MD NAME: the fence under the paragraph ending in "as `NAME`:"
 }
 
 check() { python3 "$LAB/lab/shown.py" --check "$LAB"; }
+
+# One lab, one user: two scripts building ~/linkbox at once would build it
+# twice into the same directory. Everything that touches it takes this lock,
+# and whatever it starts inherits it (capture.sh takes it the same way).
+if [ -z "${SP_LOCKED:-}" ]; then
+  exec 9>/var/lock/secure-pipeline-lab.lock
+  flock 9
+  export SP_LOCKED=1
+fi
 
 case ${1:-} in
   tools) tools ;;

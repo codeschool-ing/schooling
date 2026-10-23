@@ -20,6 +20,13 @@
 # with the environment's name in brackets in front while one is active.
 
 set -uo pipefail
+# The lab is one machine and one user: a second capture running at the same
+# time would rebuild ~/linkbox under this one. Wait for the lab to be free.
+if [ -z "${SP_LOCKED:-}" ]; then
+  exec 9>/var/lock/secure-pipeline-lab.lock
+  flock 9
+  export SP_LOCKED=1
+fi
 COURSE=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
 lab() { bash "$COURSE/lab.sh" "$@"; }
