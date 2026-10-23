@@ -1,0 +1,430 @@
+{
+  "ex-n2km2rk9": {
+    "prompt": "O linkbox da aula 3 respondia com `Server: gunicorn` e sem nenhum dos cabeçalhos de proteção do navegador, e o Bandit e o Semgrep da aula 3 não levantaram nada sobre isso. Por quê?",
+    "choices": [
+      {
+        "text": "As regras foram ajustadas frouxas demais na aula 3",
+        "why": "A aula 3 ajustou o B101 nos testes e mais nada; nenhuma regra ali procura um cabeçalho ausente."
+      },
+      {
+        "text": "Nenhum dos dois é uma linha do código que eles leem",
+        "why": "Isso. O banner vem do gunicorn e os cabeçalhos são uma ausência; uma ferramenta estática lê as linhas que existem."
+      },
+      {
+        "text": "Análise estática não consegue ler frameworks web em Python",
+        "why": "O Bandit achou o SQL em código Flask na aula 3; ele lê o código do framework sem problema."
+      },
+      {
+        "text": "Os cabeçalhos só aparecem atrás de um proxy reverso",
+        "why": "O linkbox não manda nada, com proxy ou sem; o curl no staging mostra isso."
+      }
+    ]
+  },
+  "ex-qm57xsm9": {
+    "prompt": "Qual defeito a varredura baseline desta aula nunca acharia no linkbox, por mais tempo que rodasse?",
+    "choices": [
+      {
+        "text": "Um cabeçalho ausente na página 404",
+        "why": "O spider pede robots.txt e sitemap.xml, os dois 404, e o 10038 da primeira varredura listou um deles."
+      },
+      {
+        "text": "Um banner de servidor em toda resposta",
+        "why": "Banners se leem em respostas comuns; é para isso que servem as regras passivas."
+      },
+      {
+        "text": "Uma falha no código que trata `POST /links`",
+        "why": "Isso. A rota pede o token, o spider nunca chegou a ela, e uma varredura só julga o que alcança."
+      },
+      {
+        "text": "Um `X-Frame-Options` ausente na página de busca",
+        "why": "Ela achou exatamente isso: o 10020 em `/search?q=ZAP`."
+      }
+    ]
+  },
+  "ex-d9xwr0ge": {
+    "prompt": "Em que ponto do pipeline uma varredura dinâmica pode rodar, no mínimo?",
+    "choices": [
+      {
+        "text": "Antes dos testes, direto no checkout recém-feito",
+        "why": "Um checkout são arquivos; não há nada rodando para receber uma requisição."
+      },
+      {
+        "text": "Depois do build, com a imagem rodando",
+        "why": "Isso. Ela precisa de uma instância rodando do que foi construído, então vem depois do build."
+      },
+      {
+        "text": "No editor, enquanto o código é digitado",
+        "why": "É ali que algumas checagens estáticas rodam; a dinâmica precisa de um serviço."
+      },
+      {
+        "text": "No hook de pre-commit",
+        "why": "Um hook vê arquivos no stage, não um serviço rodando."
+      }
+    ]
+  },
+  "ex-9q4c0wrf": {
+    "prompt": "O `ci/dast.sh` chama a rede de `linkbox-staging-$$`. O que o `$$` compra?",
+    "choices": [
+      {
+        "text": "Um nome que o Docker aceita, já que redes precisam de número",
+        "why": "O Docker aceita `linkbox-staging` como está; a seção de staging criou exatamente isso à mão."
+      },
+      {
+        "text": "Duas execuções simultâneas não colidem",
+        "why": "Isso. `$$` é o id do processo do script, diferente em cada execução."
+      },
+      {
+        "text": "O relatório da varredura pode ser ligado ao commit",
+        "why": "O commit está em `CI_COMMIT`; um id de processo não diz nada sobre ele."
+      },
+      {
+        "text": "O trap sabe qual rede manter",
+        "why": "O trap remove a rede; não mantém nada."
+      }
+    ]
+  },
+  "ex-5m5eszyg": {
+    "prompt": "Com o serviço rodando na rede de staging, `curl http://127.0.0.1:8000/` a partir do host não conecta. Por quê?",
+    "choices": [
+      {
+        "text": "O gunicorn só escuta em 127.0.0.1 dentro do contêiner",
+        "why": "O Dockerfile faz bind em 0.0.0.0:8000, e o scanner na rede o alcançou."
+      },
+      {
+        "text": "O serviço ainda não tinha subido",
+        "why": "O curl do contêiner do ZAP recebeu resposta um instante antes."
+      },
+      {
+        "text": "A porta 8000 está ocupada no host",
+        "why": "Porta ocupada é outro erro, em outro comando; nada foi ligado aqui."
+      },
+      {
+        "text": "O `docker run` não publicou porta nenhuma",
+        "why": "Isso. O serviço é alcançável na própria rede e em mais nenhum lugar, de propósito."
+      }
+    ]
+  },
+  "ex-fgtqn6cq": {
+    "prompt": "Um time varre um servidor de testes compartilhado em que três times fazem deploy. Um alerta de cabeçalho aparece na terça e some na quarta, sem commit nenhum no serviço entre os dois dias. O que o staging por execução desta aula teria eliminado?",
+    "choices": [
+      {
+        "text": "Os falsos positivos do próprio scanner",
+        "why": "Falso positivo é uma regra lendo mal uma resposta; aqui é a própria resposta mudando."
+      },
+      {
+        "text": "Um resultado que depende do que outras pessoas deixaram no servidor",
+        "why": "Isso. Um staging feito com a imagem do commit e descartado responde só por aquele commit."
+      },
+      {
+        "text": "A necessidade de um arquivo de regras",
+        "why": "As regras decidem o que um achado faz; não tornam o alvo estável."
+      },
+      {
+        "text": "O tempo que o spider gasta rastreando",
+        "why": "O spider rastreia do mesmo jeito em qualquer alvo."
+      }
+    ]
+  },
+  "ex-k6601jcc": {
+    "prompt": "A varredura roda com `-z -silent`. O que o `-silent` impede?",
+    "choices": [
+      {
+        "text": "O ZAP imprimir as regras que passaram",
+        "why": "Isso foi o `grep -v ^PASS`; o `-silent` não muda a saída."
+      },
+      {
+        "text": "O ZAP mandar requisições que poderiam quebrar o serviço",
+        "why": "A baseline nunca manda essas; isso é o modo passivo, não esta opção."
+      },
+      {
+        "text": "O ZAP chamar fora por conta própria: atualizações, add-ons, notícias",
+        "why": "Isso. Um job de CI não deveria precisar de acesso de saída, avisar a terceiros que está varrendo, nem mudar regras entre execuções."
+      },
+      {
+        "text": "O ZAP gravar o plano em `/zap/wrk`",
+        "why": "Isso falhou porque a montagem é só leitura, outra decisão do `ci/dast.sh`."
+      }
+    ]
+  },
+  "ex-gbkb35sh": {
+    "prompt": "Quantas URLs o spider do ZAP achou no linkbox?"
+  },
+  "ex-bys3f7sm": {
+    "prompt": "Associe cada regra que a baseline levantou ao assunto dela.",
+    "pairs": [
+      {
+        "left": "10020",
+        "right": "outro site carregando a página dentro de um frame"
+      },
+      {
+        "left": "10021",
+        "right": "o navegador adivinhando o tipo da resposta pelos bytes"
+      },
+      {
+        "left": "10031",
+        "right": "o valor enviado voltando dentro de um atributo HTML"
+      },
+      {
+        "left": "10038",
+        "right": "nada limitando o que a página pode carregar"
+      }
+    ],
+    "right_distractors": [
+      "o cookie de sessão sem a flag Secure"
+    ]
+  },
+  "ex-hae10n85": {
+    "prompt": "A primeira execução da baseline, sem arquivo de regras, saiu com status 2. O que o 2 diz?",
+    "choices": [
+      {
+        "text": "Pelo menos um WARN, e nenhum FAIL",
+        "why": "Isso. Sem arquivo de regras toda regra é WARN, então o padrão não diz mais do que isso."
+      },
+      {
+        "text": "Duas regras bateram",
+        "why": "Quatro bateram; o status é uma categoria, não uma contagem."
+      },
+      {
+        "text": "A varredura não conseguiu terminar",
+        "why": "Isso é o 3; esta varredura terminou e imprimiu os totais."
+      },
+      {
+        "text": "Pelo menos uma regra marcada como FAIL bateu",
+        "why": "Isso é o 1, e nenhuma regra é FAIL sem arquivo de regras."
+      }
+    ]
+  },
+  "ex-4axnrxn4": {
+    "prompt": "No `ci/zap-rules.conf`, a ação que para o build quando a regra dela bate é ___",
+    "blanks": [
+      {
+        "accept": [
+          "FAIL"
+        ]
+      }
+    ]
+  },
+  "ex-dwj227ws": {
+    "prompt": "Para que serve a linha `trap … EXIT` do `ci/dast.sh`?",
+    "choices": [
+      {
+        "text": "Transforma o status de saída do ZAP no do estágio",
+        "why": "O status do último comando já é o do script; o trap só limpa."
+      },
+      {
+        "text": "Para a varredura se passar de um minuto",
+        "why": "Nada no script cronometra a varredura; o `-m` define os minutos do spider."
+      },
+      {
+        "text": "Apaga o contêiner e a rede, termine o script como terminar",
+        "why": "Isso. Senão uma varredura que falha deixaria um serviço rodando para a próxima execução tropeçar."
+      },
+      {
+        "text": "Espera o gunicorn antes de a varredura começar",
+        "why": "Isso é o `sleep 2`, algo mais tosco."
+      }
+    ]
+  },
+  "ex-19q4p25d": {
+    "prompt": "Ponha o que o `ci/dast.sh` faz na ordem em que acontece.",
+    "items": [
+      "criar uma rede com o nome do processo do script",
+      "iniciar nela a imagem deste commit",
+      "esperar dois segundos pelo gunicorn",
+      "rodar a baseline de um segundo contêiner com as regras",
+      "remover o contêiner e a rede"
+    ]
+  },
+  "ex-dy9s44a4": {
+    "prompt": "A varredura já confere os cabeçalhos toda noite. Por que a correção vem também com um teste unitário?",
+    "choices": [
+      {
+        "text": "O teste roda em todo push e diz o que quebrou",
+        "why": "Isso. Leva menos de um segundo. A varredura acharia uma regressão na noite seguinte; o teste a acha no push que a causou."
+      },
+      {
+        "text": "O ZAP não consegue ler cabeçalhos de uma página 404",
+        "why": "Ele leu: na primeira varredura, o 10038 listou `sitemap.xml`, um 404."
+      },
+      {
+        "text": "A varredura vê só a imagem, não o código",
+        "why": "É verdade, e é por isso que a varredura é útil; não é por isso que o teste existe."
+      },
+      {
+        "text": "Regras com FAIL não quebram o build à noite",
+        "why": "Um FAIL quebra a execução noturna como quebraria qualquer outra."
+      }
+    ]
+  },
+  "ex-8xzhp5nv": {
+    "prompt": "O 10031 é falso positivo na página de busca de hoje. Por que fica em WARN em vez de ir para IGNORE?",
+    "choices": [
+      {
+        "text": "O ZAP recusa IGNORE para qualquer regra de cross-site scripting",
+        "why": "Qualquer regra pode ser ignorada; o arquivo aceita."
+      },
+      {
+        "text": "Um WARN quebra o build noturno, então alguém lê",
+        "why": "Com `-I`, um WARN não quebra nada nesta aula."
+      },
+      {
+        "text": "O IGNORE vale por regra e esconderia um caso real futuro",
+        "why": "Isso. O arquivo funciona por regra, não por página, então ignorar esconderia um verdadeiro depois."
+      },
+      {
+        "text": "A regra pode estar certa, afinal",
+        "why": "A resposta decide isso para esta página; o motivo é sobre páginas ainda não escritas."
+      }
+    ]
+  },
+  "ex-4pjsmbf8": {
+    "prompt": "O que na resposta do linkbox mostra que o 10031 é um falso positivo?",
+    "choices": [
+      {
+        "text": "A página de busca responde 200, não 500",
+        "why": "Isso mostra que a busca funciona, não se o valor tem escape."
+      },
+      {
+        "text": "A página traz uma Content-Security-Policy",
+        "why": "A política é uma segunda linha de defesa; a regra é sobre o valor no atributo."
+      },
+      {
+        "text": "A palavra `ZAP` está no atributo `value`",
+        "why": "Foi isso que fez a regra bater, não o que a absolve."
+      },
+      {
+        "text": "Uma aspa dupla enviada em `q` voltou como `&#34;`",
+        "why": "Isso. Com escape, a aspa não fecha o atributo, então o texto não vira marcação."
+      }
+    ]
+  },
+  "ex-v0rfhydf": {
+    "prompt": "Quais destas afirmações valem para a função `after_request` acrescentada ao `app.py`? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Ela acrescenta os cabeçalhos também às páginas 404 do Flask",
+        "why": "Isso: o curl de `/nothing-here` voltou com os três."
+      },
+      {
+        "text": "Uma rota criada depois recebe os cabeçalhos sem mudança nenhuma",
+        "why": "Isso: a função roda para toda resposta, seja qual for a rota que a gerou."
+      },
+      {
+        "text": "Ela muda como o Jinja escapa o valor da busca",
+        "why": "O escape é do Jinja e já estava ligado; a função só define cabeçalhos."
+      },
+      {
+        "text": "Ela torna a varredura dinâmica desnecessária",
+        "why": "A varredura confere a imagem como foi iniciada, o que um teste do código não faz."
+      }
+    ]
+  },
+  "ex-g2azx0ss": {
+    "prompt": "Por que o `dast` vai para o `ci/nightly` e não para o `ci/stages`?",
+    "choices": [
+      {
+        "text": "É lento demais para esperar a cada push",
+        "why": "Isso: precisa de imagem, contêiner e rastreamento, e enquanto isso o teste unitário cobre os cabeçalhos a cada push."
+      },
+      {
+        "text": "A licença do ZAP só permite rodar uma vez por dia",
+        "why": "O ZAP é open source, sem limite desse tipo."
+      },
+      {
+        "text": "Os achados dele são só alertas",
+        "why": "Três regras dele são FAIL; onde ele roda é questão de tempo."
+      },
+      {
+        "text": "A main é o único branch com imagem construída",
+        "why": "Todo push constrói uma imagem, em todo branch."
+      }
+    ]
+  },
+  "ex-atz9c6dt": {
+    "prompt": "Um colega propõe um `zap-full-scan.py` semanal contra o endereço de produção do linkbox: \"o serviço é nosso, então pode\". Qual é a resposta que a aula dá?",
+    "choices": [
+      {
+        "text": "Tudo bem, desde que rode de noite, com pouco tráfego",
+        "why": "A noite muda quem percebe, não o que a varredura grava nos dados reais."
+      },
+      {
+        "text": "Tudo bem, com `-silent` para ninguém de fora saber",
+        "why": "O `-silent` impede o ZAP de chamar fora; não muda nada do que a varredura manda para dentro."
+      },
+      {
+        "text": "Não: rode contra um staging feito para a execução",
+        "why": "Isso. Uma varredura ativa grava e quebra coisas, então aponta para um alvo descartável, mesmo sendo seu."
+      },
+      {
+        "text": "Não: varreduras ativas nunca valem a pena",
+        "why": "Elas acham o que a baseline não acha; a questão é para onde apontam."
+      }
+    ]
+  },
+  "ex-w3kfx271": {
+    "prompt": "A varredura noturna passa com um alerta. Sem autenticação configurada, o que essa aprovação afirma?",
+    "choices": [
+      {
+        "text": "O linkbox não tem vulnerabilidades web",
+        "why": "A varredura leu quatro URLs e não mandou nada para provocar falha; afirma bem menos."
+      },
+      {
+        "text": "As páginas que um estranho alcança mandaram os cabeçalhos esperados",
+        "why": "Isso. Nada atrás do token foi varrido."
+      },
+      {
+        "text": "Toda rota, `POST /links` inclusive, foi conferida",
+        "why": "O `POST /links` pede o token e não estava entre as URLs achadas."
+      },
+      {
+        "text": "A imagem bate com o que foi revisado",
+        "why": "Nada nesta varredura compara a imagem com uma revisão; a aula 14 trata de identidade."
+      }
+    ]
+  },
+  "ex-sg3m97qe": {
+    "prompt": "Uma empresa parceira passa o endereço da API dela, e um colega quer rodar a baseline contra ela para conferir os cabeçalhos antes de integrar. O que vem primeiro?",
+    "choices": [
+      {
+        "text": "Nada: a baseline só lê, então não precisa de permissão",
+        "why": "Ela ainda manda as requisições do spider a um sistema que não é seu; ler não é o mesmo que ter permissão."
+      },
+      {
+        "text": "Rodar com `-silent` para o parceiro não saber",
+        "why": "Esconder a varredura do dono é o contrário do que se precisa."
+      },
+      {
+        "text": "Permissão por escrito do parceiro para varrer",
+        "why": "Isso. O sistema é deles, a decisão é deles, registrada; ou peça os resultados que eles mesmos têm."
+      },
+      {
+        "text": "Um arquivo de regras que põe toda regra em WARN",
+        "why": "Regras decidem o que um achado faz ao seu build, não se você pode varrer."
+      }
+    ]
+  },
+  "ex-ntatsm9v": {
+    "prompt": "Um commit posterior apaga a linha `@app.after_request` por engano. Onde isso é pego primeiro?",
+    "choices": [
+      {
+        "text": "Na varredura noturna, como três FAILs",
+        "why": "A varredura também pegaria, mas só naquela noite."
+      },
+      {
+        "text": "No Semgrep, no estágio sast",
+        "why": "Nenhuma regra da aula 3 sabe de cabeçalhos."
+      },
+      {
+        "text": "No estágio de testes daquele push",
+        "why": "Isso. O `test_every_answer_carries_the_headers` falha no push que os removeu."
+      },
+      {
+        "text": "Na revisão, já que o diff é de uma linha",
+        "why": "Um diff de uma linha é o mais fácil de deixar passar; o teste não depende de alguém notar."
+      }
+    ]
+  },
+  "ex-pc9vg0h3": {
+    "prompt": "Depois da correção, quantas regras do ZAP passaram na varredura do linkbox?"
+  }
+}

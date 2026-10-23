@@ -1,0 +1,644 @@
+[
+  {
+    "id": "ex-n2km2rk9",
+    "version": 1,
+    "section": "what-it-sees",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 3's linkbox answered with `Server: gunicorn` and none of the browser's protective headers, and lesson 3's Bandit and Semgrep raised nothing about either. Why?",
+    "choices": [
+      {
+        "text": "The rules were tuned too loosely in lesson 3",
+        "correct": false,
+        "why": "Lesson 3 tuned B101 in tests and nothing else; no rule there looks for a header that is absent."
+      },
+      {
+        "text": "Neither is a line in the code they read",
+        "correct": true,
+        "why": "Right. The banner comes from gunicorn and the headers are an absence; a static tool reads lines that are there."
+      },
+      {
+        "text": "Static analysis cannot read Python web frameworks",
+        "correct": false,
+        "why": "Bandit found the SQL in Flask code in lesson 3; it reads the framework's code fine."
+      },
+      {
+        "text": "The headers only appear behind a reverse proxy",
+        "correct": false,
+        "why": "linkbox sends nothing at all, proxy or not; the curl to staging shows it."
+      }
+    ]
+  },
+  {
+    "id": "ex-qm57xsm9",
+    "version": 1,
+    "section": "what-it-sees",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which defect could the baseline scan of this lesson never find in linkbox, however long it ran?",
+    "choices": [
+      {
+        "text": "A missing header on the 404 page",
+        "correct": false,
+        "why": "The spider asks for robots.txt and sitemap.xml, both 404s, and the first scan's 10038 listed one of them."
+      },
+      {
+        "text": "A server banner in every response",
+        "correct": false,
+        "why": "Banners are read from ordinary responses; that is what passive rules are for."
+      },
+      {
+        "text": "A flaw in the code that handles `POST /links`",
+        "correct": true,
+        "why": "Right. The route needs the token, the spider never reached it, and a scan judges only what it reaches."
+      },
+      {
+        "text": "A missing `X-Frame-Options` on the search page",
+        "correct": false,
+        "why": "It found exactly that: 10020 on `/search?q=ZAP`."
+      }
+    ]
+  },
+  {
+    "id": "ex-d9xwr0ge",
+    "version": 1,
+    "section": "what-it-sees",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where in the pipeline can a dynamic scan run, at the earliest?",
+    "choices": [
+      {
+        "text": "Before the tests, straight on the fresh checkout",
+        "correct": false,
+        "why": "A checkout is files; there is nothing running to send a request to."
+      },
+      {
+        "text": "After the build, once the image runs",
+        "correct": true,
+        "why": "Right. It needs a running instance of what was built, so it comes after the build."
+      },
+      {
+        "text": "In the editor, as the code is typed",
+        "correct": false,
+        "why": "That is where some static checks run; a dynamic one needs a service."
+      },
+      {
+        "text": "In the pre-commit hook",
+        "correct": false,
+        "why": "A hook sees staged files, not a running service."
+      }
+    ]
+  },
+  {
+    "id": "ex-9q4c0wrf",
+    "version": 1,
+    "section": "staging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ci/dast.sh` names its network `linkbox-staging-$$`. What does `$$` buy?",
+    "choices": [
+      {
+        "text": "A name Docker accepts, since networks need a number",
+        "correct": false,
+        "why": "Docker accepts `linkbox-staging` as it is; the staging section made exactly that by hand."
+      },
+      {
+        "text": "Two runs at once cannot collide",
+        "correct": true,
+        "why": "Right. `$$` is the script's process id, different for every run."
+      },
+      {
+        "text": "The scan report can be matched to its commit",
+        "correct": false,
+        "why": "The commit is in `CI_COMMIT`; a process id says nothing about it."
+      },
+      {
+        "text": "The trap knows which network to keep",
+        "correct": false,
+        "why": "The trap removes the network; it keeps nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-5m5eszyg",
+    "version": 1,
+    "section": "staging",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the service running on the staging network, `curl http://127.0.0.1:8000/` from the host fails to connect. Why?",
+    "choices": [
+      {
+        "text": "gunicorn listens only on 127.0.0.1 inside the container",
+        "correct": false,
+        "why": "The Dockerfile binds 0.0.0.0:8000, and the scanner on the network reached it."
+      },
+      {
+        "text": "The service had not started yet",
+        "correct": false,
+        "why": "The ZAP container's curl got an answer a moment earlier."
+      },
+      {
+        "text": "Port 8000 is taken on the host",
+        "correct": false,
+        "why": "A taken port is a different error, on a different command; nothing was bound here."
+      },
+      {
+        "text": "`docker run` published no port",
+        "correct": true,
+        "why": "Right. The service is reachable on its own network and nowhere else, on purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-fgtqn6cq",
+    "version": 1,
+    "section": "staging",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team scans a shared test server that three teams deploy to. A header warning appears on Tuesday and is gone on Wednesday, with no commit to the service in between. What would the per-run staging of this lesson have removed?",
+    "choices": [
+      {
+        "text": "The scanner's own false positives",
+        "correct": false,
+        "why": "A false positive is a rule misreading a response; this is the response itself changing."
+      },
+      {
+        "text": "A result that depends on what other people left on the server",
+        "correct": true,
+        "why": "Right. A staging made from the commit's image and thrown away answers only for that commit."
+      },
+      {
+        "text": "The need for a rules file",
+        "correct": false,
+        "why": "The rules decide what a finding does; they cannot make the target stable."
+      },
+      {
+        "text": "The time the spider spends crawling",
+        "correct": false,
+        "why": "The spider crawls the same way on either target."
+      }
+    ]
+  },
+  {
+    "id": "ex-k6601jcc",
+    "version": 1,
+    "section": "baseline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The scan is run with `-z -silent`. What does `-silent` stop?",
+    "choices": [
+      {
+        "text": "ZAP printing the rules that passed",
+        "correct": false,
+        "why": "That is what `grep -v ^PASS` did here; `-silent` does not change the output."
+      },
+      {
+        "text": "ZAP sending requests that could break the service",
+        "correct": false,
+        "why": "The baseline never sends those; that is the passive mode, not this flag."
+      },
+      {
+        "text": "ZAP calling out on its own: update checks, add-ons, news",
+        "correct": true,
+        "why": "Right. A CI job should not need outbound access, tell a third party it is scanning, or change rules between runs."
+      },
+      {
+        "text": "ZAP writing its plan into `/zap/wrk`",
+        "correct": false,
+        "why": "That failed because the mount is read-only, a different decision in `ci/dast.sh`."
+      }
+    ]
+  },
+  {
+    "id": "ex-gbkb35sh",
+    "version": 1,
+    "section": "baseline",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many URLs did ZAP's spider find in linkbox?",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-bys3f7sm",
+    "version": 1,
+    "section": "baseline",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each rule the baseline raised to what it is about.",
+    "pairs": [
+      {
+        "left": "10020",
+        "right": "another site loading the page inside a frame"
+      },
+      {
+        "left": "10021",
+        "right": "the browser guessing a response's type from its bytes"
+      },
+      {
+        "left": "10031",
+        "right": "the value sent coming back inside an HTML attribute"
+      },
+      {
+        "left": "10038",
+        "right": "nothing limiting what the page may load"
+      }
+    ],
+    "right_distractors": [
+      "the session cookie lacking its Secure flag"
+    ]
+  },
+  {
+    "id": "ex-hae10n85",
+    "version": 1,
+    "section": "baseline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first baseline run, with no rules file, exited with status 2. What does 2 say?",
+    "choices": [
+      {
+        "text": "At least one WARN, and no FAIL",
+        "correct": true,
+        "why": "Right. With no rules file every rule is a WARN, so the default says no more than that."
+      },
+      {
+        "text": "Two rules matched",
+        "correct": false,
+        "why": "Four matched; the status is a category, not a count."
+      },
+      {
+        "text": "The scan could not finish",
+        "correct": false,
+        "why": "That is 3; this scan finished and printed its totals."
+      },
+      {
+        "text": "At least one rule set to FAIL matched",
+        "correct": false,
+        "why": "That is 1, and no rule can be FAIL without a rules file."
+      }
+    ]
+  },
+  {
+    "id": "ex-4axnrxn4",
+    "version": 1,
+    "section": "the-rules",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `ci/zap-rules.conf`, the action that stops the build when its rule matches is ___",
+    "blanks": [
+      {
+        "accept": [
+          "FAIL"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dwj227ws",
+    "version": 1,
+    "section": "the-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the `trap … EXIT` line in `ci/dast.sh` for?",
+    "choices": [
+      {
+        "text": "It turns ZAP's exit status into the stage's",
+        "correct": false,
+        "why": "The status of the last command already is the script's; the trap only cleans up."
+      },
+      {
+        "text": "It stops the scan if it runs past a minute",
+        "correct": false,
+        "why": "Nothing in the script times the scan; `-m` sets the spider's minutes."
+      },
+      {
+        "text": "It deletes the container and network however the script ends",
+        "correct": true,
+        "why": "Right. A failed scan would otherwise leave a running service for the next run to trip over."
+      },
+      {
+        "text": "It waits for gunicorn before the scan starts",
+        "correct": false,
+        "why": "That is the `sleep 2`, a cruder thing."
+      }
+    ]
+  },
+  {
+    "id": "ex-19q4p25d",
+    "version": 1,
+    "section": "the-rules",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what `ci/dast.sh` does in the order it happens.",
+    "items": [
+      "create a network named after the script's process",
+      "start the image of this commit on it",
+      "wait two seconds for gunicorn",
+      "run the baseline from a second container with the rules",
+      "remove the container and the network"
+    ]
+  },
+  {
+    "id": "ex-dy9s44a4",
+    "version": 1,
+    "section": "headers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The scan already checks the headers every night. Why does the fix come with a unit test as well?",
+    "choices": [
+      {
+        "text": "The test runs on every push and names what broke",
+        "correct": true,
+        "why": "Right. It takes under a second. The scan would find a regression the next night; the test finds it on the push that caused it."
+      },
+      {
+        "text": "ZAP cannot read the headers of a 404 page",
+        "correct": false,
+        "why": "It read them: in the first scan, 10038 listed `sitemap.xml`, a 404."
+      },
+      {
+        "text": "The scan sees only the image, not the code",
+        "correct": false,
+        "why": "That is true and it is why the scan is useful; it is not why the test exists."
+      },
+      {
+        "text": "Rules set to FAIL do not break the build at night",
+        "correct": false,
+        "why": "A FAIL breaks the nightly run as it would any other."
+      }
+    ]
+  },
+  {
+    "id": "ex-8xzhp5nv",
+    "version": 1,
+    "section": "headers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "10031 is a false positive on today's search page. Why is it left at WARN instead of being set to IGNORE?",
+    "choices": [
+      {
+        "text": "ZAP refuses IGNORE for any rule about cross-site scripting",
+        "correct": false,
+        "why": "Any rule can be ignored; the file accepts it."
+      },
+      {
+        "text": "A WARN breaks the nightly build, so it gets read",
+        "correct": false,
+        "why": "With `-I`, a WARN breaks nothing in this lesson."
+      },
+      {
+        "text": "IGNORE works per rule, so it would hide a future real one",
+        "correct": true,
+        "why": "Right. The file works per rule, not per page, so ignoring it would hide a real one later."
+      },
+      {
+        "text": "The rule may be right after all",
+        "correct": false,
+        "why": "The response settles it for this page; the reason is about pages not written yet."
+      }
+    ]
+  },
+  {
+    "id": "ex-4pjsmbf8",
+    "version": 1,
+    "section": "headers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What in linkbox's response shows that 10031 is a false positive?",
+    "choices": [
+      {
+        "text": "The search page answers 200, not 500",
+        "correct": false,
+        "why": "That shows the search works, not whether the value is escaped."
+      },
+      {
+        "text": "The page carries a Content-Security-Policy",
+        "correct": false,
+        "why": "The policy is a second line of defence; the rule is about the value in the attribute."
+      },
+      {
+        "text": "The word `ZAP` is in the `value` attribute",
+        "correct": false,
+        "why": "That is what made the rule match, not what clears it."
+      },
+      {
+        "text": "A double quote sent in `q` came back as `&#34;`",
+        "correct": true,
+        "why": "Right. Escaped, the quote cannot end the attribute, so the text cannot become markup."
+      }
+    ]
+  },
+  {
+    "id": "ex-v0rfhydf",
+    "version": 1,
+    "section": "headers",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of the `after_request` function added to `app.py`? Choose all that apply.",
+    "choices": [
+      {
+        "text": "It adds the headers to Flask's 404 pages too",
+        "correct": true,
+        "why": "Right: the curl for `/nothing-here` came back with all three."
+      },
+      {
+        "text": "A route added later gets the headers with no change",
+        "correct": true,
+        "why": "Right: the function runs for every response, whatever route made it."
+      },
+      {
+        "text": "It changes how Jinja escapes the search value",
+        "why": "Escaping is Jinja's and was already on; the function only sets headers."
+      },
+      {
+        "text": "It makes the dynamic scan unnecessary",
+        "why": "The scan checks the image as started, which a unit test of the code does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-g2azx0ss",
+    "version": 1,
+    "section": "nightly",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `dast` go in `ci/nightly` rather than in `ci/stages`?",
+    "choices": [
+      {
+        "text": "It is too slow to wait for on every push",
+        "correct": true,
+        "why": "Right: it needs an image, a container and a crawl, and the unit test covers the headers on every push meanwhile."
+      },
+      {
+        "text": "ZAP may only run once a day under its licence",
+        "correct": false,
+        "why": "ZAP is open source with no such limit."
+      },
+      {
+        "text": "Its findings are only warnings",
+        "correct": false,
+        "why": "Three of its rules FAIL; where it runs is about time."
+      },
+      {
+        "text": "Main is the only branch with a built image",
+        "correct": false,
+        "why": "Every push builds an image, on every branch."
+      }
+    ]
+  },
+  {
+    "id": "ex-atz9c6dt",
+    "version": 1,
+    "section": "nightly",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes a weekly `zap-full-scan.py` against linkbox's production address: \"it's our own service, so it's allowed\". What is the answer the lesson gives?",
+    "choices": [
+      {
+        "text": "Fine, as long as it runs at night when traffic is low",
+        "correct": false,
+        "why": "Night changes who notices, not what the scan writes into real data."
+      },
+      {
+        "text": "Fine, with `-silent` so nobody outside is told",
+        "correct": false,
+        "why": "`-silent` stops ZAP calling out; it does nothing about what the scan sends in."
+      },
+      {
+        "text": "No: run it against a staging made for the run",
+        "correct": true,
+        "why": "Right. An active scan writes and breaks things, so it points at a throwaway target, even one you own."
+      },
+      {
+        "text": "No: active scans are never worth running",
+        "correct": false,
+        "why": "They find what the baseline cannot; the question is where they point."
+      }
+    ]
+  },
+  {
+    "id": "ex-w3kfx271",
+    "version": 1,
+    "section": "nightly",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The nightly scan passes with one warning. With no authentication configured, what does that pass assert?",
+    "choices": [
+      {
+        "text": "linkbox has no web vulnerabilities",
+        "correct": false,
+        "why": "The scan read four URLs and sent nothing to provoke a flaw; it asserts much less."
+      },
+      {
+        "text": "The pages a stranger reaches sent the expected headers",
+        "correct": true,
+        "why": "Right. Everything behind the token was never scanned."
+      },
+      {
+        "text": "Every route, `POST /links` included, was checked",
+        "correct": false,
+        "why": "`POST /links` needs the token and was not among the URLs found."
+      },
+      {
+        "text": "The image matches what was reviewed",
+        "correct": false,
+        "why": "Nothing in this scan compares the image with a review; lesson 14 deals with identity."
+      }
+    ]
+  },
+  {
+    "id": "ex-sg3m97qe",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A partner company gives you the address of its API, and a teammate wants to run the baseline against it to check its headers before integrating. What comes first?",
+    "choices": [
+      {
+        "text": "Nothing: the baseline only reads, so it needs no permission",
+        "correct": false,
+        "why": "It still sends the spider's requests to a system you do not own; reading is not the same as being allowed."
+      },
+      {
+        "text": "Running it with `-silent` so the partner is not told",
+        "correct": false,
+        "why": "Hiding a scan from the owner is the opposite of what is needed."
+      },
+      {
+        "text": "Written permission from the partner to scan it",
+        "correct": true,
+        "why": "Right. Their system, their decision, on the record; or ask them for their own results."
+      },
+      {
+        "text": "A rules file that sets every rule to WARN",
+        "correct": false,
+        "why": "Rules decide what a finding does to your build, not whether you may scan."
+      }
+    ]
+  },
+  {
+    "id": "ex-ntatsm9v",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A later commit deletes the `@app.after_request` line by accident. Where is it caught first?",
+    "choices": [
+      {
+        "text": "In the nightly scan, as three FAILs",
+        "correct": false,
+        "why": "The scan would catch it too, but only that night."
+      },
+      {
+        "text": "In Semgrep, in the sast stage",
+        "correct": false,
+        "why": "No rule of lesson 3 knows about headers."
+      },
+      {
+        "text": "In the test stage of that push",
+        "correct": true,
+        "why": "Right. `test_every_answer_carries_the_headers` fails in the push that removed them."
+      },
+      {
+        "text": "At review, since the diff is one line",
+        "correct": false,
+        "why": "A one-line diff is the easiest to miss; the test does not depend on anybody noticing."
+      }
+    ]
+  },
+  {
+    "id": "ex-pc9vg0h3",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the fix, how many of ZAP's rules passed in the scan of linkbox?",
+    "value": 60,
+    "tolerance": 0
+  }
+]

@@ -1,0 +1,623 @@
+[
+  {
+    "id": "ex-xy0g17t8",
+    "version": 1,
+    "section": "published",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A teammate says the token was only ever in a private repository, so a commit that deletes the line closes the matter. What is wrong with that?",
+    "choices": [
+      {
+        "text": "Private repositories are indexed by search engines once they hold a secret",
+        "correct": false,
+        "why": "They are not indexed. The exposure is the people and machines that already hold a copy."
+      },
+      {
+        "text": "Every copy made before the deletion keeps the commits that carry it",
+        "correct": true,
+        "why": "Right. The deletion is a new snapshot; the old ones stay in every clone, fork and backup."
+      },
+      {
+        "text": "The deletion only takes effect after the next release",
+        "correct": false,
+        "why": "Releases have nothing to do with it: the history is copied whenever anybody clones or fetches."
+      },
+      {
+        "text": "Git keeps deleted lines in a log of its own that commits never touch",
+        "correct": false,
+        "why": "There is no such log. The deleted line is simply still in the earlier commits, as they were."
+      }
+    ]
+  },
+  {
+    "id": "ex-01309pv0",
+    "version": 1,
+    "section": "published",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before the fix, in how many commits of the project's history did `git grep` find the administration token?",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-6ykha9vh",
+    "version": 1,
+    "section": "published",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is not a secret, in the sense this lesson uses the word?",
+    "choices": [
+      {
+        "text": "A webhook's signing secret",
+        "correct": false,
+        "why": "It grants something by being known: whoever has it can sign messages the receiver will trust."
+      },
+      {
+        "text": "A session cookie pasted into a bug report",
+        "correct": false,
+        "why": "Whoever pastes it into their browser is that user until the session ends. It is a secret."
+      },
+      {
+        "text": "The public half of a key pair",
+        "correct": true,
+        "why": "Right. It is meant to be handed out; knowing it opens nothing."
+      },
+      {
+        "text": "A database connection string with its password",
+        "correct": false,
+        "why": "The password inside it opens the database to anybody who reads the string."
+      }
+    ]
+  },
+  {
+    "id": "ex-4r0901pr",
+    "version": 1,
+    "section": "scanning",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each command to what it reads.",
+    "pairs": [
+      {
+        "left": "gitleaks dir .",
+        "right": "the files as they are on disk now"
+      },
+      {
+        "left": "gitleaks git .",
+        "right": "the lines each commit added, from the first commit on"
+      },
+      {
+        "left": "gitleaks git --pre-commit --staged",
+        "right": "what is staged for the next commit"
+      },
+      {
+        "left": "git grep -l X $(git rev-list --all)",
+        "right": "the full snapshot of every commit"
+      }
+    ],
+    "right_distractors": [
+      "the branches that exist only on the server"
+    ]
+  },
+  {
+    "id": "ex-pakgvrp4",
+    "version": 1,
+    "section": "scanning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`git grep` found the token in five commits, and `gitleaks git` reported it once, in the first. Why the difference?",
+    "choices": [
+      {
+        "text": "gitleaks stops reading the history at its first finding",
+        "correct": false,
+        "why": "It went on to scan all five commits, as its own last lines say."
+      },
+      {
+        "text": "Identical findings across commits are merged by fingerprint",
+        "correct": false,
+        "why": "The fingerprint includes the commit, so the same line in two commits would be two findings."
+      },
+      {
+        "text": "Later commits are packed, and packed objects are not scanned",
+        "correct": false,
+        "why": "Packing is storage. gitleaks reads through git, which unpacks whatever it asks for."
+      },
+      {
+        "text": "It reads only the lines each commit added",
+        "correct": true,
+        "why": "Right. Four of the five commits kept the line without touching it, so only the first added it."
+      }
+    ]
+  },
+  {
+    "id": "ex-enp0ec21",
+    "version": 1,
+    "section": "scanning",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Your service's tokens are `svc_` followed by 32 random characters, and the code keeps them in variables called `ADMIN` and `PEER`. What should you expect from gitleaks' default rules, and what fixes it?",
+    "choices": [
+      {
+        "text": "They are found by entropy alone, whatever the variable is called",
+        "correct": false,
+        "why": "Entropy is the second half of the generic rule; the first half is a keyword in the name, and these names carry none."
+      },
+      {
+        "text": "The generic rule misses them; a svc_ rule finds them",
+        "correct": true,
+        "why": "Right. No keyword in the name, so the catch-all stays silent, and a prefix of your own makes a one-line rule."
+      },
+      {
+        "text": "Provider rules catch them by their length",
+        "correct": false,
+        "why": "Provider rules match a provider's own prefix and shape; nobody wrote one for svc_."
+      },
+      {
+        "text": "Nothing automated can find them; only a person reading the code",
+        "correct": false,
+        "why": "A scanner finds them as soon as somebody tells it the shape, which is the point of the prefix."
+      }
+    ]
+  },
+  {
+    "id": "ex-z5gw7mh1",
+    "version": 1,
+    "section": "scanning",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Each finding carries an identity, made of the commit, the file, the rule and the line, and `.gitleaksignore` lists one of these per line. The field is called the ___.",
+    "blanks": [
+      {
+        "accept": [
+          "fingerprint",
+          "Fingerprint"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0t7jsg3y",
+    "version": 1,
+    "section": "the-response",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the response to a pushed secret in order.",
+    "items": [
+      "revoke the value, so it opens nothing",
+      "give whatever needs access a new value, kept outside the repository",
+      "remove the value from the code",
+      "read the logs for use of the old value during the window",
+      "decide whether to rewrite the history",
+      "add the hook and the pipeline stage"
+    ]
+  },
+  {
+    "id": "ex-0a9cazzb",
+    "version": 1,
+    "section": "the-response",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For linkbox, revoking the token and taking it out of the code were one change. Why could they not be two?",
+    "choices": [
+      {
+        "text": "The pre-commit hook refuses a commit that keeps the token",
+        "correct": false,
+        "why": "The hook looks at what is added, and it was installed later in the lesson anyway."
+      },
+      {
+        "text": "Flask reads settings once, when the code changes",
+        "correct": false,
+        "why": "Settings are read when the process imports them; a restart with a new environment is enough."
+      },
+      {
+        "text": "The running service compares what it receives against the value in the code",
+        "correct": true,
+        "why": "Right. While the value is in the code, the running service accepts it, so revoking it means moving it out."
+      },
+      {
+        "text": "The CI server accepts one commit per security fix",
+        "correct": false,
+        "why": "Nothing on the server counts commits; it runs the pipeline on whatever is pushed."
+      }
+    ]
+  },
+  {
+    "id": "ex-sy6rk0sn",
+    "version": 1,
+    "section": "the-response",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the new token in its environment, the service answered 401 to the old one and 201 to the new one. What did the 401 establish?",
+    "choices": [
+      {
+        "text": "That the history had been cleaned",
+        "correct": false,
+        "why": "The history was not touched; every commit still holds the old value."
+      },
+      {
+        "text": "That nobody had used the old token while it was valid",
+        "correct": false,
+        "why": "That question needs logs, which linkbox does not keep. The 401 is about now, not about the window."
+      },
+      {
+        "text": "That gitleaks would stop reporting the finding",
+        "correct": false,
+        "why": "It still reported it; the finding is silenced only by recording it in .gitleaksignore."
+      },
+      {
+        "text": "That the value every copy holds opens nothing now",
+        "correct": true,
+        "why": "Right. That is the moment the copies stopped mattering."
+      }
+    ]
+  },
+  {
+    "id": "ex-t2yyhhvd",
+    "version": 1,
+    "section": "the-response",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A cloud access key was pushed to a public repository twenty minutes ago. A colleague is already writing the commit that deletes it. What comes first?",
+    "choices": [
+      {
+        "text": "Revoking the key at the provider that issued it, before anything else",
+        "correct": true,
+        "why": "Right. Nothing else stops it working, and on a public repository the window is already twenty minutes long."
+      },
+      {
+        "text": "Rewriting the history with git filter-repo and a forced push",
+        "correct": false,
+        "why": "That changes one copy and leaves every clone and fork, and the key still works the whole time."
+      },
+      {
+        "text": "Making the repository private",
+        "correct": false,
+        "why": "Whoever cloned it in those twenty minutes keeps the key, and it still works."
+      },
+      {
+        "text": "Waiting for the platform's partner programme to report it",
+        "correct": false,
+        "why": "The programme may act, but waiting leaves the key valid; the lesson does not count on it."
+      }
+    ]
+  },
+  {
+    "id": "ex-zc0q7cdq",
+    "version": 1,
+    "section": "the-response",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statements about the token in `tests/conftest.py` are true?",
+    "choices": [
+      {
+        "text": "It opens nothing outside a test's temporary database",
+        "correct": true,
+        "why": "Right: what makes a value a secret is what it opens."
+      },
+      {
+        "text": "setdefault leaves a token that is already in the environment alone",
+        "correct": true,
+        "why": "Right. A token set in the shell wins over the test's."
+      },
+      {
+        "text": "pytest reads it before the test modules import settings.py",
+        "correct": true,
+        "why": "Right, which is why the token is in place when settings.py looks for it."
+      },
+      {
+        "text": "gitleaks skips conftest files, so it is never reported",
+        "why": "gitleaks has no such exception; the value is not reported because it does not look like a key."
+      }
+    ]
+  },
+  {
+    "id": "ex-yc53zfe7",
+    "version": 1,
+    "section": "history",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `git filter-repo` replaced the token in a fresh clone, which of these was still true?",
+    "choices": [
+      {
+        "text": "The CI server's copy still held the token, untouched by the rewrite",
+        "correct": true,
+        "why": "Right. The rewrite changed one clone, and the server is another."
+      },
+      {
+        "text": "The other commits kept their hashes",
+        "correct": false,
+        "why": "Every hash changed: each commit's hash covers its parent, so the change runs down the whole history."
+      },
+      {
+        "text": "The other clones would pick up the rewrite at their next fetch",
+        "correct": false,
+        "why": "A fetch brings new commits; it does not replace a clone's history, and the old commits stay."
+      },
+      {
+        "text": "An ordinary git push would replace the server's history with it",
+        "correct": false,
+        "why": "filter-repo removed the remote on purpose, and replacing history takes a forced push."
+      }
+    ]
+  },
+  {
+    "id": "ex-xfgtdeyt",
+    "version": 1,
+    "section": "history",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In which case is rewriting the history worth what it costs everybody who holds a clone?",
+    "choices": [
+      {
+        "text": "Whenever a scanner keeps reporting a token that was rotated",
+        "correct": false,
+        "why": "Recording the dead finding in .gitleaksignore stops the reports at no cost to anybody's clone."
+      },
+      {
+        "text": "A customer's personal data was committed, and nothing can revoke it",
+        "correct": true,
+        "why": "Right. Nothing makes that data worthless, so limiting its copies, together with everybody who holds one, is worth the price."
+      },
+      {
+        "text": "Right after any revocation, so nobody can read the old value",
+        "correct": false,
+        "why": "After a revocation the old value opens nothing, so reading it costs nothing."
+      },
+      {
+        "text": "When the repository is public",
+        "correct": false,
+        "why": "Being public widens the window; what decides is whether the thing committed can be revoked."
+      }
+    ]
+  },
+  {
+    "id": "ex-4m9ykxm9",
+    "version": 1,
+    "section": "history",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `.gitleaksignore` name one fingerprint instead of switching off the `generic-api-key` rule?",
+    "choices": [
+      {
+        "text": "gitleaks has no switch for one rule",
+        "correct": false,
+        "why": "Rules can be configured; the point is what switching one off would hide."
+      },
+      {
+        "text": "A new secret in the same file is still reported",
+        "correct": true,
+        "why": "Right. The fingerprint names one finding in one commit, and anything new has another."
+      },
+      {
+        "text": "The fingerprint makes the scan of the history faster",
+        "correct": false,
+        "why": "The scan reads the same commits either way; the fingerprint only filters the report."
+      },
+      {
+        "text": "A rule switched off would also hide the finding from git log",
+        "correct": false,
+        "why": "git log is not affected by gitleaks at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-vc5d9cab",
+    "version": 1,
+    "section": "before-the-commit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the pre-commit hook a convenience rather than a control?",
+    "choices": [
+      {
+        "text": "It is too slow to run on each commit",
+        "correct": false,
+        "why": "It scans only what is staged, in a fraction of a second."
+      },
+      {
+        "text": "It misses files that are staged",
+        "correct": false,
+        "why": "Staged files are exactly what it reads."
+      },
+      {
+        "text": "Clones lack it; --no-verify skips it",
+        "correct": true,
+        "why": "Right. Whatever is skipped or left uninstalled has to be on the server as well."
+      },
+      {
+        "text": "It needs --redact to refuse anything",
+        "correct": false,
+        "why": "--redact only hides the value in the output; the refusal works either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-qx3wzzvr",
+    "version": 1,
+    "section": "before-the-commit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "According to GitHub's documentation, which of these pushes would its push protection let through, on a repository with no custom patterns configured?",
+    "choices": [
+      {
+        "text": "A commit adding linkbox's lbx_ token",
+        "correct": true,
+        "why": "Right. It looks for known providers' formats, and nobody told it about lbx_."
+      },
+      {
+        "text": "A commit adding a GitHub personal access token",
+        "correct": false,
+        "why": "That is a format GitHub knows well, the clearest case push protection exists for."
+      },
+      {
+        "text": "A cloud provider's access key",
+        "correct": false,
+        "why": "Cloud access keys have documented formats and are among those it recognises."
+      },
+      {
+        "text": "A commit made with --no-verify that adds a payment provider's key",
+        "correct": false,
+        "why": "--no-verify skips local hooks; push protection runs on the server and is not affected."
+      }
+    ]
+  },
+  {
+    "id": "ex-3z4dn7mf",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which reason for putting `secrets` first in `ci/stages` carries the most weight?",
+    "choices": [
+      {
+        "text": "It is the slowest stage, so it should start early",
+        "correct": false,
+        "why": "It is the cheapest: its scan of the whole history took 275ms here."
+      },
+      {
+        "text": "gitleaks needs the virtual environment before the tests make theirs",
+        "correct": false,
+        "why": "gitleaks is a single binary and uses no virtual environment."
+      },
+      {
+        "text": "The tests would fail on the token otherwise",
+        "correct": false,
+        "why": "The tests bring a token of their own in conftest.py."
+      },
+      {
+        "text": "Its answer does not depend on the later stages",
+        "correct": true,
+        "why": "Right. Whatever the tests say, a pushed secret is revoked, so nothing is gained by waiting for them."
+      }
+    ]
+  },
+  {
+    "id": "ex-2b8fkkm2",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `ci/secrets.sh` pass `--redact`?",
+    "choices": [
+      {
+        "text": "A CI log is read by everybody with access to the builds, and kept long",
+        "correct": true,
+        "why": "Right. Printing the value there would publish it a second time."
+      },
+      {
+        "text": "Without it, gitleaks exits 0 when it finds something",
+        "correct": false,
+        "why": "The exit status is the same either way: 1 when there is a finding."
+      },
+      {
+        "text": "It makes the scan skip findings already in .gitleaksignore",
+        "correct": false,
+        "why": "The ignore file is read with or without --redact."
+      },
+      {
+        "text": "It hides the file and the line, which somebody outside the team could use to find the value",
+        "correct": false,
+        "why": "The file and line stay, and they are what a person needs to act."
+      }
+    ]
+  },
+  {
+    "id": "ex-p06yvd56",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The image started with no token stops on a `KeyError`. A colleague proposes `os.environ.get(\"LINKBOX_TOKEN\", \"changeme\")`, so that it always starts. What is wrong with it?",
+    "choices": [
+      {
+        "text": "Nothing, provided every deployment sets the variable",
+        "correct": false,
+        "why": "The proposal exists for the deployment that does not, and that one would accept a token written in the code."
+      },
+      {
+        "text": "os.environ.get is slower than os.environ[...]",
+        "correct": false,
+        "why": "The difference is irrelevant; the problem is what the default does."
+      },
+      {
+        "text": "A deployment that forgets the variable runs with a known token",
+        "correct": true,
+        "why": "Right. The refusal to start is the protection; a default turns a missing setting into an open door."
+      },
+      {
+        "text": "gitleaks would block the commit, since changeme counts as a secret to its generic rule",
+        "correct": false,
+        "why": "changeme is too short and too plain for the generic rule; the danger is not the scan."
+      }
+    ]
+  },
+  {
+    "id": "ex-4q87cbmg",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation to the right first move.",
+    "pairs": [
+      {
+        "left": "the history holds a token that was already rotated",
+        "right": "record its fingerprint in .gitleaksignore, with the reason"
+      },
+      {
+        "left": "the hook refused a commit with a key in it",
+        "right": "take the key out of the staged file"
+      },
+      {
+        "left": "a provider's key reached a pushed commit",
+        "right": "revoke it at the provider"
+      },
+      {
+        "left": "a customer's file was committed and pushed",
+        "right": "plan a rewrite with everybody who holds a copy"
+      }
+    ],
+    "right_distractors": [
+      "make the repository private and carry on"
+    ]
+  },
+  {
+    "id": "ex-gmhxdfg2",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The option of `git commit` that skips the pre-commit hook, and the reason the hook alone is not a control, is ___",
+    "blanks": [
+      {
+        "accept": [
+          "--no-verify",
+          "-n"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,632 @@
+[
+  {
+    "id": "ex-aeg00b9x",
+    "version": 1,
+    "section": "what-sast-sees",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a static analysis tool do with the code it is given?",
+    "choices": [
+      {
+        "text": "Runs it in a sandbox and watches what it does",
+        "correct": false,
+        "why": "That is closer to dynamic analysis; static analysis never runs the program."
+      },
+      {
+        "text": "Matches it against rules somebody wrote, without running it",
+        "correct": true,
+        "why": "Right. It finds the shapes it has rules for, and nothing else."
+      },
+      {
+        "text": "Compares it with a database of published security advisories",
+        "correct": false,
+        "why": "That is composition analysis of dependencies, lesson 5."
+      },
+      {
+        "text": "Proves that it has no vulnerabilities left",
+        "correct": false,
+        "why": "A clean run says no rule that ran found its shape; it proves nothing about the rest."
+      }
+    ]
+  },
+  {
+    "id": "ex-s8zskja2",
+    "version": 1,
+    "section": "what-sast-sees",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of linkbox's search to its role in the flow a security rule looks for.",
+    "pairs": [
+      {
+        "left": "request.args.get(\"q\", \"\")",
+        "right": "a source: data somebody outside controls"
+      },
+      {
+        "left": "db().execute(...)",
+        "right": "a sink: a call that runs what it is given as SQL"
+      },
+      {
+        "left": "f\"... LIKE '%{q}%'\"",
+        "right": "the path: data formatted into the code"
+      },
+      {
+        "left": "(f\"%{q}%\",)",
+        "right": "the fix: the value passed as a parameter"
+      }
+    ],
+    "right_distractors": [
+      "a header the browser adds to the response"
+    ]
+  },
+  {
+    "id": "ex-7g1bp8ae",
+    "version": 1,
+    "section": "what-sast-sees",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can static analysis of linkbox's source not see? Choose all that apply.",
+    "choices": [
+      {
+        "text": "A security header missing from the HTTP response",
+        "correct": true,
+        "why": "Right: a property of the answer at runtime, which is lesson 4's dynamic analysis."
+      },
+      {
+        "text": "A flaw inside Flask itself",
+        "correct": true,
+        "why": "Right: it is in a dependency, which is lesson 5."
+      },
+      {
+        "text": "An environment variable that turns debugging on in production",
+        "correct": true,
+        "why": "Right: configuration is outside the code that was scanned."
+      },
+      {
+        "text": "A query built by formatting the search text into SQL",
+        "why": "This is exactly the shape Bandit's B608 and the project's Semgrep rule match."
+      }
+    ]
+  },
+  {
+    "id": "ex-drp66wsn",
+    "version": 1,
+    "section": "first-scan",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Bandit's first run on ~/linkbox, with the .venv inside it, reported 436 findings. How many of them were in the project's own files?",
+    "value": 9,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-xtxwf2xj",
+    "version": 1,
+    "section": "first-scan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson call a first run with hundreds of findings in .venv the most damaging one?",
+    "choices": [
+      {
+        "text": "Because those findings are all false positives",
+        "correct": false,
+        "why": "Many may be real in their own context; the damage is to how the tool is seen."
+      },
+      {
+        "text": "The developer decides the tool is noise, for good",
+        "correct": true,
+        "why": "Right. The first thing to tune is what the tool reads."
+      },
+      {
+        "text": "Because scanning .venv takes longer than the push budget",
+        "correct": false,
+        "why": "The scan was quick; the cost the lesson names is trust."
+      },
+      {
+        "text": "Because Bandit cannot scan installed packages correctly",
+        "correct": false,
+        "why": "It scanned them the same way as the project; it was simply pointed at code that is not yours."
+      }
+    ]
+  },
+  {
+    "id": "ex-f08aef88",
+    "version": 1,
+    "section": "first-scan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "B608 on the search was reported with medium confidence. What does that score describe?",
+    "choices": [
+      {
+        "text": "How harmful the injection would be if it is real",
+        "correct": false,
+        "why": "That is severity, the other score."
+      },
+      {
+        "text": "How sure the check is that the case is real",
+        "correct": true,
+        "why": "Right. Bandit cannot see what q holds, so it is not certain."
+      },
+      {
+        "text": "How often the rule is wrong across all Python projects",
+        "correct": false,
+        "why": "It is a judgement about this finding, not a statistic about the rule."
+      },
+      {
+        "text": "How likely an attacker is to find the flaw",
+        "correct": false,
+        "why": "Bandit says nothing about attackers; it scores its own evidence."
+      }
+    ]
+  },
+  {
+    "id": "ex-s0deaqrt",
+    "version": 1,
+    "section": "first-scan",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Bandit flags `assert user.is_admin` in a route with low severity and high confidence. A colleague says low severity means it can wait. What does the lesson's reading of the two scores suggest?",
+    "choices": [
+      {
+        "text": "Agree: severity is the score that decides urgency",
+        "correct": false,
+        "why": "In a test that would be fair; in a route the assert is the access check, and -O removes it."
+      },
+      {
+        "text": "Disagree: high confidence means it must be fixed first",
+        "correct": false,
+        "why": "Confidence is about the evidence, not urgency; the reason to act is what the assert guards."
+      },
+      {
+        "text": "Look at the line: here it is the access check",
+        "correct": true,
+        "why": "Right. The scores describe the rule's view; the context says this one is a real defect."
+      },
+      {
+        "text": "Skip B101 everywhere, since it fires on tests",
+        "correct": false,
+        "why": "That is the move the lesson rejects: it would hide exactly this line."
+      }
+    ]
+  },
+  {
+    "id": "ex-ams7vq8y",
+    "version": 1,
+    "section": "false-positives",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Bandit does not report that create() compares the token with !=. What is that, in the lesson's vocabulary?",
+    "choices": [
+      {
+        "text": "A true negative",
+        "correct": false,
+        "why": "A true negative is a correct silence; this silence is about a real defect."
+      },
+      {
+        "text": "A false positive",
+        "correct": false,
+        "why": "A false positive is a report; here there is no report at all."
+      },
+      {
+        "text": "A false negative",
+        "correct": true,
+        "why": "Right: a real defect the tool did not report, the expensive kind."
+      },
+      {
+        "text": "A true positive",
+        "correct": false,
+        "why": "A true positive is a report about a real defect, like B608 on the search."
+      }
+    ]
+  },
+  {
+    "id": "ex-f2sgss0b",
+    "version": 1,
+    "section": "false-positives",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Six B101 findings sit on the asserts in tests/test_app.py. Why does bandit.yaml skip B101 for the tests only, instead of everywhere?",
+    "choices": [
+      {
+        "text": "Because skipping a rule everywhere needs administrator rights on the machine",
+        "correct": false,
+        "why": "It is one line of configuration; the reason is what the rule still catches elsewhere."
+      },
+      {
+        "text": "Because an assert in application code is a real defect under -O",
+        "correct": true,
+        "why": "Right. Skipping it everywhere would turn that into a false negative."
+      },
+      {
+        "text": "Because the tests directory is excluded from the scan anyway",
+        "correct": false,
+        "why": "Only .venv is excluded; the tests are scanned, which is why B101 fired there."
+      },
+      {
+        "text": "Because pytest removes its asserts when run under -O",
+        "correct": false,
+        "why": "pytest rewrites asserts to report them; the point is nobody runs tests under -O."
+      }
+    ]
+  },
+  {
+    "id": "ex-51ydz3vj",
+    "version": 1,
+    "section": "false-positives",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A comment reads `# nosec B608: t is one of TABLES`. What did Bandit do with it in the lesson?",
+    "choices": [
+      {
+        "text": "Ignored the whole comment and reported B608 anyway",
+        "correct": false,
+        "why": "The finding was suppressed and the exit status was 0."
+      },
+      {
+        "text": "Suppressed B608 and stored the reason in its report for reviewers",
+        "correct": false,
+        "why": "Bandit has no field for a reason; it read the words as check ids."
+      },
+      {
+        "text": "Refused the file as a syntax error",
+        "correct": false,
+        "why": "It parsed the file fine and only warned."
+      },
+      {
+        "text": "Suppressed it, warning once per word as an unknown id",
+        "correct": true,
+        "why": "Right. The reason belongs on the line above, with the ids alone after nosec."
+      }
+    ]
+  },
+  {
+    "id": "ex-zt98zwcb",
+    "version": 1,
+    "section": "false-positives",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In bandit.yaml, the setting that keeps the virtual environment out of every scan is called ___.",
+    "blanks": [
+      {
+        "accept": [
+          "exclude_dirs"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8g7zdc10",
+    "version": 1,
+    "section": "own-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "create() checks the token inline, and the rule writes-need-the-token flags it. What is the finding, in the lesson's terms?",
+    "choices": [
+      {
+        "text": "A false positive, since the route rejects a missing token",
+        "correct": false,
+        "why": "The rule did not say the route is open; it said the route does not call require_token(), which was true."
+      },
+      {
+        "text": "A true positive of the rule, which enforces one checking function",
+        "correct": true,
+        "why": "Right. Whether the rule is right to want the call is the question it raises."
+      },
+      {
+        "text": "A false negative of Bandit that Semgrep corrected",
+        "correct": false,
+        "why": "Semgrep reported it, so for Semgrep it is a positive; Bandit's silence is a separate matter."
+      },
+      {
+        "text": "A true negative, because lesson 1's test passes",
+        "correct": false,
+        "why": "A finding was reported, so it cannot be a negative."
+      }
+    ]
+  },
+  {
+    "id": "ex-wvxjzdzw",
+    "version": 1,
+    "section": "own-rules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson prefer secrets.compare_digest() to != for the token?",
+    "choices": [
+      {
+        "text": "Because != fails on tokens longer than 32 characters",
+        "correct": false,
+        "why": "!= compares strings of any length; the issue is how long it takes."
+      },
+      {
+        "text": "Because compare_digest() also hashes the token",
+        "correct": false,
+        "why": "It stores nothing; it only compares."
+      },
+      {
+        "text": "Because != stops at the first difference, and its timing leaks",
+        "correct": true,
+        "why": "Right: how long it takes says how much of a guess is right. compare_digest() takes the same time whatever the input."
+      },
+      {
+        "text": "Because Bandit's B105 requires it",
+        "correct": false,
+        "why": "B105 is about the token being written in the code; it says nothing about comparison."
+      }
+    ]
+  },
+  {
+    "id": "ex-j0z16fx4",
+    "version": 1,
+    "section": "own-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which call does the rule sql-built-from-a-string not match?",
+    "choices": [
+      {
+        "text": "db().execute(\"SELECT url FROM links WHERE code = ?\", (code,))",
+        "correct": true,
+        "why": "Right: a plain string and a tuple of parameters, like follow()."
+      },
+      {
+        "text": "db().execute(\"SELECT url FROM links WHERE code = '\" + code + \"'\")",
+        "correct": false,
+        "why": "A string joined with + is one of the four patterns."
+      },
+      {
+        "text": "db().execute(\"SELECT url FROM links WHERE code = '{}'\".format(code))",
+        "correct": false,
+        "why": ".format() is one of the four patterns."
+      },
+      {
+        "text": "db().execute(f\"SELECT url FROM links WHERE code = '{code}'\")",
+        "correct": false,
+        "why": "An f-string is the first pattern of the rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-k3a6dz5x",
+    "version": 1,
+    "section": "the-build-breaks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What happens if ci/sast.sh calls semgrep without --error and Semgrep finds the SQL rule's shape?",
+    "choices": [
+      {
+        "text": "It prints the finding and the stage passes",
+        "correct": true,
+        "why": "Right. Without --error Semgrep exits 0, and the pipeline looks like it checked something."
+      },
+      {
+        "text": "Semgrep refuses to start without an exit policy",
+        "correct": false,
+        "why": "It runs and reports; only the exit status changes."
+      },
+      {
+        "text": "Bandit's exit status breaks the build instead",
+        "correct": false,
+        "why": "Bandit only fails on its own findings; it knows nothing of Semgrep's."
+      },
+      {
+        "text": "The stage fails with a warning that is counted",
+        "correct": false,
+        "why": "There is no warning status in this pipeline yet; lesson 7 adds one."
+      }
+    ]
+  },
+  {
+    "id": "ex-85pcv0ms",
+    "version": 1,
+    "section": "the-build-breaks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "B105, the token in settings.py, is a true positive, yet ci/sast.sh does not break on it. What reason does the lesson give?",
+    "choices": [
+      {
+        "text": "Low-severity findings are false by definition",
+        "correct": false,
+        "why": "The lesson says the opposite: B105 is true."
+      },
+      {
+        "text": "Its confidence is only medium",
+        "correct": false,
+        "why": "B608 has medium confidence too and does break the build; the stage filters on severity."
+      },
+      {
+        "text": "Its fix is not a code change, so no push clears it",
+        "correct": true,
+        "why": "Right: breaking on it would block every push for work nobody does in their change. Lesson 6 is about it, and lesson 7 generalises the rule."
+      },
+      {
+        "text": "Semgrep already reports it in the same stage, so Bandit need not",
+        "correct": false,
+        "why": "Neither of the project's two Semgrep rules is about secrets."
+      }
+    ]
+  },
+  {
+    "id": "ex-r2wk86w7",
+    "version": 1,
+    "section": "the-build-breaks",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the stages of ci/stages, as this lesson leaves it, in the order they run.",
+    "items": [
+      "test",
+      "sast",
+      "build"
+    ]
+  },
+  {
+    "id": "ex-0msmz3zk",
+    "version": 1,
+    "section": "fixing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did the new test show before the fix, when it searched for it's?",
+    "choices": [
+      {
+        "text": "A 500 from the search, because SQLite refused the query",
+        "correct": true,
+        "why": "Right: near \"s\": syntax error, and Flask answered 500."
+      },
+      {
+        "text": "An empty page, because nothing matched",
+        "correct": false,
+        "why": "The page never rendered; the query failed first."
+      },
+      {
+        "text": "A 401, because the test sent no token",
+        "correct": false,
+        "why": "The search needs no token; the link was created with one."
+      },
+      {
+        "text": "Every link in the database",
+        "correct": false,
+        "why": "That is what an empty search returns; this one failed."
+      }
+    ]
+  },
+  {
+    "id": "ex-n7wpypk2",
+    "version": 1,
+    "section": "fixing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson write the failing test before changing the query?",
+    "choices": [
+      {
+        "text": "Because Bandit only stops reporting B608 once a test exists",
+        "correct": false,
+        "why": "Bandit reads the code's shape and knows nothing about tests."
+      },
+      {
+        "text": "To prove the test catches the defect, in any form",
+        "correct": true,
+        "why": "Right. A silent scanner says the shape is gone, not that the behaviour is right."
+      },
+      {
+        "text": "Because the pipeline runs tests before static analysis",
+        "correct": false,
+        "why": "The order of stages is not why; the test's value is in failing first."
+      },
+      {
+        "text": "Because pytest refuses a test that passes on its first run",
+        "correct": false,
+        "why": "pytest has no such rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-nvptfhnm",
+    "version": 1,
+    "section": "fixing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "linkbox's image starts gunicorn, so app.run(debug=True) never ran in it. Why remove it anyway?",
+    "choices": [
+      {
+        "text": "Because gunicorn refuses to load a file that contains it",
+        "correct": false,
+        "why": "gunicorn imports app and ignores the block; it never refused."
+      },
+      {
+        "text": "Because it slows down every request",
+        "correct": false,
+        "why": "It does nothing under gunicorn, which is the point: it is dead code until somebody runs the file."
+      },
+      {
+        "text": "It becomes live if somebody runs python app.py",
+        "correct": true,
+        "why": "Right. The debugger would then run typed Python for whoever reaches the page."
+      },
+      {
+        "text": "Because Semgrep's writes-need-the-token rule flags it",
+        "correct": false,
+        "why": "That rule is about POST routes; Bandit's B201 is the one that flagged the debugger."
+      }
+    ]
+  },
+  {
+    "id": "ex-v5e8vgdc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate proposes adding `skips: [B608]` to bandit.yaml because the table-name query in a report script is a false positive. What would the lesson have them do?",
+    "choices": [
+      {
+        "text": "Accept it: one false positive justifies switching off the check",
+        "correct": false,
+        "why": "Switching it off everywhere hides the next real injection, the false negative the lesson warns about."
+      },
+      {
+        "text": "Raise the stage's threshold to high severity",
+        "correct": false,
+        "why": "That would let the search's B608 through as well."
+      },
+      {
+        "text": "A `# nosec B608` on that one line, with the reason on the line above",
+        "correct": true,
+        "why": "Right. One line, the check named, a reason a reviewer checks."
+      },
+      {
+        "text": "Exclude the report script's directory from Bandit",
+        "correct": false,
+        "why": "A directory exclusion is a wider hole than the one line that is wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-jg09f5f4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody adds a route `@app.post(\"/links/<code>/delete\")` that deletes a link and forgets require_token(). With the pipeline as this lesson leaves it, what stops the push?",
+    "choices": [
+      {
+        "text": "Bandit, because deleting without a check is a known Python pattern",
+        "correct": false,
+        "why": "None of Bandit's built-in checks knows linkbox's token convention."
+      },
+      {
+        "text": "The tests, because lesson 1's token test covers every route",
+        "correct": false,
+        "why": "That test posts to /links only; nobody wrote one for the new route."
+      },
+      {
+        "text": "Nothing until the dynamic scan of lesson 4",
+        "correct": false,
+        "why": "The static analysis stage already has a rule for exactly this shape."
+      },
+      {
+        "text": "The sast stage, through Semgrep's writes-need-the-token",
+        "correct": true,
+        "why": "Right. A POST route that never calls require_token() is the shape the project's own rule matches."
+      }
+    ]
+  }
+]

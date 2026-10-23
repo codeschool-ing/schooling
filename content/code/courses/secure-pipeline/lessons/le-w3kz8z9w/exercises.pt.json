@@ -1,0 +1,422 @@
+{
+  "ex-xy0g17t8": {
+    "prompt": "Um colega diz que o token só esteve num repositório privado, então um commit que apaga a linha encerra o assunto. O que há de errado nisso?",
+    "choices": [
+      {
+        "text": "Repositórios privados são indexados por buscadores quando guardam um segredo",
+        "why": "Não são indexados. A exposição são as pessoas e máquinas que já têm uma cópia."
+      },
+      {
+        "text": "Toda cópia feita antes da exclusão mantém os commits que o carregam",
+        "why": "Isso. A exclusão é uma fotografia nova; as antigas ficam em todo clone, fork e backup."
+      },
+      {
+        "text": "A exclusão só vale depois do próximo release",
+        "why": "Releases não têm nada a ver: o histórico é copiado sempre que alguém clona ou faz fetch."
+      },
+      {
+        "text": "O Git guarda linhas apagadas num log próprio que os commits nunca tocam",
+        "why": "Esse log não existe. A linha apagada simplesmente continua nos commits anteriores, como estavam."
+      }
+    ]
+  },
+  "ex-01309pv0": {
+    "prompt": "Antes da correção, em quantos commits do histórico do projeto o `git grep` encontrou o token de administração?"
+  },
+  "ex-6ykha9vh": {
+    "prompt": "Qual destes não é um segredo, no sentido em que esta aula usa a palavra?",
+    "choices": [
+      {
+        "text": "O segredo de assinatura de um webhook",
+        "why": "Ele concede algo por ser conhecido: quem o tem assina mensagens em que o receptor vai confiar."
+      },
+      {
+        "text": "Um cookie de sessão colado num relato de bug",
+        "why": "Quem o cola no navegador é aquele usuário até a sessão acabar. É um segredo."
+      },
+      {
+        "text": "A metade pública de um par de chaves assimétricas",
+        "why": "Isso. Ela foi feita para ser distribuída; conhecê-la não abre nada."
+      },
+      {
+        "text": "Uma string de conexão ao banco com a senha",
+        "why": "A senha dentro dela abre o banco para qualquer um que leia a string."
+      }
+    ]
+  },
+  "ex-4r0901pr": {
+    "prompt": "Associe cada comando ao que ele lê.",
+    "pairs": [
+      {
+        "left": "gitleaks dir .",
+        "right": "os arquivos como estão no disco agora"
+      },
+      {
+        "left": "gitleaks git .",
+        "right": "as linhas que cada commit acrescentou, desde o primeiro commit"
+      },
+      {
+        "left": "gitleaks git --pre-commit --staged",
+        "right": "o que está no stage para o próximo commit"
+      },
+      {
+        "left": "git grep -l X $(git rev-list --all)",
+        "right": "a fotografia completa de cada commit"
+      }
+    ],
+    "right_distractors": [
+      "os branches que só existem no servidor"
+    ]
+  },
+  "ex-pakgvrp4": {
+    "prompt": "O `git grep` achou o token em cinco commits, e o `gitleaks git` o apontou uma vez, no primeiro. Por que a diferença?",
+    "choices": [
+      {
+        "text": "O gitleaks para de ler o histórico no primeiro achado",
+        "why": "Ele seguiu e varreu os cinco commits, como as próprias últimas linhas dizem."
+      },
+      {
+        "text": "Achados idênticos em commits diferentes são unidos pelo fingerprint",
+        "why": "O fingerprint inclui o commit, então a mesma linha em dois commits seriam dois achados."
+      },
+      {
+        "text": "Commits posteriores são compactados, e objetos compactados não são varridos",
+        "why": "Compactar é armazenamento. O gitleaks lê pelo git, que descompacta o que ele pedir."
+      },
+      {
+        "text": "Ele lê só as linhas que cada commit acrescentou",
+        "why": "Isso. Quatro dos cinco commits mantiveram a linha sem mexer nela, então só o primeiro a acrescentou."
+      }
+    ]
+  },
+  "ex-enp0ec21": {
+    "prompt": "Os tokens do seu serviço são `svc_` seguido de 32 caracteres aleatórios, e o código os guarda em variáveis chamadas `ADMIN` e `PEER`. O que esperar das regras padrão do gitleaks, e o que resolve?",
+    "choices": [
+      {
+        "text": "Eles são achados só pela entropia, seja qual for o nome da variável",
+        "why": "A entropia é a segunda metade da regra genérica; a primeira é uma palavra-chave no nome, e esses nomes não têm nenhuma."
+      },
+      {
+        "text": "A regra genérica não os pega; uma regra svc_ os acha",
+        "why": "Isso. Sem palavra-chave no nome, a regra genérica fica quieta, e um prefixo próprio vira uma regra de uma linha."
+      },
+      {
+        "text": "As regras de provedores os pegam pelo tamanho",
+        "why": "As regras de provedores casam o prefixo e o formato de cada provedor; ninguém escreveu uma para svc_."
+      },
+      {
+        "text": "Nada automatizado consegue achá-los; só uma pessoa lendo o código",
+        "why": "Um scanner os acha assim que alguém lhe diz o formato, que é para isso que serve o prefixo."
+      }
+    ]
+  },
+  "ex-z5gw7mh1": {
+    "prompt": "Cada achado tem uma identidade, feita do commit, do arquivo, da regra e da linha, e o `.gitleaksignore` lista uma por linha. O campo se chama ___.",
+    "blanks": [
+      {
+        "accept": [
+          "fingerprint",
+          "Fingerprint"
+        ]
+      }
+    ]
+  },
+  "ex-0t7jsg3y": {
+    "prompt": "Ponha em ordem a resposta a um segredo enviado.",
+    "items": [
+      "revogar o valor, para que não abra nada",
+      "dar ao que precisa de acesso um valor novo, guardado fora do repositório",
+      "tirar o valor do código",
+      "ler os logs procurando uso do valor antigo durante a janela",
+      "decidir se reescreve o histórico",
+      "acrescentar o hook e o estágio do pipeline"
+    ]
+  },
+  "ex-0a9cazzb": {
+    "prompt": "No linkbox, revogar o token e tirá-lo do código foram uma mudança só. Por que não podiam ser duas?",
+    "choices": [
+      {
+        "text": "O hook de pre-commit recusa um commit que mantém o token",
+        "why": "O hook olha o que é acrescentado, e de todo modo foi instalado depois, na aula."
+      },
+      {
+        "text": "O Flask lê as configurações uma vez, quando o código muda",
+        "why": "As configurações são lidas quando o processo as importa; reiniciar com um ambiente novo basta."
+      },
+      {
+        "text": "O serviço em execução compara o que recebe com o valor que está no código",
+        "why": "Isso. Enquanto o valor está no código, o serviço em execução o aceita, então revogá-lo significa tirá-lo de lá."
+      },
+      {
+        "text": "O servidor de CI aceita um commit por correção de segurança",
+        "why": "Nada no servidor conta commits; ele roda o pipeline no que for enviado."
+      }
+    ]
+  },
+  "ex-sy6rk0sn": {
+    "prompt": "Com o token novo no ambiente, o serviço respondeu 401 ao antigo e 201 ao novo. O que o 401 estabeleceu?",
+    "choices": [
+      {
+        "text": "Que o histórico tinha sido limpo",
+        "why": "O histórico não foi tocado; todo commit ainda guarda o valor antigo."
+      },
+      {
+        "text": "Que ninguém usou o token antigo enquanto ele valia",
+        "why": "Essa pergunta precisa de logs, que o linkbox não guarda. O 401 fala do agora, não da janela."
+      },
+      {
+        "text": "Que o gitleaks pararia de apontar o achado",
+        "why": "Ele continuou apontando; o achado só se cala ao ser registrado no .gitleaksignore."
+      },
+      {
+        "text": "Que o valor que toda cópia guarda não abre mais nada",
+        "why": "Isso. É o momento em que as cópias deixaram de importar."
+      }
+    ]
+  },
+  "ex-t2yyhhvd": {
+    "prompt": "Uma chave de acesso de nuvem foi enviada para um repositório público há vinte minutos. Um colega já está escrevendo o commit que a apaga. O que vem primeiro?",
+    "choices": [
+      {
+        "text": "Revogar a chave no provedor que a emitiu, antes de qualquer outra coisa",
+        "why": "Isso. Nada mais faz ela parar de funcionar, e num repositório público a janela já tem vinte minutos."
+      },
+      {
+        "text": "Reescrever o histórico com git filter-repo e um push forçado",
+        "why": "Isso muda uma cópia e deixa todo clone e fork, e a chave continua funcionando o tempo todo."
+      },
+      {
+        "text": "Tornar o repositório privado",
+        "why": "Quem clonou nesses vinte minutos fica com a chave, e ela continua funcionando."
+      },
+      {
+        "text": "Esperar o programa de parceiros da plataforma avisar o provedor",
+        "why": "O programa até age, mas esperar deixa a chave válida; a aula não conta com ele."
+      }
+    ]
+  },
+  "ex-zc0q7cdq": {
+    "prompt": "Quais afirmações sobre o token em `tests/conftest.py` são verdadeiras?",
+    "choices": [
+      {
+        "text": "Ele não abre nada fora do banco temporário de um teste",
+        "why": "Isso: o que faz de um valor um segredo é o que ele abre."
+      },
+      {
+        "text": "setdefault não mexe num token que já esteja no ambiente",
+        "why": "Isso. Um token definido no shell vence o do teste."
+      },
+      {
+        "text": "O pytest o lê antes de os módulos de teste importarem settings.py",
+        "why": "Isso, e é por isso que o token já está no lugar quando settings.py o procura."
+      },
+      {
+        "text": "O gitleaks pula arquivos conftest, então ele nunca é apontado",
+        "why": "O gitleaks não tem essa exceção; o valor não é apontado porque não parece uma chave."
+      }
+    ]
+  },
+  "ex-yc53zfe7": {
+    "prompt": "Depois que o `git filter-repo` trocou o token num clone recém-feito, qual destas coisas ainda era verdade?",
+    "choices": [
+      {
+        "text": "A cópia do servidor de CI ainda guardava o token, intocada pela reescrita",
+        "why": "Isso. A reescrita mudou um clone, e o servidor é outro."
+      },
+      {
+        "text": "Os outros hashes ficaram iguais",
+        "why": "Todos os hashes mudaram: o hash de cada commit cobre o pai, então a mudança desce pelo histórico inteiro."
+      },
+      {
+        "text": "Os outros clones receberiam a reescrita no próximo fetch",
+        "why": "Um fetch traz commits novos; ele não substitui o histórico de um clone, e os antigos ficam."
+      },
+      {
+        "text": "Um git push comum substituiria o histórico do servidor por ele",
+        "why": "O filter-repo removeu o remote de propósito, e substituir histórico exige um push forçado."
+      }
+    ]
+  },
+  "ex-xfgtdeyt": {
+    "prompt": "Em que caso reescrever o histórico vale o que custa a todo mundo que tem um clone?",
+    "choices": [
+      {
+        "text": "Sempre que um scanner continua apontando um token que já passou por rotação",
+        "why": "Registrar o achado morto no .gitleaksignore para os avisos sem custo para o clone de ninguém."
+      },
+      {
+        "text": "Dados pessoais de um cliente entraram num commit, e nada os revoga",
+        "why": "Isso. Nada torna esses dados inúteis, então limitar as cópias, junto com todos que guardam uma, vale o preço."
+      },
+      {
+        "text": "Logo depois de qualquer revogação, para ninguém ler o valor antigo",
+        "why": "Depois da revogação o valor antigo não abre nada, então lê-lo não custa nada."
+      },
+      {
+        "text": "Quando o repositório é público",
+        "why": "Ser público alarga a janela; o que decide é se o que entrou no commit pode ser revogado."
+      }
+    ]
+  },
+  "ex-4m9ykxm9": {
+    "prompt": "Por que o `.gitleaksignore` nomeia um fingerprint em vez de desligar a regra `generic-api-key`?",
+    "choices": [
+      {
+        "text": "O gitleaks não tem como desligar uma regra",
+        "why": "Regras podem ser configuradas; o ponto é o que desligar uma esconderia."
+      },
+      {
+        "text": "Um segredo novo no mesmo arquivo continua sendo apontado",
+        "why": "Isso. O fingerprint nomeia um achado num commit, e qualquer coisa nova tem outro."
+      },
+      {
+        "text": "O fingerprint deixa a varredura do histórico mais rápida",
+        "why": "A varredura lê os mesmos commits de qualquer jeito; o fingerprint só filtra o relatório."
+      },
+      {
+        "text": "Uma regra desligada também esconderia o achado do git log",
+        "why": "O git log não é afetado pelo gitleaks de jeito nenhum."
+      }
+    ]
+  },
+  "ex-vc5d9cab": {
+    "prompt": "Por que o hook de pre-commit é uma conveniência e não um controle?",
+    "choices": [
+      {
+        "text": "Ele é lento demais para rodar a cada commit",
+        "why": "Ele varre só o que está no stage, em fração de segundo."
+      },
+      {
+        "text": "Ele não enxerga arquivos no stage",
+        "why": "Arquivos no stage são justamente o que ele lê."
+      },
+      {
+        "text": "Clones não o têm; --no-verify o pula",
+        "why": "Isso. O que é pulado ou fica sem instalar tem de estar no servidor também."
+      },
+      {
+        "text": "Ele precisa de --redact para recusar algo",
+        "why": "--redact só esconde o valor na saída; a recusa funciona de qualquer jeito."
+      }
+    ]
+  },
+  "ex-qx3wzzvr": {
+    "prompt": "Segundo a documentação do GitHub, qual destes pushes a proteção de push dele deixaria passar, num repositório sem padrões próprios configurados?",
+    "choices": [
+      {
+        "text": "Um commit que acrescenta o token lbx_ do linkbox",
+        "why": "Isso. Ela procura formatos de provedores conhecidos, e ninguém lhe falou de lbx_."
+      },
+      {
+        "text": "Um commit que acrescenta um token de acesso pessoal do GitHub",
+        "why": "É um formato que o GitHub conhece bem, o caso mais claro para o qual a proteção existe."
+      },
+      {
+        "text": "Uma chave de acesso de um provedor de nuvem",
+        "why": "Chaves de nuvem têm formatos documentados e estão entre as que ela reconhece."
+      },
+      {
+        "text": "Um commit feito com --no-verify que acrescenta a chave de um provedor de pagamentos",
+        "why": "--no-verify pula hooks locais; a proteção de push roda no servidor e não é afetada."
+      }
+    ]
+  },
+  "ex-3z4dn7mf": {
+    "prompt": "Qual motivo para pôr `secrets` primeiro em `ci/stages` pesa mais?",
+    "choices": [
+      {
+        "text": "É o estágio mais lento, então precisa começar cedo",
+        "why": "É o mais barato: a varredura do histórico inteiro levou 275ms aqui."
+      },
+      {
+        "text": "O gitleaks precisa do ambiente virtual antes que os testes criem o deles",
+        "why": "O gitleaks é um binário só e não usa ambiente virtual."
+      },
+      {
+        "text": "Os testes falhariam por causa do token, se não fosse assim",
+        "why": "Os testes trazem um token próprio no conftest.py."
+      },
+      {
+        "text": "A resposta a ela não depende dos estágios seguintes",
+        "why": "Isso. Digam o que disserem os testes, um segredo enviado é revogado, então não se ganha nada esperando por eles."
+      }
+    ]
+  },
+  "ex-2b8fkkm2": {
+    "prompt": "Por que o `ci/secrets.sh` passa `--redact`?",
+    "choices": [
+      {
+        "text": "Um log de CI é lido por todos com acesso aos builds, e guardado por muito tempo",
+        "why": "Isso. Imprimir o valor ali o publicaria uma segunda vez."
+      },
+      {
+        "text": "Sem ele, o gitleaks sai com 0 quando acha algo",
+        "why": "O código de saída é o mesmo nos dois casos: 1 quando há achado."
+      },
+      {
+        "text": "Ele faz a varredura pular achados que já estão no .gitleaksignore",
+        "why": "O arquivo de ignorados é lido com ou sem --redact."
+      },
+      {
+        "text": "Ele esconde o arquivo e a linha, que alguém de fora do time poderia usar para achar o valor",
+        "why": "O arquivo e a linha ficam, e são o que uma pessoa precisa para agir."
+      }
+    ]
+  },
+  "ex-p06yvd56": {
+    "prompt": "A imagem iniciada sem token para num `KeyError`. Um colega propõe `os.environ.get(\"LINKBOX_TOKEN\", \"changeme\")`, para que ela sempre suba. O que há de errado?",
+    "choices": [
+      {
+        "text": "Nada, desde que toda implantação defina a variável",
+        "why": "A proposta existe para a implantação que não define, e essa aceitaria um token escrito no código."
+      },
+      {
+        "text": "os.environ.get é mais lento que os.environ[...]",
+        "why": "A diferença é irrelevante; o problema é o que o padrão faz."
+      },
+      {
+        "text": "Uma implantação que esquece a variável roda com um token conhecido",
+        "why": "Isso. A recusa a subir é a proteção; um padrão transforma uma configuração faltando numa porta aberta."
+      },
+      {
+        "text": "O gitleaks bloquearia o commit, já que changeme conta como segredo para a regra genérica",
+        "why": "changeme é curto e simples demais para a regra genérica; o perigo não é a varredura."
+      }
+    ]
+  },
+  "ex-4q87cbmg": {
+    "prompt": "Associe cada situação ao primeiro passo certo.",
+    "pairs": [
+      {
+        "left": "o histórico guarda um token que já passou por rotação",
+        "right": "registrar o fingerprint no .gitleaksignore, com o motivo"
+      },
+      {
+        "left": "o hook recusou um commit com uma chave",
+        "right": "tirar a chave do arquivo no stage"
+      },
+      {
+        "left": "a chave de um provedor chegou a um commit enviado",
+        "right": "revogá-la no provedor"
+      },
+      {
+        "left": "o arquivo de um cliente entrou num commit enviado",
+        "right": "planejar uma reescrita com todos que têm uma cópia"
+      }
+    ],
+    "right_distractors": [
+      "tornar o repositório privado e seguir em frente"
+    ]
+  },
+  "ex-gmhxdfg2": {
+    "prompt": "A opção do `git commit` que pula o hook de pre-commit, e o motivo de o hook sozinho não ser um controle, é ___",
+    "blanks": [
+      {
+        "accept": [
+          "--no-verify",
+          "-n"
+        ]
+      }
+    ]
+  }
+}

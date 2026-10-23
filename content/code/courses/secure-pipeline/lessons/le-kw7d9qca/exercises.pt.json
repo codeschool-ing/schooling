@@ -1,0 +1,412 @@
+{
+  "ex-4djyen02": {
+    "prompt": "Qual destes é uma dependência direta do serviço linkbox?",
+    "choices": [
+      {
+        "text": "werkzeug",
+        "why": "O Flask precisa dele; o `app.py` nunca o cita, então é transitivo, mesmo fixado no `requirements.txt`."
+      },
+      {
+        "text": "markupsafe",
+        "why": "O Jinja e o Werkzeug o trazem."
+      },
+      {
+        "text": "gunicorn",
+        "why": "Isso. O Dockerfile o inicia pelo nome, então o serviço depende dele diretamente."
+      },
+      {
+        "text": "packaging",
+        "why": "O gunicorn e o pytest o puxam, e nenhum arquivo o cita."
+      }
+    ]
+  },
+  "ex-6bpg2bhq": {
+    "prompt": "Quantos pacotes os dois arquivos de requisitos da aula 1 puseram no ambiente, transitivos inclusive?"
+  },
+  "ex-mbv5rmsn": {
+    "prompt": "O pytest não está na imagem do linkbox. Por que a aula audita o `requirements-dev.txt` mesmo assim?",
+    "choices": [
+      {
+        "text": "O pip-audit se recusa a auditar um arquivo sem o outro",
+        "why": "Ele audita os arquivos `-r` que receber, um ou vários."
+      },
+      {
+        "text": "Ele roda onde estão as credenciais",
+        "why": "Isso: na máquina de CI, ao lado das credenciais do pipeline. Uma falha numa ferramenta de teste é uma falha na máquina de build."
+      },
+      {
+        "text": "A imagem copia o repositório inteiro, testes inclusive",
+        "why": "A imagem instala só o `requirements.txt`; o pytest nunca é instalado nela."
+      },
+      {
+        "text": "Dependências de desenvolvimento têm mais avisos que as outras",
+        "why": "Não existe essa regra; aqui um pacote de dev tinha uma falha."
+      }
+    ]
+  },
+  "ex-m6smz4xf": {
+    "prompt": "O pip-audit imprimiu 29 linhas para o `requirements.txt` da aula 1. Por que isso não quer dizer 29 falhas?",
+    "choices": [
+      {
+        "text": "O pip-audit audita cada pacote duas vezes, uma por arquivo",
+        "why": "Ele recebeu um arquivo só aqui, e as linhas dobraram assim mesmo."
+      },
+      {
+        "text": "Algumas linhas são de versões que não estão instaladas",
+        "why": "Toda linha cita a versão instalada."
+      },
+      {
+        "text": "Quase toda falha vem em dois registros, GHSA e PYSEC",
+        "why": "Isso. O PyPI serve os dois e o pip-audit imprime uma linha para cada. Contar os ids CVE distintos dá quinze."
+      },
+      {
+        "text": "Avisos retirados continuam listados",
+        "why": "Nada na execução foi retirado; as duplicatas são aliases."
+      }
+    ]
+  },
+  "ex-fktrt844": {
+    "prompt": "A quantos ids CVE distintos a auditoria do `requirements.txt` da aula 1 se reduziu?"
+  },
+  "ex-c7v2ttxx": {
+    "prompt": "Associe cada tipo de identificador ao que ele é.",
+    "pairs": [
+      {
+        "left": "CVE",
+        "right": "um id por falha, em toda linguagem e produto"
+      },
+      {
+        "left": "GHSA",
+        "right": "o aviso revisado do GitHub para um ecossistema de pacotes"
+      },
+      {
+        "left": "PYSEC",
+        "right": "o aviso da Python Packaging Authority para um pacote do PyPI"
+      },
+      {
+        "left": "OSV",
+        "right": "um formato comum, e um serviço que reúne os outros"
+      }
+    ],
+    "right_distractors": [
+      "uma nota de 0 a 10 para a gravidade da falha"
+    ]
+  },
+  "ex-2r87s8j3": {
+    "prompt": "O `pip-audit` não relata nenhuma vulnerabilidade conhecida num projeto. O que esse resultado afirma?",
+    "choices": [
+      {
+        "text": "As dependências não têm falha explorável",
+        "why": "Uma falha que ninguém divulgou passa em toda auditoria."
+      },
+      {
+        "text": "Nenhum aviso que ele conhece bateu com essas versões",
+        "why": "Isso. SCA só acha o que foi divulgado, no banco que consultou, naquele dia."
+      },
+      {
+        "text": "Todo pacote foi revisado pelos mantenedores",
+        "why": "Avisos não dizem nada sobre revisões do que está limpo."
+      },
+      {
+        "text": "O código do próprio projeto não tem falhas de injeção",
+        "why": "O pip-audit nunca lê o código do projeto; isso é trabalho da aula 3."
+      }
+    ]
+  },
+  "ex-186db9x9": {
+    "prompt": "Por que o aviso do Flask CVE-2026-27205 não é alcançável no linkbox?",
+    "choices": [
+      {
+        "text": "O linkbox põe `Cache-Control: private` em toda página",
+        "why": "O linkbox não põe `Cache-Control` nenhum; os cabeçalhos da aula 4 são outros três."
+      },
+      {
+        "text": "O `app.py` nunca mexe na sessão do Flask",
+        "why": "Isso. O aviso precisa de chaves de sessão lidas, e o linkbox não tem sessão."
+      },
+      {
+        "text": "O gunicorn remove o cabeçalho `Vary`",
+        "why": "O gunicorn repassa cabeçalhos; a condição falha bem antes."
+      },
+      {
+        "text": "O Flask 3.0.0 é anterior à falha",
+        "why": "A auditoria diz que a 3.0.0 é afetada e a 3.1.3 corrige."
+      }
+    ]
+  },
+  "ex-eabn8p92": {
+    "prompt": "Qual mudança no linkbox tornaria alcançáveis as três falhas de template do Jinja (CVE-2024-56201, CVE-2024-56326, CVE-2025-27516)?",
+    "choices": [
+      {
+        "text": "Mudar o serviço para um servidor Windows",
+        "why": "Windows importa para as falhas de `safe_join` do Werkzeug, não para estas."
+      },
+      {
+        "text": "Pôr um proxy de cache na frente dele",
+        "why": "Cache é condição da falha do Flask."
+      },
+      {
+        "text": "Deixar usuários salvarem templates que o Jinja renderiza",
+        "why": "Isso. As três precisam de um atacante que consiga escrever um template."
+      },
+      {
+        "text": "Pôr uma segunda caixa de busca na página",
+        "why": "Um valor num template é dado escapado; estas falhas precisam do controle do próprio template."
+      }
+    ]
+  },
+  "ex-dma9xnqc": {
+    "prompt": "Doze das quinze falhas do linkbox não são alcançáveis hoje. Para que a aula usa esse julgamento?",
+    "choices": [
+      {
+        "text": "Para pular essas doze atualizações",
+        "why": "Cada uma tem correção barata, e um commit posterior pode tornar qualquer uma alcançável."
+      },
+      {
+        "text": "Para ordenar o trabalho e julgar achados sem correção",
+        "why": "Isso. Alcançabilidade decide o que vem primeiro e o que pode esperar quando nada dá para atualizar."
+      },
+      {
+        "text": "Para marcá-las como IGNORE nas regras que o scanner lê",
+        "why": "O pip-audit não tem arquivo assim aqui, e o raciocínio se perderia."
+      },
+      {
+        "text": "Para baixar as notas CVSS delas",
+        "why": "As notas base do CVSS são das fontes; nada aqui as muda."
+      }
+    ]
+  },
+  "ex-mec9yhhk": {
+    "prompt": "Associe cada sinal à pergunta que ele responde.",
+    "pairs": [
+      {
+        "left": "CVSS",
+        "right": "quão grave seria se fosse explorada"
+      },
+      {
+        "left": "EPSS",
+        "right": "qual a chance de exploração nos próximos 30 dias"
+      },
+      {
+        "left": "KEV",
+        "right": "ela já foi explorada de verdade"
+      }
+    ],
+    "right_distractors": [
+      "este serviço alcança o código vulnerável"
+    ]
+  },
+  "ex-2cxbk5cg": {
+    "prompt": "O relatório do Trivy dá ao CVE-2024-1135 nota 8.2 pelo GitHub e 7.5 pela Red Hat. Por que dois números?",
+    "choices": [
+      {
+        "text": "Um usa CVSS 3.1 e o outro 2.0",
+        "why": "Os dois vetores são da versão 3; diferem numa letra."
+      },
+      {
+        "text": "Julgaram de forma diferente o impacto na confidencialidade",
+        "why": "Isso: `C:L` contra `C:N`, a partir da mesma descrição."
+      },
+      {
+        "text": "A Red Hat baixa as notas para os próprios clientes pagantes",
+        "why": "Cada fonte pontua a falha como a lê; nada aqui é por cliente."
+      },
+      {
+        "text": "Um inclui o EPSS e o outro não",
+        "why": "O EPSS é uma probabilidade à parte e nunca entra numa nota CVSS."
+      }
+    ]
+  },
+  "ex-yqzhzwtm": {
+    "prompt": "Quantos dos quinze CVEs do linkbox estavam no catálogo KEV da CISA no dia da gravação?"
+  },
+  "ex-mjgr12fz": {
+    "prompt": "Dois achados, tempo para uma correção hoje. A: CVSS 9.8, fora do KEV, código não alcançável. B: CVSS 6.5, no KEV, código alcançável. Os dois têm versão corrigida. Qual primeiro, pela ordem da aula?",
+    "choices": [
+      {
+        "text": "A, porque a nota é mais alta",
+        "why": "A nota diz quão grave se explorada; B está sendo explorada, e você a alcança."
+      },
+      {
+        "text": "Nenhum, até conferir o EPSS",
+        "why": "O KEV já é evidência mais forte que qualquer probabilidade."
+      },
+      {
+        "text": "A, porque código não alcançável pode virar alcançável",
+        "why": "Vale para os dois; não muda qual é urgente hoje."
+      },
+      {
+        "text": "B",
+        "why": "Isso. O que está no KEV vem primeiro, seja qual for a nota, e este está num caminho que o serviço executa."
+      }
+    ]
+  },
+  "ex-e00njysp": {
+    "prompt": "O resumo do Trivy para o `requirements-dev.txt` mostra `-` em Vulnerabilities. O que isso significa?",
+    "choices": [
+      {
+        "text": "O arquivo não foi varrido",
+        "why": "Isso. O Trivy reconhece `requirements.txt` pelo nome, e este arquivo não tem esse nome."
+      },
+      {
+        "text": "O arquivo foi varrido e está limpo",
+        "why": "Limpo é `0`; a legenda embaixo da tabela diz isso."
+      },
+      {
+        "text": "O banco do Trivy não tem avisos de Python",
+        "why": "Ele achou quinze no `requirements.txt` um instante antes."
+      },
+      {
+        "text": "O pytest não tem aviso no banco do Trivy",
+        "why": "O Trivy nunca consultou o pytest; o pip-audit achou o aviso dele."
+      }
+    ]
+  },
+  "ex-xp584wnv": {
+    "prompt": "Com um arquivo de uma linha só, `flask==3.0.0`, o pip-audit auditou sete pacotes e o Trivy um. Por quê?",
+    "choices": [
+      {
+        "text": "O pip-audit conta avisos duplicados como pacotes",
+        "why": "Os sete são nomes de pacotes com versões, não avisos."
+      },
+      {
+        "text": "O Trivy pula pacotes sem aviso",
+        "why": "Ele listou o Flask, que tem um, e nada mais existe na visão dele do arquivo."
+      },
+      {
+        "text": "O pip-audit resolve o que seria instalado; o Trivy lê as linhas",
+        "why": "Isso. Um audita a resolução de hoje, o outro o que o arquivo diz."
+      },
+      {
+        "text": "O Trivy precisa de lock file para ver as dependências",
+        "why": "Um lock file as citaria, e o Trivy as leria; ele não resolve de jeito nenhum."
+      }
+    ]
+  },
+  "ex-0txjx93x": {
+    "prompt": "O `requirements.txt` de um projeto fixa só as dependências diretas. O pip-audit passa na segunda e falha na quinta; ninguém fez commit nesse meio-tempo. Qual a explicação mais provável, segundo esta aula?",
+    "choices": [
+      {
+        "text": "O cache do pip-audit expirou",
+        "why": "Um cache muda a velocidade, não quais pacotes são auditados."
+      },
+      {
+        "text": "Um transitivo mudou de versão, ou saiu um aviso",
+        "why": "Isso. Pacotes sem versão fixa se movem, e o banco cresce; um lock file elimina a primeira causa."
+      },
+      {
+        "text": "O banco do Trivy foi atualizado",
+        "why": "O pip-audit consulta o PyPI, não o banco do Trivy."
+      },
+      {
+        "text": "As versões diretas foram reescritas pelo pip na instalação",
+        "why": "O pip nunca edita um arquivo de requisitos."
+      }
+    ]
+  },
+  "ex-m3xpr05h": {
+    "prompt": "Ponha os passos do movimento mínimo em ordem.",
+    "items": [
+      "auditar as versões fixadas",
+      "pôr cada pacote apontado na maior versão corrigida",
+      "ler o que as versões novas exigem",
+      "rodar os testes",
+      "auditar de novo"
+    ]
+  },
+  "ex-t8p8pq85": {
+    "prompt": "A opção do pip-audit no `ci/sca.sh` que faz a auditoria falhar quando uma dependência não pôde ser coletada é ___",
+    "blanks": [
+      {
+        "accept": [
+          "--strict",
+          "-S"
+        ]
+      }
+    ]
+  },
+  "ex-g3s8cfgy": {
+    "prompt": "Depois do movimento, `pip-audit -r requirements.txt` estava limpo, e o primeiro push quebrou o build no `sca` mesmo assim. Por quê?",
+    "choices": [
+      {
+        "text": "O CI resolveu versões mais novas, e elas eram vulneráveis",
+        "why": "Toda versão do `requirements.txt` é fixada; o CI instalou as mesmas."
+      },
+      {
+        "text": "O pytest 8.4.2, no segundo arquivo, tinha aviso",
+        "why": "Isso. O estágio audita o `requirements-dev.txt` também, e esse arquivo nunca tinha sido auditado."
+      },
+      {
+        "text": "O `--strict` falhou num pacote que não achou no PyPI",
+        "why": "O log mostra uma linha de vulnerabilidade, não uma falha de coleta."
+      },
+      {
+        "text": "A imagem ainda tinha o Flask 3.0.0",
+        "why": "O `sca` lê os arquivos de requisitos e roda antes do build."
+      }
+    ]
+  },
+  "ex-syg50rsd": {
+    "prompt": "Quais destas mudanças fazem parte do movimento mínimo do linkbox? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "itsdangerous de 2.1.2 para 2.2.0",
+        "why": "Isso: o Flask 3.1.3 pede 2.2.0 ou mais, como dizem os metadados dele."
+      },
+      {
+        "text": "click para a versão mais nova",
+        "why": "O click não tinha aviso e o Flask novo aceita a 8.1.7, então fica."
+      },
+      {
+        "text": "blinker de 1.7.0 para 1.9.0",
+        "why": "Isso: o Flask 3.1.3 pede 1.9.0 ou mais."
+      },
+      {
+        "text": "markupsafe para 3.x",
+        "why": "Não tinha aviso e nada exigia mais que a 2.1.3."
+      }
+    ]
+  },
+  "ex-7n4rdg6p": {
+    "prompt": "Daqui a uma semana, um push que só edita o README falha no `sca`. Qual a causa mais provável?",
+    "choices": [
+      {
+        "text": "O README é auditado como arquivo de requisitos",
+        "why": "O pip-audit só lê os arquivos passados com `-r`."
+      },
+      {
+        "text": "Saiu um aviso para uma versão já fixada",
+        "why": "Isso. A auditoria pergunta o que se sabe hoje, e o que se sabe cresce."
+      },
+      {
+        "text": "As versões fixadas mudaram por falta de hash",
+        "why": "Uma versão fixada instala aquela versão; hash é sobre os bytes do arquivo, aula 15."
+      },
+      {
+        "text": "O pip-audit falha toda execução depois de sete dias sem mudar dependência",
+        "why": "Essa regra não existe; o estágio falha por achados."
+      }
+    ]
+  },
+  "ex-05wg9pg2": {
+    "prompt": "Um colega quer deixar o Werkzeug na 3.0.1 porque \"as falhas de `safe_join` são só de Windows e nós rodamos Linux\". Existe versão corrigida. O que a aula responde?",
+    "choices": [
+      {
+        "text": "Concordar: achados não alcançáveis não pedem ação",
+        "why": "Pedem uma decisão, e com correção barata a decisão é atualizar."
+      },
+      {
+        "text": "Concordar, e pôr a regra em IGNORE",
+        "why": "Não há arquivo de regras neste estágio, e o IGNORE esconderia também a alcançável."
+      },
+      {
+        "text": "Atualizar: uma falha do Werkzeug é alcançável, e a correção custa uma rodada de testes",
+        "why": "Isso. O CVE-2024-49767 está no caminho do formulário, e o movimento é de seis linhas e testes verdes."
+      },
+      {
+        "text": "Esperar o EPSS passar de um limite",
+        "why": "O EPSS nem estava acessível aqui, e a correção já existe."
+      }
+    ]
+  }
+}
