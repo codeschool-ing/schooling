@@ -36,7 +36,7 @@ ana@laptop:~/shipquote$ for i in 1 2 3 4 5 6 7 8 9 10; do PYTHONHASHSEED=0 pytho
      10 1 passed
 ```
 
-**Five passes, five failures.** Python randomises the hashing of strings in every new process, as a
+**Six passes, four failures.** Python randomises the hashing of strings in every new process, as a
 defence against a kind of denial-of-service attack, so the order in which a set yields `"SP"` and
 `"SE"` changes from run to run. Setting `PYTHONHASHSEED=0` fixes the hash seed, and the second loop
 passed ten times out of ten.

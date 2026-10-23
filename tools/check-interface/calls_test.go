@@ -66,3 +66,16 @@ func TestOnlyThePlusesInsideTheCallCount(t *testing.T) {
 func TestEscapesSurviveTheJoin(t *testing.T) {
 	only(t, `const a = txt('it\'s ' + 'here');`, "it's here")
 }
+
+// THE TYPE ON TOP OF EVERY QUESTION, which is said through a variable. A module
+// declares the types it draws, and each of them is a string the paper shows.
+func TestTheQuestionTypesAModuleDeclaresAreSaid(t *testing.T) {
+	got := typesDeclared(`export default {
+  // types: ['not-this-one'],
+  types: ['quiz', "multiple-choice"],
+  body(ex) { return txt(ex.type); },
+};`)
+	if len(got) != 2 || got[0] != "quiz" || got[1] != "multiple-choice" {
+		t.Errorf("want [quiz multiple-choice], the commented one left out; got %q", got)
+	}
+}
