@@ -1,0 +1,297 @@
+# Lesson 2: the Angular CLI
+
+@ a-project quiz medium #ex-wjcqnq60
+? `ng new` stopped with `Cannot read properties of null (reading 'edgesOut')`. What was wrong?
+?? O `ng new` parou com `Cannot read properties of null (reading 'edgesOut')`. O que estava errado?
+- A file `ng new` wrote had a syntax error that npm could not read :: Every file was written, and nothing in them was read by the step that broke.
+-- Um arquivo que o `ng new` escreveu tinha um erro de sintaxe que o npm não leu :: Todos os arquivos foram escritos, e nada neles foi lido pela etapa que quebrou.
++ A defect in npm 10.9.4 itself :: Right. It trips over a chain of optional peer dependencies; npm 11 does not.
+++ Um defeito do próprio npm 10.9.4 :: Isso. Ele tropeça numa cadeia de dependências peer opcionais; o npm 11 não.
+- The registry was unreachable, and npm reported it badly :: A network failure has its own codes, `ECONNREFUSED` and the like, and the package list had already been fetched.
+-- O registro estava inalcançável, e o npm relatou isso mal :: Uma falha de rede tem os próprios códigos, `ECONNREFUSED` e afins, e a lista de pacotes já tinha sido baixada.
+- Angular 21 does not support npm, only pnpm :: The project's own `packageManager` field names npm.
+-- O Angular 21 não suporta npm, só pnpm :: O próprio campo `packageManager` do projeto diz npm.
+
+@ a-project quiz hard #ex-cvxcm9ge
+? `legacy-peer-deps=true` stops npm from installing peer dependencies on its own. Why is that safe for this project?
+?? O `legacy-peer-deps=true` impede o npm de instalar dependências peer por conta própria. Por que isso é seguro neste projeto?
+- Peer dependencies are only used by tests, never by the application :: Some are needed at run time; the point is that this project lists them.
+-- Dependências peer só são usadas pelos testes, nunca pela aplicação :: Algumas são necessárias em tempo de execução; o ponto é que este projeto as lista.
+- npm 10.9.4 does not support peer dependencies at all :: It does; it crashed while resolving them.
+-- O npm 10.9.4 não suporta dependências peer :: Suporta; ele quebrou ao resolvê-las.
+- Because `save-exact` installs the peers in their place :: `save-exact` decides how a version is written down, not what is installed.
+-- Porque o `save-exact` instala as peers no lugar delas :: O `save-exact` decide como uma versão é anotada, não o que é instalado.
++ Every package the project needs is already named in its `package.json` :: Right. With nothing left for npm to add, the setting only skips the step that crashes.
+++ Todo pacote de que o projeto precisa já está no `package.json` dele :: Isso. Sem nada para o npm acrescentar, a configuração só pula a etapa que quebra.
+
+@ a-project quiz easy #ex-ebt5w03z
+? In `package.json`, what does `"@angular/core": "^21.2.0"` allow that `"21.2.25"` does not?
+?? No `package.json`, o que `"@angular/core": "^21.2.0"` permite que `"21.2.25"` não permite?
++ Any newer 21 :: Right. Two installs a week apart can then get different code.
+++ Qualquer 21 mais novo :: Isso. Duas instalações com uma semana de diferença podem receber código diferente.
+- Any older version, down to 21.0.0, if the newer one fails to install :: npm never falls back to an older version.
+-- Qualquer versão mais velha, até a 21.0.0, se a mais nova falhar :: O npm nunca recua para uma versão mais velha.
+- Version 22, once it is released :: The caret stops before the next major.
+-- A versão 22, quando for lançada :: O acento circunflexo para antes do próximo major.
+- Nothing: npm treats the two the same since version 7 :: They are different ranges, and npm treats them differently.
+-- Nada: o npm trata os dois igual desde a versão 7 :: São faixas diferentes, e o npm as trata de modo diferente.
+
+@ a-project quiz medium #ex-pcfxj798
+? A colleague clones the planner on a second computer. Which command gives them exactly the `node_modules` you have?
+?? Uma colega clona o planner num segundo computador. Que comando dá a ela exatamente o `node_modules` que você tem?
+- `npm install`, which reads `package.json` and takes the newest that matches :: With exact versions in `package.json` it would take those, but the packages they brought in would still be chosen that day.
+-- `npm install`, que lê o `package.json` e pega o mais novo que combina :: Com versões exatas no `package.json` ele pegaria essas, mas os pacotes que elas trazem ainda seriam escolhidos naquele dia.
++ `npm ci`, which rebuilds it from `package-lock.json` :: Right. The lockfile names every package, direct or not.
+++ `npm ci`, que o reconstrói a partir do `package-lock.json` :: Isso. O lockfile lista todo pacote, direto ou não.
+- `npx ng new planner`, run again in the same folder :: That would write a new project over the old one.
+-- `npx ng new planner`, rodado de novo na mesma pasta :: Isso escreveria um projeto novo por cima do antigo.
+- `git clone` alone, since `node_modules` is in the repository :: `.gitignore` leaves `node_modules` out of the repository.
+-- Só o `git clone`, já que o `node_modules` está no repositório :: O `.gitignore` deixa o `node_modules` fora do repositório.
+
+@ a-project numeric easy #ex-pwqghxde
+? How many megabytes did `du -sh node_modules` report for the new project?
+?? Quantos megabytes o `du -sh node_modules` informou para o projeto novo?
+= 318
+== 318
+
+@ the-workspace matching easy #ex-686kajf4
+? Match each file with what it is for.
+?? Associe cada arquivo ao que ele faz.
+< `angular.json` :: what `ng build`, `ng serve` and `ng test` do
+<< `angular.json` :: o que `ng build`, `ng serve` e `ng test` fazem
+< `src/main.ts` :: the first code that runs, which starts the application
+<< `src/main.ts` :: o primeiro código que roda, que inicia a aplicação
+< `src/app/app.config.ts` :: the providers the application can be given
+<< `src/app/app.config.ts` :: os providers que a aplicação pode receber
+< `src/index.html` :: the one page the browser asks for
+<< `src/index.html` :: a única página que o navegador pede
+x the list of addresses the router knows
+xx a lista de endereços que o router conhece
+
+@ the-workspace quiz medium #ex-xspw2b4h
+? `src/index.html` contains `<app-root></app-root>`. Where does the name `app-root` come from?
+?? O `src/index.html` contém `<app-root></app-root>`. De onde vem o nome `app-root`?
+- It is an HTML element every browser knows :: Browsers know no such element; it means nothing until Angular draws there.
+-- É um elemento HTML que todo navegador conhece :: Nenhum navegador conhece esse elemento; ele não quer dizer nada até o Angular desenhar ali.
+- From `angular.json`, which names the page's root element :: `angular.json` names files and builders, not elements.
+-- Do `angular.json`, que dá nome ao elemento raiz da página :: O `angular.json` nomeia arquivos e builders, não elementos.
++ The `selector` of the root component, `App` :: Right. `bootstrapApplication(App, ...)` draws `App` where its selector appears.
+++ Do `selector` do componente raiz, o `App` :: Isso. O `bootstrapApplication(App, ...)` desenha o `App` onde o seletor dele aparece.
+- From the project's name, `planner`, with the prefix added :: That would be `app-planner`; the name is the selector's.
+-- Do nome do projeto, `planner`, com o prefixo :: Isso daria `app-planner`; o nome é o do seletor.
+
+@ the-workspace quiz hard #ex-6b9yd2n4
+? A page stays blank in the browser, and the terminal shows a successful build. Which file's code would have told you why, and where?
+?? Uma página fica em branco no navegador, e o terminal mostra um build bem-sucedido. O código de qual arquivo teria dito o motivo, e onde?
++ `src/main.ts`, whose `catch` prints the error in the browser's console :: Right. A build can succeed and the start still fail; the console is the first place to look.
+++ O `src/main.ts`, cujo `catch` imprime o erro no console do navegador :: Isso. Um build pode dar certo e a inicialização ainda falhar; o console é o primeiro lugar a olhar.
+- `angular.json`, which writes start-up errors to the dev server's terminal :: The dev server reports build errors; a failure in the browser is reported in the browser.
+-- O `angular.json`, que escreve erros de inicialização no terminal do servidor de desenvolvimento :: O servidor de desenvolvimento relata erros de build; uma falha no navegador é relatada no navegador.
+- `app.spec.ts`, whose second test fails when the page is blank :: A test runs in jsdom when you run `ng test`, not when a page opens.
+-- O `app.spec.ts`, cujo segundo teste falha quando a página está em branco :: Um teste roda no jsdom quando você roda o `ng test`, não quando uma página abre.
+- `src/index.html`, which shows a message inside `<app-root>` :: It shows nothing there; the element is empty until Angular draws.
+-- O `src/index.html`, que mostra uma mensagem dentro do `<app-root>` :: Ele não mostra nada ali; o elemento fica vazio até o Angular desenhar.
+
+@ ng-serve quiz medium #ex-e92pf6a7
+? You save `public/courses.json` while `ng serve` is running, and `curl` on `/courses.json` returns the start of `index.html`. Why?
+?? Você salva o `public/courses.json` com o `ng serve` rodando, e o `curl` em `/courses.json` devolve o começo do `index.html`. Por quê?
+- The JSON has a syntax error, so the server sends the page instead :: The same file was served correctly after a restart.
+-- O JSON tem um erro de sintaxe, então o servidor manda a página no lugar :: O mesmo arquivo foi servido certo depois de reiniciar.
++ It reads `public/` when it starts, and answers unknown addresses with `index.html` :: Right. Restart it and the file is there.
+++ Ele lê o `public/` quando inicia, e responde endereços desconhecidos com o `index.html` :: Isso. Reinicie e o arquivo aparece.
+- `curl` asks for HTML unless you tell it you want JSON :: The server decides by the path, and the path was the same both times.
+-- O `curl` pede HTML se você não disser que quer JSON :: O servidor decide pelo caminho, e o caminho foi o mesmo nas duas vezes.
+- Files in `public/` are only served by `ng build` :: Both commands copy `public/`; the dev server only needed a restart.
+-- Arquivos em `public/` só são servidos pelo `ng build` :: Os dois comandos copiam o `public/`; o servidor de desenvolvimento só precisava reiniciar.
+
+@ ng-serve quiz easy #ex-x5j9868m
+? After you saved `app.html`, the dev server printed `Component update sent to client(s)`. What happened in the open page?
+?? Depois que você salvou o `app.html`, o servidor de desenvolvimento imprimiu `Component update sent to client(s)`. O que aconteceu na página aberta?
+- It reloaded from the start, losing whatever state it had :: The point of the message is that it did not reload.
+-- Ela recarregou do zero, perdendo o estado que tinha :: O ponto da mensagem é justamente que ela não recarregou.
+- Nothing until you pressed F5 :: The update reaches the page on its own, over the dev server's connection.
+-- Nada até você apertar F5 :: A atualização chega sozinha à página, pela conexão do servidor de desenvolvimento.
++ It swapped the new template in place, without a reload :: Right. Only the changed component was rebuilt and sent.
+++ Ela trocou o template novo no lugar, sem recarregar :: Isso. Só o componente alterado foi reconstruído e enviado.
+- It showed a banner asking you to accept the change :: There is no banner; the change simply appears.
+-- Ela mostrou um aviso pedindo para você aceitar a mudança :: Não há aviso; a mudança simplesmente aparece.
+
+@ ng-serve numeric medium #ex-aag1rtdw
+? `ps` listed the dev server's resident memory in kilobytes. Rounded to the nearest hundred megabytes, how many megabytes is that?
+?? O `ps` listou a memória residente do servidor de desenvolvimento em kilobytes. Arredondando para a centena de megabytes mais próxima, quantos megabytes são?
+! The first line, `ng serve (planner)`.
+!! A primeira linha, `ng serve (planner)`.
+= 400
+~ 0
+== 400
+
+@ ng-serve quiz medium #ex-855xbr1n
+? Why does `look` print `[vite] connecting...` against the dev server, and not against the built files?
+?? Por que o `look` imprime `[vite] connecting...` contra o servidor de desenvolvimento, e não contra os arquivos do build?
+- Vite is the production web server, and the dev server imitates it :: It is the other way round: Vite is what the dev server is built on.
+-- O Vite é o servidor web de produção, e o servidor de desenvolvimento o imita :: É o contrário: o Vite é a base do servidor de desenvolvimento.
+- `look` connects to Vite to read the page's text :: `look` reads the page through Chromium; the message is the page's own console.
+-- O `look` se conecta ao Vite para ler o texto da página :: O `look` lê a página pelo Chromium; a mensagem é o console da própria página.
++ It is the dev server's live-reload connection, which a production build does not have :: Right. The production build also drops the development-mode message.
+++ É a conexão de recarregamento ao vivo do servidor de desenvolvimento, que um build de produção não tem :: Isso. O build de produção também tira a mensagem do modo de desenvolvimento.
+- The production build prints it too, but only after the first click :: The production build printed nothing to the console at all.
+-- O build de produção também imprime, mas só depois do primeiro clique :: O build de produção não imprimiu nada no console.
+
+@ ng-generate quiz easy #ex-3d2kn51w
+? `npx ng generate component week-summary` wrote a class. What is it called?
+?? O `npx ng generate component week-summary` escreveu uma classe. Como ela se chama?
+- `WeekSummaryComponent` :: That is the older naming, from the 2016 style guide. This project uses the newer one.
+-- `WeekSummaryComponent` :: Esse é o nome antigo, do guia de estilo de 2016. Este projeto usa o novo.
++ `WeekSummary` :: Right. Its selector is `app-week-summary` and its files are `week-summary.*`.
+++ `WeekSummary` :: Isso. O seletor é `app-week-summary` e os arquivos são `week-summary.*`.
+- `AppWeekSummary` :: The `app` prefix goes on the selector, not on the class.
+-- `AppWeekSummary` :: O prefixo `app` vai no seletor, não na classe.
+- `week-summary` :: That is the file and folder name; a class name cannot contain a hyphen.
+-- `week-summary` :: Esse é o nome do arquivo e da pasta; nome de classe não pode ter hífen.
+
+@ ng-generate quiz medium #ex-rgcwb4na
+? Why does every selector the CLI generates start with `app-`?
+?? Por que todo seletor que a CLI gera começa com `app-`?
+- Browsers only render custom elements whose names start with `app-` :: A custom element needs a hyphen somewhere; the prefix is Angular's convention, set by `ng new`.
+-- Os navegadores só desenham elementos personalizados cujo nome começa com `app-` :: Um elemento personalizado precisa de um hífen em algum lugar; o prefixo é uma convenção do Angular, definida pelo `ng new`.
++ To avoid collisions with other elements :: Right. It is the project's prefix, chosen when the project was created.
+++ Para evitar colisão com outros elementos :: Isso. É o prefixo do projeto, escolhido quando o projeto foi criado.
+- Because `app` is the name of the root component :: The root is `App`, and the prefix would be `app` whatever it was called.
+-- Porque `app` é o nome do componente raiz :: A raiz é o `App`, e o prefixo seria `app` qualquer que fosse o nome dela.
+- It marks the component as standalone :: Standalone is a property of the decorator, and has nothing to do with the selector.
+-- Ele marca o componente como standalone :: Standalone é uma propriedade do decorator, e não tem a ver com o seletor.
+
+@ ng-generate cloze easy #ex-frp7z32d
+? To see the files a schematic would write without writing them, add the option `--___`.
+?? Para ver os arquivos que um schematic escreveria sem escrevê-los, acrescente a opção `--___`.
+= dry-run
+== dry-run
+
+@ ng-build quiz medium #ex-bk8m7g6k
+? The production build named its script `main-J4WVDBNH.js`. What decides the eight characters after `main-`?
+?? O build de produção chamou o script de `main-J4WVDBNH.js`. O que decide os oito caracteres depois de `main-`?
+- The build's date and time, so two builds never share a name :: Two builds of the same code get the same name.
+-- A data e a hora do build, para dois builds nunca terem o mesmo nome :: Dois builds do mesmo código recebem o mesmo nome.
+- A random value chosen at each build, to defeat caches :: Nothing random: the name has to be reproducible for caching to work.
+-- Um valor aleatório escolhido a cada build, para driblar caches :: Nada aleatório: o nome precisa ser reproduzível para o cache funcionar.
++ The file's own bytes :: Right. Change one line and the name changes, so a cached old file is never mistaken for the new one.
+++ Os bytes do próprio arquivo :: Isso. Mude uma linha e o nome muda, então um arquivo antigo em cache nunca é confundido com o novo.
+- The version in `package.json`, encoded :: Every build of version 0.0.0 would then share a name.
+-- A versão do `package.json`, codificada :: Todo build da versão 0.0.0 teria então o mesmo nome.
+
+@ ng-build quiz hard #ex-8jm5q7zs
+? Python's server sent its 404 page for `/courses/git`. What has a host for an Angular application to do with such an address?
+?? O servidor do Python mandou a página 404 dele para `/courses/git`. O que um host de aplicação Angular precisa fazer com um endereço assim?
+- Redirect it to `/`, so the application starts at its first screen :: The application would then never see the address the person asked for.
+-- Redirecioná-lo para `/`, para a aplicação começar na primeira tela :: A aplicação nunca veria o endereço que a pessoa pediu.
+- Return 404, as it does, and let the browser retry :: A browser does not retry a 404, and the application never loads.
+-- Devolver 404, como faz, e deixar o navegador tentar de novo :: Um navegador não tenta de novo um 404, e a aplicação nunca carrega.
+- Build one file per address in advance, which `ng build` cannot do :: Serving `index.html` is enough; lesson 23's prerendering is a different matter.
+-- Gerar um arquivo por endereço antes, o que o `ng build` não faz :: Servir o `index.html` basta; a pré-renderização da aula 23 é outro assunto.
++ Answer it with `index.html` and let the code route it :: Right. The dev server already does this, and every hosting service has a setting for it.
+++ Respondê-lo com o `index.html` e deixar o código rotear :: Isso. O servidor de desenvolvimento já faz isso, e todo serviço de hospedagem tem uma configuração para isso.
+
+@ ng-build numeric medium #ex-ceaq6z5b
+? How many kilobytes did the production build estimate would cross the network for the planner's initial files?
+?? Quantos kilobytes o build de produção estimou que atravessariam a rede nos arquivos iniciais do planner?
+= 50.84
+~ 0.5
+== 50.84
+
+@ ng-build quiz medium #ex-85w03kan
+? An `initial` budget has `maximumWarning: '500kB'` and `maximumError: '1MB'`. The initial files reach 700 kB. What happens?
+?? Um budget `initial` tem `maximumWarning: '500kB'` e `maximumError: '1MB'`. Os arquivos iniciais chegam a 700 kB. O que acontece?
++ The build succeeds and warns :: Right. It is past the warning and under the error.
+++ O build dá certo e avisa :: Isso. Passou do aviso e ficou abaixo do erro.
+- The build fails, because 700 kB is over the first limit :: Only `maximumError` fails a build.
+-- O build falha, porque 700 kB passa do primeiro limite :: Só o `maximumError` derruba um build.
+- Nothing, because budgets are only checked by `ng serve` :: Budgets belong to the production build configuration.
+-- Nada, porque budgets só são conferidos pelo `ng serve` :: Budgets pertencem à configuração de build de produção.
+- The CLI splits the file in two to stay under 500 kB :: The CLI reports sizes; it does not rearrange your code to meet them.
+-- A CLI divide o arquivo em dois para ficar abaixo de 500 kB :: A CLI informa tamanhos; ela não reorganiza o código para cumpri-los.
+
+@ ng-test quiz easy #ex-4abc0mqe
+? The test `should render title` failed with `Expected: "Hello, planner"` and `Received: "Study planner"`. Which was wrong?
+?? O teste `should render title` falhou com `Expected: "Hello, planner"` e `Received: "Study planner"`. Quem estava errado?
+- The template, which should have kept the welcome heading :: The heading was changed on purpose; the test was describing the old page.
+-- O template, que devia ter mantido o título de boas-vindas :: O título foi mudado de propósito; o teste descrevia a página antiga.
++ The test, which still expected the page `ng new` wrote :: Right. A failing test is a disagreement, and here the page was the intended side.
+++ O teste, que ainda esperava a página que o `ng new` escreveu :: Isso. Um teste falhando é uma discordância, e aqui a página era o lado desejado.
+- jsdom, which cannot read headings :: jsdom read the heading; the value it received is in the report.
+-- O jsdom, que não consegue ler títulos :: O jsdom leu o título; o valor que recebeu está no relatório.
+- Vitest, because `toContain` does not work on text :: `toContain` works on strings; it compared and found a difference.
+-- O Vitest, porque o `toContain` não funciona com texto :: O `toContain` funciona com strings; ele comparou e achou uma diferença.
+
+@ ng-test quiz medium #ex-w9tgt63z
+? Why do the transcripts run `ng test --watch=false`?
+?? Por que as transcrições rodam `ng test --watch=false`?
+- Watch mode only works in a desktop browser :: Watch mode works anywhere; it just never finishes.
+-- O modo watch só funciona num navegador de desktop :: O modo watch funciona em qualquer lugar; ele só nunca termina.
++ So the command finishes, which a transcript needs :: Right. While you work, leaving it watching is the useful way.
+++ Para o comando terminar, coisa de que uma transcrição precisa :: Isso. Enquanto você trabalha, deixá-lo observando é o jeito útil.
+- Because watching skips the tests that failed before :: Watching reruns affected tests; it skips nothing.
+-- Porque o modo watch pula os testes que falharam antes :: O modo watch reroda os testes afetados; ele não pula nada.
+- Without it, `ng test` runs the dev server instead :: It runs the tests either way; the flag only decides whether it stays.
+-- Sem ele, o `ng test` roda o servidor de desenvolvimento :: Ele roda os testes de qualquer jeito; a opção só decide se ele fica.
+
+@ ng-update quiz medium #ex-n5sxy865
+? `ng update @angular/core@22 @angular/cli@22` first answered `Repository is not clean`. Why does it insist on a clean repository?
+?? O `ng update @angular/core@22 @angular/cli@22` respondeu primeiro `Repository is not clean`. Por que ele insiste num repositório limpo?
+- Because it pushes to the remote after updating :: It never pushes anything.
+-- Porque ele faz push para o remoto depois de atualizar :: Ele nunca faz push de nada.
+- Because uncommitted files would be deleted by the update :: It deletes nothing; it edits.
+-- Porque os arquivos não commitados seriam apagados pela atualização :: Ele não apaga nada; ele edita.
++ So the next diff shows only the migrations :: Right. You can then read exactly what the update changed.
+++ Para o próximo diff mostrar só as migrações :: Isso. Aí você consegue ler exatamente o que a atualização mudou.
+- Git is how it downloads the new version :: The packages come from the npm registry.
+-- O git é como ele baixa a versão nova :: Os pacotes vêm do registro do npm.
+
+@ ng-update ordering medium #ex-1bxacmay
+? Put what happens, when you run `ng update @angular/core@22 @angular/cli@22` on a clean repository with a new enough Node, in order.
+?? Coloque em ordem o que acontece quando você roda `ng update @angular/core@22 @angular/cli@22` num repositório limpo com um Node novo o bastante.
+> it checks that the repository has no uncommitted changes
+>> ele confere se o repositório não tem mudanças não commitadas
+> it installs a temporary copy of the version 22 CLI
+>> ele instala uma cópia temporária da CLI da versão 22
+> that copy checks the version of Node
+>> essa cópia confere a versão do Node
+> the packages move to 22 and the migrations edit your code
+>> os pacotes vão para o 22 e as migrações editam o seu código
+
+@ ng-update quiz hard #ex-vqdf93rt
+? Your team wants Angular 22. According to this lesson, where is the first change made?
+?? O seu time quer o Angular 22. Segundo esta aula, onde é feita a primeira mudança?
+- In `package.json`, by editing the versions by hand to 22 :: Hand-edited versions skip the migrations, and the CLI 22 would still refuse the Node.
+-- No `package.json`, editando as versões à mão para 22 :: Versões editadas à mão pulam as migrações, e a CLI 22 ainda recusaria o Node.
++ In the track's Node, which must reach 22.22.3 :: Right. The CLI refuses before it changes anything, so the project cannot move first.
+++ No Node da trilha, que precisa chegar ao 22.22.3 :: Isso. A CLI recusa antes de mudar qualquer coisa, então o projeto não consegue ir primeiro.
+- In `angular.json`, whose builder names carry the version :: The builders are named without a version.
+-- No `angular.json`, cujos nomes de builder carregam a versão :: Os builders não têm versão no nome.
+- In `.npmrc`, by removing `legacy-peer-deps` :: That setting is about npm's defect, not about Angular's version.
+-- No `.npmrc`, tirando o `legacy-peer-deps` :: Essa configuração é sobre o defeito do npm, não sobre a versão do Angular.
+
+@ drill multiple-choice medium #ex-09eydc0y
+? Which of these files belong in the planner's git repository? Choose all that apply.
+?? Quais destes arquivos pertencem ao repositório git do planner? Escolha todos os que se aplicam.
++ `package-lock.json` :: Right. It is what `npm ci` rebuilds from.
+++ `package-lock.json` :: Isso. É a partir dele que o `npm ci` reconstrói.
++ `.npmrc` :: Right. Without it, the next `npm install` crashes again.
+++ `.npmrc` :: Isso. Sem ele, o próximo `npm install` quebra de novo.
+- `node_modules/` :: It can always be rebuilt, and `.gitignore` leaves it out.
+-- `node_modules/` :: Ele sempre pode ser reconstruído, e o `.gitignore` o deixa de fora.
+- `dist/` :: Build output is made again from the source; `.gitignore` leaves it out.
+-- `dist/` :: A saída do build é refeita a partir do código; o `.gitignore` a deixa de fora.
++ `public/courses.json` :: Right. It is source: the planner's data.
+++ `public/courses.json` :: Isso. Ele é código-fonte: os dados do planner.
+
+@ drill quiz medium #ex-rc9zspg4
+? You want to know whether your change broke anything, and then see it in a browser. Which pair of commands, in which order?
+?? Você quer saber se a sua mudança quebrou algo, e depois vê-la num navegador. Que par de comandos, em que ordem?
+- `ng build`, then `ng update` :: Neither tells you whether the behaviour broke, and `ng update` changes versions.
+-- `ng build`, depois `ng update` :: Nenhum dos dois diz se o comportamento quebrou, e o `ng update` muda versões.
+- `ng generate`, then `ng serve` :: `ng generate` writes new files; it checks nothing.
+-- `ng generate`, depois `ng serve` :: O `ng generate` escreve arquivos novos; ele não confere nada.
++ `ng test`, then `ng serve` :: Right. The tests answer the first question, and the dev server the second.
+++ `ng test`, depois `ng serve` :: Isso. Os testes respondem a primeira pergunta, e o servidor de desenvolvimento a segunda.
+- `ng serve`, then `ng new` :: `ng new` starts a different project.
+-- `ng serve`, depois `ng new` :: O `ng new` começa outro projeto.

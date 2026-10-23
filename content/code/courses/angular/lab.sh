@@ -41,6 +41,8 @@
 #   - the files ana writes. Each one is shown whole in a lesson, and the
 #     capture takes it OUT of that lesson's .md with lab/shown.py, so the
 #     file the student reads is the file that ran.
+#   - git's identity for ana, as the git course leaves it: Ana,
+#     ana@example.com, and main as the first branch's name.
 #   - the network. The recording computer reaches the internet through a
 #     proxy that re-signs TLS, so ana's shell is given the proxy's variables
 #     and NODE_EXTRA_CA_CERTS pointing at its certificate. A student's
@@ -48,6 +50,8 @@
 #   - the Angular CLI's question about sharing usage data, which it asks the
 #     first time `ng` runs at a terminal. NG_CLI_ANALYTICS=false answers it
 #     no; lesson 2 tells the student what the question is.
+#   - PYTHONUNBUFFERED=1, so Python's web server (lesson 2) prints its first
+#     line at once, as it does at a terminal, rather than when a buffer fills.
 #   - the colours. NO_COLOR=1 and FORCE_COLOR=0, so a transcript is the text
 #     without the escape codes a terminal turns into colour.
 #   - the clock's zone: TZ=America/Sao_Paulo. The browser's DATE is fixed
@@ -82,6 +86,8 @@ up() {
       ln -sf ~/.local/node/bin/node ~/.local/node/bin/npm ~/.local/node/bin/npx ~/.local/bin/ &&
       rm node-$NODE_V-linux-x64.tar.xz"
   fi
+  # The git course: a name and an address for commits.
+  run "git config --global user.name Ana && git config --global user.email ana@example.com && git config --global init.defaultBranch main"
   # javascript lesson 1: ~/js-tools with Playwright 1.56.0, and the page command.
   if [ ! -d /home/ana/js-tools/node_modules/playwright ]; then
     run "mkdir -p ~/js-tools && cd ~/js-tools && npm init -y >/dev/null && npm install --silent playwright@1.56.0"
@@ -110,7 +116,7 @@ ana_env() {
   net=$(env | grep -iE '^(https?_proxy|no_proxy)=' | tr '\n' ' ' || true)
   echo env -i HOME=/home/ana USER=ana LOGNAME=ana SHELL=/bin/bash LANG=C.UTF-8 TERM=dumb \
     PATH=/usr/sbin:/usr/bin:/sbin:/bin TZ=America/Sao_Paulo \
-    NO_COLOR=1 FORCE_COLOR=0 NG_CLI_ANALYTICS=false \
+    NO_COLOR=1 FORCE_COLOR=0 NG_CLI_ANALYTICS=false PYTHONUNBUFFERED=1 \
     npm_config_update_notifier=false npm_config_fund=false \
     $net ${CA:+NODE_EXTRA_CA_CERTS=$CA}
 }

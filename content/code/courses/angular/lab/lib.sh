@@ -112,3 +112,13 @@ restore() {
 
 # look ARGS: the line a student types, typed into ~/planner.
 look() { session '~/planner' "look $*"; }
+
+# cap DIR 'command' ...: one fence's transcript, in a block of its own. The
+# block is named by a counter: fill.py finds a fence by what was typed, never
+# by the name.
+CAPN=0
+cap() { CAPN=$((CAPN + 1)); block "t$CAPN"; session "$@"; }
+# cap_look ARGS: the same for one look.
+cap_look() { CAPN=$((CAPN + 1)); block "t$CAPN"; look "$@"; }
+# cap_bg NAME: the same for a second terminal, as it stands.
+cap_bg() { CAPN=$((CAPN + 1)); block "t$CAPN"; bg_show "$1"; }

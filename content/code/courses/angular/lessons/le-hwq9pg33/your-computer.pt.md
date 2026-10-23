@@ -50,7 +50,7 @@ O `du` mediu quanto custam as duas pastas. O navegador que o Playwright baixou f
 | | onde | cerca de |
 |---|---|---|
 | TypeScript, para as duas seções desta aula | `~/ts` | 23 MB |
-| o projeto Angular que você constrói ao longo de 25 aulas | `~/planner` | 330 MB, quase tudo em `node_modules` |
+| o projeto Angular que você constrói ao longo de 25 aulas | `~/planner` | 320 MB, quase tudo em `node_modules` |
 | mais um programa ao lado do `page.mjs`, chamado `look` | `~/js-tools` | alguns kilobytes |
 
 A aula 2 cria o projeto e o mede, e mostra o `look` inteiro. Nada é instalado globalmente: a CLI do

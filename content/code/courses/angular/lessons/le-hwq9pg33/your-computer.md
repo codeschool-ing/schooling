@@ -50,7 +50,7 @@ answering.
 | | where | about |
 |---|---|---|
 | TypeScript, for this lesson's two sections | `~/ts` | 23 MB |
-| the Angular project you build across 25 lessons | `~/planner` | 330 MB, nearly all of it `node_modules` |
+| the Angular project you build across 25 lessons | `~/planner` | 320 MB, nearly all of it `node_modules` |
 | one more program beside `page.mjs`, called `look` | `~/js-tools` | a few kilobytes |
 
 Lesson 2 creates the project and measures it, and shows `look` whole. Nothing is installed
