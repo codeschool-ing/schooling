@@ -1,0 +1,737 @@
+[
+  {
+    "id": "ex-ftjkpvrp",
+    "version": 1,
+    "section": "event-attributes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Svelte 5, what is `onclick={save}` on a button?",
+    "hint": "Compare it with `class` or `href`.",
+    "choices": [
+      {
+        "text": "A directive that only works on elements, never passed as a prop",
+        "correct": false,
+        "why": "It is an attribute, so it can be passed, spread or left out like any other."
+      },
+      {
+        "text": "An attribute whose value is a function",
+        "correct": true,
+        "why": "Right. The browser calls it with the event."
+      },
+      {
+        "text": "Svelte 4 syntax that runes mode still accepts",
+        "correct": false,
+        "why": "Svelte 4 wrote `on:click`; `onclick` is the Svelte 5 form."
+      },
+      {
+        "text": "A call to `save` made once, when the button is created",
+        "correct": false,
+        "why": "`save` is given, not called; it runs on each click."
+      }
+    ]
+  },
+  {
+    "id": "ex-887cbpsg",
+    "version": 1,
+    "section": "event-attributes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A button holds a `<span>`. A click lands on the span. In the button's handler, which is `event.currentTarget`?",
+    "hint": "One is where the event started, the other where the handler is.",
+    "choices": [
+      {
+        "text": "The span, since that is what was clicked",
+        "correct": false,
+        "why": "That is `event.target`."
+      },
+      {
+        "text": "The button",
+        "correct": true,
+        "why": "Right: the element the handler is on."
+      },
+      {
+        "text": "The root of the application, because of delegation",
+        "correct": false,
+        "why": "Svelte's delegation still hands the handler the element it was set on."
+      },
+      {
+        "text": "`null`, until the event finishes bubbling up to the document root",
+        "correct": false,
+        "why": "Inside the handler it is set; it is the button."
+      }
+    ]
+  },
+  {
+    "id": "ex-pmr3z0tg",
+    "version": 1,
+    "section": "event-attributes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a `<button>` with only `onclick` work from the keyboard?",
+    "hint": "What does the browser fire when Enter is pressed on it?",
+    "choices": [
+      {
+        "text": "Svelte adds a keydown handler to every element with `onclick`",
+        "correct": false,
+        "why": "Svelte adds nothing; the browser does it for buttons only."
+      },
+      {
+        "text": "Every element with a click handler can be focused with Tab",
+        "correct": false,
+        "why": "An `<li>` with `onclick` cannot; that is what the compiler warned about."
+      },
+      {
+        "text": "The browser fires `click` on a focused button for Enter or Space",
+        "correct": true,
+        "why": "Right, which is why the planner's controls are buttons."
+      }
+    ]
+  },
+  {
+    "id": "ex-rm1xsa9g",
+    "version": 1,
+    "section": "event-attributes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A parent element has a listener added by hand with `addEventListener` that calls `event.stopPropagation()`. A Svelte button inside it stops responding. Why?",
+    "hint": "Where do delegated handlers wait?",
+    "choices": [
+      {
+        "text": "The click stops before the root, where the delegated handler waits",
+        "correct": true,
+        "why": "Right. Stop propagation in Svelte handlers, which know about delegation."
+      },
+      {
+        "text": "`stopPropagation` also calls `preventDefault` on the event, which cancels the button's click entirely",
+        "correct": false,
+        "why": "They are separate; a button's click has no default to prevent anyway."
+      },
+      {
+        "text": "Handlers added by hand always run after Svelte's own handlers and then override whatever they did",
+        "correct": false,
+        "why": "Order is not the issue: the delegated handler never runs at all."
+      },
+      {
+        "text": "The button lost focus",
+        "correct": false,
+        "why": "Focus has nothing to do with it; a mouse click fails too."
+      }
+    ]
+  },
+  {
+    "id": "ex-vr2pj23a",
+    "version": 1,
+    "section": "event-attributes",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A list of 300 sessions has a checkbox with `onchange` on each. With delegation, how many listeners for that event does Svelte add?",
+    "hint": "One place catches them all.",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-exmgrdcr",
+    "version": 1,
+    "section": "forms",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `AddSession` as a form, what does Enter in the date field do?",
+    "hint": "What does Enter in a form field do in any browser?",
+    "choices": [
+      {
+        "text": "Nothing, until a keydown handler is added",
+        "correct": false,
+        "why": "The transcript added a session with Enter and no keydown handler."
+      },
+      {
+        "text": "It moves focus to the minutes field",
+        "correct": false,
+        "why": "That is Tab."
+      },
+      {
+        "text": "Submits the form, so `submit` runs",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It opens the browser's date picker",
+        "correct": false,
+        "why": "Enter in a form field submits; the picker is a separate control."
+      }
+    ]
+  },
+  {
+    "id": "ex-093as31c",
+    "version": 1,
+    "section": "forms",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The button is pressed with no date. Why did `look` show nothing changed?",
+    "hint": "Did `submit` run?",
+    "choices": [
+      {
+        "text": "`submit` ran, and the page's `add` refused the session because its date was an empty string",
+        "correct": false,
+        "why": "Nothing in `onadd` checks dates; the handler never ran."
+      },
+      {
+        "text": "The browser checked `required` and refused to submit, so the handler never ran",
+        "correct": true,
+        "why": "Right. Its message is drawn by the browser, outside the page."
+      },
+      {
+        "text": "The button is disabled until a date is filled in",
+        "correct": false,
+        "why": "That was lesson 5's version; `required` replaced it."
+      }
+    ]
+  },
+  {
+    "id": "ex-b51hdfcb",
+    "version": 1,
+    "section": "forms",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Without `event.preventDefault()`, the session of the 21st still appeared. Why?",
+    "hint": "Who handled the GET submission?",
+    "choices": [
+      {
+        "text": "Browsers quietly ignore any form submission whose address is the page they are already showing",
+        "correct": false,
+        "why": "On a plain HTML page it reloads and the session is lost."
+      },
+      {
+        "text": "Svelte calls `preventDefault` for every `onsubmit`",
+        "correct": false,
+        "why": "It does not; that is why Svelte 4 had a modifier for it."
+      },
+      {
+        "text": "SvelteKit turned the GET submission into a client-side navigation to the same page, so the state stayed",
+        "correct": true,
+        "why": "Right, and the lesson says not to rely on it."
+      },
+      {
+        "text": "The form has no `action` attribute, so the browser has no address to send it to and never submits it",
+        "correct": false,
+        "why": "Without an `action` a form submits to the current address."
+      }
+    ]
+  },
+  {
+    "id": "ex-pn4e4r9t",
+    "version": 1,
+    "section": "forms",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A plain `<button>` inside a `<form>` is a ___ button.",
+    "hint": "What does pressing it do to the form?",
+    "blanks": [
+      {
+        "accept": [
+          "submit"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rha2bw0y",
+    "version": 1,
+    "section": "modifiers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which line replaces Svelte 4's `self` modifier?",
+    "hint": "Only when the element itself was the target.",
+    "choices": [
+      {
+        "text": "`event.stopPropagation()` at the top of the handler",
+        "correct": false,
+        "why": "That replaces `stopPropagation`, not `self`."
+      },
+      {
+        "text": "`if (event.target !== event.currentTarget) return;`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`onclickself`",
+        "correct": false,
+        "why": "Only `capture` survived as an attribute suffix."
+      },
+      {
+        "text": "`if (!event.isTrusted) return;`",
+        "correct": false,
+        "why": "That replaces `trusted`."
+      }
+    ]
+  },
+  {
+    "id": "ex-yqedkq5h",
+    "version": 1,
+    "section": "modifiers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Svelte 4 modifier with its Svelte 5 replacement.",
+    "hint": "One survived as syntax.",
+    "pairs": [
+      {
+        "left": "`preventDefault`",
+        "right": "`event.preventDefault()` in the handler"
+      },
+      {
+        "left": "`capture`",
+        "right": "`onclickcapture`"
+      },
+      {
+        "left": "`self`",
+        "right": "`if (event.target !== event.currentTarget) return;`"
+      },
+      {
+        "left": "`trusted`",
+        "right": "`if (!event.isTrusted) return;`"
+      }
+    ],
+    "right_distractors": [
+      "`on:click|preventDefault`, unchanged"
+    ]
+  },
+  {
+    "id": "ex-8bd1v5tt",
+    "version": 1,
+    "section": "modifiers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `capture` the one modifier that survived as syntax?",
+    "hint": "Could it be written inside the handler?",
+    "choices": [
+      {
+        "text": "It is the most used of them",
+        "correct": false,
+        "why": "`preventDefault` is the most used, and it became code."
+      },
+      {
+        "text": "It changes how the listener is registered, which a handler cannot do",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Browsers removed capturing from `addEventListener`",
+        "correct": false,
+        "why": "They did not; capturing is still part of the DOM."
+      },
+      {
+        "text": "Delegation does not work for any event that bubbles upwards",
+        "correct": false,
+        "why": "Delegation depends on bubbling; it works for exactly those."
+      }
+    ]
+  },
+  {
+    "id": "ex-gnhsxyzq",
+    "version": 1,
+    "section": "modifiers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `onclick={once(save)}` do?",
+    "hint": "Read the helper.",
+    "choices": [
+      {
+        "text": "Calls `save` once now, while the component is created",
+        "correct": false,
+        "why": "`once(save)` returns a handler; nothing calls `save` until a click."
+      },
+      {
+        "text": "Removes the button after the first click",
+        "correct": false,
+        "why": "The button stays; later clicks just do nothing."
+      },
+      {
+        "text": "Runs `save` on the first click and ignores the rest",
+        "correct": true,
+        "why": "Right, with a flag in a closure."
+      }
+    ]
+  },
+  {
+    "id": "ex-3nbfgbeb",
+    "version": 1,
+    "section": "modifiers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the `passive` modifier mostly no longer matter?",
+    "hint": "What did it tell the browser, and what does the browser now assume?",
+    "choices": [
+      {
+        "text": "Svelte makes every listener passive",
+        "correct": false,
+        "why": "It does not; a form's submit handler must be able to `preventDefault`."
+      },
+      {
+        "text": "Scrolling no longer fires any events",
+        "correct": false,
+        "why": "It does; the browser just no longer waits for those listeners."
+      },
+      {
+        "text": "Browsers already assume it for the touch and wheel listeners where it made a difference",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`passive` listeners turned out to be slower than ordinary ones, so browsers stopped honouring the flag",
+        "correct": false,
+        "why": "The point of `passive` was speed: scrolling without waiting."
+      }
+    ]
+  },
+  {
+    "id": "ex-s9sxa4p6",
+    "version": 1,
+    "section": "keyboard",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`<li onclick={…}>` gives `a11y_click_events_have_key_events`. What is the compiler saying?",
+    "hint": "Who can use a control with only a click handler?",
+    "choices": [
+      {
+        "text": "Only a mouse will operate it; use a button",
+        "correct": true,
+        "why": "Right. A button inside the `<li>` was the fix."
+      },
+      {
+        "text": "List items cannot have any attributes besides `class` and `id`",
+        "correct": false,
+        "why": "They can; the warning is about who can operate it."
+      },
+      {
+        "text": "The handler should be called `onpress` on non-button elements",
+        "correct": false,
+        "why": "There is no `onpress` event in the browser."
+      },
+      {
+        "text": "Click events are slow on list items, so keydown should be used instead for speed",
+        "correct": false,
+        "why": "It is about access, not speed."
+      }
+    ]
+  },
+  {
+    "id": "ex-ja24vv9d",
+    "version": 1,
+    "section": "keyboard",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `shortcut` return early when `event.target.closest('input, textarea, select')` is found?",
+    "hint": "Where do arrow keys belong while you type?",
+    "choices": [
+      {
+        "text": "Inputs cannot receive keydown events",
+        "correct": false,
+        "why": "They do; that is exactly why the check is needed."
+      },
+      {
+        "text": "In a field the arrows move the cursor, and a shortcut stealing them is a bug",
+        "correct": true,
+        "why": "Right: the week stayed when the focus was in Minutes."
+      },
+      {
+        "text": "To stop the week moving twice per key",
+        "correct": false,
+        "why": "One keydown moves it once either way."
+      },
+      {
+        "text": "`svelte:window` only works when no field is focused",
+        "correct": false,
+        "why": "It listens on the whole window; the guard is the page's own choice."
+      }
+    ]
+  },
+  {
+    "id": "ex-7af09k99",
+    "version": 1,
+    "section": "keyboard",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why are the arrow keys a safer shortcut than the letters `n` and `p`?",
+    "hint": "Think of dictation, and of WCAG 2.2.",
+    "choices": [
+      {
+        "text": "Letters cannot be detected in `onkeydown`, only in `oninput`, which a window never receives",
+        "correct": false,
+        "why": "`event.key` reports letters as well."
+      },
+      {
+        "text": "Screen readers block every arrow key, so a shortcut on them never fires for a student using one",
+        "correct": false,
+        "why": "They do not block them; the lesson's capture moved the week with one."
+      },
+      {
+        "text": "They are not character keys, so they cannot fire by accident while typing or dictating",
+        "correct": true,
+        "why": "Right, and single-letter shortcuts have to be switchable under WCAG 2.2."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ys9vdey",
+    "version": 1,
+    "section": "keyboard",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The special element that puts attributes such as `onkeydown` on the browser's global object is `<svelte:___>`.",
+    "hint": "The name of the object it listens on.",
+    "blanks": [
+      {
+        "accept": [
+          "window"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ywtn30xa",
+    "version": 1,
+    "section": "callbacks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `WeekNav` call `onchange(next)` instead of setting the week itself?",
+    "hint": "Who owns the week?",
+    "choices": [
+      {
+        "text": "A child component is not allowed to hold any state of its own",
+        "correct": false,
+        "why": "Children hold their own state; `AddSession` keeps its fields."
+      },
+      {
+        "text": "The page owns it and decides",
+        "correct": true,
+        "why": "Right: the callback reports a request."
+      },
+      {
+        "text": "Assigning to a prop throws an error in Svelte 5",
+        "correct": false,
+        "why": "It does not throw; lesson 5 showed it simply does not travel upwards."
+      },
+      {
+        "text": "Callbacks are faster than assignments to a prop",
+        "correct": false,
+        "why": "Speed is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-6g10v1wj",
+    "version": 1,
+    "section": "callbacks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `AddSession` call `onadd({ date, minutes })` rather than `onadd(event)`?",
+    "hint": "What should the parent need to know?",
+    "choices": [
+      {
+        "text": "Events cannot be passed to functions in Svelte 5",
+        "correct": false,
+        "why": "They can; handlers receive them."
+      },
+      {
+        "text": "The parent should get what happened, not where the input lives inside the child",
+        "correct": true,
+        "why": "Right: the form could become a dialog and `add` would not change."
+      },
+      {
+        "text": "An event object is too large to pass between components",
+        "correct": false,
+        "why": "Size is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-1stkkgxf",
+    "version": 1,
+    "section": "callbacks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does a component call a callback that a parent may not have passed?",
+    "hint": "The same operator as `{@render empty?.()}`.",
+    "choices": [
+      {
+        "text": "`onchange?.(next)`",
+        "correct": true,
+        "why": "Right: nothing happens when it is missing."
+      },
+      {
+        "text": "`$bindable(onchange)`",
+        "correct": false,
+        "why": "`$bindable` marks a prop as bindable; it does not make a call optional."
+      },
+      {
+        "text": "`try { onchange(next) } catch {}`, so a missing one throws and is swallowed",
+        "correct": false,
+        "why": "That also swallows real errors inside the callback."
+      },
+      {
+        "text": "`dispatch('change', next)`",
+        "correct": false,
+        "why": "That is the deprecated Svelte 4 way."
+      }
+    ]
+  },
+  {
+    "id": "ex-9jpza150",
+    "version": 1,
+    "section": "callbacks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Panel` spreads `{...rest}` onto its `<section>`. A parent writes `<Panel title=\"x\" onkeydown={f}>`. Where does `f` end up?",
+    "hint": "A handler is an attribute.",
+    "choices": [
+      {
+        "text": "Nowhere: handlers have to be forwarded one by one",
+        "correct": false,
+        "why": "That was Svelte 4's `on:keydown`."
+      },
+      {
+        "text": "On the `<h2>`, the first element",
+        "correct": false,
+        "why": "The spread is on the section."
+      },
+      {
+        "text": "On the section",
+        "correct": true,
+        "why": "Right: spreading attributes spreads handlers too."
+      },
+      {
+        "text": "On the window, as with `<svelte:window>`",
+        "correct": false,
+        "why": "Only `<svelte:window>` puts handlers on the window."
+      }
+    ]
+  },
+  {
+    "id": "ex-ket5bxt4",
+    "version": 1,
+    "section": "callbacks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In an effect you need a listener on an element. Why prefer `on(...)` from `svelte/events` over `addEventListener`?",
+    "hint": "Think back to delegation.",
+    "choices": [
+      {
+        "text": "`addEventListener` is deprecated in modern browsers",
+        "correct": false,
+        "why": "It is not deprecated."
+      },
+      {
+        "text": "`on` runs the handler before the page updates, so the effect sees the old layout on every event",
+        "correct": false,
+        "why": "Timing is not what it changes."
+      },
+      {
+        "text": "It adds the listener as the compiler does, so it plays well with delegated handlers",
+        "correct": true,
+        "why": "Right, and it returns a function that removes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-a4p0b3zh",
+    "version": 1,
+    "section": "callbacks",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each planner component with the callback it calls.",
+    "hint": "Named `on` and a verb.",
+    "pairs": [
+      {
+        "left": "`WeekNav`",
+        "right": "`onchange`"
+      },
+      {
+        "left": "`AddSession`",
+        "right": "`onadd`"
+      },
+      {
+        "left": "`CourseList` before lesson 5's binding",
+        "right": "`onselect`"
+      }
+    ],
+    "right_distractors": [
+      "`onrender`"
+    ]
+  },
+  {
+    "id": "ex-6d799p0b",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens in order when the student presses Enter in the date field.",
+    "hint": "The page decides last.",
+    "items": [
+      "The browser checks `required` on the fields",
+      "The form's `submit` handler runs and calls `preventDefault`",
+      "`AddSession` calls `onadd({ date, minutes })`",
+      "The page's `add` pushes the session"
+    ],
+    "trap": "A submission the browser refused never reaches the handler, so the check comes first."
+  },
+  {
+    "id": "ex-998jf3sr",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can be operated from the keyboard with no extra code? Choose all that apply.",
+    "hint": "Which elements does the browser treat as controls?",
+    "choices": [
+      {
+        "text": "A `<button>` with `onclick`",
+        "correct": true,
+        "why": "Yes: Enter and Space fire `click`."
+      },
+      {
+        "text": "A checkbox with `bind:checked`",
+        "correct": true,
+        "why": "Yes: Space toggles it."
+      },
+      {
+        "text": "An `<li>` with `onclick`",
+        "correct": false,
+        "why": "No: it cannot take focus; the compiler warned."
+      },
+      {
+        "text": "A form's text field, submitted with Enter",
+        "correct": true,
+        "why": "Yes: Enter submits the form."
+      }
+    ]
+  }
+]
