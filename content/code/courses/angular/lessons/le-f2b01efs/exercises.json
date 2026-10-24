@@ -1,0 +1,626 @@
+[
+ {
+  "id": "ex-hcwgc7r8",
+  "version": 1,
+  "section": "asking",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does `inject(Greeter)` in a component's field do?",
+  "choices": [
+   {
+    "text": "It creates a fresh `Greeter` with `new`, every time the field is read",
+    "correct": false,
+    "why": "The field is set once, and the instance comes from an injector, not from `new` in the component."
+   },
+   {
+    "text": "It asks an injector for one and keeps the answer",
+    "correct": true,
+    "why": "Right. The component never builds it."
+   },
+   {
+    "text": "It imports the file where `Greeter` is written",
+    "correct": false,
+    "why": "The `import` line does that; `inject` asks for an instance at run time."
+   },
+   {
+    "text": "It registers `Greeter` so other components can use it",
+    "correct": false,
+    "why": "Registering is what a provider does; `inject` only asks."
+   }
+  ]
+ },
+ {
+  "id": "ex-dn2b0c23",
+  "version": 1,
+  "section": "asking",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`Greeter` was marked `@Injectable()` with nothing inside the brackets, and the bench asked for one. What happened?",
+  "choices": [
+   {
+    "text": "The bench showed an empty paragraph",
+    "correct": false,
+    "why": "Nothing of the application past the heading appeared."
+   },
+   {
+    "text": "The build failed before the page loaded",
+    "correct": false,
+    "why": "The build passed; the error came when the page ran."
+   },
+   {
+    "text": "`NG0201`: no injector had a recipe, and the app stopped at the heading",
+    "correct": true,
+    "why": "Right. `@Injectable()` alone says Angular may build it, not where."
+   },
+   {
+    "text": "Angular built one anyway, since the class was marked",
+    "correct": false,
+    "why": "The mark is not a recipe; no injector was told about it."
+   }
+  ]
+ },
+ {
+  "id": "ex-84jpdszc",
+  "version": 1,
+  "section": "asking",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "`@Injectable({ providedIn: '___' })` makes one instance for the whole application, the first time it is asked for.",
+  "blanks": [
+   {
+    "accept": [
+     "root"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-vcfc3kah",
+  "version": 1,
+  "section": "asking",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Older code writes `constructor(private readonly greeter: Greeter) {}`. Compared with `inject(Greeter)` in a field, what is different?",
+  "choices": [
+   {
+    "text": "The parameter gets a new `Greeter` per component; `inject` shares one",
+    "correct": false,
+    "why": "Both ask the same injector and get the same answer."
+   },
+   {
+    "text": "Nothing about the answer; `inject` also works outside a constructor's parameters",
+    "correct": true,
+    "why": "Right. Same question, same injector."
+   },
+   {
+    "text": "The parameter form is no longer allowed in Angular 21",
+    "correct": false,
+    "why": "It still works and you will read plenty of it."
+   },
+   {
+    "text": "The parameter form skips the injector and calls `new`",
+    "correct": false,
+    "why": "Angular reads the type and asks the injector."
+   }
+  ]
+ },
+ {
+  "id": "ex-xxgrj8s6",
+  "version": 1,
+  "section": "providers",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each provider key with what the injector answers.",
+  "pairs": [
+   {
+    "left": "`useClass`",
+    "right": "an instance of that class, made once"
+   },
+   {
+    "left": "`useValue`",
+    "right": "that value, exactly as written"
+   },
+   {
+    "left": "`useFactory`",
+    "right": "what a function returns"
+   },
+   {
+    "left": "`useExisting`",
+    "right": "what another token already answers"
+   }
+  ],
+  "right_distractors": [
+   "a fresh instance on every request"
+  ]
+ },
+ {
+  "id": "ex-0f87we6z",
+  "version": 1,
+  "section": "providers",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`Greeter` had `providedIn: 'root'`, and `app.config.ts` listed `{ provide: Greeter, useClass: LoudGreeter }`. What did the bench show?",
+  "choices": [
+   {
+    "text": "`Hello, Ana`, because the class's own recipe comes first",
+    "correct": false,
+    "why": "The listed provider wins; the class's own is the default."
+   },
+   {
+    "text": "`HELLO, ANA!`",
+    "correct": true,
+    "why": "Right. The bench asked for `Greeter` and was answered with a `LoudGreeter`."
+   },
+   {
+    "text": "An error, since two recipes for one token clash",
+    "correct": false,
+    "why": "A list entry overriding a default is the normal case."
+   },
+   {
+    "text": "Both greetings, one after the other",
+    "correct": false,
+    "why": "One token, one answer."
+   }
+  ]
+ },
+ {
+  "id": "ex-qxh7azs0",
+  "version": 1,
+  "section": "providers",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does `provideRouter(routes)` in `app.config.ts` put in the list?",
+  "choices": [
+   {
+    "text": "The routes array, used as a token",
+    "correct": false,
+    "why": "The routes are an argument; what comes back is providers."
+   },
+   {
+    "text": "One component that draws the router",
+    "correct": false,
+    "why": "A provider list holds recipes, not components to draw."
+   },
+   {
+    "text": "Several providers for the router's classes",
+    "correct": true,
+    "why": "Right. A `provide...` function gathers them behind one name."
+   },
+   {
+    "text": "A setting that turns on the `<router-outlet>` tag",
+    "correct": false,
+    "why": "The tag comes from `RouterOutlet` in a component's `imports`."
+   }
+  ]
+ },
+ {
+  "id": "ex-26aypxbh",
+  "version": 1,
+  "section": "providers",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The provider list `providers: [Greeter]` is the short form of `{ provide: Greeter, ___: Greeter }`.",
+  "blanks": [
+   {
+    "accept": [
+     "useClass"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-92bf7xw0",
+  "version": 1,
+  "section": "tokens",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the planner need `InjectionToken` for today, rather than `inject(Date)`?",
+  "choices": [
+   {
+    "text": "`inject(Date)` asks for the class, not a day",
+    "correct": true,
+    "why": "Right. A token stands for a value that is not a class."
+   },
+   {
+    "text": "`Date` cannot be imported into an Angular component",
+    "correct": false,
+    "why": "It is a global of the language; nothing stops you using it."
+   },
+   {
+    "text": "An `InjectionToken` reads the clock more precisely",
+    "correct": false,
+    "why": "It reads nothing; its factory calls `new Date()`, the same clock."
+   },
+   {
+    "text": "Tokens are the only things a test may override",
+    "correct": false,
+    "why": "A test can override a class token just as well."
+   }
+  ]
+ },
+ {
+  "id": "ex-wkxsrmgr",
+  "version": 1,
+  "section": "tokens",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The planner stays open from Sunday evening to Monday morning. Which week does it count on Monday?",
+  "choices": [
+   {
+    "text": "The new week, because `TODAY` reads the clock whenever it is injected",
+    "correct": false,
+    "why": "The factory runs once, the first time, and its answer is kept."
+   },
+   {
+    "text": "The old one, until the page is loaded again",
+    "correct": true,
+    "why": "Right. `TODAY` is the moment it was first asked for."
+   },
+   {
+    "text": "Neither: `Week` throws when the date moves",
+    "correct": false,
+    "why": "Nothing watches the date, so nothing throws."
+   },
+   {
+    "text": "The new one, because `--today` moves the clock",
+    "correct": false,
+    "why": "`--today` exists only in `look`, for the transcripts."
+   }
+  ]
+ },
+ {
+  "id": "ex-zx0wab4f",
+  "version": 1,
+  "section": "tokens",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The first `week.spec.ts` expected the week of 26 October and failed. Why did the second one pass, on the same day?",
+  "choices": [
+   {
+    "text": "It waited for the data before reading the page",
+    "correct": false,
+    "why": "Neither version loaded the data; the range does not need it."
+   },
+   {
+    "text": "It moved the computer's clock forward by five days first",
+    "correct": false,
+    "why": "Nothing touched the clock."
+   },
+   {
+    "text": "`TestBed` reads dates from `courses.json`",
+    "correct": false,
+    "why": "The test never reached `courses.json`."
+   },
+   {
+    "text": "It gave `TODAY` a `useValue` in the test's providers",
+    "correct": true,
+    "why": "Right. The test's recipe wins over the token's factory."
+   }
+  ]
+ },
+ {
+  "id": "ex-anzth1ct",
+  "version": 1,
+  "section": "tokens",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "With `TODAY` set to Wednesday, 28 October 2026, on which day of October does the week the planner counts begin?",
+  "value": 26,
+  "tolerance": 0
+ },
+ {
+  "id": "ex-q63ss9jg",
+  "version": 1,
+  "section": "hierarchy",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`Tally` had `providedIn: 'root'` and no component listed it. One click on `Add to first`: what did the two counters show?",
+  "choices": [
+   {
+    "text": "first: 1, second: 0",
+    "correct": false,
+    "why": "That is the version where each counter lists `Tally` in its own `providers`."
+   },
+   {
+    "text": "first: 1, second: 1",
+    "correct": true,
+    "why": "Right. Both questions reached the root, which made one `Tally`."
+   },
+   {
+    "text": "first: 2, second: 0",
+    "correct": false,
+    "why": "One click adds one, to one shared tally."
+   },
+   {
+    "text": "An `NG0201`, since no component provided it",
+    "correct": false,
+    "why": "The root had the recipe from `providedIn`."
+   }
+  ]
+ },
+ {
+  "id": "ex-zsabw650",
+  "version": 1,
+  "section": "hierarchy",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the injectors in the order `inject(Tally)` in a `Counter` asks them, first to last.",
+  "items": [
+   "the `Counter`'s own",
+   "the `Bench`'s",
+   "the root injector",
+   "the platform injector",
+   "`NullInjector`"
+  ]
+ },
+ {
+  "id": "ex-227mb24p",
+  "version": 1,
+  "section": "hierarchy",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A service is listed in a component's `providers`. How long does the instance it makes live?",
+  "choices": [
+   {
+    "text": "As long as the application, like any service",
+    "correct": false,
+    "why": "That is a root provider; a component's list makes one per component."
+   },
+   {
+    "text": "Until the next change detection",
+    "correct": false,
+    "why": "Change detection does not make or destroy instances."
+   },
+   {
+    "text": "As long as that component",
+    "correct": true,
+    "why": "Right. It is made with it and goes when it is destroyed."
+   },
+   {
+    "text": "Until somebody else asks for one at the root",
+    "correct": false,
+    "why": "The root's recipe is separate and does not replace it."
+   }
+  ]
+ },
+ {
+  "id": "ex-3crfeb1y",
+  "version": 1,
+  "section": "hierarchy",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why will one root instance fix the disagreement between `Week` and `CoursePage`?",
+  "choices": [
+   {
+    "text": "Root services load data faster",
+    "correct": false,
+    "why": "Speed is not the problem; two copies are."
+   },
+   {
+    "text": "It turns off the second fetch of `courses.json` in the dev server",
+    "correct": false,
+    "why": "The dev server answers whatever is asked; the change is in who asks."
+   },
+   {
+    "text": "Both screens get the same instance, so there is one copy of the data",
+    "correct": true,
+    "why": "Right. A toggle on one is then seen by the other."
+   },
+   {
+    "text": "`providedIn: 'root'` makes the data read-only",
+    "correct": false,
+    "why": "It decides who shares the instance, not whether it changes."
+   }
+  ]
+ },
+ {
+  "id": "ex-1thnbys0",
+  "version": 1,
+  "section": "modifiers",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each option of `inject` with what it changes.",
+  "pairs": [
+   {
+    "left": "`optional: true`",
+    "right": "nobody answering gives `null`"
+   },
+   {
+    "left": "`self: true`",
+    "right": "only the component's own injector is asked"
+   },
+   {
+    "left": "`skipSelf: true`",
+    "right": "the question starts at the parent"
+   },
+   {
+    "left": "`host: true`",
+    "right": "the question stops at the host component"
+   }
+  ],
+  "right_distractors": [
+   "the instance is made again for every read"
+  ]
+ },
+ {
+  "id": "ex-hp1rf1nw",
+  "version": 1,
+  "section": "modifiers",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "After one click on `Add to first` and one on `Add to second`, each counter showed `1, all: 2`. Where did `all` come from?",
+  "choices": [
+   {
+    "text": "From the bench, which added up the two counters' numbers",
+    "correct": false,
+    "why": "The bench holds no tally of its own."
+   },
+   {
+    "text": "From the root's `Tally`, reached with `skipSelf`",
+    "correct": true,
+    "why": "Right. Skipping its own injector, each counter found the shared one."
+   },
+   {
+    "text": "From `NOTE`, which nobody provided",
+    "correct": false,
+    "why": "`NOTE` was `null`, and the page showed `no note`."
+   },
+   {
+    "text": "From a second `providers: [Tally]` on the bench",
+    "correct": false,
+    "why": "The bench has no `providers` list in this version."
+   }
+  ]
+ },
+ {
+  "id": "ex-4r9s059x",
+  "version": 1,
+  "section": "modifiers",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "An `NG0201` appears for a service that should always exist. Why does the lesson advise against `optional: true` there?",
+  "choices": [
+   {
+    "text": "It is slower than a normal injection",
+    "correct": false,
+    "why": "Speed is not the argument."
+   },
+   {
+    "text": "It only works on tokens, not on classes",
+    "correct": false,
+    "why": "It works on both."
+   },
+   {
+    "text": "It swaps a clear error now for a `null` found later",
+    "correct": true,
+    "why": "Right. The missing provider is the bug to fix."
+   },
+   {
+    "text": "It makes the component skip its own injector",
+    "correct": false,
+    "why": "That is `skipSelf`."
+   }
+  ]
+ },
+ {
+  "id": "ex-4ejegzm1",
+  "version": 1,
+  "section": "injection-context",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`report()` called `inject(Tally)` when the button was clicked. What happened?",
+  "choices": [
+   {
+    "text": "`NG0203`: by then nothing was being built, so there was no injector to ask",
+    "correct": true,
+    "why": "Right. A method runs long after construction."
+   },
+   {
+    "text": "`NG0201`: nobody provided `Tally`",
+    "correct": false,
+    "why": "`Tally` had `providedIn: 'root'`; the timing was the problem."
+   },
+   {
+    "text": "The count was logged as 0, as in the fixed version",
+    "correct": false,
+    "why": "The log only appeared once `inject` moved into a field."
+   },
+   {
+    "text": "The build refused the file",
+    "correct": false,
+    "why": "It compiled; the error came at the click."
+   }
+  ]
+ },
+ {
+  "id": "ex-4ehnbnm5",
+  "version": 1,
+  "section": "injection-context",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Where may `inject()` be called? Choose every place that works.",
+  "choices": [
+   {
+    "text": "In a field's initialiser",
+    "correct": true,
+    "why": "Right. Fields are set while the class is built."
+   },
+   {
+    "text": "In the constructor",
+    "correct": true,
+    "why": "Right."
+   },
+   {
+    "text": "In a plain function called from a field",
+    "correct": true,
+    "why": "Right. What matters is when it runs."
+   },
+   {
+    "text": "In a click handler",
+    "correct": false,
+    "why": "That runs after construction: `NG0203`."
+   },
+   {
+    "text": "In a `setTimeout` started by the constructor",
+    "correct": false,
+    "why": "The callback runs later, outside the context."
+   }
+  ]
+ },
+ {
+  "id": "ex-9dsehead",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A component reads `localStorage` directly to find the user's theme, and its test cannot set one. What does this lesson suggest?",
+  "choices": [
+   {
+    "text": "Clear `localStorage` before every test, so each starts from nothing",
+    "correct": false,
+    "why": "That gives every test the same theme, not the one it wants."
+   },
+   {
+    "text": "A token with a factory reading it, overridden in the test",
+    "correct": true,
+    "why": "Right. The component asks; the test decides the answer."
+   },
+   {
+    "text": "Mark the component `@Injectable()`",
+    "correct": false,
+    "why": "Components are already built by injectors; the problem is what it reads."
+   },
+   {
+    "text": "Move the read into `ngOnInit`",
+    "correct": false,
+    "why": "Later is still the same global, still not settable."
+   }
+  ]
+ }
+]

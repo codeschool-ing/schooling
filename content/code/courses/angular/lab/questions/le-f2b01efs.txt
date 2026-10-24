@@ -1,0 +1,255 @@
+# Lesson 10: dependency injection
+
+@ asking quiz easy #ex-hcwgc7r8
+? What does `inject(Greeter)` in a component's field do?
+?? O que o `inject(Greeter)` num campo de um componente faz?
+- It creates a fresh `Greeter` with `new`, every time the field is read :: The field is set once, and the instance comes from an injector, not from `new` in the component.
+-- Cria um `Greeter` novo com `new`, toda vez que o campo é lido :: O campo é definido uma vez, e a instância vem de um injetor, não de um `new` no componente.
++ It asks an injector for one and keeps the answer :: Right. The component never builds it.
+++ Pede um a um injetor e guarda a resposta :: Isso. O componente nunca o constrói.
+- It imports the file where `Greeter` is written :: The `import` line does that; `inject` asks for an instance at run time.
+-- Importa o arquivo onde o `Greeter` está escrito :: A linha `import` faz isso; o `inject` pede uma instância em tempo de execução.
+- It registers `Greeter` so other components can use it :: Registering is what a provider does; `inject` only asks.
+-- Registra o `Greeter` para outros componentes poderem usar :: Registrar é o que um provider faz; o `inject` só pede.
+
+@ asking quiz medium #ex-dn2b0c23
+? `Greeter` was marked `@Injectable()` with nothing inside the brackets, and the bench asked for one. What happened?
+?? O `Greeter` estava marcado com `@Injectable()` sem nada dentro dos parênteses, e o bench pediu um. O que aconteceu?
+- The bench showed an empty paragraph :: Nothing of the application past the heading appeared.
+-- O bench mostrou um parágrafo vazio :: Nada da aplicação depois do título apareceu.
+- The build failed before the page loaded :: The build passed; the error came when the page ran.
+-- O build falhou antes de a página carregar :: O build passou; o erro veio quando a página rodou.
++ `NG0201`: no injector had a recipe, and the app stopped at the heading :: Right. `@Injectable()` alone says Angular may build it, not where.
+++ `NG0201`: nenhum injetor tinha receita, e o app parou no título :: Isso. `@Injectable()` sozinho diz que o Angular pode construí-lo, não onde.
+- Angular built one anyway, since the class was marked :: The mark is not a recipe; no injector was told about it.
+-- O Angular construiu um mesmo assim, já que a classe estava marcada :: A marca não é uma receita; nenhum injetor foi avisado.
+
+@ asking cloze easy #ex-84jpdszc
+? `@Injectable({ providedIn: '___' })` makes one instance for the whole application, the first time it is asked for.
+?? `@Injectable({ providedIn: '___' })` faz uma instância para a aplicação inteira, na primeira vez que é pedida.
+= root
+== root
+
+@ asking quiz medium #ex-vcfc3kah
+? Older code writes `constructor(private readonly greeter: Greeter) {}`. Compared with `inject(Greeter)` in a field, what is different?
+?? Código mais antigo escreve `constructor(private readonly greeter: Greeter) {}`. Comparado com `inject(Greeter)` num campo, o que é diferente?
+- The parameter gets a new `Greeter` per component; `inject` shares one :: Both ask the same injector and get the same answer.
+-- O parâmetro recebe um `Greeter` novo por componente; o `inject` compartilha um :: Os dois perguntam ao mesmo injetor e recebem a mesma resposta.
++ Nothing about the answer; `inject` also works outside a constructor's parameters :: Right. Same question, same injector.
+++ Nada na resposta; o `inject` também funciona fora dos parâmetros de um construtor :: Isso. Mesma pergunta, mesmo injetor.
+- The parameter form is no longer allowed in Angular 21 :: It still works and you will read plenty of it.
+-- A forma com parâmetro não é mais permitida no Angular 21 :: Ela ainda funciona e você vai ler bastante dela.
+- The parameter form skips the injector and calls `new` :: Angular reads the type and asks the injector.
+-- A forma com parâmetro pula o injetor e chama `new` :: O Angular lê o tipo e pergunta ao injetor.
+
+@ providers matching medium #ex-xxgrj8s6
+? Match each provider key with what the injector answers.
+?? Associe cada chave de provider ao que o injetor responde.
+< `useClass` :: an instance of that class, made once
+<< `useClass` :: uma instância dessa classe, feita uma vez
+< `useValue` :: that value, exactly as written
+<< `useValue` :: esse valor, exatamente como escrito
+< `useFactory` :: what a function returns
+<< `useFactory` :: o que uma função retorna
+< `useExisting` :: what another token already answers
+<< `useExisting` :: o que outro token já responde
+x a fresh instance on every request
+xx uma instância nova a cada pedido
+
+@ providers quiz medium #ex-0f87we6z
+? `Greeter` had `providedIn: 'root'`, and `app.config.ts` listed `{ provide: Greeter, useClass: LoudGreeter }`. What did the bench show?
+?? O `Greeter` tinha `providedIn: 'root'`, e o `app.config.ts` listava `{ provide: Greeter, useClass: LoudGreeter }`. O que o bench mostrou?
+- `Hello, Ana`, because the class's own recipe comes first :: The listed provider wins; the class's own is the default.
+-- `Hello, Ana`, porque a receita da própria classe vem primeiro :: O provider listado vence; o da própria classe é o padrão.
++ `HELLO, ANA!` :: Right. The bench asked for `Greeter` and was answered with a `LoudGreeter`.
+++ `HELLO, ANA!` :: Isso. O bench pediu `Greeter` e recebeu um `LoudGreeter`.
+- An error, since two recipes for one token clash :: A list entry overriding a default is the normal case.
+-- Um erro, já que duas receitas para um token conflitam :: Uma entrada na lista sobrepondo um padrão é o caso normal.
+- Both greetings, one after the other :: One token, one answer.
+-- As duas saudações, uma depois da outra :: Um token, uma resposta.
+
+@ providers quiz easy #ex-qxh7azs0
+? What does `provideRouter(routes)` in `app.config.ts` put in the list?
+?? O que o `provideRouter(routes)` no `app.config.ts` põe na lista?
+- The routes array, used as a token :: The routes are an argument; what comes back is providers.
+-- O array de rotas, usado como token :: As rotas são um argumento; o que volta são providers.
+- One component that draws the router :: A provider list holds recipes, not components to draw.
+-- Um componente que desenha o router :: Uma lista de providers guarda receitas, não componentes para desenhar.
++ Several providers for the router's classes :: Right. A `provide...` function gathers them behind one name.
+++ Vários providers para as classes do router :: Isso. Uma função `provide...` os reúne sob um nome.
+- A setting that turns on the `<router-outlet>` tag :: The tag comes from `RouterOutlet` in a component's `imports`.
+-- Uma configuração que liga a tag `<router-outlet>` :: A tag vem do `RouterOutlet` nos `imports` de um componente.
+
+@ providers cloze medium #ex-26aypxbh
+? The provider list `providers: [Greeter]` is the short form of `{ provide: Greeter, ___: Greeter }`.
+?? A lista de providers `providers: [Greeter]` é a forma curta de `{ provide: Greeter, ___: Greeter }`.
+= useClass
+== useClass
+
+@ tokens quiz medium #ex-92bf7xw0
+? Why does the planner need `InjectionToken` for today, rather than `inject(Date)`?
+?? Por que o planner precisa de `InjectionToken` para hoje, em vez de `inject(Date)`?
++ `inject(Date)` asks for the class, not a day :: Right. A token stands for a value that is not a class.
+++ `inject(Date)` pede a classe, não um dia :: Isso. Um token representa um valor que não é uma classe.
+- `Date` cannot be imported into an Angular component :: It is a global of the language; nothing stops you using it.
+-- `Date` não pode ser importado num componente Angular :: É um global da linguagem; nada impede que você o use.
+- An `InjectionToken` reads the clock more precisely :: It reads nothing; its factory calls `new Date()`, the same clock.
+-- Um `InjectionToken` lê o relógio com mais precisão :: Ele não lê nada; a factory dele chama `new Date()`, o mesmo relógio.
+- Tokens are the only things a test may override :: A test can override a class token just as well.
+-- Tokens são as únicas coisas que um teste pode sobrepor :: Um teste pode sobrepor um token de classe do mesmo jeito.
+
+@ tokens quiz hard #ex-wkxsrmgr
+? The planner stays open from Sunday evening to Monday morning. Which week does it count on Monday?
+?? O planner fica aberto de domingo à noite até segunda de manhã. Qual semana ele conta na segunda?
+- The new week, because `TODAY` reads the clock whenever it is injected :: The factory runs once, the first time, and its answer is kept.
+-- A semana nova, porque o `TODAY` lê o relógio sempre que é injetado :: A factory roda uma vez, na primeira vez, e a resposta é guardada.
++ The old one, until the page is loaded again :: Right. `TODAY` is the moment it was first asked for.
+++ A velha, até a página ser carregada de novo :: Isso. O `TODAY` é o momento em que foi pedido pela primeira vez.
+- Neither: `Week` throws when the date moves :: Nothing watches the date, so nothing throws.
+-- Nenhuma: o `Week` lança um erro quando a data muda :: Nada observa a data, então nada lança.
+- The new one, because `--today` moves the clock :: `--today` exists only in `look`, for the transcripts.
+-- A nova, porque o `--today` move o relógio :: O `--today` só existe no `look`, para as transcrições.
+
+@ tokens quiz medium #ex-zx0wab4f
+? The first `week.spec.ts` expected the week of 26 October and failed. Why did the second one pass, on the same day?
+?? O primeiro `week.spec.ts` esperava a semana de 26 de outubro e falhou. Por que o segundo passou, no mesmo dia?
+- It waited for the data before reading the page :: Neither version loaded the data; the range does not need it.
+-- Ele esperou os dados antes de ler a página :: Nenhuma versão carregou os dados; o intervalo não precisa deles.
+- It moved the computer's clock forward by five days first :: Nothing touched the clock.
+-- Ele adiantou o relógio do computador em cinco dias antes :: Nada mexeu no relógio.
+- `TestBed` reads dates from `courses.json` :: The test never reached `courses.json`.
+-- O `TestBed` lê datas do `courses.json` :: O teste nunca chegou ao `courses.json`.
++ It gave `TODAY` a `useValue` in the test's providers :: Right. The test's recipe wins over the token's factory.
+++ Ele deu ao `TODAY` um `useValue` nos providers do teste :: Isso. A receita do teste vence a factory do token.
+
+@ tokens numeric easy #ex-anzth1ct
+? With `TODAY` set to Wednesday, 28 October 2026, on which day of October does the week the planner counts begin?
+?? Com o `TODAY` em quarta, 28 de outubro de 2026, em que dia de outubro começa a semana que o planner conta?
+= 26
+== 26
+
+@ hierarchy quiz medium #ex-q63ss9jg
+? `Tally` had `providedIn: 'root'` and no component listed it. One click on `Add to first`: what did the two counters show?
+?? O `Tally` tinha `providedIn: 'root'` e nenhum componente o listava. Um clique em `Add to first`: o que os dois contadores mostraram?
+- first: 1, second: 0 :: That is the version where each counter lists `Tally` in its own `providers`.
+-- first: 1, second: 0 :: Essa é a versão em que cada contador lista o `Tally` nos próprios `providers`.
++ first: 1, second: 1 :: Right. Both questions reached the root, which made one `Tally`.
+++ first: 1, second: 1 :: Isso. As duas perguntas chegaram à raiz, que fez um `Tally`.
+- first: 2, second: 0 :: One click adds one, to one shared tally.
+-- first: 2, second: 0 :: Um clique soma um, a um tally compartilhado.
+- An `NG0201`, since no component provided it :: The root had the recipe from `providedIn`.
+-- Um `NG0201`, já que nenhum componente o fornecia :: A raiz tinha a receita do `providedIn`.
+
+@ hierarchy ordering medium #ex-zsabw650
+? Put the injectors in the order `inject(Tally)` in a `Counter` asks them, first to last.
+?? Coloque os injetores na ordem em que o `inject(Tally)` num `Counter` os pergunta, do primeiro ao último.
+> the `Counter`'s own
+>> o do próprio `Counter`
+> the `Bench`'s
+>> o do `Bench`
+> the root injector
+>> o injetor raiz
+> the platform injector
+>> o injetor da plataforma
+> `NullInjector`
+>> `NullInjector`
+
+@ hierarchy quiz hard #ex-227mb24p
+? A service is listed in a component's `providers`. How long does the instance it makes live?
+?? Um serviço está listado nos `providers` de um componente. Quanto tempo vive a instância que ele faz?
+- As long as the application, like any service :: That is a root provider; a component's list makes one per component.
+-- Enquanto a aplicação durar, como qualquer serviço :: Isso é um provider da raiz; a lista de um componente faz um por componente.
+- Until the next change detection :: Change detection does not make or destroy instances.
+-- Até a próxima detecção de mudanças :: A detecção de mudanças não faz nem destrói instâncias.
++ As long as that component :: Right. It is made with it and goes when it is destroyed.
+++ Enquanto esse componente durar :: Isso. É feita com ele e vai embora quando ele é destruído.
+- Until somebody else asks for one at the root :: The root's recipe is separate and does not replace it.
+-- Até alguém pedir um na raiz :: A receita da raiz é separada e não a substitui.
+
+@ hierarchy quiz medium #ex-3crfeb1y
+? Why will one root instance fix the disagreement between `Week` and `CoursePage`?
+?? Por que uma instância na raiz vai resolver a discordância entre o `Week` e o `CoursePage`?
+- Root services load data faster :: Speed is not the problem; two copies are.
+-- Serviços da raiz carregam dados mais rápido :: Velocidade não é o problema; duas cópias são.
+- It turns off the second fetch of `courses.json` in the dev server :: The dev server answers whatever is asked; the change is in who asks.
+-- Desliga o segundo fetch do `courses.json` no servidor de desenvolvimento :: O servidor responde o que pedirem; a mudança está em quem pede.
++ Both screens get the same instance, so there is one copy of the data :: Right. A toggle on one is then seen by the other.
+++ As duas telas recebem a mesma instância, então há uma cópia dos dados :: Isso. Um toggle numa é visto pela outra.
+- `providedIn: 'root'` makes the data read-only :: It decides who shares the instance, not whether it changes.
+-- O `providedIn: 'root'` deixa os dados somente leitura :: Ele decide quem compartilha a instância, não se ela muda.
+
+@ modifiers matching medium #ex-1thnbys0
+? Match each option of `inject` with what it changes.
+?? Associe cada opção do `inject` ao que ela muda.
+< `optional: true` :: nobody answering gives `null`
+<< `optional: true` :: ninguém respondendo dá `null`
+< `self: true` :: only the component's own injector is asked
+<< `self: true` :: só o injetor do próprio componente é perguntado
+< `skipSelf: true` :: the question starts at the parent
+<< `skipSelf: true` :: a pergunta começa no pai
+< `host: true` :: the question stops at the host component
+<< `host: true` :: a pergunta para no componente hospedeiro
+x the instance is made again for every read
+xx a instância é feita de novo a cada leitura
+
+@ modifiers quiz medium #ex-hp1rf1nw
+? After one click on `Add to first` and one on `Add to second`, each counter showed `1, all: 2`. Where did `all` come from?
+?? Depois de um clique em `Add to first` e um em `Add to second`, cada contador mostrou `1, all: 2`. De onde veio o `all`?
+- From the bench, which added up the two counters' numbers :: The bench holds no tally of its own.
+-- Do bench, que somou os números dos dois contadores :: O bench não tem tally próprio.
++ From the root's `Tally`, reached with `skipSelf` :: Right. Skipping its own injector, each counter found the shared one.
+++ Do `Tally` da raiz, alcançado com `skipSelf` :: Isso. Pulando o próprio injetor, cada contador achou o compartilhado.
+- From `NOTE`, which nobody provided :: `NOTE` was `null`, and the page showed `no note`.
+-- Do `NOTE`, que ninguém fornecia :: O `NOTE` era `null`, e a página mostrou `no note`.
+- From a second `providers: [Tally]` on the bench :: The bench has no `providers` list in this version.
+-- De um segundo `providers: [Tally]` no bench :: O bench não tem lista de `providers` nesta versão.
+
+@ modifiers quiz hard #ex-4r9s059x
+? An `NG0201` appears for a service that should always exist. Why does the lesson advise against `optional: true` there?
+?? Um `NG0201` aparece para um serviço que deveria sempre existir. Por que a aula desaconselha `optional: true` aí?
+- It is slower than a normal injection :: Speed is not the argument.
+-- É mais lento que uma injeção normal :: Velocidade não é o argumento.
+- It only works on tokens, not on classes :: It works on both.
+-- Só funciona em tokens, não em classes :: Funciona nos dois.
++ It swaps a clear error now for a `null` found later :: Right. The missing provider is the bug to fix.
+++ Troca um erro claro agora por um `null` achado depois :: Isso. O provider que falta é o bug a corrigir.
+- It makes the component skip its own injector :: That is `skipSelf`.
+-- Faz o componente pular o próprio injetor :: Isso é o `skipSelf`.
+
+@ injection-context quiz medium #ex-4ejegzm1
+? `report()` called `inject(Tally)` when the button was clicked. What happened?
+?? O `report()` chamava `inject(Tally)` quando o botão era clicado. O que aconteceu?
++ `NG0203`: by then nothing was being built, so there was no injector to ask :: Right. A method runs long after construction.
+++ `NG0203`: àquela altura nada estava sendo construído, então não havia injetor a perguntar :: Isso. Um método roda muito depois da construção.
+- `NG0201`: nobody provided `Tally` :: `Tally` had `providedIn: 'root'`; the timing was the problem.
+-- `NG0201`: ninguém fornecia o `Tally` :: O `Tally` tinha `providedIn: 'root'`; o problema era o momento.
+- The count was logged as 0, as in the fixed version :: The log only appeared once `inject` moved into a field.
+-- A contagem foi registrada como 0, como na versão corrigida :: O registro só apareceu quando o `inject` foi para um campo.
+- The build refused the file :: It compiled; the error came at the click.
+-- O build recusou o arquivo :: Compilou; o erro veio no clique.
+
+@ injection-context multiple-choice medium #ex-4ehnbnm5
+? Where may `inject()` be called? Choose every place that works.
+?? Onde o `inject()` pode ser chamado? Escolha todo lugar que funciona.
++ In a field's initialiser :: Right. Fields are set while the class is built.
+++ No inicializador de um campo :: Isso. Campos são definidos enquanto a classe é construída.
++ In the constructor :: Right.
+++ No construtor :: Isso.
++ In a plain function called from a field :: Right. What matters is when it runs.
+++ Numa função comum chamada de um campo :: Isso. O que importa é quando ela roda.
+- In a click handler :: That runs after construction: `NG0203`.
+-- Num handler de clique :: Isso roda depois da construção: `NG0203`.
+- In a `setTimeout` started by the constructor :: The callback runs later, outside the context.
+-- Num `setTimeout` iniciado pelo construtor :: O callback roda depois, fora do contexto.
+
+@ drill quiz hard #ex-9dsehead
+? A component reads `localStorage` directly to find the user's theme, and its test cannot set one. What does this lesson suggest?
+?? Um componente lê o `localStorage` direto para achar o tema do usuário, e o teste dele não consegue definir um. O que esta aula sugere?
+- Clear `localStorage` before every test, so each starts from nothing :: That gives every test the same theme, not the one it wants.
+-- Limpar o `localStorage` antes de todo teste, para cada um começar do zero :: Isso dá a todo teste o mesmo tema, não o que ele quer.
++ A token with a factory reading it, overridden in the test :: Right. The component asks; the test decides the answer.
+++ Um token com uma factory que o lê, sobreposto no teste :: Isso. O componente pede; o teste decide a resposta.
+- Mark the component `@Injectable()` :: Components are already built by injectors; the problem is what it reads.
+-- Marcar o componente com `@Injectable()` :: Componentes já são construídos por injetores; o problema é o que ele lê.
+- Move the read into `ngOnInit` :: Later is still the same global, still not settable.
+-- Mover a leitura para o `ngOnInit` :: Mais tarde continua sendo o mesmo global, ainda não definível.
