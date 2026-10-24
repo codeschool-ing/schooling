@@ -59,6 +59,15 @@ flush() {
   quiet '~/planner' 'look http://localhost:4200/'
   FLUSHED=$(fails)
 }
+# settled: until the dev server's log has been still for two seconds, so a
+# second build a save set off (it happens) is over before a page is opened.
+settled() {
+  local before after
+  while :; do
+    before=$(wc -c < $STATE/serve.log); sleep 2; after=$(wc -c < $STATE/serve.log)
+    [ "$before" = "$after" ] && return 0
+  done
+}
 # rebuilt: after one or more saves, until the dev server has finished the
 # build they caused (a fixed sleep was once too short, and the page a capture
 # opened still carried the error of the build before).
@@ -66,7 +75,7 @@ rebuilt() {
   local mark=${SAVE_MARK:-0}
   SAVE_MARK=
   for _ in $(seq 300); do
-    if [ "$(builds)" -gt "$mark" ]; then sleep 1; flush; return 0; fi
+    if [ "$(builds)" -gt "$mark" ]; then settled; flush; return 0; fi
     sleep 0.1
   done
   echo "rebuilt: the dev server finished no build after the save" >&2

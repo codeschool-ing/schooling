@@ -1,0 +1,239 @@
+# Lesson 12: HttpClient
+
+@ the-api quiz easy #ex-ptmkg16d
+? Why does the API keep its data in `planner.json` and not in `seed.json`?
+?? Por que a API guarda os dados no `planner.json` e não no `seed.json`?
+- Node cannot write to a file that git tracks :: Git does not lock files; Node can write anywhere it may.
+-- O Node não consegue escrever num arquivo que o git acompanha :: O git não trava arquivos; o Node escreve onde tiver permissão.
++ So the seed stays as it was :: Right. The working copy is made from the seed when missing.
+++ Para o seed ficar como era :: Isso. A cópia de trabalho é feita do seed quando falta.
+- `seed.json` is read-only for the dev server :: The dev server no longer reads either file.
+-- O `seed.json` é somente leitura para o servidor de desenvolvimento :: O servidor de desenvolvimento não lê mais nenhum dos dois.
+- JSON files under `server/` are served to the browser :: Nothing serves `server/`; the API answers on port 3000.
+-- Arquivos JSON em `server/` são entregues ao navegador :: Nada entrega o `server/`; a API responde na porta 3000.
+
+@ the-api quiz medium #ex-ygwy1h5k
+? `curl -X PATCH .../api/sessions/5 -d '{"done":"yes"}'` was refused. With what?
+?? `curl -X PATCH .../api/sessions/5 -d '{"done":"yes"}'` foi recusado. Com o quê?
+- 404, there is no session 5 :: Session 5 exists; the refusal was about the body.
+-- 404, não existe sessão 5 :: A sessão 5 existe; a recusa foi sobre o corpo.
++ 400, done must be true or false :: Right. `"yes"` is a string, not a boolean.
+++ 400, done must be true or false :: Isso. `"yes"` é uma string, não um booleano.
+- 200, with `done` set to true :: The server checks the type before it changes anything.
+-- 200, com `done` definido como true :: O servidor confere o tipo antes de mudar qualquer coisa.
+- 500, because the JSON could not be read :: The JSON was valid; its value was the wrong type.
+-- 500, porque o JSON não pôde ser lido :: O JSON era válido; o valor dele era do tipo errado.
+
+@ the-api quiz medium #ex-692m0faf
+? What problem does the dev server's proxy solve?
+?? Que problema o proxy do servidor de desenvolvimento resolve?
+- It makes the API answer faster by caching it :: It passes requests on; it keeps nothing.
+-- Faz a API responder mais rápido guardando as respostas :: Ele repassa pedidos; não guarda nada.
+- It lets the API read the application's files :: The API reads its own two files.
+-- Deixa a API ler os arquivos da aplicação :: A API lê os dois arquivos dela.
++ The two share one origin, so no CORS needed :: Right. The browser only ever asks port 4200.
+++ As duas dividem uma origem, sem CORS :: Isso. O navegador só pergunta à porta 4200.
+- It restarts the API when its code changes :: The API is restarted by hand, in its own terminal.
+-- Reinicia a API quando o código dela muda :: A API é reiniciada à mão, no terminal dela.
+
+@ the-api quiz easy #ex-yp56q1p8
+? After `ng config` set `proxyConfig`, why did the dev server have to be restarted?
+?? Depois que o `ng config` definiu o `proxyConfig`, por que o servidor de desenvolvimento teve de ser reiniciado?
++ It reads the proxy when it starts :: Right. A change to `angular.json` is not watched like the code is.
+++ Ele lê o proxy quando inicia :: Isso. Uma mudança no `angular.json` não é observada como o código.
+- `ng config` stops it on purpose :: `ng config` only edits `angular.json`.
+-- O `ng config` o para de propósito :: O `ng config` só edita o `angular.json`.
+- Port 4200 was taken by the API :: The API listens on 3000.
+-- A porta 4200 foi tomada pela API :: A API escuta na 3000.
+- The cache in `.angular` had to be cleared first :: No cache was involved.
+-- O cache em `.angular` precisava ser limpo antes :: Nenhum cache estava envolvido.
+
+@ http-client quiz medium #ex-qjty6vh1
+? In Angular 21, what had to be added to `app.config.ts` before the store could `inject(HttpClient)`?
+?? No Angular 21, o que precisou ser acrescentado ao `app.config.ts` antes de o store poder fazer `inject(HttpClient)`?
+- `provideHttpClient()`, or the injection fails with `NG0201` :: That was true before Angular 21; the store worked with no change to the config.
+-- `provideHttpClient()`, senão a injeção falha com `NG0201` :: Isso valia antes do Angular 21; o store funcionou sem mudar a configuração.
++ Nothing: `HttpClient` already has `providedIn: 'root'` :: Right. `provideHttpClient()` arrives later, to switch on interceptors.
+++ Nada: o `HttpClient` já tem `providedIn: 'root'` :: Isso. O `provideHttpClient()` chega depois, para ligar os interceptors.
+- `HttpClientModule` in the component's `imports` :: That is the module-era way, and nothing here needed it.
+-- O `HttpClientModule` nos `imports` do componente :: Esse é o jeito da era dos módulos, e nada aqui precisou dele.
+- `withFetch()`, since there is no other way to send a request :: Without it, requests go through `XMLHttpRequest`.
+-- O `withFetch()`, já que não há outro jeito de mandar um pedido :: Sem ele, os pedidos passam pelo `XMLHttpRequest`.
+
+@ http-client multiple-choice medium #ex-94217201
+? What does `HttpClient` do that a plain `fetch` leaves to you? Choose every one.
+?? O que o `HttpClient` faz que um `fetch` comum deixa para você? Escolha todos.
++ It reads the JSON of the answer :: Right.
+++ Lê o JSON da resposta :: Isso.
++ It treats a 404 or a 500 as an error :: Right. `fetch` resolves with any status.
+++ Trata um 404 ou um 500 como erro :: Isso. O `fetch` resolve com qualquer status.
++ It sends every request through the interceptors :: Right.
+++ Passa todo pedido pelos interceptors :: Isso.
+- It checks the answer against the type argument :: Nothing checks a type argument at run time.
+-- Confere a resposta contra o argumento de tipo :: Nada confere um argumento de tipo em tempo de execução.
+- It keeps answers so a second request is not sent :: It sends every request it is asked to.
+-- Guarda as respostas para um segundo pedido não ser enviado :: Ele envia todo pedido que lhe pedirem.
+
+@ http-client cloze easy #ex-nyh7r6tz
+? For reading, the store uses `___(() => '/api/planner')`, a resource whose loader is an `HttpClient` GET.
+?? Para ler, o store usa `___(() => '/api/planner')`, um resource cujo loader é um GET do `HttpClient`.
+= httpResource
+== httpResource
+
+@ http-client quiz medium #ex-kwk2593x
+? The first page that imported `@angular/common/http` connected to the dev server twice. Why?
+?? A primeira página que importou o `@angular/common/http` se conectou ao servidor de desenvolvimento duas vezes. Por quê?
+- The store sent its GET twice :: The network list shows one GET.
+-- O store mandou o GET duas vezes :: A lista da rede mostra um GET.
+- The proxy reconnects on every request :: The proxy is between the dev server and the API, not the page.
+-- O proxy se reconecta a cada pedido :: O proxy fica entre o servidor de desenvolvimento e a API, não a página.
++ A new package was prepared, then the page reloaded :: Right. It happens once per package.
+++ Um pacote novo foi preparado, e a página recarregou :: Isso. Acontece uma vez por pacote.
+- `look` opens every page twice :: Every other look in the lesson connected once.
+-- O `look` abre toda página duas vezes :: Todos os outros looks da aula se conectaram uma vez.
+
+@ typed quiz medium #ex-7h9fmazz
+? Session 5's minutes became `"50"`, a string. Why did the compiler say nothing?
+?? Os minutos da sessão 5 viraram `"50"`, uma string. Por que o compilador não disse nada?
+- The dev server skips type checking in development :: It checks types; the data was not code.
+-- O servidor de desenvolvimento pula a checagem de tipos em desenvolvimento :: Ele checa tipos; os dados não eram código.
+- `httpResource` converts strings to numbers :: It did not, which is why the total became `11550`.
+-- O `httpResource` converte strings em números :: Não converteu, e é por isso que o total virou `11550`.
++ A type argument is a claim, unchecked :: Right. The compiler believed `minutes: number`.
+++ Um argumento de tipo é uma afirmação, sem conferência :: Isso. O compilador acreditou em `minutes: number`.
+- `minutes` was declared as `number | string` :: `Session` declares it as `number`.
+-- `minutes` foi declarado como `number | string` :: O `Session` o declara como `number`.
+
+@ typed numeric medium #ex-qeteys0w
+? With session 5's minutes as the string `"50"`, the week said `11550` minutes planned. How many minutes of the week came before session 5 in the sum?
+?? Com os minutos da sessão 5 como a string `"50"`, a semana disse `11550` minutos planejados. Quantos minutos da semana vieram antes da sessão 5 na soma?
+= 115
+== 115
+
+@ typed quiz medium #ex-c0bbyj73
+? What does `parse: parsePlanner` change about the resource?
+?? O que o `parse: parsePlanner` muda no resource?
++ A bad answer becomes an error, with its message :: Right. The week said which session and which field.
+++ Uma resposta ruim vira um erro, com a mensagem :: Isso. A semana disse qual sessão e qual campo.
+- It turns `"50"` into `50`, so the total is right :: It refuses the answer; it repairs nothing.
+-- Transforma `"50"` em `50`, para o total ficar certo :: Ele recusa a resposta; não conserta nada.
+- It makes the request again until the answer passes :: It runs once per answer.
+-- Faz o pedido de novo até a resposta passar :: Ele roda uma vez por resposta.
+- It moves the check to build time :: The check runs on each answer, at run time.
+-- Leva a checagem para o momento do build :: A checagem roda em cada resposta, em tempo de execução.
+
+@ writing quiz medium #ex-r7056yev
+? A store method calls `this.http.patch(url, body)` and nothing else. What happens?
+?? Um método do store chama `this.http.patch(url, body)` e mais nada. O que acontece?
+- The request is sent and its answer ignored :: An Observable does nothing until somebody subscribes.
+-- O pedido é enviado e a resposta ignorada :: Um Observable não faz nada até alguém assinar.
++ No request is sent :: Right. Nobody subscribed, so nothing ran.
+++ Nenhum pedido é enviado :: Isso. Ninguém assinou, então nada rodou.
+- The request is sent twice, once per screen :: There is one store; and no request is sent at all.
+-- O pedido é enviado duas vezes, uma por tela :: Há um store só; e nenhum pedido é enviado.
+- The compiler refuses an unused Observable :: It compiles, which is what makes it easy to miss.
+-- O compilador recusa um Observable não usado :: Compila, e é isso que facilita não perceber.
+
+@ writing quiz easy #ex-cnk9vgkh
+? How did the lesson show that the tick reached the server?
+?? Como a aula mostrou que a marcação chegou ao servidor?
+- The checkbox stayed ticked on the same page :: The page's copy ticks whether or not the server hears.
+-- A caixa ficou marcada na mesma página :: A cópia da página marca ouvindo o servidor ou não.
+- The dev server printed the PATCH :: The dev server passes requests on and logs only errors.
+-- O servidor de desenvolvimento imprimiu o PATCH :: O servidor de desenvolvimento repassa pedidos e só registra erros.
++ A fresh page loaded 140 minutes done from the API :: Right. A new page knows only what the server sends it.
+++ Uma página nova carregou 140 minutos feitos da API :: Isso. Uma página nova só sabe o que o servidor lhe manda.
+- `git status` listed `planner.json` as changed :: `planner.json` is ignored by git.
+-- O `git status` listou o `planner.json` como mudado :: O `planner.json` é ignorado pelo git.
+
+@ writing cloze medium #ex-2z021f1a
+? Changing the copy at once and telling the server afterwards is called an ___ update.
+?? Mudar a cópia na hora e avisar o servidor depois se chama atualização ___.
+= optimistic
+== otimista | optimistic
+
+@ interceptors quiz medium #ex-wb586k8t
+? Why did the `GET` from `httpResource` carry the `X-Requested-By` header too?
+?? Por que o `GET` do `httpResource` também levou o cabeçalho `X-Requested-By`?
+- The store added it to the resource's options :: The store did not change in that section.
+-- O store o acrescentou às opções do resource :: O store não mudou nessa seção.
++ `httpResource` sends its request through `HttpClient`, and so through the chain :: Right. One chain for every request.
+++ O `httpResource` manda o pedido pelo `HttpClient`, e portanto pela cadeia :: Isso. Uma cadeia para todo pedido.
+- The proxy copies headers from earlier requests :: The proxy passes on what it receives.
+-- O proxy copia cabeçalhos de pedidos anteriores :: O proxy repassa o que recebe.
+- The browser adds custom headers to every request on its own :: The browser adds none of yours.
+-- O navegador acrescenta cabeçalhos próprios a todo pedido sozinho :: O navegador não acrescenta nenhum seu.
+
+@ interceptors quiz medium #ex-y6wstatk
+? Why does an interceptor call `req.clone({ setHeaders: ... })` rather than setting a header on `req`?
+?? Por que um interceptor chama `req.clone({ setHeaders: ... })` em vez de definir um cabeçalho no `req`?
+- `clone` sends the request a second time :: `next` sends it, once.
+-- O `clone` manda o pedido uma segunda vez :: O `next` o manda, uma vez.
+- Headers can only be set on a copy of the browser's request :: The request is Angular's object, not the browser's.
+-- Cabeçalhos só podem ser definidos numa cópia do pedido do navegador :: O pedido é um objeto do Angular, não do navegador.
++ An `HttpRequest` cannot be changed, so a changed copy is passed on :: Right. Immutability keeps each step from surprising the next.
+++ Um `HttpRequest` não pode ser mudado, então uma cópia mudada é repassada :: Isso. A imutabilidade evita que um passo surpreenda o seguinte.
+- `setHeaders` works only during the first request :: It works on every request.
+-- O `setHeaders` só funciona no primeiro pedido :: Funciona em todo pedido.
+
+@ interceptors matching medium #ex-d42zspqs
+? Match each interceptor with what it lets an application do.
+?? Associe cada interceptor ao que ele deixa uma aplicação fazer.
+< adds `Authorization: Bearer ...` :: send a signed-in user's token
+<< acrescenta `Authorization: Bearer ...` :: mandar o token de quem entrou
+< reads a 401 in the answer :: send somebody to sign in
+<< lê um 401 na resposta :: mandar alguém entrar
+< logs the method, URL and time :: find the slow requests
+<< registra o método, a URL e o tempo :: achar os pedidos lentos
+< tries again on a network failure :: survive a moment of bad Wi-Fi
+<< tenta de novo numa falha de rede :: sobreviver a um momento de Wi-Fi ruim
+x compile templates faster
+xx compilar templates mais rápido
+
+@ errors quiz medium #ex-hngvhab6
+? With the API stopped, the page got a 500. Who sent it?
+?? Com a API parada, a página recebeu um 500. Quem o mandou?
+- The API, as it shut down :: Nothing was listening on port 3000.
+-- A API, enquanto desligava :: Nada estava escutando na porta 3000.
++ The dev server's proxy :: Right. Its terminal said `ECONNREFUSED`.
+++ O proxy do servidor de desenvolvimento :: Isso. O terminal dele disse `ECONNREFUSED`.
+- The browser, which turns refused connections into 500 :: Without a proxy the browser would report status 0.
+-- O navegador, que transforma conexões recusadas em 500 :: Sem proxy o navegador relataria status 0.
+- `httpResource`, after a timeout :: The status came over the network, from the proxy.
+-- O `httpResource`, depois de um tempo limite :: O status veio pela rede, do proxy.
+
+@ errors quiz hard #ex-hfnezvtd
+? Before the fix, a failed `PATCH` left the box ticked. What was wrong with that, beyond the console error?
+?? Antes da correção, um `PATCH` que falhou deixava a caixa marcada. O que havia de errado nisso, além do erro no console?
+- The box could not be unticked again :: It could; the page would just keep lying.
+-- A caixa não podia ser desmarcada de novo :: Podia; a página só continuaria mentindo.
+- The week's total doubled :: The total moved by 50, as for any tick.
+-- O total da semana dobrou :: O total mudou 50, como em qualquer marcação.
+- The server saved the tick anyway, later :: The server never received it.
+-- O servidor salvou a marcação mesmo assim, depois :: O servidor nunca a recebeu.
++ The page and the server disagreed :: Right. A reload would quietly undo it.
+++ A página e o servidor discordavam :: Isso. Um recarregamento a desfaria em silêncio.
+
+@ errors quiz medium #ex-fd3jw717
+? Why does the message go in a paragraph with `role="alert"`?
+?? Por que a mensagem vai num parágrafo com `role="alert"`?
+- It makes the paragraph red :: `role` changes what is announced, not how it looks.
+-- Deixa o parágrafo vermelho :: O `role` muda o que é anunciado, não a aparência.
+- It stops the box from being ticked again :: Nothing about the role touches the box.
+-- Impede a caixa de ser marcada de novo :: Nada no role mexe na caixa.
++ A screen reader announces it at once :: Right. Somebody who cannot see the box untick hears why.
+++ Um leitor de tela o anuncia na hora :: Isso. Quem não vê a caixa desmarcar ouve por quê.
+- It sends the message to the server's log :: It is an attribute of the page.
+-- Manda a mensagem para o log do servidor :: É um atributo da página.
+
+@ drill quiz hard #ex-nfz0vh0m
+? A request fails with 400 because the body was wrong. What should the application do?
+?? Um pedido falha com 400 porque o corpo estava errado. O que a aplicação deve fazer?
+- Retry it three times, then give up quietly :: A 400 fails the same way every time, and quiet is the one thing it must not be.
+-- Tentar três vezes e depois desistir em silêncio :: Um 400 falha igual toda vez, e silêncio é a única coisa que não pode haver.
++ Undo what it showed, and show the server's reason :: Right. The page goes back to what the server believes.
+++ Desfazer o que mostrou, e mostrar o motivo do servidor :: Isso. A página volta ao que o servidor acredita.
+- Ignore it, since the next request will fix it :: Nothing will resend this one.
+-- Ignorar, já que o próximo pedido vai resolver :: Nada vai reenviar este.
+- Reload the whole page :: A reload hides the error and loses the reason.
+-- Recarregar a página inteira :: Um recarregamento esconde o erro e perde o motivo.
