@@ -55,7 +55,7 @@ def progress(T):
         c.text(x + w / 2, y + 31, note, size=9, fill="var(--phosphor)" if done else "var(--paper-dim)")
     box(290, 12, 140, "App", T("built", "pronto"), True)
     box(110, 90, 180, "Week", T("built", "pronto"), True)
-    box(430, 90, 180, "CoursePage", T("lesson 17", "aula 17"), False)
+    box(430, 90, 180, "CoursePage", T("lesson 8", "aula 8"), False)
     c.line(330, 54, 220, 88, arrow=True)
     c.line(390, 54, 500, 88, arrow=True, dash="4 3")
     box(20, 176, 150, "WeekSummary", T("built", "pronto"), True)

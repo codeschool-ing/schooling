@@ -171,7 +171,7 @@ async function axTree(sel) {
         const v = p.value?.value;
         if (p.name === "level") line += ` [level=${v}]`;
         else if (["checked", "expanded", "pressed"].includes(p.name) && v !== "false") line += ` [${p.name}${v === "true" || v === true ? "" : `=${v}`}]`;
-        else if (["disabled", "invalid", "required"].includes(p.name) && v && v !== "false") line += ` [${p.name}]`;
+        else if (["disabled", "invalid", "required", "focused"].includes(p.name) && v && v !== "false") line += ` [${p.name}]`;
       }
       if (n.value?.value !== undefined && n.value.value !== "") line += `: ${n.value.value}`;
       lines.push(line);
