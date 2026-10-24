@@ -811,6 +811,19 @@ var allowedOutsideTheFont = map[rune]string{
 		"follows it, and a capture is pasted byte for byte",
 	'\u2139': "`node --test` opens each line of its summary with it (`ℹ tests 3`). IBM Plex " +
 		"Mono has no U+2139 at all. It opens a line and nothing is aligned to what follows it",
+	// Nuxt's tools draw their progress with these: create-nuxt opens a step with
+	// U+25C7 and a finished one with U+25C6, and ends with U+2728; Vue Router's
+	// warnings, as Nuxt prints them, hang two lines off the message with U+25B6.
+	'\u25c7': "`create-nuxt` opens each step it takes with it (`◇ Creating project in planner-nuxt`). " +
+		"IBM Plex Mono has no U+25C7 at all. It opens a line and nothing is aligned to what follows it",
+	'\u25c6': "`create-nuxt` and `nuxt dev` open a finished step with it (`◆ Ready in 2.76s`). IBM " +
+		"Plex Mono has no U+25C6 at all. It opens a line and nothing is aligned to what follows it",
+	'\u2728': "`create-nuxt` ends with it (`└  ✨ Happy building!`). No font this interface serves " +
+		"has U+2728, and it is the last thing on the last line of the transcript, so nothing " +
+		"follows it to move",
+	'\u25b6': "Vue Router's warnings, as Nuxt prints them, hang two lines off the message with it " +
+		"(`├▶ fix:` and `╰▶ see:`). IBM Plex Mono has no U+25B6 at all. Both lines carry it in the " +
+		"same column, so whatever width the reader's machine gives it moves them together",
 }
 
 // coverage is the set of code points the interface declares a face for.
