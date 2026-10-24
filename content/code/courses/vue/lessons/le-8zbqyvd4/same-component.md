@@ -6,8 +6,9 @@ version: 1
 **The Options API is the way Vue components were written before the Composition API, and it is still
 fully supported: a component is an object whose properties, `data`, `computed`, `methods`, `props`,
 `mounted` and the rest, each hold one kind of thing.** Almost all Vue 2 code is written this way (the
-Composition API reached Vue 2 only in its last version, 2.7), and a great deal of Vue 3 code too. You will meet it in your first job before you write any, so this lesson is about
-reading it, translating it, and knowing why the planner is not written in it.
+Composition API reached Vue 2 only in its last version, 2.7), and a great deal of Vue 3 code too. You
+will meet it in your first job before you write any, so this lesson is about reading it, translating it,
+and knowing why the planner is not written in it.
 
 Here is a card, written twice, once in each API. The Options version:
 

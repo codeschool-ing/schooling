@@ -36,7 +36,7 @@ and the form that calls it, `<form novalidate @submit.prevent="submit">`. In ord
    holding the form's reactive draft, and the next keystroke would change a session already in the list:
    lesson 6's object prop, in a new place.
 4. **Reset**: the course is cleared and the minutes go back to 30, but **the date stays**, because the
-   next session is often on the same day; `tried` goes back to false, so the cleared course field is not
+   next session is often on the same day. `tried` goes back to false, so the cleared course field is not
    shown as an error; and the focus returns to the first field.
 
 The store's new action is one line beside `toggle`, through lesson 3's rule, which has waited since
@@ -114,5 +114,5 @@ the arrow keys once the field has focus.
 
 The planner saves to the browser at once. A form that sends to a server waits, and the wait needs two
 more things: **disable the button while sending**, `:disabled="sending"`, so a double click does not
-create two sessions; and **say what happened when it fails**, in the same status line, without clearing
+create two sessions. And **say what happened when it fails**, in the same status line, without clearing
 the form, so the student can try again without typing everything twice.

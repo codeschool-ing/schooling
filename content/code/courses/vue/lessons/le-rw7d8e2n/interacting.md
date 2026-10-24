@@ -73,6 +73,6 @@ lesson 14's status line announced, and, through `emitted`, what the page around 
 
 The tests find elements by what they are, `select`, `input[type=number]`, `form`, and by the class
 of an error. Lesson 14 gave every field a `<label>` tied to it, so a test could also find a field
-by its label, which is how a screen reader user finds it; Vue Test Utils does not do that itself,
+by its label, which is how a screen reader user finds it. Vue Test Utils does not do that itself,
 and the companion library *Testing Library* (`@testing-library/vue`) is built around exactly that
 idea. For a form this small, selectors are clear enough, and they break only when the markup does.

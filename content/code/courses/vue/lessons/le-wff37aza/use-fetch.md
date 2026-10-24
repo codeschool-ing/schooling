@@ -4,11 +4,11 @@ version: 1
 ---
 
 **`useFetch(url)` fetches the data a page needs, once, on whichever side renders the page first, and
-hands the result to the other side.** That has been the first line of both of the planner's pages
-since lesson 18, and lesson 19 showed what it bought: a page that arrives drawn, and a browser that
-never asks for `/api/courses` when the page is first loaded. This lesson takes it apart, and the first step is to see every request
-that reaches the API. A file in `server/middleware/` runs before every route of the server, and this
-one only prints:
+hands the result to the other side.** That has been the first line of both of the planner's pages since
+lesson 18, and lesson 19 showed what it bought: a page that arrives drawn, and a browser that never asks
+for `/api/courses` when the page is first loaded. This lesson takes it apart, and the first step is to
+see every request that reaches the API. A file in `server/middleware/` runs before every route of the
+server, and this one only prints:
 
 ```typescript
 // server/middleware/log.ts: a line in the server's terminal for every request to the API.

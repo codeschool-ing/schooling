@@ -59,11 +59,11 @@ attribute, `data-v-9092e573`, because it is still the card's markup.
 
 ## Why it matters
 
-The card has `overflow: hidden` and a fixed height, so the first note, drawn inside it, is cut off at the
-card's edge: an ordinary CSS rule, set for an ordinary reason, that a dialog living inside the card
+The card has `overflow: hidden` and a fixed height, so the first note, drawn inside it, is cut off at
+the card's edge: an ordinary CSS rule, set for an ordinary reason, that a dialog living inside the card
 cannot escape. The same happens with `transform` and `filter` on any ancestor, and with `z-index` on a
-positioned one, each of which creates a new layer the dialog is trapped in. **A teleported element has none of its old ancestors**,
-so none of their rules reach it.
+positioned one, each of which creates a new layer the dialog is trapped in. **A teleported element has
+none of its old ancestors**, so none of their rules reach it.
 
 `to` takes any CSS selector, `#modals` for a container of your own, and `:disabled="true"` renders the
 contents in place after all, which is useful for showing the same component inline on a large screen

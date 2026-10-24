@@ -91,7 +91,7 @@ highlighted row is the 22nd.
 ## The rule underneath
 
 Every one of those waits says what it is waiting for. A test that calls `setTimeout(…, 500)` and hopes
-the page is ready by then passes on a fast computer and fails on a busy CI machine one run in twenty,
-and a test that fails sometimes is worse than none, because people learn to run it again until it
-passes. If a test needs to wait and there is no tool that names what for, the code under test is the
-thing to change: it should return its promise, as the store's `load` does.
+the page is ready by then passes on a fast computer and fails on a busy CI machine one run in twenty. A
+test that fails sometimes is worse than none, because people learn to run it again until it passes. If a
+test needs to wait and there is no tool that names what for, the code under test is the thing to change:
+it should return its promise, as the store's `load` does.

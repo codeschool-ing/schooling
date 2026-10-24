@@ -131,8 +131,8 @@ the same store to every later caller.
 
 ## What a store adds to a shared ref
 
-A `ref` exported from a module, like lesson 4's `clock.js`, is also one copy for everybody. What Pinia adds
-is what makes shared state manageable once an application has a few people working on it:
+A `ref` exported from a module, like lesson 4's `clock.js`, is also one copy for everybody. What Pinia
+adds is what makes shared state manageable once an application has a few people working on it:
 
 - **one container per application**, so server rendering (lesson 19) and tests (lesson 21) start each run
   with fresh state instead of whatever the last one left in a module;

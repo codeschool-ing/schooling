@@ -63,7 +63,7 @@ Four moments, and the refs are full only at the second and the fourth:
   who pressed *Add a session* expects.
 
 That last pattern, show something and then focus it, is the most common use of a template ref, and it
-is also an accessibility rule: a field that appears because the student asked for it should receive the
+is also an accessibility rule. A field that appears because the student asked for it should receive the
 focus, or a keyboard user is left on the button with no idea where the field went.
 
 ## The older spelling

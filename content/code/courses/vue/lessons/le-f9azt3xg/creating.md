@@ -230,7 +230,7 @@ To address all issues (including breaking changes), run:
 each listed because it depends on the one below it. The advisory is about checking RSA signatures. The
 package that uses `node-forge` here is `listhen`, the part of Nitro that opens the dev server's port,
 and it uses it to *make* a certificate when you ask the dev server for HTTPS, which the planner never
-does; nothing in the planner checks a signature with it. So the exposure is close to nothing, for now.
+does. Nothing in the planner checks a signature with it. So the exposure is close to nothing, for now.
 What not to do is the command it suggests: `npm audit fix --force` would install Nuxt **4.1.3**, back
 past a fix 4.6.2 carries for an advisory about Nuxt's own route rules, one that covers every Nuxt up to
 4.6.1, to remove a warning about a code path you do not use. The right move is to wait for Nitro to
@@ -346,6 +346,6 @@ Two things in that transcript are new. `look` gets `--text body`, because a Nuxt
 `#app`. And it has **no `--clock`**, and from here on none of this course's transcripts do: a Nuxt page
 is drawn by the server too, and the server's clock cannot be set from the browser. On the recording
 computer the server and the browser were both set to 21 October 2026, 10:00, for these transcripts, so
-they match the ones before them; on your computer the planner will show the week you are in, and the
+they match the ones before them. On your computer the planner will show the week you are in, and the
 dates in your transcripts will be yours. The `<Suspense>` line is information, not a warning: Nuxt wraps
 every page in the `<Suspense>` of lesson 15, and Vue says in development that it is experimental.

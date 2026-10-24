@@ -63,7 +63,8 @@ Step by step:
 2. The first click changed `minutes` twice. Still nothing: a computed nobody reads is never worked out.
 3. **`Show hours` read it for the first time**, and it was computed once, from 150, the value at that
    moment.
-4. The second click on `Add an hour` added another hour in two steps, and `hours` was computed **once**, from
+4. The second click on `Add an hour` added another hour in two steps, and `hours` was computed **once**,
+from
    210. The two writes marked it stale; the redraw read it once.
 
 ## How it knows what it depends on

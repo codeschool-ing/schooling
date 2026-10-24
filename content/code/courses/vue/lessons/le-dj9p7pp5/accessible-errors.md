@@ -48,7 +48,7 @@ first visit, which is the screen-reader version of the three red messages the la
 After a failed submit, a sighted student sees the red messages. A keyboard user is still on the
 button, and the errors are above it. Two choices are defensible: move the focus to the first invalid
 field, or announce a summary. The planner keeps it small and does neither on failure, relying on each
-field announcing its own error when reached; **after a successful submit**, it moves the focus back to
+field announcing its own error when reached. **After a successful submit**, it moves the focus back to
 the course field, ready for the next session, and the status line says what was added. Lesson 9's
 template ref is how, and the next section's handler is where it happens.
 

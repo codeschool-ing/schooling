@@ -100,6 +100,7 @@ ana@dev:~/vue/planner$ npm run type-check 2>&1 | grep -o 'error TS[0-9]*' | sort
 Three codes account for almost all of them. **TS7006, `implicitly has an 'any' type`**: a function's
 parameter that nothing describes, most of them in `planner.ts`, which the next section types. **TS2339,
 `does not exist on type 'never'`**: `ref([])` was taken to be an array of nothing, so every session read
-from it has no properties at all (three more say `on type '{}'`, in `SessionForm`). **TS18047, `is possibly 'null'`**: a template ref used as if its
-element were always there. The section on typed refs fixes the last two. The app still runs in the browser meanwhile,
-exactly as it did: none of this is about what the code does.
+from it has no properties at all (three more say `on type '{}'`, in `SessionForm`). **TS18047, `is
+possibly 'null'`**: a template ref used as if its element were always there. The section on typed refs
+fixes the last two. The app still runs in the browser meanwhile, exactly as it did: none of this is
+about what the code does.

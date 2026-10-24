@@ -115,6 +115,6 @@ ana@dev:~/vue/planner-nuxt$ curl -s -X PATCH http://localhost:3000/api/sessions/
 studied on one computer that is a fair trade, and a real one would write to a database, or to a file
 through Nitro's storage layer. And **anybody who can reach port 3000 can tick anybody's session**: the
 endpoints check that the session exists and nothing else. That is fine while the server answers only
-`localhost`, which is what `use --host to expose` in the dev server's banner means; the day the
+`localhost`, which is what `use --host to expose` in the dev server's banner means. The day the
 planner is on the internet, every route that changes something needs to know who is asking, which is
 the work of a sign-in and outside this course.

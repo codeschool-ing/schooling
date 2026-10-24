@@ -131,4 +131,5 @@ Back to this week
 Built with Vue 3.5.44, by Nuxt
 ```
 
-**The planner's own frame, around the message Nuxt wrote for the missing route**, and still a `404` underneath.
+**The planner's own frame, around the message Nuxt wrote for the missing route**, and still a `404`
+underneath.

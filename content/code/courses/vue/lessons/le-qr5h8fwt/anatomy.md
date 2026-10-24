@@ -107,6 +107,6 @@ files beside its class. Vue's choice keeps the three together and keeps each one
 the template looks like HTML, the style is CSS, and the script is JavaScript. A designer can read the
 template, and a CSS rule sits next to the markup it styles.
 
-**The cost is a build step.** A `.vue` file cannot be opened by a browser as it is, so there is
-always a compiler between you and the page. "A page at a time", two sections on, shows the one way to use Vue without one, and
-why projects rarely do.
+**The cost is a build step.** A `.vue` file cannot be opened by a browser as it is, so there is always a
+compiler between you and the page. "A page at a time", two sections on, shows the one way to use Vue
+without one, and why projects rarely do.

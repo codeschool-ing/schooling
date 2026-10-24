@@ -86,11 +86,11 @@ careless ticks
 ```
 
 **After the removal, `careless` keeps ticking and `tidy` stops.** The careless component is gone from
-the page and from Vue, and its interval still runs, every tenth of a second as the code asks (a browser busy loading a page
-fits in a few more or a few less), holding on to the component's
-`name` and everything else its function can reach. Show and hide a component like it a hundred times
-and a hundred intervals are running. `javascript` lesson 19 called this a leak you cause, and this is
-how it looks in a component.
+the page and from Vue, and its interval still runs. It fires every tenth of a second as the code asks (a
+browser busy loading a page fits in a few more or a few less), and it holds on to the component's `name`
+and everything else its function can reach. Show and hide a component like it a hundred times and a
+hundred intervals are running. `javascript` lesson 19 called this a leak you cause, and this is how it
+looks in a component.
 
 ## The rule
 

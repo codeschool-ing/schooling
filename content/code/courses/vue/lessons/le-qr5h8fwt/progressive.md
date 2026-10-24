@@ -5,7 +5,7 @@ version: 1
 
 **Vue can take over one element of a page that already exists, and leave the rest of it alone.** That
 is what Vue's own documentation means by calling it a *progressive* framework, and it is the one thing
-on this subject where Vue differs from the other three in the track: React, Angular and Svelte expect
+on this subject where Vue differs from the other three in the track. React, Angular and Svelte expect
 to own the whole page, or at least to be built by their own tools. Vue can be added to a page that a
 server already renders, a widget at a time, with no build step at all.
 

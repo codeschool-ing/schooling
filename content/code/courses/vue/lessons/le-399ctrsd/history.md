@@ -40,9 +40,10 @@ ana@dev:~/vue/planner$ kill %1
 bash: line 9: kill: %1: no such job
 ```
 
-The root answers 200, with the built `index.html`. **The course page answers 404.** There is no file called `courses/spanish` in `dist`, and a plain server answers only for
-files that exist. The application works when the student starts at `/` and clicks, and breaks the
-moment they reload a course page or share its address. The last line stopped the server.
+The root answers 200, with the built `index.html`. **The course page answers 404.** There is no file
+called `courses/spanish` in `dist`, and a plain server answers only for files that exist. The
+application works when the student starts at `/` and clicks, and breaks the moment they reload a course
+page or share its address. The last line stopped the server.
 
 ## The two fixes
 

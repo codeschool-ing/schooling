@@ -85,8 +85,8 @@ page and a field's value is not text. The count below it is.)
 
 They are where a kept component pauses and resumes what it was doing: stop a timer when deactivated,
 since nobody is looking, and start it again when activated; refresh data that may have gone stale while
-the tab was hidden. `onUnmounted` will not run for a kept component until the `<KeepAlive>` itself goes, or drops
-it from its cache because of the `include`, `exclude` or `max` below.
+the tab was hidden. `onUnmounted` will not run for a kept component until the `<KeepAlive>` itself goes,
+or drops it from its cache because of the `include`, `exclude` or `max` below.
 
 ## When to keep things alive
 

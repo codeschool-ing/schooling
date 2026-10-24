@@ -47,8 +47,8 @@ createApp(App).use(router).mount('#app')
 ```
 
 `app.use(router)` does three things. It registers the two components every routed application uses,
-`<RouterView>` and `<RouterLink>`; it provides the router to every component, through lesson 8's
-`provide`, so that `useRouter()` and `useRoute()` can find it; and it starts listening to the address
+`<RouterView>` and `<RouterLink>`. It provides the router to every component, through lesson 8's
+`provide`, so that `useRouter()` and `useRoute()` can find it. And it starts listening to the address
 bar, so that the first screen drawn is the one the address names.
 
 The router itself is defined in `src/router.js`, the next section's subject. The order matters only in

@@ -65,7 +65,8 @@ through its label for the same reason a screen reader does.
 
 ## The keys, once more
 
-`:key="session.id"`. Tick a session, and the list is replaced by a new array, with a new object for that session, but the ids are the
-same, so Vue keeps every `<li>` and only updates the one whose `done` changed. Sorted by date, the
-same session can move position when one is added in lesson 14, and its row moves with it. That is the
-behaviour the last two sections were about, arriving for free because the data carries ids.
+`:key="session.id"`. Tick a session, and the list is replaced by a new array, with a new object for that
+session, but the ids are the same, so Vue keeps every `<li>` and only updates the one whose `done`
+changed. Sorted by date, the same session can move position when one is added in lesson 14, and its row
+moves with it. That is the behaviour the last two sections were about, arriving for free because the
+data carries ids.

@@ -218,6 +218,6 @@ its storage key, its timer and both hooks, and gained two lines that say what it
 
 `usePlannerData` is a composable, so every call makes a new copy of the data and fetches it again. Today
 only `App` calls it, and that is fine. The day a second component needs the sessions, the course page
-of lesson 12 for instance, calling `usePlannerData()` there would give it a separate list: a tick on one
+of lesson 12 for instance, calling `usePlannerData()` there would give it a separate list. A tick on one
 screen would not appear on the other until a reload, and the two watchers would overwrite each other's
 copy in storage. **Shared state needs one owner**, and lesson 13 gives the planner one, with a store.

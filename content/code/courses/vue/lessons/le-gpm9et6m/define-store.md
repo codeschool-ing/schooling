@@ -42,7 +42,7 @@ lesson is about it.
   works, and is invisible to the developer tools and to server rendering.
 - **Watchers and computed values work as in a component.** Lifecycle hooks do not belong in one: a store
   outlives every component, yet an `onMounted` inside it attaches to whichever component happened to
-  create the store, and stops with it; and if the store is first created where no component is being
+  create the store, and stops with it. And if the store is first created where no component is being
   set up, a guard for instance, the hook attaches to nothing and Vue warns, as lesson 10 showed.
 - **Call `usePlannerStore()` inside setup, or after Pinia is installed.** The store needs to find the
   application's container, and before `app.use(createPinia())` there is none.

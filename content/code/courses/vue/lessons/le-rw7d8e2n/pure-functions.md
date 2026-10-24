@@ -60,10 +60,10 @@ describe('toggleDone', () => {
 ```
 
 `describe` groups tests under a name, `it` is one test, and `expect(value)` followed by a *matcher*
-states what the value must be: `toBe` for a value compared with `===`, `toEqual` for an object or a
-list compared field by field. The `new Date(2026, 9, 21)` is 21 October, because JavaScript counts the
-months from zero; a comment beside such a date, like the one in the week page's test later on, saves the
-next reader the count.
+states what the value must be: `toBe` for a value compared with `===`, `toEqual` for an object or a list
+compared field by field. The `new Date(2026, 9, 21)` is 21 October, because JavaScript counts the months
+from zero; a comment beside such a date, like the one in the week page's test in the section on
+asynchronous code, saves the next reader the count.
 
 ```
 ana@dev:~/vue/planner$ npx vitest run src/planner.test.ts

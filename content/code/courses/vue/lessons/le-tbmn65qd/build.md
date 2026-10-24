@@ -29,12 +29,12 @@ dist/assets/index-BPp-uHAO.js        122.34 kB │ gzip: 47.25 kB
 ✓ built in 615ms
 ```
 
-Sixty-one modules went in, counting Vue's and the router's own, and the list names seven files. **The three
-small JavaScript files are the routes lesson 12 made lazy**, `CourseView` and its two children, split
-off because the router imports them with `import()`; a student who never opens a course never downloads
-them. Everything else is in one `index` file of 122 kB, 47 kB once compressed, most of which is Vue,
-the router and Pinia. The two CSS files are every component's `<style>` joined, again one for the lazy
-routes. Here is the folder:
+Sixty-one modules went in, counting Vue's and the router's own, and the list names seven files. **The
+three small JavaScript files are the routes lesson 12 made lazy**, `CourseView` and its two children,
+split off because the router imports them with `import()`; a student who never opens a course never
+downloads them. Everything else is in one `index` file of 122 kB, 47 kB once compressed, most of which
+is Vue, the router and Pinia. The two CSS files are every component's `<style>` joined, again one for
+the lazy routes. Here is the folder:
 
 ```
 ana@dev:~/vue/planner$ ls -R dist

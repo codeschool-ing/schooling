@@ -88,9 +88,9 @@ and the `resolve` event said so; then both were mounted, and the fallback remove
 in parallel, and `<Suspense>` waited for the slower before showing either, so the page never showed one
 course with a gap where the other would be.
 
-The first line of the console is a message Vue prints as information, and it is Vue being honest: **Suspense is still marked
-experimental**, years after it arrived, and its API may change. It is widely used, and Nuxt builds on it
-(lesson 20); write it knowing that.
+The first line of the console is a message Vue prints as information, and it is Vue being honest:
+**Suspense is still marked experimental**, years after it arrived, and its API may change. It is widely
+used, and Nuxt builds on it (lesson 20); write it knowing that.
 
 ## The await that keeps its component
 
@@ -114,6 +114,6 @@ lesson 10 described.
 
 Suspense suits data a component cannot draw anything useful without, loaded once: a page's main data, a
 detail view. It does not suit data that changes as the student types, because a Suspense that has
-resolved does not, by default, show its fallback again for an update; that is a job for a watcher and a loading flag,
-lesson 10. And every async component needs a `<Suspense>` above it: without one, Vue warns that no Suspense
-boundary was found, and the component draws nothing.
+resolved does not, by default, show its fallback again for an update; that is a job for a watcher and a
+loading flag, lesson 10. And every async component needs a `<Suspense>` above it: without one, Vue warns
+that no Suspense boundary was found, and the component draws nothing.

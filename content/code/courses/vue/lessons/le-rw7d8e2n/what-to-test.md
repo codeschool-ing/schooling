@@ -31,7 +31,7 @@ Environment  jsdom was created 5 times · 3.21s total, 77% of tracked time
 ```
 
 **Twenty tests in five files, in about two seconds**, most of it spent making five jsdom documents,
-one per file, so that no file's test can see another's; the note under the summary says how to trade
+one per file, so that no file's test can see another's. The note under the summary says how to trade
 some of that isolation for speed, and the planner does not need to. The tests are TypeScript, so they
 are type-checked with everything else:
 

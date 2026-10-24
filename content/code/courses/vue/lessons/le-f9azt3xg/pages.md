@@ -17,7 +17,7 @@ where the page of the current address is drawn:
 </template>
 ```
 
-`<NuxtRouteAnnouncer>` was in the template already, and it stays: it is a region a screen reader reads
+`<NuxtRouteAnnouncer>` was in the template already, and it stays. It is a region a screen reader reads
 out, holding the page's title, so that a navigation that changes the page without loading a new one is
 announced, the job lesson 12 did by setting `document.title` in `afterEach`. Then the two pages, short
 for now; the last section of the lesson fills them in:

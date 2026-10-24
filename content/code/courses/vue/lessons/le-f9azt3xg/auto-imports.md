@@ -207,6 +207,6 @@ nobody calls, is in the list and not in the bundle.
 
 The cost is the one every convention has. Reading a file no longer tells you where a name comes from,
 so a function called `formatDay` in `shared/utils` and another `formatDay` in `app/utils` would be a
-collision Nuxt warns about at start-up, and a teammate meeting `toggleDone` for the first time needs
+collision Nuxt warns about at start-up. A teammate meeting `toggleDone` for the first time needs
 the editor's *go to definition*, or the generated file above. An explicit `import { formatDay } from
 '#imports'` still works, wherever a file reads better with one.

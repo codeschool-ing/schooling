@@ -19,7 +19,7 @@ for every reader, and how soon must a change reach it?
 | client-only | in the browser, after hydration | after the script | at once | no |
 
 Every mode except CSR sends HTML that is already drawn, and every one of those hydrates, so the
-mismatches of this lesson apply to all of them, SSG included: what the browser knows and the server
+mismatches of this lesson apply to all of them, SSG included. What the browser knows and the server
 does not has to be drawn after hydration, whatever the mode.
 
 ## The planner's choices
@@ -31,10 +31,10 @@ does not has to be drawn after hydration, whatever the mode.
 - **`/about`: prerendered.** The same for everybody until the next deploy.
 - **The API: no cache.** A list of sessions somebody has just changed is not a thing to keep.
 
-A course catalogue, the kind of site where these modes were invented, decides the other way round:
-its pages are the same for every reader, they are read thousands of times between two edits, and they
-must be found by search engines, so they are generated or kept with `swr`, and only the parts that
-belong to one reader, a basket or a name, are drawn in the browser.
+A course catalogue, the kind of site where these modes were invented, decides the other way round. Its
+pages are the same for every reader, they are read thousands of times between two edits, and they must
+be found by search engines. So they are generated or kept with `swr`, and only the parts that belong to
+one reader, a basket or a name, are drawn in the browser.
 
 `front-performance` lesson 2 measures these modes, in Nuxt and in three other frameworks, and is the
 place to take the numbers further. The next lesson goes back to the line both SSR and SSG depend on,

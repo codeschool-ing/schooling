@@ -46,7 +46,7 @@ probably a typo.
 The form has `novalidate`. Without it, the browser would check `min="5"` and `max="240"` itself on
 submit and show its own bubble, in its own words and its own language, before Vue's handler runs. The
 attributes stay on the input, because they tell the browser's number field what the arrows can reach and
-tell a screen reader the range; `novalidate` only stops the browser from blocking the submit, so that one
+tell a screen reader the range. `novalidate` only stops the browser from blocking the submit, so that one
 set of messages, the planner's, is shown, wired for a screen reader as the next section describes.
 
 ## The rule lives in the form, and in the store

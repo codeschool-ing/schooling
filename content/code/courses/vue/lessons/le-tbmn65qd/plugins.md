@@ -143,9 +143,9 @@ dist/assets/index-CNeZWQJG.js        122.37 kB │ gzip: 47.27 kB
 ## What it does not catch
 
 **`buildStart` runs when the dev server starts, not while it runs.** Break `courses.json` with the
-server already up, and nothing says so until the next start or the next build. A plugin can watch a
-file in the dev server too, with the `configureServer` hook, which hands it the server and its file
-watcher; for a check like this one, the build is where it counts, because the build is what reaches
-students, and the build always runs it. Other hooks do other jobs: `resolveId` and `load` invent a
-module that is not on disk, and `transform` receives the code of every file before it is served and
-may change it, which is how `plugin-vue` turns a `.vue` file into JavaScript.
+server already up, and nothing says so until the next start or the next build. A plugin can watch a file
+in the dev server too, with the `configureServer` hook, which hands it the server and its file watcher.
+For a check like this one, the build is where it counts, because the build is what reaches students, and
+the build always runs it. Other hooks do other jobs: `resolveId` and `load` invent a module that is not
+on disk, and `transform` receives the code of every file before it is served and may change it, which is
+how `plugin-vue` turns a `.vue` file into JavaScript.

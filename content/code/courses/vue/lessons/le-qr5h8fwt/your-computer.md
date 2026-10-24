@@ -30,7 +30,7 @@ a path in a transcript may differ from yours.
 Ubuntu Server 24.04 LTS as the guest and the Linux steps inside it. It is how this course was
 recorded. A server has no desktop, so there is no browser window there, and `look` is how you see a
 page. **Online**, GitHub Codespaces and similar services give you a Linux terminal in a browser tab, on
-a monthly allowance whose terms the company sets and can change; it was not run for this course, and
+a monthly allowance whose terms the company sets and can change. It was not run for this course, and
 a dev server there is reached through an address the service gives you rather than `localhost`.
 
 ## Node.js, in brief

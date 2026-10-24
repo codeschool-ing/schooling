@@ -32,9 +32,10 @@ ana@dev:~/vue/planner$ du -sh node_modules/typescript
 ```
 
 **About two seconds to check the whole planner**, on the recording machine, and a compiler that is a
-large share of what `node_modules` holds; neither reaches the student's browser. And the code: changes to nine files in `src` besides the two new ones, almost all of them parameters,
-`ref<…>()` and `?.`. Nothing about how the planner runs changed, and the build's JavaScript is the same, because
-types are removed before anything is bundled.
+large share of what `node_modules` holds; neither reaches the student's browser. And the code: changes
+to nine files in `src` besides the two new ones, almost all of them parameters, `ref<…>()` and `?.`.
+Nothing about how the planner runs changed, and the build's JavaScript is the same, because types are
+removed before anything is bundled.
 
 ## Where it costs more than it looks
 

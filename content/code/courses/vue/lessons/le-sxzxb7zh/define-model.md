@@ -58,10 +58,10 @@ ana@dev:~/vue/sandbox$ look 'http://localhost:5173/?demo=ModelDemo' --do 'fill i
 The parent's ref: 100 (number)
 ```
 
-**The parent's ref became 60 in the first run and 100 in the second, and stayed a number.** The button wrote `minutes += 15` and the
-field wrote `minutes = Number(…)`, both to the model ref, and both changes reached `planned` in the
-parent. The `Number(…)` is the field's job: an input hands over text, as lesson 5 warned, and this
-component promises a number.
+**The parent's ref became 60 in the first run and 100 in the second, and stayed a number.** The button
+wrote `minutes += 15` and the field wrote `minutes = Number(…)`, both to the model ref, and both changes
+reached `planned` in the parent. The `Number(…)` is the field's job: an input hands over text, as lesson
+5 warned, and this component promises a number.
 
 ## What it expands into
 

@@ -44,7 +44,7 @@ export default defineNuxtConfig({
 
 `prerender: true` is the static generation of the last section, for one page, inside a normal build.
 `swr: 60` is *stale-while-revalidate*: the server renders the page once, keeps the HTML, and for the
-next sixty seconds answers from that copy; the first request after that still gets the old copy, at
+next sixty seconds answers from that copy. The first request after that still gets the old copy, at
 once, and makes the server render a new one in the background. Nuxt's `isr`, *incremental static
 regeneration*, is the same idea carried out by the hosts that support it, which keep the copy in their
 own network rather than in the server. `headers` sets response headers, here one telling every cache on
@@ -112,7 +112,7 @@ those. The rule stays for the rest of this lesson, to be argued with in the last
 Route rules decide how a page is rendered and cached. **They are not the place for anything that has
 to hold**. Nuxt published an advisory, GHSA-vjh5-4x84-xrqp, that route rules, the `headers` and
 `redirect` kinds included, were skipped when an address was written with different capitals,
-`/API/courses` for `/api/courses`, on servers that treat the two as one; it covers every Nuxt up to
+`/API/courses` for `/api/courses`, on servers that treat the two as one. It covers every Nuxt up to
 4.6.1, which is one more reason lesson 18 installed 4.6.2.
 The lesson to keep is the general one: a header that protects something, a redirect away from a
 private page, needs to be enforced by the code that serves the thing, or by the host, and not only

@@ -118,12 +118,11 @@ ana@dev:~/vue/planner-nuxt$ look http://localhost:3000/ --text 'li:has(strong)'
  21 October 2026, Statistics, 60 minutes (today)
 ```
 
-**One row is highlighted as today, and another row says `(today)`.** In production Vue only reports
-that a mismatch happened, with one line and no detail, and repairs only what it must: a missing
-element is made, so the browser's `(today)` appeared on the 21st, and an attribute is left alone, so
-the server's highlight stayed on the 22nd. Nothing else is wrong on the page, and nobody would report
-it as an error; a student would just see two todays, three hours every evening, and stop trusting
-the planner.
+**One row is highlighted as today, and another row says `(today)`.** In production Vue only reports that
+a mismatch happened, with one line and no detail, and repairs only what it must. A missing element is
+made, so the browser's `(today)` appeared on the 21st, and an attribute is left alone, so the server's
+highlight stayed on the 22nd. Nothing else is wrong on the page, and nobody would report it as an error;
+a student would just see two todays, three hours every evening, and stop trusting the planner.
 
 ## Where mismatches come from
 

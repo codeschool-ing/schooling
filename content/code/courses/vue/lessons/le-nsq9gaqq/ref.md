@@ -101,11 +101,11 @@ ana@dev:~/vue/sandbox$ look 'http://localhost:5173/?demo=Unwrapping'
 [object Object]1
 ```
 
-`{{ total + 1 }}` is 1, because `total` is top-level and was unwrapped before the `+`. `{{ counts.total }}`
-is 0, because the last thing an interpolation does is unwrap what it is about to print. But
-**`{{ counts.total + 1 }}` is `[object Object]1`**: the `+` met the wrapper, turned it into a string
-and glued a 1 to it. Keep refs at the top level of the script, or inside a `reactive` object (next
-section), where they are unwrapped whenever they are read.
+`{{ total + 1 }}` is 1, because `total` is top-level and was unwrapped before the `+`. `{{ counts.total
+}}` is 0, because the last thing an interpolation does is unwrap what it is about to print. But **`{{
+counts.total + 1 }}` is `[object Object]1`**: the `+` met the wrapper, turned it into a string and glued
+a 1 to it. Keep refs at the top level of the script, or inside a `reactive` object (next section), where
+they are unwrapped whenever they are read.
 
 ## When the whole value is replaced
 
