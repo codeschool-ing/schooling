@@ -97,6 +97,7 @@ navegador não cabe numa aula, então este curso lê páginas com um programa cu
 //                  XMLHttpRequest, and their status: the data, not the scripts
 //   --no-js        open the page with JavaScript turned off
 //   --wait MS      how long to let the page settle after each step (500)
+//   --url          print the address the page ended up at, before its text
 import { chromium } from "playwright";
 
 const args = process.argv.slice(2);
@@ -115,6 +116,7 @@ while (args.length) {
   else if (a === "--network") opt.network = true;
   else if (a === "--no-js") opt.noJs = true;
   else if (a === "--wait") opt.wait = Number(args.shift());
+  else if (a === "--url") opt.url = true;
   else { console.error(`look: unknown option ${a}`); process.exit(2); }
 }
 
@@ -218,6 +220,7 @@ for (const action of opt.do) {
   await settle();
 }
 
+if (opt.url) say(`url: ${new URL(page.url()).pathname}`);
 const pick = opt.html || opt.a11y || opt.text || "body";
 const target = page.locator(pick).first();
 if (!opt.styles && (await target.count()) === 0) {
