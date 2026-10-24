@@ -87,7 +87,8 @@ be pasted into a lesson, so this course reads pages with a short program instead
 //                  Angular adds to keep a component's styles to itself
 //                  (_ngcontent-…, _nghost-…); --raw keeps them
 //   --a11y SEL     print SEL's accessibility tree as Chromium builds it for a
-//                  screen reader: each role, its name, its value and its state
+//                  screen reader: each role, its name, its value, its state
+//                  and its description
 //   --styles       print the CSS rules the page's stylesheets hold, as the
 //                  browser read them
 //   --today DATE   make the browser's clock say DATE (YYYY-MM-DD), at 09:00
@@ -144,6 +145,8 @@ if (opt.network) {
 // a screen reader, one line per node: role, "name", [level or state], value.
 // Nodes that only group others (generic, none) are left out and their
 // children kept, and the text of a node already named by it is not repeated.
+// A date or time field is one line: the parts the browser draws inside it,
+// a spinbutton for each part and the picker's button, are the browser's own.
 async function axTree(sel) {
   const cdp = await context.newCDPSession(page);
   const { root } = await cdp.send("DOM.getDocument", { depth: 0 });
@@ -156,6 +159,11 @@ async function axTree(sel) {
   const byId = new Map(nodes.map((n) => [n.nodeId, n]));
   const parent = new Map(nodes.flatMap((n) => (n.childIds ?? []).map((c) => [c, byId.get(n.nodeId)])));
   const lines = [];
+  const DRAWN = ["Date", "DateTime", "InputTime"];
+  const focusedWithin = (n) => (n.childIds ?? []).some((id) => {
+    const c = byId.get(id);
+    return c.properties?.some((p) => p.name === "focused" && p.value?.value) || focusedWithin(c);
+  });
   const walk = (n, depth, named) => {
     const role = n.role?.value;
     const name = n.name?.value ?? "";
@@ -172,9 +180,12 @@ async function axTree(sel) {
         else if (["checked", "expanded", "pressed"].includes(p.name) && v !== "false") line += ` [${p.name}${v === "true" || v === true ? "" : `=${v}`}]`;
         else if (["disabled", "invalid", "required", "focused"].includes(p.name) && v && v !== "false") line += ` [${p.name}]`;
       }
+      if (DRAWN.includes(role) && focusedWithin(n)) line += " [focused]";
       if (n.value?.value !== undefined && n.value.value !== "") line += `: ${n.value.value}`;
+      if (n.description?.value) line += ` (description: ${n.description.value})`;
       lines.push(line);
     }
+    if (DRAWN.includes(role)) return;
     for (const id of n.childIds ?? []) walk(byId.get(id), shown ? depth + 1 : depth, shown ? Boolean(name) : named);
   };
   // An element with no role of its own, such as a component's tag, has no node
