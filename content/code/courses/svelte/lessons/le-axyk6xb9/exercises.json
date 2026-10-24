@@ -1,0 +1,749 @@
+[
+  {
+    "id": "ex-tz73ndes",
+    "version": 1,
+    "section": "vitest",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can Vitest compile `.svelte` files and resolve `#lib` imports with no setup of its own?",
+    "hint": "What is it built on?",
+    "choices": [
+      {
+        "text": "`svelte-check` compiles them for it beforehand",
+        "correct": false,
+        "why": "`svelte-check` only checks; it hands nothing to Vitest."
+      },
+      {
+        "text": "It reads the project's own `vite.config.js`",
+        "correct": true,
+        "why": "Right: Vitest is built on Vite, plugin and imports included."
+      },
+      {
+        "text": "It ships its own copy of the Svelte compiler",
+        "correct": false,
+        "why": "It uses the SvelteKit plugin the project already has."
+      },
+      {
+        "text": "It asks the running dev server to compile them",
+        "correct": false,
+        "why": "No server runs during `npm run test:unit`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ye70f5mt",
+    "version": 1,
+    "section": "vitest",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the difference between `vitest run` and `vitest` on its own?",
+    "hint": "One of them stops.",
+    "choices": [
+      {
+        "text": "`vitest` on its own runs only the tests that failed",
+        "correct": false,
+        "why": "It watches and reruns; it does not filter by failure."
+      },
+      {
+        "text": "`vitest run` builds the planner before testing it",
+        "correct": false,
+        "why": "No build is made for unit tests."
+      },
+      {
+        "text": "`vitest run` also starts the end-to-end tests",
+        "correct": false,
+        "why": "Those are Playwright's, run by `test:e2e`."
+      },
+      {
+        "text": "`vitest run` runs once; `vitest` keeps watching",
+        "correct": true,
+        "why": "Right: alone, it runs the tests again whenever a file is saved."
+      }
+    ]
+  },
+  {
+    "id": "ex-ehefa457",
+    "version": 1,
+    "section": "vitest",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Vitest file sits beside the file it checks, and its name ends in `.___.ts`.",
+    "hint": "The pattern is in `vite.config.js`.",
+    "blanks": [
+      {
+        "accept": [
+          "test"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4yww8qwm",
+    "version": 1,
+    "section": "vitest",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the test that `mondayOf('2026-10-25')` is `'2026-10-19'` worth writing?",
+    "hint": "How does JavaScript number the days?",
+    "choices": [
+      {
+        "text": "JavaScript numbers Sunday as 0, an easy place to slip",
+        "correct": true,
+        "why": "Right: a slip would put Sunday's sessions in the next week."
+      },
+      {
+        "text": "Sunday sessions are never counted in any total",
+        "correct": false,
+        "why": "They count, in the week they belong to."
+      },
+      {
+        "text": "The 25th of October is a public holiday in the data",
+        "correct": false,
+        "why": "Holidays play no part in the planner."
+      },
+      {
+        "text": "Dates at the end of a month are parsed differently",
+        "correct": false,
+        "why": "That is `addDays`'s test, crossing into November."
+      }
+    ]
+  },
+  {
+    "id": "ex-bw71n31s",
+    "version": 1,
+    "section": "vitest",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many tests did `src/lib/week.test.ts` run?",
+    "hint": "Five of them came from one `test.each`.",
+    "value": 11,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-7qtqg6tm",
+    "version": 1,
+    "section": "failing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `<` became `<=` in `inWeek`, which test failed?",
+    "hint": "Which day does `<=` let in?",
+    "choices": [
+      {
+        "text": "None, since the change was made for a good reason",
+        "correct": false,
+        "why": "A test cannot know the reason; it knew what was true before."
+      },
+      {
+        "text": "The one about Sunday ending the week",
+        "correct": false,
+        "why": "Sunday was in the week before and still is."
+      },
+      {
+        "text": "The one about the following Monday",
+        "correct": true,
+        "why": "Right: `inWeek('2026-10-26', '2026-10-19')` became true."
+      },
+      {
+        "text": "Every test in `check.test.ts` at once",
+        "correct": false,
+        "why": "The check does not use `inWeek`."
+      }
+    ]
+  },
+  {
+    "id": "ex-0m6n7z8z",
+    "version": 1,
+    "section": "failing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `{ date: '2026-10-21', minutes: '30' }` one of the refused rows?",
+    "hint": "Look at the quotes around 30.",
+    "choices": [
+      {
+        "text": "The date is in the past, which the check refuses",
+        "correct": false,
+        "why": "The check says nothing about past dates."
+      },
+      {
+        "text": "A session must name its course to pass the check",
+        "correct": false,
+        "why": "`problemWith` checks only the date and the minutes."
+      },
+      {
+        "text": "The minutes arrive as text, as lesson 18 sent them",
+        "correct": true,
+        "why": "Right: `'30'` is a string, and only a whole number passes."
+      },
+      {
+        "text": "Thirty minutes is shorter than the minimum of five",
+        "correct": false,
+        "why": "Thirty is well above five."
+      }
+    ]
+  },
+  {
+    "id": "ex-h2aw24mx",
+    "version": 1,
+    "section": "failing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did the failing test know about the change to `inWeek`?",
+    "hint": "Not the reason.",
+    "choices": [
+      {
+        "text": "What was true before, and that it no longer was",
+        "correct": true,
+        "why": "Right: that is all a test can know, and almost always enough."
+      },
+      {
+        "text": "What the change was meant to achieve",
+        "correct": false,
+        "why": "The lesson says the test did not know that."
+      },
+      {
+        "text": "Which totals in the planner it would break",
+        "correct": false,
+        "why": "It checked `inWeek` alone, not the totals."
+      },
+      {
+        "text": "Who made it, from the history in Git",
+        "correct": false,
+        "why": "Tests do not read Git."
+      }
+    ]
+  },
+  {
+    "id": "ex-myevzbzt",
+    "version": 1,
+    "section": "failing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many tests passed once `check.test.ts` joined `week.test.ts`?",
+    "hint": "Eleven plus seven.",
+    "value": 18,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-ymng26ez",
+    "version": 1,
+    "section": "runes-in-tests",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is the planner's test called `planner.svelte.test.ts`?",
+    "hint": "It uses `$state`.",
+    "choices": [
+      {
+        "text": "The name is what makes it a component test",
+        "correct": false,
+        "why": "It tests a class, and renders nothing."
+      },
+      {
+        "text": "So that Playwright runs it in a browser",
+        "correct": false,
+        "why": "It runs in Vitest, with no browser."
+      },
+      {
+        "text": "Vitest reads only names with `.svelte` in them",
+        "correct": false,
+        "why": "`week.test.ts` ran too, without it."
+      },
+      {
+        "text": "A file with runes must go through the Svelte compiler",
+        "correct": true,
+        "why": "Right: the name sends it there, as with `planner.svelte.ts`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ksjptp8c",
+    "version": 1,
+    "section": "runes-in-tests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does each test call `source()` for its data instead of sharing one object?",
+    "hint": "One test changes the week.",
+    "choices": [
+      {
+        "text": "Vitest runs every test in a separate browser",
+        "correct": false,
+        "why": "These tests run in Node, with no browser."
+      },
+      {
+        "text": "So that each test starts from data of its own",
+        "correct": true,
+        "why": "Right: the second test changes its data's week."
+      },
+      {
+        "text": "A `Planner` refuses data it has been given before",
+        "correct": false,
+        "why": "Nothing in the class checks that."
+      },
+      {
+        "text": "`source()` reads the file `data/planner.json`",
+        "correct": false,
+        "why": "It returns data written in the test itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-3arzg6d9",
+    "version": 1,
+    "section": "runes-in-tests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the second test, what makes `planner.total` go from 135 to 60?",
+    "hint": "What is `data`, and what changed in it?",
+    "choices": [
+      {
+        "text": "`data.week` changed, and `data` is `$state`",
+        "correct": true,
+        "why": "Right: the planner reads its data, so the totals follow."
+      },
+      {
+        "text": "A call to `refreshAll()` at the end of the test",
+        "correct": false,
+        "why": "No load function runs here, so there is nothing to refresh."
+      },
+      {
+        "text": "A new `Planner` made with the earlier week",
+        "correct": false,
+        "why": "The test keeps the same planner throughout."
+      },
+      {
+        "text": "A component that rerenders when the week changes",
+        "correct": false,
+        "why": "There is no component anywhere in this test."
+      }
+    ]
+  },
+  {
+    "id": "ex-x6sang84",
+    "version": 1,
+    "section": "components",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `render` from `svelte/server` give a test to read?",
+    "hint": "As the server does.",
+    "choices": [
+      {
+        "text": "The JavaScript the compiler wrote for it",
+        "correct": false,
+        "why": "That was lesson 1's `compile.mjs`."
+      },
+      {
+        "text": "A tree of roles and names, as `look` prints",
+        "correct": false,
+        "why": "That is Playwright's view, not `render`'s."
+      },
+      {
+        "text": "The HTML the component produced, as `body`",
+        "correct": true,
+        "why": "Right: the test looks for text in it."
+      },
+      {
+        "text": "A live component that the test can click",
+        "correct": false,
+        "why": "Nothing is live; there is no browser."
+      }
+    ]
+  },
+  {
+    "id": "ex-4pz3k2tv",
+    "version": 1,
+    "section": "components",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can a test with `render` from `svelte/server` not check? Choose all that apply.",
+    "hint": "Anything after the HTML exists.",
+    "choices": [
+      {
+        "text": "A click on a button",
+        "correct": true,
+        "why": "Right: nothing is clicked in HTML text."
+      },
+      {
+        "text": "A form being sent",
+        "correct": true,
+        "why": "Right: that happens in a browser."
+      },
+      {
+        "text": "Focus moving to an element",
+        "correct": true,
+        "why": "Right: there is no focus without a browser."
+      },
+      {
+        "text": "The text a prop produces",
+        "correct": false,
+        "why": "It can: `90` gave `1 h 30 min`."
+      }
+    ]
+  },
+  {
+    "id": "ex-9cbfr3j4",
+    "version": 1,
+    "section": "components",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many unit tests passed once `WeekTotal.test.ts` was added?",
+    "hint": "Four files.",
+    "value": 22,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-pg7jj3g9",
+    "version": 1,
+    "section": "playwright",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `@playwright/test` installed at exactly 1.63.0?",
+    "hint": "Which tool already uses Playwright?",
+    "choices": [
+      {
+        "text": "Vitest 5.0.5 refuses any other version of it",
+        "correct": false,
+        "why": "The two are installed and run separately."
+      },
+      {
+        "text": "It matches `look`, so it finds lesson 1's browser",
+        "correct": true,
+        "why": "Right: nothing has to be downloaded."
+      },
+      {
+        "text": "It is the only version that supports SvelteKit 3",
+        "correct": false,
+        "why": "Playwright drives a browser; it does not know SvelteKit."
+      },
+      {
+        "text": "Newer versions cannot test with JavaScript off",
+        "correct": false,
+        "why": "Nothing in the lesson says so."
+      }
+    ]
+  },
+  {
+    "id": "ex-bskyycse",
+    "version": 1,
+    "section": "playwright",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the server module read `process.env.PLANNER_FILE`?",
+    "hint": "The tests add sessions.",
+    "choices": [
+      {
+        "text": "So the planner can keep one data file per course",
+        "correct": false,
+        "why": "There is still one file; only its name can change."
+      },
+      {
+        "text": "Because `adapter-node` cannot read a relative path",
+        "correct": false,
+        "why": "It read `data/planner.json` since lesson 15."
+      },
+      {
+        "text": "So that the browser can choose which file to load",
+        "correct": false,
+        "why": "The browser never sees the server's environment."
+      },
+      {
+        "text": "So the tests' server works on a copy of the data",
+        "correct": true,
+        "why": "Right: the sessions the tests add never reach the planner you use."
+      }
+    ]
+  },
+  {
+    "id": "ex-syzv4920",
+    "version": 1,
+    "section": "playwright",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `playwright.config.ts` set `reuseExistingServer: false`?",
+    "hint": "What would an old server still hold?",
+    "choices": [
+      {
+        "text": "Reusing it would skip the CSRF check of lesson 15",
+        "correct": false,
+        "why": "The check belongs to every build, reused or not."
+      },
+      {
+        "text": "A reused server would run with JavaScript off",
+        "correct": false,
+        "why": "JavaScript is switched off in the browser, by `test.use`."
+      },
+      {
+        "text": "Playwright cannot connect to a server it did not start",
+        "correct": false,
+        "why": "It can; the option exists to allow it."
+      },
+      {
+        "text": "An old server still holds sessions added before",
+        "correct": true,
+        "why": "Right: a fresh one starts every run from the same data."
+      }
+    ]
+  },
+  {
+    "id": "ex-xhaw8rs8",
+    "version": 1,
+    "section": "playwright",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the test about three minutes, why is `noValidate` set on the form?",
+    "hint": "Whose check is under test?",
+    "choices": [
+      {
+        "text": "Playwright cannot fill in a number below `min`",
+        "correct": false,
+        "why": "It filled in 3 before `noValidate` was set."
+      },
+      {
+        "text": "The browser would refuse 3 before the server saw it",
+        "correct": true,
+        "why": "Right: switching the browser's check off tests the server's."
+      },
+      {
+        "text": "`use:enhance` needs it to show the `role=\"alert\"` message",
+        "correct": false,
+        "why": "The message comes from `fail()`, enhanced or not."
+      },
+      {
+        "text": "Without it the browser would send minutes as text",
+        "correct": false,
+        "why": "A form field is always sent as text, either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-apbtc6hf",
+    "version": 1,
+    "section": "playwright",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What would make the two tests in the `with JavaScript off` group fail?",
+    "hint": "Lesson 14's promise.",
+    "choices": [
+      {
+        "text": "Adding `use:enhance` to another form",
+        "correct": false,
+        "why": "Enhancement leaves the form working without JavaScript."
+      },
+      {
+        "text": "Renaming a course in `data/planner.json`",
+        "correct": false,
+        "why": "The tests use a copy, and look for sessions and weeks."
+      },
+      {
+        "text": "A control that only works with a click handler",
+        "correct": true,
+        "why": "Right: with JavaScript off, nothing would answer it."
+      },
+      {
+        "text": "A slower server answering in two seconds",
+        "correct": false,
+        "why": "`expect` waits up to five seconds for the answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-gzzf1evv",
+    "version": 1,
+    "section": "playwright",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many end-to-end tests did `npm run test:e2e` run?",
+    "hint": "Two of them with JavaScript off.",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-8sgtxssk",
+    "version": 1,
+    "section": "what-to-test",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each command with the kind of mistake it catches.",
+    "hint": "One reads code, one runs pieces, one drives a browser.",
+    "pairs": [
+      {
+        "left": "`npm run check`",
+        "right": "A property that does not exist"
+      },
+      {
+        "left": "`npm run test:unit`",
+        "right": "A rule that gives the wrong week"
+      },
+      {
+        "left": "`npm run test:e2e`",
+        "right": "A form that stopped working with JavaScript off"
+      }
+    ]
+  },
+  {
+    "id": "ex-573jnxw8",
+    "version": 1,
+    "section": "what-to-test",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put what `npm test` runs in the order it runs them.",
+    "hint": "From the fastest.",
+    "items": [
+      "`npm run check`",
+      "`npm run test:unit`",
+      "`npm run test:e2e`"
+    ],
+    "trap": "A type error stops the chain before the slower tests run."
+  },
+  {
+    "id": "ex-ajdgtjkd",
+    "version": 1,
+    "section": "what-to-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should most of the tests be unit tests?",
+    "hint": "What does each say when it fails?",
+    "choices": [
+      {
+        "text": "They are fast and name the line that broke",
+        "correct": true,
+        "why": "Right: an end-to-end failure only says a journey broke somewhere."
+      },
+      {
+        "text": "End-to-end tests cannot run with JavaScript off",
+        "correct": false,
+        "why": "Two of the planner's do exactly that."
+      },
+      {
+        "text": "Unit tests also check the framework itself",
+        "correct": false,
+        "why": "The framework is Svelte's and SvelteKit's to test."
+      },
+      {
+        "text": "`svelte-check` reads only unit test files",
+        "correct": false,
+        "why": "It reads every file in `src`."
+      }
+    ]
+  },
+  {
+    "id": "ex-k245qd9z",
+    "version": 1,
+    "section": "what-to-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do the planner's tests look for text and roles rather than `<p class=\"svelte-1x2y3z\">`?",
+    "hint": "What changes when a style changes?",
+    "choices": [
+      {
+        "text": "Classes are removed from the HTML in a build",
+        "correct": false,
+        "why": "Scoped classes stay; they change with the styles."
+      },
+      {
+        "text": "A class changes with every style and proves nothing",
+        "correct": true,
+        "why": "Right: text and controls survive a redesign."
+      },
+      {
+        "text": "Screen readers announce the class of each element",
+        "correct": false,
+        "why": "They announce roles and names, not classes."
+      },
+      {
+        "text": "Playwright cannot find an element by its class",
+        "correct": false,
+        "why": "It can; it is just the wrong thing to ask for."
+      }
+    ]
+  },
+  {
+    "id": "ex-yr3rhvpx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A change puts every Monday's sessions in two weeks. Which check is the quickest to catch it?",
+    "hint": "It is a rule about weeks.",
+    "choices": [
+      {
+        "text": "`npm run test:unit`, in `week.test.ts`",
+        "correct": true,
+        "why": "Right: that is the test that failed in this lesson."
+      },
+      {
+        "text": "`npm run test:e2e`, in its JavaScript-off group",
+        "correct": false,
+        "why": "None of those tests looks at a Monday."
+      },
+      {
+        "text": "None: such a change looks plausible to every check",
+        "correct": false,
+        "why": "It looks plausible on the page, not to the test."
+      },
+      {
+        "text": "`npm run check`, since the types are wrong",
+        "correct": false,
+        "why": "`<=` has the same types as `<`."
+      }
+    ]
+  },
+  {
+    "id": "ex-vw346zhx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A component only displays text from its props. Which test suits it best?",
+    "hint": "No clicks involved.",
+    "choices": [
+      {
+        "text": "A Playwright test that builds and serves the planner",
+        "correct": false,
+        "why": "That is far slower than needed for text from props."
+      },
+      {
+        "text": "A test named `.svelte.test.ts` with `$state`",
+        "correct": false,
+        "why": "That name is for tests that use runes themselves."
+      },
+      {
+        "text": "A `svelte-check` run with no tests at all",
+        "correct": false,
+        "why": "It checks types, not the text a component shows."
+      },
+      {
+        "text": "A Vitest test with `render` from `svelte/server`",
+        "correct": true,
+        "why": "Right: like `WeekTotal.test.ts`."
+      }
+    ]
+  }
+]
