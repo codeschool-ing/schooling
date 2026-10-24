@@ -72,10 +72,10 @@ commit() {
 # IN ORDER the first time; after that any lesson can be run again on its own.
 # What a student types to get from one lesson to the next is in the lessons.
 SNAP=/var/lib/machines/fm-snapshots
-PROJECTS="planner keep-awake planner-native planner-electron"
+PROJECTS="planner keep-awake planner-native planner_flutter planner-ionic planner-electron"
 save_as() {
   mkdir -p $SNAP
-  ( cd "$M/home/ana" && tar -cf "$SNAP/after-$1.tar" --exclude='*/src-tauri/target' $(ls -d $PROJECTS 2>/dev/null) )
+  ( cd "$M/home/ana" && tar -cf "$SNAP/after-$1.tar" --exclude='*/src-tauri/target' --exclude='planner_flutter/build' --exclude='planner_flutter/.dart_tool' $(ls -d $PROJECTS 2>/dev/null) )
 }
 start_from() {
   [ -f "$SNAP/after-$1.tar" ] || { echo "no snapshot after lesson $1: run its captures first" >&2; exit 1; }
