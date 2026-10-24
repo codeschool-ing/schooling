@@ -1,0 +1,199 @@
+# Lesson 16: template-driven forms
+
+@ ng-model quiz easy #ex-r9z4495z
+? In a template-driven form, what makes each control?
+?? Num formulário template-driven, o que faz cada controle?
+- A `FormControl` written in the class :: That is a reactive form.
+-- Um `FormControl` escrito na classe :: Isso é um formulário reativo.
++ The `ngModel` directive on each input :: Right. The `<form>` collects them.
+++ A diretiva `ngModel` em cada input :: Isso. O `<form>` os reúne.
+- The browser, from the input's `name` :: `name` is the key; `ngModel` makes the control.
+-- O navegador, a partir do `name` do input :: O `name` é a chave; o `ngModel` faz o controle.
+- `FormsModule`, once per form :: The module provides the directives; each `ngModel` makes one.
+-- O `FormsModule`, uma vez por formulário :: O módulo fornece as diretivas; cada `ngModel` faz um.
+
+@ ng-model quiz medium #ex-4wwsdbpj
+? What does `[(ngModel)]="date"` do, with `date` a signal?
+?? O que o `[(ngModel)]="date"` faz, com `date` sendo um signal?
+- It copies the signal into the input once, at start :: It keeps them in step both ways.
+-- Copia o signal para o input uma vez, no começo :: Ele os mantém em sincronia nos dois sentidos.
++ It keeps the input and the signal in step, both ways :: Right. Two bindings in one.
+++ Mantém o input e o signal em sincronia, nos dois sentidos :: Isso. Duas ligações numa.
+- It fails, because `ngModel` needs a plain field :: Two-way binding works with a writable signal.
+-- Falha, porque o `ngModel` precisa de um campo comum :: A ligação de mão dupla funciona com um signal gravável.
+- It turns the signal into a `FormControl` :: The control is the directive's own; the signal stays a signal.
+-- Transforma o signal num `FormControl` :: O controle é da própria diretiva; o signal continua signal.
+
+@ ng-model quiz medium #ex-aq624z1v
+? Inside a `<form>`, what does every `ngModel` need?
+?? Dentro de um `<form>`, do que todo `ngModel` precisa?
+- An `id` matching its label :: That is for the label and a screen reader, not for `ngModel`.
+-- Um `id` igual ao do label :: Isso é para o label e um leitor de tela, não para o `ngModel`.
+- A `#ref="ngModel"` :: A template reference is optional.
+-- Um `#ref="ngModel"` :: Uma referência de template é opcional.
++ A `name` attribute :: Right. Without one it fails at run time.
+++ Um atributo `name` :: Isso. Sem um, falha em tempo de execução.
+- A validator :: A field may have none.
+-- Um validador :: Um campo pode não ter nenhum.
+
+@ in-the-template quiz medium #ex-a2pfjc5q
+? How does `min="5"` on an input become a validator?
+?? Como o `min="5"` num input vira um validador?
+- The browser checks it and tells Angular :: Angular adds `novalidate`; the browser checks nothing.
+-- O navegador confere e avisa o Angular :: O Angular acrescenta `novalidate`; o navegador não confere nada.
++ A directive adds `Validators.min(5)` :: Right. Validation by attribute.
+++ Uma diretiva acrescenta `Validators.min(5)` :: Isso. Validação por atributo.
+- It does not; only `required` is read :: `min` is read too, and the bench showed its message.
+-- Não vira; só o `required` é lido :: O `min` também é lido, e o bench mostrou a mensagem dele.
+- The class reads the attribute in `ngOnInit` :: Nothing in the class mentions it.
+-- A classe lê o atributo no `ngOnInit` :: Nada na classe o menciona.
+
+@ in-the-template matching medium #ex-fxrsb4fc
+? Match each template reference with what it gives the template.
+?? Associe cada referência de template ao que ela dá ao template.
+< `#f="ngForm"` :: the whole form: value, validity, submitted
+<< `#f="ngForm"` :: o formulário inteiro: valor, validade, enviado
+< `#day="ngModel"` :: one field's control
+<< `#day="ngModel"` :: o controle de um campo
+< `#box` on a plain input :: the input element itself
+<< `#box` num input comum :: o próprio elemento input
+x the component's class
+xx a classe do componente
+
+@ in-the-template quiz easy #ex-khhva9dh
+? Where are the rules of a template-driven form written?
+?? Onde as regras de um formulário template-driven ficam escritas?
++ In the template, as attributes :: Right. Which validators, when a message shows, what is sent.
+++ No template, como atributos :: Isso. Quais validadores, quando uma mensagem aparece, o que é mandado.
+- In a schema function :: That is Signal Forms.
+-- Numa função de schema :: Isso é Signal Forms.
+- In validator functions passed to controls :: That is a reactive form.
+-- Em funções validadoras passadas a controles :: Isso é um formulário reativo.
+- In the server :: The server checks again, whatever the form does.
+-- No servidor :: O servidor confere de novo, faça o formulário o que fizer.
+
+@ the-catch quiz medium #ex-9c4g4113
+? In `ngAfterViewInit`, the bench's form value was `{}`. Why?
+?? No `ngAfterViewInit`, o valor do formulário do bench era `{}`. Por quê?
+- The inputs had no values yet :: An empty value would still be a key; there were no keys.
+-- Os inputs ainda não tinham valores :: Um valor vazio ainda seria uma chave; não havia chaves.
+- `viewChild` returns an empty form until submit :: It returned the form; the form had no controls yet.
+-- O `viewChild` retorna um formulário vazio até o envio :: Ele retornou o formulário; o formulário ainda não tinha controles.
++ The controls register a moment later :: Right. A moment later both were there.
+++ Os controles se registram um instante depois :: Isso. Um instante depois os dois estavam lá.
+- `ngAfterViewInit` runs before the template :: It runs after the view is drawn.
+-- O `ngAfterViewInit` roda antes do template :: Ele roda depois que a view é desenhada.
+
+@ the-catch quiz medium #ex-zyqnkd9y
+? What type is `f.value` in a template-driven form?
+?? Qual é o tipo do `f.value` num formulário template-driven?
+- The type of the class's signals :: The form does not know about them.
+-- O tipo dos signals da classe :: O formulário não sabe deles.
++ `any` :: Right. Nobody described its shape.
+++ `any` :: Isso. Ninguém descreveu a forma dele.
+- `Partial` of the fields, like `form.value` in lesson 14 :: That needs controls declared in code.
+-- Um `Partial` dos campos, como o `form.value` da aula 14 :: Isso precisa de controles declarados em código.
+- `string`, because inputs hold text :: `ngModel` gives numbers for number inputs.
+-- `string`, porque inputs guardam texto :: O `ngModel` dá números para inputs numéricos.
+
+@ the-catch quiz hard #ex-8qvhyy9t
+? Why does a cross-field rule such as `distinctDates` cost more in a template-driven form?
+?? Por que uma regra entre campos como o `distinctDates` custa mais num formulário template-driven?
+- Template-driven forms cannot have more than one validator per field :: They can have several.
+-- Formulários template-driven não podem ter mais de um validador por campo :: Podem ter vários.
+- The rule needs the server :: It is a check of two values in the browser.
+-- A regra precisa do servidor :: É uma conferência de dois valores no navegador.
++ It must be wrapped in a directive, on an element around the fields :: Right. A reactive form passes the function to the array.
+++ Ela precisa virar uma diretiva, num elemento em volta dos campos :: Isso. Um formulário reativo passa a função ao array.
+- Arrays are not allowed in template-driven forms :: An `@for` of `ngModel`s works, with generated names.
+-- Arrays não são permitidos em formulários template-driven :: Um `@for` de `ngModel`s funciona, com nomes gerados.
+
+@ the-catch multiple-choice medium #ex-h1ac26xf
+? Which of these grow harder with the size of a template-driven form? Choose every one.
+?? Quais destes ficam mais difíceis com o tamanho de um formulário template-driven? Escolha todos.
++ Testing the rules without rendering :: Right. The form only exists once the template runs.
+++ Testar as regras sem renderizar :: Isso. O formulário só existe quando o template roda.
++ Knowing the type of the value :: Right. It is `any`.
+++ Saber o tipo do valor :: Isso. Ele é `any`.
++ A list of fields whose length changes :: Right. Generated names in an `@for`.
+++ Uma lista de campos cujo tamanho muda :: Isso. Nomes gerados num `@for`.
+- Binding one input to one value :: That is what it does well.
+-- Ligar um input a um valor :: Isso é o que ele faz bem.
+
+@ signal-forms quiz medium #ex-2p2b3vcy
+? In Signal Forms, where does a field's value live?
+?? Nos Signal Forms, onde fica o valor de um campo?
+- In a `FormControl` the field makes :: There are no `FormControl`s.
+-- Num `FormControl` que o campo faz :: Não há `FormControl`s.
+- In the input element, read on submit :: The input wrote straight into the model.
+-- No elemento input, lido no envio :: O input escreveu direto no modelo.
++ In the signal you passed to `form()` :: Right. `model().minutes` changed as the field did.
+++ No signal que você passou ao `form()` :: Isso. O `model().minutes` mudou junto com o campo.
+- In a service Angular provides :: Nothing is provided; the model is a field of the class.
+-- Num serviço que o Angular fornece :: Nada é fornecido; o modelo é um campo da classe.
+
+@ signal-forms quiz medium #ex-bbsva7g6
+? What did `[formField]` write into the page by itself?
+?? O que o `[formField]` escreveu na página sozinho?
+- `aria-describedby`, linking each message :: That is still yours to write.
+-- `aria-describedby`, ligando cada mensagem :: Isso ainda é seu para escrever.
++ `required` and `min` :: Right. The browser's own attributes.
+++ `required` e `min` :: Isso. Os atributos do próprio navegador.
+- The error messages :: The template drew them, from `errors()`.
+-- As mensagens de erro :: O template as desenhou, a partir do `errors()`.
+- A `novalidate` on the form :: That was written by hand.
+-- Um `novalidate` no formulário :: Esse foi escrito à mão.
+
+@ signal-forms quiz hard #ex-3z76bbrt
+? Why does the planner not move to Signal Forms now?
+?? Por que o planner não passa para Signal Forms agora?
+- They cannot validate numbers :: `min` worked on the minutes.
+-- Eles não conseguem validar números :: O `min` funcionou nos minutos.
+- They need zone.js :: They work zoneless, as the bench did.
+-- Eles precisam do zone.js :: Funcionam sem zone, como o bench funcionou.
++ They are still experimental :: Right. Reactive forms are stable.
+++ Eles ainda são marcados como experimentais :: Isso. Formulários reativos são estáveis.
+- They cannot be used beside reactive forms :: They are designed to be adopted one form at a time.
+-- Não podem ser usados ao lado de formulários reativos :: Foram feitos para ser adotados um formulário por vez.
+
+@ signal-forms cloze easy #ex-5zdb2ywr
+? A Signal Forms input is bound to its field with `<input [___]="draft.date" />`.
+?? Um input dos Signal Forms é ligado ao campo dele com `<input [___]="draft.date" />`.
+= formField
+== formField
+
+@ three-ways matching medium #ex-atqcz4c7
+? Match each kind of form with where its model is.
+?? Associe cada tipo de formulário a onde o modelo dele fica.
+< template-driven :: controls made by the template's `ngModel`s
+<< template-driven :: controles feitos pelos `ngModel`s do template
+< reactive :: `FormGroup` and `FormControl` in the class
+<< reativo :: `FormGroup` e `FormControl` na classe
+< Signal Forms :: a signal of a plain object, with a field tree over it
+<< Signal Forms :: um signal de um objeto simples, com uma árvore de campos sobre ele
+x the browser's own form data
+xx os dados de formulário do próprio navegador
+
+@ three-ways quiz medium #ex-wvb9y88p
+? Which form suits a newsletter sign-up with one email field?
+?? Que formulário serve para um cadastro de newsletter com um campo de email?
++ Template-driven is fine :: Right. One field, no rules across fields, nothing for the class to read.
+++ Template-driven serve :: Isso. Um campo, nenhuma regra entre campos, nada para a classe ler.
+- Only Signal Forms, as the newest :: Newest is not the reason to choose.
+-- Só Signal Forms, por ser o mais novo :: Ser o mais novo não é motivo para escolher.
+- A reactive `FormArray` :: There is no list here.
+-- Um `FormArray` reativo :: Não há lista aqui.
+- None: a single field needs no form :: A real `<form>` still gives Enter to submit.
+-- Nenhum: um campo só não precisa de formulário :: Um `<form>` de verdade ainda dá o Enter para enviar.
+
+@ drill quiz hard #ex-1zj1wvqq
+? An old template-driven form has grown to thirty fields and three rules across them, and its tests render the page. What does the lesson suggest?
+?? Um formulário template-driven antigo cresceu para trinta campos e três regras entre eles, e os testes dele renderizam a página. O que a aula sugere?
+- Add more directives for the new rules :: That is the cost growing, not shrinking.
+-- Acrescentar mais diretivas para as regras novas :: Isso é o custo crescendo, não diminuindo.
+- Move it to Signal Forms at once, everywhere :: Experimental, and everywhere is the most expensive way.
+-- Passá-lo para Signal Forms de uma vez, em todo lugar :: Experimental, e em todo lugar é o jeito mais caro.
++ Rewrite this one form as a reactive form, rules and all :: Right. Typed values, rules as functions, tests without a template.
+++ Reescrevê-lo como reativo :: Isso. Valores tipados, regras como funções, testes sem template.
+- Leave it, since template-driven forms cannot be changed :: They can; the question is what keeps paying.
+-- Deixá-lo, já que formulários template-driven não podem mudar :: Podem; a questão é o que continua valendo a pena.
