@@ -27,13 +27,15 @@ Put the mouse out of reach and go through each screen:
 4. **After every action, find the focus.** It is somewhere that makes sense, never back at the top.
 5. **Open whatever opens, and leave it.** Escape closes it, and the focus goes back to what opened it.
 
-For the planner after this lesson, the walk finds one thing the tests do not: Tab crosses the date field
-in four presses, which is the browser's decision and fine. Write down what you found and when, so the
-next walk can be compared with this one.
+For the planner after this lesson, the walk finds two things the tests do not. Tab crosses the date field
+in four presses, which is the browser's decision and fine. And **Add session** loses the focus, exactly as
+**Done** did: the form is drawn again and the button that had the focus is gone. Lesson 12 fixes it,
+together with what a screen reader is told when a session is added. Write down what you found and when,
+so the next walk can be compared with this one.
 
 ## What is still missing
 
-The planner can now be used from the keyboard, and the focus is always visible and always somewhere
-sensible. **What a screen reader says at each stop is still wrong in places**: the back link is read as
-*left-pointing arrow*, adding a session changes the page in silence, and the page has no landmarks to
+The planner can now be used from the keyboard, and the focus is always visible and, after everything
+but **Add session**, somewhere sensible. **What a screen reader says at each stop is still wrong in places**: the back link is read as
+the name of an arrow, adding a session changes the page in silence, and the page has no landmarks to
 jump between. That is lesson 12.

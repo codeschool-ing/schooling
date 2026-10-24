@@ -93,4 +93,4 @@ ana@dev:~/planner$ npx playwright test e2e/keyboard.spec.ts 2>&1 | grep -E "^  (
 The order is right: it follows the page from the top, the way it reads. **This test passes and keeps
 passing until somebody moves a control**, and then it fails with the new order printed, which is the
 moment to ask whether the new order still makes sense. The back link's text, a lone arrow, is a problem
-of its own, and it is lesson 12's: a screen reader reads it as *left-pointing arrow*.
+of its own, and it is lesson 12's: a screen reader reads out the symbol's name, something like *left arrow*.

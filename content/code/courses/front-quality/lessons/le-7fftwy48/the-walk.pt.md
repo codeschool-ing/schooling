@@ -92,4 +92,4 @@ ana@dev:~/planner$ npx playwright test e2e/keyboard.spec.ts 2>&1 | grep -E "^  (
 A ordem está certa: ela segue a página de cima para baixo, do jeito que ela se lê. **Este teste passa e
 continua passando até alguém mover um controle**, e aí falha com a ordem nova impressa, que é o momento de
 perguntar se a ordem nova ainda faz sentido. O texto do link de voltar, uma seta sozinha, é um problema à
-parte, e é da aula 12: um leitor de tela o lê como *seta para a esquerda*.
+parte, e é da aula 12: um leitor de tela lê o nome do símbolo, algo como *seta para a esquerda*.
