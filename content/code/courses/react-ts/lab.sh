@@ -119,16 +119,20 @@ exec_as() {  # exec_as USER COMMAND: in ~/planner when it exists
   exec_in "$u" "$dir" "$@"
 }
 
+# ~/planner is the project every lesson uses; ~/planner-next, from lesson 15
+# on, is kept beside it as NAME.next when it exists.
 save() {
   mkdir -p $STATE
-  rm -rf "$STATE/$1"
+  rm -rf "$STATE/$1" "$STATE/$1.next"
   cp -a /home/ana/planner "$STATE/$1"
+  if [ -d /home/ana/planner-next ]; then cp -a /home/ana/planner-next "$STATE/$1.next"; fi
 }
 
 restore() {
   [ -d "$STATE/$1" ] || { echo "nothing saved as $1: capture the lessons before it first" >&2; exit 1; }
   reset_home
   cp -a "$STATE/$1" /home/ana/planner
+  if [ -d "$STATE/$1.next" ]; then cp -a "$STATE/$1.next" /home/ana/planner-next; fi
 }
 
 # A dev server, or any server, started the way ana starts one in a second
