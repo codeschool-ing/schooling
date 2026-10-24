@@ -7,9 +7,9 @@ version: 1
 10 took two of them from axe, 2.32:1 and 5.33:1. This section works them out, so that a colour can be
 chosen before anybody runs a checker on it.
 
-WCAG defines it in two steps. First the **relative luminance** of each colour, from 0 for black to 1 for
-white: each channel is turned from the screen's encoded value into the light it actually makes, and the
-three are added with weights for how sensitive the eye is to each, green most and blue least. Then the
+WCAG defines it in two steps. First the **relative luminance** of each colour, from 0 for black to 1 for white. Each channel is turned
+from the screen's encoded value into the light it actually makes, and the three are added with weights
+for how sensitive the eye is to each, green most and blue least. Then the
 **ratio** of the lighter to the darker, with 0.05 added to both for the light a screen reflects:
 
 | step | formula |

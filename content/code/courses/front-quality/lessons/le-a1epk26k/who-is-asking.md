@@ -23,10 +23,9 @@ How it is carried is the subject of this lesson, and there are three answers in 
 
 ## What the front-end owns
 
-On a site built from pages the server renders, all of this is the back-end's business. **An
-application like the planner, whose page is a program running in the browser, takes part in it**: it
-sends the sign-in, it decides where a token is kept, it attaches it to requests or relies on the
-browser to send a cookie, and it is the code an attacker's script would run next to. The rest of
+On a site built from pages the server renders, all of this is the back-end's business. **An application like the planner, whose page is a program running in the browser, takes part in it.** It
+sends the sign-in, it decides where a token is kept, and it attaches it to requests or relies on the
+browser to send a cookie. It is also the code an attacker's script would run next to. The rest of
 this part of the course, lessons 5 to 9, is the front-end's share of that.
 
 The planner has had no accounts until now, and nothing in this lesson changes what it draws. It gains

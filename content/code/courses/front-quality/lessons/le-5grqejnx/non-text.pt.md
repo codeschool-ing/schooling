@@ -3,10 +3,10 @@ title: Contraste que não é texto
 version: 1
 ---
 
-**Texto não é a única coisa que precisa ser vista.** O 1.4.11 *Contraste não textual*, nível AA, pede 3:1
-contra o que está ao lado para dois tipos de coisa: as partes de um controle que dizem que ele é um
-controle, como a borda de um campo ou a caixinha de uma caixa de seleção, e os seus estados, como o anel de
-foco; e as partes de um gráfico necessárias para entendê-lo, como as linhas de um gráfico.
+**Texto não é a única coisa que precisa ser vista.** O 1.4.11 *Contraste não textual*, nível AA, pede 3:1 contra o que está ao lado para dois tipos de coisa. Um
+é o controle: as partes que dizem que ele é um controle, como a borda de um campo ou a caixinha de uma
+caixa de seleção, e os seus estados, como o anel de foco. O outro é a parte de um gráfico necessária para
+entendê-lo, como as linhas de um gráfico.
 
 **O axe não mede nada disso.** Uma borda, um contorno e o traço de um SVG não são texto, e a regra
 `color-contrast` dele só lê texto. Então o 1.4.11 é verificado do jeito que esta seção o verifica: dando nome

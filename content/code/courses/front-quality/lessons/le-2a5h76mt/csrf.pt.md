@@ -22,7 +22,7 @@ O planner já está bem defendido, e vale ver por quê antes de acrescentar algo
 ```
 
 **Duas defesas que vêm ambas de outro lugar** são o motivo para acrescentar uma terceira que pertence ao
-servidor: toda requisição que muda algo diz de onde veio, no cabeçalho `Origin` que o navegador define e
+servidor. Toda requisição que muda algo diz de onde veio, no cabeçalho `Origin` que o navegador define e
 que nenhuma página consegue forjar, e o servidor recusa uma de um site que não conhece. Essa checagem
 sobrevive a um cookie definido sem `SameSite`, a um navegador que não o aplica, e a um endereço que um dia
 aceite um formulário. Acrescente o teste ao fim do `server/api.test.mjs`:

@@ -4,10 +4,9 @@ version: 1
 ---
 
 **When a browser loads a new page, it puts the focus back at the top of the document**, and a screen
-reader announces the new page's title. The planner never loads a new page. Following a link changes the
-`#` part of the address, the app draws another screen into the same document, and the browser does
-neither of those things: the focus is lost with the link that had it, exactly as with **Done**, and the
-person using a screen reader is told nothing.
+reader announces the new page's title. The planner never loads a new page. Following a link changes the `#` part of the address, the app draws another screen into the same
+document, and the browser does neither of those things. The focus is lost with the link that had it,
+exactly as with **Done**, and the person using a screen reader is told nothing.
 
 **So a single-page app has to do what the browser would have done.** The usual answer, and the planner's,
 is to move the focus to the new screen's main heading. A screen reader then reads the heading, which says

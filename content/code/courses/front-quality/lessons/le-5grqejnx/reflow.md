@@ -3,10 +3,9 @@ title: Zoomed in, and on a narrow screen
 version: 1
 ---
 
-**People enlarge pages, a lot.** 1.4.4 *Resize Text*, level AA, asks that text can be made twice its size
-without losing content or function; 1.4.10 *Reflow*, level AA, asks that at **320 CSS pixels** wide the
-page works without scrolling sideways, except for things that need two dimensions, such as a map or a
-data table. 320 is not an arbitrary phone: it is what a screen 1280 pixels wide becomes at 400% zoom, so a
+**People enlarge pages, a lot.** 1.4.4 *Resize Text*, level AA, asks that text can be made twice its size without losing content or
+function. 1.4.10 *Reflow*, level AA, asks that at **320 CSS pixels** wide the page works without scrolling
+sideways, except for things that need two dimensions, such as a map or a data table. 320 is not an arbitrary phone: it is what a screen 1280 pixels wide becomes at 400% zoom, so a
 page that reflows at 320 also survives the zoom that somebody with low vision uses every day.
 
 ```typescript

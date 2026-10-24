@@ -77,7 +77,7 @@ Um `await` no topo de um módulo é permitido em todo navegador atual, e quer di
 antes de os dados chegarem. Um plano em que você acrescenta coisas vive só na memória: recarregue a
 página e ele volta ao arquivo. A aula 5 dá a ele um lugar para ser guardado.
 
-E os estilos, que são curtos e, como as próximas aulas mostram, nem todos corretos:
+E os estilos, que são curtos e, como as aulas 10 a 13 mostram, nem todos corretos:
 
 ```css
 /* src/style.css */

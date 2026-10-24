@@ -3,10 +3,9 @@ title: Com zoom, e numa tela estreita
 version: 1
 ---
 
-**As pessoas aumentam as páginas, e muito.** O 1.4.4 *Redimensionar texto*, nível AA, pede que o texto possa
-ficar duas vezes maior sem perder conteúdo nem função; o 1.4.10 *Refluxo*, nível AA, pede que com **320
-pixels CSS** de largura a página funcione sem rolar de lado, a não ser o que precisa de duas dimensões,
-como um mapa ou uma tabela de dados. 320 não é um celular qualquer: é o que uma tela de 1280 pixels de
+**As pessoas aumentam as páginas, e muito.** O 1.4.4 *Redimensionar texto*, nível AA, pede que o texto possa ficar duas vezes maior sem perder conteúdo
+nem função. O 1.4.10 *Refluxo*, nível AA, pede que com **320 pixels CSS** de largura a página funcione sem
+rolar de lado, a não ser o que precisa de duas dimensões, como um mapa ou uma tabela de dados. 320 não é um celular qualquer: é o que uma tela de 1280 pixels de
 largura vira com zoom de 400%, então uma página que reflui em 320 também sobrevive ao zoom que alguém com
 baixa visão usa todo dia.
 

@@ -7,9 +7,9 @@ version: 1
 pegou duas do axe, 2,32:1 e 5,33:1. Esta seção as calcula, para que uma cor possa ser escolhida antes de
 alguém rodar um verificador nela.
 
-A WCAG a define em dois passos. Primeiro a **luminância relativa** de cada cor, de 0 para o preto a 1 para
-o branco: cada canal passa do valor codificado da tela para a luz que ele de fato faz, e os três são
-somados com pesos de acordo com a sensibilidade do olho a cada um, verde mais e azul menos. Depois a
+A WCAG a define em dois passos. Primeiro a **luminância relativa** de cada cor, de 0 para o preto a 1 para o branco. Cada canal passa do
+valor codificado da tela para a luz que ele de fato faz, e os três são somados com pesos de acordo com a
+sensibilidade do olho a cada um, verde mais e azul menos. Depois a
 **razão** da mais clara pela mais escura, com 0,05 somado às duas pela luz que a tela reflete:
 
 | passo | fórmula |

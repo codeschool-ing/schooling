@@ -3,10 +3,9 @@ title: Why the dev server gets no policy
 version: 1
 ---
 
-**The headers went on the preview server and not on the dev server, and that was deliberate.** The dev
-server is a different program serving a different page: it injects the client that reloads the page on
-every save, and it puts the CSS into the page with `<style>` elements created by JavaScript, which is
-how it can swap styles without a reload. A strict policy refuses both.
+**The headers went on the preview server and not on the dev server, and that was deliberate.** The dev server is a different program serving a different page. It injects the client that reloads the
+page on every save, and it puts the CSS into the page with `<style>` elements created by JavaScript, which
+is how it can swap styles without a reload. A strict policy refuses both.
 
 As an experiment, give the dev server the same headers:
 

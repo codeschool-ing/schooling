@@ -23,10 +23,9 @@ Como ela vem junto é o assunto desta aula, e há três respostas em uso:
 
 ## O que é do front-end
 
-Num site feito de páginas que o servidor desenha, tudo isso é assunto do back-end. **Um aplicativo como
-o planner, cuja página é um programa rodando no navegador, participa disso**: ele envia o login, decide
-onde um token fica guardado, o anexa às requisições ou confia que o navegador mande um cookie, e é o
-código ao lado do qual o script de um atacante rodaria. O resto desta parte do curso, as aulas 5 a 9,
+Num site feito de páginas que o servidor desenha, tudo isso é assunto do back-end. **Um aplicativo como o planner, cuja página é um programa rodando no navegador, participa disso.** Ele
+envia o login, decide onde um token fica guardado, e o anexa às requisições ou confia que o navegador mande
+um cookie. É também o código ao lado do qual o script de um atacante rodaria. O resto desta parte do curso, as aulas 5 a 9,
 é a parte do front-end nisso.
 
 O planner não tinha contas até agora, e nada nesta aula muda o que ele desenha. Ele ganha um servidor

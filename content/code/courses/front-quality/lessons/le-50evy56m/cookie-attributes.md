@@ -22,10 +22,9 @@ including the three it left out.
 ## The `__Host-` prefix
 
 A cookie whose name begins with `__Host-` is one the browser **refuses to accept** unless it is
-`Secure`, has `Path=/` and has no `Domain`. That sounds like a restriction and it is a guarantee: a
-cookie called `__Host-sid` can only have been set by this exact host, over a secure connection, so
-neither a careless subdomain nor a page served over plain HTTP can plant a session cookie of its own
-for the browser to send. Renaming the cookie costs nothing and turns three rules into one that the
+`Secure`, has `Path=/` and has no `Domain`. That sounds like a restriction and it is a guarantee: a cookie called `__Host-sid` can only have been set
+by this exact host, over a secure connection. Neither a careless subdomain nor a page served over plain
+HTTP can plant a session cookie of its own for the browser to send. Renaming the cookie costs nothing and turns three rules into one that the
 browser enforces.
 
 ## What none of them does

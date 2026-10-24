@@ -40,8 +40,8 @@ por isso que a árvore é a coisa a testar**, e a próxima seção imprime a do 
 
 ## Dois modos
 
-Um leitor de tela numa página lê num **modo de navegação**, em que as teclas andam pelo conteúdo e uma
-única letra salta (H para o próximo título, K para o próximo link no NVDA), e num **modo de foco**, em que
-as teclas vão para o controle, para que digitar num campo digite. Ele troca de um para o outro sozinho
+Um leitor de tela numa página tem dois modos. No **modo de navegação** as teclas andam pelo conteúdo e uma
+única letra salta: H para o próximo título, K para o próximo link no NVDA. No **modo de foco** as teclas vão
+para o controle, para que digitar num campo digite. Ele troca de um para o outro sozinho
 quando o foco entra num campo e sai dele. É por isso que um controle próprio que nunca diz ao leitor o que
 é pode deixar alguém digitando H e indo para um título em vez de escrever uma letra.

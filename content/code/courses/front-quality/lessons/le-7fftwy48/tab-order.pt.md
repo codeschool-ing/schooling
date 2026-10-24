@@ -12,8 +12,8 @@ são iguais, e é por isso que a caminhada se leu como a página:
 
 Elas deixam de ser iguais quando o CSS move alguma coisa. Um contêiner flex com `flex-direction:
 row-reverse`, um item com `order: -1`, uma grade que posiciona itens por área, um elemento com `position:
-absolute` desenhado num canto: cada um muda onde um elemento é visto e nenhum muda para onde o Tab leva o
-foco, então o foco pula pela página numa ordem em que ninguém leria. Isso falha no 2.4.3 *Ordem do foco*, e
+absolute` desenhado num canto: cada um muda onde um elemento é visto, e nenhum muda para onde o Tab leva o foco. O foco então pula pela
+página numa ordem em que ninguém leria. Isso falha no 2.4.3 *Ordem do foco*, e
 em geral também no 1.3.2 *Sequência com significado*, que pede o mesmo da ordem de leitura de um leitor de
 tela. **A correção é pôr os elementos no HTML na ordem do que eles significam**, e fazer o layout a partir
 daí.

@@ -3,10 +3,10 @@ title: Contrast that is not text
 version: 1
 ---
 
-**Text is not the only thing that has to be seen.** 1.4.11 *Non-text Contrast*, level AA, asks for 3:1
-against what is next to it for two kinds of thing: the parts of a control that say it is a control, such
-as a field's border or a checkbox's box, and its states, such as the focus ring; and the parts of a
-graphic that are needed to understand it, such as the lines of a chart.
+**Text is not the only thing that has to be seen.** 1.4.11 *Non-text Contrast*, level AA, asks for 3:1 against what is next to it for two kinds of thing. One
+is a control: the parts that say it is a control, such as a field's border or a checkbox's box, and its
+states, such as the focus ring. The other is the part of a graphic needed to understand it, such as the
+lines of a chart.
 
 **axe does not measure any of it.** A border, an outline and the stroke of an SVG are not text, and its
 `color-contrast` rule only reads text. So 1.4.11 is checked the way this section checks it: by naming each

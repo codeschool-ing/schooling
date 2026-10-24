@@ -19,9 +19,9 @@ That arrangement has three advantages, and they are why it is the first choice:
 ## When CORS is the answer
 
 Some APIs are meant to be called from other origins: a public API other people's sites use, or one API
-behind several apps on different domains. Then the allowlist of the last section is the tool, written
-from the list of sites that are meant to use it, and tested in both directions, as the planner's is: the
-origin that should be allowed is, and one that should not be is not.
+behind several apps on different domains. Then the allowlist of the last section is the tool, written from the list of sites that are meant to use
+it. Test it in both directions, as the planner's is: the origin that should be allowed is, and one that
+should not be is not.
 
 ## What CORS is not
 

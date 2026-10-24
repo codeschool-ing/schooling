@@ -40,8 +40,8 @@ thing to test**, and the next section prints the planner's.
 
 ## Two modes
 
-A screen reader on a page reads in a **browse mode**, where the keys move through the content and a single
-letter jumps (H for the next heading, K for the next link in NVDA), and a **focus mode**, where the keys go
-to the control, so that typing in a field types. It switches between them by itself as the focus enters
+A screen reader on a page has two modes. In **browse mode** the keys move through the content and a single
+letter jumps: H to the next heading, K to the next link in NVDA. In **focus mode** the keys go to the
+control, so that typing in a field types. It switches between them by itself as the focus enters
 and leaves a field. That is why a custom control that never tells the reader what it is can leave somebody
 typing H and getting a heading instead of a letter.

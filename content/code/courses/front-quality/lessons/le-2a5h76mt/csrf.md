@@ -22,8 +22,8 @@ The planner is already well defended, and it is worth seeing why before adding t
 ```
 
 **Two defences that both come from somewhere else** is the reason to add a third that belongs to the
-server: every request that changes something says where it came from, in the `Origin` header the
-browser sets and no page can forge, and the server refuses one from a site it does not know. That check
+server. Every request that changes something says where it came from, in the `Origin` header the browser
+sets and no page can forge, and the server refuses one from a site it does not know. That check
 survives a cookie set without `SameSite`, a browser that does not apply it, and an endpoint that one day
 accepts a form. Add the test to the end of `server/api.test.mjs`:
 

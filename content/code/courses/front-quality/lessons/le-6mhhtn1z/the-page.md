@@ -76,7 +76,7 @@ if (response.ok) {
 until the data has arrived. A plan you add to lives only in memory: reload the page and it is back to
 the file. Lesson 5 gives it somewhere to be kept.
 
-And the styles, which are short and, as later lessons show, not all correct:
+And the styles, which are short and, as lessons 10 to 13 show, not all correct:
 
 ```css
 /* src/style.css */

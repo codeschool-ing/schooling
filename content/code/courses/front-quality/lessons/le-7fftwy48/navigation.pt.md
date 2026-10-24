@@ -4,10 +4,9 @@ version: 1
 ---
 
 **Quando um navegador carrega uma página nova, ele põe o foco de volta no começo do documento**, e um leitor
-de tela anuncia o título da página nova. O planner nunca carrega uma página nova. Seguir um link muda a
-parte do endereço depois do `#`, o app desenha outra tela no mesmo documento, e o navegador não faz
-nenhuma das duas coisas: o foco se perde junto com o link que o tinha, exatamente como no **Done**, e quem
-usa um leitor de tela não fica sabendo de nada.
+de tela anuncia o título da página nova. O planner nunca carrega uma página nova. Seguir um link muda a parte do endereço depois do `#`, o app desenha outra tela no mesmo documento, e o
+navegador não faz nenhuma das duas coisas. O foco se perde junto com o link que o tinha, exatamente como
+no **Done**, e quem usa um leitor de tela não fica sabendo de nada.
 
 **Então um app de página única tem que fazer o que o navegador teria feito.** A resposta de costume, e a do
 planner, é mover o foco para o título principal da tela nova. Um leitor de tela lê o título, que diz onde a
