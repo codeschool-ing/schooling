@@ -98,7 +98,12 @@ for (let i = 0; i < args.length; i++) {
   console.log(`-- ${flag.slice(2)} ${value}`);
   if (flag === "--click") {
     const name = { name: value, exact: true };
-    await page.getByRole("button", name).or(page.getByRole("link", name)).click();
+    const target = page.getByRole("button", name).or(page.getByRole("link", name));
+    const before = page.url();
+    const isLink = (await target.evaluate((e) => e.tagName)) === "A";
+    await target.click();
+    // A link changes the address; wait until it has, before reading the page.
+    if (isLink) await page.waitForURL((u) => u.href !== before, { timeout: 5000 }).catch(() => {});
   } else if (flag === "--fill") {
     const [label, ...text] = value.split("=");
     await page.getByLabel(label, { exact: true }).fill(text.join("="));
