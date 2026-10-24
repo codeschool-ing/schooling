@@ -86,6 +86,8 @@ run /home/ana 'printf x >> planner/release/planner-0.3.0-x86_64.AppImage'
 run /home/ana 'xvfb-run -a sh -c "APPIMAGE_EXTRACT_AND_RUN=1 timeout 40 installed/planner-0.2.0-x86_64.AppImage 2>/dev/null | grep -E \"^(up to date|update)|sha512\" | cut -c1-110"'
 unserve
 quiet $P 'rm -rf release ~/.cache/planner-updater'
+# An AppImage stopped by timeout leaves its unpacked copy in /tmp, a tmpfs.
+LAB root 'rm -rf /tmp/appimage_extracted_*'
 
 block tauri-key
 run $P 'npx tauri signer generate --ci -p recording-machine-only -w ~/keys/planner-updater.key 2>&1 | grep -v "^ *$" | head -n 4'

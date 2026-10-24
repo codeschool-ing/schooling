@@ -55,6 +55,8 @@ run $P 'npx asar list release/linux-unpacked/resources/app.asar | cut -d/ -f2-3 
 block appimage
 run $P 'xvfb-run -a sh -c "APPIMAGE_EXTRACT_AND_RUN=1 timeout 12 release/*.AppImage > /dev/null 2>&1 & sleep 10; xwininfo -root -tree | grep -o \"Study planner.*\" | head -n 1"'
 
+# An AppImage stopped by timeout leaves its unpacked copy in /tmp, a tmpfs.
+LAB root 'rm -rf /tmp/appimage_extracted_*'
 block depends
 run $P 'npx tauri build --bundles deb 2>&1 | tail -n 2'
 run $P 'dpkg-deb -f release/*.deb Package Version Depends'
