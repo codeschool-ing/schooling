@@ -54,7 +54,7 @@ one file both sides read.
 - **Scalars** are the leaves: `ID`, `String`, `Int`, `Float` and `Boolean`. `ID` is a string that
   identifies something and is not meant to be read; the course ids, `git` and `javascript`, are `ID`s. The
   session ids are numbers in the planner already, so they stay `Int`.
-- **`!`** means never null. `title: String!` always has a title. `course(id: ID!): Course` has no `!` on
+- **`!`** means never null. A `title` of type `String!` is always there. `course(id: ID!): Course` has no `!` on
   its result, because asking for a course that does not exist answers `null`.
 - **`[Session!]!`** is a list that is never null, of sessions that are never null: an empty course has
   `[]`, never `null`, and never a `null` inside the list.

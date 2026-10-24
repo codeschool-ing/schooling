@@ -54,7 +54,7 @@ os dois lados leem.
 - **Escalares** são as folhas: `ID`, `String`, `Int`, `Float` e `Boolean`. `ID` é uma string que
   identifica algo e não é feita para ser lida; os ids dos cursos, `git` e `javascript`, são `ID`s. Os ids
   das sessões já são números no planner, então continuam `Int`.
-- **`!`** quer dizer nunca nulo. `title: String!` sempre tem um título. `course(id: ID!): Course` não tem
+- **`!`** quer dizer nunca nulo. Um `title` do tipo `String!` está sempre lá. `course(id: ID!): Course` não tem
   `!` no resultado, porque pedir um curso que não existe responde `null`.
 - **`[Session!]!`** é uma lista que nunca é nula, de sessões que nunca são nulas: um curso vazio tem `[]`,
   nunca `null`, e nunca um `null` dentro da lista.
