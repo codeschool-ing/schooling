@@ -94,6 +94,7 @@ export function AddSessionForm({ course }: { course: string }) {
   )
 }
 TSX
+block add-form
 on "sed -i \"s|^import { usePlannerContext } from './plannerContext'\$|import { AddSessionForm } from './AddSessionForm'\\n&|; s|^    </>\$|      <AddSessionForm course={course.id} />\\n&|\" src/CourseScreen.tsx"
 on 'grep -n AddSessionForm src/CourseScreen.tsx'
 on 'npm run lint && npx tsc -b && echo no errors'
@@ -143,8 +144,11 @@ on "$L $OPEN --do 'fill Date=2026-10-24' --do 'fill Minutes=500' --do 'click but
 on "$L $OPEN --do 'fill Date=2026-10-24' --do 'fill Minutes=45' --do 'click button Add session' | sed -n '/list:/,/heading \"Add/p'"
 
 block install
-on 'npm install react-hook-form@7.91.0 zod@4.6.7 @hookform/resolvers@6.0.0'
 on 'npm view react-hook-form dist-tags.latest'
+on 'npm install react-hook-form@7.91.0 zod@4.6.7 @hookform/resolvers@6.0.0 2>&1 | head -n 14'
+on 'npm view @hookform/resolvers@6.0.0 peerDependenciesMeta.effect'
+on 'npm install react-hook-form@7.91.0 zod@4.6.7 @hookform/resolvers@5.9.2'
+on 'npm ls react-hook-form zod @hookform/resolvers'
 
 block rhf
 put src/sessionSchema.ts <<'TS'
