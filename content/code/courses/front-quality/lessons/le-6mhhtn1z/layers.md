@@ -38,7 +38,8 @@ a keyboard and a screen reader in lessons 11 and 12, because some of it no machi
 
 ## How many of each
 
-This course ends with about forty tests in the planner, and the proportions are the argument above
-applied rather than a target. Most are unit and component tests that run in under two seconds
-together; a handful are end-to-end tests that take several seconds each. A suite whose fast part is
+This course ends with sixty-four tests in the planner, and the proportions are the argument above
+applied rather than a target. Thirty-six are unit and component tests that run in under two seconds
+together; twenty-eight drive a real browser and take about ten seconds between them, most of the
+security and accessibility of the last nine lessons among them, because those only exist in a browser. A suite whose fast part is
 fast is one people run before every commit, and a suite people do not run catches nothing.

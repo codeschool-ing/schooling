@@ -37,7 +37,7 @@ Os três jeitos de ter o ambiente são os que a aula 1 de `javascript` dá, e a 
 
 | caminho | o que você ganha | quanto custa ao seu computador |
 |---|---|---|
-| **instalado** (recomendado) | o Node.js no computador que você já usa | uns 200 MB para o Node, e uns 450 MB a mais para os pacotes e o navegador que este curso acrescenta |
+| **instalado** (recomendado) | o Node.js no computador que você já usa | uns 200 MB para o Node, e uns 850 MB a mais para os pacotes e o navegador que este curso acrescenta |
 | uma máquina virtual | um Ubuntu Server 24.04 separado do seu sistema | alguns gigabytes de disco, e 2 GB de memória enquanto roda |
 | online | uma máquina Linux numa aba do navegador, como o GitHub Codespaces | nada no seu computador; horas de uma cota mensal, em condições que o fornecedor define |
 

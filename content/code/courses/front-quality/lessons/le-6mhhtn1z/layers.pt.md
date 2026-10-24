@@ -39,8 +39,10 @@ teclado e um leitor de tela nas aulas 11 e 12, porque parte dela nenhuma máquin
 
 ## Quantos de cada
 
-Este curso termina com uns quarenta testes no planner, e as proporções são o argumento acima aplicado,
-e não uma meta. A maioria são testes unitários e de componente que rodam juntos em menos de dois
-segundos; uns poucos são testes de ponta a ponta que levam alguns segundos cada. Uma suíte cuja parte
+Este curso termina com sessenta e quatro testes no planner, e as proporções são o argumento acima
+aplicado, e não uma meta. Trinta e seis são testes unitários e de componente que rodam juntos em menos de
+dois segundos; vinte e oito controlam um navegador de verdade e levam uns dez segundos ao todo, entre eles
+a maior parte da segurança e da acessibilidade das últimas nove aulas, porque elas só existem num
+navegador. Uma suíte cuja parte
 rápida é rápida é uma que as pessoas rodam antes de cada commit, e uma suíte que ninguém roda não pega
 nada.

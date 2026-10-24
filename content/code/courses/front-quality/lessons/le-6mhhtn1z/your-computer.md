@@ -38,7 +38,7 @@ recommendation:
 
 | path | what you get | what it costs your computer |
 |---|---|---|
-| **installed** (recommended) | Node.js on the computer you already use | about 200 MB for Node, and about 450 MB more for the packages and the browser this course adds |
+| **installed** (recommended) | Node.js on the computer you already use | about 200 MB for Node, and about 850 MB more for the packages and the browser this course adds |
 | a virtual machine | Ubuntu Server 24.04 apart from your own system | a few gigabytes of disk, and 2 GB of memory while it runs |
 | online | a Linux machine in a browser tab, such as GitHub Codespaces | nothing on your computer; hours from a monthly allowance, on terms the provider sets |
 
