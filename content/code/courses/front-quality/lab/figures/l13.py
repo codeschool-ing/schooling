@@ -19,7 +19,7 @@ EXAMPLES = {"contrast": [{"language": "typescript", "file": "src/contrast.ts", "
 
 T = {
     "en": dict(
-        pairs_aria="Four colour pairs drawn as text on its background, each with its ratio. Light theme: #aaaaaa on white, 2.32 to 1, fails; #6b6b6b on white, 5.33 to 1, passes. Dark theme: the light theme's green #2f6f4e on #161616, 3.02 to 1, fails; #6fc596 on #161616, 8.71 to 1, passes. A note says that AA asks 4.5 to 1 for text.",
+        pairs_aria="Four colour pairs, each drawn as a swatch of the text colour on its background, with its ratio. Light theme: #aaaaaa on white, 2.32 to 1, fails; #6b6b6b on white, 5.33 to 1, passes. Dark theme: the light theme's green #2f6f4e on #161616, 3.02 to 1, fails; #6fc596 on #161616, 8.71 to 1, passes. A note says that AA asks 4.5 to 1 for text.",
         sample="Done", fail="fails", pass_="passes", bar="AA for text: 4.5:1",
         light="light theme", dark="dark theme",
         pairs_cap="The two failures this course found and the two colours that replaced them. A colour that passes on one background can fail on the other: the green is the same in both failures and passes.",
@@ -30,7 +30,7 @@ T = {
         target_cap="2.5.8 Target Size (Minimum), level AA. The rule is about the box the person has to hit, not about the size of the text inside it.",
     ),
     "pt": dict(
-        pairs_aria="Quatro pares de cores desenhados como texto sobre o seu fundo, cada um com a sua razão. Tema claro: #aaaaaa sobre branco, 2,32 para 1, falha; #6b6b6b sobre branco, 5,33 para 1, passa. Tema escuro: o verde do tema claro, #2f6f4e, sobre #161616, 3,02 para 1, falha; #6fc596 sobre #161616, 8,71 para 1, passa. Uma nota diz que o AA pede 4,5 para 1 para texto.",
+        pairs_aria="Quatro pares de cores, cada um desenhado como uma amostra da cor do texto sobre o seu fundo, com a sua razão. Tema claro: #aaaaaa sobre branco, 2,32 para 1, falha; #6b6b6b sobre branco, 5,33 para 1, passa. Tema escuro: o verde do tema claro, #2f6f4e, sobre #161616, 3,02 para 1, falha; #6fc596 sobre #161616, 8,71 para 1, passa. Uma nota diz que o AA pede 4,5 para 1 para texto.",
         sample="Done", fail="falha", pass_="passa", bar="AA para texto: 4,5:1",
         light="tema claro", dark="tema escuro",
         pairs_cap="As duas falhas que este curso encontrou e as duas cores que as substituíram. Uma cor que passa num fundo pode falhar no outro: o verde é o mesmo numa falha e num acerto.",
@@ -53,13 +53,15 @@ def figures(lang):
     for i, (theme, fg, bg, ratio, ok) in enumerate(PAIRS):
         x = 30 + i * 172
         f.out.append(f'<rect x="{x}" y="36" width="150" height="64" rx="4" fill="{bg}" stroke="var(--wire)" stroke-width="1.4"></rect>')
-        f.out.append(f'<text x="{x + 75}" y="68" text-anchor="middle" dominant-baseline="middle" font-family="\'IBM Plex Sans\', sans-serif" font-size="18" fill="{fg}">{t["sample"]}</text>')
+        # The text colour as a swatch rather than as text: a figure may not draw words below AA,
+        # and two of these four pairs are below it on purpose.
+        f.out.append(f'<rect x="{x + 40}" y="58" width="70" height="20" rx="3" fill="{fg}"></rect>')
         f.text(x + 75, 116, f"{fg} / {bg}", mono=True, size=9, fill="paper-dim")
         r = ratio.replace(".", ",") if lang == "pt" else ratio
         f.text(x + 75, 140, r, size=13, bold=True, fill="phosphor" if ok else "amber")
         f.text(x + 75, 162, t["pass_"] if ok else t["fail"], size=10, italic=True, fill="phosphor" if ok else "amber")
     f.text(690, 190, t["bar"], size=9, anchor="end", italic=True, fill="paper-dim")
-    pairs = f.json(t["pairs_cap"], same=["Done"] if lang == "pt" else None)
+    pairs = f.json(t["pairs_cap"])
 
     g = Fig("l13-target", 720, 220, t["target_aria"])
     s = 4  # pixels drawn per CSS pixel
