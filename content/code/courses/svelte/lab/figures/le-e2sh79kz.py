@@ -40,9 +40,9 @@ def models(T):
         "marca o componente que o leu, e o Angular confere o template desse componente e atualiza o texto."))
     rows = [
         ("Svelte", [T("signal", "signal"), T("the one effect", "o único efeito")]),
-        ("Vue", [T("ref marks a component", "o ref marca um componente"), T("render again", "render de novo"), T("compare vDOM", "comparar vDOM")]),
+        ("Vue", [T("ref marks a component", "ref marca o componente"), T("render again", "render de novo"), T("compare vDOM", "comparar vDOM")]),
         ("React", [T("run the function again", "rodar a função de novo"), T("compare vDOM", "comparar vDOM")]),
-        ("Angular", [T("signal marks a component", "o signal marca um componente"), T("check its template", "conferir o template")]),
+        ("Angular", [T("signal marks a component", "signal marca o componente"), T("check its template", "conferir o template")]),
     ]
     for k, (name, steps) in enumerate(rows):
         y = 26 + k * 62

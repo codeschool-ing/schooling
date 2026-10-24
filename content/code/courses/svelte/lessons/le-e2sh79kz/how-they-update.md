@@ -4,7 +4,7 @@ version: 1
 ---
 
 **When `minutes` changes, the paragraph must say so, and the four frameworks find that paragraph in
-three different ways.** Lesson 2 described two of them; the other two sit between.
+four different ways.** Lesson 2 described two of them; the other two sit between.
 
 **Svelte compiles the answer in.** The compiler reads the component, sees that one text node depends on
 `minutes`, and writes an effect that sets that text node when `minutes` changes, as lesson 1 read in the
