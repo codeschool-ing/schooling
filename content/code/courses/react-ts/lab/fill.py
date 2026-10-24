@@ -56,7 +56,7 @@ def main(lesson, capture):
                 bad += 1
                 return m.group(0)
             return got[name]
-        new = re.sub(r"^@@typed:([a-zA-Z0-9_./:+#-]+)@@$", rep, text, flags=re.M)
+        new = re.sub(r"^@@typed:([][a-zA-Z0-9_./:+#-]+)@@$", rep, text, flags=re.M)
         if new != text:
             md.write_text(new)
     sys.exit(1 if bad else 0)

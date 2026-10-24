@@ -125,7 +125,7 @@ class Fig:
             t = a.get("t")
             if isinstance(t, dict) and t["en"] == t["pt"]:
                 t = t["en"]
-            if kind == "text" and not a["mono"] and isinstance(t, str) and re.search(r"[A-Za-z]", t):
+            if kind == "text" and not a["mono"] and isinstance(t, str) and any(c.isalpha() for c in t):
                 if t not in s:
                     s.append(t)
         return s
