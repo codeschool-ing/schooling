@@ -27,9 +27,9 @@ when the name changes with the content.
 
 ## Answers that are not reads
 
-**Only `GET` and `HEAD` are cached in practice.** The planner's `POST /vitals` is never kept by anybody,
-and a `GET` that changes something, such as a link that deletes, is a bug for many reasons, one of them that a
-cache may answer it without the server ever hearing of it.
+**Only `GET` and `HEAD` are cached in practice.** The planner's `POST /vitals` is never kept by anybody. A
+`GET` that changes something, such as a link that deletes, is a bug for many reasons, one of them that a cache
+may answer it without the server ever hearing of it.
 
 ## And one header in front of all of it
 

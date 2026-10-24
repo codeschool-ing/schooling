@@ -52,10 +52,10 @@ hash, as Vite does. Three of them add `immutable`; Angular's server sends the ye
 a check when the person reloads the page, in the browsers that check.
 
 **The pages differ.** Nuxt, SvelteKit and Angular send nothing for a page drawn on the server, which leaves
-the browser to guess, as the section "What a cache saves" described; for a page that is the same for
-everybody, a header like the planner's is one line of their configuration. **Next.js sends
-`s-maxage=3600, stale-while-revalidate=82800`** for the course page, whose lesson-3 version regenerates
-every hour and expires after a day: a CDN may keep it an hour, and serve it stale for the rest of the day
-while it fetches a new one. That is incremental regeneration written as a header, which any CDN understands.
+the browser to guess, as the section "What a cache saves" described. For a page that is the same for
+everybody, a header like the planner's is one line of their configuration. **Next.js sends `s-maxage=3600,
+stale-while-revalidate=82800`** for the course page, whose lesson-3 version regenerates every hour and
+expires after a day: a CDN may keep it an hour, and serve it stale for the rest of the day while it fetches
+a new one. That is incremental regeneration written as a header, which any CDN understands.
 
 Stop the four servers when you are done.

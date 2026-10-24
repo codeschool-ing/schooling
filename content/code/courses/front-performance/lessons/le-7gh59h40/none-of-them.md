@@ -8,7 +8,7 @@ use.** Next.js if the app is React, Nuxt if it is Vue, SvelteKit if it is Svelte
 server rendering if it is Angular. Switching UI framework to get a different meta-framework is
 rewriting every component, and nothing in this lesson's measurements is worth that on its own.
 
-So the real question is a different one: does this app need a meta-framework at all?
+So ask a different question: does this app need a meta-framework at all?
 
 ## When the plain app is enough
 

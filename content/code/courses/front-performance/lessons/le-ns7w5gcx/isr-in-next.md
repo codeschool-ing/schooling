@@ -12,11 +12,11 @@ waiting an hour, give the data a lifetime of ten seconds. In `lib/plan.ts`, chan
   cacheLife({ revalidate: 10, expire: 3600 });
 ```
 
-`revalidate` is the first number of the previous section, in seconds, and `expire` the second.
-A third field, `stale`, is how long the browser's router may reuse a page without asking the server
-at all; it is left at its default of five minutes, because **a `stale` under thirty seconds takes
-the data out of the prerender altogether**, and the build then refuses the page as uncached. Rebuild
-and look at the table:
+`revalidate` is the first number of the previous section, in seconds, and `expire` the second. A
+third field, `stale`, is how long the browser's router may reuse a page without asking the server at
+all. It is left at its default of five minutes, because **a `stale` under thirty seconds takes the
+data out of the prerender altogether**, and the build then refuses the page as uncached. Rebuild and
+look at the table:
 
 ```
 ana@dev:~/meta/next$ npm run build 2>&1 | sed -n '/^Route/,$p' | head -8

@@ -89,9 +89,9 @@ page changed; the same bytes travel in a smaller box.
 
 **In production a server like `server.ts` rarely compresses for itself.** The reverse proxy in front of
 it, nginx or Caddy, or the CDN of lesson 9, does it for every application behind it, and usually with
-Brotli as well. Doing it in the application is right here, because there is nothing in front of it;
-on a real deployment, check the header of a real response before adding it, since compressing twice
-wastes time and compressing nowhere is one of the most common findings Lighthouse makes.
+Brotli as well. Doing it in the application is right here, because there is nothing in front of it. On
+a real deployment, check the header of a real response before adding it: compressing twice wastes time,
+and compressing nowhere is one of the most common findings Lighthouse makes.
 
 `gzipSync` compresses each answer again, every time. For a page drawn per request that is the price;
 for a file that never changes, such as the build's script, a server can compress it once, at build

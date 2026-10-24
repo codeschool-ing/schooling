@@ -48,7 +48,7 @@ export async function POST(request: Request) {
 ```
 
 **The secret is not optional.** An address that throws away every cached page is an address anybody
-on the internet can call in a loop, turning every request into a full render; the check refuses
+on the internet can call in a loop, turning every request into a full render. The check refuses
 whoever does not hold the secret, and a server started without one refuses everybody. `{ expire: 0 }`
 asks for the old copies not to be served at all once marked.
 

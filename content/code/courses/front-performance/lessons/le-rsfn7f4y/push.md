@@ -13,9 +13,9 @@ message goes to the browser, which wakes the planner's service worker to show it
    **push service**, run by the browser's maker, for an address. The answer, a *subscription*, is an endpoint URL
    at that service and two keys. The page sends it to the planner's server, which stores it.
 2. **The server sends.** To reach that person, the server makes a request to the endpoint, with the message
-   encrypted for the subscription's keys and signed with the server's own **VAPID** key pair, which proves to the
-   push service that the message comes from the server the subscription was made for. Libraries do the
-   encryption; for Node it is the `web-push` package.
+   encrypted for the subscription's keys and signed with the server's own **VAPID** key pair. The signature
+   proves to the push service that the message comes from the server the subscription was made for. Libraries
+   do the encryption; for Node it is the `web-push` package.
 3. **The push service delivers** to the browser, whenever that browser is next online.
 4. **The worker wakes**, gets a `push` event, and shows the notification.
 

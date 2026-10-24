@@ -22,12 +22,12 @@ that surprises everybody once, so it is worth walking through before it happens.
 ## Why it waits
 
 **Two versions must never serve the same page at once.** A page loaded through the old worker expects the
-files the old worker keeps; if the new one took over halfway, its next request could get a file from a
-different build, which is lesson 8's hashed chunks mixed across deploys. Waiting is the safe default.
+files the old worker keeps. If the new one took over halfway, its next request could get a file from a
+different build: lesson 8's hashed chunks, mixed across deploys. Waiting is the safe default.
 
 `self.skipWaiting()` in `install` skips the wait, and `clients.claim()` in `activate` takes over the open
 pages at once. Both are right for a worker whose caches cannot disagree with the pages already open, and
-risky for one that can; a common middle way is for the page to show *a new version is ready*, and call
+risky for one that can. A common middle way is for the page to show *a new version is ready*, and call
 `skipWaiting` on the worker when the person agrees, reloading the page after it.
 
 ## What this means for the planner

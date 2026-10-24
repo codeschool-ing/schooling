@@ -24,13 +24,13 @@ window, whether somebody is signed in.
 
 In the planner the script noticed, warned and redrew. The person saw the server's *Sat* replaced by
 *Fri* a few milliseconds later, which is a flicker and a wrong answer. Each of the four frameworks of
-lesson 2 checks for the same thing while it hydrates and reports a mismatch while you develop; what
+lesson 2 checks for the same thing while it hydrates and reports a mismatch while you develop. What
 each does about it in production differs, and has changed between versions, so it is each framework
 course's business and not something to rely on.
 
 What is common is the rule: **the server and the browser must compute the same HTML from the same
-data**. A difference is never a feature of hydration; it is a bug in the page, and the only good
-place to find it is a test that opens the page with a time zone and a language that differ from the
+data**. A difference is never a feature of hydration; it is a bug in the page. The only good place
+to find it is a test that opens the page with a time zone and a language that differ from the
 server's, which is exactly what `hydrate.ts` did.
 
 ## The fix

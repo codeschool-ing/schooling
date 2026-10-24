@@ -16,7 +16,7 @@ project's documentation and package; none of it was run.
 | **SvelteKit** | built in: a file `src/service-worker.js` is bundled and registered on its own, and the module `$service-worker` gives it the list of the build's files and a version string | your worker, with the lists it needs written for it |
 | **Angular** | `ng add @angular/pwa`, which installs `@angular/service-worker` | Angular's own worker, configured in `ngsw-config.json`: groups of assets fetched at install or on use, and groups of data with a *performance* or *freshness* strategy |
 
-**What none of them can decide is the strategy.** Each gives you cache first, network first and
-stale while revalidate under some name, and each leaves the choice of which files get which to the project,
-because it depends on how often each changes and how stale it may be, which is what this lesson's three sections
-of strategy were about. SvelteKit's is the closest to this lesson: it gives the list and leaves the code to you.
+**What none of them can decide is the strategy.** Each gives you cache first, network first and stale while
+revalidate under some name, and each leaves to the project the choice of which files get which. That depends on
+how often each changes and how stale it may be, which is what this lesson's sections on strategy were about.
+SvelteKit's is the closest to this lesson: it gives the list and leaves the code to you.

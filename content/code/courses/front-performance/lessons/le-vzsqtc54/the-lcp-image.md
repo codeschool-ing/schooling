@@ -37,7 +37,7 @@ performance 99, throttling devtools
 
 **`fetchpriority="high"`** tells the browser that this request matters more than the others it found.
 A browser gives images a low priority at first, because it cannot know which one will be large until
-it has laid out the page; for the one picture that will be the LCP, the page knows better, and saying
+it has laid out the page. For the one picture that will be the LCP, the page knows better, and saying
 so is what LCP request discovery asked for.
 
 And never **`loading="lazy"`** on that picture. Lazy loading waits until an image is near the window
