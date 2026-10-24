@@ -113,7 +113,7 @@ request only in the browser. For now, the second:
 ```html
 <!-- src/routes/+page.svelte -->
 <script>
-	import { browser } from '$app/environment';
+	import { browser } from '$app/env';
 	import Planner from '#lib/Planner.svelte';
 
 	function load() {

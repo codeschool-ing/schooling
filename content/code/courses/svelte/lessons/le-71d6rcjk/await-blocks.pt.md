@@ -114,7 +114,7 @@ aula 13, ou fazer o pedido só no navegador. Por enquanto, o segundo:
 ```html
 <!-- src/routes/+page.svelte -->
 <script>
-	import { browser } from '$app/environment';
+	import { browser } from '$app/env';
 	import Planner from '#lib/Planner.svelte';
 
 	function load() {

@@ -53,7 +53,7 @@ ana@dev:~/planner$ curl -s http://localhost:5173/ | grep -o '<title>.*</title>'
 
 **Desta vez o servidor renderizou a página inteira**, título incluído: ele rodou o `load`, esperou o
 arquivo e renderizou a semana com os dados dentro. O `{#await}` e seus três ramos sumiram, e junto foi
-o `browser` do `$app/environment`, a defesa de que a aula 8 precisou porque o componente não sabia onde
+o `browser` do `$app/env`, a defesa de que a aula 8 precisou porque o componente não sabia onde
 estava rodando. Uma função load também não precisa saber.
 
 ## Roda duas vezes, busca uma

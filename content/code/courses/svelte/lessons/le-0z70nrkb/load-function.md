@@ -53,7 +53,7 @@ ana@dev:~/planner$ curl -s http://localhost:5173/ | grep -o '<title>.*</title>'
 
 **The server rendered the whole page this time**, title included: it ran `load`, waited for the file,
 and rendered the week with the data in it. The `{#await}` and its three branches are gone, and so is
-`browser` from `$app/environment`, the guard lesson 8 needed because the component could not tell where
+`browser` from `$app/env`, the guard lesson 8 needed because the component could not tell where
 it was running. A load function does not have to know either.
 
 ## Run twice, fetched once

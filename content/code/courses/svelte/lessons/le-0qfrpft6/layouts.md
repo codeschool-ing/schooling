@@ -23,7 +23,7 @@ The home page had a `<main>` and its own style for it, which now belong to the l
 
 ```schooling-example
 {"language": "html", "file": "src/routes/+page.svelte", "parts": [
- {"code": "<script>\n\timport { browser } from '$app/environment';\n\timport Planner from '#lib/Planner.svelte';\n\n\tfunction load() {\n\t\treturn fetch('/planner.json').then((response) => {\n\t\t\tif (!response.ok) throw new Error(`${response.status} ${response.statusText}`);\n\t\t\treturn response.json();\n\t\t});\n\t}\n\n\t// In the browser, ask for the data. On the server, a promise that never\n\t// settles, so the server's HTML is the loading message.\n\tconst loading = browser ? load() : new Promise(() => {});\n</script>", "note": "The script is unchanged: the page still loads the data in the browser, as in lesson 8."},
+ {"code": "<script>\n\timport { browser } from '$app/env';\n\timport Planner from '#lib/Planner.svelte';\n\n\tfunction load() {\n\t\treturn fetch('/planner.json').then((response) => {\n\t\t\tif (!response.ok) throw new Error(`${response.status} ${response.statusText}`);\n\t\t\treturn response.json();\n\t\t});\n\t}\n\n\t// In the browser, ask for the data. On the server, a promise that never\n\t// settles, so the server's HTML is the loading message.\n\tconst loading = browser ? load() : new Promise(() => {});\n</script>", "note": "The script is unchanged: the page still loads the data in the browser, as in lesson 8."},
  {"code": "<h1>Study planner</h1>\n{#await loading}\n\t<p>Loading the planner…</p>\n{:then data}\n\t<Planner {data} />\n{:catch error}\n\t<p role=\"alert\">The planner could not be loaded: {error.message}</p>\n{/await}", "note": "No `<main>` and no `<style>`: the layout provides both."}
 ]}
 ```
