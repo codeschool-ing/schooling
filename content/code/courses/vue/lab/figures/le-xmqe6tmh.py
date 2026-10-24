@@ -64,7 +64,7 @@ def kept(T):
     for y, cells in rows:
         for i, (hook, note, on) in enumerate(cells):
             x = 135 + i * 190
-            c.rect(x, y, 180, 52, fill="var(--phosphor-dim)" if on else "var(--ink)",
+            c.rect(x, y, 180, 52, fill="var(--ink)",
                    stroke="var(--phosphor)" if on else "var(--wire)", dash=None if on else "4 3")
             if hook and note:
                 c.text(x + 90, y + 18, hook, mono=True, size=10)

@@ -75,7 +75,7 @@ def queue(T):
     c.text(670, 55, T("the page says 3", "a página diz 3"), size=9.5)
     c.rect(100, 176, 523, 28, fill="var(--panel)", stroke="var(--wire)")
     c.text(361, 190, "0", mono=True, size=11)
-    c.rect(627, 176, 83, 28, fill="var(--phosphor-dim)", stroke="var(--phosphor)")
+    c.rect(627, 176, 83, 28, fill="var(--ink)", stroke="var(--phosphor)")
     c.text(668, 190, "3", mono=True, size=11)
     c.line(100, 226, 710, 226, stroke="var(--wire)", arrow=True)
     c.text(405, 238, T("one click, in time order", "um clique, em ordem de tempo"), size=10, fill="var(--paper-dim)")

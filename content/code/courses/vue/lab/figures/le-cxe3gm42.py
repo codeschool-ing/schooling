@@ -17,13 +17,13 @@ def timelines(T):
         "com o arquivo, legível na hora, e hidratada quando o script rodou."))
     rows = [
         ("CSR", 40, [(T("empty HTML", "HTML vazio"), 110, "var(--panel)"), (T("script", "script"), 90, "var(--panel)"),
-                     (T("data", "dados"), 80, "var(--panel)"), (T("drawn, usable", "desenhada, usável"), 150, "var(--phosphor-dim)")]),
+                     (T("data", "dados"), 80, "var(--panel)"), (T("drawn, usable", "desenhada, usável"), 150, "var(--ink)")]),
         ("SSR", 110, [(T("server renders", "servidor renderiza"), 120, "var(--panel)"),
                       (T("drawn, readable", "desenhada, legível"), 150, "var(--scan)"),
-                      (T("hydrated, usable", "hidratada, usável"), 160, "var(--phosphor-dim)")]),
+                      (T("hydrated, usable", "hidratada, usável"), 160, "var(--ink)")]),
         ("SSG", 180, [(T("file", "arquivo"), 70, "var(--panel)"),
                       (T("drawn, readable", "desenhada, legível"), 150, "var(--scan)"),
-                      (T("hydrated, usable", "hidratada, usável"), 160, "var(--phosphor-dim)")]),
+                      (T("hydrated, usable", "hidratada, usável"), 160, "var(--ink)")]),
     ]
     for name, y, parts in rows:
         c.text(40, y + 16, name, mono=True, size=12, weight="600", fill="var(--amber)")

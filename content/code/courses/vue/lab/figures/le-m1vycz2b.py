@@ -67,7 +67,7 @@ def lazy(T):
     cells = [(T("not run", "não roda"), False), (T("not run", "não roda"), False),
              (T("once, from 150", "uma vez, de 150"), True), (T("once, from 210", "uma vez, de 210"), True)]
     for i, (s, hot) in enumerate(cells):
-        c.rect(150 + i * 140, y, 130, 32, fill="var(--phosphor-dim)" if hot else "var(--ink)",
+        c.rect(150 + i * 140, y, 130, 32, fill="var(--ink)",
                stroke="var(--phosphor)" if hot else "var(--wire)", dash=None if hot else "4 3")
         c.text(215 + i * 140, y + 16, s, size=10.5, fill="var(--paper)" if hot else "var(--paper-dim)")
     c.text(355, 198, T("two writes, nobody reading", "duas escritas, ninguém lendo"), size=9.5, fill="var(--paper-dim)")

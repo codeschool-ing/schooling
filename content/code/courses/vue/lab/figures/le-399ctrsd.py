@@ -54,7 +54,7 @@ def where_it_goes(T):
     c.rect(220, 170, 300, 42, fill="var(--ink)", stroke="var(--wire)", dash="4 3")
     c.text(370, 191, T("the last route: its path matches everything", "a última rota: o caminho dela casa com tudo"),
            size=10)
-    c.rect(570, 24, 130, 36, fill="var(--phosphor-dim)", stroke="var(--phosphor)")
+    c.rect(570, 24, 130, 36, fill="var(--ink)", stroke="var(--phosphor)")
     c.text(635, 42, T("the course page", "a página do curso"), size=10.5)
     c.rect(570, 140, 130, 52, fill="var(--panel)", stroke="var(--amber)")
     c.text(635, 157, "NotFound.vue", mono=True, size=10.5, fill="var(--amber)")

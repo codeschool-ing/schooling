@@ -75,7 +75,7 @@ def flush(T):
            fill="var(--phosphor)")
     c.rect(100, 182, 362, 28, fill="var(--panel)", stroke="var(--wire)")
     c.text(281, 196, "0", mono=True, size=11)
-    c.rect(466, 182, 236, 28, fill="var(--phosphor-dim)", stroke="var(--phosphor)")
+    c.rect(466, 182, 236, 28, fill="var(--ink)", stroke="var(--phosphor)")
     c.text(584, 196, "2", mono=True, size=11)
     c.line(100, 226, 702, 226, stroke="var(--wire)", arrow=True)
     c.caption = T("sync runs at every write; pre and post run once, on either side of the redraw.",

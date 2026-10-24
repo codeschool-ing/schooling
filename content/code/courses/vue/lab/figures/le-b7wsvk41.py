@@ -73,7 +73,7 @@ def lives(T):
     for i in range(4):
         x = 110 + i * 150
         if i % 2 == 0:
-            c.rect(x, 60, 140, 44, fill="var(--phosphor-dim)", stroke="var(--phosphor)")
+            c.rect(x, 60, 140, 44, fill="var(--ink)", stroke="var(--phosphor)")
             c.text(x + 70, 82, on, size=10)
         else:
             c.rect(x, 60, 140, 44, fill="var(--ink)", stroke="var(--wire)", dash="4 3")
@@ -82,7 +82,7 @@ def lives(T):
     cells = [(on, False), ("display: none", True), (T("shown again", "visível de novo"), False), ("display: none", True)]
     for i, (s, mono) in enumerate(cells):
         x = 110 + i * 150
-        c.rect(x, 130, 140, 44, fill="var(--panel)" if mono else "var(--phosphor-dim)",
+        c.rect(x, 130, 140, 44, fill="var(--panel)" if mono else "var(--ink)",
                stroke="var(--wire)" if mono else "var(--phosphor)")
         c.text(x + 70, 152, s, size=10, mono=mono, fill="var(--paper-dim)" if mono else "var(--paper)")
     c.text(410, 192, T("the v-show paragraph is the same element throughout", "o parágrafo do v-show é o mesmo elemento o tempo todo"),
