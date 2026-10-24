@@ -1,0 +1,730 @@
+[
+  {
+    "id": "ex-vdyerqtt",
+    "version": 1,
+    "section": "the-story",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What made it possible, by 2020, for Vite to stop bundling during development?",
+    "hint": "What browsers had learnt to do on their own.",
+    "choices": [
+      {
+        "text": "Webpack had become fast enough to bundle on every save",
+        "correct": false,
+        "why": "Vite did not make the bundling faster; it took the bundling out of development."
+      },
+      {
+        "text": "Every browser in use loaded ES modules natively",
+        "correct": true,
+        "why": "Right. With `<script type=\"module\">` and `import` everywhere, each file could be served as its own module."
+      },
+      {
+        "text": "Rust made bundling the whole app take no time",
+        "correct": false,
+        "why": "Rolldown is written in Rust and does the build, but the dev server still serves your files one by one."
+      },
+      {
+        "text": "Vue 3 no longer needed `.vue` files converted",
+        "correct": false,
+        "why": "`.vue` files are still converted, by `@vitejs/plugin-vue`, as each one is asked for."
+      }
+    ]
+  },
+  {
+    "id": "ex-h7jmvj81",
+    "version": 1,
+    "section": "the-story",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these build on Vite, as the lesson describes them? Choose all that apply.",
+    "hint": "One of the wrong ones is the tool Vite replaced.",
+    "choices": [
+      {
+        "text": "Nuxt",
+        "correct": true,
+        "why": "Right. Nuxt is built on Vite; lesson 18 uses it."
+      },
+      {
+        "text": "Vue CLI",
+        "correct": false,
+        "why": "Vue CLI ran webpack. It is what Vite replaced, and it is in maintenance now."
+      },
+      {
+        "text": "Vitest",
+        "correct": true,
+        "why": "Right. The lesson calls it Vite running tests."
+      },
+      {
+        "text": "The Angular CLI's development server",
+        "correct": true,
+        "why": "Right. It has used Vite since Angular 17."
+      },
+      {
+        "text": "webpack",
+        "correct": false,
+        "why": "webpack is the bundler Vue CLI ran, a different tool from Vite and from Rolldown."
+      }
+    ]
+  },
+  {
+    "id": "ex-gdn9sxe3",
+    "version": 1,
+    "section": "dev-server",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many requests did the week page make to the dev server?",
+    "hint": "The count `grep -c` printed.",
+    "value": 33,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-1fkjnbam",
+    "version": 1,
+    "section": "dev-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`curl` of `/src/planner.ts` from the dev server printed `isoDate(date)` with no `: Date`. What checked the types on the way?",
+    "hint": "Which script exists apart from `dev`, and why?",
+    "choices": [
+      {
+        "text": "`@vitejs/plugin-vue`, as it converted the file",
+        "correct": false,
+        "why": "That plugin converts `.vue` files, and `planner.ts` is not one; it does not check types either."
+      },
+      {
+        "text": "The browser, as it loaded the TypeScript",
+        "correct": false,
+        "why": "The browser never sees TypeScript: what arrives is JavaScript."
+      },
+      {
+        "text": "The dev server, which refuses a file with a type error",
+        "correct": false,
+        "why": "It refuses nothing on types; a type error is stripped and served like the rest."
+      },
+      {
+        "text": "Nothing; checking is left to `vue-tsc`",
+        "correct": true,
+        "why": "Right. Stripping takes a moment per file, checking takes seconds for the project, so `type-check` runs apart."
+      }
+    ]
+  },
+  {
+    "id": "ex-f6e2qesx",
+    "version": 1,
+    "section": "dev-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the dev server rewrite `from 'vue'` in `main.ts` to an address under `/node_modules/.vite/deps/`?",
+    "hint": "Think of what the browser would do with the word `vue` alone.",
+    "choices": [
+      {
+        "text": "A browser has no idea where a bare name like `vue` lives",
+        "correct": true,
+        "why": "Right. The browser loads addresses, so the server swaps each bare name for one it serves."
+      },
+      {
+        "text": "To check the installed Vue against `package.json`",
+        "correct": false,
+        "why": "Nothing compares versions there; the `?v=` part changes with the dependencies so the cache stays right."
+      },
+      {
+        "text": "Because a file was renamed to `.ts` in lesson 16",
+        "correct": false,
+        "why": "That was `router.js`, a file of yours, and it became `/src/router.ts`. `vue` is a package."
+      },
+      {
+        "text": "So the browser fetches Vue from a CDN",
+        "correct": false,
+        "why": "The address is on the dev server itself, a folder inside your project."
+      }
+    ]
+  },
+  {
+    "id": "ex-nwnpbsjy",
+    "version": 1,
+    "section": "hmr",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The page is on the week of 26 October after a click on *Next week*. You change only the `<h1>` in `HomeView.vue`'s template and save. What does the page show?",
+    "hint": "What a template change replaces, and what it leaves alone.",
+    "choices": [
+      {
+        "text": "The old heading until you reload by hand",
+        "correct": false,
+        "why": "The update was hot: the page logged `hot updated`, and the new heading was there."
+      },
+      {
+        "text": "A full reload of the page, landing on the current week",
+        "correct": false,
+        "why": "A `.vue` file accepts its own updates, so nothing had to reload."
+      },
+      {
+        "text": "The new heading, back on the week of 19 October",
+        "correct": false,
+        "why": "That is what a change to `<script setup>` did, because setup ran again."
+      },
+      {
+        "text": "The new heading, still on the week of 26 October",
+        "correct": true,
+        "why": "Right. Only the render function is replaced; the instance and its `monday` ref stay."
+      }
+    ]
+  },
+  {
+    "id": "ex-ngzaryex",
+    "version": 1,
+    "section": "hmr",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The edit to `HomeView.vue`'s `<script setup>` was only a comment, and the page still went back to the week of 19 October. Why?",
+    "hint": "Vite does not read what the new script means.",
+    "choices": [
+      {
+        "text": "The comment broke the `monday` ref, and Vue fell back to a default",
+        "correct": false,
+        "why": "The comment changed no code. The state was rebuilt because setup ran again, not because anything broke."
+      },
+      {
+        "text": "Setup runs again, since Vite cannot know the state would match",
+        "correct": true,
+        "why": "Right. The component is created anew, and `monday` comes from `weekStart(new Date())`."
+      },
+      {
+        "text": "The store reset the week when it reloaded its sessions",
+        "correct": false,
+        "why": "The store lives in its own module and kept its sessions; the week is the component's `monday` ref."
+      },
+      {
+        "text": "A comment counts as a template change",
+        "correct": false,
+        "why": "A template change kept the 26th in the first capture; this edit was in the script."
+      }
+    ]
+  },
+  {
+    "id": "ex-nawbfv1z",
+    "version": 1,
+    "section": "hmr",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An edit to `planner.ts` reloaded the whole page, though `HomeView` imports it and would take the update. Why?",
+    "hint": "Follow every importer, not only the one on screen.",
+    "choices": [
+      {
+        "text": "Plain `.ts` files are left out of HMR",
+        "correct": false,
+        "why": "They are in it: the update goes up through their importers until one accepts it."
+      },
+      {
+        "text": "`HomeView` refused it because the week had changed",
+        "correct": false,
+        "why": "A `.vue` file accepts its own updates; the refusal was at the top of another path."
+      },
+      {
+        "text": "A path through the store and the router reaches `main.ts`, which nobody imports",
+        "correct": true,
+        "why": "Right. On that path the update reaches the top with nobody to take it, and a full reload is all that is left."
+      },
+      {
+        "text": "A change to a TypeScript file forces a full reload, so that the types are checked first",
+        "correct": false,
+        "why": "The dev server checks no types; the edit was a comment, and it would have been stripped like any type."
+      }
+    ]
+  },
+  {
+    "id": "ex-67ggch9s",
+    "version": 1,
+    "section": "build",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many files did `vite build` list in its output, `dist/index.html` included?",
+    "hint": "One `dist/` line per file.",
+    "value": 7,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-6rp8a1wa",
+    "version": 1,
+    "section": "build",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why may a server tell browsers to keep the files in `dist/assets` for a year?",
+    "hint": "Look at their names.",
+    "choices": [
+      {
+        "text": "Vite builds them once and later builds leave them alone",
+        "correct": false,
+        "why": "Each build writes them again, and a code change gives them new contents; the cache is safe because the names change too."
+      },
+      {
+        "text": "`index.html` carries a version the browser compares",
+        "correct": false,
+        "why": "`index.html` has no version; it names the hashed files, and it is the one file whose name stays the same."
+      },
+      {
+        "text": "A hash of the contents is in each name",
+        "correct": true,
+        "why": "Right. Changed code arrives under a new name, which `index.html` points to."
+      },
+      {
+        "text": "Vite compresses them for caching, as it does `public/`",
+        "correct": false,
+        "why": "`public/` is copied as it is, never processed; the size of a file has nothing to do with how long it is cached."
+      }
+    ]
+  },
+  {
+    "id": "ex-y7q985n3",
+    "version": 1,
+    "section": "build",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under `vite preview` the week page made four requests, where the dev server needed 33. What accounts for the difference?",
+    "hint": "What the build did with the modules.",
+    "choices": [
+      {
+        "text": "The preview kept the other 29 in the browser's cache",
+        "correct": false,
+        "why": "Those 29 files do not exist in `dist`: there is nothing separate to cache."
+      },
+      {
+        "text": "HMR sends the rest over its WebSocket",
+        "correct": false,
+        "why": "A build has no HMR client, which is why no `[vite] connecting...` appeared."
+      },
+      {
+        "text": "The build joined the modules into few files",
+        "correct": true,
+        "why": "Right. The page, the stylesheet, the script and the data: four."
+      },
+      {
+        "text": "The preview skips the components the week page does not show",
+        "correct": false,
+        "why": "Only the lazy course routes were split off; the week page's components are inside `index`."
+      }
+    ]
+  },
+  {
+    "id": "ex-071terx5",
+    "version": 1,
+    "section": "build",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The planner's `dist` is on a host. A link to `/courses/spanish` works when clicked inside the planner, and gives a 404 when the address is typed. What is missing?",
+    "hint": "What did `vite preview` answer for that address, and with which file?",
+    "choices": [
+      {
+        "text": "A file called `courses/spanish` in `dist`",
+        "correct": false,
+        "why": "There is no such file even under `vite preview`, which answered 200; the router draws the page."
+      },
+      {
+        "text": "A route for `/courses/spanish` in `vite.config.js`",
+        "correct": false,
+        "why": "Routes live in the router; the configuration lists no pages."
+      },
+      {
+        "text": "The dev server's HMR client, which the build leaves out",
+        "correct": false,
+        "why": "The click works without it, and so would the typed address once the host answers."
+      },
+      {
+        "text": "The host serving `index.html` where no file exists",
+        "correct": true,
+        "why": "Right. `createWebHistory` needs it; that is the redirects of `front-delivery` lesson 4."
+      }
+    ]
+  },
+  {
+    "id": "ex-a0w5c6nt",
+    "version": 1,
+    "section": "config",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `server: { port: 5173, strictPort: true }`, what happens when a second dev server starts while the first is running?",
+    "hint": "`strictPort` is what lesson 1 did not have.",
+    "choices": [
+      {
+        "text": "It takes 5174 and says so",
+        "correct": false,
+        "why": "That is the default without `strictPort`, and the tab on 5173 keeps talking to the first server."
+      },
+      {
+        "text": "It waits until 5173 is free, then starts",
+        "correct": false,
+        "why": "It does not wait: it stops with an error at once."
+      },
+      {
+        "text": "It stops with `Port 5173 is already in use`",
+        "correct": true,
+        "why": "Right. An error that stops you beats a server on a port you are not looking at."
+      },
+      {
+        "text": "It takes over 5173 and the first server stops",
+        "correct": false,
+        "why": "Two servers do not share a port, and the first one keeps running."
+      }
+    ]
+  },
+  {
+    "id": "ex-gavf4p96",
+    "version": 1,
+    "section": "config",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where and when does `vite.config.js` run?",
+    "hint": "It may import packages and read files.",
+    "choices": [
+      {
+        "text": "In the browser, before the page's first module",
+        "correct": false,
+        "why": "A browser could not read files from your disk; the configuration is for Vite, not for the page."
+      },
+      {
+        "text": "Inside `vue-tsc`, while it checks types",
+        "correct": false,
+        "why": "`vue-tsc` checks the code; it is not what reads the configuration."
+      },
+      {
+        "text": "Inside the bundle, as a module of the app",
+        "correct": false,
+        "why": "Nothing of it reaches `dist`; it decides how `dist` is made."
+      },
+      {
+        "text": "In Node, before the server starts or the build begins",
+        "correct": true,
+        "why": "Right. That is why it imports packages and computes values freely."
+      }
+    ]
+  },
+  {
+    "id": "ex-4gd5h7bm",
+    "version": 1,
+    "section": "config",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A project uses `server.proxy` so that `/api` reaches a backend on port 3000. Once the build is deployed, what passes `/api` on to the backend?",
+    "hint": "Which of Vite's servers are there in production?",
+    "choices": [
+      {
+        "text": "The host, or whatever sits in front of the backend",
+        "correct": true,
+        "why": "Right. A build is a folder of files; the proxy belongs to Vite's two servers."
+      },
+      {
+        "text": "The proxy, which the build writes into `index.html`",
+        "correct": false,
+        "why": "`index.html` names the script and the stylesheet and nothing else."
+      },
+      {
+        "text": "`vite preview`, which serves the built folder to students",
+        "correct": false,
+        "why": "`vite preview` is for looking at a build on your computer, not for serving students."
+      },
+      {
+        "text": "The browser, which reads `server.proxy` from the configuration",
+        "correct": false,
+        "why": "The configuration runs in Node before the server or the build; no browser reads it."
+      }
+    ]
+  },
+  {
+    "id": "ex-wba4tz8z",
+    "version": 1,
+    "section": "env",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`.env` holds `VITE_DATA_URL=/courses.json` and `PLANNER_NOTE=not-for-the-browser`. After a build, which values are in the bundle?",
+    "hint": "Count what the two `grep`s found.",
+    "choices": [
+      {
+        "text": "Both, since the store could read either",
+        "correct": false,
+        "why": "The note was in the bundle nowhere: Vite exposes only the names that start with `VITE_`."
+      },
+      {
+        "text": "Neither; they are looked up when the page runs",
+        "correct": false,
+        "why": "Vite replaces the expression with its value as it builds, and `courses.json` was found once."
+      },
+      {
+        "text": "Only `PLANNER_NOTE`, since build settings are unprefixed",
+        "correct": false,
+        "why": "It is the other way round: the unprefixed note stays out of the bundle."
+      },
+      {
+        "text": "Only `/courses.json`",
+        "correct": true,
+        "why": "Right. The prefix decides, and the value is written into the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-k76cwp48",
+    "version": 1,
+    "section": "env",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`VITE_DATA_URL` is `/courses.json` in `.env` and `/staging.json` in `.env.staging`, and the shell that runs `vite build --mode staging` has `VITE_DATA_URL=/test.json` set. Which address ends up in the bundle?",
+    "hint": "The order runs from weakest to strongest, and there is a fifth place after the four files.",
+    "choices": [
+      {
+        "text": "`/staging.json`",
+        "correct": false,
+        "why": "The mode's file beats `.env`, but a variable already set in the shell beats both."
+      },
+      {
+        "text": "`/test.json`",
+        "correct": true,
+        "why": "Right. A variable set in the shell that started Vite beats all four files."
+      },
+      {
+        "text": "`/courses.json`",
+        "correct": false,
+        "why": "`.env` is the weakest of the files and loses to both others here."
+      },
+      {
+        "text": "None: the build stops on the conflict",
+        "correct": false,
+        "why": "Three values for one name is no conflict; the strongest wins."
+      }
+    ]
+  },
+  {
+    "id": "ex-qa8jd3gs",
+    "version": 1,
+    "section": "env",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without `strictImportMetaEnv`, a name on `import.meta.env` that `env.d.ts` never declared is accepted and typed as ___.",
+    "hint": "The TypeScript type that accepts anything.",
+    "blanks": [
+      {
+        "accept": [
+          "any"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-q01njh0f",
+    "version": 1,
+    "section": "plugins",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The dev server is running when somebody changes a session in `courses.json` to the course `piano`. What does `check-planner-data` say, and when?",
+    "hint": "When does `buildStart` run?",
+    "choices": [
+      {
+        "text": "An error in the browser on the next save",
+        "correct": false,
+        "why": "`buildStart` runs once when the server starts; a save does not call it."
+      },
+      {
+        "text": "An error at once in the dev server's terminal",
+        "correct": false,
+        "why": "That would need a file watcher, through `configureServer`; this plugin has only `buildStart`."
+      },
+      {
+        "text": "Nothing, until the next start or the next build",
+        "correct": true,
+        "why": "Right. The build always runs the check, and the build is what reaches students."
+      },
+      {
+        "text": "A warning the next time the week page loads",
+        "correct": false,
+        "why": "The plugin runs in Vite, not in the page; the page would show the id and say nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-yjddmv5h",
+    "version": 1,
+    "section": "plugins",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The hook that receives the code of every file before it is served, and may change it, is `___`. It is how `plugin-vue` turns a `.vue` file into JavaScript.",
+    "hint": "Not `load`, which invents a module.",
+    "blanks": [
+      {
+        "accept": [
+          "transform"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tt3hfdb4",
+    "version": 1,
+    "section": "plugins",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is `checkPlannerData` a function that returns the plugin object, rather than the object itself?",
+    "hint": "`vue()` is written the same way.",
+    "choices": [
+      {
+        "text": "Vite calls the function again before each hook",
+        "correct": false,
+        "why": "The configuration calls it once, in `plugins: [vue(), checkPlannerData()]`, and Vite gets the object."
+      },
+      {
+        "text": "It is the convention every plugin follows, so options have somewhere to go",
+        "correct": true,
+        "why": "Right. This plugin takes none yet, and `vue()` is the same shape."
+      },
+      {
+        "text": "`this.error` works only inside a returned object",
+        "correct": false,
+        "why": "`this` is the context Vite passes to the hook; it has nothing to do with the function around it."
+      },
+      {
+        "text": "So the plugin is left out of the bundle",
+        "correct": false,
+        "why": "The plugin runs in Node with the configuration and never reaches the bundle, function or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-gcx8dfz5",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what `npm run build` did, in the planner, in the order it happened.",
+    "hint": "The script has two commands, and a plugin's `buildStart` runs before any file is processed.",
+    "items": [
+      "`vue-tsc --noEmit` checks the types",
+      "`check-planner-data` reads `courses.json`",
+      "The modules are transformed",
+      "The chunks are rendered and their gzip sizes computed",
+      "Vite lists the files in `dist` with their sizes"
+    ]
+  },
+  {
+    "id": "ex-s4bestfa",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each file edited and saved while the dev server runs to what the lesson shows happening.",
+    "hint": "Three of them are in the section on HMR, one in the section on the configuration.",
+    "pairs": [
+      {
+        "left": "the `<h1>` in `HomeView.vue`'s template",
+        "right": "the component updates and keeps its state"
+      },
+      {
+        "left": "a comment in `HomeView.vue`'s `<script setup>`",
+        "right": "the component is created anew"
+      },
+      {
+        "left": "a comment at the top of `planner.ts`",
+        "right": "the whole page reloads"
+      },
+      {
+        "left": "`vite.config.js`",
+        "right": "the server restarts on its own"
+      }
+    ],
+    "right_distractors": [
+      "the whole application is bundled again"
+    ]
+  },
+  {
+    "id": "ex-9m3ktnyg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate puts `VITE_ADMIN_PASSWORD=…` in `.env.local`, reasoning that `.local` files stay out of git, so the password stays private. What is wrong with that?",
+    "hint": "Two separate rules: one about git, one about the prefix.",
+    "choices": [
+      {
+        "text": "`create-vue`'s `.gitignore` leaves `.local` files in",
+        "correct": false,
+        "why": "It has a line `*.local`, so git does leave the file out. The leak is elsewhere."
+      },
+      {
+        "text": "`.env.local` is read in development alone, so the build fails",
+        "correct": false,
+        "why": "It is read in every mode; `.env.[mode].local` is the one that belongs to a mode."
+      },
+      {
+        "text": "Nothing; a value in a `.local` file stays on one computer",
+        "correct": false,
+        "why": "The file stays on one computer, and its `VITE_` value is written into the built JavaScript."
+      },
+      {
+        "text": "The prefix puts the value in the bundle every visitor downloads",
+        "correct": true,
+        "why": "Right. The prefix is a promise that the value is fit to publish; a secret stays on a server."
+      }
+    ]
+  },
+  {
+    "id": "ex-twtktj60",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these hold for the dev server and not for a build served by `vite preview`? Choose all that apply.",
+    "hint": "Compare the two `look` captures and the footer.",
+    "choices": [
+      {
+        "text": "Each module the page imports is a request of its own",
+        "correct": true,
+        "why": "Right. Thirty-three requests against four."
+      },
+      {
+        "text": "TypeScript types are stripped from the code sent",
+        "correct": false,
+        "why": "Both send JavaScript with no types; the build runs `vue-tsc` first and still strips them."
+      },
+      {
+        "text": "The page opens a WebSocket for updates",
+        "correct": true,
+        "why": "Right. A build has no HMR client, so the preview printed no `[vite] connecting...`."
+      },
+      {
+        "text": "`import.meta.env.MODE` is `development`",
+        "correct": true,
+        "why": "Right. The preview's footer said `production build`."
+      },
+      {
+        "text": "`/courses/spanish` is answered with `index.html`",
+        "correct": false,
+        "why": "The lesson shows `vite preview` doing exactly that, with a 200."
+      }
+    ]
+  }
+]

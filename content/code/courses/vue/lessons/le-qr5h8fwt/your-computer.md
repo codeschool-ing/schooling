@@ -121,6 +121,8 @@ says what it prints and which options it takes, and lessons 2 to 22 use those op
 //   --do 'press KEY'      press a key on whatever has focus (Tab, Enter...)
 //   --do 'goto PATH'      go to another address on the same site
 //   --do 'wait MS'        let MS milliseconds pass
+//   --do 'run COMMAND'    run a shell command, an edit to a file say, and
+//                         print what it printed
 //   --text SEL            print the text of SEL instead of #app ('-' for none)
 //   --html SEL            also print SEL's HTML, as the page has it now
 //   --source              also print the HTML the server sent, before any
@@ -130,6 +132,7 @@ says what it prints and which options it takes, and lessons 2 to 22 use those op
 //   --clock ISO           the date the page's clock says, e.g. 2026-10-21T10:00
 //   --width PX            the window's width (1024)
 //   --reduced-motion      the reader has asked their system for less motion
+import { execSync } from "node:child_process";
 import { chromium } from "playwright";
 
 const args = process.argv.slice(2);
@@ -187,6 +190,10 @@ for (const action of opt.do) {
   else if (verb === "press") await page.keyboard.press(sel);
   else if (verb === "goto") await page.goto(origin + sel, { waitUntil: "networkidle" });
   else if (verb === "wait") await page.waitForTimeout(Number(sel));
+  else if (verb === "run") {
+    const out = execSync(rest.join(" "), { encoding: "utf8" }).trimEnd();
+    if (out) say(out);
+  }
   else say(`look: unknown action ${verb}`);
   await page.waitForTimeout(100);
 }

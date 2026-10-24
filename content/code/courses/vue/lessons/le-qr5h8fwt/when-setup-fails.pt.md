@@ -95,7 +95,7 @@ browserType.launch: Executable doesn't exist at /home/ana/.cache/ms-playwright/c
 ║                                                            ║
 ║ <3 Playwright Team                                         ║
 ╚════════════════════════════════════════════════════════════╝
-    at /home/ana/vue-tools/look.mjs:47:32 {
+    at /home/ana/vue-tools/look.mjs:53:32 {
   log: [],
   name: 'Error'
 }
