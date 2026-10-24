@@ -14,6 +14,8 @@ VOLATILE = [
     (re.compile(r"\b\d+(\.\d+)?\s?(ms|s|m)\b"), "<time>"),
     (re.compile(r"\d{4}-\d\d-\d\dT\d\d_\d\d_\d\d_\d+Z"), "<stamp>"),
     (re.compile(r"\(\d+(\.\d+)?s\)"), "(<time>)"),
+    (re.compile(r"\b\d\d:\d\d:\d\d\b"), "<clock>"),
+    (re.compile(r"\b\d+%"), "<pct>"),
 ]
 
 
