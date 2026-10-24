@@ -39,8 +39,8 @@ bem parecido.
 
 ## Para que ele serve neste curso
 
-O design system precisa de três coisas que uma oficina dá: **um lugar onde todo componente fica visível**,
-para uma designer e um desenvolvedor discutirem a mesma coisa; **documentação que não tem como ficar
-desatualizada**, porque é tirada do código; e **um conjunto de exemplos que testes conseguem visitar**, o
+O design system precisa de três coisas que uma oficina dá. **Um lugar onde todo componente fica visível**,
+para uma designer e um desenvolvedor discutirem a mesma coisa. **Documentação que não tem como ficar
+desatualizada**, porque é tirada do código. E **um conjunto de exemplos que testes conseguem visitar**, o
 que transforma o pipeline da aula 3 num que pega um componente que mudou por acidente. A última dessas é a
 seção sobre stories como testes.

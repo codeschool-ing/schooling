@@ -34,4 +34,4 @@ O `path` é `location.pathname`, e não `location.href`. A parte depois do `?` �
 como um termo de busca, um token de um link de e-mail ou o próprio endereço de e-mail, e nada disso é
 preciso para achar um bug. O mesmo vale para os valores de campos de formulário, o conteúdo da página e
 qualquer coisa que identifique a pessoa: **o planner não manda id de usuário, nome nem e-mail.** A próxima
-seção é sobre por que isso é uma questão legal, e não só de capricho.
+seção é sobre por que isso também é uma questão legal.

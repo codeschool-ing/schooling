@@ -110,9 +110,9 @@ ana@dev:~/planner-ui$ git restore src/session-element.ts
 
 Two tests fail, and each says what it found. The button is the page's red, and axe now finds a
 `color-contrast` violation: red text and white on red both measure about 4:1 against the 4.5:1 that
-text needs. That is why the demo page's rules say `main button` and not `button`: with no shadow root,
+text needs. That is why the demo page's rules say `main button` and not `button`. With no shadow root,
 the element's `<style>` would be one more style sheet in the page, and a plain `button` rule in the page
-would lose to it on order alone, so the test would pass with the boundary gone. `git restore` puts the
+would lose to it on order alone; the test would pass with the boundary gone. `git restore` puts the
 file back as it was committed.
 
 ## Where Playwright stops

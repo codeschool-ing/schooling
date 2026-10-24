@@ -5,8 +5,8 @@ version: 1
 
 **Vite puts a variable into the bundle only if its name starts with `VITE_`.** Everything else in the
 environment and in the `.env` files stays out, whatever the code asks for. The prefix is a fence between
-two kinds of value that live in the same files and the same shell: the ones meant for the page, and the
-ones meant for the machine that builds it, such as a token for a deploy tool or a password for a
+two kinds of value that live in the same files and the same shell. Some are meant for the page. Others
+are meant for the machine that builds it, such as a token for a deploy tool or a password for a
 registry.
 
 ## A variable without the prefix

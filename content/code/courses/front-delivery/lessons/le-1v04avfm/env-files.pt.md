@@ -106,4 +106,4 @@ ana@dev:~/planner$ npm run dev
 **Esse reinício é só do dev server.** Um build lê os arquivos uma vez, e um site publicado fica com o
 valor com que foi construído até o próximo build, digam o que disserem os arquivos depois.
 
-Apague o `.env.development.local` depois de ver o reinício; nada mais adiante no curso o usa.
+Apague o `.env.development.local` depois de ver o reinício; nenhuma aula seguinte o usa.

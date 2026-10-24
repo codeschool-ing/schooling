@@ -67,8 +67,8 @@ ana@dev:~/planner$ sed -i 's/{color.grey-400}/{color.grey-600}/' tokens.json
 
 **3.12 on white and 2.88 on the raised panel**, where 4.5 is the floor, and the last command put the
 right grey back. Nobody looking at the screen would have called that a bug. The dark theme has its own version of the same trap: `grey-400` passes on
-the dark page and fails on the dark raised panel, so **a colour has to be checked against every surface
-it can land on, in every theme**, which is why the script measures pairs rather than colours:
+the dark page and fails on the dark raised panel. **A colour has to be checked against every surface it
+can land on, in every theme**, which is why the script measures pairs rather than colours:
 
 ```
 ana@dev:~/planner$ sed -i 's/{color.grey-300}/{color.grey-400}/' tokens.json

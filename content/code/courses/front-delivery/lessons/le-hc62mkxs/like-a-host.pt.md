@@ -19,7 +19,7 @@ própria documentação do Vite diz o que ele não é: um servidor de produção
 host não perdoa, como mostra a aula 4.
 
 **Um servidor que você consegue ler.** Este tem umas quarenta linhas de Node, sem nada instalado, e faz o que
-todo host estático faz no fundo: transforma um caminho num arquivo, envia o arquivo com o `Content-Type`
+todo host estático faz: transforma um caminho num arquivo, envia o arquivo com o `Content-Type`
 certo e responde 404 quando não há arquivo. Salve-o na raiz do projeto:
 
 ```schooling-example

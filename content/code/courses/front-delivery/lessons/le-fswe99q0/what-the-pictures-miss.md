@@ -29,8 +29,8 @@ ana@dev:~/planner$ npx playwright test -g 'done in light' 2>&1 | sed -n '/Error:
 ```
 
 **The screenshot comparison passed.** The word *done* changed from one grey to a lighter one, and
-Playwright's comparison, by default, forgives a small difference in colour per pixel, because anti-aliasing
-and font smoothing vary slightly between runs and a test that failed on those would be ignored within a
+Playwright's comparison, by default, forgives a small difference in colour per pixel. Anti-aliasing
+and font smoothing vary slightly between runs, and a test that failed on those would be ignored within a
 week. A threshold that tolerates that tolerates a slightly lighter grey too.
 
 **Axe did not pass it**: `color-contrast`, the rule that measures the same WCAG ratio lesson 5's script

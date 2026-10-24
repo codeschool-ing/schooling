@@ -40,6 +40,6 @@ elemento só escuta o próprio botão, que vai embora junto com ele.
 O HTML pode conter `<planner-session>` antes de a classe ser registrada: o navegador trata a tag como um
 elemento desconhecido até o `customElements.define` rodar, e então faz o **upgrade** de cada uma que já
 está na página, chamando o construtor e os callbacks de cada uma. É por isso que a página de demonstração
-pode pôr as linhas no HTML e registrar a classe num script depois delas, e por isso uma página renderizada
+pode pôr as linhas no HTML e registrar a classe num script depois delas. É também por isso que uma página renderizada
 no servidor pode mandar as tags antes de chegar qualquer JavaScript: elas mostram o conteúdo do light DOM,
 o nome do curso, até o script completá-las.

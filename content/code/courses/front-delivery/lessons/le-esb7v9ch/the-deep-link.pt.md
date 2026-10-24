@@ -30,8 +30,8 @@ ana@dev:~/planner$ curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:808
 ```
 
 **O servidor de preview respondeu 200 e o host 404.** O `vite preview` trata o projeto como um app de
-página única e responde a qualquer caminho para o qual não tem arquivo com o `index.html`, o que é
-conveniente e é exatamente o motivo de ele não ser um servidor de produção: ele perdoa um erro que todo
+página única e responde a qualquer caminho para o qual não tem arquivo com o `index.html`. Isso é
+conveniente, e é exatamente o motivo de ele não ser um servidor de produção: ele perdoa um erro que todo
 host estático vai punir. Um site conferido só com `npm run preview` é um site cujos links profundos nunca
 foram testados.
 

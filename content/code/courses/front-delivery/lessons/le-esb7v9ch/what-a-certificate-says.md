@@ -47,7 +47,7 @@ the strongest reason to let the host manage certificates rather than uploading o
 
 ## Where this lesson goes next
 
-A public authority will not sign anything for a name that is not on the internet, so the rest of this
+A public authority will not sign anything for a name that is not on the internet. So the rest of this
 lesson does what organisations do for internal names: it creates **an authority of its own**, signs a
 certificate for `planner.test` with it, and tells `curl` to trust that authority, and nothing else. The
 host first learns to speak HTTPS, in the next section.

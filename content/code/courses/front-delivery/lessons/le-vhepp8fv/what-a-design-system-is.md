@@ -22,7 +22,7 @@ one by one; a kit without rules is a folder that five teams fork in five directi
 
 This course is about shipping, and these four lessons sit in it for a reason. A design system's value is
 not that it looks consistent on the day it is written. It is that **a change made once reaches every
-screen that uses it, and nothing else**: the brand green changes on a Tuesday and every button, link and
+screen that uses it, and nothing else**. The brand green changes on a Tuesday, and every button, link and
 focus ring in three products changes with it, through a version bump and a build, with no screen edited
 by hand. That is a delivery pipeline, for decisions rather than code.
 

@@ -101,6 +101,6 @@ f7e724d @planner/ui 0.2.0
 
 O **Changesets** é a ferramenta que a maioria das bibliotecas JavaScript usa para isto: cada pull request
 leva um arquivo pequeno citando os pacotes que muda e se a mudança é patch, minor ou major, com uma linha
-para o changelog; na hora da versão, um comando transforma os arquivos acumulados em números de versão e
+para o changelog. Na hora da versão, um comando transforma os arquivos acumulados em números de versão e
 entradas de changelog, em todo pacote de um monorepo de uma vez. Ele não foi executado para este curso; os
 comandos dele fazem perguntas num terminal, e o que ele automatiza são exatamente os três passos acima.

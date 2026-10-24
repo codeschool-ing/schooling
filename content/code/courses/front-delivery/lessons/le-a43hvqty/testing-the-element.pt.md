@@ -111,8 +111,8 @@ ana@dev:~/planner-ui$ git restore src/session-element.ts
 Dois testes falham, e cada um diz o que encontrou. O botão está com o vermelho da página, e o axe agora
 acha uma violação de `color-contrast`: texto vermelho e branco sobre vermelho medem os dois cerca de 4:1,
 contra os 4,5:1 que um texto precisa. É por isso que as regras da página de demonstração dizem
-`main button` e não `button`: sem raiz shadow, o `<style>` do elemento seria só mais uma folha de estilo
-na página, e uma regra `button` simples da página perderia para ela só pela ordem, então o teste passaria
+`main button` e não `button`. Sem raiz shadow, o `<style>` do elemento seria só mais uma folha de estilo
+na página, e uma regra `button` simples da página perderia para ela só pela ordem; o teste passaria
 com a fronteira desfeita. O `git restore` devolve o arquivo ao estado do commit.
 
 ## Onde o Playwright para

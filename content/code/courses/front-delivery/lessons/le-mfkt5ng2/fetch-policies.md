@@ -21,7 +21,7 @@ Step 5 used `network-only`, which is why it reached the server where step 2 did 
 
 The planner's data changes in two ways: by the planner itself, through a mutation whose answer goes into
 the cache, and by somebody else, on another device. `cache-first` handles the first. For the second there
-is no setting that is right without knowing the product: a planner used on a phone and a laptop by the
+is no setting that is right without knowing the product. A planner used on a phone and a laptop by the
 same person might use `cache-and-network` when a page opens, so it draws at once from memory and
 corrects itself a moment later. The planner in this lesson keeps the default.
 

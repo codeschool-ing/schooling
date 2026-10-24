@@ -40,8 +40,8 @@ read it or something close to it.
 
 ## What it is for in this course
 
-The design system needs three things a workshop gives: **one place where every component is visible**,
-so a designer and a developer argue about the same thing; **documentation that cannot fall out of date**,
-because it is drawn from the code; and **a set of examples that tests can visit**, which turns lesson
+The design system needs three things a workshop gives. **One place where every component is visible**,
+so a designer and a developer argue about the same thing. **Documentation that cannot fall out of date**,
+because it is drawn from the code. And **a set of examples that tests can visit**, which turns lesson
 3's pipeline into one that catches a component that changed by accident. The last of those is the
 section on stories as tests.

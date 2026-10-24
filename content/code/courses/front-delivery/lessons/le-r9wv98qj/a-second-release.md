@@ -101,6 +101,6 @@ f7e724d @planner/ui 0.2.0
 
 **Changesets** is the tool most JavaScript libraries use for this: each pull request carries a small file
 naming the packages it changes and whether the change is a patch, minor or major, with a line for the
-changelog; at release time one command turns the accumulated files into version numbers and changelog
+changelog. At release time one command turns the accumulated files into version numbers and changelog
 entries, across every package of a monorepo at once. It was not run for this course; its commands ask
 questions at a terminal, and what it automates is exactly the three steps above.

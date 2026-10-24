@@ -29,8 +29,8 @@ Ubuntu 24.04 LTS as the guest. Take the desktop edition rather than the server o
 a browser opens the pages you build, and the server edition has none. Memory is the reason for 4 GB
 rather than 2: a browser and a build running together is the heaviest thing this course does.
 **Online**, GitHub Codespaces and similar services give you a terminal and an editor in a browser tab
-on a monthly allowance whose terms the company sets and can change; it was not run for this course,
-and a page you serve there is reached through an address the service forwards, not `127.0.0.1`.
+on a monthly allowance whose terms the company sets and can change. It was not run for this course, and
+a page you serve there is reached through an address the service forwards, not `127.0.0.1`.
 
 ## Node.js, in brief
 

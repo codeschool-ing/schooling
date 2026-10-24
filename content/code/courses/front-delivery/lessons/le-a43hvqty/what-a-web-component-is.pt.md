@@ -35,6 +35,6 @@ em volta deles.
 
 `<planner-session>`, na biblioteca, ao lado dos componentes em forma de função, com uma página de
 demonstração que o Vite serve e testes do Playwright que a dirigem. **Nenhuma biblioteca é usada para
-escrevê-lo**, então cada linha é uma API do navegador; o **Lit**, uma biblioteca pequena da equipe de
+escrevê-lo**, então cada linha é uma API do navegador. O **Lit**, uma biblioteca pequena da equipe de
 plataforma web do Google, é o que muitas equipes usam para escrever a mesma coisa com menos código, e ele
 produz exatamente o tipo de elemento que esta aula escreve à mão.

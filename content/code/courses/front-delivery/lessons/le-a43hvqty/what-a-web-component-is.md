@@ -34,6 +34,6 @@ layouts around them.
 ## What the lesson builds
 
 `<planner-session>`, in the library, beside the function components, with a demo page that Vite serves
-and Playwright tests that drive it. **No library is used to write it**, so every line is a browser API;
+and Playwright tests that drive it. **No library is used to write it**, so every line is a browser API.
 **Lit**, a small library from Google's web platform team, is what many teams use to write the same thing
 with less code, and it produces exactly the kind of element this lesson writes by hand.

@@ -29,7 +29,7 @@ Ubuntu 24.04 LTS como convidado. Pegue a edição desktop, e não a de servidor:
 navegador abre as páginas que você constrói, e a edição de servidor não tem nenhum. A memória é o motivo
 de 4 GB, e não 2: um navegador e um build rodando juntos é a coisa mais pesada que este curso faz.
 **Online**, o GitHub Codespaces e serviços parecidos dão um terminal e um editor numa aba do navegador,
-com uma cota mensal cujos termos a empresa define e pode mudar; isso não foi executado para este curso, e
+com uma cota mensal cujos termos a empresa define e pode mudar. Isso não foi executado para este curso, e
 uma página que você serve lá é alcançada por um endereço que o serviço encaminha, não por `127.0.0.1`.
 
 ## Node.js, em resumo

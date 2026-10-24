@@ -5,8 +5,8 @@ version: 1
 
 **A secret that reaches a commit has leaked, and the fix is to replace it at whatever issued it.**
 Deleting the line, deleting the file and even rewriting the history come after, and none of them is the
-fix, because none of them reaches the copies that already exist: every clone, every fork, every cache of
-a public repository, and every automated scanner that reads new commits within minutes of a push.
+fix. None of them reaches the copies that already exist: every clone, every fork, every cache of a public
+repository, and every automated scanner that reads new commits within minutes of a push.
 
 ## How it gets there
 

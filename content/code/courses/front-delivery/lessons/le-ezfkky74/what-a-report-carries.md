@@ -34,4 +34,4 @@ The services in a later section add more, and most of it is useful:
 like a search term, a token from an e-mail link, or an e-mail address itself, and none of that is needed
 to find a bug. The same goes for the values of form fields, the contents of the page, and anything that
 identifies the person: **the planner sends no user id, no name and no e-mail address.** The next section
-is about why that is a legal question and not only a tidy one.
+is about why that is also a legal question.

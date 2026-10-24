@@ -28,7 +28,7 @@ The same `_redirects` format, with two differences that matter here. A site with
 `404.html`** is treated as a single-page app by default: Cloudflare's documentation says any path that is
 not a file is answered with the root page. So the planner needs only the first line there. And its
 documentation says redirects are followed **whether or not a file matches**, which is the opposite of
-Netlify's rule; a broad `/*` line is the kind of rule that difference turns into a problem, which is
+Netlify's rule. A broad `/*` line is the kind of rule that difference turns into a problem, which is
 another reason to leave the second line out on Cloudflare.
 
 ## Vercel

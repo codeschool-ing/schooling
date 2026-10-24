@@ -39,5 +39,5 @@ listens on its own button, which goes when it goes.
 HTML can contain `<planner-session>` before the class is registered: the browser treats it as an unknown
 element until `customElements.define` runs, then **upgrades** every one already in the page, calling each
 constructor and callback in turn. That is why the demo page can put the rows in its HTML and register the
-class in a script after them, and why a server-rendered page can send the tags before any JavaScript
-arrives: they show their light content, the course name, until the script makes them whole.
+class in a script after them. It is also why a server-rendered page can send the tags before any
+JavaScript arrives: they show their light content, the course name, until the script makes them whole.

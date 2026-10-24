@@ -47,6 +47,6 @@ proportion, which is the point of having the rule rather than the list.
 The sizes are in `rem`, multiples of the root element's font size, which is 16 pixels in every browser
 unless the reader changed it. A reader who set their browser's text larger, because they need to, gets
 every size in the planner scaled with it. Sizes in `px` ignore that setting. HTML and CSS lesson 6
-compared the units; here the consequence is that **a token in `rem` keeps the whole scale accessible
+compared the units. Here the consequence is that **a token in `rem` keeps the whole scale accessible
 without a line of extra code**, and WCAG 2.2's success criterion 1.4.4 asks for text that can be resized
 to 200% without losing anything.

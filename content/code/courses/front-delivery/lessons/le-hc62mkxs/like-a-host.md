@@ -18,7 +18,7 @@ and Vite's own documentation says what it is not: a production server. It also f
 does not, as lesson 4 shows.
 
 **A server you can read.** This one is about forty lines of Node with nothing installed, and it does what
-every static host does at its core: it turns a path into a file, sends the file with the right
+every static host does: it turns a path into a file, sends the file with the right
 `Content-Type`, and answers 404 when there is none. Save it at the root of the project:
 
 ```schooling-example

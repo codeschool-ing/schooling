@@ -105,4 +105,4 @@ ana@dev:~/planner$ npm run dev
 **That restart is the dev server's alone.** A build reads the files once, and a deployed site keeps the
 value it was built with until the next build, whatever the files say by then.
 
-Delete `.env.development.local` once you have seen it restart; nothing later in the course uses it.
+Delete `.env.development.local` once you have seen it restart; no later lesson uses it.
