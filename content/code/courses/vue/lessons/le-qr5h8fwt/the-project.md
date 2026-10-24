@@ -111,7 +111,7 @@ browser.
 ]}
 ```
 
-And the page the browser opens first, given a language and a real title:
+And the page the browser opens first, given a language and a title worth reading:
 
 ```schooling-example
 {"language": "html", "file": "index.html", "parts": [

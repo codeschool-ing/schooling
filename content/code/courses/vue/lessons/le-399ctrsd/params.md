@@ -39,7 +39,7 @@ const course = computed(() => courses.value.find((c) => c.id === id))
 </style>
 ```
 
-Open the week and click the first link that says Spanish, which is the course card's title:
+Open the week and click the first link that says Spanish, which is the title of the course card:
 
 ```
 ana@dev:~/vue/planner$ look http://localhost:5173/ --clock 2026-10-21T10:00 --do 'click text=Spanish >> nth=0' --text main

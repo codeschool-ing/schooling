@@ -27,7 +27,7 @@ part:
 
 A component a route draws is called a **view**, and views live in `src/views`, apart from the reusable
 pieces in `src/components`. The week that used to be the body of `App.vue` is now the first view, with
-its own title:
+a title of its own:
 
 ```html
 <!-- src/views/HomeView.vue -->
@@ -158,7 +158,7 @@ header {
 footer, is drawn on every page. The header's title is now a `<p>`, because each view has its own `<h1>`
 and a page should have one.
 
-The cards link to their course. `CourseCard` gains an `id` prop and a `<RouterLink>` around its title:
+The cards link to their course. `CourseCard` gains an `id` prop and a `<RouterLink>` around the name of the course:
 
 ```html
 <!-- src/components/CourseCard.vue -->
