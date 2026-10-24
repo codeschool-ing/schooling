@@ -1,0 +1,555 @@
+{
+  "ex-pcgx6wyf": {
+    "prompt": "O planner está no ar, e alguém muda `VITE_TITLE` nas configurações do host sem iniciar um deploy novo. O que os leitores veem?",
+    "hint": "Quando o valor foi lido?",
+    "choices": [
+      {
+        "text": "O título novo, no próximo carregamento da página",
+        "why": "O navegador não tem ambiente para ler; o valor é uma string no pacote."
+      },
+      {
+        "text": "O título antigo, até o próximo build",
+        "why": "Certo. O build gravou o valor no JavaScript, e nada lê a variável de novo."
+      },
+      {
+        "text": "Um erro, porque a variável não bate mais com o pacote",
+        "why": "Nada compara os dois; o pacote só guarda a string dele."
+      },
+      {
+        "text": "O padrão, `Study planner`",
+        "why": "O padrão só aparece quando o build não viu valor nenhum."
+      }
+    ]
+  },
+  "ex-sdk34gap": {
+    "prompt": "Depois de construir com `VITE_TITLE` definida, `grep -c VITE_TITLE dist/assets/*.js` imprime `0`. Por quê?",
+    "choices": [
+      {
+        "text": "O build falhou e gravou um arquivo vazio",
+        "why": "O mesmo arquivo contém o valor do título, então o build funcionou."
+      },
+      {
+        "text": "A minificação renomeou a variável para uma letra",
+        "why": "A minificação renomeia variáveis locais; esta foi substituída antes disso."
+      },
+      {
+        "text": "O Vite a trocou pelo valor",
+        "why": "Certo. O pacote tem a string e nenhum rastro do nome da variável."
+      },
+      {
+        "text": "Variáveis moram no `index.html`, não no script",
+        "why": "Esta foi usada no `env.ts`, então o valor dela foi para o script."
+      }
+    ]
+  },
+  "ex-3y5x295r": {
+    "prompt": "O Vite expõe as variáveis ao código em `import.meta.___`.",
+    "hint": "Três letras.",
+    "blanks": [
+      {
+        "accept": [
+          "env"
+        ]
+      }
+    ]
+  },
+  "ex-b387z8pe": {
+    "prompt": "Ligue cada arquivo ao momento em que o Vite o lê.",
+    "pairs": [
+      {
+        "left": "`.env`",
+        "right": "Em todo modo, e vai para o commit"
+      },
+      {
+        "left": "`.env.local`",
+        "right": "Em todo modo, e o git o ignora"
+      },
+      {
+        "left": "`.env.staging`",
+        "right": "Só com `--mode staging`"
+      },
+      {
+        "left": "`.env.development`",
+        "right": "Quando `npm run dev` inicia"
+      }
+    ],
+    "right_distractors": [
+      "Só no host, nunca localmente"
+    ]
+  },
+  "ex-31hhyjft": {
+    "prompt": "`VITE_TITLE` está definida em quatro lugares para um build de staging. Ordene do que ganha para o que perde.",
+    "hint": "O shell ganha de todo arquivo.",
+    "items": [
+      "O shell que roda o build",
+      "`.env.staging.local`",
+      "`.env.staging`",
+      "`.env`"
+    ]
+  },
+  "ex-hw9r9n4t": {
+    "prompt": "Qual modo o `npm run build` usa quando nenhum `--mode` é dado?",
+    "choices": [
+      {
+        "text": "`development`",
+        "why": "Esse é o modo do dev server."
+      },
+      {
+        "text": "`production`",
+        "why": "Certo."
+      },
+      {
+        "text": "`staging`",
+        "why": "Só quando você o nomeia."
+      },
+      {
+        "text": "Nenhum, então nenhum arquivo é lido",
+        "why": "`.env` e `.env.production` são lidos."
+      }
+    ]
+  },
+  "ex-dwqwknvz": {
+    "prompt": "Um valor digitado no painel de um host deve ganhar do `.env.staging` commitado no repositório. Qual regra faz isso acontecer?",
+    "choices": [
+      {
+        "text": "O ambiente ganha de todo arquivo",
+        "why": "Certo. O host passa os valores do painel para o build como variáveis de ambiente comuns."
+      },
+      {
+        "text": "Arquivos terminados em `.local` são lidos por último",
+        "why": "Isso ordena os arquivos entre si; o painel não é um arquivo."
+      },
+      {
+        "text": "O host apaga o `.env.staging` antes de construir",
+        "why": "Não precisa; o ambiente ganha de qualquer jeito."
+      },
+      {
+        "text": "O Vite lê o painel pela API do host",
+        "why": "O Vite não sabe nada de hosts; ele lê o ambiente e os arquivos."
+      }
+    ]
+  },
+  "ex-8z0prrff": {
+    "prompt": "`SUPPORT_TOKEN` está no `.env.local`, e o `main.ts` registra `import.meta.env.SUPPORT_TOKEN`. O que o pacote contém ali?",
+    "choices": [
+      {
+        "text": "O token, porque o código pediu",
+        "why": "Pedir não basta; falta o prefixo no nome."
+      },
+      {
+        "text": "`void 0`, que é `undefined`",
+        "why": "Certo. Sem `VITE_`, o build se recusa a entregar o valor."
+      },
+      {
+        "text": "Um erro de build citando a variável",
+        "why": "Uma variável ausente é algo normal de perguntar, então não há erro."
+      },
+      {
+        "text": "A string `SUPPORT_TOKEN`",
+        "why": "Nem o nome nem o valor são gravados."
+      }
+    ]
+  },
+  "ex-7caa67z6": {
+    "prompt": "Alguém define `envPrefix: \"\"` no `vite.config.ts` para todas as variáveis ficarem disponíveis. O que acontece?",
+    "choices": [
+      {
+        "text": "Toda variável do shell vai para o pacote",
+        "why": "É o que isso significaria, e é por isso que o Vite não permite."
+      },
+      {
+        "text": "Só as variáveis dos arquivos `.env` são expostas",
+        "why": "A opção não distingue arquivos de shell."
+      },
+      {
+        "text": "O Vite se recusa a construir",
+        "why": "Certo: o erro fala de informação sensível. O prefixo pode ser outra palavra, nunca vazio."
+      },
+      {
+        "text": "O Vite ignora a opção e mantém `VITE_`",
+        "why": "Ele não ignora; ele recusa."
+      }
+    ]
+  },
+  "ex-wg6c6w4m": {
+    "prompt": "Ligue cada ferramenta ao prefixo que marca um valor para o navegador.",
+    "pairs": [
+      {
+        "left": "Vite",
+        "right": "`VITE_`"
+      },
+      {
+        "left": "Next.js",
+        "right": "`NEXT_PUBLIC_`"
+      },
+      {
+        "left": "SvelteKit",
+        "right": "`PUBLIC_`"
+      }
+    ],
+    "right_distractors": [
+      "`SECRET_`"
+    ]
+  },
+  "ex-ys9j806h": {
+    "prompt": "Um token secreto ficou no pacote publicado por uma semana, depois foi tirado do código e publicado de novo. O que ainda precisa ser feito?",
+    "choices": [
+      {
+        "text": "Nada; o pacote novo não o tem mais",
+        "why": "Quem baixou o pacote velho ainda o tem."
+      },
+      {
+        "text": "Limpar o cache da CDN",
+        "why": "Isso impede cópias novas, não as já baixadas."
+      },
+      {
+        "text": "Minificar mais o próximo build",
+        "why": "Minificar nunca esconde uma string."
+      },
+      {
+        "text": "Trocar o token em quem o emitiu",
+        "why": "Certo. Só isso torna inúteis as cópias vazadas."
+      }
+    ]
+  },
+  "ex-g8t7vhab": {
+    "prompt": "Um serviço de mapas dá a você uma chave `pk_` e uma `sk_`. Qual delas pode ir em `VITE_MAPS_KEY`?",
+    "hint": "Publicável ou secreta?",
+    "choices": [
+      {
+        "text": "A `pk_`, restrita ao seu domínio no serviço",
+        "why": "Certo. Ela foi feita para ser pública, e o limite de domínio a protege."
+      },
+      {
+        "text": "A `sk_`, já que o prefixo a mantém privada",
+        "why": "O prefixo publica; ele não protege."
+      },
+      {
+        "text": "Qualquer uma, desde que o pacote seja minificado",
+        "why": "Uma string minificada continua legível."
+      },
+      {
+        "text": "Nenhuma: chave nenhuma pode ir para um front-end",
+        "why": "Chaves publicáveis existem justamente para ir num front-end."
+      }
+    ]
+  },
+  "ex-rs7cght3": {
+    "prompt": "A quais destes um visitante do planner publicado tem acesso? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Toda string do pacote JavaScript",
+        "why": "Certo."
+      },
+      {
+        "text": "Todo cabeçalho que a página manda numa requisição",
+        "why": "Certo: o painel de rede os mostra."
+      },
+      {
+        "text": "Variáveis sem o prefixo `VITE_`",
+        "why": "Essas nunca chegam ao pacote."
+      },
+      {
+        "text": "Um source map, se um foi publicado",
+        "why": "Certo; a aula 11 os mantém privados."
+      }
+    ]
+  },
+  "ex-ksg2a93f": {
+    "prompt": "Antes do `vite-env.d.ts`, `import.meta.env.VITE_TITEL` era construído sem reclamação. Por quê?",
+    "choices": [
+      {
+        "text": "O TypeScript não confere `import.meta`",
+        "why": "Confere; depois que os nomes são declarados ele recusa o erro."
+      },
+      {
+        "text": "Os tipos do Vite aceitam qualquer nome por padrão",
+        "why": "Certo. Uma assinatura de índice deixa passar qualquer nome."
+      },
+      {
+        "text": "O Vite corrige sozinho erros de digitação próximos",
+        "why": "Ele não faz nada disso; quem assumiu foi o valor padrão."
+      },
+      {
+        "text": "O `.env.staging` também declarava `VITE_TITEL`",
+        "why": "Ele declarava `VITE_TITLE`, e por isso o título perdeu o valor."
+      }
+    ]
+  },
+  "ex-3ehjjaem": {
+    "prompt": "As declarações são salvas como `src/env.d.ts`, ao lado de `src/env.ts`, e o erro de digitação ainda passa no build. O que está errado?",
+    "choices": [
+      {
+        "text": "As interfaces precisam de `export`",
+        "why": "São declarações globais; um export não ajudaria aqui."
+      },
+      {
+        "text": "`strictImportMetaEnv` precisa ser `true`, e não `unknown`",
+        "why": "O Vite confere se a chave existe, não o tipo dela."
+      },
+      {
+        "text": "O TypeScript o lê como as declarações do próprio `env.ts` e o pula",
+        "why": "Certo. Um `.d.ts` ao lado de um `.ts` de mesmo nome é ignorado; `vite-env.d.ts` não colide com nada."
+      },
+      {
+        "text": "O `tsc` só confere arquivos `.d.ts` com `--strict`",
+        "why": "Arquivos de declaração são lidos sem essa opção."
+      }
+    ]
+  },
+  "ex-2vas8jqn": {
+    "prompt": "A chave que deixa estritos os tipos de ambiente do Vite é `___`, na interface `ViteTypeOptions`.",
+    "blanks": [
+      {
+        "accept": [
+          "strictImportMetaEnv"
+        ]
+      }
+    ]
+  },
+  "ex-a4806k8p": {
+    "prompt": "Os builds de staging e de produção de um mesmo commit têm hashes diferentes. O que isso quer dizer para uma publicação?",
+    "choices": [
+      {
+        "text": "Um dos dois builds está quebrado",
+        "why": "Os dois são builds corretos do mesmo código com valores diferentes."
+      },
+      {
+        "text": "O que chega a quem usa não é o que foi conferido",
+        "why": "Certo. É um segundo build, feito depois, com outros valores."
+      },
+      {
+        "text": "A CDN vai servir os dois a todo visitante",
+        "why": "Cada ambiente serve o próprio build."
+      },
+      {
+        "text": "O hash inclui a data, então sempre muda",
+        "why": "Dois builds do mesmo conteúdo deram o mesmo hash na aula 1."
+      }
+    ]
+  },
+  "ex-2k75qt6m": {
+    "prompt": "Uma equipe promove um build de staging para produção e guarda os valores por ambiente num `config.json` buscado no início. Qual valor ainda nunca pode ir nele?",
+    "choices": [
+      {
+        "text": "O endereço da API daquele ambiente",
+        "why": "Um endereço é público de qualquer jeito; é para isso que o arquivo serve."
+      },
+      {
+        "text": "Um título que diz qual ambiente é",
+        "why": "Inofensivo; o navegador o mostra na página."
+      },
+      {
+        "text": "Uma chave que deixa quem a tem agir como a equipe",
+        "why": "Certo. O arquivo é buscado pelo navegador, então é tão público quanto o pacote."
+      },
+      {
+        "text": "A chave publicável de um relator de erros",
+        "why": "Essa foi feita para ser pública."
+      }
+    ]
+  },
+  "ex-zrx493r3": {
+    "prompt": "No workflow, qual passo deve receber `CLOUDFLARE_API_TOKEN`? Marque todas as que se aplicam.",
+    "hint": "Quem precisa do token para fazer o seu trabalho?",
+    "choices": [
+      {
+        "text": "O build, para a página poder chamar a Cloudflare",
+        "why": "A página nunca pode tê-lo."
+      },
+      {
+        "text": "O deploy, que envia `dist/`",
+        "why": "Certo; só o envio precisa dele."
+      },
+      {
+        "text": "Todo passo, pelo `env:` do job",
+        "why": "Isso o entregaria ao build também."
+      },
+      {
+        "text": "O checkout, para ler o repositório",
+        "why": "O checkout usa o token do próprio workflow."
+      }
+    ]
+  },
+  "ex-070xtd9z": {
+    "prompt": "Um pull request vindo de um fork roda o seu workflow, e o passo que precisa de um segredo falha. Por quê?",
+    "choices": [
+      {
+        "text": "O branch do fork não tem arquivo `.env`",
+        "why": "Segredos vêm das configurações do repositório, não de um arquivo."
+      },
+      {
+        "text": "Segredos expiram depois de cada merge",
+        "why": "Eles não expiram assim."
+      },
+      {
+        "text": "Pull request de fork não recebe segredos",
+        "why": "Certo, para o código de um estranho não conseguir imprimi-los."
+      },
+      {
+        "text": "O mascaramento trocou o segredo por `***`",
+        "why": "O mascaramento muda o log, não o valor que o passo recebe."
+      }
+    ]
+  },
+  "ex-xyemdh7s": {
+    "prompt": "Quais valores um build de preview deve usar?",
+    "choices": [
+      {
+        "text": "Os de produção, para o preview ser realista",
+        "why": "Um preview é público no próprio endereço; valores de produção não pertencem a ele."
+      },
+      {
+        "text": "Os de staging, definidos por ambiente no host",
+        "why": "Certo. É para isso que servem as configurações por ambiente."
+      },
+      {
+        "text": "Nenhum; previews não leem variáveis",
+        "why": "Eles as leem como qualquer build."
+      },
+      {
+        "text": "O que estiver no `.env.local`",
+        "why": "Esse arquivo nunca sai da sua máquina."
+      }
+    ]
+  },
+  "ex-8x6cbbfp": {
+    "prompt": "No exemplo do suporte, o que o pacote da página contém?",
+    "choices": [
+      {
+        "text": "O token, codificado para não poder ser lido",
+        "why": "Qualquer codificação que a página desfaz, quem lê também desfaz."
+      },
+      {
+        "text": "O caminho `/api/support` e mais nada",
+        "why": "Certo. O token mora no ambiente do proxy."
+      },
+      {
+        "text": "O endereço do serviço de suporte",
+        "why": "Só o proxy fala com o serviço."
+      },
+      {
+        "text": "Metade do token, com a outra metade no servidor",
+        "why": "Dividir um segredo ainda entrega metade a todo leitor."
+      }
+    ]
+  },
+  "ex-k4cgxn5n": {
+    "prompt": "O proxy é mudado para repassar qualquer caminho ao serviço, acrescentando a chave. O que deu errado?",
+    "choices": [
+      {
+        "text": "Estranhos ganham todo o poder da chave",
+        "why": "Certo. O proxy deve permitir a única ação de que a página precisa."
+      },
+      {
+        "text": "A chave agora aparece no pacote",
+        "why": "A chave continua no servidor; o estrago é o que se pode fazer com ela."
+      },
+      {
+        "text": "Nada; a chave continua secreta",
+        "why": "Secreta, e usável por qualquer um através do proxy."
+      },
+      {
+        "text": "O serviço vai recusar requisições que passam por um proxy",
+        "why": "Ele vê uma chave correta e aceita."
+      }
+    ]
+  },
+  "ex-jseh32m1": {
+    "prompt": "Qual status HTTP o serviço de suporte respondeu sem a chave?",
+    "hint": "Ele imprimiu `unauthorised`."
+  },
+  "ex-p861mnfg": {
+    "prompt": "Um segredo foi enviado a um repositório público. Ponha a resposta em ordem.",
+    "items": [
+      "Trocar o segredo no serviço e revogar o antigo",
+      "Ler os logs do serviço atrás de uso do antigo",
+      "Remover o arquivo e acrescentá-lo ao `.gitignore`",
+      "Reescrever o histórico, se outros vão cloná-lo"
+    ]
+  },
+  "ex-kzcz3hr3": {
+    "prompt": "`git check-ignore -v .env.local .env` imprime uma linha, para `.env.local`. O que isso diz sobre o `.env`?",
+    "choices": [
+      {
+        "text": "Ele é ignorado por uma regra num arquivo global",
+        "why": "Nesse caso o `check-ignore` teria impresso essa regra."
+      },
+      {
+        "text": "Nenhuma regra o ignora, então `git add .` o commitaria",
+        "why": "Certo. O template espera que o `.env` guarde valores compartilhados."
+      },
+      {
+        "text": "Ele não existe",
+        "why": "O `check-ignore` responde sobre caminhos, existindo o arquivo ou não."
+      },
+      {
+        "text": "Ele já está commitado",
+        "why": "O comando não diz nada sobre o que está commitado."
+      }
+    ]
+  },
+  "ex-7mdsxkgd": {
+    "prompt": "Depois de `git rm --cached .env` e um commit, o segredo sumiu do repositório?",
+    "choices": [
+      {
+        "text": "Sim, `--cached` o remove de todo commit",
+        "why": "Ele o remove só do próximo commit."
+      },
+      {
+        "text": "Não, o commit anterior ainda o guarda",
+        "why": "Certo. `git log -p -- .env` mostra a linha."
+      },
+      {
+        "text": "Sim, depois que o `.env` está no `.gitignore`",
+        "why": "Ignorar afeta arquivos ainda não rastreados, nunca o histórico."
+      },
+      {
+        "text": "Não, mas só porque não foi enviado",
+        "why": "Enviado ou não, o histórico local o tem."
+      }
+    ]
+  },
+  "ex-fkwh59e7": {
+    "prompt": "A proteção de push do GitHub aceitou um push com um token num formato inventado por você. O que isso mostra?",
+    "choices": [
+      {
+        "text": "O token não era segredo, afinal",
+        "why": "Ser segredo depende do que ele abre, não do que um scanner conhece."
+      },
+      {
+        "text": "A proteção de push estava desligada",
+        "why": "Ela pode estar ligada e ainda não conhecer o formato."
+      },
+      {
+        "text": "O scanner conhece formatos comuns, não todos",
+        "why": "Certo. É uma rede sob a regra, nunca a regra."
+      },
+      {
+        "text": "Repositórios privados não são examinados",
+        "why": "A seção não diz nada disso."
+      }
+    ]
+  },
+  "ex-1rc1h0rt": {
+    "prompt": "Um front-end precisa chamar um serviço cuja única chave é secreta. Qual desenho mantém a chave em segredo?",
+    "choices": [
+      {
+        "text": "`VITE_SERVICE_KEY` definida só no painel do host",
+        "why": "O prefixo a copia para o pacote, seja onde for definida."
+      },
+      {
+        "text": "A chave no `config.json`, buscada depois do login",
+        "why": "O que o navegador busca, quem lê tem."
+      },
+      {
+        "text": "Um servidor pequeno seu que a guarda e faz uma só ação",
+        "why": "Certo: a página chama o seu servidor, e só ele guarda a chave."
+      },
+      {
+        "text": "A chave sem prefixo, lida com `import.meta.env`",
+        "why": "Aí a página recebe `undefined` e o recurso nem funciona."
+      }
+    ]
+  }
+}
