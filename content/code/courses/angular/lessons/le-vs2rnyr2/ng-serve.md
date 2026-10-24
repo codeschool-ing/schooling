@@ -73,6 +73,7 @@ be pasted into a lesson, so this course reads pages with a short program instead
 // page.mjs drives. What it prints, in order:
 //   - each console message, as page.mjs prints them ([warn], [error], and
 //     "Uncaught" for an exception nobody caught)
+//   - each dialog the page opens, alert() or confirm(), as [dialog]
 //   - each action it performs, as "-- " and the action
 //   - at the end, the text of the page as a reader sees it: what the browser
 //     renders, with hidden elements left out
@@ -97,6 +98,10 @@ be pasted into a lesson, so this course reads pages with a short program instead
 //   --no-js        open the page with JavaScript turned off
 //   --wait MS      how long to let the page settle after each step (500)
 //   --url          print the address the page ended up at, before its text
+//   --scripts      print the application's own script files the page loaded,
+//                  in the order it asked for them, before its text
+//   --accept       answer yes to a confirm() the page shows; without it, every
+//                  dialog is printed as [dialog] and answered no
 import { chromium } from "playwright";
 
 const args = process.argv.slice(2);
@@ -116,6 +121,8 @@ while (args.length) {
   else if (a === "--no-js") opt.noJs = true;
   else if (a === "--wait") opt.wait = Number(args.shift());
   else if (a === "--url") opt.url = true;
+  else if (a === "--scripts") opt.scripts = true;
+  else if (a === "--accept") opt.accept = true;
   else { console.error(`look: unknown option ${a}`); process.exit(2); }
 }
 
@@ -136,6 +143,10 @@ page.on("console", (m) => {
   else say(m.text());
 });
 page.on("pageerror", (e) => say(`Uncaught ${e.name}: ${e.message}`));
+page.on("dialog", async (d) => {
+  say(`[dialog] ${d.message()}`);
+  await (opt.accept ? d.accept() : d.dismiss());
+});
 const origin = new URL(url).origin;
 const data = (q) => ["fetch", "xhr"].includes(q.resourceType());
 if (opt.network) {
@@ -220,6 +231,14 @@ for (const action of opt.do) {
 }
 
 if (opt.url) say(`url: ${new URL(page.url()).pathname}`);
+if (opt.scripts) {
+  // The dev server also serves its own client and the packages it prepared
+  // (/@vite/, /@fs/); what is left are the files the build made of your code.
+  const files = await page.evaluate(() => performance.getEntriesByType("resource")
+    .map((e) => new URL(e.name).pathname)
+    .filter((p) => p.endsWith(".js") && !p.startsWith("/@")));
+  say(`scripts: ${files.join(" ")}`);
+}
 const pick = opt.html || opt.a11y || opt.text || "body";
 const target = page.locator(pick).first();
 if (!opt.styles && (await target.count()) === 0) {
