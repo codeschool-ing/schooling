@@ -39,8 +39,12 @@ def parse(body):
         elif line.strip():
             raise SystemExit(f"ex.py: a line before the first '---' would be lost: {line!r}")
     out = []
-    for p in parts:
+    for k, p in enumerate(parts):
         code = "\n".join(p["code"]).rstrip("\n")
+        # A blank line before the next part is kept, as one trailing newline: the copy
+        # button joins the parts with a newline, and the blank line comes back.
+        if k < len(parts) - 1 and p["code"] and p["code"][-1] == "":
+            code += "\n"
         d = {"code": code}
         if p["note"]: d["note"] = p["note"]
         out.append(d)
