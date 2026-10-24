@@ -66,9 +66,9 @@ LESSON3="openjdk-21-jdk-headless"
 LESSON11="libgtk-3-0t64 libnss3 libxss1 libasound2t64 libgbm1 libxkbcommon0 libatk-bridge2.0-0t64 libcups2t64 xvfb xauth"
 LESSON12="build-essential pkg-config libwebkit2gtk-4.1-dev libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev file wget"
 # Not a lesson's: what makes a container look like a desktop to the programs
-# that run on it. dbus is the bus every Linux desktop has; x11-apps and
+# that run on it. dbus is the bus every Linux desktop has; x11-apps, x11-utils and
 # imagemagick let the lab list the windows on the virtual display.
-DESKTOP="dbus dbus-x11 x11-apps imagemagick fonts-dejavu-core fonts-liberation2 xz-utils locales tzdata sudo"
+DESKTOP="dbus dbus-x11 x11-apps x11-utils imagemagick fonts-dejavu-core fonts-liberation2 xz-utils locales tzdata sudo"
 NODE=v22.22.0
 
 net_env() {
