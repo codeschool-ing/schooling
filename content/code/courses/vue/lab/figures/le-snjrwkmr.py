@@ -42,4 +42,45 @@ def skip(T):
     return c
 
 
-FIGURES = [("provide-inject", skip)]
+def owner(T):
+    c = Canvas(720, 250, T(
+        "The ReactiveProvide demo. On the left, the provider owns total, a ref that starts at 75. In the middle, "
+        "what it provides under plannerKey: readonly of total, and the function addFive. On the right, TotalBadge "
+        "injects both and shows Total: 80 minutes. Clicking Add five calls addFive, and the provider changes its own "
+        "ref, from 75 to 80, which both show. Writing total.value equals 999 from the badge is refused, because what "
+        "it holds is a read-only view of the ref.",
+        "A demo ReactiveProvide. À esquerda, o provider é dono de total, um ref que começa em 75. No meio, o que ele "
+        "fornece sob plannerKey: readonly de total, e a função addFive. À direita, o TotalBadge injeta os dois e "
+        "mostra Total: 80 minutes. Clicar em Add five chama addFive, e o provider muda o próprio ref, de 75 para 80, "
+        "que os dois mostram. Escrever total.value igual a 999 a partir do badge é recusado, porque o que ele tem é "
+        "uma visão somente leitura do ref."))
+    c.rect(20, 50, 180, 90, fill="var(--ink)", stroke="var(--amber)")
+    c.text(110, 68, "ReactiveProvide.vue", mono=True, size=10, fill="var(--amber)")
+    c.text(110, 96, "total = ref(75)", mono=True, size=10.5)
+    c.text(110, 120, T("75, then 80", "75, depois 80"), size=10, fill="var(--phosphor)")
+    c.rect(270, 40, 180, 116, fill="var(--panel)", stroke="var(--wire)", dash="4 3")
+    c.text(360, 56, "plannerKey", mono=True, size=10, fill="var(--paper-dim)")
+    c.rect(285, 70, 150, 32, fill="var(--ink)", stroke="var(--phosphor)")
+    c.text(360, 86, "readonly(total)", mono=True, size=10.5, fill="var(--phosphor)")
+    c.rect(285, 112, 150, 32, fill="var(--ink)", stroke="var(--phosphor)")
+    c.text(360, 128, "addFive", mono=True, size=10.5, fill="var(--phosphor)")
+    c.rect(520, 50, 180, 90, fill="var(--ink)", stroke="var(--wire)")
+    c.text(610, 68, "TotalBadge.vue", mono=True, size=10, fill="var(--amber)")
+    c.text(610, 100, "Total: 80 minutes", mono=True, size=10.5)
+    c.line(202, 96, 266, 96, stroke="var(--wire)", arrow=True)
+    c.text(234, 84, "provide", mono=True, size=9.5, fill="var(--paper-dim)")
+    c.line(452, 96, 516, 96, stroke="var(--wire)", arrow=True)
+    c.text(484, 84, "inject", mono=True, size=9.5, fill="var(--paper-dim)")
+    c.path("M 570 142 V 196 H 110", stroke="var(--phosphor)")
+    c.line(110, 196, 110, 144, stroke="var(--phosphor)", arrow=True)
+    c.text(340, 186, T("Add five: the owner changes its own ref", "Add five: o dono muda o próprio ref"), size=10,
+           fill="var(--phosphor)")
+    c.text(620, 214, "total.value = 999", mono=True, size=10, fill="var(--amber)")
+    c.text(620, 232, T("refused: a read-only view", "recusado: uma visão somente leitura"), size=9.5,
+           fill="var(--amber)")
+    c.caption = T("Provide the state read-only and the ways to change it as functions.",
+                  "Forneça o estado como somente leitura e as formas de mudá-lo como funções.")
+    return c
+
+
+FIGURES = [("provide-inject", skip), ("reactive-provide", owner)]

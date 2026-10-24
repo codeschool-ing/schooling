@@ -39,4 +39,39 @@ def grouping(T):
     return c
 
 
-FIGURES = [("same-component", grouping)]
+def merge(T):
+    c = Canvas(720, 230, T(
+        "The Mixins demo. On the left, two mixins in the order of the mixins list: progressMixin, with label "
+        "progress and its own describe, and courseMixin, with label course and its own describe. On the right, what "
+        "the component's this ends up with: label is course and describe returns course: course. The arrow from "
+        "progressMixin is dashed: both its label and its describe were overwritten, silently, because the later "
+        "mixin in the list wins.",
+        "A demo Mixins. À esquerda, dois mixins na ordem da lista mixins: progressMixin, com label progress e o seu "
+        "próprio describe, e courseMixin, com label course e o seu próprio describe. À direita, o que o this do "
+        "componente acaba tendo: label é course e describe devolve course: course. A seta que sai do progressMixin "
+        "é tracejada: tanto o label quanto o describe dele foram sobrescritos, em silêncio, porque o mixin que vem "
+        "depois na lista vence."))
+    c.text(360, 18, "mixins: [progressMixin, courseMixin]", mono=True, size=11, fill="var(--amber)")
+    boxes = [(40, "progressMixin", "label: 'progress'", "describe() → progress: …", False),
+             (135, "courseMixin", "label: 'course'", "describe() → course: …", True)]
+    for y, name, label, desc, wins in boxes:
+        c.rect(30, y, 230, 76, fill="var(--ink)" if wins else "var(--panel)",
+               stroke="var(--phosphor)" if wins else "var(--wire)", dash=None if wins else "4 3")
+        c.text(145, y + 18, name, mono=True, size=11, fill="var(--phosphor)" if wins else "var(--paper-dim)")
+        c.text(145, y + 40, label, mono=True, size=10, fill="var(--paper)" if wins else "var(--paper-dim)")
+        c.text(145, y + 60, desc, mono=True, size=10, fill="var(--paper)" if wins else "var(--paper-dim)")
+    c.line(262, 78, 446, 112, stroke="var(--wire)", dash="4 3", arrow=True)
+    c.text(345, 70, T("overwritten", "sobrescrito"), size=10, fill="var(--paper-dim)")
+    c.line(262, 173, 446, 142, stroke="var(--phosphor)", arrow=True)
+    c.text(345, 178, T("later in the list: wins", "depois na lista: vence"), size=10, fill="var(--phosphor)")
+    c.rect(450, 78, 250, 96, fill="var(--ink)", stroke="var(--phosphor)")
+    c.text(575, 98, T("the component's this", "o this do componente"), size=10.5, fill="var(--phosphor)")
+    c.text(575, 126, "label = course", mono=True, size=10.5)
+    c.text(575, 150, "describe() = course: course", mono=True, size=10)
+    c.text(575, 200, T("nothing warned", "nada avisou"), size=10, fill="var(--amber)")
+    c.caption = T("Merging mixins keeps one of each name, the later one, and says nothing about the other.",
+                  "Juntar mixins guarda um de cada nome, o que vem depois, e não diz nada sobre o outro.")
+    return c
+
+
+FIGURES = [("same-component", grouping), ("mixins", merge)]

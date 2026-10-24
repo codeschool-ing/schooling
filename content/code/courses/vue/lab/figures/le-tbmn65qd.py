@@ -51,4 +51,41 @@ def two_ways(T):
     return c
 
 
-FIGURES = [("build", two_ways)]
+def climb(T):
+    c = Canvas(720, 240, T(
+        "Where an edit to planner.ts goes. planner.ts accepts no updates of its own, so the update passes up to every "
+        "module that imports it. HomeView.vue imports it, and a vue file accepts its own updates, so it would take "
+        "the update. But the store imports it too, the router imports the store, and main.ts imports the router; "
+        "nobody imports main.ts. On that path the update reaches the top with nobody to take it, and the page "
+        "reloads: the dev server logs page reload src/planner.ts.",
+        "Para onde vai uma edição no planner.ts. O planner.ts não aceita atualizações próprias, então a atualização "
+        "sobe para todo módulo que o importa. O HomeView.vue o importa, e um arquivo vue aceita as próprias "
+        "atualizações, então ele receberia a atualização. Mas a store também o importa, o router importa a store, e o "
+        "main.ts importa o router; ninguém importa o main.ts. Nesse caminho a atualização chega ao topo sem ninguém "
+        "para recebê-la, e a página recarrega: o servidor de desenvolvimento registra page reload src/planner.ts."))
+    c.rect(20, 100, 130, 44, fill="var(--ink)", stroke="var(--amber)")
+    c.text(85, 114, "planner.ts", mono=True, size=11, fill="var(--amber)")
+    c.text(85, 132, T("edited", "editado"), size=9.5, fill="var(--amber)")
+    c.rect(210, 30, 160, 48, fill="var(--ink)", stroke="var(--phosphor)")
+    c.text(290, 46, "HomeView.vue", mono=True, size=10.5, fill="var(--phosphor)")
+    c.text(290, 64, T("accepts: would take it", "aceita: receberia"), size=9.5)
+    boxes = [(210, T("the store", "a store"), False), (390, T("the router", "o router"), False), (560, "main.ts", True)]
+    for x, name, mono in boxes:
+        c.rect(x, 170, 140 if x < 560 else 140, 40, fill="var(--panel)", stroke="var(--wire)")
+        c.text(x + 70, 190, name, mono=mono, size=10.5)
+    c.line(152, 110, 206, 62, stroke="var(--phosphor)", arrow=True)
+    c.line(152, 134, 206, 180, stroke="var(--wire)", arrow=True)
+    c.line(352, 190, 386, 190, stroke="var(--wire)", arrow=True)
+    c.line(532, 190, 556, 190, stroke="var(--wire)", arrow=True)
+    c.text(178, 160, T("imported by", "importado por"), size=9.5, anchor="end", fill="var(--paper-dim)")
+    c.line(630, 168, 630, 106, stroke="var(--amber)", arrow=True)
+    c.text(622, 140, T("nobody imports it", "ninguém o importa"), size=9.5, anchor="end", fill="var(--amber)")
+    c.rect(540, 50, 160, 54, fill="var(--ink)", stroke="var(--amber)")
+    c.text(620, 68, "page reload", mono=True, size=11, fill="var(--amber)")
+    c.text(620, 88, T("the whole page again", "a página inteira de novo"), size=9.5)
+    c.caption = T("An update climbs the importers until something accepts it; a path that reaches main.ts reloads the page.",
+                  "Uma atualização sobe por quem importa até alguém aceitá-la; um caminho que chega ao main.ts recarrega a página.")
+    return c
+
+
+FIGURES = [("build", two_ways), ("hmr", climb)]

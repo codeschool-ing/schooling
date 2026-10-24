@@ -44,4 +44,42 @@ def crossing(T):
     return c
 
 
-FIGURES = [("the-payload", crossing)]
+def twice(T):
+    c = Canvas(720, 235, T(
+        "One visit to /demo/twice, in time order from left to right, on two rows. On the server: first the layout's "
+        "session-count fetches GET /api/courses; then the page's $fetch fetches GET /api/courses; then the server "
+        "draws 6 sessions and sends the HTML. In the browser: the same setup runs again to hydrate, and the same "
+        "$fetch, knowing nothing about payloads, fetches GET /api/courses a third time. The server's terminal "
+        "prints one line for each of the three.",
+        "Uma visita a /demo/twice, em ordem de tempo da esquerda para a direita, em duas linhas. No servidor: "
+        "primeiro o session-count do layout busca GET /api/courses; depois o $fetch da página busca GET "
+        "/api/courses; depois o servidor desenha 6 sessions e envia o HTML. No navegador: o mesmo setup roda de novo "
+        "para hidratar, e o mesmo $fetch, que não sabe nada de payloads, busca GET /api/courses uma terceira vez. O "
+        "terminal do servidor imprime uma linha para cada uma das três."))
+    c.text(20, 63, T("server", "servidor"), size=11, anchor="start", fill="var(--amber)")
+    c.text(20, 163, T("browser", "navegador"), size=11, anchor="start", fill="var(--phosphor)")
+    boxes = [(90, 40, "1", "GET /api/courses", T("the layout's session-count", "o session-count do layout"), True),
+             (240, 40, "2", "GET /api/courses", T("the page's $fetch", "o $fetch da página"), True),
+             (390, 40, None, T("draws 6 sessions", "desenha 6 sessions"), T("sends the HTML", "envia o HTML"), False),
+             (410, 140, None, T("runs the same setup", "roda o mesmo setup"), T("to hydrate", "para hidratar"), False),
+             (565, 140, "3", "GET /api/courses", T("the same $fetch, again", "o mesmo $fetch, de novo"), True)]
+    for x, y, n, top, bottom, req in boxes:
+        col = "var(--amber)" if req else "var(--wire)"
+        c.rect(x, y, 145, 46, fill="var(--ink)" if req else "var(--panel)", stroke=col)
+        c.text(x + 72, y + 15, top, mono=req, size=9.5, fill="var(--amber)" if req else "var(--paper)")
+        c.text(x + 72, y + 32, bottom, size=9.5)
+        if n:
+            c.text(x + 72, y - 10, n, mono=True, size=11, weight="600", fill="var(--amber)")
+    c.line(462, 88, 462, 136, stroke="var(--wire)", arrow=True)
+    c.text(472, 112, "HTML", mono=True, size=9.5, anchor="start", fill="var(--paper-dim)")
+    c.line(557, 163, 561, 163, stroke="var(--wire)", arrow=True)
+    c.line(90, 212, 710, 212, stroke="var(--wire)", arrow=True)
+    c.text(400, 226, T("one visit, three lines of api: GET /api/courses in the server's terminal",
+                       "uma visita, três linhas de api: GET /api/courses no terminal do servidor"),
+           size=9.5, fill="var(--paper-dim)")
+    c.caption = T("Plain $fetch in setup runs on both sides, so the browser asks again for what the server already drew.",
+                  "Um $fetch simples no setup roda nos dois lados, então o navegador pede de novo o que o servidor já desenhou.")
+    return c
+
+
+FIGURES = [("the-payload", crossing), ("double-fetch", twice)]

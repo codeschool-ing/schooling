@@ -36,4 +36,48 @@ def order(T):
     return c
 
 
-FIGURES = [("order", order)]
+def kept(T):
+    c = Canvas(720, 190, T(
+        "The KeptAlive demo, two Draft components over three moments. When the page opens, statistics is mounted "
+        "and activated, and verbs is typed into its note, 5 characters. Spanish does not exist yet. After the click "
+        "on Spanish, statistics is deactivated, not unmounted, and spanish is mounted and activated. After the click "
+        "on Statistics, spanish is deactivated and the same statistics component is activated again, with its 5 "
+        "characters.",
+        "A demo KeptAlive, dois componentes Draft em três momentos. Quando a página abre, statistics é montado e "
+        "ativado, e verbs é digitado na nota dele, 5 caracteres. Spanish ainda não existe. Depois do clique em "
+        "Spanish, statistics é desativado, não desmontado, e spanish é montado e ativado. Depois do clique em "
+        "Statistics, spanish é desativado e o mesmo componente statistics é ativado de novo, com os seus 5 "
+        "caracteres."))
+    heads = [T("opens, verbs typed", "abre, verbs digitado"), "click #spanish", "click #stats"]
+    for i, h in enumerate(heads):
+        c.text(225 + i * 190, 22, h, size=10.5, mono=i > 0, fill="var(--amber)")
+    c.text(20, 66, "statistics", mono=True, size=11, anchor="start", fill="var(--phosphor)")
+    c.text(20, 136, "spanish", mono=True, size=11, anchor="start", fill="var(--phosphor)")
+    rows = [
+        (40, [("mounted · activated", T("5 characters", "5 caracteres"), True),
+              ("deactivated", T("kept, not unmounted", "guardado, não desmontado"), False),
+              ("activated", T("the same one, 5 characters", "o mesmo, 5 caracteres"), True)]),
+        (110, [(None, T("not created yet", "ainda não criado"), False),
+               ("mounted · activated", None, True),
+               ("deactivated", T("kept, not unmounted", "guardado, não desmontado"), False)]),
+    ]
+    for y, cells in rows:
+        for i, (hook, note, on) in enumerate(cells):
+            x = 135 + i * 190
+            c.rect(x, y, 180, 52, fill="var(--phosphor-dim)" if on else "var(--ink)",
+                   stroke="var(--phosphor)" if on else "var(--wire)", dash=None if on else "4 3")
+            if hook and note:
+                c.text(x + 90, y + 18, hook, mono=True, size=10)
+                c.text(x + 90, y + 36, note, size=9.5, fill="var(--paper)" if on else "var(--paper-dim)")
+            elif hook:
+                c.text(x + 90, y + 26, hook, mono=True, size=10)
+            else:
+                c.text(x + 90, y + 26, note, size=9.5, fill="var(--paper-dim)")
+    c.text(420, 180, T("onUnmounted never ran: KeepAlive put each one away", "o onUnmounted nunca rodou: o KeepAlive guardou cada um"),
+           size=9.5, fill="var(--paper-dim)")
+    c.caption = T("Switching away deactivates a kept component; switching back activates the same instance.",
+                  "Sair de um componente guardado o desativa; voltar ativa a mesma instância.")
+    return c
+
+
+FIGURES = [("order", order), ("keep-alive", kept)]

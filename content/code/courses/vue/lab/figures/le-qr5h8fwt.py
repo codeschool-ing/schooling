@@ -46,4 +46,47 @@ def compile_path(T):
     return c
 
 
-FIGURES = [("anatomy", compile_path)]
+def two_halves(T):
+    c = Canvas(720, 235, T(
+        "The two halves of a scoped style, side by side. On the left, the footer's HTML as the page has it: the "
+        "footer element carries data-v-6704560a, AppFooter's own attribute, and a second one, data-v-7a7a37b1, "
+        "which is App.vue's, because the root element of a child also gets its parent's attribute; the paragraph "
+        "inside carries data-v-6704560a only. On the right, the style block as Vite sends it: the rule written "
+        "for p has become p[data-v-6704560a], with colour #666 and font size 0.875rem. Below, the browser "
+        "applies the rule only where both match.",
+        "As duas metades de um estilo scoped, lado a lado. À esquerda, o HTML do footer como a página o tem: o "
+        "elemento footer carrega data-v-6704560a, o atributo do próprio AppFooter, e um segundo, data-v-7a7a37b1, "
+        "que é o do App.vue, porque o elemento raiz de um filho também recebe o atributo do pai; o parágrafo de "
+        "dentro carrega só data-v-6704560a. À direita, o bloco de estilo como o Vite o envia: a regra escrita "
+        "para p virou p[data-v-6704560a], com cor #666 e tamanho de fonte 0.875rem. Embaixo, o navegador aplica "
+        "a regra só onde os dois casam."))
+    c.text(180, 20, T("the HTML: an attribute on every element", "o HTML: um atributo em cada elemento"), size=10.5,
+           fill="var(--paper-dim)")
+    c.rect(30, 36, 300, 124, fill="var(--ink)", stroke="var(--wire)")
+    rows = [(0, "<footer data-v-6704560a", "var(--phosphor)"), (8, "data-v-7a7a37b1>", "var(--paper-dim)"),
+            (2, "<p data-v-6704560a>", "var(--phosphor)"), (0, "</footer>", "var(--paper)")]
+    for i, (ind, s, f) in enumerate(rows):
+        c.text(46 + ind * 6.3, 56 + i * 20, s, mono=True, size=10.5, anchor="start", fill=f)
+    c.text(180, 145, T("the second one is App.vue's, on the child's root", "o segundo é o do App.vue, na raiz do filho"),
+           size=9.5, fill="var(--paper-dim)")
+    c.text(540, 20, T("the stylesheet: a selector rewritten", "a folha de estilo: um seletor reescrito"), size=10.5,
+           fill="var(--paper-dim)")
+    c.rect(390, 36, 300, 124, fill="var(--ink)", stroke="var(--wire)")
+    c.text(406, 56, "p {", mono=True, size=10.5, anchor="start", fill="var(--paper-dim)")
+    c.text(674, 56, T("as written", "como foi escrito"), size=9.5, anchor="end", fill="var(--paper-dim)")
+    c.text(406, 80, "p[data-v-6704560a] {", mono=True, size=10.5, anchor="start", fill="var(--phosphor)")
+    c.text(674, 80, T("as Vite sends it", "como o Vite envia"), size=9.5, anchor="end", fill="var(--phosphor)")
+    c.text(419, 100, "color: #666;", mono=True, size=10.5, anchor="start")
+    c.text(419, 120, "font-size: 0.875rem;", mono=True, size=10.5, anchor="start")
+    c.text(406, 140, "}", mono=True, size=10.5, anchor="start")
+    c.line(180, 162, 290, 188, stroke="var(--phosphor)", arrow=True)
+    c.line(540, 162, 430, 188, stroke="var(--phosphor)", arrow=True)
+    c.rect(200, 190, 320, 34, fill="var(--panel)", stroke="var(--phosphor)")
+    c.text(360, 207, T("the browser applies the rule where both match", "o navegador aplica a regra onde os dois casam"),
+           size=10.5, fill="var(--phosphor)")
+    c.caption = T("The compiler marks the elements and rewrites the selector; the browser runs ordinary CSS.",
+                  "O compilador marca os elementos e reescreve o seletor; o navegador roda CSS comum.")
+    return c
+
+
+FIGURES = [("anatomy", compile_path), ("scoped-style", two_halves)]

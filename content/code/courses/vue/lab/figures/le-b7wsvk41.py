@@ -49,4 +49,47 @@ def keys(T):
     return c
 
 
-FIGURES = [("the-key", keys)]
+def lives(T):
+    c = Canvas(720, 200, T(
+        "The two Noisy components of the IfAndShow demo over three clicks on Toggle, in four columns: the page "
+        "opening with open true, the first click with open false, the second with open true, the third with open "
+        "false. The one with v-if is created and put on the page, removed and replaced by a v-if comment, created "
+        "and put on the page again, and removed again: created twice, removed twice. The one with v-show is created "
+        "and put on the page once, and then only switches between display none and shown.",
+        "Os dois componentes Noisy da demo IfAndShow ao longo de três cliques em Toggle, em quatro colunas: a "
+        "página abrindo com open true, o primeiro clique com open false, o segundo com open true, o terceiro com "
+        "open false. O que tem v-if é criado e posto na página, removido e trocado por um comentário v-if, criado e "
+        "posto na página de novo, e removido de novo: criado duas vezes, removido duas vezes. O que tem v-show é "
+        "criado e posto na página uma vez, e depois só alterna entre display none e visível."))
+    heads = [(T("page opens", "a página abre"), "open = true"), (T("click 1", "clique 1"), "open = false"),
+             (T("click 2", "clique 2"), "open = true"), (T("click 3", "clique 3"), "open = false")]
+    for i, (h, v) in enumerate(heads):
+        x = 110 + i * 150
+        c.text(x + 70, 20, h, size=10.5, fill="var(--amber)")
+        c.text(x + 70, 38, v, mono=True, size=9.5, fill="var(--paper-dim)")
+    c.text(20, 82, "v-if", mono=True, size=11, anchor="start", fill="var(--phosphor)")
+    c.text(20, 152, "v-show", mono=True, size=11, anchor="start", fill="var(--phosphor)")
+    on = T("created, on the page", "criado, na página")
+    for i in range(4):
+        x = 110 + i * 150
+        if i % 2 == 0:
+            c.rect(x, 60, 140, 44, fill="var(--phosphor-dim)", stroke="var(--phosphor)")
+            c.text(x + 70, 82, on, size=10)
+        else:
+            c.rect(x, 60, 140, 44, fill="var(--ink)", stroke="var(--wire)", dash="4 3")
+            c.text(x + 70, 74, T("removed", "removido"), size=10)
+            c.text(x + 70, 92, "<!--v-if-->", mono=True, size=9.5, fill="var(--paper-dim)")
+    cells = [(on, False), ("display: none", True), (T("shown again", "visível de novo"), False), ("display: none", True)]
+    for i, (s, mono) in enumerate(cells):
+        x = 110 + i * 150
+        c.rect(x, 130, 140, 44, fill="var(--panel)" if mono else "var(--phosphor-dim)",
+               stroke="var(--wire)" if mono else "var(--phosphor)")
+        c.text(x + 70, 152, s, size=10, mono=mono, fill="var(--paper-dim)" if mono else "var(--paper)")
+    c.text(410, 192, T("the v-show paragraph is the same element throughout", "o parágrafo do v-show é o mesmo elemento o tempo todo"),
+           size=9.5, fill="var(--paper-dim)")
+    c.caption = T("v-if builds and destroys the component; v-show builds it once and changes one style.",
+                  "O v-if constrói e destrói o componente; o v-show o constrói uma vez e muda um estilo.")
+    return c
+
+
+FIGURES = [("the-key", keys), ("v-if-and-v-show", lives)]

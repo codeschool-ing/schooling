@@ -50,4 +50,43 @@ def flow(T):
     return c
 
 
-FIGURES = [("planner-in-nuxt", flow)]
+def files_to_routes(T):
+    c = Canvas(720, 245, T(
+        "Files in app/pages on the left and the addresses they become on the right. index.vue is the route /. "
+        "about.vue, dashed because the planner has none, would be /about. courses/[id].vue is /courses/:id, the "
+        "square brackets making id a parameter, and it answers /courses/statistics, /courses/spanish and so on. "
+        "Below, /courses/spanish/extra has no file, so there is no page, and the server answers with a real 404.",
+        "Arquivos em app/pages à esquerda e os endereços que eles viram à direita. index.vue é a rota /. about.vue, "
+        "tracejado porque o planner não tem um, seria /about. courses/[id].vue é /courses/:id, com os colchetes "
+        "fazendo de id um parâmetro, e ele responde a /courses/statistics, /courses/spanish e assim por diante. "
+        "Embaixo, /courses/spanish/extra não tem arquivo, então não há página, e o servidor responde com um 404 de "
+        "verdade."))
+    c.text(130, 18, "app/pages/", mono=True, size=11, fill="var(--amber)")
+    c.text(405, 18, T("the route", "a rota"), size=10.5, fill="var(--paper-dim)")
+    rows = [(36, "index.vue", "/", False), (86, "about.vue", "/about", True), (136, "courses/[id].vue", "/courses/:id", False)]
+    for y, f, r, dashed in rows:
+        d = "4 3" if dashed else None
+        col = "var(--paper-dim)" if dashed else "var(--paper)"
+        c.rect(40, y, 180, 32, fill="var(--panel)", stroke="var(--wire)", dash=d)
+        c.text(130, y + 16, f, mono=True, size=10.5, fill=col)
+        c.rect(330, y, 150, 32, fill="var(--ink)", stroke="var(--wire)" if dashed else "var(--phosphor)", dash=d)
+        c.text(405, y + 16, r, mono=True, size=10.5, fill=col if dashed else "var(--phosphor)")
+        c.line(222, y + 16, 326, y + 16, stroke="var(--wire)", dash=d, arrow=True)
+    c.text(274, 92, T("would be", "seria"), size=9.5, fill="var(--paper-dim)")
+    for i, ex in enumerate(["/courses/statistics", "/courses/spanish"]):
+        y = 118 + i * 40
+        c.rect(540, y, 160, 28, fill="var(--panel)", stroke="var(--wire)")
+        c.text(620, y + 14, ex, mono=True, size=10)
+        c.line(482, 152, 536, y + 14, stroke="var(--wire)", arrow=True)
+    c.text(130, 218, T("no file for it", "nenhum arquivo para ele"), size=10, fill="var(--paper-dim)")
+    c.rect(300, 204, 180, 28, fill="var(--ink)", stroke="var(--amber)", dash="4 3")
+    c.text(390, 218, "/courses/spanish/extra", mono=True, size=10, fill="var(--amber)")
+    c.line(482, 218, 526, 218, stroke="var(--amber)", arrow=True)
+    c.rect(530, 204, 170, 28, fill="var(--ink)", stroke="var(--amber)")
+    c.text(615, 218, T("404 from the server", "404 do servidor"), size=10, fill="var(--amber)")
+    c.caption = T("A file's path in pages/ is its address; square brackets make a parameter.",
+                  "O caminho de um arquivo em pages/ é o seu endereço; colchetes fazem um parâmetro.")
+    return c
+
+
+FIGURES = [("planner-in-nuxt", flow), ("pages", files_to_routes)]

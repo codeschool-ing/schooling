@@ -29,4 +29,35 @@ def flow(T):
     return c
 
 
-FIGURES = [("typed-refs", flow)]
+def inference(T):
+    c = Canvas(720, 220, T(
+        "How T is decided in the TypedPicker demo. On the left, the parent passes :items equal to courses, a Course "
+        "array. In the middle, T becomes Course. On the right, the three places TypedList wrote T: items, a T array, "
+        "is a Course array; the event pick, with an item of type T, hands the listener a Course, so course.goal is "
+        "a number; and the slot's item is a Course, so item.title is a string. Each is checked against Course.",
+        "Como T é decidido na demo TypedPicker. À esquerda, o pai passa :items igual a courses, um array de Course. "
+        "No meio, T vira Course. À direita, os três lugares onde o TypedList escreveu T: items, um array de T, é um "
+        "array de Course; o evento pick, com um item do tipo T, entrega ao listener um Course, então course.goal é "
+        "um number; e o item do slot é um Course, então item.title é uma string. Cada um é verificado contra "
+        "Course."))
+    c.text(110, 60, T("the parent passes", "o pai passa"), size=10.5, fill="var(--paper-dim)")
+    c.rect(20, 76, 180, 60, fill="var(--panel)", stroke="var(--wire)")
+    c.text(110, 96, ':items="courses"', mono=True, size=10.5)
+    c.text(110, 118, "Course[]", mono=True, size=10.5, fill="var(--amber)")
+    c.line(202, 106, 256, 106, stroke="var(--amber)", arrow=True)
+    c.rect(260, 82, 140, 48, fill="var(--ink)", stroke="var(--amber)")
+    c.text(330, 106, "T = Course", mono=True, size=12, weight="600", fill="var(--amber)")
+    c.text(585, 16, T("where TypedList wrote T", "onde o TypedList escreveu T"), size=10.5, fill="var(--paper-dim)")
+    rows = [(30, "items: T[]", "Course[]"), (95, "pick: [item: T]", "course.goal: number"),
+            (160, '<slot :item="item">', "item.title: string")]
+    for y, decl, got in rows:
+        c.rect(470, y, 230, 46, fill="var(--ink)", stroke="var(--phosphor)")
+        c.text(585, y + 15, decl, mono=True, size=10)
+        c.text(585, y + 33, got, mono=True, size=10, fill="var(--phosphor)")
+        c.line(402, 106, 466, y + 23, stroke="var(--phosphor)", arrow=True)
+    c.caption = T("Nothing in the picker names a type; T is read off the items it was given.",
+                  "Nada no picker nomeia um tipo; T é lido dos itens que ele recebeu.")
+    return c
+
+
+FIGURES = [("typed-refs", flow), ("generic-components", inference)]

@@ -41,4 +41,44 @@ def timelines(T):
     return c
 
 
-FIGURES = [("choosing", timelines)]
+def two_clocks(T):
+    c = Canvas(720, 255, T(
+        "The same line, today equals isoDate of new Date, read on two clocks at the same moment. The server, in "
+        "UTC, reads 02:30 on 22 October, so today is 2026-10-22 and it draws the highlight on the 22nd. The "
+        "browser, in São Paulo, three hours behind, reads 23:30 on 21 October, so today is 2026-10-21 and it "
+        "expects (today) on the 21st. Below, the page in production: Vue makes the missing element, so the 21st, "
+        "Statistics, 60 minutes, says (today); and leaves the attribute alone, so the 22nd, Guitar, 20 minutes, "
+        "keeps the server's highlight. Two todays.",
+        "A mesma linha, today igual a isoDate de new Date, lida em dois relógios no mesmo instante. O servidor, em "
+        "UTC, lê 02:30 de 22 de outubro, então today é 2026-10-22 e ele desenha o destaque no dia 22. O navegador, "
+        "em São Paulo, três horas atrás, lê 23:30 de 21 de outubro, então today é 2026-10-21 e ele espera (today) no "
+        "dia 21. Embaixo, a página em produção: o Vue cria o elemento que falta, então o dia 21, Statistics, 60 "
+        "minutes, diz (today); e deixa o atributo como está, então o dia 22, Guitar, 20 minutes, fica com o destaque "
+        "do servidor. Dois hojes."))
+    sides = [(20, "var(--amber)", T("the server, in UTC", "o servidor, em UTC"), T("02:30 on 22 October", "02:30 de 22 de outubro"),
+              "today = '2026-10-22'", T("highlights the 22nd", "destaca o dia 22")),
+             (380, "var(--phosphor)", T("the browser, in São Paulo", "o navegador, em São Paulo"),
+              T("23:30 on 21 October", "23:30 de 21 de outubro"), "today = '2026-10-21'",
+              T("expects (today) on the 21st", "espera (today) no dia 21"))]
+    for x, col, who, when, today, does in sides:
+        c.rect(x, 20, 320, 100, fill="var(--ink)", stroke=col)
+        c.text(x + 160, 38, who, size=11, weight="600", fill=col)
+        c.text(x + 160, 60, when, size=10.5)
+        c.text(x + 160, 82, today, mono=True, size=10.5, fill=col)
+        c.text(x + 160, 104, does, size=10)
+    c.text(360, 146, T("the page in production, at the same moment", "a página em produção, no mesmo instante"),
+           size=10.5, fill="var(--paper-dim)")
+    c.rect(20, 162, 370, 30, fill="var(--panel)", stroke="var(--phosphor)")
+    c.text(205, 177, "21 October 2026, Statistics, 60 minutes (today)", mono=True, size=9.5)
+    c.text(402, 177, T("(today) made by the browser", "(today) criado pelo navegador"), size=10, anchor="start",
+           fill="var(--phosphor)")
+    c.rect(20, 204, 370, 30, fill="var(--scan)", stroke="var(--amber)")
+    c.text(205, 219, "22 October 2026, Guitar, 20 minutes", mono=True, size=9.5)
+    c.text(402, 219, T("highlight left by the server", "destaque deixado pelo servidor"), size=10, anchor="start",
+           fill="var(--amber)")
+    c.caption = T("Each side reads its own clock; in production the page keeps a piece of each answer.",
+                  "Cada lado lê o próprio relógio; em produção a página fica com um pedaço de cada resposta.")
+    return c
+
+
+FIGURES = [("choosing", timelines), ("hydration-mismatch", two_clocks)]

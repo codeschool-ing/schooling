@@ -31,4 +31,46 @@ def wiring(T):
     return c
 
 
-FIGURES = [("accessible-errors", wiring)]
+def round_trip(T):
+    c = Canvas(720, 235, T(
+        "The FieldContract demo after 1.5 is typed into the hours field. The hours FormField emits "
+        "update:modelValue with 1.5. The writable computed hours runs its setter, which writes minutes as 1.5 times "
+        "60, rounded: 90. The ref minutes is now 90. From it, the minutes field shows 90, and the computed error, "
+        "which only has a message above 240 minutes, is empty, so the minutes field's error goes. The hours getter, "
+        "90 divided by 60, gives back 1.5.",
+        "A demo FieldContract depois de 1.5 ser digitado no campo das horas. O FormField das horas emite "
+        "update:modelValue com 1.5. O computed gravável hours roda o seu setter, que escreve minutes como 1.5 vezes "
+        "60, arredondado: 90. O ref minutes agora é 90. A partir dele, o campo dos minutos mostra 90, e o computed "
+        "error, que só tem mensagem acima de 240 minutos, fica vazio, então o erro do campo dos minutos some. O "
+        "getter de hours, 90 dividido por 60, devolve 1.5."))
+    c.text(95, 20, "FormField", mono=True, size=10.5, fill="var(--paper-dim)")
+    c.rect(20, 34, 150, 56, fill="var(--panel)", stroke="var(--wire)")
+    c.text(95, 52, T("the Minutes field", "o campo Minutes"), size=10)
+    c.text(95, 72, "90", mono=True, size=11, fill="var(--phosphor)")
+    c.rect(20, 140, 150, 56, fill="var(--panel)", stroke="var(--amber)")
+    c.text(95, 158, T("the Hours field", "o campo Hours"), size=10)
+    c.text(95, 178, T("1.5 typed", "1.5 digitado"), size=10.5, fill="var(--amber)")
+    c.rect(290, 34, 170, 56, fill="var(--ink)", stroke="var(--phosphor)")
+    c.text(375, 52, "minutes", mono=True, size=10.5, fill="var(--phosphor)")
+    c.text(375, 72, "ref: 300 → 90", mono=True, size=10)
+    c.rect(290, 140, 170, 56, fill="var(--ink)", stroke="var(--amber)")
+    c.text(375, 158, "hours", mono=True, size=10.5, fill="var(--amber)")
+    c.text(375, 178, T("writable computed", "computed gravável"), size=10)
+    c.rect(540, 34, 160, 56, fill="var(--ink)", stroke="var(--wire)")
+    c.text(620, 52, "error", mono=True, size=10.5)
+    c.text(620, 72, T("empty: 90 is not above 240", "vazio: 90 não passa de 240"), size=9.5)
+    c.line(172, 168, 286, 168, stroke="var(--amber)", arrow=True)
+    c.text(230, 156, "update:modelValue", mono=True, size=9, fill="var(--amber)")
+    c.line(375, 138, 375, 94, stroke="var(--amber)", arrow=True)
+    c.text(385, 116, T("set: × 60, rounded", "set: × 60, arredondado"), size=9.5, anchor="start", fill="var(--amber)")
+    c.line(288, 62, 174, 62, stroke="var(--phosphor)", arrow=True)
+    c.text(230, 50, ":model-value", mono=True, size=9, fill="var(--phosphor)")
+    c.line(462, 62, 536, 62, stroke="var(--wire)", arrow=True)
+    c.text(375, 218, T("get: 90 / 60 = 1.5, back in the Hours field", "get: 90 / 60 = 1.5, de volta no campo Hours"),
+           size=10, fill="var(--paper-dim)")
+    c.caption = T("One write goes up through the contract, and everything that reads minutes follows it.",
+                  "Uma escrita sobe pelo contrato, e tudo o que lê minutes a acompanha.")
+    return c
+
+
+FIGURES = [("accessible-errors", wiring), ("the-contract", round_trip)]

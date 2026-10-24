@@ -39,4 +39,35 @@ def one_owner(T):
     return c
 
 
-FIGURES = [("why-a-store", one_owner)]
+def three_takes(T):
+    c = Canvas(720, 215, T(
+        "The LostRefs demo. On the left, the sessions store, a reactive object, with done going from 45 to 105 when "
+        "s4 is toggled, planned at 105, and the action toggle. On the right, three ways of taking pieces out of it. "
+        "const done equals store reads done once and is a plain copy: it stays at 45. storeToRefs of store gives a "
+        "ref for done and planned, which follows the store: 105 of 105. const toggle equals store takes the action "
+        "straight from the store: a function, the same forever, and its button worked.",
+        "A demo LostRefs. À esquerda, a store de sessões, um objeto reativo, com done indo de 45 para 105 quando s4 é "
+        "alternada, planned em 105, e a action toggle. À direita, três jeitos de tirar pedaços dela. const done igual "
+        "a store lê done uma vez e é uma cópia simples: fica em 45. storeToRefs de store dá um ref para done e "
+        "planned, que acompanha a store: 105 de 105. const toggle igual a store pega a action direto da store: uma "
+        "função, a mesma para sempre, e o botão dela funcionou."))
+    c.rect(20, 30, 200, 156, fill="var(--ink)", stroke="var(--phosphor)")
+    c.text(120, 50, "useSessionsStore()", mono=True, size=10.5, fill="var(--phosphor)")
+    c.text(120, 80, "done: 45 → 105", mono=True, size=10.5)
+    c.text(120, 108, "planned: 105", mono=True, size=10.5)
+    c.text(120, 160, "toggle()", mono=True, size=10.5)
+    takes = [(40, "const { done } = store", T("a copy: stays at 45", "uma cópia: fica em 45"), "var(--amber)"),
+             (95, "storeToRefs(store)", T("refs: 105 of 105", "refs: 105 de 105"), "var(--phosphor)"),
+             (150, "const { toggle } = store", T("a function: the same forever", "uma função: a mesma para sempre"),
+              "var(--phosphor)")]
+    for y, code, result, col in takes:
+        c.rect(280, y, 220, 34, fill="var(--panel)", stroke=col)
+        c.text(390, y + 17, code, mono=True, size=10)
+        c.line(222, y + 17, 276, y + 17, stroke=col, arrow=True)
+        c.text(512, y + 17, result, size=10.5, anchor="start", fill=col)
+    c.caption = T("State and getters go through storeToRefs; actions come straight from the store.",
+                  "Estado e getters passam pelo storeToRefs; as actions vêm direto da store.")
+    return c
+
+
+FIGURES = [("why-a-store", one_owner), ("store-to-refs", three_takes)]
