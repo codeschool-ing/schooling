@@ -805,20 +805,23 @@ var allowedOutsideTheFont = map[rune]string{
 		"follows it, and a capture is pasted byte for byte",
 	'\u2139': "`node --test` opens each line of its summary with it (`ℹ tests 3`). IBM Plex " +
 		"Mono has no U+2139 at all. It opens a line and nothing is aligned to what follows it",
-	// Vite's development server opens the two lines that say where it listens
-	// with this arrow, and every course whose project runs on Vite shows them.
-	'\u279c': "Vite's development server and `vite preview` open the lines that give their " +
-		"addresses with it (`  ➜  Local:   http://localhost:5173/`). IBM Plex Mono has no " +
-		"U+279C at all. Every line it opens starts with it at the same column, so whatever " +
-		"width the reader's machine gives it moves each of them equally and the addresses " +
-		"stay aligned with each other",
-	'\u23af': "Vitest draws the rule around `Failed Tests` with a run of it " +
-		"(`⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯`). IBM Plex Mono has no U+23AF. The rule is a line " +
-		"of its own with nothing aligned to it, so however wide the reader's machine draws " +
-		"it, no column of anything else moves",
-	'\u276f': "Vitest opens the line that names where a test failed with it " +
-		"(` ❯ src/lib/week.test.ts:25:45`). IBM Plex Mono has no U+276F. It opens a line and " +
-		"nothing is aligned to what follows it",
+	// Vite's own tools. `npm create vite` draws its steps on a rail of box-drawing
+	// characters, which the terminal cut carries, with a diamond on each step it
+	// reports; and the dev server opens each address it prints with an arrow.
+	'\u25c7': "`npm create vite` marks each step it reports with it (`◇  Scaffolding project`). " +
+		"IBM Plex Mono has no U+25C7 at all. It opens a line, on the rail of `│` above and " +
+		"below it, and nothing after it is aligned to anything",
+	'\u279c': "Vite's dev server opens each address it prints with it (`➜  Local:`). IBM Plex " +
+		"Mono has no U+279C at all. It opens every such line at the same indentation, so " +
+		"whatever width it is given, the lines stay aligned with each other",
+	// Vitest's default reporter: an arrow before each file and each place in the
+	// code it points at, and a rule of these around the heading of a failure.
+	'\u276f': "Vitest opens the line of each test file, and each `file:line:column` it points " +
+		"at, with it (`❯ src/planner.test.ts`). IBM Plex Mono has no U+276F at all. It opens " +
+		"the line after the indentation and nothing below is aligned to the column it ends in",
+	'\u23af': "Vitest draws the rule around the heading of a failure with a run of it " +
+		"(`⎯⎯⎯ Failed Tests 2 ⎯⎯⎯`). IBM Plex Mono has no U+23AF at all. A rule is the whole " +
+		"line and nothing is aligned to where it ends",
 }
 
 // coverage is the set of code points the interface declares a face for.
