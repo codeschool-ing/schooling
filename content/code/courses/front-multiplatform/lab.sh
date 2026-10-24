@@ -13,7 +13,7 @@
 #
 # WHAT IS IN IT
 #   apt          the packages of LESSON_APT below, which are the lines lessons
-#                1, 3, 11 and 12 print. The base has them all installed, so a
+#                1, 3, 11, 12 and 14 print. The base has them all installed, so a
 #                lesson's transcript is never a download log.
 #   Node.js      22.22.0 in ~/.local/node, installed exactly as lesson 1 of
 #                `javascript` installs it (this course does not install it
@@ -65,6 +65,7 @@ LESSON1="git curl ca-certificates"
 LESSON3="openjdk-21-jdk-headless"
 LESSON11="libgtk-3-0t64 libnss3 libxss1 libasound2t64 libgbm1 libxkbcommon0 libatk-bridge2.0-0t64 libcups2t64 xvfb xauth"
 LESSON12="build-essential pkg-config libwebkit2gtk-4.1-dev libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev file wget"
+LESSON14="gnupg"
 # Not a lesson's: what makes a container look like a desktop to the programs
 # that run on it. dbus is the bus every Linux desktop has; x11-apps, x11-utils and
 # imagemagick let the lab list the windows on the virtual display.
@@ -92,7 +93,7 @@ S
 rm -f /etc/apt/sources.list
 update-ca-certificates >/dev/null
 apt-get update -q >/dev/null
-apt-get install -y -q --no-install-recommends $LESSON1 $LESSON3 $LESSON11 $LESSON12 $DESKTOP
+apt-get install -y -q --no-install-recommends $LESSON1 $LESSON3 $LESSON11 $LESSON12 $LESSON14 $DESKTOP
 useradd -m -s /bin/bash ana
 echo dev > /etc/hostname
 ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
