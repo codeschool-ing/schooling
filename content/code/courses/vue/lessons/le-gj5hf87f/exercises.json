@@ -1,0 +1,725 @@
+[
+  {
+    "id": "ex-x930k55g",
+    "version": 1,
+    "section": "watch",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `watch(minutes.value, …)` not do what its author meant?",
+    "hint": "What is `minutes.value` at the moment the line runs?",
+    "choices": [
+      {
+        "text": "It watches `minutes` deeply, which is slower",
+        "correct": false,
+        "why": "Depth is not the problem: nothing reactive was passed at all."
+      },
+      {
+        "text": "It passes the number 30, which Vue cannot track",
+        "correct": true,
+        "why": "Right. Pass the ref itself; Vue warns about a source like this one."
+      },
+      {
+        "text": "It fires on every render instead of on every change",
+        "correct": false,
+        "why": "It never fires. What it received is a value, not a source."
+      },
+      {
+        "text": "It works, without the old value",
+        "correct": false,
+        "why": "The old value comes with any source that works; this one does not work."
+      }
+    ]
+  },
+  {
+    "id": "ex-d4xqv5de",
+    "version": 1,
+    "section": "watch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `WatchSources`, the watcher on the getter `() => minutes.value >= 60` printed once, at 60. Why did it stay silent at 45?",
+    "hint": "What did the getter return before that change, and after it?",
+    "choices": [
+      {
+        "text": "A getter skips the first change it sees",
+        "correct": false,
+        "why": "There is no such rule; the getter is run again on every change of what it read."
+      },
+      {
+        "text": "The array watcher took that change first",
+        "correct": false,
+        "why": "Each watcher is independent; one firing takes nothing away from the others."
+      },
+      {
+        "text": "Its result was `false` before and after",
+        "correct": true,
+        "why": "Right. 30 and 45 both give `false`, and the callback runs when the result changes; 60 is the first `true`."
+      },
+      {
+        "text": "Vue tracked `minutes` from 60 on, when the getter first returned something",
+        "correct": false,
+        "why": "It tracked `minutes` from the first run; the getter ran at 45 too, and returned `false` again."
+      }
+    ]
+  },
+  {
+    "id": "ex-9pt8h018",
+    "version": 1,
+    "section": "watch",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the `WatchSources` transcript, how many of the three watchers fired on the click on `Guitar`?",
+    "hint": "Count the lines under `-- click #guitar`.",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-c5adg715",
+    "version": 1,
+    "section": "deep-and-once",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `DeepAndOnce`, which watchers fired on the first click on `Push a session`? Choose all that apply.",
+    "hint": "A push changes the array that is already in `.value`.",
+    "choices": [
+      {
+        "text": "The one with `deep: true`",
+        "correct": true,
+        "why": "Right. A push changes something inside, and a deep watcher reads everything inside."
+      },
+      {
+        "text": "The plain watcher on the ref",
+        "correct": false,
+        "why": "Nothing was replaced, so a shallow watcher saw nothing; it missed both pushes."
+      },
+      {
+        "text": "The one on the `reactive` object",
+        "correct": true,
+        "why": "Right. A `reactive` object is watched deeply without asking."
+      },
+      {
+        "text": "The one with `immediate: true`",
+        "correct": false,
+        "why": "It ran when the page opened and then behaves like a plain watcher, which a push does not wake."
+      },
+      {
+        "text": "The one with `once: true` and deep",
+        "correct": true,
+        "why": "Right. It is deep, and this was its first change; it did not run again."
+      }
+    ]
+  },
+  {
+    "id": "ex-afz99zyr",
+    "version": 1,
+    "section": "deep-and-once",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The watcher on the `reactive` object `plan` fired on both pushes and not on `Replace the list`. Why not on the replace?",
+    "hint": "Look at what `replace()` assigns to.",
+    "choices": [
+      {
+        "text": "A `reactive` object is watched shallowly",
+        "correct": false,
+        "why": "The opposite: it is watched deeply without asking, which is why it saw the pushes."
+      },
+      {
+        "text": "Copying an array with `[...]` is not a reactive change at all",
+        "correct": false,
+        "why": "The ref's own watchers fired on the replace, so it was a change; just not to `plan`."
+      },
+      {
+        "text": "It had already used up its one run",
+        "correct": false,
+        "why": "That is the `once` watcher; this one has no `once`."
+      },
+      {
+        "text": "`replace` gave the ref `sessions` a new array and left `plan` alone",
+        "correct": true,
+        "why": "Right. The two buttons change different things, and only `push` touched `plan`."
+      }
+    ]
+  },
+  {
+    "id": "ex-gb4dnzfn",
+    "version": 1,
+    "section": "deep-and-once",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A list of ten thousand sessions is watched with `deep: true` only to show how many there are. What does the lesson's advice point to?",
+    "hint": "What is the one thing this watcher needs?",
+    "choices": [
+      {
+        "text": "Adding `immediate: true`, so that the walk happens once",
+        "correct": false,
+        "why": "`immediate` adds a run at the start; every later change is still a walk of the whole tree."
+      },
+      {
+        "text": "A getter: `() => sessions.value.length`",
+        "correct": true,
+        "why": "Right. It fires when the count changes and reads nothing else."
+      },
+      {
+        "text": "`flush: 'sync'`, to keep the cost down",
+        "correct": false,
+        "why": "`'sync'` runs it on every single write, which costs more, not less."
+      },
+      {
+        "text": "Moving the list into `reactive` instead of a ref",
+        "correct": false,
+        "why": "A `reactive` object is watched deeply anyway: the same walk, without the option written."
+      }
+    ]
+  },
+  {
+    "id": "ex-byf1x41n",
+    "version": 1,
+    "section": "watch-effect",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `EffectTracking`, the async effect reads `note`, and yet `Add a note` re-ran nothing. Why?",
+    "hint": "Where in the function is `note` read?",
+    "choices": [
+      {
+        "text": "`note` starts as an empty string, which is not reactive",
+        "correct": false,
+        "why": "An empty string in a ref is as reactive as any other value."
+      },
+      {
+        "text": "An async effect runs once, when the page opens, and stops",
+        "correct": false,
+        "why": "It re-ran on `Spanish`, because it had read `course` before the `await`."
+      },
+      {
+        "text": "The first effect had claimed `note`",
+        "correct": false,
+        "why": "Effects do not share or claim sources, and the first one never read `note`."
+      },
+      {
+        "text": "It is read after the `await`, when Vue had stopped recording",
+        "correct": true,
+        "why": "Right. Tracking lasts while the function runs synchronously; the reads after it count for nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-nqvjchnp",
+    "version": 1,
+    "section": "watch-effect",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In an async `watchEffect`, read every source you depend on before the first ___, into local constants.",
+    "hint": "The keyword where the function pauses.",
+    "blanks": [
+      {
+        "accept": [
+          "await"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7bb0aca5",
+    "version": 1,
+    "section": "watch-effect",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does a `watchEffect` run once as soon as it is created?",
+    "hint": "It has no source argument.",
+    "choices": [
+      {
+        "text": "It is a `watch` with `immediate: true`, written shorter",
+        "correct": false,
+        "why": "It differs more than that: it has no named sources and no old value."
+      },
+      {
+        "text": "Vue runs every watcher once when a component is set up",
+        "correct": false,
+        "why": "A `watch` does not run until the first change, unless `immediate` is set."
+      },
+      {
+        "text": "Running it is how it finds its sources",
+        "correct": true,
+        "why": "Right. Its first run records what it reads, and that is what it then watches."
+      },
+      {
+        "text": "To store the old values before any change arrives",
+        "correct": false,
+        "why": "A `watchEffect` gives you no old value; the table in this section says so."
+      }
+    ]
+  },
+  {
+    "id": "ex-yr1wagg0",
+    "version": 1,
+    "section": "timing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "One click on `Add two` in `FlushTiming`. How many times did the `'sync'` watcher run?",
+    "hint": "Count the lines that start with `sync:`.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-eah3g7a2",
+    "version": 1,
+    "section": "timing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A watcher scrolls a list to the session that was just added. Which `flush` does it need?",
+    "hint": "Does the new session's element exist yet?",
+    "choices": [
+      {
+        "text": "`'pre'`, since it is the default",
+        "correct": false,
+        "why": "Before the redraw, the new session's element does not exist yet."
+      },
+      {
+        "text": "`'sync'`, so that it runs at the moment of the write",
+        "correct": false,
+        "why": "At the moment of the write the page still shows the old list, as `page says 0` did."
+      },
+      {
+        "text": "Any of the three, because the value is the same in all of them",
+        "correct": false,
+        "why": "The value is the same; the page is not, and scrolling needs the page."
+      },
+      {
+        "text": "`'post'`",
+        "correct": true,
+        "why": "Right. The element exists only after the redraw."
+      }
+    ]
+  },
+  {
+    "id": "ex-jhjgsrne",
+    "version": 1,
+    "section": "timing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The default watcher printed `pre:  count 2, page says 0`. What does that line show?",
+    "hint": "Compare it with the `sync` lines and the `post` line around it.",
+    "choices": [
+      {
+        "text": "It ran at the first write and missed the second",
+        "correct": false,
+        "why": "Then it would have said count 1, as the first `sync` line did."
+      },
+      {
+        "text": "Once, with the final value, before the redraw",
+        "correct": true,
+        "why": "Right. Both writes were batched, and the page had not been redrawn yet."
+      },
+      {
+        "text": "The redraw failed and the page stayed at 0",
+        "correct": false,
+        "why": "The `post` line, a moment later, saw the page say 2."
+      },
+      {
+        "text": "It read the page before Vue had even started its queue for that click",
+        "correct": false,
+        "why": "It runs from the queue; its place in the queue is before the redraw."
+      }
+    ]
+  },
+  {
+    "id": "ex-gmppactm",
+    "version": 1,
+    "section": "cleanup",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the careless watcher end up showing the notes for statistics, while the course chosen is Spanish?",
+    "hint": "Look at when each answer arrived.",
+    "choices": [
+      {
+        "text": "Statistics was asked first, so Vue shows its answer",
+        "correct": false,
+        "why": "Vue does not order the answers; the last assignment wins."
+      },
+      {
+        "text": "The slow answer landed last and overwrote the fast one",
+        "correct": true,
+        "why": "Right. Both requests were in flight; statistics answered 500 milliseconds after Spanish."
+      },
+      {
+        "text": "Spanish's request failed without saying so",
+        "correct": false,
+        "why": "Nothing failed: Spanish answered after 100 milliseconds and was shown."
+      },
+      {
+        "text": "The watcher fired for the first change and not the second",
+        "correct": false,
+        "why": "It fired for both; that is why two requests were in flight."
+      }
+    ]
+  },
+  {
+    "id": "ex-jxy9vkzd",
+    "version": 1,
+    "section": "cleanup",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When does Vue call a function registered with `onWatcherCleanup`?",
+    "hint": "In the demo, the statistics run's flag was set when Spanish was chosen.",
+    "choices": [
+      {
+        "text": "When the `await` inside the callback resolves",
+        "correct": false,
+        "why": "The answer arriving calls nothing; the next change does."
+      },
+      {
+        "text": "After the component redraws",
+        "correct": false,
+        "why": "That is `flush: 'post'`, which is about the callback, not the cleanup."
+      },
+      {
+        "text": "Just before the watcher runs again, and when it is stopped",
+        "correct": true,
+        "why": "Right. So the statistics run was marked stale before the Spanish run began."
+      },
+      {
+        "text": "Once, when the component is removed from the page",
+        "correct": false,
+        "why": "Removal stops the watcher and calls it then, but it is also called before every new run."
+      }
+    ]
+  },
+  {
+    "id": "ex-ymvgw3zz",
+    "version": 1,
+    "section": "cleanup",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "About cancelling a stale request, which of these does the section support? Choose all that apply.",
+    "hint": "A flag ignores; an `AbortController` stops.",
+    "choices": [
+      {
+        "text": "With a `stale` flag, the slow request still runs to the end",
+        "correct": true,
+        "why": "Right. The flag only decides that its answer is thrown away."
+      },
+      {
+        "text": "A cleanup registered after the first `await` is tied to its run as well",
+        "correct": false,
+        "why": "Registered after an `await`, Vue cannot tell which run it belongs to, and warns."
+      },
+      {
+        "text": "`controller.abort()` makes the pending `fetch` reject with an `AbortError`",
+        "correct": true,
+        "why": "Right. So the lines after the `fetch` never run for the stale course."
+      },
+      {
+        "text": "Aborting also needs the `stale` flag, or the old answer still lands",
+        "correct": false,
+        "why": "An aborted `fetch` rejects, so the assignment after it never happens."
+      }
+    ]
+  },
+  {
+    "id": "ex-xnfnn4wd",
+    "version": 1,
+    "section": "cleanup",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Since Vue 3.5, `___(fn)`, called inside a watcher's callback, registers a function that belongs to that run.",
+    "hint": "`StaleAnswer` imports it from `vue`.",
+    "blanks": [
+      {
+        "accept": [
+          "onWatcherCleanup"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-00fgnn2a",
+    "version": 1,
+    "section": "stopping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `Remove the listener`, the late watcher alone saw tick 3. Why that one?",
+    "hint": "Look at when each of the three was created.",
+    "choices": [
+      {
+        "text": "It was the last to be registered, so Vue keeps it",
+        "correct": false,
+        "why": "Vue keeps nothing by order; what matters is whether a component was being set up."
+      },
+      {
+        "text": "It watches `tick` through the module rather than the component",
+        "correct": false,
+        "why": "All three watch the same `tick` from the same module."
+      },
+      {
+        "text": "The setup watcher had called `stop()` on the first tick",
+        "correct": false,
+        "why": "That was the stoppable watcher; the setup watcher saw tick 2 and then stopped with the component."
+      },
+      {
+        "text": "It was created in a `setTimeout`, after setup",
+        "correct": true,
+        "why": "Right. No component was being set up then, so it belongs to nobody and removing the component does not stop it."
+      }
+    ]
+  },
+  {
+    "id": "ex-wbmw9feq",
+    "version": 1,
+    "section": "stopping",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In a `<script setup>`, a watcher is created inside `loadCourses().then(() => { … })`. The component is shown and hidden many times. What follows from the lesson?",
+    "hint": "What does Vue know about the component when the `.then()` callback runs?",
+    "choices": [
+      {
+        "text": "The watchers pile up: keep each stop function and call it in `onUnmounted`",
+        "correct": true,
+        "why": "Right. Created in a callback that runs later, it belongs to nobody and outlives its component."
+      },
+      {
+        "text": "Nothing changes: the `.then()` is written at the top level of the script",
+        "correct": false,
+        "why": "It is written there, but the callback runs later, when no component is being set up."
+      },
+      {
+        "text": "Vue stops it at the next change of its source",
+        "correct": false,
+        "why": "A change runs it; nothing stops a watcher that belongs to nobody until the page closes."
+      },
+      {
+        "text": "It runs once and stops, as with `{ once: true }`",
+        "correct": false,
+        "why": "`once` is an option you pass; an `await` does not add it."
+      }
+    ]
+  },
+  {
+    "id": "ex-fwr6twjh",
+    "version": 1,
+    "section": "stopping",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What do `watch` and `watchEffect` return?",
+    "hint": "The stoppable watcher in `Listener` keeps it in a constant.",
+    "choices": [
+      {
+        "text": "The watcher's first result",
+        "correct": false,
+        "why": "For a `watch`, nothing has run yet when it returns."
+      },
+      {
+        "text": "A promise that resolves on the first change",
+        "correct": false,
+        "why": "There is no promise; the demo calls what was returned directly, as a function."
+      },
+      {
+        "text": "A ref that holds the latest value",
+        "correct": false,
+        "why": "That is closer to a `computed`; a watcher's return value is how you stop it."
+      },
+      {
+        "text": "A function that stops the watcher",
+        "correct": true,
+        "why": "Right. In Vue 3.5 the same handle also has `pause()` and `resume()`."
+      }
+    ]
+  },
+  {
+    "id": "ex-n1g9qhpp",
+    "version": 1,
+    "section": "saving",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a shallow watcher on `sessions` enough to keep the browser's copy current?",
+    "hint": "How do the planner's rules change the list?",
+    "choices": [
+      {
+        "text": "`localStorage` keeps its own copy in step with the ref",
+        "correct": false,
+        "why": "`localStorage` keeps what it was last given; nothing in it follows the ref."
+      },
+      {
+        "text": "The rules return new arrays, so every change is a new `.value`",
+        "correct": true,
+        "why": "Right. `toggleDone` and `addSession` never change the list they are given."
+      },
+      {
+        "text": "`JSON.stringify` reads the whole list, which makes the watcher deep",
+        "correct": false,
+        "why": "It reads the list when the callback runs; it has no say in when the callback runs."
+      },
+      {
+        "text": "The planner never changes its sessions",
+        "correct": false,
+        "why": "Not yet; lessons 5 and 14 do, and they replace the list each time."
+      }
+    ]
+  },
+  {
+    "id": "ex-az5ckbws",
+    "version": 1,
+    "section": "saving",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`courses.json` gains a new session. A student whose browser has a saved copy reloads the page. What does the planner show?",
+    "hint": "Read the line that assigns `sessions.value`.",
+    "choices": [
+      {
+        "text": "The file's list, because the file is the source",
+        "correct": false,
+        "why": "The sessions come from the browser's copy when there is one; the courses alone come from the file."
+      },
+      {
+        "text": "Both lists, merged",
+        "correct": false,
+        "why": "Nothing merges them; `saved ? JSON.parse(saved) : data.sessions` picks one of the two."
+      },
+      {
+        "text": "An error saying that the courses could not be loaded",
+        "correct": false,
+        "why": "That is what a copy that is not valid JSON would cause, not a changed file."
+      },
+      {
+        "text": "The saved copy, without the new session",
+        "correct": true,
+        "why": "Right. The copy wins, and the lesson calls that the right answer for sessions that belong to the student."
+      }
+    ]
+  },
+  {
+    "id": "ex-hyksx4g0",
+    "version": 1,
+    "section": "saving",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the capture of the planner add `--do 'goto /'`?",
+    "hint": "What does `look` have stored when it starts?",
+    "choices": [
+      {
+        "text": "`look` starts with an empty browser every time",
+        "correct": true,
+        "why": "Right. So the page is loaded twice in one browser, and the second load finds the copy the first one saved."
+      },
+      {
+        "text": "To wait for the watcher to finish saving",
+        "correct": false,
+        "why": "The watcher saves as soon as the list is assigned; the second load is about reading the copy back."
+      },
+      {
+        "text": "To clear `localStorage` before the run",
+        "correct": false,
+        "why": "It does the opposite: it keeps the same browser, with what was stored."
+      },
+      {
+        "text": "The first load reads the copy and the second one the file",
+        "correct": false,
+        "why": "The other way round: the first visit read the file, the second the copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-rs58ka92",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens around `StaleAnswer`'s careful watcher in order, from the click on `Statistics` to the end of the wait.",
+    "hint": "The cleanup runs before the next run starts, not when an answer arrives.",
+    "items": [
+      "The course becomes statistics, and its run asks the slow server",
+      "The course becomes Spanish",
+      "Vue calls the statistics run's cleanup, which sets its `stale`",
+      "The Spanish run asks, and its answer is shown after 100 milliseconds",
+      "The statistics answer arrives, and its run drops it"
+    ]
+  },
+  {
+    "id": "ex-vvm7bay7",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each option to what it changes about a watcher.",
+    "hint": "One description on the right belongs to an option that is not on the left.",
+    "pairs": [
+      {
+        "left": "`deep: true`",
+        "right": "notices a change anywhere inside the value"
+      },
+      {
+        "left": "`immediate: true`",
+        "right": "runs once before any change"
+      },
+      {
+        "left": "`once: true`",
+        "right": "stops after the first change"
+      },
+      {
+        "left": "`flush: 'post'`",
+        "right": "runs after the component redraws"
+      }
+    ],
+    "right_distractors": [
+      "runs at the moment of every write"
+    ]
+  },
+  {
+    "id": "ex-jy44y472",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`watchEffect(async () => { await loadSettings(); notes.value = await lookUp(course.value) })`. The student picks another course. What happens?",
+    "hint": "Where is `course` read, relative to the first `await`?",
+    "choices": [
+      {
+        "text": "The effect runs again and fetches the new course's notes",
+        "correct": false,
+        "why": "That needs `course` read before the first `await`; here it is read after it."
+      },
+      {
+        "text": "It runs again twice, once for each `await`",
+        "correct": false,
+        "why": "`await`s do not make runs; changes to tracked sources do, and this effect tracked none."
+      },
+      {
+        "text": "Vue warns that `course` was read too late, and runs it again anyway",
+        "correct": false,
+        "why": "There is no warning; that silence is the trap the lesson names."
+      },
+      {
+        "text": "Nothing: `course` was read after an `await`, so it is not a source",
+        "correct": true,
+        "why": "Right. The notes stay those of the first course, and nothing says so."
+      }
+    ]
+  }
+]
