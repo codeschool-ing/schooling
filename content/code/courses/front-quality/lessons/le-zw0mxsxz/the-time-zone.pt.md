@@ -3,7 +3,7 @@ title: O defeito é o fuso horário
 version: 1
 ---
 
-**`new Date("2026-10-21")` é meia-noite em Londres, não meia-noite onde você está.** Uma data escrita
+**`new Date("2026-10-21")` é meia-noite em UTC, não meia-noite onde você está.** Uma data escrita
 sem hora é lida como UTC, e todo método `get…` de um `Date` responde no fuso do próprio computador.
 Este curso foi gravado em São Paulo, três horas atrás do UTC, onde essa meia-noite é 21:00 da terça,
 dia 20.

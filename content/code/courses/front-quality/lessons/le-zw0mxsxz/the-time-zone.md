@@ -3,7 +3,7 @@ title: The bug is the time zone
 version: 1
 ---
 
-**`new Date("2026-10-21")` is midnight in London, not midnight where you are.** A date written
+**`new Date("2026-10-21")` is midnight in UTC, not midnight where you are.** A date written
 with no time is read as UTC, and every `get…` method of a `Date` answers in the computer's own
 time zone. This course was recorded in São Paulo, three hours behind UTC, where that midnight is
 21:00 on Tuesday the 20th.
