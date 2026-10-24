@@ -37,7 +37,7 @@ CREATE angular/public/favicon.ico (15086 bytes)
 
 O `--defaults` aceita a resposta padrão de cada pergunta que o CLI faria, e o `--ssr=false` deixa de fora
 a renderização no servidor, que o Angular sabe fazer como o Nuxt faz. Instale, e fixe os pacotes do
-framework:
+framework em 22.2.3; a CLI e a ferramenta de build saem separadas deles, e estão em 22.2.4:
 
 ```
 ana@dev:~/vue/compare/angular$ npm install

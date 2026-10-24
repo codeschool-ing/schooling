@@ -36,7 +36,8 @@ CREATE angular/public/favicon.ico (15086 bytes)
 ```
 
 `--defaults` takes the default answer to every question the CLI would ask, and `--ssr=false` leaves
-out server rendering, which Angular can do as Nuxt does. Install, and pin the framework's packages:
+out server rendering, which Angular can do as Nuxt does. Install, and pin the framework's
+packages at 22.2.3; the CLI and the build tool are released apart from them, and are at 22.2.4:
 
 ```
 ana@dev:~/vue/compare/angular$ npm install
