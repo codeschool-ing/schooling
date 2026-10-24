@@ -8,15 +8,15 @@
 #
 # What is STAGED rather than typed: the files ana writes, taken out of the
 # lesson's .md by lab/shown.py; `ng serve`, running "in a second terminal",
-# restarted after `npm ci` as a person would after reinstalling; three
-# seconds after each save for the dev server to rebuild.
+# restarted after `npm ci` as a person would after reinstalling; after each
+# save, a wait until the dev server has finished the build it caused.
 set -uo pipefail
 cd "$(dirname "$0")"
 source ../../lab/lib.sh
 bash "$LAB_SH" down >/dev/null 2>&1; sleep 1
 restore le-0z4qr9s9
 serve
-w() { sleep 3; }
+w() { rebuilt; }
 
 cap '~/planner' 'npx ng generate component bench --skip-tests --inline-template --inline-style'
 save what-it-does src/app/bench/bench.ts

@@ -8,15 +8,15 @@
 #
 # What is STAGED rather than typed: the files ana writes, taken out of the
 # lesson's .md by lab/shown.py (a file shown twice in one section is taken by
-# its position); `ng serve`, running "in a second terminal"; three seconds
-# after each save for the dev server to rebuild.
+# its position); `ng serve`, running "in a second terminal"; after each save,
+# a wait until the dev server has finished the build it caused.
 set -uo pipefail
 cd "$(dirname "$0")"
 source ../../lab/lib.sh
 bash "$LAB_SH" down >/dev/null 2>&1; sleep 1
 restore le-ja36d9g0
 serve
-w() { sleep 3; }
+w() { rebuilt; }
 
 save at-if src/app/week-summary/week-summary.html; w
 cap_look http://localhost:4200/ --text app-week-summary

@@ -11,15 +11,15 @@
 # What is STAGED rather than typed: the files ana writes, taken out of the
 # lesson's .md by lab/shown.py (a file shown twice in one section is taken by
 # its position); `ng serve`, running "in a second terminal". After each save
-# the script waits three seconds for the dev server to rebuild, as a person
-# would before looking.
+# the script waits until the dev server has finished the build it caused, as a
+# person would before looking.
 set -uo pipefail
 cd "$(dirname "$0")"
 source ../../lab/lib.sh
 bash "$LAB_SH" down >/dev/null 2>&1; sleep 1
 restore le-37z2c925
 serve
-w() { sleep 3; }
+w() { rebuilt; }
 
 cap '~/planner' 'npx ng generate component bench --skip-tests'
 save interpolation src/app/app.html

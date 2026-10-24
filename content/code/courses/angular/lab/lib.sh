@@ -40,7 +40,24 @@ shown() {
 }
 # save SECTION PATH [N]: the file PATH of the planner, as SECTION.md of the
 # lesson being captured shows it, saved where the student saves it.
-save() { shown "$PWD/$1.md" "$2" "~/planner/$2" "${3:-}"; }
+save() {
+  [ -n "${SAVE_MARK:-}" ] || SAVE_MARK=$(builds)
+  shown "$PWD/$1.md" "$2" "~/planner/$2" "${3:-}"
+}
+# builds: how many builds the dev server has finished, well or badly.
+builds() { local n; n=$(grep -cE 'bundle generation (complete|failed)' $STATE/serve.log 2>/dev/null); echo "${n:-0}"; }
+# rebuilt: after one or more saves, until the dev server has finished the
+# build they caused (a fixed sleep was once too short, and the page a capture
+# opened still carried the error of the build before).
+rebuilt() {
+  local mark=${SAVE_MARK:-0}
+  SAVE_MARK=
+  for _ in $(seq 300); do
+    [ "$(builds)" -gt "$mark" ] && { sleep 1; return 0; }
+    sleep 0.1
+  done
+  echo "rebuilt: the dev server finished no build after the save" >&2
+}
 
 # bg NAME DIR 'command': start a program in "a second terminal", as ana. What
 # it prints goes to a log that bg_show prints with the prompt it was typed at.

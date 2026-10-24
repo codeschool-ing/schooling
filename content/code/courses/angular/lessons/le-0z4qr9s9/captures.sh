@@ -9,15 +9,16 @@
 # What is STAGED rather than typed: the files ana writes, taken out of the
 # lesson's .md by lab/shown.py (a file shown twice in one section is taken by
 # its position), the try/ folder they go in included; `ng serve`, running "in
-# a second terminal"; three seconds after each save for the dev server to
-# rebuild. The browser's date is set with look --today where the lesson says.
+# a second terminal"; after each save, a wait until the dev server has
+# finished the build it caused. The browser's date is set with look --today
+# where the lesson says.
 set -uo pipefail
 cd "$(dirname "$0")"
 source ../../lab/lib.sh
 bash "$LAB_SH" down >/dev/null 2>&1; sleep 1
 restore le-xkvc03gn
 serve
-w() { sleep 3; }
+w() { rebuilt; }
 
 save signal try/signals.mts
 cap '~/planner' 'node try/signals.mts'
