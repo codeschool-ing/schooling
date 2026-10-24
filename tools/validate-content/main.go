@@ -805,14 +805,23 @@ var allowedOutsideTheFont = map[rune]string{
 		"follows it, and a capture is pasted byte for byte",
 	'\u2139': "`node --test` opens each line of its summary with it (`ℹ tests 3`). IBM Plex " +
 		"Mono has no U+2139 at all. It opens a line and nothing is aligned to what follows it",
-	// Vite's servers, and the program that makes a Vite project. Every front-end
-	// course that runs `npm run dev` prints the first; IBM Plex Mono has neither.
-	'\u279c': "Vite's development and preview servers print it before each address they " +
-		"listen on (`➜  Local:   http://localhost:5173/`). IBM Plex Mono has no U+279C at all. " +
-		"It opens the line after the indentation and nothing is aligned to the column it ends in",
-	'\u25c7': "`npm create vite` prints it beside a step it finished (`◇  Scaffolding project " +
-		"in …`). IBM Plex Mono has no U+25C7 at all. It opens a line and nothing is aligned to " +
-		"what follows it, and a capture is pasted byte for byte",
+	// Vite's own tools. `npm create vite` draws its steps on a rail of box-drawing
+	// characters, which the terminal cut carries, with a diamond on each step it
+	// reports; and the dev server opens each address it prints with an arrow.
+	'\u25c7': "`npm create vite` marks each step it reports with it (`◇  Scaffolding project`). " +
+		"IBM Plex Mono has no U+25C7 at all. It opens a line, on the rail of `│` above and " +
+		"below it, and nothing after it is aligned to anything",
+	'\u279c': "Vite's dev server opens each address it prints with it (`➜  Local:`). IBM Plex " +
+		"Mono has no U+279C at all. It opens every such line at the same indentation, so " +
+		"whatever width it is given, the lines stay aligned with each other",
+	// Vitest's default reporter: an arrow before each file and each place in the
+	// code it points at, and a rule of these around the heading of a failure.
+	'\u276f': "Vitest opens the line of each test file, and each `file:line:column` it points " +
+		"at, with it (`❯ src/planner.test.ts`). IBM Plex Mono has no U+276F at all. It opens " +
+		"the line after the indentation and nothing below is aligned to the column it ends in",
+	'\u23af': "Vitest draws the rule around the heading of a failure with a run of it " +
+		"(`⎯⎯⎯ Failed Tests 2 ⎯⎯⎯`). IBM Plex Mono has no U+23AF at all. A rule is the whole " +
+		"line and nothing is aligned to where it ends",
 	'\u25c6': "Nuxt's tools print it beside a step they finished (`◆ Types generated in .nuxt.`). " +
 		"IBM Plex Mono has no U+25C6 at all. It opens a line and nothing is aligned to what " +
 		"follows it",
