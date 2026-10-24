@@ -260,7 +260,7 @@ EX = [
           "Por que a resposta em streaming não tem Content-Length?"),
          None,
          [(("Node never sends one, whatever the response", "O Node nunca manda um, seja qual for a resposta"), False,
-           ("It sends one when the body is known, as with res.end(html).", "Ele manda quando o corpo é conhecido, como com res.end(html).")),
+           ("It sends one when res.end gets the whole body before any head was written.", "Ele manda quando o res.end recebe o corpo inteiro antes de qualquer cabeçalho ser escrito.")),
           (("Its length was unknown", "O tamanho era desconhecido"), True,
            ("Right. Each chunk carries its own length instead.", "Certo. Cada pedaço leva o seu próprio tamanho no lugar.")),
           (("HTML pages have no length", "Páginas HTML não têm tamanho"), False, ("Every body has one.", "Todo corpo tem um.")),
