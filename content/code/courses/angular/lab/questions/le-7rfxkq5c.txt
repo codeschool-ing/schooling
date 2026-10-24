@@ -1,0 +1,217 @@
+# Lesson 19: pipes
+
+@ built-in quiz easy #ex-g3xwrhw7
+? What does a pipe change about the value in the class?
+?? O que um pipe muda no valor da classe?
++ Nothing :: Right. Only the text on the screen is formatted.
+++ Nada :: Isso. Só o texto na tela é formatado.
+- It replaces it with the formatted text :: The class keeps the original value.
+-- Troca-o pelo texto formatado :: A classe mantém o valor original.
+- It converts it to a string for good :: The value in the class keeps its type.
+-- Converte-o em string de vez :: O valor na classe mantém o tipo.
+- It copies it into the store :: Pipes do not touch the store.
+-- Copia-o para o store :: Pipes não mexem no store.
+
+@ built-in quiz medium #ex-66bk89q4
+? How does `DatePipe` read the string `2026-10-19`?
+?? Como o `DatePipe` lê a string `2026-10-19`?
+- As midnight UTC, like `new Date('2026-10-19')` :: That is what `Date` does; the pipe reads a date-only string as a local day.
+-- Como meia-noite UTC, como o `new Date('2026-10-19')` :: Isso é o que o `Date` faz; o pipe lê uma string só de data como dia local.
+- It cannot; it needs a `Date` :: It takes strings, numbers and `Date`s.
+-- Não lê; ele precisa de um `Date` :: Ele aceita strings, números e `Date`s.
++ As 19 October where the browser is :: Right. The day the string says, wherever the reader is.
+++ Como 19 de outubro onde o navegador está :: Isso. O dia que a string diz, onde quer que o leitor esteja.
+- As a number of milliseconds :: It parses the date in the string.
+-- Como um número de milissegundos :: Ele interpreta a data da string.
+
+@ built-in matching medium #ex-21a6eq6p
+? Match each pipe with what it shows.
+?? Associe cada pipe ao que ele mostra.
+< `date: 'EEE d MMM'` :: Sat 24 Oct
+<< `date: 'EEE d MMM'` :: Sat 24 Oct
+< `percent` :: 0.55 as 55%
+<< `percent` :: 0.55 como 55%
+< `uppercase` :: the same text in capitals
+<< `uppercase` :: o mesmo texto em maiúsculas
+< `json` :: any value as JSON, for debugging
+<< `json` :: qualquer valor como JSON, para depurar
+x the value's type
+xx o tipo do valor
+
+@ built-in cloze easy #ex-f18r0y6v
+? In a template, `{{ day ___ date }}` passes `day` to the date pipe.
+?? Num template, `{{ day ___ date }}` passa `day` para o pipe date.
+= |
+== |
+
+@ locale quiz medium #ex-va5399rg
+? Why did `longDate` first print `October 25, 2026`?
+?? Por que o `longDate` imprimiu primeiro `October 25, 2026`?
+- The browser was set to American English :: The pipe asks Angular's locale, not the browser's.
+-- O navegador estava em inglês americano :: O pipe pergunta à localidade do Angular, não à do navegador.
++ Angular's default locale is `en-US` :: Right. `longDate` is the locale's long date.
+++ A localidade padrão do Angular é `en-US` :: Isso. O `longDate` é a data longa da localidade.
+- `longDate` always puts the month first :: It follows the locale; in `en-GB` the day comes first.
+-- O `longDate` sempre põe o mês primeiro :: Ele segue a localidade; em `en-GB` o dia vem primeiro.
+- The dev server runs in America :: Where the server runs does not matter.
+-- O servidor de desenvolvimento roda nos Estados Unidos :: Onde o servidor roda não importa.
+
+@ locale quiz medium #ex-ztda0m8t
+? What did setting `sourceLocale` to `en-GB` change in the templates?
+?? O que definir o `sourceLocale` como `en-GB` mudou nos templates?
+- Every `date` call needed a locale argument :: No template changed.
+-- Toda chamada de `date` precisou de um argumento de localidade :: Nenhum template mudou.
+- The text of the templates was translated :: Translation is `@angular/localize`, a different job.
+-- O texto dos templates foi traduzido :: Tradução é o `@angular/localize`, outro trabalho.
+- `DatePipe` had to be replaced by a British pipe :: The same pipe asks a different locale.
+-- O `DatePipe` teve de ser trocado por um pipe britânico :: O mesmo pipe pergunta a outra localidade.
++ Nothing; the pipes now format for en-GB :: Right. The locale's data is in the build.
+++ Nada; os pipes agora formatam para en-GB :: Isso. Os dados da localidade estão no build.
+
+@ locale quiz hard #ex-f9054a9v
+? A planner for English and Portuguese readers: how do most applications handle the locale?
+?? Um planner para leitores em inglês e em português: como a maioria das aplicações lida com a localidade?
++ One build per locale :: Right. With `@angular/localize` translating the text too.
+++ Um build por localidade :: Isso. Com o `@angular/localize` traduzindo o texto também.
+- One build, and the reader picks a locale at run time :: Possible, but it formats dates without translating the text.
+-- Um build, e o leitor escolhe a localidade em tempo de execução :: Possível, mas formata datas sem traduzir o texto.
+- Two applications, written twice :: The same code is built twice.
+-- Duas aplicações, escritas duas vezes :: O mesmo código é construído duas vezes.
+- A pipe argument on every date is enough :: The text of the page would stay in one language.
+-- Um argumento de pipe em toda data basta :: O texto da página continuaria numa língua só.
+
+@ your-own quiz easy #ex-njegt433
+? What makes a class a pipe?
+?? O que faz de uma classe um pipe?
+- Extending `DatePipe` :: A pipe extends nothing.
+-- Estender o `DatePipe` :: Um pipe não estende nada.
+- Being in a file ending in `-pipe.ts` :: The file name is a convention.
+-- Estar num arquivo terminado em `-pipe.ts` :: O nome do arquivo é uma convenção.
++ `@Pipe` with a name, and `transform` :: Right. The name is what templates write.
+++ `@Pipe` com um nome, e o `transform` :: Isso. O nome é o que os templates escrevem.
+- Being listed in `app.config.ts` :: A pipe is imported by the components that use it.
+-- Estar listado no `app.config.ts` :: Um pipe é importado pelos componentes que o usam.
+
+@ your-own quiz medium #ex-w9twcb40
+? Why does the `minutes` pipe write `1 hour 50 minutes` and not `1 h 50 min`?
+?? Por que o pipe `minutes` escreve `1 hour 50 minutes` e não `1 h 50 min`?
+- `h` is not allowed in a pipe's output :: Any string is allowed.
+-- `h` não é permitido na saída de um pipe :: Qualquer string é permitida.
++ A screen reader reads words as a person would :: Right. An abbreviation may be spelt out.
+++ Um leitor de tela lê palavras como uma pessoa leria :: Isso. Uma abreviação pode ser soletrada.
+- Words are shorter on narrow screens :: They are longer.
+-- Palavras são mais curtas em telas estreitas :: Elas são mais longas.
+- The tests require words :: The tests were written for what the pipe says.
+-- Os testes exigem palavras :: Os testes foram escritos para o que o pipe diz.
+
+@ your-own numeric easy #ex-r1gw07yh
+? What does the `minutes` pipe write for 165? Give the number of hours in its answer.
+?? O que o pipe `minutes` escreve para 165? Dê o número de horas da resposta.
+= 2
+== 2
+
+@ your-own quiz medium #ex-cjpsywtv
+? After the date pipe arrived, lesson 10's week test failed. What was the right fix?
+?? Depois que o pipe de data chegou, o teste da semana da aula 10 falhou. Qual era a correção certa?
+- Remove the test, since the range still works :: The test checks what the person sees, which is worth keeping.
+-- Remover o teste, já que o intervalo ainda funciona :: O teste confere o que a pessoa vê, o que vale manter.
+- Undo the pipe in `week.html` :: The pipe was the point of the lesson.
+-- Desfazer o pipe no `week.html` :: O pipe era o objetivo da aula.
+- Run the test in `en-US` :: The tests share the source locale; nothing is gained.
+-- Rodar o teste em `en-US` :: Os testes compartilham a localidade de origem; nada se ganha.
++ Expect the new wording :: Right. The change was on purpose, so the test follows it.
+++ Esperar o texto novo :: Isso. A mudança foi de propósito, então o teste a acompanha.
+
+@ pure quiz medium #ex-7y1mz9pw
+? After `Push 10`, the bench showed `30 + 60 + 10 = 90`. Why did the total not change?
+?? Depois do `Push 10`, o bench mostrou `30 + 60 + 10 = 90`. Por que o total não mudou?
++ The pipe is pure and got the same array :: Right. Same argument, last answer reused.
+++ O pipe é puro e recebeu o mesmo array :: Isso. Mesmo argumento, última resposta reaproveitada.
+- Change detection did not run :: It ran: `join` shows three numbers.
+-- A detecção de mudanças não rodou :: Rodou: o `join` mostra três números.
+- `reduce` skips the last item :: It adds every item.
+-- O `reduce` pula o último item :: Ele soma todos os itens.
+- `push` creates a copy the template cannot see :: `push` changes the array in place.
+-- O `push` cria uma cópia que o template não vê :: O `push` muda o array no lugar.
+
+@ pure quiz medium #ex-kqnhszdz
+? What makes a pure pipe run again?
+?? O que faz um pipe puro rodar de novo?
+- Any change detection of its component :: That describes an impure pipe.
+-- Qualquer detecção de mudanças do componente :: Isso descreve um pipe impuro.
+- A click on the page :: A click runs a check; the pipe still compares its arguments.
+-- Um clique na página :: Um clique roda uma conferência; o pipe ainda compara os argumentos.
++ A different value or object as argument :: Right. A new array, not the same one changed.
+++ Um valor ou objeto diferente como argumento :: Isso. Um array novo, não o mesmo mudado.
+- A call to `markForCheck` :: That marks the component; the pipe still compares.
+-- Uma chamada ao `markForCheck` :: Isso marca o componente; o pipe ainda compara.
+
+@ impure quiz medium #ex-gf8rnfpd
+? With `pure: false`, what did two clicks on `Do nothing` do?
+?? Com `pure: false`, o que dois cliques em `Do nothing` fizeram?
+- Nothing, since nothing changed :: The pipe cannot know that.
+-- Nada, já que nada mudou :: O pipe não tem como saber disso.
++ Ran the pipe twice more :: Right. Calls 3 and 4.
+++ Rodaram o pipe mais duas vezes :: Isso. As chamadas 3 e 4.
+- Reset the array :: `nothing()` does nothing.
+-- Reiniciaram o array :: O `nothing()` não faz nada.
+- Ran it once, then cached :: Impure pipes are not cached.
+-- Rodaram uma vez, e guardaram :: Pipes impuros não são guardados.
+
+@ impure multiple-choice medium #ex-rc8fxes2
+? Which of Angular's pipes are impure? Choose every one.
+?? Quais pipes do Angular são impuros? Escolha todos.
++ `async` :: Right. It has to look for new values.
+++ `async` :: Isso. Ele precisa procurar valores novos.
++ `keyvalue` :: Right. Objects change in place.
+++ `keyvalue` :: Isso. Objetos mudam no lugar.
++ `json` :: Right.
+++ `json` :: Isso.
+- `date` :: It is pure.
+-- `date` :: Ele é puro.
+- `uppercase` :: It is pure.
+-- `uppercase` :: Ele é puro.
+
+@ impure cloze medium #ex-ahytw7gk
+? A pipe that runs on every check is declared with `@Pipe({ name: 'total', ___: false })`.
+?? Um pipe que roda em toda conferência é declarado com `@Pipe({ name: 'total', ___: false })`.
+= pure
+== pure
+
+@ pipe-or-computed matching medium #ex-bv2xheyk
+? Match each need with what the planner wrote for it.
+?? Associe cada necessidade ao que o planner escreveu para ela.
+< durations written the same in five templates :: the `minutes` pipe
+<< durações escritas igual em cinco templates :: o pipe `minutes`
+< the week screen's rows :: a `computed` in `Week`
+<< as linhas da tela da semana :: um `computed` no `Week`
+< two comparisons for a message :: the `shows()` method
+<< duas comparações para uma mensagem :: o método `shows()`
+< totals every screen agrees on :: `weekTotals` in the store
+<< totais com que toda tela concorda :: o `weekTotals` no store
+x a guard on a route
+xx um guard numa rota
+
+@ pipe-or-computed quiz medium #ex-7gndpnhc
+? A method called in a template sorts a thousand sessions. What is the problem?
+?? Um método chamado num template ordena mil sessões. Qual é o problema?
+- Methods cannot be called in templates :: They can.
+-- Métodos não podem ser chamados em templates :: Podem.
+- It sorts only once :: It sorts on every check.
+-- Ordena só uma vez :: Ordena em toda conferência.
+- It mutates the store :: Sorting a copy changes nothing; the cost is the repetition.
+-- Muda o store :: Ordenar uma cópia não muda nada; o custo é a repetição.
++ It sorts on every check, like an impure pipe :: Right. A `computed` would sort once per change.
+++ Ordena em toda conferência, como um pipe impuro :: Isso. Um `computed` ordenaria uma vez por mudança.
+
+@ drill quiz hard #ex-422brjpn
+? Three screens show money the same odd way, `R$ 12,50` with a space after the symbol. What do you write?
+?? Três telas mostram dinheiro do mesmo jeito peculiar, `R$ 12,50` com espaço depois do símbolo. O que você escreve?
++ A pure pipe, tested with `new` :: Right. One definition for three templates.
+++ Um pipe puro, testado com `new` :: Isso. Uma definição para três templates.
+- A `computed` in each component :: Three copies of one rule.
+-- Um `computed` em cada componente :: Três cópias de uma regra.
+- An impure pipe, so it is always current :: Amounts are values; a pure pipe is current.
+-- Um pipe impuro, para estar sempre atual :: Valores são valores; um pipe puro fica atual.
+- A method on the store :: Formatting is the template's job, not the data's.
+-- Um método no store :: Formatar é trabalho do template, não dos dados.
