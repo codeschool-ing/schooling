@@ -1,0 +1,209 @@
+# Lesson 9: lifecycle hooks
+
+@ the-hooks ordering medium #ex-twkrw3jf
+? Put these hooks in the order the bench logged them when `Life` was created.
+?? Coloque estes hooks na ordem em que o bench os registrou quando o `Life` foi criado.
+> `constructor`
+>> `constructor`
+> `ngOnChanges`
+>> `ngOnChanges`
+> `ngOnInit`
+>> `ngOnInit`
+> `ngAfterViewInit`
+>> `ngAfterViewInit`
+
+@ the-hooks quiz medium #ex-13jkghm9
+? After `Rename`, which hooks ran again?
+?? Depois do `Rename`, quais hooks rodaram de novo?
+- Every hook from `constructor` to `ngAfterViewChecked`, all over again :: The component was not created again; only the per-check hooks ran.
+-- Todo hook do `constructor` ao `ngAfterViewChecked`, tudo de novo :: O componente não foi criado de novo; só os hooks de cada conferência rodaram.
++ `ngOnChanges`, `ngDoCheck` and the two `...Checked` hooks :: Right. The `Init` hooks run once.
+++ `ngOnChanges`, `ngDoCheck` e os dois hooks `...Checked` :: Isso. Os hooks `Init` rodam uma vez.
+- Only `ngOnChanges` :: The check that followed also ran `ngDoCheck` and the two `...Checked` hooks.
+-- Só o `ngOnChanges` :: A conferência seguinte também rodou o `ngDoCheck` e os dois hooks `...Checked`.
+- `ngOnInit`, because an input changed :: `ngOnInit` runs once, after the first `ngOnChanges`.
+-- O `ngOnInit`, porque um input mudou :: O `ngOnInit` roda uma vez, depois do primeiro `ngOnChanges`.
+
+@ the-hooks quiz hard #ex-brpkv0ck
+? Why does the lesson warn about code in `ngDoCheck` and the `...Checked` hooks?
+?? Por que a aula alerta sobre código no `ngDoCheck` e nos hooks `...Checked`?
+- They run before the component's inputs are set :: They run on every check, inputs set or not.
+-- Eles rodam antes de os inputs do componente serem definidos :: Eles rodam a cada conferência, com inputs definidos ou não.
+- They were removed from Angular in version 21 :: They exist and ran on the bench.
+-- Eles foram removidos do Angular na versão 21 :: Eles existem e rodaram no bench.
++ They run on every check, whatever its cause :: Right. In a zone.js default component, after every event anywhere.
+++ Rodam em toda conferência, venha de onde vier :: Isso. Num componente padrão com zone.js, depois de todo evento em qualquer lugar.
+- They cannot read signals, so they go stale :: They can; the concern is how often they run.
+-- Eles não conseguem ler signals, então ficam velhos :: Conseguem; a preocupação é a frequência com que rodam.
+
+@ the-hooks matching easy #ex-7z88kz4z
+? Match each hook with the moment it marks.
+?? Associe cada hook ao momento que ele marca.
+< `ngOnChanges` :: an input was set or changed
+<< `ngOnChanges` :: um input foi definido ou mudou
+< `ngOnInit` :: once, after the inputs were first set
+<< `ngOnInit` :: uma vez, depois que os inputs foram definidos pela primeira vez
+< `ngAfterViewInit` :: once, after the component's own template was drawn
+<< `ngAfterViewInit` :: uma vez, depois que o próprio template do componente foi desenhado
+< `ngOnDestroy` :: once, when the component is removed
+<< `ngOnDestroy` :: uma vez, quando o componente é removido
+x every time the browser repaints
+xx toda vez que o navegador repinta
+
+@ constructor-or-init quiz medium #ex-06cepqy3
+? Reading a required signal input in the constructor stopped the build with which error?
+?? Ler um input signal obrigatório no construtor parou o build com qual erro?
+- `NG0950`, at run time :: That is the run-time error lesson 8's test met; here the compiler caught it first.
+-- `NG0950`, em tempo de execução :: Esse é o erro em tempo de execução que o teste da aula 8 encontrou; aqui o compilador pegou antes.
++ `NG8118` :: Right. The compiler saw a required input read where it cannot have a value yet.
+++ `NG8118` :: Isso. O compilador viu um input obrigatório lido onde ainda não pode ter valor.
+- `TS2551`, a misspelt name :: The name was right; the timing was wrong.
+-- `TS2551`, um nome escrito errado :: O nome estava certo; o momento estava errado.
+- `NG0100`, a value changing between checks :: That is lesson 7's error, about checks, not construction.
+-- `NG0100`, um valor mudando entre conferências :: Esse é o erro da aula 7, sobre conferências, não sobre construção.
+
+@ constructor-or-init quiz medium #ex-58b5vh1c
+? Why does a `computed` that reads an input work even when it is declared as a field?
+?? Por que um `computed` que lê um input funciona mesmo declarado como campo?
++ It reads nothing until someone reads it :: Right. By then the input is set.
+++ Ele não lê nada até alguém o ler :: Isso. Até lá o input já está definido.
+- Fields are initialised after `ngOnInit` :: Fields are initialised during construction, before any hook.
+-- Campos são inicializados depois do `ngOnInit` :: Campos são inicializados durante a construção, antes de qualquer hook.
+- Angular delays every field until the inputs are set :: Only the computed's own work is delayed, because it is lazy.
+-- O Angular adia todo campo até os inputs serem definidos :: Só o trabalho do próprio computed é adiado, porque ele é preguiçoso.
+- A computed copies the input's default value :: It reads the input when asked; it copies nothing.
+-- Um computed copia o valor padrão do input :: Ele lê o input quando é perguntado; não copia nada.
+
+@ constructor-or-init quiz hard #ex-n947th3p
+? Which of these is still a fair reason to write `ngOnInit` in new code?
+?? Qual destes ainda é um motivo justo para escrever `ngOnInit` em código novo?
+- To read an input into a field once, for the template :: A `computed` does that and stays in step with the input.
+-- Para ler um input num campo uma vez, para o template :: Um `computed` faz isso e acompanha o input.
+- To call `inject()` :: `inject()` belongs in field initialisers or the constructor.
+-- Para chamar o `inject()` :: O `inject()` pertence aos inicializadores de campo ou ao construtor.
++ A one-off act that needs the inputs :: Right. An effect would repeat it whenever the input changed.
+++ Um ato único que precisa dos inputs :: Isso. Um effect o repetiria sempre que o input mudasse.
+- To clean up a timer :: Cleaning up is `DestroyRef`'s job.
+-- Para limpar um timer :: Limpar é trabalho do `DestroyRef`.
+
+@ changes quiz medium #ex-3a1r0z66
+? An old component has `@Input() minutes = 0`, a field `hours`, and `ngOnChanges` that sets `hours`. What replaces the hook and the field with signal inputs?
+?? Um componente antigo tem `@Input() minutes = 0`, um campo `hours`, e um `ngOnChanges` que define `hours`. O que substitui o hook e o campo com inputs signal?
+- An `effect` that sets an `hours` signal :: That is the copy-into-a-signal mistake lesson 6 warned about.
+-- Um `effect` que define um signal `hours` :: Esse é o erro de copiar para um signal contra o qual a aula 6 alertou.
++ `hours = computed(() => this.minutes() / 60)` :: Right. It follows the input with nothing to keep in step.
+++ `hours = computed(() => this.minutes() / 60)` :: Isso. Ele acompanha o input sem nada para manter em sincronia.
+- `ngOnInit`, which runs when the input changes :: `ngOnInit` runs once.
+-- O `ngOnInit`, que roda quando o input muda :: O `ngOnInit` roda uma vez.
+- A `@let` in the template :: The class would lose the value, and the question is about the class.
+-- Um `@let` no template :: A classe perderia o valor, e a pergunta é sobre a classe.
+
+@ changes quiz medium #ex-xma17ba3
+? What does `ngOnChanges` receive?
+?? O que o `ngOnChanges` recebe?
+- Only the new values, without the old ones :: It receives each change's previous and current value.
+-- Só os valores novos, sem os antigos :: Ele recebe o valor anterior e o atual de cada mudança.
+- Nothing at all; the hook reads the inputs itself :: It receives a `SimpleChanges` object.
+-- Nada; o hook lê os inputs sozinho, por conta própria :: Ele recebe um objeto `SimpleChanges`.
++ A `SimpleChanges`, one entry per changed input :: Right. With `previousValue`, `currentValue` and `firstChange`.
+++ Um `SimpleChanges`, uma entrada por input alterado :: Isso. Com `previousValue`, `currentValue` e `firstChange`.
+- The whole component, before and after :: It receives the inputs that changed, not the component.
+-- O componente inteiro, antes e depois :: Ele recebe os inputs que mudaram, não o componente.
+
+@ destroy quiz medium #ex-68hk056r
+? After `Remove`, the clock without `DestroyRef` kept logging `tick`. Why?
+?? Depois do `Remove`, o relógio sem `DestroyRef` continuou registrando `tick`. Por quê?
+- The `@if` hides components rather than destroying them :: `@if` destroyed it; `ngOnDestroy` would have run.
+-- O `@if` esconde componentes em vez de destruí-los :: O `@if` o destruiu; o `ngOnDestroy` teria rodado.
++ Angular never knew about the interval :: Right. It was started with a browser API, so stopping it was the component's job.
+++ O Angular nunca soube do intervalo que o componente começou :: Isso. Ele foi iniciado com uma API do navegador, então pará-lo era trabalho do componente.
+- Signals keep their component alive :: The interval did, by holding a reference to it.
+-- Signals mantêm o componente vivo :: Quem manteve foi o intervalo, guardando uma referência a ele.
+- `look` reloaded the page :: The page stayed loaded; the leak is inside it.
+-- O `look` recarregou a página :: A página continuou carregada; o vazamento está dentro dela.
+
+@ destroy quiz medium #ex-ep25446p
+? Which of these does the planner need to clean up by hand when a component goes?
+?? Qual destes o planner precisa limpar à mão quando um componente sai?
+- A `resource` request still running when it goes :: A resource ends with its component on its own.
+-- Uma requisição de `resource` ainda rodando quando ele sai :: Um resource termina junto com o componente sozinho.
+- An `effect`, created in the constructor :: Effects stop with the component that created them.
+-- Um `effect`, criado no construtor :: Effects param junto com o componente que os criou.
++ A listener added with `window.addEventListener` :: Right. A browser API, so the component stops it.
+++ Um ouvinte posto com `window.addEventListener` :: Isso. Uma API do navegador, então o componente o para.
+- A `computed` that reads the session list :: A computed holds no resource that outlives it.
+-- Um `computed` que lê a lista de sessões :: Um computed não guarda nada que sobreviva a ele.
+
+@ destroy cloze medium #ex-dcy1nxby
+? Inside a component, `inject(___).onDestroy(...)` registers what to run when the component is destroyed.
+?? Dentro de um componente, `inject(___).onDestroy(...)` registra o que rodar quando o componente for destruído.
+= DestroyRef
+== DestroyRef
+
+@ after-render quiz medium #ex-9bn58sr3
+? In the constructor, `document.querySelector('app-bench p')` found nothing. In `afterNextRender`, the paragraph was 18 pixels tall. What changed in between?
+?? No construtor, o `document.querySelector('app-bench p')` não achou nada. No `afterNextRender`, o parágrafo tinha 18 pixels de altura. O que mudou no meio?
+- The browser loaded the stylesheet :: The paragraph did not exist at all in the constructor, styled or not.
+-- O navegador carregou a folha de estilo :: O parágrafo nem existia no construtor, com estilo ou sem.
++ Angular drew the template into the DOM :: Right. `afterNextRender` runs after that write.
+++ O Angular desenhou o template no DOM :: Isso. O `afterNextRender` roda depois dessa escrita.
+- The `viewChild` query found the paragraph :: The query found it because it now existed, which is the real change.
+-- A query `viewChild` achou o parágrafo :: A query o achou porque ele passou a existir, que é a mudança de verdade.
+- The component was checked twice in development mode :: The second check changes nothing in the DOM.
+-- O componente foi conferido duas vezes em modo de desenvolvimento :: A segunda conferência não muda nada no DOM.
+
+@ after-render quiz hard #ex-hzwezb9b
+? Why should reading `offsetHeight` not be done in a `computed` or a template?
+?? Por que ler o `offsetHeight` não deve ser feito num `computed` ou num template?
+- `offsetHeight` is not available in Angular :: It is a DOM property, available once the element exists.
+-- O `offsetHeight` não está disponível no Angular :: É uma propriedade do DOM, disponível assim que o elemento existe.
+- Computed signals cannot return numbers :: They return anything.
+-- Signals computed não devolvem números :: Eles devolvem qualquer coisa.
++ It forces a layout during a check :: Right. Layout belongs after rendering, which is what `afterNextRender` is for.
+++ Ele força um layout durante uma conferência :: Isso. O layout pertence ao depois da renderização, que é para o que serve o `afterNextRender`.
+- It runs only on the server :: It runs only in the browser.
+-- Ele só roda no servidor :: Ele só roda no navegador.
+
+@ after-render quiz medium #ex-vhdqr39s
+? In which situation does lesson 23 make `afterNextRender` matter more?
+?? Em que situação a aula 23 faz o `afterNextRender` importar mais?
+- When the page has no stylesheet loaded yet :: Styles are not the issue; the server is.
+-- Quando a página ainda não carregou a folha de estilo :: Estilos não são a questão; o servidor é.
++ When the page is first drawn on a server :: Right. There is no layout or focus there, and it runs only in the browser.
+++ Quando a página nasce num servidor :: Isso. Lá não há layout nem foco, e ele só roda no navegador.
+- When every component in the tree is OnPush :: OnPush does not change when rendering happens.
+-- Quando todo componente da árvore é OnPush :: O OnPush não muda quando a renderização acontece.
+- When tests run in jsdom :: Lesson 23 is about server-side rendering, not tests.
+-- Quando os testes rodam no jsdom :: A aula 23 é sobre renderização no servidor, não testes.
+
+@ which-you-need matching medium #ex-5jcz3r2c
+? Match each job with the tool the lesson recommends for new code.
+?? Associe cada trabalho à ferramenta que a aula recomenda para código novo.
+< react to an input changing :: a `computed`
+<< reagir a um input que muda :: um `computed`
+< clean up a timer :: `DestroyRef.onDestroy`
+<< limpar um timer :: `DestroyRef.onDestroy`
+< focus an element once it is drawn :: `afterNextRender`
+<< focar um elemento depois de desenhado :: `afterNextRender`
+< use projected content :: `contentChild()`
+<< usar conteúdo projetado :: `contentChild()`
+x `ngDoCheck`
+xx `ngDoCheck`
+
+@ which-you-need numeric easy #ex-xmt0cvxv
+? How many lifecycle hooks does the planner have at the end of this lesson?
+?? Quantos hooks de ciclo de vida o planner tem no fim desta aula?
+= 0
+== 0
+
+@ drill quiz hard #ex-v668s30v
+? An old component subscribes to a timer in `ngOnInit` and unsubscribes in `ngOnDestroy`, forty lines apart. What does the lesson suggest instead?
+?? Um componente antigo assina um timer no `ngOnInit` e cancela no `ngOnDestroy`, a quarenta linhas de distância. O que a aula sugere no lugar?
+- Moving both into `ngAfterViewInit` :: The view is not involved, and the distance remains.
+-- Mover os dois para o `ngAfterViewInit` :: A view não tem nada a ver, e a distância continua.
+- Letting the timer run, since Angular stops it :: Angular does not know about timers started with browser APIs.
+-- Deixar o timer rodar, já que o Angular o para :: O Angular não sabe de timers iniciados com APIs do navegador.
++ Start it in the constructor and register its stop with `DestroyRef` beside it :: Right. Setup and cleanup in one place.
+++ Iniciá-lo no construtor e registrar a parada com o `DestroyRef` ao lado :: Isso. Preparação e limpeza num lugar só.
+- An `effect` that restarts it on every change :: The timer has no signal to follow; an effect adds nothing.
+-- Um `effect` que o reinicia a cada mudança :: O timer não tem signal para acompanhar; um effect não acrescenta nada.
