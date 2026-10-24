@@ -32,7 +32,10 @@ quiet() { bash "$LAB_SH" script "cd $1; $2" >/dev/null 2>&1 || true; }
 shown() {
   local text
   text=$(python3 "$COURSE/lab/shown.py" "$1" "$2") || { echo "shown: $2 is not in $1" >&2; exit 1; }
-  bash "$LAB_SH" script "mkdir -p \"\$(dirname $3)\" && cat > $3" <<<"$text"
+  # DEST may hold brackets, as route folders do, so it is quoted; a leading ~
+  # becomes $HOME, which the quoted path still expands.
+  local dest=${3/#\~/\$HOME}
+  bash "$LAB_SH" script "mkdir -p \"\$(dirname \"$dest\")\" && cat > \"$dest\"" <<<"$text"
 }
 
 # bg NAME DIR 'command': start a program in "a second terminal", as ana. What
