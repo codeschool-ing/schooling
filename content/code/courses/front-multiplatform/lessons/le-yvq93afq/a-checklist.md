@@ -31,6 +31,5 @@ gesture and of the system closing the app has to be seen on the phone.*
 ## The row that decides
 
 **The last row is the one a reviewer applies**, and the only one that no amount of polish fixes. If the
-honest answer is that the app shows the same thing the website shows, the question is no longer how to
-pass review: it is whether the app should exist, or whether the website, installable as a Progressive
+honest answer is that the app shows the same thing the website shows, the question is no longer how to pass review. It is whether the app should exist, or whether the website, installable as a Progressive
 Web App, already does the job without any store at all.

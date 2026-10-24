@@ -45,7 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 **`Info.plist` is the iOS manifest**, a list of keys and values in XML. `CFBundleDisplayName` is the
 name under the icon, the `appName` of lesson 2. The others are not written there at all: they are
-`$(…)` variables that Xcode fills in from the project's build settings, so the bundle identifier,
+`$(…)` variables that Xcode fills in from the project's build settings. So the bundle identifier,
 which is your `appId`, and the two version numbers are edited in Xcode, under the target's "General"
 tab, and not in this file. Lesson 15 comes back to the two version numbers, which mean different
 things.

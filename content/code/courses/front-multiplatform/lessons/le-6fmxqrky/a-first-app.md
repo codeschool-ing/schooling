@@ -3,8 +3,7 @@ title: A first app with Expo
 version: 1
 ---
 
-**Expo is the way React Native's own documentation recommends starting a new app**: a set of tools and
-libraries around React Native that runs the app on a phone without building it first, builds it in the
+**Expo is the way React Native's own documentation recommends starting a new app.** It is a set of tools and libraries around React Native: it runs the app on a phone without building it first, builds it in the
 cloud when you need a real package, and gives the native features as packages. Lesson 9 is about Expo
 itself. This section uses the least of it: a new project, and the app in a browser.
 

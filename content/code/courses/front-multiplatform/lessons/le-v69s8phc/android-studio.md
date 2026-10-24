@@ -8,8 +8,7 @@ Development Kit, the Android SDK, and a place to run the app, either an emulator
 Studio brings the second and the means to the third, and Capacitor expects it.
 
 *Nothing in this section after the JDK was run for this course. The machine it was recorded on could
-not reach `dl.google.com`, where Google serves Android Studio, the SDK and the Android Gradle plugin,
-so the steps come from Google's documentation at developer.android.com and Capacitor's at
+not reach `dl.google.com`, where Google serves Android Studio, the SDK and the Android Gradle plugin. So the steps come from Google's documentation at developer.android.com and Capacitor's at
 capacitorjs.com, and the only output shown is what Capacitor printed without them.*
 
 ## The JDK

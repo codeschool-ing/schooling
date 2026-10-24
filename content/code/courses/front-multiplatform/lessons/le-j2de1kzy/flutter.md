@@ -180,5 +180,5 @@ there. With it on, the second run reads the planner, opens Spanish A2 and marks 
 week reads 105 of 125, the same number as every other version of the planner, from rules written twice.
 
 On a phone, Flutter gives its semantics tree to TalkBack and VoiceOver without that button, so a Flutter
-app can be as accessible as a native one; it is a promise Flutter keeps by work of its own, where React
+app can be as accessible as a native one. It is a promise Flutter keeps by work of its own, where React
 Native gets it from the platform's controls.

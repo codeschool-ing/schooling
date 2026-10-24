@@ -88,6 +88,6 @@ color-contrast (serious): Elements must meet minimum color contrast ratio thresh
 **`color-contrast` is the rule**, and the element is the one "Mark done" label on that screen, the
 Statistics session still to do. The
 colour went back to `#0a58ca` afterwards. axe on the web build cannot tell you how TalkBack reads a
-screen, or whether the focus order makes sense, which is why the real test of an app's accessibility is
+screen, or whether the focus order makes sense. The real test of an app's accessibility is
 the phone's own screen reader, turned on, with your eyes closed. *That test was not run for this
 course; it needs a phone.*

@@ -125,8 +125,7 @@ acee15a1a238fe71 installed/planner-0.3.0-x86_64.AppImage
 acee15a1a238fe71 planner/release/planner-0.3.0-x86_64.AppImage
 ```
 
-**The `0.2.0` in `~/installed` is gone, and `0.3.0` is in its place**, byte for byte the file on the server: the
-updater replaces the AppImage the person started, in the folder where they keep it, and since the old name had the
+**The `0.2.0` in `~/installed` is gone, and `0.3.0` is in its place**, byte for byte the file on the server. The updater replaces the AppImage the person started, in the folder where they keep it, and since the old name had the
 version in it, the new file takes the new version's name. The next start runs `0.3.0`.
 
 **The checksum is checked, not decorative.** Here one byte is added to the AppImage on the server after the

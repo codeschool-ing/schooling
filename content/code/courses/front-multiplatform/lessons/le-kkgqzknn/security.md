@@ -49,5 +49,5 @@ A Content Security Policy for the planner's `index.html` is one `<meta>` line in
 scripts and connections only from its own origin and the `blob:` addresses the camera's web
 implementation uses: `<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src
 'self' blob:; connect-src 'self' blob:">`. *It was not added to the planner in this course, which keeps
-`index.html` as lesson 1 wrote it; a policy has to be tried against every feature of the app before it
+`index.html` as lesson 1 wrote it. A policy has to be tried against every feature of the app before it
 ships, and the planner's Vite dev server and its plugins would each need checking.*

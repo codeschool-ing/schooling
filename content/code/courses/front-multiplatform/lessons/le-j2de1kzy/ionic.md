@@ -5,8 +5,7 @@ version: 1
 
 **Ionic is a library of components that look and behave like a phone's**: lists with the platform's
 spacing, toolbars, tabs, modal sheets that slide up, and the iOS or the Android look chosen by the
-platform the app runs on. They are web components, so they work in a plain page and inside Angular,
-React and Vue alike, and in a Capacitor app they are the usual way to make the WebView look like an app
+platform the app runs on. They are web components, so they work in a plain page and inside Angular, React and Vue alike. In a Capacitor app they are the usual way to make the WebView look like an app
 rather than a page, which is half of lesson 6's checklist.
 
 A small page shows them. It is a second Vite project beside the planner, so the planner stays as it is:

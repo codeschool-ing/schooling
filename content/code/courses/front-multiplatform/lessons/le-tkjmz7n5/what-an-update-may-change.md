@@ -7,11 +7,9 @@ version: 1
 are about trust rather than technology: the reviewer approved an app, and an update must not turn it into
 a different one.
 
-**Apple** allows an app to download code that runs in its own interpreter, which is what a JavaScript
-bundle is, as long as the change does not alter the app's main purpose, does not add features the
+**Apple** allows an app to download code that runs in its own interpreter, which is what a JavaScript bundle is. The condition is that the change does not alter the app's main purpose, does not add features the
 reviewer never saw, and does not get round the App Store's review or its payment rules. **Google Play**
-forbids an app to update itself, or to download executable code, by any route other than Google Play,
-and makes an exception for code that runs in a virtual machine or an interpreter, such as JavaScript in a
+forbids an app to update itself, or to download executable code, by any route other than Google Play. It makes an exception for code that runs in a virtual machine or an interpreter, such as JavaScript in a
 WebView or in the app's JavaScript engine. *That is a summary of the
 Apple Developer Program License Agreement and Google Play's policy on device and network abuse as they
 read when this course was written; read the current text before relying on it.*

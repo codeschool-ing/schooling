@@ -40,7 +40,7 @@ the WebView, it is the places where the app does not behave like the others on t
 - **nothing works offline**, because the app expected the network that a website always has;
 - **the app forgets** where the person was each time the system closes it in the background.
 
-**Every one of these can be fixed inside the WebView**, and each fix is web work you know how to do:
-handling the back button with Capacitor's `App` plugin, a stylesheet that turns off selection and zoom
-where they make no sense, a smaller page, a cache, saving state as lesson 4 did. The planner has some
+**Every one of these can be fixed inside the WebView**, and each fix is web work you know how to do. The
+back button is handled with Capacitor's `App` plugin; then come a stylesheet that turns off selection and zoom
+where they make no sense, a smaller page, a cache, and saving state as lesson 4 did. The planner has some
 of them right already and some not, and the next sections find out which before a reviewer does.

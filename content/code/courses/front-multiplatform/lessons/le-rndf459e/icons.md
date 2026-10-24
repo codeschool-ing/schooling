@@ -4,8 +4,7 @@ version: 1
 ---
 
 **Every package of the previous section needs an icon, and each system wants it in its own sizes and
-formats.** Android wants a set of PNGs in five densities, with a round version for the launchers that
-cut icons into circles; iOS wants one 1024-pixel image in an asset catalogue; Windows wants an `.ico`
+formats.** Android wants a set of PNGs in five densities, with a round version for the launchers that cut icons into circles. iOS wants one 1024-pixel image in an asset catalogue; Windows wants an `.ico`
 holding several sizes in one file; macOS wants an `.icns`; Linux wants PNGs. Nobody draws those by hand.
 **You draw one icon, large and square, and a tool cuts the rest.**
 

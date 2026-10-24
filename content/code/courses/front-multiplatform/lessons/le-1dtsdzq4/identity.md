@@ -19,8 +19,7 @@ ana@dev:~/planner$ grep -E "productName|identifier|frontendDist|title" src-tauri
 ```
 
 **Tauri refuses its own placeholder.** `com.tauri.dev` is the identifier the template writes, and like
-Capacitor's `appId` of lesson 2 and Expo's `package` of lesson 9, an identifier is the app's identity:
-on macOS it names the bundle, on Windows the installer, and on every system it names the folder where the
+Capacitor's `appId` of lesson 2 and Expo's `package` of lesson 9, an identifier is the app's identity. On macOS it names the bundle, on Windows the installer, and on every system it names the folder where the
 app keeps its data. Giving it the planner's own one, `com.example.studyplanner`, the same as the phone
 app's, is one `sed` on the configuration, and the other settings are what `tauri init` was told.
 

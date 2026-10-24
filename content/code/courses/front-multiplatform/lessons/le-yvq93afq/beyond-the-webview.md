@@ -27,10 +27,9 @@ for the whole app.
 ## Background work is the strictest
 
 The browser in your pocket runs a page while you look at it. A phone app does not get to run when
-nobody looks: both systems suspend an app in the background within a short time, and give it only
+nobody looks: both systems suspend an app in the background within a short time. They give it only
 specific, limited ways to work there, a scheduled task, a location update, a download that the system
 finishes for it. That is why lesson 4's reminder was scheduled with the system and not with a timer
 in the page. **A design that needs the app to keep running, such as a timer that counts a study
-session with the screen off, does not survive on either system** unless it is rebuilt around those
-limits: the system holds the notification, and the app only works out the time when it is opened
+session with the screen off, does not survive on either system** unless it is rebuilt around those limits. The system holds the notification, and the app only works out the time when it is opened
 again.

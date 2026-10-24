@@ -5,9 +5,7 @@ version: 1
 
 
 **Lesson 11 gave the page one door to the computer, `exportPlan`, and Tauri needs the same door, written
-in Rust.** A Tauri **command** is a Rust function marked `#[tauri::command]`: the page calls it by name
-with `invoke`, Tauri turns the arguments from JSON into Rust values and the answer back into JSON, and
-nothing the page sends reaches the computer except through a command somebody wrote. `tauri init` left a
+in Rust.** A Tauri **command** is a Rust function marked `#[tauri::command]`: the page calls it by name with `invoke`, and Tauri turns the arguments from JSON into Rust values and the answer back into JSON. Nothing the page sends reaches the computer except through a command somebody wrote. `tauri init` left a
 `src-tauri/src/lib.rs` with a log plugin in it and nothing else; this is the planner's, whole:
 
 ```
