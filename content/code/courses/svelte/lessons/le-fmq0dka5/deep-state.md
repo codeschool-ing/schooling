@@ -61,7 +61,7 @@ at /
 ```
 
 Read the console lines first. `$inspect(total)` printed `init 225` when the page appeared and
-`update 255` when the push added thirty minutes; without `.with(console.log)` it prints the same
+`update 255` when the push added thirty minutes. Without `.with(console.log)` it prints the same
 values with a stack trace under each update, which is useful when you need to find what changed a
 value and noisy when you do not. Marking a session done printed nothing, because
 `total` adds up minutes and does not read `done`, so it did not change.

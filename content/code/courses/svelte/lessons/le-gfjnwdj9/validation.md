@@ -74,9 +74,9 @@ Updated 1 path from the index
 ## `fail()`
 
 **`fail(status, data)` is how an action says the form was wrong.** It does not throw, it is returned,
-and it does not show the error page: the page renders again, as the answer to the `POST`, with the
-status given and `data` available to it as the **form result**, so it can say what was wrong and keep
-what the person typed. Replace `+page.server.js`:
+and it does not show the error page. The page renders again, as the answer to the `POST`, with the
+status given and `data` available to it as the **form result**. So the page can say what was wrong and
+keep what the person typed. Replace `+page.server.js`:
 
 ```schooling-example
 {"language": "javascript", "file": "src/routes/(planner)/courses/[id=slug]/+page.server.js", "parts": [
