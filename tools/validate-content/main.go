@@ -818,9 +818,9 @@ var allowedOutsideTheFont = map[rune]string{
 		"IBM Plex Mono has no U+25C7 at all. It opens a line and nothing is aligned to what follows it",
 	'\u25c6': "`create-nuxt` and `nuxt dev` open a finished step with it (`◆ Ready in 2.76s`). IBM " +
 		"Plex Mono has no U+25C6 at all. It opens a line and nothing is aligned to what follows it",
-	'\u2728': "`create-nuxt` ends with it (`└  ✨ Happy building!`). No font this interface serves " +
-		"has U+2728, and it is the last thing on the last line of the transcript, so nothing " +
-		"follows it to move",
+	'\u2728': "`create-nuxt` and `nuxt build` put it before their last message (`└  ✨ Happy " +
+		"building!`, `◆ ✨ Build complete in 6.37s!`). No font this interface serves has U+2728. " +
+		"It is on the last line of what they print, so no line below is aligned to it",
 	'\u25b6': "Vue Router's warnings, as Nuxt prints them, hang two lines off the message with it " +
 		"(`├▶ fix:` and `╰▶ see:`). IBM Plex Mono has no U+25B6 at all. Both lines carry it in the " +
 		"same column, so whatever width the reader's machine gives it moves them together",
