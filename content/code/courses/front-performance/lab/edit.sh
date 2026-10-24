@@ -6,7 +6,7 @@
 fence() { python3 - "$1" "$2" <<'PY'
 import re, sys
 text = open(sys.argv[1], encoding="utf-8").read()
-for m in re.finditer(r"^```[a-z]*\n(.*?)^```$", text, re.S | re.M):
+for m in re.finditer(r"^```[a-z-]*\n(.*?)^```$", text, re.S | re.M):
     if m.group(1).lstrip("\n").lstrip().startswith(sys.argv[2]):
         sys.stdout.write(m.group(1)); break
 else:
