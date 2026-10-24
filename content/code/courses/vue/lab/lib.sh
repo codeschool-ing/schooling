@@ -18,7 +18,13 @@ session() {
   shift
   script="cd $dir"
   for c in "$@"; do
-    script+=$'\n'"printf 'ana@dev:%s\$ %s\\n' \"\$(dirs +0)\" $(printf '%q' "$c")"$'\n'"$c 2>&1"
+    script+=$'\n'"printf 'ana@dev:%s\$ %s\\n' \"\$(dirs +0)\" $(printf '%q' "$c")"$'\n'
+    # With CLOCK set (see bg), the command runs on the staged clock, browser and all.
+    if [ -n "${CLOCK:-}" ]; then
+      script+="faketime -f $(printf '%q' "@$CLOCK") bash -c $(printf '%q' "$c") 2>&1"
+    else
+      script+="$c 2>&1"
+    fi
   done
   bash "$LAB_SH" script "$script" 2>&1 || true
 }
@@ -38,9 +44,20 @@ shown() {
 # bg NAME DIR 'command': start a program in "a second terminal", as ana. What
 # it prints goes to a log that bg_show prints with the prompt it was typed at.
 bg() {
-  local name=$1 dir=$2 cmd=$3
+  local name=$1 dir=$2 cmd=$3 run=$3
   printf '%s\n%s\n' "$dir" "$cmd" > $STATE/$name.cmd
-  bash "$LAB_SH" script "cd $dir; setsid bash -c $(printf '%q' "$cmd") > $STATE/$name.log 2>&1 < /dev/null & echo \$! > $STATE/$name.pid"
+  # A server whose clock is staged: CLOCK='2026-10-21 10:00:00' starts its
+  # clock there (it then runs on), and SERVER_TZ gives it another zone, at the
+  # same instant. Both
+  # are libfaketime and the environment, and neither is in what the
+  # transcript shows typed.
+  if [ -n "${CLOCK:-}" ]; then
+    local at=$CLOCK
+    # CLOCK is a time in ana's zone; the same instant in the server's own.
+    [ -n "${SERVER_TZ:-}" ] && at=$(TZ=$SERVER_TZ date -d "TZ=\"America/Sao_Paulo\" $CLOCK" '+%F %T')
+    run="${SERVER_TZ:+TZ=$SERVER_TZ }faketime -f $(printf '%q' "@$at") bash -c $(printf '%q' "$cmd")"
+  fi
+  bash "$LAB_SH" script "cd $dir; setsid bash -c $(printf '%q' "$run") > $STATE/$name.log 2>&1 < /dev/null & echo \$! > $STATE/$name.pid"
 }
 # bg_show NAME: that terminal as it stands, prompt first.
 bg_show() {

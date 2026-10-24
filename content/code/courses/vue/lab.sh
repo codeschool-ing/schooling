@@ -37,7 +37,15 @@
 #     153.0.8010.12, in /opt/pw-browsers, and ~/.cache/ms-playwright is
 #     linked to it. Lesson 1 says so where the student downloads theirs.
 #   - the clock's zone: TZ=America/Sao_Paulo. The clock itself is not staged,
-#     so a timing is what the machine said that day.
+#     so a timing is what the machine said that day, with two exceptions.
+#     The browser's date, where a lesson says --clock, is look's own option,
+#     shown in the transcript. And from lesson 18 the Nuxt server renders the
+#     page too, and a server has no --clock. So in those lessons the captures
+#     set CLOCK: the server and the `look` beside it run under libfaketime
+#     (the faketime package), both starting at that moment, and lesson 19's
+#     mismatch gives the server the zone UTC as well (SERVER_TZ). The typed
+#     command is shown as typed. A student's server and browser simply have
+#     the real date, and lesson 18 says what that changes on the screen.
 #
 #   sudo bash lab.sh up                    create ana
 #   sudo bash lab.sh exec 'command'        one command in ana's shell, in ~/vue
