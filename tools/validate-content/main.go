@@ -813,6 +813,13 @@ var allowedOutsideTheFont = map[rune]string{
 	'\u25c7': "create-vite marks the step it is on with it (`◇  Scaffolding project in …`). " +
 		"IBM Plex Mono has no U+25C7 at all. It opens a line and nothing is aligned to what " +
 		"follows it",
+	// Vitest's default reporter, which the React course's tests print.
+	'\u276f': "Vitest opens a file that has failures, and each line of a stack trace, with it " +
+		"(`❯ src/WeekSummary.test.tsx`). IBM Plex Mono has no U+276F at all. It opens the line after " +
+		"the indentation, and the lines that carry it carry it in the same column, so they move together",
+	'\u23af': "Vitest draws the rules around its list of failures with it (`⎯⎯⎯ Failed Tests 1 ⎯⎯⎯`). " +
+		"IBM Plex Mono has no U+23AF at all. A rule of them is a line of its own, and nothing below it is " +
+		"aligned to where it ends",
 	// Next.js, whose build and development server the React course runs.
 	'\u25b2': "Next.js opens the first line of `next dev`, `next build` and `next start` with it " +
 		"(`▲ Next.js 16.4.3`). IBM Plex Mono has no U+25B2 at all. It opens a line and nothing is " +
