@@ -88,3 +88,23 @@ for lang in ("en", "pt"):
         bad |= bool(flag)
         res.append(f"{name} {len(hits)}/{len(single)}{flag}" + (f" {hits}" if flag else ""))
     print(lang, "guess:", "; ".join(res))
+
+# Hedges only in the right option are the mirror of the absolutes tell.
+HEDGES = {
+    "en": ["usually", "often", "frequently", "can", "may", "tends to", "tend to", "generally", "sometimes", "typically"],
+    "pt": ["geralmente", "normalmente", "em geral", "frequentemente", "muitas vezes", "pode", "podem",
+           "tende a", "tendem a", "costuma", "costumam", "às vezes", "tipicamente"],
+}
+def hedged(lang, text):
+    if lang == "pt":
+        text = re.sub(r"(?i)não pode[m]?|não é possível", " ", text)
+    return re.search(r"(?i)(?:^|[^\w])(?:" + "|".join(map(re.escape, HEDGES[lang])) + r")(?:$|[^\w])", text) is not None
+for q in qs:
+    if q["type"] not in ("quiz", "multiple-choice"):
+        continue
+    for lang in ("en", "pt"):
+        ch = q[lang]["choices"]
+        right = [c for c in ch if c["correct"]]
+        wrong = [c for c in ch if not c["correct"]]
+        if any(hedged(lang, c["text"]) for c in right) and not any(hedged(lang, c["text"]) for c in wrong):
+            print(f"line {q['line']} {lang}: a hedge only in the right option")
