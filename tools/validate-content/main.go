@@ -812,6 +812,13 @@ var allowedOutsideTheFont = map[rune]string{
 		"U+279C at all. Every line it opens starts with it at the same column, so whatever " +
 		"width the reader's machine gives it moves each of them equally and the addresses " +
 		"stay aligned with each other",
+	'\u23af': "Vitest draws the rule around `Failed Tests` with a run of it " +
+		"(`⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯`). IBM Plex Mono has no U+23AF. The rule is a line " +
+		"of its own with nothing aligned to it, so however wide the reader's machine draws " +
+		"it, no column of anything else moves",
+	'\u276f': "Vitest opens the line that names where a test failed with it " +
+		"(` ❯ src/lib/week.test.ts:25:45`). IBM Plex Mono has no U+276F. It opens a line and " +
+		"nothing is aligned to what follows it",
 }
 
 // coverage is the set of code points the interface declares a face for.
