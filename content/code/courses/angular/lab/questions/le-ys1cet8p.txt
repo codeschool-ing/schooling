@@ -1,0 +1,223 @@
+# Lesson 13: RxJS
+
+@ observables quiz easy #ex-fvgc9kmj
+? In the bench, `subscribed` was logged after `before subscribe`. What does that show?
+?? No bench, o `subscribed` foi registrado depois do `before subscribe`. O que isso mostra?
+- The console reorders messages from the same component :: The console prints in the order things ran.
+-- O console reordena mensagens do mesmo componente :: O console imprime na ordem em que as coisas rodaram.
++ Making an Observable runs nothing; subscribing does :: Right. It is lazy.
+++ Criar um Observable não roda nada; assinar roda :: Isso. Ele é preguiçoso.
+- The Observable waited for Angular to finish starting :: It waited for `subscribe`, which came straight after.
+-- O Observable esperou o Angular terminar de iniciar :: Ele esperou o `subscribe`, que veio logo depois.
+- `new Observable` is asynchronous, like a Promise :: `got 1` arrived before `subscribe` returned.
+-- `new Observable` é assíncrono, como uma Promise :: O `got 1` chegou antes de o `subscribe` retornar.
+
+@ observables numeric easy #ex-4drwn7c5
+? The bench subscribed twice to one `http.get('/api/planner')`. Counting the store's, how many requests for `/api/planner` did the page make?
+?? O bench assinou duas vezes um mesmo `http.get('/api/planner')`. Contando o do store, quantos pedidos de `/api/planner` a página fez?
+= 3
+== 3
+
+@ observables quiz medium #ex-ghvyxb7c
+? Why did two subscriptions to one `http.get(...)` send two requests?
+?? Por que duas assinaturas de um mesmo `http.get(...)` mandaram dois pedidos?
+- `HttpClient` sends every request twice to be safe :: One subscriber, one request.
+-- O `HttpClient` manda todo pedido duas vezes por segurança :: Um assinante, um pedido.
+- The proxy duplicates requests to the API :: The API's log matched the page's network list.
+-- O proxy duplica pedidos para a API :: O log da API bateu com a lista de rede da página.
++ It is cold: each subscriber runs the function again :: Right. For `HttpClient`, the function sends the request.
+++ Ele é frio: cada assinante roda a função de novo :: Isso. No `HttpClient`, a função manda o pedido.
+- The first subscription failed, and the second retried it :: Both answered 200.
+-- A primeira assinatura falhou, e a segunda tentou de novo :: As duas responderam 200.
+
+@ observables matching medium #ex-ksdttrkz
+? Match each with what it gives.
+?? Associe cada um ao que ele dá.
+< a `Promise` :: one value or an error, started at once
+<< uma `Promise` :: um valor ou um erro, iniciada na hora
+< a `signal` :: the value now, always there
+<< um `signal` :: o valor de agora, sempre presente
+< an `Observable` :: values over time, from when it is subscribed
+<< um `Observable` :: valores ao longo do tempo, a partir da assinatura
+x a value written once at build time
+xx um valor escrito uma vez no build
+
+@ operators quiz medium #ex-qv9vbkw4
+? `interval(100).pipe(map(n => n * 10), filter(n => n % 20 === 0), take(3))`: which values were logged?
+?? `interval(100).pipe(map(n => n * 10), filter(n => n % 20 === 0), take(3))`: quais valores foram registrados?
+- 0, 10 and 20 :: `filter` dropped 10.
+-- 0, 10 e 20 :: O `filter` descartou o 10.
++ 0, 20 and 40 :: Right. `take` counted only what `filter` let through.
+++ 0, 20 e 40 :: Isso. O `take` contou só o que o `filter` deixou passar.
+- 0, 1 and 2 :: `map` multiplied each by ten first.
+-- 0, 1 e 2 :: O `map` multiplicou cada um por dez antes.
+- 0, 20, 40, 60 and on, for ever :: `take(3)` completed the chain.
+-- 0, 20, 40, 60 e assim por diante, para sempre :: O `take(3)` terminou a cadeia.
+
+@ operators quiz medium #ex-3pxgyw23
+? What stopped `interval(100)`, which on its own counts for ever?
+?? O que parou o `interval(100)`, que sozinho conta para sempre?
+- The component was destroyed :: The bench stayed on the page.
+-- O componente foi destruído :: O bench ficou na página.
+- `filter` dropped the values after 40 :: `filter` lets through every multiple of 20.
+-- O `filter` descartou os valores depois do 40 :: O `filter` deixa passar todo múltiplo de 20.
++ `take(3)`, by completing the chain :: Right. Completing the end of a chain ends what feeds it.
+++ O `take(3)`, ao terminar a cadeia :: Isso. Terminar a ponta de uma cadeia encerra o que a alimenta.
+- `look` closed the page after a second :: The chain completed well before; `ticks done` was logged.
+-- O `look` fechou a página depois de um segundo :: A cadeia terminou bem antes; `ticks done` foi registrado.
+
+@ operators matching medium #ex-k84senp1
+? Match each operator with where it earns its place.
+?? Associe cada operador a onde ele vale a pena.
+< `debounceTime` :: a search box, so not every key sends a request
+<< `debounceTime` :: uma caixa de busca, para nem toda tecla mandar um pedido
+< `catchError` :: a fallback value instead of a broken screen
+<< `catchError` :: um valor de reserva em vez de uma tela quebrada
+< `tap` :: a log line in the middle of a chain
+<< `tap` :: uma linha de log no meio de uma cadeia
+< `distinctUntilChanged` :: not asking the same question twice in a row
+<< `distinctUntilChanged` :: não fazer a mesma pergunta duas vezes seguidas
+x turning a signal into a template
+xx transformar um signal num template
+
+@ switch-map quiz medium #ex-4rc32d2g
+? Without `debounceTime`, typing `Jav` sent how many requests from the bench?
+?? Sem o `debounceTime`, digitar `Jav` mandou quantos pedidos do bench?
+- One, for `Jav` :: That needed the pause `debounceTime` adds.
+-- Um, para `Jav` :: Isso precisou da pausa que o `debounceTime` acrescenta.
+- Three, one per letter :: The empty query at the start sent one too.
+-- Três, um por letra :: A busca vazia do começo também mandou um.
++ Four: the empty query, `J`, `Ja` and `Jav` :: Right. One per value the query had.
+++ Quatro: a busca vazia, `J`, `Ja` e `Jav` :: Isso. Um por valor que a busca teve.
+- None until the box lost focus :: Each `input` event set the signal at once.
+-- Nenhum até a caixa perder o foco :: Cada evento `input` definia o signal na hora.
+
+@ switch-map quiz medium #ex-dmfnkggx
+? What does `debounceTime(300)` do with the values of the query?
+?? O que o `debounceTime(300)` faz com os valores da busca?
++ It passes one on only after 300 ms with no newer one :: Right. A burst of keys becomes one value.
+++ Repassa um após 300 ms sem outro mais novo :: Isso. Uma rajada de teclas vira um valor.
+- It delays every value by 300 ms and passes all of them :: That is `delay`; `debounceTime` drops the ones overtaken.
+-- Atrasa todo valor em 300 ms e repassa todos :: Isso é o `delay`; o `debounceTime` descarta os ultrapassados.
+- It cancels any request slower than 300 ms :: It acts on the values before any request exists.
+-- Cancela qualquer pedido mais lento que 300 ms :: Ele age sobre os valores antes de existir pedido.
+- It lets one value through every 300 ms :: That is closer to `throttleTime`.
+-- Deixa passar um valor a cada 300 ms :: Isso está mais perto do `throttleTime`.
+
+@ switch-map quiz hard #ex-8ttemqvv
+? Over a slow network, the answer for `Ja` arrives after the answer for `Jav`. Which operator keeps the screen right?
+?? Numa rede lenta, a resposta para `Ja` chega depois da resposta para `Jav`. Qual operador mantém a tela certa?
+- `mergeMap`, which keeps every answer :: It would show `Ja`'s results under a box that says `Jav`.
+-- O `mergeMap`, que guarda toda resposta :: Ele mostraria os resultados de `Ja` sob uma caixa que diz `Jav`.
+- `concatMap`, which keeps them in order :: It would wait for every old answer, and show each in turn.
+-- O `concatMap`, que os mantém em ordem :: Ele esperaria toda resposta velha, e mostraria cada uma por vez.
++ `switchMap`, which cancels :: Right. An old answer cannot land, because it was never kept.
+++ O `switchMap`, que cancela :: Isso. Uma resposta velha não chega, porque não foi guardada.
+- `exhaustMap`, which ignores new values while busy :: It would drop `Jav` and show `Ja`.
+-- O `exhaustMap`, que ignora valores novos enquanto ocupado :: Ele descartaria o `Jav` e mostraria `Ja`.
+
+@ switch-map matching medium #ex-h79jxqxe
+? Match each operator with what it does when a new value arrives while a request is still out.
+?? Associe cada operador ao que ele faz quando chega um valor novo com um pedido ainda em andamento.
+< `switchMap` :: cancels the old request, starts the new one
+<< `switchMap` :: cancela o pedido velho, começa o novo
+< `mergeMap` :: starts the new one and keeps both
+<< `mergeMap` :: começa o novo e mantém os dois
+< `concatMap` :: waits for the old one, then starts
+<< `concatMap` :: espera o velho, depois começa
+< `exhaustMap` :: ignores the new value until done
+<< `exhaustMap` :: ignora o valor novo até terminar
+x sends both values in one request
+xx manda os dois valores num pedido só
+
+@ interop quiz medium #ex-z8m7grsq
+? What does `toSignal(observable)` do about unsubscribing?
+?? O que o `toSignal(observable)` faz quanto a cancelar a assinatura?
+- Nothing; call `unsubscribe` in `ngOnDestroy` :: It does it for you.
+-- Nada; chame `unsubscribe` no `ngOnDestroy` :: Ele faz isso por você.
++ It unsubscribes when its component or service is destroyed :: Right. That is why it needs an injection context.
+++ Cancela quando o componente ou serviço dele é destruído :: Isso. É por isso que precisa de um contexto de injeção.
+- It unsubscribes after the first value :: It keeps the latest value as long as it lives.
+-- Cancela depois do primeiro valor :: Ele guarda o último valor enquanto existir.
+- It never subscribes until the template reads it :: It subscribes at once.
+-- Nunca assina até o template lê-lo :: Ele assina na hora.
+
+@ interop quiz medium #ex-vg28s41m
+? A template writes `{{ left$ | async }}` twice. What happens?
+?? Um template escreve `{{ left$ | async }}` duas vezes. O que acontece?
+- One subscription, shared by both :: Each pipe subscribes on its own.
+-- Uma assinatura, compartilhada pelas duas :: Cada pipe assina sozinho.
+- A build error: one Observable, one `async` :: It compiles.
+-- Um erro de build: um Observable, um `async` :: Compila.
+- The second shows nothing until the first completes :: Both show the value when their request answers.
+-- O segundo não mostra nada até o primeiro terminar :: Os dois mostram o valor quando o pedido deles responde.
++ Two subscriptions, and since it is cold, two requests :: Right. `@if (left$ | async; as left)` subscribes once.
+++ Duas assinaturas, e como é frio, dois pedidos :: Isso. `@if (left$ | async; as left)` assina uma vez.
+
+@ interop cloze easy #ex-rex9dczc
+? Inside a constructor, `.pipe(___())` completes a subscription when the component is destroyed.
+?? Dentro de um construtor, `.pipe(___())` termina uma assinatura quando o componente é destruído.
+= takeUntilDestroyed
+== takeUntilDestroyed
+
+@ retry quiz medium #ex-mzq9hdwk
+? The store retries a failed `PATCH` only when `transient(error)` is true. Why not on a 400?
+?? O store só tenta de novo um `PATCH` que falhou quando `transient(error)` é verdadeiro. Por que não num 400?
+- A 400 means the API is restarting :: A 400 is the API refusing the body.
+-- Um 400 quer dizer que a API está reiniciando :: Um 400 é a API recusando o corpo.
++ It fails the same way each time :: Right. Retrying a refusal is noise.
+++ Falha do mesmo jeito toda vez :: Isso. Tentar de novo uma recusa é ruído.
+- `retry` cannot see the status code :: The `delay` function receives the error, status and all.
+-- O `retry` não consegue ver o código de status :: A função `delay` recebe o erro, com status e tudo.
+- A 400 is retried by the browser on its own :: The browser retries nothing on a 400.
+-- Um 400 é repetido pelo navegador sozinho :: O navegador não repete nada num 400.
+
+@ retry quiz medium #ex-jgedh1gj
+? In the retry run, the first `PATCH` got a 500. What happened next?
+?? Na rodada com retry, o primeiro `PATCH` recebeu um 500. O que aconteceu em seguida?
+- The box unticked and the message appeared :: That is what happens once the retries run out.
+-- A caixa desmarcou e a mensagem apareceu :: Isso acontece quando as tentativas acabam.
+- The page reloaded the planner from the API :: Only the `PATCH` was sent again.
+-- A página recarregou o planner da API :: Só o `PATCH` foi mandado de novo.
++ It was sent again two seconds later, and saved :: Right. The box stayed ticked.
+++ Foi mandado de novo dois segundos depois, e salvo :: Isso. A caixa ficou marcada.
+- Nothing: `retry` waits for the next tick :: It sent the same request again on its own.
+-- Nada: o `retry` espera a próxima marcação :: Ele mandou o mesmo pedido de novo sozinho.
+
+@ retry quiz hard #ex-9rfvsd45
+? Why will lesson 14's `POST` that adds a session not retry?
+?? Por que o `POST` da aula 14 que acrescenta uma sessão não vai tentar de novo?
+- A `POST` cannot be piped through `retry` :: Any Observable can.
+-- Um `POST` não pode passar pelo `retry` :: Qualquer Observable pode.
+- The API refuses a second `POST` from the same page :: It accepts every valid one.
+-- A API recusa um segundo `POST` da mesma página :: Ela aceita todo válido.
+- Adding a session never fails :: It fails on a bad field, and with the API down.
+-- Acrescentar uma sessão nunca falha :: Falha com um campo ruim, e com a API fora do ar.
++ A lost answer would mean a second session :: Right. Only what is safe twice is retried.
+++ Uma resposta perdida viraria uma segunda sessão :: Isso. Só se repete o que é seguro fazer duas vezes.
+
+@ signal-or-observable multiple-choice medium #ex-pp59v8cx
+? Which of these call for RxJS rather than a signal? Choose every one.
+?? Quais destes pedem RxJS em vez de um signal? Escolha todos.
++ Waiting for a pause in typing :: Right. `debounceTime`.
+++ Esperar uma pausa na digitação :: Isso. `debounceTime`.
++ Keeping only the newest of overlapping requests :: Right. `switchMap`.
+++ Ficar só com o mais novo de pedidos sobrepostos :: Isso. `switchMap`.
+- Holding whether a panel is open :: A `signal` holds that.
+-- Guardar se um painel está aberto :: Um `signal` guarda isso.
+- The week's total, worked out from the sessions :: A `computed` works it out.
+-- O total da semana, calculado das sessões :: Um `computed` calcula isso.
++ Trying a request again two seconds later :: Right. `retry` with a `delay`.
+++ Tentar um pedido de novo dois segundos depois :: Isso. `retry` com um `delay`.
+
+@ drill quiz hard #ex-j6ef872g
+? Old code keeps the selected course in a `BehaviorSubject` and every template reads it with `| async`. You are changing one screen. What does the lesson suggest?
+?? Um código antigo guarda o curso selecionado num `BehaviorSubject` e todo template o lê com `| async`. Você vai mudar uma tela. O que a aula sugere?
+- Rewrite every screen to signals first :: Nothing obliges a rewrite of code that works.
+-- Reescrever toda tela para signals antes :: Nada obriga a reescrever código que funciona.
+- Leave it, since signals and Observables cannot meet :: `toSignal` and `toObservable` exist to make them meet.
+-- Deixar como está, já que signals e Observables não se encontram :: `toSignal` e `toObservable` existem para fazê-los se encontrar.
++ Read it with `toSignal` in the screen you change :: Right. The two kinds meet at the edge of what you touched.
+++ Ler com `toSignal` na tela que você muda :: Isso. Os dois tipos se encontram na borda do que você mexeu.
+- Subscribe to it in the constructor, with no cleanup :: That is the leak `toSignal` avoids.
+-- Assinar no construtor, sem limpeza :: Esse é o vazamento que o `toSignal` evita.

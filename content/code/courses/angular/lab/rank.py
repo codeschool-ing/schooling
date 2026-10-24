@@ -13,6 +13,9 @@ from q import parse
 qs = parse(sys.argv[1])
 share = {"en": collections.Counter(), "pt": collections.Counter()}
 counted = {"en": 0, "pt": 0}
+# check-exercises measures the length rank over single-answer quizzes only
+qshare = {"en": collections.Counter(), "pt": collections.Counter()}
+qcounted = {"en": 0, "pt": 0}
 for q in qs:
     if q["type"] not in ("quiz", "multiple-choice"):
         continue
@@ -35,11 +38,20 @@ for q in qs:
         for r in ranks:
             share[lang][r] += 1
         counted[lang] += 1
+        if q["type"] == "quiz":
+            for r in ranks:
+                qshare[lang][r] += 1
+            qcounted[lang] += 1
         row.append(f"{lang} {','.join(ranks)} {lens}")
     print(f"{q['line']:4} {q['section'][:22]:22} " + "   ".join(row))
 for lang in ("en", "pt"):
     n = counted[lang] or 1
     print(lang, {k: f"{v}/{n} {100*v//n}%" for k, v in sorted(share[lang].items())})
+
+for lang in ("en", "pt"):
+    n = qcounted[lang] or 1
+    over = [k for k, v in qshare[lang].items() if k != "t" and v * 100 >= 45 * n]
+    print(lang, "quiz only:", {k: f"{v}/{n}" for k, v in sorted(qshare[lang].items())}, "OVER " + ",".join(over) if over else "")
 
 # The guessing strategies check-exercises tries, over single-answer quizzes:
 # a student who read nothing and applies one rule to every question.
