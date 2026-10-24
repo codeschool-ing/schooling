@@ -1,0 +1,201 @@
+# Lesson 22: state
+
+@ the-pattern quiz medium #ex-2e4hzfdq
+? In the planner's store, what plays the part of a selector?
+?? No store do planner, o que faz o papel de um seletor?
++ The `computed` signals :: Right. `sessions`, `weekTotals`, read-only.
+++ Os signals `computed` :: Isso. `sessions`, `weekTotals`, só de leitura.
+- `toggle` and `add` :: Those are the ways in; selectors read.
+-- O `toggle` e o `add` :: Esses são as entradas; seletores leem.
+- The private `data` :: That is the state itself.
+-- O `data` privado :: Esse é o próprio estado.
+- The components that read the store :: They use selectors; they are not selectors.
+-- Os componentes que leem o store :: Eles usam seletores; não são seletores.
+
+@ the-pattern quiz medium #ex-9rppm9fz
+? Why must a store replace its state rather than change it in place?
+?? Por que um store precisa trocar o estado em vez de mudá-lo no lugar?
+- Signals cannot hold objects :: They hold anything.
+-- Signals não guardam objetos :: Guardam qualquer coisa.
+- Replacing is faster :: Speed is not the reason.
+-- Trocar é mais rápido :: Velocidade não é o motivo.
++ So every reader sees that it changed :: Right. Computeds, OnPush and pure pipes compare values.
+++ Para todo leitor ver que mudou :: Isso. Computeds, OnPush e pipes puros comparam valores.
+- The server requires a new object :: The server never sees the signal.
+-- O servidor exige um objeto novo :: O servidor nunca vê o signal.
+
+@ the-pattern quiz medium #ex-q2vcfg32
+? Which of these does not belong in a store?
+?? Qual destes não pertence a um store?
+- The sessions every screen reads :: That is exactly a store's job.
+-- As sessões que toda tela lê :: Esse é exatamente o trabalho de um store.
++ Whether one panel is open :: Right. It is that component's own business.
+++ Se um painel está aberto :: Isso. É assunto daquele componente.
+- A preference kept between courses :: It outlives the component; it belongs in one.
+-- Uma preferência mantida entre cursos :: Ela sobrevive ao componente; pertence a um.
+- The week's totals :: Shared, derived from the store's state.
+-- Os totais da semana :: Compartilhados, derivados do estado do store.
+
+@ the-pattern cloze easy #ex-66t54psb
+? A component never keeps a ___ of the store's state; it reads the store's signal where it needs it.
+?? Um componente nunca guarda uma ___ do estado do store; ele lê o signal do store onde precisa.
+= copy
+== cópia | copia
+
+@ preferences quiz medium #ex-kn8t7nde
+? Why does the "hide done" choice live in a service and not in `CourseSessions`?
+?? Por que a escolha de "esconder as feitas" mora num serviço e não no `CourseSessions`?
+- Components cannot have signals :: They have plenty.
+-- Componentes não podem ter signals :: Têm vários.
+- The checkbox needs a service to work :: The box only needs a value and a handler.
+-- A caixa precisa de um serviço para funcionar :: A caixa só precisa de um valor e um handler.
+- It has to be sent to the server :: Nothing sends it to the server.
+-- Ela precisa ir para o servidor :: Nada a manda para o servidor.
++ It outlives the component :: Right. A component's state goes with it.
+++ Ela sobrevive ao componente :: Isso. O estado de um componente vai junto com ele.
+
+@ preferences quiz medium #ex-nnpc3p5e
+? Before persisting, the choice survived moving between pages and was lost on a reload. Why lost?
+?? Antes de persistir, a escolha sobreviveu à troca de páginas e se perdeu num recarregamento. Por que perdida?
++ A reload made a new service :: Right. Nothing outside the page kept it.
+++ O reload fez um serviço novo :: Isso. Nada fora da página o guardou.
+- The router cleared the service :: The router does not touch root services.
+-- O router limpou o serviço :: O router não mexe em serviços da raiz.
+- The checkbox reset itself :: It showed what the service said.
+-- A caixa se reiniciou sozinha :: Ela mostrava o que o serviço dizia.
+- `computed` forgets on navigation :: It recomputes from the state, which was new.
+-- O `computed` esquece numa navegação :: Ele recalcula do estado, que era novo.
+
+@ preferences quiz medium #ex-a7bjezkw
+? `shown` reads both `PlannerStore` and `Preferences`. When does it recompute?
+?? O `shown` lê o `PlannerStore` e o `Preferences`. Quando ele recalcula?
+- Only when the sessions change :: It also reads `hideDone()`.
+-- Só quando as sessões mudam :: Ele também lê o `hideDone()`.
+- On every change detection :: A `computed` recomputes only for its signals.
+-- Em toda detecção de mudanças :: Um `computed` só recalcula pelos signals dele.
++ When either signal changes :: Right. Tracking follows every read.
+++ Quando um dos signals muda :: Isso. O rastreamento segue toda leitura.
+- Never: two stores cannot be combined :: A `computed` reads any signals.
+-- Nunca: dois stores não se combinam :: Um `computed` lê quaisquer signals.
+
+@ persisting quiz medium #ex-j5jey6fx
+? Why is saving to `localStorage` an effect and not a `computed`?
+?? Por que salvar no `localStorage` é um effect e não um `computed`?
+- A `computed` cannot read objects :: It can.
+-- Um `computed` não lê objetos :: Lê.
++ It acts outside the page :: Right. That is what effects are for.
+++ Age fora da página :: Isso. É para isso que servem os effects.
+- `localStorage` is asynchronous :: It is synchronous.
+-- O `localStorage` é assíncrono :: É síncrono.
+- Effects run before computeds :: Order is not the reason.
+-- Effects rodam antes dos computeds :: A ordem não é o motivo.
+
+@ persisting quiz hard #ex-7sdhsrtz
+? Why does `read()` catch errors and check each field?
+?? Por que o `read()` captura erros e confere cada campo?
+- `JSON.parse` returns `null` for objects :: It returns the object.
+-- O `JSON.parse` retorna `null` para objetos :: Retorna o objeto.
+- `localStorage` only holds numbers :: It holds strings.
+-- O `localStorage` só guarda números :: Guarda strings.
+- To slow down attackers :: It is about robustness, not attackers.
+-- Para atrasar atacantes :: É sobre robustez, não atacantes.
++ Old text, or no storage at all :: Right. A failed read is a first visit.
+++ Texto velho, ou sem armazenamento :: Isso. Uma leitura que falha é uma primeira visita.
+
+@ persisting quiz medium #ex-kj5h8eys
+? What may `localStorage` hold, by the lesson's rule?
+?? O que o `localStorage` pode guardar, pela regra da aula?
++ Preferences and drafts :: Right. Never a password or a token.
+++ Preferências e rascunhos :: Isso. Nunca uma senha ou um token.
+- The sessions, instead of the server :: They must survive a change of computer.
+-- As sessões, no lugar do servidor :: Elas precisam sobreviver a uma troca de computador.
+- A sign-in token, for convenience :: Any script on the page can read it.
+-- Um token de login, por conveniência :: Qualquer script da página pode lê-lo.
+- Anything up to its size limit :: The limit is not the question.
+-- Qualquer coisa até o limite de tamanho :: O limite não é a questão.
+
+@ ngrx-store matching medium #ex-2fdbzjx5
+? Match each NgRx Store part with what it does.
+?? Associe cada parte do NgRx Store ao que ela faz.
+< an action :: says what happened
+<< uma action :: diz o que aconteceu
+< a reducer :: returns the next state from the state and an action
+<< um reducer :: retorna o próximo estado a partir do estado e de uma action
+< a selector :: reads from the state, remembering its answer
+<< um seletor :: lê do estado, lembrando a resposta
+< `dispatch` :: the only way in
+<< `dispatch` :: a única entrada
+x a component's template
+xx o template de um componente
+
+@ ngrx-store quiz medium #ex-52m1z62x
+? After Add 30, Add 30, Clear, Add 30, what did the bench show?
+?? Depois de Add 30, Add 30, Clear, Add 30, o que o bench mostrou?
+- `30 + 30 + 30 = 90` :: Clear emptied the state in between.
+-- `30 + 30 + 30 = 90` :: O Clear esvaziou o estado no meio.
+- `nothing = 0` :: The last Add came after Clear.
+-- `nothing = 0` :: O último Add veio depois do Clear.
++ `30 = 30` :: Right. The reducer started again from `[]`.
+++ `30 = 30` :: Isso. O reducer recomeçou do `[]`.
+- `60 = 60` :: Clear came after the first two.
+-- `60 = 60` :: O Clear veio depois dos dois primeiros.
+
+@ ngrx-store quiz hard #ex-kwgd3jev
+? What does NgRx Store's ceremony buy a large team?
+?? O que a cerimônia do NgRx Store compra para uma equipe grande?
+- Faster pages :: It adds code; speed is not the point.
+-- Páginas mais rápidas :: Ele acrescenta código; velocidade não é o ponto.
++ A log of every change :: Right. Actions are objects.
+++ Um registro de toda mudança :: Isso. Actions são objetos.
+- No need for a server :: State management does not replace a server.
+-- Nenhuma necessidade de servidor :: Gerenciar estado não substitui um servidor.
+- Components with no templates :: Components still draw.
+-- Componentes sem templates :: Componentes ainda desenham.
+
+@ ngrx-store quiz medium #ex-ctptbzds
+? `npm audit` reported advisories in `undici`, with `--force` going back to `@angular/build` 20. What did the lesson decide?
+?? O `npm audit` relatou avisos no `undici`, com o `--force` voltando ao `@angular/build` 20. O que a aula decidiu?
+- Run `npm audit fix --force` at once :: That downgrades the build tool a major version.
+-- Rodar `npm audit fix --force` na hora :: Isso rebaixa a ferramenta de build uma versão maior.
+- Remove NgRx, which caused them :: They come from `undici`, not NgRx.
+-- Remover o NgRx, que os causou :: Eles vêm do `undici`, não do NgRx.
+- Ignore audit reports in general :: Reading them and deciding is the job.
+-- Ignorar relatórios de auditoria em geral :: Lê-los e decidir é o trabalho.
++ Wait for a patch of the build tool :: Right. It runs on your computer, not in the browser.
+++ Esperar um patch da ferramenta de build :: Isso. Ela roda no seu computador, não no navegador.
+
+@ which-to-use quiz medium #ex-em47t1mw
+? What is NgRx SignalStore?
+?? O que é o NgRx SignalStore?
++ A store made of signals :: Right. `withState`, `withMethods`, and the rest.
+++ Um store feito de signals :: Isso. `withState`, `withMethods`, e o resto.
+- A replacement for Angular's signals :: It is built from them.
+-- Um substituto para os signals do Angular :: Ele é construído com eles.
+- The old name of NgRx Store :: They are two libraries.
+-- O nome antigo do NgRx Store :: São duas bibliotecas.
+- A devtools extension :: That is a browser extension for Store.
+-- Uma extensão de devtools :: Isso é uma extensão de navegador para o Store.
+
+@ which-to-use matching medium #ex-9x9mgrxk
+? Match each approach with what it costs.
+?? Associe cada abordagem ao que ela custa.
+< a service of signals :: discipline the team keeps by itself
+<< um serviço de signals :: disciplina que a equipe mantém sozinha
+< NgRx Store :: actions, reducers and selectors for every change
+<< NgRx Store :: actions, reducers e seletores para cada mudança
+< NgRx SignalStore :: a package and its conventions
+<< NgRx SignalStore :: um pacote e as convenções dele
+x a rewrite of every template
+xx reescrever todo template
+
+@ drill quiz hard #ex-sjdkz5gx
+? A new screen needs the course the person opened last, on every visit. Where does that go?
+?? Uma tela nova precisa do último curso que a pessoa abriu, em toda visita. Onde isso vai?
+- In the screen's component, as a field :: It would be lost when the component goes.
+-- No componente da tela, como um campo :: Se perderia quando o componente saísse.
+- In NgRx Store, since it is state :: A store library is not needed for one value.
+-- No NgRx Store, já que é estado :: Uma biblioteca de store não é precisa para um valor.
++ In `Preferences`, saved by its effect :: Right. One more field in one object.
+++ No `Preferences`, salvo pelo effect dele :: Isso. Mais um campo num objeto.
+- In `planner.json` on the server :: Possible, but it is the reader's preference, kept in the browser.
+-- No `planner.json` no servidor :: Possível, mas é uma preferência do leitor, guardada no navegador.

@@ -91,5 +91,5 @@ this.done())` é a mesma coisa, sempre certa, sem nada para agendar. **Se você 
 dentro de um effect, procure o computed que você queria.**
 
 O effect de log e o botão eram para observar; a próxima seção troca os dois. Os effects que ficam neste
-curso são poucos: um na aula 22 salva o planner no `localStorage`, que é exatamente o mundo de fora
+curso são poucos: um na aula 22 salva uma preferência no `localStorage`, que é exatamente o mundo de fora
 para o qual um effect existe.

@@ -91,5 +91,5 @@ this.done())` is the same thing, always right, with nothing to schedule. **If yo
 signal inside an effect, look for the computed you meant.**
 
 The logging effect and the button were for watching; the next section replaces both. Effects you keep
-in this course are few: one in lesson 22 saves the planner to `localStorage`, which is exactly the
+in this course are few: one in lesson 22 saves a preference to `localStorage`, which is exactly the
 outside world an effect is for.
