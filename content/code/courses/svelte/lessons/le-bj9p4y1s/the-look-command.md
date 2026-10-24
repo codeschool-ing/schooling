@@ -56,7 +56,7 @@ used.*
 ## The program
 
 Save this as `~/svelte-tools/look.mjs`. You do not need to follow every line yet. It opens the
-address, carries out what the options ask in order, and prints the path it ended up on, the page's title
+address, carries out what the options ask in order, and prints the address it ended up on, without the host, the page's title
 when it has one, and the tree of the page's `<main>`, or of the whole page when there is no
 `<main>`:
 
@@ -76,8 +76,8 @@ when it has one, and the tree of the page's `<main>`, or of the whole page when 
 //   --no-js             open the page with JavaScript turned off
 //   --reduce-motion     open it as a browser set to prefer reduced motion
 //   --console           print what the page wrote to its console, too
-// At the end it prints the path it is on, the page's title if it has one,
-// and the tree of <main>.
+// At the end it prints the address it is on, without the host, the page's
+// title if it has one, and the tree of <main>.
 import { chromium } from "playwright";
 
 const [url, ...args] = process.argv.slice(2);
@@ -99,11 +99,12 @@ for (let i = 0; i < args.length; i++) {
   if (flag === "--click") {
     const name = { name: value, exact: true };
     const target = page.getByRole("button", name).or(page.getByRole("link", name));
-    const before = page.url();
     const isLink = (await target.evaluate((e) => e.tagName)) === "A";
+    // A click may start a navigation: a link always does, and so does a button
+    // that sends a form while JavaScript is off. Wait for it before going on.
+    const navigated = page.waitForEvent("framenavigated", { timeout: isLink ? 5000 : 1000 }).catch(() => {});
     await target.click();
-    // A link changes the address; wait until it has, before reading the page.
-    if (isLink) await page.waitForURL((u) => u.href !== before, { timeout: 5000 }).catch(() => {});
+    await navigated;
   } else if (flag === "--fill") {
     const [label, ...text] = value.split("=");
     await page.getByLabel(label, { exact: true }).fill(text.join("="));
@@ -120,7 +121,7 @@ for (let i = 0; i < args.length; i++) {
 }
 
 const where = new URL(page.url());
-if (where.protocol.startsWith("http")) console.log(`at ${where.pathname}`);
+if (where.protocol.startsWith("http")) console.log(`at ${where.pathname}${where.search}`);
 if (await page.title()) console.log(`title: ${await page.title()}`);
 const main = page.locator("main");
 console.log(await ((await main.count()) ? main : page.locator("body")).ariaSnapshot());
@@ -154,7 +155,7 @@ ana@dev:~$ look 'data:text/html,<main><h1>It works</h1><button>Press me</button>
 **Each line is one thing a screen reader would announce.** `main` is the page's main region, and
 everything indented under it is inside it. `heading "It works" [level=1]` is the `<h1>`, with its
 text as its name and its level beside it; `button "Press me"` is the button, named by its text. A
-page served at an `http://` address also gets a first line saying which path the browser ended on,
-which matters from lesson 12, when links start moving between pages. When you read a tree like this later and a control has no
-name, or a heading has the wrong level, you have found an accessibility defect before anybody had
+page served at an `http://` address also gets a first line saying where the browser ended up, the path
+and any query after it, which matters from lesson 12, when links start moving between pages. When you
+read a tree like this later and a control has no name, or a heading has the wrong level, you have found an accessibility defect before anybody had
 to report it.
