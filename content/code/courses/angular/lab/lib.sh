@@ -46,6 +46,19 @@ save() {
 }
 # builds: how many builds the dev server has finished, well or badly.
 builds() { local n; n=$(grep -cE 'bundle generation (complete|failed)' $STATE/serve.log 2>/dev/null); echo "${n:-0}"; }
+# flush: the dev server hands the error of a failed build to the first page
+# that connects after it, even once a later build has succeeded. The
+# student's own tab, open through all of it, is that page; a quiet look
+# stands in for it, so the next look a lesson shows opens the page as it is.
+FLUSHED=0
+fails() { local n; n=$(grep -c 'bundle generation failed' $STATE/serve.log 2>/dev/null); echo "${n:-0}"; }
+flush() {
+  [ "$(fails)" -gt "$FLUSHED" ] || return 0
+  # the last build failed: the error is the page's own, not a stale one
+  grep -E 'bundle generation (complete|failed)' $STATE/serve.log | tail -1 | grep -q failed && return 0
+  quiet '~/planner' 'look http://localhost:4200/'
+  FLUSHED=$(fails)
+}
 # rebuilt: after one or more saves, until the dev server has finished the
 # build they caused (a fixed sleep was once too short, and the page a capture
 # opened still carried the error of the build before).
@@ -53,7 +66,7 @@ rebuilt() {
   local mark=${SAVE_MARK:-0}
   SAVE_MARK=
   for _ in $(seq 300); do
-    [ "$(builds)" -gt "$mark" ] && { sleep 1; return 0; }
+    if [ "$(builds)" -gt "$mark" ]; then sleep 1; flush; return 0; fi
     sleep 0.1
   done
   echo "rebuilt: the dev server finished no build after the save" >&2

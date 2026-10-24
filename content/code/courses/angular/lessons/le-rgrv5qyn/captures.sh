@@ -28,10 +28,6 @@ save constructor-or-init src/app/bench/bench.ts; w
 cap '~/planner' 'npx ng build 2>&1 | grep -A4 ERROR'
 
 save destroy src/app/bench/bench.ts 1; w
-# The dev server hands the error of the failed build above to the first page
-# that connects after it, even once a build has succeeded. The student's own
-# tab, open through all of it, is that page; this look stands in for it.
-quiet '~/planner' 'look http://localhost:4200/'
 cap_look http://localhost:4200/ --text app-bench --do "'wait 500'" --do "'click Remove'" --do "'wait 500'"
 save destroy src/app/bench/bench.ts 2; w
 cap_look http://localhost:4200/ --text app-bench --do "'wait 500'" --do "'click Remove'" --do "'wait 500'"

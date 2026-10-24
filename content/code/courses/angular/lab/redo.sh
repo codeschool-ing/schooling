@@ -26,4 +26,8 @@ for pt in "$D"/*.pt.md; do
   if grep -q '^```' "$md"; then python3 "$HERE/pt.py" "$md" "$pt" >/dev/null || echo "pt.py failed on $pt"; fi
 done
 [ -f "$HERE/figures/$L.py" ] && python3 "$HERE/fig.py" "$L" >/dev/null
+# A helper that gave up says so in the output, and a fence would carry it.
+if [ -f /tmp/anglab/$L.txt ] && grep -nE '^(rebuilt|wait_port|wait_log|shown|restore): ' /tmp/anglab/$L.txt; then
+  echo "$L: a capture step failed, see above" >&2; exit 1
+fi
 echo "$L: done"
