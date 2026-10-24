@@ -821,6 +821,15 @@ var allowedOutsideTheFont = map[rune]string{
 	'\u2728': "`create-nuxt` and `nuxt build` put it before their last message (`└  ✨ Happy " +
 		"building!`, `◆ ✨ Build complete in 6.37s!`). No font this interface serves has U+2728. " +
 		"It is on the last line of what they print, so no line below is aligned to it",
+	// Vitest's default reporter: U+276F opens a file or a group with a failure in it,
+	// where a passing one opens with U+2713, and U+23AF draws the rules around the
+	// list of failures.
+	'\u276f': "Vitest opens a failing file or group with it (`❯ src/planner.test.ts (7 tests | 1 " +
+		"failed)`), where a passing one opens with U+2713. IBM Plex Mono has no U+276F. The names " +
+		"after the two marks can sit a fraction apart; nothing else is aligned to them, and a " +
+		"capture is pasted byte for byte",
+	'\u23af': "Vitest draws the rules around its list of failures with it (`⎯⎯⎯ Failed Tests 1 ⎯⎯⎯`). " +
+		"IBM Plex Mono has no U+23AF. A rule is a line of its own, and nothing is aligned to its length",
 	'\u25b6': "Vue Router's warnings, as Nuxt prints them, hang two lines off the message with it " +
 		"(`├▶ fix:` and `╰▶ see:`). IBM Plex Mono has no U+25B6 at all. Both lines carry it in the " +
 		"same column, so whatever width the reader's machine gives it moves them together",
