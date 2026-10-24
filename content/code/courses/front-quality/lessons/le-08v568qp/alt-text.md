@@ -29,7 +29,7 @@ Three rules settle most cases.
 
 ## Images that are not `<img>`
 
-An inline `<svg>` has no `alt`. It takes `role="img"` and an `aria-label`, or a `<title>` as its first
+An SVG drawn inline in the page has no `alt`. It takes `role="img"` and an `aria-label`, or a `<title>` as its first
 child, which is what every diagram in this course does: open one in your browser's developer tools and the
 label is there, saying what the drawing shows. A CSS background image is invisible to the tree by
 construction, which is right for decoration and wrong for anything that carries meaning.

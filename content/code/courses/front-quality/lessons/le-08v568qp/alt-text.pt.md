@@ -30,7 +30,7 @@ Três regras resolvem a maior parte dos casos.
 
 ## Imagens que não são `<img>`
 
-Um `<svg>` embutido não tem `alt`. Ele recebe `role="img"` e um `aria-label`, ou um `<title>` como
+Um SVG desenhado direto na página não tem `alt`. Ele recebe `role="img"` e um `aria-label`, ou um `<title>` como
 primeiro filho, que é o que todo diagrama deste curso faz: abra um nas ferramentas de desenvolvedor do seu
 navegador e o rótulo está lá, dizendo o que o desenho mostra. Uma imagem de fundo em CSS é invisível para a
 árvore por construção, o que é certo para decoração e errado para qualquer coisa que carregue significado.
