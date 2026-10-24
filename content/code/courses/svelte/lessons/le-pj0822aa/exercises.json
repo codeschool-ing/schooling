@@ -1,0 +1,667 @@
+[
+  {
+    "id": "ex-qpa28v6c",
+    "version": 1,
+    "section": "handle",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `handle` receive besides the request's `event`?",
+    "hint": "It is what does SvelteKit's own work.",
+    "choices": [
+      {
+        "text": "The response, ready to be sent",
+        "correct": false,
+        "why": "The response is what `resolve` returns."
+      },
+      {
+        "text": "The data the layouts' load functions returned for the page",
+        "correct": false,
+        "why": "Load functions run inside `resolve`, after `handle` starts."
+      },
+      {
+        "text": "`resolve`, which does what SvelteKit would have done anyway",
+        "correct": true,
+        "why": "Right: code before it runs first, code after it sees the response."
+      },
+      {
+        "text": "The page component, already rendered",
+        "correct": false,
+        "why": "Nothing is rendered until `resolve` runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-a26fzrv2",
+    "version": 1,
+    "section": "handle",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which file holds the planner's `handle`?",
+    "hint": "It runs on the server only.",
+    "choices": [
+      {
+        "text": "`src/hooks.server.js`",
+        "correct": true,
+        "why": "Right: SvelteKit looks for that name."
+      },
+      {
+        "text": "`vite.config.js`",
+        "correct": false,
+        "why": "That configures the build; it is not called per request."
+      },
+      {
+        "text": "`src/routes/+layout.server.js`",
+        "correct": false,
+        "why": "That holds a load function, not hooks."
+      },
+      {
+        "text": "`src/hooks.js`",
+        "correct": false,
+        "why": "That one runs in both places, and has no `handle`."
+      }
+    ]
+  },
+  {
+    "id": "ex-6t7v2m1g",
+    "version": 1,
+    "section": "handle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the first version of the log break `npm run build`?",
+    "hint": "About is prerendered.",
+    "choices": [
+      {
+        "text": "`console.log` is not allowed in a hook",
+        "correct": false,
+        "why": "The second version logs too."
+      },
+      {
+        "text": "`performance.now()` does not exist on the server",
+        "correct": false,
+        "why": "Node has it; the error named `url.search`."
+      },
+      {
+        "text": "The hook was in the wrong file and was imported by the browser",
+        "correct": false,
+        "why": "The file was right; the build ran it."
+      },
+      {
+        "text": "It read `url.search` while About was being prerendered",
+        "correct": true,
+        "why": "Right: a build-time request has no real query, and SvelteKit refuses it."
+      }
+    ]
+  },
+  {
+    "id": "ex-vx737s80",
+    "version": 1,
+    "section": "handle",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The value from `$app/env` that is true while the build prerenders is called ___.",
+    "hint": "A word ending in -ing.",
+    "blanks": [
+      {
+        "accept": [
+          "building"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s100jfzz",
+    "version": 1,
+    "section": "handle",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the week page, a click on Guitar and a session added, which lines did the log show? Choose all that apply.",
+    "hint": "Three trips to the server, and only three.",
+    "choices": [
+      {
+        "text": "`GET /`",
+        "correct": true,
+        "why": "Yes: the first page."
+      },
+      {
+        "text": "A `POST` to `?week=…&/add`, answered 200",
+        "correct": true,
+        "why": "Yes: `use:enhance` got JSON back."
+      },
+      {
+        "text": "A `GET` for the click on Guitar",
+        "correct": false,
+        "why": "That needed nothing from the server."
+      },
+      {
+        "text": "A `GET /about`",
+        "correct": false,
+        "why": "About was not visited, and it is a file anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-cbfh7nv4",
+    "version": 1,
+    "section": "headers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each header with what it asks the browser.",
+    "hint": "One is about frames, one about guessing, one about links.",
+    "pairs": [
+      {
+        "left": "`X-Content-Type-Options: nosniff`",
+        "right": "Trust the declared type, do not guess"
+      },
+      {
+        "left": "`Referrer-Policy: same-origin`",
+        "right": "Keep the address from other sites"
+      },
+      {
+        "left": "`X-Frame-Options: DENY`",
+        "right": "Never show the page in another site's frame"
+      }
+    ]
+  },
+  {
+    "id": "ex-zddqb80w",
+    "version": 1,
+    "section": "headers",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With `handle = sequence(log, headers)`, put what happens to one request in order.",
+    "hint": "Each one wraps the ones after it.",
+    "items": [
+      "`log` starts its clock",
+      "`headers` calls `resolve`",
+      "SvelteKit renders the page",
+      "`headers` adds its three headers",
+      "`log` prints its line"
+    ],
+    "trap": "Printing first would measure nothing, since nothing has happened yet."
+  },
+  {
+    "id": "ex-casb1c29",
+    "version": 1,
+    "section": "headers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `curl -I /about` show none of the three headers?",
+    "hint": "Who answered that request?",
+    "choices": [
+      {
+        "text": "`sequence` only runs its last function for pages without data",
+        "correct": false,
+        "why": "`sequence` runs every function, every time."
+      },
+      {
+        "text": "It is a prerendered file, sent without SvelteKit",
+        "correct": true,
+        "why": "Right: the adapter serves files itself, and no hook sees them."
+      },
+      {
+        "text": "`csr = false` pages may not carry headers",
+        "correct": false,
+        "why": "Page options say nothing about headers."
+      },
+      {
+        "text": "`curl -I` asks for the headers of the dev server instead",
+        "correct": false,
+        "why": "It asked the built server, on port 3000."
+      }
+    ]
+  },
+  {
+    "id": "ex-e0ta4mf2",
+    "version": 1,
+    "section": "headers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is `Content-Security-Policy` harder to set by hand than the other three?",
+    "hint": "Think of the small script in every page.",
+    "choices": [
+      {
+        "text": "It would block the stylesheet that every page links to, so no page could be styled",
+        "correct": false,
+        "why": "A policy can allow the site's own styles."
+      },
+      {
+        "text": "SvelteKit puts an inline script in every page, which the policy must allow",
+        "correct": true,
+        "why": "Right: its own `csp` option marks those scripts."
+      },
+      {
+        "text": "Browsers ignore it on localhost",
+        "correct": false,
+        "why": "Nothing in the lesson says so."
+      },
+      {
+        "text": "It can only be sent from a prerendered page",
+        "correct": false,
+        "why": "Prerendered pages are the ones hooks cannot touch."
+      }
+    ]
+  },
+  {
+    "id": "ex-eet8x8rf",
+    "version": 1,
+    "section": "locals",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is `event.locals`?",
+    "hint": "It lives as long as one request.",
+    "choices": [
+      {
+        "text": "Settings read from the `.env` file",
+        "correct": false,
+        "why": "Environment variables are something else."
+      },
+      {
+        "text": "A store shared by every request the server answers",
+        "correct": false,
+        "why": "Each request gets its own; sharing is what lesson 11 warned against."
+      },
+      {
+        "text": "Variables the browser keeps for the page",
+        "correct": false,
+        "why": "It is the server's and never reaches the browser on its own."
+      },
+      {
+        "text": "An object for one request, which hooks write and loads read",
+        "correct": true,
+        "why": "Right: written once, read by everything after."
+      }
+    ]
+  },
+  {
+    "id": "ex-qdfcwqpq",
+    "version": 1,
+    "section": "locals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the planner give each request a short id?",
+    "hint": "Where does the id appear?",
+    "choices": [
+      {
+        "text": "To match a log line with the page somebody saw",
+        "correct": true,
+        "why": "Right: the same id is in both."
+      },
+      {
+        "text": "So the server can refuse a request it has answered once",
+        "correct": false,
+        "why": "Each id is new and nothing checks it."
+      },
+      {
+        "text": "So that the browser can cache each page under its own name",
+        "correct": false,
+        "why": "It is not sent as a cache key."
+      },
+      {
+        "text": "To sign the session cookie",
+        "correct": false,
+        "why": "The planner has no session."
+      }
+    ]
+  },
+  {
+    "id": "ex-bq4twjas",
+    "version": 1,
+    "section": "locals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A page needs a value a hook computed. Where should it come from?",
+    "hint": "`locals` never reaches the browser by itself.",
+    "choices": [
+      {
+        "text": "From a global variable the hook sets",
+        "correct": false,
+        "why": "A global is shared by every request."
+      },
+      {
+        "text": "From a cookie the hook writes",
+        "correct": false,
+        "why": "That goes to the browser, not into the page's data."
+      },
+      {
+        "text": "From what a load function returns, reading `locals`",
+        "correct": true,
+        "why": "Right: what a page needs goes in a load's result."
+      },
+      {
+        "text": "From `event.locals`, read in the component",
+        "correct": false,
+        "why": "Components cannot see `locals`."
+      }
+    ]
+  },
+  {
+    "id": "ex-7rm0d1zp",
+    "version": 1,
+    "section": "handle-error",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `kind` with where its error came from.",
+    "hint": "Only one of them is a surprise.",
+    "pairs": [
+      {
+        "left": "`'app'`",
+        "right": "Raised with `error()`"
+      },
+      {
+        "left": "`'framework'`",
+        "right": "SvelteKit's own, such as no route"
+      },
+      {
+        "left": "`'unknown'`",
+        "right": "Code that broke"
+      }
+    ]
+  },
+  {
+    "id": "ex-x2vqgafh",
+    "version": 1,
+    "section": "handle-error",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Without `handleError`, what did the visitor see when the data file was missing?",
+    "hint": "SvelteKit's safe default.",
+    "choices": [
+      {
+        "text": "A blank page",
+        "correct": false,
+        "why": "The error page was rendered."
+      },
+      {
+        "text": "A 404, because the file could not be found",
+        "correct": false,
+        "why": "A missing file on the server is the server's failure, a 500."
+      },
+      {
+        "text": "The `ENOENT` message and the file's path",
+        "correct": false,
+        "why": "That went to the server's terminal only."
+      },
+      {
+        "text": "A 500 with \"Internal Error\"",
+        "correct": true,
+        "why": "Right: nothing from the error itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-zf6xd09t",
+    "version": 1,
+    "section": "handle-error",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must `handleError` never throw?",
+    "hint": "When does it run?",
+    "choices": [
+      {
+        "text": "Because a hook must always return a response",
+        "correct": false,
+        "why": "`handleError` returns an object, not a response."
+      },
+      {
+        "text": "It runs because something already failed; its own error has nowhere to go",
+        "correct": true,
+        "why": "Right: keep it to logging and building an object."
+      },
+      {
+        "text": "Because a throw would show the stack to the visitor",
+        "correct": false,
+        "why": "SvelteKit never shows that; the problem is what happens next."
+      },
+      {
+        "text": "Because throwing there restarts the server",
+        "correct": false,
+        "why": "The lesson says nothing like that."
+      }
+    ]
+  },
+  {
+    "id": "ex-cawq27y7",
+    "version": 1,
+    "section": "handle-error",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `handleError` was added, why did `/courses/piano` still say \"There is no course called “piano”\"?",
+    "hint": "Who raised that 404?",
+    "choices": [
+      {
+        "text": "It is `kind: 'app'`, and the hook returns those unchanged",
+        "correct": true,
+        "why": "Right: only `'unknown'` errors get the plain sentence."
+      },
+      {
+        "text": "Because a 404 never reaches the hook",
+        "correct": false,
+        "why": "It reaches it, with `kind: 'app'`."
+      },
+      {
+        "text": "Because the course page has its own error page",
+        "correct": false,
+        "why": "There is one `+error.svelte`, at the root."
+      },
+      {
+        "text": "Because `piano` matched no route at all",
+        "correct": false,
+        "why": "It matched the course route; the load raised it."
+      }
+    ]
+  },
+  {
+    "id": "ex-p6kstvrw",
+    "version": 1,
+    "section": "handle-error",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What status did the planner answer with while `data/planner.json` was moved away?",
+    "hint": "Internal Error.",
+    "value": 500,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-agzftj00",
+    "version": 1,
+    "section": "other-hooks",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each hook with the file it lives in.",
+    "hint": "`hooks.js` runs on both sides.",
+    "pairs": [
+      {
+        "left": "`handle`",
+        "right": "`src/hooks.server.js`"
+      },
+      {
+        "left": "`reroute`",
+        "right": "`src/hooks.js`"
+      },
+      {
+        "left": "`handleError` for browser errors",
+        "right": "`src/hooks.client.js`"
+      }
+    ]
+  },
+  {
+    "id": "ex-7mvtmggk",
+    "version": 1,
+    "section": "other-hooks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `handleFetch` sit in front of?",
+    "hint": "Only one side's requests.",
+    "choices": [
+      {
+        "text": "Every `fetch` made in the browser after the first page has loaded",
+        "correct": false,
+        "why": "It is a server hook."
+      },
+      {
+        "text": "Requests for prerendered files",
+        "correct": false,
+        "why": "No hook sees those."
+      },
+      {
+        "text": "Every `fetch` a load or action makes on the server",
+        "correct": true,
+        "why": "Right: it can send them to a faster internal address."
+      },
+      {
+        "text": "Every request the browser sends to the server",
+        "correct": false,
+        "why": "That is `handle`."
+      }
+    ]
+  },
+  {
+    "id": "ex-e90xvtm5",
+    "version": 1,
+    "section": "other-hooks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `reroute` sending `/sobre` to `/about`, what does the address bar show?",
+    "hint": "It changes the route, not the address.",
+    "choices": [
+      {
+        "text": "Nothing, until the page has loaded",
+        "correct": false,
+        "why": "The browser shows what was asked for."
+      },
+      {
+        "text": "`/about`, after a redirect",
+        "correct": false,
+        "why": "No redirect happens."
+      },
+      {
+        "text": "`/sobre`",
+        "correct": true,
+        "why": "Right: the address stays as typed."
+      },
+      {
+        "text": "Both, one after the other",
+        "correct": false,
+        "why": "Nothing moves the address."
+      }
+    ]
+  },
+  {
+    "id": "ex-znd5w80k",
+    "version": 1,
+    "section": "other-hooks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does `transport` make possible that lesson 13 could not do?",
+    "hint": "Lesson 13 tried to return a function.",
+    "choices": [
+      {
+        "text": "Sending a class of your own whose state is data",
+        "correct": true,
+        "why": "Right: the data travels and the constructor runs again."
+      },
+      {
+        "text": "Skipping the check that forbids reading the query during prerendering",
+        "correct": false,
+        "why": "That is `building`, in another section."
+      },
+      {
+        "text": "Returning functions from a server load",
+        "correct": false,
+        "why": "It does not make functions travel."
+      },
+      {
+        "text": "Running a server load in the browser",
+        "correct": false,
+        "why": "A server load never leaves the server."
+      }
+    ]
+  },
+  {
+    "id": "ex-3tha2scn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Every response must say who served it, in an `X-Served-By` header. Where does that go?",
+    "hint": "Every response, including the files.",
+    "choices": [
+      {
+        "text": "In `handleFetch`",
+        "correct": false,
+        "why": "That is for the server's own `fetch` calls."
+      },
+      {
+        "text": "In a `handle`, and in whatever serves the prerendered files",
+        "correct": true,
+        "why": "Right: hooks never see the files."
+      },
+      {
+        "text": "In each page's `+page.server.js`",
+        "correct": false,
+        "why": "Pages without one, and files, would miss it."
+      },
+      {
+        "text": "In `handleError`",
+        "correct": false,
+        "why": "That runs only for errors."
+      }
+    ]
+  },
+  {
+    "id": "ex-9f9bs9fv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A visitor writes in quoting reference `d1afdf92`. What do you look for?",
+    "hint": "The id is in two places.",
+    "choices": [
+      {
+        "text": "The browser's console on your own computer",
+        "correct": false,
+        "why": "The error happened on the server."
+      },
+      {
+        "text": "A file of that name under `build/`, the one the error page was rendered from",
+        "correct": false,
+        "why": "The id names a request, not a file."
+      },
+      {
+        "text": "The session with that id in the data file",
+        "correct": false,
+        "why": "Sessions have numbers; this is a request."
+      },
+      {
+        "text": "The server's log lines that start with `d1afdf92`",
+        "correct": true,
+        "why": "Right: the failure and its request, together."
+      }
+    ]
+  }
+]
