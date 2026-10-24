@@ -813,6 +813,17 @@ var allowedOutsideTheFont = map[rune]string{
 	'\u25c7': "create-vite marks the step it is on with it (`◇  Scaffolding project in …`). " +
 		"IBM Plex Mono has no U+25C7 at all. It opens a line and nothing is aligned to what " +
 		"follows it",
+	// Next.js, whose build and development server the React course runs.
+	'\u25b2': "Next.js opens the first line of `next dev`, `next build` and `next start` with it " +
+		"(`▲ Next.js 16.4.3`). IBM Plex Mono has no U+25B2 at all. It opens a line and nothing is " +
+		"aligned to what follows it",
+	'\u25d0': "`next build` marks a partially prerendered route with it, in its route table and its " +
+		"legend. IBM Plex Mono has no U+25D0 at all. Where it is followed by aligned text, so is " +
+		"U+25CB, in the same column of the line beside it, and the two come from the same block, so " +
+		"they move together",
+	'\u25cb': "`next build` marks a static route with it, in its route table and its legend. IBM " +
+		"Plex Mono has no U+25CB at all. Where it is followed by aligned text, so is U+25D0, in the " +
+		"same column of the line beside it, and the two come from the same block, so they move together",
 }
 
 // coverage is the set of code points the interface declares a face for.
