@@ -63,7 +63,7 @@ if (load) {
 ```
 
 `import.meta.glob` é algo que o Vite fornece, não o JavaScript: ele encontra cada arquivo que bate com
-o padrão quando o projeto é montado, e a aula 17 mostra no que ele se transforma. Aqui, isso quer dizer
+o padrão quando o projeto é montado, e a aula 17 é sobre o Vite. Aqui, isso quer dizer
 que uma demonstração nova é um arquivo novo, e nada mais muda.
 
 ## Uma vez, contra toda vez

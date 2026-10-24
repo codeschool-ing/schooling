@@ -63,7 +63,7 @@ if (load) {
 ```
 
 `import.meta.glob` is something Vite provides, not JavaScript: it finds every file matching the
-pattern when the project is built, and lesson 17 shows what it turns into. Here it means that a new
+pattern when the project is built, and lesson 17 is about Vite. Here it means that a new
 demo is a new file, and nothing else changes.
 
 ## Once, against every time

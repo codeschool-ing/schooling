@@ -109,5 +109,5 @@ na sua própria linguagem: o template parece HTML, o estilo é CSS e o script é
 consegue ler o template, e uma regra de CSS fica ao lado da marcação que ela estiliza.
 
 **O custo é uma etapa de build.** Um arquivo `.vue` não pode ser aberto por um navegador como está,
-então sempre há um compilador entre você e a página. "Uma página por vez", duas seções adiante, mostra
+então sempre há um compilador entre você e a página. "Uma página por vez", três seções adiante, mostra
 o único jeito de usar o Vue sem um, e por que os projetos raramente fazem isso.

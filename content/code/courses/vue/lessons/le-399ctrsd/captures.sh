@@ -53,7 +53,11 @@ session $P "curl -s http://localhost:5173/courses/spanish | grep -E '<title>|id=
 bg_stop pl
 block build
 session $P 'npm run build'
+dev py $P 'python3 -m http.server 8000 --directory dist' 8000
 block static
-session $P 'cd dist && python3 -m http.server 8000 > /dev/null 2>&1 &' 'sleep 1; curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8000/' \
-  'curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8000/courses/spanish' 'kill %1'
+session $P 'curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8000/' \
+  'curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8000/courses/spanish'
+block static-server
+bg_show py
+bg_stop py
 snapshot

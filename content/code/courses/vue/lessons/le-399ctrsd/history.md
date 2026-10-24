@@ -28,22 +28,26 @@ ana@dev:~/vue/planner$ curl -s http://localhost:5173/courses/spanish | grep -E '
 application, which is the **fallback** a router with real paths needs.
 
 A static host does not always do that. Serve the built files with a plain web server, the one Python
-ships with, and ask for the same address:
+ships with, started in a second terminal, and ask for the same address:
 
 ```
-ana@dev:~/vue/planner$ cd dist && python3 -m http.server 8000 > /dev/null 2>&1 &
-ana@dev:~/vue/planner$ sleep 1; curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8000/
+ana@dev:~/vue/planner$ curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8000/
 200
 ana@dev:~/vue/planner$ curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8000/courses/spanish
 404
-ana@dev:~/vue/planner$ kill %1
-bash: line 9: kill: %1: no such job
 ```
 
 The root answers 200, with the built `index.html`. **The course page answers 404.** There is no file
 called `courses/spanish` in `dist`, and a plain server answers only for files that exist. The
 application works when the student starts at `/` and clicks, and breaks the moment they reload a course
-page or share its address. The last line stopped the server.
+page or share its address. The server's own terminal logged both requests; Ctrl-C stops it:
+
+```
+ana@dev:~/vue/planner$ python3 -m http.server 8000 --directory dist
+127.0.0.1 - - [23/Oct/2026 22:40:35] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2026 22:40:35] code 404, message File not found
+127.0.0.1 - - [23/Oct/2026 22:40:35] "GET /courses/spanish HTTP/1.1" 404 -
+```
 
 ## The two fixes
 

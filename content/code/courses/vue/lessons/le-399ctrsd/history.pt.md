@@ -28,22 +28,27 @@ ana@dev:~/vue/planner$ curl -s http://localhost:5173/courses/spanish | grep -E '
 recebe a aplicação, que é o **fallback** de que um router com caminhos de verdade precisa.
 
 Um host estático nem sempre faz isso. Sirva os arquivos do build com um servidor web simples, o que vem
-com o Python, e peça o mesmo endereço:
+com o Python, iniciado num segundo terminal, e peça o mesmo endereço:
 
 ```
-ana@dev:~/vue/planner$ cd dist && python3 -m http.server 8000 > /dev/null 2>&1 &
-ana@dev:~/vue/planner$ sleep 1; curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8000/
+ana@dev:~/vue/planner$ curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8000/
 200
 ana@dev:~/vue/planner$ curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8000/courses/spanish
 404
-ana@dev:~/vue/planner$ kill %1
-bash: line 9: kill: %1: no such job
 ```
 
 A raiz responde 200, com o `index.html` do build. **A página do curso responde 404.** Não existe arquivo
 chamado `courses/spanish` em `dist`, e um servidor simples só responde por arquivos que existem. A
 aplicação funciona quando o aluno começa em `/` e clica, e quebra no momento em que ele recarrega uma
-página de curso ou compartilha o endereço dela. A última linha parou o servidor.
+página de curso ou compartilha o endereço dela. O terminal do próprio servidor registrou as duas
+requisições; Ctrl-C o para:
+
+```
+ana@dev:~/vue/planner$ python3 -m http.server 8000 --directory dist
+127.0.0.1 - - [23/Oct/2026 22:40:35] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [23/Oct/2026 22:40:35] code 404, message File not found
+127.0.0.1 - - [23/Oct/2026 22:40:35] "GET /courses/spanish HTTP/1.1" 404 -
+```
 
 ## As duas correções
 
