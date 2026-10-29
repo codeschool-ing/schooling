@@ -1,0 +1,700 @@
+[
+  {
+    "id": "ex-ddnz30t9",
+    "version": 1,
+    "section": "between-page-and-network",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put a service worker's life in order.",
+    "items": [
+      "register",
+      "install",
+      "activate",
+      "fetch"
+    ]
+  },
+  {
+    "id": "ex-drjz0zkc",
+    "version": 1,
+    "section": "between-page-and-network",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a service worker run only on HTTPS or localhost?",
+    "choices": [
+      {
+        "text": "It answers every request of the site",
+        "correct": true,
+        "why": "Right: an attacker on the network would want to install one."
+      },
+      {
+        "text": "Plain HTTP is too slow for it",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "Cache Storage needs a certificate to open",
+        "correct": false,
+        "why": "Storage has no certificate of its own."
+      },
+      {
+        "text": "Browsers drop HTTP pages from the cache",
+        "correct": false,
+        "why": "They cache HTTP pages as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-ev98jcfd",
+    "version": 1,
+    "section": "between-page-and-network",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A worker is served from /assets/sw.js. Which addresses does it control?",
+    "choices": [
+      {
+        "text": "The whole site",
+        "correct": false,
+        "why": "That needs /sw.js at the root."
+      },
+      {
+        "text": "Only the page that registered it",
+        "correct": false,
+        "why": "Scope is a folder, not a page."
+      },
+      {
+        "text": "Only those under /assets/",
+        "correct": true,
+        "why": "Yes: its scope is its folder."
+      },
+      {
+        "text": "None until the browser restarts",
+        "correct": false,
+        "why": "A restart is not needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-kw7hzj14",
+    "version": 1,
+    "section": "the-planners-worker",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does sw.js live in public/ rather than src/?",
+    "choices": [
+      {
+        "text": "Vite cannot read JavaScript in src/",
+        "correct": false,
+        "why": "All of the planner's code is there."
+      },
+      {
+        "text": "Its name and place must not change",
+        "correct": true,
+        "why": "Right: copied to the root, unhashed."
+      },
+      {
+        "text": "Service workers have to be written in TypeScript",
+        "correct": false,
+        "why": "It is plain JavaScript."
+      },
+      {
+        "text": "public/ is cached for a year",
+        "correct": false,
+        "why": "It is sent with no-cache."
+      }
+    ]
+  },
+  {
+    "id": "ex-d8mhsfg1",
+    "version": 1,
+    "section": "the-planners-worker",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did server.ts need a new entry in its table of types?",
+    "choices": [
+      {
+        "text": "The worker refuses JSON",
+        "correct": false,
+        "why": "It caches the plan."
+      },
+      {
+        "text": "gzip needs a type",
+        "correct": false,
+        "why": "Compression does not read the type."
+      },
+      {
+        "text": "Lighthouse failed the page",
+        "correct": false,
+        "why": "Nothing measured it yet."
+      },
+      {
+        "text": "It had no type for .html",
+        "correct": true,
+        "why": "Yes: application/octet-stream, not a page."
+      }
+    ]
+  },
+  {
+    "id": "ex-v7zj3kj1",
+    "version": 1,
+    "section": "the-planners-worker",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the page register the worker on load rather than at once?",
+    "choices": [
+      {
+        "text": "To stay out of the page's way",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A worker registered early is ignored",
+        "correct": false,
+        "why": "It would still install."
+      },
+      {
+        "text": "load is when the cache opens",
+        "correct": false,
+        "why": "The cache is the worker's, opened by it."
+      },
+      {
+        "text": "The plan is only parsed after load",
+        "correct": false,
+        "why": "It is parsed when main.ts runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-efgbne7r",
+    "version": 1,
+    "section": "three-strategies",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each kind of file to the strategy the planner gives it.",
+    "pairs": [
+      {
+        "left": "/assets/, the hashed scripts",
+        "right": "cache first"
+      },
+      {
+        "left": "the pages",
+        "right": "network first"
+      },
+      {
+        "left": "fonts, covers, the plan",
+        "right": "stale while revalidate"
+      }
+    ],
+    "right_distractors": [
+      "cache only"
+    ]
+  },
+  {
+    "id": "ex-v6bp6eb4",
+    "version": 1,
+    "section": "three-strategies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are the planner's pages network first, and not stale while revalidate?",
+    "choices": [
+      {
+        "text": "Pages cannot be cached",
+        "correct": false,
+        "why": "They are, as the offline test showed."
+      },
+      {
+        "text": "stale while revalidate does not work offline",
+        "correct": false,
+        "why": "It does, with a kept copy."
+      },
+      {
+        "text": "Their plan would be a visit old",
+        "correct": true,
+        "why": "Yes: an online visitor should see the page drawn now."
+      },
+      {
+        "text": "navigate requests are slow",
+        "correct": false,
+        "why": "Speed is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-hv0mvqwg",
+    "version": 1,
+    "section": "three-strategies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What is the cost of network first on a weak phone signal?",
+    "choices": [
+      {
+        "text": "The copy is deleted",
+        "correct": false,
+        "why": "It stays for the next failure."
+      },
+      {
+        "text": "A wait for the network",
+        "correct": true,
+        "why": "Right, its full timeout unless the worker gives up sooner."
+      },
+      {
+        "text": "The page is shown twice",
+        "correct": false,
+        "why": "One answer is given."
+      },
+      {
+        "text": "The POST to /vitals is lost",
+        "correct": false,
+        "why": "The worker does not handle it."
+      }
+    ]
+  },
+  {
+    "id": "ex-3f0ch5pa",
+    "version": 1,
+    "section": "three-strategies",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does the fetch handler leave the POST to /vitals to the browser?",
+    "choices": [
+      {
+        "text": "It calls event.preventDefault()",
+        "correct": false,
+        "why": "That is not how a fetch is let through."
+      },
+      {
+        "text": "It answers with a 405 status",
+        "correct": false,
+        "why": "That would refuse it."
+      },
+      {
+        "text": "It caches it",
+        "correct": false,
+        "why": "A POST is never cached."
+      },
+      {
+        "text": "It returns without calling respondWith",
+        "correct": true,
+        "why": "Yes."
+      }
+    ]
+  },
+  {
+    "id": "ex-7519db2x",
+    "version": 1,
+    "section": "offline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does offline.ts open the first address twice before going offline?",
+    "choices": [
+      {
+        "text": "The first page is not controlled",
+        "correct": true,
+        "why": "Right, not the page that installed it."
+      },
+      {
+        "text": "The first visit has no fonts",
+        "correct": false,
+        "why": "It has them."
+      },
+      {
+        "text": "To measure LCP",
+        "correct": false,
+        "why": "It measures no metric."
+      },
+      {
+        "text": "Playwright needs a warm-up before it can go offline",
+        "correct": false,
+        "why": "The reason is the worker's."
+      }
+    ]
+  },
+  {
+    "id": "ex-55jxbtcq",
+    "version": 1,
+    "section": "offline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Offline, the JavaScript course showed \"You are offline\". Which part of the worker did that?",
+    "choices": [
+      {
+        "text": "cacheFirst",
+        "correct": false,
+        "why": "That one is for /assets/."
+      },
+      {
+        "text": "The browser's own error page",
+        "correct": false,
+        "why": "The heading came from offline.html."
+      },
+      {
+        "text": "networkFirst, with no copy of that page",
+        "correct": true,
+        "why": "Yes: its last resort, fetched at install."
+      },
+      {
+        "text": "activate",
+        "correct": false,
+        "why": "It only deletes old caches."
+      }
+    ]
+  },
+  {
+    "id": "ex-0g3w01k5",
+    "version": 1,
+    "section": "offline",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Once the Git page is open offline, why does a click on All courses still work?",
+    "choices": [
+      {
+        "text": "The worker precached the home page",
+        "correct": false,
+        "why": "It precached only offline.html."
+      },
+      {
+        "text": "mount draws it from the plan in the page",
+        "correct": true,
+        "why": "Right: no request is made."
+      },
+      {
+        "text": "The browser keeps every page it has ever loaded",
+        "correct": false,
+        "why": "The home page was never loaded here."
+      },
+      {
+        "text": "Links are exempt from setOffline",
+        "correct": false,
+        "why": "Nothing is exempt."
+      }
+    ]
+  },
+  {
+    "id": "ex-debdf67k",
+    "version": 1,
+    "section": "a-new-version",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A new sw.js is installed. Why does it not take over at once?",
+    "choices": [
+      {
+        "text": "It must be approved by the server",
+        "correct": false,
+        "why": "The server is not asked."
+      },
+      {
+        "text": "Its cache is still downloading",
+        "correct": false,
+        "why": "install had finished."
+      },
+      {
+        "text": "Browsers update workers once a week",
+        "correct": false,
+        "why": "They check on every navigation."
+      },
+      {
+        "text": "The old one still controls open tabs",
+        "correct": true,
+        "why": "Yes: two versions must not serve one page."
+      }
+    ]
+  },
+  {
+    "id": "ex-t8xvem9g",
+    "version": 1,
+    "section": "a-new-version",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does changing the planner's worker mean changing CACHE?",
+    "choices": [
+      {
+        "text": "So the new version starts clean",
+        "correct": true,
+        "why": "Right, and it makes the file differ by at least a byte."
+      },
+      {
+        "text": "Cache names expire after a day",
+        "correct": false,
+        "why": "They do not expire."
+      },
+      {
+        "text": "The browser requires a version in the name",
+        "correct": false,
+        "why": "Any name works; the version is the planner's habit."
+      },
+      {
+        "text": "Pages are cached under it",
+        "correct": false,
+        "why": "True, but not the reason it changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-dt86cjn3",
+    "version": 1,
+    "section": "a-new-version",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "When are skipWaiting and clients.claim safe?",
+    "choices": [
+      {
+        "text": "Always: they only make updates faster",
+        "correct": false,
+        "why": "They can mix two builds in one page."
+      },
+      {
+        "text": "Only on localhost",
+        "correct": false,
+        "why": "Location is not the condition."
+      },
+      {
+        "text": "When old pages cannot break",
+        "correct": true,
+        "why": "Yes; otherwise ask the person first."
+      },
+      {
+        "text": "When the worker has no fetch handler",
+        "correct": false,
+        "why": "Then there is little to update."
+      }
+    ]
+  },
+  {
+    "id": "ex-nz3j4p85",
+    "version": 1,
+    "section": "what-it-hides",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "revisit.ts printed undefined for every request of a controlled page. Why?",
+    "choices": [
+      {
+        "text": "The server crashed",
+        "correct": false,
+        "why": "The pages loaded."
+      },
+      {
+        "text": "The worker answered",
+        "correct": true,
+        "why": "Right: the tool has no line for that."
+      },
+      {
+        "text": "revisit.ts has a bug in its loop",
+        "correct": false,
+        "why": "Its loop is fine; its cases are older than the worker."
+      },
+      {
+        "text": "CDP is off for service workers",
+        "correct": false,
+        "why": "The worker has its own list, in its own target."
+      }
+    ]
+  },
+  {
+    "id": "ex-xhqcjc4v",
+    "version": 1,
+    "section": "what-it-hides",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What lets a site drop the caches and workers it put in every visitor's browser?",
+    "choices": [
+      {
+        "text": "Cache-Control: no-store on sw.js",
+        "correct": false,
+        "why": "That stops the HTTP cache keeping sw.js, nothing more."
+      },
+      {
+        "text": "A new CACHE name in a worker that never installs",
+        "correct": false,
+        "why": "A worker that never installs never activates."
+      },
+      {
+        "text": "Restarting the server",
+        "correct": false,
+        "why": "The caches are in the browser."
+      },
+      {
+        "text": "Clear-Site-Data: \"storage\", or unregister()",
+        "correct": true,
+        "why": "Yes."
+      }
+    ]
+  },
+  {
+    "id": "ex-cm4mev6m",
+    "version": 1,
+    "section": "what-not-to-cache",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does fetchAndKeep keep only responses whose ok is true?",
+    "choices": [
+      {
+        "text": "An error would pass for the page",
+        "correct": true,
+        "why": "Right, offline, with no way to tell."
+      },
+      {
+        "text": "Errors are too large to store",
+        "correct": false,
+        "why": "Size is not the reason."
+      },
+      {
+        "text": "Cache Storage rejects a 500",
+        "correct": false,
+        "why": "It would store it."
+      },
+      {
+        "text": "ok is false for every cached copy",
+        "correct": false,
+        "why": "A cached 200 is ok."
+      }
+    ]
+  },
+  {
+    "id": "ex-tfpaps48",
+    "version": 1,
+    "section": "what-not-to-cache",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What makes an opaque response from another server risky to cache?",
+    "choices": [
+      {
+        "text": "It is encrypted",
+        "correct": false,
+        "why": "Opaque is about reading, not encryption."
+      },
+      {
+        "text": "It expires at once",
+        "correct": false,
+        "why": "Cache Storage does not expire anything."
+      },
+      {
+        "text": "Its status cannot be read",
+        "correct": true,
+        "why": "Yes, so an error looks like a success; and it takes megabytes of quota."
+      },
+      {
+        "text": "It breaks the planner's CSP",
+        "correct": false,
+        "why": "The planner sets no CSP."
+      }
+    ]
+  },
+  {
+    "id": "ex-d30hczmb",
+    "version": 1,
+    "section": "workers-in-the-frameworks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which framework bundles and registers a src/service-worker.js on its own?",
+    "choices": [
+      {
+        "text": "Next.js",
+        "correct": false,
+        "why": "Its guide writes public/sw.js by hand."
+      },
+      {
+        "text": "SvelteKit",
+        "correct": true,
+        "why": "Yes, with $service-worker for the build's files."
+      },
+      {
+        "text": "Nuxt",
+        "correct": false,
+        "why": "It uses a module."
+      },
+      {
+        "text": "Angular",
+        "correct": false,
+        "why": "It uses @angular/service-worker."
+      }
+    ]
+  },
+  {
+    "id": "ex-76mcjk3h",
+    "version": 1,
+    "section": "workers-in-the-frameworks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What do the frameworks' tools leave to the project?",
+    "choices": [
+      {
+        "text": "The list of hashed files",
+        "correct": false,
+        "why": "That is what they write."
+      },
+      {
+        "text": "Registering the worker",
+        "correct": false,
+        "why": "Several do it for you."
+      },
+      {
+        "text": "Choosing HTTPS",
+        "correct": false,
+        "why": "That is the deployment's."
+      },
+      {
+        "text": "Which files get which strategy",
+        "correct": true,
+        "why": "Right: it depends on how often each changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-t5ggrycm",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A worker's request-and-response store is called Cache ___.",
+    "blanks": [
+      {
+        "accept": [
+          "Storage"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-f3qbaqev",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The method that keeps a worker installing until a promise settles is event.___.",
+    "hint": "Two words joined, in camel case.",
+    "blanks": [
+      {
+        "accept": [
+          "waitUntil"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
