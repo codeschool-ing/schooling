@@ -1,0 +1,251 @@
+# Lesson 23: server-side rendering
+
+@ what-the-server-sends quiz easy #ex-26bdwbdx
+? Before SSR, what did the dev server's HTML hold inside `<app-root>`?
+?? Antes do SSR, o que o HTML do dev server tinha dentro do `<app-root>`?
++ Nothing :: Right. The browser built every word after the scripts ran.
+++ Nada :: Isso. O navegador construía cada palavra depois que os scripts rodavam.
+- The week, without styles :: That is what SSR adds.
+-- A semana, sem estilos :: Isso é o que o SSR acrescenta.
+- A loading message the CLI writes :: The CLI writes an empty element.
+-- Uma mensagem de carregamento que o CLI escreve :: O CLI escreve um elemento vazio.
+- The data, as JSON :: No data was in the page.
+-- Os dados, em JSON :: Nenhum dado estava na página.
+
+@ what-the-server-sends quiz medium #ex-6avedkey
+? Which cost comes with rendering on the server?
+?? Que custo vem com renderizar no servidor?
+- The browser downloads more scripts :: The scripts are the same.
+-- O navegador baixa mais scripts :: Os scripts são os mesmos.
+- Hydration repeats every request :: The data travels in the page.
+-- A hidratação repete cada requisição :: Os dados viajam na página.
++ The code runs in two places :: Right. And must be correct in both, with a Node.js program serving pages.
+++ O código roda em dois lugares :: Isso. E precisa estar certo nos dois, com um programa Node.js servindo as páginas.
+- Routes can no longer be lazy :: Lazy routes keep working.
+-- As rotas não podem mais ser lazy :: Rotas lazy continuam funcionando.
+
+@ adding-ssr quiz medium #ex-t7n3hz0g
+? After `ng add @angular/ssr@21.2.28`, why was `npm install --save-exact` run again?
+?? Depois do `ng add @angular/ssr@21.2.28`, por que o `npm install --save-exact` rodou de novo?
+- The packages failed to install :: They installed.
+-- Os pacotes não instalaram :: Eles instalaram.
++ The set-up wrote carets :: Right. `^21.2.28` lets another install choose a later version.
+++ O set-up escreveu circunflexos :: Isso. `^21.2.28` deixa outra instalação escolher uma versão posterior.
+- To remove `express` :: The server is built on it.
+-- Para remover o `express` :: O servidor é construído sobre ele.
+- `.npmrc` was deleted :: It was still there; the set-up wrote `package.json` itself.
+-- O `.npmrc` foi apagado :: Continuava lá; o set-up escreveu o `package.json` sozinho.
+
+@ adding-ssr matching medium #ex-ztn8vbth
+? Match each file `ng add` wrote with what it is.
+?? Associe cada arquivo que o `ng add` escreveu ao que ele é.
+< `src/main.server.ts` :: the server's way in to the same `App`
+<< `src/main.server.ts` :: a entrada do servidor no mesmo `App`
+< `src/app/app.config.server.ts` :: the browser's configuration plus server rendering
+<< `src/app/app.config.server.ts` :: a configuração do navegador mais a renderização no servidor
+< `src/app/app.routes.server.ts` :: how each route is rendered
+<< `src/app/app.routes.server.ts` :: como cada rota é renderizada
+< `src/server.ts` :: an Express server the project owns
+<< `src/server.ts` :: um servidor Express que é do projeto
+x the browser's bundle
+xx o bundle do navegador
+
+@ render-modes matching medium #ex-nq8grdg3
+? Match each render mode with when its HTML is made.
+?? Associe cada modo de renderização a quando o HTML dele é feito.
+< `RenderMode.Prerender` :: once, during `ng build`
+<< `RenderMode.Prerender` :: uma vez, durante o `ng build`
+< `RenderMode.Server` :: on every request
+<< `RenderMode.Server` :: a cada requisição
+< `RenderMode.Client` :: in the browser
+<< `RenderMode.Client` :: no navegador
+x when hydration ends
+xx quando a hidratação termina
+
+@ render-modes quiz medium #ex-vrh78y12
+? Why does the planner not prerender its course pages, even with `getPrerenderParams`?
+?? Por que o planner não pré-renderiza as páginas dos cursos, mesmo com `getPrerenderParams`?
+- Prerendering needs a database :: It needs only the build.
+-- Pré-renderizar precisa de um banco de dados :: Precisa só do build.
+- Lazy routes cannot be prerendered :: The build reaches them.
+-- Rotas lazy não podem ser pré-renderizadas :: O build chega nelas.
+- Prerendered pages skip hydration :: They are hydrated like any other.
+-- Páginas pré-renderizadas pulam a hidratação :: São hidratadas como qualquer outra.
++ The data would be the build's :: Right. Sessions ticked after the build would not be in the page.
+++ Os dados seriam os do build :: Isso. Sessões marcadas depois do build não estariam na página.
+
+@ render-modes quiz hard #ex-t7akwnp5
+? Beside `{ path: '**', renderMode: RenderMode.Server }`, a rule gives `courses/:courseId/add` `RenderMode.Client`. Where it sits in the list, which applies to `/courses/git/add`?
+?? Ao lado de `{ path: '**', renderMode: RenderMode.Server }`, uma regra dá `RenderMode.Client` a `courses/:courseId/add`. Onde quer que ela esteja na lista, qual vale para `/courses/git/add`?
++ The rule for the add page :: Right. The most specific rule applies.
+++ A regra da página de adicionar :: Isso. Vale a regra mais específica.
+- `**`, if it comes first :: Position does not decide it.
+-- O `**`, se vier primeiro :: A posição não decide.
+- Both, server then client :: One mode per address.
+-- As duas, servidor e depois cliente :: Um modo por endereço.
+- Neither: the build refuses two rules :: A list may be mixed.
+-- Nenhuma: o build recusa duas regras :: Uma lista pode ser mista.
+
+@ hydration quiz medium #ex-dpah2nwd
+? What does hydration do with the HTML the server sent?
+?? O que a hidratação faz com o HTML que o servidor mandou?
+- Throws it away and draws again :: That is what happens without `provideClientHydration`.
+-- Joga fora e desenha de novo :: Isso é o que acontece sem `provideClientHydration`.
+- Sends it back to compare :: Nothing goes back to the server.
+-- Manda de volta para comparar :: Nada volta para o servidor.
++ Takes over its elements :: Right. Each is paired with its component, and the listeners attached.
+++ Assume os elementos :: Isso. Cada um é pareado com o componente, e os listeners ligados.
+- Freezes it until a click :: The page is live once hydrated.
+-- Congela até um clique :: A página fica viva depois de hidratada.
+
+@ hydration quiz medium #ex-eaqxqsbd
+? With SSR, `--network` showed no `GET /api/planner` from the browser. Why?
+?? Com SSR, o `--network` não mostrou nenhum `GET /api/planner` do navegador. Por quê?
+- The resource was removed :: The store still uses it.
+-- O resource foi removido :: O store ainda usa.
++ The answer came in `ng-state` :: Right. The transfer cache answers the first identical `GET`.
+++ A resposta veio no `ng-state` :: Isso. O transfer cache responde o primeiro `GET` idêntico.
+- The browser cached the page :: It was a fresh page.
+-- O navegador guardou a página em cache :: Era uma página nova.
+- Hydration skips the store :: The store is made in the browser too.
+-- A hidratação pula o store :: O store é criado no navegador também.
+
+@ hydration quiz hard #ex-mqnpr7mz
+? Which request does the HTTP transfer cache leave out by default?
+?? Que requisição o transfer cache de HTTP deixa de fora por padrão?
+- A `GET` the server made :: Those are what it holds.
+-- Um `GET` que o servidor fez :: É isso que ele guarda.
+- A `HEAD` request :: `GET` and `HEAD` are cached.
+-- Uma requisição `HEAD` :: `GET` e `HEAD` vão para o cache.
+- A request through an interceptor :: Interceptors do not change that.
+-- Uma requisição que passou por um interceptor :: Interceptors não mudam isso.
++ A `GET` with `Authorization` :: Right. The page is HTML anybody can save.
+++ Um `GET` com `Authorization` :: Isso. A página é HTML que qualquer um pode salvar.
+
+@ hydration cloze easy #ex-cc101mrh
+? To make `HttpClient` use `fetch`, the planner adds ___() to `provideHttpClient`.
+?? Para o `HttpClient` usar `fetch`, o planner acrescenta ___() ao `provideHttpClient`.
+= withFetch
+== withFetch
+
+@ not-a-browser quiz medium #ex-gkh4m4jp
+? Why did the dev server warn about `localStorage` for every course page?
+?? Por que o dev server avisava sobre `localStorage` a cada página de curso?
++ The effect ran on the server :: Right. Node.js has no `localStorage`, and the `catch` warned.
+++ O effect rodou no servidor :: Isso. O Node.js não tem `localStorage`, e o `catch` avisou.
+- The browser blocks storage :: The warning came from the server.
+-- O navegador bloqueia o armazenamento :: O aviso vinha do servidor.
+- The preference was never saved :: The browser saved it.
+-- A preferência nunca era salva :: O navegador salvava.
+- Hydration reads storage twice :: Hydration does not read storage.
+-- A hidratação lê o armazenamento duas vezes :: A hidratação não lê o armazenamento.
+
+@ not-a-browser quiz medium #ex-ks40g4pq
+? A preference must be right in the first HTML. Where should it be kept?
+?? Uma preferência precisa estar certa no primeiro HTML. Onde guardá-la?
+- In `localStorage` :: The server never sees it.
+-- No `localStorage` :: O servidor nunca vê.
+- In `sessionStorage` :: The server never sees that either.
+-- No `sessionStorage` :: O servidor também não vê.
++ In a cookie :: Right. Every request carries its cookies.
+++ Num cookie do site :: Isso. Toda requisição leva os cookies.
+- In a signal of the root injector :: Each request starts a new one.
+-- Num signal do injetor raiz :: Cada requisição começa um novo.
+
+@ not-a-browser quiz hard #ex-3y6hcgq4
+? On the server, what does `Autofocus` do with its `afterNextRender`?
+?? No servidor, o que o `Autofocus` faz com o `afterNextRender` dele?
+- It throws, as `focus()` is missing :: The callback is never called.
+-- Lança erro, porque falta `focus()` :: A função nunca é chamada.
++ Nothing: the callback runs only in a browser :: Right. It needs no check of where it is.
+++ Nada: a função só roda num navegador :: Isso. Não precisa testar onde está.
+- It focuses the field in the HTML :: The HTML had no focus.
+-- Põe o foco no campo no HTML :: O HTML não tinha foco.
+- It waits for hydration on the server :: Hydration happens in the browser.
+-- Espera a hidratação no servidor :: A hidratação acontece no navegador.
+
+@ status-codes quiz medium #ex-cbk8b1sq
+? Why did `/course/git` redirect to `/course/courses/:courseId` once rendered on the server?
+?? Por que `/course/git` redirecionava para `/course/courses/:courseId` depois de renderizado no servidor?
+- The guard sent it there :: The guard is on `courses/:courseId`.
+-- O guard mandava para lá :: O guard está em `courses/:courseId`.
+- `allowedHosts` rewrote the address :: It checks names; it rewrites nothing.
+-- O `allowedHosts` reescreveu o endereço :: Ele verifica nomes; não reescreve nada.
+- Event replay clicked an old link :: Nobody clicked; it was `curl`.
+-- O event replay clicou num link antigo :: Ninguém clicou; era o `curl`.
++ The pattern went out unfilled :: Right. The 302 carried `:courseId` as text.
+++ O padrão saiu sem ser preenchido :: Isso. O 302 levou o `:courseId` como texto.
+
+@ status-codes quiz medium #ex-7cyvf52c
+? What does `NotFound` change so that `/nowhere` answers `404`?
+?? O que o `NotFound` muda para `/nowhere` responder `404`?
++ The `status` of `RESPONSE_INIT` :: Right. `null` in the browser, the response on the server.
+++ O `status` do `RESPONSE_INIT` :: Isso. `null` no navegador, a resposta no servidor.
+- Its route, to `status: 404` :: The status is set from the component.
+-- A rota, para `status: 404` :: O status é definido pelo componente.
+- The template's heading :: A person sees the same page.
+-- O título do template :: Uma pessoa vê a mesma página.
+- `server.ts`, with a check per path :: `server.ts` did not change.
+-- O `server.ts`, com uma verificação por caminho :: O `server.ts` não mudou.
+
+@ allowed-hosts quiz hard #ex-fc3e5hbk
+? What does `allowedHosts` protect the production server from?
+?? Do que o `allowedHosts` protege o servidor de produção?
+- Visitors from other countries :: It reads the `Host` header, not the visitor.
+-- Visitantes de outros países :: Ele lê o cabeçalho `Host`, não o visitante.
+- Too many requests at once :: That needs a rate limit.
+-- Requisições demais ao mesmo tempo :: Isso pede um limite de taxa.
++ Fetching where a forged `Host` points :: Right. Relative URLs are built from that header.
+++ Buscar onde um `Host` forjado aponta :: Isso. URLs relativas são montadas a partir desse cabeçalho.
+- Scripts from another origin :: That is the browser's same-origin policy.
+-- Scripts de outra origem :: Isso é a política de mesma origem do navegador.
+
+@ allowed-hosts multiple-choice medium #ex-aryawtx8
+? Which are true of `allowedHosts` in Angular 21?
+?? O que é verdade sobre o `allowedHosts` no Angular 21?
++ `localhost` also allows `localhost:4000` :: Right. A port is not part of the name.
+++ `localhost` também libera `localhost:4000` :: Isso. A porta não faz parte do nome.
++ `NG_ALLOWED_HOSTS` sets it when the server starts :: Right. No build needed.
+++ O `NG_ALLOWED_HOSTS` define a lista quando o servidor começa :: Isso. Sem build.
+- An empty list allows every name :: It refuses them, rendering in the browser for now.
+-- Uma lista vazia libera todo nome :: Ela recusa, renderizando no navegador por enquanto.
+- `*` alone is a safe default :: It switches the defence off.
+-- O `*` sozinho é um padrão seguro :: Ele desliga a defesa.
+
+@ the-planners-server quiz medium #ex-cf6rmgbz
+? In production, why did `/api/planner` answer with the planner's "Nothing here" page?
+?? Em produção, por que `/api/planner` respondia com a página "Nothing here" do planner?
+- The API was down :: It was running on 3000.
+-- A API estava fora :: Estava rodando na 3000.
++ The proxy belongs to `ng serve` :: Right. In production, `server.ts` has to forward.
+++ O proxy é do `ng serve` :: Isso. Em produção, o `server.ts` precisa encaminhar.
+- `allowedHosts` refused it :: The page rendered.
+-- O `allowedHosts` recusou :: A página foi renderizada.
+- The transfer cache kept the old answer :: It holds data, not pages.
+-- O transfer cache guardou a resposta antiga :: Ele guarda dados, não páginas.
+
+@ drill ordering medium #ex-jnktdshf
+? Put a server-rendered request in order.
+?? Ponha em ordem uma requisição renderizada no servidor.
+> The server renders the page and fetches its data
+>> O servidor renderiza a página e busca os dados
+> The browser shows the HTML
+>> O navegador mostra o HTML
+> The scripts arrive and run
+>> Os scripts chegam e rodam
+> Angular hydrates the page
+>> O Angular hidrata a página
+> A click recorded before is replayed
+>> Um clique gravado antes é reproduzido
+
+@ drill quiz hard #ex-2gg8g66s
+? The planner computes `TODAY` with `new Date()`. What can differ between the server's HTML and the browser?
+?? O planner calcula `TODAY` com `new Date()`. O que pode diferir entre o HTML do servidor e o navegador?
+- Nothing, as the date travels in `ng-state` :: Only HTTP answers travel there.
+-- Nada, pois a data viaja no `ng-state` :: Só respostas HTTP viajam lá.
+- The session's minutes :: Those come from the API.
+-- Os minutos das sessões :: Vêm da API.
+- The course names :: Those come from the API.
+-- Os nomes dos cursos :: Vêm da API.
++ The week shown :: Right. Two clocks, perhaps in two time zones.
+++ A semana mostrada :: Isso. Dois relógios, talvez em dois fusos.

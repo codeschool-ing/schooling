@@ -84,9 +84,36 @@ rebuilt() {
 # bg NAME DIR 'command': start a program in "a second terminal", as ana. What
 # it prints goes to a log that bg_show prints with the prompt it was typed at.
 bg() {
-  local name=$1 dir=$2 cmd=$3
+  local name=$1 dir=$2 cmd=$3 env=""
   printf '%s\n%s\n' "$dir" "$cmd" > $STATE/$name.cmd
-  bash "$LAB_SH" script "cd $dir; setsid bash -c $(printf '%q' "$cmd") > $STATE/$name.log 2>&1 < /dev/null & echo \$! > $STATE/$name.pid"
+  [ -n "${SERVER_TODAY:-}" ] && env="LAB_TODAY=$SERVER_TODAY NODE_OPTIONS=--import=file://$STATE/clock.mjs "
+  bash "$LAB_SH" script "cd $dir; ${env}setsid bash -c $(printf '%q' "$cmd") > $STATE/$name.log 2>&1 < /dev/null & echo \$! > $STATE/$name.pid"
+}
+# THE SERVER'S CLOCK. `look --today` sets the browser's; from lesson 23 a page
+# is first drawn by Node, whose `new Date()` would be the recording computer's
+# day. server_today DATE: every program bg starts after it believes the day is
+# DATE, from 09:00 on and moving as a clock does, the morning the browser is
+# given. Node reads the module before the program, so nothing in a transcript
+# shows it, and the commands printed are the ones the student types.
+server_today() {
+  SERVER_TODAY=$1
+  cat > $STATE/clock.mjs <<'JS'
+const Real = Date;
+const start = Real.now();
+const shift = new Real(`${process.env.LAB_TODAY}T09:00:00`).getTime() - start;
+const now = () => Real.now() + shift;
+// a function rather than a class, so `Date()` without `new` still answers
+function LabDate(...args) {
+  if (!new.target) return new Real(now()).toString();
+  return args.length === 0 ? new Real(now()) : new Real(...args);
+}
+LabDate.prototype = Real.prototype;
+LabDate.now = now;
+LabDate.parse = Real.parse;
+LabDate.UTC = Real.UTC;
+globalThis.Date = LabDate;
+JS
+  chown ana: $STATE/clock.mjs 2>/dev/null || true
 }
 # bg_show NAME: that terminal as it stands, prompt first.
 bg_show() {
