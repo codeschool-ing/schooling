@@ -17,17 +17,19 @@ for md in "$D"/*.md; do case $md in *.pt.md) ;; *) python3 "$HERE/ex.py" "$md" >
 if [ "${2:-}" != "--no-capture" ] && [ -f "$D/captures.sh" ]; then
   bash "$D/captures.sh" > /tmp/anglab/$L.txt 2>&1
 fi
-for md in "$D"/*.md; do
-  case $md in *.pt.md) continue ;; esac
-  if [ -f /tmp/anglab/$L.txt ] && grep -q "^ana@dev:" "$md"; then python3 "$HERE/fill.py" "$md" /tmp/anglab/$L.txt; fi
-done
+# The sections in the lesson's order, all in one call: a command typed in two
+# sections is two blocks, and each section has to get its own.
+if [ -f /tmp/anglab/$L.txt ]; then
+  mapfile -t MDS < <(python3 -c "import json,sys; print('\n'.join(sys.argv[2]+'/'+s['slug']+'.md' for s in json.load(open(sys.argv[1]))['sections']))" "$D/lesson.json" "$D")
+  python3 "$HERE/fill.py" "${MDS[@]}" /tmp/anglab/$L.txt
+fi
 for pt in "$D"/*.pt.md; do
   md=${pt%.pt.md}.md
   if grep -q '^```' "$md"; then python3 "$HERE/pt.py" "$md" "$pt" >/dev/null || echo "pt.py failed on $pt"; fi
 done
 [ -f "$HERE/figures/$L.py" ] && python3 "$HERE/fig.py" "$L" >/dev/null
 # A helper that gave up says so in the output, and a fence would carry it.
-if [ -f /tmp/anglab/$L.txt ] && grep -nE '^(rebuilt|wait_port|wait_log|shown|restore): ' /tmp/anglab/$L.txt; then
+if [ -f /tmp/anglab/$L.txt ] && grep -nE '^(rebuilt|wait_port|wait_log|shown|restore|expect): ' /tmp/anglab/$L.txt; then
   echo "$L: a capture step failed, see above" >&2; exit 1
 fi
 echo "$L: done"

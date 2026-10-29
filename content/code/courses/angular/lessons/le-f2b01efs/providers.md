@@ -87,7 +87,7 @@ ana@dev:~/planner$ look http://localhost:4200/ --text app-bench
 [vite] connecting...
 [vite] connected.
 Angular is running in development mode.
-Hello, Ana
+HELLO, ANA!
 ```
 
 The bench did not change. It still asks for `Greeter`, and the injector, following the recipe it

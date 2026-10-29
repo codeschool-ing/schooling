@@ -112,11 +112,10 @@ ana@dev:~/planner$ look http://localhost:4200/ --today 2026-10-23 --text app-wee
 [vite] connected.
 Angular is running in development mode.
 net  GET /courses.json  200
-net  GET /courses.json  200
 -- check 2026-10-24, 50 minutes
-165 minutes planned, 90 done.
+165 minutes planned, 140 done.
 
-75 minutes to go.
+25 minutes to go.
 
 Done this week
 ```

@@ -18,7 +18,10 @@ templates at run time. Break the bench's template in three places at once:
 
 ```
 ana@dev:~/planner$ npx ng build 2>&1 | grep -A1 ERROR
-✘ [ERROR] NG8002: Can't bind to 'colspan' since it isn't a known property of 'td'. [plugin angular-compiler]
+✘ [ERROR] TS2551: Property 'minuts' does not exist on type 'Bench'. Did you mean 'minutes'? [plugin angular-compiler]
+
+--
+✘ [ERROR] TS2554: Expected 1 arguments, but got 0. [plugin angular-compiler]
 ```
 
 Two errors, each a TypeScript error code from lesson 1, now pointing into HTML:

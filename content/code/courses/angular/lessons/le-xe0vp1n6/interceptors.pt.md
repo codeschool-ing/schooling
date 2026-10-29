@@ -44,9 +44,9 @@ ana@dev:~/planner$ look http://localhost:4200/ --today 2026-10-23 --text app-wee
 [vite] connecting...
 [vite] connected.
 Angular is running in development mode.
-165 minutes planned, 140 done.
+165 minutes planned, 90 done.
 
-25 minutes to go.
+75 minutes to go.
 
 Done this week
 ```
@@ -59,6 +59,15 @@ the planner's API is on http://localhost:3000
 GET /api/planner -
 PATCH /api/sessions/5 -
 PATCH /api/sessions/9 -
+GET /api/planner -
+GET /api/planner -
+GET /api/planner -
+GET /api/planner -
+GET /api/planner -
+PATCH /api/sessions/5 -
+GET /api/planner -
+PATCH /api/sessions/5 -
+GET /api/planner planner
 ```
 
 O último `GET` veio com o cabeçalho, e nem o store nem o resource sabem que ele foi acrescentado. O

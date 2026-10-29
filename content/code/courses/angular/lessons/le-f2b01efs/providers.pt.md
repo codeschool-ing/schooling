@@ -87,7 +87,7 @@ ana@dev:~/planner$ look http://localhost:4200/ --text app-bench
 [vite] connecting...
 [vite] connected.
 Angular is running in development mode.
-Hello, Ana
+HELLO, ANA!
 ```
 
 O bench não mudou. Ele ainda pede `Greeter`, e o injetor, seguindo a receita que recebeu, responde

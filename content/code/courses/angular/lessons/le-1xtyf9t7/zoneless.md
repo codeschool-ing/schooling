@@ -38,7 +38,7 @@ ana@dev:~/planner$ look http://localhost:4200/ --text app-bench --wait 1000
 Angular is running in development mode.
 Bench
 
-default, plain field: 1
+default, plain field: 0
 
 OnPush, plain field: 0
 

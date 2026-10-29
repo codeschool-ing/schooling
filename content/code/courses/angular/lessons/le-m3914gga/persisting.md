@@ -30,8 +30,6 @@ Angular is running in development mode.
 Angular is running in development mode.
 [vite] connected.
 Hide sessions that are done
-Tue 13 Oct, 45 minutes
-Tue 20 Oct, 1 hour
 Sat 24 Oct, 50 minutes
 ```
 

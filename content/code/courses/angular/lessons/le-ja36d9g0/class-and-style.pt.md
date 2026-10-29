@@ -35,7 +35,7 @@ ana@dev:~/planner$ look http://localhost:4200/ --html app-bench
 [vite] connecting...
 [vite] connected.
 Angular is running in development mode.
-<app-bench><h2>Bench</h2><label for="bench-minutes">Minutes</label><input id="bench-minutes" type="number" min="5" max="240"><progress value="45" max="240" aria-label="45 of 240 minutes"></progress><button type="button">More</button></app-bench>
+<app-bench><h2>Bench</h2><p class="long">45 minutes</p><p class="long">The same, as an object</p><div class="bar" style="width: 18.75%;"></div><p>Red past 200</p></app-bench>
 ```
 
 Quatro linhas, quatro formas:

@@ -23,10 +23,8 @@ pare-o com `Ctrl-C` e inicie o `npx ng serve` de novo:
 ana@dev:~/planner$ look http://localhost:4200/ --today 2026-10-23 --text 'app-week p'
 [vite] connecting...
 [vite] connected.
-[vite] connecting...
-[vite] connected.
 Angular is running in development mode.
-19 October to October 25, 2026
+19 October to 25 October 2026
 ```
 
 O dia antes do mês, sem vírgula, e nada no template mudou.

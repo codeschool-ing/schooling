@@ -77,7 +77,7 @@ Angular is running in development mode.
 Day
 Length in minutes
 
-2026-10-26, 45 minutes
+2026-10-26, 45 minutes, valid: true
 ```
 
 O input escreveu direto no `model`: o `model().minutes` foi 2, depois 45, sem `getRawValue` no meio,

@@ -7,8 +7,8 @@ version: 1
 
 ```
 ana@dev:~/planner$ npx ng build 2>&1 | grep -E 'Initial total|courses-routes'
-                      | Initial total  | 294.50 kB |                81.56 kB
-chunk-RJNJDY6E.js     | courses-routes |  44.80 kB |                10.34 kB
+                      | Initial total  | 313.73 kB |                86.23 kB
+chunk-ODVGTZAK.js     | courses-routes | 196.97 kB |                37.46 kB
 ```
 
 The first download grew by about 20 kB, most of it the theme's styles, which every page needs. The
@@ -31,7 +31,10 @@ ana@dev:~/planner$ git status --short
  M angular.json
  M package-lock.json
  M package.json
- M src/index.html
+ M src/app/add-session/add-session.ts
+ M src/app/session-row/session-row.ts
+ M src/app/unsaved-work.ts
+?? src/app/confirm-leave/
 ?? src/material-theme.scss
 ```
 

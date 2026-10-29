@@ -18,7 +18,10 @@ tempo de execução. Quebre o template da bancada em três lugares de uma vez:
 
 ```
 ana@dev:~/planner$ npx ng build 2>&1 | grep -A1 ERROR
-✘ [ERROR] NG8002: Can't bind to 'colspan' since it isn't a known property of 'td'. [plugin angular-compiler]
+✘ [ERROR] TS2551: Property 'minuts' does not exist on type 'Bench'. Did you mean 'minutes'? [plugin angular-compiler]
+
+--
+✘ [ERROR] TS2554: Expected 1 arguments, but got 0. [plugin angular-compiler]
 ```
 
 Dois erros, cada um com um código de erro do TypeScript da aula 1, agora apontando para HTML:
