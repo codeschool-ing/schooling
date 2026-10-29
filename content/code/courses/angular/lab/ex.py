@@ -37,8 +37,12 @@ def parse(body):
         if cur is not None:
             cur["code"].append(line)
     out = []
-    for p in parts:
+    for i, p in enumerate(parts):
         code = "\n".join(p["code"]).rstrip("\n")
+        # A blank line between two parts is part of the program: the copy
+        # button joins the parts with one newline, so the code keeps one.
+        if i < len(parts) - 1 and p["code"] and p["code"][-1] == "" and code:
+            code += "\n"
         d = {"code": code}
         if p["note"]: d["note"] = p["note"]
         out.append(d)
