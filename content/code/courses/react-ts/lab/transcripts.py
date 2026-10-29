@@ -1,8 +1,8 @@
 """transcripts.py LESSON_DIR CAPTURE_OUTPUT: is every transcript still true?
 
 Every fence in the lesson's English prose that starts with ana's prompt must
-appear in what captures.sh printed on this run. Durations and the names of
-npm's log files are the only things allowed to differ, because they differ
+appear in what captures.sh printed on this run. Durations, the names of
+npm's log files and the date Angular's build prints are the only things allowed to differ, because they differ
 on every run; each is replaced by a placeholder on both sides before the
 comparison, and nothing else is.
 """
@@ -11,7 +11,8 @@ import sys
 from pathlib import Path
 
 VOLATILE = [
-    (re.compile(r"\b\d+(\.\d+)?\s?(ms|s|m)\b"), "<time>"),
+    (re.compile(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d+Z"), "<stamp>"),
+    (re.compile(r"\b\d+(\.\d+)?\s?(ms|seconds|s|m)\b"), "<time>"),
     (re.compile(r"\d{4}-\d\d-\d\dT\d\d_\d\d_\d\d_\d+Z"), "<stamp>"),
     (re.compile(r"\(\d+(\.\d+)?s\)"), "(<time>)"),
     (re.compile(r"\b\d\d:\d\d:\d\d\b"), "<clock>"),

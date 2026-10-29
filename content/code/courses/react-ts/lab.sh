@@ -69,6 +69,7 @@ COLORS=false
 NO_UPDATE_NOTIFIER=1
 npm_config_update_notifier=false
 NEXT_TELEMETRY_DISABLED=1
+NG_CLI_ANALYTICS=false
 NODE_EXTRA_CA_CERTS=/etc/rtlab-ca.crt
 HTTPS_PROXY=${HTTPS_PROXY:-}
 NO_PROXY=${NO_PROXY:-}
@@ -103,7 +104,7 @@ build_tools() {
 
 reset_home() {
   stop_server
-  rm -rf /home/ana/planner /home/ana/planner-* /home/ana/other
+  rm -rf /home/ana/planner /home/ana/planner-* /home/ana/other /home/ana/sessions-*
 }
 
 exec_in() {  # exec_in USER DIR COMMAND, with the lab's environment and nothing else
