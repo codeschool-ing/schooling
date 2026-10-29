@@ -1,0 +1,582 @@
+[
+  {
+    "id": "ex-8bsg7dbr",
+    "version": 1,
+    "section": "store-contract",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes an object a store?",
+    "hint": "One method is the whole contract.",
+    "choices": [
+      {
+        "text": "Being created by `writable` or `readable` from `svelte/store`",
+        "correct": false,
+        "why": "Those build stores, but the hand-written clock is a store without them."
+      },
+      {
+        "text": "A method called `subscribe` that follows the contract",
+        "correct": true,
+        "why": "Right. Call it with a function, get called back, get back a way to stop."
+      },
+      {
+        "text": "A `$` at the start of the variable's name",
+        "correct": false,
+        "why": "The `$` is how a component reads a store, not what makes one."
+      },
+      {
+        "text": "Living in a file whose name ends in `.svelte.js`, so the compiler reads it",
+        "correct": false,
+        "why": "That is what runes need; `timer.js` is a plain module and its store works."
+      }
+    ]
+  },
+  {
+    "id": "ex-wgkvfshr",
+    "version": 1,
+    "section": "store-contract",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the life of a subscription to the hand-written `now` in order.",
+    "hint": "The interval is cleared last.",
+    "items": [
+      "The component calls `subscribe` with a function",
+      "The store calls that function with `Date.now()` at once",
+      "Every 250 ms the interval calls it again",
+      "The component goes away and calls what `subscribe` returned",
+      "`clearInterval` stops the clock"
+    ],
+    "trap": "The first value arrives before any interval fires, because the contract says call at once."
+  },
+  {
+    "id": "ex-bp0a7qrr",
+    "version": 1,
+    "section": "store-contract",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the compiler write for you when a component reads `$now`?",
+    "hint": "Three things you would otherwise do by hand.",
+    "choices": [
+      {
+        "text": "A copy of the store for this component alone",
+        "correct": false,
+        "why": "There is one store; the component subscribes to it."
+      },
+      {
+        "text": "A conversion of the store into a `$state` field, kept in step with it by an effect",
+        "correct": false,
+        "why": "That resembles `fromStore`, which you call yourself; `$` subscribes directly."
+      },
+      {
+        "text": "The subscribe, the variable holding the value, and the unsubscribe when it goes away",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-rxjc9mvt",
+    "version": 1,
+    "section": "store-contract",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does `$now` NOT work?",
+    "hint": "Which files does the compiler rewrite?",
+    "choices": [
+      {
+        "text": "In a plain `.js` module, which the compiler does not rewrite",
+        "correct": true,
+        "why": "Right. Use `get(store)` or `subscribe` there."
+      },
+      {
+        "text": "In the markup of the component that imports it",
+        "correct": false,
+        "why": "That is exactly where the timer page used it."
+      },
+      {
+        "text": "In the script of a component, at the top level",
+        "correct": false,
+        "why": "It works there too, for a store imported or declared at the top level."
+      },
+      {
+        "text": "In a component that also uses runes like `$state`",
+        "correct": false,
+        "why": "Runes and `$store` live together in Svelte 5 components."
+      }
+    ]
+  },
+  {
+    "id": "ex-y0nbc2dk",
+    "version": 1,
+    "section": "store-contract",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`look … --wait 2400` printed how many seconds on the timer page?",
+    "hint": "Whole seconds after a wait of 2.4.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-ebteh4cn",
+    "version": 1,
+    "section": "writable-readable-derived",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each function with the store it makes.",
+    "hint": "Only one can be set from outside.",
+    "pairs": [
+      {
+        "left": "`writable`",
+        "right": "A store you set from outside"
+      },
+      {
+        "left": "`readable`",
+        "right": "A store fed by a source it starts"
+      },
+      {
+        "left": "`derived`",
+        "right": "A store computed from other stores"
+      }
+    ],
+    "right_distractors": [
+      "A store that saves itself to disk"
+    ]
+  },
+  {
+    "id": "ex-fkta8pka",
+    "version": 1,
+    "section": "writable-readable-derived",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What was wrong with the hand-written clock that `readable` fixes?",
+    "hint": "Think of two components watching it.",
+    "choices": [
+      {
+        "text": "It never called its subscriber until the first tick",
+        "correct": false,
+        "why": "It called `run(Date.now())` at once, as the contract asks."
+      },
+      {
+        "text": "Every subscriber started an interval of its own",
+        "correct": true,
+        "why": "Right. `readable` keeps one source for all of them."
+      },
+      {
+        "text": "It could not be read with `$` in a component",
+        "correct": false,
+        "why": "The timer page read it with `$now`."
+      },
+      {
+        "text": "It kept running after the last subscriber had left the page",
+        "correct": false,
+        "why": "It cleared its interval on unsubscribe; the flaw was having one per subscriber."
+      }
+    ]
+  },
+  {
+    "id": "ex-xsjc5yvw",
+    "version": 1,
+    "section": "writable-readable-derived",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When does the `start` function passed to `readable` run?",
+    "hint": "Look at the figure.",
+    "choices": [
+      {
+        "text": "When the module is imported",
+        "correct": false,
+        "why": "Importing creates the store; nothing starts until somebody subscribes."
+      },
+      {
+        "text": "Once per subscriber",
+        "correct": false,
+        "why": "That was the hand-written clock's flaw."
+      },
+      {
+        "text": "When the first subscriber arrives",
+        "correct": true,
+        "why": "Right, and what it returns runs when the last one leaves."
+      },
+      {
+        "text": "Every 250 milliseconds, as the interval fires",
+        "correct": false,
+        "why": "The interval calls `set`; `start` ran once to create it."
+      }
+    ]
+  },
+  {
+    "id": "ex-kf25dqj6",
+    "version": 1,
+    "section": "writable-readable-derived",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside a component, `$count += 1` is shorthand for…",
+    "hint": "The new value depends on the old.",
+    "choices": [
+      {
+        "text": "`count.update((n) => n + 1)`, from the old value",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`count.subscribe((n) => n + 1)`",
+        "correct": false,
+        "why": "`subscribe` listens; it never changes the value."
+      },
+      {
+        "text": "`count = writable(count + 1)`, a new store each time",
+        "correct": false,
+        "why": "That would replace the store and lose every subscriber."
+      }
+    ]
+  },
+  {
+    "id": "ex-tty4x39f",
+    "version": 1,
+    "section": "writable-readable-derived",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You start the timer, follow a link elsewhere in the app, then come back by a link. What does `$startedAt` hold?",
+    "hint": "Where does `startedAt` live?",
+    "choices": [
+      {
+        "text": "`null`, because the page component was destroyed and created again",
+        "correct": false,
+        "why": "The component went; the store lives in the module, which stayed."
+      },
+      {
+        "text": "The time it was started, since the module kept it",
+        "correct": true,
+        "why": "Right. Only a full reload starts it fresh."
+      },
+      {
+        "text": "The time you came back, because the store restarts with its first new subscriber",
+        "correct": false,
+        "why": "That is `readable`'s source restarting; a `writable` keeps its value."
+      }
+    ]
+  },
+  {
+    "id": "ex-234b42r6",
+    "version": 1,
+    "section": "runes-in-modules",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is the file called `planner.svelte.js` and not `planner.js`?",
+    "hint": "Who reads runes?",
+    "choices": [
+      {
+        "text": "Vite only serves files whose names contain `.svelte`",
+        "correct": false,
+        "why": "Vite serves `week.js` happily."
+      },
+      {
+        "text": "The compiler only rewrites runes in `.svelte` and `.svelte.js` files",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It is a naming habit with no effect on how the file runs",
+        "correct": false,
+        "why": "In a plain `.js` file `$state` would not be rewritten into a signal."
+      }
+    ]
+  },
+  {
+    "id": "ex-kp8612tm",
+    "version": 1,
+    "section": "runes-in-modules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does moving `add` and `move` into the class give the planner?",
+    "hint": "Ask: what can change the planner?",
+    "choices": [
+      {
+        "text": "Faster updates, because methods skip the proxy",
+        "correct": false,
+        "why": "They go through the same `$state` fields and proxy."
+      },
+      {
+        "text": "Persistence: a class keeps its state after a reload",
+        "correct": false,
+        "why": "A reload starts from the data file, class or not."
+      },
+      {
+        "text": "One file where every change to the state is written",
+        "correct": true,
+        "why": "Right, and a class a test can create with no page."
+      },
+      {
+        "text": "The ability for components to import the same planner without props",
+        "correct": false,
+        "why": "The component creates its own; a shared instance is the trap of the next section."
+      }
+    ]
+  },
+  {
+    "id": "ex-w46mtww9",
+    "version": 1,
+    "section": "runes-in-modules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`const { total } = planner;` and then a session is added. What does `total` hold?",
+    "hint": "Lesson 2 warned about this.",
+    "choices": [
+      {
+        "text": "The old number",
+        "correct": true,
+        "why": "Right. Destructuring copied it once; read `planner.total` instead."
+      },
+      {
+        "text": "The new number, because `total` is a `$derived` field",
+        "correct": false,
+        "why": "The field is reactive; the local copy is not."
+      },
+      {
+        "text": "`undefined`, because private signals cannot be destructured",
+        "correct": false,
+        "why": "The getter returns the value at that moment."
+      }
+    ]
+  },
+  {
+    "id": "ex-tbw1vhcj",
+    "version": 1,
+    "section": "runes-in-modules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`Planner.svelte` writes `new Planner(untrack(() => data))`. What would change if `data` were later passed a new value?",
+    "hint": "When is the planner made?",
+    "choices": [
+      {
+        "text": "A new `Planner` would be created with the new data",
+        "correct": false,
+        "why": "Nothing re-runs the script, and `untrack` says the read is deliberate."
+      },
+      {
+        "text": "Nothing: the planner was made once, from the data as first given",
+        "correct": true,
+        "why": "Right, which is intended here."
+      },
+      {
+        "text": "The fields would update, because the class reads `data` reactively",
+        "correct": false,
+        "why": "The constructor copied values out of `data` into its own fields."
+      },
+      {
+        "text": "An error, since a prop read through `untrack` may not change",
+        "correct": false,
+        "why": "Props may change; `untrack` only stops this read being tracked."
+      }
+    ]
+  },
+  {
+    "id": "ex-8mwks17h",
+    "version": 1,
+    "section": "runes-in-modules",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`bind:selected={planner.selected}` works because the class field is declared with the rune `$___`.",
+    "hint": "Not `$derived`.",
+    "blanks": [
+      {
+        "accept": [
+          "state"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-p8ddpsfk",
+    "version": 1,
+    "section": "when-a-rune-is-enough",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each value with the tool the lesson recommends.",
+    "hint": "Who owns the value?",
+    "pairs": [
+      {
+        "left": "The planner's sessions",
+        "right": "Runes in a class"
+      },
+      {
+        "left": "A clock that should tick only while watched",
+        "right": "`readable`"
+      },
+      {
+        "left": "An RxJS observable from a library",
+        "right": "The store contract, read with `$`"
+      }
+    ],
+    "right_distractors": [
+      "A global variable on `window`"
+    ]
+  },
+  {
+    "id": "ex-h8p2yvh5",
+    "version": 1,
+    "section": "when-a-rune-is-enough",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You need a store's value inside a `.svelte.js` module. What do you use?",
+    "hint": "`$` does not exist there.",
+    "choices": [
+      {
+        "text": "`$store`, since the file is compiled by Svelte",
+        "correct": false,
+        "why": "`$store` is a component feature only."
+      },
+      {
+        "text": "`fromStore(store)`, then read its `.current`",
+        "correct": true,
+        "why": "Right, as reactive as a `$state` field."
+      },
+      {
+        "text": "`toStore(store)`, which turns it into runes",
+        "correct": false,
+        "why": "`toStore` goes the other way: runes into a store."
+      },
+      {
+        "text": "Nothing: stores cannot be used outside components in Svelte 5",
+        "correct": false,
+        "why": "They can: `subscribe` and `get` always work, and `fromStore` exists for this."
+      }
+    ]
+  },
+  {
+    "id": "ex-1pdwjbcw",
+    "version": 1,
+    "section": "when-a-rune-is-enough",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is `export const planner = new Planner(…)` in a module dangerous on the server?",
+    "hint": "How many modules does the server have per visitor?",
+    "choices": [
+      {
+        "text": "Classes cannot be imported during server rendering",
+        "correct": false,
+        "why": "They can; the trouble is sharing one instance."
+      },
+      {
+        "text": "The instance is created again on each request, losing changes",
+        "correct": false,
+        "why": "It is the opposite: the module runs once and the instance is kept."
+      },
+      {
+        "text": "One instance is shared by every visitor's requests",
+        "correct": true,
+        "why": "Right. The next lesson shows it happening."
+      }
+    ]
+  },
+  {
+    "id": "ex-hddyfyxt",
+    "version": 1,
+    "section": "when-a-rune-is-enough",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "For state an application owns, what does the lesson, and Svelte's documentation, recommend?",
+    "hint": "The planner moved to it.",
+    "choices": [
+      {
+        "text": "A `writable` store per field",
+        "correct": false,
+        "why": "That was the Svelte 4 way."
+      },
+      {
+        "text": "A global object on `window` that every component reads",
+        "correct": false,
+        "why": "Global state is the singleton trap, made worse."
+      },
+      {
+        "text": "A class or object with runes",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A `derived` store computed from the data file at build time",
+        "correct": false,
+        "why": "Derived stores compute from other stores at runtime; this is not owned state."
+      }
+    ]
+  },
+  {
+    "id": "ex-gnedxjfv",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are stores? Choose all that apply.",
+    "hint": "Look for `subscribe`.",
+    "choices": [
+      {
+        "text": "The hand-written `now` in `timer.js`",
+        "correct": true,
+        "why": "Yes: it has `subscribe`."
+      },
+      {
+        "text": "`startedAt = writable(null)`",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "The `Planner` class",
+        "correct": false,
+        "why": "No: runes, no `subscribe`."
+      },
+      {
+        "text": "`prefersReducedMotion` from `svelte/motion`, read as `.current`",
+        "correct": false,
+        "why": "No: it is read through `.current`, the runes way."
+      }
+    ]
+  },
+  {
+    "id": "ex-t2qf6r63",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `--click Start --wait 2400`, the page said `2 s studied`. Which store computed the 2?",
+    "hint": "It reads two others.",
+    "choices": [
+      {
+        "text": "`now`",
+        "correct": false,
+        "why": "`now` holds a timestamp, not a count of seconds."
+      },
+      {
+        "text": "`startedAt`",
+        "correct": false,
+        "why": "`startedAt` holds when Start was pressed."
+      },
+      {
+        "text": "`elapsed`, derived from `now` and `startedAt`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  }
+]

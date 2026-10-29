@@ -1,0 +1,502 @@
+{
+  "ex-ftjkpvrp": {
+    "prompt": "No Svelte 5, o que é `onclick={save}` num botão?",
+    "hint": "Compare com `class` ou `href`.",
+    "choices": [
+      {
+        "text": "Uma diretiva que só funciona em elementos, nunca passada como prop",
+        "why": "É um atributo, então pode ser passado, espalhado ou omitido como qualquer outro."
+      },
+      {
+        "text": "Um atributo cujo valor é uma função",
+        "why": "Isso. O navegador a chama com o evento."
+      },
+      {
+        "text": "Sintaxe do Svelte 4 que o modo runes ainda aceita",
+        "why": "O Svelte 4 escrevia `on:click`; `onclick` é a forma do Svelte 5."
+      },
+      {
+        "text": "Uma chamada a `save` feita uma vez, quando o botão é criado",
+        "why": "`save` é passada, não chamada; roda a cada clique."
+      }
+    ]
+  },
+  "ex-887cbpsg": {
+    "prompt": "Um botão contém um `<span>`. Um clique cai no span. No handler do botão, quem é `event.currentTarget`?",
+    "hint": "Um é onde o evento começou, o outro onde o handler está.",
+    "choices": [
+      {
+        "text": "O span, já que foi ele o clicado",
+        "why": "Esse é o `event.target`."
+      },
+      {
+        "text": "O botão",
+        "why": "Isso: o elemento em que o handler está."
+      },
+      {
+        "text": "A raiz da aplicação, por causa da delegação",
+        "why": "A delegação do Svelte ainda entrega ao handler o elemento em que ele foi posto."
+      },
+      {
+        "text": "`null`, até o evento terminar de subir até a raiz do documento",
+        "why": "Dentro do handler ele está definido; é o botão."
+      }
+    ]
+  },
+  "ex-pmr3z0tg": {
+    "prompt": "Por que um `<button>` só com `onclick` funciona pelo teclado?",
+    "hint": "O que o navegador dispara quando Enter é apertado nele?",
+    "choices": [
+      {
+        "text": "O Svelte acrescenta um handler de keydown a todo elemento com `onclick`",
+        "why": "O Svelte não acrescenta nada; o navegador faz isso só para botões."
+      },
+      {
+        "text": "Todo elemento com handler de clique recebe foco com Tab",
+        "why": "Um `<li>` com `onclick` não recebe; foi disso que o compilador avisou."
+      },
+      {
+        "text": "O navegador dispara `click` num botão com foco ao Enter ou Espaço",
+        "why": "Isso, e é por isso que os controles do planner são botões."
+      }
+    ]
+  },
+  "ex-rm1xsa9g": {
+    "prompt": "Um elemento pai tem um listener posto à mão com `addEventListener` que chama `event.stopPropagation()`. Um botão do Svelte dentro dele para de responder. Por quê?",
+    "hint": "Onde os handlers delegados esperam?",
+    "choices": [
+      {
+        "text": "O clique para antes da raiz, onde o handler delegado espera",
+        "why": "Isso. Pare a propagação em handlers do Svelte, que conhecem a delegação."
+      },
+      {
+        "text": "`stopPropagation` também chama `preventDefault` no evento, o que cancela de vez o clique do botão",
+        "why": "São coisas separadas; o clique de um botão nem tem ação padrão a impedir."
+      },
+      {
+        "text": "Handlers postos à mão sempre rodam depois dos do Svelte e então substituem o que quer que eles tenham feito",
+        "why": "A ordem não é o problema: o handler delegado nem chega a rodar."
+      },
+      {
+        "text": "O botão perdeu o foco",
+        "why": "O foco não tem nada a ver; um clique de mouse falha também."
+      }
+    ]
+  },
+  "ex-vr2pj23a": {
+    "prompt": "Uma lista de 300 sessões tem um checkbox com `onchange` em cada. Com delegação, quantos listeners para esse evento o Svelte acrescenta?",
+    "hint": "Um lugar pega todos."
+  },
+  "ex-exmgrdcr": {
+    "prompt": "Com o `AddSession` como formulário, o que Enter no campo de data faz?",
+    "hint": "O que Enter num campo de formulário faz em qualquer navegador?",
+    "choices": [
+      {
+        "text": "Nada, até um handler de keydown ser acrescentado",
+        "why": "A transcrição acrescentou uma sessão com Enter e nenhum handler de keydown."
+      },
+      {
+        "text": "Move o foco para o campo de minutos",
+        "why": "Isso é o Tab."
+      },
+      {
+        "text": "Envia o formulário, então o `submit` roda",
+        "why": "Isso."
+      },
+      {
+        "text": "Abre o seletor de data do navegador",
+        "why": "Enter num campo de formulário envia; o seletor é outro controle."
+      }
+    ]
+  },
+  "ex-093as31c": {
+    "prompt": "O botão é apertado sem data. Por que o `look` não mostrou nada mudado?",
+    "hint": "O `submit` rodou?",
+    "choices": [
+      {
+        "text": "O `submit` rodou, e o `add` da página recusou a sessão porque a data era uma string vazia",
+        "why": "Nada no `onadd` confere datas; o handler nem rodou."
+      },
+      {
+        "text": "O navegador conferiu o `required` e recusou o envio, então o handler nunca rodou",
+        "why": "Isso. A mensagem dele é desenhada pelo navegador, fora da página."
+      },
+      {
+        "text": "O botão fica desabilitado até uma data ser preenchida",
+        "why": "Essa era a versão da aula 5; o `required` a substituiu."
+      }
+    ]
+  },
+  "ex-b51hdfcb": {
+    "prompt": "Sem `event.preventDefault()`, a sessão do dia 21 apareceu mesmo assim. Por quê?",
+    "hint": "Quem cuidou do envio por GET?",
+    "choices": [
+      {
+        "text": "Navegadores ignoram em silêncio qualquer envio de formulário cujo endereço é a página que já estão mostrando",
+        "why": "Numa página HTML comum ela recarrega e a sessão se perde."
+      },
+      {
+        "text": "O Svelte chama `preventDefault` em todo `onsubmit`",
+        "why": "Não chama; é por isso que o Svelte 4 tinha um modificador para isso."
+      },
+      {
+        "text": "O SvelteKit transformou o envio por GET numa navegação no cliente para a mesma página, então o estado ficou",
+        "why": "Isso, e a aula diz para não contar com isso."
+      },
+      {
+        "text": "O formulário não tem o atributo `action`, então o navegador não tem endereço para onde mandar e nunca o envia",
+        "why": "Sem `action` um formulário envia para o endereço atual."
+      }
+    ]
+  },
+  "ex-pn4e4r9t": {
+    "prompt": "Um `<button>` comum dentro de um `<form>` é um botão de ___.",
+    "hint": "O que apertá-lo faz com o formulário?",
+    "blanks": [
+      {
+        "accept": [
+          "envio",
+          "submit"
+        ]
+      }
+    ]
+  },
+  "ex-rha2bw0y": {
+    "prompt": "Que linha substitui o modificador `self` do Svelte 4?",
+    "hint": "Só quando o próprio elemento foi o alvo.",
+    "choices": [
+      {
+        "text": "`event.stopPropagation()` no topo do handler",
+        "why": "Isso substitui o `stopPropagation`, não o `self`."
+      },
+      {
+        "text": "`if (event.target !== event.currentTarget) return;`",
+        "why": "Isso."
+      },
+      {
+        "text": "`onclickself`",
+        "why": "Só o `capture` sobreviveu como sufixo de atributo."
+      },
+      {
+        "text": "`if (!event.isTrusted) return;`",
+        "why": "Isso substitui o `trusted`."
+      }
+    ]
+  },
+  "ex-yqedkq5h": {
+    "prompt": "Ligue cada modificador do Svelte 4 ao que o substitui no Svelte 5.",
+    "hint": "Um sobreviveu como sintaxe.",
+    "pairs": [
+      {
+        "left": "`preventDefault`",
+        "right": "`event.preventDefault()` no handler"
+      },
+      {
+        "left": "`capture`",
+        "right": "`onclickcapture`"
+      },
+      {
+        "left": "`self`",
+        "right": "`if (event.target !== event.currentTarget) return;`"
+      },
+      {
+        "left": "`trusted`",
+        "right": "`if (!event.isTrusted) return;`"
+      }
+    ],
+    "right_distractors": [
+      "`on:click|preventDefault`, sem mudança"
+    ]
+  },
+  "ex-8bd1v5tt": {
+    "prompt": "Por que o `capture` é o único modificador que sobreviveu como sintaxe?",
+    "hint": "Dava para escrevê-lo dentro do handler?",
+    "choices": [
+      {
+        "text": "É o mais usado de todos",
+        "why": "O `preventDefault` é o mais usado, e virou código."
+      },
+      {
+        "text": "Muda como o listener é registrado, o que um handler não consegue fazer",
+        "why": "Isso."
+      },
+      {
+        "text": "Os navegadores tiraram a captura do `addEventListener`",
+        "why": "Não tiraram; a captura continua fazendo parte do DOM."
+      },
+      {
+        "text": "A delegação não funciona para nenhum evento que sobe",
+        "why": "A delegação depende da subida; funciona justamente para esses."
+      }
+    ]
+  },
+  "ex-gnhsxyzq": {
+    "prompt": "O que `onclick={once(save)}` faz?",
+    "hint": "Leia a função auxiliar.",
+    "choices": [
+      {
+        "text": "Chama `save` uma vez agora, enquanto o componente é criado",
+        "why": "`once(save)` devolve um handler; nada chama `save` até um clique."
+      },
+      {
+        "text": "Remove o botão depois do primeiro clique",
+        "why": "O botão fica; os cliques seguintes só não fazem nada."
+      },
+      {
+        "text": "Roda `save` no primeiro clique e ignora o resto",
+        "why": "Isso, com uma marca numa closure."
+      }
+    ]
+  },
+  "ex-3nbfgbeb": {
+    "prompt": "Por que o modificador `passive` quase não importa mais?",
+    "hint": "O que ele dizia ao navegador, e o que o navegador agora supõe?",
+    "choices": [
+      {
+        "text": "O Svelte torna todo listener passivo",
+        "why": "Não torna; o handler de envio de um formulário precisa poder chamar `preventDefault`."
+      },
+      {
+        "text": "A rolagem não dispara mais eventos",
+        "why": "Dispara; o navegador só não espera mais por esses listeners."
+      },
+      {
+        "text": "Os navegadores já supõem isso para os listeners de toque e de roda em que fazia diferença",
+        "why": "Isso."
+      },
+      {
+        "text": "Listeners `passive` acabaram sendo mais lentos que os comuns, então os navegadores deixaram de respeitar a opção",
+        "why": "O objetivo do `passive` era velocidade: rolar sem esperar."
+      }
+    ]
+  },
+  "ex-s9sxa4p6": {
+    "prompt": "`<li onclick={…}>` dá `a11y_click_events_have_key_events`. O que o compilador está dizendo?",
+    "hint": "Quem consegue usar um controle só com handler de clique?",
+    "choices": [
+      {
+        "text": "Só um mouse vai operá-lo; use um botão",
+        "why": "Isso. Um botão dentro do `<li>` era a correção."
+      },
+      {
+        "text": "Itens de lista não podem ter atributos além de `class` e `id`",
+        "why": "Podem; o aviso é sobre quem consegue operá-lo."
+      },
+      {
+        "text": "O handler deveria se chamar `onpress` em elementos que não são botão",
+        "why": "Não existe evento `onpress` no navegador."
+      },
+      {
+        "text": "Eventos de clique são lentos em itens de lista, então keydown deveria ser usado no lugar, por velocidade",
+        "why": "É sobre acesso, não velocidade."
+      }
+    ]
+  },
+  "ex-ja24vv9d": {
+    "prompt": "Por que o `shortcut` retorna cedo quando `event.target.closest('input, textarea, select')` é encontrado?",
+    "hint": "A quem as setas pertencem enquanto você digita?",
+    "choices": [
+      {
+        "text": "Inputs não recebem eventos de keydown",
+        "why": "Recebem; é justamente por isso que a conferência é necessária."
+      },
+      {
+        "text": "Num campo as setas movem o cursor, e um atalho que as rouba é um bug",
+        "why": "Isso: a semana ficou quando o foco estava em Minutes."
+      },
+      {
+        "text": "Para impedir a semana de andar duas vezes por tecla",
+        "why": "Um keydown a move uma vez de qualquer jeito."
+      },
+      {
+        "text": "`svelte:window` só funciona quando nenhum campo tem foco",
+        "why": "Ele escuta a janela inteira; a proteção é escolha da própria página."
+      }
+    ]
+  },
+  "ex-7af09k99": {
+    "prompt": "Por que as setas são um atalho mais seguro que as letras `n` e `p`?",
+    "hint": "Pense em ditado, e nas WCAG 2.2.",
+    "choices": [
+      {
+        "text": "Letras não podem ser detectadas no `onkeydown`, só no `oninput`, que uma janela nunca recebe",
+        "why": "O `event.key` relata letras também."
+      },
+      {
+        "text": "Leitores de tela bloqueiam toda seta, então um atalho nelas nunca dispara para um aluno que usa um",
+        "why": "Não bloqueiam; a captura da aula moveu a semana com uma."
+      },
+      {
+        "text": "Não são teclas de caractere, então não disparam por acidente enquanto se digita ou dita",
+        "why": "Isso, e atalhos de uma letra têm de poder ser desligados pelas WCAG 2.2."
+      }
+    ]
+  },
+  "ex-4ys9vdey": {
+    "prompt": "O elemento especial que põe atributos como `onkeydown` no objeto global do navegador é `<svelte:___>`.",
+    "hint": "O nome do objeto em que ele escuta.",
+    "blanks": [
+      {
+        "accept": [
+          "window"
+        ]
+      }
+    ]
+  },
+  "ex-ywtn30xa": {
+    "prompt": "Por que o `WeekNav` chama `onchange(next)` em vez de definir a semana ele mesmo?",
+    "hint": "Quem é dono da semana?",
+    "choices": [
+      {
+        "text": "Um componente filho não pode guardar nenhum estado próprio",
+        "why": "Filhos guardam o próprio estado; o `AddSession` guarda os seus campos."
+      },
+      {
+        "text": "A página é dona e decide",
+        "why": "Isso: o callback relata um pedido."
+      },
+      {
+        "text": "Atribuir a uma prop lança um erro no Svelte 5",
+        "why": "Não lança; a aula 5 mostrou que ela só não sobe."
+      },
+      {
+        "text": "Callbacks são mais rápidos que atribuições a uma prop",
+        "why": "Velocidade não é o motivo."
+      }
+    ]
+  },
+  "ex-6g10v1wj": {
+    "prompt": "Por que o `AddSession` chama `onadd({ date, minutes })` em vez de `onadd(event)`?",
+    "hint": "O que o pai deveria precisar saber?",
+    "choices": [
+      {
+        "text": "Eventos não podem ser passados a funções no Svelte 5",
+        "why": "Podem; handlers os recebem."
+      },
+      {
+        "text": "O pai deveria receber o que aconteceu, não onde o input mora dentro do filho",
+        "why": "Isso: o formulário poderia virar um diálogo e o `add` não mudaria."
+      },
+      {
+        "text": "Um objeto de evento é grande demais para passar entre componentes",
+        "why": "O tamanho não é o motivo."
+      }
+    ]
+  },
+  "ex-1stkkgxf": {
+    "prompt": "Como um componente chama um callback que o pai pode não ter passado?",
+    "hint": "O mesmo operador de `{@render empty?.()}`.",
+    "choices": [
+      {
+        "text": "`onchange?.(next)`",
+        "why": "Isso: nada acontece quando ele falta."
+      },
+      {
+        "text": "`$bindable(onchange)`",
+        "why": "O `$bindable` marca uma prop como ligável; não torna uma chamada opcional."
+      },
+      {
+        "text": "`try { onchange(next) } catch {}`, para que a ausência lance e seja engolida",
+        "why": "Isso também engole erros de verdade dentro do callback."
+      },
+      {
+        "text": "`dispatch('change', next)`",
+        "why": "Esse é o jeito obsoleto do Svelte 4."
+      }
+    ]
+  },
+  "ex-9jpza150": {
+    "prompt": "O `Panel` espalha `{...rest}` no seu `<section>`. Um pai escreve `<Panel title=\"x\" onkeydown={f}>`. Onde `f` vai parar?",
+    "hint": "Um handler é um atributo.",
+    "choices": [
+      {
+        "text": "Em lugar nenhum: handlers precisam ser repassados um a um",
+        "why": "Isso era o `on:keydown` do Svelte 4."
+      },
+      {
+        "text": "No `<h2>`, o primeiro elemento",
+        "why": "O espalhamento está no section."
+      },
+      {
+        "text": "No section",
+        "why": "Isso: espalhar atributos espalha handlers também."
+      },
+      {
+        "text": "Na janela, como com `<svelte:window>`",
+        "why": "Só o `<svelte:window>` põe handlers na janela."
+      }
+    ]
+  },
+  "ex-ket5bxt4": {
+    "prompt": "Num efeito você precisa de um listener num elemento. Por que preferir `on(...)` de `svelte/events` a `addEventListener`?",
+    "hint": "Lembre da delegação.",
+    "choices": [
+      {
+        "text": "O `addEventListener` está obsoleto nos navegadores modernos",
+        "why": "Não está obsoleto."
+      },
+      {
+        "text": "O `on` roda o handler antes de a página atualizar, então o efeito vê o layout antigo a cada evento",
+        "why": "O momento não é o que ele muda."
+      },
+      {
+        "text": "Acrescenta o listener como o compilador faz, então convive bem com os handlers delegados",
+        "why": "Isso, e devolve uma função que o remove."
+      }
+    ]
+  },
+  "ex-a4p0b3zh": {
+    "prompt": "Ligue cada componente do planner ao callback que ele chama.",
+    "hint": "Nome `on` mais um verbo.",
+    "pairs": [
+      {
+        "left": "`WeekNav`",
+        "right": "`onchange`"
+      },
+      {
+        "left": "`AddSession`",
+        "right": "`onadd`"
+      },
+      {
+        "left": "`CourseList` antes do binding da aula 5",
+        "right": "`onselect`"
+      }
+    ],
+    "right_distractors": [
+      "`onrender`"
+    ]
+  },
+  "ex-6d799p0b": {
+    "prompt": "Ponha em ordem o que acontece quando o aluno aperta Enter no campo de data.",
+    "hint": "A página decide por último.",
+    "items": [
+      "O navegador confere o `required` dos campos",
+      "O handler `submit` do formulário roda e chama `preventDefault`",
+      "O `AddSession` chama `onadd({ date, minutes })`",
+      "O `add` da página faz o push da sessão"
+    ],
+    "trap": "Um envio que o navegador recusou nunca chega ao handler, então a conferência vem primeiro."
+  },
+  "ex-998jf3sr": {
+    "prompt": "Quais destes podem ser operados pelo teclado sem código extra? Escolha todos os que se aplicam.",
+    "hint": "Que elementos o navegador trata como controles?",
+    "choices": [
+      {
+        "text": "Um `<button>` com `onclick`",
+        "why": "Sim: Enter e Espaço disparam `click`."
+      },
+      {
+        "text": "Um checkbox com `bind:checked`",
+        "why": "Sim: Espaço o alterna."
+      },
+      {
+        "text": "Um `<li>` com `onclick`",
+        "why": "Não: ele não recebe foco; o compilador avisou."
+      },
+      {
+        "text": "O campo de texto de um formulário, enviado com Enter",
+        "why": "Sim: Enter envia o formulário."
+      }
+    ]
+  }
+}

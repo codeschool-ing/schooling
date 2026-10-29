@@ -1,0 +1,479 @@
+{
+  "ex-nz92msge": {
+    "prompt": "Quando a função `load` de uma página roda, em relação à renderização da página?",
+    "hint": "O componente nunca vê um instante sem seus dados.",
+    "choices": [
+      {
+        "text": "Só no navegador, depois da hidratação",
+        "why": "Uma load universal roda no servidor primeiro; uma de servidor só no servidor."
+      },
+      {
+        "text": "Quando o componente decide que quer os dados, chamando um método `getData()` em si mesmo",
+        "why": "Não existe essa chamada; o SvelteKit chama o `load` sozinho."
+      },
+      {
+        "text": "Antes de a página renderizar: o resultado dela é o `data`",
+        "why": "Isso: a página recebe seus dados antes de renderizar."
+      },
+      {
+        "text": "Depois: a página renderiza, e então o `load` preenche o `data`",
+        "why": "Esse era o jeito antigo com `{#await}`, que esta aula substitui."
+      }
+    ]
+  },
+  "ex-gjm52b26": {
+    "prompt": "Antes da mudança, o `curl` da página inicial não achou nenhum `<title>`. Por quê?",
+    "hint": "O título é definido na página da semana.",
+    "choices": [
+      {
+        "text": "A página da semana estava dentro de um `{#await}` que nunca resolve no servidor, então nunca renderizou lá",
+        "why": "Isso: sem dados no servidor ficava o ramo de carregamento, sem título."
+      },
+      {
+        "text": "O `curl` não vê um título de `<svelte:head>`",
+        "why": "Consegue; depois da mudança o mesmo `curl` o achou."
+      },
+      {
+        "text": "O servidor tira o título para economizar bytes",
+        "why": "Nada o tira; ele simplesmente nunca foi renderizado."
+      },
+      {
+        "text": "Um `<title>` só funciona quando o JavaScript roda",
+        "why": "O `<svelte:head>` renderiza no servidor também."
+      }
+    ]
+  },
+  "ex-rgm2aghz": {
+    "prompt": "Por que usar o `fetch` que o `load` recebe em vez do `fetch` global?",
+    "hint": "Duas razões, uma por lugar em que ela roda.",
+    "choices": [
+      {
+        "text": "É o único `fetch` que um componente tem permissão de chamar de dentro do bloco de script",
+        "why": "O global funciona num componente; isto é sobre o `load`."
+      },
+      {
+        "text": "Ele aceita um endereço relativo no servidor, e reaproveita a resposta do HTML no navegador",
+        "why": "Isso: os dois problemas que o `fetch` global teria."
+      },
+      {
+        "text": "Ele é mais rápido porque é escrito em Rust",
+        "why": "Velocidade não é o ponto, e não é Rust."
+      },
+      {
+        "text": "Ele criptografa a requisição",
+        "why": "Ele não faz nada disso."
+      }
+    ]
+  },
+  "ex-v2350bfs": {
+    "prompt": "O que uma função `load` devolve chega ao componente numa prop chamada `___`.",
+    "hint": "O nome que o próprio SvelteKit dá.",
+    "blanks": [
+      {
+        "accept": [
+          "data"
+        ]
+      }
+    ]
+  },
+  "ex-g4bc1syw": {
+    "prompt": "Qual nome de arquivo faz uma função `load` rodar só no servidor?",
+    "hint": "Renomear foi a correção inteira.",
+    "choices": [
+      {
+        "text": "`+layout.js`, com `export const ssr = true` no topo do arquivo",
+        "why": "Esse é universal: roda nos dois lugares."
+      },
+      {
+        "text": "`+server.layout.js`",
+        "why": "Não é um nome que o SvelteKit lê."
+      },
+      {
+        "text": "`+layout.node.js`",
+        "why": "Não existe essa convenção."
+      },
+      {
+        "text": "`+layout.server.js`",
+        "why": "Isso: um nome terminado em `.server.js` nunca vai para o navegador."
+      }
+    ]
+  },
+  "ex-tkybt470": {
+    "prompt": "Pôr o import que lê o arquivo no `+layout.js` falhou. O que exatamente quebrou?",
+    "hint": "Uma load universal é mandada ao navegador para rodar de novo.",
+    "choices": [
+      {
+        "text": "O SvelteKit se recusou a enviar o módulo de `src/lib/server` ao navegador",
+        "why": "Isso: `server_only_import`, antes mesmo de a leitura do arquivo poder falhar."
+      },
+      {
+        "text": "O servidor não conseguiu ler o arquivo",
+        "why": "O servidor ficou contente; o título provou que renderizou."
+      },
+      {
+        "text": "Os dados no arquivo eram grandes demais para serem serializados e escritos no HTML da página",
+        "why": "O tamanho não era o problema; o import era."
+      },
+      {
+        "text": "O `git mv` corrompeu o arquivo",
+        "why": "O `git mv` só o move."
+      }
+    ]
+  },
+  "ex-f1dqcd9e": {
+    "prompt": "Por que tirar o `planner.json` de `static`?",
+    "hint": "Pense no que a aula 14 faz, e em mais de um usuário.",
+    "choices": [
+      {
+        "text": "Um arquivo JSON não é permitido em `static`",
+        "why": "Qualquer arquivo é permitido ali."
+      },
+      {
+        "text": "O Vite se recusa a compilar com dados em `static`",
+        "why": "Não se recusa; a mudança é uma escolha de projeto."
+      },
+      {
+        "text": "O `static` é servido a qualquer um, e o arquivo está prestes a ser escrito e, para mais de um usuário, ser um banco",
+        "why": "Isso: a leitura tem de ir para o servidor de qualquer modo."
+      },
+      {
+        "text": "Arquivos em `static` não podem ser lidos pelo `node:fs`",
+        "why": "Podem; a razão é exposição e escrita, não leitura."
+      }
+    ]
+  },
+  "ex-6vxyvkw0": {
+    "prompt": "Além de um nome terminado em `.server.js`, o que mais mantém um módulo fora do navegador?",
+    "hint": "Uma pasta específica é tratada de modo especial.",
+    "choices": [
+      {
+        "text": "Importá-lo só de outro `+page.js`",
+        "why": "Um `+page.js` é universal, então isso não o manteria fora do navegador."
+      },
+      {
+        "text": "Pô-lo em `src/lib/server`",
+        "why": "Isso: essa pasta é o outro lugar só de servidor."
+      },
+      {
+        "text": "Pô-lo em `static`",
+        "why": "O `static` é servido a todos; é o oposto."
+      },
+      {
+        "text": "Pôr `// @server` no topo dele",
+        "why": "Não existe esse comentário; a pasta ou o nome decide."
+      }
+    ]
+  },
+  "ex-h50vn3xk": {
+    "prompt": "Numa navegação no cliente, de onde o navegador pega os dados de uma load de servidor?",
+    "hint": "A seção o pediu na mão.",
+    "choices": [
+      {
+        "text": "Do `localStorage`, onde a primeira visita o salvou",
+        "why": "Nada é salvo ali; é buscado na hora quando preciso."
+      },
+      {
+        "text": "Roda de novo a load de servidor no navegador",
+        "why": "Uma load de servidor nunca roda no navegador."
+      },
+      {
+        "text": "De um `fetch` global de `/planner.json`",
+        "why": "Esse arquivo sumiu; os dados vêm como `__data.json`."
+      },
+      {
+        "text": "Do endereço da página com `__data.json` no fim",
+        "why": "Isso: é lá que o SvelteKit o serve."
+      }
+    ]
+  },
+  "ex-g8rh2jv8": {
+    "prompt": "Uma load de servidor devolve `{ ...data, courseName: (id) => ... }`. O que acontece?",
+    "hint": "O resultado tem de ser escrito como dados.",
+    "choices": [
+      {
+        "text": "Um 500 em toda requisição",
+        "why": "Isso: `load_not_serializable`, nomeando `data.courseName`."
+      },
+      {
+        "text": "Funciona, e a função é entregue ao navegador para qualquer componente poder chamá-la",
+        "why": "Código não faz a viagem como dados."
+      },
+      {
+        "text": "A função é descartada em silêncio e o resto chega",
+        "why": "Falha com ruído, em toda requisição."
+      },
+      {
+        "text": "Só a segunda visita falha",
+        "why": "Falha em toda requisição, que é a escolha prestativa."
+      }
+    ]
+  },
+  "ex-45gpq96e": {
+    "prompt": "Além de JSON puro, o que o resultado de uma load de servidor consegue levar ao navegador? Escolha todas as que se aplicam.",
+    "hint": "O devalue carrega mais do que JSON, mas não código.",
+    "choices": [
+      {
+        "text": "Uma `Date`",
+        "why": "Sim: o devalue lida com isso."
+      },
+      {
+        "text": "Um `Map` ou um `Set`",
+        "why": "Sim, os dois."
+      },
+      {
+        "text": "Um objeto referenciado duas vezes, mantido como um",
+        "why": "Sim: chega referenciado duas vezes, não copiado."
+      },
+      {
+        "text": "Uma função",
+        "why": "Não: código não pode ser serializado."
+      },
+      {
+        "text": "Uma instância de uma classe sua",
+        "why": "Não: os métodos dela são código."
+      }
+    ]
+  },
+  "ex-hc5nyk7r": {
+    "prompt": "O que o `await parent()` devolve dentro do `load` de uma página?",
+    "hint": "Não só o layout mais próximo.",
+    "choices": [
+      {
+        "text": "Os `params` da própria página, as partes do endereço que a rota casou",
+        "why": "O `params` é um argumento à parte."
+      },
+      {
+        "text": "Uma promise que nunca resolve no servidor",
+        "why": "Resolve quando os loads dos layouts terminam."
+      },
+      {
+        "text": "Todo layout acima, fundido",
+        "why": "Isso: todos eles, fundidos num só objeto."
+      },
+      {
+        "text": "Só os dados do layout pai imediato",
+        "why": "Ele funde todo layout acima, não só o mais próximo."
+      }
+    ]
+  },
+  "ex-tcarqrp8": {
+    "prompt": "O `load` da página do curso chama `error(404, ...)` para um curso desconhecido. O que o visitante recebe?",
+    "hint": "Compare com a resposta da aula 12.",
+    "choices": [
+      {
+        "text": "Um redirecionamento direto de volta à página inicial do planner em `/`",
+        "why": "O `error` não redireciona."
+      },
+      {
+        "text": "A página de erro, aquela mensagem, e um 404",
+        "why": "Isso, onde a aula 12 respondia 200."
+      },
+      {
+        "text": "A página, renderizando \"No such course\" com um 200",
+        "why": "Isso era a aula 12; o load agora responde 404."
+      },
+      {
+        "text": "Uma página em branco",
+        "why": "A página de erro renderiza, não nada."
+      }
+    ]
+  },
+  "ex-nt7g3xkk": {
+    "prompt": "Por que o `load` da página do curso é um `+page.js` universal e não um `+page.server.js`?",
+    "hint": "De onde vêm os cursos?",
+    "choices": [
+      {
+        "text": "Ela não precisa de nada que o servidor tenha e o navegador não: os cursos chegam do layout",
+        "why": "Isso: então pode rodar no navegador nas navegações seguintes."
+      },
+      {
+        "text": "Uma página de curso não pode ler arquivos, o que só uma load de servidor pode",
+        "why": "Ela não lê arquivo; procura em dados que já tem."
+      },
+      {
+        "text": "Loads universais são sempre mais rápidas",
+        "why": "Não é a razão; é sobre precisar do servidor ou não."
+      },
+      {
+        "text": "O `error()` só funciona num `+page.js`",
+        "why": "Funciona nos dois."
+      }
+    ]
+  },
+  "ex-d7vbw4rj": {
+    "prompt": "Um `load` precisa dos seus próprios dados e dos do pai, e nenhum depende do outro. Ponha o corpo dele na ordem que evita uma cascata.",
+    "hint": "Comece primeiro o trabalho que não espera.",
+    "items": [
+      "Começar a buscar os próprios dados (sem esperar ainda)",
+      "`await parent()` pelos dados dos layouts",
+      "`await` dos próprios dados",
+      "Devolver os dois fundidos"
+    ],
+    "trap": "Esperar o parent primeiro faria a própria busca esperar sem razão."
+  },
+  "ex-e9exqx5w": {
+    "prompt": "Um `load` universal aberto por um endereço digitado: onde ele roda?",
+    "hint": "Na primeira página ele roda nos dois lugares.",
+    "choices": [
+      {
+        "text": "Só no servidor",
+        "why": "Essa é uma load de servidor; uma universal roda no navegador também."
+      },
+      {
+        "text": "Só no navegador",
+        "why": "O servidor a roda primeiro para renderizar o HTML."
+      },
+      {
+        "text": "Em nenhum lugar, até algo na página pedir os dados apertando um botão",
+        "why": "O SvelteKit a roda para a página sem ser pedido."
+      },
+      {
+        "text": "No servidor, e de novo no navegador durante a hidratação",
+        "why": "Isso: os dois, numa primeira visita."
+      }
+    ]
+  },
+  "ex-dxscsyza": {
+    "prompt": "Você clica num link de curso a partir da semana. O `load` universal da página do curso roda onde?",
+    "hint": "Nada novo apareceu no terminal do servidor.",
+    "choices": [
+      {
+        "text": "Nos dois, como numa primeira visita",
+        "why": "Só a primeira visita a roda nos dois."
+      },
+      {
+        "text": "Em lugar nenhum, porque os dados estão em cache",
+        "why": "Ela rodou: o console imprimiu a linha dela."
+      },
+      {
+        "text": "Só no navegador",
+        "why": "Isso: uma navegação no cliente roda a load universal só no navegador."
+      },
+      {
+        "text": "Só no servidor",
+        "why": "O servidor não foi consultado; o navegador a rodou."
+      }
+    ]
+  },
+  "ex-9c90xkrb": {
+    "prompt": "O que é verdade de um `load` universal por rodar em dois lugares? Escolha todas as que se aplicam.",
+    "hint": "Pense servidor e navegador, e efeitos colaterais.",
+    "choices": [
+      {
+        "text": "Não pode usar `window`, `localStorage` ou `node:fs`",
+        "why": "Sim: cada um existe só de um lado."
+      },
+      {
+        "text": "Um efeito colateral nele pode acontecer duas vezes numa primeira visita",
+        "why": "Sim: uma no servidor, uma no navegador."
+      },
+      {
+        "text": "O resultado dele não pode ser uma função ou instância de classe",
+        "why": "Não: esse é o limite da load de servidor; uma universal pode devolvê-los."
+      },
+      {
+        "text": "Contar ou registrar em log pertence a uma load de servidor",
+        "why": "Sim: uma load de servidor roda uma vez por requisição."
+      }
+    ]
+  },
+  "ex-8npp9m3j": {
+    "prompt": "O `load` do layout do planner não lê `params` nem `url`. Com que frequência ele roda enquanto você clica pelo grupo?",
+    "hint": "O SvelteKit acompanha o que cada load lê.",
+    "choices": [
+      {
+        "text": "Uma vez, para a primeira página",
+        "why": "Isso: os dados dele foram mantidos nas navegações."
+      },
+      {
+        "text": "Uma vez por navegação",
+        "why": "Só os loads cujas entradas mudaram rodam de novo."
+      },
+      {
+        "text": "Uma vez por página de curso",
+        "why": "Esse é o load da própria página, não o do layout."
+      },
+      {
+        "text": "Nunca mais, assim que o SvelteKit prepara um cache especial dos dados do layout",
+        "why": "Ele rodou uma vez, para a primeira página."
+      }
+    ]
+  },
+  "ex-qfry4a8m": {
+    "prompt": "Quando um `load` roda de novo e o `data` muda, o que acontece com o componente?",
+    "hint": "Pense em `new Planner(untrack(() => data))`.",
+    "choices": [
+      {
+        "text": "Nada: uma nova execução não toca o componente",
+        "why": "Ela atualiza, sim, a prop `data`."
+      },
+      {
+        "text": "Ele não é recriado; recebe o novo `data` como uma prop que mudou",
+        "why": "Isso: por isso um componente que leu o `data` uma vez mantém o que leu."
+      },
+      {
+        "text": "É destruído e criado de novo com os novos dados",
+        "why": "Não: o SvelteKit o mantém e atualiza a prop."
+      },
+      {
+        "text": "O `$state` dele é redefinido para os novos dados",
+        "why": "Nada o redefine; a prop muda, o estado não segue."
+      }
+    ]
+  },
+  "ex-9e3xkk90": {
+    "prompt": "Para rodar de novo toda função load da página atual na mão, chame `___()` do `$app/navigation`.",
+    "hint": "O nome antigo era `invalidateAll`.",
+    "blanks": [
+      {
+        "accept": [
+          "refreshAll"
+        ]
+      }
+    ]
+  },
+  "ex-gfwpas4c": {
+    "prompt": "Você precisa ler uma chave de API privada e consultar um banco para os dados do planner. Qual load, e por quê?",
+    "hint": "O que nunca pode chegar ao navegador?",
+    "choices": [
+      {
+        "text": "Uma load universal, para poder rodar no navegador também",
+        "why": "Isso enviaria o segredo ao navegador, o que o SvelteKit recusa."
+      },
+      {
+        "text": "Qualquer uma; não faz diferença para segredos",
+        "why": "Faz toda a diferença: uma load universal é pública."
+      },
+      {
+        "text": "Nenhuma; busque a chave no componente",
+        "why": "Um componente roda no navegador também; mesma exposição."
+      },
+      {
+        "text": "Uma load de servidor, para a chave nunca chegar ao navegador",
+        "why": "Isso: segredos e um banco pertencem só ao servidor."
+      }
+    ]
+  },
+  "ex-pj35awrq": {
+    "prompt": "Uma load de servidor devolve o arquivo de dados inteiro, incluindo um campo que nenhum componente mostra. Esse campo está seguro?",
+    "hint": "Tudo o que uma load de servidor devolve, o visitante pode ler.",
+    "choices": [
+      {
+        "text": "Sim, desde que seja uma load de servidor",
+        "why": "O retorno de uma load de servidor é justamente o que é público."
+      },
+      {
+        "text": "Só se o `__data.json` estiver desligado",
+        "why": "Ele também vai embutido no HTML; não dá para escondê-lo."
+      },
+      {
+        "text": "Não: o visitante o lê no HTML ou em `__data.json`, exibido ou não",
+        "why": "Isso: devolva só o que as páginas precisam."
+      },
+      {
+        "text": "Sim: um campo que nenhum componente renderiza nunca é enviado",
+        "why": "Tudo o que é devolvido é enviado, exibido ou não."
+      }
+    ]
+  }
+}

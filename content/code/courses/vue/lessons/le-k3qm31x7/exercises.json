@@ -1,0 +1,697 @@
+[
+  {
+    "id": "ex-64n0q530",
+    "version": 1,
+    "section": "one-card-four-ways",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The card was chosen because it has the three parts every framework has to answer for. Which three?",
+    "hint": "What changes, what follows it, and what draws both.",
+    "choices": [
+      {
+        "text": "A router, a store and a test",
+        "correct": false,
+        "why": "Those are parts of an application, and the card has none of them: it is one component and an entry file."
+      },
+      {
+        "text": "Props in, events out, and a slot for the content",
+        "correct": false,
+        "why": "That is how components talk to each other, which the card never does: it is mounted on its own."
+      },
+      {
+        "text": "State, derived values and a template",
+        "correct": true,
+        "why": "Right. The sessions change, the two totals follow them, and the template draws both and sends the tick back."
+      },
+      {
+        "text": "A component, a build and a dev server",
+        "correct": false,
+        "why": "Each version does have those, but they are the project around the card, not the parts of it the comparison reads."
+      }
+    ]
+  },
+  {
+    "id": "ex-d5j98a21",
+    "version": 1,
+    "section": "one-card-four-ways",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The Vue card starts with the 19 October session done. After the 23 October one was ticked, how many minutes did it say were done?",
+    "hint": "30 minutes, plus 40.",
+    "value": 70,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-hgtnaz92",
+    "version": 1,
+    "section": "one-card-four-ways",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The Vue console printed `Vue: setup runs` once, before the tick and not after it. What did the tick do instead?",
+    "hint": "Lessons 2 and 3: a reactive list, and what reads it.",
+    "choices": [
+      {
+        "text": "It ran the setup again quietly, without its log",
+        "correct": false,
+        "why": "Nothing reran the setup: the log is its first line, so a second run would have printed it again."
+      },
+      {
+        "text": "It had Vite reload the module, which kept the old totals",
+        "correct": false,
+        "why": "Vite reloads a module when a file is saved, not when a box is ticked, and the totals did change, to 70 of 70."
+      },
+      {
+        "text": "It replaced the whole list with a copy",
+        "correct": false,
+        "why": "That is React's way and Angular's. `v-model` changed `s.done` inside the reactive list, with no copy."
+      },
+      {
+        "text": "It changed `s.done`, the two `computed`s were marked stale, and only the parts of the template that use them were redrawn",
+        "correct": true,
+        "why": "Right. That is the whole model in one line of console: the setup builds the connections once, and a change reruns what read it."
+      }
+    ]
+  },
+  {
+    "id": "ex-74y66jr4",
+    "version": 1,
+    "section": "react",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before the tick, `React: WeekCard runs` appeared twice. Why twice?",
+    "hint": "Look at what `main.tsx` wraps the card in.",
+    "choices": [
+      {
+        "text": "`<StrictMode>` calls it a second time, in development, on purpose",
+        "correct": true,
+        "why": "Right. It brings out code that is not safe to run more than once; a production build calls it once."
+      },
+      {
+        "text": "The card has two sessions, and the function is called once per session",
+        "correct": false,
+        "why": "The function is the whole card; the sessions are drawn by `.map` inside one call."
+      },
+      {
+        "text": "Vite's dev server loads the module once to connect and once to draw",
+        "correct": false,
+        "why": "`[vite] connecting...` came before both lines, and Vue's and Svelte's cards, on the same server, ran once."
+      },
+      {
+        "text": "Once to draw the list and once more to work out the two totals",
+        "correct": false,
+        "why": "The totals are plain `const`s inside the same call; working them out is not a separate run."
+      }
+    ]
+  },
+  {
+    "id": "ex-wvvmt4qb",
+    "version": 1,
+    "section": "react",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does the React card's `toggle` mark a session done?",
+    "hint": "Lesson 3's `toggleDone`.",
+    "choices": [
+      {
+        "text": "It sets `s.done` on the list `useState` returned, and React sees the field change",
+        "correct": false,
+        "why": "React does not watch inside the value: changing a field of the old list would draw nothing new."
+      },
+      {
+        "text": "The input writes `s.done` itself, through `checked`",
+        "correct": false,
+        "why": "`checked` only draws the state; the change is asked for by `onChange`, which calls `toggle`."
+      },
+      {
+        "text": "It builds a new list with `map` and hands it to `setSessions`",
+        "correct": true,
+        "why": "Right. React draws again because it was given a new value."
+      },
+      {
+        "text": "It calls `useMemo` so that the two totals are worked out again",
+        "correct": false,
+        "why": "The card never uses `useMemo`; the totals are recomputed because the whole function runs again."
+      }
+    ]
+  },
+  {
+    "id": "ex-tta3yrc3",
+    "version": 1,
+    "section": "react",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of the React card? Choose all that apply.",
+    "hint": "Compare each with the four points the lesson lists against the Vue card.",
+    "choices": [
+      {
+        "text": "The totals are plain `const`s, worked out again every time the function runs",
+        "correct": true,
+        "why": "Right. Nothing caches them unless you ask with `useMemo`."
+      },
+      {
+        "text": "The markup is a template that the build reads beside the function",
+        "correct": false,
+        "why": "There are no templates in React. The markup is JSX, inside the function, turned into function calls."
+      },
+      {
+        "text": "The checkbox is controlled, `checked` drawing the state and `onChange` asking for the change",
+        "correct": true,
+        "why": "Right. With no `v-model`, both directions are written out."
+      },
+      {
+        "text": "The totals are cached between runs, as Vue's `computed`s are",
+        "correct": false,
+        "why": "That would need `useMemo`, which the card does without: for a sum of two numbers nobody should ask for it."
+      },
+      {
+        "text": "Each `<li>` drawn by `sessions.map` carries a `key`",
+        "correct": true,
+        "why": "Right. The same `key` as `v-for`'s, for the same reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-78nbxe5y",
+    "version": 1,
+    "section": "react",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "React keeps a derived value from being worked out again on every run only when asked, with `___`. For a sum of two numbers, the lesson says nobody should ask.",
+    "hint": "A hook whose name says it remembers.",
+    "blanks": [
+      {
+        "accept": [
+          "useMemo"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yjg961j7",
+    "version": 1,
+    "section": "angular",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the Angular card, how does the template read the `sessions` signal?",
+    "hint": "Look at the `@for` line.",
+    "choices": [
+      {
+        "text": "With `.value`, as a `ref` is read",
+        "correct": false,
+        "why": "That is Vue's spelling. A signal is a close kin of a `ref`, but it is read differently."
+      },
+      {
+        "text": "Through `.get()`, the counterpart of `.set`",
+        "correct": false,
+        "why": "The card changes the signal with `.update` and `.set` exists, but there is no `.get` in it."
+      },
+      {
+        "text": "By calling it, `sessions()`",
+        "correct": true,
+        "why": "Right. `this.sessions()` in the class and `sessions()` in the template, which is how Angular knows it was read."
+      },
+      {
+        "text": "By its bare name, which the Angular compiler rewrites into a read",
+        "correct": false,
+        "why": "That is closer to Svelte, whose compiler reads the runes. In Angular the read is a call."
+      }
+    ]
+  },
+  {
+    "id": "ex-m2b9szvm",
+    "version": 1,
+    "section": "angular",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`npm audit` offered `npm audit fix --force`. Why did the lesson set an override instead?",
+    "hint": "Read the line that says what it will install.",
+    "choices": [
+      {
+        "text": "Half the advisories are about Windows, and the lab runs on Linux",
+        "correct": false,
+        "why": "Some are, but others are about a cross-origin script and files served from outside the allowed folders, on any system."
+      },
+      {
+        "text": "It would move `@angular/build` back to 22.1.9, older than the rest of Angular",
+        "correct": true,
+        "why": "Right. The planner's Vite 8.3.5 already had the fixes, so pinning it everywhere fixed the audit without going backwards."
+      },
+      {
+        "text": "The advisories are about the dev server, which only answers on localhost, so there was nothing to fix",
+        "correct": false,
+        "why": "The lesson says the opposite: it is the server you leave running while you browse, so localhost is no comfort."
+      },
+      {
+        "text": "It would uninstall Vite, which `ng serve` needs",
+        "correct": false,
+        "why": "The fix would have changed the version of `@angular/build`, not removed Vite."
+      }
+    ]
+  },
+  {
+    "id": "ex-wa0w0fbd",
+    "version": 1,
+    "section": "angular",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To make every package in the Angular project get Vite 8.3.5, including the one inside `@angular/build`, the lesson ran `npm pkg set ___.vite=8.3.5`.",
+    "hint": "The field of `package.json` that `npm ls` then marks with a word ending in -den.",
+    "blanks": [
+      {
+        "accept": [
+          "overrides"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-y4vd6t9d",
+    "version": 1,
+    "section": "angular",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The Angular project was made by the Angular CLI, not `create-vite`, and yet its page printed `[vite] connecting...`. Why?",
+    "hint": "What is `ng serve` underneath?",
+    "choices": [
+      {
+        "text": "Vitest, which its `package.json` lists, opens a connection to the page",
+        "correct": false,
+        "why": "Vitest runs tests; it was in the project, but it is not what served the page on port 4200."
+      },
+      {
+        "text": "The override swapped Angular's own server for the planner's Vite",
+        "correct": false,
+        "why": "The override changed which version of Vite was installed; Vite was already the server before it."
+      },
+      {
+        "text": "`ng serve` is Vite's dev server, under Angular's own build",
+        "correct": true,
+        "why": "Right. Which is also why the audit found a Vite inside `@angular/build`."
+      },
+      {
+        "text": "The browser kept a script from the React card, served from the same port",
+        "correct": false,
+        "why": "React's card was on port 5173 and Angular's on 4200: two origins, nothing shared."
+      }
+    ]
+  },
+  {
+    "id": "ex-25tm7jn5",
+    "version": 1,
+    "section": "svelte",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is Svelte, as the lesson describes it?",
+    "hint": "Most of its work is done before the page is sent.",
+    "choices": [
+      {
+        "text": "A platform with its own CLI, router, forms and tests",
+        "correct": false,
+        "why": "That is Angular. Svelte's project was made by `create-vite`, like Vue's and React's."
+      },
+      {
+        "text": "A library that calls the component again and compares what it returns",
+        "correct": false,
+        "why": "That is React's model. Svelte's script ran once."
+      },
+      {
+        "text": "A compiler",
+        "correct": true,
+        "why": "Right. A `.svelte` file is turned at build time into plain JavaScript that updates the page directly."
+      },
+      {
+        "text": "A set of runes added on top of Vue's single-file components",
+        "correct": false,
+        "why": "Its files look like Vue's, a script and markup, but Svelte is a framework of its own and the runes are read by its compiler."
+      }
+    ]
+  },
+  {
+    "id": "ex-s9064rwm",
+    "version": 1,
+    "section": "svelte",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the Svelte card, how does ticking the box reach the list?",
+    "hint": "The card has no `toggle` function at all.",
+    "choices": [
+      {
+        "text": "An `onchange` handler hands a new list to a setter",
+        "correct": false,
+        "why": "That is React's shape. `$state` has no setter: changing it is an ordinary assignment."
+      },
+      {
+        "text": "`bind:checked` writes `s.done` straight into the `$state` list",
+        "correct": true,
+        "why": "Right. As Vue's reactive object did, a field inside the state is changed and seen."
+      },
+      {
+        "text": "`$derived` notices the click and writes the field itself",
+        "correct": false,
+        "why": "`$derived` is `computed`: it follows the state and never writes it."
+      },
+      {
+        "text": "The `{#each}` block makes a copy of the list with the one session changed",
+        "correct": false,
+        "why": "`{#each}` draws the list; nothing in the card copies it."
+      }
+    ]
+  },
+  {
+    "id": "ex-b556hq6p",
+    "version": 1,
+    "section": "svelte",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of the Svelte card? Choose all that apply.",
+    "hint": "Three differences in kind from a Vue single-file component.",
+    "choices": [
+      {
+        "text": "Its state is read with `.value`, as a `ref` is",
+        "correct": false,
+        "why": "No `.value`, no setter, no function call to read: `$state` makes a plain variable reactive."
+      },
+      {
+        "text": "The markup is not inside a `<template>`",
+        "correct": true,
+        "why": "Right. It sits in the file below the `<script>`."
+      },
+      {
+        "text": "The list is a block, `{#each sessions as s (s.id)}`, with the key in brackets",
+        "correct": true,
+        "why": "Right. Svelte's control flow is blocks."
+      },
+      {
+        "text": "The totals are `$derived`, which is Svelte's `computed`",
+        "correct": true,
+        "why": "Right. And the compiler made them signals out of the rune."
+      }
+    ]
+  },
+  {
+    "id": "ex-y5q9x9ae",
+    "version": 1,
+    "section": "reactivity-compared",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of the four frameworks does not track which pieces of state a computation read?",
+    "hint": "The one whose console line appeared again after the tick.",
+    "choices": [
+      {
+        "text": "Svelte",
+        "correct": false,
+        "why": "Svelte tracks too: its compiler makes signals out of the runes."
+      },
+      {
+        "text": "Angular",
+        "correct": false,
+        "why": "Angular tracks with signals; its constructor ran once and the tick reran what read them."
+      },
+      {
+        "text": "Vue",
+        "correct": false,
+        "why": "Vue tracks with the proxies of lesson 2."
+      },
+      {
+        "text": "React",
+        "correct": true,
+        "why": "Right. A change of state runs the whole component again, and React works out what differs in what it returned."
+      }
+    ]
+  },
+  {
+    "id": "ex-123em0gh",
+    "version": 1,
+    "section": "reactivity-compared",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`useMemo` and `useCallback` exist in React, and the other three have nothing that answers to them. Why the difference?",
+    "hint": "What runs again at a tick, in React and in the others?",
+    "choices": [
+      {
+        "text": "In React the whole function runs again on every change, so keeping some work from being redone has to be asked for",
+        "correct": true,
+        "why": "Right. Where dependencies are tracked, only what read the changed state reruns, and there is nothing extra to keep."
+      },
+      {
+        "text": "React has no other way to write a derived value",
+        "correct": false,
+        "why": "Its derived values are plain `const`s in the function, and the card's totals worked with no hook at all."
+      },
+      {
+        "text": "They stop `<StrictMode>` from calling the component twice",
+        "correct": false,
+        "why": "StrictMode's second call is on purpose and in development only; the card was called twice with no hook to stop it."
+      },
+      {
+        "text": "JSX is compiled to function calls, and those hooks make the calls cheaper",
+        "correct": false,
+        "why": "JSX does become function calls, but the hooks are about the component running again, not about how JSX is compiled."
+      }
+    ]
+  },
+  {
+    "id": "ex-8m0jpcxh",
+    "version": 1,
+    "section": "reactivity-compared",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Built for production, how many kilobytes did the React card's JavaScript come to, gzipped? Round to the nearest kilobyte.",
+    "hint": "The largest of the four.",
+    "value": 69,
+    "tolerance": 1
+  },
+  {
+    "id": "ex-v5d7xcyn",
+    "version": 1,
+    "section": "reactivity-compared",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In which of the cards does changing a field inside the state, `s.done = true`, show on the page? Choose all that apply.",
+    "hint": "Where they split in two.",
+    "choices": [
+      {
+        "text": "Vue's, with a `ref`",
+        "correct": true,
+        "why": "Right. The proxy sees the field change, which is what `v-model` relied on."
+      },
+      {
+        "text": "React's, with `useState`",
+        "correct": false,
+        "why": "React wants a new value: the list is copied with one session changed and handed to `setSessions`."
+      },
+      {
+        "text": "Angular's, with a `signal`",
+        "correct": false,
+        "why": "A signal notices a new value and not a change inside the old one, which is why `toggle` builds a new list in `update`."
+      },
+      {
+        "text": "Svelte's, with `$state`",
+        "correct": true,
+        "why": "Right. `bind:checked` writes `s.done` straight into the list."
+      }
+    ]
+  },
+  {
+    "id": "ex-bg3dphfd",
+    "version": 1,
+    "section": "what-transfers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which part of the planner does the lesson call the most portable, and why?",
+    "hint": "It would run unchanged in any of them.",
+    "choices": [
+      {
+        "text": "`CourseCard` and `SessionRow`, since all four frameworks have components with props",
+        "correct": false,
+        "why": "The idea carries over, but the files do not: each framework writes a component in its own syntax."
+      },
+      {
+        "text": "`planner.ts` and its seven tests, because they know nothing about Vue",
+        "correct": true,
+        "why": "Right. Rules in plain functions run in any of the four, and so do their tests."
+      },
+      {
+        "text": "The store, since each of the four has one",
+        "correct": false,
+        "why": "The store library is in the list of what does not carry over."
+      },
+      {
+        "text": "`vite.config.js`, since three of the four use Vite",
+        "correct": false,
+        "why": "The lesson says lesson 17 applies to all four, but the most portable code it names is the rules, not a config file."
+      }
+    ]
+  },
+  {
+    "id": "ex-3d688jjg",
+    "version": 1,
+    "section": "what-transfers",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A student who finished this course starts the `react-ts` one. Which of these, by the lesson's account, do they bring over with almost no change? Choose all that apply.",
+    "hint": "The part each framework is proud of stays behind.",
+    "choices": [
+      {
+        "text": "Deriving the totals instead of storing them and keeping them in step by hand",
+        "correct": true,
+        "why": "Right. Lesson 3's rule is everyone's rule; in React the derived value is a recomputed `const`."
+      },
+      {
+        "text": "The names of the lifecycle hooks",
+        "correct": false,
+        "why": "Those are on the list of what does not carry over, with the template syntax and the store library."
+      },
+      {
+        "text": "Testing pure functions first with Vitest, and faking the network and the clock",
+        "correct": true,
+        "why": "Right. Vitest runs the tests of all four, and lesson 21 holds word for word."
+      },
+      {
+        "text": "What hydration is and why a server and a browser disagree about what day it is",
+        "correct": true,
+        "why": "Right. Next is React's Nuxt, and lesson 19's two todays happen there for the same reason."
+      },
+      {
+        "text": "The exact model of what runs again when the state changes",
+        "correct": false,
+        "why": "That is the one thing the comparison showed differs most: React reruns the whole function."
+      }
+    ]
+  },
+  {
+    "id": "ex-a47k3f18",
+    "version": 1,
+    "section": "what-transfers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many of the four cards ended up served by Vite's development server?",
+    "hint": "Count Angular's too.",
+    "choices": [
+      {
+        "text": "Three: Angular has a server of its own",
+        "correct": false,
+        "why": "`ng serve` printed `[vite] connecting...`: Angular's dev server is Vite under its own build."
+      },
+      {
+        "text": "All four",
+        "correct": true,
+        "why": "Right. Three were made by `create-vite`, and Angular's `ng serve` is Vite underneath, which is why lesson 17 applies to all of them."
+      },
+      {
+        "text": "Two, Vue and Svelte, since React has a dev server of its own",
+        "correct": false,
+        "why": "React's project was made by `create-vite` as well and printed `[vite] connecting...` like the others."
+      },
+      {
+        "text": "Only Vue's, the one framework whose author also wrote Vite",
+        "correct": false,
+        "why": "Vite is not tied to Vue: the React and Svelte templates are in `create-vite`'s own list."
+      }
+    ]
+  },
+  {
+    "id": "ex-x43f2yzg",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the four cards in order of the JavaScript their production build sends, gzipped, smallest first.",
+    "hint": "A compiler at one end, `react-dom` at the other.",
+    "items": [
+      "Svelte, 13 kB",
+      "Vue, 25 kB",
+      "Angular, 32 kB",
+      "React, 69 kB"
+    ]
+  },
+  {
+    "id": "ex-3k0yjfzs",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each framework to the way its card draws the list of sessions.",
+    "hint": "One of the spellings on the right is not any of the four.",
+    "pairs": [
+      {
+        "left": "Vue",
+        "right": "`v-for` with `:key`"
+      },
+      {
+        "left": "React",
+        "right": "`.map()` with `key`"
+      },
+      {
+        "left": "Angular",
+        "right": "`@for` with `track`"
+      },
+      {
+        "left": "Svelte",
+        "right": "`{#each}` with `(s.id)`"
+      }
+    ],
+    "right_distractors": [
+      "`{#for}` with `track`"
+    ]
+  },
+  {
+    "id": "ex-tpm8p0sv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody rewrites the Angular card's `toggle` the Vue way: `this.sessions().find((s) => s.id === id)!.done = true`, with no `set` or `update`. They tick 23 October. What does the total line say?",
+    "hint": "What does a signal notice?",
+    "choices": [
+      {
+        "text": "70 of 70, because `computed` tracks what it read, as Vue's does",
+        "correct": false,
+        "why": "It tracks the signal, and the signal was never given a new value, so nothing told the `computed` to run again."
+      },
+      {
+        "text": "30 of 70",
+        "correct": true,
+        "why": "Right. A signal notices a new value and not a change inside the old one: the list is the same list, so the totals stay as they were."
+      },
+      {
+        "text": "70 of 70, after the constructor runs again and recomputes",
+        "correct": false,
+        "why": "The constructor ran once and never again, in the capture and in this case."
+      },
+      {
+        "text": "Nothing: the template refuses to draw a signal changed in place",
+        "correct": false,
+        "why": "Nothing refuses anything; the page keeps drawing, with the totals it already had."
+      }
+    ]
+  }
+]
