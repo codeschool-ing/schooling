@@ -1,0 +1,762 @@
+[
+  {
+    "id": "ex-z1m8xws1",
+    "version": 1,
+    "section": "the-data",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can the planner compare `\"2026-10-19\" < \"2026-10-24\"` as strings?",
+    "hint": "Look at the order of the parts.",
+    "choices": [
+      {
+        "text": "JavaScript converts both to dates before comparing",
+        "correct": false,
+        "why": "It compares them as text, character by character."
+      },
+      {
+        "text": "Year, month, day, zero-padded: text order is date order",
+        "correct": true,
+        "why": "Right, which is why the format was chosen."
+      },
+      {
+        "text": "Svelte's compiler rewrites string comparisons on dates",
+        "correct": false,
+        "why": "`week.js` is a plain module; the compiler does not touch it."
+      },
+      {
+        "text": "It only works here because both of those dates happen to fall in the same month",
+        "correct": false,
+        "why": "It works across months and years too, for the same reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-fhfv874g",
+    "version": 1,
+    "section": "the-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`week.js` does every calculation in UTC. What goes wrong without that?",
+    "hint": "A date at midnight in one zone is the day before in another.",
+    "choices": [
+      {
+        "text": "Nothing; time zones only matter for times, not dates",
+        "correct": false,
+        "why": "A date parsed at local midnight can print as the previous day."
+      },
+      {
+        "text": "The planner would refuse to load on a computer set to a time zone other than Brazil's",
+        "correct": false,
+        "why": "Nothing refuses; the dates would quietly shift."
+      },
+      {
+        "text": "A date comes out a day early on a computer in the Americas",
+        "correct": true,
+        "why": "Right. The same input gives the same answer everywhere only if the zone is fixed."
+      }
+    ]
+  },
+  {
+    "id": "ex-07fnhst7",
+    "version": 1,
+    "section": "the-data",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Session 6 is on Saturday 24 October 2026. `mondayOf` returns the Monday of its week. Which day of October is that?",
+    "hint": "Count back from Saturday.",
+    "value": 19,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-73bdjmhf",
+    "version": 1,
+    "section": "the-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are `planner.json` and `week.js` plain files with no runes in them?",
+    "hint": "Where do runes belong?",
+    "choices": [
+      {
+        "text": "Nothing in them changes while the page is open",
+        "correct": true,
+        "why": "Right: runes go where values change, and these can be tested on their own."
+      },
+      {
+        "text": "Runes are forbidden in any file under `src/lib`",
+        "correct": false,
+        "why": "`src/lib` holds components with runes, like `WeekTotal.svelte`."
+      },
+      {
+        "text": "JSON and JavaScript files cannot be imported by a component",
+        "correct": false,
+        "why": "The page imports both."
+      },
+      {
+        "text": "They would be faster with runes, but runes are still experimental",
+        "correct": false,
+        "why": "Runes are Svelte 5's normal syntax, and speed is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-eryk7r5k",
+    "version": 1,
+    "section": "state",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does the `Next week` button change the week shown?",
+    "hint": "Read its handler.",
+    "choices": [
+      {
+        "text": "It calls a setter function that `$state` returned",
+        "correct": false,
+        "why": "`$state` returns the value itself; there is no setter."
+      },
+      {
+        "text": "It assigns a new value to `week`",
+        "correct": true,
+        "why": "Right. The compiler turned that assignment into a signal write."
+      },
+      {
+        "text": "It reloads the page with the next week in the address",
+        "correct": false,
+        "why": "Nothing reloads; `look` stayed at `/`."
+      },
+      {
+        "text": "It sends the new week to the development server",
+        "correct": false,
+        "why": "The state lives in the browser; the server is not asked."
+      }
+    ]
+  },
+  {
+    "id": "ex-1x6m0hqx",
+    "version": 1,
+    "section": "state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`let week = $state(mondayOf(data.sessions.at(-1).date))`. How many times does `mondayOf` run while you click the week buttons?",
+    "hint": "When is the initial value computed?",
+    "choices": [
+      {
+        "text": "Once per click, to recompute the starting week",
+        "correct": false,
+        "why": "The declaration is not re-run; clicks only assign to `week`."
+      },
+      {
+        "text": "Twice per click: once before the change and once again after it",
+        "correct": false,
+        "why": "Nothing calls it on a click at all."
+      },
+      {
+        "text": "Once, when the component is created; clicks do not call it",
+        "correct": true,
+        "why": "Right. The initial value is computed once."
+      }
+    ]
+  },
+  {
+    "id": "ex-51yjnyqs",
+    "version": 1,
+    "section": "state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these should NOT be its own `$state`?",
+    "hint": "Could you work it out from the others?",
+    "choices": [
+      {
+        "text": "The week being shown",
+        "correct": false,
+        "why": "Nothing else determines it; the buttons set it."
+      },
+      {
+        "text": "The label `Week of 19 Oct 2026`",
+        "correct": true,
+        "why": "Right. It is computed from `week`, so storing it twice invites the two to disagree."
+      },
+      {
+        "text": "Which course the student selected",
+        "correct": false,
+        "why": "Only a click can tell you that, so it is state."
+      },
+      {
+        "text": "The list of sessions, once sessions can be added",
+        "correct": false,
+        "why": "Additions cannot be worked out from anything else."
+      }
+    ]
+  },
+  {
+    "id": "ex-xd8hr4pw",
+    "version": 1,
+    "section": "state",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "If you deleted a variable and could work its value out from the others, it is ___, not state.",
+    "hint": "The next rune.",
+    "blanks": [
+      {
+        "accept": [
+          "derived"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-43t577sb",
+    "version": 1,
+    "section": "derived",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Previous week` only sets `week`. Why does the total change too?",
+    "hint": "Follow the chain in the figure.",
+    "choices": [
+      {
+        "text": "`total` is derived from `thisWeek`, which is derived from `week`",
+        "correct": true,
+        "why": "Right. Each link recalculates when next read."
+      },
+      {
+        "text": "The handler also recalculates the total, hidden by the compiler",
+        "correct": false,
+        "why": "The compiler adds no recalculation to handlers; the derived values do it themselves."
+      },
+      {
+        "text": "The whole component re-runs when any state changes",
+        "correct": false,
+        "why": "That is React's model; the script ran once."
+      },
+      {
+        "text": "The browser recomputes every expression in braces on each click",
+        "correct": false,
+        "why": "Only the expressions whose signals changed run again."
+      }
+    ]
+  },
+  {
+    "id": "ex-dme79y0q",
+    "version": 1,
+    "section": "derived",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each property of a derived value with what it means.",
+    "hint": "Three properties, three meanings.",
+    "pairs": [
+      {
+        "left": "Lazy",
+        "right": "Recalculated when next read, not when marked out of date"
+      },
+      {
+        "left": "Remembered",
+        "right": "Read ten times, calculated once until something changes"
+      },
+      {
+        "left": "Pure",
+        "right": "Computes a value and does nothing else"
+      }
+    ],
+    "right_distractors": [
+      "Recalculated on a timer, every animation frame"
+    ]
+  },
+  {
+    "id": "ex-0yq5rkdc",
+    "version": 1,
+    "section": "derived",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When do you write `$derived.by(() => …)` rather than `$derived(…)`?",
+    "hint": "Compare `total` and `byCourse`.",
+    "choices": [
+      {
+        "text": "When the value is an object rather than a number",
+        "correct": false,
+        "why": "The type of the result does not matter; the shape of the computation does."
+      },
+      {
+        "text": "When the calculation is slow and should run in the background",
+        "correct": false,
+        "why": "Both forms run in the same place, at the same time."
+      },
+      {
+        "text": "When computing it takes several statements",
+        "correct": true,
+        "why": "Right. `.by` takes a function body; the plain form takes one expression."
+      },
+      {
+        "text": "When it depends on more than one piece of state",
+        "correct": false,
+        "why": "A one-expression derived can read any number of signals."
+      }
+    ]
+  },
+  {
+    "id": "ex-y8wa7fgw",
+    "version": 1,
+    "section": "derived",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`{minutesFor(course)}` in the markup and `{byCourse[course.id]}` show the same number. What differs?",
+    "hint": "How often does each one compute?",
+    "choices": [
+      {
+        "text": "The function version is not reactive, so it stops updating after the first time it runs",
+        "correct": false,
+        "why": "A call in the markup is tracked: it reads state, so it re-runs."
+      },
+      {
+        "text": "The call runs each time its markup updates; the derived value runs once per change and is shared",
+        "correct": true,
+        "why": "Right. Both are correct; the derived value is cheaper and has a name."
+      },
+      {
+        "text": "The derived value is computed on the server only",
+        "correct": false,
+        "why": "It is computed wherever the component runs, browser included."
+      }
+    ]
+  },
+  {
+    "id": "ex-dxgemy2k",
+    "version": 1,
+    "section": "deep-state",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`sessions.push({...})` on a `$state` array. What updates?",
+    "hint": "The proxy reports writes.",
+    "choices": [
+      {
+        "text": "Nothing; you have to assign a new array to `sessions`",
+        "correct": false,
+        "why": "That is needed with `$state.raw`, not with deep state."
+      },
+      {
+        "text": "Everything that read the array, such as the totals and the list",
+        "correct": true,
+        "why": "Right. The proxy saw the push."
+      },
+      {
+        "text": "Only the `{#each}` that walks the array; derived values keep their old results",
+        "correct": false,
+        "why": "The derived values read the array too, so they are out of date as well."
+      },
+      {
+        "text": "The page reloads with the new session",
+        "correct": false,
+        "why": "Nothing reloads."
+      }
+    ]
+  },
+  {
+    "id": "ex-8py6fjse",
+    "version": 1,
+    "section": "deep-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Marking a session done printed no `update` from `$inspect(total)`. Why?",
+    "hint": "What does `total` read from each session?",
+    "choices": [
+      {
+        "text": "`$inspect` only reports pushes, not property changes",
+        "correct": false,
+        "why": "It reports any change to what it tracks; `total` simply did not change."
+      },
+      {
+        "text": "Toggle buttons do not change state",
+        "correct": false,
+        "why": "This one assigned `session.done`, and the button showed `[pressed]`."
+      },
+      {
+        "text": "`total` reads `minutes`, not `done`",
+        "correct": true,
+        "why": "Right. The write reached the button, which read `done`."
+      },
+      {
+        "text": "The proxy ignores booleans to save memory",
+        "correct": false,
+        "why": "Booleans are tracked like any property."
+      }
+    ]
+  },
+  {
+    "id": "ex-emr1x26n",
+    "version": 1,
+    "section": "deep-state",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the page keep the selected course as an id rather than as the course object?",
+    "hint": "What does `$state` do to an object?",
+    "choices": [
+      {
+        "text": "Ids take less memory than objects",
+        "correct": false,
+        "why": "True but beside the point; the trouble is comparing."
+      },
+      {
+        "text": "A proxied object is not `===` the original, and a string compares cleanly",
+        "correct": true,
+        "why": "Right. Comparing ids sidesteps the question."
+      },
+      {
+        "text": "Objects cannot be passed to `aria-pressed`",
+        "correct": false,
+        "why": "`aria-pressed` receives the result of a comparison, a boolean."
+      },
+      {
+        "text": "Courses change while the page is open, and a stored object would go out of date with them",
+        "correct": false,
+        "why": "They do not; the course list is a plain import."
+      }
+    ]
+  },
+  {
+    "id": "ex-p768mvbx",
+    "version": 1,
+    "section": "deep-state",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tool with when you reach for it.",
+    "hint": "Two are runes, one is a method of a rune.",
+    "pairs": [
+      {
+        "left": "`$state(…)`",
+        "right": "Data you change in place"
+      },
+      {
+        "left": "`$state.raw(…)`",
+        "right": "A large list you only ever replace whole"
+      },
+      {
+        "left": "`$state.snapshot(…)`",
+        "right": "A plain copy, to log or send somewhere"
+      }
+    ],
+    "right_distractors": [
+      "A value shared between two browser tabs"
+    ]
+  },
+  {
+    "id": "ex-mrb9c0x6",
+    "version": 1,
+    "section": "deep-state",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You keep a `Date` object in `$state` and call `date.setDate(25)` on it. What happens on the page?",
+    "hint": "Which objects does the proxy wrap?",
+    "choices": [
+      {
+        "text": "The date updates everywhere it is shown",
+        "correct": false,
+        "why": "Only arrays and plain objects are proxied; a `Date` is left alone."
+      },
+      {
+        "text": "An error: classes are not allowed in `$state`",
+        "correct": false,
+        "why": "They are allowed; they are just not made deeply reactive."
+      },
+      {
+        "text": "Nothing visible changes, because the change is not seen",
+        "correct": true,
+        "why": "Right. Assign a new `Date`, or use `SvelteDate` from `svelte/reactivity`."
+      }
+    ]
+  },
+  {
+    "id": "ex-f7jp1sqm",
+    "version": 1,
+    "section": "effect",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is `$effect` for?",
+    "hint": "Think about where its code reaches.",
+    "choices": [
+      {
+        "text": "Computing values from other values",
+        "correct": false,
+        "why": "That is `$derived`."
+      },
+      {
+        "text": "Responding to a click or a keypress",
+        "correct": false,
+        "why": "That is an event handler."
+      },
+      {
+        "text": "Reaching outside the component after the page updates",
+        "correct": true,
+        "why": "Right: a title, a timer, a canvas, a connection."
+      },
+      {
+        "text": "Running code on the server before the HTML is sent",
+        "correct": false,
+        "why": "Effects never run during server rendering."
+      }
+    ]
+  },
+  {
+    "id": "ex-at3a30yk",
+    "version": 1,
+    "section": "effect",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An effect starts a `setInterval` and returns nothing. It re-runs three times. How many intervals are running?",
+    "hint": "Nothing stopped the earlier ones.",
+    "choices": [
+      {
+        "text": "One; Svelte stops the old interval for you",
+        "correct": false,
+        "why": "Svelte calls the function you return, and here there is none."
+      },
+      {
+        "text": "Four",
+        "correct": true,
+        "why": "Right: the first run and three re-runs, none cleared. Return `() => clearInterval(id)`."
+      },
+      {
+        "text": "Three, since the first run does not count",
+        "correct": false,
+        "why": "The first run started one too."
+      },
+      {
+        "text": "None; intervals are not allowed in effects",
+        "correct": false,
+        "why": "They are allowed, and a timer is the usual example."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ezrw6r3",
+    "version": 1,
+    "section": "effect",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A teammate writes `$effect(() => { total = sum(thisWeek); })`. What do you suggest?",
+    "hint": "It computes a value.",
+    "choices": [
+      {
+        "text": "`let total = $derived(sum(thisWeek))`",
+        "correct": true,
+        "why": "Right. A value from other values is derived, computed when read, with no second update."
+      },
+      {
+        "text": "Wrap the assignment in `untrack` so it cannot loop",
+        "correct": false,
+        "why": "That hides one symptom and keeps the extra update and the stale moment."
+      },
+      {
+        "text": "Use `$effect.pre` so it runs before the page updates",
+        "correct": false,
+        "why": "Still an effect computing a value, which is the wrong tool."
+      },
+      {
+        "text": "Move the line into the button's click handler",
+        "correct": false,
+        "why": "Then the total would only follow one button, not every change to the sessions."
+      }
+    ]
+  },
+  {
+    "id": "ex-vmpmz2k9",
+    "version": 1,
+    "section": "effect",
+    "type": "cloze",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An effect that keeps setting a value it reads is stopped with the error `effect_update_depth____`.",
+    "hint": "How deep the updates went.",
+    "blanks": [
+      {
+        "accept": [
+          "_exceeded",
+          "exceeded"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vs1844at",
+    "version": 1,
+    "section": "props",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`let { minutes, label = 'this week' } = $props();` and the parent writes `<WeekTotal minutes={total} />`. What is `label`?",
+    "hint": "The parent passed one prop.",
+    "choices": [
+      {
+        "text": "`undefined`",
+        "correct": false,
+        "why": "The default applies when the parent passes nothing."
+      },
+      {
+        "text": "`'this week'`",
+        "correct": true,
+        "why": "Right: the default."
+      },
+      {
+        "text": "An error, because every prop must be passed",
+        "correct": false,
+        "why": "A prop with a default is optional."
+      },
+      {
+        "text": "The name of the parent component, as a fallback",
+        "correct": false,
+        "why": "Svelte supplies no such fallback; the destructuring default does."
+      }
+    ]
+  },
+  {
+    "id": "ex-ck9dhtbp",
+    "version": 1,
+    "section": "props",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside `WeekTotal`, what happens if it assigns `minutes = 0`?",
+    "hint": "Who owns the value?",
+    "choices": [
+      {
+        "text": "The parent's `total` becomes 0 too",
+        "correct": false,
+        "why": "Props flow down; the parent's state is not touched."
+      },
+      {
+        "text": "The child shows 0 until the parent passes a new value, which overwrites it",
+        "correct": true,
+        "why": "Right. A child reads its props; changing the parent's value is lesson 5."
+      },
+      {
+        "text": "Nothing; props are constants and the line is ignored",
+        "correct": false,
+        "why": "The assignment works locally, which is exactly why it is a trap."
+      }
+    ]
+  },
+  {
+    "id": "ex-6kj9d63t",
+    "version": 1,
+    "section": "props",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way of writing props with what it does.",
+    "hint": "One collects, one passes on, one is shorthand.",
+    "pairs": [
+      {
+        "left": "`let { minutes, ...rest } = $props()`",
+        "right": "Collects every other prop"
+      },
+      {
+        "left": "`<p {...rest}>`",
+        "right": "Passes them on to an element"
+      },
+      {
+        "left": "`<WeekTotal {minutes} />`",
+        "right": "Same as `minutes={minutes}`"
+      }
+    ],
+    "right_distractors": [
+      "Makes the prop writable by the child"
+    ]
+  },
+  {
+    "id": "ex-tnrjcybg",
+    "version": 1,
+    "section": "props",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The parent's `total` changes. Why does `WeekTotal`'s `hours` follow it?",
+    "hint": "A prop is read like anything else.",
+    "choices": [
+      {
+        "text": "The child's script runs again with the new prop",
+        "correct": false,
+        "why": "Scripts run once, children included."
+      },
+      {
+        "text": "The parent recreates the child component from scratch whenever any of its props changes",
+        "correct": false,
+        "why": "The child stays; only what read the prop updates."
+      },
+      {
+        "text": "`hours` is derived from `minutes`, and reading a prop is tracked",
+        "correct": true,
+        "why": "Right. Props are reactive reads like state."
+      }
+    ]
+  },
+  {
+    "id": "ex-ewkkzve7",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lesson's steps in the order the planner page was built.",
+    "hint": "Each step needed the one before it.",
+    "items": [
+      "`week` as state, with two buttons",
+      "`thisWeek`, `total` and `byCourse` derived from it",
+      "`sessions` as deep state, with a push and a toggle",
+      "An effect for the document's title",
+      "`WeekTotal` with `$props`, used twice"
+    ],
+    "trap": "The total could not be derived before there was a week to derive it from."
+  },
+  {
+    "id": "ex-sctwtg86",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these belong in `$derived` rather than `$effect`? Choose all that apply.",
+    "hint": "Does the code compute a value, or reach outside?",
+    "choices": [
+      {
+        "text": "The number of sessions done this week",
+        "correct": true,
+        "why": "Yes: a value from other values."
+      },
+      {
+        "text": "The sessions of the selected course, sorted by date",
+        "correct": true,
+        "why": "Yes: still a value."
+      },
+      {
+        "text": "Saving the sessions to `localStorage` when they change",
+        "correct": false,
+        "why": "No: that reaches outside, so it is an effect."
+      },
+      {
+        "text": "Setting `document.title`",
+        "correct": false,
+        "why": "No: an effect, as the lesson did."
+      }
+    ]
+  }
+]

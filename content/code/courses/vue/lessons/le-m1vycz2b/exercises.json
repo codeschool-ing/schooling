@@ -1,0 +1,735 @@
+[
+  {
+    "id": "ex-cj849gb2",
+    "version": 1,
+    "section": "computed",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `ComputedTotal.vue`, how does the template show the value of `total`?",
+    "hint": "A computed is a ref, and the template treats a top-level ref in one particular way.",
+    "choices": [
+      {
+        "text": "`{{ total.value }}`",
+        "correct": false,
+        "why": "That is how the script reads it. In the template a top-level ref is unwrapped, so `.value` is left out."
+      },
+      {
+        "text": "`{{ total() }}`",
+        "correct": false,
+        "why": "A computed is not a function you call; `computed()` returned a ref, and the function inside it is Vue's to run."
+      },
+      {
+        "text": "`{{ total }}`",
+        "correct": true,
+        "why": "Right. `computed()` returned a ref, and the template unwraps a top-level ref."
+      },
+      {
+        "text": "`{{ total.get() }}`",
+        "correct": false,
+        "why": "`get` is a key you hand to `computed()` when you want a setter too; the ref it returns has no `get()` to call."
+      }
+    ]
+  },
+  {
+    "id": "ex-37mh2s69",
+    "version": 1,
+    "section": "computed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After one click in the `ComputedTotal` demo, `computing total` was printed once and `totalByHand called` three times. Why the difference?",
+    "hint": "Count how many times each one is read in the template.",
+    "choices": [
+      {
+        "text": "The template reads `total` once and calls the function three times",
+        "correct": false,
+        "why": "The template reads `total` three times too: `{{ total }}`, `total / 60` and `total % 60`. The reads are not the difference."
+      },
+      {
+        "text": "Vue printed the computed's line once to keep the console readable",
+        "correct": false,
+        "why": "Vue does not filter what `console.log` prints. The function itself ran once."
+      },
+      {
+        "text": "A function in the template runs at each call, on every render; the computed ran once and served its stored result to the other reads",
+        "correct": true,
+        "why": "Right. The computed is worked out once per change and cached; a plain function has no cache."
+      },
+      {
+        "text": "The computed ran before the click and not after it",
+        "correct": false,
+        "why": "The transcript prints `computing total` on both sides of `-- click button`: the push changed `sessions`, and it ran again."
+      }
+    ]
+  },
+  {
+    "id": "ex-3pd9yjfw",
+    "version": 1,
+    "section": "computed",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the planner, which of these are derived and belong in a `computed`? Choose all that apply.",
+    "hint": "Ask of each one: could it be worked out from what I already have?",
+    "choices": [
+      {
+        "text": "The week's total",
+        "correct": true,
+        "why": "Right. It is a fact about the sessions, not something the student edits."
+      },
+      {
+        "text": "The text typed in a search box",
+        "correct": false,
+        "why": "Nothing produces that text except the student typing it. It is owned, so it is a `ref`."
+      },
+      {
+        "text": "The courses whose title matches the search",
+        "correct": true,
+        "why": "Right. It follows from the courses and the text typed."
+      },
+      {
+        "text": "The Monday of the week on screen",
+        "correct": false,
+        "why": "The buttons choose it and nothing works it out. It is the planner's one new `ref`."
+      },
+      {
+        "text": "The sessions inside the week being shown",
+        "correct": true,
+        "why": "Right. They follow from the sessions and the Monday."
+      }
+    ]
+  },
+  {
+    "id": "ex-n1vk8sm6",
+    "version": 1,
+    "section": "caching",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the `LazyComputed` transcript, how many times did the function of `hours` run, from the page opening to the end?",
+    "hint": "Count the `computing hours` lines.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-6qmnw9qt",
+    "version": 1,
+    "section": "caching",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `LazyComputed`, the first click changed `minutes` twice and `hours` was not computed. Why?",
+    "hint": "Look at the `v-if` on the paragraph that shows it.",
+    "choices": [
+      {
+        "text": "Vue holds the two writes back and computes on the next tick",
+        "correct": false,
+        "why": "Batching is about the redraw. A computed is not worked out on a tick, only when something reads it."
+      },
+      {
+        "text": "Nobody had read it: the `v-if` hid the one place that does",
+        "correct": true,
+        "why": "Right. Lazy means worked out when read, and nothing read it until `Show hours`."
+      },
+      {
+        "text": "`+=` on a ref's `.value` is not seen by Vue's tracking",
+        "correct": false,
+        "why": "It is seen: the paragraph showing `minutes` redrew, and the next `hours` was worked out from 150."
+      },
+      {
+        "text": "A computed waits for its first change before running",
+        "correct": false,
+        "why": "There was a change and it still did not run. What starts it is a read."
+      }
+    ]
+  },
+  {
+    "id": "ex-13nfjf8f",
+    "version": 1,
+    "section": "caching",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A component has `const factor = multiplier.value` at the top of its script, and then `const scaled = computed(() => base.value * factor)`. Later `multiplier.value` changes. What does `scaled` do?",
+    "hint": "What did the function read while it ran?",
+    "choices": [
+      {
+        "text": "Recomputes with the new multiplier, because `multiplier` is a ref",
+        "correct": false,
+        "why": "Being a ref is not enough. The computed depends on what its function reads, and it never read `multiplier`."
+      },
+      {
+        "text": "Vue warns that `factor` is not reactive and recomputes anyway",
+        "correct": false,
+        "why": "Vue has no way to tell that a plain number was once a ref's value, so there is no warning to give."
+      },
+      {
+        "text": "Goes on using the old value: `factor` is a copy read outside the function",
+        "correct": true,
+        "why": "Right. Its dependencies are what the last run read, `base` alone, so `multiplier` changing marks nothing stale."
+      },
+      {
+        "text": "Is marked stale, as any ref change in the component marks its computed values",
+        "correct": false,
+        "why": "Staleness is per dependency. A ref the function did not read leaves it alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-cadp326j",
+    "version": 1,
+    "section": "caching",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A computed runs its function ___: not when its inputs change, but the next time somebody reads it.",
+    "hint": "One word, an adverb.",
+    "blanks": [
+      {
+        "accept": [
+          "lazily"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yhp2vxkc",
+    "version": 1,
+    "section": "writable",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `WritableHours`, after the first button runs `hours.value = 2`, how many minutes does `minutes` hold?",
+    "hint": "The setter multiplies by 60 and rounds.",
+    "value": 120,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-sdrwf57x",
+    "version": 1,
+    "section": "writable",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `WritableHours`, the second button runs `readOnly.value = 3` on a computed with no setter. What happened, in the development server?",
+    "hint": "Look for the `[warn]` line and the text of the page after it.",
+    "choices": [
+      {
+        "text": "A warning, and the value stayed as it was",
+        "correct": true,
+        "why": "Right. `Write operation failed: computed value is readonly`, and the page still says 120 minutes. A production build drops even the warning."
+      },
+      {
+        "text": "The write went through to `minutes`, and the page showed 180 minutes",
+        "correct": false,
+        "why": "Writing passes through to the source only when a setter says how. This one has a getter alone."
+      },
+      {
+        "text": "An error stopped the component, and the page went blank",
+        "correct": false,
+        "why": "The page text is still there after the warning. Vue refused the write and carried on."
+      },
+      {
+        "text": "`readOnly` turned into an ordinary ref holding 3, until the next change",
+        "correct": false,
+        "why": "A computed does not change into a ref. The write was refused and its value is still worked out from `minutes`."
+      }
+    ]
+  },
+  {
+    "id": "ex-zzyajxs1",
+    "version": 1,
+    "section": "writable",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Tags are stored as an array `tags` and edited in a text field as `\"grammar, verbs\"`. The getter is `() => tags.value.join(', ')`. Which setter passes the lesson's test for a writable computed?",
+    "hint": "After a `set`, the `get` should return what was just written.",
+    "choices": [
+      {
+        "text": "`(text) => { field.value = text }`, with a ref `field` beside it",
+        "correct": false,
+        "why": "The getter joins `tags`, which this setter never touches, so a `get` after it shows the old tags. And had the getter read `field`, it would be a ref with extra steps."
+      },
+      {
+        "text": "`(text) => { tags.value.push(text) }`",
+        "correct": false,
+        "why": "It adds the whole string as one more tag, so writing `\"grammar, verbs\"` reads back with the old tags in front of it."
+      },
+      {
+        "text": "`(text) => { console.log(text) }`, since the getter already reads `tags`",
+        "correct": false,
+        "why": "A setter that stores nothing leaves the truth unchanged; the field would snap back to the old tags."
+      },
+      {
+        "text": "`(text) => { tags.value = text.split(', ') }`",
+        "correct": true,
+        "why": "Right. It turns the view back into the truth, and the getter joins it into the same text again."
+      }
+    ]
+  },
+  {
+    "id": "ex-ghw7gg8f",
+    "version": 1,
+    "section": "writable",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`computed({ get, ___ })` takes two functions, and the second one is what makes it writable.",
+    "hint": "The key of the function that turns the view back into the truth.",
+    "blanks": [
+      {
+        "accept": [
+          "set"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-66wym3m3",
+    "version": 1,
+    "section": "wrong-tool",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `SyncedByWatch` show on its first render, with two sessions of 45 and 30 minutes?",
+    "hint": "When does a watcher run for the first time?",
+    "choices": [
+      {
+        "text": "Planned: 75 minutes",
+        "correct": false,
+        "why": "That would need the watcher to run when it is created. It runs when its source changes, and nothing had changed."
+      },
+      {
+        "text": "Planned: 0 minutes",
+        "correct": true,
+        "why": "Right. `total` still held its starting value, 0, while the page had two sessions."
+      },
+      {
+        "text": "Planned: undefined minutes",
+        "correct": false,
+        "why": "`total` starts as `ref(0)`, so its value is a number from the first line."
+      },
+      {
+        "text": "Planned: 115 minutes",
+        "correct": false,
+        "why": "115 came at the end, after the second button had added guitar twice over."
+      }
+    ]
+  },
+  {
+    "id": "ex-3cn2bv83",
+    "version": 1,
+    "section": "wrong-tool",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `SyncedByWatch`, why did the `push` button not wake the watcher?",
+    "hint": "What does a watcher on a ref compare?",
+    "choices": [
+      {
+        "text": "Vue's proxy does not track `push`",
+        "correct": false,
+        "why": "It does: the computed version notices the `push`, because its `reduce` read every item. The watcher was not looking there."
+      },
+      {
+        "text": "The watcher fired, and its log line was lost behind the render",
+        "correct": false,
+        "why": "No render line follows the push either, and the total stayed wrong by 20 minutes until the second button."
+      },
+      {
+        "text": "Watchers wait for a second change before they fire",
+        "correct": false,
+        "why": "The second button woke it at once. It woke because it replaced `.value`, not because it came second."
+      },
+      {
+        "text": "It fires when `.value` is replaced, and `push` changed the array already there",
+        "correct": true,
+        "why": "Right. That is the second defect; `{ deep: true }` treats the symptom, and a computed removes the copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-gr97s1wq",
+    "version": 1,
+    "section": "wrong-tool",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are jobs for a watcher rather than a computed? Choose all that apply.",
+    "hint": "A watcher is for reaching outside the component's own state.",
+    "choices": [
+      {
+        "text": "Saving the sessions to storage when they change",
+        "correct": true,
+        "why": "Right. Writing to storage is a side effect."
+      },
+      {
+        "text": "Working out the week's total from the sessions",
+        "correct": false,
+        "why": "A value that follows from other values is a computed; a watcher here is the lesson's mistake."
+      },
+      {
+        "text": "Fetching a course's details when its id changes",
+        "correct": true,
+        "why": "Right. A request takes time and reaches outside the component."
+      },
+      {
+        "text": "Keeping a `fullName` ref in step with `first` and `last`",
+        "correct": false,
+        "why": "If the watcher's body only assigns to another ref, it was a computed all along."
+      },
+      {
+        "text": "Moving focus to a field when an error appears",
+        "correct": true,
+        "why": "Right. Focus is the page, not the component's state."
+      }
+    ]
+  },
+  {
+    "id": "ex-66666h5r",
+    "version": 1,
+    "section": "pure",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these array methods returns a new array and leaves the one it is called on alone?",
+    "hint": "Its name says it hands you something back.",
+    "choices": [
+      {
+        "text": "`sort()`",
+        "correct": false,
+        "why": "`sort` rearranges the array in place and returns that same array, which is what broke `SortInPlace`."
+      },
+      {
+        "text": "`reverse()`",
+        "correct": false,
+        "why": "`reverse` changes the array in place, like `sort`; its copy is `toReversed()`."
+      },
+      {
+        "text": "`splice()`",
+        "correct": false,
+        "why": "`splice` removes and inserts in the array itself; its copy is `toSpliced()`."
+      },
+      {
+        "text": "`toSorted()`",
+        "correct": true,
+        "why": "Right. It returns a sorted copy, in every browser since 2023 and in Node 20 and later."
+      }
+    ]
+  },
+  {
+    "id": "ex-nfbdpbft",
+    "version": 1,
+    "section": "pure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `SortInPlace`, the line meant to show the data as it was written came out sorted. Why?",
+    "hint": "Which of the two computed values changed something it read?",
+    "choices": [
+      {
+        "text": "`toSorted()` sorts the original as well, and only the return is a copy",
+        "correct": false,
+        "why": "`toSorted()` leaves the original alone; that is the whole reason the lesson recommends it."
+      },
+      {
+        "text": "`byDateWrong` called `sort` on `sessions.value` itself",
+        "correct": true,
+        "why": "Right. `sort` rearranged the original array through the proxy, and every reader of `sessions` saw the new order."
+      },
+      {
+        "text": "The template sorts a list of dates before printing it",
+        "correct": false,
+        "why": "A template prints what the expression returns. The `first` line confirms the data was written with the 23rd first."
+      },
+      {
+        "text": "The two computed values share a cache, so the first line read the sorted copy",
+        "correct": false,
+        "why": "Each computed has its own cache, and the first line reads `sessions`, not either computed."
+      }
+    ]
+  },
+  {
+    "id": "ex-cbk3x0b0",
+    "version": 1,
+    "section": "pure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`AsyncComputed` gives `computed()` an `async` function that fetches `/courses.json` and returns the status. What happened?",
+    "hint": "What does an `async` function return?",
+    "choices": [
+      {
+        "text": "The page showed 200 once the request answered",
+        "correct": false,
+        "why": "A computed does not wait for a promise. Its value is the promise itself."
+      },
+      {
+        "text": "The page printed `\"[object Promise]\"`, and the request was not sent",
+        "correct": false,
+        "why": "The function did run, so the `fetch` went out; its answer went nowhere."
+      },
+      {
+        "text": "The page printed `\"[object Promise]\"`, and the request ran anyway",
+        "correct": true,
+        "why": "Right. The value is the promise, and the template printed it the one way it prints an object."
+      },
+      {
+        "text": "Vue warned that a computed cannot be `async` and showed nothing",
+        "correct": false,
+        "why": "The transcript has no warning at all. Nothing told anybody, which is the danger."
+      }
+    ]
+  },
+  {
+    "id": "ex-xckfyvtm",
+    "version": 1,
+    "section": "pure",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these computed bodies breaks the rule that a computed only reads and returns?",
+    "hint": "Look for a method that changes the array it is called on.",
+    "choices": [
+      {
+        "text": "`() => [...items.value].reverse()`",
+        "correct": false,
+        "why": "`reverse` changes an array in place, but this one is the fresh copy the spread just made."
+      },
+      {
+        "text": "`() => items.value.filter((i) => i.done)`",
+        "correct": false,
+        "why": "`filter` returns a new array and leaves `items` as it was."
+      },
+      {
+        "text": "`() => items.value.reverse()`",
+        "correct": true,
+        "why": "Right. It turns `items` itself around, and every other reader sees it reversed."
+      },
+      {
+        "text": "`() => items.value.length`",
+        "correct": false,
+        "why": "Reading a length changes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-t3cf9cq1",
+    "version": 1,
+    "section": "week-total",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the one new piece of state `App.vue` gains in this section?",
+    "hint": "Everything else on the screen is worked out from it and from the sessions.",
+    "choices": [
+      {
+        "text": "`total`",
+        "correct": false,
+        "why": "`total` is a computed, worked out from the sessions and the Monday."
+      },
+      {
+        "text": "`perCourse`",
+        "correct": false,
+        "why": "`perCourse` is a computed: each course with its own totals."
+      },
+      {
+        "text": "`monday`",
+        "correct": true,
+        "why": "Right. `ref(weekStart(new Date()))`, and the two buttons replace it."
+      },
+      {
+        "text": "`weekTotal`",
+        "correct": false,
+        "why": "`weekTotal` is a plain function in `planner.js` and holds no state."
+      }
+    ]
+  },
+  {
+    "id": "ex-1fwgkbes",
+    "version": 1,
+    "section": "week-total",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`sessionsInWeek` writes `s.date >= monday && s.date <= sunday` with no `Date` object in sight. Why does that compare dates correctly?",
+    "hint": "What form are the dates kept in?",
+    "choices": [
+      {
+        "text": "JavaScript turns both strings into dates before comparing",
+        "correct": false,
+        "why": "`>=` on two strings compares them as text. It works because of the form the text is in."
+      },
+      {
+        "text": "`YYYY-MM-DD` sorts as text in the order of the dates",
+        "correct": true,
+        "why": "Right. Year, then month, then day, each padded, so text order is date order."
+      },
+      {
+        "text": "`monday` is a ref, and Vue compares a ref's value as a date",
+        "correct": false,
+        "why": "Inside `planner.js` nothing knows about Vue; `monday` arrives as a plain string."
+      },
+      {
+        "text": "The comparison is approximate, which is close enough for a week of sessions",
+        "correct": false,
+        "why": "It is exact for every date in that form; the session of the 12th is left out of the week of the 19th, as the header shows."
+      }
+    ]
+  },
+  {
+    "id": "ex-k0v3dgs3",
+    "version": 1,
+    "section": "week-total",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the clock on 21 October 2026, the header said `75 of 195 minutes done`. What is the 195?",
+    "hint": "`weekTotal` filters before it adds.",
+    "choices": [
+      {
+        "text": "The minutes of every session in the file, the 12th included",
+        "correct": false,
+        "why": "The session of the 12th is not in the week of 19 October; with it the total would be 245."
+      },
+      {
+        "text": "The goals of the three courses added together",
+        "correct": false,
+        "why": "The goals are 180, 120 and 90, which make 390, and the header does not read them."
+      },
+      {
+        "text": "The minutes planned in that week",
+        "correct": true,
+        "why": "Right. Five sessions from Monday the 19th to Sunday the 25th: 45, 30, 60, 20 and 40."
+      },
+      {
+        "text": "The minutes planned this week and the one before it",
+        "correct": false,
+        "why": "One week back the header says 50 of 50, so the two weeks together would be 245."
+      }
+    ]
+  },
+  {
+    "id": "ex-rn0x9wef",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens after a click on Previous week in the planner.",
+    "hint": "The computed values are worked out by the read, not by the write.",
+    "items": [
+      "`monday` is replaced",
+      "`total` and `perCourse` are marked stale",
+      "The template is queued to redraw",
+      "The redraw reads `total` and `perCourse`",
+      "Each computed runs its function once"
+    ]
+  },
+  {
+    "id": "ex-6emnmh5v",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each demo of this lesson to what its transcript showed.",
+    "hint": "One thing on the right happened in a demo that is not on the left.",
+    "pairs": [
+      {
+        "left": "`ComputedTotal`",
+        "right": "a function in the template ran three times per render"
+      },
+      {
+        "left": "`LazyComputed`",
+        "right": "nothing was worked out until a button showed the value"
+      },
+      {
+        "left": "`SyncedByWatch`",
+        "right": "the first render said 0"
+      },
+      {
+        "left": "`AsyncComputed`",
+        "right": "the page printed a promise"
+      }
+    ],
+    "right_distractors": [
+      "Vue refused a write with a warning"
+    ]
+  },
+  {
+    "id": "ex-shben250",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A search box keeps its results with `watch(query, (q) => { matches.value = courses.value.filter((c) => c.title.includes(q)) })`. The courses arrive from `fetch` a moment after the page opens. What goes wrong?",
+    "hint": "What is the watcher's source, and what else does the result depend on?",
+    "choices": [
+      {
+        "text": "Nothing: the watcher runs once when it is created, so `matches` starts filled",
+        "correct": false,
+        "why": "A watcher runs when its source changes, not when it is created; that was the first render of `SyncedByWatch`."
+      },
+      {
+        "text": "The list stays empty until somebody types, since the watcher is on `query` and not on the courses",
+        "correct": true,
+        "why": "Right. A computed over `query` and `courses` would be right on the first read and follow both."
+      },
+      {
+        "text": "It needs `{ deep: true }` before it notices the typing",
+        "correct": false,
+        "why": "Typing replaces the string in `query.value`, which a plain watcher sees. What it misses is the courses."
+      },
+      {
+        "text": "`filter` changes `courses` in place, and the list shrinks with each search",
+        "correct": false,
+        "why": "`filter` returns a new array; it is `sort`, `reverse` and `splice` that change the original."
+      }
+    ]
+  },
+  {
+    "id": "ex-ydtfj2xn",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these could be the body of a computed without breaking its rule? Choose all that apply.",
+    "hint": "Could you call it ten times in a row, or not at all, and have the page be the same?",
+    "choices": [
+      {
+        "text": "`[...sessions.value].sort(byDate)`",
+        "correct": true,
+        "why": "Right. The copy is sorted, and `sessions` keeps its order."
+      },
+      {
+        "text": "`localStorage.setItem('total', t)`, then return `t`",
+        "correct": false,
+        "why": "Writing to storage is a side effect at a moment nobody chose. It belongs in a watcher."
+      },
+      {
+        "text": "`weekTotal(sessions.value, monday.value)`",
+        "correct": true,
+        "why": "Right. `weekTotal` reads its input and returns a new object."
+      },
+      {
+        "text": "`sessions.value.push(extra)`, then return the length",
+        "correct": false,
+        "why": "`push` changes the array the computed reads, and every reader of `sessions` gets the extra session."
+      },
+      {
+        "text": "`sessions.value.filter((s) => s.done).length`",
+        "correct": true,
+        "why": "Right. Filtering makes a new array and counting it changes nothing."
+      }
+    ]
+  }
+]

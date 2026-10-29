@@ -1,0 +1,2010 @@
+{
+  "ex-p6re7gmg": {
+    "prompt": "Na página do grupo de estudo de \"Uma página de cada vez\", de onde vem o template do contador?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "De um arquivo `.vue` que o Vite compilou no caminho",
+        "why": "Ali não há Vite nem arquivo `.vue`: a pasta tem uma página HTML e uma cópia do Vue."
+      },
+      {
+        "text": "Do servidor Python, que preenche as chaves antes de enviar",
+        "why": "O `http.server` envia os arquivos como estão; não sabe nada de `{{ minutes }}`."
+      },
+      {
+        "text": "Do conteúdo de `#counter`, compilado pelo Vue no navegador",
+        "why": "Isso. O navegador lê a marcação como HTML, e a versão do Vue que traz o compilador a compila ali mesmo."
+      },
+      {
+        "text": "De uma string devolvida pelo `setup()`",
+        "why": "O `setup()` devolve o estado que o template lê, `{ minutes }`, e nenhuma marcação."
+      }
+    ]
+  },
+  "ex-fy8gyrzh": {
+    "prompt": "Todo `look` do planner imprime `[vite] connecting...` e `[vite] connected.` antes do texto. O que são essas duas linhas?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Erros do servidor de desenvolvimento que a página escondeu",
+        "why": "São mensagens comuns do console, não erros; um erro viria marcado com `[error]`."
+      },
+      {
+        "text": "O script do Vite na página, ligando de volta para poder enviar suas edições",
+        "why": "Isso. É por esse canal que um arquivo salvo chega à página aberta sem recarregar."
+      },
+      {
+        "text": "O Playwright iniciando o Chromium",
+        "why": "O Playwright não escreve no console da página; essas linhas vêm de um script dentro dela."
+      },
+      {
+        "text": "O Vue anunciando que o `createApp` montou",
+        "why": "O Vue não diz nada ao montar; as linhas levam o prefixo `[vite]` por um motivo."
+      }
+    ]
+  },
+  "ex-1c4vab89": {
+    "prompt": "Os elementos do rodapé levam `data-v-6704560a` em toda execução, e os do `App.vue` levam outro. Por que os caracteres são estáveis?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Vêm do caminho do arquivo",
+        "why": "Isso: o mesmo caminho dá os mesmos caracteres em toda execução, e outro arquivo dá outros."
+      },
+      {
+        "text": "O Vue os sorteia uma vez e guarda no lockfile",
+        "why": "O lockfile registra versões de pacotes, nada sobre componentes."
+      },
+      {
+        "text": "São uma contagem dos componentes montados até ali",
+        "why": "Uma contagem mudaria com a ordem de montagem; estes nunca mudam para um arquivo."
+      },
+      {
+        "text": "São o hash do conteúdo do bloco de estilo, então só uma edição de CSS os muda",
+        "why": "A aula os liga ao caminho, não às regras; editar uma regra não mexe no atributo."
+      }
+    ]
+  },
+  "ex-3ec0n8n1": {
+    "prompt": "Que porta o servidor de desenvolvimento do Vite do planner usa quando nada mais a ocupa?",
+    "hint": "Aula 1.",
+    "unit": "porta"
+  },
+  "ex-6j3c1yd4": {
+    "prompt": "O `vite.config.js` define um apelido. O que significa `import x from '@/planner.js'`, num arquivo três pastas abaixo?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Um pacote chamado `@` no `node_modules`",
+        "why": "Um pacote com escopo seria `@nome/pacote`; aqui `@` é o nome de uma pasta do projeto."
+      },
+      {
+        "text": "O `planner.js` na mesma pasta do arquivo que importa",
+        "why": "Isso seria `./planner.js`; o apelido existe para a profundidade não importar."
+      },
+      {
+        "text": "`src/planner.js`, qualquer que seja a profundidade de quem importa",
+        "why": "Isso: `@` é um nome curto para `src`."
+      },
+      {
+        "text": "Um arquivo na raiz do projeto, ao lado do `package.json`",
+        "why": "O apelido aponta para `src`, não para a raiz."
+      }
+    ]
+  },
+  "ex-1wgpm5nz": {
+    "prompt": "Um componente chama `reactive(raw)` duas vezes sobre o mesmo objeto `raw`. O que as duas chamadas devolvem?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "O mesmo proxy nas duas vezes, e nunca o próprio objeto `raw`",
+        "why": "Isso. O Vue guarda um proxy por original, e nunca devolve o próprio original."
+      },
+      {
+        "text": "Dois proxies, que divergem depois da primeira mudança",
+        "why": "O Vue guarda um proxy por original, então não há segundo proxy para divergir."
+      },
+      {
+        "text": "Um proxy na primeira vez, e o próprio `raw` na segunda",
+        "why": "O `reactive` nunca devolve o original: `session === raw` deu `false`."
+      },
+      {
+        "text": "Um aviso, porque um objeto só pode virar reativo uma vez",
+        "why": "Não existe esse aviso; o único aviso da demo foi para `reactive(25)`."
+      }
+    ]
+  },
+  "ex-ykrgszn3": {
+    "prompt": "`week` é `reactive({ planned: 195, done: 75, note: 'verbs' })`, e os dados chegam como `loaded = { planned: 220, done: 90 }`. Depois de `Object.assign(week, loaded)`, o que `week` contém?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "220, 90 e o `note` antigo",
+        "why": "Isso. Escreve no mesmo proxy, e não mexe numa propriedade que `loaded` não tem: a surpresa mais discreta."
+      },
+      {
+        "text": "`{ planned: 220, done: 90 }`, uma cópia exata de `loaded`",
+        "why": "O `Object.assign` escreve o que `loaded` tem e não remove nada, então `note` fica."
+      },
+      {
+        "text": "Os valores antigos: atribuir dentro de um proxy não é visto pelo template",
+        "why": "Escrever propriedade por propriedade pelo proxy é justamente o que o template percebe."
+      },
+      {
+        "text": "Um segundo proxy que o template não segura",
+        "why": "Isso seria `week = reactive(loaded)`; o `Object.assign` mantém o primeiro proxy."
+      }
+    ]
+  },
+  "ex-fa67thry": {
+    "prompt": "Tudo o que está na pasta ___ do projeto é servido como está, na raiz do endereço, e por isso o planner consegue buscar `/courses.json`.",
+    "hint": "Aula 2.",
+    "blanks": [
+      {
+        "accept": [
+          "public"
+        ]
+      }
+    ]
+  },
+  "ex-mp7ysk17": {
+    "prompt": "Um clique em `Add three` no `UpdateQueue`. Ponha as linhas que vieram depois na ordem em que foram impressas.",
+    "hint": "Aula 2.",
+    "items": [
+      "count is 3, the page still says 0",
+      "render with count = 3",
+      "after nextTick the page says 3"
+    ],
+    "trap": "As três escritas só enfileiram um redesenho; ele roda quando o código do clique chega ao `await nextTick()`."
+  },
+  "ex-8abdvqz2": {
+    "prompt": "O `perCourse` do planner devolve um array novo de objetos novos a cada execução. Uma mudança o faz rodar de novo, e todos os números saem iguais. O que acontece com o template que o lê?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "Nada, porque o Vue compara os objetos campo a campo e não acha mudança",
+        "why": "Essa comparação profunda é justamente o que o Vue não faz para um objeto novo."
+      },
+      {
+        "text": "Lança um erro, porque um computed precisa devolver sempre o mesmo objeto",
+        "why": "Devolver um objeto novo é permitido; só custa um redesenho."
+      },
+      {
+        "text": "Mostra os números antigos até a próxima mudança",
+        "why": "O template lê o resultado novo; a questão é só se ele redesenha."
+      },
+      {
+        "text": "Redesenha mesmo assim",
+        "why": "Isso. O Vue 3.4 pula o redesenho para um número ou uma string que não mudou, e não olha dentro de um objeto novo para comparar."
+      }
+    ]
+  },
+  "ex-j76xa005": {
+    "prompt": "`label = computed(() => (showHours.value ? `${hours.value} hours` : `${minutes.value} minutes`))`. Enquanto `showHours` é falso, `hours` muda. O que o `label` faz?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "Recalcula, porque `hours` está escrito na sua função",
+        "why": "Estar escrito na função não basta; precisa ter sido lido na última execução."
+      },
+      {
+        "text": "Nada mesmo, porque a última execução dele nunca leu `hours`",
+        "why": "Isso. As dependências são o que a última execução leu: `showHours` e `minutes`."
+      },
+      {
+        "text": "Fica desatualizado até `showHours` mudar, e então mostra as horas erradas",
+        "why": "Quando `showHours` vira verdadeiro a função roda de novo e lê o `hours` atual."
+      },
+      {
+        "text": "O Vue avisa que um computed leu um valor condicionalmente",
+        "why": "Uma condição dentro de um computed é comum; nada avisa."
+      }
+    ]
+  },
+  "ex-rqqw18cg": {
+    "prompt": "No `WritableHours`, o setter guarda `Math.round(value * 60)`. Depois de `hours.value = 0.01`, quantos minutos `minutes` guarda?",
+    "hint": "Aula 3.",
+    "unit": "minutos"
+  },
+  "ex-ncb9c3eg": {
+    "prompt": "Quais destes métodos de array mudam o array em que são chamados, e por isso não têm lugar dentro de um computed? Marque todas que se aplicam.",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "`reverse`",
+        "why": "Isso: inverte no lugar e devolve o mesmo array."
+      },
+      {
+        "text": "`toSorted`",
+        "why": "Devolve uma cópia ordenada e deixa o original intacto, por isso o planner o usa."
+      },
+      {
+        "text": "`splice`",
+        "why": "Isso: remove e insere no lugar."
+      },
+      {
+        "text": "`filter`",
+        "why": "Monta um array novo; o `sessionsInWeek` do planner é um exemplo."
+      },
+      {
+        "text": "`sort`",
+        "why": "Isso: o `byDateWrong` ordenou o próprio `sessions.value` assim."
+      }
+    ]
+  },
+  "ex-mqjr6zws": {
+    "prompt": "Desde o Vue 3.5, `deep` também aceita um número. O que `{ deep: 1 }` observa num ref com a lista de sessões?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "Só a primeira sessão da lista",
+        "why": "O número é uma profundidade, não um índice."
+      },
+      {
+        "text": "O array e seus itens, mas não o interior dos itens",
+        "why": "Isso: um push é visto, uma mudança nos minutos de uma sessão não."
+      },
+      {
+        "text": "Tudo, como `deep: true`, mas no máximo uma vez",
+        "why": "Isso é `once: true`; o número limita a profundidade, não a quantidade de execuções."
+      },
+      {
+        "text": "Nada de novo: qualquer número é lido como `true`",
+        "why": "O Vue lê o número como profundidade, que é a razão de aceitar um."
+      }
+    ]
+  },
+  "ex-ce5an55s": {
+    "prompt": "O que é `watchPostEffect`?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "Um watcher que roda depois que o componente é removido",
+        "why": "A remoção para os watchers; nada desse tipo roda depois."
+      },
+      {
+        "text": "`watch` com `immediate: true` já ligado",
+        "why": "`immediate` trata da primeira execução; \"post\" trata do redesenho."
+      },
+      {
+        "text": "Um watcher para a resposta de uma requisição HTTP POST",
+        "why": "Nada a ver com HTTP: post quer dizer depois do redesenho."
+      },
+      {
+        "text": "`watchEffect` com `flush: 'post'` ligado",
+        "why": "Isso: roda depois do redesenho, quando a página já mostra a mudança."
+      }
+    ]
+  },
+  "ex-etf8wjmj": {
+    "prompt": "Quando o curso muda, o planner precisa salvar as notas do curso que ficou para trás antes de carregar as do novo. Que ferramenta serve, pela tabela da aula?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "`watchEffect`, já que acha o curso sozinho",
+        "why": "Ele acha suas fontes, mas nunca diz o que eram antes."
+      },
+      {
+        "text": "Um computed do curso que salva quando recalcula",
+        "why": "Salvar é efeito colateral, e um computed só deve ler e devolver."
+      },
+      {
+        "text": "`watch`, porque entrega o valor antigo",
+        "why": "Isso. O callback recebe `(now, before)`; o `watchEffect` não dá valor antigo."
+      },
+      {
+        "text": "Um watcher com `flush: 'sync'`, para nada escapar",
+        "why": "O tempo não é o problema; o callback precisa do curso antigo, que o `watch` dá com qualquer flush."
+      }
+    ]
+  },
+  "ex-q22y1wnn": {
+    "prompt": "Por que `'pre'` é o `flush` padrão, rodando o watcher antes do redesenho?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "Porque a página ainda não existe quando o watcher é criado",
+        "why": "A criação não é o ponto; isto trata de cada mudança depois dela."
+      },
+      {
+        "text": "Porque vê cada valor intermediário, o que o `post` não consegue",
+        "why": "Isso é o `sync`; o `pre` rodou uma vez com o valor final."
+      },
+      {
+        "text": "Para o estado que ele define sair numa passada só, e não em duas",
+        "why": "Isso: uma passada em vez de duas, e a maioria dos watchers nem toca na página."
+      },
+      {
+        "text": "Porque um watcher que lê o DOM precisa da página antiga",
+        "why": "Ler o DOM é trabalho do `post`, que vê a página depois da mudança."
+      }
+    ]
+  },
+  "ex-v1qfga6r": {
+    "prompt": "Um clique em `Add two` no `FlushTiming`, que incrementa `count` duas vezes. Ponha as linhas na ordem em que foram impressas.",
+    "hint": "Aula 4.",
+    "items": [
+      "sync: count 1, page says 0",
+      "sync: count 2, page says 0",
+      "pre:  count 2, page says 0",
+      "post: count 2, page says 2"
+    ],
+    "trap": "`'sync'` roda a cada escrita, `'pre'` uma vez antes do redesenho, `'post'` uma vez depois."
+  },
+  "ex-bddmcp4e": {
+    "prompt": "Um `<p>` fica entre um elemento com `v-if` e o elemento com `v-else`. O que acontece?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "O `v-else` passa a se ligar ao `<p>`",
+        "why": "Nada se religa; o par é feito pela posição, e um intervalo o quebra."
+      },
+      {
+        "text": "Os dois ramos são desenhados, e o Vue avisa em tempo de execução",
+        "why": "O problema é achado antes de qualquer coisa rodar."
+      },
+      {
+        "text": "Nada: espaços e elementos entre eles são ignorados",
+        "why": "Espaços são; um elemento não."
+      },
+      {
+        "text": "O compilador recusa o `v-else`",
+        "why": "Isso: `v-else-if` e `v-else` precisam vir logo depois de um elemento com `v-if`."
+      }
+    ]
+  },
+  "ex-bwddnbj2": {
+    "prompt": "O template tem `<span v-for=\"(a, b) in goal\" :key=\"b\">`, e `goal` é o objeto `{ course: 'statistics', minutes: 180 }`. O que é `a` no primeiro span?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "O nome `'course'`",
+        "why": "Num objeto o valor vem primeiro; o nome é o segundo."
+      },
+      {
+        "text": "A posição, 0",
+        "why": "Num objeto a posição é o terceiro nome; num array, o segundo."
+      },
+      {
+        "text": "`'statistics'`",
+        "why": "Isso: `(valor, chave) in objeto`, na ordem que `Object.keys` dá."
+      },
+      {
+        "text": "1, porque o `v-for` conta a partir de um",
+        "why": "Só um intervalo, `n in 3`, começa em um."
+      }
+    ]
+  },
+  "ex-y84xvg9k": {
+    "prompt": "Um `<input v-model=\"minutes\">` comum, sem tipo number, recebe `45`. Quanto dá `minutes + 15`?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "`60`",
+        "why": "Só `type=\"number\"`, ou o modificador `.number`, converte; este campo devolve texto."
+      },
+      {
+        "text": "`\"4515\"`",
+        "why": "Isso: o campo deu a string `\"45\"`, e o `+` junta strings."
+      },
+      {
+        "text": "`NaN`",
+        "why": "Somar a uma string concatena; nada vira número aqui."
+      },
+      {
+        "text": "Um erro, já que o `v-model` recusa dígitos num campo de texto",
+        "why": "Dígitos são texto como qualquer outro; o campo os aceita."
+      }
+    ]
+  },
+  "ex-3ea4dg43": {
+    "prompt": "Ligue cada hook de uma diretiva própria a quando o Vue o chama.",
+    "hint": "Aula 5.",
+    "pairs": [
+      {
+        "left": "`created`",
+        "right": "antes de os atributos e os listeners do elemento serem aplicados"
+      },
+      {
+        "left": "`mounted`",
+        "right": "depois de o elemento ser posto na página"
+      },
+      {
+        "left": "`updated`",
+        "right": "depois de o componente em volta redesenhar"
+      },
+      {
+        "left": "`unmounted`",
+        "right": "depois de o elemento ser removido"
+      }
+    ],
+    "right_distractors": [
+      "quando o setup do componente começa"
+    ]
+  },
+  "ex-khy19kr6": {
+    "prompt": "Um colega põe `v-focus` no campo de busca da página da semana, para o cursor estar ali assim que a página carrega. O que a aula diz disso?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "É o uso clássico de uma diretiva, e ajuda todo mundo",
+        "why": "Focar um campo que o estudante acabou de abrir é; focar um no carregamento da página não."
+      },
+      {
+        "text": "Tira um usuário de leitor de tela do começo da página, sem avisar",
+        "why": "Isso. Mova o foco para algo que apareceu porque o estudante pediu."
+      },
+      {
+        "text": "Falha, porque o `mounted` roda antes de o campo existir",
+        "why": "O `mounted` roda quando o elemento já está na página; por isso o `focus()` funcionou."
+      },
+      {
+        "text": "Precisa ser registrada no `main.js` antes, ou nada acontece",
+        "why": "No `<script setup>` uma variável `vFocus` já é diretiva, sem registrar nada."
+      }
+    ]
+  },
+  "ex-getchzph": {
+    "prompt": "Um pai escreve `class=\"wide\"` num componente cujo template tem dois elementos raiz e nenhum `v-bind=\"$attrs\"`. Para onde vai a classe?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "Nas duas raízes",
+        "why": "O Vue não copia para cada raiz; sem um lugar único, não escolhe nenhum."
+      },
+      {
+        "text": "Na primeira raiz, por ser a mais próxima",
+        "why": "Não há regra de \"primeira\"; com várias raízes não existe alvo padrão."
+      },
+      {
+        "text": "Em lugar nenhum, com um aviso",
+        "why": "Isso, a não ser que o componente diga onde, com `v-bind=\"$attrs\"` num dos seus elementos."
+      },
+      {
+        "text": "Vira uma prop chamada `class` que o filho pode ler",
+        "why": "Um atributo não declarado é um atributo de fallthrough, não uma prop."
+      }
+    ]
+  },
+  "ex-35nzef3n": {
+    "prompt": "O `DoneButton` verifica `done` com `minutes > 0`. Numa build de produção, o que acontece quando ele emite `done` com 0 minutos?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "O pai o recebe; a verificação não roda",
+        "why": "Isso: a build de produção pula o validador, que só servia para avisar."
+      },
+      {
+        "text": "O evento é descartado, e o pai nunca o recebe",
+        "why": "Um validador nunca foi filtro: mesmo no desenvolvimento o evento foi entregue."
+      },
+      {
+        "text": "O mesmo aviso do desenvolvimento, e a entrega",
+        "why": "O aviso é ajuda de desenvolvimento; a produção pula a verificação inteira."
+      },
+      {
+        "text": "Uma exceção no handler de clique do filho",
+        "why": "Uma verificação que falha nunca lança erro, em build nenhuma."
+      }
+    ]
+  },
+  "ex-pqhg47nf": {
+    "prompt": "Um filho chama `emit('weekChanged', monday)`. O pai escreve `@week-changed=\"onWeek\"`. O que acontece?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "O handler do pai roda, recebendo a data",
+        "why": "Isso: emite-se em camelCase, escuta-se em qualquer das formas, e o Vue as casa."
+      },
+      {
+        "text": "Nada, porque os nomes estão escritos de formas diferentes",
+        "why": "O Vue trata `weekChanged` e `week-changed` como o mesmo evento."
+      },
+      {
+        "text": "Um aviso de que eventos em kebab-case estão obsoletos",
+        "why": "Listener em kebab-case é uma das duas grafias aceitas."
+      },
+      {
+        "text": "Um listener nativo na raiz, já que o nome não está em camelCase",
+        "why": "O casamento é pelo nome do evento, e os nomes casam."
+      }
+    ]
+  },
+  "ex-89ny4yj5": {
+    "prompt": "No `PropsBasics`, a barra de Spanish é `<GoalBar label=\"Spanish\" minutes=\"30\" />`, sem `goal`. Que meta ela mostrou?",
+    "hint": "Aula 6.",
+    "unit": "minutos"
+  },
+  "ex-hyh9cx3a": {
+    "prompt": "Props e emits, juntos, são o ___ público de um componente: o que ele precisa receber e o que pode relatar. O resto dele é privado.",
+    "hint": "Aula 6.",
+    "blanks": [
+      {
+        "accept": [
+          "contrato"
+        ]
+      }
+    ]
+  },
+  "ex-frs6mq0d": {
+    "prompt": "Um pai escreve `<template #fotter>75 minutes</template>` dentro do `TitledPanel`, cujo slot é `name=\"footer\"`. O texto não aparece e o console fica calado. Por que calado?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "O Vue esconde avisos de slot a não ser que o filho os peça",
+        "why": "Não há aviso a esconder: um nome errado não é algo que o Vue relata."
+      },
+      {
+        "text": "O conteúdo foi para o slot padrão, que o painel desenhou em outro lugar",
+        "why": "Conteúdo dentro de um `<template>` nomeado nunca passa para o slot padrão."
+      },
+      {
+        "text": "`$slots.footer` era falso, e o Vue só avisa quando é verdadeiro",
+        "why": "`$slots.footer` é falso aqui, mas isso só decide se o painel desenha seu `<footer>`."
+      },
+      {
+        "text": "Nome de slot é uma string comum; um nome errado não preenche nada e não avisa nada",
+        "why": "Isso, a única falha silenciosa dos slots. Compare os nomes primeiro."
+      }
+    ]
+  },
+  "ex-cfrj47rb": {
+    "prompt": "Um pai preenche o `TitledPanel` com `#footer` escrito acima de `#header`. Onde cada parte aparece?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Na ordem em que o pai escreveu, o rodapé primeiro",
+        "why": "A ordem do pai não é o que as posiciona."
+      },
+      {
+        "text": "Só a primeira é usada; a segunda é ignorada",
+        "why": "Os dois slots são preenchidos; um não esconde o outro."
+      },
+      {
+        "text": "O Vue recusa: slots nomeados precisam seguir a ordem do filho",
+        "why": "Não existe essa regra, e nada recusa."
+      },
+      {
+        "text": "Onde o próprio template do filho põe cada um dos slots",
+        "why": "Isso: o cabeçalho em cima e o rodapé embaixo, qualquer que seja a ordem do pai."
+      }
+    ]
+  },
+  "ex-m2773gd2": {
+    "prompt": "O `WeekPager` volta um `Date` para texto com `toLocaleDateString('sv-SE')`. Por que sueco?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Escreve a data como AAAA-MM-DD",
+        "why": "Isso, o formato que o planner já guarda e compara."
+      },
+      {
+        "text": "É o idioma em que o navegador do `look` roda",
+        "why": "O `look` abre o navegador em `en-GB`."
+      },
+      {
+        "text": "Para a semana começar na segunda, como na Suécia",
+        "why": "Uma string de idioma formata a data; não decide onde a semana começa."
+      },
+      {
+        "text": "Ignora o fuso horário, ao contrário de todos os outros idiomas",
+        "why": "Todo idioma formata no fuso do próprio computador; o sueco é escolhido pelo formato."
+      }
+    ]
+  },
+  "ex-agsbkav0": {
+    "prompt": "Na comparação da seção, o que o pai entrega em cada framework?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Um componente nos dois, que o filho monta",
+        "why": "Nenhum passa um componente: o React passa uma função, o Vue um template."
+      },
+      {
+        "text": "Uma função nos dois, escrita à mão",
+        "why": "O Vue compila o template numa função, mas o pai escreve um template."
+      },
+      {
+        "text": "O React uma string de JSX, o Vue uma string de HTML que o filho interpreta",
+        "why": "Nenhum é string; JSX é código, e um template do Vue é compilado antes de rodar."
+      },
+      {
+        "text": "O React uma função, o Vue um template compilado",
+        "why": "Isso. O filho em React chama uma função a cada render; o Vue chama o slot compilado com as slot props."
+      }
+    ]
+  },
+  "ex-xqradm1t": {
+    "prompt": "O `main.js` importa `./main.css`. O que o Vite faz com essa folha de estilo no desenvolvimento e na build?",
+    "hint": "Aulas 7 e 17.",
+    "choices": [
+      {
+        "text": "Limita toda regra ao `App.vue`, nos dois",
+        "why": "Só um bloco `<style scoped>` tem escopo; este arquivo existe para valer em todo lugar."
+      },
+      {
+        "text": "Nada: um arquivo `.css` não pode ser importado do JavaScript",
+        "why": "JavaScript puro não pode; importar um é recurso do Vite."
+      },
+      {
+        "text": "Injeta as regras na página, e depois as põe num arquivo próprio",
+        "why": "Isso: na build, o `index-….css` as guarda, ligado pelo `index.html`."
+      },
+      {
+        "text": "Copia sem mudar para o `dist`, como faz com o `public`",
+        "why": "É processado e ganha um nome com hash, ao contrário de um arquivo do `public`."
+      }
+    ]
+  },
+  "ex-phtc288d": {
+    "prompt": "Como bibliotecas como o router ficam disponíveis para todos os componentes de uma aplicação?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "Sendo importadas em cada componente que as usa",
+        "why": "Um componente pode importá-las, mas o `useRoute()` funciona porque o router foi fornecido."
+      },
+      {
+        "text": "Por uma variável global em `window`",
+        "why": "Nada na aula passa por `window`; passa pelo provide."
+      },
+      {
+        "text": "Como props, passadas do `App` até cada view",
+        "why": "Esse é o drilling que o provide existe para evitar."
+      },
+      {
+        "text": "Com `app.provide`, na própria aplicação",
+        "why": "Isso: fornecido acima do `App`, e por isso achado em qualquer profundidade."
+      }
+    ]
+  },
+  "ex-nehq3j68": {
+    "prompt": "Por que a aula dá uma descrição a toda chave Symbol, como em `Symbol('unit')`?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "Dois Symbols com a mesma descrição são iguais, o que os mantém em sincronia",
+        "why": "Nunca são iguais, com descrição ou sem; é isso que os torna seguros."
+      },
+      {
+        "text": "Para um aviso nomear a chave que falta",
+        "why": "Isso: `injection \"Symbol(unit)\" not found` diz qual chave ninguém forneceu."
+      },
+      {
+        "text": "O Vue recusa um Symbol sem descrição",
+        "why": "Um `Symbol()` sem descrição funciona; só deixa o aviso ilegível."
+      },
+      {
+        "text": "A descrição é a string que uma chave string usaria, então as duas funcionam",
+        "why": "Uma chave Symbol só é alcançada pelo próprio Symbol, nunca pela descrição."
+      }
+    ]
+  },
+  "ex-q5prvmqw": {
+    "prompt": "Sem provedor acima, o `SessionRow` mostra `statistics` onde estaria o título. Por que a aula prefere isso a uma string vazia?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "Porque uma string vazia faria o Vue lançar um erro",
+        "why": "Uma string vazia é desenhada em silêncio; esse silêncio é o problema."
+      },
+      {
+        "text": "Piora de forma visível e continua verdadeiro",
+        "why": "Isso. Um título vazio esconderia o problema; o id é menos amigável e continua correto."
+      },
+      {
+        "text": "Porque o id e o título são sempre a mesma palavra",
+        "why": "`statistics` e `Statistics` diferem, por isso o id é a exibição mais pobre."
+      },
+      {
+        "text": "Porque um lookup de que a linha precisa não deve ter padrão",
+        "why": "Sem padrão é para o que o componente não funciona sem; os títulos só melhoram a exibição."
+      }
+    ]
+  },
+  "ex-8fnkdj19": {
+    "prompt": "Para um padrão que é objeto, a aula escreve `inject('settings', () => ({ … }), true)`. O que a forma de fábrica compra?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "O objeto vira somente leitura, como `readonly()`",
+        "why": "Nada na fábrica congela o que ela devolve."
+      },
+      {
+        "text": "O padrão só é construído quando nada fornece a chave",
+        "why": "Isso: um padrão caro nunca é construído quando existe um provedor."
+      },
+      {
+        "text": "Todos os componentes abaixo compartilham uma cópia do padrão",
+        "why": "A fábrica trata de quando o padrão é feito, não de compartilhá-lo."
+      },
+      {
+        "text": "O Vue para de avisar que a chave não foi achada",
+        "why": "Qualquer padrão para o aviso; a fábrica trata de um padrão que é objeto."
+      }
+    ]
+  },
+  "ex-hrgat49w": {
+    "prompt": "O `Orphan` é aberto sem nada acima e chama `inject` três vezes: sem padrão, com `'minutes'` e com uma fábrica. Quantas linhas `[Vue warn]` ele imprimiu?",
+    "hint": "Aula 8.",
+    "unit": "avisos"
+  },
+  "ex-hy636s0b": {
+    "prompt": "Antes do Vue 3.5, um template ref era `const minutes = ref(null)` ao lado de `<input ref=\"minutes\">`. O que o `useTemplateRef('minutes')` permite que a forma antiga não?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "Ler o elemento durante o setup",
+        "why": "Os dois são `null` no setup; nada foi renderizado ainda."
+      },
+      {
+        "text": "Uma variável com nome diferente do atributo",
+        "why": "Isso, como `minutesField` para `ref=\"minutes\"`, e diz para que serve o ref."
+      },
+      {
+        "text": "Juntar os elementos de um `v-for` num array",
+        "why": "Um `ref` dentro de `v-for` junta um array nas duas formas."
+      },
+      {
+        "text": "Chamar métodos de um componente filho sem `defineExpose`",
+        "why": "Um filho continua expondo só o que o `defineExpose` nomeia."
+      }
+    ]
+  },
+  "ex-a9zgqdha": {
+    "prompt": "Um componente guardado pelo `<KeepAlive>` é trocado e reaberto muitas vezes. Quando roda o seu `onUnmounted`?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "Cada vez que sai de cena",
+        "why": "Sair de cena o desativa; quem roda é o `onDeactivated`."
+      },
+      {
+        "text": "Quando o `<KeepAlive>` vai embora, ou o cache o descarta",
+        "why": "Isso: o cache descarta um por causa de `include`, `exclude` ou `max`."
+      },
+      {
+        "text": "Nunca: um componente guardado vive enquanto a página viver",
+        "why": "Ele pode ir embora: quando o próprio `<KeepAlive>` vai, ou quando o cache o descarta."
+      },
+      {
+        "text": "Logo depois do `onActivated`, na primeira vez em que aparece",
+        "why": "A primeira exibição roda `onMounted` e depois `onActivated`; nada é desmontado."
+      }
+    ]
+  },
+  "ex-ncd9950w": {
+    "prompt": "Na transcrição do `KeptAlive` o estudante escreveu uma nota para statistics, foi para Spanish e voltou. Quantas linhas disseram `statistics: activated`?",
+    "hint": "Aula 9.",
+    "unit": "linhas"
+  },
+  "ex-n7x6htsv": {
+    "prompt": "Código React começa uma requisição num efeito, depois do render. Por que a aula a começa no setup?",
+    "hint": "Aulas 2 e 9.",
+    "choices": [
+      {
+        "text": "Porque o Vue não tem hook que rode depois do render",
+        "why": "Tem o `onMounted`; o ponto é que ele só atrasaria a requisição."
+      },
+      {
+        "text": "Porque o `fetch` falha dentro do `onMounted`",
+        "why": "Funciona ali; só começa mais tarde do que precisa."
+      },
+      {
+        "text": "O corpo de um componente React roda a cada render; o setup do Vue roda uma vez",
+        "why": "Isso. O motivo do efeito não se aplica, e uma requisição não precisa da página. Traga a intenção, não o hook."
+      },
+      {
+        "text": "Porque os dados precisam chegar antes de o template ser compilado",
+        "why": "O template é compilado antes de o navegador vê-lo; os dados chegam depois em qualquer dos lugares."
+      }
+    ]
+  },
+  "ex-b15eqjyh": {
+    "prompt": "Um componente é exibido, seu `minutes` muda uma vez, e ele é removido. Ponha seus momentos em ordem.",
+    "hint": "Aula 9.",
+    "items": [
+      "o nível de cima do `<script setup>` roda",
+      "`onBeforeMount`",
+      "`onMounted`",
+      "`onBeforeUpdate`, com o valor antigo na página",
+      "`onUpdated`",
+      "`onUnmounted`"
+    ],
+    "trap": "O setup é a criação; a página existe a partir do `onMounted`."
+  },
+  "ex-5hcbmskp": {
+    "prompt": "Um `async setup()` escrito à mão que chama um composable depois de um `await` perde o componente. Por que o `<script setup>` com `await` no nível de cima não perde?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "O compilador o restaura após cada `await`",
+        "why": "Isso: cada `await` é embrulhado para o componente atual ser guardado e restaurado."
+      },
+      {
+        "text": "Porque o `<script setup>` proíbe `await` no nível de cima",
+        "why": "Ele permite; o `SlowCourse` da aula 15 é escrito assim."
+      },
+      {
+        "text": "Porque composables rodam numa cópia própria do componente",
+        "why": "Um composable não tem componente próprio; liga-se ao que estiver sendo montado."
+      },
+      {
+        "text": "Porque hooks registrados tarde ficam na fila até o próximo componente",
+        "why": "Um hook tardio não se liga a nada, com aviso; não fica na fila."
+      }
+    ]
+  },
+  "ex-n5h4qxqm": {
+    "prompt": "Algo precisa acontecer quando o estudante clica, e usa um composable. O que a aula recomenda?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "Chamar o composable dentro do handler do clique",
+        "why": "Seus hooks e watchers não se ligariam a componente nenhum."
+      },
+      {
+        "text": "Embrulhar a chamada em `nextTick()`",
+        "why": "O tempo do clique não é o problema; nenhum componente está sendo montado nessa hora."
+      },
+      {
+        "text": "Chamá-lo no setup, e fazê-lo devolver uma função que o clique chama",
+        "why": "Isso, como o `useWeek` devolve `next`."
+      },
+      {
+        "text": "Transformá-lo num componente renderless e exibi-lo no clique",
+        "why": "Isso traz de volta a camada extra que os composables substituíram."
+      }
+    ]
+  },
+  "ex-6523g2pb": {
+    "prompt": "Dois componentes de uma página chamam cada um `useFetchJson('/notes/spanish.json')`, o composable desta aula. Quantas requisições para esse endereço são feitas?",
+    "hint": "Aula 10.",
+    "unit": "requisições"
+  },
+  "ex-ghggsks1": {
+    "prompt": "Quando o endereço muda no meio da requisição, o `useFetchJson` registra `gave up on …` e retorna sem mexer em `error`. Por que não relatar?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "Foi cancelada de propósito; nada deu errado",
+        "why": "Isso: o usuário pediu algo mais novo, que está a caminho."
+      },
+      {
+        "text": "Porque um `AbortError` não pode ser capturado",
+        "why": "Ele é capturado, no `catch`; é ali que é reconhecido e descartado."
+      },
+      {
+        "text": "Porque `error` é somente leitura dentro de um watcher",
+        "why": "O mesmo callback define `error` para qualquer outra falha."
+      },
+      {
+        "text": "Porque a requisição antiga terminou de qualquer jeito",
+        "why": "Ela foi abortada; não terminou."
+      }
+    ]
+  },
+  "ex-zbhdjxkj": {
+    "prompt": "Um componente do Vue 3 é escrito com `data: { clicks: 0 }`, um objeto comum em vez de uma função. O que acontece?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "Todas as cópias dele compartilham um único `clicks`",
+        "why": "Esse é o perigo para o qual a regra existe, e o Vue 3 não deixa chegar lá."
+      },
+      {
+        "text": "Funciona, já que só a instância raiz precisava de função",
+        "why": "Essa era a exceção do Vue 2, ao contrário: permitia objeto comum só na raiz."
+      },
+      {
+        "text": "O Vue avisa, e o componente não monta",
+        "why": "Isso: a opção data precisa ser uma função."
+      },
+      {
+        "text": "O Vue a embrulha numa função sozinho",
+        "why": "O Vue não a conserta; a recusa."
+      }
+    ]
+  },
+  "ex-wd3fh9cn": {
+    "prompt": "Um componente da Options API tem um método e um computed chamados `percent`. O que o Vue faz?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "Avisa no desenvolvimento, e o computed vence",
+        "why": "Isso. Outras colisões, entre mixins ou entre `setup()` e `data`, passam em silêncio."
+      },
+      {
+        "text": "Mantém os dois, e o template escolhe pelo contexto",
+        "why": "São um nome só em `this`, então só um pode estar lá."
+      },
+      {
+        "text": "Nada: o método vence em silêncio",
+        "why": "Essa colisão é uma das que o Vue anuncia, e o método não vence."
+      },
+      {
+        "text": "Recusa compilar o componente",
+        "why": "Compila; o aviso vem em tempo de execução no desenvolvimento."
+      }
+    ]
+  },
+  "ex-6qr9b1yw": {
+    "prompt": "No `Mixing.vue`, o `setup()` devolve `monday`, um ref, do `useWeek`. Dentro do método `forward`, o que é `this.monday`?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "A própria string da data, como `'2026-10-19'`, desembrulhada",
+        "why": "Isso: em `this`, os refs vêm desembrulhados, então não há `.value` a escrever."
+      },
+      {
+        "text": "O ref, então o método escreve `this.monday.value`",
+        "why": "O que o `setup()` devolve entra em `this` já desembrulhado, como tudo ali."
+      },
+      {
+        "text": "`undefined`, porque o `setup()` roda depois dos métodos",
+        "why": "O `setup()` roda primeiro, antes das outras opções serem preparadas."
+      },
+      {
+        "text": "Uma cópia tirada na montagem, que nunca muda",
+        "why": "É lido ao vivo por `this`; depois de `next()` mostra a nova segunda-feira."
+      }
+    ]
+  },
+  "ex-av70jj3m": {
+    "prompt": "Dentro da opção `setup()` não existe `this`. Como ela chega às props do componente?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "Por `defineProps`, como no `<script setup>`",
+        "why": "`defineProps` é macro do `<script setup>`; a opção recebe as props como argumento."
+      },
+      {
+        "text": "Não consegue; props são só para as outras opções",
+        "why": "Consegue, e as recebe diretamente."
+      },
+      {
+        "text": "Chamando `this.$props` quando o método já começou",
+        "why": "Não existe `this` no `setup()` em momento nenhum."
+      },
+      {
+        "text": "Pelo primeiro argumento",
+        "why": "Isso: `setup(props)`. Ela roda antes de as opções da instância serem preparadas."
+      }
+    ]
+  },
+  "ex-zmqhtdz4": {
+    "prompt": "O componente `OptionsLifecycle` abre, seu botão é clicado uma vez, e depois ele é removido. Ponha o que roda em ordem.",
+    "hint": "Aula 11.",
+    "items": [
+      "`beforeCreate`, com `minutes` ainda `undefined`",
+      "`created`, com `minutes` em 30 e nenhum elemento",
+      "`mounted`",
+      "o watcher de `minutes`, `30 -> 45`",
+      "`beforeUnmount`"
+    ],
+    "trap": "O estado existe a partir do `created`; o elemento só a partir do `mounted`."
+  },
+  "ex-pj1086tn": {
+    "prompt": "A rota de não encontrado, `/:pathMatch(.*)*`, casa com qualquer caminho. Por que ela pode ficar em qualquer lugar da lista de rotas?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "Não pode: escrita primeiro, pegaria todo endereço",
+        "why": "Isso valeria para um router que testasse rotas em ordem; este não testa."
+      },
+      {
+        "text": "Porque `(.*)*` só é testado quando a página é recarregada",
+        "why": "É testado em toda navegação, por clique ou recarga."
+      },
+      {
+        "text": "Porque um guard `beforeEnter` redireciona para ela antes",
+        "why": "O guard está na rota do curso; a rota que pega tudo não precisa de nenhum."
+      },
+      {
+        "text": "O router ordena as rotas pela especificidade",
+        "why": "Isso. Fica no fim só porque é ali que o leitor a procura."
+      }
+    ]
+  },
+  "ex-epprv20p": {
+    "prompt": "Código antigo escreve um guard com um terceiro argumento, `next`, e um dos caminhos esquece de chamá-lo. O que dá errado?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "O router chama `next()` sozinho depois de um tempo",
+        "why": "Nada o chama por você; é por isso que é fácil errar."
+      },
+      {
+        "text": "A versão 5 se recusa a rodar guards com três argumentos",
+        "why": "Ela ainda os roda, com um aviso de obsolescência no desenvolvimento."
+      },
+      {
+        "text": "A navegação segue, como se `true` tivesse sido devolvido",
+        "why": "Sem a chamada não há resposta, então a navegação nem segue nem para."
+      },
+      {
+        "text": "A navegação fica parada, esperando uma chamada",
+        "why": "Isso. Devolver um valor faz o mesmo trabalho e não pode ser esquecido desse jeito."
+      }
+    ]
+  },
+  "ex-f304y1sd": {
+    "prompt": "O router troca a página e o `afterEach` define o `document.title`. O que um estudante cego ouve, pela aula?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "O novo título, lido como em qualquer carregamento de página",
+        "why": "O título é lido quando a página carrega; uma troca sem carregamento não é anunciada com garantia."
+      },
+      {
+        "text": "Talvez nada, a não ser que o foco mude ou uma região viva fale",
+        "why": "Isso: mover o foco para o novo título, ou uma região viva, é o que avisa."
+      },
+      {
+        "text": "O `aria-current` do link ativo, lido a cada mudança",
+        "why": "O `aria-current` é anunciado quando o link é alcançado, não quando a página muda."
+      },
+      {
+        "text": "Nunca nada, porque uma página do router é invisível a leitores de tela",
+        "why": "A página é lida como qualquer outra; só a troca em si passa sem anúncio."
+      }
+    ]
+  },
+  "ex-5gvsr3ec": {
+    "prompt": "No link cuja rota é exatamente a exibida, o router define `aria-___=\"page\"`, e um leitor de tela o anuncia como a página em que o estudante está.",
+    "hint": "Aula 12.",
+    "blanks": [
+      {
+        "accept": [
+          "current"
+        ]
+      }
+    ]
+  },
+  "ex-28fd3cvm": {
+    "prompt": "Uma setup store chama `onMounted` dentro da sua função, e a store é criada pela primeira vez pelo guard do router. O que acontece com esse hook?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "Não se liga a nada, e o Vue avisa",
+        "why": "Isso. Criada dentro de um componente, se ligaria a ele e pararia junto, o que também é errado para uma store."
+      },
+      {
+        "text": "Roda quando a primeira view é montada",
+        "why": "Um hook pertence ao componente que está sendo montado quando é registrado, e um guard não é um."
+      },
+      {
+        "text": "Roda quando a aplicação monta, já que a store pertence ao app",
+        "why": "A store pertence ao contêiner do Pinia; hooks ainda precisam de um componente."
+      },
+      {
+        "text": "O Pinia o transforma numa action",
+        "why": "O Pinia faz actions das funções que a store devolve; uma chamada de hook não é uma."
+      }
+    ]
+  },
+  "ex-5zpr33nz": {
+    "prompt": "O planner instala o Pinia antes do router, embora aqui qualquer ordem funcionasse. Por que manter o hábito?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "Porque o router se recusa a instalar depois do Pinia",
+        "why": "A ordem inversa também funcionou; nada recusa."
+      },
+      {
+        "text": "Um plugin que usa uma store ao ser instalado só a acha assim",
+        "why": "Isso: com o Pinia já lá, qualquer plugin posterior pode usar uma store na hora."
+      },
+      {
+        "text": "Para a primeira navegação do router rodar depois de os dados carregarem",
+        "why": "A ordem de instalação não diz nada sobre quando o `load()` responde; o guard espera por ele."
+      },
+      {
+        "text": "Porque `createPinia()` precisa ser a última chamada antes do `mount`",
+        "why": "Aqui ela vem primeiro, não por último."
+      }
+    ]
+  },
+  "ex-4yqtexh7": {
+    "prompt": "Um componente chama `store.$subscribe(save, { detached: true })`. O que o `detached` muda?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "Continua rodando depois de o componente ser removido",
+        "why": "Isso. Sem ele, uma assinatura para junto com o componente que a criou."
+      },
+      {
+        "text": "`save` só roda para mudanças feitas fora das actions",
+        "why": "Não muda nada sobre quais mudanças são vistas."
+      },
+      {
+        "text": "`save` roda sobre uma cópia do estado, separada da store",
+        "why": "O callback recebe o estado depois da mudança, não uma cópia."
+      },
+      {
+        "text": "`save` roda antes de cada mudança, e não depois",
+        "why": "Continua rodando depois de cada mudança."
+      }
+    ]
+  },
+  "ex-3zgkv3yp": {
+    "prompt": "O `$subscribe` diz como o estado mudou, não qual action o mudou. Para ver as próprias actions, com nomes e argumentos, uma store tem `$___`.",
+    "hint": "Aula 13.",
+    "blanks": [
+      {
+        "accept": [
+          "onAction"
+        ]
+      }
+    ]
+  },
+  "ex-9yf2ypfy": {
+    "prompt": "Um `ref` exportado de um módulo já é uma cópia para todo mundo. Quais destes o Pinia acrescenta, pela aula? Marque todas que se aplicam.",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "Um contêiner por aplicação, e cada execução começa do zero",
+        "why": "Isso: renderização no servidor e testes começam com estado novo."
+      },
+      {
+        "text": "Um nome e uma forma: id, estado, getters e actions",
+        "why": "Isso: todo mundo sabe de onde uma mudança pode vir."
+      },
+      {
+        "text": "Uma cópia separada do estado para cada componente que a usa",
+        "why": "Isso é um composable; uma store é o contrário."
+      },
+      {
+        "text": "Toda store nas ferramentas de desenvolvimento, com uma linha do tempo das mudanças",
+        "why": "Isso."
+      },
+      {
+        "text": "Salvar o estado no `localStorage` sozinho",
+        "why": "A store do planner salva com um watcher que ela mesma escreve."
+      }
+    ]
+  },
+  "ex-vvz28ez4": {
+    "prompt": "O handler de envio chama `planner.add({ ...draft })`. Suponha que a store guardasse o objeto recebido, e o handler passasse o próprio `draft`. O que daria errado?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "O `addSession` o recusaria por não ter id",
+        "why": "O `addSession` dá o id a toda sessão nova; o objeto não tem id em caso nenhum."
+      },
+      {
+        "text": "A próxima tecla mudaria uma sessão já listada",
+        "why": "Isso: a store guardaria o rascunho reativo do formulário, a prop de objeto da aula 6 num lugar novo."
+      },
+      {
+        "text": "O Vue avisaria que um objeto reativo entrou numa store",
+        "why": "Nada avisa; é isso que faz a cópia valer a pena."
+      },
+      {
+        "text": "A linha de status mostraria os minutos da sessão seguinte",
+        "why": "A mensagem é montada uma vez, como string, antes do reset."
+      }
+    ]
+  },
+  "ex-p92r8jpc": {
+    "prompt": "Um campo de nota é escrito `<textarea>{{ note }}</textarea>`, sem `v-model`. O que acontece quando o estudante digita?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "O campo mostra `note`, e o que se digita nunca chega a ele",
+        "why": "Isso: escreva `v-model` no `<textarea>`."
+      },
+      {
+        "text": "`note` acompanha, já que as chaves ligam nos dois sentidos",
+        "why": "Chaves só mostram um valor; nunca escrevem de volta."
+      },
+      {
+        "text": "O template não compila",
+        "why": "Compila, e por isso o erro é fácil de cometer."
+      },
+      {
+        "text": "`note` só é atualizado quando o campo perde o foco",
+        "why": "Isso seria `v-model.lazy`; sem `v-model` nada é escrito."
+      }
+    ]
+  },
+  "ex-hhqesz60": {
+    "prompt": "Por que a aula envolve os botões de rádio do tipo de sessão num `<fieldset>` com `<legend>`?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "Assim um leitor de tela anuncia a pergunta com cada opção",
+        "why": "Isso: \"Kind\" é lido com \"Reading\" e com \"Practice\"."
+      },
+      {
+        "text": "Sem ele, dois rádios com o mesmo `v-model` ficam os dois marcados",
+        "why": "Um `v-model` já faz deles uma escolha só; o fieldset é para quem não vê o grupo."
+      },
+      {
+        "text": "O `v-model` só lê rádios dentro de um fieldset",
+        "why": "O `v-model` lê um rádio onde quer que ele esteja."
+      },
+      {
+        "text": "Desliga a validação do próprio navegador para o grupo",
+        "why": "Isso é o `novalidate`, no formulário."
+      }
+    ]
+  },
+  "ex-1z47krs1": {
+    "prompt": "Para qual destes campos a aula diz que o `.lazy` serve?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "Os minutos de uma sessão, conferidos entre 5 e 240",
+        "why": "Uma checagem feita no próprio navegador deve sumir no momento em que a digitação a corrige."
+      },
+      {
+        "text": "O título de um curso, para tirar espaços nas pontas",
+        "why": "Isso é o `.trim`."
+      },
+      {
+        "text": "Um campo cujo valor dispara uma busca num servidor",
+        "why": "Isso: uma requisição quando o campo é deixado, em vez de uma por letra."
+      },
+      {
+        "text": "Um número digitado num campo de texto comum",
+        "why": "Isso é o `.number`."
+      }
+    ]
+  },
+  "ex-31e1xvz0": {
+    "prompt": "O cartão da demo de teleport tem um listener de clique no seu `<div>`. Um clique cai dentro da nota teleportada. O listener do cartão escuta?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "Sim, porque a nota continua sendo parte do componente do cartão",
+        "why": "Props, eventos e provide seguem o componente; eventos do DOM seguem o DOM."
+      },
+      {
+        "text": "Sim, através do comentário `<!--teleport start-->`",
+        "why": "Um comentário marca um lugar; não carrega eventos."
+      },
+      {
+        "text": "Não, porque um elemento teleportado não pode ser clicado",
+        "why": "Pode ser clicado; o clique só segue outro caminho."
+      },
+      {
+        "text": "Não: ele sobe até o `<body>`, não passa pelo cartão",
+        "why": "Isso: os antigos ancestrais da nota já não são seus ancestrais."
+      }
+    ]
+  },
+  "ex-rqe25pr3": {
+    "prompt": "Um componente com `await` no nível de cima do `<script setup>` é usado sem nenhum `<Suspense>` acima. O que acontece?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "O Vue avisa que não achou fronteira de Suspense, e nada é desenhado",
+        "why": "Isso: todo componente assíncrono precisa de um `<Suspense>` acima."
+      },
+      {
+        "text": "Desenha um elemento vazio e depois preenche",
+        "why": "Sem uma fronteira ele nunca preenche."
+      },
+      {
+        "text": "O compilador recusa `await` fora de um `<Suspense>`",
+        "why": "O compilador não sabe onde o componente será usado."
+      },
+      {
+        "text": "O Vue o embrulha num `<Suspense>` próprio",
+        "why": "O Vue puro não faz isso; o Nuxt embrulha toda página num, o que é outra coisa."
+      }
+    ]
+  },
+  "ex-0a1wz9yx": {
+    "prompt": "Uma linha é inserida no topo de um `<TransitionGroup>`, e as antigas deslizam para baixo. Ponha o que o Vue faz, a técnica chamada FLIP, em ordem.",
+    "hint": "Aula 15.",
+    "items": [
+      "medir onde cada linha está antes da mudança",
+      "deixar a lista redesenhar",
+      "medir onde cada linha está agora",
+      "levar cada linha de volta ao lugar antigo com um `transform`",
+      "deixar a transição `-move` levá-la ao novo"
+    ],
+    "trap": "First, last, invert, play: o redesenho fica entre as duas medições."
+  },
+  "ex-q3tm62cy": {
+    "prompt": "Para um `<Transition name=\"fade\">` entrando, ligue cada classe a quando o Vue a põe no elemento.",
+    "hint": "Aula 15.",
+    "pairs": [
+      {
+        "left": "`fade-enter-from`",
+        "right": "só no primeiro quadro: o estado inicial"
+      },
+      {
+        "left": "`fade-enter-active`",
+        "right": "o tempo todo: onde se escreve o `transition:`"
+      },
+      {
+        "left": "`fade-enter-to`",
+        "right": "do segundo quadro ao fim: o estado de destino"
+      }
+    ],
+    "right_distractors": [
+      "depois de o elemento ser removido da página"
+    ]
+  },
+  "ex-9j3dbbw8": {
+    "prompt": "Um `<dialog>` aberto com `showModal()`. Quais destes o navegador faz sem nenhuma linha de código do componente? Marque todas que se aplicam.",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "Leva o foco ao primeiro campo dentro dele",
+        "why": "Isso: `#minutes`, toda vez que abriu."
+      },
+      {
+        "text": "Fecha com Escape",
+        "why": "Isso, com `returnValue` vazio."
+      },
+      {
+        "text": "Dá a ele um nome para o leitor de tela",
+        "why": "Isso precisa de `aria-labelledby` apontando para o título."
+      },
+      {
+        "text": "Devolve o foco ao botão que o abriu",
+        "why": "Isso: `focus is back on #open`."
+      },
+      {
+        "text": "Desenha um botão de fechar que o usuário de mouse vê",
+        "why": "O Escape é invisível; um botão de fechar visível é você quem põe."
+      }
+    ]
+  },
+  "ex-mrxk8epk": {
+    "prompt": "O `HomeView` guarda um template ref para o componente `PlannerDialog`. Como esse ref é tipado?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "`useTemplateRef<PlannerDialog>('adding')`",
+        "why": "Um componente é um valor; o tipo da instância precisa ser derivado dele."
+      },
+      {
+        "text": "`useTemplateRef<HTMLDialogElement>('adding')`",
+        "why": "Isso tipa o elemento nativo lá dentro; o ref aqui guarda o componente."
+      },
+      {
+        "text": "Não pode ser tipado, então fica `any`",
+        "why": "Todo recurso que cruza componentes tem forma tipada; esta é a dele."
+      },
+      {
+        "text": "`useTemplateRef<InstanceType<typeof PlannerDialog>>('adding')`",
+        "why": "Isso: correto e, como a aula diz, longe de legível."
+      }
+    ]
+  },
+  "ex-exttpjb4": {
+    "prompt": "O `useToday.ts` declara `let timer: ReturnType<typeof setInterval> | undefined`. Por que esse tipo em vez de `number`?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "Porque o `setInterval` devolve uma promise",
+        "why": "Ele devolve um identificador para o `clearInterval`, não uma promise."
+      },
+      {
+        "text": "O que o `setInterval` devolver, ou nada antes da montagem",
+        "why": "Isso: o tipo vem da própria função, e o `undefined` cobre o momento antes do `onMounted`."
+      },
+      {
+        "text": "Porque o TypeScript não tem tipo `number` para timers",
+        "why": "Ele tem `number`; o ponto é não adivinhar o que o `setInterval` devolve."
+      },
+      {
+        "text": "Para o timer poder ser parado por outro componente",
+        "why": "O tipo não diz nada sobre quem pode pará-lo."
+      }
+    ]
+  },
+  "ex-08x1tev8": {
+    "prompt": "A aula alerta sobre `as Something` e o operador `!`. Qual custo ela aponta?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "Deixam a build mais lenta, já que cada um é conferido em tempo de execução",
+        "why": "Tipos, asserções incluídas, são removidos antes de qualquer coisa rodar."
+      },
+      {
+        "text": "O `vue-tsc` os recusa em templates",
+        "why": "Ele os aceita; a página de curso do planner em Nuxt escreve `course!.title`."
+      },
+      {
+        "text": "Mudam o que o JavaScript faz ao rodar",
+        "why": "Não mudam nada em tempo de execução; é justamente por isso que podem esconder um erro."
+      },
+      {
+        "text": "Cada um é um ponto onde os tipos dizem o que o código não prova",
+        "why": "Isso: mandam o checker confiar em você, e um código cheio deles fica com o custo e perde o benefício."
+      }
+    ]
+  },
+  "ex-6f3fhrxa": {
+    "prompt": "Antes de qualquer erro ser mostrado, as mensagens do formulário são `{}`. Por isso `shown` é tipado `computed<___<Errors>>`, que diz que qualquer das três chaves pode faltar.",
+    "hint": "Aula 16.",
+    "blanks": [
+      {
+        "accept": [
+          "Partial"
+        ]
+      }
+    ]
+  },
+  "ex-ewqkke99": {
+    "prompt": "O servidor de desenvolvimento serve seus arquivos um a um, mas Vue, Pinia e Vue Router foram juntados cada um num só arquivo em `node_modules/.vite/deps`. Por que a diferença?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "Porque uma dependência passa por checagem de tipos e seus arquivos não",
+        "why": "Nada passa por checagem de tipos no caminho, dependência ou não."
+      },
+      {
+        "text": "Porque navegadores recusam mais de um módulo por pacote",
+        "why": "Um navegador carrega quantos módulos receber; o custo é a quantidade."
+      },
+      {
+        "text": "Uma dependência não muda entre dois saves, e junta centenas de módulos",
+        "why": "Isso, uma requisição cada sem isso; o pré-empacotamento também converte o CommonJS que nenhum navegador carrega."
+      },
+      {
+        "text": "Para o HMR poder trocar uma dependência sem recarregar",
+        "why": "O HMR troca os seus módulos; dependências são o que não muda."
+      }
+    ]
+  },
+  "ex-fexj8zm6": {
+    "prompt": "Versões anteriores do Vite usavam esbuild no desenvolvimento e Rollup na build. O que o Vite 8 muda, e por que importa?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "Abandona o empacotamento de vez, no desenvolvimento e na build",
+        "why": "A build ainda empacota; só o desenvolvimento parou."
+      },
+      {
+        "text": "Passa para o webpack, que lê plugins do Rollup",
+        "why": "O webpack é o que o Vite foi escrito para substituir."
+      },
+      {
+        "text": "Usa o esbuild nos dois, e plugins do Rollup param de funcionar",
+        "why": "O Rolldown mantém a interface de plugins do Rollup, e a maioria funciona."
+      },
+      {
+        "text": "O Rolldown faz os dois, e o projeto se comporta igual em cada um",
+        "why": "Isso: com duas ferramentas, um projeto podia agir um pouco diferente no desenvolvimento e na build."
+      }
+    ]
+  },
+  "ex-b6yn9wge": {
+    "prompt": "Uma variável está definida em vários lugares. Ponha as origens da mais fraca para a mais forte, sendo a última a que vence.",
+    "hint": "Aula 17.",
+    "items": [
+      "`.env`",
+      "`.env.local`",
+      "`.env.[mode]`",
+      "`.env.[mode].local`",
+      "o shell que iniciou o Vite"
+    ],
+    "trap": "O arquivo do modo vence o geral, o `.local` vence o seu par, e o shell vence os quatro."
+  },
+  "ex-vt90pcdn": {
+    "prompt": "Quais destes nomes estão sempre em `import.meta.env`, sem nenhum arquivo `.env`? Marque todas que se aplicam.",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "`MODE`",
+        "why": "Isso: `development` ou `production`."
+      },
+      {
+        "text": "`DEV`",
+        "why": "Isso, um dos dois booleanos."
+      },
+      {
+        "text": "`VITE_DATA_URL`",
+        "why": "A variável do próprio planner, do seu `.env`."
+      },
+      {
+        "text": "`BASE_URL`",
+        "why": "Isso: o `base` da configuração."
+      },
+      {
+        "text": "`NODE_ENV`",
+        "why": "Não é um dos nomes que a aula lista; o navegador não tem `process.env` de onde trazê-lo."
+      }
+    ]
+  },
+  "ex-8ezxvy2p": {
+    "prompt": "Para que serve `compatibilityDate: '2025-07-15'` no `nuxt.config.ts`?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "Mantém os padrões do Nuxt e do Nitro como eram nessa data",
+        "why": "Isso: uma atualização que muda um padrão não muda seu projeto por baixo de você."
+      },
+      {
+        "text": "É a data em que o projeto foi criado, exibida nas ferramentas de desenvolvimento",
+        "why": "É uma configuração que o Nuxt lê, não um registro do passado."
+      },
+      {
+        "text": "Depois dessa data, o Nuxt se recusa a iniciar até ser atualizado",
+        "why": "Nada expira; a data fixa comportamento, não um prazo."
+      },
+      {
+        "text": "Diz ao npm qual versão do Nuxt instalar",
+        "why": "Versões vêm do `package.json`, fixadas com `--save-exact`."
+      }
+    ]
+  },
+  "ex-c1ctwwgr": {
+    "prompt": "A aula 12 definia `document.title` depois de cada navegação. O que o `<NuxtRouteAnnouncer>` do Nuxt acrescenta?",
+    "hint": "Aulas 12 e 18.",
+    "choices": [
+      {
+        "text": "Leva o foco ao primeiro título de cada página",
+        "why": "Ele lê o título em voz alta; não move o foco."
+      },
+      {
+        "text": "Nada para pessoas: só define o título da aba",
+        "why": "Definir o título era a parte da aula 12; o anunciador é para leitor de tela."
+      },
+      {
+        "text": "Uma região que o leitor de tela lê em voz alta, com o título",
+        "why": "Isso: uma navegação sem carregar página passa a ser anunciada, o que a troca de título sozinha não garante."
+      },
+      {
+        "text": "Um status 404 para uma rota que não existe",
+        "why": "Isso vem de o Nuxt conhecer suas rotas no servidor, não do anunciador."
+      }
+    ]
+  },
+  "ex-grhrf16j": {
+    "prompt": "Um componente é salvo como `app/components/week/Row.vue`. Com que nome um template o usa, sem import?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "`<Row>`",
+        "why": "A pasta faz parte do nome."
+      },
+      {
+        "text": "Só `<week-row>`, em kebab-case",
+        "why": "O nome gerado é `WeekRow`, a forma que a aula usa."
+      },
+      {
+        "text": "`<LazyRow>`",
+        "why": "`Lazy` é prefixo para a cópia carregada sob demanda, e ainda levaria a pasta."
+      },
+      {
+        "text": "`<WeekRow>`",
+        "why": "Isso: a subpasta vira a primeira parte do nome."
+      }
+    ]
+  },
+  "ex-arkm0e16": {
+    "prompt": "Que porta o servidor de desenvolvimento do Nuxt usa?",
+    "hint": "Aula 18.",
+    "unit": "porta"
+  },
+  "ex-5e8bedf2": {
+    "prompt": "O `error.vue` do planner sai por um botão que chama `clearError({ redirect: '/' })`. Por que um botão e não um `<NuxtLink to=\"/\">`?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "Porque um link não pode ser desenhado dentro de `<NuxtLayout>`",
+        "why": "O próprio layout desenha um `<NuxtLink>` no cabeçalho."
+      },
+      {
+        "text": "Encerra o estado de erro além de sair do endereço",
+        "why": "Isso: a próxima página é desenhada normalmente."
+      },
+      {
+        "text": "Porque um botão é mais fácil de alcançar pelo teclado",
+        "why": "Os dois são alcançados com Tab; o motivo é o que a chamada faz."
+      },
+      {
+        "text": "Porque o `clearError` recarrega a aplicação inteira",
+        "why": "Ele encerra o estado de erro; não é uma recarga."
+      }
+    ]
+  },
+  "ex-bkct2xkq": {
+    "prompt": "Em produção, o servidor desenhou `class=\"today\"` na linha do dia 22 e o navegador o esperava no dia 21. O que a hidratação faz com esse atributo?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "Leva-o para o dia 21, como o desenvolvimento fez",
+        "why": "O desenvolvimento corrige o que pode; a produção não corrige o DOM."
+      },
+      {
+        "text": "Desenha a lista inteira de novo",
+        "why": "A hidratação nunca redesenha a página; é isso que a torna barata."
+      },
+      {
+        "text": "Deixa-o como chegou",
+        "why": "Isso: só um elemento que falta é criado, e a página mostra dois \"hojes\"."
+      },
+      {
+        "text": "Remove a classe de todas as linhas",
+        "why": "Nada é removido; o atributo do servidor fica."
+      }
+    ]
+  },
+  "ex-8zb06whx": {
+    "prompt": "O `nuxt generate` escreve um `200.html` ao lado do `index.html`. Para que serve?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "Uma página mostrada quando a build deu certo",
+        "why": "Ninguém deve abri-la por esse nome."
+      },
+      {
+        "text": "O esqueleto que um host estático envia para um endereço sem arquivo",
+        "why": "Isso, para o router assumir dali, o trabalho que o `vite preview` fazia para a build da aula 17."
+      },
+      {
+        "text": "A página de erro para o status 200",
+        "why": "200 é sucesso; a página de erro é o `404.html`."
+      },
+      {
+        "text": "O payload da página inicial",
+        "why": "O payload é o `_payload.json`."
+      }
+    ]
+  },
+  "ex-3d4s01ex": {
+    "prompt": "O que a regra de rota `ssr: false` faz pelo seu endereço?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "Envia um esqueleto vazio, desenhado no navegador",
+        "why": "Isso: o jeito do planner do Vite, para uma página que nada ganha com o servidor."
+      },
+      {
+        "text": "Renderiza uma vez, na build",
+        "why": "Isso é `prerender: true`."
+      },
+      {
+        "text": "Serve uma cópia de no máximo um minuto",
+        "why": "Isso é `swr: 60`."
+      },
+      {
+        "text": "Desliga o JavaScript nessa página",
+        "why": "O navegador continua rodando a página; é ele que a desenha."
+      }
+    ]
+  },
+  "ex-2e5vt6ag": {
+    "prompt": "Um componente rotula um campo com um id de `Math.random()`, e a página é renderizada no servidor. O que dá errado, e o que o curso oferece no lugar?",
+    "hint": "Aulas 14 e 19.",
+    "choices": [
+      {
+        "text": "Nada dá errado; o `useTemplateRef` só seria mais curto",
+        "why": "Um id aleatório difere entre os dois desenhos, o que é um mismatch."
+      },
+      {
+        "text": "`Math.random()` não existe no servidor",
+        "why": "Existe; só devolve outro número ali."
+      },
+      {
+        "text": "Servidor e navegador desenham ids diferentes; o `useId()` dá o mesmo id nos dois",
+        "why": "Isso: a aula 14 usou `useId()` para o rótulo e o erro, e ele sobrevive à hidratação."
+      },
+      {
+        "text": "O servidor se recusa a renderizar um componente que o chama",
+        "why": "Ele renderiza; o problema aparece na hidratação."
+      }
+    ]
+  },
+  "ex-cygnwne3": {
+    "prompt": "Ligue cada regra de rota ao que ela faz com seu endereço.",
+    "hint": "Aula 19.",
+    "pairs": [
+      {
+        "left": "`prerender: true`",
+        "right": "desenhado uma vez, pela build, em `.output/public`"
+      },
+      {
+        "left": "`swr: 60`",
+        "right": "respondido de uma cópia guardada, renovada em segundo plano"
+      },
+      {
+        "left": "`headers: { 'cache-control': 'no-store' }`",
+        "right": "nenhum cache no caminho pode guardar a resposta"
+      },
+      {
+        "left": "`ssr: false`",
+        "right": "enviado como esqueleto vazio e desenhado no navegador"
+      }
+    ],
+    "right_distractors": [
+      "recusado a não ser que o visitante tenha entrado"
+    ]
+  },
+  "ex-jytadh9m": {
+    "prompt": "Na página da semana, sabe-se que `data.value?.sessions` é uma lista de `Session`, embora nada desse lado o declare. De onde vem o tipo?",
+    "hint": "Aulas 16 e 20.",
+    "choices": [
+      {
+        "text": "Do `useFetch` lendo o JSON em tempo de execução",
+        "why": "Tipos não existem em tempo de execução; isto é sabido antes de qualquer coisa rodar."
+      },
+      {
+        "text": "Do `courses.json`, que o TypeScript lê como esquema",
+        "why": "O arquivo de dados não é de onde o tipo vem aqui."
+      },
+      {
+        "text": "É `any`, e o checker confia",
+        "why": "Com `strict`, um valor desconhecido seria erro, não um `any` silencioso."
+      },
+      {
+        "text": "Do que a rota de servidor `courses.get.ts` devolve",
+        "why": "Isso: o Nuxt lê o tipo de retorno da rota e o passa para `data`."
+      }
+    ]
+  },
+  "ex-454g58p3": {
+    "prompt": "O `PATCH` que marca uma sessão já responde com a sessão alterada, mas o planner chama `refresh()` e lê tudo de novo. Por que a aula aceita duas requisições por marcação?",
+    "hint": "Aula 20.",
+    "choices": [
+      {
+        "text": "Porque o `$fetch` descarta o corpo de um `PATCH`",
+        "why": "Ele lê a resposta; o planner só não a usa."
+      },
+      {
+        "text": "Porque `data` não pode ser escrito fora do `useFetch`",
+        "why": "Pode; a aula o cita como alternativa."
+      },
+      {
+        "text": "É mais simples, e fica certo mesmo se outra pessoa mudou algo",
+        "why": "Isso: pôr a sessão em `data` à mão seria uma escolha com mais jeitos de errar."
+      },
+      {
+        "text": "Porque o servidor só manda a sessão no desenvolvimento",
+        "why": "Ele responde igual numa build; o que muda ali é o stack do erro."
+      }
+    ]
+  },
+  "ex-6ykktp50": {
+    "prompt": "A página e o layout precisam dos dados do planner e os buscam com duas chaves, então são buscados duas vezes. Qual é a cura simples que a aula dá, quando precisam mesmo da mesma resposta?",
+    "hint": "Aula 20.",
+    "choices": [
+      {
+        "text": "Buscar na página, e passar ao outro como prop",
+        "why": "Isso: uma chamada para ler e uma requisição para contar."
+      },
+      {
+        "text": "Dar a mesma chave às duas chamadas à mão",
+        "why": "Uma chave compartilhada só é um dado se as duas significam o mesmo, e o `/demo/clash` mostra o risco."
+      },
+      {
+        "text": "Tornar uma delas `lazy`",
+        "why": "O lazy muda quando a busca é esperada, não quantas há."
+      },
+      {
+        "text": "Pôr cache na API com `swr`",
+        "why": "A aula tirou o `swr`, e a API é `no-store` de propósito."
+      }
+    ]
+  },
+  "ex-06bpttmb": {
+    "prompt": "`use___Fetch(url)` é o mesmo que `useFetch(url, { lazy: true })`.",
+    "hint": "Aula 20.",
+    "blanks": [
+      {
+        "accept": [
+          "Lazy"
+        ]
+      }
+    ]
+  },
+  "ex-9xcrvk95": {
+    "prompt": "Quais destes o `const { … } = await useFetch('/api/courses')` devolve? Marque todas que se aplicam.",
+    "hint": "Aula 20.",
+    "choices": [
+      {
+        "text": "`data`, um ref com o JSON lido",
+        "why": "Isso, `undefined` até chegar."
+      },
+      {
+        "text": "`status`, de `idle` a `success` ou `error`",
+        "why": "Isso, com `'pending'` no meio."
+      },
+      {
+        "text": "`refresh`, que pede de novo",
+        "why": "Isso, como o planner faz depois de cada marcação."
+      },
+      {
+        "text": "`html`, o desenho da página feito pelo servidor",
+        "why": "O HTML da página não faz parte do que o composable devolve."
+      },
+      {
+        "text": "`abort`, que cancela a requisição",
+        "why": "Não está na lista da aula: data, status, error, refresh."
+      }
+    ]
+  },
+  "ex-akkqyx2q": {
+    "prompt": "Um teste de `SessionRow` marca a caixa uma vez. O que `row.emitted('toggle')` contém?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "`'s4'`, o id que a linha emitiu",
+        "why": "É uma lista de todas as emissões, cada uma uma lista dos seus argumentos."
+      },
+      {
+        "text": "`[['s4']]`",
+        "why": "Isso: um `toggle`, com um argumento."
+      },
+      {
+        "text": "`true`, já que o evento foi emitido",
+        "why": "Registra o que foi emitido, não só que algo foi."
+      },
+      {
+        "text": "A sessão com o `done` invertido",
+        "why": "A linha não inverte nada; ela relata, e o pai decide."
+      }
+    ]
+  },
+  "ex-mpdrq1qx": {
+    "prompt": "O que o `createTestingPinia`, do `@pinia/testing`, daria a um teste de componente?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "Uma store que busca do `courses.json` real",
+        "why": "Faz o contrário de buscar fora: substitui a store."
+      },
+      {
+        "text": "Uma store nova por teste, que o `setActivePinia(createPinia())` não dá",
+        "why": "Essa linha dá justamente isso, e os testes do planner a usam."
+      },
+      {
+        "text": "Toda action trocada por uma que só registra a chamada",
+        "why": "Isso, para um teste que só deve conferir que o componente *chamou* a store."
+      },
+      {
+        "text": "Timers falsos para todo watcher da store",
+        "why": "Timers são o `vi.useFakeTimers`, outra ferramenta."
+      }
+    ]
+  },
+  "ex-q9ayd8dv": {
+    "prompt": "O `fetch` falso no teste da store responde com `new Response(JSON.stringify(body), { status, statusText })` em vez de um objeto comum. Por quê?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "Porque o `vi.fn` só aceita funções que devolvam um `Response`",
+        "why": "O `vi.fn` registra qualquer função; a escolha é por causa do código testado."
+      },
+      {
+        "text": "Porque o jsdom não tem `fetch` sem isso",
+        "why": "O teste troca o `fetch` com `vi.stubGlobal` de qualquer jeito."
+      },
+      {
+        "text": "A store lê `ok` e `json()` dele como do de um servidor",
+        "why": "Isso: a mesma classe que o `fetch` devolve, e o código testado roda sem mudança."
+      },
+      {
+        "text": "Para a requisição chegar ao servidor de desenvolvimento",
+        "why": "A ideia toda é que nenhum servidor seja consultado."
+      }
+    ]
+  },
+  "ex-ex8xxfsy": {
+    "prompt": "Quantos testes a suíte inteira rodou, nos seus cinco arquivos?",
+    "hint": "Aula 21.",
+    "unit": "testes"
+  },
+  "ex-07ma4z5v": {
+    "prompt": "O teste da store põe o seu próprio `fetch` onde a store vai procurá-lo com `vi.___('fetch', fake)`, e devolve o verdadeiro depois de cada teste.",
+    "hint": "Aula 21.",
+    "blanks": [
+      {
+        "accept": [
+          "stubGlobal"
+        ]
+      }
+    ]
+  },
+  "ex-a0sk19nt": {
+    "prompt": "A auditoria do projeto Angular aponta um Vite com alertas no servidor de desenvolvimento, e o `npm audit fix --force` voltaria o `@angular/build` uma versão menor. O que a aula faz no lugar?",
+    "hint": "Aula 22.",
+    "choices": [
+      {
+        "text": "Ignora o aviso, como a aula 18 fez com o `node-forge`",
+        "why": "Desta vez os alertas tratam do servidor que fica rodando enquanto você navega."
+      },
+      {
+        "text": "Roda o `--force`, já que um alerta alto precisa ser corrigido na hora",
+        "why": "Isso deixaria o `@angular/build` atrás do resto do Angular no projeto."
+      },
+      {
+        "text": "Apaga o Vite do próprio Angular e serve o cartão com o do planner",
+        "why": "O `ng serve` continua rodando; o override muda qual Vite ele recebe."
+      },
+      {
+        "text": "Uma entrada em `overrides` no `package.json` fixa todo Vite em 8.3.5",
+        "why": "Isso: `overridden`, nenhuma vulnerabilidade, e a ser retirada quando o Angular trouxer a correção."
+      }
+    ]
+  },
+  "ex-p16gatw5": {
+    "prompt": "O cartão do Angular marca com `this.sessions.update((list) => list.map(…))`, uma lista nova. Por que não mudar `s.done` no lugar, como o cartão do Vue faz?",
+    "hint": "Aulas 3 e 22.",
+    "choices": [
+      {
+        "text": "Porque um signal não guarda array",
+        "why": "Ele guarda a lista de sessões no cartão."
+      },
+      {
+        "text": "Um signal percebe um valor novo, não uma mudança dentro do antigo",
+        "why": "Isso, o estilo do `toggleDone` da aula 3, e por isso código escrito assim passa entre os quatro."
+      },
+      {
+        "text": "Porque os templates do Angular são somente leitura",
+        "why": "Templates se ligam ao estado; a questão é como o estado percebe a mudança."
+      },
+      {
+        "text": "Porque o `computed` do Angular só lê arrays que ele mesmo montou",
+        "why": "O `computed` do Angular lê qualquer signal, com o mesmo rastreamento do Vue."
+      }
+    ]
+  },
+  "ex-rpfsnecr": {
+    "prompt": "Ponha os quatro cartões em ordem do JavaScript comprimido que cada build envia, do menor.",
+    "hint": "Aula 22.",
+    "items": [
+      "Svelte",
+      "Vue",
+      "Angular",
+      "React"
+    ],
+    "trap": "Um compilador envia só o código que a página usa; o `react-dom` leva toda a maquinaria de comparação do React."
+  },
+  "ex-vgzkp118": {
+    "prompt": "Ligue cada framework a como o seu cartão lê a lista de sessões no código do script.",
+    "hint": "Aula 22.",
+    "pairs": [
+      {
+        "left": "Vue",
+        "right": "`sessions.value`"
+      },
+      {
+        "left": "Angular",
+        "right": "`this.sessions()`"
+      },
+      {
+        "left": "Svelte",
+        "right": "`sessions`, uma variável marcada com `$state`"
+      },
+      {
+        "left": "React",
+        "right": "`sessions`, o primeiro valor que o `useState` deu"
+      }
+    ],
+    "right_distractors": [
+      "`sessions.get()`"
+    ]
+  },
+  "ex-ctc6fhq2": {
+    "prompt": "Numa marcação, quais dos quatro frameworks rodam de novo só o que leu o estado alterado, em vez do componente inteiro? Marque todas que se aplicam.",
+    "hint": "Aula 22.",
+    "choices": [
+      {
+        "text": "Vue",
+        "why": "Isso, pelos proxies da aula 2."
+      },
+      {
+        "text": "React",
+        "why": "Não rastreia nada: a função inteira roda de novo e os resultados são comparados."
+      },
+      {
+        "text": "Angular",
+        "why": "Isso, com signals."
+      },
+      {
+        "text": "Svelte",
+        "why": "Isso, com signals que o compilador faz a partir das runes."
+      }
+    ]
+  }
+}

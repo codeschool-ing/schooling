@@ -1,0 +1,784 @@
+[
+  {
+    "id": "ex-wx4s874q",
+    "version": 1,
+    "section": "routes-are-folders",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which file is the page at `/about`?",
+    "hint": "The folder is the address.",
+    "choices": [
+      {
+        "text": "`src/routes/(about)/+page.svelte`",
+        "correct": false,
+        "why": "Brackets make a group, which adds nothing to the address: that file would be `/`."
+      },
+      {
+        "text": "`src/routes/about.svelte`",
+        "correct": false,
+        "why": "A page is the `+page.svelte` inside a folder, not a file named after the address."
+      },
+      {
+        "text": "`src/routes/about/+page.svelte`",
+        "correct": true,
+        "why": "Right: the folder `about` gives the address, and `+page.svelte` is the page in it."
+      },
+      {
+        "text": "`src/lib/about/+page.svelte`",
+        "correct": false,
+        "why": "`src/lib` is for code the pages use; the router reads only `src/routes`."
+      }
+    ]
+  },
+  {
+    "id": "ex-qx085187",
+    "version": 1,
+    "section": "routes-are-folders",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You save `Chart.svelte` next to `+page.svelte` in `src/routes/stats/`. What does the router do with it?",
+    "hint": "Which files does SvelteKit read?",
+    "choices": [
+      {
+        "text": "Nothing; it is ignored",
+        "correct": true,
+        "why": "Right. Only names starting with `+` are the router's; the page can still import it."
+      },
+      {
+        "text": "Refuses to start, because a route folder may hold only `+` files",
+        "correct": false,
+        "why": "A helper may sit next to the page that uses it."
+      },
+      {
+        "text": "Wraps the page in it, like a layout",
+        "correct": false,
+        "why": "That is `+layout.svelte`'s job, and it needs the name."
+      },
+      {
+        "text": "Serves it as a second page, at `/stats/Chart`",
+        "correct": false,
+        "why": "Only `+page.svelte` makes a page."
+      }
+    ]
+  },
+  {
+    "id": "ex-wcsj5pq8",
+    "version": 1,
+    "section": "routes-are-folders",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You click \"Back to the planner\" on `/about`. What does SvelteKit do?",
+    "hint": "`look` printed `at /`, and the section explains how it got there.",
+    "choices": [
+      {
+        "text": "Nothing, unless the link uses a special `<Link>` component",
+        "correct": false,
+        "why": "There is no link component; a plain `<a href>` is enough."
+      },
+      {
+        "text": "Renders the new page in place and updates the address with the History API",
+        "correct": true,
+        "why": "Right: a client-side navigation, with no reload."
+      },
+      {
+        "text": "Lets the browser load `/` from the server and draw it from scratch, as any link on any site would",
+        "correct": false,
+        "why": "That would be a reload, which SvelteKit avoids for its own pages."
+      }
+    ]
+  },
+  {
+    "id": "ex-kbhtdwtr",
+    "version": 1,
+    "section": "routes-are-folders",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To set a page's title, put a `<title>` inside `<svelte:___>`.",
+    "hint": "It is the document's head.",
+    "blanks": [
+      {
+        "accept": [
+          "head"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-j9m8s1dk",
+    "version": 1,
+    "section": "layouts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does a page go inside a `+layout.svelte`?",
+    "hint": "The layout receives it as a prop.",
+    "choices": [
+      {
+        "text": "After the layout's own markup, always",
+        "correct": false,
+        "why": "The layout chooses the spot; here it is inside `<main>`."
+      },
+      {
+        "text": "Inside the first `<main>` it finds",
+        "correct": false,
+        "why": "Nothing looks for a `<main>`; the layout says where."
+      },
+      {
+        "text": "Wherever the layout puts a `<slot />`",
+        "correct": false,
+        "why": "Svelte 5 renders a snippet; slots are the old way."
+      },
+      {
+        "text": "Where it writes `{@render children()}`",
+        "correct": true,
+        "why": "Right: `children` is the page, as a snippet."
+      }
+    ]
+  },
+  {
+    "id": "ex-0wmqj5js",
+    "version": 1,
+    "section": "layouts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You move from `/` to `/about`. What happens to the root layout?",
+    "hint": "Both pages are inside it.",
+    "choices": [
+      {
+        "text": "It stays, and only the `children` it renders changes",
+        "correct": true,
+        "why": "Right: a layout is not recreated between two pages it wraps."
+      },
+      {
+        "text": "It is destroyed and created again for the new page",
+        "correct": false,
+        "why": "That would lose its state on every click, which is what layouts avoid."
+      },
+      {
+        "text": "It is rendered again on the server and sent whole",
+        "correct": false,
+        "why": "A client-side navigation does not ask the server for the layout again."
+      }
+    ]
+  },
+  {
+    "id": "ex-tgb8nhkk",
+    "version": 1,
+    "section": "layouts",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of the root layout with what it does.",
+    "hint": "One of them reaches outside the component.",
+    "pairs": [
+      {
+        "left": "`page.url.pathname`",
+        "right": "The address of the page showing"
+      },
+      {
+        "left": "`aria-current=\"page\"`",
+        "right": "Tells a screen reader which link is this page"
+      },
+      {
+        "left": "`:global(body)`",
+        "right": "Styles the whole document"
+      },
+      {
+        "left": "`{@render children()}`",
+        "right": "The page"
+      }
+    ],
+    "right_distractors": [
+      "A link component that avoids reloads"
+    ]
+  },
+  {
+    "id": "ex-tjz0r17e",
+    "version": 1,
+    "section": "layouts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`curl` on `/about` printed `aria-current=\"page\"` on the About link. What does that show?",
+    "hint": "`curl` runs no JavaScript.",
+    "choices": [
+      {
+        "text": "That every link is marked current until JavaScript fixes it",
+        "correct": false,
+        "why": "The Study planner link has no attribute in the same output."
+      },
+      {
+        "text": "That a script in the browser marked it after loading",
+        "correct": false,
+        "why": "`curl` never runs a script; the attribute was in what the server sent."
+      },
+      {
+        "text": "The server marked it in the first response",
+        "correct": true,
+        "why": "Right: the layout ran on the server and read `page` there too."
+      }
+    ]
+  },
+  {
+    "id": "ex-n54rvhcw",
+    "version": 1,
+    "section": "route-groups",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the address of `src/routes/(planner)/+page.svelte`?",
+    "hint": "A group adds nothing to the address.",
+    "choices": [
+      {
+        "text": "`/planner`",
+        "correct": false,
+        "why": "The brackets keep the name out of the address."
+      },
+      {
+        "text": "`/`",
+        "correct": true,
+        "why": "Right: the group only gives its pages a layout of their own."
+      },
+      {
+        "text": "`/(planner)`",
+        "correct": false,
+        "why": "The group name is never part of the address."
+      }
+    ]
+  },
+  {
+    "id": "ex-yjbs62sg",
+    "version": 1,
+    "section": "route-groups",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does About go in a group of its own, `(info)`?",
+    "hint": "What does the `(planner)` layout do before it renders a page?",
+    "choices": [
+      {
+        "text": "So it does not wait for the planner's data, which it never uses",
+        "correct": true,
+        "why": "Right: only the planner's pages need the data and the context."
+      },
+      {
+        "text": "To give it the address `/info/about`",
+        "correct": false,
+        "why": "A group adds nothing to the address; About is still `/about`."
+      },
+      {
+        "text": "So the header is not drawn above it",
+        "correct": false,
+        "why": "The header is the root layout's, which wraps both groups."
+      },
+      {
+        "text": "Because SvelteKit requires every page to be in some group",
+        "correct": false,
+        "why": "Pages outside any group are fine; the root layout wraps them."
+      }
+    ]
+  },
+  {
+    "id": "ex-9hsvf30z",
+    "version": 1,
+    "section": "route-groups",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the move into groups in order.",
+    "hint": "A folder must exist before anything moves into it.",
+    "items": [
+      "`mkdir 'src/routes/(planner)' 'src/routes/(info)'`",
+      "Move `about` into `(info)` and `+page.svelte` into `(planner)`",
+      "Rename `Planner.svelte` to `PlannerProvider.svelte` and make it render `children`",
+      "Write `(planner)/+layout.svelte`, which loads the data and wraps the pages in the provider"
+    ],
+    "trap": "The layout imports the provider, so the provider comes first."
+  },
+  {
+    "id": "ex-vc8t35nj",
+    "version": 1,
+    "section": "route-groups",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The week page sets its title with `<svelte:head>` instead of an effect. What does that gain?",
+    "hint": "Where do effects run?",
+    "choices": [
+      {
+        "text": "The title is in the HTML the server sends",
+        "correct": true,
+        "why": "Right: effects run only in the browser, `<svelte:head>` also on the server."
+      },
+      {
+        "text": "It removes the need for a root layout",
+        "correct": false,
+        "why": "The layout is still there; the title is a separate matter."
+      },
+      {
+        "text": "The title updates faster when the total changes",
+        "correct": false,
+        "why": "Speed is not the point; both follow the total."
+      }
+    ]
+  },
+  {
+    "id": "ex-z66ya7zk",
+    "version": 1,
+    "section": "dynamic-routes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `src/routes/(planner)/courses/[id]/+page.svelte`, what is `params.id` at `/courses/spanish`?",
+    "hint": "It is the part of the address in place of `[id]`.",
+    "choices": [
+      {
+        "text": "`undefined` until the data has loaded",
+        "correct": false,
+        "why": "The address is known at once; it does not wait for data."
+      },
+      {
+        "text": "`courses/spanish`",
+        "correct": false,
+        "why": "Only the segment where `[id]` sits."
+      },
+      {
+        "text": "`spanish`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The Spanish course object",
+        "correct": false,
+        "why": "A parameter is text from the address; the page looks the course up itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-a2s8z353",
+    "version": 1,
+    "section": "dynamic-routes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the planner lose its `selected` course?",
+    "hint": "Two answers to one question.",
+    "choices": [
+      {
+        "text": "The address says which course; a second answer could disagree",
+        "correct": true,
+        "why": "Right: one source for the course being looked at."
+      },
+      {
+        "text": "Because a class with runes may only have two fields of state, and it needed room for the week",
+        "correct": false,
+        "why": "There is no such limit."
+      },
+      {
+        "text": "Because `$state` cannot hold a string",
+        "correct": false,
+        "why": "It held one for eight lessons."
+      }
+    ]
+  },
+  {
+    "id": "ex-7x5ms01y",
+    "version": 1,
+    "section": "dynamic-routes",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the course page for guitar you go to the week of 12 October and add a 30-minute session on the 14th. How many minutes does the week page then show for that week in total?",
+    "hint": "That week had 90 minutes before.",
+    "value": 120,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-kwv70nd1",
+    "version": 1,
+    "section": "dynamic-routes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `/courses/piano` show, before any matcher is added?",
+    "hint": "`[id]` takes any text.",
+    "choices": [
+      {
+        "text": "An error on `course.name`",
+        "correct": false,
+        "why": "The page checks `{#if course}` first."
+      },
+      {
+        "text": "The page, saying \"No such course\"",
+        "correct": true,
+        "why": "Right: the address reached the page and the data had no piano."
+      },
+      {
+        "text": "A 404 from SvelteKit",
+        "correct": false,
+        "why": "The route matches; it is the page that finds no course."
+      }
+    ]
+  },
+  {
+    "id": "ex-5z0ca0yv",
+    "version": 1,
+    "section": "matchers",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To use the matcher `slug` for the parameter `id`, the folder is named `[id=___]`.",
+    "hint": "The matcher's name goes after the `=`.",
+    "blanks": [
+      {
+        "accept": [
+          "slug"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fsgycjba",
+    "version": 1,
+    "section": "matchers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the `slug` matcher in place, what does `/courses/Algebra` get?",
+    "hint": "Capital letters are not in the pattern.",
+    "choices": [
+      {
+        "text": "The course page, saying \"No such course\"",
+        "correct": false,
+        "why": "That was before the matcher; now the page is never reached."
+      },
+      {
+        "text": "The algebra course, since the matcher lower-cases it",
+        "correct": false,
+        "why": "This matcher returns the text as it is or `undefined`."
+      },
+      {
+        "text": "A 404, before the course page runs",
+        "correct": true,
+        "why": "Right: the route does not match and no other does."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ye5xqe3",
+    "version": 1,
+    "section": "matchers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `/courses/piano` still reach the page after the matcher is added?",
+    "hint": "What can a matcher know?",
+    "choices": [
+      {
+        "text": "It has the shape of an id; whether it exists is a question for the data",
+        "correct": true,
+        "why": "Right. A matcher checks shape, not existence."
+      },
+      {
+        "text": "Because the matcher was written to let one unknown course through",
+        "correct": false,
+        "why": "It lets through every lower-case slug, known or not."
+      },
+      {
+        "text": "Because matchers only run on the server",
+        "correct": false,
+        "why": "They run in both places, and `piano` passes in both."
+      }
+    ]
+  },
+  {
+    "id": "ex-nmz4dwhv",
+    "version": 1,
+    "section": "matchers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way of writing matchers with its SvelteKit version.",
+    "hint": "Version 3 changed both the file and what the function returns.",
+    "pairs": [
+      {
+        "left": "One file per matcher in `src/params/`",
+        "right": "Before 3, exporting `match`"
+      },
+      {
+        "left": "A boolean result",
+        "right": "Before 3: match or no match"
+      },
+      {
+        "left": "`defineParams` in `src/params.js`",
+        "right": "SvelteKit 3"
+      },
+      {
+        "left": "A value or `undefined`",
+        "right": "SvelteKit 3, which can also convert"
+      }
+    ]
+  },
+  {
+    "id": "ex-mc486tmk",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `+error.svelte` in place, what status does `/courses/Algebra` answer?",
+    "hint": "`curl -w '%{http_code}'` printed it.",
+    "choices": [
+      {
+        "text": "404",
+        "correct": true,
+        "why": "Right: friendlier words, the same status."
+      },
+      {
+        "text": "500, because an error page ran",
+        "correct": false,
+        "why": "The error page shows the status of the failure, here a 404."
+      },
+      {
+        "text": "200, since a page was rendered",
+        "correct": false,
+        "why": "That would tell a crawler the address exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-k0re7q5w",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the error page show the planner's header?",
+    "hint": "Which layouts wrap an error page?",
+    "choices": [
+      {
+        "text": "Because `+error.svelte` copies the header's markup",
+        "correct": false,
+        "why": "It has none of its own; it is wrapped."
+      },
+      {
+        "text": "The root layout is above its folder, so it wraps the error page",
+        "correct": true,
+        "why": "Right: an error page renders inside the layouts above its own folder."
+      },
+      {
+        "text": "Because every error page is rendered inside every layout",
+        "correct": false,
+        "why": "Only the layouts above its folder; the `(planner)` layout does not wrap this one."
+      }
+    ]
+  },
+  {
+    "id": "ex-2eybn66c",
+    "version": 1,
+    "section": "errors",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which failures never reach an `+error.svelte`? Choose all that apply.",
+    "hint": "The last paragraph names two.",
+    "choices": [
+      {
+        "text": "The root layout failing",
+        "correct": true,
+        "why": "Yes: there is no layout left, so `src/error.html` is used."
+      },
+      {
+        "text": "An error in a server endpoint",
+        "correct": true,
+        "why": "Yes: it is answered as data, not as a page."
+      },
+      {
+        "text": "An address no route matches",
+        "correct": false,
+        "why": "That is the 404 this section's page shows."
+      },
+      {
+        "text": "An error thrown inside a page in a group",
+        "correct": false,
+        "why": "The nearest `+error.svelte` above it shows that."
+      }
+    ]
+  },
+  {
+    "id": "ex-cp55d88g",
+    "version": 1,
+    "section": "errors",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `+error.svelte`, the error's text is `page.error.___`.",
+    "hint": "It printed \"Not Found\".",
+    "blanks": [
+      {
+        "accept": [
+          "message"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1aezfsfy",
+    "version": 1,
+    "section": "navigation",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each value of `data-sveltekit-preload-data` with when it starts loading.",
+    "hint": "One of them never does.",
+    "pairs": [
+      {
+        "left": "`hover`",
+        "right": "When the pointer rests on the link"
+      },
+      {
+        "left": "`tap`",
+        "right": "When the link is pressed"
+      },
+      {
+        "left": "`false`",
+        "right": "Not before the click"
+      }
+    ],
+    "right_distractors": [
+      "When the page first loads, for every link"
+    ]
+  },
+  {
+    "id": "ex-8r49deqf",
+    "version": 1,
+    "section": "navigation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You follow a link from the week to `/courses/guitar`. What is replaced?",
+    "hint": "Both pages are in the `(planner)` group.",
+    "choices": [
+      {
+        "text": "The page and the `(planner)` layout, but not the root layout",
+        "correct": false,
+        "why": "The group layout wraps both pages, so it stays."
+      },
+      {
+        "text": "Everything, since the address changed",
+        "correct": false,
+        "why": "A client-side navigation keeps what the two addresses share."
+      },
+      {
+        "text": "Only the page; the layouts and the planner stay",
+        "correct": true,
+        "why": "Right: the layouts, the provider and the planner stay."
+      }
+    ]
+  },
+  {
+    "id": "ex-7mz9mqah",
+    "version": 1,
+    "section": "navigation",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You add 30 minutes of guitar on 21 October, go to About, and come back. How many guitar minutes does the week of 19 October show?",
+    "hint": "The group's layout was created again from the file.",
+    "value": 45,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-3xavq545",
+    "version": 1,
+    "section": "navigation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is the session lost after the trip to About?",
+    "hint": "About is outside the group.",
+    "choices": [
+      {
+        "text": "Leaving the group destroyed its layout, and the planner with it",
+        "correct": true,
+        "why": "Right: back in the group, a new layout loaded the file and made a new planner."
+      },
+      {
+        "text": "Because the About page clears every context it finds above it when it is created",
+        "correct": false,
+        "why": "About knows nothing of the planner."
+      },
+      {
+        "text": "Because the link to About reloads the page",
+        "correct": false,
+        "why": "It is a client-side navigation like the others; no reload happened."
+      }
+    ]
+  },
+  {
+    "id": "ex-ke58akx8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A new page at `/courses/[id=slug]/history` should list a course's past sessions, read from context. Where does its file go?",
+    "hint": "Which layout sets the context?",
+    "choices": [
+      {
+        "text": "`src/routes/(info)/courses/[id=slug]/history/+page.svelte`",
+        "correct": false,
+        "why": "The `(info)` group has no provider; `getPlanner()` would throw."
+      },
+      {
+        "text": "`src/routes/(planner)/courses/[id=slug]/history/+page.svelte`",
+        "correct": true,
+        "why": "Right: inside the group, under the provider, with the matcher."
+      },
+      {
+        "text": "`src/routes/courses/[id=slug]/history/+page.svelte`, outside every group",
+        "correct": false,
+        "why": "Outside the group there is no provider above it, and `getPlanner()` would throw."
+      }
+    ]
+  },
+  {
+    "id": "ex-jqjgp5sz",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each file of the lesson with its job.",
+    "hint": "Four files, four jobs.",
+    "pairs": [
+      {
+        "left": "`src/routes/+layout.svelte`",
+        "right": "The header, on every page"
+      },
+      {
+        "left": "`src/routes/(planner)/+layout.svelte`",
+        "right": "Loads the data and provides the planner"
+      },
+      {
+        "left": "`src/params.js`",
+        "right": "Says what a course id looks like"
+      },
+      {
+        "left": "`src/routes/+error.svelte`",
+        "right": "What a failed address shows"
+      }
+    ]
+  }
+]

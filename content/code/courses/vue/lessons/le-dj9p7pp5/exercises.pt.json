@@ -1,0 +1,493 @@
+{
+  "ex-86sqbssp": {
+    "prompt": "Na demo `Fields`, o aluno escolhe *Spanish* no `<select>` de curso. O que `course` guarda?",
+    "hint": "Olhe o JSON que a demo imprimiu e os atributos das opções.",
+    "choices": [
+      {
+        "text": "`\"Spanish\"`, o texto que o aluno viu na tela",
+        "why": "É o que daria uma opção sem `value`. Todas estas têm um."
+      },
+      {
+        "text": "`1`, o lugar da opção na lista",
+        "why": "Um select entrega um valor, não uma posição; a posição não fica guardada em lugar nenhum."
+      },
+      {
+        "text": "`\"spanish\"`, o `value` da opção",
+        "why": "Certo. O valor é o id e o texto é o título, a regra do planner para toda lista."
+      },
+      {
+        "text": "O elemento `<option>` escolhido",
+        "why": "O `v-model` guarda dados, nunca um elemento; um elemento é o que um template ref dá."
+      }
+    ]
+  },
+  "ex-j752fd32": {
+    "prompt": "O aluno esvazia o campo `Minutes` do `Fields.vue`, um `<input type=\"number\" v-model=\"minutes\">`. O que `minutes` guarda agora?",
+    "hint": "O Vue converte o que dá para converter e deixa o resto.",
+    "choices": [
+      {
+        "text": "`0`, já que um campo numérico vazio conta como zero",
+        "why": "O Vue nunca inventa um zero; um campo vazio passaria então numa regra que só olha o intervalo."
+      },
+      {
+        "text": "`NaN`, o resultado de uma conversão que falhou",
+        "why": "Uma conversão que falha deixa o valor original em vez de gravar `NaN`."
+      },
+      {
+        "text": "`null`, para dizer que o campo não tem valor",
+        "why": "O Vue grava o que o campo dá, e um campo vazio dá texto, não `null`."
+      },
+      {
+        "text": "`\"\"`, uma string vazia",
+        "why": "Certo. Só o que se converte vira número; a tabela diz que um campo vazio dá `\"\"`."
+      }
+    ]
+  },
+  "ex-x8wd8sj1": {
+    "prompt": "Quais destes campos entregam ao `v-model` um valor que não é string, sem nenhum modificador? Escolha todas as que se aplicam.",
+    "hint": "Só um tipo de campo é convertido pelo Vue sozinho; o outro caminho é você mesmo ligar o valor.",
+    "choices": [
+      {
+        "text": "`<input type=\"number\">` com 45",
+        "why": "Certo. O Vue lê o `type` do campo e converte para número."
+      },
+      {
+        "text": "`<input type=\"date\">` com o dia 30 de outubro",
+        "why": "Um campo de data dá `\"2026-10-30\"`, uma string, que é o formato que o planner já usa."
+      },
+      {
+        "text": "Um `<select>` cujas opções ligam `:value` a números",
+        "why": "Certo. Ligada com `:value`, a opção entrega o que você deu a ela, número inclusive."
+      },
+      {
+        "text": "Botões de rádio com `value=\"reading\"` e `value=\"practice\"`",
+        "why": "Um atributo `value` comum é texto, então o rádio dá a string do escolhido."
+      }
+    ]
+  },
+  "ex-9pm82fyt": {
+    "prompt": "Na primeira execução da demo `Modifiers`, `lazy` ficou `\"\"` embora `verbs` tivesse sido digitado. Na segunda, mostrou `\"verbs\"` depois do Tab. Por quê?",
+    "hint": "Que evento cada tipo de `v-model` escuta?",
+    "choices": [
+      {
+        "text": "O `.lazy` espera um tempo curto depois da última tecla, e a primeira execução acabou cedo demais",
+        "why": "Não há timer no `.lazy`. Ele espera um evento, não que o tempo passe."
+      },
+      {
+        "text": "O `.lazy` grava no `change`, que dispara quando o campo é deixado",
+        "why": "Certo. Sem ele, o `v-model` sempre grava no `input`, uma vez por tecla."
+      },
+      {
+        "text": "O `.lazy` grava quando o formulário em volta do campo é enviado",
+        "why": "Não havia formulário na demo; sair do campo bastou."
+      },
+      {
+        "text": "O Tab renderizou a página de novo, e o ref já estava gravado desde o começo",
+        "why": "O ref ficou vazio até o foco sair: a primeira execução o imprimiu enquanto ainda estava."
+      }
+    ]
+  },
+  "ex-ytscc63r": {
+    "prompt": "Um campo de texto tem `v-model.number=\"minutes\"` e o aluno digita `abc`. O que `minutes` guarda?",
+    "hint": "Leia o que a aula diz que o `.number` faz com um valor que não se converte.",
+    "choices": [
+      {
+        "text": "`NaN`",
+        "why": "É o que o `parseFloat` devolve, e o Vue não o grava: ele confere isso."
+      },
+      {
+        "text": "`0`, o número usado no lugar",
+        "why": "Não existe número reserva; inventar um esconderia o erro."
+      },
+      {
+        "text": "A string `\"abc\"`",
+        "why": "Certo. Um valor que não se converte fica como estava: o `.number` não checa nada, então é uma conveniência, não validação."
+      },
+      {
+        "text": "`\"\"`, porque o modificador recusa o que não é número",
+        "why": "O `.number` não recusa nada. Recusar é trabalho da validação, algumas seções adiante."
+      }
+    ]
+  },
+  "ex-z25z7z79": {
+    "prompt": "Um título de curso salvo como ` Guitar`, com um espaço na frente, fica em primeiro na ordenação e nunca aparece numa busca. Escrito como `v-model.___`, o campo guarda `Guitar`.",
+    "hint": "O modificador que tira os espaços das pontas.",
+    "blanks": [
+      {
+        "accept": [
+          "trim"
+        ]
+      }
+    ]
+  },
+  "ex-re2t0mgy": {
+    "prompt": "O que o `useId()` dá a cada cópia do `FormField`?",
+    "hint": "Dois campos de um formulário são duas cópias do mesmo componente.",
+    "choices": [
+      {
+        "text": "O nome do componente, igual nas cópias",
+        "why": "Aí dois campos dividiriam um id, e um rótulo chegaria ao input errado."
+      },
+      {
+        "text": "Um id único na página, para o rótulo e o erro apontarem para ele",
+        "why": "Certo. A captura mostra `v-0`, e o `v-0-error` da mensagem é feito a partir dele, então toda cópia fica ligada às suas próprias partes."
+      },
+      {
+        "text": "Um id sorteado de novo a cada renderização",
+        "why": "Um id que mudasse a cada renderização soltaria o rótulo entre duas renderizações; ele é fixo por cópia."
+      },
+      {
+        "text": "O `id` que o pai escreveu no `<FormField>`",
+        "why": "O pai não escreve nenhum nesta aula; o componente cria o seu."
+      }
+    ]
+  },
+  "ex-k6y6bg88": {
+    "prompt": "Tire `inheritAttrs: false` e `v-bind=\"$attrs\"` do `FormField` e mantenha `type=\"number\" min=\"5\"` na tag do pai. Onde esses dois atributos vão parar?",
+    "hint": "O fallthrough da aula 6 escolhe um elemento do componente.",
+    "choices": [
+      {
+        "text": "No `<input>`, o primeiro elemento dentro do componente",
+        "why": "O fallthrough não procura um input; ele usa o elemento raiz."
+      },
+      {
+        "text": "São descartados, porque um componente fica com as props declaradas e joga fora o resto",
+        "why": "Atributos não declarados não são descartados: é justamente isso o fallthrough."
+      },
+      {
+        "text": "O Vue se recusa a compilar um componente que recebe atributos que nunca declarou",
+        "why": "O Vue aceita e os repassa; nada falha, e é por isso que o erro passa despercebido."
+      },
+      {
+        "text": "Na `<div class=\"field\">` em volta, e o input continua um campo de texto",
+        "why": "Certo. A raiz os recebe, e uma `<div>` com `type` não faz nada."
+      }
+    ]
+  },
+  "ex-3snwh405": {
+    "prompt": "No `FieldContract`, `1.5` é digitado no campo de horas. Quantos minutos `minutes` guarda depois?",
+    "hint": "O setter do computed gravável multiplica por 60 e arredonda.",
+    "unit": "minutos"
+  },
+  "ex-6wx5gxw5": {
+    "prompt": "Por que o formulário tem o `shown` além do `errors`?",
+    "hint": "Um responde o que está errado; o outro responde o que dizer.",
+    "choices": [
+      {
+        "text": "O `errors` é recalculado no envio, e o `shown` o mantém atualizado no meio-tempo",
+        "why": "O `errors` é um computed, então nunca fica velho; está atual a cada tecla."
+      },
+      {
+        "text": "O `errors` está sempre atual; o `shown` fica vazio até o primeiro envio",
+        "why": "Certo. Um formulário intocado não recebe o aluno com três mensagens vermelhas, e depois de uma tentativa cada uma some quando é corrigida."
+      },
+      {
+        "text": "O `shown` guarda o `errors` em cache, e as regras rodam uma vez em vez de a cada tecla",
+        "why": "Um computed já guarda em cache; o `shown` existe para decidir quando falar, não por velocidade."
+      },
+      {
+        "text": "O `shown` guarda as frases da tela, o `errors` códigos curtos",
+        "why": "Os dois guardam as mesmas frases; o `shown` é o `errors` ou nada."
+      }
+    ]
+  },
+  "ex-xdjsbdd6": {
+    "prompt": "O formulário tem `novalidate`, mas o campo de minutos ainda tem `min=\"5\"` e `max=\"240\"`. Para que eles estão ali?",
+    "hint": "O `novalidate` impede uma coisa que o navegador faz com eles, não tudo.",
+    "choices": [
+      {
+        "text": "O navegador ainda bloqueia um envio fora do intervalo, como segunda checagem",
+        "why": "Bloquear o envio é justamente o que o `novalidate` impede."
+      },
+      {
+        "text": "O Vue os lê para escrever a mensagem *Between 5 and 240 whole minutes.*",
+        "why": "A mensagem é escrita à mão no `errors`; o Vue nunca lê `min` nem `max`."
+      },
+      {
+        "text": "As setas do campo numérico, e o intervalo que um leitor de tela anuncia",
+        "why": "Certo. Eles descrevem o campo; o `novalidate` só impede o balão do navegador."
+      },
+      {
+        "text": "Sobraram de antes de o `novalidate` ser adicionado",
+        "why": "Eles ainda fazem dois trabalhos, os dois para o aluno e não para a checagem."
+      }
+    ]
+  },
+  "ex-j8j1b3qa": {
+    "prompt": "Quais valores de `draft.minutes` fazem do `errors.minutes` uma mensagem? Escolha todas as que se aplicam.",
+    "hint": "Três condições: inteiro, pelo menos 5, no máximo 240.",
+    "choices": [
+      {
+        "text": "`4`",
+        "why": "Certo. Abaixo do mínimo de 5."
+      },
+      {
+        "text": "`240`",
+        "why": "A regra é `<= 240`, então quatro horas exatas são permitidas."
+      },
+      {
+        "text": "`22.5`",
+        "why": "Certo. Dentro do intervalo, mas o `Number.isInteger` o recusa: só minutos inteiros."
+      },
+      {
+        "text": "`\"\"`, de um campo esvaziado",
+        "why": "Certo. Um campo numérico vazio dá uma string, e uma string não é um inteiro."
+      },
+      {
+        "text": "`5`",
+        "why": "A regra é `>= 5`; o próprio mínimo passa."
+      }
+    ]
+  },
+  "ex-n6vtd1wa": {
+    "prompt": "O formulário foi enviado com o curso vazio e 500 minutos. No HTML impresso, qual controle não tinha nem `aria-invalid` nem `aria-describedby`?",
+    "hint": "Qual campo não tinha nada de errado?",
+    "choices": [
+      {
+        "text": "O `<select>` de curso",
+        "why": "Ele estava vazio, então tinha os dois, apontando para *Choose a course.*"
+      },
+      {
+        "text": "O campo de data",
+        "why": "Certo. Ele tinha a data de hoje, então estava certo, e um campo sem nada de errado nunca é marcado."
+      },
+      {
+        "text": "O campo de minutos",
+        "why": "500 passa de 240, então ele foi marcado e descrito por `v-2-error`."
+      },
+      {
+        "text": "Nenhum deles: um envio que falha marca todos os campos do formulário",
+        "why": "Cada campo é marcado pelo seu próprio erro, não pelo envio; a data não tinha nenhum."
+      }
+    ]
+  },
+  "ex-8kqxkjn3": {
+    "prompt": "O que o `aria-describedby=\"v-2-error\"` no input de minutos faz para quem usa leitor de tela?",
+    "hint": "Olhe a tabela: um atributo dá nome, um marca, um descreve.",
+    "choices": [
+      {
+        "text": "Dá nome ao campo, como o `<label for>` faz",
+        "why": "O rótulo dá nome ao campo; a descrição vem depois do nome."
+      },
+      {
+        "text": "Move o foco para a mensagem quando o envio falha",
+        "why": "Nenhum atributo move o foco; o planner só o move depois de um sucesso, com um template ref."
+      },
+      {
+        "text": "Lê a mensagem depois do nome e do valor do campo",
+        "why": "Certo. O campo aponta para o `<p>` pelo id, então a mensagem é ouvida toda vez que o campo é alcançado."
+      },
+      {
+        "text": "Anuncia o campo como inválido quando ele é alcançado",
+        "why": "Esse é o trabalho do `aria-invalid`, o atributo ao lado."
+      }
+    ]
+  },
+  "ex-rgyqcvh5": {
+    "prompt": "O formulário de um colega põe `aria-invalid=\"true\"` em todo campo vazio desde o início e o tira à medida que cada um é preenchido. O que dá errado?",
+    "hint": "Pense no aluno que ainda não mexeu em nada.",
+    "choices": [
+      {
+        "text": "O aluno não nota diferença: o `aria-invalid` é ignorado enquanto não existe mensagem",
+        "why": "Um leitor de tela o anuncia exista ou não uma mensagem."
+      },
+      {
+        "text": "Todo campo é anunciado como errado na primeira visita, antes de qualquer coisa ser digitada",
+        "why": "Certo. É a versão para leitor de tela de receber um formulário novo com três mensagens vermelhas."
+      },
+      {
+        "text": "O navegador bloqueia o envio, porque o `novalidate` cobre `min` e `max`, e não ARIA",
+        "why": "O `aria-invalid` é para a tecnologia assistiva; as checagens do próprio navegador nunca o leem."
+      },
+      {
+        "text": "A linha com `role=\"status\"` lê os erros em voz alta quando a página abre",
+        "why": "A linha de status diz só o que recebe, e nada escreve erros nela."
+      }
+    ]
+  },
+  "ex-67bbvadc": {
+    "prompt": "Por que o `submit()` faz `saved.value = ''` antes de retornar num formulário inválido?",
+    "hint": "O que a linha de status ainda diria da sessão anterior?",
+    "choices": [
+      {
+        "text": "Para que uma linha *Added…* antiga não fique sobre uma nova falha",
+        "why": "Certo. Nada deve dizer que uma sessão foi adicionada quando nenhuma foi."
+      },
+      {
+        "text": "Para que a região viva leia os erros no lugar",
+        "why": "Nada escreve erros na linha de status; cada campo anuncia o seu quando é alcançado."
+      },
+      {
+        "text": "Porque o `role=\"status\"` recusa um texto novo enquanto o formulário está inválido",
+        "why": "O role não recusa nada; ele anuncia o que o parágrafo receber."
+      },
+      {
+        "text": "É o passo quatro, o reset para a próxima entrada",
+        "why": "O reset só acontece depois de um sucesso; isto é o retorno antecipado do passo dois."
+      }
+    ]
+  },
+  "ex-57nmft0c": {
+    "prompt": "Depois de um envio bem-sucedido, o curso é limpo e os minutos voltam a 30. Por que a data fica como estava?",
+    "hint": "Pense na próxima sessão que o aluno vai adicionar.",
+    "choices": [
+      {
+        "text": "A data chegou como prop, e um componente não pode escrever nas suas props",
+        "why": "Ela foi copiada para o `draft` uma vez; o draft é do formulário, e poderia ser resetado."
+      },
+      {
+        "text": "Limpá-la mostraria *Choose a date.* na hora",
+        "why": "O `tried` volta a false no mesmo reset, então nada apareceria."
+      },
+      {
+        "text": "Quem planeja um dia adiciona as sessões desse dia uma depois da outra, em sequência",
+        "why": "Certo. O reset mantém o que o aluno digitaria de novo, e nada mais."
+      },
+      {
+        "text": "O `Object.assign` não consegue voltar uma propriedade para uma string",
+        "why": "Ele volta o `course` para a string `''` naquela mesma linha, como qualquer reset faria."
+      }
+    ]
+  },
+  "ex-rdfdv0qg": {
+    "prompt": "Guitar foi adicionado no dia 24, com 25 minutos. Quantos minutos planejados o rodapé da semana passou a mostrar?",
+    "hint": "A linha embaixo da lista da semana: `75 of … minutes done`.",
+    "unit": "minutos"
+  },
+  "ex-vbgdazn7": {
+    "prompt": "Agora o formulário envia cada sessão a um servidor, e a requisição falha. O que o formulário deve fazer, como a aula descreve?",
+    "hint": "O aluno não deveria ter de digitar tudo duas vezes.",
+    "choices": [
+      {
+        "text": "Limpar os campos, para a próxima tentativa começar do zero",
+        "why": "Limpar faz o aluno digitar a sessão inteira de novo por uma falha que não foi dele."
+      },
+      {
+        "text": "Dizer isso na linha de status, e manter o que foi digitado",
+        "why": "Certo. A mesma linha que diz *Added…* diz o que falhou, e o aluno tenta de novo com todos os campos como estavam."
+      },
+      {
+        "text": "Voltar o `tried` para false e esconder as mensagens",
+        "why": "O `tried` trata dos erros do próprio aluno; uma requisição que falhou não é um deles."
+      },
+      {
+        "text": "Desabilitar o botão até a página ser recarregada",
+        "why": "O botão fica desabilitado enquanto envia, não depois; recarregar perderia todos os refs."
+      }
+    ]
+  },
+  "ex-v4ffvg1e": {
+    "prompt": "No `SessionForm`, como o `<select>` de curso recebe o id do campo e o id da sua mensagem?",
+    "hint": "O select não é o `<input>` do próprio `FormField`; é conteúdo que o formulário entrega.",
+    "choices": [
+      {
+        "text": "Pelo `$attrs`, que o `inheritAttrs: false` repassa a ele",
+        "why": "O `$attrs` vai para o `<input>` padrão; o select não é esse elemento."
+      },
+      {
+        "text": "Chamando ele mesmo o `useId()`, que repete o id dentro de um formulário",
+        "why": "Cada chamada dá um id novo; chamar de novo soltaria o select do seu rótulo."
+      },
+      {
+        "text": "Por provide e inject, do formulário até cada campo",
+        "why": "Nada é fornecido aqui; os valores viajam um nível, do campo para o seu slot."
+      },
+      {
+        "text": "Do slot com escopo, que entrega `id`, `invalid` e `describedBy`",
+        "why": "Certo. O slot com escopo da aula 7: o campo passa os três valores, e o select os conecta; nada mais é preciso."
+      }
+    ]
+  },
+  "ex-vk595gcx": {
+    "prompt": "Clicado vazio, o formulário do planner mostrou só *Choose a course.* Por que não as outras duas mensagens?",
+    "hint": "O que eram a data e os minutos quando o formulário abriu?",
+    "choices": [
+      {
+        "text": "Um formulário mostra a mensagem do primeiro campo inválido e de nenhum outro",
+        "why": "Todo campo inválido mostra a sua; a captura dos 500 minutos mostrou duas ao mesmo tempo."
+      },
+      {
+        "text": "A data começou como hoje e os minutos como 30, os dois dentro das regras",
+        "why": "Certo. Só o curso não tinha valor inicial."
+      },
+      {
+        "text": "Só o select é checado no envio; os inputs são checados enquanto se digita",
+        "why": "As três regras estão num só computed, e o `shown` revela todas no primeiro envio."
+      },
+      {
+        "text": "O `shown` revela mais um erro a cada clique no botão",
+        "why": "O `shown` é o `errors` inteiro ou nada."
+      }
+    ]
+  },
+  "ex-k3ajvzym": {
+    "prompt": "Ponha o que acontece num envio válido na ordem em que o planner faz.",
+    "hint": "Parar, checar, agir, resetar; o foco se move por último.",
+    "items": [
+      "O `.prevent` impede o envio do próprio navegador",
+      "O `tried` vira true e o `valid` é checado",
+      "A store recebe uma cópia do draft",
+      "A linha de status diz o que foi adicionado",
+      "O curso é limpo e os minutos voltam a 30",
+      "O foco volta para o campo de curso"
+    ]
+  },
+  "ex-msypdh0s": {
+    "prompt": "Ligue cada atributo do formulário do planner ao que ele faz.",
+    "hint": "Uma descrição é algo que o planner deliberadamente não faz.",
+    "pairs": [
+      {
+        "left": "`aria-invalid=\"true\"`",
+        "right": "Marca o campo como errado quando ele é alcançado"
+      },
+      {
+        "left": "`aria-describedby`",
+        "right": "Faz a mensagem ser lida depois do valor do campo"
+      },
+      {
+        "left": "`role=\"status\"`",
+        "right": "Anuncia uma linha nova sem mover o foco"
+      },
+      {
+        "left": "`novalidate`",
+        "right": "Impede o balão do navegador de bloquear o envio"
+      }
+    ],
+    "right_distractors": [
+      "Move o foco para o primeiro campo inválido"
+    ]
+  },
+  "ex-mwtd6hx5": {
+    "prompt": "Num componente, o `v-model` é uma prop mais um listener de `update:modelValue`. No filho, as duas metades se escrevem como uma chamada à macro `___()`.",
+    "hint": "A mesma chamada que o `FormField` faz na terceira linha do script.",
+    "blanks": [
+      {
+        "accept": [
+          "defineModel"
+        ]
+      }
+    ]
+  },
+  "ex-azf61vm6": {
+    "prompt": "Um novo `FormField` para o título de uma sessão tem a regra `title: draft.title ? '' : 'Write a title.'`. Um aluno digita três espaços e a regra os deixa passar. O que no `v-model` do pai os pegaria?",
+    "hint": "Um modificador num componente é aplicado ao valor que o componente emite.",
+    "choices": [
+      {
+        "text": "`.trim`, para os três espaços chegarem como `\"\"`",
+        "why": "Certo. O Vue aplica o modificador a tudo que o `FormField` emite, e uma string vazia falha na regra: nada passa."
+      },
+      {
+        "text": "`.lazy`, para nada ser gravado até o campo ser deixado",
+        "why": "Ao sair, o `.lazy` grava os três espaços do mesmo jeito; ele muda quando, não o quê."
+      },
+      {
+        "text": "`.number`, que transforma texto que não é número em `\"\"`",
+        "why": "O `.number` deixa como estava o texto que não se converte, espaços inclusive."
+      },
+      {
+        "text": "Nenhum: um modificador funciona em `<input>` e se perde num componente",
+        "why": "O `.number` no campo de horas do `FieldContract` funcionou através de um componente; o `.trim` também."
+      }
+    ]
+  }
+}

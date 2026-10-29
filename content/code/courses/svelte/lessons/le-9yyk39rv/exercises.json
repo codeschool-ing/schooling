@@ -1,0 +1,628 @@
+[
+  {
+    "id": "ex-3thsgz75",
+    "version": 1,
+    "section": "prop-drilling",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is prop drilling?",
+    "hint": "Think of the components in the middle.",
+    "choices": [
+      {
+        "text": "A bug in which a prop changes on its way down through the tree",
+        "correct": false,
+        "why": "Props arrive as they were passed; nothing changes them on the way."
+      },
+      {
+        "text": "Passing a value through components that only hand it on",
+        "correct": true,
+        "why": "Right. It is honest, and noisy when the middle grows props it does not use."
+      },
+      {
+        "text": "Reading a prop from inside an effect",
+        "correct": false,
+        "why": "That is ordinary, and has nothing to do with depth."
+      },
+      {
+        "text": "Binding a prop through several components with bind:",
+        "correct": false,
+        "why": "Binding is two-way; drilling is about passing through the middle, one way or the other."
+      }
+    ]
+  },
+  {
+    "id": "ex-p3x4yqwm",
+    "version": 1,
+    "section": "prop-drilling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Status` reads `total` and `doneMinutes`, `Days` reads `week` and `byDay`. What do the two really need?",
+    "hint": "It is never a single value.",
+    "choices": [
+      {
+        "text": "Four separate props, one per field they read, passed from the page",
+        "correct": false,
+        "why": "That works, and grows by one prop for every new field."
+      },
+      {
+        "text": "The planner itself, the whole instance whose fields they read",
+        "correct": true,
+        "why": "Right: they read a few of its fields, which change as they change."
+      },
+      {
+        "text": "A copy of the planner's data, taken when they are created",
+        "correct": false,
+        "why": "A copy would stop following the planner the moment it was taken."
+      }
+    ]
+  },
+  {
+    "id": "ex-z2fqmv77",
+    "version": 1,
+    "section": "prop-drilling",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these make context the right tool? Choose all that apply.",
+    "hint": "The section lists three conditions.",
+    "choices": [
+      {
+        "text": "Many components inside one part of the page need the same thing",
+        "correct": true,
+        "why": "Yes, the first condition."
+      },
+      {
+        "text": "The thing belongs to that part of the page, not to the whole application",
+        "correct": true,
+        "why": "Yes, the second."
+      },
+      {
+        "text": "The value must be the same for every visitor of the site",
+        "correct": false,
+        "why": "That describes a module-level constant, not context."
+      },
+      {
+        "text": "Only one component needs it, two levels down",
+        "correct": false,
+        "why": "One reader is what a prop is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-dr6hrbjt",
+    "version": 1,
+    "section": "prop-drilling",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two `Planner.svelte` components sit side by side on one page. What does a `Days` inside the second one get?",
+    "hint": "Context goes to a component's own descendants.",
+    "choices": [
+      {
+        "text": "Whichever planner was set last on the page",
+        "correct": false,
+        "why": "That would make context a global, which it is not."
+      },
+      {
+        "text": "An error, because a context may only be set once per page",
+        "correct": false,
+        "why": "Each component may set its own, for its own children."
+      },
+      {
+        "text": "The one its own nearest ancestor set",
+        "correct": true,
+        "why": "Right. The nearest component above that set it decides."
+      },
+      {
+        "text": "The first planner, since it was created earlier",
+        "correct": false,
+        "why": "Creation order does not matter; the tree above does."
+      }
+    ]
+  },
+  {
+    "id": "ex-qtmf74vx",
+    "version": 1,
+    "section": "create-context",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `createContext()` return?",
+    "hint": "The lesson destructures it in `context.js`.",
+    "choices": [
+      {
+        "text": "A key string to pass to `setContext` and `getContext`",
+        "correct": false,
+        "why": "It replaces keys altogether."
+      },
+      {
+        "text": "A pair of functions, one that gets the value and one that sets it for the components inside",
+        "correct": true,
+        "why": "Right, and a third that says whether it was set."
+      },
+      {
+        "text": "A store holding the value, read with `$`",
+        "correct": false,
+        "why": "It is not a store; it hands over a value."
+      },
+      {
+        "text": "A component that wraps the children it provides for",
+        "correct": false,
+        "why": "It is a pair of functions, not a component."
+      }
+    ]
+  },
+  {
+    "id": "ex-svv2texw",
+    "version": 1,
+    "section": "create-context",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can `Planner.svelte` write `const planner = setPlanner(new Planner(…))` in one line?",
+    "hint": "What does the setter give back?",
+    "choices": [
+      {
+        "text": "`setPlanner` returns the value it was given",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`setPlanner` creates a reactive copy of the instance and returns the copy",
+        "correct": false,
+        "why": "No copy is made: it is the same instance."
+      },
+      {
+        "text": "Because `new` inside a function call is evaluated after the call returns",
+        "correct": false,
+        "why": "Arguments are evaluated first, as anywhere in JavaScript."
+      }
+    ]
+  },
+  {
+    "id": "ex-drqz1rtv",
+    "version": 1,
+    "section": "create-context",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many lines of `Planner.svelte`'s markup did the two tags `<Status />` and `<Days />` replace?",
+    "hint": "The note in the example says it.",
+    "value": 13,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-zmj7907g",
+    "version": 1,
+    "section": "create-context",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After ticking the session of the 24th, `Status` and `Days` agree with the rest of the page. Why?",
+    "hint": "How many planners are there?",
+    "choices": [
+      {
+        "text": "The context sends them an update event whenever the planner changes",
+        "correct": false,
+        "why": "A context is not reactive by itself; it handed over the instance once."
+      },
+      {
+        "text": "They read fields of the one planner the page changes",
+        "correct": true,
+        "why": "Right. One instance, signals in its fields."
+      },
+      {
+        "text": "The page re-creates both components after every change",
+        "correct": false,
+        "why": "Nothing is re-created; only what read the changed fields updates."
+      },
+      {
+        "text": "Each one keeps its own planner and copies the page's on change",
+        "correct": false,
+        "why": "There is only one planner, set by the page."
+      }
+    ]
+  },
+  {
+    "id": "ex-7cnyhp69",
+    "version": 1,
+    "section": "create-context",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`createContext` is part of Svelte since version 5.___.",
+    "hint": "Before it, `setContext` and `getContext` with a key.",
+    "blanks": [
+      {
+        "accept": [
+          "40"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cg5w8cgm",
+    "version": 1,
+    "section": "missing-context",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Days` is rendered on a page with no `Planner.svelte` around it. What happens?",
+    "hint": "Read the first line of the server's message.",
+    "choices": [
+      {
+        "text": "It renders an empty list and logs a warning",
+        "correct": false,
+        "why": "`getPlanner()` throws; nothing is rendered quietly."
+      },
+      {
+        "text": "It creates a planner of its own with no sessions",
+        "correct": false,
+        "why": "Nothing creates a planner except the code that calls `new Planner`."
+      },
+      {
+        "text": "An error, `missing_context`, and a 500 page",
+        "correct": true,
+        "why": "Right. The stack names `Days.svelte` as the component that asked."
+      }
+    ]
+  },
+  {
+    "id": "ex-hwsvs0jc",
+    "version": 1,
+    "section": "missing-context",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the error from `getPlanner()` better than what the older `getContext(key)` did?",
+    "hint": "What did the old one return?",
+    "choices": [
+      {
+        "text": "The old one crashed the whole server instead of one page",
+        "correct": false,
+        "why": "It did the opposite: it returned quietly."
+      },
+      {
+        "text": "The old one returned `undefined` and the failure came later, somewhere less helpful",
+        "correct": true,
+        "why": "Right. A failure at the point of the mistake is easier to fix."
+      },
+      {
+        "text": "The new one fixes the missing context by itself",
+        "correct": false,
+        "why": "It reports it; the fix is yours."
+      },
+      {
+        "text": "They behave the same; only the name of the function changed",
+        "correct": false,
+        "why": "One throws, one returned `undefined`."
+      }
+    ]
+  },
+  {
+    "id": "ex-9d1dyknc",
+    "version": 1,
+    "section": "missing-context",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A component should work with or without a planner above it. What does it use?",
+    "hint": "`createContext` returns three functions.",
+    "choices": [
+      {
+        "text": "A `try … catch` around every read of a planner field",
+        "correct": false,
+        "why": "The check belongs before getting, not around every read."
+      },
+      {
+        "text": "The third function: `hasPlanner() ? getPlanner() : null`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`getPlanner(null)`, which returns its argument when nothing was set",
+        "correct": false,
+        "why": "The getter takes no default; it throws."
+      }
+    ]
+  },
+  {
+    "id": "ex-h404ynjx",
+    "version": 1,
+    "section": "missing-context",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A button's click handler calls `getPlanner()` to add a session. What happens?",
+    "hint": "When may context be read?",
+    "choices": [
+      {
+        "text": "It fails: by then Svelte no longer knows which component is asking",
+        "correct": true,
+        "why": "Right. Get it at the top of the script, keep it in a constant."
+      },
+      {
+        "text": "It works, since the planner the page created is still on the page and still in context",
+        "correct": false,
+        "why": "Being on the page is not enough; context is read during creation."
+      },
+      {
+        "text": "It returns a fresh planner with the data as it was first loaded",
+        "correct": false,
+        "why": "Nothing makes a new planner."
+      }
+    ]
+  },
+  {
+    "id": "ex-6wa4zzs3",
+    "version": 1,
+    "section": "what-context-holds",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match what the parent sets with what a child sees later.",
+    "hint": "Only one keeps following the planner.",
+    "pairs": [
+      {
+        "left": "`setTotal(planner.total)`",
+        "right": "The total as it was when set"
+      },
+      {
+        "left": "`setPlanner(planner)`, then `planner = new Planner(…)`",
+        "right": "The old instance"
+      },
+      {
+        "left": "`setPlanner(planner)`, changed through its fields",
+        "right": "The current total"
+      }
+    ],
+    "right_distractors": [
+      "An error the first time the total changes"
+    ]
+  },
+  {
+    "id": "ex-76tzxbwj",
+    "version": 1,
+    "section": "what-context-holds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A child needs only the current total. What should the parent put in context?",
+    "hint": "A function call is read when it runs.",
+    "choices": [
+      {
+        "text": "`planner.total`, which the child then reads with `$derived`",
+        "correct": false,
+        "why": "The number was copied when it was set; deriving from a copy follows nothing."
+      },
+      {
+        "text": "A function, `() => planner.total`, which the child calls whenever it needs the total",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A new `$state` variable holding the total, set once",
+        "correct": false,
+        "why": "Set once, it would never follow the planner's total."
+      },
+      {
+        "text": "The total as a string, since strings are passed by reference",
+        "correct": false,
+        "why": "Strings are values like numbers; that changes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-ys13p4am",
+    "version": 1,
+    "section": "what-context-holds",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`setContext('total', total)` with a `$state` variable makes the compiler warn `state_referenced____`.",
+    "hint": "The same warning as lesson 2's `hours`.",
+    "blanks": [
+      {
+        "accept": [
+          "_locally",
+          "locally"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jzn80z4k",
+    "version": 1,
+    "section": "what-context-holds",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why will lesson 13 update the planner's fields in place instead of making a new `Planner` when data arrives?",
+    "hint": "Look at the second row of the table.",
+    "choices": [
+      {
+        "text": "Creating instances of a class is slow on the server",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "A class with runes can only be constructed once per page",
+        "correct": false,
+        "why": "Nothing limits how many are made."
+      },
+      {
+        "text": "Children hold the instance they were given, so a new one would never reach them",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-70wg283d",
+    "version": 1,
+    "section": "server-state",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana opens `/hello?name=Ana`, then a stranger opens `/hello` with the module version. What does the stranger see?",
+    "hint": "One copy of the module answers both.",
+    "choices": [
+      {
+        "text": "`Hello, stranger.`",
+        "correct": false,
+        "why": "That is the context version."
+      },
+      {
+        "text": "`Hello, Ana.`",
+        "correct": true,
+        "why": "Right: the first request set the name in the module the second request read."
+      },
+      {
+        "text": "An error, since two requests wrote the same object",
+        "correct": false,
+        "why": "Nothing errors, which is why it is dangerous."
+      },
+      {
+        "text": "An empty greeting until the first request has finished",
+        "correct": false,
+        "why": "The first had finished; its value stayed."
+      }
+    ]
+  },
+  {
+    "id": "ex-6a6kzbwq",
+    "version": 1,
+    "section": "server-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a module-level value cause no trouble in the browser?",
+    "hint": "Who holds the page?",
+    "choices": [
+      {
+        "text": "The browser holds one page for one person",
+        "correct": true,
+        "why": "Right, so the value is that person's."
+      },
+      {
+        "text": "Browsers copy every module once per component that imports it",
+        "correct": false,
+        "why": "A module is loaded once per page, in the browser too."
+      },
+      {
+        "text": "Svelte resets module state on every client-side navigation",
+        "correct": false,
+        "why": "It keeps it, as the timer of lesson 10 did."
+      }
+    ]
+  },
+  {
+    "id": "ex-sgbhha4g",
+    "version": 1,
+    "section": "server-state",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the fix for the greeting in order.",
+    "hint": "The module changes first; the page uses what it exports.",
+    "items": [
+      "The module exports `createContext()`'s pair instead of an instance",
+      "The page creates its own `$state` visitor from the address",
+      "The page calls `setVisitor(visitor)`",
+      "Each request greets its own visitor"
+    ],
+    "trap": "Setting a context needs the value to exist first."
+  },
+  {
+    "id": "ex-88q2zj7g",
+    "version": 1,
+    "section": "server-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is safe at module level on a page rendered on the server?",
+    "hint": "Is it the same for everybody?",
+    "choices": [
+      {
+        "text": "The selected course of the student who is browsing",
+        "correct": false,
+        "why": "That belongs to one person."
+      },
+      {
+        "text": "A list of sessions loaded for the current visitor",
+        "correct": false,
+        "why": "Private to one visitor: it would leak to the next."
+      },
+      {
+        "text": "A function that formats dates for display",
+        "correct": true,
+        "why": "Right: the same for everybody."
+      },
+      {
+        "text": "The name typed into a form by the last person who submitted it",
+        "correct": false,
+        "why": "Exactly the leak the section shows."
+      }
+    ]
+  },
+  {
+    "id": "ex-fd4p5j81",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A theme setting chosen by each visitor must reach twenty components across the layout. Where does it go?",
+    "hint": "Per visitor, many readers, rendered on the server.",
+    "choices": [
+      {
+        "text": "An exported `$state` object in a `.svelte.js` module",
+        "correct": false,
+        "why": "On the server it would be shared between visitors."
+      },
+      {
+        "text": "An object in context, set by the component that holds them all",
+        "correct": true,
+        "why": "Right: one per request, reachable at any depth."
+      },
+      {
+        "text": "A prop passed by hand through every component in between",
+        "correct": false,
+        "why": "It works, at the price the first section described."
+      }
+    ]
+  },
+  {
+    "id": "ex-4123mas2",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each value with where it belongs.",
+    "hint": "Who does it belong to, and who reads it?",
+    "pairs": [
+      {
+        "left": "A date-formatting function",
+        "right": "A plain module"
+      },
+      {
+        "left": "The planner, read by Status and Days",
+        "right": "Context"
+      },
+      {
+        "left": "The minutes for one WeekTotal",
+        "right": "A prop"
+      }
+    ],
+    "right_distractors": [
+      "A module-level `$state` shared by every request"
+    ]
+  }
+]

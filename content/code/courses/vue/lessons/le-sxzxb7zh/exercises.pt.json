@@ -1,0 +1,456 @@
+{
+  "ex-a0250636": {
+    "prompt": "Em `PropsBasics`, a segunda barra é escrita `<GoalBar label=\"Spanish\" minutes=\"30\" />`. O que o `GoalBar` recebeu como `minutes`, e o que o Vue fez a respeito?",
+    "hint": "Veja a linha que o componente registrou para Spanish.",
+    "choices": [
+      {
+        "text": "O número 30, porque a prop está declarada como `Number`",
+        "why": "A declaração diz o que o filho espera, não o que ele recebe. Sem os dois-pontos nada converte o texto."
+      },
+      {
+        "text": "Nada: o Vue se recusou a renderizar essa barra",
+        "why": "A transcrição mostra `Spanish: 30 of 60 minutes` na página. Uma checagem que falha avisa; ela não impede nada."
+      },
+      {
+        "text": "A string `\"30\"`; o Vue avisou e a usou assim mesmo",
+        "why": "Isso. Um atributo comum é texto, a checagem de tipo falhou, e a barra foi desenhada assim mesmo com a string: `minutes is a string`."
+      },
+      {
+        "text": "`undefined`, porque uma prop passada sem dois-pontos é descartada",
+        "why": "Ela não é descartada; chega como texto. `undefined` foi o que a quarta barra teve em `label`, que nem foi passada."
+      }
+    ]
+  },
+  "ex-m9r7czjy": {
+    "prompt": "Na transcrição de `PropsBasics`, quantas linhas `[Vue warn]` as quatro barras produziram?",
+    "hint": "Três dos quatro usos estavam errados."
+  },
+  "ex-e0b73e3x": {
+    "prompt": "Quais destas afirmações valem para o `defineProps`? Escolha todas as que se aplicam.",
+    "hint": "Ele é lido pelo compilador antes de o código rodar.",
+    "choices": [
+      {
+        "text": "É usado sem ser importado",
+        "why": "Isso. É uma macro do compilador, e o compilador de SFC a transforma nas opções do componente."
+      },
+      {
+        "text": "Só funciona no nível de cima do `<script setup>`",
+        "why": "Isso. O compilador o procura ali; dentro de uma função ele não é visto."
+      },
+      {
+        "text": "Um `validator` que falha mantém o valor fora do componente",
+        "why": "`unit=\"days\"` falhou no validator e a barra disse `days` assim mesmo. Uma checagem em desenvolvimento avisa e nada mais."
+      },
+      {
+        "text": "Uma prop deixada de fora cai no seu `default`",
+        "why": "Isso. `goal` foi 60 em toda barra que não passou um."
+      },
+      {
+        "text": "A forma de array `['label', 'minutes']` também confere os tipos",
+        "why": "A forma de array nomeia as props e não diz nada sobre os tipos; as formas de objeto é que conferem."
+      }
+    ]
+  },
+  "ex-366s51vb": {
+    "prompt": "Um filho escreve `const { done } = defineProps({ done: Number })` e depois `const label = describe(done)`, onde `describe` é uma função sua que monta uma string. Depois o pai muda `done`. O que acontece com `label`?",
+    "hint": "O compilador reescreve `done`, mas o que `describe` recebe?",
+    "choices": [
+      {
+        "text": "Fica com o primeiro valor",
+        "why": "Isso. `describe` rodou uma vez com um número comum, como na aula 2. Embrulhe, `computed(() => describe(done))`, e a leitura acontece dentro de um computed que acompanha a prop."
+      },
+      {
+        "text": "O Vue avisa que uma prop desestruturada foi passada para uma função",
+        "why": "Não existe esse aviso. O código é válido; ele só lê o valor uma vez."
+      },
+      {
+        "text": "Acompanha, porque uma prop desestruturada continua reativa desde o Vue 3.5",
+        "why": "A prop continua reativa onde o compilador a reescreve. `label` é calculado uma vez no script, e nada o roda de novo."
+      },
+      {
+        "text": "Vira `undefined`, porque as props foram desestruturadas",
+        "why": "Desestruturar copiou o valor que ela tinha; nada o transforma em `undefined` depois."
+      }
+    ]
+  },
+  "ex-9g15fmex": {
+    "prompt": "Em `OneWay`, o aluno clica em `Change the number prop` e depois em `Change inside the object prop`. O que a linha do pai diz depois?",
+    "hint": "Uma das duas escritas foi recusada.",
+    "choices": [
+      {
+        "text": "Parent has 35 and 35",
+        "why": "Isso significaria que a prop numérica também mudou. Atribuir a `props.minutes` foi recusado com um aviso, e o pai ficou com 30."
+      },
+      {
+        "text": "Parent has 30 and 35",
+        "why": "Isso. O número foi recusado; a propriedade dentro do objeto não, e o objeto é do próprio pai."
+      },
+      {
+        "text": "Parent has 30 and 30",
+        "why": "É o que daria um somente leitura até o fundo, e o Vue não faz isso: `session.minutes` chegou ao pai."
+      },
+      {
+        "text": "Parent has 35 and 30",
+        "why": "As duas metades estão trocadas: o número ficou e a propriedade do objeto mudou."
+      }
+    ]
+  },
+  "ex-cpe07az8": {
+    "prompt": "Por que o Vue recusou `props.minutes += 5` mas deixou passar `props.session.minutes += 5`?",
+    "hint": "Qual objeto é somente leitura, e em qual objeto se escreveu?",
+    "choices": [
+      {
+        "text": "O objeto de props é somente leitura um nível só; `session` aponta para o objeto do pai",
+        "why": "Isso. O filho não podia trocar `session`, mas mexeu dentro do objeto para o qual `session` aponta, que é do pai."
+      },
+      {
+        "text": "Uma prop objeto é entregue ao filho como cópia, então a mudança fica no filho e é inofensiva",
+        "why": "Se fosse uma cópia, o pai ainda diria 30. Ele diz 35: o filho mudou os dados do pai."
+      },
+      {
+        "text": "O JavaScript congela números, e não objetos",
+        "why": "Um número numa variável pode ser reatribuído; quem recusou a escrita foi o proxy somente leitura do Vue, não a linguagem."
+      },
+      {
+        "text": "`session` foi declarada como `Object`, um tipo que o Vue não confere",
+        "why": "O tipo declarado é sobre o que é passado, não sobre escritas. A recusa vem de o objeto de props ser somente leitura."
+      }
+    ]
+  },
+  "ex-9vqphng9": {
+    "prompt": "Um filho que recebe `initial` e depois edita o próprio rascunho o copia uma vez: `const draft = ___(props.initial)`.",
+    "hint": "A função que cria um estado de que o filho é dono.",
+    "blanks": [
+      {
+        "accept": [
+          "ref"
+        ]
+      }
+    ]
+  },
+  "ex-55pd62t6": {
+    "prompt": "Em `Emits`, o segundo `DoneButton` tem 0 minutos, e a checagem de `done` é `minutes > 0`. O que aconteceu quando ele foi clicado?",
+    "hint": "Leia o log embaixo dos botões, além do aviso.",
+    "choices": [
+      {
+        "text": "O evento foi descartado, e o log ficou com duas linhas",
+        "why": "O log tem uma terceira linha, `s9 done, 0 minutes`. Uma checagem num evento não é um filtro."
+      },
+      {
+        "text": "O Vue avisou, e o evento chegou ao `onDone` mesmo assim",
+        "why": "Isso. `event validation failed` foi impresso, e `s9 done, 0 minutes` entrou no log assim mesmo, como com as props."
+      },
+      {
+        "text": "O botão foi desabilitado pela checagem",
+        "why": "A checagem roda quando o evento é emitido; ela não mexe no botão."
+      },
+      {
+        "text": "O Vue lançou um erro e a página parou de atualizar",
+        "why": "Há um aviso, não um erro, e a página seguiu: a linha do log apareceu."
+      }
+    ]
+  },
+  "ex-6tm4gv27": {
+    "prompt": "Uma linha deixa o aluno apagar uma sessão. Qual nome de evento segue a regra da aula?",
+    "hint": "Dê o nome do que o aluno fez, não do que alguém deveria fazer a respeito.",
+    "choices": [
+      {
+        "text": "`update-total`",
+        "why": "Isso nomeia uma consequência que o pai talvez escolha. A linha não sabe que existe um total."
+      },
+      {
+        "text": "`save-to-storage`",
+        "why": "Salvar é decisão do pai, e um nome assim amarra a linha ao jeito como o pai funciona hoje."
+      },
+      {
+        "text": "`splice-sessions`",
+        "why": "Isso é uma instrução sobre o array do pai, que a linha não deveria saber que existe."
+      },
+      {
+        "text": "`remove-requested`",
+        "why": "Isso. Diz o que aconteceu, e deixa o pai decidir o que remover significa."
+      }
+    ]
+  },
+  "ex-nwxabg4v": {
+    "prompt": "Um componente chama `emit('click')` no seu botão mas nunca declara `click`. O pai escreve `<SaveButton @click=\"save\" />`. O que um clique no botão faz?",
+    "hint": "Um evento não declarado também é tratado como outra coisa.",
+    "choices": [
+      {
+        "text": "Chama `save` uma vez, pelo evento emitido",
+        "why": "É o que acontece quando `click` está declarado. Sem declarar, `@click` também vira um listener nativo no elemento raiz."
+      },
+      {
+        "text": "Chama `save` duas vezes",
+        "why": "Isso. O `@click` não declarado passou para a raiz como listener nativo, e o `click` emitido também chegou a ele como evento do componente."
+      },
+      {
+        "text": "Nada, porque o Vue ignora um evento que não foi declarado",
+        "why": "Declarar não é o que deixa um evento passar; tanto o emit quanto o listener nativo chegam."
+      },
+      {
+        "text": "O Vue se recusa a compilar o componente até `click` ser declarado",
+        "why": "Eventos não declarados compilam e rodam; o preço é o fallthrough, não um erro."
+      }
+    ]
+  },
+  "ex-2gcdggat": {
+    "prompt": "Um pai coloca `class=\"wide\"` num componente que não declara nenhuma prop `class` e tem um único elemento raiz. Para onde vai a classe?",
+    "hint": "Isso se chama atributo fallthrough.",
+    "choices": [
+      {
+        "text": "Para o `$attrs`, até o filho colocá-la",
+        "why": "Esse é o caso de um componente com várias raízes, ou com `inheritAttrs: false`. Com uma raiz só, o Vue a coloca ali sozinho."
+      },
+      {
+        "text": "Se perde, com um aviso de prop desconhecida",
+        "why": "Nada se perde. A captura de `Fallthrough` mostra `class=\"wide\"` no `<p>` do `GoalBar`."
+      },
+      {
+        "text": "No elemento raiz, no lugar das classes que ele tinha",
+        "why": "Ela vai para a raiz, mas `class` se mescla; substituir as classes do filho quebraria o estilo dele."
+      },
+      {
+        "text": "No elemento raiz, mesclada com as classes que ele já tinha",
+        "why": "Isso. `class` e `style` se mesclam com os da própria raiz em vez de substituí-los."
+      }
+    ]
+  },
+  "ex-fazms226": {
+    "prompt": "Na captura de `Fallthrough`, quais atributos aparecem no `<p>` do `GoalBar`? Escolha todas as que se aplicam.",
+    "hint": "Uma prop declarada é usada pelo componente, não escrita no elemento dele.",
+    "choices": [
+      {
+        "text": "`id=\"stats\"`",
+        "why": "Isso. O `GoalBar` não declara nenhum `id`, então ele passou adiante."
+      },
+      {
+        "text": "`label=\"Statistics\"`",
+        "why": "`label` é uma prop declarada: o componente a usou no texto e ela não está no elemento."
+      },
+      {
+        "text": "`aria-describedby=\"help\"`",
+        "why": "Isso. Chegou à raiz, que é como o pai ligou o texto de ajuda à barra."
+      },
+      {
+        "text": "`minutes=\"45\"`",
+        "why": "`minutes` também está declarada, e foi passada com `v-bind` como número; virou texto dentro do `<p>`."
+      },
+      {
+        "text": "`class=\"wide\"`",
+        "why": "Isso. Se mesclou com as classes da raiz, das quais o `<p>` do `GoalBar` não tem nenhuma."
+      }
+    ]
+  },
+  "ex-w35wtj2w": {
+    "prompt": "Um `LabelledInput` tem um `<label>` como raiz e um `<input>` dentro dele. O pai escreve `<LabelledInput placeholder=\"Minutes\" />` e quer o placeholder no input. Do que o componente precisa?",
+    "hint": "Duas peças: uma desliga o padrão, a outra diz onde.",
+    "choices": [
+      {
+        "text": "Nada; um atributo fallthrough encontra o elemento a que pertence",
+        "why": "O Vue não sabe a que elemento um `placeholder` pertence. Ele o coloca na raiz, o `<label>`, onde não faz nada."
+      },
+      {
+        "text": "Uma prop chamada `placeholder`, para que ela pare de passar adiante",
+        "why": "Isso funciona para um atributo e exige uma prop nova para cada atributo que um input aceita; a resposta da aula é mover todos de uma vez."
+      },
+      {
+        "text": "`inheritAttrs: false` e `v-bind=\"$attrs\"` no `<input>`",
+        "why": "Isso. O primeiro impede o Vue de colocá-los na raiz; o segundo os põe no elemento a que pertencem."
+      },
+      {
+        "text": "Um segundo elemento raiz, para o Vue espalhar os atributos pelos dois",
+        "why": "Com várias raízes, o Vue avisa e não coloca os atributos em lugar nenhum."
+      }
+    ]
+  },
+  "ex-157q80ss": {
+    "prompt": "Pela tabela da aula, o que há de errado com um componente que precisa de oito props?",
+    "hint": "Pergunte qual seria o menor número de props.",
+    "choices": [
+      {
+        "text": "São dois componentes, ou recebe estado que deveria pedir por id",
+        "why": "Isso. Um bom contrato é o mínimo de props que o deixe se desenhar: um id e um título, não o estado da aplicação."
+      },
+      {
+        "text": "O Vue recusa mais do que um número fixo de props",
+        "why": "Não existe esse limite. O problema é o desenho, não o framework."
+      },
+      {
+        "text": "As props deveriam ser agrupadas numa prop objeto para a lista ficar menor",
+        "why": "Uma prop objeto esconde os mesmos oito valores e acrescenta o risco da seção anterior: um filho mexendo no objeto do pai."
+      },
+      {
+        "text": "Nada, desde que cada uma esteja declarada na forma completa",
+        "why": "A forma completa documenta e confere cada prop; ela não torna oito delas um contrato claro."
+      }
+    ]
+  },
+  "ex-nvskrd23": {
+    "prompt": "`planned` começa em 45 no `ModelDemo`. O que a linha do pai mostra depois de um clique em `+15`?",
+    "hint": "O filho escreve no ref do model, e o `v-model` do pai faz o resto."
+  },
+  "ex-jdfj36kh": {
+    "prompt": "No pai, `<MinutesField v-model=\"planned\" />` é abreviação de quê?",
+    "hint": "Uma prop descendo, e um evento subindo.",
+    "choices": [
+      {
+        "text": "`:planned=\"planned\" @change=\"planned = $event\"`",
+        "why": "Os nomes não são os da variável. Os dois lados concordam em `modelValue` e `update:modelValue`."
+      },
+      {
+        "text": "`:model-value=\"planned\" @update:model-value=\"(value) => (planned = value)\"`",
+        "why": "Isso. Uma prop chamada `modelValue` e um evento chamado `update:modelValue`, cujo listener atribui."
+      },
+      {
+        "text": "`:value=\"planned\" @input=\"planned = $event.target.value\"`",
+        "why": "Isso é o `v-model` num `<input>` nativo, e devolve texto; num componente ele liga uma prop e um evento."
+      },
+      {
+        "text": "`:model=\"planned\"`, uma prop em que o filho escreve diretamente",
+        "why": "Nenhuma prop pode ser escrita pelo filho. Escrever no ref do model emite um evento, e o pai atribui."
+      }
+    ]
+  },
+  "ex-0wp2qda9": {
+    "prompt": "`defineModel()` sem nome declara uma prop chamada ___, e o seu evento de atualização.",
+    "hint": "O nome da forma longa, em camelCase.",
+    "blanks": [
+      {
+        "accept": [
+          "modelValue",
+          "model-value"
+        ]
+      }
+    ]
+  },
+  "ex-p0yz4j3d": {
+    "prompt": "Depois de marcar a sessão de guitar, que porcentagem da meta semanal o card de Guitar mostra? Guitar tem 20 minutos feitos e uma meta de 90.",
+    "hint": "`Math.round((done / goal) * 100)`."
+  },
+  "ex-sz4sbx5h": {
+    "prompt": "Por que o `SessionRow` emite `toggle` com um id em vez de chamar `toggleDone` ele mesmo?",
+    "hint": "Quem é dono da lista de sessões?",
+    "choices": [
+      {
+        "text": "`toggleDone` não é exportado de `planner.js`",
+        "why": "O `App` o importa de lá, então ele é exportado. Onde ele é chamado é uma decisão sobre quem é dono."
+      },
+      {
+        "text": "Um evento emitido é mais rápido que uma chamada de função",
+        "why": "Velocidade não tem nada a ver; o evento acaba chamando a mesma função `toggle` de qualquer jeito."
+      },
+      {
+        "text": "Um componente não pode importar nada além do Vue e de outros componentes",
+        "why": "O `SessionRow` importa `formatDay` de `planner.js`. Importar uma regra é normal; mudar o estado do pai é o que ele evita."
+      },
+      {
+        "text": "A lista é do `App`; a linha relata",
+        "why": "Isso. A linha não faz ideia de que existe uma lista nem de que ela é salva; o `App` substitui a lista, e tudo que a lê acompanha."
+      }
+    ]
+  },
+  "ex-zshd3azr": {
+    "prompt": "No `CourseCard`, para que serve o texto `{{ percent }}%` dentro de `<progress>`?",
+    "hint": "Nem todo navegador desenha o elemento.",
+    "choices": [
+      {
+        "text": "O que mostra um navegador que não sabe desenhar `<progress>`",
+        "why": "Isso. Um navegador que conhece o elemento desenha a barra; um que não conhece mostra o texto."
+      },
+      {
+        "text": "Define o valor da barra, como `:value` faz num input",
+        "why": "`:value=\"done\"` e `:max=\"goal\"` definem a barra. O texto de dentro não define nada."
+      },
+      {
+        "text": "É o rótulo que um leitor de tela lê no lugar do valor",
+        "why": "Um leitor de tela anuncia o `<progress>` com o seu valor; o texto de dentro não é o que ele lê."
+      },
+      {
+        "text": "Uma dica mostrada quando o ponteiro para sobre a barra",
+        "why": "Uma dica seria um atributo `title`. O texto de dentro é o conteúdo alternativo."
+      }
+    ]
+  },
+  "ex-k9zx4rkb": {
+    "prompt": "O aluno marca a sessão de guitar. Ponha o que acontece em ordem, do clique até o card.",
+    "hint": "Sobe como evento, depois desce como props.",
+    "items": [
+      "A checkbox dispara `change`",
+      "O `SessionRow` emite `toggle` com o id da sessão",
+      "O `toggle` do `App` substitui `sessions` por uma lista nova",
+      "`perCourse` recalcula",
+      "O `CourseCard` de Guitar recebe uma prop `done` nova",
+      "O `percent` do card acompanha, para 22%"
+    ]
+  },
+  "ex-rp5n8rxw": {
+    "prompt": "Ligue cada necessidade à ferramenta que a aula dá para ela.",
+    "hint": "Para baixo, para cima, os dois, ou nenhum.",
+    "pairs": [
+      {
+        "left": "O título de um curso, para um card desenhar",
+        "right": "Uma prop"
+      },
+      {
+        "left": "A notícia de que o aluno marcou uma linha",
+        "right": "Um evento emitido"
+      },
+      {
+        "left": "Um campo que edita um número de que o pai é dono",
+        "right": "`defineModel`"
+      },
+      {
+        "left": "Um `aria-describedby` que o componente nunca menciona",
+        "right": "Um atributo fallthrough"
+      }
+    ],
+    "right_distractors": [
+      "Um `computed` da prop"
+    ]
+  },
+  "ex-1yrsb8zv": {
+    "prompt": "Um colega quer que o `CourseCard` marque o seu curso como concluído, e acrescenta um botão que roda `props.done = props.goal`. O que acontece quando ele é apertado?",
+    "hint": "`done` é um número, e o objeto de props é somente leitura.",
+    "choices": [
+      {
+        "text": "O card mostra 100%, e os dados do `App` ficam como estavam",
+        "why": "Isso seria uma cópia local. Nada muda: a escrita numa prop numérica é recusada."
+      },
+      {
+        "text": "Funciona, e a lista de sessões no `App` é marcada como feita",
+        "why": "Mesmo uma escrita aceita não chegaria às sessões: `done` é um total que o `App` calcula a partir delas."
+      },
+      {
+        "text": "O Vue avisa que o alvo é somente leitura, e nada muda",
+        "why": "Isso. Como com a prop numérica do `Counter`. O card deveria emitir um evento e deixar o `App` mudar as próprias sessões."
+      },
+      {
+        "text": "O compilador recusa o arquivo, porque `props` é uma constante",
+        "why": "`const` impede reatribuir `props`, não escrever numa propriedade. A recusa vem na execução, como aviso."
+      }
+    ]
+  },
+  "ex-ymy1r1e6": {
+    "prompt": "Quais destes pertencem ao contrato público do `CourseCard`, a parte em que o `App` se apoia? Escolha todas as que se aplicam.",
+    "hint": "O contrato é o que ele precisa receber e o que pode relatar.",
+    "choices": [
+      {
+        "text": "Que `goal` é um `Number` obrigatório",
+        "why": "Isso. Uma prop declarada, com o seu tipo: o `App` precisa passá-la."
+      },
+      {
+        "text": "O `percent` que ele calcula",
+        "why": "`percent` é privado. Poderia ser renomeado ou calculado de outro jeito sem o `App` perceber."
+      },
+      {
+        "text": "Que `planned` cai em 0 quando fica de fora",
+        "why": "Isso. Um default faz parte da declaração, e o `App` conta com ele."
+      },
+      {
+        "text": "A cor que o seu estilo scoped dá a um parágrafo",
+        "why": "O markup e o estilo também são privados; poderiam mudar sem mais ninguém perceber."
+      }
+    ]
+  }
+}

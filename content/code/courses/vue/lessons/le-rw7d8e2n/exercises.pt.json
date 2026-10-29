@@ -1,0 +1,474 @@
+{
+  "ex-p39y8g8v": {
+    "prompt": "Por que o Vitest é o executor de testes que esta aula usa?",
+    "hint": "Sobre o que ele é construído?",
+    "choices": [
+      {
+        "text": "Ele lê o mesmo `vite.config.js` e os mesmos plugins, então um `.vue` roda como o servidor de desenvolvimento o serve",
+        "why": "Isso. O Vitest é o Vite rodando testes, e por isso quase não há o que configurar."
+      },
+      {
+        "text": "Ele roda cada teste num navegador de verdade",
+        "why": "Os testes rodam no jsdom, um documento escrito em JavaScript, sem navegador nenhum."
+      },
+      {
+        "text": "Ele vem dentro do Vue, então não precisa ser instalado",
+        "why": "Ele foi instalado com `npm install --save-dev`, fixado em 5.0.5, ao lado de outros dois pacotes."
+      },
+      {
+        "text": "É o único executor que lê arquivos de teste em TypeScript",
+        "why": "O TypeScript não é o motivo que a aula dá; o motivo é que ele compartilha a configuração do Vite."
+      }
+    ]
+  },
+  "ex-ya4m90xf": {
+    "prompt": "Antes de existir qualquer arquivo de teste, o `npx vitest run` parou. Com que código de saída?",
+    "hint": "A linha que diz que nenhum arquivo de teste foi encontrado."
+  },
+  "ex-bygrjb1a": {
+    "prompt": "O script `test` é `vitest`, sem mais nada. O que o `npm test` faz?",
+    "hint": "Compare com o `vitest run`.",
+    "choices": [
+      {
+        "text": "Roda cada teste uma vez e para",
+        "why": "Isso é o `vitest run`; sem o `run`, o Vitest não para."
+      },
+      {
+        "text": "Roda só os testes que falharam na última vez",
+        "why": "Nada na aula filtra pelo último resultado; ele roda os arquivos que casam com o padrão."
+      },
+      {
+        "text": "Fica aberto e roda os testes de novo sempre que um arquivo muda",
+        "why": "Isso. É o modo de observação, que é como ele é usado enquanto se trabalha."
+      },
+      {
+        "text": "Sobe o servidor de desenvolvimento na porta 5173 e testa a página que ele serve",
+        "why": "Os testes montam componentes no jsdom; nenhum servidor sobe, e por isso o servidor de desenvolvimento pode ficar parado."
+      }
+    ]
+  },
+  "ex-cm5q2rqt": {
+    "prompt": "O `weekStart` arrumado voltava `date.getDay() - 1` dias. O que a execução relatou?",
+    "hint": "O que o `getDay()` devolve num domingo?",
+    "choices": [
+      {
+        "text": "Os dois testes de `weekStart` falharam, já que a fórmula mudou para todos os dias",
+        "why": "De segunda a sábado as duas fórmulas concordam, então o teste da quarta continuou passando."
+      },
+      {
+        "text": "Uma falha, o teste do domingo",
+        "why": "Isso. O `getDay()` é 0 no domingo, então ele foi para a segunda seguinte: recebeu 2026-10-26."
+      },
+      {
+        "text": "Nenhuma falha; as duas fórmulas são a mesma coisa escrita de outro jeito",
+        "why": "Elas concordam em seis dias de sete. No domingo a arrumada dá -1, e o teste pegou."
+      },
+      {
+        "text": "O teste de `addDays`, na virada do mês",
+        "why": "O `addDays` não foi mexido pela edição, e o teste dele passou."
+      }
+    ]
+  },
+  "ex-7xf2kjp8": {
+    "prompt": "O `toBe` compara com `===`. Para comparar um objeto ou uma lista campo a campo, um teste usa `expect(value).___(…)`.",
+    "hint": "O matcher que o teste de `weekTotal` usa.",
+    "blanks": [
+      {
+        "accept": [
+          "toEqual"
+        ]
+      }
+    ]
+  },
+  "ex-c140zvdy": {
+    "prompt": "Um teste novo do planner escreve `new Date(2026, 11, 25)`. Que dia é esse?",
+    "hint": "Como o JavaScript conta os meses?",
+    "choices": [
+      {
+        "text": "25 de novembro de 2026",
+        "why": "Isso conta os meses a partir de um; o JavaScript conta a partir de zero, então 11 é dezembro."
+      },
+      {
+        "text": "26 de dezembro de 2026",
+        "why": "Só o mês conta a partir de zero. O dia do mês é o número escrito, 25."
+      },
+      {
+        "text": "11 de dezembro de 2026, lendo os argumentos como ano, dia e mês",
+        "why": "A ordem é ano, mês, dia, como em `new Date(2026, 9, 21)` para 21 de outubro."
+      },
+      {
+        "text": "O dia de Natal de 2026",
+        "why": "Isso. O mês 11, contado a partir de zero, é dezembro, então é 25 de dezembro de 2026."
+      }
+    ]
+  },
+  "ex-jggkf00q": {
+    "prompt": "Por que cada teste de `SessionRow` começa com `setActivePinia(createPinia())`?",
+    "hint": "A linha lê os títulos dos cursos de algum lugar.",
+    "choices": [
+      {
+        "text": "O `mount` recusa um componente sem router",
+        "why": "A linha precisa de uma store, não de um router; o router só aparece nos stubs da página da semana."
+      },
+      {
+        "text": "Dá a cada teste uma store nova e vazia, para que nenhum teste veja os dados de outro",
+        "why": "Isso. Sem ele, o título do segundo teste ainda estaria na store do terceiro."
+      },
+      {
+        "text": "Faz a store buscar o `courses.json` antes de a linha ser desenhada",
+        "why": "Uma Pinia nova começa vazia e não carrega nada; o segundo teste põe os títulos à mão."
+      },
+      {
+        "text": "A Pinia guarda toda store no `localStorage` entre os testes, a menos que seja trocada",
+        "why": "A Pinia guarda as stores na memória; o `localStorage` é onde o watcher do próprio planner salva as sessões."
+      }
+    ]
+  },
+  "ex-t2bdwp51": {
+    "prompt": "Quais destes os testes de `SessionRow` usam para verificar a linha? Escolha todas as que se aplicam.",
+    "hint": "O que um leitor vê, e o que a linha diz ao componente pai.",
+    "choices": [
+      {
+        "text": "`row.text()`",
+        "why": "Isso. É o que um leitor vê, comparado com a frase inteira."
+      },
+      {
+        "text": "`row.vm.title`, o computed dentro da linha",
+        "why": "A aula desaconselha: entrar no componente quebra a cada refatoração."
+      },
+      {
+        "text": "`row.classes()`",
+        "why": "Isso. Ele devolveu `['done', 'today']`."
+      },
+      {
+        "text": "`row.emitted('toggle')`",
+        "why": "Isso. Ele listou um `toggle`, levando `s4`."
+      }
+    ]
+  },
+  "ex-hysrf0kq": {
+    "prompt": "Alguém reescreve o `SessionRow` com outros refs e computeds, e ele desenha exatamente a mesma linha. Quais dos quatro testes quebram?",
+    "hint": "O que os testes leem?",
+    "choices": [
+      {
+        "text": "Os dois testes de título, porque o computed que escolhe o título mudou",
+        "why": "Eles leem o `text()`, a frase desenhada, e ela não mudou."
+      },
+      {
+        "text": "Nenhum deles",
+        "why": "Isso. Eles verificam o que a linha desenha e emite, nunca como ela decide, e é esse o ponto."
+      },
+      {
+        "text": "O teste do toggle, já que o que um componente emite faz parte do seu interior",
+        "why": "O que a linha emite é o que ela diz ao pai, o lado de fora; a reescrita emite o mesmo `toggle`."
+      },
+      {
+        "text": "Os quatro, já que o arquivo que eles montam agora é outro",
+        "why": "Os testes importam o `SessionRow.vue` pelo nome e leem o que ele desenha; o conteúdo do arquivo não é comparado."
+      }
+    ]
+  },
+  "ex-gxac24wq": {
+    "prompt": "Por que o teste do formulário põe `await` na frente de `setValue` e `trigger`?",
+    "hint": "A fila de atualizações da aula 2.",
+    "choices": [
+      {
+        "text": "Cada um manda uma requisição ao servidor da aplicação e espera a resposta dele",
+        "why": "Não há requisição nenhuma; o formulário adiciona a uma store na memória."
+      },
+      {
+        "text": "O Vue redesenha no próximo tick, e a promise se resolve quando isso acontece",
+        "why": "Isso. Sem o `await`, a linha seguinte leria a página de antes da mudança."
+      },
+      {
+        "text": "Chamados sem ele, eles lançam um erro",
+        "why": "Eles devolvem uma promise de qualquer jeito; sem o `await` nada é lançado, só se lê cedo demais."
+      },
+      {
+        "text": "O `v-model.number` converte `'25'` num timer, e o `await` espera por ele",
+        "why": "A conversão acontece no tratador do evento; o que se espera é o redesenho do Vue."
+      }
+    ]
+  },
+  "ex-h9xp0dt9": {
+    "prompt": "Depois que o formulário vazio é enviado, o teste também confere `expect(usePlannerStore().sessions).toEqual([])`. A que essa linha obriga o formulário?",
+    "hint": "Mostrar os erros é metade.",
+    "choices": [
+      {
+        "text": "Que o `beforeEach` esvaziou a store antes de o teste começar",
+        "why": "O `beforeEach` prepara a store; esta linha é sobre o que o formulário fez depois de enviado."
+      },
+      {
+        "text": "Que os cursos não carregaram",
+        "why": "Os cursos são postos pelo `beforeEach`, e `sessions` é outra lista."
+      },
+      {
+        "text": "Que um formulário inválido não adicionou nada",
+        "why": "Isso. Um formulário inválido precisa mostrar os erros e não pode ter adicionado sessão nenhuma."
+      },
+      {
+        "text": "Que o formulário limpou os próprios campos depois de mostrar os erros",
+        "why": "A linha lê a store, não os campos."
+      }
+    ]
+  },
+  "ex-vmjwxdz9": {
+    "prompt": "O Vue Test Utils encontra um campo pelo seletor. A biblioteca companheira feita para encontrá-lo pelo seu `<label>`, como faz quem usa um leitor de tela, é a `@___-library/vue`.",
+    "hint": "O nome dela é Algo Library.",
+    "blanks": [
+      {
+        "accept": [
+          "testing"
+        ]
+      }
+    ]
+  },
+  "ex-7qmrbcax": {
+    "prompt": "Um teste da store chama `planner.load()` três vezes ao mesmo tempo. Quantas chamadas o `fetch` falso registra?",
+    "hint": "O `loading ??=` da aula 13."
+  },
+  "ex-pdwckp2y": {
+    "prompt": "Logo depois de `planner.toggle('s1')`, a cópia no `localStorage` ainda tem a sessão como não feita. Por quê?",
+    "hint": "Como a store salva?",
+    "choices": [
+      {
+        "text": "O jsdom grava o `localStorage` em segundo plano",
+        "why": "O `localStorage` do jsdom é gravado no momento em que o `setItem` é chamado; o atraso está na store."
+      },
+      {
+        "text": "O `toggle` é uma action assíncrona que o teste esqueceu de esperar",
+        "why": "O teste espera o `nextTick()` de propósito, e quem espera é o watcher, não o `toggle`."
+      },
+      {
+        "text": "A store salva com um `watch`, que roda antes da próxima renderização",
+        "why": "Isso. Depois do `await nextTick()`, a cópia salva é a nova."
+      },
+      {
+        "text": "O `beforeEach` limpou o armazenamento, e nada grava de novo até o próximo `load`",
+        "why": "A cópia foi gravada no load, com a sessão não feita; o que ainda não foi salvo é o toggle."
+      }
+    ]
+  },
+  "ex-4jwy9nyz": {
+    "prompt": "O que o auxiliar `answer(body, status)` do teste da store faz? Escolha todas as que se aplicam.",
+    "hint": "Leia as três linhas dele.",
+    "choices": [
+      {
+        "text": "Cria um `vi.fn` que registra como foi chamado",
+        "why": "Isso. É o que o `toHaveBeenCalledTimes(1)` lê."
+      },
+      {
+        "text": "Sobe um pequeno servidor numa porta local para a store chamar",
+        "why": "Não há servidor nenhum: o teste não pode depender de um estar no ar."
+      },
+      {
+        "text": "Põe o falso onde a store procura o `fetch`, com `vi.stubGlobal`",
+        "why": "Isso. A store chama o `fetch` como sempre e recebe o falso."
+      },
+      {
+        "text": "Responde com um `Response` de verdade",
+        "why": "Isso. Assim a store o lê com `response.ok` e `response.json()` como lê o de um servidor."
+      },
+      {
+        "text": "Devolve o `fetch` de verdade quando o teste termina",
+        "why": "Isso é o `vi.unstubAllGlobals()` no `afterEach`, não o auxiliar."
+      }
+    ]
+  },
+  "ex-k05mxakt": {
+    "prompt": "No teste da meia-noite, o que faz o `await vi.advanceTimersByTimeAsync(60_000)`?",
+    "hint": "O relógio é falso.",
+    "choices": [
+      {
+        "text": "Espera um minuto de verdade até o intervalo do `useToday` disparar",
+        "why": "O teste leva cerca de um décimo de segundo; nada espera de verdade."
+      },
+      {
+        "text": "Acerta o relógio para sessenta segundos depois da meia-noite",
+        "why": "Quem moveu o relógio, para 00:00:30, foi o `vi.setSystemTime` na linha anterior."
+      },
+      {
+        "text": "Deixa passar um minuto de uma vez, rodando os timers que vencem nele",
+        "why": "Isso. O timer de um minuto do `useToday` roda e muda o hoje para o dia 22."
+      },
+      {
+        "text": "Chama o callback do `useToday` diretamente, pulando o timer",
+        "why": "Isso testaria uma função e não a página, que é o que os timers falsos evitam."
+      }
+    ]
+  },
+  "ex-r8jrxhz3": {
+    "prompt": "Por que o teste da página da semana a monta com `stubs: { RouterLink: true, Teleport: true }`?",
+    "hint": "Nenhum dos dois é o assunto deste teste.",
+    "choices": [
+      {
+        "text": "O jsdom não consegue desenhar um link nem um diálogo",
+        "why": "O jsdom desenha os dois; um `RouterLink` precisa de um router, e um `Teleport` desenha em outro lugar."
+      },
+      {
+        "text": "Componentes substituídos carregam mais rápido, e o teste precisa terminar em um segundo",
+        "why": "A velocidade não é o motivo dado; não existe esse limite na aula."
+      },
+      {
+        "text": "Falta router para o link, e o diálogo sairia do wrapper",
+        "why": "Isso. Um `RouterLink` precisa de um router, e com o stub o diálogo da aula 15 é desenhado onde está escrito, não num `<body>` que o wrapper não lê."
+      },
+      {
+        "text": "Para o teste falhar se algum deles for desenhado",
+        "why": "Um stub desenha um substituto vazio; ele não afirma nada sobre ter sido desenhado."
+      }
+    ]
+  },
+  "ex-6pefv4vn": {
+    "prompt": "O teste de um colega espera com `await new Promise((r) => setTimeout(r, 500))` antes de ler a página. O que a aula diz sobre isso?",
+    "hint": "A regra por baixo.",
+    "choices": [
+      {
+        "text": "Tudo bem, desde que 500 ms seja mais do que a página jamais leva",
+        "why": "Quanto a página leva depende da máquina, e é isso que faz o teste falhar de vez em quando."
+      },
+      {
+        "text": "É a espera certa quando os timers falsos estão ligados",
+        "why": "Com timers falsos um `setTimeout` não roda até o teste deixar o tempo passar, então ele travaria."
+      },
+      {
+        "text": "É o `flushPromises()` escrito por extenso",
+        "why": "O `flushPromises()` espera as promises já iniciadas, durem o quanto durarem; isto espera um tempo fixo e torce."
+      },
+      {
+        "text": "Ele falha numa máquina ocupada uma vez em vinte, e um teste que falha uma vez ou outra é pior que nenhum",
+        "why": "Isso. Uma espera deve dizer pelo que espera; se nenhuma ferramenta consegue, o código deve devolver a promise."
+      }
+    ]
+  },
+  "ex-7vvxggxf": {
+    "prompt": "O que a aula diz que é um relatório de cobertura?",
+    "hint": "O último item da lista.",
+    "choices": [
+      {
+        "text": "Uma meta: a suíte está pronta em 100%",
+        "why": "Um teste escrito para subir o número verifica que uma linha rodou, não que ela estava certa."
+      },
+      {
+        "text": "A lista dos testes que passaram e falharam",
+        "why": "Isso é o resumo da própria execução; a cobertura informa quais linhas rodaram."
+      },
+      {
+        "text": "Um mapa do que ninguém testou",
+        "why": "Isso. É um mapa, não uma meta."
+      },
+      {
+        "text": "Algo que o Vitest imprime em toda execução, sem nada para instalar",
+        "why": "Ele precisa do `--coverage` e do `@vitest/coverage-v8` instalado."
+      }
+    ]
+  },
+  "ex-gq7sygg0": {
+    "prompt": "Quais destes os testes do planner deixam de fora de propósito? Escolha todas as que se aplicam.",
+    "hint": "A lista do que estes testes não fazem.",
+    "choices": [
+      {
+        "text": "Verificar que um `computed` recalcula",
+        "why": "Isso. Testar isso é trabalho do Vue, e só falha quando o framework falha."
+      },
+      {
+        "text": "O caso do domingo no `weekStart`",
+        "why": "Esse é o teste que pegou a refatoração arrumada."
+      },
+      {
+        "text": "O `CourseView` e o router",
+        "why": "Isso. Cada um precisaria de um router ou de um navegador para pouca lógica; a guarda seria a próxima."
+      },
+      {
+        "text": "Como o diálogo prende o foco",
+        "why": "Isso. O jsdom não tem foco nem `<dialog>` de verdade; isso é para um teste no navegador."
+      },
+      {
+        "text": "O que o `SessionRow` emite quando sua caixa é marcada",
+        "why": "O quarto teste do `SessionRow` verifica exatamente isso, com `emitted('toggle')`."
+      }
+    ]
+  },
+  "ex-jjgs2mkf": {
+    "prompt": "A suíte inteira levou cerca de dois segundos, enquanto os testes de cada arquivo levaram menos de 130 ms. Para onde foi a maior parte do tempo?",
+    "hint": "A nota embaixo do resumo.",
+    "choices": [
+      {
+        "text": "Checando os tipos dos arquivos de teste antes de rodá-los",
+        "why": "O `vue-tsc` é um comando à parte, `npm run type-check`, rodado depois da suíte."
+      },
+      {
+        "text": "Criando cinco documentos jsdom, um por arquivo",
+        "why": "Isso. 77% do tempo medido, o preço de nenhum arquivo ver os testes de outro."
+      },
+      {
+        "text": "O `fetch` falso esperando um timeout de rede",
+        "why": "O falso responde na hora com um `Response`; nenhuma rede é tocada."
+      },
+      {
+        "text": "O Vite subindo o servidor de desenvolvimento para os testes de página terem o que carregar",
+        "why": "Nenhum servidor sobe; a página é montada no jsdom como os componentes."
+      }
+    ]
+  },
+  "ex-mjh02wrv": {
+    "prompt": "Ponha os passos do teste da meia-noite na ordem em que acontecem.",
+    "hint": "Primeiro o `beforeEach`, depois o `page()`, depois as linhas do próprio teste.",
+    "items": [
+      "Fingir o relógio às dez de 21 de outubro",
+      "Carregar a store e montar a página",
+      "`await flushPromises()`",
+      "Conferir que a linha de hoje é 21 de outubro",
+      "Acertar a hora do sistema para 00:00:30 do dia 22",
+      "Deixar passar um minuto com `vi.advanceTimersByTimeAsync`",
+      "Conferir que a linha de hoje é 22 de outubro"
+    ]
+  },
+  "ex-t1djqfsq": {
+    "prompt": "Associe cada coisa de que um teste precisa à ferramenta que a aula usa para ela.",
+    "hint": "Uma ferramenta da direita é a que a aula rejeita.",
+    "pairs": [
+      {
+        "left": "Esperar as promises já iniciadas, e depois o redesenho",
+        "right": "`flushPromises()`"
+      },
+      {
+        "left": "Fazer o `new Date()` dizer o que o teste diz",
+        "right": "`vi.useFakeTimers({ now })`"
+      },
+      {
+        "left": "Trocar o `fetch` onde a store o procura",
+        "right": "`vi.stubGlobal`"
+      },
+      {
+        "left": "Uma store nova e vazia para cada teste",
+        "right": "`setActivePinia(createPinia())`"
+      }
+    ],
+    "right_distractors": [
+      "`setTimeout(…, 500)`"
+    ]
+  },
+  "ex-r97y1zcp": {
+    "prompt": "Chega uma regra nova: os minutos que faltam nesta semana, mostrados na página da semana. Seguindo a forma da aula, para onde vai a maior parte dos testes dela?",
+    "hint": "Onde estão os testes mais baratos e mais precisos?",
+    "choices": [
+      {
+        "text": "No teste da página da semana, com relógio falso e `fetch` falso",
+        "why": "Funciona, mas aí cada caso custa uma store, um relógio e uma montagem; a página precisa de uma linha no máximo."
+      },
+      {
+        "text": "Numa função simples em `planner.ts`, testada com um valor de entrada e uma resposta",
+        "why": "Isso. Regras em funções simples, componentes finos o bastante para precisar de poucos testes."
+      },
+      {
+        "text": "Num teste com Playwright, já que aparece numa página",
+        "why": "Um teste no navegador é para o que falta ao jsdom, como o foco; uma soma de minutos não precisa de navegador."
+      },
+      {
+        "text": "Em nada novo: a cobertura do `HomeView` já roda essas linhas",
+        "why": "Uma linha que rodou não é uma linha que estava certa; a cobertura é um mapa, não uma meta."
+      }
+    ]
+  }
+}
