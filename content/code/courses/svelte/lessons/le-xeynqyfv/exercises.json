@@ -1,0 +1,646 @@
+[
+  {
+    "id": "ex-yfhvkbds",
+    "version": 1,
+    "section": "the-virtual-dom",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a virtual DOM?",
+    "hint": "React builds one on every change.",
+    "choices": [
+      {
+        "text": "A second, hidden page that the browser renders off screen and then swaps in when it is ready",
+        "correct": false,
+        "why": "It is not a page and the browser does not render it; it is plain JavaScript objects."
+      },
+      {
+        "text": "A description of the page in JavaScript, rebuilt and compared after each change",
+        "correct": true,
+        "why": "Right. The comparison is the diff, and applying it is the patch."
+      },
+      {
+        "text": "The DOM the server builds while it renders, kept in memory until the HTML is sent to the visitor",
+        "correct": false,
+        "why": "The server sends a string; the virtual DOM lives in the browser while the page runs."
+      },
+      {
+        "text": "Svelte's name for the template its compiler writes",
+        "correct": false,
+        "why": "Svelte has no virtual DOM. Its template is copied once, never compared."
+      }
+    ]
+  },
+  {
+    "id": "ex-6bjmckpc",
+    "version": 1,
+    "section": "the-virtual-dom",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put React's steps after `setMinutes(30)` in order.",
+    "hint": "The patch is last; the call to your function is first.",
+    "items": [
+      "React calls `Counter` again",
+      "`Counter` returns a new description",
+      "React compares it with the previous description",
+      "React changes the one text that differs"
+    ],
+    "trap": "Comparing needs the new description, so the call has to come before the diff."
+  },
+  {
+    "id": "ex-9zrxpjf0",
+    "version": 1,
+    "section": "the-virtual-dom",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did React adopt a virtual DOM in the first place?",
+    "hint": "What is hard to write by hand?",
+    "choices": [
+      {
+        "text": "Because the browsers of 2013 had no DOM API that scripts could use",
+        "correct": false,
+        "why": "They had one; using it precisely by hand was the problem."
+      },
+      {
+        "text": "To let pages run without any JavaScript in the browser",
+        "correct": false,
+        "why": "A virtual DOM is JavaScript running in the browser."
+      },
+      {
+        "text": "Simple page code, with only the differences applied",
+        "correct": true,
+        "why": "Right. The diff makes the simple way of writing affordable."
+      },
+      {
+        "text": "Because the compiler it needed did not exist yet",
+        "correct": false,
+        "why": "React never wanted a compiler for this; its components are plain functions on purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-n66bbmzw",
+    "version": 1,
+    "section": "the-virtual-dom",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which cost of Svelte's design does React's design avoid?",
+    "hint": "Think about who can read a component file.",
+    "choices": [
+      {
+        "text": "Tools have to understand Svelte syntax, since a `.svelte` file is not JavaScript",
+        "correct": true,
+        "why": "Right. A React component is a plain function any JavaScript tool can read."
+      },
+      {
+        "text": "Every change makes Svelte build a description of the page and compare it with the one before",
+        "correct": false,
+        "why": "That is React's cost, not Svelte's."
+      },
+      {
+        "text": "A Svelte app has to download the compiler before it can show the first page to a visitor",
+        "correct": false,
+        "why": "The compiler runs on your computer at build time; the browser never gets it."
+      },
+      {
+        "text": "Svelte touches more DOM nodes per change than React does",
+        "correct": false,
+        "why": "Both end at the same single change; the section on counting showed it."
+      }
+    ]
+  },
+  {
+    "id": "ex-px6f3qva",
+    "version": 1,
+    "section": "runs-once",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The counter's page was opened once and its button pressed three times. How many times did `the script ran` print in the browser?",
+    "hint": "The script sets up; the effects respond.",
+    "choices": [
+      {
+        "text": "Four: once on load and once per press",
+        "correct": false,
+        "why": "That was the effect. The script did not run again."
+      },
+      {
+        "text": "Once",
+        "correct": true,
+        "why": "Right. A component's script runs once, when it is created."
+      },
+      {
+        "text": "Three, once per press",
+        "correct": false,
+        "why": "Presses run effects, not the script."
+      },
+      {
+        "text": "Twice: once to render and once to hydrate",
+        "correct": false,
+        "why": "The second run was on the server, in the dev server's terminal, not in the browser."
+      }
+    ]
+  },
+  {
+    "id": "ex-mh7mhhr6",
+    "version": 1,
+    "section": "runs-once",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the page loaded and the button was pressed three times, how many `the effect ran` lines had the browser printed?",
+    "hint": "One for appearing, then one per change.",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-n4z0z7wv",
+    "version": 1,
+    "section": "runs-once",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `the effect ran` never appear in the development server's terminal?",
+    "hint": "What does the server do with the page once it is rendered?",
+    "choices": [
+      {
+        "text": "Because the server's console is switched off in development",
+        "correct": false,
+        "why": "It is on: `the script ran` printed there."
+      },
+      {
+        "text": "Because the effect failed silently on the server",
+        "correct": false,
+        "why": "Nothing failed; effects are not run during server rendering at all."
+      },
+      {
+        "text": "Effects do not run during server rendering, since nothing there changes after the string is sent",
+        "correct": true,
+        "why": "Right. The server builds a string, sends it and forgets it."
+      }
+    ]
+  },
+  {
+    "id": "ex-9ecyjfha",
+    "version": 1,
+    "section": "runs-once",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`let hours = minutes / 60;` sits in the script, and the page shows `{hours}`. Pressing the button changes nothing on screen. Why?",
+    "hint": "When did that line run, and how often?",
+    "choices": [
+      {
+        "text": "Dividing a `$state` value is not allowed and silently gives 0",
+        "correct": false,
+        "why": "The division worked; it gave 0 because `minutes` was 0 at that moment."
+      },
+      {
+        "text": "It ran once, when `minutes` was 0, and nothing runs it again",
+        "correct": true,
+        "why": "Right, and the compiler warned with `state_referenced_locally`. `$derived` fixes it."
+      },
+      {
+        "text": "The button's handler changes `hours` instead of `minutes`",
+        "correct": false,
+        "why": "The handler adds to `minutes`, which did change; `hours` did not follow it."
+      },
+      {
+        "text": "Hot replacement had not finished, so the old page was still showing",
+        "correct": false,
+        "why": "`look` opens a fresh browser each time, so it saw the new component."
+      }
+    ]
+  },
+  {
+    "id": "ex-a44egype",
+    "version": 1,
+    "section": "runs-once",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The compiler warning for reading a reactive value once, in a place that will never read it again, is `state_referenced____`.",
+    "hint": "The last part says where it was referenced.",
+    "blanks": [
+      {
+        "accept": [
+          "_locally",
+          "locally"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mf0nc5a9",
+    "version": 1,
+    "section": "signals",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a signal?",
+    "hint": "`$state` makes one.",
+    "choices": [
+      {
+        "text": "An event the browser fires when a value changes",
+        "correct": false,
+        "why": "Browsers fire no such event; a signal is Svelte's own bookkeeping."
+      },
+      {
+        "text": "A message the server sends to update the page",
+        "correct": false,
+        "why": "Signals live in the browser's memory; the server is not involved."
+      },
+      {
+        "text": "A value that keeps a list of the code that read it",
+        "correct": true,
+        "why": "Right. A change goes down that list and nowhere else."
+      },
+      {
+        "text": "A copy of a value kept to compare with the next one",
+        "correct": false,
+        "why": "That is closer to what a virtual DOM keeps."
+      }
+    ]
+  },
+  {
+    "id": "ex-jtj1f4p3",
+    "version": 1,
+    "section": "signals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Pressing `Raise the goal` changed the second paragraph but did not print `the effect ran`. Why?",
+    "hint": "Whose list is the logging effect on?",
+    "choices": [
+      {
+        "text": "The logging effect never read `goal`, so `goal`'s list does not include it",
+        "correct": true,
+        "why": "Right. The paragraph has its own template effect, which did read `goal`."
+      },
+      {
+        "text": "Effects only run for the first signal declared in a script",
+        "correct": false,
+        "why": "Declaration order means nothing; reads decide."
+      },
+      {
+        "text": "The button's handler ran before the effect had a chance to subscribe to anything",
+        "correct": false,
+        "why": "The effect had run on load; it simply read `minutes` only."
+      },
+      {
+        "text": "Console output is muted while a button is held down",
+        "correct": false,
+        "why": "Nothing mutes the console; adding minutes printed straight after."
+      }
+    ]
+  },
+  {
+    "id": "ex-yk7094d5",
+    "version": 1,
+    "section": "signals",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An effect reads `if (minutes > 0) console.log(`${minutes} of ${goal}`)`. With `minutes` at 0, you raise the goal. What prints?",
+    "hint": "On its last run, did it read `goal`?",
+    "choices": [
+      {
+        "text": "`0 of 180`, since the effect mentions `goal`",
+        "correct": false,
+        "why": "Mentioning is not reading: with `minutes` at 0 the line with `goal` never ran."
+      },
+      {
+        "text": "Nothing; the effect does not depend on `goal` yet",
+        "correct": true,
+        "why": "Right. An effect depends on exactly what it read the last time it ran."
+      },
+      {
+        "text": "An error, because `goal` is read conditionally",
+        "correct": false,
+        "why": "Conditional reads are allowed; they just make the dependency conditional too."
+      },
+      {
+        "text": "`180`, since the compiler made the effect read every signal in the file",
+        "correct": false,
+        "why": "Svelte 5 tracks reads at runtime; the compiler adds none."
+      }
+    ]
+  },
+  {
+    "id": "ex-cnmy8f7y",
+    "version": 1,
+    "section": "signals",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each file with whether `$state` works in it.",
+    "hint": "Runes are compiler words.",
+    "pairs": [
+      {
+        "left": "`Counter.svelte`",
+        "right": "Works: a component"
+      },
+      {
+        "left": "`planner.svelte.js`",
+        "right": "Works: a module the compiler reads"
+      },
+      {
+        "left": "`planner.js`",
+        "right": "Fails: plain JavaScript, never compiled by Svelte"
+      }
+    ],
+    "right_distractors": [
+      "Works only inside a `<style>` tag"
+    ]
+  },
+  {
+    "id": "ex-f0wgexqb",
+    "version": 1,
+    "section": "one-mutation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a `MutationObserver` report?",
+    "hint": "It is a browser API, not Svelte's.",
+    "choices": [
+      {
+        "text": "Every time a signal changes value",
+        "correct": false,
+        "why": "It knows nothing about signals; it watches the page."
+      },
+      {
+        "text": "Each change made to the page: nodes, attributes, text",
+        "correct": true,
+        "why": "Right, which is why it can count what a press touched."
+      },
+      {
+        "text": "Each request the page sends to the server",
+        "correct": false,
+        "why": "That is the network, which it does not watch."
+      },
+      {
+        "text": "Errors thrown by scripts on the page",
+        "correct": false,
+        "why": "Errors are reported elsewhere; `look` prints them as `error:` lines."
+      }
+    ]
+  },
+  {
+    "id": "ex-71vrm3j8",
+    "version": 1,
+    "section": "one-mutation",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The page was opened and the buttons pressed three times in all. How many `changed:` lines did the observer print?",
+    "hint": "One press, one change.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-p9sjxf7q",
+    "version": 1,
+    "section": "one-mutation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "If the same observer watched a React version of the counter, what would it most likely report per press?",
+    "hint": "Where does a virtual DOM end?",
+    "choices": [
+      {
+        "text": "Every node in the component, recreated",
+        "correct": false,
+        "why": "The point of the diff is to avoid exactly that."
+      },
+      {
+        "text": "Nothing, since React does not change the real DOM",
+        "correct": false,
+        "why": "It does change it, at the end, in the patch."
+      },
+      {
+        "text": "One text change, the same as Svelte",
+        "correct": true,
+        "why": "Right. The difference is the work before it, not the change itself."
+      },
+      {
+        "text": "The button and the paragraph, since they share a parent element",
+        "correct": false,
+        "why": "Sharing a parent does not make the button change; its text never differs."
+      }
+    ]
+  },
+  {
+    "id": "ex-tjd9nzsq",
+    "version": 1,
+    "section": "one-mutation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A page shows 3,000 rows and one of them changes. Where does Svelte's approach save work over a virtual DOM?",
+    "hint": "Both end with the same DOM change.",
+    "choices": [
+      {
+        "text": "In the DOM change, which Svelte makes faster than the browser can",
+        "correct": false,
+        "why": "Both make the same DOM change through the same browser."
+      },
+      {
+        "text": "In finding the change: no descriptions of 3,000 rows rebuilt and compared",
+        "correct": true,
+        "why": "Right. The effect for that row already knew what to set."
+      },
+      {
+        "text": "In the download, since Svelte sends the rows already rendered",
+        "correct": false,
+        "why": "Both can render on the server; the saving is at the moment of change."
+      }
+    ]
+  },
+  {
+    "id": "ex-77v6a22r",
+    "version": 1,
+    "section": "what-changes",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each React habit with what replaces it in Svelte.",
+    "hint": "Three come from the script running once.",
+    "pairs": [
+      {
+        "left": "`useCallback`",
+        "right": "Write the function; it is the same object for the component's life"
+      },
+      {
+        "left": "`useMemo`",
+        "right": "`$derived`"
+      },
+      {
+        "left": "`[...list, item]`",
+        "right": "`list.push(item)` on a `$state` array"
+      }
+    ],
+    "right_distractors": [
+      "`onMount` around every variable"
+    ]
+  },
+  {
+    "id": "ex-wn7d0zxx",
+    "version": 1,
+    "section": "what-changes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which React concern still applies in Svelte?",
+    "hint": "Lesson 8 shows the wrong row keeping an input.",
+    "choices": [
+      {
+        "text": "Keeping hooks out of `if` statements",
+        "correct": false,
+        "why": "Runes are compiler instructions, not calls counted in order."
+      },
+      {
+        "text": "Giving list items a key",
+        "correct": true,
+        "why": "Right. Without one, a reordered list is matched by position."
+      },
+      {
+        "text": "Wrapping event handlers so children do not re-render",
+        "correct": false,
+        "why": "Children do not re-render as a whole in Svelte; nothing to prevent."
+      },
+      {
+        "text": "Copying arrays before changing them",
+        "correct": false,
+        "why": "`$state` arrays are deep; changing them in place is tracked."
+      }
+    ]
+  },
+  {
+    "id": "ex-qfxfbda8",
+    "version": 1,
+    "section": "what-changes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`let { minutes } = counter;` where `counter` is a `$state` object. Later `counter.minutes` changes. What does `minutes` hold?",
+    "hint": "It is the same mistake as `hours`.",
+    "choices": [
+      {
+        "text": "The old number: destructuring copied it once",
+        "correct": true,
+        "why": "Right. Read `counter.minutes` where you need it, or use `$derived`."
+      },
+      {
+        "text": "The new number, since the object is reactive",
+        "correct": false,
+        "why": "The object is; the local variable you copied into is not."
+      },
+      {
+        "text": "`undefined`, since destructuring a proxy breaks it",
+        "correct": false,
+        "why": "It copies the value that was there; nothing breaks."
+      },
+      {
+        "text": "An error the first time `counter` changes",
+        "correct": false,
+        "why": "No error: a stale copy is silent, which is why it is a trap."
+      }
+    ]
+  },
+  {
+    "id": "ex-97366jf2",
+    "version": 1,
+    "section": "what-changes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does Svelte give up in exchange for its small runtime?",
+    "hint": "What has to happen before a `.svelte` file means anything?",
+    "choices": [
+      {
+        "text": "Server rendering, which needs a runtime",
+        "correct": false,
+        "why": "Svelte renders on the server; lesson 1 compiled the server half."
+      },
+      {
+        "text": "Reactivity for arrays and objects",
+        "correct": false,
+        "why": "`$state` arrays and objects are deep and tracked."
+      },
+      {
+        "text": "Being readable as plain JavaScript by any tool",
+        "correct": true,
+        "why": "Right. Editors, linters and test runners have to know Svelte."
+      },
+      {
+        "text": "The ability to run in browsers without a build step",
+        "correct": false,
+        "why": "That is true but it is the same thing said differently; the cost named was the tools."
+      }
+    ]
+  },
+  {
+    "id": "ex-03mt7zhv",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the component is on the page, which of these run again when `minutes` changes? Choose all that apply.",
+    "hint": "Only code that read `minutes` reacts.",
+    "choices": [
+      {
+        "text": "The template effect that shows `{minutes}`",
+        "correct": true,
+        "why": "Yes: it read `minutes`."
+      },
+      {
+        "text": "An `$effect` that logs `minutes`",
+        "correct": true,
+        "why": "Yes: it read `minutes` on its last run."
+      },
+      {
+        "text": "The component's `<script>`",
+        "correct": false,
+        "why": "No: the script runs once."
+      },
+      {
+        "text": "The template effect that shows `{goal}`",
+        "correct": false,
+        "why": "No: it never read `minutes`."
+      }
+    ]
+  },
+  {
+    "id": "ex-bj1ccc5n",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which sentence describes Svelte's reactivity correctly?",
+    "hint": "Think of the list, and when it is built.",
+    "choices": [
+      {
+        "text": "The component re-runs and the output is compared",
+        "correct": false,
+        "why": "That is React's."
+      },
+      {
+        "text": "The compiler lists, once, every name that appears near each statement",
+        "correct": false,
+        "why": "That was Svelte 4's `$:`; lesson 4 shows what it got wrong."
+      },
+      {
+        "text": "Each signal records who read it at runtime, and a change reaches those readers",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  }
+]

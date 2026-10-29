@@ -1,0 +1,495 @@
+{
+  "ex-92wfe7x1": {
+    "prompt": "Depois de três cliques em Toggle, o que o HTML de `#panels` tinha onde estava o parágrafo do `v-if`?",
+    "hint": "Olhe a última linha da transcrição.",
+    "choices": [
+      {
+        "text": "O parágrafo, com `style=\"display: none;\"`",
+        "why": "Esse é o parágrafo do `v-show`. O `v-if` tira o elemento da página em vez de escondê-lo."
+      },
+      {
+        "text": "Absolutamente nada",
+        "why": "O Vue deixa algo para trás: ele precisa saber onde pôr o elemento de volta quando a condição ficar verdadeira."
+      },
+      {
+        "text": "Um comentário, `<!--v-if-->`",
+        "why": "Certo. O comentário é um marcador que indica onde o elemento volta."
+      },
+      {
+        "text": "O parágrafo, com um atributo `hidden`",
+        "why": "Nenhuma das duas diretivas usa `hidden`. O `v-show` põe `display: none`, e o `v-if` remove o elemento."
+      }
+    ]
+  },
+  "ex-b4me9hw3": {
+    "prompt": "Na transcrição das três alternâncias, quantas vezes o componente `with v-if` foi criado?",
+    "hint": "Conte as linhas que terminam em `created`."
+  },
+  "ex-ptdhy024": {
+    "prompt": "Um painel de notas guarda uma nota meio digitada, e o aluno o abre e fecha dezenas de vezes numa sessão de estudo. Pela tabela da aula, o que serve para ele?",
+    "hint": "Duas linhas da tabela decidem esta: o custo de uma alternância e o que acontece com o estado dentro.",
+    "choices": [
+      {
+        "text": "`v-if`, porque não construir nada é o mais barato",
+        "why": "Esse é o padrão para coisas que continuam escondidas. Aqui cada alternância reconstruiria o painel e perderia a nota meio digitada."
+      },
+      {
+        "text": "`v-if` num `<template>`, para não acrescentar um invólucro à página",
+        "why": "O `<template>` só poupa um elemento invólucro. Por baixo continua sendo `v-if`, e a nota continua se perdendo quando o painel fecha."
+      },
+      {
+        "text": "Qualquer um: para um leitor de tela eles são iguais",
+        "why": "Eles são iguais para um leitor de tela, e essa é a única linha em que concordam. O estado dentro é onde diferem."
+      },
+      {
+        "text": "`v-show`, para a nota sobreviver e cada alternância mudar só um estilo",
+        "why": "Certo. Alternado com frequência, e com estado que precisa sobreviver a ser escondido: as duas razões que a aula dá para o `v-show`."
+      }
+    ]
+  },
+  "ex-bjn5xg74": {
+    "prompt": "O que `<span v-for=\"n in 3\" :key=\"n\">{{ n }} </span>` pôs na página?",
+    "hint": "Um intervalo no `v-for` não conta do jeito que um índice de array conta.",
+    "choices": [
+      {
+        "text": "`012`",
+        "why": "É assim que um índice conta. Um intervalo começa em 1."
+      },
+      {
+        "text": "`0123`",
+        "why": "Seria um intervalo que começa em 0 e inclui o 3. Ele começa em 1 e para no 3."
+      },
+      {
+        "text": "`123`",
+        "why": "Certo. Um intervalo começa em 1, o único lugar do Vue em que a contagem faz isso."
+      },
+      {
+        "text": "Nada, porque um número não é uma lista",
+        "why": "O `v-for` repete sobre um número como um intervalo; a transcrição imprimiu três dígitos."
+      }
+    ]
+  },
+  "ex-5r078d4j": {
+    "prompt": "`<li v-for=\"session in sessions\" v-if=\"session.done\">` deixou a página vazia no Vue 3. Por quê?",
+    "hint": "Qual das duas diretivas rodou primeiro?",
+    "choices": [
+      {
+        "text": "O `v-if` rodou primeiro, antes de `session` existir",
+        "why": "Certo. O aviso diz que `session` foi acessado na renderização sem estar definido, e ler `.done` de undefined lançou o erro."
+      },
+      {
+        "text": "O `v-for` rodou primeiro, e o filtro não deixou nenhuma sessão para mostrar",
+        "why": "Essa é a ordem do Vue 2. Uma das duas sessões está feita, então um filtro que rodasse depois do laço a teria mostrado."
+      },
+      {
+        "text": "Um elemento com `v-if` não pode ter um `:key`",
+        "why": "Os erros são sobre `session` estar indefinido, não sobre a chave."
+      },
+      {
+        "text": "A propriedade `done` falta nos dados",
+        "why": "As duas sessões têm `done`. O que faltava era o próprio `session`, no momento em que o `v-if` perguntou."
+      }
+    ]
+  },
+  "ex-k0bq28vb": {
+    "prompt": "Quais destes mostram só as sessões feitas, do jeito que a aula aceita? Escolha todas as que se aplicam.",
+    "hint": "Um jeito dá um nome à lista filtrada; o outro filtra dentro do laço.",
+    "choices": [
+      {
+        "text": "`v-for` e `v-if` juntos no `<li>`",
+        "why": "Essa é a demonstração que deixou a página vazia: no Vue 3 o `v-if` roda primeiro."
+      },
+      {
+        "text": "Um `computed` que filtra, e um `v-for` simples sobre ele",
+        "why": "Certo. A lista filtrada significa algo, então ganha um nome no script."
+      },
+      {
+        "text": "Um `v-if=\"session.done\"` no `<ul>` em volta do laço",
+        "why": "O `<ul>` fica fora do laço, onde não existe `session`, e esconderia a lista inteira em vez de linhas."
+      },
+      {
+        "text": "`<template v-for>` com o `v-if` no `<li>` de dentro",
+        "why": "Certo. O laço roda primeiro e cada cópia decide depois, que é como a última lista da primeira demonstração faz."
+      }
+    ]
+  },
+  "ex-jdkmyjc5": {
+    "prompt": "Statistics recebeu estrela na lista com chave pelo índice, e depois foi removido dos cursos. Qual componente o Vue removeu dessa lista?",
+    "hint": "Pergunte quais chaves existem antes da remoção e quais existem depois.",
+    "choices": [
+      {
+        "text": "O da chave 0, que tinha a estrela",
+        "why": "A chave 0 ainda existe depois da remoção, então o componente dela fica, com estrela e tudo. Por isso Spanish aparece com estrela."
+      },
+      {
+        "text": "Nenhum; o Vue reconstruiu as três linhas",
+        "why": "Se todas as linhas tivessem sido reconstruídas, a estrela teria sumido. Ela foi para Spanish porque um componente foi mantido."
+      },
+      {
+        "text": "O da chave 2",
+        "why": "Certo. Só as chaves 0 e 1 continuam, então o último componente saiu, embora não tivesse nada a ver com statistics."
+      },
+      {
+        "text": "O componente de statistics, onde quer que estivesse",
+        "why": "Isso foi o que aconteceu na lista com chave pelo curso. Com chave pelo índice, o Vue não sabe qual componente era statistics."
+      }
+    ]
+  },
+  "ex-z7rev6ds": {
+    "prompt": "Uma lista de notas tem chave pelo índice, e cada linha tem um campo de texto. O aluno digita metade de algo na primeira linha, e então uma nota nova é inserida no topo da lista. Onde está o texto meio digitado agora?",
+    "hint": "O texto pertence ao elemento, não à lista.",
+    "choices": [
+      {
+        "text": "Ao lado da própria nota, agora na segunda linha",
+        "why": "Isso é o que uma chave estável daria. Com um índice, o Vue reaproveita os elementos pela posição."
+      },
+      {
+        "text": "Ainda na primeira linha, ao lado da nota nova",
+        "why": "Certo. A chave 0 sobreviveu, então o elemento dela e o texto dentro ficaram na posição 0 enquanto as notas passavam."
+      },
+      {
+        "text": "Sumiu, porque inserir reconstrói todas as linhas",
+        "why": "O Vue mantém todo componente cuja chave ainda existe, e todas as chaves antigas ainda existem. Só uma linha nova é construída."
+      },
+      {
+        "text": "Em lugar nenhum: o Vue avisa que duas linhas têm a chave 0 e não desenha nada",
+        "why": "Índices são únicos, então nenhuma linha divide uma chave. O problema do índice é não ser estável."
+      }
+    ]
+  },
+  "ex-24ab909r": {
+    "prompt": "Quais destes são um bom `:key` para uma linha das sessões do planner? Escolha todas as que se aplicam.",
+    "hint": "Estável, único entre os irmãos, e uma string ou um número.",
+    "choices": [
+      {
+        "text": "`session.id`",
+        "why": "Certo. Ele nunca muda e nenhuma sessão divide o seu com outra."
+      },
+      {
+        "text": "`session.date`",
+        "why": "É uma string, mas não é única: duas sessões caem em 19 de outubro."
+      },
+      {
+        "text": "O próprio objeto da sessão",
+        "why": "Uma chave é uma string ou um número. Dois objetos nunca são iguais como chave, então uma lista substituída não casaria com nada."
+      },
+      {
+        "text": "Um número dado a cada sessão quando ela é criada e nunca reaproveitado",
+        "why": "Certo. É o que o `addSession` faz com o próximo número: estável e único."
+      },
+      {
+        "text": "O `index` de `(session, index) in thisWeek`",
+        "why": "A lista é ordenada por data, então uma sessão acrescentada depois desloca todos os índices seguintes."
+      }
+    ]
+  },
+  "ex-8fx41xcn": {
+    "prompt": "Um índice só é aceitável como chave quando a lista nunca muda de ___ e as linhas não guardam estado próprio.",
+    "hint": "É a ordenação que estraga isso.",
+    "blanks": [
+      {
+        "accept": [
+          "ordem"
+        ]
+      }
+    ]
+  },
+  "ex-468zxx1f": {
+    "prompt": "Duas checkboxes, `reading` e `exercises`, dividem `v-model=\"kinds\"`. Depois de marcar só Exercises, o que `kinds` guardava?",
+    "hint": "Várias checkboxes com um array.",
+    "choices": [
+      {
+        "text": "`true`",
+        "why": "Isso é o que uma checkbox sozinha dá. Ligadas a um array, as checkboxes dão os valores marcados."
+      },
+      {
+        "text": "`[ false, true ]`",
+        "why": "O array não guarda uma marca por caixa; ele guarda o `value` de cada caixa marcada."
+      },
+      {
+        "text": "`\"exercises\"`, uma string sozinha",
+        "why": "Um valor escolhido como string é o que os botões de rádio dão."
+      },
+      {
+        "text": "`[ \"exercises\" ]`",
+        "why": "Certo. O array dos `value`s marcados, e só um está."
+      }
+    ]
+  },
+  "ex-pkymhcq1": {
+    "prompt": "`note` é um ref com `''`, e o template tem `<input v-model=\"note\" value=\"hello\">`. O que o campo mostra quando a página carrega?",
+    "hint": "Qual dos dois é a verdade?",
+    "choices": [
+      {
+        "text": "`hello`, e `note` passa a ser `'hello'`",
+        "why": "O atributo não escreve no ref. Os valores iniciais vão no ref."
+      },
+      {
+        "text": "Um campo vazio, diga o `value` o que disser",
+        "why": "Certo. O ref é a verdade, e o atributo `value` do próprio campo é ignorado."
+      },
+      {
+        "text": "`hello`, até o aluno começar a digitar",
+        "why": "Esse é o comportamento do HTML puro. Com `v-model` o campo mostra o que `note` guarda desde o começo."
+      },
+      {
+        "text": "Nada, porque o Vue se recusa a compilar o template",
+        "why": "A aula diz que o atributo é ignorado, não recusado; a página é renderizada com o valor do ref."
+      }
+    ]
+  },
+  "ex-v75gqkd9": {
+    "prompt": "Por que a lista do planner não põe `v-model` em `session.done`?",
+    "hint": "A aula 3 decidiu como a lista de sessões muda.",
+    "choices": [
+      {
+        "text": "O `v-model` não funciona numa checkbox",
+        "why": "Funciona: uma checkbox sozinha dá `true` ou `false`, como a caixa `Done` da demonstração mostrou."
+      },
+      {
+        "text": "Ele viraria a propriedade dentro da lista no lugar, pelas costas do `toggleDone`",
+        "why": "Certo. A regra do planner é que a lista é substituída por meio do `toggleDone`, nunca mudada no lugar."
+      },
+      {
+        "text": "Numa checkbox ele escuta `input`, a cada tecla",
+        "why": "O `v-model` de uma checkbox escuta `change`. O evento nunca foi o problema."
+      },
+      {
+        "text": "Dentro de um `v-for` ele só alcança a cópia do laço, nunca a lista",
+        "why": "A variável do laço é o próprio objeto da lista, e é justamente por isso que escrever nela mudaria a lista no lugar."
+      }
+    ]
+  },
+  "ex-na4wdth3": {
+    "prompt": "Na transcrição do BindAndOn, Enter foi apertado no campo de minutos. Qual linha veio primeiro, e por quê?",
+    "hint": "Quando um navegador envia um formulário: com a tecla descendo ou subindo?",
+    "choices": [
+      {
+        "text": "`Enter pressed`, porque o `keyup` dispara antes de o formulário ser enviado",
+        "why": "A ordem foi a contrária: o envio acontece com a tecla descendo, antes de ela subir."
+      },
+      {
+        "text": "`submitted 60 minutes…`, porque um navegador envia um formulário com a tecla descendo",
+        "why": "Certo. O handler de `keyup` rodou depois, quando a tecla voltou."
+      },
+      {
+        "text": "`submitted 60 minutes…`, porque o `.prevent` segura o handler de `keyup`",
+        "why": "O `.prevent` chama `preventDefault()` no evento de submit e mais nada; ele não atrasa outros listeners."
+      },
+      {
+        "text": "Só `Enter pressed`; o `.prevent` impediu o handler de submit de rodar",
+        "why": "O `.prevent` impede o comportamento padrão do navegador, o carregamento da página, e o handler roda mesmo assim: a transcrição imprimiu as duas linhas."
+      }
+    ]
+  },
+  "ex-0e3frqs9": {
+    "prompt": "Um botão tem `:disabled=\"saving\"`, e `saving` é `false`. O que fica no botão no HTML?",
+    "hint": "Um `false` ligado a um atributo booleano.",
+    "choices": [
+      {
+        "text": "`disabled=\"false\"`, que o desabilita mesmo assim",
+        "why": "Essa é a armadilha de escrever o atributo à mão no HTML. Um `false` ligado remove um atributo booleano."
+      },
+      {
+        "text": "`disabled=\"\"`, até `saving` ficar verdadeiro",
+        "why": "Um `disabled` vazio continua desabilitado. O atributo é removido até `saving` ser verdadeiro."
+      },
+      {
+        "text": "Nenhum atributo `disabled`",
+        "why": "Certo. `false` remove um atributo booleano, então o botão fica habilitado, e é por isso que o idioma funciona."
+      },
+      {
+        "text": "`disabled`, porque qualquer valor ligado define um atributo booleano",
+        "why": "`null` e `undefined` removem qualquer atributo, mas `false` também remove um booleano como `disabled`."
+      }
+    ]
+  },
+  "ex-awgte39j": {
+    "prompt": "O modificador que impede um formulário enviado de carregar o seu endereço de novo se escreve `@submit.___`.",
+    "hint": "Ele chama o método do evento de mesmo nome, antes do handler.",
+    "blanks": [
+      {
+        "accept": [
+          "prevent"
+        ]
+      }
+    ]
+  },
+  "ex-apdejf1x": {
+    "prompt": "Um handler de clique num botão deve rodar só na primeira vez, e o clique não deve chegar aos pais do botão. De quais modificadores ele precisa? Escolha todas as que se aplicam.",
+    "hint": "Um remove o listener, outro impede a subida.",
+    "choices": [
+      {
+        "text": "`.once`",
+        "why": "Certo. O listener é removido depois da primeira vez."
+      },
+      {
+        "text": "`.self`",
+        "why": "O `.self` decide quais cliques rodam este handler, os do próprio elemento e não de um filho; ele não impede o evento de subir."
+      },
+      {
+        "text": "`.stop`",
+        "why": "Certo. `event.stopPropagation()`: o evento não sobe até os pais."
+      },
+      {
+        "text": "`.prevent`",
+        "why": "O `.prevent` impede a ação padrão do navegador, como um formulário carregar uma página; o evento continua subindo."
+      }
+    ]
+  },
+  "ex-zz6ahcs0": {
+    "prompt": "No FocusDirective, o foco foi para `#minutes`, e não para `#course`. Por quê?",
+    "hint": "Onde o `v-focus` está?",
+    "choices": [
+      {
+        "text": "O Vue põe o foco no último campo de um componente quando ele é montado",
+        "why": "O Vue não põe foco em nada sozinho. Algo teve de chamar `focus()`."
+      },
+      {
+        "text": "O `v-focus` está em `#minutes`, e o hook `mounted` dele pôs o foco nesse elemento",
+        "why": "Certo. O hook rodou com o elemento em que está, assim que ele foi posto na página."
+      },
+      {
+        "text": "O `onMounted` do script moveu o foco para lá",
+        "why": "Esse `onMounted` só imprime onde o foco está. Ele lê `document.activeElement`; não o define."
+      },
+      {
+        "text": "A diretiva rodou em todos os inputs, e o último a ser montado ficou com o foco",
+        "why": "Uma diretiva age sobre o elemento em que está escrita, e só `#minutes` tem `v-focus`."
+      }
+    ]
+  },
+  "ex-hezf987m": {
+    "prompt": "No `<script setup>`, qual variável fica disponível no template como `v-colour`, sem registrar nada?",
+    "hint": "A regra do nome: uma letra, e depois uma maiúscula.",
+    "choices": [
+      {
+        "text": "`useColour`",
+        "why": "`use` é o costume de nome de um composable. O nome de uma diretiva começa com `v` e uma maiúscula."
+      },
+      {
+        "text": "`colour`",
+        "why": "Sem o prefixo `v` é uma variável comum; ela teria de ser registrada com `app.directive` para virar uma."
+      },
+      {
+        "text": "`v_colour`",
+        "why": "A regra é `v` seguido de letra maiúscula, como em `vFocus`, não um sublinhado."
+      },
+      {
+        "text": "`vColour`",
+        "why": "Certo. `v` seguido de letra maiúscula, usado no template como `v-colour`."
+      }
+    ]
+  },
+  "ex-kzznrgdm": {
+    "prompt": "Na transcrição do planner, quantos minutos de Spanish estavam planejados para a semana de 19 de outubro?",
+    "hint": "Some as duas sessões de Spanish da lista, ou leia a linha do curso.",
+    "unit": "minutos"
+  },
+  "ex-e0x633kf": {
+    "prompt": "Uma checkbox tem o texto ao lado, mas fora de qualquer `<label>` e sem ligação com um por `for` e `id`. O que um leitor de tela anuncia para ela?",
+    "hint": "O nome de uma checkbox vem do label.",
+    "choices": [
+      {
+        "text": "O texto ao lado, como nome da caixa",
+        "why": "Estar ao lado não basta. O texto só dá nome à caixa de dentro de um label, ou por `for` e `id`."
+      },
+      {
+        "text": "\"checkbox, checked\" e nada mais",
+        "why": "Certo. Sem label a caixa não tem nome, então o aluno ouve o que ela é e não para que serve."
+      },
+      {
+        "text": "Nada, porque o leitor pula uma caixa sem label",
+        "why": "A caixa continua sendo anunciada; ela é anunciada sem nome."
+      },
+      {
+        "text": "O `id` do input, no lugar de um nome",
+        "why": "Um `id` sozinho não dá nome a nada; ele só importa quando o `for` de um label aponta para ele."
+      }
+    ]
+  },
+  "ex-04b90ytk": {
+    "prompt": "O aluno marca a sessão de guitar e recarrega a página. Ponha o que acontece em ordem.",
+    "hint": "Do clique, passando pelas regras e pelo watcher, até a segunda visita.",
+    "items": [
+      "A checkbox dispara `change`",
+      "O `toggle` chama o `toggleDone`",
+      "`sessions.value` é substituído pela lista nova",
+      "O watcher escreve a lista no `localStorage`",
+      "O recarregamento lê a lista de volta do navegador"
+    ]
+  },
+  "ex-8qc4ckd8": {
+    "prompt": "Associe cada campo ao que o `v-model` lê e escreve nele.",
+    "hint": "O tipo de campo escolhe o que a mesma diretiva faz.",
+    "pairs": [
+      {
+        "left": "um input de texto",
+        "right": "o texto, como string"
+      },
+      {
+        "left": "uma checkbox sozinha",
+        "right": "`true` ou `false`"
+      },
+      {
+        "left": "várias checkboxes com um array",
+        "right": "os `value`s marcados"
+      },
+      {
+        "left": "botões de rádio",
+        "right": "o `value` do escolhido"
+      }
+    ],
+    "right_distractors": [
+      "o número de caixas marcadas"
+    ]
+  },
+  "ex-mje0bchy": {
+    "prompt": "Cada linha de uma lista com chave pelo índice tem um input com `v-focus`. O primeiro item é removido da lista. O hook `mounted` da diretiva roda de novo?",
+    "hint": "Quais chaves sobrevivem à remoção, e o que o Vue faz com um componente cuja chave sobrevive?",
+    "choices": [
+      {
+        "text": "Sim, em todas as linhas, porque a lista foi substituída",
+        "why": "Uma lista nova não quer dizer elementos novos. O Vue compara chaves, e as chaves 0 e 1 continuam lá."
+      },
+      {
+        "text": "Sim, na linha cujo item subiu para a posição 0",
+        "why": "O elemento dessa linha já estava na página como chave 0. Ele é atualizado com um item novo, não montado."
+      },
+      {
+        "text": "Não: as chaves 0 e 1 sobrevivem, então os elementos delas são atualizados, não montados de novo",
+        "why": "Certo. O único elemento cuja vida muda é o da chave 2, e ele é removido, o que roda `unmounted`, não `mounted`."
+      },
+      {
+        "text": "Não, porque os hooks de uma diretiva rodam uma vez por aplicação",
+        "why": "Eles rodam por elemento: o `mounted` rodaria para qualquer elemento posto na página de novo, o que remover um não faz."
+      }
+    ]
+  },
+  "ex-kwx7zz4w": {
+    "prompt": "Quais destes a lista da semana do planner usa? Escolha todas as que se aplicam.",
+    "hint": "Leia o template da lista nova.",
+    "choices": [
+      {
+        "text": "`v-for` com `:key=\"session.id\"`",
+        "why": "Certo. Uma chave de verdade, o id da sessão."
+      },
+      {
+        "text": "`v-model` em cada checkbox",
+        "why": "A caixa é ligada à mão, com `:checked` e `@change`, para que a mudança passe pelo `toggle`."
+      },
+      {
+        "text": "`v-if` e `v-else` para uma semana sem nada planejado",
+        "why": "Certo. Um parágrafo para uma semana vazia, a lista nos outros casos."
+      },
+      {
+        "text": "`v-show` no parágrafo de semana vazia",
+        "why": "É `v-if`, que forma par com `v-else`; o `v-show` não funciona com `v-else`."
+      },
+      {
+        "text": "`:class=\"{ done: session.done }\"` em cada linha",
+        "why": "Certo. Uma sessão feita ganha a classe que a risca."
+      }
+    ]
+  }
+}

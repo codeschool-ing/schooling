@@ -1,0 +1,522 @@
+{
+  "ex-z1m8xws1": {
+    "prompt": "Por que o planner consegue comparar `\"2026-10-19\" < \"2026-10-24\"` como strings?",
+    "hint": "Olhe a ordem das partes.",
+    "choices": [
+      {
+        "text": "O JavaScript converte as duas em datas antes de comparar",
+        "why": "Ele compara como texto, caractere por caractere."
+      },
+      {
+        "text": "Ano, mês, dia, com zeros: a ordem do texto é a das datas",
+        "why": "Isso, e é por isso que o formato foi escolhido."
+      },
+      {
+        "text": "O compilador do Svelte reescreve comparações de string com datas",
+        "why": "O `week.js` é um módulo comum; o compilador não mexe nele."
+      },
+      {
+        "text": "Só funciona aqui porque essas duas datas por acaso caem no mesmo mês do mesmo ano",
+        "why": "Funciona entre meses e anos também, pelo mesmo motivo."
+      }
+    ]
+  },
+  "ex-fhfv874g": {
+    "prompt": "O `week.js` faz todo cálculo em UTC. O que dá errado sem isso?",
+    "hint": "Uma data à meia-noite num fuso é o dia anterior em outro.",
+    "choices": [
+      {
+        "text": "Nada; fusos só importam para horas, não para datas",
+        "why": "Uma data lida à meia-noite local pode sair como o dia anterior."
+      },
+      {
+        "text": "O planner se recusaria a carregar num computador com fuso horário diferente do brasileiro",
+        "why": "Nada recusa; as datas se deslocariam em silêncio."
+      },
+      {
+        "text": "Uma data sai um dia antes num computador nas Américas",
+        "why": "Isso. A mesma entrada dá a mesma resposta em todo lugar só se o fuso for fixo."
+      }
+    ]
+  },
+  "ex-07fnhst7": {
+    "prompt": "A sessão 6 é no sábado, 24 de outubro de 2026. `mondayOf` devolve a segunda-feira da semana dela. Que dia de outubro é esse?",
+    "hint": "Conte para trás a partir do sábado."
+  },
+  "ex-73bdjmhf": {
+    "prompt": "Por que `planner.json` e `week.js` são arquivos comuns, sem runes?",
+    "hint": "Onde as runes ficam?",
+    "choices": [
+      {
+        "text": "Nada neles muda enquanto a página está aberta",
+        "why": "Isso: runes vão onde os valores mudam, e estes podem ser testados sozinhos."
+      },
+      {
+        "text": "Runes são proibidas em qualquer arquivo dentro de `src/lib`",
+        "why": "`src/lib` guarda componentes com runes, como o `WeekTotal.svelte`."
+      },
+      {
+        "text": "Arquivos JSON e JavaScript não podem ser importados por um componente",
+        "why": "A página importa os dois."
+      },
+      {
+        "text": "Ficariam mais rápidos com runes, mas as runes ainda são experimentais",
+        "why": "Runes são a sintaxe normal do Svelte 5, e velocidade não é o motivo."
+      }
+    ]
+  },
+  "ex-eryk7r5k": {
+    "prompt": "Como o botão `Next week` muda a semana mostrada?",
+    "hint": "Leia o handler dele.",
+    "choices": [
+      {
+        "text": "Chama uma função setter que o `$state` devolveu",
+        "why": "O `$state` devolve o próprio valor; não há setter."
+      },
+      {
+        "text": "Atribui um novo valor a `week`",
+        "why": "Isso. O compilador transformou a atribuição numa escrita de signal."
+      },
+      {
+        "text": "Recarrega a página com a semana seguinte no endereço",
+        "why": "Nada recarrega; o `look` continuou em `/`."
+      },
+      {
+        "text": "Manda a semana nova para o servidor de desenvolvimento",
+        "why": "O estado vive no navegador; o servidor não é consultado."
+      }
+    ]
+  },
+  "ex-1x6m0hqx": {
+    "prompt": "`let week = $state(mondayOf(data.sessions.at(-1).date))`. Quantas vezes `mondayOf` roda enquanto você clica nos botões da semana?",
+    "hint": "Quando o valor inicial é calculado?",
+    "choices": [
+      {
+        "text": "Uma vez por clique, para recalcular a semana inicial",
+        "why": "A declaração não roda de novo; os cliques só atribuem a `week`."
+      },
+      {
+        "text": "Duas vezes por clique: uma antes da mudança e outra de novo depois dela",
+        "why": "Nada a chama num clique."
+      },
+      {
+        "text": "Uma vez, quando o componente é criado; cliques não a chamam",
+        "why": "Isso. O valor inicial é calculado uma vez."
+      }
+    ]
+  },
+  "ex-51yjnyqs": {
+    "prompt": "Qual destes NÃO deveria ser um `$state` próprio?",
+    "hint": "Daria para calcular a partir dos outros?",
+    "choices": [
+      {
+        "text": "A semana mostrada",
+        "why": "Nada mais a determina; os botões a definem."
+      },
+      {
+        "text": "O rótulo `Week of 19 Oct 2026`",
+        "why": "Isso. Ele é calculado de `week`, então guardá-lo duas vezes convida os dois a discordarem."
+      },
+      {
+        "text": "Qual curso o aluno selecionou",
+        "why": "Só um clique diz isso, então é estado."
+      },
+      {
+        "text": "A lista de sessões, quando dá para acrescentar sessões",
+        "why": "Acréscimos não podem ser calculados a partir de nada."
+      }
+    ]
+  },
+  "ex-xd8hr4pw": {
+    "prompt": "Se você apagasse uma variável e conseguisse calcular o valor dela a partir das outras, ela é ___, não estado.",
+    "hint": "A próxima rune.",
+    "blanks": [
+      {
+        "accept": [
+          "derivada",
+          "derivado",
+          "derived"
+        ]
+      }
+    ]
+  },
+  "ex-43t577sb": {
+    "prompt": "`Previous week` só define `week`. Por que o total muda também?",
+    "hint": "Siga a cadeia da figura.",
+    "choices": [
+      {
+        "text": "`total` é derivado de `thisWeek`, que é derivado de `week`",
+        "why": "Isso. Cada elo recalcula quando é lido de novo."
+      },
+      {
+        "text": "O handler também recalcula o total, escondido pelo compilador",
+        "why": "O compilador não acrescenta recálculo aos handlers; os valores derivados fazem isso sozinhos."
+      },
+      {
+        "text": "O componente inteiro roda de novo quando qualquer estado muda",
+        "why": "Esse é o modelo do React; o script rodou uma vez."
+      },
+      {
+        "text": "O navegador recalcula cada expressão entre chaves a cada clique",
+        "why": "Só as expressões cujos signals mudaram rodam de novo."
+      }
+    ]
+  },
+  "ex-dme79y0q": {
+    "prompt": "Ligue cada propriedade de um valor derivado ao que ela significa.",
+    "hint": "Três propriedades, três significados.",
+    "pairs": [
+      {
+        "left": "Preguiçoso",
+        "right": "Recalculado quando lido de novo, não quando marcado como desatualizado"
+      },
+      {
+        "left": "Memorizado",
+        "right": "Lido dez vezes, calculado uma vez até algo mudar"
+      },
+      {
+        "left": "Puro",
+        "right": "Calcula um valor e não faz mais nada"
+      }
+    ],
+    "right_distractors": [
+      "Recalculado por um timer, a cada quadro de animação"
+    ]
+  },
+  "ex-0yq5rkdc": {
+    "prompt": "Quando você escreve `$derived.by(() => …)` em vez de `$derived(…)`?",
+    "hint": "Compare `total` e `byCourse`.",
+    "choices": [
+      {
+        "text": "Quando o valor é um objeto e não um número",
+        "why": "O tipo do resultado não importa; a forma do cálculo importa."
+      },
+      {
+        "text": "Quando o cálculo é lento e deve rodar em segundo plano",
+        "why": "As duas formas rodam no mesmo lugar, na mesma hora."
+      },
+      {
+        "text": "Quando calcular leva várias instruções",
+        "why": "Isso. O `.by` recebe o corpo de uma função; a forma simples, uma expressão."
+      },
+      {
+        "text": "Quando depende de mais de um estado",
+        "why": "Um derivado de uma expressão pode ler quantos signals quiser."
+      }
+    ]
+  },
+  "ex-y8wa7fgw": {
+    "prompt": "`{minutesFor(course)}` na marcação e `{byCourse[course.id]}` mostram o mesmo número. O que difere?",
+    "hint": "Com que frequência cada um calcula?",
+    "choices": [
+      {
+        "text": "A versão com função não é reativa, então ela para de atualizar depois da primeira vez que roda",
+        "why": "Uma chamada na marcação é rastreada: ela lê estado, então roda de novo."
+      },
+      {
+        "text": "A chamada roda cada vez que a sua marcação atualiza; o derivado roda uma vez por mudança e é compartilhado",
+        "why": "Isso. Os dois estão certos; o derivado é mais barato e tem nome."
+      },
+      {
+        "text": "O valor derivado é calculado só no servidor",
+        "why": "Ele é calculado onde o componente roda, navegador incluído."
+      }
+    ]
+  },
+  "ex-dxgemy2k": {
+    "prompt": "`sessions.push({...})` num array `$state`. O que atualiza?",
+    "hint": "O proxy relata escritas.",
+    "choices": [
+      {
+        "text": "Nada; você precisa atribuir um array novo a `sessions`",
+        "why": "Isso é preciso com `$state.raw`, não com estado profundo."
+      },
+      {
+        "text": "Tudo o que leu o array, como os totais e a lista",
+        "why": "Isso. O proxy viu o push."
+      },
+      {
+        "text": "Só o `{#each}` que percorre o array; os valores derivados ficam com os resultados antigos",
+        "why": "Os valores derivados também leram o array, então ficam desatualizados também."
+      },
+      {
+        "text": "A página recarrega com a sessão nova",
+        "why": "Nada recarrega."
+      }
+    ]
+  },
+  "ex-8py6fjse": {
+    "prompt": "Marcar uma sessão como feita não imprimiu nenhum `update` do `$inspect(total)`. Por quê?",
+    "hint": "O que `total` lê de cada sessão?",
+    "choices": [
+      {
+        "text": "O `$inspect` só relata pushes, não mudanças de propriedade",
+        "why": "Ele relata qualquer mudança no que rastreia; o `total` é que não mudou."
+      },
+      {
+        "text": "Botões de alternar não mudam estado",
+        "why": "Este atribuiu `session.done`, e o botão mostrou `[pressed]`."
+      },
+      {
+        "text": "`total` lê `minutes`, não `done`",
+        "why": "Isso. A escrita chegou ao botão, que leu `done`."
+      },
+      {
+        "text": "O proxy ignora booleanos para economizar memória",
+        "why": "Booleanos são rastreados como qualquer propriedade."
+      }
+    ]
+  },
+  "ex-emr1x26n": {
+    "prompt": "Por que a página guarda o curso selecionado como um id e não como o objeto do curso?",
+    "hint": "O que o `$state` faz com um objeto?",
+    "choices": [
+      {
+        "text": "Ids ocupam menos memória que objetos",
+        "why": "Verdade, mas fora do ponto; o problema é comparar."
+      },
+      {
+        "text": "Um objeto com proxy não é `===` ao original, e uma string compara sem problema",
+        "why": "Isso. Comparar ids evita a questão."
+      },
+      {
+        "text": "Objetos não podem ser passados para `aria-pressed`",
+        "why": "O `aria-pressed` recebe o resultado de uma comparação, um booleano."
+      },
+      {
+        "text": "Os cursos mudam enquanto a página está aberta, e um objeto guardado ficaria desatualizado junto",
+        "why": "Não mudam; a lista de cursos é um import comum."
+      }
+    ]
+  },
+  "ex-p768mvbx": {
+    "prompt": "Ligue cada ferramenta a quando usá-la.",
+    "hint": "Duas são runes, uma é método de uma rune.",
+    "pairs": [
+      {
+        "left": "`$state(…)`",
+        "right": "Dados que você muda no lugar"
+      },
+      {
+        "left": "`$state.raw(…)`",
+        "right": "Uma lista grande que você só troca inteira"
+      },
+      {
+        "left": "`$state.snapshot(…)`",
+        "right": "Uma cópia comum, para registrar ou mandar a algum lugar"
+      }
+    ],
+    "right_distractors": [
+      "Um valor compartilhado entre duas abas do navegador"
+    ]
+  },
+  "ex-mrb9c0x6": {
+    "prompt": "Você guarda um objeto `Date` num `$state` e chama `date.setDate(25)` nele. O que acontece na página?",
+    "hint": "Que objetos o proxy envolve?",
+    "choices": [
+      {
+        "text": "A data atualiza em todo lugar onde aparece",
+        "why": "Só arrays e objetos comuns ganham proxy; um `Date` é deixado em paz."
+      },
+      {
+        "text": "Um erro: classes não são permitidas em `$state`",
+        "why": "São permitidas; só não ficam profundamente reativas."
+      },
+      {
+        "text": "Nada visível muda, porque a mudança não é vista",
+        "why": "Isso. Atribua um `Date` novo, ou use `SvelteDate` de `svelte/reactivity`."
+      }
+    ]
+  },
+  "ex-f7jp1sqm": {
+    "prompt": "Para que serve o `$effect`?",
+    "hint": "Pense em até onde o código dele chega.",
+    "choices": [
+      {
+        "text": "Calcular valores a partir de outros valores",
+        "why": "Isso é o `$derived`."
+      },
+      {
+        "text": "Responder a um clique ou a uma tecla",
+        "why": "Isso é um handler de evento."
+      },
+      {
+        "text": "Alcançar fora do componente depois que a página atualiza",
+        "why": "Isso: um título, um timer, um canvas, uma conexão."
+      },
+      {
+        "text": "Rodar código no servidor antes de o HTML ser mandado",
+        "why": "Efeitos nunca rodam durante a renderização no servidor."
+      }
+    ]
+  },
+  "ex-at3a30yk": {
+    "prompt": "Um efeito inicia um `setInterval` e não devolve nada. Ele roda de novo três vezes. Quantos intervalos estão rodando?",
+    "hint": "Nada parou os anteriores.",
+    "choices": [
+      {
+        "text": "Um; o Svelte para o intervalo antigo por você",
+        "why": "O Svelte chama a função que você devolve, e aqui não há nenhuma."
+      },
+      {
+        "text": "Quatro",
+        "why": "Isso: a primeira execução e três repetições, nenhuma limpa. Devolva `() => clearInterval(id)`."
+      },
+      {
+        "text": "Três, já que a primeira execução não conta",
+        "why": "A primeira execução também iniciou um."
+      },
+      {
+        "text": "Nenhum; intervalos não são permitidos em efeitos",
+        "why": "São permitidos, e um timer é o exemplo comum."
+      }
+    ]
+  },
+  "ex-4ezrw6r3": {
+    "prompt": "Um colega escreve `$effect(() => { total = sum(thisWeek); })`. O que você sugere?",
+    "hint": "Ele calcula um valor.",
+    "choices": [
+      {
+        "text": "`let total = $derived(sum(thisWeek))`",
+        "why": "Isso. Um valor vindo de outros valores é derivado, calculado quando lido, sem segunda atualização."
+      },
+      {
+        "text": "Envolver a atribuição em `untrack` para não entrar em loop",
+        "why": "Isso esconde um sintoma e mantém a atualização extra e o momento desatualizado."
+      },
+      {
+        "text": "Usar `$effect.pre` para rodar antes de a página atualizar",
+        "why": "Continua sendo um efeito calculando um valor, que é a ferramenta errada."
+      },
+      {
+        "text": "Mover a linha para o handler de clique do botão",
+        "why": "Aí o total só acompanharia um botão, não toda mudança nas sessões."
+      }
+    ]
+  },
+  "ex-vmpmz2k9": {
+    "prompt": "Um efeito que fica definindo um valor que ele mesmo lê é parado com o erro `effect_update_depth____`.",
+    "hint": "Quão fundo as atualizações foram.",
+    "blanks": [
+      {
+        "accept": [
+          "_exceeded",
+          "exceeded"
+        ]
+      }
+    ]
+  },
+  "ex-vs1844at": {
+    "prompt": "`let { minutes, label = 'this week' } = $props();` e o pai escreve `<WeekTotal minutes={total} />`. O que é `label`?",
+    "hint": "O pai passou uma prop.",
+    "choices": [
+      {
+        "text": "`undefined`",
+        "why": "O padrão vale quando o pai não passa nada."
+      },
+      {
+        "text": "`'this week'`",
+        "why": "Isso: o padrão."
+      },
+      {
+        "text": "Um erro, porque toda prop tem de ser passada",
+        "why": "Uma prop com padrão é opcional."
+      },
+      {
+        "text": "O nome do componente pai, como alternativa",
+        "why": "O Svelte não fornece essa alternativa; o padrão da desestruturação fornece."
+      }
+    ]
+  },
+  "ex-ck9dhtbp": {
+    "prompt": "Dentro do `WeekTotal`, o que acontece se ele atribuir `minutes = 0`?",
+    "hint": "Quem é dono do valor?",
+    "choices": [
+      {
+        "text": "O `total` do pai vira 0 também",
+        "why": "Props descem; o estado do pai não é tocado."
+      },
+      {
+        "text": "O filho mostra 0 até o pai passar um valor novo, que o sobrescreve",
+        "why": "Isso. Um filho lê as suas props; mudar o valor do pai é a aula 5."
+      },
+      {
+        "text": "Nada; props são constantes e a linha é ignorada",
+        "why": "A atribuição funciona localmente, e é por isso que é uma armadilha."
+      }
+    ]
+  },
+  "ex-6kj9d63t": {
+    "prompt": "Ligue cada jeito de escrever props ao que ele faz.",
+    "hint": "Uma junta, uma repassa, uma é atalho.",
+    "pairs": [
+      {
+        "left": "`let { minutes, ...rest } = $props()`",
+        "right": "Junta todas as outras props"
+      },
+      {
+        "left": "`<p {...rest}>`",
+        "right": "Repassa a um elemento"
+      },
+      {
+        "left": "`<WeekTotal {minutes} />`",
+        "right": "O mesmo que `minutes={minutes}`"
+      }
+    ],
+    "right_distractors": [
+      "Torna a prop gravável pelo filho"
+    ]
+  },
+  "ex-tnrjcybg": {
+    "prompt": "O `total` do pai muda. Por que o `hours` do `WeekTotal` acompanha?",
+    "hint": "Uma prop é lida como qualquer outra coisa.",
+    "choices": [
+      {
+        "text": "O script do filho roda de novo com a prop nova",
+        "why": "Scripts rodam uma vez, filhos incluídos."
+      },
+      {
+        "text": "O pai recria o componente filho do zero sempre que qualquer uma das suas props muda",
+        "why": "O filho permanece; só o que leu a prop atualiza."
+      },
+      {
+        "text": "`hours` é derivado de `minutes`, e ler uma prop é rastreado",
+        "why": "Isso. Props são leituras reativas como o estado."
+      }
+    ]
+  },
+  "ex-ewkkzve7": {
+    "prompt": "Ponha os passos da aula na ordem em que a página do planner foi construída.",
+    "hint": "Cada passo precisou do anterior.",
+    "items": [
+      "`week` como estado, com dois botões",
+      "`thisWeek`, `total` e `byCourse` derivados dele",
+      "`sessions` como estado profundo, com um push e uma alternância",
+      "Um efeito para o título do documento",
+      "`WeekTotal` com `$props`, usado duas vezes"
+    ],
+    "trap": "O total não podia ser derivado antes de haver uma semana de onde derivá-lo."
+  },
+  "ex-sctwtg86": {
+    "prompt": "Quais destes pertencem a um `$derived` e não a um `$effect`? Escolha todos os que se aplicam.",
+    "hint": "O código calcula um valor, ou alcança fora?",
+    "choices": [
+      {
+        "text": "O número de sessões feitas nesta semana",
+        "why": "Sim: um valor a partir de outros valores."
+      },
+      {
+        "text": "As sessões do curso selecionado, ordenadas por data",
+        "why": "Sim: continua sendo um valor."
+      },
+      {
+        "text": "Gravar as sessões no `localStorage` quando mudam",
+        "why": "Não: isso alcança fora, então é um efeito."
+      },
+      {
+        "text": "Definir o `document.title`",
+        "why": "Não: um efeito, como a aula fez."
+      }
+    ]
+  }
+}

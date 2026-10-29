@@ -1,0 +1,523 @@
+{
+  "ex-beec1gyb": {
+    "prompt": "Na transcrição do `TwoApis`, por que o card Options diz `(1 requests)` e o card Composition diz `(0 requests)`?",
+    "hint": "Qual dos dois valores é compartilhado, e qual é de cada card?",
+    "choices": [
+      {
+        "text": "O `ref` do card Composition não redesenhou o template",
+        "why": "Redesenhou: a porcentagem dele foi para 33% junto com a outra. A contagem é 0 porque ninguém apertou o botão dele."
+      },
+      {
+        "text": "Só um card pode contar pedidos enquanto os dois compartilham `done`",
+        "why": "Compartilhar `done` não diz nada sobre `clicks`. Aperte o segundo botão e ele também conta."
+      },
+      {
+        "text": "Cada card tem o próprio `clicks`, e um foi apertado",
+        "why": "Isso. `done` mora no `TwoApis` e os dois o leem; `clicks` é estado de cada card, e só o primeiro foi clicado."
+      },
+      {
+        "text": "O card Options contou um clique em `data` e o `emit` dele não contou nenhum",
+        "why": "Há uma contagem por card e ela mora em `data`; o emit só pediu ao pai que somasse 15 minutos."
+      }
+    ]
+  },
+  "ex-ybzy9n97": {
+    "prompt": "Na transcrição do `TwoApis`, que porcentagem os dois cards mostraram depois do clique?",
+    "hint": "60 de 180, arredondado."
+  },
+  "ex-axjg2mrr": {
+    "prompt": "Um componente de quinhentas linhas faz quatro coisas na Options API. O que envolve mudar uma dessas coisas?",
+    "hint": "A segunda linha da tabela: o código é agrupado por quê?",
+    "choices": [
+      {
+        "text": "Uma entrada em `methods`, já que cada assunto é um método",
+        "why": "Um assunto também tem estado, valores derivados, um watcher e limpeza, e isso mora em outras opções."
+      },
+      {
+        "text": "Uma reescrita em `<script setup>` antes de qualquer mudança",
+        "why": "Componentes Options continuam funcionando e podem ser mudados no lugar; a última seção os passa para o outro lado aos poucos."
+      },
+      {
+        "text": "Um mixin, porque código Options guarda cada assunto num mixin próprio",
+        "why": "Mixins são um jeito de compartilhar opções entre componentes, não a forma como um componente é organizado."
+      },
+      {
+        "text": "Visitas a `data`, `computed`, `watch` e `beforeUnmount`, cada uma num canto",
+        "why": "Isso. O código é agrupado por tipo, então as partes de um assunto ficam em quatro opções, longe umas das outras."
+      }
+    ]
+  },
+  "ex-8cmh5pft": {
+    "prompt": "Por que `data` é escrito como uma função que devolve um objeto, e não como o próprio objeto?",
+    "hint": "Quantos cards guardariam o mesmo `clicks`?",
+    "choices": [
+      {
+        "text": "Cada instância a chama e recebe um objeto novo, só dela",
+        "why": "Isso. O Vue a chama uma vez por instância; um objeto compartilhado daria o mesmo `clicks` a todos os cards."
+      },
+      {
+        "text": "O Vue 3 não consegue tornar reativo um objeto simples",
+        "why": "Consegue: `reactive({})` faz exatamente isso. A função é sobre quantos objetos existem, não sobre se eles reagem."
+      },
+      {
+        "text": "Para que o Vue espere o template ler o estado antes de criá-lo",
+        "why": "O Vue chama `data()` enquanto a instância é criada, antes de `created`, leia o template o que ler."
+      },
+      {
+        "text": "Para que o `this` dentro dela seja o componente pai",
+        "why": "O `this` numa opção é a própria instância do componente; a função existe para criar um objeto novo por instância."
+      }
+    ]
+  },
+  "ex-hk7nm65h": {
+    "prompt": "Num componente Options API, o que `this.label` pode ser? Escolha todas as que se aplicam.",
+    "hint": "O Vue junta várias opções num único objeto.",
+    "choices": [
+      {
+        "text": "Uma prop",
+        "why": "Isso. As props ficam no `this` ao lado de todo o resto."
+      },
+      {
+        "text": "Um ref que você lê como `this.label.value`",
+        "why": "No `this` um ref vem desempacotado: `this.label` já é o valor."
+      },
+      {
+        "text": "Um valor computed",
+        "why": "Isso. Valores computed também entram no `this`, lidos sem chamá-los."
+      },
+      {
+        "text": "Uma propriedade que o `data` de um mixin acrescentou",
+        "why": "Isso. É por isso que nada diz de onde um nome veio: um mixin também pode colocá-lo ali."
+      },
+      {
+        "text": "Uma `const` declarada dentro de outro método",
+        "why": "Uma constante local pertence à chamada daquele método e não chega à instância."
+      },
+      {
+        "text": "Uma propriedade de data",
+        "why": "Isso. `data()` devolve o estado, e cada chave dele fica no `this`."
+      }
+    ]
+  },
+  "ex-6h2svgvs": {
+    "prompt": "`this.clicks` é o valor, não um ref. Que custo disso a aula aponta?",
+    "hint": "Pense numa função que deveria continuar acompanhando um valor depois de chamada.",
+    "choices": [
+      {
+        "text": "Toda leitura precisa de `.value`, e é fácil esquecer",
+        "why": "Esse é o custo da Composition API, ao contrário: no `this` não há `.value` para esquecer."
+      },
+      {
+        "text": "Não há ref para entregar a uma função que deveria acompanhá-lo",
+        "why": "Isso. Você só consegue passar o número do momento; as regras da aula 2 pediam o próprio ref para continuar rastreando."
+      },
+      {
+        "text": "O template deixa de atualizar quando `clicks` muda",
+        "why": "Atualiza: o card redesenhou `(1 requests)`. O desempacotamento muda como você lê o valor, não se ele reage."
+      },
+      {
+        "text": "O Vue copia o número a cada leitura, o que deixa um componente grande lento",
+        "why": "Nada é copiado; `this.clicks` lê o estado reativo a cada vez."
+      }
+    ]
+  },
+  "ex-6fmdk17c": {
+    "prompt": "No `ThisTrap`, por que `Shorter` lançou um erro enquanto `Longer` funcionou?",
+    "hint": "Leia o erro: o que era `this` quando `minutes` foi lido?",
+    "choices": [
+      {
+        "text": "O `this` dele era `window`, que não tem `minutes`",
+        "why": "Aí a leitura daria `undefined`, sem erro. O erro lê uma propriedade de `undefined`: num módulo, o `this` do nível de cima é `undefined`."
+      },
+      {
+        "text": "O Vue liga os métodos em ordem e parou depois do primeiro",
+        "why": "O Vue liga todos os métodos; ligar uma arrow simplesmente não tem efeito, porque a arrow mantém o `this` de onde foi escrita."
+      },
+      {
+        "text": "Ela é uma arrow, e o `this` dela é o do módulo: `undefined`",
+        "why": "Isso. Uma arrow ignora como é chamada; o `this` dela foi fixado quando o módulo foi avaliado."
+      },
+      {
+        "text": "Um método não pode subtrair de `data`; só um computed pode mudá-lo",
+        "why": "`longer` mudou `data` a partir de um método um instante antes. Computed deriva valores, não escreve."
+      }
+    ]
+  },
+  "ex-q6p7b030": {
+    "prompt": "Na transcrição do `ThisTrap`, quantos minutos a página mostrou depois dos dois cliques?",
+    "hint": "Só um dos dois botões fez o seu trabalho."
+  },
+  "ex-n2p5d1ht": {
+    "prompt": "Um método contém `setTimeout(function () { this.minutes += 15 }, 1000)`. O que acontece com o `minutes` do componente?",
+    "hint": "O callback é uma função comum. Quem a chama?",
+    "choices": [
+      {
+        "text": "Sobe 15, porque o Vue liga toda função escrita dentro de um método",
+        "why": "O Vue liga o próprio método, não as funções que ele cria; esta recebe o `this` do timer."
+      },
+      {
+        "text": "Nada: o `this` do callback é definido pelo timer",
+        "why": "Isso. Uma função comum tem `this` próprio, e o do timer não é o componente. Uma arrow teria mantido o do método."
+      },
+      {
+        "text": "Sobe 15 só se o método também for escrito como arrow",
+        "why": "Um método arrow tem o `this` do módulo, `undefined`, então a arrow dentro dele também herdaria `undefined`."
+      },
+      {
+        "text": "O componente não carrega: `function` é recusada dentro de `methods`",
+        "why": "O Vue nem vê a função de dentro; é JavaScript comum e roda, com o `this` errado."
+      }
+    ]
+  },
+  "ex-4ntctcaf": {
+    "prompt": "No `OptionsLifecycle`, por que o `beforeCreate` imprimiu `minutes is undefined`?",
+    "hint": "Compare com a linha que o `created` imprimiu.",
+    "choices": [
+      {
+        "text": "`minutes` está em `data`, e só as `props` existem tão cedo",
+        "why": "As props são montadas antes deste hook, mas isso não vem ao caso: `minutes` é data, e data vem depois."
+      },
+      {
+        "text": "`data` ainda não tinha sido montado",
+        "why": "Isso. A instância existia e o estado dela não; no `created`, um passo depois, `minutes` era 30."
+      },
+      {
+        "text": "O `this` dentro de um hook não é o componente",
+        "why": "Um hook escrito como método tem o componente como `this`; o `created` leu `minutes` por ele um instante depois."
+      },
+      {
+        "text": "O template ainda não tinha desenhado `minutes` na página",
+        "why": "Renderizar não tem nada a ver com o valor: o `created` leu 30 sem nada renderizado."
+      }
+    ]
+  },
+  "ex-j1hv3ams": {
+    "prompt": "Por que o `mounted` imprimiu `the element is a #text`?",
+    "hint": "Conte as raízes do template.",
+    "choices": [
+      {
+        "text": "O `mounted` roda antes de o DOM existir, então `$el` é um marcador provisório",
+        "why": "O DOM já existe no `mounted`; o hook sem nada renderizado era o `created`, e lá `$el` era `null`."
+      },
+      {
+        "text": "`$el` é o primeiro texto do template, `30 minutes`",
+        "why": "O nó de texto é vazio, não é o texto do parágrafo: o Vue o acrescenta como marcador."
+      },
+      {
+        "text": "Duas raízes, então `$el` é o nó marcador vazio do Vue",
+        "why": "Isso. Um componente com várias raízes não tem um elemento único; um template ref nomeia o que você quer."
+      },
+      {
+        "text": "O Vue 3 informa o `nodeName` de um `<p>` como `#text`",
+        "why": "Um `<p>` informa `P`. O nó aqui nem é o parágrafo."
+      }
+    ]
+  },
+  "ex-p8axbp28": {
+    "prompt": "Quais hooks da Options API não têm par `on…` na Composition API? Escolha todas as que se aplicam.",
+    "hint": "O nível de cima do `<script setup>` ocupa o lugar deles.",
+    "choices": [
+      {
+        "text": "`mounted`",
+        "why": "O par dele é `onMounted`."
+      },
+      {
+        "text": "`created`",
+        "why": "Isso. O código do nível de cima do `<script setup>` roda na criação; não existe `onCreated`."
+      },
+      {
+        "text": "`beforeUnmount`",
+        "why": "O par dele é `onBeforeUnmount`."
+      },
+      {
+        "text": "`beforeCreate`",
+        "why": "Isso. Como `created`, ele é o nível de cima do `<script setup>`."
+      },
+      {
+        "text": "`activated`",
+        "why": "O par dele é `onActivated`, para um componente mantido vivo."
+      }
+    ]
+  },
+  "ex-gcrct706": {
+    "prompt": "O `beforeDestroy` do Vue 2 se chama ___ no Vue 3, e um componente que ainda usa o nome antigo nunca roda essa limpeza.",
+    "hint": "O par na Composition API é `onBeforeUnmount`; tire o `on`.",
+    "blanks": [
+      {
+        "accept": [
+          "beforeUnmount"
+        ]
+      }
+    ]
+  },
+  "ex-fxw31tzj": {
+    "prompt": "Depois de uma atualização para o Vue 3, o watcher `sessions(list) {}` parou de rodar quando o código chama `this.sessions.push(…)`. O que resolve?",
+    "hint": "O Vue 2 observava mutações em arrays por padrão.",
+    "choices": [
+      {
+        "text": "Acrescentar `immediate: true`",
+        "why": "`immediate` o roda uma vez no começo; depois ele continua raso e o push continua passando despercebido."
+      },
+      {
+        "text": "Levá-lo para `computed`, que acompanha arrays",
+        "why": "Um computed deriva um valor; não é lugar para um efeito como salvar, e não é um watcher."
+      },
+      {
+        "text": "`sessions: { handler(list) {}, deep: true }`",
+        "why": "Isso. A forma de opção também é rasa, a menos que se diga `deep: true`."
+      },
+      {
+        "text": "Chamar `this.$forceUpdate()` depois de cada push no array",
+        "why": "Isso redesenha o componente e não roda watcher nenhum; o watcher é raso e continua assim."
+      }
+    ]
+  },
+  "ex-vcmpaf2e": {
+    "prompt": "Qual é o mais próximo de `watchEffect` na Options API?",
+    "hint": "É um método da instância, chamado de um hook.",
+    "choices": [
+      {
+        "text": "Uma chave `watchEffect` dentro da opção `watch`",
+        "why": "A opção `watch` recebe fontes pelo nome; não há `watchEffect` nas opções."
+      },
+      {
+        "text": "Uma entrada de `watch` com `immediate: true`",
+        "why": "Isso roda uma vez no começo e depois observa o único nome que recebeu, não o que ele lê."
+      },
+      {
+        "text": "Um valor computed que salva como efeito colateral",
+        "why": "Um computed roda quando alguém o lê, não quando suas fontes mudam; um efeito ali é um bug."
+      },
+      {
+        "text": "`this.$watch(() => …, handler)` no `created`",
+        "why": "Isso. Ele devolve uma função de parada, e um componente que precisa de mais que isso é candidato ao `setup()`."
+      }
+    ]
+  },
+  "ex-cpspxft7": {
+    "prompt": "Qual chamada de `watch()` é o par, na Composition API, da opção `'session.minutes'(now) {}`?",
+    "hint": "Na Composition API, uma propriedade aninhada é observada por um getter.",
+    "choices": [
+      {
+        "text": "`watch('session.minutes', (now) => {})`",
+        "why": "Um caminho em string é a grafia da forma de opção; `watch()` recebe um ref, um objeto reactive ou um getter."
+      },
+      {
+        "text": "`watch(() => session.value.minutes, (now) => {})`",
+        "why": "Isso. O getter lê a única propriedade, então o watcher roda quando ela muda."
+      },
+      {
+        "text": "`watch(session, (now) => {}, { deep: true })`",
+        "why": "Isso roda com qualquer mudança dentro de `session`, e `now` é a sessão inteira em vez dos minutos."
+      },
+      {
+        "text": "`watch(session.value.minutes, (now) => {})`",
+        "why": "Isso passa o número que a propriedade tem naquele momento, que nada consegue rastrear."
+      }
+    ]
+  },
+  "ex-qp0s26dv": {
+    "prompt": "No `Mixins.vue`, por que a página mostrou `course: course`?",
+    "hint": "Olhe a ordem do array `mixins`.",
+    "choices": [
+      {
+        "text": "O `describe` do primeiro mixin rodou com o `label` do segundo",
+        "why": "Aí a página diria `progress: course`. Os dois nomes vieram do mesmo mixin."
+      },
+      {
+        "text": "O próprio componente define `label` como `'course'`",
+        "why": "O `Mixins.vue` não tem `data` próprio; todo nome no seu `this` veio de um mixin."
+      },
+      {
+        "text": "O Vue junta os mixins em ordem alfabética dos nomes",
+        "why": "A ordem é a do array, e `courseMixin` está em segundo, que é por que ele venceu."
+      },
+      {
+        "text": "O segundo mixin venceu os dois nomes",
+        "why": "Isso. Para `data` e `methods` o último vence, e nada avisa."
+      }
+    ]
+  },
+  "ex-r6cvh3cd": {
+    "prompt": "Um componente e seus mixins definem as mesmas opções. Quais frases descrevem como o Vue 3 as junta? Escolha todas as que se aplicam.",
+    "hint": "Há duas regras, uma para nomes e uma para hooks.",
+    "choices": [
+      {
+        "text": "Os `methods` do próprio componente vencem os de qualquer mixin",
+        "why": "Isso. Um mixin completa; a palavra final é do componente."
+      },
+      {
+        "text": "O Vue avisa em desenvolvimento quando dois mixins definem um mesmo método",
+        "why": "A transcrição não mostra aviso nenhum: sobrescrever é como a junção funciona."
+      },
+      {
+        "text": "Todo hook `mounted` roda, os dos mixins primeiro",
+        "why": "Isso. Os hooks são a exceção: todos são mantidos, em ordem."
+      },
+      {
+        "text": "O primeiro mixin da lista vence, e os seguintes só preenchem lacunas",
+        "why": "É o contrário: `courseMixin`, em segundo, sobrescreveu `progressMixin`."
+      },
+      {
+        "text": "Para `data`, o mixin que vem depois na lista vence",
+        "why": "Isso. Foi assim que `label` virou `'course'`."
+      }
+    ]
+  },
+  "ex-3j4mhmqc": {
+    "prompt": "De qual dos problemas dos mixins `const { label: courseLabel } = useCourse()` dá conta?",
+    "hint": "O que acontece com um segundo `label` na entrada?",
+    "choices": [
+      {
+        "text": "Parâmetros: a renomeação entrega `courseLabel` à função",
+        "why": "A desestruturação renomeia o que voltou; argumentos vão nos parênteses, como em `useWeek('2026-10-19')`."
+      },
+      {
+        "text": "A colisão de nomes, e com ela a origem obscura do nome",
+        "why": "Isso. Quem chama nomeia o que recebe, então dois `label` não se sobrescrevem, e a linha diz de onde o nome veio."
+      },
+      {
+        "text": "Nenhum deles: um composable é juntado ao `this` como um mixin",
+        "why": "Um composable é uma função que devolve valores; nada é juntado, e esse é o ponto."
+      },
+      {
+        "text": "A reatividade, que faltava ao `data` de um mixin",
+        "why": "O `data` de um mixin é tão reativo quanto o do componente; os problemas eram todos sobre nomes."
+      }
+    ]
+  },
+  "ex-g928sdp7": {
+    "prompt": "No `Mixing.vue`, de onde veio o `this.next`?",
+    "hint": "Leia a primeira opção do componente.",
+    "choices": [
+      {
+        "text": "Do `setup()`, que devolveu o que o `useWeek` lhe deu",
+        "why": "Isso. O que o `setup()` devolve entra no `this`, ao lado de `data` e `methods`."
+      },
+      {
+        "text": "De `methods`, para onde o Vue copia as funções de um composable",
+        "why": "`methods` só tem `forward`. Nada é copiado: o `setup()` devolveu `next` pelo nome."
+      },
+      {
+        "text": "De um mixin que o Vue monta a partir do `useWeek`",
+        "why": "O Vue não monta mixin nenhum; o composable é chamado uma vez, dentro do `setup()`."
+      },
+      {
+        "text": "De `data`, onde o `setup()` escreve seus valores",
+        "why": "`data` só tem `moves`. O que o `setup()` devolve fica no `this` ao lado dele, não dentro dele."
+      }
+    ]
+  },
+  "ex-vkxwjm4e": {
+    "prompt": "O que é `this` dentro da opção `setup()`?",
+    "hint": "Quando o `setup()` roda, em relação às outras opções?",
+    "choices": [
+      {
+        "text": "O objeto das props, e é por isso que as props chegam ao `this`",
+        "why": "As props chegam como primeiro argumento do `setup()`; o `this` não entra nisso."
+      },
+      {
+        "text": "O componente, já com `data` e `methods` nele",
+        "why": "Essas opções são montadas depois que o `setup()` retorna; é por isso que ele não as lê pelo `this`."
+      },
+      {
+        "text": "Não há `this` ali",
+        "why": "Isso. Ele roda antes de as opções da instância serem montadas, e recebe `props` como primeiro argumento."
+      },
+      {
+        "text": "O componente pai que o renderizou",
+        "why": "Nada entrega o pai a um filho como `this`; dentro do `setup()` não há `this` nenhum."
+      }
+    ]
+  },
+  "ex-04h0w7e8": {
+    "prompt": "Um componente antigo guarda um timer em `data`, `mounted` e `beforeUnmount`, e pedem para você usar nele um composable novo. Qual é o primeiro passo que a aula dá?",
+    "hint": "O passo 1 de passar um componente para o outro lado.",
+    "choices": [
+      {
+        "text": "Trocar `<script>` por `<script setup>` e passar todas as opções de uma vez",
+        "why": "Esse é o passo 3, depois que nada sobrar fora do `setup()`. Um componente é mudado de lugar, não reescrito de uma vez."
+      },
+      {
+        "text": "Embrulhar o composable num mixin, para ele caber na Options API",
+        "why": "Isso traz de volta os três problemas dos mixins; um componente Options pode chamar um composable no `setup()`."
+      },
+      {
+        "text": "Criar um `setup()` que o chame, e deixar as opções antigas como estão",
+        "why": "Isso. O resto das opções continua funcionando, e o timer pode ir para o `setup()` depois, como um assunto só."
+      },
+      {
+        "text": "Levar primeiro o `data` do timer para o `setup()`, e os hooks depois",
+        "why": "Um assunto muda inteiro, estado e hooks juntos, e nada precisa mudar para o composable novo ser usado."
+      }
+    ]
+  },
+  "ex-c3qnfmjp": {
+    "prompt": "Ponha em ordem os passos de passar um componente Options API para `<script setup>`.",
+    "hint": "O componente continua funcionando depois de cada passo.",
+    "items": [
+      "Acrescentar `setup()` e usar um composable novo a partir dele",
+      "Levar o estado, os valores derivados, o watcher e os hooks de um assunto para o `setup()`",
+      "Repetir até nada sobrar fora do `setup()`",
+      "Trocar `<script>` por `<script setup>` e tirar o `return`"
+    ]
+  },
+  "ex-132a50s3": {
+    "prompt": "Associe cada trecho de código Options API ao seu par na Composition API.",
+    "hint": "Uma linha da direita não tem par à esquerda, nem par no Vue.",
+    "pairs": [
+      {
+        "left": "`data() { return { clicks: 0 } }`",
+        "right": "`const clicks = ref(0)`"
+      },
+      {
+        "left": "`created() {}`",
+        "right": "o nível de cima do `<script setup>`"
+      },
+      {
+        "left": "`mounted() {}`",
+        "right": "`onMounted(() => {})`"
+      },
+      {
+        "left": "`this.$emit('more', 15)`",
+        "right": "`emit('more', 15)`"
+      }
+    ],
+    "right_distractors": [
+      "`onCreated(() => {})`"
+    ]
+  },
+  "ex-fsqbx62c": {
+    "prompt": "Na Options API, props, data, valores computed e métodos são juntados em ___, e é por isso que um método escrito como arrow não os alcança.",
+    "hint": "Uma palavra-chave: a instância do componente, como uma opção a enxerga.",
+    "blanks": [
+      {
+        "accept": [
+          "this"
+        ]
+      }
+    ]
+  },
+  "ex-x5j4snnj": {
+    "prompt": "Um mixin do Vue 2, `timerMixin`, usado por seis componentes, inicia um intervalo no `mounted` e o limpa no `beforeDestroy`. Depois da atualização para o Vue 3, componentes removidos continuam com os intervalos rodando. O que está errado?",
+    "hint": "Duas seções da aula se encontram aqui: os nomes dos hooks, e como os hooks de um mixin são juntados.",
+    "choices": [
+      {
+        "text": "O `beforeUnmount` de cada componente sobrescreve o do mixin, como acontece com `methods`",
+        "why": "Os hooks são a exceção da junção: todos são mantidos e rodam, o do mixin primeiro."
+      },
+      {
+        "text": "`beforeDestroy` é um nome do Vue 2, e o Vue 3 nunca chama esse hook",
+        "why": "Isso. Renomeie para `beforeUnmount`; e como o mixin vai ter de mudar de qualquer jeito, é a hora de transformá-lo num composable."
+      },
+      {
+        "text": "O watcher do intervalo precisa de `deep: true` desde o Vue 3",
+        "why": "Esse era o problema dos arrays na atualização. Nada aqui é observado; a falha é um hook que não roda."
+      },
+      {
+        "text": "O callback do intervalo é uma arrow, então o `this` se perde",
+        "why": "Uma arrow dentro de um método mantém o `this` do método; é o único lugar em que arrows são o que você quer."
+      }
+    ]
+  }
+}

@@ -1,0 +1,666 @@
+[
+  {
+    "id": "ex-w5g1mmrv",
+    "version": 1,
+    "section": "extracting",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`TwoWeeks` calls `useWeek('2026-10-19')` twice, and its button calls `next` from the second call only. After one click, what does the first line say?",
+    "hint": "How many `monday` refs were made?",
+    "choices": [
+      {
+        "text": "Plan: 2026-10-26 to 2026-11-01, the same as the review",
+        "correct": false,
+        "why": "That is a store's behaviour. Each call to `useWeek` makes a `monday` of its own, so the second week moving does not move the first."
+      },
+      {
+        "text": "Plan: 2026-10-19 to 2026-10-25",
+        "correct": true,
+        "why": "Right. The first call has its own `monday` ref, and nothing touched it."
+      },
+      {
+        "text": "Plan: 2026-10-26 to 2026-11-01, because both calls were given the same start date",
+        "correct": false,
+        "why": "The same argument is not the same state. The function ran twice and made two refs, whatever it was given."
+      },
+      {
+        "text": "Nothing: the two calls fight over one ref, and Vue warns",
+        "correct": false,
+        "why": "There is no conflict to warn about. Two calls, two refs; the capture shows both lines printed."
+      }
+    ]
+  },
+  {
+    "id": "ex-37v4pnn8",
+    "version": 1,
+    "section": "extracting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `const { monday, sunday, next } = useWeek('2026-10-19')` safe, when destructuring a `reactive` object is not?",
+    "hint": "Look at what each piece is.",
+    "choices": [
+      {
+        "text": "The template keeps whatever it is given reactive, destructured or not",
+        "correct": false,
+        "why": "The template unwraps refs; it cannot bring back reactivity to a plain value read once in the script."
+      },
+      {
+        "text": "`useWeek` returns `reactive({ … })`, which hands out refs when destructured",
+        "correct": false,
+        "why": "That describes `toRefs`, not `reactive`. A reactive object loses its reactivity when destructured, which is why `useWeek` returns a plain object."
+      },
+      {
+        "text": "A week changes rarely, so reading it once is close enough",
+        "correct": false,
+        "why": "The review line moved to the 26th after a click, so it did follow the change; nothing was read once."
+      },
+      {
+        "text": "Each piece it returns is a ref or a function",
+        "correct": true,
+        "why": "Right. Destructuring copies the references, and a ref copied is still the same ref."
+      }
+    ]
+  },
+  {
+    "id": "ex-a70ya32z",
+    "version": 1,
+    "section": "extracting",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did turning `WeekPager` into `useWeek` buy? Choose all that apply.",
+    "hint": "Compare a component in the tree with a function call.",
+    "choices": [
+      {
+        "text": "No extra component in the tree",
+        "correct": true,
+        "why": "Right. A composable is a function call; nothing is rendered for it."
+      },
+      {
+        "text": "Two independent weeks in one component, from two calls",
+        "correct": true,
+        "why": "Right. A renderless component would have to be written twice in the template for that."
+      },
+      {
+        "text": "A single week shared by every component that calls it",
+        "correct": false,
+        "why": "Each call makes fresh state. Shared state is a store, and that is lesson 13."
+      },
+      {
+        "text": "A test that calls it as a function, with nothing mounted",
+        "correct": true,
+        "why": "Right. Lesson 21 does exactly that."
+      },
+      {
+        "text": "Faster updates, since a composable works outside Vue's reactivity",
+        "correct": false,
+        "why": "It works through Vue's reactivity: `ref` and `computed` are the whole of `useWeek`."
+      }
+    ]
+  },
+  {
+    "id": "ex-b9b6124y",
+    "version": 1,
+    "section": "conventions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the `Conventions` demo, why did the line from `useHours(minutes.value)` stay at 1.50 after the click?",
+    "hint": "What did that call actually pass?",
+    "choices": [
+      {
+        "text": "`toValue` reads a ref once, the first time it is called, and caches it",
+        "correct": false,
+        "why": "`toValue` reads the ref every time the `computed` runs; the ref line moved to 2.00 through the same function."
+      },
+      {
+        "text": "A composable sees changes made during setup, and the click came after it",
+        "correct": false,
+        "why": "The ref and the getter both followed the click, which came after setup too."
+      },
+      {
+        "text": "It was handed 90, and a number cannot change",
+        "correct": true,
+        "why": "Right. `minutes.value` is read once, at the call, and what arrives is a plain number."
+      },
+      {
+        "text": "Its `computed` kept its first result until the component was mounted again",
+        "correct": false,
+        "why": "A `computed` recomputes when what it read changes. This one read nothing reactive, so there was nothing to change."
+      }
+    ]
+  },
+  {
+    "id": "ex-96g2n9v8",
+    "version": 1,
+    "section": "conventions",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`___(input)` gives back the value of a ref, the result of a getter, or a plain value as it is, so a composable need not care which it was handed.",
+    "hint": "It is imported from `vue`, and `useHours` calls it.",
+    "blanks": [
+      {
+        "accept": [
+          "toValue"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-w4zraq1f",
+    "version": 1,
+    "section": "conventions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A composable returns `reactive({ data, error, loading })`, and a component writes `const { data } = useIt()`. What happens when the data arrives?",
+    "hint": "Lesson 2 destructured a reactive object.",
+    "choices": [
+      {
+        "text": "The component's `data` was read once and stays at what it was",
+        "correct": true,
+        "why": "Right. Destructuring read the property once; a plain object of refs would have handed out a ref instead."
+      },
+      {
+        "text": "Vue refuses: a reactive object cannot be destructured",
+        "correct": false,
+        "why": "Destructuring works without a word from Vue; what is lost is the link, which is why it goes unnoticed."
+      },
+      {
+        "text": "The new data shows, because `reactive` hands each property out as a ref",
+        "correct": false,
+        "why": "That is `toRefs(…)`. Plain `reactive` gives out the current value, which no longer follows the object."
+      },
+      {
+        "text": "`data` follows, but `error` and `loading` lose their reactivity",
+        "correct": false,
+        "why": "All three are the same kind of property on the same object; destructuring treats them alike."
+      }
+    ]
+  },
+  {
+    "id": "ex-r0r7nm2b",
+    "version": 1,
+    "section": "conventions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before writing a general composable, for the window's size or the mouse, where does the lesson say to look first?",
+    "hint": "A collection written to these conventions.",
+    "choices": [
+      {
+        "text": "Pinia",
+        "correct": false,
+        "why": "Pinia is the store of lesson 13: shared state, not a collection of small composables."
+      },
+      {
+        "text": "TanStack Query, which keeps answers by address",
+        "correct": false,
+        "why": "That library is for fetching with a cache; the lesson names it for that and nothing else."
+      },
+      {
+        "text": "VueUse",
+        "correct": true,
+        "why": "Right. Some two hundred composables, written to the same conventions as this lesson's."
+      },
+      {
+        "text": "The `vue` package itself, which ships one per browser API",
+        "correct": false,
+        "why": "`vue` ships the pieces, `ref`, `computed`, the hooks, and no composable for the window or the mouse."
+      }
+    ]
+  },
+  {
+    "id": "ex-r1wp8718",
+    "version": 1,
+    "section": "use-fetch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `useFetchJson`, which read decides when the `watchEffect` runs again?",
+    "hint": "Tracking stops at the first `await`.",
+    "choices": [
+      {
+        "text": "`toValue(url)`, which the effect reads on its very first line",
+        "correct": true,
+        "why": "Right. It is the one reactive read before the first `await`, and the lesson put it there on purpose."
+      },
+      {
+        "text": "`loading.value`, which each run sets to true",
+        "correct": false,
+        "why": "Setting a ref is a write, not a read, and a write does not make the effect depend on it."
+      },
+      {
+        "text": "Everything it touches, `await response.json()` included",
+        "correct": false,
+        "why": "Whatever runs after the first `await` is outside the tracking window, so it adds nothing."
+      },
+      {
+        "text": "`data.value`, which is assigned when the answer arrives",
+        "correct": false,
+        "why": "That assignment comes after the `await`, and it is a write; neither would make it a dependency."
+      }
+    ]
+  },
+  {
+    "id": "ex-3j1xvqkh",
+    "version": 1,
+    "section": "use-fetch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The course changes to Spanish while the statistics request is still on its way. What does `useFetchJson` do with the statistics request?",
+    "hint": "Follow `onWatcherCleanup`, then the `catch`.",
+    "choices": [
+      {
+        "text": "Waits for it to finish, then starts the Spanish one",
+        "correct": false,
+        "why": "The `watchEffect` reruns at once; the cleanup is what deals with the old run, and it does not wait."
+      },
+      {
+        "text": "Aborts it; that run logs `gave up on` and returns, leaving `error` alone",
+        "correct": true,
+        "why": "Right. An aborted request is not an error the user should see, so the `catch` drops it."
+      },
+      {
+        "text": "Aborts it, and shows `Could not load: AbortError` until Spanish answers",
+        "correct": false,
+        "why": "The `catch` checks for `AbortError` first and returns before setting `error`."
+      },
+      {
+        "text": "Lets it finish, then throws away its answer",
+        "correct": false,
+        "why": "That is the flag of lesson 4. Here an `AbortController` stops the request itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-0a6095gc",
+    "version": 1,
+    "section": "use-fetch",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Asking for `/notes/nope.json` showed `Unexpected token '<'` rather than a 404. Why?",
+    "hint": "What did the dev server send back?",
+    "choices": [
+      {
+        "text": "The server sent the HTML page, and parsing it as JSON failed",
+        "correct": true,
+        "why": "Right. The address does not exist, the dev server answered with the page, and the composable reported what that caused."
+      },
+      {
+        "text": "`response.ok` was false, but it is checked only after `response.json()`",
+        "correct": false,
+        "why": "The check comes first in `useFetchJson`, and for a 404 it would have thrown `404 Not Found`."
+      },
+      {
+        "text": "The request was aborted halfway, leaving half a document",
+        "correct": false,
+        "why": "An abort is caught and logged as `gave up on`; it never reaches the screen."
+      },
+      {
+        "text": "`useFetchJson` turns every 404 into a JSON error so that the screen has one message to show",
+        "correct": false,
+        "why": "A non-ok answer throws its own status; nothing turns one error into another."
+      }
+    ]
+  },
+  {
+    "id": "ex-mtch9rdy",
+    "version": 1,
+    "section": "lifecycle-inside",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the capture, after how many ticks was each `TickerUser` stopped?",
+    "hint": "The two `stopped after` lines.",
+    "value": 9,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-sjp7mpey",
+    "version": 1,
+    "section": "lifecycle-inside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`tooLate()` calls `useTicker('called from a click')` from a button. What happens?",
+    "hint": "Which component is being set up at that moment?",
+    "choices": [
+      {
+        "text": "A timer starts and is never stopped, since nothing is removed",
+        "correct": false,
+        "why": "The timer is started inside `onMounted`, and that callback was never registered, so no timer exists to leak."
+      },
+      {
+        "text": "The hooks attach to `LifecycleInside`, whose handler made the call",
+        "correct": false,
+        "why": "Hooks attach to the component being set up, not to the one whose code is running; `LifecycleInside`'s setup was over."
+      },
+      {
+        "text": "Vue warns once per hook, and no timer starts",
+        "correct": true,
+        "why": "Right. With no component being set up, `onMounted` and `onUnmounted` had nothing to attach to."
+      },
+      {
+        "text": "Vue throws, and the button stops responding",
+        "correct": false,
+        "why": "It is a warning, `[Vue warn]`, and the page goes on working."
+      }
+    ]
+  },
+  {
+    "id": "ex-fwb7fr4d",
+    "version": 1,
+    "section": "lifecycle-inside",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`useTicker` is called from each of these places in a component. Which calls give its hooks a component to attach to? Choose all that apply.",
+    "hint": "Is the component still being set up when the line runs?",
+    "choices": [
+      {
+        "text": "At the top level of `<script setup>`",
+        "correct": true,
+        "why": "Right. That is the place the rule names."
+      },
+      {
+        "text": "Inside a `setTimeout` started during setup",
+        "correct": false,
+        "why": "The callback runs after setup has finished, so there is no component being set up."
+      },
+      {
+        "text": "Inside an `if` at the top level of `<script setup>`",
+        "correct": true,
+        "why": "Right. Setup is still running, and in Vue a condition does not matter."
+      },
+      {
+        "text": "Inside the `.then()` of a `fetch` started during setup",
+        "correct": false,
+        "why": "The `.then()` runs when the answer arrives, long after setup."
+      },
+      {
+        "text": "In a click handler, as `tooLate` does",
+        "correct": false,
+        "why": "That is the capture's own example: two warnings and no timer."
+      }
+    ]
+  },
+  {
+    "id": "ex-8rfj2vz9",
+    "version": 1,
+    "section": "versus-hooks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How often does a composable's body run for one component that calls it?",
+    "hint": "Setup, or every render?",
+    "choices": [
+      {
+        "text": "On every render of that component",
+        "correct": false,
+        "why": "That is a React custom hook. A Vue component's setup runs once, and the composable with it."
+      },
+      {
+        "text": "Each time one of the refs it returned changes",
+        "correct": false,
+        "why": "A ref changing reruns what depends on it, a `computed` or the template; it does not rerun the function that made it."
+      },
+      {
+        "text": "Once per interpolation in the template that reads it",
+        "correct": false,
+        "why": "The template reads the refs; it never calls the composable."
+      },
+      {
+        "text": "Once, during the component's setup",
+        "correct": true,
+        "why": "Right. Which is why its functions are created once, and nothing needs `useCallback`."
+      }
+    ]
+  },
+  {
+    "id": "ex-hv206rax",
+    "version": 1,
+    "section": "versus-hooks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why may a composable be called inside an `if` in setup, when a React hook may not be called inside one?",
+    "hint": "How does each framework find a piece of state again?",
+    "choices": [
+      {
+        "text": "Vue's compiler moves every composable call out of its condition",
+        "correct": false,
+        "why": "Nothing is moved; the call stays where it was written, and runs only if the condition holds."
+      },
+      {
+        "text": "Vue finds the state by the ref objects, not by the order of the calls",
+        "correct": true,
+        "why": "Right. Setup runs once and the refs are ordinary objects the component holds; React matches state to the position of each hook call on each render."
+      },
+      {
+        "text": "Vue runs setup again on every render in the same order",
+        "correct": false,
+        "why": "Setup runs once. If it ran on every render, the order would matter in Vue too."
+      },
+      {
+        "text": "Vue has the same rule and just does not warn about it",
+        "correct": false,
+        "why": "The table says a condition is allowed, and the reason is that nothing in a composable depends on order."
+      }
+    ]
+  },
+  {
+    "id": "ex-gp4fvb48",
+    "version": 1,
+    "section": "versus-hooks",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a React hook, a derived value is wrapped in `___` with a list of dependencies written by hand; in a composable, `computed` finds its own.",
+    "hint": "The React counterpart of `computed`.",
+    "blanks": [
+      {
+        "accept": [
+          "useMemo"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ktx5mx1z",
+    "version": 1,
+    "section": "in-the-planner",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the planner's capture, how many minutes were planned in the week of 19 October?",
+    "hint": "The panel's footer: `… of … minutes done`.",
+    "value": 195,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-j9sbaza3",
+    "version": 1,
+    "section": "in-the-planner",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these stayed in `App.vue` when the two composables took over?",
+    "hint": "What only `App` can decide.",
+    "choices": [
+      {
+        "text": "The `watch` that saves the sessions to local storage",
+        "correct": false,
+        "why": "Saving moved into `usePlannerData`, with the loading, because they are one job."
+      },
+      {
+        "text": "The `monday` ref, which says which week is on show",
+        "correct": true,
+        "why": "Right. Which week is shown is the screen's decision, so it stays with the screen."
+      },
+      {
+        "text": "The timer that keeps `today` current",
+        "correct": false,
+        "why": "The timer and its two hooks went into `useToday`."
+      },
+      {
+        "text": "The `STORAGE_KEY` constant",
+        "correct": false,
+        "why": "It lives beside the code that uses it, in `usePlannerData.js`."
+      }
+    ]
+  },
+  {
+    "id": "ex-45x1y62m",
+    "version": 1,
+    "section": "in-the-planner",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 12's course page also calls `usePlannerData()`. A session is ticked in `App`. What does the course page show?",
+    "hint": "What does every call to a composable make?",
+    "choices": [
+      {
+        "text": "The tick, at once, since both calls read the same storage key",
+        "correct": false,
+        "why": "They share a key in storage, not a list in memory; storage is read once, when the data loads."
+      },
+      {
+        "text": "A warning that the composable is already used by `App`",
+        "correct": false,
+        "why": "Vue has no notion of a composable being in use; the second call is a second ordinary function call."
+      },
+      {
+        "text": "A list of its own, which lacks the tick until the page is reloaded",
+        "correct": true,
+        "why": "Right. Two calls, two lists, two watchers writing over each other's copy: shared state needs one owner."
+      },
+      {
+        "text": "The tick, because `usePlannerData` keeps one cached answer per address",
+        "correct": false,
+        "why": "That cache belongs to libraries like TanStack Query. This composable fetches again on every call."
+      }
+    ]
+  },
+  {
+    "id": "ex-zsfnc5yg",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these in the order they happen to one `TickerUser` in the capture.",
+    "hint": "Setup comes before the page; removal comes last.",
+    "items": [
+      "`useTicker` runs during `TickerUser`'s setup",
+      "`onMounted`'s callback starts the timer and logs `started`",
+      "The timer counts ticks",
+      "`shown` becomes false",
+      "`onUnmounted`'s callback clears the timer and logs the count"
+    ]
+  },
+  {
+    "id": "ex-yss3wwj7",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each composable of this lesson to what it gives the component that calls it.",
+    "hint": "One description belongs to no composable here.",
+    "pairs": [
+      {
+        "left": "`useWeek`",
+        "right": "A week of its own, and moves to change it"
+      },
+      {
+        "left": "`useFetchJson`",
+        "right": "Data, error and loading for an address"
+      },
+      {
+        "left": "`useTicker`",
+        "right": "A count started on mount, stopped on removal"
+      },
+      {
+        "left": "`useToday`",
+        "right": "Today's date, refreshed every minute"
+      }
+    ],
+    "right_distractors": [
+      "One list of sessions shared with every caller"
+    ]
+  },
+  {
+    "id": "ex-b78gnw8r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague from React wraps the `previous` and `next` that a composable returns in a memo helper, so that they are not recreated. What does that buy in Vue?",
+    "hint": "How many times are those functions created?",
+    "choices": [
+      {
+        "text": "Fewer re-renders of the component, as in React",
+        "correct": false,
+        "why": "In React the memo keeps a child from re-rendering on a new function; in Vue the function was never new."
+      },
+      {
+        "text": "The refs they change stay reactive, which they would otherwise not",
+        "correct": false,
+        "why": "The refs are reactive whatever wraps the functions that change them."
+      },
+      {
+        "text": "It lets the template call them in a `@click`",
+        "correct": false,
+        "why": "`TwoWeeks` calls `next` in a `@click` with no wrapper at all."
+      },
+      {
+        "text": "Nothing: they were created once, during setup",
+        "correct": true,
+        "why": "Right. A composable runs once, so there is no re-render to fear."
+      }
+    ]
+  },
+  {
+    "id": "ex-m1964cd3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`useNotes(course)` fetches a course's notes. A component calls `useNotes(course.value)`, and the notes never follow a change of course. Which fix follows the lesson's conventions?",
+    "hint": "What should the component pass, and what should the composable do with it?",
+    "choices": [
+      {
+        "text": "Call `useNotes(course.value)` again inside a `watch` on `course`",
+        "correct": false,
+        "why": "That is a composable called after setup: its watchers and hooks would have no component to attach to."
+      },
+      {
+        "text": "Make `useNotes` return `reactive({ … })` instead of refs",
+        "correct": false,
+        "why": "The output was not the problem. The input arrived as a plain string, and no return type brings back what was never passed."
+      },
+      {
+        "text": "Pass `course`, or `() => course.value`, and read it with `toValue` inside a watcher",
+        "correct": true,
+        "why": "Right. Pass the ref or a getter, and the composable follows it, as `useFetchJson` follows its address."
+      },
+      {
+        "text": "Wrap `course.value` in `ref()` at the call",
+        "correct": false,
+        "why": "`ref(course.value)` is a new ref holding a copy; changing `course` does not change it."
+      }
+    ]
+  }
+]

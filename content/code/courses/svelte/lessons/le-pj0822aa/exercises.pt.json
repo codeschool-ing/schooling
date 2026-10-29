@@ -1,0 +1,457 @@
+{
+  "ex-qpa28v6c": {
+    "prompt": "O que o `handle` recebe além do `event` da requisição?",
+    "hint": "É o que faz o trabalho do próprio SvelteKit.",
+    "choices": [
+      {
+        "text": "A resposta, pronta para ser mandada",
+        "why": "A resposta é o que o `resolve` devolve."
+      },
+      {
+        "text": "Os dados que as funções load dos layouts devolveram para a página",
+        "why": "As funções load rodam dentro do `resolve`, depois que o `handle` começa."
+      },
+      {
+        "text": "`resolve`, uma função que faz tudo o que o SvelteKit teria feito de qualquer jeito",
+        "why": "Isso: o código antes dele roda primeiro, o código depois vê a resposta."
+      },
+      {
+        "text": "O componente da página, já renderizado",
+        "why": "Nada é renderizado até o `resolve` rodar."
+      }
+    ]
+  },
+  "ex-a26fzrv2": {
+    "prompt": "Que arquivo guarda o `handle` do planner?",
+    "hint": "Ele roda só no servidor.",
+    "choices": [
+      {
+        "text": "`src/hooks.server.js`",
+        "why": "Isso: o SvelteKit procura esse nome."
+      },
+      {
+        "text": "`vite.config.js`",
+        "why": "Esse configura o build; não é chamado por requisição."
+      },
+      {
+        "text": "`src/routes/+layout.server.js`",
+        "why": "Esse guarda uma função load, não hooks."
+      },
+      {
+        "text": "`src/hooks.js`",
+        "why": "Esse roda nos dois lugares, e não tem `handle`."
+      }
+    ]
+  },
+  "ex-6t7v2m1g": {
+    "prompt": "Por que a primeira versão do log quebrou o `npm run build`?",
+    "hint": "A About é pré-renderizada.",
+    "choices": [
+      {
+        "text": "`console.log` não é permitido num hook",
+        "why": "A segunda versão também registra."
+      },
+      {
+        "text": "`performance.now()` não existe no servidor",
+        "why": "O Node tem; o erro falava de `url.search`."
+      },
+      {
+        "text": "O hook estava no arquivo errado e foi importado pelo navegador",
+        "why": "O arquivo estava certo; o build o rodou."
+      },
+      {
+        "text": "Ele leu `url.search` enquanto a About era pré-renderizada",
+        "why": "Isso: uma requisição do build não tem query de verdade, e o SvelteKit recusa."
+      }
+    ]
+  },
+  "ex-vx737s80": {
+    "prompt": "O valor de `$app/env` que é verdadeiro enquanto o build pré-renderiza se chama ___.",
+    "hint": "Uma palavra terminada em -ing.",
+    "blanks": [
+      {
+        "accept": [
+          "building"
+        ]
+      }
+    ]
+  },
+  "ex-s100jfzz": {
+    "prompt": "Depois da página da semana, de um clique em Guitar e de uma sessão acrescentada, que linhas o log mostrou? Escolha todas as que se aplicam.",
+    "hint": "Três idas ao servidor, e só três.",
+    "choices": [
+      {
+        "text": "`GET /`",
+        "why": "Sim: a primeira página."
+      },
+      {
+        "text": "Um `POST` para `?week=…&/add`, respondido com 200",
+        "why": "Sim: o `use:enhance` recebeu JSON de volta."
+      },
+      {
+        "text": "Um `GET` pelo clique em Guitar",
+        "why": "Esse não precisou de nada do servidor."
+      },
+      {
+        "text": "Um `GET /about`",
+        "why": "A About não foi visitada, e de todo modo é um arquivo."
+      }
+    ]
+  },
+  "ex-cbfh7nv4": {
+    "prompt": "Ligue cada cabeçalho ao que ele pede ao navegador.",
+    "hint": "Um é sobre frames, um sobre adivinhar, um sobre links.",
+    "pairs": [
+      {
+        "left": "`X-Content-Type-Options: nosniff`",
+        "right": "Confiar no tipo declarado, não adivinhar"
+      },
+      {
+        "left": "`Referrer-Policy: same-origin`",
+        "right": "Não mostrar o endereço a outros sites"
+      },
+      {
+        "left": "`X-Frame-Options: DENY`",
+        "right": "Nunca mostrar a página num frame de outro site"
+      }
+    ]
+  },
+  "ex-zddqb80w": {
+    "prompt": "Com `handle = sequence(log, headers)`, ponha em ordem o que acontece com uma requisição.",
+    "hint": "Cada um envolve os que vêm depois.",
+    "items": [
+      "O `log` começa o relógio",
+      "O `headers` chama o `resolve`",
+      "O SvelteKit renderiza a página",
+      "O `headers` acrescenta os três cabeçalhos",
+      "O `log` imprime a linha"
+    ],
+    "trap": "Imprimir primeiro não mediria nada, já que nada aconteceu ainda."
+  },
+  "ex-casb1c29": {
+    "prompt": "Por que o `curl -I /about` não mostrou nenhum dos três cabeçalhos?",
+    "hint": "Quem respondeu essa requisição?",
+    "choices": [
+      {
+        "text": "O `sequence` só roda a última função para páginas sem dados",
+        "why": "O `sequence` roda todas as funções, sempre."
+      },
+      {
+        "text": "É um arquivo pré-renderizado, mandado sem o SvelteKit",
+        "why": "Isso: o adapter serve arquivos sozinho, e nenhum hook os vê."
+      },
+      {
+        "text": "Páginas com `csr = false` não podem levar cabeçalhos",
+        "why": "As opções de página não dizem nada sobre cabeçalhos."
+      },
+      {
+        "text": "O `curl -I` pede os cabeçalhos do servidor de desenvolvimento",
+        "why": "Ele perguntou ao servidor de build, na porta 3000."
+      }
+    ]
+  },
+  "ex-e0ta4mf2": {
+    "prompt": "Por que o `Content-Security-Policy` é mais difícil de definir à mão que os outros três?",
+    "hint": "Pense no pequeno script de toda página.",
+    "choices": [
+      {
+        "text": "Ele bloquearia a folha de estilo que toda página liga, e nenhuma página teria estilo",
+        "why": "Uma política pode permitir os estilos do próprio site."
+      },
+      {
+        "text": "O SvelteKit põe um script inline em toda página, que a política precisa permitir",
+        "why": "Isso: a opção `csp` dele marca esses scripts."
+      },
+      {
+        "text": "Os navegadores o ignoram no localhost",
+        "why": "Nada na aula diz isso."
+      },
+      {
+        "text": "Ele só pode ser mandado de uma página pré-renderizada",
+        "why": "As páginas pré-renderizadas são as que os hooks não alcançam."
+      }
+    ]
+  },
+  "ex-eet8x8rf": {
+    "prompt": "O que é `event.locals`?",
+    "hint": "Ele vive enquanto dura uma requisição.",
+    "choices": [
+      {
+        "text": "Configurações lidas do arquivo `.env`",
+        "why": "Variáveis de ambiente são outra coisa."
+      },
+      {
+        "text": "Uma store compartilhada por toda requisição que o servidor atende",
+        "why": "Cada requisição ganha o seu; compartilhar é o que a aula 11 desaconselhou."
+      },
+      {
+        "text": "Variáveis que o navegador guarda para a página",
+        "why": "Ele é do servidor e nunca chega sozinho ao navegador."
+      },
+      {
+        "text": "Um objeto que pertence a uma só requisição, que os hooks escrevem e as funções load leem",
+        "why": "Isso: escrito uma vez, lido por tudo o que vem depois."
+      }
+    ]
+  },
+  "ex-qdfcwqpq": {
+    "prompt": "Por que o planner dá a cada requisição um id curto?",
+    "hint": "Onde o id aparece?",
+    "choices": [
+      {
+        "text": "Para ligar uma linha do log à página que alguém viu",
+        "why": "Isso: o mesmo id está nos dois."
+      },
+      {
+        "text": "Para o servidor recusar uma requisição que já atendeu",
+        "why": "Cada id é novo e nada o confere."
+      },
+      {
+        "text": "Para que o navegador guarde cada página em cache com um nome próprio",
+        "why": "Ele não é mandado como chave de cache."
+      },
+      {
+        "text": "Para assinar o cookie de sessão",
+        "why": "O planner não tem sessão."
+      }
+    ]
+  },
+  "ex-bq4twjas": {
+    "prompt": "Uma página precisa de um valor que um hook calculou. De onde ele deve vir?",
+    "hint": "O `locals` nunca chega sozinho ao navegador.",
+    "choices": [
+      {
+        "text": "De uma variável global que o hook define",
+        "why": "Uma global é compartilhada por toda requisição."
+      },
+      {
+        "text": "De um cookie que o hook escreve",
+        "why": "Isso vai ao navegador, não aos dados da página."
+      },
+      {
+        "text": "Do que uma função load devolve, lendo o `locals`",
+        "why": "Isso: o que a página precisa vai no resultado de uma load."
+      },
+      {
+        "text": "De `event.locals`, lido no componente",
+        "why": "Componentes não enxergam o `locals`."
+      }
+    ]
+  },
+  "ex-7rm0d1zp": {
+    "prompt": "Ligue cada `kind` à origem do seu erro.",
+    "hint": "Só um deles é uma surpresa.",
+    "pairs": [
+      {
+        "left": "`'app'`",
+        "right": "Lançado com `error()`"
+      },
+      {
+        "left": "`'framework'`",
+        "right": "Do próprio SvelteKit, como falta de rota"
+      },
+      {
+        "left": "`'unknown'`",
+        "right": "Código que quebrou"
+      }
+    ]
+  },
+  "ex-x2vqgafh": {
+    "prompt": "Sem o `handleError`, o que o visitante viu quando o arquivo de dados faltava?",
+    "hint": "O padrão seguro do SvelteKit.",
+    "choices": [
+      {
+        "text": "Uma página em branco",
+        "why": "A página de erro foi renderizada."
+      },
+      {
+        "text": "Um 404, porque o arquivo não foi achado",
+        "why": "Um arquivo faltando no servidor é falha do servidor, um 500."
+      },
+      {
+        "text": "A mensagem `ENOENT` e o caminho do arquivo",
+        "why": "Isso foi só para o terminal do servidor."
+      },
+      {
+        "text": "Um 500 com \"Internal Error\"",
+        "why": "Isso: nada do erro em si."
+      }
+    ]
+  },
+  "ex-zf6xd09t": {
+    "prompt": "Por que o `handleError` nunca pode lançar erro?",
+    "hint": "Quando ele roda?",
+    "choices": [
+      {
+        "text": "Porque um hook sempre precisa devolver uma resposta",
+        "why": "O `handleError` devolve um objeto, não uma resposta."
+      },
+      {
+        "text": "Ele roda porque algo já falhou, e um erro lançado dentro dele não tem mais para onde ir",
+        "why": "Isso: mantenha-o em registrar e montar um objeto."
+      },
+      {
+        "text": "Porque um erro mostraria a pilha ao visitante",
+        "why": "O SvelteKit nunca mostra isso; o problema é o que vem depois."
+      },
+      {
+        "text": "Porque lançar ali reinicia o servidor",
+        "why": "A aula não diz nada parecido."
+      }
+    ]
+  },
+  "ex-cawq27y7": {
+    "prompt": "Depois de acrescentado o `handleError`, por que `/courses/piano` ainda dizia \"There is no course called “piano”\"?",
+    "hint": "Quem lançou esse 404?",
+    "choices": [
+      {
+        "text": "É `kind: 'app'`, e o hook os devolve sem mudança",
+        "why": "Isso: só os erros `'unknown'` recebem a frase simples."
+      },
+      {
+        "text": "Porque um 404 nunca chega ao hook",
+        "why": "Ele chega, com `kind: 'app'`."
+      },
+      {
+        "text": "Porque a página do curso tem a sua própria página de erro",
+        "why": "Há um `+error.svelte`, na raiz."
+      },
+      {
+        "text": "Porque `piano` não casou com rota nenhuma",
+        "why": "Casou com a rota do curso; a load o lançou."
+      }
+    ]
+  },
+  "ex-p6kstvrw": {
+    "prompt": "Com que status o planner respondeu enquanto o `data/planner.json` estava fora do lugar?",
+    "hint": "Internal Error."
+  },
+  "ex-agzftj00": {
+    "prompt": "Ligue cada hook ao arquivo em que ele mora.",
+    "hint": "O `hooks.js` roda dos dois lados.",
+    "pairs": [
+      {
+        "left": "`handle`",
+        "right": "`src/hooks.server.js`"
+      },
+      {
+        "left": "`reroute`",
+        "right": "`src/hooks.js`"
+      },
+      {
+        "left": "`handleError` para erros do navegador",
+        "right": "`src/hooks.client.js`"
+      }
+    ]
+  },
+  "ex-7mvtmggk": {
+    "prompt": "Na frente de que o `handleFetch` fica?",
+    "hint": "Só as requisições de um lado.",
+    "choices": [
+      {
+        "text": "Todo `fetch` feito no navegador depois que a primeira página carregou",
+        "why": "Ele é um hook de servidor."
+      },
+      {
+        "text": "Requisições de arquivos pré-renderizados",
+        "why": "Nenhum hook vê essas."
+      },
+      {
+        "text": "Todo `fetch` que uma load ou action faz no servidor",
+        "why": "Isso: ele pode mandá-los a um endereço interno mais rápido."
+      },
+      {
+        "text": "Toda requisição que o navegador manda ao servidor",
+        "why": "Isso é o `handle`."
+      }
+    ]
+  },
+  "ex-e90xvtm5": {
+    "prompt": "Com o `reroute` mandando `/sobre` para `/about`, o que a barra de endereço mostra?",
+    "hint": "Ele muda a rota, não o endereço.",
+    "choices": [
+      {
+        "text": "Nada, até a página carregar",
+        "why": "O navegador mostra o que foi pedido."
+      },
+      {
+        "text": "`/about`, depois de um redirecionamento",
+        "why": "Nenhum redirecionamento acontece."
+      },
+      {
+        "text": "`/sobre`",
+        "why": "Isso: o endereço fica como foi digitado."
+      },
+      {
+        "text": "Os dois, um depois do outro",
+        "why": "Nada muda o endereço."
+      }
+    ]
+  },
+  "ex-znd5w80k": {
+    "prompt": "O que o `transport` torna possível que a aula 13 não conseguiu?",
+    "hint": "A aula 13 tentou devolver uma função.",
+    "choices": [
+      {
+        "text": "Levar uma classe sua",
+        "why": "Isso: os dados viajam e o construtor roda de novo."
+      },
+      {
+        "text": "Pular a checagem que proíbe ler a query durante o pré-render",
+        "why": "Isso é o `building`, em outra seção."
+      },
+      {
+        "text": "Devolver funções de uma load de servidor",
+        "why": "Ele não faz funções viajarem."
+      },
+      {
+        "text": "Rodar uma load de servidor no navegador",
+        "why": "Uma load de servidor nunca sai do servidor."
+      }
+    ]
+  },
+  "ex-3tha2scn": {
+    "prompt": "Toda resposta precisa dizer quem a serviu, num cabeçalho `X-Served-By`. Onde isso vai?",
+    "hint": "Toda resposta, inclusive os arquivos.",
+    "choices": [
+      {
+        "text": "No `handleFetch`",
+        "why": "Ele é para os `fetch` do próprio servidor."
+      },
+      {
+        "text": "Num `handle`, e em quem serve os arquivos pré-renderizados",
+        "why": "Isso: os hooks nunca veem os arquivos."
+      },
+      {
+        "text": "No `+page.server.js` de cada página",
+        "why": "Páginas sem um, e arquivos, ficariam sem."
+      },
+      {
+        "text": "No `handleError`",
+        "why": "Ele só roda para erros."
+      }
+    ]
+  },
+  "ex-9f9bs9fv": {
+    "prompt": "Um visitante escreve citando a referência `d1afdf92`. O que você procura?",
+    "hint": "O id está em dois lugares.",
+    "choices": [
+      {
+        "text": "O console do navegador no seu computador",
+        "why": "O erro aconteceu no servidor."
+      },
+      {
+        "text": "Um arquivo com esse nome em `build/`, de onde a página de erro foi renderizada",
+        "why": "O id nomeia uma requisição, não um arquivo."
+      },
+      {
+        "text": "A sessão com esse id no arquivo de dados",
+        "why": "Sessões têm números; isto é uma requisição."
+      },
+      {
+        "text": "As linhas do log do servidor que começam com `d1afdf92`",
+        "why": "Isso: a falha e a sua requisição, juntas."
+      }
+    ]
+  }
+}

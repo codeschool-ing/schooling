@@ -1,0 +1,450 @@
+{
+  "ex-w5g1mmrv": {
+    "prompt": "`TwoWeeks` chama `useWeek('2026-10-19')` duas vezes, e o botão dele chama o `next` só da segunda chamada. Depois de um clique, o que diz a primeira linha?",
+    "hint": "Quantos refs `monday` foram criados?",
+    "choices": [
+      {
+        "text": "Plan: 2026-10-26 to 2026-11-01, igual à revisão",
+        "why": "Esse é o comportamento de um store. Cada chamada a `useWeek` cria o seu próprio `monday`, então a segunda semana andar não move a primeira."
+      },
+      {
+        "text": "Plan: 2026-10-19 to 2026-10-25",
+        "why": "Certo. A primeira chamada tem o seu próprio ref `monday`, e nada mexeu nele."
+      },
+      {
+        "text": "Plan: 2026-10-26 to 2026-11-01, porque as duas chamadas receberam a mesma data de início",
+        "why": "O mesmo argumento não é o mesmo estado. A função rodou duas vezes e criou dois refs, qualquer que fosse a entrada."
+      },
+      {
+        "text": "Nada: as duas chamadas disputam um ref, e o Vue avisa",
+        "why": "Não há conflito nenhum para avisar. Duas chamadas, dois refs; a captura mostra as duas linhas impressas."
+      }
+    ]
+  },
+  "ex-37v4pnn8": {
+    "prompt": "Por que `const { monday, sunday, next } = useWeek('2026-10-19')` é seguro, se desestruturar um objeto `reactive` não é?",
+    "hint": "Olhe o que cada peça é.",
+    "choices": [
+      {
+        "text": "O template mantém reativo o que recebe, desestruturado ou não",
+        "why": "O template desembrulha refs; ele não devolve reatividade a um valor comum lido uma vez no script."
+      },
+      {
+        "text": "`useWeek` devolve `reactive({ … })`, que entrega refs ao ser desestruturado",
+        "why": "Isso descreve `toRefs`, não `reactive`. Um objeto reativo perde a reatividade ao ser desestruturado, e é por isso que `useWeek` devolve um objeto comum."
+      },
+      {
+        "text": "Uma semana muda pouco, então lê-la uma vez basta",
+        "why": "A linha da revisão foi para o dia 26 depois de um clique, então ela acompanhou a mudança; nada foi lido uma vez só."
+      },
+      {
+        "text": "Cada peça que ele devolve é um ref ou uma função",
+        "why": "Certo. Desestruturar copia as referências, e um ref copiado continua sendo o mesmo ref."
+      }
+    ]
+  },
+  "ex-a70ya32z": {
+    "prompt": "Quais destas coisas a troca do `WeekPager` por `useWeek` rendeu? Escolha todas as que se aplicam.",
+    "hint": "Compare um componente na árvore com uma chamada de função.",
+    "choices": [
+      {
+        "text": "Nenhum componente a mais na árvore",
+        "why": "Certo. Um composable é uma chamada de função; nada é renderizado para ele."
+      },
+      {
+        "text": "Duas semanas independentes num componente, com duas chamadas",
+        "why": "Certo. Um componente renderless teria de ser escrito duas vezes no template para isso."
+      },
+      {
+        "text": "Uma só semana compartilhada por todo componente que o chama",
+        "why": "Cada chamada cria estado novo. Estado compartilhado é um store, e isso é a aula 13."
+      },
+      {
+        "text": "Um teste que o chama como função, sem montar nada",
+        "why": "Certo. A aula 21 faz exatamente isso."
+      },
+      {
+        "text": "Atualizações mais rápidas, já que um composable funciona fora da reatividade do Vue",
+        "why": "Ele funciona por meio da reatividade do Vue: `ref` e `computed` são o `useWeek` inteiro."
+      }
+    ]
+  },
+  "ex-b9b6124y": {
+    "prompt": "Na demo `Conventions`, por que a linha de `useHours(minutes.value)` ficou em 1.50 depois do clique?",
+    "hint": "O que essa chamada realmente passou?",
+    "choices": [
+      {
+        "text": "`toValue` lê um ref uma vez, na primeira chamada, e guarda o valor",
+        "why": "`toValue` lê o ref sempre que o `computed` roda; a linha do ref foi para 2.00 pela mesma função."
+      },
+      {
+        "text": "Um composable vê mudanças feitas durante o setup, e o clique veio depois",
+        "why": "O ref e o getter acompanharam o clique, que também veio depois do setup."
+      },
+      {
+        "text": "Ele recebeu 90, e um número não muda",
+        "why": "Certo. `minutes.value` é lido uma vez, na chamada, e o que chega é um número comum."
+      },
+      {
+        "text": "O `computed` dele guardou o primeiro resultado até o componente ser montado de novo",
+        "why": "Um `computed` recalcula quando o que ele leu muda. Este não leu nada reativo, então não havia o que mudar."
+      }
+    ]
+  },
+  "ex-96g2n9v8": {
+    "prompt": "`___(input)` devolve o valor de um ref, o resultado de um getter, ou um valor comum como está, então um composable não precisa se importar com o que recebeu.",
+    "hint": "Ele é importado de `vue`, e `useHours` o chama.",
+    "blanks": [
+      {
+        "accept": [
+          "toValue"
+        ]
+      }
+    ]
+  },
+  "ex-w4zraq1f": {
+    "prompt": "Um composable devolve `reactive({ data, error, loading })`, e um componente escreve `const { data } = useIt()`. O que acontece quando os dados chegam?",
+    "hint": "A aula 2 desestruturou um objeto reativo.",
+    "choices": [
+      {
+        "text": "O `data` do componente foi lido uma vez só e fica no valor que tinha",
+        "why": "Certo. Desestruturar leu a propriedade uma vez; um objeto comum de refs teria entregado um ref."
+      },
+      {
+        "text": "O Vue recusa: um objeto reativo não pode ser desestruturado",
+        "why": "Desestruturar funciona sem uma palavra do Vue; o que se perde é a ligação, e é por isso que passa despercebido."
+      },
+      {
+        "text": "Os dados novos aparecem, porque `reactive` entrega cada propriedade como um ref",
+        "why": "Isso é `toRefs(…)`. O `reactive` puro entrega o valor atual, que não acompanha mais o objeto."
+      },
+      {
+        "text": "`data` acompanha, mas `error` e `loading` perdem a reatividade",
+        "why": "Os três são o mesmo tipo de propriedade no mesmo objeto; desestruturar trata todos igual."
+      }
+    ]
+  },
+  "ex-r0r7nm2b": {
+    "prompt": "Antes de escrever um composable genérico, para o tamanho da janela ou o mouse, onde a aula diz para procurar primeiro?",
+    "hint": "Uma coleção escrita com essas convenções.",
+    "choices": [
+      {
+        "text": "Pinia",
+        "why": "Pinia é o store da aula 13: estado compartilhado, não uma coleção de composables pequenos."
+      },
+      {
+        "text": "TanStack Query, que guarda respostas por endereço",
+        "why": "Essa biblioteca serve para buscar dados com cache; a aula a cita para isso e mais nada."
+      },
+      {
+        "text": "VueUse",
+        "why": "Certo. Uns duzentos composables, escritos com as mesmas convenções desta aula."
+      },
+      {
+        "text": "O próprio pacote `vue`, que traz um por API do navegador",
+        "why": "O `vue` traz as peças, `ref`, `computed`, os hooks, e nenhum composable para a janela ou o mouse."
+      }
+    ]
+  },
+  "ex-r1wp8718": {
+    "prompt": "Em `useFetchJson`, que leitura decide quando o `watchEffect` roda de novo?",
+    "hint": "O rastreamento para no primeiro `await`.",
+    "choices": [
+      {
+        "text": "`toValue(url)`, que o efeito lê logo na sua primeira linha",
+        "why": "Certo. É a única leitura reativa antes do primeiro `await`, e a aula a pôs ali de propósito."
+      },
+      {
+        "text": "`loading.value`, que cada execução põe em true",
+        "why": "Atribuir um ref é uma escrita, não uma leitura, e uma escrita não faz o efeito depender dele."
+      },
+      {
+        "text": "Tudo o que ele toca, inclusive `await response.json()`",
+        "why": "O que roda depois do primeiro `await` fica fora da janela de rastreamento, então não acrescenta nada."
+      },
+      {
+        "text": "`data.value`, atribuído quando a resposta chega",
+        "why": "Essa atribuição vem depois do `await`, e é uma escrita; nenhuma das duas coisas faria dela uma dependência."
+      }
+    ]
+  },
+  "ex-3j1xvqkh": {
+    "prompt": "O curso muda para Spanish enquanto a requisição de statistics ainda está a caminho. O que `useFetchJson` faz com a requisição de statistics?",
+    "hint": "Siga o `onWatcherCleanup`, depois o `catch`.",
+    "choices": [
+      {
+        "text": "Espera que ela termine, e depois começa a de Spanish",
+        "why": "O `watchEffect` roda de novo na hora; é a limpeza que cuida da execução velha, e ela não espera."
+      },
+      {
+        "text": "Aborta; aquela execução registra `gave up on` e retorna, sem mexer em `error`",
+        "why": "Certo. Uma requisição abortada não é um erro que o usuário deva ver, então o `catch` a descarta."
+      },
+      {
+        "text": "Aborta, e mostra `Could not load: AbortError` até Spanish responder",
+        "why": "O `catch` verifica `AbortError` primeiro e retorna antes de atribuir `error`."
+      },
+      {
+        "text": "Deixa que ela termine, e depois joga fora a resposta",
+        "why": "Isso é a flag da aula 4. Aqui um `AbortController` interrompe a própria requisição."
+      }
+    ]
+  },
+  "ex-0a6095gc": {
+    "prompt": "Pedir `/notes/nope.json` mostrou `Unexpected token '<'` em vez de um 404. Por quê?",
+    "hint": "O que o servidor de desenvolvimento devolveu?",
+    "choices": [
+      {
+        "text": "O servidor mandou a página HTML, e lê-la como JSON falhou",
+        "why": "Certo. O endereço não existe, o servidor de desenvolvimento respondeu com a página, e o composable informou o que isso causou."
+      },
+      {
+        "text": "`response.ok` era false, mas só é verificado depois de `response.json()`",
+        "why": "A verificação vem primeiro em `useFetchJson`, e para um 404 ela teria lançado `404 Not Found`."
+      },
+      {
+        "text": "A requisição foi abortada no meio, deixando meio documento",
+        "why": "Um abort é capturado e registrado como `gave up on`; ele nunca chega à tela."
+      },
+      {
+        "text": "`useFetchJson` transforma todo 404 num erro de JSON para que a tela tenha uma só mensagem",
+        "why": "Uma resposta não-ok lança o seu próprio status; nada transforma um erro em outro."
+      }
+    ]
+  },
+  "ex-mtch9rdy": {
+    "prompt": "Na captura, depois de quantos ticks cada `TickerUser` foi parado?",
+    "hint": "As duas linhas `stopped after`."
+  },
+  "ex-sjp7mpey": {
+    "prompt": "`tooLate()` chama `useTicker('called from a click')` a partir de um botão. O que acontece?",
+    "hint": "Que componente está sendo montado nesse momento?",
+    "choices": [
+      {
+        "text": "Um timer começa e nunca para, já que nada é removido",
+        "why": "O timer é começado dentro do `onMounted`, e esse callback nunca foi registrado, então não existe timer para vazar."
+      },
+      {
+        "text": "Os hooks se prendem ao `LifecycleInside`, cujo handler fez a chamada",
+        "why": "Os hooks se prendem ao componente que está sendo montado, não ao dono do código que roda; o setup do `LifecycleInside` já tinha acabado."
+      },
+      {
+        "text": "O Vue avisa uma vez por hook, e nenhum timer começa",
+        "why": "Certo. Sem nenhum componente sendo montado, `onMounted` e `onUnmounted` não tinham a que se prender."
+      },
+      {
+        "text": "O Vue lança um erro, e o botão para de responder",
+        "why": "É um aviso, `[Vue warn]`, e a página continua funcionando."
+      }
+    ]
+  },
+  "ex-fwb7fr4d": {
+    "prompt": "`useTicker` é chamado de cada um destes lugares num componente. Quais chamadas dão aos hooks dele um componente a que se prender? Escolha todas as que se aplicam.",
+    "hint": "O componente ainda está sendo montado quando a linha roda?",
+    "choices": [
+      {
+        "text": "No nível de cima do `<script setup>`",
+        "why": "Certo. É o lugar que a regra indica."
+      },
+      {
+        "text": "Dentro de um `setTimeout` começado durante o setup",
+        "why": "O callback roda depois que o setup terminou, então não há componente sendo montado."
+      },
+      {
+        "text": "Dentro de um `if` no nível de cima do `<script setup>`",
+        "why": "Certo. O setup ainda está rodando, e no Vue uma condição não importa."
+      },
+      {
+        "text": "Dentro do `.then()` de um `fetch` começado durante o setup",
+        "why": "O `.then()` roda quando a resposta chega, muito depois do setup."
+      },
+      {
+        "text": "Num handler de clique, como faz o `tooLate`",
+        "why": "É o próprio exemplo da captura: dois avisos e nenhum timer."
+      }
+    ]
+  },
+  "ex-8rfj2vz9": {
+    "prompt": "Com que frequência o corpo de um composable roda para um componente que o chama?",
+    "hint": "Setup, ou cada renderização?",
+    "choices": [
+      {
+        "text": "A cada renderização desse componente",
+        "why": "Isso é um custom hook do React. O setup de um componente Vue roda uma vez, e o composable junto."
+      },
+      {
+        "text": "Cada vez que um dos refs que ele devolveu muda",
+        "why": "Um ref mudar roda de novo o que depende dele, um `computed` ou o template; não roda de novo a função que o criou."
+      },
+      {
+        "text": "Uma vez por interpolação do template que o lê",
+        "why": "O template lê os refs; ele nunca chama o composable."
+      },
+      {
+        "text": "Uma vez, durante o setup do componente",
+        "why": "Certo. É por isso que as funções dele são criadas uma vez, e nada precisa de `useCallback`."
+      }
+    ]
+  },
+  "ex-hv206rax": {
+    "prompt": "Por que um composable pode ser chamado dentro de um `if` no setup, se um hook do React não pode?",
+    "hint": "Como cada framework encontra de novo um pedaço de estado?",
+    "choices": [
+      {
+        "text": "O compilador do Vue tira cada chamada de composable de dentro da condição",
+        "why": "Nada é movido; a chamada fica onde foi escrita, e só roda se a condição valer."
+      },
+      {
+        "text": "O Vue acha o estado pelos objetos ref, não pela ordem das chamadas",
+        "why": "Certo. O setup roda uma vez e os refs são objetos comuns que o componente guarda; o React liga o estado à posição de cada chamada de hook a cada renderização."
+      },
+      {
+        "text": "O Vue roda o setup de novo a cada renderização, na mesma ordem",
+        "why": "O setup roda uma vez. Se rodasse a cada renderização, a ordem importaria no Vue também."
+      },
+      {
+        "text": "O Vue tem a mesma regra, só não avisa",
+        "why": "A tabela diz que uma condição é permitida, e o motivo é que nada num composable depende de ordem."
+      }
+    ]
+  },
+  "ex-gp4fvb48": {
+    "prompt": "Num hook do React, um valor derivado é embrulhado em `___` com uma lista de dependências escrita à mão; num composable, `computed` encontra as suas sozinho.",
+    "hint": "O equivalente do `computed` no React.",
+    "blanks": [
+      {
+        "accept": [
+          "useMemo"
+        ]
+      }
+    ]
+  },
+  "ex-ktx5mx1z": {
+    "prompt": "Na captura do planner, quantos minutos estavam planejados na semana de 19 de outubro?",
+    "hint": "O rodapé do painel: `… of … minutes done`."
+  },
+  "ex-j9sbaza3": {
+    "prompt": "Qual destas coisas ficou no `App.vue` quando os dois composables assumiram?",
+    "hint": "O que só o `App` pode decidir.",
+    "choices": [
+      {
+        "text": "O `watch` que salva as sessões no local storage do navegador",
+        "why": "O salvamento foi para `usePlannerData`, junto com o carregamento, porque são um trabalho só."
+      },
+      {
+        "text": "O ref `monday`, que diz qual semana está em exibição",
+        "why": "Certo. Qual semana aparece é decisão da tela, então fica com a tela."
+      },
+      {
+        "text": "O timer que mantém `today` atualizado",
+        "why": "O timer e os seus dois hooks foram para `useToday`."
+      },
+      {
+        "text": "A constante `STORAGE_KEY`",
+        "why": "Ela mora ao lado do código que a usa, em `usePlannerData.js`."
+      }
+    ]
+  },
+  "ex-45x1y62m": {
+    "prompt": "A página de curso da aula 12 também chama `usePlannerData()`. Uma sessão é marcada no `App`. O que a página de curso mostra?",
+    "hint": "O que cada chamada a um composable cria?",
+    "choices": [
+      {
+        "text": "A marcação, na hora, já que as duas chamadas leem a mesma chave do armazenamento",
+        "why": "Elas compartilham uma chave no armazenamento, não uma lista na memória; o armazenamento é lido uma vez, quando os dados carregam."
+      },
+      {
+        "text": "Um aviso de que o composable já está em uso pelo `App`",
+        "why": "O Vue não tem noção de um composable estar em uso; a segunda chamada é uma segunda chamada de função comum."
+      },
+      {
+        "text": "A sua própria lista, sem a marcação até a página recarregar",
+        "why": "Certo. Duas chamadas, duas listas, dois watchers sobrescrevendo a cópia um do outro: estado compartilhado precisa de um dono."
+      },
+      {
+        "text": "A marcação, porque `usePlannerData` guarda uma resposta em cache por endereço",
+        "why": "Esse cache é de bibliotecas como TanStack Query. Este composable busca de novo a cada chamada."
+      }
+    ]
+  },
+  "ex-zsfnc5yg": {
+    "prompt": "Ponha em ordem o que acontece com um `TickerUser` na captura.",
+    "hint": "O setup vem antes da página; a remoção vem por último.",
+    "items": [
+      "`useTicker` roda durante o setup do `TickerUser`",
+      "O callback do `onMounted` começa o timer e registra `started`",
+      "O timer conta ticks",
+      "`shown` vira false",
+      "O callback do `onUnmounted` limpa o timer e registra a contagem"
+    ]
+  },
+  "ex-yss3wwj7": {
+    "prompt": "Ligue cada composable desta aula ao que ele dá ao componente que o chama.",
+    "hint": "Uma descrição não pertence a nenhum composable daqui.",
+    "pairs": [
+      {
+        "left": "`useWeek`",
+        "right": "Uma semana só sua, e movimentos para mudá-la"
+      },
+      {
+        "left": "`useFetchJson`",
+        "right": "Dados, erro e carregamento de um endereço"
+      },
+      {
+        "left": "`useTicker`",
+        "right": "Uma contagem começada ao montar, parada ao remover"
+      },
+      {
+        "left": "`useToday`",
+        "right": "A data de hoje, atualizada a cada minuto"
+      }
+    ],
+    "right_distractors": [
+      "Uma lista de sessões compartilhada com todo chamador"
+    ]
+  },
+  "ex-b78gnw8r": {
+    "prompt": "Um colega vindo do React embrulha o `previous` e o `next` que um composable devolve num helper de memo, para que não sejam recriados. O que isso rende no Vue?",
+    "hint": "Quantas vezes essas funções são criadas?",
+    "choices": [
+      {
+        "text": "Menos re-renderizações do componente, como no React",
+        "why": "No React o memo evita que um filho re-renderize por receber uma função nova; no Vue a função nunca foi nova."
+      },
+      {
+        "text": "Os refs que elas mudam continuam reativos, o que de outro modo não aconteceria",
+        "why": "Os refs são reativos seja o que for que embrulhe as funções que os mudam."
+      },
+      {
+        "text": "Permite que o template as chame num `@click`",
+        "why": "`TwoWeeks` chama `next` num `@click` sem embrulho nenhum."
+      },
+      {
+        "text": "Nada: elas foram criadas uma vez, durante o setup",
+        "why": "Certo. Um composable roda uma vez, então não há re-renderização a temer."
+      }
+    ]
+  },
+  "ex-m1964cd3": {
+    "prompt": "`useNotes(course)` busca as notas de um curso. Um componente chama `useNotes(course.value)`, e as notas nunca acompanham uma troca de curso. Que correção segue as convenções da aula?",
+    "hint": "O que o componente deveria passar, e o que o composable deveria fazer com isso?",
+    "choices": [
+      {
+        "text": "Chamar `useNotes(course.value)` de novo dentro de um `watch` em `course`",
+        "why": "Isso é um composable chamado depois do setup: os watchers e hooks dele não teriam componente a que se prender."
+      },
+      {
+        "text": "Fazer `useNotes` devolver `reactive({ … })` em vez de refs",
+        "why": "A saída não era o problema. A entrada chegou como uma string comum, e nenhum tipo de retorno traz de volta o que nunca foi passado."
+      },
+      {
+        "text": "Passar `course`, ou `() => course.value`, e lê-lo com `toValue` dentro de um watcher",
+        "why": "Certo. Passe o ref ou um getter, e o composable consegue acompanhá-lo, como `useFetchJson` acompanha o endereço."
+      },
+      {
+        "text": "Embrulhar `course.value` em `ref()` na chamada",
+        "why": "`ref(course.value)` é um ref novo com uma cópia; mudar `course` não muda ele."
+      }
+    ]
+  }
+}
