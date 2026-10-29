@@ -1,0 +1,784 @@
+[
+  {
+    "id": "ex-2jcskw3j",
+    "version": 1,
+    "section": "build-time-html",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What decides whether a page can be generated statically?",
+    "choices": [
+      {
+        "text": "Whether the site is a blog or documentation",
+        "correct": false,
+        "why": "The kind of site is the folklore; a page inside a large app can qualify."
+      },
+      {
+        "text": "Being the same for everybody for a while",
+        "correct": true,
+        "why": "Right. A page that differs per person never qualifies."
+      },
+      {
+        "text": "Whether it uses JavaScript in the browser",
+        "correct": false,
+        "why": "A static page can ship and run a whole framework."
+      },
+      {
+        "text": "How many pages the site has in total",
+        "correct": false,
+        "why": "Size changes the build time, not whether a page can be a file."
+      }
+    ]
+  },
+  {
+    "id": "ex-3eqg0svr",
+    "version": 1,
+    "section": "build-time-html",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which cost is a static page's alone, compared with server rendering?",
+    "choices": [
+      {
+        "text": "A slower first byte",
+        "correct": false,
+        "why": "The first byte is the time to read a file, faster than a render."
+      },
+      {
+        "text": "Crawlers see an empty page",
+        "correct": false,
+        "why": "The first response carries the page, as with server rendering."
+      },
+      {
+        "text": "It stays wrong until the next build",
+        "correct": true,
+        "why": "Yes. It is a photograph of the data at the moment of the build."
+      },
+      {
+        "text": "It cannot be cached by a CDN",
+        "correct": false,
+        "why": "It is the easiest thing of all to cache: the same bytes for everybody."
+      }
+    ]
+  },
+  {
+    "id": "ex-fpvfdwr1",
+    "version": 1,
+    "section": "build-time-html",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each term to what it means in this lesson.",
+    "pairs": [
+      {
+        "left": "static generation",
+        "right": "Rendering pages into files at build time"
+      },
+      {
+        "left": "regeneration",
+        "right": "Rendering a static page again while the site runs"
+      },
+      {
+        "left": "on-demand revalidation",
+        "right": "Regenerating because something said the data changed"
+      }
+    ],
+    "right_distractors": [
+      "Rendering every page on each request"
+    ]
+  },
+  {
+    "id": "ex-k0ppswbz",
+    "version": 1,
+    "section": "prerender-the-planner",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must `prerender.ts` run on a fresh build, never twice on the same one?",
+    "choices": [
+      {
+        "text": "Node caches the old files",
+        "correct": false,
+        "why": "Node reads the files again on every run."
+      },
+      {
+        "text": "The second run finds no empty main to fill",
+        "correct": true,
+        "why": "Right. The first run overwrote dist/index.html, the shell, with the home page."
+      },
+      {
+        "text": "The script deletes dist/ when it finishes",
+        "correct": false,
+        "why": "It only writes files into dist/."
+      },
+      {
+        "text": "Vite refuses to serve a folder that was written twice",
+        "correct": false,
+        "why": "Vite is not involved after the build."
+      }
+    ]
+  },
+  {
+    "id": "ex-2qzapygq",
+    "version": 1,
+    "section": "prerender-the-planner",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `vite preview` the wrong server to test the prerendered planner with?",
+    "choices": [
+      {
+        "text": "It does not serve HTML files",
+        "correct": false,
+        "why": "It serves them; it just answers unknown addresses with index.html."
+      },
+      {
+        "text": "It compresses everything it sends",
+        "correct": false,
+        "why": "Compression would not change which page comes back."
+      },
+      {
+        "text": "It answers any unknown address with index.html",
+        "correct": true,
+        "why": "Yes. A static host answers with the folder's own index.html or a 404."
+      },
+      {
+        "text": "It needs TypeScript",
+        "correct": false,
+        "why": "It serves built files, whatever they were written in."
+      }
+    ]
+  },
+  {
+    "id": "ex-mzjxc716",
+    "version": 1,
+    "section": "prerender-the-planner",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What status did `static.ts` send for `/courses/nonsense`?",
+    "value": 404,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-qjtq6mm0",
+    "version": 1,
+    "section": "the-four-prerender",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How did Nuxt's `generate` and SvelteKit's prerenderer find the three course pages?",
+    "choices": [
+      {
+        "text": "From generateStaticParams",
+        "correct": false,
+        "why": "That is Next.js's list."
+      },
+      {
+        "text": "By following the links of the home page",
+        "correct": true,
+        "why": "Right. Both crawl from /."
+      },
+      {
+        "text": "By reading courses.json at build time, directly",
+        "correct": false,
+        "why": "That is what prerender.ts and Angular's getPrerenderParams do."
+      },
+      {
+        "text": "From the sitemap",
+        "correct": false,
+        "why": "The projects have no sitemap."
+      }
+    ]
+  },
+  {
+    "id": "ex-60fn4t93",
+    "version": 1,
+    "section": "the-four-prerender",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A course exists in courses.json but no page links to it. Which projects leave it out of the build, with no error?",
+    "hint": "Which ones find pages by following links?",
+    "choices": [
+      {
+        "text": "Next.js and Angular",
+        "correct": false,
+        "why": "Both list their slugs from the data, so they find it."
+      },
+      {
+        "text": "All four",
+        "correct": false,
+        "why": "Two of them never look at links."
+      },
+      {
+        "text": "Nuxt and SvelteKit",
+        "correct": true,
+        "why": "Yes. A crawler only finds what is linked, and the build still succeeds."
+      },
+      {
+        "text": "None: every build fails on a missing page",
+        "correct": false,
+        "why": "Both kinds fail in silence, which is the warning of the section."
+      }
+    ]
+  },
+  {
+    "id": "ex-bfe1pae1",
+    "version": 1,
+    "section": "the-four-prerender",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "SvelteKit wrote `courses/git.html`. What can go wrong on a plain static host?",
+    "choices": [
+      {
+        "text": "Nothing: every host maps an address to a .html file",
+        "correct": false,
+        "why": "Some only look for git/index.html."
+      },
+      {
+        "text": "The page loses its JavaScript",
+        "correct": false,
+        "why": "The file name does not change what the page contains."
+      },
+      {
+        "text": "The browser downloads it instead of showing it",
+        "correct": false,
+        "why": "A .html file is served as a page."
+      },
+      {
+        "text": "Some hosts miss it at `/courses/git`",
+        "correct": true,
+        "why": "Right. trailingSlash switches SvelteKit to git/index.html."
+      }
+    ]
+  },
+  {
+    "id": "ex-719ajwc8",
+    "version": 1,
+    "section": "what-goes-stale",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You change a title in public/courses.json and do not rebuild. What does static.ts serve for that course?",
+    "choices": [
+      {
+        "text": "The old title, with a 200",
+        "correct": true,
+        "why": "Yes. The page is the file the last build wrote."
+      },
+      {
+        "text": "The new title, because static.ts reads from disk",
+        "correct": false,
+        "why": "It reads dist/ from disk, and dist/ still holds the old page."
+      },
+      {
+        "text": "A 404, because the data and the page disagree",
+        "correct": false,
+        "why": "Nothing compares them; that is why stale pages go unnoticed."
+      },
+      {
+        "text": "An error from the build",
+        "correct": false,
+        "why": "No build ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-s00e4s9b",
+    "version": 1,
+    "section": "what-goes-stale",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the timing run, how many seconds did prerender.ts take for 5000 courses?",
+    "hint": "The last line the loop printed.",
+    "value": 4.773,
+    "tolerance": 0.01,
+    "unit": "s"
+  },
+  {
+    "id": "ex-4d0q03p2",
+    "version": 1,
+    "section": "what-goes-stale",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One title changes on a site of a hundred thousand prerendered pages. What does a plain rebuild cost?",
+    "choices": [
+      {
+        "text": "The time to render the one page that changed",
+        "correct": false,
+        "why": "A plain build has no idea which page changed."
+      },
+      {
+        "text": "Every page rendered again",
+        "correct": true,
+        "why": "Right. That is the cost regeneration removes."
+      },
+      {
+        "text": "Nothing, because the files are cached",
+        "correct": false,
+        "why": "The build rewrites them whatever a cache holds."
+      },
+      {
+        "text": "Only the time to copy the files to the host, with no rendering",
+        "correct": false,
+        "why": "Copying comes after rendering every page."
+      }
+    ]
+  },
+  {
+    "id": "ex-46w7yg42",
+    "version": 1,
+    "section": "regeneration",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under regeneration by age, which request is the last to see the old page?",
+    "choices": [
+      {
+        "text": "The first one after the data changed",
+        "correct": false,
+        "why": "Requests while the copy is still fresh see it too, and so does one more."
+      },
+      {
+        "text": "None: the page changes the moment the data does",
+        "correct": false,
+        "why": "Nothing watches the data under regeneration by age."
+      },
+      {
+        "text": "The one that starts the render",
+        "correct": true,
+        "why": "Yes. Its render is for the person after it."
+      },
+      {
+        "text": "The one that arrives during the render",
+        "correct": false,
+        "why": "That one may see it too, but the one that started the render is the reliable answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-wtkatjd0",
+    "version": 1,
+    "section": "regeneration",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two Node servers behind a load balancer each run Next.js with regeneration. What happens after the data changes?",
+    "choices": [
+      {
+        "text": "Both regenerate at the same moment",
+        "correct": false,
+        "why": "Each regenerates when one of its own requests finds its own copy old."
+      },
+      {
+        "text": "The load balancer regenerates the page",
+        "correct": false,
+        "why": "A load balancer forwards requests; it renders nothing."
+      },
+      {
+        "text": "Their copies go stale at different times",
+        "correct": true,
+        "why": "Right. A shared store of copies is what a host built for these frameworks adds."
+      },
+      {
+        "text": "Regeneration stops working",
+        "correct": false,
+        "why": "It works on each server, separately."
+      }
+    ]
+  },
+  {
+    "id": "ex-dsg146h7",
+    "version": 1,
+    "section": "regeneration",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Serving a copy past its freshness while a fresh one is fetched is called stale-while-___.",
+    "hint": "The same word Next.js uses for its first number.",
+    "blanks": [
+      {
+        "accept": [
+          "revalidate"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yeb8qp82",
+    "version": 1,
+    "section": "isr-in-next",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson leave `stale` out of `cacheLife({ revalidate: 10, expire: 3600 })`?",
+    "choices": [
+      {
+        "text": "Under 30 s it removes the data from the prerender",
+        "correct": true,
+        "why": "Yes. The build then refuses the page as uncached."
+      },
+      {
+        "text": "Next.js 16 removed the stale field",
+        "correct": false,
+        "why": "It is still there, defaulting to five minutes."
+      },
+      {
+        "text": "stale only applies to images",
+        "correct": false,
+        "why": "It is how long the browser's router may reuse a page."
+      },
+      {
+        "text": "It would make the page regenerate every second, whatever revalidate says",
+        "correct": false,
+        "why": "stale does not decide when the server regenerates."
+      }
+    ]
+  },
+  {
+    "id": "ex-3zt892xz",
+    "version": 1,
+    "section": "isr-in-next",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Eleven seconds after the data changed, the response said `x-nextjs-cache: STALE` and *Git*. What did Next.js do?",
+    "choices": [
+      {
+        "text": "Failed to read courses.json",
+        "correct": false,
+        "why": "Nothing failed; the next request had the new title."
+      },
+      {
+        "text": "Rendered a new page before answering",
+        "correct": false,
+        "why": "Then the answer would have had the new title."
+      },
+      {
+        "text": "Served it old, rendering behind",
+        "correct": true,
+        "why": "Right. A second later the new copy was a HIT."
+      },
+      {
+        "text": "Sent the page from the browser's cache",
+        "correct": false,
+        "why": "curl has no cache; the server sent it."
+      }
+    ]
+  },
+  {
+    "id": "ex-68wft3ex",
+    "version": 1,
+    "section": "isr-in-next",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Next.js sent `Cache-Control: s-maxage=10, stale-while-revalidate=___` for a page with revalidate 10 and expire 3600.",
+    "hint": "The hour, minus the ten seconds.",
+    "blanks": [
+      {
+        "accept": [
+          "3590"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-encm2dxr",
+    "version": 1,
+    "section": "on-demand",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the revalidation address check a secret?",
+    "choices": [
+      {
+        "text": "Next.js refuses route handlers without one",
+        "correct": false,
+        "why": "The check is in the handler's own code."
+      },
+      {
+        "text": "So the page is encrypted",
+        "correct": false,
+        "why": "The secret encrypts nothing."
+      },
+      {
+        "text": "Anyone could call it in a loop",
+        "correct": true,
+        "why": "Yes. A server started without a secret refuses everybody."
+      },
+      {
+        "text": "To tell which editor changed the data",
+        "correct": false,
+        "why": "One shared secret identifies nobody."
+      }
+    ]
+  },
+  {
+    "id": "ex-xj0f02ez",
+    "version": 1,
+    "section": "on-demand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `cacheTag(\"plan\")` let one call of `revalidateTag` do?",
+    "choices": [
+      {
+        "text": "Mark every page rendered from the plan at once",
+        "correct": true,
+        "why": "Right. The home page and the course pages agree after one call."
+      },
+      {
+        "text": "Rebuild the whole site",
+        "correct": false,
+        "why": "Nothing is built; marked copies are rendered again when asked for."
+      },
+      {
+        "text": "Mark only the page whose address was called",
+        "correct": false,
+        "why": "That would be revalidatePath; the tag finds every page that read the data."
+      },
+      {
+        "text": "Delete courses.json",
+        "correct": false,
+        "why": "It never touches the data, only the copies made from it."
+      }
+    ]
+  },
+  {
+    "id": "ex-w5ma49kx",
+    "version": 1,
+    "section": "on-demand",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the call with the secret, the first request for the Git page still said *Git*. What does the lesson conclude?",
+    "choices": [
+      {
+        "text": "The call failed",
+        "correct": false,
+        "why": "It answered revalidated, and the second request had the new title."
+      },
+      {
+        "text": "Test the promise with a request",
+        "correct": true,
+        "why": "Yes. The documented promise did not hold on this version, and only a request showed it."
+      },
+      {
+        "text": "The secret was wrong",
+        "correct": false,
+        "why": "A wrong secret is answered with forbidden."
+      },
+      {
+        "text": "expire: 0 only works on a host",
+        "correct": false,
+        "why": "The lesson makes no such claim; it reports what happened here."
+      }
+    ]
+  },
+  {
+    "id": "ex-1p205627",
+    "version": 1,
+    "section": "isr-in-nuxt",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Nuxt sends no HIT or STALE header. How does the lesson tell which copy came back?",
+    "choices": [
+      {
+        "text": "By the cache-control header",
+        "correct": false,
+        "why": "It is the same on every answer."
+      },
+      {
+        "text": "By the last-modified date",
+        "correct": true,
+        "why": "Right. A new copy carries a new date."
+      },
+      {
+        "text": "By the size of the page",
+        "correct": false,
+        "why": "The title changes the size by a few bytes, which curl did not print."
+      },
+      {
+        "text": "By asking Nuxt's server log",
+        "correct": false,
+        "why": "The log was not read; the headers were enough."
+      }
+    ]
+  },
+  {
+    "id": "ex-rk2749hj",
+    "version": 1,
+    "section": "isr-in-nuxt",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does this section use `npm run build` and not `npm run generate`?",
+    "choices": [
+      {
+        "text": "generate is slower",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "generate cannot read courses.json",
+        "correct": false,
+        "why": "It read it in the previous section."
+      },
+      {
+        "text": "swr needs a running server",
+        "correct": true,
+        "why": "Yes. swr regenerates on the server; a folder of files cannot."
+      },
+      {
+        "text": "build is what routeRules requires",
+        "correct": false,
+        "why": "routeRules also apply to generate; prerender rules are used by it."
+      }
+    ]
+  },
+  {
+    "id": "ex-4zkhsga1",
+    "version": 1,
+    "section": "which-to-use",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An editor changes product descriptions by pressing Save, and the page may never lag. Which fits?",
+    "choices": [
+      {
+        "text": "Static generation, rebuilt nightly",
+        "correct": false,
+        "why": "It can be wrong for a whole day."
+      },
+      {
+        "text": "Regeneration by age, one minute",
+        "correct": false,
+        "why": "A minute of lag is still lag."
+      },
+      {
+        "text": "On demand, tested",
+        "correct": true,
+        "why": "Right. Save can make the call, and the previous sections show why the next request must be tested."
+      },
+      {
+        "text": "Client rendering",
+        "correct": false,
+        "why": "It works, and loses the first-response content the page needs to be found."
+      }
+    ]
+  },
+  {
+    "id": "ex-nxasxdh2",
+    "version": 1,
+    "section": "which-to-use",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A page shows a feed read from another company's server, which tells nobody when it changes. Which regeneration can keep it current?",
+    "choices": [
+      {
+        "text": "Only an age",
+        "correct": true,
+        "why": "Yes. Nothing can call an address when the data changes behind the site's back."
+      },
+      {
+        "text": "Only on demand",
+        "correct": false,
+        "why": "The other company does not call your address."
+      },
+      {
+        "text": "Either one, with the same result",
+        "correct": false,
+        "why": "On demand needs someone to make the call."
+      },
+      {
+        "text": "Neither: the page must be rendered in the browser",
+        "correct": false,
+        "why": "It can be static with an age."
+      }
+    ]
+  },
+  {
+    "id": "ex-krxwrma8",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the four answers of the Next.js ISR run in the order they came back.",
+    "items": [
+      "HIT, Git, the file from the build",
+      "HIT, Git, just after the data changed",
+      "STALE, Git, eleven seconds later",
+      "HIT, Git and GitHub, a second after that"
+    ]
+  },
+  {
+    "id": "ex-ax3b834q",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each project to where its prerendered course page was written.",
+    "pairs": [
+      {
+        "left": "prerender.ts",
+        "right": "dist/courses/git/index.html"
+      },
+      {
+        "left": "Next.js",
+        "right": ".next/server/app/courses/git.html"
+      },
+      {
+        "left": "SvelteKit",
+        "right": "build/prerendered/courses/git.html"
+      },
+      {
+        "left": "Angular",
+        "right": "dist/angular/browser/courses/git/index.html"
+      }
+    ]
+  },
+  {
+    "id": "ex-hq2cdn2b",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these can leave a page out of a static build without any error? Choose all that apply.",
+    "choices": [
+      {
+        "text": "A crawler that finds no link to it",
+        "correct": true,
+        "why": "Yes, that is how Nuxt and SvelteKit miss a page."
+      },
+      {
+        "text": "A list of slugs that forgot it",
+        "correct": true,
+        "why": "Yes, the list is all generateStaticParams knows."
+      },
+      {
+        "text": "A course title with an accent in it",
+        "correct": false,
+        "why": "Text in a title does not change which pages exist."
+      },
+      {
+        "text": "A page that is the same for everybody",
+        "correct": false,
+        "why": "That is the kind of page a static build is for."
+      }
+    ]
+  }
+]
