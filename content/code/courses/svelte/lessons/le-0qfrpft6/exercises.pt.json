@@ -1,0 +1,528 @@
+{
+  "ex-wx4s874q": {
+    "prompt": "Qual arquivo é a página em `/about`?",
+    "hint": "A pasta é o endereço.",
+    "choices": [
+      {
+        "text": "`src/routes/(about)/+page.svelte`",
+        "why": "Parênteses fazem um grupo, que não acrescenta nada ao endereço: esse arquivo seria `/`."
+      },
+      {
+        "text": "`src/routes/about.svelte`",
+        "why": "Uma página é o `+page.svelte` dentro de uma pasta, não um arquivo com o nome do endereço."
+      },
+      {
+        "text": "`src/routes/about/+page.svelte`",
+        "why": "Isso: a pasta `about` dá o endereço, e o `+page.svelte` é a página dentro dela."
+      },
+      {
+        "text": "`src/lib/about/+page.svelte`",
+        "why": "O `src/lib` é para código que as páginas usam; o roteador só lê `src/routes`."
+      }
+    ]
+  },
+  "ex-qx085187": {
+    "prompt": "Você salva um `Chart.svelte` ao lado do `+page.svelte` em `src/routes/stats/`. O que o roteador faz com ele?",
+    "hint": "Quais arquivos o SvelteKit lê?",
+    "choices": [
+      {
+        "text": "Nada; é ignorado",
+        "why": "Isso. Só os nomes que começam com `+` são do roteador; a página ainda pode importá-lo."
+      },
+      {
+        "text": "Recusa iniciar, porque uma pasta de rota só pode ter arquivos com `+`",
+        "why": "Uma função auxiliar pode ficar ao lado da página que a usa."
+      },
+      {
+        "text": "Envolve a página nele, como um layout",
+        "why": "Esse é o trabalho do `+layout.svelte`, e ele precisa do nome."
+      },
+      {
+        "text": "Serve como uma segunda página, em `/stats/Chart`",
+        "why": "Só o `+page.svelte` faz uma página."
+      }
+    ]
+  },
+  "ex-wcsj5pq8": {
+    "prompt": "Você clica em \"Back to the planner\" em `/about`. O que o SvelteKit faz?",
+    "hint": "O `look` imprimiu `at /`, e a seção explica como ele chegou lá.",
+    "choices": [
+      {
+        "text": "Nada, a menos que o link use um componente especial `<Link>`",
+        "why": "Não existe componente de link; um `<a href>` comum basta."
+      },
+      {
+        "text": "Renderiza a página nova no lugar e atualiza o endereço com a History API",
+        "why": "Isso: uma navegação no cliente, sem recarregar."
+      },
+      {
+        "text": "Deixa o navegador carregar `/` do servidor e desenhar do zero, como qualquer link de qualquer site",
+        "why": "Isso seria um recarregamento, que o SvelteKit evita nas suas próprias páginas."
+      }
+    ]
+  },
+  "ex-kbhtdwtr": {
+    "prompt": "Para definir o título de uma página, ponha um `<title>` dentro de `<svelte:___>`.",
+    "hint": "É a cabeça do documento.",
+    "blanks": [
+      {
+        "accept": [
+          "head"
+        ]
+      }
+    ]
+  },
+  "ex-j9m8s1dk": {
+    "prompt": "Onde uma página entra dentro de um `+layout.svelte`?",
+    "hint": "O layout a recebe como prop.",
+    "choices": [
+      {
+        "text": "Depois da marcação do próprio layout, sempre",
+        "why": "O layout escolhe o lugar; aqui é dentro do `<main>`."
+      },
+      {
+        "text": "Dentro do primeiro `<main>` que encontrar",
+        "why": "Nada procura um `<main>`; o layout diz onde."
+      },
+      {
+        "text": "Onde o layout puser um `<slot />`",
+        "why": "O Svelte 5 renderiza um snippet; slots são o jeito antigo."
+      },
+      {
+        "text": "Onde ele escreve `{@render children()}`",
+        "why": "Isso: `children` é a página, como um snippet."
+      }
+    ]
+  },
+  "ex-0wmqj5js": {
+    "prompt": "Você vai de `/` para `/about`. O que acontece com o layout raiz?",
+    "hint": "As duas páginas estão dentro dele.",
+    "choices": [
+      {
+        "text": "Fica, e só muda o `children` que ele renderiza",
+        "why": "Isso: um layout não é recriado entre duas páginas que ele envolve."
+      },
+      {
+        "text": "É destruído e criado de novo para a página nova",
+        "why": "Isso perderia o estado dele a cada clique, que é o que os layouts evitam."
+      },
+      {
+        "text": "É renderizado de novo no servidor e mandado inteiro",
+        "why": "Uma navegação no cliente não pede o layout de novo ao servidor."
+      }
+    ]
+  },
+  "ex-tgb8nhkk": {
+    "prompt": "Ligue cada parte do layout raiz ao que ela faz.",
+    "hint": "Uma delas alcança fora do componente.",
+    "pairs": [
+      {
+        "left": "`page.url.pathname`",
+        "right": "O endereço da página que está aparecendo"
+      },
+      {
+        "left": "`aria-current=\"page\"`",
+        "right": "Diz a um leitor de tela qual link é esta página"
+      },
+      {
+        "left": "`:global(body)`",
+        "right": "Estiliza o documento inteiro"
+      },
+      {
+        "left": "`{@render children()}`",
+        "right": "A página"
+      }
+    ],
+    "right_distractors": [
+      "Um componente de link que evita recarregamentos"
+    ]
+  },
+  "ex-tjz0r17e": {
+    "prompt": "O `curl` em `/about` imprimiu `aria-current=\"page\"` no link About. O que isso mostra?",
+    "hint": "O `curl` não roda JavaScript.",
+    "choices": [
+      {
+        "text": "Que todo link fica marcado como atual até o JavaScript corrigir",
+        "why": "O link Study planner não tem o atributo na mesma saída."
+      },
+      {
+        "text": "Que um script no navegador o marcou depois de carregar",
+        "why": "O `curl` nunca roda script; o atributo estava no que o servidor mandou."
+      },
+      {
+        "text": "O servidor o marcou na primeira resposta",
+        "why": "Isso: o layout rodou no servidor e leu o `page` lá também."
+      }
+    ]
+  },
+  "ex-n54rvhcw": {
+    "prompt": "Qual é o endereço de `src/routes/(planner)/+page.svelte`?",
+    "hint": "Um grupo não acrescenta nada ao endereço.",
+    "choices": [
+      {
+        "text": "`/planner`",
+        "why": "Os parênteses deixam o nome fora do endereço."
+      },
+      {
+        "text": "`/`",
+        "why": "Isso: o grupo só dá às suas páginas um layout próprio."
+      },
+      {
+        "text": "`/(planner)`",
+        "why": "O nome do grupo nunca faz parte do endereço."
+      }
+    ]
+  },
+  "ex-yjbs62sg": {
+    "prompt": "Por que a About vai para um grupo próprio, `(info)`?",
+    "hint": "O que o layout de `(planner)` faz antes de renderizar uma página?",
+    "choices": [
+      {
+        "text": "Para não esperar pelos dados do planner, que ela nunca usa",
+        "why": "Isso: só as páginas do planner precisam dos dados e do contexto."
+      },
+      {
+        "text": "Para lhe dar o endereço `/info/about`",
+        "why": "Um grupo não acrescenta nada ao endereço; a About continua em `/about`."
+      },
+      {
+        "text": "Para o cabeçalho não ser desenhado acima dela",
+        "why": "O cabeçalho é do layout raiz, que envolve os dois grupos."
+      },
+      {
+        "text": "Porque o SvelteKit exige que toda página esteja em algum grupo",
+        "why": "Páginas fora de qualquer grupo funcionam; o layout raiz as envolve."
+      }
+    ]
+  },
+  "ex-9hsvf30z": {
+    "prompt": "Ponha em ordem a mudança para os grupos.",
+    "hint": "Uma pasta precisa existir antes de algo ser movido para ela.",
+    "items": [
+      "`mkdir 'src/routes/(planner)' 'src/routes/(info)'`",
+      "Mover `about` para `(info)` e `+page.svelte` para `(planner)`",
+      "Renomear `Planner.svelte` para `PlannerProvider.svelte` e fazê-lo renderizar `children`",
+      "Escrever o `(planner)/+layout.svelte`, que carrega os dados e envolve as páginas no provider"
+    ],
+    "trap": "O layout importa o provider, então o provider vem antes."
+  },
+  "ex-vc8t35nj": {
+    "prompt": "A página da semana define o título com `<svelte:head>` em vez de um efeito. O que isso ganha?",
+    "hint": "Onde os efeitos rodam?",
+    "choices": [
+      {
+        "text": "O título já está no HTML que o servidor manda, antes de qualquer script",
+        "why": "Isso: efeitos só rodam no navegador, o `<svelte:head>` também no servidor."
+      },
+      {
+        "text": "Dispensa a necessidade de um layout raiz",
+        "why": "O layout continua lá; o título é outro assunto."
+      },
+      {
+        "text": "O título atualiza mais rápido quando o total muda",
+        "why": "Velocidade não é a questão; os dois acompanham o total."
+      }
+    ]
+  },
+  "ex-z66ya7zk": {
+    "prompt": "Em `src/routes/(planner)/courses/[id]/+page.svelte`, quanto vale `params.id` em `/courses/spanish`?",
+    "hint": "É a parte do endereço no lugar de `[id]`.",
+    "choices": [
+      {
+        "text": "`undefined` até os dados carregarem",
+        "why": "O endereço é conhecido na hora; não espera dados."
+      },
+      {
+        "text": "`courses/spanish`",
+        "why": "Só o segmento onde está o `[id]`."
+      },
+      {
+        "text": "`spanish`",
+        "why": "Isso."
+      },
+      {
+        "text": "O objeto do curso de espanhol",
+        "why": "Um parâmetro é texto do endereço; a página procura o curso por conta própria."
+      }
+    ]
+  },
+  "ex-a2s8z353": {
+    "prompt": "Por que o planner perdeu o seu curso `selected`?",
+    "hint": "Duas respostas para uma pergunta.",
+    "choices": [
+      {
+        "text": "O endereço diz qual curso; outra resposta poderia discordar",
+        "why": "Isso: uma fonte só para o curso que está sendo visto."
+      },
+      {
+        "text": "Porque uma classe com runes só pode ter dois campos de estado, e precisava de espaço para a semana",
+        "why": "Não existe esse limite."
+      },
+      {
+        "text": "Porque `$state` não guarda uma string",
+        "why": "Guardou uma por oito aulas."
+      }
+    ]
+  },
+  "ex-7x5ms01y": {
+    "prompt": "Na página do curso de violão você vai para a semana de 12 de outubro e acrescenta uma sessão de 30 minutos no dia 14. Quantos minutos a página da semana mostra então para aquela semana no total?",
+    "hint": "Aquela semana tinha 90 minutos antes."
+  },
+  "ex-kwv70nd1": {
+    "prompt": "O que `/courses/piano` mostra, antes de qualquer matcher?",
+    "hint": "O `[id]` aceita qualquer texto.",
+    "choices": [
+      {
+        "text": "Um erro em `course.name`",
+        "why": "A página verifica `{#if course}` antes."
+      },
+      {
+        "text": "A página, dizendo \"No such course\"",
+        "why": "Isso: o endereço chegou à página e os dados não tinham piano."
+      },
+      {
+        "text": "Um 404 do SvelteKit",
+        "why": "A rota casa; é a página que não acha nenhum curso."
+      }
+    ]
+  },
+  "ex-5z0ca0yv": {
+    "prompt": "Para usar o matcher `slug` no parâmetro `id`, a pasta se chama `[id=___]`.",
+    "hint": "O nome do matcher vai depois do `=`.",
+    "blanks": [
+      {
+        "accept": [
+          "slug"
+        ]
+      }
+    ]
+  },
+  "ex-fsgycjba": {
+    "prompt": "Com o matcher `slug`, o que `/courses/Algebra` recebe?",
+    "hint": "Letras maiúsculas não estão no padrão.",
+    "choices": [
+      {
+        "text": "A página do curso, dizendo \"No such course\"",
+        "why": "Isso era antes do matcher; agora a página nem é alcançada."
+      },
+      {
+        "text": "O curso de álgebra, já que o matcher o põe em minúsculas",
+        "why": "Este matcher devolve o texto como está ou `undefined`."
+      },
+      {
+        "text": "Um 404, antes de a página do curso rodar",
+        "why": "Isso: a rota não casa, e nenhuma outra casa."
+      }
+    ]
+  },
+  "ex-7ye5xqe3": {
+    "prompt": "Por que `/courses/piano` ainda chega à página depois do matcher?",
+    "hint": "O que um matcher pode saber?",
+    "choices": [
+      {
+        "text": "Tem o formato de um id; se ele existe é uma pergunta para os dados",
+        "why": "Isso. Um matcher verifica formato, não existência."
+      },
+      {
+        "text": "Porque o matcher foi escrito para deixar passar um curso desconhecido",
+        "why": "Ele deixa passar todo slug minúsculo, conhecido ou não."
+      },
+      {
+        "text": "Porque matchers só rodam no servidor",
+        "why": "Rodam nos dois lugares, e `piano` passa nos dois."
+      }
+    ]
+  },
+  "ex-nmz4dwhv": {
+    "prompt": "Ligue cada jeito de escrever matchers à sua versão do SvelteKit.",
+    "hint": "A versão 3 mudou o arquivo e o que a função devolve.",
+    "pairs": [
+      {
+        "left": "Um arquivo por matcher em `src/params/`",
+        "right": "Antes da 3, exportando `match`"
+      },
+      {
+        "left": "Um resultado booleano",
+        "right": "Antes da 3: casa ou não casa"
+      },
+      {
+        "left": "`defineParams` em `src/params.js`",
+        "right": "SvelteKit 3"
+      },
+      {
+        "left": "Um valor ou `undefined`",
+        "right": "SvelteKit 3, que também pode converter"
+      }
+    ]
+  },
+  "ex-mc486tmk": {
+    "prompt": "Com o `+error.svelte`, qual status `/courses/Algebra` responde?",
+    "hint": "O `curl -w '%{http_code}'` imprimiu.",
+    "choices": [
+      {
+        "text": "404",
+        "why": "Isso: palavras mais amigáveis, o mesmo status."
+      },
+      {
+        "text": "500, porque uma página de erro rodou",
+        "why": "A página de erro mostra o status da falha, aqui um 404."
+      },
+      {
+        "text": "200, já que uma página foi renderizada",
+        "why": "Isso diria a um crawler que o endereço existe."
+      }
+    ]
+  },
+  "ex-k0re7q5w": {
+    "prompt": "Por que a página de erro mostra o cabeçalho do planner?",
+    "hint": "Quais layouts envolvem uma página de erro?",
+    "choices": [
+      {
+        "text": "Porque o `+error.svelte` copia a marcação do cabeçalho",
+        "why": "Ele não tem nenhuma própria; é envolvido."
+      },
+      {
+        "text": "O layout raiz está acima da pasta dele, então envolve a página de erro",
+        "why": "Isso: uma página de erro é renderizada dentro dos layouts acima da sua pasta."
+      },
+      {
+        "text": "Porque toda página de erro é renderizada dentro de todos os layouts",
+        "why": "Só os layouts acima da pasta dela; o layout de `(planner)` não envolve esta."
+      }
+    ]
+  },
+  "ex-2eybn66c": {
+    "prompt": "Quais falhas nunca chegam a um `+error.svelte`? Escolha todas as que se aplicam.",
+    "hint": "O último parágrafo cita duas.",
+    "choices": [
+      {
+        "text": "O layout raiz falhando",
+        "why": "Sim: não sobra layout, então o `src/error.html` é usado."
+      },
+      {
+        "text": "Um erro num endpoint do servidor",
+        "why": "Sim: é respondido como dados, não como página."
+      },
+      {
+        "text": "Um endereço que nenhuma rota casa",
+        "why": "Esse é o 404 que a página desta seção mostra."
+      },
+      {
+        "text": "Um erro lançado dentro de uma página num grupo",
+        "why": "O `+error.svelte` mais próximo acima mostra isso."
+      }
+    ]
+  },
+  "ex-cp55d88g": {
+    "prompt": "No `+error.svelte`, o texto do erro é `page.error.___`.",
+    "hint": "Imprimiu \"Not Found\".",
+    "blanks": [
+      {
+        "accept": [
+          "message"
+        ]
+      }
+    ]
+  },
+  "ex-1aezfsfy": {
+    "prompt": "Ligue cada valor de `data-sveltekit-preload-data` a quando ele começa a carregar.",
+    "hint": "Um deles nunca carrega.",
+    "pairs": [
+      {
+        "left": "`hover`",
+        "right": "Quando o ponteiro para sobre o link"
+      },
+      {
+        "left": "`tap`",
+        "right": "Quando o link é pressionado"
+      },
+      {
+        "left": "`false`",
+        "right": "Não antes do clique"
+      }
+    ],
+    "right_distractors": [
+      "Quando a página carrega pela primeira vez, para todo link"
+    ]
+  },
+  "ex-8r49deqf": {
+    "prompt": "Você segue um link da semana para `/courses/guitar`. O que é substituído?",
+    "hint": "As duas páginas estão no grupo `(planner)`.",
+    "choices": [
+      {
+        "text": "A página e o layout de `(planner)`, mas não o layout raiz",
+        "why": "O layout do grupo envolve as duas páginas, então fica."
+      },
+      {
+        "text": "Tudo, já que o endereço mudou",
+        "why": "Uma navegação no cliente mantém o que os dois endereços compartilham."
+      },
+      {
+        "text": "Só a página; os layouts e o planner ficam",
+        "why": "Isso: os layouts, o provider e o planner ficam."
+      }
+    ]
+  },
+  "ex-7mz9mqah": {
+    "prompt": "Você acrescenta 30 minutos de violão em 21 de outubro, vai para a About e volta. Quantos minutos de violão a semana de 19 de outubro mostra?",
+    "hint": "O layout do grupo foi criado de novo a partir do arquivo."
+  },
+  "ex-3xavq545": {
+    "prompt": "Por que a sessão se perde depois da ida à About?",
+    "hint": "A About fica fora do grupo.",
+    "choices": [
+      {
+        "text": "Sair do grupo destruiu o layout e o planner",
+        "why": "Isso: de volta ao grupo, um layout novo carregou o arquivo e fez um planner novo."
+      },
+      {
+        "text": "Porque a página About limpa todo contexto que encontra acima dela quando é criada",
+        "why": "A About não sabe nada do planner."
+      },
+      {
+        "text": "Porque o link para a About recarrega a página",
+        "why": "É uma navegação no cliente como as outras; não houve recarregamento."
+      }
+    ]
+  },
+  "ex-ke58akx8": {
+    "prompt": "Uma página nova em `/courses/[id=slug]/history` deveria listar as sessões passadas de um curso, lidas do contexto. Onde fica o arquivo dela?",
+    "hint": "Qual layout define o contexto?",
+    "choices": [
+      {
+        "text": "`src/routes/(info)/courses/[id=slug]/history/+page.svelte`",
+        "why": "O grupo `(info)` não tem provider; o `getPlanner()` lançaria um erro."
+      },
+      {
+        "text": "`src/routes/(planner)/courses/[id=slug]/history/+page.svelte`",
+        "why": "Isso: dentro do grupo, sob o provider, com o matcher."
+      },
+      {
+        "text": "`src/routes/courses/[id=slug]/history/+page.svelte`, fora de todo grupo",
+        "why": "Fora do grupo não há provider acima, e o `getPlanner()` lançaria um erro."
+      }
+    ]
+  },
+  "ex-jqjgp5sz": {
+    "prompt": "Ligue cada arquivo da aula ao seu trabalho.",
+    "hint": "Quatro arquivos, quatro trabalhos.",
+    "pairs": [
+      {
+        "left": "`src/routes/+layout.svelte`",
+        "right": "O cabeçalho, em toda página"
+      },
+      {
+        "left": "`src/routes/(planner)/+layout.svelte`",
+        "right": "Carrega os dados e fornece o planner"
+      },
+      {
+        "left": "`src/params.js`",
+        "right": "Diz como é um id de curso"
+      },
+      {
+        "left": "`src/routes/+error.svelte`",
+        "right": "O que um endereço que falhou mostra"
+      }
+    ]
+  }
+}

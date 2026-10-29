@@ -1,0 +1,720 @@
+[
+  {
+    "id": "ex-y1rkc6cy",
+    "version": 1,
+    "section": "use-fetch",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the logging middleware in place, you load the week page fresh in a new tab. Who sends the request to `/api/courses`?",
+    "hint": "Compare the browser's network list with the server's terminal.",
+    "choices": [
+      {
+        "text": "The browser, once the page has hydrated",
+        "correct": false,
+        "why": "That is a navigation inside a running page. On a first load the browser's network list had no `/api/` line."
+      },
+      {
+        "text": "The server, while rendering",
+        "correct": true,
+        "why": "Right. The terminal printed `api: GET /api/courses`, and the browser found the answer in the payload."
+      },
+      {
+        "text": "Both of them: the server to draw the page, the browser to hydrate it",
+        "correct": false,
+        "why": "That is what plain `$fetch` in setup does. `useFetch` hands the server's answer over, so the browser does not ask."
+      },
+      {
+        "text": "Neither: Nuxt reads `courses.get.ts` at build time",
+        "correct": false,
+        "why": "Only `/about` is prerendered. The week is rendered per request, and the terminal shows the call."
+      }
+    ]
+  },
+  {
+    "id": "ex-vvnftdsp",
+    "version": 1,
+    "section": "use-fetch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "From the week, already open in the browser, you click *Spanish*. Why does the request for the course's data now appear in the browser's network list?",
+    "hint": "Who renders a page that the router changes in place?",
+    "choices": [
+      {
+        "text": "The payload of the first page has expired",
+        "correct": false,
+        "why": "The payload has no clock; it holds the data of the page the server rendered, and the course page was not that page."
+      },
+      {
+        "text": "`useFetch` asks again on each page to check the server's copy",
+        "correct": false,
+        "why": "It fetches once per page shown. On a first load that one fetch was the server's."
+      },
+      {
+        "text": "The middleware in `server/middleware/` sends the browser there",
+        "correct": false,
+        "why": "The middleware prints a line and returns nothing; the request goes on to its route as before."
+      },
+      {
+        "text": "No server renders this page, so `useFetch` runs in the browser",
+        "correct": true,
+        "why": "Right. A navigation inside the running page is drawn by the browser, and its `useFetch` makes the request itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-qnny2cn5",
+    "version": 1,
+    "section": "use-fetch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `useFetch` written with `await` in a page's setup?",
+    "hint": "What would the server send if rendering did not wait?",
+    "choices": [
+      {
+        "text": "Without it `data` would be a promise and not a ref",
+        "correct": false,
+        "why": "`useFetch` gives back refs either way; the `await` decides when rendering goes on."
+      },
+      {
+        "text": "It makes the setup run in the browser alone",
+        "correct": false,
+        "why": "The setup still runs on both sides; `<Suspense>` is what lets it be `async` at all."
+      },
+      {
+        "text": "So the server waits for the data and draws the HTML with it",
+        "correct": true,
+        "why": "Right. Without it the server would send the page before the answer came back."
+      },
+      {
+        "text": "So the browser waits for hydration to end before it asks the API",
+        "correct": false,
+        "why": "On a first load the browser does not ask the API at all; the wait that matters is the server's."
+      }
+    ]
+  },
+  {
+    "id": "ex-0f7nmpy8",
+    "version": 1,
+    "section": "use-async-data",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which `useAsyncData` call does `useFetch('/api/courses')` stand for?",
+    "hint": "The first sentence of the section.",
+    "choices": [
+      {
+        "text": "`useAsyncData(() => $fetch('/api/courses'))`, with no key at all",
+        "correct": false,
+        "why": "There is a key all the same; `useFetch` makes one from the URL, the `$f…` the payload shows."
+      },
+      {
+        "text": "`useAsyncData('/api/courses', { server: false })`",
+        "correct": false,
+        "why": "That has no handler, and `server: false` would skip the server's fetch, which `useFetch` does not do by default."
+      },
+      {
+        "text": "`useAsyncData('courses', () => fetch('/api/courses'))`",
+        "correct": false,
+        "why": "The key is made from the URL, not a word you pick, and the function is `$fetch`, which parses the JSON; plain `fetch` gives back a response."
+      },
+      {
+        "text": "`useAsyncData(key, () => $fetch('/api/courses'))`, the key made from the URL",
+        "correct": true,
+        "why": "Right. `useFetch` adds only the key and the `$fetch` call."
+      }
+    ]
+  },
+  {
+    "id": "ex-wptjf27h",
+    "version": 1,
+    "section": "use-async-data",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For which of these would the lesson reach for `useAsyncData` rather than `useFetch`? Choose all that apply.",
+    "hint": "Is the data the answer of one URL?",
+    "choices": [
+      {
+        "text": "Two requests whose answers are combined",
+        "correct": true,
+        "why": "Right. No single URL answers it, so the function does both."
+      },
+      {
+        "text": "Reading `/api/courses/spanish` exactly as the route answers it",
+        "correct": false,
+        "why": "That is one URL, answered as it is: `useFetch` is the short way to write it."
+      },
+      {
+        "text": "A value read from a module on the server, with no request",
+        "correct": true,
+        "why": "Right. The handler is any function that returns a promise."
+      },
+      {
+        "text": "Data fetched in the browser alone, after the page has mounted",
+        "correct": false,
+        "why": "That is `onMounted`, or `server: false`; `useAsyncData` runs in the server's render first by default."
+      }
+    ]
+  },
+  {
+    "id": "ex-87j1e4ky",
+    "version": 1,
+    "section": "the-payload",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The payload in `__NUXT_DATA__` is written by a library called ___, which stores each repeated value once and points at it by position.",
+    "hint": "Its name is given where the section explains the format, and again for `-1`.",
+    "blanks": [
+      {
+        "accept": [
+          "devalue"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wydwvg6r",
+    "version": 1,
+    "section": "the-payload",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The week page measured 5,081 bytes with `wc -c`. How many bytes of it were the `__NUXT_DATA__` payload?",
+    "hint": "The second of the three `wc -c`.",
+    "value": 956,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-bnmpc7cw",
+    "version": 1,
+    "section": "the-payload",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the payload, the layout's key `session-count` points at an item holding `6`, not at the planner's courses and sessions. Why?",
+    "hint": "When does `transform` run?",
+    "choices": [
+      {
+        "text": "`devalue` keeps the numbers and drops objects it has seen before",
+        "correct": false,
+        "why": "`devalue` stores a repeated value once and points at it; it keeps each object it is given."
+      },
+      {
+        "text": "`transform` ran on the server before the payload was written",
+        "correct": true,
+        "why": "Right. What the handler and its `transform` return, and only that, is what crosses."
+      },
+      {
+        "text": "The browser runs `transform` on the payload once it arrives",
+        "correct": false,
+        "why": "Then the payload would carry the whole planner. It ran before the payload was written."
+      },
+      {
+        "text": "The planner is filed under the page's `$f…` key instead",
+        "correct": false,
+        "why": "The page's key has the planner, but the layout's data is its own, item 4; it is a number because of `transform`."
+      }
+    ]
+  },
+  {
+    "id": "ex-kff3sv82",
+    "version": 1,
+    "section": "the-payload",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`/api/me` returns an account with its name, e-mail and password hash. A page shows the name, fetched with `useFetch('/api/me', { pick: ['name'] })`. What is a stranger still able to read?",
+    "hint": "`pick` runs on the server, but after the route has answered.",
+    "choices": [
+      {
+        "text": "Nothing beyond the name: `pick` kept the rest on the server",
+        "correct": false,
+        "why": "It kept the rest out of the payload. The route still answers the whole record to whoever calls it."
+      },
+      {
+        "text": "The whole record, inside the page's `__NUXT_DATA__` script",
+        "correct": false,
+        "why": "That is the case without `pick`; with it, the payload carries the name alone."
+      },
+      {
+        "text": "The whole record, to anybody who calls `/api/me` with `curl`",
+        "correct": true,
+        "why": "Right. `pick` trims the payload, not the route; the cure is a route that returns only what its callers are meant to see."
+      },
+      {
+        "text": "The e-mail, since `pick` drops the fields that look secret and keeps the rest",
+        "correct": false,
+        "why": "`pick` keeps the fields it names and drops the others; it does not judge what looks secret."
+      }
+    ]
+  },
+  {
+    "id": "ex-htgcqnrf",
+    "version": 1,
+    "section": "double-fetch",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With plain `$fetch` in the demo page's setup, how many `api:` lines did the server's terminal print for one visit to `/demo/twice`?",
+    "hint": "The layout's count is one of them.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-7v57wdj7",
+    "version": 1,
+    "section": "double-fetch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`/demo/twice` arrived with *6 sessions* already drawn, and the browser still asked for `/api/courses`. Why?",
+    "hint": "What does `$fetch` know about the page it runs in?",
+    "choices": [
+      {
+        "text": "The server's HTML lacked the number, and the browser filled it in",
+        "correct": false,
+        "why": "The HTML had the number; *6 sessions* was drawn on the server."
+      },
+      {
+        "text": "Hydration checks the server's answers by fetching them again",
+        "correct": false,
+        "why": "Hydration reads the payload; it does not re-check the server by asking."
+      },
+      {
+        "text": "Setup ran again to hydrate, and `$fetch` knows nothing about payloads",
+        "correct": true,
+        "why": "Right. `useFetch` and `useAsyncData` exist to make the two runs one request."
+      },
+      {
+        "text": "The layout's `useAsyncData` asked from the browser by mistake",
+        "correct": false,
+        "why": "The layout's count was fetched by the server; the browser's request came from the page's `$fetch`."
+      }
+    ]
+  },
+  {
+    "id": "ex-xw5bjf9c",
+    "version": 1,
+    "section": "double-fetch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`/demo/mounted` fetches in `onMounted`. What does `curl` of that page find inside its `<p>`?",
+    "hint": "`onMounted` runs on one side.",
+    "choices": [
+      {
+        "text": "*6 sessions*, drawn by the server",
+        "correct": false,
+        "why": "That needs the fetch to run during the server's render, and `onMounted` does not run there."
+      },
+      {
+        "text": "An empty paragraph, since `data` is undefined on the server",
+        "correct": false,
+        "why": "The `v-else` branch has its own text, and the server drew it."
+      },
+      {
+        "text": "*6 sessions*, read out of the payload when the page hydrated",
+        "correct": false,
+        "why": "Nothing was fetched on the server, so the payload holds none of it, and `curl` does not hydrate a page."
+      },
+      {
+        "text": "*Loading…*",
+        "correct": true,
+        "why": "Right. `onMounted` runs in the browser alone, so the server drew the `v-else`."
+      }
+    ]
+  },
+  {
+    "id": "ex-t47cyz48",
+    "version": 1,
+    "section": "keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The course page gives `useFetch` a function that builds the URL from `route.params.id`, rather than a string. What does the function buy?",
+    "hint": "What happens to the URL, and so to the key, when the route changes?",
+    "choices": [
+      {
+        "text": "The URL is built in the browser, so the server skips the fetch",
+        "correct": false,
+        "why": "On a first load the server still fetches; the function is about change, not about side."
+      },
+      {
+        "text": "A key nobody else will choose, so no `NUXT_E3004`",
+        "correct": false,
+        "why": "A key from a URL is shared by any call to the same URL; the clash came from two keys written by hand."
+      },
+      {
+        "text": "A reactive key, so a new `id` fetches the new course",
+        "correct": true,
+        "why": "Right. The URL changes with the route, the key with the URL, and `useFetch` fetches again by itself."
+      },
+      {
+        "text": "The data is fetched after the page is shown, as with `lazy`",
+        "correct": false,
+        "why": "That is `lazy: true`, an option of its own; the function changes what is fetched, not when the navigation goes ahead."
+      }
+    ]
+  },
+  {
+    "id": "ex-e5cy3e8e",
+    "version": 1,
+    "section": "keys",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`/demo/clash` drew *6 sessions in courses*, with no number before *courses*. What happened?",
+    "hint": "Read the warning, then ask what the second call got back.",
+    "choices": [
+      {
+        "text": "The second call was handed the first one's data, the count, and read a field it lacks",
+        "correct": true,
+        "why": "Right. One key is one piece of data; the different handler earned a warning and nothing more."
+      },
+      {
+        "text": "The second fetch failed, so `planner` stayed undefined",
+        "correct": false,
+        "why": "No request failed; the warning is about different handlers, and the second call was handed data."
+      },
+      {
+        "text": "Both calls ran, and the second overwrote the count",
+        "correct": false,
+        "why": "Then `count` would hold the planner, and the page would not say *6 sessions*."
+      },
+      {
+        "text": "`useAsyncData` merged both answers into one object",
+        "correct": false,
+        "why": "There is no merge: the key was taken, and the second call shares what is under it."
+      }
+    ]
+  },
+  {
+    "id": "ex-066s6180",
+    "version": 1,
+    "section": "keys",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "According to the lesson, what does the key of a `useFetch` or `useAsyncData` decide? Choose all that apply.",
+    "hint": "The section opens with three things.",
+    "choices": [
+      {
+        "text": "Where the payload keeps the answer",
+        "correct": true,
+        "why": "Right. The payload maps each key to the item that holds its data."
+      },
+      {
+        "text": "Whether the call runs on the server or in the browser",
+        "correct": false,
+        "why": "That depends on where the page is rendered, and on `server: false`; the key names the data."
+      },
+      {
+        "text": "Which calls share one piece of data",
+        "correct": true,
+        "why": "Right. Two calls with one key are one piece of data, for better or worse."
+      },
+      {
+        "text": "When the data is fetched again",
+        "correct": true,
+        "why": "Right. A key that changes, like one built from the route, fetches again."
+      }
+    ]
+  },
+  {
+    "id": "ex-9gefrcyd",
+    "version": 1,
+    "section": "refresh-and-errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the week's endpoint answering 503, and before the `role=\"alert\"` line was added, what did the week page show?",
+    "hint": "`useFetch` does not throw.",
+    "choices": [
+      {
+        "text": "Nuxt's error page, with the status 503",
+        "correct": false,
+        "why": "That needs the page to throw `createError` itself, as the course page does; `useFetch` puts the failure in `error`."
+      },
+      {
+        "text": "The last week it had drawn, kept in a cache",
+        "correct": false,
+        "why": "`swr` was taken off at the start of the lesson, and `data` was `undefined` here."
+      },
+      {
+        "text": "An empty week with zeros, and no word about why",
+        "correct": true,
+        "why": "Right. Each `computed` falls back to `[]`, so the page looks like a planner with no sessions."
+      },
+      {
+        "text": "A blank page, because the setup threw on reading `data.value`",
+        "correct": false,
+        "why": "The `computed` values use `?.` and `?? []`, so the setup ran to its end and the page drew."
+      }
+    ]
+  },
+  {
+    "id": "ex-dgrhwx48",
+    "version": 1,
+    "section": "refresh-and-errors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A page at `/invoices/:id` shows one invoice, and its `useFetch` comes back with a 404. Following the lesson's question, what should the page do?",
+    "hint": "Is the page still worth showing without this data?",
+    "choices": [
+      {
+        "text": "Show a `role=\"alert\"` line above an empty invoice",
+        "correct": false,
+        "why": "That is the week's answer, for a page worth drawing without its data. An empty invoice is not one."
+      },
+      {
+        "text": "Call `refresh()` until the invoice arrives",
+        "correct": false,
+        "why": "A 404 is an answer, not a slow one; asking again gets the same."
+      },
+      {
+        "text": "Throw `createError` with the route's status, as the course page does",
+        "correct": true,
+        "why": "Right. An invoice page without its invoice must not be drawn; Nuxt draws `error.vue` with the 404."
+      },
+      {
+        "text": "Nothing: `useFetch` throws the 404 and Nuxt shows its error page",
+        "correct": false,
+        "why": "`useFetch` does not throw. The page has to pass the error on itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-p85fpmf0",
+    "version": 1,
+    "section": "refresh-and-errors",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The week's error line is `<p v-if=\"error\" role=\"___\">`, which a screen reader reads out as soon as it appears.",
+    "hint": "The ARIA role of a message that interrupts.",
+    "blanks": [
+      {
+        "accept": [
+          "alert"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mkp71703",
+    "version": 1,
+    "section": "lazy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The course route waits two seconds before answering, and the course page is not lazy. You click *Spanish* on the week. What does the heading say a moment later?",
+    "hint": "By default, who waits for the data?",
+    "choices": [
+      {
+        "text": "*Spanish*, with an empty list under it",
+        "correct": false,
+        "why": "The heading comes from the data, and the page is not shown before the data is there."
+      },
+      {
+        "text": "*This week*",
+        "correct": true,
+        "why": "Right. The router keeps the old page until the next page's data has arrived."
+      },
+      {
+        "text": "Nothing at all: the heading is empty until the data comes",
+        "correct": false,
+        "why": "That is what `lazy: true` gives, the new page at once with nothing in it."
+      },
+      {
+        "text": "*Loading the course…*, from a line reading `status`",
+        "correct": false,
+        "why": "That line belongs to a lazy page; this one is not lazy, and the router has not shown it yet."
+      }
+    ]
+  },
+  {
+    "id": "ex-wn7fv6hh",
+    "version": 1,
+    "section": "lazy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `lazy: true` on the course page's `useFetch`, what does the reader see right after the click, before the two seconds are up?",
+    "hint": "The capture taken without the wait.",
+    "choices": [
+      {
+        "text": "The week, unchanged, until the data arrives",
+        "correct": false,
+        "why": "That is the default; `lazy: true` lets the navigation go ahead at once."
+      },
+      {
+        "text": "A loading bar from Nuxt, drawn over the week",
+        "correct": false,
+        "why": "Nuxt drew no such thing here; what shows while waiting is the template's job, with `status`."
+      },
+      {
+        "text": "The course page with no data in it: *Goal: minutes a week*",
+        "correct": true,
+        "why": "Right. The page is shown at once and fills in when the data arrives."
+      },
+      {
+        "text": "The course, read from the payload, and then a refresh",
+        "correct": false,
+        "why": "A navigation brings no payload of its own; the browser fetches, lazily here."
+      }
+    ]
+  },
+  {
+    "id": "ex-4e41mzf5",
+    "version": 1,
+    "section": "lazy",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A page shows a report that takes seconds to compute, and you add `server: false` to its `useFetch`. What changes on a first load?",
+    "hint": "Which side skips the fetch?",
+    "choices": [
+      {
+        "text": "The server waits for the report, and the browser does not ask",
+        "correct": false,
+        "why": "That is plain `useFetch` on a first load; `server: false` is the other way round."
+      },
+      {
+        "text": "The page arrives without the report, and the browser fetches it",
+        "correct": true,
+        "why": "Right. The server's render skips the fetch: lesson 19's client-only, applied to one piece of data."
+      },
+      {
+        "text": "The report is fetched once at build time, as `/about` is prerendered",
+        "correct": false,
+        "why": "Prerendering is a route rule; `server: false` is about one fetch, at the time of the request."
+      },
+      {
+        "text": "The report goes into the payload, but is drawn lazily",
+        "correct": false,
+        "why": "With the fetch skipped on the server, the payload has none of the report to carry."
+      }
+    ]
+  },
+  {
+    "id": "ex-hjre6ysr",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these in the order they happen when a reader opens the week in a new tab and then clicks a course.",
+    "hint": "The figure in the section on the payload, then one click.",
+    "items": [
+      "The server's render runs `useFetch`, which calls `/api/courses`",
+      "The server sends the HTML with the payload inside it",
+      "The browser shows the HTML",
+      "The browser hydrates, and `useFetch` finds its key in the payload",
+      "The browser requests `/api/courses/spanish` for the course page"
+    ]
+  },
+  {
+    "id": "ex-ndfhdqvg",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need to what the lesson reaches for.",
+    "hint": "One URL, several sources, a slow answer, a fact of the browser.",
+    "pairs": [
+      {
+        "left": "The answer of one URL, as it is",
+        "right": "`useFetch(url)`"
+      },
+      {
+        "left": "Two requests combined into one value",
+        "right": "`useAsyncData` with a key of its own"
+      },
+      {
+        "left": "A slow API, and a click that goes at once",
+        "right": "`lazy: true`"
+      },
+      {
+        "left": "A value that only the reader's browser knows",
+        "right": "`onMounted`"
+      }
+    ],
+    "right_distractors": [
+      "`pick: ['name']`"
+    ]
+  },
+  {
+    "id": "ex-0sxr4k83",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A reader opens `/courses/guitar` directly in a new tab. How many requests for `/api/courses/guitar` does their browser make?",
+    "hint": "Who renders a page opened in a new tab?",
+    "choices": [
+      {
+        "text": "One, because the function that builds the URL runs in the browser",
+        "correct": false,
+        "why": "The function runs on the server too; it makes the key follow the route, it does not move the fetch."
+      },
+      {
+        "text": "One, as the capture of clicking *Guitar* showed",
+        "correct": false,
+        "why": "That capture was a navigation inside a running page, which the browser renders itself."
+      },
+      {
+        "text": "One, to hydrate, as plain `$fetch` in setup did",
+        "correct": false,
+        "why": "That was the double fetch, and it is what `useFetch` exists to prevent."
+      },
+      {
+        "text": "None: the answer came in the payload",
+        "correct": true,
+        "why": "Right. A first load is rendered by the server, and a reactive key changes nothing about that."
+      }
+    ]
+  },
+  {
+    "id": "ex-h41v644d",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these end up in the `__NUXT_DATA__` of a server-rendered page? Choose all that apply.",
+    "hint": "What the server fetched while rendering, through `useFetch` or `useAsyncData`.",
+    "choices": [
+      {
+        "text": "Data fetched with `$fetch` in `onMounted`",
+        "correct": false,
+        "why": "`onMounted` runs in the browser, after the payload was written."
+      },
+      {
+        "text": "The layout's session count, after its `transform`",
+        "correct": true,
+        "why": "Right. Item 4 of the week's payload is `6`."
+      },
+      {
+        "text": "The answer of plain `$fetch` in setup",
+        "correct": false,
+        "why": "`$fetch` knows nothing about payloads, which is why the browser fetched it again."
+      },
+      {
+        "text": "A whole record fetched by `useFetch`, though the template shows one field of it",
+        "correct": true,
+        "why": "Right. Whatever the server fetched while rendering is in it, whether the template uses it or not."
+      }
+    ]
+  }
+]

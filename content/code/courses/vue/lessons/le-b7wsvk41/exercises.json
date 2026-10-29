@@ -1,0 +1,731 @@
+[
+  {
+    "id": "ex-92wfe7x1",
+    "version": 1,
+    "section": "v-if-and-v-show",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After three clicks on Toggle, what did the HTML of `#panels` hold where the `v-if` paragraph had been?",
+    "hint": "Look at the last line of the transcript.",
+    "choices": [
+      {
+        "text": "The paragraph, with `style=\"display: none;\"`",
+        "correct": false,
+        "why": "That is the `v-show` paragraph. `v-if` takes the element off the page instead of hiding it."
+      },
+      {
+        "text": "Nothing whatsoever",
+        "correct": false,
+        "why": "Vue leaves something behind: it needs to know where to put the element back when the condition turns true."
+      },
+      {
+        "text": "A comment, `<!--v-if-->`",
+        "correct": true,
+        "why": "Right. The comment is a placeholder that marks where the element goes back."
+      },
+      {
+        "text": "The paragraph, with a `hidden` attribute on it",
+        "correct": false,
+        "why": "Neither directive uses `hidden`. `v-show` sets `display: none`, and `v-if` removes the element."
+      }
+    ]
+  },
+  {
+    "id": "ex-b4me9hw3",
+    "version": 1,
+    "section": "v-if-and-v-show",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the transcript of three toggles, how many times was the `with v-if` component created?",
+    "hint": "Count the lines that end in `created`.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-ptdhy024",
+    "version": 1,
+    "section": "v-if-and-v-show",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A notes panel holds a half-typed note, and the student opens and closes it dozens of times in one sitting. By the lesson's table, which fits it?",
+    "hint": "Two rows of the table decide this one: the cost of a toggle and what happens to state inside.",
+    "choices": [
+      {
+        "text": "`v-if`, because building nothing is the cheapest",
+        "correct": false,
+        "why": "That is the default for things that stay hidden. Here every toggle would rebuild the panel and lose the half-typed note."
+      },
+      {
+        "text": "`v-if` on a `<template>`, so that no wrapper is added to the page",
+        "correct": false,
+        "why": "The `<template>` only saves a wrapper element. Underneath it is still `v-if`, and the note is still lost when the panel closes."
+      },
+      {
+        "text": "Either one: for a screen reader they are the same",
+        "correct": false,
+        "why": "They are the same for a screen reader, and that is the one row where they agree. The state inside is where they differ."
+      },
+      {
+        "text": "`v-show`, so the note survives and a toggle changes one style",
+        "correct": true,
+        "why": "Right. Toggled often, and with state that has to survive being hidden: both are the reasons the lesson gives for `v-show`."
+      }
+    ]
+  },
+  {
+    "id": "ex-bjn5xg74",
+    "version": 1,
+    "section": "v-for",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `<span v-for=\"n in 3\" :key=\"n\">{{ n }} </span>` put on the page?",
+    "hint": "A range in `v-for` does not count the way an array index does.",
+    "choices": [
+      {
+        "text": "`012`",
+        "correct": false,
+        "why": "That is how an index counts. A range starts at 1."
+      },
+      {
+        "text": "`0123`",
+        "correct": false,
+        "why": "That would be a range starting at 0 and including 3. It starts at 1 and stops at 3."
+      },
+      {
+        "text": "`123`",
+        "correct": true,
+        "why": "Right. A range starts at 1, the one place in Vue where counting does."
+      },
+      {
+        "text": "Nothing, because a number is not a list",
+        "correct": false,
+        "why": "`v-for` repeats over a number as a range; the transcript printed three digits."
+      }
+    ]
+  },
+  {
+    "id": "ex-5r078d4j",
+    "version": 1,
+    "section": "v-for",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`<li v-for=\"session in sessions\" v-if=\"session.done\">` left the page empty in Vue 3. Why?",
+    "hint": "Which of the two directives ran first?",
+    "choices": [
+      {
+        "text": "`v-if` ran first, before `session` existed",
+        "correct": true,
+        "why": "Right. The warning says `session` was accessed during render but is not defined, and reading `.done` of undefined threw."
+      },
+      {
+        "text": "`v-for` ran first, and the filter left no session to show",
+        "correct": false,
+        "why": "That is Vue 2's order. One of the two sessions is done, so a filter that ran after the loop would have shown it."
+      },
+      {
+        "text": "An element with `v-if` may not carry a `:key`",
+        "correct": false,
+        "why": "The errors are about `session` being undefined, not about the key."
+      },
+      {
+        "text": "The `done` property is missing from the data",
+        "correct": false,
+        "why": "Both sessions have `done`. What was missing was `session` itself, at the moment `v-if` asked."
+      }
+    ]
+  },
+  {
+    "id": "ex-k0bq28vb",
+    "version": 1,
+    "section": "v-for",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these show only the sessions that are done, the way the lesson accepts? Choose all that apply.",
+    "hint": "One way gives the filtered list a name; the other filters inside the loop.",
+    "choices": [
+      {
+        "text": "`v-for` and `v-if` together on the `<li>`",
+        "correct": false,
+        "why": "That is the demo that left the page empty: in Vue 3 the `v-if` runs first."
+      },
+      {
+        "text": "A `computed` that filters, and a plain `v-for` over it",
+        "correct": true,
+        "why": "Right. The filtered list means something, so it gets a name in the script."
+      },
+      {
+        "text": "A `v-if=\"session.done\"` on the `<ul>` around the loop",
+        "correct": false,
+        "why": "The `<ul>` is outside the loop, where no `session` exists, and it would hide the whole list rather than single rows."
+      },
+      {
+        "text": "`<template v-for>` with the `v-if` on the `<li>` inside it",
+        "correct": true,
+        "why": "Right. The loop runs first and each copy then decides, which is how the first demo's last list does it."
+      }
+    ]
+  },
+  {
+    "id": "ex-jdkmyjc5",
+    "version": 1,
+    "section": "the-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Statistics was starred in the list keyed by index, then removed from the courses. Which component did Vue remove from that list?",
+    "hint": "Ask which keys exist before the removal and which exist after.",
+    "choices": [
+      {
+        "text": "The one with key 0, which held the star",
+        "correct": false,
+        "why": "Key 0 still exists after the removal, so its component stays, star included. That is why Spanish shows a star."
+      },
+      {
+        "text": "None of them; Vue rebuilt all three rows",
+        "correct": false,
+        "why": "If every row had been rebuilt, the star would have vanished. It moved to Spanish because a component was kept."
+      },
+      {
+        "text": "The one with key 2",
+        "correct": true,
+        "why": "Right. Only keys 0 and 1 remain, so the last component went, though it had nothing to do with statistics."
+      },
+      {
+        "text": "The statistics component, wherever it was",
+        "correct": false,
+        "why": "That is what happened in the list keyed by course. Keyed by index, Vue does not know which component was statistics."
+      }
+    ]
+  },
+  {
+    "id": "ex-z7rev6ds",
+    "version": 1,
+    "section": "the-key",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A list of notes is keyed by index, and each row has a text field. The student half-types into the first row, then a new note is inserted at the top of the list. Where is the half-typed text now?",
+    "hint": "The text belongs to the element, not to the list.",
+    "choices": [
+      {
+        "text": "Beside its own note, now in the second row",
+        "correct": false,
+        "why": "That is what a stable key would give. With an index, Vue reuses the elements by position."
+      },
+      {
+        "text": "Still in the first row, beside the new note",
+        "correct": true,
+        "why": "Right. Key 0 survived, so its element and the text in it stayed at position 0 while the notes moved past."
+      },
+      {
+        "text": "Gone, because inserting rebuilds every row",
+        "correct": false,
+        "why": "Vue keeps every component whose key still exists, and all the old keys still exist. Only one new row is built."
+      },
+      {
+        "text": "Nowhere: Vue warns that two rows share key 0 and draws nothing",
+        "correct": false,
+        "why": "Indexes are unique, so no two rows share a key. The problem with an index is that it is not stable."
+      }
+    ]
+  },
+  {
+    "id": "ex-24ab909r",
+    "version": 1,
+    "section": "the-key",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these make a good `:key` for a row of the planner's sessions? Choose all that apply.",
+    "hint": "Stable, unique among its siblings, and a string or a number.",
+    "choices": [
+      {
+        "text": "`session.id`",
+        "correct": true,
+        "why": "Right. It never changes and no two sessions share one."
+      },
+      {
+        "text": "`session.date`",
+        "correct": false,
+        "why": "It is a string, but it is not unique: two sessions fall on 19 October."
+      },
+      {
+        "text": "The session object itself",
+        "correct": false,
+        "why": "A key is a string or a number. Two objects never compare equal as keys, so a replaced list would match nothing."
+      },
+      {
+        "text": "A number given to each session when it is created and never reused",
+        "correct": true,
+        "why": "Right. That is what `addSession` does with the next number: stable and unique."
+      },
+      {
+        "text": "The `index` from `(session, index) in thisWeek`",
+        "correct": false,
+        "why": "The list is sorted by date, so a session added later moves every index after it."
+      }
+    ]
+  },
+  {
+    "id": "ex-8fx41xcn",
+    "version": 1,
+    "section": "the-key",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An index is acceptable as a key only when the list never changes ___ and its rows hold no state of their own.",
+    "hint": "Sorting is what breaks it.",
+    "blanks": [
+      {
+        "accept": [
+          "order"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-468zxx1f",
+    "version": 1,
+    "section": "v-model",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two checkboxes, `reading` and `exercises`, share `v-model=\"kinds\"`. After ticking only Exercises, what did `kinds` hold?",
+    "hint": "Several checkboxes with one array.",
+    "choices": [
+      {
+        "text": "`true`",
+        "correct": false,
+        "why": "That is what a lone checkbox gives. Bound to an array, checkboxes give the values that are ticked."
+      },
+      {
+        "text": "`[ false, true ]`",
+        "correct": false,
+        "why": "The array does not hold one flag per box; it holds the `value` of each box that is ticked."
+      },
+      {
+        "text": "`\"exercises\"`, a string on its own",
+        "correct": false,
+        "why": "One chosen value as a string is what radio buttons give."
+      },
+      {
+        "text": "`[ \"exercises\" ]`",
+        "correct": true,
+        "why": "Right. The array of the `value`s that are ticked, and only one is."
+      }
+    ]
+  },
+  {
+    "id": "ex-pkymhcq1",
+    "version": 1,
+    "section": "v-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`note` is a ref holding `''`, and the template has `<input v-model=\"note\" value=\"hello\">`. What does the field show when the page loads?",
+    "hint": "Which of the two is the truth?",
+    "choices": [
+      {
+        "text": "`hello`, and `note` becomes `'hello'`",
+        "correct": false,
+        "why": "The attribute does not write into the ref. Initial values go in the ref."
+      },
+      {
+        "text": "An empty field, whatever `value` says",
+        "correct": true,
+        "why": "Right. The ref is the truth, and the field's own `value` attribute is ignored."
+      },
+      {
+        "text": "`hello`, until the student starts typing",
+        "correct": false,
+        "why": "That is plain HTML's behaviour. With `v-model` the field shows whatever `note` holds from the start."
+      },
+      {
+        "text": "Nothing at all, because Vue refuses to compile the template",
+        "correct": false,
+        "why": "The lesson says the attribute is ignored, not refused; the page renders with the ref's value."
+      }
+    ]
+  },
+  {
+    "id": "ex-v75gqkd9",
+    "version": 1,
+    "section": "v-model",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the planner's list not put `v-model` on `session.done`?",
+    "hint": "Lesson 3 decided how the list of sessions changes.",
+    "choices": [
+      {
+        "text": "`v-model` does not work on a checkbox",
+        "correct": false,
+        "why": "It does: a lone checkbox gives `true` or `false`, as the `Done` box in the demo showed."
+      },
+      {
+        "text": "It would flip the property inside the list in place, behind `toggleDone`'s back",
+        "correct": true,
+        "why": "Right. The planner's rule is that the list is replaced through `toggleDone`, never changed in place."
+      },
+      {
+        "text": "On a checkbox it listens to `input`, on every keystroke",
+        "correct": false,
+        "why": "A checkbox's `v-model` listens to `change`. The event was never the problem."
+      },
+      {
+        "text": "Inside a `v-for` it reaches only the loop's copy, never the list",
+        "correct": false,
+        "why": "The loop variable is the object in the list itself, which is exactly why writing into it would change the list in place."
+      }
+    ]
+  },
+  {
+    "id": "ex-na4wdth3",
+    "version": 1,
+    "section": "bind-and-on",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the transcript of BindAndOn, Enter was pressed in the minutes field. Which line came first, and why?",
+    "hint": "When does a browser submit a form: the key going down or coming up?",
+    "choices": [
+      {
+        "text": "`Enter pressed`, because `keyup` fires before the form is submitted",
+        "correct": false,
+        "why": "The order was the other way round: the submit happens on the key going down, before it comes up."
+      },
+      {
+        "text": "`submitted 60 minutes…`, because a browser submits a form on the key going down",
+        "correct": true,
+        "why": "Right. The `keyup` handler ran after, when the key came back up."
+      },
+      {
+        "text": "`submitted 60 minutes…`, because `.prevent` holds the `keyup` handler back",
+        "correct": false,
+        "why": "`.prevent` calls `preventDefault()` on the submit event and nothing else; it does not delay other listeners."
+      },
+      {
+        "text": "Only `Enter pressed`; `.prevent` stopped the submit handler from running",
+        "correct": false,
+        "why": "`.prevent` stops the browser's default, the page load, and the handler still runs: the transcript printed both lines."
+      }
+    ]
+  },
+  {
+    "id": "ex-0e3frqs9",
+    "version": 1,
+    "section": "bind-and-on",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A button has `:disabled=\"saving\"`, and `saving` is `false`. What is on the button in the HTML?",
+    "hint": "A bound `false` on a boolean attribute.",
+    "choices": [
+      {
+        "text": "`disabled=\"false\"`, which still disables it",
+        "correct": false,
+        "why": "That is the trap of writing the attribute by hand in HTML. A bound `false` removes a boolean attribute."
+      },
+      {
+        "text": "`disabled=\"\"`, until `saving` turns true",
+        "correct": false,
+        "why": "An empty `disabled` is still disabled. The attribute is removed until `saving` is true."
+      },
+      {
+        "text": "No `disabled` attribute",
+        "correct": true,
+        "why": "Right. `false` removes a boolean attribute, so the button is enabled, which is why the idiom works."
+      },
+      {
+        "text": "`disabled`, because any bound value sets a boolean attribute",
+        "correct": false,
+        "why": "Only `null` and `undefined` remove every attribute, but `false` removes a boolean one such as `disabled` too."
+      }
+    ]
+  },
+  {
+    "id": "ex-awgte39j",
+    "version": 1,
+    "section": "bind-and-on",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The modifier that keeps a submitted form from loading its address again is written `@submit.___`.",
+    "hint": "It calls the event's method of the same name, before the handler.",
+    "blanks": [
+      {
+        "accept": [
+          "prevent"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-apdejf1x",
+    "version": 1,
+    "section": "bind-and-on",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A click handler on a button should run the first time only, and the click should not reach the button's parents. Which modifiers does it need? Choose all that apply.",
+    "hint": "One removes the listener, one stops the bubbling.",
+    "choices": [
+      {
+        "text": "`.once`",
+        "correct": true,
+        "why": "Right. The listener is removed after the first time."
+      },
+      {
+        "text": "`.self`",
+        "correct": false,
+        "why": "`.self` decides which clicks run this handler, those on the element and not a child; it does not stop the event bubbling up."
+      },
+      {
+        "text": "`.stop`",
+        "correct": true,
+        "why": "Right. `event.stopPropagation()`: the event does not bubble to the parents."
+      },
+      {
+        "text": "`.prevent`",
+        "correct": false,
+        "why": "`.prevent` stops the browser's default action, such as a form loading a page; the event still bubbles."
+      }
+    ]
+  },
+  {
+    "id": "ex-zz6ahcs0",
+    "version": 1,
+    "section": "custom-directives",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In FocusDirective, the focus went to `#minutes` rather than `#course`. Why?",
+    "hint": "Where does `v-focus` sit?",
+    "choices": [
+      {
+        "text": "Vue focuses the last field of a component when it mounts",
+        "correct": false,
+        "why": "Vue focuses nothing on its own. Something had to call `focus()`."
+      },
+      {
+        "text": "`v-focus` sits on `#minutes`, and its `mounted` hook focused that element",
+        "correct": true,
+        "why": "Right. The hook ran with the element it sits on, once it was on the page."
+      },
+      {
+        "text": "The `onMounted` in the script moved the focus there",
+        "correct": false,
+        "why": "That `onMounted` only prints where the focus is. It reads `document.activeElement`; it does not set it."
+      },
+      {
+        "text": "The directive ran on every input, and the last to mount kept the focus",
+        "correct": false,
+        "why": "A directive acts on the element it is written on, and only `#minutes` has `v-focus`."
+      }
+    ]
+  },
+  {
+    "id": "ex-hezf987m",
+    "version": 1,
+    "section": "custom-directives",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `<script setup>`, which variable is available in the template as `v-colour`, with nothing registered?",
+    "hint": "The naming rule: a letter, then a capital.",
+    "choices": [
+      {
+        "text": "`useColour`",
+        "correct": false,
+        "why": "`use` is the naming habit of a composable. A directive's name starts with `v` and a capital."
+      },
+      {
+        "text": "`colour`",
+        "correct": false,
+        "why": "Without the `v` prefix it is an ordinary variable; it would have to be registered with `app.directive` to be one."
+      },
+      {
+        "text": "`v_colour`",
+        "correct": false,
+        "why": "The rule is `v` followed by a capital letter, as in `vFocus`, not an underscore."
+      },
+      {
+        "text": "`vColour`",
+        "correct": true,
+        "why": "Right. `v` followed by a capital letter, used in the template as `v-colour`."
+      }
+    ]
+  },
+  {
+    "id": "ex-kzznrgdm",
+    "version": 1,
+    "section": "session-list",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the transcript of the planner, how many minutes of Spanish were planned for the week of 19 October?",
+    "hint": "Add the two Spanish sessions in the list, or read the course's line.",
+    "value": 70,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-e0x633kf",
+    "version": 1,
+    "section": "session-list",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A checkbox has its text beside it, but outside any `<label>` and not tied to one with `for` and `id`. What does a screen reader announce for it?",
+    "hint": "The name of a checkbox comes from its label.",
+    "choices": [
+      {
+        "text": "The text beside it, as the box's name",
+        "correct": false,
+        "why": "Beside is not enough. The text names the box only from inside a label, or through `for` and `id`."
+      },
+      {
+        "text": "\"checkbox, checked\" and nothing else",
+        "correct": true,
+        "why": "Right. With no label the box has no name, so the student hears what it is and not what it is for."
+      },
+      {
+        "text": "Nothing, because the reader skips a box with no label",
+        "correct": false,
+        "why": "The box is still announced; it is announced without a name."
+      },
+      {
+        "text": "The `id` of the input, in place of a name",
+        "correct": false,
+        "why": "An `id` on its own names nothing; it only matters when a label's `for` points at it."
+      }
+    ]
+  },
+  {
+    "id": "ex-04b90ytk",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The student ticks the guitar session and reloads the page. Put what happens in order.",
+    "hint": "From the click, through the rules and the watcher, to the second visit.",
+    "items": [
+      "The checkbox fires `change`",
+      "`toggle` calls `toggleDone`",
+      "`sessions.value` is replaced with the new list",
+      "The watcher writes the list to `localStorage`",
+      "The reload reads the list back from the browser"
+    ]
+  },
+  {
+    "id": "ex-8qc4ckd8",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each field to what `v-model` reads and writes for it.",
+    "hint": "The kind of field chooses what the same directive does.",
+    "pairs": [
+      {
+        "left": "a text input",
+        "right": "the text, as a string"
+      },
+      {
+        "left": "a lone checkbox",
+        "right": "`true` or `false`"
+      },
+      {
+        "left": "several checkboxes with one array",
+        "right": "the `value`s that are ticked"
+      },
+      {
+        "left": "radio buttons",
+        "right": "the `value` of the one chosen"
+      }
+    ],
+    "right_distractors": [
+      "the number of boxes ticked"
+    ]
+  },
+  {
+    "id": "ex-mje0bchy",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Each row of a list keyed by index has an input with `v-focus`. The first item is removed from the list. Does the directive's `mounted` hook run again?",
+    "hint": "Which keys survive the removal, and what does Vue do with a component whose key survives?",
+    "choices": [
+      {
+        "text": "Yes, on every row, because the list was replaced",
+        "correct": false,
+        "why": "A new list does not mean new elements. Vue compares keys, and keys 0 and 1 are still there."
+      },
+      {
+        "text": "Yes, on the row whose item moved up into position 0",
+        "correct": false,
+        "why": "That row's element was already on the page as key 0. It is updated with a new item, not mounted."
+      },
+      {
+        "text": "No: keys 0 and 1 survive, so their elements are updated, not mounted again",
+        "correct": true,
+        "why": "Right. The only element that changes its life is key 2, and it is removed, which runs `unmounted` rather than `mounted`."
+      },
+      {
+        "text": "No, because a directive's hooks run once per application",
+        "correct": false,
+        "why": "They run per element: `mounted` would run for any element newly put on the page, which removing one does not do."
+      }
+    ]
+  },
+  {
+    "id": "ex-kwx7zz4w",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does the planner's list of the week use? Choose all that apply.",
+    "hint": "Read the template of the new list.",
+    "choices": [
+      {
+        "text": "`v-for` with `:key=\"session.id\"`",
+        "correct": true,
+        "why": "Right. A real key, the session's id."
+      },
+      {
+        "text": "`v-model` on each checkbox",
+        "correct": false,
+        "why": "The box is bound by hand, with `:checked` and `@change`, so that the change goes through `toggle`."
+      },
+      {
+        "text": "`v-if` and `v-else` for a week with nothing planned",
+        "correct": true,
+        "why": "Right. One paragraph for an empty week, the list otherwise."
+      },
+      {
+        "text": "`v-show` on the paragraph for an empty week",
+        "correct": false,
+        "why": "It is `v-if`, which pairs with `v-else`; `v-show` does not work with `v-else`."
+      },
+      {
+        "text": "`:class=\"{ done: session.done }\"` on each row",
+        "correct": true,
+        "why": "Right. A session that is done gets the class that strikes it through."
+      }
+    ]
+  }
+]

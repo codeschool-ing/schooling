@@ -1,0 +1,513 @@
+{
+  "ex-mbjftsbz": {
+    "prompt": "O que o Vite faz com os tipos de um arquivo `.ts` quando serve o planner?",
+    "hint": "Pense em por que o app continuou rodando enquanto o verificador apontava erros.",
+    "choices": [
+      {
+        "text": "Confere, e se recusa a servir um arquivo que tenha um erro",
+        "why": "É o que a ideia errada da aula espera. O Vite não confere nada; o `vue-tsc` é um programa separado."
+      },
+      {
+        "text": "Remove os tipos e roda o JavaScript que está por baixo",
+        "why": "Certo. O código roda exatamente como antes; os tipos são para o verificador."
+      },
+      {
+        "text": "Transforma cada interface numa conferência de runtime dos dados",
+        "why": "Só uma prop declarada por tipo ganha conferência de runtime, gerada pelo compilador do Vue, e para uma `Session` ela é apenas `Object`."
+      },
+      {
+        "text": "Passa o arquivo ao `vue-tsc`, que o traduz para JavaScript",
+        "why": "O script roda `vue-tsc --noEmit`, que não escreve arquivo nenhum: ele aponta erros e mais nada."
+      }
+    ]
+  },
+  "ex-yaz1v7qk": {
+    "prompt": "Depois de renomear todos os arquivos e não mudar mais nada, quantos erros o `npm run type-check` apontou?",
+    "hint": "A transcrição que conta linhas com `grep -c`."
+  },
+  "ex-r601hyb9": {
+    "prompt": "Depois das renomeações, os imports do planner ainda dizem `from '../planner.js'`, e o arquivo agora é `planner.ts`. O que acontece?",
+    "choices": [
+      {
+        "text": "O import quebra até cada terminação virar `.ts`",
+        "why": "A aula diz o contrário: a terminação `.js` não é um engano, e nada precisa mudar."
+      },
+      {
+        "text": "O Vite serve o `planner.js` antigo, que sobrou das renomeações",
+        "why": "O loop moveu os arquivos, então não sobra `planner.js` para servir."
+      },
+      {
+        "text": "O TypeScript aponta TS2339 pelo módulo que falta",
+        "why": "TS2339 é uma propriedade que não existe num tipo; nenhum dos 59 erros era sobre um import."
+      },
+      {
+        "text": "Funciona: o Vite acha o `planner.ts`",
+        "why": "Certo. A partir de um arquivo TypeScript, é assim que se escrevem imports de módulos que vão rodar como JavaScript."
+      }
+    ]
+  },
+  "ex-pq52dt00": {
+    "prompt": "O `SessionRow` declara `session: Session` por tipo. Que conferência de runtime o Vue gera para essa prop?",
+    "hint": "O que o Vue enxerga de uma interface enquanto o app roda?",
+    "choices": [
+      {
+        "text": "Uma conferência de cada campo de `Session`, com um aviso se faltar o `minutes`",
+        "why": "A interface existe só para o verificador; em tempo de execução não sobra nada contra o que comparar os campos."
+      },
+      {
+        "text": "`Object`, e que ela é obrigatória",
+        "why": "Certo. O Vue consegue ver que recebeu um objeto, e mais nada além disso."
+      },
+      {
+        "text": "Nenhuma, já que uma prop por tipo não tem metade de runtime",
+        "why": "O compilador transforma o tipo na mesma declaração de runtime que a aula 6 escrevia à mão."
+      },
+      {
+        "text": "`String`, porque `Session` é o nome de um tipo",
+        "why": "O tipo de runtime segue a forma do valor, um objeto, e não a grafia do nome do tipo."
+      }
+    ]
+  },
+  "ex-w98ybbx6": {
+    "prompt": "O `addSession` recebe `Omit<Session, 'id' | 'done'>`. O que esse tipo dá ao planner? Escolha todas as que se aplicam.",
+    "hint": "Leia como \"uma sessão sem dois campos\".",
+    "choices": [
+      {
+        "text": "Quem chama passando um id próprio é recusado",
+        "why": "Certo. O id é a regra que preenche."
+      },
+      {
+        "text": "Um campo acrescentado depois a `Session` passa a ser exigido aqui na hora",
+        "why": "Certo. O tipo é derivado de `Session`, então acompanha cada mudança nela."
+      },
+      {
+        "text": "O `done` da nova sessão começa `false` por causa dele",
+        "why": "Isso é o corpo da função, `done: false`; um tipo não põe valor em lugar algum."
+      },
+      {
+        "text": "Uma sessão lida do `courses.json` sem `minutes` é pega quando carrega",
+        "why": "Os tipos já sumiram quando o app roda; dados que chegam pela rede não são conferidos por eles."
+      }
+    ]
+  },
+  "ex-feacz2d8": {
+    "prompt": "Uma prop nova, `label`, tem de ser opcional, com o valor padrão `'Study'`. No estilo do `CourseCard`, onde vão as duas metades?",
+    "choices": [
+      {
+        "text": "`label: string = 'Study'` dentro do tipo passado ao `defineProps`",
+        "why": "Um tipo descreve e não guarda valores; o padrão pertence à desestruturação."
+      },
+      {
+        "text": "`{ type: String, default: 'Study' }` ao lado do tipo, num segundo `defineProps`",
+        "why": "Um componente declara as props uma vez; a forma por objeto e a forma por tipo são alternativas, não metades."
+      },
+      {
+        "text": "`label?: string` no tipo, `label = 'Study'` na desestruturação",
+        "why": "Certo. É assim que `planned?: number` e `planned = 0` estão escritos, a forma do Vue 3.5."
+      },
+      {
+        "text": "`label: string` no tipo, e `'Study'` atribuído no `onMounted` se estiver vazio",
+        "why": "Isso deixa a prop obrigatória, então todo pai que a omitir é um erro para o verificador."
+      }
+    ]
+  },
+  "ex-xvfs3r3w": {
+    "prompt": "Em `defineEmits<{ toggle: [id: string] }>()`, o que é `[id: string]`?",
+    "choices": [
+      {
+        "text": "Um array de ids que o evento acumula",
+        "why": "Os colchetes são um tipo, não um valor: nenhum array é montado."
+      },
+      {
+        "text": "O nome do listener, escrito como um array",
+        "why": "Quem nomeia o listener é o pai, em `@toggle=\"...\"`; isto é o que ele recebe."
+      },
+      {
+        "text": "Um validador de runtime que rejeita um número",
+        "why": "O Vue guarda o nome do evento em tempo de execução, não uma conferência dos argumentos."
+      },
+      {
+        "text": "Uma tupla: os argumentos do evento, uma string com nome",
+        "why": "Certo. Um evento com dois seria `[id: string, done: boolean]`."
+      }
+    ]
+  },
+  "ex-3qga0f80": {
+    "prompt": "No planner em JavaScript, antes dos tipos, o `SessionRow` chamava `emit('toggel', session.id)`. O que um estudante teria visto?",
+    "hint": "Quem escuta `toggel`?",
+    "choices": [
+      {
+        "text": "Um aviso no console com o nome do evento desconhecido",
+        "why": "A aula diz que o console não diz nada: um evento sem listener não é um erro."
+      },
+      {
+        "text": "Uma caixa que não faz nada quando marcada, e nenhuma mensagem",
+        "why": "Certo. O evento sai e ninguém está escutando aquele nome."
+      },
+      {
+        "text": "Uma página em branco, porque o componente não compila",
+        "why": "Nada no nome do evento impede o componente de compilar; ele aparece normalmente."
+      },
+      {
+        "text": "A caixa é marcada, já que o Vue corrige nomes parecidos",
+        "why": "O Vue compara nomes de evento exatamente; `toggel` e `toggle` são dois eventos."
+      }
+    ]
+  },
+  "ex-ww7cbrkk": {
+    "prompt": "Uma equipe declara `toggle: [id: string]` e um colega, em tempo de execução, emite `toggle` com um número. O que acontece?",
+    "hint": "Separe o que o verificador lê do que o Vue guarda.",
+    "choices": [
+      {
+        "text": "O Vue recusa o evento em tempo de execução e registra o tipo esperado",
+        "why": "Isso exige a forma por objeto da aula 6, com um validador; o tipo guarda só o nome do evento."
+      },
+      {
+        "text": "O evento é descartado, porque o `toggle` passa a ser tratado como evento nativo",
+        "why": "A lista de runtime gerada a partir do tipo é justamente o que diz ao Vue que `toggle` é do próprio componente."
+      },
+      {
+        "text": "Se o código passou pelo verificador, nada o impede enquanto ele roda",
+        "why": "Certo. A conferência dos argumentos é a metade que o tipo não consegue manter em tempo de execução."
+      },
+      {
+        "text": "O número é convertido em string a caminho do listener",
+        "why": "Nem o Vue nem o TypeScript convertem nada; o listener recebe o número."
+      }
+    ]
+  },
+  "ex-ew25r4vw": {
+    "prompt": "Que tipo o TypeScript dá a `ref([])` quando nada mais está escrito?",
+    "choices": [
+      {
+        "text": "Um array de `any`, que o verificador deixa passar em silêncio",
+        "why": "Com `strict`, um tipo que não dá para deduzir não vira um `any` silencioso; aqui ele é um array de nada."
+      },
+      {
+        "text": "Um array de `Session`, pelo nome da store",
+        "why": "O TypeScript lê valores, não nomes; `sessions` não diz nada sobre os elementos."
+      },
+      {
+        "text": "Uma `Ref` que guarda um `never[]`",
+        "why": "Certo. Não se lê nada de um `never`, e é daí que vieram os erros TS2339."
+      },
+      {
+        "text": "`null`, até os cursos carregarem",
+        "why": "Isso é uma template ref antes da montagem; um array vazio continua sendo um array."
+      }
+    ]
+  },
+  "ex-f4qtfj7y": {
+    "prompt": "Na store, `const courses = ref<___[]>([])` diz o que o array vai guardar.",
+    "hint": "A interface que o `planner.ts` exporta para um curso.",
+    "blanks": [
+      {
+        "accept": [
+          "Course"
+        ]
+      }
+    ]
+  },
+  "ex-fhvferer": {
+    "prompt": "O `PlannerDialog` chama `dialog.value?.showModal()`. Por que o `?.` está ali?",
+    "hint": "A aula 9 mostrou quando uma template ref é preenchida.",
+    "choices": [
+      {
+        "text": "Porque o `showModal` não existe em `HTMLDialogElement` nos navegadores antigos",
+        "why": "O `<HTMLDialogElement>` é o que faz o `showModal` ser conhecido; o `?.` diz respeito à ref."
+      },
+      {
+        "text": "Para calar o TS7006 do parâmetro da função",
+        "why": "Estas funções não recebem parâmetro; o erro aqui era o TS18047, `is possibly 'null'`."
+      },
+      {
+        "text": "Para o dialog abrir mais rápido",
+        "why": "O `?.` não muda nada na velocidade; ele só pula a chamada quando o lado esquerdo está vazio."
+      },
+      {
+        "text": "A ref é `null` até a montagem, e o `?.` só chama se ela estiver preenchida",
+        "why": "Certo. O verificador insiste na possibilidade, e o `?.` cuida dela."
+      }
+    ]
+  },
+  "ex-m7pp3jgq": {
+    "prompt": "Assim que `routes` é tipado `RouteRecordRaw[]`, `planner.hasCourse(to.params.id)` é recusado. Por que a correção o envolve em `String(...)`?",
+    "choices": [
+      {
+        "text": "Um parâmetro se repete em algumas URLs: `string | string[]`",
+        "why": "Certo. O `hasCourse` recebe uma `string`, e o `String` produz uma de qualquer jeito."
+      },
+      {
+        "text": "Parâmetros de rota chegam como números, e os ids de curso são strings",
+        "why": "Nada numa URL chega como número; o tipo é `string | string[]`."
+      },
+      {
+        "text": "O `to` continua `any` e o `String` lhe dá um tipo",
+        "why": "Tipar o `routes` é que deu tipo ao `to`; é por isso que este segundo erro apareceu."
+      },
+      {
+        "text": "O `String` confere se o curso existe antes de o guard rodar",
+        "why": "O `String` converte um valor; a conferência é o próprio `hasCourse`."
+      }
+    ]
+  },
+  "ex-gbtxzawx": {
+    "prompt": "Nada no `TypedPicker` diz o que é `item`, e mesmo assim `item.goal` é conferido contra `Course`. O que decidiu isso?",
+    "choices": [
+      {
+        "text": "A restrição `T extends { id: string }`",
+        "why": "A restrição diz o que qualquer `T` precisa ter; ela não escolhe qual `T` é este uso."
+      },
+      {
+        "text": "`:items` recebeu um `Course[]`",
+        "why": "Certo. O uso no pai decide o `T`, e o slot e o evento acompanham."
+      },
+      {
+        "text": "A `ref<Course | null>` declarada para `chosen`",
+        "why": "O `chosen` recebe o valor do evento; não é ele que fixa o `T`."
+      },
+      {
+        "text": "O `TypedList` importa `Course` do planner",
+        "why": "A lista não importa nada sobre cursos; é esse o sentido de um genérico."
+      }
+    ]
+  },
+  "ex-prx1fjna": {
+    "prompt": "No `TypedMistakes`, quais destes o `vue-tsc` recusa? Escolha todas as que se aplicam.",
+    "hint": "Duas linhas de erro foram impressas.",
+    "choices": [
+      {
+        "text": "O `:key` de uma sessão, porque o `id` dela é `'s2'`",
+        "why": "`'s2'` é uma string, que é tudo o que a restrição pede do `id`."
+      },
+      {
+        "text": "`item.title` no slot da lista de sessões",
+        "why": "Certo. O `T` virou `{ id: string; minutes: number; }`, que não tem `title`."
+      },
+      {
+        "text": "`:items=\"labels\"`, uma lista de strings",
+        "why": "Certo. Uma string não tem `id`, então `string[]` não cumpre a restrição."
+      },
+      {
+        "text": "Usar o `TypedList` duas vezes no mesmo template",
+        "why": "Um componente pode ser usado quantas vezes você quiser; cada uso decide o próprio `T`."
+      }
+    ]
+  },
+  "ex-mwrwc3gq": {
+    "prompt": "Um pai passa ao `TypedList` os itens `[{ id: 'g1', minutes: 20 }]` e o slot lê `item.minutes`. O que o `vue-tsc` diz?",
+    "hint": "O que o `T` vira aqui?",
+    "choices": [
+      {
+        "text": "Recusa `item.minutes`, porque a restrição só fala de `id`",
+        "why": "A restrição é um mínimo; o `T` é a forma inteira que foi passada, `minutes` incluído."
+      },
+      {
+        "text": "Recusa a lista, porque se esperava um `Course`",
+        "why": "O `TypedList` não sabe nada de cursos; qualquer forma com um `id` string é aceita."
+      },
+      {
+        "text": "Nada: é aceito, e `minutes` é um número",
+        "why": "Certo. O `T` virou `{ id: string; minutes: number; }`."
+      },
+      {
+        "text": "Aceita, mas `item.minutes` fica tipado como `any`",
+        "why": "Um genérico preserva os tipos do pai; perdê-los na borda da lista é o que ele existe para evitar."
+      }
+    ]
+  },
+  "ex-tj775ds8": {
+    "prompt": "O script de build agora é `vue-tsc --noEmit && vite build`. O que o `&&` faz ali?",
+    "choices": [
+      {
+        "text": "Roda os dois comandos ao mesmo tempo",
+        "why": "Isso é o que o pacote auxiliar do `create-vue` faz; o `&&` roda um depois do outro."
+      },
+      {
+        "text": "Roda o `vite build` só se o verificador deu certo",
+        "why": "Certo. Assim, um erro de tipo para o build."
+      },
+      {
+        "text": "Entrega os arquivos conferidos ao `vite build`",
+        "why": "O `--noEmit` não escreve nada para entregar; o Vite lê os fontes por conta própria."
+      },
+      {
+        "text": "Roda o `vite build` seja qual for o resultado do verificador, e mostra os dois",
+        "why": "Isso seria o `;`; com `&&` uma falha encerra a linha."
+      }
+    ]
+  },
+  "ex-xmygmb0t": {
+    "prompt": "Dos três lugares que a aula lista, qual avisa de um erro de tipo mais cedo?",
+    "choices": [
+      {
+        "text": "A CI, no pull request",
+        "why": "A CI é a última das três: pega o que ninguém viu localmente."
+      },
+      {
+        "text": "O `npm run type-check`, antes de um commit",
+        "why": "Esse é o do meio; ele espera você rodá-lo."
+      },
+      {
+        "text": "O terminal do servidor de desenvolvimento, ao salvar",
+        "why": "O servidor de desenvolvimento não confere tipos; o curso não acrescenta o `vite-plugin-checker`."
+      },
+      {
+        "text": "O editor, enquanto você digita",
+        "why": "Certo. O VS Code com o *Vue (Official)* roda o mesmo verificador em segundo plano e sublinha o erro."
+      }
+    ]
+  },
+  "ex-1gsv0av7": {
+    "prompt": "O planner de um colega mostra a semana perfeitamente no servidor de desenvolvimento, e o `npm run type-check` aponta quatro erros. O que isso diz a você?",
+    "choices": [
+      {
+        "text": "Os erros estão desatualizados, já que o servidor teria recusado os arquivos",
+        "why": "O servidor de desenvolvimento remove os tipos e não confere nada, então ele nunca recusa um arquivo por erro de tipo."
+      },
+      {
+        "text": "Nada se contradiz: o código roda, e quatro lugares contradizem os tipos dele",
+        "why": "Certo. O planner rodou durante toda a aula enquanto o `vue-tsc` apontava dezenas."
+      },
+      {
+        "text": "Os erros estão em arquivos que a página não usa",
+        "why": "O verificador lê todo arquivo que o `include` nomeia; se a página os usa não é o que ele aponta."
+      },
+      {
+        "text": "O `vite build` ainda vai dar certo com o script de build do planner",
+        "why": "O script de build roda o verificador primeiro, e o `&&` para nesses quatro erros."
+      }
+    ]
+  },
+  "ex-rezbarb3": {
+    "prompt": "O `du -sh node_modules/typescript` mediu o compilador no disco. Quantos megabytes?",
+    "hint": "A segunda linha do `du`.",
+    "unit": "MB"
+  },
+  "ex-36wvphry": {
+    "prompt": "Por que um projeto Vue roda o `vue-tsc` e não o `tsc`, o compilador TypeScript puro?",
+    "choices": [
+      {
+        "text": "O `tsc` é lento demais para um projeto com componentes",
+        "why": "A diferença que a aula aponta é o que cada um entende, não a velocidade; o rápido é o TypeScript 7."
+      },
+      {
+        "text": "O `tsc` escreve arquivos JavaScript, e o `vue-tsc` não escreve nenhum",
+        "why": "Os dois aceitam `--noEmit`; o que os separa é o tipo de arquivo que leem."
+      },
+      {
+        "text": "O `tsc` não entende arquivos `.vue`, templates incluídos",
+        "why": "Certo. E o `vue-tsc` precisa ser mantido numa versão que combine com o Vue e com o TypeScript."
+      },
+      {
+        "text": "O `tsc` ignora o `strict` do `@vue/tsconfig`",
+        "why": "O `tsc` lê o `extends` como qualquer `tsconfig.json`; ele só não consegue ler um template."
+      }
+    ]
+  },
+  "ex-ccc5qank": {
+    "prompt": "Pelo raciocínio da aula, qual destes é o caso mais fraco para adicionar TypeScript desde o começo?",
+    "hint": "A aula pesa quanto tempo o código vive e quantas pessoas compartilham os dados dele.",
+    "choices": [
+      {
+        "text": "Um app de reservas que quatro pessoas vão alterar por anos",
+        "why": "Vida longa e várias pessoas são os primeiros motivos da aula para tipos desde o começo."
+      },
+      {
+        "text": "Um painel cuja forma de pedido é compartilhada por vinte componentes",
+        "why": "Uma forma de dados compartilhada entre muitos componentes é o caso do planner, e um sim."
+      },
+      {
+        "text": "Um widget de contagem regressiva numa página, escrito hoje à tarde",
+        "why": "Certo. Um widget de uma tarde fica bem em JavaScript, e convertê-lo depois é trabalho de uma tarde."
+      },
+      {
+        "text": "Uma loja cujas bibliotecas são Vue, Vue Router e Pinia",
+        "why": "Essas bibliotecas são escritas em TypeScript, então não custam nada nas bordas."
+      }
+    ]
+  },
+  "ex-j6atnwwe": {
+    "prompt": "Ponha os passos da conversão do planner na ordem em que a aula os faz.",
+    "hint": "O verificador só encontra alguma coisa depois que os arquivos são TypeScript.",
+    "items": [
+      "Instalar `typescript`, `vue-tsc` e `@vue/tsconfig`",
+      "Escrever o `tsconfig.json` e o `env.d.ts`",
+      "Acrescentar o script `type-check`",
+      "Renomear os arquivos `.js` e marcar cada `<script setup>`",
+      "Tipar o `planner.ts` e a store",
+      "Fazer o build rodar o verificador primeiro"
+    ]
+  },
+  "ex-kzrg8bxy": {
+    "prompt": "Ligue cada código de erro desta aula à causa que ele teve no planner.",
+    "pairs": [
+      {
+        "left": "TS7006",
+        "right": "Um parâmetro que nada descreve"
+      },
+      {
+        "left": "TS2339",
+        "right": "Uma propriedade lida de um `never`"
+      },
+      {
+        "left": "TS18047",
+        "right": "Uma template ref que talvez seja `null`"
+      },
+      {
+        "left": "TS2345",
+        "right": "Um nome de evento que não foi declarado"
+      }
+    ],
+    "right_distractors": [
+      "Uma terminação `.js` num import"
+    ]
+  },
+  "ex-v17sq941": {
+    "prompt": "Quais destes existem só para o verificador, sem nada deles sobrando quando o planner roda no navegador? Escolha todas as que se aplicam.",
+    "hint": "O compilador do Vue guarda uma metade de runtime de algumas declarações.",
+    "choices": [
+      {
+        "text": "A `interface Session` do `planner.ts`",
+        "why": "Certo. O Vite a remove, e o JavaScript do build é o mesmo sem ela."
+      },
+      {
+        "text": "A lista de eventos de `defineEmits<{ toggle: [id: string] }>()`",
+        "why": "O Vue gera a partir dele uma lista de runtime dos eventos declarados, que a regra de fallthrough lê."
+      },
+      {
+        "text": "O `<HTMLDialogElement>` em `useTemplateRef<HTMLDialogElement>('dialog')`",
+        "why": "Certo. O argumento de tipo só diz ao verificador qual elemento ela vai ser."
+      },
+      {
+        "text": "O `today?: boolean` nas props do `SessionRow`",
+        "why": "O compilador o transforma em `{ type: Boolean, required: false }`, uma declaração de runtime."
+      },
+      {
+        "text": "O `Partial<Errors>` do `SessionForm`",
+        "why": "Certo. Ele descreve o `shown` ao verificador e não produz código."
+      }
+    ]
+  },
+  "ex-j5ew9ary": {
+    "prompt": "Um componente novo, `NoteRow`, declara `defineEmits<{ save: [text: string] }>()` e depois chama `emit('save')` sem argumento. Onde isso é encontrado primeiro, na configuração desta aula?",
+    "choices": [
+      {
+        "text": "No console do navegador, como um aviso do Vue quando o evento dispara",
+        "why": "O Vue guarda o nome do evento em tempo de execução, não os argumentos, então nada avisa ali."
+      },
+      {
+        "text": "No editor, sublinhado, pelo verificador comparando a chamada com a tupla",
+        "why": "Certo. A tupla diz um argumento; o editor roda o mesmo verificador enquanto você digita."
+      },
+      {
+        "text": "No terminal do servidor de desenvolvimento, quando o arquivo é salvo",
+        "why": "O servidor de desenvolvimento remove os tipos e não confere nada."
+      },
+      {
+        "text": "Em lugar nenhum: um argumento que falta é `undefined`, que uma string aceita",
+        "why": "Com `strict`, `undefined` não é uma `string`, e um argumento que falta é um erro."
+      }
+    ]
+  }
+}

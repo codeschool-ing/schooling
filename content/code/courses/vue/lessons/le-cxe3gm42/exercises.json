@@ -1,0 +1,733 @@
+[
+  {
+    "id": "ex-68cgqmac",
+    "version": 1,
+    "section": "csr-recap",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The Vite planner's preview server is asked for `/courses/spanish` by `curl`. What comes back?",
+    "hint": "Lesson 17 showed the same answer for every address.",
+    "choices": [
+      {
+        "text": "The Spanish course's sessions, drawn as a list",
+        "correct": false,
+        "why": "That is what the browser shows after the script has run and fetched the data; `curl` runs no script."
+      },
+      {
+        "text": "A redirect to `/`, where the router takes over",
+        "correct": false,
+        "why": "The preview server answers the address with a page, not a redirect; the router reads the address once it runs."
+      },
+      {
+        "text": "An empty `<div id=\"app\">` and a script",
+        "correct": true,
+        "why": "Right. The HTML is the same shell for every address, and everything visible is drawn by the script."
+      },
+      {
+        "text": "The course's title and description, with the sessions left for the script",
+        "correct": false,
+        "why": "That would be a page drawn partly on the server; the Vite build sends no words of the page at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-5jjsj4j6",
+    "version": 1,
+    "section": "csr-recap",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are costs of client-side rendering that the lesson names? Choose all that apply.",
+    "hint": "Three costs, and readers who turn JavaScript off are not one of them.",
+    "choices": [
+      {
+        "text": "A blank screen until the script and the data have arrived",
+        "correct": true,
+        "why": "Right. On a cheap phone on a slow network that is seconds of white."
+      },
+      {
+        "text": "Many readers browse with JavaScript turned off",
+        "correct": false,
+        "why": "The lesson says few people do, and that this is not the cost."
+      },
+      {
+        "text": "A link preview finds an empty `<div>`",
+        "correct": true,
+        "why": "Right. The program that builds the preview reads the HTML without running it."
+      },
+      {
+        "text": "An error at start-up leaves nothing drawn",
+        "correct": true,
+        "why": "Right. If the script fails, the blank page is all the reader gets."
+      },
+      {
+        "text": "Each tick needs a full page reload from the server",
+        "correct": false,
+        "why": "A tick in the Vite planner sends a request and redraws in place; nothing reloads."
+      }
+    ]
+  },
+  {
+    "id": "ex-x7gd5anq",
+    "version": 1,
+    "section": "ssr",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a Nuxt page, what is hydration?",
+    "hint": "It happens in the browser, after the HTML is already on the screen.",
+    "choices": [
+      {
+        "text": "The server turning the components' output into HTML",
+        "correct": false,
+        "why": "That is the server-side render, the first half; hydration is the second."
+      },
+      {
+        "text": "The browser's Vue attaching itself to the elements the server sent",
+        "correct": true,
+        "why": "Right. It runs the same components and attaches them instead of drawing new elements."
+      },
+      {
+        "text": "The browser fetching `/api/courses` after the page is shown",
+        "correct": false,
+        "why": "The data came inside the page, in the payload; the built page made no such request."
+      },
+      {
+        "text": "Drawing the page again in the browser and swapping it for the server's",
+        "correct": false,
+        "why": "Vue does not draw the page again; it walks the server's elements and attaches to them."
+      }
+    ]
+  },
+  {
+    "id": "ex-b5d9a2v6",
+    "version": 1,
+    "section": "ssr",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With JavaScript off, a reader ticks the 21st on the Nuxt week page and loads `/` again. The footer still says 75 of 195. Why?",
+    "hint": "The box did tick. What sends the `PATCH`?",
+    "choices": [
+      {
+        "text": "The `@change` that sends the `PATCH` is attached by hydration",
+        "correct": true,
+        "why": "Right. Without JavaScript the checkbox ticks itself and nothing tells the server."
+      },
+      {
+        "text": "The server rejected the tick because the page had not hydrated",
+        "correct": false,
+        "why": "The server never heard of the tick; no request was sent at all."
+      },
+      {
+        "text": "The page was served from a cached copy",
+        "correct": false,
+        "why": "The dev server keeps no copy here; the reload drew the server's data, which had not changed."
+      },
+      {
+        "text": "A checkbox cannot be ticked before Vue is running",
+        "correct": false,
+        "why": "It can and was: a checkbox ticks itself. What is missing is the listener."
+      }
+    ]
+  },
+  {
+    "id": "ex-psz9qf05",
+    "version": 1,
+    "section": "ssr",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "From the built Nuxt server, how many requests did the week page make in the browser?",
+    "hint": "Count the `net` lines after `node .output/server/index.mjs`.",
+    "value": 11,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-mjc1fwrq",
+    "version": 1,
+    "section": "ssr",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "None of the built week page's requests is `/api/courses`, yet the page shows the sessions and hydrates. Where did the browser get the data?",
+    "hint": "Lesson 20 is about it.",
+    "choices": [
+      {
+        "text": "From `localStorage`, saved on an earlier visit",
+        "correct": false,
+        "why": "The planner keeps nothing in the browser; the data comes from the server."
+      },
+      {
+        "text": "From a `/_nuxt/` chunk, where the build compiled the sessions",
+        "correct": false,
+        "why": "The chunks are code and stylesheets; the sessions change and are not compiled in."
+      },
+      {
+        "text": "From reading the rows back out of the HTML it was sent",
+        "correct": false,
+        "why": "Vue does not parse data out of markup; it hydrates with the data the server passed along."
+      },
+      {
+        "text": "From the payload sent with the HTML",
+        "correct": true,
+        "why": "Right. The server sent what `useFetch` received along with the page."
+      }
+    ]
+  },
+  {
+    "id": "ex-gh8vwqex",
+    "version": 1,
+    "section": "ssr",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The built server printed `Listening on http://___:3000`, the address meaning every network the computer is on.",
+    "hint": "Not `localhost`.",
+    "blanks": [
+      {
+        "accept": [
+          "0.0.0.0"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fm74s687",
+    "version": 1,
+    "section": "hydration-mismatch",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "It is 23:30 in São Paulo on the 21st, the built Nuxt server runs in UTC, and the week page computes `today` on both sides. What does the reader see?",
+    "hint": "Production repairs a missing element and leaves an attribute alone.",
+    "choices": [
+      {
+        "text": "The 22nd highlighted, and `(today)` on the 21st",
+        "correct": true,
+        "why": "Right. Two todays: the server's highlight stayed and the browser's `(today)` was added."
+      },
+      {
+        "text": "The 22nd highlighted and labelled `(today)`, as the server drew it",
+        "correct": false,
+        "why": "The `(today)` is an element the browser expected on the 21st, and production makes a missing element."
+      },
+      {
+        "text": "The 21st highlighted and labelled `(today)`, as the browser corrects it",
+        "correct": false,
+        "why": "That is what the dev server ends with; the built one does not fix the class."
+      },
+      {
+        "text": "An error page, because hydration completed with mismatches",
+        "correct": false,
+        "why": "Production logs one line and carries on; the page works and is quietly wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-m15wxb2e",
+    "version": 1,
+    "section": "hydration-mismatch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the line `const today = isoDate(new Date())` produce a mismatch only some of the time?",
+    "hint": "The two dates agree for 21 hours of the day.",
+    "choices": [
+      {
+        "text": "`new Date()` returns a different value on each call",
+        "correct": false,
+        "why": "It does, by milliseconds; `isoDate` keeps only the day, and the day is what differs."
+      },
+      {
+        "text": "Server and browser read their own clocks in their own time zones",
+        "correct": true,
+        "why": "Right. In the last three hours of São Paulo's day, UTC is already on the next date."
+      },
+      {
+        "text": "The server caches the page, so its date is from an earlier request",
+        "correct": false,
+        "why": "Nothing caches the week page; the server draws it per request with its own clock."
+      },
+      {
+        "text": "Hydration runs `isoDate` only when the data has changed",
+        "correct": false,
+        "why": "Hydration runs the components every time; what differs is the clock each side reads."
+      }
+    ]
+  },
+  {
+    "id": "ex-471pm3h5",
+    "version": 1,
+    "section": "hydration-mismatch",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these, read by a component during render, are mismatches waiting to happen? Choose all that apply.",
+    "hint": "Anything that is not the same on the server and in the browser.",
+    "choices": [
+      {
+        "text": "`Math.random()`",
+        "correct": true,
+        "why": "Right. Each side draws its own number."
+      },
+      {
+        "text": "The sessions `useFetch` returned",
+        "correct": false,
+        "why": "The server decides those and the browser receives them in the payload, so both draw the same."
+      },
+      {
+        "text": "A value read from `localStorage`",
+        "correct": true,
+        "why": "Right. The server has no `localStorage` at all."
+      },
+      {
+        "text": "An id made by `useId()`",
+        "correct": false,
+        "why": "That is the fix for counter ids: `useId()` gives the same id on both sides."
+      },
+      {
+        "text": "The window's width",
+        "correct": true,
+        "why": "Right. There is no window on the server."
+      }
+    ]
+  },
+  {
+    "id": "ex-wsy11dcg",
+    "version": 1,
+    "section": "ssg",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many routes did `nuxt generate` prerender for the planner?",
+    "hint": "The line that starts `ℹ Prerendered`.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "routes"
+  },
+  {
+    "id": "ex-58z37fne",
+    "version": 1,
+    "section": "ssg",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How did `nuxt generate` know to render the three course pages?",
+    "hint": "A page no link reaches is not generated unless it is listed.",
+    "choices": [
+      {
+        "text": "It rendered every file in `app/pages`, with each id from `courses.json`",
+        "correct": false,
+        "why": "A dynamic page has no list of ids; generation does not read the data file to invent addresses."
+      },
+      {
+        "text": "It followed the `<NuxtLink>`s on `/`",
+        "correct": true,
+        "why": "Right. It rendered `/`, read its links and rendered what they lead to."
+      },
+      {
+        "text": "The route rules listed them",
+        "correct": false,
+        "why": "No rule names the course pages for prerendering; in the route rules section they get `swr`."
+      },
+      {
+        "text": "It asked the router for every route with a parameter",
+        "correct": false,
+        "why": "The router knows the pattern `/courses/:id`, not which ids exist."
+      }
+    ]
+  },
+  {
+    "id": "ex-8bdm854t",
+    "version": 1,
+    "section": "ssg",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The generated planner is put on a host that only sends files, and a reader ticks a session. What happens to the tick?",
+    "hint": "Where does the API exist?",
+    "choices": [
+      {
+        "text": "It is written into `_payload.json`, and the next visitor sees it",
+        "correct": false,
+        "why": "A static host writes nothing; the files are as the build left them."
+      },
+      {
+        "text": "It is kept until the next `nuxt generate`, which renders it in",
+        "correct": false,
+        "why": "Nothing keeps it: the data of the files is the data of the build, read from `courses.json`."
+      },
+      {
+        "text": "The page sends it to `/api/sessions/…`, and the host forwards it to Nitro",
+        "correct": false,
+        "why": "There is no Nitro behind a host that only sends files."
+      },
+      {
+        "text": "The `PATCH` has no server to answer it",
+        "correct": true,
+        "why": "Right. A generated planner could show a week; it could not keep one."
+      }
+    ]
+  },
+  {
+    "id": "ex-m14knf7m",
+    "version": 1,
+    "section": "route-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `'/courses/**': { swr: 60 }`, a session is ticked, and a minute later `/courses/spanish` is requested twice. What do the two requests get?",
+    "hint": "The first one sets off the new render and does not wait for it.",
+    "choices": [
+      {
+        "text": "The first the old copy, the second the new one",
+        "correct": true,
+        "why": "Right. The transcript counted 1 and then 2."
+      },
+      {
+        "text": "Both the new page, because the minute is up",
+        "correct": false,
+        "why": "After the window the first request is still answered from the copy, at once."
+      },
+      {
+        "text": "Both the old copy, until another sixty seconds pass",
+        "correct": false,
+        "why": "The first request after the window starts a render in the background, and the second gets it."
+      },
+      {
+        "text": "The first waits for a fresh render, the second gets it from the copy",
+        "correct": false,
+        "why": "That is ordinary caching; `swr` answers at once from the copy and renders behind it."
+      }
+    ]
+  },
+  {
+    "id": "ex-cwgqqawx",
+    "version": 1,
+    "section": "route-rules",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `routeRules`, `'/about': { ___: true }` draws the page once, by the build, into `.output/public`.",
+    "hint": "The word `nuxt generate`'s output used for every route.",
+    "blanks": [
+      {
+        "accept": [
+          "prerender"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qdkm3hft",
+    "version": 1,
+    "section": "route-rules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team protects `/admin` with a route rule that redirects anyone who is not signed in. What does the lesson's advisory teach about that?",
+    "hint": "GHSA-vjh5-4x84-xrqp, and the general lesson after it.",
+    "choices": [
+      {
+        "text": "It is safe once Nuxt is at 4.6.2, which fixed the capitals",
+        "correct": false,
+        "why": "4.6.2 fixed that one bypass; the lesson's point is that a pattern on an address is the wrong place for a lock."
+      },
+      {
+        "text": "It is safe if the rule uses `headers` rather than `redirect`",
+        "correct": false,
+        "why": "The advisory covered both kinds, `headers` and `redirect` alike."
+      },
+      {
+        "text": "The check must also be enforced by the code that serves the page, or by the host",
+        "correct": true,
+        "why": "Right. A rule decides rendering and caching; it is not a lock."
+      },
+      {
+        "text": "It is safe if `/admin` is prerendered, so no server answers it",
+        "correct": false,
+        "why": "A prerendered page is a file anyone can download; prerendering removes the server that would check."
+      }
+    ]
+  },
+  {
+    "id": "ex-hhrhy6pf",
+    "version": 1,
+    "section": "route-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does Nuxt's `isr` relate to the `swr` of the planner's course pages?",
+    "hint": "Same idea, different keeper.",
+    "choices": [
+      {
+        "text": "The same keeping, done by the hosts that support it, in their own network",
+        "correct": true,
+        "why": "Right. The copy lives in the host's network rather than in the server."
+      },
+      {
+        "text": "`isr` renders every page at build time, `swr` none",
+        "correct": false,
+        "why": "That is closer to `prerender`; `isr` also renders on demand and keeps the copy."
+      },
+      {
+        "text": "`isr` sends `cache-control: no-store`, so nothing is kept",
+        "correct": false,
+        "why": "`no-store` is what the planner's `/api/**` rule sends; `isr` exists to keep a copy."
+      },
+      {
+        "text": "`isr` is `ssr: false` with a cache: the page is drawn in the browser",
+        "correct": false,
+        "why": "`ssr: false` sends an empty shell; an `isr` page arrives drawn."
+      }
+    ]
+  },
+  {
+    "id": "ex-x44k47x1",
+    "version": 1,
+    "section": "client-only",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The fix makes `today` a `ref('')` that `onMounted` sets. Why does that end the mismatch?",
+    "hint": "What is `today` during the server's render, and during the browser's first one?",
+    "choices": [
+      {
+        "text": "`onMounted` runs before hydration, so the browser draws the right day from the start",
+        "correct": false,
+        "why": "It runs after hydration, and only in the browser; that is why the first drawings agree."
+      },
+      {
+        "text": "`onMounted` sends the browser's date to the server, which draws it",
+        "correct": false,
+        "why": "Nothing is sent; the server keeps drawing with `today` empty."
+      },
+      {
+        "text": "A ref is excluded from hydration checks",
+        "correct": false,
+        "why": "Vue compares what a ref draws like anything else; here the ref is simply the same on both sides."
+      },
+      {
+        "text": "Both first drawings have `today` empty and match no row, so they agree",
+        "correct": true,
+        "why": "Right. Then `onMounted` sets it and the one row is redrawn, as any ref change would."
+      }
+    ]
+  },
+  {
+    "id": "ex-9vw0r4ts",
+    "version": 1,
+    "section": "client-only",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the server send for the footer's `<ClientOnly>` time zone line?",
+    "hint": "`curl` shows the server's HTML.",
+    "choices": [
+      {
+        "text": "`Days are counted in UTC`, the server's own zone",
+        "correct": false,
+        "why": "That is what drawing the line on the server would have said, and the reason it is client-only."
+      },
+      {
+        "text": "Nothing, and the footer has an empty gap until hydration",
+        "correct": false,
+        "why": "That is what happens with no `#fallback`; the planner gives one."
+      },
+      {
+        "text": "`Days are counted in America/Sao_Paulo`, read from the request",
+        "correct": false,
+        "why": "The server is not told the reader's zone; only the browser reports it."
+      },
+      {
+        "text": "The `#fallback`: `Days are counted in your browser's time zone`",
+        "correct": true,
+        "why": "Right. A sentence true for every reader, and no mention of UTC."
+      }
+    ]
+  },
+  {
+    "id": "ex-bchqnfzx",
+    "version": 1,
+    "section": "client-only",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team adds `Weather.client.vue` to `app/components` and uses it on the week page. What does the server do with it?",
+    "hint": "The name says something, as `Clock.client.vue`'s does.",
+    "choices": [
+      {
+        "text": "Renders it, and the browser renders it again after hydration",
+        "correct": false,
+        "why": "Rendering it on both sides is what the `.client` suffix exists to prevent."
+      },
+      {
+        "text": "Leaves it out, as if each use were wrapped in `<ClientOnly>`",
+        "correct": true,
+        "why": "Right. The suffix makes the component browser-only wherever it is used."
+      },
+      {
+        "text": "Refuses to build until the page wraps it in `<ClientOnly>`",
+        "correct": false,
+        "why": "The suffix replaces the wrapper; nothing has to be added."
+      },
+      {
+        "text": "Renders it once at build time, like a prerendered page",
+        "correct": false,
+        "why": "That is `prerender`, a route rule about a page, not a component's name."
+      }
+    ]
+  },
+  {
+    "id": "ex-j6580cwb",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which modes are open to the lesson's hydration mismatches?",
+    "hint": "Which modes send HTML that is already drawn?",
+    "choices": [
+      {
+        "text": "Only SSR, because only there a server renders per request",
+        "correct": false,
+        "why": "SSG and `swr` send drawn HTML too, and a generated page with a build-time `today` is a mismatch with no server at all."
+      },
+      {
+        "text": "Every mode except CSR, SSG included",
+        "correct": true,
+        "why": "Right. Each of them hydrates, so what only the browser knows has to wait for hydration."
+      },
+      {
+        "text": "SSR and `swr`, but not SSG, which needs no server",
+        "correct": false,
+        "why": "Needing no server does not stop a page hydrating; the generated `index.html` showed it."
+      },
+      {
+        "text": "Every mode, CSR included",
+        "correct": false,
+        "why": "CSR draws only in the browser; with one drawing there is nothing to disagree with."
+      }
+    ]
+  },
+  {
+    "id": "ex-nmdgfjnt",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson take `swr` off the course pages before the planner is deployed?",
+    "hint": "Who reads a course page, and who changes it?",
+    "choices": [
+      {
+        "text": "A page with `swr` cannot be read by a search engine",
+        "correct": false,
+        "why": "It arrives drawn, which a search engine reads well; that is why a catalogue uses it."
+      },
+      {
+        "text": "Sixty seconds of rendering is too slow",
+        "correct": false,
+        "why": "The sixty seconds are how long the copy is kept, not how long a render takes."
+      },
+      {
+        "text": "Its reader edits it, and a reload would show the old copy",
+        "correct": true,
+        "why": "Right. `swr` suits pages many read and few change; a ticked session vanishing on reload is the opposite."
+      },
+      {
+        "text": "`swr` breaks the `PATCH` to `/api/sessions/…`",
+        "correct": false,
+        "why": "The `PATCH` worked; the API has its own `no-store` rule. Only the HTML was stale."
+      }
+    ]
+  },
+  {
+    "id": "ex-441fzgzj",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of the planner to the way the lesson's last section renders it.",
+    "hint": "The list under \"The planner's choices\".",
+    "pairs": [
+      {
+        "left": "The week, `/`",
+        "right": "on the server, every request"
+      },
+      {
+        "left": "`/about`",
+        "right": "once, by the build"
+      },
+      {
+        "left": "The API",
+        "right": "never kept by a cache"
+      },
+      {
+        "left": "The reader's day on the week",
+        "right": "in the browser, after hydration"
+      }
+    ],
+    "right_distractors": [
+      "from a copy at most a minute old"
+    ]
+  },
+  {
+    "id": "ex-16nd44v1",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these moments of one visit to the Nuxt week page in order.",
+    "hint": "The page is readable before it answers a click.",
+    "items": [
+      "The server runs the page's components",
+      "The HTML arrives with the payload",
+      "The reader sees the week",
+      "The browser downloads the same components",
+      "Hydration attaches the `@change` listeners",
+      "`onMounted` sets `today`"
+    ]
+  },
+  {
+    "id": "ex-ekwk0cca",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A shop's product page is the same for everybody, is read thousands of times a day, changes twice a day, and greets a signed-in reader by name. Following the lesson, how is it rendered?",
+    "hint": "Two questions: is it the same for every reader, and how soon must a change reach it?",
+    "choices": [
+      {
+        "text": "SSR per request, so the name is in the HTML",
+        "correct": false,
+        "why": "The name is one reader's, and putting it in the server's HTML gives up the copy thousands of readers share."
+      },
+      {
+        "text": "Prerendered at build time, name included",
+        "correct": false,
+        "why": "A build has no reader to greet, and twice a day would mean deploying twice a day."
+      },
+      {
+        "text": "Kept with `swr`, the greeting drawn in the browser",
+        "correct": true,
+        "why": "Right. Shared and rarely changed suits a kept copy; the part that belongs to one reader waits for the browser."
+      },
+      {
+        "text": "`ssr: false`, since one part depends on who is reading",
+        "correct": false,
+        "why": "That sends an empty shell to every reader and every search engine for the sake of one line."
+      }
+    ]
+  }
+]
